@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import { Button } from './Button'
 import { Row } from './blocks/Row'
 import { UIContext } from './helpers/contexts'

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { ThemeObject } from '@mcro/gloss'
+import { ThemeObject, attachTheme } from '@mcro/gloss'
 
 const Section = view('section', {
   width: '100%',

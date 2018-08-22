@@ -25,6 +25,17 @@ const decreaseContrast = (color, amt) => {
   return color.isLight() ? color.lighten(adjustAmt) : color.darken(adjustAmt)
 }
 
+const roundToExtreme = (color, pct = 15) => {
+  const lightness = color.lightness()
+  if (lightness <= pct) {
+    return '#000'
+  }
+  if (lightness >= 100 - pct) {
+    return '#fff'
+  }
+  return color
+}
+
 const smallAmt = color => {
   // 1 = white, 1 = black, 0 = middle
   const ranged = Math.abs(50 / (50 - color.lightness()))
@@ -99,7 +110,9 @@ export class ThemeMaker {
     // some handy basic styles
     const base = this.colorize({
       background: backgroundColored,
-      color: color || decreaseContrast(opposite(backgroundColored), largeAmt),
+      color:
+        color ||
+        roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmt)),
       borderColor: borderColor || increaseContrast(backgroundColored, smallAmt),
     })
     const hover = {

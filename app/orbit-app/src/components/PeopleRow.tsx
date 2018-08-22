@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { attachTheme } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
 

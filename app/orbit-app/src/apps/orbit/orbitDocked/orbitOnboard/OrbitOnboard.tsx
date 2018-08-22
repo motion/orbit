@@ -10,6 +10,7 @@ import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettings
 import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
+import { SubTitle, Title } from '../../../../views'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -18,7 +19,8 @@ type Props = {
 }
 
 const sidePad = 16
-const controlsHeight = 40
+const controlsHeight = 50
+const framePad = 25
 const numFrames = 3
 // subtract padding from parent
 const frameWidth = ORBIT_WIDTH - sidePad * 2
@@ -27,7 +29,7 @@ const OnboardFrame = view({
   position: 'relative',
   width: frameWidth,
   minHeight: 300,
-  padding: [20, 30, 20 + controlsHeight],
+  padding: [20, framePad, 20 + controlsHeight],
 })
 
 const Centered = view({
@@ -40,7 +42,7 @@ const Centered = view({
 const Controls = view({
   flexFlow: 'row',
   position: 'absolute',
-  bottom: 0,
+  bottom: 15,
   right: 0,
   alignItems: 'center',
 })
@@ -65,7 +67,7 @@ FrameAnimate.theme = ({ curFrame }) => ({
 })
 
 const Unpad = view({
-  margin: [0, -sidePad],
+  margin: [0, -sidePad - framePad],
 })
 
 const Item = view({
@@ -108,7 +110,7 @@ const AddButton = ({ disabled, ...props }) =>
     </Theme>
   )
 
-const buttonText = ['Next', 'Looks good', 'Done!']
+const buttonText = ['Begin', 'Next', 'Done!']
 
 class OnboardStore {
   props: Props
@@ -183,22 +185,26 @@ export const OrbitOnboard = decorator(
               </Text>
               <View height={20} />
               <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
-                Orbit is the first ever completely private search and app
-                platform. To work, it needs to proxy our OAuth keys on your
-                machine. Learn how this Orbit privacy works, and hit "Next" to
-                enter password for this.
+                Orbit is the first ever completely private search platform.
+                <br />
+                <br />
+                To work, Orbit sets up a proxy to direct our servers at{' '}
+                <strong>auth.tryorbit.com</strong> to your local computer.{' '}
+                <a href="http://tryorbit.com/auth">
+                  Learn more about how this works
+                </a>.
               </Text>
             </Centered>
           </OnboardFrame>
           <OnboardFrame>
-            <Text size={1.2} fontWeight={600}>
+            <Title size={1.2} fontWeight={600}>
               Select apps
-            </Text>
+            </Title>
             <Text>
-              You can always set these up and add multiple apps through the
-              store later, but it's nice to get a few working.
+              You can always set these up through the app store later, but it's
+              nice to get a few working:
             </Text>
-            <View height={10} />
+            <View height={15} />
             <Unpad>
               {integrations.map(item => {
                 return (

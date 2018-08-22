@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { OrbitFrame } from './OrbitFrame'
 import { OrbitSearchResults } from './OrbitSearchResults'

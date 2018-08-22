@@ -7,7 +7,8 @@ import {
   propsToStyles,
   alphaColor,
 } from '@mcro/gloss'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'

@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { view, compose, attachTheme } from '@mcro/black'
+import { view, compose } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'

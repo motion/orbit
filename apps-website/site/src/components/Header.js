@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import { Link } from '~/views'
 import { SectionContent } from '~/views/sectionContent'
 import { BrandLogo } from '~/components'

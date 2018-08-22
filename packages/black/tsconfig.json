@@ -13,7 +13,6 @@
     { "path": "../decor-classes" },
     { "path": "../decor-mobx" },
     { "path": "../decor-react" },
-    { "path": "../gloss" },
     { "path": "../helpers" }
   ]
 }

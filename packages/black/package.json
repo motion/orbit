@@ -13,7 +13,6 @@
     "@mcro/decor-classes": "^2.2.1",
     "@mcro/decor-mobx": "^2.2.1",
     "@mcro/decor-react": "^2.2.1",
-    "@mcro/gloss": "^2.2.1",
     "@mcro/helpers": "^2.2.1",
     "event-kit": "^2.5.0",
     "global": "^4.3.0",

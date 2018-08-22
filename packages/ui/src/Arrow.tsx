@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import { Col } from './blocks/Col'
 import { Color, ThemeObject } from '@mcro/gloss'
 

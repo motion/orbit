@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 
 export const RoundButtonPerson = ({ person, ...props }) => {
   // TODO: avatar value on person
-  const avatar = person.data.profile.image_512
+  const avatar = person.photo
   return (
     <RoundButton
       size={0.95}

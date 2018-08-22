@@ -21,20 +21,19 @@ export const ResolvePerson = ({ children, bit }) => {
   if (!bit) {
     return null
   }
-  const avatar = bit.data.profile && bit.data.profile.image_512
   return children({
     id: bit.id,
     title: bit.name,
     type: 'person',
-    icon: avatar || 'users_square',
-    subtitle: !!bit.data.profile && bit.data.profile.email,
+    icon: bit.author.photo || 'users_square',
+    subtitle: !!bit.author.email,
     date: bit.bitUpdatedAt,
     iconProps: {
       color: '#ccc',
     },
-    preview: !!avatar && (
+    preview: !!bit.author.photo && (
       <UI.Col flex={1}>
-        <Avatar src={bit.data.profile.image_512} />
+        <Avatar src={bit.author.photo} />
       </UI.Col>
     ),
   })

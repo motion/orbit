@@ -7,4 +7,5 @@ export interface SlackPersonData {
     image_512?: string
     email: string
   }
+  tz: string
 }

@@ -55,7 +55,7 @@ export class ConfluenceContentSyncer {
     await getRepository(BitEntity).save(bits)
     log(`bits where saved`)
 
-    // get a difference to find a removed bits
+    // get a difference to find a removed bits and remove them
     const removedBits = BitUtils.difference(this.bits, bits)
     log(`removing bits`, removedBits)
     await getRepository(BitEntity).remove(removedBits)
@@ -90,9 +90,7 @@ export class ConfluenceContentSyncer {
     })
 
     // build the data property for this bit
-    const data: ConfluenceBitData = {
-      content: cleanHtml,
-    }
+    const data: ConfluenceBitData = { }
 
     // create or update a bit
     const bit = this.bits.find(bit => bit.id === id)

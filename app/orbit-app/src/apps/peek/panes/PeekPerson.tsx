@@ -1,16 +1,16 @@
-import * as React from 'react'
 import { view } from '@mcro/black'
-import { OrbitIcon } from '../../../views/OrbitIcon'
-import { BitRepository } from '../../../repositories'
-import { SubTitle, RoundButton } from '../../../views'
-import { OrbitCardMasonry } from '../../../views/OrbitCardMasonry'
-import { PeekPaneProps } from '../PeekPaneProps'
-import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
-import { Carousel } from '../../../components/Carousel'
-import { App } from '@mcro/stores'
-import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
-import { trace } from 'mobx'
+import { SlackPersonData } from '@mcro/models/_'
+import { App } from '@mcro/stores'
+import * as React from 'react'
+import { Carousel } from '../../../components/Carousel'
+import { BitRepository } from '../../../repositories'
+import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
+import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
+import { RoundButton, SubTitle } from '../../../views'
+import { OrbitCardMasonry } from '../../../views/OrbitCardMasonry'
+import { OrbitIcon } from '../../../views/OrbitIcon'
+import { PeekPaneProps } from '../PeekPaneProps'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
@@ -170,8 +170,8 @@ export class PeekPerson extends React.Component<
     }
     // @ts-ignore
     const setting = settings.slack
-    if (!setting || !person || !person.data || !person.data.profile) {
-      console.log('no person or person.data.profile?', person)
+    if (!setting || !person) {
+      console.log('no person?', person)
       return children({})
     }
     return children({
@@ -186,12 +186,12 @@ export class PeekPerson extends React.Component<
       content: (
         <Frame>
           <CardContent>
-            <Avatar src={person.data.profile.image_512} />
+            <Avatar src={person.photo} />
             <Info>
               <Name>{person.name}</Name>
               <br />
-              <Email href={`mailto:${person.data.email}`}>
-                {person.data.email}
+              <Email href={`mailto:${person.email}`}>
+                {person.email}
               </Email>
               <br />
               <Links>
@@ -199,7 +199,7 @@ export class PeekPerson extends React.Component<
                   icon="slack"
                   href={`slack://user?team=${
                     1 /* setting.values.oauth.info.team.id */
-                  }&id=${person.data.id}`}
+                  }&id=${person.integrationId}`}
                 >
                   Slack
                 </IntegrationButton>
@@ -217,7 +217,7 @@ export class PeekPerson extends React.Component<
             <FadeMapRight />
             <MapImg
               src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
-                person.data.tz
+                (person.data as SlackPersonData).tz
               }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
             />
           </Map>

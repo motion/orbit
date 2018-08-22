@@ -51,16 +51,17 @@ export class Dropdown extends React.Component<Props> {
           arrowSize={12}
           distance={4}
           target={
-            <Button
-              if={!noWrap}
-              glow={false}
-              iconAfter
-              icon={arrow}
-              borderRadius={16}
-              {...buttonProps}
-            >
-              {children}
-            </Button>
+            noWrap ? null : (
+              <Button
+                glow={false}
+                iconAfter
+                icon={arrow}
+                borderRadius={16}
+                {...buttonProps}
+              >
+                {children}
+              </Button>
+            )
           }
           {...popoverProps}
         >

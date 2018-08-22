@@ -17,7 +17,6 @@ module.exports = function(context, givenOpts) {
         regenerator: false,
       }),
       plug('@mcro/gloss-displaynames'),
-      plug('@mcro/babel-plugin-if'),
       plug('@babel/plugin-proposal-export-default-from'),
       plug('@babel/plugin-proposal-class-properties', {
         loose: true,

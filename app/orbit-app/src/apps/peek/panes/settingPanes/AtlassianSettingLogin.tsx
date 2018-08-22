@@ -193,36 +193,34 @@ export class AtlassianSettingLogin extends React.Component<
             <Views.VertSpace />
             <UI.ListRow>
               <UI.View flex={1}>
-                <Views.Link
-                  if={store.existingSetting}
-                  onClick={store.importExisting}
-                >
-                  Import from {capitalize(store.existingSetting.type)}.
-                </Views.Link>
+                {!!store.existingSetting && (
+                  <Views.Link onClick={store.importExisting}>
+                    Import from {capitalize(store.existingSetting.type)}.
+                  </Views.Link>
+                )}
               </UI.View>
               <UI.Theme theme={buttonThemes[store.status] || '#4C36C4'}>
-                <UI.Button
-                  if={!store.status || store.status === Statuses.FAIL}
-                  onClick={store.save}
-                >
-                  Save
-                </UI.Button>
-                <UI.Button if={store.status === Statuses.LOADING}>
-                  Saving...
-                </UI.Button>
-                <UI.Button
-                  if={store.status === Statuses.SUCCESS}
-                  onClick={store.addIntegration}
-                >
-                  Add Integration
-                </UI.Button>
+                {!store.status ||
+                  (store.status === Statuses.FAIL && (
+                    <UI.Button onClick={store.save}>Save</UI.Button>
+                  ))}
+                {store.status === Statuses.LOADING && (
+                  <UI.Button>Saving...</UI.Button>
+                )}
+                {store.status === Statuses.SUCCESS && (
+                  <UI.Button onClick={store.addIntegration}>
+                    Add Integration
+                  </UI.Button>
+                )}
               </UI.Theme>
             </UI.ListRow>
             <Views.VertSpace />
-            <Message if={store.error}>{store.error}</Message>
-            <Message if={store.status === Statuses.SUCCESS}>
-              Looks good! We can login to your account successfully.
-            </Message>
+            {store.error && <Message>{store.error}</Message>}
+            {store.status === Statuses.SUCCESS && (
+              <Message>
+                Looks good! We can login to your account successfully.
+              </Message>
+            )}
           </UI.Col>
         </UI.Col>
       </UI.Col>

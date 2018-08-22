@@ -891,13 +891,14 @@ export class Popover extends React.PureComponent<PopoverProps> {
             isOpen={showPopover}
             isClosing={closing}
           >
-            <Overlay
-              if={overlay}
-              forwardRef={this.overlayRef}
-              isShown={showPopover && !closing}
-              onClick={e => this.handleOverlayClick(e)}
-              overlay={overlay}
-            />
+            {!!overlay && (
+              <Overlay
+                forwardRef={this.overlayRef}
+                isShown={showPopover && !closing}
+                onClick={e => this.handleOverlayClick(e)}
+                overlay={overlay}
+              />
+            )}
             <PopoverWrap
               {...popoverProps}
               isOpen={!closing && !!showPopover}
@@ -919,26 +920,27 @@ export class Popover extends React.PureComponent<PopoverProps> {
                 maxHeight,
               }}
             >
-              <ArrowContain
-                if={!noArrow}
-                style={{
-                  top: arrowTop,
-                  marginLeft: arrowLeft,
-                  zIndex: 100000000000, // above any shadows
-                }}
-              >
-                <Arrow
-                  background={
-                    typeof background === 'string' &&
-                    background !== 'transparent'
-                      ? background
-                      : null
-                  }
-                  size={arrowSize}
-                  towards={INVERSE[direction]}
-                  boxShadow={getShadow(shadow, elevation)}
-                />
-              </ArrowContain>
+              {!noArrow && (
+                <ArrowContain
+                  style={{
+                    top: arrowTop,
+                    marginLeft: arrowLeft,
+                    zIndex: 100000000000, // above any shadows
+                  }}
+                >
+                  <Arrow
+                    background={
+                      typeof background === 'string' &&
+                      background !== 'transparent'
+                        ? background
+                        : null
+                    }
+                    size={arrowSize}
+                    towards={INVERSE[direction]}
+                    boxShadow={getShadow(shadow, elevation)}
+                  />
+                </ArrowContain>
+              )}
               <SizedSurface sizeRadius flex={1} {...props}>
                 {typeof children === 'function'
                   ? children(showPopover)

@@ -12,30 +12,33 @@ export const WindowControls = ({
 }) => {
   return (
     <>
-      <ControlButton
-        if={onClose}
-        icon="x"
-        onClick={onClose}
-        background="#ED6C60"
-        {...itemProps}
-        {...closeProps}
-      />
-      <ControlButton
-        if={onMax}
-        onClick={onMax}
-        icon="y"
-        background="#F6BE4F"
-        {...itemProps}
-        {...maxProps}
-      />
-      <ControlButton
-        if={onMin}
-        onClick={onMin}
-        icon="z"
-        background="#62C554"
-        {...itemProps}
-        {...minProps}
-      />
+      {!!onClose && (
+        <ControlButton
+          icon="x"
+          onClick={onClose}
+          background="#ED6C60"
+          {...itemProps}
+          {...closeProps}
+        />
+      )}
+      {!!onMax && (
+        <ControlButton
+          onClick={onMax}
+          icon="y"
+          background="#F6BE4F"
+          {...itemProps}
+          {...maxProps}
+        />
+      )}
+      {!!onMin && (
+        <ControlButton
+          onClick={onMin}
+          icon="z"
+          background="#62C554"
+          {...itemProps}
+          {...minProps}
+        />
+      )}
     </>
   )
 }

@@ -215,53 +215,55 @@ export class ListItem extends React.Component<ItemProps> {
         after={below}
         {...props}
       >
-        <Before if={before} {...beforeProps}>
-          {before}
-        </Before>
+        {!!before && <Before {...beforeProps}>{before}</Before>}
         <Content overflowHidden={after || before}>
-          <Above if={primary || secondary || date}>
-            {beforePrimary}
-            <Prop if={primary || secondary}>
-              <Text
-                wordWrap="break-word"
-                fontSize={fontSize}
-                fontWeight={fontWeight}
-                size={size}
-                editable={editable}
-                autoselect={autoselect}
-                onFinishEdit={onFinishEdit}
-                ellipse={primaryEllipse}
-                {...primaryProps}
-              >
-                {primary}
-              </Text>
-              <Text
-                if={secondary || date}
-                size={size * 0.85}
-                alpha={0.7}
-                ellipse
-                {...secondaryProps}
-              >
-                <ListDate if={date}>{date}</ListDate>
-                <Middot if={date && secondary}> &middot; </Middot>
-                {secondary}
-              </Text>
-            </Prop>
-          </Above>
+          {!!(primary || secondary || date) && (
+            <Above>
+              {beforePrimary}
+              {!!(primary || secondary) && (
+                <Prop>
+                  <Text
+                    wordWrap="break-word"
+                    fontSize={fontSize}
+                    fontWeight={fontWeight}
+                    size={size}
+                    editable={editable}
+                    autoselect={autoselect}
+                    onFinishEdit={onFinishEdit}
+                    ellipse={primaryEllipse}
+                    {...primaryProps}
+                  >
+                    {primary}
+                  </Text>
+                  {!!(secondary || date) && (
+                    <Text
+                      size={size * 0.85}
+                      alpha={0.7}
+                      ellipse
+                      {...secondaryProps}
+                    >
+                      {!!date && <ListDate>{date}</ListDate>}
+                      {!!(date && secondary) && <Middot> &middot; </Middot>}
+                      {secondary}
+                    </Text>
+                  )}
+                </Prop>
+              )}
+            </Above>
+          )}
           {!areChildrenString && <div>{children}</div>}
-          <Text
-            if={areChildrenString}
-            size={size * 0.9}
-            alpha={0.6}
-            ellipse={childrenEllipse}
-            {...childrenProps}
-          >
-            {children}
-          </Text>
+          {areChildrenString && (
+            <Text
+              size={size * 0.9}
+              alpha={0.6}
+              ellipse={childrenEllipse}
+              {...childrenProps}
+            >
+              {children}
+            </Text>
+          )}
         </Content>
-        <After if={after} {...afterProps}>
-          {after}
-        </After>
+        {!!after && <After {...afterProps}>{after}</After>}
       </SizedSurface>
     )
   }

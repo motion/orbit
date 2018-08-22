@@ -10,7 +10,7 @@ type ListRowProps = {
   active?: number
   defaultActive?: number
   controlled?: boolean
-  items: Array<React.ReactNode | { text?: string; id?: string; icon?: string }>
+  items?: Array<React.ReactNode | { text?: string; id?: string; icon?: string }>
   children: React.ReactNode
   label: React.ReactNode
   onChange?: Function
@@ -79,13 +79,11 @@ export class ListRow extends React.Component<ListRowProps> {
       spaced
         ? {}
         : {
-            uiContext: {
-              ...uiContext,
-              inSegment: {
-                first: index === 0,
-                last: index === length - 1,
-                index,
-              },
+            ...uiContext,
+            inSegment: {
+              first: index === 0,
+              last: index === length - 1,
+              index,
             },
           }
 

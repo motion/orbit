@@ -49,17 +49,17 @@ class PeekPageInner extends React.Component<Props> {
     if (!peekStore.state) {
       return null
     }
-    const { item, model, peekId } = peekStore.state
+    const { item, model } = peekStore.state
     const type = (item && capitalize(item.type)) || 'Empty'
     const PeekContentsView = PeekPanes[type] as PeekPane
     if (!PeekContentsView) {
       console.error('none', type)
       return <div>no pane found</div>
     }
-    console.log('render with id', peekId)
+    console.log('render peek page', model.id, model)
     return (
       <PeekContentsView
-        key={peekId}
+        key={model.id}
         item={item}
         model={model}
         appStore={appStore}

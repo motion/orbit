@@ -16,6 +16,7 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
+import { UIContext } from './helpers/contexts'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -58,7 +59,7 @@ export type SurfaceProps = CSSPropertySet & {
   theme?: string
   tooltip?: string
   tooltipProps?: Object
-  uiContext?: boolean
+  uiContext?: { inSegment?: { first: boolean; last: boolean; index: number } }
   width?: number
   alpha?: number
   dimmed?: boolean
@@ -112,7 +113,19 @@ const SurfaceFrame = view(View, {
 
 SurfaceFrame.theme = props => {
   const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
-
+  // support being inside a segmented list
+  let segmentedStyle: any
+  if (props.uiContext && props.uiContext.inSegment) {
+    const { inSegment } = props.uiContext
+    segmentedStyle = {}
+    if (inSegment.first) {
+      segmentedStyle.borderRightRadius = 0
+      segmentedStyle.borderRightWidth = 0
+    }
+    if (inSegment.last) {
+      segmentedStyle.borderLeftRadius = 0
+    }
+  }
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -157,6 +170,7 @@ SurfaceFrame.theme = props => {
     ...themeStylesFromProps,
     ...propsToTextSize(props),
     ...chromelessStyle,
+    ...segmentedStyle,
   }
   return alphaColor(surfaceStyles, props.alpha)
 }
@@ -210,7 +224,7 @@ const baseIconStyle = {
 // @ts-ignore
 @attachTheme
 @view.ui
-export class Surface extends React.Component<SurfaceProps> {
+export class SurfaceInner extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,
     size: 1,
@@ -339,3 +353,9 @@ export class Surface extends React.Component<SurfaceProps> {
     )
   }
 }
+
+export const Surface = props => (
+  <UIContext.Consumer>
+    {uiContext => <SurfaceInner uiContext={uiContext} {...props} />}
+  </UIContext.Consumer>
+)

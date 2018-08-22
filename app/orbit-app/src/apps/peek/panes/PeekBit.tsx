@@ -44,7 +44,8 @@ BottomFloat.theme = ({ theme }) => ({
 })
 
 const HeadSide = view({
-  width: 80,
+  minWidth: 80,
+  padding: [0, 15],
   alignItems: 'center',
   justifyContent: 'center',
 })
@@ -94,32 +95,34 @@ export const PeekBit = ({
               padding: [5, 10],
               height: 42,
             }}
-            before={
-              <HeadSide>
-                {!!icon && (
-                  <UI.Button
-                    onClick={() => {
-                      App.actions.open(locationLink)
-                      App.actions.closeOrbit()
-                    }}
-                    circular
-                    icon={<OrbitIcon icon={icon} size={16} />}
-                  />
-                )}
-              </HeadSide>
-            }
+            before={<HeadSide />}
             after={
               <HeadSide>
                 {!!icon && (
-                  <UI.Button
-                    onClick={() => {
-                      App.actions.open(desktopLink || webLink)
-                      App.actions.closeOrbit()
+                  <UI.ListRow
+                    itemProps={{
+                      iconSize: 12,
+                      sizeRadius: 2,
+                      sizePadding: 1.4,
                     }}
-                    circular
-                    icon="link"
-                    iconSize={14}
-                  />
+                  >
+                    <UI.Button
+                      onClick={() => {
+                        App.actions.open(locationLink)
+                        App.actions.closeOrbit()
+                      }}
+                      icon={<OrbitIcon icon={icon} size={16} />}
+                      tooltip={location}
+                    />
+                    <UI.Button
+                      onClick={() => {
+                        App.actions.open(desktopLink || webLink)
+                        App.actions.closeOrbit()
+                      }}
+                      tooltip="Open"
+                      icon="link"
+                    />
+                  </UI.ListRow>
                 )}
               </HeadSide>
             }

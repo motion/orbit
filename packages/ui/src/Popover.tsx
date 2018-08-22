@@ -74,6 +74,7 @@ export type PopoverProps = CSSPropertySet & {
   shadow?: boolean | string
   style?: Object
   elevation?: number
+  ignoreSegment?: boolean
 }
 
 const PopoverContainer = view({
@@ -851,6 +852,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       shadow,
       style,
       elevation,
+      ignoreSegment,
       ...props
     } = this.props
     const {
@@ -941,7 +943,12 @@ export class Popover extends React.PureComponent<PopoverProps> {
                   />
                 </ArrowContain>
               )}
-              <SizedSurface sizeRadius flex={1} {...props}>
+              <SizedSurface
+                sizeRadius
+                flex={1}
+                ignoreSegment={ignoreSegment}
+                {...props}
+              >
                 {typeof children === 'function'
                   ? children(showPopover)
                   : children}

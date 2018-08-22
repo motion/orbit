@@ -115,15 +115,17 @@ SurfaceFrame.theme = props => {
   const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   // support being inside a segmented list
   let segmentedStyle: any
-  if (props.uiContext && props.uiContext.inSegment) {
-    const { inSegment } = props.uiContext
-    segmentedStyle = {}
-    if (inSegment.first) {
-      segmentedStyle.borderRightRadius = 0
-      segmentedStyle.borderRightWidth = 0
-    }
-    if (inSegment.last) {
-      segmentedStyle.borderLeftRadius = 0
+  if (!props.ignoreSegment) {
+    if (props.uiContext && props.uiContext.inSegment) {
+      const { inSegment } = props.uiContext
+      segmentedStyle = {}
+      if (inSegment.first) {
+        segmentedStyle.borderRightRadius = 0
+        segmentedStyle.borderRightWidth = 0
+      }
+      if (inSegment.last) {
+        segmentedStyle.borderLeftRadius = 0
+      }
     }
   }
   // circular
@@ -343,6 +345,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
               arrowSize={10}
               delay={400}
               popoverProps={POPOVER_PROPS}
+              ignoreSegment
               {...tooltipProps}
             >
               {tooltip}

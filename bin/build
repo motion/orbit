@@ -7,7 +7,7 @@ if [ "$(realpath .)" = "$ROOT" ]; then
   # build
   if [ "$1" = "" ]; then
     ARGS=${@:1}
-    (cd app && tsc --build $ARGS) &
+    (cd app && tsc --build $ARGS)
     (bin/in ui npm run build) &
     (bin/in store-hmr npm run build) &
     wait

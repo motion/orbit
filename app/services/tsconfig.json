@@ -12,6 +12,7 @@
     { "path": "../../packages/constants" },
     { "path": "../../packages/helpers" },
     { "path": "../../packages/oauth-strategies" },
-    { "path": "../../packages/r2" }
+    { "path": "../../packages/r2" },
+    { "path": "../../packages/config" }
   ]
 }

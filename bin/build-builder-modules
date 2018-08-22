@@ -2,6 +2,8 @@
 
 # because tsc errors
 set +e
+(cd packages/build && npm run build) &
+wait
 (cd packages/css && npm run build) &
 (cd packages/color && npm run build) &
 wait

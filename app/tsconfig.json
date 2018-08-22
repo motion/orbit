@@ -2,7 +2,7 @@
   "files": [],
   "references": [
     { "path": "./orbit-desktop" },
-    { "path": "./orbit-electron" }
-    { "path": "./orbit" },
+    { "path": "./orbit-electron" },
+    { "path": "./orbit" }
   ]
 }

@@ -3,7 +3,8 @@ import { ResolveConversation } from './resolveBits/ResolveConversation'
 import { ResolveDocument } from './resolveBits/ResolveDocument'
 import { ResolveMail } from './resolveBits/ResolveMail'
 import { ResolveTask } from './resolveBits/ResolveTask'
-import { ItemResolverProps } from '../ItemResolver';
+import { ItemResolverProps } from '../ItemResolver'
+import { Bit } from '../../../../models/src'
 
 const results = {
   slack: {
@@ -26,23 +27,30 @@ const results = {
   },
 }
 
-export const ResolveBit = ({ bit, children, searchTerm, ...props }: ItemResolverProps) => {
-  const resolveIntegration = results[bit.integration]
-  const Resolver = resolveIntegration && resolveIntegration[bit.type]
+export type BitItemResolverProps = ItemResolverProps & { bit: Bit }
+
+export const ResolveBit = ({
+  model,
+  children,
+  searchTerm,
+  ...props
+}: ItemResolverProps & { model: Bit }) => {
+  const resolveIntegration = results[model.integration]
+  const Resolver = resolveIntegration && resolveIntegration[model.type]
   if (!Resolver) {
-    console.log('no resolver for', bit.integration, bit.type)
+    console.log('no resolver for', model.integration, model.type)
     return () => <div>no resolver</div>
   }
   return (
-    <Resolver bit={bit} searchTerm={searchTerm} {...props}>
+    <Resolver bit={model} searchTerm={searchTerm} {...props}>
       {bitProps =>
         children({
-          id: bit.id,
+          id: model.id,
           type: 'bit',
-          subType: bit.type,
-          integration: bit.integration,
-          createdAt: bit.bitCreatedAt,
-          updatedAt: bit.bitUpdatedAt,
+          subType: model.type,
+          integration: model.integration,
+          createdAt: model.bitCreatedAt,
+          updatedAt: model.bitUpdatedAt,
           ...bitProps,
         })
       }

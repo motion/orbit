@@ -320,7 +320,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
     store.isSelected
     return (
       <ItemResolver
-        bit={bit}
+        model={bit}
         item={item}
         isExpanded={isExpanded}
         searchTerm={searchTerm}

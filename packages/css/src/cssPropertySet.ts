@@ -600,6 +600,7 @@ type transformSyntax = {
   y?: number | string
   z?: number | string
   rotate?: string
+  scale?: number | string
   scaleX?: number | string
   scaleY?: number | string
   scaleZ?: number | string

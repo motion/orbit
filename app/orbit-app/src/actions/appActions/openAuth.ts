@@ -1,6 +1,6 @@
-import { API_URL } from '../../constants'
 import { open } from './open'
+import { getConfig } from '@mcro/config'
 
 export async function openAuth(integrationName: string) {
-  open(`${API_URL}/auth/${integrationName}`)
+  open(`${getConfig().privateUrl}/auth/${integrationName}`)
 }

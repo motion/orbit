@@ -2,6 +2,7 @@ import { main } from './main'
 import { setConfig } from '@mcro/config'
 
 setConfig({
+  privateUrl: 'http://private.tryorbit.com',
   version: '0',
   ports: {
     server: 3001,

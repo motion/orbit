@@ -92,6 +92,10 @@ class SwiftStore {
     }
     this.ws.onclose = () => {
       this.isOpen = false
+      // reconnecting websocket reconnect fix: https://github.com/pladaria/reconnecting-websocket/issues/60
+      if (this.ws._shouldReconnect) {
+        this.ws._connect()
+      }
     }
     this.ws.onerror = err => {
       if (err.preventDefault) {

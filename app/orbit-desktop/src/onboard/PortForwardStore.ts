@@ -1,16 +1,15 @@
-import { store, react } from '@mcro/black'
-import forwardPort from 'http-port-forward'
-import { App } from '@mcro/stores'
-import hostile_ from 'hostile'
+import { store, react, ensure } from '@mcro/black'
+import { App, Desktop } from '@mcro/stores'
 import { getConfig } from '../config'
-import { promisifyAll } from 'sb-promisify'
-import sudoPrompt_ from 'sudo-prompt'
 import { logger } from '@mcro/logger'
+// import Sudoer from 'electron-sudo'
+import sudoPrompt from 'sudo-prompt'
+import * as Path from 'path'
+import { getConfig as getGlobalConfig } from '@mcro/config'
 
 const log = logger('desktop')
-const hostile = promisifyAll(hostile_)
-const sudoPrompt = promisifyAll(sudoPrompt_)
 const Config = getConfig()
+const options = { name: 'Orbit Proxy' }
 
 // @ts-ignore
 @store
@@ -20,27 +19,70 @@ export class PortForwardStore {
   forwardOnAccept = react(
     () => App.state.acceptsForwarding,
     accepts => {
-      react.ensure('accepts', accepts)
-      react.ensure('not forwarded', !this.isForwarded)
+      ensure('accepts', accepts)
+      ensure('not forwarded', !this.isForwarded)
+      log('Starting orbit proxy...')
       this.forwardPort()
-      this.setupHosts()
     },
   )
 
-  forwardPort = () => {
-    const port = Config.server.port
-    forwardPort(80, port, { isPublicAccess: true })
-    this.isForwarded = true
+  forwardPort = async () => {
+    const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
+    log(`Running proxy script: ${pathToOrbitProxy}`)
+
+    const { port } = Config.server
+    const GlobalConfig = getGlobalConfig()
+    const host = GlobalConfig.privateUrl.replace('http://', '')
+
+    sudoPrompt.exec(
+      `node ${pathToOrbitProxy} --port ${port} --host ${host}`,
+      options,
+      (err, stdout, stderr) => {
+        if (err) {
+          const message = `${err.message}`
+          if (message.indexOf('EADDRINUSE')) {
+            // handle error!
+            log('OrbitProxy in use error', message)
+            // TODO: we can run lsof or similar and show what app is using it and show instructions.
+            // they only need to forward during oauth so we could tell them its temporary too.
+            Desktop.sendMessage(
+              App,
+              App.messages.FORWARD_STATUS,
+              'Port already in use: 80',
+            )
+          } else {
+            // handle error!
+            log('OrbitProxy', err)
+            Desktop.sendMessage(
+              App,
+              App.messages.FORWARD_STATUS,
+              message.slice(0, 400),
+            )
+          }
+        } else {
+          log('OrbitProxy', stdout, stderr)
+        }
+      },
+    )
+
+    // const sudoer = new Sudoer(options)
+    // const proc = await sudoer.spawn('node', [pathToOrbitProxy], {
+    //   env: {
+    //     HOST: host,
+    //     PORT: port,
+    //   },
+    // })
+    // this.handleProcess(proc)
+
+    log('Launched orbit Proxy')
   }
 
-  setupHosts = async () => {
-    const lines = await hostile.get(true)
-    const exists = lines.map(line => line[1]).indexOf(Config.server.host) > -1
-    if (!exists) {
-      log('Adding host entry', Config.server.host)
-      await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Config.server.host}`, {
-        name: 'Orbit',
-      })
-    }
+  private handleProcess = proc => {
+    proc.stdout.on('data', data => {
+      log(`OrbitProxyProcess: ${data}`)
+    })
+    proc.stderr.on('data', data => {
+      log(`OrbitProxyProcess: ${data}`)
+    })
   }
 }

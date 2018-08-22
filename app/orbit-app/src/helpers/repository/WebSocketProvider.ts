@@ -25,6 +25,12 @@ export class WebSocketProvider {
     }
     this.websocket.onclose = () => {
       console.log('Provider closed')
+      // reconnecting websocket reconnect fix: https://github.com/pladaria/reconnecting-websocket/issues/60
+      // @ts-ignore
+      if (this.websocket._shouldReconnect) {
+        // @ts-ignore
+        this.websocket._connect()
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 import { SubPane } from '../../SubPane'
-import { view, compose } from '@mcro/black'
+import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
@@ -10,7 +10,8 @@ import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettings
 import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SubTitle, Title } from '../../../../views'
+import { Title } from '../../../../views'
+import { getConfig } from '@mcro/config'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -20,7 +21,7 @@ type Props = {
 
 const sidePad = 16
 const controlsHeight = 50
-const framePad = 25
+const framePad = 30
 const numFrames = 3
 // subtract padding from parent
 const frameWidth = ORBIT_WIDTH - sidePad * 2
@@ -115,16 +116,61 @@ const buttonText = ['Begin', 'Next', 'Done!']
 class OnboardStore {
   props: Props
 
+  acceptedMessage = ''
+  accepted = null
   curFrame = 0
-  lastFrame = () => this.curFrame--
 
+  didMount() {
+    this.checkAlreadyProxied()
+  }
+
+  async checkAlreadyProxied() {
+    try {
+      const testUrl = `${getConfig().privateUrl}/hello`
+      console.log(`Checking testurl: ${testUrl}`)
+      const res = await fetch(testUrl).then(res => res.text())
+      if (res && res === 'hello world') {
+        // already proxied!
+        this.accepted = true
+      }
+    } catch (err) {
+      console.log('error seeing if already proxied')
+    }
+  }
+
+  prevFrame = () => this.curFrame--
   nextFrame = async () => {
     // before incrementing, run some actions for:
     // LEAVING curFrame page...
 
-    if (this.curFrame === 1) {
-      // await acceptsforwarding...
-      // App.setState({ acceptsForwarding: true })
+    if (this.curFrame === 0) {
+      await this.checkAlreadyProxied()
+      if (this.accepted !== true) {
+        // await acceptsforwarding... TODO should be message
+        App.setState({ acceptsForwarding: false })
+        await sleep(1)
+        App.setState({ acceptsForwarding: true })
+        const accepted = await new Promise(res => {
+          const dispose = App.onMessage(App.messages.FORWARD_STATUS, status => {
+            console.log('got status', status)
+            dispose()
+            if (status === 'accepted') {
+              // show message for just a bit
+              sleep(1500).then(() => {
+                res(true)
+              })
+            } else {
+              this.acceptedMessage = status
+              res(false)
+            }
+          })
+        })
+        this.accepted = accepted
+        if (!accepted) {
+          console.log('not accepting, not advancing frame...')
+          return
+        }
+      }
     }
 
     if (this.curFrame === 2) {
@@ -175,26 +221,62 @@ export const OrbitOnboard = decorator(
       <SubPane name="onboard">
         <FrameAnimate curFrame={store.curFrame}>
           <OnboardFrame>
-            <Centered>
-              <Text size={2.5} fontWeight={600}>
-                Hello
-              </Text>
-              <View height={5} />
-              <Text size={1.5} alpha={0.5}>
-                Welcome to Orbit
-              </Text>
-              <View height={20} />
-              <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
-                Orbit is the first ever completely private search platform.
-                <br />
-                <br />
-                To work, Orbit sets up a proxy to direct our servers at{' '}
-                <strong>auth.tryorbit.com</strong> to your local computer.{' '}
-                <a href="http://tryorbit.com/auth">
-                  Learn more about how this works
-                </a>.
-              </Text>
-            </Centered>
+            {store.accepted === null && (
+              <Centered>
+                <Text size={2.5} fontWeight={600}>
+                  Hello
+                </Text>
+                <View height={5} />
+                <Text size={1.5} alpha={0.5}>
+                  Welcome to Orbit
+                </Text>
+                <View height={20} />
+                <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                  Orbit is the first ever completely private search platform.
+                  <br />
+                  <br />
+                  To work, Orbit sets up a proxy to direct our servers at{' '}
+                  <strong>{getConfig().privateUrl}</strong> to your local
+                  computer.{' '}
+                  <a href="http://tryorbit.com/auth">
+                    Learn more about how this works
+                  </a>.
+                </Text>
+              </Centered>
+            )}
+            {store.accepted === false && (
+              <Centered>
+                <Text size={1.5} alpha={0.5}>
+                  Error setting up proxy
+                </Text>
+                <View height={20} />
+                <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                  Orbit had a problem setting up a proxy on your machine. Feel
+                  free to get in touch with us if you are having issues:
+                  <a href="mailto:hi@tryorbit.com">hi@tryorbit.com</a>.
+                  <br />
+                  <br />
+                  Error message:
+                  {store.acceptedMessage}
+                </Text>
+              </Centered>
+            )}
+            {store.accepted === true && (
+              <Centered>
+                <Text size={2.2} fontWeight={600}>
+                  Success
+                </Text>
+                <View height={5} />
+                <Text size={1.5} alpha={0.5} width="80%">
+                  Orbit was able to set up a private server to handle your
+                  authentication.
+                </Text>
+                <View height={25} />
+                <Text size={1.5} alpha={0.5} width="80%">
+                  Now, let's get you set up.
+                </Text>
+              </Centered>
+            )}
           </OnboardFrame>
           <OnboardFrame>
             <Title size={1.2} fontWeight={600}>
@@ -241,7 +323,7 @@ export const OrbitOnboard = decorator(
         </FrameAnimate>
         <Controls>
           {store.curFrame > 1 && (
-            <Button chromeless onClick={store.lastFrame}>
+            <Button chromeless onClick={store.prevFrame}>
               Back
             </Button>
           )}

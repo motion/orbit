@@ -38,6 +38,9 @@ const exploreButton = {
   iconProps: {
     size: 12,
   },
+  hoverStyle: {
+    opacity: 0.5,
+  },
   activeStyle: {
     opacity: 1,
   },

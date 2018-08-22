@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ResolvePerson } from './resolve/ResolvePerson'
 import { ResolveBit } from './resolve/ResolveBit'
 import { ResolveEmpty } from './resolve/ResolveEmpty'
-import { Person, Bit } from '@mcro/models'
+import { Person, Bit, PersonBit } from '@mcro/models'
 import { AppStore } from '../stores/AppStore'
 import { AppStatePeekItem } from '@mcro/stores'
 import { ItemHideProps } from '../types/ItemHideProps'
@@ -26,7 +26,7 @@ export type ResolvedItem = {
 }
 
 export type ItemResolverProps = {
-  bit?: Bit
+  model?: Bit | Person | PersonBit
   item?: AppStatePeekItem
   appStore?: AppStore
   isExpanded?: boolean
@@ -37,19 +37,19 @@ export type ItemResolverProps = {
   hide?: ItemHideProps
 }
 
-export const ItemResolver = ({ bit, item, ...props }: ItemResolverProps) => {
+export const ItemResolver = ({ model, item, ...props }: ItemResolverProps) => {
   let Resolver
-  if (!bit) {
+  if (!model) {
     return null
   }
-  if (bit.target === 'person') {
+  if (model.target === 'person' || model.target === 'person-bit') {
     Resolver = ResolvePerson
   }
-  if (bit.target === 'bit') {
+  if (model.target === 'bit') {
     Resolver = ResolveBit
   }
   if (!Resolver) {
     Resolver = ResolveEmpty
   }
-  return <Resolver bit={bit} item={item} {...props} />
+  return <Resolver model={model} item={item} {...props} />
 }

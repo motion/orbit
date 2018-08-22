@@ -64,7 +64,7 @@ Card.theme = ({
   const disabledShadow = disableShadow ? 'none' : null
   card = {
     ...card,
-    padding: padding || 13,
+    padding: padding || 9,
     borderRadius: borderRadius || 9,
     background: background || theme.background,
     ...theme.card,
@@ -319,7 +319,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     store.isSelected
     return (
       <ItemResolver
-        bit={bit}
+        model={bit}
         item={item}
         isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}

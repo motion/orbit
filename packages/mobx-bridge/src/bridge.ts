@@ -235,6 +235,10 @@ class Bridge {
     }
     this._socket.onclose = () => {
       this._wsOpen = false
+      // reconnecting websocket reconnect fix: https://github.com/pladaria/reconnecting-websocket/issues/60
+      if (this._socket._shouldReconnect) {
+        this._socket._connect()
+      }
     }
     this._socket.onerror = err => {
       if (err.preventDefault) {
@@ -414,7 +418,7 @@ class Bridge {
       if (!this._wsOpen) {
         log('\n\n\nWaiting for open socket....\n\n\n')
         await this.onOpenSocket()
-        log('\n\n\Socket opened!\n\n\n')
+        log('\n\nSocket opened!\n\n\n')
       }
       this._socket.send(JSON.stringify({ message, to: Store.source }))
     }

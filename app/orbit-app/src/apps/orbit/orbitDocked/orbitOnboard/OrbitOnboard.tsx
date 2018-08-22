@@ -144,6 +144,7 @@ class OnboardStore {
     // LEAVING curFrame page...
 
     if (this.curFrame === 0) {
+      await this.checkAlreadyProxied()
       if (this.accepted !== true) {
         // await acceptsforwarding... TODO should be message
         App.setState({ acceptsForwarding: false })

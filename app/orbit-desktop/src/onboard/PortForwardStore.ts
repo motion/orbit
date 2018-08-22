@@ -1,4 +1,4 @@
-import { store, react } from '@mcro/black'
+import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { getConfig } from '../config'
 import { logger } from '@mcro/logger'
@@ -18,8 +18,8 @@ export class PortForwardStore {
   forwardOnAccept = react(
     () => App.state.acceptsForwarding,
     accepts => {
-      react.ensure('accepts', accepts)
-      react.ensure('not forwarded', !this.isForwarded)
+      ensure('accepts', accepts)
+      ensure('not forwarded', !this.isForwarded)
       log('Starting orbit proxy...')
       this.forwardPort()
     },
@@ -27,6 +27,7 @@ export class PortForwardStore {
 
   forwardPort = async () => {
     const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
+    log(`Running proxy script: ${pathToOrbitProxy}`)
     const proc = await sudoer.spawn('node', [pathToOrbitProxy], {
       env: {
         HOST: Config.server.host,
@@ -34,8 +35,11 @@ export class PortForwardStore {
       },
     })
     log('Launched orbit Proxy')
-    proc.output.stdout.on('data', data => {
-      console.log(`${data}`)
+    proc.stdout.on('data', data => {
+      log(`OrbitProxyProcess: ${data}`)
+    })
+    proc.stderr.on('data', data => {
+      log(`OrbitProxyProcess: ${data}`)
     })
   }
 }

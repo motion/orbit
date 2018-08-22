@@ -1,4 +1,4 @@
-module.exports = function(context, givenOpts) {
+module.exports = function(_, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
   const plug = (name, opts) => {
@@ -10,7 +10,6 @@ module.exports = function(context, givenOpts) {
   }
   const config = {
     plugins: [
-      // plug('babel-plugin-sitrep'),
       plug('react-hot-loader/babel'),
       plug('@babel/plugin-transform-runtime', {
         polyfill: false,
@@ -23,11 +22,6 @@ module.exports = function(context, givenOpts) {
       }),
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,
-      }),
-      plug('babel-plugin-root-import', {
-        rootPathPrefix: '~',
-        rootPathSuffix:
-          typeof opts.rootSuffix === 'undefined' ? 'src' : opts.rootSuffix,
       }),
       plug('babel-plugin-lodash'),
     ],
@@ -45,20 +39,3 @@ module.exports = function(context, givenOpts) {
   // console.log('babel config', config)
   return config
 }
-
-// plug(
-//   '@babel/preset-env',
-//   Object.assign(
-//     {
-//       // this could avoid building es6 altogether, but lets fix stack before testing
-//       modules: false,
-//       loose: true,
-//       useBuiltIns: 'entry',
-//       targets: opts.targets || {
-//         chrome: '45',
-//       },
-//       exclude: ['transform-regenerator', 'transform-async-to-generator'],
-//     },
-//     opts.env,
-//   ),
-// ),

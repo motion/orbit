@@ -24,11 +24,6 @@ module.exports = {
     'no-debugger': 'off',
     'babel/quotes': [1, 'single'],
   },
-  settings: {
-    'import/resolver': {
-      'babel-root-import': {},
-    },
-  },
   globals: {
     require: true,
     module: true,

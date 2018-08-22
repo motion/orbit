@@ -25,15 +25,15 @@ export const ResolvePerson = ({ children, bit }) => {
     id: bit.id,
     title: bit.name,
     type: 'person',
-    icon: bit.author.photo || 'users_square',
-    subtitle: !!bit.author.email,
+    icon: bit.photo || 'users_square',
+    subtitle: !!bit.email,
     date: bit.bitUpdatedAt,
     iconProps: {
       color: '#ccc',
     },
-    preview: !!bit.author.photo && (
+    preview: !!bit.photo && (
       <UI.Col flex={1}>
-        <Avatar src={bit.author.photo} />
+        <Avatar src={bit.photo} />
       </UI.Col>
     ),
   })

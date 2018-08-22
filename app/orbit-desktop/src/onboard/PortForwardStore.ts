@@ -32,7 +32,7 @@ export class PortForwardStore {
 
     const { port } = Config.server
     const GlobalConfig = getGlobalConfig()
-    const host = GlobalConfig.privateUrl.replace('https://', '')
+    const host = GlobalConfig.privateUrl.replace('http://', '')
 
     sudoPrompt.exec(
       `node ${pathToOrbitProxy} --port ${port} --host ${host}`,

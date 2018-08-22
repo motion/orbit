@@ -1,7 +1,7 @@
-import * as Helpers from '../../../helpers'
 import keywordExtract from '@mcro/keyword-extract'
 import * as _ from 'lodash'
 import { ItemResolverProps } from '../../ItemResolver'
+import { getHeader } from '../../../helpers'
 
 const options = {
   remove_digits: true,
@@ -19,7 +19,8 @@ export const ResolveMail = ({ bit, children }: ItemResolverProps) =>
     icon: 'gmail',
     webLink: bit.webLink,
     desktopLink: bit.desktopLink,
-    location: Helpers.getHeaderFromShort(bit),
+    // @ts-ignore
+    location: `${getHeader(bit.data.messages[0], 'from')}`,
     locationLink: bit.location.webLink,
     content: bit.body,
     preview: keywordExtract

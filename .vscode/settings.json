@@ -1,5 +1,4 @@
 {
   "git.ignoreLimitWarning": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "python.linting.enabled": false
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

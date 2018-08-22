@@ -3,6 +3,11 @@ import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { timeout } from '../../utils'
 
+const createDOMPurify = require('dompurify')
+const JSDOM = require('jsdom').JSDOM
+const window = (new JSDOM('')).window
+const DOMPurify = createDOMPurify(window)
+
 /**
  * Common utils for syncers.
  */
@@ -42,5 +47,27 @@ export class SyncerUtils {
       return this.loadPeople(settingId, log)
     })
   }
+
+  /**
+   * Strips HTML from the given HTML text content.
+   */
+  static stripHtml(value: string) {
+    if (!value) return ''
+
+    return DOMPurify.sanitize(value, { ALLOWED_TAGS: [] })
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/•/gi, '')
+      .trim()
+  }
+
+  /**
+   * Sanitizes given HTML text content.
+   */
+  static sanitizeHtml(value: string) {
+    if (!value) return ''
+
+    return DOMPurify.sanitize(value).trim()
+  }
+
 
 }

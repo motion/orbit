@@ -67,7 +67,7 @@ export class SlackUtils {
    * Finds all the mentioned people in the given slack messages.
    */
   static findMessageMentionedPeople(messages: SlackMessage[], allPeople: Person[]) {
-    const body = messages.map(message => message.text).join("")
+    const body = messages.map(message => message.text).join('')
     return allPeople.filter(person => new RegExp(`<@${person.integrationId}>`).test(body))
   }
 

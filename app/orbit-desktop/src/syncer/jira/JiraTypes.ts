@@ -11,7 +11,7 @@ export type JiraUser = {
   emailAddress: string
   displayName: string
   avatarUrls: {
-    "48x48": string
+    '48x48': string
   }
 }
 
@@ -60,9 +60,16 @@ export type JiraIssue = {
       name: string
       key: string
     }
-    comment: JiraComment[]
+    comment: {
+      total: number
+    }
     creator: JiraUser
     assignee: JiraUser
     reporter: JiraUser
   }
+  renderedFields: {
+    description: string
+  }
+  // custom properties
+  comments: JiraComment[]
 }

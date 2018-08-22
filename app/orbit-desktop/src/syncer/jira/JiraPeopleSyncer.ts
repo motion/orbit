@@ -33,7 +33,7 @@ export class JiraPeopleSyncer implements IntegrationSyncer {
 
     // we don't need some jira users, like system or bot users
     // so we are filtering them out
-    log("filter out users we don't need")
+    log('filter out users we don\'t need')
     const filteredUsers = allUsers.filter(user => this.checkUser(user))
     log('users were filtered out', filteredUsers)
 

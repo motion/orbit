@@ -28,13 +28,13 @@ export class ConfluenceLoader {
    *
    * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-get
    */
-  async loadContents(type?: "page"|"blogpost", start = 0, limit = 25): Promise<ConfluenceContent[]> {
+  async loadContents(type?: 'page'|'blogpost', start = 0, limit = 25): Promise<ConfluenceContent[]> {
 
     // without type specified we load everything
     if (!type) {
       return Promise.all([
-        ...(await this.loadContents("page", start, limit)),
-        ...(await this.loadContents("blogpost", start, limit)),
+        ...(await this.loadContents('page', start, limit)),
+        ...(await this.loadContents('blogpost', start, limit)),
       ])
     }
 

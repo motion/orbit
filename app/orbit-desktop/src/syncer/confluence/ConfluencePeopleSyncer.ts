@@ -36,7 +36,7 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
 
     // we don't need some confluence users, like system or bot users
     // so we are filtering them out
-    log("filter out users we don't need")
+    log('filter out users we don\'t need')
     const filteredUsers = allUsers.filter(member => this.checkUser(member))
     log('users were filtered out', filteredUsers)
 

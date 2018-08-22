@@ -1,5 +1,5 @@
 import { store, react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { getConfig } from '../config'
 import { logger } from '@mcro/logger'
 // import Sudoer from 'electron-sudo'
@@ -41,10 +41,22 @@ export class PortForwardStore {
         if (err) {
           if (err.indexOf('EADDRINUSE')) {
             // handle error!
-            log('OrbitProxy IN USE ERRR', err)
+            log('OrbitProxy in use error')
+            // TODO: we can run lsof or similar and show what app is using it and show instructions.
+            // they only need to forward during oauth so we could tell them its temporary too.
+            Desktop.sendMessage(
+              App,
+              App.messages.FORWARD_STATUS,
+              'Port already in use: 80',
+            )
           } else {
             // handle error!
             log('OrbitProxy', err)
+            Desktop.sendMessage(
+              App,
+              App.messages.FORWARD_STATUS,
+              err.slice(0, 400),
+            )
           }
         } else {
           log('OrbitProxy', stdout, stderr)

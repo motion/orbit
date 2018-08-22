@@ -116,6 +116,8 @@ const buttonText = ['Begin', 'Next', 'Done!']
 class OnboardStore {
   props: Props
 
+  acceptedMessage = ''
+  accepted = null
   curFrame = 0
   lastFrame = () => this.curFrame--
 
@@ -125,7 +127,22 @@ class OnboardStore {
 
     if (this.curFrame === 1) {
       // await acceptsforwarding...
-      // App.setState({ acceptsForwarding: true })
+      App.setState({ acceptsForwarding: true })
+      const accepted = await new Promise(res => {
+        const dispose = App.onMessage(App.messages.FORWARD_STATUS, status => {
+          dispose()
+          if (status === 'accepted') {
+            res(true)
+          } else {
+            this.acceptedMessage = status
+            res(false)
+          }
+        })
+      })
+      this.accepted = accepted
+      if (!accepted) {
+        return
+      }
     }
 
     if (this.curFrame === 2) {
@@ -176,27 +193,46 @@ export const OrbitOnboard = decorator(
       <SubPane name="onboard">
         <FrameAnimate curFrame={store.curFrame}>
           <OnboardFrame>
-            <Centered>
-              <Text size={2.5} fontWeight={600}>
-                Hello
-              </Text>
-              <View height={5} />
-              <Text size={1.5} alpha={0.5}>
-                Welcome to Orbit
-              </Text>
-              <View height={20} />
-              <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
-                Orbit is the first ever completely private search platform.
-                <br />
-                <br />
-                To work, Orbit sets up a proxy to direct our servers at{' '}
-                <strong>{getConfig().privateUrl}</strong> to your local
-                computer.{' '}
-                <a href="http://tryorbit.com/auth">
-                  Learn more about how this works
-                </a>.
-              </Text>
-            </Centered>
+            {store.accepted === null && (
+              <Centered>
+                <Text size={2.5} fontWeight={600}>
+                  Hello
+                </Text>
+                <View height={5} />
+                <Text size={1.5} alpha={0.5}>
+                  Welcome to Orbit
+                </Text>
+                <View height={20} />
+                <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                  Orbit is the first ever completely private search platform.
+                  <br />
+                  <br />
+                  To work, Orbit sets up a proxy to direct our servers at{' '}
+                  <strong>{getConfig().privateUrl}</strong> to your local
+                  computer.{' '}
+                  <a href="http://tryorbit.com/auth">
+                    Learn more about how this works
+                  </a>.
+                </Text>
+              </Centered>
+            )}
+            {store.accepted === false && (
+              <Centered>
+                <Text size={1.5} alpha={0.5}>
+                  Error setting up proxy
+                </Text>
+                <View height={20} />
+                <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                  Orbit had a problem setting up a proxy on your machine. Feel
+                  free to get in touch with us if you are having issues:
+                  <a href="mailto:hi@tryorbit.com">hi@tryorbit.com</a>.
+                  <br />
+                  <br />
+                  Error message:
+                  {store.acceptedMessage}
+                </Text>
+              </Centered>
+            )}
           </OnboardFrame>
           <OnboardFrame>
             <Title size={1.2} fontWeight={600}>

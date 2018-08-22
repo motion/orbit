@@ -35,7 +35,6 @@ And just to be safe, our servers disable logs and deny all requests. Learn more.
 - Fix empty profiles from gmail contacts import
 - Fix slack not showing usernames
 - Fix intra-peek clicking
-- Onboard fix final bugs
 - Onboard click tray to focus
 - Slack select all settings by default (syncer needs to respect settings/set them)
   - Toggle select all button in table view
@@ -72,6 +71,7 @@ And just to be safe, our servers disable logs and deny all requests. Learn more.
 
 ## Orbit 1.2 best guess
 
+- Management features
 - Better filtering by type/location
 - Attachment/file previews
 - Follow topics

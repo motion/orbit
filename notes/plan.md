@@ -9,6 +9,9 @@
 
 # Launch
 
+- reach out to various integration partners:
+  - spectrum
+
 ## Beta
 
 - Simple and nice signup process, sends email, downloads app

@@ -16,4 +16,3 @@ export class LocationEntity implements Location {
   desktopLink: string
 
 }
-

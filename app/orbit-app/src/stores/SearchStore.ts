@@ -37,10 +37,10 @@ const getSearchResults = async ({
 
   const andConditions: any = {}
   if (startDate) {
-    andConditions.bitCreatedAt = { $moreThan: startDate }
+    andConditions.bitCreatedAt = { $moreThan: startDate.getTime() }
   }
   if (endDate) {
-    andConditions.bitCreatedAt = { $lessThan: endDate }
+    andConditions.bitCreatedAt = { $lessThan: endDate.getTime() }
   }
   if (integrationFilters && integrationFilters.length) {
     andConditions.integration = { $in: integrationFilters }

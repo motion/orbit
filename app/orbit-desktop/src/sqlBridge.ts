@@ -1,5 +1,6 @@
 import { getConnection, getRepository } from 'typeorm'
 import { logger } from '@mcro/logger'
+import WebSocket = require('ws')
 
 const log = logger('sql-bridge')
 

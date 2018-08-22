@@ -41,9 +41,9 @@ export default class Server {
     const app = express()
     app.set('port', Config.server.port)
 
-    if (process.env.NODE_ENV !== 'development') {
-      app.use(morgan('dev'))
-    }
+    // if (process.env.NODE_ENV !== 'development') {
+    app.use(morgan('dev'))
+    // }
 
     this.app = app
 
@@ -69,9 +69,9 @@ export default class Server {
 
   async start() {
     // kill old processes
-    log(`Killing any old servers...`)
+    log('Killing any old servers...')
     await killPort(Config.server.port)
-    log(`Desktop listening!!!!!!!!!...`)
+    log('Desktop listening!!!!!!!!!...')
     this.app.listen(Config.server.port, () => {
       console.log('listening at port', Config.server.port)
     })
@@ -192,7 +192,7 @@ export default class Server {
           const values = req.user || req['currentUser']
           this.oauth.finishOauth(name, values)
           res.send(
-            `<html><head><title>Authentication Success</title></head><body>All done, closing...</body></html>`,
+            '<html><head><title>Authentication Success</title></head><body>All done, closing...</body></html>',
           )
         },
       )

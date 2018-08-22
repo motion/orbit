@@ -1,16 +1,14 @@
 import { store, react } from '@mcro/black'
-import forwardPort from 'http-port-forward'
 import { App } from '@mcro/stores'
-import hostile_ from 'hostile'
 import { getConfig } from '../config'
-import { promisifyAll } from 'sb-promisify'
-import sudoPrompt_ from 'sudo-prompt'
 import { logger } from '@mcro/logger'
+import Sudoer from 'electron-sudo'
+import * as Path from 'path'
 
 const log = logger('desktop')
-const hostile = promisifyAll(hostile_)
-const sudoPrompt = promisifyAll(sudoPrompt_)
 const Config = getConfig()
+const options = { name: 'Orbit Proxy' }
+const sudoer = new Sudoer(options)
 
 // @ts-ignore
 @store
@@ -22,25 +20,22 @@ export class PortForwardStore {
     accepts => {
       react.ensure('accepts', accepts)
       react.ensure('not forwarded', !this.isForwarded)
+      log('Starting orbit proxy...')
       this.forwardPort()
-      this.setupHosts()
     },
   )
 
-  forwardPort = () => {
-    const port = Config.server.port
-    forwardPort(80, port, { isPublicAccess: true })
-    this.isForwarded = true
-  }
-
-  setupHosts = async () => {
-    const lines = await hostile.get(true)
-    const exists = lines.map(line => line[1]).indexOf(Config.server.host) > -1
-    if (!exists) {
-      log('Adding host entry', Config.server.host)
-      await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Config.server.host}`, {
-        name: 'Orbit',
-      })
-    }
+  forwardPort = async () => {
+    const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
+    const proc = await sudoer.spawn('node', [pathToOrbitProxy], {
+      env: {
+        HOST: Config.server.host,
+        PORT: Config.server.port,
+      },
+    })
+    log('Launched orbit Proxy')
+    proc.output.stdout.on('data', data => {
+      console.log(`${data}`)
+    })
   }
 }

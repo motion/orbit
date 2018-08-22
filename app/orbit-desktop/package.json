@@ -69,7 +69,7 @@
     "slack": "^11.0.1",
     "source-map-support": "^0.4.16",
     "sqlite": "2.9.2",
-    "sudo-prompt": "^7.1.1",
+    "electron-sudo": "4.0.12",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.9",
     "ws": "6.0.0"

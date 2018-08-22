@@ -267,6 +267,13 @@ babel-polyfill@7.0.0-beta.3:
     core-js "^2.4.0"
     regenerator-runtime "^0.11.0"
 
+babel-runtime@^6.18.0:
+  version "6.26.0"
+  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
+  dependencies:
+    core-js "^2.4.0"
+    regenerator-runtime "^0.11.0"
+
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
@@ -313,6 +320,10 @@ bl@^1.0.0:
   dependencies:
     readable-stream "^2.3.5"
     safe-buffer "^5.1.1"
+
+bluebird@^3.4.6:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
 
 body-parser@1.18.2:
   version "1.18.2"
@@ -812,6 +823,13 @@ ecc-jsbn@~0.1.1:
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
+
+electron-sudo@4.0.12:
+  version "4.0.12"
+  resolved "https://registry.yarnpkg.com/electron-sudo/-/electron-sudo-4.0.12.tgz#17d27fcb33837b7f6fd3a7946f168d6590566a53"
+  dependencies:
+    babel-runtime "^6.18.0"
+    bluebird "^3.4.6"
 
 email-addresses@^3.0.1:
   version "3.0.1"
@@ -3259,10 +3277,6 @@ strip-eof@^1.0.0:
 strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
-
-sudo-prompt@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/sudo-prompt/-/sudo-prompt-7.1.1.tgz#3e1e025920b085dfc0d072193cca2867fa9c51b2"
 
 supports-color@^2.0.0:
   version "2.0.0"

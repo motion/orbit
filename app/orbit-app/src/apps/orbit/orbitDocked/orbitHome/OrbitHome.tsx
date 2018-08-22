@@ -96,7 +96,7 @@ const decorator = compose(
   view,
 )
 const OrbitHomeCarouselSection = decorator(
-  ({ selectionStore, subPaneStore, homeStore, categoryName }) => {
+  ({ subPaneStore, homeStore, categoryName }) => {
     const { items, startIndex } = homeStore.following[categoryName]
     return (
       <Section key={categoryName}>
@@ -111,7 +111,6 @@ const OrbitHomeCarouselSection = decorator(
             isActiveStore={subPaneStore}
             resetOnInactive
             cardProps={{
-              getIndex: selectionStore.getIndexForItem,
               hide: { body: true },
               titleFlex: 1,
             }}

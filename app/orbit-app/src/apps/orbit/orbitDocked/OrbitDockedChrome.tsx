@@ -120,8 +120,8 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
           top: -overflow,
           left: overflow,
           right: overflow,
-          height: maxHeight,
-          transform: `translateY(${height - maxHeight + extraShadow}px)`,
+          height: maxHeight + above,
+          transform: `translateY(${height - above - maxHeight + 10}px)`,
           // transition: 'transform ease-out 60ms',
         }}
       >
@@ -136,11 +136,11 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
 export const OrbitDockedChrome = view(({ appStore }: Props) => {
   return (
     <>
-      <BlockTop height={90} overflow={SHADOW_PAD}>
+      <BlockTop height={60} overflow={SHADOW_PAD}>
         <OrbitChrome isUpper />
       </BlockTop>
       <BlockBottom
-        above={90}
+        above={60}
         height={appStore.contentHeight}
         maxHeight={window.innerHeight - 20}
         overflow={SHADOW_PAD}

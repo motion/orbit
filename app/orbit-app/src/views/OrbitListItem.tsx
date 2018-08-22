@@ -5,7 +5,6 @@ import { OrbitIcon } from './OrbitIcon'
 import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
-import { EMPTY_ITEM } from '../constants'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
@@ -118,11 +117,6 @@ const Bottom = view({
 })
 @view
 export class OrbitListInner extends React.Component<OrbitItemProps> {
-  static defaultProps = {
-    item: EMPTY_ITEM,
-    hide: {},
-  }
-
   getInner = (contentProps: ResolvedItem) => {
     // TODO weird mutation
     this.props.store.normalizedBit = contentProps

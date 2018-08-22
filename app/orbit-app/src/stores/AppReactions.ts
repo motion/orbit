@@ -204,30 +204,30 @@ export class AppReactions /* extends Store */ {
   //   },
   // )
 
-  repositioningFromAppState = react(
-    () => [appTarget(Desktop.appState), Desktop.linesBoundingBox],
-    ([appBB, linesBB]) => {
-      // prefer using lines bounding box, fall back to app
-      const box = linesBB || appBB
-      if (!box) {
-        throw react.cancel
-      }
-      let { size, orbitOnLeft, orbitDocked } = orbitPosition(box)
-      // before for sidebar we used "{position} = orbitPosition(box)"
-      // in future, put sidebar onto different state area
-      // if (linesBB) {
-      //   // add padding
-      //   position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
-      // } else {
-      //   // remove padding
-      //   position[0] += orbitOnLeft ? SCREEN_PAD : -SCREEN_PAD
-      // }
-      App.setOrbitState({
-        position: [window.innerWidth - ORBIT_WIDTH, 0],
-        size,
-        orbitOnLeft,
-        orbitDocked,
-      })
-    },
-  )
+  // repositioningFromAppState = react(
+  //   () => [appTarget(Desktop.appState), Desktop.linesBoundingBox],
+  //   ([appBB, linesBB]) => {
+  //     // prefer using lines bounding box, fall back to app
+  //     const box = linesBB || appBB
+  //     if (!box) {
+  //       throw react.cancel
+  //     }
+  //     let { size, orbitOnLeft, orbitDocked } = orbitPosition(box)
+  //     // before for sidebar we used "{position} = orbitPosition(box)"
+  //     // in future, put sidebar onto different state area
+  //     // if (linesBB) {
+  //     //   // add padding
+  //     //   position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
+  //     // } else {
+  //     //   // remove padding
+  //     //   position[0] += orbitOnLeft ? SCREEN_PAD : -SCREEN_PAD
+  //     // }
+  //     App.setOrbitState({
+  //       position: [window.innerWidth - ORBIT_WIDTH, 0],
+  //       size,
+  //       orbitOnLeft,
+  //       orbitDocked,
+  //     })
+  //   },
+  // )
 }

@@ -3,8 +3,8 @@ import markdown from '@mcro/marky-markdown'
 import { GithubBitData, GithubBitDataComment } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { TimeAgo } from '../../../views/TimeAgo'
-import { ItemResolverProps } from '../../ItemResolver'
+import { DateFormat } from '../../../views/DateFormat'
+import { BitItemResolverProps } from '../ResolveBit'
 
 // const converter = new Showdown.Converter()
 // const markdown = text => converter.makeHtml(text)
@@ -15,7 +15,11 @@ const options = {
   remove_duplicates: false,
 }
 
-const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) => {
+const BitGithubTaskComment = ({
+  comment,
+}: {
+  comment: GithubBitDataComment
+}) => {
   const {
     author: { avatarUrl, login },
     createdAt,
@@ -29,7 +33,7 @@ const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) =>
           src={avatarUrl}
         />
         {login}
-        {!!createdAt && <TimeAgo>{createdAt}</TimeAgo>}
+        {!!createdAt && <DateFormat date={new Date(createdAt)} />}
       </UI.Row>
       <div
         dangerouslySetInnerHTML={{
@@ -61,7 +65,7 @@ export const ResolveTask = ({
   children,
   isExpanded,
   shownLimit,
-}: ItemResolverProps) => {
+}: BitItemResolverProps) => {
   const { content, comments } = isExpanded
     ? parseGithubContents({ bit, shownLimit })
     : { content: null, comments: null }

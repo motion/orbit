@@ -1,5 +1,5 @@
-export const ResolveApp = ({ bit, children }) =>
+export const ResolveApp = ({ model, children }) =>
   children({
-    title: bit.title,
-    icon: `/icons/${bit.icon}`,
+    title: model.title,
+    icon: `/icons/${model.icon}`,
   })

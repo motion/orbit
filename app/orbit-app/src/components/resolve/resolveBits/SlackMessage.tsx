@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-// import slackDown from '@mcro/slackdown'
 import Markdown from 'react-markdown'
 import { Bit, SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'

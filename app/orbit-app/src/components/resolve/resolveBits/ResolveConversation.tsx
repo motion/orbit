@@ -4,7 +4,7 @@ import keywordExtract from '@mcro/keyword-extract'
 import { SlackBitData } from '@mcro/models'
 import arrford from 'arrford'
 import { capitalize } from 'lodash'
-import { ItemResolverProps } from '../../ItemResolver'
+import { BitItemResolverProps } from '../ResolveBit'
 
 const options = {
   remove_digits: true,
@@ -19,7 +19,7 @@ export const ResolveConversation = ({
   itemProps,
   isExpanded,
   hide,
-}: ItemResolverProps) => {
+}: BitItemResolverProps) => {
   const data = bit.data as SlackBitData
   const content = isExpanded
     ? (data.messages

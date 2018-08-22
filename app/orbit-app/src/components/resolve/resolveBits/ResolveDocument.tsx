@@ -1,6 +1,6 @@
 import markdown from '@mcro/marky-markdown'
 import keywordExtract from '@mcro/keyword-extract'
-import { ItemResolverProps } from '../../ItemResolver'
+import { BitItemResolverProps } from '../ResolveBit'
 
 const options = {
   remove_digits: true,
@@ -25,7 +25,7 @@ export const ResolveDocument = ({
   searchTerm,
   children,
   isExpanded,
-}: ItemResolverProps) =>
+}: BitItemResolverProps) =>
   children({
     title: bit.title || item.title,
     icon: bit.integration || item.integration,
@@ -34,12 +34,7 @@ export const ResolveDocument = ({
     webLink: bit.webLink,
     desktopLink: bit.webLink,
     content: isExpanded
-      ? markdown(
-          markdownBoldifySearch(
-            bit.body,
-            searchTerm,
-          ),
-        )
+      ? markdown(markdownBoldifySearch(bit.body, searchTerm))
       : bit.body.slice(0, 200),
     preview: keywordExtract
       .extract(bit.body, options)

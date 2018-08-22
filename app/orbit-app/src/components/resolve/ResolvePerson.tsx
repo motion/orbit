@@ -17,23 +17,23 @@ const Avatar = view('img', {
   },
 })
 
-export const ResolvePerson = ({ children, bit }) => {
-  if (!bit) {
+export const ResolvePerson = ({ children, model }) => {
+  if (!model) {
     return null
   }
   return children({
-    id: bit.id,
-    title: bit.name,
+    id: model.id,
+    title: model.name,
     type: 'person',
-    icon: bit.photo || 'users_square',
-    subtitle: !!bit.email,
-    date: bit.bitUpdatedAt,
+    icon: model.photo || 'users_square',
+    subtitle: !!model.email,
+    date: model.updatedAt,
     iconProps: {
       color: '#ccc',
     },
-    preview: !!bit.photo && (
+    preview: !!model.photo && (
       <UI.Col flex={1}>
-        <Avatar src={bit.photo} />
+        <Avatar src={model.photo} />
       </UI.Col>
     ),
   })

@@ -83,8 +83,7 @@
     "@types/passport": "0.4.5",
     "@types/fs-extra": "5.0.4",
     "nodemon": "1.18.3",
-    "touch": "^3.1.0",
-    "watch": "1.0.2"
+    "touch": "^3.1.0"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

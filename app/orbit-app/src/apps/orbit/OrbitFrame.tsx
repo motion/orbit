@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { view, react, attachTheme } from '@mcro/black'
+import { view, react } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import { App, Electron } from '@mcro/stores'
 import * as Constants from '../../constants'
 import { OrbitArrow } from './OrbitArrow'

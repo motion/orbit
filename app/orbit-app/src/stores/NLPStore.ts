@@ -2,7 +2,7 @@ import { PersonRepository } from '../repositories'
 
 // @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
-import { store, react } from '@mcro/black'
+import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { NLPResponse } from './nlpStore/types'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
@@ -45,6 +45,7 @@ export class NLPStore /* extends Store */ {
     },
   )
 
+  // TODO select just the names
   peopleNames = modelQueryReaction(
     () => PersonRepository.find({ take: 5000 }),
     people => people.map(person => person.name),
@@ -53,12 +54,10 @@ export class NLPStore /* extends Store */ {
 
   updateUsers = react(
     () => this.peopleNames,
-    names => {
-      if (!names) {
-        throw react.cancel
-      }
-      // ensure js
-      setUserNames(names.slice())
+    async (names, { sleep }) => {
+      ensure('has names', !!names)
+      await sleep(200) // debounce
+      setUserNames(names.slice()) // ensure js
     },
   )
 }

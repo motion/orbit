@@ -63,11 +63,7 @@ const TabListItem = view(Row, {
 
 TabListItem.theme = ({ theme, active }) => ({
   color: active ? theme.colorActive : theme.colorBlur,
-  background: active ? theme.background : theme.backgroundBlur,
-  '&:hover': {
-    color: active ? theme.colorActive : theme.colorHover,
-    background: active ? theme.background : theme.backgroundBlur,
-  },
+  background: active ? 'transparent' : theme.backgroundBlur,
 })
 
 const TabListAddItem = view(TabListItem, {

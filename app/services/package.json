@@ -4,7 +4,7 @@
   "main": "_/index.js",
   "scripts": {
     "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "watch": "tsc --build --watch --preserveWatchOutput --verbose"
   },
   "dependencies": {
     "@mcro/config": "*",

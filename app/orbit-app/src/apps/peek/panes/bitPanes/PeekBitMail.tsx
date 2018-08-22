@@ -1,13 +1,8 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { flatten } from 'lodash'
-import * as Helpers from '../../../../helpers'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 import { TimeAgo } from '../../../../views/TimeAgo'
-
-const parseBody = body =>
-  !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
 
 const Message = view({
   padding: [22, 35],
@@ -21,65 +16,67 @@ const Para = view({
 export const Mail = ({ bit }: PeekBitPaneProps) => {
   // @ts-ignore
   const { messages } = bit.data
+  if (!messages) {
+    debugger
+    return null
+  }
   return (
     <div>
-      {messages.map((message, index) => {
-        return (
-          <Message key={`${index}${message.id}`}>
-            <UI.Row
-              css={{
-                opacity: 0.7,
-                margin: [0, 0, 6, -15],
-                flex: 1,
-                alignItems: 'center',
-                // justifyContent: 'center',
-              }}
-            >
-              <UI.Icon
-                name="arrows-1_redo"
-                color="#ddd"
-                size={12}
-                opacity={index === 0 ? 0 : 1}
-                marginTop={2}
-                marginRight={8}
-                marginLeft={-6}
-              />
+      {messages
+        // im seeing messages with no body
+        .filter(message => !!message.body)
+        .map((message, index) => {
+          return (
+            <Message key={`${index}${message.id}`}>
               <UI.Row
-                if={message.payload}
-                alignItems="center"
-                justifyContent="center"
+                css={{
+                  opacity: 0.7,
+                  margin: [0, 0, 6, -15],
+                  flex: 1,
+                  alignItems: 'center',
+                }}
               >
-                {Helpers.getHeader(message, 'From') && (
-                  <strong>
-                    {Helpers.getHeader(message, 'From').split(' ')[0]}&nbsp;
-                  </strong>
-                )}
-                {index !== 0 && (
-                  <UI.View
-                    style={{
-                      opacity: 0.6,
-                      marginBottom: 2,
-                      marginLeft: 3,
-                      fontSize: 13,
-                    }}
-                  >
-                    <TimeAgo>{Helpers.getHeader(message, 'Date')}</TimeAgo>
-                  </UI.View>
-                )}
+                <UI.Icon
+                  name="arrows-1_redo"
+                  color="#ddd"
+                  size={12}
+                  opacity={index === 0 ? 0 : 1}
+                  marginTop={2}
+                  marginRight={8}
+                  marginLeft={-6}
+                />
+                <UI.Row alignItems="center" justifyContent="center">
+                  {message.participants
+                    .filter(x => x.type === 'from')
+                    .map(({ name, email }, index) => (
+                      <a key={index} href={`mailto:${email}`}>
+                        <strong>{name}</strong>&nbsp;
+                      </a>
+                    ))}
+                  {index !== 0 && (
+                    <UI.View
+                      style={{
+                        opacity: 0.6,
+                        marginBottom: 2,
+                        marginLeft: 3,
+                        fontSize: 13,
+                      }}
+                    >
+                      <TimeAgo>{message.date}</TimeAgo>
+                    </UI.View>
+                  )}
+                </UI.Row>
               </UI.Row>
-            </UI.Row>
-            {!!message.snippet && (
-              <UI.Text size={1.1}>
-                {flatten(
-                  (parseBody(message.payload.body.data) || message.snippet)
+              {!!message.body && (
+                <UI.Text>
+                  {message.body
                     .split('\n')
-                    .map((i, idx) => <Para key={idx}>{i}</Para>),
-                )}
-              </UI.Text>
-            )}
-          </Message>
-        )
-      })}
+                    .map((i, idx) => <Para key={idx}>{i}</Para>)}
+                </UI.Text>
+              )}
+            </Message>
+          )
+        })}
     </div>
   )
 }

@@ -7,9 +7,6 @@ export type ButtonProps = SizedSurfaceProps &
 const buttonStyles = {
   outline: 0,
   cursor: 'default',
-  '&:active': {
-    opacity: 0.75,
-  },
 }
 
 export const Button = ({
@@ -49,7 +46,6 @@ export const Button = ({
       theme={theme}
       glowProps={{
         scale: 1.8,
-        draggable: false,
         opacity: 0.15,
         ...glowProps,
       }}

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { ThemeObject } from '@mcro/gloss'
+import { ThemeObject, attachTheme } from '@mcro/gloss'
 
 const Section = view('section', {
   width: '100%',
@@ -31,23 +31,14 @@ const exploreButton = {
   borderWidth: 1,
   borderColor: 'transparent',
   background: 'transparent',
+  opacity: 0.35,
   transform: {
     y: -0.5,
   },
   iconProps: {
-    color: 'black',
     size: 12,
   },
-  opacity: 0.35,
   activeStyle: {
-    color: '#000',
-    background: 'transparent',
-    borderColor: 'transparent',
-    opacity: 1,
-  },
-  hoverStyle: {
-    background: 'transparent',
-    borderColor: 'transparent',
     opacity: 1,
   },
 }

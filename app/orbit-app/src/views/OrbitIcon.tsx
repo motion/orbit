@@ -1,4 +1,4 @@
-import { attachTheme } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import iconGCalendar from '../../public/icons/gcalendar.svg'

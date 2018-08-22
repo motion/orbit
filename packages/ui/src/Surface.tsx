@@ -7,7 +7,8 @@ import {
   propsToStyles,
   alphaColor,
 } from '@mcro/gloss'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
+import { attachTheme } from '@mcro/gloss'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
@@ -15,6 +16,7 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
+import { UIContext } from './helpers/contexts'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -57,7 +59,7 @@ export type SurfaceProps = CSSPropertySet & {
   theme?: string
   tooltip?: string
   tooltipProps?: Object
-  uiContext?: boolean
+  uiContext?: { inSegment?: { first: boolean; last: boolean; index: number } }
   width?: number
   alpha?: number
   dimmed?: boolean
@@ -110,7 +112,20 @@ const SurfaceFrame = view(View, {
 })
 
 SurfaceFrame.theme = props => {
-  const themeStyles = propsToThemeStyles(props, true)
+  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
+  // support being inside a segmented list
+  let segmentedStyle: any
+  if (props.uiContext && props.uiContext.inSegment) {
+    const { inSegment } = props.uiContext
+    segmentedStyle = {}
+    if (inSegment.first) {
+      segmentedStyle.borderRightRadius = 0
+      segmentedStyle.borderRightWidth = 0
+    }
+    if (inSegment.last) {
+      segmentedStyle.borderLeftRadius = 0
+    }
+  }
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -123,7 +138,7 @@ SurfaceFrame.theme = props => {
     ...baseIconStyle,
   }
   const hoverIconStyle = {
-    color: props.iconHoverColor || themeStyles.hoverColor,
+    color: props.iconHoverColor || themeStyles.colorHover,
   }
   const chromelessStyle = props.chromeless && {
     borderColor: 'transparent',
@@ -138,18 +153,24 @@ SurfaceFrame.theme = props => {
         : props.overflow,
     justifyContent: props.justify || props.justifyContent,
     alignSelf: props.alignSelf,
-    borderStyle: props.borderStyle || props.borderWidth ? 'solid' : undefined,
+    borderStyle:
+      props.borderStyle || props.borderWidth
+        ? props.borderStyle || 'solid'
+        : undefined,
     ...circularStyles,
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
     ...(props.dimmed && dimmedStyle),
     ...(props.dim && dimStyle),
     ...props.userStyle,
+    // note: base theme styles go *above* propsToStyles...
     ...themeStyles,
     ...propsToStyles(props),
+    // ...whereas theme styles passed in as ovverrides go in here
+    ...themeStylesFromProps,
     ...propsToTextSize(props),
-    ...(props.active && themeStyles['&:active']),
     ...chromelessStyle,
+    ...segmentedStyle,
   }
   return alphaColor(surfaceStyles, props.alpha)
 }
@@ -203,7 +224,7 @@ const baseIconStyle = {
 // @ts-ignore
 @attachTheme
 @view.ui
-export class Surface extends React.Component<SurfaceProps> {
+export class SurfaceInner extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,
     size: 1,
@@ -332,3 +353,9 @@ export class Surface extends React.Component<SurfaceProps> {
     )
   }
 }
+
+export const Surface = props => (
+  <UIContext.Consumer>
+    {uiContext => <SurfaceInner uiContext={uiContext} {...props} />}
+  </UIContext.Consumer>
+)

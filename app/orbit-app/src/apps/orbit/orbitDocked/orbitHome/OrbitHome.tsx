@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react, compose, ensure } from '@mcro/black'
 import { BitRepository, PersonRepository } from '../../../../repositories'
-import { SubTitle } from '../../../../views'
+import { SubTitle, SuggestionBarVerticalPad } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import {
@@ -58,15 +58,18 @@ class OrbitHomeStore {
         order: { createdAt: 'DESC' },
         take: 10,
       })
-      const [slack, drive, github, confluence, jira] = await Promise.all([
-        findManyType('slack'),
-        findManyType('gdocs'),
-        findManyType('github'),
-        findManyType('confluence'),
-        findManyType('jira'),
-      ])
+      const [slack, drive, github, confluence, jira, gmail] = await Promise.all(
+        [
+          findManyType('slack'),
+          findManyType('gdocs'),
+          findManyType('github'),
+          findManyType('confluence'),
+          findManyType('jira'),
+          findManyType('gmail'),
+        ],
+      )
       // only return ones with results
-      const all = { people, slack, drive, github, confluence, jira }
+      const all = { people, slack, drive, github, confluence, jira, gmail }
       const res = {} as any
       let curIndex = 0
       for (const name in all) {
@@ -139,6 +142,7 @@ export class OrbitHome extends React.Component<Props> {
     console.log('HOME RENDER')
     return (
       <SubPane name="home" fadeBottom>
+        <SuggestionBarVerticalPad />
         {Object.keys(homeStore.following).map(categoryName => (
           <OrbitHomeCarouselSection
             key={categoryName}

@@ -7,7 +7,7 @@ import { omit } from 'lodash'
 type ReactModelQueryOpts = ReactionOptions & {
   condition?: () => boolean
   poll?: number
-  ignoreKeys: string[]
+  ignoreKeys?: string[]
 }
 
 const trueFn = () => true

@@ -45,12 +45,16 @@ export const themes = {
   }),
   dark: {
     ...macTheme,
-    cardBackground: '#77777788',
+    card: {
+      background: '#77777788',
+    },
     ...Theme.fromStyles({
       background: 'rgba(20,20,20,0.94)',
+      backgroundHover: 'rgba(20,20,20,0.2)',
       color: '#fff',
       borderColor: '#222',
     }),
+    colorActive: '#fff',
   },
   light: {
     ...macTheme,

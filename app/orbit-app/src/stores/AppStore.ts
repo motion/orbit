@@ -1,4 +1,4 @@
-import { on, react, isEqual } from '@mcro/black'
+import { on, react, isEqual, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SettingRepository } from '../repositories'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
@@ -77,6 +77,7 @@ export class AppStore {
   services = react(
     () => this.appSettings,
     settings => {
+      ensure('has settings', !!settings)
       console.log('update services')
       const services = {}
       for (const setting of settings) {

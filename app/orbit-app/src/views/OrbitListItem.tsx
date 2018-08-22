@@ -60,7 +60,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.background.alpha(0.2),
+      background: theme.background.alpha(0.6),
       // border: [1, borderSelected],
       // boxShadow: disabledShadow || [[0, 0, 0, 1, '#90b1e4']],
     }
@@ -77,7 +77,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
     ...listStyle,
     borderLeft: 'none',
     borderRight: 'none',
-    padding: padding || [12, 16],
+    padding: padding || 16,
     '&:active': {
       opacity: isSelected ? 1 : 0.8,
     },
@@ -111,12 +111,6 @@ const Bottom = view({
   flexFlow: 'row',
   alignItems: 'center',
 })
-
-const orbitIconProps = {
-  orbitIconStyle: {
-    marginRight: -2,
-  },
-}
 
 @view.attach('appStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
@@ -189,10 +183,9 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             !(hide && hide.icon) && (
               <OrbitIcon
                 icon={icon}
-                size={18}
-                {...orbitIconProps}
+                size={20}
                 position="absolute"
-                top={16}
+                top={14}
                 right={16}
                 {...iconProps}
               />

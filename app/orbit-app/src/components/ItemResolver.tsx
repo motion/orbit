@@ -9,12 +9,12 @@ import { ItemHideProps } from '../types/ItemHideProps'
 
 export type ResolvedItem = {
   title: string
-  preview?: string
+  preview?: React.ReactNode
   content?: string
   icon: string
-  location: string
-  locationLink: string
-  webLink: string
+  location?: string
+  locationLink?: string
+  webLink?: string
   desktopLink?: string
   createdAt?: Date
   updatedAt?: Date

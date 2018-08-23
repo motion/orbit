@@ -323,6 +323,7 @@ export default class Oracle {
             this.setState(state)
           }
           if (actions[action]) {
+            log(`oracle action ${action}: ${JSON.stringify(value)}`)
             actions[action](value)
           } else {
             // otherwise its a window change event

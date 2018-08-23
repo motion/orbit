@@ -122,21 +122,30 @@ export class Screen {
   clearTimeout?: Function
 
   start = async () => {
-    console.log('starting oracle...')
+    console.log('starting screen...')
 
-    const info = await this.oracle.getInfo()
-    Desktop.setState({
-      operatingSystem: {
-        supportsTransparency: info.supportsTransparency
-      }
-    })
-
+    // handle messages
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
+
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.12')) {
       console.log('older mac, avoiding oracle')
       return
     }
+
+    this.setupOracleListeners()
+    await this.oracle.start()
+
+    // get initial info
+    const info = await this.oracle.getInfo()
+    Desktop.setState({
+      operatingSystem: {
+        supportsTransparency: info.supportsTransparency,
+      },
+    })
+  }
+
+  setupOracleListeners() {
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
       console.log('is accessible, start watching stuff', isAccessible)
@@ -147,6 +156,7 @@ export class Screen {
         // this.watchMouse()
       }
     })
+
     // OCR words
     this.oracle.onWords(words => {
       this.hasResolvedOCR = true
@@ -155,12 +165,14 @@ export class Screen {
         updatedAt: Date.now(),
       })
     })
+
     // OCR lines
     this.oracle.onLines(lines => {
       Desktop.setOcrState({
         lines,
       })
     })
+
     // window movements
     this.oracle.onWindowChange((event, value) => {
       if (event === 'ScrollEvent') {
@@ -232,6 +244,7 @@ export class Screen {
         }, 4),
       )
     })
+
     // OCR work clear
     this.oracle.onBoxChanged(count => {
       if (!Desktop.ocrState.words) {
@@ -255,6 +268,7 @@ export class Screen {
         }
       }
     })
+
     // OCR word restore
     this.oracle.onRestored(count => {
       log('restore', count)
@@ -262,12 +276,12 @@ export class Screen {
         restoreWords: this.oracle.restoredIds,
       })
     })
+
     // general errors
     this.oracle.onError(async error => {
       log('screen ran into err, restart', error)
       this.restartScreen()
     })
-    await this.oracle.start()
   }
 
   async restartScreen() {

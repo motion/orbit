@@ -10,10 +10,24 @@ const log = logger('desktop')
 const Config = getConfig()
 const options = { name: 'Orbit Proxy' }
 
+const checkAuthProxy = async () => {
+  try {
+    const testUrl = `${getGlobalConfig().privateUrl}/hello`
+    console.log(`Checking testurl: ${testUrl}`)
+    const res = await fetch(testUrl).then(res => res.text())
+    if (res && res === 'hello world') {
+      return true
+    }
+  } catch (err) {
+    console.log('error seeing if already proxied')
+  }
+  return false
+}
 // @ts-ignore
 @store
 export class PortForwardStore {
   isForwarded = false
+  successInt = null
 
   forwardOnAccept = react(
     () => App.state.acceptsForwarding,
@@ -21,6 +35,7 @@ export class PortForwardStore {
       ensure('accepts', accepts)
       ensure('not forwarded', !this.isForwarded)
       log('Starting orbit proxy...')
+      clearInterval(this.successInt)
       this.forwardPort()
     },
   )
@@ -33,13 +48,21 @@ export class PortForwardStore {
     const GlobalConfig = getGlobalConfig()
     const host = GlobalConfig.privateUrl.replace('http://', '')
 
+    // check in a loop since the sudoPrompt process is long running
+    this.successInt = setInterval(async () => {
+      if (await checkAuthProxy()) {
+        clearInterval(this.successInt)
+        Desktop.sendMessage(App, App.messages.FORWARD_STATUS, 'accepted')
+      }
+    }, 300)
+
     sudoPrompt.exec(
       `node ${pathToOrbitProxy} --port ${port} --host ${host}`,
       options,
       (err, stdout, stderr) => {
         if (err) {
           const message = `${err.message}`
-          if (message.indexOf('EADDRINUSE')) {
+          if (message.indexOf('EADDRINUSE') > -1) {
             // handle error!
             log('OrbitProxy in use error', message)
             // TODO: we can run lsof or similar and show what app is using it and show instructions.
@@ -47,7 +70,7 @@ export class PortForwardStore {
             Desktop.sendMessage(
               App,
               App.messages.FORWARD_STATUS,
-              'Port already in use: 80',
+              'Port 80 already in use',
             )
           } else {
             // handle error!
@@ -59,24 +82,15 @@ export class PortForwardStore {
             )
           }
         } else {
-          // TODO one more failure case here if stdout or stderr have error
-          // Success!
-          log('OrbitProxy', stdout, stderr)
-          Desktop.sendMessage(App, App.messages.FORWARD_STATUS, 'accepted')
+          log('OrbitProxy no err but exited early', stdout, stderr)
+          Desktop.sendMessage(
+            App,
+            App.messages.FORWARD_STATUS,
+            stdout || stderr,
+          )
         }
       },
     )
-
-    // const sudoer = new Sudoer(options)
-    // const proc = await sudoer.spawn('node', [pathToOrbitProxy], {
-    //   env: {
-    //     HOST: host,
-    //     PORT: port,
-    //   },
-    // })
-    // this.handleProcess(proc)
-
-    log('Launched orbit Proxy')
   }
 
   private handleProcess = proc => {

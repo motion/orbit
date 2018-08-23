@@ -1,29 +1,14 @@
 # next
 
-- make older macs not have transparent bg
-
-friday goals
-
-- 90% of deployable .app
-  - onboarding much improved
-  - profile/theme cleanup
+- PersonBit transition - uniqueness in person bit is tracked by `email` property
 - typeform survey to capture a few potential paths
 - (bonus) oauth key management
-
-## Deployable .app
-
-- productionize: fix proxy process for prod
-
-- oauth:
-  - when going through flow show orbit
-  - show message:
-    - "Private Auth Mode"
+- location filters: `.find({ location: { name: "..." } })`
 
 "Orbit proxies the keys directly to your computer.
 You and only you receive the key to your data.
 And just to be safe, our servers disable logs and deny all requests. Learn more."
 
-- Properly proxy/prompt the production domain in prod mode
 - in:x for location
 - clicking location buttons should filter that location
 - direct open button in search results
@@ -119,13 +104,6 @@ p2p: https://github.com/webtorrent/bittorrent-dht
 - p2p sync with real features (rate-limit, pin-to-search)
 - deploy it with 5 teams
 - alpha ocr/memory/contextual-search
-
-queue:
-
-- SHOULD show banner, update and restart once update is pushed
-- handle screen changes/resizes
-- react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
-- Google drive settings pane
 
 ## unnecessary for beta polish bucket
 

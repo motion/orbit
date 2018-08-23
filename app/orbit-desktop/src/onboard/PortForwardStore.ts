@@ -56,6 +56,10 @@ export class PortForwardStore {
       }
     }, 300)
 
+    // turns out it doesnt matter if theres a user just that we set it to something
+    // see: https://github.com/jorangreef/sudo-prompt/blob/ad291f7bd00bba09a01b7e4ce93dfa547f35f22d/index.js#L172
+    process.env.USER = process.env.USER || 'hi'
+
     sudoPrompt.exec(
       `node ${pathToOrbitProxy} --port ${port} --host ${host}`,
       options,

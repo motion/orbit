@@ -1,7 +1,7 @@
 {
   "name": "orbit",
   "productName": "Orbit",
-  "version": "2.2.108",
+  "version": "2.2.111",
   "dependencies": {
     "@mcro/orbit": "*",
     "electron": "3.0.0-beta.3"

@@ -1,11 +1,10 @@
 # next
 
-- next: fix production oauth
+- make older macs not have transparent bg
 
 friday goals
 
 - 90% of deployable .app
-  - proper oauth keys and proxy
   - onboarding much improved
   - profile/theme cleanup
 - typeform survey to capture a few potential paths

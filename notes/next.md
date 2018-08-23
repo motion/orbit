@@ -155,3 +155,20 @@ queue:
 - contextual search
 - component store
 - forking apps / app store
+
+# interesting apps to build
+
+home queues:
+
+...
+
+search apps:
+
+- calculator
+- local file search
+- wikipedia lookup
+- map lookup
+
+peek apps:
+
+- just needs internals + documentation

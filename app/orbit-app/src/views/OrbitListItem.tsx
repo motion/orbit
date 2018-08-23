@@ -152,7 +152,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       subtitleSpaceBetween,
       searchTerm,
       onClickLocation,
-      bit,
+      model,
       ...props
     } = this.props
     const { isSelected } = store
@@ -247,11 +247,11 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               </Preview>
             )}
           {typeof children === 'function'
-            ? children(contentProps, bit, props.index)
+            ? children(contentProps, model, props.index)
             : children}
           <Bottom>
             {!(hide && hide.people) &&
-            bit.integration !== 'slack' &&
+            model.integration !== 'slack' &&
             people &&
             people.length &&
             people[0].data.profile ? (
@@ -275,10 +275,10 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               icon="link"
               size={1.2}
               onClick={e => {
-                console.log('opening', bit)
+                console.log('opening', model)
                 e.preventDefault()
                 e.stopPropagation()
-                App.actions.open(bit.desktopLink || bit.webLink)
+                App.actions.openItem(model)
                 App.actions.closeOrbit()
               }}
             />
@@ -294,7 +294,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       selectionStore,
       store,
       pane,
-      bit,
+      model,
       itemProps,
       inGrid,
       item,
@@ -304,17 +304,16 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       ...props
     } = this.props
     console.log(
-      `${props.index} ${(bit && bit.id) || props.title}.${pane} ${
-        store.isSelected
-      }`,
+      `${props.index} ${(model && (model.id || model.email)) ||
+        props.title}.${pane} ${store.isSelected}`,
     )
-    if (!bit) {
+    if (!model) {
       return this.getInner(props)
     }
     store.isSelected
     return (
       <ItemResolver
-        model={bit}
+        model={model}
         item={item}
         isExpanded={isExpanded}
         searchTerm={searchTerm}

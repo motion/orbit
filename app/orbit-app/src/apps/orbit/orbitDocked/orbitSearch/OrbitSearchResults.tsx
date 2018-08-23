@@ -98,7 +98,6 @@ class OrbitSearchResultsList extends React.Component<Props> {
     ) : (
       <OrbitCardContent>
         <UI.Text
-          alpha={0.85}
           wordBreak="break-all"
           highlight={highlightOptions(
             this.props.searchStore.searchState.query,
@@ -128,18 +127,20 @@ class OrbitSearchResultsList extends React.Component<Props> {
       return null
     }
     const searchTerm = searchStore.searchState.query
+    const quickResultsLen = searchStore.quickSearchState.results.length
     return (
       <HighlightsLayer term={searchTerm}>
         <>
-          {results.map((bit, index) => (
+          {results.map((model, index) => (
             <OrbitListItem
               pane={name}
               subPane="search"
-              key={bit.id}
-              index={index + searchStore.quickSearchState.results.length}
-              bit={bit}
+              key={model.id}
+              index={index + quickResultsLen}
+              model={model}
               listItem
-              hide={bit.integration === 'slack' ? hideSlack : null}
+              hide={model.integration === 'slack' ? hideSlack : null}
+              padding={model.integration === 'slack' ? [12, 16] : null}
               subtitleSpaceBetween={this.spaceBetween}
               isExpanded
               searchTerm={searchTerm}

@@ -10,8 +10,7 @@ type OrbitOpts = {
 export async function main({ version }: OrbitOpts) {
   let desktopPid
 
-  // handle exits gracefully
-  process.on('exit', async () => {
+  const handleExit = async () => {
     console.log('Orbit exiting...')
     if (desktopPid) {
       process.kill(desktopPid)
@@ -19,7 +18,10 @@ export async function main({ version }: OrbitOpts) {
     console.log('Cleaning children...')
     await cleanupChildren()
     console.log('bye!')
-  })
+  }
+
+  // handle exits gracefully
+  process.on('exit', handleExit)
 
   const ports = await findContiguousPorts(5, 3333)
 
@@ -52,5 +54,5 @@ export async function main({ version }: OrbitOpts) {
 
   // require apps after config
   const ElectronApp = require('@mcro/orbit-electron')
-  desktopPid = await ElectronApp.main({ port: ports[0] })
+  desktopPid = await ElectronApp.main({ port: ports[0], handleExit })
 }

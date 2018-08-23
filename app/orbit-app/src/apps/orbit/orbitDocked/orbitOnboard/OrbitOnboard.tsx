@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { SubPane } from '../../SubPane'
 import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
@@ -14,6 +15,7 @@ import { Title } from '../../../../views'
 import { getConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
+import { Message } from '../../../../views/Message'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -231,13 +233,24 @@ export const OrbitOnboard = decorator(
                   Error setting up proxy
                 </Text>
                 <View height={20} />
-                <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                <Text
+                  selectable
+                  textAlign="left"
+                  size={1.1}
+                  sizeLineHeight={0.9}
+                >
                   Orbit had a problem setting up a proxy on your machine. Feel
                   free to get in touch with us if you are having issues:
-                  <a href="mailto:hi@tryorbit.com">hi@tryorbit.com</a>.
                   <br />
                   <br />
-                  Error message:
+                  <strong>
+                    <a href="mailto:hi@tryorbit.com">hi@tryorbit.com</a>
+                  </strong>.
+                  <br />
+                  <br />
+                  <strong>Error message:</strong>
+                  <br />
+                  <br />
                   {store.acceptedMessage}
                 </Text>
               </Centered>
@@ -287,6 +300,12 @@ export const OrbitOnboard = decorator(
                 )
               })}
             </Unpad>
+            <br />
+            <Message>
+              <strong>Orbit Proxy Active</strong>. Your private keys will never
+              be available outside this device!
+            </Message>
+            <br />
           </OnboardFrame>
           <OnboardFrame>
             <Centered>

@@ -8,7 +8,7 @@ import { Bit } from '@mcro/models'
 import { matchSort } from './helpers/searchStoreHelpers'
 import { MarkType } from './nlpStore/types'
 import { FindOptions } from 'typeorm'
-import { BitRepository, PersonRepository } from '../repositories'
+import { BitRepository, PersonBitRepository } from '../repositories'
 import { flatten } from 'lodash'
 import { SelectionStore } from './SelectionStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
@@ -346,7 +346,7 @@ export class SearchStore {
         integrations /* , nouns */,
       } = this.nlpStore.nlp
       // fuzzy people results
-      const allResults = await PersonRepository.find({
+      const allResults = await PersonBitRepository.find({
         take: 3,
         where: {
           name: { $like: `%${searchQuery.split('').join('%')}%` },
@@ -354,7 +354,7 @@ export class SearchStore {
       })
       const exactPeople = await Promise.all(
         people.map(name => {
-          return PersonRepository.findOne({
+          return PersonBitRepository.findOne({
             where: { name: { $like: `%${name}%` } },
           })
         }),

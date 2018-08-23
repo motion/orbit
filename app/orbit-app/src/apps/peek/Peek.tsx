@@ -52,6 +52,12 @@ class PeekPageInner extends React.Component<Props> {
     const { item, model } = peekStore.state
     const type = (item && capitalize(item.type)) || 'Empty'
     const PeekContentsView = PeekPanes[type] as PeekPane
+    if (type === 'Bit' || type === 'Person') {
+      if (!model) {
+        console.error('no model?', model)
+        return null
+      }
+    }
     if (!PeekContentsView) {
       console.error('none', type)
       return <div>no pane found</div>

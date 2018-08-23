@@ -56,8 +56,8 @@ const Background = view({
   borderRadius: BORDER_RADIUS + 1,
   // background: 'rgba(255,255,255,0.92)',
 })
-Background.theme = ({ supportsTransparency }) => ({
-  background: supportsTransparency ? [50, 50, 50, 0.82] : [40, 40, 40],
+Background.theme = ({ isTransparent }) => ({
+  background: isTransparent ? [50, 50, 50, 0.82] : [40, 40, 40],
   // background: [0, 0, 0, 0.5],
   // background: isUpper
   //   ? theme.background.alpha(0.2)

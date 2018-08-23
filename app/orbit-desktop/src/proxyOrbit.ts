@@ -1,6 +1,8 @@
 import hostile_ from 'hostile'
 import { promisifyAll } from 'sb-promisify'
 import forwardPort from 'http-port-forward'
+import killPort from 'kill-port'
+import { sleep } from './helpers'
 
 const findArgVal = arg => process.argv[process.argv.indexOf(arg) + 1]
 const host = findArgVal('--host')
@@ -22,6 +24,10 @@ if (!host || !port) {
     } else {
       console.log('exists already', exists)
     }
+
+    // attempt to kill port 80
+    killPort(80)
+    await sleep(50)
 
     // forward port
     forwardPort(port, 80, { isPublicAccess: true })

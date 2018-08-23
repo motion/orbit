@@ -50,6 +50,10 @@ const HeadSide = view({
   justifyContent: 'center',
 })
 
+type PeekItemResolverExtraProps = {
+  itemProps?: Object
+}
+
 export const PeekBit = ({
   item,
   model,
@@ -59,17 +63,18 @@ export const PeekBit = ({
   children,
 }: PeekPaneProps) => {
   const bit = model as Bit
-  const bitPaneName = capitalize(item.subType)
+  const bitPaneName = capitalize(bit.type)
   const BitPaneContent = PeekBitPanes[bitPaneName]
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {item.subType}</div>
   }
+  console.log('peekbit...', PeekItemResolver, bit)
   return (
     <PeekItemResolver
       item={item}
-      bit={bit}
+      model={model}
       appStore={appStore}
-      {...BitPaneContent.bitResolverProps}
+      {...BitPaneContent.bitResolverProps as PeekItemResolverExtraProps}
     >
       {({
         title,

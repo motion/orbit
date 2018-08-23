@@ -93,13 +93,6 @@ export class Root {
     debugState(({ stores }) => {
       this.stores = stores
     })
-    // temp: get context
-    // setInterval(async () => {
-    //   if (Desktop.appState.name === 'Chrome') {
-    //     const { selection } = await getChromeContext()
-    //     Desktop.setAppState({ selectedText: selection })
-    //   }
-    // }, 3000)
   }
 
   async connect() {

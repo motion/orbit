@@ -24,6 +24,10 @@ export class AppStore {
 
   async willMount() {
     this.updateScreenSize()
+    // show orbit on startup
+    App.setOrbitState({
+      docked: false,
+    })
   }
 
   willUnmount() {
@@ -36,13 +40,15 @@ export class AppStore {
 
   updateAppOrbitStateOnResize = react(
     () => [this.contentHeight, App.orbitState.docked],
-    ([height]) => {
-      App.setOrbitState({
-        size: [ORBIT_WIDTH, height + 20],
-        position: [window.innerWidth - ORBIT_WIDTH, 0],
-      })
-    },
+    this.updateOrbit,
   )
+
+  updateOrbit() {
+    App.setOrbitState({
+      size: [ORBIT_WIDTH, this.contentHeight + 20],
+      position: [window.innerWidth - ORBIT_WIDTH, 0],
+    })
+  }
 
   get selectedPane() {
     if (App.orbitState.hidden) {

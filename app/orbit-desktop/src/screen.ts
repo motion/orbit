@@ -1,6 +1,6 @@
 import Oracle from '@mcro/oracle'
 import { debounce, last } from 'lodash'
-import { store, isEqual, react, on } from '@mcro/black'
+import { store, isEqual, react, on, sleep } from '@mcro/black'
 import { Desktop, Electron, Swift, App } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
@@ -135,14 +135,20 @@ export class Screen {
 
     this.setupOracleListeners()
     await this.oracle.start()
+    this.getOracleInfo()
+  }
 
-    // get initial info
-    const info = await this.oracle.getInfo()
-    Desktop.setState({
-      operatingSystem: {
-        supportsTransparency: info.supportsTransparency,
-      },
-    })
+  async getOracleInfo() {
+    // they can toggle this on and off
+    setInterval(async () => {
+      // get initial info
+      const info = await this.oracle.getInfo()
+      Desktop.setState({
+        operatingSystem: {
+          supportsTransparency: info.supportsTransparency,
+        },
+      })
+    }, 1000)
   }
 
   setupOracleListeners() {

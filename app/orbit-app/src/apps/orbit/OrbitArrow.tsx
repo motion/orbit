@@ -39,7 +39,15 @@ export const OrbitArrow = view(
         background={background}
         boxShadow={[['inset', 0, 0, 0, 0.5, borderColor.darken(0.1)]]}
         // border={[1, '#000']}
-        css={{
+        transform={{
+          y: arrowTransformY || 0,
+          x: showing
+            ? orbitOnLeft
+              ? -0.5
+              : 0.5
+            : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
+        }}
+        {...{
           position: 'absolute',
           ...arrowStyle,
           zIndex: 1000000000,
@@ -53,14 +61,6 @@ export const OrbitArrow = view(
               transform ease-in 180ms
             `,
           opacity: showing ? 1 : 0,
-          transform: {
-            y: arrowTransformY || 0,
-            x: showing
-              ? orbitOnLeft
-                ? -0.5
-                : 0.5
-              : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
-          },
           ...css,
         }}
       />

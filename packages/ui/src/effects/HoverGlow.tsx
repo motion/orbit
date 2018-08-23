@@ -315,7 +315,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       <Overlay
         key="hoverglow"
         forwardRef={this.rootRef}
-        css={{
+        style={{
           WebkitAppRegion: draggable ? 'drag' : 'no-drag',
           borderLeftRadius: borderLeftRadius || borderRadius,
           borderRightRadius: borderRightRadius || borderRadius,

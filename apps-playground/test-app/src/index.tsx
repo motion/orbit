@@ -1,6 +1,5 @@
 import '../public/styles/nucleo.css'
 import '../public/testBase.css'
-import './createElement'
 import 'react-hot-loader'
 import * as React from 'react'
 import ReactDOM from 'react-dom'

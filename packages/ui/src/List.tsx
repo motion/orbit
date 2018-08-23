@@ -464,8 +464,8 @@ class ListUI extends React.PureComponent<ListProps> {
       for (const { index, name } of groups) {
         const getChild = (extraProps?) => (
           <div
-            css={{
-              borderBottom: [1, '#000'],
+            style={{
+              borderBottom: `1px solid #000`,
               paddingTop: index === 0 ? 10 : 0,
             }}
             key={name}

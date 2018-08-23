@@ -16,7 +16,8 @@
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
     "@mcro/color": "^2.2.1",
-    "@mcro/css": "^2.2.1"
+    "@mcro/css": "^2.2.1",
+    "react-fast-compare": "2.0.2"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",

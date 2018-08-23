@@ -16,12 +16,12 @@ type Props = {
 }
 
 // why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
-const ArrowOuter = view({
+const ArrowOuter = view(Col, {
   position: 'relative',
   overflow: 'hidden',
 })
 
-const ArrowInner = view({
+const ArrowInner = view(Col, {
   position: 'absolute',
   left: 0,
   borderRadius: 1,
@@ -55,16 +55,16 @@ export const Arrow = attachTheme(
     }[towards]
     return (
       <Col {...props}>
-        <ArrowOuter css={{ transform, width: size, height: size }}>
+        <ArrowOuter transform={transform} width={size} height={size}>
           <Col
-            css={{
+            {...{
               transform: { rotate: rotate },
               width: size,
               height: size,
             }}
           >
             <ArrowInner
-              css={{
+              {...{
                 top: innerTop * 0.75,
                 width: size,
                 height: size,

@@ -7,7 +7,7 @@ import * as Constants from '../constants'
 const { SHADOW_PAD } = Constants
 const iWidth = 4
 
-const OrbitIndicatorContainer = view({
+const OrbitIndicatorContainer = view(UI.View, {
   width: iWidth * 1.5,
   height: iWidth * 6,
   top: 0,
@@ -23,7 +23,7 @@ export const OrbitIndicator = view(({ orbitOnLeft }) => {
   const border = [1, UI.color('#E9B73A').darken(0.2)]
   return (
     <OrbitIndicatorContainer
-      css={{
+      {...{
         border,
         borderRight: orbitOnLeft ? 0 : border,
         borderLeft: !orbitOnLeft ? 0 : border,

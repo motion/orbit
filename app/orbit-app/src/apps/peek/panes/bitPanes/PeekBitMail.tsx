@@ -29,7 +29,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
           return (
             <Message key={`${index}${message.id}`}>
               <UI.Row
-                css={{
+                {...{
                   opacity: 0.7,
                   margin: [0, 0, 6, -15],
                   flex: 1,

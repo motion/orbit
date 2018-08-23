@@ -1,11 +1,11 @@
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
+// needs to be imported before react
 import 'react-hot-loader'
 import 'isomorphic-fetch'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import './RootViewHMR'
-import './helpers/createElement'
 
 // separate this so hmr works nicely
 

@@ -79,7 +79,11 @@ class OrbitDirectoryStore {
   )
 
   allPeople = modelQueryReaction(
-    () => PersonRepository.find({ take: 100, where: { integration: 'slack' } }),
+    () =>
+      PersonRepository.find({
+        take: 100,
+        where: { name: { $not: null } /* , photo: { $not: null } */ },
+      }),
     people => {
       if (!this.isActive && this.allPeople.length) {
         throw react.cancel

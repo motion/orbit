@@ -140,7 +140,9 @@ class OnboardStore {
     // LEAVING curFrame page...
 
     if (this.curFrame === 0) {
+      console.log('start proxy')
       await this.checkAlreadyProxied()
+      console.log('already on?', this.accepted)
       if (this.accepted !== true) {
         const { accepted, message } = await promptForAuthProxy()
         console.log('got from prompt', accepted, message)
@@ -206,29 +208,33 @@ export const OrbitOnboard = decorator(
           <OnboardFrame>
             {store.accepted === null && (
               <Centered>
-                <Text size={2.5} fontWeight={600}>
+                <br />
+                <Text size={3.2} fontWeight={600}>
                   Hello
                 </Text>
-                <View height={5} />
-                <Text size={1.5} alpha={0.5}>
+                <View height={10} />
+                <Text size={1.75} alpha={0.5}>
                   Welcome to Orbit
                 </Text>
-                <View height={20} />
-                <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                <View height={30} />
+                <Text textAlign="left" size={1.1}>
                   Orbit is the first ever completely private search platform.
                   <br />
                   <br />
                   To work, Orbit sets up a proxy to direct our servers at{' '}
-                  <strong>{getConfig().privateUrl}</strong> to your local
-                  computer. When you click 'Begin', we'll prompt you for a
-                  password to set this up.
+                  <em>{getConfig().privateUrl}</em> to your local computer.
+                  <br />
+                  <br />
+                  When you click 'Begin', we'll prompt you for a password to set
+                  this up.
+                  <br />
                   <br />
                   <br />
                   <strong>
                     <a href="http://tryorbit.com/security">
                       Learn everything about Orbit security.
                     </a>
-                  </strong>.
+                  </strong>
                 </Text>
               </Centered>
             )}

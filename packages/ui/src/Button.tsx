@@ -44,6 +44,9 @@ export const Button = ({
       glow={glow}
       glint
       theme={theme}
+      activeStyle={{
+        opacity: 0.8,
+      }}
       glowProps={{
         scale: 1.8,
         opacity: 0.15,

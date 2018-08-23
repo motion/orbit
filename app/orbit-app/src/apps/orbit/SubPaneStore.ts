@@ -109,15 +109,10 @@ export class SubPaneStore {
     return this.fullHeight - this.aboveContentHeight
   }
 
-  hasRunOnce = false
-
   setAppHeightOnHeightChange = react(
     () => [this.fullHeight, this.positionState.isActive],
     async ([height, isActive], { sleep }) => {
-      if (!isActive) {
-        this.hasRunOnce = false
-        throw react.cancel
-      }
+      ensure('is active', isActive)
       // on first transition go fast
       if (this.isTransitioningToActive) {
         this.isTransitioningToActive = false
@@ -129,10 +124,7 @@ export class SubPaneStore {
           await sleep(100)
         }
       }
-      react.ensure(
-        'different height',
-        height !== this.props.appStore.contentHeight,
-      )
+      react.ensure('new value', height !== this.props.appStore.contentHeight)
       this.props.appStore.setContentHeight(height)
     },
   )

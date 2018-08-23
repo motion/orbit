@@ -6,6 +6,7 @@ import { Person, Bit, PersonBit } from '@mcro/models'
 import { AppStore } from '../stores/AppStore'
 import { AppStatePeekItem } from '@mcro/stores'
 import { ItemHideProps } from '../types/ItemHideProps'
+import { Setting } from '../../../models/src'
 
 export type ResolvedItem = {
   title: string
@@ -26,7 +27,7 @@ export type ResolvedItem = {
 }
 
 export type ItemResolverProps = {
-  model?: Bit | Person | PersonBit
+  model?: Bit | Person | PersonBit | Setting
   item?: AppStatePeekItem
   appStore?: AppStore
   isExpanded?: boolean

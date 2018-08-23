@@ -141,6 +141,7 @@ class OnboardStore {
       await this.checkAlreadyProxied()
       if (this.accepted !== true) {
         const { accepted, message } = await promptForAuthProxy()
+        console.log('got from prompt', accepted, message)
         this.accepted = accepted
         this.acceptedMessage = message
         if (accepted) {

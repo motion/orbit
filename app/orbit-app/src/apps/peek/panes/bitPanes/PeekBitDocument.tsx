@@ -12,6 +12,7 @@ const BitTitle = view({
 })
 
 export const Document = ({ content, bit }: PeekBitPaneProps) => {
+  console.log('resolve document...', content, bit)
   return (
     <>
       <BitTitle>{bit.title}</BitTitle>

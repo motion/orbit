@@ -11,6 +11,10 @@ import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 
+const VerticalSpaceSmall = view({
+  height: 5,
+})
+
 const CardWrap = view(UI.View, {
   position: 'relative',
   width: '100%',
@@ -110,8 +114,7 @@ const Preview = view({
 
 const CardSubtitle = view(UI.View, {
   height: 20,
-  margin: [3, 0, 0],
-  padding: [2, 30, 2, 0],
+  padding: [3, 30, 3, 0],
   flexFlow: 'row',
   alignItems: 'center',
   listItem: {
@@ -170,7 +173,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const hasSubtitle = !!(location || subtitle) && !(hide && hide.subtitle)
+    const hasMeta = !!(location || updatedAt) && !(hide && hide.meta)
+    const hasPreview = !!preview && !children && !hide.body
+    const hasSubtitle = !!subtitle
     return (
       <CardWrap
         {...hoverToSelect && !inactive && store.hoverSettler.props}
@@ -200,11 +205,11 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               />
             )}
           {!(hide && hide.title) && (
-            <Title style={titleFlex && { flex: titleFlex }}>
+            <Title>
               <UI.Text
                 fontSize={15}
                 sizeLineHeight={0.85}
-                ellipse={2}
+                ellipse={hasSubtitle && hasMeta ? true : 2}
                 fontWeight={600}
                 maxWidth="calc(100% - 30px)"
                 {...titleProps}
@@ -214,13 +219,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               {afterTitle}
             </Title>
           )}
+          {!!titleFlex && <div style={{ flex: titleFlex }} />}
           {hasSubtitle && (
             <CardSubtitle>
-              {!!location && (
-                <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
-                  {location}
-                </RoundButtonSmall>
-              )}
               {typeof subtitle === 'string' ? (
                 <UI.Text alpha={0.55} ellipse {...subtitleProps}>
                   {subtitle}
@@ -228,42 +229,46 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               ) : (
                 subtitle
               )}
+              {hasMeta && <VerticalSpaceSmall />}
+            </CardSubtitle>
+          )}
+          {hasMeta && (
+            <CardSubtitle>
+              {!!location && (
+                <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
+                  {location}
+                </RoundButtonSmall>
+              )}
               {subtitleSpaceBetween}
               {!!createdAt && (
                 <>
-                  {!!(subtitle || location) && <div style={{ width: 5 }} />}
+                  {!!location && <div style={{ width: 5 }} />}
                   <UI.Text alpha={0.65} size={0.9}>
                     <DateFormat date={new Date(updatedAt)} nice />
                   </UI.Text>
                 </>
               )}
+              {hasPreview && <VerticalSpaceSmall />}
             </CardSubtitle>
           )}
-          {/* vertical space only if needed */}
-          {hasSubtitle &&
-            (!!children || !!preview) && (
-              <div style={{ flex: 1, maxHeight: 4 }} />
-            )}
-          {!!preview &&
-            !children &&
-            !hide.body && (
-              <Preview>
-                {typeof preview !== 'string' && preview}
-                {typeof preview === 'string' && (
-                  <UI.Text
-                    size={1.3}
-                    sizeLineHeight={0.9}
-                    margin={inGrid ? ['auto', 0] : 0}
-                  >
-                    {preview}
-                  </UI.Text>
-                )}
-              </Preview>
-            )}
+          {hasPreview && (
+            <Preview>
+              {typeof preview !== 'string' && preview}
+              {typeof preview === 'string' && (
+                <UI.Text
+                  size={1.3}
+                  sizeLineHeight={0.9}
+                  margin={inGrid ? ['auto', 0] : 0}
+                >
+                  {preview}
+                </UI.Text>
+              )}
+            </Preview>
+          )}
           {typeof children === 'function'
             ? children(contentProps, props.bit, props.index)
             : children}
-          {people && people.length && people[0].data.profile ? (
+          {people && people.length ? (
             <div>
               <PeopleRow people={people} />
             </div>

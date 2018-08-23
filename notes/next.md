@@ -1,11 +1,10 @@
 # next
 
-- next: fix production oauth
+- make older macs not have transparent bg
 
 friday goals
 
 - 90% of deployable .app
-  - proper oauth keys and proxy
   - onboarding much improved
   - profile/theme cleanup
 - typeform survey to capture a few potential paths
@@ -156,3 +155,20 @@ queue:
 - contextual search
 - component store
 - forking apps / app store
+
+# interesting apps to build
+
+home queues:
+
+...
+
+search apps:
+
+- calculator
+- local file search
+- wikipedia lookup
+- map lookup
+
+peek apps:
+
+- just needs internals + documentation

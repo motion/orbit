@@ -81,7 +81,7 @@ export class Root {
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    await this.startSyncers()
+    // await this.startSyncers()
     this.screen = new Screen()
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,
@@ -169,7 +169,10 @@ export class Root {
     })
     server.on('connection', socket => {
       socket.on('message', str => {
-        handleEntityActions(socket, typeof str === "string" ? JSON.parse(str) : str)
+        handleEntityActions(
+          socket,
+          typeof str === 'string' ? JSON.parse(str) : str,
+        )
       })
     })
   }

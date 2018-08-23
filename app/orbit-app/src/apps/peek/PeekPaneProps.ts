@@ -1,4 +1,4 @@
-import { Bit, Person, Setting } from '@mcro/models'
+import { Bit, PersonBit, Setting } from '@mcro/models'
 import { AppStore } from '../../stores/AppStore'
 import { PeekStore } from './stores/PeekStore'
 import { AppStatePeekItem } from '@mcro/stores'
@@ -24,7 +24,7 @@ export type PeekContents = {
 
 export type PeekPaneProps = {
   scrollToHighlight?: () => void
-  model?: Bit | Person | Setting
+  model?: Bit | PersonBit | Setting
   selectionStore: SelectionStore
   appStore: AppStore
   peekStore: PeekStore

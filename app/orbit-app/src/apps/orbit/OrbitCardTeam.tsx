@@ -48,7 +48,7 @@ export class OrbitCardTeam extends React.Component<any> {
       <OrbitCard
         title={bit.title}
         titleProps={{ ellipse: 1 }}
-        bit={bit}
+        model={model}
         afterTitle={isExpanded && connections}
         index={0}
         {...props}

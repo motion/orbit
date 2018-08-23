@@ -59,7 +59,7 @@ class PeekPageInner extends React.Component<Props> {
     console.log('render peek page', model, type)
     return (
       <PeekContentsView
-        key={(model ? model.id : item.id) || Math.random()}
+        key={(model && model.id) || item.id || Math.random()}
         item={item}
         model={model}
         appStore={appStore}

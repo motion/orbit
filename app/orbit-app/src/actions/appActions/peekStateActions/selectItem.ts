@@ -5,6 +5,9 @@ import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { PeekTarget } from './types'
 import { isEqual } from '@mcro/black'
+import { logger } from '@mcro/logger'
+
+const log = logger('selectItem')
 
 export function setPeekState(props) {
   const target = getTargetPosition(props.target)
@@ -19,6 +22,7 @@ export function toggleSelectItem(
   item: Person | Bit | AppStatePeekItem,
   target?: PeekTarget,
 ) {
+  log('toggleSelectItem', item)
   if (isEqual(App.peekState.item, getItem(item))) {
     App.actions.clearPeek()
   } else {

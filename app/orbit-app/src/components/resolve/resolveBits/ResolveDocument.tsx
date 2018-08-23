@@ -27,6 +27,8 @@ export const ResolveDocument = ({
   isExpanded,
 }: BitItemResolverProps) =>
   children({
+    id: bit.id,
+    type: 'bit',
     title: bit.title || item.title,
     icon: bit.integration || item.integration,
     location: bit.location.name || '',

@@ -70,6 +70,8 @@ export const ResolveTask = ({
     ? parseGithubContents({ bit, shownLimit })
     : { content: null, comments: null }
   return children({
+    id: bit.id,
+    type: 'bit',
     title: bit.title,
     icon: 'github',
     locationLink: bit.location.webLink,

@@ -81,14 +81,14 @@ class OrbitDirectoryStore {
   allPeople = modelQueryReaction(
     () =>
       PersonRepository.find({
-        take: 100,
-        where: { name: { $not: null } /* , photo: { $not: null } */ },
+        take: 4000,
+        // where: { name: { $not: null } /* , photo: { $not: null } */ },
       }),
     people => {
       if (!this.isActive && this.allPeople.length) {
         throw react.cancel
       }
-      return sortBy(people, x => x.name.toLowerCase())
+      return sortBy(people.filter(x => !!x.name), x => x.name.toLowerCase())
     },
     {
       defaultValue: [],

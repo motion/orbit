@@ -27,6 +27,8 @@ export const ResolvePerson = ({
     return null
   }
   return children({
+    id: model.id || model.email,
+    type: 'person',
     title: model.name,
     icon: model.photo || 'users_square',
     subtitle: model.email,

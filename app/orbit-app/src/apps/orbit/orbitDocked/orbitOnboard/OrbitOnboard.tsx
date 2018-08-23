@@ -220,10 +220,15 @@ export const OrbitOnboard = decorator(
                   <br />
                   To work, Orbit sets up a proxy to direct our servers at{' '}
                   <strong>{getConfig().privateUrl}</strong> to your local
-                  computer.{' '}
-                  <a href="http://tryorbit.com/auth">
-                    Learn more about how this works
-                  </a>.
+                  computer. When you click 'Begin', we'll prompt you for a
+                  password to set this up.
+                  <br />
+                  <br />
+                  <strong>
+                    <a href="http://tryorbit.com/security">
+                      Learn everything about Orbit security.
+                    </a>
+                  </strong>.
                 </Text>
               </Centered>
             )}

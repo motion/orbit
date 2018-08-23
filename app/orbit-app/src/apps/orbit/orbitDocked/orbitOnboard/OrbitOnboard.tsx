@@ -15,7 +15,7 @@ import { Title } from '../../../../views'
 import { getConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
-import { Message } from '../../../../views/Message'
+import { MessageDark } from '../../../../views/Message'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -312,10 +312,10 @@ export const OrbitOnboard = decorator(
               })}
             </Unpad>
             <br />
-            <Message>
+            <MessageDark style={{ textAlign: 'center' }}>
               <strong>Orbit Proxy Active</strong>. Your private keys will never
               be available outside this device!
-            </Message>
+            </MessageDark>
             <br />
           </OnboardFrame>
           <OnboardFrame>

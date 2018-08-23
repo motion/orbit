@@ -1,18 +1,22 @@
 import { getConfig } from '@mcro/config'
 
-export const checkAuthProxy = async () => {
-  try {
+export const checkAuthProxy = () => {
+  return new Promise(res => {
     const testUrl = `${getConfig().privateUrl}/hello`
     console.log(`Checking testurl: ${testUrl}`)
-    setTimeout(() => {
-      throw new Error('timeout')
-    }, 500)
-    const res = await fetch(testUrl).then(res => res.text())
-    if (res && res === 'hello world') {
-      return true
-    }
-  } catch (err) {
-    console.log('error seeing if already proxied')
-  }
-  return false
+    // timeout
+    const tm = setTimeout(() => res(false), 500)
+    fetch(testUrl)
+      .then(res => res.text())
+      .then(text => {
+        if (text === 'hello world') {
+          clearTimeout(tm)
+          res(true)
+        }
+      })
+      .catch(err => {
+        console.log('check err', err)
+        res(false)
+      })
+  })
 }

@@ -1,5 +1,6 @@
 # next
 
+- need way to update without losing data: use a ~/.orbit dir?
 - PersonBit transition - uniqueness in person bit is tracked by `email` property
 - typeform survey to capture a few potential paths
 - (bonus) oauth key management

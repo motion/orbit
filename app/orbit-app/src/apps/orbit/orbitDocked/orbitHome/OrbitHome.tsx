@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react, compose, ensure } from '@mcro/black'
-import { BitRepository, PersonRepository } from '../../../../repositories'
+import { BitRepository, PersonBitRepository } from '../../../../repositories'
 import { SubTitle, SuggestionBarVerticalPad } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -54,9 +54,9 @@ class OrbitHomeStore {
 
   following = react(
     async () => {
-      const people = await PersonRepository.find({
-        order: { createdAt: 'DESC' },
-        take: 10,
+      const people = await PersonBitRepository.find({
+        // order: { createdAt: 'DESC' },
+        take: 15,
       })
       const [slack, drive, github, confluence, jira, gmail] = await Promise.all(
         [

@@ -5,4 +5,5 @@ export type ItemHideProps = {
   subtitle?: boolean
   body?: boolean
   date?: boolean
+  meta?: boolean
 }

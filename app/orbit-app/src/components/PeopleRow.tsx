@@ -13,7 +13,7 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
   const total = people.length
   const half = total / 2
   return (
-    <UI.Row padding={[3, 0, 0]}>
+    <UI.Row>
       <UI.Row marginRight={14} alignItems="center">
         {people.map((person, i) => (
           <UI.Image

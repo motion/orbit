@@ -3,7 +3,6 @@ import { SlackMessage } from './SlackMessage'
 import keywordExtract from '@mcro/keyword-extract'
 import { SlackBitData } from '@mcro/models'
 import arrford from 'arrford'
-import { capitalize } from 'lodash'
 import { BitItemResolverProps } from '../ResolveBit'
 
 const options = {
@@ -36,10 +35,7 @@ export const ResolveConversation = ({
         )) as any) // todo(nate) please fix type error and remove "as any"
     : null
   return children({
-    title:
-      bit.people && bit.people.length
-        ? arrford(bit.people.map(p => capitalize((p.name || '').split(' ')[0])))
-        : bit.title,
+    title: arrford(keywordExtract.extract(bit.body, options).slice(0, 3)),
     people: bit.people,
     preview: keywordExtract
       .extract(bit.body, options)

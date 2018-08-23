@@ -49,7 +49,7 @@ export class SelectableCarousel extends React.Component<Props> {
       store,
       selectionStore,
       cardWidth = 180,
-      cardHeight = 90,
+      cardHeight = 95,
       ...props
     } = this.props
     return (

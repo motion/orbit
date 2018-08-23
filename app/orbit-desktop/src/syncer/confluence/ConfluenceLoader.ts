@@ -28,8 +28,11 @@ export class ConfluenceLoader {
    *
    * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-get
    */
-  async loadContents(type?: 'page'|'blogpost', start = 0, limit = 25): Promise<ConfluenceContent[]> {
-
+  async loadContents(
+    type?: 'page' | 'blogpost',
+    start = 0,
+    limit = 25,
+  ): Promise<ConfluenceContent[]> {
     // without type specified we load everything
     if (!type) {
       return Promise.all([
@@ -45,12 +48,13 @@ export class ConfluenceLoader {
     // 4. body.styled_view - used to get bit body / page content (with html styles included)
 
     const response = await this.fetch<ConfluenceCollection<ConfluenceContent>>(
-      `/wiki/rest/api/content`,
+      '/wiki/rest/api/content',
       {
         type,
         start,
         limit,
-        expand: 'childTypes.all,space,body.styled_view,history,history.lastUpdated,history.contributors,history.contributors.publishers'
+        expand:
+          'childTypes.all,space,body.styled_view,history,history.lastUpdated,history.contributors,history.contributors.publishers',
       },
     )
 
@@ -67,7 +71,7 @@ export class ConfluenceLoader {
     if (response.results.length < response.size) {
       return [
         ...response.results,
-        ...(await this.loadContents(type, start + limit, limit))
+        ...(await this.loadContents(type, start + limit, limit)),
       ]
     }
 
@@ -79,8 +83,11 @@ export class ConfluenceLoader {
    *
    * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-id-child-comment-get
    */
-  private async loadComments(contentId: string, start = 0, limit = 25): Promise<ConfluenceComment[]> {
-
+  private async loadComments(
+    contentId: string,
+    start = 0,
+    limit = 25,
+  ): Promise<ConfluenceComment[]> {
     // scopes we use here:
     // 1. history.createdBy - used to get comment author
 
@@ -89,13 +96,13 @@ export class ConfluenceLoader {
       {
         start,
         limit,
-        expand: 'history.createdBy'
+        expand: 'history.createdBy',
       },
     )
     if (response.results.length < response.size) {
       return [
         ...response.results,
-        ...(await this.loadComments(contentId, start + limit, limit))
+        ...(await this.loadComments(contentId, start + limit, limit)),
       ]
     }
 
@@ -109,7 +116,6 @@ export class ConfluenceLoader {
    * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-groupName-member-get
    */
   async loadUsers(): Promise<ConfluenceUser[]> {
-
     // get groups first
     const groups = await this.loadGroups()
 
@@ -118,13 +124,11 @@ export class ConfluenceLoader {
     for (let group of groups) {
       const members = await this.loadGroupMembers(group.name)
       for (let member of members) {
-
         // same users can participate in multiple groups, so we exclude duplicates
         const hasSameUser = users.some(user => {
           return user.accountId === member.accountId
         })
-        if (hasSameUser === false)
-          users.push(member)
+        if (hasSameUser === false) users.push(member)
       }
     }
     return users
@@ -137,12 +141,12 @@ export class ConfluenceLoader {
    */
   private async loadGroups(start = 0, limit = 200): Promise<ConfluenceGroup[]> {
     const response = await this.fetch<ConfluenceCollection<ConfluenceGroup>>(
-      `/wiki/rest/api/group`
+      '/wiki/rest/api/group',
     )
     if (response.results.length < response.size) {
       return [
         ...response.results,
-        ...(await this.loadGroups(start + limit, limit))
+        ...(await this.loadGroups(start + limit, limit)),
       ]
     }
 
@@ -154,8 +158,11 @@ export class ConfluenceLoader {
    *
    * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-get
    */
-  private async loadGroupMembers(groupName: string, start = 0, limit = 200): Promise<ConfluenceUser[]> {
-
+  private async loadGroupMembers(
+    groupName: string,
+    start = 0,
+    limit = 200,
+  ): Promise<ConfluenceUser[]> {
     const response = await this.fetch<ConfluenceCollection<ConfluenceUser>>(
       `/wiki/rest/api/group/${groupName}/member`,
       { expand: 'operations,details.personal' },
@@ -163,7 +170,7 @@ export class ConfluenceLoader {
     if (response.results.length < response.size) {
       return [
         ...response.results,
-        ...(await this.loadGroupMembers(groupName, start + limit, limit))
+        ...(await this.loadGroupMembers(groupName, start + limit, limit)),
       ]
     }
 
@@ -177,9 +184,10 @@ export class ConfluenceLoader {
     path: string,
     params?: { [key: string]: any },
   ): Promise<T> {
-
     const { username, password, domain } = this.setting.values.atlassian
-    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
+    const credentials = Buffer.from(`${username}:${password}`).toString(
+      'base64',
+    )
     const qs = queryObjectToQueryString(params)
     const url = `${domain}${path}${qs}`
 
@@ -190,11 +198,12 @@ export class ConfluenceLoader {
         'Content-Type': 'application/json',
       },
     })
-    log(`request ${url} result:`, result)
+    log(`request ${url} result ok:`, result.ok)
     if (!result.ok)
-      throw new Error(`[${result.status}] ${result.statusText}: ${await result.text()}`)
+      throw new Error(
+        `[${result.status}] ${result.statusText}: ${await result.text()}`,
+      )
 
     return result.json()
   }
-
 }

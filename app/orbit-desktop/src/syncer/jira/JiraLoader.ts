@@ -3,7 +3,13 @@ import { Bit, Person } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { queryObjectToQueryString } from '../../utils'
-import { JiraComment, JiraCommentCollection, JiraIssue, JiraIssueCollection, JiraUser } from './JiraTypes'
+import {
+  JiraComment,
+  JiraCommentCollection,
+  JiraIssue,
+  JiraIssueCollection,
+  JiraUser,
+} from './JiraTypes'
 
 const log = logger('syncer:jira:loader')
 
@@ -22,11 +28,11 @@ export class JiraLoader {
    */
   async loadUsers(startAt: number = 0): Promise<JiraUser[]> {
     const maxResults = 1000
-    const url = `/rest/api/2/user/search`
+    const url = '/rest/api/2/user/search'
     const users = await this.fetch<JiraUser[]>(url, {
       maxResults,
       startAt,
-      username: '_'
+      username: '_',
     })
 
     // since we can only load max 1000 people per request, we check if we have more people to load
@@ -44,16 +50,14 @@ export class JiraLoader {
    * Loads jira issues from the jira api.
    */
   async loadIssues(startAt: number = 0): Promise<JiraIssue[]> {
-
     const maxResults = 100
-    const url = `/rest/api/2/search`
+    const url = '/rest/api/2/search'
     const response = await this.fetch<JiraIssueCollection>(url, {
       fields: '*all',
       maxResults,
       startAt,
-      expand: 'renderedFields'
+      expand: 'renderedFields',
     })
-
 
     // load content comments
     for (let issue of response.issues) {
@@ -79,8 +83,11 @@ export class JiraLoader {
    *
    * @see https://developer.atlassian.com/cloud/jira/platform/rest/#api-api-2-issue-issueIdOrKey-comment-get
    */
-  private async loadComments(issueId: string, startAt = 0, maxResults = 25): Promise<JiraComment[]> {
-
+  private async loadComments(
+    issueId: string,
+    startAt = 0,
+    maxResults = 25,
+  ): Promise<JiraComment[]> {
     const response = await this.fetch<JiraCommentCollection>(
       `/rest/api/2/issue/${issueId}/comment`,
       {
@@ -91,24 +98,24 @@ export class JiraLoader {
     if (response.comments.length < response.total) {
       return [
         ...response.comments,
-        ...(await this.loadComments(issueId, startAt + maxResults, maxResults))
+        ...(await this.loadComments(issueId, startAt + maxResults, maxResults)),
       ]
     }
 
     return response.comments
   }
 
-
   /**
    * Performs HTTP request to the atlassian to get requested data.
    */
   private async fetch<T>(
     path: string,
-    params?: { [key: string]: any }
+    params?: { [key: string]: any },
   ): Promise<T> {
-
     const { username, password, domain } = this.setting.values.atlassian
-    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
+    const credentials = Buffer.from(`${username}:${password}`).toString(
+      'base64',
+    )
     const qs = queryObjectToQueryString(params)
     const url = `${domain}${path}${qs}`
 
@@ -119,7 +126,7 @@ export class JiraLoader {
         'Content-Type': 'application/json',
       },
     })
-    log(`request ${url} result:`, result)
+    log(`request ${url} result ok:`, result.ok)
 
     if (!result.ok) {
       throw new Error(
@@ -129,5 +136,4 @@ export class JiraLoader {
 
     return result.json()
   }
-
 }

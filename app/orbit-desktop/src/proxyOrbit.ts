@@ -25,9 +25,12 @@ if (!host || !port) {
       console.log('exists already', exists)
     }
 
-    // attempt to kill port 80
-    killPort(80)
-    await sleep(50)
+    // attempt to kill port 80 just in case...
+    try {
+      await killPort(80)
+    } catch (err) {
+      console.log('err killing port', err.message)
+    }
 
     // forward port
     forwardPort(port, 80, { isPublicAccess: true })

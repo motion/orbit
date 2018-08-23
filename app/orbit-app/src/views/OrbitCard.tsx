@@ -174,7 +174,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     } = this.props
     const { isSelected } = store
     const hasMeta = !!(location || updatedAt) && !(hide && hide.meta)
-    const hasPreview = !!preview && !children && !hide.body
+    const hasPreview = !!preview && !children && !(hide && hide.body)
     const hasSubtitle = !!subtitle
     return (
       <CardWrap

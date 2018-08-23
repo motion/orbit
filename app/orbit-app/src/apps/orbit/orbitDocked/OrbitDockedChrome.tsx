@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import { BORDER_RADIUS, CHROME_PAD } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import * as UI from '@mcro/ui'
+import { Desktop } from '@mcro/stores'
 
 type Props = {
   appStore: AppStore
@@ -55,8 +56,8 @@ const Background = view({
   borderRadius: BORDER_RADIUS + 1,
   // background: 'rgba(255,255,255,0.92)',
 })
-Background.theme = ({ theme, isUpper }) => ({
-  background: [50, 50, 50, 0.82],
+Background.theme = ({ supportsTransparency }) => ({
+  background: supportsTransparency ? [50, 50, 50, 0.82] : [40, 40, 40],
   // background: [0, 0, 0, 0.5],
   // background: isUpper
   //   ? theme.background.alpha(0.2)
@@ -66,15 +67,18 @@ Background.theme = ({ theme, isUpper }) => ({
   //     )`,
 })
 
-const OrbitChrome = ({ isUpper = false }) => {
+const OrbitChrome = view(({ isUpper = false }) => {
   return (
     <>
       <Border />
       <Chrome />
-      <Background isUpper={isUpper} />
+      <Background
+        isUpper={isUpper}
+        isTransparent={Desktop.state.operatingSystem.supportsTransparency}
+      />
     </>
   )
-}
+})
 
 const BlockFrame = view(UI.View, {
   pointerEvents: 'none',

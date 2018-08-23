@@ -84,6 +84,7 @@ class DesktopStore {
     operatingSystem: {
       isAccessible: false,
       macVersion: null,
+      supportsTransparency: false,
     },
     paused: true,
     focusedOnOrbit: false,

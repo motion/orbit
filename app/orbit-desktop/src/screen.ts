@@ -123,6 +123,14 @@ export class Screen {
 
   start = async () => {
     console.log('starting oracle...')
+
+    const info = await this.oracle.getInfo()
+    Desktop.setState({
+      operatingSystem: {
+        supportsTransparency: info.supportsTransparency
+      }
+    })
+
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.12')) {

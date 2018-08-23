@@ -27,6 +27,10 @@ const appPath = bundle =>
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
 
+type OracleInfo = {
+  supportsTransparency: boolean
+}
+
 export default class Oracle {
   wss: Server
   process: any
@@ -39,6 +43,7 @@ export default class Oracle {
   awaitingSocket = []
   listeners = []
   onWindowChangeCB: (a: string, b: any) => any = idFn
+  onInfoCB = idFn
   onLinesCB = idFn
   onWordsCB = idFn
   onBoxChangedCB = idFn
@@ -179,6 +184,15 @@ export default class Oracle {
     return this
   }
 
+  getInfo = (): Promise<OracleInfo> => {
+    return new Promise(res => {
+      this.onInfoCB = info => {
+        res(info)
+      }
+      this.socketSend('info')
+    })
+  }
+
   onClear = cb => {
     this.onClearCB = cb
   }
@@ -291,10 +305,11 @@ export default class Oracle {
         },
         accessible: this.handleAccessibility,
         // up to listeners of this class
-        clear: this.onClearCB,
-        words: this.onWordsCB,
-        lines: this.onLinesCB,
-        // relay down to swift process
+        clear: val => this.onClearCB(val),
+        words: val => this.onWordsCB(val),
+        lines: val => this.onLinesCB(val),
+        info: val => this.onInfoCB(val),
+        // down to swift process
         pause: this.pause,
         resume: this.resume,
         start: this.start,

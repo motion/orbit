@@ -323,11 +323,10 @@ export const OrbitOnboard = decorator(
               <Text size={2.5} fontWeight={600}>
                 All set!
               </Text>
-              <View height={10} />
+              <View height={20} />
               <Text size={1.5} alpha={0.5}>
-                Orbit will scan your integrations and create an index. It
-                creates profiles of people it sees from across different
-                integrations.
+                Orbit will now create an index of things and people from across
+                your cloud.
               </Text>
             </Centered>
           </OnboardFrame>

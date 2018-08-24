@@ -5,10 +5,10 @@ import { logger } from '@mcro/logger'
 import sudoPrompt from 'sudo-prompt'
 import * as Path from 'path'
 import { getConfig as getGlobalConfig } from '@mcro/config'
+import Sudoer from '@mcro/electron-sudo'
 
 const log = logger('desktop')
 const Config = getConfig()
-const options = { name: 'Orbit Proxy' }
 
 const checkAuthProxy = () => {
   return new Promise(res => {
@@ -64,53 +64,20 @@ export class PortForwardStore {
       }
     }, 300)
 
-    // turns out it doesnt matter if theres a user just that we set it to something
-    // see: https://github.com/jorangreef/sudo-prompt/blob/ad291f7bd00bba09a01b7e4ce93dfa547f35f22d/index.js#L172
-    process.env.USER = process.env.USER || 'hi'
-
-    sudoPrompt.exec(
-      `node ${pathToOrbitProxy} --port ${port} --host ${host}`,
-      options,
-      (err, stdout, stderr) => {
-        if (err) {
-          const message = `${err.message}`
-          if (message.indexOf('EADDRINUSE') > -1) {
-            // handle error!
-            log('OrbitProxy in use error', message)
-            // TODO: we can run lsof or similar and show what app is using it and show instructions.
-            // they only need to forward during oauth so we could tell them its temporary too.
-            Desktop.sendMessage(
-              App,
-              App.messages.FORWARD_STATUS,
-              'Port 80 already in use',
-            )
-          } else {
-            // handle error!
-            log('OrbitProxy', err)
-            Desktop.sendMessage(
-              App,
-              App.messages.FORWARD_STATUS,
-              message.slice(0, 400),
-            )
-          }
-        } else {
-          log('OrbitProxy no err but exited early', stdout, stderr)
-          Desktop.sendMessage(
-            App,
-            App.messages.FORWARD_STATUS,
-            stdout || stderr,
-          )
-        }
-      },
+    const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
+    const cmd = await sudoer.spawn(
+      'node',
+      `${pathToOrbitProxy} --port ${port} --host ${host}`.split(' '),
     )
-  }
-
-  private handleProcess = proc => {
-    proc.stdout.on('data', data => {
-      log(`OrbitProxyProcess: ${data}`)
+    cmd.stdout.on('data', x => {
+      log(`OrbitProxy: ${x}`)
+      if (x.indexOf('OrbitSuccess') > -1) {
+        Desktop.sendMessage(App, App.messages.FORWARD_STATUS, 'success')
+      }
     })
-    proc.stderr.on('data', data => {
-      log(`OrbitProxyProcess: ${data}`)
+    cmd.stderr.on('data', x => {
+      log(`OrbitProxyErr: ${x}`)
+      Desktop.sendMessage(App, App.messages.FORWARD_STATUS, x)
     })
   }
 }

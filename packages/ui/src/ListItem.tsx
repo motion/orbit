@@ -43,7 +43,7 @@ export type ItemProps = SizedSurfaceProps & {
   style?: Object
   childrenEllipse?: boolean
   getRef?: Function
-  highlight?: boolean | Function
+  highlight?: boolean | ((index: number) => React.ReactNode)
   selectable?: boolean
 }
 

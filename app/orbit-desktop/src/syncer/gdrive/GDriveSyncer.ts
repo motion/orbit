@@ -4,8 +4,6 @@ import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import * as Helpers from '../../helpers'
-import { createOrUpdate } from '../../helpers/createOrUpdate'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
@@ -14,45 +12,68 @@ import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
 
 const log = logger('syncer:gdrive')
 
+/**
+ * Syncs Google Drive files.
+ */
 export class GDriveSyncer implements IntegrationSyncer {
   private loader: GDriveLoader
   private setting: SettingEntity
+  private people: PersonEntity[]
+  private bits: BitEntity[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
     this.loader = new GDriveLoader(this.setting)
   }
 
+  /**
+   * Runs synchronization process.
+   */
   async run(): Promise<void> {
-    log('synchronizing google drive files')
+
+    // load all database bits
+    log(`loading database bits`)
+    this.bits = await getRepository(BitEntity).find({
+      settingId: this.setting.id
+    })
+    log(`database bits were loaded`, this.bits)
+
+    // load all database people
+    log(`loading database people`)
+    this.people = await getRepository(PersonEntity).find({
+      settingId: this.setting.id
+    })
+    log(`database people were loaded`, this.people)
+
+    // now load gdrive files from gdrive API
     await this.loader.load()
 
-    // create entities for loaded files
-    const createdFiles = await Promise.all(
-      this.loader.files.map(file => {
-        return this.createFile(file)
-      }),
-    )
-    const newlyCreatedFiles = createdFiles.filter(file => !!file)
-    log(`synced ${newlyCreatedFiles.length} files`)
+    // build bits and people from loaded files
+    const bits = this.loader.files.map(file => this.buildBit(file))
+    const people = this.loader.users.map(user => this.buildPerson(user))
 
-    // create entities for loaded users
-    const createdPeople = await Promise.all(
-      this.loader.users.map(user => {
-        return this.createPerson(user)
-      }),
-    )
-    const newlyCreatedPeople = createdPeople.filter(person => !!person)
-    log(`synced ${newlyCreatedPeople.length} people`)
+    // saving built bits
+    log(`saving bits`, bits)
+    await getRepository(BitEntity).save(bits)
+    log(`bits where saved`)
+
+    // saving built bits and people
+    log(`saving bits and people`, bits, people)
+    await getRepository(PersonEntity).save(people)
+    await createOrUpdatePersonBits(people)
+    await getRepository(BitEntity).save(bits)
+    log(`bits and people where saved`)
   }
 
-  private async createFile(file: GDriveLoadedFile): Promise<Bit | null> {
+  /**
+   * Builds a bit from the given gdrive aggregated file.
+   */
+  private buildBit(file: GDriveLoadedFile): BitEntity {
     const data: GDriveBitData = {}
     const id = `gdrive-${this.setting.id}-${file.file.id}`
-    let bit = await getRepository(BitEntity).findOne(id)
-    if (!bit) bit = new BitEntity()
+    const bit = this.bits.find(bit => bit.id === id)
 
-    assign(bit, {
+    return assign(bit || new BitEntity(), {
       integration: 'gdrive',
       setting: this.setting,
       id: file.file.id,
@@ -79,32 +100,26 @@ export class GDriveSyncer implements IntegrationSyncer {
       //     ? file.file.id + '.' + file.file.fileExtension
       //     : undefined,
     })
-
-    return getRepository(BitEntity).save(bit)
   }
 
-  private async createPerson(user: GDriveLoadedUser) {
+  /**
+   * Creates person entity from a given google drive user.
+   */
+  private buildPerson(user: GDriveLoadedUser): PersonEntity {
     const id = `gdrive-${this.setting.id}-${user.email}`
     const data: GDrivePersonData = {}
-    const personEntity = await createOrUpdate(
-      PersonEntity,
-      {
-        id,
-        setting: this.setting,
-        integrationId: user.email,
-        integration: 'gdrive',
-        name: user.name,
-        email: user.email,
-        photo: user.photo,
-        data,
-        raw: user,
-      },
-      { matching: ['id', 'integration'] },
-    )
+    const person = this.people.find(person => person.id === id)
 
-    if (user.email)
-      await createOrUpdatePersonBits(personEntity)
-
-    return personEntity
+    return assign(person || new PersonEntity(), {
+      id,
+      setting: this.setting,
+      integrationId: user.email,
+      integration: 'gdrive',
+      name: user.name,
+      email: user.email,
+      photo: user.photo,
+      data,
+      raw: user,
+    })
   }
 }

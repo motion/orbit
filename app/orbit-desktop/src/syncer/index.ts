@@ -9,7 +9,7 @@ import { GMailSyncer } from './gmail/GMailSyncer'
 import { JiraIssueSyncer } from './jira/JiraIssueSyncer'
 import { JiraPeopleSyncer } from './jira/JiraPeopleSyncer'
 import { MailWhitelisterSyncer } from './mail-whitelister/MailWhitelisterSyncer'
-import { SlackIssuesSyncer } from './slack/SlackIssuesSyncer'
+import { SlackMessagesSyncer } from './slack/SlackMessagesSyncer'
 import { SlackPeopleSyncer } from './slack/SlackPeopleSyncer'
 
 const ONE_MINUTE = 1000 * 60 * 60
@@ -71,7 +71,7 @@ export const Syncers = [
     }),
     new Syncer({
       type: 'slack',
-      constructor: SlackIssuesSyncer,
+      constructor: SlackMessagesSyncer,
       interval: FIVE_MINUTES,
     }),
   ]),

@@ -15,6 +15,7 @@
     { "path": "../oracle" },
     { "path": "../../packages/black" },
     { "path": "../../packages/constants" },
+    { "path": "../../packages/electron-sudo" },
     { "path": "../../packages/config" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/helpers" },

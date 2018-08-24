@@ -164,8 +164,7 @@ export class PeekStore {
     if (type === 'person') {
       selectedItem = await PersonBitRepository.findOne({ email: id })
     } else if (type === 'bit') {
-      // TODO add relations: ['people']
-      selectedItem = await BitRepository.findOne({ id })
+      selectedItem = BitRepository.findOne({ where: { id }, relations: ['people'] })
     } else if (type === 'setting') {
       selectedItem = await SettingRepository.findOne({ id })
     }

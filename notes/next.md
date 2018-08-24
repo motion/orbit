@@ -1,3 +1,14 @@
+# end of month
+
+- need to talk to a few companies that may want to trial it
+- if i can get a good enough demo, we can discuss "friendly/consulting" contracts
+- goal is to get a couple companies on board with that
+  - formidable
+  - workday
+  - snapchat/tesla
+  - target/stripe
+  - walmart labs
+
 # next
 
 - need way to update without losing data: use a ~/.orbit dir?

@@ -11,7 +11,8 @@ fi
 npx kill-port 3002
 
 if [ "$PUNDLE" = "true" ]; then
-  pundle --dev.port 3002 --dev.singlepage --dev.static ./public::/
+  echo "start w pundle"
+  pundle --watch --dev.port 3002 --dev.singlepage --dev.static ./public::/ --cache.reset
 else
   npx mcro-build --entry ./src/main --port 3002
 fi

@@ -1,8 +1,8 @@
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 
 export const checkAuthProxy = () => {
   return new Promise(res => {
-    const testUrl = `${getConfig().privateUrl}/hello`
+    const testUrl = `${getGlobalConfig().privateUrl}/hello`
     console.log(`Checking testurl: ${testUrl}`)
     // timeout
     const tm = setTimeout(() => res(false), 500)

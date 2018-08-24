@@ -13,7 +13,6 @@ const Config = getConfig()
 const checkAuthProxy = () => {
   return new Promise(res => {
     const testUrl = `${getGlobalConfig().privateUrl}/hello`
-    console.log(`Checking testurl: ${testUrl}`)
     // timeout
     const tm = setTimeout(() => res(false), 500)
     fetch(testUrl)
@@ -25,7 +24,6 @@ const checkAuthProxy = () => {
         }
       })
       .catch(err => {
-        console.log('check err', err)
         res(false)
       })
   })

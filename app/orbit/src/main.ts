@@ -41,7 +41,7 @@ export async function main({ version }: OrbitOpts) {
     // errors are just showing the ports are empty
   }
 
-  const rootDirectory = Path.join(__dirname, '..', '..', '..')
+  const rootDirectory = Path.join(__dirname, '..', '..', '..', '..')
   console.log('rootDirectory', rootDirectory)
 
   setConfig({

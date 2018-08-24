@@ -2,7 +2,6 @@ import { store, react, ensure } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { getConfig } from '../config'
 import { logger } from '@mcro/logger'
-import sudoPrompt from 'sudo-prompt'
 import * as Path from 'path'
 import { getGlobalConfig } from '@mcro/config'
 import Sudoer from '@mcro/electron-sudo'
@@ -13,7 +12,6 @@ const Config = getConfig()
 const checkAuthProxy = () => {
   return new Promise(res => {
     const testUrl = `${getGlobalConfig().privateUrl}/hello`
-    // timeout
     const tm = setTimeout(() => res(false), 500)
     fetch(testUrl)
       .then(res => res.text())

@@ -27,15 +27,31 @@ export async function createOrUpdatePersonBits(
   // set unfilled properties
   if (!personBit.name) personBit.name = person.name
   if (!personBit.photo) personBit.photo = person.photo
-  if (!personBit.allNames) personBit.allNames = []
-  if (!personBit.allPhotos) personBit.allPhotos = []
+  if (!personBit.allNames) personBit.allNames = {}
+  if (!personBit.allPhotos) personBit.allPhotos = {}
   if (!personBit.people) personBit.people = []
 
   // add new properties
-  if (person.name && personBit.allNames.indexOf(person.name) === -1)
-    personBit.allNames.push(person.name)
-  if (person.photo && personBit.allPhotos.indexOf(person.photo) === -1)
-    personBit.allPhotos.push(person.photo)
+  if (person.name)
+    personBit.allNames[person.integration] = person.name
+  if (person.photo)
+    personBit.allPhotos[person.integration] = person.photo
+
+  // if we have default photo and name value
+  // that is not defined in all names and all photos
+  // it means this default photo/name value is obsolete
+  // and we need to update it
+  const isNameValid = Object.keys(personBit.allNames)
+    .map(key => personBit.allNames[key])
+    .indexOf(person.name) !== -1
+  const isPhotoValid = Object.keys(personBit.allPhotos)
+    .map(key => personBit.allPhotos[key])
+    .indexOf(person.photo) !== -1
+
+  if (!isNameValid && personBit.allNames[person.integration])
+    person.name = personBit.allNames[person.integration]
+  if (!isPhotoValid && personBit.allPhotos[person.integration])
+    person.photo = personBit.allPhotos[person.integration]
 
   switch (person.integration) {
     case 'gmail':

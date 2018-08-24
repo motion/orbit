@@ -14,11 +14,11 @@ const store = new IntegrationSettingsStore()
 const getItem = {
   githubItem: () =>
     BitRepository.findOne({ where: { integration: 'github' }, skip: 6 }),
-  gdocsSetting: async () => ({
+  gdriveSetting: async () => ({
     id: 1,
     title: 'GDocs',
     type: 'setting',
-    integration: 'gdocs',
+    integration: 'gdrive',
   }),
   githubSetting: async () =>
     SettingRepository.findOne({ where: { type: 'github' } }).then(

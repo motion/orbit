@@ -55,11 +55,11 @@ export default {
       prompt: 'consent',
     },
   },
-  gdocs: {
+  gdrive: {
     strategy: GoogleStrategy,
     config: {
       credentials: {
-        callbackURL: '/auth/gdocs/callback',
+        callbackURL: '/auth/gdrive/callback',
         clientID:
           '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com',
         clientSecret: 'LLXP2Vq36socQtgXy_XQqLOW',

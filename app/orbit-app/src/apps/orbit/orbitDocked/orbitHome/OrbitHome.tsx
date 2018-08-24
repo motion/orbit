@@ -58,10 +58,10 @@ class OrbitHomeStore {
         // order: { createdAt: 'DESC' },
         take: 15,
       })
-      const [slack, drive, github, confluence, jira, gmail] = await Promise.all(
+      const [slack, gdrive, github, confluence, jira, gmail] = await Promise.all(
         [
           findManyType('slack'),
-          findManyType('gdocs'),
+          findManyType('gdrive'),
           findManyType('github'),
           findManyType('confluence'),
           findManyType('jira'),
@@ -69,7 +69,7 @@ class OrbitHomeStore {
         ],
       )
       // only return ones with results
-      const all = { people, slack, drive, github, confluence, jira, gmail }
+      const all = { people, slack, gdrive, github, confluence, jira, gmail }
       const res = {} as any
       let curIndex = 0
       for (const name in all) {

@@ -72,6 +72,7 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
    * Creates person entity from a given confluence user.
    */
   private createPerson(user: ConfluenceUser): PersonEntity {
+    const domain = this.setting.values.atlassian.domain
     const id = `confluence-${this.setting.id}-${user.accountId}`
     const person = this.people.find(person => person.id === id)
     const data: ConfluencePersonData = {}
@@ -82,7 +83,7 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
       integrationId: user.accountId,
       name: user.displayName,
       email: user.details.personal.email,
-      photo: user.profilePicture.path,
+      photo: domain + user.profilePicture.path.replace('s=48', 's=512'),
       raw: user,
       data
     })

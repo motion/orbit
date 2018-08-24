@@ -1,4 +1,4 @@
-import { Bit, Person, PersonBit } from '@mcro/models'
+import { Bit, Person, PersonBit, IntegrationTypeValues } from '@mcro/models'
 import { AfterLoad, BaseEntity, Column, Entity, getRepository, Index, OneToMany, PrimaryColumn } from 'typeorm'
 import { BitEntity } from './BitEntity'
 import { PersonEntity } from './PersonEntity'
@@ -16,16 +16,16 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   @Index()
   name: string
 
-  @Column({ type: 'simple-array', default: '[]' })
+  @Column({ type: 'simple-json', default: '{}' })
   @Index()
-  allNames: string[]
+  allNames: IntegrationTypeValues
 
   @Column({ nullable: true })
   photo: string
 
-  @Column({ type: 'simple-array', default: '[]' })
+  @Column({ type: 'simple-json', default: '{}' })
   @Index()
-  allPhotos: string[]
+  allPhotos: IntegrationTypeValues
 
   @Column({ default: false })
   hasSlack: boolean
@@ -51,9 +51,9 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   @AfterLoad()
   async afterLoad() {
     this.bits = await getRepository(BitEntity)
-      .createQueryBuilder("bit")
-      .innerJoin("bit.people", "bitPerson")
-      .innerJoin("bitPerson.personBit", "personBit", "personBit.email = :email")
+      .createQueryBuilder('bit')
+      .innerJoin('bit.people', 'bitPerson')
+      .innerJoin('bitPerson.personBit', 'personBit', 'personBit.email = :email')
       .setParameters({ email: this.email })
       .getMany()
   }

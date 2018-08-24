@@ -11,12 +11,12 @@ import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage } from './SlackTypes'
 import { SlackUtils } from './SlackUtils'
 
-const log = logger('syncer:slack:issues')
+const log = logger('syncer:slack:messages')
 
 /**
- * Syncs Slack issues.
+ * Syncs Slack messages.
  */
-export class SlackIssuesSyncer implements IntegrationSyncer {
+export class SlackMessagesSyncer implements IntegrationSyncer {
   private setting: SettingEntity
   private loader: SlackLoader
 

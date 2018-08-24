@@ -1,4 +1,5 @@
 import { Bit } from './Bit'
+import { IntegrationTypeValues } from './IntegrationType'
 import { Person } from './Person'
 
 export interface PersonBit {
@@ -6,7 +7,7 @@ export interface PersonBit {
   /**
    * Target type.
    */
-  target: "person-bit"
+  target: 'person-bit'
 
   /**
    * Person's email address.
@@ -21,7 +22,7 @@ export interface PersonBit {
   /**
    * All known person names.
    */
-  allNames: string[]
+  allNames: IntegrationTypeValues
 
   /**
    * Person's profile photo.
@@ -31,7 +32,7 @@ export interface PersonBit {
   /**
    * All known person photos.
    */
-  allPhotos: string[]
+  allPhotos: IntegrationTypeValues
 
   /**
    * Bits related to this Person.

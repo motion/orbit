@@ -47,6 +47,7 @@ export * from './Tree'
 export * from './DynamicList'
 export * from './FixedList'
 export * from './Toolbar'
+export * from './Tooltip'
 
 // table
 export * from './table/TableInput'

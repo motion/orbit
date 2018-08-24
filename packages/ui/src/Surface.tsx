@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {
-  Theme,
   Color,
   CSSPropertySet,
   propsToThemeStyles,
@@ -12,13 +11,11 @@ import { attachTheme } from '@mcro/gloss'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
-import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
 import { UIContext } from './helpers/contexts'
-
-const POPOVER_PROPS = { style: { fontSize: 12 } }
+import { Tooltip } from './Tooltip'
 
 export type SurfaceProps = CSSPropertySet & {
   active?: boolean
@@ -330,28 +327,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
               {children}
             </Element>
           )}
-        {tooltip ? (
-          <Theme name="dark">
-            <Popover
-              background
-              openOnHover
-              closeOnClick
-              noHoverOnChildren
-              animation="bounce 150ms"
-              target={`.${this.uniq}`}
-              padding={[2, 7]}
-              borderRadius={5}
-              distance={12}
-              arrowSize={10}
-              delay={400}
-              popoverProps={POPOVER_PROPS}
-              ignoreSegment
-              {...tooltipProps}
-            >
-              {tooltip}
-            </Popover>
-          </Theme>
-        ) : null}
+        {!!tooltip && <Tooltip {...tooltipProps}>{tooltip}</Tooltip>}
       </SurfaceFrame>
     )
   }

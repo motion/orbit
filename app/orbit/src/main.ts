@@ -2,6 +2,7 @@ import { findContiguousPorts } from './findContiguousPorts'
 import { setConfig } from '@mcro/config'
 import killPort from 'kill-port'
 import { cleanupChildren } from './cleanupChildren'
+import * as Path from 'path'
 
 type OrbitOpts = {
   version: string
@@ -40,7 +41,11 @@ export async function main({ version }: OrbitOpts) {
     // errors are just showing the ports are empty
   }
 
+  const rootDirectory = Path.join(__dirname, '..', '..', '..')
+  console.log('rootDirectory', rootDirectory)
+
   setConfig({
+    rootDirectory,
     privateUrl: 'http://private.tryorbit.com',
     version,
     ports: {

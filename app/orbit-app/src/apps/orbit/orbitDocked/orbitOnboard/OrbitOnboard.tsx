@@ -255,7 +255,7 @@ export const OrbitOnboard = decorator(
                   <br />
                   <br />
                   <strong>
-                    <a href="mailto:hi@tryorbit.com">hi@tryorbit.com</a>
+                    <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
                   </strong>.
                   <br />
                   <br />

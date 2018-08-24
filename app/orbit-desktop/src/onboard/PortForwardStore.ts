@@ -65,9 +65,26 @@ export class PortForwardStore {
     }, 300)
 
     const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
+    let pathToElectronBinary = 'node'
+    if (process.env.NODE_ENV !== 'development') {
+      pathToElectronBinary = Path.join(
+        GlobalConfig.rootDirectory,
+        '..',
+        '..',
+        'MacOS',
+        'Orbit',
+      )
+    }
+    console.log('Electron binary path:', pathToElectronBinary)
     const cmd = await sudoer.spawn(
-      'node',
+      pathToElectronBinary,
       `${pathToOrbitProxy} --port ${port} --host ${host}`.split(' '),
+      {
+        env: {
+          ...process.env,
+          ELECTRON_RUN_AS_NODE: 1,
+        },
+      },
     )
     cmd.stdout.on('data', x => {
       log(`OrbitProxy: ${x}`)

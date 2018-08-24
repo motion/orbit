@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import hostile_ from 'hostile'
 import { promisifyAll } from 'sb-promisify'
 import forwardPort from 'http-port-forward'

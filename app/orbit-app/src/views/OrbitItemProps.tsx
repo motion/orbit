@@ -1,6 +1,6 @@
 import { AppStatePeekItem } from '@mcro/stores'
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
-import { Bit } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
 import { SelectionStore } from '../stores/SelectionStore'
 import { AppStore } from '../stores/AppStore'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
@@ -10,7 +10,7 @@ import { ResolvedItem } from '../components/ItemResolver'
 import { PersonBit } from '../../../models/src'
 import { ThemeObject } from '@mcro/gloss'
 
-type Model = Bit | PersonBit
+type Model = Bit | PersonBit | Setting
 
 export type OrbitItemProps = {
   theme?: Partial<ThemeObject>

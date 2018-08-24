@@ -1,16 +1,14 @@
 import { view } from '@mcro/black'
-import { Person, PersonBit } from '@mcro/models'
+import { PersonBit } from '@mcro/models'
 import { SlackPersonData } from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as React from 'react'
 import { Carousel } from '../../../components/Carousel'
-import { BitRepository } from '../../../repositories'
-import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton, SubTitle } from '../../../views'
-import { OrbitCardMasonry } from '../../../views/OrbitCardMasonry'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { PeekPaneProps } from '../PeekPaneProps'
+import { OrbitListItem } from '../../../views/OrbitListItem'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
@@ -18,17 +16,6 @@ const StrongSubTitle = props => (
 
 const mapW = 700
 const mapH = 200
-
-class PersonPeek {
-  recentBits = modelQueryReaction(
-    () =>
-      BitRepository.find({
-        relations: ['people'],
-        take: 10,
-      }),
-    { defaultValue: [] },
-  )
-}
 
 const Frame = view({
   width: '100%',
@@ -151,18 +138,14 @@ const IntegrationButton = ({ href, children, ...props }) => (
 )
 
 @view.attach('integrationSettingsStore')
-@view.attach({
-  store: PersonPeek,
-})
 @view
 export class PeekPerson extends React.Component<
   PeekPaneProps & {
-    store: PersonPeek
     integrationSettingsStore: IntegrationSettingsStore
   }
 > {
   render() {
-    const { store, integrationSettingsStore, model, children } = this.props
+    const { integrationSettingsStore, model, children } = this.props
     const person = model as PersonBit
     const { settings } = integrationSettingsStore
     if (!settings) {
@@ -251,7 +234,13 @@ export class PeekPerson extends React.Component<
 
               <Section>
                 <StrongSubTitle>Recently</StrongSubTitle>
-                <OrbitCardMasonry items={store.recentBits} />
+                {(person.bits || []).slice(0, 30).map(bit => {
+                  return (
+                    <OrbitListItem key={bit.id} model={bit} isExpanded>
+                      {({ content }) => content}
+                    </OrbitListItem>
+                  )
+                })}
               </Section>
             </ContentInner>
           </Content>

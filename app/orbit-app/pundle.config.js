@@ -2,7 +2,7 @@ const path = require('path')
 const presetDefault = require('pundle-preset-default')
 
 const pundleConfig = {
-  entry: ['./src', './index.html'],
+  entry: ['./src/main.ts', './index.html'],
   components: presetDefault({
     transform: {
       typescript: true,

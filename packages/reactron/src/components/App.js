@@ -1,5 +1,4 @@
 import { BaseComponent } from './BaseComponent'
-import installExtension from 'electron-devtools-installer'
 
 const EVENT_KEYS = {
   onReady: 'on-ready',
@@ -24,8 +23,9 @@ export class App extends BaseComponent {
         this.app.setPath(val)
       }
       if (key === 'devTools') {
-        for (const devTool of val) {
-          installExtension(devTool)
+        const installer = require('electron-devtools-installer')
+        for (const tool of val) {
+          installer(tool)
         }
       }
     }

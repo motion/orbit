@@ -39,7 +39,11 @@ export class ElectronRoot extends React.Component {
         onBeforeQuit={electronStore.handleBeforeQuit}
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
-        devTools={[DevTools.mobx, DevTools.react]}
+        devTools={
+          process.env.NODE_ENV === 'development'
+            ? [DevTools.mobx, DevTools.react]
+            : null
+        }
       >
         <MenuItems />
         {/* <VibrantWindow /> */}

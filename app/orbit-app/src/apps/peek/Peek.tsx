@@ -55,7 +55,7 @@ class PeekPageInner extends React.Component<Props> {
     if (type === 'Bit' || type === 'Person') {
       if (!model) {
         console.error('no model?', model)
-        return null
+        return <div>no model........?</div>
       }
     }
     if (!PeekContentsView) {

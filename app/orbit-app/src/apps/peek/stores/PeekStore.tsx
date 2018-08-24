@@ -122,8 +122,11 @@ export class PeekStore {
 
   // make this not change if not needed
   state: PeekStoreItemState = react(
-    () => this.internalState,
-    ({ lastState, curState }) => {
+    () => [this.tornState, this.internalState],
+    ([tornState, { lastState, curState }]) => {
+      if (tornState) {
+        return tornState
+      }
       if (this.willHide) {
         return lastState
       }
@@ -135,6 +138,9 @@ export class PeekStore {
   )
 
   get isShown() {
+    if (this.tornState) {
+      return true
+    }
     return this.internalState.isShown
   }
 

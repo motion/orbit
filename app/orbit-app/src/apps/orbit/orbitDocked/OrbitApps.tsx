@@ -17,8 +17,6 @@ import { App } from '@mcro/stores'
 import { Setting } from '@mcro/models'
 import { settingToResult } from '../../../helpers/settingToResult'
 import { settingsList } from '../../../helpers/settingsList'
-import { checkAuthProxy } from '../../../helpers/checkAuthProxy'
-import { promptForAuthProxy } from '../../../helpers/promptForAuthProxy'
 
 type Props = {
   name: string

@@ -26,7 +26,7 @@ export class AppStore {
     this.updateScreenSize()
     // show orbit on startup
     App.setOrbitState({
-      docked: false,
+      docked: true,
     })
   }
 

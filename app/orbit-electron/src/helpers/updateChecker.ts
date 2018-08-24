@@ -10,7 +10,7 @@ console.log('Update checker... is prod?', getConfig().env.prod)
 if (getConfig().env.prod) {
   updater.init({
     version: getGlobalConfig().version,
-    url: 'http://138.68.15.104/updates/updates.json',
+    url: 'http://get.tryorbit.com/updates/updates.json',
   })
 
   updater.on('update-available', () => {

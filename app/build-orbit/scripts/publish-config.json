@@ -1,11 +1,11 @@
 {
   "transport": {
     "module": "ssh",
-    "host": "138.68.15.104",
+    "host": "get.tryorbit.com",
     "username": "orbit",
     "password": "iloveorbit123",
     "remotePath": "/updates",
-    "remoteUrl": "http://138.68.15.104/updates"
+    "remoteUrl": "http://get.tryorbit.com/updates"
   },
-  "updatesJsonUrl": "http://138.68.15.104/updates/updates.json"
+  "updatesJsonUrl": "http://get.tryorbit.com/updates/updates.json"
 }

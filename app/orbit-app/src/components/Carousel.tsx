@@ -62,13 +62,13 @@ export class Carousel extends React.Component<CarouselProps> {
         {...props}
       >
         {before}
-        {(items || []).map((bit, index) => (
+        {(items || []).map((item, index) => (
           <OrbitCard
-            key={`${index}${bit.id}`}
+            key={`${index}${item.id}`}
             index={index + offset}
             className={`carousel-result-item ${className || ''}`}
             pane="carousel"
-            model={bit}
+            model={item}
             inGrid
             {...cardProps}
             style={{

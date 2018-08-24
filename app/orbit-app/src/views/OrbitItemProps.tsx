@@ -40,7 +40,9 @@ export type OrbitItemProps = {
   subPane?: string
   model?: Model
   itemProps?: Object
-  children?: ((a: Object, b: Bit, c: number) => JSX.Element) | React.ReactNode
+  children?:
+    | ((a: ResolvedItem, b: Bit, c: number) => JSX.Element)
+    | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number

@@ -231,7 +231,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             )}
           {!!preview &&
             !children &&
-            !hide.body && (
+            !(hide && hide.body) && (
               <Preview>
                 {typeof preview !== 'string' && preview}
                 {typeof preview === 'string' && (

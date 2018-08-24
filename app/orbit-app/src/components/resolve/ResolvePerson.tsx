@@ -2,7 +2,8 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { ItemResolverProps } from '../ItemResolver'
-import { Person } from '@mcro/models'
+import { PersonBit } from '../../../../models/src'
+import { last } from 'lodash'
 
 const Avatar = view('img', {
   borderRadius: 100,
@@ -22,21 +23,22 @@ const Avatar = view('img', {
 export const ResolvePerson = ({
   children,
   model,
-}: ItemResolverProps & { model: Person }) => {
+}: ItemResolverProps & { model: PersonBit }) => {
   if (!model) {
     return null
   }
+  const photo = last(model.allPhotos) || model.photo
   return children({
-    id: model.id || model.email,
+    id: model.email,
     type: 'person',
     title: model.name,
-    icon: model.photo || 'users_square',
+    icon: photo,
     subtitle: model.email,
-    createdAt: model.createdAt,
-    updatedAt: model.updatedAt,
-    preview: !!model.photo && (
+    // createdAt: model.createdAt,
+    // updatedAt: model.updatedAt,
+    preview: !!photo && (
       <UI.Col flex={1}>
-        <Avatar src={model.photo} />
+        <Avatar src={photo} />
       </UI.Col>
     ),
   })

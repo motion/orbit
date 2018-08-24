@@ -138,7 +138,6 @@ class OrbitSearchResultsList extends React.Component<Props> {
               key={model.id}
               index={index + quickResultsLen}
               model={model}
-              listItem
               hide={model.integration === 'slack' ? hideSlack : null}
               padding={model.integration === 'slack' ? [12, 16] : null}
               subtitleSpaceBetween={this.spaceBetween}

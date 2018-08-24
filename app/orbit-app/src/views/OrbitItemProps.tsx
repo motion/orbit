@@ -8,10 +8,12 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { ResolvedItem } from '../components/ItemResolver'
 import { PersonBit } from '../../../models/src'
+import { ThemeObject } from '@mcro/gloss'
 
 type Model = Bit | PersonBit
 
 export type OrbitItemProps = {
+  theme?: Partial<ThemeObject>
   listItem?: boolean
   hoverToSelect?: boolean
   appStore?: AppStore

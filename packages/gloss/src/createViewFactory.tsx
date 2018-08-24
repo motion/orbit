@@ -410,14 +410,23 @@ export function createViewFactory(toCSS) {
       }
     }
 
+    // attach themes from context
     ThemedConstructor = props => (
       <ThemeContext.Consumer>
         {({ allThemes, activeThemeName }) => {
           if (!allThemes) {
             return <Constructor {...props} />
           }
-          const theme = allThemes[activeThemeName]
-          return <Constructor theme={theme} {...props} />
+          let theme = allThemes[activeThemeName]
+          // allow simple overriding of the theme using props:
+          // <Button theme={{ backgroundHover: 'transparent' }} />
+          if (props.theme) {
+            theme = {
+              ...theme,
+              ...props.theme,
+            }
+          }
+          return <Constructor {...props} theme={theme} />
         }}
       </ThemeContext.Consumer>
     )

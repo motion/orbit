@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { Text } from './Text'
-import { SizedSurface } from './SizedSurface'
+import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 
-export type ItemProps = {
+export type ItemProps = SizedSurfaceProps & {
   after?: React.ReactNode
   below?: React.ReactNode
   afterProps?: Object

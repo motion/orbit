@@ -354,7 +354,7 @@ export default class Table extends PureComponent<TableProps, TableState> {
       !state ||
       state.props.filter !== props.filter ||
       state.props.filterValue !== props.filterValue ||
-      !isEqual(state.props.sortOrder, props.sortOrder)
+      (!!props.sortOrder && !isEqual(state.props.sortOrder, props.sortOrder))
     ) {
       // need to reorder or refilter the rows
       sortedRows = getSortedRows(

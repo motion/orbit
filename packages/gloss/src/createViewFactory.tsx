@@ -5,7 +5,7 @@ import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import validProp from './helpers/validProp'
-import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './gloss'
+import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import reactFastCompare from 'react-fast-compare'
 
 export type RawRules = CSSPropertySet & {

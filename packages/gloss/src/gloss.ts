@@ -1,9 +1,7 @@
 import css from '@mcro/css'
 import { Options } from './types'
 import { createViewFactory } from './createViewFactory'
-
-export const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
-export const GLOSS_IGNORE_COMPONENT_SYMBOL = '__GLOSS_IGNORE_COMPONENT__'
+import { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
 
 export { ThemeObject } from './types'
 export { alphaColor } from './helpers/alphaColor'

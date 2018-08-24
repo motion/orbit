@@ -21,7 +21,7 @@ import { Onboard } from './onboard/Onboard'
 import { Logger, logger } from '@mcro/logger'
 import * as typeorm from 'typeorm'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
-import { getConfig as getConfigGlobal } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 
 const log = logger('desktop')
 
@@ -158,7 +158,7 @@ export class Root {
    */
   private registerEntityServer() {
     const server = new WebSocketServer({
-      port: getConfigGlobal().ports.dbBridge,
+      port: getGlobalConfig().ports.dbBridge,
     })
     server.on('connection', socket => {
       socket.on('message', str => {

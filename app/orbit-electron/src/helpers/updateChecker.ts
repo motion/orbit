@@ -1,6 +1,6 @@
 import updater from 'electron-simple-updater'
 import { getConfig } from '../config'
-import { getConfig as getGlobalConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 
 const UPDATE_PREFIX = '\n\n\n\nELECTRON UPDATE\n\n\n'
 

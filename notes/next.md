@@ -12,9 +12,7 @@
 # next
 
 - need way to update without losing data: use a ~/.orbit dir?
-- PersonBit transition - uniqueness in person bit is tracked by `email` property
 - typeform survey to capture a few potential paths
-- (bonus) oauth key management
 - location filters: `.find({ location: { name: "..." } })`
 
 "Orbit proxies the keys directly to your computer.
@@ -147,7 +145,15 @@ p2p: https://github.com/webtorrent/bittorrent-dht
 - component store
 - forking apps / app store
 
-# interesting apps to build
+# apps
+
+blockers:
+
+- not being able to deploy to server means not available on every platform
+- solution:
+  - hosted orbit
+  - cloud orbit
+  - ipfs
 
 home queues:
 
@@ -163,3 +169,7 @@ search apps:
 peek apps:
 
 - just needs internals + documentation
+
+component store:
+
+- https://github.com/jlfwong/speedscope

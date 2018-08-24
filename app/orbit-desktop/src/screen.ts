@@ -5,7 +5,7 @@ import { Desktop, Electron, Swift, App } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 
 const log = logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
@@ -46,7 +46,7 @@ export class Screen {
   curAppName = ''
   watchSettings = { name: '', settings: {} }
   oracle = new Oracle({
-    socketPort: getConfig().ports.oracleBridge,
+    socketPort: getGlobalConfig().ports.oracleBridge,
   })
 
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)

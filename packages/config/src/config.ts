@@ -1,4 +1,5 @@
 type Config = {
+  userDataDirectory: string
   rootDirectory: string
   privateUrl: string
   version: string
@@ -13,11 +14,11 @@ type Config = {
 
 let config: Config
 
-export function getConfig(): Config {
+export function getGlobalConfig(): Config {
   return config
 }
 
-export function setConfig(nextConfig: Config) {
+export function setGlobalConfig(nextConfig: Config) {
   if (config) {
     throw new Error('Already set config once!')
   }

@@ -1,6 +1,6 @@
 import { open } from './open'
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 
 export async function openAuth(integrationName: string) {
-  open(`${getConfig().privateUrl}/auth/${integrationName}`)
+  open(`${getGlobalConfig().privateUrl}/auth/${integrationName}`)
 }

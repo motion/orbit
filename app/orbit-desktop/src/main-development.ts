@@ -1,7 +1,8 @@
 import { main } from './main'
-import { setConfig } from '@mcro/config'
+import { setGlobalConfig } from '@mcro/config'
 
-setConfig({
+setGlobalConfig({
+  userDataDirectory: '',
   rootDirectory: '',
   privateUrl: 'http://private.tryorbit.com',
   version: '0',

@@ -1,7 +1,7 @@
 import * as r2 from '@mcro/r2'
 import Strategies from '@mcro/oauth-strategies'
 import { DriveServiceHelpers, FetchOptions } from './types'
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 
 export const getHelpers = (setting): DriveServiceHelpers => ({
   baseUrl: 'https://content.googleapis.com',
@@ -34,7 +34,7 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
       headers: {
         Authorization: `Bearer ${setting.token}`,
         'Access-Control-Allow-Origin': `http://localhost:${
-          getConfig().ports.server
+          getGlobalConfig().ports.server
         }`,
         'Access-Control-Allow-Methods': 'GET',
         ...headers,

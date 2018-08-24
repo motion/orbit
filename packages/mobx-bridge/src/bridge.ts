@@ -5,11 +5,11 @@ import WS from './websocket'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import { logger } from '@mcro/logger'
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 import { SocketManager } from './SocketManager'
 
 const log = logger('bridge')
-const port = getConfig().ports.bridge
+const port = getGlobalConfig().ports.bridge
 
 // exports
 export * from './proxySetters'

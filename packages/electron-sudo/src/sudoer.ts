@@ -1,18 +1,30 @@
 import { tmpdir } from 'os'
-import {
-  watchFile,
-  unwatchFile,
-  unlink,
-  createReadStream,
-  createWriteStream,
-} from 'fs'
+import { watchFile, unwatchFile, createReadStream, createWriteStream } from 'fs'
 import { normalize, join } from 'path'
 import { createHash } from 'crypto'
-import { readFile, writeFile, exec, spawn, stat } from './utils'
+import { readFile, writeFile, exec, spawn, stat, unlink } from './utils'
+import { ChildProcess } from 'child_process'
 
 let { platform } = process
 
+const EXEC_OPTIONS = {
+  env: null,
+}
+
+const DEFAULT_OPTIONS = {
+  name: null,
+  icns: null,
+}
+
 class Sudoer {
+  cp?: ChildProcess
+  platform?: string
+  options?: {
+    name?: string
+    icns?: string
+  }
+  tmpdir?: string
+
   constructor(options) {
     this.platform = platform
     this.options = options
@@ -57,7 +69,7 @@ class Sudoer {
 }
 
 class SudoerUnix extends Sudoer {
-  constructor(options = {}) {
+  constructor(options = DEFAULT_OPTIONS) {
     super(options)
     if (!this.options.name) {
       this.options.name = 'Electron'
@@ -99,14 +111,13 @@ class SudoerUnix extends Sudoer {
 }
 
 class SudoerDarwin extends SudoerUnix {
-  constructor(options = {}) {
+  constructor(options = DEFAULT_OPTIONS) {
     super(options)
     if (options.icns && typeof options.icns !== 'string') {
       throw new Error('options.icns must be a string if provided.')
     } else if (options.icns && options.icns.trim().length === 0) {
       throw new Error('options.icns must be a non-empty string if provided.')
     }
-    this.up = false
   }
 
   isValidName(name) {
@@ -126,7 +137,7 @@ class SudoerDarwin extends SudoerUnix {
     return spreaded
   }
 
-  async exec(command, options = {}) {
+  async exec(command, options = EXEC_OPTIONS) {
     return new Promise(async (resolve, reject) => {
       const commandEscaped = command.replace(/"/g, '\\\\\\"')
       const toExec = this.getCommand(commandEscaped)
@@ -145,7 +156,7 @@ class SudoerDarwin extends SudoerUnix {
     }\\" with administrator privileges"`
   }
 
-  async spawn(command, args, options = {}) {
+  async spawn(command, args, options = EXEC_OPTIONS) {
     return new Promise(async (resolve, reject) => {
       let cp
       const commandWithArgs = [command, ...args].join(' ')
@@ -162,7 +173,10 @@ class SudoerDarwin extends SudoerUnix {
 }
 
 class SudoerLinux extends SudoerUnix {
-  constructor(options = {}) {
+  binary?: string
+  paths: string[]
+
+  constructor(options = DEFAULT_OPTIONS) {
     super(options)
     this.binary = null
     // We prefer gksudo over pkexec since it gives a nicer prompt:
@@ -186,7 +200,7 @@ class SudoerLinux extends SudoerUnix {
     )).filter(v => v)[0]
   }
 
-  async exec(command, options = {}) {
+  async exec(command, options = EXEC_OPTIONS) {
     return new Promise(async (resolve, reject) => {
       let self = this,
         result
@@ -219,7 +233,7 @@ class SudoerLinux extends SudoerUnix {
     })
   }
 
-  async spawn(command, args, options = {}) {
+  async spawn(command, args, options = EXEC_OPTIONS) {
     let self = this
     return new Promise(async (resolve, reject) => {
       /* Detect utility for sudo mode */
@@ -259,7 +273,10 @@ class SudoerLinux extends SudoerUnix {
 }
 
 class SudoerWin32 extends Sudoer {
-  constructor(options = {}) {
+  bundled: string
+  binary?: string
+
+  constructor(options = DEFAULT_OPTIONS) {
     super(options)
     this.bundled = 'src\\bin\\elevate.exe'
     this.binary = null
@@ -299,6 +316,7 @@ class SudoerWin32 extends Sudoer {
       { persistent: true, interval: 1 },
       () => {
         let stream = createReadStream(cp.files.output, {
+            // @ts-ignore
             start: watcher.last,
           }),
           size = 0
@@ -345,7 +363,7 @@ class SudoerWin32 extends Sudoer {
     })
   }
 
-  async exec(command, options = {}) {
+  async exec(command, options = EXEC_OPTIONS) {
     let self = this,
       files,
       output
@@ -367,14 +385,14 @@ class SudoerWin32 extends Sudoer {
     })
   }
 
-  async spawn(command, args, options = {}) {
+  async spawn(command, args, options = EXEC_OPTIONS) {
     let files = await this.writeBatch(command, args, options),
       sudoArgs = [],
       cp
     sudoArgs.push('-wait')
     sudoArgs.push(files.batch)
     await this.prepare()
-    cp = spawn(this.binary, sudoArgs, options, { wait: false })
+    cp = spawn(this.binary, sudoArgs, options)
     cp.files = files
     await this.watchOutput(cp)
     return cp

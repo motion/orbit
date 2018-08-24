@@ -1,8 +1,16 @@
-import { Bit, GmailBitData, IntegrationType, Person, Setting, SlackBitData, ConfluenceBitData, JiraBitData, BitData } from '@mcro/models'
+import {
+  Bit,
+  BitData,
+  ConfluenceBitData,
+  GmailBitData,
+  IntegrationType,
+  JiraBitData,
+  Person,
+  Setting,
+  SlackBitData,
+} from '@mcro/models'
 import {
   BaseEntity,
-  BeforeInsert,
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -13,7 +21,6 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { hash } from '../helpers/createOrUpdateBit'
 import { LocationEntity } from './LocationEntity'
 import { PersonEntity } from './PersonEntity'
 import { SettingEntity } from './SettingEntity'
@@ -28,9 +35,6 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @Column({ type: String })
   integration: IntegrationType
-
-  @Column({ unique: true })
-  contentHash: string
 
   @Index()
   @Column()
@@ -84,11 +88,5 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @ManyToOne(() => SettingEntity)
   setting: Setting
-
-  @BeforeUpdate()
-  @BeforeInsert()
-  beforeInsert() {
-    if (!this.contentHash) this.contentHash = hash(this.data)
-  }
 
 }

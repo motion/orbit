@@ -15,7 +15,7 @@ export const API_URL = `${protocol}${API_HOST}`
 
 export const NICE_INTEGRATION_NAMES = {
   slack: 'Slack',
-  gdocs: 'Google Docs',
+  gdrive: 'Google Docs',
   gmail: 'Gmail',
   confluence: 'Confluence',
   jira: 'Jira',
@@ -60,7 +60,7 @@ export const PEEK_THEMES = {
       background: '#353535',
       color: 'white',
     },
-    gdocs: {
+    gdrive: {
       darkenTitleBarAmount: 0.04,
       background: '#7DA5F4',
     },

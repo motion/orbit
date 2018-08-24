@@ -175,7 +175,7 @@ export class GMailSyncer implements IntegrationSyncer {
     const people = await Promise.all(allParticipants.map(async participant => {
       const {name, email} = participant
 
-      const id = `gmail-${this.setting.id}-${Helpers.hash(email)}`
+      const id = `gmail-${this.setting.id}-${email}`
       const person = (await getRepository(PersonEntity).findOne(id)) || new PersonEntity()
       const data: GmailPersonData = {}
 

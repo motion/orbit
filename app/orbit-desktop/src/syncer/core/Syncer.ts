@@ -44,7 +44,7 @@ export class Syncer {
   /**
    * Starts a process of active syncronization (runs interval).
    */
-  async start() {
+  async start(force = false) {
     if (this.options.type) {
       // register subscriber
       const subscribers = getConnection().subscribers
@@ -56,11 +56,11 @@ export class Syncer {
       const settings = await SettingEntity.find({ type: this.options.type })
       await Promise.all(
         settings.map(async setting => {
-          return this.runInterval(setting.id, setting.id)
+          return this.runInterval(setting.id, setting.id, force)
         }),
       )
     } else {
-      await this.runInterval(0)
+      await this.runInterval(0, undefined, force)
     }
   }
 
@@ -88,42 +88,44 @@ export class Syncer {
   /**
    * Runs interval to run a syncer.
    */
-  private async runInterval(index: number, settingId?: number) {
+  private async runInterval(index: number, settingId?: number, force = false) {
     // get the last run job
-    const lastJob = await getRepository(JobEntity).findOne({
-      where: {
-        syncer: this.name,
-        settingId: settingId,
-      },
-      order: {
-        time: 'desc',
-      },
-    })
-    if (lastJob) {
-      const needToWait =
-        lastJob.time + this.options.interval - new Date().getTime()
-      if (needToWait > 0) {
-        log(
-          `found last executed job for ${this.name}${
-            settingId ? ':' + settingId : ''
-          } and we should wait some time ` +
+    if (force === false) {
+      const lastJob = await getRepository(JobEntity).findOne({
+        where: {
+          syncer: this.name,
+          settingId: settingId,
+        },
+        order: {
+          time: 'desc',
+        },
+      })
+      if (lastJob) {
+        const needToWait =
+          lastJob.time + this.options.interval - new Date().getTime()
+        if (needToWait > 0) {
+          log(
+            `found last executed job for ${this.name}${
+              settingId ? ':' + settingId : ''
+              } and we should wait some time ` +
             'until enough interval time will pass before we execute a new job',
-          {
-            jobTime: lastJob.time + this.options.interval * 1000,
-            currentTime: new Date().getTime(),
-            needToWait,
+            {
+              jobTime: lastJob.time + this.options.interval * 1000,
+              currentTime: new Date().getTime(),
+              needToWait,
+              lastJob,
+            },
+          )
+          setTimeout(() => this.runInterval(index, settingId), needToWait)
+          return
+        } else {
+          log(
+            `found last executed job for ${
+              this.name
+              } and its okay to execute a new job`,
             lastJob,
-          },
-        )
-        setTimeout(() => this.runInterval(index, settingId), needToWait)
-        return
-      } else {
-        log(
-          `found last executed job for ${
-            this.name
-          } and its okay to execute a new job`,
-          lastJob,
-        )
+          )
+        }
       }
     }
 

@@ -52,7 +52,7 @@ class GDocsSettingStore {
 
   get service(): DriveService {
     console.log('get service again')
-    return this.props.appStore.services.gdocs
+    return this.props.appStore.services.gdrive
   }
 
   setActiveKey = key => {

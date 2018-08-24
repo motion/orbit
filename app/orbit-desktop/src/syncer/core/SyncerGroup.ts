@@ -16,9 +16,9 @@ export class SyncerGroup {
   /**
    * Starts a process of active syncronization (runs interval).
    */
-  async start() {
+  async start(force = false) {
     for (let syncer of this.syncers) {
-      await syncer.start()
+      await syncer.start(force)
     }
   }
 

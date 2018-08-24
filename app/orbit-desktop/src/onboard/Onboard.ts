@@ -25,7 +25,7 @@ const integrationPatterns = [
   { name: 'github', patterns: ['%github.com%'] },
   { name: 'gmail', patterns: ['%gmail.com%', '%mail.google.com/mail%'] },
   { name: 'slack', patterns: ['%.slack.com%'] },
-  { name: 'gdocs', patterns: ['%docs.google.com%'] },
+  { name: 'gdrive', patterns: ['%docs.google.com%'] },
 ]
 
 export class Onboard {

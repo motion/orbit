@@ -1,15 +1,15 @@
 import { logger } from '@mcro/logger'
-import { Bit, Person } from '@mcro/models'
-import { GithubBitData } from '@mcro/models'
-import { omit, uniqBy } from 'lodash'
+import { Bit, GithubBitData, Person } from '@mcro/models'
+import { uniqBy } from 'lodash'
+import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { createOrUpdateBit } from '../../helpers/helpers'
-import { GithubIssue } from './GithubTypes'
+import { assign } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SyncerUtils } from '../core/SyncerUtils'
 import { GithubIssueLoader } from './GithubIssueLoader'
 import { GithubPeopleSyncer } from './GithubPeopleSyncer'
+import { GithubIssue } from './GithubTypes'
 
 const log = logger('syncer:github:issues')
 
@@ -88,10 +88,14 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       }),
     }
 
-    return await createOrUpdateBit(BitEntity, {
+    const id = `github-${this.setting.id}-${issue.id}`
+    let bit = await getRepository(BitEntity).findOne(id)
+    if (!bit) bit = new BitEntity()
+
+    assign(bit, {
+      id,
       setting: this.setting,
       integration: 'github',
-      id: issue.id,
       type: 'task',
       title: issue.title,
       body: issue.bodyText,
@@ -100,6 +104,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
         id: issue.repository.id,
         name: issue.repository.name,
         webLink: issue.repository.url,
+        desktopLink: ''
       },
       data,
       raw: issue,
@@ -107,5 +112,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       bitUpdatedAt: updatedAt,
       people: people,
     })
+
+    return getRepository(BitEntity).save(bit)
   }
 }

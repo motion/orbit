@@ -1,16 +1,16 @@
-import { Bit } from '@mcro/models'
 import { logger } from '@mcro/logger'
-import { GDriveBitData, GDrivePersonData } from '@mcro/models'
+import { Bit, GDriveBitData, GDrivePersonData } from '@mcro/models'
+import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
+import { SettingEntity } from '../../entities/SettingEntity'
 import * as Helpers from '../../helpers'
 import { createOrUpdate } from '../../helpers/createOrUpdate'
-import { createOrUpdateBit } from '../../helpers/createOrUpdateBit'
 import { createOrUpdatePersonBits } from '../../repository'
+import { assign } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
-import { SettingEntity } from '../../entities/SettingEntity'
 
 const log = logger('syncer:gdrive')
 
@@ -46,10 +46,14 @@ export class GDriveSyncer implements IntegrationSyncer {
     log(`synced ${newlyCreatedPeople.length} people`)
   }
 
-  private createFile(file: GDriveLoadedFile): Promise<Bit | null> {
+  private async createFile(file: GDriveLoadedFile): Promise<Bit | null> {
     const data: GDriveBitData = {}
-    return createOrUpdateBit(BitEntity, {
-      integration: 'gdocs',
+    const id = `gdrive-${this.setting.id}-${file.file.id}`
+    let bit = await getRepository(BitEntity).findOne(id)
+    if (!bit) bit = new BitEntity()
+
+    assign(bit, {
+      integration: 'gdrive',
       setting: this.setting,
       id: file.file.id,
       type: 'document',
@@ -65,25 +69,22 @@ export class GDriveSyncer implements IntegrationSyncer {
             id: file.parent.id,
             name: file.parent.name,
             webLink: file.file.webViewLink || file.parent.webContentLink,
+            desktopLink: ''
           }
         : undefined,
       bitCreatedAt: new Date(file.file.createdTime).getTime(),
       bitUpdatedAt: new Date(file.file.modifiedTime).getTime(),
-      image:
-        file.file.fileExtension && file.file.thumbnailLink
-          ? file.file.id + '.' + file.file.fileExtension
-          : undefined,
+      // image:
+      //   file.file.fileExtension && file.file.thumbnailLink
+      //     ? file.file.id + '.' + file.file.fileExtension
+      //     : undefined,
     })
+
+    return getRepository(BitEntity).save(bit)
   }
 
   private async createPerson(user: GDriveLoadedUser) {
-    const person = {
-      location: '',
-      bio: '',
-      avatar: user.photo || '',
-      emails: user.email ? [user.email] : [],
-    }
-    const id = `gdrive-${this.setting.id}-${Helpers.hash(person)}`
+    const id = `gdrive-${this.setting.id}-${user.email}`
     const data: GDrivePersonData = {}
     const personEntity = await createOrUpdate(
       PersonEntity,

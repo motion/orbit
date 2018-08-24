@@ -109,9 +109,4 @@ export interface Bit {
    */
   location: Location
 
-  /**
-   * todo: find about usages
-   */
-  contentHash: string
-
 }

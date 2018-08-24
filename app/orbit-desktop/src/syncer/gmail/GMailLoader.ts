@@ -24,6 +24,7 @@ export class GMailLoader {
     startHistoryId: string,
     pageToken?: string,
   ): Promise<GmailHistoryLoadResult> {
+
     // load a history first
     log(pageToken ? `loading history from the next page` : `loading history`)
     const result = await this.fetcher.fetch(

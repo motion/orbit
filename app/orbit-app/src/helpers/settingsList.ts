@@ -7,11 +7,11 @@ export const settingsList = [
     icon: 'gmail',
   },
   {
-    id: 'gdocs',
+    id: 'gdrive',
     type: 'setting',
-    integration: 'gdocs',
-    title: 'Google Docs',
-    icon: 'gdocs',
+    integration: 'gdrive',
+    title: 'Google Drive',
+    icon: 'gdrive',
   },
   {
     id: 'github',

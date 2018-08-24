@@ -9,7 +9,7 @@ import { GMailSyncer } from './gmail/GMailSyncer'
 import { JiraIssueSyncer } from './jira/JiraIssueSyncer'
 import { JiraPeopleSyncer } from './jira/JiraPeopleSyncer'
 import { MailWhitelisterSyncer } from './mail-whitelister/MailWhitelisterSyncer'
-import { SlackIssuesSyncer } from './slack/SlackIssuesSyncer'
+import { SlackMessagesSyncer } from './slack/SlackMessagesSyncer'
 import { SlackPeopleSyncer } from './slack/SlackPeopleSyncer'
 
 const ONE_MINUTE = 1000 * 60 * 60
@@ -17,16 +17,18 @@ const FIVE_MINUTES = ONE_MINUTE * 5
 const TEN_MINUTES = ONE_MINUTE * 10
 
 export const Syncers = [
-  new Syncer({
-    type: 'jira',
-    constructor: JiraIssueSyncer,
-    interval: TEN_MINUTES,
-  }),
-  new Syncer({
-    type: 'jira',
-    constructor: JiraPeopleSyncer,
-    interval: TEN_MINUTES,
-  }),
+  new SyncerGroup('JiraSyncers', [
+    new Syncer({
+      type: 'jira',
+      constructor: JiraPeopleSyncer,
+      interval: TEN_MINUTES,
+    }),
+    new Syncer({
+      type: 'jira',
+      constructor: JiraIssueSyncer,
+      interval: TEN_MINUTES,
+    }),
+  ]),
   new SyncerGroup('GithubSyncers', [
     new Syncer({
       type: 'confluence',
@@ -40,10 +42,10 @@ export const Syncers = [
     }),
   ]),
   new Syncer({
-    type: 'gdocs' as any,
+    type: 'gdrive',
     constructor: GDriveSyncer,
     interval: FIVE_MINUTES,
-  }), // todo: fix gdocs as any - to fix that we need to change all gdocs to gdrive
+  }),
   new Syncer({
     type: 'gmail',
     constructor: GMailSyncer,
@@ -69,7 +71,7 @@ export const Syncers = [
     }),
     new Syncer({
       type: 'slack',
-      constructor: SlackIssuesSyncer,
+      constructor: SlackMessagesSyncer,
       interval: FIVE_MINUTES,
     }),
   ]),

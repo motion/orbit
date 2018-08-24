@@ -39,7 +39,7 @@ export class OrbitCardTeam extends React.Component<any> {
         >
           <OrbitIcon icon="slack" />
           <OrbitIcon icon="github" />
-          <OrbitIcon icon="gdocs" />
+          <OrbitIcon icon="gdrive" />
           <OrbitIcon icon="gmail" />
         </UI.PassProps>
       </UI.View>

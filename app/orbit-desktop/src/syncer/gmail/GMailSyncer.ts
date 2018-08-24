@@ -1,11 +1,9 @@
 import { logger } from '@mcro/logger'
-import { Bit, GmailBitDataParticipant, Person } from '@mcro/models'
-import { GmailBitData, GmailPersonData } from '@mcro/models'
-import { getManager, getRepository, In } from 'typeorm'
+import { Bit, GmailBitData, GmailBitDataParticipant, GmailPersonData, Person } from '@mcro/models'
+import { getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import * as Helpers from '../../helpers'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign, sequence } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
@@ -49,7 +47,7 @@ export class GMailSyncer implements IntegrationSyncer {
       log(
         `last syncronization settings mismatch (max=${max}/${lastSyncMax}; filter=${filter}/${lastSyncFilter})`,
       )
-      const truncatedBits = await BitEntity.find({ integration: 'gmail' }) // also need to filter by setting
+      const truncatedBits = await BitEntity.find({ settingId: this.setting.id }) // also need to filter by setting
       log(`removing all bits`, truncatedBits)
       await BitEntity.remove(truncatedBits)
       log(`bits were removed`)
@@ -86,7 +84,7 @@ export class GMailSyncer implements IntegrationSyncer {
           history.removedThreadIds,
         )
         removedBits = await BitEntity.find({
-          integration: 'gmail',
+          settingId: this.setting.id,
           id: In(history.removedThreadIds),
         })
         log('found bits to be removed', removedBits)
@@ -175,7 +173,7 @@ export class GMailSyncer implements IntegrationSyncer {
     const people = await Promise.all(allParticipants.map(async participant => {
       const {name, email} = participant
 
-      const id = `gmail-${this.setting.id}-${Helpers.hash(email)}`
+      const id = `gmail-${this.setting.id}-${email}`
       const person = (await getRepository(PersonEntity).findOne(id)) || new PersonEntity()
       const data: GmailPersonData = {}
 

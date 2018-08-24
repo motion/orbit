@@ -79,7 +79,7 @@ export class JiraPeopleSyncer implements IntegrationSyncer {
       integrationId: user.accountId,
       name: user.displayName,
       email: user.emailAddress,
-      photo: user.avatarUrls['48x48'],
+      photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),
       data,
       raw: user
     })

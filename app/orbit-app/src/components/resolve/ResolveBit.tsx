@@ -10,7 +10,7 @@ const results = {
   slack: {
     conversation: ResolveConversation,
   },
-  gdocs: {
+  gdrive: {
     document: ResolveDocument,
   },
   gmail: {

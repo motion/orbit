@@ -302,7 +302,7 @@ class Bridge {
       return changedState
     }
     if (changedState) {
-      log(`changedState: ${JSON.stringify(changedState)}`)
+      // log(`changedState: ${JSON.stringify(changedState)}`)
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
       } else {

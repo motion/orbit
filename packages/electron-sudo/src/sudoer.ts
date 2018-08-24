@@ -11,21 +11,23 @@ const EXEC_OPTIONS = {
   env: null,
 }
 
-const DEFAULT_OPTIONS = {
+type SudoerOptions = {
+  name?: string
+  icns?: string
+}
+
+const DEFAULT_OPTIONS: SudoerOptions = {
   name: null,
   icns: null,
 }
 
 class Sudoer {
+  options?: SudoerOptions
   cp?: ChildProcess
   platform?: string
-  options?: {
-    name?: string
-    icns?: string
-  }
   tmpdir?: string
 
-  constructor(options) {
+  constructor(options: SudoerOptions) {
     this.platform = platform
     this.options = options
     this.cp = null

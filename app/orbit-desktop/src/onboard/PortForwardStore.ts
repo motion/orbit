@@ -4,7 +4,7 @@ import { getConfig } from '../config'
 import { logger } from '@mcro/logger'
 import sudoPrompt from 'sudo-prompt'
 import * as Path from 'path'
-import { getConfig as getGlobalConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 import Sudoer from '@mcro/electron-sudo'
 
 const log = logger('desktop')

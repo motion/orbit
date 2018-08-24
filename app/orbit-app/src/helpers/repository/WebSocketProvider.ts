@@ -1,6 +1,6 @@
 import { RepositoryOperationType } from './Repository'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 
 export class WebSocketProvider {
   websocket: ReconnectingWebSocket
@@ -13,7 +13,7 @@ export class WebSocketProvider {
 
   constructor() {
     this.websocket = new ReconnectingWebSocket(
-      `ws://localhost:${getConfig().ports.dbBridge}`,
+      `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
       [],
       {
         WebSocket,

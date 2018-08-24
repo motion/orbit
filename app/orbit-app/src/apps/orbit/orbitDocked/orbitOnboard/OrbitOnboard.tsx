@@ -12,7 +12,7 @@ import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { Title } from '../../../../views'
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 import { MessageDark } from '../../../../views/Message'
@@ -222,7 +222,8 @@ export const OrbitOnboard = decorator(
                   <br />
                   <br />
                   To work, Orbit sets up a proxy to direct our servers at{' '}
-                  <em>{getConfig().privateUrl}</em> to your local computer.
+                  <em>{getGlobalConfig().privateUrl}</em> to your local
+                  computer.
                   <br />
                   <br />
                   When you click 'Begin', we'll prompt you for a password to set

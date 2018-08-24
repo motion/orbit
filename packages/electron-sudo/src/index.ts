@@ -1,4 +1,4 @@
-import { SudoerDarwin, SudoerWin32, SudoerLinux } from './lib/sudoer'
+import { SudoerDarwin, SudoerWin32, SudoerLinux } from './sudoer'
 
 export default (() => {
   let { platform } = process

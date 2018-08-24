@@ -1,8 +1,10 @@
 import { findContiguousPorts } from './findContiguousPorts'
-import { setConfig } from '@mcro/config'
+import { setGlobalConfig } from '@mcro/config'
 import killPort from 'kill-port'
 import { cleanupChildren } from './cleanupChildren'
 import * as Path from 'path'
+// @ts-ignore
+import { app } from 'electron'
 
 type OrbitOpts = {
   version: string
@@ -44,7 +46,8 @@ export async function main({ version }: OrbitOpts) {
   const rootDirectory = Path.join(__dirname, '..', '..', '..', '..')
   console.log('rootDirectory', rootDirectory)
 
-  setConfig({
+  setGlobalConfig({
+    userDataDirectory: app.getPath('appData'),
     rootDirectory,
     privateUrl: 'http://private.tryorbit.com',
     version,

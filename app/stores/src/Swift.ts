@@ -1,7 +1,7 @@
 import { store, react } from '@mcro/black'
 import { WebSocket, ReconnectingWebSocket } from '@mcro/mobx-bridge'
 import { Desktop } from './Desktop'
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 
 export let Swift
 
@@ -61,7 +61,7 @@ class SwiftStore {
 
   private setupLink() {
     this.ws = new ReconnectingWebSocket(
-      `ws://localhost:${getConfig().ports.swift}`,
+      `ws://localhost:${getGlobalConfig().ports.swift}`,
       undefined,
       {
         constructor: WebSocket,

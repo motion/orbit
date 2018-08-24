@@ -1,7 +1,7 @@
 import { fork } from 'child_process'
 import { logger } from '@mcro/logger'
 import * as Path from 'path'
-import { getConfig } from '@mcro/config'
+import { getGlobalConfig } from '@mcro/config'
 import electronUtil from 'electron-util/node'
 
 const log = logger('electron')
@@ -18,7 +18,7 @@ export function startDesktopInProcess(port) {
       env: {
         DESKTOP_PORT: port,
         NODE_ENV: process.env.NODE_ENV,
-        ORBIT_CONFIG: JSON.stringify(getConfig()),
+        ORBIT_CONFIG: JSON.stringify(getGlobalConfig()),
         PATH: process.env.PATH,
       },
     })

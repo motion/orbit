@@ -78,9 +78,6 @@ class OrbitAppsStore {
       subPane="apps"
       total={this.integrationSettings.length}
       inGrid
-      titleProps={{
-        size: 1,
-      }}
       {...props}
     />
   )
@@ -144,7 +141,6 @@ export class OrbitApps extends React.Component<Props> {
                   key={result.id}
                   result={result}
                   index={index}
-                  model={result.setting}
                   isActive
                 />
               ))}

@@ -19,11 +19,11 @@ type SlackMessageProps = {
 }
 
 const SlackMessageFrame = view(View, {
-  padding: [2, 0],
+  padding: [0, 0],
 })
 
 const SlackMessageInner = view({
-  padding: [2, 0, 2, 20],
+  padding: [2, 0, 2, 28],
 })
 
 @view
@@ -50,8 +50,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           <UI.Row
             flexFlow="row"
             alignItems="center"
-            margin={[0, 0, 2, 0]}
-            padding={[2, 0]}
+            padding={[2, 0, 0]}
             userSelect="none"
             cursor="default"
           >
@@ -71,7 +70,8 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           <UI.Text
             className="searchable-item"
             fontWeight={400}
-            sizeLineHeight={0.85}
+            sizeLineHeight={0.8}
+            size={1.1}
           >
             <Markdown source={message.text} {...markdownOptions} />
           </UI.Text>

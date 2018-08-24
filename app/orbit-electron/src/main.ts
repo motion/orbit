@@ -4,12 +4,16 @@ import * as Path from 'path'
 import { logger } from '@mcro/logger'
 import waitPort from 'wait-port'
 import { startDesktopInProcess } from './helpers/startDesktopInProcess'
+import { app } from 'electron'
 
 const log = logger('electron')
 
 Error.stackTraceLimit = Infinity
 
-export async function main({ port }): Promise<number | void> {
+export async function main({
+  port,
+  handleExit = null,
+}): Promise<number | void> {
   log(`Starting electron with port ${port} in env ${process.env.NODE_ENV}`)
 
   // handle our own separate process in development
@@ -39,8 +43,16 @@ export async function main({ port }): Promise<number | void> {
 
   let desktopPid
 
-  // start desktop in production
+  // PRODUCTION
   if (process.env.NODE_ENV !== 'development') {
+    if (handleExit) {
+      app.on('before-quit', () => {
+        console.log('Electron handle exit...')
+        handleExit()
+      })
+    }
+
+    // start desktop...
     let desktopFailMsg = ''
     const failStartTm = setTimeout(() => {
       require('electron').dialog.showMessageBox({
@@ -51,7 +63,7 @@ export async function main({ port }): Promise<number | void> {
     log('In production, starting desktop...')
     try {
       desktopPid = startDesktopInProcess(port)
-      console.log('\n\n\n\n\n\ndesktop pid is\n\n\n\n\n\n', desktopPid)
+      console.log('>>>>>>> desktop pid is', desktopPid)
     } catch (err) {
       desktopFailMsg = `${err.message}`
     }

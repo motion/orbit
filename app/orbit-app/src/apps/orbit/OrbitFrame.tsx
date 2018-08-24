@@ -10,7 +10,7 @@ import * as UI from '@mcro/ui'
 const SHADOW_PAD = 85
 const ARROW_PAD = 15
 
-const OrbitBorder = view({
+const OrbitBorder = view(UI.View, {
   pointerEvents: 'none',
   userSelect: 'none',
   position: 'absolute',
@@ -136,7 +136,7 @@ export class OrbitFrame extends React.Component<{
     }
     return (
       <UI.Col
-        css={{
+        {...{
           color: theme.color,
           position: 'absolute',
           pointerEvents: hidden ? ' none' : 'auto',
@@ -159,7 +159,7 @@ export class OrbitFrame extends React.Component<{
         />
         <OrbitIndicator orbitOnLeft={orbitOnLeft} />
         <OverflowWrap
-          css={{
+          {...{
             overflow: 'hidden',
             padding: SHADOW_PAD,
             margin: -SHADOW_PAD,
@@ -172,7 +172,7 @@ export class OrbitFrame extends React.Component<{
           }}
         >
           <Orbit
-            css={{
+            style={{
               width: size[0],
               borderLeftRadius,
               borderRightRadius,
@@ -181,7 +181,7 @@ export class OrbitFrame extends React.Component<{
             orbitAnimate={willAnimate}
           >
             <OrbitBorder
-              css={{
+              {...{
                 borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
                 borderRightRadius: borderRightRadius
                   ? borderRightRadius - 1
@@ -190,7 +190,7 @@ export class OrbitFrame extends React.Component<{
               }}
             />
             <OrbitContent
-              css={{
+              style={{
                 background,
                 // makes the shadow go offscreen nicely
                 marginRight: 0,
@@ -202,7 +202,7 @@ export class OrbitFrame extends React.Component<{
               {children}
               <Expand>
                 <Fade
-                  css={{
+                  style={{
                     opacity: 1,
                     background: `linear-gradient(transparent, ${
                       theme.background

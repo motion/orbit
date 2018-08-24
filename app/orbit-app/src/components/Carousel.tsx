@@ -68,7 +68,7 @@ export class Carousel extends React.Component<CarouselProps> {
             index={index + offset}
             className={`carousel-result-item ${className || ''}`}
             pane="carousel"
-            bit={bit}
+            model={bit}
             inGrid
             {...cardProps}
             style={{

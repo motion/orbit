@@ -6,6 +6,7 @@ import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import validProp from './helpers/validProp'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './gloss'
+import reactFastCompare from 'react-fast-compare'
 
 export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
@@ -114,29 +115,6 @@ export function createViewFactory(toCSS) {
   const rulesToClass = new WeakMap()
   const sheet = new StyleSheet(process.env.NODE_ENV !== 'development')
   const gc = new GarbageCollector(sheet, tracker, rulesToClass)
-
-  function hasEquivProps<A extends React.Props<Object>>(
-    props: A,
-    nextProps: A,
-  ): boolean {
-    for (const key in props) {
-      if (key === 'children') {
-        continue
-      }
-      if (nextProps[key] !== props[key]) {
-        return false
-      }
-    }
-    for (const key in nextProps) {
-      if (!(key in props)) {
-        return false
-      }
-    }
-    if (Boolean(props.children) !== Boolean(nextProps.children)) {
-      return false
-    }
-    return true
-  }
 
   let idCounter = 1
   const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
@@ -363,10 +341,8 @@ export function createViewFactory(toCSS) {
 
       static getDerivedStateFromProps(props: Props, state: State) {
         const noRecentHMR = isHMREnabled ? !recentHMR() : true
-        const hasPrevProps = state.prevProps !== null
-        const hasSameProps =
-          hasPrevProps && hasEquivProps(props, state.prevProps)
-        const shouldAvoidUpdate = noRecentHMR && hasPrevProps && hasSameProps
+        const hasSameProps = reactFastCompare(props, state.prevProps)
+        const shouldAvoidUpdate = noRecentHMR && hasSameProps
         if (shouldAvoidUpdate) {
           return null
         }

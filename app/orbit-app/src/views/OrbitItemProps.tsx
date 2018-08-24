@@ -7,6 +7,9 @@ import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { ResolvedItem } from '../components/ItemResolver'
+import { PersonBit } from '../../../models/src'
+
+type Model = Bit | PersonBit
 
 export type OrbitItemProps = {
   listItem?: boolean
@@ -35,7 +38,7 @@ export type OrbitItemProps = {
   inGrid?: boolean
   pane?: string
   subPane?: string
-  bit?: Bit
+  model?: Model
   itemProps?: Object
   children?: ((a: Object, b: Bit, c: number) => JSX.Element) | React.ReactNode
   onClick?: Function
@@ -50,7 +53,7 @@ export type OrbitItemProps = {
   padding?: number | number[]
   titleFlex?: number
   subtitleProps?: Object
-  getIndex?: (id: string) => number
+  getIndex?: (id: Model) => number
   subtitleSpaceBetween?: React.ReactNode
   searchTerm?: string
   onClickLocation?: (e: Event, item: ResolvedItem) => any

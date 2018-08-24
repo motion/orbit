@@ -81,7 +81,7 @@ export class Root {
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    await this.startSyncers()
+    // await this.startSyncers()
     this.screen = new Screen()
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,
@@ -93,13 +93,6 @@ export class Root {
     debugState(({ stores }) => {
       this.stores = stores
     })
-    // temp: get context
-    // setInterval(async () => {
-    //   if (Desktop.appState.name === 'Chrome') {
-    //     const { selection } = await getChromeContext()
-    //     Desktop.setAppState({ selectedText: selection })
-    //   }
-    // }, 3000)
   }
 
   async connect() {
@@ -169,7 +162,10 @@ export class Root {
     })
     server.on('connection', socket => {
       socket.on('message', str => {
-        handleEntityActions(socket, typeof str === "string" ? JSON.parse(str) : str)
+        handleEntityActions(
+          socket,
+          typeof str === 'string' ? JSON.parse(str) : str,
+        )
       })
     })
   }

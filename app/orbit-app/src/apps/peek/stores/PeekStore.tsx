@@ -4,9 +4,9 @@ import { App } from '@mcro/stores'
 import { PEEK_THEMES } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import {
-  PersonRepository,
   BitRepository,
   SettingRepository,
+  PersonBitRepository,
 } from '../../../repositories'
 import { Person, Bit, Setting } from '@mcro/models'
 
@@ -162,7 +162,7 @@ export class PeekStore {
     const { id, type } = App.peekState.item
     let selectedItem = null
     if (type === 'person') {
-      selectedItem = await PersonRepository.findOne({ id })
+      selectedItem = await PersonBitRepository.findOne({ email: id })
     } else if (type === 'bit') {
       // TODO add relations: ['people']
       selectedItem = await BitRepository.findOne({ id })

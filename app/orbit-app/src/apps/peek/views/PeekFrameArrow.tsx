@@ -52,14 +52,14 @@ export const PeekFrameArrow = decorator(({ theme, borderShadow }: Props) => {
       towards={onRight ? 'left' : 'right'}
       background={getBackground(arrowY, theme)}
       boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
-      css={{
+      transform={{
+        y: arrowY,
+        x: onRight ? 0.5 : -0.5,
+      }}
+      {...{
         left: !onRight ? 'auto' : -14,
         right: !onRight ? -arrowSize : 'auto',
         zIndex: 1000000000,
-        transform: {
-          y: arrowY,
-          x: onRight ? 0.5 : -0.5,
-        },
       }}
     />
   )

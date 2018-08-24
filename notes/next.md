@@ -1,5 +1,6 @@
 # next
 
+- need way to update without losing data: use a ~/.orbit dir?
 - PersonBit transition - uniqueness in person bit is tracked by `email` property
 - typeform survey to capture a few potential paths
 - (bonus) oauth key management
@@ -21,13 +22,14 @@ And just to be safe, our servers disable logs and deny all requests. Learn more.
 - Fix empty profiles from gmail contacts import
 - Fix slack not showing usernames
 - Fix intra-peek clicking
-- Onboard click tray to focus
 - Slack select all settings by default (syncer needs to respect settings/set them)
   - Toggle select all button in table view
 - working remove integration
 - fix highlight index click interaction
 - fix integration buttons styling and going inactive after click
 - Finish settings panes
+
+- Ask for survey during onboarding...
 
 ## Oauth custom keys
 

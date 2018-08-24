@@ -9,6 +9,8 @@ import { ItemHideProps } from '../types/ItemHideProps'
 import { Setting } from '../../../models/src'
 
 export type ResolvedItem = {
+  id: string
+  type: string
   title: string
   preview?: React.ReactNode
   content?: string

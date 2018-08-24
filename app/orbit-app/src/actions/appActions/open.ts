@@ -1,16 +1,16 @@
 import { App, Desktop, Electron } from '@mcro/stores'
-import { Bit, Person } from '@mcro/models'
+import { Bit, PersonBit } from '@mcro/models'
 
 export async function open(url) {
   App.sendMessage(Desktop, Desktop.messages.OPEN, url)
 }
 
-export async function openItem(item?: Bit | Person) {
+export async function openItem(item?: Bit | PersonBit) {
   if (!item) {
     return
   }
-  if (item.target === 'person') {
-    App.actions.open('')
+  if (item.target === 'person-bit') {
+    // App.actions.open('')
     return
   }
   if (item.target === 'bit') {
@@ -19,7 +19,7 @@ export async function openItem(item?: Bit | Person) {
   }
 }
 
-export async function copyLink(item?: Bit | Person) {
+export async function copyLink(item?: Bit | PersonBit) {
   if (!item) {
     return
   }

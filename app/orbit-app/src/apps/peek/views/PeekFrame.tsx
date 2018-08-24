@@ -29,7 +29,7 @@ const PeekFrameBorder = view({
   boxShadow: [borderShadow, ['inset', 0, 0.5, 0, 0.5, [255, 255, 255, 0.3]]],
 })
 
-const PeekMain = view({
+const PeekMain = view(UI.View, {
   flex: 1,
   overflow: 'hidden',
   opacity: 1,
@@ -96,11 +96,8 @@ export const PeekFrame = decorator(
           <UI.Col position="relative" flex={1}>
             <PeekFrameBorder />
             <PeekMain
-              css={{
-                boxShadow,
-                borderRadius: Constants.PEEK_BORDER_RADIUS,
-                // background,
-              }}
+              boxShadow={boxShadow}
+              borderRadius={Constants.PEEK_BORDER_RADIUS}
               {...props}
             >
               {children}

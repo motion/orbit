@@ -42,10 +42,10 @@ export class OrbitItemStore {
   }
 
   open = () => {
-    if (!this.props.bit) {
+    if (!this.props.model) {
       return
     }
-    App.actions.openItem(this.props.bit)
+    App.actions.openItem(this.props.model)
   }
 
   setCardWrapRef = cardWrapRef => {
@@ -67,8 +67,8 @@ export class OrbitItemStore {
   }
 
   get realIndex() {
-    const { bit, getIndex, index } = this.props
-    return getIndex ? getIndex(bit.id) : index
+    const { model, getIndex, index } = this.props
+    return getIndex ? getIndex(model) : index
   }
 
   // this cancels to prevent renders very aggressively

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { App } from '@mcro/stores'
 import { view, react, ensure } from '@mcro/black'
 import { compose } from '@mcro/helpers'
-import { PersonRepository } from '../../../repositories'
+import { PersonRepository, PersonBitRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
 import { Title, VerticalSpace } from '../../../views'
@@ -14,6 +14,7 @@ import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
 import { SelectionStore } from '../../../stores/SelectionStore'
+import { PersonBit } from '../../../../../models/src'
 
 const height = 69
 
@@ -79,20 +80,24 @@ class OrbitDirectoryStore {
   )
 
   allPeople = modelQueryReaction(
-    () => PersonRepository.find({ take: 100, where: { integration: 'slack' } }),
+    () =>
+      PersonBitRepository.find({
+        take: 4000,
+        // where: { name: { $not: null } /* , photo: { $not: null } */ },
+      }),
     people => {
       if (!this.isActive && this.allPeople.length) {
         throw react.cancel
       }
-      return sortBy(people, x => x.name.toLowerCase())
+      return sortBy(people.filter(x => !!x.name), x => x.name.toLowerCase())
     },
     {
       defaultValue: [],
     },
   )
 
-  getIndex = id => {
-    return this.results.findIndex(x => x.id === id)
+  getIndex = item => {
+    return this.results.findIndex(x => x.email === item.email)
   }
 }
 
@@ -111,20 +116,19 @@ export const OrbitDirectory = decorator((props: Props) => {
   )
 })
 
-const createSection = (people: Person[], letter, getIndex) => {
+const createSection = (people: PersonBit[], letter, getIndex) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
       <Grid>
-        {people.map(bit => (
+        {people.map(person => (
           <OrbitCard
-            key={bit.id}
+            key={person.email}
             inGrid
             pane="docked"
             subPane="directory"
             getIndex={getIndex}
-            // @ts-ignore
-            bit={bit}
+            model={person}
             hide={{
               icon: true,
             }}

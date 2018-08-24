@@ -35,6 +35,8 @@ export const ResolveConversation = ({
         )) as any) // todo(nate) please fix type error and remove "as any"
     : null
   return children({
+    id: bit.id,
+    type: 'bit',
     title: arrford(keywordExtract.extract(bit.body, options).slice(0, 3)),
     people: bit.people,
     preview: keywordExtract

@@ -48,7 +48,7 @@ export class RootView extends React.Component {
     if (this.state.error) {
       return (
         <UI.Col
-          css={{
+          {...{
             position: 'absolute',
             top: 0,
             left: 0,
@@ -58,7 +58,7 @@ export class RootView extends React.Component {
           }}
         >
           <UI.Col
-            css={{
+            {...{
               position: 'absolute',
               bottom: 0,
               right: 0,

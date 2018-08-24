@@ -1,4 +1,3 @@
-import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import { Options } from './types'
 import { createViewFactory } from './createViewFactory'
@@ -69,10 +68,8 @@ const DEFAULT_OPTS = {
 export default function createGloss(options: Options = DEFAULT_OPTS) {
   const createStyles = css(options)
   const createView = createViewFactory(createStyles)
-  const createElement = fancyElement({ createStyles, options })
   return {
     createStyles,
-    createElement,
     createView,
   }
 }

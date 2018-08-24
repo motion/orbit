@@ -1,6 +1,5 @@
 import '~/../public/styles/siteBase.css'
 import '~/../public/styles/nucleo.css'
-import './createElement'
 import 'intersection-observer'
 import * as React from 'react'
 import ReactDOM from 'react-dom'

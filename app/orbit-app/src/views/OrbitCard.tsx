@@ -174,7 +174,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     } = this.props
     const { isSelected } = store
     const hasMeta = !!(location || updatedAt) && !(hide && hide.meta)
-    const hasPreview = !!preview && !children && !hide.body
+    const hasPreview = !!preview && !children && !(hide && hide.body)
     const hasSubtitle = !!subtitle
     return (
       <CardWrap
@@ -300,7 +300,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       selectionStore,
       store,
       pane,
-      bit,
+      model,
       itemProps,
       inGrid,
       item,
@@ -308,17 +308,17 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       ...props
     } = this.props
     console.log(
-      `${props.index} ${(bit && bit.id) || props.title}.${pane} ${
+      `${props.index} ${(model && model.id) || props.title}.${pane} ${
         store.isSelected
       }`,
     )
-    if (!bit) {
+    if (!model) {
       return this.getOrbitCard(props)
     }
     store.isSelected
     return (
       <ItemResolver
-        model={bit}
+        model={model}
         item={item}
         isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}

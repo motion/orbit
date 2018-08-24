@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { SubPane } from '../../SubPane'
 import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
@@ -14,6 +15,7 @@ import { Title } from '../../../../views'
 import { getConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
+import { MessageDark } from '../../../../views/Message'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -138,7 +140,9 @@ class OnboardStore {
     // LEAVING curFrame page...
 
     if (this.curFrame === 0) {
+      console.log('start proxy')
       await this.checkAlreadyProxied()
+      console.log('already on?', this.accepted)
       if (this.accepted !== true) {
         const { accepted, message } = await promptForAuthProxy()
         console.log('got from prompt', accepted, message)
@@ -204,24 +208,33 @@ export const OrbitOnboard = decorator(
           <OnboardFrame>
             {store.accepted === null && (
               <Centered>
-                <Text size={2.5} fontWeight={600}>
+                <br />
+                <Text size={3.2} fontWeight={600}>
                   Hello
                 </Text>
-                <View height={5} />
-                <Text size={1.5} alpha={0.5}>
+                <View height={10} />
+                <Text size={1.75} alpha={0.5}>
                   Welcome to Orbit
                 </Text>
-                <View height={20} />
-                <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                <View height={30} />
+                <Text textAlign="left" size={1.1}>
                   Orbit is the first ever completely private search platform.
                   <br />
                   <br />
                   To work, Orbit sets up a proxy to direct our servers at{' '}
-                  <strong>{getConfig().privateUrl}</strong> to your local
-                  computer.{' '}
-                  <a href="http://tryorbit.com/auth">
-                    Learn more about how this works
-                  </a>.
+                  <em>{getConfig().privateUrl}</em> to your local computer.
+                  <br />
+                  <br />
+                  When you click 'Begin', we'll prompt you for a password to set
+                  this up.
+                  <br />
+                  <br />
+                  <br />
+                  <strong>
+                    <a href="http://tryorbit.com/security">
+                      Learn everything about Orbit security.
+                    </a>
+                  </strong>
                 </Text>
               </Centered>
             )}
@@ -231,13 +244,24 @@ export const OrbitOnboard = decorator(
                   Error setting up proxy
                 </Text>
                 <View height={20} />
-                <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                <Text
+                  selectable
+                  textAlign="left"
+                  size={1.1}
+                  sizeLineHeight={0.9}
+                >
                   Orbit had a problem setting up a proxy on your machine. Feel
                   free to get in touch with us if you are having issues:
-                  <a href="mailto:hi@tryorbit.com">hi@tryorbit.com</a>.
                   <br />
                   <br />
-                  Error message:
+                  <strong>
+                    <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
+                  </strong>.
+                  <br />
+                  <br />
+                  <strong>Error message:</strong>
+                  <br />
+                  <br />
                   {store.acceptedMessage}
                 </Text>
               </Centered>
@@ -287,17 +311,22 @@ export const OrbitOnboard = decorator(
                 )
               })}
             </Unpad>
+            <br />
+            <MessageDark style={{ textAlign: 'center' }}>
+              <strong>Orbit Proxy Active</strong>. Your private keys will never
+              be available outside this device!
+            </MessageDark>
+            <br />
           </OnboardFrame>
           <OnboardFrame>
             <Centered>
               <Text size={2.5} fontWeight={600}>
                 All set!
               </Text>
-              <View height={10} />
+              <View height={20} />
               <Text size={1.5} alpha={0.5}>
-                Orbit will scan your integrations and create an index. It
-                creates profiles of people it sees from across different
-                integrations.
+                Orbit will now create an index of things and people from across
+                your cloud.
               </Text>
             </Centered>
           </OnboardFrame>

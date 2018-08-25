@@ -11,7 +11,8 @@
 
 # next
 
-- kevins app didnt start through .app
+- only have them download .app and auto move to apps folder
+- slack orbit-friends
 - close orbit while oauth open so it doesnt cover it
 - orbit doesnt move to new spaces properly
 - better show the panes on onboard

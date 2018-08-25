@@ -4,7 +4,7 @@ import * as Path from 'path'
 import { logger } from '@mcro/logger'
 import waitPort from 'wait-port'
 import { startDesktopInProcess } from './helpers/startDesktopInProcess'
-import { app } from 'electron'
+import { app, dialog } from 'electron'
 
 const log = logger('electron')
 
@@ -53,13 +53,16 @@ export async function main({
     }
 
     // start desktop...
+
+    // fail message
     let desktopFailMsg = ''
     const failStartTm = setTimeout(() => {
-      require('electron').dialog.showMessageBox({
+      dialog.showMessageBox({
         message: `Node process didnt start: ${desktopFailMsg}`,
         buttons: ['Ok'],
       })
     }, 5000)
+
     log('In production, starting desktop...')
     try {
       desktopPid = startDesktopInProcess(port)
@@ -67,10 +70,31 @@ export async function main({
     } catch (err) {
       desktopFailMsg = `${err.message}`
     }
+
     log('Waiting for desktop startup to continue...')
     await waitPort({ port })
     clearTimeout(failStartTm)
     log('Found desktop, continue...')
+
+    // move to app folder
+    if (!app.isInApplicationsFolder()) {
+      app.dock.bounce('informational')
+      const response = dialog.showMessageBox({
+        type: 'question',
+        title: 'Move to apps?',
+        message: 'Move Orbit to Applications folder?',
+        buttons: ['Cancel', 'Ok'],
+        defaultId: 1,
+        cancelId: 0,
+      })
+      if (response === 1) {
+        try {
+          app.moveToApplicationsFolder()
+        } catch (err) {
+          console.log('error moving to app folder', err)
+        }
+      }
+    }
   }
 
   // set config before starting app

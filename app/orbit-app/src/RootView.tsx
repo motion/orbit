@@ -94,17 +94,17 @@ export class RootView extends React.Component {
   }
 }
 
-// if (process.env.NODE_ENV === 'development') {
-//   if (module.hot && module.hot.addStatusHandler) {
-//     if (module.hot.status() === 'idle') {
-//       module.hot.addStatusHandler(status => {
-//         if (status === 'prepare') {
-//           // for gloss to update styles
-//           window['__lastHMR'] = Date.now()
-//           view.emit('will-hmr')
-//           view.provide.emit('will-hmr')
-//         }
-//       })
-//     }
-//   }
-// }
+if (process.env.NODE_ENV === 'development') {
+  if (module.hot && module.hot.addStatusHandler) {
+    if (module.hot.status() === 'idle') {
+      module.hot.addStatusHandler(status => {
+        if (status === 'prepare') {
+          // for gloss to update styles
+          window['__lastHMR'] = Date.now()
+          view.emit('will-hmr')
+          view.provide.emit('will-hmr')
+        }
+      })
+    }
+  }
+}

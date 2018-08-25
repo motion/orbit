@@ -1,6 +1,8 @@
 import * as Path from 'path'
 import execa from 'execa'
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development'
+
 console.log('node env', process.env.NODE_ENV)
 
 const configPath = require.resolve('./webpack.config')

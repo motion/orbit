@@ -11,7 +11,7 @@ import {
 import { Person, Bit, Setting } from '@mcro/models'
 
 // @ts-ignore
-type PeekStoreItemState = App.state.peekState & {
+type PeekStoreItemState = typeof App.state.peekState & {
   peekId: string
   model: Person | Bit | Setting
 }
@@ -213,7 +213,7 @@ export class PeekStore {
       return [0, 0]
     }
     // determine x adjustments
-    const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
+    const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
     const position = state.position
     let x = position[0]
     let y = position[1] + animationAdjust

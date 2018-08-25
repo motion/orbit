@@ -22,7 +22,7 @@ export class App extends BaseComponent {
       if (key === 'path') {
         this.app.setPath(val)
       }
-      if (key === 'devTools') {
+      if (key === 'devTools' && val) {
         const installer = require('electron-devtools-installer').default
         for (const tool of val) {
           installer(tool)

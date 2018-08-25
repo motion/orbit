@@ -1,4 +1,4 @@
-import { Person, Bit } from '@mcro/models'
+import { Bit, PersonBit } from '@mcro/models'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { peekPosition } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
@@ -6,6 +6,7 @@ import invariant from 'invariant'
 import { PeekTarget } from './types'
 import { isEqual } from '@mcro/black'
 import { logger } from '@mcro/logger'
+import { ResolvedItem } from '../../../components/ItemResolver'
 
 const log = logger('selectItem')
 
@@ -18,10 +19,7 @@ export function setPeekState(props) {
   })
 }
 
-export function toggleSelectItem(
-  item: Person | Bit | AppStatePeekItem,
-  target?: PeekTarget,
-) {
+export function toggleSelectItem(item: PersonBit | Bit, target?: PeekTarget) {
   log('toggleSelectItem', item)
   if (isEqual(App.peekState.item, getItem(item))) {
     App.actions.clearPeek()
@@ -30,10 +28,7 @@ export function toggleSelectItem(
   }
 }
 
-export function selectItem(
-  item?: Person | Bit | AppStatePeekItem,
-  target?: PeekTarget,
-) {
+export function selectItem(item?: PersonBit | Bit, target?: PeekTarget) {
   invariant(item, 'Must pass item')
   setPeekState({
     target,
@@ -42,41 +37,34 @@ export function selectItem(
   })
 }
 
-function getItem(item: Person | Bit | AppStatePeekItem) {
-  if (item.target === 'person') {
-    invariant(item.name, 'Must pass Person name')
-    return getPersonItem(item)
-  } else if (item.target === 'bit') {
-    invariant(item.title, 'Must pass Bit title')
-    return getBitItem(item)
-  } else {
-    invariant(item.id, 'Must pass item id')
-    return {
-      id: item.id,
-      title: item.title || '',
-      icon: item.icon || '',
-      type: item.type || '',
-      // because were doing deep merging, we reset extra fields
-      body: '',
-      integration: item.integration || '',
-      subType: item.subType || '',
-    }
+function getItem(item: PersonBit | Bit | AppStatePeekItem): AppStatePeekItem {
+  if (!item.target) {
+    return item
+  }
+  switch (item.target) {
+    case 'person-bit':
+      return getPersonItem(item as PersonBit)
+    case 'bit':
+      return getBitItem(item as Bit)
   }
 }
 
-function getPersonItem(person: Person) {
+function getPersonItem(person: PersonBit): AppStatePeekItem {
   return {
-    id: person.id,
+    id: person.email,
     icon: person.photo || '',
     title: person.name,
     body: '',
     type: 'person',
     integration: '',
     subType: '',
+    config: {
+      showTitleBar: false,
+    },
   }
 }
 
-function getBitItem(bit: Bit) {
+function getBitItem(bit: Bit): AppStatePeekItem {
   return {
     id: bit.id,
     icon: bit.integration || '',

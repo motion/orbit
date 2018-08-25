@@ -2,10 +2,11 @@ import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
+import { ResolvedItem } from '../components/ItemResolver'
 
 export class OrbitItemStore {
   props: OrbitItemProps
-  normalizedBit = null
+  resolvedItem: ResolvedItem = null
   isSelected = false
   cardWrapRef = null
   clickAt = 0
@@ -53,8 +54,12 @@ export class OrbitItemStore {
     this.cardWrapRef = cardWrapRef
   }
 
+  setResolvedItem = (item: ResolvedItem) => {
+    this.resolvedItem = item
+  }
+
   get target() {
-    return this.props.result || this.normalizedBit
+    return this.props.result || this.props.model
   }
 
   get position() {

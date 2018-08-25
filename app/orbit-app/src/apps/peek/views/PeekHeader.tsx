@@ -23,7 +23,10 @@ const PeekHeaderContain = view(UI.View, {
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
 })
 
-PeekHeaderContain.theme = ({ position, theme, focused }) => {
+PeekHeaderContain.theme = ({ invisible, position, theme, focused }) => {
+  if (invisible) {
+    return null
+  }
   let style: CSSPropertySet = {
     position: position || 'relative',
   }
@@ -106,8 +109,11 @@ export class PeekHeaderContent extends React.Component<Props> {
       ...props
     } = this.props
     const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
+    const itemConfig = peekStore.state.item.config
+    const hideTitleBar = itemConfig && itemConfig.showTitleBar === false
     return (
       <PeekHeaderContain
+        invisible={hideTitleBar}
         draggable
         focused
         onDragStart={peekStore.onDragStart}

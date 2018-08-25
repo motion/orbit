@@ -10,6 +10,7 @@ import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
+import { App } from '@mcro/stores'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -68,7 +69,7 @@ Card.theme = ({
   card = {
     ...card,
     padding: padding || 9,
-    borderRadius: borderRadius || 9,
+    borderRadius: borderRadius || 7,
     background: background || theme.background,
     ...theme.card,
   }
@@ -135,8 +136,6 @@ const orbitIconProps = {
 @view
 export class OrbitCardInner extends React.Component<OrbitItemProps> {
   getOrbitCard = (contentProps: ResolvedItem) => {
-    // TODO weird mutation
-    this.props.store.normalizedBit = contentProps
     const {
       createdAt,
       icon,
@@ -235,7 +234,14 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           {hasMeta && (
             <CardSubtitle>
               {!!location && (
-                <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
+                <RoundButtonSmall
+                  marginLeft={-3}
+                  onClick={
+                    onClickLocation
+                      ? () => App.actions.open(onClickLocation)
+                      : null
+                  }
+                >
                   {location}
                 </RoundButtonSmall>
               )}
@@ -322,6 +328,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
         item={item}
         isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}
+        onResolvedItem={store.setResolvedItem}
         {...itemProps}
       >
         {this.getOrbitCard}

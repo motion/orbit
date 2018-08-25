@@ -22,7 +22,7 @@
     "lodash": "4.17.10",
     "mobx": "5.0.3",
     "react-countup": "3.0.3",
-    "react-hot-loader": "4.3.4",
+    "react-hot-loader": "4.3.5",
     "react-media": "^1.8.0",
     "react-spring": "5.3.4",
     "react-svg-inline": "^2.1.0",

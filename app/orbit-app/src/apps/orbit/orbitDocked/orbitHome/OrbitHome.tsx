@@ -145,11 +145,10 @@ export class OrbitHome extends React.Component<Props> {
 
   render() {
     const { homeStore, selectionStore } = this.props
-    console.log('HOME RENDER')
+    console.log('HOME RENDER2')
     return (
       <SubPane name="home" fadeBottom>
         <SuggestionBarVerticalPad />
-        123
         {Object.keys(homeStore.following).map(categoryName => (
           <OrbitHomeCarouselSection
             key={categoryName}

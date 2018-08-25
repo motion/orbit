@@ -119,7 +119,10 @@ const OrbitHomeCarouselSection = decorator(
             isActiveStore={subPaneStore}
             resetOnInactive
             cardProps={{
-              hide: { body: true },
+              hide: {
+                body: categoryName !== 'People',
+                icon: categoryName === 'People',
+              },
               titleFlex: 1,
             }}
           />

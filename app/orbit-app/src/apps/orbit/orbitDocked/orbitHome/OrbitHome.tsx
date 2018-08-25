@@ -104,7 +104,7 @@ const decorator = compose(
   view,
 )
 const OrbitHomeCarouselSection = decorator(
-  ({ subPaneStore, homeStore, categoryName }) => {
+  ({ subPaneStore, homeStore, categoryName, ...props }) => {
     const { items, startIndex } = homeStore.following[categoryName]
     return (
       <Section key={categoryName}>
@@ -125,6 +125,7 @@ const OrbitHomeCarouselSection = decorator(
               },
               titleFlex: 1,
             }}
+            {...props}
           />
         </Unpad>
       </Section>
@@ -158,6 +159,7 @@ export class OrbitHome extends React.Component<Props> {
             selectionStore={selectionStore}
             homeStore={homeStore}
             categoryName={categoryName}
+            cardHeight={categoryName === 'People' ? 70 : 90}
           />
         ))}
         {/* this is a nice lip effect */}

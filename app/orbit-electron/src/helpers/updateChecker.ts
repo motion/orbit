@@ -31,6 +31,7 @@ if (getConfig().env.prod) {
       })
 
       try {
+        // @ts-ignore
         notification.on('action', ({ index }) => {
           if (index === 0) {
             updater.quitAndInstall()

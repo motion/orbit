@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Surface, SurfaceProps } from './Surface'
-import { forwardRef } from './helpers/forwardRef'
 
 const LINE_HEIGHT = 28
 
@@ -19,7 +18,7 @@ export type SizedSurfaceProps = SurfaceProps & {
 
 const num = x => (x === true ? 1 : x)
 
-const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
+export const SizedSurface = (props: SizedSurfaceProps) => {
   const {
     size = 1,
     sizeHeight,
@@ -78,6 +77,4 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
   }
   const iconPad = LINE_HEIGHT * 0.2 * num(sizeHeight)
   return <Surface {...pass} size={size} iconPad={iconPad} {...rest} />
-})
-
-export const SizedSurface = SizedSurfaceInner as React.SFC<SizedSurfaceProps>
+}

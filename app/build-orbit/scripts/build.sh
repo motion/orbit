@@ -129,4 +129,5 @@ if [[ "$FLAGS" =~ "--no-pack" ]]; then
 else
   echo "packing app into .dmg..."
   npx electron-installer-dmg --overwrite --out ./dist --icon ./resources/icon.icns ./dist/Orbit-darwin-x64/Orbit.app Orbit
+  codesign -vfs "Developer ID Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ./dist/Orbit.dmg
 fi

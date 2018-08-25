@@ -27,13 +27,12 @@ const macTheme = Theme.colorize({
     iconSelected: '#4d84f5',
     iconSelectedBlur: '#80a6f5',
     iconActive: '#4c4c4c',
-    buttonBorder: '#d3d2d3',
+    buttonBorderColor: '#d3d2d3',
     buttonBorderBottom: '#b0afb0',
     buttonBorderBlur: '#dbdbdb',
-    buttonBackground: 'rgba(0,0,0,0.05)',
+    buttonBackground: 'linear-gradient(#FDFDFD, #F0F0F0)',
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
-    buttonBackgroundActive: '#e5e5e5',
   },
 })
 

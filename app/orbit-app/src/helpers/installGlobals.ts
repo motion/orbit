@@ -9,7 +9,7 @@ import { start } from '../start'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
 import * as Repositories from '../repositories'
-import {Logger} from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 
 // add require('') to window for easy debugging
 // for example require('lodash')

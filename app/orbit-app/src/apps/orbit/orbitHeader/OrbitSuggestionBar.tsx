@@ -56,7 +56,6 @@ const HorizontalScroll = view({
 })
 
 const suggestionTheme = theme => ({
-  ...theme,
   background: theme.background.alpha(0.2),
   color: theme.color.alpha(0.6),
   backgroundHover: theme.backgroundHover.alpha(0.1),
@@ -71,7 +70,7 @@ const SuggestionButton = props => (
     sizeHeight={0.8}
     sizePadding={0.6}
     fontWeight={600}
-    themeAdjust={suggestionTheme}
+    themeSelect={suggestionTheme}
     {...props}
   />
 )

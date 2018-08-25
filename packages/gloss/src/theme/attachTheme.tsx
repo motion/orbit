@@ -4,20 +4,29 @@ import { ThemeContext } from './ThemeContext'
 // HoC for active theme attaching
 
 export const wrapTheme = (props, Klass, avoidTheme?) => {
-  if (props.theme || avoidTheme) {
+  if (avoidTheme) {
     return <Klass {...props} />
   }
   return (
     <ThemeContext.Consumer>
       {({ allThemes, activeThemeName }) => {
-        return <Klass {...props} theme={allThemes[activeThemeName]} />
+        let theme = allThemes[activeThemeName]
+        // allow simple overriding of the theme using props:
+        // <Button theme={{ backgroundHover: 'transparent' }} />
+        // if (typeof props.theme === 'object') {
+        //   console.log('merging theme', theme, props.theme)
+        //   theme = {
+        //     ...theme,
+        //     ...props.theme,
+        //   }
+        // }
+        return <Klass {...props} theme={theme} />
       }}
     </ThemeContext.Consumer>
   )
 }
 
 export function attachTheme<T>(Klass: T): T {
-  Klass['_hasTheme'] = true
   const AttachedKlass = props => {
     return wrapTheme(props, Klass)
   }

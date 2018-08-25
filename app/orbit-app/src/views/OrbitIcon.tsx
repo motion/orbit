@@ -76,7 +76,7 @@ export const OrbitIcon = attachTheme(
     const extImg = icon.indexOf('http') === 0 ? icon : null
     let iconImg = icons[icon] ? icons[icon] : extImg
     // white icon if dark background + white icon exists
-    if (icons[icon] && theme.background.isDark()) {
+    if (icons[icon] && theme.background.isDark && theme.background.isDark()) {
       const whiteKey = `${icon}White`
       if (icons[whiteKey]) {
         iconImg = icons[whiteKey]

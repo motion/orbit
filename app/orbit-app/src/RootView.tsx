@@ -6,9 +6,6 @@ import { view, on } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
 
-// install these after we setup everything so they
-require('./helpers/installDevelopmentHelpers')
-
 export class RootView extends React.Component {
   state = {
     error: null,

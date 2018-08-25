@@ -187,6 +187,7 @@ export class ListItem extends React.Component<ItemProps> {
     }
 
     const areChildrenString = typeof children === 'string'
+    const shouldHighlight = selectable !== false && !!highlightValue
 
     return (
       <SizedSurface
@@ -211,7 +212,7 @@ export class ListItem extends React.Component<ItemProps> {
         }}
         style={style}
         getRef={this.getRef}
-        highlight={selectable !== false && highlightValue}
+        highlight={shouldHighlight}
         after={below}
         {...props}
       >

@@ -11,7 +11,9 @@
 
 # next
 
-- need way to update without losing data: use a ~/.orbit dir?
+- userDataDir
+- remove confluence
+- make onboarding encourage adding more integrations
 - typeform survey to capture a few potential paths
 - location filters: `.find({ location: { name: "..." } })`
 

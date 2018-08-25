@@ -11,7 +11,7 @@ import {
 import { Person, Bit, Setting } from '@mcro/models'
 
 // @ts-ignore
-type PeekStoreItemState = App.state.peekState & {
+type PeekStoreItemState = typeof App.state.peekState & {
   peekId: string
   model: Person | Bit | Setting
 }

@@ -10,7 +10,7 @@ import { Setting } from '../../../models/src'
 
 export type ResolvedItem = {
   id: string
-  type: string
+  type: 'person' | 'bit'
   title: string
   preview?: React.ReactNode
   content?: string
@@ -38,9 +38,16 @@ export type ItemResolverProps = {
   itemProps?: Object
   searchTerm?: string
   hide?: ItemHideProps
+  onResolvedItem?: (a: ResolvedItem) => any
 }
 
-export const ItemResolver = ({ model, item, ...props }: ItemResolverProps) => {
+export const ItemResolver = ({
+  model,
+  item,
+  onResolvedItem,
+  children,
+  ...props
+}: ItemResolverProps) => {
   let Resolver
   if (!model) {
     return null
@@ -54,5 +61,15 @@ export const ItemResolver = ({ model, item, ...props }: ItemResolverProps) => {
   if (!Resolver) {
     Resolver = ResolveEmpty
   }
-  return <Resolver model={model} item={item} {...props} />
+  return (
+    <Resolver model={model} item={item} {...props}>
+      {item => {
+        // allow getting the item via a prop other than children intended for side effects
+        if (onResolvedItem) {
+          onResolvedItem(item)
+        }
+        return children(item)
+      }}
+    </Resolver>
+  )
 }

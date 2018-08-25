@@ -106,6 +106,11 @@ export class PeekHeaderContent extends React.Component<Props> {
       ...props
     } = this.props
     const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
+    const itemConfig = peekStore.state.item.config
+    if (itemConfig && itemConfig.showTitleBar === false) {
+      console.log('peekState.item showTitleBar false')
+      return null
+    }
     return (
       <PeekHeaderContain
         draggable

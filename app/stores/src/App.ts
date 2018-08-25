@@ -17,6 +17,11 @@ export type AppStatePeekItem = {
   type: string
   integration: string
   subType: string
+  // allow various things to be passed as config
+  // to help configure the peek window
+  config?: {
+    showTitleBar?: boolean
+  }
 }
 
 // @ts-ignore
@@ -83,7 +88,7 @@ class AppStore {
       pinned: false,
       devModeStick: false,
       target: null,
-      item: null,
+      item: null as AppStatePeekItem,
       peekId: 0,
       peekOnLeft: false,
       position: [0, 0],

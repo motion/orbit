@@ -91,7 +91,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     if #available(OSX 10.12, *) {
       let _ = Timer(timeInterval: 0.4, repeats: true) { _ in
         if !self.window.isOnActiveSpace {
-          self.emit("{ \"action\": \"moveSpace\", \"value\": true }")
+          self.emit("{ \"action\": \"spaceMove\", \"value\": true }")
           NSApp.activate(ignoringOtherApps: true)
         }
       }

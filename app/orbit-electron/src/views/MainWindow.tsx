@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { on, view } from '@mcro/black'
+import { on, view, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron } from '@mcro/stores'
+import { Electron, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { getConfig } from '../config'
@@ -9,10 +9,36 @@ import { logger } from '@mcro/logger'
 
 const log = logger('electron')
 
+type Props = {
+  store?: MainStore
+  electronStore?: ElectronStore
+  onRef?: Function
+}
+
 class MainStore {
+  props: Props
+
+  window = null
+
   get mouseInActiveArea() {
     return Electron.hoverState.peekHovered || Electron.hoverState.orbitHovered
   }
+
+  handleRef = ref => {
+    if (this.props.onRef) {
+      this.props.onRef(ref)
+    }
+    this.window = ref
+  }
+
+  moveToNewSpace = react(
+    () => Desktop.state.movedToNewSpace,
+    () => {
+      this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens
+      this.window.focus() // focus the window up front on the active screen
+      this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
+    },
+  )
 }
 
 @view.attach('electronStore')
@@ -20,11 +46,7 @@ class MainStore {
   store: MainStore,
 })
 @view.electron
-export class MainWindow extends React.Component<{
-  store?: MainStore
-  electronStore?: ElectronStore
-  onRef?: Function
-}> {
+export class MainWindow extends React.Component<Props> {
   state = {
     show: false,
     position: [0, 0],
@@ -52,20 +74,19 @@ export class MainWindow extends React.Component<{
   }
 
   render() {
-    const { store, electronStore, onRef } = this.props
+    const { store, electronStore } = this.props
     const url = getConfig().server.url
     log(`Rendering main window at url ${url}`)
     return (
       <Window
         alwaysOnTop
         ignoreMouseEvents={!store.mouseInActiveArea}
-        ref={ref => ref && onRef(ref.window)}
+        ref={store.handleRef}
         file={url}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
-        visibleOnAllWorkspaces
         // @ts-ignore
         showDevTools={Electron.state.showDevTools.app}
         transparent

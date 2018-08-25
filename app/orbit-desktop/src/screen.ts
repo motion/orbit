@@ -152,6 +152,11 @@ export class Screen {
   }
 
   setupOracleListeners() {
+    // space move
+    this.oracle.onSpaceMove(() => {
+      Desktop.setState({ movedToNewSpace: Date.now() })
+    })
+
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
       console.log('is accessible, start watching stuff', isAccessible)

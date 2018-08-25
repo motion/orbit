@@ -69,7 +69,7 @@ Card.theme = ({
   card = {
     ...card,
     padding: padding || 9,
-    borderRadius: borderRadius || 9,
+    borderRadius: borderRadius || 7,
     background: background || theme.background,
     ...theme.card,
   }

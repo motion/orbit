@@ -30,7 +30,7 @@ export const ResolvePerson = ({
   const photo = last(model.allPhotos) || model.photo
   return children({
     id: model.email,
-    type: 'person-bit',
+    type: 'person',
     title: model.name,
     icon: photo,
     subtitle: model.email,

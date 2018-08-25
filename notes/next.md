@@ -11,6 +11,10 @@
 
 # next
 
+- kevins app didnt start through .app
+- close orbit while oauth open so it doesnt cover it
+- orbit doesnt move to new spaces properly
+- better show the panes on onboard
 - userDataDir
 - remove confluence
 - make onboarding encourage adding more integrations

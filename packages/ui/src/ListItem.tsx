@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { Text } from './Text'
-import { SizedSurface } from './SizedSurface'
+import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 
-export type ItemProps = {
+export type ItemProps = SizedSurfaceProps & {
   after?: React.ReactNode
   below?: React.ReactNode
   afterProps?: Object
@@ -43,7 +43,7 @@ export type ItemProps = {
   style?: Object
   childrenEllipse?: boolean
   getRef?: Function
-  highlight?: boolean | Function
+  highlight?: boolean | ((index: number) => React.ReactNode)
   selectable?: boolean
 }
 
@@ -187,6 +187,7 @@ export class ListItem extends React.Component<ItemProps> {
     }
 
     const areChildrenString = typeof children === 'string'
+    const shouldHighlight = selectable !== false && !!highlightValue
 
     return (
       <SizedSurface
@@ -211,7 +212,7 @@ export class ListItem extends React.Component<ItemProps> {
         }}
         style={style}
         getRef={this.getRef}
-        highlight={selectable !== false && highlightValue}
+        highlight={shouldHighlight}
         after={below}
         {...props}
       >

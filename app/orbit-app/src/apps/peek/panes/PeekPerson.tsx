@@ -236,7 +236,14 @@ export class PeekPerson extends React.Component<
                 <StrongSubTitle>Recently</StrongSubTitle>
                 {(person.bits || []).slice(0, 30).map(bit => {
                   return (
-                    <OrbitListItem key={bit.id} model={bit} isExpanded>
+                    <OrbitListItem
+                      key={bit.id}
+                      model={bit}
+                      isExpanded
+                      theme={{
+                        backgroundHover: 'transparent',
+                      }}
+                    >
                       {({ content }) => content}
                     </OrbitListItem>
                   )

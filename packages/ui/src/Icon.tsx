@@ -1,6 +1,5 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import { Popover } from './Popover'
 import { iconNames } from './iconNames'
 import fuzzy from 'fuzzy'
 import { View } from './blocks/View'
@@ -111,22 +110,6 @@ export class Icon extends React.Component<IconProps> {
         >
           {content}
         </div>
-        {tooltip ? (
-          <Popover
-            theme="dark"
-            background
-            openOnHover
-            noArrow
-            noHoverOnChildren
-            target={`.${this.uniq}`}
-            padding={[0, 5]}
-            distance={10}
-            towards="top"
-            {...tooltipProps}
-          >
-            {tooltip}
-          </Popover>
-        ) : null}
       </IconInner>
     )
   }

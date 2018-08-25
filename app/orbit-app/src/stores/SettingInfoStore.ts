@@ -1,7 +1,11 @@
 // import { react } from '@mcro/black'
 import { Setting } from '@mcro/models'
 import { IntegrationType } from '../../../models/src'
-import { BitRepository, JobRepository } from '../repositories'
+import {
+  BitRepository,
+  JobRepository,
+  SettingRepository,
+} from '../repositories'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
 import { react } from '@mcro/black'
 
@@ -11,11 +15,12 @@ import { react } from '@mcro/black'
 export class SettingInfoStore {
   props: {
     model: Setting
+    result: { id: string; [key: string]: any }
   }
 
-  get setting() {
-    return this.props.model
-  }
+  setting = modelQueryReaction(() =>
+    SettingRepository.findOne(`${(this.props.model || this.props.result).id}`),
+  )
 
   job = modelQueryReaction(
     async () => {
@@ -33,6 +38,7 @@ export class SettingInfoStore {
     if (!this.setting) {
       return 0
     }
+    console.log('count by type', this.setting.type)
     return await BitRepository.count({
       integration: this.setting.type as IntegrationType,
     })

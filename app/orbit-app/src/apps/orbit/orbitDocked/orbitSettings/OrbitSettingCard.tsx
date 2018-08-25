@@ -23,7 +23,7 @@ export const OrbitSettingCard = decorator(
       : store.bitsCount >= 0
         ? `${store.bitsCount}`
         : '...'
-    const subtitleDisplay = subtitle || countSubtitle
+    const subtitleDisplay = subtitle || Number(countSubtitle).toLocaleString()
     return (
       <OrbitCard
         inactive={!isActive}
@@ -34,7 +34,7 @@ export const OrbitSettingCard = decorator(
         subtitle={subtitleDisplay}
         subtitleProps={{
           size: 1.5,
-          fontWeight: 500,
+          fontWeight: 300,
         }}
         titleFlex={1}
         date={store.job && store.job.updatedAt}

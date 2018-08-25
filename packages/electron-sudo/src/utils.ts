@@ -1,36 +1,14 @@
 import fs from 'fs'
 import child from 'child_process'
+import { promisify } from 'util'
 
-function promisify(fn) {
-  return function() {
-    return new Promise((resolve, reject) => {
-      fn(...arguments, function() {
-        if (arguments[0] instanceof Error) {
-          reject(arguments[0])
-        } else {
-          resolve(...Array.prototype.slice.call(arguments, 1))
-        }
-      })
-    })
-  }
-}
+export const exec = promisify(child.exec)
 
-async function exec(cmd, options = {}) {
-  return new Promise((resolve, reject) => {
-    child.exec(cmd, options, (err, stdout, stderr) => {
-      if (err) {
-        return reject(err)
-      }
-      return resolve({ stdout, stderr })
-    })
-  })
-}
-
-function spawn(cmd, args, options = {}) {
+export function spawn(cmd, args, options = {}) {
   return child.spawn(cmd, args, { ...options, shell: true })
 }
 
-async function stat(target) {
+export async function stat(target) {
   let _stat = promisify(fs.stat)
   try {
     let fileStat = await _stat(target)
@@ -40,9 +18,8 @@ async function stat(target) {
   }
 }
 
-let open = promisify(fs.open),
-  mkdir = promisify(fs.mkdir),
-  readFile = promisify(fs.readFile),
-  writeFile = promisify(fs.writeFile)
-
-export { readFile, writeFile, spawn, exec, mkdir, stat, open }
+export const open = promisify(fs.open)
+export const mkdir = promisify(fs.mkdir)
+export const readFile = promisify(fs.readFile)
+export const writeFile = promisify(fs.writeFile)
+export const unlink = promisify(fs.unlink)

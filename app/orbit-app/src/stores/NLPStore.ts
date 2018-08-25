@@ -1,17 +1,19 @@
 import { PersonRepository } from '../repositories'
 
-// @ts-ignore
-import initNlp from './nlpStore/nlpQueryWorker'
 import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { NLPResponse } from './nlpStore/types'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
 // runs off thread
-const { parseSearchQuery, setUserNames } = initNlp()
-
 // @ts-ignore
-// window.nlpWorker = { parseSearchQuery, setUserNames }
+import initNlp from './nlpStore/nlpQueryWorker'
+const { parseSearchQuery, setUserNames } = initNlp()
+// @ts-ignore
+window.nlpWorker = { parseSearchQuery, setUserNames }
+
+// runs on thread
+// import { parseSearchQuery, setUserNames } from './nlpStore/nlpQuery'
 
 const DEFAULT_NLP = {
   date: {

@@ -9,7 +9,6 @@ import { getGlobalConfig } from '@mcro/config'
 import { SocketManager } from './SocketManager'
 
 const log = logger('bridge')
-const port = getGlobalConfig().ports.bridge
 
 // exports
 export * from './proxySetters'
@@ -67,6 +66,7 @@ class Bridge {
       throw new Error('No source given for starting screen store')
     }
     log(`Starting bridge for ${store.source}...`)
+    const port = getGlobalConfig().ports.bridge
     this.setupActions(store, options.actions)
     // on re-start treat as update
     if (this.started) {

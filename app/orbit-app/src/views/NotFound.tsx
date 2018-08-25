@@ -1,8 +1,6 @@
-import React from 'react'
-import { view } from '@mcro/black'
+import * as React from 'react'
 
-@view
-export class NotFound {
+export class NotFound extends React.Component {
   render() {
     return <div>404</div>
   }

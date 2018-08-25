@@ -11,6 +11,7 @@ import {
 import { capitalize } from 'lodash'
 import { View } from '@mcro/ui'
 import { SelectableCarousel } from '../../../../components/SelectableCarousel'
+import { now } from 'mobx-utils'
 
 type Props = {
   name: string
@@ -53,21 +54,27 @@ class OrbitHomeStore {
   }
 
   following = react(
+    () => now(1000 * 60),
     async () => {
       const people = await PersonBitRepository.find({
         // order: { createdAt: 'DESC' },
         take: 15,
       })
-      const [slack, gdrive, github, confluence, jira, gmail] = await Promise.all(
-        [
-          findManyType('slack'),
-          findManyType('gdrive'),
-          findManyType('github'),
-          findManyType('confluence'),
-          findManyType('jira'),
-          findManyType('gmail'),
-        ],
-      )
+      const [
+        slack,
+        gdrive,
+        github,
+        confluence,
+        jira,
+        gmail,
+      ] = await Promise.all([
+        findManyType('slack'),
+        findManyType('gdrive'),
+        findManyType('github'),
+        findManyType('confluence'),
+        findManyType('jira'),
+        findManyType('gmail'),
+      ])
       // only return ones with results
       const all = { people, slack, gdrive, github, confluence, jira, gmail }
       const res = {} as any
@@ -85,6 +92,7 @@ class OrbitHomeStore {
     },
     {
       defaultValue: {},
+      onlyUpdateIfChanged: true,
     },
   )
 }

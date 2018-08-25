@@ -41,9 +41,6 @@ const ListItem = view({
     border: [1, 'transparent'],
     background: 'transparent',
     padding: [12, 12, 12, 10],
-    '&:hover': {
-      background: [0, 0, 0, 0.025],
-    },
   },
 })
 

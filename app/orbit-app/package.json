@@ -62,8 +62,8 @@
   "devDependencies": {
     "@mcro/build": "^2.2.1",
     "@types/webpack-env": "1.13.6",
-    "pundle-cli": "3.0.0-beta4",
-    "pundle-preset-default": "3.0.0-beta4"
+    "pundle-cli": "3.0.0-beta7",
+    "pundle-preset-default": "3.0.0-beta7"
   },
   "peerDependencies": {
     "mobx": "5.0.3",

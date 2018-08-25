@@ -71,8 +71,9 @@ export class PeekStore {
   }
 
   internalState: PeekStoreState = react(
-    () => [App.peekState.target, this.tornState],
+    () => [App.peekState.target, this.tornState, App.peekState.item],
     async ([target, tornState], { getValue, setValue, sleep }) => {
+      console.log('okok', target)
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
       const isShown = !!tornState || (!!target && !!App.orbitState.docked)
@@ -122,8 +123,11 @@ export class PeekStore {
 
   // make this not change if not needed
   state: PeekStoreItemState = react(
-    () => this.internalState,
-    ({ lastState, curState }) => {
+    () => [this.tornState, this.internalState],
+    ([tornState, { lastState, curState }]) => {
+      if (tornState) {
+        return tornState
+      }
       if (this.willHide) {
         return lastState
       }
@@ -135,6 +139,9 @@ export class PeekStore {
   )
 
   get isShown() {
+    if (this.tornState) {
+      return true
+    }
     return this.internalState.isShown
   }
 

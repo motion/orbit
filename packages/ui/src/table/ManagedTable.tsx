@@ -108,6 +108,7 @@ type ManagedTableState = {
   highlightedRows: TableHighlightedRows
   columnOrder?: TableColumnRawOrder
   columnSizes?: TableColumnSizes
+  sortOrder?: TableRowSortOrder
 }
 
 /**
@@ -144,9 +145,8 @@ export class ManagedTable extends React.PureComponent<
     // return nextState
     if (nextState) {
       return nextState
-    } else {
-      return null
     }
+    return null
   }
 
   getTableKey = (): string => {
@@ -164,6 +164,7 @@ export class ManagedTable extends React.PureComponent<
       this.props.columnOrder,
     columnSizes: this.props.columnSizes,
     highlightedRows: [],
+    sortOrder: null,
   }
 
   tableRef?: Table
@@ -204,6 +205,10 @@ export class ManagedTable extends React.PureComponent<
     }
   }
 
+  onSort = (sortOrder: TableRowSortOrder) => {
+    this.setState({ sortOrder })
+  }
+
   render() {
     const { props, state } = this
     if ((!props.rows || !props.rows.length) && props.bodyPlaceholder) {
@@ -223,8 +228,8 @@ export class ManagedTable extends React.PureComponent<
         filterValue={props.filterValue}
         highlightedRows={state.highlightedRows}
         onHighlight={this.onHighlight}
-        sortOrder={props.sortOrder}
-        onSort={props.onSort}
+        sortOrder={props.sortOrder || state.sortOrder}
+        onSort={props.onSort || this.onSort}
         columnOrder={state.columnOrder}
         onColumnOrder={this.onColumnOrder}
         columnSizes={state.columnSizes}

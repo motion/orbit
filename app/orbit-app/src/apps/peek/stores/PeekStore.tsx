@@ -213,7 +213,7 @@ export class PeekStore {
       return [0, 0]
     }
     // determine x adjustments
-    const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
+    const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
     const position = state.position
     let x = position[0]
     let y = position[1] + animationAdjust

@@ -37,7 +37,10 @@ export function selectItem(item?: PersonBit | Bit, target?: PeekTarget) {
   })
 }
 
-function getItem(item: PersonBit | Bit): AppStatePeekItem {
+function getItem(item: PersonBit | Bit | AppStatePeekItem): AppStatePeekItem {
+  if (!item.target) {
+    return item
+  }
   switch (item.target) {
     case 'person-bit':
       return getPersonItem(item as PersonBit)

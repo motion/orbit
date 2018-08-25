@@ -16,7 +16,6 @@ export const Tooltip = ({ themeName, ...props }: TooltipProps) => (
       closeOnClick
       noHoverOnChildren
       animation="bounce 150ms"
-      target={`.${this.uniq}`}
       padding={[2, 7]}
       borderRadius={5}
       distance={12}

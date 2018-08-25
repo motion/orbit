@@ -327,7 +327,11 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
               {children}
             </Element>
           )}
-        {!!tooltip && <Tooltip {...tooltipProps}>{tooltip}</Tooltip>}
+        {!!tooltip && (
+          <Tooltip target={`.${this.uniq}`} {...tooltipProps}>
+            {tooltip}
+          </Tooltip>
+        )}
       </SurfaceFrame>
     )
   }

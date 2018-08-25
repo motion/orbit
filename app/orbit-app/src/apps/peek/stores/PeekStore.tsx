@@ -71,8 +71,8 @@ export class PeekStore {
   }
 
   internalState: PeekStoreState = react(
-    () => [App.peekState.target, this.tornState],
-    async ([target, tornState], { getValue, setValue, sleep }) => {
+    () => [App.peekState, this.tornState],
+    async ([{ target }, tornState], { getValue, setValue, sleep }) => {
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
       const isShown = !!tornState || (!!target && !!App.orbitState.docked)

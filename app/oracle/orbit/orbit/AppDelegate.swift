@@ -87,6 +87,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     if #available(OSX 10.11, *) {
       self.supportsTransparency = true
     }
+    
+    if #available(OSX 10.12, *) {
+      let _ = Timer(timeInterval: 0.4, repeats: true) { _ in
+        if !self.window.isOnActiveSpace {
+          self.emit("{ \"action\": \"moveSpace\", \"value\": true }")
+          NSApp.activate(ignoringOtherApps: true)
+        }
+      }
+    } else {
+      // Fallback on earlier versions
+    }
 
     blurryView.maskImage = _maskImage(cornerRadius: 16.0)
     blurryView.layer?.masksToBounds = true

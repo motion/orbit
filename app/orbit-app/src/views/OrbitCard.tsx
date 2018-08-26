@@ -68,7 +68,7 @@ Card.theme = ({
   const disabledShadow = disableShadow ? 'none' : null
   card = {
     ...card,
-    padding: padding || 9,
+    padding: padding || 10,
     borderRadius: borderRadius || 7,
     background: background || theme.background,
     ...theme.card,
@@ -206,7 +206,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           {!(hide && hide.title) && (
             <Title>
               <UI.Text
-                fontSize={15}
+                fontSize={14}
                 sizeLineHeight={0.85}
                 ellipse={hasSubtitle && hasMeta ? true : 2}
                 fontWeight={600}
@@ -281,22 +281,21 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-        {/* {!listItem &&
-          !disableShadow && (
-            <UI.HoverGlow
-              behind
-              color="#000"
-              resist={90}
-              scale={0.99}
-              offsetTop={isSelected ? 6 : 4}
-              full
-              blur={isSelected ? 8 : 4}
-              inverse
-              opacity={isSelected ? 0.08 : 0.03}
-              borderRadius={20}
-              duration={100}
-            />
-          )} */}
+        {!disableShadow && (
+          <UI.HoverGlow
+            behind
+            color="#000"
+            resist={80}
+            scale={0.99}
+            offsetTop={isSelected ? 6 : 4}
+            full
+            blur={8}
+            inverse
+            opacity={isSelected ? 0.08 : 0.04}
+            borderRadius={20}
+            duration={100}
+          />
+        )}
       </CardWrap>
     )
   }

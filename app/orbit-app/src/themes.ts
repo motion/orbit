@@ -58,7 +58,7 @@ export const themes = {
   light: {
     ...macTheme,
     ...Theme.fromStyles({
-      background: '#fff',
+      background: 'rgba(255,255,255,0.94)',
       color: '#444',
       borderColor: '#e2e2e2',
     }),

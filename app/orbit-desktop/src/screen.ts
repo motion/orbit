@@ -77,10 +77,11 @@ export class Screen {
     },
   )
 
-  updateTheem = react(
-    () => App.state.darkTheme,
-    darkTheme => {
-      this.oracle.themeWindow(darkTheme ? 'dark' : 'light')
+  updateTheme = react(
+    () => (App.state.darkTheme ? 'dark' : 'light'),
+    theme => {
+      console.log('theme', theme)
+      this.oracle.themeWindow(theme)
     },
   )
 

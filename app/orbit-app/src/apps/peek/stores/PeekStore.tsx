@@ -168,7 +168,10 @@ export class PeekStore {
     const { id, type } = App.peekState.item
     let selectedItem = null
     if (type === 'person') {
-      selectedItem = await PersonBitRepository.findOne({ where: { email: id } })
+      selectedItem = await PersonBitRepository.findOne({
+        where: { email: id },
+        relations: ['people'],
+      })
     } else if (type === 'bit') {
       selectedItem = await BitRepository.findOne({
         where: { id },

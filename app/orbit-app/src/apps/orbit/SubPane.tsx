@@ -8,6 +8,7 @@ import { AppStore } from '../../stores/AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from '../../stores/SearchStore'
 import { SelectionStore } from '../../stores/SelectionStore'
+import { BORDER_RADIUS } from '../../constants'
 
 export type SubPaneProps = CSSPropertySet & {
   store?: SubPaneStore
@@ -39,8 +40,9 @@ const Pane = view(UI.View, {
   right: 0,
   left: 0,
   transition: 'all ease 120ms',
-  overflowX: 'hidden',
-  overflowY: 'auto',
+  overflow: 'hidden',
+  // overflowY: 'auto',
+  borderBottomRadius: BORDER_RADIUS,
   padding: [0, 14],
   margin: [0, 0, 0],
   // pointerEvents: 'none',
@@ -65,7 +67,7 @@ const OverflowFade = view({
   right: 0,
   height: 100,
   zIndex: 10000000,
-  borderRadius: 20,
+  borderBottomRadius: BORDER_RADIUS,
   overflow: 'hidden',
   opacity: 1,
   transition: 'all ease-in 100ms',

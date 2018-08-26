@@ -19,6 +19,8 @@ if [ ! -f "$DIST/Orbit-$npm_package_version.dmg" ]; then
   zip -r -X -8 -q $DIST/Orbit-$npm_package_version-mac.zip $DIST/Orbit-darwin-x64/Orbit.app
 fi
 
+scp -r $DIST/Orbit-$npm_package_version-mac.zip root@get.tryorbit.com:/updates/Orbit.zip
+
 # publish
 npx publish ./scripts/publish-config.json -p $DIST -d
 

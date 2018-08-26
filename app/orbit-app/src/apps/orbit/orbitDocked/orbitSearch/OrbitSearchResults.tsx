@@ -61,7 +61,7 @@ const selectHighlight = (
 const highlightOptions = (query, bit) => ({
   text: replaceUglies(sanitize(bit.body || '')),
   words: query.split(' ').filter(x => x.length > 2),
-  maxChars: 300,
+  maxChars: 100,
   maxSurroundChars: 110,
   trimWhitespace: true,
   separator: '&nbsp;&middot;&nbsp;',

@@ -12,7 +12,6 @@
 # next
 
 - remove confluence
-- userDataDir
 - make onboarding encourage adding more integrations
 - only have them download .app and auto move to apps folder
 - slack orbit-friends

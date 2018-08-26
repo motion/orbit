@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { on, view, react } from '@mcro/black'
+import { on, view, react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -26,14 +26,15 @@ class MainStore {
 
   handleRef = ref => {
     if (this.props.onRef) {
-      this.props.onRef(ref)
+      this.props.onRef(ref.window)
     }
-    this.window = ref
+    this.window = ref.window
   }
 
   moveToNewSpace = react(
     () => Desktop.state.movedToNewSpace,
     () => {
+      ensure('has window', !!this.window)
       this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens
       this.window.focus() // focus the window up front on the active screen
       this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior

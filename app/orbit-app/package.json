@@ -29,7 +29,6 @@
     "gatsby-remark-emoji": "0.0.2",
     "typeorm": "^0.3.0-alpha.7",
     "react-markdown": "3.4.1",
-    "electron": "3.0.0-beta.3",
     "arrford": "2.0.1",
     "compromise": "11.11.0",
     "date-fns": "2.0.0-alpha.7",
@@ -67,6 +66,7 @@
     "pundle-preset-default": "3.0.0-beta7"
   },
   "peerDependencies": {
+    "electron": "*",
     "mobx": "5.0.3",
     "react": "16.4.0",
     "react-dom": "16.4.0"

@@ -71,19 +71,22 @@ export class PeekStore {
   }
 
   internalState: PeekStoreState = react(
-    () => [App.peekState.target, this.tornState, App.peekState.item],
+    () => [App.peekState.target, this.tornState],
     async ([target, tornState], { getValue, setValue, sleep }) => {
+      await sleep(16)
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
       const isShown = !!tornState || (!!target && !!App.orbitState.docked)
+      // first make target update quickly so it moves fast
+      // while keeping the last model the same so it doesn't flicker
+      const { item, ...rest } = App.peekState
+      const curState = {
+        ...lastState,
+        ...rest,
+      }
       let nextState = {
         lastState,
-        // first make target update quickly so it moves fast
-        // while keeping the last model the same so it doesn't flicker
-        curState: {
-          ...lastState,
-          ...App.peekState,
-        },
+        curState,
         isShown,
         willHide: !!lastState && !isShown,
         willShow: !!isShown && !wasShown,
@@ -101,8 +104,10 @@ export class PeekStore {
         ])
         setValue({
           ...nextState,
+          // now update to new model
           curState: {
-            ...nextState.curState,
+            ...curState,
+            item,
             model,
             peekId: `${Math.random()}`,
           },

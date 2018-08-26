@@ -68,7 +68,7 @@ export const PeekBit = ({
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {item.subType}</div>
   }
-  console.log('peekbit...', PeekItemResolver, bit)
+  console.log('peekbit...', bit)
   return (
     <PeekItemResolver
       item={item}
@@ -87,7 +87,6 @@ export const PeekBit = ({
         updatedAt,
         comments,
       }) => {
-        console.log('what', webLink, desktopLink, locationLink)
         return (
           <SearchablePeek
             key={item.id}

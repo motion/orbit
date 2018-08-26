@@ -6,7 +6,6 @@ import invariant from 'invariant'
 import { PeekTarget } from './types'
 import { isEqual } from '@mcro/black'
 import { logger } from '@mcro/logger'
-import { ResolvedItem } from '../../../components/ItemResolver'
 
 const log = logger('selectItem')
 

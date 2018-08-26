@@ -1,18 +1,19 @@
 import { createConnection } from 'typeorm'
 import * as Path from 'path'
-import { getConfig } from '../config'
+import { getGlobalConfig } from '@mcro/config'
 
-const Config = getConfig()
+const Config = getGlobalConfig()
+const env = process.env.NODE_ENV !== 'development' ? 'orbit' : 'dev'
 
 export default async function connectModels(models) {
   try {
     return await createConnection({
       name: 'default',
       type: 'sqlite',
-      database: Path.join(Config.directories.root, 'app_data', 'database.sqlite'),
+      database: Path.join(Config.userDataDirectory, `${env}_database.sqlite`),
       // location: 'default',
       entities: models,
-      logging: ["error"],
+      logging: ['error'],
       logger: 'simple-console',
       synchronize: true,
     }).then(connection => {
@@ -24,8 +25,7 @@ export default async function connectModels(models) {
     const errorType = err.message.slice(0, err.message.indexOf(':'))
     switch (errorType) {
       case 'SQLITE_CORRUPT':
-        console.log('corrupted db, recreate from last backup...')
-      // recoverDB()
+        console.log('corrupted db!!!!!!!!!!\n\n\n')
     }
   }
 }

@@ -77,6 +77,13 @@ export class Screen {
     },
   )
 
+  updateTheem = react(
+    () => App.state.darkTheme,
+    darkTheme => {
+      this.oracle.themeWindow(darkTheme ? 'dark' : 'light')
+    },
+  )
+
   updateWindowVisibility = react(
     () => !!App.orbitState.docked,
     visible => {

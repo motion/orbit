@@ -84,7 +84,7 @@ export class RootView extends React.Component {
     }
     const CurrentPage = Router.activeView || NotFound
     return (
-      <UI.ThemeProvide themes={themes} defaultTheme="light">
+      <UI.ThemeProvide themes={themes}>
         <CurrentPage key={Router.key} {...Router.params} />
       </UI.ThemeProvide>
     )

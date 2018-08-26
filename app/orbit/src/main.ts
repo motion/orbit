@@ -46,6 +46,8 @@ export async function main({ version }: OrbitOpts) {
   const rootDirectory = Path.join(__dirname, '..', '..', '..', '..')
   console.log('rootDirectory', rootDirectory)
 
+  console.log(`\n\n\n\n\n\n ${app.getAppPath()} .... ${app.getPath('exe')}`)
+
   setGlobalConfig({
     userDataDirectory: app.getPath('appData'),
     rootDirectory,

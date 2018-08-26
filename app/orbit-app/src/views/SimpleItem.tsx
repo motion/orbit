@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitIcon } from './OrbitIcon'
 import { Text } from '@mcro/ui'

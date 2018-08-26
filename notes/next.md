@@ -1,20 +1,22 @@
-# end of month
+# wow
 
-- need to talk to a few companies that may want to trial it
-- if i can get a good enough demo, we can discuss "friendly/consulting" contracts
-- goal is to get a couple companies on board with that
-  - formidable
-  - workday
-  - snapchat/tesla
-  - target/stripe
-  - walmart labs
+- p2p / app store
+- big-frame sidebar custom app
+- OCR
+- contextual sidebar
 
-# next
+# productionize
 
+- need a way for people to suggest/vote features
+- sort the queues by most recent at top so you can quickly hit emails
+  - should be fully keynav so you can get to links inside them quickly
+  - show html in emails
+- fix github showing natew
+- deploy initial oauth step to digitalocean
 - remove confluence
 - make onboarding encourage adding more integrations
 - only have them download .app and auto move to apps folder
-- slack orbit-friends
+- slack orbit-fam #revolution
 - close orbit while oauth open so it doesnt cover it
 - better show the panes on onboard
 - after onboard "what can i do / search?"
@@ -38,17 +40,7 @@
 - fix highlight index click interaction
 - fix integration buttons styling and going inactive after click
 - Finish settings panes
-
-- Ask for survey during onboarding...
-
-## Oauth custom keys
-
-- Oauth key strategy:
-  1.  UI/storage for adding your own oauth keys as master/admin
-  2.  Using those keys in Passport
-  3.  Documentation to onboard for creating your own keys
-      - should be built into app as well as on a website
-      - https://docs.tryretool.com/docs/sso-google-and-okta
+- Ask for survey _after_ onboarding...
 
 ## Website signup for beta
 
@@ -61,24 +53,13 @@
 
 ## Orbit 1.1 best guess
 
-- Big bugfix run
+- Better movement and displays
 - Profiles upgrade
 - Cosal
 - Account/settings upgrades
 - Search upgrades
-
-## Orbit 1.2 best guess
-
-- Management features
-- Better filtering by type/location
 - Attachment/file previews
 - Follow topics
-
-## Requested features best guess
-
-- Custom lists
-- Better search in 10 ways
-- Support for X integration
 
 ---
 
@@ -99,14 +80,6 @@
 
 ---
 
-# Small things
-
-UI
-
-- Theme psuedo state better strategy
-  - hover: [brightenBorders(0.1), biggerShadow(1.5)]
-  - active: [darken(1.1)]
-
 # August details
 
 p2p: https://github.com/webtorrent/bittorrent-dht
@@ -119,16 +92,11 @@ p2p: https://github.com/webtorrent/bittorrent-dht
 
 ## unnecessary for beta polish bucket
 
-- make ui themes better
-- <UI.Theme select={theme => theme.titleBar} />
-  - that takes the subset from theme.gray.titleBar
-    - which means that can have specific button styles nicely :D
 - cmd+z undo in search area (needs to work with toggles...)
 - peek arrow position shouldn't straddle weird borders
 - react-spring for peek placement
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
-- test-app: fix themes/tabs
 - UI.Text not wrapping subtitlePrefix
 
 ## random dev notes
@@ -138,7 +106,6 @@ p2p: https://github.com/webtorrent/bittorrent-dht
 
 # potential gamechangers
 
-- personalize your profile
 - calendar
 - injest anything (instant crawler/snippets)
 - memory
@@ -147,14 +114,6 @@ p2p: https://github.com/webtorrent/bittorrent-dht
 - forking apps / app store
 
 # apps
-
-blockers:
-
-- not being able to deploy to server means not available on every platform
-- solution:
-  - hosted orbit
-  - cloud orbit
-  - ipfs
 
 home queues:
 
@@ -174,3 +133,7 @@ peek apps:
 component store:
 
 - https://github.com/jlfwong/speedscope
+
+later:
+
+- deploy orbit apps to a hosted instance possible eventually

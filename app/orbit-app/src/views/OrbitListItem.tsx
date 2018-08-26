@@ -205,7 +205,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                   onClick={
                     onClickLocation
                       ? e => onClickLocation(e, contentProps)
-                      : locationLink
+                      : () => App.actions.open(locationLink)
                   }
                 >
                   {location}

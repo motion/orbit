@@ -71,10 +71,15 @@ export class GeneralSettingManager {
       log('Autolaunch disabled in dev mode')
       return
     }
+    const isEnabled = this.autoLaunch.isEnabled()
     if (setting.values.autoLaunch) {
-      this.autoLaunch.enable()
+      if (!isEnabled) {
+        this.autoLaunch.enable()
+      }
     } else {
-      this.autoLaunch.disable()
+      if (isEnabled) {
+        this.autoLaunch.disable()
+      }
     }
   }
 }

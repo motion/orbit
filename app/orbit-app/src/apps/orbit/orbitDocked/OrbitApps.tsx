@@ -76,6 +76,7 @@ class OrbitAppsStore {
       subPane="apps"
       total={this.integrationSettings.length}
       inGrid
+      borderRadius={4}
       {...props}
     />
   )

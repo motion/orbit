@@ -40,8 +40,8 @@ const Pane = view(UI.View, {
   right: 0,
   left: 0,
   transition: 'all ease 120ms',
-  overflow: 'hidden',
-  // overflowY: 'auto',
+  overflowX: 'hidden',
+  overflowY: 'auto',
   borderBottomRadius: BORDER_RADIUS,
   padding: [0, 14],
   margin: [0, 0, 0],
@@ -82,6 +82,8 @@ OverflowFade.theme = ({ theme }) => ({
 
 const SubPaneInner = view(UI.View, {
   position: 'relative',
+  borderRadius: BORDER_RADIUS,
+  overflow: 'hidden',
   flex: 1,
 })
 

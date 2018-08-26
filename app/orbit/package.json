@@ -17,6 +17,6 @@
     "ps-tree": "1.1.0"
   },
   "peerDependencies": {
-    "electron": "3.0.0-beta.3"
+    "electron": "3.0.0-beta.7"
   }
 }

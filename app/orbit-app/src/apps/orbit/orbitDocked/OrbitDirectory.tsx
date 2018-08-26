@@ -5,7 +5,7 @@ import { compose } from '@mcro/helpers'
 import { PersonBitRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { Title, VerticalSpace } from '../../../views'
+import { Title } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
@@ -18,9 +18,8 @@ import { PersonBit } from '../../../../../models/src'
 
 const height = 60
 
-export const Separator = view({
-  padding: [3, 16],
-  margin: [0, -16, 10],
+const VerticalSpace = view({
+  height: 10,
 })
 
 type Props = {
@@ -120,7 +119,7 @@ const createSection = (people: PersonBit[], letter, getIndex) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
-      <Grid>
+      <Grid gridAutoRows={height}>
         {people.map(person => (
           <OrbitCard
             key={person.email}

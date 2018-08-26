@@ -4,6 +4,12 @@ import { ThemeObject } from '../types'
 // backs up to theme colors if not found
 
 const config = {
+  active: {
+    pseudoKey: '&:active',
+    postfix: 'Active',
+    booleanProp: 'active',
+    extraStyleProp: 'activeStyle',
+  },
   hover: {
     pseudoKey: '&:hover',
     postfix: 'Hover',
@@ -15,12 +21,6 @@ const config = {
     postfix: 'Focus',
     booleanProp: 'focus',
     extraStyleProp: 'focusStyle',
-  },
-  active: {
-    pseudoKey: '&:active',
-    postfix: 'Active',
-    booleanProp: 'active',
-    extraStyleProp: 'activeStyle',
   },
 }
 

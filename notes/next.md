@@ -11,6 +11,8 @@
 
 # next
 
+- fix github showing natew
+- deploy initial oauth step to digitalocean
 - remove confluence
 - make onboarding encourage adding more integrations
 - only have them download .app and auto move to apps folder

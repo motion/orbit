@@ -151,9 +151,7 @@ export class PeekPerson extends React.Component<
     if (!settings) {
       return children({})
     }
-    // @ts-ignore
-    const setting = settings.slack
-    if (!setting || !person) {
+    if (!person) {
       console.log('no person?', person)
       return children({})
     }
@@ -176,14 +174,12 @@ export class PeekPerson extends React.Component<
               <Email href={`mailto:${person.email}`}>{person.email}</Email>
               <br />
               <Links>
-                <IntegrationButton
+                {/* <IntegrationButton
                   icon="slack"
-                  href={`slack://user?team=${
-                    1 /* setting.values.oauth.info.team.id */
-                  }&id=${person.integrationId}`}
+                  href={`slack://user?team=${setting.values.oauth.info.team.id}&id=${person.integrationId}`}
                 >
                   Slack
-                </IntegrationButton>
+                </IntegrationButton> */}
                 <IntegrationButton icon="zoom" size={12} href="">
                   Documents
                 </IntegrationButton>

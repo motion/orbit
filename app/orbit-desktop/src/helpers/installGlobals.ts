@@ -4,11 +4,13 @@ import { Entities } from '../entities'
 import r2 from '@mcro/r2'
 import { App, Desktop, Swift, Electron } from '@mcro/stores'
 import { getConfig } from '../config'
+import { getGlobalConfig } from '@mcro/config'
 
 root['require'] = require
 root['Path'] = require('path')
 root['_'] = require('lodash')
-root['Config'] = getConfig()
+root['getConfig'] = getConfig
+root['getGlobalConfig'] = getGlobalConfig
 root['Mobx'] = Mobx
 root['r2'] = r2
 root['App'] = App

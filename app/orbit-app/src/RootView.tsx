@@ -6,9 +6,6 @@ import { view, on } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
 
-// install these after we setup everything so they
-require('./helpers/installDevelopmentHelpers')
-
 export class RootView extends React.Component {
   state = {
     error: null,
@@ -87,7 +84,7 @@ export class RootView extends React.Component {
     }
     const CurrentPage = Router.activeView || NotFound
     return (
-      <UI.ThemeProvide themes={themes} defaultTheme="light">
+      <UI.ThemeProvide themes={themes}>
         <CurrentPage key={Router.key} {...Router.params} />
       </UI.ThemeProvide>
     )

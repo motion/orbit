@@ -2,7 +2,7 @@ import { main } from './main'
 import { setGlobalConfig } from '@mcro/config'
 
 setGlobalConfig({
-  userDataDirectory: '',
+  userDataDirectory: '/tmp',
   rootDirectory: '',
   privateUrl: 'http://private.tryorbit.com',
   version: '0',

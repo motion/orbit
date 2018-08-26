@@ -64,7 +64,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
     listStyle = {
       // border: [1, 'transparent'],
       '&:hover': {
-        background: theme.backgroundHover,
+        background: theme.backgroundHover.alpha(0.2),
       },
     }
   }
@@ -73,7 +73,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
     ...listStyle,
     borderLeft: 'none',
     borderRight: 'none',
-    padding: padding || 16,
+    padding: padding || 14,
     '&:active': {
       opacity: isSelected ? 1 : 0.8,
     },

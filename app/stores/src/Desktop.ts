@@ -92,6 +92,7 @@ class DesktopStore {
     lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
+    movedToNewSpace: Date.now(),
     lastSQLError: '',
   })
 

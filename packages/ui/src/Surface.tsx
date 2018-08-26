@@ -69,7 +69,7 @@ export type SurfaceProps = CSSPropertySet & {
   activeStyle?: Object
   sizeLineHeight?: boolean | number
   type?: string
-  themeAdjust?: Function
+  themeSelect?: Function
 }
 
 const getIconSize = props => {
@@ -259,18 +259,18 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       noInnerElement,
       tagName,
       forwardRef,
-      themeAdjust,
+      themeSelect,
       style,
       padding,
       margin,
       className,
       ...props
     } = this.props
-    const adjustedTheme = themeAdjust ? themeAdjust(theme) : theme
+    const selectedTheme = themeSelect ? themeSelect(theme) : theme
     const stringIcon = typeof icon === 'string'
     // goes to both
     const throughProps = {
-      theme: adjustedTheme,
+      theme: selectedTheme,
       sizeIcon: this.props.sizeIcon,
       iconSize: this.props.iconSize,
       height: this.props.height,

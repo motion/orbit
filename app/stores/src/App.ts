@@ -74,6 +74,7 @@ class AppStore {
   state = deep({
     query: '',
     screenSize: [0, 0],
+    darkTheme: true,
     orbitState: {
       hidden: true,
       pinned: false,

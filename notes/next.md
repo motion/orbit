@@ -11,16 +11,15 @@
 
 # next
 
-- userDataDir
 - remove confluence
 - make onboarding encourage adding more integrations
+- only have them download .app and auto move to apps folder
+- slack orbit-friends
+- close orbit while oauth open so it doesnt cover it
+- better show the panes on onboard
+- after onboard "what can i do / search?"
 - typeform survey to capture a few potential paths
 - location filters: `.find({ location: { name: "..." } })`
-
-"Orbit proxies the keys directly to your computer.
-You and only you receive the key to your data.
-And just to be safe, our servers disable logs and deny all requests. Learn more."
-
 - in:x for location
 - clicking location buttons should filter that location
 - direct open button in search results

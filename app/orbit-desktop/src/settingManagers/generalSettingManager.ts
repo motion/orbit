@@ -9,7 +9,10 @@ import * as Path from 'path'
 const Config = getConfig()
 const log = logger('GeneralSettingManager')
 
-const generalSettingQuery = { type: 'general' as 'general', category: 'general' }
+const generalSettingQuery = {
+  type: 'general' as 'general',
+  category: 'general',
+}
 
 // @ts-ignore
 @store
@@ -57,6 +60,8 @@ export class GeneralSettingManager {
     setting.values = {
       openShortcut: 'Option+Space',
       autoLaunch: true,
+      autoUpdate: true,
+      darkTheme: true,
     }
     await setting.save()
   }

@@ -51,6 +51,7 @@ export default class Oracle {
   onErrorCB = idFn
   onClearCB = idFn
   onAccessibleCB = idFn
+  onSpaceMoveCB = idFn
   state = {
     isPaused: false,
   }
@@ -197,6 +198,10 @@ export default class Oracle {
     this.onClearCB = cb
   }
 
+  onSpaceMove = cb => {
+    this.onSpaceMoveCB = cb
+  }
+
   onBoxChanged = cb => {
     this.onBoxChangedCB = cb
   }
@@ -309,6 +314,7 @@ export default class Oracle {
         words: val => this.onWordsCB(val),
         lines: val => this.onLinesCB(val),
         info: val => this.onInfoCB(val),
+        spaceMove: val => this.onSpaceMoveCB(val),
         // down to swift process
         pause: this.pause,
         resume: this.resume,

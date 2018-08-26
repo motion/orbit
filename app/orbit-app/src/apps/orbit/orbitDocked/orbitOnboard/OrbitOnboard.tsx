@@ -151,6 +151,9 @@ class OnboardStore {
         if (accepted) {
           // show message for a sec
           await sleep(1500)
+          if (this.curFrame !== 0) {
+            return
+          }
         } else {
           console.log('not accepting, not advancing frame...')
           return

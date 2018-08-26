@@ -77,6 +77,14 @@ export class Screen {
     },
   )
 
+  updateTheme = react(
+    () => (App.state.darkTheme ? 'dark' : 'light'),
+    theme => {
+      console.log('theme', theme)
+      this.oracle.themeWindow(theme)
+    },
+  )
+
   updateWindowVisibility = react(
     () => !!App.orbitState.docked,
     visible => {
@@ -152,6 +160,11 @@ export class Screen {
   }
 
   setupOracleListeners() {
+    // space move
+    this.oracle.onSpaceMove(() => {
+      Desktop.setState({ movedToNewSpace: Date.now() })
+    })
+
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
       console.log('is accessible, start watching stuff', isAccessible)

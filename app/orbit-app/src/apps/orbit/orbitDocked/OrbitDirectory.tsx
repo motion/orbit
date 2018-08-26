@@ -2,7 +2,7 @@ import * as React from 'react'
 import { App } from '@mcro/stores'
 import { view, react, ensure } from '@mcro/black'
 import { compose } from '@mcro/helpers'
-import { PersonRepository, PersonBitRepository } from '../../../repositories'
+import { PersonBitRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
 import { Title, VerticalSpace } from '../../../views'
@@ -16,7 +16,7 @@ import { GridTitle } from './GridTitle'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { PersonBit } from '../../../../../models/src'
 
-const height = 69
+const height = 60
 
 export const Separator = view({
   padding: [3, 16],

@@ -12,12 +12,12 @@ type ListRowProps = {
   controlled?: boolean
   items?: Array<React.ReactNode | { text?: string; id?: string; icon?: string }>
   children: React.ReactNode
-  label: React.ReactNode
+  label?: React.ReactNode
   onChange?: Function
   onlyIcons?: boolean
   stretch?: boolean
   sync?: { get(): number; set(value: number): void }
-  color: Color
+  color?: Color
   uiContext?: Object
   itemProps?: Object
   spaced?: boolean

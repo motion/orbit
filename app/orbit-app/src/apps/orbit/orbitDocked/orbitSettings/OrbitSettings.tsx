@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { SettingRepository } from '../../../../repositories'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
@@ -65,6 +65,14 @@ class OrbitSettingsStore {
   _generalSettingUpdate = Date.now()
   _generalSetting = modelQueryReaction(generalSettingQuery)
 
+  settingSetup = react(
+    () => this.generalSetting,
+    setting => {
+      ensure('has setting', !!setting)
+      App.setState({ darkTheme: setting.values.darkTheme })
+    },
+  )
+
   get generalSetting() {
     this._generalSettingUpdate
     return this._generalSetting
@@ -75,6 +83,11 @@ class OrbitSettingsStore {
     this.generalSetting.values[prop] = val
     SettingRepository.save(this.generalSetting)
     this._generalSettingUpdate = Date.now()
+  }
+
+  changeTheme = val => {
+    this.generalChange('darkTheme')(val)
+    App.setState({ darkTheme: val })
   }
 
   shortcutChange = val => {
@@ -120,10 +133,16 @@ export class OrbitSettings extends React.Component<Props> {
               Start on Login
             </Views.CheckBoxRow>
             <Views.CheckBoxRow
-              checked={store.generalSetting.values.autoLaunch}
-              onChange={store.generalChange('autoLaunch')}
+              checked={store.generalSetting.values.autoUpdate}
+              onChange={store.generalChange('autoUpdate')}
             >
               Auto Update
+            </Views.CheckBoxRow>
+            <Views.CheckBoxRow
+              checked={store.generalSetting.values.darkTheme}
+              onChange={store.changeTheme}
+            >
+              Dark Theme
             </Views.CheckBoxRow>
             <Views.FormRow label="Open shortcut">
               <ShortcutCapture

@@ -141,7 +141,7 @@ export class ElectronStore {
       await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
       this.show = 2
     },
-    { deferFirstRun: true }
+    { deferFirstRun: true },
   )
 
   // focus on pinned
@@ -161,7 +161,9 @@ export class ElectronStore {
 
   restart() {
     if (process.env.NODE_ENV === 'development') {
-      require('touch')(require('path').join(__dirname, '..', 'index.js'))
+      require('touch')(
+        require('path').join(__dirname, '..', '..', 'src', 'index.js'),
+      )
     }
   }
 

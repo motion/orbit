@@ -420,7 +420,7 @@ export function createViewFactory(toCSS) {
           let theme = allThemes[activeThemeName]
           // allow simple overriding of the theme using props:
           // <Button theme={{ backgroundHover: 'transparent' }} />
-          if (props.theme) {
+          if (typeof props.theme === 'object') {
             theme = {
               ...theme,
               ...props.theme,

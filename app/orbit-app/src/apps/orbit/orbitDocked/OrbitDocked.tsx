@@ -125,7 +125,7 @@ export class OrbitDocked extends React.Component<Props> {
     const { appStore, searchStore, paneManagerStore } = this.props
     // log('DOCKED ------------', store.animationState)
     return (
-      <UI.Theme name="dark">
+      <UI.Theme name={App.state.darkTheme ? 'dark' : 'light'}>
         <OrbitDockedFrame
           className="theme-dark"
           visible={App.orbitState.docked}

@@ -107,7 +107,7 @@ export const PeekBit = ({
                   <UI.ListRow
                     itemProps={{
                       iconSize: 12,
-                      sizeRadius: 2,
+                      // sizeRadius: 2,
                       sizePadding: 1.4,
                     }}
                   >

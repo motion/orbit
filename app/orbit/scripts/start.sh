@@ -14,10 +14,3 @@ fi
 
 wait
 
-kill %-
-kill %-
-kill %-
-kill %-
-
-echo "bye orbit"
-

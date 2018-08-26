@@ -35,7 +35,9 @@ export interface Setting {
     channels?: Array<string>
     lastAttachmentSync?: { [key: string]: string }
     lastMessageSync?: { [key: string]: string }
+    autoUpdate?: boolean
     autoLaunch?: boolean
+    darkTheme?: boolean
     openShortcut?: string
     hasOnboarded?: boolean
 

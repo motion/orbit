@@ -56,8 +56,13 @@ const Background = view({
   borderRadius: BORDER_RADIUS + 1,
   // background: 'rgba(255,255,255,0.92)',
 })
-Background.theme = ({ isTransparent }) => ({
-  background: isTransparent ? [50, 50, 50, 0.82] : [40, 40, 40],
+Background.theme = ({ theme, isTransparent }) => {
+  const isDark = theme.background.isDark()
+  const darkBg = isTransparent ? [50, 50, 50, 0.82] : [40, 40, 40]
+  const lightBg = isTransparent ? [255, 255, 255, 0.9] : [255, 255, 255]
+  return {
+    background: isDark ? darkBg : lightBg,
+  }
   // background: [0, 0, 0, 0.5],
   // background: isUpper
   //   ? theme.background.alpha(0.2)
@@ -65,7 +70,7 @@ Background.theme = ({ isTransparent }) => ({
   //       ${theme.background.alpha(0.2)} 90%,
   //       ${theme.background.alpha(0)}
   //     )`,
-})
+}
 
 const OrbitChrome = view(({ isUpper = false }) => {
   return (

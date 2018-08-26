@@ -9,6 +9,23 @@ const buttonStyles = {
   cursor: 'default',
 }
 
+const selectFromPrefix = (o: Object, prefix?: string) => {
+  const len = prefix.length
+  const o1 = o
+  for (const key in o) {
+    if (key.indexOf(prefix) === 0) {
+      const newKey = key.slice(len)
+      const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
+      o1[newKeyCamelCase] = o[key]
+    }
+  }
+  return o1
+}
+
+const buttonThemeSelect = theme => {
+  return selectFromPrefix(theme, 'button')
+}
+
 export const Button = ({
   badge,
   children,
@@ -44,6 +61,7 @@ export const Button = ({
       glow={glow}
       glint
       theme={theme}
+      themeSelect={buttonThemeSelect}
       activeStyle={{
         opacity: 0.8,
       }}

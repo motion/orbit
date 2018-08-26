@@ -73,7 +73,6 @@ export class PeekStore {
   internalState: PeekStoreState = react(
     () => [App.peekState.target, this.tornState, App.peekState.item],
     async ([target, tornState], { getValue, setValue, sleep }) => {
-      console.log('okok', target)
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
       const isShown = !!tornState || (!!target && !!App.orbitState.docked)
@@ -169,7 +168,10 @@ export class PeekStore {
     const { id, type } = App.peekState.item
     let selectedItem = null
     if (type === 'person') {
-      selectedItem = await PersonBitRepository.findOne({ where: { email: id } })
+      selectedItem = await PersonBitRepository.findOne({
+        where: { email: id },
+        relations: ['people'],
+      })
     } else if (type === 'bit') {
       selectedItem = await BitRepository.findOne({
         where: { id },

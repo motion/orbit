@@ -1,8 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 
-const roundTheme = theme => ({
-  ...theme,
+const roundThemeSelect = theme => ({
   background: theme.background.alpha(0.2),
   color: theme.color.alpha(0.6),
   backgroundHover: theme.backgroundHover.alpha(0.1),
@@ -15,7 +14,7 @@ export const RoundButton = props => (
     borderWidth={0}
     fontWeight={300}
     display="inline-flex"
-    themeAdjust={roundTheme}
+    themeSelect={roundThemeSelect}
     {...props}
   />
 )

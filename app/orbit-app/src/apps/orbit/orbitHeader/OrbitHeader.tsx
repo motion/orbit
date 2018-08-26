@@ -5,8 +5,9 @@ import * as UI from '@mcro/ui'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
+import { View } from '@mcro/ui'
 
-const OrbitHeaderContainer = view({
+const OrbitHeaderContainer = view(View, {
   position: 'relative',
   flexFlow: 'row',
   alignItems: 'stretch',
@@ -60,10 +61,20 @@ export class OrbitHeader extends React.Component<
   }
 > {
   render() {
-    const { headerStore, after, theme, borderRadius } = this.props
+    const {
+      headerStore,
+      paneManagerStore,
+      after,
+      theme,
+      borderRadius,
+    } = this.props
     const headerBg = theme.background
     return (
-      <OrbitHeaderContainer headerBg={headerBg} borderRadius={borderRadius}>
+      <OrbitHeaderContainer
+        headerBg={headerBg}
+        borderRadius={borderRadius}
+        opacity={paneManagerStore.shouldOnboard ? 0 : 1}
+      >
         <OrbitFakeInput>
           <Title>
             <UI.Icon

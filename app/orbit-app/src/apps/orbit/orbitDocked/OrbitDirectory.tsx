@@ -157,7 +157,8 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   for (const [index, person] of results.entries()) {
     let letter = person.name[0].toLowerCase()
     const isNewSection = lastPersonLetter && letter !== lastPersonLetter
-    if ((isNewSection && nextPeople.length) || index === total - 1) {
+    const isLastSection = index === total - 1
+    if ((isNewSection || isLastSection) && nextPeople.length) {
       if (!lastPersonLetter) {
         lastPersonLetter = letter
       }

@@ -71,7 +71,7 @@ export class PeekStore {
   }
 
   internalState: PeekStoreState = react(
-    () => [App.peekState.target, this.tornState],
+    () => [App.peekState.item, this.tornState],
     async ([target, tornState], { getValue, setValue, sleep }) => {
       await sleep(16)
       const lastState = getValue().curState

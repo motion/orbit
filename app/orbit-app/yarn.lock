@@ -659,7 +659,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.1:
+classnames@^2.2.1, classnames@^2.2.5:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -3919,6 +3919,13 @@ react-date-range@1.0.0-beta:
     date-fns "2.0.0-alpha.7"
     prop-types "^15.5.10"
     react-list "^0.8.8"
+
+react-draggable@3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-3.0.5.tgz#c031e0ed4313531f9409d6cd84c8ebcec0ddfe2d"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
 
 react-fast-compare@2.0.1:
   version "2.0.1"

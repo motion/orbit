@@ -99,6 +99,9 @@ else
 fi
 echo -n "--no-install " >> ./scripts/.lastbuild
 
+# before bundle, sign the oracle app
+codesign -vfs "3rd Party Mac Developer Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ../oracle/orbit/Build/Products/Release/orbit.app
+
 # bundle
 if [[ "$FLAGS" =~ "--no-bundle" ]]; then
   echo "not bundling..."

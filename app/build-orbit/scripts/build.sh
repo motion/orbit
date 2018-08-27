@@ -119,7 +119,7 @@ if [[ "$FLAGS" =~ "--no-sign" ]]; then
   echo "not signing"
 else
   echo "signing app..."
-  npx electron-osx-sign --ignore puppeteer/\\.local-chromium --ignore oracle ./dist/Orbit-darwin-x64/Orbit.app
+  npx electron-osx-sign --ignore oracle ./dist/Orbit-darwin-x64/Orbit.app
 fi
 echo -n "--no-sign " >> ./scripts/.lastbuild
 

@@ -7,7 +7,7 @@ echo "zipping $OUT_FILE"
 
 function finish() {
   echo "err, remove zip"
-  rm $OUT_FILE
+  rm $OUT_FILE || true
 }
 trap finish ERR
 

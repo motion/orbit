@@ -1,3 +1,4 @@
 src
 scripts
 app_data/*
+.cache-loader

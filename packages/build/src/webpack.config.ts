@@ -10,6 +10,7 @@ import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plu
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 // import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
+// import PrepackPlugin from 'prepack-webpack-plugin'
 
 const cwd = process.cwd()
 const readEntry = () => {
@@ -63,7 +64,7 @@ const optimizeSplit = {
 
 const optimization = {
   prod: {
-    ...optimizeSplit,
+    // ...optimizeSplit,
     minimizer: [
       new UglifyJsPlugin({
         uglifyOptions: {
@@ -174,8 +175,6 @@ const config = {
   },
   plugins: [
     // new ProfilingPlugin(),
-    // this runs a checker in a process, but reduces the number of processes that run
-    // new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: !isProd }),
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
     new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({
@@ -192,6 +191,8 @@ const config = {
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
       }),
+
+    // isProd && new PrepackPlugin(),
   ].filter(Boolean),
 }
 

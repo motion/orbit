@@ -7,7 +7,8 @@ const Config = getGlobalConfig()
 
 export function startDesktop() {
   const appBinary = app.getAppPath()
-  const args = Config.isProd ? [] : ['--remote-debugging-port', '9000']
+  // enable remote debugging in dev
+  const args = Config.isProd ? [] : ['--inspect=127.0.0.1:9000']
   try {
     const child = spawn(appBinary, args, {
       env: {

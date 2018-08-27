@@ -47,7 +47,7 @@ export async function main() {
     const rootDirectory = Path.join(__dirname, '..', '..', '..', '..')
     console.log('rootDirectory', rootDirectory)
 
-    console.log(`\n\n\n\n\n\n ${app.getAppPath()} .... ${app.getPath('exe')}`)
+    console.log(`\n\n\n\n\n\n app at: ${app.getAppPath()}`)
 
     const root = __dirname
     const appStatic = Path.join(
@@ -57,7 +57,7 @@ export async function main() {
     )
     let nodeBinary = 'node'
     if (process.env.NODE_ENV !== 'development') {
-      nodeBinary = Path.join(root, '..', '..', 'MacOS', 'Orbit')
+      nodeBinary = app.getPath('exe')
     }
     const dotApp = Path.join(root, '..', '..', '..', '..', '..', '..')
     const serverHost = 'localhost'

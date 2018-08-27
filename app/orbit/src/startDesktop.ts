@@ -8,8 +8,11 @@ const Config = getGlobalConfig()
 
 export function startDesktop() {
   // enable remote debugging in dev
-  const desktopRoot = !Config.isProd && Path.join(__dirname, 'main')
-  const args = Config.isProd ? [] : [desktopRoot, '--inspect=127.0.0.1:9000']
+  const root = !Config.isProd && Path.join(__dirname, 'main')
+  let args = [root]
+  if (!Config.isProd) {
+    args = [...args, '--inspect=127.0.0.1:9000']
+  }
   try {
     console.log('Starting Desktop:', Config.paths.nodeBinary, args)
     const child = spawn(Config.paths.nodeBinary, args, {

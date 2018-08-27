@@ -1,38 +1,68 @@
-import { setGlobalConfig, GlobalConfig } from '@mcro/config'
+import { findContiguousPorts } from './findContiguousPorts'
+import { setGlobalConfig } from '@mcro/config'
+import killPort from 'kill-port'
+import { cleanupChildren } from './cleanupChildren'
+import * as Path from 'path'
+// @ts-ignore
+import { app } from 'electron'
 
-// this runs as the entry for both processes
-// first electron, then desktop
-// this lets us share config more easily
-// and also use the bundled electron binary as the entry point
-// which lets us pack things into an asar
-export async function main() {
-  // if were in desktop we get config through here
-  let config: GlobalConfig = process.env.ORBIT_CONFIG
-    ? JSON.parse(process.env.ORBIT_CONFIG)
-    : null
+type OrbitOpts = {
+  version: string
+}
 
-  // if not we're in the root electron process, lets set it up once...
-  if (!config) {
-    config = await require('./getInitialConfig').getInitialConfig()
+export async function main({ version }: OrbitOpts) {
+  let desktopPid
+
+  const handleExit = async () => {
+    console.log('Orbit exiting...')
+    if (desktopPid) {
+      process.kill(desktopPid)
+    }
+    console.log('Cleaning children...')
+    await cleanupChildren()
+    console.log('bye!')
   }
 
-  // both processes now run this part to have their config setup
-  setGlobalConfig(config)
+  // handle exits gracefully
+  process.on('exit', handleExit)
 
-  // IS IN DESKTOP
-  // go off and do its thing...
-  if (process.env.IS_DESKTOP) {
-    if (!config) {
-      throw new Error('Desktop didn\'t receive config!')
-    }
-    // lets run desktop now
-    require('@mcro/orbit-desktop').main()
+  const ports = await findContiguousPorts(5, 3333)
+
+  if (!ports) {
+    console.log('no ports found!')
     return
   }
 
-  await require('./startElectron').startElectron()
-  console.log('Started Electron!')
-}
+  // for some reason you'll get "directv-tick" consistently on a port
+  // even though that port was found to be empty....
+  // so attempting to make sure we kill anything even if it looks empty
+  try {
+    console.log('Found ports, ensuring clear', ports)
+    await Promise.all(ports.map(port => killPort(port)))
+  } catch {
+    // errors are just showing the ports are empty
+  }
 
-// self starting
-main()
+  const rootDirectory = Path.join(__dirname, '..', '..', '..', '..')
+  console.log('rootDirectory', rootDirectory)
+
+  console.log(`\n\n\n\n\n\n ${app.getAppPath()} .... ${app.getPath('exe')}`)
+
+  setGlobalConfig({
+    userDataDirectory: app.getPath('appData'),
+    rootDirectory,
+    privateUrl: 'http://private.tryorbit.com',
+    version,
+    ports: {
+      server: ports[0],
+      bridge: ports[1],
+      swift: ports[2],
+      dbBridge: ports[3],
+      oracleBridge: ports[4],
+    },
+  })
+
+  // require apps after config
+  const ElectronApp = require('@mcro/orbit-electron')
+  desktopPid = await ElectronApp.main({ port: ports[0], handleExit })
+}

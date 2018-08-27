@@ -4,7 +4,7 @@
   "main": "./index.js",
   "scripts": {
     "start": "./scripts/start.sh",
-    "serve-prod": "static-server -p 3999 -n dist/index.html dist",
+    "serve-prod": "static-server -p 3002 -n dist/index.html dist",
     "build-app": "NODE_ENV=production mcro-build --entry ./src/main --build",
     "deploy": "./scripts/deploy.sh"
   },

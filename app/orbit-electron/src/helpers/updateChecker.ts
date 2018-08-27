@@ -1,11 +1,14 @@
 import updater from 'electron-simple-updater'
+import { getConfig } from '../config'
 import { getGlobalConfig } from '@mcro/config'
 import { Notification } from 'electron'
 
 const UPDATE_PREFIX = '\n\n\n\nELECTRON UPDATE\n\n\n'
 
+console.log('Update checker... is prod?', getConfig().env.prod)
+
 // update checker
-if (getGlobalConfig().isProd) {
+if (getConfig().env.prod) {
   updater.init({
     version: getGlobalConfig().version,
     url: 'http://get.tryorbit.com/updates/updates.json',

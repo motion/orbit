@@ -7,8 +7,6 @@
 
 # productionize
 
-- run through orbit both APP=desktop/electron for asar
-- https://github.com/cameronhunter/local-ssl-proxy
 - need a way for people to suggest/vote features
 - sort the queues by most recent at top so you can quickly hit emails
   - should be fully keynav so you can get to links inside them quickly

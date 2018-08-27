@@ -420,12 +420,7 @@ class Bridge {
         await this.onOpenSocket()
         log('\n\nSocket opened!\n\n\n')
       }
-      // this prevents blockages on sending
-      // this would happen when sockets are on desktop side
-      // and then any Store.setState call will hang...
-      setImmediate(() => {
-        this._socket.send(JSON.stringify({ message, to: Store.source }))
-      })
+      this._socket.send(JSON.stringify({ message, to: Store.source }))
     }
   }
 

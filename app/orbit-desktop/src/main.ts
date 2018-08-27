@@ -1,11 +1,37 @@
 import 'isomorphic-fetch'
+import * as Path from 'path'
+import { setConfig } from './config'
 import { logger } from '@mcro/logger'
 import { cleanupChildren } from './helpers/cleanupChildren'
 
 const log = logger('desktop')
 
-export async function main() {
+export async function main({ port }) {
   log('Desktop is starting')
+
+  /*
+   *  Set config before requiring app!
+   */
+
+  // local
+  setConfig({
+    env: {
+      prod: process.env.NODE_ENV !== 'development',
+    },
+    server: {
+      url: `http://localhost:${port}`,
+      host: 'localhost',
+      port,
+    },
+    directories: {
+      root: Path.join(__dirname, '..'),
+      orbitAppStatic: Path.join(
+        require.resolve('@mcro/orbit-app'),
+        '..',
+        'dist',
+      ),
+    },
+  })
 
   /*
    *  Setup app after config

@@ -10,7 +10,7 @@ export default async function connectModels(models) {
     return await createConnection({
       name: 'default',
       type: 'sqlite',
-      database: Path.join(Config.paths.userData, `${env}_database.sqlite`),
+      database: Path.join(Config.userDataDirectory, `${env}_database.sqlite`),
       // location: 'default',
       entities: models,
       logging: ['error'],

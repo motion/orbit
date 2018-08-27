@@ -92,6 +92,7 @@ async function bundle() {
 
   console.log('packaging new app...')
   const paths = await electronPackager({
+    platform: 'darwin',
     // asar: true,
     appBundleId: 'com.tryorbit',
     helperBundleId: 'com.tryorbit',

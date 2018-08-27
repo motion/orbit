@@ -12,10 +12,7 @@ if [ "$npm_package_version" = "" ]; then
   exit 0
 fi
 
-# publish .app.zip
-zip -r9 -q ./dist/Orbit.app.zip ./dist/Orbit-darwin-x64/Orbit.app
-codesign -vfs "Developer ID Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ./dist/Orbit.app.zip
-scp -r ./dist/Orbit.app.zip root@get.tryorbit.com:/updates/Orbit.app.zip
+./scripts/zip-app.sh
 
 # prepare for publish by version
 if [ ! -f "./dist/Orbit-$npm_package_version.dmg" ]; then

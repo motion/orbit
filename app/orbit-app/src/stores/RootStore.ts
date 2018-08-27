@@ -3,6 +3,7 @@ import { App, Desktop } from '@mcro/stores'
 import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import * as appActions from '../actions/appActions'
+import { getGlobalConfig } from '@mcro/config'
 
 if (process.env.NODE_ENV === 'development') {
   module.hot.accept('../actions/appActions', () => {
@@ -11,10 +12,12 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
+const Config = getGlobalConfig()
+
 const onPort = async cb => {
   await sleep(200)
   try {
-    await fetch('http://localhost:3001')
+    await fetch(`http://localhost:${Config.ports.server}`)
     cb()
   } catch (_) {
     onPort(cb)

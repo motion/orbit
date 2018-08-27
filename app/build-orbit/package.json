@@ -1,11 +1,12 @@
 {
   "name": "orbit",
-  "version": "2.2.149",
+  "version": "2.2.159",
   "scripts": {
     "start": "./scripts/build.sh --resume",
     "test-built-app": "DEBUG=api,crawler,crawler:* dist/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "build-app": "./scripts/build.sh",
     "build-app-resume": "./scripts/build.sh --resume",
+    "zip-app": "./scripts/zip-app.sh",
     "publish": "./scripts/publish.sh"
   },
   "devDependencies": {

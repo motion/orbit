@@ -4,8 +4,9 @@ import { logger } from '@mcro/logger'
 import { queryObjectToQueryString } from '../../utils'
 import { GmailFetchOptions } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { getConfig } from '../../config'
+import { getGlobalConfig } from '@mcro/config'
 
+const Config = getGlobalConfig()
 const log = logger('syncer:gmail')
 
 export class GMailFetcher {
@@ -32,7 +33,7 @@ export class GMailFetcher {
       mode: 'cors',
       headers: {
         Authorization: `Bearer ${this.setting.token}`,
-        'Access-Control-Allow-Origin': getConfig().server.host,
+        'Access-Control-Allow-Origin': Config.urls.serverHost,
         'Access-Control-Allow-Methods': 'GET',
       },
     })

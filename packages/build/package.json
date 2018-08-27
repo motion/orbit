@@ -26,13 +26,11 @@
     "style-loader": "^0.21.0",
     "svg-inline-loader": "^0.8.0",
     "thread-loader": "^1.1.5",
-    "prepack-webpack-plugin": "1.1.1",
     "tsconfig-paths-webpack-plugin": "3.1.3",
     "uglifyjs-webpack-plugin": "1.3.0",
     "url-loader": "^1.0.1",
     "webpack-bundle-analyzer": "^2.13.1",
-    "workerize-loader": "1.0.3",
-    "prepack": "0.2.49"
+    "workerize-loader": "1.0.3"
   },
   "peerDependencies": {
     "webpack": "*",

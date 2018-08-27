@@ -1,7 +1,17 @@
-type Config = {
-  userDataDirectory: string
-  rootDirectory: string
-  privateUrl: string
+export type GlobalConfig = {
+  isProd: boolean
+  paths: {
+    root: string
+    appStatic: string
+    userData: string
+    nodeBinary: string
+    dotApp: string
+  }
+  urls: {
+    authProxy: string
+    server: string
+    serverHost: string
+  }
   version: string
   ports: {
     server: number
@@ -12,13 +22,13 @@ type Config = {
   }
 }
 
-let config: Config
+let config: GlobalConfig
 
-export function getGlobalConfig(): Config {
+export function getGlobalConfig(): GlobalConfig {
   return config
 }
 
-export function setGlobalConfig(nextConfig: Config) {
+export function setGlobalConfig(nextConfig: GlobalConfig) {
   if (config) {
     throw new Error('Already set config once!')
   }

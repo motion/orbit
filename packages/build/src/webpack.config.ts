@@ -85,6 +85,8 @@ const optimization = {
   },
 }
 
+console.log('buildNodeModules', buildNodeModules)
+
 const config = {
   target,
   mode,

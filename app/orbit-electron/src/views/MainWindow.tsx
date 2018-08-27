@@ -4,10 +4,11 @@ import { Window } from '@mcro/reactron'
 import { Electron, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
-import { getConfig } from '../config'
 import { logger } from '@mcro/logger'
+import { getGlobalConfig } from '@mcro/config'
 
 const log = logger('electron')
+const Config = getGlobalConfig()
 
 type Props = {
   store?: MainStore
@@ -76,7 +77,7 @@ export class MainWindow extends React.Component<Props> {
 
   render() {
     const { store, electronStore } = this.props
-    const url = getConfig().server.url
+    const url = Config.urls.server
     log(`Rendering main window at url ${url}`)
     return (
       <Window

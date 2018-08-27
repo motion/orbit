@@ -3,7 +3,15 @@ import { Tray } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import Path from 'path'
 import { Electron, App } from '@mcro/stores'
-import { getConfig } from '../config'
+
+const image = Path.join(
+  __dirname,
+  '..',
+  '..',
+  'resources',
+  'icons',
+  'orbitTemplate.png',
+)
 
 @view.electron
 export default class TrayEl extends React.Component {
@@ -13,12 +21,7 @@ export default class TrayEl extends React.Component {
         onClick={() => {
           Electron.sendMessage(App, App.messages.TOGGLE_DOCKED)
         }}
-        image={Path.join(
-          getConfig().directories.root,
-          'resources',
-          'icons',
-          'orbitTemplate.png',
-        )}
+        image={image}
         title={App.state.contextMessage}
       />
     )

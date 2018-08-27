@@ -99,6 +99,9 @@ else
 fi
 echo -n "--no-install " >> ./scripts/.lastbuild
 
+# before bundle, sign the oracle app
+codesign -vfs "3rd Party Mac Developer Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ../oracle/orbit/Build/Products/Release/orbit.app
+
 # bundle
 if [[ "$FLAGS" =~ "--no-bundle" ]]; then
   echo "not bundling..."
@@ -119,7 +122,7 @@ if [[ "$FLAGS" =~ "--no-sign" ]]; then
   echo "not signing"
 else
   echo "signing app..."
-  npx electron-osx-sign --ignore puppeteer/\\.local-chromium --ignore oracle ./dist/Orbit-darwin-x64/Orbit.app
+  npx electron-osx-sign --ignore oracle ./dist/Orbit-darwin-x64/Orbit.app
 fi
 echo -n "--no-sign " >> ./scripts/.lastbuild
 
@@ -129,5 +132,5 @@ if [[ "$FLAGS" =~ "--no-pack" ]]; then
 else
   echo "packing app into .dmg..."
   npx electron-installer-dmg --overwrite --out ./dist --icon ./resources/icon.icns ./dist/Orbit-darwin-x64/Orbit.app Orbit
-  codesign -vfs "Developer ID Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ./dist/Orbit.dmg
+  codesign -vfs "3rd Party Mac Developer Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ./dist/Orbit.dmg
 fi

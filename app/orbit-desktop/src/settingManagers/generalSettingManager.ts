@@ -3,10 +3,10 @@ import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
 import { logger } from '@mcro/logger'
-import { getConfig } from '../config'
 import * as Path from 'path'
+import { getGlobalConfig } from '@mcro/config'
 
-const Config = getConfig()
+const Config = getGlobalConfig()
 const log = logger('GeneralSettingManager')
 
 const generalSettingQuery = {
@@ -20,22 +20,13 @@ export class GeneralSettingManager {
   autoLaunch: AutoLaunch
 
   constructor() {
-    if (Config.env.prod) {
+    if (Config.isProd) {
       try {
-        // jank
-        const appPath = Path.join(
-          getConfig().directories.root,
-          '..',
-          '..',
-          '..',
-          '..',
-          '..',
-          '..',
-        )
-        console.log('auto launch path', appPath)
+        const dotApp = Config.paths.dotApp
+        console.log('auto launch path', dotApp)
         this.autoLaunch = new AutoLaunch({
           name: 'Orbit',
-          path: appPath,
+          path: dotApp,
         })
       } catch (err) {
         console.error(err)

@@ -4,19 +4,15 @@ import express from 'express'
 import proxy from 'http-proxy-middleware'
 import session from 'express-session'
 import bodyParser from 'body-parser'
-import { getConfig } from './config'
 import { getGlobalConfig } from '@mcro/config'
 import OAuth from './server/oauth'
 import OAuthStrategies from '@mcro/oauth-strategies'
 import Passport from 'passport'
 import killPort from 'kill-port'
-import Fs from 'fs'
-import Path from 'path'
 import { logger } from '@mcro/logger'
 
-const Config = getConfig()
-
 const log = logger('desktop')
+const Config = getGlobalConfig()
 
 export default class Server {
   oauth: OAuth
@@ -39,7 +35,7 @@ export default class Server {
     })
 
     const app = express()
-    app.set('port', Config.server.port)
+    app.set('port', Config.ports.server)
 
     // if (process.env.NODE_ENV !== 'development') {
     app.use(morgan('dev'))
@@ -70,13 +66,13 @@ export default class Server {
   async start() {
     // kill old processes
     log('Killing any old servers...')
-    await killPort(Config.server.port)
+    await killPort(Config.ports.server)
     log('Desktop listening!!!!!!!!!...')
-    this.app.listen(Config.server.port, () => {
-      console.log('listening at port', Config.server.port)
+    this.app.listen(Config.ports.server, () => {
+      console.log('listening at port', Config.ports.server)
     })
 
-    return Config.server.port
+    return Config.ports.server
   }
 
   cors() {
@@ -132,9 +128,9 @@ export default class Server {
     // proxy to webpack-dev-server in development
     if (process.env.NODE_ENV === 'development') {
       log('Serving orbit app through proxy to webpack-dev-server...')
-      const webpackUrl = 'http://localhost:3002'
+      const webpackUrl = 'http://localhost:3999'
       const router = {
-        'http://localhost:3001': webpackUrl,
+        [`http://localhost:${Config.ports.server}`]: webpackUrl,
       }
       this.app.use(
         '/',
@@ -150,8 +146,8 @@ export default class Server {
     }
     // serve static in production
     if (process.env.NODE_ENV !== 'development') {
-      log(`Serving orbit static app in ${Config.directories.orbitAppStatic}...`)
-      this.app.use('/', express.static(Config.directories.orbitAppStatic))
+      log(`Serving orbit static app in ${Config.paths.appStatic}...`)
+      this.app.use('/', express.static(Config.paths.appStatic))
     }
   }
 

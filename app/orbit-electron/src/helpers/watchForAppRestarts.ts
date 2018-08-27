@@ -5,7 +5,7 @@ export function watchForAppRestarts() {
   // watch for parcel restarts, then restart electron
   let shouldRestart = false
   const int = setInterval(async () => {
-    const webRunning = await check(3002, '127.0.0.1')
+    const webRunning = await check(3999, '127.0.0.1')
     if (!webRunning && !shouldRestart) {
       console.log('app down, will restart on next app startup')
       shouldRestart = true

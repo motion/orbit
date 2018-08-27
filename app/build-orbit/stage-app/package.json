@@ -1,19 +1,26 @@
 {
   "name": "orbit",
   "productName": "Orbit",
+  "author": "Orbit",
+  "description": "Orbit",
   "version": "2.2.163",
   "dependencies": {
-    "@mcro/orbit": "*",
+    "@mcro/orbit": "*"
+  },
+  "devDependencies": {
     "electron": "3.0.0-beta.7"
   },
   "build": {
     "appId": "com.tryorbit",
     "productName": "Orbit",
     "mac": {
-      "category": "search"
+      "target": "zip",
+      "identity": null,
+      "icon": "../resources/icon.icns"
     },
     "directories": {
-      "buildResources": "../resources"
+      "buildResources": "../resources",
+      "output": "../dist"
     }
   }
 }

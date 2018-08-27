@@ -4,7 +4,9 @@ import { Desktop, App } from '@mcro/stores'
 import { SettingEntity } from '../entities/SettingEntity'
 import { closeChromeTabWithUrlStarting } from '../helpers/injections'
 import { OauthValues } from './oauthTypes'
-import { getConfig } from '../config'
+import { getGlobalConfig } from '@mcro/config'
+
+const Config = getGlobalConfig()
 
 export default class Oauth {
   findInfo: Function
@@ -12,16 +14,16 @@ export default class Oauth {
 
   constructor({ strategies, onSuccess, findInfo, updateInfo }) {
     if (!strategies) {
-      throw Error(`Need to provide strategies key`)
+      throw Error('Need to provide strategies key')
     }
     if (!onSuccess) {
-      throw Error(`Need to provide onSuccess callback`)
+      throw Error('Need to provide onSuccess callback')
     }
     if (!findInfo) {
-      throw Error(`Need to provide findInfo`)
+      throw Error('Need to provide findInfo')
     }
     if (!updateInfo) {
-      throw Error(`Need to provide updateInfo`)
+      throw Error('Need to provide updateInfo')
     }
     this.findInfo = findInfo
     this.updateInfo = updateInfo
@@ -93,7 +95,7 @@ export default class Oauth {
 
   finishOauth = (type: string, values: OauthValues) => {
     // close window
-    closeChromeTabWithUrlStarting(`${getConfig().server.url}/auth/${type}`)
+    closeChromeTabWithUrlStarting(`${Config.urls.server}/auth/${type}`)
     // create setting
     this.createSetting(type, values)
     // show Orbit again

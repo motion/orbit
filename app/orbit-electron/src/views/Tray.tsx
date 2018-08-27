@@ -3,7 +3,9 @@ import { Tray } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import Path from 'path'
 import { Electron, App } from '@mcro/stores'
-import { getConfig } from '../config'
+import { getGlobalConfig } from '@mcro/config'
+
+const Config = getGlobalConfig()
 
 @view.electron
 export default class TrayEl extends React.Component {
@@ -14,7 +16,7 @@ export default class TrayEl extends React.Component {
           Electron.sendMessage(App, App.messages.TOGGLE_DOCKED)
         }}
         image={Path.join(
-          getConfig().directories.root,
+          Config.paths.root,
           'resources',
           'icons',
           'orbitTemplate.png',

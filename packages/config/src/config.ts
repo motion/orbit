@@ -10,6 +10,7 @@ export type GlobalConfig = {
   urls: {
     authProxy: string
     server: string
+    serverHost: string
   }
   version: string
   ports: {

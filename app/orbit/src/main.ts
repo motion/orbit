@@ -7,6 +7,7 @@ import { startDesktop } from './startDesktop'
 // @ts-ignore
 import { app, dialog } from 'electron'
 import { logger } from '@mcro/logger'
+import waitPort from 'wait-port'
 
 const log = logger(process.env.IS_DESKTOP ? 'desktop' : 'electron')
 
@@ -59,6 +60,7 @@ export async function main({ version }: OrbitOpts) {
       nodeBinary = Path.join(root, '..', '..', 'MacOS', 'Orbit')
     }
     const dotApp = Path.join(root, '..', '..', '..', '..', '..', '..')
+    const serverHost = 'localhost'
     config = {
       isProd: process.env.NODE_ENV !== 'development',
       paths: {
@@ -70,7 +72,8 @@ export async function main({ version }: OrbitOpts) {
       },
       urls: {
         authProxy: 'http://private.tryorbit.com',
-        server: `http://localhost:${ports[0]}`,
+        server: `http://${serverHost}:${ports[0]}`,
+        serverHost,
       },
       version,
       ports: {
@@ -86,10 +89,14 @@ export async function main({ version }: OrbitOpts) {
   // both processes now run this part to have their config setup
   setGlobalConfig(config)
 
-  // IS in desktop process, go do its thing...
+  // IS IN DESKTOP
+  // go off and do its thing...
   if (process.env.IS_DESKTOP) {
+    if (!config) {
+      throw new Error('Desktop didn\'t receive config!')
+    }
     // lets run desktop now
-    require('@mcro/desktop')
+    require('@mcro/desktop').main()
     return
   }
 
@@ -133,31 +140,29 @@ export async function main({ version }: OrbitOpts) {
   }
 
   log('Waiting for desktop startup to continue...')
-  await waitPort({ port })
+  await waitPort({ port: config.ports.server })
   clearTimeout(failStartTm)
   log('Found desktop, continue...')
-}
 
-// PRODUCTION
-if (process.env.NODE_ENV !== 'development') {
-  // start desktop...
-
-  // move to app folder
-  if (!app.isInApplicationsFolder()) {
-    app.dock.bounce('informational')
-    const response = dialog.showMessageBox({
-      type: 'question',
-      title: 'Move to apps?',
-      message: 'Move Orbit to Applications folder?',
-      buttons: ['Cancel', 'Ok'],
-      defaultId: 1,
-      cancelId: 0,
-    })
-    if (response === 1) {
-      try {
-        app.moveToApplicationsFolder()
-      } catch (err) {
-        console.log('error moving to app folder', err)
+  // PRODUCTION
+  if (config.isProd) {
+    // move to app folder
+    if (!app.isInApplicationsFolder()) {
+      app.dock.bounce('informational')
+      const response = dialog.showMessageBox({
+        type: 'question',
+        title: 'Move to apps?',
+        message: 'Move Orbit to Applications folder?',
+        buttons: ['Cancel', 'Ok'],
+        defaultId: 1,
+        cancelId: 0,
+      })
+      if (response === 1) {
+        try {
+          app.moveToApplicationsFolder()
+        } catch (err) {
+          console.log('error moving to app folder', err)
+        }
       }
     }
   }

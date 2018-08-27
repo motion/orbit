@@ -1,11 +1,7 @@
 import 'raf/polyfill'
-import { setConfig } from './config'
-import * as Path from 'path'
 import { logger } from '@mcro/logger'
 import waitPort from 'wait-port'
-import { getGlobalConfig } from '@mcro/config'
 
-const Config = getGlobalConfig()
 const log = logger('electron')
 
 Error.stackTraceLimit = Infinity
@@ -37,21 +33,6 @@ export async function main(): Promise<number | void> {
       console.log('uncaughtException', err.stack)
     })
   }
-
-  // set config before starting app
-  setConfig({
-    env: {
-      prod: process.env.NODE_ENV !== 'development',
-    },
-    server: {
-      url: `http://localhost:${Config.ports.server}`,
-      host: 'localhost',
-      port: `${Config.ports.server}`,
-    },
-    directories: {
-      root: Path.join(__dirname, '..'),
-    },
-  })
 
   // require app after setting config
   const { ElectronApp } = require('./ElectronApp')

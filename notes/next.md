@@ -9,12 +9,13 @@
 
 - run through orbit both APP=desktop/electron for asar
 - https://github.com/cameronhunter/local-ssl-proxy
+- deploy initial oauth step to digitalocean
 - need a way for people to suggest/vote features
 - sort the queues by most recent at top so you can quickly hit emails
   - should be fully keynav so you can get to links inside them quickly
   - show html in emails
-- fix github showing natew
-- deploy initial oauth step to digitalocean
+- slack room
+- email list email
 - remove confluence
 - make onboarding encourage adding more integrations
 - only have them download .app and auto move to apps folder

@@ -112,10 +112,6 @@ export async function main() {
     console.log('bye!')
   }
 
-  // start electron...
-  const ElectronApp = require('@mcro/orbit-electron')
-  ElectronApp.main()
-
   app.on('before-quit', () => {
     console.log('Electron handle exit...')
     handleExit()
@@ -142,6 +138,10 @@ export async function main() {
   await waitPort({ port: config.ports.server })
   clearTimeout(failStartTm)
   log('Found desktop, continue...')
+
+  // start electron...
+  const ElectronApp = require('@mcro/orbit-electron')
+  ElectronApp.main()
 
   // PRODUCTION
   if (config.isProd) {

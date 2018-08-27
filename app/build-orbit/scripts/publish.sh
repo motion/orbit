@@ -18,7 +18,7 @@ fi
 if [ ! -f "./dist/Orbit-$npm_package_version.dmg" ]; then
   echo "zipping into versioned file..."
   cp ./dist/Orbit.dmg ./dist/Orbit-$npm_package_version.dmg
-  zip -r -X -8 -q ./dist/Orbit-$npm_package_version-mac.zip ./dist/Orbit-darwin-x64/Orbit.app
+  zip -y -r -X -8 -q ./dist/Orbit-$npm_package_version-mac.zip ./dist/Orbit-darwin-x64/Orbit.app
 fi
 
 # publish

@@ -3,27 +3,25 @@ import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 import killPort from 'kill-port'
 import { cleanupChildren } from './cleanupChildren'
 import * as Path from 'path'
-import { startDesktop } from './startDesktop'
 // @ts-ignore
 import { app, dialog } from 'electron'
 import { logger } from '@mcro/logger'
 import waitPort from 'wait-port'
 
-const log = logger(process.env.IS_DESKTOP ? 'desktop' : 'electron')
+const name = process.env.IS_DESKTOP ? 'desktop' : 'electron'
+const log = logger(name)
 
-type OrbitOpts = {
-  version: string
-}
+console.log('Starting...', name)
 
 // this runs as the entry for both processes
 // first electron, then desktop
 // this lets us share config more easily
 // and also use the bundled electron binary as the entry point
 // which lets us pack things into an asar
-export async function main({ version }: OrbitOpts) {
+export async function main() {
   // if were in desktop we get config through here
-  let config: GlobalConfig = process.env.CONFIG
-    ? JSON.parse(process.env.CONFIG)
+  let config: GlobalConfig = process.env.ORBIT_CONFIG
+    ? JSON.parse(process.env.ORBIT_CONFIG)
     : null
 
   // if not we're in the root electron process, lets set it up once...
@@ -75,7 +73,7 @@ export async function main({ version }: OrbitOpts) {
         server: `http://${serverHost}:${ports[0]}`,
         serverHost,
       },
-      version,
+      version: process.env.ORBIT_VERSION,
       ports: {
         server: ports[0],
         bridge: ports[1],
@@ -96,7 +94,7 @@ export async function main({ version }: OrbitOpts) {
       throw new Error('Desktop didn\'t receive config!')
     }
     // lets run desktop now
-    require('@mcro/desktop').main()
+    require('@mcro/orbit-desktop').main()
     return
   }
 
@@ -131,9 +129,8 @@ export async function main({ version }: OrbitOpts) {
     })
   }, 5000)
 
-  log('In production, starting desktop...')
   try {
-    desktopPid = startDesktop()
+    desktopPid = require('./startDesktop').startDesktop()
     console.log('>>>>>>> desktop pid is', desktopPid)
   } catch (err) {
     desktopFailMsg = `${err.message}`
@@ -167,3 +164,6 @@ export async function main({ version }: OrbitOpts) {
     }
   }
 }
+
+// self starting
+main()

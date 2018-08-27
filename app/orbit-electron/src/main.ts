@@ -14,7 +14,7 @@ export async function main(): Promise<number | void> {
     require('source-map-support/register')
     require('./helpers/installGlobals')
     require('./helpers/watchForAppRestarts').watchForAppRestarts()
-    await waitPort({ port: 3002 })
+    await waitPort({ port: 3999 })
     await waitPort({ port: 3001 })
     const exitHandler = code => process.exit(code)
     // dont close instantly

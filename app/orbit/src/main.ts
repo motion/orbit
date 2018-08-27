@@ -8,8 +8,10 @@ import { app, dialog } from 'electron'
 import { logger } from '@mcro/logger'
 import waitPort from 'wait-port'
 
-const name = process.env.IS_DESKTOP ? 'desktop' : 'electron'
+const { IS_DESKTOP } = process.env
+const name = IS_DESKTOP ? 'desktop' : 'electron'
 const log = logger(name)
+const isProd = process.env.NODE_ENV !== 'development'
 
 console.log('Starting...', name)
 
@@ -26,7 +28,7 @@ export async function main() {
 
   // if not we're in the root electron process, lets set it up once...
   if (!config) {
-    const ports = await findContiguousPorts(5, 3333)
+    const ports = await findContiguousPorts(5, isProd ? 3333 : 3001)
     if (!ports) {
       console.log('no ports found!')
       return
@@ -60,7 +62,7 @@ export async function main() {
     const dotApp = Path.join(root, '..', '..', '..', '..', '..', '..')
     const serverHost = 'localhost'
     config = {
-      isProd: process.env.NODE_ENV !== 'development',
+      isProd,
       paths: {
         root,
         appStatic,

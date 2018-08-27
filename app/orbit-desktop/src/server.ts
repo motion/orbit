@@ -128,9 +128,9 @@ export default class Server {
     // proxy to webpack-dev-server in development
     if (process.env.NODE_ENV === 'development') {
       log('Serving orbit app through proxy to webpack-dev-server...')
-      const webpackUrl = 'http://localhost:3002'
+      const webpackUrl = 'http://localhost:3999'
       const router = {
-        'http://localhost:3001': webpackUrl,
+        [`http://localhost:${Config.ports.server}`]: webpackUrl,
       }
       this.app.use(
         '/',

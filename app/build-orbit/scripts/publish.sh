@@ -12,7 +12,8 @@ if [ "$npm_package_version" = "" ]; then
   exit 0
 fi
 
-./scripts/zip-app.sh --publish
+# disable for now, it wont let me be a verified dev...
+# ./scripts/zip-app.sh --publish
 
 # prepare for publish by version
 if [ ! -f "./dist/Orbit-$npm_package_version.dmg" ]; then

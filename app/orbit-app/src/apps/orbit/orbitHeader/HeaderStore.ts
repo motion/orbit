@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { HeaderProps } from './HeaderProps'
 
@@ -52,9 +52,8 @@ export class HeaderStore {
   focusInputOnVisible = react(
     () => App.orbitState.pinned || App.orbitState.docked,
     async shown => {
-      if (!shown) {
-        throw react.cancel
-      }
+      ensure('shown', shown)
+      ensure('ref', !!this.inputRef.current)
       this.focus()
       selectTextarea(this.inputRef.current)
     },

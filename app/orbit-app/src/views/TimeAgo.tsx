@@ -1,11 +1,12 @@
 import { Component } from 'react'
-import differenceInSeconds from 'date-fns/difference_in_seconds'
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
+import { differenceInSeconds, formatRelative } from 'date-fns'
 
 type TimeAgoProps = {
   date?: number | Date
   children?: number | Date
   postfix?: string
+  isLive?: boolean
+  timeInterval?: number
 }
 
 export class TimeAgo extends Component<TimeAgoProps> {
@@ -20,7 +21,7 @@ export class TimeAgo extends Component<TimeAgoProps> {
     timeInterval: 60 * 1000,
   }
 
-  interval = 0
+  interval = null
 
   componentDidMount() {
     if (this.props.isLive) {
@@ -64,11 +65,7 @@ export class TimeAgo extends Component<TimeAgoProps> {
     if (diff < 30) {
       return 'now'
     } else {
-      const options = {
-        addSuffix: this.props.addSuffix,
-        includeSeconds: this.props.includeSeconds,
-      }
-      return distanceInWordsToNow(this.date, options)
+      return formatRelative(this.date, Date.now())
         .replace('about ', '')
         .replace('almost ', '')
         .replace('over ', '')

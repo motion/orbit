@@ -5,11 +5,12 @@ import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 // import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
-// import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 // import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
+// import PrepackPlugin from 'prepack-webpack-plugin'
 
 const cwd = process.cwd()
 const readEntry = () => {
@@ -63,17 +64,18 @@ const optimizeSplit = {
 
 const optimization = {
   prod: {
-    ...optimizeSplit,
-    minimizer: [],
-    // new UglifyJsPlugin({
-    //   uglifyOptions: {
-    //     ecma: 8,
-    //     toplevel: true,
-    //   },
-    //   sourceMap: true,
-    //   cache: true,
-    //   parallel: true,
-    // }),
+    // ...optimizeSplit,
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          ecma: 8,
+          // toplevel: true,
+        },
+        sourceMap: true,
+        cache: true,
+        parallel: true,
+      }),
+    ],
   },
   dev: {
     removeAvailableModules: false,
@@ -173,8 +175,6 @@ const config = {
   },
   plugins: [
     // new ProfilingPlugin(),
-    // this runs a checker in a process, but reduces the number of processes that run
-    // new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: !isProd }),
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
     new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({
@@ -191,6 +191,8 @@ const config = {
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
       }),
+
+    // isProd && new PrepackPlugin(),
   ].filter(Boolean),
 }
 

@@ -3,11 +3,9 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.163",
+  "version": "2.2.166",
   "dependencies": {
-    "@mcro/orbit": "*"
-  },
-  "devDependencies": {
+    "@mcro/orbit": "*",
     "electron": "3.0.0-beta.7"
   },
   "build": {
@@ -15,7 +13,6 @@
     "productName": "Orbit",
     "mac": {
       "target": "zip",
-      "identity": null,
       "icon": "../resources/icon.icns"
     },
     "directories": {

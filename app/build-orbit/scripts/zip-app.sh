@@ -21,7 +21,7 @@ echo "zipping app..."
   # -y preserve symlinks
   # cd in because zip compressed the full path
   (cd ./dist/Orbit-darwin-x64 && zip -y -r9 -q $OUT_FILE Orbit.app)
-  # codesign -vfs "3rd Party Mac Developer Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain $OUT_FILE
+  codesign -vfs "Developer ID Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain $OUT_FILE
 fi
 
 if [[ "$@" =~ "--publish" ]]; then

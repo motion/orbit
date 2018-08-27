@@ -26,19 +26,6 @@ const ignorePaths = [
   '.d.ts',
   // avoid some bundle size ⚠️ hopefully dont cause headaches....
   '.gif',
-  // this avoids duplicating the chromium build,
-  // since it derefs the subling Versions/Current symlink it still copies
-  'Framework.framework/Versions/A',
-  // theres a weird nesting here that gets copied too
-  // and chromium doesnt complain if we just leave it out
-  'Chromium Framework.framework/Versions',
-  'Electron Framework.framework/Versions',
-  '/node_modules/.bin/',
-  '/node_modules/.cache/',
-  'node_modules/electron/',
-  'node_modules/electron-prebuilt/',
-  'node_modules/electron-prebuilt-compile/',
-  'node_modules/electron-packager/',
   '/.git/',
 ]
 

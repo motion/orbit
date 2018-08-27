@@ -8,7 +8,7 @@ const Config = getGlobalConfig()
 
 export function startDesktop() {
   // enable remote debugging in dev
-  const root = !Config.isProd && Path.join(__dirname, 'main')
+  const root = Path.join(__dirname, 'main')
   let args = [root]
   if (!Config.isProd) {
     args = [...args, '--inspect=127.0.0.1:9000']

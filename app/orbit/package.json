@@ -22,7 +22,8 @@
     "ps-tree": "1.1.0"
   },
   "devDependencies": {
-    "@types/electron": "*"
+    "@types/electron": "*",
+    "nodemon": ""
   },
   "peerDependencies": {
     "electron": "3.0.0-beta.7"

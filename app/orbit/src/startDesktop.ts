@@ -3,15 +3,18 @@ import { getGlobalConfig } from '@mcro/config'
 // @ts-ignore
 import { app } from 'electron'
 
+const Config = getGlobalConfig()
+
 export function startDesktop() {
   const appBinary = app.getAppPath()
+  const args = Config.isProd ? [] : ['--remote-debugging-port', '9000']
   try {
-    const child = spawn(appBinary, [], {
+    const child = spawn(appBinary, args, {
       env: {
         ELECTRON_RUN_AS_NODE: 1,
         IS_DESKTOP: true,
         NODE_ENV: process.env.NODE_ENV,
-        ORBIT_CONFIG: JSON.stringify(getGlobalConfig()),
+        ORBIT_CONFIG: JSON.stringify(Config),
         PATH: process.env.PATH,
       },
     })

@@ -19,6 +19,8 @@ const STAGING_DIR = Path.join(ROOT, 'stage-app')
 const BUILD_DIR = Path.join(ROOT, 'dist')
 
 const ignorePaths = [
+  // were going to copy in the oracle sub-app ourselves
+  'orbit.app',
   // avoid leaking our sources a bit
   '.js.map',
   '.d.ts',
@@ -94,8 +96,8 @@ async function bundle() {
   const paths = await electronPackager({
     platform: 'darwin',
     // asar: true,
-    appBundleId: 'com.tryorbit',
-    helperBundleId: 'com.tryorbit',
+    appBundleId: 'com.o.orbit',
+    helperBundleId: 'com.o.orbit',
     dir: STAGING_DIR,
     out: BUILD_DIR,
     icon: Path.join(ROOT, 'resources', 'icon.icns'),

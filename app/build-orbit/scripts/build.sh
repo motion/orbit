@@ -99,9 +99,6 @@ else
 fi
 echo -n "--no-install " >> ./scripts/.lastbuild
 
-# before bundle, sign the oracle app
-# codesign -vfs "3rd Party Mac Developer Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ../oracle/orbit/Build/Products/Release/orbit.app
-
 # bundle
 if [[ "$FLAGS" =~ "--no-bundle" ]]; then
   echo "not bundling..."
@@ -116,6 +113,10 @@ rm -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite
 
 echo "fixing sqlite for desktop process..."
 cp -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
+
+echo "copy signed oracle"
+# -Rfa = R recurse, f force, a preserve symlinks (important for signing)
+cp -Rfa ../oracle/orbit/Build/Products/Release/orbit.app ./dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/oracle/orbit/Build/Products/Release/
 
 # sign
 if [[ "$FLAGS" =~ "--no-sign" ]]; then

@@ -1,16 +1,17 @@
 import { store, react, ensure } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
+import { getConfig } from '../config'
 import { logger } from '@mcro/logger'
 import * as Path from 'path'
 import { getGlobalConfig } from '@mcro/config'
 import Sudoer from '@mcro/electron-sudo'
 
 const log = logger('desktop')
-const Config = getGlobalConfig()
+const Config = getConfig()
 
 const checkAuthProxy = () => {
   return new Promise(res => {
-    const testUrl = `${Config.urls.authProxy}/hello`
+    const testUrl = `${getGlobalConfig().privateUrl}/hello`
     const tm = setTimeout(() => res(false), 500)
     fetch(testUrl)
       .then(res => res.text())
@@ -47,9 +48,9 @@ export class PortForwardStore {
     const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
     log(`Running proxy script: ${pathToOrbitProxy}`)
 
-    const port = Config.ports.server
+    const { port } = Config.server
     const GlobalConfig = getGlobalConfig()
-    const host = Config.urls.authProxy.replace('http://', '')
+    const host = GlobalConfig.privateUrl.replace('http://', '')
 
     // check in a loop since the sudoPrompt process is long running
     this.successInt = setInterval(async () => {
@@ -60,9 +61,19 @@ export class PortForwardStore {
     }, 300)
 
     const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
-    console.log('Electron binary path:', Config.paths.nodeBinary)
+    let pathToElectronBinary = 'node'
+    if (process.env.NODE_ENV !== 'development') {
+      pathToElectronBinary = Path.join(
+        GlobalConfig.rootDirectory,
+        '..',
+        '..',
+        'MacOS',
+        'Orbit',
+      )
+    }
+    console.log('Electron binary path:', pathToElectronBinary)
     const cmd = await sudoer.spawn(
-      Config.paths.nodeBinary,
+      pathToElectronBinary,
       `${pathToOrbitProxy} --port ${port} --host ${host}`.split(' '),
       {
         env: {

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import * as _ from 'lodash'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
@@ -125,6 +126,11 @@ export class SubPane extends React.Component<SubPaneProps> {
             {...props}
           >
             <PaneContentInner>{children}</PaneContentInner>
+            {/* {fadeBottom && (
+              <OverflowFade
+                isInvisible={!subPaneStore.isActive || subPaneStore.isAtBottom}
+              />
+            )} */}
           </Pane>
         </SubPaneInner>
         {after}

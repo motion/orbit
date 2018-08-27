@@ -6,7 +6,10 @@ import { Orbit } from './orbit/Orbit'
 import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
+import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
 import { settingToResult } from '../helpers/settingToResult'
+
+const store = new IntegrationSettingsStore()
 
 const getItem = {
   githubItem: () =>

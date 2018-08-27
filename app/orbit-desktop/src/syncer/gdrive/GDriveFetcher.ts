@@ -6,9 +6,8 @@ import * as r2 from '@mcro/r2'
 import { logger } from '@mcro/logger'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { getGlobalConfig } from '@mcro/config'
+import { getConfig } from '../../config'
 
-const Config = getGlobalConfig()
 const log = logger('syncer:gdrive')
 
 /**
@@ -68,7 +67,7 @@ export class GDriveFetcher {
       mode: json ? 'cors' : undefined,
       headers: {
         Authorization: `Bearer ${this.setting.token}`,
-        'Access-Control-Allow-Origin': Config.urls.server,
+        'Access-Control-Allow-Origin': getConfig().server.url,
         'Access-Control-Allow-Methods': 'GET',
       },
     })

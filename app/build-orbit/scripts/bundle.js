@@ -19,11 +19,6 @@ const STAGING_DIR = Path.join(ROOT, 'stage-app')
 const BUILD_DIR = Path.join(ROOT, 'dist')
 
 const ignorePaths = [
-  // avoid leaking our sources a bit
-  '.js.map',
-  '.d.ts',
-  // avoid some bundle size ⚠️ hopefully dont cause headaches....
-  '.gif',
   // this avoids duplicating the chromium build,
   // since it derefs the subling Versions/Current symlink it still copies
   'Framework.framework/Versions/A',
@@ -92,7 +87,6 @@ async function bundle() {
 
   console.log('packaging new app...')
   const paths = await electronPackager({
-    platform: 'darwin',
     // asar: true,
     appBundleId: 'com.tryorbit',
     helperBundleId: 'com.tryorbit',

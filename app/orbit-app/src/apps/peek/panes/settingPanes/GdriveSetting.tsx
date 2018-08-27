@@ -88,7 +88,7 @@ const decorator = compose(
 
 type Props = SettingPaneProps & { store: GDocsSettingStore }
 
-export const GdocsSetting = decorator(({ store, children }: Props) => {
+export const GdriveSetting = decorator(({ store, children }: Props) => {
   const folders = store.popularFolders
   console.log('folders, ', folders)
   return children({

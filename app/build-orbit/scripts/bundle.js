@@ -96,8 +96,8 @@ async function bundle() {
   const paths = await electronPackager({
     platform: 'darwin',
     // asar: true,
-    appBundleId: 'com.o.orbit',
-    helperBundleId: 'com.o.orbit',
+    appBundleId: 'com.tryorbit',
+    helperBundleId: 'com.tryorbit',
     dir: STAGING_DIR,
     out: BUILD_DIR,
     icon: Path.join(ROOT, 'resources', 'icon.icns'),

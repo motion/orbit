@@ -33,7 +33,7 @@ export async function startElectron() {
       message: `Node process didnt start: ${desktopFailMsg}`,
       buttons: ['Ok'],
     })
-  }, 5000)
+  }, 10000)
 
   try {
     desktopPid = require('./startDesktop').startDesktop()

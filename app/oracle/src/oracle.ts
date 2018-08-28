@@ -379,6 +379,7 @@ export default class Oracle {
     let bin = 'orbit'
     let binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
     if (this.binPath) {
+      bin = 'oracle'
       binDir = Path.join(this.binPath, '..')
     }
     log(

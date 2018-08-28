@@ -415,10 +415,7 @@ export default class Oracle {
       this.onErrorCB(str)
     }
 
-    // never logs :( (tried with spawn too)...
-    this.process.stdout.on('data', data => {
-      console.log('stdout from oracle', handleOut)
-    })
+    this.process.stdout.on('data', handleOut)
     this.process.stderr.on('data', handleOut)
   }
 }

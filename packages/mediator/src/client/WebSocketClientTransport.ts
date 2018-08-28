@@ -1,9 +1,7 @@
-import { RepositoryOperationType } from './Repository'
-import ReconnectingWebSocket from 'reconnecting-websocket'
-import { getGlobalConfig } from '@mcro/config'
+import { ClientTransportInterface } from './ClientTransportInterface'
 
-export class WebSocketProvider {
-  websocket: ReconnectingWebSocket
+export class WebSocketClientTransport implements ClientTransportInterface {
+  websocket: WebSocket
   operationId: number = 0
   subscriptions: {
     operationId: number
@@ -11,20 +9,13 @@ export class WebSocketProvider {
     onError: Function
   }[] = []
 
-  constructor() {
-    this.websocket = new ReconnectingWebSocket(
-      `ws://localhost:9876`, // temporary port, this class should be removed
-      [],
-      {
-        WebSocket,
-      },
-    )
+  constructor(websocket: WebSocket) {
+    this.websocket = websocket
     this.websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     this.websocket.onerror = err => {
-      console.log('ws error', err)
+      console.error('ws error', err)
     }
     this.websocket.onclose = () => {
-      console.log('Provider closed')
       // reconnecting websocket reconnect fix: https://github.com/pladaria/reconnecting-websocket/issues/60
       // @ts-ignore
       if (this.websocket._shouldReconnect) {
@@ -34,28 +25,11 @@ export class WebSocketProvider {
     }
   }
 
-  handleData(data: any) {
-    if (data.operationId) {
-      const subscription = this.subscriptions.find(
-        subscription => subscription.operationId === data.operationId,
-      )
-      if (subscription) {
-        subscription.onSuccess(data.result)
-      }
-    }
-  }
-
-  execute(
-    entity: string,
-    operation: RepositoryOperationType,
-    parameters: any[] = [],
-  ): Promise<any> {
+  execute(value: any): Promise<any> {
     this.operationId++
     const query = {
       operationId: this.operationId,
-      entity,
-      operation,
-      parameters,
+      value,
     }
     return new Promise((ok, fail) => {
       try {
@@ -65,7 +39,7 @@ export class WebSocketProvider {
           console.warn('socket closed')
         }
       } catch (err) {
-        fail(`Failed to execute websocket operation ${JSON.stringify(query)}`)
+        fail(`WAIT! Failed to execute websocket operation ${JSON.stringify(err)}`)
         return
       }
       const subscription: any = { operationId: this.operationId }
@@ -80,4 +54,16 @@ export class WebSocketProvider {
       this.subscriptions.push(subscription)
     })
   }
+
+  private handleData(data: any) {
+    if (data.operationId) {
+      const subscription = this.subscriptions.find(
+        subscription => subscription.operationId === data.operationId,
+      )
+      if (subscription) {
+        subscription.onSuccess(data.result)
+      }
+    }
+  }
+
 }

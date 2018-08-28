@@ -20,6 +20,7 @@
     "@mcro/keyword-extract": "^2.2.1",
     "@mcro/marky-markdown": "^2.2.1",
     "@mcro/models": "^2.2.1",
+    "@mcro/mediator": "^2.2.1",
     "@mcro/r2": "^2.2.1",
     "@mcro/router": "^2.2.1",
     "@mcro/services": "^2.2.1",

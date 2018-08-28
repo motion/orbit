@@ -1,0 +1,17 @@
+{
+  "name": "@mcro/mediator",
+  "version": "2.2.1",
+  "author": "Motion",
+  "main": "_/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4343"
+  },
+  "dependencies": {
+    "ws": "6.0.0",
+    "typeorm": "^0.3.0-alpha.9"
+  }
+}

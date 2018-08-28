@@ -19,6 +19,7 @@ export {
   validCSSAttr,
   Color,
 } from '@mcro/css'
+export {GLOSS_IGNORE_COMPONENT_SYMBOL} from './symbols'
 
 export const color = require('@mcro/color').default
 

@@ -13,6 +13,7 @@
     "@mcro/constants": "^2.2.1",
     "@mcro/helpers": "^2.2.1",
     "@mcro/logger": "^2.2.1",
+    "@mcro/mediator": "^2.2.1",
     "@mcro/models": "^2.2.1",
     "@mcro/oauth-strategies": "^2.2.1",
     "@mcro/oracle": "^2.2.1",

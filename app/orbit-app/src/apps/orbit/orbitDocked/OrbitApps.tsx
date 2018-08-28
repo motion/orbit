@@ -1,22 +1,23 @@
+import { ensure, react, view } from '@mcro/black'
+import { query } from '@mcro/mediator'
+import { Setting, SettingModel } from '@mcro/models'
+import { App } from '@mcro/stores'
+import { Button } from '@mcro/ui'
 import * as React from 'react'
-import { view, react, ensure } from '@mcro/black'
-import { SettingRepository } from '../../../repositories'
-import { OrbitSettingCard } from './OrbitSettings/OrbitSettingCard'
-import { SubPane } from '../SubPane'
-import * as Views from '../../../views'
-import { PaneManagerStore } from '../PaneManagerStore'
+import { fuzzy } from '../../../helpers'
+import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClickHandler'
+import { settingsList } from '../../../helpers/settingsList'
+import { settingToResult } from '../../../helpers/settingToResult'
+import { Mediator } from '../../../repositories'
+import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { SelectionStore } from '../../../stores/SelectionStore'
-import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
-import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClickHandler'
+import * as Views from '../../../views'
 import { Grid } from '../../../views/Grid'
 import { SimpleItem } from '../../../views/SimpleItem'
-import { Button } from '@mcro/ui'
-import { fuzzy } from '../../../helpers'
-import { App } from '@mcro/stores'
-import { Setting } from '@mcro/models'
-import { settingToResult } from '../../../helpers/settingToResult'
-import { settingsList } from '../../../helpers/settingsList'
+import { PaneManagerStore } from '../PaneManagerStore'
+import { SubPane } from '../SubPane'
+import { OrbitSettingCard } from './OrbitSettings/OrbitSettingCard'
 
 type Props = {
   name: string
@@ -81,12 +82,19 @@ class OrbitAppsStore {
     />
   )
 
-  getSettings = () =>
-    SettingRepository.find({
+  getSettings = () => {
+    return Mediator.loadMany(query(SettingModel, {
       where: {
-        category: 'integration',
+        id: 1
       },
+    }, {
+      id: true,
+      // title: true
+    })).then(settings => {
+      // console.log("SETTINGS LOADED", settings)
+      return settings
     })
+  }
 
   // this will go away soon...
   refreshSettings = modelQueryReaction(

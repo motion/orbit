@@ -27,6 +27,7 @@ if [[ "$FLAGS" =~ "--no-version" ]]; then
 else
   echo "bump version..."
   npm version patch
+  (cd stage-app && npm version patch)
 fi
 echo -n "--no-version " >> ./scripts/.lastbuild
 

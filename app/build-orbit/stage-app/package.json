@@ -28,15 +28,25 @@
     ],
     "extraResources": [
       {
-        "from": "../../oracle/orbit/Build/Products/Release",
-        "to": "",
+        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources",
+        "to": ".",
+        "filter": "**/*"
+      },
+      {
+        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Frameworks",
+        "to": "../Frameworks",
+        "filter": "**/*"
+      },
+      {
+        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/MacOS/orbit",
+        "to": "../MacOS/oracle",
         "filter": "**/*"
       }
     ],
     "publish": [
       {
         "provider": "generic",
-        "url": "get.tryorbit.com/updates"
+        "url": "http://get.tryorbit.com/updates"
       }
     ]
   }

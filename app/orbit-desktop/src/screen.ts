@@ -15,8 +15,7 @@ const Config = getGlobalConfig()
 
 // we re-route this with electron-builder to here
 const oracleBinPath =
-  Config.isProd &&
-  Path.join(Config.paths.resources, 'orbit.app', 'Contents', 'MacOS', 'orbit')
+  Config.isProd && Path.join(Config.paths.resources, '..', 'MacOS', 'oracle')
 
 console.log('oracleBinPath', oracleBinPath)
 

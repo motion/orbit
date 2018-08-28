@@ -5,7 +5,9 @@
   "description": "Orbit",
   "version": "2.2.166",
   "dependencies": {
-    "@mcro/orbit": "*",
+    "@mcro/orbit": "*"
+  },
+  "devDependencies": {
     "electron": "3.0.0-beta.7"
   },
   "build": {
@@ -18,6 +20,17 @@
     "directories": {
       "buildResources": "../resources",
       "output": "../dist"
-    }
+    },
+    "files": [
+      "**/*",
+      "!**/*oracle/orbit/Build/Products/Release**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "../../oracle/orbit/Build/Products/Release",
+        "to": "Resources/bin",
+        "filter": "**/*"
+      }
+    ]
   }
 }

@@ -41,7 +41,6 @@ const Card = view({
   },
 })
 
-const cardShadow = [0, 6, 14, [0, 0, 0, 0.12]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
 // 90b1e433
 // 90b1e4cc
@@ -66,6 +65,7 @@ Card.theme = ({
     return card
   }
   const disabledShadow = disableShadow ? 'none' : null
+  const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
   card = {
     ...card,
     padding: padding || 10,

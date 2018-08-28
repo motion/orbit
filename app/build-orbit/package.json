@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.2.166",
+  "version": "2.2.168",
   "scripts": {
     "start": "./scripts/build.sh --resume",
     "test-built-app": "DEBUG=api,crawler,crawler:* dist/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "debug": "^3.1.0",
+    "electron-builder": "20.28.2",
     "electron-installer-dmg": "^1.0.0",
     "electron-osx-sign": "^0.4.10",
     "electron-packager": "12.1.0",

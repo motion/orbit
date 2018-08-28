@@ -44,6 +44,14 @@ class OrbitAppsStore {
     },
   )
 
+  private activeQuery = react(
+    () => [this.isActive, App.state.query],
+    ([isActive, query]) => {
+      ensure('active', isActive)
+      return query
+    },
+  )
+
   private get rawInactiveApps() {
     // sort by not used first
     return settingsList.sort(
@@ -52,7 +60,7 @@ class OrbitAppsStore {
   }
 
   get inactiveApps() {
-    return fuzzy(App.state.query, this.rawInactiveApps, {
+    return fuzzy(this.activeQuery, this.rawInactiveApps, {
       key: 'title',
     })
   }
@@ -65,7 +73,7 @@ class OrbitAppsStore {
   }
 
   get results() {
-    return fuzzy(App.state.query, this.rawActiveApps, {
+    return fuzzy(this.activeQuery, this.rawActiveApps, {
       key: 'title',
     })
   }

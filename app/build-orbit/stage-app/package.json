@@ -15,7 +15,8 @@
     "productName": "Orbit",
     "mac": {
       "target": "zip",
-      "icon": "../resources/icon.icns"
+      "icon": "../resources/icon.icns",
+      "provisioningProfile": "../build-resources/orbit.provisionprofile"
     },
     "directories": {
       "buildResources": "../resources",

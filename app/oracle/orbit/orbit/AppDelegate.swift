@@ -4,7 +4,6 @@ import class AXSwift.Observer
 import Cocoa
 import PromiseKit
 import Darwin
-import Async
 
 struct Position: Decodable {
   let x: Int
@@ -40,7 +39,6 @@ class BlurryEffectView: NSVisualEffectView {
 
 class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
-  let queue = AsyncGroup()
   var socketBridge: SocketBridge!
   var windo: Windo!
 //  var screen: Screen!
@@ -115,7 +113,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     window.contentView?.addSubview(blurryView)
     window.makeKeyAndOrderFront(nil)
 
-    socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    socketBridge = SocketBridge(onMessage: self.onMessage)
 //    windo = Windo(emit: self.emit)
 
 //    do {

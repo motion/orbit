@@ -105,9 +105,7 @@
 		CF0BCD9C202E0E3C0012723C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CF0BCD9E202E0E3E0012723C /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
-		CF0BCDA5202E10FB0012723C /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
-		CF0BCDAB202E11140012723C /* Async.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Async.framework.dSYM; path = Carthage/Build/Mac/Async.framework.dSYM; sourceTree = "<group>"; };
 		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CF0BCDBA202E282E0012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
@@ -138,11 +136,9 @@
 		CF0BCD61202E0A2E0012723C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CF0BCDAB202E11140012723C /* Async.framework.dSYM */,
 				CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */,
 				CF0BCD7B202E0C250012723C /* AXSwift.framework.dSYM */,
 				CF0BCD7C202E0C250012723C /* PromiseKit.framework.dSYM */,
-				CF0BCDA5202E10FB0012723C /* Async.framework */,
 				CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */,
 				CF0BCD75202E0C060012723C /* AXSwift.framework */,
 				CF0BCD74202E0C050012723C /* PromiseKit.framework */,

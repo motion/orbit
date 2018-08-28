@@ -11,7 +11,7 @@
     "electron": "3.0.0-beta.7"
   },
   "build": {
-    "appId": "com.tryorbit",
+    "appId": "com.o.orbit",
     "productName": "Orbit",
     "mac": {
       "target": "zip",

@@ -30,7 +30,7 @@
 		CF0BCD9F202E0E3E0012723C /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9E202E0E3E0012723C /* util.swift */; };
 		CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; };
 		CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; };
+		CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };

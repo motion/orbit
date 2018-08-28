@@ -107,4 +107,4 @@ rm -r stage-app/node_modules/sqlite3/lib/binding/node-v59-darwin-x64 || true
 
 # see stage-app/package.json for options
 echo "electron-builder..."
-(cd stage-app && npx electron-builder)
+(cd stage-app && npx electron-builder -p always)

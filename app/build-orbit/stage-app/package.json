@@ -31,6 +31,12 @@
         "to": "",
         "filter": "**/*"
       }
+    ],
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "get.tryorbit.com/updates"
+      }
     ]
   }
 }

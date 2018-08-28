@@ -70,22 +70,18 @@ export default class Oracle {
   }
 
   start = async () => {
-    // kill old apertures
-    try {
-      await execa('kill', ['-9', 'orbit'])
-    } catch (err) {
-      // none
-    }
+    log('start oracle')
     if (!this.wss) {
       // kill old ones
       await killPort(this.socketPort)
       this.wss = new Server({ port: this.socketPort })
       this.setupSocket()
+      log('Started socket server')
     }
     await this.setState({ isPaused: false })
     await this.runScreenProcess()
     await this.connectToScreenProcess()
-    // monitorScreenProcess(this.process, this.restart)
+    log('ran process')
   }
 
   stop = async () => {
@@ -385,7 +381,7 @@ export default class Oracle {
     if (this.binPath) {
       binDir = Path.join(this.binPath, '..')
     }
-    log(`Running oracle app at ${this.binPath} ${binDir}`)
+    log(`Running oracle app ${bin} at path ${binDir}`)
     this.process = execa(bin, [], {
       cwd: binDir,
       reject: false,
@@ -393,6 +389,7 @@ export default class Oracle {
         SOCKET_PORT: `${this.socketPort}`,
       },
     })
+    log('Connect stdout...')
     // never logs :( (tried with spawn too)...
     this.process.stdout.setEncoding('utf8')
     this.process.stdout.on('data', data => {

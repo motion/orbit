@@ -93,7 +93,11 @@ echo -n "--no-install " >> ./scripts/.lastbuild
 # clean old
 rm -r dist/mac/Orbit.app || true
 
-echo "fixing sqlite for desktop process..."
+# before fix sqlite need to build for electron
+echo "electron-rebuild..."
+(cd stage-app && ../node_modules/.bin/electron-rebuild --version 3.0.0-beta.1)
+
+echo "fix sqlite for desktop process..."
 # so desktop node subprocess can use it
 if [ ! -L "node_modules/sqlite3/lib/binding/node-v64-darwin-x64" ]; then
   cp -r stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64
@@ -102,4 +106,5 @@ fi
 rm -r stage-app/node_modules/sqlite3/lib/binding/node-v59-darwin-x64 || true
 
 # see stage-app/package.json for options
+echo "electron-builder..."
 (cd stage-app && npx electron-builder)

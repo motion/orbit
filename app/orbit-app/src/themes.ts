@@ -57,6 +57,9 @@ export const themes = {
   },
   light: {
     ...macTheme,
+    inputBackground: '#ddd',
+    inputBackgroundActive: '#eee',
+    cardShadow: [0, 2, 6, [0, 0, 0, 0.035]],
     ...Theme.fromStyles({
       background: 'rgba(255,255,255,0.94)',
       color: '#444',

@@ -6,7 +6,6 @@
   "version": "2.2.1",
   "main": "_/main.js",
   "scripts": {
-    "start": "./scripts/start.sh",
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "deploy": "cd ../electron-build && npm run deploy"
@@ -38,7 +37,8 @@
     "babel-polyfill": "7.0.0-beta.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.5.0",
-    "electron-simple-updater": "^1.2.3",
+    "electron-updater": "3.1.1",
+    "electron-log": "2.2.17",
     "electron-util": "0.9.0",
     "iohook": "0.2.0",
     "kill-port": "^1.1.0",

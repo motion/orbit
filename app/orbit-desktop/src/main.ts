@@ -17,11 +17,14 @@ export async function main() {
   }
 
   // handle exits gracefully
-  process.on('exit', () => {
+  const dispose = () => {
     console.log('Orbit Desktop exiting...')
     appRoot.dispose()
     cleanupChildren()
-  })
+  }
+  process.on('exit', dispose)
 
   await appRoot.start()
+
+  return dispose
 }

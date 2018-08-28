@@ -3,11 +3,12 @@ import { app } from 'electron'
 import { findContiguousPorts } from './findContiguousPorts'
 import killPort from 'kill-port'
 import * as Path from 'path'
+import { GlobalConfig } from '@mcro/config'
 
 export async function getInitialConfig() {
   const isProd = process.env.NODE_ENV !== 'development'
   const ports = await findContiguousPorts(5, isProd ? 3333 : 3001)
-  let config
+  let config: GlobalConfig
 
   if (!ports) {
     throw new Error('no ports found!')
@@ -26,8 +27,6 @@ export async function getInitialConfig() {
   const rootDirectory = Path.join(__dirname, '..', '..', '..', '..')
   console.log('rootDirectory', rootDirectory)
 
-  console.log(`\n\n\n\n\n\n app at: ${app.getAppPath()}`)
-
   const root = __dirname
   const appStatic = Path.join(require.resolve('@mcro/orbit-app'), '..', 'dist')
   let nodeBinary = 'node'
@@ -43,6 +42,7 @@ export async function getInitialConfig() {
       appStatic,
       userData: app.getPath('appData'),
       nodeBinary,
+      resources: Path.join(app.getAppPath(), '..'),
       dotApp,
     },
     urls: {

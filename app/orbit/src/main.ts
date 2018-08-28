@@ -26,8 +26,7 @@ export async function main() {
       throw new Error('Desktop didn\'t receive config!')
     }
     // lets run desktop now
-    require('@mcro/orbit-desktop').main()
-    return
+    return require('@mcro/orbit-desktop').main()
   }
 
   await require('./startElectron').startElectron()

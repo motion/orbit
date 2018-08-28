@@ -1,5 +1,5 @@
 import Path from 'path'
-import execa from 'execa'
+import { spawn, ChildProcess } from 'child_process'
 import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { Server } from 'ws'
@@ -33,7 +33,7 @@ type OracleInfo = {
 
 export default class Oracle {
   wss: Server
-  process: any
+  process: ChildProcess
 
   socketPort: number
   debugBuild = false
@@ -52,6 +52,7 @@ export default class Oracle {
   onClearCB = idFn
   onAccessibleCB = idFn
   onSpaceMoveCB = idFn
+  binPath = null
   state = {
     isPaused: false,
   }
@@ -61,29 +62,26 @@ export default class Oracle {
     await this.socketSend('state', this.state)
   }
 
-  constructor({ debugBuild = false, socketPort = 40512 } = {}) {
+  constructor({ debugBuild = false, socketPort = 40512, binPath = null } = {}) {
+    this.binPath = binPath
     this.socketPort = socketPort
     this.debugBuild = debugBuild
     macosVersion.assertGreaterThanOrEqualTo('10.11')
   }
 
   start = async () => {
-    // kill old apertures
-    try {
-      await execa('kill', ['-9', 'orbit'])
-    } catch (err) {
-      // none
-    }
+    log('start oracle')
     if (!this.wss) {
       // kill old ones
       await killPort(this.socketPort)
       this.wss = new Server({ port: this.socketPort })
       this.setupSocket()
+      log('Started socket server')
     }
     await this.setState({ isPaused: false })
     await this.runScreenProcess()
     await this.connectToScreenProcess()
-    // monitorScreenProcess(this.process, this.restart)
+    log('ran process')
   }
 
   stop = async () => {
@@ -378,42 +376,47 @@ export default class Oracle {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }
-    const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
-    log(`Running oracle app at ${binDir}`)
-    this.process = execa('./orbit', [], {
-      cwd: binDir,
-      reject: false,
-      env: {
-        SOCKET_PORT: `${this.socketPort}`,
-      },
-    })
-    // never logs :( (tried with spawn too)...
-    this.process.stdout.setEncoding('utf8')
-    this.process.stdout.on('data', data => {
-      console.log('stdout from oracle', data)
-    })
-    this.process.stderr.setEncoding('utf8')
-    this.process.stderr.on('data', data => {
-      if (!data) return
-      // weird ass workaround for stdout not being captured
-      const isLikelyError = data[0] === ' '
-      const out = data.trim()
-      const isPurposefulLog = out[0] === '!'
-      if (isPurposefulLog || isLikelyError) {
-        log('swift >', out.slice(1))
-        return
+    let bin = 'orbit'
+    let binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
+    if (this.binPath) {
+      bin = 'oracle'
+      binDir = Path.join(this.binPath, '..')
+    }
+    log(
+      `Running oracle app with port ${
+        this.socketPort
+      } ${bin} at path ${binDir}`,
+    )
+    try {
+      this.process = spawn(Path.join(binDir, bin), [], {
+        env: {
+          SOCKET_PORT: `${this.socketPort}`,
+        },
+      })
+      log('Connect stdout...')
+
+      const handleOut = data => {
+        if (!data) return
+        const str = data.toString()
+        // weird ass workaround for stdout not being captured
+        const isLikelyError = str[0] === ' '
+        const out = str.trim()
+        const isPurposefulLog = out[0] === '!'
+        if (isPurposefulLog || isLikelyError) {
+          log('swift >', out.slice(1))
+          return
+        }
+        if (str.indexOf('<Notice>')) {
+          return
+        }
+        console.log('screen stderr:', str)
+        this.onErrorCB(str)
       }
-      if (data.indexOf('<Notice>')) {
-        return
-      }
-      console.log('screen stderr:', data)
-      this.onErrorCB(data)
-    })
-    this.process.catch((err, ...rest) => {
-      console.log('screen err:', ...rest)
-      console.log(err)
-      console.log(err.stack)
-      throw err
-    })
+
+      this.process.stdout.on('data', handleOut)
+      this.process.stderr.on('data', handleOut)
+    } catch (err) {
+      console.log('errror', err)
+    }
   }
 }

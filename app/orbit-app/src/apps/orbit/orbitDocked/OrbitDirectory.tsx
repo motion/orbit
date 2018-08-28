@@ -5,7 +5,7 @@ import { compose } from '@mcro/helpers'
 import { PersonBitRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { Title } from '../../../views'
+import { Title, VerticalSpace } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
@@ -18,7 +18,7 @@ import { PersonBit } from '../../../../../models/src'
 
 const height = 60
 
-const VerticalSpace = view({
+const SmallVerticalSpace = view({
   height: 10,
 })
 
@@ -137,7 +137,7 @@ const createSection = (people: PersonBit[], letter, getIndex) => {
           />
         ))}
       </Grid>
-      <VerticalSpace />
+      <SmallVerticalSpace />
     </React.Fragment>
   )
 }
@@ -176,9 +176,10 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   }
   return (
     <>
-      <VerticalSpace />
+      <SmallVerticalSpace />
       <Title>Directory</Title>
       {sections}
+      <VerticalSpace />
     </>
   )
 })

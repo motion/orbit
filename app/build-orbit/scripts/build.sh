@@ -21,15 +21,6 @@ if [[ "$FLAGS" =~ "--debug" ]]; then
   DEBUG="electron-packager,electron-build:*"
 fi
 
-# iohook
-if [[ "$FLAGS" =~ "--no-iohook" ]]; then
-  echo "not building iohook..."
-else
-  echo "installing iohook..."
-  (cd build-resources/iohook && npm install)
-fi
-echo -n "--no-iohook " >> ./scripts/.lastbuild
-
 # version
 if [[ "$FLAGS" =~ "--no-version" ]]; then
   echo "not versioning..."
@@ -40,13 +31,13 @@ fi
 echo -n "--no-version " >> ./scripts/.lastbuild
 
 # bundle
-if [[ "$FLAGS" =~ "--no-app-bundle" ]]; then
+if [[ "$FLAGS" =~ "--no-build-app" ]]; then
   echo "not bundling..."
 else
   echo "bundling..."
   (cd ../orbit-app && npm run build-app)
 fi
-echo -n "--no-app-bundle " >> ./scripts/.lastbuild
+echo -n "--no-build-app " >> ./scripts/.lastbuild
 
 function publish-packages() {
   # clean old one since we are re-publishing
@@ -99,38 +90,21 @@ else
 fi
 echo -n "--no-install " >> ./scripts/.lastbuild
 
-# before bundle, sign the oracle app
-codesign -vfs "3rd Party Mac Developer Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ../oracle/orbit/Build/Products/Release/orbit.app
+# clean old
+rm -r dist/mac/Orbit.app || true
 
-# bundle
-if [[ "$FLAGS" =~ "--no-bundle" ]]; then
-  echo "not bundling..."
-else
-  echo "running electron-bundler..."
-  DEBUG=electron-packager node -r esm --trace-warnings ./scripts/bundle.js
+# before fix sqlite need to build for electron
+echo "electron-rebuild..."
+(cd stage-app && ../node_modules/.bin/electron-rebuild --version 3.0.0-beta.1)
+
+echo "fix sqlite for desktop process..."
+# so desktop node subprocess can use it
+if [ ! -L "node_modules/sqlite3/lib/binding/node-v64-darwin-x64" ]; then
+  cp -r stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64
 fi
-echo -n "--no-install " >> ./scripts/.lastbuild
+# remove outdated one
+rm -r stage-app/node_modules/sqlite3/lib/binding/node-v59-darwin-x64 || true
 
-echo "patching bundle..."
-rm -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/build || true
-
-echo "fixing sqlite for desktop process..."
-cp -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
-
-# sign
-if [[ "$FLAGS" =~ "--no-sign" ]]; then
-  echo "not signing"
-else
-  echo "signing app..."
-  npx electron-osx-sign --ignore oracle ./dist/Orbit-darwin-x64/Orbit.app
-fi
-echo -n "--no-sign " >> ./scripts/.lastbuild
-
-# pack
-if [[ "$FLAGS" =~ "--no-pack" ]]; then
-  echo "not signing"
-else
-  echo "packing app into .dmg..."
-  npx electron-installer-dmg --overwrite --out ./dist --icon ./resources/icon.icns ./dist/Orbit-darwin-x64/Orbit.app Orbit
-  codesign -vfs "3rd Party Mac Developer Application: Nathan Wienert (399WY8X9HY)" --keychain login.keychain ./dist/Orbit.dmg
-fi
+# see stage-app/package.json for options
+echo "electron-builder..."
+(cd stage-app && npx electron-builder -p always)

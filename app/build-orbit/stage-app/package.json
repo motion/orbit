@@ -1,9 +1,53 @@
 {
   "name": "orbit",
   "productName": "Orbit",
-  "version": "2.2.160",
+  "author": "Orbit",
+  "description": "Orbit",
+  "version": "2.2.166",
   "dependencies": {
-    "@mcro/orbit": "*",
+    "@mcro/orbit": "*"
+  },
+  "devDependencies": {
     "electron": "3.0.0-beta.7"
+  },
+  "build": {
+    "appId": "com.o.orbit",
+    "productName": "Orbit",
+    "mac": {
+      "target": "zip",
+      "icon": "../resources/icon.icns",
+      "provisioningProfile": "../build-resources/orbit.provisionprofile"
+    },
+    "directories": {
+      "buildResources": "../resources",
+      "output": "../dist"
+    },
+    "files": [
+      "**/*",
+      "!**/*oracle/orbit/Build/Products/Release**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources",
+        "to": ".",
+        "filter": "**/*"
+      },
+      {
+        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Frameworks",
+        "to": "../Frameworks",
+        "filter": "**/*"
+      },
+      {
+        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/MacOS/orbit",
+        "to": "../MacOS/oracle",
+        "filter": "**/*"
+      }
+    ],
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://get.tryorbit.com/updates"
+      }
+    ]
   }
 }

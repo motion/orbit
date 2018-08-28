@@ -225,7 +225,7 @@ export const OrbitOnboard = decorator(
                   <br />
                   <br />
                   To work, Orbit sets up a proxy to direct our servers at{' '}
-                  <em>{getGlobalConfig().privateUrl}</em> to your local
+                  <em>{getGlobalConfig().urls.authProxy}</em> to your local
                   computer.
                   <br />
                   <br />
@@ -260,8 +260,8 @@ export const OrbitOnboard = decorator(
                   <br />
                   <strong>
                     <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
-                  </strong>.
-                  <br />
+                  </strong>
+                  .<br />
                   <br />
                   <strong>Error message:</strong>
                   <br />

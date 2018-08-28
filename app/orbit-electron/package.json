@@ -6,7 +6,6 @@
   "version": "2.2.1",
   "main": "_/main.js",
   "scripts": {
-    "start": "./scripts/start.sh",
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "deploy": "cd ../electron-build && npm run deploy"

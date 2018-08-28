@@ -1,5 +1,5 @@
 import Path from 'path'
-import execa from 'execa'
+import { spawn, ChildProcess } from 'child_process'
 import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { Server } from 'ws'
@@ -33,7 +33,7 @@ type OracleInfo = {
 
 export default class Oracle {
   wss: Server
-  process: any
+  process: ChildProcess
 
   socketPort: number
   debugBuild = false
@@ -381,17 +381,22 @@ export default class Oracle {
     if (this.binPath) {
       binDir = Path.join(this.binPath, '..')
     }
-    log(`Running oracle app ${bin} at path ${binDir}`)
-    this.process = execa(bin, [], {
-      cwd: binDir,
-      reject: false,
-      env: {
-        SOCKET_PORT: `${this.socketPort}`,
-      },
-    })
+    log(
+      `Running oracle app with port ${
+        this.socketPort
+      } ${bin} at path ${binDir}`,
+    )
+    try {
+      this.process = spawn(Path.join(binDir, bin), [], {
+        env: {
+          SOCKET_PORT: `${this.socketPort}`,
+        },
+      })
+    } catch (err) {
+      console.log('errror', err)
+    }
     log('Connect stdout...')
     // never logs :( (tried with spawn too)...
-    this.process.stdout.setEncoding('utf8')
     this.process.stdout.on('data', data => {
       console.log('stdout from oracle', data)
     })
@@ -411,12 +416,6 @@ export default class Oracle {
       }
       console.log('screen stderr:', data)
       this.onErrorCB(data)
-    })
-    this.process.catch((err, ...rest) => {
-      console.log('screen err:', ...rest)
-      console.log(err)
-      console.log(err.stack)
-      throw err
     })
   }
 }

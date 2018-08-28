@@ -11,7 +11,7 @@ export function startDesktop() {
   const root = Path.join(__dirname, 'main')
   let args = [root]
   if (!Config.isProd) {
-    args = [...args, '--inspect=127.0.0.1:9000']
+    args = ['--inspect=9000', ...args]
   }
   try {
     console.log('Starting Desktop:', Config.paths.nodeBinary, args)

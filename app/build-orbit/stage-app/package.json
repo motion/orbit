@@ -25,10 +25,10 @@
       "**/*",
       "!**/*oracle/orbit/Build/Products/Release**/*"
     ],
-    "extraFiles": [
+    "extraResources": [
       {
         "from": "../../oracle/orbit/Build/Products/Release",
-        "to": "Resources/bin",
+        "to": "",
         "filter": "**/*"
       }
     ]

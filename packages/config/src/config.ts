@@ -6,6 +6,7 @@ export type GlobalConfig = {
     userData: string
     nodeBinary: string
     dotApp: string
+    resources: string
   }
   urls: {
     authProxy: string

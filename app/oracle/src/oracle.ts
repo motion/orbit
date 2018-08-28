@@ -52,6 +52,7 @@ export default class Oracle {
   onClearCB = idFn
   onAccessibleCB = idFn
   onSpaceMoveCB = idFn
+  binPath = null
   state = {
     isPaused: false,
   }
@@ -61,7 +62,8 @@ export default class Oracle {
     await this.socketSend('state', this.state)
   }
 
-  constructor({ debugBuild = false, socketPort = 40512 } = {}) {
+  constructor({ debugBuild = false, socketPort = 40512, binPath = null } = {}) {
+    this.binPath = binPath
     this.socketPort = socketPort
     this.debugBuild = debugBuild
     macosVersion.assertGreaterThanOrEqualTo('10.11')
@@ -378,7 +380,7 @@ export default class Oracle {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }
-    const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
+    const binDir = this.binPath || this.debugBuild ? DEBUG_PATH : RELEASE_PATH
     log(`Running oracle app at ${binDir}`)
     this.process = execa('./orbit', [], {
       cwd: binDir,

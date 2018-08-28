@@ -505,6 +505,7 @@
 		CFBEEE2A202D838D005F925A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Nathan Wienert (399WY8X9HY)";
 				CODE_SIGN_STYLE = Manual;
@@ -527,6 +528,7 @@
 		CFBEEE2B202D838D005F925A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Nathan Wienert (399WY8X9HY)";
 				CODE_SIGN_STYLE = Manual;

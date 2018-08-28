@@ -30,10 +30,7 @@
 		CF0BCD9F202E0E3E0012723C /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9E202E0E3E0012723C /* util.swift */; };
 		CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; };
 		CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
 		CF0BCDBD202E2A640012723C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDBC202E2A640012723C /* main.swift */; };
@@ -70,7 +67,6 @@
 				CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */,
 				CF0BCD79202E0C060012723C /* AXSwift.framework in CopyFiles */,
 				CF0BCD77202E0C060012723C /* PromiseKit.framework in CopyFiles */,
-				CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +79,6 @@
 				CF0BCD7D202E0C260012723C /* AXSwift.framework.dSYM in CopyFiles */,
 				CF0BCD7E202E0C260012723C /* PromiseKit.framework.dSYM in CopyFiles */,
 				CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */,
-				CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,7 +127,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF0BCD76202E0C060012723C /* PromiseKit.framework in Frameworks */,
-				CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */,
 				CF0BCD78202E0C060012723C /* AXSwift.framework in Frameworks */,
 				CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */,
 			);

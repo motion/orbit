@@ -380,9 +380,13 @@ export default class Oracle {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }
-    const binDir = this.binPath || (this.debugBuild ? DEBUG_PATH : RELEASE_PATH)
+    let bin = 'orbit'
+    let binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
+    if (this.binPath) {
+      binDir = Path.join(this.binPath, '..')
+    }
     log(`Running oracle app at ${this.binPath} ${binDir}`)
-    this.process = execa('./orbit', [], {
+    this.process = execa(bin, [], {
       cwd: binDir,
       reject: false,
       env: {

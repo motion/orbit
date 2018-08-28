@@ -396,26 +396,29 @@ export default class Oracle {
       console.log('errror', err)
     }
     log('Connect stdout...')
-    // never logs :( (tried with spawn too)...
-    this.process.stdout.on('data', data => {
-      console.log('stdout from oracle', data)
-    })
-    this.process.stderr.setEncoding('utf8')
-    this.process.stderr.on('data', data => {
+
+    const handleOut = data => {
       if (!data) return
+      const str = data.toString()
       // weird ass workaround for stdout not being captured
-      const isLikelyError = data[0] === ' '
-      const out = data.trim()
+      const isLikelyError = str[0] === ' '
+      const out = str.trim()
       const isPurposefulLog = out[0] === '!'
       if (isPurposefulLog || isLikelyError) {
         log('swift >', out.slice(1))
         return
       }
-      if (data.indexOf('<Notice>')) {
+      if (str.indexOf('<Notice>')) {
         return
       }
-      console.log('screen stderr:', data)
-      this.onErrorCB(data)
+      console.log('screen stderr:', str)
+      this.onErrorCB(str)
+    }
+
+    // never logs :( (tried with spawn too)...
+    this.process.stdout.on('data', data => {
+      console.log('stdout from oracle', handleOut)
     })
+    this.process.stderr.on('data', handleOut)
   }
 }

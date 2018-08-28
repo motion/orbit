@@ -16,7 +16,9 @@ export async function startElectron() {
       process.kill(desktopPid)
     }
     console.log('Cleaning children...')
-    await cleanupChildren()
+    setTimeout(async () => {
+      await cleanupChildren()
+    }, 16)
     console.log('bye!')
   }
 

@@ -393,30 +393,30 @@ export default class Oracle {
           SOCKET_PORT: `${this.socketPort}`,
         },
       })
+      log('Connect stdout...')
+
+      const handleOut = data => {
+        if (!data) return
+        const str = data.toString()
+        // weird ass workaround for stdout not being captured
+        const isLikelyError = str[0] === ' '
+        const out = str.trim()
+        const isPurposefulLog = out[0] === '!'
+        if (isPurposefulLog || isLikelyError) {
+          log('swift >', out.slice(1))
+          return
+        }
+        if (str.indexOf('<Notice>')) {
+          return
+        }
+        console.log('screen stderr:', str)
+        this.onErrorCB(str)
+      }
+
+      this.process.stdout.on('data', handleOut)
+      this.process.stderr.on('data', handleOut)
     } catch (err) {
       console.log('errror', err)
     }
-    log('Connect stdout...')
-
-    const handleOut = data => {
-      if (!data) return
-      const str = data.toString()
-      // weird ass workaround for stdout not being captured
-      const isLikelyError = str[0] === ' '
-      const out = str.trim()
-      const isPurposefulLog = out[0] === '!'
-      if (isPurposefulLog || isLikelyError) {
-        log('swift >', out.slice(1))
-        return
-      }
-      if (str.indexOf('<Notice>')) {
-        return
-      }
-      console.log('screen stderr:', str)
-      this.onErrorCB(str)
-    }
-
-    this.process.stdout.on('data', handleOut)
-    this.process.stderr.on('data', handleOut)
   }
 }

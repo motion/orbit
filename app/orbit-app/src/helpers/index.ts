@@ -13,7 +13,7 @@ export const deepClone = obj =>
 
 export const getSlackDate = (time: number) => new Date(time)
 
-export const fuzzy = (query, results, extraOpts?) =>
+export const fuzzyQueryFilter = (query, results, extraOpts?) =>
   !query
     ? results
     : fuzzySort

@@ -55,7 +55,7 @@ type PeekItemResolverExtraProps = {
 }
 
 export const PeekBit = ({
-  item,
+  appConfig,
   model,
   appStore,
   selectionStore,
@@ -66,12 +66,11 @@ export const PeekBit = ({
   const bitPaneName = capitalize(bit.type)
   const BitPaneContent = PeekBitPanes[bitPaneName]
   if (!BitPaneContent) {
-    return <div>Error yo item.subType: {item.subType}</div>
+    return <div>Error yo item.subType: {appConfig.subType}</div>
   }
   console.log('peekbit...', bit)
   return (
     <PeekItemResolver
-      item={item}
       model={model}
       appStore={appStore}
       {...BitPaneContent.bitResolverProps as PeekItemResolverExtraProps}
@@ -89,12 +88,12 @@ export const PeekBit = ({
       }) => {
         return (
           <SearchablePeek
-            key={item.id}
+            key={appConfig.id}
             defaultValue={App.state.query}
             // focusOnMount
             onChange={() => selectionStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
-            placeholder={`Search this ${item.subType} and related...`}
+            placeholder={`Search this ${appConfig.subType} and related...`}
             searchBarProps={{
               padding: [5, 10],
               height: 42,

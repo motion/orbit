@@ -34,7 +34,7 @@ export const matchSort = (query, results) => {
   if (!results.length) {
     return results
   }
-  const strongTitleMatches = Helpers.fuzzy(query, results, {
+  const strongTitleMatches = Helpers.fuzzyQueryFilter(query, results, {
     threshold: -40,
   })
   return uniq([...strongTitleMatches, ...results])

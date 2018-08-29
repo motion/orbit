@@ -28,6 +28,6 @@ export type PeekPaneProps = {
   selectionStore: SelectionStore
   appStore: AppStore
   peekStore: PeekStore
-  item: AppConfig
+  appConfig: AppConfig
   children: (a: PeekContents) => JSX.Element
 }

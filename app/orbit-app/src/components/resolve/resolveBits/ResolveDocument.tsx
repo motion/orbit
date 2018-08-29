@@ -20,7 +20,6 @@ const markdownBoldifySearch = (str = '', term = '') => {
 }
 
 export const ResolveDocument = ({
-  item,
   bit,
   searchTerm,
   children,
@@ -29,8 +28,8 @@ export const ResolveDocument = ({
   children({
     id: bit.id,
     type: 'bit',
-    title: bit.title || item.title,
-    icon: bit.integration || item.integration,
+    title: bit.title,
+    icon: bit.integration,
     location: bit.location.name || '',
     locationLink: bit.location.desktopLink || bit.location.webLink,
     webLink: bit.webLink,

@@ -71,7 +71,7 @@ class OrbitDirectoryStore {
       if (!query) {
         return people
       }
-      return Helpers.fuzzy(query, people, {
+      return Helpers.fuzzyQueryFilter(query, people, {
         key: 'name',
       })
     },

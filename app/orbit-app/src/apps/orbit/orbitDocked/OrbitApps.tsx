@@ -12,7 +12,7 @@ import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClick
 import { Grid } from '../../../views/Grid'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
-import { fuzzy } from '../../../helpers'
+import { fuzzyQueryFilter } from '../../../helpers'
 import { App } from '@mcro/stores'
 import { Setting } from '@mcro/models'
 import { settingToAppConfig } from '../../../helpers/settingToResult'
@@ -30,20 +30,12 @@ class OrbitAppsStore {
   props: Props
   integrationSettings: Setting[] = []
 
+  // when pane is active
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  setSelectionHandler = react(
-    () => [this.isActive, this.results],
-    ([isActive]) => {
-      ensure('is active', isActive)
-      this.props.selectionStore.setResults([
-        { type: 'column', items: this.results },
-      ])
-    },
-  )
-
+  // this is the searchbar value, active only when this pane is active
   private activeQuery = react(
     () => [this.isActive, App.state.query],
     ([isActive, query]) => {
@@ -52,28 +44,39 @@ class OrbitAppsStore {
     },
   )
 
-  private get rawInactiveApps() {
+  // this updates SelectionStore to handle keyboard movements
+  setSelectionHandler = react(
+    () => [this.isActive, this.filteredActiveApps],
+    ([isActive]) => {
+      ensure('is active', isActive)
+      this.props.selectionStore.setResults([
+        { type: 'column', items: this.filteredActiveApps },
+      ])
+    },
+  )
+
+  private get allAvailableApps() {
     // sort by not used first
     return settingsList.sort(
       (a, b) => (!this.isAppActive(a) && this.isAppActive(b) ? -1 : 1),
     )
   }
 
-  get inactiveApps() {
-    return fuzzy(this.activeQuery, this.rawInactiveApps, {
+  get filteredAvailableApps() {
+    return fuzzyQueryFilter(this.activeQuery, this.allAvailableApps, {
       key: 'title',
     })
   }
 
-  private get rawActiveApps() {
+  private get allActiveApps() {
     return this.integrationSettings.map(setting => ({
       ...settingToAppConfig(setting),
       setting,
     }))
   }
 
-  get results() {
-    return fuzzy(this.activeQuery, this.rawActiveApps, {
+  get filteredActiveApps() {
+    return fuzzyQueryFilter(this.activeQuery, this.allActiveApps, {
       key: 'title',
     })
   }
@@ -120,14 +123,14 @@ export class OrbitApps extends React.Component<Props> {
       <SubPane name={name} fadeBottom>
         <Views.VerticalSpace />
         <Views.Title>My Apps</Views.Title>
-        {!!store.results.length && (
+        {!!store.filteredActiveApps.length && (
           <>
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
               gridAutoRows={80}
               margin={[5, -4]}
             >
-              {store.results.map((result, index) => (
+              {store.filteredActiveApps.map((result, index) => (
                 <OrbitSettingCard
                   key={result.id}
                   pane="docked"
@@ -146,7 +149,7 @@ export class OrbitApps extends React.Component<Props> {
         )}
         <Views.SubTitle>Add App</Views.SubTitle>
         <Unpad>
-          {store.inactiveApps.map(item => {
+          {store.filteredAvailableApps.map(item => {
             return (
               <SimpleItem
                 key={item.id}

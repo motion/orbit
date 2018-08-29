@@ -1,18 +1,18 @@
 import { Header, Footer, PostTemplate } from '~/components'
-import { P2, Section, SubTitle } from '~/views'
+import { P2, Section, SubTitle } from '../views'
 import { SectionContent } from '~/views/sectionContent'
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
-import { Bauhaus } from '~/views/bauhaus'
+import { Bauhaus } from '../views/Bauhaus'
 
-@view.ui
+@view
 export class AboutPage extends React.Component {
   render() {
     return (
-      <page
-        css={{
+      <div
+        style={{
           overflow: 'hidden',
           flex: 1,
           background: Constants.blueTheme.background,
@@ -97,7 +97,8 @@ export class AboutPage extends React.Component {
                       Signup for early access, and{' '}
                       <a href="mailto:natewienert@gmail.com">
                         let us know what you think
-                      </a>.
+                      </a>
+                      .
                     </P2>
                   </UI.PassProps>
                 }
@@ -106,7 +107,7 @@ export class AboutPage extends React.Component {
           </Section>
           <Footer noMission />
         </UI.Theme>
-      </page>
+      </div>
     )
   }
 }

@@ -30,10 +30,7 @@
 		CF0BCD9F202E0E3E0012723C /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9E202E0E3E0012723C /* util.swift */; };
 		CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; };
 		CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
 		CF0BCDBD202E2A640012723C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDBC202E2A640012723C /* main.swift */; };
@@ -70,7 +67,6 @@
 				CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */,
 				CF0BCD79202E0C060012723C /* AXSwift.framework in CopyFiles */,
 				CF0BCD77202E0C060012723C /* PromiseKit.framework in CopyFiles */,
-				CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +79,6 @@
 				CF0BCD7D202E0C260012723C /* AXSwift.framework.dSYM in CopyFiles */,
 				CF0BCD7E202E0C260012723C /* PromiseKit.framework.dSYM in CopyFiles */,
 				CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */,
-				CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,9 +105,7 @@
 		CF0BCD9C202E0E3C0012723C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CF0BCD9E202E0E3E0012723C /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
-		CF0BCDA5202E10FB0012723C /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
-		CF0BCDAB202E11140012723C /* Async.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Async.framework.dSYM; path = Carthage/Build/Mac/Async.framework.dSYM; sourceTree = "<group>"; };
 		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CF0BCDBA202E282E0012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
@@ -132,7 +125,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF0BCD76202E0C060012723C /* PromiseKit.framework in Frameworks */,
-				CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */,
 				CF0BCD78202E0C060012723C /* AXSwift.framework in Frameworks */,
 				CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */,
 			);
@@ -144,11 +136,9 @@
 		CF0BCD61202E0A2E0012723C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CF0BCDAB202E11140012723C /* Async.framework.dSYM */,
 				CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */,
 				CF0BCD7B202E0C250012723C /* AXSwift.framework.dSYM */,
 				CF0BCD7C202E0C250012723C /* PromiseKit.framework.dSYM */,
-				CF0BCDA5202E10FB0012723C /* Async.framework */,
 				CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */,
 				CF0BCD75202E0C060012723C /* AXSwift.framework */,
 				CF0BCD74202E0C050012723C /* PromiseKit.framework */,
@@ -505,6 +495,7 @@
 		CFBEEE2A202D838D005F925A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Nathan Wienert (399WY8X9HY)";
 				CODE_SIGN_STYLE = Manual;
@@ -515,7 +506,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = orbit/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.o.orbit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -527,6 +518,7 @@
 		CFBEEE2B202D838D005F925A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Nathan Wienert (399WY8X9HY)";
 				CODE_SIGN_STYLE = Manual;
@@ -537,7 +529,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = orbit/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.o.orbit;
 				PRODUCT_NAME = "$(TARGET_NAME)";

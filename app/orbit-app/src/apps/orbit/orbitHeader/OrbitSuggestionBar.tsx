@@ -103,6 +103,7 @@ const hideFilterPanes = {
   onboard: true,
   directory: true,
   apps: true,
+  home: true,
 }
 
 export const OrbitSuggestionBar = view(

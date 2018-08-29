@@ -1,7 +1,7 @@
 {
   "lerna": "3.0.0-rc.0",
   "npmClient": "yarn",
-  "packages": ["app/*", "packages/*"],
+  "packages": ["app/*", "packages/*", "projects/*"],
   "version": "2.2.1",
   "command": {
     "publish": {

@@ -1,6 +1,6 @@
 export * from './clearPeek'
 export * from './finishPeekDrag'
-export * from './selectItem'
+export * from './peekApp'
 export * from './tearPeek'
 export * from './toggleDevModeStick'
 export * from './setPeekTarget'

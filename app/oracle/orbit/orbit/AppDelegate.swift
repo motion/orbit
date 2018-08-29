@@ -4,7 +4,6 @@ import class AXSwift.Observer
 import Cocoa
 import PromiseKit
 import Darwin
-import Async
 
 struct Position: Decodable {
   let x: Int
@@ -38,9 +37,16 @@ class BlurryEffectView: NSVisualEffectView {
   }
 }
 
+enum InterfaceStyle : String {
+  case Dark, Light
+  init() {
+    let type = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
+    self = InterfaceStyle(rawValue: type)!
+  }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
-  let queue = AsyncGroup()
   var socketBridge: SocketBridge!
   var windo: Windo!
 //  var screen: Screen!
@@ -115,7 +121,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     window.contentView?.addSubview(blurryView)
     window.makeKeyAndOrderFront(nil)
 
-    socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    socketBridge = SocketBridge(onMessage: self.onMessage)
 //    windo = Windo(emit: self.emit)
 
 //    do {
@@ -175,7 +181,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.blurryView.setFrameSize(NSMakeSize(w, h))
   }
   
-  func theme(_ theme: String) {
+  func theme(_ themeOpt: String) {
+    var theme = themeOpt
+    if theme == "auto" {
+      theme = InterfaceStyle() == InterfaceStyle.Dark ? "ultra" : "light"
+    }
     if #available(OSX 10.11, *) {
       if theme == "ultra" {
         blurryView.material = NSVisualEffectView.Material.ultraDark

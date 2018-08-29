@@ -7,8 +7,7 @@
 
 # productionize
 
-- run through orbit both APP=desktop/electron for asar
-- https://github.com/cameronhunter/local-ssl-proxy
+- doesnt follow monitor on add new monitor
 - deploy initial oauth step to digitalocean
 - need a way for people to suggest/vote features
 - sort the queues by most recent at top so you can quickly hit emails

@@ -1,11 +1,11 @@
-import { AppStatePeekItem } from '../../../../stores/App'
+import { AppConfig } from '@mcro/stores'
 import { EMPTY_ITEM } from '../../constants'
 
 export const ResolveEmpty = ({
   item = EMPTY_ITEM,
   children,
 }: {
-  item: AppStatePeekItem
+  item: AppConfig
   children: Function
 }) =>
   children({

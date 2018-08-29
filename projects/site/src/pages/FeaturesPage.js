@@ -31,7 +31,7 @@ import intelligenceImg from '~/../public/screen-context-word.png'
 import searchImg from '~/../public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
 import profileImg from '~/../public/screen-profile.png'
-import { Bauhaus } from '~/views/bauhaus'
+import { Bauhaus } from '../views/Bauhaus'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const background = UI.color('#FBFAF5')
@@ -47,7 +47,7 @@ const Callout = view('div', {})
 const slantBg = background
 
 const FeatureTitle = props => (
-  <Title italic size={2.6} css={{ marginBottom: 10 }} {...props} />
+  <Title italic size={2.6} style={{ marginBottom: 10 }} {...props} />
 )
 
 @view
@@ -55,7 +55,7 @@ class FeaturesIntro extends React.Component {
   render() {
     return (
       <Section
-        css={{
+        {...{
           background: 'transparent',
           marginTop: -window.innerHeight / 2,
         }}
@@ -64,13 +64,13 @@ class FeaturesIntro extends React.Component {
           <Slant
             slantSize={6}
             slantGradient={['transparent', slantBg.darken(0.05)]}
-            css={{ zIndex: 2 }}
+            {...{ zIndex: 2 }}
           />
           <Bauhaus
             if={false}
             hideSquare
             hideCircle
-            css={{
+            {...{
               opacity: 0.1,
               transform: { scale: 1.2, y: '-40%', x: '30%' },
             }}
@@ -79,7 +79,7 @@ class FeaturesIntro extends React.Component {
             hideSquare
             hideTriangle
             circleColor="#F7C7FF"
-            css={{
+            {...{
               opacity: 0.1,
               transform: { scale: 0.8, y: '40%', x: '-20%' },
             }}

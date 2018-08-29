@@ -3,7 +3,11 @@ import Warp from 'warpjs'
 import { findDOMNode } from 'react-dom'
 import * as UI from '@mcro/ui'
 
-export class Bauhaus extends React.Component {
+export class Bauhaus extends React.Component<{
+  showTriangle?: boolean
+  showSquare?: boolean
+  showCircle?: boolean
+}> {
   componentDidMount() {
     const svg = findDOMNode(this).querySelector('svg')
     const warp = new Warp(svg)
@@ -33,7 +37,7 @@ export class Bauhaus extends React.Component {
         pointerEvents="none"
         {...props}
       >
-        <svg viewBox="0 0 303 251" css={{ overflow: 'visible' }}>
+        <svg viewBox="0 0 303 251" style={{ overflow: 'visible' }}>
           {showCircle && (
             <circle
               cx="88.784"

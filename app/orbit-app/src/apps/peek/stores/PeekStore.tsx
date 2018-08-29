@@ -8,12 +8,12 @@ import {
   SettingRepository,
   PersonBitRepository,
 } from '../../../repositories'
-import { Person, Bit, Setting } from '@mcro/models'
+import { Bit, Setting, PersonBit } from '@mcro/models'
 
 // @ts-ignore
 type PeekStoreItemState = typeof App.state.peekState & {
   peekId: string
-  model: Person | Bit | Setting
+  model: PersonBit | Bit | Setting
 }
 
 export type PeekStoreState = {
@@ -71,15 +71,15 @@ export class PeekStore {
   }
 
   internalState: PeekStoreState = react(
-    () => [App.peekState.item, this.tornState],
-    async ([target, tornState], { getValue, setValue, sleep }) => {
+    () => [App.peekState.appConfig, this.tornState],
+    async ([_, tornState], { getValue, setValue, sleep }) => {
       await sleep(16)
+      const { appConfig, ...rest } = App.peekState
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
-      const isShown = !!tornState || (!!target && !!App.orbitState.docked)
+      const isShown = !!tornState || (!!appConfig && !!App.orbitState.docked)
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
-      const { item, ...rest } = App.peekState
       const curState = {
         ...lastState,
         ...rest,
@@ -107,7 +107,7 @@ export class PeekStore {
           // now update to new model
           curState: {
             ...curState,
-            item,
+            appConfig,
             model,
             peekId: `${Math.random()}`,
           },
@@ -170,7 +170,7 @@ export class PeekStore {
   }
 
   getModel = async () => {
-    const { id, type } = App.peekState.item
+    const { id, type } = App.peekState.appConfig
     let selectedItem = null
     if (type === 'person') {
       selectedItem = await PersonBitRepository.findOne({
@@ -189,10 +189,10 @@ export class PeekStore {
   }
 
   get theme() {
-    if (!this.state.item) {
+    if (!this.state.appConfig) {
       return PEEK_THEMES.base
     }
-    const { type, integration } = this.state.item
+    const { type, integration } = this.state.appConfig
     return (
       PEEK_THEMES.integration[integration] ||
       PEEK_THEMES.type[type] ||

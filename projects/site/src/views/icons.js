@@ -8,13 +8,13 @@ import githubIcon from '~/../public/github.svg'
 
 export const Icon = ({ size, icon, after, style, ...props }) => (
   <div
-    css={{ position: 'relative', width: size * 512, height: size * 512 }}
+    style={{ position: 'relative', width: size * 512, height: size * 512 }}
     style={style}
   >
     <img
       width="512"
       height="512"
-      css={{
+      style={{
         // transformOrigin: 'top left',
         // transform: { scale: size * scale, ...transform },
         width: size * 512,

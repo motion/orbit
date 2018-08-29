@@ -44,9 +44,8 @@ export const themes = {
   }),
   dark: {
     ...macTheme,
-    card: {
-      background: '#77777788',
-    },
+    cardBackground: 'rgba(80, 80, 80, 0.25)',
+    cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     ...Theme.fromStyles({
       background: 'rgba(20,20,20,0.94)',
       backgroundHover: 'rgba(20,20,20,0.2)',
@@ -57,7 +56,7 @@ export const themes = {
   },
   light: {
     ...macTheme,
-    inputBackground: '#ddd',
+    inputBackground: '#e9e9e9',
     inputBackgroundActive: '#eee',
     cardShadow: [0, 2, 6, [0, 0, 0, 0.035]],
     ...Theme.fromStyles({

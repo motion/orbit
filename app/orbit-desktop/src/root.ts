@@ -62,22 +62,6 @@ export class Root {
     })
     await this.connect()
 
-    // rtemp
-    if (!(await SettingEntity.findOne({ type: 'confluence' }))) {
-      const setting = new SettingEntity()
-      setting.type = 'confluence'
-      setting.category = 'integration'
-      setting.token = 'good'
-      setting.values = {
-        atlassian: {
-          username: 'natewienert@gmail.com',
-          password: 'AtlOrbit123',
-          domain: 'https://tryorbit2.atlassian.net',
-        },
-      }
-      await setting.save()
-    }
-
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...

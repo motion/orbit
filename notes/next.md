@@ -90,7 +90,7 @@ p2p: https://github.com/webtorrent/bittorrent-dht
 
 - p2p sync with real features (rate-limit, pin-to-search)
 - deploy it with 5 teams
-- alpha ocr/memory/contextual-search
+- alpha app store
 
 ## unnecessary for beta polish bucket
 

@@ -92,7 +92,10 @@ class OrbitAppsStore {
   refreshSettings = modelQueryReaction(
     this.getSettings,
     settings => {
-      ensure('is active', this.isActive || !this.integrationSettings.length)
+      ensure(
+        'is active if already loaded',
+        this.isActive || !this.integrationSettings.length,
+      )
       this.integrationSettings = settings
     },
     {

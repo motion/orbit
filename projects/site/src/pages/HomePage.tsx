@@ -8,7 +8,7 @@ import * as Constants from '../constants'
 import Media from 'react-media'
 import { scrollTo } from '../helpers'
 import { Join } from '../components/Join'
-import { Bauhaus } from '../views/bauhaus'
+import { Bauhaus } from '../views/Bauhaus'
 import { Parallax, ParallaxLayer } from '../components/Parallax'
 import profileImg from '../../public/profileimg.jpg'
 import { Icon } from '../views/icon'
@@ -83,11 +83,9 @@ const Half = props => (
   <Media query={Constants.screen.large}>
     {isLarge => (
       <UI.Col
-        css={
-          isLarge
-            ? { width: '45%', margin: ['auto', 0] }
-            : { width: '100%', margin: ['auto', 0] }
-        }
+        {...(isLarge
+          ? { width: '45%', margin: ['auto', 0] }
+          : { width: '100%', margin: ['auto', 0] })}
         {...props}
       />
     )}
@@ -135,25 +133,6 @@ const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
   </WaveSVG>
 ))
 
-const ToolTip = ({ tooltip, tooltipProps = {}, ...props }) => (
-  <UI.InlineFlex
-    size={1.2}
-    fontWeight={300}
-    opacity={0.8}
-    cursor="pointer"
-    {...{
-      '&:hover': {
-        opacity: 1,
-      },
-    }}
-    {...props}
-  />
-)
-
-const SectionContentParallax = props => (
-  <SectionContent css={{ height: '100%' }} {...props} />
-)
-
 const scrollToTrack = (to, track) => {
   return () => {
     window.ga('send', 'event', 'Home', 'download', track)
@@ -173,12 +152,12 @@ const topSlants = {
 const firstSlant = {
   slantSize: 1,
   amount: 40,
-  css: { zIndex: 2 },
+  style: { zIndex: 2 },
 }
 const secondSlant = {
   slantSize: 1,
   amount: 10,
-  css: { zIndex: 2 },
+  style: { zIndex: 2 },
 }
 const thirdSlant = {
   slantSize: 1,
@@ -187,7 +166,7 @@ const thirdSlant = {
 
 const VertSpace = () => (
   <Media query={Constants.screen.tall}>
-    {isTall => <div css={{ height: isTall ? 25 : 20 }} />}
+    {isTall => <div style={{ height: isTall ? 25 : 20 }} />}
   </Media>
 )
 
@@ -237,7 +216,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
     <VertSpace />
     <VertSpace />
     <UI.Row
-      css={{
+      {...{
         margin: isLarge ? [0, 'auto', 0, 0] : [20, 0, 0, 0],
         alignItems: 'center',
       }}
@@ -248,10 +227,10 @@ const Pitch = ({ isLarge, scrollTo }) => (
           onClick={scrollToTrack('#join', 'Mac')}
           width={15}
           height={15}
-          css={{
+          style={{
             fill: '#999',
             display: 'inline-block',
-            margin: [-3, 4, 0],
+            margin: `-3px 4px 0`,
             opacity: 0.9,
           }}
         />
@@ -260,10 +239,10 @@ const Pitch = ({ isLarge, scrollTo }) => (
           onClick={scrollToTrack('#join', 'Windows')}
           width={13}
           height={13}
-          css={{
+          style={{
             opacity: 0.9,
             display: 'inline-block',
-            margin: [-1, 3, 0, 6],
+            margin: `-1px 3px 0 6px`,
             filter: 'grayscale(100%)',
           }}
         />
@@ -284,7 +263,7 @@ class HomeHeader extends React.Component {
               <Bauhaus
                 showCircle
                 circleColor="#F7C7FF"
-                css={{
+                {...{
                   opacity: 0.25,
                   transform: { scale: 0.97, y: '-11%', x: '54%' },
                 }}
@@ -295,7 +274,7 @@ class HomeHeader extends React.Component {
               />
             </Parallax>
             <div
-              css={{
+              style={{
                 height: sectionHeight,
                 position: 'absolute',
                 top: 0,
@@ -314,9 +293,9 @@ class HomeHeader extends React.Component {
                 render={() => (
                   <>
                     <UI.View flex={1.2} />
-                    <inner>
+                    <div>
                       <Pitch scrollTo={scrollTo} />
-                    </inner>
+                    </div>
                     <UI.View flex={1} />
                   </>
                 )}
@@ -327,7 +306,7 @@ class HomeHeader extends React.Component {
                   <>
                     <UI.View
                       flex={1}
-                      css={{
+                      {...{
                         textAlign: 'left',
                         width: '40%',
                       }}
@@ -393,7 +372,7 @@ class SectionSearch extends React.Component {
             <Parallax speed={0.3} zIndex={-1}>
               <Bauhaus
                 showTriangle
-                css={{
+                {...{
                   transformOrigin: 'top left',
                   transform: { scale: 0.4, y: -sectionHeight * 0.75, x: '0%' },
                   opacity: 0.1,
@@ -407,7 +386,7 @@ class SectionSearch extends React.Component {
                   x - 4 * -Math.sin(x / 30),
                   y - 4 * -Math.sin(x / 30),
                 ]}
-                css={{
+                {...{
                   transformOrigin: 'bottom left',
                   transform: { scale: 0.4, y: sectionHeight * 0.8, x: '-10%' },
                   opacity: 0.1,
@@ -415,7 +394,7 @@ class SectionSearch extends React.Component {
               />
             </Parallax>
             <Content id="home-search">
-              <Half css={{ flex: 1 }}>
+              <Half {...{ flex: 1 }}>
                 <UI.View flex={isLarge ? 1.5 : 3} />
                 <SectionTitle
                   color={UI.color(waveColor)
@@ -437,7 +416,7 @@ class SectionSearch extends React.Component {
                 <VertSpace />
                 <UI.View flex={0.5} />
                 <UI.Row
-                  css={{
+                  {...{
                     transformOrigin: 'bottom left',
                     transform: {
                       scale: isTall ? 1.4 : 1,
@@ -482,7 +461,8 @@ class SectionSearch extends React.Component {
 
 @view
 class SectionProfiles extends React.Component {
-  render({ isLarge }) {
+  render() {
+    const { isLarge } = this.props
     return (
       <Page
         offset={2}
@@ -499,15 +479,13 @@ class SectionProfiles extends React.Component {
               <Slant inverseSlant {...secondSlant} {...topSlants} />
               <Slant {...thirdSlant} {...topSlants} />
             </Parallax>
-            <Content id="home-profiles" css={{ flex: 1 }}>
+            <Content id="home-profiles" {...{ flex: 1 }}>
               <UI.View if={!isLarge} flex={1} />
-              <div
+              <UI.View
                 className="profiles"
-                css={
-                  isLarge
-                    ? { width: '45%', margin: ['auto', 0] }
-                    : { margin: ['auto', 0] }
-                }
+                {...(isLarge
+                  ? { width: '45%', margin: ['auto', 0] }
+                  : { margin: ['auto', 0] })}
               >
                 <SectionTitle size={2.8}>
                   The ultimate insight into your org
@@ -524,9 +502,9 @@ class SectionProfiles extends React.Component {
                 </SectionSubP>
                 <VertSpace />
                 <VertSpace />
-                <div css={{ position: 'relative' }}>
+                <div style={{ position: 'relative' }}>
                   <UI.View
-                    css={{
+                    {...{
                       position: 'absolute',
                       bottom: '-10%',
                       left: '-10%',
@@ -543,7 +521,7 @@ class SectionProfiles extends React.Component {
                   />
                   <UI.Image
                     src={profileImg}
-                    css={{
+                    {...{
                       width: '40vw',
                       minWidth: 400,
                       maxWidth: 1100 / 2,
@@ -562,7 +540,7 @@ class SectionProfiles extends React.Component {
                     }}
                   />
                 </div>
-              </div>
+              </UI.View>
             </Content>
           </>
         )}
@@ -573,7 +551,7 @@ class SectionProfiles extends React.Component {
 
 const Card = ({ title, children, icon }) => (
   <UI.View
-    css={{
+    {...{
       flexFlow: 'row',
       padding: [28, 32],
       background: [0, 0, 0, 0.05],
@@ -586,7 +564,7 @@ const Card = ({ title, children, icon }) => (
       name={icon}
       size={46}
       color="#fff"
-      css={{ margin: [0, 40, 0, 0] }}
+      {...{ margin: [0, 40, 0, 0] }}
     />
     <div style={{ flex: 1 }}>
       <SectionP size={1.5} fontWeight={700} flex={1} marginBottom={5}>
@@ -605,7 +583,7 @@ class SectionNoCloud extends React.Component {
     const { homeStore, isLarge } = this.props
     return (
       <UI.View
-        css={{
+        {...{
           minHeight: homeStore.sectionHeight,
           padding: [100, 0],
           position: 'relative',
@@ -613,7 +591,7 @@ class SectionNoCloud extends React.Component {
         }}
       >
         <WaveBanner fill="#79bdd1" />
-        <SectionContent css={{ flex: 1 }}>
+        <SectionContent {...{ flex: 1 }}>
           <Bauhaus
             showCircle
             zIndex={0}
@@ -627,7 +605,7 @@ class SectionNoCloud extends React.Component {
               flex: 1,
             }}
           >
-            <UI.Col css={isLarge && { width: '46%', margin: ['auto', 0] }}>
+            <UI.Col {...isLarge && { width: '46%', margin: ['auto', 0] }}>
               <SectionTitle color="#fff">The Serverless Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.85}>
@@ -645,7 +623,7 @@ class SectionNoCloud extends React.Component {
               <VertSpace />
               <VertSpace />
             </UI.Col>
-            <UI.Col css={isLarge && { width: '38%', margin: ['auto', 0] }}>
+            <UI.Col {...isLarge && { width: '38%', margin: ['auto', 0] }}>
               <Card icon="lock" title="Complete Security">
                 Your data never leaves your firewall.
               </Card>
@@ -692,10 +670,10 @@ class OrbitPure extends React.Component {
         offset={0}
         speed={-1}
         scrollTop={scrollTop}
-        css={{ zIndex: 1000 }}
+        style={{ zIndex: 1000 }}
       >
         <UI.Col
-          css={{
+          {...{
             zIndex: 10,
             pointerEvents: 'none',
             position: 'absolute',
@@ -705,7 +683,7 @@ class OrbitPure extends React.Component {
           }}
         >
           <UI.Col
-            css={{
+            {...{
               pointerEvents: 'all',
               width: 1100 / 2,
               height: 2014 / 2,
@@ -731,18 +709,15 @@ class OrbitPure extends React.Component {
               hideShadow
               restingPosition={restingPosition}
               tiltOptions={{ perspective: 1500 }}
-              css={{
+              style={{
                 borderRadius: 17,
-                boxShadow: [[0, 23, 80, [0, 0, 0, 0.15]]],
-                // WebkitMaskImage:
-                //   '-webkit-linear-gradient(top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%)',
               }}
               glowProps={{
                 opacity: 0.5,
               }}
             >
               <UI.View
-                css={{
+                {...{
                   width: 1100 / 2,
                   height: 2014 / 2,
                   background: '#F3F3F3',
@@ -781,7 +756,7 @@ class OrbitPure extends React.Component {
               >
                 <UI.Image
                   src={avatarCardImg}
-                  css={{
+                  {...{
                     width: 629 / 2,
                     height: 'auto',
                     position: 'absolute',
@@ -980,10 +955,10 @@ export class HomeWrapper extends React.Component {
                   </Parallax>
                   <SectionNoCloud {...sectionProps} />
                   <UI.View
-                    css={{ position: 'relative', zIndex: 999, marginTop: 50 }}
+                    {...{ position: 'relative', zIndex: 999, marginTop: 50 }}
                   >
                     <UI.View
-                      css={{
+                      {...{
                         position: 'absolute',
                         top: -500,
                         left: 0,

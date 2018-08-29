@@ -15,7 +15,7 @@ export class BlogPage extends React.Component {
   render() {
     return (
       <page
-        css={{
+        style={{
           overflow: 'hidden',
           flex: 1,
           background: Constants.blueTheme.background,
@@ -38,9 +38,9 @@ export class BlogPage extends React.Component {
                         <V.SubTitle size={2}>{title}</V.SubTitle>
                       </V.LinkSimple>
                       <br />
-                      <content css={{ marginBottom: -40 }}>
+                      <div style={{ marginBottom: -40 }}>
                         {Renderer.processSync(firstLine).contents}
-                      </content>
+                      </div>
                     </post>
                   )
                 })}

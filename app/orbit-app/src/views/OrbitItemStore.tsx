@@ -105,7 +105,7 @@ export class OrbitItemStore {
         }
         // fluidity
         await sleep(16)
-        App.actions.selectItem(this.target, this.position)
+        App.actions.peekApp(this.target, this.position)
       }
     },
   )

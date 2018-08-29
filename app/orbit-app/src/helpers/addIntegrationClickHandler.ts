@@ -22,7 +22,7 @@ export const addIntegrationClickHandler = memoize(
   (item: IntegrationItem) => async ({ currentTarget }) => {
     console.log('add integration', currentTarget, item)
     if (item.auth) {
-      App.actions.toggleSelectItem(
+      App.actions.togglePeekApp(
         { id: item.id, type: 'view', title: item.title },
         currentTarget,
       )

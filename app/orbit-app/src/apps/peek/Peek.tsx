@@ -49,8 +49,8 @@ class PeekPageInner extends React.Component<Props> {
     if (!peekStore.state) {
       return null
     }
-    const { item, model } = peekStore.state
-    const type = (item && capitalize(item.type)) || 'Empty'
+    const { appConfig, model } = peekStore.state
+    const type = (appConfig && capitalize(appConfig.type)) || 'Empty'
     const PeekContentsView = PeekPanes[type] as PeekPane
     if (type === 'Bit' || type === 'Person') {
       if (!model) {
@@ -65,8 +65,8 @@ class PeekPageInner extends React.Component<Props> {
     console.log('render peek page', model, type)
     return (
       <PeekContentsView
-        key={(model && model.id) || item.id || Math.random()}
-        item={item}
+        key={(model && model.id) || appConfig.id || Math.random()}
+        appConfig={appConfig}
         model={model}
         appStore={appStore}
         peekStore={peekStore}

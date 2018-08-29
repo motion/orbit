@@ -58,8 +58,8 @@ const Background = view({
 })
 Background.theme = ({ theme, isTransparent }) => {
   const isDark = theme.background.isDark()
-  const darkBg = isTransparent ? [50, 50, 50, 0.82] : [40, 40, 40]
-  const lightBg = isTransparent ? [255, 255, 255, 0.9] : [255, 255, 255]
+  const darkBg = isTransparent ? [25, 25, 25, 0.6] : [40, 40, 40]
+  const lightBg = isTransparent ? [255, 255, 255, 0.96] : [255, 255, 255]
   return {
     background: isDark ? darkBg : lightBg,
   }

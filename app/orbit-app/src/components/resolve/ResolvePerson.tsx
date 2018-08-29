@@ -11,11 +11,10 @@ const Avatar = view('img', {
   height: 70,
   margin: [10, 0],
   position: 'absolute',
-  top: -15,
-  right: -15,
+  top: -22,
+  right: -22,
   transform: {
-    scale: 1.4,
-    y: -5,
+    scale: 1,
     rotate: '40deg',
   },
 })

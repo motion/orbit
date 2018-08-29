@@ -1,4 +1,4 @@
-import { AppStatePeekItem } from '@mcro/stores'
+import { AppConfig } from '@mcro/stores'
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
 import { Bit, Setting } from '@mcro/models'
 import { SelectionStore } from '../stores/SelectionStore'
@@ -24,9 +24,7 @@ export type OrbitItemProps = {
   subtitle?: React.ReactNode
   date?: React.ReactNode
   icon?: React.ReactNode
-  result?: AppStatePeekItem & {
-    auth: boolean
-  }
+  result?: AppConfig
   index?: number
   store?: OrbitItemStore
   isExpanded?: boolean
@@ -51,7 +49,7 @@ export type OrbitItemProps = {
   nextUpStyle?: Object
   isSelected?: boolean | Function
   cardProps?: Object
-  item?: AppStatePeekItem
+  item?: AppConfig
   disableShadow?: boolean
   preventAutoSelect?: boolean
   padding?: number | number[]

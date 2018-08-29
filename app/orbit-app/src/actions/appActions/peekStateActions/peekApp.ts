@@ -1,5 +1,5 @@
 import { Bit, PersonBit } from '@mcro/models'
-import { App, AppStatePeekItem } from '@mcro/stores'
+import { App, AppConfig } from '@mcro/stores'
 import { peekPosition } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
@@ -7,36 +7,39 @@ import { PeekTarget } from './types'
 import { isEqual } from '@mcro/black'
 import { logger } from '@mcro/logger'
 
-const log = logger('selectItem')
+const log = logger('peekApp')
 
-export function setPeekState(props) {
-  const target = getTargetPosition(props.target)
+export function setPeekState({
+  target,
+  ...props
+}: { target: PeekTarget } & typeof App.state.peekState) {
+  const realTarget = getTargetPosition(target)
   App.setPeekState({
     ...props,
-    target,
-    ...peekPosition(target),
+    target: realTarget,
+    ...peekPosition(realTarget),
   })
 }
 
-export function toggleSelectItem(item: PersonBit | Bit, target?: PeekTarget) {
-  log('toggleSelectItem', item)
-  if (isEqual(App.peekState.item, getItem(item))) {
+export function togglePeekApp(item: PersonBit | Bit, target?: PeekTarget) {
+  log('togglePeekApp', item)
+  if (isEqual(App.peekState.appConfig, getAppConfig(item))) {
     App.actions.clearPeek()
   } else {
-    selectItem(item, target)
+    peekApp(item, target)
   }
 }
 
-export function selectItem(item?: PersonBit | Bit, target?: PeekTarget) {
+export function peekApp(item?: PersonBit | Bit, target?: PeekTarget) {
   invariant(item, 'Must pass item')
   setPeekState({
     target,
     peekId: Math.random(),
-    item: getItem(item),
+    appConfig: getAppConfig(item),
   })
 }
 
-function getItem(item: PersonBit | Bit | AppStatePeekItem): AppStatePeekItem {
+function getAppConfig(item: PersonBit | Bit | AppConfig): AppConfig {
   if (!item.target) {
     return item
   }
@@ -48,7 +51,7 @@ function getItem(item: PersonBit | Bit | AppStatePeekItem): AppStatePeekItem {
   }
 }
 
-function getPersonItem(person: PersonBit): AppStatePeekItem {
+function getPersonItem(person: PersonBit): AppConfig {
   return {
     id: person.email,
     icon: person.photo || '',
@@ -63,7 +66,7 @@ function getPersonItem(person: PersonBit): AppStatePeekItem {
   }
 }
 
-function getBitItem(bit: Bit): AppStatePeekItem {
+function getBitItem(bit: Bit): AppConfig {
   return {
     id: bit.id,
     icon: bit.integration || '',

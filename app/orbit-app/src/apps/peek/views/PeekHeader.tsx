@@ -109,7 +109,7 @@ export class PeekHeaderContent extends React.Component<Props> {
       ...props
     } = this.props
     const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
-    const itemConfig = peekStore.state.item.config
+    const itemConfig = peekStore.state.appConfig.config
     const hideTitleBar = itemConfig && itemConfig.showTitleBar === false
     return (
       <PeekHeaderContain

@@ -37,6 +37,14 @@ class BlurryEffectView: NSVisualEffectView {
   }
 }
 
+enum InterfaceStyle : String {
+  case Dark, Light
+  init() {
+    let type = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
+    self = InterfaceStyle(rawValue: type)!
+  }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   var socketBridge: SocketBridge!
@@ -173,7 +181,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.blurryView.setFrameSize(NSMakeSize(w, h))
   }
   
-  func theme(_ theme: String) {
+  func theme(_ themeOpt: String) {
+    var theme = themeOpt
+    if theme == "auto" {
+      theme = InterfaceStyle() == InterfaceStyle.Dark ? "ultra" : "light"
+    }
     if #available(OSX 10.11, *) {
       if theme == "ultra" {
         blurryView.material = NSVisualEffectView.Material.ultraDark

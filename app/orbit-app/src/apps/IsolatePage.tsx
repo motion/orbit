@@ -6,7 +6,7 @@ import { Orbit } from './orbit/Orbit'
 import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
-import { settingToResult } from '../helpers/settingToResult'
+import { settingToAppConfig } from '../helpers/settingToResult'
 
 const getItem = {
   githubItem: () =>
@@ -19,7 +19,7 @@ const getItem = {
   }),
   githubSetting: async () =>
     SettingRepository.findOne({ where: { type: 'github' } }).then(
-      settingToResult,
+      settingToAppConfig,
     ),
 }
 
@@ -28,7 +28,7 @@ export class IsolatePeek extends React.Component {
   render() {
     getItem.githubSetting().then(item => {
       console.log('got', item)
-      App.actions.selectItem(item, {
+      App.actions.peekApp(item, {
         top: window.innerHeight,
         left: window.innerHeight - 350,
         width: 0,

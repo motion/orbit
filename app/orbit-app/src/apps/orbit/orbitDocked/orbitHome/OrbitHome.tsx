@@ -115,7 +115,7 @@ const OrbitHomeCarouselSection = decorator(
           <SelectableCarousel
             items={items}
             offset={startIndex}
-            horizontalPadding={16}
+            horizontalPadding={12}
             isActiveStore={subPaneStore}
             resetOnInactive
             cardProps={{
@@ -152,14 +152,14 @@ export class OrbitHome extends React.Component<Props> {
     console.log('HOME RENDER2')
     return (
       <SubPane name="home" fadeBottom>
-        <SuggestionBarVerticalPad />
+        {/* <SuggestionBarVerticalPad /> */}
         {Object.keys(homeStore.following).map(categoryName => (
           <OrbitHomeCarouselSection
             key={categoryName}
             selectionStore={selectionStore}
             homeStore={homeStore}
             categoryName={categoryName}
-            cardHeight={categoryName === 'People' ? 70 : 90}
+            cardHeight={categoryName === 'People' ? 60 : 90}
           />
         ))}
         {/* this is a nice lip effect */}

@@ -4,7 +4,6 @@ import { ResolveBit } from './resolve/ResolveBit'
 import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit, PersonBit } from '@mcro/models'
 import { AppStore } from '../stores/AppStore'
-import { AppStatePeekItem } from '@mcro/stores'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { Setting } from '../../../models/src'
 
@@ -30,7 +29,6 @@ export type ResolvedItem = {
 
 export type ItemResolverProps = {
   model?: Bit | Person | PersonBit | Setting
-  item?: AppStatePeekItem
   appStore?: AppStore
   isExpanded?: boolean
   children: ((a: ResolvedItem) => React.ReactNode)
@@ -43,7 +41,6 @@ export type ItemResolverProps = {
 
 export const ItemResolver = ({
   model,
-  item,
   onResolvedItem,
   children,
   ...props
@@ -62,7 +59,7 @@ export const ItemResolver = ({
     Resolver = ResolveEmpty
   }
   return (
-    <Resolver model={model} item={item} {...props}>
+    <Resolver model={model} {...props}>
       {item => {
         // allow getting the item via a prop other than children intended for side effects
         if (onResolvedItem) {

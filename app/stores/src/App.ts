@@ -9,7 +9,7 @@ const isBrowser = typeof window !== 'undefined'
 const isOrbit = isBrowser && window.location.pathname === '/orbit'
 // const log = debug('App')
 
-export type AppStatePeekItem = {
+export type AppConfig = {
   id: string
   icon: string
   title: string
@@ -38,8 +38,8 @@ class AppStore {
   // TODO: get these onto here
   actions: {
     closeOrbit: Function
-    selectItem: Function
-    toggleSelectItem: Function
+    peekApp: Function
+    togglePeekApp: Function
     open: Function
     openItem: Function
     openAuth: Function
@@ -89,7 +89,7 @@ class AppStore {
       pinned: false,
       devModeStick: false,
       target: null,
-      item: null as AppStatePeekItem,
+      appConfig: null as AppConfig,
       peekId: 0,
       peekOnLeft: false,
       position: [0, 0],

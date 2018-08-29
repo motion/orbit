@@ -4,7 +4,7 @@ import { ResolveBit } from './resolve/ResolveBit'
 import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit, PersonBit } from '@mcro/models'
 import { AppStore } from '../stores/AppStore'
-import { AppStatePeekItem } from '@mcro/stores'
+import { AppConfig } from '@mcro/stores'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { Setting } from '../../../models/src'
 
@@ -30,7 +30,7 @@ export type ResolvedItem = {
 
 export type ItemResolverProps = {
   model?: Bit | Person | PersonBit | Setting
-  item?: AppStatePeekItem
+  item?: AppConfig
   appStore?: AppStore
   isExpanded?: boolean
   children: ((a: ResolvedItem) => React.ReactNode)

@@ -1,5 +1,5 @@
 import { App } from '@mcro/stores'
-import { setPeekState } from './selectItem'
+import { setPeekState } from './peekApp'
 
 export function clearPeek() {
   if (App.peekState.devModeStick) {
@@ -9,7 +9,7 @@ export function clearPeek() {
   setPeekState({
     target: null,
     peekId: null,
-    item: null,
+    appConfig: null,
     pinned: false,
   })
 }

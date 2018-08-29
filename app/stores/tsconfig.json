@@ -5,7 +5,10 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "../orbit-app/src/actions/appActions/peekStateActions/peekApp.ts"
+  ],
   "references": [
     { "path": "../models" },
     { "path": "../../packages/config" },

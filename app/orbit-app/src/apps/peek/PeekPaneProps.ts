@@ -1,7 +1,7 @@
 import { Bit, PersonBit, Setting } from '@mcro/models'
 import { AppStore } from '../../stores/AppStore'
 import { PeekStore } from './stores/PeekStore'
-import { AppStatePeekItem } from '@mcro/stores'
+import { AppConfig } from '@mcro/stores'
 import { SelectionStore } from '../../stores/SelectionStore'
 
 export type PeekContents = {
@@ -28,6 +28,6 @@ export type PeekPaneProps = {
   selectionStore: SelectionStore
   appStore: AppStore
   peekStore: PeekStore
-  item: AppStatePeekItem
+  item: AppConfig
   children: (a: PeekContents) => JSX.Element
 }

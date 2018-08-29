@@ -6,7 +6,7 @@ export const getSettingTitle = (setting: Setting) => {
   return config ? config.title : ''
 }
 
-export const settingToResult = (setting: Setting) => ({
+export const settingToAppConfig = (setting: Setting) => ({
   id: setting.id,
   type: 'setting',
   integration: setting.type,

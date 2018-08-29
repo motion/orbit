@@ -71,12 +71,12 @@ export class PeekStore {
   }
 
   internalState: PeekStoreState = react(
-    () => [App.peekState.item, this.tornState],
-    async ([target, tornState], { getValue, setValue, sleep }) => {
+    () => [App.peekState.appConfig, this.tornState],
+    async ([appConfig, tornState], { getValue, setValue, sleep }) => {
       await sleep(16)
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
-      const isShown = !!tornState || (!!target && !!App.orbitState.docked)
+      const isShown = !!tornState || (!!appConfig && !!App.orbitState.docked)
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
       const { item, ...rest } = App.peekState
@@ -170,7 +170,7 @@ export class PeekStore {
   }
 
   getModel = async () => {
-    const { id, type } = App.peekState.item
+    const { id, type } = App.peekState.appConfig
     let selectedItem = null
     if (type === 'person') {
       selectedItem = await PersonBitRepository.findOne({

@@ -1,7 +1,7 @@
 import { App } from '@mcro/stores'
 
 export function tearPeek() {
-  if (App.peekState.item) {
+  if (App.peekState.appConfig) {
     // do it
   }
 }

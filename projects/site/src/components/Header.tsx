@@ -38,7 +38,7 @@ const Nav = view('nav', {
 @view
 export class Header extends React.Component {
   render() {
-    const { linkStyle, theme, scrollTo } = this.props
+    const { linkProps, theme, scrollTo } = this.props
     const color = theme.base.color.desaturate(0.2).alpha(0.8)
     return (
       <Media query={Constants.screen.large}>
@@ -53,7 +53,7 @@ export class Header extends React.Component {
                     <Link
                       isLarge={isLarge}
                       color={color}
-                      css={linkStyle}
+                      {...linkProps}
                       onClick={() => scrollTo(1)}
                     >
                       Search
@@ -61,7 +61,7 @@ export class Header extends React.Component {
                     <Link
                       isLarge={isLarge}
                       color={color}
-                      css={linkStyle}
+                      {...linkProps}
                       onClick={() => scrollTo(2)}
                     >
                       Explore
@@ -69,7 +69,7 @@ export class Header extends React.Component {
                     <Link
                       isLarge={isLarge}
                       color={color}
-                      css={linkStyle}
+                      {...linkProps}
                       to="/about"
                     >
                       About

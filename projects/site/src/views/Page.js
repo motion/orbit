@@ -4,7 +4,9 @@ import { SectionContent } from '~/views/sectionContent'
 import { ParallaxLayer } from '~/components/Parallax'
 
 const NormalLayer = view.attach('homeStore')(({ homeStore, ...props }) => {
-  return <SectionContent css={{ height: homeStore.sectionHeight }} {...props} />
+  return (
+    <SectionContent style={{ height: homeStore.sectionHeight }} {...props} />
+  )
 })
 
 @view
@@ -16,13 +18,13 @@ export class Page extends React.Component {
         className="parallaxLayer"
         offset={offset}
         speed={0.2}
-        css={{ zIndex: zIndex + baseZIndex }}
+        style={{ zIndex: zIndex + baseZIndex }}
         {...props}
       />
     )
     const Content = props => (
       <NormalLayer
-        css={{ position: 'relative', zIndex: 1 + zIndex }}
+        style={{ position: 'relative', zIndex: 1 + zIndex }}
         {...props}
       />
     )

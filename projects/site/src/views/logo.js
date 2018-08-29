@@ -21,7 +21,6 @@ export const Logo = ({
       width={naturalWidth}
       height={naturalHeight}
       viewBox={`0 0 ${naturalWidth} ${naturalHeight}`}
-      css={css}
       {...props}
     >
       <defs>

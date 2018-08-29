@@ -6,7 +6,7 @@ import * as Constants from '~/constants'
 import { MailIcon } from '~/views/icons'
 import Router from '~/router'
 
-export * from './section'
+export * from './Section'
 
 const fullscreen = {
   position: 'absolute',
@@ -19,7 +19,7 @@ const fullscreen = {
 const TITLE_FONT_FAMILY = '"Eesti Pro"'
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
-export const P = ({ size, titleFont, ...props }) => (
+export const P = ({ size = 1, titleFont = false, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall => (
       <UI.Text
@@ -118,18 +118,18 @@ export const LeftSide = ({
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <leftSide css={{ padding: [sidePadSmall, 0, 0] }}>{children}</leftSide>
+        <UI.View {...{ padding: [sidePadSmall, 0, 0] }}>{children}</UI.View>
       ) : (
-        <outer
-          css={{
+        <UI.View
+          {...{
             flex: 1,
             width: '50%',
             position: 'relative',
             zIndex: (props.style && props.style.zIndex) || 3,
           }}
         >
-          <leftSide
-            css={{
+          <UI.View
+            {...{
               display: 'block',
               height: '100%',
               width: '100%',
@@ -141,21 +141,22 @@ export const LeftSide = ({
             style={innerStyle}
             {...props}
           >
-            <edge
-              if={!noEdge}
-              css={{
-                shapeOutside: inverse
-                  ? 'polygon(105% 0%, 90px 0%, 0% 1096px)'
-                  : 'polygon(0% 0%, 1px 0%, 96% 1096px)',
-                float: 'right',
-                width: 110,
-                height: 990,
-                marginLeft: inverse ? 5 : -20,
-              }}
-            />
+            {!noEdge && (
+              <UI.View
+                {...{
+                  shapeOutside: inverse
+                    ? 'polygon(105% 0%, 90px 0%, 0% 1096px)'
+                    : 'polygon(0% 0%, 1px 0%, 96% 1096px)',
+                  float: 'right',
+                  width: 110,
+                  height: 990,
+                  marginLeft: inverse ? 5 : -20,
+                }}
+              />
+            )}
             {children}
-          </leftSide>
-        </outer>
+          </UI.View>
+        </UI.View>
       )
     }
   </Media>
@@ -165,12 +166,10 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <rightSide css={{ padding: [sidePadSmall, 0, 0] }}>
-          {children}
-        </rightSide>
+        <UI.View {...{ padding: [sidePadSmall, 0, 0] }}>{children}</UI.View>
       ) : (
-        <rightSide
-          css={{
+        <UI.View
+          {...{
             zIndex: 3,
             flex: 1,
             position: 'absolute',
@@ -183,29 +182,30 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
           }}
           {...props}
         >
-          <div
-            if={!noEdge}
-            css={{
-              display: 'block',
-              height: '100%',
-              paddingLeft: 20,
-            }}
-          >
-            <edge
-              css={{
-                shapeOutside: inverse
-                  ? 'polygon(0% 0%, 0% 21px, 174% 2131px)'
-                  : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
-                float: 'left',
-                width: 187,
+          {!noEdge && (
+            <div
+              {...{
+                display: 'block',
                 height: '100%',
-                marginLeft: inverse ? -75 : -90,
+                paddingLeft: 20,
               }}
-            />
-            {children}
-          </div>
+            >
+              <UI.View
+                {...{
+                  shapeOutside: inverse
+                    ? 'polygon(0% 0%, 0% 21px, 174% 2131px)'
+                    : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
+                  float: 'left',
+                  width: 187,
+                  height: '100%',
+                  marginLeft: inverse ? -75 : -90,
+                }}
+              />
+              {children}
+            </div>
+          )}
           {noEdge && children}
-        </rightSide>
+        </UI.View>
       )
     }
   </Media>
@@ -213,8 +213,8 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
 
 export const Border = attachTheme(
   ({ theme, width = 4, color, type = 'dotted', ...props }) => (
-    <border
-      css={{
+    <UI.View
+      {...{
         position: 'absolute',
         left: -30,
         right: -30,
@@ -237,43 +237,45 @@ export const FadedArea = attachTheme(
   ({ theme, fadeRight, fadeDown, fadeLeft, fadeBackground, children }) => (
     <>
       {children}
-      <fadeRight
-        if={fadeRight}
-        css={{
-          ...fullscreen,
-          left: 'auto',
-          width: 100,
-          zIndex: 100,
-          background: `linear-gradient(to right, transparent, ${fadeBackground ||
-            theme.base.background} 80%)`,
-        }}
-      />
-      <fadeLeft
-        if={fadeLeft}
-        css={{
-          ...fullscreen,
-          right: 'auto',
-          width: 100,
-          zIndex: 100,
-          background: `linear-gradient(to left, transparent, ${fadeBackground ||
-            theme.base.background} 80%)`,
-        }}
-      />
-      <fadeDown
-        if={fadeDown}
-        css={{
-          ...fullscreen,
-          top: 'auto',
-          height: 100,
-          zIndex: 100,
-          background: `linear-gradient(transparent, ${fadeBackground ||
-            theme.base.background})`,
-        }}
-      />
-      <circleWrap css={{ ...fullscreen, zIndex: 1000, overflow: 'hidden' }}>
-        <div
-          $circle
-          css={{
+      {fadeRight && (
+        <UI.View
+          {...{
+            ...fullscreen,
+            left: 'auto',
+            width: 100,
+            zIndex: 100,
+            background: `linear-gradient(to right, transparent, ${fadeBackground ||
+              theme.base.background} 80%)`,
+          }}
+        />
+      )}
+      {fadeLeft && (
+        <UI.View
+          {...{
+            ...fullscreen,
+            right: 'auto',
+            width: 100,
+            zIndex: 100,
+            background: `linear-gradient(to left, transparent, ${fadeBackground ||
+              theme.base.background} 80%)`,
+          }}
+        />
+      )}
+      {fadeDown && (
+        <UI.View
+          {...{
+            ...fullscreen,
+            top: 'auto',
+            height: 100,
+            zIndex: 100,
+            background: `linear-gradient(transparent, ${fadeBackground ||
+              theme.base.background})`,
+          }}
+        />
+      )}
+      <UI.View {...{ ...fullscreen, zIndex: 1000, overflow: 'hidden' }}>
+        <UI.View
+          {...{
             width: '100%',
             paddingBottom: '100%',
             borderRadius: 1000,
@@ -289,7 +291,7 @@ export const FadedArea = attachTheme(
             ],
           }}
         />
-      </circleWrap>
+      </UI.View>
     </>
   ),
 )
@@ -309,23 +311,18 @@ export const WindowsLogo = props => (
   </svg>
 )
 
-export const DottedButton = props => (
-  <btn
-    css={{
-      display: 'inline-block',
-      padding: [8, 12],
-      borderRadius: 8,
-      border: [1, 'dashed', '#eee'],
-      flex: 'none',
-      cursor: 'pointer',
-      fontWeight: 500,
-      fontSize: 16,
-      flexFlow: 'row',
-      alignItems: 'center',
-    }}
-    {...props}
-  />
-)
+export const DottedButton = view({
+  display: 'inline-block',
+  padding: [8, 12],
+  borderRadius: 8,
+  border: [1, 'dashed', '#eee'],
+  flex: 'none',
+  cursor: 'pointer',
+  fontWeight: 500,
+  fontSize: 16,
+  flexFlow: 'row',
+  alignItems: 'center',
+})
 
 export const Cmd = view('span', {
   padding: [2, 5],
@@ -334,25 +331,13 @@ export const Cmd = view('span', {
   borderRadius: 12,
 })
 
-const Lines = ({ width = 100, height = 100, style }) => (
-  <svg height={height} width={width} style={style}>
-    <rect
-      style={{ fill: 'url(#diagonal-stripe-3)' }}
-      x="0"
-      y="0"
-      height={height}
-      width={width}
-    />
-  </svg>
-)
-
 export const Glow = ({ below, style = {}, ...props }) => (
   <Media
     if={!isSafari}
     query={Constants.screen.large}
     render={() => (
-      <glow
-        css={{
+      <UI.View
+        {...{
           ...fullscreen,
           zIndex: below ? -1 : 0,
           background: '#fff',
@@ -372,35 +357,34 @@ export const Glow = ({ below, style = {}, ...props }) => (
   />
 )
 
+const NotifFrame = view({
+  width: 300,
+  height: 70,
+  background: '#f3f3f3',
+  border: [1, '#ddd'],
+  padding: 10,
+  borderRadius: 7,
+  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  flexFlow: 'row',
+  overflow: 'hidden',
+  marginBottom: 20,
+  textAlign: 'left',
+})
+
 export const Notification = ({ title, body, ...props }) => (
-  <notification
-    css={{
-      width: 300,
-      height: 70,
-      background: '#f3f3f3',
-      border: [1, '#ddd'],
-      padding: 10,
-      borderRadius: 7,
-      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-      flexFlow: 'row',
-      overflow: 'hidden',
-      marginBottom: 20,
-      textAlign: 'left',
-    }}
-    {...props}
-  >
+  <NotifFrame {...props}>
     <MailIcon size={0.09} css={{ margin: [0, 10, 0, 0] }} />
-    <content
-      css={{
+    <UI.View
+      {...{
         padding: 3,
         flex: 1,
         overflow: 'hidden',
       }}
     >
-      <notTitle css={{ fontWeight: 600 }}>{title}</notTitle>
+      <div style={{ fontWeight: 600 }}>{title}</div>
       <UI.Text ellipse={1}>{body}</UI.Text>
-    </content>
-  </notification>
+    </UI.View>
+  </NotifFrame>
 )
 
 export const HalfSection = view('section', {
@@ -414,7 +398,7 @@ export const HalfSection = view('section', {
   },
 })
 
-export const A = view('a', {
+export const A = view(UI.Inline, {
   textDecoration: 'none',
   fontSize: 14,
   color: [0, 0, 0, 0.6],
@@ -422,6 +406,10 @@ export const A = view('a', {
   padding: [3, 2],
   borderBottom: [2, 'transparent'],
 })
+
+A.defaultProps = {
+  tagName: 'a',
+}
 
 A.theme = ({ theme, active, ...props }) => {
   const bg = theme.base.background.darken(0.1).desaturate(0.1)
@@ -458,29 +446,17 @@ export const LinkSimple = ({ to, ...props }) => (
   <a
     href={to}
     onClick={Router.link(to)}
-    css={{
+    style={{
       textDecoration: 'none',
     }}
     {...props}
   />
 )
 
-export const TopoBg = () => (
-  <topoBg
-    if={false}
-    css={{
-      ...fullscreen,
-      zIndex: 0,
-      opacity: 0.17,
-      background: `url(${require('../../public/topo2.svg')})`,
-    }}
-  />
-)
-
 export const HomeImg = ({ children, style, borderProps, ...props }) => (
   <>
     <img
-      css={{
+      {...{
         width: 1100 / 2,
         height: 2014 / 2,
         overflow: 'hidden',
@@ -491,8 +467,8 @@ export const HomeImg = ({ children, style, borderProps, ...props }) => (
       style={style}
       {...props}
     />
-    <border
-      css={{
+    <UI.View
+      {...{
         position: 'absolute',
         borderRadius: 17,
         top: 0,
@@ -505,7 +481,7 @@ export const HomeImg = ({ children, style, borderProps, ...props }) => (
       {...borderProps}
     >
       {children}
-    </border>
+    </UI.View>
   </>
 )
 
@@ -516,7 +492,7 @@ export const FeatureSubTitle = props => (
         if={isLarge}
         size={1.9}
         alpha={0.7}
-        css={{ marginBottom: 20 }}
+        {...{ marginBottom: 20 }}
         {...props}
       />
     )}
@@ -555,7 +531,13 @@ Card.Icon = props => (
   <UI.Icon
     size={40}
     color="black"
-    css={{ position: 'absolute', top: 30, right: 30, opacity: 0.5, zIndex: -1 }}
+    style={{
+      position: 'absolute',
+      top: 30,
+      right: 30,
+      opacity: 0.5,
+      zIndex: -1,
+    }}
     {...props}
   />
 )

@@ -55,8 +55,8 @@ export const Icon = ({ name, imageStyle, size = 25, ...props }) => {
     height: size,
   }
   return (
-    <icon
-      css={{
+    <div
+      style={{
         display: 'inline-block',
         textAlign: 'center',
         ...adjust[name],
@@ -66,12 +66,12 @@ export const Icon = ({ name, imageStyle, size = 25, ...props }) => {
     >
       <img
         src={icons[name]}
-        css={{
+        style={{
           width: '100%',
           height: '100%',
           ...imageStyle,
         }}
       />
-    </icon>
+    </div>
   )
 }

@@ -82,24 +82,24 @@ export class Footer extends React.Component {
   render() {
     const { theme, noCallToAction } = this.props
     return (
-      <Bottom css={{ background: '#fff', flex: 1 }}>
-        <SectionContent css={{ flex: 1 }}>
+      <Bottom style={{ background: '#fff', flex: 1 }}>
+        <SectionContent style={{ flex: 1 }}>
           <UI.View
-            css={{
+            style={{
               flex: 2,
               textAlign: 'center',
               padding: [150, 0, 150 - 20],
               justifyContent: 'center',
             }}
           >
-            <Title color="#AE2E73" size={3} css={{ marginBottom: 20 }}>
+            <Title color="#AE2E73" size={3} style={{ marginBottom: 20 }}>
               Keep everyone in sync, without overhead.
             </Title>
-            <UI.View css={{ margin: [40, 40], transform: { scale: 1.2 } }}>
+            <UI.View {...{ margin: [40, 40], transform: { scale: 1.2 } }}>
               <Join size={2} />
             </UI.View>
           </UI.View>
-          <UI.View css={{ padding: [50, 0, 100, 0] }}>
+          <UI.View {...{ padding: [50, 0, 100, 0] }}>
             <Sections>
               <StartSection if={!noCallToAction}>
                 <BrandLogo />

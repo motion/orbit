@@ -2,7 +2,7 @@ import * as React from 'react'
 import ZenScroll from 'zenscroll'
 import reactRenderer from 'remark-react'
 import remark from 'remark'
-import { A, P2, SubTitle, SubSubTitle, Title } from '~/views'
+import { A, P2, SubTitle, Title } from '~/views'
 
 export const scrollTo = query => () =>
   ZenScroll.to(document.querySelector(query), 100)
@@ -29,7 +29,7 @@ export const Renderer = remark().use(reactRenderer, {
         <P margin={[0, 0, 10]}>{props.children}</P>
       </li>
     ),
-    ul: props => <ul css={{ margin: [0, 0, 50, 20] }}>{props.children}</ul>,
-    ol: props => <ol css={{ margin: [0, 0, 50, 20] }}>{props.children}</ol>,
+    ul: props => <ul style={{ margin: '0 0 50px 20px' }}>{props.children}</ul>,
+    ol: props => <ol style={{ margin: '0 0 50px 20px' }}>{props.children}</ol>,
   },
 })

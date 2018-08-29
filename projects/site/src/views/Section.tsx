@@ -5,11 +5,11 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 
 export const Slant = ({
-  inverse,
-  inverseSlant,
+  inverse = false,
+  inverseSlant = false,
   slantBackground = '#f2f2f2',
-  slantGradient,
-  rightBackground,
+  slantGradient = null,
+  rightBackground = null,
   slantSize = 14,
   amount = 40,
   ...props
@@ -32,13 +32,13 @@ export const Slant = ({
       query={Constants.screen.large}
       render={() => (
         <UI.FullScreen
-          css={{
+          {...{
             overflow: 'hidden',
             pointerEvents: 'none',
           }}
         >
-          <slant
-            css={{
+          <UI.View
+            {...{
               position: 'absolute',
               top: 0,
               bottom: 0,
@@ -48,8 +48,8 @@ export const Slant = ({
             }}
             {...props}
           >
-            <div
-              css={{
+            <UI.View
+              {...{
                 position: 'absolute',
                 background: slantGradient
                   ? `linear-gradient(200deg, ${gradients[0]} 5%, ${
@@ -69,44 +69,50 @@ export const Slant = ({
                 },
               }}
             />
-            <div
-              if={rightBackground}
-              css={{
-                position: 'absolute',
-                background: rightBackground,
-                top: '-15%',
-                right: inverse ? slant : '-200%',
-                left: inverse ? '-200%' : slant,
-                bottom: '-15%',
-                zIndex: -1,
-                transform: {
-                  rotate,
-                  x: -1,
-                },
-              }}
-            />
-          </slant>
+            {rightBackground && (
+              <UI.View
+                {...{
+                  position: 'absolute',
+                  background: rightBackground,
+                  top: '-15%',
+                  right: inverse ? slant : '-200%',
+                  left: inverse ? '-200%' : slant,
+                  bottom: '-15%',
+                  zIndex: -1,
+                  transform: {
+                    rotate,
+                    x: -1,
+                  },
+                }}
+              />
+            )}
+          </UI.View>
         </UI.FullScreen>
       )}
     />
   )
 }
 
-@view.ui
-export class Section extends React.Component {
-  render({
-    withBackground,
-    leftBackground,
-    inverse,
-    children,
-    theme,
-    ...props
-  }) {
-    return (
-      <section css={{ position: 'relative' }} {...props}>
-        <div
-          if={leftBackground}
-          css={{
+const SectionFrame = view({
+  position: 'relative',
+})
+
+SectionFrame.theme = ({ withBackground, theme }) => ({
+  background: withBackground ? theme.background : 'transparent',
+})
+
+export const Section = ({
+  withBackground,
+  leftBackground,
+  inverse,
+  children,
+  ...props
+}) => {
+  return (
+    <SectionFrame withBackground={withBackground} {...props}>
+      {leftBackground && (
+        <UI.View
+          {...{
             position: 'absolute',
             top: -500,
             left: -500,
@@ -119,16 +125,8 @@ export class Section extends React.Component {
             },
           }}
         />
-        {children}
-      </section>
-    )
-  }
-
-  static theme = ({ withBackground, theme }) => {
-    return {
-      section: {
-        background: withBackground ? theme.base.background : 'transparent',
-      },
-    }
-  }
+      )}
+      {children}
+    </SectionFrame>
+  )
 }

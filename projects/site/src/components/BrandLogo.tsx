@@ -7,12 +7,14 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 
 @view
-export class BrandLogo extends React.Component {
+export class BrandLogo extends React.Component<{ white?: boolean }> {
   state = { hovered: false }
   leave = () => this.setState({ hovered: false })
   hover = () => this.setState({ hovered: true })
 
-  render({ white, ...props }, { hovered }) {
+  render() {
+    const { white, ...props } = this.props
+    const { hovered } = this.state
     const coloredFill = UI.color('#000') //theme.base.background.darken(0.5).desaturate(0.65)
     const fill = hovered ? coloredFill.alpha(0.9) : coloredFill
     return (
@@ -25,7 +27,6 @@ export class BrandLogo extends React.Component {
             style={{ cursor: 'pointer', marginLeft: isLarge ? 0 : 0 }}
             onClick={Router.link('/')}
           >
-            <orbit />
             <Logo fill={`${fill}`} size={0.19} white={white} />
           </div>
         )}

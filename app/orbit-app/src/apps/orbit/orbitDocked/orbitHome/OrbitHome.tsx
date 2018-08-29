@@ -159,7 +159,7 @@ export class OrbitHome extends React.Component<Props> {
             selectionStore={selectionStore}
             homeStore={homeStore}
             categoryName={categoryName}
-            cardHeight={categoryName === 'People' ? 70 : 90}
+            cardHeight={categoryName === 'People' ? 60 : 90}
           />
         ))}
         {/* this is a nice lip effect */}

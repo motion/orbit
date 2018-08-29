@@ -68,9 +68,10 @@ Card.theme = ({
   const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
   card = {
     ...card,
-    padding: padding || 10,
+    padding: padding || [9, 10],
     borderRadius: borderRadius || 7,
-    background: background || theme.background,
+    background:
+      background || theme.cardBackground || theme.background.alpha(0.9),
     ...theme.card,
   }
   if (!isSelected) {

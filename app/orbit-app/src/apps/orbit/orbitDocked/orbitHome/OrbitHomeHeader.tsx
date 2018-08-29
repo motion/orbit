@@ -43,16 +43,14 @@ const exploreButton = {
   },
   activeStyle: {
     opacity: 1,
+    fontWeight: 701,
   },
 }
 
-@attachTheme
 @view
 export class OrbitHomeHeader extends React.Component<Props> {
   render() {
-    const { paneManagerStore, theme } = this.props
-    const buttonColor = theme.color.lighten(0.2)
-    exploreButton.iconProps.color = buttonColor
+    const { paneManagerStore } = this.props
     const homeActive =
       paneManagerStore.activePane === 'home' ||
       paneManagerStore.activePane === 'search'
@@ -91,28 +89,6 @@ export class OrbitHomeHeader extends React.Component<Props> {
             onClick={() => paneManagerStore.setActivePane('settings')}
             {...exploreButton}
           /> */}
-          {/*
-          <filters>
-            {paneManagerStore.filters.map((name, index) => (
-              <RoundButton
-                {...roundBtnProps}
-                key={index}
-                active={paneManagerStore.paneIndex === index - paneManagerStore.mainPanes}
-                onClick={() => paneManagerStore.setActivePane(name)}
-              >
-                {name}
-              </RoundButton>
-            ))}
-            <RoundButton
-              {...roundBtnProps}
-              sizePadding={1.3}
-              icon="arrowsmalldown"
-              iconProps={{
-                color: theme.backgroundActive.darken(0.15),
-                style: { marginTop: 3 },
-              }}
-            />
-          </filters> */}
         </Section>
       </>
     )

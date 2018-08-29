@@ -7,6 +7,7 @@ import {
 } from './helpers'
 import { Color } from './types'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
+import { GlossCSSPropertySetFlat } from './cssPropertySet'
 
 export const cssNameMap = CAMEL_TO_SNAKE
 
@@ -107,19 +108,27 @@ const unitlessNumberProperties = new Set([
   'strokeWidth',
 ])
 
-// special @mcro/css attributes
-export const validCSSAttr = {
+type CSSPropertyKey = keyof GlossCSSPropertySetFlat
+type ValidCSSPropertyMap = { [key in CSSPropertyKey]: boolean }
+
+const allCSSAttr = {}
+// add standard ones
+if (typeof document !== 'undefined') {
+  for (const key of Object.keys(document.body.style)) {
+    allCSSAttr[key] = true
+  }
+}
+
+const cssSpecialAttr = {
   borderLeftRadius: true,
   borderRightRadius: true,
   borderBottomRadius: true,
   borderTopRadius: true,
 }
 
-// add standard ones
-if (typeof document !== 'undefined') {
-  for (const key of Object.keys(document.body.style)) {
-    validCSSAttr[key] = true
-  }
+export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
+  ...allCSSAttr,
+  ...cssSpecialAttr,
 }
 
 // helpers

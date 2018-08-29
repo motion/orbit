@@ -26,6 +26,12 @@ const recentHMR = () => {
   return Date.now() - lastHMR < 400
 }
 
+// ensures &:active psuedo selectors are always placed below
+// so they override &:hover and &:hover
+// TODO: make sure &:active:hover is below below
+// TODO: and make sure &:focus:hover is below below
+const pseudoSort = a => (a.indexOf('&:active') === 0 ? 1 : -1)
+
 const arrToDict = obj => {
   if (Array.isArray(obj)) {
     return obj.reduce((acc, cur) => {
@@ -194,6 +200,7 @@ export function createViewFactory(toCSS) {
 
     function addRules(displayName: string, rules: BaseRules, namespace) {
       // if these rules have been cached to a className then retrieve it
+      console.log('rules', rules)
       const cachedClass = rulesToClass.get(rules)
       if (cachedClass) {
         return cachedClass
@@ -273,7 +280,9 @@ export function createViewFactory(toCSS) {
       }
       if (hasPropStyles) {
         for (const key in propStyles) {
-          if (props[key] !== true) continue
+          if (props[key] !== true) {
+            continue
+          }
           for (const styleKey in propStyles[key]) {
             const dynKey = styleKey === 'base' ? id : styleKey
             dynamicStyles[dynKey] = {
@@ -297,8 +306,11 @@ export function createViewFactory(toCSS) {
       }
       const prevClasses = state.classNames
       const classNames = []
+      // sort so we properly order pseudo keys
+      const keys = Object.keys(myStyles)
+      const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
       // add rules
-      for (const namespace in myStyles) {
+      for (const namespace of sortedStyleKeys) {
         const className = addRules(displayName, myStyles[namespace], namespace)
         classNames.push(className)
         // if this is the first mount render or we didn't previously have this class then add it as new
@@ -394,7 +406,10 @@ export function createViewFactory(toCSS) {
             finalProps.forwardRef = forwardRef
           }
         }
-        if (this.state.ignoreAttrs) {
+        if (
+          this.state.ignoreAttrs &&
+          typeof this.state.ignoreAttrs === 'object'
+        ) {
           for (const prop in finalProps) {
             if (this.state.ignoreAttrs[prop]) {
               delete finalProps[prop]

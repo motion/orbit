@@ -5,11 +5,10 @@ import { compose } from '@mcro/helpers'
 import { PersonBitRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { Title, VerticalSpace } from '../../../views'
+import { Title, VerticalSpace, SmallVerticalSpace } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
-import { Person } from '@mcro/models'
 import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
@@ -17,10 +16,6 @@ import { SelectionStore } from '../../../stores/SelectionStore'
 import { PersonBit } from '../../../../../models/src'
 
 const height = 60
-
-const SmallVerticalSpace = view({
-  height: 10,
-})
 
 type Props = {
   store?: OrbitDirectoryStore
@@ -65,7 +60,7 @@ class OrbitDirectoryStore {
     return query.slice(prefix ? 1 : 0)
   }
 
-  results: Person[] = react(
+  results: PersonBit[] = react(
     () => [this.peopleQuery, this.allPeople],
     ([query, people]) => {
       if (!query) {
@@ -149,30 +144,55 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
     return null
   }
   console.log('rendering directory...')
-  // create sections by letter
-  let sections = []
-  let nextPeople = []
-  let lastPersonLetter
-  for (const [index, person] of results.entries()) {
-    let letter = person.name[0].toLowerCase()
-    const isNewSection = lastPersonLetter && letter !== lastPersonLetter
-    const isLastSection = index === total - 1
-    if ((isNewSection || isLastSection) && nextPeople.length) {
-      if (!lastPersonLetter) {
-        lastPersonLetter = letter
+  let sections
+  // not that many, show without sections
+  if (total < 10) {
+    sections = (
+      <Grid gridAutoRows={height}>
+        {results.map((person, index) => (
+          <OrbitCard
+            key={person.email}
+            inGrid
+            pane="docked"
+            subPane="directory"
+            index={index}
+            model={person}
+            hide={{
+              icon: true,
+            }}
+            style={{
+              height,
+            }}
+          />
+        ))}
+      </Grid>
+    )
+  } else {
+    // create sections by letter
+    sections = []
+    let nextPeople = []
+    let lastPersonLetter
+    for (const [index, person] of results.entries()) {
+      let letter = person.name[0].toLowerCase()
+      const isNewSection = lastPersonLetter && letter !== lastPersonLetter
+      const isLastSection = index === total - 1
+      if ((isNewSection || isLastSection) && nextPeople.length) {
+        if (!lastPersonLetter) {
+          lastPersonLetter = letter
+        }
+        sections.push(
+          createSection(
+            nextPeople,
+            lastPersonLetter.toUpperCase(),
+            store.getIndex,
+          ),
+        )
+        nextPeople = [person]
+      } else {
+        nextPeople.push(person)
       }
-      sections.push(
-        createSection(
-          nextPeople,
-          lastPersonLetter.toUpperCase(),
-          store.getIndex,
-        ),
-      )
-      nextPeople = [person]
-    } else {
-      nextPeople.push(person)
+      lastPersonLetter = letter
     }
-    lastPersonLetter = letter
   }
   return (
     <>

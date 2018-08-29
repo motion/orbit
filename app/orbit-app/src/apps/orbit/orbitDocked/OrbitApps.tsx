@@ -124,7 +124,7 @@ export class OrbitApps extends React.Component<Props> {
     const { name, store } = this.props
     return (
       <SubPane name={name} fadeBottom>
-        <Views.VerticalSpace />
+        <Views.SmallVerticalSpace />
         <Views.Title>My Apps</Views.Title>
         {!!store.filteredActiveApps.length && (
           <>

@@ -85,8 +85,12 @@ export const SuggestionBarVerticalPad = view({
   pointerEvents: 'none',
 })
 
+export const SmallVerticalSpace = view({
+  height: 10,
+})
+
 export const VerticalSpace = view({
-  height: 16
+  height: 16,
 })
 
 export const Circle = view({
@@ -107,7 +111,7 @@ export const Circle = view({
 
 export const Title = ({ verticalSpacing = 1, ...props }) => (
   <UI.Text
-    size={1.4}
+    size={1.3}
     fontWeight={300}
     margin={[0, 0, 12 * verticalSpacing]}
     {...props}

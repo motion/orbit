@@ -15,6 +15,7 @@ export class MediatorServer {
 
   bootstrap() {
     this.options.transport.onMessage(data => {
+      console.log(`got message`, data)
 
       // do repository actions based on operation type
       switch (data.value.type) {

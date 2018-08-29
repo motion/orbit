@@ -4,23 +4,20 @@ import { ServerTransportInterface } from '../index'
 export class WebSocketServerTransport implements ServerTransportInterface {
   private websocket: WebSocketServer
   private socket: any
-  private awaitingCallbacks: ((data: any) => any)[] = []
+  private onCallbacks: ((data: any) => any)[] = []
 
   constructor(options: { port: number }) {
     this.websocket = new WebSocketServer({ port: options.port })
     this.websocket.on('connection', socket => {
       this.socket = socket
-      this.awaitingCallbacks.forEach(callback => this.onMessage(callback))
-      this.awaitingCallbacks = []
+      this.onCallbacks.forEach(callback => this.onMessage(callback))
     })
   }
 
   onMessage(callback: (data: any) => any) {
-    if (this.socket) {
+    this.onCallbacks.push(callback)
+    if (this.socket)
       this.socket.on('message', str => callback(JSON.parse(str)))
-    } else {
-      this.awaitingCallbacks.push(callback)
-    }
   }
 
   send(data: any) {

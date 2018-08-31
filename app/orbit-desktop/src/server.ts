@@ -188,7 +188,7 @@ export default class Server {
           const values = req.user || req['currentUser']
           this.oauth.finishOauth(name, values)
           res.send(
-            '<html><head><title>Authentication Success</title></head><body>All done, closing...</body></html>',
+            '<html><head><title>Authentication Success</title><script>window.close()</script></head><body>All done, closing...</body></html>',
           )
         },
       )

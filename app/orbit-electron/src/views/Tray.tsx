@@ -19,7 +19,7 @@ export default class TrayEl extends React.Component {
     return (
       <Tray
         onClick={() => {
-          Electron.sendMessage(App, App.messages.TOGGLE_DOCKED)
+          Electron.sendMessage(App, App.messages.TOGGLE_SHOWN)
         }}
         image={image}
         title={App.state.contextMessage}

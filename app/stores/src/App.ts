@@ -53,7 +53,6 @@ class AppStore {
   messages = {
     SHOW_APPS: 'SHOW_APPS',
     TOGGLE_SETTINGS: 'TOGGLE_SETTINGS',
-    TOGGLE_DOCKED: 'TOGGLE_DOCKED',
     TOGGLE_SHOWN: 'TOGGLE_SHOWN',
     SHOW: 'SHOW',
     HIDE: 'HIDE',
@@ -102,7 +101,7 @@ class AppStore {
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
-    contextMessage: 'Orbit',
+    contextMessage: '',
     acceptsForwarding: false,
   })
 

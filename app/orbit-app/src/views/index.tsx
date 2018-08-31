@@ -109,30 +109,34 @@ export const Circle = view({
   margin: [-3, 4, 0, -2],
 })
 
-export const Title = ({ verticalSpacing = 1, ...props }) => (
+export const Title = ({ verticalSpacing = 1, children, ...props }) => (
   <UI.Text
     size={1.2}
     fontWeight={400}
     margin={[0, 0, 12 * verticalSpacing]}
     {...props}
-  />
+  >
+    {children}
+  </UI.Text>
 )
 
 export const VertSpace = view({
   height: 20,
 })
 
-export const SubTitle = ({ verticalSpacing = 1, ...props }) => (
+export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
   <UI.Text
     alpha={0.7}
     fontWeight={400}
-    size={1}
+    size={1.1}
     alignItems="center"
     flexFlow="row"
     padding={[4 * verticalSpacing, 0, 10 * verticalSpacing]}
     opacity={0.75}
     {...props}
-  />
+  >
+    {children}
+  </UI.Text>
 )
 
 export const Link = props => (

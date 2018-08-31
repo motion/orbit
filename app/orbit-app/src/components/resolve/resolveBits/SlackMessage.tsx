@@ -71,7 +71,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
             className="searchable-item"
             fontWeight={400}
             sizeLineHeight={0.8}
-            size={1.1}
+            fontSize={15}
           >
             <Markdown source={message.text} {...markdownOptions} />
           </UI.Text>

@@ -124,7 +124,6 @@ class Bridge {
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', this.dispose)
     }
-    process.on('exit', this.dispose)
     // wait for initial state to come down for a little
     try {
       await Mobx.when(() => this._hasFetchedInitialState, { timeout: 250 })

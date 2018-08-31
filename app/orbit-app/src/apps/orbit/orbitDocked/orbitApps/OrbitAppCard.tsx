@@ -3,6 +3,8 @@ import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
+import { Row, Col } from '@mcro/ui'
+import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 
 type Props = OrbitItemProps & {
   store: SettingInfoStore
@@ -16,7 +18,7 @@ const decorator = compose(
   view,
 )
 
-export const OrbitSettingCard = decorator(
+export const OrbitAppCard = decorator(
   ({ store, result, isActive, subtitle, ...props }: Props) => {
     const countSubtitle = !isActive
       ? ''
@@ -44,7 +46,12 @@ export const OrbitSettingCard = decorator(
         }}
         result={result}
         {...props}
-      />
+      >
+        <Row>
+          <Col flex={1} />
+          <RoundButtonSmall>View</RoundButtonSmall>
+        </Row>
+      </OrbitCard>
     )
   },
 )

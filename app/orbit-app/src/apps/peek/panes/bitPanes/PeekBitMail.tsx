@@ -17,7 +17,6 @@ const Para = view({
 export const Mail = ({ bit }: PeekBitPaneProps) => {
   const { messages } = bit.data as GmailBitData
   if (!messages) {
-    debugger
     return null
   }
   return (
@@ -50,7 +49,8 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
                     .filter(x => x.type === 'from')
                     .map(({ name, email }, index) => (
                       <a key={index} href={`mailto:${email}`}>
-                        <strong>{name}</strong>&nbsp;
+                        <strong>{name}</strong>
+                        &nbsp;
                       </a>
                     ))}
                   {index !== 0 && (
@@ -69,9 +69,9 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
               </UI.Row>
               {!!message.body && (
                 <UI.Text>
-                  {message.body
-                    .split('\n')
-                    .map((i, idx) => <Para key={idx}>{i}</Para>)}
+                  {message.body.split('\n').map((i, idx) => (
+                    <Para key={idx}>{i}</Para>
+                  ))}
                 </UI.Text>
               )}
             </Message>

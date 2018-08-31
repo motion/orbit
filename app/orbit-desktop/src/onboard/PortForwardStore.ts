@@ -48,7 +48,6 @@ export class PortForwardStore {
     log(`Running proxy script: ${pathToOrbitProxy}`)
 
     const port = Config.ports.server
-    const GlobalConfig = getGlobalConfig()
     const host = Config.urls.authProxy.replace('http://', '')
 
     // check in a loop since the sudoPrompt process is long running

@@ -2,6 +2,7 @@ import css from '@mcro/css'
 import { Options } from './types'
 import { createViewFactory } from './createViewFactory'
 import { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
+import { Color } from '@mcro/css'
 
 export { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
 export { ThemeObject } from './types'
@@ -20,7 +21,9 @@ export {
   validCSSAttr,
   Color,
 } from '@mcro/css'
-export {GLOSS_IGNORE_COMPONENT_SYMBOL} from './symbols'
+
+// bugfixing a typescript bug... remove if this compiles without this
+export type Color2 = Color
 
 export const color = require('@mcro/color').default
 

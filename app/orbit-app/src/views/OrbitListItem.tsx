@@ -115,8 +115,6 @@ const Bottom = view({
 @view
 export class OrbitListInner extends React.Component<OrbitItemProps> {
   getInner = (contentProps: ResolvedItem) => {
-    // TODO weird mutation
-    this.props.store.normalizedBit = contentProps
     const {
       createdAt,
       icon,
@@ -294,7 +292,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       model,
       itemProps,
       inGrid,
-      item,
       searchTerm,
       isExpanded,
       hide,
@@ -311,7 +308,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
     return (
       <ItemResolver
         model={model}
-        item={item}
         isExpanded={isExpanded}
         searchTerm={searchTerm}
         hide={hide}

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { on, view, react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron, Desktop } from '@mcro/stores'
+import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { logger } from '@mcro/logger'
@@ -75,6 +75,16 @@ export class MainWindow extends React.Component<Props> {
     this.setState({ position })
   }
 
+  handleBlur = () => {
+    console.log('hide on blur')
+    Electron.sendMessage(App, App.messages.HIDE)
+  }
+
+  handleFocus = () => {
+    console.log('electron focus')
+    Electron.sendMessage(App, App.messages.SHOW)
+  }
+
   render() {
     const { store, electronStore } = this.props
     const url = Config.urls.server
@@ -106,6 +116,8 @@ export class MainWindow extends React.Component<Props> {
         position={this.state.position}
         size={Electron.state.screenSize}
         onMove={this.handleMove}
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
       />
     )
   }

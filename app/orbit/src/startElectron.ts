@@ -62,11 +62,11 @@ export async function startElectron() {
         type: 'question',
         title: 'Move to apps?',
         message: 'Move Orbit to Applications folder?',
-        buttons: ['Cancel', 'Ok'],
-        defaultId: 1,
-        cancelId: 0,
+        buttons: ['Ok', 'Cancel'],
+        defaultId: 0,
+        cancelId: 1,
       })
-      if (response === 1) {
+      if (response === 0) {
         try {
           app.moveToApplicationsFolder()
         } catch (err) {

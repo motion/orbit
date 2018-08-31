@@ -1,9 +1,24 @@
-# wow
+# September
 
-- p2p / app store
-- big-frame sidebar custom app
-- OCR
-- contextual sidebar
+p2p sync, app platform, some features.
+
+- Login/signup/onboarding completion
+- Figure out Google/https oauth workaround
+- p2p system for avoiding hitting syncers
+- Iron out a lot of bugs and syncer issues
+- Refactors and build app for app platform
+
+# October
+
+- Continue on UI kit for apps
+- Get the basic app store in place
+- If Swift contractor works out integrate some OCR
+- Potentially get cosal into search
+- Prep website for private beta launch
+
+# November
+
+Private beta
 
 # productionize
 

@@ -390,6 +390,7 @@ export default class Oracle {
     try {
       this.process = spawn(Path.join(binDir, bin), [], {
         env: {
+          ELECTRON_RUN_AS_NODE: '1',
           SOCKET_PORT: `${this.socketPort}`,
         },
       })

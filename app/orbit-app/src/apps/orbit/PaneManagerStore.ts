@@ -73,7 +73,7 @@ export class PaneManagerStore {
       if (pane === 'onboard') {
         App.actions.setContextMessage('Welcome to Orbit...')
       } else {
-        App.actions.setContextMessage('Orbit')
+        App.actions.setContextMessage('')
       }
     },
   )

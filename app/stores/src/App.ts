@@ -102,7 +102,7 @@ class AppStore {
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
-    contextMessage: 'Orbit',
+    contextMessage: '',
     acceptsForwarding: false,
   })
 

@@ -3,8 +3,8 @@ import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
-import { RoundButton } from '../../../../views'
 import { Row, Col } from '@mcro/ui'
+import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 
 type Props = OrbitItemProps & {
   store: SettingInfoStore
@@ -49,7 +49,7 @@ export const OrbitAppCard = decorator(
       >
         <Row>
           <Col flex={1} />
-          <RoundButton size={0.85}>View</RoundButton>
+          <RoundButtonSmall>View</RoundButtonSmall>
         </Row>
       </OrbitCard>
     )

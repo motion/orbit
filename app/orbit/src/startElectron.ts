@@ -15,8 +15,8 @@ export async function startElectron() {
   app.on('before-quit', async () => {
     console.log('Electron handle exit...')
     console.log('Orbit exiting...')
-    await cleanupChildren(desktopProcess.pid)
-    await cleanupChildren(process.pid)
+    cleanupChildren(desktopProcess.pid)
+    cleanupChildren(process.pid)
     desktopProcess.kill('SIGINT')
     // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
     process.kill(-desktopProcess.pid)

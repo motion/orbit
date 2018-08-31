@@ -35,7 +35,6 @@ export async function startElectron() {
 
   try {
     desktopProcess = require('./startDesktop').startDesktop()
-    console.log('>>>>>>> desktop pid is', desktopProcess)
   } catch (err) {
     desktopFailMsg = `${err.message}`
   }

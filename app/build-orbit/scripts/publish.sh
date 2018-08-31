@@ -13,3 +13,6 @@ fi
 scp ./dist/*.yml root@get.tryorbit.com:/updates
 scp ./dist/*.yaml root@get.tryorbit.com:/updates
 scp ./dist/Orbit-$npm_package_version-mac.zip root@get.tryorbit.com:/updates
+
+# cleanup
+rm ./dist/Orbit-*.zip

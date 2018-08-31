@@ -222,13 +222,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           {!!titleFlex && <div style={{ flex: titleFlex }} />}
           {hasSubtitle && (
             <CardSubtitle>
-              {typeof subtitle === 'string' ? (
-                <UI.Text alpha={0.55} ellipse {...subtitleProps}>
-                  {subtitle}
-                </UI.Text>
-              ) : (
-                subtitle
-              )}
+              <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                {subtitle}
+              </UI.Text>
               {hasMeta && <VerticalSpaceSmall />}
             </CardSubtitle>
           )}

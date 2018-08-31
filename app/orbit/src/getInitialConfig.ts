@@ -40,7 +40,7 @@ export async function getInitialConfig() {
     paths: {
       root,
       appStatic,
-      userData: app.getPath('appData'),
+      userData: app.getPath('userData'),
       nodeBinary,
       resources: Path.join(app.getAppPath(), '..'),
       dotApp,

@@ -200,7 +200,6 @@ export function createViewFactory(toCSS) {
 
     function addRules(displayName: string, rules: BaseRules, namespace) {
       // if these rules have been cached to a className then retrieve it
-      console.log('rules', rules)
       const cachedClass = rulesToClass.get(rules)
       if (cachedClass) {
         return cachedClass

@@ -2,13 +2,12 @@ import { SlackChannel, SlackMessage } from './SlackTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { Person, SlackPersonData } from '@mcro/models'
 
-const Autolinker = require( 'autolinker')
+const Autolinker = require('autolinker')
 
 /**
  * Group of helper utilities to work with Slack Syncer.
  */
 export class SlackUtils {
-
   /**
    * Filters given slack channels by channels in the settings.
    */
@@ -16,14 +15,15 @@ export class SlackUtils {
     channels: SlackChannel[],
     setting: SettingEntity,
   ) {
-    const settingChannels = setting.values.channels /*|| {
-      'C0Z43BNJX': 'C0Z43BNJX',
+    const settingChannels =
+      setting.values.channels /*|| {
+      'C0Z43BNJX': true,
     }*/
 
     // if no channels in settings are selected then return all channels
     if (!settingChannels) return channels
 
-    const settingsChannelIds = Object.keys(settingChannels).map(
+    const settingsChannelIds = Object.keys(settingChannels).filter(
       key => settingChannels[key],
     )
 
@@ -66,20 +66,22 @@ export class SlackUtils {
   /**
    * Finds all the mentioned people in the given slack messages.
    */
-  static findMessageMentionedPeople(messages: SlackMessage[], allPeople: Person[]) {
+  static findMessageMentionedPeople(
+    messages: SlackMessage[],
+    allPeople: Person[],
+  ) {
     const body = messages.map(message => message.text).join('')
-    return allPeople.filter(person => new RegExp(`<@${person.integrationId}>`).test(body))
+    return allPeople.filter(person =>
+      new RegExp(`<@${person.integrationId}>`).test(body),
+    )
   }
 
   /**
    * Builds "body" for a Bit object.
    */
   static buildBitBody(messages: SlackMessage[], allPeople: Person[]): string {
-
     // merge all messages texts into a single body
-    let body = messages
-      .map(message => message.text.trim())
-      .join(' ... ')
+    let body = messages.map(message => message.text.trim()).join(' ... ')
 
     // replace all people id mentions in the message into a real people names
     for (let person of allPeople) {
@@ -100,5 +102,4 @@ export class SlackUtils {
 
     return body
   }
-
 }

@@ -34,7 +34,7 @@ const getItemStyle = (isDragging, { left, top, ...draggableStyle }, index) => ({
   background: isDragging ? 'transparent' : 'transparent',
   // styles we need to apply on draggables
   ...draggableStyle,
-  top: index > 0 ? top : 0,
+  top: index > 0 ? top - 90 : 0,
 })
 
 const findManyType = integration => ({
@@ -65,11 +65,10 @@ class OrbitHomeStore {
   results = react(
     () => [this.allCarousels, this.carouselData, this.carouselOrder],
     ([carousels, data, order]) => {
-      console.log('update results')
+      console.log('update results', this.carouselOrder, order)
       let results: SelectionGroup[] = []
       let offset = 0
-      for (const id in order) {
-        console.log('id', id)
+      for (const id of order) {
         const items = data[id]
         if (!items || !items.length) {
           continue

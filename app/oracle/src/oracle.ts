@@ -89,10 +89,10 @@ export default class Oracle {
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
     // kill process
-    this.process.kill()
+    this.process.kill('SIGINT')
     const killExtra = setTimeout(() => {
       this.process.kill('SIGKILL')
-    }, 16)
+    }, 40)
     await this.process
     delete this.process
     clearTimeout(killExtra)

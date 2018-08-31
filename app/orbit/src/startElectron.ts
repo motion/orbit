@@ -9,16 +9,13 @@ export async function startElectron() {
   const Config = getGlobalConfig()
 
   // else, electron...
-  let desktopPid
+  let desktopProcess
   const handleExit = async () => {
     console.log('Orbit exiting...')
-    if (desktopPid) {
-      process.kill(desktopPid)
+    if (desktopProcess) {
+      desktopProcess.kill('SIGINT')
     }
-    console.log('Cleaning children...')
-    setTimeout(async () => {
-      await cleanupChildren()
-    }, 16)
+    await cleanupChildren()
     console.log('bye!')
   }
 
@@ -38,8 +35,8 @@ export async function startElectron() {
   }, 10000)
 
   try {
-    desktopPid = require('./startDesktop').startDesktop()
-    console.log('>>>>>>> desktop pid is', desktopPid)
+    desktopProcess = require('./startDesktop').startDesktop()
+    console.log('>>>>>>> desktop pid is', desktopProcess)
   } catch (err) {
     desktopFailMsg = `${err.message}`
   }

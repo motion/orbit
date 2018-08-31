@@ -1,4 +1,4 @@
-import { spawn } from 'child_process'
+import { spawn, ChildProcess } from 'child_process'
 import { getGlobalConfig } from '@mcro/config'
 // @ts-ignore
 import { app } from 'electron'
@@ -6,7 +6,7 @@ import * as Path from 'path'
 
 const Config = getGlobalConfig()
 
-export function startDesktop() {
+export function startDesktop(): ChildProcess {
   // enable remote debugging in dev
   const root = Path.join(__dirname, 'main')
   let args = [root]
@@ -29,7 +29,7 @@ export function startDesktop() {
     child.stderr.on('data', b => console.log('desktop err:', b.toString()))
 
     // return pid
-    return child.pid
+    return child
   } catch (err) {
     console.log('error starting desktop', err)
   }

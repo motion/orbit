@@ -1,6 +1,7 @@
 import psTree from 'ps-tree'
 
 export function cleanupChildren() {
+  console.log('Cleaning children...')
   const exitWait = setTimeout(() => {
     console.log('failed to exit gracefully!')
   }, 500)

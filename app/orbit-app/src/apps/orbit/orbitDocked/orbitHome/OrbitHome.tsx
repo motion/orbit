@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react, compose, ensure } from '@mcro/black'
 import { BitRepository, PersonBitRepository } from '../../../../repositories'
-import { SubTitle, SuggestionBarVerticalPad } from '../../../../views'
+import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import {

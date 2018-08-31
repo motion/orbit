@@ -1,22 +1,22 @@
 import * as React from 'react'
 import { view, react, ensure } from '@mcro/black'
-import { SettingRepository } from '../../../repositories'
-import { OrbitSettingCard } from './OrbitSettings/OrbitSettingCard'
-import { SubPane } from '../SubPane'
-import * as Views from '../../../views'
-import { PaneManagerStore } from '../PaneManagerStore'
-import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
-import { SelectionStore } from '../../../stores/SelectionStore'
-import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
-import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClickHandler'
-import { Grid } from '../../../views/Grid'
-import { SimpleItem } from '../../../views/SimpleItem'
+import { SettingRepository } from '../../../../repositories'
+import { OrbitAppCard } from './OrbitAppCard'
+import { SubPane } from '../../SubPane'
+import * as Views from '../../../../views'
+import { PaneManagerStore } from '../../PaneManagerStore'
+import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
+import { SelectionStore } from '../../../../stores/SelectionStore'
+import { modelQueryReaction } from '../../../../repositories/modelQueryReaction'
+import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
+import { Grid } from '../../../../views/Grid'
+import { SimpleItem } from '../../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
-import { fuzzyQueryFilter } from '../../../helpers'
+import { fuzzyQueryFilter } from '../../../../helpers'
 import { App } from '@mcro/stores'
 import { Setting } from '@mcro/models'
-import { settingToAppConfig } from '../../../helpers/settingToResult'
-import { settingsList } from '../../../helpers/settingsList'
+import { settingToAppConfig } from '../../../../helpers/settingToResult'
+import { settingsList } from '../../../../helpers/settingsList'
 
 type Props = {
   name: string
@@ -134,7 +134,7 @@ export class OrbitApps extends React.Component<Props> {
               margin={[5, -4]}
             >
               {store.filteredActiveApps.map((result, index) => (
-                <OrbitSettingCard
+                <OrbitAppCard
                   key={result.id}
                   pane="docked"
                   subPane="apps"

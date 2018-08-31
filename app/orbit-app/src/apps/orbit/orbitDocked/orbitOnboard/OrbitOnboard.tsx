@@ -78,7 +78,7 @@ const Unpad = view({
 const Item = view({
   flexFlow: 'row',
   padding: [0, sidePad + 4],
-  height: 56,
+  height: 42,
   alignItems: 'center',
   inactive: {
     opacity: 0.5,
@@ -96,10 +96,10 @@ Item.theme = ({ theme }) => ({
 const ItemTitle = props => (
   <Text
     {...{
-      fontWeight: 600,
+      fontWeight: 400,
       padding: [0, 12],
       justifyContent: 'center',
-      fontSize: 16,
+      fontSize: 15,
       flex: 1,
     }}
     {...props}
@@ -289,12 +289,14 @@ export const OrbitOnboard = decorator(
           </OnboardFrame>
           <OnboardFrame>
             <Title size={1.2} fontWeight={600}>
-              Select apps
+              Set up a few apps
             </Title>
+
             <Text>
-              You can always set these up through the app store later, but it's
-              nice to get a few working:
+              Orbit privately syncs your data. You can add a few apps now to get
+              it started.
             </Text>
+
             <View height={15} />
             <Unpad>
               {integrations.map(item => {
@@ -308,7 +310,7 @@ export const OrbitOnboard = decorator(
                   >
                     <OrbitIcon size={18} icon={item.id} />
                     <ItemTitle>{item.title}</ItemTitle>
-                    <AddButton disabled={item.added}>
+                    <AddButton size={0.9} disabled={item.added}>
                       {item.added ? 'Added!' : 'Add'}
                     </AddButton>
                   </Item>
@@ -316,10 +318,15 @@ export const OrbitOnboard = decorator(
               })}
             </Unpad>
             <br />
+
             <MessageDark style={{ textAlign: 'center' }}>
-              <strong>Orbit Proxy Active</strong>. Your private keys will never
-              be available outside this device!
+              <strong>Orbit Proxy Active!</strong>
+              <br />
+              <Text textAlign="left" size={1.2}>
+                Your private keys will never leave this device.
+              </Text>
             </MessageDark>
+
             <br />
           </OnboardFrame>
           <OnboardFrame>

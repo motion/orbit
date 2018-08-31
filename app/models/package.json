@@ -8,11 +8,13 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@mcro/mediator": "^2.2.1",
     "global": "^4.3.2",
     "lodash": "4.17.10",
     "octokat": "0.10.0",
     "reflect-metadata": "^0.1.12",
-    "slack": "^11.0.0"
+    "slack": "^11.0.0",
+    "typeorm": "^0.3.0-alpha.12"
   },
   "peerDependencies": {
     "mobx": "*",

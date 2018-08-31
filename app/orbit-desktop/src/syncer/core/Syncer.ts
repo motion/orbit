@@ -28,8 +28,8 @@ const log = logger('syncer')
  */
 export class Syncer {
   name: string
+  options: SyncerOptions
 
-  private options: SyncerOptions
   private intervals: {
     setting?: Setting
     timer: Timer
@@ -166,7 +166,7 @@ export class Syncer {
   /**
    * Runs syncer immediately.
    */
-  private async runSyncer(setting?: SettingEntity) {
+  async runSyncer(setting?: SettingEntity) {
     log(`starting ${this.options.constructor.name} syncer`, setting)
 
     // create a new job - the fact that we started a new syncer

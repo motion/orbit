@@ -5,6 +5,5 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../../packages/mediator" }]
+  "include": ["src/**/*"]
 }

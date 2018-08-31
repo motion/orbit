@@ -13,7 +13,7 @@ export class WebSocketProvider {
 
   constructor() {
     this.websocket = new ReconnectingWebSocket(
-      `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
+      `ws://localhost:9876`, // temporary port, this class should be removed
       [],
       {
         WebSocket,

@@ -1,27 +1,35 @@
-import { BitEntity } from './entities/BitEntity'
-import { SettingEntity } from './entities/SettingEntity'
-import { Syncers } from './syncer'
-import Server from './Server'
-import { Screen } from './Screen'
-import { KeyboardStore } from './stores/keyboardStore'
-import { handleEntityActions } from './sqlBridge'
-import { App, Electron, Desktop } from '@mcro/stores'
 import { debugState, on } from '@mcro/black'
-import root from 'global'
-import Path from 'path'
-import open from 'opn'
-// import iohook from 'iohook'
-import { Connection } from 'typeorm'
-import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
-import macosVersion from 'macos-version'
-import { Server as WebSocketServer } from 'ws'
-import connectModels from './helpers/connectModels'
-import { Entities } from './entities'
-import { Onboard } from './onboard/Onboard'
-import { Logger, logger } from '@mcro/logger'
-import * as typeorm from 'typeorm'
-import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { getGlobalConfig } from '@mcro/config'
+import { Logger, logger } from '@mcro/logger'
+import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
+import { BitModel, JobModel, PersonBitModel, PersonModel, SettingModel, SettingRemoveCommand } from '@mcro/models'
+import { SettingForceSyncCommand } from '@mcro/models/_'
+import { App, Desktop, Electron } from '@mcro/stores'
+import root from 'global'
+import macosVersion from 'macos-version'
+import open from 'opn'
+import Path from 'path'
+// import iohook from 'iohook'
+import * as typeorm from 'typeorm'
+import { Connection } from 'typeorm'
+import { Server as WebSocketServer } from 'ws'
+import { Entities } from './entities'
+import { BitEntity } from './entities/BitEntity'
+import { JobEntity } from './entities/JobEntity'
+import { PersonBitEntity } from './entities/PersonBitEntity'
+import { PersonEntity } from './entities/PersonEntity'
+import { SettingEntity } from './entities/SettingEntity'
+import connectModels from './helpers/connectModels'
+import { Onboard } from './onboard/Onboard'
+import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
+import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
+import { Screen } from './Screen'
+import Server from './Server'
+import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
+import { handleEntityActions } from './sqlBridge'
+import { KeyboardStore } from './stores/keyboardStore'
+import { Syncers } from './syncer'
+import { SyncerGroup } from './syncer/core/SyncerGroup'
 
 const log = logger('desktop')
 
@@ -35,6 +43,7 @@ export class Root {
   generalSettingManager: GeneralSettingManager
   server = new Server()
   stores = null
+  mediatorServer: MediatorServer
 
   start = async () => {
     this.registerREPLGlobals()
@@ -61,6 +70,7 @@ export class Root {
       open(url)
     })
     await this.connect()
+    this.registerMediatorServer()
 
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
@@ -137,12 +147,52 @@ export class Root {
   }
 
   /**
+   * Registers a mediator server which is responsible
+   * for communication between processes.
+   */
+  private registerMediatorServer() {
+    this.mediatorServer = new MediatorServer({
+      models: [
+        SettingModel,
+        BitModel,
+        JobModel,
+        PersonModel,
+        PersonBitModel,
+      ],
+      commands: [
+        SettingRemoveCommand,
+        SettingForceSyncCommand,
+      ],
+      transport: new WebSocketServerTransport({
+        port: getGlobalConfig().ports.dbBridge,
+      }),
+      resolvers: [
+        ...typeormResolvers(this.connection, [
+          { entity: SettingEntity, models: [SettingModel] },
+          { entity: BitEntity, models: [BitModel] },
+          { entity: JobEntity, models: [JobModel] },
+          { entity: PersonEntity, models: [PersonModel] },
+          { entity: PersonBitEntity, models: [PersonBitModel] },
+        ]),
+        SettingRemoveResolver,
+        SettingForceSyncResolver,
+        // PostChangeCommandResolver,
+        // PostModelResolver,
+        // PostCategoriesResolver,
+        // PostModelSaveResolver,
+        // PostModelRemoveResolver,
+      ]
+    });
+    this.mediatorServer.bootstrap()
+  }
+
+  /**
    * Registers a websocket server which is responsible
    * for communication between processes.
    */
   private registerEntityServer() {
     const server = new WebSocketServer({
-      port: getGlobalConfig().ports.dbBridge,
+      port: 9876, // temporary port, this code should be removed
     })
     server.on('connection', socket => {
       socket.on('message', str => {

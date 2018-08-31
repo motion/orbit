@@ -48,11 +48,14 @@ export async function startElectron() {
   const ElectronApp = require('@mcro/orbit-electron')
   ElectronApp.main()
 
+  // focus app on start
+  // because we hide dock icon we need to do this
+  app.focus()
+
   // PRODUCTION
   if (Config.isProd) {
     // move to app folder
     if (!app.isInApplicationsFolder()) {
-      app.focus()
       app.dock.bounce('informational')
       const response = dialog.showMessageBox({
         type: 'question',

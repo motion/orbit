@@ -13,6 +13,7 @@ import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
+import { debounce } from 'lodash'
 
 type Props = {
   name: string
@@ -26,6 +27,7 @@ const getListStyle = isDraggingOver => ({
 })
 
 const getItemStyle = (isDragging, { left, top, ...draggableStyle }, index) => ({
+  cursor: 'default',
   // some basic styles to make the items look a bit nicer
   userSelect: 'none',
   // change background colour if dragging
@@ -62,9 +64,7 @@ class OrbitHomeStore {
 
   results = react(
     () => [this.allCarousels, this.carouselData, this.carouselOrder],
-    async ([carousels, data, order], { sleep }) => {
-      // debounce a little
-      await sleep(50)
+    ([carousels, data, order]) => {
       console.log('update results')
       let results: SelectionGroup[] = []
       let offset = 0
@@ -129,8 +129,10 @@ class OrbitHomeStore {
   carouselOrder = [0, 1, 2, 3, 4, 5, 6]
 
   reorder = (startIndex, endIndex) => {
-    const [removed] = this.carouselOrder.splice(startIndex, 1)
-    this.carouselOrder.splice(endIndex, 0, removed)
+    const order = [...this.carouselOrder]
+    const [removed] = order.splice(startIndex, 1)
+    order.splice(endIndex, 0, removed)
+    this.carouselOrder = order
   }
 
   carouselData = {}
@@ -148,13 +150,15 @@ class OrbitHomeStore {
       for (const { id, name, model, query } of this.allCarousels) {
         const subscription = Mediator.observeMany(model, {
           args: query,
-        }).subscribe(values => {
-          console.log('update model data', name, values)
-          this.carouselData = {
-            ...this.carouselData,
-            [id]: values,
-          }
-        })
+        }).subscribe(
+          debounce(values => {
+            console.log('update model data', name, values)
+            this.carouselData = {
+              ...this.carouselData,
+              [id]: values,
+            }
+          }, 100),
+        )
 
         disposers.push(() => subscription.unsubscribe())
       }

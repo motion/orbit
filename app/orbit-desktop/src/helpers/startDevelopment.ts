@@ -18,24 +18,11 @@ export function startDevelopment(appRoot) {
     }
   }
 
-  // do something when app is closing
   process.on('exit', exitHandler)
-  // ctrl+c event
-  process.on('SIGINT', exitHandler)
-  // "kill pid" (nodemon)
-  process.on('SIGUSR1', exitHandler)
-  process.on('SIGUSR2', exitHandler)
-  process.on('SIGSEGV', () => {
-    console.log('Segmentation fault on exit')
-    exitHandler(1)
-  })
 
-  // uncaught exceptions
   process.on('uncaughtException', err => {
     console.log('uncaughtException', err)
   })
-
-  // promise exceptions
   process.on('unhandledRejection', function(reason, promise) {
     if (reason) {
       if (reason.code === 'SQLITE_BUSY') {

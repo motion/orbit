@@ -20,7 +20,7 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/orbit-desktop)/_ \
   --watch $(realpath node_modules/@mcro/orbit-desktop)/package.json \
   --delay 1 \
-  --exec 'npx kill-port 9001 && npx kill-port 9002 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 _/test.js'
+  --exec 'npx kill-port 9001 && npx kill-port 9002 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 _/main.js'
 
 
 echo "bye orbit-electron"

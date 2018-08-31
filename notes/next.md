@@ -26,6 +26,8 @@ Private beta
 
 # productionize
 
+- typing while focused on a peek:
+  - reset index to 0 not -1, keeps the peek open as you filter things
 - doesnt follow monitor on add new monitor
 - deploy initial oauth step to digitalocean
 - need a way for people to suggest/vote features

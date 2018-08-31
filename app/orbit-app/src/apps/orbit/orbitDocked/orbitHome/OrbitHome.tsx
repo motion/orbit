@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react, compose, ensure } from '@mcro/black'
 import { BitRepository, PersonBitRepository } from '../../../../repositories'
-import { SubTitle } from '../../../../views'
+import { SubTitle, RoundButton } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import {
@@ -9,9 +9,10 @@ import {
   SelectionGroup,
 } from '../../../../stores/SelectionStore'
 import { capitalize } from 'lodash'
-import { View } from '@mcro/ui'
+import { View, Row, Col } from '@mcro/ui'
 import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 import { now } from 'mobx-utils'
+import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 
 type Props = {
   name: string
@@ -109,9 +110,18 @@ const OrbitHomeCarouselSection = decorator(
     const isPeople = categoryName === 'People'
     return (
       <Section key={categoryName}>
-        <SubTitle margin={0} padding={[10, 0, 0]}>
-          {categoryName}
-        </SubTitle>
+        <Row alignItems="center" padding={[10, 0, 2]}>
+          <SubTitle margin={0} padding={0}>
+            {categoryName}
+          </SubTitle>
+          <Col flex={1} />
+          <RoundButtonSmall
+            icon="remove"
+            iconProps={{ size: 9 }}
+            opacity={0}
+            hoverStyle={{ opacity: 1 }}
+          />
+        </Row>
         <Unpad>
           <SelectableCarousel
             items={items}

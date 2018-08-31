@@ -34,10 +34,12 @@ const SuggestionBar = view(UI.Row, {
   height: 0,
   transition: 'all ease 90ms 40ms',
   opacity: 0,
+  pointerEvents: 'none',
   transform: {
     x: 6,
   },
   visible: {
+    pointerEvents: 'auto',
     opacity: 1,
     transform: {
       x: 0,

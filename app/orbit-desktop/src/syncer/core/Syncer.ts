@@ -260,7 +260,7 @@ export class Syncer {
         event,
       )
       const interval = this.intervals.find(
-        interval => interval.setting.id === event.entityId,
+        interval => interval.setting && interval.setting.id === event.entityId,
       )
       if (interval) {
         log('okay we had interval for it, let\'s removing it now', interval)

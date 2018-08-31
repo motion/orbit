@@ -80,7 +80,9 @@ export class MainWindow extends React.Component<Props> {
 
   handleBlur = () => {
     console.log('hide on blur')
-    Electron.sendMessage(App, App.messages.HIDE)
+    if (process.env.NODE_ENV !== 'development') {
+      Electron.sendMessage(App, App.messages.HIDE)
+    }
   }
 
   handleFocus = () => {

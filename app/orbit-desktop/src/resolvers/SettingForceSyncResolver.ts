@@ -7,7 +7,7 @@ import { Syncers } from '../syncer'
 import { Syncer } from '../syncer/core/Syncer'
 import { SyncerGroup } from '../syncer/core/SyncerGroup'
 
-const log = logger(`command:setting-sync`)
+const log = logger(`command:setting-force-sync`)
 
 export const SettingForceSyncResolver = resolveCommand(SettingForceSyncCommand, async ({ settingId }) => {
 

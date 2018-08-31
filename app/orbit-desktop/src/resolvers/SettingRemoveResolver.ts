@@ -7,7 +7,7 @@ import { JobEntity } from '../entities/JobEntity'
 import { PersonEntity } from '../entities/PersonEntity'
 import { SettingEntity } from '../entities/SettingEntity'
 
-const log = logger(`command:setting-force-sync`)
+const log = logger(`command:setting-remove`)
 
 export const SettingRemoveResolver = resolveCommand(SettingRemoveCommand, async ({ settingId }) => {
 

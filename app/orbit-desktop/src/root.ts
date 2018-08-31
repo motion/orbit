@@ -3,6 +3,7 @@ import { getGlobalConfig } from '@mcro/config'
 import { Logger, logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import { BitModel, JobModel, PersonBitModel, PersonModel, SettingModel, SettingRemoveCommand } from '@mcro/models'
+import { SettingForceSyncCommand } from '@mcro/models/_'
 import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
 import macosVersion from 'macos-version'
@@ -20,6 +21,8 @@ import { PersonEntity } from './entities/PersonEntity'
 import { SettingEntity } from './entities/SettingEntity'
 import connectModels from './helpers/connectModels'
 import { Onboard } from './onboard/Onboard'
+import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
+import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { Screen } from './Screen'
 import Server from './Server'
 import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
@@ -158,6 +161,7 @@ export class Root {
       ],
       commands: [
         SettingRemoveCommand,
+        SettingForceSyncCommand,
       ],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,
@@ -170,6 +174,8 @@ export class Root {
           { entity: PersonEntity, models: [PersonModel] },
           { entity: PersonBitEntity, models: [PersonBitModel] },
         ]),
+        SettingRemoveResolver,
+        SettingForceSyncResolver,
         // PostChangeCommandResolver,
         // PostModelResolver,
         // PostCategoriesResolver,

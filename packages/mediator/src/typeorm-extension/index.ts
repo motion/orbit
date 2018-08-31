@@ -1,6 +1,15 @@
 import { Connection } from 'typeorm'
 import { Model } from '../common'
-import { ResolveInterface, resolveMany, resolveOne, resolveRemove, resolveSave } from '../server'
+import {
+  resolveCount,
+  ResolveInterface,
+  resolveMany, resolveManyAndCount, resolveObserveCount,
+  resolveObserveMany, resolveObserveManyAndCount,
+  resolveObserveOne,
+  resolveOne,
+  resolveRemove,
+  resolveSave,
+} from '../server'
 
 export interface TypeORMResolver<ModelType> {
   entity: Function;
@@ -18,6 +27,13 @@ export function typeormResolvers(connection: Connection, entityResolvers: TypeOR
       resolvers.push(resolveMany(model, async args => {
         return connection.getRepository(entityResolver.entity).find(args);
       }));
+      resolvers.push(resolveManyAndCount(model, async args => {
+        return connection.getRepository(entityResolver.entity).findAndCount(args);
+      }));
+      resolvers.push(resolveCount(model, async args => {
+        // todo: not sure but probably we would need to use args.where
+        return connection.getRepository(entityResolver.entity).count(args);
+      }));
       resolvers.push(resolveSave(model, async model => {
         return connection.getRepository(entityResolver.entity).save(model);
       }));
@@ -25,13 +41,19 @@ export function typeormResolvers(connection: Connection, entityResolvers: TypeOR
         await connection.getRepository(entityResolver.entity).remove(model);
         return true
       }));
-
-      /*const PostCategoriesResolver = resolveModelProperty(PostModel, "categories", async args => {
-        return [{
-          id: 1,
-          name: "Hello"
-        }];
-      });*/
+      resolvers.push(resolveObserveOne(model, args => {
+        return connection.getRepository(entityResolver.entity).observeOne(args);
+      }));
+      resolvers.push(resolveObserveMany(model, args => {
+        return connection.getRepository(entityResolver.entity).observe(args);
+      }));
+      resolvers.push(resolveObserveManyAndCount(model, args => {
+        return connection.getRepository(entityResolver.entity).observeManyAndCount(args);
+      }));
+      resolvers.push(resolveObserveCount(model, args => {
+        // todo: not sure but probably we would need to use args.where
+        return connection.getRepository(entityResolver.entity).observeCount(args);
+      }));
     }
   }
   return resolvers

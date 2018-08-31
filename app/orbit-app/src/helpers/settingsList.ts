@@ -1,4 +1,12 @@
-export const settingsList = [
+import { IntegrationType } from '@mcro/models'
+
+export const settingsList: {
+  id: IntegrationType
+  type: string
+  integration: string
+  title: string
+  icon: string
+}[] = [
   {
     id: 'gmail',
     type: 'setting',

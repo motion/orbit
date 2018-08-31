@@ -19,13 +19,14 @@ export const SettingRepository = new Repository<Setting>(
   provider,
 )
 
+const websocket = new ReconnectingWebSocket(
+  `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
+  [],
+  {
+    WebSocket,
+  },
+);
+
 export const Mediator = new MediatorClient({
-  transport: new WebSocketClientTransport(
-    new ReconnectingWebSocket(
-      `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
-      [],
-      {
-        WebSocket,
-      },
-    )),
+  transport: new WebSocketClientTransport(websocket as any)
 })

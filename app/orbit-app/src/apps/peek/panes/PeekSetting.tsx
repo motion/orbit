@@ -1,16 +1,16 @@
-import * as React from 'react'
 import { view } from '@mcro/black'
+import { Setting, SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { Setting } from '@mcro/models'
-import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
-import { SettingRepository } from '../../../repositories'
-import * as SettingPanes from './settingPanes'
+import { capitalize } from 'lodash'
+import * as React from 'react'
+import { Mediator } from '../../../repositories'
+import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { SettingInfoStore } from '../../../stores/SettingInfoStore'
+import { RoundButton } from '../../../views'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekPaneProps } from '../PeekPaneProps'
-import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
-import { RoundButton } from '../../../views'
+import * as SettingPanes from './settingPanes'
 
 // @ts-ignore
 const Electron = electronRequire('electron')
@@ -43,6 +43,9 @@ class SettingContent extends React.Component<
   }
 > {
   handleRefresh = async () => {
+    Mediator.command(SettingForceSyncCommand, {
+      settingId: this.props.setting.id
+    })
     // const store = this.props.store
     // const job: Job = {} as Job
     // job.type = store.setting.type
@@ -61,7 +64,9 @@ class SettingContent extends React.Component<
       cancelId: 0,
     })
     if (response === 1) {
-      await SettingRepository.remove(store.setting)
+      Mediator.command(SettingRemoveCommand, {
+        settingId: store.setting.id
+      })
       App.actions.clearPeek()
     }
   }

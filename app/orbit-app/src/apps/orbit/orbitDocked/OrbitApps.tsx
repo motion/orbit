@@ -1,34 +1,32 @@
+import { ensure, react, view } from '@mcro/black'
+import {  Subscription } from '@mcro/mediator'
+import { IntegrationType, Setting, SettingModel } from '@mcro/models'
+import { App } from '@mcro/stores'
+import { Button } from '@mcro/ui'
 import * as React from 'react'
-import { view, react, ensure } from '@mcro/black'
-import { SettingRepository } from '../../../repositories'
-import { OrbitSettingCard } from './OrbitSettings/OrbitSettingCard'
-import { SubPane } from '../SubPane'
-import * as Views from '../../../views'
-import { PaneManagerStore } from '../PaneManagerStore'
-import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
-import { SelectionStore } from '../../../stores/SelectionStore'
-import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
+import { fuzzyQueryFilter } from '../../../helpers'
 import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClickHandler'
+import { settingsList } from '../../../helpers/settingsList'
+import { settingToAppConfig } from '../../../helpers/settingToResult'
+import { Mediator } from '../../../repositories'
+import { SelectionStore } from '../../../stores/SelectionStore'
+import * as Views from '../../../views'
 import { Grid } from '../../../views/Grid'
 import { SimpleItem } from '../../../views/SimpleItem'
-import { Button } from '@mcro/ui'
-import { fuzzyQueryFilter } from '../../../helpers'
-import { App } from '@mcro/stores'
-import { Setting } from '@mcro/models'
-import { settingToAppConfig } from '../../../helpers/settingToResult'
-import { settingsList } from '../../../helpers/settingsList'
+import { PaneManagerStore } from '../PaneManagerStore'
+import { SubPane } from '../SubPane'
+import { OrbitSettingCard } from './OrbitSettings/OrbitSettingCard'
 
 type Props = {
   name: string
   store?: OrbitAppsStore
   paneManagerStore?: PaneManagerStore
-  integrationSettingsStore?: IntegrationSettingsStore
   selectionStore?: SelectionStore
 }
 
 class OrbitAppsStore {
   props: Props
-  integrationSettings: Setting[] = []
+  integrations: Setting[] = []
 
   // when pane is active
   get isActive() {
@@ -55,13 +53,6 @@ class OrbitAppsStore {
     },
   )
 
-  private get allAvailableApps() {
-    // sort by not used first
-    return settingsList.sort(
-      (a, b) => (!this.isAppActive(a) && this.isAppActive(b) ? -1 : 1),
-    )
-  }
-
   get filteredAvailableApps() {
     return fuzzyQueryFilter(this.activeQuery, this.allAvailableApps, {
       key: 'title',
@@ -69,7 +60,7 @@ class OrbitAppsStore {
   }
 
   private get allActiveApps() {
-    return this.integrationSettings.map(setting => ({
+    return this.integrations.map(setting => ({
       ...settingToAppConfig(setting),
       setting,
     }))
@@ -81,31 +72,16 @@ class OrbitAppsStore {
     })
   }
 
-  getSettings = () =>
-    SettingRepository.find({
-      where: {
-        category: 'integration',
-      },
+  private get allAvailableApps() {
+    // sort by not used first
+    return settingsList.sort((a, b) => {
+      return (!this.hasIntegration(a.id) && this.hasIntegration(b.id) ? -1 : 1)
     })
+  }
 
-  // this will go away soon...
-  refreshSettings = modelQueryReaction(
-    this.getSettings,
-    settings => {
-      ensure(
-        'is active if already loaded',
-        this.isActive || !this.integrationSettings.length,
-      )
-      this.integrationSettings = settings
-    },
-    {
-      ignoreKeys: ['updatedAt', 'values'],
-    },
-  )
-
-  isAppActive = result => {
-    return !!this.integrationSettings.find(
-      setting => setting.type === result.id,
+  private hasIntegration = (type: IntegrationType) => {
+    return !!this.integrations.find(
+      setting => setting.type === type,
     )
   }
 }
@@ -114,12 +90,32 @@ const Unpad = view({
   margin: [0, -16],
 })
 
-@view.attach('selectionStore', 'paneManagerStore', 'integrationSettingsStore')
+@view.attach('selectionStore', 'paneManagerStore')
 @view.attach({
   store: OrbitAppsStore,
 })
 @view
 export class OrbitApps extends React.Component<Props> {
+
+  subscription: Subscription;
+
+  componentDidMount() {
+    this.subscription = Mediator
+      .observeMany(SettingModel, {
+        args: {
+          where: { category: 'integration' },
+        }
+      })
+      .subscribe(settings => {
+        console.log(`updated settings`, settings)
+        this.props.store.integrations = settings
+      })
+  }
+
+  componentWillUnmount() {
+    this.subscription.unsubscribe();
+  }
+
   render() {
     const { name, store } = this.props
     return (
@@ -138,7 +134,7 @@ export class OrbitApps extends React.Component<Props> {
                   key={result.id}
                   pane="docked"
                   subPane="apps"
-                  total={store.integrationSettings.length}
+                  total={store.integrations.length}
                   inGrid
                   borderRadius={4}
                   result={result}

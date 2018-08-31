@@ -1,4 +1,4 @@
-export * from "./ClientTransportInterface"
+export * from "./ClientTransport"
 export * from "./MediatorClient"
 export * from "./queries"
 export * from "./Query"

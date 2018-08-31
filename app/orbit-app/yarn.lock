@@ -171,6 +171,10 @@
   version "1.13.6"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.13.6.tgz#128d1685a7c34d31ed17010fc87d6a12c1de6976"
 
+"@types/zen-observable@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
+
 abab@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -4529,10 +4533,11 @@ type-is@~1.6.15, type-is@~1.6.16:
     media-typer "0.3.0"
     mime-types "~2.1.18"
 
-typeorm@^0.3.0-alpha.7:
-  version "0.3.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.7.tgz#a5aff08d2ddc532ef18bb190d2f5767f7888c157"
+typeorm@^0.3.0-alpha.12:
+  version "0.3.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.12.tgz#2a540df613d4376d176918549ea0d267d964eb8a"
   dependencies:
+    "@types/zen-observable" "^0.8.0"
     app-root-path "^2.0.1"
     buffer "^5.1.0"
     chalk "^2.3.2"
@@ -4546,6 +4551,7 @@ typeorm@^0.3.0-alpha.7:
     xml2js "^0.4.17"
     yargonaut "^1.1.2"
     yargs "^11.1.0"
+    zen-observable "^0.8.9"
 
 uglify-es@^3.3.9:
   version "3.3.9"
@@ -4895,3 +4901,7 @@ yup@^0.26.2:
     property-expr "^1.5.0"
     synchronous-promise "^1.0.18"
     toposort "^2.0.2"
+
+zen-observable@^0.8.9:
+  version "0.8.9"
+  resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.9.tgz#0475c760ff0eda046bbdfa4dc3f95d392807ac53"

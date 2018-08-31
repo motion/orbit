@@ -1,10 +1,10 @@
 import { Server as WebSocketServer } from 'ws'
-import { ServerTransportInterface } from '../index'
+import { ServerTransport, TransportRequest, TransportResponse } from '../index'
 
-export class WebSocketServerTransport implements ServerTransportInterface {
+export class WebSocketServerTransport implements ServerTransport {
   private websocket: WebSocketServer
   private socket: any
-  private onCallbacks: ((data: any) => any)[] = []
+  private onCallbacks: ((data: TransportRequest) => void)[] = []
 
   constructor(options: { port: number }) {
     this.websocket = new WebSocketServer({ port: options.port })
@@ -14,13 +14,13 @@ export class WebSocketServerTransport implements ServerTransportInterface {
     })
   }
 
-  onMessage(callback: (data: any) => any) {
+  onMessage(callback: (data: TransportRequest) => void) {
     this.onCallbacks.push(callback)
     if (this.socket)
       this.socket.on('message', str => callback(JSON.parse(str)))
   }
 
-  send(data: any) {
+  send(data: TransportResponse) {
     this.socket.send(JSON.stringify(data))
   }
 

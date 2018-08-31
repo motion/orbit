@@ -6,6 +6,10 @@
   version "10.9.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.9.2.tgz#f0ab8dced5cd6c56b26765e1c0d9e4fdcc9f2a00"
 
+"@types/zen-observable@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
+
 ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
@@ -551,10 +555,11 @@ tiny-json-http@^7.0.0:
   version "7.0.0"
   resolved "https://registry.npmjs.org/tiny-json-http/-/tiny-json-http-7.0.0.tgz#1b1240efa591cd0faa5845f844694e79563ac2a2"
 
-typeorm@^0.3.0-alpha.9:
-  version "0.3.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.10.tgz#31909d4dc99e1c406cb36c785cdaa23b1d7fc77b"
+typeorm@^0.3.0-alpha.12:
+  version "0.3.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.12.tgz#2a540df613d4376d176918549ea0d267d964eb8a"
   dependencies:
+    "@types/zen-observable" "^0.8.0"
     app-root-path "^2.0.1"
     buffer "^5.1.0"
     chalk "^2.3.2"
@@ -568,6 +573,7 @@ typeorm@^0.3.0-alpha.9:
     xml2js "^0.4.17"
     yargonaut "^1.1.2"
     yargs "^11.1.0"
+    zen-observable "^0.8.9"
 
 whatwg-fetch@^2.0.3:
   version "2.0.4"
@@ -666,3 +672,7 @@ yargs@^11.1.0:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^9.0.2"
+
+zen-observable@^0.8.9:
+  version "0.8.9"
+  resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.9.tgz#0475c760ff0eda046bbdfa4dc3f95d392807ac53"

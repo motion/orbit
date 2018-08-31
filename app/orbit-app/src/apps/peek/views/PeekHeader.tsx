@@ -108,9 +108,11 @@ export class PeekHeaderContent extends React.Component<Props> {
       integration,
       ...props
     } = this.props
+    const hasTitle = !!(title || titleAfter)
     const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
     const itemConfig = peekStore.state.appConfig.config
     const hideTitleBar = itemConfig && itemConfig.showTitleBar === false
+    const titleHeight = 27
     return (
       <PeekHeaderContain
         invisible={hideTitleBar}
@@ -122,6 +124,10 @@ export class PeekHeaderContent extends React.Component<Props> {
       >
         <MainHead>
           <TitleBar
+            {...!hasTitle && {
+              height: '100%',
+              position: 'absolute',
+            }}
             after={
               <>
                 <UI.Row
@@ -130,7 +136,8 @@ export class PeekHeaderContent extends React.Component<Props> {
                   top={0}
                   left={6}
                   right={0}
-                  height={27}
+                  padding={hasTitle ? 0 : [16, 0, 0, 8]}
+                  height={titleHeight}
                   zIndex={10000}
                   alignItems="center"
                 >

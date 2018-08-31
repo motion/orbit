@@ -43,7 +43,7 @@ BottomFloat.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.background} 50%)`,
 })
 
-const HeadSide = view({
+const HeadSide = view(View, {
   minWidth: 80,
   padding: [0, 15],
   alignItems: 'center',
@@ -93,12 +93,17 @@ export const PeekBit = ({
             // focusOnMount
             onChange={() => selectionStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
-            placeholder={`Search this ${appConfig.subType} and related...`}
             searchBarProps={{
               padding: [5, 10],
               height: 42,
             }}
-            before={<HeadSide />}
+            before={
+              <HeadSide maxWidth="70%" margin={[0, 10, 0, 15]}>
+                <UI.Text fontSize={13} fontWeight={400} ellipse>
+                  {title}
+                </UI.Text>
+              </HeadSide>
+            }
             after={
               <HeadSide>
                 {!!icon && (
@@ -132,7 +137,7 @@ export const PeekBit = ({
           >
             {({ searchBar, searchTerm }) => {
               return children({
-                title,
+                title: null,
                 icon,
                 belowHeadMain: searchBar,
                 postBody: (

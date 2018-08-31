@@ -19,6 +19,7 @@ export const ControlButtonChrome = view(UI.Col, {
   borderRadius: 100,
   alignItems: 'center',
   justifyContent: 'center',
+  pointerEvents: 'auto',
   '& > img': {
     opacity: 0,
   },

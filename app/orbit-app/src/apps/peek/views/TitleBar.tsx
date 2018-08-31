@@ -1,5 +1,6 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
-import { Text } from '@mcro/ui'
+import { Text, View } from '@mcro/ui'
 
 // just the top titlebar:
 export const TitleBar = ({ children, after, ...props }) => (
@@ -9,12 +10,13 @@ export const TitleBar = ({ children, after, ...props }) => (
   </TitleBarContain>
 )
 
-const TitleBarContain = view({
+const TitleBarContain = view(View, {
   flex: 1,
   height: 27,
   maxWidth: '100%',
   position: 'relative',
-  zIndex: 1,
+  zIndex: 10,
+  pointerEvents: 'none',
 })
 
 const TitleBarText = props => (

@@ -2,8 +2,13 @@
 
 app platform demo, p2p sync, search
 
-- RSS Syncer means we can actually publish an RSS feed of updates to orbit users :D
-  - and can hardcode it for them so theres content there on first start
+- Able to make your own "Pages/Spaces/Homescreens"
+- RSS Syncer
+- We make the default home screen be "Orbit Updates"
+  - shows our RSS and maybe Twitter :D
+- Integration quick search result cards
+  - Those show a queue for each Location in that integration
+- We can also have an example of Design blogs
 - Login/signup/onboarding completion
 - Figure out Google/https oauth workaround
 - p2p system for avoiding hitting syncers
@@ -26,6 +31,8 @@ Private beta
 
 # productionize
 
+- typing while focused on a peek:
+  - reset index to 0 not -1, keeps the peek open as you filter things
 - doesnt follow monitor on add new monitor
 - deploy initial oauth step to digitalocean
 - need a way for people to suggest/vote features

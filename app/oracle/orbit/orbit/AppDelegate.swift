@@ -94,6 +94,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       self.supportsTransparency = true
     }
     
+    // todo support lower versions
     if #available(OSX 10.12, *) {
       let _ = Timer(timeInterval: 0.4, repeats: true) { _ in
         if !self.window.isOnActiveSpace {
@@ -103,6 +104,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
     } else {
       // Fallback on earlier versions
+    }
+    
+    // allow showing icon in sub-apps
+    if ProcessInfo.processInfo.environment["SHOW_ICON"] != nil {
+      NSApp.setActivationPolicy(NSApplication.ActivationPolicy.regular)
     }
 
     blurryView.maskImage = _maskImage(cornerRadius: 16.0)

@@ -26,6 +26,7 @@ type Props = {
 
 const exploreButton = {
   size: 1.3,
+  width: 32,
   circular: true,
   glint: false,
   borderWidth: 0,

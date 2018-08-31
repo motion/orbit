@@ -106,6 +106,7 @@ const decorator = compose(
 const OrbitHomeCarouselSection = decorator(
   ({ subPaneStore, homeStore, categoryName, ...props }) => {
     const { items, startIndex } = homeStore.following[categoryName]
+    const isPeople = categoryName === 'People'
     return (
       <Section key={categoryName}>
         <SubTitle margin={0} padding={[10, 0, 0]}>
@@ -120,10 +121,11 @@ const OrbitHomeCarouselSection = decorator(
             resetOnInactive
             cardProps={{
               hide: {
-                body: categoryName !== 'People',
-                icon: categoryName === 'People',
+                body: !isPeople,
+                icon: isPeople,
               },
               titleFlex: 1,
+              titleProps: isPeople ? { ellipse: true } : null,
             }}
             {...props}
           />

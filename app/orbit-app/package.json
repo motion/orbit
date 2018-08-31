@@ -27,6 +27,7 @@
     "@mcro/slackdown": "^2.2.1",
     "@mcro/stores": "^2.2.1",
     "@mcro/ui": "^2.2.1",
+    "react-beautiful-dnd": "9.0.2",
     "gatsby-remark-emoji": "0.0.2",
     "typeorm": "^0.3.0-alpha.12",
     "react-markdown": "3.4.1",

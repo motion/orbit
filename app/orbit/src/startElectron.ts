@@ -53,6 +53,7 @@ export async function startElectron() {
   if (Config.isProd) {
     // move to app folder
     if (!app.isInApplicationsFolder()) {
+      app.focus()
       app.dock.bounce('informational')
       const response = dialog.showMessageBox({
         type: 'question',

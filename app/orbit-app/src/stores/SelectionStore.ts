@@ -1,4 +1,4 @@
-import { react, on, isEqual } from '@mcro/black'
+import { react, on, isEqual, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import * as Helpers from '../helpers'
 import { AppStore } from './AppStore'
@@ -138,12 +138,12 @@ export class SelectionStore {
   )
 
   clearSelectedOnClosePeek = react(
-    () => App.peekState.target,
+    () => !!App.peekState.appConfig,
     target => {
-      if (target || !this.hasActiveIndex) {
-        throw react.cancel
-      }
-      log(`ok clearing ${target} ${this.hasActiveIndex} ${this.activeIndex}`)
+      ensure('no target and active index', !target && this.hasActiveIndex)
+      console.log(
+        `ok clearing ${target} ${this.hasActiveIndex} ${this.activeIndex}`,
+      )
       this.clearSelected()
     },
   )
@@ -197,6 +197,7 @@ export class SelectionStore {
       return
     }
     const activeIndex = this.getNextIndex(this.activeIndex, direction)
+    console.log('move next index', activeIndex)
     if (activeIndex !== this.activeIndex) {
       this.toggleSelected(activeIndex)
     }
@@ -233,19 +234,25 @@ export class SelectionStore {
         maxIndex,
       )
     }
-    const canMoveOne =
+    const canMove =
       curResult && curResult.moves.some(move => move === direction)
-    if (canMoveOne) {
+    if (canMove) {
       switch (direction) {
         case Direction.right:
           return curIndex + 1
         case Direction.left:
           return curIndex - 1
-        default:
-          const rowDirection =
-            direction === Direction.down ? Direction.right : Direction.left
-          const movesToNextRow = this.movesToNextRow(rowDirection, curIndex)
-          return Math.min(maxIndex, curIndex + movesToNextRow)
+        case Direction.up:
+          const movesToPrevRow = this.movesToNextRow(Direction.left, curIndex)
+          return curIndex + movesToPrevRow
+        case Direction.down:
+          const movesToNextRow = this.movesToNextRow(Direction.right, curIndex)
+          const nextIndex = curIndex + movesToNextRow
+          // if were in the last row already, avoid moving
+          if (nextIndex >= maxIndex) {
+            return curIndex
+          }
+          return nextIndex
       }
     }
     return curIndex

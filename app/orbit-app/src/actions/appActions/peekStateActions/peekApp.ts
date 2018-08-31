@@ -14,6 +14,7 @@ export function setPeekState({
   ...props
 }: { target: PeekTarget } & typeof App.state.peekState) {
   const realTarget = getTargetPosition(target)
+  console.log('setting peek state', props)
   App.setPeekState({
     ...props,
     target: realTarget,

@@ -49,18 +49,19 @@
 #app pre code {
   background: #fff;
   border: 1px solid #eee;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 #app .theme-dark code,
 #app .theme-dark pre code {
-  background: rgba(0, 0, 0, 0.2);
+  background: #333;
   border: none;
   color: #fff;
+  font-weight: 700;
 }
 
 #app code {
-  line-height: 16px;
+  line-height: 15px;
   border-radius: 3px;
   white-space: pre;
   overflow: scroll;
@@ -78,7 +79,7 @@
 }
 
 #app pre code {
-  padding: 10px 18px;
+  padding: 10px;
   margin: 10px -5px;
   border-radius: 3px;
   white-space: pre;
@@ -94,8 +95,6 @@ anonymous {
 a.anchor {
   display: none;
 }
-
-/* hacky harcdoded styles for demo */
 
 .markdown {
   user-select: auto;
@@ -113,16 +112,21 @@ a.anchor {
 }
 
 .markdown {
-  color: #111;
-  line-height: 1.45rem;
+  line-height: 1.15rem;
 }
 
-.markdown ul {
+.markdown ul,
+.markdown ol {
+  display: flex;
   margin: 0 0 0.5rem 0.3rem;
 }
 
 .markdown p {
   margin: 0 0 0.5rem 0;
+}
+
+.slack-markdown p {
+  margin: 0;
 }
 
 .markdown h1 {
@@ -489,7 +493,7 @@ br {
 
 ol,
 ul {
-  margin: 20px 0 0 20px;
+  margin: 0 0 0.5rem;
   padding: 0;
 }
 

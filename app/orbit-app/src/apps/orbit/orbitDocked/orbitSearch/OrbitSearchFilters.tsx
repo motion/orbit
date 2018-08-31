@@ -73,7 +73,8 @@ const FilterButton = props => (
 const IntegrationFiltersRow = view({
   flexFlow: 'row',
   alignItems: 'center',
-  background: [0, 0, 0, 0.1],
+  padding: 1,
+  background: [255, 255, 255, 0.025],
   borderRadius: 100,
 })
 
@@ -104,13 +105,11 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
                 key={`${filter.icon}${i}`}
                 circular
                 glint={false}
-                size={1.1}
-                marginLeft={1}
+                size={1}
                 icon={<OrbitIcon size={16} icon={filter.icon} />}
                 tooltip={filter.name}
                 onClick={searchFilterStore.integrationFilterToggler(filter)}
-                filter={filter.active ? null : 'grayscale(100%)'}
-                opacity={filter.active ? 1 : 0.4}
+                opacity={filter.active ? 1 : 0.45}
                 background="transparent"
                 activeStyle={{
                   background: 'transparent',

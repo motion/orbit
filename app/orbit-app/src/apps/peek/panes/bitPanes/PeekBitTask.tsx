@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const BodyContents = view({
-  whiteSpace: 'pre-line',
+  display: 'block',
   padding: 22,
   fontSize: 16,
   lineHeight: 24,

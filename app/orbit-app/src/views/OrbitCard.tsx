@@ -197,7 +197,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             !(hide && hide.icon) && (
               <OrbitIcon
                 icon={icon}
-                size={22}
+                size={20}
                 {...orbitIconProps}
                 position="absolute"
                 top={10}
@@ -279,7 +279,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-        {!disableShadow && (
+        {/* {!disableShadow && (
           <UI.HoverGlow
             behind
             color="#000"
@@ -293,7 +293,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             borderRadius={20}
             duration={100}
           />
-        )}
+        )} */}
       </CardWrap>
     )
   }

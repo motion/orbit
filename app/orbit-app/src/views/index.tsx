@@ -128,7 +128,7 @@ export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
   <UI.Text
     alpha={0.7}
     fontWeight={400}
-    size={1.1}
+    size={1.05}
     alignItems="center"
     flexFlow="row"
     padding={[4 * verticalSpacing, 0, 10 * verticalSpacing]}

@@ -1,4 +1,4 @@
-import { react, on } from '@mcro/black'
+import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { generalSettingQuery } from '../../repositories/settingQueries'
@@ -68,9 +68,9 @@ export class PaneManagerStore {
   )
 
   setTrayTitleOnPaneChange = react(
-    () => this.activePane,
-    pane => {
-      if (pane === 'onboard') {
+    () => this.activePane === 'onboard',
+    onboard => {
+      if (onboard) {
         App.actions.setContextMessage('Welcome to Orbit...')
       } else {
         App.actions.setContextMessage('')
@@ -161,12 +161,8 @@ export class PaneManagerStore {
   clearPeekOnActivePaneChange = react(
     () => this.activePane,
     pane => {
-      if (!pane) {
-        throw react.cancel
-      }
-      if (!App.peekState.target) {
-        throw react.cancel
-      }
+      ensure('pane', !!pane)
+      ensure('target', !!App.peekState.target)
       App.actions.clearPeek()
     },
   )

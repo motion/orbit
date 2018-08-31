@@ -8,11 +8,11 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { ResolvedItem } from '../components/ItemResolver'
 import { PersonBit } from '../../../models/src'
-import { ThemeObject } from '@mcro/gloss'
+import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
 
 type Model = Bit | PersonBit | Setting
 
-export type OrbitItemProps = {
+export type OrbitItemProps = CSSPropertySet & {
   theme?: Partial<ThemeObject>
   listItem?: boolean
   hoverToSelect?: boolean

@@ -94,3 +94,12 @@ Talked to Andy Coenen, Caleb
 
 - ++ Personal edition as a starter
 - ++ App store / app development
+
+# Aug 31st
+
+Talked to Karthik Gollapudi (SpaceX)
+
+- Confluence/Jira search is bad now
+- Needs Windows support
+- May need for internal web app they can deploy themselves
+-

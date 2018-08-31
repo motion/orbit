@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 const BodyContents = view({
-  whiteSpace: 'pre-line',
   width: '100%',
   flex: 1,
   overflowX: 'hidden',
@@ -10,6 +9,7 @@ const BodyContents = view({
   padding: 22,
   fontSize: 16,
   lineHeight: 24,
+  display: 'block',
 })
 
 export const MarkdownBody = ({ children }) => (

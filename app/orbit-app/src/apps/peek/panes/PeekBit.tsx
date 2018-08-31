@@ -9,10 +9,10 @@ import { App } from '@mcro/stores'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 // import { PeekRelated } from '../views/PeekRelated'
-import { TimeAgo } from '../../../views/TimeAgo'
 import { View } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
 import { Bit } from '@mcro/models'
+import { DateFormat } from '../../../views/DateFormat'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -152,7 +152,7 @@ export const PeekBit = ({
                     </PeekBar.Button>
                     <PeekBar.Space />
                     <PeekBar.Text>
-                      <TimeAgo>{updatedAt}</TimeAgo>
+                      <DateFormat>{updatedAt}</DateFormat>
                     </PeekBar.Text>
                     <UI.View flex={1} />
                     <PeekBar.Section>

@@ -38,7 +38,7 @@ export class SearchFilterStore /* extends Store */ {
   extraFiltersVisible = false
   disabledFilters = {}
   exclusiveFilters = {}
-  sortBy = 'Relevant'
+  sortBy = 'Recent'
   sortOptions = ['Relevant', 'Recent']
 
   dateState: DateSelections = {

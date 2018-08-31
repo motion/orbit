@@ -11,16 +11,17 @@ const ClearClickableArea = view({
 })
 
 const ClearFrame = view(View, {
-  fontSize: 16,
-  lineHeight: 15,
+  fontSize: 14,
+  lineHeight: 13,
   fontWeight: 600,
-  width: 17,
-  height: 17,
+  width: 16,
+  height: 16,
   borderRadius: 999,
   textAlign: 'center',
   backgroundColor: 'rgba(0,0,0,0.1)',
   color: [255, 255, 255, 0.8],
   display: 'block',
+  cursor: 'default',
 })
 
 export const ClearButton = ({

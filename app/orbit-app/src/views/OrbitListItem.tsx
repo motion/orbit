@@ -216,9 +216,8 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 fontSize={15}
                 sizeLineHeight={0.85}
                 ellipse={2}
-                fontWeight={600}
+                fontWeight={700}
                 maxWidth="calc(100% - 30px)"
-                textShadow={'0 0.5px 0 rgba(0,0,0,0.5)'}
                 {...titleProps}
               >
                 {title}

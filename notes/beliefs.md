@@ -99,4 +99,7 @@ Talked to Andy Coenen, Caleb
 
 Talked to Karthik Gollapudi (SpaceX)
 
-- Confluence/Jira search is really bad
+- Confluence/Jira search is bad now
+- Needs Windows support
+- May need for internal web app they can deploy themselves
+-

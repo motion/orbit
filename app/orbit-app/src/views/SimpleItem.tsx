@@ -8,7 +8,7 @@ const sidePad = 16
 const Item = view({
   flexFlow: 'row',
   padding: [0, sidePad],
-  height: 42,
+  height: 40,
   alignItems: 'center',
   inactive: {
     opacity: 0.5,

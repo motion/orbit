@@ -159,7 +159,7 @@ export class OrbitApps extends React.Component<Props> {
                 onClick={addIntegrationClickHandler(item)}
                 title={item.title}
                 icon={item.icon}
-                after={<Button>Add</Button>}
+                after={<Button size={0.9}>Add</Button>}
               />
             )
           })}

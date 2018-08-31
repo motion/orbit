@@ -107,6 +107,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
+  padding: [0, 0, 2],
 })
 
 const Preview = view({
@@ -116,7 +117,7 @@ const Preview = view({
 
 const CardSubtitle = view(UI.View, {
   height: 20,
-  padding: [3, 0, 3, 0],
+  padding: [0, 0, 3, 0],
   flexFlow: 'row',
   alignItems: 'center',
   listItem: {

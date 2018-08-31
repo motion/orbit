@@ -217,7 +217,7 @@ export class Syncer {
         event,
       )
       const interval = this.intervals.find(
-        interval => interval.setting.id === event.entityId,
+        interval => interval.setting && interval.setting.id === event.entityId,
       )
       if (interval) {
         if (interval.running) {

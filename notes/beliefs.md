@@ -87,3 +87,10 @@ Talked to Patrick Gray
   - Making it "feel like Minority Report"
 - Upweight:
   - ++++ User experience and feeling of control
+
+# Aug 28th
+
+Talked to Andy Coenen, Caleb
+
+- ++ Personal edition as a starter
+- ++ App store / app development

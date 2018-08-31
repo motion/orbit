@@ -107,6 +107,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
+  padding: [0, 0, 2],
 })
 
 const Preview = view({
@@ -116,7 +117,7 @@ const Preview = view({
 
 const CardSubtitle = view(UI.View, {
   height: 20,
-  padding: [3, 30, 3, 0],
+  padding: [0, 0, 3, 0],
   flexFlow: 'row',
   alignItems: 'center',
   listItem: {
@@ -221,14 +222,10 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           )}
           {!!titleFlex && <div style={{ flex: titleFlex }} />}
           {hasSubtitle && (
-            <CardSubtitle>
-              {typeof subtitle === 'string' ? (
-                <UI.Text alpha={0.55} ellipse {...subtitleProps}>
-                  {subtitle}
-                </UI.Text>
-              ) : (
-                subtitle
-              )}
+            <CardSubtitle paddingRight={30}>
+              <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                {subtitle}
+              </UI.Text>
               {hasMeta && <VerticalSpaceSmall />}
             </CardSubtitle>
           )}
@@ -250,7 +247,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               {!!createdAt && (
                 <>
                   {!!location && <div style={{ width: 5 }} />}
-                  <UI.Text alpha={0.65} size={0.9}>
+                  <UI.Text alpha={0.65} size={0.9} ellipse>
                     <DateFormat date={new Date(updatedAt)} nice />
                   </UI.Text>
                 </>

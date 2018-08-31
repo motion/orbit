@@ -73,7 +73,7 @@ SearchBox.theme = ({ theme }) => ({
 
 export const SearchInput = view(TableInput, {
   fontWeight: 400,
-  fontSize: 16,
+  fontSize: 14,
   padding: 0,
   paddingBottom: 1, // fixes visual height
   flexGrow: 1,

@@ -900,9 +900,7 @@ export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
 export type CSSPropertyValue<Value> = Value
 
-export type CSSPropertySet = {
-  // because we have '& > .something'
-  [key: string]: any
+export type CSSPropertySetFlat = {
   alignContent?: CSSPropertyValue<alignContent>
   alignItems?: CSSPropertyValue<alignItems>
   alignSelf?: CSSPropertyValue<alignSelf>
@@ -1270,4 +1268,16 @@ export type CSSPropertySet = {
   voiceStress?: CSSPropertyValue<voiceStress>
   voiceVolume?: CSSPropertyValue<voiceVolume>
   zoom?: CSSPropertyValue<zoom>
+}
+
+export type GlossCSSPropertySetFlat = CSSPropertySetFlat & {
+  borderLeftRadius: number
+  borderRightRadius: number
+  borderBottomRadius: number
+  borderTopRadius: number
+}
+
+export type CSSPropertySet = CSSPropertySetFlat & {
+  // because we have '& > .something'
+  [key: string]: any
 }

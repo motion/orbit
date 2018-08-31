@@ -284,6 +284,11 @@ export class Text extends React.Component<TextProps> {
         onKeyDown={this.handleKeydown}
         forwardRef={this.getRef}
         color={color}
+        {...ellipse && {
+          flex: 1,
+          display: 'flex',
+          overflow: 'hidden',
+        }}
         {...props}
       >
         {contents}

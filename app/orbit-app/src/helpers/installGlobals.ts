@@ -20,6 +20,14 @@ if (typeof __webpack_require__ !== 'undefined') {
   window['require'] = require('webpack-runtime-require').Require
 }
 
+const recrusiveMobxToJS = obj => {
+  const next = Mobx.toJS(obj)
+  if (Array.isArray(next)) {
+    return next.map(recrusiveMobxToJS)
+  }
+  return next
+}
+
 // the heavy hitters
 window['React'] = React
 window['Constants'] = Constants
@@ -37,7 +45,9 @@ window['render'] = start
 window['color'] = color
 window['dateFns'] = dateFns
 window['Logger'] = Logger
+window['toJS'] = recrusiveMobxToJS
 
+// make the various model/repositories global
 for (const repo in Repositories) {
   window[repo] = Repositories[repo]
 }

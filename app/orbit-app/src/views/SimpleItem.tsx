@@ -8,7 +8,7 @@ const sidePad = 16
 const Item = view({
   flexFlow: 'row',
   padding: [0, sidePad],
-  height: 42,
+  height: 40,
   alignItems: 'center',
   inactive: {
     opacity: 0.5,
@@ -26,10 +26,10 @@ Item.theme = ({ theme }) => ({
 })
 
 const ItemTitle = view(Text, {
-  fontWeight: 600,
+  fontWeight: 700,
   padding: [0, 12],
   justifyContent: 'center',
-  fontSize: 16,
+  fontSize: 14,
   alpha: 0.5,
   flex: 1,
 })

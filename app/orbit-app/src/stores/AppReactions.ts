@@ -31,16 +31,13 @@ export class AppReactions /* extends Store */ {
       console.log('app message', msg)
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
-          // this.toggle()
-          return
-        case App.messages.TOGGLE_DOCKED:
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:
-          App.actions.hideOrbit()
+          App.setOrbitState({ docked: false })
           return
         case App.messages.SHOW:
-          // this.show()
+          App.setOrbitState({ docked: true })
           return
         case App.messages.HIDE_PEEK:
           return App.actions.clearPeek()

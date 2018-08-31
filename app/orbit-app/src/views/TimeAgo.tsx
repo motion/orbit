@@ -65,12 +65,16 @@ export class TimeAgo extends Component<TimeAgoProps> {
     if (diff < 30) {
       return 'now'
     } else {
-      return formatRelative(this.date, Date.now())
-        .replace('about ', '')
-        .replace('almost ', '')
-        .replace('over ', '')
-        .replace('less than ', '')
-        .replace(' ago', this.props.postfix ? ` ${this.props.postfix}` : '')
+      return (
+        formatRelative(this.date, Date.now())
+          .replace('about ', '')
+          .replace('almost ', '')
+          .replace('over ', '')
+          .replace('less than ', '')
+          .replace(' ago', this.props.postfix ? ` ${this.props.postfix}` : '')
+          // this is always "last" in our case
+          .replace('last ', '')
+      )
     }
   }
 

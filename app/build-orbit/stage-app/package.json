@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.188",
+  "version": "2.2.201",
   "dependencies": {
     "@mcro/orbit": "*"
   },
@@ -13,10 +13,14 @@
   "build": {
     "appId": "com.o.orbit",
     "productName": "Orbit",
+    "asar": true,
     "mac": {
       "target": "zip",
       "icon": "../resources/icon.icns",
-      "provisioningProfile": "../build-resources/orbit.provisionprofile"
+      "provisioningProfile": "../build-resources/orbit.provisionprofile",
+      "extendInfo": {
+        "LSUIElement": 1
+      }
     },
     "directories": {
       "buildResources": "../resources",

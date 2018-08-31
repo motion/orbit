@@ -1,21 +1,21 @@
 import { ensure, react, view } from '@mcro/black'
-import {  Subscription } from '@mcro/mediator'
+import { Subscription } from '@mcro/mediator'
 import { IntegrationType, Setting, SettingModel } from '@mcro/models'
-import { App } from '@mcro/stores'
-import { Button } from '@mcro/ui'
 import * as React from 'react'
-import { fuzzyQueryFilter } from '../../../helpers'
-import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClickHandler'
-import { settingsList } from '../../../helpers/settingsList'
-import { settingToAppConfig } from '../../../helpers/settingToResult'
-import { Mediator } from '../../../repositories'
-import { SelectionStore } from '../../../stores/SelectionStore'
-import * as Views from '../../../views'
-import { Grid } from '../../../views/Grid'
-import { SimpleItem } from '../../../views/SimpleItem'
-import { PaneManagerStore } from '../PaneManagerStore'
-import { SubPane } from '../SubPane'
-import { OrbitSettingCard } from './OrbitSettings/OrbitSettingCard'
+import { Mediator } from '../../../../repositories'
+import { OrbitAppCard } from './OrbitAppCard'
+import { SubPane } from '../../SubPane'
+import * as Views from '../../../../views'
+import { PaneManagerStore } from '../../PaneManagerStore'
+import { SelectionStore } from '../../../../stores/SelectionStore'
+import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
+import { Grid } from '../../../../views/Grid'
+import { SimpleItem } from '../../../../views/SimpleItem'
+import { Button } from '@mcro/ui'
+import { fuzzyQueryFilter } from '../../../../helpers'
+import { App } from '@mcro/stores'
+import { settingToAppConfig } from '../../../../helpers/settingToResult'
+import { settingsList } from '../../../../helpers/settingsList'
 
 type Props = {
   name: string
@@ -75,14 +75,12 @@ class OrbitAppsStore {
   private get allAvailableApps() {
     // sort by not used first
     return settingsList.sort((a, b) => {
-      return (!this.hasIntegration(a.id) && this.hasIntegration(b.id) ? -1 : 1)
+      return !this.hasIntegration(a.id) && this.hasIntegration(b.id) ? -1 : 1
     })
   }
 
   private hasIntegration = (type: IntegrationType) => {
-    return !!this.integrations.find(
-      setting => setting.type === type,
-    )
+    return !!this.integrations.find(setting => setting.type === type)
   }
 }
 
@@ -96,24 +94,21 @@ const Unpad = view({
 })
 @view
 export class OrbitApps extends React.Component<Props> {
-
-  subscription: Subscription;
+  subscription: Subscription
 
   componentDidMount() {
-    this.subscription = Mediator
-      .observeMany(SettingModel, {
-        args: {
-          where: { category: 'integration' },
-        }
-      })
-      .subscribe(settings => {
-        console.log(`updated settings`, settings)
-        this.props.store.integrations = settings
-      })
+    this.subscription = Mediator.observeMany(SettingModel, {
+      args: {
+        where: { category: 'integration' },
+      },
+    }).subscribe(settings => {
+      console.log(`updated settings`, settings)
+      this.props.store.integrations = settings
+    })
   }
 
   componentWillUnmount() {
-    this.subscription.unsubscribe();
+    this.subscription.unsubscribe()
   }
 
   render() {
@@ -130,7 +125,7 @@ export class OrbitApps extends React.Component<Props> {
               margin={[5, -4]}
             >
               {store.filteredActiveApps.map((result, index) => (
-                <OrbitSettingCard
+                <OrbitAppCard
                   key={result.id}
                   pane="docked"
                   subPane="apps"
@@ -155,7 +150,7 @@ export class OrbitApps extends React.Component<Props> {
                 onClick={addIntegrationClickHandler(item)}
                 title={item.title}
                 icon={item.icon}
-                after={<Button>Add</Button>}
+                after={<Button size={0.9} icon="add" />}
               />
             )
           })}

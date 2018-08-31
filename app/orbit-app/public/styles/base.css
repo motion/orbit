@@ -49,18 +49,18 @@
 #app pre code {
   background: #fff;
   border: 1px solid #eee;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 #app .theme-dark code,
 #app .theme-dark pre code {
-  background: rgba(0, 0, 0, 0.2);
+  background: #fff;
   border: none;
-  color: #fff;
+  color: #222;
 }
 
 #app code {
-  line-height: 16px;
+  line-height: 14px;
   border-radius: 3px;
   white-space: pre;
   overflow: scroll;
@@ -78,7 +78,7 @@
 }
 
 #app pre code {
-  padding: 10px 18px;
+  padding: 10px;
   margin: 10px -5px;
   border-radius: 3px;
   white-space: pre;
@@ -113,11 +113,12 @@ a.anchor {
 }
 
 .markdown {
-  color: #111;
-  line-height: 1.45rem;
+  line-height: 1.15rem;
 }
 
-.markdown ul {
+.markdown ul,
+.markdown ol {
+  display: flex;
   margin: 0 0 0.5rem 0.3rem;
 }
 
@@ -489,7 +490,7 @@ br {
 
 ol,
 ul {
-  margin: 20px 0 0 20px;
+  margin: 0 0 0.5rem;
   padding: 0;
 }
 

@@ -31,7 +31,7 @@ export const PeekFrameArrow = decorator(({ theme, borderShadow }: Props) => {
   }
   const isHidden = !state
   const onRight = !state.peekOnLeft
-  const arrowSize = 18
+  const arrowSize = 14
   const ARROW_CARD_TOP_OFFSET = 32
   const arrowY = Math.min(
     isHidden

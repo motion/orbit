@@ -17,12 +17,14 @@ export const ResolveConversation = ({
   shownLimit = 5,
   itemProps,
   isExpanded,
+  searchTerm,
   hide,
 }: BitItemResolverProps) => {
   const data = bit.data as SlackBitData
   const content = isExpanded
     ? (data.messages
         .slice(0, shownLimit)
+        .filter(m => m.text.indexOf(searchTerm) >= 0)
         .map((message, index) => (
           <SlackMessage
             key={index}
@@ -37,7 +39,9 @@ export const ResolveConversation = ({
   return children({
     id: bit.id,
     type: 'bit',
-    title: arrford(keywordExtract.extract(bit.body, options).slice(0, 3)),
+    title: arrford(
+      keywordExtract.extract(bit.body, options).slice(0, 3),
+    ).replace('```', ''),
     people: bit.people,
     preview: keywordExtract
       .extract(bit.body, options)

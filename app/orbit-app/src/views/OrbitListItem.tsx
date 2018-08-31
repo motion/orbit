@@ -40,7 +40,7 @@ const ListItem = view({
   chromeless: {
     border: [1, 'transparent'],
     background: 'transparent',
-    padding: [12, 12, 12, 10],
+    padding: [10, 12],
   },
 })
 
@@ -56,7 +56,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.background.alpha(0.6),
+      background: theme.background.alpha(0.25),
       // border: [1, borderSelected],
       // boxShadow: disabledShadow || [[0, 0, 0, 1, '#90b1e4']],
     }
@@ -64,7 +64,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
     listStyle = {
       // border: [1, 'transparent'],
       '&:hover': {
-        background: theme.backgroundHover.alpha(0.2),
+        background: theme.backgroundHover.alpha(0.15),
       },
     }
   }
@@ -73,7 +73,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
     ...listStyle,
     borderLeft: 'none',
     borderRight: 'none',
-    padding: padding || 14,
+    padding: padding || [12, 14],
     '&:active': {
       opacity: isSelected ? 1 : 0.8,
     },
@@ -85,6 +85,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
+  alignItems: 'center',
 })
 
 const Preview = view({
@@ -95,12 +96,17 @@ const Preview = view({
 const CardSubtitle = view(UI.View, {
   height: 20,
   margin: [3, 0, 0],
-  padding: [2, 30, 2, 0],
+  padding: [2, 0, 2, 0],
   flexFlow: 'row',
   alignItems: 'center',
   listItem: {
     margin: [6, 0, 0],
   },
+})
+
+const AfterHeader = view({
+  flexFlow: 'row',
+  alignItems: 'center',
 })
 
 const Bottom = view({
@@ -151,7 +157,37 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const hasSubtitle = !!(location || subtitle) && !(hide && hide.subtitle)
+    const showSubtitle = !!(location || subtitle) && !(hide && hide.subtitle)
+    const showDate = !!createdAt && !(hide && hide.date)
+    const showIcon = !!icon && !(hide && hide.icon)
+    const showTitle = !(hide && hide.title)
+    const afterHeader = (
+      <AfterHeader>
+        {showDate && (
+          <UI.Text alpha={0.6} size={0.9} fontWeight={400}>
+            <DateFormat
+              date={new Date(updatedAt)}
+              nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
+            />
+          </UI.Text>
+        )}
+        <div style={{ width: 8 }} />
+        <RoundButtonSmall
+          icon="link"
+          size={1.1}
+          tooltip="Open"
+          opacity={0.5}
+          background="transparent"
+          onClick={e => {
+            console.log('opening', model)
+            e.preventDefault()
+            e.stopPropagation()
+            App.actions.openItem(model)
+            App.actions.closeOrbit()
+          }}
+        />
+      </AfterHeader>
+    )
     return (
       <CardWrap
         {...hoverToSelect && !inactive && store.hoverSettler.props}
@@ -168,21 +204,16 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
           padding={padding}
           {...cardProps}
         >
-          {!!icon &&
-            !(hide && hide.icon) && (
-              <OrbitIcon
-                icon={icon}
-                size={20}
-                position="absolute"
-                top={14}
-                right={16}
-                {...iconProps}
-              />
-            )}
-          {!(hide && hide.title) && (
+          {showTitle && (
             <Title style={titleFlex && { flex: titleFlex }}>
+              {showIcon && (
+                <>
+                  <OrbitIcon icon={icon} size={16} {...iconProps} />
+                  <div style={{ width: 8 }} />
+                </>
+              )}
               <UI.Text
-                fontSize={16}
+                fontSize={15}
                 sizeLineHeight={0.85}
                 ellipse={2}
                 fontWeight={600}
@@ -193,10 +224,18 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 {title}
               </UI.Text>
               {afterTitle}
+              {afterHeader}
             </Title>
           )}
-          {hasSubtitle && (
+          {showSubtitle && (
             <CardSubtitle>
+              {showIcon &&
+                !showTitle && (
+                  <>
+                    <OrbitIcon icon={icon} size={16} {...iconProps} />
+                    <div style={{ width: 8 }} />
+                  </>
+                )}
               {!!location && (
                 <RoundButtonSmall
                   marginLeft={-3}
@@ -217,10 +256,11 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               ) : (
                 subtitle
               )}
+              {hide && hide.title && afterHeader}
             </CardSubtitle>
           )}
           {/* vertical space only if needed */}
-          {hasSubtitle &&
+          {showSubtitle &&
             (!!children || !!preview) && (
               <div style={{ flex: 1, maxHeight: 4 }} />
             )}
@@ -254,29 +294,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 <PeopleRow people={people} />
               </div>
             ) : null}
-            <UI.View flex={1} />
-            {!!createdAt && (
-              <>
-                <UI.Text alpha={0.75} size={0.95}>
-                  <DateFormat
-                    date={new Date(updatedAt)}
-                    nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
-                  />
-                </UI.Text>
-                <div style={{ width: 5 }} />
-              </>
-            )}
-            <RoundButtonSmall
-              icon="link"
-              size={1.2}
-              onClick={e => {
-                console.log('opening', model)
-                e.preventDefault()
-                e.stopPropagation()
-                App.actions.openItem(model)
-                App.actions.closeOrbit()
-              }}
-            />
           </Bottom>
         </ListItem>
         <Divider />

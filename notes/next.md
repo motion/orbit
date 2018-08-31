@@ -2,7 +2,6 @@
 
 app platform demo, p2p sync, search
 
-- Able to make your own "Pages/Spaces/Homescreens"
 - RSS Syncer
 - We make the default home screen be "Orbit Updates"
   - shows our RSS and maybe Twitter :D
@@ -20,6 +19,7 @@ app platform demo, p2p sync, search
 
 app platform
 
+- Able to make your own "Pages/Spaces/Homescreens"
 - Continue on UI kit for apps
 - Get the basic app store in place
 - If Swift contractor works out integrate some OCR

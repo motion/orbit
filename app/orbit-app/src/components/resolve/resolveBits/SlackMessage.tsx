@@ -4,10 +4,10 @@ import { view } from '@mcro/black'
 import Markdown from 'react-markdown'
 import { Bit, SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
-import { TimeAgo } from '../../../views/TimeAgo'
 import { ItemHideProps } from '../../../types/ItemHideProps'
 import { View } from '@mcro/ui'
 import { markdownOptions } from '../../../constants/markdownOptions'
+import { DateFormat } from '../../../views/DateFormat'
 
 type SlackMessageProps = {
   bit: Bit
@@ -23,7 +23,7 @@ const SlackMessageFrame = view(View, {
 })
 
 const SlackMessageInner = view({
-  padding: [2, 0, 2, 28],
+  padding: [2, 0, 2, 16],
 })
 
 @view
@@ -58,23 +58,16 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
               <RoundButtonPerson background="transparent" person={person} />
             )}
             <div style={{ width: 6 }} />
-            {!(hide && hide.date) &&
+            {!(hide && hide.itemDate) &&
               (!previousMessage || !previousWithinOneMinute) && (
-                <UI.Text alpha={0.5}>
-                  {<TimeAgo date={new Date(message.time)} />}
+                <UI.Text size={0.9} fontWeight={500} alpha={0.5}>
+                  {<DateFormat date={new Date(message.time)} />}
                 </UI.Text>
               )}
           </UI.Row>
         )}
-        <SlackMessageInner>
-          <UI.Text
-            className="searchable-item"
-            fontWeight={400}
-            sizeLineHeight={0.8}
-            fontSize={15}
-          >
-            <Markdown source={message.text} {...markdownOptions} />
-          </UI.Text>
+        <SlackMessageInner className="markdown">
+          <Markdown source={message.text} {...markdownOptions} />
         </SlackMessageInner>
       </SlackMessageFrame>
     )

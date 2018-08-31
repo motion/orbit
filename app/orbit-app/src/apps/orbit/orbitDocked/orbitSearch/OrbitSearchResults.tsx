@@ -11,7 +11,7 @@ import { SearchStore } from '../../../../stores/SearchStore'
 import { SelectionStore } from '../../../../stores/SelectionStore'
 import { App } from '@mcro/stores'
 import { memoize } from 'lodash'
-import { HighlightsLayer } from '../../../../views/HighlightsLayer'
+// import { HighlightsLayer } from '../../../../views/HighlightsLayer'
 import { ResolvedItem } from '../../../../components/ItemResolver'
 import { SuggestionBarVerticalPad } from '../../../../views'
 
@@ -23,9 +23,10 @@ type Props = {
 }
 
 const Highlight = view({
+  userSelect: 'auto',
   display: 'inline-block',
   lineHeight: 18.5,
-  fontSize: 15,
+  fontSize: 14,
   padding: [2, 6, 2, 10],
   margin: [0, 0, 0, 4],
   fontWeight: 400,
@@ -68,7 +69,7 @@ const highlightOptions = (query, bit) => ({
 })
 
 const hideSlack = {
-  title: true,
+  // title: true,
   people: true,
   date: true,
 }
@@ -76,6 +77,10 @@ const hideSlack = {
 const OrbitCardContent = view({
   padding: [6, 0],
 })
+
+const SearchResultText = props => (
+  <UI.Text wordBreak="break-all" fontWeight={400} {...props} />
+)
 
 @view
 class OrbitSearchResultsList extends React.Component<Props> {
@@ -94,18 +99,17 @@ class OrbitSearchResultsList extends React.Component<Props> {
 
   getChildren = ({ content }, bit, index) => {
     return bit.integration === 'slack' ? (
-      content
+      <SearchResultText>{content}</SearchResultText>
     ) : (
       <OrbitCardContent>
-        <UI.Text
-          wordBreak="break-all"
+        <SearchResultText
           highlight={highlightOptions(
             this.props.searchStore.searchState.query,
             bit,
           )}
         >
           {this.getHighlight(index)}
-        </UI.Text>
+        </SearchResultText>
       </OrbitCardContent>
     )
   }
@@ -129,27 +133,27 @@ class OrbitSearchResultsList extends React.Component<Props> {
     const searchTerm = searchStore.searchState.query
     const quickResultsLen = searchStore.quickSearchState.results.length
     return (
-      <HighlightsLayer term={searchTerm}>
-        <>
-          {results.map((model, index) => (
-            <OrbitListItem
-              pane={name}
-              subPane="search"
-              key={model.id}
-              index={index + quickResultsLen}
-              model={model}
-              hide={model.integration === 'slack' ? hideSlack : null}
-              padding={model.integration === 'slack' ? [12, 16] : null}
-              subtitleSpaceBetween={this.spaceBetween}
-              isExpanded
-              searchTerm={searchTerm}
-              onClickLocation={this.handleLocation}
-            >
-              {this.getChildren}
-            </OrbitListItem>
-          ))}
-        </>
-      </HighlightsLayer>
+      // <HighlightsLayer term={searchTerm}>
+      <>
+        {results.map((model, index) => (
+          <OrbitListItem
+            pane={name}
+            subPane="search"
+            key={model.id}
+            index={index + quickResultsLen}
+            model={model}
+            hide={model.integration === 'slack' ? hideSlack : null}
+            padding={model.integration === 'slack' ? [12, 16] : null}
+            subtitleSpaceBetween={this.spaceBetween}
+            isExpanded
+            searchTerm={searchTerm}
+            onClickLocation={this.handleLocation}
+          >
+            {this.getChildren}
+          </OrbitListItem>
+        ))}
+      </>
+      // </HighlightsLayer>
     )
   }
 }

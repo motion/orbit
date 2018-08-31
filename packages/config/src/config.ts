@@ -29,6 +29,7 @@ export function getGlobalConfig(): GlobalConfig {
   return config
 }
 
+// only can set once
 export function setGlobalConfig(nextConfig: GlobalConfig) {
   if (config) {
     throw new Error('Already set config once!')

@@ -77,41 +77,18 @@ export class ElectronStore {
       this.toggleDocked()
       return
     }
-    // if (shortcut === 'Option+Space') {
-    //   if (App.orbitState.hidden) {
-    //     this.toggleVisible()
-    //     Electron.sendMessage(App, App.messages.PIN)
-    //     return
-    //   }
-    //   if (App.orbitState.pinned) {
-    //     Electron.sendMessage(Desktop, Desktop.messages.CLEAR_OPTION)
-    //     Electron.sendMessage(App, App.messages.HIDE)
-    //     Electron.sendMessage(App, App.messages.UNPIN)
-    //     return
-    //   } else {
-    //     // !pinned
-    //     this.togglePinned()
-    //   }
-    // }
   }
 
   toggleDocked = async () => {
+    const shown = App.orbitState.docked
     console.log('toggling docked')
-    if (!App.orbitState.docked) {
+    if (!shown) {
       this.windowFocusStore.focusOrbit()
     } else {
       this.windowFocusStore.defocusOrbit()
     }
-    await sleep(40)
-    Electron.sendMessage(App, App.messages.TOGGLE_DOCKED)
-  }
-
-  toggleVisible = () => {
-    if (App.orbitState.hidden) {
-      Electron.sendMessage(App, App.messages.HIDE)
-    } else {
-      Electron.sendMessage(App, App.messages.SHOW)
-    }
+    await sleep(16)
+    Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
   }
 
   togglePinned = () => {
@@ -162,7 +139,7 @@ export class ElectronStore {
   restart() {
     if (process.env.NODE_ENV === 'development') {
       require('touch')(
-        require('path').join(__dirname, '..', '..', 'src', 'index.js'),
+        require('path').join(__dirname, '..', '..', 'package.json'),
       )
     }
   }

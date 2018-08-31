@@ -1,6 +1,7 @@
 import 'raf/polyfill'
 import { logger } from '@mcro/logger'
 import waitPort from 'wait-port'
+import { app } from 'electron'
 
 const log = logger('electron')
 
@@ -33,6 +34,9 @@ export async function main(): Promise<number | void> {
       console.log('uncaughtException', err.stack)
     })
   }
+
+  // show dock icon
+  app.dock.show()
 
   // require app after setting config
   const { ElectronApp } = require('./ElectronApp')

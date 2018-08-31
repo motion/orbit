@@ -96,7 +96,7 @@ export class Root {
   }
 
   restart = () => {
-    require('touch')(Path.join(__dirname, '..', '_', 'index.js'))
+    require('touch')(Path.join(__dirname, '..', 'package.json'))
   }
 
   dispose = async () => {

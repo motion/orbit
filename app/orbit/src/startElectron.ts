@@ -4,27 +4,23 @@ import { cleanupChildren } from './cleanupChildren'
 import waitPort from 'wait-port'
 import { log } from './log'
 import { getGlobalConfig } from '@mcro/config'
+import { ChildProcess } from 'child_process'
 
 export async function startElectron() {
   const Config = getGlobalConfig()
 
   // else, electron...
-  let desktopPid
-  const handleExit = async () => {
-    console.log('Orbit exiting...')
-    if (desktopPid) {
-      process.kill(desktopPid)
-    }
-    console.log('Cleaning children...')
-    setTimeout(async () => {
-      await cleanupChildren()
-    }, 16)
-    console.log('bye!')
-  }
+  let desktopProcess: ChildProcess
 
-  app.on('before-quit', () => {
+  app.on('before-quit', async () => {
     console.log('Electron handle exit...')
-    handleExit()
+    console.log('Orbit exiting...')
+    cleanupChildren(desktopProcess.pid)
+    cleanupChildren(process.pid)
+    desktopProcess.kill('SIGINT')
+    // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
+    process.kill(-desktopProcess.pid)
+    console.log('bye!')
   })
 
   // fork desktop process...
@@ -38,8 +34,7 @@ export async function startElectron() {
   }, 10000)
 
   try {
-    desktopPid = require('./startDesktop').startDesktop()
-    console.log('>>>>>>> desktop pid is', desktopPid)
+    desktopProcess = require('./startDesktop').startDesktop()
   } catch (err) {
     desktopFailMsg = `${err.message}`
   }
@@ -57,16 +52,17 @@ export async function startElectron() {
   if (Config.isProd) {
     // move to app folder
     if (!app.isInApplicationsFolder()) {
+      app.focus()
       app.dock.bounce('informational')
       const response = dialog.showMessageBox({
         type: 'question',
         title: 'Move to apps?',
         message: 'Move Orbit to Applications folder?',
-        buttons: ['Cancel', 'Ok'],
-        defaultId: 1,
-        cancelId: 0,
+        buttons: ['Ok', 'Cancel'],
+        defaultId: 0,
+        cancelId: 1,
       })
-      if (response === 1) {
+      if (response === 0) {
         try {
           app.moveToApplicationsFolder()
         } catch (err) {

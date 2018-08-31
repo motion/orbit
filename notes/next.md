@@ -1,9 +1,28 @@
-# wow
+# September
 
-- p2p / app store
-- big-frame sidebar custom app
-- OCR
-- contextual sidebar
+app platform demo, p2p sync, search
+
+- RSS Syncer means we can actually publish an RSS feed of updates to orbit users :D
+  - and can hardcode it for them so theres content there on first start
+- Login/signup/onboarding completion
+- Figure out Google/https oauth workaround
+- p2p system for avoiding hitting syncers
+- Iron out a lot of bugs and syncer issues
+- Refactors and build app for app platform
+- hstf5, cosal search integrations
+
+# October
+
+app platform
+
+- Continue on UI kit for apps
+- Get the basic app store in place
+- If Swift contractor works out integrate some OCR
+- Prep website for private beta launch
+
+# November
+
+Private beta
 
 # productionize
 
@@ -90,7 +109,7 @@ p2p: https://github.com/webtorrent/bittorrent-dht
 
 - p2p sync with real features (rate-limit, pin-to-search)
 - deploy it with 5 teams
-- alpha ocr/memory/contextual-search
+- alpha app store
 
 ## unnecessary for beta polish bucket
 

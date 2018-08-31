@@ -48,8 +48,12 @@ function publish-packages() {
   while ! nc -z localhost 4343; do sleep 0.1; done
   # publish packages
   (cd ../.. && \
-    npx lerna exec --ignore "orbit" --ignore "@mcro/orbit" -- \
-        npm publish --force --registry http://localhost:4343)
+    npx lerna exec \
+      --ignore "orbit" \
+      --ignore "@mcro/orbit" \
+      --ignore "@mcro/playground" \
+      --ignore "@mcro/site" \
+      -- npm publish --force --registry http://localhost:4343)
   # then publish main app with all packages
   (cd ../orbit && npm publish --registry http://localhost:4343 --force)
   # kill verdaccio

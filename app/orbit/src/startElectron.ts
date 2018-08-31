@@ -4,24 +4,23 @@ import { cleanupChildren } from './cleanupChildren'
 import waitPort from 'wait-port'
 import { log } from './log'
 import { getGlobalConfig } from '@mcro/config'
+import { ChildProcess } from 'child_process'
 
 export async function startElectron() {
   const Config = getGlobalConfig()
 
   // else, electron...
-  let desktopProcess
-  const handleExit = async () => {
-    console.log('Orbit exiting...')
-    if (desktopProcess) {
-      desktopProcess.kill('SIGINT')
-    }
-    await cleanupChildren()
-    console.log('bye!')
-  }
+  let desktopProcess: ChildProcess
 
-  app.on('before-quit', () => {
+  app.on('before-quit', async () => {
     console.log('Electron handle exit...')
-    handleExit()
+    console.log('Orbit exiting...')
+    await cleanupChildren(desktopProcess.pid)
+    await cleanupChildren(process.pid)
+    desktopProcess.kill('SIGINT')
+    // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
+    process.kill(-desktopProcess.pid)
+    console.log('bye!')
   })
 
   // fork desktop process...

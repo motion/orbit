@@ -16,6 +16,7 @@ export function startDesktop(): ChildProcess {
   try {
     console.log('Starting Desktop:', Config.paths.nodeBinary, args)
     const child = spawn(Config.paths.nodeBinary, args, {
+      detached: true,
       env: {
         ELECTRON_RUN_AS_NODE: 1,
         IS_DESKTOP: true,
@@ -28,7 +29,6 @@ export function startDesktop(): ChildProcess {
     child.stdout.on('data', b => console.log('desktop:', b.toString()))
     child.stderr.on('data', b => console.log('desktop err:', b.toString()))
 
-    // return pid
     return child
   } catch (err) {
     console.log('error starting desktop', err)

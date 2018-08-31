@@ -2,6 +2,8 @@
 
 app platform demo, p2p sync, search
 
+- RSS Syncer means we can actually publish an RSS feed of updates to orbit users :D
+  - and can hardcode it for them so theres content there on first start
 - Login/signup/onboarding completion
 - Figure out Google/https oauth workaround
 - p2p system for avoiding hitting syncers

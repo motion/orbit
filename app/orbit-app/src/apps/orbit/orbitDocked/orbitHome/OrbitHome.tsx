@@ -221,7 +221,7 @@ const OrbitHomeCarouselSection = decorator(
 )
 
 const Unpad = view({
-  margin: [0, -16],
+  margin: [0, -14],
 })
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore')

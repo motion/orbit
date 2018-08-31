@@ -55,24 +55,34 @@ class OrbitHomeStore {
     () => [this.isActive, this.results],
     ([isActive]) => {
       ensure('is active', isActive)
+      console.log('set home sleection stuff')
       this.props.selectionStore.setResults(this.results)
     },
   )
 
-  get results() {
-    let results: SelectionGroup[] = []
-    let offset = 0
-    for (const id in this.carouselOrder) {
-      const items = this.carouselData[id]
-      if (!items || !items.length) {
-        continue
+  results = react(
+    () => [this.allCarousels, this.carouselData, this.carouselOrder],
+    async ([carousels, data, order], { sleep }) => {
+      // debounce a little
+      await sleep(50)
+      console.log('update results')
+      let results: SelectionGroup[] = []
+      let offset = 0
+      for (const id in order) {
+        const items = data[id]
+        if (!items || !items.length) {
+          continue
+        }
+        const { name } = carousels.find(x => x.id === `${id}`)
+        results.push({ name, type: 'row', items, startIndex: offset, id })
+        offset += items.length
       }
-      const { name } = this.allCarousels.find(x => x.id === `${id}`)
-      results.push({ name, type: 'row', items, startIndex: offset, id })
-      offset += items.length
-    }
-    return results
-  }
+      return results
+    },
+    {
+      defaultValue: [],
+    },
+  )
 
   allCarousels = [
     {
@@ -123,7 +133,7 @@ class OrbitHomeStore {
     this.carouselOrder.splice(endIndex, 0, removed)
   }
 
-  carouselData = deep({})
+  carouselData = {}
 
   updateCarouselData = react(
     () => this.allCarousels,
@@ -139,8 +149,11 @@ class OrbitHomeStore {
         const subscription = Mediator.observeMany(model, {
           args: query,
         }).subscribe(values => {
-          console.log('update model data', name)
-          this.carouselData[id] = values
+          console.log('update model data', name, values)
+          this.carouselData = {
+            ...this.carouselData,
+            [id]: values,
+          }
         })
 
         disposers.push(() => subscription.unsubscribe())

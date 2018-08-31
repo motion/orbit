@@ -81,8 +81,6 @@ OverflowFade.theme = ({ theme }) => ({
 
 const SubPaneInner = view(UI.View, {
   position: 'relative',
-  borderRadius: BORDER_RADIUS,
-  overflow: 'hidden',
   flex: 1,
 })
 

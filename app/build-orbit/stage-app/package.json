@@ -17,7 +17,10 @@
     "mac": {
       "target": "zip",
       "icon": "../resources/icon.icns",
-      "provisioningProfile": "../build-resources/orbit.provisionprofile"
+      "provisioningProfile": "../build-resources/orbit.provisionprofile",
+      "extendInfo": {
+        "LSUIElement": 1
+      }
     },
     "directories": {
       "buildResources": "../resources",

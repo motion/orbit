@@ -26,6 +26,9 @@ class MainStore {
   }
 
   handleRef = ref => {
+    if (!ref) {
+      return
+    }
     if (this.props.onRef) {
       this.props.onRef(ref.window)
     }

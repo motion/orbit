@@ -103,7 +103,7 @@ export class ElectronStore {
       this.windowFocusStore.defocusOrbit()
     }
     await sleep(40)
-    Electron.sendMessage(App, App.messages.TOGGLE_DOCKED)
+    Electron.sendMessage(App, App.messages.TOGGLE_SHOWN)
   }
 
   toggleVisible = () => {

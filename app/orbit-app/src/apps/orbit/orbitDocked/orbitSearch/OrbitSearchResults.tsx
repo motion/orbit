@@ -148,6 +148,8 @@ class OrbitSearchResultsList extends React.Component<Props> {
             isExpanded
             searchTerm={searchTerm}
             onClickLocation={this.handleLocation}
+            maxHeight={300}
+            overflow="hidden"
           >
             {this.getChildren}
           </OrbitListItem>

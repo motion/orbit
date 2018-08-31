@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
 import keywordExtract from '@mcro/keyword-extract'
-import { SlackBitData } from '@mcro/models'
+import { SlackBitData, SlackBitDataMessage } from '@mcro/models'
 import arrford from 'arrford'
 import { BitItemResolverProps } from '../ResolveBit'
 
@@ -9,6 +9,20 @@ const options = {
   remove_digits: true,
   return_changed_case: true,
   remove_duplicates: false,
+}
+
+const getMessages = (
+  messages: SlackBitDataMessage[],
+  { shownLimit, searchTerm },
+) => {
+  let res = messages.slice(0, shownLimit)
+  if (searchTerm) {
+    const filtered = res.filter(m => m.text.indexOf(searchTerm) >= 0)
+    if (filtered.length) {
+      res = filtered
+    }
+  }
+  return res
 }
 
 export const ResolveConversation = ({
@@ -22,10 +36,8 @@ export const ResolveConversation = ({
 }: BitItemResolverProps) => {
   const data = bit.data as SlackBitData
   const content = isExpanded
-    ? (data.messages
-        .slice(0, shownLimit)
-        .filter(m => m.text.indexOf(searchTerm) >= 0)
-        .map((message, index) => (
+    ? (getMessages(data.messages, { searchTerm, shownLimit }).map(
+        (message, index) => (
           <SlackMessage
             key={index}
             message={message}
@@ -34,7 +46,8 @@ export const ResolveConversation = ({
             itemProps={itemProps}
             hide={hide}
           />
-        )) as any) // todo(nate) please fix type error and remove "as any"
+        ),
+      ) as any) // todo(nate) please fix type error and remove "as any"
     : null
   return children({
     id: bit.id,

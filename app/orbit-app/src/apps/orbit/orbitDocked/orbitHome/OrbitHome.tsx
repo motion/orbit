@@ -69,6 +69,7 @@ class OrbitHomeStore {
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id in order) {
+        console.log('id', id)
         const items = data[id]
         if (!items || !items.length) {
           continue

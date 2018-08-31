@@ -1,4 +1,3 @@
-// @ts-ignore
 import { app, dialog } from 'electron'
 import { cleanupChildren } from './cleanupChildren'
 import waitPort from 'wait-port'
@@ -12,7 +11,7 @@ export async function startElectron() {
   // else, electron...
   let desktopProcess: ChildProcess
 
-  app.on('before-quit', async () => {
+  const handleExit = async () => {
     console.log('Electron handle exit...')
     console.log('Orbit exiting...')
     cleanupChildren(desktopProcess.pid)
@@ -21,7 +20,12 @@ export async function startElectron() {
     // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
     process.kill(-desktopProcess.pid)
     console.log('bye!')
-  })
+  }
+
+  // this works in prod
+  app.on('before-quit', handleExit)
+  // this works in dev
+  process.on('exit', handleExit)
 
   // fork desktop process...
   // fail message

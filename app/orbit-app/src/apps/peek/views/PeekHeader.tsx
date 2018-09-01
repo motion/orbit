@@ -8,6 +8,7 @@ import * as Constants from '../../../constants'
 import { PeekContents } from '../PeekPaneProps'
 import { TitleBar } from './TitleBar'
 import { CSSPropertySet } from '@mcro/gloss'
+import { Glint } from '@mcro/ui'
 
 type Props = PeekContents & {
   peekStore?: PeekStore
@@ -29,6 +30,8 @@ PeekHeaderContain.theme = ({ invisible, position, theme, focused }) => {
   }
   let style: CSSPropertySet = {
     position: position || 'relative',
+    // to keep things aligned
+    paddingTop: 1,
   }
   if (!focused) {
     style = {
@@ -40,7 +43,7 @@ PeekHeaderContain.theme = ({ invisible, position, theme, focused }) => {
     style = {
       ...style,
       background: theme.backgroundGradient || theme.background,
-      borderBottom: [1, theme.borderColor],
+      borderBottom: [1, theme.borderBottomColor || theme.borderColor],
     }
   }
   return style
@@ -86,6 +89,7 @@ const SubTitle = ({ children, before, after }) => (
 const MainHead = view({
   position: 'relative',
   flex: 1,
+  height: 38,
 })
 
 @attachTheme
@@ -112,7 +116,6 @@ export class PeekHeaderContent extends React.Component<Props> {
     const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
     const itemConfig = peekStore.state.appConfig.config
     const hideTitleBar = itemConfig && itemConfig.showTitleBar === false
-    const titleHeight = 27
     return (
       <PeekHeaderContain
         invisible={hideTitleBar}
@@ -122,6 +125,7 @@ export class PeekHeaderContent extends React.Component<Props> {
         theme={theme}
         {...props}
       >
+        <Glint borderRadius={7.5} color="rgba(255,255,255,0.65)" top={1} />
         <MainHead>
           <TitleBar
             {...!hasTitle && {
@@ -136,8 +140,8 @@ export class PeekHeaderContent extends React.Component<Props> {
                   top={0}
                   left={6}
                   right={0}
-                  padding={hasTitle ? 0 : [16, 0, 0, 8]}
-                  height={titleHeight}
+                  padding={hasTitle ? 0 : [0, 0, 0, 8]}
+                  height="100%"
                   zIndex={10000}
                   alignItems="center"
                 >

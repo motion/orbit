@@ -6,10 +6,9 @@ import * as Constants from '../../../constants'
 import { PeekFrameArrow } from './PeekFrameArrow'
 import { ResizableBox } from '../../../views/ResizableBox'
 import { App } from '@mcro/stores'
+import { attachTheme, ThemeObject } from '@mcro/gloss'
 
 const SHADOW_PAD = 85
-// shared by arrow and frameborder
-const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.5]]
 
 const transitions = store => {
   if (store.isHidden) return 'none'
@@ -19,7 +18,7 @@ const transitions = store => {
   return 'all ease 100ms'
 }
 
-const PeekFrameBorder = view({
+const PeekFrameBorder = view(UI.View, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -28,7 +27,6 @@ const PeekFrameBorder = view({
   zIndex: 10000,
   borderRadius: Constants.PEEK_BORDER_RADIUS,
   pointerEvents: 'none',
-  boxShadow: [borderShadow, ['inset', 0, 0.5, 0, 0.5, [255, 255, 255, 0.3]]],
 })
 
 const PeekMain = view(UI.View, {
@@ -40,9 +38,11 @@ const PeekMain = view(UI.View, {
 type PeekFrameProps = {
   peekStore: PeekStore
   children: any
+  theme?: ThemeObject
 }
 
 const decorator = compose(
+  attachTheme,
   view.attach('peekStore'),
   view,
 )
@@ -58,7 +58,7 @@ const handleResize = (_, { size }) => {
 }
 
 export const PeekFrame = decorator(
-  ({ peekStore, children, ...props }: PeekFrameProps) => {
+  ({ peekStore, children, theme, ...props }: PeekFrameProps) => {
     const {
       isShown,
       willShow,
@@ -70,6 +70,7 @@ export const PeekFrame = decorator(
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }
+    const borderShadow = ['inset', 0, 0, 0, 0.5, theme.frameBorderColor]
     const isHidden = !state
     const onRight = !state.peekOnLeft
     const padding = [
@@ -110,7 +111,7 @@ export const PeekFrame = decorator(
           )}
           <UI.Col flex={1} padding={padding} margin={margin}>
             <UI.Col position="relative" flex={1}>
-              <PeekFrameBorder />
+              <PeekFrameBorder boxShadow={[borderShadow]} />
               <PeekMain
                 boxShadow={boxShadow}
                 borderRadius={Constants.PEEK_BORDER_RADIUS}

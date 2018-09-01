@@ -1,17 +1,19 @@
 import { view } from '@mcro/black'
+import { Color } from '@mcro/css'
 
 const isUndef = x => typeof x === 'undefined'
 
-// type Props = {
-//   color: Color,
-//   size: number,
-//   borderRadius?: number,
-//   borderLeftRadius?: number,
-//   borderRightRadius?: number,
-//   attach?: Object,
-//   top?: number,
-//   bottom?: number,
-// }
+type Props = {
+  color: Color
+  size: number
+  borderRadius?: number
+  borderLeftRadius?: number
+  borderRightRadius?: number
+  attach?: Object
+  top?: number
+  bottom?: number
+  y?: number
+}
 
 export const Glint = view({
   pointerEvents: 'none',
@@ -22,20 +24,16 @@ export const Glint = view({
   zIndex: 10000,
 })
 
-Glint.defaultProps = {
-  color: [255, 255, 255, 0.09],
-  size: 1,
-}
-
 Glint.theme = ({
-  borderRadius,
   bottom,
-  borderRightRadius,
   borderLeftRadius,
-  color,
-  size,
+  borderRadius = 0,
+  borderRightRadius,
+  color = [255, 255, 255, 0.4],
+  size = 1,
+  y = 0.5,
   ...props
-}) => {
+}: Props) => {
   const radiusStyle = borderRadius && {
     borderRadius,
   }
@@ -52,7 +50,7 @@ Glint.theme = ({
   return {
     top: 0,
     height: '100%',
-    transform: { y: 0.5 * (bottom ? 1 : -1), z: 0 },
+    transform: { y: y * (bottom ? 1 : -1), z: 0 },
     borderTop: isUndef(bottom) && [size, color],
     borderBottom: !isUndef(bottom) && [size, color],
     // retina border

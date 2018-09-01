@@ -27,6 +27,7 @@ const SearchClearButton = view(ClearButton, {
 })
 
 type Props = {
+  width?: number | string
   defaultValue?: string
   placeholder?: string
   actions?: React.ReactNode
@@ -49,7 +50,7 @@ type Props = {
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
 const SearchBar = view(Row, {
-  height: 37,
+  height: '100%',
   padding: [3, 5],
 })
 
@@ -58,7 +59,6 @@ export const SearchBox = view(View, {
   flexFlow: 'row',
   borderRadius: '999em',
   height: '100%',
-  flex: 1,
   alignItems: 'center',
   paddingLeft: 4,
   '&:focus-within': {
@@ -392,6 +392,7 @@ export function Searchable<T extends object>(
         before,
         after,
         theme,
+        width,
         ...props
       } = this.props
       const searchBar = (
@@ -402,7 +403,7 @@ export function Searchable<T extends object>(
           {...searchBarProps}
         >
           {before}
-          <SearchBox tabIndex={-1}>
+          <SearchBox width={width} tabIndex={-1}>
             <SearchIcon
               name="ui-1_zoom"
               // @ts-ignore

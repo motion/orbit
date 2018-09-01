@@ -54,6 +54,16 @@ type PeekItemResolverExtraProps = {
   itemProps?: Object
 }
 
+const TitleBarButton = props => (
+  <UI.Button
+    sizeRadius={0.75}
+    sizePadding={1}
+    sizeHeight={0.95}
+    iconSize={12}
+    {...props}
+  />
+)
+
 export const PeekBit = ({
   appConfig,
   model,
@@ -93,28 +103,26 @@ export const PeekBit = ({
             // focusOnMount
             onChange={() => selectionStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
+            width={200}
             searchBarProps={{
-              padding: [5, 10],
-              height: 42,
+              // 1px more for inset shadow
+              padding: [5, 10, 4, 10],
             }}
             before={
-              <HeadSide maxWidth="70%" margin={[0, 10, 0, 15]}>
-                <UI.Text fontSize={13} fontWeight={400} ellipse>
-                  {title}
-                </UI.Text>
-              </HeadSide>
+              <>
+                <HeadSide maxWidth="70%" margin={[0, 10, 0, 15]}>
+                  <UI.Text fontSize={12.5} fontWeight={500} ellipse>
+                    {title}
+                  </UI.Text>
+                </HeadSide>
+                <View flex={1} />
+              </>
             }
             after={
               <HeadSide>
                 {!!icon && (
-                  <UI.ListRow
-                    itemProps={{
-                      iconSize: 12,
-                      // sizeRadius: 2,
-                      sizePadding: 1.4,
-                    }}
-                  >
-                    <UI.Button
+                  <UI.ListRow>
+                    <TitleBarButton
                       onClick={() => {
                         App.actions.open(locationLink)
                         App.actions.closeOrbit()
@@ -122,7 +130,7 @@ export const PeekBit = ({
                       icon={<OrbitIcon icon={icon} size={16} />}
                       tooltip={location}
                     />
-                    <UI.Button
+                    <TitleBarButton
                       onClick={() => {
                         App.actions.open(desktopLink || webLink)
                         App.actions.closeOrbit()

@@ -14,8 +14,8 @@ type Props = {
 }
 
 const getBackground = (y, theme) => {
-  if (y < 20) return theme.background
-  if (y < 40) return theme.backgroundBottom || theme.background
+  if (y < 20) return theme.titleBar.background
+  if (y < 40) return theme.titleBar.backgroundBottom
   return theme.background
 }
 

@@ -48,23 +48,37 @@ const TabList = view(Row, {
   alignItems: 'stretch',
 })
 
+TabList.theme = ({ theme }) => ({
+  boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
+})
+
 const TabListItem = view(Row, {
   flex: 1,
-  fontSize: 13,
+  fontSize: 11,
+  fontWeight: 500,
   lineHeight: 22,
   overflow: 'hidden',
-  padding: [3, 10],
+  padding: [1, 10],
   position: 'relative',
-  textAlign: 'center',
+  justifyContent: 'center',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   userSelect: 'none',
+  transition: 'all ease 700ms',
 })
 
-TabListItem.theme = ({ theme, active }) => ({
-  color: active ? theme.colorActive : theme.colorBlur,
-  background: active ? 'transparent' : theme.backgroundBlur,
-})
+TabListItem.theme = ({ theme, active }) => {
+  const background = active
+    ? theme.tabBackgroundActive || theme.background
+    : theme.tabBackground || theme.background
+  return {
+    color: active ? theme.colorActive : theme.colorBlur,
+    background,
+    '&:hover': {
+      background: active ? background : theme.tabBackgroundHover,
+    },
+  }
+}
 
 const TabListAddItem = view(TabListItem, {
   borderRight: 'none',

@@ -17,9 +17,12 @@ const macTheme = Theme.colorize({
 
   // sub-themes go into their own objects so they can be narrowed into
   titleBar: {
+    tabBackgroundActive: 'linear-gradient(#D5D5D5, #CBCBCC)',
+    tabBackground: 'linear-gradient(#BFBFBF, #B1B1B1)',
+    tabBackgroundHover: 'linear-gradient(#B1B1B1, #A1A1A1)',
     background: '#eae9eb',
     backgroundBottom: '#dcdbdc',
-    backgroundGradient: 'linear-gradient(to bottom, #E5E4E5 0%, #CDCDCD 100%)',
+    backgroundGradient: 'linear-gradient(#E5E4E5, #CDCDCD)',
     backgroundBlur: '#f6f6f6',
     borderColor: '#c1c0c2',
     borderBottomColor: '#B2B2B3',

@@ -74,7 +74,6 @@ const SubTitle = ({ children, before, after }) => (
     padding={[0, 6]}
     alignItems="center"
     flex={1}
-    height={32}
     zIndex={1}
   >
     {textify(before)}
@@ -163,8 +162,6 @@ export class PeekHeaderContent extends React.Component<Props> {
               {subtitle}
             </SubTitle>
           )}
-          {/* Adjust for window controls */}
-          <div style={{ width: 40 }} />
           {belowHeadMain}
         </MainHead>
         {belowHead}

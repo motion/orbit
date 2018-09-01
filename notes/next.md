@@ -1,3 +1,12 @@
+# September:
+
+- Rate limits may be per-token so we may not need fancy p2p stuff (or not yet)
+- Reach out to stuart for meeting Workday
+- Give Karthik (SpaceX) demo app to use:
+  - Requirements:
+    - Add in basic Cosal search
+    - Add in basic topic modeling for people
+
 # September
 
 app platform demo, p2p sync, search

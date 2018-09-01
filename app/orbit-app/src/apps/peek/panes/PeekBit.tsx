@@ -96,16 +96,7 @@ export const PeekBit = ({
               // 1px more for inset shadow
               padding: [5, 10, 4, 0],
             }}
-            before={
-              <>
-                <HeadSide flex={40} maxWidth="70%" margin={[0, 10, 0, 0]}>
-                  <UI.Text fontSize={12.5} fontWeight={500} ellipse>
-                    {title}
-                  </UI.Text>
-                </HeadSide>
-                <View flex={1} />
-              </>
-            }
+            before={<View flex={1} />}
             after={
               <>
                 <TitleBarSpace />
@@ -134,7 +125,7 @@ export const PeekBit = ({
           >
             {({ searchBar, searchTerm }) => {
               return children({
-                title: null,
+                title,
                 icon,
                 belowHeadMain: searchBar,
                 postBody: (

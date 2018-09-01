@@ -107,7 +107,7 @@ export const PeekBit = ({
               </>
             }
             after={
-              <HeadSide>
+              <>
                 <TitleBarSpace />
                 {!!icon && (
                   <UI.ListRow>
@@ -129,7 +129,7 @@ export const PeekBit = ({
                     />
                   </UI.ListRow>
                 )}
-              </HeadSide>
+              </>
             }
           >
             {({ searchBar, searchTerm }) => {

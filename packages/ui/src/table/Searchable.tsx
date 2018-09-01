@@ -53,6 +53,7 @@ const SearchBar = view(Row, {
   height: '100%',
   maxHeight: 40,
   padding: [3, 5],
+  alignItems: 'center',
 })
 
 export const SearchBox = view(View, {

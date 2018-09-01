@@ -110,7 +110,7 @@ export const PeekBit = ({
             }}
             before={
               <>
-                <HeadSide maxWidth="70%" margin={[0, 10, 0, 15]}>
+                <HeadSide flex={40} maxWidth="70%" margin={[0, 10, 0, 15]}>
                   <UI.Text fontSize={12.5} fontWeight={500} ellipse>
                     {title}
                   </UI.Text>

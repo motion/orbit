@@ -295,7 +295,12 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         className={`${this.uniq} ${className || ''}`}
       >
         {glint ? (
-          <Glint key={0} size={size} borderRadius={props.borderRadius} />
+          <Glint
+            key={0}
+            size={size}
+            opacity={0.2}
+            borderRadius={props.borderRadius}
+          />
         ) : null}
         {icon && !stringIcon ? <div>{icon}</div> : null}
         {icon && stringIcon ? (

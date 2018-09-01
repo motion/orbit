@@ -13,6 +13,8 @@ import { View } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
 import { Bit } from '@mcro/models'
 import { DateFormat } from '../../../views/DateFormat'
+import { TitleBarButton } from '../views/TitleBarButton'
+import { TitleBarSpace } from '../views/TitleBarSpace'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -43,26 +45,11 @@ BottomFloat.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.background} 50%)`,
 })
 
-const HeadSide = view(View, {
-  minWidth: 80,
-  padding: [0, 15],
-  alignItems: 'center',
-  justifyContent: 'center',
-})
+const HeadSide = view(View)
 
 type PeekItemResolverExtraProps = {
   itemProps?: Object
 }
-
-const TitleBarButton = props => (
-  <UI.Button
-    sizeRadius={0.75}
-    sizePadding={1}
-    sizeHeight={0.95}
-    iconSize={12}
-    {...props}
-  />
-)
 
 export const PeekBit = ({
   appConfig,
@@ -105,12 +92,13 @@ export const PeekBit = ({
             onEnter={peekStore.goToNextHighlight}
             width={200}
             searchBarProps={{
+              flex: 1,
               // 1px more for inset shadow
-              padding: [5, 10, 4, 10],
+              padding: [5, 10, 4, 0],
             }}
             before={
               <>
-                <HeadSide flex={40} maxWidth="70%" margin={[0, 10, 0, 15]}>
+                <HeadSide flex={40} maxWidth="70%" margin={[0, 10, 0, 0]}>
                   <UI.Text fontSize={12.5} fontWeight={500} ellipse>
                     {title}
                   </UI.Text>
@@ -120,6 +108,7 @@ export const PeekBit = ({
             }
             after={
               <HeadSide>
+                <TitleBarSpace />
                 {!!icon && (
                   <UI.ListRow>
                     <TitleBarButton

@@ -13,6 +13,7 @@ type Props = {
   top?: number
   bottom?: number
   y?: number
+  opacity?: number
 }
 
 export const Glint = view({
@@ -29,7 +30,8 @@ Glint.theme = ({
   borderLeftRadius,
   borderRadius = 0,
   borderRightRadius,
-  color = [255, 255, 255, 0.4],
+  opacity = 0.5,
+  color = '#fff',
   size = 1,
   y = 0.5,
   ...props
@@ -48,6 +50,7 @@ Glint.theme = ({
       : 'borderBottomLeftRadius']: borderLeftRadius,
   }
   return {
+    opacity,
     top: 0,
     height: '100%',
     transform: { y: y * (bottom ? 1 : -1), z: 0 },

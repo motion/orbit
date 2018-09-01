@@ -51,6 +51,7 @@ const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
 const SearchBar = view(Row, {
   height: '100%',
+  maxHeight: 40,
   padding: [3, 5],
 })
 
@@ -59,6 +60,7 @@ export const SearchBox = view(View, {
   flexFlow: 'row',
   borderRadius: '999em',
   height: '100%',
+  flex: 1,
   alignItems: 'center',
   paddingLeft: 4,
   '&:focus-within': {

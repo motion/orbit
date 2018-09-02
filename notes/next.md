@@ -1,34 +1,44 @@
 # September:
 
 - Rate limits may be per-token so we may not need fancy p2p stuff (or not yet)
-- Reach out to stuart for meeting Workday
-- Give Karthik (SpaceX) demo app to use:
-  - Requirements:
-    - Add in basic Cosal search
-    - Add in basic topic modeling for people
-
-# September
-
-app platform demo, p2p sync, search
-
-- RSS Syncer
-- We make the default home screen be "Orbit Updates"
-  - shows our RSS and maybe Twitter :D
-- Integration quick search result cards
-  - Those show a queue for each Location in that integration
-- We can also have an example of Design blogs
-- Login/signup/onboarding completion
-- Figure out Google/https oauth workaround
-- p2p system for avoiding hitting syncers
-- Iron out a lot of bugs and syncer issues
-- Refactors and build app for app platform
-- hstf5, cosal search integrations
+- Contacts
+  - Reach out to stuart for meeting Workday
+  - Convince tstuart to do Swindler and get on video call to discuss OCR
+  - Give Karthik (SpaceX) demo app to use:
+    - Requirements:
+      - Add in basic Cosal search
+      - Add in basic topic modeling for people
+  - Reply to Andy properly, give update
+- Community
+  - Start community
+    - Get a first beta build cut
+      - deploy https/private.orbit.com with letsencrypt
+      - Iron out a lot of bugs and syncer issues
+      - Cosal early integration for search/profiles, maybe hstf5
+      - RSS Syncer
+    - Start Orbit friends chat
+    - Typeform survey
+    - Orbit home has RSS that has Orbit Updates + Orbit Help
+      - Updates are latest dev notes
+      - Help is for onboarding onto Orbit, shows its power
+      - Make the default home screen be "Orbit Updates"
+      - Twitter as well, we can IFTT our twitter into rss
+- Sales
+  - We should have tiers for support
+  - We can do 50% off for early users lifetime
+  - 25k, 50k, 100k or something to start
+- Account system
+  - This should let people set up an Orbit and share the config with friends
+- Hire
+  - Find someone to work on the swift OCR system
 
 # October
 
 app platform
 
 - Able to make your own "Pages/Spaces/Homescreens"
+  - By default it splits them by Location in a new Pane for each App
+  - We can also have an example of Design blogs example
 - Continue on UI kit for apps
 - Get the basic app store in place
 - If Swift contractor works out integrate some OCR
@@ -38,7 +48,7 @@ app platform
 
 Private beta
 
-# productionize
+# next
 
 - typing while focused on a peek:
   - reset index to 0 not -1, keeps the peek open as you filter things
@@ -52,8 +62,6 @@ Private beta
 - email list email
 - remove confluence
 - make onboarding encourage adding more integrations
-- only have them download .app and auto move to apps folder
-- slack orbit-fam #revolution
 - close orbit while oauth open so it doesnt cover it
 - better show the panes on onboard
 - after onboard "what can i do / search?"

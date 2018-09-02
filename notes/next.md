@@ -4,6 +4,8 @@
   - Gmail super slow
   - Gmail no html coming back?
   - Really simple throttle
+  - Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
+    - for gmail, dont sync full history, but do sync a trailing X months or limited # of items
   - PersonBit query recent + limit
   - Slack.people sometimes still not showing up
   - Github not normalizing createdAt timestamps properly

@@ -308,7 +308,7 @@ type TableState = {
   columnKeys: TableColumnKeys
   sortedRows: TableRows
   dragStartingKey?: string
-  props: TableProps
+  props: TableProps | {}
 }
 
 const NO_COLUMN_SIZE: TableColumnSizes = {}
@@ -377,6 +377,15 @@ export default class Table extends PureComponent<TableProps, TableState> {
   static defaultProps = {
     floating: true,
     virtual: true,
+  }
+
+  state = {
+    columnKeys: null,
+    columnOrder: null,
+    columnSizes: null,
+    sortedRows: null,
+    dragStartingKey: null,
+    props: {},
   }
 
   componentDidMount() {

@@ -1,5 +1,9 @@
 import { view } from '@mcro/black'
-import { Setting, SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/models'
+import {
+  Setting,
+  SettingForceSyncCommand,
+  SettingRemoveCommand,
+} from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
@@ -11,6 +15,8 @@ import { RoundButton } from '../../../views'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekPaneProps } from '../PeekPaneProps'
 import * as SettingPanes from './settingPanes'
+import { TitleBarButton } from '../views/TitleBarButton'
+import { TitleBarSpace } from '../views/TitleBarSpace'
 
 // @ts-ignore
 const Electron = electronRequire('electron')
@@ -26,10 +32,6 @@ const statusIcons = {
   COMPLETE: { name: 'check', color: 'darkgreen' },
 }
 
-const SubTitleButton = props => (
-  <UI.Button sizeHeight={0.85} sizePadding={0.9} {...props} />
-)
-
 @view.attach('integrationSettingsStore')
 @view.attach({
   store: SettingInfoStore,
@@ -44,7 +46,7 @@ class SettingContent extends React.Component<
 > {
   handleRefresh = async () => {
     Mediator.command(SettingForceSyncCommand, {
-      settingId: this.props.setting.id
+      settingId: this.props.setting.id,
     })
     // const store = this.props.store
     // const job: Job = {} as Job
@@ -65,7 +67,7 @@ class SettingContent extends React.Component<
     })
     if (response === 1) {
       Mediator.command(SettingRemoveCommand, {
-        settingId: store.setting.id
+        settingId: store.setting.id,
       })
       App.actions.clearPeek()
     }
@@ -100,18 +102,8 @@ class SettingContent extends React.Component<
           const icon = statusIcons[store.job && store.job.status] || {}
           return children({
             title: capitalize(integration),
-            subtitleBefore: (
-              <SubTitleButton
-                icon="remove"
-                tooltip="Remove integration"
-                onClick={this.removeIntegration}
-              >
-                Remove
-              </SubTitleButton>
-            ),
             subtitle: (
               <>
-                <UI.Text>{store.bitsCount} total</UI.Text>
                 <UI.View width={10} />
                 {!!store.job &&
                   !!store.job.updatedAt && (
@@ -128,12 +120,24 @@ class SettingContent extends React.Component<
               </>
             ),
             subtitleAfter: (
-              <SubTitleButton
-                tooltip="Re-run sync"
-                onClick={this.handleRefresh}
-              >
-                Sync
-              </SubTitleButton>
+              <>
+                <UI.Text size={0.9} fontWeight={400} alpha={0.6}>
+                  {(+store.bitsCount).toLocaleString()} total
+                </UI.Text>
+                <TitleBarSpace />
+                <UI.ListRow>
+                  <TitleBarButton
+                    icon="remove"
+                    tooltip="Remove integration"
+                    onClick={this.removeIntegration}
+                  />
+                  <TitleBarButton
+                    tooltip="Sync"
+                    icon="refresh"
+                    onClick={this.handleRefresh}
+                  />
+                </UI.ListRow>
+              </>
             ),
             belowHead,
             content,

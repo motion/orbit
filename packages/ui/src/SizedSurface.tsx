@@ -49,7 +49,7 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
   }
   if (sizePadding) {
     const padSize = num(sizePadding) * size
-    const padding = sizePadding
+    const padding = !!sizePadding
       ? [sizeHeight ? 0 : padSize * 1.5, 9 * padSize]
       : 0
     pass.padding = padding

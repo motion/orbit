@@ -23,9 +23,9 @@ export const OrbitAppCard = decorator(
     const countSubtitle = !isActive
       ? ''
       : store.bitsCount >= 0
-        ? `${store.bitsCount}`
+        ? Number(store.bitsCount).toLocaleString()
         : '...'
-    const subtitleDisplay = subtitle || Number(countSubtitle).toLocaleString()
+    const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard
         inactive={!isActive}

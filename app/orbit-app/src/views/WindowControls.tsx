@@ -16,7 +16,7 @@ export const WindowControls = ({
         <ControlButton
           icon="x"
           onClick={onClose}
-          background="#ED6C60"
+          background="#FF6159"
           {...itemProps}
           {...closeProps}
         />

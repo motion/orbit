@@ -1,12 +1,9 @@
 import { IntegrationType } from '@mcro/models'
+import { AppConfig } from '@mcro/stores'
 
-export const settingsList: {
-  id: IntegrationType
-  type: string
-  integration: string
-  title: string
-  icon: string
-}[] = [
+type SettingConfig = AppConfig & { id: IntegrationType }
+
+export const settingsList: SettingConfig[] = [
   {
     id: 'gmail',
     type: 'setting',
@@ -37,19 +34,19 @@ export const settingsList: {
   },
   {
     id: 'confluence',
-    type: 'setting',
+    type: 'view',
+    subType: 'ConfluenceSetupPane',
     integration: 'confluence',
     title: 'Confluence',
     icon: 'confluence',
-    auth: true,
   },
   {
     id: 'jira',
-    type: 'setting',
+    type: 'view',
+    subType: 'JiraSetupPane',
     integration: 'jira',
     title: 'Jira',
     icon: 'jira',
-    auth: true,
   },
   // {
   //   id: 'website',

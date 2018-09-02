@@ -13,6 +13,8 @@ import { View } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
 import { Bit } from '@mcro/models'
 import { DateFormat } from '../../../views/DateFormat'
+import { TitleBarButton } from '../views/TitleBarButton'
+import { TitleBarSpace } from '../views/TitleBarSpace'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -43,12 +45,7 @@ BottomFloat.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.background} 50%)`,
 })
 
-const HeadSide = view(View, {
-  minWidth: 80,
-  padding: [0, 15],
-  alignItems: 'center',
-  justifyContent: 'center',
-})
+const HeadSide = view(View)
 
 type PeekItemResolverExtraProps = {
   itemProps?: Object
@@ -93,28 +90,19 @@ export const PeekBit = ({
             // focusOnMount
             onChange={() => selectionStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
+            width={200}
             searchBarProps={{
-              padding: [5, 10],
-              height: 42,
+              flex: 1,
+              // 1px more for inset shadow
+              padding: [5, 10, 4, 0],
             }}
-            before={
-              <HeadSide maxWidth="70%" margin={[0, 10, 0, 15]}>
-                <UI.Text fontSize={13} fontWeight={400} ellipse>
-                  {title}
-                </UI.Text>
-              </HeadSide>
-            }
+            before={<View flex={1} />}
             after={
-              <HeadSide>
+              <>
+                <TitleBarSpace />
                 {!!icon && (
-                  <UI.ListRow
-                    itemProps={{
-                      iconSize: 12,
-                      // sizeRadius: 2,
-                      sizePadding: 1.4,
-                    }}
-                  >
-                    <UI.Button
+                  <UI.ListRow>
+                    <TitleBarButton
                       onClick={() => {
                         App.actions.open(locationLink)
                         App.actions.closeOrbit()
@@ -122,7 +110,7 @@ export const PeekBit = ({
                       icon={<OrbitIcon icon={icon} size={16} />}
                       tooltip={location}
                     />
-                    <UI.Button
+                    <TitleBarButton
                       onClick={() => {
                         App.actions.open(desktopLink || webLink)
                         App.actions.closeOrbit()
@@ -132,12 +120,12 @@ export const PeekBit = ({
                     />
                   </UI.ListRow>
                 )}
-              </HeadSide>
+              </>
             }
           >
             {({ searchBar, searchTerm }) => {
               return children({
-                title: null,
+                title,
                 icon,
                 belowHeadMain: searchBar,
                 postBody: (

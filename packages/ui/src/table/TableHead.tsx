@@ -97,21 +97,20 @@ function calculatePercentage(parentWidth: number, selfWidth: number): string {
   return `${(100 / parentWidth) * selfWidth}%`
 }
 
-class TableHeadColumn extends React.PureComponent {
-  props: {
-    id: string
-    width: string | number
-    sortable: boolean | undefined
-    isResizable: boolean
-    leftHasResizer: boolean
-    hasFlex: boolean
-    sortOrder: TableRowSortOrder | undefined
-    onSort: TableOnSort | undefined
-    columnSizes: TableColumnSizes
-    onColumnResize: TableOnColumnResize | undefined
-    children?: any
-    title?: string
-  }
+class TableHeadColumn extends React.PureComponent<{
+  id: string
+  width: string | number
+  sortable: boolean | undefined
+  isResizable: boolean
+  leftHasResizer: boolean
+  hasFlex: boolean
+  sortOrder: TableRowSortOrder | undefined
+  onSort: TableOnSort | undefined
+  columnSizes: TableColumnSizes
+  onColumnResize: TableOnColumnResize | undefined
+  children?: any
+  title?: string
+}> {
   ref: HTMLElement
 
   onClick = () => {
@@ -177,6 +176,7 @@ class TableHeadColumn extends React.PureComponent {
     if (isResizable) {
       children = (
         <TableHeaderColumnInteractive
+          debug
           fill={true}
           resizable={RIGHT_RESIZABLE}
           onResize={this.onResize}
@@ -199,18 +199,16 @@ class TableHeadColumn extends React.PureComponent {
   }
 }
 
-export default class TableHead extends React.PureComponent {
-  props: {
-    columnOrder: TableColumnOrder
-    onColumnOrder: (order: TableColumnOrder) => void | undefined
-    columnKeys: TableColumnKeys
-    columns: TableColumns
-    sortOrder: TableRowSortOrder | undefined
-    onSort: TableOnSort | undefined
-    columnSizes: TableColumnSizes
-    onColumnResize: TableOnColumnResize | undefined
-  }
-
+export default class TableHead extends React.PureComponent<{
+  columnOrder: TableColumnOrder
+  onColumnOrder: (order: TableColumnOrder) => void | undefined
+  columnKeys: TableColumnKeys
+  columns: TableColumns
+  sortOrder: TableRowSortOrder | undefined
+  onSort: TableOnSort | undefined
+  columnSizes: TableColumnSizes
+  onColumnResize: TableOnColumnResize | undefined
+}> {
   buildContextMenu = () => {
     return Object.keys(this.props.columns).map(key => {
       const visible = this.props.columnKeys.includes(key)

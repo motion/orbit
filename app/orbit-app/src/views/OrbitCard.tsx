@@ -78,7 +78,7 @@ Card.theme = ({
     card = {
       ...card,
       boxShadow: disabledShadow || [cardShadow],
-      border: border || [1, [255, 255, 255, 0.07]],
+      border: border || [1, theme.cardBorderColor || 'transparent'],
       '&:hover': {
         boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
         border: [1, [255, 255, 255, 0.25]],

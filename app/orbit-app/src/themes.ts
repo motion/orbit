@@ -51,6 +51,7 @@ export const themes = {
     ...macTheme,
     cardBackground: 'rgba(80, 80, 80, 0.25)',
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
+    cardBorderColor: [255, 255, 255, 0.07],
     ...Theme.fromStyles({
       background: 'rgba(20,20,20,0.94)',
       backgroundHover: 'rgba(20,20,20,0.2)',
@@ -64,6 +65,7 @@ export const themes = {
     inputBackground: '#e9e9e9',
     inputBackgroundActive: '#eee',
     cardShadow: [0, 2, 6, [0, 0, 0, 0.035]],
+    cardBorderColor: [0, 0, 0, 0.1],
     ...Theme.fromStyles({
       background: 'rgba(255,255,255,0.94)',
       color: '#444',

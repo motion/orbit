@@ -128,7 +128,6 @@ export class PeekHeaderContent extends React.Component<Props> {
         <MainHead>
           <TitleBar
             height="100%"
-            position="absolute"
             after={
               <>
                 <UI.Row

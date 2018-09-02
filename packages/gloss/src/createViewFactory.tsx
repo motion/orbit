@@ -4,7 +4,6 @@ import { CSSPropertyValue, CSSPropertySet, validCSSAttr } from '@mcro/css'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
-import validProp from './helpers/validProp'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import reactFastCompare from 'react-fast-compare'
 
@@ -377,25 +376,16 @@ export function createViewFactory(toCSS) {
       }
 
       render() {
-        const props = this.props
-        const { children, forwardRef } = props
-        // build final props without weird attrs
-        const finalProps: Props = {}
-        // build class names
+        const { children, forwardRef, ...props } = this.props
+        const finalProps = props as any
+
+        // className
         const className = this.state.classNames
           .concat(this.state.extraClassNames)
           .join(' ')
-        for (const key of Object.keys(props)) {
-          if (validProp(key)) {
-            finalProps[key] = props[key]
-          }
-        }
-        if (props.is) {
-          finalProps.class = className
-        } else {
-          finalProps.className = className
-        }
-        //
+        finalProps.className = className
+
+        // forwardRef
         if (forwardRef) {
           if (isDOM) {
             // dom ref
@@ -405,16 +395,19 @@ export function createViewFactory(toCSS) {
             finalProps.forwardRef = forwardRef
           }
         }
+
+        // ignoreAttrs
         if (
           this.state.ignoreAttrs &&
           typeof this.state.ignoreAttrs === 'object'
         ) {
-          for (const prop in finalProps) {
+          for (const prop in props) {
             if (this.state.ignoreAttrs[prop]) {
               delete finalProps[prop]
             }
           }
         }
+
         return React.createElement(
           // accept custom tagname overrides
           props.tagName || tagName,

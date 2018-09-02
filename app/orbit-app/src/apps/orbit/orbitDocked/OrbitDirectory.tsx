@@ -123,6 +123,9 @@ const createSection = (people: PersonBit[], letter, getIndex) => {
             subPane="directory"
             getIndex={getIndex}
             model={person}
+            titleProps={{
+              ellipse: true,
+            }}
             hide={{
               icon: true,
             }}

@@ -13,8 +13,6 @@
 
 # Nate week of Sep 2
 
-- Bugfix run:
-  - click people names to go to them
 - Cosal merged into search and people profiles
 
 # September:

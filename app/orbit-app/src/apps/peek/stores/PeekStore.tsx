@@ -9,6 +9,7 @@ import {
   PersonBitRepository,
 } from '../../../repositories'
 import { Bit, Setting, PersonBit } from '@mcro/models'
+import { Actions } from '../../../actions/Actions'
 
 // @ts-ignore
 type PeekStoreItemState = typeof App.state.peekState & {
@@ -67,7 +68,7 @@ export class PeekStore {
     const { highlightIndex } = App.peekState
     // loop back to beginning once at end
     const next = (highlightIndex + 1) % this.highlights.length
-    App.actions.setHighlightIndex(next)
+    Actions.setHighlightIndex(next)
   }
 
   internalState: PeekStoreState = react(
@@ -172,7 +173,7 @@ export class PeekStore {
   getModel = async () => {
     const { id, type } = App.peekState.appConfig
     let selectedItem = null
-    if (type === 'person') {
+    if (type === 'person' || type === 'person-bit') {
       selectedItem = await PersonBitRepository.findOne({
         where: { email: id },
         relations: ['people'],
@@ -205,7 +206,7 @@ export class PeekStore {
   }
 
   clearPeek = () => {
-    App.actions.clearPeek()
+    Actions.clearPeek()
     this.clearTorn()
   }
 
@@ -272,14 +273,20 @@ export class PeekStore {
   handleDragEnd = () => {
     this.clearDragHandlers()
     // now that it's pinned, update position
-    App.actions.finishPeekDrag(this.framePosition)
+    Actions.finishPeekDrag(this.framePosition)
   }
 
   openItem = () => {
-    App.actions.openItem(this.state.model)
+    if (this.state.model.target === 'setting') {
+      return
+    }
+    Actions.openItem(this.state.model)
   }
 
   copyItem = () => {
-    App.actions.copyLink(this.state.model)
+    if (this.state.model.target === 'setting') {
+      return
+    }
+    Actions.copyLink(this.state.model)
   }
 }

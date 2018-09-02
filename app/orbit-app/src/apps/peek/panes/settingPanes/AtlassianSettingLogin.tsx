@@ -6,8 +6,8 @@ import * as Views from '../../../../views'
 import { Message } from '../../../../views/Message'
 import { Setting } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
-import { App } from '@mcro/stores'
 import { capitalize } from 'lodash'
+import { Actions } from '../../../../actions/Actions'
 
 type Props = {
   type: string
@@ -149,7 +149,7 @@ class AtlassianSettingLoginStore {
     // code here is very strange because it saves a something that I don't know type of,
     // but assume its a setting
     SettingRepository.save(this.setting)
-    App.actions.clearPeek()
+    Actions.clearPeek()
   }
 
   // autoSave = debounce(this.save, 400)

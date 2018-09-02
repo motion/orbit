@@ -4,6 +4,7 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { generalSettingQuery } from '../../repositories/settingQueries'
 import { modelQueryReaction } from '../../repositories/modelQueryReaction'
 import { KeyboardStore } from '../../stores/KeyboardStore'
+import { Actions } from '../../actions/Actions'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
@@ -71,9 +72,9 @@ export class PaneManagerStore {
     () => this.activePane === 'onboard',
     onboard => {
       if (onboard) {
-        App.actions.setContextMessage('Welcome to Orbit...')
+        Actions.setContextMessage('Welcome to Orbit...')
       } else {
-        App.actions.setContextMessage('')
+        Actions.setContextMessage('')
       }
     },
   )
@@ -163,7 +164,7 @@ export class PaneManagerStore {
     pane => {
       ensure('pane', !!pane)
       ensure('target', !!App.peekState.target)
-      App.actions.clearPeek()
+      Actions.clearPeek()
     },
   )
 }

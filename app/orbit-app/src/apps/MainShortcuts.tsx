@@ -1,7 +1,8 @@
+import * as React from 'react'
 import { HotKeys } from 'react-hotkeys'
-import { App } from '@mcro/stores'
 import { view, compose } from '@mcro/black'
 import { SelectionStore } from '../stores/SelectionStore'
+import { Actions } from '../actions/Actions'
 
 type Props = {
   selectionStore: SelectionStore
@@ -19,10 +20,10 @@ export const MainShortcuts = decorator(
   ({ selectionStore, children }: Props) => {
     const handlers = {
       openCurrent: () => {
-        App.actions.openItem(selectionStore.selectedItem)
+        Actions.openItem(selectionStore.selectedItem)
       },
       copyLink: async () => {
-        App.actions.copyLink(selectionStore.selectedItem)
+        Actions.copyLink(selectionStore.selectedItem)
       },
     }
 

@@ -10,7 +10,7 @@ import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
-import { App } from '@mcro/stores'
+import { Actions } from '../actions/Actions'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -235,9 +235,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
                 <RoundButtonSmall
                   marginLeft={-3}
                   onClick={
-                    onClickLocation
-                      ? () => App.actions.open(onClickLocation)
-                      : null
+                    onClickLocation ? () => Actions.open(onClickLocation) : null
                   }
                 >
                   {location}

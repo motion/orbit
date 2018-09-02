@@ -2,11 +2,10 @@ import { react, on, isEqual, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import * as Helpers from '../helpers'
 import { AppStore } from './AppStore'
-import { logger } from '@mcro/logger'
 import { QueryStore } from './QueryStore'
 import { KeyboardStore } from './KeyboardStore'
+import { Actions } from '../actions/Actions'
 
-const log = logger('selectionStore')
 const isInRow = item =>
   item.moves.some(move => move === Direction.right || move === Direction.left)
 
@@ -54,8 +53,8 @@ export class SelectionStore {
         this.move(Direction[key])
       }
       if (key === 'enter') {
-        App.actions.openItem(this.selectedItem)
-        App.actions.closeOrbit()
+        Actions.openItem(this.selectedItem)
+        Actions.closeOrbit()
       }
     })
 
@@ -133,7 +132,7 @@ export class SelectionStore {
       if (this.hasActiveIndex) {
         throw react.cancel
       }
-      App.actions.clearPeek()
+      Actions.clearPeek()
     },
   )
 
@@ -152,7 +151,7 @@ export class SelectionStore {
     this.leaveIndex = -1
     this.activeIndex = -1
     if (clearPeek) {
-      App.actions.clearPeek()
+      Actions.clearPeek()
     }
   }
 
@@ -333,7 +332,7 @@ export class SelectionStore {
 
   openSelected = () => {
     if (this.selectedItem) {
-      App.actions.openItem(this.selectedItem)
+      Actions.openItem(this.selectedItem)
       return true
     }
     return false

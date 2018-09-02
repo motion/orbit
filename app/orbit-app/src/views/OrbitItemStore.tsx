@@ -3,6 +3,7 @@ import { App } from '@mcro/stores'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
 import { ResolvedItem } from '../components/ItemResolver'
+import { Actions } from '../actions/Actions'
 
 export class OrbitItemStore {
   props: OrbitItemProps
@@ -43,10 +44,10 @@ export class OrbitItemStore {
   }
 
   open = () => {
-    if (!this.props.model) {
+    if (!this.props.model || this.props.model.target === 'setting') {
       return
     }
-    App.actions.openItem(this.props.model)
+    Actions.openItem(this.props.model)
   }
 
   setCardWrapRef = cardWrapRef => {
@@ -100,12 +101,10 @@ export class OrbitItemStore {
         if (subPaneStore) {
           subPaneStore.scrollIntoView(this.cardWrapRef)
         }
-        if (!this.target) {
-          throw new Error('No target!')
-        }
+        ensure('target', !!this.target)
         // fluidity
         await sleep(16)
-        App.actions.peekApp(this.target, this.position)
+        Actions.setPeekApp(this.target, this.position)
       }
     },
   )

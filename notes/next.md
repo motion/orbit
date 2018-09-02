@@ -1,3 +1,22 @@
+# Umed Week of Sep 2
+
+- Syncers, we dont want to spend too much time here but we will have to a bit more:
+  - Gmail super slow
+  - Gmail no html coming back?
+  - Really simple throttle
+  - PersonBit query recent + limit
+  - Slack.people sometimes still not showing up
+  - Github not normalizing createdAt timestamps properly
+  - Github sync auto select everything by default
+  - GDocs auto sync most things by default
+- Really simple RSS Syncer
+
+# Nate week of Sep 2
+
+- Bugfix run:
+  - click people names to go to them
+- Cosal merged into search and people profiles
+
 # September:
 
 - Rate limits may be per-token so we may not need fancy p2p stuff (or not yet)

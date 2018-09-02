@@ -1,20 +1,32 @@
 import * as React from 'react'
-import { App } from '@mcro/stores'
 import { RoundButton } from './RoundButton'
 import * as UI from '@mcro/ui'
+import { ButtonProps } from '@mcro/ui'
+import { Person } from '../../../models/src'
+import { PersonBitRepository } from '../repositories'
+import { Actions } from '../actions/Actions'
 
-export const RoundButtonPerson = ({ person, ...props }) => {
+type PersonButtonProps = ButtonProps & {
+  person?: Person
+}
+
+const handleClick = (person: Person) => async e => {
+  e.stopPropagation()
+  const personBit = await PersonBitRepository.findOne({
+    where: { email: person.email },
+  })
+  if (!personBit) {
+    console.log('no personBit found', person)
+  } else {
+    Actions.togglePeekApp(personBit)
+  }
+}
+
+export const RoundButtonPerson = ({ person, ...props }: PersonButtonProps) => {
   // TODO: avatar value on person
   const avatar = person.photo
   return (
-    <RoundButton
-      size={0.95}
-      onClick={e => {
-        e.stopPropagation()
-        App.actions.selectPerson(person)
-      }}
-      {...props}
-    >
+    <RoundButton size={0.95} onClick={handleClick(person)} {...props}>
       <UI.Row alignItems="center">
         {!!avatar && (
           <UI.Image

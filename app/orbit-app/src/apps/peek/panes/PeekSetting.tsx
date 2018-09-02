@@ -4,7 +4,6 @@ import {
   SettingForceSyncCommand,
   SettingRemoveCommand,
 } from '@mcro/models'
-import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
@@ -17,6 +16,7 @@ import { PeekPaneProps } from '../PeekPaneProps'
 import * as SettingPanes from './settingPanes'
 import { TitleBarButton } from '../views/TitleBarButton'
 import { TitleBarSpace } from '../views/TitleBarSpace'
+import { Actions } from '../../../actions/Actions'
 
 // @ts-ignore
 const Electron = electronRequire('electron')
@@ -69,7 +69,7 @@ class SettingContent extends React.Component<
       Mediator.command(SettingRemoveCommand, {
         settingId: store.setting.id,
       })
-      App.actions.clearPeek()
+      Actions.clearPeek()
     }
   }
 

@@ -67,11 +67,9 @@ class Bridge {
     }
     log(`Starting bridge for ${store.source}...`)
     const port = getGlobalConfig().ports.bridge
-    this.setupActions(store, options.actions)
-    // on re-start treat as update
+    // ensure only start once
     if (this.started) {
-      log('already started, just updating actions...')
-      return
+      throw new Error('Already started this store...')
     }
     store.bridge = this
     this.started = true
@@ -129,24 +127,6 @@ class Bridge {
       await Mobx.when(() => this._hasFetchedInitialState, { timeout: 250 })
     } catch {
       this._hasFetchedInitialState = true
-    }
-  }
-
-  // define actions onto the store
-  // wrap them in mobx actions so we get logging
-  setupActions(store, actions) {
-    if (!actions) {
-      return
-    }
-    store.actions = {}
-    for (const key of Object.keys(actions)) {
-      const actionName = `${store.constructor.name}.${key}`
-      const boundAction = actions[key].bind(store)
-      const finalAction = (...args) => {
-        log(`ACTION: ${actionName}`, args)
-        return boundAction(...args)
-      }
-      store.actions[key] = Mobx.action(actionName, finalAction)
     }
   }
 

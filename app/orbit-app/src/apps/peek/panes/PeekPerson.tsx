@@ -1,7 +1,6 @@
 import { view } from '@mcro/black'
 import { PersonBit } from '@mcro/models'
 import { SlackPersonData } from '@mcro/models'
-import { App } from '@mcro/stores'
 import * as React from 'react'
 import { Carousel } from '../../../components/Carousel'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
@@ -9,6 +8,7 @@ import { RoundButton, SubTitle } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitListItem } from '../../../views/OrbitListItem'
+import { Actions } from '../../../actions/Actions'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
@@ -130,7 +130,7 @@ const Links = view({
 
 const IntegrationButton = ({ href, children, ...props }) => (
   <RoundButton
-    onClick={() => App.actions.open(href)}
+    onClick={() => Actions.open(href)}
     icon={<OrbitIcon preventAdjust size={14} {...props} />}
   >
     {children}

@@ -10,10 +10,6 @@ class JiraSettingStore {
   active = 'general'
 }
 
-// const Section = view({
-//   flex: 1,
-// })
-
 const decorator = compose(
   view.attach({
     store: JiraSettingStore,

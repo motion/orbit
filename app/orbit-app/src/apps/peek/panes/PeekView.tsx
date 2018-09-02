@@ -1,21 +1,15 @@
 import * as React from 'react'
-import { ConfluenceSetupPane } from './viewPanes/ConfluenceSetupPane'
-import { JiraSetupPane } from './viewPanes/JiraSetupPane'
 import { PeekPaneProps } from '../PeekPaneProps'
+import * as ViewPanes from './viewPanes'
 
-const views = {
-  confluence: ConfluenceSetupPane,
-  jira: JiraSetupPane,
-}
-
-export const PeekView = ({ item, children }: PeekPaneProps) => {
-  if (!item || !views[item.id]) {
-    console.log('no view or item', item, views)
+export const PeekView = ({ appConfig, children }: PeekPaneProps) => {
+  if (!appConfig || !ViewPanes[appConfig.subType]) {
+    console.log('no view or item', appConfig, ViewPanes)
     return children({})
   }
-  const View = views[item.id]
+  const View = ViewPanes[appConfig.subType]
   return children({
-    title: item.title,
-    content: <View item={item} />,
+    title: appConfig.title,
+    content: <View appConfig={appConfig} />,
   })
 }

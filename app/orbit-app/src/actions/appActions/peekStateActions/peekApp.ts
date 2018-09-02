@@ -4,15 +4,15 @@ import { peekPosition } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { PeekTarget } from './types'
-import { isEqual } from '@mcro/black'
 import { logger } from '@mcro/logger'
 
-const log = logger('peekApp')
+export const log = logger('peekApp')
 
-export function setPeekState({
-  target,
-  ...props
-}: { target: PeekTarget } & typeof App.state.peekState) {
+type PartialPeekState = { target: PeekTarget } & Partial<
+  typeof App.state.peekState
+>
+
+export function setPeekState({ target, ...props }: PartialPeekState) {
   const realTarget = getTargetPosition(target)
   console.log('setting peek state', props)
   App.setPeekState({
@@ -22,29 +22,20 @@ export function setPeekState({
   })
 }
 
-export function togglePeekApp(item: PersonBit | Bit, target?: PeekTarget) {
-  log('togglePeekApp', item)
-  if (isEqual(App.peekState.appConfig, getAppConfig(item))) {
-    App.actions.clearPeek()
-  } else {
-    peekApp(item, target)
-  }
-}
-
-export function peekApp(item?: PersonBit | Bit, target?: PeekTarget) {
+export function setPeekApp(item: PersonBit | Bit, target?: PeekTarget) {
   invariant(item, 'Must pass item')
   setPeekState({
-    target,
+    target: target || App.peekState.target,
     peekId: Math.random(),
     appConfig: getAppConfig(item),
   })
 }
 
-function getAppConfig(item: PersonBit | Bit | AppConfig): AppConfig {
-  if (!item.target) {
-    return item
+export function getAppConfig(item: PersonBit | Bit | AppConfig): AppConfig {
+  if (!item['target']) {
+    return item as AppConfig
   }
-  switch (item.target) {
+  switch (item['target']) {
     case 'person-bit':
       return getPersonItem(item as PersonBit)
     case 'bit':

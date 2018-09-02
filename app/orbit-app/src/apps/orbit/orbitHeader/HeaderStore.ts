@@ -2,6 +2,7 @@ import * as React from 'react'
 import { react, ensure } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { HeaderProps } from './HeaderProps'
+import { Actions } from '../../../actions/Actions'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -111,7 +112,7 @@ export class HeaderStore {
 
   goHome = () => {
     if (this.props.paneManagerStore.activePane === 'home') {
-      App.actions.closeOrbit()
+      Actions.closeOrbit()
     } else {
       if (App.state.query) {
         this.props.queryStore.clearQuery()

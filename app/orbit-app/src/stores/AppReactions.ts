@@ -1,5 +1,6 @@
 import { store, react } from '@mcro/black'
 import { App } from '@mcro/stores'
+import { Actions } from '../actions/Actions'
 // import orbitPosition from '../helpers/orbitPosition'
 // import { ORBIT_WIDTH } from '@mcro/constants'
 // const log = debug('AppReactions')
@@ -40,7 +41,7 @@ export class AppReactions /* extends Store */ {
           App.setOrbitState({ docked: true })
           return
         case App.messages.HIDE_PEEK:
-          return App.actions.clearPeek()
+          return Actions.clearPeek()
         case App.messages.PIN:
           App.setOrbitState({ pinned: true })
           return
@@ -108,7 +109,7 @@ export class AppReactions /* extends Store */ {
       if (App.peekState.pinned) {
         throw react.cancel
       }
-      App.actions.clearPeek()
+      Actions.clearPeek()
     },
     { log: 'state' },
   )

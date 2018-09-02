@@ -29,7 +29,6 @@ type Props = PeekBitPaneProps & {
 
 export const Conversation = decorator(
   ({ /* relatedStore, */ content }: Props) => {
-    console.log('content is', content)
     return (
       <>
         {content || null}

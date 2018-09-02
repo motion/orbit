@@ -1,7 +1,8 @@
-import { App, AppConfig } from '@mcro/stores'
+import { AppConfig } from '@mcro/stores'
 import { checkAuthProxy } from './checkAuthProxy'
 import { promptForAuthProxy } from './promptForAuthProxy'
 import { memoize } from 'lodash'
+import { Actions } from '../actions/Actions'
 
 const promptForProxy = async () => {
   if (await checkAuthProxy()) {
@@ -16,12 +17,12 @@ export const addIntegrationClickHandler = memoize(
   (appConfig: AppConfig) => async ({ currentTarget }) => {
     console.log('add integration', currentTarget, appConfig)
     if (appConfig.type === 'view') {
-      App.actions.togglePeekApp(appConfig, currentTarget)
+      Actions.togglePeekApp(appConfig, currentTarget)
     } else {
       // clear any existing peek
-      App.actions.clearPeek()
+      Actions.clearPeek()
       if (await promptForProxy()) {
-        App.actions.openAuth(appConfig.id)
+        Actions.openAuth(appConfig.id)
         return true
       } else {
         console.log('failed proxy prompt... show something')

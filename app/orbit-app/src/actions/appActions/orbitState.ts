@@ -1,11 +1,12 @@
 import { App } from '@mcro/stores'
+import { Actions } from '../Actions'
 
 // this should be more specific and less general
 
 export const hideOrbit = async () => {
   // hide peek first
   if (App.peekState.target && !App.peekState.pinned) {
-    App.actions.clearPeek()
+    Actions.clearPeek()
     await new Promise(res => setTimeout(res, 80)) // sleep 80
     return
   }

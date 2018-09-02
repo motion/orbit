@@ -1,5 +1,6 @@
 import { App, Desktop, Electron } from '@mcro/stores'
 import { Bit, PersonBit } from '@mcro/models'
+import { Actions } from '../Actions'
 
 export async function open(url) {
   App.sendMessage(Desktop, Desktop.messages.OPEN, url)
@@ -10,11 +11,11 @@ export async function openItem(item?: Bit | PersonBit) {
     return
   }
   if (item.target === 'person-bit') {
-    // App.actions.open('')
+    // Actions.open('')
     return
   }
   if (item.target === 'bit') {
-    App.actions.open(item.desktopLink || item.webLink)
+    Actions.open(item.desktopLink || item.webLink)
     return
   }
 }

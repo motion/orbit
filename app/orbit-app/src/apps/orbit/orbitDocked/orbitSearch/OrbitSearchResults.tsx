@@ -14,6 +14,7 @@ import { memoize } from 'lodash'
 // import { HighlightsLayer } from '../../../../views/HighlightsLayer'
 import { ResolvedItem } from '../../../../components/ItemResolver'
 import { SuggestionBarVerticalPad } from '../../../../views'
+import { Actions } from '../../../../actions/Actions'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -55,7 +56,7 @@ const selectHighlight = (
   if (isAlreadyAtIndex) {
     e.stopPropagation()
   }
-  App.actions.setHighlightIndex(hlIndex)
+  Actions.setHighlightIndex(hlIndex)
   return
 }
 

@@ -7,6 +7,7 @@ import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { settingToAppConfig } from '../helpers/settingToResult'
+import { Actions } from '../actions/Actions'
 
 const getItem = {
   githubItem: () =>
@@ -28,7 +29,7 @@ export class IsolatePeek extends React.Component {
   render() {
     getItem.githubSetting().then(item => {
       console.log('got', item)
-      App.actions.peekApp(item, {
+      Actions.setPeekApp(item, {
         top: window.innerHeight,
         left: window.innerHeight - 350,
         width: 0,

@@ -15,6 +15,7 @@ import { Bit } from '@mcro/models'
 import { DateFormat } from '../../../views/DateFormat'
 import { TitleBarButton } from '../views/TitleBarButton'
 import { TitleBarSpace } from '../views/TitleBarSpace'
+import { Actions } from '../../../actions/Actions'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -104,16 +105,16 @@ export const PeekBit = ({
                   <UI.ListRow>
                     <TitleBarButton
                       onClick={() => {
-                        App.actions.open(locationLink)
-                        App.actions.closeOrbit()
+                        Actions.open(locationLink)
+                        Actions.closeOrbit()
                       }}
                       icon={<OrbitIcon icon={icon} size={16} />}
                       tooltip={location}
                     />
                     <TitleBarButton
                       onClick={() => {
-                        App.actions.open(desktopLink || webLink)
-                        App.actions.closeOrbit()
+                        Actions.open(desktopLink || webLink)
+                        Actions.closeOrbit()
                       }}
                       tooltip="Open"
                       icon="link"
@@ -133,7 +134,7 @@ export const PeekBit = ({
                     <PeekBar.Button
                       onClick={e => {
                         e.stopPropagation()
-                        App.actions.open(locationLink)
+                        Actions.open(locationLink)
                       }}
                     >
                       {location}

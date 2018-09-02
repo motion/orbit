@@ -11,7 +11,7 @@ import { DateFormat } from './DateFormat'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
-import { App } from '@mcro/stores'
+import { Actions } from '../actions/Actions'
 
 const CardWrap = view(UI.View, {
   position: 'relative',
@@ -182,8 +182,8 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             console.log('opening', model)
             e.preventDefault()
             e.stopPropagation()
-            App.actions.openItem(model)
-            App.actions.closeOrbit()
+            Actions.openItem(model)
+            Actions.closeOrbit()
           }}
         />
       </AfterHeader>
@@ -241,7 +241,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                   onClick={
                     onClickLocation
                       ? e => onClickLocation(e, contentProps)
-                      : () => App.actions.open(locationLink)
+                      : () => Actions.open(locationLink)
                   }
                 >
                   {location}

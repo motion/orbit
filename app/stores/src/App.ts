@@ -36,21 +36,6 @@ class AppStore {
   setPeekState: Function
   setAuthState: Function
 
-  // TODO: get these onto here
-  actions: {
-    closeOrbit: Function
-    peekApp: Function
-    togglePeekApp: Function
-    open: Function
-    openItem: Function
-    openAuth: Function
-    copyLink: Function
-    clearPeek: Function
-    setPeekTarget: Function
-    setContextMessage: Function
-    setHighlightIndex: Function
-  }
-
   messages = {
     SHOW_APPS: 'SHOW_APPS',
     TOGGLE_SETTINGS: 'TOGGLE_SETTINGS',

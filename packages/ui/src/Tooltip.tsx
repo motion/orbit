@@ -16,10 +16,11 @@ export const Tooltip = ({ themeName, ...props }: TooltipProps) => (
       closeOnClick
       noHoverOnChildren
       animation="bounce 150ms"
-      padding={[2, 7]}
-      borderRadius={5}
-      distance={12}
-      arrowSize={10}
+      padding={[1, 5]}
+      borderRadius={4}
+      distance={10}
+      arrowSize={8}
+      fontSize={13}
       delay={400}
       popoverProps={POPOVER_PROPS}
       ignoreSegment

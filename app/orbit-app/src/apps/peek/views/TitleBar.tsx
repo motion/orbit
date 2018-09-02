@@ -27,7 +27,6 @@ const TitleBarText = props => (
     margin={0}
     padding={[0, 20, 0, 43]}
     lineHeight="1.5rem"
-    textAlign="center"
     {...props}
   />
 )

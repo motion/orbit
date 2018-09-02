@@ -114,7 +114,7 @@ const createSection = (people: PersonBit[], letter, getIndex) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
-      <Grid gridAutoRows={height}>
+      <Grid columnWidth={140} gridAutoRows={height}>
         {people.map(person => (
           <OrbitCard
             key={person.email}

@@ -573,7 +573,7 @@ export type textEmphasisPosition = string
 export type textEmphasisStyle = 'none' | string
 export type textIndent = string | 'hanging' | 'each-line'
 export type textOrientation = 'mixed' | 'upright' | 'sideways'
-export type textOverflow = string
+export type textOverflow = 'clip' | 'ellipsis'
 export type textRendering =
   | 'auto'
   | 'optimizeSpeed'

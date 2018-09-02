@@ -6,6 +6,7 @@ import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import reactFastCompare from 'react-fast-compare'
+import validProp from './helpers/validProp'
 
 export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
@@ -376,8 +377,23 @@ export function createViewFactory(toCSS) {
       }
 
       render() {
-        const { children, forwardRef, ...props } = this.props
-        const finalProps = props as any
+        // dont pass down theme
+        const { children, forwardRef, theme, ...props } = this.props
+        let finalProps
+        const element = props.tagName || tagName
+
+        if (typeof element === 'string') {
+          // if it's a DOM element, pass DOM attributes only
+          finalProps = {}
+          for (const key in props) {
+            if (validProp(key)) {
+              finalProps[key] = props[key]
+            }
+          }
+        } else {
+          // if it's passing down to a Component, pass anything
+          finalProps = props
+        }
 
         // className
         const className = this.state.classNames
@@ -410,7 +426,7 @@ export function createViewFactory(toCSS) {
 
         return React.createElement(
           // accept custom tagname overrides
-          props.tagName || tagName,
+          element,
           finalProps,
           children,
         )

@@ -46,7 +46,11 @@ const TableHeaderColumnContainer = view({
 
 const TableColumnText = view({
   flex: 1,
+  maxWidth: '100%',
+  display: 'block',
   overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
 })
 
 const TableHeadContainer = view(Row, {

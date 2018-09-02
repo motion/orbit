@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { capitalize } from 'lodash'
 
 const shortName = name => {
   const names = name.split(' ')
-  const lastInitial = names[1] ? ` ${capitalize(names[1])[0]}.` : ''
-  return `${capitalize(names[0])}${lastInitial}`
+  const lastInitial = names[1] ? ` ${names[1][0]}.` : ''
+  return `${names[0]}${lastInitial}`
 }
 
 export const PeopleRow = attachTheme(({ people, theme }) => {

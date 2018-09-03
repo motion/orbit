@@ -30,6 +30,11 @@ export const MainShortcuts = decorator(
       escape: () => {
         if (App.peekState.appConfig) {
           Actions.clearPeek()
+          return
+        }
+        if (App.state.orbitState.docked) {
+          Actions.closeOrbit()
+          return
         }
       },
     }

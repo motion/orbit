@@ -110,28 +110,34 @@ export const OrbitDirectory = decorator((props: Props) => {
   )
 })
 
+const DirectoryPersonCard = props => (
+  <OrbitCard
+    inGrid
+    pane="docked"
+    subPane="directory"
+    titleProps={{
+      ellipse: true,
+    }}
+    hide={{
+      icon: true,
+    }}
+    style={{
+      height,
+    }}
+    {...props}
+  />
+)
+
 const createSection = (people: PersonBit[], letter, getIndex) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
-      <Grid columnWidth={140} gridAutoRows={height}>
+      <Grid gridAutoRows={height}>
         {people.map(person => (
-          <OrbitCard
+          <DirectoryPersonCard
             key={person.email}
-            inGrid
-            pane="docked"
-            subPane="directory"
             getIndex={getIndex}
             model={person}
-            titleProps={{
-              ellipse: true,
-            }}
-            hide={{
-              icon: true,
-            }}
-            style={{
-              height,
-            }}
           />
         ))}
       </Grid>
@@ -149,23 +155,14 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   console.log('rendering directory...')
   let sections
   // not that many, show without sections
-  if (total < 10) {
+  if (total < 20) {
     sections = (
       <Grid gridAutoRows={height}>
         {results.map((person, index) => (
-          <OrbitCard
+          <DirectoryPersonCard
             key={person.email}
-            inGrid
-            pane="docked"
-            subPane="directory"
             index={index}
             model={person}
-            hide={{
-              icon: true,
-            }}
-            style={{
-              height,
-            }}
           />
         ))}
       </Grid>

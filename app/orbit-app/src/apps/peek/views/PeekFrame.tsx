@@ -49,7 +49,7 @@ const decorator = compose(
 
 const PeekFrameContainer = view(UI.View, {
   position: 'absolute',
-  left: 0,
+  right: 0,
   zIndex: 2,
 })
 

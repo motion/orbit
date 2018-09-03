@@ -5,6 +5,7 @@ import { generalSettingQuery } from '../../repositories/settingQueries'
 import { KeyboardStore } from '../../stores/KeyboardStore'
 import { Actions } from '../../actions/Actions'
 import { observeOne } from '../../repositories'
+import { SettingModel } from '@mcro/models'
 
 export class PaneManagerStore {
   props: {
@@ -21,9 +22,11 @@ export class PaneManagerStore {
   didMount() {
     on(
       this,
-      observeOne({ args: generalSettingQuery }).subscribe(generalSetting => {
-        this.generalSetting = generalSetting
-      }),
+      observeOne(SettingModel, { args: generalSettingQuery }).subscribe(
+        generalSetting => {
+          this.generalSetting = generalSetting
+        },
+      ),
     )
 
     on(this, this.props.keyboardStore, 'key', key => {

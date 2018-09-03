@@ -12,7 +12,9 @@ import { PureComponent } from 'react'
 import { Text } from '../Text'
 import { findDOMNode } from 'react-dom'
 import { colors } from '../helpers/colors'
-// import electron from 'electron'
+
+// @ts-ignore
+const Electron = electronRequire('electron')
 
 const Token = view(Text, {
   display: 'inline-flex',
@@ -161,13 +163,15 @@ export class FilterToken extends PureComponent {
         },
       )
     }
-    // const menu = electron.remote.Menu.buildFromTemplate(menuTemplate)
-    // const { bottom, left } = this._ref ? this._ref.getBoundingClientRect() : {}
-    // menu.popup(electron.remote.getCurrentWindow(), {
-    //   async: true,
-    //   x: parseInt(left, 10),
-    //   y: parseInt(bottom, 10) + 8,
-    // })
+    const menu = Electron.remote.Menu.buildFromTemplate(menuTemplate)
+    const { bottom, left } = this._ref
+      ? this._ref.getBoundingClientRect()
+      : { bottom: 0, left: 0 }
+    menu.popup(Electron.remote.getCurrentWindow(), {
+      async: true,
+      x: parseInt(`${left}`, 10),
+      y: parseInt(`${bottom}`, 10) + 8,
+    })
   }
 
   toggleFilter = () => {

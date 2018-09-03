@@ -18,7 +18,7 @@ export const Message = view('p', {
 })
 
 // @ts-ignore
-export const MessageDark = view('p', {
+export const MessageDark = view('div', {
   fontSize: 16,
   lineHeight: '1.3rem',
   cursor: 'text',

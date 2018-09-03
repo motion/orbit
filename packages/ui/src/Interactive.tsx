@@ -330,6 +330,7 @@ export class Interactive extends React.Component<
   }
 
   resize(width: number, height: number) {
+    console.log('resize me', width, height, this.props)
     if (width === this.props.width && height === this.props.height) {
       // noop
       return

@@ -160,13 +160,12 @@ export const SlackSetting = decorator(({ store, children }: Props) => {
     ),
     content: (
       <>
-        <HideablePane visible={store.active !== 'repos'}>
+        <HideablePane invisible={store.active !== 'repos'}>
           <UI.SearchableTable
             virtual
             rowLineHeight={28}
             floating={false}
             columnSizes={store.columnSizes}
-            onColumnResize={store.handleColumnSize}
             columns={columns}
             multiHighlight
             rows={store.rows}
@@ -177,7 +176,7 @@ export const SlackSetting = decorator(({ store, children }: Props) => {
             }
           />
         </HideablePane>
-        <HideablePane visible={store.active !== 'issues'}>
+        <HideablePane invisible={store.active !== 'issues'}>
           {/* <Bits bits={store.bits} /> */}
         </HideablePane>
       </>

@@ -11,8 +11,17 @@ const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
 const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 const macTheme = Theme.colorize({
-  highlight: '#dbe7fa', // used for text selection, tokens, etc.
-  highlightActive: '#85afee', // active tokens
+  white: '#fff',
+  light02: '#f6f7f9', // Light 02 – Modal Headers & Nav - Modal headers and navigation elements that sit above primary UI
+  light05: '#e9ebee', // Light 05 – Mobile & Desktop Wash - Background wash color for desktop and mobile
+  light10: '#dddfe2', // Light 10 – Desktop Dividers, Strokes, Borders - Desktop dividers, strokes, borders
+  light15: '#ced0d4', // Light 15 – Mobile Dividers, Strokes, Borders - Mobile dividers, strokes, borders
+  light20: '#bec2c9', // Light 20 – Inactive Nav Glyphs - Inactive-state nav glyphs, tertiary glyphs
+  light30: '#90949c', // Light 30 – Secondary Text & Glyphs - Secondary text and glyphs, meta text and glyphs
+  light50: '#4b4f56', // Light 50 – Medium Text & Primary Glyphs - Medium text and primary glyphs
+  light80: '#1d2129', // Light 80 – Primary Text - Primary text
+  highlightBackground: '#4080ff', // used for text selection, tokens, etc.
+  highlightBackgroundActive: '#85afee', // active tokens
   frameBorderColor: '#aaa',
 
   // sub-themes go into their own objects so they can be narrowed into

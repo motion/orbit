@@ -8,7 +8,6 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import {
-  TableColumnKeys,
   TableColumnOrder,
   TableColumnSizes,
   TableColumns,
@@ -21,14 +20,22 @@ import { normaliseColumnWidth, isPercentage } from './utils'
 import { Interactive } from '../Interactive'
 import { colors } from '../helpers/colors'
 import { Row } from '../blocks/Row'
-
-const invariant = require('invariant')
+import ContextMenu from '../ContextMenu'
+import invariant from 'invariant'
 
 const TableHeaderArrow = view({
   display: 'block',
   float: 'right',
   fontSize: '75%',
   opacity: 0.6,
+})
+
+const TableHeadColumnText = view({
+  display: 'inline-block',
+  flex: 1,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 })
 
 const TableHeaderColumnInteractive = view(Interactive, {
@@ -42,15 +49,6 @@ const TableHeaderColumnInteractive = view(Interactive, {
 const TableHeaderColumnContainer = view({
   flexFlow: 'row',
   padding: '0 8px',
-})
-
-const TableColumnText = view({
-  flex: 1,
-  maxWidth: '100%',
-  display: 'block',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
 })
 
 const TableHeadContainer = view(Row, {
@@ -104,15 +102,15 @@ function calculatePercentage(parentWidth: number, selfWidth: number): string {
 class TableHeadColumn extends React.PureComponent<{
   id: string
   width: string | number
-  sortable: boolean | undefined
+  sortable?: boolean
   isResizable: boolean
   leftHasResizer: boolean
   hasFlex: boolean
-  sortOrder: TableRowSortOrder | undefined
-  onSort: TableOnSort | undefined
+  sortOrder?: TableRowSortOrder
+  onSort?: TableOnSort
   columnSizes: TableColumnSizes
-  onColumnResize: TableOnColumnResize | undefined
-  children?: any
+  onColumnResize?: TableOnColumnResize
+  children?: React.ReactNode
   title?: string
 }> {
   ref: HTMLElement
@@ -139,7 +137,7 @@ class TableHeadColumn extends React.PureComponent<{
       return
     }
 
-    let normalizedWidth: string | number = newWidth
+    let normalizedWidth: number | string = newWidth
 
     // normalise number to a percentage if we were originally passed a percentage
     if (isPercentage(width)) {
@@ -180,7 +178,6 @@ class TableHeadColumn extends React.PureComponent<{
     if (isResizable) {
       children = (
         <TableHeaderColumnInteractive
-          debug
           fill={true}
           resizable={RIGHT_RESIZABLE}
           onResize={this.onResize}
@@ -195,7 +192,7 @@ class TableHeadColumn extends React.PureComponent<{
         width={width}
         title={title}
         onClick={sortable === true ? this.onClick : undefined}
-        forwardRef={this.setRef}
+        innerRef={this.setRef}
       >
         {children}
       </TableHeadColumnContainer>
@@ -203,19 +200,25 @@ class TableHeadColumn extends React.PureComponent<{
   }
 }
 
-export default class TableHead extends React.PureComponent<{
+export class TableHead extends React.PureComponent<{
   columnOrder: TableColumnOrder
-  onColumnOrder: (order: TableColumnOrder) => void | undefined
-  columnKeys: TableColumnKeys
+  onColumnOrder?: (order: TableColumnOrder) => void
   columns: TableColumns
-  sortOrder: TableRowSortOrder | undefined
-  onSort: TableOnSort | undefined
+  sortOrder?: TableRowSortOrder
+  onSort?: TableOnSort
   columnSizes: TableColumnSizes
-  onColumnResize: TableOnColumnResize | undefined
+  onColumnResize?: TableOnColumnResize
 }> {
-  buildContextMenu = () => {
+  buildContextMenu = (): any[] => {
+    const visibles = this.props.columnOrder
+      .map(c => (c.visible ? c.key : null))
+      .filter(Boolean)
+      .reduce((acc, cv) => {
+        acc.add(cv)
+        return acc
+      }, new Set())
     return Object.keys(this.props.columns).map(key => {
-      const visible = this.props.columnKeys.includes(key)
+      const visible = visibles.has(key)
       return {
         label: this.props.columns[key].value,
         click: () => {
@@ -300,7 +303,7 @@ export default class TableHead extends React.PureComponent<{
           onColumnResize={onColumnResize}
           title={key}
         >
-          <TableColumnText>{col.value}</TableColumnText>
+          <TableHeadColumnText>{col.value}</TableHeadColumnText>
           {arrow}
         </TableHeadColumn>
       )
@@ -313,9 +316,9 @@ export default class TableHead extends React.PureComponent<{
     }
 
     return (
-      // <ContextMenu buildItems={this.buildContextMenu}>
-      <TableHeadContainer>{elems}</TableHeadContainer>
-      // </ContextMenu>
+      <ContextMenu buildItems={this.buildContextMenu}>
+        <TableHeadContainer>{elems}</TableHeadContainer>
+      </ContextMenu>
     )
   }
 }

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view, react, compose } from '@mcro/black'
 import { SettingPaneProps } from './SettingPaneProps'
-import * as UI from '@mcro/ui'
 import { HideablePane } from '../../views/HideablePane'
 import { DriveService } from '@mcro/services'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import { Text, SearchableTable, Tabs, Tab } from '@mcro/ui'
 
 const columnSizes = {
   name: 'flex',
@@ -93,15 +93,15 @@ export const GdriveSetting = decorator(({ store, children }: Props) => {
   console.log('folders, ', folders)
   return children({
     belowHead: (
-      <UI.Tabs active={store.active} onActive={store.setActiveKey}>
-        <UI.Tab key="folders" width="50%" label="Folders" />
-        <UI.Tab key="settings" width="50%" label="Settings" />
-      </UI.Tabs>
+      <Tabs active={store.active} onActive={store.setActiveKey}>
+        <Tab key="folders" width="50%" label="Folders" />
+        <Tab key="settings" width="50%" label="Settings" />
+      </Tabs>
     ),
     content: (
       <>
         <HideablePane visible={store.active !== 'folders'}>
-          <UI.SearchableTable
+          <SearchableTable
             virtual
             rowLineHeight={28}
             floating={false}
@@ -111,7 +111,7 @@ export const GdriveSetting = decorator(({ store, children }: Props) => {
             rows={folders}
             bodyPlaceholder={
               <div style={{ margin: 'auto' }}>
-                <UI.Text size={1.2}>Loading...</UI.Text>
+                <Text size={1.2}>Loading...</Text>
               </div>
             }
           />

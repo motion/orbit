@@ -25,8 +25,13 @@ const websocket = new ReconnectingWebSocket(
   {
     WebSocket,
   },
-);
+)
 
 export const Mediator = new MediatorClient({
-  transport: new WebSocketClientTransport(websocket as any)
+  transport: new WebSocketClientTransport(websocket as any),
 })
+
+export const observeMany = Mediator.observeMany
+export const observeOne = Mediator.observeOne
+export const observeCount = Mediator.observeCount
+export const observeManyAndCount = Mediator.observeManyAndCount

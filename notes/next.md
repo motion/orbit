@@ -20,6 +20,7 @@
 
 # Nate week of Sep 2
 
+- searchresults - keep scroll at top of pane makes it possible to move quickly down
 - hstf5
 - Cosal merged into search and people profiles
 - Signup process that links to real in-cloud db for accounts

@@ -28,6 +28,15 @@
 - Cosal merged into search and people profiles
 - Signup process that links to real in-cloud db for accounts
 - Attach account to orbit app
+- Start on settings panel
+  - Move settings over to window
+    - General, Appearance
+  - Ability to join Orbits
+  - Ability to manage your account
+- Platform work
+  - RSS syncer ideate
+  - Generic views you can plug into stream
+  - Start on documentation for building views
 
 # September:
 

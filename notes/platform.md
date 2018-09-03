@@ -48,4 +48,6 @@ They don't have a password, they can be private and only allow specific username
 
 # Username
 
-This means everyone needs a specific username. Can be tied to a personal email.
+Username first means its end-user focused and can spread organically. You never leave your username.
+
+Unlike Slack which is team-focused. With one username you can join many orbits. Not having many different passwords and profiles, just the one you want.

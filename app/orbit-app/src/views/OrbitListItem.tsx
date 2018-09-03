@@ -81,7 +81,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
     ...listStyle,
     borderLeft: 'none',
     borderRight: 'none',
-    padding: padding || [12, 14],
+    padding: padding || [10, 12],
     '&:active': {
       opacity: isSelected ? 1 : 0.8,
     },

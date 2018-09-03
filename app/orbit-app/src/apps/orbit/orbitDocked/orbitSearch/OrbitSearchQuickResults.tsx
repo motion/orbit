@@ -39,7 +39,7 @@ export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
     <>
       <SelectableCarousel
         offset={0}
-        cardHeight={70}
+        cardHeight={56}
         cardWidth={200}
         cardSpace={10}
         cardProps={cardProps}

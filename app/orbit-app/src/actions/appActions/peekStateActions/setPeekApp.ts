@@ -14,22 +14,24 @@ type PartialPeekState = { target: PeekTarget } & Partial<
   typeof App.state.peekState
 >
 
-export function setPeekState({ target, ...props }: PartialPeekState) {
+export function setPeekApp(item: PersonBit | Bit, target?: PeekTarget) {
+  invariant(item, 'Must pass item')
+  const appConfig = getAppConfig(item)
+  setPeekState({
+    target: target || App.peekState.target,
+    peekId: Math.random(),
+    appConfig,
+  })
+}
+
+function setPeekState({ target, appConfig, ...props }: PartialPeekState) {
   const realTarget = getTargetPosition(target)
   console.log('setting peek state', props)
   App.setPeekState({
     ...props,
+    appConfig,
     target: realTarget,
     ...peekPosition(realTarget),
-  })
-}
-
-export function setPeekApp(item: PersonBit | Bit, target?: PeekTarget) {
-  invariant(item, 'Must pass item')
-  setPeekState({
-    target: target || App.peekState.target,
-    peekId: Math.random(),
-    appConfig: getAppConfig(item),
   })
 }
 

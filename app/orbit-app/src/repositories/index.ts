@@ -31,7 +31,7 @@ export const Mediator = new MediatorClient({
   transport: new WebSocketClientTransport(websocket as any),
 })
 
-export const observeMany = Mediator.observeMany
-export const observeOne = Mediator.observeOne
-export const observeCount = Mediator.observeCount
-export const observeManyAndCount = Mediator.observeManyAndCount
+export const observeMany = Mediator.observeMany.bind(Mediator)
+export const observeOne = Mediator.observeOne.bind(Mediator)
+export const observeCount = Mediator.observeCount.bind(Mediator)
+export const observeManyAndCount = Mediator.observeManyAndCount.bind(Mediator)

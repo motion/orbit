@@ -5,12 +5,6 @@ import { uniqBy } from 'lodash'
 import * as appActions from '../actions/appActions'
 import { getGlobalConfig } from '@mcro/config'
 
-if (process.env.NODE_ENV === 'development') {
-  module.hot.accept('../actions/appActions', () => {
-    console.log('updated actions')
-  })
-}
-
 const Config = getGlobalConfig()
 
 const onPort = async cb => {

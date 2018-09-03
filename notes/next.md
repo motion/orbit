@@ -20,6 +20,9 @@
 
 # Nate week of Sep 2
 
+- better way to log errors in prod and send logs from prod app automatically
+  - log everything to /Application Support/Orbit/activity.log
+  - have a MenuItem for Report Activity...
 - searchresults - keep scroll at top of pane makes it possible to move quickly down
 - hstf5
 - Cosal merged into search and people profiles

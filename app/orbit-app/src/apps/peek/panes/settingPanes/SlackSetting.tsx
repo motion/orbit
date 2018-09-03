@@ -4,12 +4,13 @@ import { view, react, compose } from '@mcro/black'
 // import { Bit } from '@mcro/models'
 // import { BitRepository, SettingRepository } from '../../../../repositories'
 // import { Bits } from '../../../../views/Bits'
-import { TimeAgo } from '../../../../views/TimeAgo'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
 import { orderBy } from 'lodash'
 import { SettingRepository } from '../../../../repositories'
+import { DateFormat } from '../../../../views/DateFormat'
+import { Text } from '@mcro/ui'
 
 const columns = {
   name: {
@@ -27,8 +28,8 @@ const columns = {
     sortable: true,
     resizable: true,
   },
-  lastActive: {
-    value: 'Last Active',
+  createdAt: {
+    value: 'Created',
     sortable: true,
     resizable: true,
   },
@@ -38,33 +39,40 @@ const columns = {
   },
 }
 
-const itemToRow = (index, channel, topic, isActive, onSync) => ({
-  key: `${index}`,
-  columns: {
-    name: {
-      sortValue: channel.name,
-      value: channel.name,
+const itemToRow = (index, channel, topic, isActive, onSync) => {
+  console.log('ok', channel)
+  return {
+    key: `${index}`,
+    columns: {
+      name: {
+        sortValue: channel.name,
+        value: channel.name,
+      },
+      topic: {
+        sortValue: topic,
+        value: topic,
+      },
+      members: {
+        sortValue: channel.num_members,
+        value: channel.num_members,
+      },
+      createdAt: {
+        sortValue: channel.created,
+        value: (
+          <Text ellipse>
+            <DateFormat date={new Date(channel.created * 1000)} />
+          </Text>
+        ),
+      },
+      active: {
+        sortValue: isActive,
+        value: (
+          <ReactiveCheckBox onChange={onSync(channel.id)} isActive={isActive} />
+        ),
+      },
     },
-    topic: {
-      sortValue: topic,
-      value: topic,
-    },
-    members: {
-      sortValue: channel.num_members,
-      value: channel.num_members,
-    },
-    lastActive: {
-      sortValue: Date.now(),
-      value: <TimeAgo>{Date.now()}</TimeAgo>,
-    },
-    active: {
-      sortValue: isActive,
-      value: (
-        <ReactiveCheckBox onChange={onSync(channel.id)} isActive={isActive} />
-      ),
-    },
-  },
-})
+  }
+}
 
 class SlackSettingStore {
   props: SettingPaneProps
@@ -80,7 +88,7 @@ class SlackSettingStore {
     name: '25%',
     topic: '25%',
     members: '20%',
-    lastActive: '15%',
+    createdAt: '15%',
     active: '15%',
   }
 

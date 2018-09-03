@@ -1,5 +1,5 @@
 import * as Constants from '@mcro/constants'
-import { App } from '@mcro/stores'
+import { App, AppConfig } from '@mcro/stores'
 import { isEqual } from 'lodash'
 
 const MIN_Y = 80
@@ -26,10 +26,15 @@ type Position = {
 // dynamic peek size
 // always slightly taller than wide
 // capped between a set range
-const getPeekSize = ([screenWidth]: number[]) => {
-  const max = [630, 720]
+const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
+  let preferred
+  if (appConfig && appConfig.config && appConfig.config.dimensions) {
+    preferred = appConfig.config.dimensions
+  } else {
+    preferred = [screenWidth / 3.25, screenWidth / 3]
+  }
+  const max = [930, 820]
   const min = [550, 640]
-  const preferred = [screenWidth / 3.25, screenWidth / 3]
   return preferred
     .map((z, i) => Math.min(z, max[i]))
     .map((z, i) => Math.max(z, min[i]))
@@ -38,11 +43,12 @@ const getPeekSize = ([screenWidth]: number[]) => {
 let lastPeek = null
 let lastTarget = null
 
-export function peekPosition(target): WindowMap | null {
+export function peekPosition(target, appConfig?: AppConfig): WindowMap | null {
+  console.log('we have a pos', appConfig)
   if (!target) {
     return null
   }
-  const nextPosition = getPeekPositionFromTarget(target, lastPeek)
+  const nextPosition = getPeekPositionFromTarget(target, lastPeek, appConfig)
   lastPeek = nextPosition
   lastTarget = target
   return nextPosition
@@ -94,7 +100,11 @@ function getLazyPosition(
   return y
 }
 
-function getPeekPositionFromTarget(target, lastPeek): WindowMap | null {
+function getPeekPositionFromTarget(
+  target,
+  lastPeek,
+  appConfig?: AppConfig,
+): WindowMap | null {
   // dont reset position on same target re-opening
   if (isEqual(target, lastTarget)) {
     return lastPeek
@@ -110,7 +120,7 @@ function getPeekPositionFromTarget(target, lastPeek): WindowMap | null {
   const rightSpace = screenW - (target.left + orbitWidth)
   // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
-  let [pW, pH] = getPeekSize(screenSize())
+  let [pW, pH] = getPeekSize(screenSize(), appConfig)
   let x
   let y = getLazyPosition(target, pH, lastPeek)
   // prefer more strongly away from app if possible

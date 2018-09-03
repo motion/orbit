@@ -112,7 +112,6 @@ class Bridge {
     this._source = store.source
     this._store = store
     this._options = options
-    this.setupActions(store, options.actions)
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {

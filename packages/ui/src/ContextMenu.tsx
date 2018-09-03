@@ -6,19 +6,19 @@
  */
 
 import * as React from 'react'
-import { Col } from './blocks/Col'
 import PropTypes from 'prop-types'
+import { Col } from './blocks/Col'
 
 type MenuTemplate = Array<any>
 
 type Props = {
   items?: MenuTemplate
   buildItems?: () => MenuTemplate
-  children: any
-  component: React.ComponentType<any> | string
+  children: React.ReactNode
+  component?: React.ComponentType<any> | string
 }
 
-export class ContextMenu extends React.PureComponent<Props> {
+export default class ContextMenu extends React.Component<Props> {
   static defaultProps = {
     component: Col,
   }
@@ -27,7 +27,7 @@ export class ContextMenu extends React.PureComponent<Props> {
     appendToContextMenu: PropTypes.func,
   }
 
-  onContextMenu = (_: MouseEvent) => {
+  onContextMenu = (_: React.MouseEvent) => {
     if (typeof this.context.appendToContextMenu === 'function') {
       if (this.props.items != null) {
         this.context.appendToContextMenu(this.props.items)
@@ -39,7 +39,7 @@ export class ContextMenu extends React.PureComponent<Props> {
 
   render() {
     const {
-      items: _itesm,
+      items: _ignoreItems,
       buildItems: _buildItems,
       component,
       ...props

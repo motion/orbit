@@ -52,7 +52,7 @@ const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 const SearchBar = view(Row, {
   height: '100%',
   maxHeight: 40,
-  padding: [3, 5],
+  padding: 5,
   alignItems: 'center',
 })
 

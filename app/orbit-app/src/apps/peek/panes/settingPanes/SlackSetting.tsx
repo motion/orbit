@@ -11,14 +11,6 @@ import { HideablePane } from '../../views/HideablePane'
 import { orderBy } from 'lodash'
 import { SettingRepository } from '../../../../repositories'
 
-const columnSizes = {
-  repo: 'flex',
-  org: 'flex',
-  lastCommit: '20%',
-  numIssues: '12%',
-  active: '10%',
-}
-
 const columns = {
   name: {
     value: 'Name',
@@ -82,6 +74,19 @@ class SlackSettingStore {
 
   setActiveKey = key => {
     this.active = key
+  }
+
+  columnSizes = {
+    name: '25%',
+    topic: '25%',
+    members: '20%',
+    lastActive: '15%',
+    active: '15%',
+  }
+
+  handleColumnSize = sizes => {
+    console.log('handling', sizes)
+    this.columnSizes = sizes
   }
 
   get setting() {
@@ -155,12 +160,12 @@ export const SlackSetting = decorator(({ store, children }: Props) => {
     ),
     content: (
       <>
-        <HideablePane visible={store.active !== 'repos'}>
+        <HideablePane invisible={store.active !== 'repos'}>
           <UI.SearchableTable
             virtual
             rowLineHeight={28}
             floating={false}
-            columnSizes={columnSizes}
+            columnSizes={store.columnSizes}
             columns={columns}
             multiHighlight
             rows={store.rows}
@@ -171,7 +176,7 @@ export const SlackSetting = decorator(({ store, children }: Props) => {
             }
           />
         </HideablePane>
-        <HideablePane visible={store.active !== 'issues'}>
+        <HideablePane invisible={store.active !== 'issues'}>
           {/* <Bits bits={store.bits} /> */}
         </HideablePane>
       </>

@@ -26,10 +26,14 @@
     "react-resize-detector": "^2.3.0",
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.20.1",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "react-virtualized-auto-sizer": "1.0.2",
+    "react-debounce-render": "4.0.3",
+    "react-window": "1.1.2"
   },
   "peerDependencies": {
     "@babel/runtime": "*",
+    "electron": "*",
     "mobx": "5.0.3",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"

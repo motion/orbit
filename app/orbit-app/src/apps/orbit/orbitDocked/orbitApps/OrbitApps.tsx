@@ -14,7 +14,7 @@ import { SimpleItem } from '../../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
 import { fuzzyQueryFilter } from '../../../../helpers'
 import { App } from '@mcro/stores'
-import { settingToAppConfig } from '../../../../helpers/settingToResult'
+import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 import { settingsList } from '../../../../helpers/settingsList'
 
 type Props = {

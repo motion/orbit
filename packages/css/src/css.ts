@@ -12,7 +12,7 @@ import { GlossCSSPropertySetFlat } from './cssPropertySet'
 export const cssNameMap = CAMEL_TO_SNAKE
 
 // exports
-export { CSSPropertySet, CSSPropertyValue } from './cssPropertySet'
+export { CSSPropertySet } from './cssPropertySet'
 export { Transform, Color } from './types'
 export * from './helpers'
 

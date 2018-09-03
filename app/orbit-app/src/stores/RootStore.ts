@@ -5,13 +5,6 @@ import { uniqBy } from 'lodash'
 import * as appActions from '../actions/appActions'
 import { getGlobalConfig } from '@mcro/config'
 
-if (process.env.NODE_ENV === 'development') {
-  module.hot.accept('../actions/appActions', () => {
-    console.log('update actions')
-    App.start({ actions: require('../actions/appActions') })
-  })
-}
-
 const Config = getGlobalConfig()
 
 const onPort = async cb => {
@@ -24,6 +17,7 @@ const onPort = async cb => {
   }
 }
 
+// @ts-ignore
 @store
 export class RootStore {
   started = false

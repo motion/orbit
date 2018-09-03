@@ -1,33 +1,18 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
 import { store, react, deep } from '@mcro/black'
 import { Electron } from './Electron'
+import { AppConfig } from './AppConfig'
 
 export let App = null as AppStore
 
 // @ts-ignore
 const isBrowser = typeof window !== 'undefined'
 const isOrbit = isBrowser && window.location.pathname === '/orbit'
-// const log = debug('App')
-
-export type AppConfig = {
-  id: string
-  icon: string
-  title: string
-  type: string
-  integration: string
-  body?: string
-  subType?: string
-  // allow various things to be passed as config
-  // to help configure the peek window
-  config?: {
-    showTitleBar?: boolean
-    viewPane?: string
-  }
-}
 
 // @ts-ignore
 @store
 class AppStore {
+  // TODO proxySetters should auto-type this
   // shortcuts
   orbitState: AppStore['state']['orbitState']
   peekState: AppStore['state']['peekState']

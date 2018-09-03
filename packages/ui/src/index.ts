@@ -53,9 +53,9 @@ export * from './Tooltip'
 export * from './table/TableInput'
 export * from './table/Searchable'
 export * from './table/SearchableTable'
-export * from './table/Table'
-export * from './table/TableBody'
+export * from './table/ManagedTable'
 export * from './table/TableHead'
+export * from './table/TableRow'
 
 // effects
 export * from './effects/HoverGlow'

@@ -24,14 +24,13 @@ export function setPeekApp(item: PersonBit | Bit, target?: PeekTarget) {
   })
 }
 
-function setPeekState({ target, appConfig, ...props }: PartialPeekState) {
+function setPeekState({ target, appConfig, peekId }: PartialPeekState) {
   const realTarget = getTargetPosition(target)
-  console.log('setting peek state', props)
   App.setPeekState({
-    ...props,
+    peekId,
     appConfig,
     target: realTarget,
-    ...peekPosition(realTarget),
+    ...peekPosition(realTarget, appConfig),
   })
 }
 

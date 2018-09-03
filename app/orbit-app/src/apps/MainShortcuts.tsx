@@ -3,6 +3,7 @@ import { HotKeys } from 'react-hotkeys'
 import { view, compose } from '@mcro/black'
 import { SelectionStore } from '../stores/SelectionStore'
 import { Actions } from '../actions/Actions'
+import { App } from '@mcro/stores'
 
 type Props = {
   selectionStore: SelectionStore
@@ -12,6 +13,7 @@ type Props = {
 const rootShortcuts = {
   openCurrent: 'command+enter',
   copyLink: 'command+shift+c',
+  escape: 'esc',
 }
 
 const decorator = compose(view.attach('selectionStore'))
@@ -24,6 +26,11 @@ export const MainShortcuts = decorator(
       },
       copyLink: async () => {
         Actions.copyLink(selectionStore.selectedItem)
+      },
+      escape: () => {
+        if (App.peekState.appConfig) {
+          Actions.clearPeek()
+        }
       },
     }
 

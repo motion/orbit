@@ -12,7 +12,7 @@ export function personToAppConfig(person: PersonBit): AppConfig {
     subType: '',
     config: {
       showTitleBar: false,
-      dimensions: [800, 900],
+      dimensions: [700, 800],
     },
   }
 }

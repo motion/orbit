@@ -3,7 +3,7 @@ import { App } from '@mcro/stores'
 import { PeekTarget } from './types'
 import { isEqual } from '@mcro/black'
 import { Actions } from '../../Actions'
-import { log, getAppConfig, setPeekApp } from './peekApp'
+import { log, getAppConfig, setPeekApp } from './setPeekApp'
 
 export function togglePeekApp(item: PersonBit | Bit, target?: PeekTarget) {
   log('togglePeekApp', item)

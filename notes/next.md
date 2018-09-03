@@ -16,6 +16,8 @@
 # Nate week of Sep 2
 
 - Cosal merged into search and people profiles
+- Signup process that links to real in-cloud db for accounts
+- Attach account to orbit app
 
 # September:
 

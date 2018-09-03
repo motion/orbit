@@ -1,5 +1,5 @@
 import { App } from '@mcro/stores'
-import { setPeekState } from './peekApp'
+import { setPeekState } from './setPeekApp'
 
 export function clearPeek() {
   if (App.peekState.devModeStick) {

@@ -6,7 +6,7 @@ import { Orbit } from './orbit/Orbit'
 import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
-import { settingToAppConfig } from '../helpers/settingToResult'
+import { settingToAppConfig } from '../helpers/toAppConfig/settingToAppConfig'
 import { Actions } from '../actions/Actions'
 
 const getItem = {

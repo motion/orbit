@@ -1,7 +1,7 @@
 import { Setting } from '@mcro/models'
 import { SettingRepository } from '../repositories'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
-import { getSettingTitle } from '../helpers/settingToResult'
+import { getSettingTitle } from '../helpers/toAppConfig/settingToAppConfig'
 
 export class IntegrationSettingsStore {
   settingsList?: Setting[] = modelQueryReaction(

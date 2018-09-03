@@ -24,6 +24,12 @@ const SearchClearButton = view(ClearButton, {
   right: 6,
   top: '50%',
   marginTop: -9,
+  opacity: 0,
+  pointerEvents: 'none',
+  visible: {
+    opacity: 1,
+    pointerEvents: 'auto',
+  },
 })
 
 type Props = {
@@ -434,9 +440,10 @@ export function Searchable<T extends object>(
               onBlur={this.onInputBlur}
               {...searchInputProps}
             />
-            {this.state.searchTerm || this.state.filters.length > 0 ? (
-              <SearchClearButton onClick={this.clear} />
-            ) : null}
+            <SearchClearButton
+              onClick={this.clear}
+              visible={!!this.state.searchTerm || this.state.filters.length > 0}
+            />
           </SearchBox>
           {after}
           {actions != null ? <Actions>{actions}</Actions> : null}

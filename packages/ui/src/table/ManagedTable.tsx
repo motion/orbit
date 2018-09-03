@@ -466,12 +466,11 @@ class ManagedTableInner extends React.Component<
   }
 
   getSelectedText = (): string => {
-    const { highlightedRows } = this.state
-
+    const { highlightedRows, sortedRows } = this.state
     if (highlightedRows.size === 0) {
       return ''
     }
-    return this.state.sortedRows
+    return sortedRows
       .filter(row => highlightedRows.has(row.key))
       .map(
         (row: TableBodyRow) =>
@@ -518,24 +517,22 @@ class ManagedTableInner extends React.Component<
   )
 
   getRow = ({ index, style }) => {
-    const rows = this.state.sortedRows
     const { onAddFilter, multiline, zebra } = this.props
-    const { columnOrder, columnSizes, highlightedRows } = this.state
+    const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
     const columnKeys = columnOrder
       .map(k => (k.visible ? k.key : null))
       .filter(Boolean)
-
     return (
       <TableRow
-        key={rows[index].key}
+        key={sortedRows[index].key}
         columnSizes={columnSizes}
         columnKeys={columnKeys}
-        onMouseDown={e => this.onHighlight(e, rows[index], index)}
-        onMouseEnter={e => this.onMouseEnterRow(e, rows[index], index)}
+        onMouseDown={e => this.onHighlight(e, sortedRows[index], index)}
+        onMouseEnter={e => this.onMouseEnterRow(e, sortedRows[index], index)}
         multiline={multiline}
         rowLineHeight={24}
-        highlighted={highlightedRows.has(rows[index].key)}
-        row={rows[index]}
+        highlighted={highlightedRows.has(sortedRows[index].key)}
+        row={sortedRows[index]}
         index={index}
         style={style}
         onAddFilter={onAddFilter}

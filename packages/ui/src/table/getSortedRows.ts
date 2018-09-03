@@ -15,9 +15,7 @@ export function getSortedRows(
   if (!maybeSortOrder) {
     return rows
   }
-
   const sortOrder: TableRowSortOrder = maybeSortOrder
-
   const cached = sortedBodyCache.get(rows)
   if (cached && cached.sortOrder === sortOrder) {
     return cached.rows
@@ -26,7 +24,6 @@ export function getSortedRows(
   let sortedRows = rows.sort((a, b) => {
     const aVal = a.columns[sortOrder.key].sortValue
     const bVal = b.columns[sortOrder.key].sortValue
-
     if (typeof aVal === 'string' && typeof bVal === 'string') {
       return aVal.localeCompare(bVal)
     } else if (typeof aVal === 'number' && typeof bVal === 'number') {
@@ -44,6 +41,8 @@ export function getSortedRows(
     rows: sortedRows,
     sortOrder,
   })
+
+  console.log('sorted rows', sortedRows)
 
   return sortedRows
 }

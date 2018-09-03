@@ -22,7 +22,14 @@ type Watchable = {
   _idleTimeout?: number
 }
 
-type OnAble = number | NodeJS.Timer | Disposable | MutationObserver | Watchable
+type Subscriber = { unsubscribe: Function }
+type OnAble =
+  | number
+  | NodeJS.Timer
+  | Disposable
+  | MutationObserver
+  | Watchable
+  | Subscriber
 
 // fuck electron doesnt have timers
 const looksLikeTimeout = thing => thing && !!thing._idleTimeout
@@ -65,12 +72,20 @@ export default function on(
     subject.subscriptions.add(disposable)
     return () => disposable.dispose()
   }
+  // Observable
+  target = target as Subscriber
+  if (typeof target.unsubscribe === 'function') {
+    // @ts-ignore
+    const dispose = () => target.unsubscribe()
+    subject.subscriptions.add({ dispose })
+    return dispose
+  }
   // cast to Watchable because can't use NodeJS.Timer above
   target = target as Watchable
   // subscribable
   if (target.subscribe) {
     if (typeof eventName !== 'function') {
-      throw new Error(`Should pass in (Observable, callback) for Observables`)
+      throw new Error('Should pass in (Observable, callback) for Observables')
     }
     const subscription = target.subscribe(eventName)
     const dispose = () => subscription.unsubscribe()

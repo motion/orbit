@@ -1,6 +1,11 @@
+# Week of Sep 2 goal
+
+- Have a really great first deliverable app
+- Better sync, better search, fix lots of bugs
+
 # Umed Week of Sep 2
 
-- Syncers, we dont want to spend too much time here but we will have to a bit more:
+- Make all syncers sync a more/better
   - Gmail super slow
   - Gmail no html coming back?
   - Really simple throttle
@@ -15,6 +20,8 @@
 
 # Nate week of Sep 2
 
+- searchresults - keep scroll at top of pane makes it possible to move quickly down
+- hstf5
 - Cosal merged into search and people profiles
 - Signup process that links to real in-cloud db for accounts
 - Attach account to orbit app

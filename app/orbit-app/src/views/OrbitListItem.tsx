@@ -13,13 +13,21 @@ import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
 
-const CardWrap = view(UI.View, {
+const ListFrame = view(UI.View, {
   position: 'relative',
-  width: '100%',
   transform: {
     z: 0,
   },
 })
+
+ListFrame.theme = ({ theme }) => {
+  return {
+    background: theme.cardBackground || theme.background.alpha(0.5),
+    margin: 5,
+    marginTop: 0,
+    borderRadius: 3,
+  }
+}
 
 const Divider = view({
   height: 1,
@@ -40,7 +48,7 @@ const ListItem = view({
   chromeless: {
     border: [1, 'transparent'],
     background: 'transparent',
-    padding: [10, 12],
+    padding: 8,
   },
 })
 
@@ -189,7 +197,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       </AfterHeader>
     )
     return (
-      <CardWrap
+      <ListFrame
         {...hoverToSelect && !inactive && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         zIndex={isSelected ? 5 : 4}
@@ -296,7 +304,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
           </Bottom>
         </ListItem>
         <Divider />
-      </CardWrap>
+      </ListFrame>
     )
   }
 

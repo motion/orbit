@@ -1,20 +1,24 @@
-import { Setting } from '@mcro/models'
-import { SettingRepository } from '../repositories'
-import { modelQueryReaction } from '../repositories/modelQueryReaction'
+import { SettingModel } from '@mcro/models'
 import { getSettingTitle } from '../helpers/toAppConfig/settingToAppConfig'
+import { observeMany } from '../repositories'
 
 export class IntegrationSettingsStore {
-  settingsList?: Setting[] = modelQueryReaction(
-    () =>
-      SettingRepository.find({
+  settingsList = []
+
+  didMount() {
+    const settings$ = observeMany(SettingModel, {
+      args: {
         where: {
           token: { $not: '' },
         },
-      }),
-    {
-      ignoreKeys: ['updatedAt'],
-    },
-  )
+      },
+    }).subscribe(values => {
+      this.settingsList = values
+    })
+    this.subscriptions.add({
+      dispose: () => settings$.unsubscribe(),
+    })
+  }
 
   get settings() {
     if (!this.settingsList) {

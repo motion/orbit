@@ -65,12 +65,9 @@ TableBodyRowContainer.theme = props => ({
 })
 
 const TableBodyColumnContainer = view({
-  display: 'block',
   overflow: 'hidden',
-  padding: '0 8px',
+  padding: [0, 8],
   userSelect: 'none',
-  textOverflow: 'ellipsis',
-  verticalAlign: 'top',
   maxWidth: '100%',
 })
 TableBodyColumnContainer.theme = props => ({

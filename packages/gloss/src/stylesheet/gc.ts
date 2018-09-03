@@ -5,11 +5,10 @@
  * @format
  */
 
-import { CSSPropertyValue } from '@mcro/css'
 import { StyleSheet } from './sheet'
 
 type BaseRules = {
-  [key: string]: CSSPropertyValue<string | number>
+  [key: string]: string | number
 }
 
 type Tracker = Map<

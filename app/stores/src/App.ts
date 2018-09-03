@@ -12,6 +12,7 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 // @ts-ignore
 @store
 class AppStore {
+  // TODO proxySetters should auto-type this
   // shortcuts
   orbitState: AppStore['state']['orbitState']
   peekState: AppStore['state']['peekState']

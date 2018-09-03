@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ThemeContext } from './theme/ThemeContext'
-import { CSSPropertyValue, CSSPropertySet, validCSSAttr } from '@mcro/css'
+import { CSSPropertySet, validCSSAttr } from '@mcro/css'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
@@ -12,7 +12,7 @@ export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
 }
 export type BaseRules = {
-  [key: string]: CSSPropertyValue<string | number>
+  [key: string]: string | number
 }
 type Props = CSSPropertySet
 

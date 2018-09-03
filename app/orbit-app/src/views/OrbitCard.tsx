@@ -177,6 +177,17 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     const hasMeta = !!(location || updatedAt) && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
     const hasSubtitle = !!subtitle
+    let topPad = 10
+    let sidePad = 10
+    if (props.padding) {
+      if (Array.isArray(props.padding)) {
+        topPad = props.padding[0]
+        sidePad = props.padding[1]
+      } else {
+        topPad = props.padding
+        sidePad = props.padding
+      }
+    }
     return (
       <CardWrap
         {...hoverToSelect && !inactive && store.hoverSettler.props}
@@ -200,8 +211,8 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
                 size={20}
                 {...orbitIconProps}
                 position="absolute"
-                top={10}
-                right={10}
+                top={topPad}
+                right={sidePad}
                 {...iconProps}
               />
             )}

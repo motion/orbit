@@ -44,6 +44,7 @@ export const OrbitAppCard = decorator(
         iconProps={{
           size: 20,
         }}
+        padding={8}
         result={result}
         {...props}
       >

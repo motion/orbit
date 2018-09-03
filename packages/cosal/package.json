@@ -4,5 +4,9 @@
     "compute-covariance": "^1.0.1",
     "mathjs": "^4.1.2",
     "vectorious": "^4.8.1"
+  },
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
   }
 }

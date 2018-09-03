@@ -29,7 +29,8 @@ export function getSortedRows(
     } else if (typeof aVal === 'number' && typeof bVal === 'number') {
       return aVal - bVal
     } else {
-      throw new Error('Unsure how to sort this')
+      console.error('Unsure how to sort this')
+      return 0
     }
   })
 

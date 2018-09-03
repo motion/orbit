@@ -141,6 +141,7 @@ export type ManagedTableProps = {
    */
   hideHeader?: boolean
 
+  sortOrder?: TableRowSortOrder
   onCreatePaste?: Function
 }
 
@@ -243,6 +244,7 @@ class ManagedTableInner extends React.Component<
     columnSizes: this.props.columnSizes || {},
     highlightedRows: new Set(),
     sortOrder: null,
+    sortedRows: null,
     shouldScrollToBottom: Boolean(this.props.stickyBottom),
     prevProps: {},
   }
@@ -335,7 +337,11 @@ class ManagedTableInner extends React.Component<
   }
 
   onSort = (sortOrder: TableRowSortOrder) => {
-    this.setState({ sortOrder })
+    const sortedRows = getSortedRows(
+      sortOrder,
+      filterRows(this.props.rows, this.props.filterValue, this.props.filter),
+    )
+    this.setState({ sortOrder, sortedRows })
   }
 
   onColumnOrder = (columnOrder: TableColumnOrder) => {

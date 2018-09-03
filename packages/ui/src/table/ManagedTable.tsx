@@ -580,7 +580,7 @@ class ManagedTableInner extends React.Component<
                     width={width}
                     estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
                     overscanCount={5}
-                    innerRef={this.scrollRef}
+                    forwardRef={this.scrollRef}
                     onScroll={this.onScroll}
                     height={height}
                   >

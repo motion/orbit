@@ -65,7 +65,7 @@ class OrderableItem extends React.Component<{
       <OrderableItemContainer
         orientation={this.props.orientation}
         key={this.props.id}
-        innerRef={this.addRef}
+        forwardRef={this.addRef}
         onMouseDown={this.startMove}
       >
         {this.props.children}
@@ -372,7 +372,7 @@ export class Orderable extends React.Component<OrderableProps, OrderableState> {
     return (
       <OrderableContainer
         className={this.props.className}
-        innerRef={this.setContainerRef}
+        forwardRef={this.setContainerRef}
       >
         {order.map(key => {
           const item = items[key]

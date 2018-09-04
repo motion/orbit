@@ -167,25 +167,34 @@ export class Screen {
 
     this.setupOracleListeners()
     await this.oracle.start()
-    this.getOracleInfo()
+    await this.getOracleInfo()
     this.isStarted = true
   }
 
   defocusOrbit = () => {
-    this.oracle.defocus()
+    console.log('should defocus, crashing oracle for now...')
+    // this.oracle.defocus()
   }
 
-  async getOracleInfo() {
-    // they can toggle this on and off
-    setInterval(async () => {
-      // get initial info
-      const info = await this.oracle.getInfo()
-      Desktop.setState({
-        operatingSystem: {
-          supportsTransparency: info.supportsTransparency,
-        },
-      })
-    }, 1000)
+  getOracleInfo() {
+    let hasResolved = false
+    return new Promise(res => {
+      const getInfo = async () => {
+        // get initial info
+        const info = await this.oracle.getInfo()
+        if (!hasResolved) {
+          hasResolved = true
+          res()
+        }
+        Desktop.setState({
+          operatingSystem: {
+            supportsTransparency: info.supportsTransparency,
+          },
+        })
+      }
+      setInterval(getInfo, 700)
+      getInfo()
+    })
   }
 
   setupOracleListeners() {

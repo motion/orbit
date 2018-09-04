@@ -85,7 +85,10 @@ export default class Oracle {
   }
 
   stop = async () => {
-    if (!this.process) return
+    if (!this.process) {
+      return
+    }
+    log('STOPPING oracle')
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
     // kill process
@@ -101,6 +104,7 @@ export default class Oracle {
   }
 
   restart = async () => {
+    log('RESTARTING oracle')
     await this.stop()
     await this.start()
   }
@@ -415,6 +419,9 @@ export default class Oracle {
 
       this.process.stdout.on('data', handleOut)
       this.process.stderr.on('data', handleOut)
+      this.process.on('exit', val => {
+        log('ORACLE PROCESS STOPPING', val)
+      })
     } catch (err) {
       console.log('errror', err)
     }

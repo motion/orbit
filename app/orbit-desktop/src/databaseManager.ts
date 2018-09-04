@@ -16,7 +16,7 @@ const hasTable = (db: sqlite.Database, table: string) =>
     table,
   )
 
-export class Database {
+export class DatabaseManager {
   db: sqlite.Database
   subscriptions = new CompositeDisposable()
 

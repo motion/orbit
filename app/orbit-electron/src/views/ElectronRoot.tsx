@@ -5,6 +5,7 @@ import Tray from './Tray'
 import { MenuItems } from './MenuItems'
 import { MainWindow } from './MainWindow'
 import { ElectronStore } from '../stores/ElectronStore'
+import { AppWindows } from './AppWindows'
 
 @view.provide({
   electronStore: ElectronStore,
@@ -46,6 +47,7 @@ export class ElectronRoot extends React.Component {
       >
         <MenuItems />
         <MainWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
+        <AppWindows />
         <Tray />
       </AppWindow>
     )

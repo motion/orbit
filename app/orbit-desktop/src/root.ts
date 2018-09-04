@@ -1,8 +1,19 @@
 import { debugState, on } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger, logger } from '@mcro/logger'
-import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
-import { BitModel, JobModel, PersonBitModel, PersonModel, SettingModel, SettingRemoveCommand } from '@mcro/models'
+import {
+  MediatorServer,
+  typeormResolvers,
+  WebSocketServerTransport,
+} from '@mcro/mediator'
+import {
+  BitModel,
+  JobModel,
+  PersonBitModel,
+  PersonModel,
+  SettingModel,
+  SettingRemoveCommand,
+} from '@mcro/models'
 import { SettingForceSyncCommand } from '@mcro/models/_'
 import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
@@ -27,7 +38,7 @@ import { Screen } from './Screen'
 import Server from './Server'
 import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
 import { handleEntityActions } from './sqlBridge'
-import { KeyboardStore } from './stores/keyboardStore'
+import { KeyboardStore } from './stores/KeyboardStore'
 import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
 
@@ -152,17 +163,8 @@ export class Root {
    */
   private registerMediatorServer() {
     this.mediatorServer = new MediatorServer({
-      models: [
-        SettingModel,
-        BitModel,
-        JobModel,
-        PersonModel,
-        PersonBitModel,
-      ],
-      commands: [
-        SettingRemoveCommand,
-        SettingForceSyncCommand,
-      ],
+      models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
+      commands: [SettingRemoveCommand, SettingForceSyncCommand],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,
       }),
@@ -181,8 +183,8 @@ export class Root {
         // PostCategoriesResolver,
         // PostModelSaveResolver,
         // PostModelRemoveResolver,
-      ]
-    });
+      ],
+    })
     this.mediatorServer.bootstrap()
   }
 

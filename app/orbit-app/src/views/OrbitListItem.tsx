@@ -81,7 +81,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
     ...listStyle,
     borderLeft: 'none',
     borderRight: 'none',
-    padding: padding || [10, 12],
+    padding,
     '&:active': {
       opacity: isSelected ? 1 : 0.8,
     },
@@ -128,6 +128,10 @@ const Bottom = view({
 })
 @view
 export class OrbitListInner extends React.Component<OrbitItemProps> {
+  static defaultProps = {
+    padding: [8, 12],
+  }
+
   getInner = (contentProps: ResolvedItem) => {
     const {
       createdAt,

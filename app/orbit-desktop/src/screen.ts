@@ -7,6 +7,7 @@ import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
 import { getGlobalConfig } from '@mcro/config'
 import * as Path from 'path'
+import { CompositeDisposable } from 'event-kit'
 
 const log = logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
@@ -46,6 +47,7 @@ const PREVENT_SCANNING = {
 // @ts-ignore
 @store
 export class Screen {
+  subscriptions = new CompositeDisposable()
   hasResolvedOCR = false
   appStateTm: any
   clearOCRTm: any
@@ -142,7 +144,16 @@ export class Screen {
     console.log('starting screen...')
 
     // handle messages
-    Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
+    const off1 = Desktop.onMessage(
+      Desktop.messages.TOGGLE_PAUSED,
+      this.togglePaused,
+    )
+    const off2 = Desktop.onMessage(
+      Desktop.messages.DEFOCUS_ORBIT,
+      this.defocusOrbit,
+    )
+    this.subscriptions.add({ dispose: off1 })
+    this.subscriptions.add({ dispose: off2 })
 
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.12')) {
@@ -153,6 +164,10 @@ export class Screen {
     this.setupOracleListeners()
     await this.oracle.start()
     this.getOracleInfo()
+  }
+
+  defocusOrbit = () => {
+    this.oracle.defocus()
   }
 
   async getOracleInfo() {
@@ -432,6 +447,7 @@ export class Screen {
   }
 
   async dispose() {
+    this.subscriptions.dispose()
     if (this.oracle) {
       await this.oracle.stop()
     }

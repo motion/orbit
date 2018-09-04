@@ -1,5 +1,5 @@
 import { react, store } from '@mcro/black'
-import { App, Swift } from '@mcro/stores'
+import { App, Electron, Desktop } from '@mcro/stores'
 // @ts-ignore
 import ElectronNode from 'electron'
 
@@ -60,14 +60,14 @@ export class WindowFocusStore {
   }
 
   defocusOrbit = () => {
-    Swift.defocus()
+    Electron.sendMessage(Desktop, Desktop.messages.DEFOCUS_ORBIT)
   }
 
   unfocusOnHide = react(
     () => App.orbitState.docked || App.orbitState.pinned,
     showing => {
       if (!showing) {
-        Swift.defocus()
+        Electron.sendMessage(Desktop, Desktop.messages.DEFOCUS_ORBIT)
         return
       }
     },
@@ -85,7 +85,7 @@ export class WindowFocusStore {
         if (App.orbitState.docked) {
           throw react.cancel
         }
-        Swift.defocus()
+        Electron.sendMessage(Desktop, Desktop.messages.DEFOCUS_ORBIT)
       }
     },
   )

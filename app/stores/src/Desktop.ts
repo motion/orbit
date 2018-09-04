@@ -41,6 +41,7 @@ class DesktopStore {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',
     OPEN: 'OPEN',
     CLEAR_OPTION: 'CLEAR_OPTION',
+    DEFOCUS_ORBIT: 'DEFOCUS_ORBIT',
   }
 
   setState = Bridge.setState

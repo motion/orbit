@@ -126,17 +126,17 @@ export class Screen {
     },
   )
 
-  togglePaused = () => {
-    console.log('toggle paused screen')
-    const paused = !Desktop.state.paused
-    Desktop.setPaused(paused)
-    if (paused) {
-      Swift.pause()
-    } else {
-      Swift.resume()
-      this.rescanApp()
-    }
-  }
+  // togglePaused = () => {
+  //   console.log('toggle paused screen')
+  //   const paused = !Desktop.state.paused
+  //   Desktop.setPaused(paused)
+  //   if (paused) {
+  //     Swift.pause()
+  //   } else {
+  //     Swift.resume()
+  //     this.rescanApp()
+  //   }
+  // }
 
   clearTimeout?: Function
 
@@ -144,15 +144,15 @@ export class Screen {
     console.log('starting screen...')
 
     // handle messages
-    const off1 = Desktop.onMessage(
-      Desktop.messages.TOGGLE_PAUSED,
-      this.togglePaused,
-    )
+    // const off1 = Desktop.onMessage(
+    //   Desktop.messages.TOGGLE_PAUSED,
+    //   this.togglePaused,
+    // )
+    // this.subscriptions.add({ dispose: off1 })
     const off2 = Desktop.onMessage(
       Desktop.messages.DEFOCUS_ORBIT,
       this.defocusOrbit,
     )
-    this.subscriptions.add({ dispose: off1 })
     this.subscriptions.add({ dispose: off2 })
 
     // for now just enable until re enable oracle

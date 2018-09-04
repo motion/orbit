@@ -222,7 +222,8 @@ const OrbitHomeCarouselSection = decorator(
 
 const Unpad = view({
   margin: [0, -14],
-  overflow: 'hidden',
+  // dont do this, it undoes all our hard work with nice overrflow in carousels
+  // overflow: 'hidden',
 })
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore')

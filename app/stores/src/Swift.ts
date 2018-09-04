@@ -1,9 +1,8 @@
-import { store, react } from '@mcro/black'
+import { store } from '@mcro/black'
 import { WebSocket, ReconnectingWebSocket } from '@mcro/mobx-bridge'
-import { Desktop } from './Desktop'
 import { getGlobalConfig } from '@mcro/config'
 
-export let Swift
+export let Swift = null as SwiftStore
 
 // @ts-ignore
 @store
@@ -19,20 +18,8 @@ class SwiftStore {
 
   constructor(props = { onStateChange: _ => _ }) {
     this.onStateChange = props.onStateChange
+    this.setupLink()
   }
-
-  setup = react(
-    () => [
-      Desktop.state.operatingSystem.isAccessible,
-      Desktop.state.operatingSystem.macVersion || '',
-    ],
-    ([isAccessible, version]) => {
-      react.ensure('accessible', isAccessible)
-      react.ensure('version 10', version.indexOf('10') === 0)
-      react.ensure('at least verison 11', +version.split('.')[1] >= 11)
-      this.setupLink()
-    },
-  )
 
   clear = () => {
     this.send({ action: 'clear' })
@@ -61,7 +48,7 @@ class SwiftStore {
 
   private setupLink() {
     this.ws = new ReconnectingWebSocket(
-      `ws://localhost:${getGlobalConfig().ports.swift}`,
+      `ws://localhost:${getGlobalConfig().ports.oracleBridge}`,
       undefined,
       {
         constructor: WebSocket,
@@ -110,7 +97,7 @@ class SwiftStore {
 
   private send(object) {
     if (this.isOpen) {
-      this.ws.send(JSON.stringify(object))
+      this.ws.send(typeof object === 'string' ? object : JSON.stringify(object))
     } else {
       console.log('not open queue', object)
       this.queuedMessages.push(object)

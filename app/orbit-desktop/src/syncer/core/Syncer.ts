@@ -247,8 +247,9 @@ export class Syncer {
         type: this.options.type,
       })
       if (setting) {
+        // we don't need to await here because we don't want to block setting save when its added
         log('okay we have a new setting that we are going to sync')
-        await this.runInterval(setting.id, setting.id)
+        this.runInterval(setting.id, setting.id)
       }
     },
     afterUpdate: async event => {

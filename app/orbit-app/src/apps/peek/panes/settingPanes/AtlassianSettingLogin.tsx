@@ -1,13 +1,11 @@
-import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { react, view } from '@mcro/black'
+import { AtlassianSettingSaveCommand, AtlassianSettingValuesCredentials, Setting } from '@mcro/models'
 import * as UI from '@mcro/ui'
-import { SettingRepository } from '../../../../repositories'
+import * as React from 'react'
+import { Actions } from '../../../../actions/Actions'
+import { Mediator } from '../../../../repositories'
 import * as Views from '../../../../views'
 import { Message } from '../../../../views/Message'
-import { Setting } from '@mcro/models'
-import { AtlassianService } from '@mcro/services'
-import { capitalize } from 'lodash'
-import { Actions } from '../../../../actions/Actions'
 
 type Props = {
   type: string
@@ -28,10 +26,11 @@ const buttonThemes = {
 
 class AtlassianSettingLoginStore {
   props: Props
+  // setting: Setting
 
-  retry = null
-  error = null
-  values = {
+  status: string
+  error: string
+  values: AtlassianSettingValuesCredentials = {
     username: '',
     password: '',
     domain: '',
@@ -40,119 +39,27 @@ class AtlassianSettingLoginStore {
   setting = react(
     () => this.props.setting,
     async propSetting => {
+
+      // if setting was sent via component props then use it
       if (propSetting) {
+        this.values = propSetting.values.credentials
         return propSetting
       }
-      if (!this.props.type) {
-        throw new Error('No props.type')
-      }
 
-      const values = {
+      // if setting prop was not defined then at least
+      // integration type should be defined to create a new setting
+      if (!this.props.type)
+        throw new Error('No props.type')
+
+      // create a new empty setting
+      return {
         category: 'integration',
         type: this.props.type,
         token: null,
       } as Setting
-      const setting = await SettingRepository.findOne({ where: values })
-      if (setting) {
-        return setting
-      }
-      return await SettingRepository.save(values)
     },
   )
 
-  updateValuesFromSetting = react(
-    () => this.setting,
-    setting => {
-      if (!setting) {
-        throw react.cancel
-      }
-      setting.values = setting.values || {}
-      if (!setting.values.atlassian) {
-        setting.values.atlassian = {
-          username: '',
-          password: '',
-          domain: '',
-        }
-      }
-      this.values = setting.values.atlassian
-    },
-  )
-
-  status = react(
-    () => this.values,
-    async (values, { setValue, sleep }) => {
-      if (!values.username || !values.password || !values.domain) {
-        throw react.cancel
-      }
-      if (values.domain.indexOf('http') !== 0) {
-        throw react.cancel
-      }
-      // delay before running checks
-      await sleep(700)
-      setValue(Statuses.LOADING)
-      this.setting.values.atlassian = values
-      const service = new AtlassianService(this.setting)
-      let res
-      try {
-        res = await service.fetch('/wiki/rest/api/content')
-        if (!res) {
-          // do something
-          throw react.cancel
-        }
-        if (res.error) {
-          this.error = `Failed to fetch from domain: ${values.domain}`
-          setValue(Statuses.FAIL)
-          return
-        }
-        if (res) {
-          console.log('atlassian got res', res)
-          setValue(Statuses.SUCCESS)
-          return
-        }
-      } catch (err) {
-        console.log('atlassian setting err', err)
-        this.error = `${err.message || 'Some Error'}`
-      }
-      setValue(Statuses.FAIL)
-    },
-  )
-
-  existingSetting = react(async () => {
-    return await SettingRepository.findOne({
-      where: {
-        type: this.props.type === 'confluence' ? 'jira' : 'confluence',
-        token: 'good',
-      },
-    })
-  })
-
-  importExisting = () => {
-    this.values = {
-      ...this.existingSetting.values.atlassian,
-    }
-  }
-
-  handleChange = prop => val => {
-    this.values = {
-      ...this.values,
-      [prop]: val,
-    }
-  }
-
-  save = async () => {
-    this.retry = Date.now()
-  }
-
-  addIntegration = () => {
-    this.setting.token = 'good'
-    // replaced following code: this.setting.save()
-    // code here is very strange because it saves a something that I don't know type of,
-    // but assume its a setting
-    SettingRepository.save(this.setting)
-    Actions.clearPeek()
-  }
-
-  // autoSave = debounce(this.save, 400)
 }
 
 @view.attach({
@@ -162,8 +69,40 @@ class AtlassianSettingLoginStore {
 export class AtlassianSettingLogin extends React.Component<
   Props & { store?: AtlassianSettingLoginStore }
 > {
+
+  // if (!values.username || !values.password || !values.domain)
+  // if (values.domain.indexOf('http') !== 0)
+
+  addIntegration = async () => {
+    const { setting } = this.props.store
+    setting.values = { ...setting.values, credentials: this.props.store.values }
+    console.log(`adding integration!`, setting)
+
+    // send command to the desktop
+    this.props.store.status = Statuses.LOADING
+    const result = await Mediator.command(AtlassianSettingSaveCommand, { setting })
+
+    // update status on success of fail
+    if (result.success) {
+      this.props.store.status = Statuses.SUCCESS
+      this.props.store.error = null
+      Actions.clearPeek()
+    } else {
+      this.props.store.status = Statuses.FAIL
+      this.props.store.error = result.error
+    }
+  }
+
+  handleChange = (prop: keyof AtlassianSettingValuesCredentials) =>
+    (val: AtlassianSettingValuesCredentials[typeof prop]) => {
+      this.props.store.values = {
+        ...this.props.store.values,
+        [prop]: val,
+      }
+    }
+
   render() {
-    const { store } = this.props
+    const { values, status, error } = this.props.store
     return (
       <UI.Col padding={20}>
         <Message>
@@ -176,53 +115,37 @@ export class AtlassianSettingLogin extends React.Component<
           <UI.Col padding={[0, 10]}>
             <Views.Table>
               <Views.InputRow
+                label="Domain"
+                value={values.domain}
+                onChange={this.handleChange('domain')}
+              />
+              <Views.InputRow
                 label="Username"
-                value={store.values.username}
-                onChange={store.handleChange('username')}
+                value={values.username}
+                onChange={this.handleChange('username')}
               />
               <Views.InputRow
                 label="Password"
                 type="password"
-                value={store.values.password}
-                onChange={store.handleChange('password')}
-              />
-              <Views.InputRow
-                label="Domain"
-                value={store.values.domain}
-                onChange={store.handleChange('domain')}
+                value={values.password}
+                onChange={this.handleChange('password')}
               />
             </Views.Table>
             <Views.VertSpace />
             <UI.ListRow>
-              <UI.View flex={1}>
-                {!!store.existingSetting && (
-                  <Views.Link onClick={store.importExisting}>
-                    Import from {capitalize(store.existingSetting.type)}.
-                  </Views.Link>
-                )}
-              </UI.View>
-              <UI.Theme theme={buttonThemes[store.status] || '#4C36C4'}>
-                {!store.status ||
-                  (store.status === Statuses.FAIL && (
-                    <UI.Button onClick={store.save}>Save</UI.Button>
-                  ))}
-                {store.status === Statuses.LOADING && (
+              <UI.Theme theme={buttonThemes[status] || '#4C36C4'}>
+                {status === Statuses.LOADING && (
                   <UI.Button>Saving...</UI.Button>
                 )}
-                {store.status === Statuses.SUCCESS && (
-                  <UI.Button onClick={store.addIntegration}>
-                    Add Integration
+                {status !== Statuses.LOADING && (
+                  <UI.Button onClick={this.addIntegration}>
+                    Save
                   </UI.Button>
                 )}
               </UI.Theme>
             </UI.ListRow>
             <Views.VertSpace />
-            {store.error && <Message>{store.error}</Message>}
-            {store.status === Statuses.SUCCESS && (
-              <Message>
-                Looks good! We can login to your account successfully.
-              </Message>
-            )}
+            {error && <Message>{error}</Message>}
           </UI.Col>
         </UI.Col>
       </UI.Col>

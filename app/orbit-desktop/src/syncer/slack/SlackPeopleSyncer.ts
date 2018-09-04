@@ -1,6 +1,7 @@
 import { logger } from '@mcro/logger'
 import { Person } from '@mcro/models'
 import { SlackPersonData } from '@mcro/models'
+import { SlackSettingValues } from '@mcro/models'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
@@ -76,6 +77,7 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
     const data: SlackPersonData = {
       tz: user.tz
     }
+    const values = this.setting.values as SlackSettingValues
 
     return assign(person || new PersonEntity(), {
       setting: this.setting,
@@ -85,8 +87,8 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
       name: user.profile.real_name || user.name,
       data,
       raw: user,
-      webLink: `https://${this.setting.values.oauth.info.team.id}.slack.com/messages/${user.id}`,
-      desktopLink: `slack://user?team=${this.setting.values.oauth.info.team.id}&id=${user.id}`,
+      webLink: `https://${values.oauth.info.team.id}.slack.com/messages/${user.id}`,
+      desktopLink: `slack://user?team=${values.oauth.info.team.id}&id=${user.id}`,
       email: user.profile.email,
       photo: user.profile.image_512,
     })

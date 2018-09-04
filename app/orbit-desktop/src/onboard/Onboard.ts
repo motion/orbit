@@ -1,3 +1,4 @@
+import { GeneralSettingValues } from '@mcro/models'
 import { SettingEntity } from '../entities/SettingEntity'
 import sqlite from 'sqlite'
 import Fs from 'fs-extra'
@@ -45,8 +46,9 @@ export class Onboard {
     })
     console.log('onboard:', this.generalSetting)
     // for now always run...
-    this.generalSetting.values.hasOnboarded = false
-    if (!this.generalSetting.values.hasOnboarded) {
+    const values = this.generalSetting.values as GeneralSettingValues
+    values.hasOnboarded = false
+    if (!values.hasOnboarded) {
       await this.runOnboarding()
       // if (didRun) {
       //   this.generalSetting.values.hasOnboarded = true

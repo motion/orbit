@@ -1,5 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Bit, JiraBitData } from '@mcro/models'
+import { JiraSettingValues } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -69,7 +70,8 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     const id = `jira-${this.setting.id}-${issue.id}`
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
-    const domain = this.setting.values.atlassian.domain
+    const values = this.setting.values as JiraSettingValues
+    const domain = values.credentials.domain
     const body = SyncerUtils.stripHtml(issue.renderedFields.description)
     const cleanHtml = SyncerUtils.sanitizeHtml(issue.renderedFields.description)
 

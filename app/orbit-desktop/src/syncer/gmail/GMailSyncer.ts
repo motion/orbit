@@ -1,5 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Bit, GmailBitData, GmailBitDataParticipant, GmailPersonData, Person } from '@mcro/models'
+import { GmailSettingValues } from '@mcro/models'
 import { getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -30,7 +31,7 @@ export class GMailSyncer implements IntegrationSyncer {
       lastSyncMax,
       lastSyncFilter,
       whiteList,
-    } = this.setting.values
+    } = this.setting.values as GmailSettingValues
     if (!max) max = 50
 
     log('sync settings', {
@@ -70,7 +71,7 @@ export class GMailSyncer implements IntegrationSyncer {
         )
         addedThreads = await this.loader.loadThreads(
           max,
-          this.setting.values.filter,
+          filter,
           history.addedThreadIds,
         )
       } else {
@@ -92,7 +93,7 @@ export class GMailSyncer implements IntegrationSyncer {
         log(`no removed messages in history were found`)
       }
     } else {
-      addedThreads = await this.loader.loadThreads(max, this.setting.values.filter)
+      addedThreads = await this.loader.loadThreads(max, filter)
       historyId = addedThreads.length > 0 ? addedThreads[0].historyId : null
     }
 
@@ -130,9 +131,10 @@ export class GMailSyncer implements IntegrationSyncer {
     }
 
     // update settings
-    // this.setting.values.historyId = historyId
-    // this.setting.values.lastSyncFilter = filter
-    // this.setting.values.lastSyncMax = max
+    const values = this.setting.values as GmailSettingValues
+    values.historyId = historyId
+    values.lastSyncFilter = filter
+    values.lastSyncMax = max
     await this.setting.save()
   }
 

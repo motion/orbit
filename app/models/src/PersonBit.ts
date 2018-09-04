@@ -35,11 +35,6 @@ export interface PersonBit {
   allPhotos: IntegrationTypeValues
 
   /**
-   * Bits related to this Person.
-   */
-  bits: Bit[]
-
-  /**
    * People from integrations.
    */
   people: Person[]

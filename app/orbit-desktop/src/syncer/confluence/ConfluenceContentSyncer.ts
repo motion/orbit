@@ -1,6 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Bit, Person, ConfluenceBitData } from '@mcro/models'
-import { AtlassianService } from '@mcro/services'
+import { ConfluenceSettingValues } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -66,7 +66,8 @@ export class ConfluenceContentSyncer {
    */
   private buildBit(content: ConfluenceContent) {
 
-    const domain = this.setting.values.atlassian.domain
+    const values = this.setting.values as ConfluenceSettingValues
+    const domain = values.credentials.domain
     const id = `confluence-${this.setting.id}-${content.id}`
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()

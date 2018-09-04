@@ -1,6 +1,5 @@
 import { logger } from '@mcro/logger'
-import { Bit, Person, ConfluencePersonData } from '@mcro/models'
-import { AtlassianService } from '@mcro/services'
+import { Bit, ConfluencePersonData, ConfluenceSettingValues, Person } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
@@ -72,7 +71,8 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
    * Creates person entity from a given confluence user.
    */
   private createPerson(user: ConfluenceUser): PersonEntity {
-    const domain = this.setting.values.atlassian.domain
+    const values = this.setting.values as ConfluenceSettingValues
+    const domain = values.credentials.domain
     const id = `confluence-${this.setting.id}-${user.accountId}`
     const person = this.people.find(person => person.id === id)
     const data: ConfluencePersonData = {}

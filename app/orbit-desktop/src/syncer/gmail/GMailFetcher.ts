@@ -1,3 +1,4 @@
+import { GmailSettingValues } from '@mcro/models'
 import Strategies from '@mcro/oauth-strategies'
 import * as r2 from '@mcro/r2'
 import { logger } from '@mcro/logger'
@@ -59,7 +60,8 @@ export class GMailFetcher {
   }
 
   private async refreshToken() {
-    if (!this.setting.values.oauth.refreshToken) {
+    const values = this.setting.values as GmailSettingValues
+    if (!values.oauth.refreshToken) {
       return null
     }
     const reply = await r2.post('https://www.googleapis.com/oauth2/v4/token', {
@@ -67,7 +69,7 @@ export class GMailFetcher {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       formData: {
-        refresh_token: this.setting.values.oauth.refreshToken,
+        refresh_token: values.oauth.refreshToken,
         client_id: Strategies.gmail.config.credentials.clientID,
         client_secret: Strategies.gmail.config.credentials.clientSecret,
         grant_type: 'refresh_token',

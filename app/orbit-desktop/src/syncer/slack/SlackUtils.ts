@@ -1,3 +1,4 @@
+import { SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackMessage } from './SlackTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { Person, SlackPersonData } from '@mcro/models'
@@ -15,8 +16,9 @@ export class SlackUtils {
     channels: SlackChannel[],
     setting: SettingEntity,
   ) {
+    const values = setting.values as SlackSettingValues
     const settingChannels =
-      setting.values.channels /*|| {
+      values.channels /*|| {
       'C0Z43BNJX': true,
     }*/
 

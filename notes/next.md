@@ -1,8 +1,3 @@
-# Week of Sep 2 goal
-
-- Have a really great first deliverable app
-- Better sync, better search, fix lots of bugs
-
 # Umed Week of Sep 2
 
 - Make all syncers sync a more/better
@@ -20,24 +15,22 @@
 
 # Nate week of Sep 2
 
-- swift isnt connecting so defocus isnt working
-- better way to log errors in prod and send logs from prod app automatically
-  - log everything to /Application Support/Orbit/activity.log
-  - have a MenuItem for Report Activity...
-- searchresults - keep scroll at top of pane makes it possible to move quickly down
-- hstf5
+- fix profile peek title bug
+- make peek profile show list a lot better/cleaner
+- during onboard prompt to allow "innocent" logging to help us
+  - find a automatic analytic/logging service for desktop apps
+- fts5
+- deploy https/private.orbit.com with letsencrypt
 - Cosal merged into search and people profiles
 - Signup process that links to real in-cloud db for accounts
 - Attach account to orbit app
 - Start on settings panel
+- searchresults - keep scroll at top of pane makes it possible to move quickly down
   - Move settings over to window
     - General, Appearance
   - Ability to join Orbits
   - Ability to manage your account
-- Platform work
-  - RSS syncer ideate
-  - Generic views you can plug into stream
-  - Start on documentation for building views
+- Ask for survey notification if they use it for a few days...
 
 # September:
 
@@ -52,7 +45,6 @@
 - Community
   - Start community
     - Get a first beta build cut
-      - deploy https/private.orbit.com with letsencrypt
       - Iron out a lot of bugs and syncer issues
       - Cosal early integration for search/profiles, maybe hstf5
       - RSS Syncer
@@ -71,22 +63,6 @@
   - This should let people set up an Orbit and share the config with friends
 - Hire
   - Find someone to work on the swift OCR system
-
-# October
-
-app platform
-
-- Able to make your own "Pages/Spaces/Homescreens"
-  - By default it splits them by Location in a new Pane for each App
-  - We can also have an example of Design blogs example
-- Continue on UI kit for apps
-- Get the basic app store in place
-- If Swift contractor works out integrate some OCR
-- Prep website for private beta launch
-
-# November
-
-Private beta
 
 # next
 
@@ -125,7 +101,14 @@ Private beta
 - fix highlight index click interaction
 - fix integration buttons styling and going inactive after click
 - Finish settings panes
-- Ask for survey _after_ onboarding...
+
+- Able to make your own "Pages/Spaces/Homescreens"
+  - By default it splits them by Location in a new Pane for each App
+  - We can also have an example of Design blogs example
+- Continue on UI kit for apps
+- Get the basic app store in place
+- If Swift contractor works out integrate some OCR
+- Prep website for private beta launch
 
 ## Website signup for beta
 
@@ -148,77 +131,11 @@ Private beta
 
 ---
 
-# GameChangers
-
-## App store
-
-- Platform refactor
-- Simple p2p app deploy system
-- Improve Manage Apps pane with a few extras
-- Website / Documentation of UI components
-
-## Realtime Search
-
-## Brain
-
-- Ridiculously easy indexing
-
----
-
-# August details
-
-p2p: https://github.com/webtorrent/bittorrent-dht
-
-## September
-
-- p2p sync with real features (rate-limit, pin-to-search)
-- deploy it with 5 teams
-- alpha app store
-
-## unnecessary for beta polish bucket
-
 - cmd+z undo in search area (needs to work with toggles...)
 - peek arrow position shouldn't straddle weird borders
 - react-spring for peek placement
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
 - UI.Text not wrapping subtitlePrefix
-
-## random dev notes
-
 - hmr: doesn't store.unmount stores often
 - react: await finishRender() could be interesting
-
-# potential gamechangers
-
-- calendar
-- injest anything (instant crawler/snippets)
-- memory
-- contextual search
-- component store
-- forking apps / app store
-
-# apps
-
-home queues:
-
-...
-
-search apps:
-
-- calculator
-- local file search
-- wikipedia lookup
-- map lookup
-
-peek apps:
-
-- just needs internals + documentation
-
-component store:
-
-- https://github.com/jlfwong/speedscope
-
-later:
-
-- deploy orbit apps to a hosted instance possible eventually

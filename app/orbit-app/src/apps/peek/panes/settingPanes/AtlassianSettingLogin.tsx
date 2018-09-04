@@ -1,5 +1,9 @@
 import { react, view } from '@mcro/black'
-import { AtlassianSettingSaveCommand, AtlassianSettingValuesCredentials, Setting } from '@mcro/models'
+import {
+  AtlassianSettingSaveCommand,
+  AtlassianSettingValuesCredentials,
+  Setting,
+} from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { Actions } from '../../../../actions/Actions'
@@ -39,7 +43,6 @@ class AtlassianSettingLoginStore {
   setting = react(
     () => this.props.setting,
     async propSetting => {
-
       // if setting was sent via component props then use it
       if (propSetting) {
         this.values = propSetting.values.credentials
@@ -48,8 +51,7 @@ class AtlassianSettingLoginStore {
 
       // if setting prop was not defined then at least
       // integration type should be defined to create a new setting
-      if (!this.props.type)
-        throw new Error('No props.type')
+      if (!this.props.type) throw new Error('No props.type')
 
       // create a new empty setting
       return {
@@ -59,7 +61,6 @@ class AtlassianSettingLoginStore {
       } as Setting
     },
   )
-
 }
 
 @view.attach({
@@ -69,7 +70,6 @@ class AtlassianSettingLoginStore {
 export class AtlassianSettingLogin extends React.Component<
   Props & { store?: AtlassianSettingLoginStore }
 > {
-
   // if (!values.username || !values.password || !values.domain)
   // if (values.domain.indexOf('http') !== 0)
 
@@ -80,7 +80,9 @@ export class AtlassianSettingLogin extends React.Component<
 
     // send command to the desktop
     this.props.store.status = Statuses.LOADING
-    const result = await Mediator.command(AtlassianSettingSaveCommand, { setting })
+    const result = await Mediator.command(AtlassianSettingSaveCommand, {
+      setting,
+    })
 
     // update status on success of fail
     if (result.success) {
@@ -93,13 +95,14 @@ export class AtlassianSettingLogin extends React.Component<
     }
   }
 
-  handleChange = (prop: keyof AtlassianSettingValuesCredentials) =>
-    (val: AtlassianSettingValuesCredentials[typeof prop]) => {
-      this.props.store.values = {
-        ...this.props.store.values,
-        [prop]: val,
-      }
+  handleChange = (prop: keyof AtlassianSettingValuesCredentials) => (
+    val: AtlassianSettingValuesCredentials[typeof prop],
+  ) => {
+    this.props.store.values = {
+      ...this.props.store.values,
+      [prop]: val,
     }
+  }
 
   render() {
     const { values, status, error } = this.props.store
@@ -132,18 +135,17 @@ export class AtlassianSettingLogin extends React.Component<
               />
             </Views.Table>
             <Views.VertSpace />
-            <UI.ListRow>
-              <UI.Theme theme={buttonThemes[status] || '#4C36C4'}>
-                {status === Statuses.LOADING && (
-                  <UI.Button>Saving...</UI.Button>
-                )}
-                {status !== Statuses.LOADING && (
-                  <UI.Button onClick={this.addIntegration}>
-                    Save
-                  </UI.Button>
-                )}
-              </UI.Theme>
-            </UI.ListRow>
+            <UI.Theme
+              theme={{
+                color: '#fff',
+                background: buttonThemes[status] || '#4C36C4',
+              }}
+            >
+              {status === Statuses.LOADING && <UI.Button>Saving...</UI.Button>}
+              {status !== Statuses.LOADING && (
+                <UI.Button onClick={this.addIntegration}>Save</UI.Button>
+              )}
+            </UI.Theme>
             <Views.VertSpace />
             {error && <Message>{error}</Message>}
           </UI.Col>

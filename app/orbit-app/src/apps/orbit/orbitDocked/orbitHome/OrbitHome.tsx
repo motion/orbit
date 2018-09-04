@@ -185,7 +185,7 @@ const OrbitHomeCarouselSection = decorator(
     const isPeople = categoryName === 'People'
     return (
       <Section key={categoryName}>
-        <Row alignItems="center" padding={[10, 0, 2]}>
+        <Row alignItems="center" padding={[8, 0, 2]}>
           <SubTitle margin={0} padding={0}>
             {categoryName}
           </SubTitle>
@@ -222,6 +222,7 @@ const OrbitHomeCarouselSection = decorator(
 
 const Unpad = view({
   margin: [0, -14],
+  overflow: 'hidden',
 })
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore')

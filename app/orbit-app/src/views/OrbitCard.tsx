@@ -68,7 +68,7 @@ Card.theme = ({
   const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
   card = {
     ...card,
-    padding: padding || [9, 10],
+    padding,
     borderRadius: borderRadius || 7,
     background:
       background || theme.cardBackground || theme.background.alpha(0.9),
@@ -137,6 +137,10 @@ const orbitIconProps = {
 })
 @view
 export class OrbitCardInner extends React.Component<OrbitItemProps> {
+  static defaultProps = {
+    padding: 8,
+  }
+
   getOrbitCard = (contentProps: ResolvedItem) => {
     const {
       createdAt,

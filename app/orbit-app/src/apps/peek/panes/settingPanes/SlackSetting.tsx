@@ -37,7 +37,6 @@ const columns = {
 }
 
 const itemToRow = (index, channel, topic, isActive, onSync) => {
-  console.log('ok', channel)
   return {
     key: `${index}`,
     columns: {

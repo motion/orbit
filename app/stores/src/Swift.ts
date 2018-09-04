@@ -18,7 +18,7 @@ class SwiftStore {
 
   constructor(props = { onStateChange: _ => _ }) {
     this.onStateChange = props.onStateChange
-    this.setupLink()
+    // this.setupLink()
   }
 
   clear = () => {

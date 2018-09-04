@@ -22,7 +22,7 @@ const ListFrame = view(UI.View, {
 
 ListFrame.theme = ({ theme }) => {
   return {
-    background: theme.cardBackground || theme.background.alpha(0.5),
+    background: theme.listItemBackground || theme.background.alpha(0.5),
     margin: 5,
     marginTop: 0,
     borderRadius: 3,

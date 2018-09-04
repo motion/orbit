@@ -60,12 +60,15 @@ class SettingContent extends React.Component<
     const response = Electron.remote.dialog.showMessageBox({
       type: 'question',
       title: 'Remove integration?',
-      message: `Are you sure you want to remove ${store.setting.type}`,
-      buttons: ['Cancel', 'Ok'],
-      defaultId: 1,
-      cancelId: 0,
+      message: `Are you sure you want to remove ${capitalize(
+        store.setting.type,
+      )}?`,
+      buttons: ['Ok', 'Cancel'],
+      defaultId: 0,
+      cancelId: 1,
     })
-    if (response === 1) {
+    if (response === 0) {
+      console.log('removing', store.setting.id)
       Mediator.command(SettingRemoveCommand, {
         settingId: store.setting.id,
       })

@@ -116,11 +116,11 @@ export class Screen {
       const [x, y] = position
       const [width, height] = size
       return {
-        x: x - 10,
+        x: Math.round(x - 10),
         // mac topbar 23
-        y: y + 23 + 10,
-        width: width,
-        height: height - 30,
+        y: Math.round(y + 23 + 10),
+        width: Math.round(width),
+        height: Math.round(height - 30),
       }
     },
     async (position, { when }) => {

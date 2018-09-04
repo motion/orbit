@@ -3,7 +3,7 @@ import { view, react, ensure, on } from '@mcro/black'
 import { SettingRepository, observeOne } from '../../../../repositories'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
-import { App } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 import { ShortcutCapture } from '../../../../views/ShortcutCapture'
@@ -11,6 +11,7 @@ import { Input } from '../../../../views/Input'
 import { Button, Theme } from '@mcro/ui'
 import { SettingModel } from '@mcro/models'
 import { SearchStore } from '../../../../stores/SearchStore'
+import { showConfirmDialog } from '../../../../helpers/electron/showConfirmDialog'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -116,6 +117,17 @@ const Section = view({
 })
 @view
 export class OrbitSettings extends React.Component<Props> {
+  handleClearAllData = () => {
+    if (
+      showConfirmDialog({
+        title: 'Delete all Orbit local data?',
+        message: 'This will delete all Orbit data and restart Orbit.',
+      })
+    ) {
+      App.sendMessage(Desktop, Desktop.messages.RESET_DATA)
+    }
+  }
+
   render() {
     const { name, store } = this.props
     return (
@@ -161,6 +173,14 @@ export class OrbitSettings extends React.Component<Props> {
                   />
                 }
               />
+            </Views.FormRow>
+
+            <Views.FormRow label="Account">
+              <Theme name="orbit">
+                <Button onClick={this.handleClearAllData}>
+                  Clear all data
+                </Button>
+              </Theme>
             </Views.FormRow>
           </Section>
         )}

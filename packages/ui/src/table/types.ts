@@ -5,11 +5,13 @@
  * @format
  */
 
+export type FilterIncludeExclude = 'include' | 'exclude'
+
 export type Filter =
   | {
       key: string
       value: string
-      type: 'include' | 'exclude'
+      type: FilterIncludeExclude
       persistent?: boolean
     }
   | {

@@ -41,6 +41,7 @@ class AppStore {
     TOGGLE_PINNED: 'TOGGLE_PINNED',
     CLEAR_SELECTED: 'CLEAR_SELECTED',
     FORWARD_STATUS: 'FORWARD_STATUS',
+    NOTIFICATION: 'NOTIFICATION',
   }
 
   setState = Bridge.setState

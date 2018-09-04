@@ -17,9 +17,7 @@ import * as SettingPanes from './settingPanes'
 import { TitleBarButton } from '../views/TitleBarButton'
 import { TitleBarSpace } from '../views/TitleBarSpace'
 import { Actions } from '../../../actions/Actions'
-
-// @ts-ignore
-const Electron = electronRequire('electron')
+import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -57,17 +55,14 @@ class SettingContent extends React.Component<
 
   removeIntegration = async () => {
     const { store } = this.props
-    const response = Electron.remote.dialog.showMessageBox({
-      type: 'question',
-      title: 'Remove integration?',
-      message: `Are you sure you want to remove ${capitalize(
-        store.setting.type,
-      )}?`,
-      buttons: ['Ok', 'Cancel'],
-      defaultId: 0,
-      cancelId: 1,
-    })
-    if (response === 0) {
+    if (
+      showConfirmDialog({
+        title: 'Remove integration?',
+        message: `Are you sure you want to remove ${capitalize(
+          store.setting.type,
+        )}?`,
+      })
+    ) {
       console.log('removing', store.setting.id)
       Mediator.command(SettingRemoveCommand, {
         settingId: store.setting.id,

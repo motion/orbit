@@ -6,6 +6,7 @@ import Os from 'os'
 import { Desktop } from '@mcro/stores'
 import { findOrCreate } from '../helpers/helpers'
 import { PortForwardStore } from './PortForwardStore'
+import { GeneralSettingValues } from '@mcro/models'
 
 const chromeDbPaths = [
   Path.join(
@@ -43,7 +44,8 @@ export class Onboard {
       type: 'general',
       category: 'general',
     })
-    if (!this.generalSetting.values.hasOnboarded) {
+    const values = this.generalSetting.values as GeneralSettingValues
+    if (!values.hasOnboarded) {
       await this.scanHistory()
     }
   }

@@ -1,6 +1,9 @@
 import sqlite from 'sqlite'
 import { DATABASE_PATH } from './constants'
 import { logger } from '@mcro/logger'
+import { Desktop, Electron, App } from '@mcro/stores';
+import { CompositeDisposable } from 'event-kit';
+import { remove } from 'fs-extra';
 
 const log = logger('database')
 
@@ -15,10 +18,24 @@ const hasTable = (db: sqlite.Database, table: string) =>
 
 export class Database {
   db: sqlite.Database
+  subscriptions = new CompositeDisposable()
 
   async start() {
     this.db = await sqlite.open(DATABASE_PATH)
     this.ensureSearchTable()
+    this.watchForReset()
+  }
+
+  dispose() {
+    this.subscriptions.dispose()
+  }
+
+  private watchForReset() {
+    const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
+      await remove(DATABASE_PATH)
+      Desktop.sendMessage(App, App.messages.NOTIFICATION, JSON.stringify({ title: 'Deleted successfully!' }))
+    })
+    this.subscriptions.add({ dispose })
   }
 
   private ensureSearchTable = async () => {

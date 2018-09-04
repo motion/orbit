@@ -1,6 +1,7 @@
 import { store, react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Actions } from '../actions/Actions'
+import { showNotification } from '../helpers/electron/showNotification'
 // import orbitPosition from '../helpers/orbitPosition'
 // import { ORBIT_WIDTH } from '@mcro/constants'
 // const log = debug('AppReactions')
@@ -50,6 +51,13 @@ export class AppReactions /* extends Store */ {
           return
         case App.messages.TOGGLE_PINNED:
           App.setOrbitState({ pinned: !App.orbitState.pinned })
+          return
+        case App.messages.NOTIFICATION:
+          const val = JSON.parse(msg)
+          showNotification({
+            title: val.title,
+            message: val.message,
+          })
           return
       }
       if (msg.indexOf(App.messages.PIN) === 0) {

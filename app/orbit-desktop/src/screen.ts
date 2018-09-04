@@ -47,13 +47,14 @@ const PREVENT_SCANNING = {
 // @ts-ignore
 @store
 export class Screen {
-  subscriptions = new CompositeDisposable()
+  running = new CompositeDisposable()
   hasResolvedOCR = false
   appStateTm: any
   clearOCRTm: any
   isWatching = ''
   curAppID = ''
   curAppName = ''
+  isStarted = false
   watchSettings = { name: '', settings: {} }
   oracle = new Oracle({
     binPath: oracleBinPath,
@@ -90,7 +91,8 @@ export class Screen {
 
   updateTheme = react(
     () => (App.state.darkTheme ? 'ultra' : 'light'),
-    theme => {
+    async (theme, { when }) => {
+      await when(() => this.isStarted)
       console.log('theme', theme)
       this.oracle.themeWindow(theme)
     },
@@ -98,7 +100,8 @@ export class Screen {
 
   updateWindowVisibility = react(
     () => !!App.orbitState.docked,
-    visible => {
+    async (visible, { when }) => {
+      await when(() => this.isStarted)
       if (visible) {
         this.oracle.showWindow()
       } else {
@@ -120,7 +123,8 @@ export class Screen {
         height: height - 30,
       }
     },
-    position => {
+    async (position, { when }) => {
+      await when(() => this.isStarted)
       console.log('setting position', position)
       this.oracle.positionWindow(position)
     },
@@ -148,12 +152,12 @@ export class Screen {
     //   Desktop.messages.TOGGLE_PAUSED,
     //   this.togglePaused,
     // )
-    // this.subscriptions.add({ dispose: off1 })
+    // this.running.add({ dispose: off1 })
     const off2 = Desktop.onMessage(
       Desktop.messages.DEFOCUS_ORBIT,
       this.defocusOrbit,
     )
-    this.subscriptions.add({ dispose: off2 })
+    this.running.add({ dispose: off2 })
 
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.12')) {
@@ -164,6 +168,7 @@ export class Screen {
     this.setupOracleListeners()
     await this.oracle.start()
     this.getOracleInfo()
+    this.isStarted = true
   }
 
   defocusOrbit = () => {
@@ -447,7 +452,7 @@ export class Screen {
   }
 
   async dispose() {
-    this.subscriptions.dispose()
+    this.running.dispose()
     if (this.oracle) {
       await this.oracle.stop()
     }

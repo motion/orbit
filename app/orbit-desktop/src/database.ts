@@ -1,9 +1,9 @@
 import sqlite from 'sqlite'
 import { DATABASE_PATH } from './constants'
 import { logger } from '@mcro/logger'
-import { Desktop, Electron, App } from '@mcro/stores';
-import { CompositeDisposable } from 'event-kit';
-import { remove } from 'fs-extra';
+import { Desktop, Electron, App } from '@mcro/stores'
+import { CompositeDisposable } from 'event-kit'
+import { remove } from 'fs-extra'
 
 const log = logger('database')
 
@@ -32,8 +32,13 @@ export class Database {
 
   private watchForReset() {
     const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
+      log(`Removing all data from database at: ${DATABASE_PATH}`)
       await remove(DATABASE_PATH)
-      Desktop.sendMessage(App, App.messages.NOTIFICATION, JSON.stringify({ title: 'Deleted successfully!' }))
+      Desktop.sendMessage(
+        App,
+        App.messages.NOTIFICATION,
+        JSON.stringify({ title: 'Deleted successfully!' }),
+      )
     })
     this.subscriptions.add({ dispose })
   }

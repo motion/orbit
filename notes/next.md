@@ -1,3 +1,7 @@
+to sync with umed:
+
+- Gmail how do I know if its html or text? (i need to auto-link-links)
+
 # Umed Week of Sep 2
 
 - Make all syncers sync a more/better

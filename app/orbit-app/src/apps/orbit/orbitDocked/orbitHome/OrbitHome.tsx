@@ -13,7 +13,6 @@ import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
-import { debounce } from 'lodash'
 
 type Props = {
   name: string

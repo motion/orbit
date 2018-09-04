@@ -1,6 +1,5 @@
 import { logger } from '@mcro/logger'
-import { Bit, Person } from '@mcro/models'
-import { AtlassianService } from '@mcro/services'
+import { Bit, ConfluenceSettingValues, Person } from '@mcro/models'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { queryObjectToQueryString } from '../../utils'
 import {
@@ -21,6 +20,17 @@ export class ConfluenceLoader {
 
   constructor(setting: SettingEntity) {
     this.setting = setting
+  }
+
+  /**
+   * Sends test request to the confluence api to check settings credentials.
+   * Returns void if successful, throws an error if fails.
+   */
+  async test(): Promise<void> {
+    await this.fetch<ConfluenceCollection<ConfluenceContent>>('/wiki/rest/api/content', {
+      limit: 1,
+      start: 0,
+    })
   }
 
   /**
@@ -184,7 +194,8 @@ export class ConfluenceLoader {
     path: string,
     params?: { [key: string]: any },
   ): Promise<T> {
-    const { username, password, domain } = this.setting.values.atlassian
+    const values = this.setting.values as ConfluenceSettingValues
+    const { username, password, domain } = values.credentials
     const credentials = Buffer.from(`${username}:${password}`).toString(
       'base64',
     )

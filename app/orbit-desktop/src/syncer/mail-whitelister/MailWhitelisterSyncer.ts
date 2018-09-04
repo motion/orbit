@@ -1,5 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Person } from '@mcro/models'
+import { GmailSettingValues } from '@mcro/models'
 import { PersonBitEntity } from '../../entities/PersonBitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
@@ -39,14 +40,15 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
     // update whitelist settings in integrations
     const newWhiteListedEmails: string[] = []
     for (let integration of integrations) {
-      const currentWhitelist = integration.values.whiteList || {}
+      const values = integration.values as GmailSettingValues
+      const currentWhitelist = values.whiteList || {}
       for (let email of emails) {
         if (currentWhitelist[email] === undefined) {
           currentWhitelist[email] = true
           newWhiteListedEmails.push(email)
         }
       }
-      integration.values.whiteList = currentWhitelist
+      values.whiteList = currentWhitelist
       await integration.save()
     }
     log(`newly whitelisted emails`, newWhiteListedEmails)

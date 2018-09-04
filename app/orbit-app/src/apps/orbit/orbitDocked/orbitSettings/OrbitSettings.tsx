@@ -6,7 +6,6 @@ import * as Views from '../../../../views'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
-import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { ShortcutCapture } from '../../../../views/ShortcutCapture'
 import { Input } from '../../../../views/Input'
 import { Button, Theme } from '@mcro/ui'
@@ -68,7 +67,7 @@ class OrbitSettingsStore {
     on(
       this,
       observeOne(SettingModel, {
-        args: generalSettingQuery,
+        args: { where: { type: 'general', category: 'general' } },
       }).subscribe(value => {
         this.generalSetting = value
       }),

@@ -42,7 +42,7 @@ export class SlackService {
   dispose() {}
 
   get activeChannelIds() {
-    const settings = this.setting.values.channels
+    const settings = (this.setting.values as any).channels
     if (!settings) {
       console.log('no active channels', this.setting)
       return []

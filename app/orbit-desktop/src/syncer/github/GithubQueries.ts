@@ -23,6 +23,9 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
             id
             name
             url
+            owner {
+              login
+            }
           }
           author {
             ... on User {

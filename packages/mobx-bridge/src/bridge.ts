@@ -80,7 +80,7 @@ class Bridge {
         masterSource: 'Desktop',
         port,
         onState: (source, state) => {
-          log(`onState ${JSON.stringify(state)}`)
+          // log(`onState ${JSON.stringify(state)}`)
           this._update(stores[source].state, state)
         },
         actions: {

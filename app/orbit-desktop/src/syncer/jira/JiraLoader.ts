@@ -1,15 +1,8 @@
 import { logger } from '@mcro/logger'
-import { Bit, Person } from '@mcro/models'
-import { AtlassianService } from '@mcro/services'
+import { AtlassianSettingValuesCredentials, Bit, JiraSettingValues, Person } from '@mcro/models'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { queryObjectToQueryString } from '../../utils'
-import {
-  JiraComment,
-  JiraCommentCollection,
-  JiraIssue,
-  JiraIssueCollection,
-  JiraUser,
-} from './JiraTypes'
+import { JiraComment, JiraCommentCollection, JiraIssue, JiraIssueCollection, JiraUser } from './JiraTypes'
 
 const log = logger('syncer:jira:loader')
 
@@ -21,6 +14,18 @@ export class JiraLoader {
 
   constructor(setting: SettingEntity) {
     this.setting = setting
+  }
+
+  /**
+   * Sends test request to the jira api to check settings credentials.
+   * Returns void if successful, throws an error if fails.
+   */
+  async test(): Promise<void> {
+    await this.fetch<JiraUser[]>('/rest/api/2/user/search', {
+      maxResults: 1,
+      startAt: 0,
+      username: '_',
+    })
   }
 
   /**
@@ -112,7 +117,8 @@ export class JiraLoader {
     path: string,
     params?: { [key: string]: any },
   ): Promise<T> {
-    const { username, password, domain } = this.setting.values.atlassian
+    const values = this.setting.values as JiraSettingValues
+    const { username, password, domain } = values.credentials
     const credentials = Buffer.from(`${username}:${password}`).toString(
       'base64',
     )

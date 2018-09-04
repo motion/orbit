@@ -123,7 +123,7 @@ export default class Oauth {
     setting.token = values.token
     setting.values = {
       ...setting.values,
-      oauth: { ...values },
+      oauth: { ...values }, // todo
     }
     await setting.save()
   }

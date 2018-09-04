@@ -8,7 +8,6 @@ import { Desktop } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
-import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { Title } from '../../../../views'
@@ -165,7 +164,12 @@ class OnboardStore {
       console.log('cur frame now...')
       this.props.paneManagerStore.forceOnboard = false
       // save setting
-      const generalSetting = await generalSettingQuery()
+      const generalSetting = await SettingRepository.findOne({
+        where: {
+          type: 'general',
+          category: 'general',
+        },
+      })
       generalSetting.values.hasOnboarded = true
       await SettingRepository.save(generalSetting)
     }

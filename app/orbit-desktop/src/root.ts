@@ -14,7 +14,7 @@ import {
   SettingModel,
   SettingRemoveCommand,
 } from '@mcro/models'
-import { SettingForceSyncCommand } from '@mcro/models/_'
+import { AtlassianSettingSaveCommand, SettingForceSyncCommand } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
 import macosVersion from 'macos-version'
@@ -32,6 +32,7 @@ import { PersonEntity } from './entities/PersonEntity'
 import { SettingEntity } from './entities/SettingEntity'
 import connectModels from './helpers/connectModels'
 import { Onboard } from './onboard/Onboard'
+import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
 import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { Screen } from './Screen'
@@ -163,8 +164,18 @@ export class Root {
    */
   private registerMediatorServer() {
     this.mediatorServer = new MediatorServer({
-      models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
-      commands: [SettingRemoveCommand, SettingForceSyncCommand],
+      models: [
+        SettingModel,
+        BitModel,
+        JobModel,
+        PersonModel,
+        PersonBitModel,
+      ],
+      commands: [
+        SettingRemoveCommand,
+        SettingForceSyncCommand,
+        AtlassianSettingSaveCommand,
+      ],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,
       }),
@@ -178,11 +189,7 @@ export class Root {
         ]),
         SettingRemoveResolver,
         SettingForceSyncResolver,
-        // PostChangeCommandResolver,
-        // PostModelResolver,
-        // PostCategoriesResolver,
-        // PostModelSaveResolver,
-        // PostModelRemoveResolver,
+        AtlassianSettingSaveResolver,
       ],
     })
     this.mediatorServer.bootstrap()

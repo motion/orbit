@@ -43,3 +43,10 @@ export const observeCount: typeof Mediator.observeCount = Mediator.observeCount.
 export const observeManyAndCount: typeof Mediator.observeManyAndCount = Mediator.observeManyAndCount.bind(
   Mediator,
 )
+export const loadMany: typeof Mediator.loadMany = Mediator.loadMany.bind(
+  Mediator,
+)
+
+export const loadOne: typeof Mediator.loadOne = Mediator.loadOne.bind(
+  Mediator,
+)

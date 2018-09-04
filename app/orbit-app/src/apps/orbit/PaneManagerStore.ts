@@ -1,7 +1,6 @@
 import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionStore } from '../../stores/SelectionStore'
-import { generalSettingQuery } from '../../repositories/settingQueries'
 import { KeyboardStore } from '../../stores/KeyboardStore'
 import { Actions } from '../../actions/Actions'
 import { observeOne } from '../../repositories'
@@ -22,11 +21,11 @@ export class PaneManagerStore {
   didMount() {
     on(
       this,
-      observeOne(SettingModel, { args: generalSettingQuery }).subscribe(
-        generalSetting => {
-          this.generalSetting = generalSetting
-        },
-      ),
+      observeOne(SettingModel, {
+        args: { where: { type: 'general', category: 'general' } },
+      }).subscribe(generalSetting => {
+        this.generalSetting = generalSetting
+      }),
     )
 
     on(this, this.props.keyboardStore, 'key', key => {

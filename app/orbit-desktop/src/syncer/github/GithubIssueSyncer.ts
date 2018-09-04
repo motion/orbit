@@ -1,13 +1,16 @@
 import { logger } from '@mcro/logger'
 import { Bit, GithubBitData, Person } from '@mcro/models'
+import { GithubSettingValues } from '@mcro/models'
 import { uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
+import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SyncerUtils } from '../core/SyncerUtils'
-import { GithubIssueLoader } from './GithubIssueLoader'
+import { GithubLoader } from './GithubLoader'
 import { GithubPeopleSyncer } from './GithubPeopleSyncer'
 import { GithubIssue } from './GithubTypes'
 
@@ -15,16 +18,20 @@ const log = logger('syncer:github:issues')
 
 export class GithubIssueSyncer implements IntegrationSyncer {
   private setting: SettingEntity
+  private loader: GithubLoader
+  private bits: BitEntity[]
+  private people: PersonEntity[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
+    this.loader = new GithubLoader(setting)
   }
 
   async run() {
 
-    const createdIssues: BitEntity[] = []
-    const repoSettings = this.setting.values.repos
-    const repositoryPaths = Object.keys(repoSettings || {})
+    const allBits: BitEntity[] = []
+    const values = this.setting.values as GithubSettingValues
+    const repositoryPaths = Object.keys(values.repos || {})
 
     // if no repositories were selected in settings, we don't do anything
     if (!repositoryPaths.length) {
@@ -32,34 +39,46 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       return
     }
 
-    // load people, we need them to deal with bits
-    // note that people must be synced before this syncer's sync
-    const allPeople = await SyncerUtils.loadPeople(this.setting.id, log)
+    this.people = await SyncerUtils.loadPeople(this.setting.id, log)
+    this.bits = await getRepository(BitEntity).find({
+      settingId: this.setting.id
+    })
 
     // sync each repository
     for (let repositoryPath of repositoryPaths) {
       const [organization, repository] = repositoryPath.split('/')
-      const loader = new GithubIssueLoader(
-        organization,
-        repository,
-        this.setting.token,
-      )
-      const issues = await loader.load()
-      for (let issue of issues) {
-        createdIssues.push(await this.createIssue(issue, organization, repository, allPeople))
+      const issues = await this.loader.loadIssues(organization, repository)
+      const bits = issues.map(issue => this.createIssue(issue))
+      allBits.push(...bits)
+    }
+
+    // collect people from the bits we need to save
+    // people such as people from comments
+    const peopleFromBits: PersonEntity[] = []
+    for (let bit of allBits) {
+      for (let person of bit.people) {
+        const hasSuchPerson = peopleFromBits.find(personFromBit => {
+          return personFromBit.id === person.id
+        })
+        if (!hasSuchPerson) {
+          peopleFromBits.push(person as PersonEntity)
+        }
       }
     }
 
-    log(`created ${createdIssues.length} issues`, createdIssues)
+    // saving all the people and bits
+    log(`saving people`, peopleFromBits)
+    await getRepository(PersonEntity).save(peopleFromBits, { chunk: 100 })
+    log(`people were saved, saving their person bits`)
+    await createOrUpdatePersonBits(peopleFromBits.filter(person => person.email))
+    log(`person bits were saved, saving bits`, allBits)
+    await getRepository(BitEntity).save(allBits, { chunk: 100 })
+    log(`bits were saved`)
   }
 
-  private async createIssue(
-    issue: GithubIssue,
-    organization: string,
-    repository: string,
-    allPeople: Person[],
-  ): Promise<BitEntity> {
+  private createIssue(issue: GithubIssue): BitEntity {
 
+    const id = `github-${this.setting.id}-${issue.id}`
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
     const comments = issue.comments.edges.map(edge => edge.node)
@@ -71,30 +90,28 @@ export class GithubIssueSyncer implements IntegrationSyncer {
 
     const people: Person[] = []
     for (let githubPerson of githubPeople) {
-      people.push(await GithubPeopleSyncer.createPerson(this.setting, githubPerson))
+      people.push(GithubPeopleSyncer.createPerson(this.setting, githubPerson, this.people))
     }
 
     const data: GithubBitData = {
       body: issue.body,
       comments: issue.comments.edges.map(edge => {
+        // note: if user is removed on a github comment will have author set to "null"
         return {
-          author: {
+          author: edge.node.author ? {
             avatarUrl: edge.node.author.avatarUrl,
             login: edge.node.author.login,
-          },
+          } : undefined,
           createdAt: edge.node.createdAt,
           body: edge.node.body,
         }
       }),
     }
 
-    const id = `github-${this.setting.id}-${issue.id}`
-    let bit = await getRepository(BitEntity).findOne(id)
-    if (!bit) bit = new BitEntity()
-
-    assign(bit, {
+    const bit = this.bits.find(bit => bit.id === id)
+    return assign(bit || new BitEntity(), {
       id,
-      setting: this.setting,
+      settingId: this.setting.id,
       integration: 'github',
       type: 'task',
       title: issue.title,
@@ -112,7 +129,5 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       bitUpdatedAt: updatedAt,
       people: people,
     })
-
-    return getRepository(BitEntity).save(bit)
   }
 }

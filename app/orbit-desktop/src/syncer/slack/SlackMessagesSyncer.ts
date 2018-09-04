@@ -1,5 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Bit, Person, PersonBit, SlackBitData } from '@mcro/models'
+import { SlackSettingValues } from '@mcro/models'
 import * as _ from 'lodash'
 import { getRepository, MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
@@ -55,7 +56,8 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
     log(`filtering only selected channels`, activeChannels)
 
     // go through all channels
-    const lastMessageSync = this.setting.values.lastMessageSync || {}
+    const values = this.setting.values as SlackSettingValues
+    const lastMessageSync = values.lastMessageSync || {}
     const updatedBits: Bit[] = [],
       removedBits: Bit[] = []
 
@@ -134,7 +136,7 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
 
     // update settings
     log(`updating settings`, { lastMessageSync })
-    this.setting.values.lastMessageSync = lastMessageSync
+    values.lastMessageSync = lastMessageSync
     await getRepository(SettingEntity).save(this.setting)
   }
 
@@ -181,7 +183,8 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
     const id = 'slack' + this.setting.id + '_' + channel.id + '_' + firstMessage.ts
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
-    const team = this.setting.values.oauth.info.team
+    const values = this.setting.values as SlackSettingValues
+    const team = values.oauth.info.team
     const webLink = `https://${team.domain}.slack.com/archives/${channel.id}/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${team.id}`
     const body = SlackUtils.buildBitBody(messages, allPeople)

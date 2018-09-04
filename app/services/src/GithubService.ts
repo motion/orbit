@@ -19,7 +19,7 @@ export class GithubService {
 
   get activeRepos() {
     if (!this.setting) return
-    return this.setting.values.repos
+    return (this.setting.values as any).repos
   }
 
   get activeOrgs() {

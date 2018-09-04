@@ -1,3 +1,4 @@
+import { GmailSettingValues } from '@mcro/models'
 import { getManager, getRepository } from 'typeorm'
 import { BitEntity } from '../entities/BitEntity'
 import { PersonEntity } from '../entities/PersonEntity'
@@ -25,9 +26,10 @@ export class GMailManager {
     log(`people were removed`)
 
     // reset settings
-    setting.values.historyId = null
-    setting.values.lastSyncFilter = null
-    setting.values.lastSyncMax = null
+    const values = setting.values as GmailSettingValues
+    values.historyId = null
+    values.lastSyncFilter = null
+    values.lastSyncMax = null
     await getRepository(SettingEntity).save(setting)
   }
 

@@ -1,3 +1,4 @@
+import { GDriveSettingValues } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
@@ -95,7 +96,8 @@ export class GDriveFetcher {
    * todo: its a setting responsibility to control its access token state
    */
   private async refreshToken(setting: SettingEntity) {
-    if (!setting.values.oauth.refreshToken) {
+    const values = setting.values as GDriveSettingValues
+    if (!values.oauth.refreshToken) {
       return null
     }
     const reply = await r2.post('https://www.googleapis.com/oauth2/v4/token', {
@@ -103,7 +105,7 @@ export class GDriveFetcher {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       formData: {
-        refresh_token: setting.values.oauth.refreshToken,
+        refresh_token: values.oauth.refreshToken,
         client_id: Strategies.gmail.config.credentials.clientID,
         client_secret: Strategies.gmail.config.credentials.clientSecret,
         grant_type: 'refresh_token',

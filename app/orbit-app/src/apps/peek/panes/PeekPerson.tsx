@@ -1,14 +1,15 @@
 import { view } from '@mcro/black'
-import { PersonBit } from '@mcro/models'
-import { SlackPersonData } from '@mcro/models'
+import { Subscription } from '@mcro/mediator'
+import { Bit, BitModel, PersonBit, SlackPersonData } from '@mcro/models'
 import * as React from 'react'
+import { Actions } from '../../../actions/Actions'
 import { Carousel } from '../../../components/Carousel'
+import { loadMany } from '../../../repositories'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton, SubTitle } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
-import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitListItem } from '../../../views/OrbitListItem'
-import { Actions } from '../../../actions/Actions'
+import { PeekPaneProps } from '../PeekPaneProps'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
@@ -144,6 +145,25 @@ export class PeekPerson extends React.Component<
     integrationSettingsStore: IntegrationSettingsStore
   }
 > {
+
+  state: { bits: Bit[] } = {}
+  async componentDidMount() {
+
+    const person = this.props.model as PersonBit
+    this.setState({ bits: await loadMany(BitModel, {
+      args: {
+        where: {
+          people: {
+            personBit: {
+              email: person.email
+            }
+          }
+        },
+        take: 100
+      },
+    })});
+  }
+
   render() {
     const { integrationSettingsStore, model, children } = this.props
     const person = model as PersonBit
@@ -230,7 +250,7 @@ export class PeekPerson extends React.Component<
 
               <Section>
                 <StrongSubTitle>Recently</StrongSubTitle>
-                {(person.bits || []).slice(0, 30).map(bit => {
+                {(this.state.bits || []).slice(0, 30).map(bit => {
                   return (
                     <OrbitListItem
                       key={bit.id}

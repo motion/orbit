@@ -1,9 +1,9 @@
 import { store } from '@mcro/black'
+import { GeneralSettingValues } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
 import { logger } from '@mcro/logger'
-import * as Path from 'path'
 import { getGlobalConfig } from '@mcro/config'
 
 const Config = getGlobalConfig()
@@ -44,7 +44,8 @@ export class GeneralSettingManager {
   }
 
   ensureDefaultSettings = async setting => {
-    if (Object.keys(setting.values).length) {
+    const values = setting.values as GeneralSettingValues
+    if (Object.keys(values).length) {
       return
     }
     log('New setting, set defaults...')
@@ -53,7 +54,7 @@ export class GeneralSettingManager {
       autoLaunch: true,
       autoUpdate: true,
       darkTheme: true,
-    }
+    } as GeneralSettingValues
     await setting.save()
   }
 
@@ -63,7 +64,8 @@ export class GeneralSettingManager {
       return
     }
     const isEnabled = this.autoLaunch.isEnabled()
-    if (setting.values.autoLaunch) {
+    const values = setting.values as GeneralSettingValues
+    if (values.autoLaunch) {
       if (!isEnabled) {
         this.autoLaunch.enable()
       }

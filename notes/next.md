@@ -20,6 +20,7 @@
 
 # Nate week of Sep 2
 
+- swift isnt connecting so defocus isnt working
 - better way to log errors in prod and send logs from prod app automatically
   - log everything to /Application Support/Orbit/activity.log
   - have a MenuItem for Report Activity...

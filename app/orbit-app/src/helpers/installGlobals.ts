@@ -10,6 +10,7 @@ import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
 import * as Repositories from '../repositories'
 import { Logger } from '@mcro/logger'
+import { getGlobalConfig } from '@mcro/config'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -32,7 +33,7 @@ const recrusiveMobxToJS = obj => {
 window['React'] = React
 window['Constants'] = Constants
 window['Mobx'] = Mobx
-window['Constants'] = Constants
+window['Config'] = getGlobalConfig()
 window['log'] = Black.log
 window['Black'] = Black
 window['r2'] = r2

@@ -4,10 +4,10 @@ import { view, react } from '@mcro/black'
 import { BitRepository, SettingRepository } from '../../../../repositories'
 import { Bits } from '../../../../views/Bits'
 import { TimeAgo } from '../../../../views/TimeAgo'
-import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
+import { flatten } from 'lodash'
 
 const columnSizes = {
   repo: 'flex',
@@ -77,7 +77,7 @@ class GithubSettingStore {
 
   allRepos = react(
     async () => {
-      return _.flatten(
+      return flatten(
         await Promise.all(
           this.orgsList.map(async org => {
             return await this.service.github
@@ -144,7 +144,6 @@ class GithubSettingStore {
         [fullName]: e.target.checked,
       },
     }
-    // await this.setting.save()
     SettingRepository.save(this.setting)
   }
 

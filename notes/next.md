@@ -42,13 +42,12 @@
 
 - Rate limits may be per-token so we may not need fancy p2p stuff (or not yet)
 - Contacts
-  - Reach out to stuart for meeting Workday
-  - Convince tstuart to do Swindler and get on video call to discuss OCR
+  - Reach out to charlie post burn (Wed)
+  - Reach out to stuart for meeting Workday after
   - Give Karthik (SpaceX) demo app to use:
     - Requirements:
       - Add in basic Cosal search
       - Add in basic topic modeling for people
-  - Reply to Andy properly, give update
 - Community
   - Start community
     - Get a first beta build cut

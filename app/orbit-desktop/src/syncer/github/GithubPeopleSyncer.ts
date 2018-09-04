@@ -47,10 +47,13 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     const allPeople: PersonEntity[] = []
     for (let organization of organizations) {
       const apiPeople = await this.loader.loadPeople(organization)
-      const people = apiPeople.map(apiPerson => {
-        return GithubPeopleSyncer.createPerson(this.setting, apiPerson, existPeople)
-      })
-      allPeople.push(...people)
+      for (let apiPerson of apiPeople) {
+        const person = GithubPeopleSyncer.createPerson(this.setting, apiPerson, existPeople)
+        const hasSuchPerson = allPeople.some(allPerson => allPerson.id === person.id)
+        if (!hasSuchPerson) {
+          allPeople.push(person)
+        }
+      }
     }
 
     // save entities we got

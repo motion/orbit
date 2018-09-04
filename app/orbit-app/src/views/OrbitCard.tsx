@@ -42,10 +42,6 @@ const Card = view({
 })
 
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-// 90b1e433
-// 90b1e4cc
-const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
-const borderSelected = '#90b1e4ee'
 
 Card.theme = ({
   borderRadius,
@@ -87,10 +83,10 @@ Card.theme = ({
   } else {
     card = {
       ...card,
-      boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
-      border: [1, borderSelected],
+      boxShadow: disabledShadow || [cardShadow, theme.shadowSelected],
+      border: [1, theme.borderSelected],
       '&:hover': {
-        border: [1, borderSelected],
+        border: [1, theme.borderSelected],
       },
     }
   }

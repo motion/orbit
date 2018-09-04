@@ -11,6 +11,9 @@ const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
 const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 const macTheme = Theme.colorize({
+  shadowSelected: [0, 0, 0, 3, '#90b1e433'],
+  borderSelected: '#90b1e4ee',
+
   white: '#fff',
   light02: '#f6f7f9', // Light 02 – Modal Headers & Nav - Modal headers and navigation elements that sit above primary UI
   light05: '#e9ebee', // Light 05 – Mobile & Desktop Wash - Background wash color for desktop and mobile
@@ -59,6 +62,7 @@ export const themes = {
   dark: {
     ...macTheme,
     listItemBackground: 'transparent',
+    listItemBackgroundSelected: [60, 60, 60, 0.2],
     cardBackground: [60, 60, 60, 0.2],
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardBorderColor: [255, 255, 255, 0.07],

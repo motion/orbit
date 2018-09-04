@@ -147,18 +147,18 @@ class OrbitHomeStore {
 
       const disposers = []
 
+      console.log('setting up observers...', this.allCarousels)
+
       for (const { id, name, model, query } of this.allCarousels) {
         const subscription = observeMany(model, {
           args: query,
-        }).subscribe(
-          debounce(values => {
-            console.log('update model data', name, values)
-            this.carouselData = {
-              ...this.carouselData,
-              [id]: values,
-            }
-          }, 100),
-        )
+        }).subscribe(values => {
+          console.log('update model data', name, values)
+          this.carouselData = {
+            ...this.carouselData,
+            [id]: values,
+          }
+        })
 
         disposers.push(() => subscription.unsubscribe())
       }

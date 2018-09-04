@@ -2,12 +2,10 @@ import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { generalSettingQuery } from '../../repositories/settingQueries'
-import { modelQueryReaction } from '../../repositories/modelQueryReaction'
 import { KeyboardStore } from '../../stores/KeyboardStore'
 import { Actions } from '../../actions/Actions'
-
-// filters = ['all', 'general', 'status', 'showoff']
-// panes = [...this.mainPanes, ...this.filters]
+import { observeOne } from '../../repositories'
+import { SettingModel } from '@mcro/models'
 
 export class PaneManagerStore {
   props: {
@@ -17,8 +15,20 @@ export class PaneManagerStore {
 
   panes = ['home', 'directory', 'apps', 'settings']
   paneIndex = 0
+  forceOnboard = null
+  hasOnboarded = true
+  generalSetting = null
 
-  willMount() {
+  didMount() {
+    on(
+      this,
+      observeOne(SettingModel, { args: generalSettingQuery }).subscribe(
+        generalSetting => {
+          this.generalSetting = generalSetting
+        },
+      ),
+    )
+
     on(this, this.props.keyboardStore, 'key', key => {
       if (!App.orbitState.inputFocused) {
         return
@@ -113,13 +123,6 @@ export class PaneManagerStore {
   get activePaneFast() {
     return this.panes[this.paneIndex]
   }
-
-  forceOnboard = null
-
-  hasOnboarded = modelQueryReaction(
-    generalSettingQuery,
-    setting => setting.values.hasOnboarded,
-  )
 
   get shouldOnboard() {
     if (typeof this.forceOnboard === 'boolean') {

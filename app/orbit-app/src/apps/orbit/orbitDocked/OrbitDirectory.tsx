@@ -1,19 +1,18 @@
 import * as React from 'react'
 import { App } from '@mcro/stores'
 import { view, react, ensure } from '@mcro/black'
-import { compose } from '@mcro/helpers'
-import { PersonBitRepository } from '../../../repositories'
+import { compose, on } from '@mcro/helpers'
+import { observeMany } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
 import { Title, VerticalSpace, SmallVerticalSpace } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
-import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
 import { SelectionStore } from '../../../stores/SelectionStore'
-import { PersonBit } from '../../../../../models/src'
+import { PersonBitModel } from '@mcro/models'
 
 const height = 60
 
@@ -26,6 +25,19 @@ type Props = {
 
 class OrbitDirectoryStore {
   props: Props
+  allPeople = []
+
+  didMount() {
+    // TODO make this pause when pane is not active
+    const allPeople$ = observeMany(PersonBitModel).subscribe(people => {
+      if (!people) return
+      const sorted = sortBy(people.filter(x => !!x.name), x =>
+        x.name.toLowerCase(),
+      )
+      this.allPeople = sorted
+    })
+    on(this, allPeople$)
+  }
 
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
@@ -73,23 +85,6 @@ class OrbitDirectoryStore {
     { defaultValue: [] },
   )
 
-  allPeople = modelQueryReaction(
-    () =>
-      PersonBitRepository.find({
-        take: 4000,
-        // where: { name: { $not: null } /* , photo: { $not: null } */ },
-      }),
-    people => {
-      if (!this.isActive && this.allPeople.length) {
-        throw react.cancel
-      }
-      return sortBy(people.filter(x => !!x.name), x => x.name.toLowerCase())
-    },
-    {
-      defaultValue: [],
-    },
-  )
-
   getIndex = item => {
     return this.results.findIndex(x => x.email === item.email)
   }
@@ -110,28 +105,34 @@ export const OrbitDirectory = decorator((props: Props) => {
   )
 })
 
+const DirectoryPersonCard = props => (
+  <OrbitCard
+    inGrid
+    pane="docked"
+    subPane="directory"
+    titleProps={{
+      ellipse: true,
+    }}
+    hide={{
+      icon: true,
+    }}
+    style={{
+      height,
+    }}
+    {...props}
+  />
+)
+
 const createSection = (people: PersonBit[], letter, getIndex) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
-      <Grid columnWidth={140} gridAutoRows={height}>
+      <Grid gridAutoRows={height}>
         {people.map(person => (
-          <OrbitCard
+          <DirectoryPersonCard
             key={person.email}
-            inGrid
-            pane="docked"
-            subPane="directory"
             getIndex={getIndex}
             model={person}
-            titleProps={{
-              ellipse: true,
-            }}
-            hide={{
-              icon: true,
-            }}
-            style={{
-              height,
-            }}
           />
         ))}
       </Grid>
@@ -149,23 +150,14 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   console.log('rendering directory...')
   let sections
   // not that many, show without sections
-  if (total < 10) {
+  if (total < 20) {
     sections = (
       <Grid gridAutoRows={height}>
         {results.map((person, index) => (
-          <OrbitCard
+          <DirectoryPersonCard
             key={person.email}
-            inGrid
-            pane="docked"
-            subPane="directory"
             index={index}
             model={person}
-            hide={{
-              icon: true,
-            }}
-            style={{
-              height,
-            }}
           />
         ))}
       </Grid>

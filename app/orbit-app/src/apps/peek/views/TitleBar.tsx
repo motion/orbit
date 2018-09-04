@@ -12,6 +12,7 @@ export const TitleBar = ({ children, after, ...props }) => (
 
 const TitleBarContain = view(View, {
   flex: 1,
+  overflow: 'hidden',
   height: 27,
   maxWidth: '100%',
   position: 'relative',

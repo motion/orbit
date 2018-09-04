@@ -1,17 +1,17 @@
 import * as React from 'react'
-import { view, react, ensure } from '@mcro/black'
-import { SettingRepository } from '../../../../repositories'
+import { view, react, ensure, on } from '@mcro/black'
+import { SettingRepository, observeOne } from '../../../../repositories'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
-import { SearchStore } from '../../../../stores/SelectionStore'
-import { modelQueryReaction } from '../../../../repositories/modelQueryReaction'
 import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { ShortcutCapture } from '../../../../views/ShortcutCapture'
 import { Input } from '../../../../views/Input'
 import { Button, Theme } from '@mcro/ui'
+import { SettingModel } from '@mcro/models'
+import { SearchStore } from '../../../../stores/SearchStore'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -62,8 +62,18 @@ class OrbitSettingsStore {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  _generalSettingUpdate = Date.now()
-  _generalSetting = modelQueryReaction(generalSettingQuery)
+  generalSetting = null
+
+  didMount() {
+    on(
+      this,
+      observeOne(SettingModel, {
+        args: generalSettingQuery,
+      }).subscribe(value => {
+        this.generalSetting = value
+      }),
+    )
+  }
 
   settingSetup = react(
     () => this.generalSetting,
@@ -73,16 +83,10 @@ class OrbitSettingsStore {
     },
   )
 
-  get generalSetting() {
-    this._generalSettingUpdate
-    return this._generalSetting
-  }
-
   generalChange = prop => val => {
     console.log('handleChange', prop, val)
     this.generalSetting.values[prop] = val
     SettingRepository.save(this.generalSetting)
-    this._generalSettingUpdate = Date.now()
   }
 
   changeTheme = val => {

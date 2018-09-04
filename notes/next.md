@@ -20,11 +20,23 @@
 
 # Nate week of Sep 2
 
+- better way to log errors in prod and send logs from prod app automatically
+  - log everything to /Application Support/Orbit/activity.log
+  - have a MenuItem for Report Activity...
 - searchresults - keep scroll at top of pane makes it possible to move quickly down
 - hstf5
 - Cosal merged into search and people profiles
 - Signup process that links to real in-cloud db for accounts
 - Attach account to orbit app
+- Start on settings panel
+  - Move settings over to window
+    - General, Appearance
+  - Ability to join Orbits
+  - Ability to manage your account
+- Platform work
+  - RSS syncer ideate
+  - Generic views you can plug into stream
+  - Start on documentation for building views
 
 # September:
 

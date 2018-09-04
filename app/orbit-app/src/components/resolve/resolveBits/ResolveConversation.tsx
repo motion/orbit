@@ -49,12 +49,13 @@ export const ResolveConversation = ({
         ),
       ) as any) // todo(nate) please fix type error and remove "as any"
     : null
+  const title = `${arrford(
+    keywordExtract.extract(bit.body, options).slice(0, 3),
+  ) || ''}`.replace('```', '')
   return children({
     id: bit.id,
     type: 'bit',
-    title: arrford(
-      keywordExtract.extract(bit.body, options).slice(0, 3),
-    ).replace('```', ''),
+    title,
     people: bit.people,
     preview: keywordExtract
       .extract(bit.body, options)

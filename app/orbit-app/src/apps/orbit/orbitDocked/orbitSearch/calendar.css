@@ -21,8 +21,8 @@
 
 .rdrDateDisplayItem input {
   cursor: pointer;
-  height: 2.5em;
-  line-height: 2.5em;
+  height: 2em;
+  line-height: 2em;
   border: 0px;
   background: transparent;
   width: 100%;
@@ -136,7 +136,7 @@
 
 .rdrWeekDay {
   font-weight: 300;
-  line-height: 2.667em;
+  line-height: 2.267em;
   color: rgb(132, 144, 149);
 }
 
@@ -149,7 +149,7 @@
   border: 0;
   padding: 0;
   line-height: 3em;
-  height: 2.5em;
+  height: 2.3em;
   text-align: center;
   color: #fff;
 }
@@ -166,8 +166,8 @@
   right: 0;
   top: 0;
   bottom: 0;
-  top: 5px;
-  bottom: 5px;
+  top: 2px;
+  bottom: 2px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

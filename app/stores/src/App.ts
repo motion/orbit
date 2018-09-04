@@ -9,6 +9,13 @@ export let App = null as AppStore
 const isBrowser = typeof window !== 'undefined'
 const isOrbit = isBrowser && window.location.pathname === '/orbit'
 
+type AppState = {
+  id: number
+  appConfig: AppConfig
+  size: number[]
+  position: number[]
+}
+
 // @ts-ignore
 @store
 class AppStore {
@@ -17,6 +24,7 @@ class AppStore {
   orbitState: AppStore['state']['orbitState']
   peekState: AppStore['state']['peekState']
   authState: AppStore['state']['authState']
+  appsState: AppStore['state']['appsState']
   setOrbitState: Function
   setPeekState: Function
   setAuthState: Function
@@ -65,6 +73,7 @@ class AppStore {
       position: [0, 0],
       size: [0, 0],
     },
+    appsState: [] as AppState[],
     authState: {
       openId: null,
       closeId: null,

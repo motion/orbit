@@ -1,16 +1,12 @@
 import { createConnection } from 'typeorm'
-import * as Path from 'path'
-import { getGlobalConfig } from '@mcro/config'
-
-const Config = getGlobalConfig()
-const env = process.env.NODE_ENV !== 'development' ? 'orbit' : 'dev'
+import { DATABASE_PATH } from '../constants'
 
 export default async function connectModels(models) {
   try {
     return await createConnection({
       name: 'default',
       type: 'sqlite',
-      database: Path.join(Config.paths.userData, `${env}_database.sqlite`),
+      database: DATABASE_PATH,
       // location: 'default',
       entities: models,
       logging: ['error'],

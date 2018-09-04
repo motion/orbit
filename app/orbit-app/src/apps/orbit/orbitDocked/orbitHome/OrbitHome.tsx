@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { view, react, compose, ensure, deep } from '@mcro/black'
-import { Mediator } from '../../../../repositories'
+import { view, react, compose, ensure } from '@mcro/black'
+import { observeMany } from '../../../../repositories'
 import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -148,7 +148,7 @@ class OrbitHomeStore {
       const disposers = []
 
       for (const { id, name, model, query } of this.allCarousels) {
-        const subscription = Mediator.observeMany(model, {
+        const subscription = observeMany(model, {
           args: query,
         }).subscribe(
           debounce(values => {

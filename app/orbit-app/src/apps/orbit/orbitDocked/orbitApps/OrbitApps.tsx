@@ -2,7 +2,7 @@ import { ensure, react, view } from '@mcro/black'
 import { Subscription } from '@mcro/mediator'
 import { IntegrationType, Setting, SettingModel } from '@mcro/models'
 import * as React from 'react'
-import { Mediator } from '../../../../repositories'
+import { observeMany } from '../../../../repositories'
 import { OrbitAppCard } from './OrbitAppCard'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
@@ -97,7 +97,7 @@ export class OrbitApps extends React.Component<Props> {
   subscription: Subscription
 
   componentDidMount() {
-    this.subscription = Mediator.observeMany(SettingModel, {
+    this.subscription = observeMany(SettingModel, {
       args: {
         where: { category: 'integration' },
       },

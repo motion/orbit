@@ -60,8 +60,8 @@
 }
 
 #app code {
-  line-height: 15px;
-  border-radius: 3px;
+  line-height: 16px;
+  border-radius: 5px;
   white-space: pre;
   overflow: scroll;
 }
@@ -79,7 +79,7 @@
 
 #app pre code {
   padding: 10px;
-  margin: 10px -5px;
+  margin: 10px 0;
   border-radius: 3px;
   white-space: pre;
   overflow-x: scroll;
@@ -95,10 +95,6 @@ a.anchor {
   display: none;
 }
 
-.markdown {
-  user-select: auto;
-}
-
 .markdown p img,
 .markdown li img {
   max-width: 100%;
@@ -112,6 +108,8 @@ a.anchor {
 
 .markdown {
   line-height: 1.15rem;
+  user-select: auto;
+  font-size: 14px;
 }
 
 .markdown ul,

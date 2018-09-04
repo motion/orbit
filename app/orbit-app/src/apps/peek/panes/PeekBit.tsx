@@ -46,8 +46,6 @@ BottomFloat.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.background} 50%)`,
 })
 
-const HeadSide = view(View)
-
 type PeekItemResolverExtraProps = {
   itemProps?: Object
 }

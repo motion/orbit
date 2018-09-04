@@ -26,7 +26,7 @@ SearchFilterBar.theme = ({ theme }) => ({
 
 const ExtraFilters = view(UI.View, {
   width: '100%',
-  padding: [20, 0],
+  padding: [12, 0],
   opacity: 0,
   transition: 'all ease 50ms',
   visible: {

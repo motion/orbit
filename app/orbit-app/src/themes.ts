@@ -58,7 +58,7 @@ export const themes = {
   }),
   dark: {
     ...macTheme,
-    cardBackground: [80, 80, 80, 0.2],
+    cardBackground: [40, 40, 40, 0.75],
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardBorderColor: [255, 255, 255, 0.07],
     ...Theme.fromStyles({

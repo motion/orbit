@@ -12,10 +12,10 @@ const SHADOW_PAD = 85
 
 const transitions = store => {
   if (store.isHidden) return 'none'
-  if (store.tornState) return 'all linear 10ms'
-  if (store.willHide) return 'all ease 100ms'
-  if (store.willStayShown) return 'all ease 60ms'
-  return 'all ease 100ms'
+  if (store.tornState) return 'transform linear 10ms'
+  if (store.willHide) return 'transform ease 100ms'
+  if (store.willStayShown) return 'transform ease 60ms'
+  return 'transform ease 100ms'
 }
 
 const PeekFrameBorder = view(UI.View, {
@@ -48,10 +48,13 @@ const decorator = compose(
 )
 
 const PeekFrameContainer = view(UI.View, {
+  // alignItems: 'flex-end',
   position: 'absolute',
   right: 0,
   zIndex: 2,
 })
+
+let dragAt = Date.now()
 
 const handleResize = (_, { size }) => {
   App.setPeekState({ size: [size.width, size.height] })
@@ -92,13 +95,14 @@ export const PeekFrame = decorator(
         onResize={handleResize}
         style={{
           zIndex: 2,
+          // keep size/positionX linked to be fast...
           width: size[0],
           height: size[1],
+          left: App.peekState.position[0],
+          // ...but have the positionY animate nicely
+          transform: `translateX(0px) translateY(${framePosition[1]}px)`,
           transition,
           opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
-          transform: `translateX(${framePosition[0]}px) translateY(${
-            framePosition[1]
-          }px)`,
         }}
       >
         <PeekFrameContainer

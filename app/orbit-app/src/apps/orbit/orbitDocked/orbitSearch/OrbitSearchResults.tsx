@@ -174,7 +174,7 @@ const OrbitSearchResultsContents = view(
     return (
       <OrbitSearchResultsFrame
         style={{
-          opacity: isChanging ? 0.3 : 1,
+          opacity: isChanging ? 0.7 : 1,
         }}
       >
         {!!message && <div>{message}</div>}

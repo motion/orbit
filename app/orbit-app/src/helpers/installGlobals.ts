@@ -4,7 +4,7 @@ import * as Constants from '../constants'
 import * as Black from '@mcro/black'
 import r2 from '@mcro/r2'
 import * as Helpers from '../helpers'
-import { App, Desktop, Swift, Electron } from '@mcro/stores'
+import { App, Desktop, Electron } from '@mcro/stores'
 import { start } from '../start'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
@@ -41,7 +41,6 @@ window['Helpers'] = Helpers
 window['App'] = App
 window['Desktop'] = Desktop
 window['Electron'] = Electron
-window['Swift'] = Swift
 window['render'] = start
 window['color'] = color
 window['dateFns'] = dateFns

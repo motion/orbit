@@ -6,6 +6,7 @@ import Os from 'os'
 import { Desktop } from '@mcro/stores'
 import { findOrCreate } from '../helpers/helpers'
 import { PortForwardStore } from './PortForwardStore'
+import { generalSettingQuery } from '@mcro/models';
 
 const chromeDbPaths = [
   Path.join(
@@ -39,24 +40,10 @@ export class Onboard {
   }
 
   async start() {
-    this.generalSetting = await findOrCreate(SettingEntity, {
-      type: 'general',
-      category: 'general',
-    })
-    console.log('onboard:', this.generalSetting)
-    // for now always run...
-    this.generalSetting.values.hasOnboarded = false
+    this.generalSetting = await findOrCreate(SettingEntity, generalSettingQuery.where)
     if (!this.generalSetting.values.hasOnboarded) {
-      await this.runOnboarding()
-      // if (didRun) {
-      //   this.generalSetting.values.hasOnboarded = true
-      //   await this.generalSetting.save()
-      // }
+      await this.scanHistory()
     }
-  }
-
-  async runOnboarding() {
-    this.scanHistory()
   }
 
   async scanHistory() {

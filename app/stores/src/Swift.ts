@@ -48,7 +48,7 @@ class SwiftStore {
 
   private setupLink() {
     this.ws = new ReconnectingWebSocket(
-      `ws://localhost:${getGlobalConfig().ports.oracleBridge}`,
+      `ws://localhost:${getGlobalConfig().ports.swift}`,
       undefined,
       {
         constructor: WebSocket,

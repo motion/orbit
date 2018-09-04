@@ -101,6 +101,10 @@ a.anchor {
   user-select: none;
 }
 
+.theme-dark .markdown a {
+  color: #a3b7d0;
+}
+
 .markdown a {
   color: #2a78de;
   text-decoration: underline;

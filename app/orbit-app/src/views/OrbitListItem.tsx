@@ -129,7 +129,7 @@ const Bottom = view({
 @view
 export class OrbitListInner extends React.Component<OrbitItemProps> {
   static defaultProps = {
-    padding: [8, 12],
+    padding: [6, 10],
   }
 
   getInner = (contentProps: ResolvedItem) => {

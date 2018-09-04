@@ -90,6 +90,7 @@ export class Root {
     this.registerMediatorServer()
 
     this.databaseManager = new DatabaseManager()
+    this.databaseManager.start()
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...

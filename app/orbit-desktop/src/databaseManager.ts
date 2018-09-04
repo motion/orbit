@@ -4,6 +4,7 @@ import { logger } from '@mcro/logger'
 import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
+import { sleep } from './helpers'
 
 const log = logger('database')
 
@@ -37,8 +38,13 @@ export class DatabaseManager {
       Desktop.sendMessage(
         App,
         App.messages.NOTIFICATION,
-        JSON.stringify({ title: 'Deleted successfully!' }),
+        JSON.stringify({
+          title: 'Deleted successfully!',
+          message: 'Restarting...',
+        }),
       )
+      await sleep(500)
+      Desktop.sendMessage(Electron, Electron.messages.RESTART)
     })
     this.subscriptions.add({ dispose })
   }

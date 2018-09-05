@@ -25,7 +25,7 @@ type Props = {
 
 const Highlight = view({
   userSelect: 'auto',
-  display: 'inline-block',
+  display: 'block',
   lineHeight: 18.5,
   fontSize: 14,
   padding: [2, 6, 2, 10],

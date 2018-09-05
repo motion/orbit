@@ -9,7 +9,7 @@ import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const bitResolverProps = {
   itemProps: {
-    padding: [4, 6],
+    padding: [1, 6],
     '&:hover': {
       background: [0, 0, 0, 0.02],
     },

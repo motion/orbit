@@ -14,13 +14,29 @@ type PartialPeekState = { target: PeekTarget } & Partial<
   typeof App.state.peekState
 >
 
+// using this ensures it clears old properties
+// because App.setState merges not replaces
+const DEFAULT_APP_CONFIG: AppConfig = {
+  id: '',
+  type: '',
+  config: null,
+  body: '',
+  title: '',
+  icon: '',
+  subType: '',
+  integration: '',
+}
+
 export function setPeekApp(item: PersonBit | Bit, target?: PeekTarget) {
   invariant(item, 'Must pass item')
   const appConfig = getAppConfig(item)
   setPeekState({
     target: target || App.peekState.target,
     peekId: Math.random(),
-    appConfig,
+    appConfig: {
+      ...DEFAULT_APP_CONFIG,
+      ...appConfig,
+    },
   })
 }
 
@@ -28,7 +44,10 @@ function setPeekState({ target, appConfig, peekId }: PartialPeekState) {
   const realTarget = getTargetPosition(target)
   App.setPeekState({
     peekId,
-    appConfig,
+    appConfig: {
+      ...DEFAULT_APP_CONFIG,
+      ...appConfig,
+    },
     target: realTarget,
     ...peekPosition(realTarget, appConfig),
   })

@@ -11,6 +11,7 @@ export const HighlightText = ({ options, children, ...props }: Props) => (
   <HighlightsContext.Consumer>
     {term => (
       <Text
+        tagName="p"
         color="inherit"
         highlight={
           term

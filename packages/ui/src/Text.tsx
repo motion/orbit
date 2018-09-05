@@ -275,6 +275,7 @@ export class Text extends React.Component<TextProps> {
 
     return (
       <TextBlock
+        tagName={tagName}
         contentEditable={editable}
         selectable={selectable}
         oneLineEllipse={oneLineEllipse}

@@ -104,29 +104,35 @@ export class Syncer {
         const jobTime = lastJob.time + this.options.interval
         const currentTime = new Date().getTime()
         const needToWait = jobTime - currentTime
-        if (needToWait > 0) {
+        const jobName = this.name + (settingId ? ':' + settingId : '')
+
+        // if app was closed when syncer was in processing
+        if (lastJob.status === 'PROCESSING' && !this.intervals[index]) {
           log(
-            `found last executed job for ${this.name}${
-              settingId ? ':' + settingId : ''
-              } and we should wait some time ` +
-            'until enough interval time will pass before we execute a new job',
-            {
-              jobTime,
-              currentTime,
-              needToWait,
-              lastJob,
-            },
+            `found job for ${jobName} but it left uncompleted ` +
+            `(probably app was closed before job completion). ` +
+            `Removing stale job and run synchronization again`
           )
-          setTimeout(() => this.runInterval(index, settingId), needToWait)
-          return
+          await getRepository(JobEntity).remove(lastJob)
+
         } else {
-          log(
-            `found last executed job for ${
-              this.name
-              } and its okay to execute a new job`,
-            lastJob,
-          )
+          if (needToWait > 0) {
+            log(
+              `found last executed job for ${jobName} and we should wait ` +
+              'until enough interval time will pass before we execute a new job',
+              { jobTime, currentTime, needToWait, lastJob },
+            )
+            setTimeout(() => this.runInterval(index, settingId), needToWait)
+            return
+          }
         }
+      } else {
+        log(
+          `found last executed job for ${
+            this.name
+            } and its okay to execute a new job`,
+          lastJob,
+        )
       }
     }
 

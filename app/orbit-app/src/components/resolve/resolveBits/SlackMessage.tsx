@@ -1,13 +1,12 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import Markdown from 'react-markdown'
 import { Bit, SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
 import { ItemHideProps } from '../../../types/ItemHideProps'
 import { View } from '@mcro/ui'
-import { markdownOptions } from '../../../constants/markdownOptions'
 import { DateFormat } from '../../../views/DateFormat'
+import { Markdown } from '../../../views/Markdown'
 
 type SlackMessageProps = {
   bit: Bit
@@ -66,7 +65,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           </UI.Row>
         )}
         <SlackMessageInner className="markdown slack-markdown">
-          <Markdown source={message.text} {...markdownOptions} />
+          <Markdown source={message.text} />
         </SlackMessageInner>
       </SlackMessageFrame>
     )

@@ -89,7 +89,7 @@ anonymous {
   display: inline;
 }
 
-/* for marky-markdown contnet */
+/* markdown */
 
 a.anchor {
   display: none;
@@ -403,6 +403,11 @@ body.dragging * {
     transform: rotate(180deg) translateY(-8px);
     opacity: 0;
   }
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  display: inline;
 }
 
 input,

@@ -251,10 +251,12 @@ export class Text extends React.Component<TextProps> {
     if (multiLineEllipse) {
       ellipseProps = {
         ...ellipseProps,
-        WebkitLineClamp: ellipse === true ? numLinesToShow || 10000 : ellipse,
-        maxHeight,
-        width: doClamp ? '100%' : '100.001%',
-        opacity: doClamp ? 1 : 0,
+        style: {
+          WebkitLineClamp: ellipse === true ? numLinesToShow || 10000 : ellipse,
+          maxHeight,
+          width: doClamp ? '100%' : '100.001%',
+          opacity: doClamp ? 1 : 0,
+        },
       }
     }
 

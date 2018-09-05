@@ -1,6 +1,7 @@
-import markdown from '@mcro/marky-markdown'
+import * as React from 'react'
 import keywordExtract from '@mcro/keyword-extract'
 import { BitItemResolverProps } from '../ResolveBit'
+import { Markdown } from '../../../views/Markdown'
 
 const options = {
   remove_digits: true,
@@ -8,20 +9,9 @@ const options = {
   remove_duplicates: false,
 }
 
-const markdownBoldifySearch = (str = '', term = '') => {
-  if (term.length < 3) {
-    return str
-  }
-  // avoid highlighting when multiple words for now
-  if (term.indexOf(' ') > -1) {
-    return str
-  }
-  return str.replace(new RegExp(`(${term})`, 'gi'), '**$1**')
-}
-
 export const ResolveDocument = ({
   bit,
-  searchTerm,
+  // searchTerm,
   children,
   isExpanded,
 }: BitItemResolverProps) =>
@@ -34,9 +24,11 @@ export const ResolveDocument = ({
     locationLink: bit.location.desktopLink || bit.location.webLink,
     webLink: bit.webLink,
     desktopLink: bit.webLink,
-    content: isExpanded
-      ? markdown(markdownBoldifySearch(bit.body, searchTerm))
-      : bit.body.slice(0, 200),
+    content: isExpanded ? (
+      <Markdown source={bit.body} />
+    ) : (
+      bit.body.slice(0, 200)
+    ),
     preview: keywordExtract
       .extract(bit.body, options)
       .slice(0, 8)

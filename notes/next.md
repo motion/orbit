@@ -19,6 +19,7 @@ to sync with umed:
 
 # Nate week of Sep 2
 
+- fix counts not updating using observe on OrbitApps
 - fix profile peek title bug
 - make peek profile show list a lot better/cleaner
 - during onboard prompt to allow "innocent" logging to help us

@@ -436,7 +436,7 @@ class ManagedTableInner extends React.Component<
     const { dragStartIndex } = this
     const { current } = this.tableRef
     if (
-      dragStartIndex &&
+      typeof dragStartIndex === 'number' &&
       current &&
       this.props.multiHighlight &&
       this.props.highlightableRows

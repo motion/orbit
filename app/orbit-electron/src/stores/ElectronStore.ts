@@ -4,7 +4,7 @@ import { ShortcutsStore } from './ShortcutsStore'
 import { WindowFocusStore } from '../stores/WindowFocusStore'
 import { HoverStateStore } from '../stores/HoverStateStore'
 import root from 'global'
-import { screen, clipboard } from 'electron'
+import { app, screen, clipboard } from 'electron'
 
 // @ts-ignore
 @store
@@ -46,6 +46,10 @@ export class ElectronStore {
           return
         case Electron.messages.FOCUS:
           this.windowFocusStore.focusOrbit()
+          return
+        case Electron.messages.RESTART:
+          app.relaunch()
+          app.exit()
           return
       }
     })

@@ -3,16 +3,33 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
-import { TimeAgo } from '../../../../views/TimeAgo'
+import Linkify from 'react-linkify'
+import { DateFormat } from '../../../../views/DateFormat'
+import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
+import { Actions } from '../../../../actions/Actions'
+import { VerticalSpace } from '../../../../views'
+
+const HorizontalSpace = view({
+  width: 10,
+})
 
 const Message = view({
-  padding: [22, 35],
+  padding: 15,
   borderBottom: [1, 'dotted', '#eee'],
 })
 
 const Para = view({
   marginBottom: '0.35rem',
+  whiteSpace: 'normal',
 })
+
+const MessageHeader = view({
+  flexFlow: 'row',
+})
+
+const openMail = email => () => {
+  Actions.open(`mailto:${email}`)
+}
 
 export const Mail = ({ bit }: PeekBitPaneProps) => {
   const { messages } = bit.data as GmailBitData
@@ -21,62 +38,47 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
   }
   return (
     <div>
-      {messages
-        // im seeing messages with no body
-        .filter(message => !!message.body)
-        .map((message, index) => {
-          return (
-            <Message key={`${index}${message.id}`}>
-              <UI.Row
-                {...{
-                  opacity: 0.7,
-                  margin: [0, 0, 6, -15],
-                  flex: 1,
-                  alignItems: 'center',
-                }}
-              >
-                <UI.Icon
-                  name="arrows-1_redo"
-                  color="#ddd"
-                  size={12}
-                  opacity={index === 0 ? 0 : 1}
-                  marginTop={2}
-                  marginRight={8}
-                  marginLeft={-6}
-                />
-                <UI.Row alignItems="center" justifyContent="center">
-                  {message.participants
-                    .filter(x => x.type === 'from')
-                    .map(({ name, email }, index) => (
-                      <a key={index} href={`mailto:${email}`}>
-                        <strong>{name}</strong>
-                        &nbsp;
-                      </a>
-                    ))}
-                  {index !== 0 && (
-                    <UI.View
-                      style={{
-                        opacity: 0.6,
-                        marginBottom: 2,
-                        marginLeft: 3,
-                        fontSize: 13,
+      {messages.map((message, index) => {
+        return (
+          <Message key={`${index}${message.id}`}>
+            <UI.Text fontWeight={500} size={0.9} alpha={0.8}>
+              <DateFormat date={new Date(message.date)} />
+            </UI.Text>
+            <VerticalSpace small />
+            <MessageHeader>
+              {message.participants
+                .filter(x => x.type === 'from')
+                .map(({ name, email }, index) => (
+                  <>
+                    <RoundButtonBordered
+                      key={index}
+                      onClick={openMail(email)}
+                      tooltip={email}
+                      tooltipProps={{
+                        noHoverOnChildren: false,
                       }}
                     >
-                      <TimeAgo>{message.date}</TimeAgo>
-                    </UI.View>
-                  )}
-                </UI.Row>
-              </UI.Row>
+                      {name}
+                    </RoundButtonBordered>
+                    <HorizontalSpace />
+                  </>
+                ))}
+            </MessageHeader>
+            <VerticalSpace small />
+            <Linkify>
               {!!message.body && (
                 <UI.Text>
-                  {message.body.split('\n').map((i, idx) => (
-                    <Para key={idx}>{i}</Para>
+                  {message.body.split('\n\n').map((message, idx) => (
+                    <Para className="markdown" key={idx}>
+                      {message}
+                    </Para>
                   ))}
                 </UI.Text>
               )}
-            </Message>
-          )
-        })}
+            </Linkify>
+          </Message>
+        )
+      })}
     </div>
   )
 }

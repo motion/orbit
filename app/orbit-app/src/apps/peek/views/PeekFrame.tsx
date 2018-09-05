@@ -98,7 +98,10 @@ export const PeekFrame = decorator(
           // keep size/positionX linked to be fast...
           width: size[0],
           height: size[1],
-          left: App.peekState.position[0],
+          // dont put this in transform so it doesnt animate
+          // it needs to move quickly because the frame itself resizes
+          // and so it has to update the width + left at same time
+          left: framePosition[0],
           // ...but have the positionY animate nicely
           transform: `translateX(0px) translateY(${framePosition[1]}px)`,
           transition,

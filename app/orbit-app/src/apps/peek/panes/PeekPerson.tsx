@@ -1,22 +1,59 @@
 import { view } from '@mcro/black'
-import { Subscription } from '@mcro/mediator'
-import { Bit, BitModel, PersonBit, SlackPersonData } from '@mcro/models'
+import { BitModel, PersonBit, SlackPersonData } from '@mcro/models'
 import * as React from 'react'
 import { Actions } from '../../../actions/Actions'
 import { Carousel } from '../../../components/Carousel'
-import { loadMany } from '../../../repositories'
+import { observeMany } from '../../../repositories'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton, SubTitle } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { OrbitListItem } from '../../../views/OrbitListItem'
 import { PeekPaneProps } from '../PeekPaneProps'
 
-const StrongSubTitle = props => (
-  <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
-)
+type Props = PeekPaneProps & {
+  integrationSettingsStore: IntegrationSettingsStore
+}
+
+class PeekPersonStore {
+  props: Props
+
+  get person() {
+    return this.props.model as PersonBit
+  }
+
+  recentBits = []
+  recentBits$ = observeMany(BitModel, {
+    args: {
+      where: {
+        people: {
+          personBit: {
+            email: this.person.email,
+          },
+        },
+      },
+      take: 100,
+    },
+  }).subscribe(values => {
+    this.recentBits = values
+  })
+
+  willUnmount() {
+    this.recentBits$.unsubscribe()
+  }
+}
 
 const mapW = 700
 const mapH = 200
+
+const StrongSubTitle = props => (
+  <SubTitle
+    padding={[0, 10]}
+    fontWeight={500}
+    fontSize={16}
+    alpha={0.8}
+    {...props}
+  />
+)
 
 const Frame = view({
   width: '100%',
@@ -34,7 +71,7 @@ const Content = view({
 })
 
 const ContentInner = view({
-  padding: [0, 15],
+  // padding: [0, 15],
 })
 
 const CardContent = view({
@@ -139,33 +176,15 @@ const IntegrationButton = ({ href, children, ...props }) => (
 )
 
 @view.attach('integrationSettingsStore')
+@view.attach({
+  store: PeekPersonStore,
+})
 @view
 export class PeekPerson extends React.Component<
-  PeekPaneProps & {
-    integrationSettingsStore: IntegrationSettingsStore
-  }
+  Props & { store: PeekPersonStore }
 > {
-
-  state: { bits: Bit[] } = {}
-  async componentDidMount() {
-
-    const person = this.props.model as PersonBit
-    this.setState({ bits: await loadMany(BitModel, {
-      args: {
-        where: {
-          people: {
-            personBit: {
-              email: person.email
-            }
-          }
-        },
-        take: 100
-      },
-    })});
-  }
-
   render() {
-    const { integrationSettingsStore, model, children } = this.props
+    const { integrationSettingsStore, model, children, store } = this.props
     const person = model as PersonBit
     const { settings } = integrationSettingsStore
     if (!settings) {
@@ -250,17 +269,18 @@ export class PeekPerson extends React.Component<
 
               <Section>
                 <StrongSubTitle>Recently</StrongSubTitle>
-                {(this.state.bits || []).slice(0, 30).map(bit => {
+                {(store.recentBits || []).map(bit => {
                   return (
                     <OrbitListItem
                       key={bit.id}
                       model={bit}
-                      isExpanded
+                      margin={0}
+                      padding={15}
                       theme={{
                         backgroundHover: 'transparent',
                       }}
                     >
-                      {({ content }) => content}
+                      {({ preview }) => preview}
                     </OrbitListItem>
                   )
                 })}

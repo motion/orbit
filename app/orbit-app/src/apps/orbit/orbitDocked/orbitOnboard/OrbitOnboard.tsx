@@ -8,7 +8,6 @@ import { Desktop } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
-import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { Title } from '../../../../views'
@@ -16,6 +15,7 @@ import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 import { MessageDark } from '../../../../views/Message'
+import { GeneralSettingValues } from '../../../../../../models/src';
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -165,8 +165,14 @@ class OnboardStore {
       console.log('cur frame now...')
       this.props.paneManagerStore.forceOnboard = false
       // save setting
-      const generalSetting = await generalSettingQuery()
-      generalSetting.values.hasOnboarded = true
+      const generalSetting = await SettingRepository.findOne({
+        where: {
+          type: 'general',
+          category: 'general',
+        },
+      })
+      const values = generalSetting.values as GeneralSettingValues
+      values.hasOnboarded = true
       await SettingRepository.save(generalSetting)
     }
 

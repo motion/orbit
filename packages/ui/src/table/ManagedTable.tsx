@@ -304,9 +304,7 @@ class ManagedTableInner extends React.Component<
       // arrow navigation
       const { highlightedRows, sortedRows } = this.state
       const lastItemKey = Array.from(this.state.highlightedRows).pop()
-      const lastItemIndex = this.props.rows.findIndex(
-        row => row.key === lastItemKey,
-      )
+      const lastItemIndex = sortedRows.findIndex(row => row.key === lastItemKey)
       const newIndex = Math.min(
         sortedRows.length - 1,
         Math.max(0, e.keyCode === 38 ? lastItemIndex - 1 : lastItemIndex + 1),
@@ -324,11 +322,10 @@ class ManagedTableInner extends React.Component<
     }
   }
 
-  onRowHighlighted = (highlightedRows: Set<string>, cb?: Function) => {
+  onRowHighlighted = (highlightedRows: Set<string>, cb = () => {}) => {
     if (!this.props.highlightableRows) {
       return
     }
-    // @ts-ignore
     this.setState({ highlightedRows }, cb)
     const { onRowHighlighted } = this.props
     if (onRowHighlighted) {
@@ -356,9 +353,9 @@ class ManagedTableInner extends React.Component<
 
   scrollToBottom() {
     const { current: tableRef } = this.tableRef
-
-    if (tableRef && this.props.rows.length > 1) {
-      tableRef.scrollToItem(this.props.rows.length - 1)
+    const { sortedRows } = this.state
+    if (tableRef && sortedRows.length > 1) {
+      tableRef.scrollToItem(sortedRows.length - 1)
     }
   }
 
@@ -406,14 +403,15 @@ class ManagedTableInner extends React.Component<
   }
 
   selectInRange = (fromKey: string, toKey: string): Array<string> => {
+    const rows = this.state.sortedRows
     const selected = []
     let startIndex = -1
     let endIndex = -1
-    for (let i = 0; i < this.props.rows.length; i++) {
-      if (this.props.rows[i].key === fromKey) {
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].key === fromKey) {
         startIndex = i
       }
-      if (this.props.rows[i].key === toKey) {
+      if (rows[i].key === toKey) {
         endIndex = i
       }
       if (endIndex > -1 && startIndex > -1) {
@@ -427,7 +425,7 @@ class ManagedTableInner extends React.Component<
       i++
     ) {
       try {
-        selected.push(this.props.rows[i].key)
+        selected.push(rows[i].key)
       } catch (e) {}
     }
 
@@ -438,7 +436,7 @@ class ManagedTableInner extends React.Component<
     const { dragStartIndex } = this
     const { current } = this.tableRef
     if (
-      dragStartIndex &&
+      typeof dragStartIndex === 'number' &&
       current &&
       this.props.multiHighlight &&
       this.props.highlightableRows

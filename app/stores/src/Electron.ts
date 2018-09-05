@@ -14,6 +14,7 @@ class ElectronStore {
     DEFOCUS: 'DEFOCUS',
     FOCUS: 'FOCUS',
     COPY: 'COPY',
+    RESTART: 'RESTART',
   }
 
   setState = Bridge.setState

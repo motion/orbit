@@ -1,12 +1,13 @@
 import Oracle from '@mcro/oracle'
 import { debounce, last } from 'lodash'
 import { store, isEqual, react, on, sleep } from '@mcro/black'
-import { Desktop, Electron, Swift, App } from '@mcro/stores'
+import { Desktop, Electron, App } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
 import { getGlobalConfig } from '@mcro/config'
 import * as Path from 'path'
+import { CompositeDisposable } from 'event-kit'
 
 const log = logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
@@ -46,12 +47,14 @@ const PREVENT_SCANNING = {
 // @ts-ignore
 @store
 export class Screen {
+  running = new CompositeDisposable()
   hasResolvedOCR = false
   appStateTm: any
   clearOCRTm: any
   isWatching = ''
   curAppID = ''
   curAppName = ''
+  isStarted = false
   watchSettings = { name: '', settings: {} }
   oracle = new Oracle({
     binPath: oracleBinPath,
@@ -88,7 +91,8 @@ export class Screen {
 
   updateTheme = react(
     () => (App.state.darkTheme ? 'ultra' : 'light'),
-    theme => {
+    async (theme, { when }) => {
+      await when(() => this.isStarted)
       console.log('theme', theme)
       this.oracle.themeWindow(theme)
     },
@@ -96,7 +100,8 @@ export class Screen {
 
   updateWindowVisibility = react(
     () => !!App.orbitState.docked,
-    visible => {
+    async (visible, { when }) => {
+      await when(() => this.isStarted)
       if (visible) {
         this.oracle.showWindow()
       } else {
@@ -111,30 +116,31 @@ export class Screen {
       const [x, y] = position
       const [width, height] = size
       return {
-        x: x - 10,
+        x: Math.round(x - 10),
         // mac topbar 23
-        y: y + 23 + 10,
-        width: width,
-        height: height - 30,
+        y: Math.round(y + 23 + 10),
+        width: Math.round(width),
+        height: Math.round(height - 30),
       }
     },
-    position => {
+    async (position, { when }) => {
+      await when(() => this.isStarted)
       console.log('setting position', position)
       this.oracle.positionWindow(position)
     },
   )
 
-  togglePaused = () => {
-    console.log('toggle paused screen')
-    const paused = !Desktop.state.paused
-    Desktop.setPaused(paused)
-    if (paused) {
-      Swift.pause()
-    } else {
-      Swift.resume()
-      this.rescanApp()
-    }
-  }
+  // togglePaused = () => {
+  //   console.log('toggle paused screen')
+  //   const paused = !Desktop.state.paused
+  //   Desktop.setPaused(paused)
+  //   if (paused) {
+  //     Swift.pause()
+  //   } else {
+  //     Swift.resume()
+  //     this.rescanApp()
+  //   }
+  // }
 
   clearTimeout?: Function
 
@@ -142,7 +148,16 @@ export class Screen {
     console.log('starting screen...')
 
     // handle messages
-    Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
+    // const off1 = Desktop.onMessage(
+    //   Desktop.messages.TOGGLE_PAUSED,
+    //   this.togglePaused,
+    // )
+    // this.running.add({ dispose: off1 })
+    const off2 = Desktop.onMessage(
+      Desktop.messages.DEFOCUS_ORBIT,
+      this.defocusOrbit,
+    )
+    this.running.add({ dispose: off2 })
 
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.12')) {
@@ -152,20 +167,34 @@ export class Screen {
 
     this.setupOracleListeners()
     await this.oracle.start()
-    this.getOracleInfo()
+    await this.getOracleInfo()
+    this.isStarted = true
   }
 
-  async getOracleInfo() {
-    // they can toggle this on and off
-    setInterval(async () => {
-      // get initial info
-      const info = await this.oracle.getInfo()
-      Desktop.setState({
-        operatingSystem: {
-          supportsTransparency: info.supportsTransparency,
-        },
-      })
-    }, 1000)
+  defocusOrbit = () => {
+    console.log('should defocus, crashing oracle for now...')
+    // this.oracle.defocus()
+  }
+
+  getOracleInfo() {
+    let hasResolved = false
+    return new Promise(res => {
+      const getInfo = async () => {
+        // get initial info
+        const info = await this.oracle.getInfo()
+        if (!hasResolved) {
+          hasResolved = true
+          res()
+        }
+        Desktop.setState({
+          operatingSystem: {
+            supportsTransparency: info.supportsTransparency,
+          },
+        })
+      }
+      setInterval(getInfo, 700)
+      getInfo()
+    })
   }
 
   setupOracleListeners() {
@@ -432,6 +461,7 @@ export class Screen {
   }
 
   async dispose() {
+    this.running.dispose()
     if (this.oracle) {
       await this.oracle.stop()
     }

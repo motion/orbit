@@ -13,7 +13,6 @@ import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
-import { debounce } from 'lodash'
 
 type Props = {
   name: string
@@ -185,7 +184,7 @@ const OrbitHomeCarouselSection = decorator(
     const isPeople = categoryName === 'People'
     return (
       <Section key={categoryName}>
-        <Row alignItems="center" padding={[10, 0, 2]}>
+        <Row alignItems="center" padding={[8, 0, 2]}>
           <SubTitle margin={0} padding={0}>
             {categoryName}
           </SubTitle>
@@ -222,6 +221,8 @@ const OrbitHomeCarouselSection = decorator(
 
 const Unpad = view({
   margin: [0, -14],
+  // dont do this, it undoes all our hard work with nice overrflow in carousels
+  // overflow: 'hidden',
 })
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore')

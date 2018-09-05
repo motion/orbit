@@ -6,7 +6,7 @@
  */
 
 import { view, on } from '@mcro/black'
-import { Filter } from './types'
+import { Filter, FilterIncludeExclude } from './types'
 import * as React from 'react'
 import { Row } from '../blocks/Row'
 import { TableInput } from './TableInput'
@@ -291,7 +291,7 @@ export function Searchable<T extends object>(
             filter.indexOf(':') > filter.indexOf('=') ? ':' : '='
           let [key, ...values] = filter.split(separator)
           let value = values.join(separator).trim()
-          let type = 'include'
+          let type: FilterIncludeExclude = 'include'
           // if value starts with !, it's an exclude filter
           if (value.indexOf('!') === 0) {
             type = 'exclude'
@@ -302,7 +302,7 @@ export function Searchable<T extends object>(
             type = 'exclude'
             key = key.slice(0, -1)
           }
-          // @ts-ignore
+
           this.addFilter({
             type,
             key,

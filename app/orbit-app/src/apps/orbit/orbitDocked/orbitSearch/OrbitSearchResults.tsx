@@ -11,10 +11,11 @@ import { SearchStore } from '../../../../stores/SearchStore'
 import { SelectionStore } from '../../../../stores/SelectionStore'
 import { App } from '@mcro/stores'
 import { memoize } from 'lodash'
-// import { HighlightsLayer } from '../../../../views/HighlightsLayer'
 import { ResolvedItem } from '../../../../components/ItemResolver'
 import { SuggestionBarVerticalPad } from '../../../../views'
 import { Actions } from '../../../../actions/Actions'
+import { HighlightText } from '../../../../views/HighlightText'
+import { HighlightsContext } from '../../../../helpers/contexts/HighlightsContext'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -25,7 +26,7 @@ type Props = {
 
 const Highlight = view({
   userSelect: 'auto',
-  display: 'inline-block',
+  display: 'block',
   lineHeight: 18.5,
   fontSize: 14,
   padding: [2, 6, 2, 10],
@@ -77,6 +78,9 @@ const hideSlack = {
 
 const OrbitCardContent = view({
   padding: [6, 0],
+  flex: 1,
+  overflow: 'hidden',
+  whiteSpace: 'pre',
 })
 
 const SearchResultText = props => (
@@ -98,19 +102,14 @@ class OrbitSearchResultsList extends React.Component<Props> {
     })
   })
 
-  getChildren = ({ content }, bit, index) => {
+  getChildren = ({ content }, bit) => {
     return bit.integration === 'slack' ? (
       <SearchResultText>{content}</SearchResultText>
     ) : (
       <OrbitCardContent>
-        <SearchResultText
-          highlight={highlightOptions(
-            this.props.searchStore.searchState.query,
-            bit,
-          )}
-        >
-          {this.getHighlight(index)}
-        </SearchResultText>
+        <HighlightText alpha={0.7} options={{ maxSurroundChars: 100 }}>
+          {content}
+        </HighlightText>
       </OrbitCardContent>
     )
   }
@@ -134,8 +133,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
     const searchTerm = searchStore.searchState.query
     const quickResultsLen = searchStore.quickSearchState.results.length
     return (
-      // <HighlightsLayer term={searchTerm}>
-      <>
+      <HighlightsContext.Provider value={searchTerm}>
         {results.map((model, index) => (
           <OrbitListItem
             pane={name}
@@ -144,19 +142,17 @@ class OrbitSearchResultsList extends React.Component<Props> {
             index={index + quickResultsLen}
             model={model}
             hide={model.integration === 'slack' ? hideSlack : null}
-            padding={model.integration === 'slack' ? [12, 16] : null}
             subtitleSpaceBetween={this.spaceBetween}
             isExpanded
             searchTerm={searchTerm}
             onClickLocation={this.handleLocation}
-            maxHeight={300}
+            maxHeight={240}
             overflow="hidden"
           >
             {this.getChildren}
           </OrbitListItem>
         ))}
-      </>
-      // </HighlightsLayer>
+      </HighlightsContext.Provider>
     )
   }
 }

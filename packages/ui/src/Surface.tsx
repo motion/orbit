@@ -167,6 +167,7 @@ SurfaceFrame.theme = props => {
     ...propsToStyles(props),
     // ...whereas theme styles passed in as ovverrides go in here
     ...themeStylesFromProps,
+    ...(props.active && { '&:hover': themeStyles['&:active'] }),
     ...propsToTextSize(props),
     ...chromelessStyle,
     ...segmentedStyle,

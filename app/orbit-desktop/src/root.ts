@@ -14,7 +14,10 @@ import {
   SettingModel,
   SettingRemoveCommand,
 } from '@mcro/models'
-import { AtlassianSettingSaveCommand, SettingForceSyncCommand } from '@mcro/models'
+import {
+  AtlassianSettingSaveCommand,
+  SettingForceSyncCommand,
+} from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
 import macosVersion from 'macos-version'
@@ -42,6 +45,7 @@ import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
+import { DatabaseManager } from './databaseManager'
 
 const log = logger('desktop')
 
@@ -56,6 +60,7 @@ export class Root {
   server = new Server()
   stores = null
   mediatorServer: MediatorServer
+  databaseManager: DatabaseManager
 
   start = async () => {
     this.registerREPLGlobals()
@@ -84,6 +89,8 @@ export class Root {
     await this.connect()
     this.registerMediatorServer()
 
+    this.databaseManager = new DatabaseManager()
+    this.databaseManager.start()
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
@@ -164,13 +171,7 @@ export class Root {
    */
   private registerMediatorServer() {
     this.mediatorServer = new MediatorServer({
-      models: [
-        SettingModel,
-        BitModel,
-        JobModel,
-        PersonModel,
-        PersonBitModel,
-      ],
+      models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
       commands: [
         SettingRemoveCommand,
         SettingForceSyncCommand,

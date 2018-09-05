@@ -1,9 +1,7 @@
-import { Bit } from './Bit'
 import { IntegrationTypeValues } from './IntegrationType'
 import { Person } from './Person'
 
 export interface PersonBit {
-
   /**
    * Target type.
    */
@@ -68,6 +66,4 @@ export interface PersonBit {
    * Indicates if person has integrations with Gmail.
    */
   hasGmail: boolean
-
-
 }

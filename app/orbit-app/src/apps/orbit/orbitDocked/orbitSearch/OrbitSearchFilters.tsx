@@ -98,30 +98,33 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
           {searchFilterStore.sortBy}
         </FilterButton>
         <UI.Col flex={1} />
-        <IntegrationFiltersRow>
-          {searchFilterStore.integrationFilters.map((filter, i) => {
-            return (
-              <RoundButton
-                key={`${filter.icon}${i}`}
-                circular
-                glint={false}
-                size={1}
-                icon={<OrbitIcon size={16} icon={filter.icon} />}
-                tooltip={filter.name}
-                onClick={searchFilterStore.integrationFilterToggler(filter)}
-                opacity={filter.active ? 1 : 0.45}
-                background="transparent"
-                activeStyle={{
-                  background: 'transparent',
-                }}
-                hoverStyle={{
-                  filter: 'none',
-                  opacity: filter.active ? 1 : 0.75,
-                }}
-              />
-            )
-          })}
-        </IntegrationFiltersRow>
+        {searchFilterStore.integrationFilters.length > 1 && (
+          <IntegrationFiltersRow>
+            {searchFilterStore.integrationFilters.map((filter, i) => {
+              return (
+                <RoundButton
+                  key={`${filter.icon}${i}`}
+                  circular
+                  glint={false}
+                  sizeHeight={0.85}
+                  margin={[0, 1]}
+                  icon={<OrbitIcon size={16} icon={filter.icon} />}
+                  tooltip={filter.name}
+                  onClick={searchFilterStore.integrationFilterToggler(filter)}
+                  opacity={filter.active ? 1 : 0.45}
+                  background="transparent"
+                  activeStyle={{
+                    background: 'transparent',
+                  }}
+                  hoverStyle={{
+                    filter: 'none',
+                    opacity: filter.active ? 1 : 0.75,
+                  }}
+                />
+              )
+            })}
+          </IntegrationFiltersRow>
+        )}
       </SearchFilterBar>
       <SearchFilters width="100%" alignItems="center">
         <ExtraFilters

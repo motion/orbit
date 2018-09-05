@@ -13,6 +13,7 @@ import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { PersonBitModel } from '@mcro/models'
+import { HighlightsContext } from '../../../helpers/contexts/HighlightsContext'
 
 const height = 60
 
@@ -190,11 +191,11 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
     }
   }
   return (
-    <>
+    <HighlightsContext.Provider value={store.peopleQuery}>
       <SmallVerticalSpace />
       <Title>Directory</Title>
       {sections}
       <VerticalSpace />
-    </>
+    </HighlightsContext.Provider>
   )
 })

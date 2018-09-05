@@ -1,11 +1,10 @@
 import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionStore } from '../../stores/SelectionStore'
-import { generalSettingQuery } from '../../repositories/settingQueries'
 import { KeyboardStore } from '../../stores/KeyboardStore'
 import { Actions } from '../../actions/Actions'
 import { observeOne } from '../../repositories'
-import { SettingModel } from '@mcro/models'
+import { SettingModel, GeneralSettingValues } from '@mcro/models'
 
 export class PaneManagerStore {
   props: {
@@ -22,11 +21,11 @@ export class PaneManagerStore {
   didMount() {
     on(
       this,
-      observeOne(SettingModel, { args: generalSettingQuery }).subscribe(
-        generalSetting => {
-          this.generalSetting = generalSetting
-        },
-      ),
+      observeOne(SettingModel, {
+        args: { where: { type: 'general', category: 'general' } },
+      }).subscribe(generalSetting => {
+        this.generalSetting = generalSetting
+      }),
     )
 
     on(this, this.props.keyboardStore, 'key', key => {
@@ -46,6 +45,20 @@ export class PaneManagerStore {
       }
     })
 
+    const generalSetting$ = observeOne(SettingModel, {
+      args: {
+        where: {
+          type: 'general',
+          category: 'general'
+        }
+      }
+    }).subscribe(generalSetting => {
+      const values = generalSetting.values as GeneralSettingValues
+      this.hasOnboarded = values.hasOnboarded
+    })
+
+
+
     const disposeToggleSettings = App.onMessage(
       App.messages.TOGGLE_SETTINGS,
       () => {
@@ -62,6 +75,7 @@ export class PaneManagerStore {
     // @ts-ignore
     this.subscriptions.add({
       dispose: () => {
+        generalSetting$.unsubscribe()
         disposeToggleSettings()
         disposeShowApps()
       },

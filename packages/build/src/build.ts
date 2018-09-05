@@ -13,7 +13,9 @@ if (fs.existsSync(paths.appPublic)) {
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 
 console.log('build for prod... process.env.NODE_ENV', process.env.NODE_ENV)
+
 webpack(
+  // @ts-ignore
   {
     mode: 'production',
     ...config,

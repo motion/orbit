@@ -155,8 +155,8 @@ export default class DebugApps {
     const initialRender = pages.length === 0
     if (initialRender) {
       // focus first tab on startup
-      const pages = await this.getPages()
-      pages[0].bringToFront()
+      await this.getPages()
+      // pages[0].bringToFront()
     }
   }
 

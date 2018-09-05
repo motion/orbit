@@ -1,9 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react, compose } from '@mcro/black'
-// import { Bit } from '@mcro/models'
-// import { BitRepository, SettingRepository } from '../../../../repositories'
-// import { Bits } from '../../../../views/Bits'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
@@ -11,6 +8,8 @@ import { orderBy } from 'lodash'
 import { SettingRepository } from '../../../../repositories'
 import { DateFormat } from '../../../../views/DateFormat'
 import { Text } from '@mcro/ui'
+import { MultiSelectTableShortcutHandler } from '../../../../components/shortcutHandlers/MultiSelectTableShortcutHandler'
+import { SlackSettingValues } from '../../../../../../models/src'
 
 const columns = {
   name: {
@@ -40,7 +39,6 @@ const columns = {
 }
 
 const itemToRow = (index, channel, topic, isActive, onSync) => {
-  console.log('ok', channel)
   return {
     key: `${index}`,
     columns: {
@@ -127,23 +125,41 @@ class SlackSettingStore {
     },
   )
 
+  get values() {
+    return this.setting.values as SlackSettingValues
+  }
+
   onSync = fullName => async e => {
     this.setting.values = {
-      ...this.setting.values,
+      ...this.values,
       channels: {
-        ...this.setting.values.channels,
+        ...this.values.channels,
         [fullName]: e.target.checked,
       },
     }
-    // await this.setting.save()
     await SettingRepository.save(this.setting)
   }
 
   isSyncing = fullName => {
-    if (!this.setting || !this.setting.values.channels) {
+    if (!this.setting || !this.values.channels) {
       return false
     }
-    return this.setting.values.channels[fullName] || false
+    return this.values.channels[fullName] || false
+  }
+
+  highlightedRows = []
+
+  handleEnter = e => {
+    console.log('enter!!', e)
+    if (this.highlightedRows.length) {
+      console.log('were highlighted', this.highlightedRows)
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
+
+  handleHighlightedRows = rows => {
+    this.highlightedRows = rows
   }
 }
 
@@ -169,20 +185,25 @@ export const SlackSetting = decorator(({ store, children }: Props) => {
     content: (
       <>
         <HideablePane invisible={store.active !== 'repos'}>
-          <UI.SearchableTable
-            virtual
-            rowLineHeight={28}
-            floating={false}
-            columnSizes={store.columnSizes}
-            columns={columns}
-            multiHighlight
-            rows={store.rows}
-            bodyPlaceholder={
-              <div style={{ margin: 'auto' }}>
-                <UI.Text size={1.2}>Loading...</UI.Text>
-              </div>
-            }
-          />
+          <MultiSelectTableShortcutHandler
+            handlers={{ enter: store.handleEnter }}
+          >
+            <UI.SearchableTable
+              virtual
+              rowLineHeight={28}
+              floating={false}
+              columnSizes={store.columnSizes}
+              columns={columns}
+              multiHighlight
+              onRowHighlighted={store.handleHighlightedRows}
+              rows={store.rows}
+              bodyPlaceholder={
+                <div style={{ margin: 'auto' }}>
+                  <UI.Text size={1.2}>Loading...</UI.Text>
+                </div>
+              }
+            />
+          </MultiSelectTableShortcutHandler>
         </HideablePane>
         <HideablePane invisible={store.active !== 'issues'}>
           {/* <Bits bits={store.bits} /> */}

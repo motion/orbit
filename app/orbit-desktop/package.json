@@ -23,6 +23,7 @@
     "@mcro/stores": "^2.2.1",
     "@mcro/electron-sudo": "*",
     "ps-tree": "1.1.0",
+    "event-kit": "2.5.0",
     "http-port-forward": "2.0.3",
     "apollo-fetch": "^0.7.0",
     "auto-launch": "5.0.5",

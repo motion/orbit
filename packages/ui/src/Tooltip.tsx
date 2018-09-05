@@ -8,12 +8,20 @@ type TooltipProps = Partial<PopoverProps> & {
   themeName?: string
 }
 
-export const Tooltip = ({ themeName, ...props }: TooltipProps) => (
-  <Theme name="dark">
+const defaultOnClick = e => {
+  e.stopPropagation()
+  console.log('no click on tooltip')
+}
+
+export const Tooltip = ({
+  themeName,
+  onClick = defaultOnClick,
+  ...props
+}: TooltipProps) => (
+  <Theme name="tooltip">
     <Popover
       background
       openOnHover
-      closeOnClick
       noHoverOnChildren
       animation="bounce 150ms"
       padding={[1, 5]}
@@ -24,6 +32,7 @@ export const Tooltip = ({ themeName, ...props }: TooltipProps) => (
       delay={400}
       popoverProps={POPOVER_PROPS}
       ignoreSegment
+      onClick={onClick}
       {...props}
     />
   </Theme>

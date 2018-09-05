@@ -3,9 +3,41 @@ import { view, on } from '@mcro/black'
 import keycode from 'keycode'
 import { InlineBlock } from './blocks/InlineBlock'
 import { Inline } from './blocks/Inline'
-import { highlightText } from './helpers/highlightText'
+import { highlightText, HighlightOptions } from './helpers/highlightText'
 import { propsToTextSize } from './helpers/propsToTextSize'
 import { Color, alphaColor, CSSPropertySet } from '@mcro/gloss'
+
+export type TextProps = CSSPropertySet & {
+  editable?: boolean
+  autoselect?: boolean
+  selectable?: boolean
+  onFinishEdit?: Function
+  onCancelEdit?: Function
+  getRef?: Function
+  ellipse?: boolean | number
+  tagName?: string
+  lines?: number
+  alpha?: number
+  onKeyDown?: Function
+  color?: Color
+  opacity?: number
+  size?: number
+  onClick?: Function
+  onMouseEnter?: Function
+  onMouseLeave?: Function
+  style?: Object
+  placeholder?: string
+  lineHeight?: number
+  sizeLineHeight?: number
+  className?: string
+  measure?: boolean
+  onMeasure?: Function
+  sizeMethod?: string
+  highlight?: HighlightOptions
+  wordBreak?: string
+  theme?: Object
+  children: React.ReactNode | ((Highlights) => React.ReactNode)
+}
 
 const TextBlock = view(InlineBlock, {
   userSelect: 'none',
@@ -52,38 +84,6 @@ TextEllipse.theme = ({ ellipse }) => ({
 
 export type Highlights = {
   highlights: string[]
-}
-
-export type TextProps = CSSPropertySet & {
-  editable?: boolean
-  autoselect?: boolean
-  selectable?: boolean
-  onFinishEdit?: Function
-  onCancelEdit?: Function
-  getRef?: Function
-  ellipse?: boolean | number
-  tagName?: string
-  lines?: number
-  alpha?: number
-  onKeyDown?: Function
-  color?: Color
-  opacity?: number
-  size?: number
-  onClick?: Function
-  onMouseEnter?: Function
-  onMouseLeave?: Function
-  style?: Object
-  placeholder?: string
-  lineHeight?: number
-  sizeLineHeight?: number
-  className?: string
-  measure?: boolean
-  onMeasure?: Function
-  sizeMethod?: string
-  highlight?: Object
-  wordBreak?: string
-  theme?: Object
-  children: React.ReactNode | ((Highlights) => React.ReactNode)
 }
 
 @view.ui

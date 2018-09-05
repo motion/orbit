@@ -25,6 +25,7 @@ export class RootView extends React.Component {
         event.target.href.startsWith('http')
       ) {
         event.preventDefault()
+        console.log('Capturing a A tag from root', event.target.href)
         App.sendMessage(Desktop, Desktop.messages.OPEN, event.target.href)
       }
     })

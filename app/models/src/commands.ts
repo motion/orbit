@@ -8,6 +8,10 @@ export const SettingForceSyncCommand = new Command<void, { settingId: number }>(
   'setting-force-sync',
 )
 
+export const SettingOnboardFinishCommand = new Command<void, void>(
+  'setting-onboard-finish',
+)
+
 export const AtlassianSettingSaveCommand = new Command<
   { success: boolean; error?: string },
   { setting: Setting }

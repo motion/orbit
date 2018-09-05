@@ -1,4 +1,3 @@
-import { GeneralSettingValues } from '@mcro/models'
 import { SettingEntity } from '../entities/SettingEntity'
 import sqlite from 'sqlite'
 import Fs from 'fs-extra'
@@ -7,6 +6,7 @@ import Os from 'os'
 import { Desktop } from '@mcro/stores'
 import { findOrCreate } from '../helpers/helpers'
 import { PortForwardStore } from './PortForwardStore'
+import { GeneralSettingValues } from '@mcro/models'
 
 const chromeDbPaths = [
   Path.join(
@@ -44,21 +44,10 @@ export class Onboard {
       type: 'general',
       category: 'general',
     })
-    console.log('onboard:', this.generalSetting)
-    // for now always run...
     const values = this.generalSetting.values as GeneralSettingValues
-    values.hasOnboarded = false
     if (!values.hasOnboarded) {
-      await this.runOnboarding()
-      // if (didRun) {
-      //   this.generalSetting.values.hasOnboarded = true
-      //   await this.generalSetting.save()
-      // }
+      await this.scanHistory()
     }
-  }
-
-  async runOnboarding() {
-    this.scanHistory()
   }
 
   async scanHistory() {

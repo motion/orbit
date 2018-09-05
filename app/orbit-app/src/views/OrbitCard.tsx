@@ -11,6 +11,7 @@ import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
+import { HighlightText } from './HighlightText'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -42,10 +43,6 @@ const Card = view({
 })
 
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-// 90b1e433
-// 90b1e4cc
-const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
-const borderSelected = '#90b1e4ee'
 
 Card.theme = ({
   borderRadius,
@@ -68,7 +65,7 @@ Card.theme = ({
   const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
   card = {
     ...card,
-    padding: padding || [9, 10],
+    padding,
     borderRadius: borderRadius || 7,
     background:
       background || theme.cardBackground || theme.background.alpha(0.9),
@@ -87,10 +84,10 @@ Card.theme = ({
   } else {
     card = {
       ...card,
-      boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
-      border: [1, borderSelected],
+      boxShadow: disabledShadow || [cardShadow, theme.shadowSelected],
+      border: [1, theme.borderSelected],
       '&:hover': {
-        border: [1, borderSelected],
+        border: [1, theme.borderSelected],
       },
     }
   }
@@ -137,6 +134,10 @@ const orbitIconProps = {
 })
 @view
 export class OrbitCardInner extends React.Component<OrbitItemProps> {
+  static defaultProps = {
+    padding: 8,
+  }
+
   getOrbitCard = (contentProps: ResolvedItem) => {
     const {
       createdAt,
@@ -218,7 +219,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             )}
           {!(hide && hide.title) && (
             <Title>
-              <UI.Text
+              <HighlightText
                 fontSize={14}
                 sizeLineHeight={0.85}
                 ellipse={hasSubtitle && hasMeta ? true : 2}
@@ -227,7 +228,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
                 {...titleProps}
               >
                 {title}
-              </UI.Text>
+              </HighlightText>
               {afterTitle}
             </Title>
           )}

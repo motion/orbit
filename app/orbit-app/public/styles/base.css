@@ -63,7 +63,7 @@
   line-height: 16px;
   border-radius: 5px;
   white-space: pre;
-  overflow: scroll;
+  overflow: auto;
 }
 
 #app div code {
@@ -82,7 +82,7 @@
   margin: 10px 0;
   border-radius: 3px;
   white-space: pre;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 anonymous {

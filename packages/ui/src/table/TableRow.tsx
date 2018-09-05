@@ -36,7 +36,12 @@ const backgroundColor = props => {
   }
 }
 
-const TableBodyRowContainer = view(Row, {})
+const TableBodyRowContainer = view(Row, {
+  overflow: 'hidden',
+  width: '100%',
+  userSelect: 'none',
+})
+
 TableBodyRowContainer.theme = props => ({
   backgroundColor: backgroundColor(props),
   boxShadow: props.zebra ? 'none' : 'inset 0 -1px #E9EBEE',
@@ -52,9 +57,6 @@ TableBodyRowContainer.theme = props => ({
   height: props.multiline ? 'auto' : props.rowLineHeight,
   lineHeight: `${String(props.rowLineHeight || DEFAULT_ROW_HEIGHT)}px`,
   fontWeight: props.fontWeight || 'inherit',
-  overflow: 'hidden',
-  width: '100%',
-  userSelect: 'none',
   flexShrink: 0,
   '&:hover': {
     backgroundColor:

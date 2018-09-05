@@ -42,7 +42,7 @@ const Pane = view(UI.View, {
   overflowX: 'hidden',
   overflowY: 'auto',
   borderBottomRadius: BORDER_RADIUS,
-  padding: [0, 14],
+  padding: [0, 12],
   margin: [0, 0, 0],
   // pointerEvents: 'none',
   isActive: {

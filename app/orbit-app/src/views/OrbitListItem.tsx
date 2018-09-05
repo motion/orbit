@@ -20,28 +20,32 @@ const ListFrame = view(UI.View, {
   },
 })
 
-ListFrame.theme = ({ theme }) => {
+ListFrame.theme = ({ theme, margin, borderRadius }) => {
   return {
-    background: theme.cardBackground || theme.background.alpha(0.5),
-    margin: 5,
-    marginTop: 0,
-    borderRadius: 3,
+    background: theme.listItemBackground || theme.background.alpha(0.5),
+    margin: typeof margin === 'undefined' ? [2, 5] : margin,
+    borderRadius: borderRadius || 3,
   }
 }
 
 const Divider = view({
   height: 1,
-  background: [0, 0, 0, 0.08],
   position: 'absolute',
   bottom: 0,
   left: 10,
   right: 10,
 })
 
+Divider.theme = ({ theme }) => ({
+  background: theme.color.alpha(0.015),
+})
+
 const ListItem = view({
   overflow: 'hidden',
   position: 'relative',
   maxHeight: '100%',
+  flex: 1,
+  border: [1, 'transparent'],
   transform: {
     z: 0,
   },
@@ -52,41 +56,36 @@ const ListItem = view({
   },
 })
 
-ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
-  let card: CSSPropertySet = {
-    flex: inGrid ? 1 : 'none',
-  }
+ListItem.theme = ({ theme, isSelected, padding, chromeless }) => {
+  let style: CSSPropertySet = {}
   if (chromeless) {
-    return card
+    return style
   }
   // LIST ITEM
   let listStyle
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.background.alpha(0.25),
-      // border: [1, borderSelected],
-      // boxShadow: disabledShadow || [[0, 0, 0, 1, '#90b1e4']],
+      background:
+        theme.listItemBackgroundSelected || theme.background.alpha(0.25),
+      border: [1, theme.borderSelected.alpha(0.5)],
     }
   } else {
     listStyle = {
-      // border: [1, 'transparent'],
       '&:hover': {
-        background: theme.backgroundHover.alpha(0.15),
+        background: theme.listItemBackgroundHover,
       },
     }
   }
-  card = {
-    ...card,
+  style = {
+    ...style,
     ...listStyle,
-    borderLeft: 'none',
-    borderRight: 'none',
     padding,
     '&:active': {
       opacity: isSelected ? 1 : 0.8,
     },
   }
-  return card
+  return style
 }
 
 const Title = view({
@@ -154,7 +153,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       hoverToSelect,
       iconProps,
       inactive,
-      inGrid,
       onClick,
       selectionStore,
       store,
@@ -210,7 +208,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
         <ListItem
           isSelected={isSelected}
           borderRadius={borderRadius}
-          inGrid={inGrid}
           onClick={store.handleClick}
           disableShadow={disableShadow}
           padding={padding}
@@ -281,12 +278,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               <Preview>
                 {typeof preview !== 'string' && preview}
                 {typeof preview === 'string' && (
-                  <UI.Text
-                    alpha={0.7}
-                    size={1.1}
-                    sizeLineHeight={0.9}
-                    margin={inGrid ? ['auto', 0] : 0}
-                  >
+                  <UI.Text alpha={0.7} size={1.1} sizeLineHeight={0.9}>
                     {preview}
                   </UI.Text>
                 )}
@@ -319,7 +311,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       pane,
       model,
       itemProps,
-      inGrid,
       searchTerm,
       isExpanded,
       hide,

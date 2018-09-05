@@ -20,22 +20,24 @@ const ListFrame = view(UI.View, {
   },
 })
 
-ListFrame.theme = ({ theme }) => {
+ListFrame.theme = ({ theme, margin, borderRadius }) => {
   return {
     background: theme.listItemBackground || theme.background.alpha(0.5),
-    margin: 5,
-    marginTop: 0,
-    borderRadius: 3,
+    margin: typeof margin === 'undefined' ? [2, 5] : margin,
+    borderRadius: borderRadius || 3,
   }
 }
 
 const Divider = view({
   height: 1,
-  background: [0, 0, 0, 0.08],
   position: 'absolute',
   bottom: 0,
   left: 10,
   right: 10,
+})
+
+Divider.theme = ({ theme }) => ({
+  background: theme.color.alpha(0.015),
 })
 
 const ListItem = view({

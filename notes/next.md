@@ -1,6 +1,6 @@
 to sync with umed:
 
-- Gmail how do I know if its html or text? (i need to auto-link-links)
+- Gmail how do I know if its html or text?
 
 # Umed Week of Sep 2
 

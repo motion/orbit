@@ -1,13 +1,7 @@
-// import { react } from '@mcro/black'
-import { Setting } from '@mcro/models'
+import { Setting, BitModel } from '@mcro/models'
 import { IntegrationType } from '../../../models/src'
-import {
-  BitRepository,
-  JobRepository,
-  SettingRepository,
-} from '../repositories'
+import { JobRepository, SettingRepository, observeCount } from '../repositories'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
-import { react } from '@mcro/black'
 
 // TODO: we can have multiple of the same integration added in
 // this just assumes one of each
@@ -22,6 +16,22 @@ export class SettingInfoStore {
     SettingRepository.findOne(`${(this.props.model || this.props.result).id}`),
   )
 
+  bitsCount = 0
+  bitsCounts$ = observeCount(BitModel, {
+    args: {
+      where: {
+        integration: this.setting.type as IntegrationType,
+      },
+    },
+  }).subscribe(value => {
+    console.log('got count', value)
+    this.bitsCount = value
+  })
+
+  willUnmount() {
+    this.bitsCounts$.unsubscribe()
+  }
+
   job = modelQueryReaction(
     async () => {
       return await JobRepository.findOne({
@@ -33,14 +43,4 @@ export class SettingInfoStore {
       condition: () => !!this.setting,
     },
   )
-
-  bitsCount = react(async () => {
-    if (!this.setting) {
-      return 0
-    }
-    console.log('count by type', this.setting.type)
-    return await BitRepository.count({
-      integration: this.setting.type as IntegrationType,
-    })
-  })
 }

@@ -320,11 +320,11 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       searchTerm,
       ...props
     } = this.props
-    console.log(
-      `${props.index} ${(model && model.id) || props.title}.${pane} ${
-        store.isSelected
-      }`,
-    )
+    // console.log(
+    //   `${props.index} ${(model && model.id) || props.title}.${pane} ${
+    //     store.isSelected
+    //   }`,
+    // )
     if (!model) {
       return this.getOrbitCard(props)
     }

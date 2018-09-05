@@ -13,12 +13,7 @@ const BodyContents = view({
 export const Task = ({ content, comments }: PeekBitPaneProps) => {
   return (
     <>
-      <BodyContents
-        className="markdown searchable rendered-content"
-        dangerouslySetInnerHTML={{
-          __html: content,
-        }}
-      />
+      <BodyContents>{content}</BodyContents>
       <BodyContents>{comments}</BodyContents>
     </>
   )

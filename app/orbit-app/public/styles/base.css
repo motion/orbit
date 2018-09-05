@@ -405,6 +405,11 @@ body.dragging * {
   }
 }
 
+input[type='checkbox'],
+input[type='radio'] {
+  display: inline;
+}
+
 input,
 textarea,
 select {

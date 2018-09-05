@@ -8,6 +8,8 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
 import { flatten } from 'lodash'
+import { Text } from '@mcro/ui'
+import { DateFormat } from '../../../../views/DateFormat'
 
 const columnSizes = {
   repo: 'flex',
@@ -112,7 +114,11 @@ class GithubSettingStore {
             },
             lastCommit: {
               sortValue: repo.pushedAt.getTime(),
-              value: <TimeAgo>{repo.pushedAt}</TimeAgo>,
+              value: (
+                <Text ellipse>
+                  <DateFormat date={new Date(repo.pushedAt)} />
+                </Text>
+              ),
             },
             numIssues: {
               sortValue: repo.openIssuesCount,

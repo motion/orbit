@@ -5,9 +5,7 @@ import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { DateFormat } from '../../../views/DateFormat'
 import { BitItemResolverProps } from '../ResolveBit'
-
-// const converter = new Showdown.Converter()
-// const markdown = text => converter.makeHtml(text)
+import { Markdown } from '../../../views/Markdown'
 
 const options = {
   remove_digits: true,
@@ -55,7 +53,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
       ))
   }
   return {
-    content: markdown(body),
+    content: <Markdown source={body} />,
     comments: commentComponents,
   }
 }

@@ -59,6 +59,10 @@ export const themes = {
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
+  tooltip: {
+    background: 'rgba(50,50,50,0.94)',
+    color: '#fff',
+  },
   dark: {
     ...macTheme,
     listItemBackground: 'transparent',

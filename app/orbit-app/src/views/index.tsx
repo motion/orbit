@@ -91,6 +91,9 @@ export const SmallVerticalSpace = view({
 
 export const VerticalSpace = view({
   height: 16,
+  small: {
+    height: 8,
+  },
 })
 
 export const Circle = view({

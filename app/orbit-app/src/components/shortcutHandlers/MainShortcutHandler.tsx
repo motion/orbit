@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { HotKeys } from 'react-hotkeys'
 import { view, compose } from '@mcro/black'
-import { SelectionStore } from '../stores/SelectionStore'
-import { Actions } from '../actions/Actions'
+import { SelectionStore } from '../../stores/SelectionStore'
+import { Actions } from '../../actions/Actions'
 import { App } from '@mcro/stores'
+import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 
 type Props = {
   selectionStore: SelectionStore
@@ -18,7 +18,7 @@ const rootShortcuts = {
 
 const decorator = compose(view.attach('selectionStore'))
 
-export const MainShortcuts = decorator(
+export const MainShortcutHandler = decorator(
   ({ selectionStore, children }: Props) => {
     const handlers = {
       openCurrent: () => {
@@ -40,14 +40,9 @@ export const MainShortcuts = decorator(
     }
 
     return (
-      <HotKeys
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-        focused
-        keyMap={rootShortcuts}
-        handlers={handlers}
-      >
+      <FocusableShortcutHandler shortcuts={rootShortcuts} handlers={handlers}>
         {children}
-      </HotKeys>
+      </FocusableShortcutHandler>
     )
   },
 )

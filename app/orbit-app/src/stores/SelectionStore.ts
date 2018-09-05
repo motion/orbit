@@ -53,8 +53,9 @@ export class SelectionStore {
         this.move(Direction[key])
       }
       if (key === 'enter') {
-        Actions.openItem(this.selectedItem)
-        Actions.closeOrbit()
+        console.log('global enter')
+        // Actions.openItem(this.selectedItem)
+        // Actions.closeOrbit()
       }
     })
 

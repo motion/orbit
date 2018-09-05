@@ -222,7 +222,7 @@ export class PeekStore {
     }
     // determine x adjustments
     const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
-    const position = state.position
+    const position = App.peekState.position
     let x = position[0]
     let y = position[1] + animationAdjust
     if (this.dragOffset) {

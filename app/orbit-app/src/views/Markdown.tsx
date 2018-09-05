@@ -7,7 +7,7 @@ export const markdownOptions = {
   // use this to highlight search terms more e
   plugins: [remarkEmoji],
   renderers: {
-    text: HighlightText,
+    paragraph: HighlightText,
   },
 }
 

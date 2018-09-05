@@ -274,7 +274,7 @@ export class Text extends React.Component<TextProps> {
     }
 
     if ((highlight && typeof children !== 'function') || renderAsHtml) {
-      contents = <div {...ellipseProps} />
+      contents = <span {...ellipseProps} />
     }
 
     return (

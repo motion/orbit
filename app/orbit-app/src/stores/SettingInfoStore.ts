@@ -1,5 +1,4 @@
 import { Setting, BitModel } from '@mcro/models'
-import { IntegrationType } from '../../../models/src'
 import { JobRepository, SettingRepository, observeCount } from '../repositories'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
@@ -19,9 +18,7 @@ export class SettingInfoStore {
   bitsCount = 0
   bitsCounts$ = observeCount(BitModel, {
     args: {
-      where: {
-        integration: this.setting.type as IntegrationType,
-      },
+      settingId: this.setting.id
     },
   }).subscribe(value => {
     console.log('got count', value)

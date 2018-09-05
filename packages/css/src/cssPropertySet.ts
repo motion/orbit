@@ -643,7 +643,13 @@ export type verticalAlign =
   | string
   | number
 export type visibility = 'visible' | 'hidden' | 'collapse'
-export type whiteSpace = 'normal' | 'pre' | 'nowrap' | 'pre-wrap' | 'pre-line'
+export type whiteSpace =
+  | 'inherit'
+  | 'normal'
+  | 'pre'
+  | 'nowrap'
+  | 'pre-wrap'
+  | 'pre-line'
 export type widows = number
 export type width =
   | string

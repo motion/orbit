@@ -9,6 +9,7 @@ import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 import { Actions } from '../../../../actions/Actions'
 import { VerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
+import { removeQuoted } from '../../../../components/resolve/resolveBits/ResolveMail'
 
 const HorizontalSpace = view({
   width: 10,
@@ -21,7 +22,7 @@ const Message = view({
 
 const Paragraph = view(HighlightText, {
   marginBottom: '0.35rem',
-  whiteSpace: 'normal',
+  userSelect: 'auto',
 })
 
 Paragraph.defaultProps = {
@@ -74,7 +75,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
               {!!message.body && (
                 <UI.Text>
                   {message.body.split('\n\n').map((message, idx) => (
-                    <Paragraph key={idx}>{message}</Paragraph>
+                    <Paragraph key={idx}>{removeQuoted(message)}</Paragraph>
                   ))}
                 </UI.Text>
               )}

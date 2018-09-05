@@ -231,45 +231,46 @@ export class Text extends React.Component<TextProps> {
         : 'auto'
     const oneLineEllipse = ellipse === 1
 
-    let ellipseProps: any = {
+    // so we can toggle between html or text
+    let finalProps: any = {
       children,
     }
 
     if (highlight && typeof children === 'string') {
       const __html = highlightText({ text: children, ...highlight })
-      ellipseProps = {
+      finalProps = {
         dangerouslySetInnerHTML: {
           __html,
         },
       }
     } else if (renderAsHtml) {
-      ellipseProps = {
+      finalProps = {
         dangerouslySetInnerHTML: {
           __html: children,
         },
       }
     }
 
-    let contents = children
-
     if (highlight && typeof children === 'function') {
       const highlights = highlightText(highlight)
-      contents = children({ highlights })
+      finalProps = {
+        children: children({ highlights }),
+      }
     }
 
-    if (renderAsHtml || !ellipse) {
-      contents = <span {...ellipseProps} />
-    } else if (ellipse) {
-      contents = (
-        <TextEllipse
-          ellipse={ellipse}
-          numLinesToShow={numLinesToShow}
-          maxHeight={maxHeight}
-          doClamp={doClamp}
-          color={color}
-          {...ellipseProps}
-        />
-      )
+    if (ellipse) {
+      finalProps = {
+        children: (
+          <TextEllipse
+            ellipse={ellipse}
+            numLinesToShow={numLinesToShow}
+            maxHeight={maxHeight}
+            doClamp={doClamp}
+            color={color}
+            {...finalProps}
+          />
+        ),
+      }
     }
 
     return (
@@ -286,10 +287,9 @@ export class Text extends React.Component<TextProps> {
           display: 'flex',
           overflow: 'hidden',
         }}
+        {...finalProps}
         {...props}
-      >
-        {contents}
-      </TextBlock>
+      />
     )
   }
 }

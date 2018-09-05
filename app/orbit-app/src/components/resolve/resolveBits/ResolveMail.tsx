@@ -10,7 +10,7 @@ const options = {
 }
 
 // TODO this isn't great, what if they purposely quote?
-const removeQuoted = str => {
+export const removeQuoted = str => {
   return str
     .split('\n')
     .filter(line => line[0] !== '>')

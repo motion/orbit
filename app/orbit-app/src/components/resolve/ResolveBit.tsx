@@ -3,7 +3,7 @@ import { ResolveConversation } from './resolveBits/ResolveConversation'
 import { ResolveDocument } from './resolveBits/ResolveDocument'
 import { ResolveMail } from './resolveBits/ResolveMail'
 import { ResolveTask } from './resolveBits/ResolveTask'
-import { ItemResolverProps } from '../ItemResolver'
+import { ItemResolverResolverProps } from '../ItemResolver'
 import { Bit } from '@mcro/models'
 
 const results = {
@@ -27,16 +27,18 @@ const results = {
   },
 }
 
-export type BitItemResolverProps = ItemResolverProps & { bit: Bit }
+export type BitItemResolverProps = ItemResolverResolverProps & { bit: Bit }
+export type BitItemResolver = React.SFC<BitItemResolverProps>
 
 export const ResolveBit = ({
   model,
   children,
   searchTerm,
   ...props
-}: ItemResolverProps & { model: Bit }) => {
+}: ItemResolverResolverProps & { model: Bit }) => {
   const resolveIntegration = results[model.integration]
-  const Resolver = resolveIntegration && resolveIntegration[model.type]
+  const Resolver =
+    resolveIntegration && (resolveIntegration[model.type] as BitItemResolver)
   if (!Resolver) {
     console.log('no resolver for', model.integration, model.type)
     return () => <div>no resolver</div>

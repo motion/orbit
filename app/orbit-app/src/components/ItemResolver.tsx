@@ -6,10 +6,15 @@ import { Person, Bit, PersonBit } from '@mcro/models'
 import { AppStore } from '../stores/AppStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { Setting } from '@mcro/models'
+import {
+  ItemResolverDecoration,
+  ItemResolverDecorationContext,
+} from '../helpers/contexts/ItemResolverDecorationContext'
 
 export type ResolvedItem = {
   id: string
   type: 'person' | 'bit'
+  subType?: string
   title: string
   preview?: React.ReactNode
   content?: React.ReactNode
@@ -33,10 +38,13 @@ export type ItemResolverProps = {
   isExpanded?: boolean
   children: ((a: ResolvedItem) => React.ReactNode)
   shownLimit?: number
-  itemProps?: Object
   searchTerm?: string
   hide?: ItemHideProps
   onResolvedItem?: (a: ResolvedItem) => any
+}
+
+export type ItemResolverResolverProps = ItemResolverProps & {
+  decoration: ItemResolverDecoration
 }
 
 export const ItemResolver = ({
@@ -59,14 +67,20 @@ export const ItemResolver = ({
     Resolver = ResolveEmpty
   }
   return (
-    <Resolver model={model} {...props}>
-      {item => {
-        // allow getting the item via a prop other than children intended for side effects
-        if (onResolvedItem) {
-          onResolvedItem(item)
-        }
-        return children(item)
+    <ItemResolverDecorationContext.Consumer>
+      {decoration => {
+        return (
+          <Resolver decoration={decoration} model={model} {...props}>
+            {item => {
+              // allow getting the item via a prop other than children intended for side effects
+              if (onResolvedItem) {
+                onResolvedItem(item)
+              }
+              return children(item)
+            }}
+          </Resolver>
+        )
       }}
-    </Resolver>
+    </ItemResolverDecorationContext.Consumer>
   )
 }

@@ -46,10 +46,6 @@ BottomFloat.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.background} 50%)`,
 })
 
-type PeekItemResolverExtraProps = {
-  itemProps?: Object
-}
-
 export const PeekBit = ({
   appConfig,
   model,
@@ -66,11 +62,7 @@ export const PeekBit = ({
   }
   console.log('peekbit...', bit)
   return (
-    <PeekItemResolver
-      model={model}
-      appStore={appStore}
-      {...BitPaneContent.bitResolverProps as PeekItemResolverExtraProps}
-    >
+    <PeekItemResolver model={model} appStore={appStore}>
       {({
         title,
         icon,
@@ -115,7 +107,7 @@ export const PeekBit = ({
                         Actions.closeOrbit()
                       }}
                       tooltip="Open"
-                      icon="link"
+                      icon="arrowshare91"
                     />
                   </UI.ListRow>
                 )}

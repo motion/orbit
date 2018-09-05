@@ -15,6 +15,7 @@ import { ResolvedItem } from '../../../../components/ItemResolver'
 import { SuggestionBarVerticalPad } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightsContext } from '../../../../helpers/contexts/HighlightsContext'
+import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -90,7 +91,6 @@ class OrbitSearchResultsList extends React.Component<Props> {
   // })
 
   getChildren = ({ content }, bit) => {
-    console.log('content', content)
     return bit.integration === 'slack' ? (
       <SearchResultText>{content}</SearchResultText>
     ) : (
@@ -208,11 +208,20 @@ export class OrbitSearchResults extends React.Component<Props> {
         }
         onScrollNearBottom={this.props.searchStore.loadMore}
       >
-        <OrbitSearchResultsContents
-          selectionStore={selectionStore}
-          searchStore={searchStore}
-          name={name}
-        />
+        <ItemResolverDecorationContext.Provider
+          value={{
+            item: null,
+            text: {
+              alpha: 0.7555,
+            },
+          }}
+        >
+          <OrbitSearchResultsContents
+            selectionStore={selectionStore}
+            searchStore={searchStore}
+            name={name}
+          />
+        </ItemResolverDecorationContext.Provider>
       </SubPane>
     )
   }

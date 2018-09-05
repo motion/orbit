@@ -72,13 +72,12 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
             </MessageHeader>
             <VerticalSpace small />
             <Linkify>
-              {!!message.body && (
-                <UI.Text>
-                  {message.body.split('\n\n').map((message, idx) => (
+              {!!message.body &&
+                message.body
+                  .split('\n')
+                  .map((message, idx) => (
                     <Paragraph key={idx}>{removeQuoted(message)}</Paragraph>
                   ))}
-                </UI.Text>
-              )}
             </Linkify>
           </Message>
         )

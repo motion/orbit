@@ -1,18 +1,17 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { Bit, SlackBitDataMessage } from '@mcro/models'
+import { SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
 import { ItemHideProps } from '../../../types/ItemHideProps'
 import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
 import { Markdown } from '../../../views/Markdown'
+import { BitItemResolverProps } from '../ResolveBit'
 
-type SlackMessageProps = {
-  bit: Bit
+type SlackMessageProps = BitItemResolverProps & {
   message: SlackBitDataMessage
   previousMessage?: SlackBitDataMessage
-  itemProps?: Object
   highlight?: Object
   hide: ItemHideProps
 }
@@ -28,7 +27,7 @@ const SlackMessageInner = view({
 @view
 export class SlackMessage extends React.Component<SlackMessageProps> {
   render() {
-    const { bit, message, previousMessage, hide = {}, itemProps } = this.props
+    const { bit, message, previousMessage, hide = {}, decoration } = this.props
     if (!message.text || !bit) {
       console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -44,7 +43,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     return (
-      <SlackMessageFrame {...itemProps}>
+      <SlackMessageFrame {...decoration.item}>
         {!hideHeader && (
           <UI.Row
             flexFlow="row"
@@ -65,7 +64,9 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           </UI.Row>
         )}
         <SlackMessageInner>
-          <Markdown className="slack-markdown" source={message.text} />
+          <UI.Text {...decoration.text}>
+            <Markdown className="slack-markdown" source={message.text} />
+          </UI.Text>
         </SlackMessageInner>
       </SlackMessageFrame>
     )

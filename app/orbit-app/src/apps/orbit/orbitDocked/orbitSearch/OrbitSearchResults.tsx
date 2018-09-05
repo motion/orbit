@@ -212,7 +212,7 @@ export class OrbitSearchResults extends React.Component<Props> {
           value={{
             item: null,
             text: {
-              alpha: 0.7555,
+              alpha: 0.6555,
             },
           }}
         >

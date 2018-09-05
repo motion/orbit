@@ -23,6 +23,7 @@ const ListFrame = view(UI.View, {
 
 ListFrame.theme = ({ theme, margin, borderRadius }) => {
   return {
+    color: theme.color,
     background: theme.listItemBackground || theme.background.alpha(0.5),
     margin: typeof margin === 'undefined' ? [2, 5] : margin,
     borderRadius: borderRadius || 3,

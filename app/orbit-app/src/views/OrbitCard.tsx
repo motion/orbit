@@ -54,9 +54,11 @@ Card.theme = ({
   padding,
   disableShadow,
   chromeless,
+  color,
 }) => {
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
+    color: color || theme.color,
   }
   if (chromeless) {
     return card

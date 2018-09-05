@@ -1,13 +1,16 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
-// import * as UI from '@mcro/ui'
-// import { OrbitIcon } from '../../../../views/OrbitIcon'
-// import { SubTitle } from '../../../../views'
 import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 import { SettingPaneProps } from './SettingPaneProps'
+import { HideablePane } from '../../views/HideablePane'
+import { AppStatusPane } from './AppStatusPane'
+import { Tabs, Tab } from '@mcro/ui'
 
 class JiraSettingStore {
-  active = 'general'
+  active = 'status'
+  setActiveKey = key => {
+    this.active = key
+  }
 }
 
 const decorator = compose(
@@ -19,33 +22,23 @@ const decorator = compose(
 
 type Props = SettingPaneProps & { store: JiraSettingStore }
 
-export const JiraSetting = decorator(({ setting, children }: Props) => {
+export const JiraSetting = decorator(({ store, setting, children }: Props) => {
   return children({
-    content: <AtlassianSettingLogin type="jira" setting={setting} />,
+    belowHead: (
+      <Tabs active={store.active} onActive={store.setActiveKey}>
+        <Tab key="status" width="50%" label="Status" />
+        <Tab key="repos" width="50%" label="Repos" />
+      </Tabs>
+    ),
+    content: (
+      <>
+        <HideablePane invisible={store.active !== 'status'}>
+          <AppStatusPane setting={setting} />
+        </HideablePane>
+        <HideablePane invisible={store.active !== 'repos'}>
+          <AtlassianSettingLogin type="jira" setting={setting} />
+        </HideablePane>
+      </>
+    ),
   })
-  // return children({
-  //   belowHead: (
-  //     <UI.Tabs
-  //       $tabs
-  //       active={store.active}
-  //       onActive={key => (store.active = key)}
-  //     >
-  //       <UI.Tab key="general" width="50%" label="General" />
-  //       <UI.Tab key="account" width="50%" label="Account" />
-  //     </UI.Tabs>
-  //   ),
-  //   content: (
-  //     <UI.Col flex={1}>
-  //       <Section if={store.active === 'general'}>
-  //         <UI.Col margin="auto">
-  //           <SubTitle css={{ textAlign: 'center' }}>All good!</SubTitle>
-  //           <OrbitIcon icon="confluence" size={256} />
-  //         </UI.Col>
-  //       </Section>
-  //       <Section if={store.active === 'account'}>
-  //         <AtlassianSettingLogin setting={setting} />
-  //       </Section>
-  //     </UI.Col>
-  //   ),
-  // })
 })

@@ -2,14 +2,14 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { BitRepository, SettingRepository } from '../../../../repositories'
-import { Bits } from '../../../../views/Bits'
-import { TimeAgo } from '../../../../views/TimeAgo'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
 import { flatten } from 'lodash'
 import { Text } from '@mcro/ui'
 import { DateFormat } from '../../../../views/DateFormat'
+import { AppStatusPane } from './AppStatusPane'
+import { GithubSettingValues } from '@mcro/models'
 
 const columnSizes = {
   repo: 'flex',
@@ -49,7 +49,7 @@ const columns = {
 class GithubSettingStore {
   props: SettingPaneProps
 
-  active = 'repos'
+  active = 'status'
   userOrgs = []
   sortOrder = {
     key: 'lastCommit',
@@ -142,11 +142,15 @@ class GithubSettingStore {
     },
   )
 
+  get values() {
+    return this.setting.values as GithubSettingValues
+  }
+
   onSync = fullName => async e => {
     this.setting.values = {
-      ...this.setting.values,
+      ...this.values,
       repos: {
-        ...this.setting.values.repos,
+        ...this.values.repos,
         [fullName]: e.target.checked,
       },
     }
@@ -154,10 +158,10 @@ class GithubSettingStore {
   }
 
   isSyncing = fullName => {
-    if (!this.setting || !this.setting.values.repos) {
+    if (!this.setting || !this.values.repos) {
       return false
     }
-    return this.setting.values.repos[fullName] || false
+    return this.values.repos[fullName] || false
   }
 
   newOrg = ''
@@ -181,16 +185,15 @@ export class GithubSetting extends React.Component<
     return children({
       belowHead: (
         <UI.Tabs active={store.active} onActive={store.setActiveKey}>
+          <UI.Tab key="status" width="50%" label="Status" />
           <UI.Tab key="repos" width="50%" label="Repos" />
-          <UI.Tab
-            key="issues"
-            width="50%"
-            label={`Issues (${store.bits ? store.bits.length : 0})`}
-          />
         </UI.Tabs>
       ),
       content: (
         <>
+          <HideablePane invisible={store.active !== 'status'}>
+            <AppStatusPane setting={store.setting} />
+          </HideablePane>
           <HideablePane invisible={store.active !== 'repos'}>
             <UI.SearchableTable
               virtual
@@ -209,9 +212,6 @@ export class GithubSetting extends React.Component<
                 </div>
               }
             />
-          </HideablePane>
-          <HideablePane invisible={store.active !== 'issues'}>
-            <Bits bits={store.bits} />
           </HideablePane>
         </>
       ),

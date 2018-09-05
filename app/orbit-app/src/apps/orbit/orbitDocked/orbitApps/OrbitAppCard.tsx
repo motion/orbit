@@ -6,8 +6,8 @@ import {
   SettingInfoProps,
 } from '../../../../stores/SettingInfoStore'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
-import { Row, Col } from '@mcro/ui'
-import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
+// import { Row, Col } from '@mcro/ui'
+// import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 
 type Props = OrbitItemProps &
   SettingInfoProps & {
@@ -52,10 +52,12 @@ export const OrbitAppCard = decorator(
         result={result}
         {...props}
       >
-        <Row>
+        {/* this will be so you can go straight to the individual home screen */}
+        {/* for this integration which will pre-populate with location rows */}
+        {/* <Row>
           <Col flex={1} />
           <RoundButtonSmall>View</RoundButtonSmall>
-        </Row>
+        </Row> */}
       </OrbitCard>
     )
   },

@@ -245,7 +245,6 @@ export class OrbitHome extends React.Component<Props> {
 
   render() {
     const { homeStore, selectionStore } = this.props
-    console.log('HOME RENDER2')
     // we react to this so keep this here
     homeStore.results
     return (

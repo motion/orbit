@@ -120,20 +120,20 @@ export class MediatorClient {
     })
   }
 
-  loadCount<ModelType, Args>(
-    query: Query<ModelType, Args>,
+  loadCount<ModelType, Args, CountArgs>(
+    query: Query<ModelType, CountArgs>,
   ): Promise<[ModelType[], number]>;
-  loadCount<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  loadCount<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     options?: {
-      args?: Args
+      args?: CountArgs
       resolvers?: QueryOptions<ModelType>
     }
   ): Promise<[ModelType[], number]>;
-  loadCount<ModelType, Args>(
-    qm: Query<ModelType, Args>|Model<ModelType, Args>,
+  loadCount<ModelType, Args, CountArgs>(
+    qm: Query<ModelType, CountArgs>|Model<ModelType, Args, CountArgs>,
     options?: {
-      args?: Args
+      args?: CountArgs
       resolvers?: QueryOptions<ModelType>
     }
   ): Promise<[ModelType[], number]> {
@@ -220,20 +220,20 @@ export class MediatorClient {
     })
   }
 
-  observeCount<ModelType, Args>(
-    query: Query<ModelType, Args>,
+  observeCount<ModelType, Args, CountArgs>(
+    query: Query<ModelType, CountArgs>,
   ): Observable<number>;
-  observeCount<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  observeCount<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     options?: {
-      args?: Args
+      args?: CountArgs
       resolvers?: QueryOptions<ModelType>
     }
   ): Observable<number>;
-  observeCount<ModelType, Args>(
-    qm: Query<ModelType, Args>|Model<ModelType, Args>,
+  observeCount<ModelType, Args, CountArgs>(
+    qm: Query<ModelType, CountArgs>|Model<ModelType, Args, CountArgs>,
     options?: {
-      args?: Args
+      args?: CountArgs
       resolvers?: QueryOptions<ModelType>
     }
   ): Observable<number> {

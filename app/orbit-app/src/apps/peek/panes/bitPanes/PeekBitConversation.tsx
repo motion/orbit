@@ -2,11 +2,10 @@ import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { PeekItemResolver } from '../../views/PeekItemResolver'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
-// import { BitRepository } from '../../../../repositories';
 import { Divider } from '../../../../views/Divider'
 import { observeMany } from '../../../../repositories'
 import { BitModel } from '@mcro/models'
-import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
+import { SubTitle, VerticalSpace } from '../../../../views'
 
 type Props = PeekBitPaneProps & {
   store: PeekConversationStore
@@ -25,6 +24,7 @@ class PeekConversationStore {
           $moreThan: this.props.bit.bitCreatedAt,
         },
       },
+      relations: ['people'],
       take: 5,
       order: {
         bitCreatedAt: 'DESC',
@@ -40,7 +40,11 @@ class PeekConversationStore {
 }
 
 const SlackConversation = view({
-  padding: [10, 0],
+  padding: 15,
+})
+
+const Unpad = view({
+  margin: [0, -15],
 })
 
 const decorator = compose(
@@ -52,30 +56,26 @@ const decorator = compose(
 
 export const Conversation = decorator(({ store, content }: Props) => {
   return (
-    <ItemResolverDecorationContext.Provider
-      value={{
-        text: null,
-        item: {
-          padding: [1, 6],
-          '&:hover': {
-            background: [0, 0, 0, 0.02],
-          },
-        },
-      }}
-    >
-      <SlackConversation>
-        {content || null}
-        {store.nextConversations.map((convo, index) => (
-          <React.Fragment key={`${convo.id}${index}`}>
-            <PeekItemResolver model={convo}>
-              {({ content }) => content}
-            </PeekItemResolver>
-            <Divider />
-          </React.Fragment>
-        ))}
-        <br />
-        <br />
-      </SlackConversation>
-    </ItemResolverDecorationContext.Provider>
+    <SlackConversation>
+      <Unpad>{content || null}</Unpad>
+      {!!store.nextConversations.length && (
+        <>
+          <Divider />
+          <VerticalSpace />
+          <SubTitle>Next conversations:</SubTitle>
+          <VerticalSpace />
+        </>
+      )}
+      {store.nextConversations.map((convo, index) => (
+        <React.Fragment key={`${convo.id}${index}`}>
+          <PeekItemResolver model={convo}>
+            {({ content }) => <Unpad>{content}</Unpad>}
+          </PeekItemResolver>
+          <Divider />
+        </React.Fragment>
+      ))}
+      <br />
+      <br />
+    </SlackConversation>
   )
 })

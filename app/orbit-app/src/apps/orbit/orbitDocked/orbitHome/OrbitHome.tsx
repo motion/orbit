@@ -184,8 +184,8 @@ const OrbitHomeCarouselSection = decorator(
     const isPeople = categoryName === 'People'
     return (
       <Section key={categoryName}>
-        <Row alignItems="center" padding={[8, 0, 2]}>
-          <SubTitle margin={0} padding={0}>
+        <Row alignItems="center" padding={[startIndex === 0 ? 4 : 8, 0, 0]}>
+          <SubTitle margin={0} padding={0} fontWeight={500} fontSize={13}>
             {categoryName}
           </SubTitle>
           <Col flex={1} />

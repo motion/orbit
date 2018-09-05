@@ -12,7 +12,9 @@ export const HighlightText = ({ options, children, ...props }: Props) => (
     {term => (
       <Text
         tagName="p"
+        display="block"
         color="inherit"
+        selectable
         highlight={
           term
             ? {

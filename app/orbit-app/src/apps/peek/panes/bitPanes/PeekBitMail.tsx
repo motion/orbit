@@ -8,6 +8,7 @@ import { DateFormat } from '../../../../views/DateFormat'
 import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 import { Actions } from '../../../../actions/Actions'
 import { VerticalSpace } from '../../../../views'
+import { HighlightText } from '../../../../views/HighlightText'
 
 const HorizontalSpace = view({
   width: 10,
@@ -18,10 +19,14 @@ const Message = view({
   borderBottom: [1, 'dotted', '#eee'],
 })
 
-const Para = view({
+const Paragraph = view(HighlightText, {
   marginBottom: '0.35rem',
   whiteSpace: 'normal',
 })
+
+Paragraph.defaultProps = {
+  className: 'markdown',
+}
 
 const MessageHeader = view({
   flexFlow: 'row',
@@ -69,9 +74,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
               {!!message.body && (
                 <UI.Text>
                   {message.body.split('\n\n').map((message, idx) => (
-                    <Para className="markdown" key={idx}>
-                      {message}
-                    </Para>
+                    <Paragraph key={idx}>{message}</Paragraph>
                   ))}
                 </UI.Text>
               )}

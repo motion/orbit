@@ -5,7 +5,7 @@ import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit, PersonBit } from '@mcro/models'
 import { AppStore } from '../stores/AppStore'
 import { ItemHideProps } from '../types/ItemHideProps'
-import { Setting } from '../../../models/src'
+import { Setting } from '@mcro/models'
 
 export type ResolvedItem = {
   id: string

@@ -12,6 +12,7 @@ import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
+import { HighlightText } from './HighlightText'
 
 const ListFrame = view(UI.View, {
   position: 'relative',
@@ -221,7 +222,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                   <div style={{ width: 8 }} />
                 </>
               )}
-              <UI.Text
+              <HighlightText
                 fontSize={15}
                 sizeLineHeight={0.85}
                 ellipse={2}
@@ -230,7 +231,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 {...titleProps}
               >
                 {title}
-              </UI.Text>
+              </HighlightText>
               {afterTitle}
               {afterHeader}
             </Title>
@@ -278,9 +279,9 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               <Preview>
                 {typeof preview !== 'string' && preview}
                 {typeof preview === 'string' && (
-                  <UI.Text alpha={0.7} size={1.1} sizeLineHeight={0.9}>
+                  <HighlightText alpha={0.7} size={1.1} sizeLineHeight={0.9}>
                     {preview}
-                  </UI.Text>
+                  </HighlightText>
                 )}
               </Preview>
             )}

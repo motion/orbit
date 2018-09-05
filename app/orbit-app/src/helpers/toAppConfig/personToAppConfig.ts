@@ -1,4 +1,4 @@
-import { PersonBit } from '../../../../models/src'
+import { PersonBit } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
 
 export function personToAppConfig(person: PersonBit): AppConfig {

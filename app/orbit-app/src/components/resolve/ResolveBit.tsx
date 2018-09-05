@@ -4,7 +4,7 @@ import { ResolveDocument } from './resolveBits/ResolveDocument'
 import { ResolveMail } from './resolveBits/ResolveMail'
 import { ResolveTask } from './resolveBits/ResolveTask'
 import { ItemResolverProps } from '../ItemResolver'
-import { Bit } from '../../../../models/src'
+import { Bit } from '@mcro/models'
 
 const results = {
   slack: {
@@ -49,8 +49,8 @@ export const ResolveBit = ({
           type: 'bit',
           subType: model.type,
           integration: model.integration,
-          createdAt: model.bitCreatedAt,
-          updatedAt: model.bitUpdatedAt,
+          createdAt: new Date(model.bitCreatedAt),
+          updatedAt: new Date(model.bitUpdatedAt),
           ...bitProps,
         })
       }

@@ -15,7 +15,7 @@ import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 import { MessageDark } from '../../../../views/Message'
-import { GeneralSettingValues } from '../../../../../../models/src';
+import { GeneralSettingValues } from '@mcro/models'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore

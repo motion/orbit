@@ -1,5 +1,4 @@
 import { ensure, react, view } from '@mcro/black'
-import { Subscription } from '@mcro/mediator'
 import { IntegrationType, Setting, SettingModel } from '@mcro/models'
 import * as React from 'react'
 import { observeMany } from '../../../../repositories'
@@ -27,6 +26,17 @@ type Props = {
 class OrbitAppsStore {
   props: Props
   integrations: Setting[] = []
+  private integrations$ = observeMany(SettingModel, {
+    args: {
+      where: { category: 'integration' },
+    },
+  }).subscribe(settings => {
+    this.integrations = settings
+  })
+
+  willUnmount() {
+    this.integrations$.unsubscribe()
+  }
 
   // when pane is active
   get isActive() {
@@ -94,23 +104,6 @@ const Unpad = view({
 })
 @view
 export class OrbitApps extends React.Component<Props> {
-  subscription: Subscription
-
-  componentDidMount() {
-    this.subscription = observeMany(SettingModel, {
-      args: {
-        where: { category: 'integration' },
-      },
-    }).subscribe(settings => {
-      console.log(`updated settings`, settings)
-      this.props.store.integrations = settings
-    })
-  }
-
-  componentWillUnmount() {
-    this.subscription.unsubscribe()
-  }
-
   render() {
     const { name, store } = this.props
     return (
@@ -127,6 +120,7 @@ export class OrbitApps extends React.Component<Props> {
               {store.filteredActiveApps.map((result, index) => (
                 <OrbitAppCard
                   key={result.id}
+                  settingId={+result.id}
                   pane="docked"
                   subPane="apps"
                   total={store.integrations.length}

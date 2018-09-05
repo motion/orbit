@@ -4,7 +4,6 @@ import * as PeekBitPanes from './bitPanes'
 import { PeekItemResolver } from '../views/PeekItemResolver'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
-import { HighlightsLayer } from '../../../views/HighlightsLayer'
 import { App } from '@mcro/stores'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
@@ -16,6 +15,7 @@ import { DateFormat } from '../../../views/DateFormat'
 import { TitleBarButton } from '../views/TitleBarButton'
 import { TitleBarSpace } from '../views/TitleBarSpace'
 import { Actions } from '../../../actions/Actions'
+import { HighlightsContext } from '../../../helpers/contexts/HighlightsContext'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -138,9 +138,11 @@ export const PeekBit = ({
                       {location}
                     </PeekBar.Button>
                     <PeekBar.Space />
-                    <PeekBar.Text>
-                      <DateFormat>{updatedAt}</DateFormat>
-                    </PeekBar.Text>
+                    {!!updatedAt && (
+                      <PeekBar.Text>
+                        <DateFormat date={updatedAt} />
+                      </PeekBar.Text>
+                    )}
                     <UI.View flex={1} />
                     <PeekBar.Section>
                       <PeekBar.Button onClick={peekStore.copyItem}>
@@ -155,7 +157,7 @@ export const PeekBit = ({
                 ),
                 content: (
                   <>
-                    <HighlightsLayer term={searchTerm}>
+                    <HighlightsContext.Provider value={searchTerm}>
                       <BitPaneContent
                         bit={bit}
                         appStore={appStore}
@@ -164,7 +166,7 @@ export const PeekBit = ({
                         content={content}
                         comments={comments}
                       />
-                    </HighlightsLayer>
+                    </HighlightsContext.Provider>
                     {/* height for bottom bar */}
                     <div style={{ height: 80 }} />
                     {/* <BottomSpace />

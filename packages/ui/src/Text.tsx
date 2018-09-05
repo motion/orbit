@@ -66,13 +66,16 @@ const TextEllipse = view(Inline, {
   maxWidth: '100%',
 })
 
-TextEllipse.theme = ({ ellipse }) => ({
+TextEllipse.theme = ({ ellipse, doClamp, maxHeight }) => ({
   ...(ellipse > 1 && {
+    WebkitLineClamp: ellipse,
+    maxHeight,
+    width: doClamp ? '100%' : '100.001%',
+    opacity: doClamp ? 1 : 0,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
-    width: '100%',
   }),
   ...((ellipse === 1 || ellipse === true) && {
     display: 'block',
@@ -103,10 +106,6 @@ export class Text extends React.Component<TextProps> {
     textHeight: 0,
   }
 
-  get multiLineEllipse() {
-    return this.props.ellipse > 1 || this.props.ellipse === true
-  }
-
   componentDidMount() {
     this.handleProps(this.props)
     // this fixes bug because clamp is hacky af and needs to re-measure to trigger
@@ -128,7 +127,7 @@ export class Text extends React.Component<TextProps> {
   }
 
   measure() {
-    if (this.multiLineEllipse) {
+    if (this.props.ellipse > 1) {
       this.setState(
         {
           doClamp: true,
@@ -222,7 +221,6 @@ export class Text extends React.Component<TextProps> {
       renderAsHtml,
       ...props
     } = this.props
-    const { multiLineEllipse } = this
     const { doClamp, textHeight } = this.state
     const text = propsToTextSize(this.props)
     const numLinesToShow =
@@ -232,7 +230,10 @@ export class Text extends React.Component<TextProps> {
         ? `${ellipse * text.lineHeightNum}px`
         : 'auto'
     const oneLineEllipse = ellipse === 1
-    let ellipseProps = {}
+
+    let ellipseProps: any = {
+      children,
+    }
 
     if (highlight && typeof children === 'string') {
       const __html = highlightText({ text: children, ...highlight })
@@ -248,33 +249,27 @@ export class Text extends React.Component<TextProps> {
         },
       }
     }
-    if (multiLineEllipse) {
-      ellipseProps = {
-        ...ellipseProps,
-        style: {
-          WebkitLineClamp: ellipse === true ? numLinesToShow || 10000 : ellipse,
-          maxHeight,
-          width: doClamp ? '100%' : '100.001%',
-          opacity: doClamp ? 1 : 0,
-        },
-      }
-    }
 
     let contents = children
 
     if (highlight && typeof children === 'function') {
-      const highlights = highlightText(highlight, true)
+      const highlights = highlightText(highlight)
       contents = children({ highlights })
-    } else if (ellipse) {
-      contents = (
-        <TextEllipse ellipse={ellipse} color={color} {...ellipseProps}>
-          {children}
-        </TextEllipse>
-      )
     }
 
-    if ((highlight && typeof children !== 'function') || renderAsHtml) {
+    if (renderAsHtml || !ellipse) {
       contents = <span {...ellipseProps} />
+    } else if (ellipse) {
+      contents = (
+        <TextEllipse
+          ellipse={ellipse}
+          numLinesToShow={numLinesToShow}
+          maxHeight={maxHeight}
+          doClamp={doClamp}
+          color={color}
+          {...ellipseProps}
+        />
+      )
     }
 
     return (

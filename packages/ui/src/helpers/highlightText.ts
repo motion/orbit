@@ -18,14 +18,26 @@ export type HighlightOptions = {
   separator?: string
 }
 
+const isHighlightWord = (str, words) => {
+  if (!str) {
+    return false
+  }
+  for (const word of words) {
+    if (str.length !== word.length) {
+      continue
+    }
+    if (str.toLowerCase() === word) {
+      return true
+    }
+  }
+  return false
+}
+
 // cut text down using highlight words
 // not a wonderfully efficient
 // but still great for not too long text
 // and pretty easy to follow
-export const highlightText = (
-  options: HighlightOptions,
-  returnList = false,
-) => {
+export const highlightText = (options: HighlightOptions) => {
   const {
     text,
     words,
@@ -37,7 +49,7 @@ export const highlightText = (
   } = options
   let parts = [text]
   if (trimWhitespace) {
-    parts[0] = parts[0].replace(/(\s{2,}|\n)/g, separator)
+    parts[0] = parts[0].replace(/(\s{2,}|\n)/g, splitChar)
   }
   const wordFinders = words.map(
     word => new RegExp(`(${word.replace(notLetter, '')})`, 'gi'),
@@ -52,20 +64,19 @@ export const highlightText = (
   const wordsLen = words.reduce((a, b) => a + b.length, 0)
   const restLen = maxChars - wordsLen
   const surroundMax = Math.min(maxSurroundChars, restLen / numSurrounds / 2)
-  const isHighlightWord = str =>
-    str ? words.indexOf(str.toLowerCase()) > -1 : false
+
   // trim it down
   const filtered = []
   let prev
   for (const [index, part] of parts.entries()) {
-    const highlighted = isHighlightWord(part)
+    const highlighted = isHighlightWord(part, words)
     const prevHighlighted = prev
     prev = highlighted
     if (highlighted) {
       filtered.push(part)
       continue
     }
-    const nextHighlighted = isHighlightWord(parts[index + 1])
+    const nextHighlighted = isHighlightWord(parts[index + 1], words)
     // if not close, ignore
     if (!prevHighlighted && !nextHighlighted) {
       continue
@@ -99,27 +110,26 @@ export const highlightText = (
     }
   }
   let final = []
+  let len = 0
   for (const part of filtered) {
+    // this does our maxChars filtering, but wont chop last line...
+    len += part.length
+    if (len > maxChars) {
+      continue
+    }
     if (words.indexOf(part.toLowerCase()) === 0) {
       final.push(`<span style="${style}">${part}</span>`)
     } else {
       final.push(part)
     }
   }
-  let stringResult = final.join('').trim()
-  // return raw array
-  if (returnList) {
-    if (!stringResult.length) {
-      return [cutoff(text, maxChars)]
-    }
-    return stringResult
-      .split(splitChar)
-      .filter(x => !!x.length)
-      .map(part => `...${part}...`)
-  }
-  stringResult = stringResult.replace(splitChar, ' ... ')
+  let stringResult = final
+    .join('')
+    .trim()
+    .replace(splitChar, separator)
   if (stringResult.length) {
     return stringResult
   }
-  return text.length < maxChars ? text : cutoff(text, maxChars)
+  // no result, do a simple cutoff
+  return cutoff(text, maxChars)
 }

@@ -9,7 +9,7 @@ import { SettingRepository } from '../../../../repositories'
 import { DateFormat } from '../../../../views/DateFormat'
 import { Text } from '@mcro/ui'
 import { MultiSelectTableShortcutHandler } from '../../../../components/shortcutHandlers/MultiSelectTableShortcutHandler'
-import { SlackSettingValues } from '../../../../../../models/src'
+import { SlackSettingValues } from '@mcro/models'
 
 const columns = {
   name: {

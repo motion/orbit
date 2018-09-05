@@ -40,7 +40,7 @@ const SuggestionBar = view(UI.Row, {
   },
   visible: {
     pointerEvents: 'auto',
-    opacity: 1,
+    opacity: 0.8,
     transform: {
       x: 0,
     },
@@ -66,7 +66,7 @@ const suggestionTheme = theme => ({
 const SuggestionButton = props => (
   <UI.Button
     glint={false}
-    size={1}
+    size={0.9}
     sizeRadius={0.9}
     marginRight={3}
     sizeHeight={0.8}

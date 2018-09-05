@@ -11,6 +11,7 @@ import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
+import { HighlightText } from './HighlightText'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -218,7 +219,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             )}
           {!(hide && hide.title) && (
             <Title>
-              <UI.Text
+              <HighlightText
                 fontSize={14}
                 sizeLineHeight={0.85}
                 ellipse={hasSubtitle && hasMeta ? true : 2}
@@ -227,7 +228,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
                 {...titleProps}
               >
                 {title}
-              </UI.Text>
+              </HighlightText>
               {afterTitle}
             </Title>
           )}

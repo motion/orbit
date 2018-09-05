@@ -22,7 +22,7 @@ type State = {
 
 const Highlight = view(UI.View, {
   position: 'absolute',
-  background: 'rgba(0, 0, 0, 0.15)',
+  background: 'yellow',
   borderRadius: 4,
   padding: 2,
   transform: {

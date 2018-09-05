@@ -8,18 +8,31 @@ const cutoff = (str, maxChars) => {
   return str.replace(/(\s{2,}|\n)/g, ' ').slice(0, maxChars - 3) + '...'
 }
 
+export type HighlightOptions = {
+  text?: string
+  words?: string[]
+  trimWhitespace?: boolean
+  maxChars?: number
+  maxSurroundChars?: number
+  style?: string
+  separator?: string
+}
+
 // cut text down using highlight words
 // not a wonderfully efficient
 // but still great for not too long text
 // and pretty easy to follow
-export const highlightText = (options, returnList = false) => {
+export const highlightText = (
+  options: HighlightOptions,
+  returnList = false,
+) => {
   const {
     text,
     words,
     trimWhitespace,
     maxChars = 500,
     maxSurroundChars = 50,
-    style = 'background: rgba(251, 255, 162, 0.15); border-radius: 4px;',
+    style = 'background: rgba(255, 255, 0, 0.8); color: #000; border-radius: 4px;',
     separator = '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
   } = options
   let parts = [text]

@@ -73,7 +73,7 @@ ListItem.theme = ({ theme, isSelected, padding, chromeless }) => {
   } else {
     listStyle = {
       '&:hover': {
-        background: theme.backgroundHover.alpha(0.15),
+        background: theme.listItemBackgroundHover,
       },
     }
   }

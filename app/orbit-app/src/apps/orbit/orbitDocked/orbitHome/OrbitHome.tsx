@@ -245,8 +245,6 @@ export class OrbitHome extends React.Component<Props> {
 
   render() {
     const { homeStore, selectionStore } = this.props
-    console.log('HOME RENDER2')
-    homeStore.results
     return (
       <SubPane name="home" fadeBottom>
         <DragDropContext onDragEnd={this.onDragEnd}>

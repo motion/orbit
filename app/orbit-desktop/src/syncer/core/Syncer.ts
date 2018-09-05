@@ -101,8 +101,9 @@ export class Syncer {
         },
       })
       if (lastJob) {
-        const needToWait =
-          lastJob.time + this.options.interval - new Date().getTime()
+        const jobTime = lastJob.time + this.options.interval
+        const currentTime = new Date().getTime()
+        const needToWait = jobTime - currentTime
         if (needToWait > 0) {
           log(
             `found last executed job for ${this.name}${
@@ -110,8 +111,8 @@ export class Syncer {
               } and we should wait some time ` +
             'until enough interval time will pass before we execute a new job',
             {
-              jobTime: lastJob.time + this.options.interval * 1000,
-              currentTime: new Date().getTime(),
+              jobTime,
+              currentTime,
               needToWait,
               lastJob,
             },

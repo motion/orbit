@@ -5,6 +5,9 @@ const splitChar = '🂓'
 
 const notLetter = /[^A-Za-z0-9]+/g
 const cutoff = (str, maxChars) => {
+  if (str.length <= maxChars) {
+    return str
+  }
   return str.replace(/(\s{2,}|\n)/g, ' ').slice(0, maxChars - 3) + '...'
 }
 

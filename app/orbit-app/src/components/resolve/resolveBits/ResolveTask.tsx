@@ -1,5 +1,4 @@
 import keywordExtract from '@mcro/keyword-extract'
-import markdown from '@mcro/marky-markdown'
 import { GithubBitData, GithubBitDataComment } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
@@ -33,11 +32,7 @@ const BitGithubTaskComment = ({
         {login}
         {!!createdAt && <DateFormat date={new Date(createdAt)} />}
       </UI.Row>
-      <div
-        dangerouslySetInnerHTML={{
-          __html: markdown(body),
-        }}
-      />
+      <Markdown source={body} />
     </div>
   )
 }

@@ -12,7 +12,7 @@ export type ResolvedItem = {
   type: 'person' | 'bit'
   title: string
   preview?: React.ReactNode
-  content?: string
+  content?: React.ReactNode
   icon: string
   location?: string
   locationLink?: string

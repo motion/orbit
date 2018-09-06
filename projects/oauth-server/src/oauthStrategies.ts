@@ -30,8 +30,8 @@ export default {
     config: {
       credentials: {
         callbackURL: 'https://orbitauth.com/auth/github/callback',
-        clientID: '9afb7a8f8758557ca884',
-        clientSecret: 'eb53a07f613eb07f4fa4db96845bae813ec2c01f',
+        clientID: 'de95d6d639ef4a013166',
+        clientSecret: 'aa259c9b4ea25c22b288761e03e7f19f43b0cca6',
         scope: ['user:email', 'notifications', 'repo', 'read:org'],
       },
     },

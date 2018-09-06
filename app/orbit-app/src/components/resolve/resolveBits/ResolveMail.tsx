@@ -15,6 +15,8 @@ export const removeQuoted = str => {
     .split('\n')
     .filter(line => line[0] !== '>')
     .join('\n')
+  // we need to replace repeating empty lines
+  // .replace(/(\s+\n$)+/gm, '')
 }
 
 export const ResolveMail = ({ bit, children }: BitItemResolverProps) => {

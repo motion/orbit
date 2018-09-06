@@ -11,9 +11,9 @@ const log = logger('database')
 // we can setup the database for the first time
 // and run migration from here
 
-const hasTable = (db: sqlite.Database, table: string) =>
-  db.all(
-    'SELECT name FROM sqlite_master WHERE type=\'table\' AND name=\'{?}\';',
+const hasTable = async (db: sqlite.Database, table: string) =>
+  await db.get(
+    'SELECT name FROM sqlite_master WHERE type="table" AND name=?',
     table,
   )
 
@@ -23,7 +23,7 @@ export class DatabaseManager {
 
   async start() {
     this.db = await sqlite.open(DATABASE_PATH)
-    this.ensureSearchTable()
+    this.ensureSearchIndex()
     this.watchForReset()
   }
 
@@ -49,19 +49,27 @@ export class DatabaseManager {
     this.subscriptions.add({ dispose })
   }
 
-  private ensureSearchTable = async () => {
+  private ensureSearchIndex = async () => {
     if (await hasTable(this.db, 'search_index')) {
       log('Already has search index')
       return
     }
+    await this.createSearchIndex()
+    await this.createSearchIndexTriggers()
+  }
+
+  createSearchIndex = async () => {
     log('Setting up search index')
     await this.db.all(
       'CREATE VIRTUAL TABLE search_index USING fts5(title, body, location, tokenize=porter);',
     )
+  }
+
+  createSearchIndexTriggers = async () => {
     log('Setting up trigger to keep search index up to date')
     // INSERT
     await this.db.all(
-      `CREATE TRIGGER after_bit_insert AFTER INSERT ON bits BEGIN
+      `CREATE TRIGGER after_bit_insert AFTER INSERT ON bit_entity BEGIN
         INSERT INTO search_index (
           rowid,
           title,
@@ -79,7 +87,7 @@ export class DatabaseManager {
     )
     // UPDATE
     await this.db.all(`
-      CREATE TRIGGER after_bit_update UPDATE OF bit ON bits BEGIN
+      CREATE TRIGGER after_bit_update UPDATE OF bit ON bit_entity BEGIN
         UPDATE search_index
           SET body = new.body
         WHERE rowid = old.id;
@@ -87,7 +95,7 @@ export class DatabaseManager {
     `)
     // DELETE
     await this.db.all(`
-      CREATE TRIGGER after_bit_delete AFTER DELETE ON bits BEGIN
+      CREATE TRIGGER after_bit_delete AFTER DELETE ON bit_entity BEGIN
         DELETE FROM search_index WHERE rowid = old.id;
       END;
     `)

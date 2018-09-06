@@ -10,7 +10,7 @@ import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationCl
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { Title } from '../../../../views'
+import { Title, VerticalSpace } from '../../../../views'
 import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
@@ -50,6 +50,11 @@ const Controls = view({
   bottom: 15,
   right: 0,
   alignItems: 'center',
+  disabled: {
+    pointerEvents: 'none',
+    filter: 'grayscale(100%)',
+    opacity: 0.8,
+  },
 })
 
 const FrameAnimate = view({
@@ -115,7 +120,7 @@ const AddButton = ({ disabled, ...props }) =>
     </Theme>
   )
 
-const buttonText = ['Begin', 'Next', 'Done!']
+const buttonText = ['Start Proxy', 'Next', 'Done!']
 
 class OnboardStore {
   props: Props
@@ -124,14 +129,22 @@ class OnboardStore {
   accepted = null
   curFrame = 0
 
-  didMount() {
-    this.checkAlreadyProxied()
+  async didMount() {
+    await this.checkAlreadyProxied()
+    if (this.accepted && this.curFrame === 0) {
+      this.nextFrame()
+    }
   }
 
   async checkAlreadyProxied() {
     if (await checkAuthProxy()) {
       this.accepted = true
     }
+  }
+
+  get disableButtons() {
+    const isShowingSuccessMessage = this.accepted && this.curFrame === 0
+    return isShowingSuccessMessage
   }
 
   prevFrame = () => this.curFrame--
@@ -219,33 +232,32 @@ export const OrbitOnboard = decorator(
               <Centered>
                 <br />
                 <Text size={3.2} fontWeight={600}>
-                  Hello
+                  Hello,
                 </Text>
                 <View height={10} />
                 <Text size={1.75} alpha={0.5}>
                   Welcome to Orbit
                 </Text>
                 <View height={30} />
-                <Text textAlign="left" size={1.1}>
-                  Orbit is the first ever completely private search platform.
-                  <br />
-                  <br />
-                  To work, Orbit sets up a proxy to direct our servers at{' '}
-                  <em>{getGlobalConfig().urls.authProxy}</em> to your local
-                  computer.
-                  <br />
-                  <br />
-                  When you click 'Begin', we'll prompt you for a password to set
-                  this up.
-                  <br />
-                  <br />
-                  <br />
-                  <strong>
-                    <a href="http://tryorbit.com/security">
-                      Learn everything about Orbit security.
-                    </a>
-                  </strong>
+                <Text textAlign="left" size={1.3} alpha={0.9}>
+                  Orbit is the first ever search platform built{' '}
+                  <strong>for&nbsp;you</strong>, the individual.
+                  <VerticalSpace />
+                  Your data never leaves your computer and we don't even get
+                  access to the keys.
                 </Text>
+                <VerticalSpace />
+                <Text textAlign="left" size={1.1}>
+                  To pull that off Orbit needs to run a secure local proxy from
+                  your computer to {getGlobalConfig().urls.authProxy}.
+                </Text>
+                <VerticalSpace />
+                <VerticalSpace />
+                <strong className="markdown">
+                  <a href="http://tryorbit.com/security">
+                    Learn more about Orbit security.
+                  </a>
+                </strong>
               </Centered>
             )}
             {store.accepted === false && (
@@ -298,10 +310,7 @@ export const OrbitOnboard = decorator(
               Set up a few apps
             </Title>
 
-            <Text>
-              Orbit privately syncs your data. You can add a few apps now to get
-              it started.
-            </Text>
+            <Text>You can add a few apps now to get started.</Text>
 
             <View height={15} />
             <Unpad>
@@ -326,14 +335,8 @@ export const OrbitOnboard = decorator(
             <br />
 
             <MessageDark style={{ textAlign: 'center' }}>
-              <strong>Orbit Proxy Active!</strong>
-              <br />
-              <Text textAlign="left" size={1.2}>
-                Your private keys will never leave this device.
-              </Text>
+              <Text size={1.2}>Orbit Proxy Active!</Text>
             </MessageDark>
-
-            <br />
           </OnboardFrame>
           <OnboardFrame>
             <Centered>
@@ -348,7 +351,7 @@ export const OrbitOnboard = decorator(
             </Centered>
           </OnboardFrame>
         </FrameAnimate>
-        <Controls>
+        <Controls disabled={store.disableButtons}>
           {store.curFrame > 1 && (
             <Button chromeless onClick={store.prevFrame}>
               Back
@@ -356,7 +359,7 @@ export const OrbitOnboard = decorator(
           )}
           <View width={10} />
           <Theme name="orbit">
-            <Button size={1.2} onClick={store.nextFrame}>
+            <Button size={1.1} fontWeight={600} onClick={store.nextFrame}>
               {buttonText[store.curFrame]}
             </Button>
           </Theme>

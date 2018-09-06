@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SubPane } from '../../SubPane'
 import { view, compose, sleep } from '@mcro/black'
-import { Text, Button, Theme, View } from '@mcro/ui'
+import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { Desktop } from '@mcro/stores'
@@ -11,10 +11,10 @@ import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettings
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { Title, VerticalSpace } from '../../../../views'
-import { getGlobalConfig } from '@mcro/config'
+// import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
-import { MessageDark } from '../../../../views/Message'
+// import { MessageDark } from '../../../../views/Message'
 import { GeneralSettingValues } from '@mcro/models'
 
 type Props = {
@@ -87,7 +87,7 @@ const Item = view({
   alignItems: 'center',
   inactive: {
     opacity: 0.5,
-    filter: 'grayscale(1)',
+    filter: 'grayscale(0.5)',
   },
   '&:hover': {
     background: [0, 0, 0, 0.05],
@@ -175,7 +175,7 @@ class OnboardStore {
     }
 
     if (this.curFrame === 2) {
-      console.log('cur frame now...')
+      this.props.paneManagerStore.setActivePane('home')
       this.props.paneManagerStore.forceOnboard = false
       // save setting
       const generalSetting = await SettingRepository.findOne({
@@ -332,17 +332,21 @@ export const OrbitOnboard = decorator(
                     <OrbitIcon size={18} icon={item.id} />
                     <ItemTitle>{item.title}</ItemTitle>
                     <AddButton size={0.9} disabled={item.added}>
-                      {item.added ? 'Added!' : 'Add'}
+                      {item.added ? (
+                        <Icon size={16} name="check" color="green" />
+                      ) : (
+                        'Add'
+                      )}
                     </AddButton>
                   </Item>
                 )
               })}
             </Unpad>
-            <br />
+            <VerticalSpace />
 
-            <MessageDark style={{ textAlign: 'center' }}>
+            {/* <MessageDark style={{ textAlign: 'center' }}>
               <Text size={1.2}>Orbit Proxy Active!</Text>
-            </MessageDark>
+            </MessageDark> */}
           </OnboardFrame>
           <OnboardFrame>
             <Centered>
@@ -351,7 +355,7 @@ export const OrbitOnboard = decorator(
               </Text>
               <View height={20} />
               <Text size={1.5} alpha={0.5}>
-                Orbit will now create an index of things and people from across
+                Orbit is now creating an index of things and people from across
                 your cloud.
               </Text>
             </Centered>

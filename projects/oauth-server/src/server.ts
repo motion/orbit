@@ -121,17 +121,10 @@ export class Server {
   <head>
     <title>Finish Orbit Auth</title>
     <script>
-      var xhttp = new XMLHttpRequest()
-      xhttp.open("GET", "http://private.tryorbit.com?value=${encodeURIComponent(
+      var url = "http://private.tryorbit.com?value=${encodeURIComponent(
         JSON.stringify(values),
-      )}", true)
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          console.log('good stuff')
-          window.close()
-        }
-      }
-      xhttp.send()
+      )}"
+      window.location = url
     </script>
   </head>
   <body>All done, closing...</body>

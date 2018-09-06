@@ -51,7 +51,8 @@ util.inherits(Strategy, OAuth2Strategy)
  */
 Strategy.prototype.userProfile = function(accessToken, done) {
   if (!accessToken) {
-    throw new Error('error')
+    console.log('no access token!')
+    return done('no access token!')
   }
   // this._oauth2.setAccessTokenName('token')
 

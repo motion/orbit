@@ -6,7 +6,7 @@
     "build-once": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "start": "node ./_/main.js",
-    "deploy": "now"
+    "deploy": "now && now alias"
   },
   "dependencies": {
     "express": "^4.15.2",

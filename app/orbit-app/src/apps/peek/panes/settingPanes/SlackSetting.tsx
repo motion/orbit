@@ -9,7 +9,8 @@ import { SettingRepository } from '../../../../repositories'
 import { DateFormat } from '../../../../views/DateFormat'
 import { Text } from '@mcro/ui'
 import { MultiSelectTableShortcutHandler } from '../../../../components/shortcutHandlers/MultiSelectTableShortcutHandler'
-import { SlackSettingValues } from '../../../../../../models/src'
+import { SlackSettingValues } from '@mcro/models'
+import { AppStatusPane } from './AppStatusPane'
 
 const columns = {
   name: {
@@ -76,7 +77,7 @@ class SlackSettingStore {
   props: SettingPaneProps
 
   syncing = {}
-  active = 'repos'
+  active = 'status'
 
   setActiveKey = key => {
     this.active = key
@@ -170,21 +171,20 @@ const decorator = compose(
 
 type Props = SettingPaneProps & { store: SlackSettingStore }
 
-export const SlackSetting = decorator(({ store, children }: Props) => {
+export const SlackSetting = decorator(({ store, setting, children }: Props) => {
   return children({
     belowHead: (
       <UI.Tabs active={store.active} onActive={store.setActiveKey}>
-        <UI.Tab key="repos" width="50%" label="Repos" />
-        <UI.Tab
-          key="issues"
-          width="50%"
-          label={`Issues (${store.bits ? store.bits.length : 0})`}
-        />
+        <UI.Tab key="status" width="50%" label="Status" />
+        <UI.Tab key="rooms" width="50%" label="Rooms" />
       </UI.Tabs>
     ),
     content: (
       <>
-        <HideablePane invisible={store.active !== 'repos'}>
+        <HideablePane invisible={store.active !== 'status'}>
+          <AppStatusPane setting={setting} />
+        </HideablePane>
+        <HideablePane invisible={store.active !== 'rooms'}>
           <MultiSelectTableShortcutHandler
             handlers={{ enter: store.handleEnter }}
           >
@@ -204,9 +204,6 @@ export const SlackSetting = decorator(({ store, children }: Props) => {
               }
             />
           </MultiSelectTableShortcutHandler>
-        </HideablePane>
-        <HideablePane invisible={store.active !== 'issues'}>
-          {/* <Bits bits={store.bits} /> */}
         </HideablePane>
       </>
     ),

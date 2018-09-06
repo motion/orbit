@@ -4,18 +4,18 @@ import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { SubPane } from '../../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
-import sanitize from 'sanitize-html'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../../../../stores/SearchStore'
 import { SelectionStore } from '../../../../stores/SelectionStore'
-import { App } from '@mcro/stores'
-import { memoize } from 'lodash'
+// import { App } from '@mcro/stores'
+// import { memoize } from 'lodash'
+// import { Actions } from '../../../../actions/Actions'
 import { ResolvedItem } from '../../../../components/ItemResolver'
 import { SuggestionBarVerticalPad } from '../../../../views'
-import { Actions } from '../../../../actions/Actions'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightsContext } from '../../../../helpers/contexts/HighlightsContext'
+import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -41,34 +41,22 @@ Highlight.theme = ({ theme }) => ({
   color: theme.color.alpha(0.95),
 })
 
-const uglies = /([^a-zA-Z]{2,})/g
-const replaceUglies = str => str.replace(uglies, ' ')
-
-const selectHighlight = (
-  index,
-  hlIndex,
-  selectionStore: SelectionStore,
-) => e => {
-  const isAlreadyAtHighlight = App.peekState.highlightIndex === hlIndex
-  const isAlreadyAtIndex = selectionStore.activeIndex === index
-  if (isAlreadyAtHighlight && isAlreadyAtIndex) {
-    return
-  }
-  if (isAlreadyAtIndex) {
-    e.stopPropagation()
-  }
-  Actions.setHighlightIndex(hlIndex)
-  return
-}
-
-const highlightOptions = (query, bit) => ({
-  text: replaceUglies(sanitize(bit.body || '')),
-  words: query.split(' ').filter(x => x.length > 2),
-  maxChars: 100,
-  maxSurroundChars: 110,
-  trimWhitespace: true,
-  separator: '&nbsp;&middot;&nbsp;',
-})
+// const selectHighlight = (
+//   index,
+//   hlIndex,
+//   selectionStore: SelectionStore,
+// ) => e => {
+//   const isAlreadyAtHighlight = App.peekState.highlightIndex === hlIndex
+//   const isAlreadyAtIndex = selectionStore.activeIndex === index
+//   if (isAlreadyAtHighlight && isAlreadyAtIndex) {
+//     return
+//   }
+//   if (isAlreadyAtIndex) {
+//     e.stopPropagation()
+//   }
+//   Actions.setHighlightIndex(hlIndex)
+//   return
+// }
 
 const hideSlack = {
   // title: true,
@@ -89,18 +77,18 @@ const SearchResultText = props => (
 
 @view
 class OrbitSearchResultsList extends React.Component<Props> {
-  getHighlight = memoize(index => ({ highlights }) => {
-    const { selectionStore } = this.props
-    return highlights.map((highlight, hlIndex) => {
-      return (
-        <Highlight
-          key={hlIndex}
-          dangerouslySetInnerHTML={{ __html: highlight }}
-          onClick={selectHighlight(index, hlIndex, selectionStore)}
-        />
-      )
-    })
-  })
+  // getHighlight = memoize(index => ({ highlights }) => {
+  //   const { selectionStore } = this.props
+  //   return highlights.map((highlight, hlIndex) => {
+  //     return (
+  //       <Highlight
+  //         key={hlIndex}
+  //         dangerouslySetInnerHTML={{ __html: highlight }}
+  //         onClick={selectHighlight(index, hlIndex, selectionStore)}
+  //       />
+  //     )
+  //   })
+  // })
 
   getChildren = ({ content }, bit) => {
     return bit.integration === 'slack' ? (
@@ -220,11 +208,20 @@ export class OrbitSearchResults extends React.Component<Props> {
         }
         onScrollNearBottom={this.props.searchStore.loadMore}
       >
-        <OrbitSearchResultsContents
-          selectionStore={selectionStore}
-          searchStore={searchStore}
-          name={name}
-        />
+        <ItemResolverDecorationContext.Provider
+          value={{
+            item: null,
+            text: {
+              alpha: 0.6555,
+            },
+          }}
+        >
+          <OrbitSearchResultsContents
+            selectionStore={selectionStore}
+            searchStore={searchStore}
+            name={name}
+          />
+        </ItemResolverDecorationContext.Provider>
       </SubPane>
     )
   }

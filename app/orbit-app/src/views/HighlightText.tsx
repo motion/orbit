@@ -7,18 +7,31 @@ type Props = TextProps & {
   options?: HighlightOptions
 }
 
-export const HighlightText = ({ options, ...props }: Props) => (
+export const HighlightText = ({ options, children, ...props }: Props) => (
   <HighlightsContext.Consumer>
     {term => (
       <Text
-        highlight={{
-          words: [term],
-          maxSurroundChars: Infinity,
-          maxChars: Infinity,
-          ...options,
-        }}
+        tagName="p"
+        display="block"
+        color="inherit"
+        selectable
+        highlight={
+          term
+            ? {
+                words: [term],
+                maxSurroundChars: Infinity,
+                maxChars: Infinity,
+                ...options,
+              }
+            : null
+        }
         {...props}
-      />
+      >
+        {/* react-markdown passes us an array of length 1... */}
+        {Array.isArray(children) && children.length === 1
+          ? children[0]
+          : children}
+      </Text>
     )}
   </HighlightsContext.Consumer>
 )

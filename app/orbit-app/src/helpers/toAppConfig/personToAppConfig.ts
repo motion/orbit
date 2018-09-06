@@ -1,4 +1,4 @@
-import { PersonBit } from '../../../../models/src'
+import { PersonBit } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
 
 export function personToAppConfig(person: PersonBit): AppConfig {
@@ -12,7 +12,7 @@ export function personToAppConfig(person: PersonBit): AppConfig {
     subType: '',
     config: {
       showTitleBar: false,
-      dimensions: [700, 800],
+      dimensions: [600, 680],
     },
   }
 }

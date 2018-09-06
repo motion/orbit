@@ -1,13 +1,12 @@
 import { AppConfig } from '@mcro/stores'
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
-import { Bit, Setting } from '@mcro/models'
+import { Bit, Setting, PersonBit } from '@mcro/models'
 import { SelectionStore } from '../stores/SelectionStore'
 import { AppStore } from '../stores/AppStore'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { ResolvedItem } from '../components/ItemResolver'
-import { PersonBit } from '../../../models/src'
 import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
 
 type Model = Bit | PersonBit | Setting
@@ -41,7 +40,11 @@ export type OrbitItemProps = CSSPropertySet & {
   model?: Model
   itemProps?: Object
   children?:
-    | ((a: ResolvedItem, b: Bit, c: number) => JSX.Element)
+    | ((
+        a: ResolvedItem,
+        b: Bit | PersonBit | Setting,
+        c: number,
+      ) => JSX.Element)
     | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any

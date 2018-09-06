@@ -71,6 +71,10 @@ to sync with umed:
 
 # next
 
+- showing sync status:
+  - make a SyncStatusStore that takes a setting
+  - ask umed: how to get all JobRepository.Syncer types
+  - in Setting panes show status at bottom or top
 - typing while focused on a peek:
   - reset index to 0 not -1, keeps the peek open as you filter things
 - doesnt follow monitor on add new monitor
@@ -81,8 +85,6 @@ to sync with umed:
   - show html in emails
 - slack room
 - email list email
-- remove confluence
-- make onboarding encourage adding more integrations
 - close orbit while oauth open so it doesnt cover it
 - better show the panes on onboard
 - after onboard "what can i do / search?"

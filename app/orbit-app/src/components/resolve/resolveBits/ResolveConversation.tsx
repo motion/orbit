@@ -25,25 +25,17 @@ const getMessages = (
   return res
 }
 
-export const ResolveConversation = ({
-  children,
-  bit,
-  shownLimit = 5,
-  itemProps,
-  isExpanded,
-  searchTerm,
-  hide,
-}: BitItemResolverProps) => {
+export const ResolveConversation = (props: BitItemResolverProps) => {
+  const { children, bit, shownLimit = 5, isExpanded, searchTerm, hide } = props
   const data = bit.data as SlackBitData
   const content = isExpanded
     ? (getMessages(data.messages, { searchTerm, shownLimit }).map(
         (message, index) => (
           <SlackMessage
             key={index}
+            {...props}
             message={message}
             previousMessage={data.messages[index - 1]}
-            bit={bit}
-            itemProps={itemProps}
             hide={hide}
           />
         ),

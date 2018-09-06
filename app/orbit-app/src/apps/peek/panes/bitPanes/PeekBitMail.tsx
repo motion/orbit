@@ -8,6 +8,8 @@ import { DateFormat } from '../../../../views/DateFormat'
 import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 import { Actions } from '../../../../actions/Actions'
 import { VerticalSpace } from '../../../../views'
+import { HighlightText } from '../../../../views/HighlightText'
+import { removeQuoted } from '../../../../components/resolve/resolveBits/ResolveMail'
 
 const HorizontalSpace = view({
   width: 10,
@@ -18,10 +20,14 @@ const Message = view({
   borderBottom: [1, 'dotted', '#eee'],
 })
 
-const Para = view({
+const Paragraph = view(HighlightText, {
   marginBottom: '0.35rem',
-  whiteSpace: 'normal',
+  userSelect: 'auto',
 })
+
+Paragraph.defaultProps = {
+  className: 'markdown',
+}
 
 const MessageHeader = view({
   flexFlow: 'row',
@@ -66,15 +72,12 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
             </MessageHeader>
             <VerticalSpace small />
             <Linkify>
-              {!!message.body && (
-                <UI.Text>
-                  {message.body.split('\n\n').map((message, idx) => (
-                    <Para className="markdown" key={idx}>
-                      {message}
-                    </Para>
+              {!!message.body &&
+                message.body
+                  .split('\n')
+                  .map((message, idx) => (
+                    <Paragraph key={idx}>{removeQuoted(message)}</Paragraph>
                   ))}
-                </UI.Text>
-              )}
             </Linkify>
           </Message>
         )

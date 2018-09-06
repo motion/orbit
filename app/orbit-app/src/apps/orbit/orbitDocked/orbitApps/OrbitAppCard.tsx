@@ -1,15 +1,19 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
-import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
+import {
+  SettingInfoStore,
+  SettingInfoProps,
+} from '../../../../stores/SettingInfoStore'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
-import { Row, Col } from '@mcro/ui'
-import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
+// import { Row, Col } from '@mcro/ui'
+// import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 
-type Props = OrbitItemProps & {
-  store: SettingInfoStore
-  isActive?: boolean
-}
+type Props = OrbitItemProps &
+  SettingInfoProps & {
+    store: SettingInfoStore
+    isActive?: boolean
+  }
 
 const decorator = compose(
   view.attach({
@@ -48,10 +52,12 @@ export const OrbitAppCard = decorator(
         result={result}
         {...props}
       >
-        <Row>
+        {/* this will be so you can go straight to the individual home screen */}
+        {/* for this integration which will pre-populate with location rows */}
+        {/* <Row>
           <Col flex={1} />
           <RoundButtonSmall>View</RoundButtonSmall>
-        </Row>
+        </Row> */}
       </OrbitCard>
     )
   },

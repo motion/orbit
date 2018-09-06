@@ -1,43 +1,53 @@
-import { Setting, BitModel } from '@mcro/models'
-import { JobRepository, SettingRepository, observeCount } from '../repositories'
-import { modelQueryReaction } from '../repositories/modelQueryReaction'
+import { BitModel, SettingModel, JobModel, Setting } from '@mcro/models'
+import { observeCount, observeOne } from '../repositories'
 
-// TODO: we can have multiple of the same integration added in
-// this just assumes one of each
+export type SettingInfoProps = {
+  settingId?: number
+  model?: Setting
+}
 
 export class SettingInfoStore {
-  props: {
-    model: Setting
-    result: { id: string; [key: string]: any }
+  props: SettingInfoProps
+
+  setting = null
+  bitsCount = 0
+  job = null
+
+  get settingId() {
+    return this.props.model ? this.props.model.id : this.props.settingId
   }
 
-  setting = modelQueryReaction(() =>
-    SettingRepository.findOne(`${(this.props.model || this.props.result).id}`),
-  )
-
-  bitsCount = 0
-  bitsCounts$ = observeCount(BitModel, {
+  private setting$ = observeOne(SettingModel, {
     args: {
-      settingId: this.setting.id
+      where: {
+        id: this.settingId,
+      },
+    },
+  }).subscribe(value => {
+    this.setting = value
+  })
+
+  private bitsCounts$ = observeCount(BitModel, {
+    args: {
+      settingId: this.settingId,
     },
   }).subscribe(value => {
     console.log('got count', value)
     this.bitsCount = value
   })
 
+  private job$ = observeOne(JobModel, {
+    args: {
+      where: { settingId: this.settingId },
+      order: { id: 'DESC' },
+    },
+  }).subscribe(value => {
+    this.job = value
+  })
+
   willUnmount() {
     this.bitsCounts$.unsubscribe()
+    this.setting$.unsubscribe()
+    this.job$.unsubscribe()
   }
-
-  job = modelQueryReaction(
-    async () => {
-      return await JobRepository.findOne({
-        where: { settingId: this.setting.id },
-        order: { id: 'DESC' },
-      })
-    },
-    {
-      condition: () => !!this.setting,
-    },
-  )
 }

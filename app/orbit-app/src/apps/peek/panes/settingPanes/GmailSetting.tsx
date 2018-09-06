@@ -5,10 +5,12 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
 import { SettingRepository } from '../../../../repositories'
+import { GmailSettingValues } from '@mcro/models'
+import { AppStatusPane } from './AppStatusPane'
 
 const columnSizes = {
   filter: 'flex',
-  active: '10%',
+  active: '14%',
 }
 
 const columns = {
@@ -46,7 +48,7 @@ class GmailSettingStore {
   props: SettingPaneProps
 
   syncing = {}
-  active = 'filters'
+  active = 'status'
 
   setActiveKey = key => {
     this.active = key
@@ -56,9 +58,12 @@ class GmailSettingStore {
     return this.props.setting
   }
 
+  get values() {
+    return this.setting.values as GmailSettingValues
+  }
+
   get whiteList() {
-    // @ts-ignore
-    const { whiteList } = this.setting.values
+    const { whiteList } = this.values
     if (whiteList) {
       let a = []
       for (const id in whiteList) {
@@ -77,9 +82,9 @@ class GmailSettingStore {
 
   onSync = fullName => async e => {
     this.setting.values = {
-      ...this.setting.values,
+      ...this.values,
       channels: {
-        ...this.setting.values.channels,
+        ...this.values.whiteList,
         [fullName]: e.target.checked,
       },
     }
@@ -87,10 +92,10 @@ class GmailSettingStore {
   }
 
   isSyncing = fullName => {
-    if (!this.setting || !this.setting.values.channels) {
+    if (!this.setting || !this.values.whiteList) {
       return false
     }
-    return this.setting.values.channels[fullName] || false
+    return this.values.whiteList[fullName] || false
   }
 }
 
@@ -105,12 +110,16 @@ export const GmailSetting = decorator(({ store, children }: Props) => {
   return children({
     belowHead: (
       <UI.Tabs active={store.active} onActive={store.setActiveKey}>
+        <UI.Tab key="status" width="50%" label="Status" />
         <UI.Tab key="filters" width="50%" label="Filters" />
       </UI.Tabs>
     ),
     content: (
       <>
-        <HideablePane visible={store.active !== 'filters'}>
+        <HideablePane invisible={store.active !== 'status'}>
+          <AppStatusPane setting={store.setting} />
+        </HideablePane>
+        <HideablePane invisible={store.active !== 'filters'}>
           <UI.SearchableTable
             virtual
             rowLineHeight={28}

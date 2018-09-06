@@ -144,6 +144,7 @@ SurfaceFrame.theme = props => {
     background: 'transparent',
   }
   let surfaceStyles = {
+    fontWeight: props.fontWeight,
     color: props.color || props.theme.color,
     ...(props.inline && inlineStyle),
     overflow:
@@ -280,6 +281,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       inline: this.props.inline,
       icon: this.props.icon,
       lineHeight: this.props.lineHeight,
+      fontWeight: this.props.fontWeight,
     }
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height + 1}px`

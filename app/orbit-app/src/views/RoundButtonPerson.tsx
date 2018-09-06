@@ -2,7 +2,7 @@ import * as React from 'react'
 import { RoundButton } from './RoundButton'
 import * as UI from '@mcro/ui'
 import { ButtonProps } from '@mcro/ui'
-import { Person } from '../../../models/src'
+import { Person } from '@mcro/models'
 import { PersonBitRepository } from '../repositories'
 import { Actions } from '../actions/Actions'
 

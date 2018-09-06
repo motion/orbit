@@ -31,10 +31,10 @@ const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
   if (appConfig && appConfig.config && appConfig.config.dimensions) {
     preferred = appConfig.config.dimensions
   } else {
-    preferred = [screenWidth / 3.25, screenWidth / 3]
+    preferred = [screenWidth / 3.25, screenWidth / 2.75]
   }
-  const max = [930, 820]
-  const min = [550, 640]
+  const max = [930, 920]
+  const min = [550, 300]
   return preferred
     .map((z, i) => Math.min(z, max[i]))
     .map((z, i) => Math.max(z, min[i]))

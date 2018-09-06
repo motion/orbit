@@ -11,7 +11,6 @@ const options = {
 
 export const ResolveDocument = ({
   bit,
-  // searchTerm,
   children,
   isExpanded,
 }: BitItemResolverProps) =>

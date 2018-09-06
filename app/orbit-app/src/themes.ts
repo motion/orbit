@@ -65,10 +65,11 @@ export const themes = {
   },
   dark: {
     ...macTheme,
+    glintColor: [255, 255, 255, 0.2],
     listItemBackground: 'transparent',
     listItemBackgroundSelected: [60, 60, 60, 0.2],
     listItemBackgroundHover: [20, 20, 20, 0.3],
-    cardBackground: [60, 60, 60, 0.2],
+    cardBackground: [75, 75, 75, 0.3],
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardBorderColor: [255, 255, 255, 0.07],
     ...Theme.fromStyles({

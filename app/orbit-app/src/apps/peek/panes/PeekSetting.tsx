@@ -19,6 +19,12 @@ import { TitleBarSpace } from '../views/TitleBarSpace'
 import { Actions } from '../../../actions/Actions'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 
+type Props = PeekPaneProps & {
+  store?: SettingInfoStore
+  integrationSettingsStore?: IntegrationSettingsStore
+  setting: Setting
+}
+
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
 )
@@ -35,22 +41,11 @@ const statusIcons = {
   store: SettingInfoStore,
 })
 @view
-class SettingContent extends React.Component<
-  PeekPaneProps & {
-    store?: SettingInfoStore
-    integrationSettingsStore?: IntegrationSettingsStore
-    setting: Setting
-  }
-> {
+class SettingContent extends React.Component<Props> {
   handleRefresh = async () => {
     Mediator.command(SettingForceSyncCommand, {
       settingId: this.props.setting.id,
     })
-    // const store = this.props.store
-    // const job: Job = {} as Job
-    // job.type = store.setting.type
-    // job.status = 'PENDING'
-    // await JobRepository.save(job)
   }
 
   removeIntegration = async () => {

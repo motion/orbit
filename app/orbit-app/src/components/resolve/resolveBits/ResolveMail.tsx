@@ -9,6 +9,16 @@ const options = {
   remove_duplicates: false,
 }
 
+// TODO this isn't great, what if they purposely quote?
+export const removeQuoted = str => {
+  return str
+    .split('\n')
+    .filter(line => line[0] !== '>')
+    .join('\n')
+  // we need to replace repeating empty lines
+  // .replace(/(\s+\n$)+/gm, '')
+}
+
 export const ResolveMail = ({ bit, children }: BitItemResolverProps) => {
   // for now do location as the person name
   let location = ''
@@ -28,7 +38,7 @@ export const ResolveMail = ({ bit, children }: BitItemResolverProps) => {
     desktopLink: bit.desktopLink,
     location,
     locationLink: bit.location.webLink,
-    content: bit.body,
+    content: removeQuoted(bit.body),
     preview: keywordExtract
       .extract(bit.body, options)
       .slice(0, 6)

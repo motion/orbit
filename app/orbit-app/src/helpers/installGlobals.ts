@@ -21,10 +21,10 @@ if (typeof __webpack_require__ !== 'undefined') {
   window['require'] = require('webpack-runtime-require').Require
 }
 
-const recrusiveMobxToJS = obj => {
+const toJS = obj => {
   const next = Mobx.toJS(obj)
   if (Array.isArray(next)) {
-    return next.map(recrusiveMobxToJS)
+    return next.map(toJS)
   }
   return next
 }
@@ -45,7 +45,7 @@ window['render'] = start
 window['color'] = color
 window['dateFns'] = dateFns
 window['Logger'] = Logger
-window['toJS'] = recrusiveMobxToJS
+window['toJS'] = toJS
 
 // make the various model/repositories global
 for (const repo in Repositories) {

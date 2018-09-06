@@ -3134,9 +3134,9 @@ type-is@~1.6.15, type-is@~1.6.16:
     media-typer "0.3.0"
     mime-types "~2.1.18"
 
-typeorm@^0.3.0-alpha.12:
-  version "0.3.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.12.tgz#2a540df613d4376d176918549ea0d267d964eb8a"
+typeorm@^0.3.0-alpha.14:
+  version "0.3.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.14.tgz#cb5d0ebb85bc62352353578265b67942d8f4299e"
   dependencies:
     "@types/zen-observable" "^0.8.0"
     app-root-path "^2.0.1"

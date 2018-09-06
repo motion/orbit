@@ -93,7 +93,8 @@ export class Server {
   setupAuthReplyRoutes() {
     for (const name in OAuthStrategies) {
       const path = `/auth/${name}`
-      const options = OAuthStrategies[name].options
+      const strategy = OAuthStrategies[name]
+      const options = strategy.options
       this.app.get(path, Passport.authenticate(name, options, null))
       this.app.get(
         `/auth/${name}/callback`,
@@ -105,9 +106,9 @@ export class Server {
   <head>
     <title>Finish Orbit Auth</title>
     <script>
-      var url = "http://private.tryorbit.com/authCallback/${name}?value=${encodeURIComponent(
-            JSON.stringify(values),
-          )}"
+      var url = "http://private.tryorbit.com/authCallback/${name}?secret=${encodeURIComponent(
+            strategy.config.credentials.clientSecret,
+          )}&value=${encodeURIComponent(JSON.stringify(values))}"
       window.location = url
     </script>
   </head>

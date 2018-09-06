@@ -15,13 +15,17 @@ fi
 
 echo -n "" > ./scripts/.lastbuild
 
+#
 # BUILD
+#
 
 if [[ "$FLAGS" =~ "--debug" ]]; then
   DEBUG="electron-packager,electron-build:*"
 fi
 
+#
 # version
+#
 if [[ "$FLAGS" =~ "--no-version" ]]; then
   echo "not versioning..."
 else
@@ -31,7 +35,9 @@ else
 fi
 echo -n "--no-version " >> ./scripts/.lastbuild
 
+#
 # bundle
+#
 if [[ "$FLAGS" =~ "--no-build-app" ]]; then
   echo "not bundling..."
 else
@@ -62,7 +68,9 @@ function publish-packages() {
   kill $(lsof -t -i:4343) || true
 }
 
+#
 # publish
+#
 if [[ "$FLAGS" =~ "--no-publish" ]]; then
   echo "not publishing..."
 else
@@ -87,7 +95,9 @@ function install-packages() {
   kill $(lsof -t -i:4343) || true
 }
 
+#
 # install
+#
 if [[ "$FLAGS" =~ "--no-install" ]]; then
   echo "not installing..."
 else
@@ -96,14 +106,15 @@ else
 fi
 echo -n "--no-install " >> ./scripts/.lastbuild
 
+#
 # clean old
+#
 rm -r dist/mac/Orbit.app || true
 
-# before fix sqlite need to build for electron
-echo "electron-rebuild..."
+#
+# fix sqlite
+#
 (cd stage-app && ../node_modules/.bin/electron-rebuild --version 3.0.0-beta.1)
-
-echo "fix sqlite for desktop process..."
 # so desktop node subprocess can use it
 if [ ! -L "node_modules/sqlite3/lib/binding/node-v64-darwin-x64" ]; then
   cp -r stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64

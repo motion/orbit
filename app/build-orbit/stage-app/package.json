@@ -28,7 +28,10 @@
     },
     "files": [
       "**/*",
-      "!**/*oracle/orbit/Build/Products/Release**/*"
+      "!**/*oracle/orbit/Build/Products/Release**/*",
+      "!**/*.js.map",
+      "!**/*.d.ts",
+      "!**/*.ts"
     ],
     "extraResources": [
       {

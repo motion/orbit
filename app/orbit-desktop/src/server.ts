@@ -2,12 +2,8 @@ import 'isomorphic-fetch'
 import morgan from 'morgan'
 import express from 'express'
 import proxy from 'http-proxy-middleware'
-import session from 'express-session'
 import bodyParser from 'body-parser'
 import { getGlobalConfig } from '@mcro/config'
-import OAuth from './server/oauth'
-import OAuthStrategies from '@mcro/oauth-strategies'
-import Passport from 'passport'
 import killPort from 'kill-port'
 import { logger } from '@mcro/logger'
 
@@ -15,25 +11,11 @@ const log = logger('desktop')
 const Config = getGlobalConfig()
 
 export default class Server {
-  oauth: OAuth
   cache = {}
   login = null
   app: express.Application
 
   constructor() {
-    this.oauth = new OAuth({
-      strategies: OAuthStrategies,
-      onSuccess: async (service, token, refreshToken, info) => {
-        return { token, refreshToken, info, service }
-      },
-      findInfo: provider => {
-        return this.cache[provider]
-      },
-      updateInfo: (provider, info) => {
-        this.cache[provider] = info
-      },
-    })
-
     const app = express()
     app.set('port', Config.ports.server)
 
@@ -58,8 +40,6 @@ export default class Server {
       res.json(config)
     })
 
-    this.setupCredPass()
-    this.setupPassportRoutes()
     this.setupOrbitApp()
   }
 
@@ -88,24 +68,6 @@ export default class Server {
       )
       next()
     }
-  }
-
-  creds = {}
-  setupCredPass() {
-    this.app.use('/getCreds', (_, res) => {
-      if (Object.keys(this.creds).length) {
-        res.json(this.creds)
-      } else {
-        res.json({ error: 'no creds' })
-      }
-    })
-    this.app.use('/setCreds', (req, res) => {
-      log('setCreds', typeof req.body, req.body)
-      if (req.body) {
-        this.creds = req.body
-      }
-      res.sendStatus(200)
-    })
   }
 
   verifySession = async (username, token) => {
@@ -148,50 +110,6 @@ export default class Server {
     if (process.env.NODE_ENV !== 'development') {
       log(`Serving orbit static app in ${Config.paths.appStatic}...`)
       this.app.use('/', express.static(Config.paths.appStatic))
-    }
-  }
-
-  setupPassportRoutes() {
-    this.app.use(
-      '/auth', // TODO change secret
-      session({ secret: 'orbit', resave: false, saveUninitialized: true }),
-    )
-    this.app.use('/auth', Passport.initialize({ userProperty: 'currentUser' }))
-    this.app.use('/auth', Passport.session({ pauseStream: false }))
-    this.setupAuthRefreshRoutes()
-    this.setupAuthReplyRoutes()
-  }
-
-  setupAuthRefreshRoutes() {
-    this.app.use('/auth/refreshToken/:service', async (req, res) => {
-      log('refresh for', req.params.service)
-      try {
-        const refreshToken = await this.oauth.refreshToken(req.params.service)
-        res.json({ refreshToken })
-      } catch (error) {
-        log('error', error)
-        res.status(500)
-        res.json({ error })
-      }
-    })
-  }
-
-  setupAuthReplyRoutes() {
-    for (const name in OAuthStrategies) {
-      const path = `/auth/${name}`
-      const options = OAuthStrategies[name].options
-      this.app.get(path, Passport.authenticate(name, options, null))
-      this.app.get(
-        `/auth/${name}/callback`,
-        Passport.authenticate(name, options, null),
-        (req, res) => {
-          const values = req.user || req['currentUser']
-          this.oauth.finishOauth(name, values)
-          res.send(
-            '<html><head><title>Authentication Success</title><script>window.close()</script></head><body>All done, closing...</body></html>',
-          )
-        },
-      )
     }
   }
 }

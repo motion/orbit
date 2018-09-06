@@ -1,0 +1,24 @@
+{
+  "name": "@mcro/oauth-server",
+  "version": "2.2.1",
+  "private": true,
+  "scripts": {
+    "build-once": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "start": "node ./_/main.js",
+    "deploy": "now"
+  },
+  "dependencies": {
+    "express": "^4.15.2",
+    "express-session": "^1.15.5",
+    "lodash": "4.17.10",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "passport-oauth": "^1.0.0",
+    "passport-oauth2-refresh": "^1.0.0",
+    "passport-github": "1.1.0",
+    "passport-google-oauth20": "1.0.0",
+    "body-parser": "^1.16.1",
+    "morgan": "1.9.0"
+  }
+}

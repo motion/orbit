@@ -72,22 +72,6 @@ export default class Server {
     }
   }
 
-  private verifySession = async (username, token) => {
-    const user = await this.login.getUser(username)
-    if (!user) {
-      return false
-    }
-    const session = user.session[token]
-    if (!session) {
-      return false
-    }
-    if (typeof session.expires !== 'number') {
-      log('non-number session')
-      return false
-    }
-    return session.expires > Date.now()
-  }
-
   private setupOrbitApp() {
     // proxy to webpack-dev-server in development
     if (process.env.NODE_ENV === 'development') {

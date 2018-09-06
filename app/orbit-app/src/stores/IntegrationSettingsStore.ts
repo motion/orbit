@@ -4,20 +4,18 @@ import { observeMany } from '../repositories'
 
 export class IntegrationSettingsStore {
   settingsList = []
-
-  didMount() {
-    const settings$ = observeMany(SettingModel, {
-      args: {
-        where: {
-          token: { $not: '' },
-        },
+  private settingsList$ = observeMany(SettingModel, {
+    args: {
+      where: {
+        token: { $not: '' },
       },
-    }).subscribe(values => {
-      this.settingsList = values
-    })
-    this.subscriptions.add({
-      dispose: () => settings$.unsubscribe(),
-    })
+    },
+  }).subscribe(values => {
+    this.settingsList = values
+  })
+
+  willUnmount() {
+    this.settingsList$.unsubscribe()
   }
 
   get settings() {

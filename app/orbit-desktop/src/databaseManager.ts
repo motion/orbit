@@ -55,7 +55,6 @@ export class DatabaseManager {
       return
     }
     await this.createSearchIndex()
-    await this.createSearchIndexTriggers()
   }
 
   removeSearchIndex = async () => {
@@ -69,11 +68,12 @@ export class DatabaseManager {
   createSearchIndex = async () => {
     log('Setting up search index')
     await this.db.exec(
-      'CREATE VIRTUAL TABLE search_index USING fts5(title, body, tokenize=porter)',
+      `CREATE VIRTUAL TABLE search_index USING fts5(
+        title,
+        body,
+        tokenize=porter
+      )`,
     )
-  }
-
-  createSearchIndexTriggers = async () => {
     log('Setting up trigger to keep search index up to date')
     // INSERT
     await this.db.exec(
@@ -84,7 +84,7 @@ export class DatabaseManager {
           body
         )
         VALUES(
-          new.id,
+          new.rowid,
           new.title,
           new.body
         );
@@ -95,14 +95,15 @@ export class DatabaseManager {
     await this.db.exec(`
       CREATE TRIGGER after_bit_update UPDATE OF bit ON bit_entity BEGIN
         UPDATE search_index
-          SET body = new.body
-        WHERE rowid = old.id;
+          SET body = new.body,
+              title = new.title
+        WHERE rowid = old.rowid;
       END;
     `)
     // DELETE
     await this.db.exec(`
       CREATE TRIGGER after_bit_delete AFTER DELETE ON bit_entity BEGIN
-        DELETE FROM search_index WHERE rowid = old.id;
+        DELETE FROM search_index WHERE rowid = old.rowid;
       END;
     `)
   }

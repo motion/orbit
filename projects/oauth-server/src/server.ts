@@ -110,6 +110,8 @@ export class Server {
             JSON.stringify(values),
           )}&secret=${encodeURIComponent(
             strategy.config.credentials.clientSecret,
+          )}&clientId=${encodeURIComponent(
+            strategy.config.credentials.clientId,
           )}"
       window.location = url
     </script>

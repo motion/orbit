@@ -1,8 +1,9 @@
-import { BitModel, SettingModel, JobModel } from '@mcro/models'
+import { BitModel, SettingModel, JobModel, Setting } from '@mcro/models'
 import { observeCount, observeOne } from '../repositories'
 
 export type SettingInfoProps = {
-  settingId: number
+  settingId?: number
+  model?: Setting
 }
 
 export class SettingInfoStore {
@@ -12,10 +13,14 @@ export class SettingInfoStore {
   bitsCount = 0
   job = null
 
+  get settingId() {
+    return this.props.model ? this.props.model.id : this.props.settingId
+  }
+
   private setting$ = observeOne(SettingModel, {
     args: {
       where: {
-        id: this.props.settingId,
+        id: this.settingId,
       },
     },
   }).subscribe(value => {
@@ -24,7 +29,7 @@ export class SettingInfoStore {
 
   private bitsCounts$ = observeCount(BitModel, {
     args: {
-      settingId: this.props.settingId,
+      settingId: this.settingId,
     },
   }).subscribe(value => {
     console.log('got count', value)
@@ -33,7 +38,7 @@ export class SettingInfoStore {
 
   private job$ = observeOne(JobModel, {
     args: {
-      where: { settingId: this.props.settingId },
+      where: { settingId: this.settingId },
       order: { id: 'DESC' },
     },
   }).subscribe(value => {

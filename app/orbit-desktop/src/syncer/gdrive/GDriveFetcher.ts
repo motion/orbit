@@ -2,7 +2,6 @@ import { GDriveSettingValues } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
-import Strategies from '@mcro/oauth-strategies'
 import * as r2 from '@mcro/r2'
 import { logger } from '@mcro/logger'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
@@ -106,8 +105,8 @@ export class GDriveFetcher {
       },
       formData: {
         refresh_token: values.oauth.refreshToken,
-        client_id: Strategies.gmail.config.credentials.clientID,
-        client_secret: Strategies.gmail.config.credentials.clientSecret,
+        client_id: values.oauth.clientID,
+        client_secret: values.oauth.clientSecret,
         grant_type: 'refresh_token',
       },
     }).json

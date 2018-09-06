@@ -1,7 +1,8 @@
 export interface SlackSettingValues {
-
   oauth?: {
     refreshToken: string
+    secret: string
+    clientId: string
 
     // slack-specific
     info?: {

@@ -1,12 +1,13 @@
 import * as r2 from '@mcro/r2'
-import Strategies from '@mcro/oauth-strategies'
 import { DriveServiceHelpers, FetchOptions } from './types'
 import { getGlobalConfig } from '@mcro/config'
+import { GDriveSettingValues } from '@mcro/models'
 
 export const getHelpers = (setting): DriveServiceHelpers => ({
   baseUrl: 'https://content.googleapis.com',
   async refreshToken() {
-    if (!setting.values.oauth.refreshToken) {
+    const values = setting.values as GDriveSettingValues
+    if (!values.oauth.refreshToken) {
       return null
     }
     const reply = await r2.post('https://www.googleapis.com/oauth2/v4/token', {
@@ -14,9 +15,9 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       formData: {
-        refresh_token: setting.values.oauth.refreshToken,
-        client_id: Strategies.gmail.config.credentials.clientID,
-        client_secret: Strategies.gmail.config.credentials.clientSecret,
+        refresh_token: values.oauth.refreshToken,
+        client_id: values.oauth.clientID,
+        client_secret: values.oauth.clientSecret,
         grant_type: 'refresh_token',
       },
     }).json

@@ -27,7 +27,10 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   integration: '',
 }
 
-export function setPeekApp(item: PersonBit | Bit, target?: PeekTarget) {
+export function setPeekApp(
+  item: PersonBit | Bit | AppConfig,
+  target?: PeekTarget,
+) {
   invariant(item, 'Must pass item')
   const appConfig = getAppConfig(item)
   setPeekState({

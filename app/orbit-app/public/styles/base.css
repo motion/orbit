@@ -108,7 +108,7 @@ a.anchor {
 
 .markdown a {
   color: #2a78de;
-  text-decoration: underline;
+  border-bottom: 1px dotted #2a78de55;
 }
 
 .markdown {

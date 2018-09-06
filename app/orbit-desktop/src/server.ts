@@ -6,6 +6,7 @@ import bodyParser from 'body-parser'
 import { getGlobalConfig } from '@mcro/config'
 import killPort from 'kill-port'
 import { logger } from '@mcro/logger'
+import { finishOauth } from './helpers/finishOauth'
 
 const log = logger('desktop')
 const Config = getGlobalConfig()
@@ -41,6 +42,7 @@ export default class Server {
     })
 
     this.setupOrbitApp()
+    this.setupOauthCallback()
   }
 
   async start() {
@@ -55,7 +57,7 @@ export default class Server {
     return Config.ports.server
   }
 
-  cors() {
+  private cors() {
     const HEADER_ALLOWED =
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
     return (req, res, next) => {
@@ -70,7 +72,7 @@ export default class Server {
     }
   }
 
-  verifySession = async (username, token) => {
+  private verifySession = async (username, token) => {
     const user = await this.login.getUser(username)
     if (!user) {
       return false
@@ -86,7 +88,7 @@ export default class Server {
     return session.expires > Date.now()
   }
 
-  setupOrbitApp() {
+  private setupOrbitApp() {
     // proxy to webpack-dev-server in development
     if (process.env.NODE_ENV === 'development') {
       log('Serving orbit app through proxy to webpack-dev-server...')
@@ -111,5 +113,22 @@ export default class Server {
       log(`Serving orbit static app in ${Config.paths.appStatic}...`)
       this.app.use('/', express.static(Config.paths.appStatic))
     }
+  }
+
+  private setupOauthCallback() {
+    this.app.get('/authCallback/:service', (req, res) => {
+      console.log(
+        'value is',
+        req.query.value,
+        '\n\ndecoded:',
+        decodeURIComponent(req.query.value),
+      )
+      const value = JSON.parse(decodeURIComponent(req.query.value))
+      console.log('parsed valiue is', value)
+      finishOauth(req.params.service, value)
+      res.send(
+        '<html><head><title>Authentication Success</title><script>window.close()</script></head><body>All done, closing...</body></html>',
+      )
+    })
   }
 }

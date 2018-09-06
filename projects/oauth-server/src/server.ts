@@ -121,9 +121,9 @@ export class Server {
   <head>
     <title>Finish Orbit Auth</title>
     <script>
-      var url = "http://private.tryorbit.com?value=${encodeURIComponent(
-        JSON.stringify(values),
-      )}"
+      var url = "http://private.tryorbit.com/authCallback/${name}?value=${encodeURIComponent(
+            JSON.stringify(values),
+          )}"
       window.location = url
     </script>
   </head>

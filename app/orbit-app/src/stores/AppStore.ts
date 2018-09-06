@@ -1,16 +1,23 @@
 import { on, react, isEqual, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { SettingRepository } from '../repositories'
+import { observeMany } from '../repositories'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppReactions } from './AppReactions'
-import { modelQueryReaction } from '../repositories/modelQueryReaction'
-import { Bit, Setting } from '@mcro/models'
+import { Bit, Setting, SettingModel } from '@mcro/models'
 
 export class AppStore {
   contentHeight = 0
   lastSelectedPane = ''
   onPinKeyCB = null
+  appSettings = null
+  appSettings$ = observeMany(SettingModel, {
+    args: {
+      where: { category: 'integration', token: { $not: 'good' } },
+    },
+  }).subscribe(values => {
+    this.appSettings = values
+  })
 
   get contentBottom() {
     // always leave x room at bottom
@@ -32,6 +39,7 @@ export class AppStore {
 
   willUnmount() {
     this.appReactionsStore.dispose()
+    this.appSettings$.unsubscribe()
   }
 
   onPinKey = cb => {
@@ -69,16 +77,6 @@ export class AppStore {
   setContentHeight = height => {
     this.contentHeight = height
   }
-
-  appSettings = modelQueryReaction(
-    () =>
-      SettingRepository.find({
-        where: { category: 'integration', token: { $not: 'good' } },
-      }),
-    {
-      ignoreKeys: ['updatedAt', 'values'],
-    },
-  )
 
   services = react(
     () => this.appSettings,

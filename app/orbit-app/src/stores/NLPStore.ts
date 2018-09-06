@@ -1,13 +1,12 @@
-import { PersonRepository } from '../repositories'
-
+import { observeMany } from '../repositories'
 import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { NLPResponse } from './nlpStore/types'
-import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
 // runs off thread
 // @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
+import { PersonBitModel } from '@mcro/models'
 const { parseSearchQuery, setUserNames } = initNlp()
 // @ts-ignore
 window.nlpWorker = { parseSearchQuery, setUserNames }
@@ -25,6 +24,21 @@ const DEFAULT_NLP = {
 // @ts-ignore
 @store
 export class NLPStore /* extends Store */ {
+  peopleNames = null
+  peopleNames$ = observeMany(PersonBitModel, {
+    args: {
+      select: {
+        name: true,
+      },
+    },
+  }).subscribe(values => {
+    this.peopleNames = values.map(person => person.name)
+  })
+
+  willUnmount() {
+    this.peopleNames$.unsubscribe()
+  }
+
   get marks() {
     return this.nlp.marks
   }
@@ -45,13 +59,6 @@ export class NLPStore /* extends Store */ {
     {
       defaultValue: DEFAULT_NLP,
     },
-  )
-
-  // TODO select just the names
-  peopleNames = modelQueryReaction(
-    () => PersonRepository.find({ select: { name: true } }),
-    people => people.map(person => person.name),
-    { poll: 60 * 5 * 1000 },
   )
 
   updateUsers = react(

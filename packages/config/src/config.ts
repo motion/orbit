@@ -9,6 +9,7 @@ export type GlobalConfig = {
     resources: string
   }
   urls: {
+    auth: string
     authProxy: string
     server: string
     serverHost: string

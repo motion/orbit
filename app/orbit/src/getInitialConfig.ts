@@ -1,4 +1,3 @@
-// @ts-ignore
 import { app } from 'electron'
 import { findContiguousPorts } from './findContiguousPorts'
 import killPort from 'kill-port'
@@ -46,6 +45,7 @@ export async function getInitialConfig() {
       dotApp,
     },
     urls: {
+      auth: 'https://orbitauth.com',
       authProxy: 'http://private.tryorbit.com',
       server: `http://${serverHost}:${ports[0]}`,
       serverHost,

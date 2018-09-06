@@ -106,9 +106,11 @@ export class Server {
   <head>
     <title>Finish Orbit Auth</title>
     <script>
-      var url = "http://private.tryorbit.com/authCallback/${name}?secret=${encodeURIComponent(
+      var url = "http://private.tryorbit.com/authCallback/${name}?value=${encodeURIComponent(
+            JSON.stringify(values),
+          )}&secret=${encodeURIComponent(
             strategy.config.credentials.clientSecret,
-          )}&value=${encodeURIComponent(JSON.stringify(values))}"
+          )}"
       window.location = url
     </script>
   </head>

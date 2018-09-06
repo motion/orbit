@@ -69,8 +69,8 @@ export class GMailFetcher {
       },
       formData: {
         refresh_token: values.oauth.refreshToken,
-        client_id: values.oauth.clientID,
-        client_secret: values.oauth.clientSecret,
+        client_id: values.oauth.clientId,
+        client_secret: values.oauth.secret,
         grant_type: 'refresh_token',
       },
     }).json

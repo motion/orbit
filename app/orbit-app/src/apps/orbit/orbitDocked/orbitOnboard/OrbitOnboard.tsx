@@ -239,25 +239,31 @@ export const OrbitOnboard = decorator(
                   Welcome to Orbit
                 </Text>
                 <View height={30} />
-                <Text textAlign="left" size={1.3} alpha={0.9}>
+                <Text
+                  textAlign="left"
+                  fontSize={27}
+                  lineHeight={35}
+                  alpha={0.9}
+                >
                   Orbit is the first ever search platform built{' '}
-                  <strong>for&nbsp;you</strong>, the individual.
-                  <VerticalSpace />
-                  Your data never leaves your computer and we don't even get
-                  access to the keys.
+                  <strong>for&nbsp;you</strong>.<VerticalSpace />
+                  It's completely private. Your keys and data are only ever
+                  stored and accessed privately on your computer.
                 </Text>
                 <VerticalSpace />
-                <Text textAlign="left" size={1.1}>
-                  To pull that off Orbit needs to run a secure local proxy from
-                  your computer to {getGlobalConfig().urls.authProxy}.
+                <Text textAlign="left">
+                  To pull that off Orbit will run a secure proxy on your
+                  computer.
                 </Text>
                 <VerticalSpace />
-                <VerticalSpace />
-                <strong className="markdown">
+                <div className="markdown">
                   <a href="http://tryorbit.com/security">
-                    Learn more about Orbit security.
+                    Our absolute commitment to security.
                   </a>
-                </strong>
+                </div>
+                <VerticalSpace />
+                <VerticalSpace />
+                <VerticalSpace />
               </Centered>
             )}
             {store.accepted === false && (

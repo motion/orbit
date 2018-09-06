@@ -14,16 +14,24 @@ type OauthValues = {
   refreshToken?: string
 }
 
-export const finishOauth = (type: string, values: OauthValues) => {
+export const finishOauth = (
+  type: string,
+  secret: string,
+  values: OauthValues,
+) => {
   // close window
   closeChromeTabWithUrlStarting(`${Config.urls.server}/auth/${type}`)
   // create setting
-  createSetting(type, values)
+  createSetting(type, secret, values)
   // show Orbit again
   Desktop.sendMessage(App, App.messages.SHOW_APPS, type)
 }
 
-const createSetting = async (type: string, values: OauthValues) => {
+const createSetting = async (
+  type: string,
+  secret: string,
+  values: OauthValues,
+) => {
   if (!values.token) {
     throw new Error(`No token returned ${JSON.stringify(values)}`)
   }
@@ -44,7 +52,7 @@ const createSetting = async (type: string, values: OauthValues) => {
   setting.token = values.token
   setting.values = {
     ...setting.values,
-    oauth: { ...values }, // todo
+    oauth: { secret, ...values }, // todo
   }
   await setting.save()
 }

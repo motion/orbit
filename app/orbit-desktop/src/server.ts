@@ -103,8 +103,9 @@ export default class Server {
     log('Setting up authCallback route')
     this.app.get('/authCallback/:service', (req, res) => {
       const value = JSON.parse(decodeURIComponent(req.query.value))
-      log('got auth value', value)
-      finishOauth(req.params.service, value)
+      const secret = decodeURIComponent(req.query.secret)
+      log('got auth value', value, secret)
+      finishOauth(req.params.service, secret, value)
       res.send(
         '<html><head><title>Authentication Success</title><script>window.close()</script></head><body>All done, closing...</body></html>',
       )

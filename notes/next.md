@@ -71,6 +71,10 @@ to sync with umed:
 
 # next
 
+- showing sync status:
+  - make a SyncStatusStore that takes a setting
+  - ask umed: how to get all JobRepository.Syncer types
+  - in Setting panes show status at bottom or top
 - typing while focused on a peek:
   - reset index to 0 not -1, keeps the peek open as you filter things
 - doesnt follow monitor on add new monitor

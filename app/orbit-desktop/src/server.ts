@@ -32,6 +32,7 @@ export default class Server {
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
+    this.setupOauthCallback()
     this.app.get('/hello', (_, res) => res.send('hello world'))
 
     // config
@@ -42,7 +43,6 @@ export default class Server {
     })
 
     this.setupOrbitApp()
-    this.setupOauthCallback()
   }
 
   async start() {
@@ -116,15 +116,10 @@ export default class Server {
   }
 
   private setupOauthCallback() {
+    log('Setting up authCallback route')
     this.app.get('/authCallback/:service', (req, res) => {
-      console.log(
-        'value is',
-        req.query.value,
-        '\n\ndecoded:',
-        decodeURIComponent(req.query.value),
-      )
       const value = JSON.parse(decodeURIComponent(req.query.value))
-      console.log('parsed valiue is', value)
+      log('got auth value', value)
       finishOauth(req.params.service, value)
       res.send(
         '<html><head><title>Authentication Success</title><script>window.close()</script></head><body>All done, closing...</body></html>',

@@ -85,8 +85,6 @@ to sync with umed:
   - show html in emails
 - slack room
 - email list email
-- remove confluence
-- make onboarding encourage adding more integrations
 - close orbit while oauth open so it doesnt cover it
 - better show the panes on onboard
 - after onboard "what can i do / search?"

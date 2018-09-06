@@ -19,7 +19,6 @@
     { "path": "../../packages/config" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/helpers" },
-    { "path": "../../packages/oauth-strategies" },
     { "path": "../../packages/r2" },
     { "path": "../../packages/electron-sudo" }
   ]

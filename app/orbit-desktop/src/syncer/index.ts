@@ -12,7 +12,7 @@ import { MailWhitelisterSyncer } from './mail-whitelister/MailWhitelisterSyncer'
 import { SlackMessagesSyncer } from './slack/SlackMessagesSyncer'
 import { SlackPeopleSyncer } from './slack/SlackPeopleSyncer'
 
-const ONE_MINUTE = 1000 * 60 * 60
+const ONE_MINUTE = 1000 * 60
 const FIVE_MINUTES = ONE_MINUTE * 5
 const TEN_MINUTES = ONE_MINUTE * 10
 

@@ -71,6 +71,10 @@ to sync with umed:
 
 # next
 
+- manage people (may not want github for example to sync in people)
+  - probably by default some integrations are "additive only"
+  - so they only sync in on top of existing people
+  - also could scan contacts
 - need to pass array of string to highlightcontext
 - date filtering isn't working for:
   - nate january

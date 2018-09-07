@@ -130,7 +130,7 @@ export class OrbitDocked extends React.Component<Props> {
           className="theme-dark"
           visible={App.orbitState.docked}
         >
-          <OrbitDockedChrome appStore={appStore} />
+          <OrbitDockedChrome />
           <OrbitDockedInnerFrame
             borderBottomRadius={BORDER_RADIUS}
             flex={1}

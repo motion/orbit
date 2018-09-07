@@ -1,18 +1,17 @@
 import * as React from 'react'
-import { view, react, compose, ensure } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { observeMany } from '../../../../repositories'
-import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import {
   SelectionStore,
   SelectionGroup,
 } from '../../../../stores/SelectionStore'
-import { View, Row, Col } from '@mcro/ui'
-import { SelectableCarousel } from '../../../../components/SelectableCarousel'
-import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
+import { View } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
+import { OrbitCarouselSection } from './OrbitCarouselSection'
+import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
   name: string
@@ -62,9 +61,9 @@ class OrbitHomeStore {
   )
 
   results = react(
-    () => [this.allCarousels, this.carouselData, this.carouselOrder],
-    ([carousels, data, order]) => {
-      console.log('update results', this.carouselOrder, order)
+    () => [this.allStreams, this.allData, this.sortOrder],
+    ([streams, data, order]) => {
+      console.log('update results', this.sortOrder, order)
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of order) {
@@ -72,7 +71,7 @@ class OrbitHomeStore {
         if (!items || !items.length) {
           continue
         }
-        const { name } = carousels.find(x => x.id === `${id}`)
+        const { name } = streams.find(x => x.id === `${id}`)
         results.push({ name, type: 'row', items, startIndex: offset, id })
         offset += items.length
       }
@@ -83,7 +82,7 @@ class OrbitHomeStore {
     },
   )
 
-  allCarousels = [
+  allStreams = [
     {
       id: '0',
       name: 'People',
@@ -125,19 +124,19 @@ class OrbitHomeStore {
     { id: '6', name: 'Jira', model: BitModel, query: findManyType('jira') },
   ]
 
-  carouselOrder = [0, 1, 2, 3, 4, 5, 6]
+  sortOrder = [0, 1, 2, 3, 4, 5, 6]
 
   reorder = (startIndex, endIndex) => {
-    const order = [...this.carouselOrder]
+    const order = [...this.sortOrder]
     const [removed] = order.splice(startIndex, 1)
     order.splice(endIndex, 0, removed)
-    this.carouselOrder = order
+    this.sortOrder = order
   }
 
-  carouselData = {}
+  allData = {}
 
   updateCarouselData = react(
-    () => this.allCarousels,
+    () => this.allStreams,
     () => {
       // dispose before re-run
       if (this.updateCarouselData) {
@@ -146,15 +145,15 @@ class OrbitHomeStore {
 
       const disposers = []
 
-      console.log('setting up observers...', this.allCarousels)
+      console.log('setting up observers...', this.allStreams)
 
-      for (const { id, name, model, query } of this.allCarousels) {
+      for (const { id, name, model, query } of this.allStreams) {
         const subscription = observeMany(model, {
           args: query,
         }).subscribe(values => {
           console.log('update model data', name, values)
-          this.carouselData = {
-            ...this.carouselData,
+          this.allData = {
+            ...this.allData,
             [id]: values,
           }
         })
@@ -172,58 +171,6 @@ class OrbitHomeStore {
     },
   )
 }
-
-const Section = view()
-
-const decorator = compose(
-  view.attach('subPaneStore'),
-  view,
-)
-const OrbitHomeCarouselSection = decorator(
-  ({ subPaneStore, startIndex, items, categoryName, ...props }) => {
-    const isPeople = categoryName === 'People'
-    return (
-      <Section key={categoryName}>
-        <Row alignItems="center" padding={[startIndex === 0 ? 4 : 8, 0, 0]}>
-          <SubTitle margin={0} padding={0} fontWeight={500} fontSize={13}>
-            {categoryName}
-          </SubTitle>
-          <Col flex={1} />
-          <RoundButtonSmall
-            icon="remove"
-            iconProps={{ size: 9 }}
-            opacity={0}
-            hoverStyle={{ opacity: 1 }}
-          />
-        </Row>
-        <Unpad>
-          <SelectableCarousel
-            items={items}
-            offset={startIndex}
-            horizontalPadding={12}
-            isActiveStore={subPaneStore}
-            resetOnInactive
-            cardProps={{
-              hide: {
-                body: !isPeople,
-                icon: isPeople,
-              },
-              titleFlex: 1,
-              titleProps: isPeople ? { ellipse: true } : null,
-            }}
-            {...props}
-          />
-        </Unpad>
-      </Section>
-    )
-  },
-)
-
-const Unpad = view({
-  margin: [0, -14],
-  // dont do this, it undoes all our hard work with nice overrflow in carousels
-  // overflow: 'hidden',
-})
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore')
 @view.attach({
@@ -273,8 +220,7 @@ export class OrbitHome extends React.Component<Props> {
                               index,
                             )}
                           >
-                            <OrbitHomeCarouselSection
-                              selectionStore={selectionStore}
+                            <OrbitCarouselSection
                               startIndex={startIndex}
                               items={items}
                               homeStore={homeStore}

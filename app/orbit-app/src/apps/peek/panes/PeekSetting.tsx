@@ -8,8 +8,8 @@ import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { Mediator } from '../../../repositories'
-import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
-import { SettingInfoStore } from '../../../stores/SettingInfoStore'
+import { AppsStore } from '../../AppsStore'
+import { AppInfoStore } from '../../../stores/AppInfoStore'
 import { RoundButton } from '../../../views'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekPaneProps } from '../PeekPaneProps'
@@ -20,8 +20,8 @@ import { Actions } from '../../../actions/Actions'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 
 type Props = PeekPaneProps & {
-  store?: SettingInfoStore
-  integrationSettingsStore?: IntegrationSettingsStore
+  store?: AppInfoStore
+  appsStore?: AppsStore
   setting: Setting
 }
 
@@ -36,9 +36,9 @@ const statusIcons = {
   COMPLETE: { name: 'check', color: 'darkgreen' },
 }
 
-@view.attach('integrationSettingsStore')
+@view.attach('appsStore')
 @view.attach({
-  store: SettingInfoStore,
+  store: AppInfoStore,
 })
 @view
 class SettingContent extends React.Component<Props> {
@@ -67,13 +67,7 @@ class SettingContent extends React.Component<Props> {
   }
 
   render() {
-    const {
-      appStore,
-      integrationSettingsStore,
-      model,
-      store,
-      children,
-    } = this.props
+    const { appStore, appsStore, model, store, children } = this.props
     const setting = model as Setting
     if (!setting) {
       return children({})
@@ -82,11 +76,7 @@ class SettingContent extends React.Component<Props> {
     const SettingPane =
       SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
-      <SettingPane
-        integrationSettingsStore={integrationSettingsStore}
-        appStore={appStore}
-        setting={setting}
-      >
+      <SettingPane appsStore={appsStore} appStore={appStore} setting={setting}>
         {({ belowHead, content }) => {
           // this is a bit strange, its calling up a few times and passing up props
           // not sure i like the pattern, but it is extremely flexible

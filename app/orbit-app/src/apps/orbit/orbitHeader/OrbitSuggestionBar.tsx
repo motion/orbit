@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { SearchFilterStore } from '../../../stores/SearchFilterStore'
+import { SearchFilterStore } from '../orbitDocked/SearchFilterStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
 const dateBg = UI.color('#ffb049')

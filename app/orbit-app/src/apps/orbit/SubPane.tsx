@@ -3,10 +3,10 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
-import { AppStore } from '../../stores/AppStore'
+import { AppStore } from '../AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
-import { SelectionStore } from '../../stores/SelectionStore'
+import { SearchStore } from './orbitDocked/SearchStore'
+import { SelectionStore } from './orbitDocked/SelectionStore'
 import { BORDER_RADIUS } from '../../constants'
 
 export type SubPaneProps = CSSPropertySet & {

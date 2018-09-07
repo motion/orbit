@@ -1,10 +1,10 @@
 import { react, on, isEqual, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
-import * as Helpers from '../helpers'
-import { AppStore } from './AppStore'
+import * as Helpers from '../../../helpers'
+import { AppStore } from '../../AppStore'
 import { QueryStore } from './QueryStore'
-import { KeyboardStore } from './KeyboardStore'
-import { Actions } from '../actions/Actions'
+import { KeyboardStore } from '../../../stores/KeyboardStore'
+import { Actions } from '../../../actions/Actions'
 
 const isInRow = item =>
   item.moves.some(move => move === Direction.right || move === Direction.left)
@@ -120,9 +120,7 @@ export class SelectionStore {
       }
       await when(() => !peekHovered)
       await sleep(100)
-      if (leaveIndex === -1) {
-        throw react.cancel
-      }
+      ensure('has leave index', leaveIndex > -1)
       this.clearSelected()
     },
   )
@@ -130,9 +128,7 @@ export class SelectionStore {
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,
     () => {
-      if (this.hasActiveIndex) {
-        throw react.cancel
-      }
+      ensure('no active index', !this.hasActiveIndex)
       Actions.clearPeek()
     },
   )

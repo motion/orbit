@@ -1,23 +1,20 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
-import {
-  SettingInfoStore,
-  SettingInfoProps,
-} from '../../../../stores/SettingInfoStore'
+import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
 // import { Row, Col } from '@mcro/ui'
 // import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
 
 type Props = OrbitItemProps &
-  SettingInfoProps & {
-    store: SettingInfoStore
+  AppInfoProps & {
+    store: AppInfoStore
     isActive?: boolean
   }
 
 const decorator = compose(
   view.attach({
-    store: SettingInfoStore,
+    store: AppInfoStore,
   }),
   view,
 )

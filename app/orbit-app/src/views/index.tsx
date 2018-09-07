@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { SearchStore } from '../stores/SelectionStore'
+import { SearchStore } from '../apps/orbit/orbitDocked/SelectionStore'
 import { View, Row, Text } from '@mcro/ui'
 import { Input } from './Input'
 

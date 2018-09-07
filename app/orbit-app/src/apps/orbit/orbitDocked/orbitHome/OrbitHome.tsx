@@ -3,14 +3,12 @@ import { view, react, ensure } from '@mcro/black'
 import { observeMany } from '../../../../repositories'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import {
-  SelectionStore,
-  SelectionGroup,
-} from '../../../../stores/SelectionStore'
+import { SelectionStore, SelectionGroup } from '../SelectionStore'
 import { View } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
+import { AppsStore } from '../../../AppsStore'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -18,7 +16,71 @@ type Props = {
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore
   homeStore?: OrbitHomeStore
+  appsStore?: AppsStore
 }
+
+const findManyType = integration => ({
+  take: 10,
+  where: {
+    integration,
+  },
+  relations: ['people'],
+  order: { bitCreatedAt: 'DESC' },
+})
+
+const allStreams = [
+  {
+    id: '0',
+    name: 'People',
+    source: 'person',
+    model: PersonBitModel,
+    query: {
+      take: 20,
+    },
+  },
+  {
+    id: '1',
+    name: 'Slack',
+    source: 'slack',
+    model: BitModel,
+    query: findManyType('slack'),
+  },
+  {
+    id: '2',
+    name: 'Gmail',
+    source: 'gmail',
+    model: BitModel,
+    query: findManyType('gmail'),
+  },
+  {
+    id: '3',
+    name: 'Google Drive',
+    source: 'gdrive',
+    model: BitModel,
+    query: findManyType('gdrive'),
+  },
+  {
+    id: '4',
+    name: 'Github',
+    source: 'github',
+    model: BitModel,
+    query: findManyType('github'),
+  },
+  {
+    id: '5',
+    name: 'Confluence',
+    source: 'confluence',
+    model: BitModel,
+    query: findManyType('confluence'),
+  },
+  {
+    id: '6',
+    source: 'jira',
+    name: 'Jira',
+    model: BitModel,
+    query: findManyType('jira'),
+  },
+]
 
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? 'transparent' : 'transparent',
@@ -35,17 +97,14 @@ const getItemStyle = (isDragging, { left, top, ...draggableStyle }, index) => ({
   top: index > 0 ? top - 90 : 0,
 })
 
-const findManyType = integration => ({
-  take: 10,
-  where: {
-    integration,
-  },
-  relations: ['people'],
-  order: { bitCreatedAt: 'DESC' },
-})
-
 class OrbitHomeStore {
   props: Props
+
+  willUnmount() {
+    if (this.state) {
+      this.state.dispose()
+    }
+  }
 
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
@@ -54,14 +113,13 @@ class OrbitHomeStore {
   setSelectionHandler = react(
     () => [this.isActive, this.results],
     ([isActive]) => {
-      ensure('is active', isActive)
-      console.log('set home sleection stuff')
+      ensure('is active', !!isActive)
       this.props.selectionStore.setResults(this.results)
     },
   )
 
   results = react(
-    () => [this.allStreams, this.allData, this.sortOrder],
+    () => [allStreams, this.allData, this.sortOrder],
     ([streams, data, order]) => {
       console.log('update results', this.sortOrder, order)
       let results: SelectionGroup[] = []
@@ -82,48 +140,6 @@ class OrbitHomeStore {
     },
   )
 
-  allStreams = [
-    {
-      id: '0',
-      name: 'People',
-      model: PersonBitModel,
-      query: {
-        take: 20,
-      },
-    },
-    {
-      id: '1',
-      name: 'Slack',
-      model: BitModel,
-      query: findManyType('slack'),
-    },
-    {
-      id: '2',
-      name: 'Gmail',
-      model: BitModel,
-      query: findManyType('gmail'),
-    },
-    {
-      id: '3',
-      name: 'Google Drive',
-      model: BitModel,
-      query: findManyType('gdrive'),
-    },
-    {
-      id: '4',
-      name: 'Github',
-      model: BitModel,
-      query: findManyType('github'),
-    },
-    {
-      id: '5',
-      name: 'Confluence',
-      model: BitModel,
-      query: findManyType('confluence'),
-    },
-    { id: '6', name: 'Jira', model: BitModel, query: findManyType('jira') },
-  ]
-
   sortOrder = [0, 1, 2, 3, 4, 5, 6]
 
   reorder = (startIndex, endIndex) => {
@@ -135,19 +151,23 @@ class OrbitHomeStore {
 
   allData = {}
 
-  updateCarouselData = react(
-    () => this.allStreams,
-    () => {
-      // dispose before re-run
-      if (this.updateCarouselData) {
-        this.updateCarouselData.dispose()
+  state = react(
+    () => this.props.appsStore.appsList,
+    appsList => {
+      // dispose on re-run
+      if (this.state) {
+        this.state.dispose()
       }
 
       const disposers = []
 
-      console.log('setting up observers...', this.allStreams)
+      const activeStreams = allStreams.filter(
+        x =>
+          x.source === 'people' ||
+          !!appsList.find(app => x.source === app.identifier),
+      )
 
-      for (const { id, name, model, query } of this.allStreams) {
+      for (const { id, name, model, query } of activeStreams) {
         const subscription = observeMany(model, {
           args: query,
         }).subscribe(values => {
@@ -161,18 +181,14 @@ class OrbitHomeStore {
         disposers.push(() => subscription.unsubscribe())
       }
 
-      const dispose = () => disposers.map(x => x())
-      // @ts-ignore
-      this.subscriptions.add({ dispose })
-
       return {
-        dispose,
+        dispose: () => disposers.map(x => x()),
       }
     },
   )
 }
 
-@view.attach('searchStore', 'selectionStore', 'paneManagerStore')
+@view.attach('searchStore', 'selectionStore', 'paneManagerStore', 'appsStore')
 @view.attach({
   homeStore: OrbitHomeStore,
 })
@@ -191,7 +207,7 @@ export class OrbitHome extends React.Component<Props> {
   }
 
   render() {
-    const { homeStore, selectionStore } = this.props
+    const { homeStore } = this.props
     // we react to this so keep this here
     homeStore.results
     return (

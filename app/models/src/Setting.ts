@@ -9,7 +9,14 @@ export interface Setting {
   id: number
   identifier: string
   category: string
-  type: string
+  type:
+    | 'general'
+    | 'slack'
+    | 'jira'
+    | 'confluence'
+    | 'github'
+    | 'gmail'
+    | 'gdrive'
   token: string
   values: SettingValues
   createdAt: Date

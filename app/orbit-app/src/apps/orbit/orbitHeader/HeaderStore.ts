@@ -63,9 +63,7 @@ export class HeaderStore {
   focusInputOnClosePeek = react(
     () => !!App.peekState.target,
     async (hasTarget, { sleep }) => {
-      if (hasTarget) {
-        throw react.cancel
-      }
+      ensure('no target', !hasTarget)
       this.focus()
       await sleep(16)
       this.focus()
@@ -75,9 +73,7 @@ export class HeaderStore {
   focusInputOnClearQuery = react(
     () => App.state.query,
     query => {
-      if (query) {
-        throw react.cancel
-      }
+      ensure('no query', !query)
       this.focus()
     },
     {
@@ -88,9 +84,7 @@ export class HeaderStore {
   updateInputOnPaneChange = react(
     () => this.props.paneManagerStore.activePane,
     pane => {
-      if (pane === 'search' || pane === 'home') {
-        throw react.cancel
-      }
+      ensure('pane not search or home', pane !== 'search' && pane !== 'home')
       this.props.queryStore.clearQuery()
       this.focus()
     },

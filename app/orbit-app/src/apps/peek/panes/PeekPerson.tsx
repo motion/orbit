@@ -3,7 +3,7 @@ import { BitModel, PersonBit, SlackPersonData } from '@mcro/models'
 import * as React from 'react'
 import { Carousel } from '../../../components/Carousel'
 import { observeMany } from '../../../repositories'
-import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
+import { AppsStore } from '../../AppsStore'
 import { RoundButton, SubTitle } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { OrbitListItem } from '../../../views/OrbitListItem'
@@ -11,7 +11,7 @@ import { PeekPaneProps } from '../PeekPaneProps'
 import { App } from '@mcro/stores'
 
 type Props = PeekPaneProps & {
-  integrationSettingsStore: IntegrationSettingsStore
+  appsStore: AppsStore
 }
 
 class PeekPersonStore {
@@ -178,7 +178,7 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
   </RoundButton>
 )
 
-@view.attach('integrationSettingsStore', 'queryStore')
+@view.attach('appsStore', 'queryStore')
 @view.attach({
   store: PeekPersonStore,
 })
@@ -187,12 +187,8 @@ export class PeekPerson extends React.Component<
   Props & { store: PeekPersonStore }
 > {
   render() {
-    const { integrationSettingsStore, model, children, store } = this.props
+    const { appsStore, model, children, store } = this.props
     const person = model as PersonBit
-    const { settings } = integrationSettingsStore
-    if (!settings) {
-      return children({})
-    }
     if (!person) {
       console.log('no person?', person)
       return children({})

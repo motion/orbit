@@ -11,7 +11,7 @@ import { PaneManagerStore } from '../PaneManagerStore'
 import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
-import { SelectionStore } from '../../../stores/SelectionStore'
+import { SelectionStore } from './SelectionStore'
 import { PersonBitModel } from '@mcro/models'
 import { HighlightsContext } from '../../../helpers/contexts/HighlightsContext'
 
@@ -46,7 +46,7 @@ class OrbitDirectoryStore {
   setSelectionHandler = react(
     () => [this.isActive, this.results],
     ([isActive]) => {
-      if (!isActive) throw react.cancel
+      ensure('is active', isActive)
       this.props.selectionStore.setResults([
         { type: 'column', items: this.results },
       ])

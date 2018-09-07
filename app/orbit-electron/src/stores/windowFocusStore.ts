@@ -1,4 +1,4 @@
-import { react, store } from '@mcro/black'
+import { react, store, ensure } from '@mcro/black'
 import { App, Electron, Desktop } from '@mcro/stores'
 // @ts-ignore
 import ElectronNode from 'electron'
@@ -77,15 +77,11 @@ export class WindowFocusStore {
   focusOnMouseOver = react(
     () => App.isMouseInActiveArea,
     async mouseOver => {
-      if (!App.isShowingOrbit) {
-        throw react.cancel
-      }
+      ensure('showing orbit', App.isShowingOrbit)
       if (mouseOver) {
         this.focusOrbit()
       } else {
-        if (App.orbitState.docked) {
-          throw react.cancel
-        }
+        ensure('not docked', !App.orbitState.docked)
         this.defocusOrbit()
       }
     },

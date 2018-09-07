@@ -1,4 +1,4 @@
-import { store, react } from '@mcro/black'
+import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Actions } from '../actions/Actions'
 import { showNotification } from '../helpers/electron/showNotification'
@@ -89,15 +89,15 @@ export class AppReactions /* extends Store */ {
   //   () => Desktop.isHoldingOption,
   //   async (isHoldingOption, { sleep }) => {
   //     if (App.orbitState.pinned || App.orbitState.docked) {
-  //       throw react.cancel
+  //       throw cancel
   //     }
   //     if (!isHoldingOption) {
   //       if (!App.orbitState.pinned && App.isMouseInActiveArea) {
   //         log('prevent hide while mouseover after release hold')
-  //         throw react.cancel
+  //         throw cancel
   //       }
   //       App.setOrbitState({ hidden: true })
-  //       throw react.cancel
+  //       throw cancel
   //     }
   //     await sleep(140)
   //     App.setOrbitState({ hidden: false })
@@ -110,13 +110,8 @@ export class AppReactions /* extends Store */ {
   clearPeekOnOrbitClose = react(
     () => App.isFullyHidden,
     hidden => {
-      if (!hidden) {
-        throw react.cancel
-      }
-      // dont close peek when pinned
-      if (App.peekState.pinned) {
-        throw react.cancel
-      }
+      ensure('is hidden', hidden)
+      ensure('not pinned', !App.peekState.pinned)
       Actions.clearPeek()
     },
     { log: 'state' },
@@ -137,9 +132,7 @@ export class AppReactions /* extends Store */ {
   unPinOnHidden = react(
     () => App.isFullyHidden,
     hidden => {
-      if (!hidden) {
-        throw react.cancel
-      }
+      ensure('is hidden', hidden)
       App.setOrbitState({ pinned: false })
     },
     { log: 'state' },
@@ -179,7 +172,7 @@ export class AppReactions /* extends Store */ {
   //   () => App.hoveredWordName,
   //   async (word, { sleep }) => {
   //     if (Desktop.isHoldingOption) {
-  //       throw react.cancel
+  //       throw cancel
   //     }
   //     const hidden = !word
   //     await sleep(hidden ? 50 : 500)
@@ -195,12 +188,12 @@ export class AppReactions /* extends Store */ {
   //   async ([mouseOver], { sleep }) => {
   //     const isShown = !App.orbitState.hidden
   //     if (!isShown || mouseOver || App.orbitState.pinned) {
-  //       throw react.cancel
+  //       throw cancel
   //     }
   //     // some leeway on mouse leave
   //     await sleep(150)
   //     if (Desktop.isHoldingOption) {
-  //       throw react.cancel
+  //       throw cancel
   //     }
   //     console.log('hiding orbit from mouseout')
   //     App.setOrbitState({ hidden: true })
@@ -217,7 +210,7 @@ export class AppReactions /* extends Store */ {
   //     // prefer using lines bounding box, fall back to app
   //     const box = linesBB || appBB
   //     if (!box) {
-  //       throw react.cancel
+  //       throw cancel
   //     }
   //     let { size, orbitOnLeft, orbitDocked } = orbitPosition(box)
   //     // before for sidebar we used "{position} = orbitPosition(box)"

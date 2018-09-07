@@ -47,7 +47,7 @@
 //       this.props.paneStore.activePane === this.props.name,
 //     isActive => {
 //       if (!isActive) {
-//         throw react.cancel
+//         throw cancel
 //       }
 //       // log('set get results')
 //       this.props.searchStore.setGetResults(() => this.results)

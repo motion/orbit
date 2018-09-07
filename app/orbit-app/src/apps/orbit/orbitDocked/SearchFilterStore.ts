@@ -1,10 +1,10 @@
-import { store, react } from '@mcro/black'
-import { IntegrationSettingsStore } from './IntegrationSettingsStore'
+import { store, react, ensure } from '@mcro/black'
+import { AppsStore } from '../../AppsStore'
 import { memoize, uniqBy } from 'lodash'
-import { MarkType, NLPResponse } from './nlpStore/types'
+import { MarkType, NLPResponse } from '../../../stores/nlpStore/types'
 import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
-import { hoverSettler } from '../helpers/hoverSettler'
+import { hoverSettler } from '../../../helpers/hoverSettler'
 import { QueryStore } from './QueryStore'
 import { SearchStore } from './SearchStore'
 
@@ -30,7 +30,7 @@ const suggestedDates = [
 @store
 export class SearchFilterStore /* extends Store */ {
   queryStore: QueryStore
-  integrationSettingsStore: IntegrationSettingsStore
+  appsStore: AppsStore
   nlpStore: NLPStore
   searchStore: SearchStore
 
@@ -51,8 +51,8 @@ export class SearchFilterStore /* extends Store */ {
     leaveDelay: 400,
   })()
 
-  constructor({ queryStore, integrationSettingsStore, nlpStore, searchStore }) {
-    this.integrationSettingsStore = integrationSettingsStore
+  constructor({ queryStore, appsStore, nlpStore, searchStore }) {
+    this.appsStore = appsStore
     this.nlpStore = nlpStore
     this.queryStore = queryStore
     this.searchStore = searchStore
@@ -141,9 +141,9 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   get uniqueSettings(): Setting[] {
-    const intSettings = (
-      this.integrationSettingsStore.settingsList || []
-    ).filter(x => x.type !== 'setting')
+    const intSettings = (this.appsStore.appsList || []).filter(
+      x => x.type !== 'setting',
+    )
     const unique = uniqBy(intSettings, x => x.type)
     return unique
   }
@@ -153,7 +153,7 @@ export class SearchFilterStore /* extends Store */ {
     return this.uniqueSettings.map(setting => ({
       type: setting.type,
       icon: setting.type,
-      name: this.integrationSettingsStore.getTitle(setting),
+      name: this.appsStore.getTitle(setting),
       active: this.hasExclusiveFilters ? exclusiveFilters[setting.type] : false,
     }))
   }
@@ -188,7 +188,7 @@ export class SearchFilterStore /* extends Store */ {
   searchLocations = react(
     () => this.searchStore.searchState,
     async ({ results }, { sleep }) => {
-      react.ensure('has results', !!results && results.length)
+      ensure('has results', !!results && results.length)
       await sleep(100)
       return [...new Set(results.map(x => x.location && x.location.name))]
         .filter(Boolean)
@@ -223,14 +223,10 @@ export class SearchFilterStore /* extends Store */ {
   resetIntegrationFiltersOnNLPChange = react(
     () => this.nlpStore.nlp,
     (nlp: NLPResponse) => {
-      if (!nlp) {
-        throw react.cancel
-      }
+      ensure('nlp', !!nlp)
       // reset integration inactive filters
       const { integrations } = nlp
-      if (!integrations || !integrations.length) {
-        throw react.cancel
-      }
+      ensure('has integrations', integrations && !!integrations.length)
       this.exclusiveFilters = this.uniqueSettings.reduce(
         (acc, setting: Setting) => {
           acc[setting.type] = integrations.some(x => x === setting.type)
@@ -244,9 +240,7 @@ export class SearchFilterStore /* extends Store */ {
   resetFiltersOnSearchClear = react(
     () => !!this.queryStore.query,
     hasQuery => {
-      if (hasQuery) {
-        throw react.cancel
-      }
+      ensure('no query', !hasQuery)
       this.disabledFilters = {}
       this.exclusiveFilters = {}
       this.dateState = {

@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view, react, ensure } from '@mcro/black'
+import { view, react, ensure, cancel } from '@mcro/black'
 import { Carousel, CarouselProps } from './Carousel'
-import { SelectionStore } from '../stores/SelectionStore'
+import { SelectionStore } from '../apps/orbit/orbitDocked/SelectionStore'
 import { App } from '@mcro/stores'
 
 type Props = CarouselProps & {
@@ -29,7 +29,7 @@ class CarouselStore {
         if (resetOnInactive) {
           this.carouselRef.current.scrollTo(0)
         }
-        throw react.cancel
+        throw cancel
       }
       ensure('has index', typeof index === 'number')
       ensure('wasnt clicked', selectionStore.selectEvent !== 'click')

@@ -5,12 +5,12 @@ import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
 import { App, Desktop } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
+import { AppsStore } from '../../../AppsStore'
 import { ShortcutCapture } from '../../../../views/ShortcutCapture'
 import { Input } from '../../../../views/Input'
 import { Button, Theme } from '@mcro/ui'
 import { SettingModel } from '@mcro/models'
-import { SearchStore } from '../../../../stores/SearchStore'
+import { SearchStore } from '../SearchStore'
 import { showConfirmDialog } from '../../../../helpers/electron/showConfirmDialog'
 
 const eventCharsToNiceChars = {
@@ -52,7 +52,7 @@ type Props = {
   store?: OrbitSettingsStore
   searchStore?: SearchStore
   paneManagerStore?: PaneManagerStore
-  integrationSettingsStore?: IntegrationSettingsStore
+  appsStore?: AppsStore
 }
 
 class OrbitSettingsStore {
@@ -111,7 +111,7 @@ const Section = view({
   padding: [0, 0, 20],
 })
 
-@view.attach('searchStore', 'paneManagerStore', 'integrationSettingsStore')
+@view.attach('searchStore', 'paneManagerStore', 'appsStore')
 @view.attach({
   store: OrbitSettingsStore,
 })

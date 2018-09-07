@@ -11,14 +11,14 @@ import { OrbitApps } from './orbitApps/OrbitApps'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { BORDER_RADIUS } from '../../../constants'
-import { SearchStore } from '../../../stores/SearchStore'
-import { AppStore } from '../../../stores/AppStore'
+import { SearchStore } from './SearchStore'
+import { AppStore } from '../../AppStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
-import { SelectionStore } from '../../../stores/SelectionStore'
-import { QueryStore } from '../../../stores/QueryStore'
+import { SelectionStore } from './SelectionStore'
+import { QueryStore } from './QueryStore'
 import { KeyboardStore } from '../../../stores/KeyboardStore'
 
 type Props = {
@@ -82,7 +82,7 @@ const OrbitDockedInner = view({
 //     async (visible, { sleep, setValue }) => {
 //       // hmr already showing
 //       if (visible && this.animationState.visible) {
-//         throw react.cancel
+//         throw cancel
 //       }
 //       // old value first to setup for transition
 //       setValue({ willAnimate: true, visible: !visible })
@@ -105,7 +105,7 @@ const OrbitDockedInner = view({
 //   )
 // }
 
-@view.attach('appStore', 'integrationSettingsStore')
+@view.attach('appStore', 'appsStore')
 @view.provide({
   queryStore: QueryStore,
   keyboardStore: KeyboardStore,

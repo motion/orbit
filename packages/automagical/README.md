@@ -112,10 +112,7 @@ class MyStore {
   val = react(
     () => this.something,
     () => {
-      // this wont log out
-      if (falsyCondition) {
-        throw react.cancel
-      }
+      ensure('something', somethingIsTrue)
       return Math.random()
     },
   )

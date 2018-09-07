@@ -3,7 +3,7 @@ import { ResolvePerson } from './resolve/ResolvePerson'
 import { ResolveBit } from './resolve/ResolveBit'
 import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit, PersonBit } from '@mcro/models'
-import { AppStore } from '../stores/AppStore'
+import { AppStore } from '../apps/AppStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { Setting } from '@mcro/models'
 import {

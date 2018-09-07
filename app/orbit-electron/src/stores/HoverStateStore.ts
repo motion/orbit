@@ -1,5 +1,5 @@
 import { App, Electron } from '@mcro/stores'
-import { store, react } from '@mcro/black'
+import { store, react, ensure } from '@mcro/black'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
 
 type Point = {
@@ -40,16 +40,13 @@ export class HoverStateStore {
         Electron.setHoverState({ orbitHovered: false })
         return
       }
-      throw react.cancel
     },
   )
 
   updateHoverStateOnResize = react(
     () => App.orbitState.size,
     () => {
-      if (!this.lastMousePos) {
-        throw react.cancel
-      }
+      ensure('has last mouse pos', !!this.lastMousePos)
       this.handleMousePosition(this.lastMousePos)
     },
   )

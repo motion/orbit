@@ -1,9 +1,9 @@
 import { Setting } from '@mcro/models'
-import { AppStore } from '../../../../stores/AppStore'
-import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
+import { AppStore } from '../../../AppStore'
+import { AppsStore } from '../../../AppsStore'
 
 export type SettingPaneProps = {
-  integrationSettingsStore: IntegrationSettingsStore
+  appsStore: AppsStore
   appStore: AppStore
   setting: Setting
   children: (

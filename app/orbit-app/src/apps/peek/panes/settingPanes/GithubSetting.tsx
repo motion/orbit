@@ -78,10 +78,6 @@ class GithubSettingStore {
     return this.props.appStore.services.github
   }
 
-  bits = react(() =>
-    BitRepository.find({ where: { integration: 'github', type: 'task' } }),
-  )
-
   get orgsList() {
     const { allOrgs } = this.service
     return (allOrgs && allOrgs.map(org => org.login)) || []

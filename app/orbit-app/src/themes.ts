@@ -60,7 +60,7 @@ export const themes = {
     borderColor: orbitActiveBg,
   }),
   tooltip: {
-    background: 'rgba(50,50,50,0.94)',
+    background: 'rgba(20,20,20,0.94)',
     color: '#fff',
   },
   dark: {
@@ -69,11 +69,11 @@ export const themes = {
     listItemBackground: 'transparent',
     listItemBackgroundSelected: [60, 60, 60, 0.2],
     listItemBackgroundHover: [20, 20, 20, 0.3],
-    cardBackground: [75, 75, 75, 0.3],
+    cardBackground: [90, 90, 90, 0.35],
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardBorderColor: [255, 255, 255, 0.07],
     ...Theme.fromStyles({
-      background: 'rgba(20,20,20,0.94)',
+      background: [20, 20, 20, 0.94],
       backgroundHover: 'rgba(20,20,20,0.2)',
       color: '#fff',
       borderColor: '#222',

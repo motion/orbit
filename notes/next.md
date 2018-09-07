@@ -1,10 +1,9 @@
 to sync with umed:
 
-- Gmail how do I know if its html or text?
-
 # Umed
 
 - Make all syncers sync a more/better
+  - Gmail how do I know if its html or text?
   - Gmail super slow
   - Gmail no html coming back?
   - Really simple throttle
@@ -16,6 +15,8 @@ to sync with umed:
   - Github sync auto select everything by default
   - GDocs auto sync most things by default
 - Really simple RSS Syncer
+- Location as a model
+  - This way we can search + generate feeds by Location
 
 # Nate
 

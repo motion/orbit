@@ -11,7 +11,7 @@ import { View } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
-import { OrbitGridSection } from './OrbitGridSection'
+// import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
   name: string
@@ -36,7 +36,7 @@ const getItemStyle = (isDragging, { left, top, ...draggableStyle }, index) => ({
 })
 
 const findManyType = integration => ({
-  take: 5,
+  take: 10,
   where: {
     integration,
   },

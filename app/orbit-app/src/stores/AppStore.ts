@@ -11,7 +11,7 @@ export class AppStore {
   lastSelectedPane = ''
   onPinKeyCB = null
   appSettings = null
-  appSettings$ = observeMany(SettingModel, {
+  private appSettings$ = observeMany(SettingModel, {
     args: {
       where: { category: 'integration', token: { $not: 'good' } },
     },

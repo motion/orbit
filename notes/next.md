@@ -71,6 +71,11 @@ to sync with umed:
 
 # next
 
+- date filtering isn't working for:
+  - nate january
+  - nate jan 1 to jan 30
+- multiselect tables keyboard nav not working:
+  - generally inner app keyboard nav not working
 - showing sync status:
   - make a SyncStatusStore that takes a setting
   - ask umed: how to get all JobRepository.Syncer types
@@ -78,14 +83,10 @@ to sync with umed:
 - typing while focused on a peek:
   - reset index to 0 not -1, keeps the peek open as you filter things
 - doesnt follow monitor on add new monitor
-- deploy initial oauth step to digitalocean
-- need a way for people to suggest/vote features
-- sort the queues by most recent at top so you can quickly hit emails
-  - should be fully keynav so you can get to links inside them quickly
-  - show html in emails
-- slack room
-- email list email
-- close orbit while oauth open so it doesnt cover it
+- community
+  - need a way for people to suggest/vote features
+- show html in emails
+- semi-hide orbit while oauth open so it doesnt cover it
 - better show the panes on onboard
 - after onboard "what can i do / search?"
 - typeform survey to capture a few potential paths

@@ -60,6 +60,7 @@ function publish-packages() {
       --ignore "@mcro/cosal" \
       --ignore "@mcro/playground" \
       --ignore "@mcro/site" \
+      --ignore "@mcro/oauth-server" \
       -- npm publish --force --registry http://localhost:4343)
   # then publish main app with all packages
   (cd ../orbit && npm publish --registry http://localhost:4343 --force)

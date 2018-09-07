@@ -15,23 +15,31 @@ to sync with umed:
   - Github sync auto select everything by default
   - GDocs auto sync most things by default
 - Really simple RSS Syncer
+- fts5 integration
 - Location as a model
   - This way we can search + generate feeds by Location
 
 # Nate
 
-- during onboard prompt to allow "innocent" logging to help us
-  - find a automatic analytic/logging service for desktop apps
-- fts5
-- Cosal merged into search and people profiles
-- Signup process that links to real in-cloud db for accounts
-- Attach account to orbit app
+- Pane model + default Pane.id = 0, Pane.name = 'Home'
+- Pane.feedOrder
+- Pane.hasMany Feed
+  - Feed.type: 'carousel' | 'grid' | 'list'
+- rename feed UI
+- add Feed from search UI
+- show apps in QuickResults so you can add an app to home Feed
+- Cosal merge, search and people profiles
 - searchresults - keep scroll at top of pane makes it possible to move quickly down
-  - Move settings over to window
-    - General, Appearance
-  - Ability to join Orbits
-  - Ability to manage your account
-- Ask for survey notification if they use it for a few days...
+- Move settings over to window
+  - General, Appearance
+
+## Website signup for beta
+
+- Signup process
+- Account manage area
+- Secure source code
+- Documentation for onboarding
+- Questionaire
 
 # September:
 
@@ -67,6 +75,7 @@ to sync with umed:
 
 # next
 
+- survey notification if they use it for a few days...
 - manage people (may not want github for example to sync in people)
   - probably by default some integrations are "additive only"
   - so they only sync in on top of existing people
@@ -118,25 +127,6 @@ to sync with umed:
 - Get the basic app store in place
 - If Swift contractor works out integrate some OCR
 - Prep website for private beta launch
-
-## Website signup for beta
-
-- Signup process
-- Account manage area
-- keygen.sh
-- Secure source code
-- Documentation for onboarding
-- Questionaire
-
-## Orbit 1.1 best guess
-
-- Better movement and displays
-- Profiles upgrade
-- Cosal
-- Account/settings upgrades
-- Search upgrades
-- Attachment/file previews
-- Follow topics
 
 ---
 

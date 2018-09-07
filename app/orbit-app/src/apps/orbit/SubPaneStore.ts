@@ -119,11 +119,11 @@ export class SubPaneStore {
         this.isTransitioningToActive = false
       } else {
         // on next transitions, if not at full height, debounce
-        const isLessThanMax = height < this.maxHeight
-        const willBeShorter = height < this.lastHeight
-        if (isLessThanMax && willBeShorter) {
-          await sleep(100)
-        }
+        // const isLessThanMax = height < this.maxHeight
+        // const willBeShorter = height < this.lastHeight
+        // if (isLessThanMax && willBeShorter) {
+        //   await sleep(100)
+        // }
       }
       react.ensure('new value', height !== this.props.appStore.contentHeight)
       this.props.appStore.setContentHeight(height)

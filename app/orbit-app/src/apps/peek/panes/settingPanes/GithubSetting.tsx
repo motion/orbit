@@ -11,12 +11,6 @@ import { DateFormat } from '../../../../views/DateFormat'
 import { AppStatusPane } from './AppStatusPane'
 import { GithubSettingValues } from '@mcro/models'
 
-const preventClick = e => {
-  console.log('stop it')
-  e.preventDefault()
-  e.stopPropagation()
-}
-
 const columnSizes = {
   repo: 'flex',
   org: 'flex',
@@ -131,7 +125,6 @@ class GithubSettingStore {
               value: (
                 <ReactiveCheckBox
                   onChange={this.onSync(repo.fullName)}
-                  onMouseDown={preventClick}
                   isActive={isActive}
                 />
               ),

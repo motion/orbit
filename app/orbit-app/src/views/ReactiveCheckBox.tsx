@@ -7,6 +7,12 @@ type Props = {
   [key: string]: any
 }
 
+const preventClick = e => {
+  console.log('stop it')
+  e.preventDefault()
+  e.stopPropagation()
+}
+
 @view
 export class ReactiveCheckBox extends React.Component<Props> {
   render() {
@@ -17,6 +23,7 @@ export class ReactiveCheckBox extends React.Component<Props> {
         type="checkbox"
         onChange={onChange}
         defaultChecked={isActive()}
+        onMouseDown={preventClick}
         {...props}
       />
     )

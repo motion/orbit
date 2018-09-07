@@ -17,6 +17,7 @@ export class QueryStore {
     () => App.state.query,
     query => {
       ensure('is diff', query !== this.query)
+      console.log('external query update')
       this.query = query
     },
   )

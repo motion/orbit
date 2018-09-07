@@ -2,7 +2,7 @@ to sync with umed:
 
 - Gmail how do I know if its html or text?
 
-# Umed Week of Sep 2
+# Umed
 
 - Make all syncers sync a more/better
   - Gmail super slow
@@ -17,19 +17,14 @@ to sync with umed:
   - GDocs auto sync most things by default
 - Really simple RSS Syncer
 
-# Nate week of Sep 2
+# Nate
 
-- fix counts not updating using observe on OrbitApps
-- fix profile peek title bug
-- make peek profile show list a lot better/cleaner
 - during onboard prompt to allow "innocent" logging to help us
   - find a automatic analytic/logging service for desktop apps
 - fts5
-- deploy https/private.orbit.com with letsencrypt
 - Cosal merged into search and people profiles
 - Signup process that links to real in-cloud db for accounts
 - Attach account to orbit app
-- Start on settings panel
 - searchresults - keep scroll at top of pane makes it possible to move quickly down
   - Move settings over to window
     - General, Appearance

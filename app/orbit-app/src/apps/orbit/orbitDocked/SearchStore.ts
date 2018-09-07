@@ -1,7 +1,7 @@
 import { PaneManagerStore } from '../PaneManagerStore'
 import { App } from '@mcro/stores'
 import { react, ensure } from '@mcro/black'
-import { NLPStore } from '../../../stores/NLPStore'
+import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
 import { AppStore } from '../../AppStore'
 import { Bit } from '@mcro/models'
@@ -120,13 +120,10 @@ export class SearchStore {
     searchStore: this,
   })
 
-  willMount() {
-    this.subscriptions.add({
-      dispose: () => {
-        this.nlpStore.subscriptions.dispose()
-        this.searchFilterStore.subscriptions.dispose()
-      },
-    })
+  willUnmount() {
+    this.nlpStore.subscriptions.dispose()
+    // @ts-ignore
+    this.searchFilterStore.subscriptions.dispose()
   }
 
   setSelectionHandler = react(

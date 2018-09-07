@@ -11,6 +11,12 @@ import { DateFormat } from '../../../../views/DateFormat'
 import { AppStatusPane } from './AppStatusPane'
 import { GithubSettingValues } from '@mcro/models'
 
+const preventClick = e => {
+  console.log('stop it')
+  e.preventDefault()
+  e.stopPropagation()
+}
+
 const columnSizes = {
   repo: 'flex',
   org: 'flex',
@@ -49,11 +55,25 @@ const columns = {
 class GithubSettingStore {
   props: SettingPaneProps
 
+  allRepos = []
   active = 'status'
   userOrgs = []
   sortOrder = {
     key: 'lastCommit',
     direction: 'up',
+  }
+
+  async didMount() {
+    this.allRepos = flatten(
+      await Promise.all(
+        this.orgsList.map(async org => {
+          return await this.service.github
+            .orgs(org)
+            .repos.fetch({ per_page: 100 })
+            .then(res => res.items)
+        }),
+      ),
+    )
   }
 
   get setting() {
@@ -76,24 +96,6 @@ class GithubSettingStore {
   onSortOrder = newOrder => {
     this.sortOrder = newOrder
   }
-
-  allRepos = react(
-    async () => {
-      return flatten(
-        await Promise.all(
-          this.orgsList.map(async org => {
-            return await this.service.github
-              .orgs(org)
-              .repos.fetch({ per_page: 100 })
-              .then(res => res.items)
-          }),
-        ),
-      )
-    },
-    {
-      defaultValue: [],
-    },
-  )
 
   rows = react(
     () => this.allRepos,
@@ -129,6 +131,7 @@ class GithubSettingStore {
               value: (
                 <ReactiveCheckBox
                   onChange={this.onSync(repo.fullName)}
+                  onMouseDown={preventClick}
                   isActive={isActive}
                 />
               ),

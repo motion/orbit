@@ -6,13 +6,13 @@ import { SearchFilterStore } from './SearchFilterStore'
 import { AppStore } from '../../AppStore'
 import { Bit } from '@mcro/models'
 import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
-import { MarkType } from '../../../stores/nlpStore/types'
 import { FindOptions } from 'typeorm'
 import { BitRepository, PersonBitRepository } from '../../../repositories'
 import { flatten } from 'lodash'
 import { SelectionStore } from './SelectionStore'
 import { AppsStore } from '../../AppsStore'
 import { QueryStore } from './QueryStore'
+import { MarkType } from './nlpStore/types'
 
 const TYPE_DEBOUNCE = 200
 

@@ -1,7 +1,7 @@
 import { store, react, ensure } from '@mcro/black'
 import { AppsStore } from '../../AppsStore'
 import { memoize, uniqBy } from 'lodash'
-import { MarkType, NLPResponse } from '../../../stores/nlpStore/types'
+import { MarkType, NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
 import { hoverSettler } from '../../../helpers/hoverSettler'

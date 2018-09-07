@@ -82,6 +82,9 @@ export const themes = {
   },
   light: {
     ...macTheme,
+    listItemBackground: [255, 255, 255, 0.1],
+    listItemBackgroundSelected: [255, 255, 255, 0.35],
+    listItemBackgroundHover: [255, 255, 255, 0.2],
     inputBackground: '#e9e9e9',
     inputBackgroundActive: '#eee',
     cardShadow: [0, 2, 6, [0, 0, 0, 0.035]],

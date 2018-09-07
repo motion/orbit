@@ -71,6 +71,7 @@ to sync with umed:
 
 # next
 
+- need to pass array of string to highlightcontext
 - date filtering isn't working for:
   - nate january
   - nate jan 1 to jan 30

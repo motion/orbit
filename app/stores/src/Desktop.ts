@@ -43,6 +43,7 @@ class DesktopStore {
     CLEAR_OPTION: 'CLEAR_OPTION',
     DEFOCUS_ORBIT: 'DEFOCUS_ORBIT',
     RESET_DATA: 'RESET_DATA',
+    SEARCH_INDEX: 'SEARCH_INDEX',
   }
 
   setState = Bridge.setState

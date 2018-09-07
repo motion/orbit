@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 
 export class QueryStore {
@@ -8,8 +8,16 @@ export class QueryStore {
     () => this.query,
     async (query, { sleep }) => {
       // slight debounce for super fast typing
-      await sleep(50)
+      await sleep(30)
       App.setState({ query })
+    },
+  )
+
+  externalChangeAppQuery = react(
+    () => App.state.query,
+    query => {
+      ensure('is diff', query !== this.query)
+      this.query = query
     },
   )
 

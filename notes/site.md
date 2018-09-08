@@ -1,3 +1,21 @@
+# Orbit - The Decentralized OS
+
+Orbit is a smart operating layer above Mac, Windows, and Linux. It unifies your cloud knowledge and gives you amazing search. But that's just the beginning.
+
+# Take control
+
+You not only don't control your information at all, but you also have almost no control over how you experience and manage it.
+
+Orbit gives both of them back to you.
+
+## Your Data
+
+Orbit syncs data 100% privately to your device, we never even have access your keys. For once your Slack, Jira, Confluence, Gmail, Gdrive, and many other integrations can live privately, instantly, and easily accessible right on your desktop.
+
+## Your Apps
+
+But that's just where it starts. Orbit is an entire app platform that gives you, the end user, control. Our biggest feature is putting the individual in charge. Now you can extend, manage, script, and visualize information with complete control, without ever risking a bit of your data.
+
 # overview of features section like this
 
 https://motion-core.slack.com/files/U0K6FMG5R/FBHRJERU0/image.png

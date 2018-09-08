@@ -27,6 +27,8 @@ const macTheme = Theme.colorize({
   highlightBackgroundActive: '#85afee', // active tokens
   frameBorderColor: '#aaa',
 
+  sidebarBackground: '#E8E7E7',
+
   // sub-themes go into their own objects so they can be narrowed into
   titleBar: {
     tabBackgroundActive: 'linear-gradient(#D5D5D5, #CBCBCC)',

@@ -171,16 +171,6 @@ export const PeekBit = ({
                           comments={comments}
                         />
                       </HighlightsContext.Provider>
-                      {/* height for bottom bar */}
-                      <div style={{ height: 80 }} />
-                      {/* <BottomSpace />
-                    <BottomFloat>
-                      <PeekRelated
-                        padding={[0, 15]}
-                        cardSpace={10}
-                        verticalPadding={10}
-                      />
-                    </BottomFloat> */}
                     </>
                   ),
                 })

@@ -48,6 +48,9 @@ export * from './DynamicList'
 export * from './FixedList'
 export * from './Toolbar'
 export * from './Tooltip'
+export * from './Sidebar'
+export * from './SidebarLabel'
+export * from './Panel'
 
 // table
 export * from './table/TableInput'

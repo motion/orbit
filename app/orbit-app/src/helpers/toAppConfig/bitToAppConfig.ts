@@ -10,5 +10,11 @@ export function bitToAppConfig(bit: Bit): AppConfig {
     type: 'bit',
     subType: bit.type,
     integration: bit.integration || '',
+    config:
+      bit.integration === 'app1'
+        ? {
+            dimensions: [750, 720],
+          }
+        : null,
   }
 }

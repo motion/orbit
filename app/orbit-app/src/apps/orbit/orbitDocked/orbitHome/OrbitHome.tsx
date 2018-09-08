@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react, ensure } from '@mcro/black'
-import { observeMany, SettingRepository } from '../../../../repositories'
+import { observeMany } from '../../../../repositories'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'

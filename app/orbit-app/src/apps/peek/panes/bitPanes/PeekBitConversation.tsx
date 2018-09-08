@@ -15,7 +15,7 @@ class PeekConversationStore {
   props: Props
 
   nextConversations = []
-  nextConversations$ = observeMany(BitModel, {
+  private nextConversations$ = observeMany(BitModel, {
     args: {
       where: {
         integration: this.props.bit.integration,

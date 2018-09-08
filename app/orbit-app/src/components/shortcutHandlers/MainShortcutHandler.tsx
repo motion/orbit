@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
-import { SelectionStore } from '../../stores/SelectionStore'
+import { SelectionStore } from '../../apps/orbit/orbitDocked/SelectionStore'
 import { Actions } from '../../actions/Actions'
 import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
@@ -28,13 +28,14 @@ export const MainShortcutHandler = decorator(
         Actions.copyLink(selectionStore.selectedItem)
       },
       escape: () => {
+        if (App.state.query) {
+          return Actions.clearSearch()
+        }
         if (App.peekState.appConfig) {
-          Actions.clearPeek()
-          return
+          return Actions.clearPeek()
         }
         if (App.state.orbitState.docked) {
-          Actions.closeOrbit()
-          return
+          return Actions.closeOrbit()
         }
       },
     }

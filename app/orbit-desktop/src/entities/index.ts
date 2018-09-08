@@ -3,6 +3,7 @@ import { JobEntity } from './JobEntity'
 import { PersonBitEntity } from './PersonBitEntity'
 import { PersonEntity } from './PersonEntity'
 import { SettingEntity } from './SettingEntity'
+import { SearchIndexEntity } from './SearchIndexEntity'
 
 export const Entities = [
   BitEntity,
@@ -10,4 +11,5 @@ export const Entities = [
   PersonEntity,
   PersonBitEntity,
   SettingEntity,
+  SearchIndexEntity,
 ]

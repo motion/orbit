@@ -1,25 +1,86 @@
 import * as React from 'react'
-import { view, react, compose, ensure } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { observeMany } from '../../../../repositories'
-import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import {
-  SelectionStore,
-  SelectionGroup,
-} from '../../../../stores/SelectionStore'
-import { View, Row, Col } from '@mcro/ui'
-import { SelectableCarousel } from '../../../../components/SelectableCarousel'
-import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
+import { SelectionStore, SelectionGroup } from '../SelectionStore'
+import { View } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
+import { OrbitCarouselSection } from './OrbitCarouselSection'
+import { AppsStore } from '../../../AppsStore'
+// import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
   name: string
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore
   homeStore?: OrbitHomeStore
+  appsStore?: AppsStore
 }
+
+const findManyType = integration => ({
+  take: 10,
+  where: {
+    integration,
+  },
+  relations: ['people'],
+  order: { bitCreatedAt: 'DESC' },
+})
+
+const allStreams = [
+  {
+    id: '0',
+    name: 'People',
+    source: 'people',
+    model: PersonBitModel,
+    query: {
+      take: 20,
+    },
+  },
+  {
+    id: '1',
+    name: 'Slack',
+    source: 'slack',
+    model: BitModel,
+    query: findManyType('slack'),
+  },
+  {
+    id: '2',
+    name: 'Gmail',
+    source: 'gmail',
+    model: BitModel,
+    query: findManyType('gmail'),
+  },
+  {
+    id: '3',
+    name: 'Google Drive',
+    source: 'gdrive',
+    model: BitModel,
+    query: findManyType('gdrive'),
+  },
+  {
+    id: '4',
+    name: 'Github',
+    source: 'github',
+    model: BitModel,
+    query: findManyType('github'),
+  },
+  {
+    id: '5',
+    name: 'Confluence',
+    source: 'confluence',
+    model: BitModel,
+    query: findManyType('confluence'),
+  },
+  {
+    id: '6',
+    source: 'jira',
+    name: 'Jira',
+    model: BitModel,
+    query: findManyType('jira'),
+  },
+]
 
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? 'transparent' : 'transparent',
@@ -36,17 +97,14 @@ const getItemStyle = (isDragging, { left, top, ...draggableStyle }, index) => ({
   top: index > 0 ? top - 90 : 0,
 })
 
-const findManyType = integration => ({
-  take: 5,
-  where: {
-    integration,
-  },
-  relations: ['people'],
-  order: { bitCreatedAt: 'DESC' },
-})
-
 class OrbitHomeStore {
   props: Props
+
+  willUnmount() {
+    if (this.state) {
+      this.state.dispose()
+    }
+  }
 
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
@@ -55,26 +113,30 @@ class OrbitHomeStore {
   setSelectionHandler = react(
     () => [this.isActive, this.results],
     ([isActive]) => {
-      ensure('is active', isActive)
-      console.log('set home sleection stuff')
+      ensure('is active', !!isActive)
       this.props.selectionStore.setResults(this.results)
     },
   )
 
   results = react(
-    () => [this.allCarousels, this.carouselData, this.carouselOrder],
-    ([carousels, data, order]) => {
-      console.log('update results', this.carouselOrder, order)
+    () => [this.streams, this.sortOrder],
+    ([streams, order]) => {
+      console.log('update results', this.sortOrder, order)
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of order) {
-        const items = data[id]
-        if (!items || !items.length) {
+        if (!streams[id]) {
           continue
         }
-        const { name } = carousels.find(x => x.id === `${id}`)
-        results.push({ name, type: 'row', items, startIndex: offset, id })
-        offset += items.length
+        const { values, name } = streams[id]
+        results.push({
+          name,
+          type: 'row',
+          items: values,
+          startIndex: offset,
+          id,
+        })
+        offset += values.length
       }
       return results
     },
@@ -83,149 +145,53 @@ class OrbitHomeStore {
     },
   )
 
-  allCarousels = [
-    {
-      id: '0',
-      name: 'People',
-      model: PersonBitModel,
-      query: {
-        take: 20,
-      },
-    },
-    {
-      id: '1',
-      name: 'Slack',
-      model: BitModel,
-      query: findManyType('slack'),
-    },
-    {
-      id: '2',
-      name: 'Gmail',
-      model: BitModel,
-      query: findManyType('gmail'),
-    },
-    {
-      id: '3',
-      name: 'Google Drive',
-      model: BitModel,
-      query: findManyType('gdrive'),
-    },
-    {
-      id: '4',
-      name: 'Github',
-      model: BitModel,
-      query: findManyType('github'),
-    },
-    {
-      id: '5',
-      name: 'Confluence',
-      model: BitModel,
-      query: findManyType('confluence'),
-    },
-    { id: '6', name: 'Jira', model: BitModel, query: findManyType('jira') },
-  ]
-
-  carouselOrder = [0, 1, 2, 3, 4, 5, 6]
+  sortOrder = [0, 1, 2, 3, 4, 5, 6]
 
   reorder = (startIndex, endIndex) => {
-    const order = [...this.carouselOrder]
+    const order = [...this.sortOrder]
     const [removed] = order.splice(startIndex, 1)
     order.splice(endIndex, 0, removed)
-    this.carouselOrder = order
+    this.sortOrder = order
   }
 
-  carouselData = {}
+  streams: { [a: string]: { values: any[]; name: string } } = {}
 
-  updateCarouselData = react(
-    () => this.allCarousels,
-    () => {
-      // dispose before re-run
-      if (this.updateCarouselData) {
-        this.updateCarouselData.dispose()
+  state = react(
+    () => this.props.appsStore.appsList,
+    appsList => {
+      // dispose on re-run
+      if (this.state) {
+        this.state.dispose()
       }
-
       const disposers = []
-
-      console.log('setting up observers...', this.allCarousels)
-
-      for (const { id, name, model, query } of this.allCarousels) {
+      // get active streams
+      const activeStreams = allStreams.filter(
+        x =>
+          x.source === 'people' ||
+          !!appsList.find(app => x.source === app.type),
+      )
+      // reset sort orders
+      this.sortOrder = activeStreams.map((_, index) => index)
+      // setup stream subscriptions
+      for (const { id, name, model, query } of activeStreams) {
         const subscription = observeMany(model, {
           args: query,
         }).subscribe(values => {
-          console.log('update model data', name, values)
-          this.carouselData = {
-            ...this.carouselData,
-            [id]: values,
+          this.streams = {
+            ...this.streams,
+            [id]: { values, name },
           }
         })
-
         disposers.push(() => subscription.unsubscribe())
       }
-
-      const dispose = () => disposers.map(x => x())
-      // @ts-ignore
-      this.subscriptions.add({ dispose })
-
       return {
-        dispose,
+        dispose: () => disposers.map(x => x()),
       }
     },
   )
 }
 
-const Section = view()
-
-const decorator = compose(
-  view.attach('subPaneStore'),
-  view,
-)
-const OrbitHomeCarouselSection = decorator(
-  ({ subPaneStore, startIndex, items, categoryName, ...props }) => {
-    const isPeople = categoryName === 'People'
-    return (
-      <Section key={categoryName}>
-        <Row alignItems="center" padding={[startIndex === 0 ? 4 : 8, 0, 0]}>
-          <SubTitle margin={0} padding={0} fontWeight={500} fontSize={13}>
-            {categoryName}
-          </SubTitle>
-          <Col flex={1} />
-          <RoundButtonSmall
-            icon="remove"
-            iconProps={{ size: 9 }}
-            opacity={0}
-            hoverStyle={{ opacity: 1 }}
-          />
-        </Row>
-        <Unpad>
-          <SelectableCarousel
-            items={items}
-            offset={startIndex}
-            horizontalPadding={12}
-            isActiveStore={subPaneStore}
-            resetOnInactive
-            cardProps={{
-              hide: {
-                body: !isPeople,
-                icon: isPeople,
-              },
-              titleFlex: 1,
-              titleProps: isPeople ? { ellipse: true } : null,
-            }}
-            {...props}
-          />
-        </Unpad>
-      </Section>
-    )
-  },
-)
-
-const Unpad = view({
-  margin: [0, -14],
-  // dont do this, it undoes all our hard work with nice overrflow in carousels
-  // overflow: 'hidden',
-})
-
-@view.attach('searchStore', 'selectionStore', 'paneManagerStore')
+@view.attach('searchStore', 'selectionStore', 'paneManagerStore', 'appsStore')
 @view.attach({
   homeStore: OrbitHomeStore,
 })
@@ -244,7 +210,7 @@ export class OrbitHome extends React.Component<Props> {
   }
 
   render() {
-    const { homeStore, selectionStore } = this.props
+    const { homeStore } = this.props
     // we react to this so keep this here
     homeStore.results
     return (
@@ -273,8 +239,7 @@ export class OrbitHome extends React.Component<Props> {
                               index,
                             )}
                           >
-                            <OrbitHomeCarouselSection
-                              selectionStore={selectionStore}
+                            <OrbitCarouselSection
                               startIndex={startIndex}
                               items={items}
                               homeStore={homeStore}

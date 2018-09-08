@@ -1,6 +1,6 @@
 import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { SelectionStore } from '../../stores/SelectionStore'
+import { SelectionStore } from './orbitDocked/SelectionStore'
 import { KeyboardStore } from '../../stores/KeyboardStore'
 import { Actions } from '../../actions/Actions'
 import { observeOne } from '../../repositories'
@@ -49,15 +49,13 @@ export class PaneManagerStore {
       args: {
         where: {
           type: 'general',
-          category: 'general'
-        }
-      }
+          category: 'general',
+        },
+      },
     }).subscribe(generalSetting => {
       const values = generalSetting.values as GeneralSettingValues
       this.hasOnboarded = values.hasOnboarded
     })
-
-
 
     const disposeToggleSettings = App.onMessage(
       App.messages.TOGGLE_SETTINGS,
@@ -85,9 +83,7 @@ export class PaneManagerStore {
   setActivePaneHomeOnSearchInSettings = react(
     () => App.state.query,
     () => {
-      if (this.activePane !== 'settings') {
-        throw react.cancel
-      }
+      ensure('on settings', this.activePane === 'settings')
       this.setActivePane('home')
     },
   )
@@ -167,9 +163,7 @@ export class PaneManagerStore {
       if (active === 'home' && App.state.query) {
         active = 'search'
       }
-      if (active === this.activePane) {
-        throw react.cancel
-      }
+      ensure('no on active pane', active !== this.activePane)
       return active
     },
   )

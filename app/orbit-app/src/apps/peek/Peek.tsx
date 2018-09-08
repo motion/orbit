@@ -5,10 +5,10 @@ import * as UI from '@mcro/ui'
 import * as PeekPanes from './panes'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './views/PeekFrame'
-import { AppStore } from '../../stores/AppStore'
+import { AppStore } from '../AppStore'
 import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
-import { SelectionStore } from '../../stores/SelectionStore'
+import { SelectionStore } from '../orbit/orbitDocked/SelectionStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
 
 type Props = {

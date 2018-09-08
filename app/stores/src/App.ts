@@ -42,6 +42,7 @@ class AppStore {
     CLEAR_SELECTED: 'CLEAR_SELECTED',
     FORWARD_STATUS: 'FORWARD_STATUS',
     NOTIFICATION: 'NOTIFICATION',
+    SEARCH_INDEX_ANSWER: 'SEARCH_INDEX_ANSWER',
   }
 
   setState = Bridge.setState
@@ -105,9 +106,9 @@ class AppStore {
   isMouseInActiveArea = react(
     () =>
       !!(Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered),
-    async (over, { sleep, setValue }) => {
+    async (over, { sleep }) => {
       await sleep(over ? 0 : App.animationDuration)
-      setValue(over)
+      return over
     },
     { log: false },
   )

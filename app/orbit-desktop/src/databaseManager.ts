@@ -20,15 +20,42 @@ const hasTable = async (db: sqlite.Database, table: string) =>
 export class DatabaseManager {
   db: sqlite.Database
   subscriptions = new CompositeDisposable()
+  searchIndexListener: ReturnType<typeof Desktop.onMessage>
 
   async start() {
     this.db = await sqlite.open(DATABASE_PATH)
     this.ensureSearchIndex()
     this.watchForReset()
+
+    this.temporarySearchResults()
   }
 
   dispose() {
     this.subscriptions.dispose()
+    this.searchIndexListener()
+  }
+
+  private temporarySearchResults() {
+    this.searchIndexListener = Desktop.onMessage(
+      Desktop.messages.SEARCH_INDEX,
+      async searchString => {
+        const all = await this.db.all(
+          `
+        SELECT id FROM bit_entity JOIN search_index WHERE search_index MATCH ? ORDER BY rank LIMIT 1000
+      `,
+          searchString,
+        )
+        const answer = all.map(x => x.id)
+        Desktop.sendMessage(
+          App,
+          App.messages.SEARCH_INDEX_ANSWER,
+          JSON.stringify({
+            searchString,
+            answer,
+          }),
+        )
+      },
+    )
   }
 
   private watchForReset() {

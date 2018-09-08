@@ -23,7 +23,6 @@ export class SubPaneStore {
   paneRef = React.createRef<HTMLDivElement>()
   isAtBottom = false
   childMutationObserver = null
-  isTransitioningToActive = false
 
   get paneNode() {
     return this.paneRef.current || null
@@ -55,9 +54,6 @@ export class SubPaneStore {
     },
     isActive => {
       ensure('changed', isActive !== this.positionState.isActive)
-      if (isActive) {
-        this.isTransitioningToActive = true
-      }
       return {
         isActive,
         isLeft: this.isLeft(),
@@ -112,20 +108,9 @@ export class SubPaneStore {
 
   setAppHeightOnHeightChange = react(
     () => [this.fullHeight, this.positionState.isActive],
-    async ([height, isActive], { sleep }) => {
+    async ([height, isActive]) => {
       ensure('is active', isActive)
-      // on first transition go fast
-      if (this.isTransitioningToActive) {
-        this.isTransitioningToActive = false
-      } else {
-        // on next transitions, if not at full height, debounce
-        const isLessThanMax = height < this.maxHeight
-        const willBeShorter = height < this.lastHeight
-        if (isLessThanMax && willBeShorter) {
-          await sleep(100)
-        }
-      }
-      react.ensure('new value', height !== this.props.appStore.contentHeight)
+      ensure('new value', height !== this.props.appStore.contentHeight)
       this.props.appStore.setContentHeight(height)
     },
   )

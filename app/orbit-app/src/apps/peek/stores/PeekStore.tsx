@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { react, on } from '@mcro/black'
+import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { PEEK_THEMES } from '../../../constants'
-import { AppStore } from '../../../stores/AppStore'
+import { AppStore } from '../../AppStore'
 import {
   BitRepository,
   SettingRepository,
@@ -46,19 +46,12 @@ export class PeekStore {
   scrollToHighlight = react(
     () => App.peekState.highlightIndex,
     async (index, { sleep }) => {
-      if (typeof index !== 'number') {
-        throw react.cancel
-      }
+      ensure('index number', index === 'number')
       const frame = this.contentFrame.current
-      if (!frame) {
-        throw react.cancel
-      }
+      ensure('has frame', !!frame)
       await sleep(150)
       const activeHighlight = this.highlights[index]
-      if (!activeHighlight) {
-        console.error('no highlight at index', index, this.highlights)
-        throw react.cancel
-      }
+      ensure('active highlight', !!activeHighlight)
       // move frame to center the highlight but 100px more towards the top which looks nicer
       frame.scrollTop = activeHighlight.offsetTop - frame.clientHeight / 2 + 100
     },

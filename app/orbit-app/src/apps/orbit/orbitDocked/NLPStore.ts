@@ -1,4 +1,3 @@
-import { observeMany } from '../repositories'
 import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { NLPResponse } from './nlpStore/types'
@@ -7,6 +6,7 @@ import { NLPResponse } from './nlpStore/types'
 // @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
 import { PersonBitModel } from '@mcro/models'
+import { observeMany } from '../../../repositories'
 const { parseSearchQuery, setUserNames } = initNlp()
 // @ts-ignore
 window.nlpWorker = { parseSearchQuery, setUserNames }

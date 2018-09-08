@@ -7,6 +7,10 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 
 const provider = new WebSocketProvider()
 
+export const SearchIndexRepository = new Repository<Bit>(
+  'SearchIndex',
+  provider,
+)
 export const BitRepository = new Repository<Bit>('BitEntity', provider)
 export const PersonRepository = new Repository<Person>('PersonEntity', provider)
 export const JobRepository = new Repository<Job>('JobEntity', provider)
@@ -47,6 +51,4 @@ export const loadMany: typeof Mediator.loadMany = Mediator.loadMany.bind(
   Mediator,
 )
 
-export const loadOne: typeof Mediator.loadOne = Mediator.loadOne.bind(
-  Mediator,
-)
+export const loadOne: typeof Mediator.loadOne = Mediator.loadOne.bind(Mediator)

@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 
 export class QueryStore {
@@ -12,6 +12,17 @@ export class QueryStore {
       App.setState({ query })
     },
   )
+
+  externalChangeAppQuery = react(
+    () => App.state.query,
+    query => {
+      ensure('is diff', query !== this.query)
+      console.log('external query update')
+      this.query = query
+    },
+  )
+
+  hasQuery = react(() => this.query.length)
 
   clearQuery = () => {
     this.query = ''

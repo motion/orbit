@@ -49,11 +49,25 @@ const columns = {
 class GithubSettingStore {
   props: SettingPaneProps
 
+  allRepos = []
   active = 'status'
   userOrgs = []
   sortOrder = {
     key: 'lastCommit',
     direction: 'up',
+  }
+
+  async didMount() {
+    this.allRepos = flatten(
+      await Promise.all(
+        this.orgsList.map(async org => {
+          return await this.service.github
+            .orgs(org)
+            .repos.fetch({ per_page: 100 })
+            .then(res => res.items)
+        }),
+      ),
+    )
   }
 
   get setting() {
@@ -64,10 +78,6 @@ class GithubSettingStore {
     return this.props.appStore.services.github
   }
 
-  bits = react(() =>
-    BitRepository.find({ where: { integration: 'github', type: 'task' } }),
-  )
-
   get orgsList() {
     const { allOrgs } = this.service
     return (allOrgs && allOrgs.map(org => org.login)) || []
@@ -76,24 +86,6 @@ class GithubSettingStore {
   onSortOrder = newOrder => {
     this.sortOrder = newOrder
   }
-
-  allRepos = react(
-    async () => {
-      return flatten(
-        await Promise.all(
-          this.orgsList.map(async org => {
-            return await this.service.github
-              .orgs(org)
-              .repos.fetch({ per_page: 100 })
-              .then(res => res.items)
-          }),
-        ),
-      )
-    },
-    {
-      defaultValue: [],
-    },
-  )
 
   rows = react(
     () => this.allRepos,

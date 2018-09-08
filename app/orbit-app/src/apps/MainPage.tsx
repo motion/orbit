@@ -3,9 +3,9 @@ import { view } from '@mcro/black'
 // import { HighlightsPage } from './HighlightsPage'
 import { Orbit } from './orbit/Orbit'
 import { Peek } from './peek/Peek'
-import { AppStore } from '../stores/AppStore'
+import { AppStore } from './AppStore'
 import * as UI from '@mcro/ui'
-import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
+import { AppsStore } from './AppsStore'
 import { MainShortcutHandler } from '../components/shortcutHandlers/MainShortcutHandler'
 
 const Main = view(UI.Col, {
@@ -20,11 +20,11 @@ const Main = view(UI.Col, {
 })
 
 @view.provide({
-  integrationSettingsStore: IntegrationSettingsStore,
+  appsStore: AppsStore,
   appStore: AppStore,
 })
 export class MainPage extends React.Component<{
-  integrationSettingsStore: IntegrationSettingsStore
+  appsStore: AppsStore
   appStore: AppStore
 }> {
   render() {

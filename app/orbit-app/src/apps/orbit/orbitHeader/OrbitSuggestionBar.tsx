@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { SearchFilterStore } from '../../../stores/SearchFilterStore'
+import { SearchFilterStore } from '../orbitDocked/SearchFilterStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
 const dateBg = UI.color('#ffb049')
@@ -67,12 +67,15 @@ const SuggestionButton = props => (
   <UI.Button
     glint={false}
     size={0.9}
-    sizeRadius={0.9}
-    marginRight={3}
+    sizeRadius={0}
     sizeHeight={0.8}
-    sizePadding={0.6}
+    sizePadding={0.3}
     fontWeight={600}
     themeSelect={suggestionTheme}
+    background="transparent"
+    borderColor="transparent"
+    borderWidth={0}
+    marginRight={6}
     {...props}
   />
 )
@@ -108,6 +111,9 @@ const hideFilterPanes = {
   home: true,
 }
 
+const getBorderColor = filter =>
+  (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
+
 export const OrbitSuggestionBar = view(
   ({ filterStore, paneManagerStore }: Props) => {
     filterStore.disabledFilters
@@ -121,12 +127,7 @@ export const OrbitSuggestionBar = view(
               key={`${filter.text}${filter.active}`}
               onClick={() => filterStore.toggleFilterActive(filter.text)}
               opacity={opacityScale[index] || 0.333}
-              background="transparent"
-              borderColor={
-                (filter.active && activeThemes[filter.type].borderColor) ||
-                'transparent'
-              }
-              borderWidth={1}
+              borderBottom={[2, getBorderColor(filter)]}
             >
               {filter.text}
             </SuggestionButton>

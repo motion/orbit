@@ -1,7 +1,5 @@
 import { Reaction } from './constants'
 import { ReactionOptions, ReactionHelpers } from './types'
-import { ensure } from './ensure'
-import { cancel } from './cancel'
 
 // decorator to do reactions
 
@@ -29,53 +27,59 @@ function tsWatch(options) {
   }
 }
 
-export type ReactionFunction<A, B> = {
-  (
-    a: () => A,
-    b?: ((a: A, helpers: ReactionHelpers) => B | Promise<B>) | ReactionOptions,
-    c?: ReactionOptions,
-  ): B
-  cancel: Error
-  ensure: (message: string, condition: boolean) => void
-}
-
-// @watch decorator
-export const react = <ReactionFunction<any, any>>(
-  function react(
-    a,
-    b?: ReactionOptions | Function,
-    c?: ReactionOptions,
-    opts?: ReactionOptions,
-  ) {
-    if (typeof a === 'function') {
-      if (typeof b === 'function') {
-        return new Reaction(a, b, c)
-      }
-      if (typeof b === 'object' || !b) {
-        return new Reaction(a, b, null)
-      }
+// @react decorator
+export function react<
+  A extends
+    | null
+    | number
+    | string
+    | Object
+    | [any]
+    | [any, any]
+    | [any, any, any]
+    | [any, any, any, any]
+    | [any, any, any, any, any]
+    | [any, any, any, any, any, any]
+    | [any, any, any, any, any, any, any],
+  B
+>(
+  a: () => A,
+  b?: ((a: A, helpers: ReactionHelpers) => B | Promise<B>) | ReactionOptions,
+  c?: ReactionOptions,
+  opts?: ReactionOptions,
+): B {
+  if (typeof a === 'function') {
+    if (typeof b === 'function') {
+      // @ts-ignore
+      return new Reaction(a, b, c)
     }
-    // passing options
-    if (!b) {
-      const options = { ...a, ...opts }
-      return (target, method, descriptor) => {
-        if (!descriptor) {
-          return tsWatch(options)
-        }
-        return doWatch(target, method, descriptor, options)
-      }
-    } else {
-      // typescript
-      if (!c) {
-        return tsWatch(a)
-      }
-      return doWatch(a, b, c, opts)
+    if (typeof b === 'object' || !b) {
+      // @ts-ignore
+      return new Reaction(a, b, null)
     }
   }
-)
-
-react.cancel = cancel
-react.ensure = ensure
+  // passing options
+  if (!b) {
+    console.log('no b???', a, b, c)
+    debugger
+    // @ts-ignore
+    const options = { ...a, ...opts }
+    // @ts-ignore
+    return (target, method, descriptor) => {
+      if (!descriptor) {
+        return tsWatch(options)
+      }
+      return doWatch(target, method, descriptor, options)
+    }
+  } else {
+    // typescript
+    if (!c) {
+      // @ts-ignore
+      return tsWatch(a)
+    }
+    return doWatch(a, b, c, opts)
+  }
+}
 
 function doWatch(target, _, descriptor, userOptions) {
   // non-decorator

@@ -1,17 +1,17 @@
 import { view } from '@mcro/black'
 import { BitModel, PersonBit, SlackPersonData } from '@mcro/models'
 import * as React from 'react'
-import { Actions } from '../../../actions/Actions'
 import { Carousel } from '../../../components/Carousel'
 import { observeMany } from '../../../repositories'
-import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
+import { AppsStore } from '../../AppsStore'
 import { RoundButton, SubTitle } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { OrbitListItem } from '../../../views/OrbitListItem'
 import { PeekPaneProps } from '../PeekPaneProps'
+import { App } from '@mcro/stores'
 
 type Props = PeekPaneProps & {
-  integrationSettingsStore: IntegrationSettingsStore
+  appsStore: AppsStore
 }
 
 class PeekPersonStore {
@@ -31,7 +31,10 @@ class PeekPersonStore {
           },
         },
       },
-      take: 100,
+      order: {
+        bitUpdatedAt: 'DESC',
+      },
+      take: 30,
     },
   }).subscribe(values => {
     this.recentBits = values
@@ -166,16 +169,16 @@ const Links = view({
   flexFlow: 'row',
 })
 
-const IntegrationButton = ({ href, children, ...props }) => (
+const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
   <RoundButton
-    onClick={() => Actions.open(href)}
-    icon={<OrbitIcon preventAdjust size={14} {...props} />}
+    icon={<OrbitIcon icon={icon} preventAdjust size={size} />}
+    {...props}
   >
     {children}
   </RoundButton>
 )
 
-@view.attach('integrationSettingsStore')
+@view.attach('appsStore', 'queryStore')
 @view.attach({
   store: PeekPersonStore,
 })
@@ -184,12 +187,8 @@ export class PeekPerson extends React.Component<
   Props & { store: PeekPersonStore }
 > {
   render() {
-    const { integrationSettingsStore, model, children, store } = this.props
+    const { appsStore, model, children, store } = this.props
     const person = model as PersonBit
-    const { settings } = integrationSettingsStore
-    if (!settings) {
-      return children({})
-    }
     if (!person) {
       console.log('no person?', person)
       return children({})
@@ -219,10 +218,22 @@ export class PeekPerson extends React.Component<
                 >
                   Slack
                 </IntegrationButton> */}
-                <IntegrationButton icon="zoom" size={12} href="">
+                <IntegrationButton
+                  icon="zoom"
+                  size={12}
+                  onClick={() =>
+                    App.setState({ query: `${person.name} documents` })
+                  }
+                >
                   Documents
                 </IntegrationButton>
-                <IntegrationButton icon="zoom" size={12} href="">
+                <IntegrationButton
+                  icon="zoom"
+                  size={12}
+                  onClick={() =>
+                    App.setState({ query: `${person.name} tasks` })
+                  }
+                >
                   Tasks
                 </IntegrationButton>
               </Links>
@@ -276,11 +287,12 @@ export class PeekPerson extends React.Component<
                       model={bit}
                       margin={0}
                       padding={15}
+                      isExpanded
                       theme={{
                         backgroundHover: 'transparent',
                       }}
                     >
-                      {({ preview }) => preview}
+                      {({ content }) => content}
                     </OrbitListItem>
                   )
                 })}

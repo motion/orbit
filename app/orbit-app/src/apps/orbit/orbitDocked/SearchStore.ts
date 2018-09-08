@@ -1,18 +1,18 @@
-import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
+import { PaneManagerStore } from '../PaneManagerStore'
 import { App } from '@mcro/stores'
 import { react, ensure } from '@mcro/black'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
-import { AppStore } from './AppStore'
+import { AppStore } from '../../AppStore'
 import { Bit } from '@mcro/models'
-import { matchSort } from './helpers/searchStoreHelpers'
-import { MarkType } from './nlpStore/types'
+import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { FindOptions } from 'typeorm'
-import { BitRepository, PersonBitRepository } from '../repositories'
+import { BitRepository, PersonBitRepository } from '../../../repositories'
 import { flatten } from 'lodash'
 import { SelectionStore } from './SelectionStore'
-import { IntegrationSettingsStore } from './IntegrationSettingsStore'
+import { AppsStore } from '../../AppsStore'
 import { QueryStore } from './QueryStore'
+import { MarkType } from './nlpStore/types'
 
 const TYPE_DEBOUNCE = 200
 
@@ -106,7 +106,7 @@ export class SearchStore {
     appStore: AppStore
     paneManagerStore: PaneManagerStore
     selectionStore: SelectionStore
-    integrationSettingsStore: IntegrationSettingsStore
+    appsStore: AppsStore
     queryStore: QueryStore
   }
 
@@ -115,18 +115,15 @@ export class SearchStore {
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore({
     queryStore: this.props.queryStore,
-    integrationSettingsStore: this.props.integrationSettingsStore,
+    appsStore: this.props.appsStore,
     nlpStore: this.nlpStore,
     searchStore: this,
   })
 
-  willMount() {
-    this.subscriptions.add({
-      dispose: () => {
-        this.nlpStore.subscriptions.dispose()
-        this.searchFilterStore.subscriptions.dispose()
-      },
-    })
+  willUnmount() {
+    this.nlpStore.subscriptions.dispose()
+    // @ts-ignore
+    this.searchFilterStore.subscriptions.dispose()
   }
 
   setSelectionHandler = react(
@@ -334,9 +331,7 @@ export class SearchStore {
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep, when }) => {
-      if (!this.isOnSearchPane) {
-        throw react.cancel
-      }
+      ensure('on search pane', this.isOnSearchPane)
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE - 60)
       await when(() => this.nlpStore.nlp.query === query)

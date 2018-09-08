@@ -1,8 +1,8 @@
 import { Bit, PersonBit, Setting } from '@mcro/models'
-import { AppStore } from '../../stores/AppStore'
+import { AppStore } from '../AppStore'
 import { PeekStore } from './stores/PeekStore'
 import { AppConfig } from '@mcro/stores'
-import { SelectionStore } from '../../stores/SelectionStore'
+import { SelectionStore } from '../orbit/orbitDocked/SelectionStore'
 
 export type PeekContents = {
   title?: React.ReactNode

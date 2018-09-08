@@ -7,7 +7,7 @@ import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { Desktop } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
-import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
+import { AppsStore } from '../../../AppsStore'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { Title, VerticalSpace } from '../../../../views'
@@ -18,7 +18,7 @@ import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 import { GeneralSettingValues } from '@mcro/models'
 
 type Props = {
-  integrationSettingsStore?: IntegrationSettingsStore
+  appsStore?: AppsStore
   paneManagerStore?: PaneManagerStore
   store?: OnboardStore
 }
@@ -195,186 +195,169 @@ class OnboardStore {
 }
 
 const decorator = compose(
-  view.attach('integrationSettingsStore', 'paneManagerStore'),
+  view.attach('appsStore', 'paneManagerStore'),
   view.attach({
     store: OnboardStore,
   }),
   view,
 )
 
-export const OrbitOnboard = decorator(
-  ({ store, integrationSettingsStore }: Props) => {
-    const { foundIntegrations } = Desktop.state.onboardState
-    if (!foundIntegrations) {
-      console.log('no found integrations...')
-      return null
+export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
+  const { foundIntegrations } = Desktop.state.onboardState
+  if (!foundIntegrations) {
+    console.log('no found integrations...')
+    return null
+  }
+  const { atlassian, ...rest } = foundIntegrations
+  let finalIntegrations = Object.keys(rest)
+  if (atlassian) {
+    finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
+  }
+  const integrations = finalIntegrations.map(integration => {
+    return {
+      id: integration,
+      title: NICE_INTEGRATION_NAMES[integration],
+      auth: /jira|conflunce/.test(integration),
+      added: !!(appsStore.appsList || []).find(x => x.type === integration),
     }
-    const { atlassian, ...rest } = foundIntegrations
-    let finalIntegrations = Object.keys(rest)
-    if (atlassian) {
-      finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
-    }
-    const integrations = finalIntegrations.map(integration => {
-      return {
-        id: integration,
-        title: NICE_INTEGRATION_NAMES[integration],
-        auth: /jira|conflunce/.test(integration),
-        added: !!(integrationSettingsStore.settingsList || []).find(
-          x => x.type === integration,
-        ),
-      }
-    })
-    return (
-      <SubPane name="onboard">
-        <FrameAnimate curFrame={store.curFrame}>
-          <OnboardFrame>
-            {store.accepted === null && (
-              <Centered>
-                <br />
-                <Text size={3.2} fontWeight={600}>
-                  Hello,
-                </Text>
-                <View height={10} />
-                <Text size={1.75} alpha={0.5}>
-                  Welcome to Orbit
-                </Text>
-                <View height={30} />
-                <Text
-                  textAlign="left"
-                  fontSize={27}
-                  lineHeight={35}
-                  alpha={0.9}
-                >
-                  Orbit is the first ever search platform built{' '}
-                  <strong>for&nbsp;you</strong>.<VerticalSpace />
-                  It's completely private. Your keys and data are only ever
-                  stored and accessed privately on your computer.
-                </Text>
-                <VerticalSpace />
-                <Text textAlign="left">
-                  To pull that off Orbit will run a secure proxy on your
-                  computer.
-                </Text>
-                <VerticalSpace />
-                <div className="markdown">
-                  <a href="http://tryorbit.com/security">
-                    Our absolute commitment to security.
-                  </a>
-                </div>
-                <VerticalSpace />
-                <VerticalSpace />
-                <VerticalSpace />
-              </Centered>
-            )}
-            {store.accepted === false && (
-              <Centered>
-                <Text size={1.5} alpha={0.5}>
-                  Error setting up proxy
-                </Text>
-                <View height={20} />
-                <Text
-                  selectable
-                  textAlign="left"
-                  size={1.1}
-                  sizeLineHeight={0.9}
-                >
-                  Orbit had a problem setting up a proxy on your machine. Feel
-                  free to get in touch with us if you are having issues:
-                  <br />
-                  <br />
-                  <strong>
-                    <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
-                  </strong>
-                  .<br />
-                  <br />
-                  <strong>Error message:</strong>
-                  <br />
-                  <br />
-                  {store.acceptedMessage}
-                </Text>
-              </Centered>
-            )}
-            {store.accepted === true && (
-              <Centered>
-                <Text size={2.2} fontWeight={600}>
-                  Success
-                </Text>
-                <View height={5} />
-                <Text size={1.5} alpha={0.5} width="80%">
-                  Orbit was able to set up a private server to handle your
-                  authentication.
-                </Text>
-                <View height={25} />
-                <Text size={1.5} alpha={0.5} width="80%">
-                  Now, let's get you set up.
-                </Text>
-              </Centered>
-            )}
-          </OnboardFrame>
-          <OnboardFrame>
-            <Title size={1.2} fontWeight={600}>
-              Set up a few apps
-            </Title>
-
-            <Text>You can add a few apps now to get started.</Text>
-
-            <View height={15} />
-            <Unpad>
-              {integrations.map(item => {
-                return (
-                  <Item
-                    key={item.id}
-                    inactive={item.added}
-                    onClick={
-                      item.added ? null : addIntegrationClickHandler(item)
-                    }
-                  >
-                    <OrbitIcon size={18} icon={item.id} />
-                    <ItemTitle>{item.title}</ItemTitle>
-                    <AddButton size={0.9} disabled={item.added}>
-                      {item.added ? (
-                        <Icon size={16} name="check" color="green" />
-                      ) : (
-                        'Add'
-                      )}
-                    </AddButton>
-                  </Item>
-                )
-              })}
-            </Unpad>
-            <VerticalSpace />
-
-            {/* <MessageDark style={{ textAlign: 'center' }}>
-              <Text size={1.2}>Orbit Proxy Active!</Text>
-            </MessageDark> */}
-          </OnboardFrame>
-          <OnboardFrame>
+  })
+  return (
+    <SubPane name="onboard">
+      <FrameAnimate curFrame={store.curFrame}>
+        <OnboardFrame>
+          {store.accepted === null && (
             <Centered>
-              <Text size={2.5} fontWeight={600}>
-                All set!
+              <br />
+              <Text size={3.2} fontWeight={600}>
+                Hello,
+              </Text>
+              <View height={10} />
+              <Text size={1.75} alpha={0.5}>
+                Welcome to Orbit
+              </Text>
+              <View height={30} />
+              <Text textAlign="left" fontSize={27} lineHeight={35} alpha={0.9}>
+                Orbit is the first ever search platform built{' '}
+                <strong>for&nbsp;you</strong>.<VerticalSpace />
+                It's completely private. Your keys and data are only ever stored
+                and accessed privately on your computer.
+              </Text>
+              <VerticalSpace />
+              <Text textAlign="left">
+                To pull that off Orbit will run a secure proxy on your computer.
+              </Text>
+              <VerticalSpace />
+              <div className="markdown">
+                <a href="http://tryorbit.com/security">
+                  Our absolute commitment to security.
+                </a>
+              </div>
+              <VerticalSpace />
+              <VerticalSpace />
+              <VerticalSpace />
+            </Centered>
+          )}
+          {store.accepted === false && (
+            <Centered>
+              <Text size={1.5} alpha={0.5}>
+                Error setting up proxy
               </Text>
               <View height={20} />
-              <Text size={1.5} alpha={0.5}>
-                Orbit is now creating an index of things and people from across
-                your cloud.
+              <Text selectable textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                Orbit had a problem setting up a proxy on your machine. Feel
+                free to get in touch with us if you are having issues:
+                <br />
+                <br />
+                <strong>
+                  <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
+                </strong>
+                .<br />
+                <br />
+                <strong>Error message:</strong>
+                <br />
+                <br />
+                {store.acceptedMessage}
               </Text>
             </Centered>
-          </OnboardFrame>
-        </FrameAnimate>
-        <Controls disabled={store.disableButtons}>
-          {store.curFrame > 1 && (
-            <Button chromeless onClick={store.prevFrame}>
-              Back
-            </Button>
           )}
-          <View width={10} />
-          <Theme name="orbit">
-            <Button size={1.1} fontWeight={600} onClick={store.nextFrame}>
-              {buttonText[store.curFrame]}
-            </Button>
-          </Theme>
-        </Controls>
-      </SubPane>
-    )
-  },
-)
+          {store.accepted === true && (
+            <Centered>
+              <Text size={2.2} fontWeight={600}>
+                Success
+              </Text>
+              <View height={5} />
+              <Text size={1.5} alpha={0.5} width="80%">
+                Orbit was able to set up a private server to handle your
+                authentication.
+              </Text>
+              <View height={25} />
+              <Text size={1.5} alpha={0.5} width="80%">
+                Now, let's get you set up.
+              </Text>
+            </Centered>
+          )}
+        </OnboardFrame>
+        <OnboardFrame>
+          <Title size={1.2} fontWeight={600}>
+            Set up a few apps
+          </Title>
+
+          <Text>You can add a few apps now to get started.</Text>
+
+          <View height={15} />
+          <Unpad>
+            {integrations.map(item => {
+              return (
+                <Item
+                  key={item.id}
+                  inactive={item.added}
+                  onClick={item.added ? null : addIntegrationClickHandler(item)}
+                >
+                  <OrbitIcon size={18} icon={item.id} />
+                  <ItemTitle>{item.title}</ItemTitle>
+                  <AddButton size={0.9} disabled={item.added}>
+                    {item.added ? (
+                      <Icon size={16} name="check" color="green" />
+                    ) : (
+                      'Add'
+                    )}
+                  </AddButton>
+                </Item>
+              )
+            })}
+          </Unpad>
+          <VerticalSpace />
+
+          {/* <MessageDark style={{ textAlign: 'center' }}>
+              <Text size={1.2}>Orbit Proxy Active!</Text>
+            </MessageDark> */}
+        </OnboardFrame>
+        <OnboardFrame>
+          <Centered>
+            <Text size={2.5} fontWeight={600}>
+              All set!
+            </Text>
+            <View height={20} />
+            <Text size={1.5} alpha={0.5}>
+              Orbit is now creating an index of things and people from across
+              your cloud.
+            </Text>
+          </Centered>
+        </OnboardFrame>
+      </FrameAnimate>
+      <Controls disabled={store.disableButtons}>
+        {store.curFrame > 1 && (
+          <Button chromeless onClick={store.prevFrame}>
+            Back
+          </Button>
+        )}
+        <View width={10} />
+        <Theme name="orbit">
+          <Button size={1.1} fontWeight={600} onClick={store.nextFrame}>
+            {buttonText[store.curFrame]}
+          </Button>
+        </Theme>
+      </Controls>
+    </SubPane>
+  )
+})

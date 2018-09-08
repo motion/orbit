@@ -1,12 +1,14 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, compose } from '@mcro/black'
 import { BORDER_RADIUS, CHROME_PAD } from '../../../constants'
-import { AppStore } from '../../../stores/AppStore'
+import { AppStore } from '../../AppStore'
 import * as UI from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
+import { QueryStore } from './QueryStore'
 
 type Props = {
-  appStore: AppStore
+  appStore?: AppStore
+  queryStore?: QueryStore
 }
 
 const extraShadow = -20
@@ -24,7 +26,7 @@ const Border = view({
   borderRadius: BORDER_RADIUS + 1,
 })
 
-Border.theme = ({ theme }) => {
+Border.theme = () => {
   // const borderColor = theme.background.lighten(0.4)
   // const borderShadow = [0, 0, 0, 0.5, borderColor]
   // const lightBg = theme.background.lighten(1)
@@ -54,25 +56,24 @@ const Background = view({
   bottom: 0,
   zIndex: -1,
   borderRadius: BORDER_RADIUS + 1,
-  // background: 'rgba(255,255,255,0.92)',
+  transition: 'all ease 250ms',
 })
-Background.theme = ({ theme, isTransparent }) => {
+Background.theme = ({ theme, isTransparent, moreOpaque }) => {
   const isDark = theme.background.isDark()
-  const darkBg = isTransparent ? [15, 15, 15, 0.5] : [40, 40, 40]
-  const lightBg = isTransparent ? [255, 255, 255, 0.9] : [255, 255, 255]
+  const darkBg = isTransparent
+    ? moreOpaque
+      ? [30, 30, 30, 0.55]
+      : [0, 0, 0, 0.3]
+    : [40, 40, 40]
+  const lightBg = isTransparent
+    ? [255, 255, 255, moreOpaque ? 0.9 : 0.8]
+    : [255, 255, 255]
   return {
     background: isDark ? darkBg : lightBg,
   }
-  // background: [0, 0, 0, 0.5],
-  // background: isUpper
-  //   ? theme.background.alpha(0.2)
-  //   : `linear-gradient(
-  //       ${theme.background.alpha(0.2)} 90%,
-  //       ${theme.background.alpha(0)}
-  //     )`,
 }
 
-const OrbitChrome = view(({ isUpper = false }) => {
+const OrbitChrome = view(({ moreOpaque, isUpper = false }) => {
   return (
     <>
       <Border />
@@ -80,6 +81,7 @@ const OrbitChrome = view(({ isUpper = false }) => {
       <Background
         isUpper={isUpper}
         isTransparent={Desktop.state.operatingSystem.supportsTransparency}
+        moreOpaque={moreOpaque}
       />
     </>
   )
@@ -142,20 +144,27 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
 
 // this view has two halves so it can animate smoothly without causing layout reflows
 
-export const OrbitDockedChrome = view(({ appStore }: Props) => {
-  return (
-    <>
-      <BlockTop height={60} overflow={SHADOW_PAD}>
-        <OrbitChrome isUpper />
-      </BlockTop>
-      <BlockBottom
-        above={60}
-        height={appStore.contentHeight}
-        maxHeight={window.innerHeight - 20}
-        overflow={SHADOW_PAD}
-      >
-        <OrbitChrome />
-      </BlockBottom>
-    </>
-  )
-})
+const decorator = compose(
+  view.attach('appStore', 'queryStore'),
+  view,
+)
+
+export const OrbitDockedChrome = decorator(
+  ({ appStore, queryStore }: Props) => {
+    return (
+      <>
+        <BlockTop height={60} overflow={SHADOW_PAD}>
+          <OrbitChrome isUpper moreOpaque={queryStore.hasQuery} />
+        </BlockTop>
+        <BlockBottom
+          above={60}
+          height={appStore.contentHeight}
+          maxHeight={window.innerHeight - 20}
+          overflow={SHADOW_PAD}
+        >
+          <OrbitChrome moreOpaque={queryStore.hasQuery} />
+        </BlockBottom>
+      </>
+    )
+  },
+)

@@ -1,10 +1,9 @@
 to sync with umed:
 
-- Gmail how do I know if its html or text?
-
-# Umed Week of Sep 2
+# Umed
 
 - Make all syncers sync a more/better
+  - Gmail how do I know if its html or text?
   - Gmail super slow
   - Gmail no html coming back?
   - Really simple throttle
@@ -16,26 +15,31 @@ to sync with umed:
   - Github sync auto select everything by default
   - GDocs auto sync most things by default
 - Really simple RSS Syncer
+- fts5 integration
+- Location as a model
+  - This way we can search + generate feeds by Location
 
-# Nate week of Sep 2
+# Nate
 
-- fix counts not updating using observe on OrbitApps
-- fix profile peek title bug
-- make peek profile show list a lot better/cleaner
-- during onboard prompt to allow "innocent" logging to help us
-  - find a automatic analytic/logging service for desktop apps
-- fts5
-- deploy https/private.orbit.com with letsencrypt
-- Cosal merged into search and people profiles
-- Signup process that links to real in-cloud db for accounts
-- Attach account to orbit app
-- Start on settings panel
+- Pane model + default Pane.id = 0, Pane.name = 'Home'
+- Pane.feedOrder
+- Pane.hasMany Feed
+  - Feed.type: 'carousel' | 'grid' | 'list'
+- rename feed UI
+- add Feed from search UI
+- show apps in QuickResults so you can add an app to home Feed
+- Cosal merge, search and people profiles
 - searchresults - keep scroll at top of pane makes it possible to move quickly down
-  - Move settings over to window
-    - General, Appearance
-  - Ability to join Orbits
-  - Ability to manage your account
-- Ask for survey notification if they use it for a few days...
+- Move settings over to window
+  - General, Appearance
+
+## Website signup for beta
+
+- Signup process
+- Account manage area
+- Secure source code
+- Documentation for onboarding
+- Questionaire
 
 # September:
 
@@ -71,6 +75,17 @@ to sync with umed:
 
 # next
 
+- survey notification if they use it for a few days...
+- manage people (may not want github for example to sync in people)
+  - probably by default some integrations are "additive only"
+  - so they only sync in on top of existing people
+  - also could scan contacts
+- need to pass array of string to highlightcontext
+- date filtering isn't working for:
+  - nate january
+  - nate jan 1 to jan 30
+- multiselect tables keyboard nav not working:
+  - generally inner app keyboard nav not working
 - showing sync status:
   - make a SyncStatusStore that takes a setting
   - ask umed: how to get all JobRepository.Syncer types
@@ -78,14 +93,10 @@ to sync with umed:
 - typing while focused on a peek:
   - reset index to 0 not -1, keeps the peek open as you filter things
 - doesnt follow monitor on add new monitor
-- deploy initial oauth step to digitalocean
-- need a way for people to suggest/vote features
-- sort the queues by most recent at top so you can quickly hit emails
-  - should be fully keynav so you can get to links inside them quickly
-  - show html in emails
-- slack room
-- email list email
-- close orbit while oauth open so it doesnt cover it
+- community
+  - need a way for people to suggest/vote features
+- show html in emails
+- semi-hide orbit while oauth open so it doesnt cover it
 - better show the panes on onboard
 - after onboard "what can i do / search?"
 - typeform survey to capture a few potential paths
@@ -116,25 +127,6 @@ to sync with umed:
 - Get the basic app store in place
 - If Swift contractor works out integrate some OCR
 - Prep website for private beta launch
-
-## Website signup for beta
-
-- Signup process
-- Account manage area
-- keygen.sh
-- Secure source code
-- Documentation for onboarding
-- Questionaire
-
-## Orbit 1.1 best guess
-
-- Better movement and displays
-- Profiles upgrade
-- Cosal
-- Account/settings upgrades
-- Search upgrades
-- Attachment/file previews
-- Follow topics
 
 ---
 

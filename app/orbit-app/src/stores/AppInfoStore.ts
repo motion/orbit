@@ -1,13 +1,13 @@
 import { BitModel, SettingModel, JobModel, Setting } from '@mcro/models'
 import { observeCount, observeOne } from '../repositories'
 
-export type SettingInfoProps = {
+export type AppInfoProps = {
   settingId?: number
   model?: Setting
 }
 
-export class SettingInfoStore {
-  props: SettingInfoProps
+export class AppInfoStore {
+  props: AppInfoProps
 
   setting = null
   bitsCount = 0

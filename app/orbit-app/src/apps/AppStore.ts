@@ -1,9 +1,9 @@
 import { on, react, isEqual, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { observeMany } from '../repositories'
-import * as AppStoreHelpers from './helpers/appStoreHelpers'
+import * as AppStoreHelpers from '../stores/helpers/appStoreHelpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { AppReactions } from './AppReactions'
+import { AppReactions } from '../stores/AppReactions'
 import { Bit, Setting, SettingModel } from '@mcro/models'
 
 export class AppStore {
@@ -11,7 +11,7 @@ export class AppStore {
   lastSelectedPane = ''
   onPinKeyCB = null
   appSettings = null
-  appSettings$ = observeMany(SettingModel, {
+  private appSettings$ = observeMany(SettingModel, {
     args: {
       where: { category: 'integration', token: { $not: 'good' } },
     },

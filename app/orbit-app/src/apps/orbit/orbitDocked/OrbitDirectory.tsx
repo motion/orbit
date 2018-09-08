@@ -11,7 +11,7 @@ import { PaneManagerStore } from '../PaneManagerStore'
 import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
-import { SelectionStore } from '../../../stores/SelectionStore'
+import { SelectionStore } from './SelectionStore'
 import { PersonBitModel } from '@mcro/models'
 import { HighlightsContext } from '../../../helpers/contexts/HighlightsContext'
 
@@ -27,17 +27,16 @@ type Props = {
 class OrbitDirectoryStore {
   props: Props
   allPeople = []
+  private allPeople$ = observeMany(PersonBitModel).subscribe(people => {
+    if (!people) return
+    const sorted = sortBy(people.filter(x => !!x.name), x =>
+      x.name.toLowerCase(),
+    )
+    this.allPeople = sorted
+  })
 
-  didMount() {
-    // TODO make this pause when pane is not active
-    const allPeople$ = observeMany(PersonBitModel).subscribe(people => {
-      if (!people) return
-      const sorted = sortBy(people.filter(x => !!x.name), x =>
-        x.name.toLowerCase(),
-      )
-      this.allPeople = sorted
-    })
-    on(this, allPeople$)
+  willUnmount() {
+    this.allPeople$.unsubscribe()
   }
 
   get isActive() {
@@ -47,7 +46,7 @@ class OrbitDirectoryStore {
   setSelectionHandler = react(
     () => [this.isActive, this.results],
     ([isActive]) => {
-      if (!isActive) throw react.cancel
+      ensure('is active', isActive)
       this.props.selectionStore.setResults([
         { type: 'column', items: this.results },
       ])

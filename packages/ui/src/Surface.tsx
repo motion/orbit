@@ -144,6 +144,7 @@ SurfaceFrame.theme = props => {
     background: 'transparent',
   }
   let surfaceStyles = {
+    margin: props.margin,
     fontWeight: props.fontWeight,
     color: props.color || props.theme.color,
     ...(props.inline && inlineStyle),

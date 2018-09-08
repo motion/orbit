@@ -4,7 +4,7 @@ import { view, compose } from '@mcro/black'
 import { View } from '@mcro/ui'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
-import { QueryStore } from '../../../stores/QueryStore'
+import { QueryStore } from '../orbitDocked/QueryStore'
 import { HeaderStore } from './HeaderStore'
 import { ThemeObject } from '@mcro/gloss'
 

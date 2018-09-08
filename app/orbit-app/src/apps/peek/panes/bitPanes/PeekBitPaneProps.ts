@@ -1,4 +1,4 @@
-import { AppStore } from '../../../../stores/AppStore'
+import { AppStore } from '../../../AppStore'
 import { PeekStore } from '../../stores/PeekStore'
 import { Bit } from '@mcro/models'
 

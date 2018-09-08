@@ -28,13 +28,14 @@ export const MainShortcutHandler = decorator(
         Actions.copyLink(selectionStore.selectedItem)
       },
       escape: () => {
+        if (App.state.query) {
+          return Actions.clearSearch()
+        }
         if (App.peekState.appConfig) {
-          Actions.clearPeek()
-          return
+          return Actions.clearPeek()
         }
         if (App.state.orbitState.docked) {
-          Actions.closeOrbit()
-          return
+          return Actions.closeOrbit()
         }
       },
     }

@@ -74,6 +74,7 @@ export class TimeAgo extends Component<TimeAgoProps> {
           .replace(' ago', this.props.postfix ? ` ${this.props.postfix}` : '')
           // this is always "last" in our case
           .replace('last ', '')
+          .replace(' at ', ' ')
       )
     }
   }

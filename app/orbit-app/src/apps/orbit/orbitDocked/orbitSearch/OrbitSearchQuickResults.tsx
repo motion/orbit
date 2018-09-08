@@ -44,7 +44,7 @@ export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
         cardSpace={10}
         cardProps={cardProps}
         items={results}
-        horizontalPadding={14}
+        horizontalPadding={10}
       />
       <div style={{ height: 12 }} />
     </>

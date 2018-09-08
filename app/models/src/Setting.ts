@@ -17,6 +17,7 @@ export interface Setting {
     | 'github'
     | 'gmail'
     | 'gdrive'
+    | 'app1'
   token: string
   values: SettingValues
   createdAt: Date

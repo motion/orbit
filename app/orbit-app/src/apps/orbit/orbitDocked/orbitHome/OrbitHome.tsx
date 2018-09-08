@@ -32,7 +32,7 @@ const allStreams = [
   {
     id: '0',
     name: 'People',
-    source: 'person',
+    source: 'people',
     model: PersonBitModel,
     query: {
       take: 20,
@@ -119,19 +119,24 @@ class OrbitHomeStore {
   )
 
   results = react(
-    () => [allStreams, this.allData, this.sortOrder],
-    ([streams, data, order]) => {
+    () => [this.streams, this.sortOrder],
+    ([streams, order]) => {
       console.log('update results', this.sortOrder, order)
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of order) {
-        const items = data[id]
-        if (!items || !items.length) {
+        if (!streams[id]) {
           continue
         }
-        const { name } = streams.find(x => x.id === `${id}`)
-        results.push({ name, type: 'row', items, startIndex: offset, id })
-        offset += items.length
+        const { values, name } = streams[id]
+        results.push({
+          name,
+          type: 'row',
+          items: values,
+          startIndex: offset,
+          id,
+        })
+        offset += values.length
       }
       return results
     },
@@ -149,7 +154,7 @@ class OrbitHomeStore {
     this.sortOrder = order
   }
 
-  allData = {}
+  streams: { [a: string]: { values: any[]; name: string } } = {}
 
   state = react(
     () => this.props.appsStore.appsList,
@@ -158,29 +163,27 @@ class OrbitHomeStore {
       if (this.state) {
         this.state.dispose()
       }
-
       const disposers = []
-
+      // get active streams
       const activeStreams = allStreams.filter(
         x =>
           x.source === 'people' ||
-          !!appsList.find(app => x.source === app.identifier),
+          !!appsList.find(app => x.source === app.type),
       )
-
+      // reset sort orders
+      this.sortOrder = activeStreams.map((_, index) => index)
+      // setup stream subscriptions
       for (const { id, name, model, query } of activeStreams) {
         const subscription = observeMany(model, {
           args: query,
         }).subscribe(values => {
-          console.log('update model data', name, values)
-          this.allData = {
-            ...this.allData,
-            [id]: values,
+          this.streams = {
+            ...this.streams,
+            [id]: { values, name },
           }
         })
-
         disposers.push(() => subscription.unsubscribe())
       }
-
       return {
         dispose: () => disposers.map(x => x()),
       }

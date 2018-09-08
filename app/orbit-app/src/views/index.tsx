@@ -31,7 +31,7 @@ export const FormTableValue = ({ children }) => (
   <TableCell width="70%">{children}</TableCell>
 )
 
-const Label = props => <Text tagName="lable" {...props} />
+const Label = props => <Text tagName="label" {...props} />
 
 export const FormRow = ({ label, children }) => (
   <FormTableRow>

@@ -6,6 +6,7 @@ import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
+import { BrowserWindow } from 'electron'
 
 const log = logger('electron')
 const Config = getGlobalConfig()
@@ -19,11 +20,7 @@ type Props = {
 class MainStore {
   props: Props
 
-  window = null
-
-  get mouseInActiveArea() {
-    return Electron.hoverState.peekHovered || Electron.hoverState.orbitHovered
-  }
+  window: BrowserWindow = null
 
   handleRef = ref => {
     if (!ref) {
@@ -51,7 +48,7 @@ class MainStore {
   store: MainStore,
 })
 @view.electron
-export class MainWindow extends React.Component<Props> {
+export class OrbitWindow extends React.Component<Props> {
   state = {
     show: false,
     position: [0, 0],
@@ -97,7 +94,7 @@ export class MainWindow extends React.Component<Props> {
     return (
       <Window
         alwaysOnTop
-        ignoreMouseEvents={!store.mouseInActiveArea}
+        ignoreMouseEvents={!Electron.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}
         show={electronStore.show ? this.state.show : false}

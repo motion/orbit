@@ -1,13 +1,15 @@
 import Router from '@mcro/router'
-import { MainPage } from './apps/MainPage'
+import { OrbitPage } from './apps/OrbitPage'
 import { IsolatePage } from './apps/IsolatePage'
+import { AppPage } from './apps/AppPage'
 
 let AppRouter
 
 export function runRouter() {
   AppRouter = new Router({
     routes: {
-      '/': MainPage,
+      '/': OrbitPage,
+      '/app': AppPage,
       '/isolate': IsolatePage,
     },
   })

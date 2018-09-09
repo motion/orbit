@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import Tray from './Tray'
 import { MenuItems } from './MenuItems'
-import { MainWindow } from './MainWindow'
+import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
 import { AppWindows } from './AppWindows'
 
@@ -46,7 +46,7 @@ export class ElectronRoot extends React.Component {
         }
       >
         <MenuItems />
-        <MainWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
+        <OrbitWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
         <AppWindows />
         <Tray />
       </AppWindow>

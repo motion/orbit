@@ -5,6 +5,7 @@ import { Electron, AppState } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
+import { BrowserWindow } from 'electron'
 
 const log = logger('electron')
 const Config = getGlobalConfig()
@@ -15,13 +16,18 @@ type Props = {
 
 class AppWindowStore {
   props: Props
+  window: BrowserWindow = null
 
   get ignoreMouseEvents() {
     return true
   }
 
   get url() {
-    return `${Config.urls.server}?app=${this.props.app.id}`
+    return `${Config.urls.server}/app?id=${this.props.app.id}`
+  }
+
+  handleRef = ref => {
+    this.window = ref.window
   }
 }
 
@@ -37,7 +43,9 @@ export const AppWindow = decorator(
     log(`Rendering app window at url ${store.url}`)
     return (
       <Window
-        ignoreMouseEvents={store.ignoreMouseEvents}
+        alwaysOnTop
+        ref={store.handleRef}
+        ignoreMouseEvents={!Electron.hoverState.peekHovered}
         file={store.url}
         frame={false}
         hasShadow={false}

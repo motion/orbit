@@ -79,6 +79,8 @@ class OrbitSettingsStore {
     () => this.generalSetting,
     setting => {
       ensure('has setting', !!setting)
+      // TODO: this query is returning a Job for some reason... @umed
+      ensure('setting values', !!setting.values)
       App.setState({ darkTheme: setting.values.darkTheme })
     },
   )

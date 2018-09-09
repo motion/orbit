@@ -7,7 +7,7 @@ FLAGS=$@
 if [[ "$FLAGS" =~ "--ignore-repl" ]]; then
   echo "ignore rpel"
 else
-  ../orbit-repl/scripts/start.sh &
+  (cd ../orbit-repl && npm start &)
 fi
 
 # start webpack-dev-server

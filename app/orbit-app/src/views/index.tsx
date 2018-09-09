@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { SearchStore } from '../apps/orbit/orbitDocked/SelectionStore'
 import { View, Row, Text } from '@mcro/ui'
 import { Input } from './Input'
 
@@ -152,24 +151,13 @@ export const Link = props => (
   />
 )
 
-const SmallLinkContainer = view('span', {
-  borderBottom: [2, 'transparent'],
-  '&:hover': {
-    borderBottom: [2, 'solid', [0, 0, 0, 0.1]],
-  },
+export const AppWrapper = view(UI.Col, {
+  // background: [0, 0, 0, 0.1],
+  maxWidth: '100%',
+  maxHeight: '100%',
+  overflow: 'hidden',
+  width: '100%',
+  height: '100%',
+  userSelect: 'none',
+  position: 'relative',
 })
-
-@view.ui
-export class SmallLink extends React.Component<{ searchStore?: SearchStore }> {
-  handleClick = () => {
-    if (this.props.searchStore) {
-      this.props.searchStore.setQuery(this.props.children)
-    }
-  }
-
-  render() {
-    return (
-      <SmallLinkContainer onDoubleClick={this.handleClick} {...this.props} />
-    )
-  }
-}

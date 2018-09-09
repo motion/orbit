@@ -38,6 +38,10 @@ export class PeekStore {
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
 
+  willUnmount() {
+    this.clearDragHandlers()
+  }
+
   get highlights(): HTMLDivElement[] {
     this.state // update on state...?
     return Array.from(this.contentFrame.current.querySelectorAll('.highlight'))
@@ -64,7 +68,7 @@ export class PeekStore {
     Actions.setHighlightIndex(next)
   }
 
-  internalState: PeekStoreState = react(
+  internalState = react(
     () => [App.peekState.appConfig, this.tornState],
     async ([_, tornState], { getValue, setValue, sleep }) => {
       await sleep(16)
@@ -78,7 +82,7 @@ export class PeekStore {
         ...lastState,
         ...rest,
       }
-      let nextState = {
+      let nextState: PeekStoreState = {
         lastState,
         curState,
         isShown,
@@ -96,7 +100,7 @@ export class PeekStore {
           tornState || this.getModel(),
           sleep(50),
         ])
-        setValue({
+        return {
           ...nextState,
           // now update to new model
           curState: {
@@ -105,7 +109,7 @@ export class PeekStore {
             model,
             peekId: `${Math.random()}`,
           },
-        })
+        }
       }
     },
     {
@@ -177,7 +181,7 @@ export class PeekStore {
         relations: ['people'],
       })
     } else if (type === 'setting') {
-      selectedItem = await SettingRepository.findOne({ where: { id } })
+      selectedItem = await SettingRepository.findOne(id)
     }
     return selectedItem
   }
@@ -227,6 +231,7 @@ export class PeekStore {
   }
 
   tearPeek = () => {
+    Actions.tearPeek()
     this.tornState = { ...this.state }
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }

@@ -1,9 +1,14 @@
 #!/bin/bash
 
 cd $(dirname $0)/..
+FLAGS=$@
 
 # start repl debugger
-./scripts/start-debug-browser.sh &
+if [[ "$FLAGS" =~ "--ignore-repl" ]]; then
+  echo "ignore rpel"
+else
+  ../orbit-repl/scripts/start.sh &
+fi
 
 # start webpack-dev-server
 if [ "$1" = "start-prod" ]; then

@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@mcro/config": "*",
-    "@mcro/dev": "^2.2.1",
     "@mcro/orbit-app": "*",
     "@mcro/orbit-electron": "^2.2.1",
     "@mcro/orbit-desktop": "^2.2.1",

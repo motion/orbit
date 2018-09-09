@@ -11,7 +11,8 @@ export const HighlightText = ({ options, children, ...props }: Props) => (
   <HighlightsContext.Consumer>
     {term => (
       <Text
-        tagName="p"
+        tagName="div"
+        className="paragraph"
         display="block"
         color="inherit"
         selectable

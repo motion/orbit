@@ -1,7 +1,15 @@
 import * as r2 from '@mcro/r2'
 import puppeteer from 'puppeteer'
-import * as _ from 'lodash'
+import { flatten, range } from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
+
+type DevInfo = {
+  debugUrl: string
+  url: string
+  port: string
+}
+
+const REMOTE_URL = 'http://localhost:3001'
 
 const onFocus = page => {
   return page.evaluate(() => {
@@ -78,7 +86,7 @@ export default class DebugApps {
   }
 
   getSessions = async (): Promise<any> => {
-    return await Promise.all(this.sessions.map(this.getDevUrl))
+    return flatten(await Promise.all(this.sessions.map(this.getDevUrl)))
   }
 
   lastRes = {}
@@ -100,10 +108,7 @@ export default class DebugApps {
     return res
   }
 
-  getDevUrl = ({
-    port,
-    id,
-  }): Promise<{ debugUrl: string; url: string; port: string }> => {
+  getDevUrl = ({ port, id }): Promise<DevInfo[] | null> => {
     return new Promise(async resolve => {
       const infoUrl = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
       // timeout because it doesnt resolve if the app is down
@@ -112,10 +117,20 @@ export default class DebugApps {
       }, 1000)
       try {
         const answers = await r2.get(infoUrl).json
-        // always use the LAST result because it gets the right one for browser
-        // later we can add support for more than one-per-port
-        // if that ever is needed
-        resolve(this.getUrlForJsonInfo(answers[answers.length - 1], port))
+        resolve(
+          answers
+            .map(answer => {
+              if (
+                answer.url.indexOf('file://') === 0 ||
+                answer.url.indexOf(REMOTE_URL) === 0
+              ) {
+                return this.getUrlForJsonInfo(answer, port)
+              }
+              // if its a "electron background page", we dont want it
+              return null
+            })
+            .filter(Boolean),
+        )
       } catch (err) {
         if (err.message.indexOf('ECONNREFUSED') !== -1) return
         console.log('dev err', err.message, err.stack)
@@ -145,7 +160,7 @@ export default class DebugApps {
     const tabsToOpen = this.numTabs(sessions) - pages.length
     if (tabsToOpen > 0) {
       await Promise.all(
-        _.range(tabsToOpen).map(async () => {
+        range(tabsToOpen).map(async () => {
           const page = await this.browser.newPage()
           // this handily defocuses the url bar
           await page.bringToFront()
@@ -230,9 +245,8 @@ export default class DebugApps {
                 title = document.createElement('title')
                 document.head.appendChild(title)
               }
-              const titleText =
-                PORT_NAMES[port] || url.replace('http://localhost:3001', '')
-              title.innerHTML = titleText
+              const titleText = PORT_NAMES[port] || url.replace(REMOTE_URL, '')
+              if (titleText) title.innerHTML = titleText
             } catch (err) {
               console.log('error doing this', err)
             }
@@ -275,8 +289,10 @@ export default class DebugApps {
     this.isRendering = true
     try {
       const pages = await this.getPages()
-      if (shouldUpdate.length > this.options.expectTabs) {
-        // throw 'inspecting inside electron, pause'
+      if (
+        this.options.expectTabs &&
+        shouldUpdate.length > this.options.expectTabs
+      ) {
         return
       }
       await this.openUrlsInTabs(sessions, pages, shouldUpdate)

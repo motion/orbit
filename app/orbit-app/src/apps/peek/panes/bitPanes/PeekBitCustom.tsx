@@ -13,6 +13,7 @@ import {
   SearchableTable,
   Text,
   List,
+  View,
 } from '@mcro/ui'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
@@ -91,9 +92,17 @@ export const Custom = decorator(({ store }: Props) => {
             { primary: 'You' },
           ]}
         />
-        <Panel heading="Test" collapsable>
-          this is a panel
-        </Panel>
+        <View flex={1} />
+        <View height={300}>
+          <Panel heading="Test" collapsable fill>
+            <SearchableTable
+              rowLineHeight={28}
+              columnSizes={store.columnSizes}
+              columns={columns}
+              rows={store.rows}
+            />
+          </Panel>
+        </View>
       </Sidebar>
       <Col flex={1}>
         <Theme select={theme => theme.titleBar || theme}>
@@ -105,7 +114,6 @@ export const Custom = decorator(({ store }: Props) => {
         <SearchableTable
           virtual
           rowLineHeight={28}
-          floating={false}
           columnSizes={store.columnSizes}
           columns={columns}
           multiHighlight

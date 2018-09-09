@@ -69,9 +69,10 @@ type State = {
   collapsed: boolean
 }
 
-const PanelContainer = view({})
+const PanelContainer = view({
+  flex: 1,
+})
 PanelContainer.theme = props => ({
-  flexShrink: 0,
   padding: props.floating ? 10 : 0,
   borderBottom: props.collapsed ? 'none' : BORDER,
 })

@@ -9,6 +9,9 @@ import * as React from 'react'
 import { Icon } from './Icon'
 import { view } from '@mcro/black'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { Row } from './blocks/Row'
+import { View } from './blocks/View'
+import { Text } from './Text'
 
 const BORDER = '1px solid #dddfe2'
 
@@ -48,7 +51,7 @@ type Props = {
   /**
    * Whether the panel can be collapsed. Defaults to true
    */
-  collapsable: boolean
+  collapsable?: boolean
   /**
    * Initial state for panel if it is collapsable
    */
@@ -73,7 +76,7 @@ PanelContainer.theme = props => ({
   borderBottom: props.collapsed ? 'none' : BORDER,
 })
 
-const PanelHeader = view({})
+const PanelHeader = view(Row, {})
 PanelHeader.theme = props => ({
   backgroundColor: '#f6f7f9',
   border: props.floating ? BORDER : 'none',
@@ -84,7 +87,7 @@ PanelHeader.theme = props => ({
   lineHeight: '27px',
   fontWeight: 500,
   flexShrink: 0,
-  padding: props.padded ? '0 10px' : 0,
+  padding: [3, 10],
   '&:not(:first-child)': {
     borderTop: BORDER,
   },
@@ -105,8 +108,8 @@ PanelBody.theme = props => ({
 export class Panel extends React.Component<Props, State> {
   static defaultProps = {
     fill: false,
-    floating: true,
-    collapsable: true,
+    floating: false,
+    collapsable: false,
   }
 
   static PanelContainer = PanelContainer
@@ -144,26 +147,22 @@ export class Panel extends React.Component<Props, State> {
           padded={typeof heading === 'string'}
           onClick={this.onClick}
         >
-          <span>
-            {collapsable && (
-              <Chevron
-                // @ts-ignore
-                color={theme.titleBar.icon}
-                name={collapsed ? 'triangle-right' : 'triangle-down'}
-                size={12}
-              />
-            )}
-            {heading}
-          </span>
+          {collapsable && (
+            <Chevron
+              // @ts-ignore
+              color={theme.titleBar.icon}
+              name={collapsed ? 'triangle-right' : 'triangle-down'}
+              size={12}
+            />
+          )}
+          <View flex={1}>
+            <Text size={0.95}>{heading}</Text>
+          </View>
           {accessory}
         </Panel.PanelHeader>
 
         {children == null || (collapsable && collapsed) ? null : (
-          <Panel.PanelBody
-            fill={fill}
-            padded={padded == null ? true : padded}
-            floating={floating}
-          >
+          <Panel.PanelBody fill={fill} padded={padded} floating={floating}>
             {children}
           </Panel.PanelBody>
         )}

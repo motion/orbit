@@ -1,4 +1,4 @@
-# Orbit - The Decentralized OS
+# (Home) Orbit - The Decentralized OS
 
 Orbit is a smart operating layer above Mac, Windows, and Linux. It unifies your cloud knowledge and gives you amazing search. But that's just the beginning.
 
@@ -15,6 +15,20 @@ Orbit syncs data 100% privately to your device, we never even have access your k
 ## Your Apps
 
 But that's just where it starts. Orbit is an entire app platform that gives you, the end user, control. Our biggest feature is putting the individual in charge. Now you can extend, manage, script, and visualize information with complete control, without ever risking a bit of your data.
+
+---
+
+# (Apps)
+
+Advantages:
+
+1. Load instantly anytime with no delay
+2. Instant search all app data
+3. Peek into apps quickly makes your day more fluid
+4. Complete and uniquely flexible UI Kit from day 1
+5. Build apps with HMR - instant reloads
+6. Deploy apps with a single click, no infrastructure
+7. No builds necessary
 
 # overview of features section like this
 

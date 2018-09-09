@@ -1,10 +1,6 @@
+import * as React from 'react'
 import { Label } from './form/Label'
-import { view } from '@mcro/black'
 
-export const SidebarLabel = view(Label, {
-  padding: 10,
-})
-
-SidebarLabel.defaultProps = {
-  fontSize: 12,
-}
+export const SidebarLabel = props => (
+  <Label fontWeight={600} size={0.9} {...props} />
+)

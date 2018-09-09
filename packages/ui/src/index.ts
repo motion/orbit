@@ -3,7 +3,6 @@ export { default as color } from '@mcro/color'
 export { ThemeProvide, Theme, ThemeContext } from '@mcro/gloss'
 
 export * from './helpers/forwardRef'
-export * from './helpers/parentSize'
 export * from './helpers/passProps'
 export * from './helpers/propsToTextSize'
 export * from './helpers/offset'

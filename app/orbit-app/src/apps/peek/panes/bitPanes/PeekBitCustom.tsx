@@ -12,6 +12,7 @@ import {
   Theme,
   SearchableTable,
   Text,
+  List,
 } from '@mcro/ui'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
@@ -41,12 +42,18 @@ class CustomStore {
     this.columnSizes = sizes
   }
 
-  rows = [{ id: 0, title: 'Test', topic: 'Two', created: Date.now() }].map(
-    (item, index) => {
-      const isActive = () => this.syncing[item.id]
-      return itemToRow(index, item, isActive)
-    },
-  )
+  rows = [
+    { id: 0, title: 'Test', topic: 'Two', created: Date.now() },
+    { id: 1, title: 'Second', topic: 'Two', created: Date.now() },
+    { id: 2, title: 'Third', topic: 'Two', created: Date.now() },
+    { id: 3, title: 'Fourth', topic: 'Three', created: Date.now() },
+    { id: 4, title: 'Fifth', topic: 'Three', created: Date.now() },
+    { id: 5, title: 'Sixth', topic: 'Three', created: Date.now() },
+    { id: 6, title: 'Seventh', topic: 'Three', created: Date.now() },
+  ].map((item, index) => {
+    const isActive = () => this.syncing[item.id]
+    return itemToRow(index, item, isActive)
+  })
   highlightedRows = []
 
   handleEnter = e => {
@@ -75,7 +82,15 @@ export const Custom = decorator(({ store }: Props) => {
     <Row flex={1}>
       <Sidebar minWidth={150} maxWidth={300} width={200} position="left">
         <SidebarLabel>test me</SidebarLabel>
-        testing 123
+        <List
+          items={[
+            { primary: 'Hello' },
+            { primary: 'World' },
+            { primary: 'How' },
+            { primary: 'Are' },
+            { primary: 'You' },
+          ]}
+        />
         <Panel heading="Test" collapsable>
           this is a panel
         </Panel>

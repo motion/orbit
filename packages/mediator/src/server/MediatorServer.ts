@@ -11,7 +11,7 @@ export interface MediatorServerOptions {
 
 export class MediatorServer {
   private subscriptions: {
-    operationId: number
+    id: string
     subscription: ZenObservable.Subscription
   }[] = []
 
@@ -27,7 +27,7 @@ export class MediatorServer {
 
     if (data.type === "unsubscribe") {
       const subscription = this.subscriptions.find(subscription => {
-        return subscription.operationId === data.id
+        return subscription.id === data.id
       })
       if (subscription && subscription.subscription) {
         subscription.subscription.unsubscribe();
@@ -100,7 +100,7 @@ export class MediatorServer {
       data.type === "observeCount"
     ) {
       this.subscriptions.push({
-        operationId: data.id,
+        id: data.id,
         subscription: result.subscribe(
           result => {
             this.options.transport.send({

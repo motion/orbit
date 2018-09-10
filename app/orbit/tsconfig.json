@@ -6,8 +6,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [
-    { "path": "../../packages/dev" },
-    { "path": "../../packages/config" }
-  ]
+  "references": [{ "path": "../../packages/config" }]
 }

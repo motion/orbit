@@ -2,7 +2,6 @@ import { AppConfig } from '@mcro/stores'
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
 import { Bit, Setting, PersonBit } from '@mcro/models'
 import { SelectionStore } from '../apps/orbit/orbitDocked/SelectionStore'
-import { AppStore } from '../apps/AppStore'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
@@ -15,7 +14,6 @@ export type OrbitItemProps = CSSPropertySet & {
   theme?: Partial<ThemeObject>
   listItem?: boolean
   hoverToSelect?: boolean
-  appStore?: AppStore
   selectionStore?: SelectionStore
   paneManagerStore?: PaneManagerStore
   subPaneStore?: SubPaneStore

@@ -22,7 +22,7 @@ import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
 import macosVersion from 'macos-version'
 import open from 'opn'
-import Path from 'path'
+import * as Path from 'path'
 // import iohook from 'iohook'
 import * as typeorm from 'typeorm'
 import { Connection } from 'typeorm'
@@ -38,28 +38,39 @@ import { Onboard } from './onboard/Onboard'
 import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
 import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
-import { Screen } from './Screen'
+import { ScreenManager } from './managers/ScreenManager'
+import { DatabaseManager } from './managers/DatabaseManager'
+import { GeneralSettingManager } from './managers/GeneralSettingManager'
 import Server from './Server'
-import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
 import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
-import { DatabaseManager } from './databaseManager'
+import Oracle from '@mcro/oracle'
+import { AppsManager } from './managers/appsManager'
 
 const log = logger('desktop')
+const Config = getGlobalConfig()
+
+// we re-route this with electron-builder to here
+const oracleBinPath =
+  Config.isProd && Path.join(Config.paths.resources, '..', 'MacOS', 'oracle')
 
 export class Root {
+  oracle: Oracle
   isReconnecting = false
   connection?: Connection
   onboard: Onboard
   disposed = false
-  screen: Screen
   keyboardStore: KeyboardStore
-  generalSettingManager: GeneralSettingManager
   server = new Server()
   stores = null
   mediatorServer: MediatorServer
+
+  // managers
+  appsManager: AppsManager
+  screenManager: ScreenManager
+  generalSettingManager: GeneralSettingManager
   databaseManager: DatabaseManager
 
   start = async () => {
@@ -95,14 +106,25 @@ export class Root {
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
     await this.startSyncers()
-    this.screen = new Screen()
+
+    // start manager dependencies...
+    this.oracle = new Oracle({
+      binPath: oracleBinPath,
+      socketPort: Config.ports.oracleBridge,
+    })
+    await this.oracle.start()
+
+    // start managers...
+    this.screenManager = new ScreenManager({ oracle: this.oracle })
+    this.appsManager = new AppsManager({ oracle: this.oracle })
+
     this.keyboardStore = new KeyboardStore({
-      onKeyClear: this.screen.lastScreenChange,
+      onKeyClear: this.screenManager.lastScreenChange,
     })
     this.keyboardStore.start()
     this.watchLastBit()
     await this.server.start()
-    this.screen.start()
+    this.screenManager.start()
     debugState(({ stores }) => {
       this.stores = stores
     })
@@ -132,8 +154,8 @@ export class Root {
     if (this.disposed) {
       return
     }
-    if (this.screen) {
-      await this.screen.dispose()
+    if (this.screenManager) {
+      await this.screenManager.dispose()
     }
     await this.stopSyncers()
     this.disposed = true

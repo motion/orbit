@@ -101,7 +101,7 @@ class SlackSettingStore {
   }
 
   get service() {
-    return this.props.appStore.services.slack
+    return this.props.appsStore.services.slack
   }
 
   get allChannels() {

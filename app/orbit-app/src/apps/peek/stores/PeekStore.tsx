@@ -2,7 +2,6 @@ import * as React from 'react'
 import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { PEEK_THEMES } from '../../../constants'
-import { AppStore } from '../../AppStore'
 import {
   BitRepository,
   SettingRepository,
@@ -11,8 +10,7 @@ import {
 import { Bit, Setting, PersonBit } from '@mcro/models'
 import { Actions } from '../../../actions/Actions'
 
-// @ts-ignore
-type PeekStoreItemState = typeof App.state.peekState & {
+type PeekStoreItemState = typeof App.peekState & {
   peekId: string
   model: PersonBit | Bit | Setting
 }
@@ -28,15 +26,22 @@ export type PeekStoreState = {
 
 export class PeekStore {
   props: {
-    appStore: AppStore
+    id: number
     fixed?: boolean
   }
 
   debug = true
-  tornState = null
   dragOffset?: [number, number] = null
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
+
+  willUnmount() {
+    this.clearDragHandlers()
+  }
+
+  get isPeek() {
+    return App.appsState[0].id === this.props.id
+  }
 
   get highlights(): HTMLDivElement[] {
     this.state // update on state...?
@@ -64,21 +69,32 @@ export class PeekStore {
     Actions.setHighlightIndex(next)
   }
 
-  internalState: PeekStoreState = react(
-    () => [App.peekState.appConfig, this.tornState],
-    async ([_, tornState], { getValue, setValue, sleep }) => {
-      await sleep(16)
-      const { appConfig, ...rest } = App.peekState
+  // appConfig given the id
+  appState = react(
+    () => App.appsState.find(x => x.id === this.props.id),
+    _ => _,
+    {
+      onlyUpdateIfChanged: true,
+    },
+  )
+
+  internalState = react(
+    () => this.appState,
+    async (appState, { getValue, setValue, sleep }) => {
+      ensure('has app state', !!appState)
+      console.log('appState', appState)
+      const { appConfig, torn, ...rest } = appState
+      await sleep()
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
-      const isShown = !!tornState || (!!appConfig && !!App.orbitState.docked)
+      const isShown = !!appConfig && (torn || !!App.orbitState.docked)
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
       const curState = {
         ...lastState,
         ...rest,
       }
-      let nextState = {
+      let nextState: PeekStoreState = {
         lastState,
         curState,
         isShown,
@@ -92,11 +108,10 @@ export class PeekStore {
       }
       if (isShown) {
         // wait and fetch in parallel
-        const [model] = await Promise.all([
-          tornState || this.getModel(),
-          sleep(50),
-        ])
-        setValue({
+        const model = torn
+          ? curState.model
+          : (await Promise.all([this.getModel(), sleep()]))[0]
+        return {
           ...nextState,
           // now update to new model
           curState: {
@@ -105,7 +120,7 @@ export class PeekStore {
             model,
             peekId: `${Math.random()}`,
           },
-        })
+        }
       }
     },
     {
@@ -121,11 +136,8 @@ export class PeekStore {
 
   // make this not change if not needed
   state: PeekStoreItemState = react(
-    () => [this.tornState, this.internalState],
-    ([tornState, { lastState, curState }]) => {
-      if (tornState) {
-        return tornState
-      }
+    () => this.internalState,
+    ({ lastState, curState }) => {
       if (this.willHide) {
         return lastState
       }
@@ -137,9 +149,6 @@ export class PeekStore {
   )
 
   get isShown() {
-    if (this.tornState) {
-      return true
-    }
     return this.internalState.isShown
   }
 
@@ -177,7 +186,7 @@ export class PeekStore {
         relations: ['people'],
       })
     } else if (type === 'setting') {
-      selectedItem = await SettingRepository.findOne({ where: { id } })
+      selectedItem = await SettingRepository.findOne(id)
     }
     return selectedItem
   }
@@ -205,7 +214,6 @@ export class PeekStore {
 
   clearTorn = () => {
     this.dragOffset = null
-    this.tornState = null
   }
 
   get framePosition() {
@@ -227,7 +235,7 @@ export class PeekStore {
   }
 
   tearPeek = () => {
-    this.tornState = { ...this.state }
+    Actions.tearPeek()
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
 
@@ -260,7 +268,7 @@ export class PeekStore {
 
   handleDragMove = e => {
     const { x, y } = this.initMouseDown
-    // App.setPeekState({
+    // App.setAppState({
     //   position
     // })
     this.dragOffset = [e.clientX - x, e.clientY - y]
@@ -269,7 +277,7 @@ export class PeekStore {
   handleDragEnd = () => {
     this.clearDragHandlers()
     // now that it's pinned, update position
-    Actions.finishPeekDrag(this.framePosition)
+    // Actions.finishPeekDrag(this.framePosition)
   }
 
   openItem = () => {

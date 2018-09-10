@@ -249,7 +249,6 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           )
         }
       }
-      let hasCalledSetValue = false
       const start = Date.now()
       Root.__trackStateChanges.isActive = true
 
@@ -258,7 +257,6 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         if (!reactionID) {
           throw SHARED_REJECTION_ERROR
         }
-        hasCalledSetValue = true
         updateAsyncValue(val)
       }
 
@@ -303,11 +301,6 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
               return
             }
             if (typeof val !== 'undefined') {
-              if (hasCalledSetValue) {
-                throw new Error(
-                  `In ${name}, invalid operation: called setValue, then returned a value. Use one or the other for sanity`,
-                )
-              }
               updateAsyncValue(val)
             }
           })

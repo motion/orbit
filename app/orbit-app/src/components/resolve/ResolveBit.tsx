@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ResolveConversation } from './resolveBits/ResolveConversation'
 import { ResolveDocument } from './resolveBits/ResolveDocument'
+import { ResolveCustom } from './resolveBits/ResolveCustom'
 import { ResolveMail } from './resolveBits/ResolveMail'
 import { ResolveTask } from './resolveBits/ResolveTask'
 import { ItemResolverResolverProps } from '../ItemResolver'
@@ -24,6 +25,9 @@ const results = {
   },
   jira: {
     document: ResolveDocument,
+  },
+  app1: {
+    custom: ResolveCustom,
   },
 }
 

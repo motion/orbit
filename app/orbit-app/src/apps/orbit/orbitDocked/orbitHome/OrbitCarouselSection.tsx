@@ -22,7 +22,7 @@ export const OrbitCarouselSection = decorator(
           <SelectableCarousel
             items={items}
             offset={startIndex}
-            horizontalPadding={12}
+            horizontalPadding={10}
             isActiveStore={subPaneStore}
             resetOnInactive
             cardProps={{

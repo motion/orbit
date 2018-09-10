@@ -1,7 +1,22 @@
-import { App } from '@mcro/stores'
+import { App, defaultPeekState } from '@mcro/stores'
 
 export function tearPeek() {
-  if (App.peekState.appConfig) {
-    // do it
-  }
+  const [curPeek, ...rest] = App.appsState
+  const appsState = [
+    // create next peek
+    {
+      ...defaultPeekState,
+      id: curPeek.id + 1,
+    },
+    // tear current
+    {
+      ...curPeek,
+      torn: true,
+    },
+    ...rest,
+  ]
+  // set
+  App.setState({
+    appsState,
+  })
 }

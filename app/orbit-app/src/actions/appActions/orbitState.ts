@@ -5,7 +5,7 @@ import { Actions } from '../Actions'
 
 export const hideOrbit = async () => {
   // hide peek first
-  if (App.peekState.target && !App.peekState.pinned) {
+  if (App.peekState.target) {
     Actions.clearPeek()
     await new Promise(res => setTimeout(res, 80)) // sleep 80
     return

@@ -1,4 +1,4 @@
-import Bridge, { proxySetters } from '@mcro/mobx-bridge'
+import { Bridge, proxySetters } from '@mcro/mobx-bridge'
 import { store, react, deep } from '@mcro/black'
 
 // store export
@@ -46,6 +46,7 @@ class DesktopStore {
     SEARCH_INDEX: 'SEARCH_INDEX',
   }
 
+  bridge = Bridge
   setState = Bridge.setState
   sendMessage = Bridge.sendMessage
   onMessage = Bridge.onMessage

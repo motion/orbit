@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
-import { BitRepository, SettingRepository } from '../../../../repositories'
+import { SettingRepository } from '../../../../repositories'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
@@ -75,7 +75,7 @@ class GithubSettingStore {
   }
 
   get service() {
-    return this.props.appStore.services.github
+    return this.props.appsStore.services.github
   }
 
   get orgsList() {

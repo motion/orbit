@@ -3,13 +3,12 @@ import { App } from '@mcro/stores'
 import { react, ensure } from '@mcro/black'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
-import { AppStore } from '../../AppStore'
 import { Bit } from '@mcro/models'
 import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { FindOptions } from 'typeorm'
 import { BitRepository, PersonBitRepository } from '../../../repositories'
 import { flatten } from 'lodash'
-import { SelectionStore } from './SelectionStore'
+import { SelectionStore, SelectionGroup } from './SelectionStore'
 import { AppsStore } from '../../AppsStore'
 import { QueryStore } from './QueryStore'
 import { MarkType } from './nlpStore/types'
@@ -103,7 +102,6 @@ const getSearchResults = async ({
 
 export class SearchStore {
   props: {
-    appStore: AppStore
     paneManagerStore: PaneManagerStore
     selectionStore: SelectionStore
     appsStore: AppsStore
@@ -121,6 +119,7 @@ export class SearchStore {
   })
 
   willUnmount() {
+    // @ts-ignore
     this.nlpStore.subscriptions.dispose()
     // @ts-ignore
     this.searchFilterStore.subscriptions.dispose()
@@ -155,16 +154,12 @@ export class SearchStore {
       return [
         { type: 'row', items: quickState.results },
         { type: 'column', items: searchState.results },
-      ]
+      ] as SelectionGroup[]
     },
   )
 
   get isChanging() {
     return this.searchState.query !== this.activeQuery
-  }
-
-  get isOnSearchPane() {
-    return this.props.appStore.selectedPane === 'docked-search'
   }
 
   get isActive() {
@@ -186,10 +181,11 @@ export class SearchStore {
     ],
     async ([query], { sleep, whenChanged, when, setValue }) => {
       if (!query) {
-        return setValue({
+        return {
           query,
           results: [],
-        })
+          finished: true,
+        }
       }
 
       let results
@@ -201,7 +197,7 @@ export class SearchStore {
       if (isFilteringSlack) {
         channelResults = matchSort(
           query.split(' ')[0],
-          this.props.appStore.services.slack.activeChannels.map(channel => ({
+          this.props.appsStore.services.slack.activeChannels.map(channel => ({
             id: channel.id,
             title: `#${channel.name}`,
             icon: 'slack',
@@ -212,7 +208,7 @@ export class SearchStore {
         message = `Searching ${channelResults[0].title}`
       }
       // filtered search
-      if (isFilteringChannel && this.props.appStore.services.slack) {
+      if (isFilteringChannel && this.props.appsStore.services.slack) {
         message = 'SPACE to search selected channel'
         results = channelResults
         return setValue({
@@ -313,11 +309,11 @@ export class SearchStore {
       }
 
       // finished
-      setValue({
+      return {
         query,
         results,
         finished: true,
-      })
+      }
     },
     {
       defaultValue: { results: [], query: '', finished: false },
@@ -331,9 +327,9 @@ export class SearchStore {
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep, when }) => {
-      ensure('on search pane', this.isOnSearchPane)
+      ensure('has query', !!query)
       // slightly faster for quick search
-      await sleep(TYPE_DEBOUNCE - 60)
+      await sleep(TYPE_DEBOUNCE * 0.5)
       await when(() => this.nlpStore.nlp.query === query)
       const {
         people,

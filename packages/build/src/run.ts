@@ -1,5 +1,7 @@
 import * as Path from 'path'
 import serve from 'webpack-serve'
+import history from 'connect-history-api-fallback'
+import convert from 'koa-connect'
 
 const root = Path.join(__dirname, '..')
 
@@ -17,6 +19,12 @@ async function start() {
       host: 'localhost',
       config,
       hotClient: true,
+      add: app => {
+        const historyOptions = {
+          // ... see: https://github.com/bripkens/connect-history-api-fallback#options
+        }
+        app.use(convert(history(historyOptions)))
+      },
     },
   )
 

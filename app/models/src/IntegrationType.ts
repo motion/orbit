@@ -5,6 +5,7 @@ export type IntegrationType =
   | 'github'
   | 'jira'
   | 'confluence'
+  | 'app1'
 
 export type IntegrationTypeValues = {
   slack?: string

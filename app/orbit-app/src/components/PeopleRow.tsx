@@ -12,13 +12,13 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
   const total = people.length
   const half = total / 2
   return (
-    <UI.Row>
+    <UI.Row alignItems="center">
       <UI.Row marginRight={14} alignItems="center">
         {people.map((person, i) => (
           <UI.Image
             key={i}
-            width={16}
-            height={16}
+            width={14}
+            height={14}
             marginRight={-10}
             borderRadius={100}
             border={[1, theme.background.lighten(2)]}
@@ -29,8 +29,8 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
           />
         ))}
       </UI.Row>
-      <UI.Row>
-        <UI.Text size={0.95} alpha={0.6} fontWeight={500}>
+      <UI.Row alignItems="center">
+        <UI.Text size={0.9} alpha={0.6} fontWeight={400}>
           {people.map((person, i) => (
             <UI.Inline marginRight={4} key={i}>
               {shortName(person.name)}

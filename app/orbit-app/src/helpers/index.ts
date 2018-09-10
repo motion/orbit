@@ -1,15 +1,9 @@
 import fuzzySort from 'fuzzysort'
+import { toJS } from 'mobx'
 
-export const deepClone = obj =>
-  obj
-    ? Object.keys(obj).reduce(
-        (acc, cur) => ({
-          ...acc,
-          [cur]: JSON.parse(JSON.stringify(obj[cur])),
-        }),
-        {},
-      )
-    : obj
+export const stringify = x => JSON.stringify(toJS(x))
+
+export const deepClone = obj => (obj ? JSON.parse(JSON.stringify(obj)) : obj)
 
 export const getSlackDate = (time: number) => new Date(time)
 

@@ -34,6 +34,8 @@
     "@mcro/r2": "^2.2.1",
     "@mcro/reactron": "^2.2.1",
     "@mcro/stores": "^2.2.1",
+    "@mcro/models": "*",
+    "typeorm": "^0.3.0-alpha.14",
     "babel-polyfill": "7.0.0-beta.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.5.0",

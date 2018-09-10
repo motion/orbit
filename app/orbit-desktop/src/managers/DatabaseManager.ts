@@ -1,10 +1,14 @@
 import sqlite from 'sqlite'
-import { DATABASE_PATH } from './constants'
+import { DATABASE_PATH } from '../constants'
 import { logger } from '@mcro/logger'
 import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
-import { sleep } from './helpers'
+import { sleep } from '../helpers'
+import { SettingEntity } from '../entities/SettingEntity'
+import { BitEntity } from '../entities/BitEntity'
+import { getRepository } from 'typeorm'
+import { Bit, Setting } from '@mcro/models'
 
 const log = logger('database')
 
@@ -26,6 +30,7 @@ export class DatabaseManager {
     this.db = await sqlite.open(DATABASE_PATH)
     this.ensureSearchIndex()
     this.watchForReset()
+    this.ensureCustomApp()
 
     this.temporarySearchResults()
   }
@@ -33,6 +38,30 @@ export class DatabaseManager {
   dispose() {
     this.subscriptions.dispose()
     this.searchIndexListener()
+  }
+
+  async ensureCustomApp() {
+    console.log('ensuring custom app...')
+    const vals: Partial<Setting> = {
+      type: 'app1',
+      category: 'custom',
+      token: 'good',
+    }
+    if (!(await SettingEntity.findOne(vals))) {
+      await getRepository(SettingEntity).save(vals)
+    }
+    const bit: Partial<Bit> = {
+      id: '1231023',
+      integration: 'app1',
+      title: 'My app',
+      body: '',
+      type: 'custom',
+      bitCreatedAt: Date.now(),
+      bitUpdatedAt: Date.now(),
+    }
+    if (!(await BitEntity.findOne(bit))) {
+      await getRepository(BitEntity).save(bit)
+    }
   }
 
   private temporarySearchResults() {

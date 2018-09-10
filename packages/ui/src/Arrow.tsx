@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { attachTheme } from '@mcro/gloss'
+import { attachTheme, CSSPropertySet } from '@mcro/gloss'
 import { Col } from './blocks/Col'
 import { Color, ThemeObject } from '@mcro/gloss'
 
-type Props = {
+type Props = CSSPropertySet & {
   size: number
   color?: Color
   towards?: 'top' | 'right' | 'bottom' | 'left'

@@ -1,5 +1,4 @@
 import { react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
 import { ResolvedItem } from '../components/ItemResolver'

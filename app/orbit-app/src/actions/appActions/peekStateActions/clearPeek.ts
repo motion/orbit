@@ -1,14 +1,9 @@
-import { App } from '@mcro/stores'
+import { setAppState } from '../setAppState'
 
 export function clearPeek() {
-  if (App.peekState.devModeStick) {
-    console.log('Peek pinned, ignore')
-    return
-  }
-  App.setPeekState({
+  setAppState({
     target: null,
     peekId: null,
     appConfig: null,
-    pinned: false,
   })
 }

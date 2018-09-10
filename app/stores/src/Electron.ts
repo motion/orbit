@@ -1,4 +1,4 @@
-import Bridge, { proxySetters } from '@mcro/mobx-bridge'
+import { Bridge, proxySetters } from '@mcro/mobx-bridge'
 import { store, deep } from '@mcro/black'
 
 export let Electron = null as ElectronStore
@@ -17,12 +17,12 @@ class ElectronStore {
     RESTART: 'RESTART',
   }
 
+  bridge = Bridge
   setState = Bridge.setState
   sendMessage = Bridge.sendMessage
   onMessage = Bridge.onMessage
   source = 'Electron'
 
-  onClear = null
   lastAction = null
 
   state = deep({
@@ -30,7 +30,9 @@ class ElectronStore {
     settingsPosition: [], // todo: settingsState.position
     hoverState: {
       orbitHovered: false,
-      peekHovered: false,
+      peekHovered: {
+        0: false,
+      },
     },
     showDevTools: {
       orbit: false,

@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { RoundButton } from '../../../views'
 import { Row, Text } from '@mcro/ui'
@@ -28,8 +29,9 @@ PeekBar.Space = view({
 
 const peekBarTextProps = {
   alignItems: 'center',
-  fontWeight: 600,
+  fontWeight: 500,
   alpha: 0.8,
+  size: 0.95,
 }
 
 PeekBar.Button = props => <RoundButton {...peekBarTextProps} {...props} />

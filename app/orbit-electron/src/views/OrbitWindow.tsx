@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { on, view, react, ensure } from '@mcro/black'
+import { on, view, react, ensure, sleep } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
+import { BrowserWindow } from 'electron'
 
 const log = logger('electron')
 const Config = getGlobalConfig()
@@ -19,11 +20,7 @@ type Props = {
 class MainStore {
   props: Props
 
-  window = null
-
-  get mouseInActiveArea() {
-    return Electron.hoverState.peekHovered || Electron.hoverState.orbitHovered
-  }
+  window: BrowserWindow = null
 
   handleRef = ref => {
     if (!ref) {
@@ -35,6 +32,8 @@ class MainStore {
     this.window = ref.window
   }
 
+  disposeShow = null
+
   moveToNewSpace = react(
     () => Desktop.state.movedToNewSpace,
     () => {
@@ -44,6 +43,14 @@ class MainStore {
       this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
     },
   )
+
+  handleFocus = async () => {
+    console.log('!! electron focus')
+    Electron.sendMessage(App, App.messages.SHOW)
+    await sleep(16)
+    // ...then re-bring this up above swift
+    this.window.show()
+  }
 }
 
 @view.attach('electronStore')
@@ -51,10 +58,9 @@ class MainStore {
   store: MainStore,
 })
 @view.electron
-export class MainWindow extends React.Component<Props> {
+export class OrbitWindow extends React.Component<Props> {
   state = {
     show: false,
-    position: [0, 0],
   }
 
   componentDidMount() {
@@ -74,20 +80,11 @@ export class MainWindow extends React.Component<Props> {
     })
   }
 
-  handleMove = position => {
-    this.setState({ position })
-  }
-
   handleBlur = () => {
     console.log('hide on blur')
     if (process.env.NODE_ENV !== 'development') {
       Electron.sendMessage(App, App.messages.HIDE)
     }
-  }
-
-  handleFocus = () => {
-    console.log('electron focus')
-    Electron.sendMessage(App, App.messages.SHOW)
   }
 
   render() {
@@ -97,9 +94,11 @@ export class MainWindow extends React.Component<Props> {
     return (
       <Window
         alwaysOnTop
-        ignoreMouseEvents={!store.mouseInActiveArea}
+        ignoreMouseEvents={!Electron.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}
+        position={[0, 0]}
+        size={Electron.state.screenSize}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
@@ -118,11 +117,8 @@ export class MainWindow extends React.Component<Props> {
           // scrollBounce: true,
           // offscreen: true,
         }}
-        position={this.state.position}
-        size={Electron.state.screenSize}
-        onMove={this.handleMove}
         onBlur={this.handleBlur}
-        onFocus={this.handleFocus}
+        onFocus={store.handleFocus}
       />
     )
   }

@@ -6,7 +6,6 @@ async function start() {
   console.log('starting dev browser...')
   await debugApps({
     sessions: [{ port: '9000' }, { port: '9001' }, { port: '9002' }],
-    expectTabs: 3,
   })
 }
 

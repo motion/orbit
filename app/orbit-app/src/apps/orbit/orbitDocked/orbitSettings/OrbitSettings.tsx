@@ -79,6 +79,8 @@ class OrbitSettingsStore {
     () => this.generalSetting,
     setting => {
       ensure('has setting', !!setting)
+      // TODO: this query is returning a Job for some reason... @umed
+      ensure('setting values', !!setting.values)
       App.setState({ darkTheme: setting.values.darkTheme })
     },
   )
@@ -130,6 +132,10 @@ export class OrbitSettings extends React.Component<Props> {
 
   render() {
     const { name, store } = this.props
+    if (store.generalSetting && !store.generalSetting.values) {
+      console.error('weird error')
+      return null
+    }
     return (
       <SubPane name={name} fadeBottom>
         <Views.VerticalSpace />

@@ -53,33 +53,15 @@ export class HoverStateStore {
 
   handleMousePosition = async (mousePos: Point) => {
     this.lastMousePos = mousePos
-    const { target, pinned } = App.peekState
-    const peekHovered =
-      (target || pinned) && isMouseOver(App.peekState, mousePos)
-    if (App.orbitState.docked) {
-      if (isMouseOver(App.orbitState, mousePos)) {
-        Electron.setHoverState({ orbitHovered: true, peekHovered })
-      } else {
-        Electron.setHoverState({ orbitHovered: false, peekHovered })
-      }
-      return
+    const orbitHovered =
+      App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
+    let peekHovered = Electron.hoverState
+    for (const [index, app] of App.appsState.entries()) {
+      const isPeek = index === 0
+      const hovered = isMouseOver(app, mousePos)
+      peekHovered[app.id] = isPeek ? !!app.target && hovered : hovered
     }
-    if (pinned) {
-      Electron.setHoverState({ peekHovered })
-      return
-    }
-    // if (!hidden) {
-    //   // contextual orbit sidebar
-    //   const orbitHovered = position && isMouseOver(App.orbitState, mousePos)
-    //   Electron.setHoverState({ orbitHovered, peekHovered })
-    //   return
-    // }
-    // nothing showing
-    if (Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered) {
-      Electron.setHoverState({
-        orbitHovered: false,
-        peekHovered: false,
-      })
-    }
+    Electron.setHoverState({ peekHovered, orbitHovered })
+    return
   }
 }

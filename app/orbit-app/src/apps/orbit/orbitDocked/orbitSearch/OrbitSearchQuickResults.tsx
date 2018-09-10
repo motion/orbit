@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { SearchStore } from '../SearchStore'
-import { AppStore } from '../../../AppStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore } from '../SelectionStore'
 import { SelectableCarousel } from '../../../../components/SelectableCarousel'
@@ -12,7 +11,6 @@ const decorate = compose(
 )
 
 type Props = {
-  appStore?: AppStore
   paneManagerStore?: PaneManagerStore
   searchStore: SearchStore
   selectionStore: SelectionStore
@@ -44,7 +42,7 @@ export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
         cardSpace={10}
         cardProps={cardProps}
         items={results}
-        horizontalPadding={14}
+        horizontalPadding={10}
       />
       <div style={{ height: 12 }} />
     </>

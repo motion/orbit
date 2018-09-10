@@ -4,7 +4,6 @@ export type AppConfig = {
   title: string
   type: string
   integration: string
-  body?: string
   subType?: string
   // allow various things to be passed as config
   // to help configure the peek window

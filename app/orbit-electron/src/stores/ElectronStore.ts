@@ -1,13 +1,5 @@
-import { App, Electron, Desktop } from '@mcro/stores'
-import {
-  isEqual,
-  store,
-  react,
-  debugState,
-  on,
-  sleep,
-  ensure,
-} from '@mcro/black'
+import { App, Electron } from '@mcro/stores'
+import { isEqual, store, react, debugState, on, sleep } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
 import { WindowFocusStore } from '../stores/WindowFocusStore'
 import { HoverStateStore } from '../stores/HoverStateStore'
@@ -29,6 +21,8 @@ export class ElectronStore {
   clear = Date.now()
   show = 2
 
+  apps = new Set()
+
   async didMount() {
     root.Root = this
     root.restart = this.restart
@@ -37,7 +31,7 @@ export class ElectronStore {
       this.views = views
     })
     this.windowFocusStore = new WindowFocusStore()
-    this.shortcutStore = new ShortcutsStore(['Option+Space'])
+    this.shortcutStore = new ShortcutsStore()
     this.hoverStateStore = new HoverStateStore()
     this.followMousePosition()
     this.shortcutStore.onShortcut(this.onShortcut)
@@ -61,12 +55,6 @@ export class ElectronStore {
           return
       }
     })
-    Electron.onClear = () => {
-      // log(`Electron.onClear`)
-      this.clear = Date.now()
-    }
-    // clear to start
-    Electron.onClear()
   }
 
   followMousePosition = () => {
@@ -107,29 +95,29 @@ export class ElectronStore {
     Electron.sendMessage(App, App.messages.TOGGLE_PINNED)
   }
 
-  clearApp = react(
-    () => this.clear,
-    async (_, { when, sleep }) => {
-      ensure('has app ref', !!this.appRef)
-      this.appRef.hide()
-      const getState = () => ({
-        ...Desktop.appState,
-        ...App.state.orbitState,
-      })
-      const lastState = getState()
-      this.show = 0
-      Electron.sendMessage(App, App.messages.HIDE)
-      await when(() => !App.isShowingOrbit) // ensure hidden
-      await when(() => !isEqual(getState(), lastState)) // ensure moved
-      this.show = 1 // now render with 0 opacity so chrome updates visuals
-      await sleep(50) // likely not necessary, ensure its ready for app show
-      this.appRef.show() // downstream apps should now be hidden
-      await sleep(200) // finish rendering, could be a when(() => App.isRepositioned)
-      await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
-      this.show = 2
-    },
-    { deferFirstRun: true },
-  )
+  // clearApp = react(
+  //   () => this.clear,
+  //   async (_, { when, sleep }) => {
+  //     ensure('has app ref', !!this.appRef)
+  //     this.appRef.hide()
+  //     const getState = () => ({
+  //       ...Desktop.appState,
+  //       ...App.state.orbitState,
+  //     })
+  //     const lastState = getState()
+  //     this.show = 0
+  //     Electron.sendMessage(App, App.messages.HIDE)
+  //     await when(() => !App.isShowingOrbit) // ensure hidden
+  //     await when(() => !isEqual(getState(), lastState)) // ensure moved
+  //     this.show = 1 // now render with 0 opacity so chrome updates visuals
+  //     await sleep(50) // likely not necessary, ensure its ready for app show
+  //     this.appRef.show() // downstream apps should now be hidden
+  //     await sleep(200) // finish rendering, could be a when(() => App.isRepositioned)
+  //     await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
+  //     this.show = 2
+  //   },
+  //   { deferFirstRun: true },
+  // )
 
   // focus on pinned
   focusOnPin = react(

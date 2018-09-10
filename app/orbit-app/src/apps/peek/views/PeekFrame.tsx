@@ -5,14 +5,13 @@ import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { PeekFrameArrow } from './PeekFrameArrow'
 import { ResizableBox } from '../../../views/ResizableBox'
-import { App } from '@mcro/stores'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { setAppState } from '../../../actions/appActions/setAppState'
 
 const SHADOW_PAD = 85
 
-const transitions = store => {
-  if (store.isHidden) return 'none'
-  if (store.tornState) return 'transform linear 10ms'
+const transitions = (store: PeekStore) => {
+  if (store.appState.torn) return 'transform linear 10ms'
   if (store.willHide) return 'transform ease 100ms'
   if (store.willStayShown) return 'transform ease 60ms'
   return 'transform ease 100ms'
@@ -54,10 +53,8 @@ const PeekFrameContainer = view(UI.View, {
   zIndex: 2,
 })
 
-let dragAt = Date.now()
-
 const handleResize = (_, { size }) => {
-  App.setPeekState({ size: [size.width, size.height] })
+  setAppState({ size: [size.width, size.height] })
 }
 
 export const PeekFrame = decorator(
@@ -85,7 +82,7 @@ export const PeekFrame = decorator(
     const margin = padding.map(x => -x)
     const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
     const transition = transitions(peekStore)
-    const size = App.peekState.size
+    const size = peekStore.state.size
     return (
       <ResizableBox
         width={size[0]}
@@ -113,7 +110,7 @@ export const PeekFrame = decorator(
           height={size[1]}
           pointerEvents={isShown ? 'auto' : 'none'}
         >
-          {!peekStore.tornState && (
+          {!peekStore.appState.torn && (
             <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
           )}
           <UI.Col flex={1} padding={padding} margin={margin}>

@@ -50,7 +50,6 @@ BottomFloat.theme = ({ theme }) => ({
 export const PeekBit = ({
   appConfig,
   model,
-  appStore,
   selectionStore,
   peekStore,
   children,
@@ -74,7 +73,7 @@ export const PeekBit = ({
         },
       }}
     >
-      <PeekItemResolver model={model} appStore={appStore}>
+      <PeekItemResolver model={model}>
         {({
           title,
           icon,
@@ -164,23 +163,12 @@ export const PeekBit = ({
                       <HighlightsContext.Provider value={searchTerm}>
                         <BitPaneContent
                           bit={bit}
-                          appStore={appStore}
                           peekStore={peekStore}
                           searchTerm={searchTerm}
                           content={content}
                           comments={comments}
                         />
                       </HighlightsContext.Provider>
-                      {/* height for bottom bar */}
-                      <div style={{ height: 80 }} />
-                      {/* <BottomSpace />
-                    <BottomFloat>
-                      <PeekRelated
-                        padding={[0, 15]}
-                        cardSpace={10}
-                        verticalPadding={10}
-                      />
-                    </BottomFloat> */}
                     </>
                   ),
                 })

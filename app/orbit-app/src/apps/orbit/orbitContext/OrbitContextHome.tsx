@@ -6,7 +6,7 @@
 // import { throttle } from 'lodash'
 // import { Title, SubTitle } from '../../views'
 // import { Desktop, App } from '@mcro/stores'
-// import { AppStore } from '../../stores/AppStore'
+// import { AppStore } from '../../stores/OrbitStore'
 // import { SearchStore } from '../../stores/SearchStore'
 // import { SubPaneStore } from './SubPaneStore'
 

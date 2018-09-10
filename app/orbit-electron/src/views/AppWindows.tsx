@@ -11,7 +11,7 @@ const decorator = compose(view.electron)
 export const AppWindows = decorator(() => {
   const { appsState } = App
   log(`Rendering apps ${appsState.length}`)
-  return appsState.map(app => {
-    return <AppWindow app={app} />
+  return appsState.map(({ id }, index) => {
+    return <AppWindow key={id} id={id} isPeek={index === 0} />
   })
 })

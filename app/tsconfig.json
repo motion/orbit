@@ -3,6 +3,7 @@
   "references": [
     { "path": "./orbit-desktop" },
     { "path": "./orbit-electron" },
+    { "path": "./orbit-repl" },
     { "path": "./orbit" },
     // projects necessary for orbit
     { "path": "../projects/oauth-server" },

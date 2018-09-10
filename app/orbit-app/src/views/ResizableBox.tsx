@@ -15,10 +15,13 @@ export class ResizableBox extends React.Component<ResizableProps, State> {
     height: this.props.height,
   }
 
-  onResize = (e: React.MouseEvent, data: ResizeCallbackData) => {
+  onResize = (e: MouseEvent, data: ResizeCallbackData) => {
     const { size } = data
     if (this.props.onResize) {
-      e.persist && e.persist()
+      if (e['persist']) {
+        // @ts-ignore
+        e.persist()
+      }
       this.setState(
         size,
         () => this.props.onResize && this.props.onResize(e, data),

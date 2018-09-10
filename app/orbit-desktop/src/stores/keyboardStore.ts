@@ -45,14 +45,8 @@ export class KeyboardStore {
   onKey = keycode => {
     this.clearDownKeysAfterPause()
     if (keycode === codes.esc) {
-      if (
-        App.peekState.target &&
-        (App.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
-      ) {
+      if (App.peekState.target && Desktop.state.focusedOnOrbit) {
         Desktop.sendMessage(App, App.messages.HIDE_PEEK)
-        return
-      }
-      if (!App.orbitState.docked && !App.isMouseInActiveArea) {
         return
       }
       if (App.orbitState.docked && !Desktop.state.focusedOnOrbit) {
@@ -73,14 +67,15 @@ export class KeyboardStore {
     if (holdingKeys > 1 && isOption) {
       return this.clearOption()
     }
-    const isHoldingOption = this.keysDown.has(codes.option)
+    // only valid for contextual orbit
+    // const isHoldingOption = this.keysDown.has(codes.option)
     // holding option + press key === pin
-    if (isHoldingOption && App.isShowingOrbit) {
-      // a - z, our secret pin keys, let them go
-      if (keycode >= 14 && keycode <= 49) {
-        return
-      }
-    }
+    // if (isHoldingOption && App.isShowingOrbit) {
+    //   // a - z, our secret pin keys, let them go
+    //   if (keycode >= 14 && keycode <= 49) {
+    //     return
+    //   }
+    // }
     if (isOption) {
       return Desktop.setKeyboardState({ option: Date.now() })
     }

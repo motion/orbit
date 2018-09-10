@@ -80,6 +80,13 @@ const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
+  {
+    id: '6',
+    source: 'app1',
+    name: 'Test App',
+    model: BitModel,
+    query: findManyType('app1'),
+  },
 ]
 
 const getListStyle = isDraggingOver => ({
@@ -94,7 +101,8 @@ const getItemStyle = (isDragging, { left, top, ...draggableStyle }, index) => ({
   background: isDragging ? 'transparent' : 'transparent',
   // styles we need to apply on draggables
   ...draggableStyle,
-  top: index > 0 ? top - 90 : 0,
+  top,
+  // top: index > 0 ? top - 90 : 0,
 })
 
 class OrbitHomeStore {
@@ -168,10 +176,11 @@ class OrbitHomeStore {
       const activeStreams = allStreams.filter(
         x =>
           x.source === 'people' ||
+          x.source === 'app1' ||
           !!appsList.find(app => x.source === app.type),
       )
       // reset sort orders
-      this.sortOrder = activeStreams.map((_, index) => index)
+      this.sortOrder = activeStreams.map(({ id }) => +id)
       // setup stream subscriptions
       for (const { id, name, model, query } of activeStreams) {
         const subscription = observeMany(model, {
@@ -211,8 +220,7 @@ export class OrbitHome extends React.Component<Props> {
 
   render() {
     const { homeStore } = this.props
-    // we react to this so keep this here
-    homeStore.results
+    const { results } = homeStore
     return (
       <SubPane name="home" fadeBottom>
         <DragDropContext onDragEnd={this.onDragEnd}>
@@ -223,35 +231,33 @@ export class OrbitHome extends React.Component<Props> {
                 style={getListStyle(snapshot.isDraggingOver)}
               >
                 {/* <SuggestionBarVerticalPad /> */}
-                {homeStore.results.map(
-                  ({ id, name, items, startIndex }, index) => {
-                    const height = name === 'People' ? 60 : 90
-                    return (
-                      <Draggable key={id} draggableId={id} index={index}>
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style,
-                              index,
-                            )}
-                          >
-                            <OrbitCarouselSection
-                              startIndex={startIndex}
-                              items={items}
-                              homeStore={homeStore}
-                              categoryName={name}
-                              cardHeight={height}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    )
-                  },
-                )}
+                {results.map(({ id, name, items, startIndex }, index) => {
+                  const height = name === 'People' ? 60 : 90
+                  return (
+                    <Draggable key={id} draggableId={id} index={index}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style,
+                            index,
+                          )}
+                        >
+                          <OrbitCarouselSection
+                            startIndex={startIndex}
+                            items={items}
+                            homeStore={homeStore}
+                            categoryName={name}
+                            cardHeight={height}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  )
+                })}
                 {provided.placeholder}
               </div>
             )}

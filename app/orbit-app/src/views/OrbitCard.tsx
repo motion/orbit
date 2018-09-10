@@ -130,7 +130,7 @@ const orbitIconProps = {
   },
 }
 
-@view.attach('appStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
+@view.attach('selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitItemStore,
 })
@@ -223,9 +223,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             <Title>
               <HighlightText
                 fontSize={14}
-                sizeLineHeight={0.85}
+                sizeLineHeight={0.8}
                 ellipse={hasSubtitle && hasMeta ? true : 2}
-                fontWeight={600}
+                fontWeight={500}
                 maxWidth="calc(100% - 30px)"
                 {...titleProps}
               >
@@ -284,11 +284,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           {typeof children === 'function'
             ? children(contentProps, props.bit, props.index)
             : children}
-          {people && people.length ? (
-            <div>
-              <PeopleRow people={people} />
-            </div>
-          ) : null}
+          {people && people.length ? <PeopleRow people={people} /> : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         {/* {!disableShadow && (

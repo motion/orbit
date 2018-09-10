@@ -70,6 +70,7 @@
   padding: 10px;
 }
 
+#app .paragraph > code,
 #app p > code,
 #app li > code {
   padding: 0px 4px;
@@ -96,6 +97,7 @@ a.anchor {
   display: none;
 }
 
+.markdown .paragraph img,
 .markdown p img,
 .markdown li img {
   max-width: 100%;
@@ -123,11 +125,13 @@ a.anchor {
   margin: 0 0 0.5rem 0.3rem;
 }
 
+.markdown .paragraph,
 .markdown p {
   margin: 0 0 0.5rem 0;
 }
 
-.slack-markdown p {
+.slack-markdown p,
+.slack-markdown .paragraph {
   margin: 0;
 }
 
@@ -537,6 +541,7 @@ li {
   margin-left: 0.5rem;
 }
 
+.paragraph code,
 p code {
   display: inline-block;
   padding: 0;

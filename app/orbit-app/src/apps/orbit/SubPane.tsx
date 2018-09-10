@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
-import { AppStore } from '../AppStore'
+import { OrbitStore } from '../OrbitStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from './orbitDocked/SearchStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
@@ -18,7 +18,7 @@ export type SubPaneProps = CSSPropertySet & {
   name?: string
   onScrollNearBottom?: Function
   extraCondition?: () => boolean
-  appStore?: AppStore
+  orbitStore?: OrbitStore
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   selectionStore?: SelectionStore
@@ -88,7 +88,7 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-@view.attach('paneManagerStore', 'appStore', 'searchStore', 'selectionStore')
+@view.attach('paneManagerStore', 'orbitStore', 'searchStore', 'selectionStore')
 @view.provide({
   subPaneStore: SubPaneStore,
 })

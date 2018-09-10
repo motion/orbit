@@ -13,7 +13,8 @@ const setExiting = async () => {
   }
   setTimeout(() => {
     process.kill(process.pid)
-  }, 10)
+  })
+  process.exit(0)
 }
 process.on('unhandledRejection', function(reason) {
   if (reason.message.indexOf('Execution context was destroyed.')) {
@@ -28,7 +29,7 @@ process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 
 export default async function start({
-  expectTabs = 1,
+  expectTabs = null,
   sessions = [],
   port = 8000,
 } = {}) {

@@ -1,8 +1,8 @@
 {
-  "name": "@mcro/dev",
+  "name": "@mcro/orbit-repl",
   "version": "2.2.1",
   "bin": {
-    "dev-apps": "./dev.js"
+    "orbit-repl": "./dev.js"
   },
   "scripts": {
     "start": "node _/dev.js",

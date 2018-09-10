@@ -2,11 +2,11 @@ import * as React from 'react'
 import { view, on } from '@mcro/black'
 import { ListItem } from './ListItem'
 import { List as VirtualList } from 'react-virtualized'
-import { parentSize } from './helpers/parentSize'
 import { isArrayLike } from 'mobx'
 import { CellMeasurer } from 'react-virtualized'
 import { throttle, debounce } from 'lodash'
 import { ItemProps } from './ListItem'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 const idFn = _ => _
 const SCROLL_BAR_WIDTH = 16
@@ -33,9 +33,9 @@ export type ListProps = {
   horizontal?: boolean
   itemProps?: Object
   items?: Array<ItemProps | React.ReactNode>
-  onHighlight: Function
+  onHighlight?: Function
   onItemMount?: Function
-  onSelect: Function
+  onSelect?: Function
   parentSize?: { width: number; height: number }
   rowHeight?: number
   scrollable?: boolean
@@ -45,7 +45,7 @@ export type ListProps = {
   width?: number
   groupBy?: string
   selected?: number
-  separatorHeight: number
+  separatorHeight?: number
   isSelected?: Function
   virtualized?: { rowHeight: number | ((a: number) => number) }
   // force update children
@@ -69,7 +69,7 @@ export type ListProps = {
 // }
 
 @view.ui
-class ListUI extends React.PureComponent<ListProps> {
+class ListInner extends React.PureComponent<ListProps> {
   static Item = ListItem
 
   static defaultProps = {
@@ -571,4 +571,11 @@ class ListUI extends React.PureComponent<ListProps> {
   }
 }
 
-export const List = parentSize('virtualized', 'parentSize')(ListUI)
+export const List = (props: ListProps) =>
+  props.virtualized ? (
+    <AutoSizer>
+      {parentSize => <ListInner parentSize={parentSize} {...props} />}
+    </AutoSizer>
+  ) : (
+    <ListInner {...props} />
+  )

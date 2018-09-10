@@ -6,7 +6,6 @@ export function personToAppConfig(person: PersonBit): AppConfig {
     id: person.email,
     icon: person.photo || '',
     title: person.name,
-    body: '',
     type: 'person',
     integration: '',
     subType: '',

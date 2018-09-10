@@ -7,5 +7,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../debug-apps" }]
+  "references": [{ "path": "../../packages/debug-apps" }]
 }

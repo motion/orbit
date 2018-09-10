@@ -67,7 +67,7 @@ class SettingContent extends React.Component<Props> {
   }
 
   render() {
-    const { appStore, appsStore, model, store, children } = this.props
+    const { appsStore, model, store, children } = this.props
     const setting = model as Setting
     if (!setting) {
       return children({})
@@ -76,7 +76,7 @@ class SettingContent extends React.Component<Props> {
     const SettingPane =
       SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
-      <SettingPane appsStore={appsStore} appStore={appStore} setting={setting}>
+      <SettingPane appsStore={appsStore} setting={setting}>
         {({ belowHead, content }) => {
           // this is a bit strange, its calling up a few times and passing up props
           // not sure i like the pattern, but it is extremely flexible

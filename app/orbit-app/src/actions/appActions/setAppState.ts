@@ -10,7 +10,7 @@ const merge = (state, next) => {
 }
 
 const getPeekId = () => {
-  return App.appsState.findIndex(app => !app.torn)
+  return App.appsState[0].id
 }
 
 export const setAppState = (nextState: Partial<typeof defaultPeekState>) => {

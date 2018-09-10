@@ -39,6 +39,10 @@ export class PeekStore {
     this.clearDragHandlers()
   }
 
+  get isPeek() {
+    return App.appsState[0].id === this.props.id
+  }
+
   get highlights(): HTMLDivElement[] {
     this.state // update on state...?
     return Array.from(this.contentFrame.current.querySelectorAll('.highlight'))

@@ -5,9 +5,7 @@ import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { PeekFrameArrow } from './PeekFrameArrow'
 import { ResizableBox } from '../../../views/ResizableBox'
-import { App } from '@mcro/stores'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
-import { trace } from 'mobx'
 import { setAppState } from '../../../actions/appActions/setAppState'
 
 const SHADOW_PAD = 85
@@ -84,8 +82,7 @@ export const PeekFrame = decorator(
     const margin = padding.map(x => -x)
     const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
     const transition = transitions(peekStore)
-    const size = App.peekState.size
-    trace()
+    const size = peekStore.state.size
     return (
       <ResizableBox
         width={size[0]}

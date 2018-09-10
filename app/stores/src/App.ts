@@ -1,6 +1,5 @@
 import { Bridge, proxySetters } from '@mcro/mobx-bridge'
-import { store, react, deep } from '@mcro/black'
-import { Electron } from './Electron'
+import { store, deep } from '@mcro/black'
 import { AppConfig } from './AppConfig'
 
 export let App = null as AppStore

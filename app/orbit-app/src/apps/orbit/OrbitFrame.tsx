@@ -72,30 +72,31 @@ const Expand = view({
 })
 
 class FrameStore {
-  animationState = react(
-    () => App.orbitState.hidden,
-    async (hidden, { sleep, setValue }) => {
-      // old value first to setup for transition
-      setValue({ willAnimate: true, hidden: !hidden })
-      await sleep(32)
-      // new value, start transition
-      setValue({ willAnimate: true, hidden })
-      await sleep(App.animationDuration * 2)
-      // done animating, reset
-      setValue({ willAnimate: false, hidden })
-      if (App.orbitState.pinned) {
-        App.sendMessage(
-          Electron,
-          App.orbitState.pinned
-            ? Electron.messages.FOCUS
-            : Electron.messages.DEFOCUS,
-        )
-      }
-    },
-    {
-      defaultValue: { willAnimate: false, hidden: true },
-    },
-  )
+  // until we decide on contextual orbit
+  // animationState = react(
+  //   () => App.orbitState.hidden,
+  //   async (hidden, { sleep, setValue }) => {
+  //     // old value first to setup for transition
+  //     setValue({ willAnimate: true, hidden: !hidden })
+  //     await sleep(32)
+  //     // new value, start transition
+  //     setValue({ willAnimate: true, hidden })
+  //     await sleep(App.animationDuration * 2)
+  //     // done animating, reset
+  //     setValue({ willAnimate: false, hidden })
+  //     if (App.orbitState.pinned) {
+  //       App.sendMessage(
+  //         Electron,
+  //         App.orbitState.pinned
+  //           ? Electron.messages.FOCUS
+  //           : Electron.messages.DEFOCUS,
+  //       )
+  //     }
+  //   },
+  //   {
+  //     defaultValue: { willAnimate: false, hidden: true },
+  //   },
+  // )
 }
 
 const showingAnimation = {

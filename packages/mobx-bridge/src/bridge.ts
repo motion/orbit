@@ -38,7 +38,7 @@ type Options = {
 }
 
 // we want non-granular updates on state changes
-class Bridge {
+export class BridgeManager {
   store: any
   socketManager: SocketManager
   started = false
@@ -71,7 +71,6 @@ class Bridge {
     if (this.started) {
       throw new Error('Already started this store...')
     }
-    store.bridge = this
     this.started = true
     if (options.master) {
       const stores = options.stores
@@ -81,7 +80,9 @@ class Bridge {
         port,
         onState: (source, state) => {
           // log(`onState ${JSON.stringify(state)}`)
-          this._update(stores[source].state, state)
+          this.deepMergeMutate(stores[source].state, state, {
+            ignoreKeyCheck: true,
+          })
         },
         actions: {
           // stores that first connect send a call to get initial state
@@ -183,7 +184,7 @@ class Bridge {
           )
         }
         await requestIdle()
-        this._update(state, newState)
+        this.deepMergeMutate(state, newState, { ignoreKeyCheck: true })
       } catch (err) {
         console.error(
           `${err.message}:\n${err.stack}\n
@@ -275,7 +276,7 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changedState = this._update(this.state, newState, true)
+    const changedState = this.deepMergeMutate(this.state, newState)
     if (ignoreSocketSend) {
       return changedState
     }
@@ -306,28 +307,34 @@ class Bridge {
     this.queuedState = []
   }
 
-  // private
   // return keys of changed items
   @action
-  _update(
+  deepMergeMutate(
     stateObj: Object,
     newState: Object,
-    isInternal?: Boolean,
-    // ignoreLog?: Boolean,
-  ) {
+    { ignoreKeyCheck = false, onlyKeys = null } = {},
+  ) // ignoreLog?: Boolean,
+  {
     let changed = null
     for (const key of Object.keys(newState)) {
-      if (isInternal && typeof this._initialState[key] === 'undefined') {
-        console.error(
-          `${this._source}._update: tried to set a key not in initialState
-            - key: ${key}
-            - typeof initial state key: ${typeof this._initialState[key]}
-            - value:
-              ${stringifyObject(newState)}
-            - initial state:
-              ${stringifyObject(this._initialState)}`,
-        )
-        continue
+      if (!ignoreKeyCheck) {
+        const isValidKey = onlyKeys
+          ? onlyKeys.indexOf(key) > -1
+          : this._initialState[key] !== 'undefined'
+        if (!isValidKey) {
+          console.error(
+            `${
+              this._source
+            }.deepMergeMutate: tried to set a key not in initialState
+              - key: ${key}
+              - typeof initial state key: ${typeof this._initialState[key]}
+              - value:
+                ${stringifyObject(newState)}
+              - initial state:
+                ${stringifyObject(this._initialState)}`,
+          )
+          continue
+        }
       }
       // avoid on same object
       const a = Mobx.toJS(stateObj[key])
@@ -417,4 +424,4 @@ class Bridge {
 }
 
 // singleton because
-export default new Bridge()
+export const Bridge = new BridgeManager()

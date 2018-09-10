@@ -9,7 +9,7 @@ import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { FindOptions } from 'typeorm'
 import { BitRepository, PersonBitRepository } from '../../../repositories'
 import { flatten } from 'lodash'
-import { SelectionStore } from './SelectionStore'
+import { SelectionStore, SelectionGroup } from './SelectionStore'
 import { AppsStore } from '../../AppsStore'
 import { QueryStore } from './QueryStore'
 import { MarkType } from './nlpStore/types'
@@ -121,6 +121,7 @@ export class SearchStore {
   })
 
   willUnmount() {
+    // @ts-ignore
     this.nlpStore.subscriptions.dispose()
     // @ts-ignore
     this.searchFilterStore.subscriptions.dispose()
@@ -155,16 +156,12 @@ export class SearchStore {
       return [
         { type: 'row', items: quickState.results },
         { type: 'column', items: searchState.results },
-      ]
+      ] as SelectionGroup[]
     },
   )
 
   get isChanging() {
     return this.searchState.query !== this.activeQuery
-  }
-
-  get isOnSearchPane() {
-    return this.props.appStore.selectedPane === 'docked-search'
   }
 
   get isActive() {
@@ -186,10 +183,11 @@ export class SearchStore {
     ],
     async ([query], { sleep, whenChanged, when, setValue }) => {
       if (!query) {
-        return setValue({
+        return {
           query,
           results: [],
-        })
+          finished: true,
+        }
       }
 
       let results
@@ -313,11 +311,11 @@ export class SearchStore {
       }
 
       // finished
-      setValue({
+      return {
         query,
         results,
         finished: true,
-      })
+      }
     },
     {
       defaultValue: { results: [], query: '', finished: false },
@@ -331,7 +329,7 @@ export class SearchStore {
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep, when }) => {
-      ensure('on search pane', this.isOnSearchPane)
+      ensure('has query', !!query.length)
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE - 60)
       await when(() => this.nlpStore.nlp.query === query)

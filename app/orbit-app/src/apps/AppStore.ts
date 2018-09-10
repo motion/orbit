@@ -8,7 +8,6 @@ import { Bit, Setting, SettingModel } from '@mcro/models'
 
 export class AppStore {
   contentHeight = 0
-  lastSelectedPane = ''
   onPinKeyCB = null
   appSettings = null
   private appSettings$ = observeMany(SettingModel, {
@@ -58,22 +57,6 @@ export class AppStore {
     })
   }
 
-  get selectedPane() {
-    if (App.orbitState.hidden) {
-      if (App.state.query) {
-        return 'docked-search'
-      }
-      return 'docked'
-    }
-    if (!App.orbitState.hidden) {
-      if (App.state.query) {
-        return 'context-search'
-      }
-      return 'context'
-    }
-    return this.lastSelectedPane
-  }
-
   setContentHeight = height => {
     this.contentHeight = height
   }
@@ -97,23 +80,6 @@ export class AppStore {
         }
       }
       return services
-    },
-  )
-
-  getSettingForBit = (bit: Bit): Setting | null => {
-    if (!this.appSettings) {
-      return null
-    }
-    return this.appSettings.find(x => x.type === bit.integration)
-  }
-
-  updateLastSelectedPane = react(
-    () => this.selectedPane,
-    val => {
-      this.lastSelectedPane = val
-    },
-    {
-      log: false,
     },
   )
 

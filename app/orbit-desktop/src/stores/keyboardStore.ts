@@ -73,14 +73,15 @@ export class KeyboardStore {
     if (holdingKeys > 1 && isOption) {
       return this.clearOption()
     }
-    const isHoldingOption = this.keysDown.has(codes.option)
+    // only valid for contextual orbit
+    // const isHoldingOption = this.keysDown.has(codes.option)
     // holding option + press key === pin
-    if (isHoldingOption && App.isShowingOrbit) {
-      // a - z, our secret pin keys, let them go
-      if (keycode >= 14 && keycode <= 49) {
-        return
-      }
-    }
+    // if (isHoldingOption && App.isShowingOrbit) {
+    //   // a - z, our secret pin keys, let them go
+    //   if (keycode >= 14 && keycode <= 49) {
+    //     return
+    //   }
+    // }
     if (isOption) {
       return Desktop.setKeyboardState({ option: Date.now() })
     }

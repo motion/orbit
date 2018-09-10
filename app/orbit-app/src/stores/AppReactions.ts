@@ -71,6 +71,14 @@ export class AppReactions /* extends Store */ {
     })
   }
 
+  clearPeekOnOrbitClose = react(
+    () => App.orbitState.docked,
+    () => {
+      ensure('is hidden', !App.orbitState.docked)
+      Actions.clearPeek()
+    },
+  )
+
   // disable sidebar  for now
 
   // toggle() {
@@ -107,16 +115,6 @@ export class AppReactions /* extends Store */ {
   //   { log: 'state' },
   // )
 
-  clearPeekOnOrbitClose = react(
-    () => App.isFullyHidden,
-    hidden => {
-      ensure('is hidden', hidden)
-      ensure('not pinned', !App.peekState.pinned)
-      Actions.clearPeek()
-    },
-    { log: 'state' },
-  )
-
   // onPinned = react(
   //   () => App.orbitState.pinned,
   //   pinned => {
@@ -128,15 +126,6 @@ export class AppReactions /* extends Store */ {
   //   },
   //   { log: 'state' },
   // )
-
-  unPinOnHidden = react(
-    () => App.isFullyHidden,
-    hidden => {
-      ensure('is hidden', hidden)
-      App.setOrbitState({ pinned: false })
-    },
-    { log: 'state' },
-  )
 
   // TODO: re-enable these
 

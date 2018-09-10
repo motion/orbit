@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron, AppState } from '@mcro/stores'
+import { Electron } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
@@ -11,7 +11,7 @@ const log = logger('electron')
 const Config = getGlobalConfig()
 
 type Props = {
-  app: AppState
+  id: number
 }
 
 class AppWindowStore {
@@ -23,7 +23,7 @@ class AppWindowStore {
   }
 
   get url() {
-    return `${Config.urls.server}/app?id=${this.props.app.id}`
+    return `${Config.urls.server}/app?id=${this.props.id}`
   }
 
   handleRef = ref => {

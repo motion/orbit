@@ -53,19 +53,14 @@ export class HoverStateStore {
 
   handleMousePosition = async (mousePos: Point) => {
     this.lastMousePos = mousePos
-    const { target, pinned } = App.peekState
-    const peekHovered =
-      (target || pinned) && isMouseOver(App.peekState, mousePos)
+    const { target } = App.peekState
+    const peekHovered = !!target && isMouseOver(App.peekState, mousePos)
     if (App.orbitState.docked) {
       if (isMouseOver(App.orbitState, mousePos)) {
         Electron.setHoverState({ orbitHovered: true, peekHovered })
       } else {
         Electron.setHoverState({ orbitHovered: false, peekHovered })
       }
-      return
-    }
-    if (pinned) {
-      Electron.setHoverState({ peekHovered })
       return
     }
     // if (!hidden) {

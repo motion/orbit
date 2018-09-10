@@ -1,22 +1,13 @@
-import { App, AppState } from '@mcro/stores'
+import { App } from '@mcro/stores'
+import { last } from 'lodash'
 
 export function tearPeek() {
   const { peekState } = App
   if (!peekState.appConfig) {
     console.log('no peek to tear')
   }
-  // add app to list of apps
-  let appsState: AppState[] = App.appsState
-  appsState = [
-    ...appsState,
-    {
-      id: Math.random(),
-      appConfig: peekState.appConfig,
-      position: peekState.position,
-      size: peekState.size,
-    }
-  ]
+  // push new peek app
   App.setState({
-    appsState
+    appsState: [...App.appsState, last(App.appsState) + 1],
   })
 }

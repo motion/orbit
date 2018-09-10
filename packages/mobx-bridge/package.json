@@ -1,6 +1,6 @@
 {
   "name": "@mcro/mobx-bridge",
-  "main": "_/bridge.js",
+  "main": "_/Bridge.js",
   "version": "2.2.1",
   "scripts": {
     "build": "tsc || true",

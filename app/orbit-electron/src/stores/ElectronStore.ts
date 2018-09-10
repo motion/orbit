@@ -1,13 +1,5 @@
-import { App, Electron, Desktop } from '@mcro/stores'
-import {
-  isEqual,
-  store,
-  react,
-  debugState,
-  on,
-  sleep,
-  ensure,
-} from '@mcro/black'
+import { App, Electron } from '@mcro/stores'
+import { isEqual, store, react, debugState, on, sleep } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
 import { WindowFocusStore } from '../stores/WindowFocusStore'
 import { HoverStateStore } from '../stores/HoverStateStore'

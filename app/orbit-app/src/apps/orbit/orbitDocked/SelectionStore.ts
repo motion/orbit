@@ -123,9 +123,6 @@ export class SelectionStore {
     () => !!App.peekState.appConfig,
     target => {
       ensure('no target and active index', !target && this.hasActiveIndex)
-      console.log(
-        `ok clearing ${target} ${this.hasActiveIndex} ${this.activeIndex}`,
-      )
       this.clearSelected()
     },
   )

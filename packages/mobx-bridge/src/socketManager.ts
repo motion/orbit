@@ -39,7 +39,6 @@ export class SocketManager {
       throw new Error(`No state provided for SocketManager.send: ${state}`)
     }
     try {
-      console.log('sending state', state)
       socket.send(JSON.stringify({ source, state }))
     } catch (err) {
       log('error with scoket', err.message, err.stack)

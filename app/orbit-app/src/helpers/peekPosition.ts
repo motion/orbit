@@ -38,6 +38,7 @@ const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
   return preferred
     .map((z, i) => Math.min(z, max[i]))
     .map((z, i) => Math.max(z, min[i]))
+    .map(x => Math.round(x))
 }
 
 let lastPeek = null

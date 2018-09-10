@@ -45,14 +45,8 @@ export class KeyboardStore {
   onKey = keycode => {
     this.clearDownKeysAfterPause()
     if (keycode === codes.esc) {
-      if (
-        App.peekState.target &&
-        (App.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
-      ) {
+      if (App.peekState.target && Desktop.state.focusedOnOrbit) {
         Desktop.sendMessage(App, App.messages.HIDE_PEEK)
-        return
-      }
-      if (!App.orbitState.docked && !App.isMouseInActiveArea) {
         return
       }
       if (App.orbitState.docked && !Desktop.state.focusedOnOrbit) {

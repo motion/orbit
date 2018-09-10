@@ -99,19 +99,6 @@ class AppStore {
 
   animationDuration = 90
 
-  // runs in every app independently
-  // this won't trigger until the app is actually finished showing
-  // to be more precise for enabling mouse events
-  isMouseInActiveArea = react(
-    () =>
-      !!(Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered),
-    async (over, { sleep }) => {
-      await sleep(over ? 0 : App.animationDuration)
-      return over
-    },
-    { log: false },
-  )
-
   last: Boolean
 
   get orbitOnLeft() {

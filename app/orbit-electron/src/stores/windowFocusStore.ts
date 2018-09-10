@@ -74,11 +74,11 @@ export class WindowFocusStore {
     },
   )
 
-  focusOnMouseOver = react(
-    () => App.isMouseInActiveArea,
-    async mouseOver => {
-      ensure('showing orbit', App.isShowingOrbit)
-      if (mouseOver) {
+  focusAppOnHover = react(
+    () => Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered,
+    async isHovered => {
+      if (isHovered) {
+        ensure('docked', App.orbitState.docked)
         this.focusOrbit()
       } else {
         ensure('not docked', !App.orbitState.docked)

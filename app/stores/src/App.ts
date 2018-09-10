@@ -8,6 +8,7 @@ export let App = null as AppStore
 const isBrowser = typeof window !== 'undefined'
 
 export const defaultPeekState = {
+  id: 0,
   torn: false,
   target: null,
   appConfig: null as AppConfig,

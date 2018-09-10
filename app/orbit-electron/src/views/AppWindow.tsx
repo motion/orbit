@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron, Desktop } from '@mcro/stores'
+import { Electron } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'

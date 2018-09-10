@@ -9,7 +9,8 @@ export function tearPeek() {
   // make current peek torn
   curPeek.torn = true
   // push new peek app
-  const appsState = [defaultPeekState, curPeek, ...rest]
+  const nextPeek = { ...defaultPeekState, id: curPeek.id + 1 }
+  const appsState = [nextPeek, curPeek, ...rest]
   // set
   App.setState({
     appsState,

@@ -329,9 +329,9 @@ export class SearchStore {
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep, when }) => {
-      ensure('has query', !!query.length)
+      ensure('has query', !!query)
       // slightly faster for quick search
-      await sleep(TYPE_DEBOUNCE - 60)
+      await sleep(TYPE_DEBOUNCE * 0.5)
       await when(() => this.nlpStore.nlp.query === query)
       const {
         people,

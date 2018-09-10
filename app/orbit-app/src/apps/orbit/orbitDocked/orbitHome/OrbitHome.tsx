@@ -101,7 +101,8 @@ const getItemStyle = (isDragging, { left, top, ...draggableStyle }, index) => ({
   background: isDragging ? 'transparent' : 'transparent',
   // styles we need to apply on draggables
   ...draggableStyle,
-  top: index > 0 ? top - 90 : 0,
+  top,
+  // top: index > 0 ? top - 90 : 0,
 })
 
 class OrbitHomeStore {

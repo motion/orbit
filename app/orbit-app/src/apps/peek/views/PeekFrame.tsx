@@ -54,8 +54,6 @@ const PeekFrameContainer = view(UI.View, {
   zIndex: 2,
 })
 
-let dragAt = Date.now()
-
 const handleResize = (_, { size }) => {
   App.setPeekState({ size: [size.width, size.height] })
 }

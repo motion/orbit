@@ -1,6 +1,7 @@
 # nate
 
 - Monday -- _finish great "app" demo_
+  - sign docs https://mail.google.com/mail/u/0/#inbox/FMfcgxvzKQrNntkpvmKHFZSKfhwMpvSL
   - Fully working tear away and continue using
   - Make demo app nicer:
     - Sidebar selectable list items
@@ -111,6 +112,8 @@
 
 # next
 
+- test if we dont need cloud oauth https://laravel.com/docs/5.6/valet#securing-sites
+- website docs https://github.com/gatsbyjs/gatsby/tree/master/www/src/pages
 - Location as a model
   - This way we can search + generate feeds by Location
 - survey notification if they use it for a few days...

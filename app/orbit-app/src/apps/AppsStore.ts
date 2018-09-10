@@ -20,7 +20,6 @@ export class AppsStore {
     () => this.appsList,
     settings => {
       ensure('has settings', !!settings)
-      console.log('update services')
       const services = {}
       for (const setting of settings) {
         const { type } = setting

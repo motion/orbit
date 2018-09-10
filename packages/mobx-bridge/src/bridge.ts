@@ -296,7 +296,7 @@ export class BridgeManager {
 
   private sendChangedState(changedState: Object) {
     if (changedState) {
-      log(`sendChangedState: ${JSON.stringify(changedState)}`)
+      // log(`sendChangedState: ${JSON.stringify(changedState)}`)
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
       } else {
@@ -317,7 +317,6 @@ export class BridgeManager {
 
   sendQueuedState = () => {
     for (const data of this.queuedState) {
-      console.log('sending', data)
       try {
         this._socket.send(JSON.stringify(data))
       } catch (err) {

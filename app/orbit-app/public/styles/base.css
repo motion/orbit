@@ -129,7 +129,8 @@ a.anchor {
   margin: 0 0 0.5rem 0;
 }
 
-.slack-markdown p {
+.slack-markdown p,
+.slack-markdown .paragraph {
   margin: 0;
 }
 

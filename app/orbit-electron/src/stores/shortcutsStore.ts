@@ -19,6 +19,10 @@ export class ShortcutsStore {
   // TODO: make it watch setting model
   // setting$ = getRepository(SettingEntity)
 
+  constructor() {
+    this.registerShortcuts()
+  }
+
   onShortcut = cb => {
     this.onShortcutCb = cb
   }
@@ -47,7 +51,8 @@ export class ShortcutsStore {
   registerShortcuts = () => {
     const shortcuts = this.setting.values.shortcuts
     for (const shortcutKey in shortcuts) {
-      const shortcut = shortcutKey
+      const shortcut = shortcuts[shortcutKey]
+      log('register shortcut', shortcutKey, shortcut)
       globalShortcut.register(shortcut, () => {
         this.onShortcutCb(shortcut)
       })

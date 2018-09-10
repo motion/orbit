@@ -129,7 +129,9 @@ export default class DebugApps {
               // if its a "electron background page", we dont want it
               return null
             })
-            .filter(Boolean),
+            .filter(Boolean)
+            // sort so the tab order stays stable
+            .sort((a, b) => a.url.localeCompare(b.url)),
         )
       } catch (err) {
         if (err.message.indexOf('ECONNREFUSED') !== -1) return
@@ -246,7 +248,9 @@ export default class DebugApps {
                 document.head.appendChild(title)
               }
               const titleText = PORT_NAMES[port] || url.replace(REMOTE_URL, '')
-              if (titleText) title.innerHTML = titleText
+              if (titleText) {
+                title.innerHTML = titleText
+              }
             } catch (err) {
               console.log('error doing this', err)
             }

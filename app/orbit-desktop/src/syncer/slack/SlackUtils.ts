@@ -15,11 +15,14 @@ export class SlackUtils {
   static filterChannelsBySettings(
     channels: SlackChannel[],
     setting: SettingEntity,
-  ) {
+  ) {                                
     const values = setting.values as SlackSettingValues
     const settingChannels =
       values.channels /*|| {
-      'C0Z43BNJX': true,
+      'C0SAU3124': true,
+      'CBV9PGSGG': true,
+      'C316QRE1J': true,
+      'C221Y7CMN': true,
     }*/
 
     // if no channels in settings are selected then return all channels

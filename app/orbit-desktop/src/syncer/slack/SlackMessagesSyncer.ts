@@ -1,18 +1,18 @@
-import { logger } from '@mcro/logger'
-import { Bit, Person, PersonBit, SlackBitData } from '@mcro/models'
-import { SlackSettingValues } from '@mcro/models'
-import * as _ from 'lodash'
-import { getRepository, MoreThan } from 'typeorm'
+import { logger, LoggerInstance } from '@mcro/logger'
+import { Bit, Person, PersonBit, SlackBitData, SlackSettingValues } from '@mcro/models'
+import { chunk } from 'lodash'
+import { getManager, getRepository, MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { assign, timeout } from '../../utils'
+import { timeout } from '../../utils'
+import { BitUtils } from '../../utils/BitUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage } from './SlackTypes'
 import { SlackUtils } from './SlackUtils'
 
-const log = logger('syncer:slack:messages')
+const log = new LoggerInstance('syncer:slack:messages')
 
 /**
  * Syncs Slack messages.
@@ -30,36 +30,33 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
 
     // load people, we need them to deal with bits
     // note that people must be synced before this syncer's sync
-    log(`loading (already synced) people`)
+    log.timer(`load synced people from the database`)
     const allPeople = await this.loadPeople()
+    log.timer(`load synced people from the database`, allPeople)
 
     // if there are no people it means we run this syncer before people sync,
     // postpone syncer execution
     if (!allPeople.length) {
-      log(`no people were found, looks like people syncer wasn't executed yet, scheduling restart in 10 seconds`)
+      log.verbose(`no people were found, looks like people syncer wasn't executed yet, scheduling restart in 10 seconds`)
       await timeout(10000, () => {
-        log(`restarting people syncer`)
+        log.verbose(`restarting people syncer`)
         return this.run()
       })
-
-    } else {
-      log(`loaded people`, allPeople)
     }
 
     // load all slack channels
-    log(`loading API channels`)
+    log.timer(`load API channels`)
     const allChannels = await this.loader.loadChannels()
-    log(`channels loaded`, allChannels)
+    log.timer(`load API channels`, allChannels)
 
     // filter out channels based on user settings
     const activeChannels = SlackUtils.filterChannelsBySettings(allChannels, this.setting)
-    log(`filtering only selected channels`, activeChannels)
+    log.verbose(`filtering only selected channels`, activeChannels)
 
     // go through all channels
     const values = this.setting.values as SlackSettingValues
     const lastMessageSync = values.lastMessageSync || {}
-    const updatedBits: Bit[] = [],
-      removedBits: Bit[] = []
+    const apiBits: Bit[] = [], dbBits: Bit[] = []
 
     for (let channel of activeChannels) {
       // to load messages using pagination we use "oldest" message we got last time when we synced
@@ -69,21 +66,17 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
         ? String(parseInt(lastMessageSync[channel.id]) - 60 * 60 * 24)
         : undefined
 
-      // load messages
-      log(`loading channel ${channel.id} messages`, { oldestMessageId })
-      const loadedMessages = await this.loader.loadMessages(channel.id, oldestMessageId)
-      log(`loaded messages`, loadedMessages)
-
       // we need to load all bits in the data range period we are working with (oldestMessageId)
       // because we do comparision and update bits, also we remove removed messages
-      // if oldestMessageId is missing it means this is a first time loading for this slack channel
-      // and we don't have bits in the database yet
-      let existBits: BitEntity[] = []
-      if (oldestMessageId) {
-        log(`loading channel ${channel.id} exist database bits`, { oldestMessageId })
-        existBits = await this.loadLatestBits(channel.id, oldestMessageId)
-        log(`exist database bits were loaded`, existBits)
-      }
+      log.timer(`loading channel ${channel.name}(#${channel.id}) database bits`, { oldestMessageId })
+      const existBits = await this.loadLatestBits(channel.id, oldestMessageId)
+      dbBits.push(...existBits)
+      log.timer(`loading channel ${channel.name}(#${channel.id}) database bits`, { oldestMessageId })
+
+      // load messages
+      log.timer(`loading channel ${channel.name}(#${channel.id}) messages`, { oldestMessageId })
+      const loadedMessages = await this.loader.loadMessages(channel.id, oldestMessageId)
+      log.timer(`loading channel ${channel.name}(#${channel.id}) messages`, loadedMessages)
 
       // sync messages if we found them
       if (loadedMessages.length) {
@@ -96,18 +89,17 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
           message.user &&
           message.text // snippets for example does not contain text, maybe attachments too
         ))
-        log(`filtered messages (no bots and others)`, filteredMessages)
+        log.verbose(`filtered messages (no bots and others)`, filteredMessages)
 
         // group messages into special "conversations" to avoid insertion of multiple bits for each message
         const conversations = SlackUtils.createConversation(filteredMessages)
-        log(`created ${conversations.length} conversations`, conversations)
+        log.verbose(`created ${conversations.length} conversations`, conversations)
 
         // create bits from conversations
-        updatedBits.push(
+        apiBits.push(
           ...conversations.map(messages => this.createBit(
             channel,
             messages,
-            existBits,
             allPeople,
           )),
         )
@@ -116,28 +108,40 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
         // note: we need to use loaded messages, not filtered
         lastMessageSync[channel.id] = loadedMessages[0].ts
       }
-
-      // compare database bits with loaded bits and if some loaded bits were removed
-      // add them to the list of bits needs to be removed
-      removedBits.push(...existBits.filter(existBit => {
-        return !updatedBits.some(updatedBit => {
-          return updatedBit.id === existBit.id
-        })
-      }))
     }
 
-    // update and remove bits
-    log(`saving bits`, updatedBits)
-    await getRepository(BitEntity).save(updatedBits, { chunk: 100 })
-    log(`bits are saved`)
-    log(`removing bits`, removedBits)
-    await getRepository(BitEntity).remove(removedBits as BitEntity[], { chunk: 100 })
-    log(`bits are removed`)
+    log.verbose(`calculating inserted/updated/removed bits`)
+    const insertedBits = apiBits.filter(apiBit => {
+      return !dbBits.some(dbBit => dbBit.id === apiBit.id)
+    })
+    const updatedBits = apiBits.filter(apiBit => {
+      const dbBit = dbBits.find(dbBit => dbBit.id === apiBit.id)
+      return dbBit && dbBit.contentHash !== BitUtils.contentHash(apiBit)
+    })
+    const removedBits = dbBits.filter(dbBit => {
+      return !apiBits.some(apiBit => apiBit.id === dbBit.id)
+    })
+
+    log.timer(`saving bits in the database`, { insertedBits, updatedBits, removedBits })
+    await getManager().transaction(async manager => {
+      if (insertedBits.length > 0) {
+        const insertedBitChunks = chunk(insertedBits, 50)
+        for (let bits of insertedBitChunks) {
+          await manager.insert(BitEntity, bits)
+        }
+      }
+      for (let bit of updatedBits) {
+        await manager.update(BitEntity, { id: bit.id }, bit)
+      }
+      if (removedBits.length > 0)
+        await manager.delete(BitEntity, removedBits)
+    })
+    log.timer(`saving bits in the database`)
 
     // update settings
-    log(`updating settings`, { lastMessageSync })
-    values.lastMessageSync = lastMessageSync
-    await getRepository(SettingEntity).save(this.setting)
+    // log.verbose(`updating settings`, { lastMessageSync })
+    // values.lastMessageSync = lastMessageSync
+    // await getRepository(SettingEntity).save(this.setting)
   }
 
   /**
@@ -154,13 +158,16 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
   /**
    * Loads bits in a given period.
    */
-  private loadLatestBits(channelId: string, oldestMessageId: string) {
+  private loadLatestBits(channelId: string, oldestMessageId?: string) {
     return getRepository(BitEntity).find({
-      settingId: this.setting.id,
-      location: {
-        id: channelId,
-      },
-      bitCreatedAt: MoreThan(parseInt(oldestMessageId) * 1000),
+      select: ["id", "contentHash"],
+      where: {
+        settingId: this.setting.id,
+        location: {
+          id: channelId,
+        },
+        bitCreatedAt: oldestMessageId ? MoreThan(parseInt(oldestMessageId) * 1000) : undefined,
+      }
     })
   }
 
@@ -170,7 +177,6 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
   private createBit(
     channel: SlackChannel,
     messages: SlackMessage[],
-    bits: BitEntity[],
     allPeople: Person[],
   ): BitEntity {
 
@@ -188,7 +194,6 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
     const webLink = `https://${team.domain}.slack.com/archives/${channel.id}/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${team.id}`
     const body = SlackUtils.buildBitBody(messages, allPeople)
-    const bit = bits.find(bit => bit.id === id)
     const mentionedPeople = SlackUtils.findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
       messages: messages.reverse().map(message => ({
@@ -205,15 +210,15 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
       })
     })
 
-    return assign(bit || new BitEntity(), {
-      setting: this.setting,
+    return BitUtils.create({
+      settingId: this.setting.id,
       integration: 'slack',
       id,
       type: 'conversation',
       title: `#${channel.name}`,
       body,
       data,
-      raw: { channel, messages },
+      // raw: { channel, messages },
       bitCreatedAt,
       bitUpdatedAt,
       people,

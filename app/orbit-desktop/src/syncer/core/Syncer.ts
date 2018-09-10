@@ -203,7 +203,15 @@ export class Syncer {
 
       // update our job (finish with error)
       job.status = 'FAILED'
-      job.message = JSON.stringify(error)
+      try {
+        if (typeof error.toString === 'function') {
+          job.message = error.toString()
+        } else {
+          job.message = JSON.stringify(error)
+        }
+      } catch (err) {
+        job.message = ''
+      }
       await getRepository(JobEntity).save(job)
     }
     log(`${this.options.constructor.name} syncer has finished its job`)

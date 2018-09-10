@@ -6,6 +6,7 @@ import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
+import { BitUtils } from '../../utils/BitUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
@@ -73,7 +74,7 @@ export class GDriveSyncer implements IntegrationSyncer {
     const id = `gdrive-${this.setting.id}-${file.file.id}`
     const bit = this.bits.find(bit => bit.id === id)
 
-    return assign(bit || new BitEntity(), {
+    return assign(bit || new BitEntity(), BitUtils.create({
       integration: 'gdrive',
       setting: this.setting,
       id: file.file.id,
@@ -99,7 +100,7 @@ export class GDriveSyncer implements IntegrationSyncer {
       //   file.file.fileExtension && file.file.thumbnailLink
       //     ? file.file.id + '.' + file.file.fileExtension
       //     : undefined,
-    })
+    }))
   }
 
   /**

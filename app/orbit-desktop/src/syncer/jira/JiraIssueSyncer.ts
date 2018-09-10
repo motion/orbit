@@ -102,7 +102,7 @@ export class JiraIssueSyncer implements IntegrationSyncer {
 
     // create or update a bit
     const bit = this.bits.find(bit => bit.id === id)
-    return assign(bit || new BitEntity(), {
+    return assign(bit || new BitEntity(), BitUtils.create({
       integration: 'jira',
       id,
       setting: this.setting,
@@ -122,7 +122,7 @@ export class JiraIssueSyncer implements IntegrationSyncer {
       people,
       bitCreatedAt,
       bitUpdatedAt,
-    })
+    }))
   }
 
 }

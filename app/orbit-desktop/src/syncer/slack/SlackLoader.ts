@@ -1,9 +1,9 @@
 import { channels, users } from 'slack'
-import { logger } from '@mcro/logger'
+import { logger, LoggerInstance } from '@mcro/logger'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 
-const log = logger('syncer:slack:loader')
+const log = new LoggerInstance('syncer:slack:loader')
 
 /**
  * Loads the data from the Slack API.
@@ -27,7 +27,7 @@ export class SlackLoader {
       limit: 1000,
       cursor: cursor,
     }
-    log(`request to users.list`, options)
+    log.verbose(`request to users.list`, options)
     const response = await users.list(options)
 
     const nextPageCursor =
@@ -51,7 +51,7 @@ export class SlackLoader {
       token: this.setting.token,
       cursor: cursor,
     }
-    log(`request to channels.list`, options)
+    log.verbose(`request to channels.list`, options)
     const response = await channels.list(options)
 
     const nextPageCursor =
@@ -89,7 +89,7 @@ export class SlackLoader {
       oldest: oldestMessageId,
       latest: latestMessageId,
     }
-    log(`request to channels.history`, options)
+    log.verbose(`request to channels.history`, options)
     const response = await channels.history(options)
 
     if (response.has_more === true) {

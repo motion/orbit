@@ -8,6 +8,7 @@ import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
+import { BitUtils } from '../../utils/BitUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SyncerUtils } from '../core/SyncerUtils'
 import { GithubLoader } from './GithubLoader'
@@ -109,7 +110,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     }
 
     const bit = this.bits.find(bit => bit.id === id)
-    return assign(bit || new BitEntity(), {
+    return assign(bit || new BitEntity(), BitUtils.create({
       id,
       settingId: this.setting.id,
       integration: 'github',
@@ -128,6 +129,6 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       bitCreatedAt: createdAt,
       bitUpdatedAt: updatedAt,
       people: people,
-    })
+    }))
   }
 }

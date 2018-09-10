@@ -12,6 +12,8 @@ export class WebSocketServerTransport implements ServerTransport {
       this.socket = socket
       this.onCallbacks.forEach(callback => this.onMessage(callback))
     })
+    // todo: handle disconnection. Since we can have multiple apps connecting to the same desktop
+    // todo: instance it means we need to clean things when one of the is disconnecting
   }
 
   onMessage(callback: (data: TransportRequest) => void) {

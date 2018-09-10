@@ -132,6 +132,10 @@ export class OrbitSettings extends React.Component<Props> {
 
   render() {
     const { name, store } = this.props
+    if (store.generalSetting && !store.generalSetting.values) {
+      console.error('weird error')
+      return null
+    }
     return (
       <SubPane name={name} fadeBottom>
         <Views.VerticalSpace />

@@ -230,8 +230,8 @@ export class PeekStore {
   }
 
   tearPeek = () => {
-    Actions.tearPeek()
     this.tornState = { ...this.state }
+    Actions.tearPeek()
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
 

@@ -63,14 +63,14 @@ const decorator = compose(
 )
 
 export const AppWindow = decorator(
-  ({ store }: Props & { store: AppWindowStore }) => {
+  ({ id, store }: Props & { store: AppWindowStore }) => {
     log(`Rendering app window at url ${store.url}`)
     return (
       <Window
         alwaysOnTop
         show
         ref={store.handleRef}
-        ignoreMouseEvents={!Electron.hoverState.peekHovered}
+        ignoreMouseEvents={!Electron.hoverState.peekHovered[id]}
         file={store.url}
         frame={false}
         hasShadow={false}

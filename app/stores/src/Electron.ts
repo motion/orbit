@@ -30,7 +30,9 @@ class ElectronStore {
     settingsPosition: [], // todo: settingsState.position
     hoverState: {
       orbitHovered: false,
-      peekHovered: false,
+      peekHovered: {
+        0: false,
+      },
     },
     showDevTools: {
       orbit: false,

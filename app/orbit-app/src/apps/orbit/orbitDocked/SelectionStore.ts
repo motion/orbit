@@ -112,19 +112,6 @@ export class SelectionStore {
     },
   )
 
-  clearSelectedOnLeave = react(
-    () => [this.leaveIndex, Electron.hoverState.peekHovered],
-    async ([leaveIndex, peekHovered], { sleep, when }) => {
-      if (!peekHovered) {
-        await sleep(100)
-      }
-      await when(() => !peekHovered)
-      await sleep(100)
-      ensure('has leave index', leaveIndex > -1)
-      this.clearSelected()
-    },
-  )
-
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,
     () => {
@@ -152,21 +139,33 @@ export class SelectionStore {
     }
   }
 
-  getHoverSettler = Helpers.hoverSettler({
-    enterDelay: 40,
-    betweenDelay: 40,
-    onHovered: res => {
-      // leave
-      if (!res) {
-        if (this.activeIndex !== -1) {
-          this.leaveIndex = this.activeIndex
-        }
-        return
-      }
-      this.leaveIndex = -1
-      this.toggleSelected(res.index)
-    },
-  })
+  // getHoverSettler = Helpers.hoverSettler({
+  //   enterDelay: 40,
+  //   betweenDelay: 40,
+  //   onHovered: res => {
+  //     // leave
+  //     if (!res) {
+  //       if (this.activeIndex !== -1) {
+  //         this.leaveIndex = this.activeIndex
+  //       }
+  //       return
+  //     }
+  //     this.leaveIndex = -1
+  //     this.toggleSelected(res.index)
+  //   },
+  // })
+  // clearSelectedOnLeave = react(
+  //   () => [this.leaveIndex, Electron.hoverState.peekHovered],
+  //   async ([leaveIndex, peekHovered], { sleep, when }) => {
+  //     if (!peekHovered) {
+  //       await sleep(100)
+  //     }
+  //     await when(() => !peekHovered)
+  //     await sleep(100)
+  //     ensure('has leave index', leaveIndex > -1)
+  //     this.clearSelected()
+  //   },
+  // )
 
   toggleSelected = (index, eventType?: string) => {
     if (eventType) {

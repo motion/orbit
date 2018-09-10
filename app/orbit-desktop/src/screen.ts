@@ -100,12 +100,13 @@ export class Screen {
 
   updateWindowVisibility = react(
     () => !!App.orbitState.docked,
-    async (visible, { when }) => {
+    async (visible, { when, sleep }) => {
       await when(() => this.isStarted)
       if (visible) {
-        this.oracle.showWindow()
-        // after bringing swift to front, bring electron to front
+        // after bringing swift to front, bring electron to front, but it takes
         Desktop.sendMessage(Electron, Electron.messages.BRING_TO_FRONT)
+        await sleep()
+        this.oracle.showWindow()
       } else {
         this.oracle.hideWindow()
       }

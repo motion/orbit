@@ -129,9 +129,9 @@ export default class DebugApps {
               // if its a "electron background page", we dont want it
               return null
             })
-            .filter(Boolean)
-            // sort so the tab order stays stable
-            .sort((a, b) => a.url.localeCompare(b.url)),
+            .filter(Boolean),
+          // sort so the tab order stays stable
+          // .sort((a, b) => a.url.localeCompare(b.url)),
         )
       } catch (err) {
         if (err.message.indexOf('ECONNREFUSED') !== -1) return

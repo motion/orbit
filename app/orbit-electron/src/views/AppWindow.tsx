@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron } from '@mcro/stores'
+import { Electron, Desktop } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
@@ -24,7 +24,6 @@ class AppWindowStore {
 
   didMount() {
     this.props.electronStore.apps.add(this)
-
     setTimeout(() => {
       this.position = [0, 0]
     })

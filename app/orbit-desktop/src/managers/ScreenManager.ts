@@ -5,20 +5,15 @@ import { Desktop, Electron, App } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
-import { getGlobalConfig } from '@mcro/config'
-import * as Path from 'path'
 import { CompositeDisposable } from 'event-kit'
+
+type ScreenManagerOptions = {
+  oracle: Oracle
+}
 
 const log = logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
-const Config = getGlobalConfig()
-
-// we re-route this with electron-builder to here
-const oracleBinPath =
-  Config.isProd && Path.join(Config.paths.resources, '..', 'MacOS', 'oracle')
-
-console.log('oracleBinPath', oracleBinPath)
 
 // prevent apps from clearing highlights
 const PREVENT_CLEAR = {
@@ -46,7 +41,8 @@ const PREVENT_SCANNING = {
 
 // @ts-ignore
 @store
-export class Screen {
+export class ScreenManager {
+  oracle: Oracle
   running = new CompositeDisposable()
   hasResolvedOCR = false
   appStateTm: any
@@ -56,10 +52,10 @@ export class Screen {
   curAppName = ''
   isStarted = false
   watchSettings = { name: '', settings: {} }
-  oracle = new Oracle({
-    binPath: oracleBinPath,
-    socketPort: Config.ports.oracleBridge,
-  })
+
+  constructor({ oracle }: ScreenManagerOptions) {
+    this.oracle = oracle
+  }
 
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 
@@ -168,7 +164,6 @@ export class Screen {
     }
 
     this.setupOracleListeners()
-    await this.oracle.start()
     await this.getOracleInfo()
     this.isStarted = true
   }

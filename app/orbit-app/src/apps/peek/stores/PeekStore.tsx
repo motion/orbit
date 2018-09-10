@@ -81,6 +81,7 @@ export class PeekStore {
   internalState = react(
     () => this.appState,
     async (appState, { getValue, setValue, sleep }) => {
+      ensure('has app state', !!appState)
       console.log('appState', appState)
       const { appConfig, torn, ...rest } = appState
       await sleep()

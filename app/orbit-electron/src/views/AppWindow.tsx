@@ -7,6 +7,7 @@ import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
 import { BrowserWindow } from 'electron'
 import { ElectronStore } from '../stores/ElectronStore'
+import { trace } from 'mobx'
 
 const log = logger('electron')
 const Config = getGlobalConfig()
@@ -64,7 +65,8 @@ const decorator = compose(
 
 export const AppWindow = decorator(
   ({ id, store }: Props & { store: AppWindowStore }) => {
-    log(`Rendering app window at url ${store.url}`)
+    log(`Rendering app window ${id} at url ${store.url}`)
+    trace()
     return (
       <Window
         alwaysOnTop

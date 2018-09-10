@@ -96,7 +96,7 @@ a.anchor {
   display: none;
 }
 
-.markdown paragraph img,
+.markdown .paragraph img,
 .markdown p img,
 .markdown li img {
   max-width: 100%;

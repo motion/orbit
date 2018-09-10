@@ -19,9 +19,14 @@ type Props = {
 class AppWindowStore {
   props: Props
   window: BrowserWindow = null
+  position = [1, 1]
 
   didMount() {
     this.props.electronStore.apps.add(this)
+
+    setTimeout(() => {
+      this.position = [0, 0]
+    })
   }
 
   willUnmount() {
@@ -57,6 +62,7 @@ export const AppWindow = decorator(
     return (
       <Window
         alwaysOnTop
+        show
         ref={store.handleRef}
         ignoreMouseEvents={!Electron.hoverState.peekHovered}
         file={store.url}
@@ -66,7 +72,7 @@ export const AppWindow = decorator(
         transparent
         background="#00000000"
         webPreferences={WEB_PREFERENCES}
-        position={[0, 0]}
+        position={store.position}
         size={Electron.state.screenSize}
       />
     )

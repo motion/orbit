@@ -81,7 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    window.level = .floating
+    window.level = .normal // .floating to be on top
     window.backgroundColor = NSColor.clear
     window.alphaValue = 0
     window.isOpaque = false

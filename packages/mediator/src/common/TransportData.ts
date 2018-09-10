@@ -22,11 +22,11 @@ export type TransportRequestValues = {
 }
 
 export type TransportRequest = {
-  id: number
+  id: string
   type: TransportRequestType
 } & TransportRequestValues
 
 export type TransportResponse = {
-  id: number
+  id: string
   result: any
 }

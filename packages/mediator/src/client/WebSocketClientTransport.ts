@@ -4,6 +4,7 @@ import Observable = require('zen-observable')
 
 export class WebSocketClientTransport implements ClientTransport {
   websocket: WebSocket
+  operationCode: string
   operationId: number = 0
   subscriptions: {
     operationId: number
@@ -12,6 +13,7 @@ export class WebSocketClientTransport implements ClientTransport {
   }[] = []
 
   constructor(websocket: WebSocket) {
+    this.operationCode = this.generateRandom()
     this.websocket = websocket
     this.websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     this.websocket.onerror = err => {
@@ -30,7 +32,7 @@ export class WebSocketClientTransport implements ClientTransport {
   observe(type: TransportRequestType, values: TransportRequestValues): Observable<any> {
     const operationId = ++this.operationId // don't change - will lead to wrong id
     const data = {
-      id: operationId,
+      id: this.operationCode + "_" + operationId,
       type,
       ...values
     }
@@ -66,7 +68,7 @@ export class WebSocketClientTransport implements ClientTransport {
           this.subscriptions.splice(index, 1)
 
         this.websocket.send(JSON.stringify({
-          id: operationId,
+          id: this.operationCode + "_" + operationId,
           type: "unsubscribe"
         }))
       };
@@ -76,7 +78,7 @@ export class WebSocketClientTransport implements ClientTransport {
   execute(type: TransportRequestType, values: TransportRequestValues): Promise<any> {
     const operationId = ++this.operationId // don't change - will lead to wrong id
     const query = {
-      id: operationId,
+      id: this.operationCode + "_" + operationId,
       type,
       ...values,
     }
@@ -108,10 +110,22 @@ export class WebSocketClientTransport implements ClientTransport {
     })
   }
 
+  private generateRandom() {
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let text = "";
+    for (let i = 0; i < 5; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+  }
+
   private handleData(data: TransportResponse) {
     if (data.id) {
+      const [operationCode, operationId] = data.id.split("_")
+      if (this.operationCode !== operationCode)
+        return
+
       const subscription = this.subscriptions.find(subscription => {
-        return subscription.operationId === data.id
+        return subscription.operationId === parseInt(operationId)
       })
       if (subscription) {
         subscription.onSuccess(data.result)

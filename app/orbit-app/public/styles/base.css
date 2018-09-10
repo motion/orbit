@@ -541,6 +541,7 @@ li {
   margin-left: 0.5rem;
 }
 
+.paragraph code,
 p code {
   display: inline-block;
   padding: 0;

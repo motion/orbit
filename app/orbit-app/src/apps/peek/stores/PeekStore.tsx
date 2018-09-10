@@ -105,9 +105,9 @@ export class PeekStore {
       }
       if (isShown) {
         // wait and fetch in parallel
-        const [model] = torn
+        const model = torn
           ? curState.model
-          : await Promise.all([this.getModel(), sleep(50)])
+          : (await Promise.all([this.getModel(), sleep()]))[0]
         return {
           ...nextState,
           // now update to new model

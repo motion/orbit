@@ -109,6 +109,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // allow showing icon in sub-apps
     if ProcessInfo.processInfo.environment["SHOW_ICON"] != nil {
       NSApp.setActivationPolicy(NSApplication.ActivationPolicy.regular)
+      self.setIcon(ProcessInfo.processInfo.environment["SHOW_ICON"]!)
     }
 
     blurryView.maskImage = _maskImage(cornerRadius: 16.0)
@@ -209,6 +210,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
   
+  func setIcon(_ path: String) {
+    NSApp.applicationIconImage = NSImage.init(contentsOfFile: path)
+  }
+  
   func onMessage(_ text: String) {
 //    print("Swift.onMessage \(text)")
     if text.count < 4 {
@@ -231,6 +236,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       } catch {
         print("Error parsing arguments \(text)")
       }
+      return
+    }
+    if action == "icon" {
+      self.setIcon(text[4..<text.count])
       return
     }
     if action == "them" {

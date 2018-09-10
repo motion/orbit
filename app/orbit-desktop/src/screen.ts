@@ -151,6 +151,12 @@ export class Screen {
     console.log('starting screen...')
 
     // handle messages
+
+    const off3 = Desktop.onMessage(Desktop.messages.BRING_TO_FRONT, () => {
+      this.oracle.showWindow()
+    })
+    this.running.add({ dispose: off3 })
+
     // const off1 = Desktop.onMessage(
     //   Desktop.messages.TOGGLE_PAUSED,
     //   this.togglePaused,

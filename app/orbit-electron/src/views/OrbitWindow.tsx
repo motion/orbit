@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { on, view, react, ensure } from '@mcro/black'
+import { on, view, react, ensure, sleep } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -51,6 +51,16 @@ class MainStore {
       this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
     },
   )
+
+  handleFocus = async () => {
+    console.log('!! electron focus')
+    Electron.sendMessage(App, App.messages.SHOW)
+    // bring swift up...
+    Electron.sendMessage(Desktop, Desktop.messages.BRING_TO_FRONT)
+    await sleep(16)
+    // ...then re-bring this up above swift
+    this.window.show()
+  }
 }
 
 @view.attach('electronStore')
@@ -87,11 +97,6 @@ export class OrbitWindow extends React.Component<Props> {
     }
   }
 
-  handleFocus = () => {
-    console.log('electron focus')
-    Electron.sendMessage(App, App.messages.SHOW)
-  }
-
   render() {
     const { store, electronStore } = this.props
     const url = Config.urls.server
@@ -123,7 +128,7 @@ export class OrbitWindow extends React.Component<Props> {
           // offscreen: true,
         }}
         onBlur={this.handleBlur}
-        onFocus={this.handleFocus}
+        onFocus={store.handleFocus}
       />
     )
   }

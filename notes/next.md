@@ -1,23 +1,64 @@
-to sync with umed:
+# nate
+
+- Monday -- _finish great "app" demo_
+  - Fully working tear away and continue using
+  - Make demo app nicer:
+    - Sidebar selectable list items
+    - Working tabs
+    - Better table contents
+- Tuesday -- _make app work better for demo_
+  - fix confluence/jira document display
+  - need to pass array of string to highlightcontext
+  - production app bugfix/perf fixes
+  - date filtering isn't working for:
+    - nate january
+    - nate jan 1 to jan 30
+  - Fix intra-peek clicking
+  - search in peek scroll fix
+- Wednesday -- _profiles_
+  - cosal attempt get it running and analyze for use in profiles
+  - design run on the person feed
+  - filter/sub-search for the feed
+  - pagination for the feed
+- Thursday -- _onboarding_
+  - revisit the site and get it running, fix up
+  - we'll do in-app account system dont bother doing it on site
+  - have a permanent download link to use
+  - fix spaces / screen resize bugs
+- Friday -- _have demo video / productionize_
+  - goal today is to make demo really shine
+  - lots of performance, interaction, etc
+  - record video a few times to get through full demo
+  - compose email for mailing list in tandem
 
 # Umed
 
-- Make all syncers sync a more/better
+- Goal by end of week:
+
+  - Really focused finish on observe/throttle fix (ideally no more than a day)
+  - Fix a ton of syncers stuff
+  - Clear you up so next week we can start on new stuff
+
+- Runthrough on syncers:
+
+  - See trello for important ones
+  - Slack select all rooms by default (syncer needs to respect settings/set them)
+    - Same with github
   - Gmail how do I know if its html or text?
   - Gmail super slow
   - Gmail no html coming back?
-  - Really simple throttle
+  - Really simple throttle to keep cpu from going too much
   - Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
     - for gmail, dont sync full history, but do sync a trailing X months or limited # of items
   - PersonBit query recent + limit
   - Slack.people sometimes still not showing up
-  - Github not normalizing createdAt timestamps properly
   - Github sync auto select everything by default
   - GDocs auto sync most things by default
-- Really simple RSS Syncer
-- fts5 integration
-- Location as a model
-  - This way we can search + generate feeds by Location
+
+- Next week:
+  - Add simple RSS Syncer
+    - Values can have feed urls
+  - fts5 integration
 
 # Nate
 
@@ -46,13 +87,6 @@ to sync with umed:
 # September:
 
 - Rate limits may be per-token so we may not need fancy p2p stuff (or not yet)
-- Contacts
-  - Reach out to charlie post burn (Wed)
-  - Reach out to stuart for meeting Workday after
-  - Give Karthik (SpaceX) demo app to use:
-    - Requirements:
-      - Add in basic Cosal search
-      - Add in basic topic modeling for people
 - Community
   - Start community
     - Get a first beta build cut
@@ -77,15 +111,13 @@ to sync with umed:
 
 # next
 
+- Location as a model
+  - This way we can search + generate feeds by Location
 - survey notification if they use it for a few days...
 - manage people (may not want github for example to sync in people)
   - probably by default some integrations are "additive only"
   - so they only sync in on top of existing people
   - also could scan contacts
-- need to pass array of string to highlightcontext
-- date filtering isn't working for:
-  - nate january
-  - nate jan 1 to jan 30
 - multiselect tables keyboard nav not working:
   - generally inner app keyboard nav not working
 - showing sync status:
@@ -97,7 +129,6 @@ to sync with umed:
 - doesnt follow monitor on add new monitor
 - community
   - need a way for people to suggest/vote features
-- show html in emails
 - semi-hide orbit while oauth open so it doesnt cover it
 - better show the panes on onboard
 - after onboard "what can i do / search?"
@@ -105,7 +136,6 @@ to sync with umed:
 - location filters: `.find({ location: { name: "..." } })`
 - in:x for location
 - clicking location buttons should filter that location
-- direct open button in search results
 - clicking a name should search that name
 - find by type (file / link is helpful)
 - search results date strategy:
@@ -113,19 +143,12 @@ to sync with umed:
   - do by day for first week within the current month
   - do by month after that
 - Fix empty profiles from gmail contacts import
-- Fix slack not showing usernames
-- Fix intra-peek clicking
-- Slack select all settings by default (syncer needs to respect settings/set them)
   - Toggle select all button in table view
-- working remove integration
 - fix highlight index click interaction
 - fix integration buttons styling and going inactive after click
-- Finish settings panes
-
 - Able to make your own "Pages/Spaces/Homescreens"
   - By default it splits them by Location in a new Pane for each App
   - We can also have an example of Design blogs example
-- Continue on UI kit for apps
 - Get the basic app store in place
 - If Swift contractor works out integrate some OCR
 - Prep website for private beta launch

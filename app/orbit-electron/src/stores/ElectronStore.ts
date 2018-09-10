@@ -31,7 +31,7 @@ export class ElectronStore {
       this.views = views
     })
     this.windowFocusStore = new WindowFocusStore()
-    this.shortcutStore = new ShortcutsStore(['Option+Space'])
+    this.shortcutStore = new ShortcutsStore()
     this.hoverStateStore = new HoverStateStore()
     this.followMousePosition()
     this.shortcutStore.onShortcut(this.onShortcut)

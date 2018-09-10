@@ -9,12 +9,15 @@ const log = logger('shortcutsStore')
 @store
 export class ShortcutsStore {
   onShortcutCb = _ => _
-  shortcuts = null
-
-  constructor(shortcuts) {
-    this.shortcuts = shortcuts
-    this.registerShortcuts()
+  setting = {
+    values: {
+      shortcuts: {
+        toggleApp: 'Option+Space',
+      },
+    },
   }
+  // TODO: make it watch setting model
+  // setting$ = getRepository(SettingEntity)
 
   onShortcut = cb => {
     this.onShortcutCb = cb
@@ -34,20 +37,20 @@ export class ShortcutsStore {
   )
 
   unregisterShortcuts = () => {
-    for (const shortcut of this.shortcuts) {
+    const shortcuts = this.setting.values.shortcuts
+    for (const shortcutKey in shortcuts) {
+      const shortcut = shortcutKey
       globalShortcut.unregister(shortcut)
     }
   }
 
   registerShortcuts = () => {
-    for (const shortcut of this.shortcuts) {
-      const ret = globalShortcut.register(shortcut, () => {
+    const shortcuts = this.setting.values.shortcuts
+    for (const shortcutKey in shortcuts) {
+      const shortcut = shortcutKey
+      globalShortcut.register(shortcut, () => {
         this.onShortcutCb(shortcut)
       })
-      // @ts-ignore
-      if (!ret) {
-        console.log('couldnt register shortcut', shortcut, ret)
-      }
     }
   }
 }

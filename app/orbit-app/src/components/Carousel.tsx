@@ -5,6 +5,7 @@ import {
   HorizontalScrollRowProps,
 } from '../views/HorizontalScrollRow'
 import isEqual from 'react-fast-compare'
+import scroll from 'scroll'
 
 export type CarouselProps = HorizontalScrollRowProps & {
   items?: any[]
@@ -38,7 +39,8 @@ export class Carousel extends React.Component<CarouselProps> {
     if (!frame) return
     const activeCard = this.cardRefs[index]
     if (!activeCard) return
-    frame.scrollLeft = activeCard.offsetLeft - 12
+    // non animated: frame.scrollLeft =
+    scroll.left(scroll, activeCard.offsetLeft - 12, { duration: 100 })
   }
 
   render() {

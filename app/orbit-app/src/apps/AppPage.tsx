@@ -15,10 +15,12 @@ export class AppPage extends React.Component<{
   appStore: AppStore
 }> {
   render() {
+    const id = +window.location.search.match(/id=([0-9]+)/)[1]
+    console.log('app id', id)
     return (
       <MainShortcutHandler>
         <AppWrapper>
-          <Peek />
+          <Peek id={id} />
         </AppWrapper>
       </MainShortcutHandler>
     )

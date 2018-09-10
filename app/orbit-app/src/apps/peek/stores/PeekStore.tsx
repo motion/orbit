@@ -11,7 +11,7 @@ import {
 import { Bit, Setting, PersonBit } from '@mcro/models'
 import { Actions } from '../../../actions/Actions'
 
-type PeekStoreItemState = typeof App.state.peekState & {
+type PeekStoreItemState = typeof App.peekState & {
   peekId: string
   model: PersonBit | Bit | Setting
 }
@@ -27,12 +27,12 @@ export type PeekStoreState = {
 
 export class PeekStore {
   props: {
+    id: number
     appStore: AppStore
     fixed?: boolean
   }
 
   debug = true
-  tornState = null
   dragOffset?: [number, number] = null
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
@@ -67,14 +67,24 @@ export class PeekStore {
     Actions.setHighlightIndex(next)
   }
 
+  // appConfig given the id
+  appState = react(
+    () => App.appsState.find(x => x.id === this.props.id),
+    _ => _,
+    {
+      onlyUpdateIfChanged: true,
+    },
+  )
+
   internalState = react(
-    () => [App.peekState.appConfig, this.tornState],
-    async ([_, tornState], { getValue, setValue, sleep }) => {
-      await sleep(16)
-      const { appConfig, ...rest } = App.peekState
+    () => this.appState,
+    async (appState, { getValue, setValue, sleep }) => {
+      console.log('appState', appState)
+      const { appConfig, torn, ...rest } = appState
+      await sleep()
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
-      const isShown = !!tornState || (!!appConfig && !!App.orbitState.docked)
+      const isShown = !!appConfig && (torn || !!App.orbitState.docked)
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
       const curState = {
@@ -95,10 +105,9 @@ export class PeekStore {
       }
       if (isShown) {
         // wait and fetch in parallel
-        const [model] = await Promise.all([
-          tornState || this.getModel(),
-          sleep(50),
-        ])
+        const [model] = torn
+          ? curState.model
+          : await Promise.all([this.getModel(), sleep(50)])
         return {
           ...nextState,
           // now update to new model
@@ -124,11 +133,8 @@ export class PeekStore {
 
   // make this not change if not needed
   state: PeekStoreItemState = react(
-    () => [this.tornState, this.internalState],
-    ([tornState, { lastState, curState }]) => {
-      if (tornState) {
-        return tornState
-      }
+    () => this.internalState,
+    ({ lastState, curState }) => {
       if (this.willHide) {
         return lastState
       }
@@ -140,9 +146,6 @@ export class PeekStore {
   )
 
   get isShown() {
-    if (this.tornState) {
-      return true
-    }
     return this.internalState.isShown
   }
 
@@ -208,7 +211,6 @@ export class PeekStore {
 
   clearTorn = () => {
     this.dragOffset = null
-    this.tornState = null
   }
 
   get framePosition() {
@@ -230,7 +232,6 @@ export class PeekStore {
   }
 
   tearPeek = () => {
-    this.tornState = { ...this.state }
     Actions.tearPeek()
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }

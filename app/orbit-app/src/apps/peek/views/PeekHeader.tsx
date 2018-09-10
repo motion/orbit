@@ -9,6 +9,7 @@ import { PeekContents } from '../PeekPaneProps'
 import { TitleBar } from './TitleBar'
 import { CSSPropertySet } from '@mcro/gloss'
 import { Glint } from '@mcro/ui'
+import { ControlButton } from '../../../views/ControlButton'
 
 type Props = PeekContents & {
   peekStore?: PeekStore
@@ -146,9 +147,12 @@ export class PeekHeaderContent extends React.Component<Props> {
                   <UI.Button icon="arrowminleft" circular size={0.8} />
                 )} */}
                   <UI.View flex={1} />
-                  {/* {!!peekStore.tornState && (
-                  <ControlButton icon="z" onClick={peekStore.tearPeek} />
-                )} */}
+                  {/* min/max controls */}
+                  {/* {!!peekStore.appState.torn && (
+                    <>
+                      <ControlButton icon="z" />
+                    </>
+                  )} */}
                   {titleAfter}
                 </UI.Row>
               </>

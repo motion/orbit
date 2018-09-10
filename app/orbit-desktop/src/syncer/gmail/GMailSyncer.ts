@@ -7,6 +7,7 @@ import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign, sequence } from '../../utils'
+import { BitUtils } from '../../utils/BitUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GMailLoader } from './GMailLoader'
 import { GMailMessageParser } from './GMailMessageParser'
@@ -209,7 +210,7 @@ export class GMailSyncer implements IntegrationSyncer {
       messages
     }
 
-    assign(bit, {
+    assign(bit, BitUtils.create({
       target: 'bit',
       id,
       integration: 'gmail',
@@ -222,7 +223,7 @@ export class GMailSyncer implements IntegrationSyncer {
       bitUpdatedAt: lastMessageParser.getDate(),
       webLink: `https://mail.google.com/mail/u/0/#inbox/` + thread.id,
       settingId: this.setting.id,
-    })
+    }))
 
     // adding bit people
     if (!bit.people)

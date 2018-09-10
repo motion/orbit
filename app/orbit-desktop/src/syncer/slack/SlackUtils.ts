@@ -15,7 +15,7 @@ export class SlackUtils {
   static filterChannelsBySettings(
     channels: SlackChannel[],
     setting: SettingEntity,
-  ) {
+  ) {                                
     const values = setting.values as SlackSettingValues
     const settingChannels =
       values.channels /*|| {

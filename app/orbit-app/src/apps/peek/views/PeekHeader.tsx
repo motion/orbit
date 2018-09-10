@@ -142,17 +142,12 @@ export class PeekHeaderContent extends React.Component<Props> {
                   zIndex={10000}
                   alignItems="center"
                 >
-                  <WindowControls onClose={peekStore.clearPeek} />
-                  {/* {!!peekStore.hasHistory && (
-                  <UI.Button icon="arrowminleft" circular size={0.8} />
-                )} */}
+                  <WindowControls
+                    onClose={peekStore.clearPeek}
+                    onMax={peekStore.isTorn ? peekStore.handleMaximize : null}
+                    onMin={peekStore.isTorn ? peekStore.handleMinimize : null}
+                  />
                   <UI.View flex={1} />
-                  {/* min/max controls */}
-                  {!!peekStore.isTorn && (
-                    <>
-                      <ControlButton icon="z" />
-                    </>
-                  )}
                   {titleAfter}
                 </UI.Row>
               </>

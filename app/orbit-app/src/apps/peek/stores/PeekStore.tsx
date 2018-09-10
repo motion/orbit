@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { react, on, ensure } from '@mcro/black'
+import { react, on, ensure, cancel } from '@mcro/black'
 import { App } from '@mcro/stores'
 import {
   BitRepository,
@@ -77,12 +77,13 @@ export class PeekStore {
       if (!nextState.willShow) {
         setValue(nextState)
       }
-      if (torn) {
-        return
+      // dont update model if already shown and has model
+      if (torn && curState.model) {
+        throw cancel
       }
       if (isShown) {
         // wait and fetch in parallel
-        const model = await Promise.all([this.getModel(), sleep()])[0]
+        const model = (await Promise.all([this.getModel(), sleep()]))[0]
         return {
           ...nextState,
           // now update to new model
@@ -245,6 +246,14 @@ export class PeekStore {
     // this *shouldnt* jitter, technically
     this.dragOffset = [0, 0]
     Actions.finishPeekDrag(this.framePosition)
+  }
+
+  handleMaximize = () => {
+    // todo
+  }
+
+  handleMinimize = () => {
+    // todo
   }
 
   openItem = () => {

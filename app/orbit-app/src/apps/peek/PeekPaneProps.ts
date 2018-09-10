@@ -1,5 +1,4 @@
 import { Bit, PersonBit, Setting } from '@mcro/models'
-import { AppStore } from '../AppStore'
 import { PeekStore } from './stores/PeekStore'
 import { AppConfig } from '@mcro/stores'
 import { SelectionStore } from '../orbit/orbitDocked/SelectionStore'
@@ -26,7 +25,6 @@ export type PeekPaneProps = {
   scrollToHighlight?: () => void
   model?: Bit | PersonBit | Setting
   selectionStore: SelectionStore
-  appStore: AppStore
   peekStore: PeekStore
   appConfig: AppConfig
   children: (a: PeekContents) => JSX.Element

@@ -1,7 +1,6 @@
 import { react, on, isEqual, ensure } from '@mcro/black'
-import { App, Electron } from '@mcro/stores'
-import * as Helpers from '../../../helpers'
-import { AppStore } from '../../AppStore'
+import { App } from '@mcro/stores'
+import { OrbitStore } from '../../OrbitStore'
 import { QueryStore } from './QueryStore'
 import { KeyboardStore } from '../../../stores/KeyboardStore'
 import { Actions } from '../../../actions/Actions'
@@ -31,7 +30,7 @@ export type SelectionGroup = {
 // selection store
 export class SelectionStore {
   props: {
-    appStore: AppStore
+    orbitStore: OrbitStore
     queryStore: QueryStore
     keyboardStore: KeyboardStore
   }
@@ -59,7 +58,7 @@ export class SelectionStore {
       }
     })
 
-    this.props.appStore.onPinKey(key => {
+    this.props.orbitStore.onPinKey(key => {
       if (key === 'Delete') {
         this.props.queryStore.setQuery('')
         return

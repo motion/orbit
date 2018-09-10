@@ -2,11 +2,19 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { NotFound } from './views/NotFound'
 import Router from './router'
-import { view, on } from '@mcro/black'
+import { view, on, isEqual } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
 
 export class RootView extends React.Component {
+  resizeInterval = setInterval(() => {
+    if (!App.setState) return
+    const screenSize = [window.innerWidth, window.innerHeight]
+    if (!isEqual(App.state.screenSize, screenSize)) {
+      App.setState({ screenSize })
+    }
+  }, 1000)
+
   state = {
     error: null,
   }
@@ -36,6 +44,10 @@ export class RootView extends React.Component {
 
   componentDidCatch(error) {
     this.setState({ error })
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.resizeInterval)
   }
 
   clearErrors() {

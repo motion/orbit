@@ -5,47 +5,39 @@ import * as UI from '@mcro/ui'
 import * as PeekPanes from './panes'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './views/PeekFrame'
-import { AppStore } from '../AppStore'
 import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
 import { SelectionStore } from '../orbit/orbitDocked/SelectionStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
 
 type Props = {
-  appStore?: AppStore
   peekStore?: PeekStore
   selectionStore?: SelectionStore
 }
 
 const decorator = compose(
-  view.attach('appStore', 'searchStore'),
+  view.attach('searchStore'),
   view.provide({
     peekStore: PeekStore,
   }),
 )
 
-export const Peek = decorator(
-  ({ appStore, selectionStore, peekStore }: Props) => {
-    return (
-      <UI.Theme name="light">
-        <PeekFrame>
-          <PeekPageInner
-            appStore={appStore}
-            selectionStore={selectionStore}
-            peekStore={peekStore}
-          />
-        </PeekFrame>
-      </UI.Theme>
-    )
-  },
-)
+export const Peek = decorator(({ selectionStore, peekStore }: Props) => {
+  return (
+    <UI.Theme name="light">
+      <PeekFrame>
+        <PeekPageInner selectionStore={selectionStore} peekStore={peekStore} />
+      </PeekFrame>
+    </UI.Theme>
+  )
+})
 
 type PeekPane = React.SFC<PeekPaneProps>
 
 @view
 class PeekPageInner extends React.Component<Props> {
   render() {
-    const { peekStore, appStore, selectionStore } = this.props
+    const { peekStore, selectionStore } = this.props
     if (!peekStore.state) {
       return null
     }
@@ -68,7 +60,6 @@ class PeekPageInner extends React.Component<Props> {
         key={(model && model.id) || appConfig.id || Math.random()}
         appConfig={appConfig}
         model={model}
-        appStore={appStore}
         peekStore={peekStore}
         selectionStore={selectionStore}
       >

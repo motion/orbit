@@ -3,7 +3,6 @@ import { App } from '@mcro/stores'
 import { react, ensure } from '@mcro/black'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
-import { AppStore } from '../../AppStore'
 import { Bit } from '@mcro/models'
 import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { FindOptions } from 'typeorm'
@@ -103,7 +102,6 @@ const getSearchResults = async ({
 
 export class SearchStore {
   props: {
-    appStore: AppStore
     paneManagerStore: PaneManagerStore
     selectionStore: SelectionStore
     appsStore: AppsStore
@@ -199,7 +197,7 @@ export class SearchStore {
       if (isFilteringSlack) {
         channelResults = matchSort(
           query.split(' ')[0],
-          this.props.appStore.services.slack.activeChannels.map(channel => ({
+          this.props.appsStore.services.slack.activeChannels.map(channel => ({
             id: channel.id,
             title: `#${channel.name}`,
             icon: 'slack',
@@ -210,7 +208,7 @@ export class SearchStore {
         message = `Searching ${channelResults[0].title}`
       }
       // filtered search
-      if (isFilteringChannel && this.props.appStore.services.slack) {
+      if (isFilteringChannel && this.props.appsStore.services.slack) {
         message = 'SPACE to search selected channel'
         results = channelResults
         return setValue({

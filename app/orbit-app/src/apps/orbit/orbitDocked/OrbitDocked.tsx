@@ -12,7 +12,7 @@ import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { BORDER_RADIUS } from '../../../constants'
 import { SearchStore } from './SearchStore'
-import { AppStore } from '../../AppStore'
+import { OrbitStore } from '../../OrbitStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
@@ -24,7 +24,7 @@ import { KeyboardStore } from '../../../stores/KeyboardStore'
 type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
-  appStore?: AppStore
+  appStore?: OrbitStore
   // store?: OrbitDockedStore
 }
 
@@ -105,7 +105,7 @@ const OrbitDockedInner = view({
 //   )
 // }
 
-@view.attach('appStore', 'appsStore')
+@view.attach('orbitStore', 'appsStore')
 @view.provide({
   queryStore: QueryStore,
   keyboardStore: KeyboardStore,

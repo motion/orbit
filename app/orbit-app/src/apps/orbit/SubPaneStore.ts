@@ -110,8 +110,8 @@ export class SubPaneStore {
     () => [this.fullHeight, this.positionState.isActive],
     async ([height, isActive]) => {
       ensure('is active', isActive)
-      ensure('new value', height !== this.props.appStore.contentHeight)
-      this.props.appStore.setContentHeight(height)
+      ensure('new value', height !== this.props.orbitStore.contentHeight)
+      this.props.orbitStore.setContentHeight(height)
     },
   )
 

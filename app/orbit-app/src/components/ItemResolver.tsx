@@ -3,7 +3,6 @@ import { ResolvePerson } from './resolve/ResolvePerson'
 import { ResolveBit } from './resolve/ResolveBit'
 import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit, PersonBit } from '@mcro/models'
-import { AppStore } from '../apps/AppStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { Setting } from '@mcro/models'
 import {
@@ -34,7 +33,6 @@ export type ResolvedItem = {
 
 export type ItemResolverProps = {
   model?: Bit | Person | PersonBit | Setting
-  appStore?: AppStore
   isExpanded?: boolean
   children: ((a: ResolvedItem) => React.ReactNode)
   shownLimit?: number

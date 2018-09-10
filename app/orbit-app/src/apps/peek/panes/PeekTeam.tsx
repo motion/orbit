@@ -10,7 +10,6 @@ export class PeekTeam extends React.Component<PeekPaneProps> {
     // const BitContent = bitContents(bit)
     // return (
     //   <BitContent
-    //     appStore={appStore}
     //     bit={bit}
     //     shownLimit={Infinity}
     //     isExpanded

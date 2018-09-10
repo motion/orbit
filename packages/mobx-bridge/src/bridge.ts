@@ -15,7 +15,6 @@ export * from './proxySetters'
 export const WebSocket = WS
 export const ReconnectingWebSocket = RWebSocket
 
-const root = typeof window !== 'undefined' ? window : require('global')
 const MESSAGE_SPLIT_VAL = '**|**'
 const stringifyObject = obj =>
   stringify(obj, {
@@ -23,7 +22,13 @@ const stringifyObject = obj =>
     singleQuotes: true,
     inlineCharacterLimit: 12,
   })
-const immediate = () => new Promise(res => setImmediate(res))
+
+const isBrowser = typeof window !== 'undefined'
+const root = isBrowser ? window : require('global')
+
+// only debounce on browser for fluidity, desktop should be immediate
+const runNow = x => (isBrowser ? setImmediate(x) : x())
+const immediate = () => new Promise(res => runNow(res))
 
 type Disposer = () => void
 
@@ -91,7 +96,8 @@ export class BridgeManager {
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {
-      this.setState(initialState, false)
+      console.log('not sending initial state', initialState)
+      this.setState(initialState, true)
     }
     // setup start/quit actions
     if (typeof window !== 'undefined') {
@@ -261,7 +267,7 @@ export class BridgeManager {
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  setState = (newState, shouldSend = true) => {
+  setState = (newState, ignoreSend?) => {
     if (!this.started) {
       throw new Error(
         'Not started, can only call setState on the app that starts it.',
@@ -282,7 +288,7 @@ export class BridgeManager {
     }
     // update our own state immediately so its sync
     const changedState = this.deepMergeMutate(this.state, newState)
-    if (shouldSend) {
+    if (!ignoreSend) {
       this.sendChangedState(changedState)
     }
     return changedState
@@ -290,7 +296,7 @@ export class BridgeManager {
 
   private sendChangedState(changedState: Object) {
     if (changedState) {
-      // log(`changedState: ${JSON.stringify(changedState)}`)
+      log(`sendChangedState: ${JSON.stringify(changedState)}`)
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
       } else {
@@ -299,17 +305,19 @@ export class BridgeManager {
           this._queuedState = true
           return changedState
         }
-        // setTimeout to batch sending
-        if (!this.queuedState.length) {
-          setTimeout(this.sendQueuedState)
-        }
+        const alreadyQueued = !!this.queuedState.length
         this.queuedState.push({ state: changedState, source: this._source })
+        // its already queued to send
+        if (!alreadyQueued) {
+          runNow(this.sendQueuedState)
+        }
       }
     }
   }
 
   sendQueuedState = () => {
     for (const data of this.queuedState) {
+      console.log('sending', data)
       try {
         this._socket.send(JSON.stringify(data))
       } catch (err) {
@@ -420,7 +428,7 @@ export class BridgeManager {
       // this prevents blockages on sending
       // this would happen when sockets are on desktop side
       // and then any Store.setState call will hang...
-      setImmediate(() => {
+      runNow(() => {
         this._socket.send(JSON.stringify({ message, to: Store.source }))
       })
     }

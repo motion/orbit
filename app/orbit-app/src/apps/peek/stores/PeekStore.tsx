@@ -2,7 +2,6 @@ import * as React from 'react'
 import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { PEEK_THEMES } from '../../../constants'
-import { AppStore } from '../../AppStore'
 import {
   BitRepository,
   SettingRepository,
@@ -28,7 +27,6 @@ export type PeekStoreState = {
 export class PeekStore {
   props: {
     id: number
-    appStore: AppStore
     fixed?: boolean
   }
 

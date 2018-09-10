@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { BitRepository, SettingRepository } from '../repositories'
 import { Peek } from './peek/Peek'
 import { Orbit } from './orbit/Orbit'
-import { AppStore } from './AppStore'
+import { OrbitStore } from './OrbitStore'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { settingToAppConfig } from '../helpers/toAppConfig/settingToAppConfig'
@@ -51,7 +51,7 @@ export class IsolateHome extends React.Component {
 }
 
 @view.provide({
-  appStore: AppStore,
+  orbitStore: OrbitStore,
 })
 export class IsolatePage extends React.Component {
   render() {

@@ -6,17 +6,27 @@ import { logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
 import { BrowserWindow } from 'electron'
+import { ElectronStore } from '../stores/ElectronStore'
 
 const log = logger('electron')
 const Config = getGlobalConfig()
 
 type Props = {
   id: number
+  electronStore: ElectronStore
 }
 
 class AppWindowStore {
   props: Props
   window: BrowserWindow = null
+
+  didMount() {
+    this.props.electronStore.apps.add(this)
+  }
+
+  willUnmount() {
+    this.props.electronStore.apps.delete(this)
+  }
 
   get ignoreMouseEvents() {
     return true
@@ -27,11 +37,14 @@ class AppWindowStore {
   }
 
   handleRef = ref => {
-    this.window = ref.window
+    if (ref) {
+      this.window = ref.window
+    }
   }
 }
 
 const decorator = compose(
+  view.attach('electronStore'),
   view.attach({
     store: AppWindowStore,
   }),

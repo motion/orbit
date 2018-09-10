@@ -51,7 +51,6 @@ class MainStore {
 export class OrbitWindow extends React.Component<Props> {
   state = {
     show: false,
-    position: [0, 0],
   }
 
   componentDidMount() {
@@ -69,10 +68,6 @@ export class OrbitWindow extends React.Component<Props> {
     this.setState({
       show: true,
     })
-  }
-
-  handleMove = position => {
-    this.setState({ position })
   }
 
   handleBlur = () => {
@@ -93,10 +88,12 @@ export class OrbitWindow extends React.Component<Props> {
     log(`Rendering main window at url ${url}`)
     return (
       <Window
-        alwaysOnTop
+        // alwaysOnTop
         ignoreMouseEvents={!Electron.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}
+        position={[0, 0]}
+        size={Electron.state.screenSize}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
@@ -115,9 +112,6 @@ export class OrbitWindow extends React.Component<Props> {
           // scrollBounce: true,
           // offscreen: true,
         }}
-        position={this.state.position}
-        size={Electron.state.screenSize}
-        onMove={this.handleMove}
         onBlur={this.handleBlur}
         onFocus={this.handleFocus}
       />

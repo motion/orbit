@@ -21,6 +21,8 @@ export class ElectronStore {
   clear = Date.now()
   show = 2
 
+  apps = new Set()
+
   async didMount() {
     root.Root = this
     root.restart = this.restart

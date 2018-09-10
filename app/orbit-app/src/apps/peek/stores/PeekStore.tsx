@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { PEEK_THEMES } from '../../../constants'
 import {
   BitRepository,
   SettingRepository,
@@ -30,7 +29,6 @@ export class PeekStore {
     fixed?: boolean
   }
 
-  debug = true
   dragOffset?: [number, number] = null
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
@@ -41,32 +39,6 @@ export class PeekStore {
 
   get isPeek() {
     return App.appsState[0].id === this.props.id
-  }
-
-  get highlights(): HTMLDivElement[] {
-    this.state // update on state...?
-    return Array.from(this.contentFrame.current.querySelectorAll('.highlight'))
-  }
-
-  scrollToHighlight = react(
-    () => App.peekState.highlightIndex,
-    async (index, { sleep }) => {
-      ensure('index number', index === 'number')
-      const frame = this.contentFrame.current
-      ensure('has frame', !!frame)
-      await sleep(150)
-      const activeHighlight = this.highlights[index]
-      ensure('active highlight', !!activeHighlight)
-      // move frame to center the highlight but 100px more towards the top which looks nicer
-      frame.scrollTop = activeHighlight.offsetTop - frame.clientHeight / 2 + 100
-    },
-  )
-
-  goToNextHighlight = () => {
-    const { highlightIndex } = App.peekState
-    // loop back to beginning once at end
-    const next = (highlightIndex + 1) % this.highlights.length
-    Actions.setHighlightIndex(next)
   }
 
   // appConfig given the id
@@ -105,11 +77,12 @@ export class PeekStore {
       if (!nextState.willShow) {
         setValue(nextState)
       }
+      if (torn) {
+        return
+      }
       if (isShown) {
         // wait and fetch in parallel
-        const model = torn
-          ? curState.model
-          : (await Promise.all([this.getModel(), sleep()]))[0]
+        const model = await Promise.all([this.getModel(), sleep()])[0]
         return {
           ...nextState,
           // now update to new model
@@ -172,7 +145,7 @@ export class PeekStore {
   }
 
   getModel = async () => {
-    const { id, type } = App.peekState.appConfig
+    const { id, type } = this.appState.appConfig
     let selectedItem = null
     if (type === 'person' || type === 'person-bit') {
       selectedItem = await PersonBitRepository.findOne({
@@ -188,18 +161,6 @@ export class PeekStore {
       selectedItem = await SettingRepository.findOne(id)
     }
     return selectedItem
-  }
-
-  get theme() {
-    if (!this.state.appConfig) {
-      return PEEK_THEMES.base
-    }
-    const { type, integration } = this.state.appConfig
-    return (
-      PEEK_THEMES.integration[integration] ||
-      PEEK_THEMES.type[type] ||
-      PEEK_THEMES.base
-    )
   }
 
   get hasHistory() {
@@ -222,7 +183,7 @@ export class PeekStore {
     }
     // determine x adjustments
     const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
-    const position = App.peekState.position
+    const position = this.appState.position
     let x = position[0]
     let y = position[1] + animationAdjust
     if (this.dragOffset) {
@@ -233,7 +194,14 @@ export class PeekStore {
     return [x, y]
   }
 
+  get isTorn() {
+    return this.appState.torn
+  }
+
   tearPeek = () => {
+    if (this.isTorn) {
+      return false
+    }
     Actions.tearPeek()
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
@@ -267,16 +235,16 @@ export class PeekStore {
 
   handleDragMove = e => {
     const { x, y } = this.initMouseDown
-    // App.setAppState({
-    //   position
-    // })
     this.dragOffset = [e.clientX - x, e.clientY - y]
   }
 
   handleDragEnd = () => {
     this.clearDragHandlers()
     // now that it's pinned, update position
-    // Actions.finishPeekDrag(this.framePosition)
+    // reset drag offset while simultaneously setting official position
+    // this *shouldnt* jitter, technically
+    this.dragOffset = [0, 0]
+    Actions.finishPeekDrag(this.framePosition)
   }
 
   openItem = () => {

@@ -12,6 +12,7 @@ import * as Repositories from '../repositories'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { Actions } from '../actions/Actions'
+import { stringify } from '@mcro/helpers'
 
 // add require('') to window for easy debugging
 // for example require('lodash')

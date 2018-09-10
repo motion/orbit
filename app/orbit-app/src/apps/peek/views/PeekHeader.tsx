@@ -148,11 +148,11 @@ export class PeekHeaderContent extends React.Component<Props> {
                 )} */}
                   <UI.View flex={1} />
                   {/* min/max controls */}
-                  {/* {!!peekStore.appState.torn && (
+                  {!!peekStore.isTorn && (
                     <>
                       <ControlButton icon="z" />
                     </>
-                  )} */}
+                  )}
                   {titleAfter}
                 </UI.Row>
               </>

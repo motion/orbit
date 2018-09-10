@@ -56,8 +56,10 @@ export class HoverStateStore {
     const orbitHovered =
       App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
     let peekHovered = Electron.hoverState
-    for (const app of App.appsState) {
-      peekHovered[app.id] = isMouseOver(app, mousePos)
+    for (const [index, app] of App.appsState.entries()) {
+      const isPeek = index === 0
+      const hovered = isMouseOver(app, mousePos)
+      peekHovered[app.id] = isPeek ? !!app.target && hovered : hovered
     }
     Electron.setHoverState({ peekHovered, orbitHovered })
     return

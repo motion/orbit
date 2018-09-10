@@ -2,6 +2,12 @@
 
 - Monday -- _finish great "app" demo_
   - Fully working tear away and continue using
+    - tear away bug fixes
+    - show extra window controls on tear away
+    - peek works after tear away
+    - tear away multiple apps working
+    - show icons for each app
+    - focus icon focuses app / brings to front
   - Make demo app nicer:
     - Sidebar selectable list items
     - Working tabs

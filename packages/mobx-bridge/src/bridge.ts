@@ -126,12 +126,7 @@ export class BridgeManager {
       actions: {
         // stores that first connect send a call to get initial state
         // this is where its received by other apps
-        getState: ({ source, socket }) => {
-          // dont sync you to yourself
-          if (source === this._source) {
-            console.log('ignore sending getState to self', source)
-            return
-          }
+        getState: ({ /* source,  */ socket }) => {
           for (const name of Object.keys(stores)) {
             this.socketManager.sendState(socket, stores[name].state, name)
           }
@@ -218,10 +213,7 @@ export class BridgeManager {
         )
         this._queuedState = false
       }
-      // get initial state
-      this._socket.send(
-        JSON.stringify({ action: 'getState', source: this._source }),
-      )
+      this.getCurrentState()
     }
     this._socket.onclose = () => {
       this._wsOpen = false
@@ -244,6 +236,13 @@ export class BridgeManager {
         console.log('socket err', err.message, err.stack)
       }
     }
+  }
+
+  getCurrentState = () => {
+    // get initial state
+    this._socket.send(
+      JSON.stringify({ action: 'getState', source: this._source }),
+    )
   }
 
   handleMessage = data => {

@@ -54,7 +54,6 @@ class PeekPageInner extends React.Component<Props> {
       console.error('none', type)
       return <div>no pane found</div>
     }
-    console.log('render peek page', model, type)
     return (
       <PeekContentsView
         key={(model && model.id) || appConfig.id || Math.random()}

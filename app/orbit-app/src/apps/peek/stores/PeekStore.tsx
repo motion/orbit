@@ -82,7 +82,6 @@ export class PeekStore {
     () => this.appState,
     async (appState, { getValue, setValue, sleep }) => {
       ensure('has app state', !!appState)
-      console.log('appState', appState)
       const { appConfig, torn, ...rest } = appState
       await sleep()
       const lastState = getValue().curState

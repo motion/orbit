@@ -102,7 +102,7 @@ export class OrbitItemStore {
         }
         ensure('target', !!this.target)
         // fluidity
-        await sleep(16)
+        await sleep()
         Actions.setPeekApp(this.target, this.position)
       }
     },

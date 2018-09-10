@@ -60,7 +60,6 @@ export const PeekBit = ({
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {appConfig.subType}</div>
   }
-  console.log('peekbit...', bit)
   return (
     <ItemResolverDecorationContext.Provider
       value={{

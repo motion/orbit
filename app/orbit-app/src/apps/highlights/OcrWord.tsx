@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { HL_PAD } from './helpers'
-import { MAC_TOPBAR_HEIGHT, wordKey } from '@mcro/constants'
+import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
+import { wordKey } from '@mcro/helpers'
 import { App } from '@mcro/stores'
 
 const Word = view({

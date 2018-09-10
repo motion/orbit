@@ -47,7 +47,7 @@ window['color'] = color
 window['dateFns'] = dateFns
 window['Logger'] = Logger
 window['toJS'] = toJS
-window['stringify'] = Helpers.stringify
+window['stringify'] = stringify
 window['Actions'] = Actions
 
 // make the various model/repositories global

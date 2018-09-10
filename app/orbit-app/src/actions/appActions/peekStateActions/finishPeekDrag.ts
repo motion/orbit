@@ -1,7 +1,7 @@
-import { App } from '@mcro/stores'
+import { setAppState } from '../setAppState'
 
 export function finishPeekDrag(position) {
-  App.setPeekState({
+  setAppState({
     position,
   })
 }

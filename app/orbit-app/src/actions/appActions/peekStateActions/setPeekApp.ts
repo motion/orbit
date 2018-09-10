@@ -1,4 +1,4 @@
-import { Bit, PersonBit } from '@mcro/models'
+import { Bit, PersonBit, Setting } from '@mcro/models'
 import { App, AppConfig } from '@mcro/stores'
 import { peekPosition } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
@@ -7,12 +7,11 @@ import { PeekTarget } from './types'
 import { logger } from '@mcro/logger'
 import { personToAppConfig } from '../../../helpers/toAppConfig/personToAppConfig'
 import { bitToAppConfig } from '../../../helpers/toAppConfig/bitToAppConfig'
+import { setAppState } from '../setAppState'
 
 export const log = logger('peekApp')
 
-type PartialPeekState = { target: PeekTarget } & Partial<
-  typeof App.state.peekState
->
+type PartialPeekState = { target: PeekTarget } & Partial<typeof App.peekState>
 
 // using this ensures it clears old properties
 // because App.setState merges not replaces
@@ -20,7 +19,6 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   id: '',
   type: '',
   config: null,
-  body: '',
   title: '',
   icon: '',
   subType: '',
@@ -28,7 +26,7 @@ const DEFAULT_APP_CONFIG: AppConfig = {
 }
 
 export function setPeekApp(
-  item: PersonBit | Bit | AppConfig,
+  item: PersonBit | Bit | Setting | AppConfig,
   target?: PeekTarget,
 ) {
   invariant(item, 'Must pass item')
@@ -45,7 +43,7 @@ export function setPeekApp(
 
 function setPeekState({ target, appConfig, peekId }: PartialPeekState) {
   const realTarget = getTargetPosition(target)
-  App.setPeekState({
+  setAppState({
     peekId,
     appConfig: {
       ...DEFAULT_APP_CONFIG,
@@ -56,7 +54,9 @@ function setPeekState({ target, appConfig, peekId }: PartialPeekState) {
   })
 }
 
-export function getAppConfig(item: PersonBit | Bit | AppConfig): AppConfig {
+export function getAppConfig(
+  item: PersonBit | Bit | Setting | AppConfig,
+): AppConfig {
   if (!item['target']) {
     return item as AppConfig
   }

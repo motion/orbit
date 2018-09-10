@@ -34,11 +34,12 @@ export class SocketManager {
     return !!this.activeSockets.length
   }
 
-  send = (socket, state: Object, source) => {
+  sendState = (socket, state: Object, source) => {
     if (!state) {
       throw new Error(`No state provided for SocketManager.send: ${state}`)
     }
     try {
+      console.log('sending state', state)
       socket.send(JSON.stringify({ source, state }))
     } catch (err) {
       log('error with scoket', err.message, err.stack)
@@ -109,6 +110,7 @@ export class SocketManager {
       // initial message
       if (action === 'getState') {
         this.identities[uid] = source
+        console.log('got a getState action, identities', this.identities)
       }
       if (this.actions[action]) {
         this.actions[action]({ source, socket })
@@ -133,7 +135,9 @@ export class SocketManager {
     let lastCount = 0
     setInterval(() => {
       const count = this.activeSockets.length
-      if (lastCount != count) log(count, 'connections')
+      if (lastCount !== count) {
+        log(count, 'connections')
+      }
       lastCount = count
     }, 5000)
     this.wss.on('connection', socket => {

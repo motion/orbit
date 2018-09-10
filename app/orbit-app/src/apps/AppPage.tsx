@@ -5,6 +5,7 @@ import { AppStore } from './AppStore'
 import { AppsStore } from './AppsStore'
 import { MainShortcutHandler } from '../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../views'
+import { APP_ID } from '../constants'
 
 @view.provide({
   appsStore: AppsStore,
@@ -15,12 +16,11 @@ export class AppPage extends React.Component<{
   appStore: AppStore
 }> {
   render() {
-    const id = +window.location.search.match(/id=([0-9]+)/)[1]
-    console.log('app id', id)
+    console.log('app id', APP_ID)
     return (
       <MainShortcutHandler>
         <AppWrapper>
-          <Peek id={id} />
+          <Peek id={APP_ID} />
         </AppWrapper>
       </MainShortcutHandler>
     )

@@ -265,7 +265,7 @@ export class PeekStore {
 
   handleDragMove = e => {
     const { x, y } = this.initMouseDown
-    // App.setPeekState({
+    // App.setAppState({
     //   position
     // })
     this.dragOffset = [e.clientX - x, e.clientY - y]
@@ -274,7 +274,7 @@ export class PeekStore {
   handleDragEnd = () => {
     this.clearDragHandlers()
     // now that it's pinned, update position
-    Actions.finishPeekDrag(this.framePosition)
+    // Actions.finishPeekDrag(this.framePosition)
   }
 
   openItem = () => {

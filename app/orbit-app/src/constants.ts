@@ -2,6 +2,11 @@ export * from '@mcro/constants'
 
 import * as UI from '@mcro/ui'
 
+export const IS_APP = window.location.pathname === '/app'
+export const APP_ID = IS_APP
+  ? +window.location.search.match(/id=([0-9]+)/)[1]
+  : null
+
 export const BORDER_RADIUS = 15
 export const CHROME_PAD = 1
 export const PEEK_BORDER_RADIUS = 7

@@ -1,5 +1,5 @@
-import { App } from '@mcro/stores'
+// import { setAppState } from './setAppState';
 
 export function setHighlightIndex(index: number) {
-  App.setPeekState({ highlightIndex: index })
+  // setAppState({ highlightIndex: index })
 }

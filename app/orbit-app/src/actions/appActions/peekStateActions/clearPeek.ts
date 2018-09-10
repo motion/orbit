@@ -1,7 +1,7 @@
-import { App } from '@mcro/stores'
+import { setAppState } from '../setAppState'
 
 export function clearPeek() {
-  App.setPeekState({
+  setAppState({
     target: null,
     peekId: null,
     appConfig: null,

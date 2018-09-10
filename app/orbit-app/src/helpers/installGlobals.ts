@@ -46,6 +46,7 @@ window['color'] = color
 window['dateFns'] = dateFns
 window['Logger'] = Logger
 window['toJS'] = toJS
+window['stringify'] = Helpers.stringify
 
 // make the various model/repositories global
 for (const repo in Repositories) {

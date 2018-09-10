@@ -1,4 +1,7 @@
 import fuzzySort from 'fuzzysort'
+import { toJS } from 'mobx'
+
+export const stringify = x => JSON.stringify(toJS(x))
 
 export const deepClone = obj =>
   obj

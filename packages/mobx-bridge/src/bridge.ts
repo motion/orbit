@@ -23,8 +23,7 @@ const stringifyObject = obj =>
     singleQuotes: true,
     inlineCharacterLimit: 12,
   })
-const requestIdle = (cb?: Function) =>
-  new Promise(res => setTimeout(cb || res, 0))
+const immediate = () => new Promise(res => setImmediate(res))
 
 type Disposer = () => void
 
@@ -39,6 +38,7 @@ type Options = {
 
 // we want non-granular updates on state changes
 export class BridgeManager {
+  port: number
   store: any
   socketManager: SocketManager
   started = false
@@ -66,43 +66,21 @@ export class BridgeManager {
       throw new Error('No source given for starting screen store')
     }
     log(`Starting bridge for ${store.source}...`)
-    const port = getGlobalConfig().ports.bridge
+    this.port = getGlobalConfig().ports.bridge
     // ensure only start once
     if (this.started) {
       throw new Error('Already started this store...')
     }
+    this._source = store.source
+    this._store = store
+    this._options = options
     this.started = true
     if (options.master) {
-      const stores = options.stores
-      log(`Starting socket manager on ${port}`)
-      this.socketManager = new SocketManager({
-        masterSource: 'Desktop',
-        port,
-        onState: (source, state) => {
-          // log(`onState ${JSON.stringify(state)}`)
-          this.deepMergeMutate(stores[source].state, state, {
-            ignoreKeyCheck: true,
-          })
-        },
-        actions: {
-          // stores that first connect send a call to get initial state
-          // this is where its received by other apps
-          getState: ({ source, socket }) => {
-            // dont sync you to yourself
-            if (source === this._source) return
-            for (const name of Object.keys(stores)) {
-              this.socketManager.send(socket, stores[name].state, name)
-            }
-          },
-          // message coming to Desktop
-          onMessage: this.handleMessage,
-        },
-      })
-      await this.socketManager.start()
+      await this.setupMaster()
     } else {
-      log(`Connecting socket to ${port}`)
+      log(`Connecting socket to ${this.port}`)
       this._socket = new ReconnectingWebSocket(
-        `ws://localhost:${port}`,
+        `ws://localhost:${this.port}`,
         undefined,
         {
           constructor: WebSocket,
@@ -110,9 +88,6 @@ export class BridgeManager {
       )
       this.setupClientSocket()
     }
-    this._source = store.source
-    this._store = store
-    this._options = options
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {
@@ -130,13 +105,43 @@ export class BridgeManager {
     }
   }
 
+  private async setupMaster() {
+    const stores = this._options.stores
+    log(`Starting socket manager on ${this.port}`)
+    this.socketManager = new SocketManager({
+      masterSource: 'Desktop',
+      port: this.port,
+      onState: (source, state) => {
+        log(`onState ${JSON.stringify(state)}`)
+        this.deepMergeMutate(stores[source].state, state, {
+          ignoreKeyCheck: true,
+        })
+      },
+      actions: {
+        // stores that first connect send a call to get initial state
+        // this is where its received by other apps
+        getState: ({ source, socket }) => {
+          // dont sync you to yourself
+          if (source === this._source) {
+            console.log('ignore sending getState to self', source)
+            return
+          }
+          for (const name of Object.keys(stores)) {
+            this.socketManager.sendState(socket, stores[name].state, name)
+          }
+        },
+        // message coming to Desktop
+        onMessage: this.handleMessage,
+      },
+    })
+    await this.socketManager.start()
+  }
+
   setupClientSocket = () => {
     // socket setup
     this._socket.onmessage = async ({ data }) => {
       if (!this._hasFetchedInitialState) {
-        // TODO: make this actually logically consistent
-        // has a few steps though and this is actually not bad for what we need
-        // just pretty shit code to understand why
+        // TODO: make this actually work
         setTimeout(() => {
           this._hasFetchedInitialState = true
         }, 40)
@@ -149,7 +154,7 @@ export class BridgeManager {
         this.handleMessage(data.slice(1))
         return
       }
-      await requestIdle()
+      await immediate()
       try {
         const messageObj = JSON.parse(data)
         if (!messageObj || typeof messageObj !== 'object') {
@@ -183,7 +188,7 @@ export class BridgeManager {
             `No state found for source (${source}) state (${state}) store(${store})`,
           )
         }
-        await requestIdle()
+        await immediate()
         this.deepMergeMutate(state, newState, { ignoreKeyCheck: true })
       } catch (err) {
         console.error(
@@ -201,7 +206,7 @@ export class BridgeManager {
       }
       // send state that hasnt been synced yet
       if (this._queuedState) {
-        console.log('opened, sending queued state now')
+        console.log('opened, sending queued state', this._queuedState)
         this._socket.send(
           JSON.stringify({ state: this.state, source: this._source }),
         )
@@ -256,7 +261,7 @@ export class BridgeManager {
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  setState = (newState, ignoreSocketSend?) => {
+  setState = (newState, shouldSend = true) => {
     if (!this.started) {
       throw new Error(
         'Not started, can only call setState on the app that starts it.',
@@ -277,9 +282,13 @@ export class BridgeManager {
     }
     // update our own state immediately so its sync
     const changedState = this.deepMergeMutate(this.state, newState)
-    if (ignoreSocketSend) {
-      return changedState
+    if (shouldSend) {
+      this.sendChangedState(changedState)
     }
+    return changedState
+  }
+
+  private sendChangedState(changedState: Object) {
     if (changedState) {
       // log(`changedState: ${JSON.stringify(changedState)}`)
       if (this._options.master) {
@@ -297,12 +306,16 @@ export class BridgeManager {
         this.queuedState.push({ state: changedState, source: this._source })
       }
     }
-    return changedState
   }
 
   sendQueuedState = () => {
     for (const data of this.queuedState) {
-      this._socket.send(JSON.stringify(data))
+      try {
+        this._socket.send(JSON.stringify(data))
+      } catch (err) {
+        console.log('error sending!', err.message)
+        console.log('data is', data)
+      }
     }
     this.queuedState = []
   }
@@ -312,9 +325,8 @@ export class BridgeManager {
   deepMergeMutate(
     stateObj: Object,
     newState: Object,
-    { ignoreKeyCheck = false, onlyKeys = null } = {},
-  ) // ignoreLog?: Boolean,
-  {
+    { ignoreKeyCheck = false, onlyKeys = null } = {}, // ignoreLog?: Boolean,
+  ) {
     let changed = null
     for (const key of Object.keys(newState)) {
       if (!ignoreKeyCheck) {

@@ -133,7 +133,7 @@ export default class DebugApps {
         )
       } catch (err) {
         if (err.message.indexOf('ECONNREFUSED') !== -1) return
-        console.log('dev err', err.message, err.stack)
+        console.log('dev err', err.message)
         resolve(null)
       }
     })

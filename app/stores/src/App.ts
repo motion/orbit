@@ -81,23 +81,6 @@ class AppStore {
     return this.state.appsState[0]
   }
 
-  mergePeekState = next => {
-    const state = { ...this.peekState }
-    this.bridge.deepMergeMutate(state, next, {
-      onlyKeys: Object.keys(defaultPeekState),
-    })
-    return state
-  }
-
-  setPeekState = (nextPeekState: Partial<typeof defaultPeekState>) => {
-    const [_old, ...appsState] = this.state.appsState
-    console.log('setPeekState, old:', _old, ', new:', nextPeekState)
-    const newPeekState = this.mergePeekState(nextPeekState)
-    App.setState({
-      appsState: [newPeekState, ...appsState],
-    })
-  }
-
   animationDuration = 90
 
   last: Boolean

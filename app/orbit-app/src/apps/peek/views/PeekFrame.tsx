@@ -8,6 +8,7 @@ import { ResizableBox } from '../../../views/ResizableBox'
 import { App } from '@mcro/stores'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { trace } from 'mobx'
+import { setAppState } from '../../../actions/appActions/setAppState'
 
 const SHADOW_PAD = 85
 
@@ -55,7 +56,7 @@ const PeekFrameContainer = view(UI.View, {
 })
 
 const handleResize = (_, { size }) => {
-  App.setPeekState({ size: [size.width, size.height] })
+  setAppState({ size: [size.width, size.height] })
 }
 
 export const PeekFrame = decorator(

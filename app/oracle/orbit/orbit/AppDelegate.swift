@@ -168,6 +168,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   func showWindow() {
     window.alphaValue = 1
+    // bring it to front
+    NSApp.activate(ignoringOtherApps: true)
   }
   
   func hideWindow() {

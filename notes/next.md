@@ -21,6 +21,8 @@ to sync with umed:
 
 # Nate
 
+- Multi-process app demo
+- move to new space (see Desktop.state.movedToNewSpace)
 - Pane model + default Pane.id = 0, Pane.name = 'Home'
 - Pane.feedOrder
 - Pane.hasMany Feed

@@ -32,6 +32,16 @@ class MainStore {
     this.window = ref.window
   }
 
+  disposeShow = null
+
+  didMount() {
+    Electron.onMessage(Electron.messages.BRING_TO_FRONT, () => {
+      if (this.window) {
+        this.window.show()
+      }
+    })
+  }
+
   moveToNewSpace = react(
     () => Desktop.state.movedToNewSpace,
     () => {

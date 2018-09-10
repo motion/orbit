@@ -104,6 +104,8 @@ export class Screen {
       await when(() => this.isStarted)
       if (visible) {
         this.oracle.showWindow()
+        // after bringing swift to front, bring electron to front
+        Desktop.sendMessage(Electron, Electron.messages.BRING_TO_FRONT)
       } else {
         this.oracle.hideWindow()
       }

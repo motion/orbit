@@ -13,6 +13,7 @@ const Config = getGlobalConfig()
 
 type Props = {
   id: number
+  isPeek: boolean
   electronStore: ElectronStore
 }
 
@@ -44,6 +45,12 @@ class AppWindowStore {
   handleRef = ref => {
     if (ref) {
       this.window = ref.window
+      if (this.props.isPeek) {
+        // set it above the OrbitWindow
+        this.window.setAlwaysOnTop(true, 'floating', 10)
+        this.window.setVisibleOnAllWorkspaces(true)
+        this.window.setFullScreenable(false)
+      }
     }
   }
 }

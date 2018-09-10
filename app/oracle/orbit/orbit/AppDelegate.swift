@@ -81,7 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    window.level = .normal // .floating to be on top
+    window.level = .floating // .floating to be on top
     window.backgroundColor = NSColor.clear
     window.alphaValue = 0
     window.isOpaque = false
@@ -169,7 +169,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func showWindow() {
     window.alphaValue = 1
     // bring it to front
-    NSApp.activate(ignoringOtherApps: true)
+//    NSApp.activate(ignoringOtherApps: true)
   }
   
   func hideWindow() {

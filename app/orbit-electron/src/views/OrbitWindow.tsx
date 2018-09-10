@@ -34,14 +34,6 @@ class MainStore {
 
   disposeShow = null
 
-  didMount() {
-    Electron.onMessage(Electron.messages.BRING_TO_FRONT, () => {
-      if (this.window) {
-        this.window.show()
-      }
-    })
-  }
-
   moveToNewSpace = react(
     () => Desktop.state.movedToNewSpace,
     () => {
@@ -55,8 +47,6 @@ class MainStore {
   handleFocus = async () => {
     console.log('!! electron focus')
     Electron.sendMessage(App, App.messages.SHOW)
-    // bring swift up...
-    Electron.sendMessage(Desktop, Desktop.messages.BRING_TO_FRONT)
     await sleep(16)
     // ...then re-bring this up above swift
     this.window.show()
@@ -103,7 +93,7 @@ export class OrbitWindow extends React.Component<Props> {
     log(`Rendering main window at url ${url}`)
     return (
       <Window
-        // alwaysOnTop
+        alwaysOnTop
         ignoreMouseEvents={!Electron.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}

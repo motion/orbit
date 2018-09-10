@@ -44,7 +44,6 @@ class DesktopStore {
     DEFOCUS_ORBIT: 'DEFOCUS_ORBIT',
     RESET_DATA: 'RESET_DATA',
     SEARCH_INDEX: 'SEARCH_INDEX',
-    BRING_TO_FRONT: 'BRING_TO_FRONT',
   }
 
   bridge = Bridge

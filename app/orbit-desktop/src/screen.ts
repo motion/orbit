@@ -99,13 +99,11 @@ export class Screen {
   )
 
   updateWindowVisibility = react(
-    () => !!App.orbitState.docked,
+    () => App.orbitState.docked,
     async (visible, { when, sleep }) => {
       await when(() => this.isStarted)
       if (visible) {
-        // after bringing swift to front, bring electron to front, but it takes
-        Desktop.sendMessage(Electron, Electron.messages.BRING_TO_FRONT)
-        await sleep()
+        console.log('bringing to front...')
         this.oracle.showWindow()
       } else {
         this.oracle.hideWindow()
@@ -151,11 +149,6 @@ export class Screen {
     console.log('starting screen...')
 
     // handle messages
-
-    const off3 = Desktop.onMessage(Desktop.messages.BRING_TO_FRONT, () => {
-      this.oracle.showWindow()
-    })
-    this.running.add({ dispose: off3 })
 
     // const off1 = Desktop.onMessage(
     //   Desktop.messages.TOGGLE_PAUSED,

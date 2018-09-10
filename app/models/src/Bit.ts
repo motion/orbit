@@ -12,6 +12,11 @@ export interface Bit {
   target: "bit"
 
   /**
+   * Generated bit id.
+   */
+  generatedId: string
+
+  /**
    * Bit id.
    */
   id: string
@@ -21,6 +26,21 @@ export interface Bit {
    * Duplicates information stored in the settings.
    */
   integration: IntegrationType
+
+  /**
+   * Setting id.
+   */
+  settingId: number
+
+  /**
+   * Original bit content author id.
+   */
+  authorId: number
+
+  /**
+   * Bit unique content hash.
+   */
+  contentHash: number
 
   /**
    * Database record creation time.
@@ -81,17 +101,8 @@ export interface Bit {
   /**
    * Setting has multiple bits it owns.
    * Setting is a Bit's owner.
-   *
-   * todo: remove nullable once we migrate all syncers into new model
    */
   setting: Setting
-
-  /**
-   * Setting id.
-   *
-   * todo: remove nullable once we migrate all syncers into new model
-   */
-  settingId: number
 
   /**
    * Additional bit data.

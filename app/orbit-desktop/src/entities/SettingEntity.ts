@@ -1,5 +1,4 @@
-import { ConfluenceSettingValues, IntegrationType, JiraSettingValues, Setting } from '@mcro/models'
-import { SettingValues } from '@mcro/models'
+import { ConfluenceSettingValues, IntegrationType, JiraSettingValues, Setting, SettingValues } from '@mcro/models'
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 @Entity()

@@ -18,7 +18,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { LocationEntity } from './LocationEntity'
@@ -30,11 +30,25 @@ export class BitEntity extends BaseEntity implements Bit {
   
   target: 'bit' = 'bit'
 
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
+  generatedId: string
+
+  @Index()
+  @Column({ unique: true })
   id: string
+
+  @Index()
+  @Column({ unique: true })
+  contentHash: number
 
   @Column({ type: String })
   integration: IntegrationType
+
+  @Column()
+  settingId: number
+
+  @Column({ nullable: true })
+  authorId: number
 
   @Index()
   @Column()
@@ -52,9 +66,6 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @Column({ nullable: true })
   desktopLink: string
-
-  @Column({ nullable: true })
-  settingId: number
 
   @Column({ type: 'simple-json', default: '{}' })
   data: BitData

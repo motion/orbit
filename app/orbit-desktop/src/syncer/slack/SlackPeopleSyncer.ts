@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { logger, LoggerInstance } from '@mcro/logger'
 import { Person } from '@mcro/models'
 import { SlackPersonData } from '@mcro/models'
 import { SlackSettingValues } from '@mcro/models'
@@ -10,7 +10,7 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SlackLoader } from './SlackLoader'
 import { SlackUser } from './SlackTypes'
 
-const log = logger('syncer:slack:people')
+const log = new LoggerInstance('syncer:slack:people')
 
 /**
  * Syncs Slack people.
@@ -26,29 +26,31 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    log(`loading API users`)
+    log.timer(`load API users`)
     const users = await this.loader.loadUsers()
-    log(`users loaded`, users)
+    log.timer(`load API users`, users)
 
     // filter out bots and strange users without emails
     const filteredUsers = users.filter(user => {
       return user.is_bot === false && user.profile.email
     })
-    log(`filtered users (non bots)`, filteredUsers)
+    log.verbose(`filtered users (non bots)`, filteredUsers)
 
     // load all people from the local database
+    log.timer(`load synced people from the database`)
     this.people = await PersonEntity.find({
       settingId: this.setting.id
     })
+    log.timer(`load synced people from the database`, this.people)
 
     // creating entities for them
-    log(`finding and creating people for users`, filteredUsers)
+    log.verbose(`finding and creating people for users`, filteredUsers)
     const updatedPeople = filteredUsers.map(user => {
       return this.createPerson(user)
     })
 
     // update in the database
-    log(`updated people`, updatedPeople)
+    log.timer(`update people in the database`, updatedPeople)
     await PersonEntity.save(updatedPeople)
 
     // add person bits
@@ -58,14 +60,15 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
       }),
     )
 
-    log(`people were updated`, updatedPeople)
+    log.timer(`update people in the database`)
 
     // find remove people and remove them from the database
     const removedPeople = this.people.filter(person => {
       return updatedPeople.indexOf(person) === -1
     })
+    log.timer(`remove people from the database`, removedPeople)
     await PersonEntity.remove(removedPeople)
-    log(`people were removed`, removedPeople)
+    log.timer(`remove people from the database`)
   }
 
   /**

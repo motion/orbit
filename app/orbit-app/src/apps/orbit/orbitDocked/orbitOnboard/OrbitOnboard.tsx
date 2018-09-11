@@ -246,20 +246,18 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
                 Orbit is the next step in operating systems. It's a beautiful
                 unified platform for all your information.
                 <VerticalSpace />
-                It's time we had control over our information. Orbit unifies
-                information in a completely private way: entirely on your
-                device.
+                It's time we had control over our digital lives. Orbit is the
+                first tool that unifies your knowledge completely privately.
                 <VerticalSpace />
-                We never access or expose any of your keys or data, and never
-                will.
-                <VerticalSpace />
-                To do this, we'll run a secure private local proxy.
+                Orbit runs 100% locally on your device, never exposing your keys
+                or data. To do this, it will run a secure private local proxy
+                for authentication.
               </Text>
               <VerticalSpace />
               <VerticalSpace />
               <div className="markdown">
                 <a href="http://tryorbit.com/security">
-                  Read our commitment to privacy and security.
+                  Learn about our security & privacy commitment.
                 </a>
               </div>
               <VerticalSpace />

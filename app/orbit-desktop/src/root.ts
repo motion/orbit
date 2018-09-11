@@ -93,11 +93,15 @@ export class Root {
       console.log('opening', url)
       open(url)
     })
+
+    // wait for database manager to run migrations before...
+    this.databaseManager = new DatabaseManager()
+    await this.databaseManager.start()
+
+    // ... you connect models and start running things on them
     await this.connect()
     this.registerMediatorServer()
 
-    this.databaseManager = new DatabaseManager()
-    this.databaseManager.start()
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...

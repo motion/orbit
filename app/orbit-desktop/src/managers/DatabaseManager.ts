@@ -9,6 +9,7 @@ import { SettingEntity } from '../entities/SettingEntity'
 import { BitEntity } from '../entities/BitEntity'
 import { getRepository } from 'typeorm'
 import { Bit, Setting } from '@mcro/models'
+import { BitUtils } from '../utils/BitUtils'
 
 const log = logger('database')
 
@@ -50,7 +51,7 @@ export class DatabaseManager {
     if (!(await SettingEntity.findOne(vals))) {
       await getRepository(SettingEntity).save(vals)
     }
-    const bit: Partial<Bit> = {
+    const bit = BitUtils.create({
       id: '1231023',
       integration: 'app1',
       title: 'My app',
@@ -58,8 +59,8 @@ export class DatabaseManager {
       type: 'custom',
       bitCreatedAt: Date.now(),
       bitUpdatedAt: Date.now(),
-    }
-    if (!(await BitEntity.findOne(bit))) {
+    })
+    if (!(await BitEntity.findOne({ type: 'custom', id: '1231023' }))) {
       await getRepository(BitEntity).save(bit)
     }
   }

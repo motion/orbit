@@ -103,11 +103,16 @@ export class BridgeManager {
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', this.dispose)
     }
-    // wait for initial state to come down for a little
-    try {
-      await Mobx.when(() => this._hasFetchedInitialState, { timeout: 250 })
-    } catch {
-      this._hasFetchedInitialState = true
+    // wait for initial state
+    if (!this._options.master) {
+      try {
+        await Mobx.when(() => this._hasFetchedInitialState, { timeout: 1000 })
+        if (!this._hasFetchedInitialState) {
+          throw new Error('Timed out fetching initial state!')
+        }
+      } catch {
+        this._hasFetchedInitialState = true
+      }
     }
   }
 
@@ -141,12 +146,6 @@ export class BridgeManager {
   setupClientSocket = () => {
     // socket setup
     this._socket.onmessage = async ({ data }) => {
-      if (!this._hasFetchedInitialState) {
-        // TODO: make this actually work
-        setTimeout(() => {
-          this._hasFetchedInitialState = true
-        }, 40)
-      }
       if (!data) {
         console.log('No data received over socket')
         return
@@ -191,6 +190,10 @@ export class BridgeManager {
         }
         await immediate()
         this.deepMergeMutate(state, newState, { ignoreKeyCheck: true })
+        // we have initial state :)
+        if (source === this._source && !this._hasFetchedInitialState) {
+          this._hasFetchedInitialState = true
+        }
       } catch (err) {
         console.error(
           `${err.message}:\n${err.stack}\n

@@ -168,11 +168,6 @@ export class PeekStore {
     return this.history.length > 1
   }
 
-  clearPeek = () => {
-    Actions.clearPeek()
-    this.clearTorn()
-  }
-
   clearTorn = () => {
     this.dragOffset = null
   }
@@ -246,6 +241,14 @@ export class PeekStore {
     // this *shouldnt* jitter, technically
     this.dragOffset = [0, 0]
     Actions.finishPeekDrag(this.framePosition)
+  }
+
+  handleClose = () => {
+    if (this.isTorn) {
+      // todo close
+    } else {
+      Actions.clearPeek()
+    }
   }
 
   handleMaximize = () => {

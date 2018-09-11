@@ -26,21 +26,12 @@ export class RootStore {
   errors = []
 
   constructor() {
+    this.catchErrors()
+    this.started = true
     debugState(({ stores, views }) => {
       this.stores = stores
       this.views = views
     })
-  }
-
-  // should be able to run multiple times
-  async start({ connectModels }) {
-    if (connectModels) {
-      await App.start({
-        actions: appActions,
-      })
-    }
-    this.catchErrors()
-    this.started = true
   }
 
   // for debugging why queries are locking

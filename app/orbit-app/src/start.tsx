@@ -19,9 +19,6 @@ export async function start() {
     const { RootStore } = require('./stores/RootStore')
     const rootStore = new RootStore()
     window['Root'] = rootStore
-    await rootStore.start({
-      connectModels: window.location.pathname !== '/auth',
-    })
     rootStore.rootView = RootView
   }
   ReactDOM.render(<RootView />, document.querySelector('#app'))

@@ -143,7 +143,7 @@ export class PeekHeaderContent extends React.Component<Props> {
                   alignItems="center"
                 >
                   <WindowControls
-                    onClose={peekStore.clearPeek}
+                    onClose={peekStore.handleClose}
                     onMax={peekStore.isTorn ? peekStore.handleMaximize : null}
                     onMin={peekStore.isTorn ? peekStore.handleMinimize : null}
                   />

@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.2.221",
+  "version": "2.2.222",
   "scripts": {
     "start": "./scripts/build.sh --resume",
     "test-built-app": "./dist/mac/Orbit.app/Contents/MacOS/Orbit",

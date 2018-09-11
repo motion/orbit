@@ -36,6 +36,11 @@ export class AppReactions /* extends Store */ {
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:
+          // if we recently tore a peek window it will trigger a HIDE, but ignore it
+          if (Date.now() - App.state.lastTear < 200) {
+            console.log('ignore hide from tear')
+            return
+          }
           App.setOrbitState({ docked: false })
           return
         case App.messages.SHOW:

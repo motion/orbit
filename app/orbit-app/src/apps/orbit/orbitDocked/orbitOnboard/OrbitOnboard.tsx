@@ -346,10 +346,18 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
             <Text size={2.5} fontWeight={600}>
               All set!
             </Text>
-            <View height={20} />
+            <VerticalSpace />
             <Text size={1.5} alpha={0.5}>
-              Orbit is now creating an index of things and people from across
-              your cloud.
+              Toggle Orbit with the shortcut:
+            </Text>
+            <VerticalSpace />
+            <VerticalSpace />
+            <Text size={2.2}>Option + Space</Text>
+            <VerticalSpace />
+            <VerticalSpace />
+            <Text size={1.5} alpha={0.5}>
+              Orbit has many keyboard controls, try using your arrow keys from
+              the home screen!
             </Text>
           </Centered>
         </OnboardFrame>

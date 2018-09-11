@@ -24,35 +24,39 @@ export class ObservableRouter {
   history: any
 
   max = historyLength
-  @observable position = historyLength
-  @observable path = window.location.pathname
-  @observable route = null
-  @observable.ref params = {}
-  @observable forceUpdate = false
-  @observable version = 0
+  @observable
+  position = historyLength
+  @observable
+  path = window.location.pathname
+  @observable
+  route = null
+  @observable.ref
+  params = {}
+  @observable
+  forceUpdate = false
+  @observable
+  version = 0
   _id = Math.random()
   onNavigateCallback = null
 
   constructor({ routes, history }: RouterProps) {
     this.routes = routes
     this.history = history || browserHistory()
+    const routeMap = {}
+    for (const path in routes) {
+      routeMap[properRoute(path)] = async params => {
+        // support async routes
+        if (routes[path] instanceof Promise) {
+          console.log('await route')
+          await routes[path]
+        }
+        this.setRoute(path, params)
+      }
+    }
     // setup router
     this.router = new Router({
       history: this.history,
-      routes: Object.keys(routes).reduce(
-        (acc, path) => ({
-          ...acc,
-          [properRoute(path)]: async params => {
-            // support async routes
-            if (routes[path] instanceof Promise) {
-              console.log('await route')
-              await routes[path]
-            }
-            this.setRoute(path, params)
-          },
-        }),
-        {},
-      ),
+      routes: routeMap,
     })
     // watch to update routes
     autorun(() => {

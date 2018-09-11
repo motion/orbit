@@ -14,7 +14,10 @@ export const setAppState = (nextState: Partial<typeof defaultPeekState>) => {
     throw new Error('No appState given')
   }
   console.log('starting as', stringify(App.appsState))
-  const index = APP_ID ? App.appsState.findIndex(app => app.id === APP_ID) : 0
+  const index =
+    typeof APP_ID === 'number'
+      ? App.appsState.findIndex(app => app.id === APP_ID)
+      : 0
   const myAppState = deepClone(App.appsState[index])
   const newPeekState = merge(myAppState, nextState)
   const appsState = [...App.appsState]

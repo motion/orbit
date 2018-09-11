@@ -240,9 +240,6 @@ export class PeekStore {
     // now that it's pinned, update position
     // reset drag offset while simultaneously setting official position
     // this *shouldnt* jitter, technically
-    console.log('old pos', this.appState.position, 'new pos', [
-      ...this.framePosition,
-    ])
     Actions.finishPeekDrag([...this.framePosition])
     this.dragOffset = [0, 0]
   }

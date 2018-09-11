@@ -43,6 +43,7 @@ app/apps-website/site/build
 
 # for now keep build orbit.app, its about 14mb
 !app/oracle/orbit/Build/Products/Release/orbit.app
+!app/oracle/orbit/Build/Products/Release/orbit.app/*
 
 packages/screendump/build
 

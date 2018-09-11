@@ -120,7 +120,7 @@ export class SelectionStore {
   )
 
   clearSelectedOnClosePeek = react(
-    () => !!App.peekState.appConfig,
+    () => !!App.peekState && !!App.peekState.target,
     target => {
       ensure('no target and active index', !target && this.hasActiveIndex)
       this.clearSelected()

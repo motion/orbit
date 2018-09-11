@@ -200,6 +200,9 @@ export class PeekStore {
   }
 
   get isTorn() {
+    if (!this.appState) {
+      return false
+    }
     return this.appState.torn
   }
 

@@ -10,6 +10,7 @@ import { BitEntity } from '../entities/BitEntity'
 import { getRepository } from 'typeorm'
 import { Bit, Setting } from '@mcro/models'
 import { BitUtils } from '../utils/BitUtils'
+import { MigrationManager } from './database/MigrationManager'
 
 const log = new Logger('database')
 
@@ -26,8 +27,11 @@ export class DatabaseManager {
   db: sqlite.Database
   subscriptions = new CompositeDisposable()
   searchIndexListener: ReturnType<typeof Desktop.onMessage>
+  migrationManager = new MigrationManager()
 
   async start() {
+    log.info('Starting DatabaseManager...')
+    await this.migrationManager.start()
     this.db = await sqlite.open(DATABASE_PATH)
     this.ensureSearchIndex()
     this.watchForReset()

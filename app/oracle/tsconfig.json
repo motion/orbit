@@ -6,7 +6,10 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "../orbit-desktop/src/managers/database/MigrationManager.ts"
+  ],
   "references": [
     { "path": "../../packages/black" },
     { "path": "../../packages/logger" }

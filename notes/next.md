@@ -6,7 +6,6 @@
     - Working tabs
     - Better table contents
 - Tuesday -- _make app work better for demo_
-  - fix confluence/jira document display
   - production app bugfix/perf fixes
   - date filteiring isn't working for:
     - nate january

@@ -1,7 +1,6 @@
 import { setGlobalConfig } from '@mcro/config'
 import * as r2 from '@mcro/r2'
 import { App } from '@mcro/stores'
-import { stringify } from '@mcro/helpers';
 
 async function main() {
   console.log('app:', window.location.href)
@@ -12,7 +11,6 @@ async function main() {
   setGlobalConfig(config)
 
   await App.start()
-  console.log('initial state is', stringify(App.state))
 
   // now run app..
   require('./start')

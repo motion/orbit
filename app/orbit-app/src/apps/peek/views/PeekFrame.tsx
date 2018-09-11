@@ -7,11 +7,12 @@ import { PeekFrameArrow } from './PeekFrameArrow'
 import { ResizableBox } from '../../../views/ResizableBox'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { setAppState } from '../../../actions/appActions/setAppState'
+import { trace } from 'mobx'
 
 const SHADOW_PAD = 85
 
 const transitions = (store: PeekStore) => {
-  if (store.appState.torn) return 'transform linear 10ms'
+  if (store.isTorn) return 'transform linear 10ms'
   if (store.willHide) return 'transform ease 100ms'
   if (store.willStayShown) return 'transform ease 60ms'
   return 'transform ease 100ms'
@@ -66,6 +67,7 @@ export const PeekFrame = decorator(
       state,
       willStayShown,
       framePosition,
+      isTorn,
     } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
@@ -110,7 +112,7 @@ export const PeekFrame = decorator(
           height={size[1]}
           pointerEvents={isShown ? 'auto' : 'none'}
         >
-          {!peekStore.appState.torn && (
+          {!isTorn && (
             <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
           )}
           <UI.Col flex={1} padding={padding} margin={margin}>

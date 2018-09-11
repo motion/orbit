@@ -69,8 +69,6 @@ export const PeekFrame = decorator(
       framePosition,
       isTorn,
     } = peekStore
-    console.log('PEEK FRAME RENDER', willShow, isShown, willHide)
-    trace()
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }

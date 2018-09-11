@@ -41,14 +41,13 @@ import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { ScreenManager } from './managers/ScreenManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
-import Server from './Server'
+import { Server } from './Server'
 import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
-import { oracleOptions } from './constants'
 
 const log = new Logger('desktop')
 

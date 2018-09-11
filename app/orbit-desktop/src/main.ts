@@ -10,7 +10,7 @@ export async function main() {
   /*
    *  Setup app after config
    */
-  const { Root } = require('./root')
+  const { Root } = require('./Root')
   const appRoot = new Root()
   if (process.env.NODE_ENV === 'development') {
     require('./helpers/startDevelopment').startDevelopment(appRoot)

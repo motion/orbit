@@ -127,12 +127,9 @@ export class SelectionStore {
     },
   )
 
-  clearSelected = (clearPeek = true) => {
+  clearSelected = () => {
     this.leaveIndex = -1
     this.activeIndex = -1
-    if (clearPeek) {
-      Actions.clearPeek()
-    }
   }
 
   // getHoverSettler = Helpers.hoverSettler({

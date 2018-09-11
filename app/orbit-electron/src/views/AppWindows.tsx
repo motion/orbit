@@ -1,15 +1,34 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import { AppWindow } from './AppWindow'
 
 const log = logger('electron')
 
-const decorator = compose(view.electron)
+class AppWindowsStore {
+  appsStateDebounced = react(
+    () => App.appsState,
+    _ => JSON.parse(JSON.stringify(_)),
+    // delay a little so we can finish syncing torn state
+    {
+      delay: 100,
+    },
+  )
+}
 
-export const AppWindows = decorator(() => {
-  const { appsState } = App
+const decorator = compose(
+  view.attach({
+    store: AppWindowsStore,
+  }),
+  view.electron,
+)
+
+export const AppWindows = decorator(({ store }: { store: AppWindowsStore }) => {
+  const appsState = store.appsStateDebounced
+  if (!appsState) {
+    return null
+  }
   log(`Rendering apps ${appsState.length}`)
   return appsState.map(({ id }, index) => {
     return <AppWindow key={id} id={id} isPeek={index === 0} />

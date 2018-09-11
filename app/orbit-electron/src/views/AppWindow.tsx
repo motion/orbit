@@ -63,11 +63,11 @@ const decorator = compose(
 )
 
 export const AppWindow = decorator(
-  ({ id, store }: Props & { store: AppWindowStore }) => {
+  ({ id, store, isPeek }: Props & { store: AppWindowStore }) => {
     log(`Rendering app window ${id} at url ${store.url}`)
     return (
       <Window
-        alwaysOnTop
+        alwaysOnTop={isPeek}
         show
         ref={store.handleRef}
         ignoreMouseEvents={!Electron.hoverState.peekHovered[id]}

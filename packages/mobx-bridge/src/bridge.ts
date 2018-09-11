@@ -1,5 +1,5 @@
 import { action } from 'mobx'
-import { isPlainObject, isEqual } from 'lodash'
+import { isPlainObject, isEqual, debounce } from 'lodash'
 import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
@@ -56,7 +56,7 @@ export class BridgeManager {
   _source = ''
   _initialState = {}
   _socket = null
-  _hasFetchedInitialState = false
+  private hasFetchedInitialState = false
   // to be set once they are imported
   stores = {}
   messageListeners = new Set()
@@ -106,12 +106,12 @@ export class BridgeManager {
     // wait for initial state
     if (!this._options.master) {
       try {
-        await Mobx.when(() => this._hasFetchedInitialState, { timeout: 1000 })
-        if (!this._hasFetchedInitialState) {
+        await Mobx.when(() => this.hasFetchedInitialState, { timeout: 1000 })
+        if (!this.hasFetchedInitialState) {
           throw new Error('Timed out fetching initial state!')
         }
       } catch {
-        this._hasFetchedInitialState = true
+        this.hasFetchedInitialState = true
       }
     }
   }
@@ -191,8 +191,8 @@ export class BridgeManager {
         await immediate()
         this.deepMergeMutate(state, newState, { ignoreKeyCheck: true })
         // we have initial state :)
-        if (source === this._source && !this._hasFetchedInitialState) {
-          this._hasFetchedInitialState = true
+        if (source === this._source && !this.hasFetchedInitialState) {
+          this.debounceSetHasFetched()
         }
       } catch (err) {
         console.error(
@@ -240,6 +240,10 @@ export class BridgeManager {
       }
     }
   }
+
+  debounceSetHasFetched = debounce(() => {
+    this.hasFetchedInitialState = true
+  }, 16)
 
   getCurrentState = () => {
     // get initial state

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { react, on, ensure, cancel } from '@mcro/black'
+import { react, on, ensure, cancel, sleep } from '@mcro/black'
 import { App } from '@mcro/stores'
 import {
   BitRepository,
@@ -194,11 +194,12 @@ export class PeekStore {
     return this.appState.torn
   }
 
-  tearPeek = () => {
+  tearPeek = async () => {
     if (this.isTorn) {
       return false
     }
     Actions.tearPeek()
+    await sleep(16)
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
 
@@ -239,13 +240,13 @@ export class PeekStore {
     // now that it's pinned, update position
     // reset drag offset while simultaneously setting official position
     // this *shouldnt* jitter, technically
-    this.dragOffset = [0, 0]
     Actions.finishPeekDrag(this.framePosition)
+    this.dragOffset = [0, 0]
   }
 
   handleClose = () => {
     if (this.isTorn) {
-      // todo close
+      Actions.closeApp()
     } else {
       Actions.clearPeek()
     }

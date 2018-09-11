@@ -1,7 +1,6 @@
-import * as React from 'react'
 import { view } from '@mcro/black'
 
-const BodyContents = view({
+export const MarkdownBody = view({
   width: '100%',
   flex: 1,
   overflowX: 'hidden',
@@ -11,12 +10,3 @@ const BodyContents = view({
   lineHeight: 24,
   display: 'block',
 })
-
-export const MarkdownBody = ({ children }) => (
-  <BodyContents
-    className="markdown searchable rendered-content"
-    dangerouslySetInnerHTML={{
-      __html: children,
-    }}
-  />
-)

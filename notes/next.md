@@ -7,7 +7,6 @@
     - Better table contents
 - Tuesday -- _make app work better for demo_
   - fix confluence/jira document display
-  - spaces fix
   - production app bugfix/perf fixes
   - date filteiring isn't working for:
     - nate january
@@ -62,7 +61,6 @@
 # Nate
 
 - Multi-process app demo
-- move to new space (see Desktop.state.movedToNewSpace)
 - Pane model + default Pane.id = 0, Pane.name = 'Home'
 - Pane.feedOrder
 - Pane.hasMany Feed

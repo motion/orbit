@@ -55,7 +55,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
               {message.participants
                 .filter(x => x.type === 'from')
                 .map(({ name, email }, index) => (
-                  <>
+                  <React.Fragment key={index}>
                     <RoundButtonBordered
                       key={index}
                       onClick={openMail(email)}
@@ -67,7 +67,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
                       {name}
                     </RoundButtonBordered>
                     <HorizontalSpace />
-                  </>
+                  </React.Fragment>
                 ))}
             </MessageHeader>
             <VerticalSpace small />

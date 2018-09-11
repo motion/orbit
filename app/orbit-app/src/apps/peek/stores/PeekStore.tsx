@@ -44,7 +44,13 @@ export class PeekStore {
   // appConfig given the id
   appState = react(
     () => App.appsState.find(x => x.id === this.props.id),
-    _ => _,
+    appState => {
+      if (this.isTorn) {
+        // cancel on no app state so we dont cause bugs on close
+        ensure('has state', !!appState)
+      }
+      return appState
+    },
     {
       onlyUpdateIfChanged: true,
     },
@@ -173,6 +179,9 @@ export class PeekStore {
   }
 
   get framePosition() {
+    if (!this.appState) {
+      return [0, 0]
+    }
     const { willShow, willStayShown, willHide, state } = this
     if (!state) {
       return [0, 0]
@@ -191,6 +200,9 @@ export class PeekStore {
   }
 
   get isTorn() {
+    if (!this.appState) {
+      return false
+    }
     return this.appState.torn
   }
 

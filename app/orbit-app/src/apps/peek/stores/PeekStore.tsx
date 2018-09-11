@@ -173,6 +173,9 @@ export class PeekStore {
   }
 
   get framePosition() {
+    if (!this.appState) {
+      return [0, 0]
+    }
     const { willShow, willStayShown, willHide, state } = this
     if (!state) {
       return [0, 0]

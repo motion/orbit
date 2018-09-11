@@ -5,20 +5,27 @@ import { KeyboardStore } from '../../stores/KeyboardStore'
 import { Actions } from '../../actions/Actions'
 import { observeOne } from '../../repositories'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
+import { OrbitStore } from '../OrbitStore'
+
+type Panes = 'home' | 'directory' | 'apps' | 'settings' | 'onboard' | 'search'
 
 export class PaneManagerStore {
   props: {
+    orbitStore: OrbitStore
     selectionStore: SelectionStore
     keyboardStore: KeyboardStore
   }
 
-  panes = ['home', 'directory', 'apps', 'settings']
+  panes: Partial<Panes>[] = ['home', 'directory', 'apps', 'settings']
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
   generalSetting = null
 
   didMount() {
+    // set pane manager store... todo make better
+    this.props.orbitStore.appReactionsStore.setPaneManagerStore(this)
+
     on(
       this,
       observeOne(SettingModel, {
@@ -145,7 +152,7 @@ export class PaneManagerStore {
     this.forceOnboard = val
   }
 
-  activePane: string = react(
+  activePane: Panes = react(
     () => [
       this.panes,
       this.paneIndex,

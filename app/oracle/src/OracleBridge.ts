@@ -3,7 +3,7 @@ import { Server } from 'ws'
 
 type Props = {
   port: number
-  actions: Object
+  getActions: () => Object
   setState: Function
   getState: Function
   onWindowChangeCB: Function
@@ -78,7 +78,6 @@ export class OracleBridge {
 
   private setupSocket() {
     this.server.once('connection', socket => {
-      console.log('we got a connection yo')
       this.socket = socket
       // send initial state
       this.props.setState(this.props.getState())
@@ -89,17 +88,20 @@ export class OracleBridge {
         )
         this.awaitingSocket = []
       }
+      const actions = this.props.getActions()
       socket.on('message', str => {
         try {
           const { action, value, state } = JSON.parse(str.toString())
           if (state) {
             this.props.setState(state)
           }
-          if (this.props.actions[action]) {
-            this.props.actions[action](value)
+          if (actions[action]) {
+            actions[action](value)
           } else {
             // otherwise its a window change event
-            if (!action) return
+            if (!action) {
+              return
+            }
             this.props.onWindowChangeCB(action, value)
           }
         } catch (err) {

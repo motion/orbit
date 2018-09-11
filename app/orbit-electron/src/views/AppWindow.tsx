@@ -20,6 +20,7 @@ type Props = {
 class AppWindowStore {
   props: Props
   window: BrowserWindow = null
+  off: any
   position = [1, 1]
 
   didMount() {
@@ -27,10 +28,19 @@ class AppWindowStore {
     setTimeout(() => {
       this.position = [0, 0]
     })
+
+    // listen for events
+    this.off = Electron.onMessage(Electron.messages.APP_STATE, val => {
+      const { id, action } = JSON.parse(val)
+      if (id === this.props.id) {
+        console.log('ELECTRON GOT ACTION', action)
+      }
+    })
   }
 
   willUnmount() {
     this.props.electronStore.apps.delete(this)
+    this.off()
   }
 
   get ignoreMouseEvents() {

@@ -6,10 +6,7 @@ import { logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
 import { CompositeDisposable } from 'event-kit'
-
-type ScreenManagerOptions = {
-  oracle: Oracle
-}
+import { oracleOptions } from '../constants'
 
 const log = logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
@@ -42,6 +39,7 @@ const PREVENT_SCANNING = {
 // @ts-ignore
 @store
 export class ScreenManager {
+  clearTimeout?: Function
   oracle: Oracle
   running = new CompositeDisposable()
   hasResolvedOCR = false
@@ -53,10 +51,29 @@ export class ScreenManager {
   isStarted = false
   watchSettings = { name: '', settings: {} }
 
-  constructor({ oracle }: ScreenManagerOptions) {
-    this.oracle = oracle
+  constructor() {
+    this.oracle = new Oracle(oracleOptions)
   }
 
+  start = async () => {
+    console.log('starting screenManager...')
+
+    const off2 = Desktop.onMessage(
+      Desktop.messages.DEFOCUS_ORBIT,
+      this.defocusOrbit,
+    )
+    this.running.add({ dispose: off2 })
+
+    // for now just enable until re enable oracle
+    if (macosVersion.is('<10.11')) {
+      console.log('older mac, avoiding oracle')
+      return
+    }
+
+    this.setupOracleListeners()
+    await this.oracle.start()
+    this.isStarted = true
+  }
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 
   handleOCRWords = react(
@@ -89,7 +106,6 @@ export class ScreenManager {
     () => (App.state.darkTheme ? 'ultra' : 'light'),
     async (theme, { when }) => {
       await when(() => this.isStarted)
-      console.log('theme', theme)
       this.oracle.themeWindow(theme)
     },
   )
@@ -99,7 +115,6 @@ export class ScreenManager {
     async (visible, { when, sleep }) => {
       await when(() => this.isStarted)
       if (visible) {
-        console.log('bringing to front...')
         this.oracle.showWindow()
       } else {
         this.oracle.hideWindow()
@@ -122,7 +137,6 @@ export class ScreenManager {
     },
     async (position, { when }) => {
       await when(() => this.isStarted)
-      console.log('setting position', position)
       this.oracle.positionWindow(position)
     },
   )
@@ -139,62 +153,22 @@ export class ScreenManager {
   //   }
   // }
 
-  clearTimeout?: Function
-
-  start = async () => {
-    console.log('starting screen...')
-
-    // handle messages
-
-    // const off1 = Desktop.onMessage(
-    //   Desktop.messages.TOGGLE_PAUSED,
-    //   this.togglePaused,
-    // )
-    // this.running.add({ dispose: off1 })
-    const off2 = Desktop.onMessage(
-      Desktop.messages.DEFOCUS_ORBIT,
-      this.defocusOrbit,
-    )
-    this.running.add({ dispose: off2 })
-
-    // for now just enable until re enable oracle
-    if (macosVersion.is('<10.12')) {
-      console.log('older mac, avoiding oracle')
-      return
-    }
-
-    this.setupOracleListeners()
-    await this.getOracleInfo()
-    this.isStarted = true
-  }
-
   defocusOrbit = () => {
     console.log('should defocus, crashing oracle for now...')
     // this.oracle.defocus()
   }
 
-  getOracleInfo() {
-    let hasResolved = false
-    return new Promise(res => {
-      const getInfo = async () => {
-        // get initial info
-        const info = await this.oracle.getInfo()
-        if (!hasResolved) {
-          hasResolved = true
-          res()
-        }
-        Desktop.setState({
-          operatingSystem: {
-            supportsTransparency: info.supportsTransparency,
-          },
-        })
-      }
-      setInterval(getInfo, 700)
-      getInfo()
-    })
-  }
-
   setupOracleListeners() {
+    // ok
+    this.oracle.onInfo(info => {
+      console.log('got oracle info', info)
+      Desktop.setState({
+        operatingSystem: {
+          supportsTransparency: info.supportsTransparency,
+        },
+      })
+    })
+
     // space move
     this.oracle.onSpaceMove(() => {
       Desktop.setState({ movedToNewSpace: Date.now() })

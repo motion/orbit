@@ -9,10 +9,19 @@ type FakeProcess = {
   oracle: Oracle
 }
 
+type Props = {
+  onAction: (appId: number, value: string) => any
+}
+
 // @ts-ignore
 @store
 export class AppsManager {
   processes: FakeProcess[] = []
+  props: Props
+
+  constructor(props: Props) {
+    this.props = props
+  }
 
   manageAppIcons = react(
     () => App.appsState,
@@ -35,7 +44,9 @@ export class AppsManager {
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
           const oracle = await this.spawnOracle(
-            '/Users/nw/projects/motion/oracle/assets/orbit-logo.png',
+            id,
+            'Test',
+            '/Users/nw/projects/motion/orbit/assets/icon.png',
           )
           this.processes = [
             ...this.processes,
@@ -49,13 +60,21 @@ export class AppsManager {
     },
   )
 
-  async spawnOracle(iconPath: string) {
+  async spawnOracle(id, name, iconPath: string) {
     const oracle = new Oracle({
+      name,
       ...oracleOptions,
       env: { SHOW_ICON: iconPath },
     })
     await oracle.start()
+    console.log('started oracle', id, name)
+    oracle.onAppState(this.handleAppState(id))
     return oracle
+  }
+
+  handleAppState = id => (action: string) => {
+    console.log('hadnling app state', id, action)
+    this.props.onAction(id, action)
   }
 
   async removeProcess(index: number) {

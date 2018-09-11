@@ -15,6 +15,7 @@ class ElectronStore {
     FOCUS: 'FOCUS',
     COPY: 'COPY',
     RESTART: 'RESTART',
+    APP_STATE: 'APP_STATE',
   }
 
   bridge = Bridge

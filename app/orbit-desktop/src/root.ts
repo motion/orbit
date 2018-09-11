@@ -51,7 +51,6 @@ import { AppsManager } from './managers/appsManager'
 import { oracleOptions } from './constants'
 
 const log = logger('desktop')
-const Config = getGlobalConfig()
 
 export class Root {
   oracle: Oracle
@@ -104,13 +103,20 @@ export class Root {
     // no need to wait for them...
     // await this.startSyncers()
 
-    // start manager dependencies...
-    this.oracle = new Oracle(oracleOptions)
-    await this.oracle.start()
-
     // start managers...
-    this.screenManager = new ScreenManager({ oracle: this.oracle })
-    this.appsManager = new AppsManager()
+    this.screenManager = new ScreenManager()
+    await this.screenManager.start()
+
+    this.appsManager = new AppsManager({
+      onAction: (id, action) => {
+        console.log('app action', id, action)
+        Desktop.sendMessage(
+          Electron,
+          Electron.messages.APP_STATE,
+          JSON.stringify({ id, action }),
+        )
+      },
+    })
 
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screenManager.lastScreenChange,
@@ -118,7 +124,6 @@ export class Root {
     this.keyboardStore.start()
     this.watchLastBit()
     await this.server.start()
-    this.screenManager.start()
     debugState(({ stores }) => {
       this.stores = stores
     })

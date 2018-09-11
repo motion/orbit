@@ -129,6 +129,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     window.makeKeyAndOrderFront(nil)
 
     socketBridge = SocketBridge(onMessage: self.onMessage)
+    
+    NSWorkspace.shared.notificationCenter.addObserver(
+      self,
+      selector: #selector(activated(_:)),
+      name: NSWorkspace.didActivateApplicationNotification,
+      object: nil
+    )
+    
 //    windo = Windo(emit: self.emit)
 
 //    do {
@@ -165,6 +173,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //      printErr($0)
 //      exit(1)
 //    }
+  }
+  
+  @objc func activated(_ notification: NSNotification) {
+    if let info = notification.userInfo,
+      let app = info[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
+      let bundleId = app.bundleIdentifier
+    {
+      if bundleId == Bundle.main.bundleIdentifier! {
+        self.emit("{ \"action\": \"appState\", \"value\": \"focus\" }")
+      }
+    }
   }
   
   func showWindow() {
@@ -246,12 +265,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       self.theme(text[5..<text.count])
       return
     }
-    if action == "info" {
-      self.emit("{ \"action\": \"info\", \"value\": { \"supportsTransparency\": \(self.supportsTransparency) } }")
-      return
-    }
     if action == "stat" {
       // coming from us, ignore
+      return
+    }
+    // on start
+    if action == "star" {
+      self.emit("{ \"action\": \"info\", \"value\": { \"supportsTransparency\": \(self.supportsTransparency) } }")
       return
     }
 //    if action == "paus" {

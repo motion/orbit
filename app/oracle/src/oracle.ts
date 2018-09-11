@@ -4,7 +4,10 @@ import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { logger } from '@mcro/logger'
 import { OracleBridge, SocketSender } from './OracleBridge'
+import { link } from 'fs'
+import { promisify } from 'util'
 
+const linkify = promisify(link)
 const log = logger('oracle')
 const idFn = _ => _
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -23,12 +26,8 @@ const appPath = bundle =>
   )
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
-
-type OracleInfo = {
-  supportsTransparency: boolean
-}
-
 export class Oracle {
+  name?: string
   env: { [key: string]: string } | null
   port: number
   process: ChildProcess
@@ -50,6 +49,7 @@ export class Oracle {
   onClearCB = idFn
   onAccessibleCB = idFn
   onSpaceMoveCB = idFn
+  onAppStateCB = idFn
   binPath = null
   state = {
     isPaused: false,
@@ -61,27 +61,29 @@ export class Oracle {
   }
 
   constructor({
+    name = null,
     debugBuild = false,
     socketPort = 40512,
     binPath = null,
     env = null,
   } = {}) {
+    this.name = name
     this.env = env
     this.port = socketPort
     this.binPath = binPath
     this.debugBuild = debugBuild
-    this.oracleBridge = new OracleBridge({
-      port: socketPort,
-      actions: this.actions,
-      setState: this.setState,
-      getState: () => this.state,
-      onWindowChangeCB: this.onWindowChangeCB,
-    })
     macosVersion.assertGreaterThanOrEqualTo('10.11')
   }
 
   start = async () => {
     log('start oracle')
+    this.oracleBridge = new OracleBridge({
+      port: this.port,
+      getActions: () => this.actions,
+      setState: this.setState,
+      getState: () => this.state,
+      onWindowChangeCB: (a, b) => this.onWindowChangeCB(a, b),
+    })
     await this.oracleBridge.start(({ socketSend }) => {
       this.socketSend = socketSend
     })
@@ -147,22 +149,18 @@ export class Oracle {
     }
     this.settings = settings
     await this.socketSend('watch', settings)
-    return this
   }
 
   hideWindow = async () => {
     await this.socketSend('hide')
-    return this
   }
 
   showWindow = async () => {
     await this.socketSend('show')
-    return this
   }
 
   themeWindow = async (theme: string) => {
     await this.socketSend(`them ${theme}`)
-    return this
   }
 
   positionWindow = async (position: {
@@ -172,38 +170,28 @@ export class Oracle {
     height: number
   }) => {
     await this.socketSend(`posi ${JSON.stringify(position)}`)
-    return this
   }
 
   pause = async () => {
     await this.setState({ isPaused: true })
     await this.socketSend('pause')
-    return this
   }
 
   resume = async () => {
     await this.setState({ isPaused: false })
     await this.socketSend('start')
-    return this
   }
 
   clear = async () => {
     await this.socketSend('clear')
-    return this
   }
 
   defocus = async () => {
     await this.socketSend('defoc')
-    return this
   }
 
-  getInfo = (): Promise<OracleInfo> => {
-    return new Promise(res => {
-      this.onInfoCB = info => {
-        res(info)
-      }
-      this.socketSend('info')
-    })
+  onInfo = cb => {
+    this.onInfoCB = cb
   }
 
   onClear = cb => {
@@ -240,6 +228,10 @@ export class Oracle {
 
   onAccessible = cb => {
     this.onAccessibleCB = cb
+  }
+
+  onAppState = cb => {
+    this.onAppStateCB = cb
   }
 
   lastAccessibility = null
@@ -280,6 +272,10 @@ export class Oracle {
     lines: val => this.onLinesCB(val),
     info: val => this.onInfoCB(val),
     spaceMove: val => this.onSpaceMoveCB(val),
+    appState: val => {
+      console.log('do it', val, this.onAppStateCB)
+      this.onAppStateCB(val)
+    },
     // down to swift process
     pause: this.pause,
     resume: this.resume,
@@ -298,6 +294,18 @@ export class Oracle {
       binDir = Path.join(this.binPath, '..')
     } else {
       binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
+    }
+    if (this.name) {
+      // create a named binary link to change the name...
+      console.log(`linking! ${this.name}`)
+      try {
+        await linkify(Path.join(binDir, bin), Path.join(binDir, this.name))
+      } catch (err) {
+        if (err.code !== 'EEXIST') {
+          throw new Error(err)
+        }
+      }
+      bin = this.name
     }
     log(`oracle running on port ${this.port} ${bin} at path ${binDir}`)
     try {

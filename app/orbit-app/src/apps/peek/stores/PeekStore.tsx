@@ -44,7 +44,11 @@ export class PeekStore {
   // appConfig given the id
   appState = react(
     () => App.appsState.find(x => x.id === this.props.id),
-    _ => _,
+    appState => {
+      // cancel on no app state so we dont cause bugs on close
+      ensure('has state', !!appState)
+      return appState
+    },
     {
       onlyUpdateIfChanged: true,
     },

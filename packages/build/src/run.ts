@@ -1,36 +1,30 @@
 import * as Path from 'path'
-import serve from 'webpack-serve'
-import history from 'connect-history-api-fallback'
-import convert from 'koa-connect'
-
-const root = Path.join(__dirname, '..')
-
-process.env.NODE_ENV = process.env.NODE_ENV || 'development'
-process.env.WEBPACK_MODULES = Path.join(root, 'node_modules')
+import execa from 'execa'
 
 console.log('node env', process.env.NODE_ENV)
 
-async function start() {
-  const config = require('./webpack.config').default
-  const server = await serve(
-    {},
-    {
-      port: 3999,
-      host: 'localhost',
-      config,
-      hotClient: true,
-      add: app => {
-        const historyOptions = {
-          // ... see: https://github.com/bripkens/connect-history-api-fallback#options
-        }
-        app.use(convert(history(historyOptions)))
-      },
-    },
-  )
+const configPath = require.resolve('./webpack.config')
+const root = Path.join(__dirname, '..')
 
-  server.on('listening', () => {
-    console.log('Running webpack-serve')
-  })
+const argsIndex = process.argv.findIndex(x => /mcro-build$/.test(x))
+const extraArgs = argsIndex >= 0 ? process.argv.slice(argsIndex + 1) : []
+
+const cmd = 'webpack-dev-server'
+let args = ['--config', configPath, ...extraArgs]
+
+if (process.env.NODE_ENV !== 'production') {
+  args.push('--hot')
 }
 
-start()
+console.log(`Running ${cmd} ${args.join(' ')}`)
+
+const proc = execa(cmd, args, {
+  // cwd: root,
+  env: {
+    ENTRY: `${process.cwd()}/src`,
+    WEBPACK_MODULES: Path.join(root, 'node_modules'),
+  },
+})
+
+proc.stdout.pipe(process.stdout)
+proc.stderr.pipe(process.stderr)

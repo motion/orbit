@@ -120,7 +120,7 @@ const AddButton = ({ disabled, ...props }) =>
     </Theme>
   )
 
-const buttonText = ['Start Proxy', 'Next', 'Done!']
+const buttonText = ['Start Secure Proxy', 'Next', 'Done!']
 
 class OnboardStore {
   props: Props
@@ -128,6 +128,7 @@ class OnboardStore {
   acceptedMessage = ''
   accepted = null
   curFrame = 0
+  pendingMove = false
 
   async didMount() {
     await this.checkAlreadyProxied()
@@ -149,6 +150,7 @@ class OnboardStore {
 
   prevFrame = () => this.curFrame--
   nextFrame = async () => {
+    this.pendingMove = true
     // before incrementing, run some actions for:
     // LEAVING curFrame page...
 
@@ -191,6 +193,7 @@ class OnboardStore {
 
     // go to next frame
     this.curFrame++
+    this.pendingMove = false
   }
 }
 
@@ -228,7 +231,7 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
           {store.accepted === null && (
             <Centered>
               <br />
-              <Text size={3.2} fontWeight={600}>
+              <Text size={3} fontWeight={500}>
                 Hello,
               </Text>
               <View height={10} />
@@ -236,24 +239,30 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
                 Welcome to Orbit
               </Text>
               <View height={30} />
-              <Text textAlign="left" fontSize={27} lineHeight={35} alpha={0.9}>
-                Orbit is the first ever search platform built{' '}
-                <strong>for&nbsp;you</strong>.<VerticalSpace />
-                It's completely private. Your keys and data are only ever stored
-                and accessed privately on your computer.
+              <Text
+                selectable
+                textAlign="left"
+                size={1.1}
+                sizeLineHeight={1.025}
+                alpha={0.9}
+              >
+                Orbit is the next step in operating systems. It's a beautiful
+                unified platform for all your information.
+                <VerticalSpace />
+                It's time we had control over our digital lives. Orbit is the
+                first tool that unifies your knowledge completely privately.
+                <VerticalSpace />
+                Orbit runs 100% locally on your device, never exposing your keys
+                or data. To do this, it will run a secure private local proxy
+                for authentication.
               </Text>
               <VerticalSpace />
-              <Text textAlign="left">
-                To pull that off Orbit will run a secure proxy on your computer.
-              </Text>
               <VerticalSpace />
               <div className="markdown">
                 <a href="http://tryorbit.com/security">
-                  Our absolute commitment to security.
+                  Learn about our security & privacy commitment.
                 </a>
               </div>
-              <VerticalSpace />
-              <VerticalSpace />
               <VerticalSpace />
             </Centered>
           )}
@@ -337,10 +346,18 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
             <Text size={2.5} fontWeight={600}>
               All set!
             </Text>
-            <View height={20} />
+            <VerticalSpace />
             <Text size={1.5} alpha={0.5}>
-              Orbit is now creating an index of things and people from across
-              your cloud.
+              Toggle Orbit with the shortcut:
+            </Text>
+            <VerticalSpace />
+            <VerticalSpace />
+            <Text size={2.2}>Option + Space</Text>
+            <VerticalSpace />
+            <VerticalSpace />
+            <Text size={1.5} alpha={0.5}>
+              Orbit has many keyboard controls, try using your arrow keys from
+              the home screen!
             </Text>
           </Centered>
         </OnboardFrame>
@@ -353,7 +370,13 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
         )}
         <View width={10} />
         <Theme name="orbit">
-          <Button size={1.1} fontWeight={600} onClick={store.nextFrame}>
+          <Button
+            disabled={store.pendingMove}
+            opacity={store.pendingMove ? 0.5 : 1}
+            size={1.1}
+            fontWeight={600}
+            onClick={store.nextFrame}
+          >
             {buttonText[store.curFrame]}
           </Button>
         </Theme>

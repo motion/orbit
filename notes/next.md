@@ -6,12 +6,13 @@
     - Working tabs
     - Better table contents
 - Tuesday -- _make app work better for demo_
-  - production app bugfix/perf fixes
+  - in prod focus sometimes hides again right away
+  - lots of app icons being left behind
+  - scroll down should keep search at top
   - date filteiring isn't working for:
     - nate january
     - nate jan 1 to jan 30
   - Fix intra-peek clicking
-  - search in peek scroll fix
 - Wednesday -- _profiles_
   - cosal attempt get it running and analyze for use in profiles
   - design run on the person feed

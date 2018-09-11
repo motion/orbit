@@ -1,6 +1,6 @@
 import psTree from 'ps-tree'
 
-export function cleanupChildren(pid) {
+export function cleanupChildren(pid = process.getuid()) {
   console.log(`Cleaning children of ${pid}...`)
   const exitWait = setTimeout(() => {
     console.log('failed to exit gracefully!')
@@ -12,10 +12,14 @@ export function cleanupChildren(pid) {
         console.log('error getting children', err)
         return
       }
-      const pids = children.map(x => x.PID)
-      console.log('exiting children', pids)
-      for (const pid of pids) {
-        process.kill(pid)
+      try {
+        const pids = children.map(x => x.PID)
+        console.log('exiting children', pids)
+        for (const pid of pids) {
+          process.kill(pid)
+        }
+      } catch (err) {
+        console.log('err exiting', err)
       }
       clearTimeout(exitWait)
       res()

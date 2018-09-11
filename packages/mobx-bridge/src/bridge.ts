@@ -209,10 +209,14 @@ export class BridgeManager {
       }
       // send state that hasnt been synced yet
       if (this._queuedState) {
-        console.log('opened, sending queued state', this._queuedState)
-        this._socket.send(
-          JSON.stringify({ state: this.state, source: this._source }),
-        )
+        console.log('opened, sending queued state', this.state)
+        try {
+          this._socket.send(
+            JSON.stringify({ state: this.state, source: this._source }),
+          )
+        } catch (err) {
+          console.log('error sending initial state', err.message, err.stack)
+        }
         this._queuedState = false
       }
       this.getCurrentState()

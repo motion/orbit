@@ -15,7 +15,6 @@ import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 const cwd = process.cwd()
 const readEntry = () => {
   try {
-    console.log('ok', Path.join(cwd, 'package.json'))
     const packageJson = Fs.readFileSync(Path.join(cwd, 'package.json'))
     const pkg = JSON.parse(packageJson.toString())
     return pkg.main
@@ -28,7 +27,6 @@ const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 const entry = process.env.ENTRY || readEntry() || './src'
 const tsConfig = Path.join(cwd, 'tsconfig.json')
-console.log('using tsConfig', tsConfig)
 const tsConfigExists = Fs.existsSync(tsConfig)
 const outputPath = Path.join(cwd, 'dist')
 const buildNodeModules =
@@ -42,10 +40,10 @@ const getFlag = flag => {
 
 const target = getFlag('--target') || 'web'
 
-console.log('outputting to', outputPath)
-console.log('target', target)
-console.log('isProd', isProd)
-console.log('tsConfig', tsConfig)
+console.log(
+  'webpack info',
+  JSON.stringify({ outputPath, target, isProd, tsConfig }),
+)
 
 // this really helps hmr speed
 const optimizeSplit = {

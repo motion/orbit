@@ -41,14 +41,13 @@ import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { ScreenManager } from './managers/ScreenManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
-import Server from './Server'
+import { Server } from './Server'
 import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
-import { oracleOptions } from './constants'
 
 const log = new Logger('desktop')
 
@@ -93,15 +92,19 @@ export class Root {
       console.log('opening', url)
       open(url)
     })
+
+    // wait for database manager to run migrations before...
+    this.databaseManager = new DatabaseManager()
+    await this.databaseManager.start()
+
+    // ... you connect models and start running things on them
     await this.connect()
     this.registerMediatorServer()
 
-    this.databaseManager = new DatabaseManager()
-    this.databaseManager.start()
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    // await this.startSyncers()
+    await this.startSyncers()
 
     // start managers...
     this.screenManager = new ScreenManager()

@@ -75,6 +75,7 @@ class AppStore {
     hoveredLine: null,
     contextMessage: '',
     acceptsForwarding: false,
+    lastTear: 0,
   })
 
   get peekState() {

@@ -7,11 +7,12 @@ import { getGlobalConfig } from '@mcro/config'
 import killPort from 'kill-port'
 import { Logger } from '@mcro/logger'
 import { finishOauth } from './helpers/finishOauth'
+import * as Path from 'path'
 
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
 
-export default class Server {
+export class Server {
   cache = {}
   login = null
   app: express.Application
@@ -95,7 +96,10 @@ export default class Server {
     // serve static in production
     if (process.env.NODE_ENV !== 'development') {
       log.info(`Serving orbit static app in ${Config.paths.appStatic}...`)
-      this.app.use('/', express.static(Config.paths.appStatic))
+      this.app.use(express.static(Config.paths.appStatic))
+      this.app.use((_, res) =>
+        res.sendFile(Path.join(Config.paths.appStatic, 'index.html')),
+      )
     }
   }
 

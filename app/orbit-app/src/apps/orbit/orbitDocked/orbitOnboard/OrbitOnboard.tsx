@@ -128,6 +128,7 @@ class OnboardStore {
   acceptedMessage = ''
   accepted = null
   curFrame = 0
+  pendingMove = false
 
   async didMount() {
     await this.checkAlreadyProxied()
@@ -149,6 +150,7 @@ class OnboardStore {
 
   prevFrame = () => this.curFrame--
   nextFrame = async () => {
+    this.pendingMove = true
     // before incrementing, run some actions for:
     // LEAVING curFrame page...
 
@@ -191,6 +193,7 @@ class OnboardStore {
 
     // go to next frame
     this.curFrame++
+    this.pendingMove = false
   }
 }
 
@@ -359,7 +362,13 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
         )}
         <View width={10} />
         <Theme name="orbit">
-          <Button size={1.1} fontWeight={600} onClick={store.nextFrame}>
+          <Button
+            disabled={store.pendingMove}
+            opacity={store.pendingMove ? 0.5 : 1}
+            size={1.1}
+            fontWeight={600}
+            onClick={store.nextFrame}
+          >
             {buttonText[store.curFrame]}
           </Button>
         </Theme>

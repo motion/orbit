@@ -236,7 +236,7 @@ export class Root {
 
   /**
    * Starts all the syncers.
-   * We start syncers in a small timeout to prevent app-overload.
+   * We start syncers with a small timeout to prevent app-overload.
    */
   private async startSyncers() {
     setTimeout(
@@ -246,7 +246,7 @@ export class Root {
             return syncer.start()
           }),
         ),
-      5000,
+      10000,
     )
   }
 

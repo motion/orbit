@@ -11,10 +11,15 @@ export class WebSocketClientTransport implements ClientTransport {
     onSuccess: Function
     onError: Function
   }[] = []
+  private onConnectedCallbacks: (() => void)[] = []
 
   constructor(websocket: WebSocket) {
     this.operationCode = this.generateRandom()
     this.websocket = websocket
+    this.websocket.onopen = () => {
+      this.onConnectedCallbacks.forEach(callback => callback())
+      this.onConnectedCallbacks = []
+    }
     this.websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     this.websocket.onerror = err => {
       console.error('ws error', err)
@@ -38,17 +43,6 @@ export class WebSocketClientTransport implements ClientTransport {
     }
 
     return new Observable(subject => {
-      if (!this.websocket.OPEN) {
-        console.warn('socket closed')
-        return
-      }
-      try {
-        this.websocket.send(JSON.stringify(data))
-      } catch (err) {
-        subject.error(err);
-        console.warn(`Failed to execute websocket operation ${JSON.stringify(err)}`)
-        return
-      }
 
       const subscription = {
         operationId: operationId,
@@ -60,6 +54,21 @@ export class WebSocketClientTransport implements ClientTransport {
         }
       }
       this.subscriptions.push(subscription)
+
+      const callback = () => {
+        try {
+          this.websocket.send(JSON.stringify(data))
+        } catch (err) {
+          subject.error(err);
+          console.warn(`Failed to execute websocket operation ${JSON.stringify(err)}`)
+        }
+      }
+
+      if (this.websocket.readyState === this.websocket.OPEN) {
+        callback();
+      } else {
+        this.onConnectedCallbacks.push(callback)
+      }
 
       // remove subscription on cancellation
       return () => {
@@ -83,30 +92,32 @@ export class WebSocketClientTransport implements ClientTransport {
       ...values,
     }
     return new Promise((ok, fail) => {
-      if (!this.websocket.OPEN) {
-        console.warn('socket closed')
-        return
-      }
-
-      try {
-        this.websocket.send(JSON.stringify(query))
-      } catch (err) {
-        fail(`Failed to execute websocket operation ${JSON.stringify(err)}`)
-        return
-      }
-
-      const subscriptions = this.subscriptions
-      this.subscriptions.push({
-        operationId: operationId,
-        onSuccess(result) {
-          subscriptions.splice(subscriptions.indexOf(this), 1)
-          ok(result)
-        },
-        onError(error) {
-          subscriptions.splice(subscriptions.indexOf(this), 1)
-          fail(error)
+      const callback = () => {
+        try {
+          this.websocket.send(JSON.stringify(query))
+        } catch (err) {
+          fail(`Failed to execute websocket operation ${JSON.stringify(err)}`)
+          return
         }
-      })
+
+        const subscriptions = this.subscriptions
+        this.subscriptions.push({
+          operationId: operationId,
+          onSuccess(result) {
+            subscriptions.splice(subscriptions.indexOf(this), 1)
+            ok(result)
+          },
+          onError(error) {
+            subscriptions.splice(subscriptions.indexOf(this), 1)
+            fail(error)
+          }
+        })
+      };
+      if (this.websocket.readyState === this.websocket.OPEN) {
+        callback();
+      } else {
+        this.onConnectedCallbacks.push(callback)
+      }
     })
   }
 

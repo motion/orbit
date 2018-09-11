@@ -45,8 +45,10 @@ export class PeekStore {
   appState = react(
     () => App.appsState.find(x => x.id === this.props.id),
     appState => {
-      // cancel on no app state so we dont cause bugs on close
-      ensure('has state', !!appState)
+      if (this.isTorn) {
+        // cancel on no app state so we dont cause bugs on close
+        ensure('has state', !!appState)
+      }
       return appState
     },
     {

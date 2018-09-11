@@ -27,36 +27,41 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
   }
 
   async run() {
-
     // load people, we need them to deal with bits
     // note that people must be synced before this syncer's sync
-    log.timer(`load synced people from the database`)
+    log.timer('load synced people from the database')
     const allPeople = await this.loadPeople()
-    log.timer(`load synced people from the database`, allPeople)
+    log.timer('load synced people from the database', allPeople)
 
     // if there are no people it means we run this syncer before people sync,
     // postpone syncer execution
     if (!allPeople.length) {
-      log.verbose(`no people were found, looks like people syncer wasn't executed yet, scheduling restart in 10 seconds`)
+      log.verbose(
+        'no people were found, looks like people syncer wasn\'t executed yet, scheduling restart in 10 seconds',
+      )
       await timeout(10000, () => {
-        log.verbose(`restarting people syncer`)
+        log.verbose('restarting people syncer')
         return this.run()
       })
     }
 
     // load all slack channels
-    log.timer(`load API channels`)
+    log.timer('load API channels')
     const allChannels = await this.loader.loadChannels()
-    log.timer(`load API channels`, allChannels)
+    log.timer('load API channels', allChannels)
 
     // filter out channels based on user settings
-    const activeChannels = SlackUtils.filterChannelsBySettings(allChannels, this.setting)
-    log.verbose(`filtering only selected channels`, activeChannels)
+    const activeChannels = SlackUtils.filterChannelsBySettings(
+      allChannels,
+      this.setting,
+    )
+    log.verbose('filtering only selected channels', activeChannels)
 
     // go through all channels
     const values = this.setting.values as SlackSettingValues
     const lastMessageSync = values.lastMessageSync || {}
-    const apiBits: Bit[] = [], dbBits: Bit[] = []
+    const apiBits: Bit[] = [],
+      dbBits: Bit[] = []
 
     for (let channel of activeChannels) {
       // to load messages using pagination we use "oldest" message we got last time when we synced
@@ -80,28 +85,29 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
 
       // sync messages if we found them
       if (loadedMessages.length) {
-
         // left only messages we need - real user messages, no system or bot messages
-        const filteredMessages = loadedMessages.filter(message => (
-          message.type === 'message' &&
-          !message.subtype &&
-          !message.bot_id &&
-          message.user &&
-          message.text // snippets for example does not contain text, maybe attachments too
-        ))
-        log.verbose(`filtered messages (no bots and others)`, filteredMessages)
+        const filteredMessages = loadedMessages.filter(
+          message =>
+            message.type === 'message' &&
+            !message.subtype &&
+            !message.bot_id &&
+            message.user &&
+            message.text, // snippets for example does not contain text, maybe attachments too
+        )
+        log.verbose('filtered messages (no bots and others)', filteredMessages)
 
         // group messages into special "conversations" to avoid insertion of multiple bits for each message
         const conversations = SlackUtils.createConversation(filteredMessages)
-        log.verbose(`created ${conversations.length} conversations`, conversations)
+        log.verbose(
+          `created ${conversations.length} conversations`,
+          conversations,
+        )
 
         // create bits from conversations
         apiBits.push(
-          ...conversations.map(messages => this.createBit(
-            channel,
-            messages,
-            allPeople,
-          )),
+          ...conversations.map(messages =>
+            this.createBit(channel, messages, allPeople),
+          ),
         )
 
         // update last message sync setting
@@ -167,14 +173,16 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
    */
   private loadLatestBits(channelId: string, oldestMessageId?: string) {
     return getRepository(BitEntity).find({
-      select: ["id", "contentHash"],
+      select: ['id', 'contentHash'],
       where: {
         settingId: this.setting.id,
         location: {
           id: channelId,
         },
-        bitCreatedAt: oldestMessageId ? MoreThan(parseInt(oldestMessageId) * 1000) : undefined,
-      }
+        bitCreatedAt: oldestMessageId
+          ? MoreThan(parseInt(oldestMessageId) * 1000)
+          : undefined,
+      },
     })
   }
 
@@ -186,22 +194,29 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
     messages: SlackMessage[],
     allPeople: Person[],
   ): BitEntity {
-
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
 
     const firstMessage = messages[0]
     const lastMessage = messages[messages.length - 1]
-    const id = 'slack' + this.setting.id + '_' + channel.id + '_' + firstMessage.ts
+    const id =
+      'slack' + this.setting.id + '_' + channel.id + '_' + firstMessage.ts
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
     const values = this.setting.values as SlackSettingValues
     const team = values.oauth.info.team
-    const webLink = `https://${team.domain}.slack.com/archives/${channel.id}/p${firstMessage.ts.replace('.', '')}`
-    const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${team.id}`
+    const webLink = `https://${team.domain}.slack.com/archives/${
+      channel.id
+    }/p${firstMessage.ts.replace('.', '')}`
+    const desktopLink = `slack://channel?id=${channel.id}&message=${
+      firstMessage.ts
+    }&team=${team.id}`
     const body = SlackUtils.buildBitBody(messages, allPeople)
-    const mentionedPeople = SlackUtils.findMessageMentionedPeople(messages, allPeople)
+    const mentionedPeople = SlackUtils.findMessageMentionedPeople(
+      messages,
+      allPeople,
+    )
     const data: SlackBitData = {
       messages: messages.reverse().map(message => ({
         user: message.user,
@@ -210,11 +225,14 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
       })),
     }
     const people = allPeople.filter(person => {
-      return messages.some(message => {
-        return message.user === person.integrationId
-      }) || mentionedPeople.some(mentionedPerson => {
-        return person.id === mentionedPerson.id
-      })
+      return (
+        messages.some(message => {
+          return message.user === person.integrationId
+        }) ||
+        mentionedPeople.some(mentionedPerson => {
+          return person.id === mentionedPerson.id
+        })
+      )
     })
 
     return BitUtils.create({
@@ -239,5 +257,4 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
       desktopLink,
     })
   }
-
 }

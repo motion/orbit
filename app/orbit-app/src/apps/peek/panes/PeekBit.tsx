@@ -159,7 +159,7 @@ export const PeekBit = ({
                   ),
                   content: (
                     <>
-                      <HighlightsContext.Provider value={searchTerm}>
+                      <HighlightsContext.Provider value={searchTerm.split(' ')}>
                         <BitPaneContent
                           bit={bit}
                           peekStore={peekStore}

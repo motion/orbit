@@ -88,22 +88,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     window.titlebarAppearsTransparent = true
     window.titleVisibility = .hidden
     window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
-    window.isMovableByWindowBackground = true
+    window.isMovableByWindowBackground = false
+    window.collectionBehavior = .managed
+    window.ignoresMouseEvents = true
     
     if #available(OSX 10.11, *) {
       self.supportsTransparency = true
-    }
-    
-    // todo support lower versions
-    if #available(OSX 10.12, *) {
-      let _ = Timer(timeInterval: 0.4, repeats: true) { _ in
-        if !self.window.isOnActiveSpace {
-          self.emit("{ \"action\": \"spaceMove\", \"value\": true }")
-          NSApp.activate(ignoringOtherApps: true)
-        }
-      }
-    } else {
-      // Fallback on earlier versions
     }
     
     // allow showing icon in sub-apps
@@ -272,6 +262,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // on start
     if action == "star" {
       self.emit("{ \"action\": \"info\", \"value\": { \"supportsTransparency\": \(self.supportsTransparency) } }")
+      return
+    }
+    if action == "spac" {
+      if !self.window.isOnActiveSpace {
+        print("moving to active space...")
+        self.emit("{ \"action\": \"spaceMove\", \"value\": true }")
+      }
+      return
+    }
+    if action == "mvsp" {
+      self.window.collectionBehavior = .canJoinAllSpaces
+      NSApp.activate(ignoringOtherApps: true)
+      self.window.collectionBehavior = .managed
       return
     }
 //    if action == "paus" {

@@ -68,6 +68,14 @@ export class ScreenManager {
 
     this.setupOracleListeners()
     await this.oracle.start()
+
+    // poll for now for space moves...
+    const listener = setInterval(() => {
+      // check for new space
+      this.oracle.socketSend('space')
+    }, 400)
+    on(this, listener)
+
     this.isStarted = true
   }
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
@@ -166,8 +174,14 @@ export class ScreenManager {
     })
 
     // space move
+    let mvtm
     this.oracle.onSpaceMove(() => {
+      console.log('got space move...')
       Desktop.setState({ movedToNewSpace: Date.now() })
+      clearTimeout(mvtm)
+      mvtm = setTimeout(() => {
+        this.oracle.socketSend('mvsp')
+      }, 400)
     })
 
     // accessiblity check

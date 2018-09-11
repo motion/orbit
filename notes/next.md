@@ -7,9 +7,8 @@
     - Better table contents
 - Tuesday -- _make app work better for demo_
   - fix confluence/jira document display
-  - need to pass array of string to highlightcontext
   - production app bugfix/perf fixes
-  - date filtering isn't working for:
+  - date filteiring isn't working for:
     - nate january
     - nate jan 1 to jan 30
   - Fix intra-peek clicking
@@ -62,7 +61,6 @@
 # Nate
 
 - Multi-process app demo
-- move to new space (see Desktop.state.movedToNewSpace)
 - Pane model + default Pane.id = 0, Pane.name = 'Home'
 - Pane.feedOrder
 - Pane.hasMany Feed

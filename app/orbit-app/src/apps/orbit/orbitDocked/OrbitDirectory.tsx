@@ -190,7 +190,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
     }
   }
   return (
-    <HighlightsContext.Provider value={store.peopleQuery}>
+    <HighlightsContext.Provider value={store.peopleQuery.split(' ')}>
       <SmallVerticalSpace />
       <Title>Directory</Title>
       {sections}

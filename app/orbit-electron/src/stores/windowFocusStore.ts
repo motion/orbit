@@ -3,6 +3,9 @@ import { App, Electron, Desktop } from '@mcro/stores'
 // @ts-ignore
 import ElectronNode from 'electron'
 import { debounce } from 'lodash'
+import { getGlobalConfig } from '@mcro/config'
+
+const Config = getGlobalConfig()
 
 // @ts-ignore
 @store
@@ -91,7 +94,13 @@ export class WindowFocusStore {
     if (!ref) return
     if (this.orbitRef) return
     this.orbitRef = ref.window
-    this.focusOrbit()
-    this.props.onRef(this.orbitRef)
+    this.focusOnStart()
+  }
+
+  // focus on start
+  focusOnStart() {
+    if (Config.isProd) {
+      this.focusOrbit()
+    }
   }
 }

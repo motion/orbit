@@ -2,6 +2,7 @@ import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Actions } from '../actions/Actions'
 import { showNotification } from '../helpers/electron/showNotification'
+import { sleep } from '../helpers';
 // import orbitPosition from '../helpers/orbitPosition'
 // import { ORBIT_WIDTH } from '@mcro/constants'
 // const log = debug('AppReactions')
@@ -36,6 +37,8 @@ export class AppReactions /* extends Store */ {
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:
+          // hacky, wait a bit for tear to sync
+          await sleep(100)
           // if we recently tore a peek window it will trigger a HIDE, but ignore it
           if (Date.now() - App.state.lastTear < 200) {
             console.log('ignore hide from tear')

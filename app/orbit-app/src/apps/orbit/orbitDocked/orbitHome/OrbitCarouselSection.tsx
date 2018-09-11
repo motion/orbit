@@ -11,6 +11,9 @@ const decorator = compose(
 
 export const OrbitCarouselSection = decorator(
   ({ subPaneStore, startIndex, items, categoryName, ...props }) => {
+    if (!items.length) {
+      return null
+    }
     const isPeople = categoryName === 'People'
     return (
       <OrbitSection

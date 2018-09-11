@@ -13,7 +13,6 @@ export const setAppState = (nextState: Partial<typeof defaultPeekState>) => {
   if (!nextState) {
     throw new Error('No appState given')
   }
-  console.log('starting as', stringify(App.appsState))
   const index =
     typeof APP_ID === 'number'
       ? App.appsState.findIndex(app => app.id === APP_ID)

@@ -63,7 +63,7 @@ export default {
       },
     },
     options: {
-      scope: ['profile', 'https://www.googleapis.com/auth/drive'],
+      scope: ['profile', 'https://www.googleapis.com/auth/drive.readonly'],
       accessType: 'offline',
       prompt: 'consent',
     },

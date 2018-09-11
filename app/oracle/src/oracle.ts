@@ -6,6 +6,7 @@ import { logger } from '@mcro/logger'
 import { OracleBridge, SocketSender } from './OracleBridge'
 import { link } from 'fs'
 import { promisify } from 'util'
+import { remove } from 'fs-extra'
 
 const linkify = promisify(link)
 const log = logger('oracle')
@@ -89,7 +90,7 @@ export class Oracle {
     })
     log('started oracleBridge')
     await this.setState({ isPaused: false })
-    await this.runScreenProcess()
+    await this.runOracleProcess()
     await this.oracleBridge.onConnected()
     await sleep(10)
     this.socketSend('start')
@@ -273,7 +274,7 @@ export class Oracle {
     info: val => this.onInfoCB(val),
     spaceMove: val => this.onSpaceMoveCB(val),
     appState: val => {
-      console.log('do it', val, this.onAppStateCB)
+      console.log('do it', this.name, val, this.onAppStateCB)
       this.onAppStateCB(val)
     },
     // down to swift process
@@ -283,7 +284,7 @@ export class Oracle {
     defocus: this.defocus,
   }
 
-  private async runScreenProcess() {
+  private async runOracleProcess() {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }
@@ -298,13 +299,11 @@ export class Oracle {
     if (this.name) {
       // create a named binary link to change the name...
       console.log(`linking! ${this.name}`)
+      const linkBin = Path.join(binDir, this.name)
       try {
-        await linkify(Path.join(binDir, bin), Path.join(binDir, this.name))
-      } catch (err) {
-        if (err.code !== 'EEXIST') {
-          throw new Error(err)
-        }
-      }
+        await remove(linkBin)
+      } catch {}
+      await linkify(Path.join(binDir, bin), linkBin)
       bin = this.name
     }
     log(`oracle running on port ${this.port} ${bin} at path ${binDir}`)
@@ -323,7 +322,7 @@ export class Oracle {
         const out = str.trim()
         const isPurposefulLog = out[0] === '!'
         if (isPurposefulLog || isLikelyError) {
-          log('swift >', out.slice(1))
+          log('swift >', this.name, out.slice(1))
           return
         }
         if (str.indexOf('<Notice>')) {

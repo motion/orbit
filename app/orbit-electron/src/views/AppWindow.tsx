@@ -34,6 +34,10 @@ class AppWindowStore {
       const { id, action } = JSON.parse(val)
       if (id === this.props.id) {
         console.log('ELECTRON GOT ACTION', action)
+        switch (action) {
+          case 'focus':
+            this.window.focus()
+        }
       }
     })
   }

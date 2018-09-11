@@ -77,7 +77,9 @@ export class OracleBridge {
   }
 
   private setupSocket() {
-    this.server.once('connection', socket => {
+    const emitter = this.server.once('connection', socket => {
+      // only run once...
+      emitter.removeAllListeners()
       this.socket = socket
       // send initial state
       this.props.setState(this.props.getState())

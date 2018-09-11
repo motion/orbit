@@ -109,7 +109,6 @@ export class Root {
 
     this.appsManager = new AppsManager({
       onAction: (id, action) => {
-        console.log('app action', id, action)
         Desktop.sendMessage(
           Electron,
           Electron.messages.APP_STATE,

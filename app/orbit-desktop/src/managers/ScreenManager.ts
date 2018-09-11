@@ -40,7 +40,6 @@ const PREVENT_SCANNING = {
 @store
 export class ScreenManager {
   clearTimeout?: Function
-  oracle: Oracle
   running = new CompositeDisposable()
   hasResolvedOCR = false
   appStateTm: any
@@ -50,10 +49,7 @@ export class ScreenManager {
   curAppName = ''
   isStarted = false
   watchSettings = { name: '', settings: {} }
-
-  constructor() {
-    this.oracle = new Oracle(oracleOptions)
-  }
+  oracle = new Oracle(oracleOptions)
 
   start = async () => {
     console.log('starting screenManager...')

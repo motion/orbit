@@ -73,7 +73,6 @@ export class AppsManager {
   }
 
   handleAppState = id => (action: string) => {
-    console.log('hadnling app state', id, action)
     this.props.onAction(id, action)
   }
 

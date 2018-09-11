@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Bit, GDriveBitData, GDrivePersonData } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
@@ -11,7 +11,7 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
 
-const log = logger('syncer:gdrive')
+const log = new Logger('syncer:gdrive')
 
 /**
  * Syncs Google Drive files.
@@ -33,18 +33,18 @@ export class GDriveSyncer implements IntegrationSyncer {
   async run(): Promise<void> {
 
     // load all database bits
-    log(`loading database bits`)
+    log.info(`loading database bits`)
     this.bits = await getRepository(BitEntity).find({
       settingId: this.setting.id
     })
-    log(`database bits were loaded`, this.bits)
+    log.info(`database bits were loaded`, this.bits)
 
     // load all database people
-    log(`loading database people`)
+    log.info(`loading database people`)
     this.people = await getRepository(PersonEntity).find({
       settingId: this.setting.id
     })
-    log(`database people were loaded`, this.people)
+    log.info(`database people were loaded`, this.people)
 
     // now load gdrive files from gdrive API
     await this.loader.load()
@@ -54,16 +54,16 @@ export class GDriveSyncer implements IntegrationSyncer {
     const people = this.loader.users.map(user => this.buildPerson(user))
 
     // saving built bits
-    log(`saving bits`, bits)
+    log.info(`saving bits`, bits)
     await getRepository(BitEntity).save(bits)
-    log(`bits where saved`)
+    log.info(`bits where saved`)
 
     // saving built bits and people
-    log(`saving bits and people`, bits, people)
+    log.info(`saving bits and people`, bits, people)
     await getRepository(PersonEntity).save(people)
     await createOrUpdatePersonBits(people)
     await getRepository(BitEntity).save(bits)
-    log(`bits and people where saved`)
+    log.info(`bits and people where saved`)
   }
 
   /**

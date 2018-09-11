@@ -1,6 +1,6 @@
 import { debugState, on } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
-import { Logger, logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import {
   MediatorServer,
   typeormResolvers,
@@ -50,7 +50,7 @@ import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
 import { oracleOptions } from './constants'
 
-const log = logger('desktop')
+const log = new Logger('desktop')
 
 export class Root {
   oracle: Oracle
@@ -72,7 +72,7 @@ export class Root {
   start = async () => {
     this.registerREPLGlobals()
     this.registerEntityServer()
-    log('Start Desktop Store..')
+    log.info('Start Desktop Store..')
     // iohook.start(false)
     await Desktop.start({
       ignoreSelf: true,

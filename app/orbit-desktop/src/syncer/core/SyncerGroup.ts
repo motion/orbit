@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Syncer } from './Syncer'
 
 /**

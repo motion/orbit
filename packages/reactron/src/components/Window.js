@@ -1,9 +1,9 @@
 import { BaseComponent } from './BaseComponent'
 import { BrowserWindow } from 'electron'
-import debug from 'debug'
+import { Logger } from '@mcro/logger'
 import isEqual from 'lodash.isequal'
 
-const log = debug('reactron')
+const log = new Logger('reactron')
 
 // TODO: document/type props this takes
 
@@ -106,7 +106,7 @@ export class Window extends BaseComponent {
       if (!isEqual(this.options[key], newVal)) {
         const setter = this.window[`set${properCase(key)}`]
         if (setter) {
-          log('update window, set', key, newVal)
+          log.info('update window, set', key, newVal)
           setter.call(this.window, ...newVal)
           this.options[key] = newVal
         }
@@ -116,7 +116,7 @@ export class Window extends BaseComponent {
   }
 
   unmount() {
-    log('unmounting', this.props)
+    log.info('unmounting', this.props)
     this.window.close()
     this.unmounted = true
   }
@@ -138,7 +138,7 @@ export class Window extends BaseComponent {
         }
       }
     } catch (e) {
-      log('error with prop handlers')
+      log.info('error with prop handlers')
       console.log(e)
     }
   }
@@ -210,7 +210,7 @@ function configureSize({ size: oSize, onResize, defaultSize, animateSize }) {
       return
     }
   } catch (e) {
-    log('error in configureSize', e)
+    log.info('error in configureSize', e)
   }
 }
 

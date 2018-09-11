@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { JiraPersonData, Person } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -9,7 +9,7 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { JiraLoader } from './JiraLoader'
 import { JiraUser } from './JiraTypes'
 
-const log = logger('syncer:jira:people')
+const log = new Logger('syncer:jira:people')
 
 /**
  * Syncs Jira people.
@@ -27,33 +27,33 @@ export class JiraPeopleSyncer implements IntegrationSyncer {
   async run(): Promise<void> {
 
     // load users from jira API
-    log('loading jira API users')
+    log.info('loading jira API users')
     const allUsers = await this.loader.loadUsers()
-    log('got jira API users', allUsers)
+    log.info('got jira API users', allUsers)
 
     // we don't need some jira users, like system or bot users
     // so we are filtering them out
-    log('filter out users we don\'t need')
+    log.info('filter out users we don\'t need')
     const filteredUsers = allUsers.filter(user => this.checkUser(user))
-    log('users were filtered out', filteredUsers)
+    log.info('users were filtered out', filteredUsers)
 
     // load users from the database
-    log('loading database (exist) users')
+    log.info('loading database (exist) users')
     this.people = await getRepository(PersonEntity).find({
       settingId: this.setting.id,
     })
-    log('got database users', this.people)
+    log.info('got database users', this.people)
 
     // create entities for each loaded user
-    log('creating person entities from the loaded content')
+    log.info('creating person entities from the loaded content')
     const people = filteredUsers.map(user => this.createPerson(user))
-    log('entities created', people)
+    log.info('entities created', people)
 
     // saving person entities and person bits
-    log('saving entities', people)
+    log.info('saving entities', people)
     await getRepository(PersonEntity).save(people)
     await createOrUpdatePersonBits(people)
-    log('entities saved')
+    log.info('entities saved')
   }
 
   /**

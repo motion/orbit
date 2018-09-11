@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { GithubPersonData, GithubSettingValues, Setting } from '@mcro/models'
 import { uniq } from 'lodash'
 import { getRepository } from 'typeorm'
@@ -10,7 +10,7 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubLoader } from './GithubLoader'
 import { GithubPerson } from './GithubTypes'
 
-const log = logger('syncer:github:people')
+const log = new Logger('syncer:github:people')
 
 export class GithubPeopleSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -34,7 +34,7 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
 
     // if no repositories were selected in settings, we don't do anything
     if (!repositoryPaths.length) {
-      log(`no repositories were selected in the settings, skip sync`)
+      log.info(`no repositories were selected in the settings, skip sync`)
       return
     }
 
@@ -57,11 +57,11 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     }
 
     // save entities we got
-    log(`saving people`, allPeople)
+    log.info(`saving people`, allPeople)
     await getRepository(PersonEntity).save(allPeople)
     // some people don't have their email exposed, that's why we need this check
     await createOrUpdatePersonBits(allPeople.filter(person => person.email))
-    log(`people were saved`)
+    log.info(`people were saved`)
 
     // todo: implement people removal
   }

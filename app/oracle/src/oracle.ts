@@ -2,14 +2,14 @@ import Path from 'path'
 import { spawn, ChildProcess } from 'child_process'
 import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { OracleBridge, SocketSender } from './OracleBridge'
 import { link } from 'fs'
 import { promisify } from 'util'
 import { remove } from 'fs-extra'
 
 const linkify = promisify(link)
-const log = logger('oracle')
+const log = new Logger('oracle')
 const idFn = _ => _
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
@@ -77,7 +77,7 @@ export class Oracle {
   }
 
   start = async () => {
-    log('start oracle')
+    log.info('start oracle')
     this.oracleBridge = new OracleBridge({
       port: this.port,
       getActions: () => this.actions,
@@ -88,19 +88,19 @@ export class Oracle {
     await this.oracleBridge.start(({ socketSend }) => {
       this.socketSend = socketSend
     })
-    log('started oracleBridge')
+    log.info('started oracleBridge')
     await this.setState({ isPaused: false })
     await this.runOracleProcess()
     await this.oracleBridge.onConnected()
     this.socketSend('start')
-    log('started oracle')
+    log.info('started oracle')
   }
 
   stop = async () => {
     if (!this.process) {
       return
     }
-    log('STOPPING oracle')
+    log.info('STOPPING oracle')
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
     // kill process
@@ -116,7 +116,7 @@ export class Oracle {
   }
 
   restart = async () => {
-    log('RESTARTING oracle')
+    log.info('RESTARTING oracle')
     await this.stop()
     await this.start()
   }
@@ -304,7 +304,7 @@ export class Oracle {
       await linkify(Path.join(binDir, bin), linkBin)
       bin = this.name
     }
-    log(`oracle running on port ${this.port} ${bin} at path ${binDir}`)
+    log.info(`oracle running on port ${this.port} ${bin} at path ${binDir}`)
     try {
       this.process = spawn(Path.join(binDir, bin), [], {
         env: {
@@ -320,7 +320,7 @@ export class Oracle {
         const out = str.trim()
         const isPurposefulLog = out[0] === '!'
         if (isPurposefulLog || isLikelyError) {
-          log('swift >', this.name, out.slice(1))
+          log.info('swift >', this.name, out.slice(1))
           return
         }
         if (str.indexOf('<Notice>')) {
@@ -333,7 +333,7 @@ export class Oracle {
       this.process.stdout.on('data', handleOut)
       this.process.stderr.on('data', handleOut)
       this.process.on('exit', val => {
-        log('ORACLE PROCESS STOPPING', val)
+        log.info('ORACLE PROCESS STOPPING', val)
       })
     } catch (err) {
       console.log('errror', err)

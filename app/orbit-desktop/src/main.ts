@@ -1,11 +1,11 @@
 import 'isomorphic-fetch'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { cleanupChildren } from './helpers/cleanupChildren'
 
-const log = logger('desktop')
+const log = new Logger('desktop')
 
 export async function main() {
-  log('Desktop is starting')
+  log.info('Desktop is starting')
 
   /*
    *  Setup app after config

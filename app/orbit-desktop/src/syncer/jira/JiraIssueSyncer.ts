@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Bit, JiraBitData } from '@mcro/models'
 import { JiraSettingValues } from '@mcro/models'
 import { getRepository } from 'typeorm'
@@ -12,7 +12,7 @@ import { SyncerUtils } from '../core/SyncerUtils'
 import { JiraLoader } from './JiraLoader'
 import { JiraIssue } from './JiraTypes'
 
-const log = logger('syncer:jira:issue')
+const log = new Logger('syncer:jira:issue')
 
 /**
  * Syncs Jira issues.
@@ -38,28 +38,28 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     this.people = await SyncerUtils.loadPeople(this.setting.id, log)
 
     // load all database bits
-    log(`loading database bits`)
+    log.info(`loading database bits`)
     this.bits = await getRepository(BitEntity).find({
       settingId: this.setting.id,
     })
-    log(`database bits were loaded`, this.bits)
+    log.info(`database bits were loaded`, this.bits)
 
     // load jira issues
-    log(`loading jira issues from the api`)
+    log.info(`loading jira issues from the api`)
     const issues = await this.loader.loadIssues()
-    log(`jira issues loaded`, issues)
+    log.info(`jira issues loaded`, issues)
 
     // create bits from them and save them
     const bits = issues.map(issue => this.buildBit(issue))
-    log(`saving bits`, bits)
+    log.info(`saving bits`, bits)
     await getRepository(BitEntity).save(bits)
-    log(`bits where saved`)
+    log.info(`bits where saved`)
 
     // get a difference to find a removed bits
     const removedBits = BitUtils.difference(this.bits, bits)
-    log(`removing bits`, removedBits)
+    log.info(`removing bits`, removedBits)
     await getRepository(BitEntity).remove(removedBits)
-    log(`bits were removed`)
+    log.info(`bits were removed`)
   }
 
   /**

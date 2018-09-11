@@ -1,4 +1,4 @@
-import { logger, LoggerInstance } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Person } from '@mcro/models'
 import { SlackPersonData } from '@mcro/models'
 import { SlackSettingValues } from '@mcro/models'
@@ -10,7 +10,7 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SlackLoader } from './SlackLoader'
 import { SlackUser } from './SlackTypes'
 
-const log = new LoggerInstance('syncer:slack:people')
+const log = new Logger('syncer:slack:people')
 
 /**
  * Syncs Slack people.

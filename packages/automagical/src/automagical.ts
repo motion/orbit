@@ -3,7 +3,7 @@ import { Reaction } from './constants'
 import { automagicReact } from './automagicReact'
 import { MagicalObject } from './types'
 import { Root } from './helpers'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 
 // export @react decorator
 export { react } from './react'
@@ -16,7 +16,7 @@ export {
 } from './constants'
 export * from './types'
 
-const log = logger('automagical')
+const log = new Logger('automagical')
 
 // TODO: fix deep() wrapper doesnt trigger reactions when mutating objects
 // so basically this.reactiveObj.x = 1, wont trigger react(() => this.reactiveObj)
@@ -154,7 +154,7 @@ function decorateMethodWithAutomagic(
     // wrap for logging helpers
     target[method] = (...args) => {
       if (Root.__shouldLog && Root.__shouldLog[NAME]) {
-        log(NAME, ...args)
+        log.info(NAME, ...args)
       }
       return targetMethod(...args)
     }

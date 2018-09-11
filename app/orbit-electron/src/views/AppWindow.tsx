@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { view, compose, react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron, Desktop, App } from '@mcro/stores'
-import { logger } from '@mcro/logger'
+import { Electron } from '@mcro/stores'
+import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
 import { BrowserWindow } from 'electron'
 import { ElectronStore } from '../stores/ElectronStore'
 
-const log = logger('electron')
+const log = new Logger('electron')
 const Config = getGlobalConfig()
 
 type Props = {
@@ -93,7 +93,7 @@ const decorator = compose(
 
 export const AppWindow = decorator(
   ({ id, store, isPeek }: Props & { store: AppWindowStore }) => {
-    log(`Rendering app window ${id} at url ${store.url}`)
+    log.info(`Rendering app window ${id} at url ${store.url}`)
     return (
       <Window
         alwaysOnTop={isPeek}

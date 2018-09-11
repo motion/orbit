@@ -3,13 +3,13 @@ import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
 import * as r2 from '@mcro/r2'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { getGlobalConfig } from '@mcro/config'
 
 const Config = getGlobalConfig()
-const log = logger('syncer:gdrive')
+const log = new Logger('syncer:gdrive')
 
 /**
  * Fetches data from Google Drive Api.
@@ -82,7 +82,7 @@ export class GDriveFetcher {
         throw result.error
       }
     } else if (result.error) {
-      log(fullUrl, 'error getting result for', result.error)
+      log.info(fullUrl, 'error getting result for', result.error)
       throw result.error
     }
     return result

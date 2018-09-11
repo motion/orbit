@@ -1,10 +1,10 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { SettingOnboardFinishCommand, GeneralSettingValues } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { SettingEntity } from '../entities/SettingEntity'
 
-const log = logger('command:setting-onboard-finish')
+const log = new Logger('command:setting-onboard-finish')
 
 export const SettingOnboardFinishResolver = resolveCommand(
   SettingOnboardFinishCommand,
@@ -13,7 +13,7 @@ export const SettingOnboardFinishResolver = resolveCommand(
       where: { type: 'general', category: 'general' },
     })
     if (!setting) {
-      log('error - cannot find general setting')
+      log.info('error - cannot find general setting')
       return
     }
 

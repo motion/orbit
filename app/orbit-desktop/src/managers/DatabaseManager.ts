@@ -1,6 +1,6 @@
 import sqlite from 'sqlite'
 import { DATABASE_PATH } from '../constants'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
@@ -11,7 +11,7 @@ import { getRepository } from 'typeorm'
 import { Bit, Setting } from '@mcro/models'
 import { BitUtils } from '../utils/BitUtils'
 
-const log = logger('database')
+const log = new Logger('database')
 
 // we can setup the database for the first time
 // and run migration from here
@@ -100,7 +100,7 @@ export class DatabaseManager {
 
   private watchForReset() {
     const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
-      log(`Removing all data from database at: ${DATABASE_PATH}`)
+      log.info(`Removing all data from database at: ${DATABASE_PATH}`)
       await remove(DATABASE_PATH)
       Desktop.sendMessage(
         App,
@@ -118,14 +118,14 @@ export class DatabaseManager {
 
   private ensureSearchIndex = async () => {
     if (await hasTable(this.db, 'search_index')) {
-      log('Already has search index')
+      log.info('Already has search index')
       return
     }
     await this.createSearchIndex()
   }
 
   removeSearchIndex = async () => {
-    log('Setting up search index')
+    log.info('Setting up search index')
     await this.db.exec('DROP TABLE search_index')
     await this.db.exec('DROP TRIGGER after_bit_insert')
     await this.db.exec('DROP TRIGGER after_bit_update')
@@ -133,7 +133,7 @@ export class DatabaseManager {
   }
 
   createSearchIndex = async () => {
-    log('Setting up search index')
+    log.info('Setting up search index')
     await this.db.exec(
       `CREATE VIRTUAL TABLE search_index USING fts5(
         title,
@@ -141,7 +141,7 @@ export class DatabaseManager {
         tokenize=porter
       )`,
     )
-    log('Setting up trigger to keep search index up to date')
+    log.info('Setting up trigger to keep search index up to date')
     // INSERT
     await this.db.exec(
       `CREATE TRIGGER after_bit_insert AFTER INSERT ON bit_entity BEGIN

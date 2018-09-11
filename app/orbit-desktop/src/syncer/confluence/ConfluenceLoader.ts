@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Bit, ConfluenceSettingValues, Person } from '@mcro/models'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { queryObjectToQueryString } from '../../utils'
@@ -10,7 +10,7 @@ import {
   ConfluenceUser,
 } from './ConfluenceTypes'
 
-const log = logger('syncer:confluence:loader')
+const log = new Logger('syncer:confluence:loader')
 
 /**
  * Loads confluence data from its API.
@@ -202,14 +202,14 @@ export class ConfluenceLoader {
     const qs = queryObjectToQueryString(params)
     const url = `${domain}${path}${qs}`
 
-    log(`performing request to ${url}`)
+    log.info(`performing request to ${url}`)
     const result = await fetch(url, {
       headers: {
         Authorization: `Basic ${credentials}`,
         'Content-Type': 'application/json',
       },
     })
-    log(`request ${url} result ok:`, result.ok)
+    log.info(`request ${url} result ok:`, result.ok)
     if (!result.ok)
       throw new Error(
         `[${result.status}] ${result.statusText}: ${await result.text()}`,

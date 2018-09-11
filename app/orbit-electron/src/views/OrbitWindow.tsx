@@ -4,11 +4,11 @@ import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { BrowserWindow } from 'electron'
 
-const log = logger('electron')
+const log = new Logger('electron')
 const Config = getGlobalConfig()
 
 type Props = {
@@ -95,7 +95,7 @@ export class OrbitWindow extends React.Component<Props> {
   render() {
     const { store, electronStore } = this.props
     const url = Config.urls.server
-    log(`Rendering main window at url ${url}`)
+    log.info(`Rendering main window at url ${url}`)
     return (
       <Window
         alwaysOnTop

@@ -101,7 +101,7 @@ export class AppReactions /* extends Store */ {
   //     }
   //     if (!isHoldingOption) {
   //       if (!App.orbitState.pinned && App.isMouseInActiveArea) {
-  //         log('prevent hide while mouseover after release hold')
+  //         log.info('prevent hide while mouseover after release hold')
   //         throw cancel
   //       }
   //       App.setOrbitState({ hidden: true })

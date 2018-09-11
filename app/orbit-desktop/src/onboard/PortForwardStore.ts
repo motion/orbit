@@ -1,11 +1,11 @@
 import { store, react, ensure } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import * as Path from 'path'
 import { getGlobalConfig } from '@mcro/config'
 import Sudoer from '@mcro/electron-sudo'
 
-const log = logger('desktop')
+const log = new Logger('desktop')
 const Config = getGlobalConfig()
 
 const checkAuthProxy = () => {
@@ -37,7 +37,7 @@ export class PortForwardStore {
     accepts => {
       ensure('accepts', accepts)
       ensure('not forwarded', !this.isForwarded)
-      log('Starting orbit proxy...')
+      log.info('Starting orbit proxy...')
       clearInterval(this.successInt)
       this.forwardPort()
     },
@@ -45,7 +45,7 @@ export class PortForwardStore {
 
   forwardPort = async () => {
     const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
-    log(`Running proxy script: ${pathToOrbitProxy}`)
+    log.info(`Running proxy script: ${pathToOrbitProxy}`)
 
     const port = Config.ports.server
     const host = Config.urls.authProxy.replace('http://', '')
@@ -71,13 +71,13 @@ export class PortForwardStore {
       },
     )
     cmd.stdout.on('data', x => {
-      log(`OrbitProxy: ${x}`)
+      log.info(`OrbitProxy: ${x}`)
       if (x.indexOf('OrbitSuccess') > -1) {
         Desktop.sendMessage(App, App.messages.FORWARD_STATUS, 'success')
       }
     })
     cmd.stderr.on('data', x => {
-      log(`OrbitProxyErr: ${x}`)
+      log.info(`OrbitProxyErr: ${x}`)
       Desktop.sendMessage(App, App.messages.FORWARD_STATUS, x)
     })
   }

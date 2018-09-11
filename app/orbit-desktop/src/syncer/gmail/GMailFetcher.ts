@@ -1,13 +1,13 @@
 import { GmailSettingValues } from '@mcro/models'
 import * as r2 from '@mcro/r2'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { queryObjectToQueryString } from '../../utils'
 import { GmailFetchOptions } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { getGlobalConfig } from '@mcro/config'
 
 const Config = getGlobalConfig()
-const log = logger('syncer:gmail')
+const log = new Logger('syncer:gmail')
 
 export class GMailFetcher {
   setting: SettingEntity
@@ -28,7 +28,7 @@ export class GMailFetcher {
     const url = `https://www.googleapis.com${path}${queryObjectToQueryString(
       query,
     )}`
-    log('fetching', url)
+    log.info('fetching', url)
     const response = await fetch(url, {
       mode: 'cors',
       headers: {
@@ -44,7 +44,7 @@ export class GMailFetcher {
           result.error.code === 401) &&
         !isRetrying
       ) {
-        log('refreshing token')
+        log.info('refreshing token')
         const didRefresh = await this.refreshToken()
         if (didRefresh) {
           return await this.doFetch(path, query, true)

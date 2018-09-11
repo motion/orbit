@@ -62,7 +62,7 @@ export class DriveService {
       const next = await this.getFilesWithAllInfo(ids, fileQuery)
       response = [...response, ...next]
       fetched = response.length
-      // log('getFiles', next, fetched, 'out of', fileIds.length)
+      // log.info('getFiles', next, fetched, 'out of', fileIds.length)
       await sleep(4000)
     }
     return response

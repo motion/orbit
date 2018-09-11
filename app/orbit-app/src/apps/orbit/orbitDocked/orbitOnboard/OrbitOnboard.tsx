@@ -120,7 +120,7 @@ const AddButton = ({ disabled, ...props }) =>
     </Theme>
   )
 
-const buttonText = ['Start Proxy', 'Next', 'Done!']
+const buttonText = ['Start Secure Proxy', 'Next', 'Done!']
 
 class OnboardStore {
   props: Props
@@ -228,7 +228,7 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
           {store.accepted === null && (
             <Centered>
               <br />
-              <Text size={3.2} fontWeight={600}>
+              <Text size={3} fontWeight={500}>
                 Hello,
               </Text>
               <View height={10} />
@@ -236,24 +236,32 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
                 Welcome to Orbit
               </Text>
               <View height={30} />
-              <Text textAlign="left" fontSize={27} lineHeight={35} alpha={0.9}>
-                Orbit is the first ever search platform built{' '}
-                <strong>for&nbsp;you</strong>.<VerticalSpace />
-                It's completely private. Your keys and data are only ever stored
-                and accessed privately on your computer.
+              <Text
+                selectable
+                textAlign="left"
+                size={1.1}
+                sizeLineHeight={1.025}
+                alpha={0.9}
+              >
+                Orbit is the next step in operating systems. It's a beautiful
+                unified platform for all your information.
+                <VerticalSpace />
+                It's time we had control over our information. Orbit unifies
+                information in a completely private way: entirely on your
+                device.
+                <VerticalSpace />
+                We never access or expose any of your keys or data, and never
+                will.
+                <VerticalSpace />
+                To do this, we'll run a secure private local proxy.
               </Text>
               <VerticalSpace />
-              <Text textAlign="left">
-                To pull that off Orbit will run a secure proxy on your computer.
-              </Text>
               <VerticalSpace />
               <div className="markdown">
                 <a href="http://tryorbit.com/security">
-                  Our absolute commitment to security.
+                  Read our commitment to privacy and security.
                 </a>
               </div>
-              <VerticalSpace />
-              <VerticalSpace />
               <VerticalSpace />
             </Centered>
           )}

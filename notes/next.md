@@ -7,6 +7,13 @@
     - Better table contents
 - Tuesday -- _make app work better for demo_
   - production app bugfix/perf fixes
+    - make onboard nicer in a few ways
+      - smaller selectable text
+      - show shortcut
+      - auto-advance at last step rather than button (fade?)
+    - during onboard dont hide on focus away
+    - cannot get /app
+    - teach option+space during startup (and show in tray during onboard)
   - date filteiring isn't working for:
     - nate january
     - nate jan 1 to jan 30

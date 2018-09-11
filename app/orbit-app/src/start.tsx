@@ -1,7 +1,5 @@
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
-// needs to be imported before react
-import 'react-hot-loader'
 import 'isomorphic-fetch'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
@@ -26,8 +24,8 @@ export async function start() {
 
 start()
 
-// if (process.env.NODE_ENV !== 'production') {
-//   if (typeof module.hot !== 'undefined') {
-//     module.hot.accept(start)
-//   }
-// }
+if (process.env.NODE_ENV !== 'production') {
+  if (typeof module.hot !== 'undefined') {
+    module.hot.accept(start)
+  }
+}

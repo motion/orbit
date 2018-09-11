@@ -96,6 +96,7 @@ export default class Server {
     if (process.env.NODE_ENV !== 'development') {
       log.info(`Serving orbit static app in ${Config.paths.appStatic}...`)
       this.app.use('/', express.static(Config.paths.appStatic))
+      this.app.use('/app', express.static(Config.paths.appStatic))
     }
   }
 

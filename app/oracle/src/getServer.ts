@@ -3,11 +3,11 @@ import { Server } from 'ws'
 
 let server
 
-export async function getServer() {
+export async function getServer(port: number) {
   if (!server) {
     // kill old ones
-    await killPort(this.props.port)
-    server = new Server({ port: this.props.port })
+    await killPort(port)
+    server = new Server({ port })
     server.on('error', (...args) => {
       console.log('server error', args)
     })

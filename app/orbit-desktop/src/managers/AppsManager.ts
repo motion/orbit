@@ -9,19 +9,10 @@ type FakeProcess = {
   oracle: Oracle
 }
 
-type AppsManagerOpts = {
-  oracleOptions: Object
-}
-
 // @ts-ignore
 @store
 export class AppsManager {
   processes: FakeProcess[] = []
-  opts: AppsManagerOpts
-
-  constructor(opts: AppsManagerOpts) {
-    this.opts = opts
-  }
 
   manageAppIcons = react(
     () => App.appsState,

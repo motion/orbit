@@ -96,7 +96,6 @@ export class BridgeManager {
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {
-      console.log('not sending initial state', initialState)
       this.setState(initialState, true)
     }
     // setup start/quit actions

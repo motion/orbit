@@ -85,10 +85,11 @@ export class Oracle {
     await this.oracleBridge.start(({ socketSend }) => {
       this.socketSend = socketSend
     })
+    log('started oracleBridge')
     await this.setState({ isPaused: false })
     await this.runScreenProcess()
     await this.connectToScreenProcess()
-    log('ran process')
+    log('started oracle')
   }
 
   stop = async () => {

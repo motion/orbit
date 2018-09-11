@@ -24,10 +24,11 @@ export class OracleBridge {
 
   constructor(props: Props) {
     this.props = props
+    this.port = this.props.port
   }
 
   start = async (cb: ((handlers: BridgeHandlers) => void)) => {
-    this.server = await getServer()
+    this.server = await getServer(this.port)
     cb({
       socketSend: this.socketSend,
     })

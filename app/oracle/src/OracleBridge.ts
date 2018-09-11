@@ -29,8 +29,21 @@ export class OracleBridge {
 
   start = async (cb: ((handlers: BridgeHandlers) => void)) => {
     this.server = await getServer(this.port)
+    this.setupSocket()
     cb({
       socketSend: this.socketSend,
+    })
+  }
+
+  onConnected() {
+    return new Promise(res => {
+      // wait for connection to socket before sending start
+      let startWait = setInterval(() => {
+        if (this.socket) {
+          clearInterval(startWait)
+          res()
+        }
+      }, 50)
     })
   }
 
@@ -63,8 +76,9 @@ export class OracleBridge {
     await new Promise(res => setTimeout(res))
   }
 
-  setupSocket() {
+  private setupSocket() {
     this.server.once('connection', socket => {
+      console.log('we got a connection yo')
       this.socket = socket
       // send initial state
       this.props.setState(this.props.getState())

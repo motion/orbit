@@ -88,7 +88,9 @@ export class Oracle {
     log('started oracleBridge')
     await this.setState({ isPaused: false })
     await this.runScreenProcess()
-    await this.connectToScreenProcess()
+    await this.oracleBridge.onConnected()
+    await sleep(10)
+    this.socketSend('start')
     log('started oracle')
   }
 
@@ -285,19 +287,6 @@ export class Oracle {
     defocus: this.defocus,
   }
 
-  private connectToScreenProcess() {
-    return new Promise(res => {
-      // wait for connection to socket before sending start
-      let startWait = setInterval(() => {
-        if (this.listeners.length) {
-          clearInterval(startWait)
-          setTimeout(() => this.socketSend('start'), 10)
-          res()
-        }
-      }, 10)
-    })
-  }
-
   private async runScreenProcess() {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
@@ -318,8 +307,6 @@ export class Oracle {
           ...this.env,
         },
       })
-      log('Connect stdout...')
-
       const handleOut = data => {
         if (!data) return
         const str = data.toString()

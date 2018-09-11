@@ -44,10 +44,10 @@ export class PaneManagerStore {
       }
       if (this.props.selectionStore.activeIndex === -1) {
         if (key === 'right') {
-          this.setPaneIndex(Math.min(this.panes.length - 1, this.paneIndex + 1))
+          this.setPaneIndex(this.paneIndex + 1)
         }
         if (key === 'left') {
-          this.setPaneIndex(Math.max(0, this.paneIndex - 1))
+          this.setPaneIndex(this.paneIndex - 1)
         }
       }
     })
@@ -127,6 +127,12 @@ export class PaneManagerStore {
   }
 
   setPaneIndex = index => {
+    if (index > this.panes.length - 1) {
+      return
+    }
+    if (index < 0) {
+      return
+    }
     this.beforeSetPane()
     if (index !== this.paneIndex) {
       this.paneIndex = index

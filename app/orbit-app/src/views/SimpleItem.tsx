@@ -17,6 +17,9 @@ const Item = view({
   '&:last-child': {
     borderBottom: 'none',
   },
+  '&:active': {
+    opacity: 0.8,
+  },
 })
 Item.theme = ({ theme }) => ({
   borderBottom: [1, theme.borderColor.alpha(0.3)],

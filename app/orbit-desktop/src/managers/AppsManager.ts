@@ -40,7 +40,11 @@ export class AppsManager {
       }
 
       // handle adds
-      for (const { id } of appsState) {
+      for (const { id, torn } of appsState) {
+        // dont handle peek app
+        if (!torn) {
+          continue
+        }
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
           const oracle = await this.spawnOracle(

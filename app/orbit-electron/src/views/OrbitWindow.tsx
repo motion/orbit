@@ -40,7 +40,7 @@ class MainStore {
       ensure('did move', !!moved)
       ensure('has window', !!this.window)
       // wait for move to finish
-      await sleep(400)
+      await sleep(100)
       // wait for showing
       await when(() => App.orbitState.docked)
       this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens

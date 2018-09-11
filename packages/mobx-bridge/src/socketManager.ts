@@ -103,7 +103,7 @@ export class SocketManager {
       }
       if (state) {
         // console.log('should send', source || '---nostate:(', state)
-        this.onState(source, state)
+        this.onState(source, state, uid)
         this.sendAll(source, state, { skipUID: uid })
       }
       // initial message

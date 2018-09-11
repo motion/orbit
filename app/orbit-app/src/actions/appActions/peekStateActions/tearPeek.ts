@@ -15,6 +15,7 @@ export function tearPeek() {
     },
     ...rest,
   ]
+  console.log('setting app state', appsState)
   // set
   App.setState({
     appsState,

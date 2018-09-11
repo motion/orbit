@@ -20,6 +20,7 @@ type Props = {
 class AppWindowStore {
   props: Props
   window: BrowserWindow = null
+  off: any
   position = [1, 1]
 
   didMount() {
@@ -27,10 +28,23 @@ class AppWindowStore {
     setTimeout(() => {
       this.position = [0, 0]
     })
+
+    // listen for events
+    this.off = Electron.onMessage(Electron.messages.APP_STATE, val => {
+      const { id, action } = JSON.parse(val)
+      if (id === this.props.id) {
+        console.log('ELECTRON GOT ACTION', action)
+        switch (action) {
+          case 'focus':
+            this.window.focus()
+        }
+      }
+    })
   }
 
   willUnmount() {
     this.props.electronStore.apps.delete(this)
+    this.off()
   }
 
   get ignoreMouseEvents() {
@@ -63,14 +77,15 @@ const decorator = compose(
 )
 
 export const AppWindow = decorator(
-  ({ id, store }: Props & { store: AppWindowStore }) => {
+  ({ id, store, isPeek }: Props & { store: AppWindowStore }) => {
     log(`Rendering app window ${id} at url ${store.url}`)
     return (
       <Window
-        alwaysOnTop
+        alwaysOnTop={isPeek}
         show
         ref={store.handleRef}
         ignoreMouseEvents={!Electron.hoverState.peekHovered[id]}
+        focusable={isPeek}
         file={store.url}
         frame={false}
         hasShadow={false}

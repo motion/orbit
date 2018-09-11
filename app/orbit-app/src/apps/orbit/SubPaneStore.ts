@@ -179,7 +179,6 @@ export class SubPaneStore {
     }
     const isNearBottom = scrolledTo + 450 > innerHeight
     if (isNearBottom && this.props.onScrollNearBottom) {
-      console.log('SCROLL NEAR BOTTOM TRIGGER')
       this.props.onScrollNearBottom()
     }
   }

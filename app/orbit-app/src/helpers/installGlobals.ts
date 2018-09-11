@@ -12,6 +12,7 @@ import * as Repositories from '../repositories'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { Actions } from '../actions/Actions'
+import { stringify } from '@mcro/helpers'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -47,7 +48,7 @@ window['color'] = color
 window['dateFns'] = dateFns
 window['Logger'] = Logger
 window['toJS'] = toJS
-window['stringify'] = Helpers.stringify
+window['stringify'] = stringify
 window['Actions'] = Actions
 
 // make the various model/repositories global

@@ -1,7 +1,6 @@
 # nate
 
 - Monday -- _finish great "app" demo_
-  - Fully working tear away and continue using
   - Make demo app nicer:
     - Sidebar selectable list items
     - Working tabs

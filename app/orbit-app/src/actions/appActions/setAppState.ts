@@ -9,17 +9,15 @@ const merge = (state, next) => {
   return state
 }
 
-const getPeekId = () => {
-  return App.appsState[0].id
-}
-
 export const setAppState = (nextState: Partial<typeof defaultPeekState>) => {
   if (!nextState) {
     throw new Error('No appState given')
   }
-  const index = APP_ID
-    ? App.appsState.findIndex(app => app.id === APP_ID)
-    : getPeekId()
+  console.log('starting as', stringify(App.appsState))
+  const index =
+    typeof APP_ID === 'number'
+      ? App.appsState.findIndex(app => app.id === APP_ID)
+      : 0
   const myAppState = deepClone(App.appsState[index])
   const newPeekState = merge(myAppState, nextState)
   const appsState = [...App.appsState]

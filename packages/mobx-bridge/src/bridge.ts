@@ -1,5 +1,5 @@
 import { action } from 'mobx'
-import { isPlainObject, isEqual } from 'lodash'
+import { isPlainObject, isEqual, debounce } from 'lodash'
 import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
@@ -56,7 +56,7 @@ export class BridgeManager {
   _source = ''
   _initialState = {}
   _socket = null
-  _hasFetchedInitialState = false
+  private hasFetchedInitialState = false
   // to be set once they are imported
   stores = {}
   messageListeners = new Set()
@@ -96,18 +96,22 @@ export class BridgeManager {
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {
-      console.log('not sending initial state', initialState)
       this.setState(initialState, true)
     }
     // setup start/quit actions
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', this.dispose)
     }
-    // wait for initial state to come down for a little
-    try {
-      await Mobx.when(() => this._hasFetchedInitialState, { timeout: 250 })
-    } catch {
-      this._hasFetchedInitialState = true
+    // wait for initial state
+    if (!this._options.master) {
+      try {
+        await Mobx.when(() => this.hasFetchedInitialState, { timeout: 1000 })
+        if (!this.hasFetchedInitialState) {
+          throw new Error('Timed out fetching initial state!')
+        }
+      } catch {
+        this.hasFetchedInitialState = true
+      }
     }
   }
 
@@ -117,8 +121,8 @@ export class BridgeManager {
     this.socketManager = new SocketManager({
       masterSource: 'Desktop',
       port: this.port,
-      onState: (source, state) => {
-        log(`onState ${JSON.stringify(state)}`)
+      onState: (source, state, uid) => {
+        log(`onState ${uid} ${JSON.stringify(state)}`)
         this.deepMergeMutate(stores[source].state, state, {
           ignoreKeyCheck: true,
         })
@@ -126,12 +130,7 @@ export class BridgeManager {
       actions: {
         // stores that first connect send a call to get initial state
         // this is where its received by other apps
-        getState: ({ source, socket }) => {
-          // dont sync you to yourself
-          if (source === this._source) {
-            console.log('ignore sending getState to self', source)
-            return
-          }
+        getState: ({ /* source,  */ socket }) => {
           for (const name of Object.keys(stores)) {
             this.socketManager.sendState(socket, stores[name].state, name)
           }
@@ -146,12 +145,6 @@ export class BridgeManager {
   setupClientSocket = () => {
     // socket setup
     this._socket.onmessage = async ({ data }) => {
-      if (!this._hasFetchedInitialState) {
-        // TODO: make this actually work
-        setTimeout(() => {
-          this._hasFetchedInitialState = true
-        }, 40)
-      }
       if (!data) {
         console.log('No data received over socket')
         return
@@ -196,6 +189,10 @@ export class BridgeManager {
         }
         await immediate()
         this.deepMergeMutate(state, newState, { ignoreKeyCheck: true })
+        // we have initial state :)
+        if (source === this._source && !this.hasFetchedInitialState) {
+          this.debounceSetHasFetched()
+        }
       } catch (err) {
         console.error(
           `${err.message}:\n${err.stack}\n
@@ -218,10 +215,7 @@ export class BridgeManager {
         )
         this._queuedState = false
       }
-      // get initial state
-      this._socket.send(
-        JSON.stringify({ action: 'getState', source: this._source }),
-      )
+      this.getCurrentState()
     }
     this._socket.onclose = () => {
       this._wsOpen = false
@@ -244,6 +238,17 @@ export class BridgeManager {
         console.log('socket err', err.message, err.stack)
       }
     }
+  }
+
+  debounceSetHasFetched = debounce(() => {
+    this.hasFetchedInitialState = true
+  }, 16)
+
+  getCurrentState = () => {
+    // get initial state
+    this._socket.send(
+      JSON.stringify({ action: 'getState', source: this._source }),
+    )
   }
 
   handleMessage = data => {

@@ -117,22 +117,22 @@ export default class DebugApps {
       }, 1000)
       try {
         const answers = await r2.get(infoUrl).json
-        resolve(
-          answers
-            .map(answer => {
-              if (
-                answer.url.indexOf('file://') === 0 ||
-                answer.url.indexOf(REMOTE_URL) === 0
-              ) {
-                return this.getUrlForJsonInfo(answer, port)
-              }
-              // if its a "electron background page", we dont want it
-              return null
-            })
-            .filter(Boolean),
-          // sort so the tab order stays stable
-          // .sort((a, b) => a.url.localeCompare(b.url)),
-        )
+        const sortedAnswers = answers
+          .map(answer => {
+            if (
+              answer.url.indexOf('file://') === 0 ||
+              answer.url.indexOf(REMOTE_URL) === 0
+            ) {
+              return this.getUrlForJsonInfo(answer, port)
+            }
+            // if its a "electron background page", we dont want it
+            return null
+          })
+          .filter(Boolean)
+          .sort((a, b) =>
+            `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`),
+          )
+        resolve(sortedAnswers)
       } catch (err) {
         if (err.message.indexOf('ECONNREFUSED') !== -1) return
         console.log('dev err', err.message)

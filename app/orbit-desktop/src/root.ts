@@ -46,15 +46,11 @@ import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
-import Oracle from '@mcro/oracle'
+import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
+import { oracleOptions } from './constants'
 
 const log = logger('desktop')
-const Config = getGlobalConfig()
-
-// we re-route this with electron-builder to here
-const oracleBinPath =
-  Config.isProd && Path.join(Config.paths.resources, '..', 'MacOS', 'oracle')
 
 export class Root {
   oracle: Oracle
@@ -105,18 +101,21 @@ export class Root {
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    await this.startSyncers()
-
-    // start manager dependencies...
-    this.oracle = new Oracle({
-      binPath: oracleBinPath,
-      socketPort: Config.ports.oracleBridge,
-    })
-    await this.oracle.start()
+    // await this.startSyncers()
 
     // start managers...
-    this.screenManager = new ScreenManager({ oracle: this.oracle })
-    this.appsManager = new AppsManager({ oracle: this.oracle })
+    this.screenManager = new ScreenManager()
+    await this.screenManager.start()
+
+    this.appsManager = new AppsManager({
+      onAction: (id, action) => {
+        Desktop.sendMessage(
+          Electron,
+          Electron.messages.APP_STATE,
+          JSON.stringify({ id, action }),
+        )
+      },
+    })
 
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screenManager.lastScreenChange,
@@ -124,7 +123,6 @@ export class Root {
     this.keyboardStore.start()
     this.watchLastBit()
     await this.server.start()
-    this.screenManager.start()
     debugState(({ stores }) => {
       this.stores = stores
     })

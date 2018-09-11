@@ -1,8 +1,8 @@
 import { App, Electron } from '@mcro/stores'
 import { isEqual, store, react, debugState, on, sleep } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
-import { WindowFocusStore } from '../stores/WindowFocusStore'
-import { HoverStateStore } from '../stores/HoverStateStore'
+import { WindowFocusStore } from './WindowFocusStore'
+import { HoverStateStore } from './HoverStateStore'
 import root from 'global'
 import { app, screen, clipboard } from 'electron'
 

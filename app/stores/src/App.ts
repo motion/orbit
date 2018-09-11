@@ -100,7 +100,7 @@ class AppStore {
     return 'none for now'
   }
 
-  start = async options => {
+  start = async (options?) => {
     await Bridge.start(this, this.state, options)
   }
 }

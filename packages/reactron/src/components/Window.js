@@ -118,6 +118,7 @@ export class Window extends BaseComponent {
   unmount() {
     log('unmounting', this.props)
     this.window.close()
+    this.unmounted = true
   }
 
   handleNewProps(keys) {

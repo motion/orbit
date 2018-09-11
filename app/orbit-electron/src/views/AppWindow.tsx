@@ -71,6 +71,7 @@ export const AppWindow = decorator(
         show
         ref={store.handleRef}
         ignoreMouseEvents={!Electron.hoverState.peekHovered[id]}
+        focusable={isPeek}
         file={store.url}
         frame={false}
         hasShadow={false}

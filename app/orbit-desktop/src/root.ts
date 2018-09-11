@@ -46,15 +46,12 @@ import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
-import Oracle from '@mcro/oracle'
+import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
+import { oracleOptions } from './constants'
 
 const log = logger('desktop')
 const Config = getGlobalConfig()
-
-// we re-route this with electron-builder to here
-const oracleBinPath =
-  Config.isProd && Path.join(Config.paths.resources, '..', 'MacOS', 'oracle')
 
 export class Root {
   oracle: Oracle
@@ -108,15 +105,12 @@ export class Root {
     await this.startSyncers()
 
     // start manager dependencies...
-    this.oracle = new Oracle({
-      binPath: oracleBinPath,
-      socketPort: Config.ports.oracleBridge,
-    })
+    this.oracle = new Oracle(oracleOptions)
     await this.oracle.start()
 
     // start managers...
     this.screenManager = new ScreenManager({ oracle: this.oracle })
-    this.appsManager = new AppsManager({ oracle: this.oracle })
+    this.appsManager = new AppsManager()
 
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screenManager.lastScreenChange,

@@ -1,4 +1,4 @@
-import Oracle from '@mcro/oracle'
+import { Oracle } from '@mcro/oracle'
 import { debounce, last } from 'lodash'
 import { store, isEqual, react, on, sleep } from '@mcro/black'
 import { Desktop, Electron, App } from '@mcro/stores'

@@ -123,7 +123,7 @@ const OrbitDockedInner = view({
 export class OrbitDocked extends React.Component<Props> {
   render() {
     const { searchStore, paneManagerStore } = this.props
-    // log('DOCKED ------------', store.animationState)
+    // log.info('DOCKED ------------', store.animationState)
     return (
       <UI.Theme name={App.state.darkTheme ? 'dark' : 'light'}>
         <OrbitDockedFrame

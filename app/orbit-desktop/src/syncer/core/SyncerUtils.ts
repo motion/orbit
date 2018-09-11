@@ -1,4 +1,4 @@
-import { logger, LoggerInterface } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { timeout } from '../../utils'
@@ -23,9 +23,9 @@ export class SyncerUtils {
    * that allows to wait for a people syncer to finish its job
    * and get people once we have them.
    */
-  static async loadPeople(settingId: number, log: LoggerInterface): Promise<PersonEntity[]> {
+  static async loadPeople(settingId: number, log: Logger): Promise<PersonEntity[]> {
 
-    log(`loading database (already synced) people`)
+    log.info(`loading database (already synced) people`)
     const people = await getRepository(PersonEntity).find({
       where: {
         settingId: settingId
@@ -35,15 +35,15 @@ export class SyncerUtils {
       }
     })
     if (people.length) {
-      log(`loaded database people`, people)
+      log.info(`loaded database people`, people)
       return people
     }
 
     // if there are no people it means we run this syncer before people sync,
     // postpone syncer execution
-    log(`no people were found, looks like people syncer wasn't executed yet, scheduling restart in 10 seconds`)
+    log.info(`no people were found, looks like people syncer wasn't executed yet, scheduling restart in 10 seconds`)
     return await timeout(10000, () => {
-      log(`restarting people syncer`)
+      log.info(`restarting people syncer`)
       return this.loadPeople(settingId, log)
     })
   }

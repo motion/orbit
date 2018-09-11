@@ -1,7 +1,7 @@
 import { Server } from 'ws'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 
-const log = logger('scrn')
+const log = new Logger('scrn')
 
 export class SocketManager {
   activeSockets = []
@@ -41,7 +41,7 @@ export class SocketManager {
     try {
       socket.send(JSON.stringify({ source, state }))
     } catch (err) {
-      log('error with scoket', err.message, err.stack)
+      log.info('error with scoket', err.message, err.stack)
     }
   }
 
@@ -75,7 +75,7 @@ export class SocketManager {
       try {
         socket.send(strData)
       } catch (err) {
-        log('API: failed to send to socket, removing', err.message, uid)
+        log.info('API: failed to send to socket, removing', err.message, uid)
         this.removeSocket(uid)
       }
     }
@@ -135,7 +135,7 @@ export class SocketManager {
     setInterval(() => {
       const count = this.activeSockets.length
       if (lastCount !== count) {
-        log(count, 'connections')
+        log.info(count, 'connections')
       }
       lastCount = count
     }, 5000)
@@ -146,10 +146,10 @@ export class SocketManager {
       this.decorateSocket(uid, socket)
     })
     this.wss.on('close', () => {
-      log('WE SHOULD HANDLE THIS CLOSE', ...arguments)
+      log.info('WE SHOULD HANDLE THIS CLOSE', ...arguments)
     })
     this.wss.on('error', (...args) => {
-      log('wss error', args)
+      log.info('wss error', args)
     })
   }
 }

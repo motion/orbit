@@ -9,7 +9,7 @@ export function togglePeekApp(
   item: PersonBit | Bit | AppConfig,
   target?: PeekTarget,
 ) {
-  log('togglePeekApp', item)
+  log.info('togglePeekApp', item)
   if (isEqual(App.peekState.appConfig, getAppConfig(item))) {
     Actions.clearPeek()
   } else {

@@ -43,10 +43,10 @@ export async function startElectron() {
     desktopFailMsg = `${err.message}`
   }
 
-  log('Waiting for desktop startup to continue...')
+  log.info('Waiting for desktop startup to continue...')
   await waitPort({ port: Config.ports.server })
   clearTimeout(failStartTm)
-  log('Found desktop, continue...')
+  log.info('Found desktop, continue...')
 
   // start electron...
   const ElectronApp = require('@mcro/orbit-electron')

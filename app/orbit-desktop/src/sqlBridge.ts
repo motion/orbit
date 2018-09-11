@@ -1,19 +1,19 @@
 import { getConnection, getRepository } from 'typeorm'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import WebSocket = require('ws')
 
-const log = logger('sql-bridge')
+const log = new Logger('sql-bridge')
 
 /**
  * Handles received server actions,
  * actions that needs to manipulate with the database.
  */
 export function handleEntityActions(socket: WebSocket, data: any) {
-  // log('sqlBridge received data', data)
+  // log.info('sqlBridge received data', data)
 
   // check if data has all necessary stuff
   if (!data.operation || !data.entity || !data.operationId) {
-    log(`wrong operation was received, cannot handle`)
+    log.info(`wrong operation was received, cannot handle`)
     return
   }
 
@@ -32,7 +32,7 @@ export function handleEntityActions(socket: WebSocket, data: any) {
   // get the repository and register a callback that will handle repository method calls
   const repository = getRepository(entityTarget.target)
   const sendResultsBack = result => {
-    // log(`operation ${data.operation} executed successfully`, result)
+    // log.info(`operation ${data.operation} executed successfully`, result)
     socket.send(
       JSON.stringify({
         operationId: data.operationId,

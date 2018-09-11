@@ -4,12 +4,12 @@ import { peekPosition } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { PeekTarget } from './types'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { personToAppConfig } from '../../../helpers/toAppConfig/personToAppConfig'
 import { bitToAppConfig } from '../../../helpers/toAppConfig/bitToAppConfig'
 import { setAppState } from '../setAppState'
 
-export const log = logger('peekApp')
+export const log = new Logger('peekApp')
 
 type PartialPeekState = { target: PeekTarget } & Partial<typeof App.peekState>
 

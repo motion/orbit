@@ -69,7 +69,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       value = prev
       prev = newValue
       if (!preventLog) {
-        log(`${name} (delayValue) =`, value)
+        log.info(`${name} (delayValue) =`, value)
       }
     }
     if (
@@ -240,7 +240,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           update(val)
         }
         if (!IS_PROD && !preventLog) {
-          log(
+          log.info(
             `${name} (${Date.now() - start}ms) ${
               isAsyncReaction ? `[${id}]` : ''
             } = `,
@@ -276,7 +276,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           err instanceof ReactionTimeoutError
         ) {
           if (!IS_PROD && options.log === 'all') {
-            log(`${name} [${curID}] cancelled`)
+            log.info(`${name} [${curID}] cancelled`)
           }
           return
         }
@@ -295,7 +295,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           .then(val => {
             if (!reactionID) {
               if (!IS_PROD && !preventLog) {
-                log(`${prefix} 🚫`)
+                log.info(`${prefix} 🚫`)
               }
               // cancelled before finishing
               return
@@ -310,7 +310,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
               err instanceof ReactionTimeoutError
             ) {
               if (!IS_PROD && options.log === 'all') {
-                log(`${name} [${curID}] cancelled`)
+                log.info(`${name} [${curID}] cancelled`)
               }
             } else {
               console.log(`throwing err from ${prefix}`, err)
@@ -322,7 +322,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
 
       if (!IS_PROD && !preventLog && !delayValue) {
         if (changed && Object.keys(changed).length) {
-          logState(
+          logState.info(
             `${prefix}`,
             reactValArg,
             ...logRes(result),
@@ -332,7 +332,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           )
         } else {
           if (options.log !== 'state') {
-            log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(result))
+            log.info(`${prefix}`, isReaction ? reactValArg : '', ...logRes(result))
           }
         }
       }

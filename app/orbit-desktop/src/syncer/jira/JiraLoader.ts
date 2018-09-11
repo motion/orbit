@@ -1,10 +1,10 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { AtlassianSettingValuesCredentials, Bit, JiraSettingValues, Person } from '@mcro/models'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { queryObjectToQueryString } from '../../utils'
 import { JiraComment, JiraCommentCollection, JiraIssue, JiraIssueCollection, JiraUser } from './JiraTypes'
 
-const log = logger('syncer:jira:loader')
+const log = new Logger('syncer:jira:loader')
 
 /**
  * Loads jira data from its API.
@@ -125,14 +125,14 @@ export class JiraLoader {
     const qs = queryObjectToQueryString(params)
     const url = `${domain}${path}${qs}`
 
-    log(`performing request to ${url}`)
+    log.info(`performing request to ${url}`)
     const result = await fetch(url, {
       headers: {
         Authorization: `Basic ${credentials}`,
         'Content-Type': 'application/json',
       },
     })
-    log(`request ${url} result ok:`, result.ok)
+    log.info(`request ${url} result ok:`, result.ok)
 
     if (!result.ok) {
       throw new Error(

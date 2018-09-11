@@ -1,17 +1,17 @@
 import { fork } from 'child_process'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import * as Path from 'path'
 import { getGlobalConfig } from '@mcro/config'
 import electronUtil from 'electron-util/node'
 
-const log = logger('electron')
+const log = new Logger('electron')
 
 export function startDesktopInProcess(port) {
   const desktopRoot = electronUtil.fixPathForAsarUnpack(
     require.resolve('@mcro/orbit-desktop'),
   )
   const productionRoot = Path.join(desktopRoot, '..', 'main-production.js')
-  log(`Desktop main file: ${productionRoot}`)
+  log.info(`Desktop main file: ${productionRoot}`)
   try {
     const child = fork(productionRoot, [], {
       cwd: Path.join(desktopRoot, '..'),

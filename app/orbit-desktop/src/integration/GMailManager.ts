@@ -3,9 +3,9 @@ import { getManager, getRepository } from 'typeorm'
 import { BitEntity } from '../entities/BitEntity'
 import { PersonEntity } from '../entities/PersonEntity'
 import { SettingEntity } from '../entities/SettingEntity'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 
-const log = logger('integration:gmail:manager')
+const log = new Logger('integration:gmail:manager')
 
 export class GMailManager {
   /**
@@ -21,13 +21,13 @@ export class GMailManager {
     })
 
     // remove entities
-    log(
+    log.info(
       `removing ${bits.length} bits and ${people.length} people`,
       bits,
       people,
     )
     await getManager().remove([...bits, ...people])
-    log('people were removed')
+    log.info('people were removed')
 
     // reset settings
     const values = setting.values as GmailSettingValues

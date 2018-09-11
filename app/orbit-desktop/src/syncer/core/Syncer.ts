@@ -7,11 +7,11 @@ import { JobEntity } from '../../entities/JobEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { SyncerOptions } from './IntegrationSyncer'
 import Timer = NodeJS.Timer
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
 import { assign } from '../../utils'
 
-const log = logger('syncer')
+const log = new Logger('syncer')
 
 /**
  * Runs given integration syncer.
@@ -108,7 +108,7 @@ export class Syncer {
 
         // if app was closed when syncer was in processing
         if (lastJob.status === 'PROCESSING' && !this.intervals[index]) {
-          log(
+          log.info(
             `found job for ${jobName} but it left uncompleted ` +
             `(probably app was closed before job completion). ` +
             `Removing stale job and run synchronization again`
@@ -117,7 +117,7 @@ export class Syncer {
 
         } else {
           if (needToWait > 0) {
-            log(
+            log.info(
               `found last executed job for ${jobName} and we should wait ` +
               'until enough interval time will pass before we execute a new job',
               { jobTime, currentTime, needToWait, lastJob },
@@ -127,7 +127,7 @@ export class Syncer {
           }
         }
       } else {
-        log(
+        log.info(
           `found last executed job for ${
             this.name
             } and its okay to execute a new job`,
@@ -152,7 +152,7 @@ export class Syncer {
         timer: setInterval(async () => {
           // if we still have previous interval running - we don't do anything
           if (this.intervals[index].running) {
-            log(
+            log.info(
               `tried to run ${
                 this.name
               } based on interval, but synchronization is already running, skipping`,
@@ -174,7 +174,7 @@ export class Syncer {
    * Runs syncer immediately.
    */
   async runSyncer(setting?: SettingEntity) {
-    log(`starting ${this.options.constructor.name} syncer`, setting)
+    log.info(`starting ${this.options.constructor.name} syncer`, setting)
 
     // create a new job - the fact that we started a new syncer
     const job = assign(new JobEntity(), {
@@ -185,7 +185,7 @@ export class Syncer {
       message: '',
     })
     await getRepository(JobEntity).save(job)
-    log('created a new job', job)
+    log.info('created a new job', job)
 
     try {
       const syncer = new this.options.constructor(setting)
@@ -195,7 +195,7 @@ export class Syncer {
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
     } catch (error) {
-      log(
+      log.info(
         'error',
         `error in ${this.options.constructor.name} syncer sync`,
         error,
@@ -214,7 +214,7 @@ export class Syncer {
       }
       await getRepository(JobEntity).save(job)
     }
-    log(`${this.options.constructor.name} syncer has finished its job`)
+    log.info(`${this.options.constructor.name} syncer has finished its job`)
   }
 
   /**
@@ -227,7 +227,7 @@ export class Syncer {
       return SettingEntity
     },
     beforeRemove: async event => {
-      log(
+      log.info(
         'looks like somebody is going to remove a settings, let\'s check if we have timer for it',
         event,
       )
@@ -236,22 +236,22 @@ export class Syncer {
       )
       if (interval) {
         if (interval.running) {
-          log(
+          log.info(
             'okay we found timer for removed setting and syncronization is running at the moment, let\'s await it before final setting removal',
           )
           await interval.running
-          log(
+          log.info(
             'interval has finished its job, now we can continue to setting removal',
           )
         } else {
-          log(
+          log.info(
             'interval was found, but its not currently running syncronization, its safe to proceed to setting removal',
           )
         }
       }
     },
     afterInsert: async event => {
-      log(
+      log.info(
         `looks like new setting was inserted, check if its ${
           this.options.type
         }`,
@@ -263,7 +263,7 @@ export class Syncer {
       })
       if (setting) {
         // we don't need to await here because we don't want to block setting save when its added
-        log('okay we have a new setting that we are going to sync')
+        log.info('okay we have a new setting that we are going to sync')
         this.runInterval(setting.id, setting.id)
       }
     },
@@ -271,7 +271,7 @@ export class Syncer {
       /* todo do what we want on setting update */
     },
     afterRemove: async event => {
-      log(
+      log.info(
         'looks like some setting was removed, check if we have it in timers',
         event,
       )
@@ -279,7 +279,7 @@ export class Syncer {
         interval => interval.setting && interval.setting.id === event.entityId,
       )
       if (interval) {
-        log('okay we had interval for it, let\'s removing it now', interval)
+        log.info('okay we had interval for it, let\'s removing it now', interval)
         this.intervals.splice(this.intervals.indexOf(interval))
       }
     },

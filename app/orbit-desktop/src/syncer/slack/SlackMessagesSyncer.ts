@@ -1,4 +1,4 @@
-import { logger, LoggerInstance } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Bit, Person, PersonBit, SlackBitData, SlackSettingValues } from '@mcro/models'
 import { chunk } from 'lodash'
 import { getManager, getRepository, MoreThan } from 'typeorm'
@@ -12,7 +12,7 @@ import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage } from './SlackTypes'
 import { SlackUtils } from './SlackUtils'
 
-const log = new LoggerInstance('syncer:slack:messages')
+const log = new Logger('syncer:slack:messages')
 
 /**
  * Syncs Slack messages.
@@ -68,15 +68,15 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
 
       // we need to load all bits in the data range period we are working with (oldestMessageId)
       // because we do comparision and update bits, also we remove removed messages
-      log.timer(`loading channel ${channel.name}(#${channel.id}) database bits`, { oldestMessageId })
+      log.timer(`loading ${channel.name}(#${channel.id}) database bits`, { oldestMessageId })
       const existBits = await this.loadLatestBits(channel.id, oldestMessageId)
       dbBits.push(...existBits)
-      log.timer(`loading channel ${channel.name}(#${channel.id}) database bits`, { oldestMessageId })
+      log.timer(`loading ${channel.name}(#${channel.id}) database bits`, existBits)
 
       // load messages
-      log.timer(`loading channel ${channel.name}(#${channel.id}) messages`, { oldestMessageId })
+      log.timer(`loading ${channel.name}(#${channel.id}) API messages`, { oldestMessageId })
       const loadedMessages = await this.loader.loadMessages(channel.id, oldestMessageId)
-      log.timer(`loading channel ${channel.name}(#${channel.id}) messages`, loadedMessages)
+      log.timer(`loading ${channel.name}(#${channel.id}) API messages`, loadedMessages)
 
       // sync messages if we found them
       if (loadedMessages.length) {
@@ -110,7 +110,8 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
       }
     }
 
-    log.verbose(`calculating inserted/updated/removed bits`)
+    // calculate bits that we need to update in the database
+    log.verbose(`calculating inserted/updated/removed bits`, { apiBits, dbBits })
     const insertedBits = apiBits.filter(apiBit => {
       return !dbBits.some(dbBit => dbBit.id === apiBit.id)
     })
@@ -122,24 +123,30 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
       return !apiBits.some(apiBit => apiBit.id === dbBit.id)
     })
 
-    log.timer(`saving bits in the database`, { insertedBits, updatedBits, removedBits })
-    await getManager().transaction(async manager => {
-      if (insertedBits.length > 0) {
-        const insertedBitChunks = chunk(insertedBits, 50)
-        for (let bits of insertedBitChunks) {
-          await manager.insert(BitEntity, bits)
+    // perform database operations on synced bits
+    if (insertedBits.length || updatedBits.length || removedBits.length) {
+      log.timer(`saving bits in the database`, { insertedBits, updatedBits, removedBits })
+      await getManager().transaction(async manager => {
+        if (insertedBits.length > 0) {
+          const insertedBitChunks = chunk(insertedBits, 50)
+          for (let bits of insertedBitChunks) {
+            await manager.insert(BitEntity, bits)
+          }
         }
-      }
-      for (let bit of updatedBits) {
-        await manager.update(BitEntity, { id: bit.id }, bit)
-      }
-      if (removedBits.length > 0)
-        await manager.delete(BitEntity, removedBits)
-    })
-    log.timer(`saving bits in the database`)
+        for (let bit of updatedBits) {
+          await manager.update(BitEntity, { id: bit.id }, bit)
+        }
+        if (removedBits.length > 0) {
+          await manager.delete(BitEntity, removedBits)
+        }
+      })
+      log.timer(`saving bits in the database`)
+    } else {
+      log.verbose(`no changes were detected`)
+    }
 
     // update settings
-    // log.verbose(`updating settings`, { lastMessageSync })
+    // log.verbose(`update settings`, { lastMessageSync })
     // values.lastMessageSync = lastMessageSync
     // await getRepository(SettingEntity).save(this.setting)
   }

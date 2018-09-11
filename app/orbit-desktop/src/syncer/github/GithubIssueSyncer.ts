@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Bit, GithubBitData, Person } from '@mcro/models'
 import { GithubSettingValues } from '@mcro/models'
 import { uniqBy } from 'lodash'
@@ -15,7 +15,7 @@ import { GithubLoader } from './GithubLoader'
 import { GithubPeopleSyncer } from './GithubPeopleSyncer'
 import { GithubIssue } from './GithubTypes'
 
-const log = logger('syncer:github:issues')
+const log = new Logger('syncer:github:issues')
 
 export class GithubIssueSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -36,7 +36,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
 
     // if no repositories were selected in settings, we don't do anything
     if (!repositoryPaths.length) {
-      log(`no repositories were selected in the settings, skip sync`)
+      log.info(`no repositories were selected in the settings, skip sync`)
       return
     }
 
@@ -68,13 +68,13 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     }
 
     // saving all the people and bits
-    log(`saving people`, peopleFromBits)
+    log.info(`saving people`, peopleFromBits)
     await getRepository(PersonEntity).save(peopleFromBits, { chunk: 100 })
-    log(`people were saved, saving their person bits`)
+    log.info(`people were saved, saving their person bits`)
     await createOrUpdatePersonBits(peopleFromBits.filter(person => person.email))
-    log(`person bits were saved, saving bits`, allBits)
+    log.info(`person bits were saved, saving bits`, allBits)
     await getRepository(BitEntity).save(allBits, { chunk: 100 })
-    log(`bits were saved`)
+    log.info(`bits were saved`)
   }
 
   private createIssue(issue: GithubIssue): BitEntity {

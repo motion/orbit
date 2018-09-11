@@ -5,10 +5,10 @@ import proxy from 'http-proxy-middleware'
 import bodyParser from 'body-parser'
 import { getGlobalConfig } from '@mcro/config'
 import killPort from 'kill-port'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { finishOauth } from './helpers/finishOauth'
 
-const log = logger('desktop')
+const log = new Logger('desktop')
 const Config = getGlobalConfig()
 
 export default class Server {
@@ -38,7 +38,7 @@ export default class Server {
     // config
     this.app.get('/config', (_, res) => {
       const config = getGlobalConfig()
-      log(`Send config ${JSON.stringify(config, null, 2)}`)
+      log.info(`Send config ${JSON.stringify(config, null, 2)}`)
       res.json(config)
     })
 
@@ -47,9 +47,9 @@ export default class Server {
 
   async start() {
     // kill old processes
-    log('Killing any old servers...')
+    log.info('Killing any old servers...')
     await killPort(Config.ports.server)
-    log('Desktop listening!!!!!!!!!...')
+    log.info('Desktop listening!!!!!!!!!...')
     this.app.listen(Config.ports.server, () => {
       console.log('listening at port', Config.ports.server)
     })
@@ -75,7 +75,7 @@ export default class Server {
   private setupOrbitApp() {
     // proxy to webpack-dev-server in development
     if (process.env.NODE_ENV === 'development') {
-      log('Serving orbit app through proxy to webpack-dev-server...')
+      log.info('Serving orbit app through proxy to webpack-dev-server...')
       const webpackUrl = 'http://localhost:3999'
       const router = {
         [`http://localhost:${Config.ports.server}`]: webpackUrl,
@@ -94,13 +94,13 @@ export default class Server {
     }
     // serve static in production
     if (process.env.NODE_ENV !== 'development') {
-      log(`Serving orbit static app in ${Config.paths.appStatic}...`)
+      log.info(`Serving orbit static app in ${Config.paths.appStatic}...`)
       this.app.use('/', express.static(Config.paths.appStatic))
     }
   }
 
   private setupOauthCallback() {
-    log('Setting up authCallback route')
+    log.info('Setting up authCallback route')
     this.app.get('/authCallback/:service', (req, res) => {
       const secret = decodeURIComponent(req.query.secret)
       const clientId = decodeURIComponent(req.query.clientId)
@@ -109,7 +109,7 @@ export default class Server {
         secret,
         clientId,
       }
-      log('got auth value', values)
+      log.info('got auth value', values)
       finishOauth(req.params.service, values)
       res.send(
         '<html><head><title>Authentication Success</title><script>window.close()</script></head><body>All done, closing...</body></html>',

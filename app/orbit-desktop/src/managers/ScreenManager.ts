@@ -2,13 +2,13 @@ import { Oracle } from '@mcro/oracle'
 import { debounce, last } from 'lodash'
 import { store, isEqual, react, on, sleep } from '@mcro/black'
 import { Desktop, Electron, App } from '@mcro/stores'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
 import { CompositeDisposable } from 'event-kit'
 import { oracleOptions } from '../constants'
 
-const log = logger('screen')
+const log = new Logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
 
@@ -78,7 +78,7 @@ export class ScreenManager {
       if (!words) {
         return
       }
-      log(`> ${words.length} words`)
+      log.info(`> ${words.length} words`)
       this.watchBounds('OCR', {
         fps: 12,
         sampleSpacing: 2,
@@ -272,10 +272,10 @@ export class ScreenManager {
     // OCR work clear
     this.oracle.onBoxChanged(count => {
       if (!Desktop.ocrState.words) {
-        log('RESET oracle boxChanged (App)')
+        log.info('RESET oracle boxChanged (App)')
         this.lastScreenChange()
         if (this.isWatching === 'OCR') {
-          log('reset is watching ocr to set back to app')
+          log.info('reset is watching ocr to set back to app')
           this.rescanApp()
         }
       } else {
@@ -286,7 +286,7 @@ export class ScreenManager {
           // })
         } else {
           // else just clear it all
-          log('RESET oracle boxChanged (NOTTTTTTT App)')
+          log.info('RESET oracle boxChanged (NOTTTTTTT App)')
           this.lastScreenChange()
           this.rescanApp()
         }
@@ -295,7 +295,7 @@ export class ScreenManager {
 
     // OCR word restore
     this.oracle.onRestored(count => {
-      log('restore', count)
+      log.info('restore', count)
       Desktop.setOcrState({
         restoreWords: this.oracle.restoredIds,
       })
@@ -303,13 +303,13 @@ export class ScreenManager {
 
     // general errors
     this.oracle.onError(async error => {
-      log('screen ran into err, restart', error)
+      log.info('screen ran into err, restart', error)
       this.restartScreen()
     })
   }
 
   async restartScreen() {
-    log('restartScreen')
+    log.info('restartScreen')
     this.lastScreenChange()
     await this.oracle.stop()
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
@@ -410,11 +410,11 @@ export class ScreenManager {
     if (Desktop.state.paused) {
       return
     }
-    log('rescanApp.resume', name)
+    log.info('rescanApp.resume', name)
     await this.oracle.resume()
     this.clearOCRTm = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
-        log('seems like ocr has stopped working, restarting...')
+        log.info('seems like ocr has stopped working, restarting...')
         this.restartScreen()
       }
     }, 15000)
@@ -432,6 +432,6 @@ export class ScreenManager {
     if (this.oracle) {
       await this.oracle.stop()
     }
-    log('screen disposed')
+    log.info('screen disposed')
   }
 }

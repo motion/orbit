@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { Bit, GmailBitData, GmailBitDataParticipant, GmailPersonData, Person } from '@mcro/models'
 import { GmailSettingValues } from '@mcro/models'
 import { getRepository, In } from 'typeorm'
@@ -13,7 +13,7 @@ import { GMailLoader } from './GMailLoader'
 import { GMailMessageParser } from './GMailMessageParser'
 import { GmailThread } from './GMailTypes'
 
-const log = logger('syncer:gmail')
+const log = new Logger('syncer:gmail')
 
 export class GMailSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -35,7 +35,7 @@ export class GMailSyncer implements IntegrationSyncer {
     } = this.setting.values as GmailSettingValues
     if (!max) max = 50
 
-    log('sync settings', {
+    log.info('sync settings', {
       historyId,
       max,
       filter,
@@ -46,13 +46,13 @@ export class GMailSyncer implements IntegrationSyncer {
 
     // if max or filter has changed - we drop all bits we have and make complete sync again
     if (max !== lastSyncMax || filter !== lastSyncFilter) {
-      log(
+      log.info(
         `last syncronization settings mismatch (max=${max}/${lastSyncMax}; filter=${filter}/${lastSyncFilter})`,
       )
       const truncatedBits = await BitEntity.find({ settingId: this.setting.id }) // also need to filter by setting
-      log(`removing all bits`, truncatedBits)
+      log.info(`removing all bits`, truncatedBits)
       await BitEntity.remove(truncatedBits)
-      log(`bits were removed`)
+      log.info(`bits were removed`)
       historyId = null
     }
 
@@ -66,7 +66,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
       // load threads for newly added / changed threads
       if (history.addedThreadIds.length) {
-        log(
+        log.info(
           `loading all threads until we find following thread ids`,
           history.addedThreadIds,
         )
@@ -76,12 +76,12 @@ export class GMailSyncer implements IntegrationSyncer {
           history.addedThreadIds,
         )
       } else {
-        log(`no new messages in history were found`)
+        log.info(`no new messages in history were found`)
       }
 
       // load bits for removed threads
       if (history.removedThreadIds.length) {
-        log(
+        log.info(
           'found actions in history for thread removals',
           history.removedThreadIds,
         )
@@ -89,9 +89,9 @@ export class GMailSyncer implements IntegrationSyncer {
           settingId: this.setting.id,
           id: In(history.removedThreadIds),
         })
-        log('found bits to be removed', removedBits)
+        log.info('found bits to be removed', removedBits)
       } else {
-        log(`no removed messages in history were found`)
+        log.info(`no removed messages in history were found`)
       }
     } else {
       addedThreads = await this.loader.loadThreads(max, filter)
@@ -100,7 +100,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
     // load emails for whitelisted people separately
     if (whiteList) {
-      log(`loading threads from whitelisted people`)
+      log.info(`loading threads from whitelisted people`)
       const threadsFromWhiteList: GmailThread[] = []
       await Promise.all(Object.keys(whiteList).map(async email => {
         if (whiteList[email] === false)
@@ -113,22 +113,22 @@ export class GMailSyncer implements IntegrationSyncer {
         threadsFromWhiteList.push(...nonDuplicateThreads)
       }))
       addedThreads.push(...threadsFromWhiteList)
-      log(`whitelisted people threads loaded`, threadsFromWhiteList)
+      log.info(`whitelisted people threads loaded`, threadsFromWhiteList)
     }
 
     // if there are added threads then load messages and save their bits
     if (addedThreads.length) {
-      log(`have a threads to be added/changed`, addedThreads)
+      log.info(`have a threads to be added/changed`, addedThreads)
       await this.loader.loadMessages(addedThreads)
       const createdBits = await sequence(addedThreads, thread => this.createBit(thread))
-      log('bits were created / updated', createdBits)
+      log.info('bits were created / updated', createdBits)
     }
 
     // if there are removed threads then remove their bits
     if (removedBits.length) {
-      log(`have a bits to be removed`, removedBits)
+      log.info(`have a bits to be removed`, removedBits)
       await BitEntity.remove(removedBits)
-      log('bits were removed')
+      log.info('bits were removed')
     }
 
     // update settings

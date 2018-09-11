@@ -1,14 +1,14 @@
 import 'raf/polyfill'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import waitPort from 'wait-port'
 // import { app } from 'electron'
 
-const log = logger('electron')
+const log = new Logger('electron')
 
 Error.stackTraceLimit = Infinity
 
 export async function main(): Promise<number | void> {
-  log(`Starting electron in env ${process.env.NODE_ENV}`)
+  log.info(`Starting electron in env ${process.env.NODE_ENV}`)
 
   // handle our own separate process in development
   if (process.env.NODE_ENV === 'development') {

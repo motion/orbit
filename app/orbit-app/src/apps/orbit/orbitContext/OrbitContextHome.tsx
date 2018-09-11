@@ -49,7 +49,7 @@
 //       if (!isActive) {
 //         throw cancel
 //       }
-//       // log('set get results')
+//       // log.info('set get results')
 //       this.props.searchStore.setGetResults(() => this.results)
 //     },
 //   )
@@ -120,7 +120,7 @@
 //   render() {
 //     const { store } = this.props
 //     const { resultsRef, isOverflowing } = this.state
-//     // log('CONTEXT HOME---------------')
+//     // log.info('CONTEXT HOME---------------')
 //     const total = store.results.length
 //     return (
 //       <SubPane name="context">

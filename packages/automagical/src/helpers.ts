@@ -1,13 +1,13 @@
 import * as Mobx from 'mobx'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { MagicalObject, ReactionOptions } from './types'
 
 const PREFIX = '=>'
 
 export const Root = typeof window !== 'undefined' ? window : require('global')
 
-export const logState = logger('react+')
-export const log = logger('react')
+export const logState = new Logger('react+')
+export const log = new Logger('react')
 
 export const logRes = (res: any) => {
   if (typeof res === 'undefined') {

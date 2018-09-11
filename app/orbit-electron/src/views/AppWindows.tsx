@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view, compose, react } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { AppWindow } from './AppWindow'
 
-const log = logger('electron')
+const log = new Logger('electron')
 
 class AppWindowsStore {
   appsStateDebounced = react(
@@ -29,7 +29,7 @@ export const AppWindows = decorator(({ store }: { store: AppWindowsStore }) => {
   if (!appsState) {
     return null
   }
-  log(`Rendering apps ${appsState.length}`)
+  log.info(`Rendering apps ${appsState.length}`)
   return appsState.map(({ id }, index) => {
     return <AppWindow key={id} id={id} isPeek={index === 0} />
   })

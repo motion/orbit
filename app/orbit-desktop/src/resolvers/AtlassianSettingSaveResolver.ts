@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { AtlassianSettingSaveCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
@@ -6,14 +6,14 @@ import { SettingEntity } from '../entities/SettingEntity'
 import { ConfluenceLoader } from '../syncer/confluence/ConfluenceLoader'
 import { JiraLoader } from '../syncer/jira/JiraLoader'
 
-const log = logger(`command:atlassian-setting-save`)
+const log = new Logger(`command:atlassian-setting-save`)
 
 export const AtlassianSettingSaveResolver = resolveCommand(AtlassianSettingSaveCommand, async ({ setting }) => {
-  log(`saving atlassian setting`, setting)
+  log.info(`saving atlassian setting`, setting)
   try {
 
     // send test request to atlassian server to check setting credentials
-    log(`saving atlassian setting`, setting)
+    log.info(`saving atlassian setting`, setting)
     if (setting.type === 'jira') {
       const loader = new JiraLoader(setting as SettingEntity)
       await loader.test()
@@ -24,14 +24,14 @@ export const AtlassianSettingSaveResolver = resolveCommand(AtlassianSettingSaveC
     }
 
     // if credentials are okay save the setting
-    log(`saving atlassian setting`, setting)
+    log.info(`saving atlassian setting`, setting)
     await getRepository(SettingEntity).save(setting as SettingEntity)
-    log(`atlassian setting saved successfully`)
+    log.info(`atlassian setting saved successfully`)
 
     return { success: true }
 
   } catch (error) {
-    log(`error during atlassian setting save`, error)
+    log.info(`error during atlassian setting save`, error)
     return { success: false, error: error.message }
   }
 })

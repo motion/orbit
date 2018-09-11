@@ -4,11 +4,11 @@ import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { SocketManager } from './SocketManager'
 
-const log = logger('bridge')
+const log = new Logger('bridge')
 
 // exports
 export * from './proxySetters'
@@ -70,7 +70,7 @@ export class BridgeManager {
     if (!store) {
       throw new Error('No source given for starting screen store')
     }
-    log(`Starting bridge for ${store.source}...`)
+    log.info(`Starting bridge for ${store.source}...`)
     this.port = getGlobalConfig().ports.bridge
     // ensure only start once
     if (this.started) {
@@ -83,7 +83,7 @@ export class BridgeManager {
     if (options.master) {
       await this.setupMaster()
     } else {
-      log(`Connecting socket to ${this.port}`)
+      log.info(`Connecting socket to ${this.port}`)
       this._socket = new ReconnectingWebSocket(
         `ws://localhost:${this.port}`,
         undefined,
@@ -117,12 +117,12 @@ export class BridgeManager {
 
   private async setupMaster() {
     const stores = this._options.stores
-    log(`Starting socket manager on ${this.port}`)
+    log.info(`Starting socket manager on ${this.port}`)
     this.socketManager = new SocketManager({
       masterSource: 'Desktop',
       port: this.port,
       onState: (source, state, uid) => {
-        log(`onState ${uid} ${JSON.stringify(state)}`)
+        log.info(`onState ${uid} ${JSON.stringify(state)}`)
         this.deepMergeMutate(stores[source].state, state, {
           ignoreKeyCheck: true,
         })
@@ -254,7 +254,7 @@ export class BridgeManager {
   handleMessage = data => {
     const getMessage = str => str.split(MESSAGE_SPLIT_VAL)
     const [message, value] = getMessage(data)
-    log(`Message: ${message}`, value)
+    log.info(`Message: ${message}`, value)
     for (const { type, listener } of this.messageListeners) {
       if (!type) {
         listener(message, value)
@@ -301,7 +301,7 @@ export class BridgeManager {
 
   private sendChangedState(changedState: Object) {
     if (changedState) {
-      // log(`sendChangedState: ${JSON.stringify(changedState)}`)
+      // log.info(`sendChangedState: ${JSON.stringify(changedState)}`)
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
       } else {
@@ -425,9 +425,9 @@ export class BridgeManager {
       this.socketManager.sendMessage(Store.source, message)
     } else {
       if (!this._wsOpen) {
-        log('\n\n\nWaiting for open socket....\n\n\n')
+        log.info('\n\n\nWaiting for open socket....\n\n\n')
         await this.onOpenSocket()
-        log('\n\nSocket opened!\n\n\n')
+        log.info('\n\nSocket opened!\n\n\n')
       }
       // this prevents blockages on sending
       // this would happen when sockets are on desktop side

@@ -1,9 +1,9 @@
 import { globalShortcut } from 'electron'
 import { store, react } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 
-const log = logger('shortcutsStore')
+const log = new Logger('shortcutsStore')
 
 // @ts-ignore
 @store
@@ -31,10 +31,10 @@ export class ShortcutsStore {
     () => App.orbitState.shortcutInputFocused,
     focused => {
       if (focused) {
-        log('Removing global shortcut temporarily...')
+        log.info('Removing global shortcut temporarily...')
         this.unregisterShortcuts()
       } else {
-        log('Restoring global shortcut...')
+        log.info('Restoring global shortcut...')
         this.registerShortcuts()
       }
     },
@@ -52,7 +52,7 @@ export class ShortcutsStore {
     const shortcuts = this.setting.values.shortcuts
     for (const shortcutKey in shortcuts) {
       const shortcut = shortcuts[shortcutKey]
-      log('register shortcut', shortcutKey, shortcut)
+      log.info('register shortcut', shortcutKey, shortcut)
       globalShortcut.register(shortcut, () => {
         this.onShortcutCb(shortcut)
       })

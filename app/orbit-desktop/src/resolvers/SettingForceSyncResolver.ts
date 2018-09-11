@@ -1,4 +1,4 @@
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
@@ -7,17 +7,17 @@ import { Syncers } from '../syncer'
 import { Syncer } from '../syncer/core/Syncer'
 import { SyncerGroup } from '../syncer/core/SyncerGroup'
 
-const log = logger(`command:setting-force-sync`)
+const log = new Logger(`command:setting-force-sync`)
 
 export const SettingForceSyncResolver = resolveCommand(SettingForceSyncCommand, async ({ settingId }) => {
 
   const setting = await getRepository(SettingEntity).findOne({ id: settingId })
   if (!setting) {
-    log(`error - cannot find requested setting`, { settingId })
+    log.info(`error - cannot find requested setting`, { settingId })
     return
   }
 
-  log(`force syncing setting`, setting)
+  log.info(`force syncing setting`, setting)
   for (let syncer of Syncers) {
     if (syncer instanceof SyncerGroup) {
       for (let groupSyncer of syncer.syncers) {
@@ -32,5 +32,5 @@ export const SettingForceSyncResolver = resolveCommand(SettingForceSyncCommand, 
       }
     }
   }
-  log(`force syncing is finished`)
+  log.info(`force syncing is finished`)
 })

@@ -15,7 +15,7 @@
     "react-dom": "16.4.0"
   },
   "dependencies": {
-    "debug": "^3.1.0",
+    "@mcro/logger": "^2.2.1",
     "electron-devtools-installer": "^2.2.4",
     "fbjs": "0.8.16",
     "lodash.isequal": "^4.5.0",

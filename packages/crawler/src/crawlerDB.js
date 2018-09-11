@@ -1,7 +1,7 @@
 import { sortBy } from 'lodash'
-import {logger} from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 
-const log = logger('crawler:db')
+const log = new Logger(crawler:db')
 
 export default class CrawlerDB {
   crawled = []
@@ -21,7 +21,7 @@ export default class CrawlerDB {
       console.log('not storing')
       return
     }
-    log(`Store -> ${page.url}`)
+    log.info(`Store -> ${page.url}`)
     this.crawled.push(page)
     if (this.disableLinkFinding) {
       return
@@ -38,11 +38,11 @@ export default class CrawlerDB {
     })
     if (count) {
       this.pageQueue = sortBy(this.pageQueue, 'score').reverse()
-      log(`Added ${count} new urls to queue`)
-      log(`New top of queue: ${this.pageQueue[0].url}`)
+      log.info(`Added ${count} new urls to queue`)
+      log.info(`New top of queue: ${this.pageQueue[0].url}`)
       const duplicates = page.outboundUrls.length - count
       if (duplicates) {
-        log(`${page.outboundUrls.length - count} duplicates found`)
+        log.info(`${page.outboundUrls.length - count} duplicates found`)
       }
     }
   }

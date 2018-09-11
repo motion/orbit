@@ -1,8 +1,8 @@
 import { isEqual, throttle } from 'lodash'
 import * as Mobx from 'mobx'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 
-const log = logger('hoverSettler')
+const log = new Logger('hoverSettler')
 
 // isEqual but works with dom nodes (lodash doesnt)
 function isReallyEqual(a, b) {
@@ -56,7 +56,7 @@ export function hoverSettler({
         return
       }
       if (Date.now() - lastToggle < toggleThrottle) {
-        log('Cancel select, too soon')
+        log.info('Cancel select, too soon')
         return
       }
       lastToggle = Date.now()

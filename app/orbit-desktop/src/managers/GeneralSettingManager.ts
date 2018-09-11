@@ -3,11 +3,11 @@ import { GeneralSettingValues } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
-import { logger } from '@mcro/logger'
+import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 
 const Config = getGlobalConfig()
-const log = logger('GeneralSettingManager')
+const log = new Logger('GeneralSettingManager')
 
 const generalSettingQuery = {
   type: 'general' as 'general',
@@ -48,7 +48,7 @@ export class GeneralSettingManager {
     if (Object.keys(values).length) {
       return
     }
-    log('New setting, set defaults...')
+    log.info('New setting, set defaults...')
     setting.values = {
       openShortcut: 'Option+Space',
       autoLaunch: true,
@@ -60,7 +60,7 @@ export class GeneralSettingManager {
 
   handleAutoLaunch = setting => {
     if (!this.autoLaunch) {
-      log('Autolaunch disabled in dev mode')
+      log.info('Autolaunch disabled in dev mode')
       return
     }
     const isEnabled = this.autoLaunch.isEnabled()

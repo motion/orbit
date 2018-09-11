@@ -75,7 +75,7 @@ class AppWindowStore {
       this.window = ref.window
       if (this.props.isPeek) {
         // set it above the OrbitWindow
-        this.window.setAlwaysOnTop(true, 'floating', 10)
+        this.window.setAlwaysOnTop(true, 'floating', 2)
         this.window.setVisibleOnAllWorkspaces(true)
         this.window.setFullScreenable(false)
       }

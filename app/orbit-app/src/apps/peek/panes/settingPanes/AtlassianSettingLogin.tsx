@@ -73,7 +73,8 @@ export class AtlassianSettingLogin extends React.Component<
   // if (!values.username || !values.password || !values.domain)
   // if (values.domain.indexOf('http') !== 0)
 
-  addIntegration = async () => {
+  addIntegration = async e => {
+    e.preventDefault()
     const { setting } = this.props.store
     setting.values = { ...setting.values, credentials: this.props.store.values }
     console.log(`adding integration!`, setting)
@@ -107,7 +108,7 @@ export class AtlassianSettingLogin extends React.Component<
   render() {
     const { values, status, error } = this.props.store
     return (
-      <UI.Col padding={20}>
+      <UI.Col tagName="form" onSubmit={this.addIntegration} padding={20}>
         <Message>
           Atlassian requires username and password as their OAuth requires
           administrator permissions. As always with Orbit, this information is{' '}
@@ -143,7 +144,9 @@ export class AtlassianSettingLogin extends React.Component<
             >
               {status === Statuses.LOADING && <UI.Button>Saving...</UI.Button>}
               {status !== Statuses.LOADING && (
-                <UI.Button onClick={this.addIntegration}>Save</UI.Button>
+                <UI.Button type="submit" onClick={this.addIntegration}>
+                  Save
+                </UI.Button>
               )}
             </UI.Theme>
             <Views.VertSpace />

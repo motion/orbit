@@ -238,6 +238,7 @@ export default class DebugApps {
         await page.evaluate(
           (port, url) => {
             try {
+              const REMOTE_URL = 'http://localhost:3001'
               const PORT_NAMES = {
                 9000: 'Desktop',
                 9001: 'Electron',

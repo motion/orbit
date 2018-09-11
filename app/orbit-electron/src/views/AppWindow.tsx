@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron } from '@mcro/stores'
+import { Electron, Desktop, App } from '@mcro/stores'
 import { logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
@@ -54,6 +54,21 @@ class AppWindowStore {
   get url() {
     return `${Config.urls.server}/app?id=${this.props.id}`
   }
+
+  moveToNewSpace = react(
+    () => Desktop.state.movedToNewSpace,
+    async (moved, { sleep, when }) => {
+      ensure('did move', !!moved)
+      ensure('has window', !!this.window)
+      // wait for move to finish
+      await sleep(420)
+      // wait for showing
+      await when(() => App.orbitState.docked)
+      this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens
+      this.window.focus() // focus the window up front on the active screen
+      this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
+    },
+  )
 
   handleRef = ref => {
     if (ref) {

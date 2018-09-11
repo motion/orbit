@@ -23,6 +23,7 @@ const decorator = compose(
 )
 
 export const Peek = decorator(({ selectionStore, peekStore }: Props) => {
+  console.log('render peek.... should never happen')
   return (
     <UI.Theme name="light">
       <PeekFrame>

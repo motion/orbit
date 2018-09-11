@@ -4,7 +4,6 @@ import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
-import { App } from '@mcro/stores'
 import { ThemeObject } from '@mcro/gloss'
 
 type Props = {
@@ -29,7 +28,7 @@ export const PeekFrameArrow = decorator(
     if (!peekStore.isPeek) {
       return null
     }
-    const state = App.peekState
+    const { state } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }

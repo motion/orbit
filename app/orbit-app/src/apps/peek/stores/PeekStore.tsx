@@ -21,6 +21,7 @@ export type PeekStoreState = {
   isShown: boolean
   curState: PeekStoreItemState
   lastState: PeekStoreItemState
+  torn: boolean
 }
 
 export class PeekStore {
@@ -68,10 +69,12 @@ export class PeekStore {
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
       const curState = {
+        torn,
         ...lastState,
         ...rest,
       }
       let nextState: PeekStoreState = {
+        torn,
         lastState,
         curState,
         isShown,
@@ -133,6 +136,10 @@ export class PeekStore {
 
   get willHide() {
     return this.internalState.willHide
+  }
+
+  get isTorn() {
+    return this.internalState.torn
   }
 
   // only keep it alive for a frame
@@ -197,13 +204,6 @@ export class PeekStore {
       y += yOff
     }
     return [x, y]
-  }
-
-  get isTorn() {
-    if (!this.appState) {
-      return false
-    }
-    return this.appState.torn
   }
 
   tearPeek = async () => {

@@ -17,10 +17,8 @@ export class ElectronStore {
   appRef = null
   stores = null
   views = null
-  orbitRef = null
   clear = Date.now()
   show = 2
-
   apps = new Set()
 
   async didMount() {
@@ -55,6 +53,10 @@ export class ElectronStore {
           return
       }
     })
+  }
+
+  get orbitRef() {
+    return this.windowFocusStore.orbitRef
   }
 
   followMousePosition = () => {

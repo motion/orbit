@@ -7,9 +7,9 @@
     - Better table contents
 - Tuesday -- _make app work better for demo_
   - fix confluence/jira document display
-  - need to pass array of string to highlightcontext
+  - spaces fix
   - production app bugfix/perf fixes
-  - date filtering isn't working for:
+  - date filteiring isn't working for:
     - nate january
     - nate jan 1 to jan 30
   - Fix intra-peek clicking

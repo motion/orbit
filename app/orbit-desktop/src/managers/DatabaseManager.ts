@@ -50,8 +50,9 @@ export class DatabaseManager {
     }
     let setting = await SettingEntity.findOne(vals)
     if (!setting) {
-      setting = Object.assign(new SettingEntity(), vals)
-      await getRepository(SettingEntity).save(setting)
+      setting = await getRepository(SettingEntity).save(
+        Object.assign(new SettingEntity(), vals),
+      )
     }
     const bit = BitUtils.create({
       id: '1231023',
@@ -61,9 +62,15 @@ export class DatabaseManager {
       type: 'custom',
       bitCreatedAt: Date.now(),
       bitUpdatedAt: Date.now(),
-      settingId: vals.id
+      settingId: setting.id,
     })
-    if (!(await BitEntity.findOne({ type: 'custom', id: '1231023', settingId: vals.id }))) {
+    if (
+      !(await BitEntity.findOne({
+        type: 'custom',
+        id: '1231023',
+        settingId: setting.id,
+      }))
+    ) {
       await getRepository(BitEntity).save(bit)
     }
   }

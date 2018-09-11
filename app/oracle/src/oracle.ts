@@ -92,7 +92,6 @@ export class Oracle {
     await this.setState({ isPaused: false })
     await this.runOracleProcess()
     await this.oracleBridge.onConnected()
-    await sleep(10)
     this.socketSend('start')
     log('started oracle')
   }
@@ -274,7 +273,6 @@ export class Oracle {
     info: val => this.onInfoCB(val),
     spaceMove: val => this.onSpaceMoveCB(val),
     appState: val => {
-      console.log('do it', this.name, val, this.onAppStateCB)
       this.onAppStateCB(val)
     },
     // down to swift process

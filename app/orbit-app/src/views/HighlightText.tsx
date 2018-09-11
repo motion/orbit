@@ -9,7 +9,7 @@ type Props = TextProps & {
 
 export const HighlightText = ({ options, children, ...props }: Props) => (
   <HighlightsContext.Consumer>
-    {term => (
+    {terms => (
       <Text
         tagName="div"
         className="paragraph"
@@ -17,9 +17,9 @@ export const HighlightText = ({ options, children, ...props }: Props) => (
         color="inherit"
         selectable
         highlight={
-          term
+          terms.length
             ? {
-                words: [term],
+                words: terms,
                 maxSurroundChars: Infinity,
                 maxChars: Infinity,
                 ...options,

@@ -36,8 +36,13 @@ class MainStore {
 
   moveToNewSpace = react(
     () => Desktop.state.movedToNewSpace,
-    () => {
+    async (moved, { sleep, when }) => {
+      ensure('did move', !!moved)
       ensure('has window', !!this.window)
+      // wait for move to finish
+      await sleep(400)
+      // wait for showing
+      await when(() => App.orbitState.docked)
       this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens
       this.window.focus() // focus the window up front on the active screen
       this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior

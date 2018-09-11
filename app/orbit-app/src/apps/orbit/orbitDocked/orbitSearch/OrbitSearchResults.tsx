@@ -121,7 +121,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
     const searchTerm = searchStore.searchState.query
     const quickResultsLen = searchStore.quickSearchState.results.length
     return (
-      <HighlightsContext.Provider value={searchTerm}>
+      <HighlightsContext.Provider value={searchTerm.split(' ')}>
         {results.map((model, index) => (
           <OrbitListItem
             pane={name}

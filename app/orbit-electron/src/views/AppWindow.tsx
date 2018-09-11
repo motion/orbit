@@ -37,6 +37,11 @@ class AppWindowStore {
         switch (action) {
           case 'focus':
             this.window.focus()
+            // if is peek window, bring orbit to front too
+            if (this.props.id === App.appsState[0].id) {
+              console.log('showing orbit')
+              Electron.sendMessage(App, App.messages.SHOW)
+            }
         }
       }
     })

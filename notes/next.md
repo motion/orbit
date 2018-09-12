@@ -1,17 +1,16 @@
 # nate
 
-- Monday -- _finish great "app" demo_
+- Wednesday -- _profiles_
+  - double app icon bug
+  - on move space it opens orbit
+  - on focus away from orbit hide it (use old code for activate)
+  - scroll down should keep search at top
+  - design run on the person feed
   - Make demo app nicer:
     - Sidebar selectable list items
     - Working tabs
     - Better table contents
-- Tuesday -- _make app work better for demo_
-  - double app icon bug
-  - on focus away from orbit hide it (use old code for activate)
-  - scroll down should keep search at top
-- Wednesday -- _profiles_
   - cosal attempt get it running and analyze for use in profiles
-  - design run on the person feed
   - filter/sub-search for the feed
   - pagination for the feed
 - Thursday -- _onboarding_
@@ -93,10 +92,6 @@
       - Help is for onboarding onto Orbit, shows its power
       - Make the default home screen be "Orbit Updates"
       - Twitter as well, we can IFTT our twitter into rss
-- Sales
-  - We should have tiers for support
-  - We can do 50% off for early users lifetime
-  - 25k, 50k, 100k or something to start
 - Account system
   - This should let people set up an Orbit and share the config with friends
 - Hire
@@ -121,11 +116,9 @@
   - in Setting panes show status at bottom or top
 - typing while focused on a peek:
   - reset index to 0 not -1, keeps the peek open as you filter things
-- doesnt follow monitor on add new monitor
 - community
   - need a way for people to suggest/vote features
 - semi-hide orbit while oauth open so it doesnt cover it
-- better show the panes on onboard
 - after onboard "what can i do / search?"
 - typeform survey to capture a few potential paths
 - location filters: `.find({ location: { name: "..." } })`

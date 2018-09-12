@@ -3,6 +3,11 @@ import { store, react } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { stringify } from '@mcro/helpers'
 import { oracleOptions } from '../constants'
+import { Logger } from '@mcro/logger'
+import { join } from 'path'
+import { getGlobalConfig } from '@mcro/config'
+
+const log = new Logger('AppsManager')
 
 type FakeProcess = {
   id: number
@@ -14,19 +19,17 @@ type FakeProcess = {
 export class AppsManager {
   processes: FakeProcess[] = []
 
+  // launch app icons and events to listen for focus
   manageAppIcons = react(
     () => App.appsState,
     async appsState => {
-      console.log('appsManager sees apps', stringify(appsState))
-
-      // launch app icons and events to listen for focus
-
       // handle deletes
       let current = [...this.processes]
       for (const { id } of current) {
         const hasApp = appsState.find(x => x.id === id)
         const shouldDelete = !hasApp
         if (shouldDelete) {
+          log.verbose(`remove process ${id}`)
           await this.removeProcess(id)
         }
       }
@@ -39,10 +42,11 @@ export class AppsManager {
         }
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
+          log.verbose(`create process ${id}`)
           const oracle = await this.spawnOracle(
             id,
             'Test',
-            '/Users/nw/projects/motion/orbit/assets/icon.png',
+            join(getGlobalConfig().paths.desktopRoot, 'assets', 'icon.png'),
           )
           this.processes = [
             ...this.processes,
@@ -63,17 +67,13 @@ export class AppsManager {
       env: { SHOW_ICON: iconPath },
     })
     await oracle.start()
-    console.log('started oracle', id, name)
+    log.info('started oracle', id, name)
     oracle.onAppState(this.handleAppState(id))
     return oracle
   }
 
   handleAppState = id => (action: string) => {
-    Desktop.sendMessage(
-      Electron,
-      Electron.messages.APP_STATE,
-      JSON.stringify({ id, action }),
-    )
+    Desktop.sendMessage(Electron, Electron.messages.APP_STATE, JSON.stringify({ id, action }))
   }
 
   async removeProcess(id: number) {

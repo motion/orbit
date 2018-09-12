@@ -23,21 +23,18 @@ export async function getInitialConfig() {
     // errors are just showing the ports are empty
   }
 
-  const rootDirectory = Path.join(__dirname, '..', '..', '..', '..')
-  console.log('rootDirectory', rootDirectory)
-
-  const root = __dirname
+  const desktopRoot = Path.join(__dirname, '..', '..')
   const appStatic = Path.join(require.resolve('@mcro/orbit-app'), '..', 'dist')
   let nodeBinary = 'node'
   if (process.env.NODE_ENV !== 'development') {
     nodeBinary = app.getPath('exe')
   }
-  const dotApp = Path.join(root, '..', '..', '..', '..', '..', '..')
+  const dotApp = Path.join(desktopRoot, '..', '..', '..', '..')
   const serverHost = 'localhost'
   config = {
     isProd,
     paths: {
-      root,
+      desktopRoot,
       appStatic,
       userData: app.getPath('userData'),
       nodeBinary,

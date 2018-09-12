@@ -71,9 +71,9 @@ const OrbitCardContent = view({
   whiteSpace: 'pre',
 })
 
-const SearchResultText = props => (
-  <UI.Text wordBreak="break-all" fontWeight={400} {...props} />
-)
+const SearchResultText = props => <UI.Text wordBreak="break-all" fontWeight={400} {...props} />
+
+const collapseWhitespace = str => str.replace(/\n\n*/g, ' ⏎ ').replace(/\s\s+/g, ' ')
 
 @view
 class OrbitSearchResultsList extends React.Component<Props> {
@@ -95,12 +95,8 @@ class OrbitSearchResultsList extends React.Component<Props> {
       <SearchResultText>{content}</SearchResultText>
     ) : (
       <OrbitCardContent>
-        <HighlightText
-          whiteSpace="normal"
-          alpha={0.65}
-          options={{ maxSurroundChars: 100 }}
-        >
-          {content}
+        <HighlightText whiteSpace="normal" alpha={0.65} options={{ maxSurroundChars: 100 }}>
+          {collapseWhitespace(content)}
         </HighlightText>
       </OrbitCardContent>
     )
@@ -108,10 +104,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
 
   handleLocation = (e, item: ResolvedItem) => {
     e.preventDefault()
-    this.props.searchStore.searchFilterStore.setFilter(
-      'location',
-      item.location,
-    )
+    this.props.searchStore.searchFilterStore.setFilter('location', item.location)
   }
 
   spaceBetween = <div style={{ flex: 1 }} />
@@ -156,29 +149,24 @@ const OrbitSearchResultsFrame = view({
   transition: 'all ease 100ms',
 })
 
-const OrbitSearchResultsContents = view(
-  ({ name, searchStore, selectionStore }) => {
-    const { isChanging, message } = searchStore
-    return (
-      <OrbitSearchResultsFrame
-        style={{
-          opacity: isChanging ? 0.7 : 1,
-        }}
-      >
-        {!!message && <div>{message}</div>}
-        <OrbitSearchQuickResults
-          searchStore={searchStore}
-          selectionStore={selectionStore}
-        />
-        <OrbitSearchResultsList
-          searchStore={searchStore}
-          selectionStore={selectionStore}
-          name={name}
-        />
-      </OrbitSearchResultsFrame>
-    )
-  },
-)
+const OrbitSearchResultsContents = view(({ name, searchStore, selectionStore }) => {
+  const { isChanging, message } = searchStore
+  return (
+    <OrbitSearchResultsFrame
+      style={{
+        opacity: isChanging ? 0.7 : 1,
+      }}
+    >
+      {!!message && <div>{message}</div>}
+      <OrbitSearchQuickResults searchStore={searchStore} selectionStore={selectionStore} />
+      <OrbitSearchResultsList
+        searchStore={searchStore}
+        selectionStore={selectionStore}
+        name={name}
+      />
+    </OrbitSearchResultsFrame>
+  )
+})
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore')
 @view

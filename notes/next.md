@@ -4,13 +4,13 @@
   - double app icon bug
   - on move space it opens orbit
   - on focus away from orbit hide it (use old code for activate)
+  - scroll down should keep search at top
+  - design run on the person feed
   - Make demo app nicer:
     - Sidebar selectable list items
     - Working tabs
     - Better table contents
-  - scroll down should keep search at top
   - cosal attempt get it running and analyze for use in profiles
-  - design run on the person feed
   - filter/sub-search for the feed
   - pagination for the feed
 - Thursday -- _onboarding_

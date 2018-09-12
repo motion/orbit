@@ -34,7 +34,7 @@ export class AppsManager {
       // handle adds
       for (const { id, torn } of appsState) {
         // dont handle peek app
-        if (!torn) {
+        if (torn === false) {
           continue
         }
         const shouldAdd = !this.processes.find(x => x.id === id)

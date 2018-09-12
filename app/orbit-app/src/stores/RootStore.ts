@@ -34,14 +34,6 @@ export class RootStore {
     })
   }
 
-  // for debugging why queries are locking
-  logQueriesBeforeError = react(
-    () => Desktop.state.lastSQLError,
-    () => {
-      console.log('last queries before error!!!!')
-    },
-  )
-
   async restart() {
     onPort(() => (window.location = window.location))
   }

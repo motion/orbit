@@ -9,7 +9,7 @@ import { start } from '../start'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
 import * as Repositories from '../repositories'
-import { Logger } from '@mcro/logger'
+import { LoggerSettings } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { Actions } from '../actions/Actions'
 import { stringify } from '@mcro/helpers'
@@ -46,7 +46,7 @@ window['Electron'] = Electron
 window['render'] = start
 window['color'] = color
 window['dateFns'] = dateFns
-window['Logger'] = Logger
+window['LoggerSettings'] = LoggerSettings
 window['toJS'] = toJS
 window['stringify'] = stringify
 window['Actions'] = Actions

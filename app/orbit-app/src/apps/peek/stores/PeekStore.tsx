@@ -1,11 +1,7 @@
 import * as React from 'react'
 import { react, on, ensure, cancel, sleep } from '@mcro/black'
 import { App } from '@mcro/stores'
-import {
-  BitRepository,
-  SettingRepository,
-  PersonBitRepository,
-} from '../../../repositories'
+import { BitRepository, SettingRepository, PersonBitRepository } from '../../../repositories'
 import { Bit, Setting, PersonBit } from '@mcro/models'
 import { Actions } from '../../../actions/Actions'
 
@@ -38,9 +34,9 @@ export class PeekStore {
     this.clearDragHandlers()
   }
 
-  get isPeek() {
-    return App.appsState[0].id === this.props.id
-  }
+  isPeek = react(() => this.appState && !this.appState.torn, _ => _, {
+    onlyUpdateIfChanged: true,
+  })
 
   // appConfig given the id
   appState = react(
@@ -62,7 +58,6 @@ export class PeekStore {
     async (appState, { getValue, setValue, sleep }) => {
       ensure('has app state', !!appState)
       const { appConfig, torn, ...rest } = appState
-      await sleep()
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
       const isShown = !!appConfig && (torn || !!App.orbitState.docked)
@@ -186,7 +181,7 @@ export class PeekStore {
   }
 
   get framePosition() {
-    if (!this.appState) {
+    if (!this.state) {
       return [0, 0]
     }
     const { willShow, willStayShown, willHide, state } = this
@@ -195,7 +190,7 @@ export class PeekStore {
     }
     // determine x adjustments
     const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
-    const position = this.appState.position
+    const position = this.state.position
     let x = position[0]
     let y = position[1] + animationAdjust
     if (this.dragOffset) {

@@ -2,7 +2,7 @@ import * as Mobx from 'mobx'
 import { ReactionHelpers, MagicalObject } from './types'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
 import { getReactionOptions, getReactionName, log, logState, logRes, Root } from './helpers'
-import { omitBy } from 'lodash'
+import { omitBy, isEqual } from 'lodash'
 
 const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
@@ -31,12 +31,23 @@ const diffLog = (a, b) => {
   return []
 }
 
+const toJSDeep = obj => {
+  const next = Mobx.toJS(obj)
+  if (Array.isArray(next)) {
+    return next.map(toJSDeep)
+  }
+  return next
+}
+
+const isEqualDeep = (a, b) => isEqual(toJSDeep(a), toJSDeep(b))
+
 // watches values in an autorun, and resolves their results
 export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   const {
     delayValue,
     defaultValue,
     onlyUpdateIfChanged,
+    onlyReactIfChanged,
     deferFirstRun,
     trace,
     ...options
@@ -79,14 +90,22 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         log.info(`delayValue ${logName}`, value)
       }
     }
-    if (onlyUpdateIfChanged && Mobx.comparer.structural(getCurrentValue(), newValue)) {
-      return IS_PROD ? undefined : []
+    if (onlyUpdateIfChanged) {
+      const oldVal = toJSDeep(getCurrentValue())
+      const newVal = toJSDeep(newValue)
+      if (isEqual(oldVal, newVal)) {
+        return IS_PROD ? undefined : []
+      } else {
+        if (!IS_PROD) {
+          log.verbose('onlyUpdateIfChanged changed:\n oldval:', oldVal, '\n newval:', newVal)
+        }
+      }
     }
     state.hasResolvedOnce = true
     // return diff in dev mode
     let res
     if (!IS_PROD) {
-      res = diffLog(Mobx.toJS(current.get()), Mobx.toJS(value))
+      res = diffLog(toJSDeep(getCurrentValue()), toJSDeep(value))
     }
     current.set(value)
     return res
@@ -234,8 +253,17 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   }
 
   function watcher(reactionFn) {
+    let lastReactVal
     return function watcherCb(reactValArg) {
       reset()
+      if (onlyReactIfChanged) {
+        const unchanged = isEqualDeep(lastReactVal, reactValArg)
+        lastReactVal = reactValArg
+        if (unchanged) {
+          log.verbose(`onlyReactIfChanged, not changed: ${logName}`)
+          return
+        }
+      }
       reactionID = uid()
       const curID = reactionID
       const updateAsyncValue = val => {

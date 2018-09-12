@@ -5,6 +5,7 @@ import { oracleOptions } from '../constants'
 import { Logger } from '@mcro/logger'
 import { join } from 'path'
 import { getGlobalConfig } from '@mcro/config'
+import { stringify } from '@mcro/helpers'
 
 const log = new Logger('AppsManager')
 
@@ -21,7 +22,10 @@ export class AppsManager {
   // launch app icons and events to listen for focus
   manageAppIcons = react(
     () => App.appsState,
-    async appsState => {
+    async (appsState, { sleep }) => {
+      // debounce to prevent lots of spawn/dispose
+      await sleep(50)
+      log.info('Running app state', stringify(appsState))
       // handle deletes
       let current = [...this.processes]
       for (const { id } of current) {
@@ -42,11 +46,8 @@ export class AppsManager {
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
           log.info(`create process ${id}`)
-          const oracle = await this.spawnOracle(
-            id,
-            'Test',
-            join(getGlobalConfig().paths.desktopRoot, 'assets', 'icon.png'),
-          )
+          const icon = join(getGlobalConfig().paths.desktopRoot, 'assets', 'icon.png')
+          const oracle = await this.spawnOracle(id, 'Test', icon)
           this.processes = [
             ...this.processes,
             {
@@ -58,7 +59,7 @@ export class AppsManager {
       }
     },
     {
-      onlyUpdateIfChanged: true,
+      onlyReactIfChanged: true,
     },
   )
 

@@ -281,8 +281,10 @@ export class Oracle {
       const linkBin = Path.join(binDir, this.name)
       try {
         await remove(linkBin)
-      } catch {}
-      await linkify(Path.join(binDir, bin), linkBin)
+        await linkify(Path.join(binDir, bin), linkBin)
+      } catch (err) {
+        log.verbose('Got potentially inconsequential link err', err)
+      }
       bin = this.name
     }
     log.info(`oracle running on port ${this.port} ${bin} at path ${binDir}`)

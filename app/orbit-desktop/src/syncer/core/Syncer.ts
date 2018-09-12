@@ -165,7 +165,7 @@ export class Syncer {
    * Runs syncer immediately.
    */
   async runSyncer(setting?: SettingEntity) {
-    log.info(`starting ${this.options.constructor.name} syncer`, setting)
+    log.info(`starting ${this.options.constructor.name} syncer`)
 
     // create a new job - the fact that we started a new syncer
     const job = assign(new JobEntity(), {

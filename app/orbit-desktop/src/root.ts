@@ -110,15 +110,7 @@ export class Root {
     this.screenManager = new ScreenManager()
     await this.screenManager.start()
 
-    this.appsManager = new AppsManager({
-      onAction: (id, action) => {
-        Desktop.sendMessage(
-          Electron,
-          Electron.messages.APP_STATE,
-          JSON.stringify({ id, action }),
-        )
-      },
-    })
+    this.appsManager = new AppsManager()
 
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screenManager.lastScreenChange,

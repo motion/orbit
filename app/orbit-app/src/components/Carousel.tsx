@@ -40,7 +40,7 @@ export class Carousel extends React.Component<CarouselProps> {
     const activeCard = this.cardRefs[index]
     if (!activeCard) return
     // non animated: frame.scrollLeft =
-    scroll.left(scroll, activeCard.offsetLeft - 12, { duration: 100 })
+    scroll.left(frame, activeCard.offsetLeft - 12, { duration: 60 })
   }
 
   render() {

@@ -79,6 +79,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     maskImage.resizingMode = .stretch
     return maskImage
   }
+  
+  func applicationWillBecomeActive(_ notification: Notification) {
+    self.emit("{ \"action\": \"appState\", \"value\": \"focus\" }")
+  }
+  
+  func applicationWillResignActive(_ notification: Notification) {
+    self.emit("{ \"action\": \"appState\", \"value\": \"blur\" }")
+  }
+  
+  func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+    self.emit("{ \"action\": \"appState\", \"value\": \"exit\" }")
+    return NSApplication.TerminateReply.terminateNow
+  }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     window.level = .floating // .floating to be on top
@@ -120,13 +133,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     socketBridge = SocketBridge(onMessage: self.onMessage)
     
-    NSWorkspace.shared.notificationCenter.addObserver(
-      self,
-      selector: #selector(activated(_:)),
-      name: NSWorkspace.didActivateApplicationNotification,
-      object: nil
-    )
-    
 //    windo = Windo(emit: self.emit)
 
 //    do {
@@ -163,17 +169,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //      printErr($0)
 //      exit(1)
 //    }
-  }
-  
-  @objc func activated(_ notification: NSNotification) {
-    if let info = notification.userInfo,
-      let app = info[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
-      let bundleId = app.bundleIdentifier
-    {
-      if bundleId == Bundle.main.bundleIdentifier! {
-        self.emit("{ \"action\": \"appState\", \"value\": \"focus\" }")
-      }
-    }
   }
   
   func showWindow() {

@@ -156,17 +156,17 @@ function getPeekPositionFromTarget(
   if (!orbitOnLeft && peekOnLeft) {
     x += Constants.ARROW_PAD
   }
+
+  // FOR NOW JUST FIX IT TO EDGE OR ORBIT
+  // UNTIL WE HAVE WINDOWS THAT FOLLOW OTHER STUFF
+  // THEN WE CAN HAVE THIS LINE ONLY APPLY TO PEEKWINDOW
   // adjust for docked
   if (App.orbitState.docked) {
     // for now lets not allow things to overlap the docked frame
     // comment this out if you want them to
-    const maxLeft = App.orbitState.position[0] - pW + 10
-    if (x > maxLeft) {
-      x = maxLeft - 20
-    } else {
-      x -= 20
-    }
+    x = App.orbitState.position[0] - pW - 10
   }
+
   return {
     position: [Math.round(x), Math.round(y)],
     size: [pW, pH],

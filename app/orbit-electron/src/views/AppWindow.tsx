@@ -48,6 +48,8 @@ class AppWindowStore {
   }
 
   willUnmount() {
+    // because weird stuff..
+    this.window.close()
     this.props.electronStore.apps.delete(this)
     this.off()
   }

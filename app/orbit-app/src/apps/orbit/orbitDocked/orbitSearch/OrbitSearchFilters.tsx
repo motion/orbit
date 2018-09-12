@@ -61,6 +61,7 @@ const FilterButton = props => (
     chromeless
     glint={false}
     size={0.95}
+    sizePadding={0.9}
     sizeRadius={3}
     alpha={0.8}
     fontWeight={500}

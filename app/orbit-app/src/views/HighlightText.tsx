@@ -8,6 +8,13 @@ type Props = TextProps & {
 }
 
 export const HighlightText = ({ options, children, ...props }: Props) => {
+  let extraProps
+  if (typeof props.alpha === 'undefined') {
+    extraProps = {
+      // inherits parent color for deep nesting
+      color: 'inherit',
+    }
+  }
   return (
     <HighlightsContext.Consumer>
       {terms => {
@@ -16,8 +23,8 @@ export const HighlightText = ({ options, children, ...props }: Props) => {
             tagName="div"
             className="paragraph"
             display="block"
-            color="inherit"
             selectable
+            {...extraProps}
             highlight={
               terms.length
                 ? {

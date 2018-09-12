@@ -21,15 +21,15 @@ export class AppsManager {
 
   // launch app icons and events to listen for focus
   manageAppIcons = react(
-    () => App.appsState,
-    async (appsState, { sleep }) => {
-      // debounce to prevent lots of spawn/dispose
+    () => App.appsState.map(app => ({ id: app.id, torn: app.torn })),
+    async (apps, { sleep }) => {
+      // debounce to prevent lots of processing
       await sleep(50)
-      log.info('Running app state', appsState.map(x => [x.id, x.torn]))
+      log.info('Running app state', apps)
       // handle deletes
       let current = [...this.processes]
       for (const { id } of current) {
-        const hasApp = appsState.find(x => x.id === id)
+        const hasApp = apps.find(x => x.id === id)
         const shouldDelete = !hasApp
         if (shouldDelete) {
           log.info(`remove process ${id}`)
@@ -38,7 +38,7 @@ export class AppsManager {
       }
 
       // handle adds
-      for (const { id, torn } of appsState) {
+      for (const { id, torn } of apps) {
         // dont handle peek app
         if (torn === false) {
           continue
@@ -57,9 +57,6 @@ export class AppsManager {
           ]
         }
       }
-    },
-    {
-      onlyReactIfChanged: true,
     },
   )
 

@@ -39,15 +39,12 @@ const toJSDeep = obj => {
   return next
 }
 
-const isEqualDeep = (a, b) => isEqual(toJSDeep(a), toJSDeep(b))
-
 // watches values in an autorun, and resolves their results
 export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   const {
     delayValue,
     defaultValue,
     onlyUpdateIfChanged,
-    onlyReactIfChanged,
     deferFirstRun,
     trace,
     ...options
@@ -253,17 +250,8 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   }
 
   function watcher(reactionFn) {
-    let lastReactVal
     return function watcherCb(reactValArg) {
       reset()
-      if (onlyReactIfChanged) {
-        const unchanged = isEqualDeep(lastReactVal, reactValArg)
-        lastReactVal = reactValArg
-        if (unchanged) {
-          log.verbose(`onlyReactIfChanged, not changed: ${logName}`)
-          return
-        }
-      }
       reactionID = uid()
       const curID = reactionID
       const updateAsyncValue = val => {

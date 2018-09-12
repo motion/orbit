@@ -34,9 +34,12 @@ export const PeekFrameArrow = decorator(({ peekStore, theme, borderShadow }: Pro
   const isHidden = !state
   const onRight = !state.peekOnLeft
   const arrowSize = 14
-  const ARROW_CARD_TOP_OFFSET = 32
+  const target = state.target
+  // aim for the middle, but cap it at most MAX_TOP_OFF from top
+  const MAX_TOP_OFF = 32
+  const ARROW_CARD_TOP_OFFSET = Math.min(MAX_TOP_OFF, target.height / 2)
   const arrowY = Math.min(
-    isHidden ? 0 : state.target.top + ARROW_CARD_TOP_OFFSET - state.position[1] - arrowSize / 2,
+    isHidden ? 0 : target.top + ARROW_CARD_TOP_OFFSET - state.position[1] - arrowSize / 2,
     state.size[1] - Constants.PEEK_BORDER_RADIUS * 2 - arrowSize,
   )
   return (

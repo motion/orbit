@@ -16,6 +16,8 @@ import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 // import { MessageDark } from '../../../../views/Message'
 import { GeneralSettingValues } from '@mcro/models'
+import { MessageDark } from '../../../../views/Message'
+import { settingsList } from '../../../../helpers/settingsList'
 
 type Props = {
   appsStore?: AppsStore
@@ -115,12 +117,12 @@ const AddButton = ({ disabled, ...props }) =>
   disabled ? (
     <Button chromeless disabled {...props} />
   ) : (
-    <Theme theme="green">
+    <Theme theme={{ background: 'green', color: '#fff' }}>
       <Button fontWeight={700} {...props} />
     </Theme>
   )
 
-const buttonText = ['Start Secure Proxy', 'Next', 'Done!']
+const buttonText = ['Start Secure Auth', 'Next', 'Done!']
 
 class OnboardStore {
   props: Props
@@ -155,7 +157,6 @@ class OnboardStore {
     // LEAVING curFrame page...
 
     if (this.curFrame === 0) {
-      console.log('start proxy')
       await this.checkAlreadyProxied()
       console.log('already on?', this.accepted)
       if (this.accepted !== true) {
@@ -206,22 +207,21 @@ const decorator = compose(
 )
 
 export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
-  const { foundIntegrations } = Desktop.state.onboardState
-  if (!foundIntegrations) {
-    console.log('no found integrations...')
-    return null
-  }
-  const { atlassian, ...rest } = foundIntegrations
-  let finalIntegrations = Object.keys(rest)
-  if (atlassian) {
-    finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
-  }
-  const integrations = finalIntegrations.map(integration => {
+  // for smart finding integrations...
+  // const { foundIntegrations } = Desktop.state.onboardState
+  // if (!foundIntegrations) {
+  //   console.log('no found integrations...')
+  //   return null
+  // }
+  // const { atlassian, ...rest } = foundIntegrations
+  // let finalIntegrations = Object.keys(rest)
+  // if (atlassian) {
+  //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
+  // }
+  const integrations = settingsList.sort((a, b) => a.id.localeCompare(b.id)).map(integration => {
     return {
-      id: integration,
-      title: NICE_INTEGRATION_NAMES[integration],
-      auth: /jira|conflunce/.test(integration),
-      added: !!(appsStore.appsList || []).find(x => x.type === integration),
+      ...integration,
+      added: !!(appsStore.appsList || []).find(x => x.type === integration.id),
     }
   })
   return (
@@ -239,22 +239,13 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
                 Welcome to Orbit
               </Text>
               <View height={30} />
-              <Text
-                selectable
-                textAlign="left"
-                size={1.1}
-                sizeLineHeight={1.025}
-                alpha={0.9}
-              >
-                Orbit is the next step in operating systems. It's a beautiful
-                unified platform for all your information.
+              <Text selectable textAlign="left" size={1.1} sizeLineHeight={1.025} alpha={0.9}>
+                Welcome to your personal OS. Orbit is your own tool to manage disparate information
+                in a beautiful, private, extensible way.
                 <VerticalSpace />
-                It's time we had control over our digital lives. Orbit is the
-                first tool that unifies your knowledge completely privately.
-                <VerticalSpace />
-                Orbit runs 100% locally on your device, never exposing your keys
-                or data. To do this, it will run a secure private local proxy
-                for authentication.
+                Orbit runs 100% locally on your device and never exposes your keys or data to anyone
+                but you. To do this, it will run a secure local server that handles all your
+                authentication keys.
               </Text>
               <VerticalSpace />
               <VerticalSpace />
@@ -273,8 +264,8 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
               </Text>
               <View height={20} />
               <Text selectable textAlign="left" size={1.1} sizeLineHeight={0.9}>
-                Orbit had a problem setting up a proxy on your machine. Feel
-                free to get in touch with us if you are having issues:
+                Orbit had a problem setting up a proxy on your machine. Feel free to get in touch
+                with us if you are having issues:
                 <br />
                 <br />
                 <strong>
@@ -292,28 +283,22 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
           {store.accepted === true && (
             <Centered>
               <Text size={2.2} fontWeight={600}>
-                Success
+                Success!
               </Text>
-              <View height={5} />
+              <VerticalSpace />
               <Text size={1.5} alpha={0.5} width="80%">
-                Orbit was able to set up a private server to handle your
-                authentication.
-              </Text>
-              <View height={25} />
-              <Text size={1.5} alpha={0.5} width="80%">
-                Now, let's get you set up.
+                Now, lets set you up...
               </Text>
             </Centered>
           )}
         </OnboardFrame>
         <OnboardFrame>
-          <Title size={1.2} fontWeight={600}>
+          <Title size={1.4} fontWeight={500}>
             Set up a few apps
           </Title>
 
-          <Text>You can add a few apps now to get started.</Text>
+          <VerticalSpace />
 
-          <View height={15} />
           <Unpad>
             {integrations.map(item => {
               return (
@@ -322,24 +307,18 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
                   inactive={item.added}
                   onClick={item.added ? null : addIntegrationClickHandler(item)}
                 >
-                  <OrbitIcon size={18} icon={item.id} />
+                  <OrbitIcon size={18} icon={item.icon} />
                   <ItemTitle>{item.title}</ItemTitle>
                   <AddButton size={0.9} disabled={item.added}>
-                    {item.added ? (
-                      <Icon size={16} name="check" color="green" />
-                    ) : (
-                      'Add'
-                    )}
+                    {item.added ? <Icon size={16} name="check" color="green" /> : 'Add'}
                   </AddButton>
                 </Item>
               )
             })}
           </Unpad>
-          <VerticalSpace />
 
-          {/* <MessageDark style={{ textAlign: 'center' }}>
-              <Text size={1.2}>Orbit Proxy Active!</Text>
-            </MessageDark> */}
+          <VerticalSpace />
+          <VerticalSpace />
         </OnboardFrame>
         <OnboardFrame>
           <Centered>
@@ -356,8 +335,7 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
             <VerticalSpace />
             <VerticalSpace />
             <Text size={1.5} alpha={0.5}>
-              Orbit has many keyboard controls, try using your arrow keys from
-              the home screen!
+              Orbit has many keyboard controls, try using your arrow keys from the home screen!
             </Text>
           </Centered>
         </OnboardFrame>

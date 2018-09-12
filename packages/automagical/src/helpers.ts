@@ -6,7 +6,7 @@ const PREFIX = '=>'
 
 export const Root = typeof window !== 'undefined' ? window : require('global')
 
-export const logState = new Logger('react+')
+export const logState = new Logger('react')
 export const log = new Logger('react')
 
 export const logRes = (res: any) => {
@@ -26,12 +26,13 @@ export const getReactionName = (obj: MagicalObject) => {
   return obj.constructor.name
 }
 
+const defaultOpts: ReactionOptions = {
+  equals: Mobx.comparer.structural,
+}
+
 export function getReactionOptions(userOptions?: ReactionOptions) {
-  let options: ReactionOptions = {
-    equals: Mobx.comparer.structural,
-  }
   if (userOptions instanceof Object) {
-    options = { ...options, ...userOptions }
+    return { ...defaultOpts, ...userOptions }
   }
-  return options
+  return defaultOpts
 }

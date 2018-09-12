@@ -1,5 +1,5 @@
 import { Bridge, proxySetters } from '@mcro/mobx-bridge'
-import { store, react, deep } from '@mcro/black'
+import { store, deep } from '@mcro/black'
 
 // store export
 export let Desktop = null as DesktopStore
@@ -102,14 +102,6 @@ class DesktopStore {
 
   results = []
 
-  memoizedResults = react(
-    () => [
-      ...Desktop.searchState.searchResults,
-      ...Desktop.searchState.pluginResults,
-    ],
-    x => (this.results = x),
-  )
-
   get isHoldingOption(): Boolean {
     if (Desktop.mouseState.mouseDown) {
       return false
@@ -140,10 +132,7 @@ class DesktopStore {
     // this fixes logical issues in line finding from swift for now
     if (Desktop.appState) {
       const { offset, bounds } = Desktop.appState
-      maxX = Math.min(
-        offset[0] + bounds[0] - PAD_WINDOW * 2 /* reverse linepad */,
-        maxX,
-      )
+      maxX = Math.min(offset[0] + bounds[0] - PAD_WINDOW * 2 /* reverse linepad */, maxX)
     }
     return { left, top, width: maxX - left, height: maxY - top }
   }
@@ -152,9 +141,7 @@ class DesktopStore {
     if (!Desktop.ocrState.shouldClear) {
       return Desktop.ocrState.words || []
     }
-    return (Desktop.ocrState.words || []).filter(
-      (_, index) => !Desktop.ocrState.shouldClear[index],
-    )
+    return (Desktop.ocrState.words || []).filter((_, index) => !Desktop.ocrState.shouldClear[index])
   }
 
   start = async options => {

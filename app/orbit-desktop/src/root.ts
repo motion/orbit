@@ -1,11 +1,7 @@
 import { debugState, on } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import {
-  MediatorServer,
-  typeormResolvers,
-  WebSocketServerTransport,
-} from '@mcro/mediator'
+import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
   BitModel,
   JobModel,
@@ -14,10 +10,7 @@ import {
   SettingModel,
   SettingRemoveCommand,
 } from '@mcro/models'
-import {
-  AtlassianSettingSaveCommand,
-  SettingForceSyncCommand,
-} from '@mcro/models'
+import { AtlassianSettingSaveCommand, SettingForceSyncCommand } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
 import macosVersion from 'macos-version'
@@ -27,13 +20,11 @@ import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection } from 'typeorm'
 import { Server as WebSocketServer } from 'ws'
-import { Entities } from './entities'
 import { BitEntity } from './entities/BitEntity'
 import { JobEntity } from './entities/JobEntity'
 import { PersonBitEntity } from './entities/PersonBitEntity'
 import { PersonEntity } from './entities/PersonEntity'
 import { SettingEntity } from './entities/SettingEntity'
-import connectModels from './helpers/connectModels'
 import { Onboard } from './onboard/Onboard'
 import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
 import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
@@ -71,7 +62,7 @@ export class Root {
   start = async () => {
     this.registerREPLGlobals()
     this.registerEntityServer()
-    log.info('Start Desktop Store..')
+    log.verbose('Start Desktop Store..')
     // iohook.start(false)
     await Desktop.start({
       ignoreSelf: true,
@@ -93,12 +84,12 @@ export class Root {
       open(url)
     })
 
-    // ... you connect models and start running things on them
-    await this.connect()
-
-    // wait for database manager to run migrations before...
+    // BEFORE YOUR CONNECT
+    // run the databaseManager that runs migrations
+    // this ensures things dont err
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
+    this.connection = this.databaseManager.getConnection()
 
     this.registerMediatorServer()
 
@@ -119,13 +110,11 @@ export class Root {
     this.keyboardStore.start()
     this.watchLastBit()
     await this.server.start()
+
+    // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {
       this.stores = stores
     })
-  }
-
-  async connect() {
-    this.connection = await connectModels(Entities)
   }
 
   watchLastBit = () => {
@@ -188,11 +177,7 @@ export class Root {
   private registerMediatorServer() {
     this.mediatorServer = new MediatorServer({
       models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
-      commands: [
-        SettingRemoveCommand,
-        SettingForceSyncCommand,
-        AtlassianSettingSaveCommand,
-      ],
+      commands: [SettingRemoveCommand, SettingForceSyncCommand, AtlassianSettingSaveCommand],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,
       }),
@@ -222,10 +207,7 @@ export class Root {
     })
     server.on('connection', socket => {
       socket.on('message', str => {
-        handleEntityActions(
-          socket,
-          typeof str === 'string' ? JSON.parse(str) : str,
-        )
+        handleEntityActions(socket, typeof str === 'string' ? JSON.parse(str) : str)
       })
     })
   }

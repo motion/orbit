@@ -52,12 +52,7 @@ export class ScreenManager {
   oracle = new Oracle(oracleOptions)
 
   start = async () => {
-    console.log('starting screenManager...')
-
-    const off2 = Desktop.onMessage(
-      Desktop.messages.DEFOCUS_ORBIT,
-      this.defocusOrbit,
-    )
+    const off2 = Desktop.onMessage(Desktop.messages.DEFOCUS_ORBIT, this.defocusOrbit)
     this.running.add({ dispose: off2 })
 
     // for now just enable until re enable oracle
@@ -80,31 +75,31 @@ export class ScreenManager {
   }
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 
-  handleOCRWords = react(
-    () => Desktop.ocrState.words,
-    words => {
-      if (!words) {
-        return
-      }
-      log.info(`> ${words.length} words`)
-      this.watchBounds('OCR', {
-        fps: 12,
-        sampleSpacing: 2,
-        sensitivity: 1,
-        showCursor: true,
-        boxes: words.map(([x, y, width, height], id) => ({
-          id,
-          x,
-          y,
-          width,
-          height,
-          initialScreenshot: false,
-          findContent: false,
-          ocr: false,
-        })),
-      })
-    },
-  )
+  // handleOCRWords = react(
+  //   () => Desktop.ocrState.words,
+  //   words => {
+  //     if (!words) {
+  //       return
+  //     }
+  //     log.info(`> ${words.length} words`)
+  //     this.watchBounds('OCR', {
+  //       fps: 12,
+  //       sampleSpacing: 2,
+  //       sensitivity: 1,
+  //       showCursor: true,
+  //       boxes: words.map(([x, y, width, height], id) => ({
+  //         id,
+  //         x,
+  //         y,
+  //         width,
+  //         height,
+  //         initialScreenshot: false,
+  //         findContent: false,
+  //         ocr: false,
+  //       })),
+  //     })
+  //   },
+  // )
 
   updateTheme = react(
     () => (App.state.darkTheme ? 'ultra' : 'light'),
@@ -158,14 +153,14 @@ export class ScreenManager {
   // }
 
   defocusOrbit = () => {
-    console.log('should defocus, crashing oracle for now...')
+    log.info('should defocus...')
     // this.oracle.defocus()
   }
 
   setupOracleListeners() {
     // ok
     this.oracle.onInfo(info => {
-      console.log('got oracle info', info)
+      log.verbose('got oracle info', info)
       Desktop.setState({
         operatingSystem: {
           supportsTransparency: info.supportsTransparency,
@@ -255,11 +250,7 @@ export class ScreenManager {
         return
       }
       state.appStateUpdatedAt = Date.now()
-      if (
-        !wasFocusedOnOrbit &&
-        !PREVENT_CLEAR[this.curAppName] &&
-        !PREVENT_CLEAR[nextState.name]
-      ) {
+      if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]) {
         const { appState } = Desktop.state
         if (
           !isEqual(nextState.bounds, appState.bounds) ||

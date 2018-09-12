@@ -47,10 +47,7 @@ export class SubPaneStore {
   positionState = react(
     () => {
       const { extraCondition, name, paneManagerStore } = this.props
-      return (
-        name === paneManagerStore.activePane &&
-        (extraCondition ? extraCondition() : true)
-      )
+      return name === paneManagerStore.activePane && (extraCondition ? extraCondition() : true)
     },
     isActive => {
       ensure('changed', isActive !== this.positionState.isActive)
@@ -140,13 +137,14 @@ export class SubPaneStore {
       pane.scrollTop = scrollTop
       return
     }
+    pane.scrollTop = cardOffset - 20
     // too low
-    const cardBottom = cardOffset + card.clientHeight
-    const paneBottomVisible = pane.scrollTop + pane.clientHeight
-    if (cardBottom > paneBottomVisible) {
-      pane.scrollTop = cardBottom - pane.clientHeight + 100 // for some reason we need this extra
-    }
-  }, 60)
+    // const cardBottom = cardOffset + card.clientHeight
+    // const paneBottomVisible = pane.scrollTop + pane.clientHeight
+    // if (cardBottom > paneBottomVisible) {
+    //   pane.scrollTop = cardBottom - pane.clientHeight + 100 // for some reason we need this extra
+    // }
+  }, 30)
 
   updateHeight = () => {
     // this gets full content height

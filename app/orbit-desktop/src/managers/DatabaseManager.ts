@@ -5,12 +5,11 @@ import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
 import { sleep } from '../helpers'
-import { SettingEntity } from '../entities/SettingEntity'
-import { BitEntity } from '../entities/BitEntity'
-import { getRepository } from 'typeorm'
-import { Bit, Setting } from '@mcro/models'
-import { BitUtils } from '../utils/BitUtils'
 import { MigrationManager } from './database/MigrationManager'
+import { ensureCustomApp } from '../helpers/ensureCustomApp'
+import connectModels from '../helpers/connectModels'
+import { Entities } from '../entities'
+import { Connection } from 'typeorm'
 
 const log = new Logger('database')
 
@@ -18,24 +17,30 @@ const log = new Logger('database')
 // and run migration from here
 
 const hasTable = async (db: sqlite.Database, table: string) =>
-  await db.get(
-    'SELECT name FROM sqlite_master WHERE type="table" AND name=?',
-    table,
-  )
+  await db.get('SELECT name FROM sqlite_master WHERE type="table" AND name=?', table)
 
 export class DatabaseManager {
+  connection?: Connection
   db: sqlite.Database
   subscriptions = new CompositeDisposable()
   searchIndexListener: ReturnType<typeof Desktop.onMessage>
   migrationManager = new MigrationManager()
 
   async start() {
-    log.info('Starting DatabaseManager...')
-    await this.migrationManager.start()
     this.db = await sqlite.open(DATABASE_PATH)
-    this.ensureSearchIndex()
+
+    // connect models first to ensure tables created
+    await this.connectModels()
+
+    // run migrations next to ensure up to date
+    await this.migrationManager.start()
+
+    // then create search index tables
+    await this.ensureSearchIndex()
     this.watchForReset()
-    await this.ensureCustomApp()
+
+    // then do some setup
+    await ensureCustomApp()
 
     this.temporarySearchResults()
   }
@@ -45,38 +50,12 @@ export class DatabaseManager {
     this.searchIndexListener()
   }
 
-  async ensureCustomApp() {
-    console.log('ensuring custom app...')
-    const vals: Partial<Setting> = {
-      type: 'app1',
-      category: 'custom',
-      token: 'good',
-    }
-    let setting = await SettingEntity.findOne(vals)
-    if (!setting) {
-      setting = await getRepository(SettingEntity).save(
-        Object.assign(new SettingEntity(), vals),
-      )
-    }
-    const bit = BitUtils.create({
-      id: 1231023,
-      integration: 'app1',
-      title: 'My app',
-      body: '',
-      type: 'custom',
-      bitCreatedAt: Date.now(),
-      bitUpdatedAt: Date.now(),
-      settingId: setting.id,
-    })
-    if (
-      !(await BitEntity.findOne({
-        type: 'custom',
-        id: 1231023,
-        settingId: setting.id,
-      }))
-    ) {
-      await getRepository(BitEntity).save(bit)
-    }
+  async connectModels() {
+    this.connection = await connectModels(Entities)
+  }
+
+  getConnection = () => {
+    return this.connection
   }
 
   private temporarySearchResults() {
@@ -122,7 +101,7 @@ export class DatabaseManager {
 
   private ensureSearchIndex = async () => {
     if (await hasTable(this.db, 'search_index')) {
-      log.info('Already has search index')
+      log.verbose('Already has search index')
       return
     }
     await this.createSearchIndex()

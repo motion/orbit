@@ -14,17 +14,7 @@ const idFn = _ => _
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const appPath = bundle =>
-  Path.join(
-    dir,
-    '..',
-    'orbit',
-    'Build',
-    'Products',
-    bundle,
-    'orbit.app',
-    'Contents',
-    'MacOS',
-  )
+  Path.join(dir, '..', 'orbit', 'Build', 'Products', bundle, 'orbit.app', 'Contents', 'MacOS')
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
 export class Oracle {
@@ -77,7 +67,6 @@ export class Oracle {
   }
 
   start = async () => {
-    log.info('start oracle')
     this.oracleBridge = new OracleBridge({
       port: this.port,
       getActions: () => this.actions,
@@ -88,12 +77,11 @@ export class Oracle {
     await this.oracleBridge.start(({ socketSend }) => {
       this.socketSend = socketSend
     })
-    log.info('started oracleBridge')
     await this.setState({ isPaused: false })
     await this.runOracleProcess()
     await this.oracleBridge.onConnected()
     this.socketSend('start')
-    log.info('started oracle')
+    log.verbose('started oracle')
   }
 
   stop = async () => {
@@ -163,12 +151,7 @@ export class Oracle {
     await this.socketSend(`them ${theme}`)
   }
 
-  positionWindow = async (position: {
-    x: number
-    y: number
-    width: number
-    height: number
-  }) => {
+  positionWindow = async (position: { x: number; y: number; width: number; height: number }) => {
     await this.socketSend(`posi ${JSON.stringify(position)}`)
   }
 
@@ -239,9 +222,7 @@ export class Oracle {
   handleAccessibility = async value => {
     // we just got access, need to restart the oracle process (until we can figure out cleaner way)
     if (this.lastAccessibility === false && value === true) {
-      console.log(
-        'Just got accesibility access, restarting Swift process cleanly...',
-      )
+      console.log('Just got accesibility access, restarting Swift process cleanly...')
       await this.restart()
     }
     // only send on new value
@@ -296,12 +277,14 @@ export class Oracle {
     }
     if (this.name) {
       // create a named binary link to change the name...
-      console.log(`linking! ${this.name}`)
+      log.verbose(`linking! ${this.name}`)
       const linkBin = Path.join(binDir, this.name)
       try {
         await remove(linkBin)
-      } catch {}
-      await linkify(Path.join(binDir, bin), linkBin)
+        await linkify(Path.join(binDir, bin), linkBin)
+      } catch (err) {
+        log.verbose('Got potentially inconsequential link err', err)
+      }
       bin = this.name
     }
     log.info(`oracle running on port ${this.port} ${bin} at path ${binDir}`)
@@ -320,7 +303,7 @@ export class Oracle {
         const out = str.trim()
         const isPurposefulLog = out[0] === '!'
         if (isPurposefulLog || isLikelyError) {
-          log.info('swift >', this.name, out.slice(1))
+          log.verbose('swift >', this.name, out.slice(1))
           return
         }
         if (str.indexOf('<Notice>')) {

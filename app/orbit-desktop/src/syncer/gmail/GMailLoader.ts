@@ -20,17 +20,11 @@ export class GMailLoader {
    * History represents latest changes in user inbox.
    * For example when user receives new messages or removes exist messages.
    */
-  async loadHistory(
-    startHistoryId: string,
-    pageToken?: string,
-  ): Promise<GmailHistoryLoadResult> {
-
+  async loadHistory(startHistoryId: string, pageToken?: string): Promise<GmailHistoryLoadResult> {
     // load a history first
-    log.info(pageToken ? `loading history from the next page` : `loading history`)
-    const result = await this.fetcher.fetch(
-      historyQuery(startHistoryId, pageToken),
-    )
-    log.info(`history loaded`, result)
+    log.verbose(pageToken ? 'loading history from the next page' : 'loading history')
+    const result = await this.fetcher.fetch(historyQuery(startHistoryId, pageToken))
+    log.verbose('history loaded', result)
 
     // collect from history list of added/changed and removed thread ids
     let addedThreadIds: string[] = [],
@@ -42,15 +36,13 @@ export class GMailLoader {
         if (history.messagesAdded) {
           history.messagesAdded.forEach(action => {
             const threadId = action.message.threadId
-            if (addedThreadIds.indexOf(threadId) === -1)
-              addedThreadIds.push(threadId)
+            if (addedThreadIds.indexOf(threadId) === -1) addedThreadIds.push(threadId)
           })
         }
         if (history.messageDeleted) {
           history.messageDeleted.forEach(action => {
             const threadId = action.message.threadId
-            if (deletedThreadIds.indexOf(threadId) === -1)
-              deletedThreadIds.push(threadId)
+            if (deletedThreadIds.indexOf(threadId) === -1) deletedThreadIds.push(threadId)
           })
         }
         if (history.labelsAdded) {
@@ -59,8 +51,7 @@ export class GMailLoader {
           )
           trashed.forEach(action => {
             const threadId = action.message.threadId
-            if (deletedThreadIds.indexOf(threadId) === -1)
-              deletedThreadIds.push(threadId)
+            if (deletedThreadIds.indexOf(threadId) === -1) deletedThreadIds.push(threadId)
           })
         }
       })
@@ -68,18 +59,12 @@ export class GMailLoader {
 
     // load history from the next page is available
     if (result.nextPageToken) {
-      const newPageResult = await this.loadHistory(
-        startHistoryId,
-        result.nextPageToken,
-      )
+      const newPageResult = await this.loadHistory(startHistoryId, result.nextPageToken)
 
       return {
         historyId: result.historyId,
         addedThreadIds: [...addedThreadIds, ...newPageResult.addedThreadIds],
-        removedThreadIds: [
-          ...deletedThreadIds,
-          ...newPageResult.removedThreadIds,
-        ],
+        removedThreadIds: [...deletedThreadIds, ...newPageResult.removedThreadIds],
       }
     }
 
@@ -101,18 +86,13 @@ export class GMailLoader {
     pageToken?: string,
   ): Promise<GmailThread[]> {
     // load all threads first
-    log.info(
-      pageToken
-        ? `loading next page threads (max ${count})`
-        : `loading threads (max ${count})`,
+    log.verbose(
+      pageToken ? `loading next page threads (max ${count})` : `loading threads (max ${count})`,
     )
-    const result = await this.fetcher.fetch(
-      threadsQuery(count, queryFilter, pageToken),
-    )
+    const result = await this.fetcher.fetch(threadsQuery(count, queryFilter, pageToken))
 
     let threads = result.threads
-    if (!threads)
-      return []
+    if (!threads) return []
 
     // if array of filtered thread ids were passed then we load threads until we find all threads by given ids
     // once we found all threads we stop loading threads
@@ -130,7 +110,7 @@ export class GMailLoader {
 
       // this condition means we just found all requested threads, no need to load next page
       if (filteredIds.length === 0) {
-        log.info(`all requested threads were found`)
+        log.verbose('all requested threads were found')
         return threads
       }
     }
@@ -139,10 +119,7 @@ export class GMailLoader {
     // once we count is less than one we stop loading threads
     count -= result.threads.length // important to use result.threads here instead of mutated threads
     if (count < 1) {
-      log.info(
-        `stopped loading, maximum number of threads were loaded`,
-        threads.length,
-      )
+      log.verbose('stopped loading, maximum number of threads were loaded', threads.length)
       return threads
     }
 
@@ -164,13 +141,13 @@ export class GMailLoader {
    * Loads thread messages and pushes them into threads.
    */
   async loadMessages(threads: GmailThread[]): Promise<void> {
-    log.info(`loading thread messages`)
+    log.verbose('loading thread messages')
     await Promise.all(
       threads.map(async thread => {
         const result = await this.fetcher.fetch(threadQuery(thread.id))
         Object.assign(thread, result)
       }),
     )
-    log.info(`thread messages are loaded`, threads)
+    log.verbose('thread messages are loaded', threads)
   }
 }

@@ -32,7 +32,7 @@ export class GeneralSettingManager {
         console.error(err)
       }
     }
-    console.log('ensuring models are in place all over, remove me plz')
+    log.info('move me to migration plz')
     this.start()
   }
 
@@ -60,7 +60,7 @@ export class GeneralSettingManager {
 
   handleAutoLaunch = setting => {
     if (!this.autoLaunch) {
-      log.info('Autolaunch disabled in dev mode')
+      log.verbose('Autolaunch disabled in dev mode')
       return
     }
     const isEnabled = this.autoLaunch.isEnabled()

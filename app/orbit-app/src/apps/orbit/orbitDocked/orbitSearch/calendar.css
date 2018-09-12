@@ -1,6 +1,6 @@
 /* reset our styles for their base css */
 
-.rdrDayNumber span {
+.theme-dark .rdrDayNumber span {
   color: #fff;
 }
 

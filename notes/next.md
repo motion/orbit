@@ -1,10 +1,6 @@
 # nate
 
 - Wednesday -- _profiles_
-  - double app icon bug
-  - on move space it opens orbit
-  - on focus away from orbit hide it (use old code for activate)
-  - scroll down should keep search at top
   - design run on the person feed
   - Make demo app nicer:
     - Sidebar selectable list items

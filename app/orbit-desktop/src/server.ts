@@ -39,7 +39,7 @@ export class Server {
     // config
     this.app.get('/config', (_, res) => {
       const config = getGlobalConfig()
-      log.info(`Send config ${JSON.stringify(config, null, 2)}`)
+      log.verbose(`Send config ${JSON.stringify(config, null, 2)}`)
       res.json(config)
     })
 
@@ -48,11 +48,10 @@ export class Server {
 
   async start() {
     // kill old processes
-    log.info('Killing any old servers...')
+    log.verbose('Killing any old servers...')
     await killPort(Config.ports.server)
-    log.info('Desktop listening!!!!!!!!!...')
     this.app.listen(Config.ports.server, () => {
-      console.log('listening at port', Config.ports.server)
+      log.info('listening at port', Config.ports.server)
     })
 
     return Config.ports.server
@@ -65,10 +64,7 @@ export class Server {
       res.header('Access-Control-Allow-Origin', req.headers.origin)
       res.header('Access-Control-Allow-Credentials', 'true')
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-      res.header(
-        'Access-Control-Allow-Methods',
-        'GET,HEAD,POST,PUT,DELETE,OPTIONS',
-      )
+      res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
       next()
     }
   }
@@ -76,7 +72,6 @@ export class Server {
   private setupOrbitApp() {
     // proxy to webpack-dev-server in development
     if (process.env.NODE_ENV === 'development') {
-      log.info('Serving orbit app through proxy to webpack-dev-server...')
       const webpackUrl = 'http://localhost:3999'
       const router = {
         [`http://localhost:${Config.ports.server}`]: webpackUrl,
@@ -97,14 +92,11 @@ export class Server {
     if (process.env.NODE_ENV !== 'development') {
       log.info(`Serving orbit static app in ${Config.paths.appStatic}...`)
       this.app.use(express.static(Config.paths.appStatic))
-      this.app.use((_, res) =>
-        res.sendFile(Path.join(Config.paths.appStatic, 'index.html')),
-      )
+      this.app.use((_, res) => res.sendFile(Path.join(Config.paths.appStatic, 'index.html')))
     }
   }
 
   private setupOauthCallback() {
-    log.info('Setting up authCallback route')
     this.app.get('/authCallback/:service', (req, res) => {
       const secret = decodeURIComponent(req.query.secret)
       const clientId = decodeURIComponent(req.query.clientId)

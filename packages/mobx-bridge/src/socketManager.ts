@@ -55,11 +55,7 @@ export class SocketManager {
     }
   }
 
-  sendAll = (
-    source: string,
-    state: Object,
-    { skipUID }: { skipUID?: number } = {},
-  ) => {
+  sendAll = (source: string, state: Object, { skipUID }: { skipUID?: number } = {}) => {
     if (!source) {
       throw new Error(`No source (${source}) provided to state message
         ${JSON.stringify(state, null, 2)}`)
@@ -109,7 +105,7 @@ export class SocketManager {
       // initial message
       if (action === 'getState') {
         this.identities[uid] = source
-        console.log('got a getState action, identities', this.identities)
+        log.verbose('got a getState action, identities', this.identities)
       }
       if (this.actions[action]) {
         this.actions[action]({ source, socket })
@@ -135,7 +131,7 @@ export class SocketManager {
     setInterval(() => {
       const count = this.activeSockets.length
       if (lastCount !== count) {
-        log.info(count, 'connections')
+        log.verbose(count, 'connections')
       }
       lastCount = count
     }, 5000)

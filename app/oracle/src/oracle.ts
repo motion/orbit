@@ -77,7 +77,6 @@ export class Oracle {
   }
 
   start = async () => {
-    log.info('start oracle')
     this.oracleBridge = new OracleBridge({
       port: this.port,
       getActions: () => this.actions,
@@ -88,7 +87,6 @@ export class Oracle {
     await this.oracleBridge.start(({ socketSend }) => {
       this.socketSend = socketSend
     })
-    log.info('started oracleBridge')
     await this.setState({ isPaused: false })
     await this.runOracleProcess()
     await this.oracleBridge.onConnected()
@@ -296,7 +294,7 @@ export class Oracle {
     }
     if (this.name) {
       // create a named binary link to change the name...
-      console.log(`linking! ${this.name}`)
+      log.verbose(`linking! ${this.name}`)
       const linkBin = Path.join(binDir, this.name)
       try {
         await remove(linkBin)
@@ -320,7 +318,7 @@ export class Oracle {
         const out = str.trim()
         const isPurposefulLog = out[0] === '!'
         if (isPurposefulLog || isLikelyError) {
-          log.info('swift >', this.name, out.slice(1))
+          log.verbose('swift >', this.name, out.slice(1))
           return
         }
         if (str.indexOf('<Notice>')) {

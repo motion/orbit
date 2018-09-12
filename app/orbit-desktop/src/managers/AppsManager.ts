@@ -57,6 +57,9 @@ export class AppsManager {
         }
       }
     },
+    {
+      onlyUpdateIfChanged: true
+    }
   )
 
   async spawnOracle(id, name, iconPath: string) {
@@ -66,7 +69,7 @@ export class AppsManager {
       env: { SHOW_ICON: iconPath },
     })
     await oracle.start()
-    log.info('started oracle', id, name)
+    log.verbose('spawnOracle', id, name)
     oracle.onAppState(this.handleAppState(id))
     return oracle
   }
@@ -79,5 +82,6 @@ export class AppsManager {
     const index = this.processes.findIndex(x => x.id === id)
     await this.processes[index].oracle.stop()
     this.processes.splice(index, 1)
+    log.verbose('removeProcess', id)
   }
 }

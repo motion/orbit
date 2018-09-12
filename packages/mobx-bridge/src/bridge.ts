@@ -70,7 +70,6 @@ export class BridgeManager {
     if (!store) {
       throw new Error('No source given for starting screen store')
     }
-    log.info(`Starting bridge for ${store.source}...`)
     this.port = getGlobalConfig().ports.bridge
     // ensure only start once
     if (this.started) {
@@ -84,13 +83,9 @@ export class BridgeManager {
       await this.setupMaster()
     } else {
       log.info(`Connecting socket to ${this.port}`)
-      this._socket = new ReconnectingWebSocket(
-        `ws://localhost:${this.port}`,
-        undefined,
-        {
-          constructor: WebSocket,
-        },
-      )
+      this._socket = new ReconnectingWebSocket(`ws://localhost:${this.port}`, undefined, {
+        constructor: WebSocket,
+      })
       this.setupClientSocket()
     }
     // set initial state synchronously before
@@ -117,12 +112,12 @@ export class BridgeManager {
 
   private async setupMaster() {
     const stores = this._options.stores
-    log.info(`Starting socket manager on ${this.port}`)
+    log.verbose(`Starting socket manager on ${this.port}`)
     this.socketManager = new SocketManager({
       masterSource: 'Desktop',
       port: this.port,
       onState: (source, state, uid) => {
-        log.info(`onState ${uid} ${JSON.stringify(state)}`)
+        log.verbose(`onState ${uid} ${JSON.stringify(state)}`)
         this.deepMergeMutate(stores[source].state, state, {
           ignoreKeyCheck: true,
         })
@@ -173,19 +168,13 @@ export class BridgeManager {
           `)
         }
         if (!this.stores[source]) {
-          console.warn(
-            'Store not imported: this.stores:',
-            this.stores,
-            `source: ${source}`,
-          )
+          console.warn('Store not imported: this.stores:', this.stores, `source: ${source}`)
           return
         }
         const store = this.stores[source]
         const { state } = store
         if (!state) {
-          throw new Error(
-            `No state found for source (${source}) state (${state}) store(${store})`,
-          )
+          throw new Error(`No state found for source (${source}) state (${state}) store(${store})`)
         }
         await immediate()
         this.deepMergeMutate(state, newState, { ignoreKeyCheck: true })
@@ -211,9 +200,7 @@ export class BridgeManager {
       if (this._queuedState) {
         console.log('opened, sending queued state', this.state)
         try {
-          this._socket.send(
-            JSON.stringify({ state: this.state, source: this._source }),
-          )
+          this._socket.send(JSON.stringify({ state: this.state, source: this._source }))
         } catch (err) {
           console.log('error sending initial state', err.message, err.stack)
         }
@@ -250,9 +237,7 @@ export class BridgeManager {
 
   getCurrentState = () => {
     // get initial state
-    this._socket.send(
-      JSON.stringify({ action: 'getState', source: this._source }),
-    )
+    this._socket.send(JSON.stringify({ action: 'getState', source: this._source }))
   }
 
   handleMessage = data => {
@@ -278,9 +263,7 @@ export class BridgeManager {
   // set is only allowed from the source its set as initially
   setState = (newState, ignoreSend?) => {
     if (!this.started) {
-      throw new Error(
-        'Not started, can only call setState on the app that starts it.',
-      )
+      throw new Error('Not started, can only call setState on the app that starts it.')
     }
     if (!this._store) {
       console.warn('waht is this', this, this._source, this._store)
@@ -291,9 +274,7 @@ export class BridgeManager {
       )
     }
     if (!newState || typeof newState !== 'object') {
-      throw new Error(
-        `Bad state passed to ${this._source}.setState: ${newState}`,
-      )
+      throw new Error(`Bad state passed to ${this._source}.setState: ${newState}`)
     }
     // update our own state immediately so its sync
     const changedState = this.deepMergeMutate(this.state, newState)
@@ -351,9 +332,7 @@ export class BridgeManager {
           : this._initialState[key] !== 'undefined'
         if (!isValidKey) {
           console.error(
-            `${
-              this._source
-            }.deepMergeMutate: tried to set a key not in initialState
+            `${this._source}.deepMergeMutate: tried to set a key not in initialState
               - key: ${key}
               - typeof initial state key: ${typeof this._initialState[key]}
               - value:
@@ -415,16 +394,12 @@ export class BridgeManager {
 
   sendMessage = async (Store: any, ogMessage: string, value?: string) => {
     if (!this.started) {
-      throw new Error(
-        'Not started, can only call sendMessage on the app that starts it.',
-      )
+      throw new Error('Not started, can only call sendMessage on the app that starts it.')
     }
     if (!Store || !ogMessage) {
       throw `no store || message ${Store} ${ogMessage} ${value}`
     }
-    const message = value
-      ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}`
-      : ogMessage
+    const message = value ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}` : ogMessage
     if (this._options.master) {
       this.socketManager.sendMessage(Store.source, message)
     } else {

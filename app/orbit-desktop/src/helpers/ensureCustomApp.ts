@@ -7,7 +7,6 @@ import { BitUtils } from '../utils/BitUtils'
 // temporary while we demo custom apps
 
 export async function ensureCustomApp() {
-  console.log('ensuring custom app...')
   const vals: Partial<Setting> = {
     type: 'app1',
     category: 'custom',

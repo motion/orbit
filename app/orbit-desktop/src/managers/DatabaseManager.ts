@@ -27,7 +27,6 @@ export class DatabaseManager {
   migrationManager = new MigrationManager()
 
   async start() {
-    log.info('Starting DatabaseManager...')
     this.db = await sqlite.open(DATABASE_PATH)
 
     // connect models first to ensure tables created
@@ -102,7 +101,7 @@ export class DatabaseManager {
 
   private ensureSearchIndex = async () => {
     if (await hasTable(this.db, 'search_index')) {
-      log.info('Already has search index')
+      log.verbose('Already has search index')
       return
     }
     await this.createSearchIndex()

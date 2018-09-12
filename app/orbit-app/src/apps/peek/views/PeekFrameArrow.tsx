@@ -5,7 +5,6 @@ import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { ThemeObject } from '@mcro/gloss'
-import { trace } from 'mobx'
 
 type Props = {
   peekStore: PeekStore
@@ -28,8 +27,6 @@ export const PeekFrameArrow = decorator(({ peekStore, theme, borderShadow }: Pro
   if (!peekStore.isPeek) {
     return null
   }
-  trace()
-  log('hiiiiiiiiiiiiiiiiii')
   const { state } = peekStore
   if (!state || !state.position || !state.position.length || !state.target) {
     return null

@@ -51,9 +51,9 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   // its the 95% use case and causes less bugs
   mobxOptions.fireImmediately = !deferFirstRun
 
-  const delayLog = options && options.delay >= 0 ? ` ...${options.delay}ms ` : ''
+  const delayLog = options && options.delay >= 0 ? ` ..${options.delay}ms ` : ''
   const methodName = `${getReactionName(obj)}.${method}`
-  const logName = `${delayLog}${methodName}`
+  const logName = `${methodName}${delayLog}`
   let preventLog = options.log === false
   let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE, {
     name: logName,
@@ -246,7 +246,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         }
         if (!IS_PROD && !preventLog) {
           log.info(
-            `..${Date.now() - start}ms ${logName} ${isValid ? '✅' : '🚫'}`,
+            `${logName} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
             ...(changed || []),
           )
         }
@@ -321,7 +321,11 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           logState.info(`${logName}`, reactValArg, ...logRes(result), globalChanged)
         } else {
           if (options.log !== 'state') {
-            log.info(`${logName}`, isReaction ? reactValArg : '', ...(changed || []))
+            log.info(
+              `${logName}`,
+              ...(isReaction ? ['\n        args:', reactValArg] : []),
+              ...(changed || []),
+            )
           }
         }
       }

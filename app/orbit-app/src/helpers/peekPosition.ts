@@ -2,7 +2,7 @@ import * as Constants from '@mcro/constants'
 import { App, AppConfig } from '@mcro/stores'
 import { isEqual } from 'lodash'
 
-const MIN_Y = 80
+const MIN_Y = 60
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const BOTTOM_PAD = 40
@@ -59,11 +59,7 @@ export function peekPosition(target, appConfig?: AppConfig): WindowMap | null {
 // but we don't want to stay alllll the way in place because it looks better to move a little
 // so we'll nudge it down just a little.
 
-function getLazyPosition(
-  target: Position,
-  peekHeight: number,
-  lastPeek: WindowMap,
-): number {
+function getLazyPosition(target: Position, peekHeight: number, lastPeek: WindowMap): number {
   if (!lastPeek || !lastTarget) {
     return target.top
   }
@@ -97,14 +93,12 @@ function getLazyPosition(
   }
   // ensure we don't nudge too far up
   y = Math.max(MIN_Y, y)
+  // and not too far down
+  y = Math.min(y, target.top - 10)
   return y
 }
 
-function getPeekPositionFromTarget(
-  target,
-  lastPeek,
-  appConfig?: AppConfig,
-): WindowMap | null {
+function getPeekPositionFromTarget(target, lastPeek, appConfig?: AppConfig): WindowMap | null {
   // dont reset position on same target re-opening
   if (isEqual(target, lastTarget)) {
     return lastPeek

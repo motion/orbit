@@ -3,12 +3,12 @@ import { App, AppConfig } from '@mcro/stores'
 import { PeekTarget } from './types'
 import { isEqual } from '@mcro/black'
 import { Actions } from '../../Actions'
-import { log, getAppConfig, setPeekApp } from './setPeekApp'
+import { getAppConfig, setPeekApp } from './setPeekApp'
+import { Logger } from '@mcro/logger'
 
-export function togglePeekApp(
-  item: PersonBit | Bit | AppConfig,
-  target?: PeekTarget,
-) {
+const log = new Logger('togglePeekApp')
+
+export function togglePeekApp(item: PersonBit | Bit | AppConfig, target?: PeekTarget) {
   log.info('togglePeekApp', item)
   if (isEqual(App.peekState.appConfig, getAppConfig(item))) {
     Actions.clearPeek()

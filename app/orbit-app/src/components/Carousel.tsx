@@ -1,9 +1,6 @@
 import * as React from 'react'
 import { OrbitCard } from '../views/OrbitCard'
-import {
-  HorizontalScrollRow,
-  HorizontalScrollRowProps,
-} from '../views/HorizontalScrollRow'
+import { HorizontalScrollRow, HorizontalScrollRowProps } from '../views/HorizontalScrollRow'
 import isEqual from 'react-fast-compare'
 import scroll from 'scroll'
 
@@ -29,18 +26,25 @@ export class Carousel extends React.Component<CarouselProps> {
   }
 
   get cardRefs(): HTMLDivElement[] {
-    return Array.from(
-      this.frameRef.current.querySelectorAll('.carousel-result-item'),
-    )
+    return Array.from(this.frameRef.current.querySelectorAll('.carousel-result-item'))
   }
+
+  lastScroll = Date.now()
 
   scrollTo = index => {
     const frame = this.frameRef.current
     if (!frame) return
     const activeCard = this.cardRefs[index]
     if (!activeCard) return
-    // non animated: frame.scrollLeft =
-    scroll.left(frame, activeCard.offsetLeft - 12, { duration: 60 })
+    const duration = 90
+    const scrollTo = activeCard.offsetLeft - 12
+    // dont animate if fast
+    if (Date.now() - this.lastScroll < duration) {
+      frame.scrollLeft = scrollTo
+    } else {
+      scroll.left(frame, scrollTo, { duration })
+    }
+    this.lastScroll = Date.now()
   }
 
   render() {

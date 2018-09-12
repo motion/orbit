@@ -6,6 +6,10 @@ import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
 import { sleep } from '../helpers'
 import { MigrationManager } from './database/MigrationManager'
+import { ensureCustomApp } from '../helpers/ensureCustomApp'
+import connectModels from '../helpers/connectModels'
+import { Entities } from '../entities'
+import { Connection } from 'typeorm'
 
 const log = new Logger('database')
 
@@ -16,6 +20,7 @@ const hasTable = async (db: sqlite.Database, table: string) =>
   await db.get('SELECT name FROM sqlite_master WHERE type="table" AND name=?', table)
 
 export class DatabaseManager {
+  connection?: Connection
   db: sqlite.Database
   subscriptions = new CompositeDisposable()
   searchIndexListener: ReturnType<typeof Desktop.onMessage>
@@ -23,10 +28,20 @@ export class DatabaseManager {
 
   async start() {
     log.info('Starting DatabaseManager...')
-    await this.migrationManager.start()
     this.db = await sqlite.open(DATABASE_PATH)
-    this.ensureSearchIndex()
+
+    // connect models first to ensure tables created
+    await this.connectModels()
+
+    // run migrations next to ensure up to date
+    await this.migrationManager.start()
+
+    // then create search index tables
+    await this.ensureSearchIndex()
     this.watchForReset()
+
+    // then do some setup
+    await ensureCustomApp()
 
     this.temporarySearchResults()
   }
@@ -34,6 +49,14 @@ export class DatabaseManager {
   dispose() {
     this.subscriptions.dispose()
     this.searchIndexListener()
+  }
+
+  async connectModels() {
+    this.connection = await connectModels(Entities)
+  }
+
+  getConnection = () => {
+    return this.connection
   }
 
   private temporarySearchResults() {

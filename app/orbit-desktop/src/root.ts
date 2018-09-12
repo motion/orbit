@@ -20,13 +20,11 @@ import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection } from 'typeorm'
 import { Server as WebSocketServer } from 'ws'
-import { Entities } from './entities'
 import { BitEntity } from './entities/BitEntity'
 import { JobEntity } from './entities/JobEntity'
 import { PersonBitEntity } from './entities/PersonBitEntity'
 import { PersonEntity } from './entities/PersonEntity'
 import { SettingEntity } from './entities/SettingEntity'
-import connectModels from './helpers/connectModels'
 import { Onboard } from './onboard/Onboard'
 import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
 import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
@@ -41,7 +39,6 @@ import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
-import { ensureCustomApp } from './helpers/ensureCustomApp'
 
 const log = new Logger('desktop')
 
@@ -92,11 +89,7 @@ export class Root {
     // this ensures things dont err
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
-
-    // THEN YOU CAN CONNECT
-    // ^^ read above ^^
-    await this.connect()
-    await ensureCustomApp()
+    this.connection = this.databaseManager.getConnection()
 
     this.registerMediatorServer()
 
@@ -122,10 +115,6 @@ export class Root {
     debugState(({ stores }) => {
       this.stores = stores
     })
-  }
-
-  async connect() {
-    this.connection = await connectModels(Entities)
   }
 
   watchLastBit = () => {

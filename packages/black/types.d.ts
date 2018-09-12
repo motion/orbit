@@ -3,6 +3,7 @@ import { CSSPropertySet, ThemeObject } from '@mcro/gloss'
 
 export { react } from '@mcro/automagical'
 export { on, compose } from '@mcro/helpers'
+export { store } from './src/storeDecorator'
 
 export { Component } from './src/Component'
 export { DecorCompiledDecorator } from '@mcro/decor'
@@ -30,19 +31,11 @@ export interface PotentiallyView<T> {
   getConfig: () => Object
 }
 
-export function view<T>(
-  a?: T | CSSPropertySet,
-  b?: CSSPropertySet,
-): PotentiallyView<T>
+export function view<T>(a?: T | CSSPropertySet, b?: CSSPropertySet): PotentiallyView<T>
 export namespace view {
-  export function on(
-    name: string | Object,
-    thing: Function | string,
-    cb?: Function,
-  ): void
+  export function on(name: string | Object, thing: Function | string, cb?: Function): void
   export const emitter: Emitter
   export const emit: Emitter['emit']
-  export const ui: ViewDecorator
   export const electron: ViewDecorator
   export const provide: any
   export const attach: any
@@ -51,8 +44,6 @@ export namespace view {
 export interface Proppable {
   props: any
 }
-
-export function store<T>(a: T): T & Proppable
 
 export function debugState(cb: Function): void
 

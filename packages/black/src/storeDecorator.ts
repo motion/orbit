@@ -8,12 +8,7 @@ import { CompositeDisposable } from 'event-kit'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 export { on } from '@mcro/helpers'
 
-export const storeDecorator: any = decor([
-  emittable,
-  subscribable,
-  automagical,
-  hydratable,
-])
+export const storeDecorator: any = decor([emittable, subscribable, automagical, hydratable])
 
 export const storeOptions = {
   storeDecorator,
@@ -51,17 +46,14 @@ export const storeOptions = {
     }
     // unmount stores attached to root of stores
     for (const key of Object.keys(store)) {
-      if (
-        store[key] &&
-        store[key].subscriptions instanceof CompositeDisposable
-      ) {
+      if (store[key] && store[key].subscriptions instanceof CompositeDisposable) {
         store[key].subscriptions.dispose()
       }
     }
   },
 }
 
-export function store<T>(Store): T {
+export function store<T>(Store: T): any {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     // console.log('on store mount', this, args)
@@ -76,6 +68,5 @@ export function store<T>(Store): T {
       ProxyStore[key] = Store[key]
     }
   }
-  // @ts-ignore
-  return ProxyStore
+  return ProxyStore as any
 }

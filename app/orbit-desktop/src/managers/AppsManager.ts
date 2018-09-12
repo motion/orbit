@@ -1,7 +1,6 @@
 import { Oracle } from '@mcro/oracle'
 import { store, react } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/stores'
-import { stringify } from '@mcro/helpers'
 import { oracleOptions } from '../constants'
 import { Logger } from '@mcro/logger'
 import { join } from 'path'

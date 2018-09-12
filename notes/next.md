@@ -1,15 +1,14 @@
 # nate
 
-- Monday -- _finish great "app" demo_
+- Wednesday -- _profiles_
+  - double app icon bug
+  - on move space it opens orbit
+  - on focus away from orbit hide it (use old code for activate)
   - Make demo app nicer:
     - Sidebar selectable list items
     - Working tabs
     - Better table contents
-- Tuesday -- _make app work better for demo_
-  - double app icon bug
-  - on focus away from orbit hide it (use old code for activate)
   - scroll down should keep search at top
-- Wednesday -- _profiles_
   - cosal attempt get it running and analyze for use in profiles
   - design run on the person feed
   - filter/sub-search for the feed
@@ -93,10 +92,6 @@
       - Help is for onboarding onto Orbit, shows its power
       - Make the default home screen be "Orbit Updates"
       - Twitter as well, we can IFTT our twitter into rss
-- Sales
-  - We should have tiers for support
-  - We can do 50% off for early users lifetime
-  - 25k, 50k, 100k or something to start
 - Account system
   - This should let people set up an Orbit and share the config with friends
 - Hire

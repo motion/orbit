@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ReactMarkdown from 'react-markdown'
-import remarkEmoji from 'gatsby-remark-emoji'
+import remarkEmoji from 'remark-emoji'
 import { HighlightText } from './HighlightText'
 
 export const markdownOptions = {
@@ -17,11 +17,5 @@ type MarkdownProps = Partial<typeof markdownOptions> & {
 }
 
 export const Markdown = ({ className, ...props }: MarkdownProps) => {
-  return (
-    <ReactMarkdown
-      className={`${className} markdown`}
-      {...markdownOptions}
-      {...props}
-    />
-  )
+  return <ReactMarkdown className={`${className} markdown`} {...markdownOptions} {...props} />
 }

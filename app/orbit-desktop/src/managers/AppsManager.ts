@@ -76,8 +76,29 @@ export class AppsManager {
     return oracle
   }
 
+  // set focus state from fake window
   handleAppState = id => (action: string) => {
-    Desktop.sendMessage(Electron, Electron.messages.APP_STATE, JSON.stringify({ id, action }))
+    let nextState
+    switch (action) {
+      case 'focus':
+        nextState = {
+          focused: true,
+        }
+        break
+      case 'blur':
+        nextState = {
+          focused: false,
+        }
+        break
+      case 'exit':
+        nextState = null
+        break
+    }
+    Desktop.setState({
+      appFocusState: {
+        [id]: nextState,
+      },
+    })
   }
 
   async removeProcess(id: number) {

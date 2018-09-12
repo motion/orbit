@@ -18,6 +18,10 @@ export type DesktopStateOCRItem = [
   string
 ]
 
+export type AppFocusState = {
+  [key: number]: { focused: boolean } | null
+}
+
 // @ts-ignore
 @store
 class DesktopStore {
@@ -90,6 +94,7 @@ class DesktopStore {
       macVersion: null,
       supportsTransparency: false,
     },
+    appFocusState: {} as AppFocusState,
     paused: true,
     focusedOnOrbit: false,
     appStateUpdatedAt: Date.now(),

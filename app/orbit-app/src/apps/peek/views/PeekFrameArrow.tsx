@@ -5,6 +5,7 @@ import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { ThemeObject } from '@mcro/gloss'
+import { App } from '@mcro/stores'
 
 type Props = {
   peekStore: PeekStore
@@ -27,7 +28,8 @@ export const PeekFrameArrow = decorator(({ peekStore, theme, borderShadow }: Pro
   if (!peekStore.isPeek) {
     return null
   }
-  const { state } = peekStore
+  // from here on out its only showing in a peek window so use faster App.peekState
+  const state = App.peekState
   if (!state || !state.position || !state.position.length || !state.target) {
     return null
   }

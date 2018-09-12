@@ -245,7 +245,10 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           changed = update(val)
         }
         if (!IS_PROD && !preventLog) {
-          log.info(`..${Date.now() - start}ms ${logName} ${isValid ? '✅' : '🚫'}`, ...changed)
+          log.info(
+            `..${Date.now() - start}ms ${logName} ${isValid ? '✅' : '🚫'}`,
+            ...(changed || []),
+          )
         }
       }
       const start = Date.now()
@@ -318,7 +321,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           logState.info(`${logName}`, reactValArg, ...logRes(result), globalChanged)
         } else {
           if (options.log !== 'state') {
-            log.info(`${logName}`, isReaction ? reactValArg : '', ...changed)
+            log.info(`${logName}`, isReaction ? reactValArg : '', ...(changed || []))
           }
         }
       }

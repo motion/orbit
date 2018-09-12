@@ -1,11 +1,7 @@
 import { debugState, on } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import {
-  MediatorServer,
-  typeormResolvers,
-  WebSocketServerTransport,
-} from '@mcro/mediator'
+import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
   BitModel,
   JobModel,
@@ -14,10 +10,7 @@ import {
   SettingModel,
   SettingRemoveCommand,
 } from '@mcro/models'
-import {
-  AtlassianSettingSaveCommand,
-  SettingForceSyncCommand,
-} from '@mcro/models'
+import { AtlassianSettingSaveCommand, SettingForceSyncCommand } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
 import macosVersion from 'macos-version'
@@ -48,6 +41,7 @@ import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
+import { ensureCustomApp } from './helpers/ensureCustomApp'
 
 const log = new Logger('desktop')
 
@@ -93,12 +87,16 @@ export class Root {
       open(url)
     })
 
-    // ... you connect models and start running things on them
-    await this.connect()
-
-    // wait for database manager to run migrations before...
+    // BEFORE YOUR CONNECT
+    // run the databaseManager that runs migrations
+    // this ensures things dont err
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
+
+    // THEN YOU CAN CONNECT
+    // ^^ read above ^^
+    await this.connect()
+    await ensureCustomApp()
 
     this.registerMediatorServer()
 
@@ -119,6 +117,8 @@ export class Root {
     this.keyboardStore.start()
     this.watchLastBit()
     await this.server.start()
+
+    // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {
       this.stores = stores
     })
@@ -188,11 +188,7 @@ export class Root {
   private registerMediatorServer() {
     this.mediatorServer = new MediatorServer({
       models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
-      commands: [
-        SettingRemoveCommand,
-        SettingForceSyncCommand,
-        AtlassianSettingSaveCommand,
-      ],
+      commands: [SettingRemoveCommand, SettingForceSyncCommand, AtlassianSettingSaveCommand],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,
       }),
@@ -222,10 +218,7 @@ export class Root {
     })
     server.on('connection', socket => {
       socket.on('message', str => {
-        handleEntityActions(
-          socket,
-          typeof str === 'string' ? JSON.parse(str) : str,
-        )
+        handleEntityActions(socket, typeof str === 'string' ? JSON.parse(str) : str)
       })
     })
   }

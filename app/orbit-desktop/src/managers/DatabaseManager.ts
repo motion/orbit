@@ -5,11 +5,6 @@ import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
 import { sleep } from '../helpers'
-import { SettingEntity } from '../entities/SettingEntity'
-import { BitEntity } from '../entities/BitEntity'
-import { getRepository } from 'typeorm'
-import { Bit, Setting } from '@mcro/models'
-import { BitUtils } from '../utils/BitUtils'
 import { MigrationManager } from './database/MigrationManager'
 
 const log = new Logger('database')
@@ -18,10 +13,7 @@ const log = new Logger('database')
 // and run migration from here
 
 const hasTable = async (db: sqlite.Database, table: string) =>
-  await db.get(
-    'SELECT name FROM sqlite_master WHERE type="table" AND name=?',
-    table,
-  )
+  await db.get('SELECT name FROM sqlite_master WHERE type="table" AND name=?', table)
 
 export class DatabaseManager {
   db: sqlite.Database
@@ -35,7 +27,6 @@ export class DatabaseManager {
     this.db = await sqlite.open(DATABASE_PATH)
     this.ensureSearchIndex()
     this.watchForReset()
-    await this.ensureCustomApp()
 
     this.temporarySearchResults()
   }
@@ -43,40 +34,6 @@ export class DatabaseManager {
   dispose() {
     this.subscriptions.dispose()
     this.searchIndexListener()
-  }
-
-  async ensureCustomApp() {
-    console.log('ensuring custom app...')
-    const vals: Partial<Setting> = {
-      type: 'app1',
-      category: 'custom',
-      token: 'good',
-    }
-    let setting = await SettingEntity.findOne(vals)
-    if (!setting) {
-      setting = await getRepository(SettingEntity).save(
-        Object.assign(new SettingEntity(), vals),
-      )
-    }
-    const bit = BitUtils.create({
-      id: 1231023,
-      integration: 'app1',
-      title: 'My app',
-      body: '',
-      type: 'custom',
-      bitCreatedAt: Date.now(),
-      bitUpdatedAt: Date.now(),
-      settingId: setting.id,
-    })
-    if (
-      !(await BitEntity.findOne({
-        type: 'custom',
-        id: 1231023,
-        settingId: setting.id,
-      }))
-    ) {
-      await getRepository(BitEntity).save(bit)
-    }
   }
 
   private temporarySearchResults() {

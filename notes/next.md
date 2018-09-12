@@ -13,7 +13,6 @@
   - revisit the site and get it running, fix up
   - we'll do in-app account system dont bother doing it on site
   - have a permanent download link to use
-  - fix spaces / screen resize bugs
 - Friday -- _have demo video / productionize_
   - goal today is to make demo really shine
   - lots of performance, interaction, etc

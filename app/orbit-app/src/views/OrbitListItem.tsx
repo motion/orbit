@@ -13,6 +13,7 @@ import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
 import { HighlightText } from './HighlightText'
+import { Row, Text } from '@mcro/ui'
 
 const ListFrame = view(UI.View, {
   position: 'relative',
@@ -68,8 +69,7 @@ ListItem.theme = ({ theme, isSelected, padding, chromeless }) => {
   // selected...
   if (isSelected) {
     listStyle = {
-      background:
-        theme.listItemBackgroundSelected || theme.background.alpha(0.25),
+      background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
       border: [1, theme.borderSelected.alpha(0.5)],
     }
   } else {
@@ -114,8 +114,7 @@ const ListItemSubtitle = view(UI.View, {
 })
 
 const AfterHeader = view({
-  flexFlow: 'row',
-  alignItems: 'center',
+  alignItems: 'flex-end',
 })
 
 const TitleSpace = view({
@@ -173,35 +172,58 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const showSubtitle = !!(location || subtitle) && !(hide && hide.subtitle)
+    const showSubtitle = !!subtitle && !(hide && hide.subtitle)
     const showDate = !!createdAt && !(hide && hide.date)
     const showIcon = !!icon && !(hide && hide.icon)
     const showTitle = !(hide && hide.title)
+    const showPeople =
+      !(hide && hide.people) &&
+      (model.target === 'bit' && model.integration !== 'slack') &&
+      people &&
+      people.length &&
+      people[0].data['profile']
+    const showPreview = !!preview && !children && !(hide && hide.body)
     const afterHeader = (
       <AfterHeader>
-        {showDate && (
-          <UI.Text alpha={0.6} size={0.9} fontWeight={400}>
-            <DateFormat
-              date={new Date(updatedAt)}
-              nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
-            />
-          </UI.Text>
+        <Row>
+          {showDate && (
+            <UI.Text alpha={0.6} size={0.9} fontWeight={600}>
+              <DateFormat
+                date={new Date(updatedAt)}
+                nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
+              />
+            </UI.Text>
+          )}
+          <div style={{ width: 8 }} />
+          <RoundButtonSmall
+            icon="link"
+            size={1.1}
+            tooltip="Open"
+            opacity={0.5}
+            background="transparent"
+            onClick={e => {
+              console.log('opening', model)
+              e.preventDefault()
+              e.stopPropagation()
+              Actions.openItem(model)
+              Actions.closeOrbit()
+            }}
+          />
+        </Row>
+        {!!location && (
+          <RoundButtonSmall
+            margin={-3}
+            maxWidth={120}
+            fontWeight={600}
+            onClick={
+              onClickLocation
+                ? e => onClickLocation(e, contentProps)
+                : () => Actions.open(locationLink)
+            }
+          >
+            <Text ellipse>{location}</Text>
+          </RoundButtonSmall>
         )}
-        <div style={{ width: 8 }} />
-        <RoundButtonSmall
-          icon="link"
-          size={1.1}
-          tooltip="Open"
-          opacity={0.5}
-          background="transparent"
-          onClick={e => {
-            console.log('opening', model)
-            e.preventDefault()
-            e.stopPropagation()
-            Actions.openItem(model)
-            Actions.closeOrbit()
-          }}
-        />
       </AfterHeader>
     )
     return (
@@ -223,7 +245,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             <Title style={titleFlex && { flex: titleFlex }}>
               {showIcon && (
                 <>
-                  <OrbitIcon icon={icon} size={16} {...iconProps} />
+                  <OrbitIcon icon={icon} size={14} {...iconProps} />
                   <TitleSpace />
                 </>
               )}
@@ -251,18 +273,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                     <div style={{ width: 8 }} />
                   </>
                 )}
-              {!!location && (
-                <RoundButtonSmall
-                  margin={-3}
-                  onClick={
-                    onClickLocation
-                      ? e => onClickLocation(e, contentProps)
-                      : () => Actions.open(locationLink)
-                  }
-                >
-                  {location}
-                </RoundButtonSmall>
-              )}
               {subtitleSpaceBetween}
               {typeof subtitle === 'string' ? (
                 <UI.Text alpha={0.55} ellipse {...subtitleProps}>
@@ -275,36 +285,23 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             </ListItemSubtitle>
           )}
           {/* vertical space only if needed */}
-          {showSubtitle &&
-            (!!children || !!preview) && (
-              <div style={{ flex: 1, maxHeight: 4 }} />
-            )}
-          {!!preview &&
-            !children &&
-            !(hide && hide.body) && (
-              <Preview>
-                {typeof preview !== 'string' && preview}
-                {typeof preview === 'string' && (
-                  <HighlightText alpha={0.65} size={1.1} sizeLineHeight={0.9}>
-                    {preview}
-                  </HighlightText>
-                )}
-              </Preview>
-            )}
-          {typeof children === 'function'
-            ? children(contentProps, model, props.index)
-            : children}
-          <Bottom>
-            {!(hide && hide.people) &&
-            model.integration !== 'slack' &&
-            people &&
-            people.length &&
-            people[0].data.profile ? (
-              <div>
-                <PeopleRow people={people} />
-              </div>
-            ) : null}
-          </Bottom>
+          {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
+          {showPreview && (
+            <Preview>
+              {typeof preview !== 'string' && preview}
+              {typeof preview === 'string' && (
+                <HighlightText alpha={0.65} size={1.1} sizeLineHeight={0.9} ellipse={5}>
+                  {preview}
+                </HighlightText>
+              )}
+            </Preview>
+          )}
+          {typeof children === 'function' ? children(contentProps, model, props.index) : children}
+          {showPeople && (
+            <Bottom>
+              <PeopleRow people={people} />
+            </Bottom>
+          )}
         </ListItem>
         <Divider />
       </ListFrame>
@@ -324,8 +321,9 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       ...props
     } = this.props
     console.log(
-      `${props.index} ${(model && (model.id || model.email)) ||
-        props.title}.${pane} ${store.isSelected}`,
+      `${props.index} ${(model && (model.id || model.email)) || props.title}.${pane} ${
+        store.isSelected
+      }`,
     )
     if (!model) {
       return this.getInner(props)

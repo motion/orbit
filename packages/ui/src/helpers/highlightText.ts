@@ -47,7 +47,7 @@ export const highlightText = (options: HighlightOptions) => {
     maxChars = 500,
     maxSurroundChars = 50,
     style = 'background: rgba(255, 255, 0, 0.8); color: #000; border-radius: 4px;',
-    separator = '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
+    separator = '&nbsp;&middot;&nbsp;',
   } = options
   // lowercase needle
   let parts = [text]
@@ -56,9 +56,7 @@ export const highlightText = (options: HighlightOptions) => {
   if (trimWhitespace) {
     parts[0] = parts[0].replace(/(\s{2,}|\n)/g, splitChar)
   }
-  const wordFinders = words.map(
-    word => new RegExp(`(${word.replace(notLetter, '')})`, 'gi'),
-  )
+  const wordFinders = words.map(word => new RegExp(`(${word.replace(notLetter, '')})`, 'gi'))
   // split all the highlight words:
   for (const [index] of words.entries()) {
     const regex = wordFinders[index]
@@ -86,9 +84,10 @@ export const highlightText = (options: HighlightOptions) => {
     if (!prevHighlighted && !nextHighlighted) {
       continue
     }
+    const midChar = (filtered.length && splitChar) || ''
     if (prevHighlighted && !nextHighlighted) {
       if (part.length > surroundMax) {
-        filtered.push(part.slice(0, surroundMax)) + splitChar
+        filtered.push(part.slice(0, surroundMax)) + midChar
       } else {
         filtered.push(part)
       }
@@ -96,7 +95,7 @@ export const highlightText = (options: HighlightOptions) => {
     }
     if (!prevHighlighted && nextHighlighted) {
       if (part.length > surroundMax) {
-        filtered.push(splitChar + part.slice(part.length - surroundMax))
+        filtered.push(midChar + part.slice(part.length - surroundMax))
       } else {
         filtered.push(part)
       }
@@ -104,11 +103,7 @@ export const highlightText = (options: HighlightOptions) => {
     }
     if (prevHighlighted && nextHighlighted) {
       if (part.length > surroundMax * 2) {
-        filtered.push(
-          part.slice(0, surroundMax) +
-            splitChar +
-            part.slice(part.length - surroundMax),
-        )
+        filtered.push(part.slice(0, surroundMax) + midChar + part.slice(part.length - surroundMax))
       } else {
         filtered.push(part)
       }

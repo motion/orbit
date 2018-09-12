@@ -1,5 +1,13 @@
 /* reset our styles for their base css */
 
+.rdrDayNumber span {
+  color: #fff;
+}
+
+.calendar-dom {
+  user-select: none;
+}
+
 .calendar-dom button {
   background: transparent;
 }
@@ -390,9 +398,7 @@
   color: #fff;
 }
 
-.rdrCalendarWrapper:not(.rdrDateRangeWrapper)
-  .rdrDayHovered
-  .rdrDayNumber:after {
+.rdrCalendarWrapper:not(.rdrDateRangeWrapper) .rdrDayHovered .rdrDayNumber:after {
   content: '';
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 1.333em;

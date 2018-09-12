@@ -3,7 +3,7 @@ import { flatten } from 'lodash'
 
 const splitChar = '🂓'
 
-const notLetter = /[^A-Za-z0-9]+/g
+const notLetter = /[^A-Za-z0-9 ]+/g
 const cutoff = (str, maxChars) => {
   if (str.length <= maxChars) {
     return str
@@ -43,14 +43,16 @@ const isHighlightWord = (str, words) => {
 export const highlightText = (options: HighlightOptions) => {
   const {
     text,
-    words,
     trimWhitespace,
     maxChars = 500,
     maxSurroundChars = 50,
     style = 'background: rgba(255, 255, 0, 0.8); color: #000; border-radius: 4px;',
     separator = '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
   } = options
+  // lowercase needle
   let parts = [text]
+  // lowercase haystack
+  const words = options.words.map(x => x.toLowerCase())
   if (trimWhitespace) {
     parts[0] = parts[0].replace(/(\s{2,}|\n)/g, splitChar)
   }
@@ -120,7 +122,7 @@ export const highlightText = (options: HighlightOptions) => {
     if (len > maxChars) {
       continue
     }
-    if (words.indexOf(part.toLowerCase()) === 0) {
+    if (words.indexOf(part) === 0) {
       final.push(`<span style="${style}">${part}</span>`)
     } else {
       final.push(part)

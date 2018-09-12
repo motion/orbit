@@ -39,6 +39,10 @@ export type TextProps = CSSPropertySet & {
   children: React.ReactNode | ((Highlights) => React.ReactNode)
 }
 
+const HTMLBlock = props => (
+  <span dangerouslySetInnerHTML={{ __html: ` ${props.children} ` }} />
+)
+
 const TextBlock = view(InlineBlock, {
   userSelect: 'none',
   wordBreak: 'break-word',
@@ -236,12 +240,31 @@ export class Text extends React.Component<TextProps> {
       children,
     }
 
-    if (highlight && typeof children === 'string') {
-      const __html = highlightText({ text: children, ...highlight })
-      finalProps = {
-        dangerouslySetInnerHTML: {
-          __html,
-        },
+    if (highlight) {
+      let __html
+      if (Array.isArray(children)) {
+        finalProps = {
+          children: children.map((child, index) => {
+            if (typeof child === 'string') {
+              return (
+                <HTMLBlock key={index}>
+                  {highlightText({ text: child, ...highlight })}
+                </HTMLBlock>
+              )
+            } else {
+              return child
+            }
+          }),
+        }
+      } else if (typeof children === 'string') {
+        __html = highlightText({ text: children, ...highlight })
+      }
+      if (__html) {
+        finalProps = {
+          dangerouslySetInnerHTML: {
+            __html,
+          },
+        }
       }
     } else if (renderAsHtml) {
       finalProps = {

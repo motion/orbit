@@ -94,7 +94,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  alignItems: 'center',
+  alignItems: 'flex-start',
 })
 
 const Preview = view({
@@ -102,7 +102,7 @@ const Preview = view({
   zIndex: -1,
 })
 
-const CardSubtitle = view(UI.View, {
+const ListItemSubtitle = view(UI.View, {
   height: 20,
   margin: [3, 0, 0],
   padding: [2, 0, 2, 0],
@@ -118,6 +118,10 @@ const AfterHeader = view({
   alignItems: 'center',
 })
 
+const TitleSpace = view({
+  width: 12,
+})
+
 const Bottom = view({
   flexFlow: 'row',
   alignItems: 'center',
@@ -130,7 +134,7 @@ const Bottom = view({
 @view
 export class OrbitListInner extends React.Component<OrbitItemProps> {
   static defaultProps = {
-    padding: [6, 10],
+    padding: 10,
   }
 
   getInner = (contentProps: ResolvedItem) => {
@@ -220,7 +224,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               {showIcon && (
                 <>
                   <OrbitIcon icon={icon} size={16} {...iconProps} />
-                  <div style={{ width: 8 }} />
+                  <TitleSpace />
                 </>
               )}
               <HighlightText
@@ -228,17 +232,18 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 sizeLineHeight={0.85}
                 ellipse={2}
                 fontWeight={700}
-                maxWidth="calc(100% - 30px)"
+                marginTop={-2}
                 {...titleProps}
               >
                 {title}
               </HighlightText>
+              <TitleSpace />
               {afterTitle}
               {afterHeader}
             </Title>
           )}
           {showSubtitle && (
-            <CardSubtitle>
+            <ListItemSubtitle>
               {showIcon &&
                 !showTitle && (
                   <>
@@ -248,7 +253,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 )}
               {!!location && (
                 <RoundButtonSmall
-                  marginLeft={-3}
+                  margin={-3}
                   onClick={
                     onClickLocation
                       ? e => onClickLocation(e, contentProps)
@@ -267,7 +272,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 subtitle
               )}
               {hide && hide.title && afterHeader}
-            </CardSubtitle>
+            </ListItemSubtitle>
           )}
           {/* vertical space only if needed */}
           {showSubtitle &&
@@ -280,7 +285,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               <Preview>
                 {typeof preview !== 'string' && preview}
                 {typeof preview === 'string' && (
-                  <HighlightText alpha={0.7} size={1.1} sizeLineHeight={0.9}>
+                  <HighlightText alpha={0.65} size={1.1} sizeLineHeight={0.9}>
                     {preview}
                   </HighlightText>
                 )}

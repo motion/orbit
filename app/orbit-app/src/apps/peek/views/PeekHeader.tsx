@@ -129,17 +129,12 @@ export class PeekHeaderContent extends React.Component<Props> {
         <MainHead>
           <TitleBar
             height="100%"
-            after={
+            before={
               <>
                 <UI.Row
                   flexFlow="row"
-                  position="absolute"
-                  top={0}
-                  left={6}
-                  right={0}
                   padding={hideTitleBar ? 0 : [0, 0, 0, 8]}
                   height="100%"
-                  zIndex={10000}
                   alignItems="center"
                 >
                   <WindowControls
@@ -147,7 +142,6 @@ export class PeekHeaderContent extends React.Component<Props> {
                     onMax={peekStore.isTorn ? peekStore.handleMaximize : null}
                     onMin={peekStore.isTorn ? peekStore.handleMinimize : null}
                   />
-                  <UI.View flex={1} />
                   {titleAfter}
                 </UI.Row>
               </>

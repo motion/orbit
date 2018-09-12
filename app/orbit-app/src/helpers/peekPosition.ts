@@ -45,7 +45,6 @@ let lastPeek = null
 let lastTarget = null
 
 export function peekPosition(target, appConfig?: AppConfig): WindowMap | null {
-  console.log('we have a pos', appConfig)
   if (!target) {
     return null
   }

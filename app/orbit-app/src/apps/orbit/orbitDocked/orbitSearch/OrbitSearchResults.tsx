@@ -95,7 +95,11 @@ class OrbitSearchResultsList extends React.Component<Props> {
       <SearchResultText>{content}</SearchResultText>
     ) : (
       <OrbitCardContent>
-        <HighlightText alpha={0.7} options={{ maxSurroundChars: 100 }}>
+        <HighlightText
+          whiteSpace="normal"
+          alpha={0.65}
+          options={{ maxSurroundChars: 100 }}
+        >
           {content}
         </HighlightText>
       </OrbitCardContent>
@@ -134,7 +138,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
             isExpanded
             searchTerm={searchTerm}
             onClickLocation={this.handleLocation}
-            maxHeight={240}
+            maxHeight={180}
             overflow="hidden"
           >
             {this.getChildren}

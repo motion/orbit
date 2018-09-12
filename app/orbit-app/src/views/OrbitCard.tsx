@@ -177,9 +177,12 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const hasMeta = !!(location || updatedAt) && !(hide && hide.meta)
+    const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
     const hasSubtitle = !!subtitle
+    const hasDate = !!updatedAt
+    const hasPeople = !!people && !!people.length
+    const hasFourRows = hasSubtitle || hasPeople
     let topPad = 10
     let sidePad = 10
     if (props.padding) {
@@ -191,6 +194,11 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
         sidePad = props.padding
       }
     }
+    const date = hasDate && (
+      <UI.Text alpha={0.65} size={0.9} ellipse>
+        <DateFormat date={new Date(updatedAt)} nice />
+      </UI.Text>
+    )
     return (
       <CardWrap
         {...hoverToSelect && !inactive && store.hoverSettler.props}
@@ -240,9 +248,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               <UI.Text alpha={0.55} ellipse {...subtitleProps}>
                 {subtitle}
               </UI.Text>
-              {hasMeta && <VerticalSpaceSmall />}
             </CardSubtitle>
           )}
+          {!hasFourRows && hasDate && <CardSubtitle>{date}</CardSubtitle>}
           {hasMeta && (
             <CardSubtitle>
               {!!location && (
@@ -256,14 +264,13 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
                 </RoundButtonSmall>
               )}
               {subtitleSpaceBetween}
-              {!!createdAt && (
-                <>
-                  {!!location && <div style={{ width: 5 }} />}
-                  <UI.Text alpha={0.65} size={0.9} ellipse>
-                    <DateFormat date={new Date(updatedAt)} nice />
-                  </UI.Text>
-                </>
-              )}
+              {hasFourRows &&
+                hasDate && (
+                  <>
+                    {!!location && <div style={{ width: 5 }} />}
+                    {date}
+                  </>
+                )}
               {hasPreview && <VerticalSpaceSmall />}
             </CardSubtitle>
           )}
@@ -284,7 +291,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           {typeof children === 'function'
             ? children(contentProps, props.bit, props.index)
             : children}
-          {people && people.length ? <PeopleRow people={people} /> : null}
+          {hasPeople && <PeopleRow people={people} />}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         {/* {!disableShadow && (

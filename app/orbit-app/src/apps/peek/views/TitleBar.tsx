@@ -1,16 +1,22 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Text, View } from '@mcro/ui'
+import { Text, Row } from '@mcro/ui'
 
 // just the top titlebar:
-export const TitleBar = ({ children, after, ...props }) => (
+export const TitleBar = ({
+  children,
+  before = null,
+  after = null,
+  ...props
+}) => (
   <TitleBarContain {...props}>
+    {before}
     <TitleBarText>{children}</TitleBarText>
     {after}
   </TitleBarContain>
 )
 
-const TitleBarContain = view(View, {
+const TitleBarContain = view(Row, {
   flex: 1,
   overflow: 'hidden',
   height: 27,
@@ -26,7 +32,7 @@ const TitleBarText = props => (
     fontWeight={400}
     ellipse={1}
     margin={0}
-    padding={[0, 20, 0, 43]}
+    padding={[0, 10]}
     lineHeight="1.5rem"
     {...props}
   />

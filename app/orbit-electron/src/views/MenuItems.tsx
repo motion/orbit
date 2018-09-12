@@ -11,7 +11,7 @@ export class MenuItems extends React.Component<{
 }> {
   isClosing = false
 
-  toggleDevTools = () => () => {
+  toggleDevTools = () => {
     const id = Electron.state.focusedAppId
     Electron.setState({
       showDevTools: {
@@ -67,7 +67,7 @@ export class MenuItems extends React.Component<{
           <MenuItem
             label="Show Dev Tools [App]"
             accelerator="CmdOrCtrl+Option+i"
-            onClick={this.toggleDevTools('app')}
+            onClick={this.toggleDevTools}
           />
         </SubMenu>
       </Menu>

@@ -19,6 +19,10 @@ type FakeProcess = {
 export class AppsManager {
   processes: FakeProcess[] = []
 
+  async dispose() {
+    await Promise.all(this.processes.map(x => x.oracle.stop()))
+  }
+
   // launch app icons and events to listen for focus
   manageAppIcons = react(
     () => App.appsState.map(app => ({ id: app.id, torn: app.torn })),

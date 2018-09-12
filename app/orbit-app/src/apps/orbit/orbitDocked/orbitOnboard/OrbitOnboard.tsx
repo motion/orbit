@@ -204,7 +204,10 @@ const decorator = compose(
   view,
 )
 
-export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
+export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: Props) => {
+  if (paneManagerStore.activePane !== 'onboard') {
+    return null
+  }
   // for smart finding integrations...
   // const { foundIntegrations } = Desktop.state.onboardState
   // if (!foundIntegrations) {

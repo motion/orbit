@@ -137,6 +137,9 @@ export class Root {
     if (this.disposed) {
       return
     }
+    if (this.appsManager) {
+      await this.appsManager.dispose()
+    }
     if (this.screenManager) {
       await this.screenManager.dispose()
     }

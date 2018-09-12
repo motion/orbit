@@ -123,7 +123,7 @@ export class Window extends BaseComponent {
 
   handleNewProps(keys) {
     if (!this.window) {
-      console.log('no window ey')
+      log.info('no window ey')
       return
     }
     try {

@@ -6,6 +6,11 @@ export const closeApp = () => {
     throw new Error('No app_id')
   }
   const index = App.appsState.findIndex(app => app.id === APP_ID)
+  // safety
+  if (index === -1) {
+    console.log('no index found')
+    return
+  }
   const appsState = [...App.appsState]
   appsState.splice(index, 1)
   App.setState({ appsState })

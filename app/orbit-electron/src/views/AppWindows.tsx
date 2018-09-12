@@ -3,10 +3,13 @@ import { view, compose, react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import { AppWindow } from './AppWindow'
+import { BrowserWindow } from 'electron'
 
 const log = new Logger('electron')
 
 class AppWindowsStore {
+  window: BrowserWindow = null
+
   appsStateDebounced = react(
     () => App.appsState,
     _ => JSON.parse(JSON.stringify(_)),

@@ -62,7 +62,7 @@ export class Root {
   start = async () => {
     this.registerREPLGlobals()
     this.registerEntityServer()
-    log.info('Start Desktop Store..')
+    log.verbose('Start Desktop Store..')
     // iohook.start(false)
     await Desktop.start({
       ignoreSelf: true,

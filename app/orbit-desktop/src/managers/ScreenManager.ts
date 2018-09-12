@@ -160,7 +160,7 @@ export class ScreenManager {
   setupOracleListeners() {
     // ok
     this.oracle.onInfo(info => {
-      console.log('got oracle info', info)
+      log.verbose('got oracle info', info)
       Desktop.setState({
         operatingSystem: {
           supportsTransparency: info.supportsTransparency,

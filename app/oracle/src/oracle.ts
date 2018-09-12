@@ -14,17 +14,7 @@ const idFn = _ => _
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const appPath = bundle =>
-  Path.join(
-    dir,
-    '..',
-    'orbit',
-    'Build',
-    'Products',
-    bundle,
-    'orbit.app',
-    'Contents',
-    'MacOS',
-  )
+  Path.join(dir, '..', 'orbit', 'Build', 'Products', bundle, 'orbit.app', 'Contents', 'MacOS')
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
 export class Oracle {
@@ -91,7 +81,7 @@ export class Oracle {
     await this.runOracleProcess()
     await this.oracleBridge.onConnected()
     this.socketSend('start')
-    log.info('started oracle')
+    log.verbose('started oracle')
   }
 
   stop = async () => {
@@ -161,12 +151,7 @@ export class Oracle {
     await this.socketSend(`them ${theme}`)
   }
 
-  positionWindow = async (position: {
-    x: number
-    y: number
-    width: number
-    height: number
-  }) => {
+  positionWindow = async (position: { x: number; y: number; width: number; height: number }) => {
     await this.socketSend(`posi ${JSON.stringify(position)}`)
   }
 
@@ -237,9 +222,7 @@ export class Oracle {
   handleAccessibility = async value => {
     // we just got access, need to restart the oracle process (until we can figure out cleaner way)
     if (this.lastAccessibility === false && value === true) {
-      console.log(
-        'Just got accesibility access, restarting Swift process cleanly...',
-      )
+      console.log('Just got accesibility access, restarting Swift process cleanly...')
       await this.restart()
     }
     // only send on new value

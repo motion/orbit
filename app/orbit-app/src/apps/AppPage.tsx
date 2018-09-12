@@ -13,7 +13,6 @@ export class AppPage extends React.Component<{
   appsStore: AppsStore
 }> {
   render() {
-    console.log('app id', APP_ID)
     return (
       <MainShortcutHandler>
         <AppWrapper>

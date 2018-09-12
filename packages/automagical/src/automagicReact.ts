@@ -1,14 +1,8 @@
 import * as Mobx from 'mobx'
 import { ReactionHelpers, MagicalObject } from './types'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
-import {
-  getReactionOptions,
-  getReactionName,
-  log,
-  logState,
-  logRes,
-  Root,
-} from './helpers'
+import { getReactionOptions, getReactionName, log, logState, logRes, Root } from './helpers'
+import { omitBy } from 'lodash'
 
 const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
@@ -20,6 +14,22 @@ Root.__trackStateChanges = {}
 
 let id = 1
 const uid = () => id++ % Number.MAX_VALUE
+
+// simple diff output for dev mode
+const diffLog = (a, b) => {
+  if (a === b || Mobx.comparer.structural(a, b)) {
+    return []
+  }
+  if (!b || typeof b !== 'object' || Array.isArray(b)) {
+    return ['\n        new value:', b]
+  }
+  // object
+  const diff = omitBy(a, (v, k) => b[k] === v)
+  if (Object.keys(diff).length) {
+    return ['\n        diff:', diff]
+  }
+  return []
+}
 
 // watches values in an autorun, and resolves their results
 export function automagicReact(obj: MagicalObject, method, val, userOptions) {
@@ -41,15 +51,12 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   // its the 95% use case and causes less bugs
   mobxOptions.fireImmediately = !deferFirstRun
 
-  const delayLog =
-    options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
+  const delayLog = options && options.delay >= 0 ? ` ..${options.delay}ms ` : ''
   const methodName = `${getReactionName(obj)}.${method}`
-    .padEnd(35, ' ')
-    .slice(0, 35)
-  const name = `--> ${methodName} | ${delayLog}`
+  const logName = `${methodName}${delayLog}`
   let preventLog = options.log === false
   let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE, {
-    name,
+    name: logName,
     deep: false,
   })
   let prev
@@ -69,17 +76,20 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       value = prev
       prev = newValue
       if (!preventLog) {
-        log.info(`${name} (delayValue) =`, value)
+        log.info(`delayValue ${logName}`, value)
       }
     }
-    if (
-      onlyUpdateIfChanged &&
-      Mobx.comparer.structural(getCurrentValue(), newValue)
-    ) {
-      return
+    if (onlyUpdateIfChanged && Mobx.comparer.structural(getCurrentValue(), newValue)) {
+      return IS_PROD ? undefined : []
     }
     state.hasResolvedOnce = true
+    // return diff in dev mode
+    let res
+    if (!IS_PROD) {
+      res = diffLog(Mobx.toJS(current.get()), Mobx.toJS(value))
+    }
     current.set(value)
+    return res
   }
 
   function dispose() {
@@ -107,17 +117,13 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       }
       if (isReaction) {
         if (typeof val[1] !== 'function') {
-          throw new Error(
-            `Reaction requires second function. ${name} got ${typeof val}`,
-          )
+          throw new Error(`Reaction requires second function. ${logName} got ${typeof val}`)
         }
         // reaction
         stopReaction = Mobx.reaction(val[0], watcher(val[1]), mobxOptions)
       } else {
         if (typeof val !== 'function') {
-          throw new Error(
-            `Reaction requires function. ${name} got ${typeof val}`,
-          )
+          throw new Error(`Reaction requires function. ${logName} got ${typeof val}`)
         }
         //autorun
         stopReaction = Mobx.autorun(watcher(val), mobxOptions)
@@ -126,14 +132,12 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   }
 
   // state used outside each watch/reaction
-  let isAsyncReaction = false
   let reactionID = null
   let rejections = []
 
   const reset = () => {
     rejections.map(rej => rej())
     rejections = []
-    isAsyncReaction = false
     reactionID = null
   }
 
@@ -236,16 +240,14 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       const curID = reactionID
       const updateAsyncValue = val => {
         const isValid = curID === reactionID
+        let changed
         if (isValid) {
-          update(val)
+          changed = update(val)
         }
         if (!IS_PROD && !preventLog) {
           log.info(
-            `${name} (${Date.now() - start}ms) ${
-              isAsyncReaction ? `[${id}]` : ''
-            } = `,
-            val,
-            isValid ? '✅' : `🚫 ${reactionID}/${curID}`,
+            `${logName} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
+            ...(changed || []),
           )
         }
       }
@@ -271,12 +273,9 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         )
       } catch (err) {
         // got a nice cancel!
-        if (
-          err instanceof ReactionRejectionError ||
-          err instanceof ReactionTimeoutError
-        ) {
+        if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
           if (!IS_PROD && options.log === 'all') {
-            log.info(`${name} [${curID}] cancelled`)
+            log.info(`${logName} [${curID}] cancelled`)
           }
           return
         }
@@ -284,18 +283,16 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         return
       }
 
-      const changed = Root.__trackStateChanges.changed
-      const prefix = `${name} ${isReaction ? '@r' : '@w'}`
+      const globalChanged = Root.__trackStateChanges.changed
       Root.__trackStateChanges = {}
 
       // handle promises
       if (result instanceof Promise) {
-        isAsyncReaction = true
         result
           .then(val => {
             if (!reactionID) {
               if (!IS_PROD && !preventLog) {
-                log.info(`${prefix} 🚫`)
+                log.info(`${logName} 🚫`)
               }
               // cancelled before finishing
               return
@@ -305,39 +302,33 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
             }
           })
           .catch(err => {
-            if (
-              err instanceof ReactionRejectionError ||
-              err instanceof ReactionTimeoutError
-            ) {
-              if (!IS_PROD && options.log === 'all') {
-                log.info(`${name} [${curID}] cancelled`)
+            if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
+              if (!IS_PROD) {
+                log.verbose(`${logName} [${curID}] cancelled`)
               }
             } else {
-              console.log(`throwing err from ${prefix}`, err)
+              console.log(`throwing err from ${logName}`, err)
               throw new Error(err)
             }
           })
         return
       }
 
+      const changed = update(result)
+
       if (!IS_PROD && !preventLog && !delayValue) {
-        if (changed && Object.keys(changed).length) {
-          logState.info(
-            `${prefix}`,
-            reactValArg,
-            ...logRes(result),
-            '\n\n CHANGED:',
-            changed,
-            '\n\n',
-          )
+        if (globalChanged && Object.keys(globalChanged).length) {
+          logState.info(`${logName}`, reactValArg, ...logRes(result), globalChanged)
         } else {
           if (options.log !== 'state') {
-            log.info(`${prefix}`, isReaction ? reactValArg : '', ...logRes(result))
+            log.info(
+              `${logName}`,
+              ...(isReaction ? ['\n        args:', reactValArg] : []),
+              ...(changed || []),
+            )
           }
         }
       }
-
-      update(result)
     }
   }
 

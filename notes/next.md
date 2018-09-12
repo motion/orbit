@@ -6,13 +6,9 @@
     - Working tabs
     - Better table contents
 - Tuesday -- _make app work better for demo_
-  - in prod focus sometimes hides again right away
-  - lots of app icons being left behind
+  - double app icon bug
+  - on focus away from orbit hide it (use old code for activate)
   - scroll down should keep search at top
-  - date filteiring isn't working for:
-    - nate january
-    - nate jan 1 to jan 30
-  - Fix intra-peek clicking
 - Wednesday -- _profiles_
   - cosal attempt get it running and analyze for use in profiles
   - design run on the person feed
@@ -109,7 +105,7 @@
 # next
 
 - test if we dont need cloud oauth https://laravel.com/docs/5.6/valet#securing-sites
-- website docs https://github.com/gatsbyjs/gatsby/tree/master/www/src/pages
+- website docs https://github.com/pedronauck/docz https://github.com/gatsbyjs/gatsby/tree/master/www/src/pages
 - Location as a model
   - This way we can search + generate feeds by Location
 - survey notification if they use it for a few days...

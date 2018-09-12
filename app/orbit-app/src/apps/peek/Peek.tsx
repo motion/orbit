@@ -23,7 +23,6 @@ const decorator = compose(
 )
 
 export const Peek = decorator(({ selectionStore, peekStore }: Props) => {
-  console.log('render peek.... should never happen')
   return (
     <UI.Theme name="light">
       <PeekFrame>
@@ -64,13 +63,7 @@ class PeekPageInner extends React.Component<Props> {
         selectionStore={selectionStore}
       >
         {(resolvedProps: PeekContents) => {
-          const {
-            preBody,
-            postBody,
-            content,
-            headerProps,
-            ...restResolvedProps
-          } = resolvedProps
+          const { preBody, postBody, content, headerProps, ...restResolvedProps } = resolvedProps
           return (
             <>
               <PeekHeader {...restResolvedProps} {...headerProps} />

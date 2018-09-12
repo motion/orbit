@@ -21,6 +21,10 @@ export class OrbitItemStore {
     }
   }
 
+  get didClick() {
+    return Date.now() - this.clickAt < 50
+  }
+
   handleClick = e => {
     // so we can control the speed of double clicks
     if (Date.now() - this.clickAt < 220) {
@@ -81,9 +85,7 @@ export class OrbitItemStore {
     () => [
       this.props.selectionStore && this.props.selectionStore.activeIndex,
       this.props.subPaneStore && this.props.subPaneStore.isActive,
-      typeof this.props.isSelected === 'function'
-        ? this.props.isSelected()
-        : this.props.isSelected,
+      typeof this.props.isSelected === 'function' ? this.props.isSelected() : this.props.isSelected,
     ],
     async ([activeIndex, isPaneActive, isSelected], { sleep }) => {
       ensure('active', isPaneActive)
@@ -98,7 +100,9 @@ export class OrbitItemStore {
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {
         if (subPaneStore) {
-          subPaneStore.scrollIntoView(this.cardWrapRef)
+          if (!this.didClick) {
+            subPaneStore.scrollIntoView(this.cardWrapRef)
+          }
         }
         ensure('target', !!this.target)
         // fluidity

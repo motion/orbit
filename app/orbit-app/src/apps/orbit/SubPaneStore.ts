@@ -137,7 +137,7 @@ export class SubPaneStore {
       pane.scrollTop = scrollTop
       return
     }
-    pane.scrollTop = cardOffset
+    pane.scrollTop = cardOffset - 20
     // too low
     // const cardBottom = cardOffset + card.clientHeight
     // const paneBottomVisible = pane.scrollTop + pane.clientHeight

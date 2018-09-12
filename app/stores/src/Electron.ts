@@ -27,6 +27,7 @@ class ElectronStore {
   lastAction = null
 
   state = deep({
+    focusedAppId: 'app',
     screenSize: [0, 0],
     settingsPosition: [], // todo: settingsState.position
     hoverState: {

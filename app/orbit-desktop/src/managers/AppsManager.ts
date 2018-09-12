@@ -25,7 +25,7 @@ export class AppsManager {
     async (appsState, { sleep }) => {
       // debounce to prevent lots of spawn/dispose
       await sleep(50)
-      log.info('Running app state', stringify(appsState))
+      log.info('Running app state', appsState.map(x => [x.id, x.torn]))
       // handle deletes
       let current = [...this.processes]
       for (const { id } of current) {

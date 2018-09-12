@@ -1,7 +1,9 @@
+// see setGlobalConfig for where this is set up
+
 export type GlobalConfig = {
   isProd: boolean
   paths: {
-    root: string
+    desktopRoot: string
     appStatic: string
     userData: string
     nodeBinary: string

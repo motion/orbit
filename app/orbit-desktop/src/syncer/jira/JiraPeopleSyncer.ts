@@ -4,7 +4,8 @@ import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
-import { assign } from '../../utils'
+import { CommonUtils } from '../../utils/CommonUtils'
+import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { JiraLoader } from './JiraLoader'
 import { JiraUser } from './JiraTypes'
@@ -69,10 +70,11 @@ export class JiraPeopleSyncer implements IntegrationSyncer {
    * Creates person entity from a given confluence user.
    */
   private createPerson(user: JiraUser): PersonEntity {
-    const id = `jira-${this.setting.id}-${user.accountId}`
+    const id = CommonUtils.hash(`jira-${this.setting.id}-${user.accountId}`)
     const person = this.people.find(person => person.id === id)
     const data: JiraPersonData = {}
-    return assign(person || new PersonEntity(), {
+
+    return Object.assign(person || new PersonEntity(), PersonUtils.create({
       id,
       integration: 'jira',
       setting: this.setting,
@@ -82,7 +84,7 @@ export class JiraPeopleSyncer implements IntegrationSyncer {
       photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),
       data,
       raw: user
-    })
+    }))
   }
 
 }

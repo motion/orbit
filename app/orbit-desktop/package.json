@@ -62,7 +62,7 @@
     "source-map-support": "^0.4.16",
     "sqlite": "3.0.0",
     "turndown": "4.0.2",
-    "typeorm": "^0.3.0-alpha.15",
+    "typeorm": "^0.3.0-alpha.16",
     "ws": "6.0.0"
   },
   "peerDependencies": {

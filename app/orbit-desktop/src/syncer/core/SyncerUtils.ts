@@ -1,4 +1,5 @@
 import { Logger } from '@mcro/logger'
+import { Bit } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { timeout } from '../../utils'

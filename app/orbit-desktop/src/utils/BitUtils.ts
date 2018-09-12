@@ -1,10 +1,83 @@
+import { Logger } from '@mcro/logger'
 import { Bit } from '@mcro/models'
+import { getManager } from 'typeorm'
 import { BitEntity } from '../entities/BitEntity'
+import {chunk} from 'lodash'
+import { CommonUtils } from './CommonUtils'
 
 /**
  * Bit-related utilities.
  */
 export class BitUtils {
+
+  /**
+   * Syncs given bits in the database.
+   */
+  static async sync(log: Logger, apiBits: Bit[], dbBits: Bit[]) {
+    log.verbose(`calculating inserted/updated/removed bits`, { apiBits, dbBits })
+
+    // calculate bits that we need to update in the database
+    const insertedBits = apiBits.filter(apiBit => {
+      return !dbBits.some(dbBit => dbBit.id === apiBit.id)
+    })
+    const updatedBits = apiBits.filter(apiBit => {
+      const dbBit = dbBits.find(dbBit => dbBit.id === apiBit.id)
+      return dbBit && dbBit.contentHash !== apiBit.contentHash
+    })
+    const removedBits = dbBits.filter(dbBit => {
+      return !apiBits.some(apiBit => apiBit.id === dbBit.id)
+    })
+
+    // perform database operations on synced bits
+    if (insertedBits.length || updatedBits.length || removedBits.length) {
+      log.timer(`save bits in the database`, { insertedBits, updatedBits, removedBits })
+      await getManager().transaction(async manager => {
+
+        // insert new bits
+        if (insertedBits.length > 0) {
+          const insertedBitChunks = chunk(insertedBits, 50)
+          for (let bits of insertedBitChunks) {
+            await manager.insert(BitEntity, bits)
+          }
+          for (let bit of insertedBits) {
+            await manager
+              .createQueryBuilder(BitEntity, "bit")
+              .relation("people")
+              .of(bit)
+              .add(bit.people)
+          }
+        }
+
+        // update changed bits
+        for (let bit of updatedBits) {
+          await manager.update(BitEntity, { id: bit.id }, bit)
+
+          const dbBit = dbBits.find(dbBit => dbBit.id === bit.id)
+          const newPeople = !dbBit ? bit.people : bit.people.filter(person => {
+            return !dbBit.people.some(dbPerson => dbPerson.id === person.id)
+          })
+          const removedPeople = !dbBit ? [] : dbBit.people.filter(dbPerson => {
+            return !bit.people.some(person => person.id === dbPerson.id)
+          })
+
+          await manager
+            .createQueryBuilder(BitEntity, "bit")
+            .relation("people")
+            .of(bit)
+            .addAndRemove(newPeople, removedPeople)
+        }
+
+        // delete removed bits
+        if (removedBits.length > 0) {
+          await manager.delete(BitEntity, removedBits)
+        }
+      })
+      log.timer(`save bits in the database`)
+    } else {
+      log.verbose(`no changes were detected, nothing was synced`)
+    }
+  }
+
   /**
    * Returns missing elements of the first bits based on given list of second bits.
    */
@@ -28,8 +101,8 @@ export class BitUtils {
   /**
    * Creates a content hash for a given bit.
    */
-  static contentHash(bit: Bit): number {
-    return this.hash([
+  private static contentHash(bit: Bit): number {
+    return CommonUtils.hash([
       bit.id,
       bit.integration,
       bit.settingId,
@@ -46,21 +119,4 @@ export class BitUtils {
     ].filter(item => item !== null && item !== undefined))
   }
 
-  /**
-   * Generates a hash number for a given object.
-   * Make sure given object does not have circular structure.
-   *
-   * @see https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
-   */
-  private static hash(value: any): number {
-    const str = JSON.stringify(value)
-    let hash = 0, i, chr;
-    if (str.length === 0) return hash;
-    for (i = 0; i < str.length; i++) {
-      chr   = str.charCodeAt(i);
-      hash  = ((hash << 5) - hash) + chr;
-      hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
-  }
 }

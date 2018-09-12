@@ -5,6 +5,7 @@ import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { CommonUtils } from '../../utils/CommonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
@@ -67,7 +68,7 @@ export class JiraIssueSyncer implements IntegrationSyncer {
    */
   private buildBit(issue: JiraIssue) {
 
-    const id = `jira-${this.setting.id}-${issue.id}`
+    const id = CommonUtils.hash(`jira-${this.setting.id}-${issue.id}`)
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
     const values = this.setting.values as JiraSettingValues

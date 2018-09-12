@@ -93,12 +93,13 @@ export class Root {
       open(url)
     })
 
+    // ... you connect models and start running things on them
+    await this.connect()
+
     // wait for database manager to run migrations before...
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
 
-    // ... you connect models and start running things on them
-    await this.connect()
     this.registerMediatorServer()
 
     this.onboard = new Onboard()

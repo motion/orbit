@@ -9,7 +9,6 @@ import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 import { Actions } from '../../../../actions/Actions'
 import { VerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
-import { removeQuoted } from '../../../../components/resolve/resolveBits/ResolveMail'
 
 const HorizontalSpace = view({
   width: 10,
@@ -33,6 +32,13 @@ const MessageHeader = view({
   flexFlow: 'row',
 })
 
+const Block = view({
+  display: 'block',
+  '& div': {
+    display: 'block',
+  },
+})
+
 const openMail = email => () => {
   Actions.open(`mailto:${email}`)
 }
@@ -52,28 +58,26 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
             </UI.Text>
             <VerticalSpace small />
             <MessageHeader>
-              {message.participants
-                .filter(x => x.type === 'from')
-                .map(({ name, email }, index) => (
-                  <React.Fragment key={index}>
-                    <RoundButtonBordered
-                      key={index}
-                      onClick={openMail(email)}
-                      tooltip={email}
-                      tooltipProps={{
-                        noHoverOnChildren: false,
-                      }}
-                    >
-                      {name}
-                    </RoundButtonBordered>
-                    <HorizontalSpace />
-                  </React.Fragment>
-                ))}
+              {message.participants.filter(x => x.type === 'from').map(({ name, email }, index) => (
+                <React.Fragment key={index}>
+                  <RoundButtonBordered
+                    key={index}
+                    onClick={openMail(email)}
+                    tooltip={email}
+                    tooltipProps={{
+                      noHoverOnChildren: false,
+                    }}
+                  >
+                    {name}
+                  </RoundButtonBordered>
+                  <HorizontalSpace />
+                </React.Fragment>
+              ))}
             </MessageHeader>
             <VerticalSpace small />
             <Linkify>
-              <div dangerouslySetInnerHTML={ { __html: message.body } }></div>
-            {/*  {!!message.body &&
+              <Block dangerouslySetInnerHTML={{ __html: message.body }} />
+              {/*  {!!message.body &&
                 message.body
                   .split('\n')
                   .map((message, idx) => (

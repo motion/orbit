@@ -1,3 +1,8 @@
+/* gmail style */
+*[style~='mso-line-height-rule:exactly'] {
+  line-height: 0px;
+}
+
 .react-resizable {
   position: relative;
 }
@@ -264,8 +269,8 @@ tspan {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
   color: #333;
@@ -418,8 +423,8 @@ input[type='radio'] {
 input,
 textarea,
 select {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 body,
@@ -572,6 +577,7 @@ td,
 th {
   display: table-cell;
 }
+
 caption {
   display: table-caption;
 }

@@ -218,7 +218,7 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const integrations = settingsList.map(integration => {
+  const integrations = settingsList.sort((a, b) => a.id.localeCompare(b.id)).map(integration => {
     return {
       ...integration,
       added: !!(appsStore.appsList || []).find(x => x.type === integration.id),
@@ -287,7 +287,7 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
               </Text>
               <VerticalSpace />
               <Text size={1.5} alpha={0.5} width="80%">
-                Now, lets get you set up.
+                Now, lets set you up...
               </Text>
             </Centered>
           )}
@@ -317,6 +317,7 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
             })}
           </Unpad>
 
+          <VerticalSpace />
           <VerticalSpace />
         </OnboardFrame>
         <OnboardFrame>

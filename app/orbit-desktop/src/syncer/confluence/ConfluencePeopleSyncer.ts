@@ -30,33 +30,33 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
    */
   async run(): Promise<void> {
     // load users from confluence API
-    log.info('loading confluence API users')
+    log.verbose('loading confluence API users')
     const allUsers = await this.loader.loadUsers()
-    log.info('got confluence API users', allUsers)
+    log.verbose('got confluence API users', allUsers)
 
     // we don't need some confluence users, like system or bot users
     // so we are filtering them out
-    log.info('filter out users we don\'t need')
+    log.verbose('filter out users we don\'t need')
     const filteredUsers = allUsers.filter(member => this.checkUser(member))
-    log.info('users were filtered out', filteredUsers)
+    log.verbose('users were filtered out', filteredUsers)
 
     // load users from the database
-    log.info('loading database (exist) users')
+    log.verbose('loading database (exist) users')
     this.people = await getRepository(PersonEntity).find({
       settingId: this.setting.id,
     })
-    log.info('got database users', this.people)
+    log.verbose('got database users', this.people)
 
     // create entities for each loaded member
-    log.info('creating person entities from the loaded content')
+    log.verbose('creating person entities from the loaded content')
     const people = filteredUsers.map(user => this.createPerson(user))
     log.info('entities created', people)
 
     // saving person entities and person bits
-    log.info('saving entities', people)
+    log.verbose('saving entities', people)
     await getRepository(PersonEntity).save(people)
     await createOrUpdatePersonBits(people)
-    log.info('entities saved')
+    log.verbose('entities saved')
   }
 
   /**
@@ -78,16 +78,19 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
     const person = this.people.find(person => person.id === id)
     const data: ConfluencePersonData = {}
 
-    return Object.assign(person || new PersonEntity(), PersonUtils.create({
-      id,
-      integration: 'confluence',
-      setting: this.setting,
-      integrationId: user.accountId,
-      name: user.displayName,
-      email: user.details.personal.email,
-      photo: domain + user.profilePicture.path.replace('s=48', 's=512'),
-      raw: user,
-      data
-    }))
+    return Object.assign(
+      person || new PersonEntity(),
+      PersonUtils.create({
+        id,
+        integration: 'confluence',
+        setting: this.setting,
+        integrationId: user.accountId,
+        name: user.displayName,
+        email: user.details.personal.email,
+        photo: domain + user.profilePicture.path.replace('s=48', 's=512'),
+        raw: user,
+        data,
+      }),
+    )
   }
 }

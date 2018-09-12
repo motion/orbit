@@ -28,7 +28,7 @@ export class AppsManager {
         const hasApp = appsState.find(x => x.id === id)
         const shouldDelete = !hasApp
         if (shouldDelete) {
-          log.verbose(`remove process ${id}`)
+          log.info(`remove process ${id}`)
           await this.removeProcess(id)
         }
       }
@@ -41,7 +41,7 @@ export class AppsManager {
         }
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
-          log.verbose(`create process ${id}`)
+          log.info(`create process ${id}`)
           const oracle = await this.spawnOracle(
             id,
             'Test',
@@ -58,8 +58,8 @@ export class AppsManager {
       }
     },
     {
-      onlyUpdateIfChanged: true
-    }
+      onlyUpdateIfChanged: true,
+    },
   )
 
   async spawnOracle(id, name, iconPath: string) {

@@ -19,7 +19,6 @@ const log = new Logger('syncer:jira:issue')
  * Syncs Jira issues.
  */
 export class JiraIssueSyncer implements IntegrationSyncer {
-
   private setting: SettingEntity
   private loader: JiraLoader
   private people: PersonEntity[]
@@ -34,40 +33,38 @@ export class JiraIssueSyncer implements IntegrationSyncer {
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-
     // load database people first
     this.people = await SyncerUtils.loadPeople(this.setting.id, log)
 
     // load all database bits
-    log.info(`loading database bits`)
+    log.verbose('loading database bits')
     this.bits = await getRepository(BitEntity).find({
       settingId: this.setting.id,
     })
-    log.info(`database bits were loaded`, this.bits)
+    log.verbose('database bits were loaded', this.bits)
 
     // load jira issues
-    log.info(`loading jira issues from the api`)
+    log.verbose('loading jira issues from the api')
     const issues = await this.loader.loadIssues()
-    log.info(`jira issues loaded`, issues)
+    log.verbose('jira issues loaded', issues)
 
     // create bits from them and save them
     const bits = issues.map(issue => this.buildBit(issue))
-    log.info(`saving bits`, bits)
+    log.info('saving bits', bits)
     await getRepository(BitEntity).save(bits)
-    log.info(`bits where saved`)
+    log.verbose('bits where saved')
 
     // get a difference to find a removed bits
     const removedBits = BitUtils.difference(this.bits, bits)
-    log.info(`removing bits`, removedBits)
+    log.verbose('removing bits', removedBits)
     await getRepository(BitEntity).remove(removedBits)
-    log.info(`bits were removed`)
+    log.verbose('bits were removed')
   }
 
   /**
    * Builds a bit from the given jira issue.
    */
   private buildBit(issue: JiraIssue) {
-
     const id = CommonUtils.hash(`jira-${this.setting.id}-${issue.id}`)
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
@@ -80,12 +77,9 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     const peopleIds = []
     if (issue.fields.comment)
       peopleIds.push(...issue.comments.map(comment => comment.author.accountId))
-    if (issue.fields.assignee)
-      peopleIds.push(issue.fields.assignee.accountId)
-    if (issue.fields.creator)
-      peopleIds.push(issue.fields.creator.accountId)
-    if (issue.fields.reporter)
-      peopleIds.push(issue.fields.reporter.accountId)
+    if (issue.fields.assignee) peopleIds.push(issue.fields.assignee.accountId)
+    if (issue.fields.creator) peopleIds.push(issue.fields.creator.accountId)
+    if (issue.fields.reporter) peopleIds.push(issue.fields.reporter.accountId)
 
     const people = this.people.filter(person => {
       return peopleIds.indexOf(person.integrationId) !== -1
@@ -98,32 +92,34 @@ export class JiraIssueSyncer implements IntegrationSyncer {
 
     // build the data property for this bit
     const data: JiraBitData = {
-      content: cleanHtml
+      content: cleanHtml,
     }
 
     // create or update a bit
     const bit = this.bits.find(bit => bit.id === id)
-    return assign(bit || new BitEntity(), BitUtils.create({
-      integration: 'jira',
-      id,
-      setting: this.setting,
-      type: 'document',
-      title: issue.fields.summary,
-      body,
-      author,
-      data,
-      raw: issue,
-      location: {
-        id: issue.fields.project.id,
-        name: issue.fields.project.name,
-        webLink: domain + '/browse/' + issue.fields.project.key,
-        desktopLink: ''
-      },
-      webLink: domain + '/browse/' + issue.key,
-      people,
-      bitCreatedAt,
-      bitUpdatedAt,
-    }))
+    return assign(
+      bit || new BitEntity(),
+      BitUtils.create({
+        integration: 'jira',
+        id,
+        setting: this.setting,
+        type: 'document',
+        title: issue.fields.summary,
+        body,
+        author,
+        data,
+        raw: issue,
+        location: {
+          id: issue.fields.project.id,
+          name: issue.fields.project.name,
+          webLink: domain + '/browse/' + issue.fields.project.key,
+          desktopLink: '',
+        },
+        webLink: domain + '/browse/' + issue.key,
+        people,
+        bitCreatedAt,
+        bitUpdatedAt,
+      }),
+    )
   }
-
 }

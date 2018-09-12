@@ -153,7 +153,7 @@ export class ScreenManager {
   // }
 
   defocusOrbit = () => {
-    console.log('should defocus, crashing oracle for now...')
+    log.info('should defocus...')
     // this.oracle.defocus()
   }
 

@@ -32,7 +32,7 @@ export class GeneralSettingManager {
         console.error(err)
       }
     }
-    log.info('ensuring models are in place all over, remove me plz')
+    log.info('move me to migration plz')
     this.start()
   }
 

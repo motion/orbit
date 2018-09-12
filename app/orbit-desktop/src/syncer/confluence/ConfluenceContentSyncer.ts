@@ -18,7 +18,6 @@ const log = new Logger('syncer:confluence:content')
  * Syncs Confluence pages and blogs.
  */
 export class ConfluenceContentSyncer {
-
   private setting: SettingEntity
   private loader: ConfluenceLoader
   private people: PersonEntity[]
@@ -33,40 +32,38 @@ export class ConfluenceContentSyncer {
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-
     // load database people first
     this.people = await SyncerUtils.loadPeople(this.setting.id, log)
 
     // load all database bits
-    log.info(`loading database bits`)
+    log.verbose('loading database bits')
     this.bits = await getRepository(BitEntity).find({
-      settingId: this.setting.id
+      settingId: this.setting.id,
     })
-    log.info(`database bits were loaded`, this.bits)
+    log.verbose('database bits were loaded', this.bits)
 
     // load pages
-    log.info(`loading content from the api`)
+    log.verbose('loading content from the api')
     const contents = await this.loader.loadContents()
-    log.info(`content loaded`, contents)
+    log.verbose('content loaded', contents)
 
     // create bits from them and save them
     const bits = contents.map(content => this.buildBit(content))
-    log.info(`saving bits`, bits)
+    log.info('saving bits', bits)
     await getRepository(BitEntity).save(bits)
-    log.info(`bits where saved`)
+    log.verbose('bits were saved')
 
     // get a difference to find a removed bits and remove them
     const removedBits = BitUtils.difference(this.bits, bits)
-    log.info(`removing bits`, removedBits)
+    log.verbose('removing bits', removedBits)
     await getRepository(BitEntity).remove(removedBits)
-    log.info(`bits were removed`)
+    log.verbose('bits were removed')
   }
 
   /**
    * Builds a bit from the given confluence content.
    */
   private buildBit(content: ConfluenceContent) {
-
     const values = this.setting.values as ConfluenceSettingValues
     const domain = values.credentials.domain
     const id = CommonUtils.hash(`confluence-${this.setting.id}-${content.id}`)
@@ -74,15 +71,16 @@ export class ConfluenceContentSyncer {
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
     const body = SyncerUtils.stripHtml(content.body.styled_view.value)
     let cleanHtml = SyncerUtils.sanitizeHtml(content.body.styled_view.value)
-    const matches = content.body.styled_view.value.match(/<style default-inline-css>((.|\n)*)<\/style>/gi)
-    if (matches)
-      cleanHtml = matches[0] + cleanHtml
+    const matches = content.body.styled_view.value.match(
+      /<style default-inline-css>((.|\n)*)<\/style>/gi,
+    )
+    if (matches) cleanHtml = matches[0] + cleanHtml
 
     // get people contributed to this bit (content author, editors, commentators)
     const peopleIds = [
       content.history.createdBy.accountId,
       ...content.comments.map(comment => comment.history.createdBy.accountId),
-      ...content.history.contributors.publishers.userAccountIds
+      ...content.history.contributors.publishers.userAccountIds,
     ]
     const people = this.people.filter(person => {
       return peopleIds.indexOf(person.integrationId) !== -1
@@ -95,32 +93,34 @@ export class ConfluenceContentSyncer {
 
     // build the data property for this bit
     const data: ConfluenceBitData = {
-      content: cleanHtml
+      content: cleanHtml,
     }
 
     // create or update a bit
     const bit = this.bits.find(bit => bit.id === id)
-    return assign(bit || new BitEntity(), BitUtils.create({
-      integration: 'confluence',
-      id,
-      setting: this.setting,
-      type: 'document',
-      title: content.title,
-      body,
-      data,
-      author,
-      raw: content,
-      location: {
-        id: content.space.id,
-        name: content.space.name,
-        webLink: domain + '/wiki' + content.space._links.webui,
-        desktopLink: ''
-      },
-      webLink: domain + '/wiki' + content._links.webui,
-      people,
-      bitCreatedAt,
-      bitUpdatedAt,
-    }))
+    return assign(
+      bit || new BitEntity(),
+      BitUtils.create({
+        integration: 'confluence',
+        id,
+        setting: this.setting,
+        type: 'document',
+        title: content.title,
+        body,
+        data,
+        author,
+        raw: content,
+        location: {
+          id: content.space.id,
+          name: content.space.name,
+          webLink: domain + '/wiki' + content.space._links.webui,
+          desktopLink: '',
+        },
+        webLink: domain + '/wiki' + content._links.webui,
+        people,
+        bitCreatedAt,
+        bitUpdatedAt,
+      }),
+    )
   }
-
 }

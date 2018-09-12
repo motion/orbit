@@ -122,7 +122,7 @@ export class GMailMessageParser {
 
     if (htmlBody) {
       return DOMPurify
-        .sanitize(htmlBody, { ALLOWED_TAGS: [] })
+        .sanitize(htmlBody)
         .replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '')
         .replace(/&nbsp;/gi, ' ')
         .replace(/•/gi, '')

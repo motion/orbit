@@ -1,14 +1,12 @@
 import { Logger } from '@mcro/logger'
-import { Person } from '@mcro/models'
-import { SlackPersonData } from '@mcro/models'
-import { SlackSettingValues } from '@mcro/models'
+import { Person, SlackPersonData, SlackSettingValues } from '@mcro/models'
+import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { createOrUpdatePersonBits } from '../../repository'
-import { assign } from '../../utils'
+import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SlackLoader } from './SlackLoader'
-import { SlackUser } from './SlackTypes'
+import { SlackPersonFactory } from './SlackPersonFactory'
 
 const log = new Logger('syncer:slack:people')
 
@@ -18,82 +16,48 @@ const log = new Logger('syncer:slack:people')
 export class SlackPeopleSyncer implements IntegrationSyncer {
   private setting: SettingEntity
   private loader: SlackLoader
-  private people: PersonEntity[]
+  private personFactory: SlackPersonFactory
 
   constructor(setting: SettingEntity) {
     this.setting = setting
     this.loader = new SlackLoader(this.setting)
+    this.personFactory = new SlackPersonFactory(this.setting)
   }
 
   async run() {
     log.timer(`load API users`)
-    const users = await this.loader.loadUsers()
-    log.timer(`load API users`, users)
+    const apiUsers = await this.loader.loadUsers()
+    log.timer(`load API users`, apiUsers)
 
     // filter out bots and strange users without emails
-    const filteredUsers = users.filter(user => {
+    const filteredApiUsers = apiUsers.filter(user => {
       return user.is_bot === false && user.profile.email
     })
-    log.verbose(`filtered users (non bots)`, filteredUsers)
+    log.verbose(`filtered API users (non bots)`, filteredApiUsers)
 
     // load all people from the local database
     log.timer(`load synced people from the database`)
-    this.people = await PersonEntity.find({
-      settingId: this.setting.id
-    })
-    log.timer(`load synced people from the database`, this.people)
+    const dbPeople = await this.loadPeople()
+    log.timer(`load synced people from the database`, dbPeople)
 
     // creating entities for them
-    log.verbose(`finding and creating people for users`, filteredUsers)
-    const updatedPeople = filteredUsers.map(user => {
-      return this.createPerson(user)
+    log.verbose(`finding and creating people for users`, filteredApiUsers)
+    const apiPeople = filteredApiUsers.map(user => {
+      return this.personFactory.create(user, dbPeople)
     })
 
     // update in the database
-    log.timer(`update people in the database`, updatedPeople)
-    await PersonEntity.save(updatedPeople)
-
-    // add person bits
-    await Promise.all(
-      updatedPeople.map(async person => {
-        person.personBit = await createOrUpdatePersonBits(person)
-      }),
-    )
-
-    log.timer(`update people in the database`)
-
-    // find remove people and remove them from the database
-    const removedPeople = this.people.filter(person => {
-      return updatedPeople.indexOf(person) === -1
-    })
-    log.timer(`remove people from the database`, removedPeople)
-    await PersonEntity.remove(removedPeople)
-    log.timer(`remove people from the database`)
+    await PersonUtils.sync(log, apiPeople, dbPeople)
   }
 
   /**
-   * Creates a single integration person from given Slack user.
+   * Loads all exist database people for the current integration.
    */
-  private createPerson(user: SlackUser): PersonEntity {
-    const id = `slack-${this.setting.id}-${user.id}`
-    const person = this.people.find(person => person.id === id)
-    const data: SlackPersonData = {
-      tz: user.tz
-    }
-    const values = this.setting.values as SlackSettingValues
-
-    return assign(person || new PersonEntity(), {
-      setting: this.setting,
-      id: id,
-      integration: 'slack',
-      integrationId: user.id,
-      name: user.profile.real_name || user.name,
-      data,
-      raw: user,
-      webLink: `https://${values.oauth.info.team.id}.slack.com/messages/${user.id}`,
-      desktopLink: `slack://user?team=${values.oauth.info.team.id}&id=${user.id}`,
-      email: user.profile.email,
-      photo: user.profile.image_512,
+  private loadPeople() {
+    return getRepository(PersonEntity).find({
+      where: {
+        settingId: this.setting.id
+      }
     })
   }
 

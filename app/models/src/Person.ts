@@ -10,7 +10,8 @@ export interface Person {
    */
   target: 'person'
 
-  id: string
+  id: number
+  contentHash: number
   integration: IntegrationType
   integrationId: string
   createdAt: Date

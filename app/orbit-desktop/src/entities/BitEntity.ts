@@ -18,7 +18,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { LocationEntity } from './LocationEntity'
@@ -30,12 +30,8 @@ export class BitEntity extends BaseEntity implements Bit {
   
   target: 'bit' = 'bit'
 
-  @PrimaryGeneratedColumn()
-  generatedId: string
-
-  @Index()
-  @Column({ unique: true })
-  id: string
+  @PrimaryColumn()
+  id: number
 
   @Index()
   @Column({ unique: true })

@@ -4,7 +4,8 @@ import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
-import { assign } from '../../utils'
+import { CommonUtils } from '../../utils/CommonUtils'
+import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceUser } from './ConfluenceTypes'
@@ -73,10 +74,11 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
   private createPerson(user: ConfluenceUser): PersonEntity {
     const values = this.setting.values as ConfluenceSettingValues
     const domain = values.credentials.domain
-    const id = `confluence-${this.setting.id}-${user.accountId}`
+    const id = CommonUtils.hash(`confluence-${this.setting.id}-${user.accountId}`)
     const person = this.people.find(person => person.id === id)
     const data: ConfluencePersonData = {}
-    return assign(person || new PersonEntity(), {
+
+    return Object.assign(person || new PersonEntity(), PersonUtils.create({
       id,
       integration: 'confluence',
       setting: this.setting,
@@ -86,6 +88,6 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
       photo: domain + user.profilePicture.path.replace('s=48', 's=512'),
       raw: user,
       data
-    })
+    }))
   }
 }

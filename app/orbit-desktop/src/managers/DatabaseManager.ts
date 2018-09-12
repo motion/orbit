@@ -35,7 +35,7 @@ export class DatabaseManager {
     this.db = await sqlite.open(DATABASE_PATH)
     this.ensureSearchIndex()
     this.watchForReset()
-    this.ensureCustomApp()
+    await this.ensureCustomApp()
 
     this.temporarySearchResults()
   }
@@ -59,7 +59,7 @@ export class DatabaseManager {
       )
     }
     const bit = BitUtils.create({
-      id: '1231023',
+      id: 1231023,
       integration: 'app1',
       title: 'My app',
       body: '',
@@ -71,7 +71,7 @@ export class DatabaseManager {
     if (
       !(await BitEntity.findOne({
         type: 'custom',
-        id: '1231023',
+        id: 1231023,
         settingId: setting.id,
       }))
     ) {

@@ -7,6 +7,7 @@ import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
+import { CommonUtils } from '../../utils/CommonUtils'
 import { SyncerUtils } from '../core/SyncerUtils'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceContent } from './ConfluenceTypes'
@@ -68,7 +69,7 @@ export class ConfluenceContentSyncer {
 
     const values = this.setting.values as ConfluenceSettingValues
     const domain = values.credentials.domain
-    const id = `confluence-${this.setting.id}-${content.id}`
+    const id = CommonUtils.hash(`confluence-${this.setting.id}-${content.id}`)
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
     const body = SyncerUtils.stripHtml(content.body.styled_view.value)

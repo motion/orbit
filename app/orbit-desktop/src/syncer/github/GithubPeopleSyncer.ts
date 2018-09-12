@@ -5,7 +5,8 @@ import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
-import { assign } from '../../utils'
+import { CommonUtils } from '../../utils/CommonUtils'
+import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubLoader } from './GithubLoader'
 import { GithubPerson } from './GithubTypes'
@@ -72,11 +73,11 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     people: PersonEntity[],
   ) {
 
-    const id = `github-${setting.id}-${githubPerson.id}`
+    const id = CommonUtils.hash(`github-${setting.id}-${githubPerson.id}`)
     const person = people.find(person => person.id === id)
     const data: GithubPersonData = {}
 
-    return assign(person || new PersonEntity(), {
+    return Object.assign(person || new PersonEntity(), PersonUtils.create({
       id,
       setting: setting,
       integrationId: githubPerson.id,
@@ -87,6 +88,6 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
       photo: githubPerson.avatarUrl,
       raw: githubPerson,
       data
-    })
+    }))
   }
 }

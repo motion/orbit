@@ -2,12 +2,12 @@ import {
   ConfluencePersonData,
   GmailBitData,
   IntegrationType,
+  JiraPersonData,
   Person,
   PersonBit,
+  PersonData,
   Setting,
   SlackPersonData,
-  JiraPersonData,
-  PersonData
 } from '@mcro/models'
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm'
 import { PersonBitEntity } from './PersonBitEntity'
@@ -19,7 +19,10 @@ export class PersonEntity extends BaseEntity implements Person {
   target: 'person' = 'person'
 
   @PrimaryColumn()
-  id: string
+  id: number
+
+  @Column({ unique: true })
+  contentHash: number
 
   @Column({ type: String })
   integration: IntegrationType
@@ -45,6 +48,12 @@ export class PersonEntity extends BaseEntity implements Person {
   @Column({ type: 'simple-json', default: '{}' })
   raw: any
 
+  @Column({ nullable: true })
+  webLink: string
+
+  @Column({ nullable: true })
+  desktopLink: string
+
   @CreateDateColumn()
   createdAt: Date
 
@@ -56,11 +65,5 @@ export class PersonEntity extends BaseEntity implements Person {
 
   @ManyToOne(() => PersonBitEntity, person => person.people)
   personBit: PersonBit
-
-  @Column({ nullable: true })
-  webLink: string
-
-  @Column({ nullable: true })
-  desktopLink: string
 
 }

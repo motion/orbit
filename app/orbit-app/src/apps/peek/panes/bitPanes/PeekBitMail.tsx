@@ -3,7 +3,6 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
-import Linkify from 'react-linkify'
 import { DateFormat } from '../../../../views/DateFormat'
 import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 import { Actions } from '../../../../actions/Actions'
@@ -79,15 +78,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
               ))}
             </MessageHeader>
             <VerticalSpace small />
-            <Linkify>
-              <GmailBody>{message.body}</GmailBody>
-              {/*  {!!message.body &&
-                message.body
-                  .split('\n')
-                  .map((message, idx) => (
-                    <Paragraph key={idx}>{(message)}</Paragraph>
-                  ))}*/}
-            </Linkify>
+            <GmailBody>{message.body}</GmailBody>
           </Message>
         )
       })}

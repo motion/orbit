@@ -85,13 +85,6 @@ export class OrbitWindow extends React.Component<Props> {
     })
   }
 
-  handleBlur = () => {
-    console.log('hide on blur')
-    if (process.env.NODE_ENV !== 'development') {
-      Electron.sendMessage(App, App.messages.HIDE)
-    }
-  }
-
   render() {
     const { store, electronStore } = this.props
     const url = Config.urls.server
@@ -122,7 +115,6 @@ export class OrbitWindow extends React.Component<Props> {
           // scrollBounce: true,
           // offscreen: true,
         }}
-        onBlur={this.handleBlur}
         onFocus={store.handleFocus}
       />
     )

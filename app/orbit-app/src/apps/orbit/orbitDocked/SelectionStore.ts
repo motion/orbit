@@ -165,7 +165,7 @@ export class SelectionStore {
       this.setSelectEvent(eventType)
     }
     const isSame = this.activeIndex === index && this.activeIndex > -1
-    if (isSame && App.peekState.target) {
+    if (isSame && App.peekState && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 70) {
         // ignore really fast double clicks
         console.log('isSame, ignore', index, this.activeIndex)

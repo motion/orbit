@@ -1,6 +1,6 @@
 import { Oracle } from '@mcro/oracle'
 import { store, react } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, Desktop, Electron } from '@mcro/stores'
 import { stringify } from '@mcro/helpers'
 import { oracleOptions } from '../constants'
 
@@ -9,19 +9,10 @@ type FakeProcess = {
   oracle: Oracle
 }
 
-type Props = {
-  onAction: (appId: number, value: string) => any
-}
-
 // @ts-ignore
 @store
 export class AppsManager {
   processes: FakeProcess[] = []
-  props: Props
-
-  constructor(props: Props) {
-    this.props = props
-  }
 
   manageAppIcons = react(
     () => App.appsState,
@@ -32,10 +23,11 @@ export class AppsManager {
 
       // handle deletes
       let current = [...this.processes]
-      for (const [index, { id }] of current.entries()) {
-        const shouldDelete = !appsState.find(x => x.id === id)
-        if (!shouldDelete) {
-          await this.removeProcess(index)
+      for (const { id } of current) {
+        const hasApp = appsState.find(x => x.id === id)
+        const shouldDelete = !hasApp
+        if (shouldDelete) {
+          await this.removeProcess(id)
         }
       }
 
@@ -77,10 +69,15 @@ export class AppsManager {
   }
 
   handleAppState = id => (action: string) => {
-    this.props.onAction(id, action)
+    Desktop.sendMessage(
+      Electron,
+      Electron.messages.APP_STATE,
+      JSON.stringify({ id, action }),
+    )
   }
 
-  async removeProcess(index: number) {
+  async removeProcess(id: number) {
+    const index = this.processes.findIndex(x => x.id === id)
     await this.processes[index].oracle.stop()
     this.processes.splice(index, 1)
   }

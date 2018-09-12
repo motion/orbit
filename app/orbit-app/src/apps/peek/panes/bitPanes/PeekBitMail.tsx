@@ -39,6 +39,10 @@ const Block = view({
   },
 })
 
+const GmailBody = ({ children, ...props }) => (
+  <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
+)
+
 const openMail = email => () => {
   Actions.open(`mailto:${email}`)
 }
@@ -76,7 +80,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
             </MessageHeader>
             <VerticalSpace small />
             <Linkify>
-              <Block dangerouslySetInnerHTML={{ __html: message.body }} />
+              <GmailBody>{message.body}</GmailBody>
               {/*  {!!message.body &&
                 message.body
                   .split('\n')

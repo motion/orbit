@@ -1,6 +1,19 @@
 /* gmail style */
-*[style~='mso-line-height-rule:exactly'] {
+/* .gmail-body *[style~='mso-line-height-rule:exactly'],
+.gmail-body td > div,
+.gmail-body tr {
   line-height: 0px;
+} */
+.gmail-body td,
+.gmail-body tr,
+.gmail-body table,
+.gmail-body tbody {
+  border-collapse: separate;
+  border-spacing: 0px;
+  vertical-align: inherit;
+}
+.gmail-body p {
+  line-height: 11pt;
 }
 
 .react-resizable {

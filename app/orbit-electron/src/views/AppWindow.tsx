@@ -88,6 +88,11 @@ class AppWindowStore {
       }
     }
   }
+
+  handleFocus = () => {
+    console.log('!! app focus', this.props.id)
+    Electron.setState({ focusedAppId: this.props.id })
+  }
 }
 
 const decorator = compose(
@@ -98,26 +103,25 @@ const decorator = compose(
   view.electron,
 )
 
-export const AppWindow = decorator(
-  ({ id, store, isPeek }: Props & { store: AppWindowStore }) => {
-    log.info(`Rendering app window ${id} at url ${store.url}`)
-    return (
-      <Window
-        alwaysOnTop={isPeek}
-        show
-        ref={store.handleRef}
-        ignoreMouseEvents={!Electron.hoverState.peekHovered[id]}
-        focusable={isPeek}
-        file={store.url}
-        frame={false}
-        hasShadow={false}
-        // showDevTools={Electron.state.showDevTools.app}
-        transparent
-        background="#00000000"
-        webPreferences={WEB_PREFERENCES}
-        position={store.position}
-        size={Electron.state.screenSize}
-      />
-    )
-  },
-)
+export const AppWindow = decorator(({ id, store, isPeek }: Props & { store: AppWindowStore }) => {
+  log.info(`Rendering app window ${id} at url ${store.url}`)
+  return (
+    <Window
+      alwaysOnTop={isPeek}
+      show
+      ref={store.handleRef}
+      ignoreMouseEvents={!Electron.hoverState.peekHovered[id]}
+      focusable={isPeek}
+      file={store.url}
+      frame={false}
+      hasShadow={false}
+      showDevTools={Electron.state.showDevTools[`${id}`]}
+      transparent
+      background="#00000000"
+      webPreferences={WEB_PREFERENCES}
+      position={store.position}
+      size={Electron.state.screenSize}
+      onFocus={store.handleFocus}
+    />
+  )
+})

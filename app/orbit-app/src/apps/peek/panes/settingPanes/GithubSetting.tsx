@@ -118,12 +118,7 @@ class GithubSettingStore {
             },
             active: {
               sortValue: isActive,
-              value: (
-                <ReactiveCheckBox
-                  onChange={this.onSync(repo.fullName)}
-                  isActive={isActive}
-                />
-              ),
+              value: <ReactiveCheckBox onChange={this.onSync(repo.fullName)} isActive={isActive} />,
             },
           },
         }

@@ -3,7 +3,6 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
-import Linkify from 'react-linkify'
 import { DateFormat } from '../../../../views/DateFormat'
 import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 import { Actions } from '../../../../actions/Actions'
@@ -38,6 +37,10 @@ const Block = view({
     display: 'block',
   },
 })
+
+const GmailBody = ({ children, ...props }) => (
+  <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
+)
 
 const openMail = email => () => {
   Actions.open(`mailto:${email}`)
@@ -75,15 +78,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
               ))}
             </MessageHeader>
             <VerticalSpace small />
-            <Linkify>
-              <Block dangerouslySetInnerHTML={{ __html: message.body }} />
-              {/*  {!!message.body &&
-                message.body
-                  .split('\n')
-                  .map((message, idx) => (
-                    <Paragraph key={idx}>{(message)}</Paragraph>
-                  ))}*/}
-            </Linkify>
+            <GmailBody>{message.body}</GmailBody>
           </Message>
         )
       })}

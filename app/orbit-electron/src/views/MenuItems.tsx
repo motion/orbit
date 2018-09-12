@@ -1,10 +1,5 @@
 import * as React from 'react'
-import {
-  Menu,
-  SubMenu,
-  MenuItem,
-  MenuItems as ElMenuItems,
-} from '@mcro/reactron'
+import { Menu, SubMenu, MenuItem, MenuItems as ElMenuItems } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import { Electron, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -16,10 +11,12 @@ export class MenuItems extends React.Component<{
 }> {
   isClosing = false
 
-  toggleDevTools = appName => () => {
-    // @ts-ignore
-    Electron.setShowDevTools({
-      [appName]: !Electron.state.showDevTools[appName],
+  toggleDevTools = () => {
+    const id = Electron.state.focusedAppId
+    Electron.setState({
+      showDevTools: {
+        [id]: !Electron.state.showDevTools[id],
+      },
     })
   }
 
@@ -64,20 +61,13 @@ export class MenuItems extends React.Component<{
         </SubMenu>
         <SubMenu label="Window">
           <ElMenuItems.ToggleFullscreen />
-          <ElMenuItems.Close
-            accelerator="CmdOrCtrl+w"
-            onClick={this.handleClose}
-          />
+          <ElMenuItems.Close accelerator="CmdOrCtrl+w" onClick={this.handleClose} />
           <ElMenuItems.Minimize />
-          <MenuItem
-            label="Refresh"
-            accelerator="CmdOrCtrl+r"
-            onClick={electronStore.restart}
-          />
+          <MenuItem label="Refresh" accelerator="CmdOrCtrl+r" onClick={electronStore.restart} />
           <MenuItem
             label="Show Dev Tools [App]"
             accelerator="CmdOrCtrl+Option+i"
-            onClick={this.toggleDevTools('app')}
+            onClick={this.toggleDevTools}
           />
         </SubMenu>
       </Menu>

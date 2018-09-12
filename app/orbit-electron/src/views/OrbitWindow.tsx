@@ -51,8 +51,9 @@ class MainStore {
 
   handleFocus = async () => {
     console.log('!! electron focus')
+    Electron.setState({ focusedAppId: 'app' })
     Electron.sendMessage(App, App.messages.SHOW)
-    await sleep(16)
+    await sleep(0)
     // ...then re-bring this up above swift
     this.window.show()
   }

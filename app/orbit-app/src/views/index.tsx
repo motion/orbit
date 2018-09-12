@@ -22,13 +22,9 @@ export const FormTableRow = view(Row, {
   alignItems: 'center',
 })
 
-export const FormTableLabel = ({ children }) => (
-  <TableCell width="30%">{children}</TableCell>
-)
+export const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</TableCell>
 
-export const FormTableValue = ({ children }) => (
-  <TableCell width="70%">{children}</TableCell>
-)
+export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 
 const Label = props => <Text tagName="label" {...props} />
 
@@ -47,11 +43,7 @@ export const InputRow = ({ label, type = 'input', value, onChange }) => (
       <Label>{label}</Label>
     </FormTableLabel>
     <FormTableValue>
-      <Input
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        type={type}
-      />
+      <Input value={value} onChange={e => onChange(e.target.value)} type={type} />
     </FormTableValue>
   </FormTableRow>
 )
@@ -80,7 +72,7 @@ export const CheckBoxRow = ({
 )
 
 export const SuggestionBarVerticalPad = view({
-  height: 28,
+  height: 24,
   pointerEvents: 'none',
 })
 
@@ -112,12 +104,7 @@ export const Circle = view({
 })
 
 export const Title = ({ verticalSpacing = 1, children, ...props }) => (
-  <UI.Text
-    size={1.2}
-    fontWeight={400}
-    margin={[0, 0, 12 * verticalSpacing]}
-    {...props}
-  >
+  <UI.Text size={1.2} fontWeight={400} margin={[0, 0, 12 * verticalSpacing]} {...props}>
     {children}
   </UI.Text>
 )
@@ -142,13 +129,7 @@ export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
 )
 
 export const Link = props => (
-  <UI.Text
-    cursor="pointer"
-    fontWeight={400}
-    color="#8b2bec"
-    display="inline"
-    {...props}
-  />
+  <UI.Text cursor="pointer" fontWeight={400} color="#8b2bec" display="inline" {...props} />
 )
 
 export const AppWrapper = view(UI.Col, {

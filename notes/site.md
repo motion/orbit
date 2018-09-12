@@ -1,5 +1,15 @@
 # (Home) Orbit - The Decentralized OS
 
+potential lead-lines:
+
+- Search everything
+
+name of it:
+
+- The Decentralized OS
+- Decentralized Operating Layer
+- Personal OS
+
 Orbit is a smart operating layer above Mac, Windows, and Linux. It unifies your cloud knowledge and gives you amazing search. But that's just the beginning.
 
 # Take control

@@ -9,6 +9,7 @@ import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
+import { CommonUtils } from '../../utils/CommonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SyncerUtils } from '../core/SyncerUtils'
 import { GithubLoader } from './GithubLoader'
@@ -79,7 +80,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
 
   private createIssue(issue: GithubIssue): BitEntity {
 
-    const id = `github-${this.setting.id}-${issue.id}`
+    const id = CommonUtils.hash(`github-${this.setting.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
     const comments = issue.comments.edges.map(edge => edge.node)

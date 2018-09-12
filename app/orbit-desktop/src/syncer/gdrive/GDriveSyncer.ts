@@ -7,6 +7,8 @@ import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
+import { CommonUtils } from '../../utils/CommonUtils'
+import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
@@ -71,13 +73,13 @@ export class GDriveSyncer implements IntegrationSyncer {
    */
   private buildBit(file: GDriveLoadedFile): BitEntity {
     const data: GDriveBitData = {}
-    const id = `gdrive-${this.setting.id}-${file.file.id}`
+    const id = CommonUtils.hash(`gdrive-${this.setting.id}-${file.file.id}`)
     const bit = this.bits.find(bit => bit.id === id)
 
     return assign(bit || new BitEntity(), BitUtils.create({
       integration: 'gdrive',
       setting: this.setting,
-      id: file.file.id,
+      id,
       type: 'document',
       title: file.file.name,
       body: file.content || 'empty',
@@ -107,11 +109,11 @@ export class GDriveSyncer implements IntegrationSyncer {
    * Creates person entity from a given google drive user.
    */
   private buildPerson(user: GDriveLoadedUser): PersonEntity {
-    const id = `gdrive-${this.setting.id}-${user.email}`
+    const id = CommonUtils.hash(`gdrive-${this.setting.id}-${user.email}`)
     const data: GDrivePersonData = {}
     const person = this.people.find(person => person.id === id)
 
-    return assign(person || new PersonEntity(), {
+    return Object.assign(person || new PersonEntity(), PersonUtils.create({
       id,
       setting: this.setting,
       integrationId: user.email,
@@ -121,6 +123,6 @@ export class GDriveSyncer implements IntegrationSyncer {
       photo: user.photo,
       data,
       raw: user,
-    })
+    }))
   }
 }

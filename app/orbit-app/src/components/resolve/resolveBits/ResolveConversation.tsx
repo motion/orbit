@@ -30,15 +30,20 @@ export const ResolveConversation = (props: BitItemResolverProps) => {
   const data = bit.data as SlackBitData
   const content = isExpanded
     ? (getMessages(data.messages, { searchTerm, shownLimit }).map(
-        (message, index) => (
-          <SlackMessage
+        (message, index) => {
+
+          for (let person of bit.people) {
+            message.text = message.text.replace(new RegExp(`<@${person.integrationId}>`, 'g'), '@' + person.name)
+          }
+
+          return <SlackMessage
             key={index}
             {...props}
             message={message}
             previousMessage={data.messages[index - 1]}
             hide={hide}
           />
-        ),
+        }
       ) as any) // todo(nate) please fix type error and remove "as any"
     : null
   const title = `${arrford(

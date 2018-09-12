@@ -12,14 +12,9 @@ export interface Bit {
   target: "bit"
 
   /**
-   * Generated bit id.
-   */
-  generatedId: string
-
-  /**
    * Bit id.
    */
-  id: string
+  id: number
 
   /**
    * Integration type.

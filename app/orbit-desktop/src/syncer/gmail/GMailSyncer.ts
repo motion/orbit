@@ -8,6 +8,8 @@ import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign, sequence } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
+import { CommonUtils } from '../../utils/CommonUtils'
+import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GMailLoader } from './GMailLoader'
 import { GMailMessageParser } from './GMailMessageParser'
@@ -141,7 +143,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
   private async createBit(thread: GmailThread): Promise<Bit> {
 
-    const id = `gmail-${this.setting.id}-${thread.id}`
+    const id = CommonUtils.hash(`gmail-${this.setting.id}-${thread.id}`)
     
     const body = thread.messages.map(message => {
       const parser = new GMailMessageParser(message)
@@ -176,11 +178,11 @@ export class GMailSyncer implements IntegrationSyncer {
     const people = await Promise.all(allParticipants.map(async participant => {
       const {name, email} = participant
 
-      const id = `gmail-${this.setting.id}-${email}`
+      const id = CommonUtils.hash(`gmail-${this.setting.id}-${email}`)
       const person = (await getRepository(PersonEntity).findOne(id)) || new PersonEntity()
       const data: GmailPersonData = {}
 
-      assign(person, {
+      Object.assign(person, PersonUtils.create({
         id,
         integrationId: email,
         integration: 'gmail',
@@ -191,7 +193,7 @@ export class GMailSyncer implements IntegrationSyncer {
         email: email,
         data,
         raw: participant
-      })
+      }))
       await getRepository(PersonEntity).save(person)
 
       return person

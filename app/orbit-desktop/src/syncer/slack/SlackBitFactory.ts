@@ -110,7 +110,7 @@ export class SlackBitFactory {
    */
   private buildBitBody(messages: SlackMessage[], allPeople: Person[]): string {
     // merge all messages texts into a single body
-    let body = messages.map(message => message.text.trim()).join(' ... ')
+    let body = messages.map(message => message.text.trim()).join(' ')
 
     // replace all people id mentions in the message into a real people names
     for (let person of allPeople) {

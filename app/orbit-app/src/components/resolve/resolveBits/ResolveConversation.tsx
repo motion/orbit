@@ -1,15 +1,7 @@
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
-import keywordExtract from '@mcro/keyword-extract'
 import { SlackBitData, SlackBitDataMessage } from '@mcro/models'
-import arrford from 'arrford'
 import { BitItemResolverProps } from '../ResolveBit'
-
-const options = {
-  remove_digits: true,
-  return_changed_case: true,
-  remove_duplicates: false,
-}
 
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)
@@ -50,15 +42,12 @@ export const ResolveConversation = (props: BitItemResolverProps) => {
     type: 'bit',
     title: bit.title,
     people: bit.people,
-    preview: keywordExtract
-      .extract(bit.body, options)
-      .slice(0, 8)
-      .join(' '),
+    preview: bit.title,
     icon: 'slack',
     locationLink: bit.location.desktopLink || bit.location.webLink,
     desktopLink: bit.desktopLink,
     webLink: bit.webLink,
-    location: bit.title,
+    location: bit.location.name,
     content,
   })
 }

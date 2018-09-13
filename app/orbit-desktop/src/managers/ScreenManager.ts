@@ -1,12 +1,11 @@
 import { Oracle } from '@mcro/oracle'
 import { debounce, last } from 'lodash'
-import { store, isEqual, react, on, sleep } from '@mcro/black'
+import { store, isEqual, react, on, sleep, ensure } from '@mcro/black'
 import { Desktop, Electron, App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
-import { CompositeDisposable } from 'event-kit'
-import { oracleOptions } from '../constants'
+import { runAppleScript } from '../helpers'
 
 const log = new Logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
@@ -40,7 +39,6 @@ const PREVENT_SCANNING = {
 @store
 export class ScreenManager {
   clearTimeout?: Function
-  running = new CompositeDisposable()
   hasResolvedOCR = false
   appStateTm: any
   clearOCRTm: any
@@ -49,11 +47,14 @@ export class ScreenManager {
   curAppName = ''
   isStarted = false
   watchSettings = { name: '', settings: {} }
-  oracle = new Oracle(oracleOptions)
+  oracle: Oracle
+
+  constructor(oracle: Oracle) {
+    this.oracle = oracle
+  }
 
   start = async () => {
-    const off2 = Desktop.onMessage(Desktop.messages.DEFOCUS_ORBIT, this.defocusOrbit)
-    this.running.add({ dispose: off2 })
+    Desktop.onMessage(Desktop.messages.DEFOCUS_ORBIT, this.defocusOrbit)
 
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.11')) {
@@ -77,6 +78,12 @@ export class ScreenManager {
       this.oracle.socketSend('star')
     }, 1000 * 10)
     on(this, listener2)
+
+    // poll for now, get last app
+    const appInfoListener = setInterval(() => {
+      this.oracle.socketSend('appi')
+    }, 300)
+    on(this, appInfoListener)
 
     this.isStarted = true
   }
@@ -159,20 +166,48 @@ export class ScreenManager {
   //   }
   // }
 
+  defocusOnHide = react(
+    () => App.orbitState.docked,
+    docked => {
+      ensure('not docked', !docked)
+      this.defocusOrbit()
+    },
+  )
+
+  lastAppName = null
+
   defocusOrbit = () => {
-    log.info('should defocus...')
-    // this.oracle.defocus()
+    log.info('should defocus...', this.lastAppName)
+    if (!this.lastAppName) {
+      return
+    }
+    runAppleScript(`
+      tell application "${this.lastAppName}"
+        activate
+      end tell
+    `)
   }
 
   setupOracleListeners() {
     // ok
     this.oracle.onInfo(info => {
-      log.verbose('got oracle info', info)
-      Desktop.setState({
-        operatingSystem: {
-          supportsTransparency: info.supportsTransparency,
-        },
-      })
+      if (info.appId) {
+        // avoid setting our own this is just used for defocusing us
+        if (/^(orbit|Electron)$/i.test(this.lastAppName)) {
+          return
+        }
+        this.lastAppName = info.appId
+        return
+      }
+
+      if (typeof info.supportsTransparency === 'boolean') {
+        Desktop.setState({
+          operatingSystem: {
+            supportsTransparency: info.supportsTransparency,
+          },
+        })
+        return
+      }
     })
 
     // space move
@@ -440,7 +475,6 @@ export class ScreenManager {
   }
 
   async dispose() {
-    this.running.dispose()
     if (this.oracle) {
       await this.oracle.stop()
     }

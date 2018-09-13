@@ -119,19 +119,14 @@ export default class DebugApps {
         const answers = await r2.get(infoUrl).json
         const sortedAnswers = answers
           .map(answer => {
-            if (
-              answer.url.indexOf('file://') === 0 ||
-              answer.url.indexOf(REMOTE_URL) === 0
-            ) {
+            if (answer.url.indexOf('file://') === 0 || answer.url.indexOf(REMOTE_URL) === 0) {
               return this.getUrlForJsonInfo(answer, port)
             }
             // if its a "electron background page", we dont want it
             return null
           })
           .filter(Boolean)
-          .sort((a, b) =>
-            `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`),
-          )
+          .sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
         resolve(sortedAnswers)
       } catch (err) {
         if (err.message.indexOf('ECONNREFUSED') !== -1) return
@@ -151,10 +146,7 @@ export default class DebugApps {
   }
 
   numTabs = curSessions => {
-    return (
-      this.options.expectTabs ||
-      Math.max(curSessions.length, this.sessions.length)
-    )
+    return this.options.expectTabs || Math.max(curSessions.length, this.sessions.length)
   }
 
   ensureEnoughTabs = async sessions => {
@@ -163,9 +155,9 @@ export default class DebugApps {
     if (tabsToOpen > 0) {
       await Promise.all(
         range(tabsToOpen).map(async () => {
-          const page = await this.browser.newPage()
+          await this.browser.newPage()
           // this handily defocuses the url bar
-          await page.bringToFront()
+          // await page.bringToFront()
         }),
       )
     }
@@ -294,10 +286,7 @@ export default class DebugApps {
     this.isRendering = true
     try {
       const pages = await this.getPages()
-      if (
-        this.options.expectTabs &&
-        shouldUpdate.length > this.options.expectTabs
-      ) {
+      if (this.options.expectTabs && shouldUpdate.length > this.options.expectTabs) {
         return
       }
       await this.openUrlsInTabs(sessions, pages, shouldUpdate)

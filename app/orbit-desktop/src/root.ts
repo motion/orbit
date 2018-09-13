@@ -39,6 +39,7 @@ import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
+import { oracleOptions } from './constants'
 
 const log = new Logger('desktop')
 
@@ -98,11 +99,13 @@ export class Root {
     // no need to wait for them...
     await this.startSyncers()
 
+    this.oracle = new Oracle(oracleOptions)
+
     // start managers...
-    this.screenManager = new ScreenManager()
+    this.screenManager = new ScreenManager(this.oracle)
     await this.screenManager.start()
 
-    this.appsManager = new AppsManager()
+    this.appsManager = new AppsManager(this.oracle)
 
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screenManager.lastScreenChange,

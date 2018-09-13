@@ -11,7 +11,7 @@ enum Either<T1, T2> {
   case Right(T2)
 }
 
-let orbitAppId = "com.github.electron"
+let orbitAppId = "com.o.orbit"
 
 final class Windo {
   var emit: (String)->Void

@@ -18,6 +18,11 @@ type FakeProcess = {
 @store
 export class AppsManager {
   processes: FakeProcess[] = []
+  mainOracle: Oracle
+
+  constructor(oracle: Oracle) {
+    this.mainOracle = oracle
+  }
 
   async dispose() {
     await Promise.all(this.processes.map(x => x.oracle.stop()))
@@ -42,11 +47,11 @@ export class AppsManager {
       }
 
       // handle adds
-      for (const { id, torn } of apps) {
-        // dont handle peek app
-        if (torn === false) {
-          continue
-        }
+      for (const { id } of apps) {
+        // if you want to avoid handling peek app
+        // if (torn === false) {
+        //   continue
+        // }
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
           log.info(`create process ${id}`)
@@ -91,7 +96,9 @@ export class AppsManager {
         }
         break
       case 'exit':
-        nextState = null
+        nextState = {
+          exited: true,
+        }
         break
     }
     Desktop.setState({

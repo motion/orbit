@@ -89,7 +89,7 @@ export class BitEntity extends BaseEntity implements Bit {
   @ManyToOne(() => PersonEntity)
   author: Person
 
-  @ManyToMany(() => PersonEntity)
+  @ManyToMany(() => PersonEntity, person => person.bits)
   @JoinTable()
   people: Person[]
 

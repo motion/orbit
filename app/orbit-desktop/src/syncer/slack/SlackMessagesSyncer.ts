@@ -138,12 +138,6 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
       select: {
         id: true,
         contentHash: true,
-        people: {
-          id: true
-        }
-      },
-      relations: {
-        people: true
       },
       where: {
         settingId: this.setting.id,

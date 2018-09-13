@@ -1,8 +1,9 @@
 import { Logger } from '@mcro/logger'
 import { Bit } from '@mcro/models'
+import { chunk } from 'lodash'
 import { getManager } from 'typeorm'
 import { BitEntity } from '../entities/BitEntity'
-import {chunk} from 'lodash'
+import { PersonEntity } from '../entities/PersonEntity'
 import { CommonUtils } from './CommonUtils'
 
 /**
@@ -52,11 +53,23 @@ export class BitUtils {
         for (let bit of updatedBits) {
           await manager.update(BitEntity, { id: bit.id }, bit)
 
-          const dbBit = dbBits.find(dbBit => dbBit.id === bit.id)
-          const newPeople = !dbBit ? bit.people : bit.people.filter(person => {
-            return !dbBit.people.some(dbPerson => dbPerson.id === person.id)
+          const people = await manager
+            .getRepository(PersonEntity)
+            .find({
+              select: {
+                id: true
+              },
+              where: {
+                bits: {
+                  id: bit.id
+                }
+              }
+            })
+
+          const newPeople = bit.people.filter(person => {
+            return !people.some(dbPerson => dbPerson.id === person.id)
           })
-          const removedPeople = !dbBit ? [] : dbBit.people.filter(dbPerson => {
+          const removedPeople = people.filter(dbPerson => {
             return !bit.people.some(person => person.id === dbPerson.id)
           })
 

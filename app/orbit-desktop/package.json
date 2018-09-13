@@ -61,6 +61,7 @@
     "slack": "^11.0.1",
     "source-map-support": "^0.4.16",
     "sqlite": "3.0.0",
+    "string-hash": "^1.1.3",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.16",
     "ws": "6.0.0"

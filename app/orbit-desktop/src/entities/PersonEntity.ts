@@ -1,4 +1,5 @@
 import {
+  Bit,
   ConfluencePersonData,
   GmailBitData,
   IntegrationType,
@@ -9,7 +10,17 @@ import {
   Setting,
   SlackPersonData,
 } from '@mcro/models'
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { BitEntity } from './BitEntity'
 import { PersonBitEntity } from './PersonBitEntity'
 import { SettingEntity } from './SettingEntity'
 
@@ -65,5 +76,8 @@ export class PersonEntity extends BaseEntity implements Person {
 
   @ManyToOne(() => PersonBitEntity, person => person.people)
   personBit: PersonBit
+
+  @ManyToMany(() => BitEntity, bit => bit.people)
+  bits: Bit[]
 
 }

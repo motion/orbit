@@ -78,30 +78,6 @@ export class ElectronStore {
     Electron.sendMessage(App, App.messages.TOGGLE_PINNED)
   }
 
-  // clearApp = react(
-  //   () => this.clear,
-  //   async (_, { when, sleep }) => {
-  //     ensure('has app ref', !!this.appRef)
-  //     this.appRef.hide()
-  //     const getState = () => ({
-  //       ...Desktop.appState,
-  //       ...App.state.orbitState,
-  //     })
-  //     const lastState = getState()
-  //     this.show = 0
-  //     Electron.sendMessage(App, App.messages.HIDE)
-  //     await when(() => !App.isShowingOrbit) // ensure hidden
-  //     await when(() => !isEqual(getState(), lastState)) // ensure moved
-  //     this.show = 1 // now render with 0 opacity so chrome updates visuals
-  //     await sleep(50) // likely not necessary, ensure its ready for app show
-  //     this.appRef.show() // downstream apps should now be hidden
-  //     await sleep(200) // finish rendering, could be a when(() => App.isRepositioned)
-  //     await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
-  //     this.show = 2
-  //   },
-  //   { deferFirstRun: true },
-  // )
-
   // focus on pinned
   focusOnPin = react(
     () => App.orbitState.pinned,

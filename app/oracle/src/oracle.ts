@@ -4,7 +4,7 @@ import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { Logger } from '@mcro/logger'
 import { OracleBridge, SocketSender } from './OracleBridge'
-import { link } from 'fs'
+import { link, mkdir } from 'fs'
 import { promisify } from 'util'
 import { remove } from 'fs-extra'
 
@@ -42,6 +42,7 @@ export class Oracle {
   onSpaceMoveCB = idFn
   onAppStateCB = idFn
   binPath = null
+  shouldOcr = false
   state = {
     isPaused: false,
   }
@@ -57,16 +58,23 @@ export class Oracle {
     socketPort = 40512,
     binPath = null,
     env = null,
+    ocr = false,
   } = {}) {
     this.name = name
     this.env = env
     this.port = socketPort
     this.binPath = binPath
     this.debugBuild = debugBuild
+    this.shouldOcr = ocr
     macosVersion.assertGreaterThanOrEqualTo('10.11')
   }
 
   start = async () => {
+    if (this.shouldOcr) {
+      try {
+        await promisify(mkdir)('/tmp/screen')
+      } catch {}
+    }
     this.oracleBridge = new OracleBridge({
       port: this.port,
       getActions: () => this.actions,
@@ -80,7 +88,7 @@ export class Oracle {
     await this.setState({ isPaused: false })
     await this.runOracleProcess()
     await this.oracleBridge.onConnected()
-    this.socketSend('start')
+    this.socketSend('osin')
     log.verbose('started oracle')
   }
 
@@ -92,13 +100,10 @@ export class Oracle {
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
     // kill process
+    this.process.kill('SIGKILL')
     this.process.kill('SIGINT')
-    const killExtra = setTimeout(() => {
-      this.process.kill('SIGKILL')
-    }, 40)
     await this.process
     delete this.process
-    clearTimeout(killExtra)
     // sleep to avoid issues
     await sleep(32)
   }
@@ -291,6 +296,7 @@ export class Oracle {
     try {
       this.process = spawn(Path.join(binDir, bin), [], {
         env: {
+          RUN_OCR: `${this.shouldOcr}`,
           SOCKET_PORT: `${this.port}`,
           ...this.env,
         },

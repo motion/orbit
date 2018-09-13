@@ -4,6 +4,34 @@
 <dict>
 	<key>files</key>
 	<dict>
+		<key>Resources/Bridge.plugin/Contents/Info.plist</key>
+		<data>
+		1oAJZ9tUfwGVtkqeSejYKoUqvqc=
+		</data>
+		<key>Resources/Bridge.plugin/Contents/MacOS/Bridge</key>
+		<data>
+		/mAarhQx3esBrkbHySQxZimLewU=
+		</data>
+		<key>Resources/Bridge.plugin/Contents/PkgInfo</key>
+		<data>
+		26sjaCAKra0joYQF+b0r0pDUnXM=
+		</data>
+		<key>Resources/Bridge.plugin/Contents/Resources/__boot__.py</key>
+		<data>
+		eKcHrm++I/jrgMlP8sn/aRe7Kp4=
+		</data>
+		<key>Resources/Bridge.plugin/Contents/Resources/__error__.sh</key>
+		<data>
+		98KcKRiRk/K+wK/UrfWVqQIgIG4=
+		</data>
+		<key>Resources/Bridge.plugin/Contents/Resources/__pycache__/site.cpython-36.pyc</key>
+		<data>
+		scQfLn0pmkjWOz3QH36pSZp9vKg=
+		</data>
+		<key>Resources/Bridge.plugin/Contents/Resources/site.py</key>
+		<data>
+		GcsZ1D5Pkivg2GFyDNjovDsmdp4=
+		</data>
 		<key>Resources/libswiftRemoteMirror.dylib</key>
 		<data>
 		/iY+Aur9GNjB0A9rqUEaYsL9NFQ=
@@ -15,7 +43,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			F6FHGosEy7NXvlZwB7HU6i4cggI=
+			vND1vCWOLo9cB3koXqcuiEGfQd0=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.tylermandry.AXSwift" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
@@ -24,7 +52,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			aAC4VB7pjhIUgDO/sx9NH8kiKaI=
+			xQxJ1Qri/PuTYMNt13EYcc2brdE=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "org.promisekit" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
@@ -33,7 +61,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			WwEBiFIDJx0jiSHdzBS1SW6H11o=
+			27Yf2ylj2zYb7dWwnMKKecTyOSs=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.oncast.SwiftWebSocket" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
@@ -222,10 +250,102 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			8K1R69FKsIihTkS6jfoVCbdig8g=
+			pMbQvzsM5GF3KoEDdGceDZ2NCUQ=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.o.orbit" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/Info.plist</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			1oAJZ9tUfwGVtkqeSejYKoUqvqc=
+			</data>
+			<key>hash2</key>
+			<data>
+			jl1SK+xkFkCw7g0FuTCbyDuVIjm5tTFcxVSVMt1u6kM=
+			</data>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/MacOS/Bridge</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			/mAarhQx3esBrkbHySQxZimLewU=
+			</data>
+			<key>hash2</key>
+			<data>
+			+g0fLJ38KlmkdrRbRt+vxxT+kMOHzjEz4cpf1e3TupQ=
+			</data>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/MacOS/python</key>
+		<dict>
+			<key>symlink</key>
+			<string>/Users/nw/.pyenv/versions/3.6.1/bin/python</string>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/PkgInfo</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			26sjaCAKra0joYQF+b0r0pDUnXM=
+			</data>
+			<key>hash2</key>
+			<data>
+			0GqAupLeCDPQ7QPeGwK3yJE/Em2ejIkxsZB2XdXYOxE=
+			</data>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/Resources/__boot__.py</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			eKcHrm++I/jrgMlP8sn/aRe7Kp4=
+			</data>
+			<key>hash2</key>
+			<data>
+			eSP3om3grFnvS6/ijpaLTp8MQdKnp0hGS1gmzSfxzCc=
+			</data>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/Resources/__error__.sh</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			98KcKRiRk/K+wK/UrfWVqQIgIG4=
+			</data>
+			<key>hash2</key>
+			<data>
+			xWSphbToPDRMEGRHiIpuDx9nb+gKPKQ4QZxTklYUQgo=
+			</data>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/Resources/__pycache__/site.cpython-36.pyc</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			scQfLn0pmkjWOz3QH36pSZp9vKg=
+			</data>
+			<key>hash2</key>
+			<data>
+			5C2q3MrvdDlt3fnQbNzWDXXBPgAnggJH9PXF31jGkQ4=
+			</data>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/Resources/lib/python3.6/config</key>
+		<dict>
+			<key>symlink</key>
+			<string>/Users/nw/.pyenv/versions/3.6.1/lib/python3.6/config</string>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/Resources/lib/python3.6/site.pyc</key>
+		<dict>
+			<key>symlink</key>
+			<string>../../site.pyc</string>
+		</dict>
+		<key>Resources/Bridge.plugin/Contents/Resources/site.py</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			GcsZ1D5Pkivg2GFyDNjovDsmdp4=
+			</data>
+			<key>hash2</key>
+			<data>
+			cJ4x3h0MFUOFvY6qjnmDRylfZeRZ6gPZohv3sgNj1gY=
+			</data>
 		</dict>
 		<key>Resources/libswiftRemoteMirror.dylib</key>
 		<dict>

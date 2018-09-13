@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE54E0BA214B15A4000207B1 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE54E0B9214B15A4000207B1 /* Async.swift */; };
+		AE54E0BC214B1B98000207B1 /* Bridge.plugin in Resources */ = {isa = PBXBuildFile; fileRef = AE54E0BB214B1B98000207B1 /* Bridge.plugin */; };
 		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCD76202E0C060012723C /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCD74202E0C050012723C /* PromiseKit.framework */; };
 		CF0BCD77202E0C060012723C /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD74202E0C050012723C /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -85,6 +87,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AE54E0B9214B15A4000207B1 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		AE54E0BB214B1B98000207B1 /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Bridge.plugin; sourceTree = "<group>"; };
 		CF0BCD68202E0A620012723C /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
 		CF0BCD74202E0C050012723C /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/Mac/PromiseKit.framework; sourceTree = "<group>"; };
 		CF0BCD75202E0C060012723C /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
@@ -108,7 +112,6 @@
 		CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
 		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
-		CF0BCDBA202E282E0012723C /* Bridge.plugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Bridge.plugin; path = ../pyocr/dist/Bridge.plugin; sourceTree = "<group>"; };
 		CF0BCDBC202E2A640012723C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEEE1E202D838D005F925A /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
@@ -187,7 +190,7 @@
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
-				CF0BCDBA202E282E0012723C /* Bridge.plugin */,
+				AE54E0BB214B1B98000207B1 /* Bridge.plugin */,
 				CF0BCD68202E0A620012723C /* Swindler.xcodeproj */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
@@ -217,6 +220,7 @@
 				CFBEEE22202D838D005F925A /* MainMenu.xib */,
 				CFBEEE25202D838D005F925A /* Info.plist */,
 				CFBEEE26202D838D005F925A /* orbit.entitlements */,
+				AE54E0B9214B15A4000207B1 /* Async.swift */,
 			);
 			path = orbit;
 			sourceTree = "<group>";
@@ -306,6 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */,
+				AE54E0BC214B1B98000207B1 /* Bridge.plugin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +349,7 @@
 				CF0BCD87202E0E170012723C /* UnionFind.swift in Sources */,
 				CF0BCD89202E0E1B0012723C /* Filters.swift in Sources */,
 				CF0BCD8B202E0E1F0012723C /* Images.swift in Sources */,
+				AE54E0BA214B15A4000207B1 /* Async.swift in Sources */,
 				CF0BCD8D202E0E230012723C /* Structs.swift in Sources */,
 				CF0BCD91202E0E290012723C /* OCRInterface.swift in Sources */,
 				CF0BCD8F202E0E260012723C /* Moves.swift in Sources */,

@@ -34,14 +34,17 @@ export class PeekStore {
     this.clearDragHandlers()
   }
 
-  isPeek = react(() => this.appState && !this.appState.torn, _ => _, {
+  isPeek = react(() => !this.appState.torn, _ => _, {
     onlyUpdateIfChanged: true,
   })
 
   // appConfig given the id
   appState = react(
     () => App.appsState.find(x => x.id === this.props.id),
-    appState => {
+    async (appState, { sleep, state }) => {
+      if (this.isPeek && state.hasResolvedOnce) {
+        await sleep(100)
+      }
       if (this.isTorn) {
         // cancel on no app state so we dont cause bugs on close
         ensure('has state', !!appState)
@@ -49,14 +52,14 @@ export class PeekStore {
       return appState
     },
     {
+      defaultValue: {},
       onlyUpdateIfChanged: true,
     },
   )
 
   internalState = react(
     () => this.appState,
-    async (appState, { getValue, setValue, sleep }) => {
-      ensure('has app state', !!appState)
+    async (appState, { getValue, setValue }) => {
       const { appConfig, torn, ...rest } = appState
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
@@ -87,7 +90,7 @@ export class PeekStore {
       }
       if (isShown) {
         // wait and fetch in parallel
-        const model = (await Promise.all([this.getModel(), sleep()]))[0]
+        const model = await this.getModel()
         return {
           ...nextState,
           // now update to new model
@@ -101,6 +104,7 @@ export class PeekStore {
       }
     },
     {
+      onlyUpdateIfChanged: true,
       defaultValue: {
         lastState: null,
         curState: null,
@@ -119,9 +123,6 @@ export class PeekStore {
         return lastState
       }
       return curState
-    },
-    {
-      onlyUpdateIfChanged: true,
     },
   )
 
@@ -242,13 +243,26 @@ export class PeekStore {
     this.dragOffset = [e.clientX - x, e.clientY - y]
   }
 
+  // this is triggered after Actions.finishPeekDrag
+  // where we can reset the dragOffset in the same frame
+  finishedDrag = false
+  resetDragOffsetOnFinishDrag = react(
+    () => App.appsState[this.props.id].position,
+    () => {
+      ensure('finished drag', this.finishedDrag)
+      this.dragOffset = [0, 0]
+      this.finishedDrag = false
+    },
+  )
+
   handleDragEnd = () => {
     this.clearDragHandlers()
+
     // now that it's pinned, update position
     // reset drag offset while simultaneously setting official position
     // this *shouldnt* jitter, technically
+    this.finishedDrag = true
     Actions.finishPeekDrag([...this.framePosition])
-    this.dragOffset = [0, 0]
   }
 
   handleClose = () => {

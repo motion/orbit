@@ -19,6 +19,10 @@ type FakeProcess = {
 export class AppsManager {
   processes: FakeProcess[] = []
 
+  async dispose() {
+    await Promise.all(this.processes.map(x => x.oracle.stop()))
+  }
+
   // launch app icons and events to listen for focus
   manageAppIcons = react(
     () => App.appsState.map(app => ({ id: app.id, torn: app.torn })),
@@ -72,8 +76,29 @@ export class AppsManager {
     return oracle
   }
 
+  // set focus state from fake window
   handleAppState = id => (action: string) => {
-    Desktop.sendMessage(Electron, Electron.messages.APP_STATE, JSON.stringify({ id, action }))
+    let nextState
+    switch (action) {
+      case 'focus':
+        nextState = {
+          focused: true,
+        }
+        break
+      case 'blur':
+        nextState = {
+          focused: false,
+        }
+        break
+      case 'exit':
+        nextState = null
+        break
+    }
+    Desktop.setState({
+      appFocusState: {
+        [id]: nextState,
+      },
+    })
   }
 
   async removeProcess(id: number) {

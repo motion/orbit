@@ -12,7 +12,7 @@ import { SelectionStore } from '../SelectionStore'
 // import { memoize } from 'lodash'
 // import { Actions } from '../../../../actions/Actions'
 import { ResolvedItem } from '../../../../components/ItemResolver'
-import { SuggestionBarVerticalPad } from '../../../../views'
+import { SuggestionBarVerticalPad, SmallVerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightsContext } from '../../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
@@ -73,7 +73,7 @@ const OrbitCardContent = view({
 
 const SearchResultText = props => <UI.Text wordBreak="break-all" fontWeight={400} {...props} />
 
-const collapseWhitespace = str => str.replace(/\n\n*/g, ' ⏎ ').replace(/\s\s+/g, ' ')
+const collapseWhitespace = str => str.replace(/\n[\s]*/g, ' ⏎ ')
 
 @view
 class OrbitSearchResultsList extends React.Component<Props> {
@@ -213,6 +213,7 @@ export class OrbitSearchResults extends React.Component<Props> {
             searchStore={searchStore}
             name={name}
           />
+          <SmallVerticalSpace />
         </ItemResolverDecorationContext.Provider>
       </SubPane>
     )

@@ -29,11 +29,11 @@ export class DatabaseManager {
   async start() {
     this.db = await sqlite.open(DATABASE_PATH)
 
-    // connect models first to ensure tables created
-    await this.connectModels()
-
-    // run migrations next to ensure up to date
+    // run migrations BEFORE connectModels
     await this.migrationManager.start()
+
+    // connect models next
+    await this.connectModels()
 
     // then create search index tables
     await this.ensureSearchIndex()

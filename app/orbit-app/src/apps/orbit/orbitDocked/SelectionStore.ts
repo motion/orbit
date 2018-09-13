@@ -5,8 +5,7 @@ import { QueryStore } from './QueryStore'
 import { KeyboardStore } from '../../../stores/KeyboardStore'
 import { Actions } from '../../../actions/Actions'
 
-const isInRow = item =>
-  item.moves.some(move => move === Direction.right || move === Direction.left)
+const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 
 enum Direction {
   left = 'left',
@@ -217,13 +216,9 @@ export class SelectionStore {
           return prevIndex + movesToNextRow
         }
       }
-      return Math.min(
-        Math.max(-1, curIndex + (direction === Direction.up ? -1 : 1)),
-        maxIndex,
-      )
+      return Math.min(Math.max(-1, curIndex + (direction === Direction.up ? -1 : 1)), maxIndex)
     }
-    const canMove =
-      curResult && curResult.moves.some(move => move === direction)
+    const canMove = curResult && curResult.moves.some(move => move === direction)
     if (canMove) {
       switch (direction) {
         case Direction.right:
@@ -237,7 +232,7 @@ export class SelectionStore {
           const movesToNextRow = this.movesToNextRow(Direction.right, curIndex)
           const nextIndex = curIndex + movesToNextRow
           // if were in the last row already, avoid moving
-          if (nextIndex >= maxIndex) {
+          if (nextIndex > maxIndex) {
             return curIndex
           }
           return nextIndex
@@ -280,17 +275,14 @@ export class SelectionStore {
     const numGroups = resultGroups.length
     for (const [groupIndex, { items, type }] of resultGroups.entries()) {
       if (type === 'row') {
-        const downMoves =
-          groupIndex < numGroups
-            ? [Direction.down, Direction.up]
-            : [Direction.up]
+        const downMoves = groupIndex < numGroups ? [Direction.down, Direction.up] : [Direction.up]
         const nextMoves = items.map((item, index) => ({
           item,
           moves: [
             index < items.length - 1 ? Direction.right : null,
             index > 0 ? Direction.left : null,
             ...downMoves,
-          ],
+          ].filter(Boolean),
         }))
         results = [...results, ...nextMoves]
       }

@@ -4,8 +4,6 @@ import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
-import { Desktop } from '@mcro/stores'
-import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { AppsStore } from '../../../AppsStore'
 import { SettingRepository } from '../../../../repositories'
@@ -16,8 +14,8 @@ import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 // import { MessageDark } from '../../../../views/Message'
 import { GeneralSettingValues } from '@mcro/models'
-import { MessageDark } from '../../../../views/Message'
 import { settingsList } from '../../../../helpers/settingsList'
+import { BlurryGuys } from './BlurryGuys'
 
 type Props = {
   appsStore?: AppsStore
@@ -206,7 +204,10 @@ const decorator = compose(
   view,
 )
 
-export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
+export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: Props) => {
+  if (paneManagerStore.activePane !== 'onboard') {
+    return null
+  }
   // for smart finding integrations...
   // const { foundIntegrations } = Desktop.state.onboardState
   // if (!foundIntegrations) {
@@ -226,13 +227,14 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
   })
   return (
     <SubPane name="onboard">
+      <BlurryGuys />
       <FrameAnimate curFrame={store.curFrame}>
         <OnboardFrame>
           {store.accepted === null && (
             <Centered>
               <br />
-              <Text size={3} fontWeight={500}>
-                Hello,
+              <Text size={2.8} fontWeight={500}>
+                Hello.
               </Text>
               <View height={10} />
               <Text size={1.75} alpha={0.5}>
@@ -244,8 +246,8 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
                 in a beautiful, private, extensible way.
                 <VerticalSpace />
                 Orbit runs 100% locally on your device and never exposes your keys or data to anyone
-                but you. To do this, it will run a secure local server that handles all your
-                authentication keys.
+                but you. To do that it needs to run a secure local server to handle sensitive
+                information on-device.
               </Text>
               <VerticalSpace />
               <VerticalSpace />
@@ -254,6 +256,9 @@ export const OrbitOnboard = decorator(({ store, appsStore }: Props) => {
                   Learn about our security & privacy commitment.
                 </a>
               </div>
+              <VerticalSpace />
+              <VerticalSpace />
+              <VerticalSpace />
               <VerticalSpace />
             </Centered>
           )}

@@ -28,23 +28,6 @@ class AppWindowStore {
     setTimeout(() => {
       this.position = [0, 0]
     })
-
-    // listen for events
-    this.off = Electron.onMessage(Electron.messages.APP_STATE, val => {
-      const { id, action } = JSON.parse(val)
-      if (id === this.props.id) {
-        console.log('ELECTRON GOT ACTION', action)
-        switch (action) {
-          case 'focus':
-            this.window.focus()
-            // if is peek window, bring orbit to front too
-            if (this.props.id === App.appsState[0].id) {
-              console.log('showing orbit')
-              Electron.sendMessage(App, App.messages.SHOW)
-            }
-        }
-      }
-    })
   }
 
   willUnmount() {
@@ -61,6 +44,17 @@ class AppWindowStore {
   get url() {
     return `${Config.urls.server}/app?id=${this.props.id}`
   }
+
+  // looks at desktop appFocusState and then controls electron focus
+  handleAppState = react(
+    () => Desktop.state.appFocusState[this.props.id],
+    focusState => {
+      ensure('open', !!focusState)
+      if (focusState.focused) {
+        this.window.focus()
+      }
+    }
+  )
 
   moveToNewSpace = react(
     () => Desktop.state.movedToNewSpace,

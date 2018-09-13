@@ -13,7 +13,6 @@
   - revisit the site and get it running, fix up
   - we'll do in-app account system dont bother doing it on site
   - have a permanent download link to use
-  - fix spaces / screen resize bugs
 - Friday -- _have demo video / productionize_
   - goal today is to make demo really shine
   - lots of performance, interaction, etc
@@ -30,12 +29,8 @@
 
 - Runthrough on syncers:
 
-  - See trello for important ones
   - Slack select all rooms by default (syncer needs to respect settings/set them)
     - Same with github
-  - Gmail how do I know if its html or text?
-  - Gmail super slow
-  - Gmail no html coming back?
   - Really simple throttle to keep cpu from going too much
   - Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
     - for gmail, dont sync full history, but do sync a trailing X months or limited # of items

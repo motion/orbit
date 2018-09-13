@@ -104,7 +104,7 @@ export const Circle = view({
 })
 
 export const Title = ({ verticalSpacing = 1, children, ...props }) => (
-  <UI.Text size={1.2} fontWeight={400} margin={[0, 0, 12 * verticalSpacing]} {...props}>
+  <UI.Text size={1.35} fontWeight={700} margin={[0, 0, 12 * verticalSpacing]} {...props}>
     {children}
   </UI.Text>
 )

@@ -31,13 +31,22 @@ export class Carousel extends React.Component<CarouselProps> {
 
   lastScroll = Date.now()
 
-  scrollTo = index => {
+  scrollTo = (index, { onlyIfOutside = false } = {}) => {
     const frame = this.frameRef.current
     if (!frame) return
     const activeCard = this.cardRefs[index]
     if (!activeCard) return
     const duration = 90
     const scrollTo = activeCard.offsetLeft - 12
+    if (onlyIfOutside) {
+      // leave it disabled for now...
+      // console.log(
+      //   'onlyIfOutside',
+      //   scrollTo,
+      //   frame.getBoundingClientRect(),
+      //   activeCard.getBoundingClientRect(),
+      // )
+    }
     // dont animate if fast
     if (Date.now() - this.lastScroll < duration) {
       frame.scrollLeft = scrollTo

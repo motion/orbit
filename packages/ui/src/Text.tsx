@@ -5,9 +5,10 @@ import { InlineBlock } from './blocks/InlineBlock'
 import { Inline } from './blocks/Inline'
 import { highlightText, HighlightOptions } from './helpers/highlightText'
 import { propsToTextSize } from './helpers/propsToTextSize'
-import { Color, alphaColor, CSSPropertySet } from '@mcro/gloss'
+import { alphaColor, CSSPropertySet } from '@mcro/gloss'
 
 export type TextProps = CSSPropertySet & {
+  color?: CSSPropertySet['color'] | false
   editable?: boolean
   autoselect?: boolean
   selectable?: boolean
@@ -19,7 +20,6 @@ export type TextProps = CSSPropertySet & {
   lines?: number
   alpha?: number
   onKeyDown?: Function
-  color?: Color
   opacity?: number
   size?: number
   onClick?: Function
@@ -39,9 +39,7 @@ export type TextProps = CSSPropertySet & {
   children: React.ReactNode | ((Highlights) => React.ReactNode)
 }
 
-const HTMLBlock = props => (
-  <span dangerouslySetInnerHTML={{ __html: ` ${props.children} ` }} />
-)
+const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: ` ${props.children} ` }} />
 
 const TextBlock = view(InlineBlock, {
   userSelect: 'none',
@@ -57,13 +55,19 @@ const TextBlock = view(InlineBlock, {
   },
 })
 
-TextBlock.theme = ({ theme, color, alpha }) =>
-  alphaColor(
+TextBlock.theme = ({ theme, color, alpha }) => {
+  if (color === false) {
+    return {
+      color: 'inherit',
+    }
+  }
+  return alphaColor(
     {
       color: color || theme.color,
     },
     alpha,
   )
+}
 
 const TextEllipse = view(Inline, {
   margin: ['auto', 0],
@@ -102,7 +106,6 @@ export class Text extends React.Component<TextProps> {
   static defaultProps = {
     // not a p because its nice to nest it
     tagName: 'div',
-    size: 1,
   }
 
   state = {
@@ -118,12 +121,7 @@ export class Text extends React.Component<TextProps> {
 
   componentDidUpdate() {
     this.handleProps(this.props)
-    if (
-      this.node &&
-      this.props.autoselect &&
-      this.props.editable &&
-      !this.selected
-    ) {
+    if (this.node && this.props.autoselect && this.props.editable && !this.selected) {
       this.node.focus()
       document.execCommand('selectAll', false, null)
       this.selected = true
@@ -149,8 +147,7 @@ export class Text extends React.Component<TextProps> {
   handleProps(props) {
     if (
       props.measure ||
-      ((!!props.ellipse || props.ellipse > 0) &&
-        props.ellipse !== this.props.ellipse)
+      ((!!props.ellipse || props.ellipse > 0) && props.ellipse !== this.props.ellipse)
     ) {
       on(
         this,
@@ -227,8 +224,7 @@ export class Text extends React.Component<TextProps> {
     } = this.props
     const { doClamp, textHeight } = this.state
     const text = propsToTextSize(this.props)
-    const numLinesToShow =
-      doClamp && Math.floor(textHeight / text.lineHeightNum)
+    const numLinesToShow = doClamp && Math.floor(textHeight / text.lineHeightNum)
     const maxHeight =
       typeof ellipse === 'number' && text.lineHeightNum
         ? `${ellipse * text.lineHeightNum}px`
@@ -247,9 +243,7 @@ export class Text extends React.Component<TextProps> {
           children: children.map((child, index) => {
             if (typeof child === 'string') {
               return (
-                <HTMLBlock key={index}>
-                  {highlightText({ text: child, ...highlight })}
-                </HTMLBlock>
+                <HTMLBlock key={index}>{highlightText({ text: child, ...highlight })}</HTMLBlock>
               )
             } else {
               return child

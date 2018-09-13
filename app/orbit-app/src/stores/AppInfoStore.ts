@@ -12,6 +12,7 @@ export class AppInfoStore {
   setting = null
   bitsCount = 0
   job = null
+  id = Math.random()
 
   get settingId() {
     return this.props.model ? this.props.model.id : this.props.settingId
@@ -24,6 +25,7 @@ export class AppInfoStore {
       },
     },
   }).subscribe(value => {
+    console.log('va', this.id, value)
     this.setting = value
   })
 

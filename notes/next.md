@@ -1,23 +1,15 @@
 # nate
 
-- Wednesday -- _profiles_
-  - design run on the person feed
-  - Make demo app nicer:
-    - Sidebar selectable list items
-    - Working tabs
-    - Better table contents
-  - cosal attempt get it running and analyze for use in profiles
-  - filter/sub-search for the feed
-  - pagination for the feed
-- Thursday -- _onboarding_
-  - revisit the site and get it running, fix up
-  - we'll do in-app account system dont bother doing it on site
-  - have a permanent download link to use
-- Friday -- _have demo video / productionize_
-  - goal today is to make demo really shine
-  - lots of performance, interaction, etc
-  - record video a few times to get through full demo
-  - compose email for mailing list in tandem
+- app window drag bug and icon bug in prod still
+- design run on the person feed
+- simple runthrough demo app polish
+- bugfix run 1/2 day
+  - lots of movement/focus/unfocus fixes
+- write intro email 2 hours (medium post, nice screenshots + embedded video)
+- easy permanent download link
+- lots of performance, interaction, etc
+- [design] figure out / demo a orbit join/switch
+- record video of a demo
 
 # Umed
 
@@ -40,13 +32,12 @@
   - GDocs auto sync most things by default
 
 - Next week:
-  - Add simple RSS Syncer
-    - Values can have feed urls
+  - tfidf or cosal system
   - fts5 integration
+  - rss
 
 # Nate
 
-- Multi-process app demo
 - Pane model + default Pane.id = 0, Pane.name = 'Home'
 - Pane.feedOrder
 - Pane.hasMany Feed
@@ -58,12 +49,6 @@
 - searchresults - keep scroll at top of pane makes it possible to move quickly down
 - Move settings over to window
   - General, Appearance
-
-## Website signup for beta
-
-- Signup process
-- Account manage area
-- Secure source code
 - Documentation for onboarding
 - Questionaire
 
@@ -78,7 +63,7 @@
       - RSS Syncer
     - Start Orbit friends chat
     - Typeform survey
-    - Orbit home has RSS that has Orbit Updates + Orbit Help
+    - Orbit home has RSS that has Orbit Updates + Orbit Helpsear
       - Updates are latest dev notes
       - Help is for onboarding onto Orbit, shows its power
       - Make the default home screen be "Orbit Updates"

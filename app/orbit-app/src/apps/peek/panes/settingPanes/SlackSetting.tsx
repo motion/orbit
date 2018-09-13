@@ -11,6 +11,7 @@ import { Text } from '@mcro/ui'
 import { MultiSelectTableShortcutHandler } from '../../../../components/shortcutHandlers/MultiSelectTableShortcutHandler'
 import { SlackSettingValues } from '@mcro/models'
 import { AppStatusPane } from './AppStatusPane'
+import { SlackService } from '@mcro/services'
 
 const columns = {
   name: {
@@ -65,9 +66,7 @@ const itemToRow = (index, channel, topic, isActive, onSync) => {
       },
       active: {
         sortValue: isActive,
-        value: (
-          <ReactiveCheckBox onChange={onSync(channel.id)} isActive={isActive} />
-        ),
+        value: <ReactiveCheckBox onChange={onSync(channel.id)} isActive={isActive} />,
       },
     },
   }
@@ -78,6 +77,7 @@ class SlackSettingStore {
 
   syncing = {}
   active = 'status'
+  service = new SlackService(this.props.setting)
 
   setActiveKey = key => {
     this.active = key
@@ -100,16 +100,8 @@ class SlackSettingStore {
     return this.props.setting
   }
 
-  get service() {
-    return this.props.appsStore.services.slack
-  }
-
   get allChannels() {
-    return orderBy(
-      this.service.allChannels || [],
-      ['is_private', 'num_members'],
-      ['asc', 'desc'],
-    )
+    return orderBy(this.service.allChannels || [], ['is_private', 'num_members'], ['asc', 'desc'])
   }
 
   rows = react(
@@ -185,9 +177,7 @@ export const SlackSetting = decorator(({ store, setting, children }: Props) => {
           <AppStatusPane setting={setting} />
         </HideablePane>
         <HideablePane invisible={store.active !== 'rooms'}>
-          <MultiSelectTableShortcutHandler
-            handlers={{ enter: store.handleEnter }}
-          >
+          <MultiSelectTableShortcutHandler handlers={{ enter: store.handleEnter }}>
             <UI.SearchableTable
               virtual
               rowLineHeight={28}

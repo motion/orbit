@@ -152,21 +152,6 @@ export class ScreenManager {
     },
   )
 
-  // defocusOnHide = react(
-  //   () => App.orbitState.docked,
-  //   docked => {
-  //     ensure('not docked', !docked)
-  //     const orbitId = App.appsState[0].id
-  //     console.log('Desktop.state.appFocusState', orbitId, Desktop.state.appFocusState)
-  //     const orbitFocusState = Desktop.state.appFocusState[orbitId]
-  //     ensure('has state', !!orbitFocusState)
-  //     const orbitFocus = orbitFocusState.focused
-  //     const justDefocusedOrbit = orbitFocus || Date.now() - +orbitFocus < 100
-  //     ensure('didnt already defocus', justDefocusedOrbit)
-  //     this.defocusOrbit()
-  //   },
-  // )
-
   lastAppName = null
 
   defocusOnHide = react(

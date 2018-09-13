@@ -1,7 +1,6 @@
 import { App, Electron } from '@mcro/stores'
 import { isEqual, store, react, debugState, on } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
-import { WindowFocusStore } from './WindowFocusStore'
 import { HoverStateStore } from './HoverStateStore'
 import root from 'global'
 import { app, screen, clipboard } from 'electron'
@@ -11,7 +10,6 @@ import { app, screen, clipboard } from 'electron'
 export class ElectronStore {
   // = null makes them observable
   shortcutStore?: ShortcutsStore = null
-  windowFocusStore?: WindowFocusStore = null
   hoverStateStore?: HoverStateStore = null
   error = null
   appRef = null
@@ -28,7 +26,6 @@ export class ElectronStore {
       this.stores = stores
       this.views = views
     })
-    this.windowFocusStore = new WindowFocusStore()
     this.shortcutStore = new ShortcutsStore()
     this.hoverStateStore = new HoverStateStore()
     this.followMousePosition()
@@ -41,8 +38,6 @@ export class ElectronStore {
         case Electron.messages.CLEAR:
           this.clear = Date.now()
           return
-        case Electron.messages.FOCUS:
-          this.windowFocusStore.focusOrbit()
           return
         case Electron.messages.RESTART:
           app.relaunch()
@@ -50,10 +45,6 @@ export class ElectronStore {
           return
       }
     })
-  }
-
-  get orbitRef() {
-    return this.windowFocusStore.orbitRef
   }
 
   followMousePosition = () => {
@@ -80,10 +71,6 @@ export class ElectronStore {
 
   toggleDocked = async () => {
     const shown = App.orbitState.docked
-    console.log('toggling docked')
-    if (!shown) {
-      this.windowFocusStore.focusOrbit()
-    }
     Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
   }
 

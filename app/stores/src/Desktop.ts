@@ -39,7 +39,6 @@ class DesktopStore {
   setMouseState: DesktopStore['setState']
   setPaused: DesktopStore['setState']
   setLastScreenChange: DesktopStore['setState']
-  setLastBitUpdatedAt: DesktopStore['setState']
 
   messages = {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',
@@ -97,7 +96,6 @@ class DesktopStore {
     paused: true,
     focusedOnOrbit: false,
     appStateUpdatedAt: Date.now(),
-    lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
     movedToNewSpace: 0,

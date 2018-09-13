@@ -111,25 +111,12 @@ export class Root {
       onKeyClear: this.screenManager.lastScreenChange,
     })
     this.keyboardStore.start()
-    this.watchLastBit()
     await this.server.start()
 
     // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {
       this.stores = stores
     })
-  }
-
-  watchLastBit = () => {
-    async function updateLastBit() {
-      const lastBit = await BitEntity.findOne({
-        order: { updatedAt: 'DESC' },
-      })
-      const updatedAt = `${lastBit ? lastBit.updatedAt : ''}`
-      Desktop.setLastBitUpdatedAt(updatedAt)
-    }
-    on(this, setInterval(updateLastBit, 10000))
-    updateLastBit()
   }
 
   restart = () => {

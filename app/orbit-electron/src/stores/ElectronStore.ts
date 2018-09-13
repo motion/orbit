@@ -119,7 +119,7 @@ export class ElectronStore {
 
   restart() {
     if (process.env.NODE_ENV === 'development') {
-      require('touch')(require('path').join(__dirname, '..', '..', 'package.json'))
+      require('touch')(require('path').join(__dirname, '..', '..', '_', 'main.js'))
     }
   }
 

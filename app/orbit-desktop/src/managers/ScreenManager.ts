@@ -77,12 +77,6 @@ export class ScreenManager {
     }, 1000 * 10)
     on(this, listener2)
 
-    // poll for now, get last app
-    const appInfoListener = setInterval(() => {
-      this.oracle.socketSend('appi')
-    }, 100)
-    on(this, appInfoListener)
-
     this.isStarted = true
   }
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
@@ -154,49 +148,9 @@ export class ScreenManager {
 
   lastAppName = null
 
-  defocusOnHide = react(
-    () => App.orbitState.docked,
-    docked => {
-      ensure('not docked', !docked)
-      ensure('is focused on main app', typeof Electron.state.focusedAppId !== 'number')
-      this.defocusOrbit()
-    },
-  )
-
-  defocusOrbit = async () => {
-    log.info('defocusing orbit back to', this.lastAppName)
-    if (!this.lastAppName) {
-      return
-    }
-    const dev = `${process.env.NODE_ENV === 'development'}`
-    const res = await runAppleScript(`
-      tell application "System Events"
-        set activeApps to name of application processes whose frontmost is true
-        set activeApp to item 1 of activeApps
-      end tell
-      -- only defocus if still on orbiit
-      if activeApp is "Electron" or activeApp is "Orbit" then
-        tell application "${this.lastAppName}"
-          activate
-        end tell
-      end if
-      return activeApp
-    `)
-    console.log('res', res)
-  }
-
   setupOracleListeners() {
     // ok
     this.oracle.onInfo(info => {
-      if (info.appId) {
-        // avoid setting our own this is just used for defocusing us
-        if (/^(orbit|electron)$/i.test(info.appId)) {
-          return
-        }
-        this.lastAppName = info.appId
-        return
-      }
-
       if (typeof info.supportsTransparency === 'boolean') {
         Desktop.setState({
           operatingSystem: {

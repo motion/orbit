@@ -6,7 +6,7 @@ import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { BrowserWindow } from 'electron'
+import { Menu, BrowserWindow, app } from 'electron'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -14,7 +14,6 @@ const Config = getGlobalConfig()
 type Props = {
   store?: OrbitWindowStore
   electronStore?: ElectronStore
-  onRef?: Function
 }
 
 class OrbitWindowStore {
@@ -26,15 +25,12 @@ class OrbitWindowStore {
     if (!ref) {
       return
     }
-    if (this.props.onRef) {
-      this.props.onRef(ref.window)
-    }
     this.window = ref.window
   }
 
   disposeShow = null
 
-  moveToNewSpace = react(
+  handleOrbitSpaceMove = react(
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
       ensure('did move', !!moved)
@@ -44,6 +40,22 @@ class OrbitWindowStore {
       // wait for showing
       await when(() => App.orbitState.docked)
       this.showOnNewSpace()
+    },
+  )
+
+  handleOrbitFocus = react(
+    () => App.orbitState.docked,
+    docked => {
+      if (!docked) {
+        ensure('is focused on main app', typeof Electron.state.focusedAppId !== 'number')
+        Menu.sendActionToFirstResponder('hide:')
+      } else {
+        app.show()
+        this.window.show()
+      }
+    },
+    {
+      deferFirstRun: true,
     },
   )
 

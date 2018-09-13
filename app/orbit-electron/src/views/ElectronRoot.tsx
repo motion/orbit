@@ -23,10 +23,6 @@ export class ElectronRoot extends React.Component {
 
   render() {
     const { electronStore } = this.props
-    if (!electronStore.windowFocusStore) {
-      console.log('no window focus store')
-      return null
-    }
     if (electronStore.error) {
       if (electronStore.error) {
         console.log('error is', electronStore.error)
@@ -39,14 +35,10 @@ export class ElectronRoot extends React.Component {
         onBeforeQuit={electronStore.handleBeforeQuit}
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
-        devTools={
-          process.env.NODE_ENV === 'development'
-            ? [DevTools.mobx, DevTools.react]
-            : null
-        }
+        devTools={process.env.NODE_ENV === 'development' ? [DevTools.mobx, DevTools.react] : null}
       >
         <MenuItems />
-        <OrbitWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
+        <OrbitWindow />
         <AppWindows />
         <Tray />
       </AppWindow>

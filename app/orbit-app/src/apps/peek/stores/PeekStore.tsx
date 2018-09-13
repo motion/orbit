@@ -4,7 +4,6 @@ import { App } from '@mcro/stores'
 import { BitRepository, SettingRepository, PersonBitRepository } from '../../../repositories'
 import { Bit, Setting, PersonBit } from '@mcro/models'
 import { Actions } from '../../../actions/Actions'
-import { reaction } from 'mobx'
 
 type PeekStoreItemState = typeof App.peekState & {
   peekId: string

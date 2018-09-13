@@ -67,15 +67,18 @@ export class SlackBitFactory {
     })
 
     // gets the most interesting words in the body
-    const weights = await getWordWeights(body)
-    // sort so we can
-    const sortedWeights = weights.sort((a, b) => (a.weight > b.weight ? 1 : -1))
-    // keep original order of titles
-    const title = weights
-      .filter(x => x.weight >= sortedWeights[5].weight)
-      .slice(0, 5)
-      .map(x => x.string)
-      .join(' ')
+    let weights = await getWordWeights(body)
+
+    // get the top 5, keep original order
+    if (weights.length > 5) {
+      const sortedWeights = [...weights]
+      sortedWeights.sort((a, b) => (a.weight > b.weight ? 1 : -1))
+      const limitWeight = sortedWeights[5].weight
+      // keep original order of titles
+      weights = weights.filter(x => x.weight >= limitWeight).slice(0, 5)
+    }
+
+    const title = weights.map(x => x.string).join(' ')
 
     return BitUtils.create({
       settingId: this.setting.id,

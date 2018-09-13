@@ -27,8 +27,12 @@ export const getWordVector = memoize(word => {
     .replace(';', '')
     .replace(',', '')
     .toLowerCase()
-  console.log(word, vectors['hello'])
-  return (vectors[word] || vectors['hello']).map(() => random(-0.15, 0.15))
+  let vector = vectors[word] || vectors['hello']
+  if (!vector.map) {
+    console.log('weird..', vector, word)
+    vector = vectors.hello
+  }
+  return vector.map(() => random(-0.15, 0.15))
 })
 
 const cosineSimilarity = ($v1, $v2) => {
@@ -47,7 +51,7 @@ export const nearestWords = vec => {
 }
 
 export const docVec = pairs => {
-  let $vec = new Vector(vectors['hello'].map(() => 0))
+  let $vec = new Vector(vectors.hello.map(() => 0))
   pairs.forEach(({ string, weight }) => {
     const $wordVec = new Vector(getWordVector(string.toLowerCase()))
     $vec = $vec.add($wordVec.scale(weight * weight))

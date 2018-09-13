@@ -198,7 +198,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         })
       if (timeout) {
         cancelTm = setTimeout(() => {
-          reject(new ReactionTimeoutError())
+          reject(new ReactionTimeoutError('Timed out'))
         }, timeout)
       }
       const cancel = () => {
@@ -290,8 +290,8 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       } catch (err) {
         // got a nice cancel!
         if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
-          if (!IS_PROD && options.log === 'all') {
-            log.info(`${logName} [${curID}] cancelled`)
+          if (!IS_PROD) {
+            log.verbose(`${logName} [${curID}] cancelled: ${err.message}`)
           }
           return
         }

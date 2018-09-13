@@ -6,6 +6,7 @@ import bodyParser from 'body-parser'
 import session from 'express-session'
 import Passport from 'passport'
 import { OauthValues } from './oauthTypes'
+import request from 'request'
 
 const log = console.log.bind(console)
 
@@ -41,6 +42,25 @@ export class Server {
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.app.get('/hello', (_, res) => res.send('hello world'))
 
+    // redirect latest app version to simple download link
+    this.app.get('/download', async (_, res) => {
+      let filename
+      try {
+        const latest = await fetch('http://get.tryorbit.com/updates/latest-mac.yml').then(x =>
+          x.text(),
+        )
+        filename = latest.match(/(Orbit-.*-mac.zip)/g)[0]
+      } catch (err) {
+        console.log(err)
+      }
+      if (filename) {
+        res.setHeader('content-disposition', 'attachment; filename=Orbit.zip')
+        request(`http://get.tryorbit.com/updates/${filename}`).pipe(res)
+      } else {
+        res.status(500)
+      }
+    })
+
     this.setupPassportRoutes()
   }
 
@@ -57,10 +77,7 @@ export class Server {
       res.header('Access-Control-Allow-Origin', req.headers.origin)
       res.header('Access-Control-Allow-Credentials', 'true')
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-      res.header(
-        'Access-Control-Allow-Methods',
-        'GET,HEAD,POST,PUT,DELETE,OPTIONS',
-      )
+      res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
       next()
     }
   }
@@ -110,9 +127,7 @@ export class Server {
             JSON.stringify(values),
           )}&secret=${encodeURIComponent(
             strategy.config.credentials.clientSecret,
-          )}&clientId=${encodeURIComponent(
-            strategy.config.credentials.clientId,
-          )}"
+          )}&clientId=${encodeURIComponent(strategy.config.credentials.clientId)}"
       window.location = url
     </script>
   </head>

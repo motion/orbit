@@ -47,11 +47,11 @@ export class AppsManager {
       }
 
       // handle adds
-      for (const { id } of apps) {
+      for (const { id, torn } of apps) {
         // if you want to avoid handling peek app
-        // if (torn === false) {
-        //   continue
-        // }
+        if (torn === false) {
+          continue
+        }
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
           log.info(`create process ${id}`)
@@ -87,7 +87,7 @@ export class AppsManager {
     switch (action) {
       case 'focus':
         nextState = {
-          focused: true,
+          focused: Date.now(),
         }
         break
       case 'blur':

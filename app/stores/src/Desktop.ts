@@ -19,7 +19,7 @@ export type DesktopStateOCRItem = [
 ]
 
 export type AppFocusState = {
-  [key: number]: { focused: boolean; exited: boolean } | null
+  [key: number]: { focused: number | false; exited: boolean } | null
 }
 
 // @ts-ignore
@@ -45,7 +45,6 @@ class DesktopStore {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',
     OPEN: 'OPEN',
     CLEAR_OPTION: 'CLEAR_OPTION',
-    DEFOCUS_ORBIT: 'DEFOCUS_ORBIT',
     RESET_DATA: 'RESET_DATA',
     SEARCH_INDEX: 'SEARCH_INDEX',
   }

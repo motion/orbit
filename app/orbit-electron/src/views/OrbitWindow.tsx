@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { on, view, react, ensure, sleep } from '@mcro/black'
+import { on, view, react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -7,6 +7,7 @@ import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { BrowserWindow } from 'electron'
+import { sleep } from '@mcro/black'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -53,46 +54,14 @@ class OrbitWindowStore {
     this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
   }
 
-  get peekAppState() {
-    return (
-      Desktop.state.appFocusState[App.appsState[0].id] || {
-        focused: false,
-        exited: false,
-      }
-    )
+  handleFocus = () => {
+    Electron.sendMessage(App, App.messages.SHOW)
+    Electron.setState({ focusedAppId: 'app' })
   }
 
-  handleFocus = react(
-    () => this.peekAppState.focused,
-    peekFocused => {
-      if (peekFocused) {
-        Electron.setState({ focusedAppId: 'app' })
-        Electron.sendMessage(App, App.messages.SHOW)
-        this.window.focus()
-      } else {
-        // dont handle defocus here because we swap over to electron on focus...
-        // handle it in electron blur
-      }
-    },
-  )
-
-  handleBlur = () => {
+  handleBlur = async () => {
     Electron.sendMessage(App, App.messages.HIDE)
-    Electron.sendMessage(Desktop, Desktop.messages.DEFOCUS_ORBIT)
   }
-
-  handleExit = react(
-    () => this.peekAppState.exited,
-    async exited => {
-      ensure('gone', exited)
-      // close apps...
-      Desktop.setState({ appsState: [] })
-      await sleep(16)
-      // close me...
-      this.window.close()
-      process.exit()
-    },
-  )
 }
 
 @view.attach('electronStore')
@@ -139,6 +108,7 @@ export class OrbitWindow extends React.Component<Props> {
         frame={false}
         hasShadow={false}
         onBlur={store.handleBlur}
+        onFocus={store.handleFocus}
         // @ts-ignore
         showDevTools={Electron.state.showDevTools.app}
         transparent

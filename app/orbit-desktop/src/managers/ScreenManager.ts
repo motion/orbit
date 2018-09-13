@@ -54,8 +54,6 @@ export class ScreenManager {
   }
 
   start = async () => {
-    Desktop.onMessage(Desktop.messages.DEFOCUS_ORBIT, this.defocusOrbit)
-
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.11')) {
       console.log('older mac, avoiding oracle')
@@ -82,7 +80,7 @@ export class ScreenManager {
     // poll for now, get last app
     const appInfoListener = setInterval(() => {
       this.oracle.socketSend('appi')
-    }, 300)
+    }, 100)
     on(this, appInfoListener)
 
     this.isStarted = true
@@ -154,17 +152,22 @@ export class ScreenManager {
     },
   )
 
-  // togglePaused = () => {
-  //   console.log('toggle paused screen')
-  //   const paused = !Desktop.state.paused
-  //   Desktop.setPaused(paused)
-  //   if (paused) {
-  //     Swift.pause()
-  //   } else {
-  //     Swift.resume()
-  //     this.rescanApp()
-  //   }
-  // }
+  // defocusOnHide = react(
+  //   () => App.orbitState.docked,
+  //   docked => {
+  //     ensure('not docked', !docked)
+  //     const orbitId = App.appsState[0].id
+  //     console.log('Desktop.state.appFocusState', orbitId, Desktop.state.appFocusState)
+  //     const orbitFocusState = Desktop.state.appFocusState[orbitId]
+  //     ensure('has state', !!orbitFocusState)
+  //     const orbitFocus = orbitFocusState.focused
+  //     const justDefocusedOrbit = orbitFocus || Date.now() - +orbitFocus < 100
+  //     ensure('didnt already defocus', justDefocusedOrbit)
+  //     this.defocusOrbit()
+  //   },
+  // )
+
+  lastAppName = null
 
   defocusOnHide = react(
     () => App.orbitState.docked,
@@ -174,18 +177,25 @@ export class ScreenManager {
     },
   )
 
-  lastAppName = null
-
-  defocusOrbit = () => {
-    log.info('should defocus...', this.lastAppName)
+  defocusOrbit = async () => {
+    log.info('defocusing orbit back to', this.lastAppName)
     if (!this.lastAppName) {
       return
     }
-    runAppleScript(`
-      tell application "${this.lastAppName}"
-        activate
+    const res = await runAppleScript(`
+      tell application "System Events"
+        set activeApps to name of application processes whose frontmost is true
+        set activeApp to item 1 of activeApps
       end tell
+      -- only defocus if still on orbiit
+      if activeApp is "Electron" or activeApp is "Orbit" then
+        tell application "${this.lastAppName}"
+          activate
+        end tell
+      end if
+      return activeApp
     `)
+    console.log('res', res)
   }
 
   setupOracleListeners() {

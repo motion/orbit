@@ -43,6 +43,8 @@ export default class DebugApps {
     return this.browser && !this.disposed
   }
 
+  lastErr = null
+
   async start() {
     try {
       console.log('launching puppeteer...')
@@ -75,13 +77,22 @@ export default class DebugApps {
 
   renderLoop = async () => {
     while (this.shouldRun) {
-      const sessions = await this.getSessions()
-      await this.ensureEnoughTabs(sessions)
-      const updateTabs = await this.shouldUpdateTabs(sessions)
-      if (updateTabs.some(x => x === true)) {
-        await this.render()
-      }
       await sleep(500)
+      try {
+        const sessions = await this.getSessions()
+        await this.ensureEnoughTabs(sessions)
+        const updateTabs = await this.shouldUpdateTabs(sessions)
+        if (updateTabs.some(x => x === true)) {
+          await this.render()
+        }
+      } catch (err) {
+        // avoid constant error logs
+        if (err.message === this.lastErr) {
+          continue
+        }
+        this.lastErr = err.message
+        console.log('debugBrowser err', err)
+      }
     }
   }
 
@@ -109,7 +120,7 @@ export default class DebugApps {
   }
 
   getDevUrl = ({ port, id }): Promise<DevInfo[] | null> => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       const infoUrl = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
       // timeout because it doesnt resolve if the app is down
       setTimeout(() => {
@@ -129,9 +140,7 @@ export default class DebugApps {
           .sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
         resolve(sortedAnswers)
       } catch (err) {
-        if (err.message.indexOf('ECONNREFUSED') !== -1) return
-        console.log('dev err', err.message)
-        resolve(null)
+        reject(err)
       }
     })
   }

@@ -2,39 +2,28 @@
 
 - app window drag bug and icon bug in prod still
 - design run on the person feed
-- simple runthrough demo app polish
 - bugfix run 1/2 day
   - lots of movement/focus/unfocus fixes
 - write intro email 2 hours (medium post, nice screenshots + embedded video)
-- easy permanent download link
 - lots of performance, interaction, etc
 - [design] figure out / demo a orbit join/switch
 - record video of a demo
 
 # Umed
 
-- Goal by end of week:
-
-  - Really focused finish on observe/throttle fix (ideally no more than a day)
-  - Fix a ton of syncers stuff
-  - Clear you up so next week we can start on new stuff
-
-- Runthrough on syncers:
-
-  - Slack select all rooms by default (syncer needs to respect settings/set them)
-    - Same with github
-  - Really simple throttle to keep cpu from going too much
-  - Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
-    - for gmail, dont sync full history, but do sync a trailing X months or limited # of items
-  - PersonBit query recent + limit
-  - Slack.people sometimes still not showing up
-  - Github sync auto select everything by default
-  - GDocs auto sync most things by default
+- Slack select all rooms by default (syncer needs to respect settings/set them)
+  - Same with github
+- Really simple throttle to keep cpu from going too much
+- Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
+  - for gmail, dont sync full history, but do sync a trailing X months or limited # of items
+- PersonBit query recent + limit
+- Slack.people sometimes still not showing up
+- Github sync auto select everything by default
+- GDocs auto sync most things by default
 
 - Next week:
   - tfidf or cosal system
   - fts5 integration
-  - rss
 
 # Nate
 

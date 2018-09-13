@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { cancel } from './cancel'
+import { ReactionRejectionError } from './constants'
 
 const log = new Logger('automagical')
 
@@ -10,6 +10,6 @@ export const ensure = (message: string, condition: boolean) => {
     if (process.env.DEBUG === 'automagical') {
       log.info(`Reaction cancelled: ${message}`)
     }
-    throw cancel
+    throw new ReactionRejectionError(message)
   }
 }

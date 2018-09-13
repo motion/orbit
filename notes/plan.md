@@ -1,14 +1,41 @@
-# Wow features
+# current best plan
 
-## Follow
+This serves as my best attempt at the current best steps forward for Orbit.
 
-- This should show on your homepage
-- Can automatically show people you recently interacted with
-- Type a term and hit "follow"
-  - Shows off app stuff nicely as you can drag it out
-- Add watch terms and see updates on them
-- "search" -> "Watch this term"
-  - go back to home, see updates on it now
+Orbit is exploring a unique new idea:
+
+Right now there are two models for enterprise software with different trade offs. They are:
+
+1. Cloud
+
+```
++ easy to onboard / low sales process
+- security
+- need high trust they will "be good with your data"
+```
+
+2. On-prem
+
+```
++ secure
++ can have more control
+- high sales process due to high onboard cost
+```
+
+We are exploring a new model that has unique constraints:
+
+3. Serverless
+
+This basically means everyone runs client apps on-device, which use a p2p network to sync things.
+
+```
++ secure
++ easy to onboard / low sales process
+- less reliable sync
+- hard to explain
+```
+
+...
 
 ## Memory
 

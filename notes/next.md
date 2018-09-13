@@ -1,10 +1,8 @@
 # nate
 
-- app window drag bug and icon bug in prod still
 - design run on the person feed
   - lots of movement/focus/unfocus fixes
 - write intro email 2 hours (medium post, nice screenshots + embedded video)
-- lots of performance, interaction, etc
 - [design] figure out / demo a orbit join/switch
 - record video of a demo
 

@@ -27,7 +27,6 @@ export function setPeekApp(item: PersonBit | Bit | Setting | AppConfig, target?:
   const appConfig = getAppConfig(item)
   setPeekState({
     target: target || App.peekState.target,
-    peekId: Math.random(),
     appConfig: {
       ...DEFAULT_APP_CONFIG,
       ...appConfig,
@@ -35,10 +34,9 @@ export function setPeekApp(item: PersonBit | Bit | Setting | AppConfig, target?:
   })
 }
 
-function setPeekState({ target, appConfig, peekId }: PartialPeekState) {
+function setPeekState({ target, appConfig }: PartialPeekState) {
   const realTarget = getTargetPosition(target)
   setAppState({
-    peekId,
     appConfig: {
       ...DEFAULT_APP_CONFIG,
       ...appConfig,

@@ -6,7 +6,6 @@ import { Bit, Setting, PersonBit } from '@mcro/models'
 import { Actions } from '../../../actions/Actions'
 
 type PeekStoreItemState = typeof App.peekState & {
-  peekId: string
   model: PersonBit | Bit | Setting
 }
 
@@ -98,7 +97,6 @@ export class PeekStore {
             ...curState,
             appConfig,
             model,
-            peekId: `${Math.random()}`,
           },
         }
       }
@@ -247,7 +245,9 @@ export class PeekStore {
   // where we can reset the dragOffset in the same frame
   finishDrag = false
   resetDragOffsetOnFinishDrag = react(
-    () => App.appsState[this.props.id].position,
+    () => {
+      return App.getAppState(this.props.id).position
+    },
     () => {
       console.log('finish drag?', this.dragOffset, App.appsState[this.props.id].position)
       ensure('finished drag', this.finishDrag)

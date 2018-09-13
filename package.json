@@ -35,7 +35,7 @@
     "prettier": "^1.12.1",
     "sb-promisify": "^2.0.2",
     "typescript": "3.1.0-dev.20180906",
-    "webpack": "4.17.2",
+    "webpack": "4.18.0",
     "webpack-dev-server": "3.1.8",
     "webpack-cli": "3.1.0"
   },

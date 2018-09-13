@@ -7,12 +7,21 @@ export let App = null as AppStore
 // @ts-ignore
 const isBrowser = typeof window !== 'undefined'
 
-export const defaultPeekState = {
+type AppState = {
+  id: number
+  torn: boolean
+  target?: Object
+  appConfig: AppConfig
+  peekOnLeft: boolean
+  position: [number, number]
+  size: [number, number]
+}
+
+export const defaultPeekState: AppState = {
   id: 0,
   torn: false,
   target: null,
-  appConfig: null as AppConfig,
-  peekId: 0,
+  appConfig: null,
   peekOnLeft: false,
   position: [0, 0],
   size: [0, 0],
@@ -84,7 +93,9 @@ class AppStore {
 
   animationDuration = 90
 
-  last: Boolean
+  getAppState(id: number): AppState {
+    return this.state.appsState.find(x => x.id === id)
+  }
 
   get orbitOnLeft() {
     if (App.orbitState.docked) {

@@ -42,7 +42,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			tdbNHqV9c+Aj6xzVK5DmwM1U3xw=
+			Qdr5G+2kElCjz82UT01BrSST9VM=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.tylermandry.Swindler" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
@@ -222,7 +222,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			+Jd5ZzjMXVAzZ3IgAZLuyoopfRg=
+			8K1R69FKsIihTkS6jfoVCbdig8g=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.o.orbit" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>

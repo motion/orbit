@@ -272,6 +272,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       self.window.collectionBehavior = .managed
       return
     }
+    if action == "appi" {
+      let app = NSWorkspace.shared.frontmostApplication!
+      let id = app.localizedName!
+      self.emit("{ \"action\": \"info\", \"value\": { \"appId\": \"\(id)\" } }")
+      return
+    }
 //    if action == "paus" {
 //      screen.pause()
 //      return

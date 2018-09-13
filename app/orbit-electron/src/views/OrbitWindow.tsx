@@ -12,12 +12,12 @@ const log = new Logger('electron')
 const Config = getGlobalConfig()
 
 type Props = {
-  store?: MainStore
+  store?: OrbitWindowStore
   electronStore?: ElectronStore
   onRef?: Function
 }
 
-class MainStore {
+class OrbitWindowStore {
   props: Props
 
   window: BrowserWindow = null
@@ -43,25 +43,61 @@ class MainStore {
       await sleep(150)
       // wait for showing
       await when(() => App.orbitState.docked)
-      this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens
-      this.window.focus() // focus the window up front on the active screen
-      this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
+      this.showOnNewSpace()
     },
   )
 
-  handleFocus = async () => {
-    console.log('!! electron focus')
-    Electron.setState({ focusedAppId: 'app' })
-    Electron.sendMessage(App, App.messages.SHOW)
-    await sleep(0)
-    // ...then re-bring this up above swift
-    this.window.show()
+  showOnNewSpace() {
+    this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens
+    this.window.focus() // focus the window up front on the active screen
+    this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
   }
+
+  get peekAppState() {
+    return (
+      Desktop.state.appFocusState[App.appsState[0].id] || {
+        focused: false,
+        exited: false,
+      }
+    )
+  }
+
+  handleFocus = react(
+    () => this.peekAppState.focused,
+    peekFocused => {
+      if (peekFocused) {
+        this.window.focus()
+        Electron.setState({ focusedAppId: 'app' })
+        Electron.sendMessage(App, App.messages.SHOW)
+      } else {
+        // dont handle defocus here because we swap over to electron on focus...
+        // handle it in electron blur
+      }
+    },
+  )
+
+  handleBlur = () => {
+    Electron.sendMessage(App, App.messages.HIDE)
+    Electron.sendMessage(Desktop, Desktop.messages.DEFOCUS_ORBIT)
+  }
+
+  handleExit = react(
+    () => this.peekAppState.exited,
+    async exited => {
+      ensure('gone', exited)
+      // close apps...
+      Desktop.setState({ appsState: [] })
+      await sleep(16)
+      // close me...
+      this.window.close()
+      process.exit()
+    },
+  )
 }
 
 @view.attach('electronStore')
 @view.provide({
-  store: MainStore,
+  store: OrbitWindowStore,
 })
 @view.electron
 export class OrbitWindow extends React.Component<Props> {
@@ -102,6 +138,7 @@ export class OrbitWindow extends React.Component<Props> {
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
+        onBlur={store.handleBlur}
         // @ts-ignore
         showDevTools={Electron.state.showDevTools.app}
         transparent
@@ -116,7 +153,6 @@ export class OrbitWindow extends React.Component<Props> {
           // scrollBounce: true,
           // offscreen: true,
         }}
-        onFocus={store.handleFocus}
       />
     )
   }

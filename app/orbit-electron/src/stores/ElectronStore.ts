@@ -1,5 +1,5 @@
 import { App, Electron } from '@mcro/stores'
-import { isEqual, store, react, debugState, on, sleep } from '@mcro/black'
+import { isEqual, store, react, debugState, on } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
 import { WindowFocusStore } from './WindowFocusStore'
 import { HoverStateStore } from './HoverStateStore'
@@ -40,9 +40,6 @@ export class ElectronStore {
           return
         case Electron.messages.CLEAR:
           this.clear = Date.now()
-          return
-        case Electron.messages.DEFOCUS:
-          this.windowFocusStore.defocusOrbit()
           return
         case Electron.messages.FOCUS:
           this.windowFocusStore.focusOrbit()
@@ -86,10 +83,7 @@ export class ElectronStore {
     console.log('toggling docked')
     if (!shown) {
       this.windowFocusStore.focusOrbit()
-    } else {
-      this.windowFocusStore.defocusOrbit()
     }
-    await sleep(16)
     Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
   }
 
@@ -138,9 +132,7 @@ export class ElectronStore {
 
   restart() {
     if (process.env.NODE_ENV === 'development') {
-      require('touch')(
-        require('path').join(__dirname, '..', '..', 'package.json'),
-      )
+      require('touch')(require('path').join(__dirname, '..', '..', 'package.json'))
     }
   }
 
@@ -149,7 +141,11 @@ export class ElectronStore {
     this.appRef = ref.app
     // this.appRef.dock.hide()
   }
-  handleBeforeQuit = () => console.log('before quit')
+
+  handleBeforeQuit = () => {
+    console.log('before quit electron...')
+  }
+
   handleQuit = () => {
     process.exit(0)
   }

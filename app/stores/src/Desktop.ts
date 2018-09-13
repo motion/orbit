@@ -19,7 +19,7 @@ export type DesktopStateOCRItem = [
 ]
 
 export type AppFocusState = {
-  [key: number]: { focused: boolean } | null
+  [key: number]: { focused: boolean; exited: boolean } | null
 }
 
 // @ts-ignore

@@ -11,7 +11,6 @@ class ElectronStore {
 
   messages = {
     CLEAR: 'CLEAR',
-    DEFOCUS: 'DEFOCUS',
     FOCUS: 'FOCUS',
     COPY: 'COPY',
     RESTART: 'RESTART',

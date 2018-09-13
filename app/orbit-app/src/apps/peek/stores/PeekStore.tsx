@@ -245,9 +245,7 @@ export class PeekStore {
   // where we can reset the dragOffset in the same frame
   finishDrag = false
   resetDragOffsetOnFinishDrag = react(
-    () => {
-      return App.getAppState(this.props.id).position
-    },
+    () => App.getAppState(this.props.id).position,
     () => {
       console.log('finish drag?', this.dragOffset, App.appsState[this.props.id].position)
       ensure('finished drag', this.finishDrag)

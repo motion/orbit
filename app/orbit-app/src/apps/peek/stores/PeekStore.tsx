@@ -245,13 +245,14 @@ export class PeekStore {
 
   // this is triggered after Actions.finishPeekDrag
   // where we can reset the dragOffset in the same frame
-  finishedDrag = false
+  finishDrag = false
   resetDragOffsetOnFinishDrag = react(
     () => App.appsState[this.props.id].position,
     () => {
-      ensure('finished drag', this.finishedDrag)
+      console.log('finish drag?', this.dragOffset, App.appsState[this.props.id].position)
+      ensure('finished drag', this.finishDrag)
       this.dragOffset = [0, 0]
-      this.finishedDrag = false
+      this.finishDrag = false
     },
   )
 
@@ -261,7 +262,7 @@ export class PeekStore {
     // now that it's pinned, update position
     // reset drag offset while simultaneously setting official position
     // this *shouldnt* jitter, technically
-    this.finishedDrag = true
+    this.finishDrag = true
     Actions.finishPeekDrag([...this.framePosition])
   }
 

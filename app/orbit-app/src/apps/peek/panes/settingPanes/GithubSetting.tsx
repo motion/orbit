@@ -10,6 +10,7 @@ import { Text } from '@mcro/ui'
 import { DateFormat } from '../../../../views/DateFormat'
 import { AppStatusPane } from './AppStatusPane'
 import { GithubSettingValues } from '@mcro/models'
+import { GithubService } from '@mcro/services'
 
 const columnSizes = {
   repo: 'flex',
@@ -49,7 +50,7 @@ const columns = {
 class GithubSettingStore {
   props: SettingPaneProps
 
-  allRepos = []
+  service = new GithubService(this.props.setting)
   active = 'status'
   userOrgs = []
   sortOrder = {
@@ -57,31 +58,37 @@ class GithubSettingStore {
     direction: 'up',
   }
 
-  async didMount() {
-    this.allRepos = flatten(
-      await Promise.all(
-        this.orgsList.map(async org => {
-          return await this.service.github
-            .orgs(org)
-            .repos.fetch({ per_page: 100 })
-            .then(res => res.items)
-        }),
-      ),
-    )
-  }
-
   get setting() {
     return this.props.setting
   }
 
-  get service() {
-    return this.props.appsStore.services.github
+  get values() {
+    return this.setting.values as GithubSettingValues
   }
 
   get orgsList() {
     const { allOrgs } = this.service
     return (allOrgs && allOrgs.map(org => org.login)) || []
   }
+
+  allRepos = react(
+    () => this.orgsList,
+    async () => {
+      return flatten(
+        await Promise.all(
+          this.orgsList.map(async org => {
+            return await this.service.github
+              .orgs(org)
+              .repos.fetch({ per_page: 100 })
+              .then(res => res.items)
+          }),
+        ),
+      )
+    },
+    {
+      defaultValue: [],
+    },
+  )
 
   onSortOrder = newOrder => {
     this.sortOrder = newOrder
@@ -128,10 +135,6 @@ class GithubSettingStore {
       defaultValue: [],
     },
   )
-
-  get values() {
-    return this.setting.values as GithubSettingValues
-  }
 
   onSync = fullName => async e => {
     this.setting.values = {

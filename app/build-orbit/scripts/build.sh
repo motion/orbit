@@ -57,7 +57,6 @@ function publish-packages() {
     npx lerna exec \
       --ignore "orbit" \
       --ignore "@mcro/orbit" \
-      --ignore "@mcro/cosal" \
       --ignore "@mcro/playground" \
       --ignore "@mcro/site" \
       --ignore "@mcro/oauth-server" \

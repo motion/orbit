@@ -10,5 +10,8 @@
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4343"
   }
 }

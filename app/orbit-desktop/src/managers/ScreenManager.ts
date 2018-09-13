@@ -193,7 +193,7 @@ export class ScreenManager {
     this.oracle.onInfo(info => {
       if (info.appId) {
         // avoid setting our own this is just used for defocusing us
-        if (/^(orbit|Electron)$/i.test(this.lastAppName)) {
+        if (/^(orbit|electron)$/i.test(info.appId)) {
           return
         }
         this.lastAppName = info.appId

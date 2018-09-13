@@ -81,7 +81,7 @@ const allStreams = [
     query: findManyType('jira'),
   },
   {
-    id: '6',
+    id: '7',
     source: 'app1',
     name: 'Test App',
     model: BitModel,
@@ -93,7 +93,7 @@ const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? 'transparent' : 'transparent',
 })
 
-const getItemStyle = (isDragging, { left, top, ...draggableStyle }, index) => ({
+const getItemStyle = (isDragging, { left, top, ...draggableStyle }) => ({
   cursor: 'default',
   // some basic styles to make the items look a bit nicer
   userSelect: 'none',
@@ -133,7 +133,7 @@ class OrbitHomeStore {
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of order) {
-        if (!streams[id]) {
+        if (!streams[id] || streams[id].values.length === 0) {
           continue
         }
         const { values, name } = streams[id]
@@ -153,7 +153,7 @@ class OrbitHomeStore {
     },
   )
 
-  sortOrder = [0, 1, 2, 3, 4, 5, 6]
+  sortOrder = [0, 1, 2, 3, 4, 5, 6, 7]
 
   reorder = (startIndex, endIndex) => {
     const order = [...this.sortOrder]
@@ -226,10 +226,7 @@ export class OrbitHome extends React.Component<Props> {
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
-              >
+              <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                 {/* <SuggestionBarVerticalPad /> */}
                 {results.map(({ id, name, items, startIndex }, index) => {
                   const height = name === 'People' ? 60 : 90

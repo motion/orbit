@@ -221,7 +221,9 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 : () => Actions.open(locationLink)
             }
           >
-            <Text ellipse>{location}</Text>
+            <Text ellipse color={false}>
+              {location}
+            </Text>
           </RoundButtonSmall>
         )}
       </AfterHeader>

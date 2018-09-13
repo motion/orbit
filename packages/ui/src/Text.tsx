@@ -5,9 +5,10 @@ import { InlineBlock } from './blocks/InlineBlock'
 import { Inline } from './blocks/Inline'
 import { highlightText, HighlightOptions } from './helpers/highlightText'
 import { propsToTextSize } from './helpers/propsToTextSize'
-import { Color, alphaColor, CSSPropertySet } from '@mcro/gloss'
+import { alphaColor, CSSPropertySet } from '@mcro/gloss'
 
 export type TextProps = CSSPropertySet & {
+  color?: CSSPropertySet['color'] | false
   editable?: boolean
   autoselect?: boolean
   selectable?: boolean
@@ -19,7 +20,6 @@ export type TextProps = CSSPropertySet & {
   lines?: number
   alpha?: number
   onKeyDown?: Function
-  color?: Color
   opacity?: number
   size?: number
   onClick?: Function
@@ -56,7 +56,7 @@ const TextBlock = view(InlineBlock, {
 })
 
 TextBlock.theme = ({ theme, color, alpha }) => {
-  if (!color && typeof alpha === 'undefined') {
+  if (color === false) {
     return {
       color: 'inherit',
     }

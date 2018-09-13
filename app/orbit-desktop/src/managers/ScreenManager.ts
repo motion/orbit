@@ -173,6 +173,7 @@ export class ScreenManager {
     () => App.orbitState.docked,
     docked => {
       ensure('not docked', !docked)
+      ensure('is focused on main app', typeof Electron.state.focusedAppId !== 'number')
       this.defocusOrbit()
     },
   )
@@ -182,6 +183,7 @@ export class ScreenManager {
     if (!this.lastAppName) {
       return
     }
+    const dev = `${process.env.NODE_ENV === 'development'}`
     const res = await runAppleScript(`
       tell application "System Events"
         set activeApps to name of application processes whose frontmost is true

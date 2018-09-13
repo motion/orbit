@@ -7,7 +7,6 @@ import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { BrowserWindow } from 'electron'
-import { sleep } from '@mcro/black'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -60,7 +59,10 @@ class OrbitWindowStore {
   }
 
   handleBlur = async () => {
-    Electron.sendMessage(App, App.messages.HIDE)
+    // dont blur hide in dev mode...
+    if (process.env.NODE_ENV !== 'development') {
+      Electron.sendMessage(App, App.messages.HIDE)
+    }
   }
 }
 

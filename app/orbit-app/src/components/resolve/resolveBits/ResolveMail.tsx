@@ -30,7 +30,7 @@ export const ResolveMail = ({ bit, children }: BitItemResolverProps) => {
     }
   }
   return children({
-    id: bit.id,
+    id: `${bit.id}`,
     type: 'bit',
     title: bit.title,
     icon: 'gmail',

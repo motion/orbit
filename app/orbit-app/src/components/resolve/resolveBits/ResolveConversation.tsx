@@ -11,10 +11,7 @@ const options = {
   remove_duplicates: false,
 }
 
-const getMessages = (
-  messages: SlackBitDataMessage[],
-  { shownLimit, searchTerm },
-) => {
+const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)
   if (searchTerm) {
     const filtered = res.filter(m => m.text.indexOf(searchTerm) >= 0)
@@ -29,30 +26,29 @@ export const ResolveConversation = (props: BitItemResolverProps) => {
   const { children, bit, shownLimit = 5, isExpanded, searchTerm, hide } = props
   const data = bit.data as SlackBitData
   const content = isExpanded
-    ? (getMessages(data.messages, { searchTerm, shownLimit }).map(
-        (message, index) => {
+    ? (getMessages(data.messages, { searchTerm, shownLimit }).map((message, index) => {
+        for (let person of bit.people) {
+          message.text = message.text.replace(
+            new RegExp(`<@${person.integrationId}>`, 'g'),
+            '@' + person.name,
+          )
+        }
 
-          for (let person of bit.people) {
-            message.text = message.text.replace(new RegExp(`<@${person.integrationId}>`, 'g'), '@' + person.name)
-          }
-
-          return <SlackMessage
+        return (
+          <SlackMessage
             key={index}
             {...props}
             message={message}
             previousMessage={data.messages[index - 1]}
             hide={hide}
           />
-        }
-      ) as any) // todo(nate) please fix type error and remove "as any"
+        )
+      }) as any) // todo(nate) please fix type error and remove "as any"
     : null
-  const title = `${arrford(
-    keywordExtract.extract(bit.body, options).slice(0, 3),
-  ) || ''}`.replace('```', '')
   return children({
-    id: bit.id,
+    id: `${bit.id}`,
     type: 'bit',
-    title,
+    title: bit.title,
     people: bit.people,
     preview: keywordExtract
       .extract(bit.body, options)

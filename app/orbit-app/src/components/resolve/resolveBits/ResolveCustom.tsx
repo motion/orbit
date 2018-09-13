@@ -2,7 +2,7 @@ import { BitItemResolverProps } from '../ResolveBit'
 
 export const ResolveCustom = ({ bit, children }: BitItemResolverProps) =>
   children({
-    id: bit.id,
+    id: `${bit.id}`,
     type: 'bit',
     title: bit.title,
     icon: bit.integration,

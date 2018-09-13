@@ -36,6 +36,9 @@ export class Server {
     this.setupOauthCallback()
     this.app.get('/hello', (_, res) => res.send('hello world'))
 
+    // assets
+    this.app.use('/assets', express.static(Path.join(Config.paths.desktopRoot, 'assets')))
+
     // config
     this.app.get('/config', (_, res) => {
       const config = getGlobalConfig()

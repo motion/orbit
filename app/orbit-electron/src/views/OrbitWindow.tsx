@@ -66,9 +66,9 @@ class OrbitWindowStore {
     () => this.peekAppState.focused,
     peekFocused => {
       if (peekFocused) {
-        this.window.focus()
         Electron.setState({ focusedAppId: 'app' })
         Electron.sendMessage(App, App.messages.SHOW)
+        this.window.focus()
       } else {
         // dont handle defocus here because we swap over to electron on focus...
         // handle it in electron blur

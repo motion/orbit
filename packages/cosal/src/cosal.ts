@@ -6,8 +6,8 @@ export { toCosal } from './toCosal'
 
 let emptyCovar = getCovariance([])
 
-export async function getWordWeights(text: string): Promise<Weight[]> {
+export async function getWordWeights(text: string): Promise<Weight[] | null> {
   emptyCovar = emptyCovar || getCovariance([])
   const cosal = await toCosal(text, emptyCovar)
-  return cosal.pairs
+  return cosal ? cosal.pairs : null
 }

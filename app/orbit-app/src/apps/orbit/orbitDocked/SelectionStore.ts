@@ -232,7 +232,7 @@ export class SelectionStore {
           const movesToNextRow = this.movesToNextRow(Direction.right, curIndex)
           const nextIndex = curIndex + movesToNextRow
           // if were in the last row already, avoid moving
-          if (nextIndex >= maxIndex) {
+          if (nextIndex > maxIndex) {
             return curIndex
           }
           return nextIndex

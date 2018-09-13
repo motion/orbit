@@ -24,8 +24,8 @@ export class MediatorClient {
     })
   }
 
-  async save<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  async save<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     values: SaveOptions<ModelType>
   ): Promise<ModelType> {
 
@@ -35,8 +35,8 @@ export class MediatorClient {
     })
   }
 
-  async remove<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  async remove<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     instance: ModelType
   ): Promise<boolean> {
     return this.options.transport.execute('remove', {
@@ -48,15 +48,15 @@ export class MediatorClient {
   loadOne<ModelType, Args>(
     query: Query<ModelType, Args>,
   ): Promise<ModelType>;
-  loadOne<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  loadOne<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
     }
   ): Promise<ModelType>;
-  loadOne<ModelType, Args>(
-    qm: Query<ModelType, Args>|Model<ModelType, Args>,
+  loadOne<ModelType, Args, CountArgs>(
+    qm: Query<ModelType, Args>|Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
@@ -73,15 +73,15 @@ export class MediatorClient {
   loadMany<ModelType, Args>(
     query: Query<ModelType, Args>,
   ): Promise<ModelType[]>;
-  loadMany<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  loadMany<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
     }
   ): Promise<ModelType[]>;
-  loadMany<ModelType, Args>(
-    qm: Query<ModelType, Args>|Model<ModelType, Args>,
+  loadMany<ModelType, Args, CountArgs>(
+    qm: Query<ModelType, Args>|Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
@@ -105,8 +105,8 @@ export class MediatorClient {
       resolvers?: QueryOptions<ModelType>
     }
   ): Promise<[ModelType[], number]>;
-  loadManyAndCount<ModelType, Args>(
-    qm: Query<ModelType, Args>|Model<ModelType, Args>,
+  loadManyAndCount<ModelType, Args, CountArgs>(
+    qm: Query<ModelType, Args>|Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
@@ -148,15 +148,15 @@ export class MediatorClient {
   observeOne<ModelType, Args>(
     query: Query<ModelType, Args>,
   ): Observable<ModelType>;
-  observeOne<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  observeOne<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
     }
   ): Observable<ModelType>;
-  observeOne<ModelType, Args>(
-    qm: Query<ModelType, Args>|Model<ModelType, Args>,
+  observeOne<ModelType, Args, CountArgs>(
+    qm: Query<ModelType, Args>|Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
@@ -173,15 +173,15 @@ export class MediatorClient {
   observeMany<ModelType, Args>(
     query: Query<ModelType, Args>,
   ): Observable<ModelType[]>;
-  observeMany<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  observeMany<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
     }
   ): Observable<ModelType[]>;
-  observeMany<ModelType, Args>(
-    qm: Query<ModelType, Args>|Model<ModelType, Args>,
+  observeMany<ModelType, Args, CountArgs>(
+    qm: Query<ModelType, Args>|Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
@@ -198,15 +198,15 @@ export class MediatorClient {
   observeManyAndCount<ModelType, Args>(
     query: Query<ModelType, Args>,
   ): Observable<[ModelType[], number]>;
-  observeManyAndCount<ModelType, Args>(
-    model: Model<ModelType, Args>,
+  observeManyAndCount<ModelType, Args, CountArgs>(
+    model: Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
     }
   ): Observable<[ModelType[], number]>;
-  observeManyAndCount<ModelType, Args>(
-    qm: Query<ModelType, Args>|Model<ModelType, Args>,
+  observeManyAndCount<ModelType, Args, CountArgs>(
+    qm: Query<ModelType, Args>|Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
       resolvers?: QueryOptions<ModelType>

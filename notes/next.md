@@ -2,7 +2,6 @@
 
 - app window drag bug and icon bug in prod still
 - design run on the person feed
-- bugfix run 1/2 day
   - lots of movement/focus/unfocus fixes
 - write intro email 2 hours (medium post, nice screenshots + embedded video)
 - lots of performance, interaction, etc

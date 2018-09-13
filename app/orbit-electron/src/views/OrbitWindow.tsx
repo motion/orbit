@@ -46,8 +46,9 @@ class OrbitWindowStore {
   handleOrbitFocus = react(
     () => App.orbitState.docked,
     docked => {
+      const focusedOnAppWindow = typeof Electron.state.focusedAppId === 'number'
+      ensure('is not focused on app window', !focusedOnAppWindow)
       if (!docked) {
-        ensure('is focused on main app', typeof Electron.state.focusedAppId !== 'number')
         Menu.sendActionToFirstResponder('hide:')
       } else {
         app.show()

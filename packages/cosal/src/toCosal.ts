@@ -38,7 +38,7 @@ const getDistance = (word, inverseCovar): number => {
 
 const zeros = range(100).map(() => 0)
 
-export async function toCosal(text, inverseCovar): Promise<Cosal> {
+export async function toCosal(text, inverseCovar): Promise<Cosal | null> {
   const words = toWords(text)
 
   if (words.length === 0) {

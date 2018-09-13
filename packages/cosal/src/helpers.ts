@@ -21,17 +21,15 @@ Object.keys(slang).forEach(word => {
   vectors[word] = vectors[slang[word]]
 })
 
+const baseVector = vectors['hello']
+
 export const getWordVector = memoize(word => {
   word = word
     .replace('.', '')
     .replace(';', '')
     .replace(',', '')
     .toLowerCase()
-  let vector = vectors[word] || vectors['hello']
-  if (!vector.map) {
-    console.log('weird..', vector, word)
-    vector = vectors.hello
-  }
+  const vector = word === 'constructor' ? baseVector : vectors[word] || baseVector
   return vector.map(() => random(-0.15, 0.15))
 })
 

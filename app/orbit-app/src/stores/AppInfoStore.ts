@@ -1,5 +1,5 @@
 import { BitModel, SettingModel, JobModel, Setting } from '@mcro/models'
-import { observeCount, observeOne } from '../repositories'
+import { observeCount, observeOne, loadOne } from '../repositories'
 
 export type AppInfoProps = {
   settingId?: number
@@ -12,7 +12,11 @@ export class AppInfoStore {
   setting = null
   bitsCount = 0
   job = null
-  id = Math.random()
+
+  // todo remove
+  async didMount() {
+    this.setting = await loadOne(SettingModel, { args: { where: { id: this.settingId } } })
+  }
 
   get settingId() {
     return this.props.model ? this.props.model.id : this.props.settingId
@@ -25,7 +29,6 @@ export class AppInfoStore {
       },
     },
   }).subscribe(value => {
-    console.log('va', this.id, value)
     this.setting = value
   })
 

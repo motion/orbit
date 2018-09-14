@@ -1,10 +1,7 @@
-from constants import letters
+from constants import uniqueLetters, letters
 
 import torch.nn as nn
 import torch.nn.functional as F
-
-uniqueLetters = len(set(letters))
-print("uniqueLetters" + str(uniqueLetters))
 
 # output = (W - K + 2P) / S + 1
 # W = input height/length, K = filter size, P is padding, S is stride

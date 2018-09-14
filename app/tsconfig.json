@@ -21,6 +21,7 @@
     { "path": "../packages/r2" },
     { "path": "../packages/router" },
     { "path": "../packages/slackdown" },
-    { "path": "../packages/build" }
+    { "path": "../packages/build" },
+    { "path": "../packages/cosal" }
   ]
 }

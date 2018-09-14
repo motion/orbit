@@ -13,7 +13,7 @@ class SocketBridge {
   var send: ((String)->Void) = { _ in print("not opened") }
   var onMessage: (String)->Void
   
-  init(onMessage: @escaping (String)->Void) {
+  init(queue: AsyncGroup, onMessage: @escaping (String)->Void) {
     self.onMessage = onMessage
 
     // socket bridge
@@ -36,7 +36,7 @@ class SocketBridge {
     ws.event.error = { error in
       print("screen.ws.error \(error)")
     }
-    DispatchQueue.global(qos: .background).async {
+    queue.background {
       ws.event.message = { (message) in
         if let text = message as? String {
           self.onMessage(text)

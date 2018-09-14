@@ -12,11 +12,7 @@ const options = {
   remove_duplicates: false,
 }
 
-const BitGithubTaskComment = ({
-  comment,
-}: {
-  comment: GithubBitDataComment
-}) => {
+const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) => {
   const {
     author: { avatarUrl, login },
     createdAt,
@@ -43,9 +39,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
   if (comments) {
     commentComponents = comments
       .slice(0, shownLimit)
-      .map((comment, index) => (
-        <BitGithubTaskComment key={index} comment={comment} />
-      ))
+      .map((comment, index) => <BitGithubTaskComment key={index} comment={comment} />)
   }
   return {
     content: <Markdown source={body} />,
@@ -53,17 +47,12 @@ const parseGithubContents = ({ bit, shownLimit }) => {
   }
 }
 
-export const ResolveTask = ({
-  bit,
-  children,
-  isExpanded,
-  shownLimit,
-}: BitItemResolverProps) => {
+export const ResolveTask = ({ bit, children, isExpanded, shownLimit }: BitItemResolverProps) => {
   const { content, comments } = isExpanded
     ? parseGithubContents({ bit, shownLimit })
     : { content: null, comments: null }
   return children({
-    id: bit.id,
+    id: `${bit.id}`,
     type: 'bit',
     title: bit.title,
     icon: 'github',

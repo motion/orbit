@@ -97,7 +97,7 @@ export class Root {
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    // await this.startSyncers()
+    await this.startSyncers()
 
     this.oracle = new Oracle(oracleOptions)
 
@@ -120,7 +120,7 @@ export class Root {
   }
 
   restart = () => {
-    require('touch')(Path.join(__dirname, '..', 'package.json'))
+    require('touch')(Path.join(__dirname, '..', '_', 'main.js'))
   }
 
   dispose = async () => {

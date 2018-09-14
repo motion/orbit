@@ -1,4 +1,4 @@
-const Oracle = require('../_/oracle').default
+const { Oracle } = require('../_/oracle')
 const Fs = require('fs')
 const Path = require('path')
 const execa = require('execa')
@@ -46,7 +46,7 @@ const settings = {
 }
 
 async function test() {
-  const oracle = new Oracle({ debugBuild: debug })
+  const oracle = new Oracle({ debugBuild: debug, ocr: true })
   await oracle.start()
 
   if (scroll) {
@@ -70,7 +70,6 @@ async function test() {
     if (debug) {
       console.log('now stop')
       await oracle.stop()
-      await execa('open', ['./tmp'])
       process.exit(0)
     }
   })

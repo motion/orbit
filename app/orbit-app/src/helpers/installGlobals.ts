@@ -13,6 +13,7 @@ import { LoggerSettings } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { Actions } from '../actions/Actions'
 import { stringify } from '@mcro/helpers'
+import { SettingModel, BitModel, PersonBitModel } from '@mcro/models'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -54,4 +55,8 @@ window['Actions'] = Actions
 // make the various model/repositories global
 for (const repo in Repositories) {
   window[repo] = Repositories[repo]
+}
+const models = { SettingModel, BitModel, PersonBitModel }
+for (const name in models) {
+  window[name] = models[name]
 }

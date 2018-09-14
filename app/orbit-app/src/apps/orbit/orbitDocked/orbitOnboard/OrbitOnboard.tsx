@@ -292,7 +292,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
               </Text>
               <VerticalSpace />
               <Text size={1.5} alpha={0.5} width="80%">
-                Now, lets set you up...
+                Lets set you up...
               </Text>
             </Centered>
           )}

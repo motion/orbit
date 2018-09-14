@@ -7,7 +7,7 @@ from constants import model_path, letters, ocr_path
 from torch.autograd import Variable
 import csv
 
-print("hi mom")
+print("hi from pyocr")
 
 # Load the protocol from Objective-C
 BridgeInterface = objc.protocolNamed("orbit.OCRInterface")
@@ -21,6 +21,7 @@ class Bridge(NSObject, protocols=[BridgeInterface]):
         return Bridge.alloc().init()
 
     def ocrCharacters(self):
+        print("running ocr from python")
         file = open('/tmp/characters.txt', 'r')
         print("got file")
         tensors = []

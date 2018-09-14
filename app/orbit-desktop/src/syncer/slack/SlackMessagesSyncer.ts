@@ -96,12 +96,14 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
         log.verbose(`created ${conversations.length} conversations`, conversations)
 
         // create bits from conversations
+        const savedConversations = await Promise.all(conversations.map(messages => this.bitFactory.create(
+          channel,
+          messages,
+          allPeople,
+        )))
+
         apiBits.push(
-          ...conversations.map(messages => this.bitFactory.create(
-            channel,
-            messages,
-            allPeople,
-          )),
+          ...savedConversations,
         )
 
         // update last message sync setting

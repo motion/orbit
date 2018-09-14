@@ -560,7 +560,8 @@ li {
 }
 
 .paragraph code,
-p code {
+p code,
+li code {
   display: inline-block;
   padding: 0;
 }

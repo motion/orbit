@@ -39,7 +39,7 @@ export type TextProps = CSSPropertySet & {
   children: React.ReactNode | ((Highlights) => React.ReactNode)
 }
 
-const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: ` ${props.children} ` }} />
+const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
 const TextBlock = view(InlineBlock, {
   userSelect: 'none',
@@ -243,7 +243,11 @@ export class Text extends React.Component<TextProps> {
           children: children.map((child, index) => {
             if (typeof child === 'string') {
               return (
-                <HTMLBlock key={index}>{highlightText({ text: child, ...highlight })}</HTMLBlock>
+                <HTMLBlock key={index}>
+                  {`${index > 0 ? ' ' : ''}${highlightText({ text: child, ...highlight })}${
+                    index === children.length - 1 ? ' ' : ''
+                  }`}
+                </HTMLBlock>
               )
             } else {
               return child

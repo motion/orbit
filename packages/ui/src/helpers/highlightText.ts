@@ -123,13 +123,10 @@ export const highlightText = (options: HighlightOptions) => {
       final.push(part)
     }
   }
-  let stringResult = final
-    .join('')
-    .trim()
-    .replace(splitChar, separator)
+  let stringResult = final.join('').replace(splitChar, separator)
   if (stringResult.length) {
-    return stringResult
+    return stringResult.trim()
   }
   // no result, do a simple cutoff
-  return cutoff(text, maxChars)
+  return cutoff(text, maxChars).trim()
 }

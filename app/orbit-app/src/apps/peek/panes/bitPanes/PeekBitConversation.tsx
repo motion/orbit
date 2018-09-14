@@ -44,7 +44,7 @@ const SlackConversation = view({
 })
 
 const Unpad = view({
-  margin: [0, -15],
+  margin: -15,
 })
 
 const decorator = compose(
@@ -74,8 +74,8 @@ export const Conversation = decorator(({ store, content }: Props) => {
           <Divider />
         </React.Fragment>
       ))}
-      <br />
-      <br />
+      <VerticalSpace />
+      <VerticalSpace />
     </SlackConversation>
   )
 })

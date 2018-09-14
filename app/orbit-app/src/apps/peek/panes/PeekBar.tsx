@@ -6,7 +6,7 @@ import { Row, Text } from '@mcro/ui'
 export const PeekBar = view({
   margin: 5,
   borderRadius: 7,
-  padding: [2, 4],
+  padding: [0, 4],
   position: 'absolute',
   bottom: 0,
   left: 0,
@@ -15,11 +15,12 @@ export const PeekBar = view({
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
+  boxShadow: [[0, 0, 20, [0, 0, 0, 0.075]]],
   // backdropFilter: 'blur(10px)',
 })
 
 PeekBar.theme = ({ theme }) => ({
-  background: theme.background.alpha(0.9),
+  background: theme.background.alpha(0.98),
   border: [1, theme.borderColor],
 })
 

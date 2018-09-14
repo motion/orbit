@@ -57,9 +57,7 @@ class OrbitAppsStore {
     () => [this.isActive, this.filteredActiveApps],
     ([isActive]) => {
       ensure('is active', isActive)
-      this.props.selectionStore.setResults([
-        { type: 'column', items: this.filteredActiveApps },
-      ])
+      this.props.selectionStore.setResults([{ type: 'column', items: this.filteredActiveApps }])
     },
   )
 
@@ -85,12 +83,8 @@ class OrbitAppsStore {
   private get allAvailableApps() {
     // sort by not used first
     return settingsList.sort((a, b) => {
-      return !this.hasIntegration(a.id) && this.hasIntegration(b.id) ? -1 : 1
+      return a.id.localeCompare(b.id)
     })
-  }
-
-  private hasIntegration = (type: IntegrationType) => {
-    return !!this.integrations.find(setting => setting.type === type)
   }
 }
 

@@ -32,9 +32,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
       console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
-    const person = (bit.people || []).find(
-      person => person.integrationId === message.user,
-    )
+    const person = (bit.people || []).find(person => person.integrationId === message.user)
     let previousBySameAuthor = false
     let previousWithinOneMinute = false
     if (previousMessage) {
@@ -45,15 +43,8 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
     return (
       <SlackMessageFrame {...decoration.item}>
         {!hideHeader && (
-          <UI.Row
-            flexFlow="row"
-            alignItems="center"
-            userSelect="none"
-            cursor="default"
-          >
-            {!!person && (
-              <RoundButtonPerson background="transparent" person={person} />
-            )}
+          <UI.Row flexFlow="row" alignItems="center" userSelect="none" cursor="default">
+            {!!person && <RoundButtonPerson background="transparent" person={person} />}
             <div style={{ width: 6 }} />
             {!(hide && hide.itemDate) &&
               (!previousMessage || !previousWithinOneMinute) && (

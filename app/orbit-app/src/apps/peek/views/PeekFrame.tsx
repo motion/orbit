@@ -56,7 +56,6 @@ class PeekFrameStore {
   )
 
   handleResize = (_, { size }) => {
-    Actions.tearPeek()
     this.size = [size.width, size.height]
   }
 
@@ -65,6 +64,9 @@ class PeekFrameStore {
     async (size, { sleep }) => {
       await sleep(100)
       setAppState({ size })
+      if (this.props.peekStore.isPeek) {
+        Actions.tearPeek()
+      }
     },
   )
 }

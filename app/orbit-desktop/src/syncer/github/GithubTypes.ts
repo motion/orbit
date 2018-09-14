@@ -29,9 +29,27 @@ export type GithubIssue = {
   bodyText: string
   createdAt: string
   updatedAt: string
+  closed: boolean
   author: GithubPerson
+  assignees: {
+    edges: {
+      node: GithubPerson
+    }[]
+  }
+  participants: {
+    edges: {
+      node: GithubPerson
+    }[]
+  }
   labels: {
-    edges: { node: { name: string } }[]
+    edges: {
+      node: {
+        name: string
+        description: string
+        color: string
+        url: string
+      }
+    }[]
   }
   url: string
   repository: {

@@ -31,7 +31,7 @@ export const AtlassianSettingSaveResolver = resolveCommand(AtlassianSettingSaveC
     return { success: true }
 
   } catch (error) {
-    log.info(`error during atlassian setting save`, error)
+    log.error(`error during atlassian setting save`, error)
     return { success: false, error: error.message }
   }
 })

@@ -1,6 +1,5 @@
 import { Logger } from '@mcro/logger'
 import { Person, SlackBitData, SlackPersonData, SlackSettingValues } from '@mcro/models'
-import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
@@ -19,16 +18,13 @@ export class SlackPersonFactory {
   /**
    * Creates a single integration person from given Slack user.
    */
-  create(user: SlackUser, people: Person[]): Person {
+  create(user: SlackUser): Person {
 
     const id = CommonUtils.hash(`slack-${this.setting.id}-${user.id}`)
-    const person = people.find(person => person.id === id)
-    const data: SlackPersonData = {
-      tz: user.tz
-    }
+    const data: SlackPersonData = { tz: user.tz }
     const values = this.setting.values as SlackSettingValues
 
-    return Object.assign(person || new PersonEntity(), PersonUtils.create({
+    return PersonUtils.create({
       id,
       setting: this.setting,
       integration: 'slack',
@@ -40,7 +36,7 @@ export class SlackPersonFactory {
       desktopLink: `slack://user?team=${values.oauth.info.team.id}&id=${user.id}`,
       email: user.profile.email,
       photo: user.profile.image_512,
-    }))
+    })
   }
 
 }

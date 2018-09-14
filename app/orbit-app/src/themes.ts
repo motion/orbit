@@ -76,11 +76,11 @@ const macModernTheme = Theme.colorize({
 
   // sub-themes go into their own objects so they can be narrowed into
   titleBar: {
-    tabBackgroundActive: 'linear-gradient(#D5D5D5, #CBCBCC)',
-    tabBackground: 'linear-gradient(#BFBFBF, #B1B1B1)',
-    tabBackgroundHover: 'linear-gradient(#B1B1B1, #A1A1A1)',
+    tabBackgroundActive: '#ECECEC',
+    tabBackground: '#dfdfdf',
+    tabBackgroundHover: '#ddd',
     background: '#ECECEC',
-    backgroundBottom: '#dcdbdc',
+    backgroundBottom: '#ECECEC',
     backgroundBlur: '#f6f6f6',
     borderColor: '#c1c0c2',
     borderBottomColor: '#B2B2B3',

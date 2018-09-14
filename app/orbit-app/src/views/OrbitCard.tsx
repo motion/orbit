@@ -69,8 +69,7 @@ Card.theme = ({
     ...card,
     padding,
     borderRadius: borderRadius || 7,
-    background:
-      background || theme.cardBackground || theme.background.alpha(0.9),
+    background: background || theme.cardBackground || theme.background.alpha(0.9),
     ...theme.card,
   }
   if (!isSelected) {
@@ -106,7 +105,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, 0, 2],
+  padding: [0, 0, 3],
 })
 
 const Preview = view({
@@ -141,16 +140,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
   }
 
   getOrbitCard = (contentProps: ResolvedItem) => {
-    const {
-      createdAt,
-      icon,
-      location,
-      people,
-      preview,
-      subtitle,
-      title,
-      updatedAt,
-    } = contentProps
+    const { icon, location, people, preview, subtitle, title, updatedAt } = contentProps
     const {
       afterTitle,
       borderRadius,
@@ -231,9 +221,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             <Title>
               <HighlightText
                 fontSize={14}
-                sizeLineHeight={0.8}
+                sizeLineHeight={0.78}
                 ellipse={hasSubtitle && hasMeta ? true : 2}
-                fontWeight={500}
+                fontWeight={600}
                 maxWidth="calc(100% - 30px)"
                 {...titleProps}
               >
@@ -256,9 +246,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               {!!location && (
                 <RoundButtonSmall
                   marginLeft={-3}
-                  onClick={
-                    onClickLocation ? () => Actions.open(onClickLocation) : null
-                  }
+                  onClick={onClickLocation ? () => Actions.open(onClickLocation) : null}
                 >
                   {location}
                 </RoundButtonSmall>
@@ -278,11 +266,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             <Preview>
               {typeof preview !== 'string' && preview}
               {typeof preview === 'string' && (
-                <UI.Text
-                  size={1.3}
-                  sizeLineHeight={0.9}
-                  margin={inGrid ? ['auto', 0] : 0}
-                >
+                <UI.Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
                   {preview}
                 </UI.Text>
               )}

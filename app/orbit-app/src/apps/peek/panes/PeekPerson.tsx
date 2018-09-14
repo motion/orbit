@@ -49,13 +49,7 @@ const mapW = 700
 const mapH = 200
 
 const StrongSubTitle = props => (
-  <SubTitle
-    padding={[0, 10]}
-    fontWeight={500}
-    fontSize={16}
-    alpha={0.8}
-    {...props}
-  />
+  <SubTitle padding={[0, 10]} fontWeight={700} fontSize={16} alpha={0.8} {...props} />
 )
 
 const Frame = view({
@@ -170,10 +164,7 @@ const Links = view({
 })
 
 const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
-  <RoundButton
-    icon={<OrbitIcon icon={icon} preventAdjust size={size} />}
-    {...props}
-  >
+  <RoundButton icon={<OrbitIcon icon={icon} preventAdjust size={size} />} {...props}>
     {children}
   </RoundButton>
 )
@@ -183,9 +174,7 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
   store: PeekPersonStore,
 })
 @view
-export class PeekPerson extends React.Component<
-  Props & { store: PeekPersonStore }
-> {
+export class PeekPerson extends React.Component<Props & { store: PeekPersonStore }> {
   render() {
     const { appsStore, model, children, store } = this.props
     const person = model as PersonBit
@@ -221,18 +210,14 @@ export class PeekPerson extends React.Component<
                 <IntegrationButton
                   icon="zoom"
                   size={12}
-                  onClick={() =>
-                    App.setState({ query: `${person.name} documents` })
-                  }
+                  onClick={() => App.setState({ query: `${person.name} documents` })}
                 >
                   Documents
                 </IntegrationButton>
                 <IntegrationButton
                   icon="zoom"
                   size={12}
-                  onClick={() =>
-                    App.setState({ query: `${person.name} tasks` })
-                  }
+                  onClick={() => App.setState({ query: `${person.name} tasks` })}
                 >
                   Tasks
                 </IntegrationButton>

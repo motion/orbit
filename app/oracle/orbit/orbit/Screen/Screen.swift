@@ -57,7 +57,7 @@ final class Screen: NSObject {
   var ignoreNextScan = false
   var shouldCancel = false
   var shouldRunNextTime = false
-
+  
   var emit: (String)->Void
   var queue: AsyncGroup
   var isCleared = [Int: Bool]()
@@ -76,32 +76,16 @@ final class Screen: NSObject {
   var displayId: CGDirectDisplayID
   let components = ConnectedComponentsSwiftOCR()
   var characters: Characters?
-  var ocr: OCRInterface?
   var changeHandle: AsyncBlock<Void, ()>?
   var onStart: (() -> Void)?
   var onFinish: (() -> Void)?
   var onError: ((Error) -> Void)?
+  var inPipe: Pipe
+  var outFile: URL
 
   private let simpleDebugImages = ProcessInfo.processInfo.environment["DEBUG_IMAGES"] == "true"
 
   init(emit: @escaping (String)->Void, queue: AsyncGroup, displayId: CGDirectDisplayID = CGMainDisplayID()) throws {
-    // load python ocr
-    if let path = Bundle.main.path(forResource: "Bridge", ofType: "plugin") {
-      guard let pluginbundle = Bundle(path: path) else {
-        fatalError("Could not load python plugin bundle")
-      }
-      pluginbundle.load()
-      guard let pc = pluginbundle.principalClass as? OCRInterface.Type else {
-        fatalError("Could not load principal class from python bundle")
-      }
-      let interface = pc.createInstance()
-      Bridge.setSharedInstance(to: interface)
-      self.ocr = Bridge.sharedInstance()
-    } else {
-      print("no bundle meh")
-      exit(0)
-    }
-
     self.emit = emit
     self.queue = queue
 
@@ -124,8 +108,38 @@ final class Screen: NSObject {
     self.boxes = [Int: Box]()
     self.lastBoxes = [Int: [UInt8]]()
     self.originalBoxes = [Int: [UInt8]]()
+    self.inPipe = Pipe()
+    
+    // ocr outfile
+    guard let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else {
+      print("err ocr file path")
+      exit(1)
+    }
+    guard let writePath = NSURL(fileURLWithPath: path).appendingPathComponent("OCR") else {
+      print("err ocr write path")
+      exit(1)
+    }
+    try? FileManager.default.createDirectory(atPath: writePath.path, withIntermediateDirectories: true)
+    self.outFile = writePath.appendingPathComponent("out.txt")
 
     super.init()
+    
+    // setup ocr process/file
+    if let path = Bundle.main.path(forResource: "run/run", ofType: nil) {
+      print("got python path \(path)")
+      let task = Process()
+      task.launchPath = path
+      task.arguments = []
+      task.standardInput = inPipe
+      let outPath = self.outFile.absoluteString.replacingOccurrences(of: "file://", with: "")
+      print("outPath \(outPath)")
+      task.environment = [ "OUTFILE": outPath ]
+      task.launch()
+      print("dun")
+    } else {
+      print("no python path!")
+      exit(1)
+    }
 
     // setup recorder
     output.alwaysDiscardsLateVideoFrames = true
@@ -144,6 +158,30 @@ final class Screen: NSObject {
     } else {
       throw ApertureError.couldNotAddOutput
     }
+  }
+
+  func ocrCharacters() -> [String] {
+    do {
+      try "".write(to: self.outFile, atomically: false, encoding: .utf8)
+      self.inPipe.fileHandleForWriting.write("x\n".data(using: .utf8)!)
+      var out: String
+      while(true) {
+        sleep(1 / 5)
+        out = try String(contentsOf: self.outFile, encoding: .utf8)
+        if (out.count > 0) {
+          let data = out.data(using: .utf8)!
+          if let jsonArray = try JSONSerialization.jsonObject(with: data, options : .allowFragments) as? [String] {
+            return jsonArray
+          } else {
+            print("no bueno")
+            return []
+          }
+        }
+      }
+    } catch {
+      print("errrrrrrrrrr")
+    }
+    return []
   }
 
   func start() {
@@ -286,7 +324,7 @@ final class Screen: NSObject {
       try ocrString.write(to: NSURL.fileURL(withPath: "/tmp/characters.txt").absoluteURL, atomically: true, encoding: .utf8)
       debug("getOCR - characters.txt")
       // run ocr
-      foundCharacters = ocr!.ocrCharacters()
+      foundCharacters = ocrCharacters()
     }
     // collect ocr results
     if foundCharacters.count != unsolvedCharacters.count {
@@ -296,7 +334,7 @@ final class Screen: NSObject {
     for (index, char) in unsolvedCharacters.enumerated() {
       ocrResults[char.outline] = foundCharacters[index]
     }
-    debug("getOCR - \(unsolvedCharacters.count) uniq / \(allCharacters.count), \(allCharacters.map({ return $0.completedOutline ? 0 : 1 }).reduce(0, +)) exhaust")
+    debug("getOCR done :) - \(unsolvedCharacters.count) uniq / \(allCharacters.count), \(allCharacters.map({ return $0.completedOutline ? 0 : 1 }).reduce(0, +)) exhaust")
     return ocrResults
   }
 

@@ -1,4 +1,4 @@
-from constants import uniqueLetters
+from constants import uniqueLetters, letters
 
 import torch.nn as nn
 import torch.nn.functional as F

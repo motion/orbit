@@ -3,6 +3,10 @@
 pip3 install -U torch
 pip3 install -U csv
 pip3 install -U numpy
-pip3 install -U onnx
+pip3 install -U pyinstaller
 
-python3 bridge.py py2app -A
+# build
+rm -r dist/run || true
+pyinstaller src/run.py
+cp src/model.pyt dist/run
+

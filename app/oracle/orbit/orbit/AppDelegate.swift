@@ -220,7 +220,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func onMessage(_ text: String) {
-    print("Swift.onMessage \(text)")
+//    print("Swift.onMessage \(text)")
     if text.count < 4 {
       print("weird text")
       return

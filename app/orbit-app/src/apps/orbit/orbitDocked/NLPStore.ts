@@ -64,7 +64,7 @@ export class NLPStore /* extends Store */ {
   updateUsers = react(
     () => this.peopleNames,
     async (names, { sleep }) => {
-      ensure('has names', !!names)
+      ensure('names', !!names)
       await sleep(200) // debounce
       setUserNames(names.slice()) // ensure js
     },

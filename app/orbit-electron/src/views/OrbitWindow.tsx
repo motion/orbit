@@ -34,7 +34,7 @@ class OrbitWindowStore {
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
       ensure('did move', !!moved)
-      ensure('has window', !!this.window)
+      ensure('window', !!this.window)
       // wait for move to finish
       await sleep(150)
       // wait for showing

@@ -92,6 +92,9 @@ const Item = view({
   '&:hover': {
     background: [0, 0, 0, 0.05],
   },
+  '&:active': {
+    opacity: 0.8,
+  },
 })
 
 Item.theme = ({ theme }) => ({

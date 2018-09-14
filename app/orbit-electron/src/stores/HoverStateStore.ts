@@ -46,7 +46,7 @@ export class HoverStateStore {
   updateHoverStateOnResize = react(
     () => App.orbitState.size,
     () => {
-      ensure('has last mouse pos', !!this.lastMousePos)
+      ensure('last mouse pos', !!this.lastMousePos)
       this.handleMousePosition(this.lastMousePos)
     },
   )

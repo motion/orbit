@@ -6,7 +6,7 @@ const MIN_Y = 60
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const BOTTOM_PAD = 40
-const NUDGE_AMT = 25
+const NUDGE_AMT = 40
 
 const screenSize = () => [window.innerWidth, window.innerHeight]
 
@@ -23,7 +23,7 @@ type Position = {
   height: number
 }
 
-const sizes = [[430, 280], [430, 380], [480, 440]]
+const sizes = [[480, 300], [480, 380], [520, 480], [520, 500], [520, 560]]
 
 // dynamic peek size
 // always slightly taller than wide
@@ -35,14 +35,17 @@ const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
     preferred = config.dimensions
   } else {
     if (config.contentSize) {
-      const index = Math.min(sizes.length, Math.max(0, Math.round(config.contentSize / 100 - 0.5)))
+      const index = Math.min(
+        sizes.length - 1,
+        Math.max(0, Math.round(config.contentSize / 50 - 0.5)),
+      )
       preferred = sizes[index]
     } else {
       preferred = [screenWidth / 3.25, screenWidth / 2.75]
     }
   }
   const max = [930, 920]
-  const min = [430, 280] // pretty cute small window
+  const min = [480, 300] // pretty cute small window
   return preferred
     .map((z, i) => Math.min(z, max[i]))
     .map((z, i) => Math.max(z, min[i]))

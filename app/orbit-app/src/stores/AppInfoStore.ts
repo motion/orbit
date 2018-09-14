@@ -15,6 +15,7 @@ export class AppInfoStore {
 
   // todo remove
   async didMount() {
+    console.log(loadOne(SettingModel, { args: { where: { id: this.settingId } } }))
     this.setting = await loadOne(SettingModel, { args: { where: { id: this.settingId } } })
   }
 

@@ -72,8 +72,7 @@ const OrbitCardContent = view({
 })
 
 const SearchResultText = props => <UI.Text wordBreak="break-all" fontWeight={400} {...props} />
-
-const collapseWhitespace = str => str.replace(/\n[\s]*/g, ' ⏎ ')
+const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ⏎ ') : str)
 
 @view
 class OrbitSearchResultsList extends React.Component<Props> {

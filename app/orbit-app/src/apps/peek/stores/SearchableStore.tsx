@@ -16,7 +16,7 @@ export class SearchableStore {
     async (index, { sleep }) => {
       ensure('index number', index === 'number')
       const frame = this.contentFrame.current
-      ensure('has frame', !!frame)
+      ensure('frame', !!frame)
       await sleep(150)
       const activeHighlight = this.highlights[index]
       ensure('active highlight', !!activeHighlight)

@@ -78,7 +78,7 @@ class OrbitSettingsStore {
   settingSetup = react(
     () => this.generalSetting,
     setting => {
-      ensure('has setting', !!setting)
+      ensure('setting', !!setting)
       // TODO: this query is returning a Job for some reason... @umed
       ensure('setting values', !!setting.values)
       App.setState({ darkTheme: setting.values.darkTheme })

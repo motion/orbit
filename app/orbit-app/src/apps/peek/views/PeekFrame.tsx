@@ -50,15 +50,21 @@ class PeekFrameStore {
   updateSizeFromAppState = react(
     () => this.props.peekStore.appState.size,
     size => {
-      ensure('has size', !!size)
+      ensure('size', !!size)
       this.size = size
     },
   )
 
   handleResize = (_, { size }) => {
-    Actions.tearPeek()
     this.size = [size.width, size.height]
+    this.tearOnFinishResize()
   }
+
+  tearOnFinishResize = debounce(() => {
+    if (this.props.peekStore.isPeek) {
+      Actions.tearPeek()
+    }
+  }, 100)
 
   deferredSetAppState = react(
     () => this.size,

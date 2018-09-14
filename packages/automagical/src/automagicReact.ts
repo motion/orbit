@@ -24,7 +24,7 @@ const diffLog = (a, b) => {
     return ['\n        new value:', b]
   }
   // object
-  const diff = omitBy(a, (v, k) => b[k] === v)
+  const diff = omitBy(a, (v, k) => isEqual(b[k], v))
   if (Object.keys(diff).length) {
     return ['\n        diff:', diff]
   }

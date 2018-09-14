@@ -6,6 +6,7 @@ import { allServices } from '../stores/helpers/appStoreHelpers'
 
 export class AppsStore {
   appsList: Setting[] = []
+
   private appsList$ = observeMany(SettingModel, {
     args: {
       where: {
@@ -19,7 +20,7 @@ export class AppsStore {
   services = react(
     () => this.appsList,
     settings => {
-      ensure('has settings', !!settings)
+      ensure('settings', !!settings)
       const services = {}
       for (const setting of settings) {
         const { type } = setting

@@ -1,9 +1,5 @@
 import { view } from '@mcro/black'
-import {
-  Setting,
-  SettingForceSyncCommand,
-  SettingRemoveCommand,
-} from '@mcro/models'
+import { Setting, SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
@@ -18,6 +14,7 @@ import { TitleBarButton } from '../views/TitleBarButton'
 import { TitleBarSpace } from '../views/TitleBarSpace'
 import { Actions } from '../../../actions/Actions'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
+import { NICE_INTEGRATION_NAMES } from '../../../constants'
 
 type Props = PeekPaneProps & {
   store?: AppInfoStore
@@ -25,9 +22,7 @@ type Props = PeekPaneProps & {
   setting: Setting
 }
 
-const EmptyPane = ({ setting }) => (
-  <div>no setting {JSON.stringify(setting)} pane</div>
-)
+const EmptyPane = ({ setting }) => <div>no setting {JSON.stringify(setting)} pane</div>
 
 const statusIcons = {
   PENDING: { name: 'check', color: '#999' },
@@ -54,7 +49,7 @@ class SettingContent extends React.Component<Props> {
       showConfirmDialog({
         title: 'Remove integration?',
         message: `Are you sure you want to remove ${capitalize(
-          store.setting.type,
+          NICE_INTEGRATION_NAMES[store.setting.id],
         )}?`,
       })
     ) {
@@ -73,8 +68,7 @@ class SettingContent extends React.Component<Props> {
       return children({})
     }
     const integration = setting.type
-    const SettingPane =
-      SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
+    const SettingPane = SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
       <SettingPane appsStore={appsStore} setting={setting}>
         {({ belowHead, content }) => {
@@ -93,9 +87,7 @@ class SettingContent extends React.Component<Props> {
                     <RoundButton
                       icon={icon.name}
                       iconProps={icon}
-                      tooltip={
-                        <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-                      }
+                      tooltip={<TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>}
                     >
                       Last run
                     </RoundButton>
@@ -114,11 +106,7 @@ class SettingContent extends React.Component<Props> {
                     tooltip="Remove integration"
                     onClick={this.removeIntegration}
                   />
-                  <TitleBarButton
-                    tooltip="Sync"
-                    icon="refresh"
-                    onClick={this.handleRefresh}
-                  />
+                  <TitleBarButton tooltip="Sync" icon="refresh" onClick={this.handleRefresh} />
                 </UI.ListRow>
               </>
             ),

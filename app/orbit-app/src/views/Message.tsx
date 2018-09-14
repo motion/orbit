@@ -1,7 +1,8 @@
 import { view } from '@mcro/black'
+import { View } from '@mcro/ui'
 
 // @ts-ignore
-export const Message = view('p', {
+export const Message = view(View, {
   fontSize: 16,
   lineHeight: '1.4rem',
   cursor: 'text',
@@ -16,9 +17,12 @@ export const Message = view('p', {
   margin: [0, 0, 20],
   color: '#666',
 })
+Message.defaultProps = {
+  tagName: 'p',
+}
 
 // @ts-ignore
-export const MessageDark = view('div', {
+export const MessageDark = view(View, {
   fontSize: 16,
   lineHeight: '1.3rem',
   cursor: 'text',

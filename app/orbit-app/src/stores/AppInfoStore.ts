@@ -29,7 +29,9 @@ export class AppInfoStore {
       },
     },
   }).subscribe(value => {
-    this.setting = value
+    if (value) {
+      this.setting = value
+    }
   })
 
   private bitsCounts$ = observeCount(BitModel, {

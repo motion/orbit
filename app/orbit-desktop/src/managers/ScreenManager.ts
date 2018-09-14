@@ -65,15 +65,13 @@ export class ScreenManager {
 
     // poll for now for space moves...
     const listener = setInterval(() => {
-      // check for new space
       this.oracle.socketSend('space')
     }, 400)
     on(this, listener)
 
     // poll for now for updated transparency setting...
     const listener2 = setInterval(() => {
-      // check for new space
-      this.oracle.socketSend('star')
+      this.oracle.socketSend('osin')
     }, 1000 * 10)
     on(this, listener2)
 

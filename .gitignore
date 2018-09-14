@@ -44,6 +44,8 @@ app/apps-website/site/build
 # for now keep build orbit.app, its about 14mb
 !app/oracle/orbit/Build/Products/Release/orbit.app
 !app/oracle/orbit/Build/Products/Release/orbit.app/*
+# but ignore huge ocr binary for now until coreml
+app/oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources/run
 
 packages/screendump/build
 

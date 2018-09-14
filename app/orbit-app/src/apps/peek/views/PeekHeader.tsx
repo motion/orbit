@@ -9,7 +9,6 @@ import { PeekContents } from '../PeekPaneProps'
 import { TitleBar } from './TitleBar'
 import { CSSPropertySet } from '@mcro/gloss'
 import { Glint } from '@mcro/ui'
-import { ControlButton } from '../../../views/ControlButton'
 
 type Props = PeekContents & {
   peekStore?: PeekStore
@@ -70,18 +69,10 @@ const textify = thing => {
 }
 
 const SubTitle = ({ children, before, after }) => (
-  <UI.Row
-    position="relative"
-    padding={[0, 6]}
-    alignItems="center"
-    flex={1}
-    zIndex={1}
-  >
+  <UI.Row position="relative" padding={[0, 6]} alignItems="center" flex={1} zIndex={1}>
     {textify(before)}
     <div style={{ flex: 1 }} />
-    <Centered>
-      {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
-    </Centered>
+    <Centered>{typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}</Centered>
     {textify(after)}
   </UI.Row>
 )

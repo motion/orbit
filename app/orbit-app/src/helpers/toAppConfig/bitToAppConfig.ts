@@ -3,7 +3,7 @@ import { AppConfig } from '@mcro/stores'
 
 export function bitToAppConfig(bit: Bit): AppConfig {
   return {
-    id: bit.id,
+    id: `${bit.id}`,
     icon: bit.integration || '',
     title: bit.title,
     type: 'bit',
@@ -14,6 +14,8 @@ export function bitToAppConfig(bit: Bit): AppConfig {
         ? {
             dimensions: [750, 720],
           }
-        : null,
+        : {
+            contentSize: bit.body.length,
+          },
   }
 }

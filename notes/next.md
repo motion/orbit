@@ -1,5 +1,8 @@
 # nate
 
+- attach to app is super interesting
+  - drag orbit to a window, and it goes into context mode
+  - uses ocr to realtime search
 - design run on the person feed
   - lots of movement/focus/unfocus fixes
 - write intro email 2 hours (medium post, nice screenshots + embedded video)

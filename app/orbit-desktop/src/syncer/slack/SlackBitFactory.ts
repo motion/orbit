@@ -73,11 +73,11 @@ export class SlackBitFactory {
     if (weights) {
       // get the top 5, keep original order
       if (weights.length > 5) {
-        const sortedWeights = [...weights]
-        sortedWeights.sort((a, b) => (a.weight > b.weight ? -1 : 1))
-        const limitWeight = sortedWeights[5].weight
+        const uniqSorted = [...new Set(weights)]
+        uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
+        const limitWeight = uniqSorted[5].weight
         // keep original order of titles
-        weights = weights.filter(x => x.weight >= limitWeight).slice(0, 5)
+        weights = weights.filter(x => x.weight >= limitWeight).slice(0, 8)
       }
       title = weights.map(x => x.string).join(' ')
     }

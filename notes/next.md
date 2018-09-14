@@ -1,5 +1,12 @@
 # nate
 
+- wow:
+  - a little orbit ethereal orb instead of boring search icon top left would be useful
+    - when scanning it can glow/rotate a bit (hover to see status)
+    - drag it onto any app or site to "ingest" it into your "memory"
+    - orbit tray dropdown ?
+      - add page
+      - add site
 - peek design run make info better
 - attach to app is super interesting
   - drag orbit to a window, and it goes into context mode

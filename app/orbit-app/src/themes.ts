@@ -133,7 +133,7 @@ export const themes = {
     listItemBackground: [255, 255, 255, 0.1],
     listItemBackgroundSelected: [255, 255, 255, 0.35],
     listItemBackgroundHover: [255, 255, 255, 0.2],
-    inputBackground: '#e9e9e9',
+    inputBackground: [0, 0, 0, 0.05],
     inputBackgroundActive: '#eee',
     cardShadow: [0, 2, 6, [0, 0, 0, 0.035]],
     cardBorderColor: [0, 0, 0, 0.1],

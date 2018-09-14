@@ -14,16 +14,21 @@ export async function getWordWeights(text: string, max?: number): Promise<Weight
     return null
   }
   let pairs = cosal.pairs
+  let fmax = max
   if (max) {
     if (pairs.length > max) {
       const uniqSorted = uniqBy(pairs, x => x.string)
+      // make sure we get the new last index, could be shorter
+      fmax = Math.min(uniqSorted.length - 1, max)
+      // sort by weight
       uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
-      const limitWeight = uniqSorted[max].weight
-      // keep original order of titles
+      // find our topmost weight
+      const limitWeight = uniqSorted[fmax].weight
+      // now map and filter but keeping original order
       pairs = pairs.filter(x => x.weight >= limitWeight)
     }
   }
-  return pairs.slice(0, max)
+  return pairs.slice(0, fmax)
 }
 
 export async function getTopWords(text: string, max?: number) {

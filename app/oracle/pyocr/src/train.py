@@ -133,3 +133,10 @@ for epoch in range(1, args.epochs):
     test()
     torch.save(model, model_path)
     print('epoch took', time.time() - start, 's')
+
+
+# from torch.autograd import Variable
+# from constants import model_path
+
+# dummy_input = Variable(torch.FloatTensor(1, 2, 100)) # 1 will be the batch size in production
+# torch.onnx.export(model_path, dummy_input, 'SplitModel.proto', verbose=True)

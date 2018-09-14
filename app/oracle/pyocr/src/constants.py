@@ -9,3 +9,5 @@ letters = "123*',;:.?!#$thequickbrownfoxjumpsoverthe*a'b,c;d:e.f?g!h#i$j[k]l(m)l
 
 ocr_path = dir_path + '/../data/ocr.csv'
 model_path = dir_path + '/../models/model.pyt'
+
+uniqueLetters = len(set(letters))

@@ -60,14 +60,8 @@ const Background = view({
 })
 Background.theme = ({ theme, isTransparent, moreOpaque }) => {
   const isDark = theme.background.isDark()
-  const darkBg = isTransparent
-    ? moreOpaque
-      ? [30, 30, 30, 0.55]
-      : [0, 0, 0, 0.3]
-    : [40, 40, 40]
-  const lightBg = isTransparent
-    ? [255, 255, 255, moreOpaque ? 0.9 : 0.8]
-    : [255, 255, 255]
+  const darkBg = isTransparent ? (moreOpaque ? [30, 30, 30, 0.7] : [0, 0, 0, 0.4]) : [40, 40, 40]
+  const lightBg = isTransparent ? [255, 255, 255, moreOpaque ? 0.9 : 0.8] : [255, 255, 255]
   return {
     background: isDark ? darkBg : lightBg,
   }
@@ -149,22 +143,20 @@ const decorator = compose(
   view,
 )
 
-export const OrbitDockedChrome = decorator(
-  ({ orbitStore, queryStore }: Props) => {
-    return (
-      <>
-        <BlockTop height={60} overflow={SHADOW_PAD}>
-          <OrbitChrome isUpper moreOpaque={queryStore.hasQuery} />
-        </BlockTop>
-        <BlockBottom
-          above={60}
-          height={orbitStore.contentHeight}
-          maxHeight={window.innerHeight - 20}
-          overflow={SHADOW_PAD}
-        >
-          <OrbitChrome moreOpaque={queryStore.hasQuery} />
-        </BlockBottom>
-      </>
-    )
-  },
-)
+export const OrbitDockedChrome = decorator(({ orbitStore, queryStore }: Props) => {
+  return (
+    <>
+      <BlockTop height={60} overflow={SHADOW_PAD}>
+        <OrbitChrome isUpper moreOpaque={queryStore.hasQuery} />
+      </BlockTop>
+      <BlockBottom
+        above={60}
+        height={orbitStore.contentHeight}
+        maxHeight={window.innerHeight - 20}
+        overflow={SHADOW_PAD}
+      >
+        <OrbitChrome moreOpaque={queryStore.hasQuery} />
+      </BlockBottom>
+    </>
+  )
+})

@@ -15,7 +15,7 @@ const SearchFilters = view(UI.Col, {
 
 const SearchFilterBar = view({
   flexFlow: 'row',
-  padding: [6, 8],
+  padding: [6, 12],
   width: '100%',
   alignItems: 'center',
 })
@@ -34,8 +34,7 @@ const ExtraFilters = view(UI.View, {
   },
 })
 
-const simplerDateWords = str =>
-  str.replace('about ', '').replace('less than a minute', 'now')
+const simplerDateWords = str => str.replace('about ', '').replace('less than a minute', 'now')
 
 const getDate = ({ startDate, endDate }) => {
   if (!startDate) {
@@ -60,11 +59,11 @@ const FilterButton = props => (
   <UI.Button
     chromeless
     glint={false}
-    size={0.95}
+    size={1}
     sizePadding={0.9}
     sizeRadius={3}
     alpha={0.8}
-    fontWeight={500}
+    fontWeight={600}
     {...props}
   />
 )
@@ -73,8 +72,6 @@ const IntegrationFiltersRow = view({
   flexFlow: 'row',
   alignItems: 'center',
   padding: 1,
-  background: [255, 255, 255, 0.025],
-  borderRadius: 100,
 })
 
 const decorate = compose(
@@ -83,6 +80,7 @@ const decorate = compose(
 )
 export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   const { searchFilterStore } = searchStore
+  const hasActiveFilters = !!searchFilterStore.integrationFilters.find(x => x.active)
   return (
     <>
       <SearchFilterBar>
@@ -105,13 +103,23 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
                   key={`${filter.icon}${i}`}
                   circular
                   glint={false}
-                  sizeHeight={0.85}
-                  margin={[0, 1]}
-                  icon={<OrbitIcon size={16} icon={filter.icon} />}
+                  sizeHeight={0.9}
+                  margin={[0, 3]}
+                  icon={<OrbitIcon size={20} icon={filter.icon} />}
                   tooltip={filter.name}
                   onClick={searchFilterStore.integrationFilterToggler(filter)}
-                  opacity={filter.active ? 1 : 0.45}
                   background="transparent"
+                  transformOrigin="bottom center"
+                  transition="transform ease 150ms"
+                  {...filter.active && {
+                    transform: {
+                      scale: 1.1,
+                    },
+                  }}
+                  {...hasActiveFilters &&
+                    !filter.active && {
+                      scale: 0.9,
+                    }}
                   activeStyle={{
                     background: 'transparent',
                   }}

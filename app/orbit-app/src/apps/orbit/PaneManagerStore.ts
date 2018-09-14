@@ -64,13 +64,10 @@ export class PaneManagerStore {
       this.hasOnboarded = values.hasOnboarded
     })
 
-    const disposeToggleSettings = App.onMessage(
-      App.messages.TOGGLE_SETTINGS,
-      () => {
-        this.setActivePane('settings')
-        App.setOrbitState({ docked: true })
-      },
-    )
+    const disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+      this.setActivePane('settings')
+      App.setOrbitState({ docked: true })
+    })
 
     const disposeShowApps = App.onMessage(App.messages.SHOW_APPS, () => {
       this.setActivePane('apps')
@@ -101,7 +98,7 @@ export class PaneManagerStore {
       if (onboard) {
         Actions.setContextMessage('Welcome to Orbit...')
       } else {
-        Actions.setContextMessage('')
+        Actions.setContextMessage('Orbit')
       }
     },
   )
@@ -159,13 +156,7 @@ export class PaneManagerStore {
   }
 
   activePane: Panes = react(
-    () => [
-      this.panes,
-      this.paneIndex,
-      App.orbitState.docked,
-      App.state.query,
-      this.shouldOnboard,
-    ],
+    () => [this.panes, this.paneIndex, App.orbitState.docked, App.state.query, this.shouldOnboard],
     async (_, { sleep }) => {
       if (this.shouldOnboard) {
         return 'onboard'

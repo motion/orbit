@@ -26,6 +26,7 @@ export class MenuItems extends React.Component<{
 
   handleClose = () => {
     console.log('close event?')
+    Electron.sendMessage(App, App.messages.HIDE)
   }
 
   handlePreferences = () => {
@@ -62,7 +63,6 @@ export class MenuItems extends React.Component<{
         <SubMenu label="Window">
           <ElMenuItems.ToggleFullscreen />
           <ElMenuItems.Close accelerator="CmdOrCtrl+w" onClick={this.handleClose} />
-          <ElMenuItems.Minimize />
           <MenuItem label="Refresh" accelerator="CmdOrCtrl+r" onClick={electronStore.restart} />
           <MenuItem
             label="Show Dev Tools [App]"

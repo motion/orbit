@@ -15,17 +15,17 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
 }
 
 export const ResolveConversation = (props: BitItemResolverProps) => {
-  const { children, bit, shownLimit = 5, isExpanded, searchTerm, hide } = props
+  const { children, bit, shownLimit = Infinity, isExpanded, searchTerm, hide } = props
   const data = bit.data as SlackBitData
+  const people = bit.people || []
   const content = isExpanded
     ? (getMessages(data.messages, { searchTerm, shownLimit }).map((message, index) => {
-        for (let person of bit.people) {
+        for (let person of people) {
           message.text = message.text.replace(
             new RegExp(`<@${person.integrationId}>`, 'g'),
             '@' + person.name,
           )
         }
-
         return (
           <SlackMessage
             key={index}
@@ -41,7 +41,7 @@ export const ResolveConversation = (props: BitItemResolverProps) => {
     id: `${bit.id}`,
     type: 'bit',
     title: bit.title,
-    people: bit.people,
+    people,
     preview: bit.title,
     icon: 'slack',
     locationLink: bit.location.desktopLink || bit.location.webLink,

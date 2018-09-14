@@ -59,7 +59,7 @@ Highlight.theme = ({ theme }) => ({
 // }
 
 const hideSlack = {
-  // title: true,
+  title: true,
   people: true,
   date: true,
 }
@@ -130,7 +130,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
             isExpanded
             searchTerm={searchTerm}
             onClickLocation={this.handleLocation}
-            maxHeight={180}
+            maxHeight={model.integration === 'slack' ? 380 : 200}
             overflow="hidden"
           >
             {this.getChildren}

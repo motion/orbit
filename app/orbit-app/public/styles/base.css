@@ -71,9 +71,9 @@
 
 #app .theme-dark code,
 #app .theme-dark pre code {
-  background: #333;
+  background: transparent;
   border: none;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 700;
 }
 
@@ -88,13 +88,15 @@
   padding: 10px;
 }
 
-#app .paragraph > code,
-#app p > code,
-#app li > code {
+#app .paragraph code,
+#app p code,
+#app li code {
   padding: 0px 4px;
   margin: -8px 0;
   line-height: inherit;
   overflow: hidden;
+  display: inline;
+  white-space: pre-wrap;
 }
 
 #app pre code {
@@ -557,13 +559,6 @@ img {
 li {
   display: list-item;
   margin-left: 0.5rem;
-}
-
-.paragraph code,
-p code,
-li code {
-  display: inline-block;
-  padding: 0;
 }
 
 table {

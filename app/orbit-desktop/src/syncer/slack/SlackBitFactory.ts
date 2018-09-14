@@ -79,7 +79,12 @@ export class SlackBitFactory {
         // keep original order of titles
         weights = weights.filter(x => x.weight >= limitWeight).slice(0, 8)
       }
-      title = weights.map(x => x.string).join(' ')
+      title = weights
+        .map(x => x.string)
+        .join(' ')
+        // cleanup weird characters
+        .replace(/[^a-zA-Z0-9]/g, '')
+        .replace(/\s\s*/g, ' ')
     }
 
     return BitUtils.create({

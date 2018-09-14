@@ -11,5 +11,7 @@ export type AppConfig = {
     showTitleBar?: boolean
     viewPane?: string
     dimensions?: [number, number]
+    // for auto measuring peek size
+    contentSize?: number
   }
 }

@@ -17,6 +17,7 @@ export type PeekStoreState = {
   curState: PeekStoreItemState
   lastState: PeekStoreItemState
   torn: boolean
+  resolvedModel: boolean
 }
 
 export class PeekStore {
@@ -71,6 +72,7 @@ export class PeekStore {
         ...rest,
       }
       let nextState: PeekStoreState = {
+        resolvedModel: false,
         torn,
         lastState,
         curState,
@@ -91,6 +93,7 @@ export class PeekStore {
         // wait and fetch in parallel
         const model = await this.getModel()
         return {
+          resolvedModel: true,
           ...nextState,
           // now update to new model
           curState: {
@@ -104,6 +107,8 @@ export class PeekStore {
     {
       onlyUpdateIfChanged: true,
       defaultValue: {
+        resolvedModel: false,
+        torn: false,
         lastState: null,
         curState: null,
         willHide: false,
@@ -121,6 +126,17 @@ export class PeekStore {
         return lastState
       }
       return curState
+    },
+  )
+
+  autoSizeAfterRender = react(
+    () =>
+      this.appState.appConfig.contentSize &&
+      this.internalState.resolvedModel &&
+      (this.state.model.id || this.state.model.email),
+    id => {
+      ensure('is ready', !!id)
+      console.log('should auto size')
     },
   )
 

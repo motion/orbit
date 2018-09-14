@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, react, ensure } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
@@ -7,7 +7,15 @@ import { PeekFrameArrow } from './PeekFrameArrow'
 import { ResizableBox } from '../../../views/ResizableBox'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { setAppState } from '../../../actions/appActions/setAppState'
-import { trace } from 'mobx'
+import { debounce } from 'lodash'
+import { Actions } from '../../../actions/Actions'
+
+type PeekFrameProps = {
+  store?: PeekFrameStore
+  peekStore: PeekStore
+  children: any
+  theme?: ThemeObject
+}
 
 const SHADOW_PAD = 85
 
@@ -35,15 +43,38 @@ const PeekMain = view(UI.View, {
   opacity: 1,
 })
 
-type PeekFrameProps = {
-  peekStore: PeekStore
-  children: any
-  theme?: ThemeObject
+class PeekFrameStore {
+  props: PeekFrameProps
+  size: [number, number] = [0, 0]
+
+  updateSizeFromAppState = react(
+    () => this.props.peekStore.appState.size,
+    size => {
+      ensure('has size', !!size)
+      this.size = size
+    },
+  )
+
+  handleResize = (_, { size }) => {
+    Actions.tearPeek()
+    this.size = [size.width, size.height]
+  }
+
+  deferredSetAppState = react(
+    () => this.size,
+    async (size, { sleep }) => {
+      await sleep(100)
+      setAppState({ size })
+    },
+  )
 }
 
 const decorator = compose(
   attachTheme,
   view.attach('peekStore'),
+  view.attach({
+    store: PeekFrameStore,
+  }),
   view,
 )
 
@@ -54,44 +85,27 @@ const PeekFrameContainer = view(UI.View, {
   zIndex: 2,
 })
 
-const handleResize = (_, { size }) => {
-  setAppState({ size: [size.width, size.height] })
-}
-
 export const PeekFrame = decorator(
-  ({ peekStore, children, theme, ...props }: PeekFrameProps) => {
-    const {
-      isShown,
-      willShow,
-      willHide,
-      state,
-      willStayShown,
-      framePosition,
-      isTorn,
-    } = peekStore
+  ({ peekStore, store, children, theme, ...props }: PeekFrameProps) => {
+    const { isShown, willShow, willHide, state, willStayShown, framePosition, isTorn } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }
     const borderShadow = ['inset', 0, 0, 0, 0.5, theme.frameBorderColor]
     const isHidden = !state
     const onRight = !state.peekOnLeft
-    const padding = [
-      SHADOW_PAD,
-      onRight ? SHADOW_PAD : 0,
-      SHADOW_PAD,
-      !onRight ? SHADOW_PAD : 0,
-    ]
+    const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
     const margin = padding.map(x => -x)
     const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
     const transition = transitions(peekStore)
-    const size = peekStore.state.size
+    const size = store.size
     return (
       <ResizableBox
         width={size[0]}
         height={size[1]}
         minConstraints={[100, 100]}
         maxConstraints={[window.innerWidth, window.innerHeight]}
-        onResize={handleResize}
+        onResize={store.handleResize}
         style={{
           zIndex: 2,
           // keep size/positionX linked to be fast...
@@ -112,9 +126,7 @@ export const PeekFrame = decorator(
           height={size[1]}
           pointerEvents={isShown ? 'auto' : 'none'}
         >
-          {!isTorn && (
-            <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
-          )}
+          {!isTorn && <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />}
           <UI.Col flex={1} padding={padding} margin={margin}>
             <UI.Col position="relative" flex={1}>
               <PeekFrameBorder boxShadow={[borderShadow]} />

@@ -23,18 +23,26 @@ type Position = {
   height: number
 }
 
+const sizes = [[430, 280], [430, 380], [480, 440]]
+
 // dynamic peek size
 // always slightly taller than wide
 // capped between a set range
 const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
+  const config = appConfig && appConfig.config
   let preferred
-  if (appConfig && appConfig.config && appConfig.config.dimensions) {
-    preferred = appConfig.config.dimensions
+  if (config && config.dimensions) {
+    preferred = config.dimensions
   } else {
-    preferred = [screenWidth / 3.25, screenWidth / 2.75]
+    if (config.contentSize) {
+      const index = Math.min(sizes.length, Math.max(0, Math.round(config.contentSize / 100 - 0.5)))
+      preferred = sizes[index]
+    } else {
+      preferred = [screenWidth / 3.25, screenWidth / 2.75]
+    }
   }
   const max = [930, 920]
-  const min = [550, 300]
+  const min = [430, 280] // pretty cute small window
   return preferred
     .map((z, i) => Math.min(z, max[i]))
     .map((z, i) => Math.max(z, min[i]))

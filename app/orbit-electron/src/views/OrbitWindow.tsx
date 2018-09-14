@@ -6,7 +6,7 @@ import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow, app } from 'electron'
+import { Menu, BrowserWindow } from 'electron'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -18,23 +18,21 @@ type Props = {
 
 class OrbitWindowStore {
   props: Props
-
-  window: BrowserWindow = null
+  orbitRef: BrowserWindow = null
+  disposeShow = null
 
   handleRef = ref => {
     if (!ref) {
       return
     }
-    this.window = ref.window
+    this.orbitRef = ref.window
   }
-
-  disposeShow = null
 
   handleOrbitSpaceMove = react(
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
       ensure('did move', !!moved)
-      ensure('window', !!this.window)
+      ensure('window', !!this.orbitRef)
       // wait for move to finish
       await sleep(150)
       // wait for showing
@@ -47,12 +45,13 @@ class OrbitWindowStore {
     () => App.orbitState.docked,
     docked => {
       const focusedOnAppWindow = typeof Electron.state.focusedAppId === 'number'
-      ensure('is not focused on app window', !focusedOnAppWindow)
+      ensure('focus off app window', !focusedOnAppWindow)
       if (!docked) {
+        ensure('no apps open', App.appsState.length === 1)
         Menu.sendActionToFirstResponder('hide:')
       } else {
-        app.show()
-        this.window.show()
+        // app.show()
+        this.orbitRef.show()
       }
     },
     {
@@ -61,9 +60,9 @@ class OrbitWindowStore {
   )
 
   showOnNewSpace() {
-    this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens
-    this.window.focus() // focus the window up front on the active screen
-    this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
+    this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
+    this.orbitRef.focus() // focus the window up front on the active screen
+    this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
   }
 
   handleFocus = () => {

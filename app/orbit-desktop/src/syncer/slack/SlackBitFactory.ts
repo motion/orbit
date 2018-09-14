@@ -20,7 +20,7 @@ export class SlackBitFactory {
   }
 
   /**
-   * Creates new or updated bit.
+   * Creates a new bit.
    */
   async create(
     channel: SlackChannel,

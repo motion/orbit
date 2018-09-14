@@ -53,7 +53,7 @@ export class BitUtils {
         for (let bit of updatedBits) {
           await manager.update(BitEntity, { id: bit.id }, bit)
 
-          const people = await manager
+          const dbPeople = await manager
             .getRepository(PersonEntity)
             .find({
               select: {
@@ -67,17 +67,21 @@ export class BitUtils {
             })
 
           const newPeople = bit.people.filter(person => {
-            return !people.some(dbPerson => dbPerson.id === person.id)
+            return !dbPeople.some(dbPerson => dbPerson.id === person.id)
           })
-          const removedPeople = people.filter(dbPerson => {
+          const removedPeople = dbPeople.filter(dbPerson => {
             return !bit.people.some(person => person.id === dbPerson.id)
           })
 
-          await manager
-            .createQueryBuilder(BitEntity, "bit")
-            .relation("people")
-            .of(bit)
-            .addAndRemove(newPeople, removedPeople)
+          if (newPeople.length || removedPeople.length) {
+            log.verbose(`found people changes in a bit`, bit, { newPeople, removedPeople })
+
+            await manager
+              .createQueryBuilder(BitEntity, "bit")
+              .relation("people")
+              .of(bit)
+              .addAndRemove(newPeople, removedPeople)
+          }
         }
 
         // delete removed bits

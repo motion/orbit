@@ -13,7 +13,7 @@ export const SettingForceSyncResolver = resolveCommand(SettingForceSyncCommand, 
 
   const setting = await getRepository(SettingEntity).findOne({ id: settingId })
   if (!setting) {
-    log.info(`error - cannot find requested setting`, { settingId })
+    log.error(`cannot find requested setting`, { settingId })
     return
   }
 

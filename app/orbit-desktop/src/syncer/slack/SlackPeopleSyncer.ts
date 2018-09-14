@@ -24,6 +24,9 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
     this.personFactory = new SlackPersonFactory(this.setting)
   }
 
+  /**
+   * Runs people syncronization.
+   */
   async run() {
     log.timer(`load API users`)
     const apiUsers = await this.loader.loadUsers()
@@ -35,16 +38,16 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
     })
     log.verbose(`filtered API users (non bots)`, filteredApiUsers)
 
+    // creating entities for them
+    log.verbose(`finding and creating people for users`, filteredApiUsers)
+    const apiPeople = filteredApiUsers.map(user => {
+      return this.personFactory.create(user)
+    })
+
     // load all people from the local database
     log.timer(`load synced people from the database`)
     const dbPeople = await this.loadPeople()
     log.timer(`load synced people from the database`, dbPeople)
-
-    // creating entities for them
-    log.verbose(`finding and creating people for users`, filteredApiUsers)
-    const apiPeople = filteredApiUsers.map(user => {
-      return this.personFactory.create(user, dbPeople)
-    })
 
     // update in the database
     await PersonUtils.sync(log, apiPeople, dbPeople)
@@ -55,6 +58,10 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
    */
   private loadPeople() {
     return getRepository(PersonEntity).find({
+      select: {
+        id: true,
+        contentHash: true
+      },
       where: {
         settingId: this.setting.id
       }

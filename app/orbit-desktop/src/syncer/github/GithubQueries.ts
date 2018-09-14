@@ -10,7 +10,7 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
       }
       edges {
         cursor
-        node {
+        node {          
           id
           title
           number
@@ -19,6 +19,7 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
           updatedAt
           createdAt
           url
+          closed
           repository {
             id
             name
@@ -38,10 +39,43 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
               name
             }
           }
+          assignees(first: 100) {
+            edges {
+              node {
+                ... on User {
+                  id
+                  login
+                  location
+                  avatarUrl
+                  bio
+                  email
+                  name
+                }
+              }
+            }
+          }
+          participants(first: 100) {
+            edges {
+              node {
+                ... on User {
+                  id
+                  login
+                  location
+                  avatarUrl
+                  bio
+                  email
+                  name
+                }
+              }
+            }
+          }
           labels(first: 10) {
             edges {
               node {
                 name
+                description
+                color
+                url
               }
             }
           }

@@ -2,7 +2,7 @@ import { Logger } from '@mcro/logger'
 import { Person } from '@mcro/models'
 import { getManager } from 'typeorm'
 import { PersonEntity } from '../entities/PersonEntity'
-import {chunk} from 'lodash'
+import { chunk, uniqBy } from 'lodash'
 import { createOrUpdatePersonBits } from '../repository'
 import { CommonUtils } from './CommonUtils'
 
@@ -14,10 +14,14 @@ export class PersonUtils {
   /**
    * Syncs given people in the database.
    */
-  static async sync(log: Logger, apiPeople: Person[], dbPeople: Person[]) {
-    log.verbose(`calculating inserted/updated/removed people`, { apiPeople, dbPeople })
+  static async sync(log: Logger, apiPeople: Person[], dbPeople: Person[], options?: { skipRemove?: boolean }) {
+
+    // filter out people, left only unique people
+    apiPeople = uniqBy(apiPeople, person => person.id)
+    dbPeople = uniqBy(dbPeople, person => person.id)
 
     // calculate people that we need to update in the database
+    log.verbose(`calculating inserted/updated/removed people`, { apiPeople, dbPeople })
     const insertedPersons = apiPeople.filter(apiPerson => {
       return !dbPeople.some(dbPerson => dbPerson.id === apiPerson.id)
     })
@@ -25,7 +29,7 @@ export class PersonUtils {
       const dbPerson = dbPeople.find(dbPerson => dbPerson.id === apiPerson.id)
       return dbPerson && dbPerson.contentHash !== apiPerson.contentHash
     })
-    const removedPersons = dbPeople.filter(dbPerson => {
+    const removedPersons = options && options.skipRemove ? [] : dbPeople.filter(dbPerson => {
       return !apiPeople.some(apiPerson => apiPerson.id === dbPerson.id)
     })
 
@@ -46,8 +50,10 @@ export class PersonUtils {
           await manager.delete(PersonEntity, removedPersons)
         }
       })
+
+      // note: some people don't have their email exposed, that's why we need this check
       await Promise.all(
-        apiPeople.map(async person => {
+        apiPeople.filter(person => person.email).map(async person => {
           person.personBit = await createOrUpdatePersonBits(person as PersonEntity)
         }),
       )

@@ -43,6 +43,7 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
         log.verbose(`restarting people syncer`)
         return this.run()
       })
+      return
     }
 
     // load all slack channels
@@ -116,9 +117,9 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
     await BitUtils.sync(log, apiBits, dbBits)
 
     // update settings
-    // log.verbose(`update settings`, { lastMessageSync })
-    // values.lastMessageSync = lastMessageSync
-    // await getRepository(SettingEntity).save(this.setting)
+    log.verbose(`update settings`, { lastMessageSync })
+    values.lastMessageSync = lastMessageSync
+    await getRepository(SettingEntity).save(this.setting)
   }
 
   /**

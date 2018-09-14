@@ -71,9 +71,9 @@
 
 #app .theme-dark code,
 #app .theme-dark pre code {
-  background: #333;
+  background: transparent;
   border: none;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 700;
 }
 

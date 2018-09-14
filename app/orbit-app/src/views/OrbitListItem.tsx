@@ -13,7 +13,7 @@ import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
 import { HighlightText } from './HighlightText'
-import { Row, Text } from '@mcro/ui'
+import { Row, Text, View } from '@mcro/ui'
 
 const ListFrame = view(UI.View, {
   position: 'relative',
@@ -22,11 +22,10 @@ const ListFrame = view(UI.View, {
   },
 })
 
-ListFrame.theme = ({ theme, margin, borderRadius }) => {
+ListFrame.theme = ({ theme, borderRadius }) => {
   return {
     color: theme.color,
     background: theme.listItemBackground || theme.background.alpha(0.5),
-    margin: typeof margin === 'undefined' ? [2, 5] : margin,
     borderRadius: borderRadius || 3,
   }
 }
@@ -194,8 +193,8 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               />
             </UI.Text>
           )}
-          <div style={{ width: 8 }} />
-          <RoundButtonSmall
+          {/* <div style={{ width: 8 }} /> */}
+          {/* <RoundButtonSmall
             icon="link"
             size={1.1}
             tooltip="Open"
@@ -208,7 +207,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               Actions.openItem(model)
               Actions.closeOrbit()
             }}
-          />
+          /> */}
         </Row>
         {!!location && (
           <RoundButtonSmall
@@ -247,14 +246,14 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             <Title style={titleFlex && { flex: titleFlex }}>
               {showIcon && (
                 <>
-                  <OrbitIcon icon={icon} size={14} {...iconProps} />
+                  <OrbitIcon margin={[4, 0, 0]} icon={icon} size={14} {...iconProps} />
                   <TitleSpace />
                 </>
               )}
               <HighlightText
                 fontSize={15}
                 sizeLineHeight={0.85}
-                ellipse={2}
+                ellipse
                 fontWeight={700}
                 marginTop={-2}
                 {...titleProps}
@@ -286,6 +285,16 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               {hide && hide.title && afterHeader}
             </ListItemSubtitle>
           )}
+          {!showSubtitle &&
+            (hide && hide.title) && (
+              <View
+                position="absolute"
+                right={Array.isArray(padding) ? padding[0] : padding}
+                top={Array.isArray(padding) ? padding[1] : padding}
+              >
+                {afterHeader}
+              </View>
+            )}
           {/* vertical space only if needed */}
           {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
           {showPreview && (

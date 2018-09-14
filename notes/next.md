@@ -1,5 +1,7 @@
 # nate
 
+- peek modern slim header
+- peek design run make info better
 - attach to app is super interesting
   - drag orbit to a window, and it goes into context mode
   - uses ocr to realtime search

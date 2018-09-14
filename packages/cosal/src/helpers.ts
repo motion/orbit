@@ -1,4 +1,4 @@
-import mostCommonText from './commonWords'
+import commonWords from './commonWords'
 import { Vector } from 'vectorious/withoutblas'
 import { memoize, random, sortBy, reverse } from 'lodash'
 import { readFileSync } from 'fs'
@@ -21,16 +21,15 @@ Object.keys(slang).forEach(word => {
   vectors[word] = vectors[slang[word]]
 })
 
-const baseVector = vectors['hello']
-
 export const getWordVector = memoize(word => {
   word = word
     .replace('.', '')
     .replace(';', '')
     .replace(',', '')
     .toLowerCase()
-  const vector = word === 'constructor' ? baseVector : vectors[word] || baseVector
-  return vector.map(() => random(-0.15, 0.15))
+  const randomVector = vectors.hello.map(() => random(-0.15, 0.15))
+  const vector = word === 'constructor' ? randomVector : vectors[word] || randomVector
+  return vector
 })
 
 const cosineSimilarity = ($v1, $v2) => {
@@ -57,7 +56,7 @@ export const docVec = pairs => {
   return $vec
 }
 
-export const isCommonWord = mostCommonText
+export const isCommonWord = commonWords
   .split('\n')
   .slice(0, 100)
   .reduce((acc, item) => ({ ...acc, [item]: true }), {})

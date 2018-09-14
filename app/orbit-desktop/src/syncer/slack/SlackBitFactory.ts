@@ -5,7 +5,7 @@ import { SettingEntity } from '../../entities/SettingEntity'
 import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { SlackChannel, SlackMessage } from './SlackTypes'
-import { getWordWeights } from '@mcro/cosal'
+import { getWordWeights, getTopWords } from '@mcro/cosal'
 
 const Autolinker = require('autolinker')
 
@@ -46,12 +46,11 @@ export class SlackBitFactory {
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
       team.id
     }`
-    const body = this.buildBitBody(messages, allPeople)
     const mentionedPeople = this.findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
       messages: messages.reverse().map(message => ({
         user: message.user,
-        text: message.text,
+        text: this.buildSlackText(message.text, allPeople),
         time: +message.ts.split('.')[0] * 1000,
       })),
     }
@@ -66,26 +65,14 @@ export class SlackBitFactory {
       )
     })
 
-    // gets the most interesting words in the body
-    let weights = await getWordWeights(body)
-    let title = ''
-
-    if (weights) {
-      // get the top 5, keep original order
-      if (weights.length > 5) {
-        const uniqSorted = [...new Set(weights)]
-        uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
-        const limitWeight = uniqSorted[5].weight
-        // keep original order of titles
-        weights = weights.filter(x => x.weight >= limitWeight).slice(0, 8)
-      }
-      title = weights
-        .map(x => x.string)
-        .join(' ')
-        // cleanup weird characters
-        .replace(/[^a-zA-Z0-9]/g, '')
-        .replace(/\s\s*/g, ' ')
-    }
+    const flatBody = data.messages.map(x => x.text).join(' ')
+    // gets the most interesting 10 for title
+    const title = (await getTopWords(flatBody, 10))
+      // remove weird chars from title
+      .map(x => x.replace(/[^a-zA-Z0-9.-]/g, ''))
+      .join(' ')
+    // and more for body
+    const body = (await getTopWords(flatBody, 50)).join(' ')
 
     return BitUtils.create({
       settingId: this.setting.id,
@@ -111,17 +98,15 @@ export class SlackBitFactory {
   }
 
   /**
-   * Builds "body" for a Bit object.
+   * Processes text for a slack message
    */
-  private buildBitBody(messages: SlackMessage[], allPeople: Person[]): string {
+  private buildSlackText(message: string, allPeople: Person[]): string {
     // merge all messages texts into a single body
-    let body = messages.map(message => message.text.trim()).join(' ')
-
+    let body = message.trim()
     // replace all people id mentions in the message into a real people names
     for (let person of allPeople) {
       body = body.replace(new RegExp(`<@${person.integrationId}>`, 'g'), '@' + person.name)
     }
-
     // make all links in the message a better formatting (without http and <>)
     const matchedLinks: string[] = []
     body = Autolinker.link(body, {
@@ -133,7 +118,6 @@ export class SlackBitFactory {
     for (let matchedLink of matchedLinks) {
       body = body.replace(`<${matchedLink}>`, matchedLink)
     }
-
     return body
   }
 

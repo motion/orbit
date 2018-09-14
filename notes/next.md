@@ -1,6 +1,6 @@
 # nate
 
-- peek modern slim header
+- peek size smaller for small content
 - peek design run make info better
 - attach to app is super interesting
   - drag orbit to a window, and it goes into context mode

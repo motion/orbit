@@ -41,7 +41,7 @@ for line in fileinput.input():
 
     # sys.stdout = sys.__stdout__
     # eprint(json.dumps(predicted))
-    print(json.dumps(predicted))
+    # print(json.dumps(predicted))
 
     if os.environ['OUTFILE']:
         with open(os.environ['OUTFILE'], 'w') as outfile:

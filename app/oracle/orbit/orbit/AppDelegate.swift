@@ -5,8 +5,8 @@ import Cocoa
 import PromiseKit
 import Darwin
 
-let shouldRunOCR = true || ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
-let shouldRunTest = true || ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
+let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
+let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
 
 struct Position: Decodable {
   let x: Int

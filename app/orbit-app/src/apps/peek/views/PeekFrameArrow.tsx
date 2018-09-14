@@ -28,7 +28,7 @@ class PeekArrowStore {
   arrowY = react(
     () => App.peekState,
     state => {
-      ensure('has state', state && state.position && state.target)
+      ensure('state and target', !!(state && state.position && state.target))
       const isHidden = !state
       const target = state.target
       // aim for the middle, but cap it at most maxTopOffset from top

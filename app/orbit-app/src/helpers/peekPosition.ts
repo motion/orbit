@@ -23,7 +23,7 @@ type Position = {
   height: number
 }
 
-const sizes = [[430, 280], [430, 380], [480, 440]]
+const sizes = [[480, 280], [480, 380], [480, 480]]
 
 // dynamic peek size
 // always slightly taller than wide
@@ -35,7 +35,10 @@ const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
     preferred = config.dimensions
   } else {
     if (config.contentSize) {
-      const index = Math.min(sizes.length, Math.max(0, Math.round(config.contentSize / 100 - 0.5)))
+      const index = Math.min(
+        sizes.length - 1,
+        Math.max(0, Math.round(config.contentSize / 50 - 0.5)),
+      )
       preferred = sizes[index]
     } else {
       preferred = [screenWidth / 3.25, screenWidth / 2.75]

@@ -24,7 +24,7 @@ class CarouselStore {
     ],
     ([index, isActive]) => {
       const carousel = this.carouselRef.current
-      ensure('has carousel', !!carousel)
+      ensure('carousel', !!carousel)
       const { items, offset, selectionStore, resetOnInactive } = this.props
       if (isActive == false) {
         if (resetOnInactive) {
@@ -32,7 +32,7 @@ class CarouselStore {
         }
         throw cancel
       }
-      ensure('has index', typeof index === 'number')
+      ensure('index', typeof index === 'number')
       ensure('within bounds', index >= offset && index <= offset + items.length)
       const wasClicked = selectionStore.selectEvent === 'click'
       carousel.scrollTo(index - offset, { onlyIfOutside: wasClicked })

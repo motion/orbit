@@ -188,7 +188,7 @@ export class SearchFilterStore /* extends Store */ {
   searchLocations = react(
     () => this.searchStore.searchState,
     async ({ results }, { sleep }) => {
-      ensure('has results', !!results && results.length)
+      ensure('results', !!results && results.length)
       await sleep(100)
       return [...new Set(results.map(x => x.location && x.location.name))]
         .filter(Boolean)
@@ -226,7 +226,7 @@ export class SearchFilterStore /* extends Store */ {
       ensure('nlp', !!nlp)
       // reset integration inactive filters
       const { integrations } = nlp
-      ensure('has integrations', integrations && !!integrations.length)
+      ensure('integrations', integrations && !!integrations.length)
       this.exclusiveFilters = this.uniqueSettings.reduce(
         (acc, setting: Setting) => {
           acc[setting.type] = integrations.some(x => x === setting.type)

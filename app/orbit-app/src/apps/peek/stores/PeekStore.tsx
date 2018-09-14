@@ -47,7 +47,7 @@ export class PeekStore {
       }
       if (this.isTorn) {
         // cancel on no app state so we dont cause bugs on close
-        ensure('has state', !!appState)
+        ensure('state', !!appState)
       }
       return appState
     },

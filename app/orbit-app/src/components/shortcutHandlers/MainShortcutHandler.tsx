@@ -18,35 +18,36 @@ const rootShortcuts = {
 
 const decorator = compose(view.attach('selectionStore'))
 
-export const MainShortcutHandler = decorator(
-  ({ selectionStore, children }: Props) => {
-    const handlers = {
-      openCurrent: () => {
-        Actions.openItem(selectionStore.selectedItem)
-      },
-      copyLink: async () => {
-        Actions.copyLink(selectionStore.selectedItem)
-      },
-      escape: () => {
-        // clear peek first
-        if (App.peekState.appConfig) {
-          return Actions.clearPeek()
-        }
-        // then orbit query
-        if (App.state.query) {
-          return Actions.clearSearch()
-        }
-        // then orbit itself
-        if (App.state.orbitState.docked) {
-          return Actions.closeOrbit()
-        }
-      },
-    }
+export const MainShortcutHandler = decorator(({ selectionStore, children }: Props) => {
+  const handlers = {
+    openCurrent: () => {
+      console.log('openCurrent')
+      Actions.openItem(selectionStore.selectedItem)
+    },
+    copyLink: async () => {
+      console.log('copyLink')
+      Actions.copyLink(selectionStore.selectedItem)
+    },
+    escape: () => {
+      console.log('escape')
+      // clear peek first
+      if (App.peekState.appConfig) {
+        return Actions.clearPeek()
+      }
+      // then orbit query
+      if (App.state.query) {
+        return Actions.clearSearch()
+      }
+      // then orbit itself
+      if (App.state.orbitState.docked) {
+        return Actions.closeOrbit()
+      }
+    },
+  }
 
-    return (
-      <FocusableShortcutHandler shortcuts={rootShortcuts} handlers={handlers}>
-        {children}
-      </FocusableShortcutHandler>
-    )
-  },
-)
+  return (
+    <FocusableShortcutHandler shortcuts={rootShortcuts} handlers={handlers}>
+      {children}
+    </FocusableShortcutHandler>
+  )
+})

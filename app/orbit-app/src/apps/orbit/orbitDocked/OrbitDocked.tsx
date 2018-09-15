@@ -17,9 +17,6 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
-import { SelectionStore } from './SelectionStore'
-import { QueryStore } from './QueryStore'
-import { KeyboardStore } from '../../../stores/KeyboardStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -76,14 +73,7 @@ const OrbitDockedInner = view({
   },
 })
 
-@view.attach('orbitStore', 'appsStore')
-@view.provide({
-  queryStore: QueryStore,
-  keyboardStore: KeyboardStore,
-})
-@view.provide({
-  selectionStore: SelectionStore,
-})
+@view.attach('orbitStore', 'appsStore', 'selectionStore', 'queryStore', 'keyboardStore')
 @view.provide({
   paneManagerStore: PaneManagerStore,
 })

@@ -6,7 +6,7 @@ import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow } from 'electron'
+import { Menu, BrowserWindow, screen } from 'electron'
 import root from 'global'
 
 const log = new Logger('electron')
@@ -129,8 +129,8 @@ export class OrbitWindow extends React.Component<Props> {
   componentDidMount() {
     this.handleReadyToShow()
 
-    // @ts-ignore
     screen.on('display-metrics-changed', (_event, _display) => {
+      log.info('got display metrics changed event')
       this.setScreenSize()
     })
   }

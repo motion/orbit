@@ -37,7 +37,7 @@ export class AppReactions /* extends Store */ {
   }
 
   async setupReactions() {
-    const dispose = App.onMessage(async msg => {
+    const dispose = App.onMessage(async (msg, value) => {
       console.log('app message', msg)
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
@@ -85,7 +85,7 @@ export class AppReactions /* extends Store */ {
           })
           return
         case App.messages.CLOSE_APP:
-          Actions.closeApp(+msg)
+          Actions.closeApp(+value)
           return
       }
       if (msg.indexOf(App.messages.PIN) === 0) {

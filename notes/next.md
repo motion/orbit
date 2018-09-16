@@ -1,5 +1,6 @@
 # nate
 
+- make double click to open smoother
 - wow:
   - a little orbit ethereal orb instead of boring search icon top left would be useful
     - when scanning it can glow/rotate a bit (hover to see status)

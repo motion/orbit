@@ -7,6 +7,7 @@ import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { Menu, BrowserWindow } from 'electron'
+import root from 'global'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -20,6 +21,12 @@ class OrbitWindowStore {
   props: Props
   orbitRef: BrowserWindow = null
   disposeShow = null
+  alwaysOnTop = true
+
+  didMount() {
+    // temp bugfix
+    root['OrbitWindowStore'] = this
+  }
 
   handleRef = ref => {
     if (!ref) {
@@ -38,6 +45,30 @@ class OrbitWindowStore {
       // wait for showing
       await when(() => App.orbitState.docked)
       this.showOnNewSpace()
+    },
+  )
+
+  // looks at desktop appFocusState and then controls electron focus
+  handleOrbitFocusExternal = react(
+    () => Desktop.state.appFocusState[0],
+    async (state, { sleep }) => {
+      ensure('state', !!state)
+      console.log('GOT EM', state)
+      if (state.focused) {
+        // it doesnt focus if we dont sleep here... :/
+        console.log(1)
+        await sleep()
+        // turn off always on top before focus
+        // otherwise, it brings all windows up to front
+        this.alwaysOnTop = false
+        console.log(2)
+        await sleep()
+        // then focus
+        this.orbitRef.focus()
+        console.log(3)
+        // then turn always on top back on
+        this.alwaysOnTop = true
+      }
     },
   )
 
@@ -71,10 +102,8 @@ class OrbitWindowStore {
   }
 
   handleBlur = async () => {
-    // dont blur hide in dev mode...
-    if (process.env.NODE_ENV !== 'development') {
-      Electron.sendMessage(App, App.messages.HIDE)
-    }
+    // dont hide during tear event...
+    // Electron.sendMessage(App, App.messages.HIDE)
   }
 }
 
@@ -111,7 +140,7 @@ export class OrbitWindow extends React.Component<Props> {
     log.info(`Rendering main window at url ${url}`)
     return (
       <Window
-        alwaysOnTop
+        alwaysOnTop={store.alwaysOnTop}
         ignoreMouseEvents={!Electron.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}

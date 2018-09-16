@@ -1,4 +1,4 @@
-import { debugState, on } from '@mcro/black'
+import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'

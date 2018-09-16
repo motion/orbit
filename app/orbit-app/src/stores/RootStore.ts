@@ -1,8 +1,6 @@
-import { store, react } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
+import { store } from '@mcro/black'
 import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
-import * as appActions from '../actions/appActions'
 import { getGlobalConfig } from '@mcro/config'
 
 const Config = getGlobalConfig()
@@ -53,6 +51,7 @@ export class RootStore {
 
   catchErrors() {
     window.addEventListener('unhandledrejection', event => {
+      console.log('unhandler rejection', event)
       event.promise.catch(err => {
         this.handleError({ ...err, reason: event.reason })
       })

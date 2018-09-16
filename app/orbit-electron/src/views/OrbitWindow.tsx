@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { on, view, react, ensure } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -129,6 +129,7 @@ export class OrbitWindow extends React.Component<Props> {
   componentDidMount() {
     this.handleReadyToShow()
 
+    // @ts-ignore
     screen.on('display-metrics-changed', (_event, _display) => {
       this.setScreenSize()
     })

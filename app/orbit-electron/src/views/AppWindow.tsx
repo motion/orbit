@@ -85,6 +85,7 @@ class AppWindowStore {
   }
 
   handleClose = () => {
+    if (this.closed) return
     Electron.sendMessage(App, App.messages.CLOSE_APP, `${this.props.id}`)
     this.closeApp()
   }

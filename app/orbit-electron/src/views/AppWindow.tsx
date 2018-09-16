@@ -20,7 +20,6 @@ type Props = {
 class AppWindowStore {
   props: Props
   window: BrowserWindow = null
-  off: any
   position = [1, 1]
 
   didMount() {
@@ -31,10 +30,11 @@ class AppWindowStore {
   }
 
   willUnmount() {
-    // because weird stuff..
+    // We have to close manually because this is inside a normal window
+    // so we are switching renderers technically which is real weird
+    // and react reconciler api surface doesnt support mixed renderers...
     this.window.close()
     this.props.electronStore.apps.delete(this)
-    this.off()
   }
 
   get ignoreMouseEvents() {
@@ -53,7 +53,7 @@ class AppWindowStore {
       if (focusState.focused) {
         this.window.focus()
       }
-    }
+    },
   )
 
   moveToNewSpace = react(

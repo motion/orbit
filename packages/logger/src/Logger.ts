@@ -8,21 +8,24 @@ type LoggerOpts = {
   trace?: boolean
 }
 
+const has = (x, y) => x.indexOf(y) > -1
+
 const knownUselessLog = str => {
   // our own stack
-  if (str.indexOf('at Logger.log')) return true
+  if (has(str, 'at Logger.log')) return true
   // ignore double understor function names
-  if (str.indexOf('at __')) return true
+  if (has(str, 'at __')) return true
   // common ts compiled code
-  if (str.indexOf('at res ')) return true
+  if (has(str, 'at res ')) return true
   // mobx...
-  if (str.indexOf('at executeAction$')) return true
-  if (str.indexOf('at Reaction$')) return true
-  if (str.indexOf('at runReactionsHelper')) return true
-  if (str.indexOf('at reactionScheduler')) return true
-  if (str.indexOf('at batchedUpdates$')) return true
-  if (str.indexOf('at endBatch$')) return true
-  if (str.indexOf('at endAction')) return true
+  if (has(str, 'at executeAction$')) return true
+  if (has(str, 'at Reaction$')) return true
+  if (has(str, 'at runReactionsHelper')) return true
+  if (has(str, 'at reactionScheduler')) return true
+  if (has(str, 'at batchedUpdates$')) return true
+  if (has(str, 'at endBatch$')) return true
+  if (has(str, 'at endAction')) return true
+  return false
 }
 
 /**

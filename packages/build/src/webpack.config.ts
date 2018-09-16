@@ -109,6 +109,9 @@ const config = {
     mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias: {
+      // if you want to profile in production...
+      // 'react-dom': 'react-dom/profiling',
+      // 'schedule/tracking': 'schedule/tracking-profiling',
       '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
       'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
     },

@@ -90,10 +90,14 @@ export class Logger {
     // adds a stack trace
     if (this.opts.trace) {
       let where = new Error().stack
-      if (process.env.STACK_FILTER) {
+      const { STACK_FILTER } = process.env
+      if (STACK_FILTER) {
+        // replace stack so it looks less stack-y
+        const replace = new RegExp(` \\([^\\)]*${STACK_FILTER}`)
         where = where
           .split('\n')
-          .filter(x => x.indexOf(process.env.STACK_FILTER) > -1)
+          .filter(x => x.indexOf(STACK_FILTER) > -1 && x.indexOf('__awaiter') === -1)
+          .map(x => x.replace(replace, STACK_FILTER))
           .join('\n')
       }
       if (where) {

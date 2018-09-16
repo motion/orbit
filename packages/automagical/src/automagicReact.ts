@@ -14,6 +14,10 @@ Root.__trackStateChanges = {}
 
 let id = 1
 const uid = () => id++ % Number.MAX_VALUE
+const niceLogObj = obj => {
+  const jd = JSON.stringify(obj)
+  return jd.length < 350 ? jd : obj
+}
 
 // simple diff output for dev mode
 const diffLog = (a, b) => {
@@ -21,12 +25,13 @@ const diffLog = (a, b) => {
     return []
   }
   if (!b || typeof b !== 'object' || Array.isArray(b)) {
-    return ['\n        new value:', b]
+    return ['\n        new value:', niceLogObj(b)]
   }
   // object
-  const diff = omitBy(a, (v, k) => isEqual(b[k], v))
+  const diff = omitBy(a, (v, k) => Mobx.comparer.structural(b[k], v))
   if (Object.keys(diff).length) {
-    return ['\n        diff:', diff]
+    // log the diff as json if its short enough, easier to see
+    return ['\n        diff:', niceLogObj(diff)]
   }
   return []
 }

@@ -1,5 +1,5 @@
-import { action, comparer } from 'mobx'
-import { isPlainObject, debounce } from 'lodash'
+import { action } from 'mobx'
+import { isPlainObject, debounce, isEqual } from 'lodash'
 import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
@@ -359,7 +359,7 @@ export class BridgeManager {
         const diff = {}
         let areEqual = true
         for (const cKey in b) {
-          if (!comparer.structural(a[cKey], b[cKey])) {
+          if (!isEqual(a[cKey], b[cKey])) {
             diff[cKey] = b[cKey]
             // deep mutate thanks mobx5
             stateObj[key][cKey] = b[cKey]
@@ -373,7 +373,7 @@ export class BridgeManager {
         changed[key] = diff
       } else {
         // avoid on same val
-        if (a === b || comparer.structural(a, b)) {
+        if (a === b || isEqual(a, b)) {
           continue
         }
         stateObj[key] = b

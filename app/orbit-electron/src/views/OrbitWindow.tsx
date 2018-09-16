@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { on, view, react, ensure } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow } from 'electron'
+import { Menu, BrowserWindow, screen } from 'electron'
+import root from 'global'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -20,6 +21,12 @@ class OrbitWindowStore {
   props: Props
   orbitRef: BrowserWindow = null
   disposeShow = null
+  alwaysOnTop = true
+
+  didMount() {
+    // temp bugfix
+    root['OrbitWindowStore'] = this
+  }
 
   handleRef = ref => {
     if (!ref) {
@@ -38,6 +45,30 @@ class OrbitWindowStore {
       // wait for showing
       await when(() => App.orbitState.docked)
       this.showOnNewSpace()
+    },
+  )
+
+  // looks at desktop appFocusState and then controls electron focus
+  handleOrbitFocusExternal = react(
+    () => Desktop.state.appFocusState[0],
+    async (state, { sleep }) => {
+      ensure('state', !!state)
+      console.log('GOT EM', state)
+      if (state.focused) {
+        // it doesnt focus if we dont sleep here... :/
+        console.log(1)
+        await sleep()
+        // turn off always on top before focus
+        // otherwise, it brings all windows up to front
+        this.alwaysOnTop = false
+        console.log(2)
+        await sleep()
+        // then focus
+        this.orbitRef.focus()
+        console.log(3)
+        // then turn always on top back on
+        this.alwaysOnTop = true
+      }
     },
   )
 
@@ -66,15 +97,22 @@ class OrbitWindowStore {
   }
 
   handleFocus = () => {
+    // avoid sending two show commands in a row in some cases
+    const lm = Electron.bridge.lastMessage
+    if (lm && lm.message === App.messages.SHOW) {
+      console.log('last message', lm, Date.now() - lm.at)
+      if (Date.now() - lm.at < 300) {
+        console.log('avoid sending double "show" event when already opened')
+        return
+      }
+    }
     Electron.sendMessage(App, App.messages.SHOW)
     Electron.setState({ focusedAppId: 'app' })
   }
 
   handleBlur = async () => {
-    // dont blur hide in dev mode...
-    if (process.env.NODE_ENV !== 'development') {
-      Electron.sendMessage(App, App.messages.HIDE)
-    }
+    // dont hide during tear event...
+    // Electron.sendMessage(App, App.messages.HIDE)
   }
 }
 
@@ -90,7 +128,11 @@ export class OrbitWindow extends React.Component<Props> {
 
   componentDidMount() {
     this.handleReadyToShow()
-    on(this, setInterval(this.setScreenSize, 1000))
+
+    screen.on('display-metrics-changed', (_event, _display) => {
+      log.info('got display metrics changed event')
+      this.setScreenSize()
+    })
   }
 
   setScreenSize = () => {
@@ -108,10 +150,10 @@ export class OrbitWindow extends React.Component<Props> {
   render() {
     const { store, electronStore } = this.props
     const url = Config.urls.server
-    log.info(`Rendering main window at url ${url}`)
+    log.info(`render OrbitWindow ${url} hovered? ${Electron.hoverState.orbitHovered}`)
     return (
       <Window
-        alwaysOnTop
+        alwaysOnTop={store.alwaysOnTop}
         ignoreMouseEvents={!Electron.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}

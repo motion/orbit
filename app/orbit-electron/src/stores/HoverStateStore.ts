@@ -36,10 +36,8 @@ export class HoverStateStore {
   unsetOrbitHoveredOnHide = react(
     () => App.orbitState.docked,
     docked => {
-      if (!docked) {
-        Electron.setHoverState({ orbitHovered: false })
-        return
-      }
+      ensure('hidden', !docked)
+      Electron.setHoverState({ orbitHovered: false })
     },
   )
 
@@ -53,8 +51,7 @@ export class HoverStateStore {
 
   handleMousePosition = async (mousePos: Point) => {
     this.lastMousePos = mousePos
-    const orbitHovered =
-      App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
+    const orbitHovered = App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
     let peekHovered = Electron.hoverState
     for (const [index, app] of App.appsState.entries()) {
       const isPeek = index === 0

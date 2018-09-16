@@ -1,5 +1,5 @@
 import { action } from 'mobx'
-import { isPlainObject, isEqual, debounce } from 'lodash'
+import { isPlainObject, debounce, isEqual } from 'lodash'
 import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
@@ -8,7 +8,7 @@ import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { SocketManager } from './SocketManager'
 
-const log = new Logger('bridge')
+const log = new Logger(`bridge ${process.env.PROCESS_NAME || ''}`)
 
 // exports
 export * from './proxySetters'
@@ -31,6 +31,12 @@ const runNow = x => (isBrowser ? setImmediate(x) : x())
 const immediate = () => new Promise(res => runNow(res))
 
 type Disposer = () => void
+
+type LastMessage = {
+  message: string
+  value: any
+  at: number
+}
 
 type Options = {
   master?: Boolean
@@ -60,6 +66,7 @@ export class BridgeManager {
   // to be set once they are imported
   stores = {}
   messageListeners = new Set()
+  lastMessage: LastMessage = null
 
   get state() {
     return this._store.state
@@ -351,11 +358,11 @@ export class BridgeManager {
         // check if equal
         const diff = {}
         let areEqual = true
-        for (const subKey of Object.keys(b)) {
-          if (!isEqual(a[subKey], b[subKey])) {
-            diff[subKey] = b[subKey]
+        for (const cKey in b) {
+          if (!isEqual(a[cKey], b[cKey])) {
+            diff[cKey] = b[cKey]
             // deep mutate thanks mobx5
-            stateObj[key][subKey] = b[subKey]
+            stateObj[key][cKey] = b[cKey]
             areEqual = false
           }
         }
@@ -397,7 +404,10 @@ export class BridgeManager {
       throw new Error('Not started, can only call sendMessage on the app that starts it.')
     }
     if (!Store || !ogMessage) {
-      throw `no store || message ${Store} ${ogMessage} ${value}`
+      throw new Error(`no store || message ${Store} ${ogMessage} ${value}`)
+    }
+    if (typeof Store.source !== 'string') {
+      throw new Error(`Bad store.source, store: ${Store}`)
     }
     const message = value ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}` : ogMessage
     if (this._options.master) {
@@ -412,6 +422,10 @@ export class BridgeManager {
       // this would happen when sockets are on desktop side
       // and then any Store.setState call will hang...
       runNow(() => {
+        if (process.env.NODE_ENV === 'development') {
+          log.trace.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
+        }
+        this.lastMessage = { message, value, at: Date.now() }
         this._socket.send(JSON.stringify({ message, to: Store.source }))
       })
     }

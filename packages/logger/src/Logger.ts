@@ -4,18 +4,24 @@ import { LoggerSettings } from './LoggerSettings'
 // electron doesnt have console.debug...
 const debug = (...args) => (console.debug ? console.debug(...args) : console.info(...args))
 
+type LoggerOpts = {
+  trace?: boolean
+}
+
 /**
  * Creates a new logger with a new namespace.
  */
 export class Logger {
+  private opts: LoggerOpts
   private namespace: string
   private timers: {
     message: string
     time: number
   }[] = []
 
-  constructor(namespace: string) {
+  constructor(namespace: string, opts: LoggerOpts = { trace: false }) {
     this.namespace = namespace
+    this.opts = opts
   }
 
   /**
@@ -55,6 +61,15 @@ export class Logger {
   }
 
   /**
+   * Chainable API to trace the current log
+   * can be used like:
+   *    log.trace.info(...)
+   */
+  get trace() {
+    return new Logger(this.namespace, { trace: true })
+  }
+
+  /**
    * Executes logging.
    */
   private log(level: 'verbose' | 'info' | 'warning' | 'error' | 'timer', messages: any[]) {
@@ -71,6 +86,29 @@ export class Logger {
       LOGGER_COLOR_WHEEL[
         LoggerSettings.namespaces.indexOf(this.namespace) % LOGGER_COLOR_WHEEL.length
       ]
+
+    // adds a stack trace
+    if (this.opts.trace) {
+      let where = new Error().stack
+      const { STACK_FILTER } = process.env
+      if (STACK_FILTER) {
+        // replace stack so it looks less stack-y
+        const replace = new RegExp(` \\([^\\)]*${STACK_FILTER}`)
+        where = where
+          .split('\n')
+          .filter(x => x.indexOf(STACK_FILTER) > -1 && x.indexOf('__awaiter') === -1)
+          .map(x =>
+            x
+              .replace(replace, ` in (${STACK_FILTER}`)
+              // otherwise the trace has irregular first line width
+              .replace(/^\s+at/, '   at'),
+          )
+          .join('\n')
+      }
+      if (where) {
+        messages = [...messages, `\n log trace:\n${where}`]
+      }
+    }
 
     // output to the console
     // todo: in the production we'll need to output into our statistics/logger servers

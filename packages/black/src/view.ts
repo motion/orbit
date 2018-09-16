@@ -1,10 +1,5 @@
 import decor from '@mcro/decor'
-import {
-  storeProvidable,
-  storeAttachable,
-  renderArgumentable,
-  emitsMount,
-} from '@mcro/decor-react'
+import { storeProvidable, storeAttachable, renderArgumentable, emitsMount } from '@mcro/decor-react'
 import { subscribable } from '@mcro/decor-classes'
 import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
@@ -34,7 +29,7 @@ const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   renderArgumentable,
   enable.mobx && reactObservable,
   [storeProvidable, storeOptions],
-  !enable.ui && emitsMount,
+  emitsMount,
 ]
 
 export const blackDecorator: DecorCompiledDecorator<any> = decor(

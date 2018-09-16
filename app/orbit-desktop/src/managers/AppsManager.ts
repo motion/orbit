@@ -47,15 +47,15 @@ export class AppsManager {
       }
 
       // handle adds
-      for (const { id, torn } of apps) {
-        // if you want to avoid handling peek app
-        if (torn === false) {
-          continue
-        }
+      for (const { id } of apps) {
+        // if peek app, avoid (could be used for more control of orbit)
+        // if (torn === false) {
+        //   continue
+        // }
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
-          log.info(`create process ${id}`)
           const icon = join(getGlobalConfig().paths.desktopRoot, 'assets', 'icon.png')
+          log.info(`create process -- ${id} with icon ${icon}`)
           const oracle = await this.spawnOracle(id, 'Test', icon)
           this.processes = [
             ...this.processes,

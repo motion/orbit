@@ -20,8 +20,8 @@ type Props = {
 class AppWindowStore {
   props: Props
   window: BrowserWindow = null
-  off: any
   position = [1, 1]
+  closed = false
 
   didMount() {
     this.props.electronStore.apps.add(this)
@@ -31,14 +31,10 @@ class AppWindowStore {
   }
 
   willUnmount() {
-    // because weird stuff..
-    this.window.close()
-    this.props.electronStore.apps.delete(this)
-    this.off()
-  }
-
-  get ignoreMouseEvents() {
-    return true
+    // We have to close manually because this is inside a normal window
+    // so we are switching renderers technically which is real weird
+    // and react reconciler api surface doesnt support mixed renderers...
+    this.closeApp()
   }
 
   get url() {
@@ -53,7 +49,7 @@ class AppWindowStore {
       if (focusState.focused) {
         this.window.focus()
       }
-    }
+    },
   )
 
   moveToNewSpace = react(
@@ -87,6 +83,19 @@ class AppWindowStore {
     console.log('!! app focus', this.props.id)
     Electron.setState({ focusedAppId: this.props.id })
   }
+
+  handleClose = () => {
+    if (this.closed) return
+    Electron.sendMessage(App, App.messages.CLOSE_APP, `${this.props.id}`)
+    this.closeApp()
+  }
+
+  private closeApp() {
+    if (this.closed) return
+    this.closed = true
+    this.window.close()
+    this.props.electronStore.apps.delete(this)
+  }
 }
 
 const decorator = compose(
@@ -116,6 +125,7 @@ export const AppWindow = decorator(({ id, store, isPeek }: Props & { store: AppW
       position={store.position}
       size={Electron.state.screenSize}
       onFocus={store.handleFocus}
+      onClose={store.handleClose}
     />
   )
 })

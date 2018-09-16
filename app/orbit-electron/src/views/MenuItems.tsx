@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Menu, SubMenu, MenuItem, MenuItems as ElMenuItems } from '@mcro/reactron'
 import { view } from '@mcro/black'
-import { Electron, App } from '@mcro/stores'
+import { Electron, App, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 
 @view.attach('electronStore')
@@ -33,6 +33,14 @@ export class MenuItems extends React.Component<{
     Electron.sendMessage(App, App.messages.TOGGLE_SETTINGS)
   }
 
+  handleMinimize = (_menuItem, _window, event) => {
+    if (typeof Desktop.state.appFocusState === 'number') {
+      console.log('avoid for app')
+      return
+    }
+    event.preventDefault()
+  }
+
   render() {
     const { electronStore } = this.props
     return (
@@ -62,6 +70,7 @@ export class MenuItems extends React.Component<{
         </SubMenu>
         <SubMenu label="Window">
           <ElMenuItems.ToggleFullscreen />
+          <ElMenuItems.Minimize onClick={this.handleMinimize} />
           <ElMenuItems.Close accelerator="CmdOrCtrl+w" onClick={this.handleClose} />
           <MenuItem label="Refresh" accelerator="CmdOrCtrl+r" onClick={electronStore.restart} />
           <MenuItem

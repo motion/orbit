@@ -11,8 +11,8 @@
   },
   "peerDependencies": {
     "electron": "*",
-    "react": "16.4.0",
-    "react-dom": "16.4.0"
+    "react": "16.5.1",
+    "react-dom": "16.5.1"
   },
   "dependencies": {
     "@mcro/logger": "^2.2.1",

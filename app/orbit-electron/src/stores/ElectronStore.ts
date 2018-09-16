@@ -1,5 +1,5 @@
 import { App, Electron } from '@mcro/stores'
-import { isEqual, store, react, debugState, on } from '@mcro/black'
+import { isEqual, store, debugState, on } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
 import { HoverStateStore } from './HoverStateStore'
 import root from 'global'
@@ -77,21 +77,6 @@ export class ElectronStore {
   togglePinned = () => {
     Electron.sendMessage(App, App.messages.TOGGLE_PINNED)
   }
-
-  // focus on pinned
-  focusOnPin = react(
-    () => App.orbitState.pinned,
-    pinned => {
-      // only focus on option+space
-      if (Electron.lastAction !== 'Option+Space') {
-        return
-      }
-      if (pinned) {
-        this.appRef.focus()
-      }
-    },
-    { delay: App.animationDuration },
-  )
 
   restart() {
     if (process.env.NODE_ENV === 'development') {

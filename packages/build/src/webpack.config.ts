@@ -13,11 +13,11 @@ import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 // import PrepackPlugin from 'prepack-webpack-plugin'
 
 const cwd = process.cwd()
-const readEntry = () => {
+const readPackage = (key: string) => {
   try {
     const packageJson = Fs.readFileSync(Path.join(cwd, 'package.json'))
     const pkg = JSON.parse(packageJson.toString())
-    return pkg.main
+    return pkg[key]
   } catch {
     return null
   }
@@ -25,12 +25,11 @@ const readEntry = () => {
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const entry = process.env.ENTRY || readEntry() || './src'
+const entry = process.env.ENTRY || readPackage('main') || './src'
 const tsConfig = Path.join(cwd, 'tsconfig.json')
 const tsConfigExists = Fs.existsSync(tsConfig)
 const outputPath = Path.join(cwd, 'dist')
-const buildNodeModules =
-  process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
+const buildNodeModules = process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
 
 const getFlag = flag => {
   const matcher = new RegExp(`${flag} ([a-z0-9]+)`, 'i')
@@ -40,10 +39,7 @@ const getFlag = flag => {
 
 const target = getFlag('--target') || 'web'
 
-console.log(
-  'webpack info',
-  JSON.stringify({ outputPath, target, isProd, tsConfig }),
-)
+console.log('webpack info', JSON.stringify({ outputPath, target, isProd, tsConfig }))
 
 // this really helps hmr speed
 const optimizeSplit = {
@@ -113,6 +109,9 @@ const config = {
     mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias: {
+      // if you want to profile in production...
+      // 'react-dom': 'react-dom/profiling',
+      // 'schedule/tracking': 'schedule/tracking-profiling',
       '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
       'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
     },
@@ -179,6 +178,8 @@ const config = {
     new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
+      'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
+      'process.env.STACK_FILTER': JSON.stringify(process.env.STACK_FILTER || ''),
     }),
     // adds cache based on source of files
     // new HardSourceWebpackPlugin(),

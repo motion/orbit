@@ -2,16 +2,15 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { BitRepository, SettingRepository } from '../repositories'
 import { Peek } from './peek/Peek'
-import { Orbit } from './orbit/Orbit'
 import { OrbitStore } from './OrbitStore'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { settingToAppConfig } from '../helpers/toAppConfig/settingToAppConfig'
 import { Actions } from '../actions/Actions'
+import { OrbitDocked } from './orbit/orbitDocked/OrbitDocked'
 
 const getItem = {
-  githubItem: () =>
-    BitRepository.findOne({ where: { integration: 'github' }, skip: 6 }),
+  githubItem: () => BitRepository.findOne({ where: { integration: 'github' }, skip: 6 }),
   gdriveSetting: async () => ({
     id: 1,
     title: 'GDocs',
@@ -19,9 +18,7 @@ const getItem = {
     integration: 'gdrive',
   }),
   githubSetting: async () =>
-    SettingRepository.findOne({ where: { type: 'github' } }).then(
-      settingToAppConfig,
-    ),
+    SettingRepository.findOne({ where: { type: 'github' } }).then(settingToAppConfig),
 }
 
 @view
@@ -46,7 +43,7 @@ export class IsolateHome extends React.Component {
   }
 
   render() {
-    return <Orbit />
+    return <OrbitDocked />
   }
 }
 

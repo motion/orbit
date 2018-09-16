@@ -2,11 +2,11 @@
   "name": "orbit-monorepo",
   "dependencies": {
     "global": "^4.3.2",
-    "react": "16.4.0",
-    "react-dom": "16.4.0"
+    "react": "16.5.1",
+    "react-dom": "16.5.1"
   },
   "resolutions": {
-    "@types/react": "16.4.7"
+    "@types/react": "16.4.14"
   },
   "devDependencies": {
     "@mcro/babel-preset-motion": "2.2.0",
@@ -17,8 +17,8 @@
     "@babel/plugin-syntax-typescript": "7.0.0-beta.47",
     "@babel/runtime": "7.0.0-beta.47",
     "@types/lodash": "4.14.115",
-    "@types/react": "16.4.7",
-    "@types/react-dom": "16.0.6",
+    "@types/react": "16.4.14",
+    "@types/react-dom": "16.0.7",
     "@types/event-kit": "2.4.0",
     "@types/reconnectingwebsocket": "1.0.1",
     "@types/ws": "5.1.2",

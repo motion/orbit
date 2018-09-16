@@ -21,6 +21,7 @@ class AppWindowStore {
   props: Props
   window: BrowserWindow = null
   position = [1, 1]
+  closed = false
 
   didMount() {
     this.props.electronStore.apps.add(this)
@@ -89,6 +90,8 @@ class AppWindowStore {
   }
 
   private closeApp() {
+    if (this.closed) return
+    this.closed = true
     this.window.close()
     this.props.electronStore.apps.delete(this)
   }

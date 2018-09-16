@@ -8,7 +8,7 @@ import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { SocketManager } from './SocketManager'
 
-const log = new Logger('bridge')
+const log = new Logger(`bridge ${process.env.PROCESS_NAME || ''}`)
 
 // exports
 export * from './proxySetters'

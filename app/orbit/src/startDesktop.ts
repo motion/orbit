@@ -18,6 +18,7 @@ export function startDesktop(): ChildProcess {
     const child = spawn(Config.paths.nodeBinary, args, {
       detached: true,
       env: {
+        PROCESS_NAME: 'desktop',
         ELECTRON_RUN_AS_NODE: 1,
         IS_DESKTOP: true,
         NODE_ENV: process.env.NODE_ENV,

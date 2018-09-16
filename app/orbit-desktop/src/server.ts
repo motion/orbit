@@ -21,9 +21,9 @@ export class Server {
     const app = express()
     app.set('port', Config.ports.server)
 
-    // if (process.env.NODE_ENV !== 'development') {
-    app.use(morgan('dev'))
-    // }
+    if (process.env.NODE_ENV !== 'development') {
+      app.use(morgan('dev'))
+    }
 
     this.app = app
 

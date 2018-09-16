@@ -21,6 +21,7 @@ if [[ "$FLAGS" =~ "--disable-watch" ]]; then
   echo "not watching backend for changes..."
   ./scripts/run-orbit.sh
 else
+  export PROCESS_NAME="electron"
   # start app
   npx nodemon \
     --watch _ \

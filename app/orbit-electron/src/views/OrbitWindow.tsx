@@ -128,7 +128,10 @@ export class OrbitWindow extends React.Component<Props> {
 
   componentDidMount() {
     this.handleReadyToShow()
-    on(this, setInterval(this.setScreenSize, 1000))
+
+    screen.on('display-metrics-changed', (_event, _display) => {
+      this.setScreenSize()
+    })
   }
 
   setScreenSize = () => {

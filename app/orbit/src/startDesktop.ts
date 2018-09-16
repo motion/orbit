@@ -19,6 +19,7 @@ export function startDesktop(): ChildProcess {
       detached: true,
       env: {
         PROCESS_NAME: 'desktop',
+        STACK_FILTER: 'orbit-desktop',
         ELECTRON_RUN_AS_NODE: 1,
         IS_DESKTOP: true,
         NODE_ENV: process.env.NODE_ENV,

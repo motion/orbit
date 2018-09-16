@@ -1,5 +1,5 @@
-import { action } from 'mobx'
-import { isPlainObject, isEqual, debounce } from 'lodash'
+import { action, comparer } from 'mobx'
+import { isPlainObject, debounce } from 'lodash'
 import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
@@ -358,11 +358,11 @@ export class BridgeManager {
         // check if equal
         const diff = {}
         let areEqual = true
-        for (const subKey of Object.keys(b)) {
-          if (!isEqual(a[subKey], b[subKey])) {
-            diff[subKey] = b[subKey]
+        for (const cKey in b) {
+          if (!comparer.structural(a[cKey], b[cKey])) {
+            diff[cKey] = b[cKey]
             // deep mutate thanks mobx5
-            stateObj[key][subKey] = b[subKey]
+            stateObj[key][cKey] = b[cKey]
             areEqual = false
           }
         }
@@ -373,7 +373,7 @@ export class BridgeManager {
         changed[key] = diff
       } else {
         // avoid on same val
-        if (a === b || isEqual(a, b)) {
+        if (a === b || comparer.structural(a, b)) {
           continue
         }
         stateObj[key] = b
@@ -404,7 +404,10 @@ export class BridgeManager {
       throw new Error('Not started, can only call sendMessage on the app that starts it.')
     }
     if (!Store || !ogMessage) {
-      throw `no store || message ${Store} ${ogMessage} ${value}`
+      throw new Error(`no store || message ${Store} ${ogMessage} ${value}`)
+    }
+    if (typeof Store.source !== 'string') {
+      throw new Error(`Bad store.source, store: ${Store}`)
     }
     const message = value ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}` : ogMessage
     if (this._options.master) {
@@ -420,7 +423,7 @@ export class BridgeManager {
       // and then any Store.setState call will hang...
       runNow(() => {
         if (process.env.NODE_ENV === 'development') {
-          log.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
+          log.trace.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
         }
         this.lastMessage = { message, value, at: Date.now() }
         this._socket.send(JSON.stringify({ message, to: Store.source }))

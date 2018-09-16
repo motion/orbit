@@ -53,6 +53,7 @@ class AppStore {
     FORWARD_STATUS: 'FORWARD_STATUS',
     NOTIFICATION: 'NOTIFICATION',
     SEARCH_INDEX_ANSWER: 'SEARCH_INDEX_ANSWER',
+    CLOSE_APP: 'CLOSE_APP',
   }
 
   setState = Bridge.setState

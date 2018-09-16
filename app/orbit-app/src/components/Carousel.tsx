@@ -70,10 +70,6 @@ export class Carousel extends React.Component<CarouselProps> {
       after,
       ...props
     } = this.props
-    // @ts-ignore wierd ass bug, checking...
-    if (items.target === 'job') {
-      debugger
-    }
     return (
       <HorizontalScrollRow
         forwardRef={this.frameRef}

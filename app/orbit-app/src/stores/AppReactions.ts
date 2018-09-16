@@ -84,6 +84,9 @@ export class AppReactions /* extends Store */ {
             message: val.message,
           })
           return
+        case App.messages.CLOSE_APP:
+          Actions.closeApp(+msg)
+          return
       }
       if (msg.indexOf(App.messages.PIN) === 0) {
         const key = msg.split('-')[1]

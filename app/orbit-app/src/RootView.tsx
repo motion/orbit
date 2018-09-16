@@ -5,21 +5,23 @@ import Router from './router'
 import { view, on, isEqual } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
+import { throttle } from 'lodash'
 
 export class RootView extends React.Component {
-  resizeInterval = setInterval(() => {
-    if (!App.setState) return
-    const screenSize = [window.innerWidth, window.innerHeight]
-    if (!isEqual(App.state.screenSize, screenSize)) {
-      App.setState({ screenSize })
-    }
-  }, 1000)
-
   state = {
     error: null,
   }
 
   componentDidMount() {
+    // listen for resize
+    window.onresize = throttle(() => {
+      if (!App.setState) return
+      const screenSize = [window.innerWidth, window.innerHeight]
+      if (!isEqual(App.state.screenSize, screenSize)) {
+        App.setState({ screenSize })
+      }
+    }, 20)
+
     // prevent scroll bounce
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
@@ -28,10 +30,7 @@ export class RootView extends React.Component {
     // if you don't then clicking a link will cause electron to go there
     // this is a good safeguard
     on(this, document, 'click', event => {
-      if (
-        event.target.tagName === 'A' &&
-        event.target.href.startsWith('http')
-      ) {
+      if (event.target.tagName === 'A' && event.target.href.startsWith('http')) {
         event.preventDefault()
         console.log('Capturing a A tag from root', event.target.href)
         App.sendMessage(Desktop, Desktop.messages.OPEN, event.target.href)
@@ -44,10 +43,6 @@ export class RootView extends React.Component {
 
   componentDidCatch(error) {
     this.setState({ error })
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.resizeInterval)
   }
 
   clearErrors() {
@@ -83,12 +78,7 @@ export class RootView extends React.Component {
             }}
           >
             <h2>Orbit Error: {this.state.error.message}</h2>
-            <UI.Block
-              tagName="pre"
-              fontSize={15}
-              marginTop={10}
-              lineHeight={15}
-            >
+            <UI.Block tagName="pre" fontSize={15} marginTop={10} lineHeight={15}>
               {this.state.error.stack}
             </UI.Block>
           </UI.Col>

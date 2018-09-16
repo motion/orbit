@@ -1,5 +1,7 @@
 import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 
+Error.stackTraceLimit = Infinity
+
 // this runs as the entry for both processes
 // first electron, then desktop
 // this lets us share config more easily
@@ -7,9 +9,7 @@ import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 // which lets us pack things into an asar
 export async function main() {
   // if were in desktop we get config through here
-  let config: GlobalConfig = process.env.ORBIT_CONFIG
-    ? JSON.parse(process.env.ORBIT_CONFIG)
-    : null
+  let config: GlobalConfig = process.env.ORBIT_CONFIG ? JSON.parse(process.env.ORBIT_CONFIG) : null
 
   // if not we're in the root electron process, lets set it up once...
   if (!config) {

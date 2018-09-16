@@ -32,6 +32,12 @@ const immediate = () => new Promise(res => runNow(res))
 
 type Disposer = () => void
 
+type LastMessage = {
+  message: string
+  value: any
+  at: number
+}
+
 type Options = {
   master?: Boolean
   ignoreSelf?: Boolean
@@ -60,6 +66,7 @@ export class BridgeManager {
   // to be set once they are imported
   stores = {}
   messageListeners = new Set()
+  lastMessage: LastMessage = null
 
   get state() {
     return this._store.state
@@ -412,6 +419,10 @@ export class BridgeManager {
       // this would happen when sockets are on desktop side
       // and then any Store.setState call will hang...
       runNow(() => {
+        if (process.env.NODE_ENV === 'development') {
+          log.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
+        }
+        this.lastMessage = { message, value, at: Date.now() }
         this._socket.send(JSON.stringify({ message, to: Store.source }))
       })
     }

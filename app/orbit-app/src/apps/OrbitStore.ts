@@ -32,10 +32,7 @@ export class OrbitStore {
     this.onPinKeyCB = cb
   }
 
-  updateAppOrbitStateOnResize = react(
-    () => [this.contentHeight, App.orbitState.docked],
-    this.updateOrbit,
-  )
+  updateAppOrbitStateOnResize = react(() => [this.contentHeight], this.updateOrbit)
 
   updateOrbit() {
     App.setOrbitState({

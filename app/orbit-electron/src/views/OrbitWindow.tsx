@@ -97,6 +97,11 @@ class OrbitWindowStore {
   }
 
   handleFocus = () => {
+    const lm = Electron.bridge.lastMessage
+    if (lm && lm.message === App.messages.SHOW && Date.now() - lm.at < 100) {
+      console.log('avoid sending double "show" event when already opened')
+      return
+    }
     Electron.sendMessage(App, App.messages.SHOW)
     Electron.setState({ focusedAppId: 'app' })
   }

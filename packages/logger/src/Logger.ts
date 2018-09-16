@@ -97,11 +97,16 @@ export class Logger {
         where = where
           .split('\n')
           .filter(x => x.indexOf(STACK_FILTER) > -1 && x.indexOf('__awaiter') === -1)
-          .map(x => x.replace(replace, STACK_FILTER))
+          .map(x =>
+            x
+              .replace(replace, ` in (${STACK_FILTER}`)
+              // otherwise the trace has irregular first line width
+              .replace(/^\s+at/, '   at'),
+          )
           .join('\n')
       }
       if (where) {
-        messages = [...messages, '\n', where]
+        messages = [...messages, `\n log trace:\n${where}`]
       }
     }
 

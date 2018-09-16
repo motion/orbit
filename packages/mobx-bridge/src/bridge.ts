@@ -285,6 +285,11 @@ export class BridgeManager {
     }
     // update our own state immediately so its sync
     const changedState = this.deepMergeMutate(this.state, newState)
+    if (process.env.NODE_ENV === 'development') {
+      if (changedState) {
+        log.trace.verbose('setState', newState, 'changedState', changedState)
+      }
+    }
     if (!ignoreSend) {
       this.sendChangedState(changedState)
     }

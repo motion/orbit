@@ -8,6 +8,23 @@ type LoggerOpts = {
   trace?: boolean
 }
 
+const knownUselessLog = str => {
+  // our own stack
+  if (str.indexOf('at Logger.log')) return true
+  // ignore double understor function names
+  if (str.indexOf('at __')) return true
+  // common ts compiled code
+  if (str.indexOf('at res ')) return true
+  // mobx...
+  if (str.indexOf('at executeAction$')) return true
+  if (str.indexOf('at Reaction$')) return true
+  if (str.indexOf('at runReactionsHelper')) return true
+  if (str.indexOf('at reactionScheduler')) return true
+  if (str.indexOf('at batchedUpdates$')) return true
+  if (str.indexOf('at endBatch$')) return true
+  if (str.indexOf('at endAction')) return true
+}
+
 /**
  * Creates a new logger with a new namespace.
  */
@@ -96,13 +113,17 @@ export class Logger {
         const replace = new RegExp(` \\([^\\)]*${STACK_FILTER}`)
         where = where
           .split('\n')
-          .filter(x => x.indexOf(STACK_FILTER) > -1 && x.indexOf('__awaiter') === -1)
+          // filter
+          .filter(x => x.indexOf(STACK_FILTER) > -1 && !knownUselessLog(x))
+          // cleanup formatting
           .map(x =>
             x
               .replace(replace, ` in (${STACK_FILTER}`)
-              // otherwise the trace has irregular first line width
-              .replace(/^\s+at/, '   at'),
+              // normalizes the traces irregular first line width
+              .replace(/^\s+at/, '  at'),
           )
+          // remove the first line "Error" and cap at 10 lines
+          .slice(1, 10)
           .join('\n')
       }
       if (where) {

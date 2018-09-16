@@ -7,6 +7,7 @@ import { App } from '@mcro/stores'
 import { QueryStore } from '../orbitDocked/QueryStore'
 import { HeaderStore } from './HeaderStore'
 import { ThemeObject } from '@mcro/gloss'
+import { OrbitStore } from '../../OrbitStore'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -16,39 +17,22 @@ const handleKeyDown = e => {
   }
 }
 
-const onFocus = () => {
-  App.setOrbitState({
-    inputFocused: true,
-  })
-}
-
-const onBlur = () => {
-  App.setOrbitState({
-    inputFocused: false,
-  })
-}
-
 type Props = {
   theme: ThemeObject
   queryStore?: QueryStore
   headerStore: HeaderStore
+  orbitStore?: OrbitStore
 }
 
 const decorator = compose(
-  view.attach('queryStore'),
+  view.attach('orbitStore', 'queryStore'),
   view,
 )
 
 export const OrbitHeaderInput = decorator(
-  ({ queryStore, theme, headerStore }: Props) => {
+  ({ orbitStore, queryStore, theme, headerStore }: Props) => {
     return (
-      <View
-        height="100%"
-        flex={1}
-        position="relative"
-        flexFlow="row"
-        alignItems="center"
-      >
+      <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
           width="100%"
           fontWeight={400}
@@ -61,17 +45,14 @@ export const OrbitHeaderInput = decorator(
           highlight={headerStore.highlightWords}
           color={theme.color}
           onChange={queryStore.onChangeQuery}
-          onFocus={onFocus}
-          onBlur={onBlur}
+          onFocus={orbitStore.onFocus}
+          onBlur={orbitStore.onBlur}
           onKeyDown={handleKeyDown}
           forwardRef={headerStore.inputRef}
           onClick={headerStore.onClickInput}
           placeholder={headerStore.placeholder}
         />
-        <UI.ClearButton
-          onClick={queryStore.clearQuery}
-          opacity={App.state.query ? 1 : 0}
-        />
+        <UI.ClearButton onClick={queryStore.clearQuery} opacity={App.state.query ? 1 : 0} />
       </View>
     )
   },

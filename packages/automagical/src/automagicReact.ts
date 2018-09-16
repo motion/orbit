@@ -255,7 +255,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   }
 
   function watcher(reactionFn) {
-    return function watcherCb(reactValArg) {
+    return function __watcherCb(reactValArg) {
       reset()
       reactionID = uid()
       const curID = reactionID

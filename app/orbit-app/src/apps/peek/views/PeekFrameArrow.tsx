@@ -49,7 +49,7 @@ const decorator = compose(
 )
 
 export const PeekFrameArrow = decorator(({ store, peekStore, theme, borderShadow }: Props) => {
-  if (!peekStore.isTorn) {
+  if (peekStore.isTorn) {
     return null
   }
   log(`RENDER ${store.arrowY}`)

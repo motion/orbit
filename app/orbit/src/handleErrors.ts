@@ -1,6 +1,7 @@
 import { showConfirmDialog } from '../../orbit-electron/src/helpers/showConfirmDialog'
 import { clipboard, dialog } from 'electron'
 import open from 'opn'
+// @ts-ignore
 import { logFile } from '@mcro/logger'
 import { pathExists, readFile } from 'fs-extra'
 

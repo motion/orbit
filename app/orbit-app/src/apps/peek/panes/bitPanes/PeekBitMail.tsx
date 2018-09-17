@@ -6,12 +6,8 @@ import { PeekBitPaneProps } from './PeekBitPaneProps'
 import { DateFormat } from '../../../../views/DateFormat'
 import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 import { Actions } from '../../../../actions/Actions'
-import { VerticalSpace } from '../../../../views'
+import { VerticalSpace, HorizontalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
-
-const HorizontalSpace = view({
-  width: 10,
-})
 
 const Message = view({
   padding: 15,

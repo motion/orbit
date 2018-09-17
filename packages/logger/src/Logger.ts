@@ -132,22 +132,25 @@ export class Logger {
       const { STACK_FILTER } = process.env
       if (STACK_FILTER) {
         // replace stack so it looks less stack-y
-        const noExtraFilter = STACK_FILTER === 'true'
-        const replace = noExtraFilter ? '' : new RegExp(` \\([^\\)]*${STACK_FILTER}`)
+        const simpleStackFilter = STACK_FILTER === 'true'
+        const replace = simpleStackFilter ? '' : new RegExp(` \\([^\\)]*${STACK_FILTER}`)
         where = where
           .split('\n')
-          .filter(
-            x =>
-              (STACK_FILTER !== 'true' ? x.indexOf(STACK_FILTER) > -1 : true) &&
-              !knownUselessLog(x),
-          )
+          .filter(x => {
+            let shouldKeep = !knownUselessLog(x)
+            if (!simpleStackFilter) {
+              shouldKeep = shouldKeep && x.indexOf(STACK_FILTER) > -1
+            }
+            return shouldKeep
+          })
           // cleanup formatting
           .map(x => {
             // normalizes the traces irregular first line width
-            x = x.replace(/^\s+at/, '  at')
-            if (!noExtraFilter) {
-              x = x.replace(replace, ` in (${STACK_FILTER}`)
+            let res = x.replace(/^\s+at/, '  at')
+            if (!simpleStackFilter) {
+              res = res.replace(replace, ` in (${STACK_FILTER}`)
             }
+            return res
           })
           // remove the first line "Error" and cap at 8 lines
           .slice(1, 8)

@@ -27,7 +27,7 @@ const SlackMessageInner = view({
 @view
 export class SlackMessage extends React.Component<SlackMessageProps> {
   render() {
-    const { bit, message, previousMessage, hide = {}, decoration } = this.props
+    const { bit, extraProps, message, previousMessage, hide = {}, decoration } = this.props
     if (!message.text || !bit) {
       console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -44,6 +44,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
       <SlackMessageFrame {...decoration.item}>
         {!hideHeader && (
           <UI.Row flexFlow="row" alignItems="center" userSelect="none" cursor="default">
+            {extraProps ? extraProps.beforeTitle : null}
             {!!person && <RoundButtonPerson background="transparent" person={person} />}
             <div style={{ width: 6 }} />
             {!(hide && hide.itemDate) &&

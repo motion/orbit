@@ -16,6 +16,7 @@ import { SuggestionBarVerticalPad, SmallVerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightsContext } from '../../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
+import { OrbitIcon } from '../../../../views/OrbitIcon'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -118,24 +119,34 @@ class OrbitSearchResultsList extends React.Component<Props> {
     const quickResultsLen = searchStore.quickSearchState.results.length
     return (
       <HighlightsContext.Provider value={searchTerm.split(' ')}>
-        {results.map((model, index) => (
-          <OrbitListItem
-            pane={name}
-            subPane="search"
-            key={model.id}
-            index={index + quickResultsLen}
-            model={model}
-            hide={model.integration === 'slack' ? hideSlack : null}
-            subtitleSpaceBetween={this.spaceBetween}
-            isExpanded
-            searchTerm={searchTerm}
-            onClickLocation={this.handleLocation}
-            maxHeight={model.integration === 'slack' ? 380 : 200}
-            overflow="hidden"
-          >
-            {this.getChildren}
-          </OrbitListItem>
-        ))}
+        {results.map((model, index) => {
+          const isConversation = model.integration === 'slack'
+          return (
+            <OrbitListItem
+              pane={name}
+              subPane="search"
+              key={model.id}
+              index={index + quickResultsLen}
+              model={model}
+              hide={isConversation ? hideSlack : null}
+              subtitleSpaceBetween={this.spaceBetween}
+              isExpanded
+              searchTerm={searchTerm}
+              onClickLocation={this.handleLocation}
+              maxHeight={isConversation ? 380 : 200}
+              overflow="hidden"
+              itemProps={
+                isConversation && {
+                  extraProps: {
+                    beforeTitle: <OrbitIcon margin={['auto', 0]} icon="slack" size={14} />,
+                  },
+                }
+              }
+            >
+              {this.getChildren}
+            </OrbitListItem>
+          )
+        })}
       </HighlightsContext.Provider>
     )
   }

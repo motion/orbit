@@ -1,6 +1,6 @@
-import log from 'electron-log'
+export * from './Logger'
+export * from './LoggerSettings'
 
-export * from "./Logger"
-export * from "./LoggerSettings"
-
-export const logFile = log.transports.file
+if (typeof window === 'undefined') {
+  exports.logFile = require('electron-log').transports.file
+}

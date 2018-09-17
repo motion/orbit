@@ -1,7 +1,5 @@
 # nate
 
-- make it easy to send logs on case of failure in prod
-  - on error or node process failed to open, prompt for "copy error logs to clipboard"?
 - make double click to open smoother
 - wow:
   - a little orbit ethereal orb instead of boring search icon top left would be useful

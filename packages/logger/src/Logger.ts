@@ -150,7 +150,7 @@ export class Logger {
           .join('\n')
       }
       if (where) {
-        messages = [...messages, `\n log trace2:\n${where}`]
+        messages = [...messages, `\n log trace:\n${where}`]
       }
     }
 

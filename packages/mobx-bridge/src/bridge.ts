@@ -253,10 +253,8 @@ export class BridgeManager {
     log.info(`Message: ${message}`, value)
     for (const { type, listener } of this.messageListeners) {
       if (!type) {
-        console.log('handleMessage', message, value)
         listener(message, value)
       } else if (message === type) {
-        console.log('handleMessage', type, message, value)
         listener(value)
       }
     }

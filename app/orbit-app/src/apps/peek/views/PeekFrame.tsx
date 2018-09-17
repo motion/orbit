@@ -93,11 +93,6 @@ const PeekFrameContainer = view(UI.View, {
 })
 
 export const PeekFrame = decorator(({ peekStore, store, children, theme }: PeekFrameProps) => {
-  log('peekframe')
-  trace()
-  if (peekStore.isTorn) {
-    return null
-  }
   const { isShown, willShow, willHide, state, willStayShown, framePosition } = peekStore
   if (!state || !state.position || !state.position.length || !state.target) {
     return null

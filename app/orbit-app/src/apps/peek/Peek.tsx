@@ -23,7 +23,6 @@ const decorator = compose(
 )
 
 export const Peek = decorator(({ selectionStore, peekStore }: Props) => {
-  log('peeeeeek')
   return (
     <UI.Theme name="light">
       <PeekFrame>

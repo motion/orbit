@@ -91,6 +91,16 @@ export class AppsManager {
         }
         break
       case 'blur':
+        // since we switch the focus off the app immediately, avoid blur when it happens fast
+        const curState = Desktop.state.appFocusState[id]
+        if (
+          curState &&
+          typeof curState.focused === 'number' &&
+          Date.now() - curState.focused < 80
+        ) {
+          console.log('avoid quick blur')
+          return
+        }
         nextState = {
           focused: false,
         }

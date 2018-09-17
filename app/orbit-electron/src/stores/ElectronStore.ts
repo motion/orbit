@@ -51,13 +51,11 @@ export class ElectronStore {
   }
 
   closeOnAppClose = react(
-    () => Desktop.state.appFocusState[0],
+    () => Desktop.orbitFocusState,
     state => {
+      ensure('exited', state.exited)
       log.info('exiting...')
-      ensure('state', !!state)
-      if (state.exited) {
-        process.exit(0)
-      }
+      process.exit(0)
     },
   )
 

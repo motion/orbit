@@ -48,25 +48,8 @@ class OrbitWindowStore {
     },
   )
 
-  defaultFocus = { focused: false, exited: false }
-
-  get orbitFocusState() {
-    const { appFocusState } = Desktop.state
-    const peekApp = App.appsState.find(x => x.torn)
-    if (!peekApp || !appFocusState) {
-      console.log('orbitFocusState, either no peekApp or no appFocusState')
-      return this.defaultFocus
-    }
-    const focusState = Desktop.state.appFocusState[peekApp.id]
-    if (!focusState) {
-      console.log('strange, no focus state for orbit, maybe off a frame')
-      return this.defaultFocus
-    }
-    return focusState
-  }
-
-  handleAppWindowFocus = react(
-    () => this.orbitFocusState.focused,
+  handleOrbitShouldFocus = react(
+    () => Desktop.orbitFocusState.focused,
     focused => {
       if (focused) {
         this.handleFocus()

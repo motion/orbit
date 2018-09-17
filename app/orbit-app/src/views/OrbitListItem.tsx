@@ -14,7 +14,6 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
-import { VerticalSpace } from '.'
 
 const ListFrame = view(UI.View, {
   margin: [0, -1],
@@ -105,12 +104,9 @@ const Preview = view({
 
 const ListItemSubtitle = view(UI.View, {
   height: 20,
-  padding: [2, 0, 2, 0],
+  padding: [0, 0, 4],
   flexFlow: 'row',
   alignItems: 'center',
-  listItem: {
-    margin: [6, 0, 0],
-  },
 })
 
 const AfterHeader = view({
@@ -256,7 +252,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               {showIcon &&
                 !showTitle && (
                   <>
-                    <OrbitIcon icon={icon} size={16} {...iconProps} />
+                    <OrbitIcon icon={icon} size={14} {...iconProps} />
                     <TitleSpace />
                   </>
                 )}

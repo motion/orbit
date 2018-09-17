@@ -7,6 +7,7 @@ import Darwin
 
 let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
 let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
+let isVirtualApp = ProcessInfo.processInfo.environment["VIRTUAL_APP"] == "true"
 
 struct Position: Decodable {
   let x: Int
@@ -85,8 +86,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   func applicationWillBecomeActive(_ notification: Notification) {
     self.emit("{ \"action\": \"appState\", \"value\": \"focus\" }")
-    // hide it immediately, we never want to "really" focus this window we just move to Orbit
-    NSApp.hide(nil)
+    if isVirtualApp {
+      // hide it immediately, we never want to "really" focus this window we just move to Orbit
+      NSApp.hide(nil)
+    }
   }
   
   func applicationWillResignActive(_ notification: Notification) {

@@ -72,7 +72,10 @@ export class AppsManager {
     const oracle = new Oracle({
       name,
       ...oracleOptions,
-      env: { SHOW_ICON: iconPath },
+      env: {
+        SHOW_ICON: iconPath,
+        VIRTUAL_APP: true,
+      },
     })
     await oracle.start()
     log.verbose('spawnOracle', id, name)

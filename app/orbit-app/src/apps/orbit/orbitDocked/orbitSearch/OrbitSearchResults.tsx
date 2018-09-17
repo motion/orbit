@@ -16,7 +16,6 @@ import { SuggestionBarVerticalPad, SmallVerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightsContext } from '../../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
-import { OrbitIcon } from '../../../../views/OrbitIcon'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -135,13 +134,6 @@ class OrbitSearchResultsList extends React.Component<Props> {
               onClickLocation={this.handleLocation}
               maxHeight={isConversation ? 380 : 200}
               overflow="hidden"
-              itemProps={
-                isConversation && {
-                  extraProps: {
-                    beforeTitle: <OrbitIcon margin={['auto', 0]} icon="slack" size={14} />,
-                  },
-                }
-              }
             >
               {this.getChildren}
             </OrbitListItem>

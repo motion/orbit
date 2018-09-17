@@ -105,7 +105,6 @@ const Preview = view({
 
 const ListItemSubtitle = view(UI.View, {
   height: 20,
-  margin: [3, 0, 0],
   padding: [2, 0, 2, 0],
   flexFlow: 'row',
   alignItems: 'center',
@@ -253,7 +252,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             </Title>
           )}
           {showSubtitle && (
-            <ListItemSubtitle>
+            <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
               {showIcon &&
                 !showTitle && (
                   <>
@@ -288,7 +287,12 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                 ) : (
                   subtitle
                 ))}
-              {!subtitle && <PeopleRow people={people} />}
+              {!subtitle && (
+                <>
+                  <div style={{ flex: 1 }} />
+                  <PeopleRow people={people} />
+                </>
+              )}
               {hide && hide.title && afterHeader}
             </ListItemSubtitle>
           )}

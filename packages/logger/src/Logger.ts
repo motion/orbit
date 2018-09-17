@@ -31,7 +31,7 @@ const has = (x, y) => x.indexOf(y) > -1
 
 const knownUselessLog = str => {
   // our own stack
-  if (has(str, 'at Logger.log')) return true
+  if (has(str, 'at Logger.')) return true
   // ignore double understor function names
   if (has(str, 'at __')) return true
   // common ts compiled code

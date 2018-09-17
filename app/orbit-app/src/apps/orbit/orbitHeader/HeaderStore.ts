@@ -105,14 +105,11 @@ export class HeaderStore {
   }
 
   goHome = () => {
-    if (this.props.paneManagerStore.activePane === 'home') {
+    const activePane = this.props.paneManagerStore.activePane
+    if (activePane === 'home' || activePane === 'search') {
       Actions.closeOrbit()
     } else {
-      if (App.state.query) {
-        this.props.queryStore.clearQuery()
-      } else {
-        this.props.paneManagerStore.setActivePane('home')
-      }
+      this.props.paneManagerStore.setActivePane('home')
     }
   }
 }

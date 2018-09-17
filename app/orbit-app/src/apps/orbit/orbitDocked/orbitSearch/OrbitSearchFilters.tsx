@@ -76,7 +76,7 @@ const getDate = ({ startDate, endDate }: { startDate?: Date; endDate?: Date }) =
     if (getSuffix(endInWords) === getSuffix(startInWords)) {
       startInWords = startInWords.replace(` ${getSuffix(startInWords)}`, '')
     }
-    return `${startInWords} - ${endInWords} ago`
+    return `${startInWords} - ${endInWords}`
   }
   // if older we should just show month level words
   const startMonth = monthNames[startDate.getMonth()]

@@ -149,7 +149,7 @@ export function parseSearchQuery(query: string): NLPResponse {
   const date: DateRange = Sherlockjs.parse(query)
   // better "now", sherlock often says a few hours earlier than actually now
   // also sherlock puts startDate to now but it logically is endDate (and we parse later startdates if found)
-  if (dates.indexOf('now') > -1) {
+  if (dates.map(x => x.indexOf('now') > -1).length) {
     date.startDate = null
     date.endDate = new Date()
   }

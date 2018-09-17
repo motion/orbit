@@ -1,9 +1,9 @@
-import { showConfirmDialog } from '../../orbit-electron/src/helpers/showConfirmDialog'
 import { clipboard, dialog } from 'electron'
 import open from 'opn'
 // @ts-ignore
 import { logFile } from '@mcro/logger'
 import { pathExists, readFile } from 'fs-extra'
+import { showConfirmDialog } from './showConfirmDialog'
 
 // puts the last of the log and the current error onto the clipboard
 // and opens mail if you want it to

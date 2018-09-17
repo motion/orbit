@@ -54,8 +54,9 @@ export class ElectronStore {
     () => Desktop.orbitFocusState,
     state => {
       ensure('exited', state.exited)
-      log.info('exiting...')
-      process.exit(0)
+      if (state.exited) {
+        process.exit(0)
+      }
     },
   )
 

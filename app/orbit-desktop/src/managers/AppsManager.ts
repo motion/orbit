@@ -1,11 +1,10 @@
 import { Oracle } from '@mcro/oracle'
 import { store, react } from '@mcro/black'
-import { App, Desktop, Electron } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { oracleOptions } from '../constants'
 import { Logger } from '@mcro/logger'
 import { join } from 'path'
 import { getGlobalConfig } from '@mcro/config'
-import { stringify } from '@mcro/helpers'
 
 const log = new Logger('AppsManager')
 

@@ -85,6 +85,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   func applicationWillBecomeActive(_ notification: Notification) {
     self.emit("{ \"action\": \"appState\", \"value\": \"focus\" }")
+    // hide it immediately, we never want to "really" focus this window we just move to Orbit
+    NSApp.hide(nil)
   }
   
   func applicationWillResignActive(_ notification: Notification) {

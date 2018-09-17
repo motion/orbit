@@ -50,9 +50,13 @@ class OrbitWindowStore {
 
   handleOrbitShouldFocus = react(
     () => Desktop.orbitFocusState.focused,
-    focused => {
+    async (focused, { sleep }) => {
+      console.log('\n\n\n\n sould focus \n\n\n\n\n')
       if (focused) {
         this.handleFocus()
+        await sleep()
+        this.orbitRef.show()
+        this.orbitRef.focus()
       } else {
         // nothing for now on blur
       }

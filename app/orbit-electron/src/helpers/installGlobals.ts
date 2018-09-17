@@ -7,3 +7,4 @@ root['Config'] = getGlobalConfig()
 root['App'] = App
 root['Desktop'] = Desktop
 root['Electron'] = Electron
+root['electron'] = require('electron')

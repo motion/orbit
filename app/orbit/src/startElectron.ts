@@ -12,14 +12,18 @@ export async function startElectron() {
   let desktopProcess: ChildProcess
 
   const handleExit = async () => {
-    console.log('Electron handle exit...')
-    console.log('Orbit exiting...')
-    cleanupChildren(desktopProcess.pid)
-    cleanupChildren(process.pid)
-    desktopProcess.kill('SIGINT')
-    // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
-    process.kill(-desktopProcess.pid)
-    console.log('bye!')
+    try {
+      console.log('Electron handle exit...')
+      console.log('Orbit exiting...')
+      cleanupChildren(desktopProcess.pid)
+      cleanupChildren(process.pid)
+      desktopProcess.kill('SIGINT')
+      // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
+      process.kill(-desktopProcess.pid)
+      console.log('bye!')
+    } catch (err) {
+      console.log('error exiting', err)
+    }
   }
 
   // this works in prod

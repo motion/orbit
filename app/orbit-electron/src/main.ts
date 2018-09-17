@@ -1,7 +1,7 @@
 import 'raf/polyfill'
 import { Logger } from '@mcro/logger'
 import waitPort from 'wait-port'
-// import { app } from 'electron'
+import { app } from 'electron'
 
 const log = new Logger('electron')
 
@@ -31,11 +31,10 @@ export async function main(): Promise<number | void> {
     process.on('SIGUSR2', () => exitHandler(0))
   }
 
-  // // this already shows in dev, and we dont want to lose focus during restarts
-  // if (process.env.NODE_ENV !== 'development') {
-  //   // show dock icon
-  //   app.dock.show()
-  // }
+  // we hide it already in prod, lets hide it in dev
+  if (process.env.NODE_ENV === 'development') {
+    app.dock.hide()
+  }
 
   // require app after setting config
   const { ElectronApp } = require('./ElectronApp')

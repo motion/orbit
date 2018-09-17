@@ -6,23 +6,23 @@
       "request": "attach",
       "name": "Attach to Desktop",
       "port": 9000,
-      "localRoot": "${workspaceFolder}/apps/desktop",
-      "outFiles": ["${workspaceRoot}/apps/desktop/_/**/*.js"]
+      "localRoot": "${workspaceFolder}/app/orbit-desktop",
+      "outFiles": ["${workspaceRoot}/app/orbit-desktop/_/**/*.js"]
     },
     {
       "type": "node",
       "request": "attach",
       "name": "Electron: Main",
       "port": 9001,
-      "localRoot": "${workspaceFolder}/apps/electron",
-      "outFiles": ["${workspaceRoot}/apps/electron/_/**/*.js"]
+      "localRoot": "${workspaceFolder}/app/orbit-electron",
+      "outFiles": ["${workspaceRoot}/app/orbit-electron/_/**/*.js"]
     },
     {
       "name": "Electron: Renderer",
       "type": "chrome",
       "request": "attach",
       "port": 9001,
-      "webRoot": "${workspaceFolder}/apps/app",
+      "webRoot": "${workspaceFolder}/app/orbit-app",
       "timeout": 30000
     }
   ],

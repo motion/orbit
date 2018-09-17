@@ -167,7 +167,7 @@ export class ScreenManager {
       clearTimeout(mvtm)
       mvtm = setTimeout(() => {
         this.oracle.socketSend('mvsp')
-      }, 250)
+      }, 220)
     })
 
     // accessiblity check

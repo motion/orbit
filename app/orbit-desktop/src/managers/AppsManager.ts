@@ -1,11 +1,10 @@
 import { Oracle } from '@mcro/oracle'
 import { store, react } from '@mcro/black'
-import { App, Desktop, Electron } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { oracleOptions } from '../constants'
 import { Logger } from '@mcro/logger'
 import { join } from 'path'
 import { getGlobalConfig } from '@mcro/config'
-import { stringify } from '@mcro/helpers'
 
 const log = new Logger('AppsManager')
 
@@ -73,7 +72,10 @@ export class AppsManager {
     const oracle = new Oracle({
       name,
       ...oracleOptions,
-      env: { SHOW_ICON: iconPath },
+      env: {
+        SHOW_ICON: iconPath,
+        VIRTUAL_APP: true,
+      },
     })
     await oracle.start()
     log.verbose('spawnOracle', id, name)
@@ -91,6 +93,16 @@ export class AppsManager {
         }
         break
       case 'blur':
+        // since we switch the focus off the app immediately, avoid blur when it happens fast
+        const curState = Desktop.state.appFocusState[id]
+        if (
+          curState &&
+          typeof curState.focused === 'number' &&
+          Date.now() - curState.focused < 80
+        ) {
+          console.log('avoid quick blur')
+          return
+        }
         nextState = {
           focused: false,
         }

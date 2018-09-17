@@ -132,21 +132,28 @@ export class Logger {
       const { STACK_FILTER } = process.env
       if (STACK_FILTER) {
         // replace stack so it looks less stack-y
-        const dontFilter = STACK_FILTER === 'true'
-        const replace = dontFilter ? '' : new RegExp(` \\([^\\)]*${STACK_FILTER}`)
+        const simpleStackFilter = STACK_FILTER === 'true'
+        const replace = simpleStackFilter ? '' : new RegExp(` \\([^\\)]*${STACK_FILTER}`)
         where = where
           .split('\n')
-          // filter
-          .filter(x => x.indexOf(STACK_FILTER) > -1 && !knownUselessLog(x))
+          .filter(x => {
+            let shouldKeep = !knownUselessLog(x)
+            if (!simpleStackFilter) {
+              shouldKeep = shouldKeep && x.indexOf(STACK_FILTER) > -1
+            }
+            return shouldKeep
+          })
           // cleanup formatting
-          .map(x =>
-            x
-              .replace(replace, dontFilter ? '*****' : ` in (${STACK_FILTER}`)
-              // normalizes the traces irregular first line width
-              .replace(/^\s+at/, '  at'),
-          )
-          // remove the first line "Error" and cap at 10 lines
-          .slice(1, 10)
+          .map(x => {
+            // normalizes the traces irregular first line width
+            let res = x.replace(/^\s+at/, '  at')
+            if (!simpleStackFilter) {
+              res = res.replace(replace, ` in (${STACK_FILTER}`)
+            }
+            return res
+          })
+          // remove the first line "Error" and cap at 8 lines
+          .slice(1, 8)
           .join('\n')
       }
       if (where) {

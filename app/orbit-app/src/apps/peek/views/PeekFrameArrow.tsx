@@ -26,6 +26,10 @@ const arrowSize = 14
 const peekOnRight = false
 
 class PeekArrowStore {
+  props: Props
+
+  hide = react(() => this.props.peekStore.isTorn, _ => _)
+
   arrowY = react(
     () => App.peekState,
     state => {
@@ -48,8 +52,8 @@ const decorator = compose(
   view,
 )
 
-export const PeekFrameArrow = decorator(({ store, peekStore, theme, borderShadow }: Props) => {
-  if (peekStore.isTorn) {
+export const PeekFrameArrow = decorator(({ store, theme, borderShadow }: Props) => {
+  if (store.hide) {
     return null
   }
   log(`RENDER ${store.arrowY}`)

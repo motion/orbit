@@ -1,5 +1,6 @@
 # nate
 
+- location search and type search nlp run
 - make double click to open smoother
 - wow:
   - a little orbit ethereal orb instead of boring search icon top left would be useful

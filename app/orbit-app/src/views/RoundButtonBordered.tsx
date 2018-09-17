@@ -11,3 +11,13 @@ export const RoundButtonBordered = props => (
     {...props}
   />
 )
+
+export const RoundButtonBorderedSmall = props => (
+  <RoundButtonBordered
+    sizeHeight={0.75}
+    sizePadding={0.75}
+    size={0.9}
+    fontWeight={500}
+    {...props}
+  />
+)

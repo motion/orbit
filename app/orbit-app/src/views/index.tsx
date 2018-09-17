@@ -80,6 +80,10 @@ export const SmallVerticalSpace = view({
   height: 10,
 })
 
+export const HorizontalSpace = view({
+  width: 10,
+})
+
 export const VerticalSpace = view({
   height: 16,
   small: {

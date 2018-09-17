@@ -17,6 +17,7 @@ import { TitleBarSpace } from '../views/TitleBarSpace'
 import { Actions } from '../../../actions/Actions'
 import { HighlightsContext } from '../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../helpers/contexts/ItemResolverDecorationContext'
+import { VerticalSpace } from '../../../views'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -167,6 +168,8 @@ export const PeekBit = ({
                           content={content}
                           comments={comments}
                         />
+                        <VerticalSpace />
+                        <VerticalSpace />
                       </HighlightsContext.Provider>
                     </>
                   ),

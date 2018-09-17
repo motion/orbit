@@ -7,7 +7,7 @@ import Darwin
 
 let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
 let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
-let isVirtualApp = ProcessInfo.processInfo.environment["VIRTUAL_APP"] == "true"
+let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
 struct Position: Decodable {
   let x: Int

@@ -74,7 +74,7 @@ export class AppsManager {
       ...oracleOptions,
       env: {
         SHOW_ICON: iconPath,
-        VIRTUAL_APP: torn,
+        PREVENT_FOCUSING: !torn,
       },
     })
     await oracle.start()

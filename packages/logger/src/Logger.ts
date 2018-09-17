@@ -133,7 +133,6 @@ export class Logger {
       if (STACK_FILTER) {
         // replace stack so it looks less stack-y
         const simpleStackFilter = STACK_FILTER === 'true'
-        const replace = simpleStackFilter ? '' : new RegExp(` \\([^\\)]*${STACK_FILTER}`)
         where = where
           .split('\n')
           .filter(x => {
@@ -146,8 +145,10 @@ export class Logger {
           // cleanup formatting
           .map(x => {
             // normalizes the traces irregular first line width
-            let res = x.replace(/^\s+at/, '  at')
+            let res = x.replace(/^\s+at/, '  ->')
             if (!simpleStackFilter) {
+              // remove some extra stuff from the trace
+              const replace = new RegExp(` \\([^\\)]*${STACK_FILTER}`)
               res = res.replace(replace, ` in (${STACK_FILTER}`)
             }
             return res

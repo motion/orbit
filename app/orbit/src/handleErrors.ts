@@ -16,6 +16,11 @@ export async function onError(error) {
   console.log('\n\n---error---\n\n', error)
   const errorMessage = `${error.message || ''}\n${error.stack || ''}`
 
+  // avoid certain errors that aren't easily catchable (like websockets)...
+  if (errorMessage.indexOf('WebSocket is') > -1) {
+    return
+  }
+
   if (
     showConfirmDialog({
       type: 'warning',

@@ -1,5 +1,5 @@
 import { ensure, react, view } from '@mcro/black'
-import { IntegrationType, Setting, SettingModel } from '@mcro/models'
+import { Setting, SettingModel } from '@mcro/models'
 import * as React from 'react'
 import { observeMany } from '../../../../repositories'
 import { OrbitAppCard } from './OrbitAppCard'
@@ -15,6 +15,7 @@ import { fuzzyQueryFilter } from '../../../../helpers'
 import { App } from '@mcro/stores'
 import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 import { settingsList } from '../../../../helpers/settingsList'
+import { NoResultsDialog } from '../views/NoResultsDialog'
 
 type Props = {
   name: string
@@ -100,6 +101,7 @@ const Unpad = view({
 export class OrbitApps extends React.Component<Props> {
   render() {
     const { name, store } = this.props
+    const hasFilteredApps = !!store.filteredAvailableApps.length
     return (
       <SubPane name={name} fadeBottom>
         <Views.SmallVerticalSpace />
@@ -129,20 +131,25 @@ export class OrbitApps extends React.Component<Props> {
             <Views.VertSpace />
           </>
         )}
-        <Views.SubTitle>Add App</Views.SubTitle>
-        <Unpad>
-          {store.filteredAvailableApps.map(item => {
-            return (
-              <SimpleItem
-                key={item.id}
-                onClick={addIntegrationClickHandler(item)}
-                title={item.title}
-                icon={item.icon}
-                after={<Button size={0.9}>Add</Button>}
-              />
-            )
-          })}
-        </Unpad>
+        {hasFilteredApps && (
+          <>
+            <Views.SubTitle>Add App</Views.SubTitle>
+            <Unpad>
+              {store.filteredAvailableApps.map(item => {
+                return (
+                  <SimpleItem
+                    key={item.id}
+                    onClick={addIntegrationClickHandler(item)}
+                    title={item.title}
+                    icon={item.icon}
+                    after={<Button size={0.9}>Add</Button>}
+                  />
+                )
+              })}
+            </Unpad>
+          </>
+        )}
+        {!hasFilteredApps && <NoResultsDialog />}
       </SubPane>
     )
   }

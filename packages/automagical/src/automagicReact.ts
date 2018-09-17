@@ -344,7 +344,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           if (options.log !== 'state') {
             log.info(
               `${logName}`,
-              ...(isReaction ? ['\n        args:', reactValArg] : []),
+              ...(isReaction ? ['\n        args:', toJSDeep(reactValArg)] : []),
               ...(changed || []),
             )
           }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { App } from '@mcro/stores'
 import { view, react, ensure } from '@mcro/black'
-import { compose, on } from '@mcro/helpers'
+import { compose } from '@mcro/helpers'
 import { observeMany } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
@@ -12,8 +12,9 @@ import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
 import { SelectionStore } from './SelectionStore'
-import { PersonBitModel } from '@mcro/models'
+import { PersonBitModel, PersonBit } from '@mcro/models'
 import { HighlightsContext } from '../../../helpers/contexts/HighlightsContext'
+import { NoResultsDialog } from './views/NoResultsDialog'
 
 const height = 60
 
@@ -29,9 +30,7 @@ class OrbitDirectoryStore {
   allPeople = []
   private allPeople$ = observeMany(PersonBitModel).subscribe(people => {
     if (!people) return
-    const sorted = sortBy(people.filter(x => !!x.name), x =>
-      x.name.toLowerCase(),
-    )
+    const sorted = sortBy(people.filter(x => !!x.name), x => x.name.toLowerCase())
     this.allPeople = sorted
   })
 
@@ -47,9 +46,7 @@ class OrbitDirectoryStore {
     () => [this.isActive, this.results],
     ([isActive]) => {
       ensure('is active', isActive)
-      this.props.selectionStore.setResults([
-        { type: 'column', items: this.results },
-      ])
+      this.props.selectionStore.setResults([{ type: 'column', items: this.results }])
     },
   )
 
@@ -129,11 +126,7 @@ const createSection = (people: PersonBit[], letter, getIndex) => {
       <GridTitle>{letter}</GridTitle>
       <Grid gridAutoRows={height}>
         {people.map(person => (
-          <DirectoryPersonCard
-            key={person.email}
-            getIndex={getIndex}
-            model={person}
-          />
+          <DirectoryPersonCard key={person.email} getIndex={getIndex} model={person} />
         ))}
       </Grid>
       <SmallVerticalSpace />
@@ -145,7 +138,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   const { results } = store
   const total = results.length
   if (!total) {
-    return null
+    return <NoResultsDialog />
   }
   console.log('rendering directory...')
   let sections
@@ -154,11 +147,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
     sections = (
       <Grid gridAutoRows={height}>
         {results.map((person, index) => (
-          <DirectoryPersonCard
-            key={person.email}
-            index={index}
-            model={person}
-          />
+          <DirectoryPersonCard key={person.email} index={index} model={person} />
         ))}
       </Grid>
     )
@@ -175,13 +164,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
         if (!lastPersonLetter) {
           lastPersonLetter = letter
         }
-        sections.push(
-          createSection(
-            nextPeople,
-            lastPersonLetter.toUpperCase(),
-            store.getIndex,
-          ),
-        )
+        sections.push(createSection(nextPeople, lastPersonLetter.toUpperCase(), store.getIndex))
         nextPeople = [person]
       } else {
         nextPeople.push(person)

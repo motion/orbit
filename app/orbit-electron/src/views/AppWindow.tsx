@@ -58,12 +58,10 @@ class AppWindowStore {
       ensure('did move', !!moved)
       ensure('window', !!this.window)
       // wait for move to finish
-      await sleep(420)
+      await sleep(400)
       // wait for showing
       await when(() => App.orbitState.docked)
-      this.window.setVisibleOnAllWorkspaces(true) // put the window on all screens
-      this.window.focus() // focus the window up front on the active screen
-      this.window.setVisibleOnAllWorkspaces(false) // disable all screen behavior
+      this.bringAppAboveOrbitWindow()
     },
   )
 
@@ -71,12 +69,16 @@ class AppWindowStore {
     if (ref) {
       this.window = ref.window
       if (this.props.isPeek) {
-        // set it above the OrbitWindow
-        this.window.setAlwaysOnTop(true, 'floating', 2)
-        this.window.setVisibleOnAllWorkspaces(true)
-        this.window.setFullScreenable(false)
+        this.bringAppAboveOrbitWindow()
       }
     }
+  }
+
+  bringAppAboveOrbitWindow = () => {
+    // set it above the OrbitWindow
+    this.window.setAlwaysOnTop(true, 'floating', 2)
+    this.window.setVisibleOnAllWorkspaces(true)
+    this.window.setFullScreenable(false)
   }
 
   handleFocus = () => {

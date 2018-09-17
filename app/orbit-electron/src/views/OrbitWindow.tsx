@@ -48,41 +48,43 @@ class OrbitWindowStore {
     },
   )
 
-  // looks at desktop appFocusState and then controls electron focus
-  handleOrbitFocusExternal = react(
-    () => Desktop.state.appFocusState[0],
-    async (state, { sleep }) => {
-      ensure('state', !!state)
-      console.log('GOT EM', state)
-      if (state.focused) {
-        // it doesnt focus if we dont sleep here... :/
-        console.log(1)
-        await sleep()
-        // turn off always on top before focus
-        // otherwise, it brings all windows up to front
-        this.alwaysOnTop = false
-        console.log(2)
-        await sleep()
-        // then focus
-        this.orbitRef.focus()
-        console.log(3)
-        // then turn always on top back on
-        this.alwaysOnTop = true
+  defaultFocus = { focused: false, exited: false }
+
+  get orbitFocusState() {
+    const { appFocusState } = Desktop.state
+    const peekApp = App.appsState.find(x => x.torn)
+    if (!peekApp || !appFocusState) {
+      console.log('orbitFocusState, either no peekApp or no appFocusState')
+      return this.defaultFocus
+    }
+    const focusState = Desktop.state.appFocusState[peekApp.id]
+    if (!focusState) {
+      console.log('strange, no focus state for orbit, maybe off a frame')
+      return this.defaultFocus
+    }
+    return focusState
+  }
+
+  handleAppWindowFocus = react(
+    () => this.orbitFocusState.focused,
+    focused => {
+      if (focused) {
+        this.handleFocus()
+      } else {
+        // nothing for now on blur
       }
     },
   )
 
-  handleOrbitFocus = react(
+  handleOrbitDocked = react(
     () => App.orbitState.docked,
     docked => {
-      const focusedOnAppWindow = typeof Electron.state.focusedAppId === 'number'
-      ensure('focus off app window', !focusedOnAppWindow)
       if (!docked) {
         ensure('no apps open', App.appsState.length === 1)
         Menu.sendActionToFirstResponder('hide:')
       } else {
-        // app.show()
         this.orbitRef.show()
+        this.orbitRef.focus()
       }
     },
     {
@@ -108,11 +110,6 @@ class OrbitWindowStore {
     }
     Electron.sendMessage(App, App.messages.SHOW)
     Electron.setState({ focusedAppId: 'app' })
-  }
-
-  handleBlur = async () => {
-    // dont hide during tear event...
-    // Electron.sendMessage(App, App.messages.HIDE)
   }
 }
 
@@ -153,7 +150,7 @@ export class OrbitWindow extends React.Component<Props> {
     log.info(`render OrbitWindow ${url} hovered? ${Electron.hoverState.orbitHovered}`)
     return (
       <Window
-        alwaysOnTop={store.alwaysOnTop}
+        alwaysOnTop={[store.alwaysOnTop, 'floating', 1]}
         ignoreMouseEvents={!Electron.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}
@@ -163,8 +160,6 @@ export class OrbitWindow extends React.Component<Props> {
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
-        onBlur={store.handleBlur}
-        onFocus={store.handleFocus}
         // @ts-ignore
         showDevTools={Electron.state.showDevTools.app}
         transparent

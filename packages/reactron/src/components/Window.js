@@ -49,12 +49,10 @@ export class Window extends BaseComponent {
       visibleOnAllWorkspaces: this.handleSetProp('visibleOnAllWorkspaces'),
       fullScreenable: this.handleSetProp('fullScreenable'),
       ignoreMouseEvents: this.handleSetProp('ignoreMouseEvents', x => !!x),
-      focusable: this.handleSetProp(
-        'focusable',
-        x => (x === undefined ? true : x),
-      ),
+      focusable: this.handleSetProp('focusable', x => (x === undefined ? true : x)),
       opacity: this.handleSetProp('opacity'),
-      alwaysOnTop: this.handleSetProp('alwaysOnTop', x => !!x),
+      // can be an array
+      alwaysOnTop: this.handleSetProp('alwaysOnTop', x => x),
       showDevTools: propVal => {
         if (propVal) {
           this.window.webContents.openDevTools()
@@ -214,13 +212,7 @@ function configureSize({ size: oSize, onResize, defaultSize, animateSize }) {
   }
 }
 
-function configurePosition({
-  position,
-  onMove,
-  onMoved,
-  defaultPosition,
-  animatePosition,
-}) {
+function configurePosition({ position, onMove, onMoved, defaultPosition, animatePosition }) {
   if (this.unmounted) return
   if (!this.window) return
   try {
@@ -250,8 +242,7 @@ function configurePosition({
     }
     if (position) {
       if (!Array.isArray(position)) end('not array')
-      if (typeof position[0] !== 'number' || typeof position[1] !== 'number')
-        end('not number')
+      if (typeof position[0] !== 'number' || typeof position[1] !== 'number') end('not number')
       if (onMove || onMoved) {
         this.window.setPosition(...position)
         this.window.setMovable(true)

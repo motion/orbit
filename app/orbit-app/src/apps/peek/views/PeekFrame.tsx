@@ -9,6 +9,7 @@ import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { setAppState } from '../../../actions/appActions/setAppState'
 import { debounce } from 'lodash'
 import { Actions } from '../../../actions/Actions'
+import { trace } from 'mobx'
 
 type PeekFrameProps = {
   store?: PeekFrameStore
@@ -91,62 +92,61 @@ const PeekFrameContainer = view(UI.View, {
   zIndex: 2,
 })
 
-export const PeekFrame = decorator(
-  ({ peekStore, store, children, theme, ...props }: PeekFrameProps) => {
-    const { isShown, willShow, willHide, state, willStayShown, framePosition, isTorn } = peekStore
-    if (!state || !state.position || !state.position.length || !state.target) {
-      return null
-    }
-    const borderShadow = ['inset', 0, 0, 0, 0.5, theme.frameBorderColor]
-    const isHidden = !state
-    const onRight = !state.peekOnLeft
-    const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
-    const margin = padding.map(x => -x)
-    const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
-    const transition = transitions(peekStore)
-    const size = store.size
-    return (
-      <ResizableBox
+export const PeekFrame = decorator(({ peekStore, store, children, theme }: PeekFrameProps) => {
+  log('peekframe')
+  trace()
+  if (peekStore.isTorn) {
+    return null
+  }
+  const { isShown, willShow, willHide, state, willStayShown, framePosition } = peekStore
+  if (!state || !state.position || !state.position.length || !state.target) {
+    return null
+  }
+  const borderShadow = ['inset', 0, 0, 0, 0.5, theme.frameBorderColor]
+  const isHidden = !state
+  const onRight = !state.peekOnLeft
+  const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
+  const margin = padding.map(x => -x)
+  const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
+  const transition = transitions(peekStore)
+  const size = store.size
+  return (
+    <ResizableBox
+      width={size[0]}
+      height={size[1]}
+      minConstraints={[100, 100]}
+      maxConstraints={[window.innerWidth, window.innerHeight]}
+      onResize={store.handleResize}
+      style={{
+        zIndex: 2,
+        // keep size/positionX linked to be fast...
+        width: size[0],
+        height: size[1],
+        // dont put this in transform so it doesnt animate
+        // it needs to move quickly because the frame itself resizes
+        // and so it has to update the width + left at same time
+        left: framePosition[0],
+        // ...but have the positionY animate nicely
+        transform: `translateX(0px) translateY(${framePosition[1]}px)`,
+        transition,
+        opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
+      }}
+    >
+      <PeekFrameContainer
         width={size[0]}
         height={size[1]}
-        minConstraints={[100, 100]}
-        maxConstraints={[window.innerWidth, window.innerHeight]}
-        onResize={store.handleResize}
-        style={{
-          zIndex: 2,
-          // keep size/positionX linked to be fast...
-          width: size[0],
-          height: size[1],
-          // dont put this in transform so it doesnt animate
-          // it needs to move quickly because the frame itself resizes
-          // and so it has to update the width + left at same time
-          left: framePosition[0],
-          // ...but have the positionY animate nicely
-          transform: `translateX(0px) translateY(${framePosition[1]}px)`,
-          transition,
-          opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
-        }}
+        pointerEvents={isShown ? 'auto' : 'none'}
       >
-        <PeekFrameContainer
-          width={size[0]}
-          height={size[1]}
-          pointerEvents={isShown ? 'auto' : 'none'}
-        >
-          {!isTorn && <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />}
-          <UI.Col flex={1} padding={padding} margin={margin}>
-            <UI.Col position="relative" flex={1}>
-              <PeekFrameBorder boxShadow={[borderShadow]} />
-              <PeekMain
-                boxShadow={boxShadow}
-                borderRadius={Constants.PEEK_BORDER_RADIUS}
-                {...props}
-              >
-                {children}
-              </PeekMain>
-            </UI.Col>
+        <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
+        <UI.Col flex={1} padding={padding} margin={margin}>
+          <UI.Col position="relative" flex={1}>
+            <PeekFrameBorder boxShadow={[borderShadow]} />
+            <PeekMain boxShadow={boxShadow} borderRadius={Constants.PEEK_BORDER_RADIUS}>
+              {children}
+            </PeekMain>
           </UI.Col>
-        </PeekFrameContainer>
-      </ResizableBox>
-    )
-  },
-)
+        </UI.Col>
+      </PeekFrameContainer>
+    </ResizableBox>
+  )
+})

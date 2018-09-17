@@ -105,7 +105,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
                   glint={false}
                   sizeHeight={0.9}
                   margin={[0, 3]}
-                  icon={<OrbitIcon size={20} icon={filter.icon} />}
+                  icon={<OrbitIcon size={18} icon={filter.icon} />}
                   tooltip={filter.name}
                   onClick={searchFilterStore.integrationFilterToggler(filter)}
                   background="transparent"

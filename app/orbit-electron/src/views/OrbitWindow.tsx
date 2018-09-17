@@ -6,7 +6,7 @@ import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow, screen } from 'electron'
+import { Menu, BrowserWindow, screen, app } from 'electron'
 import root from 'global'
 
 const log = new Logger('electron')
@@ -57,6 +57,10 @@ class OrbitWindowStore {
         await sleep()
         this.orbitRef.show()
         this.orbitRef.focus()
+        // bring dev tools to front in dev mode
+        if (process.env.NODE_ENV === 'development') {
+          app.show()
+        }
       } else {
         // nothing for now on blur
       }
@@ -119,13 +123,13 @@ export class OrbitWindow extends React.Component<Props> {
       // give it a second to adjust
       await sleep(100)
       this.setScreenSize()
+      this.props.electronStore.reset()
     })
   }
 
   setScreenSize = () => {
     const screenSize = getScreenSize()
     Electron.setState({ screenSize })
-    this.props.electronStore.reset()
   }
 
   handleReadyToShow = () => {
@@ -146,12 +150,11 @@ export class OrbitWindow extends React.Component<Props> {
         ref={store.handleRef}
         file={url}
         position={[0, 0]}
-        size={Electron.state.screenSize}
+        size={Electron.state.screenSize.slice()}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
-        // @ts-ignore
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#00000000"

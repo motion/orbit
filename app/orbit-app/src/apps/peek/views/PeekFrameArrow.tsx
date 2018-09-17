@@ -6,6 +6,7 @@ import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { ThemeObject } from '@mcro/gloss'
 import { App } from '@mcro/stores'
+import { trace } from 'mobx'
 
 type Props = {
   store?: PeekArrowStore
@@ -52,6 +53,7 @@ export const PeekFrameArrow = decorator(({ store, peekStore, theme, borderShadow
     return null
   }
   log(`RENDER ${store.arrowY}`)
+  trace()
   return (
     <UI.Arrow
       position="absolute"

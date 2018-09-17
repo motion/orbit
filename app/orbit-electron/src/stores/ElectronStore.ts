@@ -52,9 +52,10 @@ export class ElectronStore {
   }
 
   async reset() {
+    log.info('Resetting...')
     this.show = 0
     await sleep(1)
-    this.show = 1
+    this.show = 2
   }
 
   closeOnAppClose = react(

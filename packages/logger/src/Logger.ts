@@ -148,13 +148,13 @@ export class Logger {
             let res = x.replace(/^\s+at/, '  ->')
             if (!simpleStackFilter) {
               // remove some extra stuff from the trace
-              const replace = new RegExp(` \\([^\\)]*${STACK_FILTER}`)
-              res = res.replace(replace, ` in (${STACK_FILTER}`)
+              const replace = new RegExp(`\\([^\\)]*${STACK_FILTER}`)
+              res = res.replace(replace, `in ./app/${STACK_FILTER}`)
             }
             return res
           })
-          // remove the first line "Error" and cap at 8 lines
-          .slice(1, 8)
+          // remove the first line "Error" and cap at lesser lines
+          .slice(1, 6)
           .join('\n')
       }
       if (where) {

@@ -17,7 +17,6 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
-import { trace } from 'mobx'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -42,20 +41,6 @@ const OrbitDockedFrame = view(UI.Col, {
   },
 })
 
-const OrbitDockedInnerFrame = view(UI.Col, {
-  opacity: 0,
-  // transform: {
-  //   x: 12,
-  // },
-  // transition: `
-  //   transform ease 80ms,
-  //   opacity ease 80ms
-  // `,
-  visible: {
-    opacity: 1,
-  },
-})
-
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
 // that overlap the edge of the frame and dont cut off
@@ -73,6 +58,36 @@ const OrbitDockedInner = view({
   },
 })
 
+@view.attach('paneManagerStore', 'searchStore')
+class OrbitDockedContents extends React.PureComponent<Props> {
+  render() {
+    const { searchStore, paneManagerStore } = this.props
+    log('contents...')
+    return (
+      <>
+        <OrbitHeader
+          borderRadius={BORDER_RADIUS}
+          after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
+        />
+        <OrbitSuggestionBar
+          paneManagerStore={paneManagerStore}
+          filterStore={searchStore.searchFilterStore}
+        />
+        <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
+          <div style={{ position: 'relative', flex: 1 }}>
+            <OrbitOnboard name="onboard" />
+            <OrbitHome name="home" />
+            <OrbitDirectory name="directory" />
+            <OrbitApps name="apps" />
+            <OrbitSearchResults name="docked-search" />
+            <OrbitSettings name="settings" />
+          </div>
+        </OrbitDockedInner>
+      </>
+    )
+  }
+}
+
 @view.attach('orbitStore', 'appsStore', 'selectionStore', 'queryStore', 'keyboardStore')
 @view.provide({
   paneManagerStore: PaneManagerStore,
@@ -83,38 +98,13 @@ const OrbitDockedInner = view({
 @view
 export class OrbitDocked extends React.Component<Props> {
   render() {
-    const { searchStore, paneManagerStore } = this.props
     log('DOCKED ------------')
-    trace()
     const theme = App.state.darkTheme ? 'dark' : 'light'
     return (
       <UI.Theme name={theme}>
         <OrbitDockedFrame className={`theme-${theme}`} visible={App.orbitState.docked}>
           <OrbitDockedChrome />
-          <OrbitDockedInnerFrame
-            borderBottomRadius={BORDER_RADIUS}
-            flex={1}
-            visible={App.orbitState.docked}
-          >
-            <OrbitHeader
-              borderRadius={BORDER_RADIUS}
-              after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
-            />
-            <OrbitSuggestionBar
-              paneManagerStore={paneManagerStore}
-              filterStore={searchStore.searchFilterStore}
-            />
-            <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
-              <div style={{ position: 'relative', flex: 1 }}>
-                <OrbitOnboard name="onboard" />
-                <OrbitHome name="home" />
-                <OrbitDirectory name="directory" />
-                <OrbitApps name="apps" />
-                <OrbitSearchResults name="docked-search" />
-                <OrbitSettings name="settings" />
-              </div>
-            </OrbitDockedInner>
-          </OrbitDockedInnerFrame>
+          <OrbitDockedContents />
         </OrbitDockedFrame>
       </UI.Theme>
     )

@@ -1,5 +1,7 @@
 import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 import { handleErrors } from './handleErrors'
+import { cleanupChildren } from './cleanupChildren'
+import { ChildProcess } from 'child_process'
 
 // setup process error watching before doing most stuff
 handleErrors()
@@ -33,8 +35,39 @@ export async function main() {
     return require('@mcro/orbit-desktop').main()
   }
 
-  await require('./startElectron').startElectron()
-  console.log('Started Electron!')
+  // IS IN ELECTRON...
+
+  let desktopProcess: ChildProcess
+
+  const handleExit = async () => {
+    try {
+      console.log('Electron handle exit...')
+      console.log('Orbit exiting...')
+      cleanupChildren(desktopProcess.pid)
+      cleanupChildren(process.pid)
+      desktopProcess.kill('SIGINT')
+      // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
+      process.kill(-desktopProcess.pid)
+      console.log('bye!')
+    } catch (err) {
+      console.log('error exiting', err)
+      process.exit
+    }
+  }
+
+  // this works in dev
+  process.on('exit', handleExit)
+  process.on('SIGINT', handleExit)
+  process.on('SIGSEGV', handleExit)
+  process.on('SIGTERM', handleExit)
+
+  // fork desktop process...
+  desktopProcess = require('./startDesktop').startDesktop()
+
+  if (process.env.IGNORE_ELECTRON !== 'true') {
+    await require('./startElectron').startElectron(handleExit)
+    console.log('Started Electron!')
+  }
 }
 
 // self starting

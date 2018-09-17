@@ -12,6 +12,11 @@
   <script>
     if (typeof require !== 'undefined') {
       window.electronRequire = require;
+    } else {
+      window.electronRequire = (module) => {
+        console.log('tried to electronRequire when not in electron environment', module)
+        return {}
+      }
     }
   </script>
   <!-- chunk-import format:css -->

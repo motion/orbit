@@ -160,7 +160,7 @@ export class PaneManagerStore {
   }
 
   activePane: Panes = react(
-    () => [this.panes, this.paneIndex, App.orbitState.docked, App.state.query, this.shouldOnboard],
+    () => [this.panes, this.paneIndex, !!App.state.query, this.shouldOnboard],
     async (_, { sleep }) => {
       if (this.shouldOnboard) {
         return 'onboard'
@@ -168,7 +168,7 @@ export class PaneManagerStore {
       // let activePaneFast be a frame ahead
       await sleep(32)
       let active = this.panes[this.paneIndex]
-      if (active === 'home' && App.state.query) {
+      if (active === 'home' && !!App.state.query) {
         active = 'search'
       }
       ensure('not active', active !== this.activePane)

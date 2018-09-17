@@ -3,6 +3,7 @@ import { getGlobalConfig } from '@mcro/config'
 // @ts-ignore
 import { app } from 'electron'
 import * as Path from 'path'
+import { onError } from './handleErrors'
 
 const Config = getGlobalConfig()
 
@@ -29,7 +30,9 @@ export function startDesktop(): ChildProcess {
     })
 
     child.stdout.on('data', b => console.log('desktop:', b.toString()))
-    child.stderr.on('data', b => console.log('desktop err:', b.toString()))
+    child.stderr.on('data', b => {
+      onError(b.toString())
+    })
 
     return child
   } catch (err) {

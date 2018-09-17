@@ -1,4 +1,4 @@
-import { showConfirmDialog } from './showConfirmDialog'
+import { showConfirmDialog } from '../../orbit-electron/src/helpers/showConfirmDialog'
 import { clipboard, dialog } from 'electron'
 import open from 'opn'
 import { logFile } from '@mcro/logger'
@@ -7,7 +7,7 @@ import { pathExists, readFile } from 'fs-extra'
 // puts the last of the log and the current error onto the clipboard
 // and opens mail if you want it to
 
-async function onError(error) {
+export async function onError(error) {
   console.log('error', error)
 
   if (

@@ -181,6 +181,7 @@ const config = {
       'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
       'process.env.STACK_FILTER': JSON.stringify(true),
     }),
+    new webpack.IgnorePlugin(/electron-log/),
     // adds cache based on source of files
     // new HardSourceWebpackPlugin(),
     new webpack.NamedModulesPlugin(),

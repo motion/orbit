@@ -7,7 +7,7 @@ import Darwin
 
 let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
 let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
-let isVirtualApp = ProcessInfo.processInfo.environment["VIRTUAL_APP"] == "true"
+let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
 struct Position: Decodable {
   let x: Int
@@ -242,6 +242,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     if action == "posi" {
       do {
         let position = try JSONDecoder().decode(Position.self, from: text[5..<text.count].data(using: .utf8)!)
+        window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
         self.position(position)
       } catch {
         print("Error parsing arguments \(text)")

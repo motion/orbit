@@ -16,6 +16,7 @@ import { SuggestionBarVerticalPad, SmallVerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightsContext } from '../../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
+import { chunk } from 'lodash'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -41,6 +42,7 @@ Highlight.theme = ({ theme }) => ({
   color: theme.color.alpha(0.95),
 })
 
+// old highlights based code... keep for just a bit longer...
 // const selectHighlight = (
 //   index,
 //   hlIndex,
@@ -57,6 +59,18 @@ Highlight.theme = ({ theme }) => ({
 //   Actions.setHighlightIndex(hlIndex)
 //   return
 // }
+// getHighlight = memoize(index => ({ highlights }) => {
+//   const { selectionStore } = this.props
+//   return highlights.map((highlight, hlIndex) => {
+//     return (
+//       <Highlight
+//         key={hlIndex}
+//         dangerouslySetInnerHTML={{ __html: highlight }}
+//         onClick={selectHighlight(index, hlIndex, selectionStore)}
+//       />
+//     )
+//   })
+// })
 
 const hideSlack = {
   title: true,
@@ -74,21 +88,13 @@ const OrbitCardContent = view({
 const SearchResultText = props => <UI.Text wordBreak="break-all" fontWeight={400} {...props} />
 const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ⏎ ') : str)
 
-@view
-class OrbitSearchResultsList extends React.Component<Props> {
-  // getHighlight = memoize(index => ({ highlights }) => {
-  //   const { selectionStore } = this.props
-  //   return highlights.map((highlight, hlIndex) => {
-  //     return (
-  //       <Highlight
-  //         key={hlIndex}
-  //         dangerouslySetInnerHTML={{ __html: highlight }}
-  //         onClick={selectHighlight(index, hlIndex, selectionStore)}
-  //       />
-  //     )
-  //   })
-  // })
-
+// stays static and non-reactive to prevent re-rendering during infinite scroll
+class OrbitSearchResultsListChunk extends React.Component<{
+  results: any[]
+  query: string
+  offset: number
+  searchStore: SearchStore
+}> {
   getChildren = ({ content }, bit) => {
     return bit.integration === 'slack' ? (
       <SearchResultText>{content}</SearchResultText>
@@ -109,34 +115,57 @@ class OrbitSearchResultsList extends React.Component<Props> {
   spaceBetween = <div style={{ flex: 1 }} />
 
   render() {
-    const { name, searchStore } = this.props
+    const { results, query, offset } = this.props
+    if (!results || !results.length) {
+      return null
+    }
+    return results.map((model, index) => {
+      const isConversation = model.integration === 'slack'
+      return (
+        <OrbitListItem
+          pane={name}
+          subPane="search"
+          key={model.id}
+          index={index + offset}
+          model={model}
+          hide={isConversation ? hideSlack : null}
+          subtitleSpaceBetween={this.spaceBetween}
+          isExpanded
+          searchTerm={query}
+          onClickLocation={this.handleLocation}
+          maxHeight={isConversation ? 380 : 200}
+          overflow="hidden"
+        >
+          {this.getChildren}
+        </OrbitListItem>
+      )
+    })
+  }
+}
+
+@view
+class OrbitSearchResultsList extends React.Component<Props> {
+  render() {
+    const { searchStore } = this.props
     const { results } = searchStore.searchState
     if (!results || !results.length) {
       return null
     }
-    const searchTerm = searchStore.searchState.query
+    const query = searchStore.searchState.query
     const quickResultsLen = searchStore.quickSearchState.results.length
+    const chunkAmt = 6
+    const resultsGroups = chunk(results, chunkAmt)
     return (
-      <HighlightsContext.Provider value={searchTerm.split(' ')}>
-        {results.map((model, index) => {
-          const isConversation = model.integration === 'slack'
+      <HighlightsContext.Provider value={query.split(' ')}>
+        {resultsGroups.map((group, index) => {
           return (
-            <OrbitListItem
-              pane={name}
-              subPane="search"
-              key={model.id}
-              index={index + quickResultsLen}
-              model={model}
-              hide={isConversation ? hideSlack : null}
-              subtitleSpaceBetween={this.spaceBetween}
-              isExpanded
-              searchTerm={searchTerm}
-              onClickLocation={this.handleLocation}
-              maxHeight={isConversation ? 380 : 200}
-              overflow="hidden"
-            >
-              {this.getChildren}
-            </OrbitListItem>
+            <OrbitSearchResultsListChunk
+              key={`${index}${query}`}
+              offset={index * chunkAmt + quickResultsLen}
+              query={query}
+              results={group}
+              searchStore={searchStore}
+            />
           )
         })}
       </HighlightsContext.Provider>

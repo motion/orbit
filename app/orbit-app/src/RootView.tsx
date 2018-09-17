@@ -12,15 +12,16 @@ export class RootView extends React.Component {
     error: null,
   }
 
+  handleWindowResize = throttle(() => {
+    if (!App.setState) return
+    const screenSize = [window.innerWidth, window.innerHeight]
+    if (!isEqual(App.state.screenSize, screenSize)) {
+      App.setState({ screenSize })
+    }
+  }, 20)
+
   componentDidMount() {
-    // listen for resize
-    window.onresize = throttle(() => {
-      if (!App.setState) return
-      const screenSize = [window.innerWidth, window.innerHeight]
-      if (!isEqual(App.state.screenSize, screenSize)) {
-        App.setState({ screenSize })
-      }
-    }, 20)
+    window.addEventListener('resize', this.handleWindowResize)
 
     // prevent scroll bounce
     document.body.style.overflow = 'hidden'
@@ -43,6 +44,10 @@ export class RootView extends React.Component {
 
   componentDidCatch(error) {
     this.setState({ error })
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize)
   }
 
   clearErrors() {

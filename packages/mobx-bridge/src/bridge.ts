@@ -155,7 +155,6 @@ export class BridgeManager {
         this.handleMessage(data.slice(1))
         return
       }
-      await immediate()
       try {
         const messageObj = JSON.parse(data)
         if (!messageObj || typeof messageObj !== 'object') {

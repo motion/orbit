@@ -5,6 +5,7 @@ import { HoverStateStore } from './HoverStateStore'
 import root from 'global'
 import { app, screen, clipboard } from 'electron'
 import { Logger } from '@mcro/logger'
+import { sleep } from '@mcro/black/node_modules/@mcro/helpers/_'
 
 const log = new Logger('ElectronStore')
 
@@ -48,6 +49,13 @@ export class ElectronStore {
           return
       }
     })
+  }
+
+  async reset() {
+    log.info('Resetting...')
+    this.show = 0
+    await sleep(1)
+    this.show = 2
   }
 
   closeOnAppClose = react(

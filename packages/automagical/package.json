@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@mcro/logger": "^2.2.1",
+    "json-stringify-pretty-compact": "1.2.0",
     "global": "^4.3.2"
   },
   "devDependencies": {

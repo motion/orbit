@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, log } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -17,12 +17,12 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
+import { trace } from 'mobx'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: OrbitStore
-  // store?: OrbitDockedStore
 }
 
 const OrbitDockedFrame = view(UI.Col, {
@@ -84,7 +84,8 @@ const OrbitDockedInner = view({
 export class OrbitDocked extends React.Component<Props> {
   render() {
     const { searchStore, paneManagerStore } = this.props
-    // log.info('DOCKED ------------', store.animationState)
+    log('DOCKED ------------')
+    trace()
     const theme = App.state.darkTheme ? 'dark' : 'light'
     return (
       <UI.Theme name={theme}>

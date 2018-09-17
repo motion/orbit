@@ -35,9 +35,10 @@ class ElectronStore {
       },
     },
     showDevTools: {
-      orbit: false,
-      peek: false,
-      highlights: false,
+      app: false,
+      0: false,
+      1: false,
+      2: false,
     },
   })
 

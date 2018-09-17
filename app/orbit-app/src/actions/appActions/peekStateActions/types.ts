@@ -1,8 +1,6 @@
-export type PeekTarget =
-  | HTMLElement
-  | {
-      top: number
-      left: number
-      width: number
-      height: number
-    }
+export type PeekTarget = {
+  top: number
+  left: number
+  width: number
+  height: number
+}

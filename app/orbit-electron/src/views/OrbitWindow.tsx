@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { view, react, ensure } from '@mcro/black'
+import { view, react, ensure, sleep } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow, screen } from 'electron'
+import { Menu, BrowserWindow, screen, app } from 'electron'
 import root from 'global'
 
 const log = new Logger('electron')
@@ -57,6 +57,10 @@ class OrbitWindowStore {
         await sleep()
         this.orbitRef.show()
         this.orbitRef.focus()
+        // bring dev tools to front in dev mode
+        if (process.env.NODE_ENV === 'development') {
+          app.show()
+        }
       } else {
         // nothing for now on blur
       }
@@ -80,6 +84,7 @@ class OrbitWindowStore {
   )
 
   showOnNewSpace() {
+    console.log('Show on new space...')
     this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
     this.orbitRef.focus() // focus the window up front on the active screen
     this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
@@ -113,9 +118,12 @@ export class OrbitWindow extends React.Component<Props> {
   componentDidMount() {
     this.handleReadyToShow()
 
-    screen.on('display-metrics-changed', (_event, _display) => {
+    screen.on('display-metrics-changed', async (_event, _display) => {
       log.info('got display metrics changed event')
+      // give it a second to adjust
+      await sleep(100)
       this.setScreenSize()
+      this.props.electronStore.reset()
     })
   }
 
@@ -142,12 +150,11 @@ export class OrbitWindow extends React.Component<Props> {
         ref={store.handleRef}
         file={url}
         position={[0, 0]}
-        size={Electron.state.screenSize}
+        size={Electron.state.screenSize.slice()}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
-        // @ts-ignore
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#00000000"

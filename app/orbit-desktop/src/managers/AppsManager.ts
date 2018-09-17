@@ -46,7 +46,7 @@ export class AppsManager {
       }
 
       // handle adds
-      for (const { id } of apps) {
+      for (const { id, torn } of apps) {
         // if peek app, avoid (could be used for more control of orbit)
         // if (torn === false) {
         //   continue
@@ -55,7 +55,7 @@ export class AppsManager {
         if (shouldAdd) {
           const icon = join(getGlobalConfig().paths.desktopRoot, 'assets', 'icon.png')
           log.info(`create process -- ${id} with icon ${icon}`)
-          const oracle = await this.spawnOracle(id, 'Test', icon)
+          const oracle = await this.spawnOracle(id, torn, 'Test', icon)
           this.processes = [
             ...this.processes,
             {
@@ -68,13 +68,13 @@ export class AppsManager {
     },
   )
 
-  async spawnOracle(id, name, iconPath: string) {
+  async spawnOracle(id, torn, name, iconPath: string) {
     const oracle = new Oracle({
       name,
       ...oracleOptions,
       env: {
         SHOW_ICON: iconPath,
-        VIRTUAL_APP: true,
+        PREVENT_FOCUSING: !torn,
       },
     })
     await oracle.start()

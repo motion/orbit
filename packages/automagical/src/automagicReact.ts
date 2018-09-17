@@ -2,7 +2,8 @@ import * as Mobx from 'mobx'
 import { ReactionHelpers, MagicalObject } from './types'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
 import { getReactionOptions, getReactionName, log, logState, logRes, Root } from './helpers'
-import { omitBy, isEqual } from 'lodash'
+import { isEqual } from 'lodash'
+import prettyStringify from 'json-stringify-pretty-compact'
 
 const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
@@ -15,8 +16,22 @@ Root.__trackStateChanges = {}
 let id = 1
 const uid = () => id++ % Number.MAX_VALUE
 const niceLogObj = obj => {
-  const jd = JSON.stringify(obj)
-  return jd.length < 350 ? jd : obj
+  const jd = prettyStringify(obj)
+  return jd.length < 400 ? jd : obj
+}
+
+const obj = a => a && typeof a === 'object'
+const whatsNew = (a, b) => {
+  let final = {}
+  for (const ak in a) {
+    const av = a[ak]
+    const bv = b[ak]
+    if (Mobx.comparer.structural(av, bv)) {
+      continue
+    }
+    final[ak] = obj(av) && obj(bv) ? whatsNew(av, bv) : b[ak]
+  }
+  return final
 }
 
 // simple diff output for dev mode
@@ -28,7 +43,7 @@ const diffLog = (a, b) => {
     return ['\n        new value:', niceLogObj(b)]
   }
   // object
-  const diff = omitBy(a, (v, k) => Mobx.comparer.structural(b[k], v))
+  const diff = whatsNew(a, b)
   if (Object.keys(diff).length) {
     // log the diff as json if its short enough, easier to see
     return ['\n        diff:', niceLogObj(diff)]
@@ -99,7 +114,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         return IS_PROD ? undefined : []
       } else {
         if (!IS_PROD) {
-          log.verbose('onlyUpdateIfChanged changed:\n oldval:', oldVal, '\n newval:', newVal)
+          log.verbose(`${logName} (onlyUpdateIfChanged) diff:\n`, ...diffLog(oldVal, newVal))
         }
       }
     }

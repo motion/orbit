@@ -132,6 +132,7 @@ export class PeekStore {
   autoSizeAfterRender = react(
     () =>
       this.appState.appConfig &&
+      this.appState.appConfig.config &&
       this.appState.appConfig.config.contentSize &&
       this.internalState.resolvedModel &&
       (this.state.model.id || this.state.model.email),

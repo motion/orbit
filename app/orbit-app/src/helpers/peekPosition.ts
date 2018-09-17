@@ -34,7 +34,7 @@ const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
   if (config && config.dimensions) {
     preferred = config.dimensions
   } else {
-    if (config.contentSize) {
+    if (config && config.contentSize) {
       const index = Math.min(
         sizes.length - 1,
         Math.max(0, Math.round(config.contentSize / 50 - 0.5)),

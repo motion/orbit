@@ -4,6 +4,11 @@ import * as r2 from '@mcro/r2'
 import { App } from '@mcro/stores'
 
 async function main() {
+  // because for some reason we are picking up electron process.env stuff...
+  // we want this for web-app because stack traces dont have filenames properly
+  // see Logger.ts
+  process.env.STACK_FILTER = 'true'
+
   console.log('app:', window.location.href)
 
   // set config before app starts...

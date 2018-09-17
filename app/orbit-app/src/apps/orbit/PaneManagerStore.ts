@@ -65,7 +65,7 @@ export class PaneManagerStore {
     // @ts-ignore
     this.subscriptions.add({
       dispose: () => {
-        generalSetting$.unsubscribe()
+        this.generalSetting$.unsubscribe()
         disposeToggleSettings()
         disposeShowApps()
       },
@@ -77,7 +77,6 @@ export class PaneManagerStore {
     ({ key }) => {
       ensure('key', !!key)
       ensure('focused', this.props.orbitStore.inputFocused)
-      ensure('query', !!App.state.query)
       if (this.props.selectionStore.activeIndex === -1) {
         if (key === 'right') {
           this.setPaneIndex(this.paneIndex + 1)

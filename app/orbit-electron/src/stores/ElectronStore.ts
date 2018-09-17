@@ -1,9 +1,12 @@
-import { App, Electron } from '@mcro/stores'
-import { isEqual, store, debugState, on } from '@mcro/black'
+import { App, Electron, Desktop } from '@mcro/stores'
+import { isEqual, store, debugState, on, react } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
 import { HoverStateStore } from './HoverStateStore'
 import root from 'global'
 import { app, screen, clipboard } from 'electron'
+import { Logger } from '@mcro/logger'
+
+const log = new Logger('ElectronStore')
 
 // @ts-ignore
 @store
@@ -46,6 +49,16 @@ export class ElectronStore {
       }
     })
   }
+
+  closeOnAppClose = react(
+    () => Desktop.state.appFocusState[0],
+    state => {
+      log.info('exiting...')
+      if (state.exited) {
+        process.exit(0)
+      }
+    },
+  )
 
   followMousePosition = () => {
     let lastPoint

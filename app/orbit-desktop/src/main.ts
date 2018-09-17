@@ -4,6 +4,11 @@ import { cleanupChildren } from './helpers/cleanupChildren'
 
 const log = new Logger('desktop')
 
+process.on('unhandledRejection', error => {
+  console.log('unhandledRejection', error.stack)
+  throw error
+})
+
 export async function main() {
   log.info('Desktop is starting')
 

@@ -18,6 +18,7 @@ const appPath = bundle =>
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
 export class Oracle {
+  onClose?: Function
   name?: string
   env: { [key: string]: string } | null
   port: number
@@ -59,6 +60,7 @@ export class Oracle {
     binPath = null,
     env = null,
     ocr = false,
+    onClose = null,
   } = {}) {
     this.name = name
     this.env = env
@@ -66,6 +68,7 @@ export class Oracle {
     this.binPath = binPath
     this.debugBuild = debugBuild
     this.shouldOcr = ocr
+    this.onClose = onClose
     macosVersion.assertGreaterThanOrEqualTo('10.11')
   }
 
@@ -323,6 +326,9 @@ export class Oracle {
       this.process.stderr.on('data', handleOut)
       this.process.on('exit', val => {
         log.info('ORACLE PROCESS STOPPING', val)
+        if (this.onClose) {
+          this.onClose()
+        }
       })
     } catch (err) {
       console.log('errror', err)

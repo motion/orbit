@@ -287,7 +287,7 @@ export class BridgeManager {
     const changedState = this.deepMergeMutate(this.state, newState)
     if (process.env.NODE_ENV === 'development') {
       if (changedState) {
-        log.trace.verbose('setState', newState, 'changedState', changedState)
+        log.verbose('setState', newState, 'changedState', changedState)
       }
     }
     if (!ignoreSend) {

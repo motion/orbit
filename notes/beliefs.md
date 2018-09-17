@@ -103,3 +103,10 @@ Talked to Karthik Gollapudi (SpaceX)
 - Needs Windows support
 - May need for internal web app they can deploy themselves
 -
+
+# Sep 16th
+
+Talked to Charlie
+
+- Asked about local search
+- Thinks OCR realtime maybe compelling for personal

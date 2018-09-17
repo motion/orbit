@@ -21,7 +21,7 @@ export async function getWordWeights(text: string, max?: number): Promise<Weight
       // make sure we get the new last index, could be shorter
       fmax = Math.min(uniqSorted.length - 1, max)
       // sort by weight
-      uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
+      uniqSorted.sort((a, b) => (a.weight > b.weight ? 1 : -1))
       // find our topmost weight
       const limitWeight = uniqSorted[fmax].weight
       // now map and filter but keeping original order

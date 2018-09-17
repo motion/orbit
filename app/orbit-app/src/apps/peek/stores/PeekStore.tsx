@@ -121,8 +121,8 @@ export class PeekStore {
   // make this not change if not needed
   state: PeekStoreItemState = react(
     () => this.internalState,
-    ({ lastState, curState }) => {
-      if (this.willHide) {
+    ({ lastState, curState, willHide }) => {
+      if (willHide) {
         return lastState
       }
       return curState
@@ -135,24 +135,17 @@ export class PeekStore {
       this.appState.appConfig.config &&
       this.appState.appConfig.config.contentSize &&
       this.internalState.resolvedModel &&
-      (this.state.model.id || this.state.model.email),
+      (this.state.model['id'] || this.state.model['email']),
     id => {
       ensure('is ready', !!id)
       console.log('should auto size')
     },
   )
 
-  get isShown() {
-    return this.internalState.isShown
-  }
-
-  get willHide() {
-    return this.internalState.willHide
-  }
-
-  get isTorn() {
-    return this.internalState.torn
-  }
+  isShown = react(() => this.internalState.isShown, _ => _)
+  willHide = react(() => this.internalState.willHide, _ => _)
+  isTorn = react(() => this.internalState.torn, _ => _)
+  willStayShown = react(() => this.internalState.willStayShown, _ => _)
 
   // only keep it alive for a frame
   willShow = react(
@@ -160,15 +153,11 @@ export class PeekStore {
     async (willShow, { setValue, sleep }) => {
       if (willShow) {
         setValue(true)
-        await sleep(16)
+        await sleep(60)
       }
       setValue(false)
     },
   )
-
-  get willStayShown() {
-    return this.internalState.willStayShown
-  }
 
   getModel = async () => {
     const { id, type } = this.appState.appConfig

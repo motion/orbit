@@ -7,13 +7,14 @@ import killPort from 'kill-port'
 let browser
 
 const setExiting = async () => {
-  console.log('Exit debugbrowser...')
-  if (browser) {
-    await browser.dispose()
-  }
+  console.log('Exit debugbrowser, disposing...')
   setTimeout(() => {
     process.kill(process.pid)
-  })
+  }, 40)
+  if (browser) {
+    await browser.dispose()
+    console.log('dispsoed')
+  }
   process.exit(0)
 }
 process.on('unhandledRejection', function(reason) {
@@ -28,11 +29,7 @@ process.on('SIGSEGV', setExiting)
 process.on('SIGINT', setExiting)
 process.on('exit', setExiting)
 
-export default async function start({
-  expectTabs = null,
-  sessions = [],
-  port = 8000,
-} = {}) {
+export default async function start({ expectTabs = null, sessions = [], port = 8000 } = {}) {
   await killPort(port)
   browser = new Browser({
     sessions,

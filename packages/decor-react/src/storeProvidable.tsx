@@ -6,6 +6,7 @@ import { Disposable } from 'event-kit'
 import { updateProps } from './helpers/updateProps'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import { StoreHMR } from '@mcro/store-hmr'
+import isEqual from 'react-fast-compare'
 
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
@@ -80,6 +81,10 @@ export function storeProvidable(userOptions, Helpers) {
           this.setupStores()
         }
 
+        shouldComponentUpdate(nextProps) {
+          return !isEqual(this.props, nextProps)
+        }
+
         // PureComponent means this is only called when props are not shallow equal
         componentDidUpdate() {
           updateProps(this._props, this.props)
@@ -139,8 +144,7 @@ export function storeProvidable(userOptions, Helpers) {
               if (cachedStores && cachedStores[name]) {
                 // matching source, hot reload
                 if (
-                  nextStore.constructor.toString() ===
-                  cachedStores[name].constructor.toString()
+                  nextStore.constructor.toString() === cachedStores[name].constructor.toString()
                 ) {
                   // we have a hydratable store, hot swap it in!
                   this.stores[name] = cachedStores[name]
@@ -190,9 +194,7 @@ export function storeProvidable(userOptions, Helpers) {
           if (options.warnOnOverwriteStore && parentStores) {
             for (const name in Stores) {
               if (!parentStores[name]) continue
-              console.log(
-                `Overwriting existing store ${name} via ${Klass.name}`,
-              )
+              console.log(`Overwriting existing store ${name} via ${Klass.name}`)
             }
           }
           const names = Object.keys(Stores)
@@ -213,11 +215,7 @@ export function storeProvidable(userOptions, Helpers) {
           const children = <Klass {...props} {...this.stores} />
           if (context) {
             const childStores = this.childContextStores(__contextualStores)
-            return (
-              <StoreContext.Provider value={childStores}>
-                {children}
-              </StoreContext.Provider>
-            )
+            return <StoreContext.Provider value={childStores}>{children}</StoreContext.Provider>
           }
           return children
         }
@@ -230,9 +228,7 @@ export function storeProvidable(userOptions, Helpers) {
         StoreProviderWithContext = props => (
           <StoreContext.Consumer>
             {stores => {
-              const contextProps = stores
-                ? { __contextualStores: stores }
-                : null
+              const contextProps = stores ? { __contextualStores: stores } : null
               return <StoreProvider {...contextProps} {...props} />
             }}
           </StoreContext.Consumer>

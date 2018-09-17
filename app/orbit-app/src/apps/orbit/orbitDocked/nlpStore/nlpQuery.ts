@@ -1,7 +1,7 @@
 import compromise from 'compromise'
 import Sherlockjs from 'sherlockjs'
 import { MarkType, DateRange, NLPResponse, QueryFragment, Mark } from './types'
-import * as DateFns from 'date-fns'
+import { getYear, differenceInDays, subDays, getDaysInMonth } from 'date-fns/esm'
 
 const state = {
   namePattern: null,
@@ -35,6 +35,37 @@ const types = {
   files: 'document',
   messages: 'conversation',
   chats: 'conversation',
+}
+
+const thisYear = getYear(new Date())
+const getMonthRange = month => ({
+  startDate: new Date(thisYear, month, 1),
+  endDate: new Date(thisYear, month, getDaysInMonth(new Date(thisYear, month, 1))),
+})
+
+const months = {
+  january: getMonthRange(0),
+  february: getMonthRange(1),
+  march: getMonthRange(2),
+  april: getMonthRange(3),
+  may: getMonthRange(4),
+  june: getMonthRange(5),
+  july: getMonthRange(6),
+  august: getMonthRange(7),
+  september: getMonthRange(8),
+  october: getMonthRange(9),
+  november: getMonthRange(10),
+  december: getMonthRange(11),
+}
+const monthNames = Object.keys(months)
+
+const findMonth = str => {
+  for (const month of monthNames) {
+    if (month.indexOf(str) === 0) {
+      return months[month]
+    }
+  }
+  return null
 }
 
 // const simpleNames = /(with|from|by)\s([A-Za-z]+)$/
@@ -77,9 +108,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     .dates()
     .out('frequency')
     .map(word => word.normal)
-  const nouns = filterNouns(nlp.nouns().out('frequency')).map(
-    word => word.normal,
-  )
+  const nouns = filterNouns(nlp.nouns().out('frequency')).map(word => word.normal)
   const words = query.toLowerCase().split(' ')
   const integrations = []
 
@@ -119,28 +148,49 @@ export function parseSearchQuery(query: string): NLPResponse {
   // date
   const date: DateRange = Sherlockjs.parse(query)
   // better "now", sherlock often says a few hours earlier than actually now
-  if (dates.indexOf('now') > -1) {
+  // also sherlock puts startDate to now but it logically is endDate (and we parse later startdates if found)
+  if (dates.map(x => x.indexOf('now') > -1).length) {
+    date.startDate = null
     date.endDate = new Date()
   }
   if (date.startDate) {
     // sherlock found a date in the future
     // but we don't deal with future dates
     // so lets convert it to the past
-    const startDaysAheadOfNow = DateFns.differenceInDays(
-      date.startDate,
-      new Date(),
-    )
+    const startDaysAheadOfNow = differenceInDays(date.startDate, new Date())
     if (startDaysAheadOfNow > 0) {
-      const dateBehindEquivOfStartAhead = DateFns.subDays(
-        new Date(),
-        startDaysAheadOfNow,
-      )
+      const dateBehindEquivOfStartAhead = subDays(new Date(), startDaysAheadOfNow)
       date.startDate = dateBehindEquivOfStartAhead
     }
   }
   // if end date in future, just set it to now
-  if (date.endDate && DateFns.differenceInDays(date.endDate, new Date()) > 0) {
+  if (date.endDate && differenceInDays(date.endDate, new Date()) > 0) {
     date.endDate = new Date()
+  }
+
+  // no match!
+  // try a few of our own
+
+  // simple month matching
+  if (dates.length && !date.startDate) {
+    // for now just handle one date
+    let [start, end] = dates[0].split(' to ')
+    if (!date.endDate && end) {
+      const endMonth = findMonth(end)
+      if (endMonth) {
+        date.startDate = endMonth.startDate
+        date.endDate = endMonth.endDate
+      }
+    }
+    if (start) {
+      const startMonth = findMonth(start)
+      if (startMonth) {
+        date.startDate = startMonth.startDate
+        if (!date.endDate) {
+          date.endDate = startMonth.endDate
+        }
+      }
+    }
   }
 
   // build a nicer object describing the query for easier parsing
@@ -183,9 +233,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     .map(x => x.text.trim())
     .join(' ')
     .trim()
-  const people = parsedQuery
-    .filter(x => x.type === MarkType.Person)
-    .map(x => x.text)
+  const people = parsedQuery.filter(x => x.type === MarkType.Person).map(x => x.text)
 
   return {
     query,

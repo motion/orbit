@@ -1,38 +1,13 @@
 import { app, dialog } from 'electron'
-import { cleanupChildren } from './cleanupChildren'
 import waitPort from 'wait-port'
 import { log } from './log'
 import { getGlobalConfig } from '@mcro/config'
-import { ChildProcess } from 'child_process'
 
-export async function startElectron() {
+export async function startElectron(handleExit) {
   const Config = getGlobalConfig()
-
-  // else, electron...
-  let desktopProcess: ChildProcess
-
-  const handleExit = async () => {
-    try {
-      console.log('Electron handle exit...')
-      console.log('Orbit exiting...')
-      cleanupChildren(desktopProcess.pid)
-      cleanupChildren(process.pid)
-      desktopProcess.kill('SIGINT')
-      // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
-      process.kill(-desktopProcess.pid)
-      console.log('bye!')
-    } catch (err) {
-      console.log('error exiting', err)
-    }
-  }
 
   // this works in prod
   app.on('before-quit', handleExit)
-  // this works in dev
-  process.on('exit', handleExit)
-
-  // fork desktop process...
-  desktopProcess = require('./startDesktop').startDesktop()
 
   log.info('Waiting for desktop startup to continue...')
   await waitPort({ port: Config.ports.server })

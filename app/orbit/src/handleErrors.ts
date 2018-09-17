@@ -9,13 +9,18 @@ import { showConfirmDialog } from './showConfirmDialog'
 // and opens mail if you want it to
 
 export async function onError(error) {
-  console.log('error', error)
+  if (!error) {
+    console.log('---no error---', error)
+    return
+  }
+  console.log('\n\n---error---\n\n', error)
+  const errorMessage = `${error.message || ''}\n${error.stack || ''}`
 
   if (
     showConfirmDialog({
       type: 'warning',
       title: 'Orbit ran into an error!',
-      message: `Orbit ran into an error:\n${error.stack.slice(
+      message: `Orbit ran into an error:\n${errorMessage.slice(
         0,
         50,
       )}...\n\nWould you like to paste error to your clipboard to report it?`,
@@ -34,7 +39,7 @@ export async function onError(error) {
     // write
     const niceError = `
 Stack:
-${error.stack}
+${errorMessage}
 
 Log:
 ${log}`

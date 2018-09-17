@@ -14,8 +14,10 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
+import { VerticalSpace } from '.'
 
 const ListFrame = view(UI.View, {
+  margin: [0, -1],
   position: 'relative',
   transform: {
     z: 0,
@@ -103,7 +105,6 @@ const Preview = view({
 
 const ListItemSubtitle = view(UI.View, {
   height: 20,
-  margin: [3, 0, 0],
   padding: [2, 0, 2, 0],
   flexFlow: 'row',
   alignItems: 'center',
@@ -117,7 +118,7 @@ const AfterHeader = view({
 })
 
 const TitleSpace = view({
-  width: 12,
+  width: 10,
 })
 
 const Bottom = view({
@@ -132,7 +133,8 @@ const Bottom = view({
 @view
 export class OrbitListInner extends React.Component<OrbitItemProps> {
   static defaultProps = {
-    padding: 10,
+    // offsets -1px on sides for the negative margin we usually use to hide side border
+    padding: [10, 11],
   }
 
   getInner = (contentProps: ResolvedItem) => {
@@ -171,7 +173,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const showSubtitle = !!subtitle && !(hide && hide.subtitle)
+    const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
     const showDate = !!createdAt && !(hide && hide.date)
     const showIcon = !!icon && !(hide && hide.icon)
     const showTitle = !(hide && hide.title)
@@ -209,22 +211,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             }}
           /> */}
         </Row>
-        {!!location && (
-          <RoundButtonSmall
-            margin={-3}
-            maxWidth={120}
-            fontWeight={600}
-            onClick={
-              onClickLocation
-                ? e => onClickLocation(e, contentProps)
-                : () => Actions.open(locationLink)
-            }
-          >
-            <Text ellipse color={false}>
-              {location}
-            </Text>
-          </RoundButtonSmall>
-        )}
       </AfterHeader>
     )
     return (
@@ -246,7 +232,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             <Title style={titleFlex && { flex: titleFlex }}>
               {showIcon && (
                 <>
-                  <OrbitIcon margin={[4, 0, 0]} icon={icon} size={14} {...iconProps} />
+                  <OrbitIcon icon={icon} size={14} {...iconProps} />
                   <TitleSpace />
                 </>
               )}
@@ -266,21 +252,46 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             </Title>
           )}
           {showSubtitle && (
-            <ListItemSubtitle>
+            <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
               {showIcon &&
                 !showTitle && (
                   <>
                     <OrbitIcon icon={icon} size={16} {...iconProps} />
-                    <div style={{ width: 8 }} />
+                    <TitleSpace />
                   </>
                 )}
-              {subtitleSpaceBetween}
-              {typeof subtitle === 'string' ? (
-                <UI.Text alpha={0.55} ellipse {...subtitleProps}>
-                  {subtitle}
-                </UI.Text>
-              ) : (
-                subtitle
+              {!!location && (
+                <>
+                  <RoundButtonSmall
+                    margin={-3}
+                    maxWidth={120}
+                    fontWeight={600}
+                    onClick={
+                      onClickLocation
+                        ? e => onClickLocation(e, contentProps)
+                        : () => Actions.open(locationLink)
+                    }
+                  >
+                    <Text ellipse color={false}>
+                      {location}
+                    </Text>
+                  </RoundButtonSmall>
+                  <TitleSpace />
+                </>
+              )}
+              {!!subtitle &&
+                (typeof subtitle === 'string' ? (
+                  <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                    {subtitle}
+                  </UI.Text>
+                ) : (
+                  subtitle
+                ))}
+              {!subtitle && (
+                <>
+                  <div style={{ flex: 1 }} />
+                  <PeopleRow people={people} />
+                </>
               )}
               {hide && hide.title && afterHeader}
             </ListItemSubtitle>
@@ -308,11 +319,12 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             </Preview>
           )}
           {typeof children === 'function' ? children(contentProps, model, props.index) : children}
-          {showPeople && (
-            <Bottom>
-              <PeopleRow people={people} />
-            </Bottom>
-          )}
+          {showPeople &&
+            !showSubtitle && (
+              <Bottom>
+                <PeopleRow people={people} />
+              </Bottom>
+            )}
         </ListItem>
         <Divider />
       </ListFrame>

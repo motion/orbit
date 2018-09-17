@@ -109,16 +109,14 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
                   tooltip={filter.name}
                   onClick={searchFilterStore.integrationFilterToggler(filter)}
                   background="transparent"
-                  transformOrigin="bottom center"
+                  transformOrigin="center center"
                   transition="transform ease 150ms"
                   {...filter.active && {
-                    transform: {
-                      scale: 1.1,
-                    },
+                    opacity: 1,
                   }}
                   {...hasActiveFilters &&
                     !filter.active && {
-                      scale: 0.9,
+                      opacity: 0.5,
                     }}
                   activeStyle={{
                     background: 'transparent',

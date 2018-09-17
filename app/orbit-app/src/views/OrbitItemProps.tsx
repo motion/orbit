@@ -7,6 +7,7 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { ResolvedItem } from '../components/ItemResolver'
 import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
+import { BitItemResolverProps } from '../components/resolve/ResolveBit'
 
 type Model = Bit | PersonBit | Setting
 
@@ -36,13 +37,9 @@ export type OrbitItemProps = CSSPropertySet & {
   pane?: string
   subPane?: string
   model?: Model
-  itemProps?: Object
+  itemProps?: Partial<BitItemResolverProps>
   children?:
-    | ((
-        a: ResolvedItem,
-        b: Bit | PersonBit | Setting,
-        c: number,
-      ) => JSX.Element)
+    | ((a: ResolvedItem, b: Bit | PersonBit | Setting, c: number) => JSX.Element)
     | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any

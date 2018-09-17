@@ -15,7 +15,7 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
 }
 
 export const ResolveConversation = (props: BitItemResolverProps) => {
-  const { children, bit, shownLimit = Infinity, isExpanded, searchTerm, hide } = props
+  const { children, bit, shownLimit = Infinity, isExpanded, searchTerm, hide, extraProps } = props
   const data = bit.data as SlackBitData
   const people = bit.people || []
   const content = isExpanded
@@ -30,6 +30,7 @@ export const ResolveConversation = (props: BitItemResolverProps) => {
           <SlackMessage
             key={index}
             {...props}
+            extraProps={extraProps}
             message={message}
             previousMessage={data.messages[index - 1]}
             hide={hide}

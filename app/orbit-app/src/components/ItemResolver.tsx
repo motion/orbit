@@ -39,18 +39,16 @@ export type ItemResolverProps = {
   searchTerm?: string
   hide?: ItemHideProps
   onResolvedItem?: (a: ResolvedItem) => any
+  extraProps?: {
+    beforeTitle?: React.ReactNode
+  }
 }
 
 export type ItemResolverResolverProps = ItemResolverProps & {
   decoration: ItemResolverDecoration
 }
 
-export const ItemResolver = ({
-  model,
-  onResolvedItem,
-  children,
-  ...props
-}: ItemResolverProps) => {
+export const ItemResolver = ({ model, onResolvedItem, children, ...props }: ItemResolverProps) => {
   let Resolver
   if (!model) {
     return null

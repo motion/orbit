@@ -1,11 +1,50 @@
 import { LOGGER_COLOR_WHEEL } from './constants'
 import { LoggerSettings } from './LoggerSettings'
 
+const voidfn = (...args: any[]) => args
+let log
+
+if (typeof window !== 'undefined') {
+  // disable in renderer for now because were avoiding compiling it to electron
+  log = {
+    info: voidfn,
+    debug: voidfn,
+    warn: voidfn,
+    error: voidfn,
+  }
+} else {
+  // just use it for its simple/nice file log writing
+  log = require('electron-log')
+  // disable console output from electron-log
+  // @ts-ignore
+  log.transports.console = () => {}
+}
+
 // electron doesnt have console.debug...
 const debug = (...args) => (console.debug ? console.debug(...args) : console.info(...args))
 
 type LoggerOpts = {
   trace?: boolean
+}
+
+const has = (x, y) => x.indexOf(y) > -1
+
+const knownUselessLog = str => {
+  // our own stack
+  if (has(str, 'at Logger.log')) return true
+  // ignore double understor function names
+  if (has(str, 'at __')) return true
+  // common ts compiled code
+  if (has(str, 'at res ')) return true
+  // mobx...
+  if (has(str, 'at executeAction$')) return true
+  if (has(str, 'at Reaction$')) return true
+  if (has(str, 'at runReactionsHelper')) return true
+  if (has(str, 'at reactionScheduler')) return true
+  if (has(str, 'at batchedUpdates$')) return true
+  if (has(str, 'at endBatch$')) return true
+  if (has(str, 'at endAction')) return true
+  return false
 }
 
 /**
@@ -93,16 +132,21 @@ export class Logger {
       const { STACK_FILTER } = process.env
       if (STACK_FILTER) {
         // replace stack so it looks less stack-y
-        const replace = new RegExp(` \\([^\\)]*${STACK_FILTER}`)
+        const dontFilter = STACK_FILTER === 'true'
+        const replace = dontFilter ? '' : new RegExp(` \\([^\\)]*${STACK_FILTER}`)
         where = where
           .split('\n')
-          .filter(x => x.indexOf(STACK_FILTER) > -1 && x.indexOf('__awaiter') === -1)
+          // filter
+          .filter(x => x.indexOf(STACK_FILTER) > -1 && !knownUselessLog(x))
+          // cleanup formatting
           .map(x =>
             x
-              .replace(replace, ` in (${STACK_FILTER}`)
-              // otherwise the trace has irregular first line width
-              .replace(/^\s+at/, '   at'),
+              .replace(replace, dontFilter ? '*****' : ` in (${STACK_FILTER}`)
+              // normalizes the traces irregular first line width
+              .replace(/^\s+at/, '  at'),
           )
+          // remove the first line "Error" and cap at 10 lines
+          .slice(1, 10)
           .join('\n')
       }
       if (where) {
@@ -114,12 +158,16 @@ export class Logger {
     // todo: in the production we'll need to output into our statistics/logger servers
     if (level === 'error') {
       console.error(`%c ${this.namespace} `, 'color: white; background-color: red', ...messages)
+      log.error(this.namespace, ...messages)
     } else if (level === 'warning') {
       console.warn(`%c ${this.namespace} `, 'color: white; background-color: yellow', ...messages)
+      log.warn(this.namespace, ...messages)
     } else if (level === 'verbose') {
       debug(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
+      log.debug(this.namespace, ...messages)
     } else if (level === 'info') {
       console.info(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
+      log.info(this.namespace, ...messages)
     } else if (level === 'timer') {
       const labelMessage = messages[0]
       const existTimer = this.timers.find(timer => timer.message === labelMessage)
@@ -131,6 +179,7 @@ export class Logger {
           'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
           ...messages,
         )
+        log.debug(this.namespace, delta, ...messages)
         this.timers.splice(this.timers.indexOf(existTimer), 1)
       } else {
         debug(
@@ -139,10 +188,12 @@ export class Logger {
           'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
           ...messages,
         )
+        log.debug(this.namespace, 'started', ...messages)
         this.timers.push({ time: Date.now(), message: messages[0] })
       }
     } else {
       console.log(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
+      log.info(this.namespace, ...messages)
     }
   }
 }

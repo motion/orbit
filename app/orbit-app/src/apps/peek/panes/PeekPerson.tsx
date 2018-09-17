@@ -34,7 +34,7 @@ class PeekPersonStore {
       order: {
         bitUpdatedAt: 'DESC',
       },
-      take: 30,
+      take: 15,
     },
   }).subscribe(values => {
     this.recentBits = values

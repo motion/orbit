@@ -1,4 +1,8 @@
 import { setGlobalConfig, GlobalConfig } from '@mcro/config'
+import { handleErrors } from './handleErrors'
+
+// setup process error watching before doing most stuff
+handleErrors()
 
 Error.stackTraceLimit = Infinity
 

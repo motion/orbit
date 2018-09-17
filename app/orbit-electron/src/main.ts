@@ -29,14 +29,13 @@ export async function main(): Promise<number | void> {
     process.on('SIGUSR1', () => exitHandler(0))
     // @ts-ignore
     process.on('SIGUSR2', () => exitHandler(0))
-    // @ts-ignore
-    process.on('uncaughtException', err => {
-      console.log('uncaughtException', err.stack)
-    })
   }
 
-  // show dock icon
-  app.dock.show()
+  // this already shows in dev, and we dont want to lose focus during restarts
+  if (process.env.NODE_ENV !== 'development') {
+    // show dock icon
+    app.dock.show()
+  }
 
   // require app after setting config
   const { ElectronApp } = require('./ElectronApp')

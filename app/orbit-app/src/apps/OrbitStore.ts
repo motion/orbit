@@ -6,6 +6,15 @@ import { AppReactions } from '../stores/AppReactions'
 export class OrbitStore {
   contentHeight = 0
   onPinKeyCB = null
+  inputFocused = false
+
+  onFocus = () => {
+    this.inputFocused = true
+  }
+
+  onBlur = () => {
+    this.inputFocused = false
+  }
 
   get contentBottom() {
     // always leave x room at bottom

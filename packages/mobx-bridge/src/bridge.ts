@@ -90,8 +90,8 @@ export class BridgeManager {
       await this.setupMaster()
     } else {
       log.info(`Connecting socket to ${this.port}`)
-      this._socket = new ReconnectingWebSocket(`ws://localhost:${this.port}`, undefined, {
-        constructor: WebSocket,
+      this._socket = new ReconnectingWebSocket(`ws://localhost:${this.port}`, [], {
+        WebSocket,
       })
       this.setupClientSocket()
     }
@@ -285,6 +285,11 @@ export class BridgeManager {
     }
     // update our own state immediately so its sync
     const changedState = this.deepMergeMutate(this.state, newState)
+    if (process.env.NODE_ENV === 'development') {
+      if (changedState) {
+        log.trace.verbose('setState', newState, 'changedState', changedState)
+      }
+    }
     if (!ignoreSend) {
       this.sendChangedState(changedState)
     }

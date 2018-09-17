@@ -20,7 +20,20 @@ export class PaneManagerStore {
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
+  lastKey = { key: null, at: Date.now() }
+
   generalSetting = null
+  generalSetting$ = observeOne(SettingModel, {
+    args: {
+      where: {
+        type: 'general',
+        category: 'general',
+      },
+    },
+  }).subscribe(generalSetting => {
+    const values = generalSetting.values as GeneralSettingValues
+    this.hasOnboarded = values.hasOnboarded
+  })
 
   didMount() {
     // set pane manager store... todo make better
@@ -36,32 +49,7 @@ export class PaneManagerStore {
     )
 
     on(this, this.props.keyboardStore, 'key', key => {
-      if (!App.orbitState.inputFocused) {
-        return
-      }
-      if (App.state.query) {
-        return
-      }
-      if (this.props.selectionStore.activeIndex === -1) {
-        if (key === 'right') {
-          this.setPaneIndex(this.paneIndex + 1)
-        }
-        if (key === 'left') {
-          this.setPaneIndex(this.paneIndex - 1)
-        }
-      }
-    })
-
-    const generalSetting$ = observeOne(SettingModel, {
-      args: {
-        where: {
-          type: 'general',
-          category: 'general',
-        },
-      },
-    }).subscribe(generalSetting => {
-      const values = generalSetting.values as GeneralSettingValues
-      this.hasOnboarded = values.hasOnboarded
+      this.lastKey = { key, at: Date.now() }
     })
 
     const disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
@@ -83,6 +71,23 @@ export class PaneManagerStore {
       },
     })
   }
+
+  onKey = react(
+    () => this.lastKey,
+    ({ key }) => {
+      ensure('key', !!key)
+      ensure('focused', this.props.orbitStore.inputFocused)
+      ensure('query', !!App.state.query)
+      if (this.props.selectionStore.activeIndex === -1) {
+        if (key === 'right') {
+          this.setPaneIndex(this.paneIndex + 1)
+        }
+        if (key === 'left') {
+          this.setPaneIndex(this.paneIndex - 1)
+        }
+      }
+    },
+  )
 
   setActivePaneHomeOnSearchInSettings = react(
     () => App.state.query,
@@ -167,7 +172,7 @@ export class PaneManagerStore {
       if (active === 'home' && App.state.query) {
         active = 'search'
       }
-      ensure('no on active pane', active !== this.activePane)
+      ensure('not active', active !== this.activePane)
       return active
     },
   )

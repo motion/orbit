@@ -5,6 +5,9 @@ import * as React from 'react'
 import { DateFormat } from '../../../views/DateFormat'
 import { BitItemResolverProps } from '../ResolveBit'
 import { Markdown } from '../../../views/Markdown'
+import { VerticalSpace, HorizontalSpace } from '../../../views'
+import { RoundButtonBorderedSmall } from '../../../views/RoundButtonBordered'
+import { Text } from '@mcro/ui'
 
 const options = {
   remove_digits: true,
@@ -19,17 +22,23 @@ const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) =>
     body,
   } = comment
   return (
-    <div>
-      <UI.Row>
+    <React.Fragment>
+      <UI.Row alignItems="center">
         <img
           style={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
           src={avatarUrl}
         />
-        {login}
-        {!!createdAt && <DateFormat date={new Date(createdAt)} />}
+        <RoundButtonBorderedSmall>{login}</RoundButtonBorderedSmall>
+        <HorizontalSpace />
+        {!!createdAt && (
+          <Text size={0.95} fontWeight={600} alpha={0.8}>
+            <DateFormat date={new Date(createdAt)} />
+          </Text>
+        )}
       </UI.Row>
+      <VerticalSpace small />
       <Markdown source={body} />
-    </div>
+    </React.Fragment>
   )
 }
 

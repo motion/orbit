@@ -1,5 +1,4 @@
 import './helpers/monitorResourceUsage'
-import './helpers/handlePromiseErrors'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import React from 'react'

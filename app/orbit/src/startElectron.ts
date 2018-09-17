@@ -28,24 +28,10 @@ export async function startElectron() {
   process.on('exit', handleExit)
 
   // fork desktop process...
-  // fail message
-  let desktopFailMsg = ''
-  const failStartTm = setTimeout(() => {
-    dialog.showMessageBox({
-      message: `Node process didnt start: ${desktopFailMsg}`,
-      buttons: ['Ok'],
-    })
-  }, 10000)
-
-  try {
-    desktopProcess = require('./startDesktop').startDesktop()
-  } catch (err) {
-    desktopFailMsg = `${err.message}`
-  }
+  desktopProcess = require('./startDesktop').startDesktop()
 
   log.info('Waiting for desktop startup to continue...')
   await waitPort({ port: Config.ports.server })
-  clearTimeout(failStartTm)
   log.info('Found desktop, continue...')
 
   // start electron...

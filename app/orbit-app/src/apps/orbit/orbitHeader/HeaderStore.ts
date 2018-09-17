@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { react, ensure } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { HeaderProps } from './HeaderProps'
 import { Actions } from '../../../actions/Actions'
 
@@ -49,7 +49,7 @@ export class HeaderStore {
     this.inputRef.current.focus()
     moveCursorToEndOfTextarea(this.inputRef.current)
   }
-
+  s
   focusInputOnVisible = react(
     () => App.orbitState.pinned || App.orbitState.docked,
     async shown => {
@@ -90,11 +90,7 @@ export class HeaderStore {
     },
   )
 
-  onClickInput = () => {
-    if (!App.orbitState.pinned && Desktop.isHoldingOption) {
-      App.togglePinned()
-    }
-  }
+  onClickInput = () => {}
 
   onHoverIcon = () => {
     this.iconHovered = true

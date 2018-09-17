@@ -2,6 +2,7 @@ import 'raf/polyfill'
 import { Logger } from '@mcro/logger'
 import waitPort from 'wait-port'
 import { app } from 'electron'
+import { handleErrors } from './helpers/handleErrors'
 
 const log = new Logger('electron')
 
@@ -29,11 +30,10 @@ export async function main(): Promise<number | void> {
     process.on('SIGUSR1', () => exitHandler(0))
     // @ts-ignore
     process.on('SIGUSR2', () => exitHandler(0))
-    // @ts-ignore
-    process.on('uncaughtException', err => {
-      console.log('uncaughtException', err.stack)
-    })
   }
+
+  // setup process error watching before doing most stuff
+  handleErrors()
 
   // show dock icon
   app.dock.show()

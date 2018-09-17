@@ -1,5 +1,11 @@
 import { LOGGER_COLOR_WHEEL } from './constants'
 import { LoggerSettings } from './LoggerSettings'
+import log from 'electron-log'
+
+// disable console output from electron-log
+// just use it for its simple/nice file log writing
+// @ts-ignore
+log.transports.console = () => {}
 
 // electron doesnt have console.debug...
 const debug = (...args) => (console.debug ? console.debug(...args) : console.info(...args))
@@ -113,7 +119,8 @@ export class Logger {
       const { STACK_FILTER } = process.env
       if (STACK_FILTER) {
         // replace stack so it looks less stack-y
-        const replace = new RegExp(` \\([^\\)]*${STACK_FILTER}`)
+        const dontFilter = STACK_FILTER === 'true'
+        const replace = dontFilter ? '' : new RegExp(` \\([^\\)]*${STACK_FILTER}`)
         where = where
           .split('\n')
           // filter
@@ -121,7 +128,7 @@ export class Logger {
           // cleanup formatting
           .map(x =>
             x
-              .replace(replace, ` in (${STACK_FILTER}`)
+              .replace(replace, dontFilter ? '*****' : ` in (${STACK_FILTER}`)
               // normalizes the traces irregular first line width
               .replace(/^\s+at/, '  at'),
           )
@@ -130,7 +137,7 @@ export class Logger {
           .join('\n')
       }
       if (where) {
-        messages = [...messages, `\n log trace:\n${where}`]
+        messages = [...messages, `\n log trace2:\n${where}`]
       }
     }
 
@@ -138,12 +145,16 @@ export class Logger {
     // todo: in the production we'll need to output into our statistics/logger servers
     if (level === 'error') {
       console.error(`%c ${this.namespace} `, 'color: white; background-color: red', ...messages)
+      log.error(this.namespace, ...messages)
     } else if (level === 'warning') {
       console.warn(`%c ${this.namespace} `, 'color: white; background-color: yellow', ...messages)
+      log.warn(this.namespace, ...messages)
     } else if (level === 'verbose') {
       debug(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
+      log.debug(this.namespace, ...messages)
     } else if (level === 'info') {
       console.info(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
+      log.info(this.namespace, ...messages)
     } else if (level === 'timer') {
       const labelMessage = messages[0]
       const existTimer = this.timers.find(timer => timer.message === labelMessage)
@@ -155,6 +166,7 @@ export class Logger {
           'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
           ...messages,
         )
+        log.debug(this.namespace, delta, ...messages)
         this.timers.splice(this.timers.indexOf(existTimer), 1)
       } else {
         debug(
@@ -163,10 +175,12 @@ export class Logger {
           'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
           ...messages,
         )
+        log.debug(this.namespace, 'started', ...messages)
         this.timers.push({ time: Date.now(), message: messages[0] })
       }
     } else {
       console.log(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
+      log.info(this.namespace, ...messages)
     }
   }
 }

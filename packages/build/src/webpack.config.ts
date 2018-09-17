@@ -179,7 +179,7 @@ const config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
-      'process.env.STACK_FILTER': JSON.stringify(process.env.STACK_FILTER || ''),
+      'process.env.STACK_FILTER': JSON.stringify(true),
     }),
     // adds cache based on source of files
     // new HardSourceWebpackPlugin(),

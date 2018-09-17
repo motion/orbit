@@ -10,7 +10,7 @@ const isBrowser = typeof window !== 'undefined'
 type AppState = {
   id: number
   torn: boolean
-  target?: Object
+  target?: { top: number; left: number; width: number; height: number }
   appConfig: AppConfig
   peekOnLeft: boolean
   position: [number, number]

@@ -242,6 +242,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     if action == "posi" {
       do {
         let position = try JSONDecoder().decode(Position.self, from: text[5..<text.count].data(using: .utf8)!)
+        window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
         self.position(position)
       } catch {
         print("Error parsing arguments \(text)")

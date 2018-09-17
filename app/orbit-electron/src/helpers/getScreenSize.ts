@@ -1,4 +1,3 @@
-// @ts-ignore
 import Electron from 'electron'
 
 export function getScreenSize() {

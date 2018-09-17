@@ -125,24 +125,40 @@ export class ScreenManager {
     },
   )
 
-  updateWindowPosition = react(
-    () => {
-      const { position, size } = App.orbitState
-      const [x, y] = position
-      const [width, height] = size
-      return {
-        x: Math.round(x - 10),
-        // mac topbar 23
-        y: Math.round(y + 23 + 10),
-        width: Math.round(width),
-        height: Math.round(height - 30),
-      }
-    },
+  updateWindowPositionOnOrbitChange = react(
+    () => this.getPosition(),
     async (position, { when }) => {
       await when(() => this.isStarted)
-      this.oracle.positionWindow(position)
+      this.positionOrbit(position)
     },
   )
+
+  updateWindowPositionOnScreenRezie = react(
+    () => Electron.state.screenSize,
+    () => {
+      this.positionOrbit()
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
+
+  private positionOrbit(position = this.getPosition()) {
+    this.oracle.positionWindow(position)
+  }
+
+  private getPosition() {
+    const { position, size } = App.orbitState
+    const [x, y] = position
+    const [width, height] = size
+    return {
+      x: Math.round(x - 10),
+      // mac topbar 23
+      y: Math.round(y + 23 + 10),
+      width: Math.round(width),
+      height: Math.round(height - 30),
+    }
+  }
 
   lastAppName = null
 

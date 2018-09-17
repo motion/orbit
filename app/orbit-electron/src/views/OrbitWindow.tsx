@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, ensure } from '@mcro/black'
+import { view, react, ensure, sleep } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -80,6 +80,7 @@ class OrbitWindowStore {
   )
 
   showOnNewSpace() {
+    console.log('Show on new space...')
     this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
     this.orbitRef.focus() // focus the window up front on the active screen
     this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
@@ -113,8 +114,10 @@ export class OrbitWindow extends React.Component<Props> {
   componentDidMount() {
     this.handleReadyToShow()
 
-    screen.on('display-metrics-changed', (_event, _display) => {
+    screen.on('display-metrics-changed', async (_event, _display) => {
       log.info('got display metrics changed event')
+      // give it a second to adjust
+      await sleep(100)
       this.setScreenSize()
     })
   }
@@ -122,6 +125,7 @@ export class OrbitWindow extends React.Component<Props> {
   setScreenSize = () => {
     const screenSize = getScreenSize()
     Electron.setState({ screenSize })
+    this.props.electronStore.reset()
   }
 
   handleReadyToShow = () => {

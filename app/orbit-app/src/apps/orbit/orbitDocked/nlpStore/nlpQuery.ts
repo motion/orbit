@@ -148,7 +148,9 @@ export function parseSearchQuery(query: string): NLPResponse {
   // date
   const date: DateRange = Sherlockjs.parse(query)
   // better "now", sherlock often says a few hours earlier than actually now
+  // also sherlock puts startDate to now but it logically is endDate (and we parse later startdates if found)
   if (dates.indexOf('now') > -1) {
+    date.startDate = null
     date.endDate = new Date()
   }
   if (date.startDate) {
@@ -170,10 +172,10 @@ export function parseSearchQuery(query: string): NLPResponse {
   // try a few of our own
 
   // simple month matching
-  if (dates.length && !date.startDate && !date.endDate) {
+  if (dates.length && !date.startDate) {
     // for now just handle one date
     let [start, end] = dates[0].split(' to ')
-    if (end) {
+    if (!date.endDate && end) {
       const endMonth = findMonth(end)
       if (endMonth) {
         date.startDate = endMonth.startDate

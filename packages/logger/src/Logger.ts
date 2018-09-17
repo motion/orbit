@@ -136,8 +136,11 @@ export class Logger {
         const replace = dontFilter ? '' : new RegExp(` \\([^\\)]*${STACK_FILTER}`)
         where = where
           .split('\n')
-          // filter
-          .filter(x => x.indexOf(STACK_FILTER) > -1 && !knownUselessLog(x))
+          .filter(
+            x =>
+              (STACK_FILTER !== 'true' ? x.indexOf(STACK_FILTER) > -1 : true) &&
+              !knownUselessLog(x),
+          )
           // cleanup formatting
           .map(x =>
             x

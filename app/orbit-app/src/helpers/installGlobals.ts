@@ -53,6 +53,7 @@ window['stringify'] = stringify
 window['Actions'] = Actions
 window['Mediator'] = Repositories.Mediator
 window['Models'] = Models
+window['sherlockjs'] = require('sherlockjs')
 
 // make the various model/repositories global
 for (const repo in Repositories) {

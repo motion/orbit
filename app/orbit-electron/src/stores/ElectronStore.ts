@@ -1,5 +1,5 @@
 import { App, Electron, Desktop } from '@mcro/stores'
-import { isEqual, store, debugState, on, react } from '@mcro/black'
+import { isEqual, store, debugState, on, react, ensure } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
 import { HoverStateStore } from './HoverStateStore'
 import root from 'global'
@@ -54,6 +54,7 @@ export class ElectronStore {
     () => Desktop.state.appFocusState[0],
     state => {
       log.info('exiting...')
+      ensure('state', !!state)
       if (state.exited) {
         process.exit(0)
       }

@@ -1,7 +1,7 @@
 export function startDevelopment(appRoot) {
   Error.stackTraceLimit = Infinity
 
-  console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
+  console.log(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
   require('source-map-support/register')
   require('./installGlobals')

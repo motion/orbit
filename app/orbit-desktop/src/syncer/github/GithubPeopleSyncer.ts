@@ -27,27 +27,26 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
    * Runs people syncronization.
    */
   async run() {
-
     // get all organizations from settings we need to sync
     const organizations = this.getOrganizations()
 
     // if no repositories were selected in settings, we don't do anything
     if (!organizations.length) {
-      log.verbose(`no repositories were selected in the settings, skip sync`)
+      log.verbose('no repositories were selected in the settings, skip sync')
       return
     } else {
-      log.verbose(`got organizations to load people from`, organizations)
+      log.verbose('got organizations to load people from', organizations)
     }
 
     // get all the people we have in the database for this integration
-    log.timer(`load synced people from the database`)
+    log.timer('load synced people from the database')
     const dbPeople = await this.loadDatabasePeople()
-    log.timer(`load synced people from the database`, dbPeople)
+    log.timer('load synced people from the database', dbPeople)
 
     // load people from the API and create entities for them
-    log.timer(`load API users`)
+    log.timer('load API users')
     const apiPeople = await this.loadApiPeople(organizations)
-    log.timer(`load API users`, apiPeople)
+    log.timer('load API users', apiPeople)
 
     // update in the database
     await PersonUtils.sync(log, apiPeople, dbPeople)
@@ -58,15 +57,21 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
    */
   private getOrganizations(): string[] {
     const values = this.setting.values as GithubSettingValues
-    const repositoryPaths = Object.keys(values.repos/* || {
+    if (!values.repos) {
+      log.info('No repos selected, ending')
+      return []
+    }
+    const repositoryPaths = Object.keys(
+      values.repos /* || {
       "typeorm/javascript-example": true,
       "typeorm/browser-example": true,
       "typeorm/typeorm": true,
-    }*/)
+    }*/,
+    )
     return uniq(
       repositoryPaths.map(repositoryPath => {
         return repositoryPath.split('/')[0]
-      })
+      }),
     )
   }
 
@@ -95,12 +100,11 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     return getRepository(PersonEntity).find({
       select: {
         id: true,
-        contentHash: true
+        contentHash: true,
       },
       where: {
-        settingId: this.setting.id
-      }
+        settingId: this.setting.id,
+      },
     })
   }
-
 }

@@ -16,6 +16,7 @@ import { App } from '@mcro/stores'
 import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 import { settingsList } from '../../../../helpers/settingsList'
 import { NoResultsDialog } from '../views/NoResultsDialog'
+import { SyncStatus } from '../views/SyncStatus'
 
 type Props = {
   name: string
@@ -128,6 +129,8 @@ export class OrbitApps extends React.Component<Props> {
                 />
               ))}
             </Grid>
+            <Views.VertSpace />
+            <SyncStatus />
             <Views.VertSpace />
           </>
         )}

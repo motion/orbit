@@ -21,9 +21,4 @@ export class GithubService {
     if (!this.setting) return
     return (this.setting.values as any).repos
   }
-
-  get activeOrgs() {
-    // @ts-ignore
-    return this.setting.orgs
-  }
 }

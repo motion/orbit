@@ -60,8 +60,9 @@ const months = {
 const monthNames = Object.keys(months)
 
 const findMonth = str => {
+  const mstr = str.toLowerCase()
   for (const month of monthNames) {
-    if (month.indexOf(str) === 0) {
+    if (month.indexOf(mstr) === 0) {
       return months[month]
     }
   }

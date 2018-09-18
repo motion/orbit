@@ -9,6 +9,8 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
+import { SyncStatus } from '../views/SyncStatus'
+import { SyncStatusAll } from '../views/SyncStatusAll'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -221,8 +223,9 @@ export class OrbitHome extends React.Component<Props> {
   render() {
     const { homeStore } = this.props
     const { results } = homeStore
-    return (
-      <SubPane name="home" fadeBottom>
+    let content
+    if (results.length) {
+      content = (
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided, snapshot) => (
@@ -237,11 +240,7 @@ export class OrbitHome extends React.Component<Props> {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          style={getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style,
-                            index,
-                          )}
+                          style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                         >
                           <OrbitCarouselSection
                             startIndex={startIndex}
@@ -260,6 +259,14 @@ export class OrbitHome extends React.Component<Props> {
             )}
           </Droppable>
         </DragDropContext>
+      )
+    } else {
+      // show sync status when empty
+      content = <SyncStatusAll />
+    }
+    return (
+      <SubPane name="home" fadeBottom>
+        {content}
         {/* this is a nice lip effect */}
         <View height={20} />
       </SubPane>

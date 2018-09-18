@@ -186,7 +186,7 @@ export class Syncer {
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
     } catch (error) {
-      log.error(`${this.options.constructor.name} sync error`, error)
+      log.error(`${this.options.constructor.name} sync err`, error)
 
       // update our job (finish with error)
       job.status = 'FAILED'

@@ -15,7 +15,7 @@ export const PeekBar = view({
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
-  boxShadow: [[0, 0, 20, [0, 0, 0, 0.075]]],
+  boxShadow: [[0, 0, 18, [0, 0, 0, 0.07]]],
   // backdropFilter: 'blur(10px)',
 })
 
@@ -33,6 +33,7 @@ const peekBarTextProps = {
   fontWeight: 500,
   alpha: 0.8,
   size: 0.95,
+  fontSize: 12,
 }
 
 PeekBar.Button = props => <RoundButton {...peekBarTextProps} {...props} />

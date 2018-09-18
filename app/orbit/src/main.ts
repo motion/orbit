@@ -34,7 +34,7 @@ export async function main() {
   // setup process error watching before doing most stuff
   // this only runs in electron process
   // desktop will report errors up to here
-  require('./handleErrors')
+  require('./handleErrors').handleErrors()
 
   // IS IN ELECTRON...
 

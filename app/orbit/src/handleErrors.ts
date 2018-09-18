@@ -4,9 +4,14 @@ import open from 'opn'
 import { logFile } from '@mcro/logger'
 import { pathExists, readFile } from 'fs-extra'
 import { showConfirmDialog } from './showConfirmDialog'
+import Raven from 'raven'
+
+Raven.config('https://e885a093bbcb4d5fb2527dfe921f7654@sentry.io/1282871').install()
 
 // puts the last of the log and the current error onto the clipboard
 // and opens mail if you want it to
+
+let lastReported = 0
 
 export async function onError(error) {
   if (!error) {
@@ -20,6 +25,14 @@ export async function onError(error) {
   if (errorMessage.indexOf('WebSocket is') > -1) {
     return
   }
+
+  // if less than 5 seconds ago we reported an error, dont bombard them
+  if (Date.now() - lastReported < 1000 * 5) {
+    console.log('too soon')
+    return
+  }
+
+  lastReported = Date.now()
 
   if (
     showConfirmDialog({
@@ -49,17 +62,22 @@ ${errorMessage}
 Log:
 ${log}`
 
+    // copy to clipboard...
     clipboard.writeText(niceError)
 
     const res = dialog.showMessageBox({
       type: 'question',
       title: 'Error copied!',
-      message: 'Send email to support@tryorbit.com?',
-      buttons: ['Send email', 'I\'ll send on my own'],
+      message: 'Quick upload error to Orbit?',
+      buttons: ['Quick report error', 'Open in email', 'No thanks'],
       defaultId: 0,
-      cancelId: 1,
+      cancelId: 2,
     })
     if (res === 0) {
+      Raven.captureException(niceError)
+      return
+    }
+    if (res === 1) {
       open(
         `mailto:support@tryorbit.com?subject=${encodeURIComponent(
           'Orbit Error',

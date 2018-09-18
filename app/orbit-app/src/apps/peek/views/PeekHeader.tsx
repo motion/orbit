@@ -81,7 +81,7 @@ const MainHead = view({
   flexFlow: 'row',
   position: 'relative',
   flex: 1,
-  height: 38,
+  height: 35,
 })
 
 @attachTheme

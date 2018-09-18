@@ -15,6 +15,7 @@ import { TitleBarSpace } from '../views/TitleBarSpace'
 import { Actions } from '../../../actions/Actions'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 import { NICE_INTEGRATION_NAMES } from '../../../constants'
+import { SyncStatus } from '../../orbit/orbitDocked/views/SyncStatus'
 
 type Props = PeekPaneProps & {
   store?: AppInfoStore
@@ -95,20 +96,39 @@ class SettingContent extends React.Component<Props> {
               </>
             ),
             subtitleAfter: (
-              <>
-                <UI.Text size={0.9} fontWeight={400} alpha={0.6}>
-                  {(+store.bitsCount).toLocaleString()} total
-                </UI.Text>
-                <TitleBarSpace />
-                <UI.ListRow>
-                  <TitleBarButton
-                    icon="remove"
-                    tooltip="Remove integration"
-                    onClick={this.removeIntegration}
-                  />
-                  <TitleBarButton tooltip="Sync" icon="refresh" onClick={this.handleRefresh} />
-                </UI.ListRow>
-              </>
+              <SyncStatus settingId={setting.id}>
+                {jobs => {
+                  return (
+                    <>
+                      {jobs && (
+                        <>
+                          <UI.Text size={0.9} fontWeight={400} alpha={0.6}>
+                            Syncing...
+                          </UI.Text>
+                          <TitleBarSpace />
+                        </>
+                      )}
+                      <UI.Text size={0.9} fontWeight={400} alpha={0.6}>
+                        {(+store.bitsCount).toLocaleString()} total
+                      </UI.Text>
+                      <TitleBarSpace />
+                      <UI.ListRow>
+                        <TitleBarButton
+                          icon="remove"
+                          tooltip="Remove integration"
+                          onClick={this.removeIntegration}
+                        />
+                        <TitleBarButton
+                          disabled={!!jobs}
+                          tooltip="Sync"
+                          icon="refresh"
+                          onClick={this.handleRefresh}
+                        />
+                      </UI.ListRow>
+                    </>
+                  )
+                }}
+              </SyncStatus>
             ),
             belowHead,
             content,

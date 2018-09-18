@@ -4,18 +4,18 @@ import { JobModel, Job } from '@mcro/models'
 import { view } from '@mcro/black'
 
 type Props = {
-  type: 'github' | 'gdrive' | 'gmail' | 'jira' | 'confluence'
+  settingId: number
   children: (a: Job[]) => React.ReactNode
 }
 
-const syncers = {
-  github: ['GithubIssueSyncer', 'GithubPeopleSyncer'],
-  slack: ['SlackMessagesSyncer', 'SlackPeopleSyncer'],
-  gdrive: ['GDriveSyncer'],
-  gmail: ['GMailSyncer', 'MailWhitelisterSyncer'],
-  jira: ['JiraIssueSyncer', 'JiraPeopleSyncer'],
-  confluence: ['ConfluenceContentSyncer', 'ConfluencePeopleSyncer'],
-}
+// const syncers = {
+//   github: ['GithubIssueSyncer', 'GithubPeopleSyncer'],
+//   slack: ['SlackMessagesSyncer', 'SlackPeopleSyncer'],
+//   gdrive: ['GDriveSyncer'],
+//   gmail: ['GMailSyncer', 'MailWhitelisterSyncer'],
+//   jira: ['JiraIssueSyncer', 'JiraPeopleSyncer'],
+//   confluence: ['ConfluenceContentSyncer', 'ConfluencePeopleSyncer'],
+// }
 
 class SyncStatusStore {
   props: Props
@@ -24,8 +24,7 @@ class SyncStatusStore {
     args: {
       where: {
         status: 'PROCESSING',
-        // TODO: how to query for multiple?
-        syncer: syncers[this.props.type],
+        settingId: this.props.settingId,
       },
     },
   }).subscribe(val => {
@@ -44,7 +43,7 @@ export class SyncStatus extends React.Component<{ store?: SyncStatusStore } & Pr
   render() {
     const { store, children } = this.props
     if (!store.activeJobs.length) {
-      return null
+      return children(null)
     }
     return children(store.activeJobs)
   }

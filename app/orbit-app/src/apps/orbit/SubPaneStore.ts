@@ -179,7 +179,7 @@ export class SubPaneStore {
     if (isAtBottom !== this.isAtBottom) {
       this.isAtBottom = isAtBottom
     }
-    const isNearBottom = scrolledTo + 450 > innerHeight
+    const isNearBottom = scrolledTo + 550 > innerHeight
     if (isNearBottom && this.props.onScrollNearBottom) {
       this.props.onScrollNearBottom()
     }

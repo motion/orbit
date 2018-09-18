@@ -15,7 +15,7 @@ import { DateFormat } from '../../../views/DateFormat'
 import { TitleBarButton } from '../views/TitleBarButton'
 import { TitleBarSpace } from '../views/TitleBarSpace'
 import { Actions } from '../../../actions/Actions'
-import { HighlightsContext } from '../../../helpers/contexts/HighlightsContext'
+import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../helpers/contexts/ItemResolverDecorationContext'
 import { VerticalSpace } from '../../../views'
 
@@ -160,7 +160,7 @@ export const PeekBit = ({
                   ),
                   content: (
                     <>
-                      <HighlightsContext.Provider value={[searchTerm]}>
+                      <ProvideHighlightsContextWithDefaults value={{ words: [searchTerm] }}>
                         <BitPaneContent
                           bit={bit}
                           peekStore={peekStore}
@@ -170,7 +170,7 @@ export const PeekBit = ({
                         />
                         <VerticalSpace />
                         <VerticalSpace />
-                      </HighlightsContext.Provider>
+                      </ProvideHighlightsContextWithDefaults>
                     </>
                   ),
                 })

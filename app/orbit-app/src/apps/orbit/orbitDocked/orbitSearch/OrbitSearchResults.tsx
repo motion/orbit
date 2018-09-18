@@ -14,7 +14,7 @@ import { SelectionStore } from '../SelectionStore'
 import { ResolvedItem } from '../../../../components/ItemResolver'
 import { SuggestionBarVerticalPad, SmallVerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
-import { HighlightsContext } from '../../../../helpers/contexts/HighlightsContext'
+import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 import { chunk } from 'lodash'
 
@@ -158,7 +158,9 @@ class OrbitSearchResultsList extends React.Component<Props> {
     console.log('resultsGroups', resultsGroups)
     let curOffset = quickResultsLen
     return (
-      <HighlightsContext.Provider value={query.split(' ')}>
+      <ProvideHighlightsContextWithDefaults
+        value={{ words: query.split(' '), maxChars: 500, maxSurroundChars: 200 }}
+      >
         {resultsGroups.map((group, index) => {
           console.log('group', group, curOffset)
           const next = (
@@ -173,7 +175,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
           curOffset += group.length
           return next
         })}
-      </HighlightsContext.Provider>
+      </ProvideHighlightsContextWithDefaults>
     )
   }
 }

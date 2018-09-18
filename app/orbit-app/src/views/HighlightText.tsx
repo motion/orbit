@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Text, TextProps } from '@mcro/ui'
 import { HighlightsContext } from '../helpers/contexts/HighlightsContext'
-import { HighlightOptions } from '@mcro/ui/_/helpers/highlightText'
+import { HighlightOptions } from '@mcro/ui'
 
 type Props = TextProps & {
   options?: HighlightOptions
@@ -17,7 +17,7 @@ export const HighlightText = ({ options, children, ...props }: Props) => {
   }
   return (
     <HighlightsContext.Consumer>
-      {terms => {
+      {options => {
         return (
           <Text
             tagName="div"
@@ -25,16 +25,7 @@ export const HighlightText = ({ options, children, ...props }: Props) => {
             display="block"
             selectable
             {...extraProps}
-            highlight={
-              terms.length
-                ? {
-                    words: terms,
-                    maxSurroundChars: Infinity,
-                    maxChars: Infinity,
-                    ...options,
-                  }
-                : null
-            }
+            highlight={options.words.length ? options : null}
             {...props}
           >
             {children}

@@ -57,7 +57,11 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
         )}
         <SlackMessageInner>
           <UI.Text {...decoration.text}>
-            <Markdown className="slack-markdown" source={message.text} />
+            <Markdown
+              className="slack-markdown"
+              source={message.text}
+              options={{ maxSurroundChars: 100 }}
+            />
           </UI.Text>
         </SlackMessageInner>
       </SlackMessageFrame>

@@ -63,16 +63,14 @@ class OrbitSettingsStore {
   }
 
   generalSetting = null
+  generalSetting$ = observeOne(SettingModel, {
+    args: { where: { type: 'general', category: 'general' } },
+  }).subscribe(value => {
+    this.generalSetting = value
+  })
 
-  didMount() {
-    on(
-      this,
-      observeOne(SettingModel, {
-        args: { where: { type: 'general', category: 'general' } },
-      }).subscribe(value => {
-        this.generalSetting = value
-      }),
-    )
+  willUnmount() {
+    this.generalSetting$.unsubscribe()
   }
 
   settingSetup = react(
@@ -167,25 +165,16 @@ export class OrbitSettings extends React.Component<Props> {
             </Views.CheckBoxRow>
             <Views.FormRow label="Open shortcut">
               <ShortcutCapture
-                defaultValue={electronToNiceChars(
-                  store.generalSetting.values.openShortcut,
-                )}
+                defaultValue={electronToNiceChars(store.generalSetting.values.openShortcut)}
                 onUpdate={store.shortcutChange}
                 modifierChars={eventCharsToNiceChars}
-                element={
-                  <Input
-                    onFocus={store.focusShortcut}
-                    onBlur={store.blurShortcut}
-                  />
-                }
+                element={<Input onFocus={store.focusShortcut} onBlur={store.blurShortcut} />}
               />
             </Views.FormRow>
 
             <Views.FormRow label="Account">
               <Theme name="orbit">
-                <Button onClick={this.handleClearAllData}>
-                  Clear all data
-                </Button>
+                <Button onClick={this.handleClearAllData}>Clear all data</Button>
               </Theme>
             </Views.FormRow>
           </Section>

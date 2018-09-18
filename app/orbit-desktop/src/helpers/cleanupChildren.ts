@@ -16,7 +16,11 @@ export function cleanupChildren(pid = process.getuid()) {
         const pids = children.map(x => x.PID)
         console.log('exiting children', pids)
         for (const pid of pids) {
-          process.kill(pid)
+          try {
+            process.kill(pid)
+          } catch (err) {
+            console.log('err killing', pid, err.message)
+          }
         }
       } catch (err) {
         console.log('err exiting', err)

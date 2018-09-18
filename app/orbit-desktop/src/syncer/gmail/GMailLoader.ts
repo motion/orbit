@@ -90,7 +90,7 @@ export class GMailLoader {
       pageToken ? `loading next page threads (max ${count})` : `loading threads (max ${count})`,
     )
     const result = await this.fetcher.fetch(threadsQuery(count, queryFilter, pageToken))
-
+    if (!result) return []
     let threads = result.threads
     if (!threads) return []
 

@@ -103,6 +103,11 @@ class OrbitWindowStore {
       }
     }
     Electron.sendMessage(App, App.messages.SHOW)
+  }
+
+  // just set this here for devtools opening,
+  // we are doing weird stuff with focus
+  handleElectronFocus = () => {
     Electron.setState({ focusedAppId: 'app' })
   }
 }
@@ -157,6 +162,7 @@ export class OrbitWindow extends React.Component<Props> {
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
+        onFocus={store.handleElectronFocus}
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#00000000"

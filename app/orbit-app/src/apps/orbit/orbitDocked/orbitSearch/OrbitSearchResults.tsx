@@ -95,11 +95,6 @@ class OrbitSearchResultsListChunk extends React.Component<{
   offset: number
   searchStore: SearchStore
 }> {
-  // this component it completely non-reactive!
-  shouldComponentUpdate() {
-    return false
-  }
-
   getChildren = ({ content }, bit) => {
     return bit.integration === 'slack' ? (
       <SearchResultText>{content}</SearchResultText>
@@ -160,18 +155,23 @@ class OrbitSearchResultsList extends React.Component<Props> {
     const quickResultsLen = searchStore.quickSearchState.results.length
     const chunkAmt = 6
     const resultsGroups = chunk(results, chunkAmt)
+    console.log('resultsGroups', resultsGroups)
+    let curOffset = quickResultsLen
     return (
       <HighlightsContext.Provider value={query.split(' ')}>
         {resultsGroups.map((group, index) => {
-          return (
+          console.log('group', group, curOffset)
+          const next = (
             <OrbitSearchResultsListChunk
-              key={`${index}${query}`}
-              offset={index * chunkAmt + quickResultsLen}
+              key={`${index}${query}${group.length}`}
+              offset={curOffset}
               query={query}
               results={group}
               searchStore={searchStore}
             />
           )
+          curOffset += group.length
+          return next
         })}
       </HighlightsContext.Provider>
     )

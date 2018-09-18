@@ -154,11 +154,11 @@ export class Logger {
             return res
           })
           // remove the first line "Error" and cap at lesser lines
-          .slice(1, 6)
+          .slice(1, 4)
           .join('\n')
       }
       if (where) {
-        messages = [...messages, `\n log trace:\n${where}`]
+        messages = [...messages, `\n${where}`]
       }
     }
 

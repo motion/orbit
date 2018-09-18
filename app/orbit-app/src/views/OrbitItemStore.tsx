@@ -26,9 +26,10 @@ export class OrbitItemStore {
   }
 
   handleClick = e => {
-    // so we can control the speed of double clicks
+    // so we can control the speed of doubleclicks
     if (Date.now() - this.clickAt < 220) {
       this.open()
+      Actions.closeOrbit()
       e.stopPropagation()
     }
     this.clickAt = Date.now()

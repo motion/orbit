@@ -63,7 +63,7 @@ export class PeekStore {
       const { appConfig, torn, ...rest } = appState
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
-      const isShown = !!appConfig && (torn || !!App.orbitState.docked)
+      const isShown = !!appConfig && (torn || App.orbitState.docked)
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
       const curState = {
@@ -118,14 +118,17 @@ export class PeekStore {
     },
   )
 
-  // make this not change if not needed
   state: PeekStoreItemState = react(
-    () => this.internalState,
-    ({ lastState, curState, willHide }) => {
+    () => {
+      const { lastState, curState, willHide } = this.internalState
       if (willHide) {
         return lastState
       }
       return curState
+    },
+    _ => _,
+    {
+      onlyUpdateIfChanged: true,
     },
   )
 

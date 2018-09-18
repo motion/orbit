@@ -124,12 +124,12 @@ const config = {
       {
         test: /[wW]orker\.[jt]sx?$/,
         use: ['workerize-loader'],
-        exclude: ['node_modules'],
+        exclude: /node_modules/,
       },
       {
         test: /\.[jt]sx?$/,
         use: ['cache-loader', 'thread-loader', 'babel-loader'],
-        exclude: ['node_modules'],
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,

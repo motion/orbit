@@ -9,7 +9,7 @@ import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
 import { SelectionStore } from '../orbit/orbitDocked/SelectionStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
-import { trace } from 'mobx';
+import { trace } from 'mobx'
 
 type Props = {
   peekStore?: PeekStore
@@ -45,23 +45,16 @@ class PeekPageInner extends React.Component<Props> {
     const { appConfig, model } = peekStore.state
     const type = (appConfig && capitalize(appConfig.type)) || 'Empty'
     const PeekContentsView = PeekPanes[type] as PeekPane
-    if (type === 'Bit' || type === 'Person') {
-      if (!model) {
-        console.error('no model?', model)
-        return <div>no model........?</div>
-      }
-    }
     if (!PeekContentsView) {
       console.error('none', type)
       return <div>no pane found</div>
     }
-    log(`peekpage...`)
     trace()
     return (
       <PeekContentsView
-        key={(model && model.id) || appConfig.id || Math.random()}
-        appConfig={appConfig}
+        key={appConfig.id}
         model={model}
+        appConfig={appConfig}
         peekStore={peekStore}
         selectionStore={selectionStore}
       >

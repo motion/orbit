@@ -1,5 +1,8 @@
 # nate
 
+- sync status view that shows on:
+  - homepage when empty
+  - apps page below apps
 - location search and type search nlp run
 - make double click to open smoother
 - simple ocr would be killer demo

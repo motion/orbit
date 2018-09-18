@@ -1,5 +1,6 @@
 import { RepositoryOperationType } from './Repository'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import { getGlobalConfig } from '@mcro/config'
 
 export class WebSocketProvider {
   websocket: ReconnectingWebSocket
@@ -13,7 +14,7 @@ export class WebSocketProvider {
   constructor() {
     // NOTE you can use getGlobalConfig().ports and add a port there, easy to trace where to do
     this.websocket = new ReconnectingWebSocket(
-      'ws://localhost:9876', // temporary port, this class should be removed
+      `ws://localhost:${getGlobalConfig().ports.mediator}`, // temporary port, this class should be removed
       [],
       { WebSocket },
     )

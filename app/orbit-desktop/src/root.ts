@@ -44,6 +44,7 @@ import { oracleOptions } from './constants'
 const log = new Logger('desktop')
 
 export class Root {
+  config = getGlobalConfig()
   oracle: Oracle
   isReconnecting = false
   connection?: Connection
@@ -97,7 +98,7 @@ export class Root {
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    // await this.startSyncers()
+    await this.startSyncers()
 
     this.oracle = new Oracle(oracleOptions)
 
@@ -196,7 +197,7 @@ export class Root {
    */
   private registerEntityServer() {
     const server = new WebSocketServer({
-      port: 9876, // temporary port, this code should be removed
+      port: this.config.ports.mediator, // temporary port, this code should be removed
     })
     server.on('connection', socket => {
       socket.on('message', str => {

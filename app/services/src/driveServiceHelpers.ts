@@ -34,9 +34,7 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
       ...rest,
       headers: {
         Authorization: `Bearer ${setting.token}`,
-        'Access-Control-Allow-Origin': `http://localhost:${
-          getGlobalConfig().ports.server
-        }`,
+        'Access-Control-Allow-Origin': `http://localhost:${getGlobalConfig().ports.server}`,
         'Access-Control-Allow-Methods': 'GET',
         ...headers,
       },
@@ -69,7 +67,7 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
             isRetrying: true,
           })
         } else {
-          console.error('Couldnt refresh access toekn :(', res)
+          console.log('Couldnt refresh access toekn :(', res)
           throw res.error
         }
       }

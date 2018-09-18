@@ -95,6 +95,11 @@ class OrbitSearchResultsListChunk extends React.Component<{
   offset: number
   searchStore: SearchStore
 }> {
+  // this component it completely non-reactive!
+  shouldComponentUpdate() {
+    return false
+  }
+
   getChildren = ({ content }, bit) => {
     return bit.integration === 'slack' ? (
       <SearchResultText>{content}</SearchResultText>

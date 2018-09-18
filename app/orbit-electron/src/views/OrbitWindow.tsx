@@ -59,7 +59,9 @@ class OrbitWindowStore {
         this.orbitRef.focus()
         // bring dev tools to front in dev mode
         if (process.env.NODE_ENV === 'development') {
-          app.show()
+          setTimeout(() => {
+            app.show()
+          }, 16)
         }
       } else {
         // nothing for now on blur

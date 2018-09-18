@@ -40,7 +40,7 @@ class SyncStatusStore {
 @view.attach({
   store: SyncStatusStore,
 })
-export class SyncStatus extends React.Component<{ store: SyncStatusStore } & Props> {
+export class SyncStatus extends React.Component<{ store?: SyncStatusStore } & Props> {
   render() {
     const { store, children } = this.props
     if (!store.activeJobs.length) {

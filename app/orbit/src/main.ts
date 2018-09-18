@@ -1,10 +1,6 @@
 import { setGlobalConfig, GlobalConfig } from '@mcro/config'
-import { handleErrors } from './handleErrors'
 import { cleanupChildren } from './cleanupChildren'
 import { ChildProcess } from 'child_process'
-
-// setup process error watching before doing most stuff
-handleErrors()
 
 Error.stackTraceLimit = Infinity
 
@@ -34,6 +30,11 @@ export async function main() {
     // lets run desktop now
     return require('@mcro/orbit-desktop').main()
   }
+
+  // setup process error watching before doing most stuff
+  // this only runs in electron process
+  // desktop will report errors up to here
+  require('./handleErrors')
 
   // IS IN ELECTRON...
 

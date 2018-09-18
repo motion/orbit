@@ -127,7 +127,8 @@ export class Logger {
       ]
 
     // adds a stack trace
-    if (this.opts.trace) {
+    // only do this in development it adds a decent amount of overhead
+    if (this.opts.trace && process.env.NODE_ENV === 'development') {
       let where = new Error().stack
       const { STACK_FILTER } = process.env
       if (STACK_FILTER) {

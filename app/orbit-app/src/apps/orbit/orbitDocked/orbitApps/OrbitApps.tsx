@@ -130,8 +130,6 @@ export class OrbitApps extends React.Component<Props> {
               ))}
             </Grid>
             <Views.VertSpace />
-            <SyncStatus />
-            <Views.VertSpace />
           </>
         )}
         {hasFilteredApps && (

@@ -1,6 +1,6 @@
 import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 import { cleanupChildren } from './cleanupChildren'
-import { ChildProcess } from 'child_process'
+import { ChildProcess, exec } from 'child_process'
 
 Error.stackTraceLimit = Infinity
 
@@ -51,6 +51,7 @@ export async function main() {
       process.kill(-desktopProcess.pid)
       console.log('bye!')
     } catch (err) {
+      exec('pkill -9 Orbit')
       console.log('error exiting', err)
       process.exit
     }

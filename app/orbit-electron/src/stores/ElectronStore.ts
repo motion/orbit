@@ -1,11 +1,10 @@
 import { App, Electron, Desktop } from '@mcro/stores'
-import { isEqual, store, debugState, on, react, ensure } from '@mcro/black'
+import { isEqual, store, debugState, on, react, ensure, sleep } from '@mcro/black'
 import { ShortcutsStore } from './ShortcutsStore'
 import { HoverStateStore } from './HoverStateStore'
 import root from 'global'
 import { app, screen, clipboard } from 'electron'
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/black/node_modules/@mcro/helpers/_'
 
 const log = new Logger('ElectronStore')
 

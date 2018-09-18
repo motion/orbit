@@ -20,14 +20,8 @@ export class GMailFetcher {
     return this.doFetch('/gmail/v1' + options.url, options.query)
   }
 
-  private async doFetch(
-    path,
-    query?: { [key: string]: any },
-    isRetrying = false,
-  ) {
-    const url = `https://www.googleapis.com${path}${queryObjectToQueryString(
-      query,
-    )}`
+  private async doFetch(path, query?: { [key: string]: any }, isRetrying = false) {
+    const url = `https://www.googleapis.com${path}${queryObjectToQueryString(query)}`
     log.info('fetching', url)
     const response = await fetch(url, {
       mode: 'cors',
@@ -40,8 +34,7 @@ export class GMailFetcher {
     const result = await response.json()
     if (result.error) {
       if (
-        (result.error.message === 'Invalid Credentials' ||
-          result.error.code === 401) &&
+        (result.error.message === 'Invalid Credentials' || result.error.code === 401) &&
         !isRetrying
       ) {
         log.info('refreshing token')
@@ -49,7 +42,7 @@ export class GMailFetcher {
         if (didRefresh) {
           return await this.doFetch(path, query, true)
         } else {
-          console.error('Couldnt refresh access toekn :(!')
+          console.log('Couldnt refresh access toekn :(!')
           return null
         }
       }

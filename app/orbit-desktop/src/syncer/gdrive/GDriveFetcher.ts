@@ -78,7 +78,7 @@ export class GDriveFetcher {
       if (didRefresh) {
         return await this.fetch(options)
       } else {
-        console.error('Couldnt refresh access token :(', result)
+        console.log('Couldnt refresh access token :(', result)
         throw result.error
       }
     } else if (result.error) {

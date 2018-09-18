@@ -36,6 +36,11 @@ export function startDesktop(): ChildProcess {
       if (error.indexOf('Debugger ') === 0) {
         return
       }
+      if (error.indexOf('Error') === -1) {
+        console.log('\n\n\n got an error but may not be worth reporting \n\n\n')
+        console.log('error:', error)
+        return
+      }
       onError({ stack: error })
     })
 

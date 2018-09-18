@@ -23,6 +23,7 @@ export type GlobalConfig = {
     swift: number
     dbBridge: number
     oracleBridge: number
+    mediator: number
   }
 }
 

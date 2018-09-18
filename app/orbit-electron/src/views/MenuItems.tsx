@@ -66,7 +66,9 @@ export class MenuItems extends React.Component<{
         </SubMenu>
         <SubMenu label="Window">
           <Item.ResetZoom />
-          <Item.ZoomIn accelerators={['Command+Plus', 'Command+=']} />
+          <Item.ZoomIn
+            accelerators={['Command+Plus', 'Command+=', 'Command+Shift+Plus', 'Command+Shift+=']}
+          />
           <Item.ZoomOut />
           <Item.Minimize onClick={this.handleMinimize} />
           <Item.Close accelerator="Command+w" onClick={this.handleClose} />

@@ -15,7 +15,7 @@ export function setupActions<T extends Actions>(actions: T): T {
   const finalActions: Partial<T> = {}
   for (const actionName in actions) {
     const finalAction = (...args) => {
-      log.info(`ACTION: ${actionName}`, args)
+      log.trace.info(`ACTION: ${actionName}`, args)
       return actions[actionName](...args)
     }
     finalActions[actionName] = action(actionName, finalAction)

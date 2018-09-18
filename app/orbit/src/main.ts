@@ -53,7 +53,7 @@ export async function main() {
     } catch (err) {
       exec('pkill -9 Orbit')
       console.log('error exiting', err)
-      process.exit
+      process.exit(0)
     }
   }
 

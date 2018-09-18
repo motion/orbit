@@ -18,24 +18,33 @@ class CarouselStore {
   carouselRef = React.createRef<Carousel>()
 
   handleScrollTo = react(
-    () => [
-      this.props.selectionStore.activeIndex,
-      this.props.isActiveStore ? this.props.isActiveStore.isActive : null,
-    ],
-    ([index, isActive]) => {
+    () => {
+      const ref = this.carouselRef.current
+      const index = this.props.selectionStore.activeIndex
+      const isShowing = this.props.isActiveStore ? this.props.isActiveStore.isActive : null
+      const { items, offset } = this.props
+      const isActive =
+        ref &&
+        isShowing &&
+        typeof index === 'number' &&
+        index >= offset &&
+        index <= offset + items.length
+      return isActive ? index : false
+    },
+    indexIfActive => {
       const carousel = this.carouselRef.current
-      ensure('carousel', !!carousel)
-      const { items, offset, selectionStore, resetOnInactive } = this.props
-      if (isActive == false) {
+      const { offset, selectionStore, resetOnInactive } = this.props
+      if (indexIfActive == false) {
         if (resetOnInactive) {
           carousel.scrollTo(0)
         }
         throw cancel
       }
-      ensure('index', typeof index === 'number')
-      ensure('within bounds', index >= offset && index <= offset + items.length)
       const wasClicked = selectionStore.selectEvent === 'click'
-      carousel.scrollTo(index - offset, { onlyIfOutside: wasClicked })
+      carousel.scrollTo(indexIfActive - offset, { onlyIfOutside: wasClicked })
+    },
+    {
+      deferFirstRun: true,
     },
   )
 }

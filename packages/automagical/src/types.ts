@@ -22,7 +22,7 @@ export type ReactionOptions = {
   deferFirstRun?: boolean
 }
 
-export type MagicalObject = {
+export type MagicalObject = Object & {
   subscriptions: { add: ({ dispose: Function }) => void }
   __automagical: {
     watchers?: [any] | undefined[]

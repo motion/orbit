@@ -9,11 +9,7 @@ import { Logger } from '@mcro/logger'
 export { react } from './react'
 export { ensure } from './ensure'
 export { cancel } from './cancel'
-export {
-  Reaction,
-  ReactionRejectionError,
-  ReactionTimeoutError,
-} from './constants'
+export { Reaction, ReactionRejectionError, ReactionTimeoutError } from './constants'
 export * from './types'
 
 const log = new Logger('automagical')
@@ -57,20 +53,12 @@ const FILTER_KEYS = {
   constructor: true,
   dispose: true,
   props: true,
-  ref: true,
   render: true,
-  setInterval: true,
-  setTimeout: true,
   subscriptions: true,
-  emitter: true,
-  emit: true,
-  on: true,
 }
 
 function collectGetterPropertyDescriptors(proto) {
-  const fproto = Object.getOwnPropertyNames(proto).filter(
-    x => !FILTER_KEYS[x] && x[0] !== '_',
-  )
+  const fproto = Object.getOwnPropertyNames(proto).filter(x => !FILTER_KEYS[x] && x[0] !== '_')
   return fproto.reduce(
     (acc, cur) => ({
       ...acc,
@@ -81,22 +69,22 @@ function collectGetterPropertyDescriptors(proto) {
 }
 
 function getAutoRunDescriptors(obj) {
-  const protoDescriptors = collectGetterPropertyDescriptors(
-    Object.getPrototypeOf(obj),
-  )
+  const protoDescriptors = collectGetterPropertyDescriptors(Object.getPrototypeOf(obj))
   return Object.keys(protoDescriptors)
-    .filter(
-      key => protoDescriptors[key].get && protoDescriptors[key].get.IS_AUTO_RUN,
-    )
+    .filter(key => protoDescriptors[key].get && protoDescriptors[key].get.IS_AUTO_RUN)
     .reduce((a, b) => ({ ...a, [b]: protoDescriptors[b] }), {})
 }
 
 function decorateClassWithAutomagic(obj: MagicalObject) {
-  const descriptors = {
-    ...Object.keys(obj).reduce(
-      (a, b) => ({ ...a, [b]: Object.getOwnPropertyDescriptor(obj, b) }),
-      {},
-    ),
+  let descriptors = {}
+  for (const key in obj) {
+    if (!obj.hasOwnProperty(key)) {
+      continue
+    }
+    descriptors[key] = Object.getOwnPropertyDescriptor(obj, key)
+  }
+  descriptors = {
+    ...descriptors,
     ...getAutoRunDescriptors(obj),
   }
   const decorations = {}

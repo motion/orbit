@@ -1,6 +1,7 @@
 export * from './App'
 export * from './Window'
 export * from './Tray'
+export * from './TrayItem'
 export * from './MenuItem'
 export * from './Menu'
 export * from './SubMenu'

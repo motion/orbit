@@ -4,18 +4,14 @@
   - homepage when empty
   - apps page below apps
 - location search and type search nlp run
-- make double click to open smoother
 - simple ocr would be killer demo
-- wow:
-  - a little orbit ethereal orb instead of boring search icon top left would be useful
+- orbit orb:
   - click it once to turn on realtime search
   - Click it again ? "ingest" it into your "memory"
     - orbit tray dropdown ?
       - add page
       - add site
 - peek design run make info better
-  - drag orbit to a window, and it goes into context mode
-  - uses ocr to realtime search
 - design run on the person feed
   - lots of movement/focus/unfocus fixes
 - write intro email 2 hours (medium post, nice screenshots + embedded video)

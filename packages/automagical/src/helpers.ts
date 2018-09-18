@@ -39,8 +39,11 @@ export function getReactionOptions(userOptions?: ReactionOptions) {
 }
 
 export const niceLogObj = obj => {
-  const jd = prettyStringify(obj)
-  return jd.length < 400 ? jd : obj
+  try {
+    return prettyStringify(obj)
+  } catch {
+    return obj
+  }
 }
 
 export const obj = a => a && typeof a === 'object'

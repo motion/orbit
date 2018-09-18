@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Menu, SubMenu, MenuItem, MenuItems as ElMenuItems } from '@mcro/reactron'
+import { Menu, SubMenu, MenuItem, MenuItems as Item } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import { Electron, App, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -46,36 +46,34 @@ export class MenuItems extends React.Component<{
     return (
       <Menu>
         <SubMenu label="Orbit">
-          <ElMenuItems.About />
-          <MenuItem
-            label="Preferences"
-            accelerator="CmdOrCtrl+,"
-            onClick={this.handlePreferences}
-          />
-          <ElMenuItems.Separator />
-          <ElMenuItems.Hide />
-          <ElMenuItems.HideOthers />
-          <ElMenuItems.Unhide />
-          <ElMenuItems.Separator />
-          <ElMenuItems.Quit onClick={this.handleQuit} />
+          <Item.About />
+          <MenuItem label="Preferences" accelerator="Command+," onClick={this.handlePreferences} />
+          <Item.Separator />
+          <Item.Hide />
+          <Item.HideOthers />
+          <Item.Unhide />
+          <Item.Separator />
+          <Item.Quit onClick={this.handleQuit} />
         </SubMenu>
         <SubMenu label="Edit">
-          <ElMenuItems.Undo />
-          <ElMenuItems.Redo />
-          <ElMenuItems.Separator />
-          <ElMenuItems.Cut />
-          <ElMenuItems.Copy />
-          <ElMenuItems.Paste />
-          <ElMenuItems.SelectAll />
+          <Item.Undo />
+          <Item.Redo />
+          <Item.Separator />
+          <Item.Cut />
+          <Item.Copy />
+          <Item.Paste />
+          <Item.SelectAll />
         </SubMenu>
         <SubMenu label="Window">
-          <ElMenuItems.ToggleFullscreen />
-          <ElMenuItems.Minimize onClick={this.handleMinimize} />
-          <ElMenuItems.Close accelerator="CmdOrCtrl+w" onClick={this.handleClose} />
-          <MenuItem label="Refresh" accelerator="CmdOrCtrl+r" onClick={electronStore.restart} />
+          <Item.ResetZoom />
+          <Item.ZoomIn accelerators={['Command+Plus', 'Command+=']} />
+          <Item.ZoomOut />
+          <Item.Minimize onClick={this.handleMinimize} />
+          <Item.Close accelerator="Command+w" onClick={this.handleClose} />
+          <MenuItem label="Refresh" accelerator="Command+r" onClick={electronStore.restart} />
           <MenuItem
             label="Show Dev Tools [App]"
-            accelerator="CmdOrCtrl+Option+i"
+            accelerator="Command+Option+i"
             onClick={this.toggleDevTools}
           />
         </SubMenu>

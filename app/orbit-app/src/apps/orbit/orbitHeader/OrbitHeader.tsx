@@ -5,8 +5,8 @@ import * as UI from '@mcro/ui'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
-import { View } from '@mcro/ui'
-import orb from '../../../public/orb.svg'
+import { View, Image } from '@mcro/ui'
+import orb from '../../../../public/orb.svg'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -62,13 +62,7 @@ export class OrbitHeader extends React.Component<
   }
 > {
   render() {
-    const {
-      headerStore,
-      paneManagerStore,
-      after,
-      theme,
-      borderRadius,
-    } = this.props
+    const { headerStore, paneManagerStore, after, theme, borderRadius } = this.props
     const headerBg = theme.background
     return (
       <OrbitHeaderContainer
@@ -78,23 +72,21 @@ export class OrbitHeader extends React.Component<
       >
         <OrbitFakeInput>
           <Title>
-            <img src={orb} />
-            <UI.Icon
-              name={'ui-1_zoom'}
-              size={17}
+            <Image
+              src={orb}
+              width={20}
+              height={20}
+              margin={['auto', 10]}
               onMouseEnter={headerStore.onHoverIcon}
               onMouseLeave={headerStore.onUnHoverIcon}
               onClick={headerStore.goHome}
-              height="100%"
-              width={40}
-              opacity={0.2}
-              margin={[0, -4, 0, 0]}
+              opacity={0.5}
               transform={{
                 y: -0.5,
               }}
               {...{
                 '&:hover': {
-                  opacity: 0.4,
+                  opacity: 1,
                 },
               }}
             />

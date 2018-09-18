@@ -1,5 +1,5 @@
 import { BitModel, SettingModel, JobModel, Setting } from '@mcro/models'
-import { observeCount, observeOne, loadOne } from '../repositories'
+import { observeCount, observeOne } from '../repositories'
 
 export type AppInfoProps = {
   settingId?: number
@@ -9,19 +9,16 @@ export type AppInfoProps = {
 export class AppInfoStore {
   props: AppInfoProps
 
-  setting = null
   bitsCount = 0
-  job = null
+  private bitsCounts$ = observeCount(BitModel, {
+    args: {
+      settingId: this.settingId,
+    },
+  }).subscribe(value => {
+    this.bitsCount = value
+  })
 
-  // todo remove
-  async didMount() {
-    this.setting = await loadOne(SettingModel, { args: { where: { id: this.settingId } } })
-  }
-
-  get settingId() {
-    return this.props.model ? this.props.model.id : this.props.settingId
-  }
-
+  setting = null
   private setting$ = observeOne(SettingModel, {
     args: {
       where: {
@@ -29,20 +26,10 @@ export class AppInfoStore {
       },
     },
   }).subscribe(value => {
-    if (value) {
-      this.setting = value
-    }
+    this.setting = value
   })
 
-  private bitsCounts$ = observeCount(BitModel, {
-    args: {
-      settingId: this.settingId,
-    },
-  }).subscribe(value => {
-    console.log('got count', value)
-    this.bitsCount = value
-  })
-
+  job = null
   private job$ = observeOne(JobModel, {
     args: {
       where: { settingId: this.settingId },
@@ -51,6 +38,10 @@ export class AppInfoStore {
   }).subscribe(value => {
     this.job = value
   })
+
+  get settingId() {
+    return this.props.model ? this.props.model.id : this.props.settingId
+  }
 
   willUnmount() {
     this.bitsCounts$.unsubscribe()

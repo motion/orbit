@@ -22,6 +22,7 @@ export function createElement(type, props) {
     SUBMENU: () => new Components.SubMenu(ROOT, props),
     WINDOW: () => new Components.Window(ROOT, props),
     TRAY: () => new Components.Tray(ROOT, props),
+    TRAYITEM: () => new Components.TrayItem(ROOT, props),
   }
   if (COMPONENTS[type]) {
     const instance = COMPONENTS[type]()

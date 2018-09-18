@@ -13,7 +13,7 @@ type Props = {
 
 const extraShadow = -20
 const SHADOW_PAD = 100 + extraShadow
-const DOCKED_SHADOW = [0, SHADOW_PAD / 6, SHADOW_PAD, [0, 0, 0, 0.5]]
+const DOCKED_SHADOW = [0, SHADOW_PAD / 6, SHADOW_PAD, [0, 0, 0, 0.4]]
 
 const Border = view({
   position: 'absolute',
@@ -61,7 +61,7 @@ const Background = view({
 Background.theme = ({ theme, isTransparent, moreOpaque }) => {
   const isDark = theme.background.isDark()
   const darkBg = isTransparent ? (moreOpaque ? [30, 30, 30, 0.7] : [0, 0, 0, 0.4]) : [40, 40, 40]
-  const lightBg = isTransparent ? [255, 255, 255, moreOpaque ? 0.9 : 0.8] : [255, 255, 255]
+  const lightBg = isTransparent ? [255, 255, 255, moreOpaque ? 0.95 : 0.9] : [255, 255, 255]
   return {
     background: isDark ? darkBg : lightBg,
   }

@@ -3,29 +3,22 @@ import { view } from '@mcro/black'
 
 export const DividerContainer = view({
   pointerEvents: 'all',
-  margin: [0, 6],
-  padding: 10,
-  cursor: 'ns-resize',
+  padding: [10, 6],
   zIndex: 10,
-})
-
-DividerContainer.theme = ({ height }) => ({
-  height: height || 1,
 })
 
 export const BarInner = view({
   flex: 1,
+  height: 1,
   borderRadius: 100,
 })
 
 BarInner.theme = ({ theme }) => ({
-  '& .bar': {
-    background: theme.backgroundHover,
-  },
+  background: theme.borderColor,
 })
 
-export const Divider = ({ children = '', ...props }) => (
+export const Divider = props => (
   <DividerContainer {...props}>
-    <BarInner>{children}</BarInner>
+    <BarInner />
   </DividerContainer>
 )

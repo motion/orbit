@@ -22,25 +22,23 @@ const decorator = compose(
 
 type Props = SettingPaneProps & { store: ConfluenceSettingStore }
 
-export const ConfluenceSetting = decorator(
-  ({ store, setting, children }: Props) => {
-    return children({
-      belowHead: (
-        <Tabs active={store.active} onActive={store.setActiveKey}>
-          <Tab key="status" width="50%" label="Status" />
-          <Tab key="repos" width="50%" label="Repos" />
-        </Tabs>
-      ),
-      content: (
-        <>
-          <HideablePane invisible={store.active !== 'status'}>
-            <AppStatusPane setting={setting} />
-          </HideablePane>
-          <HideablePane invisible={store.active !== 'repos'}>
-            <AtlassianSettingLogin type="confluence" setting={setting} />
-          </HideablePane>
-        </>
-      ),
-    })
-  },
-)
+export const ConfluenceSetting = decorator(({ store, setting, children }: Props) => {
+  return children({
+    belowHead: (
+      <Tabs active={store.active} onActive={store.setActiveKey}>
+        <Tab key="status" width="50%" label="Status" />
+        <Tab key="repos" width="50%" label="Manage" />
+      </Tabs>
+    ),
+    content: (
+      <>
+        <HideablePane invisible={store.active !== 'status'}>
+          <AppStatusPane setting={setting} />
+        </HideablePane>
+        <HideablePane invisible={store.active !== 'repos'}>
+          <AtlassianSettingLogin type="confluence" setting={setting} />
+        </HideablePane>
+      </>
+    ),
+  })
+})

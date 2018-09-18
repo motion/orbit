@@ -41,10 +41,10 @@ export class PeekStore {
   // appConfig given the id
   appState = react(
     () => App.appsState.find(x => x.id === this.props.id),
-    async (appState, { sleep, state }) => {
-      if (this.isPeek && state.hasResolvedOnce) {
-        await sleep(100)
-      }
+    appState => {
+      // if (this.isPeek && state.hasResolvedOnce) {
+      //   await sleep(100)
+      // }
       if (this.isTorn) {
         // cancel on no app state so we dont cause bugs on close
         ensure('state', !!appState)

@@ -44,7 +44,7 @@ const SlackConversation = view({
 })
 
 const Unpad = view({
-  margin: -15,
+  margin: [0, -15],
 })
 
 const decorator = compose(
@@ -61,9 +61,8 @@ export const Conversation = decorator(({ store, content }: Props) => {
       {!!store.nextConversations.length && (
         <>
           <Divider />
-          <VerticalSpace />
-          <SubTitle>Next conversations:</SubTitle>
-          <VerticalSpace />
+          <SubTitle>Related & nearby</SubTitle>
+          <VerticalSpace small />
         </>
       )}
       {store.nextConversations.map((convo, index) => (
@@ -71,7 +70,7 @@ export const Conversation = decorator(({ store, content }: Props) => {
           <PeekItemResolver model={convo}>
             {({ content }) => <Unpad>{content}</Unpad>}
           </PeekItemResolver>
-          <Divider />
+          {index !== store.nextConversations.length - 1 && <Divider />}
         </React.Fragment>
       ))}
       <VerticalSpace />

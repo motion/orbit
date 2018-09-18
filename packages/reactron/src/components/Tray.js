@@ -1,4 +1,4 @@
-import { Tray as ElectronTray } from 'electron'
+import { Tray as ElectronTray, Menu } from 'electron'
 import { BaseComponent } from './BaseComponent'
 
 const EVENT_KEYS = {
@@ -22,9 +22,10 @@ const EVENT_KEYS = {
 export class Tray extends BaseComponent {
   mount() {
     if (!this.props.image) {
-      throw new Error(`Expects an image prop with path to image file`)
+      throw new Error('Expects an image prop with path to image file')
     }
     this.tray = new ElectronTray(this.props.image)
+    this.update()
   }
 
   propHandlers = {
@@ -34,8 +35,7 @@ export class Tray extends BaseComponent {
       this.tray.setTitle(title || '')
     },
     tooltip: tooltip => this.tray.setToolTip(tooltip || ''),
-    highlightMode: highlightMode =>
-      this.tray.setHighlightMode(highlightMode || 'selection'),
+    highlightMode: highlightMode => this.tray.setHighlightMode(highlightMode || 'selection'),
   }
 
   handleNewProps(keys) {
@@ -49,6 +49,11 @@ export class Tray extends BaseComponent {
         if (this.propHandlers[key]) {
           this.propHandlers[key](val)
         }
+      }
+      if (this.children) {
+        const menu = this.children.map(child => child.trayItem)
+        const trayMenu = Menu.buildFromTemplate(menu)
+        this.tray.setContextMenu(trayMenu)
       }
     } catch (e) {
       console.log('error with prop handlers')

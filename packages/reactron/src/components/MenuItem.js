@@ -14,12 +14,18 @@ export class MenuItem extends BaseComponent {
     if (props.role) {
       this.menuItem = new ElectronMenuItem({
         role: props.role,
+        accelerator: props.accelerator,
+        accelerators: props.accelerators,
+        click: (menuItem, browserWindow, event) => {
+          this.emitter.emit('click', event)
+        },
       })
     } else {
       this.menuItem = new ElectronMenuItem({
         type: props.type || 'normal',
         label: props.label,
         accelerator: props.accelerator,
+        accelerators: props.accelerators,
         click: (menuItem, browserWindow, event) => {
           this.emitter.emit('click', event)
         },

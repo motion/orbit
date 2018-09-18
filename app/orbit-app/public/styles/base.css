@@ -132,7 +132,8 @@ a.anchor {
   color: #a3b7d0;
 }
 
-.markdown a {
+.markdown a,
+.text a {
   color: #2a78de;
   border-bottom: 1px dotted #2a78de55;
 }

@@ -9,6 +9,7 @@ import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
 import { SelectionStore } from '../orbit/orbitDocked/SelectionStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
+import { trace } from 'mobx';
 
 type Props = {
   peekStore?: PeekStore
@@ -54,6 +55,8 @@ class PeekPageInner extends React.Component<Props> {
       console.error('none', type)
       return <div>no pane found</div>
     }
+    log(`peekpage...`)
+    trace()
     return (
       <PeekContentsView
         key={(model && model.id) || appConfig.id || Math.random()}

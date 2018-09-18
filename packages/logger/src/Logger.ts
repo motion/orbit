@@ -126,8 +126,11 @@ export class Logger {
         LoggerSettings.namespaces.indexOf(this.namespace) % LOGGER_COLOR_WHEEL.length
       ]
 
+    const isTrace = this.opts.trace && process.env.NODE_ENV === 'development'
+
     // adds a stack trace
-    if (this.opts.trace) {
+    // only do this in development it adds a decent amount of overhead
+    if (isTrace) {
       let where = new Error().stack
       const { STACK_FILTER } = process.env
       if (STACK_FILTER) {
@@ -160,6 +163,11 @@ export class Logger {
       if (where) {
         messages = [...messages, `\n${where}`]
       }
+    }
+
+    // group traces to avoid large things clogging console
+    if (isTrace) {
+      console.groupCollapsed(this.namespace)
     }
 
     // output to the console
@@ -202,6 +210,10 @@ export class Logger {
     } else {
       console.log(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
       log.info(this.namespace, ...messages)
+    }
+
+    if (isTrace) {
+      console.groupEnd()
     }
   }
 }

@@ -1,6 +1,7 @@
 import * as Mobx from 'mobx'
 import { Logger } from '@mcro/logger'
 import { MagicalObject, ReactionOptions } from './types'
+import prettyStringify from 'json-stringify-pretty-compact'
 
 const PREFIX = '=>'
 
@@ -35,4 +36,52 @@ export function getReactionOptions(userOptions?: ReactionOptions) {
     return { ...defaultOpts, ...userOptions }
   }
   return defaultOpts
+}
+
+export const niceLogObj = obj => {
+  try {
+    return prettyStringify(obj)
+  } catch {
+    return obj
+  }
+}
+
+export const obj = a => a && typeof a === 'object'
+
+export const whatsNew = (a, b) => {
+  let final = {}
+  for (const ak in a) {
+    const av = a[ak]
+    const bv = b[ak]
+    if (Mobx.comparer.structural(av, bv)) {
+      continue
+    }
+    final[ak] = obj(av) && obj(bv) ? whatsNew(av, bv) : b[ak]
+  }
+  return final
+}
+
+// simple diff output for dev mode
+export const diffLog = (a, b) => {
+  if (a === b || Mobx.comparer.structural(a, b)) {
+    return []
+  }
+  if (!b || typeof b !== 'object' || Array.isArray(b)) {
+    return ['\nnew value:\n', niceLogObj(b)]
+  }
+  // object
+  const diff = whatsNew(a, b)
+  if (Object.keys(diff).length) {
+    // log the diff as json if its short enough, easier to see
+    return ['\ndiff:\n', niceLogObj(diff)]
+  }
+  return []
+}
+
+export const toJSDeep = obj => {
+  const next = Mobx.toJS(obj)
+  if (Array.isArray(next)) {
+    return next.map(toJSDeep)
+  }
+  return next
 }

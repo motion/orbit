@@ -16,17 +16,21 @@ export class AppStatusPane extends React.Component<Props> {
     const { setting, extraMessage } = this.props
     return (
       <View flex={1} alignItems="center" justifyContent="center" padding={30}>
-        <SubTitle size={3}>{getSettingTitle(setting)} is active.</SubTitle>
+        <SubTitle size={2.8}>{getSettingTitle(setting)} is active.</SubTitle>
         <VerticalSpace />
         <Row alignItems="center">
-          <OrbitIcon size={32} icon={setting.type} />
+          <OrbitIcon size={28} icon={setting.type} />
           <div style={{ width: 20 }} />
-          <Icon size={32} color="green" name="check" />
+          <Icon size={28} color="green" name="check" />
         </Row>
         <VerticalSpace />
-        <Message fontSize={16} lineHeight="1.5rem" className="markdown">
-          Orbit builds a smart index that has all your relevant information without overfilling your
-          hard drive. <a href="https://tryorbit.com/about-index">Learn how it works</a>.
+        <Message size={1.2}>
+          Orbit will smart sync information thats relevant to you by default. To manage it manually,
+          click Manage.
+          <VerticalSpace />
+          <View alignItems="center" justifyContent="center" flex={1} flexFlow="row">
+            <a href="https://tryorbit.com/about-index">Learn how it works</a>.
+          </View>
           {extraMessage}
         </Message>
       </View>

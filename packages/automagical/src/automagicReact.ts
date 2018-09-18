@@ -1,9 +1,15 @@
 import * as Mobx from 'mobx'
 import { ReactionHelpers, MagicalObject } from './types'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
-import { getReactionOptions, getReactionName, log, logState, logRes, Root } from './helpers'
-import { isEqual } from 'lodash'
-import prettyStringify from 'json-stringify-pretty-compact'
+import {
+  getReactionOptions,
+  getReactionName,
+  log,
+  logRes,
+  Root,
+  diffLog,
+  toJSDeep,
+} from './helpers'
 
 const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
@@ -15,49 +21,6 @@ Root.__trackStateChanges = {}
 
 let id = 1
 const uid = () => id++ % Number.MAX_VALUE
-const niceLogObj = obj => {
-  const jd = prettyStringify(obj)
-  return jd.length < 400 ? jd : obj
-}
-
-const obj = a => a && typeof a === 'object'
-const whatsNew = (a, b) => {
-  let final = {}
-  for (const ak in a) {
-    const av = a[ak]
-    const bv = b[ak]
-    if (Mobx.comparer.structural(av, bv)) {
-      continue
-    }
-    final[ak] = obj(av) && obj(bv) ? whatsNew(av, bv) : b[ak]
-  }
-  return final
-}
-
-// simple diff output for dev mode
-const diffLog = (a, b) => {
-  if (a === b || Mobx.comparer.structural(a, b)) {
-    return []
-  }
-  if (!b || typeof b !== 'object' || Array.isArray(b)) {
-    return ['\n        new value:', niceLogObj(b)]
-  }
-  // object
-  const diff = whatsNew(a, b)
-  if (Object.keys(diff).length) {
-    // log the diff as json if its short enough, easier to see
-    return ['\n        diff:', niceLogObj(diff)]
-  }
-  return []
-}
-
-const toJSDeep = obj => {
-  const next = Mobx.toJS(obj)
-  if (Array.isArray(next)) {
-    return next.map(toJSDeep)
-  }
-  return next
-}
 
 // watches values in an autorun, and resolves their results
 export function automagicReact(obj: MagicalObject, method, val, userOptions) {
@@ -90,6 +53,9 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   let prev
   let stopReaction
   let disposed = false
+
+  // state allows end-users to track certain things in complex reactions
+  // for now its just `hasResolvedOnce` which lets them do things on first run
   const state = {
     hasResolvedOnce: false,
   }
@@ -105,17 +71,6 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       prev = newValue
       if (!preventLog) {
         log.info(`delayValue ${logName}`, value)
-      }
-    }
-    if (onlyUpdateIfChanged) {
-      const oldVal = toJSDeep(getCurrentValue())
-      const newVal = toJSDeep(newValue)
-      if (isEqual(oldVal, newVal)) {
-        return IS_PROD ? undefined : []
-      } else {
-        if (!IS_PROD) {
-          log.verbose(`${logName} (onlyUpdateIfChanged) diff:\n`, ...diffLog(oldVal, newVal))
-        }
       }
     }
     state.hasResolvedOnce = true
@@ -281,10 +236,11 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           changed = update(val)
         }
         if (!IS_PROD && !preventLog) {
-          log.info(
-            `${logName} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
-            ...(changed || []),
+          console.groupCollapsed(
+            `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
           )
+          console.log(...(changed || []))
+          console.groupEnd()
         }
       }
       const start = Date.now()
@@ -353,17 +309,21 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       const changed = update(result)
 
       if (!IS_PROD && !preventLog && !delayValue) {
+        console.groupCollapsed(`${logName} ${reactionID}`)
         if (globalChanged && Object.keys(globalChanged).length) {
-          logState.info(`${logName}`, reactValArg, ...logRes(result), globalChanged)
+          console.log('reaction', reactValArg)
+          console.log('changed', ...logRes(result))
+          console.log('Store changed', globalChanged)
         } else {
           if (options.log !== 'state') {
-            log.info(
-              `${logName}`,
+            console.log(
+              'reaction',
               ...(isReaction ? ['\n        args:', toJSDeep(reactValArg)] : []),
-              ...(changed || []),
             )
+            console.log('changed', ...(changed || []))
           }
         }
+        console.groupEnd()
       }
     }
   }

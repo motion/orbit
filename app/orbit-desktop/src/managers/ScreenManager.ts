@@ -135,7 +135,8 @@ export class ScreenManager {
 
   updateWindowPositionOnScreenRezie = react(
     () => Electron.state.screenSize,
-    () => {
+    async (_, { sleep }) => {
+      await sleep(100)
       this.positionOrbit()
     },
     {

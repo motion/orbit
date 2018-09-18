@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 
-export type ButtonProps = SizedSurfaceProps &
-  React.HTMLAttributes<HTMLButtonElement>
+export type ButtonProps = SizedSurfaceProps & React.HTMLAttributes<HTMLButtonElement>
 
 const buttonStyles = {
   outline: 0,
@@ -37,6 +36,8 @@ export const Button = ({
   badgeProps,
   elementProps,
   style,
+  opacity,
+  disabled,
   ...props
 }: ButtonProps) => {
   return (
@@ -62,6 +63,8 @@ export const Button = ({
       glint
       theme={theme}
       themeSelect={buttonThemeSelect}
+      opacity={disabled ? 0.5 : opacity}
+      pointerEvents={disabled ? 'none' : undefined}
       activeStyle={{
         opacity: 0.8,
       }}

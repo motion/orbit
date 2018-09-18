@@ -21,7 +21,7 @@ const SlackMessageFrame = view(View, {
 })
 
 const SlackMessageInner = view({
-  padding: [2, 0, 2, 16],
+  padding: [2, 16],
 })
 
 @view
@@ -57,7 +57,11 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
         )}
         <SlackMessageInner>
           <UI.Text {...decoration.text}>
-            <Markdown className="slack-markdown" source={message.text} />
+            <Markdown
+              className="slack-markdown"
+              source={message.text}
+              options={{ maxSurroundChars: 100 }}
+            />
           </UI.Text>
         </SlackMessageInner>
       </SlackMessageFrame>

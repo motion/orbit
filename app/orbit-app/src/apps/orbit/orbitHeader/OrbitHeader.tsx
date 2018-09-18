@@ -6,6 +6,7 @@ import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
 import { View } from '@mcro/ui'
+import orb from '../../../public/orb.svg'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -77,6 +78,7 @@ export class OrbitHeader extends React.Component<
       >
         <OrbitFakeInput>
           <Title>
+            <img src={orb} />
             <UI.Icon
               name={'ui-1_zoom'}
               size={17}

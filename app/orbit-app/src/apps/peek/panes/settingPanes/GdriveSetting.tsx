@@ -89,40 +89,38 @@ const decorator = compose(
 
 type Props = SettingPaneProps & { store: GDocsSettingStore }
 
-export const GdriveSetting = decorator(
-  ({ store, setting, children }: Props) => {
-    const folders = store.popularFolders
-    console.log('folders, ', folders)
-    return children({
-      belowHead: (
-        <Tabs active={store.active} onActive={store.setActiveKey}>
-          <Tab key="status" width="50%" label="Status" />
-          <Tab key="folders" width="50%" label="Folders" />
-        </Tabs>
-      ),
-      content: (
-        <>
-          <HideablePane invisible={store.active !== 'status'}>
-            <AppStatusPane setting={setting} />
-          </HideablePane>
-          <HideablePane invisible={store.active !== 'folders'}>
-            <SearchableTable
-              virtual
-              rowLineHeight={28}
-              floating={false}
-              columnSizes={columnSizes}
-              columns={columns}
-              multiHighlight
-              rows={folders}
-              bodyPlaceholder={
-                <div style={{ margin: 'auto' }}>
-                  <Text size={1.2}>Loading...</Text>
-                </div>
-              }
-            />
-          </HideablePane>
-        </>
-      ),
-    })
-  },
-)
+export const GdriveSetting = decorator(({ store, setting, children }: Props) => {
+  const folders = store.popularFolders
+  console.log('folders, ', folders)
+  return children({
+    belowHead: (
+      <Tabs active={store.active} onActive={store.setActiveKey}>
+        <Tab key="status" width="50%" label="Status" />
+        <Tab key="folders" width="50%" label="Manage" />
+      </Tabs>
+    ),
+    content: (
+      <>
+        <HideablePane invisible={store.active !== 'status'}>
+          <AppStatusPane setting={setting} />
+        </HideablePane>
+        <HideablePane invisible={store.active !== 'folders'}>
+          <SearchableTable
+            virtual
+            rowLineHeight={28}
+            floating={false}
+            columnSizes={columnSizes}
+            columns={columns}
+            multiHighlight
+            rows={folders}
+            bodyPlaceholder={
+              <div style={{ margin: 'auto' }}>
+                <Text size={1.2}>Loading...</Text>
+              </div>
+            }
+          />
+        </HideablePane>
+      </>
+    ),
+  })
+})

@@ -1,9 +1,8 @@
 import { view } from '@mcro/black'
-import { View } from '@mcro/ui'
+import { View, Text } from '@mcro/ui'
 
 // @ts-ignore
-export const Message = view(View, {
-  fontSize: 16,
+export const Message = view(Text, {
   lineHeight: '1.4rem',
   cursor: 'text',
   // theres a weird glitchy thing that happens when trying to select this
@@ -18,7 +17,7 @@ export const Message = view(View, {
   color: '#666',
 })
 Message.defaultProps = {
-  tagName: 'p',
+  className: 'text',
 }
 
 // @ts-ignore

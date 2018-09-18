@@ -63,7 +63,7 @@ export const Button = ({
       glint
       theme={theme}
       themeSelect={buttonThemeSelect}
-      opacity={disabled ? 0.5 : opacity || 1}
+      opacity={disabled ? 0.5 : opacity}
       pointerEvents={disabled ? 'none' : undefined}
       activeStyle={{
         opacity: 0.8,

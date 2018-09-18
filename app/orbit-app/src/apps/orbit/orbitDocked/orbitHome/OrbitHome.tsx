@@ -9,7 +9,6 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
-import { SyncStatus } from '../views/SyncStatus'
 import { SyncStatusAll } from '../views/SyncStatusAll'
 // import { OrbitGridSection } from './OrbitGridSection'
 

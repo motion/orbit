@@ -176,7 +176,7 @@ export class GithubSetting extends React.Component<
       belowHead: (
         <UI.Tabs active={store.active} onActive={store.setActiveKey}>
           <UI.Tab key="status" width="50%" label="Status" />
-          <UI.Tab key="repos" width="50%" label="Repos" />
+          <UI.Tab key="repos" width="50%" label="Manage" />
         </UI.Tabs>
       ),
       content: (

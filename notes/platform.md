@@ -1,18 +1,57 @@
 # creating apps
 
 1. "new"
-2. creates a new folder in your ~/.orbit/apps/[name]
-3. inside that folder it symlinks orbit:
+2. creates a new folder in your ~/.orbit/[appname]
+3. inside that folder it symlinks orbit API stuff
+4. opens your editor to that directory
+5. has a README.md there
+
+# Example app: Article Micropayments
+
+This app would use the Screen, OCR, and Payment APIs.
+
+```ts
+class MicroPaymentsApp {
+  logActivity = on(
+    () => {
+      every(1000)
+      if (Screen.activeWindow.type === 'browser') {
+        return Screen.activeWindow.getAttribute('url')
+      }
+      return false
+    },
+    url => {
+      ensure('viewing legit text on site', OCR.isViewingText && OCR.isActivelyViewing)
+      const lastBit = await Bit.findOrCreate({
+        url,
+        lastText: OCR.currentText,
+      })
+      lastBit.totalTimeReading += 1
+      await lastBit.save()
+      console.log('spent another second on', url)
+    },
+  )
+
+  sendMicroPayment = on(
+    () => observe(Bit),
+    bit => {
+      // every 10 seconds, send payment
+      if (bit.totalTimeReading - bit.totalTimePaidFor > 10) {
+        Payment.escrow(bit.url, { amount: 1 / 10 })
+      }
+    },
+  )
+}
+```
 
 ## ~/.orbit/apps/myapp
 
-folder structure, "orbit" is a symlink
+folder structure, the "[appname]/orbit" is a symlink
 
 - orbit/
   - models/
   - ui/
-  - index.ts (view, react, etc)
-  - (... other helpers, keep it simple)
+  - (... other APIs)
 - app/
   - main.tsx
 - sync/

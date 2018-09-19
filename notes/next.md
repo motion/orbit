@@ -1,8 +1,5 @@
 # nate
 
-- sync status view that shows on:
-  - homepage when empty
-  - apps page below apps
 - location search and type search nlp run
 - simple ocr would be killer demo
 - orbit orb:
@@ -13,9 +10,7 @@
       - add site
 - peek design run make info better
 - design run on the person feed
-  - lots of movement/focus/unfocus fixes
 - write intro email 2 hours (medium post, nice screenshots + embedded video)
-- [design] figure out / demo a orbit join/switch
 - record video of a demo
 
 # Umed
@@ -73,6 +68,7 @@
 
 # next
 
+- could open a special link type: orbit://gD7sadhgasdy78aDT7
 - test if we dont need cloud oauth https://laravel.com/docs/5.6/valet#securing-sites
 - website docs https://github.com/pedronauck/docz https://github.com/gatsbyjs/gatsby/tree/master/www/src/pages
 - Location as a model

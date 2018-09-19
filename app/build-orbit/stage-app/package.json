@@ -3,12 +3,12 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.257",
+  "version": "2.2.258",
   "dependencies": {
     "@mcro/orbit": "*"
   },
   "devDependencies": {
-    "electron": "3.0.0-beta.12"
+    "electron": "3.0.0"
   },
   "build": {
     "appId": "com.o.orbit",

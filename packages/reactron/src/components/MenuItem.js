@@ -1,6 +1,6 @@
 import { BaseComponent } from './BaseComponent'
-import { MenuItem as ElectronMenuItem } from 'electron'
 import EventEmitter from 'events'
+import { MenuItem as ElectronMenuItem } from 'electron'
 
 export class MenuItem extends BaseComponent {
   mount() {
@@ -9,27 +9,29 @@ export class MenuItem extends BaseComponent {
   }
 
   handleNewProps() {
+    // electron doesnt like undefined values
     const { props } = this
     this.handleEvent(this.emitter, 'click', props.onClick)
+    let menuItem = {}
     if (props.role) {
-      this.menuItem = new ElectronMenuItem({
-        role: props.role,
-        accelerator: props.accelerator,
-        accelerators: props.accelerators,
-        click: (menuItem, browserWindow, event) => {
-          this.emitter.emit('click', event)
-        },
-      })
+      menuItem.role = props.role
     } else {
-      this.menuItem = new ElectronMenuItem({
+      menuItem = {
         type: props.type || 'normal',
         label: props.label,
-        accelerator: props.accelerator,
-        accelerators: props.accelerators,
-        click: (menuItem, browserWindow, event) => {
-          this.emitter.emit('click', event)
-        },
-      })
+      }
     }
+    if (props.accelerator) {
+      menuItem.accelerator = props.accelerator
+    }
+    if (props.accelerators) {
+      menuItem.accelerators = props.accelerators
+    }
+    if (props.onClick) {
+      menuItem.click = (menuItem, browserWindow, event) => {
+        this.emitter.emit('click', event)
+      }
+    }
+    this.menuItem = new ElectronMenuItem(menuItem)
   }
 }

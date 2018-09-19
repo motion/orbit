@@ -1,6 +1,10 @@
 import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 import { cleanupChildren } from './cleanupChildren'
 import { ChildProcess, exec } from 'child_process'
+import WebSocket from 'ws'
+import root from 'global'
+
+root['WebSocket'] = WebSocket
 
 Error.stackTraceLimit = Infinity
 

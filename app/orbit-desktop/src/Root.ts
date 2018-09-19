@@ -40,6 +40,7 @@ import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { Oracle } from '@mcro/oracle'
 import { AppsManager } from './managers/appsManager'
 import { oracleOptions } from './constants'
+import { OCRManager } from './managers/OCRManager'
 
 const log = new Logger('desktop')
 
@@ -56,6 +57,7 @@ export class Root {
   mediatorServer: MediatorServer
 
   // managers
+  ocrManager: OCRManager
   appsManager: AppsManager
   screenManager: ScreenManager
   generalSettingManager: GeneralSettingManager
@@ -97,19 +99,31 @@ export class Root {
 
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
-    // no need to wait for them...
-    await this.startSyncers()
 
+    // no need to wait for them...
+    // await this.startSyncers()
+
+    // setup oracle to pass into managers
     this.oracle = new Oracle(oracleOptions)
+    this.oracle.onError(err => {
+      console.log('Oracle error', err)
+    })
 
     // start managers...
-    this.screenManager = new ScreenManager(this.oracle)
-    await this.screenManager.start()
 
+    this.ocrManager = new OCRManager(this.oracle)
+    this.screenManager = new ScreenManager(this.oracle)
     this.appsManager = new AppsManager(this.oracle)
 
+    // start oracle after passing into managers
+    await this.oracle.start()
+
+    // start screenManager once oracle is setup
+    this.screenManager.start()
+
     this.keyboardStore = new KeyboardStore({
-      onKeyClear: this.screenManager.lastScreenChange,
+      // disable for now it was used for fancy orbit app switching
+      // onKeyClear: this.screenManager.lastScreenChange,
     })
     this.keyboardStore.start()
     await this.server.start()
@@ -130,9 +144,6 @@ export class Root {
     }
     if (this.appsManager) {
       await this.appsManager.dispose()
-    }
-    if (this.screenManager) {
-      await this.screenManager.dispose()
     }
     await this.stopSyncers()
     this.disposed = true

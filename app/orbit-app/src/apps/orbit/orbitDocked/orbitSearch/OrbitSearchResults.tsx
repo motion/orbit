@@ -162,7 +162,6 @@ class OrbitSearchResultsList extends React.Component<Props> {
         value={{ words: query.split(' '), maxChars: 500, maxSurroundChars: 200 }}
       >
         {resultsGroups.map((group, index) => {
-          console.log('group', group, curOffset)
           const next = (
             <OrbitSearchResultsListChunk
               key={`${index}${query}${group.length}`}

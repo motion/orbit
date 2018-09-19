@@ -1,5 +1,5 @@
 import { BitModel, SettingModel, JobModel, Setting } from '@mcro/models'
-import { observeCount, observeOne } from '../repositories'
+import { observeCount, observeOne } from '@mcro/model-bridge'
 
 export type AppInfoProps = {
   settingId?: number

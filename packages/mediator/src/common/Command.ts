@@ -1,8 +1,6 @@
-
 export class Command<ModelType, Args = {}> {
-  _model!: ModelType;
-  _args!: Args;
+  _model!: ModelType
+  _args!: Args
 
-  constructor(public name: string) {
-  }
+  constructor(public name: string) {}
 }

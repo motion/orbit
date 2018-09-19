@@ -144,6 +144,11 @@ export function parseSearchQuery(query: string): NLPResponse {
       highlightIfClear(word, MarkType.Integration)
       continue
     }
+    // location filter segment
+    if (word.indexOf('in:') === 0 && word.length > 3) {
+      // just keep the part after in:
+      highlightIfClear(word.replace('in:', ''), MarkType.Location)
+    }
   }
 
   // date

@@ -4,7 +4,7 @@ import { view, compose } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
-import { SettingRepository } from '../../../../repositories'
+import { SettingRepository } from '@mcro/model-bridge'
 import { GmailSettingValues } from '@mcro/models'
 import { AppStatusPane } from './AppStatusPane'
 
@@ -34,12 +34,7 @@ const itemToRow = (filter, index, onSync) => ({
     },
     active: {
       sortValue: filter.isActive,
-      value: (
-        <ReactiveCheckBox
-          onChange={onSync(filter.id)}
-          isActive={filter.isActive}
-        />
-      ),
+      value: <ReactiveCheckBox onChange={onSync(filter.id)} isActive={filter.isActive} />,
     },
   },
 })
@@ -75,9 +70,7 @@ class GmailSettingStore {
   }
 
   get rows() {
-    return this.whiteList.map((item, index) =>
-      itemToRow(item, index, this.onSync),
-    )
+    return this.whiteList.map((item, index) => itemToRow(item, index, this.onSync))
   }
 
   onSync = fullName => async e => {

@@ -1,4 +1,4 @@
-import { SettingRepository } from '../repositories'
+import { SettingRepository } from '@mcro/model-bridge'
 
 export const getPermalink = async (result, type?) => {
   if (result.type === 'app') {

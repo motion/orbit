@@ -3,7 +3,7 @@ import { view, compose } from '@mcro/black'
 import { PeekItemResolver } from '../../views/PeekItemResolver'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 import { Divider } from '../../../../views/Divider'
-import { observeMany } from '../../../../repositories'
+import { observeMany } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
 import { SubTitle, VerticalSpace } from '../../../../views'
 

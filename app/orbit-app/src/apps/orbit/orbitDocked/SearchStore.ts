@@ -6,7 +6,7 @@ import { SearchFilterStore } from './SearchFilterStore'
 import { Bit } from '@mcro/models'
 import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { FindOptions } from 'typeorm'
-import { BitRepository, PersonBitRepository } from '../../../repositories'
+import { BitRepository, PersonBitRepository } from '@mcro/model-bridge'
 import { flatten } from 'lodash'
 import { SelectionStore, SelectionGroup } from './SelectionStore'
 import { AppsStore } from '../../AppsStore'
@@ -24,6 +24,7 @@ const getSearchResults = async ({
   endDate,
   integrationFilters,
   peopleFilters,
+  locationFilters,
 }) => {
   const findOptions: FindOptions<Bit> = {
     where: [],
@@ -89,6 +90,16 @@ const getSearchResults = async ({
     }
   }
 
+  if (locationFilters && locationFilters.length) {
+    for (const location of locationFilters) {
+      findOptions.where.push({
+        location: {
+          name: { $like: `%${location}%` },
+        },
+      })
+    }
+  }
+
   if (!findOptions.where.length) {
     if (Object.keys(andConditions).length) {
       findOptions.where = andConditions
@@ -148,9 +159,7 @@ export class SearchStore {
   results = react(
     () => [this.activeQuery, this.quickSearchState, this.searchState],
     async ([query, quickState, searchState], { when }) => {
-      await when(
-        () => query === quickState.query && query === searchState.query,
-      )
+      await when(() => query === quickState.query && query === searchState.query)
       return [
         { type: 'row', items: quickState.results },
         { type: 'column', items: searchState.results },
@@ -246,17 +255,16 @@ export class SearchStore {
       } = this.searchFilterStore
 
       // filters
-      const peopleFilters = activeFilters
-        .filter(x => x.type === MarkType.Person)
-        .map(x => x.text)
+      const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
       const integrationFilters = [
         // these come from the text string
-        ...activeFilters
-          .filter(x => x.type === MarkType.Integration)
-          .map(x => x.text),
+        ...activeFilters.filter(x => x.type === MarkType.Integration).map(x => x.text),
         // these come from the button bar
         ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
       ]
+      const locationFilters = activeFilters
+        .filter(x => x.type === MarkType.Location)
+        .map(x => x.text)
 
       const { startDate, endDate } = dateState
       const baseFindOptions = {
@@ -266,6 +274,7 @@ export class SearchStore {
         endDate,
         integrationFilters,
         peopleFilters,
+        locationFilters,
       }
 
       const updateNextResults = async skip => {
@@ -331,11 +340,7 @@ export class SearchStore {
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE * 0.5)
       await when(() => this.nlpStore.nlp.query === query)
-      const {
-        people,
-        searchQuery,
-        integrations /* , nouns */,
-      } = this.nlpStore.nlp
+      const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
       // fuzzy people results
       const allResults = await PersonBitRepository.find({
         take: 3,

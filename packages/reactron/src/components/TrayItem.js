@@ -12,11 +12,11 @@ export class TrayItem extends BaseComponent {
   handleNewProps() {
     const { onClick, ...props } = this.props
     this.handleEvent(this.emitter, 'click', onClick)
-    this.trayItem = {
-      ...props,
-      click: (menuItem, browserWindow, event) => {
+    this.trayItem = props
+    if (onClick) {
+      this.trayItem.click = (menuItem, browserWindow, event) => {
         this.emitter.emit('click', event)
-      },
+      }
     }
   }
 }

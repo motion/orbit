@@ -1,6 +1,6 @@
 import { SettingModel, Setting } from '@mcro/models'
 import { getSettingTitle } from '../helpers/toAppConfig/settingToAppConfig'
-import { observeMany } from '../repositories'
+import { observeMany } from '@mcro/model-bridge'
 import { react, ensure } from '@mcro/black'
 import { allServices } from '../stores/helpers/appStoreHelpers'
 

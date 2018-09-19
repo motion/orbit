@@ -10,12 +10,12 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "history": "^4.7.2",
+    "history": "4.7.2",
     "resolve-pathname": "^2.2.0",
-    "url-pattern": "^1.0.3"
+    "url-pattern": "1.0.3"
   },
   "peerDependencies": {
-    "mobx": "5.0.3"
+    "mobx": "5.1.2"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

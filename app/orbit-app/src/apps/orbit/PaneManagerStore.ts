@@ -3,7 +3,7 @@ import { App } from '@mcro/stores'
 import { SelectionStore } from './orbitDocked/SelectionStore'
 import { KeyboardStore } from '../../stores/KeyboardStore'
 import { Actions } from '../../actions/Actions'
-import { observeOne } from '../../repositories'
+import { observeOne } from '@mcro/model-bridge'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
 import { OrbitStore } from '../OrbitStore'
 

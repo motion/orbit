@@ -23,6 +23,10 @@ const activeThemes = {
     borderColor: 'rgba(193, 255, 143)',
     color: '#fff',
   },
+  location: {
+    borderColor: '#007FAA',
+    color: '#fff',
+  },
 }
 
 const SuggestionBar = view(UI.Row, {
@@ -114,28 +118,24 @@ const hideFilterPanes = {
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
-export const OrbitSuggestionBar = view(
-  ({ filterStore, paneManagerStore }: Props) => {
-    filterStore.disabledFilters
-    return (
-      <SuggestionBar
-        visible={hideFilterPanes[paneManagerStore.activePane] ? false : true}
-      >
-        <HorizontalScroll>
-          {filterStore.allFilters.map((filter, index) => (
-            <SuggestionButton
-              key={`${filter.text}${filter.active}`}
-              onClick={() => filterStore.toggleFilterActive(filter.text)}
-              opacity={opacityScale[index] || 0.333}
-              borderBottom={[2, getBorderColor(filter)]}
-            >
-              {filter.text}
-            </SuggestionButton>
-          ))}
-          <UI.View width={50} />
-        </HorizontalScroll>
-        <SuggestionBarFade />
-      </SuggestionBar>
-    )
-  },
-)
+export const OrbitSuggestionBar = view(({ filterStore, paneManagerStore }: Props) => {
+  filterStore.disabledFilters
+  return (
+    <SuggestionBar visible={hideFilterPanes[paneManagerStore.activePane] ? false : true}>
+      <HorizontalScroll>
+        {filterStore.allFilters.map((filter, index) => (
+          <SuggestionButton
+            key={`${filter.text}${filter.active}`}
+            onClick={() => filterStore.toggleFilterActive(filter.text)}
+            opacity={opacityScale[index] || 0.333}
+            borderBottom={[2, getBorderColor(filter)]}
+          >
+            {filter.text}
+          </SuggestionButton>
+        ))}
+        <UI.View width={50} />
+      </HorizontalScroll>
+      <SuggestionBarFade />
+    </SuggestionBar>
+  )
+})

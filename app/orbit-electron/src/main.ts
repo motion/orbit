@@ -1,7 +1,7 @@
 import 'raf/polyfill'
 import { Logger } from '@mcro/logger'
 import waitPort from 'wait-port'
-import { app } from 'electron'
+// import { app } from 'electron'
 
 const log = new Logger('electron')
 
@@ -31,10 +31,11 @@ export async function main(): Promise<number | void> {
     process.on('SIGUSR2', () => exitHandler(0))
   }
 
+  // dont hide it in dev because it makes debugging so hard...
   // we hide it already in prod, lets hide it in dev
-  if (process.env.NODE_ENV === 'development') {
-    app.dock.hide()
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   app.dock.hide()
+  // }
 
   // require app after setting config
   const { ElectronApp } = require('./ElectronApp')

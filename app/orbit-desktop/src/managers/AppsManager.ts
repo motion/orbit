@@ -48,9 +48,9 @@ export class AppsManager {
       // handle adds
       for (const { id, torn } of apps) {
         // if peek app, avoid (could be used for more control of orbit)
-        // if (torn === false) {
-        //   continue
-        // }
+        if (torn === false) {
+          continue
+        }
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
           const icon = join(getGlobalConfig().paths.desktopRoot, 'assets', 'icon.png')

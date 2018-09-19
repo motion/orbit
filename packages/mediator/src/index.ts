@@ -1,11 +1,14 @@
-export * from "./client"
-export * from "./common"
-export * from "./server"
-export * from "./typeorm-extension"
+export * from './client'
+export * from './common'
+export * from './server'
+export * from './typeorm-extension'
 
-export type Subscription = ZenObservable.Subscription;
+export type Subscription = {
+  closed: boolean
+  unsubscribe(): void
+}
+
 // library
-
 
 ////////////////////////////////////////////
 // interfaces and shared declarations (the only shared code)
@@ -84,7 +87,6 @@ export const PhotoModel = new Model<Photo>("Photo");*/
 //   })).subscribe(post => {
 //   });
 // };
-
 
 // server example
 

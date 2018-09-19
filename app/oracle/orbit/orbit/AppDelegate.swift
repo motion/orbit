@@ -215,6 +215,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       if theme == "light" {
         blurryView.material = NSVisualEffectView.Material.light
       }
+      if theme == "hud" {
+        if #available(OSX 10.14, *) {
+          blurryView.material = NSVisualEffectView.Material.hudWindow
+        }
+      }
+      if theme == "medium" {
+        blurryView.material = NSVisualEffectView.Material.mediumLight
+      }
     } else {
       // Fallback on earlier versions
     }

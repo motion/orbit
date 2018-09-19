@@ -1,6 +1,6 @@
 import { TransportRequestType, TransportRequestValues, TransportResponse } from '../common'
 import { ClientTransport } from './ClientTransport'
-import Observable = require('zen-observable')
+import Observable from 'zen-observable'
 
 export class WebSocketClientTransport implements ClientTransport {
   websocket: WebSocket
@@ -37,13 +37,12 @@ export class WebSocketClientTransport implements ClientTransport {
   observe(type: TransportRequestType, values: TransportRequestValues): Observable<any> {
     const operationId = ++this.operationId // don't change - will lead to wrong id
     const data = {
-      id: this.operationCode + "_" + operationId,
+      id: this.operationCode + '_' + operationId,
       type,
-      ...values
+      ...values,
     }
 
     return new Observable(subject => {
-
       const subscription = {
         operationId: operationId,
         onSuccess(result) {
@@ -51,7 +50,7 @@ export class WebSocketClientTransport implements ClientTransport {
         },
         onError(error) {
           subject.error(error)
-        }
+        },
       }
       this.subscriptions.push(subscription)
 
@@ -59,13 +58,13 @@ export class WebSocketClientTransport implements ClientTransport {
         try {
           this.websocket.send(JSON.stringify(data))
         } catch (err) {
-          subject.error(err);
+          subject.error(err)
           console.warn(`Failed to execute websocket operation ${JSON.stringify(err)}`)
         }
       }
 
       if (this.websocket.readyState === this.websocket.OPEN) {
-        callback();
+        callback()
       } else {
         this.onConnectedCallbacks.push(callback)
       }
@@ -73,21 +72,22 @@ export class WebSocketClientTransport implements ClientTransport {
       // remove subscription on cancellation
       return () => {
         const index = this.subscriptions.indexOf(subscription)
-        if (index !== -1)
-          this.subscriptions.splice(index, 1)
+        if (index !== -1) this.subscriptions.splice(index, 1)
 
-        this.websocket.send(JSON.stringify({
-          id: this.operationCode + "_" + operationId,
-          type: "unsubscribe"
-        }))
-      };
-    });
+        this.websocket.send(
+          JSON.stringify({
+            id: this.operationCode + '_' + operationId,
+            type: 'unsubscribe',
+          }),
+        )
+      }
+    })
   }
 
   execute(type: TransportRequestType, values: TransportRequestValues): Promise<any> {
     const operationId = ++this.operationId // don't change - will lead to wrong id
     const query = {
-      id: this.operationCode + "_" + operationId,
+      id: this.operationCode + '_' + operationId,
       type,
       ...values,
     }
@@ -110,11 +110,11 @@ export class WebSocketClientTransport implements ClientTransport {
           onError(error) {
             subscriptions.splice(subscriptions.indexOf(this), 1)
             fail(error)
-          }
+          },
         })
-      };
+      }
       if (this.websocket.readyState === this.websocket.OPEN) {
-        callback();
+        callback()
       } else {
         this.onConnectedCallbacks.push(callback)
       }
@@ -122,18 +122,16 @@ export class WebSocketClientTransport implements ClientTransport {
   }
 
   private generateRandom() {
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let text = "";
-    for (let i = 0; i < 5; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let text = ''
+    for (let i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length))
+    return text
   }
 
   private handleData(data: TransportResponse) {
     if (data.id) {
-      const [operationCode, operationId] = data.id.split("_")
-      if (this.operationCode !== operationCode)
-        return
+      const [operationCode, operationId] = data.id.split('_')
+      if (this.operationCode !== operationCode) return
 
       const subscription = this.subscriptions.find(subscription => {
         return subscription.operationId === parseInt(operationId)
@@ -143,5 +141,4 @@ export class WebSocketClientTransport implements ClientTransport {
       }
     }
   }
-
 }

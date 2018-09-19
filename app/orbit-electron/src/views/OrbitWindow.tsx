@@ -77,7 +77,6 @@ class OrbitWindowStore {
         Menu.sendActionToFirstResponder('hide:')
       } else {
         this.orbitRef.show()
-        this.orbitRef.focus()
       }
     },
     {

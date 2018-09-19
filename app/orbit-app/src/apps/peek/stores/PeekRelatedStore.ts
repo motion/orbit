@@ -1,4 +1,4 @@
-import { BitRepository } from '../../../repositories'
+import { BitRepository } from '@mcro/model-bridge'
 import { sleep } from '@mcro/black'
 
 export class PeekRelatedStore {

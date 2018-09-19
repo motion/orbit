@@ -3,5 +3,6 @@ export interface GeneralSettingValues {
   autoUpdate?: boolean
   autoLaunch?: boolean
   darkTheme?: boolean
+  realtimeSearch?: boolean
   openShortcut?: string
 }

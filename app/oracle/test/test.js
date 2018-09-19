@@ -62,7 +62,7 @@ async function test() {
   })
 
   oracle.onWords(async data => {
-    console.log('first 40 of', data.length, data.slice(0, 40))
+    console.log('first 100', data.length, data.slice(0, 100))
     console.log('\nto do it full speed: npm run test-fast')
     console.log('\nto see output:')
     console.log('$ open ./tmp')

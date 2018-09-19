@@ -1,6 +1,6 @@
 import { compose, react, view } from '@mcro/black'
-import { SettingModel, SlackChannel, SlackChannelModel, SlackSettingValues } from '@mcro/models'
-import { SlackService } from '@mcro/services'
+import { SettingModel, SlackChannelModel, SlackSettingValues } from '@mcro/models'
+import { SlackChannel } from '@mcro/services'
 import * as UI from '@mcro/ui'
 import { orderBy } from 'lodash'
 import { loadMany, save } from '@mcro/model-bridge'
@@ -78,7 +78,6 @@ class SlackSettingStore {
 
   syncing = {}
   active = 'status'
-  service = new SlackService(this.props.setting)
 
   async didMount() {
     const channels = await loadMany(SlackChannelModel, {

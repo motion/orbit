@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
-import { Bit, Person, ConfluenceBitData } from '@mcro/models'
-import { ConfluenceSettingValues } from '@mcro/models'
+import { Bit, ConfluenceBitData, ConfluenceSettingValues, Person } from '@mcro/models'
+import { ConfluenceContent, ConfluenceLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -9,8 +9,6 @@ import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { SyncerUtils } from '../core/SyncerUtils'
-import { ConfluenceLoader } from '../../loaders/confluence/ConfluenceLoader'
-import { ConfluenceContent } from '../../loaders/confluence/ConfluenceTypes'
 
 const log = new Logger('syncer:confluence:content')
 

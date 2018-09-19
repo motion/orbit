@@ -206,7 +206,7 @@ export class SearchStore {
       if (isFilteringSlack) {
         channelResults = matchSort(
           query.split(' ')[0],
-          this.props.appsStore.services.slack.activeChannels.map(channel => ({
+          /*this.props.appsStore.services.slack.activeChannels*/[].map(channel => ({ // todo: broken by umed, please fix me
             id: channel.id,
             title: `#${channel.name}`,
             icon: 'slack',
@@ -217,7 +217,7 @@ export class SearchStore {
         message = `Searching ${channelResults[0].title}`
       }
       // filtered search
-      if (isFilteringChannel && this.props.appsStore.services.slack) {
+      if (isFilteringChannel/* && this.props.appsStore.services.slack*/) { // todo: broken by umed, please fix me
         message = 'SPACE to search selected channel'
         results = channelResults
         return setValue({

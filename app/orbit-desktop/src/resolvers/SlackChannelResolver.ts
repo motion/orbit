@@ -1,15 +1,15 @@
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
-import { SlackChannelModel } from '@mcro/models'
-import { getRepository } from 'typeorm'
 import {
-  SlackSettingBlacklistCommand,
-  SlackSettingValues,
   SettingForceSyncCommand,
   SettingRemoveCommand,
+  SlackChannelModel,
+  SlackSettingBlacklistCommand,
+  SlackSettingValues,
 } from '@mcro/models'
+import { SlackLoader } from '@mcro/services'
+import { getRepository } from 'typeorm'
 import { SettingEntity } from '../entities/SettingEntity'
-import { SlackLoader } from '../loaders/slack/SlackLoader'
 
 const log = new Logger(`resolver:slack-channel`)
 

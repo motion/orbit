@@ -8,14 +8,10 @@
   },
   "dependencies": {
     "@mcro/config": "*",
-    "@mcro/black": "^2.2.1",
-    "@mcro/constants": "^2.2.1",
-    "@mcro/helpers": "^2.2.1",
+    "@mcro/logger": "^2.2.1",
     "@mcro/models": "^2.2.1",
     "@mcro/r2": "^2.2.1",
-    "global": "^4.3.2",
-    "lodash": "4.17.10",
-    "octokat": "0.10.0",
+    "apollo-fetch": "^0.7.0",
     "slack": "^11.0.0"
   },
   "peerDependencies": {

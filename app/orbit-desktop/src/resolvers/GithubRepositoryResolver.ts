@@ -1,15 +1,15 @@
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
-import { GithubRepositoryModel } from '@mcro/models'
-import { getRepository } from 'typeorm'
 import {
-  SlackSettingBlacklistCommand,
-  SlackSettingValues,
+  GithubRepositoryModel,
   SettingForceSyncCommand,
   SettingRemoveCommand,
+  SlackSettingBlacklistCommand,
+  SlackSettingValues,
 } from '@mcro/models'
+import { GithubLoader } from '@mcro/services'
+import { getRepository } from 'typeorm'
 import { SettingEntity } from '../entities/SettingEntity'
-import { GithubLoader } from '../loaders/github/GithubLoader'
 
 const log = new Logger(`resolver:github-repositories`)
 

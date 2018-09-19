@@ -4,7 +4,7 @@ import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
-import { GithubIssue } from '../../loaders/github/GithubTypes'
+import { GithubIssue } from '@mcro/services'
 
 /**
  * Creates a Github Bit.

@@ -19,13 +19,6 @@ export const getPermalink = async (result, type) => {
   return result.id
 }
 
-// note: importing services causes hell for some reason
-export const allServices = {
-  slack: () => require('@mcro/services').SlackService,
-  gdrive: () => require('@mcro/services').DriveService,
-  gmail: () => require('@mcro/services').DriveService,
-}
-
 // const log = debug('root')
 
 export const uniq = arr => {

@@ -38,11 +38,9 @@ import { ScreenManager } from './managers/ScreenManager'
 import { Onboard } from './onboard/Onboard'
 import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
-import { GithubSettingBlacklistResolver } from './resolvers/GithubSettingBlacklistResolver'
 import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
-import { SlackSettingBlacklistResolver } from './resolvers/SlackSettingBlacklistResolver'
 import { Server } from './Server'
 import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
@@ -220,8 +218,6 @@ export class Root {
         SettingRemoveResolver,
         SettingForceSyncResolver,
         AtlassianSettingSaveResolver,
-        GithubSettingBlacklistResolver,
-        SlackSettingBlacklistResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
       ],

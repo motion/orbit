@@ -1,5 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { Bit, GDriveBitData, GDrivePersonData } from '@mcro/models'
+import { DriveLoadedFile, DriveLoadedUser, DriveLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -10,8 +11,6 @@ import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { GDriveLoader } from '../../loaders/gdrive/GDriveLoader'
-import { GDriveLoadedFile, GDriveLoadedUser } from '../../loaders/gdrive/GDriveTypes'
 
 const log = new Logger('syncer:gdrive')
 
@@ -19,14 +18,14 @@ const log = new Logger('syncer:gdrive')
  * Syncs Google Drive files.
  */
 export class GDriveSyncer implements IntegrationSyncer {
-  private loader: GDriveLoader
+  private loader: DriveLoader
   private setting: SettingEntity
   private people: PersonEntity[]
   private bits: BitEntity[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
-    this.loader = new GDriveLoader(this.setting)
+    this.loader = new DriveLoader(this.setting)
   }
 
   /**
@@ -70,7 +69,7 @@ export class GDriveSyncer implements IntegrationSyncer {
   /**
    * Builds a bit from the given gdrive aggregated file.
    */
-  private buildBit(file: GDriveLoadedFile): BitEntity {
+  private buildBit(file: DriveLoadedFile): BitEntity {
     const data: GDriveBitData = {}
     const id = CommonUtils.hash(`gdrive-${this.setting.id}-${file.file.id}`)
     const bit = this.bits.find(bit => bit.id === id)
@@ -108,7 +107,7 @@ export class GDriveSyncer implements IntegrationSyncer {
   /**
    * Creates person entity from a given google drive user.
    */
-  private buildPerson(user: GDriveLoadedUser): PersonEntity {
+  private buildPerson(user: DriveLoadedUser): PersonEntity {
     const id = CommonUtils.hash(`gdrive-${this.setting.id}-${user.email}`)
     const data: GDrivePersonData = {}
     const person = this.people.find(person => person.id === id)

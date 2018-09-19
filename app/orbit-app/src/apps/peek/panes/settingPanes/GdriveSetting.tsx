@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view, react, compose } from '@mcro/black'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
-import { DriveService } from '@mcro/services'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, Tabs, Tab } from '@mcro/ui'
 import { AppStatusPane } from './AppStatusPane'
@@ -51,9 +50,9 @@ class GDocsSettingStore {
     return this.props.setting
   }
 
-  get service(): DriveService {
-    console.log('get service again')
-    return this.props.appsStore.services.gdrive
+  get service(): any { // todo: broken by umed please fix me
+    // console.log('get service again')
+    return {} // this.props.appsStore.services.gdrive
   }
 
   setActiveKey = key => {

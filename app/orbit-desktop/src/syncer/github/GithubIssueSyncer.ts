@@ -1,5 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { Bit, GithubBitData, GithubSettingValues, Person } from '@mcro/models'
+import { GithubLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
@@ -8,7 +9,6 @@ import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SyncerUtils } from '../core/SyncerUtils'
 import { GithubBitFactory } from './GithubBitFactory'
-import { GithubLoader } from '../../loaders/github/GithubLoader'
 import { GithubPersonFactory } from './GithubPersonFactory'
 
 const log = new Logger('syncer:github:issues')

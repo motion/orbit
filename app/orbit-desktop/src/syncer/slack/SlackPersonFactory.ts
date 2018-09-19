@@ -1,9 +1,9 @@
 import { Logger } from '@mcro/logger'
 import { Person, SlackBitData, SlackPersonData, SlackSettingValues } from '@mcro/models'
+import { SlackUser } from '@mcro/services'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
-import { SlackUser } from '../../loaders/slack/SlackTypes'
 
 /**
  * Creates a Slack Person.

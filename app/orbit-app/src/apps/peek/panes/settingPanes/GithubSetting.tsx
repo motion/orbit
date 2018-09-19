@@ -1,10 +1,10 @@
 import { react, view } from '@mcro/black'
 import {
-  GithubRepository,
   GithubRepositoryModel,
   GithubSettingValues,
   SettingModel,
 } from '@mcro/models'
+import { GithubRepository } from '@mcro/services'
 import * as UI from '@mcro/ui'
 import { Text } from '@mcro/ui'
 import * as React from 'react'

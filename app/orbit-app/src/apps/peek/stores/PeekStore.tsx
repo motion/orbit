@@ -156,9 +156,9 @@ export class PeekStore {
     async (willShow, { setValue, sleep }) => {
       if (willShow) {
         setValue(true)
-        await sleep(60)
+        await sleep(100)
       }
-      setValue(false)
+      return false
     },
   )
 

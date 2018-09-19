@@ -105,6 +105,8 @@ export const PeekFrame = decorator(({ peekStore, store, children, theme }: PeekF
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
   const transition = transitions(peekStore)
   const size = store.size
+  log('peeek frame')
+  trace()
   return (
     <ResizableBox
       width={size[0]}

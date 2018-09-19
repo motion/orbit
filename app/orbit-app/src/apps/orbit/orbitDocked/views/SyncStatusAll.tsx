@@ -28,7 +28,7 @@ export class SyncStatusAll extends React.Component<{ store?: SyncStatusAllStore 
   render() {
     const { store } = this.props
     if (!store.activeJobs) {
-      return <SubTitle>Sync inactive.</SubTitle>
+      return <SubTitle>Sync idle.</SubTitle>
     }
     return <SubTitle>Syncing {store.activeJobs.length} integrations...</SubTitle>
   }

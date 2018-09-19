@@ -47,16 +47,16 @@ export class SubPaneStore {
   positionState = react(
     () => {
       const { extraCondition, name, paneManagerStore } = this.props
-      return name === paneManagerStore.activePane && (extraCondition ? extraCondition() : true)
-    },
-    isActive => {
-      ensure('changed', isActive !== this.positionState.isActive)
+      const isActive =
+        name === paneManagerStore.activePane && (extraCondition ? extraCondition() : true)
       return {
         isActive,
         isLeft: this.isLeft(),
       }
     },
+    _ => _,
     {
+      onlyUpdateIfChanged: true,
       defaultValue: {
         isActive: false,
         isLeft: this.isLeft(),

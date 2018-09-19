@@ -49,12 +49,14 @@ export class HeaderStore {
     this.inputRef.current.focus()
     moveCursorToEndOfTextarea(this.inputRef.current)
   }
-  s
+
   focusInputOnVisible = react(
     () => App.orbitState.pinned || App.orbitState.docked,
-    async shown => {
+    async (shown, { sleep }) => {
       ensure('shown', shown)
       ensure('ref', !!this.inputRef.current)
+      // wait for after it shows
+      await sleep(16)
       this.focus()
       selectTextarea(this.inputRef.current)
     },

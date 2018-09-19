@@ -8,6 +8,7 @@ import { OrbitDocked } from './orbit/orbitDocked/OrbitDocked'
 import { QueryStore } from './orbit/orbitDocked/QueryStore'
 import { KeyboardStore } from '../stores/KeyboardStore'
 import { SelectionStore } from './orbit/orbitDocked/SelectionStore'
+import { HighlightsPage } from './HighlightsPage'
 
 @view.provide({
   appsStore: AppsStore,
@@ -28,6 +29,7 @@ export class OrbitPage extends React.Component<{
     return (
       <MainShortcutHandler>
         <AppWrapper>
+          <HighlightsPage />
           <OrbitDocked />
         </AppWrapper>
       </MainShortcutHandler>

@@ -14,5 +14,8 @@
     "@mcro/logger": "*",
     "ws": "6.0.0",
     "typeorm": "^0.3.0-alpha.16"
+  },
+  "devDependencies": {
+    "@types/zen-observable": "0.8.0"
   }
 }

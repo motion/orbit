@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { observeMany } from '../../../../repositories'
+import { observeMany } from '@mcro/model-bridge'
 import { JobModel, Job } from '@mcro/models'
 import { view } from '@mcro/black'
 

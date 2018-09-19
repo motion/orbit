@@ -47,6 +47,7 @@ class DesktopStore {
     CLEAR_OPTION: 'CLEAR_OPTION',
     RESET_DATA: 'RESET_DATA',
     SEARCH_INDEX: 'SEARCH_INDEX',
+    TOGGLE_SETTING: 'TOGGLE_SETTING',
   }
 
   bridge = Bridge

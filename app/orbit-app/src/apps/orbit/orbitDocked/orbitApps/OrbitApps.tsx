@@ -1,7 +1,7 @@
 import { ensure, react, view } from '@mcro/black'
 import { Setting, SettingModel } from '@mcro/models'
 import * as React from 'react'
-import { observeMany } from '../../../../repositories'
+import { observeMany } from '@mcro/model-bridge'
 import { OrbitAppCard } from './OrbitAppCard'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
@@ -16,7 +16,6 @@ import { App } from '@mcro/stores'
 import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 import { settingsList } from '../../../../helpers/settingsList'
 import { NoResultsDialog } from '../views/NoResultsDialog'
-import { SyncStatus } from '../views/SyncStatus'
 
 type Props = {
   name: string

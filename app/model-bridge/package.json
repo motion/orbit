@@ -1,8 +1,7 @@
 {
-  "name": "@mcro/models",
+  "name": "@mcro/model-bridge",
   "version": "2.2.1",
   "main": "_/index.js",
-  "module": "_/index.js",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
@@ -10,21 +9,9 @@
   "dependencies": {
     "@mcro/mediator": "^2.2.1",
     "@mcro/config": "*",
+    "@mcro/models": "*",
     "reconnecting-websocket": "4.0.0-rc5",
-    "zen-observable": "0.8.9",
-    "global": "^4.3.2",
-    "lodash": "4.17.10",
-    "octokat": "0.10.0",
-    "reflect-metadata": "^0.1.12",
-    "slack": "^11.0.0",
     "typeorm": "^0.3.0-alpha.16"
-  },
-  "devDependencies": {
-    "@types/zen-observable": "0.8.0"
-  },
-  "peerDependencies": {
-    "mobx": "*",
-    "typeorm": "*"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

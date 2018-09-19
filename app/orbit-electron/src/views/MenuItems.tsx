@@ -4,8 +4,6 @@ import { view } from '@mcro/black'
 import { Electron, App, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 
-console.log('MenuItemsExtra', MenuItemsExtra)
-
 @view.attach('electronStore')
 @view.electron
 export class MenuItems extends React.Component<{

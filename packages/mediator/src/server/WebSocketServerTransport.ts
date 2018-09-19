@@ -18,12 +18,10 @@ export class WebSocketServerTransport implements ServerTransport {
 
   onMessage(callback: (data: TransportRequest) => void) {
     this.onCallbacks.push(callback)
-    if (this.socket)
-      this.socket.on('message', str => callback(JSON.parse(str)))
+    if (this.socket) this.socket.on('message', str => callback(JSON.parse(str)))
   }
 
   send(data: TransportResponse) {
     this.socket.send(JSON.stringify(data))
   }
-
 }

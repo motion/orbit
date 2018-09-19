@@ -1,9 +1,7 @@
-
 export class Model<ModelType, Args = {}, CountArgs = Args> {
-  _model!: ModelType;
-  _args!: Args;
-  _countArgs!: CountArgs;
+  _model!: ModelType
+  _args!: Args
+  _countArgs!: CountArgs
 
-  constructor(public name: string) {
-  }
+  constructor(public name: string) {}
 }

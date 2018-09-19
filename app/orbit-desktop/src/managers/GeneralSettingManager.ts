@@ -5,6 +5,7 @@ import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
+import { Desktop } from '@mcro/stores'
 
 const Config = getGlobalConfig()
 const log = new Logger('GeneralSettingManager')
@@ -18,6 +19,7 @@ const generalSettingQuery = {
 @store
 export class GeneralSettingManager {
   autoLaunch: AutoLaunch
+  offMessages: any
 
   constructor() {
     if (Config.isProd) {
@@ -34,6 +36,12 @@ export class GeneralSettingManager {
     }
     log.info('move me to migration plz')
     this.start()
+
+    this.offMessages = Desktop.onMessage(Desktop.messages.TOGGLE_SETTING, async val => {
+      const setting = await SettingEntity.findOne(generalSettingQuery)
+      setting.values[val] = !setting.values[val]
+      await setting.save()
+    })
   }
 
   async start() {
@@ -41,6 +49,10 @@ export class GeneralSettingManager {
     const setting = await SettingEntity.findOne(generalSettingQuery)
     this.ensureDefaultSettings(setting)
     this.handleAutoLaunch(setting)
+  }
+
+  dispose() {
+    this.offMessages()
   }
 
   ensureDefaultSettings = async setting => {

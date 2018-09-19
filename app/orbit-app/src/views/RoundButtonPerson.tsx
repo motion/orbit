@@ -3,7 +3,7 @@ import { RoundButton } from './RoundButton'
 import * as UI from '@mcro/ui'
 import { ButtonProps } from '@mcro/ui'
 import { Person } from '@mcro/models'
-import { PersonBitRepository } from '../repositories'
+import { PersonBitRepository } from '@mcro/model-bridge'
 import { Actions } from '../actions/Actions'
 
 type PersonButtonProps = ButtonProps & {

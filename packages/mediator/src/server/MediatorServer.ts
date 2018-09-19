@@ -2,6 +2,7 @@ import { Command, Model, TransportRequest } from '../common'
 import { ServerTransport } from './ServerTransport'
 import { ResolveInterface } from './ResolveInterface'
 import { Logger } from '@mcro/logger'
+import { Subscription } from '..'
 
 const log = new Logger('MediatorServer')
 
@@ -15,7 +16,7 @@ export interface MediatorServerOptions {
 export class MediatorServer {
   private subscriptions: {
     id: string
-    subscription: ZenObservable.Subscription
+    subscription: Subscription
   }[] = []
 
   constructor(public options: MediatorServerOptions) {}
@@ -45,9 +46,7 @@ export class MediatorServer {
       })
       if (!command)
         throw new Error(
-          `Command ${
-            data.command
-          } was not found. Available commands: ${this.options.commands
+          `Command ${data.command} was not found. Available commands: ${this.options.commands
             .map(command => command.name)
             .join(', ')}`,
         )
@@ -57,9 +56,7 @@ export class MediatorServer {
       })
       if (!model)
         throw new Error(
-          `Model ${
-            data.model
-          } was not found. Available models: ${this.options.models
+          `Model ${data.model} was not found. Available models: ${this.options.models
             .map(model => model.name)
             .join(', ')}`,
         )
@@ -69,26 +66,19 @@ export class MediatorServer {
     const resolver = this.options.resolvers.find(resolver => {
       if (data.type === 'command')
         return resolver.type === 'command' && resolver.command === command
-      if (data.type === 'save')
-        return resolver.type === 'save' && resolver.model === model
-      if (data.type === 'remove')
-        return resolver.type === 'remove' && resolver.model === model
-      if (data.type === 'loadOne')
-        return resolver.type === 'one' && resolver.model === model
-      if (data.type === 'loadMany')
-        return resolver.type === 'many' && resolver.model === model
+      if (data.type === 'save') return resolver.type === 'save' && resolver.model === model
+      if (data.type === 'remove') return resolver.type === 'remove' && resolver.model === model
+      if (data.type === 'loadOne') return resolver.type === 'one' && resolver.model === model
+      if (data.type === 'loadMany') return resolver.type === 'many' && resolver.model === model
       if (data.type === 'loadManyAndCount')
         return resolver.type === 'manyAndCount' && resolver.model === model
-      if (data.type === 'loadCount')
-        return resolver.type === 'count' && resolver.model === model
+      if (data.type === 'loadCount') return resolver.type === 'count' && resolver.model === model
       if (data.type === 'observeOne')
         return resolver.type === 'observeOne' && resolver.model === model
       if (data.type === 'observeMany')
         return resolver.type === 'observeMany' && resolver.model === model
       if (data.type === 'observeManyAndCount')
-        return (
-          resolver.type === 'observeManyAndCount' && resolver.model === model
-        )
+        return resolver.type === 'observeManyAndCount' && resolver.model === model
       if (data.type === 'observeCount')
         return resolver.type === 'observeCount' && resolver.model === model
 
@@ -98,16 +88,10 @@ export class MediatorServer {
     if (!resolver) {
       if (command) {
         throw new Error(
-          `No "${data.type}" resolver for the given ${
-            command.name
-          } command was found`,
+          `No "${data.type}" resolver for the given ${command.name} command was found`,
         )
       } else {
-        throw new Error(
-          `No "${data.type}" resolver for the given ${
-            model.name
-          } model was found`,
-        )
+        throw new Error(`No "${data.type}" resolver for the given ${model.name} model was found`)
       }
     }
 

@@ -1,4 +1,4 @@
-import { SettingRepository } from '../../repositories'
+import { SettingRepository } from '@mcro/model-bridge'
 import * as Helpers from '../../helpers'
 
 export const getPermalink = async (result, type) => {

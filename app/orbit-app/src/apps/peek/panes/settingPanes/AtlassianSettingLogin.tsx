@@ -7,7 +7,7 @@ import {
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { Actions } from '../../../../actions/Actions'
-import { Mediator } from '../../../../repositories'
+import { Mediator } from '@mcro/model-bridge'
 import * as Views from '../../../../views'
 import { Message } from '../../../../views/Message'
 
@@ -110,9 +110,9 @@ export class AtlassianSettingLogin extends React.Component<
     return (
       <UI.Col tagName="form" onSubmit={this.addIntegration} padding={20}>
         <Message>
-          Atlassian requires username and password as their OAuth requires
-          administrator permissions. As always with Orbit, this information is{' '}
-          <strong>completely private</strong> to you.
+          Atlassian requires username and password as their OAuth requires administrator
+          permissions. As always with Orbit, this information is <strong>completely private</strong>{' '}
+          to you.
         </Message>
         <Views.VertSpace />
         <UI.Col margin="auto" width={370}>

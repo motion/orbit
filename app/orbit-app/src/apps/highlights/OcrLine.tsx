@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as Helpers from '@mcro/helpers'
 import { LINE_Y_ADJ } from './helpers'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
+import { wordKey } from '../../helpers'
 
 const OcrLine = view({
   borderBottom: [2, '#EDD71E'],
@@ -15,7 +15,7 @@ const OcrLine = view({
 
 export const OCRLine = view(({ item, store: { hoveredLine } }) => {
   const [x, y, width, height] = item
-  const key = Helpers.wordKey(item)
+  const key = wordKey(item)
   return (
     <OcrLine
       hovered={hoveredLine && hoveredLine.string === key}

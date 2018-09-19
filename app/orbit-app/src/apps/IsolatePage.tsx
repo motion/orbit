@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { BitRepository, SettingRepository } from '../repositories'
+import { BitRepository, SettingRepository } from '@mcro/model-bridge'
 import { Peek } from './peek/Peek'
 import { OrbitStore } from './OrbitStore'
 import { App } from '@mcro/stores'

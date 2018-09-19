@@ -3,7 +3,7 @@ import { Setting, SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/mo
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
-import { Mediator } from '../../../repositories'
+import { Mediator } from '@mcro/model-bridge'
 import { AppsStore } from '../../AppsStore'
 import { AppInfoStore } from '../../../stores/AppInfoStore'
 import { RoundButton } from '../../../views'

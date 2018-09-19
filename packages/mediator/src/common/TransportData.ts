@@ -1,4 +1,3 @@
-
 export type TransportRequestType =
   | 'unsubscribe'
   | 'command'

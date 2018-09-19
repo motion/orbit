@@ -1,7 +1,7 @@
 import { Command, Model } from '../common'
-import Observable = require('zen-observable')
+import Observable from 'zen-observable'
 
-export type ResolveType = 
+export type ResolveType =
   | 'command'
   | 'one'
   | 'many'
@@ -18,50 +18,50 @@ export type ResolveType =
 export type ResolveCommand<ModelType, Args> = {
   type: 'command'
   command: Command<ModelType, Args>
-  resolve: (args: Args) => ModelType|Promise<ModelType>
+  resolve: (args: Args) => ModelType | Promise<ModelType>
 }
 
 export type ResolveOne<ModelType, Args> = {
   type: 'one'
   model: Model<ModelType, Args>
-  resolve: (args: Args) => ModelType|Promise<ModelType>
+  resolve: (args: Args) => ModelType | Promise<ModelType>
 }
 
 export type ResolveMany<ModelType, Args> = {
   type: 'many'
   model: Model<ModelType, Args>
-  resolve: (args: Args) => ModelType[]|Promise<ModelType[]>
+  resolve: (args: Args) => ModelType[] | Promise<ModelType[]>
 }
 
 export type ResolveManyAndCount<ModelType, Args> = {
   type: 'manyAndCount'
   model: Model<ModelType, Args>
-  resolve: (args: Args) => [ModelType[], number]|Promise<[ModelType[], number]>
+  resolve: (args: Args) => [ModelType[], number] | Promise<[ModelType[], number]>
 }
 
 export type ResolveCount<ModelType, Args> = {
   type: 'count'
   model: Model<ModelType, Args>
-  resolve: (args: Args) => number|Promise<number>
+  resolve: (args: Args) => number | Promise<number>
 }
 
 export type ResolveProperty<ModelType, Property extends keyof ModelType, Args> = {
   type: 'property'
   model: Model<ModelType, Args>
-  property: Property;
-  resolve: (args: Args) => ModelType[Property]|Promise<ModelType[Property]>
+  property: Property
+  resolve: (args: Args) => ModelType[Property] | Promise<ModelType[Property]>
 }
 
 export type ResolveSave<ModelType, Args> = {
   type: 'save'
   model: Model<ModelType, Args>
-  resolve: (model: ModelType) => ModelType|Promise<ModelType>
+  resolve: (model: ModelType) => ModelType | Promise<ModelType>
 }
 
 export type ResolveRemove<ModelType, Args> = {
   type: 'remove'
   model: Model<ModelType, Args>
-  resolve: (model: ModelType) => boolean|Promise<boolean>
+  resolve: (model: ModelType) => boolean | Promise<boolean>
 }
 
 export type ResolveObserveOne<ModelType, Args> = {

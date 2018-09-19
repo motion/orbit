@@ -8,6 +8,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../stores" },
+    { "path": "../model-bridge" },
     { "path": "../../packages/black" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },

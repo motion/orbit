@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { react, on, ensure, cancel, sleep } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { BitRepository, SettingRepository, PersonBitRepository } from '../../../repositories'
+import { BitRepository, SettingRepository, PersonBitRepository } from '@mcro/model-bridge'
 import { Bit, Setting, PersonBit } from '@mcro/models'
 import { Actions } from '../../../actions/Actions'
 

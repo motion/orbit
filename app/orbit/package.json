@@ -21,7 +21,8 @@
     "ps-tree": "1.1.0",
     "fs-extra": "7.0.0",
     "electron": "3.0.0",
-    "raven": "2.6.4"
+    "raven": "2.6.4",
+    "ws": "6.0.0"
   },
   "devDependencies": {
     "@types/electron": "*",

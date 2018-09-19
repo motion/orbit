@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { view, react, ensure, on } from '@mcro/black'
-import { SettingRepository, observeOne } from '../../../../repositories'
+import { view, react, ensure } from '@mcro/black'
+import { SettingRepository, observeOne } from '@mcro/model-bridge'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
 import { App, Desktop } from '@mcro/stores'

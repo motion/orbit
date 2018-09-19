@@ -5,8 +5,10 @@
   "version": "2.2.9",
   "scripts": {
     "start": "./scripts/start.sh",
+    "start-no-watch": "./scripts/start.sh --disable-watch",
     "start-prod": "./scripts/start.sh start-prod",
-    "build-app": "cd ../build-orbit && npm run build-app"
+    "build-app": "cd ../build-orbit && npm run build-app",
+    "debug": "electron --require ndb-inspect ./_/main.js"
   },
   "dependencies": {
     "@mcro/config": "*",
@@ -25,6 +27,8 @@
     "ws": "6.0.0"
   },
   "devDependencies": {
+    "ndb": "1.0.25",
+    "ndb-inspect": "0.0.1",
     "@types/electron": "*",
     "nodemon": "1.18.4"
   }

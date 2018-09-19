@@ -47,7 +47,7 @@ const TextBlock = view(InlineBlock, {
   position: 'relative',
   maxWidth: '100%',
   selectable: {
-    userSelect: 'auto',
+    userSelect: 'text',
     cursor: 'inherit',
   },
   oneLineEllipse: {

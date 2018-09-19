@@ -3,7 +3,7 @@ import { GithubPersonData, Person, SlackBitData, SlackPersonData, SlackSettingVa
 import { SettingEntity } from '../../entities/SettingEntity'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
-import { GithubIssue, GithubPerson } from './GithubTypes'
+import { GithubIssue, GithubPerson } from '../../loaders/github/GithubTypes'
 import { uniqBy } from 'lodash'
 
 /**

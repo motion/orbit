@@ -9,8 +9,8 @@ import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { SyncerUtils } from '../core/SyncerUtils'
-import { ConfluenceLoader } from './ConfluenceLoader'
-import { ConfluenceContent } from './ConfluenceTypes'
+import { ConfluenceLoader } from '../../loaders/confluence/ConfluenceLoader'
+import { ConfluenceContent } from '../../loaders/confluence/ConfluenceTypes'
 
 const log = new Logger('syncer:confluence:content')
 

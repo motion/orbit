@@ -1,5 +1,6 @@
 import { TransportRequestType, TransportRequestValues, TransportResponse } from '../common'
 import { ClientTransport } from './ClientTransport'
+import { log } from '../common/logger'
 import Observable from 'zen-observable'
 
 export class WebSocketClientTransport implements ClientTransport {
@@ -94,6 +95,7 @@ export class WebSocketClientTransport implements ClientTransport {
     return new Promise((ok, fail) => {
       const callback = () => {
         try {
+          log.verbose(`sent client data`, query)
           this.websocket.send(JSON.stringify(query))
         } catch (err) {
           fail(`Failed to execute websocket operation ${JSON.stringify(err)}`)
@@ -133,6 +135,7 @@ export class WebSocketClientTransport implements ClientTransport {
       const [operationCode, operationId] = data.id.split('_')
       if (this.operationCode !== operationCode) return
 
+      log.verbose(`handling client data`, data)
       const subscription = this.subscriptions.find(subscription => {
         return subscription.operationId === parseInt(operationId)
       })

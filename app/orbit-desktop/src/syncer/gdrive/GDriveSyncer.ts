@@ -10,8 +10,8 @@ import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { GDriveLoader } from './GDriveLoader'
-import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
+import { GDriveLoader } from '../../loaders/gdrive/GDriveLoader'
+import { GDriveLoadedFile, GDriveLoadedUser } from '../../loaders/gdrive/GDriveTypes'
 
 const log = new Logger('syncer:gdrive')
 

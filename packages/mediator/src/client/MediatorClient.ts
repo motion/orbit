@@ -28,7 +28,7 @@ export class MediatorClient {
   ): Promise<ModelType> {
     return this.options.transport.execute('save', {
       model: model.name,
-      value: values,
+      args: values
     })
   }
 
@@ -38,7 +38,7 @@ export class MediatorClient {
   ): Promise<boolean> {
     return this.options.transport.execute('remove', {
       model: model.name,
-      value: instance,
+      args: instance
     })
   }
 

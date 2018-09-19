@@ -34,3 +34,5 @@ export const observeManyAndCount: typeof Mediator.observeManyAndCount = Mediator
 )
 export const loadMany: typeof Mediator.loadMany = Mediator.loadMany.bind(Mediator)
 export const loadOne: typeof Mediator.loadOne = Mediator.loadOne.bind(Mediator)
+export const save: typeof Mediator.save = Mediator.save.bind(Mediator)
+export const remove: typeof Mediator.remove = Mediator.remove.bind(Mediator)

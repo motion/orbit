@@ -1,16 +1,19 @@
-import * as React from 'react'
+import { react, view } from '@mcro/black'
+import {
+  GithubRepository,
+  GithubRepositoryModel,
+  GithubSettingValues,
+  SettingModel,
+} from '@mcro/models'
 import * as UI from '@mcro/ui'
-import { view, react } from '@mcro/black'
-import { SettingRepository } from '@mcro/model-bridge'
-import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { SettingPaneProps } from './SettingPaneProps'
-import { HideablePane } from '../../views/HideablePane'
-import { flatten } from 'lodash'
 import { Text } from '@mcro/ui'
+import * as React from 'react'
+import { loadMany, save } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
+import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import { HideablePane } from '../../views/HideablePane'
 import { AppStatusPane } from './AppStatusPane'
-import { GithubSettingValues } from '@mcro/models'
-import { GithubService } from '@mcro/services'
+import { SettingPaneProps } from './SettingPaneProps'
 
 const columnSizes = {
   repo: 'flex',
@@ -49,8 +52,8 @@ const columns = {
 
 class GithubSettingStore {
   props: SettingPaneProps
+  repositories: GithubRepository[] = []
 
-  service = new GithubService(this.props.setting)
   active = 'status'
   userOrgs = []
   sortOrder = {
@@ -66,66 +69,42 @@ class GithubSettingStore {
     return this.setting.values as GithubSettingValues
   }
 
-  get orgsList() {
-    const { allOrgs } = this.service
-    return (allOrgs && allOrgs.map(org => org.login)) || []
-  }
-
-  allRepos = react(
-    () => this.orgsList,
-    async () => {
-      return flatten(
-        await Promise.all(
-          this.orgsList.map(async org => {
-            return await this.service.github
-              .orgs(org)
-              .repos.fetch({ per_page: 100 })
-              .then(res => res.items)
-          }),
-        ),
-      )
-    },
-    {
-      defaultValue: [],
-    },
-  )
-
   onSortOrder = newOrder => {
     this.sortOrder = newOrder
   }
 
   rows = react(
-    () => this.allRepos,
-    repos => {
-      return repos.map((repo, index) => {
-        const orgName = repo.fullName.split('/')[0]
-        const isActive = () => this.isSyncing(repo.fullName)
+    () => this.repositories,
+    repositories => {
+      return repositories.map(repository => {
+        const [orgName] = repository.nameWithOwner.split('/')
+        const lastCommit = new Date(repository.pushedAt)
         return {
-          key: `${repo.org}${repo.name}${index}`,
+          key: `${repository.id}`,
           columns: {
             org: {
               sortValue: orgName,
               value: orgName,
             },
             repo: {
-              sortValue: repo.name,
-              value: repo.name,
+              sortValue: repository.name,
+              value: repository.name,
             },
             lastCommit: {
-              sortValue: repo.pushedAt.getTime(),
+              sortValue: lastCommit.getTime(),
               value: (
                 <Text ellipse>
-                  <DateFormat date={new Date(repo.pushedAt)} />
+                  <DateFormat date={lastCommit} />
                 </Text>
               ),
             },
             numIssues: {
-              sortValue: repo.openIssuesCount,
-              value: repo.openIssuesCount,
+              sortValue: repository.issues.totalCount,
+              value: repository.issues.totalCount,
             },
             active: {
-              sortValue: isActive,
-              value: <ReactiveCheckBox onChange={this.onSync(repo.fullName)} isActive={isActive} />,
+              sortValue: this.whitelistStatus(repository),
+              value: <ReactiveCheckBox onChange={this.changeWhitelist(repository)} isActive={this.whitelistStatus(repository)} />,
             },
           },
         }
@@ -136,32 +115,48 @@ class GithubSettingStore {
     },
   )
 
-  onSync = fullName => async e => {
-    this.setting.values = {
-      ...this.values,
-      repos: {
-        ...this.values.repos,
-        [fullName]: e.target.checked,
-      },
-    }
-    SettingRepository.save(this.setting)
-  }
-
-  isSyncing = fullName => {
-    if (!this.setting || !this.values.repos) {
-      return false
-    }
-    return this.values.repos[fullName] || false
-  }
-
-  newOrg = ''
-  addOrg = () => {
-    this.userOrgs = [...this.userOrgs, this.newOrg]
-    this.newOrg = ''
-  }
-
   setActiveKey = key => {
     this.active = key
+  }
+
+  toggleSyncAll = () => {
+
+    // if sync all is already enable, register all repositories in whitelist
+    if (this.values.whitelist === undefined) {
+      this.values.whitelist = this.repositories.map(repository => repository.nameWithOwner)
+
+    } else { // otherwise enable "sync all" mode
+      this.values.whitelist = undefined
+    }
+    save(SettingModel, this.setting)
+  }
+
+  whitelistStatus = (repository: GithubRepository) => () => {
+
+    // if whitelist is undefined we are in "sync all" mode
+    if (this.values.whitelist === undefined)
+      return true
+
+    return this.values.whitelist.indexOf(repository.nameWithOwner) !== -1
+  }
+
+  isSyncAllEnabled = () => {
+    return this.values.whitelist === undefined
+  }
+
+  changeWhitelist = (repository: GithubRepository) => () => {
+    if (!this.values.whitelist) {
+      this.values.whitelist = this.repositories
+        .map(repository => repository.nameWithOwner)
+    }
+
+    const index = this.values.whitelist.indexOf(repository.nameWithOwner)
+    if (index === -1) {
+      this.values.whitelist.push(repository.nameWithOwner)
+    } else {
+      this.values.whitelist.splice(index, 1)
+    }
+    save(SettingModel, this.setting)
   }
 }
 
@@ -170,6 +165,15 @@ class GithubSettingStore {
 export class GithubSetting extends React.Component<
   SettingPaneProps & { store: GithubSettingStore }
 > {
+
+  async componentDidMount() {
+    this.props.store.repositories = await loadMany(GithubRepositoryModel, {
+      args: {
+        settingId: this.props.setting.id
+      }
+    })
+  }
+
   render() {
     const { store, children } = this.props
     return children({
@@ -185,6 +189,9 @@ export class GithubSetting extends React.Component<
             <AppStatusPane setting={store.setting} />
           </HideablePane>
           <HideablePane invisible={store.active !== 'repos'}>
+            <div>
+              <ReactiveCheckBox onChange={store.toggleSyncAll} isActive={store.isSyncAllEnabled} /> Sync all
+            </div>
             <UI.SearchableTable
               virtual
               rowLineHeight={28}

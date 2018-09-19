@@ -4,8 +4,9 @@ import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
-import { SlackChannel, SlackMessage } from './SlackTypes'
+import { SlackMessage } from '../../loaders/slack/SlackTypes'
 import { getWordWeights, getTopWords } from '@mcro/cosal'
+import { SlackChannel } from '@mcro/models'
 
 const Autolinker = require('autolinker')
 

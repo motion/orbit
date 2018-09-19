@@ -23,7 +23,6 @@ export const allServices = {
   slack: () => require('@mcro/services').SlackService,
   gdrive: () => require('@mcro/services').DriveService,
   gmail: () => require('@mcro/services').DriveService,
-  github: () => require('@mcro/services').GithubService,
 }
 
 // const log = debug('root')

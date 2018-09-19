@@ -8,8 +8,9 @@ import { timeout } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SlackBitFactory } from './SlackBitFactory'
-import { SlackLoader } from './SlackLoader'
-import { SlackChannel, SlackMessage } from './SlackTypes'
+import { SlackLoader } from '../../loaders/slack/SlackLoader'
+import { SlackMessage } from '../../loaders/slack/SlackTypes'
+import { SlackChannel } from '@mcro/models'
 
 const log = new Logger('syncer:slack:messages')
 

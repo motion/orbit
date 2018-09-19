@@ -5,7 +5,7 @@ import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { SlackLoader } from './SlackLoader'
+import { SlackLoader } from '../../loaders/slack/SlackLoader'
 import { SlackPersonFactory } from './SlackPersonFactory'
 
 const log = new Logger('syncer:slack:people')

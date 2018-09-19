@@ -1,0 +1,35 @@
+import { Logger } from '@mcro/logger'
+import { resolveMany } from '@mcro/mediator'
+import { SlackChannelModel } from '@mcro/models'
+import { getRepository } from 'typeorm'
+import {
+  SlackSettingBlacklistCommand,
+  SlackSettingValues,
+  SettingForceSyncCommand,
+  SettingRemoveCommand,
+} from '@mcro/models'
+import { SettingEntity } from '../entities/SettingEntity'
+import { SlackLoader } from '../loaders/slack/SlackLoader'
+
+const log = new Logger(`resolver:slack-channel`)
+
+export const SlackChannelManyResolver = resolveMany(
+  SlackChannelModel,
+  async ({ settingId }) => {
+
+    const setting = await getRepository(SettingEntity).findOne({
+      id: settingId,
+      type: 'slack',
+    })
+    if (!setting) {
+      log.error(`cannot find requested slack setting`, { settingId })
+      return
+    }
+
+    log.info(`loading channels from the slack`, { setting })
+    const loader = new SlackLoader(setting)
+    const channels = await loader.loadChannels()
+    log.info(`loaded channels`, channels)
+    return channels
+  },
+)

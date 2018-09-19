@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "rootDir": "src",
+    "outDir": "_",
     "typeRoots": ["./src/main.d.ts"]
   },
   "include": ["src/**/*"],

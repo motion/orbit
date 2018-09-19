@@ -3,44 +3,53 @@ import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
+  AtlassianSettingSaveCommand,
   BitModel,
+  GithubRepositoryModel,
+  GithubSettingBlacklistCommand,
   JobModel,
   PersonBitModel,
   PersonModel,
+  SettingForceSyncCommand,
   SettingModel,
   SettingRemoveCommand,
+  SlackChannelModel,
+  SlackSettingBlacklistCommand,
 } from '@mcro/models'
-import { AtlassianSettingSaveCommand, SettingForceSyncCommand } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
+import { Oracle } from '@mcro/oracle'
 import root from 'global'
 import macosVersion from 'macos-version'
 import open from 'opn'
 import * as Path from 'path'
-// import iohook from 'iohook'
 import * as typeorm from 'typeorm'
 import { Connection } from 'typeorm'
 import { Server as WebSocketServer } from 'ws'
+import { oracleOptions } from './constants'
 import { BitEntity } from './entities/BitEntity'
 import { JobEntity } from './entities/JobEntity'
 import { PersonBitEntity } from './entities/PersonBitEntity'
 import { PersonEntity } from './entities/PersonEntity'
 import { SettingEntity } from './entities/SettingEntity'
-import { Onboard } from './onboard/Onboard'
-import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
-import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
-import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
-import { ScreenManager } from './managers/ScreenManager'
+import { AppsManager } from './managers/appsManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
+import { ScreenManager } from './managers/ScreenManager'
+import { Onboard } from './onboard/Onboard'
+import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
+import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
+import { GithubSettingBlacklistResolver } from './resolvers/GithubSettingBlacklistResolver'
+import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
+import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
+import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
+import { SlackSettingBlacklistResolver } from './resolvers/SlackSettingBlacklistResolver'
 import { Server } from './Server'
 import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { Syncers } from './syncer'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
-import { Oracle } from '@mcro/oracle'
-import { AppsManager } from './managers/appsManager'
-import { oracleOptions } from './constants'
 import { OCRManager } from './managers/OCRManager'
+// import iohook from 'iohook'
 
 const log = new Logger('desktop')
 
@@ -181,8 +190,22 @@ export class Root {
    */
   private registerMediatorServer() {
     this.mediatorServer = new MediatorServer({
-      models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
-      commands: [SettingRemoveCommand, SettingForceSyncCommand, AtlassianSettingSaveCommand],
+      models: [
+        SettingModel,
+        BitModel,
+        JobModel,
+        PersonModel,
+        PersonBitModel,
+        GithubRepositoryModel,
+        SlackChannelModel,
+      ],
+      commands: [
+        SettingRemoveCommand,
+        SettingForceSyncCommand,
+        AtlassianSettingSaveCommand,
+        GithubSettingBlacklistCommand,
+        SlackSettingBlacklistCommand,
+      ],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,
       }),
@@ -197,6 +220,10 @@ export class Root {
         SettingRemoveResolver,
         SettingForceSyncResolver,
         AtlassianSettingSaveResolver,
+        GithubSettingBlacklistResolver,
+        SlackSettingBlacklistResolver,
+        GithubRepositoryManyResolver,
+        SlackChannelManyResolver,
       ],
     })
     this.mediatorServer.bootstrap()

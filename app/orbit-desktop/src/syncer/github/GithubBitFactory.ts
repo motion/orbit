@@ -4,7 +4,7 @@ import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
-import { GithubIssue } from './GithubTypes'
+import { GithubIssue } from '../../loaders/github/GithubTypes'
 
 /**
  * Creates a Github Bit.
@@ -40,11 +40,11 @@ export class GithubBitFactory {
           body: edge.node.body,
         }
       }),
-      author: {
+      author: issue.author ? {
         avatarUrl: issue.author.avatarUrl,
         login: issue.author.login,
         email: issue.author.email,
-      },
+      } : undefined,
       labels: issue.labels.edges.map(label => ({
         name: label.node.name,
         description: label.node.description,

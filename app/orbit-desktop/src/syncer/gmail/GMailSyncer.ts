@@ -11,9 +11,9 @@ import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { GMailLoader } from './GMailLoader'
+import { GMailLoader } from '../../loaders/gmail/GMailLoader'
 import { GMailMessageParser } from './GMailMessageParser'
-import { GmailThread } from './GMailTypes'
+import { GmailThread } from '../../loaders/gmail/GMailTypes'
 
 const log = new Logger('syncer:gmail')
 

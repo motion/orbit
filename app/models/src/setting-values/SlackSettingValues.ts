@@ -1,4 +1,5 @@
 export interface SlackSettingValues {
+  whitelist: string[]
   oauth?: {
     refreshToken: string
     secret: string

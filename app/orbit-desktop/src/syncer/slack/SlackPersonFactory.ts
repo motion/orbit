@@ -3,7 +3,7 @@ import { Person, SlackBitData, SlackPersonData, SlackSettingValues } from '@mcro
 import { SettingEntity } from '../../entities/SettingEntity'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
-import { SlackUser } from './SlackTypes'
+import { SlackUser } from '../../loaders/slack/SlackTypes'
 
 /**
  * Creates a Slack Person.

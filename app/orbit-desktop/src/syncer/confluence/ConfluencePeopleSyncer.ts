@@ -6,8 +6,8 @@ import { SettingEntity } from '../../entities/SettingEntity'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { ConfluenceLoader } from './ConfluenceLoader'
-import { ConfluenceUser } from './ConfluenceTypes'
+import { ConfluenceLoader } from '../../loaders/confluence/ConfluenceLoader'
+import { ConfluenceUser } from '../../loaders/confluence/ConfluenceTypes'
 import { createOrUpdatePersonBits } from '../../repository'
 
 const log = new Logger('syncer:confluence:people')

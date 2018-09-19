@@ -7,8 +7,8 @@ import { createOrUpdatePersonBits } from '../../repository'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { JiraLoader } from './JiraLoader'
-import { JiraUser } from './JiraTypes'
+import { JiraLoader } from '../../loaders/jira/JiraLoader'
+import { JiraUser } from '../../loaders/jira/JiraTypes'
 
 const log = new Logger('syncer:jira:people')
 

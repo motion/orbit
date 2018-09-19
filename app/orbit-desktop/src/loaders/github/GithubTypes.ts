@@ -1,3 +1,47 @@
+import { GithubRepository } from '@mcro/models'
+
+export type GithubRepositoryQueryResult = {
+  viewer: {
+    repositories: {
+      edges: {
+        cursor: string
+        node: GithubRepository
+      }[]
+      pageInfo: {
+        hasNextPage: boolean
+      }
+      totalCount: number
+    }
+  }
+  rateLimit: {
+    limit: number
+    cost: number
+    remaining: number
+    resetAt: string
+  }
+}
+
+export type GithubOrganizationsQueryResult = {
+  viewer: {
+    organizations: {
+      edges: {
+        cursor: string
+        node: GithubOrganization
+      }[]
+      pageInfo: {
+        hasNextPage: boolean
+      }
+      totalCount: number
+    }
+  }
+  rateLimit: {
+    limit: number
+    cost: number
+    remaining: number
+    resetAt: string
+  }
+}
+
 export type GithubIssueQueryResult = {
   repository: {
     id: string
@@ -19,6 +63,11 @@ export type GithubIssueQueryResult = {
     remaining: number
     resetAt: string
   }
+}
+
+export type GithubOrganization = {
+  id: string
+  name: string
 }
 
 export type GithubIssue = {

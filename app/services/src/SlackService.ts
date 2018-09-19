@@ -39,8 +39,6 @@ export class SlackService {
     this.allChannels = channels
   }
 
-  dispose() {}
-
   get activeChannelIds() {
     const settings = (this.setting.values as any).channels
     if (!settings) {
@@ -56,45 +54,4 @@ export class SlackService {
     )
   }
 
-  getChannelHistory = async options => {
-    const res = await this.slack.channels.history(options)
-    return res.messages
-  }
-
-  channelHistory = async ({ oldest, max = 5000, ...rest }) => {
-    const oldestMessageTime = messages => messages[messages.length - 1].ts
-    // initial results
-    const options: SlackOpts = {
-      count: max,
-      oldest,
-      ...rest,
-    }
-    let results = await this.getChannelHistory(options)
-    if (!results.length) {
-      return results
-    }
-    // iterate until all found
-    while (results.length < max) {
-      // 1000 is max per-call
-      const count = Math.min(1000, max - results.length)
-      const moreResults = await this.getChannelHistory({
-        count,
-        oldest: oldest || oldestMessageTime(results),
-        ...rest,
-      })
-      if (!moreResults) {
-        break
-      }
-      results = [...results, ...moreResults]
-      // reached end
-      if (moreResults.length < count) {
-        break
-      }
-      // throttle
-      if (results.length > 2000) {
-        await sleep(300)
-      }
-    }
-    return results
-  }
 }

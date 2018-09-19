@@ -10,8 +10,8 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
 import { SyncerUtils } from '../core/SyncerUtils'
-import { JiraLoader } from './JiraLoader'
-import { JiraIssue } from './JiraTypes'
+import { JiraLoader } from '../../loaders/jira/JiraLoader'
+import { JiraIssue } from '../../loaders/jira/JiraTypes'
 
 const log = new Logger('syncer:jira:issue')
 

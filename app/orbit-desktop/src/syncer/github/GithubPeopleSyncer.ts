@@ -1,13 +1,12 @@
 import { Logger } from '@mcro/logger'
-import { GithubPersonData, GithubSettingValues, Setting } from '@mcro/models'
-import { Person } from '@mcro/models'
-import { uniq } from 'lodash'
+import { GithubPersonData, GithubSettingValues, Person, Setting } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { GithubLoader } from '../../loaders/github/GithubLoader'
+import { GithubOrganization } from '../../loaders/github/GithubTypes'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { GithubLoader } from './GithubLoader'
 import { GithubPersonFactory } from './GithubPersonFactory'
 
 const log = new Logger('syncer:github:people')
@@ -27,61 +26,39 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
    * Runs people syncronization.
    */
   async run() {
+
     // get all organizations from settings we need to sync
-    const organizations = this.getOrganizations()
+    const organizations = await this.loader.loadOrganizations()
 
     // if no repositories were selected in settings, we don't do anything
     if (!organizations.length) {
-      log.verbose('no repositories were selected in the settings, skip sync')
+      log.verbose(`no repositories were selected in the settings, skip sync`)
       return
     } else {
-      log.verbose('got organizations to load people from', organizations)
+      log.verbose(`got organizations to load people from`, organizations)
     }
 
     // get all the people we have in the database for this integration
-    log.timer('load synced people from the database')
+    log.timer(`load synced people from the database`)
     const dbPeople = await this.loadDatabasePeople()
-    log.timer('load synced people from the database', dbPeople)
+    log.timer(`load synced people from the database`, dbPeople)
 
     // load people from the API and create entities for them
-    log.timer('load API users')
+    log.timer(`load API users`)
     const apiPeople = await this.loadApiPeople(organizations)
-    log.timer('load API users', apiPeople)
+    log.timer(`load API users`, apiPeople)
 
     // update in the database
     await PersonUtils.sync(log, apiPeople, dbPeople)
   }
 
   /**
-   * Gets Github Organizations which people we should extract of.
-   */
-  private getOrganizations(): string[] {
-    const values = this.setting.values as GithubSettingValues
-    if (!values.repos) {
-      log.info('No repos selected, ending')
-      return []
-    }
-    const repositoryPaths = Object.keys(
-      values.repos /* || {
-      "typeorm/javascript-example": true,
-      "typeorm/browser-example": true,
-      "typeorm/typeorm": true,
-    }*/,
-    )
-    return uniq(
-      repositoryPaths.map(repositoryPath => {
-        return repositoryPath.split('/')[0]
-      }),
-    )
-  }
-
-  /**
    * Loads people from the Github API.
    */
-  private async loadApiPeople(organizations: string[]) {
+  private async loadApiPeople(organizations: GithubOrganization[]) {
     const apiPeople: Person[] = []
     for (let organization of organizations) {
-      const organizationPeople = await this.loader.loadPeople(organization)
+      const organizationPeople = await this.loader.loadPeople(organization.name)
       for (let organizationPerson of organizationPeople) {
         const person = this.personFactory.create(organizationPerson)
         const hasSuchPerson = apiPeople.some(allPerson => allPerson.id === person.id)
@@ -100,11 +77,12 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     return getRepository(PersonEntity).find({
       select: {
         id: true,
-        contentHash: true,
+        contentHash: true
       },
       where: {
-        settingId: this.setting.id,
-      },
+        settingId: this.setting.id
+      }
     })
   }
+
 }

@@ -97,8 +97,9 @@ export class Root {
 
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
+
     // no need to wait for them...
-    await this.startSyncers()
+    // await this.startSyncers()
 
     this.oracle = new Oracle(oracleOptions)
 

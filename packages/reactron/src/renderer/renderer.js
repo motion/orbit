@@ -133,7 +133,7 @@ export default Reconciler({
 
     commitUpdate(instance, updatePayload, type, oldProps, newProps) {
       if (!instance) return
-      instance.applyProps(newProps, oldProps)
+      instance.applyProps.call(instance, newProps, oldProps)
     },
 
     commitTextUpdate(textInstance, oldText, newText) {

@@ -339,11 +339,11 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       hide,
       ...props
     } = this.props
-    console.log(
-      `${props.index} ${(model && (model.id || model.email)) || props.title}.${pane} ${
-        store.isSelected
-      }`,
-    )
+    // console.verbose(
+    //   `${props.index} ${(model && (model.id || model.email)) || props.title}.${pane} ${
+    //     store.isSelected
+    //   }`,
+    // )
     if (!model) {
       return this.getInner(props)
     }

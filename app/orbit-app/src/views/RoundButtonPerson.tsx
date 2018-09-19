@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { RoundButton } from './RoundButton'
+import { loadOne } from '@mcro/model-bridge'
+import { Person, PersonBitModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { ButtonProps } from '@mcro/ui'
-import { Person } from '@mcro/models'
-import { PersonBitRepository } from '@mcro/model-bridge'
+import * as React from 'react'
 import { Actions } from '../actions/Actions'
+import { RoundButton } from './RoundButton'
 
 type PersonButtonProps = ButtonProps & {
   person?: Person
@@ -12,8 +12,12 @@ type PersonButtonProps = ButtonProps & {
 
 const handleClick = (person: Person) => async e => {
   e.stopPropagation()
-  const personBit = await PersonBitRepository.findOne({
-    where: { email: person.email },
+  const personBit = await loadOne(PersonBitModel, {
+    args: {
+      where: {
+        email: person.email
+      },
+    }
   })
   if (!personBit) {
     console.log('no personBit found', person)

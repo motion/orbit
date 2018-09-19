@@ -1,6 +1,5 @@
 # nate
 
-- location search and type search nlp run
 - simple ocr would be killer demo
 - orbit orb:
   - click it once to turn on realtime search

@@ -46,9 +46,6 @@ const getSearchResults = async ({
   if (integrationFilters && integrationFilters.length) {
     andConditions.integration = { $in: integrationFilters }
   }
-  if (locationFilters && locationFilters.length) {
-    andConditions.location = { $in: locationFilters }
-  }
 
   if (query.length) {
     const likeString = `%${query.replace(/\s+/g, '%')}%`
@@ -88,6 +85,16 @@ const getSearchResults = async ({
         ...andConditions,
         people: {
           name: { $like: `%${name}%` },
+        },
+      })
+    }
+  }
+
+  if (locationFilters && locationFilters.length) {
+    for (const location of locationFilters) {
+      findOptions.where.push({
+        location: {
+          name: { $like: `%${location}%` },
         },
       })
     }

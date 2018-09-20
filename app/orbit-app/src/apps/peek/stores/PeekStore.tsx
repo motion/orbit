@@ -1,6 +1,6 @@
 import { cancel, ensure, on, react, sleep } from '@mcro/black'
 import { loadOne } from '@mcro/model-bridge'
-import { Bit, BitModel, PersonBit, PersonBitModel, Setting } from '@mcro/models'
+import { Bit, BitModel, PersonBit, PersonBitModel, Setting, SettingModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as React from 'react'
 import { Actions } from '../../../actions/Actions'
@@ -180,9 +180,9 @@ export class PeekStore {
         }
       })
     } else if (type === 'setting') {
-      selectedItem = await loadOne(BitModel, {
+      selectedItem = await loadOne(SettingModel, {
         args: {
-          id
+          where: { id },
         }
       })
     }

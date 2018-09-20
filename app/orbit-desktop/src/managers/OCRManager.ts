@@ -90,7 +90,7 @@ export class OCRManager {
   rescanOnNewAppState = react(
     () => Desktop.state.appState,
     () => {
-      this.rescanApp()
+      this.ocrCurrentApp()
     },
   )
 
@@ -138,7 +138,7 @@ export class OCRManager {
     this.oracle.onWindowChange((event, value) => {
       console.log('got window change', event, value)
       if (event === 'ScrollEvent') {
-        this.rescanApp()
+        this.ocrCurrentApp()
         return
       }
       // console.log(`got event ${event} ${JSON.stringify(value)}`)
@@ -202,7 +202,7 @@ export class OCRManager {
         this.setScreenChanged()
         if (this.isWatching === 'OCR') {
           log.info('reset is watching ocr to set back to app')
-          this.rescanApp()
+          this.ocrCurrentApp()
         }
       } else {
         // for not many clears, try it
@@ -214,7 +214,7 @@ export class OCRManager {
           // else just clear it all
           log.info('RESET oracle boxChanged (NOTTTTTTT App)')
           this.setScreenChanged()
-          this.rescanApp()
+          this.ocrCurrentApp()
         }
       }
     })
@@ -279,8 +279,8 @@ export class OCRManager {
   //   this.mouseHookIds = []
   // }
 
-  async rescanApp() {
-    console.log('rescanApp', Desktop.appState.id)
+  async ocrCurrentApp() {
+    console.log('ocrCurrentApp', Desktop.appState.id)
     clearTimeout(this.clearOCRTm)
     if (!Desktop.appState.id || Desktop.ocrState.paused) {
       console.log('No id or paused')
@@ -321,7 +321,7 @@ export class OCRManager {
     if (Desktop.ocrState.paused) {
       return
     }
-    log.info('rescanApp.resume', name)
+    log.info('ocrCurrentApp.resume', name)
     await this.oracle.resume()
     this.clearOCRTm = setTimeout(async () => {
       if (!this.hasResolvedOCR) {

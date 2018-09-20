@@ -200,7 +200,7 @@ final class Screen: NSObject {
   }
 
   func stop() {
-    print("Screen.stop (isRunning: \(self.isRunning)")
+    print("Screen.stop (isRunning: \(self.isRunning))")
     if !self.isRunning {
       return
     }
@@ -210,20 +210,14 @@ final class Screen: NSObject {
   }
 
   func resume() {
-    print("Screen.resume (isPaused: \(self.isPaused)")
-    if !self.isPaused {
-      return
-    }
+    print("Screen.resume (isPaused: \(self.isPaused))")
     self.isPaused = false
     self.start()
     self.emit("{ \"state\": { \"isPaused\": false } }")
   }
 
   func pause() {
-    print("Screen.pause (isPaused: \(self.isPaused)")
-    if self.isPaused {
-      return
-    }
+    print("Screen.pause (isPaused: \(self.isPaused))")
     self.isPaused = true
     self.stop()
     self.emit("{ \"state\": { \"isPaused\": true } }")

@@ -230,6 +230,7 @@
 				CFBEEE18202D838D005F925A /* Frameworks */,
 				CFBEEE19202D838D005F925A /* Resources */,
 				CF0BCD70202E0A790012723C /* CopyFiles */,
+				AED62E5D21533732006BB1F9 /* Carthage copy */,
 				CF0BCD7A202E0C120012723C /* CopyFiles */,
 				AE496FAB211BD8A5008319A0 /* ShellScript */,
 			);
@@ -304,10 +305,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE6EC269214B410200834167 /* PromiseKit.framework.dSYM in Resources */,
-				AEFA929B214B5AC800721292 /* run in Resources */,
-				CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */,
 				AE6EC26E214B410200834167 /* SwiftWebSocket.framework.dSYM in Resources */,
 				AE6EC26A214B410200834167 /* AXSwift.framework.dSYM in Resources */,
+				AEFA929B214B5AC800721292 /* run in Resources */,
+				CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,6 +331,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "touch ../../orbit-desktop/_/main.js\n";
+		};
+		AED62E5D21533732006BB1F9 /* Carthage copy */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../swindler/Carthage/Build/Mac/PromiseKit.framework",
+			);
+			name = "Carthage copy";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -17,6 +17,7 @@ const appPath = bundle =>
   Path.join(dir, '..', 'orbit', 'Build', 'Products', bundle, 'orbit.app', 'Contents', 'MacOS')
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
+
 export class Oracle {
   onClose?: Function
   name?: string
@@ -179,6 +180,22 @@ export class Oracle {
 
   defocus = async () => {
     await this.socketSend('defoc')
+  }
+
+  async requestAccessbility() {
+    await this.socketSend('reac')
+  }
+
+  async checkAccessbility() {
+    await this.socketSend('chac')
+  }
+
+  async startWatchingWindows() {
+    await this.socketSend('strw')
+  }
+
+  async stopWatchingWindows() {
+    await this.socketSend('stow')
   }
 
   onInfo = cb => {

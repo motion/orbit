@@ -5,7 +5,7 @@ import Cocoa
 import PromiseKit
 import Darwin
 
-let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
+let shouldRunOCR = true || ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
 let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
 let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
@@ -105,7 +105,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
 
     if shouldRunOCR == true {
-//      windo = Windo(emit: self.emit)
+      AXSwift.checkIsProcessTrusted(prompt: true)
+      windo = Windo(emit: self.emit)
+      
+      if UIElement.isProcessTrusted(withPrompt: true) {
+        print("TRUST")
+      } else {
+        NSLog("No accessibility API permission, exiting")
+      }
+      
+      windo.start()
+     
       do {
         screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
         screen.start()
@@ -329,6 +339,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     if action == "defo" {
       windo.defocus()
+      return
+    }
+    // check accessibility
+    if action == "chac" {
+      windo.checkAccessibility()
+      return
+    }
+    // request accessibility
+    if action == "reac" {
+      windo.requestAccessibility()
+      return
+    }
+    // start window watching
+    if action == "staw" {
+      windo.start()
+      return
+    }
+    // stop window watching
+    if action == "stow" {
+      windo.stop()
       return
     }
     print("received unknown message: \(text)")

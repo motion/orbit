@@ -15,7 +15,7 @@ let orbitAppId = "com.o.orbit"
 
 final class Windo {
   var emit: (String)->Void
-  var swindler: Swindler.State
+  var swindler: Swindler.State? = nil
   var observer: Observer!
   private var started = false
   private var currentId = ""
@@ -25,22 +25,34 @@ final class Windo {
   private var lastSent = ""
   @IBOutlet weak var window: NSWindow!
   private weak var accessibilityTimer: Timer?
-  private var hasPromptedAccessibility = false
   
   init(emit: @escaping (String)->Void) {
     self.emit = emit
-    self.swindler = Swindler.state
+  }
 
+  @objc func checkAccessibility() {
+    print("Checking accessibility...")
+    if AXSwift.checkIsProcessTrusted(prompt: false) {
+      self.emit("{ \"action\": \"accessible\", \"value\": false }")
+    } else {
+      self.emit("{ \"action\": \"accessible\", \"value\": false }")
+    }
+  }
+
+  @objc func requestAccessibility() {
+    print("Requesting accessibility...")
+    AXSwift.checkIsProcessTrusted(prompt: true)
     self.checkAccessibility()
-    // TODO: prompt again in certain cases, ideally make this prompt controllable from oracle.ts
-    self.hasPromptedAccessibility = true
+  }
+  
+  func stop() {
+    self.started = false
+    print("Need to figure out how to stop Swindler cleanly...")
+  }
+  
+  func start() {
+    self.swindler = Swindler.state
     
-//    self.accessibilityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-//      if self != nil {
-//        self!.checkAccessibility()
-//      }
-//    }
-
     var lastScroll = DispatchTime.now()
     NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in
       let msSinceLast = Int(Double(DispatchTime.now().uptimeNanoseconds - lastScroll.uptimeNanoseconds) / 1_000_000)
@@ -49,29 +61,7 @@ final class Windo {
         lastScroll = DispatchTime.now()
       }
     })
-  }
 
-  @objc private func checkAccessibility() {
-    if !AXSwift.checkIsProcessTrusted(prompt: !self.hasPromptedAccessibility) {
-      if started {
-        self.stop()
-      }
-      print("Not trusted as an AX process; please authorize and re-launch")
-      self.emit("{ \"action\": \"accessible\", \"value\": false }")
-    } else {
-      if !started {
-        self.start()
-      }
-      self.emit("{ \"action\": \"accessible\", \"value\": true }")
-    }
-  }
-  
-  private func stop() {
-    self.started = false
-    print("Need to figure out how to stop Swindler cleanly...")
-  }
-  
-  private func start() {
     self.started = true
     let app = NSWorkspace.shared.frontmostApplication!
     let x = try? Observer(processID: app.processIdentifier, callback: { (a: Observer, b: UIElement, c: AXNotification, d: [String : AnyObject]?) in
@@ -81,19 +71,19 @@ final class Windo {
     if (x != nil) { print("\(x!)") }
     
     // swindler bugs if started too quickly :/
-    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
       self.frontmostWindowChanged()
 //      self.swindler.on { (event: WindowCreatedEvent) in
 //        let window = event.window
 //        if window.application.bundleIdentifier == orbitAppId { return }
 //        self.emit("{ \"action\": \"WindowCreatedEvent\", \"value\": \"\(window.title.value)\" }")
 //      }
-      self.swindler.on { (event: WindowPosChangedEvent) in
+      self.swindler!.on { (event: WindowPosChangedEvent) in
         let position = [Int(event.newValue.x), Int(event.newValue.y)]
         print("pos changed \(position)")
         self.updatePosition(event.window, size: nil, position: position)
       }
-      self.swindler.on { (event: WindowSizeChangedEvent) in
+      self.swindler!.on { (event: WindowSizeChangedEvent) in
         let size = [Int(event.newValue.width), Int(event.newValue.height)]
         let position = self.getPosition() ?? [Int(event.window.position.value.x), Int(event.window.position.value.y)]
         self.updatePosition(event.window, size: size, position: position)
@@ -103,16 +93,16 @@ final class Windo {
 //        if window.application.bundleIdentifier == orbitAppId { return }
 //        self.emit("{ \"action\": \"WindowDestroyedEvent\", \"value\": \"\(window.title.value)\" }")
 //      }
-      self.swindler.on { (event: ApplicationMainWindowChangedEvent) in
+      self.swindler!.on { (event: ApplicationMainWindowChangedEvent) in
         self.frontmostWindowChanged()
       }
-      self.swindler.on { (event: FrontmostApplicationChangedEvent) in
+      self.swindler!.on { (event: FrontmostApplicationChangedEvent) in
         if event.newValue == nil { return }
         self.lastApp = self.currentApp
         self.currentApp = NSWorkspace.shared.frontmostApplication
         self.frontmostWindowChanged()
       }
-      self.swindler.on { (event: WindowTitleChangedEvent) in
+      self.swindler!.on { (event: WindowTitleChangedEvent) in
         self.frontmostWindowChanged()
       }
     }
@@ -153,7 +143,7 @@ final class Windo {
   }
   
   private func frontmostWindowChanged() {
-    guard let app = swindler.frontmostApplication.value else {
+    guard let app = swindler!.frontmostApplication.value else {
       print("no frontmost window")
       return
     }

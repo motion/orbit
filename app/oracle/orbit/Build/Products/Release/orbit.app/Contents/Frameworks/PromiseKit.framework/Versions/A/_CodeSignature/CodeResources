@@ -6,20 +6,108 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		rXKvvmZR7lRirbjKmlSKmf0w0Og=
+		Mim1QQrPIaAYk+zoPuMKKWiDP1E=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>Headers/AnyPromise.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			IpQfnU22pOXmzg/hbrYfhoMf0vQ=
+			</data>
+			<key>hash2</key>
+			<data>
+			bGvr7ZsICvjX1Mit3PH6iUQLqJptr03SfyqMxA+3BQY=
+			</data>
+		</dict>
+		<key>Headers/PromiseKit-Swift.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			1m+8gxfFVxFd/hW2MpmK7zo+wj8=
+			</data>
+			<key>hash2</key>
+			<data>
+			M7RDMsSYaFLRs6Np4QiXVdA3+MeyxZfMdDpkgfHeLVA=
+			</data>
+		</dict>
+		<key>Headers/PromiseKit.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			ApzA8hKPfi/nqaBD0gdLflnd2oc=
+			</data>
+			<key>hash2</key>
+			<data>
+			1i1pCxzo/Egj01wVg8yEW6vCuQ2svGQYRmqQw2v1idA=
+			</data>
+		</dict>
+		<key>Headers/fwd.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			VrHEF+nUNx4h3HFrEpArZIQ025E=
+			</data>
+			<key>hash2</key>
+			<data>
+			PqqYiE3fSm1nIEZatALL5EIuOL0jk/RGDDhtc8oRAo4=
+			</data>
+		</dict>
+		<key>Modules/PromiseKit.swiftmodule/x86_64.swiftdoc</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			WF3OiszFPGsfW6/z1vzZ4Kc4SvM=
+			</data>
+			<key>hash2</key>
+			<data>
+			2BsBO2sjp9X+Imyxs6ODaBEnqDRmen8lsDIhz4pujc8=
+			</data>
+		</dict>
+		<key>Modules/PromiseKit.swiftmodule/x86_64.swiftmodule</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			L6+iToklMWiyOKhdlwoVZeqVEkI=
+			</data>
+			<key>hash2</key>
+			<data>
+			XxOWCAX6vYa6V7+xQngYvQYMbI6pSrWlpmx1C0Aw0fk=
+			</data>
+		</dict>
+		<key>Modules/module.modulemap</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			9gadZGS0TEt96l/Zm5m2cu38COg=
+			</data>
+			<key>hash2</key>
+			<data>
+			Xej1YLQ4ONP01CsatnMw/EFNBghshHaZO/uwLrl7xR4=
+			</data>
+		</dict>
+		<key>PrivateHeaders/AnyPromise+Private.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			8DZJ7P83MbVw7l8xhHFK7eKm0W0=
+			</data>
+			<key>hash2</key>
+			<data>
+			rO7XJ7c6WFxXnwCxdczmBC9qv7G2m4/cF56dMy5hvbI=
+			</data>
+		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			rXKvvmZR7lRirbjKmlSKmf0w0Og=
+			Mim1QQrPIaAYk+zoPuMKKWiDP1E=
 			</data>
 			<key>hash2</key>
 			<data>
-			elYAg4Czjt/5dmpg2Lb2DbdRZ8P0Dv9WBJVOg1PfbT8=
+			yaf3qZhxoRNLLKyc8tkHRQEIu/HojhjD+Ka21KqmNhY=
 			</data>
 		</dict>
 	</dict>

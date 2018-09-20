@@ -20,14 +20,18 @@
 		2F86CEE41BD6DAD7007E8C29 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F86CEE31BD6DAD7007E8C29 /* State.swift */; };
 		2F9E31A91BF050AF00EAD248 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9E31A81BF050AF00EAD248 /* Property.swift */; };
 		2FEEA2E31C1E6E9200CD515E /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FEEA2E21C1E6E9200CD515E /* Log.swift */; };
+		AED62E522153339B006BB1F9 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED62E502153339B006BB1F9 /* PromiseKit.framework */; };
+		AED62E532153339B006BB1F9 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED62E512153339B006BB1F9 /* AXSwift.framework */; };
+		AED62E5821533655006BB1F9 /* PromiseKit.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AED62E5621533655006BB1F9 /* PromiseKit.framework.dSYM */; };
+		AED62E5921533655006BB1F9 /* AXSwift.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AED62E5721533655006BB1F9 /* AXSwift.framework.dSYM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		CFCA9C28202D7E8400DFCABE /* CopyFiles */ = {
+		AED62E5B215336DE006BB1F9 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 16;
+			dstSubfolderSpec = 7;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,13 +58,10 @@
 		2FEEA2AC1C1E041200CD515E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2FEEA2C41C1E09A300CD515E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		2FEEA2E21C1E6E9200CD515E /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
-		67B294155BAF709C01A3A7D2 /* Pods_Swindler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Swindler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		95F8A5C2288829AB1B277B04 /* Pods_SwindlerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwindlerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CFBEEE02202D818F005F925A /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/Mac/PromiseKit.framework; sourceTree = "<group>"; };
-		CFBEEE03202D818F005F925A /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
-		CFBEEE06202D819A005F925A /* PromiseKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PromiseKit.framework.dSYM; path = Carthage/Build/Mac/PromiseKit.framework.dSYM; sourceTree = "<group>"; };
-		CFBEEE07202D819A005F925A /* AXSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = AXSwift.framework.dSYM; path = Carthage/Build/Mac/AXSwift.framework.dSYM; sourceTree = "<group>"; };
-		FC881B514AADAF10E329E46D /* Pods_SwindlerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwindlerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AED62E502153339B006BB1F9 /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/Mac/PromiseKit.framework; sourceTree = "<group>"; };
+		AED62E512153339B006BB1F9 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
+		AED62E5621533655006BB1F9 /* PromiseKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PromiseKit.framework.dSYM; path = Carthage/Build/Mac/PromiseKit.framework.dSYM; sourceTree = "<group>"; };
+		AED62E5721533655006BB1F9 /* AXSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = AXSwift.framework.dSYM; path = Carthage/Build/Mac/AXSwift.framework.dSYM; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +69,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AED62E522153339B006BB1F9 /* PromiseKit.framework in Frameworks */,
+				AED62E532153339B006BB1F9 /* AXSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,8 +89,8 @@
 		2F86CEBC1BD60117007E8C29 = {
 			isa = PBXGroup;
 			children = (
-				CFBEEE07202D819A005F925A /* AXSwift.framework.dSYM */,
-				CFBEEE06202D819A005F925A /* PromiseKit.framework.dSYM */,
+				AED62E5721533655006BB1F9 /* AXSwift.framework.dSYM */,
+				AED62E5621533655006BB1F9 /* PromiseKit.framework.dSYM */,
 				2F86CEC81BD60117007E8C29 /* Swindler */,
 				2F86CEC71BD60117007E8C29 /* Products */,
 				9E4447A2F5E7EB6E92464F87 /* Frameworks */,
@@ -130,13 +133,10 @@
 		9E4447A2F5E7EB6E92464F87 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CFBEEE03202D818F005F925A /* AXSwift.framework */,
-				CFBEEE02202D818F005F925A /* PromiseKit.framework */,
+				AED62E512153339B006BB1F9 /* AXSwift.framework */,
+				AED62E502153339B006BB1F9 /* PromiseKit.framework */,
 				2FEEA2C41C1E09A300CD515E /* AppKit.framework */,
 				2FEEA2AC1C1E041200CD515E /* XCTest.framework */,
-				67B294155BAF709C01A3A7D2 /* Pods_Swindler.framework */,
-				95F8A5C2288829AB1B277B04 /* Pods_SwindlerTests.framework */,
-				FC881B514AADAF10E329E46D /* Pods_SwindlerExample.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -164,7 +164,8 @@
 				2F86CEC21BD60117007E8C29 /* Frameworks */,
 				2F86CEC31BD60117007E8C29 /* Headers */,
 				2F86CEC41BD60117007E8C29 /* Resources */,
-				CFCA9C28202D7E8400DFCABE /* CopyFiles */,
+				AED62E5B215336DE006BB1F9 /* CopyFiles */,
+				AED62E5C215336F6006BB1F9 /* Carthage copy */,
 			);
 			buildRules = (
 			);
@@ -214,10 +215,34 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AED62E5821533655006BB1F9 /* PromiseKit.framework.dSYM in Resources */,
+				AED62E5921533655006BB1F9 /* AXSwift.framework.dSYM in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AED62E5C215336F6006BB1F9 /* Carthage copy */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/PromiseKit.framework",
+			);
+			name = "Carthage copy";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2F86CEC11BD60117007E8C29 /* Sources */ = {

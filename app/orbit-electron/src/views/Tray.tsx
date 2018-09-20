@@ -32,6 +32,9 @@ class TrayStore {
   })
 
   toggleRealtime = async () => {
+    // for now just set it here
+    Electron.setState({ realTime: true })
+
     console.log('toggling realtime')
     const generalSetting = await SettingRepository.findOne(generalSettingWhere)
     await SettingRepository.save({

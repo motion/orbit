@@ -44,6 +44,9 @@ export class OCRManager {
   curAppID = ''
   curAppName = ''
   watchSettings = { name: '', settings: {} }
+  lastAppName = null
+  started = false
+  isWatchingWindows = false
   oracle: Oracle
 
   constructor(oracle: Oracle) {
@@ -57,20 +60,40 @@ export class OCRManager {
       return
     }
     this.setupOracleListeners()
+    this.started = true
   }
 
+  startOCROnActive = react(
+    () => Electron.state.realTime,
+    async (accepts, { when }) => {
+      await when(() => this.started)
+      console.log('accepted real time', accepts)
+      if (accepts) {
+        this.oracle.checkAccessbility()
+        // we start watching once accessbile comes down, see onAccessible
+      } else {
+        if (this.isWatchingWindows) {
+          this.oracle.stopWatchingWindows()
+          this.isWatchingWindows = false
+        }
+      }
+    },
+  )
+
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
-  lastAppName = null
 
   setupOracleListeners() {
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
-      console.log('is accessible, start watching stuff', isAccessible)
+      console.log('isAccessible?', isAccessible)
       Desktop.setState({
         operatingSystem: { isAccessible },
       })
       if (isAccessible) {
-        // this.watchMouse()
+        this.oracle.startWatchingWindows()
+        this.isWatchingWindows = true
+      } else {
+        this.oracle.requestAccessbility()
       }
     })
 

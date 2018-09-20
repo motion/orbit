@@ -42,6 +42,7 @@ final class Windo {
   @objc func requestAccessibility() {
     print("Requesting accessibility...")
     AXSwift.checkIsProcessTrusted(prompt: true)
+    print("done checking... send info")
     self.checkAccessibility()
   }
   

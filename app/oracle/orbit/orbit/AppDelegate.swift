@@ -104,6 +104,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    
+    let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
+    let options = [checkOptPrompt: true]
+    //translate into boolean value
+    let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
+    
+    print("WHAT \(accessEnabled)")
 
     if shouldRunOCR == true {
       AXSwift.checkIsProcessTrusted(prompt: true)

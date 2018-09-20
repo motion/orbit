@@ -189,7 +189,7 @@ export class Oracle {
     await this.socketSend('defoc')
   }
 
-  async requestAccessbility() {
+  async requestAccessibility() {
     await this.socketSend('reac')
   }
 

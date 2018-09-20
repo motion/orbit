@@ -93,7 +93,7 @@ export class OCRManager {
         this.oracle.startWatchingWindows()
         this.isWatchingWindows = true
       } else {
-        this.oracle.requestAccessbility()
+        this.oracle.requestAccessibility()
       }
     })
 

@@ -1,5 +1,6 @@
 import { Bridge, proxySetters } from '@mcro/mobx-bridge'
 import { store, deep } from '@mcro/black'
+import { App } from './App'
 
 // store export
 export let Desktop = null as DesktopStore
@@ -111,7 +112,7 @@ class DesktopStore {
       console.log('orbitFocusState, either no peekApp or no appFocusState')
       return this.defaultFocus
     }
-    const focusState = Desktop.state.appFocusState[this.peekApp.id]
+    const focusState = Desktop.state.appFocusState[App.peekState.id]
     if (!focusState) {
       console.log('strange, no focus state for orbit, maybe off a frame')
       return this.defaultFocus

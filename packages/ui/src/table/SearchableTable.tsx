@@ -34,13 +34,11 @@ const filterRowsFactory = (filters: Array<Filter>, searchTerm: string) => (
         return filter.value.length === 0 || filter.value.indexOf(row.type) > -1
       } else if (filter.type === 'include') {
         return (
-          textContent(row.columns[filter.key].value).toLowerCase() ===
-          filter.value.toLowerCase()
+          textContent(row.columns[filter.key].value).toLowerCase() === filter.value.toLowerCase()
         )
       } else if (filter.type === 'exclude') {
         return (
-          textContent(row.columns[filter.key].value).toLowerCase() !==
-          filter.value.toLowerCase()
+          textContent(row.columns[filter.key].value).toLowerCase() !== filter.value.toLowerCase()
         )
       } else {
         return true
@@ -83,21 +81,18 @@ class SearchableManagedTable extends React.PureComponent<Props> {
   }
 
   render() {
-    const {
-      addFilter,
-      searchTerm: _searchTerm,
-      filters: _filters,
-      ...props
-    } = this.props
-    return (
-      <ManagedTable
-        {...props}
-        filter={this.state.filterRows}
-        onAddFilter={addFilter}
-      />
-    )
+    const { addFilter, searchTerm: _searchTerm, filters: _filters, ...props } = this.props
+    return <ManagedTable {...props} filter={this.state.filterRows} onAddFilter={addFilter} />
   }
 }
 
-// @ts-ignore
-export const SearchableTable = Searchable(SearchableManagedTable)
+export const SearchableTable = props => (
+  <Searchable {...props}>
+    {({ searchBar, ...rest }) => (
+      <>
+        {searchBar}
+        <SearchableManagedTable {...props} {...rest} />
+      </>
+    )}
+  </Searchable>
+)

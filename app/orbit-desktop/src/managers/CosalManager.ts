@@ -1,8 +1,8 @@
-import { Logger } from '@mcro/logger'
-import { getRepository } from '@mcro/mediator/node_modules/typeorm'
-import { BitEntity } from '../entities/BitEntity'
+// import { Logger } from '@mcro/logger'
+// import { getRepository } from '@mcro/model-bridge'
+// import { BitEntity } from '../entities/BitEntity'
 
-const log = new Logger('CosalManager')
+// const log = new Logger('CosalManager')
 
 export class CosalManager {
   start = () => {

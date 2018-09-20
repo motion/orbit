@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { HeaderProps } from './HeaderProps'
 import { Actions } from '../../../actions/Actions'
 
@@ -100,6 +100,10 @@ export class HeaderStore {
 
   onUnHoverIcon = () => {
     this.iconHovered = false
+  }
+
+  onClickOrb = () => {
+    App.sendMessage(Desktop, Desktop.messages.TOGGLE_OCR)
   }
 
   goHome = () => {

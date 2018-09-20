@@ -3,12 +3,11 @@ import { view } from '@mcro/black'
 import * as PeekBitPanes from './bitPanes'
 import { PeekItemResolver } from '../views/PeekItemResolver'
 import { capitalize } from 'lodash'
-import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 // import { PeekRelated } from '../views/PeekRelated'
-import { View } from '@mcro/ui'
+import { View, ListRow, Searchable, SearchableProps } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
 import { Bit } from '@mcro/models'
 import { DateFormat } from '../../../views/DateFormat'
@@ -19,12 +18,9 @@ import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/
 import { ItemResolverDecorationContext } from '../../../helpers/contexts/ItemResolverDecorationContext'
 import { VerticalSpace } from '../../../views'
 
-const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
-  return children({
-    searchTerm,
-    searchBar,
-  })
-})
+const SearchablePeek = ({ children, ...props }: SearchableProps) => (
+  <Searchable {...props}>{searchableProps => children(searchableProps)}</Searchable>
+)
 
 const Cmd = view({
   opacity: 0.6,
@@ -103,7 +99,7 @@ export const PeekBit = ({
                 <>
                   <TitleBarSpace />
                   {!!icon && (
-                    <UI.ListRow>
+                    <ListRow>
                       <TitleBarButton
                         onClick={() => {
                           Actions.open(locationLink)
@@ -120,7 +116,7 @@ export const PeekBit = ({
                         tooltip="Open"
                         icon="arrowshare91"
                       />
-                    </UI.ListRow>
+                    </ListRow>
                   )}
                 </>
               }
@@ -146,7 +142,7 @@ export const PeekBit = ({
                           <DateFormat date={updatedAt} />
                         </PeekBar.Text>
                       )}
-                      <UI.View flex={1} />
+                      <View flex={1} />
                       <PeekBar.Section>
                         <PeekBar.Button onClick={peekStore.copyItem}>
                           Copy Link <Cmd>⌘+Shift+C</Cmd>

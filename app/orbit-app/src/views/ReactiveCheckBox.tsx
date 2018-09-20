@@ -7,8 +7,16 @@ type Props = {
   [key: string]: any
 }
 
+export const CheckBox = view({
+  margin: 'auto',
+})
+
+CheckBox.defaultProps = {
+  tagName: 'input',
+  type: 'checkbox',
+}
+
 const preventClick = e => {
-  console.log('stop it')
   e.preventDefault()
   e.stopPropagation()
 }

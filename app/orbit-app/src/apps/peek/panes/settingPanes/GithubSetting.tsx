@@ -1,19 +1,16 @@
 import { react, view } from '@mcro/black'
-import {
-  GithubRepositoryModel,
-  GithubSettingValues,
-  SettingModel,
-} from '@mcro/models'
+import produce from 'immer'
+import { GithubRepositoryModel, GithubSettingValues, SettingModel } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
-import * as UI from '@mcro/ui'
-import { Text } from '@mcro/ui'
+import { Text, Row, View, Tabs, Tab, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { loadMany, save } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
-import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import { ReactiveCheckBox, CheckBox } from '../../../../views/ReactiveCheckBox'
 import { HideablePane } from '../../views/HideablePane'
 import { AppStatusPane } from './AppStatusPane'
 import { SettingPaneProps } from './SettingPaneProps'
+import { HorizontalSpace } from '../../../../views'
 
 const columnSizes = {
   repo: 'flex',
@@ -61,13 +58,28 @@ class GithubSettingStore {
     direction: 'up',
   }
 
+  async didMount() {
+    this.repositories = await loadMany(GithubRepositoryModel, {
+      args: {
+        settingId: this.props.setting.id,
+      },
+    })
+  }
+
   get setting() {
     return this.props.setting
   }
 
-  get values() {
-    return this.setting.values as GithubSettingValues
-  }
+  values = { ...this.setting.values } as GithubSettingValues
+
+  saveSettingOnValuesUpdate = react(
+    () => this.values,
+    values => {
+      console.log('saving values...', values)
+      this.setting.values = values
+      save(SettingModel, this.setting)
+    },
+  )
 
   onSortOrder = newOrder => {
     this.sortOrder = newOrder
@@ -104,7 +116,12 @@ class GithubSettingStore {
             },
             active: {
               sortValue: this.whitelistStatus(repository),
-              value: <ReactiveCheckBox onChange={this.changeWhitelist(repository)} isActive={this.whitelistStatus(repository)} />,
+              value: (
+                <ReactiveCheckBox
+                  onChange={this.changeWhitelist(repository)}
+                  isActive={this.whitelistStatus(repository)}
+                />
+              ),
             },
           },
         }
@@ -120,43 +137,41 @@ class GithubSettingStore {
   }
 
   toggleSyncAll = () => {
-
-    // if sync all is already enable, register all repositories in whitelist
-    if (this.values.whitelist === undefined) {
-      this.values.whitelist = this.repositories.map(repository => repository.nameWithOwner)
-
-    } else { // otherwise enable "sync all" mode
-      this.values.whitelist = undefined
-    }
-    save(SettingModel, this.setting)
+    this.values = produce(this.values, values => {
+      // if sync all is already enable, register all repositories in whitelist
+      if (values.whitelist === undefined) {
+        values.whitelist = this.repositories.map(repository => repository.nameWithOwner)
+      } else {
+        // otherwise enable "sync all" mode
+        values.whitelist = undefined
+      }
+    })
   }
 
   whitelistStatus = (repository: GithubRepository) => () => {
-
     // if whitelist is undefined we are in "sync all" mode
-    if (this.values.whitelist === undefined)
+    if (this.values.whitelist === undefined) {
       return true
-
+    }
     return this.values.whitelist.indexOf(repository.nameWithOwner) !== -1
   }
 
-  isSyncAllEnabled = () => {
+  get isSyncAllEnabled() {
     return this.values.whitelist === undefined
   }
 
   changeWhitelist = (repository: GithubRepository) => () => {
-    if (!this.values.whitelist) {
-      this.values.whitelist = this.repositories
-        .map(repository => repository.nameWithOwner)
-    }
-
-    const index = this.values.whitelist.indexOf(repository.nameWithOwner)
-    if (index === -1) {
-      this.values.whitelist.push(repository.nameWithOwner)
-    } else {
-      this.values.whitelist.splice(index, 1)
-    }
-    save(SettingModel, this.setting)
+    this.values = produce(this.values, values => {
+      if (!values.whitelist) {
+        values.whitelist = this.repositories.map(repository => repository.nameWithOwner)
+      }
+      const index = values.whitelist.indexOf(repository.nameWithOwner)
+      if (index === -1) {
+        values.whitelist.push(repository.nameWithOwner)
+      } else {
+        values.whitelist.splice(index, 1)
+      }
+    })
   }
 }
 
@@ -165,23 +180,14 @@ class GithubSettingStore {
 export class GithubSetting extends React.Component<
   SettingPaneProps & { store: GithubSettingStore }
 > {
-
-  async componentDidMount() {
-    this.props.store.repositories = await loadMany(GithubRepositoryModel, {
-      args: {
-        settingId: this.props.setting.id
-      }
-    })
-  }
-
   render() {
     const { store, children } = this.props
     return children({
       belowHead: (
-        <UI.Tabs active={store.active} onActive={store.setActiveKey}>
-          <UI.Tab key="status" width="50%" label="Status" />
-          <UI.Tab key="repos" width="50%" label="Manage" />
-        </UI.Tabs>
+        <Tabs active={store.active} onActive={store.setActiveKey}>
+          <Tab key="status" width="50%" label="Status" />
+          <Tab key="repos" width="50%" label="Manage" />
+        </Tabs>
       ),
       content: (
         <>
@@ -189,26 +195,35 @@ export class GithubSetting extends React.Component<
             <AppStatusPane setting={store.setting} />
           </HideablePane>
           <HideablePane invisible={store.active !== 'repos'}>
-            <div>
-              <ReactiveCheckBox onChange={store.toggleSyncAll} isActive={store.isSyncAllEnabled} /> Sync all
-            </div>
-            <UI.SearchableTable
-              virtual
-              rowLineHeight={28}
-              floating={false}
-              columnSizes={columnSizes}
-              columns={columns}
-              // onRowHighlighted={this.onRowHighlighted}
-              sortOrder={store.sortOrder}
-              onSort={store.onSortOrder}
-              multiHighlight
-              rows={store.rows}
-              bodyPlaceholder={
-                <div style={{ margin: 'auto' }}>
-                  <UI.Text size={1.2}>Loading...</UI.Text>
-                </div>
-              }
-            />
+            <Row padding={[6, 15]}>
+              <View flex={1} />
+              <Text>Sync all</Text>
+              <HorizontalSpace />
+              <CheckBox onChange={store.toggleSyncAll} checked={store.isSyncAllEnabled} />
+            </Row>
+            <View
+              flex={1}
+              opacity={store.isSyncAllEnabled ? 0.5 : 1}
+              pointerEvents={store.isSyncAllEnabled ? 'none' : 'auto'}
+            >
+              <SearchableTable
+                virtual
+                rowLineHeight={28}
+                floating={false}
+                columnSizes={columnSizes}
+                columns={columns}
+                // onRowHighlighted={this.onRowHighlighted}
+                sortOrder={store.sortOrder}
+                onSort={store.onSortOrder}
+                multiHighlight
+                rows={store.rows}
+                bodyPlaceholder={
+                  <div style={{ margin: 'auto' }}>
+                    <Text size={1.2}>Loading...</Text>
+                  </div>
+                }
+              />
+            </View>
           </HideablePane>
         </>
       ),

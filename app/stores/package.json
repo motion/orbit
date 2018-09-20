@@ -1,7 +1,7 @@
 {
   "name": "@mcro/stores",
   "version": "2.2.1",
-  "main": "_/index",
+  "main": "_/index.js",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

@@ -1,31 +1,25 @@
 import { Logger } from '@mcro/logger'
-import { sequence } from '../../utils'
+import { Setting } from '@mcro/models'
+import * as path from 'path'
+import { sequence } from '../utils'
+import { DriveFetcher } from './DriveFetcher'
 import {
   googleDriveFileCommentQuery,
   googleDriveFileExportQuery,
   googleDriveFileQuery,
   googleDriveFileRevisionQuery,
-} from './GDriveQueries'
-import {
-  GDriveComment,
-  GDriveFile,
-  GDriveLoadedFile,
-  GDriveLoadedUser,
-  GDriveRevision,
-} from './GDriveTypes'
-import { GDriveFetcher } from './GDriveFetcher'
-import * as path from 'path'
-import { SettingEntity } from '../../entities/SettingEntity'
+} from './DriveQueries'
+import { DriveComment, DriveFile, DriveLoadedFile, DriveLoadedUser, DriveRevision } from './DriveTypes'
 
 const log = new Logger('syncer:gdrive')
 
-export class GDriveLoader {
-  fetcher: GDriveFetcher
-  files: GDriveLoadedFile[] = []
-  users: GDriveLoadedUser[] = []
+export class DriveLoader {
+  fetcher: DriveFetcher
+  files: DriveLoadedFile[] = []
+  users: DriveLoadedUser[] = []
 
-  constructor(setting: SettingEntity) {
-    this.fetcher = new GDriveFetcher(setting)
+  constructor(setting: Setting) {
+    this.fetcher = new DriveFetcher(setting)
   }
 
   async load(): Promise<void> {
@@ -38,7 +32,7 @@ export class GDriveLoader {
 
     this.files = await sequence(files, async file => {
       // try to find a file folder to create a Bit.location later on
-      let parent: GDriveFile
+      let parent: DriveFile
       if (file.parents && file.parents.length)
         parent = files.find(otherFile => otherFile.id === file.parents[0])
 
@@ -68,7 +62,7 @@ export class GDriveLoader {
         })
         .forEach(user => {
           // make sure we don't have duplicate users - find user by email if it already was added
-          let foundUser: GDriveLoadedUser = this.users.find(
+          let foundUser: DriveLoadedUser = this.users.find(
             foundUser => foundUser.name === user.displayName,
           )
           if (!foundUser) {
@@ -92,7 +86,7 @@ export class GDriveLoader {
     log.info(`created ${this.users.length} users`, this.users)
   }
 
-  private async loadFiles(pageToken?: string): Promise<GDriveFile[]> {
+  private async loadFiles(pageToken?: string): Promise<DriveFile[]> {
     const result = await this.fetcher.fetch(googleDriveFileQuery(pageToken))
     if (result.nextPageToken) {
       const nextPageFiles = await this.loadFiles(result.nextPageToken)
@@ -101,7 +95,7 @@ export class GDriveLoader {
     return result.files
   }
 
-  private async loadFilesContent(file: GDriveFile): Promise<string> {
+  private async loadFilesContent(file: DriveFile): Promise<string> {
     if (file.mimeType !== 'application/vnd.google-apps.document') return ''
 
     log.info(`loading file content for`, file)
@@ -113,9 +107,9 @@ export class GDriveLoader {
   }
 
   private async loadComments(
-    file: GDriveFile,
+    file: DriveFile,
     pageToken?: string,
-  ): Promise<GDriveComment[]> {
+  ): Promise<DriveComment[]> {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map') return []
 
@@ -135,9 +129,9 @@ export class GDriveLoader {
   }
 
   private async loadRevisions(
-    file: GDriveFile,
+    file: DriveFile,
     pageToken?: string,
-  ): Promise<GDriveRevision[]> {
+  ): Promise<DriveRevision[]> {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
 
@@ -156,7 +150,7 @@ export class GDriveLoader {
     return result.revisions
   }
 
-  private async downloadThumbnail(file: GDriveFile): Promise<string> {
+  private async downloadThumbnail(file: DriveFile): Promise<string> {
     if (!file.thumbnailLink) return ''
 
     log.info(`downloading file thumbnail for`, file)

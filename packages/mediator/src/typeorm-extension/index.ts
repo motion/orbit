@@ -48,8 +48,8 @@ export function typeormResolvers(
         }),
       )
       resolvers.push(
-        resolveSave(model, async model => {
-          return connection.getRepository(entityResolver.entity).save(model)
+        resolveSave(model, async args => {
+          return connection.getRepository(entityResolver.entity).save(args)
         }),
       )
       resolvers.push(

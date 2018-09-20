@@ -1,10 +1,11 @@
+import { save } from '@mcro/model-bridge'
+import { SettingModel } from '@mcro/models'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, compose } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
-import { SettingRepository } from '@mcro/model-bridge'
 import { GmailSettingValues } from '@mcro/models'
 import { AppStatusPane } from './AppStatusPane'
 
@@ -81,7 +82,7 @@ class GmailSettingStore {
         [fullName]: e.target.checked,
       },
     }
-    await SettingRepository.save(this.setting)
+    await save(SettingModel, this.setting)
   }
 
   isSyncing = fullName => {

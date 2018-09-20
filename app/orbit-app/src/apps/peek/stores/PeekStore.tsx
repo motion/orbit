@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { react, on, ensure, cancel, sleep } from '@mcro/black'
+import { cancel, ensure, on, react, sleep } from '@mcro/black'
+import { loadOne } from '@mcro/model-bridge'
+import { Bit, BitModel, PersonBit, PersonBitModel, Setting, SettingModel } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { BitRepository, SettingRepository, PersonBitRepository } from '@mcro/model-bridge'
-import { Bit, Setting, PersonBit } from '@mcro/models'
+import * as React from 'react'
 import { Actions } from '../../../actions/Actions'
 
 type PeekStoreItemState = typeof App.peekState & {
@@ -166,17 +166,25 @@ export class PeekStore {
     const { id, type } = this.appState.appConfig
     let selectedItem = null
     if (type === 'person' || type === 'person-bit') {
-      selectedItem = await PersonBitRepository.findOne({
-        where: { email: id },
-        relations: ['people'],
+      selectedItem = await loadOne(PersonBitModel, {
+        args: {
+          where: { email: id },
+          relations: ['people'],
+        }
       })
     } else if (type === 'bit') {
-      selectedItem = await BitRepository.findOne({
-        where: { id },
-        relations: ['people'],
+      selectedItem = await loadOne(BitModel, {
+        args:  {
+          where: { id },
+          relations: ['people'],
+        }
       })
     } else if (type === 'setting') {
-      selectedItem = await SettingRepository.findOne(id)
+      selectedItem = await loadOne(SettingModel, {
+        args: {
+          where: { id },
+        }
+      })
     }
     return selectedItem
   }

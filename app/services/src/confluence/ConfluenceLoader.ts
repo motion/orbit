@@ -1,7 +1,6 @@
 import { Logger } from '@mcro/logger'
-import { Bit, ConfluenceSettingValues, Person } from '@mcro/models'
-import { SettingEntity } from '../../entities/SettingEntity'
-import { queryObjectToQueryString } from '../../utils'
+import { ConfluenceSettingValues, Setting } from '@mcro/models'
+import { queryObjectToQueryString } from '../utils'
 import {
   ConfluenceCollection,
   ConfluenceComment,
@@ -16,9 +15,9 @@ const log = new Logger('syncer:confluence:loader')
  * Loads confluence data from its API.
  */
 export class ConfluenceLoader {
-  private setting: SettingEntity
+  private setting: Setting
 
-  constructor(setting: SettingEntity) {
+  constructor(setting: Setting) {
     this.setting = setting
   }
 

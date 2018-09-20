@@ -1,24 +1,9 @@
 /**
- * Slack message.
- *
- * @see https://api.slack.com/methods/channels.history
- */
-export type SlackMessage = {
-  type: string
-  subtype: string
-  user: string
-  text: string
-  ts: string
-  is_starred: boolean
-  bot_id: string
-}
-
-/**
  * Slack channel.
  *
  * @see https://api.slack.com/types/channel
  */
-export type SlackChannel = {
+export interface SlackChannel {
   id: string
   name: string
   is_channel: boolean
@@ -45,6 +30,21 @@ export type SlackChannel = {
   }
   previous_names: string[]
   num_members: number
+}
+
+/**
+ * Slack message.
+ *
+ * @see https://api.slack.com/methods/channels.history
+ */
+export type SlackMessage = {
+  type: string
+  subtype: string
+  user: string
+  text: string
+  ts: string
+  is_starred: boolean
+  bot_id: string
 }
 
 /**

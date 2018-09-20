@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
-import { Bit, GmailBitData, GmailBitDataParticipant, GmailPersonData, Person } from '@mcro/models'
-import { GmailSettingValues } from '@mcro/models'
+import { Bit, GmailBitData, GmailBitDataParticipant, GmailPersonData, GmailSettingValues, Person } from '@mcro/models'
+import { GMailLoader, GmailThread } from '@mcro/services'
 import { getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -11,9 +11,7 @@ import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { GMailLoader } from './GMailLoader'
 import { GMailMessageParser } from './GMailMessageParser'
-import { GmailThread } from './GMailTypes'
 
 const log = new Logger('syncer:gmail')
 

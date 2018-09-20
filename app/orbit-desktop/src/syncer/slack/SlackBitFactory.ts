@@ -1,11 +1,10 @@
-import { Person } from '@mcro/models'
-import { SlackBitData, SlackSettingValues } from '@mcro/models'
+import { getTopWords, getWordWeights } from '@mcro/cosal'
+import { Person, SlackBitData, SlackSettingValues } from '@mcro/models'
+import { SlackChannel, SlackMessage } from '@mcro/services'
 import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { BitUtils } from '../../utils/BitUtils'
 import { CommonUtils } from '../../utils/CommonUtils'
-import { SlackChannel, SlackMessage } from './SlackTypes'
-import { getWordWeights, getTopWords } from '@mcro/cosal'
 
 const Autolinker = require('autolinker')
 

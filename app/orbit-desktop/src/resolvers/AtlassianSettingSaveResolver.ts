@@ -1,10 +1,9 @@
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { AtlassianSettingSaveCommand } from '@mcro/models'
+import { ConfluenceLoader, JiraLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { SettingEntity } from '../entities/SettingEntity'
-import { ConfluenceLoader } from '../syncer/confluence/ConfluenceLoader'
-import { JiraLoader } from '../syncer/jira/JiraLoader'
 
 const log = new Logger(`command:atlassian-setting-save`)
 

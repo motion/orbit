@@ -55,13 +55,13 @@ export type ResolveProperty<ModelType, Property extends keyof ModelType, Args> =
 export type ResolveSave<ModelType, Args> = {
   type: 'save'
   model: Model<ModelType, Args>
-  resolve: (model: ModelType) => ModelType | Promise<ModelType>
+  resolve: (args: ModelType) => ModelType | Promise<ModelType>
 }
 
 export type ResolveRemove<ModelType, Args> = {
   type: 'remove'
   model: Model<ModelType, Args>
-  resolve: (model: ModelType) => boolean | Promise<boolean>
+  resolve: (args: ModelType) => boolean | Promise<boolean>
 }
 
 export type ResolveObserveOne<ModelType, Args> = {

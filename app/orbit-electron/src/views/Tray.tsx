@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { Tray, TrayItem } from '@mcro/reactron'
 import { view } from '@mcro/black'
+import { loadOne, observeOne, save } from '@mcro/model-bridge'
+import { GeneralSettingValues, SettingModel } from '@mcro/models'
+import { Tray, TrayItem } from '@mcro/reactron'
+import { App, Electron } from '@mcro/stores'
 import Path from 'path'
-import { Electron, App } from '@mcro/stores'
-import { observeOne, SettingRepository } from '@mcro/model-bridge'
-import { SettingModel, GeneralSettingValues } from '@mcro/models'
+import * as React from 'react'
 
 const image = Path.join(__dirname, '..', '..', 'resources', 'icons', 'orbitTemplate.png')
 
@@ -33,8 +33,8 @@ class TrayStore {
 
   toggleRealtime = async () => {
     console.log('toggling realtime')
-    const generalSetting = await SettingRepository.findOne(generalSettingWhere)
-    await SettingRepository.save({
+    const generalSetting = await loadOne(SettingModel, { args: generalSettingWhere })
+    await save(SettingModel, {
       ...generalSetting,
       values: {
         ...generalSetting.values,

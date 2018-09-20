@@ -77,6 +77,7 @@ export class OCRManager {
       console.log('OCR Active', !paused)
       if (paused) {
         this.oracle.stopWatchingWindows()
+        this.oracle.pause()
       } else {
         // TODO almost but not working yet
         // this.oracle.requestAccessibility()

@@ -312,14 +312,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       return
     }
     if action == "paus" {
+      print("pausing screen...")
       screen.pause()
       return
     }
     if action == "resu" {
+      print("resuming screen...")
       screen.resume()
       return
     }
     if action == "star" {
+      print("starting screen...")
       screen.start()
       return
     }

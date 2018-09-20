@@ -23,6 +23,10 @@ export class Oracle {
   name?: string
   env: { [key: string]: string } | null
   port: number
+  options = {
+    ocr: false,
+    appWindow: false,
+  }
   process: ChildProcess
   oracleBridge: OracleBridge
   socketSend: SocketSender
@@ -44,7 +48,6 @@ export class Oracle {
   onSpaceMoveCB = idFn
   onAppStateCB = idFn
   binPath = null
-  shouldOcr = false
   state = {
     isPaused: false,
   }
@@ -61,6 +64,7 @@ export class Oracle {
     binPath = null,
     env = null,
     ocr = false,
+    appWindow = false,
     onClose = null,
   } = {}) {
     this.name = name
@@ -68,13 +72,16 @@ export class Oracle {
     this.port = socketPort
     this.binPath = binPath
     this.debugBuild = debugBuild
-    this.shouldOcr = ocr
+    this.options = {
+      ocr,
+      appWindow,
+    }
     this.onClose = onClose
     macosVersion.assertGreaterThanOrEqualTo('10.11')
   }
 
   start = async () => {
-    if (this.shouldOcr) {
+    if (this.options.ocr) {
       try {
         await promisify(mkdir)('/tmp/screen')
       } catch {}
@@ -316,7 +323,8 @@ export class Oracle {
     try {
       this.process = spawn(Path.join(binDir, bin), [], {
         env: {
-          RUN_OCR: `${this.shouldOcr}`,
+          RUN_OCR: `${this.options.ocr}`,
+          RUN_APP_WINDOW: `${this.options.appWindow}`,
           SOCKET_PORT: `${this.port}`,
           ...this.env,
         },

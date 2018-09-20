@@ -107,6 +107,7 @@ export class Root {
     this.oracle = new Oracle({
       ...oracleOptions,
       ocr: true,
+      appWindow: true,
     })
 
     this.oracle.onError(err => {

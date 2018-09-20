@@ -5,7 +5,8 @@ import Cocoa
 import PromiseKit
 import Darwin
 
-let shouldRunOCR = true || ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
+let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
+let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
 let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
 let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
@@ -113,8 +114,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       } else {
         NSLog("No accessibility API permission, exiting")
       }
-      
-      windo.start()
      
       do {
         screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
@@ -149,7 +148,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
         screen.start()
       }
-    } else {
+    }
+    
+    if shouldRunAppWindow {
       window.level = .floating // .floating to be on top
       window.backgroundColor = NSColor.clear
       window.alphaValue = 0

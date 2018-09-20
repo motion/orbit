@@ -2140,10 +2140,10 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			HetuA0TW+P88jGxb0D790aiwxFY=
+			L+jnVm5PTyH2L2hoFDIHTXsyNRE=
 			</data>
 			<key>requirement</key>
-			<string>anchor apple generic and identifier "org.promisekit" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
+			<string>identifier "org.promisekit" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY"</string>
 		</dict>
 		<key>Frameworks/SwiftWebSocket.framework</key>
 		<dict>
@@ -2158,7 +2158,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			GnkjtjgtUCKQkI+U9u8mYkxHnGc=
+			bYqB5y4xBzhwGXQ05PpK2jei/Ss=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.tylermandry.Swindler" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>

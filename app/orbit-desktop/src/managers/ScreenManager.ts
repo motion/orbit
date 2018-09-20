@@ -31,6 +31,7 @@ export class ScreenManager {
 
     // operating info
     this.oracle.onInfo(info => {
+      console.log('oracle info', info)
       if (typeof info.supportsTransparency === 'boolean') {
         Desktop.setState({
           operatingSystem: {

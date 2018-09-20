@@ -64,7 +64,7 @@ export class OCRManager {
     this.started = true
 
     // listen for start toggle
-    Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, () => {
+    Desktop.onMessage(Desktop.messages.TOGGLE_OCR, () => {
       log.info('Toggle OCR...')
       Desktop.setOcrState({ paused: !Desktop.ocrState.paused })
     })
@@ -76,13 +76,12 @@ export class OCRManager {
       await when(() => this.started)
       console.log('OCR Active', !paused)
       if (paused) {
-        if (this.isWatchingWindows) {
-          this.oracle.stopWatchingWindows()
-          this.isWatchingWindows = false
-        }
+        this.oracle.stopWatchingWindows()
       } else {
-        this.oracle.checkAccessbility()
-        // we start watching once accessbile comes down, see onAccessible
+        // TODO almost but not working yet
+        // this.oracle.requestAccessibility()
+        // this.oracle.checkAccessbility()
+        this.oracle.startWatchingWindows()
       }
     },
   )
@@ -94,6 +93,20 @@ export class OCRManager {
     },
   )
 
+  private attemptStart() {
+    const isAccessible = Desktop.state.operatingSystem.isAccessible
+    const isActive = !Desktop.ocrState.paused
+    if (isAccessible) {
+      if (isActive) {
+        this.oracle.startWatchingWindows()
+      } else {
+        console.log('not active...')
+      }
+    } else {
+      console.log('not acessible...')
+    }
+  }
+
   setupOracleListeners() {
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
@@ -101,12 +114,7 @@ export class OCRManager {
       Desktop.setState({
         operatingSystem: { isAccessible },
       })
-      if (isAccessible) {
-        this.oracle.startWatchingWindows()
-        this.isWatchingWindows = true
-      } else {
-        this.oracle.requestAccessibility()
-      }
+      this.attemptStart()
     })
 
     // OCR words

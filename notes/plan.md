@@ -37,6 +37,20 @@ This basically means everyone runs client apps on-device, which use a p2p networ
 
 ...
 
+## MicroPayments
+
+With OCR and App State APIs working you would have a perfect micropayment tool.
+
+- Works across any browser
+- Actually verifies Active Time Spent without spoofing
+- Can integrate with other things
+
+So imagine having a payments API.
+
+Then you'd have a little micropayment platform backend running.
+
+Could have news sites integrate with an API that basically allows them to get paid based on the information as long as Orbit is running their site will show....
+
 ## Memory
 
 - As you work it scans things

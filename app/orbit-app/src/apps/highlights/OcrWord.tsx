@@ -43,7 +43,7 @@ export const OCRWord = view(({ item, store: { hoveredWord } }) => {
         height: height + HL_PAD * 2,
         background: color,
         fontSize: 10,
-        opacity: 1, //highlighted || Desktop.isHoldingOption ? 1 : 0,
+        opacity: 1,
       }}
     >
       <WordInner if={!highlighted}>{word}</WordInner>

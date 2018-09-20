@@ -7,14 +7,12 @@ export function cleanupChildren(pid = process.getuid()) {
   }, 500)
   return new Promise(res => {
     psTree(pid, (err, children) => {
-      console.log('ps tree got', err, children)
       if (err) {
         console.log('error getting children', err)
         return
       }
       try {
         const pids = children.map(x => x.PID)
-        console.log('exiting children', pids)
         for (const pid of pids) {
           try {
             process.kill(pid)

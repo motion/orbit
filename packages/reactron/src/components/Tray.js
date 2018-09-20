@@ -52,8 +52,8 @@ export class Tray extends BaseComponent {
       }
       if (this.children) {
         const menu = this.children.map(child => child.trayItem)
-        const trayMenu = Menu.buildFromTemplate(menu)
-        this.tray.setContextMenu(trayMenu)
+        this.trayMenu = Menu.buildFromTemplate(menu)
+        this.tray.setContextMenu(this.trayMenu)
       }
     } catch (e) {
       console.log('error with prop handlers')

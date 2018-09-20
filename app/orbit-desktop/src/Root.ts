@@ -111,7 +111,12 @@ export class Root {
     // await this.startSyncers()
 
     // setup oracle to pass into managers
-    this.oracle = new Oracle(oracleOptions)
+    this.oracle = new Oracle({
+      ...oracleOptions,
+      ocr: true,
+      appWindow: true,
+    })
+
     this.oracle.onError(err => {
       console.log('Oracle error', err)
     })
@@ -125,8 +130,11 @@ export class Root {
     // start oracle after passing into managers
     await this.oracle.start()
 
-    // start screenManager once oracle is setup
+    // start oracle related managers once its started
+    this.ocrManager.start()
     this.screenManager.start()
+
+    this.oracle.startWatchingWindows()
 
     this.keyboardStore = new KeyboardStore({
       // disable for now it was used for fancy orbit app switching

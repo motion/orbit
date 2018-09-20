@@ -52,7 +52,7 @@ export class HoverStateStore {
   handleMousePosition = async (mousePos: Point) => {
     this.lastMousePos = mousePos
     const orbitHovered = App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
-    let peekHovered = Electron.hoverState
+    let peekHovered = Electron.hoverState.peekHovered
     for (const [index, app] of App.appsState.entries()) {
       const isPeek = index === 0
       const hovered = isMouseOver(app, mousePos)

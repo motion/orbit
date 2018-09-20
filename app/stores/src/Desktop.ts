@@ -26,7 +26,7 @@ export type AppFocusState = {
 // @ts-ignore
 @store
 class DesktopStore {
-  // TODO have the store decorator somehow auto-define these types
+  // TODO have the store decorator auto-define these types
   // shortcuts
   appState: DesktopStore['state']['appState']
   ocrState: DesktopStore['state']['ocrState']
@@ -42,7 +42,7 @@ class DesktopStore {
   setLastScreenChange: DesktopStore['setState']
 
   messages = {
-    TOGGLE_PAUSED: 'TOGGLE_PAUSED',
+    TOGGLE_OCR: 'TOGGLE_OCR',
     OPEN: 'OPEN',
     CLEAR_OPTION: 'CLEAR_OPTION',
     RESET_DATA: 'RESET_DATA',
@@ -58,7 +58,6 @@ class DesktopStore {
 
   state = deep({
     appState: {
-      selectedText: '',
       id: '',
       name: '',
       title: '',
@@ -71,6 +70,7 @@ class DesktopStore {
       shouldClear: [],
       clearWords: null,
       restoreWords: null,
+      paused: true,
     },
     searchState: {
       indexStatus: '',
@@ -95,20 +95,11 @@ class DesktopStore {
       supportsTransparency: false,
     },
     appFocusState: {} as AppFocusState,
-    paused: true,
     focusedOnOrbit: false,
-    appStateUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
     movedToNewSpace: 0,
-    lastSQLError: '',
   })
-
-  results = []
-
-  get peekApp() {
-    return App.appsState.find(x => !x.torn)
-  }
 
   // takes into account the apps state and finds the app
   // that properly represents Orbit app itself
@@ -120,24 +111,12 @@ class DesktopStore {
       console.log('orbitFocusState, either no peekApp or no appFocusState')
       return this.defaultFocus
     }
-    const focusState = Desktop.state.appFocusState[this.peekApp.id]
+    const focusState = Desktop.state.appFocusState[App.peekState.id]
     if (!focusState) {
       console.log('strange, no focus state for orbit, maybe off a frame')
       return this.defaultFocus
     }
     return focusState
-  }
-
-  get isHoldingOption(): Boolean {
-    if (Desktop.mouseState.mouseDown) {
-      return false
-    }
-    const { option, optionUp } = Desktop.state.keyboardState
-    return (option || 0) > (optionUp || 1)
-  }
-
-  get shouldHide() {
-    return Desktop.state.lastScreenChange > Desktop.state.appStateUpdatedAt
   }
 
   get linesBoundingBox() {

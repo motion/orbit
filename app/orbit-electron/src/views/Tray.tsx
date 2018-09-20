@@ -2,8 +2,10 @@ import { view } from '@mcro/black'
 import { loadOne, observeOne, save } from '@mcro/model-bridge'
 import { GeneralSettingValues, SettingModel } from '@mcro/models'
 import { Tray, TrayItem } from '@mcro/reactron'
-import { App, Electron } from '@mcro/stores'
 import Path from 'path'
+import { Electron, App, Desktop } from '@mcro/stores'
+import { observeOne, SettingRepository } from '@mcro/model-bridge'
+import { SettingModel, GeneralSettingValues } from '@mcro/models'
 import * as React from 'react'
 
 const image = Path.join(__dirname, '..', '..', 'resources', 'icons', 'orbitTemplate.png')
@@ -32,6 +34,10 @@ class TrayStore {
   })
 
   toggleRealtime = async () => {
+    // for now just set it here
+    Electron.sendMessage(Desktop, Desktop.messages.TOGGLE_OCR)
+    Electron.setState({ realTime: true })
+
     console.log('toggling realtime')
     const generalSetting = await loadOne(SettingModel, { args: generalSettingWhere })
     await save(SettingModel, {
@@ -69,7 +75,9 @@ export default class TrayEl extends React.Component<{ store?: TrayStore }> {
         />
         <TrayItem
           label="Realtime search"
-          checked={store.generalSetting && store.generalSetting.values.realtimeSearch}
+          type="checkbox"
+          /* store.generalSetting && store.generalSetting.values.realtimeSearch */
+          checked={false}
           onClick={store.toggleRealtime}
         />
         <TrayItem type="separator" />

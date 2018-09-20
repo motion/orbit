@@ -1,7 +1,7 @@
 import { Oracle } from '@mcro/oracle'
 import { debounce, last } from 'lodash'
-import { store, isEqual, react, on } from '@mcro/black'
-import { Desktop, Electron, App } from '@mcro/stores'
+import { store, isEqual, react } from '@mcro/black'
+import { Desktop, Electron } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import macosVersion from 'macos-version'
 import { toJS } from 'mobx'
@@ -14,14 +14,15 @@ const APP_ID = -1
 const PREVENT_CLEAR = {
   electron: true,
   Chromium: true,
-  // iterm2: true,
-  // VSCode: true,
+  iterm2: true,
+  VSCode: true,
 }
 // prevent apps from triggering appState updates
 const PREVENT_APP_STATE = {
-  // iterm2: true,
+  iterm2: true,
   electron: true,
   Chromium: true,
+  VSCode: true,
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -44,6 +45,9 @@ export class OCRManager {
   curAppID = ''
   curAppName = ''
   watchSettings = { name: '', settings: {} }
+  lastAppName = null
+  started = false
+  isWatchingWindows = false
   oracle: Oracle
 
   constructor(oracle: Oracle) {
@@ -57,21 +61,61 @@ export class OCRManager {
       return
     }
     this.setupOracleListeners()
+    this.started = true
+
+    // listen for start toggle
+    Desktop.onMessage(Desktop.messages.TOGGLE_OCR, () => {
+      log.info('Toggle OCR...')
+      Desktop.setOcrState({ paused: !Desktop.ocrState.paused })
+    })
   }
 
-  rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
-  lastAppName = null
+  startOCROnActive = react(
+    () => Desktop.ocrState.paused,
+    async (paused, { when }) => {
+      await when(() => this.started)
+      console.log('OCR Active', !paused)
+      if (paused) {
+        this.oracle.stopWatchingWindows()
+        this.oracle.pause()
+      } else {
+        // TODO almost but not working yet
+        // this.oracle.requestAccessibility()
+        // this.oracle.checkAccessbility()
+        this.oracle.startWatchingWindows()
+      }
+    },
+  )
+
+  rescanOnNewAppState = react(
+    () => Desktop.state.appState,
+    () => {
+      this.ocrCurrentApp()
+    },
+  )
+
+  private attemptStart() {
+    const isAccessible = Desktop.state.operatingSystem.isAccessible
+    const isActive = !Desktop.ocrState.paused
+    if (isAccessible) {
+      if (isActive) {
+        this.oracle.startWatchingWindows()
+      } else {
+        console.log('not active...')
+      }
+    } else {
+      console.log('not acessible...')
+    }
+  }
 
   setupOracleListeners() {
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
-      console.log('is accessible, start watching stuff', isAccessible)
+      console.log('isAccessible?', isAccessible)
       Desktop.setState({
         operatingSystem: { isAccessible },
       })
-      if (isAccessible) {
-        // this.watchMouse()
-      }
+      this.attemptStart()
     })
 
     // OCR words
@@ -94,79 +138,71 @@ export class OCRManager {
     this.oracle.onWindowChange((event, value) => {
       console.log('got window change', event, value)
       if (event === 'ScrollEvent') {
-        this.rescanApp()
+        this.ocrCurrentApp()
         return
       }
       // console.log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = toJS(Desktop.appState)
-      let nextState: any = {}
+      let appState: any = {}
       let id = this.curAppID
       const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           id = value.id
-          nextState = {
+          appState = {
             id,
+            name: id ? last(id.split('.')) : value.title,
             title: value.title,
             offset: value.position,
             bounds: value.size,
-            name: id ? last(id.split('.')) : value.title,
           }
           // update these now so we can use to track
           this.curAppID = id
-          this.curAppName = nextState.name
+          this.curAppName = appState.name
           break
         case 'WindowPosChangedEvent':
-          nextState.bounds = value.size
-          nextState.offset = value.position
+          appState.bounds = value.size
+          appState.offset = value.position
       }
       // no change
-      if (isEqual(nextState, lastState)) {
+      if (isEqual(appState, lastState)) {
+        log.info('Same app state, ignoring scan')
         return
       }
       const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
       Desktop.setState({ focusedOnOrbit })
-      const state: Partial<typeof Desktop.state> = {
-        appState: nextState,
-      }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
+        log.info('Prevent app state', this.curAppName)
         this.oracle.pause()
         return
       }
-      state.appStateUpdatedAt = Date.now()
-      if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]) {
+      if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[appState.name]) {
         const { appState } = Desktop.state
         if (
-          !isEqual(nextState.bounds, appState.bounds) ||
-          !isEqual(nextState.offset, appState.offset)
+          !isEqual(appState.bounds, appState.bounds) ||
+          !isEqual(appState.offset, appState.offset)
         ) {
+          console.log('ocr clearing...')
           // immediate clear for moving
           Desktop.sendMessage(Electron, Electron.messages.CLEAR)
         }
       }
-      if (!Desktop.state.paused) {
+      if (!Desktop.ocrState.paused) {
         this.oracle.resume()
       }
-      if (this.clearTimeout) {
-        this.clearTimeout()
-      }
-      this.clearTimeout = on(
-        this,
-        setTimeout(() => {
-          Desktop.setState(state)
-        }, 4),
-      )
+      console.log('setting app state!', appState)
+      Desktop.setState({ appState })
     })
 
     // OCR work clear
     this.oracle.onBoxChanged(count => {
       if (!Desktop.ocrState.words) {
         log.info('RESET oracle boxChanged (App)')
-        this.lastScreenChange()
+        this.setScreenChanged()
         if (this.isWatching === 'OCR') {
           log.info('reset is watching ocr to set back to app')
-          this.rescanApp()
+          this.ocrCurrentApp()
         }
       } else {
         // for not many clears, try it
@@ -177,8 +213,8 @@ export class OCRManager {
         } else {
           // else just clear it all
           log.info('RESET oracle boxChanged (NOTTTTTTT App)')
-          this.lastScreenChange()
-          this.rescanApp()
+          this.setScreenChanged()
+          this.ocrCurrentApp()
         }
       }
     })
@@ -194,13 +230,13 @@ export class OCRManager {
 
   async restartScreen() {
     log.info('restartScreen')
-    this.lastScreenChange()
+    this.setScreenChanged()
     await this.oracle.stop()
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
     await this.oracle.start()
   }
 
-  lastScreenChange = () => {
+  setScreenChanged = () => {
     if (PREVENT_CLEAR[Desktop.state.appState.name]) {
       return
     }
@@ -243,15 +279,24 @@ export class OCRManager {
   //   this.mouseHookIds = []
   // }
 
-  async rescanApp() {
+  async ocrCurrentApp() {
+    console.log('ocrCurrentApp', Desktop.appState.id)
     clearTimeout(this.clearOCRTm)
-    if (!Desktop.appState.id || Desktop.state.paused) {
+    if (!Desktop.appState.id || Desktop.ocrState.paused) {
+      console.log('No id or paused')
       return
     }
     const { name, offset, bounds } = Desktop.appState
-    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
-    if (!offset || !bounds) return
-    this.lastScreenChange()
+    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
+      log.info('Prevent scanning app', name)
+      return
+    }
+    if (!offset || !bounds) {
+      log.info('No offset or no bounds')
+      return
+    }
+    console.log('scanning new app')
+    this.setScreenChanged()
     // we are watching the whole app for words
     await this.watchBounds('App', {
       fps: 10,
@@ -273,10 +318,10 @@ export class OCRManager {
       ],
     })
     this.hasResolvedOCR = false
-    if (Desktop.state.paused) {
+    if (Desktop.ocrState.paused) {
       return
     }
-    log.info('rescanApp.resume', name)
+    log.info('ocrCurrentApp.resume', name)
     await this.oracle.resume()
     this.clearOCRTm = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
@@ -287,6 +332,7 @@ export class OCRManager {
   }
 
   watchBounds = async (name, settings) => {
+    console.log('watchBounds', name, settings)
     this.isWatching = name
     this.watchSettings = { name, settings }
     await this.oracle.pause()

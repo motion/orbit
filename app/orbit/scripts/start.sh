@@ -11,10 +11,14 @@ else
 fi
 
 # start webpack-dev-server
-if [ "$1" = "start-prod" ]; then
-  ../orbit-app/scripts/start.sh start-prod &
+if [[ "$FLAGS" =~ "--ignore-app" ]]; then
+  echo "ignoring app"
 else
-  ../orbit-app/scripts/start.sh &
+  if [ "$1" = "start-prod" ]; then
+    ../orbit-app/scripts/start.sh start-prod &
+  else
+    ../orbit-app/scripts/start.sh &
+  fi
 fi
 
 if [[ "$FLAGS" =~ "--disable-watch" ]]; then

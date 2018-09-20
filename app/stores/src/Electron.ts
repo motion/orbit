@@ -25,6 +25,7 @@ class ElectronStore {
   lastAction = null
 
   state = deep({
+    realTime: false,
     focusedAppId: 'app',
     screenSize: [0, 0],
     settingsPosition: [], // todo: settingsState.position

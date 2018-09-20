@@ -59,28 +59,28 @@ const FILTER_KEYS = {
 
 function collectGetterPropertyDescriptors(proto) {
   const fproto = Object.getOwnPropertyNames(proto).filter(x => !FILTER_KEYS[x] && x[0] !== '_')
-  return fproto.reduce(
-    (acc, cur) => ({
-      ...acc,
-      [cur]: Object.getOwnPropertyDescriptor(proto, cur),
-    }),
-    {},
-  )
+  const res = {}
+  for (const key of fproto) {
+    res[key] = Object.getOwnPropertyDescriptor(proto, key)
+  }
+  return res
 }
 
 function getAutoRunDescriptors(obj) {
   const protoDescriptors = collectGetterPropertyDescriptors(Object.getPrototypeOf(obj))
-  return Object.keys(protoDescriptors)
-    .filter(key => protoDescriptors[key].get && protoDescriptors[key].get.IS_AUTO_RUN)
-    .reduce((a, b) => ({ ...a, [b]: protoDescriptors[b] }), {})
+  const keys = Object.keys(protoDescriptors).filter(
+    key => protoDescriptors[key].get && protoDescriptors[key].get.IS_AUTO_RUN,
+  )
+  const res = {}
+  for (const key of keys) {
+    res[key] = protoDescriptors[key]
+  }
+  return res
 }
 
 function decorateClassWithAutomagic(obj: MagicalObject) {
   let descriptors = {}
-  for (const key in obj) {
-    if (!obj.hasOwnProperty(key)) {
-      continue
-    }
+  for (const key of Object.keys(obj)) {
     descriptors[key] = Object.getOwnPropertyDescriptor(obj, key)
   }
   descriptors = {
@@ -88,7 +88,7 @@ function decorateClassWithAutomagic(obj: MagicalObject) {
     ...getAutoRunDescriptors(obj),
   }
   const decorations = {}
-  for (const method of Object.keys(descriptors)) {
+  for (const method in descriptors) {
     if (FILTER_KEYS[method]) {
       continue
     }
@@ -114,6 +114,8 @@ function decorateMethodWithAutomagic(
       return
     }
     if (descriptor.value.__IS_DEEP) {
+      target.__automagical.deep = target.__automagical.deep || {}
+      target.__automagical.deep[method] = true
       delete descriptor.value.__IS_DEEP
       return Mobx.observable.deep
     }

@@ -193,38 +193,31 @@ final class Screen: NSObject {
     if self.shouldCancel {
       self.shouldRunNextTime = true
     }
-    if !session.isRunning {
-      self.shouldCancel = false
-      session.startRunning()
-      self.emit("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
-    }
+    print("Screen.start")
+    self.shouldCancel = false
+    session.startRunning()
+    self.emit("{ \"state\": { \"isRunning\": true, \"isPaused\": false } }")
   }
 
   func stop() {
+    print("Screen.stop (isRunning: \(self.isRunning))")
     if !self.isRunning {
       return
     }
     self.isRunning = false
-    if session.isRunning {
-      session.stopRunning()
-      self.emit("{ \"state\": { \"isRunning\": false } }")
-    }
+    session.stopRunning()
+    self.emit("{ \"state\": { \"isRunning\": false } }")
   }
 
   func resume() {
-    if !self.isPaused {
-      return
-    }
+    print("Screen.resume (isPaused: \(self.isPaused))")
     self.isPaused = false
-    print("screen: resuming...")
     self.start()
     self.emit("{ \"state\": { \"isPaused\": false } }")
   }
 
   func pause() {
-    if self.isPaused {
-      return
-    }
+    print("Screen.pause (isPaused: \(self.isPaused))")
     self.isPaused = true
     self.stop()
     self.emit("{ \"state\": { \"isPaused\": true } }")
@@ -652,7 +645,9 @@ final class Screen: NSObject {
     let startAll = DispatchTime.now()
     let chars = self.characters!
     // clear old files
-    if shouldDebug { rmAllInside(URL(fileURLWithPath: box.screenDir!)) }
+    if shouldDebug {
+      rmAllInside(URL(fileURLWithPath: box.screenDir!))
+    }
     // create filtered images for content find
     let cgImage = filters.imageFromBuffer(context, sampleBuffer: sampleBuffer, cropRect: CGRect(
       x: box.x * 2,

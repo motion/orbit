@@ -6,6 +6,7 @@ import PromiseKit
 import Darwin
 
 let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
+let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
 let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
 let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
@@ -103,9 +104,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    
+    let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
+    let options = [checkOptPrompt: true]
+    //translate into boolean value
+    let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
+    
+    print("WHAT \(accessEnabled)")
 
     if shouldRunOCR == true {
-//      windo = Windo(emit: self.emit)
+      AXSwift.checkIsProcessTrusted(prompt: true)
+      windo = Windo(emit: self.emit)
+      
+      if UIElement.isProcessTrusted(withPrompt: true) {
+        print("TRUST")
+      } else {
+        NSLog("No accessibility API permission, exiting")
+      }
+     
       do {
         screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
         screen.start()
@@ -139,7 +155,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
         screen.start()
       }
-    } else {
+    }
+    
+    if shouldRunAppWindow {
       window.level = .floating // .floating to be on top
       window.backgroundColor = NSColor.clear
       window.alphaValue = 0
@@ -294,14 +312,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       return
     }
     if action == "paus" {
+      print("pausing screen...")
       screen.pause()
       return
     }
     if action == "resu" {
+      print("resuming screen...")
       screen.resume()
       return
     }
     if action == "star" {
+      print("starting screen...")
       screen.start()
       return
     }
@@ -329,6 +350,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     if action == "defo" {
       windo.defocus()
+      return
+    }
+    // check accessibility
+    if action == "chac" {
+      windo.checkAccessibility()
+      return
+    }
+    // request accessibility
+    if action == "reac" {
+      windo.requestAccessibility()
+      return
+    }
+    // start window watching
+    if action == "staw" {
+      windo.start()
+      return
+    }
+    // stop window watching
+    if action == "stow" {
+      windo.stop()
       return
     }
     print("received unknown message: \(text)")

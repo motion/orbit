@@ -41,10 +41,10 @@ export class PeekStore {
   // appConfig given the id
   appState = react(
     () => App.appsState.find(x => x.id === this.props.id),
-    appState => {
-      // if (this.isPeek && state.hasResolvedOnce) {
-      //   await sleep(100)
-      // }
+    async (appState, { sleep, state }) => {
+      if (!appState.torn && state.hasResolvedOnce) {
+        await sleep(60)
+      }
       if (this.isTorn) {
         // cancel on no app state so we dont cause bugs on close
         ensure('state', !!appState)
@@ -59,7 +59,7 @@ export class PeekStore {
 
   internalState = react(
     () => this.appState,
-    async (appState, { getValue, setValue }) => {
+    async (appState, { getValue, setValue, sleep }) => {
       const { appConfig, torn, ...rest } = appState
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
@@ -91,6 +91,7 @@ export class PeekStore {
       }
       if (isShown) {
         // wait and fetch in parallel
+        await sleep()
         const model = await this.getModel()
         return {
           resolvedModel: true,
@@ -170,20 +171,20 @@ export class PeekStore {
         args: {
           where: { email: id },
           relations: ['people'],
-        }
+        },
       })
     } else if (type === 'bit') {
       selectedItem = await loadOne(BitModel, {
-        args:  {
+        args: {
           where: { id },
           relations: ['people'],
-        }
+        },
       })
     } else if (type === 'setting') {
       selectedItem = await loadOne(SettingModel, {
         args: {
           where: { id },
-        }
+        },
       })
     }
     return selectedItem

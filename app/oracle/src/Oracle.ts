@@ -198,7 +198,7 @@ export class Oracle {
   }
 
   async startWatchingWindows() {
-    await this.socketSend('strw')
+    await this.socketSend('staw')
   }
 
   async stopWatchingWindows() {

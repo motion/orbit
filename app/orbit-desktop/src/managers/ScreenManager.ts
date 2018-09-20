@@ -10,14 +10,7 @@ import macosVersion from 'macos-version'
 @store
 export class ScreenManager {
   clearTimeout?: Function
-  hasResolvedOCR = false
-  appStateTm: any
-  clearOCRTm: any
-  isWatching = ''
-  curAppID = ''
-  curAppName = ''
   isStarted = false
-  watchSettings = { name: '', settings: {} }
   oracle: Oracle
 
   constructor(oracle: Oracle) {

@@ -80,7 +80,13 @@ export class OCRManager {
     },
   )
 
-  rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
+  rescanOnNewAppState = react(
+    () => Desktop.state.appState,
+    state => {
+      console.log('got new app state', JSON.stringify(state, null, 2))
+      this.rescanApp()
+    },
+  )
 
   setupOracleListeners() {
     // accessiblity check
@@ -145,25 +151,24 @@ export class OCRManager {
       }
       // no change
       if (isEqual(nextState, lastState)) {
+        log.info('Same app state, ignoring scan')
         return
       }
       const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
       Desktop.setState({ focusedOnOrbit })
-      const state: Partial<typeof Desktop.state> = {
-        appState: nextState,
-      }
       // when were moving into focus prevent app, store its appName, pause then return
       if (PREVENT_APP_STATE[this.curAppName]) {
+        log.info('Prevent app state', this.curAppName)
         this.oracle.pause()
         return
       }
-      state.appStateUpdatedAt = Date.now()
       if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]) {
         const { appState } = Desktop.state
         if (
           !isEqual(nextState.bounds, appState.bounds) ||
           !isEqual(nextState.offset, appState.offset)
         ) {
+          console.log('ocr clearing...')
           // immediate clear for moving
           Desktop.sendMessage(Electron, Electron.messages.CLEAR)
         }
@@ -171,22 +176,15 @@ export class OCRManager {
       if (!Desktop.state.paused) {
         this.oracle.resume()
       }
-      if (this.clearTimeout) {
-        this.clearTimeout()
-      }
-      this.clearTimeout = on(
-        this,
-        setTimeout(() => {
-          Desktop.setState(state)
-        }, 4),
-      )
+      console.log('setting app state!', nextState)
+      Desktop.setState(nextState)
     })
 
     // OCR work clear
     this.oracle.onBoxChanged(count => {
       if (!Desktop.ocrState.words) {
         log.info('RESET oracle boxChanged (App)')
-        this.lastScreenChange()
+        this.setScreenChanged()
         if (this.isWatching === 'OCR') {
           log.info('reset is watching ocr to set back to app')
           this.rescanApp()
@@ -200,7 +198,7 @@ export class OCRManager {
         } else {
           // else just clear it all
           log.info('RESET oracle boxChanged (NOTTTTTTT App)')
-          this.lastScreenChange()
+          this.setScreenChanged()
           this.rescanApp()
         }
       }
@@ -217,13 +215,13 @@ export class OCRManager {
 
   async restartScreen() {
     log.info('restartScreen')
-    this.lastScreenChange()
+    this.setScreenChanged()
     await this.oracle.stop()
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
     await this.oracle.start()
   }
 
-  lastScreenChange = () => {
+  setScreenChanged = () => {
     if (PREVENT_CLEAR[Desktop.state.appState.name]) {
       return
     }
@@ -267,14 +265,23 @@ export class OCRManager {
   // }
 
   async rescanApp() {
+    console.log('rescanApp', Desktop.appState.id)
     clearTimeout(this.clearOCRTm)
     if (!Desktop.appState.id || Desktop.state.paused) {
+      console.log('No id or paused')
       return
     }
     const { name, offset, bounds } = Desktop.appState
-    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) return
-    if (!offset || !bounds) return
-    this.lastScreenChange()
+    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
+      log.info('Prevent scanning app', name)
+      return
+    }
+    if (!offset || !bounds) {
+      log.info('No offset or no bounds')
+      return
+    }
+    console.log('scanning new app')
+    this.setScreenChanged()
     // we are watching the whole app for words
     await this.watchBounds('App', {
       fps: 10,
@@ -310,6 +317,7 @@ export class OCRManager {
   }
 
   watchBounds = async (name, settings) => {
+    console.log('watchBounds', name, settings)
     this.isWatching = name
     this.watchSettings = { name, settings }
     await this.oracle.pause()

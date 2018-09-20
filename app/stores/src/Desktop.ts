@@ -1,6 +1,5 @@
 import { Bridge, proxySetters } from '@mcro/mobx-bridge'
 import { store, deep } from '@mcro/black'
-import { App } from './App'
 
 // store export
 export let Desktop = null as DesktopStore
@@ -26,7 +25,7 @@ export type AppFocusState = {
 // @ts-ignore
 @store
 class DesktopStore {
-  // TODO have the store decorator somehow auto-define these types
+  // TODO have the store decorator auto-define these types
   // shortcuts
   appState: DesktopStore['state']['appState']
   ocrState: DesktopStore['state']['ocrState']
@@ -97,18 +96,10 @@ class DesktopStore {
     appFocusState: {} as AppFocusState,
     paused: true,
     focusedOnOrbit: false,
-    appStateUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
     movedToNewSpace: 0,
-    lastSQLError: '',
   })
-
-  results = []
-
-  get peekApp() {
-    return App.appsState.find(x => !x.torn)
-  }
 
   // takes into account the apps state and finds the app
   // that properly represents Orbit app itself
@@ -126,18 +117,6 @@ class DesktopStore {
       return this.defaultFocus
     }
     return focusState
-  }
-
-  get isHoldingOption(): Boolean {
-    if (Desktop.mouseState.mouseDown) {
-      return false
-    }
-    const { option, optionUp } = Desktop.state.keyboardState
-    return (option || 0) > (optionUp || 1)
-  }
-
-  get shouldHide() {
-    return Desktop.state.lastScreenChange > Desktop.state.appStateUpdatedAt
   }
 
   get linesBoundingBox() {

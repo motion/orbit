@@ -4,13 +4,11 @@ import { GeneralSettingValues, SettingModel } from '@mcro/models'
 import { Tray, TrayItem } from '@mcro/reactron'
 import Path from 'path'
 import { Electron, App, Desktop } from '@mcro/stores'
-import { observeOne, SettingRepository } from '@mcro/model-bridge'
-import { SettingModel, GeneralSettingValues } from '@mcro/models'
 import * as React from 'react'
 
 const image = Path.join(__dirname, '..', '..', 'resources', 'icons', 'orbitTemplate.png')
 
-// TODO make work
+// TODO make work with setting values using this
 // const electronToNice = {
 //   Option: '⌥',
 //   CommmandOrCtrl: '⌘',

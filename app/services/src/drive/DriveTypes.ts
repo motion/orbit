@@ -2,7 +2,7 @@
 /**
  * Options based on which fetch query to Google Drive Api will be performed.
  */
-export type GDriveFetchQueryOptions<_R> = {
+export type DriveFetchQueryOptions<_R> = {
 
   /**
    * Url segment to where query should be performed.
@@ -25,9 +25,9 @@ export type GDriveFetchQueryOptions<_R> = {
  *
  * @see https://developers.google.com/drive/api/v3/reference/files/list
  */
-export type GDriveFileResponse = {
+export type DriveFileResponse = {
   nextPageToken: string
-  files: GDriveFile[]
+  files: DriveFile[]
 }
 
 /**
@@ -35,10 +35,10 @@ export type GDriveFileResponse = {
  *
  * @see https://developers.google.com/drive/api/v3/reference/comments/list
  */
-export type GDriveCommentResponse = {
+export type DriveCommentResponse = {
   kind: 'drive#commentList'
   nextPageToken: string
-  comments: GDriveComment[]
+  comments: DriveComment[]
 }
 
 /**
@@ -46,16 +46,16 @@ export type GDriveCommentResponse = {
  *
  * @see https://developers.google.com/drive/api/v3/reference/revisions/list
  */
-export type GDriveRevisionResponse = {
+export type DriveRevisionResponse = {
   kind: 'drive#revisionList'
   nextPageToken: string
-  revisions: GDriveRevision[]
+  revisions: DriveRevision[]
 }
 
 /**
  * Single Google Drive Api User resource.
  */
-export type GDriveUser = {
+export type DriveUser = {
   kind: 'drive#user'
   displayName: string
   photoLink: string
@@ -69,7 +69,7 @@ export type GDriveUser = {
  *
  * @see https://developers.google.com/drive/api/v3/reference/files#resource
  */
-export type GDriveFile = {
+export type DriveFile = {
   kind: 'drive#file'
   id: string
   name: string
@@ -78,7 +78,7 @@ export type GDriveFile = {
   starred: boolean
   trashed: boolean
   explicitlyTrashed: boolean
-  trashingUser: GDriveUser
+  trashingUser: DriveUser
   trashedTime: string
   parents: string[]
   properties: { [key: string]: string }
@@ -98,10 +98,10 @@ export type GDriveFile = {
   modifiedByMeTime: string
   modifiedByMe: boolean
   sharedWithMeTime: string
-  sharingUser: GDriveUser
-  owners: GDriveUser[]
+  sharingUser: DriveUser
+  owners: DriveUser[]
   teamDriveId: string
-  lastModifyingUser: GDriveUser
+  lastModifyingUser: DriveUser
   shared: boolean
   ownedByMe: boolean
   capabilities: {
@@ -185,12 +185,12 @@ export type GDriveFile = {
  *
  * @see https://developers.google.com/drive/api/v3/reference/comments#resource
  */
-export type GDriveComment = {
+export type DriveComment = {
   kind: 'drive#comment'
   id: string
   createdTime: string
   modifiedTime: string
-  author: GDriveUser
+  author: DriveUser
   htmlContent: string
   content: string
   deleted: boolean
@@ -208,7 +208,7 @@ export type GDriveComment = {
  *
  * @see https://developers.google.com/drive/api/v3/reference/revisions#resource
  */
-export type GDriveRevision = {
+export type DriveRevision = {
   kind: 'drive#revision'
   id: string
   mimeType: string
@@ -217,7 +217,7 @@ export type GDriveRevision = {
   published: boolean
   publishAuto: boolean
   publishedOutsideDomain: boolean
-  lastModifyingUser: GDriveUser
+  lastModifyingUser: DriveUser
   originalFilename: string
   md5Checksum: string
   size: number
@@ -226,23 +226,23 @@ export type GDriveRevision = {
 /**
  * Finally loaded google drive file with all information related to a file.
  */
-export type GDriveLoadedFile = {
-  file: GDriveFile
+export type DriveLoadedFile = {
+  file: DriveFile
   content: string
   thumbnailFilePath: string
-  comments: GDriveComment[]
-  revisions: GDriveRevision[]
-  parent?: GDriveFile
+  comments: DriveComment[]
+  revisions: DriveRevision[]
+  parent?: DriveFile
 }
 
 /**
  * Finally loaded google drive user with all information related to a user.
  */
-export type GDriveLoadedUser = {
+export type DriveLoadedUser = {
   email: string
   name: string
   photo: string
-  comments: GDriveComment[]
-  revisions: GDriveRevision[]
-  files: GDriveFile[]
+  comments: DriveComment[]
+  revisions: DriveRevision[]
+  files: DriveFile[]
 }

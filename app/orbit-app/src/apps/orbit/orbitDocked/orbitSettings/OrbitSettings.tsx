@@ -1,17 +1,17 @@
-import * as React from 'react'
-import { view, react, ensure } from '@mcro/black'
-import { SettingRepository, observeOne } from '@mcro/model-bridge'
-import { SubPane } from '../../SubPane'
-import * as Views from '../../../../views'
-import { App, Desktop } from '@mcro/stores'
-import { PaneManagerStore } from '../../PaneManagerStore'
-import { AppsStore } from '../../../AppsStore'
-import { ShortcutCapture } from '../../../../views/ShortcutCapture'
-import { Input } from '../../../../views/Input'
-import { Button, Theme } from '@mcro/ui'
+import { ensure, react, view } from '@mcro/black'
+import { observeOne, save } from '@mcro/model-bridge'
 import { SettingModel } from '@mcro/models'
-import { SearchStore } from '../SearchStore'
+import { App, Desktop } from '@mcro/stores'
+import { Button, Theme } from '@mcro/ui'
+import * as React from 'react'
 import { showConfirmDialog } from '../../../../helpers/electron/showConfirmDialog'
+import * as Views from '../../../../views'
+import { Input } from '../../../../views/Input'
+import { ShortcutCapture } from '../../../../views/ShortcutCapture'
+import { AppsStore } from '../../../AppsStore'
+import { PaneManagerStore } from '../../PaneManagerStore'
+import { SubPane } from '../../SubPane'
+import { SearchStore } from '../SearchStore'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -86,7 +86,7 @@ class OrbitSettingsStore {
   generalChange = prop => val => {
     console.log('handleChange', prop, val)
     this.generalSetting.values[prop] = val
-    SettingRepository.save(this.generalSetting)
+    save(SettingModel, this.generalSetting)
   }
 
   changeTheme = val => {

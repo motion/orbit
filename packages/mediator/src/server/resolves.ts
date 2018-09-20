@@ -72,7 +72,7 @@ export function resolveProperty<ModelType, Property extends keyof ModelType, Arg
 
 export function resolveSave<ModelType, Args>(
   model: Model<ModelType, Args>,
-  resolve: (model: ModelType) => ModelType | Promise<ModelType>,
+  resolve: (args: ModelType) => ModelType | Promise<ModelType>,
 ): ResolveInterface<ModelType, undefined, Args> {
   return {
     type: 'save',
@@ -83,7 +83,7 @@ export function resolveSave<ModelType, Args>(
 
 export function resolveRemove<ModelType, Args>(
   model: Model<ModelType, Args>,
-  resolve: (model: ModelType) => boolean | Promise<boolean>,
+  resolve: (args: ModelType) => boolean | Promise<boolean>,
 ): ResolveInterface<ModelType, undefined, Args> {
   return {
     type: 'remove',

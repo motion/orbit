@@ -1,5 +1,5 @@
 import { GmailBitDataParticipant } from '@mcro/models'
-import { GmailMessage } from './GMailTypes'
+import { GmailMessage } from '@mcro/services'
 
 const createDOMPurify = require('dompurify')
 const JSDOM = require('jsdom').JSDOM

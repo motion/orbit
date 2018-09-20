@@ -1,17 +1,17 @@
-import * as React from 'react'
+import { compose, react, view } from '@mcro/black'
+import { SettingModel, SlackChannelModel, SlackSettingValues } from '@mcro/models'
+import { SlackChannel } from '@mcro/services'
 import * as UI from '@mcro/ui'
-import { view, react, compose } from '@mcro/black'
-import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { SettingPaneProps } from './SettingPaneProps'
-import { HideablePane } from '../../views/HideablePane'
 import { orderBy } from 'lodash'
-import { SettingRepository } from '@mcro/model-bridge'
-import { DateFormat } from '../../../../views/DateFormat'
+import { loadMany, save } from '@mcro/model-bridge'
 import { Text } from '@mcro/ui'
+import * as React from 'react'
 import { MultiSelectTableShortcutHandler } from '../../../../components/shortcutHandlers/MultiSelectTableShortcutHandler'
-import { SlackSettingValues } from '@mcro/models'
+import { DateFormat } from '../../../../views/DateFormat'
+import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import { HideablePane } from '../../views/HideablePane'
 import { AppStatusPane } from './AppStatusPane'
-import { SlackService } from '@mcro/services'
+import { SettingPaneProps } from './SettingPaneProps'
 
 const columns = {
   name: {
@@ -66,7 +66,7 @@ const itemToRow = (index, channel, topic, isActive, onSync) => {
       },
       active: {
         sortValue: isActive,
-        value: <ReactiveCheckBox onChange={onSync(channel.id)} isActive={isActive} />,
+        value: <ReactiveCheckBox onChange={onSync(channel)} isActive={isActive} />,
       },
     },
   }
@@ -74,10 +74,19 @@ const itemToRow = (index, channel, topic, isActive, onSync) => {
 
 class SlackSettingStore {
   props: SettingPaneProps
+  channels: SlackChannel[] = []
 
   syncing = {}
   active = 'status'
-  service = new SlackService(this.props.setting)
+
+  async didMount() {
+    const channels = await loadMany(SlackChannelModel, {
+      args: {
+        settingId: this.props.setting.id,
+      },
+    })
+    this.channels = orderBy(channels, ['is_private', 'num_members'], ['asc', 'desc'])
+  }
 
   setActiveKey = key => {
     this.active = key
@@ -100,17 +109,16 @@ class SlackSettingStore {
     return this.props.setting
   }
 
-  get allChannels() {
-    return orderBy(this.service.allChannels || [], ['is_private', 'num_members'], ['asc', 'desc'])
+  get values() {
+    return this.setting.values as SlackSettingValues
   }
 
   rows = react(
-    () => this.allChannels,
+    () => this.channels,
     channels => {
       return channels.map((channel, index) => {
         const topic = channel.topic ? channel.topic.value : ''
-        const isActive = () => this.isSyncing(channel.id)
-        return itemToRow(index, channel, topic, isActive, this.onSync)
+        return itemToRow(index, channel, topic, this.whitelistStatus(channel), this.changeWhitelist)
       })
     },
     {
@@ -118,34 +126,10 @@ class SlackSettingStore {
     },
   )
 
-  get values() {
-    return this.setting.values as SlackSettingValues
-  }
-
-  onSync = fullName => async e => {
-    this.setting.values = {
-      ...this.values,
-      channels: {
-        ...this.values.channels,
-        [fullName]: e.target.checked,
-      },
-    }
-    await SettingRepository.save(this.setting)
-  }
-
-  isSyncing = fullName => {
-    if (!this.setting || !this.values.channels) {
-      return false
-    }
-    return this.values.channels[fullName] || false
-  }
-
   highlightedRows = []
 
   handleEnter = e => {
-    console.log('enter!!', e)
     if (this.highlightedRows.length) {
-      console.log('were highlighted', this.highlightedRows)
       e.preventDefault()
       e.stopPropagation()
     }
@@ -153,6 +137,46 @@ class SlackSettingStore {
 
   handleHighlightedRows = rows => {
     this.highlightedRows = rows
+  }
+
+  toggleSyncAll = () => {
+
+    // if sync all is already enable, register all channels in a whitelist
+    if (this.values.whitelist === undefined) {
+      this.values.whitelist = this.channels.map(channel => channel.id)
+
+    } else { // otherwise enable "sync all" mode
+      this.values.whitelist = undefined
+    }
+    save(SettingModel, this.setting)
+  }
+
+  whitelistStatus = (repository: SlackChannel) => () => {
+
+    // if whitelist is undefined we are in "sync all" mode
+    if (this.values.whitelist === undefined)
+      return true
+
+    return this.values.whitelist.indexOf(repository.id) !== -1
+  }
+
+  isSyncAllEnabled = () => {
+    return this.values.whitelist === undefined
+  }
+
+  changeWhitelist = (channel: SlackChannel) => () => {
+    if (!this.values.whitelist) {
+      this.values.whitelist = this.channels
+        .map(channel => channel.id)
+    }
+
+    const index = this.values.whitelist.indexOf(channel.id)
+    if (index === -1) {
+      this.values.whitelist.push(channel.id)
+    } else {
+      this.values.whitelist.splice(index, 1)
+    }
+    save(SettingModel, this.setting)
   }
 }
 
@@ -178,6 +202,9 @@ export const SlackSetting = decorator(({ store, setting, children }: Props) => {
         </HideablePane>
         <HideablePane invisible={store.active !== 'rooms'}>
           <MultiSelectTableShortcutHandler handlers={{ enter: store.handleEnter }}>
+            <div>
+              <ReactiveCheckBox onChange={store.toggleSyncAll} isActive={store.isSyncAllEnabled} /> Sync all
+            </div>
             <UI.SearchableTable
               virtual
               rowLineHeight={28}

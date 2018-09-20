@@ -1,16 +1,17 @@
-import * as React from 'react'
 import { view } from '@mcro/black'
-import { BitRepository, SettingRepository } from '@mcro/model-bridge'
-import { Peek } from './peek/Peek'
-import { OrbitStore } from './OrbitStore'
+import { loadOne } from '@mcro/model-bridge'
+import { BitModel, SettingModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
-import { settingToAppConfig } from '../helpers/toAppConfig/settingToAppConfig'
+import * as React from 'react'
 import { Actions } from '../actions/Actions'
+import { settingToAppConfig } from '../helpers/toAppConfig/settingToAppConfig'
 import { OrbitDocked } from './orbit/orbitDocked/OrbitDocked'
+import { OrbitStore } from './OrbitStore'
+import { Peek } from './peek/Peek'
 
 const getItem = {
-  githubItem: () => BitRepository.findOne({ where: { integration: 'github' }, skip: 6 }),
+  githubItem: () => loadOne(BitModel, { args: { where: { integration: 'github' }, skip: 6 } }),
   gdriveSetting: async () => ({
     id: 1,
     title: 'GDocs',
@@ -18,7 +19,7 @@ const getItem = {
     integration: 'gdrive',
   }),
   githubSetting: async () =>
-    SettingRepository.findOne({ where: { type: 'github' } }).then(settingToAppConfig),
+    loadOne(SettingModel, { args: { where: { type: 'github' } } }).then(settingToAppConfig),
 }
 
 @view

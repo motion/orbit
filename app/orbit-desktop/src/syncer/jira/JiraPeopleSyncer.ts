@@ -1,5 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { JiraPersonData, Person } from '@mcro/models'
+import { JiraLoader, JiraUser } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
@@ -7,8 +8,6 @@ import { createOrUpdatePersonBits } from '../../repository'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { JiraLoader } from './JiraLoader'
-import { JiraUser } from './JiraTypes'
 
 const log = new Logger('syncer:jira:people')
 

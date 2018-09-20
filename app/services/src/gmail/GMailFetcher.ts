@@ -1,18 +1,17 @@
-import { GmailSettingValues } from '@mcro/models'
-import * as r2 from '@mcro/r2'
-import { Logger } from '@mcro/logger'
-import { queryObjectToQueryString } from '../../utils'
-import { GmailFetchOptions } from './GMailTypes'
-import { SettingEntity } from '../../entities/SettingEntity'
 import { getGlobalConfig } from '@mcro/config'
+import { Logger } from '@mcro/logger'
+import { GmailSettingValues, Setting } from '@mcro/models'
+import * as r2 from '@mcro/r2'
+import { queryObjectToQueryString } from '../utils'
+import { GmailFetchOptions } from './GMailTypes'
 
 const Config = getGlobalConfig()
 const log = new Logger('syncer:gmail')
 
 export class GMailFetcher {
-  setting: SettingEntity
+  setting: Setting
 
-  constructor(setting: SettingEntity) {
+  constructor(setting: Setting) {
     this.setting = setting
   }
 
@@ -69,7 +68,7 @@ export class GMailFetcher {
     }).json
     if (reply && reply.access_token) {
       this.setting.token = reply.access_token
-      await this.setting.save()
+      // await this.setting.save() // todo broken after extracting into services
       return true
     }
     return false

@@ -1,17 +1,15 @@
 import { Logger } from '@mcro/logger'
-import { Bit, JiraBitData } from '@mcro/models'
-import { JiraSettingValues } from '@mcro/models'
+import { Bit, JiraBitData, JiraSettingValues } from '@mcro/models'
+import { JiraIssue, JiraLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { CommonUtils } from '../../utils/CommonUtils'
-import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
+import { CommonUtils } from '../../utils/CommonUtils'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SyncerUtils } from '../core/SyncerUtils'
-import { JiraLoader } from './JiraLoader'
-import { JiraIssue } from './JiraTypes'
 
 const log = new Logger('syncer:jira:issue')
 

@@ -1,17 +1,17 @@
-import { PaneManagerStore } from '../PaneManagerStore'
+import { ensure, react } from '@mcro/black'
+import { loadMany, loadOne } from '@mcro/model-bridge'
+import { Bit, BitModel, PersonBitModel } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { react, ensure } from '@mcro/black'
-import { NLPStore } from './NLPStore'
-import { SearchFilterStore } from './SearchFilterStore'
-import { Bit } from '@mcro/models'
-import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
-import { FindOptions } from 'typeorm'
-import { BitRepository, PersonBitRepository } from '@mcro/model-bridge'
 import { flatten } from 'lodash'
-import { SelectionStore, SelectionGroup } from './SelectionStore'
+import { FindOptions } from 'typeorm'
+import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { AppsStore } from '../../AppsStore'
-import { QueryStore } from './QueryStore'
+import { PaneManagerStore } from '../PaneManagerStore'
+import { NLPStore } from './NLPStore'
 import { MarkType } from './nlpStore/types'
+import { QueryStore } from './QueryStore'
+import { SearchFilterStore } from './SearchFilterStore'
+import { SelectionGroup, SelectionStore } from './SelectionStore'
 
 const TYPE_DEBOUNCE = 200
 
@@ -108,7 +108,7 @@ const getSearchResults = async ({
     }
   }
 
-  return await BitRepository.find(findOptions)
+  return await loadMany(BitModel, { args: findOptions })
 }
 
 export class SearchStore {
@@ -206,7 +206,7 @@ export class SearchStore {
       if (isFilteringSlack) {
         channelResults = matchSort(
           query.split(' ')[0],
-          this.props.appsStore.services.slack.activeChannels.map(channel => ({
+          /*this.props.appsStore.services.slack.activeChannels*/[].map(channel => ({ // todo: broken by umed, please fix me
             id: channel.id,
             title: `#${channel.name}`,
             icon: 'slack',
@@ -217,7 +217,7 @@ export class SearchStore {
         message = `Searching ${channelResults[0].title}`
       }
       // filtered search
-      if (isFilteringChannel && this.props.appsStore.services.slack) {
+      if (isFilteringChannel/* && this.props.appsStore.services.slack*/) { // todo: broken by umed, please fix me
         message = 'SPACE to search selected channel'
         results = channelResults
         return setValue({
@@ -342,16 +342,20 @@ export class SearchStore {
       await when(() => this.nlpStore.nlp.query === query)
       const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
       // fuzzy people results
-      const allResults = await PersonBitRepository.find({
-        take: 3,
-        where: {
-          name: { $like: `%${searchQuery.split('').join('%')}%` },
-        },
+      const allResults = await loadMany(PersonBitModel, {
+        args: {
+          take: 3,
+          where: {
+            name: { $like: `%${searchQuery.split('').join('%')}%` },
+          },
+        }
       })
       const exactPeople = await Promise.all(
         people.map(name => {
-          return PersonBitRepository.findOne({
-            where: { name: { $like: `%${name}%` } },
+          return loadOne(PersonBitModel, {
+            args: {
+              where: { name: { $like: `%${name}%` } },
+            }
           })
         }),
       )

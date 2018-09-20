@@ -1,9 +1,67 @@
+export const GithubRepositoriesQuery = `
+query GithubRepositoriesQuery($cursor: String) {
+  viewer {
+    repositories(first: 100, after: $cursor) {
+      totalCount
+      pageInfo {
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          name
+          nameWithOwner
+          url
+          pushedAt
+          issues {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+`
+
+export const GithubOrganizationsQuery = `
+query GithubOrganizationsQuery($cursor: String) {
+  viewer {
+    organizations(first: 100, after: $cursor) {
+      totalCount
+      pageInfo {
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          name
+        }
+      }
+    }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+`
+
 export const GithubIssueQuery = `
 query GithubIssueQuery($organization: String!, $repository: String!, $cursor: String) {
   repository(owner: $organization, name: $repository) {
     id
     name
-    issues(first: 100, after: $cursor) {
+    issues(first: 5, after: $cursor) {
       totalCount
       pageInfo {
         hasNextPage
@@ -112,7 +170,7 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
 `
 
 export const GithubPeopleQuery = `
-query GitHubIssueQuery($organization: String!, $cursor: String) {
+query GithubPeopleQuery($organization: String!, $cursor: String) {
   organization(login: $organization) {
     members(first: 100, after: $cursor) {
       totalCount

@@ -1,3 +1,5 @@
+import { loadOne, save } from '@mcro/model-bridge'
+import { SettingModel } from '@mcro/models'
 import * as React from 'react'
 import { SubPane } from '../../SubPane'
 import { view, compose, sleep } from '@mcro/black'
@@ -6,7 +8,6 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { AppsStore } from '../../../AppsStore'
-import { SettingRepository } from '@mcro/model-bridge'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { Title, VerticalSpace } from '../../../../views'
 // import { getGlobalConfig } from '@mcro/config'
@@ -182,15 +183,17 @@ class OnboardStore {
       this.props.paneManagerStore.setActivePane('home')
       this.props.paneManagerStore.forceOnboard = false
       // save setting
-      const generalSetting = await SettingRepository.findOne({
-        where: {
-          type: 'general',
-          category: 'general',
-        },
+      const generalSetting = await loadOne(SettingModel, {
+        args: {
+          where: {
+            type: 'general',
+            category: 'general',
+          },
+        }
       })
       const values = generalSetting.values as GeneralSettingValues
       values.hasOnboarded = true
-      await SettingRepository.save(generalSetting)
+      await save(SettingModel, generalSetting)
     }
 
     // go to next frame

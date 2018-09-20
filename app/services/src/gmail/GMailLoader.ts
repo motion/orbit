@@ -1,16 +1,16 @@
 import { Logger } from '@mcro/logger'
+import { Setting } from '@mcro/models'
 import { GMailFetcher } from './GMailFetcher'
 import { historyQuery, threadQuery, threadsQuery } from './GMailQueries'
 import { GmailHistoryLoadResult, GmailThread } from './GMailTypes'
-import { SettingEntity } from '../../entities/SettingEntity'
 
 const log = new Logger('syncer:gmail')
 
 export class GMailLoader {
-  setting: SettingEntity
+  setting: Setting
   fetcher: GMailFetcher
 
-  constructor(setting: SettingEntity) {
+  constructor(setting: Setting) {
     this.setting = setting
     this.fetcher = new GMailFetcher(setting)
   }

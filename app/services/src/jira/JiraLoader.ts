@@ -1,7 +1,6 @@
 import { Logger } from '@mcro/logger'
-import { AtlassianSettingValuesCredentials, Bit, JiraSettingValues, Person } from '@mcro/models'
-import { SettingEntity } from '../../entities/SettingEntity'
-import { queryObjectToQueryString } from '../../utils'
+import { JiraSettingValues, Setting } from '@mcro/models'
+import { queryObjectToQueryString } from '../utils'
 import { JiraComment, JiraCommentCollection, JiraIssue, JiraIssueCollection, JiraUser } from './JiraTypes'
 
 const log = new Logger('syncer:jira:loader')
@@ -10,9 +9,9 @@ const log = new Logger('syncer:jira:loader')
  * Loads jira data from its API.
  */
 export class JiraLoader {
-  private setting: SettingEntity
+  private setting: Setting
 
-  constructor(setting: SettingEntity) {
+  constructor(setting: Setting) {
     this.setting = setting
   }
 

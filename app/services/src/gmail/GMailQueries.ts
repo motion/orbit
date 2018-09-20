@@ -1,5 +1,4 @@
-import { GmailHistory, GmailThread, GmailThreadResult } from './GMailTypes'
-import { GmailFetchOptions, GmailUserProfile } from './GMailTypes'
+import { GmailFetchOptions, GmailHistory, GmailThread, GmailThreadResult, GmailUserProfile } from './GMailTypes'
 
 /**
  * Gets the user profile information.

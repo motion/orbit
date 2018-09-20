@@ -1,12 +1,11 @@
-import { GDriveSettingValues } from '@mcro/models'
+import { getGlobalConfig } from '@mcro/config'
+import { Logger } from '@mcro/logger'
+import { GDriveSettingValues, Setting } from '@mcro/models'
+import * as r2 from '@mcro/r2'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
-import * as r2 from '@mcro/r2'
-import { Logger } from '@mcro/logger'
-import { GDriveFetchQueryOptions } from './GDriveTypes'
-import { SettingEntity } from '../../entities/SettingEntity'
-import { getGlobalConfig } from '@mcro/config'
+import { DriveFetchQueryOptions } from './DriveTypes'
 
 const Config = getGlobalConfig()
 const log = new Logger('syncer:gdrive')
@@ -14,10 +13,10 @@ const log = new Logger('syncer:gdrive')
 /**
  * Fetches data from Google Drive Api.
  */
-export class GDriveFetcher {
-  private setting: SettingEntity
+export class DriveFetcher {
+  private setting: Setting
 
-  constructor(setting: SettingEntity) {
+  constructor(setting: Setting) {
     this.setting = setting
   }
 
@@ -58,7 +57,7 @@ export class GDriveFetcher {
   /**
    * Fetches data from google api based on a given query.
    */
-  async fetch<R>(options: GDriveFetchQueryOptions<R>): Promise<R> {
+  async fetch<R>(options: DriveFetchQueryOptions<R>): Promise<R> {
     const { url, query, json } = options
     const qs = Object.keys(query)
       .map(key => key + '=' + query[key])
@@ -94,7 +93,7 @@ export class GDriveFetcher {
    * todo: need to move this logic into Setting check method,
    * todo: its a setting responsibility to control its access token state
    */
-  private async refreshToken(setting: SettingEntity) {
+  private async refreshToken(setting: Setting) {
     const values = setting.values as GDriveSettingValues
     if (!values.oauth.refreshToken) {
       return null
@@ -112,7 +111,7 @@ export class GDriveFetcher {
     }).json
     if (reply && reply.access_token) {
       setting.token = reply.access_token
-      await setting.save()
+      // await this.setting.save() // todo broken after extracting into services
       return true
     }
     return false

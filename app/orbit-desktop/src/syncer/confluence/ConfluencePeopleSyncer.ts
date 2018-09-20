@@ -1,14 +1,13 @@
 import { Logger } from '@mcro/logger'
 import { Bit, ConfluencePersonData, ConfluenceSettingValues, Person } from '@mcro/models'
+import { ConfluenceLoader, ConfluenceUser } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { createOrUpdatePersonBits } from '../../repository'
 import { CommonUtils } from '../../utils/CommonUtils'
 import { PersonUtils } from '../../utils/PersonUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { ConfluenceLoader } from './ConfluenceLoader'
-import { ConfluenceUser } from './ConfluenceTypes'
-import { createOrUpdatePersonBits } from '../../repository'
 
 const log = new Logger('syncer:confluence:people')
 

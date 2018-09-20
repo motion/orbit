@@ -1,5 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { Bit, Person, PersonBit, SlackBitData, SlackSettingValues } from '@mcro/models'
+import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
 import { getRepository, MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -8,8 +9,6 @@ import { timeout } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SlackBitFactory } from './SlackBitFactory'
-import { SlackLoader } from './SlackLoader'
-import { SlackChannel, SlackMessage } from './SlackTypes'
 
 const log = new Logger('syncer:slack:messages')
 

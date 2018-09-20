@@ -9,14 +9,16 @@ export class TrayItem extends BaseComponent {
     this.update()
   }
 
+  handleClick = (menuItem, browserWindow, event) => {
+    this.emitter.emit('click', event)
+  }
+
   handleNewProps() {
     const { onClick, ...props } = this.props
     this.handleEvent(this.emitter, 'click', onClick)
     this.trayItem = props
     if (onClick) {
-      this.trayItem.click = (menuItem, browserWindow, event) => {
-        this.emitter.emit('click', event)
-      }
+      this.trayItem.click = this.handleClick
     }
   }
 }

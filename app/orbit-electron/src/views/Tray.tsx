@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Tray, TrayItem } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import Path from 'path'
-import { Electron, App } from '@mcro/stores'
+import { Electron, App, Desktop } from '@mcro/stores'
 import { observeOne, SettingRepository } from '@mcro/model-bridge'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
 
@@ -33,6 +33,7 @@ class TrayStore {
 
   toggleRealtime = async () => {
     // for now just set it here
+    Electron.sendMessage(Desktop, Desktop.messages.TOGGLE_OCR)
     Electron.setState({ realTime: true })
 
     console.log('toggling realtime')
@@ -72,7 +73,9 @@ export default class TrayEl extends React.Component<{ store?: TrayStore }> {
         />
         <TrayItem
           label="Realtime search"
-          checked={store.generalSetting && store.generalSetting.values.realtimeSearch}
+          type="checkbox"
+          /* store.generalSetting && store.generalSetting.values.realtimeSearch */
+          checked={false}
           onClick={store.toggleRealtime}
         />
         <TrayItem type="separator" />

@@ -336,7 +336,7 @@ export class BridgeManager {
     { ignoreKeyCheck = false, onlyKeys = null } = {}, // ignoreLog?: Boolean,
   ) {
     let changed = null
-    for (const key of Object.keys(newState)) {
+    for (const key in newState) {
       if (!ignoreKeyCheck) {
         const isValidKey = onlyKeys
           ? onlyKeys.indexOf(key) > -1
@@ -362,16 +362,22 @@ export class BridgeManager {
         // check if equal
         const diff = {}
         let areEqual = true
+        // calculate diff for smaller syncs, need to test perf
         for (const cKey in b) {
           if (!isEqual(a[cKey], b[cKey])) {
             diff[cKey] = b[cKey]
-            // deep mutate thanks mobx5
-            stateObj[key][cKey] = b[cKey]
             areEqual = false
           }
         }
         if (areEqual) {
           continue
+        }
+        // Because mobx wont trigger reactions as youd expect unless you do this.
+        // Basically App.setState({ a: { b:1 } }) wont trigger a reaction in:
+        //   react(() => App.a), and you'd generally want that to happen.
+        stateObj[key] = {
+          ...a,
+          ...b,
         }
         changed = changed || {}
         changed[key] = diff

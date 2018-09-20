@@ -42,7 +42,7 @@ class DesktopStore {
   setLastScreenChange: DesktopStore['setState']
 
   messages = {
-    TOGGLE_PAUSED: 'TOGGLE_PAUSED',
+    TOGGLE_OCR: 'TOGGLE_OCR',
     OPEN: 'OPEN',
     CLEAR_OPTION: 'CLEAR_OPTION',
     RESET_DATA: 'RESET_DATA',
@@ -58,7 +58,6 @@ class DesktopStore {
 
   state = deep({
     appState: {
-      selectedText: '',
       id: '',
       name: '',
       title: '',
@@ -71,6 +70,7 @@ class DesktopStore {
       shouldClear: [],
       clearWords: null,
       restoreWords: null,
+      paused: true,
     },
     searchState: {
       indexStatus: '',
@@ -95,7 +95,6 @@ class DesktopStore {
       supportsTransparency: false,
     },
     appFocusState: {} as AppFocusState,
-    paused: true,
     focusedOnOrbit: false,
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),

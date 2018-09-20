@@ -1,7 +1,7 @@
 import { Oracle } from '@mcro/oracle'
 import { debounce, last } from 'lodash'
-import { store, isEqual, react, on } from '@mcro/black'
-import { Desktop, Electron, App } from '@mcro/stores'
+import { store, isEqual, react } from '@mcro/black'
+import { Desktop, Electron } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import macosVersion from 'macos-version'
 import { toJS } from 'mobx'
@@ -14,14 +14,15 @@ const APP_ID = -1
 const PREVENT_CLEAR = {
   electron: true,
   Chromium: true,
-  // iterm2: true,
-  // VSCode: true,
+  iterm2: true,
+  VSCode: true,
 }
 // prevent apps from triggering appState updates
 const PREVENT_APP_STATE = {
-  // iterm2: true,
+  iterm2: true,
   electron: true,
   Chromium: true,
+  VSCode: true,
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -61,29 +62,34 @@ export class OCRManager {
     }
     this.setupOracleListeners()
     this.started = true
+
+    // listen for start toggle
+    Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, () => {
+      log.info('Toggle OCR...')
+      Desktop.setOcrState({ paused: !Desktop.ocrState.paused })
+    })
   }
 
   startOCROnActive = react(
-    () => Electron.state.realTime,
-    async (accepts, { when }) => {
+    () => Desktop.ocrState.paused,
+    async (paused, { when }) => {
       await when(() => this.started)
-      console.log('accepted real time', accepts)
-      if (accepts) {
-        this.oracle.checkAccessbility()
-        // we start watching once accessbile comes down, see onAccessible
-      } else {
+      console.log('OCR Active', !paused)
+      if (paused) {
         if (this.isWatchingWindows) {
           this.oracle.stopWatchingWindows()
           this.isWatchingWindows = false
         }
+      } else {
+        this.oracle.checkAccessbility()
+        // we start watching once accessbile comes down, see onAccessible
       }
     },
   )
 
   rescanOnNewAppState = react(
     () => Desktop.state.appState,
-    state => {
-      console.log('got new app state', JSON.stringify(state, null, 2))
+    () => {
       this.rescanApp()
     },
   )
@@ -128,29 +134,29 @@ export class OCRManager {
       }
       // console.log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = toJS(Desktop.appState)
-      let nextState: any = {}
+      let appState: any = {}
       let id = this.curAppID
       const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
         case 'FrontmostWindowChangedEvent':
           id = value.id
-          nextState = {
+          appState = {
             id,
+            name: id ? last(id.split('.')) : value.title,
             title: value.title,
             offset: value.position,
             bounds: value.size,
-            name: id ? last(id.split('.')) : value.title,
           }
           // update these now so we can use to track
           this.curAppID = id
-          this.curAppName = nextState.name
+          this.curAppName = appState.name
           break
         case 'WindowPosChangedEvent':
-          nextState.bounds = value.size
-          nextState.offset = value.position
+          appState.bounds = value.size
+          appState.offset = value.position
       }
       // no change
-      if (isEqual(nextState, lastState)) {
+      if (isEqual(appState, lastState)) {
         log.info('Same app state, ignoring scan')
         return
       }
@@ -162,22 +168,22 @@ export class OCRManager {
         this.oracle.pause()
         return
       }
-      if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[nextState.name]) {
+      if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[appState.name]) {
         const { appState } = Desktop.state
         if (
-          !isEqual(nextState.bounds, appState.bounds) ||
-          !isEqual(nextState.offset, appState.offset)
+          !isEqual(appState.bounds, appState.bounds) ||
+          !isEqual(appState.offset, appState.offset)
         ) {
           console.log('ocr clearing...')
           // immediate clear for moving
           Desktop.sendMessage(Electron, Electron.messages.CLEAR)
         }
       }
-      if (!Desktop.state.paused) {
+      if (!Desktop.ocrState.paused) {
         this.oracle.resume()
       }
-      console.log('setting app state!', nextState)
-      Desktop.setState(nextState)
+      console.log('setting app state!', appState)
+      Desktop.setState({ appState })
     })
 
     // OCR work clear
@@ -267,7 +273,7 @@ export class OCRManager {
   async rescanApp() {
     console.log('rescanApp', Desktop.appState.id)
     clearTimeout(this.clearOCRTm)
-    if (!Desktop.appState.id || Desktop.state.paused) {
+    if (!Desktop.appState.id || Desktop.ocrState.paused) {
       console.log('No id or paused')
       return
     }
@@ -303,7 +309,7 @@ export class OCRManager {
       ],
     })
     this.hasResolvedOCR = false
-    if (Desktop.state.paused) {
+    if (Desktop.ocrState.paused) {
       return
     }
     log.info('rescanApp.resume', name)

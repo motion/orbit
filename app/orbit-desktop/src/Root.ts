@@ -127,6 +127,8 @@ export class Root {
     this.ocrManager.start()
     this.screenManager.start()
 
+    this.oracle.startWatchingWindows()
+
     this.keyboardStore = new KeyboardStore({
       // disable for now it was used for fancy orbit app switching
       // onKeyClear: this.screenManager.lastScreenChange,

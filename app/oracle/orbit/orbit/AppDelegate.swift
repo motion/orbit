@@ -22,6 +22,11 @@ struct Words: Decodable {
   let id: Int
 }
 
+struct WordsReply: Codable {
+  let words: String
+  let id: Int
+}
+
 class BlurryEffectView: NSVisualEffectView {
   override func updateLayer() {
     super.updateLayer()
@@ -107,6 +112,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
+    
+    print("spell")
+    let words = "hello world hwo are you doing today in htis cool place."
+    let checker = NSSpellChecker()
+    let spellingRange = checker.checkSpelling(of: words, startingAt: 0)
+    let guesses = checker.guesses(
+      forWordRange: spellingRange,
+      in: words,
+      language: checker.language(),
+      inSpellDocumentWithTag: 0
+      )!
+    print("step 2")
+    let jsonGuesses = try JSONEncoder().encode(guesses)
+    let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
+    
+    
     print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
 
@@ -290,8 +311,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       self.theme(text[5..<text.count])
       return
     }
-    if action == "spell" {
+    if action == "spel" {
       do {
+        print("spell")
         let input = try JSONDecoder().decode(Words.self, from: text[5..<text.count].data(using: .utf8)!)
         let words = input.words
         let checker = NSSpellChecker()
@@ -302,8 +324,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           language: checker.language(),
           inSpellDocumentWithTag: 0
         )!
+        print("step 2")
         let jsonGuesses = try JSONEncoder().encode(guesses)
-        self.emit("{ \"action\": \"spellCheck\", \"value\": { \"id\": \(input.id), \"guesses\": \(jsonGuesses) } }")
+        let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
+        self.emit("{ \"action\": \"spellCheck\", \"value\": { \"id\": \(input.id), \"guesses\": \(strJsonGuesses) } }")
       } catch {
         print("error encoding guesses \(error)")
       }

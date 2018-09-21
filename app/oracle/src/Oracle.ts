@@ -210,12 +210,13 @@ export class Oracle {
     return new Promise(res => {
       const callId = Math.round(Math.random() * 100000000000)
       this.spellCallbackCb = ({ id, guesses }) => {
+        console.log('id', id, guesses)
         if (id === callId) {
           res(guesses)
         }
-        res
       }
-      this.socketSend(`spell ${words}`)
+      const spellObj = { words, id: callId }
+      this.socketSend(`spell ${JSON.stringify(spellObj)}`)
     })
   }
 
@@ -308,7 +309,7 @@ export class Oracle {
     start: this.start,
     defocus: this.defocus,
     windowEvent: ({ type, ...values }) => this.onWindowChangeCB(type, values),
-    spell: val => {
+    spellCheck: val => {
       if (this.spellCallbackCb) {
         this.spellCallbackCb(val)
       }

@@ -7,6 +7,8 @@ import macosVersion from 'macos-version'
 import { toJS } from 'mobx'
 import { oracleBinPath } from '../constants'
 import { getGlobalConfig } from '@mcro/config'
+import SpellChecker from 'spellchecker'
+import { getTopWords } from '@mcro/cosal'
 
 const log = new Logger('OCRManager')
 const Config = getGlobalConfig()
@@ -131,16 +133,38 @@ export class OCRManager {
     })
 
     // OCR words
-    this.oracle.onWords(async words => {
-      console.log('got words lets do a spellcheck :)')
-      const wordStr = words.map(word => word[4]).join(' ')
-      console.log('specllchec', wordStr)
-      const guesses = await this.oracle.spellcheck(wordStr)
-      console.log('guesses', guesses)
+    this.oracle.onWords(async wordBounds => {
+      console.time('spellcheck')
+      const words = wordBounds.map(x => x[4]) as string[]
+      const text = words.join(' ')
+      console.log('incoming string', words)
+      const correctionRanges = SpellChecker.checkSpelling(text)
+      let start = 0
+      for (const [index, word] of words.entries()) {
+        const correctionRange = correctionRanges.find(x => x.start === start)
+        if (correctionRange) {
+          const suggestions = SpellChecker.getCorrectionsForMisspelling(word) as string[]
+          if (suggestions.length) {
+            words[index] = suggestions[0]
+              // oftentimes joined words are properly recognized as such but correct with a - between.
+              // for example "tothe" will come back with corrections: ['to-the', 'to the']
+              // 98 times of 100 we want "to the" to be the answer, so lets just assume it
+              .replace('-', ' ')
+          }
+        }
+        start += word.length + 1 // extra 1 for space
+      }
+      console.timeEnd('spellcheck')
+      console.log('spellchecked string', words.join(' '))
+
+      const wordsString = words.join(' ')
+      const salientWords = await getTopWords(wordsString, 5)
 
       this.hasResolvedOCR = true
       Desktop.setOcrState({
-        words,
+        salientWords,
+        wordsString,
+        words: wordBounds,
         updatedAt: Date.now(),
       })
     })

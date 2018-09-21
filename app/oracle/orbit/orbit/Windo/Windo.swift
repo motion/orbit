@@ -58,7 +58,7 @@ final class Windo {
     NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in
       let msSinceLast = Int(Double(DispatchTime.now().uptimeNanoseconds - lastScroll.uptimeNanoseconds) / 1_000_000)
       if msSinceLast > 200 {
-        self.emit("{ \"action\": \"windowEvent\", { \"type\": \"ScrollEvent\" } }") // \(DispatchTime.now().rawValue)
+        self.emit("{ \"action\": \"windowEvent\", \"value\": { \"type\": \"ScrollEvent\" } }") // \(DispatchTime.now().rawValue)
         lastScroll = DispatchTime.now()
       }
     })

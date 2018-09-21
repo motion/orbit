@@ -6,7 +6,6 @@ type Props = {
   getActions: () => Object
   setState: Function
   getState: Function
-  onWindowChangeCB: Function
 }
 
 export type SocketSender = (action: string, data?: Object) => void
@@ -110,15 +109,12 @@ export class OracleBridge {
           const { action, value, state } = JSON.parse(str.toString())
           if (state) {
             this.props.setState(state)
+            return
           }
           if (actions[action]) {
             actions[action](value)
           } else {
-            // otherwise its a window change event
-            if (!action) {
-              return
-            }
-            this.props.onWindowChangeCB(action, value)
+            console.log('no known action for', action, value)
           }
         } catch (err) {
           console.log('Error receiving message', str)

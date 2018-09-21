@@ -58,7 +58,7 @@ final class Windo {
     NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in
       let msSinceLast = Int(Double(DispatchTime.now().uptimeNanoseconds - lastScroll.uptimeNanoseconds) / 1_000_000)
       if msSinceLast > 200 {
-        self.emit("{ \"action\": \"ScrollEvent\" }") // \(DispatchTime.now().rawValue)
+        self.emit("{ \"action\": \"windowEvent\", { \"type\": \"ScrollEvent\" } }") // \(DispatchTime.now().rawValue)
         lastScroll = DispatchTime.now()
       }
     })
@@ -129,7 +129,7 @@ final class Windo {
     if bundleId != self.currentId { return }
     let position = position ?? [Int(window.position.value.x), Int(window.position.value.y)]
     let size = size ?? [Int(window.size.value.width), Int(window.size.value.height)]
-    self.emit("{ \"action\": \"WindowPosChangedEvent\", \"value\": { \"id\": \"\(bundleId)\", \"size\": [\(size[0]), \(size[1])], \"position\": [\(position[0]), \(position[1])] } }")
+    self.emit("{ \"action\": \"windowEvent\", \"value\": { \"type\": \"WindowPosChangedEvent\", \"id\": \"\(bundleId)\", \"size\": [\(size[0]), \(size[1])], \"position\": [\(position[0]), \(position[1])] } }")
   }
   
   // sends focus to last app besides our app
@@ -159,7 +159,7 @@ final class Windo {
     let size = window.size.value
     let id = app.bundleIdentifier ?? ""
     self.currentId = id
-    self.emit("{ \"action\": \"FrontmostWindowChangedEvent\", \"value\": { \"id\": \"\(id)\", \"title\": \(titleString), \"position\": [\(position[0]),\(position[1])], \"size\": [\(size.width),\(size.height)] } }")
+    self.emit("{ \"action\": \"windowEvent\", \"value\": { \"type\": \"FrontmostWindowChangedEvent\", \"id\": \"\(id)\", \"title\": \(titleString), \"position\": [\(position[0]),\(position[1])], \"size\": [\(size.width),\(size.height)] } }")
   }
   
 }

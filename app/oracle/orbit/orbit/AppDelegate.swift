@@ -17,6 +17,11 @@ struct Position: Decodable {
   let height: Int
 }
 
+struct Words: Decodable {
+  let words: String
+  let id: Int
+}
+
 class BlurryEffectView: NSVisualEffectView {
   override func updateLayer() {
     super.updateLayer()
@@ -283,6 +288,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     if action == "them" {
       self.theme(text[5..<text.count])
+      return
+    }
+    if action == "spell" {
+      do {
+        let input = try JSONDecoder().decode(Words.self, from: text[5..<text.count].data(using: .utf8)!)
+        let words = input.words
+        let checker = NSSpellChecker()
+        let spellingRange = checker.checkSpelling(of: words, startingAt: 0)
+        let guesses = checker.guesses(
+          forWordRange: spellingRange,
+          in: words,
+          language: checker.language(),
+          inSpellDocumentWithTag: 0
+        )!
+        let jsonGuesses = try JSONEncoder().encode(guesses)
+        self.emit("{ \"action\": \"spellCheck\", \"value\": { \"id\": \(input.id), \"guesses\": \(jsonGuesses) } }")
+      } catch {
+        print("error encoding guesses \(error)")
+      }
       return
     }
     if action == "stat" {

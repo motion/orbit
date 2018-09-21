@@ -131,7 +131,13 @@ export class OCRManager {
     })
 
     // OCR words
-    this.oracle.onWords(words => {
+    this.oracle.onWords(async words => {
+      console.log('got words lets do a spellcheck :)')
+      const wordStr = words.map(word => word[4]).join(' ')
+      console.log('specllchec', wordStr)
+      const guesses = await this.oracle.spellcheck(wordStr)
+      console.log('guesses', guesses)
+
       this.hasResolvedOCR = true
       Desktop.setOcrState({
         words,

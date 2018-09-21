@@ -1,14 +1,12 @@
 # nate
 
 - simple ocr would be killer demo
-- orbit orb:
-  - click it once to turn on realtime search
-  - Click it again ? "ingest" it into your "memory"
-    - orbit tray dropdown ?
-      - add page
-      - add site
-- peek design run make info better
-- design run on the person feed
+- simple /cosal endpoint for now
+  - plus simple Cosal store that hits the endpoint
+  - plug it into profiles
+- Cosal.relevancy /relevancy endpoint
+  - plug it into Bit
+  - also make Bit views a bit bigger and nicer design
 - write intro email 2 hours (medium post, nice screenshots + embedded video)
 - record video of a demo
 

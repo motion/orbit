@@ -48,6 +48,7 @@ class DesktopStore {
     RESET_DATA: 'RESET_DATA',
     SEARCH_INDEX: 'SEARCH_INDEX',
     TOGGLE_SETTING: 'TOGGLE_SETTING',
+    PROXY_FN: 'PROXY_FN',
   }
 
   bridge = Bridge

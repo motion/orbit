@@ -1,10 +1,9 @@
 import psTree from 'ps-tree'
 
 export function cleanupChildren(pid = process.getuid()) {
-  console.log(`Cleaning children of ${pid}...`)
   const exitWait = setTimeout(() => {
     console.log('failed to exit gracefully!')
-  }, 500)
+  }, 200)
   return new Promise(res => {
     psTree(pid, (err, children) => {
       if (err) {
@@ -17,7 +16,9 @@ export function cleanupChildren(pid = process.getuid()) {
           try {
             process.kill(pid)
           } catch (err) {
-            console.log('err killing', pid, err.message)
+            if (err.message.indexOf('ESRCH') === -1) {
+              console.log('err killing', pid, err.message)
+            }
           }
         }
       } catch (err) {

@@ -17,11 +17,6 @@ type FakeProcess = {
 @store
 export class AppsManager {
   processes: FakeProcess[] = []
-  mainOracle: Oracle
-
-  constructor(oracle: Oracle) {
-    this.mainOracle = oracle
-  }
 
   async dispose() {
     await Promise.all(this.processes.map(x => x.oracle.stop()))

@@ -5,9 +5,12 @@ import { Desktop, Electron } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import macosVersion from 'macos-version'
 import { toJS } from 'mobx'
+import { oracleBinPath } from '../constants'
+import { getGlobalConfig } from '@mcro/config'
 
-const log = new Logger('screen')
-const ORBIT_APP_ID = 'com.github.electron'
+const log = new Logger('OCRManager')
+const Config = getGlobalConfig()
+const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
 const APP_ID = -1
 
 // prevent apps from clearing highlights
@@ -19,10 +22,10 @@ const PREVENT_CLEAR = {
 }
 // prevent apps from triggering appState updates
 const PREVENT_APP_STATE = {
-  iterm2: true,
-  electron: true,
+  // iterm2: true,
+  // electron: true,
+  // VSCode: true,
   Chromium: true,
-  VSCode: true,
 }
 // prevent apps from OCR
 const PREVENT_SCANNING = {
@@ -38,28 +41,31 @@ const PREVENT_SCANNING = {
 // @ts-ignore
 @store
 export class OCRManager {
-  clearTimeout?: Function
   hasResolvedOCR = false
   clearOCRTm: any
   isWatching = ''
   curAppID = ''
   curAppName = ''
   watchSettings = { name: '', settings: {} }
-  lastAppName = null
   started = false
-  isWatchingWindows = false
-  oracle: Oracle
-
-  constructor(oracle: Oracle) {
-    this.oracle = oracle
-  }
+  oracle = new Oracle({
+    binPath: oracleBinPath,
+    socketPort: Config.ports.ocrBridge,
+    ocr: true,
+    onClose: () => {
+      console.log('should restart ocr it crashed...')
+    },
+  })
 
   start = async () => {
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.11')) {
       console.log('older mac, avoiding oracle')
-      return
+      return false
     }
+    console.log('START........')
+    await this.oracle.start()
+    console.log('STARTEDDDDDDDD........')
     this.setupOracleListeners()
     this.started = true
 
@@ -68,6 +74,12 @@ export class OCRManager {
       log.info('Toggle OCR...')
       Desktop.setOcrState({ paused: !Desktop.ocrState.paused })
     })
+
+    return true
+  }
+
+  async dispose() {
+    await this.oracle.stop()
   }
 
   startOCROnActive = react(
@@ -280,6 +292,9 @@ export class OCRManager {
   // }
 
   async ocrCurrentApp() {
+    if (!this.started) {
+      return
+    }
     console.log('ocrCurrentApp', Desktop.appState.id)
     clearTimeout(this.clearOCRTm)
     if (!Desktop.appState.id || Desktop.ocrState.paused) {

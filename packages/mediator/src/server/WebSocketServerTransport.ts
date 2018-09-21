@@ -10,12 +10,12 @@ export class WebSocketServerTransport implements ServerTransport {
   constructor(options: { port: number }) {
     this.websocket = new WebSocketServer({ port: options.port })
     this.websocket.on('connection', client => {
-      log.verbose(`client connected`, client)
+      log.verbose('client connected')
       this.clients.push(client)
       this.onCallbacks.forEach(callback => this.onMessage(callback))
     })
     this.websocket.on('disconnect', client => {
-      log.verbose(`client disconnected`, client)
+      log.verbose('client disconnected', client)
       const registeredClient = this.clients.indexOf(client)
       if (registeredClient !== -1) {
         this.clients.splice(registeredClient, 1)
@@ -28,14 +28,14 @@ export class WebSocketServerTransport implements ServerTransport {
     for (let client of this.clients) {
       client.on('message', str => {
         const result = JSON.parse(str)
-        log.verbose(`received message from the client`, result)
+        log.verbose('received message from the client', result)
         return callback(result)
       })
     }
   }
 
   send(data: TransportResponse) {
-    log.verbose(`sending data to the client`, data)
+    log.verbose('sending data to the client', data)
     for (let client of this.clients) {
       client.send(JSON.stringify(data))
     }

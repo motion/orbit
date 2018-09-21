@@ -33,6 +33,10 @@ export class ScreenManager {
         return
       }
     })
+  }
+
+  start = () => {
+    this.isStarted = true
 
     // space move
     let mvtm
@@ -56,10 +60,6 @@ export class ScreenManager {
       this.oracle.socketSend('osin')
     }, 1000 * 10)
     on(this, listener2)
-  }
-
-  start = () => {
-    this.isStarted = true
   }
 
   updateTheme = react(

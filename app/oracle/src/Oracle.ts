@@ -22,7 +22,7 @@ export class Oracle {
   onClose?: Function
   name?: string
   env: { [key: string]: string } | null
-  port: number
+  socketPort: number
   options = {
     ocr: false,
     appWindow: false,
@@ -69,7 +69,7 @@ export class Oracle {
   } = {}) {
     this.name = name
     this.env = env
-    this.port = socketPort
+    this.socketPort = socketPort
     this.binPath = binPath
     this.debugBuild = debugBuild
     this.options = {
@@ -84,10 +84,12 @@ export class Oracle {
     if (this.options.ocr) {
       try {
         await promisify(mkdir)('/tmp/screen')
-      } catch {}
+      } catch {
+        log.info('Couldnt make temp dir for screens')
+      }
     }
     this.oracleBridge = new OracleBridge({
-      port: this.port,
+      port: this.socketPort,
       getActions: () => this.actions,
       setState: this.setState,
       getState: () => this.state,
@@ -96,10 +98,8 @@ export class Oracle {
     await this.oracleBridge.start(({ socketSend }) => {
       this.socketSend = socketSend
     })
-    await this.setState({ isPaused: false })
     await this.runOracleProcess()
     await this.oracleBridge.onConnected()
-    this.socketSend('osin')
     log.verbose('started oracle')
   }
 
@@ -319,15 +319,19 @@ export class Oracle {
       }
       bin = this.name
     }
-    log.info(`oracle running on port ${this.port} ${bin} at path ${binDir}`)
+    const env = {
+      RUN_OCR: `${this.options.ocr}`,
+      RUN_APP_WINDOW: `${this.options.appWindow}`,
+      SOCKET_PORT: `${this.socketPort}`,
+      ...this.env,
+    }
+    const stringEnv = JSON.stringify(env, null, 2)
+    log.info(
+      `Start Oracle on port ${this.socketPort} ${bin} at path ${binDir} with env:\n${stringEnv}`,
+    )
     try {
       this.process = spawn(Path.join(binDir, bin), [], {
-        env: {
-          RUN_OCR: `${this.options.ocr}`,
-          RUN_APP_WINDOW: `${this.options.appWindow}`,
-          SOCKET_PORT: `${this.port}`,
-          ...this.env,
-        },
+        env,
       })
       const handleOut = data => {
         if (!data) return
@@ -337,10 +341,7 @@ export class Oracle {
         const out = str.trim()
         const isPurposefulLog = out[0] === '!'
         if (isPurposefulLog || isLikelyError) {
-          log.verbose('swift >', this.name, out.slice(1))
-          return
-        }
-        if (str.indexOf('<Notice>')) {
+          log.verbose('swift >>>', this.name, out.slice(1))
           return
         }
         console.log('screen stderr:', str)
@@ -350,7 +351,7 @@ export class Oracle {
       this.process.stdout.on('data', handleOut)
       this.process.stderr.on('data', handleOut)
       this.process.on('exit', val => {
-        log.info('ORACLE PROCESS STOPPING', val)
+        log.info('ORACLE PROCESS STOPPING', this.socketPort, val)
         if (this.onClose) {
           this.onClose()
         }

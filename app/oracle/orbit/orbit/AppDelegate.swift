@@ -25,7 +25,6 @@ class BlurryEffectView: NSVisualEffectView {
     
     if backdrop.sublayers != nil {
       for sublayer in backdrop.sublayers! {
-        print("123 \(String(describing: sublayer.name))")
         if sublayer.name == "Backdrop" {
           for filter in sublayer.filters! {
             print("------------------- \(type(of: filter))")
@@ -103,23 +102,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
+    print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
-    
-    let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
-    let options = [checkOptPrompt: true]
-    //translate into boolean value
-    let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
-    
-    print("WHAT \(accessEnabled)")
 
-    if shouldRunOCR == true {
-      AXSwift.checkIsProcessTrusted(prompt: true)
+    if shouldRunOCR {
       windo = Windo(emit: self.emit)
-      
+
+      // testing trust:
+      let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
+      let options = [checkOptPrompt: true]
+      let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
+      print("trust \(accessEnabled)")
+
+      // testing trust another way:
       if UIElement.isProcessTrusted(withPrompt: true) {
-        print("TRUST")
+        print("is trusted")
       } else {
-        NSLog("No accessibility API permission, exiting")
+        print("not trusted for watching winodws")
       }
      
       do {
@@ -172,13 +171,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       if #available(OSX 10.11, *) {
         self.supportsTransparency = true
       }
-      
+
       // allow showing icon in sub-apps
       if ProcessInfo.processInfo.environment["SHOW_ICON"] != nil {
         NSApp.setActivationPolicy(NSApplication.ActivationPolicy.regular)
         self.setIcon(ProcessInfo.processInfo.environment["SHOW_ICON"]!)
       }
-      
+
       blurryView.maskImage = _maskImage(cornerRadius: 16.0)
       blurryView.layer?.masksToBounds = true
       blurryView.wantsLayer = true
@@ -190,11 +189,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
       blurryView.state = NSVisualEffectView.State.active
       blurryView.updateLayer()
-      
-      
       window.contentView?.addSubview(blurryView)
       window.makeKeyAndOrderFront(nil)
     }
+    
+    print("finished running app window")
   }
   
   func showWindow() {
@@ -251,7 +250,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func onMessage(_ text: String) {
-//    print("Swift.onMessage \(text)")
+    // dont print things that poll...
+    if text != "space" && text != "osin" {
+      print("Swift.onMessage \(text)")
+    }
     if text.count < 4 {
       print("weird text")
       return

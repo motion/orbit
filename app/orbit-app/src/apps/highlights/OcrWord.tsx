@@ -12,6 +12,7 @@ const Word = view({
   color: '#000',
   fontWeight: 200,
   highlighted: {
+    background: 'yellow',
     borderBottom: [3, '#EDD71E'],
   },
   hovered: {
@@ -21,7 +22,7 @@ const Word = view({
 })
 
 const WordInner = view({
-  opacity: 0.15,
+  opacity: 0.5,
   top: -14,
   left: -4,
   position: 'absolute',
@@ -46,7 +47,7 @@ export const OCRWord = view(({ item, store: { hoveredWord } }) => {
         opacity: 1,
       }}
     >
-      <WordInner if={!highlighted}>{word}</WordInner>
+      {!highlighted && <WordInner>{word}</WordInner>}
     </Word>
   )
 })

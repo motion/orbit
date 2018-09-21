@@ -64,13 +64,14 @@ class HighlightsStore {
 
   // test positions - all four corners + center
   get ocrWords() {
-    return [
-      [100, 60, 120, 10, 'xx', 'red'],
-      [1500, 60, 120, 10, 'xx', 'red'],
-      [1500, 1000, 120, 10, 'xx', 'red'],
-      [100, 1000, 120, 10, 'xx', 'red'],
-      [800, 500, 120, 10, 'xx', 'red'],
-    ]
+    return Desktop.ocrState.words
+    // return [
+    //   [100, 60, 120, 10, 'xx', 'red'],
+    //   [1500, 60, 120, 10, 'xx', 'red'],
+    //   [1500, 1000, 120, 10, 'xx', 'red'],
+    //   [100, 1000, 120, 10, 'xx', 'red'],
+    //   [800, 500, 120, 10, 'xx', 'red'],
+    // ]
   }
 
   // test inline words - three above each other
@@ -127,9 +128,6 @@ class HighlightsStore {
 export class HighlightsPage extends React.Component<{ store?: HighlightsStore }> {
   render() {
     const { store } = this.props
-    // if (!store.showAll) {
-    //   return null
-    // }
     return (
       <Frame>
         {(store.ocrWords || []).map(item => (

@@ -8,7 +8,39 @@
 
 # Example app: Article Micropayments
 
-This app would use the Screen, OCR, and Payment APIs.
+This app would highlight interesting people on screen and then show a view next to them:
+
+```ts
+export class MyApp {
+  myTopics = ['machine learning']
+
+  highlightInterestingPeople = react(
+    () => Screen.activeApp.words,
+    async words => {
+      const people = await Directory.findPeople(words)
+      const peopleTopics = await all(people.map(Person.getRecentBits).map(Language.importantWords))
+      const interestingPeople = []
+      for (const [index, topics] of peopleTopics.entries()) {
+        if (Language.distance(topics, this.myTopics) < Language.Distance.Similar) {
+          interestingPeople.push(people[index])
+        }
+      }
+      const interestingPeopleWordIndex = interestingPeople.map(name => words.indexOf(name)))
+      Screen.highlightWords(interestingPeopleWordIndex, {
+        onHighlight: word => App.show(MyApp, word)
+      })
+    },
+  )
+
+  render() {
+    return (
+      <App></App>
+    )
+  }
+}
+```
+
+This app would use the Screen, OCR, and Payment APIs:
 
 ```ts
 class MicroPaymentsApp {

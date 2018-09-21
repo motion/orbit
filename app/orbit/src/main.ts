@@ -1,8 +1,9 @@
 import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 import { cleanupChildren } from './cleanupChildren'
-import { ChildProcess, exec } from 'child_process'
+import { ChildProcess } from 'child_process'
 import WebSocket from 'ws'
 import root from 'global'
+import { once } from 'lodash'
 
 root['WebSocket'] = WebSocket
 
@@ -14,6 +15,8 @@ Error.stackTraceLimit = Infinity
 // and also use the bundled electron binary as the entry point
 // which lets us pack things into an asar
 export async function main() {
+  console.log(`starting ${process.env.IS_DESKTOP ? 'Desktop' : 'Electron'}`)
+
   // if were in desktop we get config through here
   let config: GlobalConfig = process.env.ORBIT_CONFIG ? JSON.parse(process.env.ORBIT_CONFIG) : null
 
@@ -32,7 +35,9 @@ export async function main() {
       throw new Error('Desktop didn\'t receive config!')
     }
     // lets run desktop now
-    return require('@mcro/orbit-desktop').main()
+    require('@mcro/orbit-desktop').main()
+    // dont keep running
+    return
   }
 
   // setup process error watching before doing most stuff
@@ -44,7 +49,7 @@ export async function main() {
 
   let desktopProcess: ChildProcess
 
-  const handleExit = async () => {
+  const handleExit = once(async () => {
     try {
       console.log('Electron handle exit...')
       console.log('Orbit exiting...')
@@ -55,11 +60,10 @@ export async function main() {
       process.kill(-desktopProcess.pid)
       console.log('bye!')
     } catch (err) {
-      exec('pkill -9 Orbit')
-      console.log('error exiting', err)
+      // exec('pkill -9 Orbit')
       process.exit(0)
     }
-  }
+  })
 
   // this works in dev
   process.on('exit', handleExit)

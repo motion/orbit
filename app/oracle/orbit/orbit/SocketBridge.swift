@@ -1,11 +1,3 @@
-//
-//  SocketBridge.swift
-//  orbit
-//
-//  Created by Nathan Wienert on 2/9/18.
-//  Copyright © 2018 Nate Wienert. All rights reserved.
-//
-
 import Foundation
 import SwiftWebSocket
 
@@ -22,19 +14,13 @@ class SocketBridge {
       return
     }
 
-    let ws = WebSocket("ws://localhost:\(port)")
+    let ws = WebSocket("ws://localhost:\(port)/")
 
     self.send = { (msg) in
       ws.send(msg)
     }
-    ws.event.open = {
-//      print("screen.ws.opened")
-    }
-    ws.event.close = { code, reason, clean in
-//      print("screen.ws.close")
-    }
     ws.event.error = { error in
-      print("screen.ws.error \(error)")
+      print("screen.ws.error \(port) \(error)")
     }
     queue.background {
       ws.event.message = { (message) in

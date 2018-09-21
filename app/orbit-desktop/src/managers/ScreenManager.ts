@@ -24,7 +24,6 @@ export class ScreenManager {
 
     // operating info
     this.oracle.onInfo(info => {
-      console.log('oracle info', info)
       if (typeof info.supportsTransparency === 'boolean') {
         Desktop.setState({
           operatingSystem: {
@@ -34,6 +33,10 @@ export class ScreenManager {
         return
       }
     })
+  }
+
+  start = () => {
+    this.isStarted = true
 
     // space move
     let mvtm
@@ -57,10 +60,6 @@ export class ScreenManager {
       this.oracle.socketSend('osin')
     }, 1000 * 10)
     on(this, listener2)
-  }
-
-  start = () => {
-    this.isStarted = true
   }
 
   updateTheme = react(

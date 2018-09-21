@@ -1,4 +1,4 @@
-import { getServer } from './getServer'
+import killPort from 'kill-port'
 import { Server } from 'ws'
 
 type Props = {
@@ -27,8 +27,24 @@ export class OracleBridge {
     this.port = this.props.port
   }
 
+  private getServer(port: number): Promise<Server> {
+    return new Promise(async res => {
+      // kill old ones
+      await killPort(port)
+      const server = new Server({ port })
+      server.on('error', (...args) => {
+        console.log('server error', args)
+      })
+      server.on('open', function open() {
+        console.log('connected', port)
+      })
+      res(server)
+    })
+  }
+
   start = async (cb: ((handlers: BridgeHandlers) => void)) => {
-    this.server = await getServer(this.port)
+    console.log('setting up OracleBridge', this.port)
+    this.server = await this.getServer(this.port)
     this.setupSocket()
     cb({
       socketSend: this.socketSend,
@@ -58,8 +74,7 @@ export class OracleBridge {
     }
     // send format is `action data`
     try {
-      const strData =
-        typeof data === 'object' ? `${action} ${JSON.stringify(data)}` : action
+      const strData = typeof data === 'object' ? `${action} ${JSON.stringify(data)}` : action
       try {
         this.socket.send(strData)
       } catch (err) {
@@ -78,6 +93,7 @@ export class OracleBridge {
 
   private setupSocket() {
     const emitter = this.server.once('connection', socket => {
+      console.log('got initial socket connection...')
       // only run once...
       emitter.removeAllListeners()
       this.socket = socket
@@ -85,9 +101,7 @@ export class OracleBridge {
       this.props.setState(this.props.getState())
       // send queued messages
       if (this.awaitingSocket.length) {
-        this.awaitingSocket.forEach(({ action, data }) =>
-          this.socketSend(action, data),
-        )
+        this.awaitingSocket.forEach(({ action, data }) => this.socketSend(action, data))
         this.awaitingSocket = []
       }
       const actions = this.props.getActions()
@@ -116,7 +130,6 @@ export class OracleBridge {
         console.log('removed1...')
       })
       socket.onerror = err => {
-        if (err.message.indexOf('ECONNRESET')) return
         console.log('socket.onerror', err)
       }
       socket.on('error', err => {

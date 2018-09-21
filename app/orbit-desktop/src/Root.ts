@@ -108,12 +108,13 @@ export class Root {
     this.generalSettingManager = new GeneralSettingManager()
 
     // no need to wait for them...
+    // TODO: off for now because electron has no repl so we have to use console
+    // and it gets insane logs from syncers...
     // await this.startSyncers()
 
     // setup oracle to pass into managers
     this.oracle = new Oracle({
       ...oracleOptions,
-      ocr: true,
       appWindow: true,
     })
 
@@ -123,18 +124,18 @@ export class Root {
 
     // start managers...
 
-    this.ocrManager = new OCRManager(this.oracle)
     this.screenManager = new ScreenManager(this.oracle)
-    this.appsManager = new AppsManager(this.oracle)
+    this.appsManager = new AppsManager()
 
-    // start oracle after passing into managers
+    // start oracle after passing into screenManager
     await this.oracle.start()
 
-    // start oracle related managers once its started
-    this.ocrManager.start()
+    // then start screenmanager after oracle.start
     this.screenManager.start()
 
-    this.oracle.startWatchingWindows()
+    // start oracle related managers once its started
+    this.ocrManager = new OCRManager()
+    this.ocrManager.start()
 
     this.keyboardStore = new KeyboardStore({
       // disable for now it was used for fancy orbit app switching
@@ -160,6 +161,7 @@ export class Root {
     if (this.appsManager) {
       await this.appsManager.dispose()
     }
+    await this.ocrManager.dispose()
     await this.stopSyncers()
     this.disposed = true
     return true

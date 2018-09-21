@@ -229,12 +229,15 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       reset()
       reactionID = uid()
       const curID = reactionID
+      const start = Date.now()
+      Root.__trackStateChanges.isActive = true
+
+      let result
+
+      // async update helpers
       const updateAsyncValue = val => {
         const isValid = curID === reactionID
         let changed
-        if (isValid) {
-          changed = update(val)
-        }
         if (!IS_PROD && !preventLog) {
           console.groupCollapsed(
             `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
@@ -242,17 +245,13 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           console.log(...(changed || []))
           console.groupEnd()
         }
-      }
-      const start = Date.now()
-      Root.__trackStateChanges.isActive = true
-
-      let result
-      reactionHelpers.setValue = val => {
-        if (!reactionID) {
+        if (isValid) {
+          changed = update(val)
+        } else {
           throw SHARED_REJECTION_ERROR
         }
-        updateAsyncValue(val)
       }
+      reactionHelpers.setValue = updateAsyncValue
 
       // to allow cancels
       try {

@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { attachTheme } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
+import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
-import { View, Image } from '@mcro/ui'
-import orb from '../../../../public/orb.svg'
+import { View, Image, Tooltip } from '@mcro/ui'
+import orbIcon from '../../../../public/orb.svg'
+import { Desktop } from '@mcro/stores'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -57,7 +57,7 @@ export class OrbitHeader extends React.Component<
     headerStore?: HeaderStore
     after?: React.ReactNode
     borderRadius?: number
-    theme?: Object
+    theme?: ThemeObject
     showPin?: boolean
   }
 > {
@@ -72,24 +72,30 @@ export class OrbitHeader extends React.Component<
       >
         <OrbitFakeInput>
           <Title>
-            <Image
-              src={orb}
-              width={20}
-              height={20}
-              margin={['auto', 10]}
-              onMouseEnter={headerStore.onHoverIcon}
-              onMouseLeave={headerStore.onUnHoverIcon}
-              onClick={headerStore.goHome}
-              opacity={0.5}
-              transform={{
-                y: -0.5,
-              }}
-              {...{
-                '&:hover': {
-                  opacity: 1,
-                },
-              }}
-            />
+            <Tooltip
+              target={
+                <Image
+                  src={orbIcon}
+                  width={20}
+                  height={20}
+                  margin={['auto', 10]}
+                  onMouseEnter={headerStore.onHoverIcon}
+                  onMouseLeave={headerStore.onUnHoverIcon}
+                  onClick={headerStore.onClickOrb}
+                  opacity={Desktop.ocrState.paused ? 0.3 : 1}
+                  transform={{
+                    y: -0.5,
+                  }}
+                  {...{
+                    '&:hover': {
+                      opacity: Desktop.ocrState.paused ? 0.6 : 1,
+                    },
+                  }}
+                />
+              }
+            >
+              Toggle Realtime Search
+            </Tooltip>
             <OrbitHeaderInput headerStore={headerStore} theme={theme} />
           </Title>
           {!!after && <After>{after}</After>}

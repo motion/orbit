@@ -2,6 +2,7 @@ import 'isomorphic-fetch'
 import { Logger } from '@mcro/logger'
 import { cleanupChildren } from './helpers/cleanupChildren'
 import root from 'global'
+import { once } from 'lodash'
 
 const log = new Logger('desktop')
 
@@ -28,11 +29,11 @@ export async function main() {
   }
 
   // handle exits gracefully
-  const dispose = () => {
+  const dispose = once(() => {
     console.log('Orbit Desktop exiting...')
     appRoot.dispose()
     cleanupChildren()
-  }
+  })
   process.on('exit', dispose)
 
   await appRoot.start()

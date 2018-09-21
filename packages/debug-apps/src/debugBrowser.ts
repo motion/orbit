@@ -243,6 +243,7 @@ export default class DebugApps {
               const PORT_NAMES = {
                 9000: 'Desktop',
                 9001: 'Electron',
+                9003: 'Syncers',
               }
               let title = document.getElementsByTagName('title')[0]
               if (!title) {

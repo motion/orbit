@@ -12,6 +12,7 @@
     "@mcro/config": "*",
     "@mcro/constants": "^2.2.1",
     "@mcro/electron-sudo": "*",
+    "@mcro/entities": "^2.2.1",
     "@mcro/helpers": "^2.2.1",
     "@mcro/logger": "^2.2.1",
     "@mcro/mediator": "^2.2.1",
@@ -22,6 +23,7 @@
     "@mcro/cosal": "*",
     "@mcro/services": "^2.2.1",
     "@mcro/stores": "^2.2.1",
+    "@mcro/utils": "^2.2.1",
     "apollo-fetch": "^0.7.0",
     "auto-launch": "5.0.5",
     "autolinker": "^1.7.1",
@@ -62,7 +64,6 @@
     "slack": "^11.0.1",
     "source-map-support": "^0.4.16",
     "sqlite": "3.0.0",
-    "string-hash": "^1.1.3",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.16",
     "ws": "6.0.0"

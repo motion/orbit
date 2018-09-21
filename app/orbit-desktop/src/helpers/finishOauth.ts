@@ -1,5 +1,6 @@
 import { Desktop, App } from '@mcro/stores'
-import { SettingEntity } from '../entities/SettingEntity'
+import { SettingEntity } from '@mcro/entities'
+import { getRepository } from 'typeorm'
 import { closeChromeTabWithUrlStarting } from '../helpers/injections'
 import { getGlobalConfig } from '@mcro/config'
 
@@ -33,7 +34,7 @@ const createSetting = async (type: string, values: OauthValues) => {
   let setting
   // update if its the same identifier from the oauth
   if (identifier) {
-    setting = await SettingEntity.findOne({ identifier })
+    setting = await getRepository(SettingEntity).findOne({ identifier })
   }
   if (!setting) {
     setting = new SettingEntity()
@@ -46,5 +47,5 @@ const createSetting = async (type: string, values: OauthValues) => {
     ...setting.values,
     oauth: { ...values }, // todo
   }
-  await setting.save()
+  await getRepository(SettingEntity).save(setting)
 }

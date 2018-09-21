@@ -1,0 +1,12 @@
+{
+  "name": "@mcro/entities",
+  "main": "_/index.js",
+  "productName": "Orbit",
+  "version": "2.2.9",
+  "scripts": {
+  },
+  "dependencies": {
+    "@mcro/models": "^2.2.1",
+    "typeorm": "^0.3.0-alpha.16"
+  }
+}

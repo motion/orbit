@@ -1,11 +1,8 @@
+import { BitEntity, JobEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { SettingRemoveCommand } from '@mcro/models'
 import { getManager, getRepository } from 'typeorm'
-import { BitEntity } from '../entities/BitEntity'
-import { JobEntity } from '../entities/JobEntity'
-import { PersonEntity } from '../entities/PersonEntity'
-import { SettingEntity } from '../entities/SettingEntity'
 
 const log = new Logger('command:setting-remove')
 

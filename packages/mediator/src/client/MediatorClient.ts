@@ -5,12 +5,13 @@ import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
 import Observable from 'zen-observable'
 
-export interface MediatorClientOptions {
+export type MediatorClientOptions = {
   transport: ClientTransport
 }
 
 export class MediatorClient {
-  constructor(public options: MediatorClientOptions) {}
+  constructor(public options: MediatorClientOptions) {
+  }
 
   async command<Args, ReturnType>(
     command: Command<ReturnType, Args>,

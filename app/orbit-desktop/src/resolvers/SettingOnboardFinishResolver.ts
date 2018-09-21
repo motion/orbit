@@ -2,7 +2,7 @@ import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { SettingOnboardFinishCommand, GeneralSettingValues } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SettingEntity } from '../entities/SettingEntity'
+import { SettingEntity } from '@mcro/entities'
 
 const log = new Logger('command:setting-onboard-finish')
 
@@ -19,6 +19,6 @@ export const SettingOnboardFinishResolver = resolveCommand(
 
     const values = setting.values as GeneralSettingValues
     values.hasOnboarded = true
-    await this.generalSetting.save()
+    await getRepository(SettingEntity).save(this.generalSetting)
   },
 )

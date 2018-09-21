@@ -221,7 +221,7 @@ await Syncers.[SyncerName].reset()
 
 To apply same operations on multiple syncers you can use following pattern:
 
-```
+```got an error but may not be worth reporting
 await Promise.all(Object.keys(Syncers).map(syncer => Syncers[syncer].start()))
 ```
 
@@ -231,5 +231,5 @@ In dev mode we set up models to be globals so you can use them easily in REPL as
 You can use any entity from `app/orbit-desktop/src/entities` and use it in the REPL following way:
 
 ```js
-await BitEntity.find()
+await typeorm.getRepository(BitEntity).find()
 ```

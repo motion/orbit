@@ -9,7 +9,7 @@ import {
 } from '@mcro/models'
 import { SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
-import { SettingEntity } from '../entities/SettingEntity'
+import { SettingEntity } from '@mcro/entities'
 
 const log = new Logger(`resolver:slack-channel`)
 

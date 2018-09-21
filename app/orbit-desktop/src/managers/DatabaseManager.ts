@@ -8,7 +8,7 @@ import { sleep } from '../helpers'
 import { MigrationManager } from './database/MigrationManager'
 import { ensureCustomApp } from '../helpers/ensureCustomApp'
 import connectModels from '../helpers/connectModels'
-import { Entities } from '../entities'
+import { Entities } from '@mcro/entities'
 import { Connection } from 'typeorm'
 
 const log = new Logger('database')

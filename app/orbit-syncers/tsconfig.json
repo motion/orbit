@@ -7,5 +7,15 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../../packages/debug-apps" }]
+  "references": [
+    { "path": "../models" },
+    { "path": "../entities" },
+    { "path": "../services" },
+    { "path": "../../packages/debug-apps" },
+    { "path": "../../packages/config" },
+    { "path": "../../packages/logger" },
+    { "path": "../../packages/mediator" },
+    { "path": "../../packages/cosal" },
+    { "path": "../../packages/utils" }
+  ]
 }

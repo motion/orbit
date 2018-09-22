@@ -64,7 +64,7 @@ const OrbitDockedInner = view({
 @view.attach('paneManagerStore', 'searchStore')
 class OrbitDockedContents extends React.PureComponent<Props> {
   render() {
-    console.log('i hsould be rendering.........')
+    console.log('>>>>> i hsould be rendering.........')
     const { searchStore, paneManagerStore } = this.props
     return (
       <>

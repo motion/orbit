@@ -10,6 +10,7 @@ import { BitModel, PersonBitModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
+import { trace } from 'mobx'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -220,6 +221,8 @@ export class OrbitHome extends React.Component<Props> {
   }
 
   render() {
+    console.log('OrbitHome Render')
+    trace()
     const { homeStore } = this.props
     const { results } = homeStore
     let content
@@ -227,35 +230,44 @@ export class OrbitHome extends React.Component<Props> {
       content = (
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable">
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-                {/* <SuggestionBarVerticalPad /> */}
-                {results.map(({ id, name, items, startIndex }, index) => {
-                  const height = name === 'People' ? 60 : 90
-                  return (
-                    <Draggable key={id} draggableId={id} index={index}>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
-                        >
-                          <OrbitCarouselSection
-                            startIndex={startIndex}
-                            items={items}
-                            homeStore={homeStore}
-                            categoryName={name}
-                            cardHeight={height}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  )
-                })}
-                {provided.placeholder}
-              </div>
-            )}
+            {(provided, snapshot) => {
+              console.log('droppable render...')
+              return (
+                <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+                  {/* <SuggestionBarVerticalPad /> */}
+                  {results.map(({ id, name, items, startIndex }, index) => {
+                    const height = name === 'People' ? 60 : 90
+                    return (
+                      <Draggable key={id} draggableId={id} index={index}>
+                        {(provided, snapshot) => {
+                          console.log('draggable render...', id)
+                          return (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style,
+                              )}
+                            >
+                              <OrbitCarouselSection
+                                startIndex={startIndex}
+                                items={items}
+                                homeStore={homeStore}
+                                categoryName={name}
+                                cardHeight={height}
+                              />
+                            </div>
+                          )
+                        }}
+                      </Draggable>
+                    )
+                  })}
+                  {provided.placeholder}
+                </div>
+              )
+            }}
           </Droppable>
         </DragDropContext>
       )

@@ -7,6 +7,7 @@ import { HeaderProps } from './HeaderProps'
 import { View, Image, Tooltip } from '@mcro/ui'
 import orbIcon from '../../../../public/orb.svg'
 import { Desktop } from '@mcro/stores'
+import { trace } from 'mobx'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -64,6 +65,8 @@ export class OrbitHeader extends React.Component<
   render() {
     const { headerStore, paneManagerStore, after, theme, borderRadius } = this.props
     const headerBg = theme.background
+    console.log('render OrbitHeader')
+    trace()
     return (
       <OrbitHeaderContainer
         headerBg={headerBg}

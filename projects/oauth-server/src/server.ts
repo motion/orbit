@@ -66,7 +66,7 @@ export class Server {
 
   async start() {
     this.app.listen(443, () => {
-      console.log('listening at port', 443)
+      console.log('Oauth server listening', 443)
     })
   }
 

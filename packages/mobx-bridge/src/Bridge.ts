@@ -34,7 +34,6 @@ type Disposer = () => void
 
 type LastMessage = {
   message: string
-  value: any
   at: number
 }
 
@@ -436,7 +435,7 @@ export class BridgeManager {
         if (process.env.NODE_ENV === 'development') {
           log.trace.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
         }
-        this.lastMessage = { message, value, at: Date.now() }
+        this.lastMessage = { message, at: Date.now() }
         this._socket.send(JSON.stringify({ message, to: Store.source }))
       })
     }

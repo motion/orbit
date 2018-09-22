@@ -198,7 +198,6 @@ export class Logger {
           ...messages,
         )
         log.debug(this.namespace, delta, ...messages)
-        this.timers.splice(this.timers.indexOf(existTimer), 1)
       } else {
         debug(
           `%c${this.namespace}%cstarted`,

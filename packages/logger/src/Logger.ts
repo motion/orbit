@@ -189,6 +189,8 @@ export class Logger {
       const existTimer = this.timers.find(timer => timer.message === labelMessage)
       if (existTimer) {
         const delta = (Date.now() - existTimer.time) / 1000
+        // reset it so we can see time since last message each message
+        existTimer.time = Date.now()
         debug(
           `%c${this.namespace}%c${delta}ms`,
           `color: ${color}; font-weight: bold`,

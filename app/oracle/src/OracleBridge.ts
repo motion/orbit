@@ -42,7 +42,6 @@ export class OracleBridge {
   }
 
   start = async (cb: ((handlers: BridgeHandlers) => void)) => {
-    console.log('setting up OracleBridge', this.port)
     this.server = await this.getServer(this.port)
     this.setupSocket()
     cb({
@@ -92,7 +91,6 @@ export class OracleBridge {
 
   private setupSocket() {
     const emitter = this.server.once('connection', socket => {
-      console.log('got initial socket connection...')
       // only run once...
       emitter.removeAllListeners()
       this.socket = socket

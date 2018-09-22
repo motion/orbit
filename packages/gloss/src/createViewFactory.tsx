@@ -17,9 +17,7 @@ export type BaseRules = {
 type Props = CSSPropertySet
 
 const isHMREnabled =
-  process.env.NODE_ENV === 'development' &&
-  typeof module !== 'undefined' &&
-  !!module['hot']
+  process.env.NODE_ENV === 'development' && typeof module !== 'undefined' && !!module['hot']
 
 const recentHMR = () => {
   const lastHMR = +window['__lastHMR']
@@ -240,12 +238,7 @@ export function createViewFactory(toCSS) {
       return className
     }
 
-    function generateClassnames(
-      styles,
-      state,
-      props: CSSPropertySet,
-      prevProps: CSSPropertySet,
-    ) {
+    function generateClassnames(styles, state, props: CSSPropertySet, prevProps: CSSPropertySet) {
       // if this is a secondary render then check if the props are essentially equivalent
       const extraClassNames = []
       let myStyles = styles
@@ -393,12 +386,14 @@ export function createViewFactory(toCSS) {
         } else {
           // if it's passing down to a Component, pass anything
           finalProps = props
+          // pass the theme down... if not a dom element
+          // maybe risky in terms of weirdness/unexpected behavior
+          // but it would save a lot of perf stuff attaching tons of context
+          // finalProps.theme = finalProps.theme || theme
         }
 
         // className
-        const className = this.state.classNames
-          .concat(this.state.extraClassNames)
-          .join(' ')
+        const className = this.state.classNames.concat(this.state.extraClassNames).join(' ')
         finalProps.className = className
 
         // forwardRef
@@ -413,10 +408,7 @@ export function createViewFactory(toCSS) {
         }
 
         // ignoreAttrs
-        if (
-          this.state.ignoreAttrs &&
-          typeof this.state.ignoreAttrs === 'object'
-        ) {
+        if (this.state.ignoreAttrs && typeof this.state.ignoreAttrs === 'object') {
           for (const prop in props) {
             if (this.state.ignoreAttrs[prop]) {
               delete finalProps[prop]
@@ -434,25 +426,31 @@ export function createViewFactory(toCSS) {
     }
 
     // attach themes from context
-    ThemedConstructor = props => (
-      <ThemeContext.Consumer>
-        {({ allThemes, activeThemeName }) => {
-          if (!allThemes) {
-            return <Constructor {...props} />
-          }
-          let theme = allThemes[activeThemeName]
-          // allow simple overriding of the theme using props:
-          // <Button theme={{ backgroundHover: 'transparent' }} />
-          if (typeof props.theme === 'object') {
-            theme = {
-              ...theme,
-              ...props.theme,
+    ThemedConstructor = props => {
+      // // avoid attach/detach theme if its passed in
+      // if (typeof props.theme === 'object') {
+      //   return <Constructor {...props} />
+      // }
+      return (
+        <ThemeContext.Consumer>
+          {({ allThemes, activeThemeName }) => {
+            if (!allThemes) {
+              return <Constructor {...props} />
             }
-          }
-          return <Constructor {...props} theme={theme} />
-        }}
-      </ThemeContext.Consumer>
-    )
+            let theme = allThemes[activeThemeName]
+            // allow simple overriding of the theme using props:
+            // <Button theme={{ backgroundHover: 'transparent' }} />
+            if (typeof props.theme === 'object') {
+              theme = {
+                ...theme,
+                ...props.theme,
+              }
+            }
+            return <Constructor {...props} theme={theme} />
+          }}
+        </ThemeContext.Consumer>
+      )
+    }
 
     ThemedConstructor[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
 

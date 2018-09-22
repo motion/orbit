@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, log } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -17,6 +17,9 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
+import { Logger } from '@mcro/logger'
+
+const log = new Logger('OrbitDocked')
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -61,8 +64,8 @@ const OrbitDockedInner = view({
 @view.attach('paneManagerStore', 'searchStore')
 class OrbitDockedContents extends React.PureComponent<Props> {
   render() {
+    console.log('i hsould be rendering.........')
     const { searchStore, paneManagerStore } = this.props
-    log('contents...')
     return (
       <>
         <OrbitHeader
@@ -98,7 +101,7 @@ class OrbitDockedContents extends React.PureComponent<Props> {
 @view
 export class OrbitDocked extends React.Component<Props> {
   render() {
-    log('DOCKED ------------')
+    log.timer('orbit', '-------- DOCKED ------------')
     const theme = App.state.darkTheme ? 'dark' : 'light'
     return (
       <UI.Theme name={theme}>

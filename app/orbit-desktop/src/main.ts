@@ -40,3 +40,7 @@ export async function main() {
 
   return dispose
 }
+
+if (process.env.AUTO_START) {
+  main()
+}

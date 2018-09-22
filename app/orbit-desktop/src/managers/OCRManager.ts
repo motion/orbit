@@ -65,9 +65,7 @@ export class OCRManager {
       console.log('older mac, avoiding oracle')
       return false
     }
-    console.log('START........')
     await this.oracle.start()
-    console.log('STARTEDDDDDDDD........')
     this.setupOracleListeners()
     this.started = true
 
@@ -88,7 +86,6 @@ export class OCRManager {
     () => Desktop.ocrState.paused,
     async (paused, { when }) => {
       await when(() => this.started)
-      console.log('OCR Active', !paused)
       if (paused) {
         this.oracle.stopWatchingWindows()
         this.oracle.pause()

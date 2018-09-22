@@ -7,7 +7,7 @@ import { App } from '@mcro/stores'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 // import { PeekRelated } from '../views/PeekRelated'
-import { View, ListRow, Searchable, SearchableProps } from '@mcro/ui'
+import { View, SegmentedRow, Searchable, SearchableProps } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
 import { Bit } from '@mcro/models'
 import { DateFormat } from '../../../views/DateFormat'
@@ -99,7 +99,7 @@ export const PeekBit = ({
                 <>
                   <TitleBarSpace />
                   {!!icon && (
-                    <ListRow>
+                    <SegmentedRow>
                       <TitleBarButton
                         onClick={() => {
                           Actions.open(locationLink)
@@ -116,7 +116,7 @@ export const PeekBit = ({
                         tooltip="Open"
                         icon="arrowshare91"
                       />
-                    </ListRow>
+                    </SegmentedRow>
                   )}
                 </>
               }

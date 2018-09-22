@@ -112,7 +112,7 @@ class SettingContent extends React.Component<Props> {
                         {(+store.bitsCount).toLocaleString()} total
                       </UI.Text>
                       <TitleBarSpace />
-                      <UI.ListRow>
+                      <UI.SegmentedRow>
                         <TitleBarButton
                           icon="remove"
                           tooltip="Remove integration"
@@ -124,7 +124,7 @@ class SettingContent extends React.Component<Props> {
                           icon="refresh"
                           onClick={this.handleRefresh}
                         />
-                      </UI.ListRow>
+                      </UI.SegmentedRow>
                     </>
                   )
                 }}

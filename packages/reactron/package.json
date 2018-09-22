@@ -16,10 +16,12 @@
   },
   "dependencies": {
     "@mcro/logger": "^2.2.1",
-    "electron-devtools-installer": "^2.2.4",
     "fbjs": "0.8.16",
     "lodash.isequal": "^4.5.0",
     "react-reconciler": "0.11.0"
+  },
+  "devDependencies": {
+    "electron-devtools-installer": "^2.2.4"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.262",
+  "version": "2.2.263",
   "dependencies": {
     "@mcro/orbit": "*"
   },
@@ -29,7 +29,6 @@
     "files": [
       "**/*",
       "!**/*oracle/orbit/Build/Products/Release**/*",
-      "!**/sqlite-autoconf-3240000.tar.gz",
       "!**/*.chromium.html",
       "!**/*.demo.gif",
       "!**/*.test.js",

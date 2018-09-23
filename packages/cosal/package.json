@@ -4,7 +4,6 @@
   "main": "_/cosal.js",
   "dependencies": {
     "compute-covariance": "^1.0.1",
-    "mathjs": "^4.1.2",
     "@mcro/vectorious": "*"
   },
   "scripts": {

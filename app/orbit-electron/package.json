@@ -57,12 +57,10 @@
     "fs-extra": "7.0.0"
   },
   "peerDependencies": {
+    "electron": "3.0.0",
     "mobx": "5.1.2"
   },
   "devDependencies": {
-    "electron": "3.0.0",
-    "electron-rebuild": "1.8.2",
-    "node-abi": "2.4.3",
     "nodemon": "1.18.3",
     "tcp-port-used": "0.1.2",
     "touch": "^3.1.0"

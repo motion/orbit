@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.269",
+  "version": "2.2.273",
   "dependencies": {
     "@mcro/orbit": "*"
   },
@@ -14,6 +14,7 @@
     "appId": "com.o.orbit",
     "productName": "Orbit",
     "asar": true,
+    "npmRebuild": false,
     "mac": {
       "target": "zip",
       "icon": "../resources/icon.icns",

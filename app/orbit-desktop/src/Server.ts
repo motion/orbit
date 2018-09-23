@@ -54,7 +54,7 @@ export class Server {
     log.verbose(`Killing any old servers on ${Config.ports.server}...`)
     await killPort(Config.ports.server)
     this.app.listen(Config.ports.server, () => {
-      log.info('listening at port', Config.ports.server)
+      log.info('Server listening', Config.ports.server)
     })
 
     return Config.ports.server

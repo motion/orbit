@@ -1,5 +1,5 @@
 import commonWords from './commonWords'
-import { Vector } from 'vectorious/withoutblas'
+import { Vector } from '@mcro/vectorious'
 import { memoize, random, sortBy, reverse } from 'lodash'
 import { readFileSync } from 'fs'
 import { join } from 'path'

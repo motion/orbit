@@ -93,7 +93,6 @@ export class Oracle {
       getActions: () => this.actions,
       setState: this.setState,
       getState: () => this.state,
-      onWindowChangeCB: (a, b) => this.onWindowChangeCB(a, b),
     })
     await this.oracleBridge.start(({ socketSend }) => {
       this.socketSend = socketSend
@@ -205,6 +204,22 @@ export class Oracle {
     await this.socketSend('stow')
   }
 
+  spellCallbackCb = null
+
+  spellcheck(words: string) {
+    return new Promise(res => {
+      const callId = Math.round(Math.random() * 100000000000)
+      this.spellCallbackCb = ({ id, guesses }) => {
+        console.log('id', id, guesses)
+        if (id === callId) {
+          res(guesses)
+        }
+      }
+      const spellObj = { words, id: callId }
+      this.socketSend(`spell ${JSON.stringify(spellObj)}`)
+    })
+  }
+
   onInfo = cb => {
     this.onInfoCB = cb
   }
@@ -293,6 +308,12 @@ export class Oracle {
     resume: this.resume,
     start: this.start,
     defocus: this.defocus,
+    windowEvent: ({ type, ...values }) => this.onWindowChangeCB(type, values),
+    spellCheck: val => {
+      if (this.spellCallbackCb) {
+        this.spellCallbackCb(val)
+      }
+    },
   }
 
   private async runOracleProcess() {

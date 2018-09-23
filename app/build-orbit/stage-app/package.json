@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.258",
+  "version": "2.2.274",
   "dependencies": {
     "@mcro/orbit": "*"
   },
@@ -14,6 +14,7 @@
     "appId": "com.o.orbit",
     "productName": "Orbit",
     "asar": true,
+    "npmRebuild": false,
     "mac": {
       "target": "zip",
       "icon": "../resources/icon.icns",
@@ -29,6 +30,11 @@
     "files": [
       "**/*",
       "!**/*oracle/orbit/Build/Products/Release**/*",
+      "!**/*.chromium.html",
+      "!**/*.demo.gif",
+      "!**/*.test.js",
+      "!**/*.development.js",
+      "!**/*.min.map",
       "!**/*.js.map",
       "!**/*.d.ts",
       "!**/*.ts"

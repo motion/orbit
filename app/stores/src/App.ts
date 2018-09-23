@@ -54,6 +54,7 @@ class AppStore {
     NOTIFICATION: 'NOTIFICATION',
     SEARCH_INDEX_ANSWER: 'SEARCH_INDEX_ANSWER',
     CLOSE_APP: 'CLOSE_APP',
+    PROXY_FN_RESPONSE: 'PROXY_FN_RESPONSE',
   }
 
   setState = Bridge.setState

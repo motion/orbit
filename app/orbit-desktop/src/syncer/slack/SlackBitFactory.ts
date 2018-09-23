@@ -1,4 +1,4 @@
-import { getTopWords, getWordWeights } from '@mcro/cosal'
+import { getTopWords } from '@mcro/cosal'
 import { Person, SlackBitData, SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackMessage } from '@mcro/services'
 import { BitEntity } from '../../entities/BitEntity'

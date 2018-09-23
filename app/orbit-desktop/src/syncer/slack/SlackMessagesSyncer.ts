@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { Bit, Person, PersonBit, SlackBitData, SlackSettingValues } from '@mcro/models'
+import { Bit, SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
 import { getRepository, MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
@@ -27,37 +27,39 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
   }
 
   async run() {
-
     // load people, we need them to deal with bits
     // note that people must be synced before this syncer's sync
-    log.timer(`load synced people from the database`)
+    log.timer('load synced people from the database')
     const allPeople = await this.loadPeople()
-    log.timer(`load synced people from the database`, allPeople)
+    log.timer('load synced people from the database', allPeople)
 
     // if there are no people it means we run this syncer before people sync,
     // postpone syncer execution
     if (!allPeople.length) {
-      log.verbose(`no people were found, looks like people syncer wasn't executed yet, scheduling restart in 10 seconds`)
+      log.verbose(
+        'no people were found, looks like people syncer wasn\'t executed yet, scheduling restart in 10 seconds',
+      )
       await timeout(10000, () => {
-        log.verbose(`restarting people syncer`)
+        log.verbose('restarting people syncer')
         return this.run()
       })
       return
     }
 
     // load all slack channels
-    log.timer(`load API channels`)
+    log.timer('load API channels')
     const allChannels = await this.loader.loadChannels()
-    log.timer(`load API channels`, allChannels)
+    log.timer('load API channels', allChannels)
 
     // filter out channels based on user settings
     const activeChannels = this.filterChannelsBySettings(allChannels)
-    log.verbose(`filtering only selected channels`, activeChannels)
+    log.verbose('filtering only selected channels', activeChannels)
 
     // go through all channels
     const values = this.setting.values as SlackSettingValues
     const lastMessageSync = values.lastMessageSync || {}
-    const apiBits: Bit[] = [], dbBits: Bit[] = []
+    const apiBits: Bit[] = [],
+      dbBits: Bit[] = []
 
     for (let channel of activeChannels) {
       // to load messages using pagination we use "oldest" message we got last time when we synced
@@ -81,30 +83,23 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
 
       // sync messages if we found them
       if (loadedMessages.length) {
-
         // left only messages we need - real user messages, no system or bot messages
-        const filteredMessages = loadedMessages.filter(message => (
-          message.type === 'message' &&
-          !message.subtype &&
-          !message.bot_id &&
-          message.user
-        ))
-        log.verbose(`filtered messages (no bots and others)`, filteredMessages)
+        const filteredMessages = loadedMessages.filter(
+          message =>
+            message.type === 'message' && !message.subtype && !message.bot_id && message.user,
+        )
+        log.verbose('filtered messages (no bots and others)', filteredMessages)
 
         // group messages into special "conversations" to avoid insertion of multiple bits for each message
         const conversations = this.createConversation(filteredMessages)
         log.verbose(`created ${conversations.length} conversations`, conversations)
 
         // create bits from conversations
-        const savedConversations = await Promise.all(conversations.map(messages => this.bitFactory.create(
-          channel,
-          messages,
-          allPeople,
-        )))
-
-        apiBits.push(
-          ...savedConversations,
+        const savedConversations = await Promise.all(
+          conversations.map(messages => this.bitFactory.create(channel, messages, allPeople)),
         )
+
+        apiBits.push(...savedConversations)
 
         // update last message sync setting
         // note: we need to use loaded messages, not filtered
@@ -116,7 +111,7 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
     await BitUtils.sync(log, apiBits, dbBits)
 
     // update settings
-    log.verbose(`update settings`, { lastMessageSync })
+    log.verbose('update settings', { lastMessageSync })
     values.lastMessageSync = lastMessageSync
     await getRepository(SettingEntity).save(this.setting)
   }
@@ -147,7 +142,7 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
           id: channelId,
         },
         bitCreatedAt: oldestMessageId ? MoreThan(parseInt(oldestMessageId) * 1000) : undefined,
-      }
+      },
     })
   }
 
@@ -155,10 +150,9 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
    * Filters given slack channels by channels in the settings.
    */
   private filterChannelsBySettings(channels: SlackChannel[]) {
-
     const values = this.setting.values as SlackSettingValues
     const settingChannels =
-      values.channels/* || {
+      values.channels /* || {
       'C0SAU3124': true,
       'CBV9PGSGG': true,
       'C316QRE1J': true,
@@ -168,9 +162,7 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
     // if no channels in settings are selected then return all channels
     if (!settingChannels) return channels
 
-    const settingsChannelIds = Object.keys(settingChannels).filter(
-      key => settingChannels[key],
-    )
+    const settingsChannelIds = Object.keys(settingChannels).filter(key => settingChannels[key])
 
     return channels.filter(channel => {
       return settingsChannelIds.indexOf(channel.id) !== -1
@@ -207,5 +199,4 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
     }
     return conversations
   }
-
 }

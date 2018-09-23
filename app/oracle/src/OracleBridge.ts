@@ -6,7 +6,6 @@ type Props = {
   getActions: () => Object
   setState: Function
   getState: Function
-  onWindowChangeCB: Function
 }
 
 export type SocketSender = (action: string, data?: Object) => void
@@ -43,7 +42,6 @@ export class OracleBridge {
   }
 
   start = async (cb: ((handlers: BridgeHandlers) => void)) => {
-    console.log('setting up OracleBridge', this.port)
     this.server = await this.getServer(this.port)
     this.setupSocket()
     cb({
@@ -93,7 +91,6 @@ export class OracleBridge {
 
   private setupSocket() {
     const emitter = this.server.once('connection', socket => {
-      console.log('got initial socket connection...')
       // only run once...
       emitter.removeAllListeners()
       this.socket = socket
@@ -110,15 +107,12 @@ export class OracleBridge {
           const { action, value, state } = JSON.parse(str.toString())
           if (state) {
             this.props.setState(state)
+            return
           }
           if (actions[action]) {
             actions[action](value)
           } else {
-            // otherwise its a window change event
-            if (!action) {
-              return
-            }
-            this.props.onWindowChangeCB(action, value)
+            console.log('no known action for', action, value)
           }
         } catch (err) {
           console.log('Error receiving message', str)

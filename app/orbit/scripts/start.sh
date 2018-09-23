@@ -25,6 +25,10 @@ if [[ "$FLAGS" =~ "--disable-watch" ]]; then
   echo "not watching backend for changes..."
   ./scripts/run-orbit.sh
 else
+  if [[ "$FLAGS" =~ "--ignore-electron" ]]; then
+    export IGNORE_ELECTRON="true"
+  fi
+
   export PROCESS_NAME="electron"
   export STACK_FILTER="orbit-electron"
   # start app

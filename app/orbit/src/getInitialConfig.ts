@@ -26,7 +26,7 @@ export async function getInitialConfig() {
   const desktopRoot = Path.join(__dirname, '..', '..')
   const appStatic = Path.join(require.resolve('@mcro/orbit-app'), '..', 'dist')
   let nodeBinary = 'node'
-  if (process.env.NODE_ENV !== 'development') {
+  if (isProd) {
     nodeBinary = app.getPath('exe')
   }
   const dotApp = Path.join(desktopRoot, '..', '..', '..', '..')

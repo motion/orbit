@@ -16,6 +16,7 @@
     "@mcro/orbit-electron": "^2.2.1",
     "@mcro/orbit-desktop": "^2.2.1",
     "@mcro/logger": "*",
+    "mobx": "5.1.2",
     "wait-port": "0.2.2",
     "electron-util": "0.9.0",
     "get-port": "4.0.0",

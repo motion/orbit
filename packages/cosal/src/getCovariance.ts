@@ -1,7 +1,7 @@
 import corpusCovarPrecomputed from './corpusCovar'
 import computeCovariance from 'compute-covariance'
 import { toWords, getWordVector, vectors } from './helpers'
-import { Matrix } from 'vectorious/withoutblas'
+import { Matrix } from '@mcro/vectorious'
 import mathjs from 'mathjs'
 const inverseMatrix = mathjs.inv
 

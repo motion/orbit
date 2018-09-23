@@ -136,7 +136,7 @@ ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-any-promise@^1.0.0:
+any-promise@^1.0.0, any-promise@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
 
@@ -2023,6 +2023,10 @@ nan@^2.0.9, nan@^2.2.0, nan@^2.9.2, nan@~2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.10.0.tgz#96d0cd610ebd58d4b4de9cc0c6828cda99c7548f"
 
+nan@^2.10.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.0.tgz#574e360e4d954ab16966ec102c0c049fd961a099"
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -2853,6 +2857,13 @@ source-map@^0.5.6:
 source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
+
+spellchecker@3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/spellchecker/-/spellchecker-3.5.0.tgz#7daefac5ce9044b9486f22ccfc1067c89c64db19"
+  dependencies:
+    any-promise "^1.3.0"
+    nan "^2.10.0"
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"

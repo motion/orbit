@@ -34,7 +34,6 @@ type Disposer = () => void
 
 type LastMessage = {
   message: string
-  value: any
   at: number
 }
 
@@ -249,7 +248,8 @@ export class BridgeManager {
   handleMessage = data => {
     const getMessage = str => str.split(MESSAGE_SPLIT_VAL)
     const [message, value] = getMessage(data)
-    log.info(`Message: ${message}`, value)
+    // orbit so we can time between other things in the app...
+    log.timer('orbit', `${this._source}.message`, `${message}`, value)
     for (const { type, listener } of this.messageListeners) {
       if (!type) {
         listener(message, value)
@@ -435,7 +435,7 @@ export class BridgeManager {
         if (process.env.NODE_ENV === 'development') {
           log.trace.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
         }
-        this.lastMessage = { message, value, at: Date.now() }
+        this.lastMessage = { message, at: Date.now() }
         this._socket.send(JSON.stringify({ message, to: Store.source }))
       })
     }

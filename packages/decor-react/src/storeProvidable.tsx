@@ -235,11 +235,15 @@ export function storeProvidable(userOptions, Helpers) {
         )
       }
 
-      const WithPath = props => (
-        <StoreHMR key={Klass.__hmrId}>
-          <StoreProviderWithContext {...props} />
-        </StoreHMR>
-      )
+      // hmr keypath for dev mode
+      const WithPath =
+        process.env.NODE_ENV !== 'development'
+          ? StoreProviderWithContext
+          : props => (
+              <StoreHMR key={Klass.__hmrId}>
+                <StoreProviderWithContext {...props} />
+              </StoreHMR>
+            )
 
       return new Proxy(WithPath, {
         set(_, method, value) {

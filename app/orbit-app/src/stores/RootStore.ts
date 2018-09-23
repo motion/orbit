@@ -32,6 +32,11 @@ export class RootStore {
     })
   }
 
+  injectReactDevTools() {
+    const script = document.createElement('script')
+    script.src = 'http://localhost:8097'
+  }
+
   async restart() {
     onPort(() => (window.location = window.location))
   }

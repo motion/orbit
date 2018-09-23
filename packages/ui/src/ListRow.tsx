@@ -6,7 +6,7 @@ import { Row } from './blocks/Row'
 import { UIContext } from './helpers/contexts'
 import { Color } from '@mcro/css'
 
-type ListRowProps = {
+type SegmentedRowProps = {
   active?: number
   defaultActive?: number
   controlled?: boolean
@@ -33,7 +33,7 @@ const Label = view({
 // @ts-ignore
 @attachTheme
 @view.ui
-export class ListRow extends React.Component<ListRowProps> {
+export class SegmentedRow extends React.Component<SegmentedRowProps> {
   state = {
     active: null,
   }
@@ -106,17 +106,10 @@ export class ListRow extends React.Component<ListRowProps> {
             return false
           }
           const finalChild =
-            typeof child === 'string' || typeof child === 'number' ? (
-              <span>{child}</span>
-            ) : (
-              child
-            )
+            typeof child === 'string' || typeof child === 'number' ? <span>{child}</span> : child
 
           return (
-            <UIContext.Provider
-              key={index}
-              value={getContext(index, realChildren.length)}
-            >
+            <UIContext.Provider key={index} value={getContext(index, realChildren.length)}>
               {itemProps
                 ? React.cloneElement(finalChild, {
                     ...itemProps,
@@ -138,10 +131,7 @@ export class ListRow extends React.Component<ListRowProps> {
           return <div style={{ flex: segmentProps.flex }} />
         }
         return (
-          <UIContext.Provider
-            key={index}
-            value={getContext(index, items.length)}
-          >
+          <UIContext.Provider key={index} value={getContext(index, items.length)}>
             <Button
               active={(id || icon) === ACTIVE}
               icon={onlyIcons ? text : icon}

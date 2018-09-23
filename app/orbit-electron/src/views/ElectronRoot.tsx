@@ -1,4 +1,4 @@
-import { App as AppWindow, DevTools } from '@mcro/reactron'
+import { App as AppWindow } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import * as React from 'react'
 import Tray from './Tray'
@@ -30,12 +30,17 @@ export class ElectronRoot extends React.Component {
       return null
     }
     console.log('electron success, rendering...')
+    let devTools = null
+    if (process.env.NODE_ENV === 'development') {
+      const tools = require('@mcro/reactron/devtools')
+      devTools = [tools.mobx, tools.react]
+    }
     return (
       <AppWindow
         onBeforeQuit={electronStore.handleBeforeQuit}
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
-        devTools={process.env.NODE_ENV === 'development' ? [DevTools.mobx, DevTools.react] : null}
+        devTools={devTools}
       >
         <MenuItems />
         <OrbitWindow />

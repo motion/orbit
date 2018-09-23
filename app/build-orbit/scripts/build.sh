@@ -120,7 +120,7 @@ if [ ! -L "node_modules/sqlite3/lib/binding/node-v64-darwin-x64" ]; then
   cp -r stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64
 fi
 # remove outdated one
-rm -r stage-app/node_modules/sqlite3/lib/binding/node-v59-darwin-x64 || true
+rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
 
 # see stage-app/package.json for options
 echo "electron-builder..."

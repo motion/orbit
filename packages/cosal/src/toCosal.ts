@@ -1,7 +1,7 @@
 import harmonicMean from './harmonicMean'
 import { range, sum } from 'lodash'
 import { toWords, sigmoid, getWordVector } from './helpers'
-import { Matrix, Vector } from 'vectorious/withoutblas'
+import { Matrix, Vector } from '@mcro/vectorious'
 
 export { getCovariance } from './getCovariance'
 

@@ -52,7 +52,7 @@ class OrbitWindowStore {
   handleOrbitShouldFocus = react(
     () => Desktop.orbitFocusState.focused,
     async (focused, { sleep }) => {
-      console.log('\n\n\n\n sould focus \n\n\n\n\n')
+      console.log('\n\n\n\n LETS FOCUS ORBIT \n\n\n\n\n')
       if (focused) {
         this.handleFocus()
         await sleep()

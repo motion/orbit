@@ -22,7 +22,7 @@ if (typeof window !== 'undefined') {
 
 // electron doesnt have console.debug...
 const debug = (...args) => (console.debug ? console.debug(...args) : console.info(...args))
-const stringify = str => (typeof str === 'string' ? str : JSON.stringify(str))
+const onlyStrings = str => (typeof str === 'string' ? str : '')
 
 type LoggerOpts = {
   trace?: boolean
@@ -168,7 +168,7 @@ export class Logger {
 
     // group traces to avoid large things clogging console
     if (isTrace) {
-      console.groupCollapsed(`${this.namespace} ${messages.map(stringify).join(' ')}`)
+      console.groupCollapsed(`${this.namespace} ${messages.map(onlyStrings).join(' ')}`)
     }
 
     // output to the console

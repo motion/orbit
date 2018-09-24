@@ -6,14 +6,15 @@ import produce from 'immer'
 @store
 export class SettingManager<T extends Setting> {
   setting: T = null
+  values: T['values'] = null
 
   constructor(setting: T) {
+    console.log('setting is', setting)
     this.setting = setting
+    // copy it onto the store so we get instant mutations in views
+    // then we react later and save it to the async model
+    this.values = { ...setting.values }
   }
-
-  // copy it onto the store so we get instant mutations in views
-  // then we react later and save it to the async model
-  values = { ...this.setting.values } as T['values']
 
   saveSettingOnValuesUpdate = react(
     () => this.values,

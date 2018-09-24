@@ -1,10 +1,9 @@
 import { compose, react, view } from '@mcro/black'
 import { SlackChannelModel, SlackSetting as SlackSettingModel } from '@mcro/models'
 import { SlackChannel } from '@mcro/services'
-import * as UI from '@mcro/ui'
 import { orderBy } from 'lodash'
 import { loadMany } from '@mcro/model-bridge'
-import { Text } from '@mcro/ui'
+import { Text, Tabs, Tab, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { MultiSelectTableShortcutHandler } from '../../../../components/shortcutHandlers/MultiSelectTableShortcutHandler'
 import { DateFormat } from '../../../../views/DateFormat'
@@ -159,7 +158,7 @@ class SlackSettingStore {
     return this.setting.values.whitelist.indexOf(repository.id) !== -1
   }
 
-  isSyncAllEnabled = () => {
+  get isSyncAllEnabled() {
     return !this.setting.values.whitelist
   }
 
@@ -185,10 +184,10 @@ const decorator = compose(
 export const SlackSetting = decorator(({ store, setting, children }: Props) => {
   return children({
     belowHead: (
-      <UI.Tabs active={store.active} onActive={store.setActiveKey}>
-        <UI.Tab key="status" width="50%" label="Status" />
-        <UI.Tab key="rooms" width="50%" label="Rooms" />
-      </UI.Tabs>
+      <Tabs active={store.active} onActive={store.setActiveKey}>
+        <Tab key="status" width="50%" label="Status" />
+        <Tab key="rooms" width="50%" label="Rooms" />
+      </Tabs>
     ),
     content: (
       <>
@@ -198,21 +197,27 @@ export const SlackSetting = decorator(({ store, setting, children }: Props) => {
         <HideablePane invisible={store.active !== 'rooms'}>
           <MultiSelectTableShortcutHandler handlers={{ enter: store.handleEnter }}>
             <ToggleSettingSyncAll store={store} />
-            <UI.SearchableTable
-              virtual
-              rowLineHeight={28}
-              floating={false}
-              columnSizes={store.columnSizes}
-              columns={columns}
-              multiHighlight
-              onRowHighlighted={store.handleHighlightedRows}
-              rows={store.rows}
-              bodyPlaceholder={
-                <div style={{ margin: 'auto' }}>
-                  <UI.Text size={1.2}>Loading...</UI.Text>
-                </div>
-              }
-            />
+            <View
+              flex={1}
+              opacity={store.isSyncAllEnabled ? 0.5 : 1}
+              pointerEvents={store.isSyncAllEnabled ? 'none' : 'auto'}
+            >
+              <SearchableTable
+                virtual
+                rowLineHeight={28}
+                floating={false}
+                columnSizes={store.columnSizes}
+                columns={columns}
+                multiHighlight
+                onRowHighlighted={store.handleHighlightedRows}
+                rows={store.rows}
+                bodyPlaceholder={
+                  <div style={{ margin: 'auto' }}>
+                    <Text size={1.2}>Loading...</Text>
+                  </div>
+                }
+              />
+            </View>
           </MultiSelectTableShortcutHandler>
         </HideablePane>
       </>

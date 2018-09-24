@@ -1,5 +1,6 @@
 # nate
 
+- add report recent error log in Tray
 - make it great
   - show current app name in Orbit <Tray />
   - Spin orbit <Orb /> when scanning

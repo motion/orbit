@@ -328,6 +328,7 @@ export class Oracle {
     } else {
       binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
     }
+    console.log('bin', bin, 'binDir', binDir)
     if (this.name) {
       // create a named binary link to change the name...
       log.verbose(`linking! ${this.name}`)

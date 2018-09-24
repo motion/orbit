@@ -25,6 +25,8 @@ export type GlobalConfig = {
     oracleBridge: number
     ocrBridge: number
     mediator: number
+    // this is hacky af, but for now its ok
+    apps: number[]
   }
 }
 

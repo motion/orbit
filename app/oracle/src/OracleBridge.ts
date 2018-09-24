@@ -29,6 +29,7 @@ export class OracleBridge {
   private getServer(port: number): Promise<Server> {
     return new Promise(async res => {
       // kill old ones
+      console.log('OracleBridge killing port', port)
       await killPort(port)
       const server = new Server({ port })
       server.on('error', (...args) => {

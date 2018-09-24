@@ -7,6 +7,7 @@ import { join } from 'path'
 import { getGlobalConfig } from '@mcro/config'
 
 const log = new Logger('AppsManager')
+const Config = getGlobalConfig()
 
 type FakeProcess = {
   id: number
@@ -48,9 +49,9 @@ export class AppsManager {
         }
         const shouldAdd = !this.processes.find(x => x.id === id)
         if (shouldAdd) {
-          const icon = join(getGlobalConfig().paths.desktopRoot, 'assets', 'icon.png')
+          const icon = join(Config.paths.desktopRoot, 'assets', 'icon.png')
           log.info(`create process -- ${id} with icon ${icon}`)
-          const oracle = await this.spawnOracle(id, torn, 'Test', icon)
+          const oracle = await this.spawnOracle(id, 'Test', icon)
           this.processes = [
             ...this.processes,
             {
@@ -63,17 +64,18 @@ export class AppsManager {
     },
   )
 
-  async spawnOracle(id, torn, name, iconPath: string) {
+  async spawnOracle(id: number, name, iconPath: string) {
     const oracle = new Oracle({
-      name,
+      // name,
       ...oracleOptions,
+      socketPort: Config.ports.apps[id],
       env: {
+        RUN_APP_WINDOW: true,
         SHOW_ICON: iconPath,
-        PREVENT_FOCUSING: !torn,
+        PREVENT_FOCUSING: true,
       },
     })
     await oracle.start()
-    log.verbose('spawnOracle', id, name)
     oracle.onAppState(this.handleAppState(id))
     return oracle
   }

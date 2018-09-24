@@ -117,7 +117,7 @@ export const AppWindow = decorator(({ id, store, isPeek }: Props & { store: AppW
       alwaysOnTop={isPeek}
       show
       ref={store.handleRef}
-      ignoreMouseEvents={!Electron.hoverState.peekHovered[id] || true}
+      ignoreMouseEvents={!Electron.hoverState.peekHovered[id] || false}
       focusable={isPeek}
       file={store.url}
       frame={false}

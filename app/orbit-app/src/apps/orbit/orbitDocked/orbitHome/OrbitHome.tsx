@@ -82,13 +82,13 @@ const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
-  // {
-  //   id: '7',
-  //   source: 'app1',
-  //   name: 'Test App',
-  //   model: BitModel,
-  //   query: findManyType('app1'),
-  // },
+  {
+    id: '7',
+    source: 'app1',
+    name: 'Test App',
+    model: BitModel,
+    query: findManyType('app1'),
+  },
 ]
 
 const getListStyle = isDraggingOver => ({

@@ -8,6 +8,7 @@ import { View, Image, Tooltip } from '@mcro/ui'
 import orbIcon from '../../../../public/orb.svg'
 import { Desktop } from '@mcro/stores'
 import { trace } from 'mobx'
+import { Actions } from '../../../actions/Actions'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -47,6 +48,23 @@ OrbitFakeInput.theme = ({ theme }) => ({
   },
 })
 
+const OrbitCloseControl = view({
+  width: 10,
+  height: 10,
+  borderRadius: 100,
+  position: 'absolute',
+  top: 10,
+  left: 10,
+  zIndex: 10000,
+  background: 'red',
+})
+OrbitCloseControl.theme = ({ theme }) => ({
+  background: theme.borderColor,
+  '&:hover': {
+    background: [100, 0, 0],
+  },
+})
+
 @attachTheme
 @view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
 @view.attach({
@@ -74,6 +92,7 @@ export class OrbitHeader extends React.Component<
       >
         <OrbitFakeInput>
           <Title>
+            <OrbitCloseControl onClick={Actions.closeOrbit} />
             <Tooltip
               target={
                 <Image

@@ -23,7 +23,7 @@ export class Window extends BaseComponent {
 
     const { props } = this
     this.options = {
-      show: props.show === undefined ? true : props.show,
+      show: props.show,
       acceptFirstMouse: !!props.acceptFirstMouse,
       titleBarStyle: props.titleBarStyle,
       vibrancy: props.vibrancy,

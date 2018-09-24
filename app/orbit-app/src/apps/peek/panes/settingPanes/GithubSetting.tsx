@@ -1,16 +1,16 @@
 import { react, view } from '@mcro/black'
-import produce from 'immer'
-import { GithubRepositoryModel, GithubSettingValues, SettingModel } from '@mcro/models'
+import { GithubRepositoryModel, GithubSetting as GithubSettingModel } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
-import { Text, Row, View, Tabs, Tab, SearchableTable } from '@mcro/ui'
+import { Text, View, Tabs, Tab, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
-import { loadMany, save } from '@mcro/model-bridge'
+import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
-import { ReactiveCheckBox, CheckBox } from '../../../../views/ReactiveCheckBox'
+import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { HideablePane } from '../../views/HideablePane'
 import { AppStatusPane } from './AppStatusPane'
 import { SettingPaneProps } from './SettingPaneProps'
-import { HorizontalSpace } from '../../../../views'
+import { SettingManager } from './stores/SettingManager'
+import { ToggleSettingSyncAll } from './views/ToggleSettingSyncAll'
 
 const columnSizes = {
   repo: 'flex',
@@ -48,7 +48,9 @@ const columns = {
 }
 
 class GithubSettingStore {
-  props: SettingPaneProps
+  props: SettingPaneProps & {
+    setting: GithubSettingModel
+  }
   repositories: GithubRepository[] = []
 
   active = 'status'
@@ -57,6 +59,7 @@ class GithubSettingStore {
     key: 'lastCommit',
     direction: 'up',
   }
+  setting = new SettingManager(this.props.setting)
 
   async didMount() {
     this.repositories = await loadMany(GithubRepositoryModel, {
@@ -66,20 +69,9 @@ class GithubSettingStore {
     })
   }
 
-  get setting() {
-    return this.props.setting
+  willUnmount() {
+    this.setting.dispose()
   }
-
-  values = { ...this.setting.values } as GithubSettingValues
-
-  saveSettingOnValuesUpdate = react(
-    () => this.values,
-    values => {
-      console.log('saving values...', values)
-      this.setting.values = values
-      save(SettingModel, this.setting)
-    },
-  )
 
   onSortOrder = newOrder => {
     this.sortOrder = newOrder
@@ -137,31 +129,30 @@ class GithubSettingStore {
   }
 
   toggleSyncAll = () => {
-    this.values = produce(this.values, values => {
-      // if sync all is already enable, register all repositories in whitelist
-      if (values.whitelist === undefined) {
-        values.whitelist = this.repositories.map(repository => repository.nameWithOwner)
-      } else {
-        // otherwise enable "sync all" mode
+    this.setting.updateValues(values => {
+      if (values.whitelist) {
+        // toggle to "sync all"
         values.whitelist = undefined
+      } else {
+        // toggle away from sync all, set each repository
+        values.whitelist = this.repositories.map(repository => repository.nameWithOwner)
       }
     })
   }
 
   whitelistStatus = (repository: GithubRepository) => () => {
-    // if whitelist is undefined we are in "sync all" mode
-    if (this.values.whitelist === undefined) {
+    if (!this.setting.values.whitelist) {
       return true
     }
-    return this.values.whitelist.indexOf(repository.nameWithOwner) !== -1
+    return this.setting.values.whitelist.indexOf(repository.nameWithOwner) !== -1
   }
 
   get isSyncAllEnabled() {
-    return this.values.whitelist === undefined
+    return !this.setting.values.whitelist
   }
 
   changeWhitelist = (repository: GithubRepository) => () => {
-    this.values = produce(this.values, values => {
+    this.setting.updateValues(values => {
       if (!values.whitelist) {
         values.whitelist = this.repositories.map(repository => repository.nameWithOwner)
       }
@@ -192,15 +183,10 @@ export class GithubSetting extends React.Component<
       content: (
         <>
           <HideablePane invisible={store.active !== 'status'}>
-            <AppStatusPane setting={store.setting} />
+            <AppStatusPane setting={this.props.setting} />
           </HideablePane>
           <HideablePane invisible={store.active !== 'repos'}>
-            <Row padding={[6, 15]}>
-              <View flex={1} />
-              <Text>Sync all</Text>
-              <HorizontalSpace />
-              <CheckBox onChange={store.toggleSyncAll} checked={store.isSyncAllEnabled} />
-            </Row>
+            <ToggleSettingSyncAll store={store} />
             <View
               flex={1}
               opacity={store.isSyncAllEnabled ? 0.5 : 1}

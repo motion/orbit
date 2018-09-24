@@ -23,7 +23,6 @@ export class Window extends BaseComponent {
 
     const { props } = this
     this.options = {
-      show: props.show,
       acceptFirstMouse: !!props.acceptFirstMouse,
       titleBarStyle: props.titleBarStyle,
       vibrancy: props.vibrancy,
@@ -36,6 +35,9 @@ export class Window extends BaseComponent {
       frame: !!props.frame,
       kiosk: !!props.kiosk,
       fullScreen: !!props.fullScreen,
+    }
+    if (typeof props.show !== 'undefined') {
+      this.options.show = props.show
     }
     this.window = new BrowserWindow(this.options)
 

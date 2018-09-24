@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view, react, cancel } from '@mcro/black'
 import { Carousel, CarouselProps } from './Carousel'
 import { SelectionStore } from '../apps/orbit/orbitDocked/SelectionStore'
-import { trace } from 'mobx'
 import { ORBIT_WIDTH } from '@mcro/constants'
 
 type Props = CarouselProps & {
@@ -57,7 +56,6 @@ class CarouselStore {
 export class SelectableCarousel extends React.Component<Props> {
   render() {
     const { store, selectionStore, cardWidth = 180, cardHeight = 95, ...props } = this.props
-    trace()
     return (
       <Carousel
         ref={store.carouselRef}

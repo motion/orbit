@@ -93,8 +93,8 @@ const decorator = compose(
     store: OrbitDirectoryStore,
   }),
 )
-
 export const OrbitDirectory = decorator((props: Props) => {
+  console.log('render OrbitDirectory')
   return (
     <SubPane name="directory" fadeBottom>
       <OrbitDirectoryInner {...props} />
@@ -135,12 +135,12 @@ const createSection = (people: PersonBit[], letter, getIndex) => {
 }
 
 const OrbitDirectoryInner = view(({ store }: Props) => {
+  console.log('render OrbitDirectoryInner')
   const { results } = store
   const total = results.length
   if (!total) {
     return <NoResultsDialog />
   }
-  console.log('rendering directory...')
   let sections
   // not that many, show without sections
   if (total < 20) {

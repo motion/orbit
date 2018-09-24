@@ -9,7 +9,6 @@ import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { setAppState } from '../../../actions/appActions/setAppState'
 import { debounce } from 'lodash'
 import { Actions } from '../../../actions/Actions'
-import { trace } from 'mobx'
 
 type PeekFrameProps = {
   store?: PeekFrameStore
@@ -106,7 +105,6 @@ export const PeekFrame = decorator(({ peekStore, store, children, theme }: PeekF
   const transition = transitions(peekStore)
   const size = store.size
   log('peeek frame')
-  trace()
   return (
     <ResizableBox
       width={size[0]}

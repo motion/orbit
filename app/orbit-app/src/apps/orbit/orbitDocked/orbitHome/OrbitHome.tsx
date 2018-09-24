@@ -222,7 +222,6 @@ export class OrbitHome extends React.Component<Props> {
 
   render() {
     console.log('OrbitHome Render')
-    trace()
     const { homeStore } = this.props
     const { results } = homeStore
     let content
@@ -231,7 +230,6 @@ export class OrbitHome extends React.Component<Props> {
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided, snapshot) => {
-              console.log('droppable render...')
               return (
                 <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                   {/* <SuggestionBarVerticalPad /> */}
@@ -240,7 +238,6 @@ export class OrbitHome extends React.Component<Props> {
                     return (
                       <Draggable key={id} draggableId={id} index={index}>
                         {(provided, snapshot) => {
-                          console.log('draggable render...', id)
                           return (
                             <div
                               ref={provided.innerRef}

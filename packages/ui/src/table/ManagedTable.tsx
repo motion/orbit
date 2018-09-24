@@ -160,10 +160,7 @@ const Container = view({
   flex: 1,
 })
 
-class ManagedTableInner extends React.Component<
-  ManagedTableProps,
-  ManagedTableState
-> {
+class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
   static defaultProps = {
     highlightableRows: true,
     multiHighlight: false,
@@ -297,10 +294,7 @@ class ManagedTableInner extends React.Component<
       e.keyCode === 67
     ) {
       this.onCopy()
-    } else if (
-      (e.keyCode === 38 || e.keyCode === 40) &&
-      this.props.highlightableRows
-    ) {
+    } else if ((e.keyCode === 38 || e.keyCode === 40) && this.props.highlightableRows) {
       // arrow navigation
       const { highlightedRows, sortedRows } = this.state
       const lastItemKey = Array.from(this.state.highlightedRows).pop()
@@ -384,10 +378,7 @@ class ManagedTableInner extends React.Component<
     } else if (e.shiftKey && this.props.multiHighlight) {
       // range select
       const lastItemKey = Array.from(this.state.highlightedRows).pop()
-      highlightedRows = new Set([
-        ...highlightedRows,
-        ...this.selectInRange(lastItemKey, row.key),
-      ])
+      highlightedRows = new Set([...highlightedRows, ...this.selectInRange(lastItemKey, row.key)])
     } else {
       // single select
       this.state.highlightedRows.clear()
@@ -419,11 +410,7 @@ class ManagedTableInner extends React.Component<
       }
     }
 
-    for (
-      let i = Math.min(startIndex, endIndex);
-      i <= Math.max(startIndex, endIndex);
-      i++
-    ) {
+    for (let i = Math.min(startIndex, endIndex); i <= Math.max(startIndex, endIndex); i++) {
       try {
         selected.push(rows[i].key)
       } catch (e) {}
@@ -456,10 +443,7 @@ class ManagedTableInner extends React.Component<
 
     return [
       {
-        label:
-          highlightedRows.size > 1
-            ? `Copy ${highlightedRows.size} rows`
-            : 'Copy row',
+        label: highlightedRows.size > 1 ? `Copy ${highlightedRows.size} rows` : 'Copy row',
         click: this.onCopy,
       },
       {
@@ -479,9 +463,7 @@ class ManagedTableInner extends React.Component<
       .map(
         (row: TableBodyRow) =>
           row.copyText ||
-          Array.from(
-            document.querySelectorAll(`[data-key='${row.key}'] > *`) || [],
-          )
+          Array.from(document.querySelectorAll(`[data-key='${row.key}'] > *`) || [])
             .map(node => node.textContent)
             .join('\t'),
       )
@@ -505,8 +487,7 @@ class ManagedTableInner extends React.Component<
         !this.state.shouldScrollToBottom &&
         current &&
         parent instanceof HTMLElement &&
-        current.offsetHeight - (scrollOffset + parent.offsetHeight) <
-          parent.offsetHeight
+        current.offsetHeight - (scrollOffset + parent.offsetHeight) < parent.offsetHeight
       ) {
         this.setState({ shouldScrollToBottom: true })
       } else if (
@@ -523,9 +504,7 @@ class ManagedTableInner extends React.Component<
   getRow = ({ index, style }) => {
     const { onAddFilter, multiline, zebra } = this.props
     const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
-    const columnKeys = columnOrder
-      .map(k => (k.visible ? k.key : null))
-      .filter(Boolean)
+    const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
     return (
       <TableRow
         key={sortedRows[index].key}

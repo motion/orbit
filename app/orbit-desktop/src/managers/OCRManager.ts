@@ -141,6 +141,7 @@ export class OCRManager {
 
     // OCR words
     this.oracle.onWords(async wordBounds => {
+      // [x, y, width, height, 'word']
       const words = wordBounds.map(x => x[4]) as string[]
 
       // disable spellcheck for now

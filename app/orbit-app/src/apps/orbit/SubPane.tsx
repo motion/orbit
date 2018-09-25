@@ -8,6 +8,7 @@ import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from './orbitDocked/SearchStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
 import { BORDER_RADIUS } from '../../constants'
+import { trace } from 'mobx'
 
 export type SubPaneProps = CSSPropertySet & {
   store?: SubPaneStore
@@ -86,6 +87,7 @@ export class SubPane extends React.Component<SubPaneProps> {
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
     console.log('rendering subpane...', this.props.name)
+    trace()
     return (
       <SubPaneFrame isActive={isActive}>
         {before}

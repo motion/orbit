@@ -75,9 +75,8 @@ export class OCRManager {
     })
 
     // poll for now for updated transparency setting...
-    const listener2 = setInterval(() => {
-      this.oracle.socketSend('osin')
-    }, 1000 * 10)
+    const listener2 = setInterval(this.oracle.getInfo, 1000 * 10)
+    this.oracle.getInfo()
     on(this, listener2)
 
     return true

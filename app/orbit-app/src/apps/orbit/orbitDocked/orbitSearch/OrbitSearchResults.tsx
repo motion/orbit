@@ -149,7 +149,6 @@ class OrbitSearchResultsList extends React.Component<Props> {
     const quickResultsLen = searchStore.quickSearchState.results.length
     const chunkAmt = 6
     const resultsGroups = chunk(results, chunkAmt)
-    console.log('resultsGroups', resultsGroups)
     let curOffset = quickResultsLen
     return (
       <ProvideHighlightsContextWithDefaults

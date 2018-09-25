@@ -155,6 +155,7 @@ export class OrbitWindow extends React.Component<Props> {
         ignoreMouseEvents={!Electron.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}
+        focus={false}
         position={[0, 0]}
         size={Electron.state.screenSize.slice()}
         show={electronStore.show ? this.state.show : false}

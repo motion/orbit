@@ -26,17 +26,14 @@ export const ControlButtonChrome = view(UI.Col, {
   '&:hover > img': {
     opacity: 0.5,
   },
-})
-
-ControlButtonChrome.theme = ({ theme, borderWidth, ...props }) => {
-  const background =
-    props.background || theme.background.darken(0.2).desaturate(0.2)
+}).theme(({ theme, borderWidth, ...props }) => {
+  const background = props.background || theme.background.darken(0.2).desaturate(0.2)
   const borderColor = props.borderColor || UI.color(background).darken(0.1)
   return {
     background,
     boxShadow: [['inset', 0, 0, 0, borderWidth, borderColor]],
   }
-}
+})
 
 const Img = view('img', {
   margin: 'auto',

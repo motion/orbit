@@ -31,27 +31,13 @@ export const Toolbar = view(Row, {
   alignItems: 'center',
   padding: 6,
   width: '100%',
-})
-
-Toolbar.theme = ({
-  height,
-  borderTop,
-  borderBottom,
-  background,
-  position,
-  compact,
-  theme,
-}) => ({
+}).theme(({ height, borderTop, borderBottom, background, position, compact, theme }) => ({
   background: background || theme.background || colors.light02,
   borderBottom:
     borderBottom ||
-    (position === 'bottom'
-      ? 'none'
-      : [1, theme.borderColor || colors.sectionHeaderBorder]),
+    (position === 'bottom' ? 'none' : [1, theme.borderColor || colors.sectionHeaderBorder]),
   borderTop:
     borderTop ||
-    (position === 'bottom'
-      ? [1, theme.borderColor || colors.sectionHeaderBorder]
-      : 'none'),
+    (position === 'bottom' ? [1, theme.borderColor || colors.sectionHeaderBorder] : 'none'),
   height: height || (compact ? 28 : 42),
-})
+}))

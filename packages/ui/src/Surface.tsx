@@ -1,11 +1,5 @@
 import * as React from 'react'
-import {
-  Color,
-  CSSPropertySet,
-  propsToThemeStyles,
-  propsToStyles,
-  alphaColor,
-} from '@mcro/gloss'
+import { Color, CSSPropertySet, propsToThemeStyles, propsToStyles, alphaColor } from '@mcro/gloss'
 import { view } from '@mcro/black'
 import { attachTheme } from '@mcro/gloss'
 import { Icon } from './Icon'
@@ -76,10 +70,7 @@ const getIconSize = props => {
   return (
     props.iconSize ||
     Math.round(
-      (props.size || 1) *
-        (props.height ? props.height / 3 : 12) *
-        (props.sizeIcon || 1) *
-        100,
+      (props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1) * 100,
     ) / 100
   )
 }
@@ -106,9 +97,7 @@ const SurfaceFrame = view(View, {
   alignItems: 'center',
   fontFamily: 'inherit',
   position: 'relative',
-})
-
-SurfaceFrame.theme = props => {
+}).theme(props => {
   const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   // support being inside a segmented list
   let segmentedStyle: any
@@ -148,16 +137,10 @@ SurfaceFrame.theme = props => {
     fontWeight: props.fontWeight,
     color: props.color || props.theme.color,
     ...(props.inline && inlineStyle),
-    overflow:
-      props.overflow || props.glow
-        ? props.overflow || 'hidden'
-        : props.overflow,
+    overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
     justifyContent: props.justify || props.justifyContent,
     alignSelf: props.alignSelf,
-    borderStyle:
-      props.borderStyle || props.borderWidth
-        ? props.borderStyle || 'solid'
-        : undefined,
+    borderStyle: props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
     ...circularStyles,
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
@@ -175,7 +158,7 @@ SurfaceFrame.theme = props => {
     ...segmentedStyle,
   }
   return alphaColor(surfaceStyles, props.alpha)
-}
+})
 
 const Element = view({
   // needed to reset for <button /> at least
@@ -191,9 +174,7 @@ const Element = view({
   noInnerElement: {
     display: 'none',
   },
-})
-
-Element.theme = props => {
+}).theme(props => {
   const iconSize = getIconSize(props)
   const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
   // element styles
@@ -216,7 +197,7 @@ Element.theme = props => {
     width: `calc(100% ${iconNegativePad})`,
     ...elementStyle,
   }
-}
+})
 
 const baseIconStyle = {
   pointerEvents: 'none',
@@ -299,12 +280,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         className={`${this.uniq} ${className || ''}`}
       >
         {glint ? (
-          <Glint
-            key={0}
-            size={size}
-            opacity={0.2}
-            borderRadius={props.borderRadius}
-          />
+          <Glint key={0} size={size} opacity={0.2} borderRadius={props.borderRadius} />
         ) : null}
         {icon && !stringIcon ? <div>{icon}</div> : null}
         {icon && stringIcon ? (
@@ -327,12 +303,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         ) : null}
         {!noInnerElement &&
           !!children && (
-            <Element
-              tagName={tagName}
-              {...throughProps}
-              {...elementProps}
-              disabled={disabled}
-            >
+            <Element tagName={tagName} {...throughProps} {...elementProps} disabled={disabled}>
               {children}
             </Element>
           )}

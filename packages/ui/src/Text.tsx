@@ -53,9 +53,7 @@ const TextBlock = view(InlineBlock, {
   oneLineEllipse: {
     overflow: 'hidden',
   },
-})
-
-TextBlock.theme = ({ theme, color, alpha }) => {
+}).theme(({ theme, color, alpha }) => {
   if (color === false) {
     return {
       color: 'inherit',
@@ -67,14 +65,12 @@ TextBlock.theme = ({ theme, color, alpha }) => {
     },
     alpha,
   )
-}
+})
 
 const TextEllipse = view(Inline, {
   margin: ['auto', 0],
   maxWidth: '100%',
-})
-
-TextEllipse.theme = ({ ellipse, doClamp, maxHeight }) => ({
+}).theme(({ ellipse, doClamp, maxHeight }) => ({
   ...(ellipse > 1 && {
     WebkitLineClamp: ellipse,
     maxHeight,
@@ -91,7 +87,7 @@ TextEllipse.theme = ({ ellipse, doClamp, maxHeight }) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
   }),
-})
+}))
 
 export type Highlights = {
   highlights: string[]

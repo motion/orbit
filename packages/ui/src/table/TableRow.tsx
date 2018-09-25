@@ -40,9 +40,7 @@ const TableBodyRowContainer = view(Row, {
   overflow: 'hidden',
   width: '100%',
   userSelect: 'none',
-})
-
-TableBodyRowContainer.theme = props => ({
+}).theme(props => ({
   backgroundColor: backgroundColor(props),
   boxShadow: props.zebra ? 'none' : 'inset 0 -1px #E9EBEE',
   color: props.highlighted ? props.theme.white : props.color || 'inherit',
@@ -50,34 +48,28 @@ TableBodyRowContainer.theme = props => ({
     color: props.highlighted ? `${props.theme.white} !important` : null,
   },
   '& img': {
-    backgroundColor: props.highlighted
-      ? `${props.theme.white} !important`
-      : 'none',
+    backgroundColor: props.highlighted ? `${props.theme.white} !important` : 'none',
   },
   height: props.multiline ? 'auto' : props.rowLineHeight,
   lineHeight: `${String(props.rowLineHeight || DEFAULT_ROW_HEIGHT)}px`,
   fontWeight: props.fontWeight || 'inherit',
   flexShrink: 0,
   '&:hover': {
-    backgroundColor:
-      !props.highlighted && props.highlightOnHover
-        ? props.theme.light02
-        : 'none',
+    backgroundColor: !props.highlighted && props.highlightOnHover ? props.theme.light02 : 'none',
   },
-})
+}))
 
 const TableBodyColumnContainer = view({
   overflow: 'hidden',
   padding: [0, 8],
   userSelect: 'none',
   maxWidth: '100%',
-})
-TableBodyColumnContainer.theme = props => ({
+}).theme(props => ({
   flexShrink: props.width === 'flex' ? 1 : 0,
   whiteSpace: props.multiline ? 'normal' : 'nowrap',
   wordWrap: props.multiline ? 'break-word' : 'normal',
   width: props.width === 'flex' ? '100%' : props.width,
-})
+}))
 
 type Props = {
   columnSizes: TableColumnSizes

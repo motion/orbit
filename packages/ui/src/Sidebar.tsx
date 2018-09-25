@@ -20,17 +20,15 @@ const SidebarContainer = view(Col, {
   height: '100%',
   overflowX: 'hidden',
   overflowY: 'auto',
-})
-SidebarContainer.theme = props => ({
-  backgroundColor:
-    props.backgroundColor || props.theme.sidebarBackground || '#E8E7E7',
+}).theme(props => ({
+  backgroundColor: props.backgroundColor || props.theme.sidebarBackground || '#E8E7E7',
   borderLeft: props.position === 'right' ? '1px solid #b3b3b3' : 'none',
   borderTop: props.position === 'bottom' ? '1px solid #b3b3b3' : 'none',
   borderRight: props.position === 'left' ? '1px solid #b3b3b3' : 'none',
   borderBottom: props.position === 'top' ? '1px solid #b3b3b3' : 'none',
   textOverflow: props.overflow ? 'ellipsis' : 'auto',
   whiteSpace: props.overflow ? 'nowrap' : 'normal',
-})
+}))
 
 type SidebarProps = {
   /**
@@ -156,9 +154,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         width={horizontal ? (onResize ? width : this.state.width) : undefined}
         minHeight={minHeight}
         maxHeight={maxHeight}
-        height={
-          !horizontal ? (onResize ? height : this.state.height) : undefined
-        }
+        height={!horizontal ? (onResize ? height : this.state.height) : undefined}
         resizable={resizable}
         onResize={this.onResize}
       >

@@ -40,7 +40,6 @@ class PeekPersonStore {
       },
     })
   }
-
 }
 
 const mapW = 700
@@ -102,10 +101,6 @@ const FadeMap = view({
   background: 'linear-gradient(transparent, #fbfbfb)',
 })
 
-// FadeMap.theme = ({ theme }) => ({
-//   background: `linear-gradient(transparent, ${theme.background})`,
-// })
-
 const FadeMapRight = view({
   position: 'absolute',
   top: 0,
@@ -113,11 +108,9 @@ const FadeMapRight = view({
   left: 0,
   right: 0,
   zIndex: 2,
-})
-
-FadeMapRight.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   background: `linear-gradient(to right, transparent, ${theme.background})`,
-})
+}))
 
 const Info = view({
   display: 'block',

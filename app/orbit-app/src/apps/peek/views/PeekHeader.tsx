@@ -22,9 +22,7 @@ const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
-})
-
-PeekHeaderContain.theme = ({ invisible, position, theme, focused }) => {
+}).theme(({ invisible, position, theme, focused }) => {
   if (invisible) {
     return null
   }
@@ -47,7 +45,7 @@ PeekHeaderContain.theme = ({ invisible, position, theme, focused }) => {
     }
   }
   return style
-}
+})
 
 const Centered = view({
   position: 'absolute',

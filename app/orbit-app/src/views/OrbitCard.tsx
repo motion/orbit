@@ -40,65 +40,63 @@ const Card = view({
       background: [0, 0, 0, 0.025],
     },
   },
-})
-
-const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-
-Card.theme = ({
-  borderRadius,
-  inGrid,
-  theme,
-  isSelected,
-  background,
-  padding,
-  disableShadow,
-  chromeless,
-  color,
-}) => {
-  let card: CSSPropertySet = {
-    flex: inGrid ? 1 : 'none',
-    color: color || theme.color,
-  }
-  if (chromeless) {
-    return card
-  }
-  const disabledShadow = disableShadow ? 'none' : null
-  const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
-  card = {
-    ...card,
-    padding,
+}).theme(
+  ({
     borderRadius,
-    background: background || theme.cardBackground || theme.background.alpha(0.9),
-    ...theme.card,
-  }
-  if (!isSelected) {
-    const borderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColor || 'transparent']
-    card = {
-      ...card,
-      boxShadow: disabledShadow || [cardShadow, borderShadow],
-      '&:hover': {
-        boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-      },
+    inGrid,
+    theme,
+    isSelected,
+    background,
+    padding,
+    disableShadow,
+    chromeless,
+    color,
+  }) => {
+    let card: CSSPropertySet = {
+      flex: inGrid ? 1 : 'none',
+      color: color || theme.color,
     }
-  } else {
-    const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
-    const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
+    if (chromeless) {
+      return card
+    }
+    const disabledShadow = disableShadow ? 'none' : null
+    const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
     card = {
       ...card,
-      boxShadow,
-      '&:hover': {
+      padding,
+      borderRadius,
+      background: background || theme.cardBackground || theme.background.alpha(0.9),
+      ...theme.card,
+    }
+    if (!isSelected) {
+      const borderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColor || 'transparent']
+      card = {
+        ...card,
+        boxShadow: disabledShadow || [cardShadow, borderShadow],
+        '&:hover': {
+          boxShadow: disabledShadow || [cardShadow, borderShadow, theme.cardHoverGlow],
+        },
+      }
+    } else {
+      const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
+      const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
+      card = {
+        ...card,
         boxShadow,
+        '&:hover': {
+          boxShadow,
+        },
+      }
+    }
+    card = {
+      ...card,
+      '&:active': {
+        opacity: 0.8,
       },
     }
-  }
-  card = {
-    ...card,
-    '&:active': {
-      opacity: 0.8,
-    },
-  }
-  return card
-}
+    return card
+  },
+)
 
 const Title = view({
   maxWidth: '100%',

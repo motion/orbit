@@ -17,10 +17,9 @@ const SearchFilterBar = view({
   padding: [6, 12],
   width: '100%',
   alignItems: 'center',
-})
-SearchFilterBar.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   borderTop: [1, theme.borderColor.alpha(0.3)],
-})
+}))
 
 const ExtraFilters = view(UI.View, {
   width: '100%',
@@ -63,7 +62,6 @@ const getDate = ({ startDate, endDate }: { startDate?: Date; endDate?: Date }) =
     return `${startInWords}`
   }
   const oneDayInMinutes = 60 * 24 * 1000
-  console.log('difference is', endDate.getTime() - startDate.getTime())
   if (endDate.getTime() - startDate.getTime() <= oneDayInMinutes) {
     return startInWords
   }

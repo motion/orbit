@@ -40,13 +40,12 @@ const OrbitFakeInput = view({
   justifyContent: 'stretch',
   transition: 'background ease-in 300ms',
   borderRadius: 10,
-})
-OrbitFakeInput.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   background: theme.inputBackground || theme.background.alpha(0.35),
   '&:active': {
     background: theme.inputBackgroundActive || theme.background.alpha(0.6),
   },
-})
+}))
 
 const OrbitCloseControl = view({
   width: 10,
@@ -57,13 +56,12 @@ const OrbitCloseControl = view({
   left: 10,
   zIndex: 10000,
   background: 'red',
-})
-OrbitCloseControl.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   background: theme.borderColor,
   '&:hover': {
     background: [100, 0, 0],
   },
-})
+}))
 
 @attachTheme
 @view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')

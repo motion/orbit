@@ -20,15 +20,13 @@ const ListFrame = view(UI.View, {
   transform: {
     z: 0,
   },
-})
-
-ListFrame.theme = ({ theme, borderRadius }) => {
+}).theme(({ theme, borderRadius }) => {
   return {
     color: theme.color,
     background: theme.listItemBackground || theme.background.alpha(0.5),
     borderRadius: borderRadius || 3,
   }
-}
+})
 
 const Divider = view({
   height: 1,
@@ -36,11 +34,9 @@ const Divider = view({
   bottom: 0,
   left: 10,
   right: 10,
-})
-
-Divider.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   background: theme.color.alpha(0.015),
-})
+}))
 
 const ListItem = view({
   overflow: 'hidden',
@@ -56,9 +52,7 @@ const ListItem = view({
     background: 'transparent',
     padding: 8,
   },
-})
-
-ListItem.theme = ({ theme, isSelected, padding, chromeless }) => {
+}).theme(({ theme, isSelected, padding, chromeless }) => {
   let style: CSSPropertySet = {}
   if (chromeless) {
     return style
@@ -87,7 +81,7 @@ ListItem.theme = ({ theme, isSelected, padding, chromeless }) => {
     },
   }
   return style
-}
+})
 
 const Title = view({
   maxWidth: '100%',

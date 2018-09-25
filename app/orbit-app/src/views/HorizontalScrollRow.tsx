@@ -16,6 +16,9 @@ const HorizontalScrollRowFrame = view(UI.View, {
   overflow: 'hidden',
 })
 
+// for shadows
+const extraPad = 20
+
 const Inner = view(UI.View, {
   flexFlow: 'row',
   alignItems: 'center',
@@ -25,19 +28,14 @@ const Inner = view(UI.View, {
     height: 0,
     width: 0,
   },
-})
-
-// for shadows
-const extraPad = 20
-
-Inner.theme = ({ height, verticalPadding, scrollBarHeight }) => ({
+}).theme(({ height, verticalPadding, scrollBarHeight }) => ({
   height: extraPad * 2 + height + verticalPadding + scrollBarHeight + 3, // 3 ??
   paddingBottom: extraPad + scrollBarHeight + verticalPadding,
   paddingTop: extraPad + verticalPadding + scrollBarHeight,
   paddingLeft: extraPad,
   paddingRight: extraPad,
   marginTop: -(scrollBarHeight / 2 - verticalPadding),
-})
+}))
 
 export const HorizontalScrollRow = ({
   height,

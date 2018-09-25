@@ -20,13 +20,12 @@ const Item = view({
   '&:active': {
     opacity: 0.8,
   },
-})
-Item.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   borderBottom: [1, theme.borderColor.alpha(0.3)],
   '&:hover': {
     background: theme.backgroundHover,
   },
-})
+}))
 
 const ItemTitle = view(Text, {
   fontWeight: 700,
@@ -37,13 +36,7 @@ const ItemTitle = view(Text, {
   flex: 1,
 })
 
-export const SimpleItem = ({
-  inactive = false,
-  after = null,
-  icon,
-  title,
-  ...props
-}) => (
+export const SimpleItem = ({ inactive = false, after = null, icon, title, ...props }) => (
   <Item inactive={inactive} {...props}>
     <OrbitIcon size={18} icon={icon} />
     <ItemTitle>{title}</ItemTitle>

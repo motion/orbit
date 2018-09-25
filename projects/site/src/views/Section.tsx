@@ -14,8 +14,7 @@ export const Slant = ({
   amount = 40,
   ...props
 }) => {
-  const slant =
-    (Math.atan(amount / (Constants.SECTION_HEIGHT / 2)) * 180) / Math.PI
+  const slant = (Math.atan(amount / (Constants.SECTION_HEIGHT / 2)) * 180) / Math.PI
   const rotate = `${(inverse ? -1 : 1) * (inverseSlant ? -1 : 1) * slant}deg`
   let gradients = []
   if (slantGradient) {
@@ -95,19 +94,11 @@ export const Slant = ({
 
 const SectionFrame = view({
   position: 'relative',
-})
-
-SectionFrame.theme = ({ withBackground, theme }) => ({
+}).theme(({ withBackground, theme }) => ({
   background: withBackground ? theme.background : 'transparent',
-})
+}))
 
-export const Section = ({
-  withBackground,
-  leftBackground,
-  inverse,
-  children,
-  ...props
-}) => {
+export const Section = ({ withBackground, leftBackground, inverse, children, ...props }) => {
   return (
     <SectionFrame withBackground={withBackground} {...props}>
       {leftBackground && (

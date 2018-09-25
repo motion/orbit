@@ -39,11 +39,9 @@ const OrderableContainer = view({
   position: 'relative',
 })
 
-const OrderableItemContainer = view({})
-
-OrderableItemContainer.theme = ({ orientation }) => ({
+const OrderableItemContainer = view({}).theme(({ orientation }) => ({
   display: orientation === 'vertical' ? 'block' : 'inline-block',
-})
+}))
 
 class OrderableItem extends React.Component<{
   orientation: OrderableOrientation
@@ -213,13 +211,9 @@ export class Orderable extends React.Component<OrderableProps, OrderableState> {
     const activeTab = this.tabRefs[activeKey]
     if (containerRef) {
       const containerRect: Rect = containerRef.getBoundingClientRect()
-      let newActivePos = // $FlowFixMe
-        event[this.screenKey] - containerRect[this.offsetKey] - cursorOffset
+      let newActivePos = event[this.screenKey] - containerRect[this.offsetKey] - cursorOffset // $FlowFixMe
       newActivePos = Math.max(-1, newActivePos)
-      newActivePos = Math.min(
-        newActivePos,
-        containerRect[this.sizeKey] - movingSize[this.sizeKey],
-      )
+      newActivePos = Math.min(newActivePos, containerRect[this.sizeKey] - movingSize[this.sizeKey])
       movingSize[this.offsetKey] = newActivePos
       if (activeTab) {
         activeTab.style.setProperty(this.offsetKey, `${newActivePos}px`)
@@ -370,10 +364,7 @@ export class Orderable extends React.Component<OrderableProps, OrderableState> {
       }
     }
     return (
-      <OrderableContainer
-        className={this.props.className}
-        forwardRef={this.setContainerRef}
-      >
+      <OrderableContainer className={this.props.className} forwardRef={this.setContainerRef}>
         {order.map(key => {
           const item = items[key]
           if (item) {

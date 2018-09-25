@@ -75,9 +75,8 @@ export class OCRManager {
     })
 
     // poll for now for updated transparency setting...
-    const listener2 = setInterval(() => {
-      this.oracle.socketSend('osin')
-    }, 1000 * 10)
+    const listener2 = setInterval(this.oracle.getInfo, 1000 * 10)
+    this.oracle.getInfo()
     on(this, listener2)
 
     return true
@@ -142,28 +141,31 @@ export class OCRManager {
 
     // OCR words
     this.oracle.onWords(async wordBounds => {
-      console.time('spellcheck')
+      // [x, y, width, height, 'word']
       const words = wordBounds.map(x => x[4]) as string[]
-      const text = words.join(' ')
-      console.log('incoming string', words)
-      const correctionRanges = SpellChecker.checkSpelling(text)
-      let start = 0
-      for (const [index, word] of words.entries()) {
-        const correctionRange = correctionRanges.find(x => x.start === start)
-        if (correctionRange) {
-          const suggestions = SpellChecker.getCorrectionsForMisspelling(word) as string[]
-          if (suggestions.length) {
-            words[index] = suggestions[0]
-              // oftentimes joined words are properly recognized as such but correct with a - between.
-              // for example "tothe" will come back with corrections: ['to-the', 'to the']
-              // 98 times of 100 we want "to the" to be the answer, so lets just assume it
-              .replace('-', ' ')
-          }
-        }
-        start += word.length + 1 // extra 1 for space
-      }
-      console.timeEnd('spellcheck')
-      console.log('spellchecked string', words.join(' '))
+
+      // disable spellcheck for now
+      // console.time('spellcheck')
+      // const text = words.join(' ')
+      // console.log('incoming string', words)
+      // const correctionRanges = SpellChecker.checkSpelling(text)
+      // let start = 0
+      // for (const [index, word] of words.entries()) {
+      //   const correctionRange = correctionRanges.find(x => x.start === start)
+      //   if (correctionRange) {
+      //     const suggestions = SpellChecker.getCorrectionsForMisspelling(word) as string[]
+      //     if (suggestions.length) {
+      //       words[index] = suggestions[0]
+      //         // oftentimes joined words are properly recognized as such but correct with a - between.
+      //         // for example "tothe" will come back with corrections: ['to-the', 'to the']
+      //         // 98 times of 100 we want "to the" to be the answer, so lets just assume it
+      //         .replace('-', ' ')
+      //     }
+      //   }
+      //   start += word.length + 1 // extra 1 for space
+      // }
+      // console.timeEnd('spellcheck')
+      // console.log('spellchecked string', words.join(' '))
 
       const wordsString = words.join(' ')
       const salientWords = await getTopWords(wordsString, 5)

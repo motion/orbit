@@ -20,18 +20,6 @@ import { FixedList } from './FixedList'
 
 const ROW_HEIGHT = 23
 
-// .extends(ContextMenu)
-const TreeItemsRowContainer = view({
-  flexFlow: 'row',
-  alignItems: 'center',
-  flexShrink: 0,
-  flexWrap: 'nowrap',
-  height: ROW_HEIGHT,
-  minWidth: '100%',
-  paddingRight: 20,
-  position: 'relative',
-})
-
 const backgroundColor = props => {
   if (props.selected) {
     return colors.macOSTitleBarIconSelected
@@ -42,7 +30,17 @@ const backgroundColor = props => {
   }
 }
 
-TreeItemsRowContainer.theme = props => {
+// .extends(ContextMenu)
+const TreeItemsRowContainer = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+  flexShrink: 0,
+  flexWrap: 'nowrap',
+  height: ROW_HEIGHT,
+  minWidth: '100%',
+  paddingRight: 20,
+  position: 'relative',
+}).theme(props => {
   return {
     backgroundColor: backgroundColor(props),
     color: props.selected ? colors.white : colors.grapeDark3,
@@ -51,12 +49,10 @@ TreeItemsRowContainer.theme = props => {
       color: props.selected ? `${colors.white} !important` : '',
     },
     '&:hover': {
-      backgroundColor: props.selected
-        ? colors.macOSTitleBarIconSelected
-        : '#EBF1FB',
+      backgroundColor: props.selected ? colors.macOSTitleBarIconSelected : '#EBF1FB',
     },
   }
-}
+})
 
 const TreeItemsRowDecoration = view(Row, {
   flexShrink: 0,
@@ -76,11 +72,9 @@ const TreeItemsLine = view({
   zIndex: 2,
   width: 2,
   borderRadius: '999em',
-})
-
-TreeItemsLine.theme = ({ childrenCount }) => ({
+}).theme(({ childrenCount }) => ({
   height: childrenCount * ROW_HEIGHT - 4,
-})
+}))
 
 const DecorationImage = view(Image, {
   height: 12,
@@ -112,11 +106,9 @@ const TreeItemsRowAttributeValue = view({
 
 const HighlightedText = view({
   backgroundColor: '#ffff33',
-})
-
-HighlightedText.theme = ({ selected }) => ({
+}).theme(({ selected }) => ({
   color: selected ? `${colors.grapeDark3} !important` : 'auto',
-})
+}))
 
 class PartialHighlight extends React.PureComponent<{
   selected: boolean
@@ -134,9 +126,7 @@ class PartialHighlight extends React.PureComponent<{
       highlighted != '' &&
       content.toLowerCase().includes(highlighted.toLowerCase())
     ) {
-      const highlightStart = content
-        .toLowerCase()
-        .indexOf(highlighted.toLowerCase())
+      const highlightStart = content.toLowerCase().indexOf(highlighted.toLowerCase())
       const highlightEnd = highlightStart + highlighted.length
       const before = content.substring(0, highlightStart)
       const match = content.substring(highlightStart, highlightEnd)
@@ -167,14 +157,11 @@ class TreeItemsRowAttribute extends React.PureComponent<{
     const { name, value, matchingSearchQuery, selected } = this.props
     return (
       <TreeItemsRowAttributeContainer code={true}>
-        <TreeItemsRowAttributeKey>{name}</TreeItemsRowAttributeKey>
-        =
+        <TreeItemsRowAttributeKey>{name}</TreeItemsRowAttributeKey>=
         <TreeItemsRowAttributeValue>
           <PartialHighlight
             content={value}
-            highlighted={
-              name === 'id' || name === 'addr' ? matchingSearchQuery : ''
-            }
+            highlighted={name === 'id' || name === 'addr' ? matchingSearchQuery : ''}
             selected={selected}
           />
         </TreeItemsRowAttributeValue>
@@ -209,10 +196,7 @@ type TreeItemsRowState = {
   hovered: boolean
 }
 
-class TreeItemsRow extends React.PureComponent<
-  TreeItemsRowProps,
-  TreeItemsRowState
-> {
+class TreeItemsRow extends React.PureComponent<TreeItemsRowProps, TreeItemsRowState> {
   constructor(props: TreeItemsRowProps, context: Object) {
     super(props, context)
     this.state = { hovered: false }
@@ -264,15 +248,7 @@ class TreeItemsRow extends React.PureComponent<
   }
 
   render() {
-    const {
-      element,
-      id,
-      level,
-      selected,
-      style,
-      even,
-      matchingSearchQuery,
-    } = this.props
+    const { element, id, level, selected, style, even, matchingSearchQuery } = this.props
     const hasChildren = element.children && element.children.length > 0
 
     let arrow
@@ -316,8 +292,7 @@ class TreeItemsRow extends React.PureComponent<
     // when we hover over or select an expanded element with children, we show a line from the
     // bottom of the element to the next sibling
     let line
-    const shouldShowLine =
-      (selected || this.state.hovered) && hasChildren && element.expanded
+    const shouldShowLine = (selected || this.state.hovered) && hasChildren && element.expanded
     if (shouldShowLine) {
       line = <TreeItemsLine childrenCount={this.props.childrenCount} />
     }
@@ -384,10 +359,7 @@ type TreeItemsState = {
   maxDepth: number
 }
 
-export class TreeItems extends React.PureComponent<
-  TreeItemsProps,
-  TreeItemsState
-> {
+export class TreeItems extends React.PureComponent<TreeItemsProps, TreeItemsState> {
   state = {
     flatTreeItems: [],
     flatKeys: [],
@@ -413,11 +385,7 @@ export class TreeItems extends React.PureComponent<
         level,
       })
       flatKeys.push(key)
-      if (
-        element.children != null &&
-        element.children.length > 0 &&
-        element.expanded
-      ) {
+      if (element.children != null && element.children.length > 0 && element.expanded) {
         for (const key of element.children) {
           seed(key, level + 1)
         }
@@ -454,8 +422,7 @@ export class TreeItems extends React.PureComponent<
 
     if (
       e.key === 'c' &&
-      ((e.metaKey && process.platform === 'darwin') ||
-        (e.ctrlKey && process.platform !== 'darwin'))
+      ((e.metaKey && process.platform === 'darwin') || (e.ctrlKey && process.platform !== 'darwin'))
     ) {
       e.preventDefault()
       // clipboard.writeText(selectedElement.name);
@@ -548,9 +515,7 @@ export class TreeItems extends React.PureComponent<
         onTreeItemSelected={onTreeItemSelected}
         selected={selected === row.key}
         matchingSearchQuery={
-          searchResults && searchResults.matches.has(row.key)
-            ? searchResults.query
-            : null
+          searchResults && searchResults.matches.has(row.key) ? searchResults.query : null
         }
         element={row.element}
         // seems like it was unused by sonar

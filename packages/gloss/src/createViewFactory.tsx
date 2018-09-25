@@ -5,7 +5,7 @@ import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
-import reactFastCompare from 'react-fast-compare'
+import { fastCompareWithoutChildren } from './helpers/fastCompareWithoutChildren'
 import validProp from './helpers/validProp'
 
 export type RawRules = CSSPropertySet & {
@@ -157,9 +157,10 @@ export function createViewFactory(toCSS) {
       }
       let themes = []
       let view = ThemedConstructor
+      // collect the themes going up the tree
       while (view) {
-        if (view.theme) {
-          themes.push(view.theme)
+        if (view.themeFn) {
+          themes.push(view.themeFn)
         }
         view = view.getConfig().child
       }
@@ -265,7 +266,6 @@ export function createViewFactory(toCSS) {
       if (!hasDynamicStyles && myStyles === state.lastStyles) {
         return null
       }
-      myStyles = { ...myStyles }
       let dynamicStyles
       if (hasDynamicStyles) {
         dynamicStyles = { [id]: {} }
@@ -288,6 +288,8 @@ export function createViewFactory(toCSS) {
         addStyles(id, dynamicStyles, theme(props))
       }
       if (hasDynamicStyles) {
+        // create new object to prevent buggy mutations
+        myStyles = { ...myStyles }
         for (const key in dynamicStyles) {
           myStyles[key] = myStyles[key] || {}
           myStyles[key] = {
@@ -345,7 +347,7 @@ export function createViewFactory(toCSS) {
 
       static getDerivedStateFromProps(props: Props, state: State) {
         const noRecentHMR = isHMREnabled ? !recentHMR() : true
-        const hasSameProps = reactFastCompare(props, state.prevProps)
+        const hasSameProps = fastCompareWithoutChildren(props, state.prevProps)
         const shouldAvoidUpdate = noRecentHMR && hasSameProps
         if (shouldAvoidUpdate) {
           return null
@@ -427,10 +429,10 @@ export function createViewFactory(toCSS) {
 
     // attach themes from context
     ThemedConstructor = props => {
-      // // avoid attach/detach theme if its passed in
-      // if (typeof props.theme === 'object') {
-      //   return <Constructor {...props} />
-      // }
+      // // avoid theme tree if not necessary
+      if (!ThemedConstructor.themeFn) {
+        return <Constructor {...props} />
+      }
       return (
         <ThemeContext.Consumer>
           {({ allThemes, activeThemeName }) => {
@@ -460,6 +462,12 @@ export function createViewFactory(toCSS) {
         displayName = config.displayName
         ThemedConstructor.displayName = config.displayName
       }
+      return ThemedConstructor
+    }
+
+    // allow setting theme
+    ThemedConstructor.theme = themeFn => {
+      ThemedConstructor.themeFn = themeFn
       return ThemedConstructor
     }
 

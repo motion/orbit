@@ -17,12 +17,10 @@ export const PeekBar = view({
   alignItems: 'center',
   boxShadow: [[0, 0, 18, [0, 0, 0, 0.07]]],
   // backdropFilter: 'blur(10px)',
-})
-
-PeekBar.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   background: theme.background.alpha(0.98),
   border: [1, theme.borderColor],
-})
+}))
 
 PeekBar.Space = view({
   width: 10,

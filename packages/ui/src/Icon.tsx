@@ -49,16 +49,7 @@ const IconInner = view(View, {
   userSelect: 'none',
   alignItems: 'center',
   justifyContent: 'center',
-})
-
-IconInner.theme = ({
-  padding,
-  width: propWidth,
-  height: propHeight,
-  size,
-  theme,
-  color,
-}) => {
+}).theme(({ padding, width: propWidth, height: propHeight, size, theme, color }) => {
   const width = (propWidth || size) + widthPadding(padding)
   const height = (propHeight || size) + heightPadding(padding)
   return {
@@ -68,7 +59,7 @@ IconInner.theme = ({
     fontSize: size,
     lineHeight: `${size / 12}rem`, // scale where 1 when 14
   }
-}
+})
 
 export class Icon extends React.Component<IconProps> {
   static defaultProps = {
@@ -80,15 +71,7 @@ export class Icon extends React.Component<IconProps> {
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
   render() {
-    const {
-      tooltip,
-      tooltipProps,
-      name,
-      type,
-      children,
-      color,
-      ...props
-    } = this.props
+    const { tooltip, tooltipProps, name, type, children, color, ...props } = this.props
     let content
     if (name[0] === '/') {
       return <img src={name} {...props} />

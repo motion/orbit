@@ -16,7 +16,7 @@ import { HighlightText } from '../../../../views/HighlightText'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 import { chunk } from 'lodash'
-import { handleClickLocation } from '../../../../helpers/handleClickLocation';
+import { handleClickLocation } from '../../../../helpers/handleClickLocation'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -37,10 +37,9 @@ const Highlight = view({
   '&:hover': {
     borderLeftColor: [255, 255, 255, 0.2],
   },
-})
-Highlight.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   color: theme.color.alpha(0.95),
-})
+}))
 
 // old highlights based code... keep for just a bit longer...
 // const selectHighlight = (
@@ -150,7 +149,6 @@ class OrbitSearchResultsList extends React.Component<Props> {
     const quickResultsLen = searchStore.quickSearchState.results.length
     const chunkAmt = 6
     const resultsGroups = chunk(results, chunkAmt)
-    console.log('resultsGroups', resultsGroups)
     let curOffset = quickResultsLen
     return (
       <ProvideHighlightsContextWithDefaults

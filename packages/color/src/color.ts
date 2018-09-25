@@ -47,7 +47,7 @@ export class Color {
     var i
     var channels
     if (!obj) {
-      throw new Error(`Error, empty value for color`)
+      throw new Error('Error, empty value for color')
     }
     if (obj instanceof Color) {
       this.model = obj.model
@@ -61,8 +61,7 @@ export class Color {
       this.model = result.model
       channels = colorConvert[this.model].channels
       this.color = result.value.slice(0, channels)
-      this.valpha =
-        typeof result.value[channels] === 'number' ? result.value[channels] : 1
+      this.valpha = typeof result.value[channels] === 'number' ? result.value[channels] : 1
     } else if (obj.length) {
       this.model = model || 'rgb'
       channels = colorConvert[this.model].channels
@@ -84,9 +83,7 @@ export class Color {
       }
       var hashedKeys = keys.sort().join('')
       if (!(hashedKeys in hashedModelKeys)) {
-        throw new Error(
-          'Unable to parse color from object: ' + JSON.stringify(obj),
-        )
+        throw new Error('Unable to parse color from object: ' + JSON.stringify(obj))
       }
       this.model = hashedModelKeys[hashedKeys]
       var labels = colorConvert[this.model].labels
@@ -115,6 +112,10 @@ export class Color {
     }
   }
 
+  get _equalityKey() {
+    return this.toString()
+  }
+
   toString() {
     return this.string()
   }
@@ -138,9 +139,7 @@ export class Color {
   }
 
   array() {
-    return this.valpha === 1
-      ? this.color.slice()
-      : this.color.concat(this.valpha)
+    return this.valpha === 1 ? this.color.slice() : this.color.concat(this.valpha)
   }
 
   object() {
@@ -181,18 +180,12 @@ export class Color {
 
   round(places) {
     places = Math.max(places || 0, 0)
-    return new Color(
-      this.color.map(roundToPlace(places)).concat(this.valpha),
-      this.model,
-    )
+    return new Color(this.color.map(roundToPlace(places)).concat(this.valpha), this.model)
   }
 
   alpha(val) {
     if (arguments.length) {
-      return new Color(
-        this.color.concat(Math.max(0, Math.min(1, val))),
-        this.model,
-      )
+      return new Color(this.color.concat(Math.max(0, Math.min(1, val))), this.model)
     }
     return this.valpha
   }
@@ -222,8 +215,7 @@ export class Color {
     var lum = []
     for (var i = 0; i < rgb.length; i++) {
       var chan = rgb[i] / 255
-      lum[i] =
-        chan <= 0.03928 ? chan / 12.92 : Math.pow((chan + 0.055) / 1.055, 2.4)
+      lum[i] = chan <= 0.03928 ? chan / 12.92 : Math.pow((chan + 0.055) / 1.055, 2.4)
     }
     return 0.2126 * lum[0] + 0.7152 * lum[1] + 0.0722 * lum[2]
   }
@@ -378,12 +370,9 @@ Object.keys(colorConvert).forEach(function(model) {
     if (arguments.length) {
       return new Color(arguments, model)
     }
-    var newAlpha =
-      typeof arguments[channels] === 'number' ? channels : this.valpha
+    var newAlpha = typeof arguments[channels] === 'number' ? channels : this.valpha
     return new Color(
-      assertArray(colorConvert[this.model][model].raw(this.color)).concat(
-        newAlpha,
-      ),
+      assertArray(colorConvert[this.model][model].raw(this.color)).concat(newAlpha),
       model,
     )
   }

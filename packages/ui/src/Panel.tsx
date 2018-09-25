@@ -71,14 +71,12 @@ type State = {
 
 const PanelContainer = view({
   flex: 1,
-})
-PanelContainer.theme = props => ({
+}).theme(props => ({
   padding: props.floating ? 10 : 0,
   borderBottom: props.collapsed ? 'none' : BORDER,
-})
+}))
 
-const PanelHeader = view(Row, {})
-PanelHeader.theme = props => ({
+const PanelHeader = view(Row, {}).theme(props => ({
   backgroundColor: '#f6f7f9',
   border: props.floating ? BORDER : 'none',
   borderBottom: BORDER,
@@ -92,10 +90,9 @@ PanelHeader.theme = props => ({
   '&:not(:first-child)': {
     borderTop: BORDER,
   },
-})
+}))
 
-const PanelBody = view({})
-PanelBody.theme = props => ({
+const PanelBody = view({}).theme(props => ({
   backgroundColor: '#fff',
   border: props.floating ? BORDER : 'none',
   borderBottomLeftRadius: 2,
@@ -103,7 +100,7 @@ PanelBody.theme = props => ({
   borderTop: 'none',
   flexGrow: 1,
   padding: props.padded ? 10 : 0,
-})
+}))
 
 @attachTheme
 export class Panel extends React.Component<Props, State> {

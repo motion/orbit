@@ -217,6 +217,10 @@ export class Oracle {
     })
   }
 
+  getInfo = async () => {
+    await this.socketSend('osin')
+  }
+
   onInfo = cb => {
     this.onInfoCB = cb
   }

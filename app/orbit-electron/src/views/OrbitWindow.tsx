@@ -6,7 +6,6 @@ import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-// @ts-ignore
 import { Menu, BrowserWindow, screen, app } from 'electron'
 import root from 'global'
 

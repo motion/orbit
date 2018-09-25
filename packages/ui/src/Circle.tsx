@@ -10,13 +10,11 @@ export const Circle = view({
   fontWeight: 400,
   cursor: 'pointer',
   userSelect: 'none',
-})
-
-Circle.theme = ({ size, background }) => ({
+}).theme(({ size, background }) => ({
   circle: {
     width: size,
     height: size,
     background,
     borderRadius: size,
   },
-})
+}))

@@ -14,12 +14,10 @@
 // const ListContain = view({
 //   alignItems: 'stretch',
 //   overflowX: 'visible',
-// })
-
-// ListContain.theme = props => ({
+// }).theme(props => ({
 //   visibility: props.visible ? 'visible' : 'hidden',
 //   marginRight: props.hideScrollBar ? -SCROLL_BAR_WIDTH : 0,
-// })
+// }))
 
 // export type ListProps = {
 //   hideScrollBar?: boolean

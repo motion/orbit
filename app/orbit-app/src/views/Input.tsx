@@ -9,9 +9,7 @@ export const Input = view(View, {
   width: '100%',
   alignItems: 'center',
   padding: [8, 12],
-})
-
-Input.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   color: theme.color,
   background: theme.background.alpha(0.5),
   border: [1, theme.borderColor.desaturate(0.1)],
@@ -22,7 +20,7 @@ Input.theme = ({ theme }) => ({
     color: theme.color.lighten(0.1),
     background: theme.background.darken(0.1),
   },
-})
+}))
 
 Input.defaultProps = {
   tagName: 'input',

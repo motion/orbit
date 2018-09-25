@@ -50,34 +50,12 @@ const Pane = view(UI.View, {
       pointerEvents: 'auto',
     },
   },
-})
-Pane.theme = ({ isLeft, isActive }) => ({
+}).theme(({ isLeft, isActive }) => ({
   opacity: isActive ? 1 : 0,
   transform: {
     x: isActive ? 0 : isLeft ? -10 : 10,
   },
-})
-
-const OverflowFade = view({
-  pointerEvents: 'none',
-  position: 'fixed',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  height: 100,
-  zIndex: 10000000,
-  borderBottomRadius: BORDER_RADIUS,
-  overflow: 'hidden',
-  opacity: 1,
-  transition: 'all ease-in 100ms',
-  isInvisible: {
-    opacity: 0,
-  },
-})
-
-OverflowFade.theme = ({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.background})`,
-})
+}))
 
 const SubPaneInner = view(UI.View, {
   position: 'relative',

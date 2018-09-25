@@ -62,9 +62,7 @@ const FrameAnimate = view({
   flexFlow: 'row',
   width: frameWidth * numFrames,
   transition: 'all ease 200ms',
-})
-
-FrameAnimate.theme = ({ curFrame }) => ({
+}).theme(({ curFrame }) => ({
   '& > div': {
     transition: 'all ease-in 500ms',
     opacity: 0,
@@ -75,7 +73,7 @@ FrameAnimate.theme = ({ curFrame }) => ({
   transform: {
     x: -frameWidth * curFrame,
   },
-})
+}))
 
 const Unpad = view({
   margin: [0, -sidePad - framePad],
@@ -96,11 +94,9 @@ const Item = view({
   '&:active': {
     opacity: 0.8,
   },
-})
-
-Item.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   borderBottom: [1, theme.borderColor.alpha(0.2)],
-})
+}))
 
 const ItemTitle = props => (
   <Text
@@ -189,7 +185,7 @@ class OnboardStore {
             type: 'general',
             category: 'general',
           },
-        }
+        },
       })
       const values = generalSetting.values as GeneralSettingValues
       values.hasOnboarded = true

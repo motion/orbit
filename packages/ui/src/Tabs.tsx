@@ -46,11 +46,9 @@ const TabContainer = view(View, {
 
 const TabList = view(Row, {
   alignItems: 'stretch',
-})
-
-TabList.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
-})
+}))
 
 const TabListItem = view(Row, {
   flex: 1,
@@ -65,9 +63,7 @@ const TabListItem = view(Row, {
   whiteSpace: 'nowrap',
   userSelect: 'none',
   transition: 'all ease 700ms',
-})
-
-TabListItem.theme = ({ theme, active }) => {
+}).theme(({ theme, active }) => {
   const background = active
     ? theme.tabBackgroundActive || theme.background
     : theme.tabBackground || theme.background
@@ -78,7 +74,7 @@ TabListItem.theme = ({ theme, active }) => {
       background: active ? background : theme.tabBackgroundHover,
     },
   }
-}
+})
 
 const TabListAddItem = view(TabListItem, {
   borderRight: 'none',
@@ -205,12 +201,7 @@ export function Tabs(props: TabsProps) {
   if (props.orderable === true) {
     tabList = (
       <OrderableContainer key="orderable-list">
-        <Orderable
-          orientation="horizontal"
-          items={tabs}
-          onChange={props.onOrder}
-          order={keys}
-        />
+        <Orderable orientation="horizontal" items={tabs} onChange={props.onOrder} order={keys} />
       </OrderableContainer>
     )
   } else {

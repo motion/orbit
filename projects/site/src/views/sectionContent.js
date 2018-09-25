@@ -27,9 +27,7 @@ export const SectionContent = view({
       paddingRight: '5%',
     },
   },
-})
-
-SectionContent.theme = ({ padding }) => ({
+}).theme(({ padding }) => ({
   paddingTop: padding !== true ? padding : 80,
   paddingBottom: padding !== true ? padding : 80,
-})
+}))

@@ -157,9 +157,10 @@ export function createViewFactory(toCSS) {
       }
       let themes = []
       let view = ThemedConstructor
+      // collect the themes going up the tree
       while (view) {
-        if (view.theme) {
-          themes.push(view.theme)
+        if (view.themeFn) {
+          themes.push(view.themeFn)
         }
         view = view.getConfig().child
       }
@@ -427,10 +428,10 @@ export function createViewFactory(toCSS) {
 
     // attach themes from context
     ThemedConstructor = props => {
-      // // avoid attach/detach theme if its passed in
-      // if (typeof props.theme === 'object') {
-      //   return <Constructor {...props} />
-      // }
+      // // avoid theme tree if not necessary
+      if (!ThemedConstructor.themeFn) {
+        return <Constructor {...props} />
+      }
       return (
         <ThemeContext.Consumer>
           {({ allThemes, activeThemeName }) => {
@@ -461,6 +462,11 @@ export function createViewFactory(toCSS) {
         ThemedConstructor.displayName = config.displayName
       }
       return ThemedConstructor
+    }
+
+    // allow setting theme
+    ThemedConstructor.theme = themeFn => {
+      ThemedConstructor.themeFn = themeFn
     }
 
     ThemedConstructor.getConfig = () => ({

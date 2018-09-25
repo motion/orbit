@@ -33,9 +33,7 @@ export const P = ({ size = 1, titleFont = false, ...props }) => (
   </Media>
 )
 
-export const P2 = props => (
-  <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
-)
+export const P2 = props => <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
 
 const IS_UPPER = /[A-Z]/
 const changeCaps = (str, reducePct) =>
@@ -63,9 +61,7 @@ export const Title = attachTheme(
           fontFamily={TITLE_FONT_FAMILY}
           // Eesti font adds space at bottom
           marginBottom="-1%"
-          color={
-            theme.titleColor || theme.base.color.desaturate(0.3).rotate(-90)
-          }
+          color={theme.titleColor || theme.base.color.desaturate(0.3).rotate(-90)}
           alpha={0.8}
           {...props}
         >
@@ -89,9 +85,7 @@ export const SubTitle = attachTheme(({ theme, size = 3, ...props }) => (
   </Media>
 ))
 
-export const SubSubTitle = props => (
-  <P size={1.2} fontWeight={800} {...props} margin={[0, 0, 8]} />
-)
+export const SubSubTitle = props => <P size={1.2} fontWeight={800} {...props} margin={[0, 0, 8]} />
 
 export const SmallTitle = props => (
   <P
@@ -107,14 +101,7 @@ export const SmallTitle = props => (
 
 const sidePadSmall = 40
 
-export const LeftSide = ({
-  children,
-  innerStyle,
-  noPad,
-  noEdge,
-  inverse,
-  ...props
-}) => (
+export const LeftSide = ({ children, innerStyle, noPad, noEdge, inverse, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
@@ -211,27 +198,25 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
   </Media>
 )
 
-export const Border = attachTheme(
-  ({ theme, width = 4, color, type = 'dotted', ...props }) => (
-    <UI.View
-      {...{
-        position: 'absolute',
-        left: -30,
-        right: -30,
-        borderBottom: [width, type, color || theme.base.color.alpha(0.08)],
-        transform: {
-          y: -2,
-        },
-        maxWidth: Constants.smallSize + 200,
-        zIndex: 2,
-        margin: [0, 'auto'],
-        alignItems: 'center',
-        pointerEvents: 'none',
-      }}
-      {...props}
-    />
-  ),
-)
+export const Border = attachTheme(({ theme, width = 4, color, type = 'dotted', ...props }) => (
+  <UI.View
+    {...{
+      position: 'absolute',
+      left: -30,
+      right: -30,
+      borderBottom: [width, type, color || theme.base.color.alpha(0.08)],
+      transform: {
+        y: -2,
+      },
+      maxWidth: Constants.smallSize + 200,
+      zIndex: 2,
+      margin: [0, 'auto'],
+      alignItems: 'center',
+      pointerEvents: 'none',
+    }}
+    {...props}
+  />
+))
 
 export const FadedArea = attachTheme(
   ({ theme, fadeRight, fadeDown, fadeLeft, fadeBackground, children }) => (
@@ -268,8 +253,7 @@ export const FadedArea = attachTheme(
             top: 'auto',
             height: 100,
             zIndex: 100,
-            background: `linear-gradient(transparent, ${fadeBackground ||
-              theme.base.background})`,
+            background: `linear-gradient(transparent, ${fadeBackground || theme.base.background})`,
           }}
         />
       )}
@@ -405,13 +389,7 @@ export const A = view(UI.Inline, {
   fontWeight: 600,
   padding: [3, 2],
   borderBottom: [2, 'transparent'],
-})
-
-A.defaultProps = {
-  tagName: 'a',
-}
-
-A.theme = ({ theme, active, ...props }) => {
+}).theme(({ theme, active, ...props }) => {
   const bg = theme.base.background.darken(0.1).desaturate(0.1)
   const color = UI.color(props.color || theme.base.color)
   const activeStyle = active && {
@@ -431,15 +409,14 @@ A.theme = ({ theme, active, ...props }) => {
       ...activeHover,
     },
   }
+})
+
+A.defaultProps = {
+  tagName: 'a',
 }
 
 export const Link = ({ to, ...props }) => (
-  <A
-    active={Router.isActive(to)}
-    href={to}
-    onClick={Router.link(to)}
-    {...props}
-  />
+  <A active={Router.isActive(to)} href={to} onClick={Router.link(to)} {...props} />
 )
 
 export const LinkSimple = ({ to, ...props }) => (
@@ -487,15 +464,7 @@ export const HomeImg = ({ children, style, borderProps, ...props }) => (
 
 export const FeatureSubTitle = props => (
   <Media query={Constants.screen.large}>
-    {isLarge => (
-      <P
-        if={isLarge}
-        size={1.9}
-        alpha={0.7}
-        {...{ marginBottom: 20 }}
-        {...props}
-      />
-    )}
+    {isLarge => <P if={isLarge} size={1.9} alpha={0.7} {...{ marginBottom: 20 }} {...props} />}
   </Media>
 )
 
@@ -513,19 +482,10 @@ export const Card = view('div', {
 })
 
 Card.Title = props => (
-  <P2
-    sizeLineHeight={1.2}
-    margin={[0, 0, 5]}
-    size={1.5}
-    fontWeight={400}
-    alpha={1}
-    {...props}
-  />
+  <P2 sizeLineHeight={1.2} margin={[0, 0, 5]} size={1.5} fontWeight={400} alpha={1} {...props} />
 )
 
-Card.Body = props => (
-  <P2 sizeLineHeight={1.1} margin={0} size={1.3} {...props} />
-)
+Card.Body = props => <P2 sizeLineHeight={1.1} margin={0} size={1.3} {...props} />
 
 Card.Icon = props => (
   <UI.Icon

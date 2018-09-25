@@ -23,8 +23,7 @@ const Border = view({
   zIndex: Number.MAX_SAFE_INTEGER,
   pointerEvents: 'none',
   borderRadius: BORDER_RADIUS + 1,
-})
-Border.theme = ({ theme }) => {
+}).theme(({ theme }) => {
   // const borderColor = theme.background.lighten(0.4)
   // const borderShadow = [0, 0, 0, 0.5, borderColor]
   // const lightBg = theme.background.lighten(1)
@@ -34,7 +33,7 @@ Border.theme = ({ theme }) => {
   return {
     boxShadow: [shadow /* , borderShadow */],
   }
-}
+})
 
 // @ts-ignore
 const Chrome = view({
@@ -57,15 +56,14 @@ const Background = view({
   zIndex: -1,
   borderRadius: BORDER_RADIUS + 1,
   transition: 'all ease 250ms',
-})
-Background.theme = ({ theme, isTransparent, moreOpaque }) => {
+}).theme(({ theme, isTransparent, moreOpaque }) => {
   const isDark = theme.background.isDark()
   const darkBg = isTransparent ? (moreOpaque ? [30, 30, 30, 0.7] : [0, 0, 0, 0.4]) : [40, 40, 40]
   const lightBg = isTransparent ? [255, 255, 255, moreOpaque ? 0.95 : 0.9] : [255, 255, 255]
   return {
     background: isDark ? darkBg : lightBg,
   }
-}
+})
 
 const OrbitChrome = view(({ moreOpaque, isUpper = false }) => {
   return (

@@ -31,14 +31,10 @@ const Token = view(Text, {
   '&:first-of-type': {
     marginLeft: 3,
   },
-})
-
-Token.theme = ({ focused, color }) => ({
-  backgroundColor: focused
-    ? colors.macOSHighlightActive
-    : color || colors.macOSHighlight,
+}).theme(({ focused, color }) => ({
+  backgroundColor: focused ? colors.macOSHighlightActive : color || colors.macOSHighlight,
   color: focused ? 'white' : 'inherit',
-})
+}))
 
 const Key = view(Text, {
   position: 'relative',
@@ -56,13 +52,11 @@ const Key = view(Text, {
   '&:active:after': {
     backgroundColor: colors.macOSHighlightActive,
   },
-})
-
-Key.theme = ({ type }) => ({
+}).theme(({ type }) => ({
   '&:after': {
     content: type === 'exclude' ? '"≠"' : '"="',
   },
-})
+}))
 
 const Value = view(Text, {
   whiteSpace: 'nowrap',
@@ -94,11 +88,9 @@ const Chevron = view(
   {
     ignoreAttributes: ['focused'],
   },
-)
-
-Chevron.theme = ({ focused }) => ({
+).theme(({ focused }) => ({
   color: focused ? colors.white : 'inherit',
-})
+}))
 
 type Props = {
   filter: Filter
@@ -115,10 +107,7 @@ export class FilterToken extends PureComponent {
   _ref: Element | void
 
   onMouseDown = () => {
-    if (
-      this.props.filter.persistent == null ||
-      this.props.filter.persistent === false
-    ) {
+    if (this.props.filter.persistent == null || this.props.filter.persistent === false) {
       this.props.onFocus(this.props.index)
     }
     this.showDetails()
@@ -164,9 +153,7 @@ export class FilterToken extends PureComponent {
       )
     }
     const menu = Electron.remote.Menu.buildFromTemplate(menuTemplate)
-    const { bottom, left } = this._ref
-      ? this._ref.getBoundingClientRect()
-      : { bottom: 0, left: 0 }
+    const { bottom, left } = this._ref ? this._ref.getBoundingClientRect() : { bottom: 0, left: 0 }
     menu.popup(Electron.remote.getCurrentWindow(), {
       async: true,
       x: parseInt(`${left}`, 10),

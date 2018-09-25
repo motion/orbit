@@ -11,11 +11,9 @@ export const BarInner = view({
   flex: 1,
   height: 1,
   borderRadius: 100,
-})
-
-BarInner.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   background: theme.borderColor,
-})
+}))
 
 export const Divider = props => (
   <DividerContainer {...props}>

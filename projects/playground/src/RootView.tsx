@@ -24,57 +24,53 @@ if (process.env.NODE_ENV === 'development') {
   }
 }
 
-const Test = view({
-  color: 'gray',
-  background: 'blue',
-  height: 100,
-  width: 100,
-  '&:hover': {
-    background: 'orange',
-  },
-  big: {
-    background: 'pink',
-    '&:hover': {
-      background: 'violet',
-    },
-  },
-  bigFont: {
-    fontSize: 30,
-    '&:hover': {
-      fontSize: 10,
-    },
-  },
-})
+// const Test = view({
+//   color: 'gray',
+//   background: 'blue',
+//   height: 100,
+//   width: 100,
+//   '&:hover': {
+//     background: 'orange',
+//   },
+//   big: {
+//     background: 'pink',
+//     '&:hover': {
+//       background: 'violet',
+//     },
+//   },
+//   bigFont: {
+//     fontSize: 30,
+//     '&:hover': {
+//       fontSize: 10,
+//     },
+//   },
+// })
 
 // extend and test
-const Test2 = view(Test, {
-  background: 'red',
-  opacity: 0.5,
-  big: {
-    opacity: 1,
-    background: 'yellow',
-    '&:hover': {
-      background: 'green',
-    },
-  },
-})
-
-Test2.theme = ({ theme, big }) => ({
-  fontStyle: 'italic',
-  fontWeight: big ? 'bold' : 'light',
-  color: big ? 'pink' : theme.color,
-})
+// const Test2 = view(Test, {
+//   background: 'red',
+//   opacity: 0.5,
+//   big: {
+//     opacity: 1,
+//     background: 'yellow',
+//     '&:hover': {
+//       background: 'green',
+//     },
+//   },
+// }).theme(({ theme, big }) => ({
+//   fontStyle: 'italic',
+//   fontWeight: big ? 'bold' : 'light',
+//   color: big ? 'pink' : theme.color,
+// }))
 
 // extend theme
-const Test3 = view(Test2, {
-  opacity: 1,
-})
-
-Test3.theme = () => ({
-  '&:hover': {
-    background: 'black',
-  },
-})
+// const Test3 = view(Test2, {
+//   opacity: 1,
+// }).theme(() => ({
+//   '&:hover': {
+//     background: 'black',
+//   },
+// }))
 
 const RootViewInner = () => {
   return (

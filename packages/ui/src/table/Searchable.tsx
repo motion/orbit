@@ -94,12 +94,10 @@ export const SearchBox = view(View, {
   '&:focus-within': {
     boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
   },
-})
-
-SearchBox.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   background: theme.background,
   border: [1, theme.borderColor],
-})
+}))
 
 export const SearchInput = view(TableInput, {
   fontWeight: 400,
@@ -116,15 +114,13 @@ export const SearchInput = view(TableInput, {
     color: colors.placeholder,
     fontWeight: 300,
   },
-})
-
-SearchInput.theme = ({ focus, theme }) => ({
+}).theme(({ focus, theme }) => ({
   color: theme.color,
   border: focus ? '1px solid black' : 0,
   '&::-webkit-input-placeholder': {
     color: theme.color,
   },
-})
+}))
 
 export const SearchIcon = view(Icon, {
   margin: [-1, 6, 0],

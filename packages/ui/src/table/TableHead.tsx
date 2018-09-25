@@ -86,12 +86,10 @@ const TableHeadColumnContainer = view({
   '&:last-child::after': {
     display: 'none',
   },
-})
-
-TableHeadColumnContainer.theme = ({ width }) => ({
+}).theme(({ width }) => ({
   flexShrink: width === 'flex' ? 1 : 0,
   width: width === 'flex' ? '100%' : width,
-})
+}))
 
 const RIGHT_RESIZABLE = { right: true }
 
@@ -119,9 +117,7 @@ class TableHeadColumn extends React.PureComponent<{
     const { id, onSort, sortOrder } = this.props
 
     const direction =
-      sortOrder && sortOrder.key === id && sortOrder.direction === 'down'
-        ? 'up'
-        : 'down'
+      sortOrder && sortOrder.key === id && sortOrder.direction === 'down' ? 'up' : 'down'
 
     if (onSort) {
       onSort({
@@ -149,9 +145,7 @@ class TableHeadColumn extends React.PureComponent<{
 
       const lastElem = childNodes[childNodes.length - 1]
       const right =
-        lastElem instanceof HTMLElement
-          ? lastElem.offsetLeft + lastElem.clientWidth + 1
-          : 0
+        lastElem instanceof HTMLElement ? lastElem.offsetLeft + lastElem.clientWidth + 1 : 0
 
       if (right < parentWidth) {
         normalizedWidth = calculatePercentage(parentWidth, newWidth)
@@ -171,9 +165,7 @@ class TableHeadColumn extends React.PureComponent<{
   render() {
     const { isResizable, sortable, width, title } = this.props
     let { children } = this.props
-    children = (
-      <TableHeaderColumnContainer>{children}</TableHeaderColumnContainer>
-    )
+    children = <TableHeaderColumnContainer>{children}</TableHeaderColumnContainer>
 
     if (isResizable) {
       children = (
@@ -247,14 +239,7 @@ export class TableHead extends React.PureComponent<{
   }
 
   render() {
-    const {
-      columnOrder,
-      columns,
-      columnSizes,
-      onColumnResize,
-      onSort,
-      sortOrder,
-    } = this.props
+    const { columnOrder, columns, columnSizes, onColumnResize, onSort, sortOrder } = this.props
     const elems = []
 
     let hasFlex = false
@@ -278,11 +263,7 @@ export class TableHead extends React.PureComponent<{
 
       let arrow
       if (col.sortable === true && sortOrder && sortOrder.key === key) {
-        arrow = (
-          <TableHeaderArrow>
-            {sortOrder.direction === 'up' ? '▲' : '▼'}
-          </TableHeaderArrow>
-        )
+        arrow = <TableHeaderArrow>{sortOrder.direction === 'up' ? '▲' : '▼'}</TableHeaderArrow>
       }
 
       const width = normaliseColumnWidth(columnSizes[key])

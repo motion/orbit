@@ -17,11 +17,9 @@ export const TableInput = view('input', {
     borderColor: '#ccc',
     cursor: 'not-allowed',
   },
-})
-
-TableInput.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   border: [1, theme.borderColor],
-})
+}))
 
 TableInput.defaultProps = {
   type: 'text',

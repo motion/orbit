@@ -33,15 +33,14 @@ const Blur = view(View, {
     x: 0,
     y: 0,
   },
-})
-Blur.theme = ({ at }) => {
+}).theme(({ at }) => {
   return {
     transform: {
       x: `${at[0]}%`,
       y: `${at[1]}%`,
     },
   }
-}
+})
 
 @view.attach({
   store: BlurryStore,

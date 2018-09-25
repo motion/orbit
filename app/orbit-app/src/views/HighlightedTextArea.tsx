@@ -19,14 +19,12 @@ const Block = view(UI.Block, {
   bottom: 0,
   padding: [10, 3],
   whiteSpace: 'pre',
-})
-
-Block.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   '&::selection': {
     color: theme.color.lighten(0.1),
     background: theme.background.darken(0.1),
   },
-})
+}))
 
 type Color = string
 
@@ -34,9 +32,7 @@ type Props = CSSPropertySet & {
   openMark?: string
   closeMark?: string
   value?: string
-  highlight?: (
-    a: string,
-  ) => Array<[number, number]> | RegExp | { [index: number]: Color }
+  highlight?: (a: string) => Array<[number, number]> | RegExp | { [index: number]: Color }
   onChange?: Function
   onFocus?: Function
   onBlur?: Function
@@ -82,16 +78,11 @@ export class HighlightedTextArea extends React.Component<Props> {
   }
 
   handleRegexHighlight(input, markRegex) {
-    return input.replace(
-      markRegex,
-      this.props.openMark + '$&' + this.props.closeMark,
-    )
+    return input.replace(markRegex, this.props.openMark + '$&' + this.props.closeMark)
   }
 
   handleArrayHighlight(value, markList = []) {
-    const sortedMarkList = markList
-      .slice()
-      .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+    const sortedMarkList = markList.slice().sort((a, b) => (a[0] < b[0] ? -1 : 1))
     let input = `${value}`
     let offset = 0
     for (const mark of sortedMarkList) {
@@ -115,10 +106,7 @@ export class HighlightedTextArea extends React.Component<Props> {
 
   handleObjectHighlight(input, markWords) {
     const markWithClass = className => {
-      const openMark = this.props.openMark.replace(
-        '>',
-        ` class="${className}">`,
-      )
+      const openMark = this.props.openMark.replace('>', ` class="${className}">`)
       return inner => `${openMark}${inner}${this.props.closeMark}`
     }
     return input

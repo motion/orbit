@@ -38,11 +38,9 @@ const BottomFloat = view({
   '& > *': {
     pointerEvents: 'auto',
   },
-})
-
-BottomFloat.theme = ({ theme }) => ({
+}).theme(({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.background} 50%)`,
-})
+}))
 
 export const PeekBit = ({
   appConfig,

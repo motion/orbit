@@ -117,11 +117,9 @@ const Overlay = view({
     opacity: 1,
     pointerEvents: 'all',
   },
-})
-
-Overlay.theme = ({ overlay }) => ({
+}).theme(({ overlay }) => ({
   background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
-})
+}))
 
 const PopoverWrap = view({
   position: 'absolute',
@@ -139,19 +137,12 @@ const PopoverWrap = view({
       y: 0,
     },
   },
-})
-
-PopoverWrap.theme = ({
-  showForgiveness,
-  forgiveness,
-  distance,
-  animation,
-}) => ({
+}).theme(({ showForgiveness, forgiveness, distance, animation }) => ({
   padding: calcForgiveness(forgiveness, distance),
   margin: -calcForgiveness(forgiveness, distance),
   background: showForgiveness ? [250, 250, 0, 0.2] : 'auto',
   animation,
-})
+}))
 
 const INVERSE = {
   top: 'bottom',
@@ -171,8 +162,7 @@ const getShadow = (shadow, elevation) => {
   }
   return base
 }
-const calcForgiveness = (forgiveness, distance) =>
-  forgiveness > distance ? distance : forgiveness
+const calcForgiveness = (forgiveness, distance) => (forgiveness > distance ? distance : forgiveness)
 
 @view.ui
 export class Popover extends React.PureComponent<PopoverProps> {
@@ -393,15 +383,11 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   clearHovered() {
-    return new Promise(resolve =>
-      this.setState({ menuHovered: 0, targetHovered: 0 }, resolve),
-    )
+    return new Promise(resolve => this.setState({ menuHovered: 0, targetHovered: 0 }, resolve))
   }
 
   setTarget() {
-    this.target =
-      (this.targetRef && this.targetRef.current) ||
-      getTarget(this.curProps.target)
+    this.target = (this.targetRef && this.targetRef.current) || getTarget(this.curProps.target)
     // couldnt forward ref...
     if (!this.target) {
       this.target = findDOMNode(this)
@@ -468,9 +454,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     return size
   }
 
-  get targetBounds():
-    | { top: number; left: number; width: number; height: number }
-    | false {
+  get targetBounds(): { top: number; left: number; width: number; height: number } | false {
     const { top, left } = this.curProps
     const bounds = { top: 0, left: 0, width: 0, height: 0 }
     // find target dimensions
@@ -557,11 +541,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     // auto for now will just be top/bottom
     // in future it needs to measure target and then determine
     if (VERTICAL) {
-      left = this.edgePad(
-        targetCenter - popoverHalfWidth,
-        window.innerWidth,
-        popoverSize.width,
-      )
+      left = this.edgePad(targetCenter - popoverHalfWidth, window.innerWidth, popoverSize.width)
       // arrow
       if (targetCenter < popoverHalfWidth) {
         // ON LEFT SIDE
@@ -646,8 +626,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       if (direction === 'top') {
         maxHeight = targetBounds.top - top + forgiveness * 2 - arrowSize / 2
       } else {
-        maxHeight =
-          window.innerHeight - (targetBounds.top + targetBounds.height)
+        maxHeight = window.innerHeight - (targetBounds.top + targetBounds.height)
       }
     }
     return { arrowTop, top, maxHeight }
@@ -671,10 +650,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     this.listeners = this.addHoverListeners('target', this.target)
     // noHoverOnChildren === no hover on the actual popover child element
     if (!this.curProps.noHoverOnChildren) {
-      this.listeners = [
-        ...this.listeners,
-        ...this.addHoverListeners('menu', this.popoverRef),
-      ]
+      this.listeners = [...this.listeners, ...this.addHoverListeners('menu', this.popoverRef)]
     }
   }
 
@@ -791,9 +767,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
       .trim()
       .replace(/\s+/g, '.')}:hover`
     return (
-      !!(node.parentNode
-        ? node.parentNode.querySelector(childSelector)
-        : null) || node.querySelector(':hover')
+      !!(node.parentNode ? node.parentNode.querySelector(childSelector) : null) ||
+      node.querySelector(':hover')
     )
   }
 
@@ -877,9 +852,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       }
       const { acceptsHovered } = target.type
       if (acceptsHovered) {
-        targetProps[
-          acceptsHovered === true ? 'hovered' : acceptsHovered
-        ] = showPopover
+        targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = showPopover
       }
       return React.cloneElement(target, targetProps)
     }
@@ -932,8 +905,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
                 >
                   <Arrow
                     background={
-                      typeof background === 'string' &&
-                      background !== 'transparent'
+                      typeof background === 'string' && background !== 'transparent'
                         ? background
                         : null
                     }
@@ -943,15 +915,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
                   />
                 </ArrowContain>
               )}
-              <SizedSurface
-                sizeRadius
-                flex={1}
-                ignoreSegment={ignoreSegment}
-                {...props}
-              >
-                {typeof children === 'function'
-                  ? children(showPopover)
-                  : children}
+              <SizedSurface sizeRadius flex={1} ignoreSegment={ignoreSegment} {...props}>
+                {typeof children === 'function' ? children(showPopover) : children}
               </SizedSurface>
             </PopoverWrap>
           </PopoverContainer>

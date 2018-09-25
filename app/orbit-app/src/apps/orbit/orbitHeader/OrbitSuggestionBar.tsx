@@ -94,12 +94,6 @@ const SuggestionBarFade = view({
   pointerEvents: 'none',
 })
 
-// SuggestionBarFade.theme = ({ theme }) => ({
-//   background: `linear-gradient(to right, transparent, ${
-//     themease.background
-//   } 80%)`,
-// })
-
 type Props = {
   filterStore?: SearchFilterStore
   paneManagerStore: PaneManagerStore

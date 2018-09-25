@@ -1,8 +1,8 @@
 import { SettingEntity } from '@mcro/entities'
+import { PersonUtils } from '@mcro/model-utils'
 import { Person, SlackPersonData, SlackSettingValues } from '@mcro/models'
 import { SlackUser } from '@mcro/services'
 import { hash } from '@mcro/utils'
-import { PersonSyncer } from '../../utils/PersonSyncer'
 
 /**
  * Creates a Slack Person.
@@ -23,7 +23,7 @@ export class SlackPersonFactory {
     const data: SlackPersonData = { tz: user.tz }
     const values = this.setting.values as SlackSettingValues
 
-    return PersonSyncer.create({
+    return PersonUtils.create({
       id,
       setting: this.setting,
       integration: 'slack',

@@ -9,6 +9,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
+    { "path": "../model-utils" },
     { "path": "../entities" },
     { "path": "../services" },
     { "path": "../../packages/debug-apps" },

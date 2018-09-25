@@ -23,13 +23,13 @@ export const SettingRemoveResolver = resolveCommand(
         // removing all synced bits
         const bits = await manager.find(BitEntity, { settingId })
         log.info('removing bits...', bits)
-        await manager.remove(bits)
+        await manager.remove(bits, { chunk: 100 })
         log.info('bits were removed')
 
         // removing all integration people
         const persons = await manager.find(PersonEntity, { settingId })
         log.info('removing integration people...', persons)
-        await manager.remove(persons)
+        await manager.remove(persons, { chunk: 100 })
         log.info('integration people were removed')
 
         // todo: also update person bit entities

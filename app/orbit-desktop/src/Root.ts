@@ -3,6 +3,7 @@ import { getGlobalConfig } from '@mcro/config'
 import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
+import { BitUtils } from '@mcro/model-utils'
 import {
   AtlassianSettingSaveCommand,
   BitModel,
@@ -11,7 +12,6 @@ import {
   JobModel,
   PersonBitModel,
   PersonModel,
-  SettingForceSyncCommand,
   SettingModel,
   SettingRemoveCommand,
   SlackChannelModel,
@@ -24,8 +24,7 @@ import macosVersion from 'macos-version'
 import open from 'opn'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
-import { Connection, getRepository } from 'typeorm'
-import { Server as WebSocketServer } from 'ws'
+import { Connection } from 'typeorm'
 import { oracleOptions } from './constants'
 import { AppsManager } from './managers/appsManager'
 import { DatabaseManager } from './managers/DatabaseManager'
@@ -63,7 +62,6 @@ export class Root {
   databaseManager: DatabaseManager
 
   start = async () => {
-    this.registerREPLGlobals()
     log.verbose('Start Desktop Store..')
     // iohook.start(false)
     await Desktop.start({
@@ -134,6 +132,8 @@ export class Root {
     debugState(({ stores }) => {
       this.stores = stores
     })
+
+    this.registerREPLGlobals()
   }
 
   restart = () => {
@@ -161,24 +161,46 @@ export class Root {
     root.Root = this
     root.restart = this.restart
     root.Logger = Logger
-    root.load = async (email: string) => {
-      console.time("timing")
-      const bits = getRepository(BitEntity).find({
-        where: {
-          people: {
-            personBit: {
-              email: email,
-            },
-          },
-        },
-        order: {
-          bitUpdatedAt: 'DESC',
-        },
-        take: 15,
-      })
-      console.timeEnd("timing")
-      return bits
-    }
+    root.mediator = this.mediator
+    // root.load = async (email: string) => {
+    //   console.time("timing")
+    //   const bits = getRepository(BitEntity).find({
+    //     where: {
+    //       people: {
+    //         personBit: {
+    //           email: email,
+    //         },
+    //       },
+    //     },
+    //     order: {
+    //       bitUpdatedAt: 'DESC',
+    //     },
+    //     take: 15,
+    //   })
+    //   console.timeEnd("timing")
+    //   return bits
+    // }
+    // root.save = async (count: number) => {
+    //   const setting = await getRepository(SettingEntity).findOne(1)
+    //   const bitCount = await getRepository(BitEntity).count()
+    //   const bits: any[] = []
+    //   for (let i = 0; i < count; i++) {
+    //     bits.push(BitUtils.create({
+    //       id: 400000 + bitCount + i,
+    //       integration: 'test' as any,
+    //       title: '4My bit #' + (bitCount + i),
+    //       body: '',
+    //       type: 'custom',
+    //       bitCreatedAt: Date.now(),
+    //       bitUpdatedAt: Date.now(),
+    //       settingId: setting.id,
+    //     }))
+    //   }
+    //   console.log("saving bit", bits)
+    //   console.time("saving bits")
+    //   await getRepository(BitEntity).save(bits, { chunk: 100 })
+    //   console.timeEnd("saving bits")
+    // }
   }
 
   /**
@@ -198,7 +220,6 @@ export class Root {
       ],
       commands: [
         SettingRemoveCommand,
-        SettingForceSyncCommand,
         AtlassianSettingSaveCommand,
         GithubSettingBlacklistCommand,
         SlackSettingBlacklistCommand,

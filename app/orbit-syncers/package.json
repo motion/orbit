@@ -13,6 +13,7 @@
     "@mcro/logger": "^2.2.1",
     "@mcro/mediator": "^2.2.1",
     "@mcro/models": "^2.2.1",
+    "@mcro/model-utils": "^2.2.1",
     "@mcro/cosal": "*",
     "@mcro/services": "^2.2.1",
     "@mcro/utils": "^2.2.1",
@@ -26,7 +27,7 @@
     "slack": "^11.0.1",
     "sqlite": "3.0.0",
     "turndown": "4.0.2",
-    "typeorm": "^0.3.0-alpha.16"
+    "typeorm": "^0.3.0-alpha.18"
   },
   "devDependencies": {
     "source-map-support": "^0.4.16"

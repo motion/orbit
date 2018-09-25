@@ -3,7 +3,7 @@ import { Setting, SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/mo
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
-import { Mediator } from '@mcro/model-bridge'
+import { command } from '@mcro/model-bridge'
 import { AppsStore } from '../../AppsStore'
 import { AppInfoStore } from '../../../stores/AppInfoStore'
 import { RoundButton } from '../../../views'
@@ -39,7 +39,7 @@ const statusIcons = {
 @view
 class SettingContent extends React.Component<Props> {
   handleRefresh = async () => {
-    Mediator.command(SettingForceSyncCommand, {
+    command(SettingForceSyncCommand, {
       settingId: this.props.setting.id,
     })
   }
@@ -55,7 +55,7 @@ class SettingContent extends React.Component<Props> {
       })
     ) {
       console.log('removing', store.setting.id)
-      Mediator.command(SettingRemoveCommand, {
+      command(SettingRemoveCommand, {
         settingId: store.setting.id,
       })
       Actions.clearPeek()

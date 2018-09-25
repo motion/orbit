@@ -4,7 +4,7 @@ import { JiraBitData, JiraSettingValues } from '@mcro/models'
 import { JiraIssue, JiraLoader } from '@mcro/services'
 import { assign, hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { BitSyncer } from '../../utils/BitSyncer'
+import { BitUtils } from '@mcro/model-utils'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { SyncerUtils } from '../../core/SyncerUtils'
 
@@ -50,7 +50,7 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     log.verbose('bits where saved')
 
     // get a difference to find a removed bits
-    const removedBits = BitSyncer.difference(this.bits, bits)
+    const removedBits = BitUtils.difference(this.bits, bits)
     log.verbose('removing bits', removedBits)
     await getRepository(BitEntity).remove(removedBits)
     log.verbose('bits were removed')
@@ -94,7 +94,7 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     const bit = this.bits.find(bit => bit.id === id)
     return assign(
       bit || new BitEntity(),
-      BitSyncer.create({
+      BitUtils.create({
         integration: 'jira',
         id,
         setting: this.setting,

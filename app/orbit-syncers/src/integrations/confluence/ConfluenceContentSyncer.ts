@@ -3,6 +3,7 @@ import { Logger } from '@mcro/logger'
 import { ConfluenceBitData, ConfluenceSettingValues } from '@mcro/models'
 import { ConfluenceContent, ConfluenceLoader } from '@mcro/services'
 import { assign, hash } from '@mcro/utils'
+import { BitUtils } from '@mcro/model-utils'
 import { getRepository } from 'typeorm'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { SyncerUtils } from '../../core/SyncerUtils'
@@ -95,7 +96,7 @@ export class ConfluenceContentSyncer {
     const bit = this.bits.find(bit => bit.id === id)
     return assign(
       bit || new BitEntity(),
-      BitSyncer.create({
+      BitUtils.create({
         integration: 'confluence',
         id,
         setting: this.setting,

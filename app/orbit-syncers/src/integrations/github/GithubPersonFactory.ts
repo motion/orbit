@@ -1,9 +1,9 @@
 import { SettingEntity } from '@mcro/entities'
+import { PersonUtils } from '@mcro/model-utils'
 import { GithubPersonData, Person } from '@mcro/models'
 import { GithubIssue, GithubPerson } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { uniqBy } from 'lodash'
-import { PersonSyncer } from '../../utils/PersonSyncer'
 
 /**
  * Creates a Github Person.
@@ -40,7 +40,7 @@ export class GithubPersonFactory {
     const id = hash(`github-${this.setting.id}-${githubPerson.id}`)
     const data: GithubPersonData = {}
 
-    return PersonSyncer.create({
+    return PersonUtils.create({
       id,
       setting: this.setting,
       integrationId: githubPerson.id,

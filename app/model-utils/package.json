@@ -1,18 +1,15 @@
 {
-  "name": "@mcro/model-bridge",
+  "name": "@mcro/model-utils",
   "version": "2.2.1",
   "main": "_/index.js",
+  "module": "_/index.js",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/mediator": "^2.2.1",
-    "@mcro/config": "*",
-    "@mcro/models": "*",
-    "@mcro/utils": "*",
-    "reconnecting-websocket": "4.0.0-rc5",
-    "typeorm": "^0.3.0-alpha.18"
+    "@mcro/models": "^2.2.1",
+    "@mcro/utils": "^2.2.1"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

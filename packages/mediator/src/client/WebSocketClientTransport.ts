@@ -5,47 +5,59 @@ import Observable from 'zen-observable'
 
 export class WebSocketClientTransport implements ClientTransport {
   websocket: WebSocket
-  operationCode: string
-  operationId: number = 0
+  name: string
+  operationsCounter: number = 0
   subscriptions: {
-    operationId: number
+    id: number
+    type: string
+    name: string
     onSuccess: Function
     onError: Function
   }[] = []
   private onConnectedCallbacks: (() => void)[] = []
 
-  constructor(websocket: WebSocket) {
-    this.operationCode = this.generateRandom()
+  constructor(name: string, websocket: any) {
+    this.name = name
     this.websocket = websocket
-    this.websocket.onopen = () => {
+
+    websocket.onopen = () => {
       this.onConnectedCallbacks.forEach(callback => callback())
       this.onConnectedCallbacks = []
     }
-    this.websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
-    this.websocket.onerror = err => {
-      console.error('ws error', err)
-    }
-    this.websocket.onclose = () => {
-      // reconnecting websocket reconnect fix: https://github.com/pladaria/reconnecting-websocket/issues/60
-      // @ts-ignore
-      if (this.websocket._shouldReconnect) {
-        // @ts-ignore
-        this.websocket._connect()
+    websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
+    websocket.onerror = err => log.error(err)
+    websocket.onclose = () => {
+      if (websocket._shouldReconnect) {
+        websocket._connect()
       }
     }
+
+    // pong functionality
+    // setInterval(() => {
+    //   if (this.websocket.readyState === this.websocket.OPEN) {
+    //     this.websocket.send("PONG")
+    //   }
+    // }, 1000);
   }
 
+  /**
+   * Creates a new observable that listens to the server events for the requested operation.
+   */
   observe(type: TransportRequestType, values: TransportRequestValues): Observable<any> {
-    const operationId = ++this.operationId // don't change - will lead to wrong id
+    const id = ++this.operationsCounter // don't change - can lead to wrong id
     const data = {
-      id: this.operationCode + '_' + operationId,
+      id: this.name + '_' + id,
       type,
       ...values,
     }
 
     return new Observable(subject => {
+
+      // create a new subscription
       const subscription = {
-        operationId: operationId,
+        id,
+        type,
+        name: values.model,
         onSuccess(result) {
           subject.next(result)
         },
@@ -54,7 +66,16 @@ export class WebSocketClientTransport implements ClientTransport {
         },
       }
       this.subscriptions.push(subscription)
+      log.verbose(`created a new subscription`, {
+        id: data.id,
+        type: subscription.type,
+        name: subscription.name,
+      })
 
+      // we need to send request to the server - here we create a function that does it
+      // and if we already have a connection with websockets we execute this function and send a request
+      // but if connection isn't established yet, we push function to the list that is going
+      // to be executed later on when websocket connection will be established
       const callback = () => {
         try {
           this.websocket.send(JSON.stringify(data))
@@ -63,36 +84,48 @@ export class WebSocketClientTransport implements ClientTransport {
           console.warn(`Failed to execute websocket operation ${JSON.stringify(err)}`)
         }
       }
-
       if (this.websocket.readyState === this.websocket.OPEN) {
         callback()
       } else {
         this.onConnectedCallbacks.push(callback)
       }
 
-      // remove subscription on cancellation
       return () => {
+
+        // remove subscription on cancellation
         const index = this.subscriptions.indexOf(subscription)
         if (index !== -1) this.subscriptions.splice(index, 1)
 
-        this.websocket.send(
-          JSON.stringify({
-            id: this.operationCode + '_' + operationId,
-            type: 'unsubscribe',
-          }),
-        )
+        const data = {
+          id: this.name + '_' + id,
+          type: 'unsubscribe',
+        }
+        this.websocket.send(JSON.stringify(data))
+        log.verbose(`removed subscription`, {
+          id: data.id,
+          type: subscription.type,
+          name: subscription.name,
+        })
       }
     })
   }
 
+  /**
+   * Executes a single-time command and returns results emitted by the server.
+   */
   execute(type: TransportRequestType, values: TransportRequestValues): Promise<any> {
-    const operationId = ++this.operationId // don't change - will lead to wrong id
+    const id = ++this.operationsCounter // don't change - will lead to wrong id
     const query = {
-      id: this.operationCode + '_' + operationId,
+      id: this.name + '_' + id,
       type,
       ...values,
     }
     return new Promise((ok, fail) => {
+
+      // we need to send request to the server - here we create a function that does it
+      // and if we already have a connection with websockets we execute this function and send a request
+      // but if connection isn't established yet, we push function to the list that is going
+      // to be executed later on when websocket connection will be established
       const callback = () => {
         try {
           log.verbose(`sent client data`, query)
@@ -104,12 +137,16 @@ export class WebSocketClientTransport implements ClientTransport {
 
         const subscriptions = this.subscriptions
         this.subscriptions.push({
-          operationId: operationId,
+          id,
+          type,
+          name: values.command,
           onSuccess(result) {
+            // remove subscription once command is done
             subscriptions.splice(subscriptions.indexOf(this), 1)
             ok(result)
           },
           onError(error) {
+            // remove subscription once command is done
             subscriptions.splice(subscriptions.indexOf(this), 1)
             fail(error)
           },
@@ -123,25 +160,35 @@ export class WebSocketClientTransport implements ClientTransport {
     })
   }
 
-  private generateRandom() {
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let text = ''
-    for (let i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length))
-    return text
-  }
-
+  /**
+   * Handles data returned by a server.
+   */
   private handleData(data: TransportResponse) {
-    if (data.id) {
-      const [operationCode, operationId] = data.id.split('_')
-      if (this.operationCode !== operationCode) return
-
-      log.verbose(`handling client data`, data)
-      const subscription = this.subscriptions.find(subscription => {
-        return subscription.operationId === parseInt(operationId)
-      })
-      if (subscription) {
-        subscription.onSuccess(data.result)
-      }
+    if (!data.id) {
+      log.warning(`data id is missing in the request to the client ${this.name}`, data)
+      return
     }
+
+    const [operationCode, id] = data.id.split('_')
+    if (this.name !== operationCode) {
+      log.warning(`unexpected data come to the client ${this.name}`, data)
+      return
+    }
+
+    const subscription = this.subscriptions.find(subscription => {
+      return subscription.id === parseInt(id)
+    })
+    if (!subscription) {
+      log.warning(`no subscription found in the client ${this.name}`, data)
+      return
+    }
+
+    log.verbose(`handling data on the client`, {
+      id: data.id,
+      type: subscription.type,
+      name: subscription.name,
+      result: data.result,
+    })
+    subscription.onSuccess(data.result)
   }
 }

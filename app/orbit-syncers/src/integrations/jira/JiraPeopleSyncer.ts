@@ -4,8 +4,8 @@ import { JiraPersonData } from '@mcro/models'
 import { JiraLoader, JiraUser } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
+import { PersonUtils } from '@mcro/model-utils'
 import { createOrUpdatePersonBits } from '../../utils/repository'
-import { PersonSyncer } from '../../utils/PersonSyncer'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 
 const log = new Logger('syncer:jira:people')
@@ -73,7 +73,7 @@ export class JiraPeopleSyncer implements IntegrationSyncer {
 
     return Object.assign(
       person || new PersonEntity(),
-      PersonSyncer.create({
+      PersonUtils.create({
         id,
         integration: 'jira',
         setting: this.setting,

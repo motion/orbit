@@ -1,20 +1,12 @@
 import { BitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import {
-  Bit,
-  GmailBitData,
-  GmailBitDataParticipant,
-  GmailPersonData,
-  GmailSettingValues,
-  Person,
-} from '@mcro/models'
+import { BitUtils, PersonUtils } from '@mcro/model-utils'
+import { Bit, GmailBitData, GmailBitDataParticipant, GmailPersonData, GmailSettingValues } from '@mcro/models'
 import { GMailLoader, GmailThread } from '@mcro/services'
 import { assign, hash, sequence } from '@mcro/utils'
 import { getRepository, In } from 'typeorm'
-import { createOrUpdatePersonBits } from '../../utils/repository'
-import { BitSyncer } from '../../utils/BitSyncer'
-import { PersonSyncer } from '../../utils/PersonSyncer'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { createOrUpdatePersonBits } from '../../utils/repository'
 import { GMailMessageParser } from './GMailMessageParser'
 
 const log = new Logger('syncer:gmail')
@@ -179,7 +171,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
         Object.assign(
           person,
-          PersonSyncer.create({
+          PersonUtils.create({
             id,
             integrationId: email,
             integration: 'gmail',
@@ -214,7 +206,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
     assign(
       bit,
-      BitSyncer.create({
+      BitUtils.create({
         target: 'bit',
         id,
         integration: 'gmail',

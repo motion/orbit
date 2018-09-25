@@ -24,7 +24,6 @@ class PeekPersonStore {
   recentBits = []
 
   async didMount() {
-    // console.time("loading recent bits")
     this.recentBits = await loadMany(BitModel, {
       args: {
         where: {
@@ -40,7 +39,6 @@ class PeekPersonStore {
         take: 15,
       },
     })
-    // console.timeEnd("loading recent bits")
   }
 
 }

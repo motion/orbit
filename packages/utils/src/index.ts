@@ -55,3 +55,13 @@ export function timeout<T>(ms: number, callback: () => T|Promise<T>): Promise<T>
 export function hash(value: any): number {
   return stringHash(JSON.stringify(value))
 }
+
+/**
+ * Generates a random string.
+ */
+export function randomString(length: number) {
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let text = ''
+  for (let i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length))
+  return text
+}

@@ -2,7 +2,7 @@ import { BitEntity, SettingEntity } from '@mcro/entities'
 import { GithubBitData } from '@mcro/models'
 import { GithubIssue } from '@mcro/services'
 import { hash } from '@mcro/utils'
-import { BitSyncer } from '../../utils/BitSyncer'
+import { BitUtils } from '@mcro/model-utils'
 
 /**
  * Creates a Github Bit.
@@ -56,7 +56,7 @@ export class GithubBitFactory {
       }))
     }
 
-    return BitSyncer.create({
+    return BitUtils.create({
       id,
       settingId: this.setting.id,
       integration: 'github',

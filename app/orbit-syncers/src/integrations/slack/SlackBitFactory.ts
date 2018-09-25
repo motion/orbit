@@ -1,9 +1,9 @@
 import { getTopWords } from '@mcro/cosal'
 import { BitEntity, SettingEntity } from '@mcro/entities'
+import { BitUtils } from '@mcro/model-utils'
 import { Person, SlackBitData, SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackMessage } from '@mcro/services'
 import { hash } from '@mcro/utils'
-import { BitSyncer } from '../../utils/BitSyncer'
 
 const Autolinker = require('autolinker')
 
@@ -70,7 +70,7 @@ export class SlackBitFactory {
     // and more for body
     const body = (await getTopWords(flatBody, 50)).join(' ')
 
-    return BitSyncer.create({
+    return BitUtils.create({
       settingId: this.setting.id,
       integration: 'slack',
       id,

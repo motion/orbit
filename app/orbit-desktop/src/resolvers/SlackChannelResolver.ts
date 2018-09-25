@@ -1,7 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
 import {
-  SettingForceSyncCommand,
   SettingRemoveCommand,
   SlackChannelModel,
   SlackSettingBlacklistCommand,

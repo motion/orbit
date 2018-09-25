@@ -1,13 +1,12 @@
 import { BitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
+import { BitUtils, PersonUtils } from '@mcro/model-utils'
 import { GDriveBitData, GDrivePersonData } from '@mcro/models'
 import { DriveLoadedFile, DriveLoadedUser, DriveLoader } from '@mcro/services'
 import { assign, hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { createOrUpdatePersonBits } from '../../utils/repository'
-import { BitSyncer } from '../../utils/BitSyncer'
-import { PersonSyncer } from '../../utils/PersonSyncer'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { createOrUpdatePersonBits } from '../../utils/repository'
 
 const log = new Logger('syncer:gdrive')
 
@@ -73,7 +72,7 @@ export class GDriveSyncer implements IntegrationSyncer {
 
     return assign(
       bit || new BitEntity(),
-      BitSyncer.create({
+      BitUtils.create({
         integration: 'gdrive',
         setting: this.setting,
         id,
@@ -111,7 +110,7 @@ export class GDriveSyncer implements IntegrationSyncer {
 
     return Object.assign(
       person || new PersonEntity(),
-      PersonSyncer.create({
+      PersonUtils.create({
         id,
         setting: this.setting,
         integrationId: user.email,

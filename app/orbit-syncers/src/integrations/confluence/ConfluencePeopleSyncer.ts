@@ -1,12 +1,12 @@
 import { PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { ConfluenceSettingValues, ConfluencePersonData } from '@mcro/models'
+import { PersonUtils } from '@mcro/model-utils'
+import { ConfluencePersonData, ConfluenceSettingValues } from '@mcro/models'
 import { ConfluenceLoader, ConfluenceUser } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { createOrUpdatePersonBits } from '../../utils/repository'
-import { PersonSyncer } from '../../utils/PersonSyncer'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { createOrUpdatePersonBits } from '../../utils/repository'
 
 const log = new Logger('syncer:confluence:people')
 
@@ -78,7 +78,7 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
 
     return Object.assign(
       person || new PersonEntity(),
-      PersonSyncer.create({
+      PersonUtils.create({
         id,
         integration: 'confluence',
         setting: this.setting,

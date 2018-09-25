@@ -1,8 +1,8 @@
-import { SettingEntity } from '../entities/SettingEntity'
-import { BitEntity } from '../entities/BitEntity'
+import { BitEntity, SettingEntity } from '@mcro/entities'
+import { Bit, Setting } from '@mcro/models'
+import { BitUtils } from '@mcro/model-utils'
+import { hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { Setting } from '@mcro/models'
-import { BitUtils } from '../utils/BitUtils'
 
 // temporary while we figure out custom apps
 
@@ -20,6 +20,7 @@ export async function ensureCustomApp() {
   if (!setting) {
     setting = await getRepository(SettingEntity).save(Object.assign(new SettingEntity(), vals))
   }
+
   const bit = BitUtils.create({
     id: 1231023,
     integration: 'app1',
@@ -31,7 +32,7 @@ export async function ensureCustomApp() {
     settingId: setting.id,
   })
   if (
-    !(await BitEntity.findOne({
+    !(await getRepository(BitEntity).findOne({
       type: 'custom',
       id: 1231023,
       settingId: setting.id,

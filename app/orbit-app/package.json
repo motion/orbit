@@ -30,7 +30,7 @@
     "react-linkify": "0.2.2",
     "react-beautiful-dnd": "9.0.2",
     "remark-emoji": "2.0.1",
-    "typeorm": "^0.3.0-alpha.16",
+    "typeorm": "^0.3.0-alpha.18",
     "immer": "1.7.2",
     "react-markdown": "3.6.0",
     "arrford": "2.0.1",

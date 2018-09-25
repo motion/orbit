@@ -247,7 +247,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           {hasMeta && (
             <CardSubtitle>
               {!!location && (
-                <RoundButtonSmall marginLeft={-3} onClick={this.handleClickLocation}>
+                <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
                   {location}
                 </RoundButtonSmall>
               )}

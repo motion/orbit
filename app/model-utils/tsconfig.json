@@ -6,8 +6,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [
-    { "path": "../models" },
-    { "path": "../model-utils" }
-  ]
+  "references": [{ "path": "../models" }, { "path": "../../packages/utils" }]
 }

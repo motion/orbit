@@ -5,11 +5,11 @@ import { hash } from '@mcro/utils'
  * Common Bit utility functions.
  */
 export class BitUtils {
-
   /**
    * Returns missing elements of the first bits based on given list of second bits.
    */
-  static difference<T extends Bit>(firstBits: T[], secondBits: T[]): T[] { // todo: this can be extracted into @mcro/model-utils
+  static difference<T extends Bit>(firstBits: T[], secondBits: T[]): T[] {
+    // todo: this can be extracted into @mcro/model-utils
     return firstBits.filter(firstBit => {
       return !secondBits.some(secondBit => {
         return firstBit.id === secondBit.id
@@ -30,21 +30,22 @@ export class BitUtils {
    * Creates a content hash for a given bit.
    */
   static contentHash(bit: Bit): number {
-    return hash([
-      bit.id,
-      bit.integration,
-      bit.settingId,
-      bit.title,
-      bit.body,
-      bit.type,
-      bit.webLink,
-      bit.desktopLink,
-      bit.data,
-      bit.location,
-      bit.bitCreatedAt,
-      bit.bitUpdatedAt,
-      bit.authorId,
-    ].filter(item => item !== null && item !== undefined))
+    return hash(
+      [
+        bit.id,
+        bit.integration,
+        bit.settingId,
+        bit.title,
+        bit.body,
+        bit.type,
+        bit.webLink,
+        bit.desktopLink,
+        bit.data,
+        bit.location,
+        bit.bitCreatedAt,
+        bit.bitUpdatedAt,
+        bit.authorId,
+      ].filter(item => item !== null && item !== undefined),
+    )
   }
-
 }

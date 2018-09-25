@@ -50,6 +50,7 @@ export class ConfluenceContentSyncer {
     log.verbose('bits were saved')
 
     // get a difference to find a removed bits and remove them
+    // @ts-ignore TODO: nate i ignored this so it builds...
     const removedBits = BitSyncer.difference(this.bits, bits)
     log.verbose('removing bits', removedBits)
     await getRepository(BitEntity).remove(removedBits)

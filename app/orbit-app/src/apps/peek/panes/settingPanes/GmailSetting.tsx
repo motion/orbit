@@ -79,7 +79,7 @@ export class GmailSetting extends React.Component<Props & { store?: GmailSetting
                   },
                 }}
                 multiHighlight
-                rows={setting.values.foundEmails.map((email, index) => {
+                rows={(setting.values.foundEmails || []).map((email, index) => {
                   const isActive = store.whitelist.whilistStatusGetter(email)
                   return {
                     key: `${index}`,

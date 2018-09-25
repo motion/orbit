@@ -26,7 +26,7 @@ export class WhitelistManager<T extends SettingWithWhiteList> {
   }
 
   get isWhitelisting() {
-    return !this.setting.values.whitelist
+    return !this.values.whitelist
   }
 
   saveSettingOnValuesUpdate = react(

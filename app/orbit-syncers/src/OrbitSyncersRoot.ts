@@ -1,9 +1,22 @@
 import { getGlobalConfig } from '@mcro/config'
-import { BitEntity, Entities, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import {
+  BitEntity,
+  Entities,
+  JobEntity,
+  PersonBitEntity,
+  PersonEntity,
+  SettingEntity,
+} from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
-import { BitUtils } from '@mcro/model-utils'
-import { BitModel, JobModel, PersonBitModel, PersonModel, SettingForceSyncCommand, SettingModel } from '@mcro/models'
+import {
+  BitModel,
+  JobModel,
+  PersonBitModel,
+  PersonModel,
+  SettingForceSyncCommand,
+  SettingModel,
+} from '@mcro/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
@@ -34,13 +47,9 @@ export class OrbitSyncersRoot {
   }
 
   private async createDbConnection(): Promise<void> {
-
     const Config = getGlobalConfig()
     const env = process.env.NODE_ENV !== 'development' ? 'orbit' : 'dev'
-    const DATABASE_PATH = Path.join(
-      Config.paths.userData,
-      `${env}_database.sqlite`,
-    )
+    const DATABASE_PATH = Path.join(Config.paths.userData, `${env}_database.sqlite`)
 
     this.connection = await createConnection({
       name: 'default',
@@ -108,16 +117,8 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediator = new MediatorServer({
-      models: [
-        SettingModel,
-        BitModel,
-        JobModel,
-        PersonModel,
-        PersonBitModel,
-      ],
-      commands: [
-        SettingForceSyncCommand,
-      ],
+      models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
+      commands: [SettingForceSyncCommand],
       transport: new WebSocketServerTransport({
         port: 40001, // todo: use config?
       }),

@@ -1,5 +1,5 @@
 import { getTopWords } from '@mcro/cosal'
-import { BitEntity, SettingEntity } from '@mcro/entities'
+import { SettingEntity, BitEntity } from '@mcro/entities'
 import { BitUtils } from '@mcro/model-utils'
 import { Person, SlackBitData, SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackMessage } from '@mcro/services'
@@ -90,7 +90,7 @@ export class SlackBitFactory {
       },
       webLink,
       desktopLink,
-    })
+    }) as BitEntity
   }
 
   /**

@@ -18,7 +18,6 @@ export class GithubBitFactory {
    * Creates a new bit from a given Github issue.
    */
   create(issue: GithubIssue): BitEntity {
-
     const id = hash(`github-${this.setting.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
@@ -29,20 +28,24 @@ export class GithubBitFactory {
       comments: issue.comments.edges.map(edge => {
         // note: if user is removed on a github comment will have author set to "null"
         return {
-          author: edge.node.author ? {
-            avatarUrl: edge.node.author.avatarUrl,
-            login: edge.node.author.login,
-            email: edge.node.author.email,
-          } : undefined,
+          author: edge.node.author
+            ? {
+                avatarUrl: edge.node.author.avatarUrl,
+                login: edge.node.author.login,
+                email: edge.node.author.email,
+              }
+            : undefined,
           createdAt: edge.node.createdAt,
           body: edge.node.body,
         }
       }),
-      author: issue.author ? {
-        avatarUrl: issue.author.avatarUrl,
-        login: issue.author.login,
-        email: issue.author.email,
-      } : undefined,
+      author: issue.author
+        ? {
+            avatarUrl: issue.author.avatarUrl,
+            login: issue.author.login,
+            email: issue.author.email,
+          }
+        : undefined,
       labels: issue.labels.edges.map(label => ({
         name: label.node.name,
         description: label.node.description,
@@ -53,7 +56,7 @@ export class GithubBitFactory {
         avatarUrl: user.node.avatarUrl,
         login: user.node.login,
         email: user.node.email,
-      }))
+      })),
     }
 
     return BitUtils.create({
@@ -68,13 +71,12 @@ export class GithubBitFactory {
         id: issue.repository.id,
         name: issue.repository.name,
         webLink: issue.repository.url,
-        desktopLink: ''
+        desktopLink: '',
       },
       data,
       raw: issue,
       bitCreatedAt: createdAt,
       bitUpdatedAt: updatedAt,
-    })
+    }) as BitEntity
   }
-
 }

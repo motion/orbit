@@ -15,6 +15,7 @@
     "@mcro/orbit-app": "*",
     "@mcro/orbit-electron": "^2.2.1",
     "@mcro/orbit-desktop": "^2.2.1",
+    "@mcro/orbit-syncers": "^2.2.1",
     "@mcro/logger": "*",
     "mobx": "5.1.2",
     "wait-port": "0.2.2",

@@ -1,32 +1,37 @@
+import Observable from 'zen-observable'
 import { Command, Model } from '../common'
 import { ClientTransport } from './ClientTransport'
 import { Query } from './Query'
 import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
-import Observable from 'zen-observable'
+// import Observable = require("zen-observable");
 
-export interface MediatorClientOptions {
-  transport: ClientTransport
+export type MediatorClientOptions = {
+  transports: ClientTransport[]
 }
 
 export class MediatorClient {
-  constructor(public options: MediatorClientOptions) {}
+  constructor(public options: MediatorClientOptions) {
+  }
 
   async command<Args, ReturnType>(
     command: Command<ReturnType, Args>,
     args?: Args,
   ): Promise<ReturnType> {
-    return this.options.transport.execute('command', {
-      command: command.name,
-      args,
+    const results = await this.options.transports.map(transport => {
+      return transport.execute('command', {
+        command: command.name,
+        args,
+      })
     })
+    return results.filter(result => result !== undefined)[0]
   }
 
   async save<ModelType, Args, CountArgs>(
     model: Model<ModelType, Args, CountArgs>,
     values: SaveOptions<ModelType>,
   ): Promise<ModelType> {
-    return this.options.transport.execute('save', {
+    return this.options.transports[0].execute('save', {
       model: model.name,
       args: values
     })
@@ -36,7 +41,7 @@ export class MediatorClient {
     model: Model<ModelType, Args, CountArgs>,
     instance: ModelType,
   ): Promise<boolean> {
-    return this.options.transport.execute('remove', {
+    return this.options.transports[0].execute('remove', {
       model: model.name,
       args: instance
     })
@@ -58,7 +63,7 @@ export class MediatorClient {
     },
   ): Promise<ModelType> {
     if (!options) options = {}
-    return this.options.transport.execute('loadOne', {
+    return this.options.transports[0].execute('loadOne', {
       model: qm instanceof Query ? qm.model.name : qm.name,
       args: qm instanceof Query ? qm.args : options.args,
       resolvers: qm instanceof Query ? qm.args : options.resolvers,
@@ -81,7 +86,7 @@ export class MediatorClient {
     },
   ): Promise<ModelType[]> {
     if (!options) options = {}
-    return this.options.transport.execute('loadMany', {
+    return this.options.transports[0].execute('loadMany', {
       model: qm instanceof Query ? qm.model.name : qm.name,
       args: qm instanceof Query ? qm.args : options.args,
       resolvers: qm instanceof Query ? qm.args : options.resolvers,
@@ -104,7 +109,7 @@ export class MediatorClient {
     },
   ): Promise<[ModelType[], number]> {
     if (!options) options = {}
-    return this.options.transport.execute('loadManyAndCount', {
+    return this.options.transports[0].execute('loadManyAndCount', {
       model: qm instanceof Query ? qm.model.name : qm.name,
       args: qm instanceof Query ? qm.args : options.args,
       resolvers: qm instanceof Query ? qm.args : options.resolvers,
@@ -129,7 +134,7 @@ export class MediatorClient {
     },
   ): Promise<[ModelType[], number]> {
     if (!options) options = {}
-    return this.options.transport.execute('loadCount', {
+    return this.options.transports[0].execute('loadCount', {
       model: qm instanceof Query ? qm.model.name : qm.name,
       args: qm instanceof Query ? qm.args : options.args,
       resolvers: qm instanceof Query ? qm.args : options.resolvers,
@@ -152,11 +157,23 @@ export class MediatorClient {
     },
   ): Observable<ModelType> {
     if (!options) options = {}
-    return this.options.transport.observe('observeOne', {
-      model: qm instanceof Query ? qm.model.name : qm.name,
-      args: qm instanceof Query ? qm.args : options.args,
-      resolvers: qm instanceof Query ? qm.args : options.resolvers,
-    })
+    return new Observable(subscriptionObserver => {
+
+      const subscriptions = this.options.transports.map(transport => {
+        return transport.observe('observeOne', {
+          model: qm instanceof Query ? qm.model.name : qm.name,
+          args: qm instanceof Query ? qm.args : options.args,
+          resolvers: qm instanceof Query ? qm.args : options.resolvers,
+        }).subscribe(
+          value => subscriptionObserver.next(value),
+          error => subscriptionObserver.error(error),
+          () => subscriptionObserver.complete()
+        )
+      })
+
+      // remove subscription on cancellation
+      return () => subscriptions.forEach(subscription => subscription.unsubscribe())
+    });
   }
 
   observeMany<ModelType, Args>(query: Query<ModelType, Args>): Observable<ModelType[]>
@@ -175,11 +192,23 @@ export class MediatorClient {
     },
   ): Observable<ModelType[]> {
     if (!options) options = {}
-    return this.options.transport.observe('observeMany', {
-      model: qm instanceof Query ? qm.model.name : qm.name,
-      args: qm instanceof Query ? qm.args : options.args,
-      resolvers: qm instanceof Query ? qm.args : options.resolvers,
-    })
+    return new Observable(subscriptionObserver => {
+
+      const subscriptions = this.options.transports.map(transport => {
+        return transport.observe('observeMany', {
+          model: qm instanceof Query ? qm.model.name : qm.name,
+          args: qm instanceof Query ? qm.args : options.args,
+          resolvers: qm instanceof Query ? qm.args : options.resolvers,
+        }).subscribe(
+          value => subscriptionObserver.next(value),
+          error => subscriptionObserver.error(error),
+          () => subscriptionObserver.complete()
+        )
+      })
+
+      // remove subscription on cancellation
+      return () => subscriptions.forEach(subscription => subscription.unsubscribe())
+    });
   }
 
   observeManyAndCount<ModelType, Args>(
@@ -200,11 +229,23 @@ export class MediatorClient {
     },
   ): Observable<[ModelType[], number]> {
     if (!options) options = {}
-    return this.options.transport.observe('observeManyAndCount', {
-      model: qm instanceof Query ? qm.model.name : qm.name,
-      args: qm instanceof Query ? qm.args : options.args,
-      resolvers: qm instanceof Query ? qm.args : options.resolvers,
-    })
+    return new Observable(subscriptionObserver => {
+
+      const subscriptions = this.options.transports.map(transport => {
+        return transport.observe('observeManyAndCount', {
+          model: qm instanceof Query ? qm.model.name : qm.name,
+          args: qm instanceof Query ? qm.args : options.args,
+          resolvers: qm instanceof Query ? qm.args : options.resolvers,
+        }).subscribe(
+          value => subscriptionObserver.next(value),
+          error => subscriptionObserver.error(error),
+          () => subscriptionObserver.complete()
+        )
+      })
+
+      // remove subscription on cancellation
+      return () => subscriptions.forEach(subscription => subscription.unsubscribe())
+    });
   }
 
   observeCount<ModelType, Args, CountArgs>(query: Query<ModelType, CountArgs>): Observable<number>
@@ -223,9 +264,21 @@ export class MediatorClient {
     },
   ): Observable<number> {
     if (!options) options = {}
-    return this.options.transport.observe('observeCount', {
-      model: qm instanceof Query ? qm.model.name : qm.name,
-      args: qm instanceof Query ? qm.args : options.args,
-    })
+    return new Observable(subscriptionObserver => {
+
+      const subscriptions = this.options.transports.map(transport => {
+        return transport.observe('observeCount', {
+          model: qm instanceof Query ? qm.model.name : qm.name,
+          args: qm instanceof Query ? qm.args : options.args,
+        }).subscribe(
+          value => subscriptionObserver.next(value),
+          error => subscriptionObserver.error(error),
+          () => subscriptionObserver.complete()
+        )
+      })
+
+      // remove subscription on cancellation
+      return () => subscriptions.forEach(subscription => subscription.unsubscribe())
+    });
   }
 }

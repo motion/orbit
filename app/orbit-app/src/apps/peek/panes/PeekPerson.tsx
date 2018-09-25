@@ -1,8 +1,8 @@
 import { view } from '@mcro/black'
+import { loadMany } from '@mcro/model-bridge'
 import { BitModel, PersonBit, SlackPersonData } from '@mcro/models'
 import * as React from 'react'
 import { Carousel } from '../../../components/Carousel'
-import { observeMany } from '@mcro/model-bridge'
 import { AppsStore } from '../../AppsStore'
 import { RoundButton, SubTitle } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
@@ -22,27 +22,25 @@ class PeekPersonStore {
   }
 
   recentBits = []
-  recentBits$ = observeMany(BitModel, {
-    args: {
-      where: {
-        people: {
-          personBit: {
-            email: this.person.email,
+
+  async didMount() {
+    this.recentBits = await loadMany(BitModel, {
+      args: {
+        where: {
+          people: {
+            personBit: {
+              email: this.person.email,
+            },
           },
         },
+        order: {
+          bitUpdatedAt: 'DESC',
+        },
+        take: 15,
       },
-      order: {
-        bitUpdatedAt: 'DESC',
-      },
-      take: 15,
-    },
-  }).subscribe(values => {
-    this.recentBits = values
-  })
-
-  willUnmount() {
-    this.recentBits$.unsubscribe()
+    })
   }
+
 }
 
 const mapW = 700

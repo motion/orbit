@@ -1,7 +1,9 @@
 import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
+import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
+import { BitUtils } from '@mcro/model-utils'
 import {
   AtlassianSettingSaveCommand,
   BitModel,
@@ -10,43 +12,32 @@ import {
   JobModel,
   PersonBitModel,
   PersonModel,
-  SettingForceSyncCommand,
   SettingModel,
   SettingRemoveCommand,
   SlackChannelModel,
   SlackSettingBlacklistCommand,
 } from '@mcro/models'
-import { App, Desktop, Electron } from '@mcro/stores'
 import { Oracle } from '@mcro/oracle'
+import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
 import macosVersion from 'macos-version'
 import open from 'opn'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection } from 'typeorm'
-import { Server as WebSocketServer } from 'ws'
 import { oracleOptions } from './constants'
-import { BitEntity } from './entities/BitEntity'
-import { JobEntity } from './entities/JobEntity'
-import { PersonBitEntity } from './entities/PersonBitEntity'
-import { PersonEntity } from './entities/PersonEntity'
-import { SettingEntity } from './entities/SettingEntity'
 import { AppsManager } from './managers/appsManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
+import { OCRManager } from './managers/OCRManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { Onboard } from './onboard/Onboard'
 import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
-import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
-import { handleEntityActions } from './sqlBridge'
 import { KeyboardStore } from './stores/KeyboardStore'
-import { Syncers } from './syncer'
-import { SyncerGroup } from './syncer/core/SyncerGroup'
-import { OCRManager } from './managers/OCRManager'
 // import iohook from 'iohook'
 
 const log = new Logger('desktop')
@@ -61,7 +52,7 @@ export class Root {
   keyboardStore: KeyboardStore
   server = new Server()
   stores = null
-  mediatorServer: MediatorServer
+  mediator: MediatorServer
 
   // managers
   ocrManager: OCRManager
@@ -71,8 +62,6 @@ export class Root {
   databaseManager: DatabaseManager
 
   start = async () => {
-    this.registerREPLGlobals()
-    this.registerEntityServer()
     log.verbose('Start Desktop Store..')
     // iohook.start(false)
     await Desktop.start({
@@ -106,11 +95,6 @@ export class Root {
 
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
-
-    // no need to wait for them...
-    // TODO: off for now because electron has no repl so we have to use console
-    // and it gets insane logs from syncers...
-    // await this.startSyncers()
 
     // setup oracle to pass into managers
     this.oracle = new Oracle({
@@ -148,6 +132,8 @@ export class Root {
     debugState(({ stores }) => {
       this.stores = stores
     })
+
+    this.registerREPLGlobals()
   }
 
   restart = () => {
@@ -162,7 +148,6 @@ export class Root {
       await this.appsManager.dispose()
     }
     await this.ocrManager.dispose()
-    await this.stopSyncers()
     this.disposed = true
     return true
   }
@@ -176,20 +161,46 @@ export class Root {
     root.Root = this
     root.restart = this.restart
     root.Logger = Logger
-    root.Syncers = Syncers.reduce((map, syncerOrGroup) => {
-      // since Syncers is an array we need to convert it to object
-      // to make them more usable in the REPL.
-      // we are using Syncer constructor name as an object key.
-      if (syncerOrGroup instanceof SyncerGroup) {
-        map[syncerOrGroup.name] = syncerOrGroup
-        for (let syncer of syncerOrGroup.syncers) {
-          map[syncer.name] = syncer
-        }
-      } else {
-        map[syncerOrGroup.name] = syncerOrGroup
-      }
-      return map
-    }, {})
+    root.mediator = this.mediator
+    // root.load = async (email: string) => {
+    //   console.time("timing")
+    //   const bits = getRepository(BitEntity).find({
+    //     where: {
+    //       people: {
+    //         personBit: {
+    //           email: email,
+    //         },
+    //       },
+    //     },
+    //     order: {
+    //       bitUpdatedAt: 'DESC',
+    //     },
+    //     take: 15,
+    //   })
+    //   console.timeEnd("timing")
+    //   return bits
+    // }
+    // root.save = async (count: number) => {
+    //   const setting = await getRepository(SettingEntity).findOne(1)
+    //   const bitCount = await getRepository(BitEntity).count()
+    //   const bits: any[] = []
+    //   for (let i = 0; i < count; i++) {
+    //     bits.push(BitUtils.create({
+    //       id: 400000 + bitCount + i,
+    //       integration: 'test' as any,
+    //       title: '4My bit #' + (bitCount + i),
+    //       body: '',
+    //       type: 'custom',
+    //       bitCreatedAt: Date.now(),
+    //       bitUpdatedAt: Date.now(),
+    //       settingId: setting.id,
+    //     }))
+    //   }
+    //   console.log("saving bit", bits)
+    //   console.time("saving bits")
+    //   await getRepository(BitEntity).save(bits, { chunk: 100 })
+    //   console.timeEnd("saving bits")
+    // }
   }
 
   /**
@@ -197,7 +208,7 @@ export class Root {
    * for communication between processes.
    */
   private registerMediatorServer() {
-    this.mediatorServer = new MediatorServer({
+    this.mediator = new MediatorServer({
       models: [
         SettingModel,
         BitModel,
@@ -209,7 +220,6 @@ export class Root {
       ],
       commands: [
         SettingRemoveCommand,
-        SettingForceSyncCommand,
         AtlassianSettingSaveCommand,
         GithubSettingBlacklistCommand,
         SlackSettingBlacklistCommand,
@@ -226,54 +236,12 @@ export class Root {
           { entity: PersonBitEntity, models: [PersonBitModel] },
         ]),
         SettingRemoveResolver,
-        SettingForceSyncResolver,
         AtlassianSettingSaveResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
       ],
     })
-    this.mediatorServer.bootstrap()
+    this.mediator.bootstrap()
   }
 
-  /**
-   * Registers a websocket server which is responsible
-   * for communication between processes.
-   */
-  private registerEntityServer() {
-    const server = new WebSocketServer({
-      port: this.config.ports.mediator, // temporary port, this code should be removed
-    })
-    server.on('connection', socket => {
-      socket.on('message', str => {
-        handleEntityActions(socket, typeof str === 'string' ? JSON.parse(str) : str)
-      })
-    })
-  }
-
-  /**
-   * Starts all the syncers.
-   * We start syncers with a small timeout to prevent app-overload.
-   */
-  private async startSyncers() {
-    setTimeout(
-      () =>
-        Promise.all(
-          Syncers.map(syncer => {
-            return syncer.start()
-          }),
-        ),
-      10000,
-    )
-  }
-
-  /**
-   * Stops all the syncers.
-   */
-  private async stopSyncers() {
-    await Promise.all(
-      Syncers.map(syncer => {
-        return syncer.stop()
-      }),
-    )
-  }
 }

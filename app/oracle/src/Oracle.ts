@@ -338,7 +338,7 @@ export class Oracle {
         const out = str.trim()
         const isPurposefulLog = out[0] === '!'
         if (isPurposefulLog || isLikelyError) {
-          log.verbose('swift >>>', this.name, out.slice(1))
+          // log.verbose('swift >>>', this.name, out.slice(1))
           return
         }
         console.log('screen stderr:', str)

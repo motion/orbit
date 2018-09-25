@@ -1,10 +1,10 @@
-import { SettingEntity } from '../entities/SettingEntity'
+import { SettingEntity } from '@mcro/entities'
 import sqlite from 'sqlite'
 import Fs from 'fs-extra'
 import Path from 'path'
 import Os from 'os'
 import { Desktop } from '@mcro/stores'
-import { findOrCreate } from '../helpers/helpers'
+import { getRepository } from 'typeorm'
 import { PortForwardStore } from './PortForwardStore'
 import { GeneralSettingValues } from '@mcro/models'
 
@@ -40,10 +40,22 @@ export class Onboard {
   }
 
   async start() {
-    this.generalSetting = await findOrCreate(SettingEntity, {
-      type: 'general',
-      category: 'general',
+
+    this.generalSetting = await SettingEntity.findOne({
+      where: {
+        type: 'general',
+        category: 'general',
+      }
     })
+    if (!this.generalSetting) {
+      this.generalSetting = new SettingEntity()
+      Object.assign(this.generalSetting, {
+        type: 'general',
+        category: 'general',
+      })
+      await getRepository(SettingEntity).save(this.generalSetting)
+    }
+
     const values = this.generalSetting.values as GeneralSettingValues
     if (!values.hasOnboarded) {
       await this.scanHistory()

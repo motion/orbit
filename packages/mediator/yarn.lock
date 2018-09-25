@@ -482,9 +482,9 @@ thenify-all@^1.0.0:
   dependencies:
     any-promise "^1.0.0"
 
-typeorm@^0.3.0-alpha.16:
-  version "0.3.0-alpha.16"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.16.tgz#1b255044c09852bf56efabb7b26d2646452a1900"
+typeorm@^0.3.0-alpha.18:
+  version "0.3.0-alpha.18"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.18.tgz#e7757957b55411792b2dfb66a95d6eb1f24ce10a"
   dependencies:
     "@types/zen-observable" "^0.8.0"
     app-root-path "^2.0.1"
@@ -602,6 +602,6 @@ yargs@^11.1.0:
     y18n "^3.2.1"
     yargs-parser "^9.0.2"
 
-zen-observable@^0.8.9:
+zen-observable@0.8.9, zen-observable@^0.8.9:
   version "0.8.9"
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.9.tgz#0475c760ff0eda046bbdfa4dc3f95d392807ac53"

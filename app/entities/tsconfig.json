@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.tspackage",
+  "compilerOptions": {
+    "composite": true,
+    "module": "CommonJS",
+    "outDir": "_",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "references": [{ "path": "../models" }]
+}

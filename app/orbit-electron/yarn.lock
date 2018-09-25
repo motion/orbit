@@ -2712,9 +2712,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typeorm@^0.3.0-alpha.16:
-  version "0.3.0-alpha.16"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.16.tgz#1b255044c09852bf56efabb7b26d2646452a1900"
+typeorm@^0.3.0-alpha.18:
+  version "0.3.0-alpha.18"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.18.tgz#e7757957b55411792b2dfb66a95d6eb1f24ce10a"
   dependencies:
     "@types/zen-observable" "^0.8.0"
     app-root-path "^2.0.1"

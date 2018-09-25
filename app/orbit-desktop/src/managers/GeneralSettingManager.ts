@@ -1,8 +1,8 @@
 import { store } from '@mcro/black'
 import { GeneralSettingValues } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
-import { SettingEntity } from '../entities/SettingEntity'
-import { findOrCreate } from '../helpers/helpers'
+import { SettingEntity } from '@mcro/entities'
+import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { Desktop } from '@mcro/stores'
@@ -38,15 +38,23 @@ export class GeneralSettingManager {
     this.start()
 
     this.offMessages = Desktop.onMessage(Desktop.messages.TOGGLE_SETTING, async val => {
-      const setting = await SettingEntity.findOne(generalSettingQuery)
+      const setting = await getRepository(SettingEntity).findOne(generalSettingQuery)
       setting.values[val] = !setting.values[val]
-      await setting.save()
+      await getRepository(SettingEntity).save(setting)
     })
   }
 
   async start() {
-    await findOrCreate(SettingEntity, generalSettingQuery)
-    const setting = await SettingEntity.findOne(generalSettingQuery)
+
+    const values = generalSettingQuery
+    let item = await SettingEntity.findOne({ where: values })
+    if (!item) {
+      item = new SettingEntity()
+      Object.assign(item, values)
+      await getRepository(SettingEntity).save(item)
+    }
+
+    const setting = await getRepository(SettingEntity).findOne(generalSettingQuery)
     this.ensureDefaultSettings(setting)
     this.handleAutoLaunch(setting)
   }
@@ -67,7 +75,7 @@ export class GeneralSettingManager {
       autoUpdate: true,
       darkTheme: true,
     } as GeneralSettingValues
-    await setting.save()
+    await getRepository(SettingEntity).save(setting)
   }
 
   handleAutoLaunch = setting => {

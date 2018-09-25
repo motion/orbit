@@ -1,4 +1,5 @@
 import { react, view } from '@mcro/black'
+import { command } from '@mcro/model-bridge'
 import {
   AtlassianSettingSaveCommand,
   AtlassianSettingValuesCredentials,
@@ -8,7 +9,6 @@ import {
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { Actions } from '../../../../actions/Actions'
-import { Mediator } from '@mcro/model-bridge'
 import * as Views from '../../../../views'
 import { Message } from '../../../../views/Message'
 
@@ -82,7 +82,7 @@ export class AtlassianSettingLogin extends React.Component<
 
     // send command to the desktop
     this.props.store.status = Statuses.LOADING
-    const result = await Mediator.command(AtlassianSettingSaveCommand, {
+    const result = await command(AtlassianSettingSaveCommand, {
       setting,
     })
 

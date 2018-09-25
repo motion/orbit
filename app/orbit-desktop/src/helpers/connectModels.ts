@@ -12,6 +12,9 @@ export default async function connectModels(models) {
       logging: ['error'],
       logger: 'simple-console',
       synchronize: true,
+      busyErrorRetry: 1000,
+      enableWAL: true,
+
     }).then(connection => {
       models.forEach(model => model.useConnection(connection))
       return connection

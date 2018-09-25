@@ -36,7 +36,7 @@
     "@mcro/stores": "^2.2.1",
     "@mcro/models": "*",
     "@mcro/model-bridge": "^2.2.1",
-    "typeorm": "^0.3.0-alpha.16",
+    "typeorm": "^0.3.0-alpha.18",
     "babel-polyfill": "7.0.0-beta.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.5.0",

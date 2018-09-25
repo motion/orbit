@@ -1,11 +1,8 @@
+import { BitEntity, JobEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { SettingRemoveCommand } from '@mcro/models'
 import { getManager, getRepository } from 'typeorm'
-import { BitEntity } from '../entities/BitEntity'
-import { JobEntity } from '../entities/JobEntity'
-import { PersonEntity } from '../entities/PersonEntity'
-import { SettingEntity } from '../entities/SettingEntity'
 
 const log = new Logger('command:setting-remove')
 
@@ -26,13 +23,13 @@ export const SettingRemoveResolver = resolveCommand(
         // removing all synced bits
         const bits = await manager.find(BitEntity, { settingId })
         log.info('removing bits...', bits)
-        await manager.remove(bits)
+        await manager.remove(bits, { chunk: 100 })
         log.info('bits were removed')
 
         // removing all integration people
         const persons = await manager.find(PersonEntity, { settingId })
         log.info('removing integration people...', persons)
-        await manager.remove(persons)
+        await manager.remove(persons, { chunk: 100 })
         log.info('integration people were removed')
 
         // todo: also update person bit entities

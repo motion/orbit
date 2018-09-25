@@ -15,7 +15,7 @@ Error.stackTraceLimit = Infinity
 // and also use the bundled electron binary as the entry point
 // which lets us pack things into an asar
 export async function main() {
-  console.log(`starting ${process.env.IS_DESKTOP ? 'Desktop' : 'Electron'}`)
+  console.log(`starting ${process.env.PROCESS_NAME}`)
 
   // if were in desktop we get config through here
   let config: GlobalConfig = process.env.ORBIT_CONFIG ? JSON.parse(process.env.ORBIT_CONFIG) : null
@@ -38,6 +38,15 @@ export async function main() {
     require('@mcro/orbit-desktop').main()
     // dont keep running
     return
+
+  } else if (process.env.IS_SYNCERS) {
+    if (!config) {
+      throw new Error('Syncers didn\'t receive config!')
+    }
+    // lets run syncers now
+    require('@mcro/orbit-syncers').main()
+    // dont keep running
+    return
   }
 
   // setup process error watching before doing most stuff
@@ -48,16 +57,20 @@ export async function main() {
   // IS IN ELECTRON...
 
   let desktopProcess: ChildProcess
+  let syncersProcess: ChildProcess
 
   const handleExit = once(async () => {
     try {
       console.log('Electron handle exit...')
       console.log('Orbit exiting...')
       cleanupChildren(desktopProcess.pid)
+      cleanupChildren(syncersProcess.pid)
       cleanupChildren(process.pid)
       desktopProcess.kill('SIGINT')
+      syncersProcess.kill('SIGINT')
       // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
       process.kill(-desktopProcess.pid)
+      process.kill(-syncersProcess.pid)
       console.log('bye!')
     } catch (err) {
       // exec('pkill -9 Orbit')
@@ -73,6 +86,7 @@ export async function main() {
 
   // fork desktop process...
   desktopProcess = require('./startDesktop').startDesktop()
+  syncersProcess = require('./startSyncers').startSyncers()
 
   if (process.env.IGNORE_ELECTRON !== 'true') {
     await require('./startElectron').startElectron(handleExit)

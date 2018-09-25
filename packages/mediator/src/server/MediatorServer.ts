@@ -1,10 +1,8 @@
 import { Command, Model, TransportRequest } from '../common'
 import { ServerTransport } from './ServerTransport'
 import { ResolveInterface } from './ResolveInterface'
-import { Logger } from '@mcro/logger'
 import { Subscription } from '..'
-
-const log = new Logger('MediatorServer')
+import { log } from '../common/logger'
 
 export interface MediatorServerOptions {
   transport: ServerTransport
@@ -44,22 +42,20 @@ export class MediatorServer {
       command = this.options.commands.find(command => {
         return command.name === data.command
       })
-      if (!command)
-        throw new Error(
-          `Command ${data.command} was not found. Available commands: ${this.options.commands
-            .map(command => command.name)
-            .join(', ')}`,
-        )
+      // simply ignore if command was not found - maybe some other server has it defined
+      if (!command) {
+        log.verbose(`command ${data.command} was not found`, data)
+        return
+      }
     } else {
       model = this.options.models.find(model => {
         return model.name === data.model
       })
-      if (!model)
-        throw new Error(
-          `Model ${data.model} was not found. Available models: ${this.options.models
-            .map(model => model.name)
-            .join(', ')}`,
-        )
+      // simply ignore if model was not found - maybe some other server has it defined
+      if (!model) {
+        log.verbose(`model ${data.model} was not found`, data)
+        return
+      }
     }
 
     // find a resolver

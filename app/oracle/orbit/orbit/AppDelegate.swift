@@ -130,6 +130,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    
+    if #available(OSX 10.11, *) {
+      self.supportsTransparency = true
+    }
 
     if shouldRunOCR {
       windo = Windo(emit: self.emit)
@@ -185,10 +189,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       window.isMovableByWindowBackground = false
       window.collectionBehavior = .managed
       window.ignoresMouseEvents = true
-      
-      if #available(OSX 10.11, *) {
-        self.supportsTransparency = true
-      }
 
       // allow showing icon in sub-apps
       if ProcessInfo.processInfo.environment["SHOW_ICON"] != nil {
@@ -268,7 +268,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func sendOSInfo() {
-    self.emit("""
+    let info = """
     {
       \"action\": \"info\",
       \"value\": {
@@ -276,7 +276,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         \"accessibilityPermission\": \(self.accessibilityPermission)
       }
     }
-    """)
+    """
+    print("sending \(info)")
+    self.emit(info)
+  }
+  
+  func promptForAccessibility() -> Bool {
+    var val = false
+    if UIElement.isProcessTrusted(withPrompt: true) {
+      val = true
+    } else {
+      val = false
+    }
+    print("setting accessiblity \(val)")
+    self.accessibilityPermission = val
+    self.sendOSInfo()
+    return val
   }
   
   func onMessage(_ text: String) {
@@ -395,13 +410,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     if action == "star" {
       print("start screen...")
-      // testing trust another way:
-      if UIElement.isProcessTrusted(withPrompt: true) {
-        self.accessibilityPermission = true
+      if (self.promptForAccessibility()) {
         screen.start()
-      } else {
-        self.accessibilityPermission = false
-        print("not trusted for watching winodws")
       }
       return
     }
@@ -415,20 +425,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     // request accessibility
     if action == "reac" {
-      if UIElement.isProcessTrusted(withPrompt: true) {
-        self.accessibilityPermission = true
-      } else {
-        self.accessibilityPermission = false
-      }
+      this.promptForAccesibility()
       return
     }
     // start window watching
     if action == "staw" {
-      if UIElement.isProcessTrusted(withPrompt: true) {
-        self.accessibilityPermission = true
+      if self.promptForAccessibility() {
         windo.start()
-      } else {
-        self.accessibilityPermission = false
       }
       return
     }

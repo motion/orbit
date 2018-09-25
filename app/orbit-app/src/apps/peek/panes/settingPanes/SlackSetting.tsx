@@ -1,10 +1,9 @@
-import { compose, react, view } from '@mcro/black'
-import { SettingModel, SlackChannelModel, SlackSettingValues } from '@mcro/models'
+import { view } from '@mcro/black'
+import { SlackChannelModel, SlackSetting as SlackSettingModel } from '@mcro/models'
 import { SlackChannel } from '@mcro/services'
-import * as UI from '@mcro/ui'
 import { orderBy } from 'lodash'
-import { loadMany, save } from '@mcro/model-bridge'
-import { Text } from '@mcro/ui'
+import { loadMany } from '@mcro/model-bridge'
+import { Text, Tabs, Tab, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { MultiSelectTableShortcutHandler } from '../../../../components/shortcutHandlers/MultiSelectTableShortcutHandler'
 import { DateFormat } from '../../../../views/DateFormat'
@@ -12,72 +11,24 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { HideablePane } from '../../views/HideablePane'
 import { AppStatusPane } from './AppStatusPane'
 import { SettingPaneProps } from './SettingPaneProps'
+import { WhitelistManager } from './stores/WhitelistManager'
+import { ManageSmartSync } from './views/ManageSmartSync'
 
-const columns = {
-  name: {
-    value: 'Name',
-    sortable: true,
-    resizable: true,
-  },
-  topic: {
-    value: 'Topic',
-    sortable: true,
-    resizable: true,
-  },
-  members: {
-    value: 'Members',
-    sortable: true,
-    resizable: true,
-  },
-  createdAt: {
-    value: 'Created',
-    sortable: true,
-    resizable: true,
-  },
-  active: {
-    value: 'Active',
-    sortable: true,
-  },
-}
-
-const itemToRow = (index, channel, topic, isActive, onSync) => {
-  return {
-    key: `${index}`,
-    columns: {
-      name: {
-        sortValue: channel.name,
-        value: channel.name,
-      },
-      topic: {
-        sortValue: topic,
-        value: topic,
-      },
-      members: {
-        sortValue: channel.num_members,
-        value: channel.num_members,
-      },
-      createdAt: {
-        sortValue: channel.created,
-        value: (
-          <Text ellipse>
-            <DateFormat date={new Date(channel.created * 1000)} />
-          </Text>
-        ),
-      },
-      active: {
-        sortValue: isActive,
-        value: <ReactiveCheckBox onChange={onSync(channel)} isActive={isActive} />,
-      },
-    },
-  }
+type Props = SettingPaneProps & {
+  store?: SlackSettingStore
+  setting: SlackSettingModel
 }
 
 class SlackSettingStore {
-  props: SettingPaneProps
+  props: Props
   channels: SlackChannel[] = []
 
   syncing = {}
   active = 'status'
+  whitelist = new WhitelistManager({
+    setting: this.props.setting,
+    getAll: this.getAllFilterIds.bind(this),
+  })
 
   async didMount() {
     const channels = await loadMany(SlackChannelModel, {
@@ -105,27 +56,6 @@ class SlackSettingStore {
     this.columnSizes = sizes
   }
 
-  get setting() {
-    return this.props.setting
-  }
-
-  get values() {
-    return this.setting.values as SlackSettingValues
-  }
-
-  rows = react(
-    () => this.channels,
-    channels => {
-      return channels.map((channel, index) => {
-        const topic = channel.topic ? channel.topic.value : ''
-        return itemToRow(index, channel, topic, this.whitelistStatus(channel), this.changeWhitelist)
-      })
-    },
-    {
-      defaultValue: [],
-    },
-  )
-
   highlightedRows = []
 
   handleEnter = e => {
@@ -139,90 +69,118 @@ class SlackSettingStore {
     this.highlightedRows = rows
   }
 
-  toggleSyncAll = () => {
-
-    // if sync all is already enable, register all channels in a whitelist
-    if (this.values.whitelist === undefined) {
-      this.values.whitelist = this.channels.map(channel => channel.id)
-
-    } else { // otherwise enable "sync all" mode
-      this.values.whitelist = undefined
-    }
-    save(SettingModel, this.setting)
-  }
-
-  whitelistStatus = (repository: SlackChannel) => () => {
-
-    // if whitelist is undefined we are in "sync all" mode
-    if (this.values.whitelist === undefined)
-      return true
-
-    return this.values.whitelist.indexOf(repository.id) !== -1
-  }
-
-  isSyncAllEnabled = () => {
-    return this.values.whitelist === undefined
-  }
-
-  changeWhitelist = (channel: SlackChannel) => () => {
-    if (!this.values.whitelist) {
-      this.values.whitelist = this.channels
-        .map(channel => channel.id)
-    }
-
-    const index = this.values.whitelist.indexOf(channel.id)
-    if (index === -1) {
-      this.values.whitelist.push(channel.id)
-    } else {
-      this.values.whitelist.splice(index, 1)
-    }
-    save(SettingModel, this.setting)
+  private getAllFilterIds() {
+    return this.channels.map(x => x.id)
   }
 }
 
-const decorator = compose(
-  view.attach({ store: SlackSettingStore }),
-  view,
-)
-
-type Props = SettingPaneProps & { store: SlackSettingStore }
-
-export const SlackSetting = decorator(({ store, setting, children }: Props) => {
-  return children({
-    belowHead: (
-      <UI.Tabs active={store.active} onActive={store.setActiveKey}>
-        <UI.Tab key="status" width="50%" label="Status" />
-        <UI.Tab key="rooms" width="50%" label="Rooms" />
-      </UI.Tabs>
-    ),
-    content: (
-      <>
-        <HideablePane invisible={store.active !== 'status'}>
-          <AppStatusPane setting={setting} />
-        </HideablePane>
-        <HideablePane invisible={store.active !== 'rooms'}>
-          <MultiSelectTableShortcutHandler handlers={{ enter: store.handleEnter }}>
-            <div>
-              <ReactiveCheckBox onChange={store.toggleSyncAll} isActive={store.isSyncAllEnabled} /> Sync all
-            </div>
-            <UI.SearchableTable
-              virtual
-              rowLineHeight={28}
-              floating={false}
-              columnSizes={store.columnSizes}
-              columns={columns}
-              multiHighlight
-              onRowHighlighted={store.handleHighlightedRows}
-              rows={store.rows}
-              bodyPlaceholder={
-                <div style={{ margin: 'auto' }}>
-                  <UI.Text size={1.2}>Loading...</UI.Text>
-                </div>
-              }
-            />
-          </MultiSelectTableShortcutHandler>
-        </HideablePane>
-      </>
-    ),
-  })
-})
+@view.attach({ store: SlackSettingStore })
+@view
+export class SlackSetting extends React.Component<Props> {
+  render() {
+    const { store, setting, children } = this.props
+    return children({
+      belowHead: (
+        <Tabs active={store.active} onActive={store.setActiveKey}>
+          <Tab key="status" width="50%" label="Status" />
+          <Tab key="rooms" width="50%" label="Rooms" />
+        </Tabs>
+      ),
+      content: (
+        <>
+          <HideablePane invisible={store.active !== 'status'}>
+            <AppStatusPane setting={setting} />
+          </HideablePane>
+          <HideablePane invisible={store.active !== 'rooms'}>
+            <MultiSelectTableShortcutHandler handlers={{ enter: store.handleEnter }}>
+              <ManageSmartSync whitelist={store.whitelist} />
+              <View
+                flex={1}
+                opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
+                pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'auto'}
+              >
+                <SearchableTable
+                  virtual
+                  rowLineHeight={28}
+                  floating={false}
+                  columnSizes={store.columnSizes}
+                  columns={{
+                    name: {
+                      value: 'Name',
+                      sortable: true,
+                      resizable: true,
+                    },
+                    topic: {
+                      value: 'Topic',
+                      sortable: true,
+                      resizable: true,
+                    },
+                    members: {
+                      value: 'Members',
+                      sortable: true,
+                      resizable: true,
+                    },
+                    createdAt: {
+                      value: 'Created',
+                      sortable: true,
+                      resizable: true,
+                    },
+                    active: {
+                      value: 'Active',
+                      sortable: true,
+                    },
+                  }}
+                  multiHighlight
+                  onRowHighlighted={store.handleHighlightedRows}
+                  rows={store.channels.map((channel, index) => {
+                    const topic = channel.topic ? channel.topic.value : ''
+                    const isActive = store.whitelist.whilistStatusGetter(channel.id)
+                    return {
+                      key: `${index}`,
+                      columns: {
+                        name: {
+                          sortValue: channel.name,
+                          value: channel.name,
+                        },
+                        topic: {
+                          sortValue: topic,
+                          value: topic,
+                        },
+                        members: {
+                          sortValue: channel.num_members,
+                          value: channel.num_members,
+                        },
+                        createdAt: {
+                          sortValue: channel.created,
+                          value: (
+                            <Text ellipse>
+                              <DateFormat date={new Date(channel.created * 1000)} />
+                            </Text>
+                          ),
+                        },
+                        active: {
+                          sortValue: store.whitelist.whilistStatusGetter(channel.id),
+                          value: (
+                            <ReactiveCheckBox
+                              onChange={store.whitelist.updateWhitelistValueSetter(channel.id)}
+                              isActive={isActive}
+                            />
+                          ),
+                        },
+                      },
+                    }
+                  })}
+                  bodyPlaceholder={
+                    <div style={{ margin: 'auto' }}>
+                      <Text size={1.2}>Loading...</Text>
+                    </div>
+                  }
+                />
+              </View>
+            </MultiSelectTableShortcutHandler>
+          </HideablePane>
+        </>
+      ),
+    })
+  }
+}

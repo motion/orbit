@@ -19,7 +19,9 @@ export async function startElectron(handleExit) {
 
   // focus app on start
   // because we hide dock icon we need to do this
-  app.focus()
+  if (process.env.NODE_ENV !== 'development') {
+    app.focus()
+  }
 
   // PRODUCTION
   if (Config.isProd) {

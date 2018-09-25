@@ -1,135 +1,115 @@
-import { save } from '@mcro/model-bridge'
-import { SettingModel } from '@mcro/models'
+import { GmailSetting as GmailSettingModel } from '@mcro/models'
 import * as React from 'react'
-import * as UI from '@mcro/ui'
-import { view, compose } from '@mcro/black'
+import { view } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
-import { GmailSettingValues } from '@mcro/models'
 import { AppStatusPane } from './AppStatusPane'
+import { WhitelistManager } from './stores/WhitelistManager'
+import { Tabs, Tab, SearchableTable, Text, View } from '@mcro/ui'
+import { ManageSmartSync } from './views/ManageSmartSync'
 
-const columnSizes = {
-  filter: 'flex',
-  active: '14%',
+type Props = SettingPaneProps & {
+  setting: GmailSettingModel
 }
-
-const columns = {
-  filter: {
-    value: 'Filter',
-    sortable: true,
-    resizable: true,
-  },
-  active: {
-    value: 'Active',
-    sortable: true,
-  },
-}
-
-const itemToRow = (filter, index, onSync) => ({
-  key: `${index}`,
-  columns: {
-    filter: {
-      sortValue: filter.name,
-      value: filter.name,
-    },
-    active: {
-      sortValue: filter.isActive,
-      value: <ReactiveCheckBox onChange={onSync(filter.id)} isActive={filter.isActive} />,
-    },
-  },
-})
 
 class GmailSettingStore {
-  props: SettingPaneProps
-
+  props: Props
   syncing = {}
-  active = 'status'
+  activeTab = 'status'
+  whitelist = new WhitelistManager({
+    setting: this.props.setting,
+    getAll: this.getAllFilterIds.bind(this),
+  })
+
+  willUnmount() {
+    this.whitelist.dispose()
+  }
 
   setActiveKey = key => {
-    this.active = key
+    this.activeTab = key
   }
 
-  get setting() {
-    return this.props.setting
-  }
-
-  get values() {
-    return this.setting.values as GmailSettingValues
-  }
-
-  get whiteList() {
-    const { whiteList } = this.values
-    if (whiteList) {
-      let a = []
-      for (const id in whiteList) {
-        a.push({ id, name: id, isActive: () => whiteList[id] })
-      }
-      return a
-    }
-    return []
-  }
-
-  get rows() {
-    return this.whiteList.map((item, index) => itemToRow(item, index, this.onSync))
-  }
-
-  onSync = fullName => async e => {
-    this.setting.values = {
-      ...this.values,
-      channels: {
-        ...this.values.whiteList,
-        [fullName]: e.target.checked,
-      },
-    }
-    await save(SettingModel, this.setting)
-  }
-
-  isSyncing = fullName => {
-    if (!this.setting || !this.values.whiteList) {
-      return false
-    }
-    return this.values.whiteList[fullName] || false
+  private getAllFilterIds() {
+    return this.props.setting.values.foundEmails
   }
 }
 
-const decorator = compose(
-  view.attach({ store: GmailSettingStore }),
-  view,
-)
-
-type Props = SettingPaneProps & { store: GmailSettingStore }
-
-export const GmailSetting = decorator(({ store, children }: Props) => {
-  return children({
-    belowHead: (
-      <UI.Tabs active={store.active} onActive={store.setActiveKey}>
-        <UI.Tab key="status" width="50%" label="Status" />
-        <UI.Tab key="filters" width="50%" label="Filters" />
-      </UI.Tabs>
-    ),
-    content: (
-      <>
-        <HideablePane invisible={store.active !== 'status'}>
-          <AppStatusPane setting={store.setting} />
-        </HideablePane>
-        <HideablePane invisible={store.active !== 'filters'}>
-          <UI.SearchableTable
-            virtual
-            rowLineHeight={28}
-            floating={false}
-            columnSizes={columnSizes}
-            columns={columns}
-            multiHighlight
-            rows={store.rows}
-            bodyPlaceholder={
-              <div style={{ margin: 'auto' }}>
-                <UI.Text size={1.2}>Loading...</UI.Text>
-              </div>
-            }
-          />
-        </HideablePane>
-      </>
-    ),
-  })
-})
+@view.attach({ store: GmailSettingStore })
+@view
+export class GmailSetting extends React.Component<Props & { store?: GmailSettingStore }> {
+  render() {
+    const { store, children, setting } = this.props
+    return children({
+      belowHead: (
+        <Tabs active={store.activeTab} onActive={store.setActiveKey}>
+          <Tab key="status" width="50%" label="Status" />
+          <Tab key="filters" width="50%" label="Filters" />
+        </Tabs>
+      ),
+      content: (
+        <>
+          <HideablePane invisible={store.activeTab !== 'status'}>
+            <AppStatusPane setting={setting} />
+          </HideablePane>
+          <HideablePane invisible={store.activeTab !== 'filters'}>
+            <ManageSmartSync whitelist={store.whitelist} />
+            <View
+              flex={1}
+              opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
+              pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'auto'}
+            >
+              <SearchableTable
+                virtual
+                rowLineHeight={28}
+                floating={false}
+                columnSizes={{
+                  filter: 'flex',
+                  active: '14%',
+                }}
+                columns={{
+                  filter: {
+                    value: 'Filter',
+                    sortable: true,
+                    resizable: true,
+                  },
+                  active: {
+                    value: 'Active',
+                    sortable: true,
+                  },
+                }}
+                multiHighlight
+                rows={(setting.values.foundEmails || []).map((email, index) => {
+                  const isActive = store.whitelist.whilistStatusGetter(email)
+                  return {
+                    key: `${index}`,
+                    columns: {
+                      filter: {
+                        sortValue: email,
+                        value: email,
+                      },
+                      active: {
+                        sortValue: isActive,
+                        value: (
+                          <ReactiveCheckBox
+                            onChange={store.whitelist.updateWhitelistValueSetter(email)}
+                            isActive={isActive}
+                          />
+                        ),
+                      },
+                    },
+                  }
+                })}
+                bodyPlaceholder={
+                  <div style={{ margin: 'auto' }}>
+                    <Text size={1.2}>Loading...</Text>
+                  </div>
+                }
+              />
+            </View>
+          </HideablePane>
+        </>
+      ),
+    })
+  }
+}

@@ -42,7 +42,11 @@ if [[ "$FLAGS" =~ "--no-build-app" ]]; then
   echo "not bundling..."
 else
   echo "bundling..."
-  (cd ../orbit-app && npm run build-app)
+  cd ../orbit-app
+  # remove old app dir so we dont have old files there
+  rm -r dist || true
+  npm run build-app
+  cd -
 fi
 echo -n "--no-build-app " >> ./scripts/.lastbuild
 

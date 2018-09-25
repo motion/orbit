@@ -32,6 +32,7 @@ export function startDesktop(): ChildProcess {
     child.stdout.on('data', b => console.log('desktop:', b.toString()))
     child.stderr.on('data', b => {
       const error = b.toString()
+      console.log('error', error)
       // for some reason node logs into error
       if (error.indexOf('Debugger ') === 0) {
         return
@@ -41,7 +42,11 @@ export function startDesktop(): ChildProcess {
         console.log('error:', error)
         return
       }
-      onError({ stack: error })
+      if (process.env.IS_DESKTOP) {
+        console.log('error is', error)
+      } else {
+        onError({ stack: error })
+      }
     })
 
     return child

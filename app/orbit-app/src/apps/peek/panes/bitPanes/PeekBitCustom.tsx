@@ -12,11 +12,11 @@ import {
   Theme,
   SearchableTable,
   Text,
-  List,
   View,
 } from '@mcro/ui'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import { SimpleItem } from '../../../../views/SimpleItem'
 
 type Props = PeekBitPaneProps & {
   store: CustomStore
@@ -83,15 +83,9 @@ export const Custom = decorator(({ store }: Props) => {
     <Row flex={1}>
       <Sidebar minWidth={150} maxWidth={300} width={200} position="left">
         <SidebarLabel>test me</SidebarLabel>
-        <List
-          items={[
-            { primary: 'Hello' },
-            { primary: 'World' },
-            { primary: 'How' },
-            { primary: 'Are' },
-            { primary: 'You' },
-          ]}
-        />
+        <SimpleItem title="Slack" icon="slack" />
+        <SimpleItem title="Github" icon="github" />
+        <SimpleItem title="Jira" icon="jira" />
         <View flex={1} />
         <View height={300}>
           <Panel heading="Test" collapsable fill>

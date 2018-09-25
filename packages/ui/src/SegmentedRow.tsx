@@ -1,271 +1,162 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Text } from './Text'
-import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
+import { attachTheme } from '@mcro/gloss'
+import { Button } from './Button'
+import { Row } from './blocks/Row'
+import { UIContext } from './helpers/contexts'
+import { Color } from '@mcro/css'
 
-export type ItemProps = SizedSurfaceProps & {
-  after?: React.ReactNode
-  below?: React.ReactNode
-  afterProps?: Object
-  before?: React.ReactNode
-  beforeProps?: Object
-  borderWidth?: number
-  beforePrimary?: React.ReactNode
-  borderRadius?: number
-  children?: React.ReactNode
-  date?: React.ReactNode
-  dateSize?: number
-  iconProps?: Object
-  segmented?: boolean
-  isFirstElement?: boolean
-  autoselect?: boolean
-  isLastElement?: boolean
-  meta?: React.ReactNode
-  onClick?: Function
-  onItemMount?: Function
-  onToggle?: Function
-  primary?: React.ReactNode
-  row?: boolean
-  secondary?: React.ReactNode
-  ellipse?: boolean
-  glowProps?: Object
-  editable?: boolean
-  onFinishEdit?: Function
-  childrenProps?: Object
-  primaryEllipse?: boolean
-  glow?: boolean
-  fontWeight?: any
-  fontSize?: any
-  primaryProps?: Object
-  index?: number
-  secondaryProps?: Object
-  size?: number
-  style?: Object
-  childrenEllipse?: boolean
-  getRef?: Function
-  highlight?: boolean | ((index: number) => React.ReactNode)
-  selectable?: boolean
+type SegmentedRowProps = {
+  active?: number
+  defaultActive?: number
+  controlled?: boolean
+  items?: Array<React.ReactNode | { text?: string; id?: string; icon?: string }>
+  children: React.ReactNode
+  label?: React.ReactNode
+  onChange?: Function
+  onlyIcons?: boolean
+  stretch?: boolean
+  sync?: { get(): number; set(value: number): void }
+  color?: Color
+  uiContext?: Object
+  itemProps?: Object
+  spaced?: boolean
+  theme?: Object
 }
 
-const Content = view({
-  flex: 1,
-  maxWidth: '100%',
-  justifyContent: 'center',
-  overflowHidden: {
-    overflow: 'hidden',
-  },
-})
-
-const Above = view({
-  maxWidth: '100%',
-  flexFlow: 'row',
-  flex: 'none',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-})
-
-const Prop = view({
-  flex: 1,
-  overflow: 'hidden',
-  maxWidth: '100%',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-})
-
-const Middot = view({
-  display: 'inline',
-})
-
-const ListDate = view({
-  userSelect: 'none',
-  fontWeight: 600,
+const Label = view({
+  margin: ['auto', 5],
   opacity: 0.8,
+  fontSize: 11,
 })
 
-const After = view({
-  margin: [0, -5, 0, 5],
-  height: 'auto',
-})
-
-const Before = view({
-  margin: ['auto', 5, 'auto', 0],
-})
-
-@view
-export class ListItem extends React.Component<ItemProps> {
-  static isListItem = true
-
-  static defaultProps = {
-    size: 1,
-    borderWidth: 0,
-    glowProps: {
-      color: '#fff',
-      scale: 1,
-      blur: 70,
-      opacity: 0.15,
-      show: false,
-      resist: 60,
-      zIndex: -1,
-    },
+// @ts-ignore
+@attachTheme
+@view.ui
+export class SegmentedRow extends React.Component<SegmentedRowProps> {
+  state = {
+    active: null,
   }
 
-  node = null
-
-  componentDidMount() {
-    if (this.props.onItemMount) {
-      this.props.onItemMount(this)
+  select = active => {
+    this.setState({ active })
+    if (this.props.sync) {
+      this.props.sync.set(active)
     }
   }
 
-  getRef = ref => {
-    this.props.getRef && this.props.getRef(ref)
-    this.node = ref
+  get active() {
+    const hasState = this.state.active !== null
+    if (this.props.sync) {
+      return this.props.sync.get()
+    }
+    return hasState ? this.state.active : this.props.defaultActive
   }
 
   render() {
     const {
-      after,
-      afterProps,
-      below,
-      before,
-      beforePrimary,
-      beforeProps,
-      borderRadius,
-      children: _children,
-      date,
-      dateSize,
-      autoselect,
-      isFirstElement,
-      isLastElement,
-      meta,
-      onItemMount,
-      onToggle,
-      onClick,
-      primary,
-      row,
-      segmented,
-      secondary,
-      secondaryProps,
-      size,
-      style,
-      childrenEllipse,
-      primaryEllipse,
-      glowProps,
-      editable,
-      onFinishEdit,
-      iconProps,
-      getRef,
-      highlight,
-      glow,
-      childrenProps,
-      fontWeight,
-      primaryProps,
-      fontSize,
-      selectable,
-      index,
+      items,
+      controlled,
+      onChange,
+      defaultActive,
+      onlyIcons,
+      children: children_,
+      active,
+      label,
+      stretch,
+      sync,
+      uiContext,
+      color,
+      itemProps: itemProps_,
+      spaced,
+      theme,
       ...props
     } = this.props
-    const radiusProps = segmented
-      ? {
-          borderBottomRadius: isLastElement ? borderRadius : 0,
-          borderTopRadius: isFirstElement ? borderRadius : 0,
-        }
-      : {
-          borderRadius,
-        }
+    let itemProps = itemProps_ as any
+    let children = children_
+    const ACTIVE = typeof active === 'undefined' ? this.active : active
+    const getContext = (index, length) =>
+      spaced
+        ? {}
+        : {
+            ...uiContext,
+            inSegment: {
+              first: index === 0,
+              last: index === length - 1,
+              index,
+            },
+          }
 
-    // reactive highlight
-    // TODO: make this not rely on listitem being mobx
-    const highlightValue =
-      typeof highlight === 'function' ? highlight(index) : highlight
-
-    let children = _children
-    // allows for reactive children
-    if (typeof children === 'function') {
-      // @ts-ignore
-      children = _children()
+    if (spaced) {
+      itemProps = itemProps || {}
+      itemProps.marginLeft = typeof spaced === 'number' ? spaced : 5
     }
 
-    const areChildrenString = typeof children === 'string'
-    const shouldHighlight = selectable !== false && !!highlightValue
+    if (stretch) {
+      itemProps = itemProps || {}
+      itemProps.flex = 1
+    }
+
+    if (children) {
+      const realChildren = React.Children.map(children, _ => _).filter(Boolean)
+
+      children = realChildren
+        .map((child, index) => {
+          if (!child) {
+            return false
+          }
+          const finalChild =
+            typeof child === 'string' || typeof child === 'number' ? <span>{child}</span> : child
+
+          return (
+            <UIContext.Provider key={index} value={getContext(index, realChildren.length)}>
+              {itemProps
+                ? React.cloneElement(finalChild, {
+                    ...itemProps,
+                    ...finalChild.props,
+                  }) /* merge child props so they can override */
+                : finalChild}
+            </UIContext.Provider>
+          )
+        })
+        .filter(Boolean)
+    } else if (Array.isArray(items)) {
+      children = items.map((seg, index) => {
+        // @ts-ignore
+        const { text, id, icon, ...segmentProps } =
+          typeof seg === 'object' ? seg : { text: seg, id: seg }
+        // @ts-ignore
+        if (segmentProps.flex) {
+          // @ts-ignore
+          return <div style={{ flex: segmentProps.flex }} />
+        }
+        return (
+          <UIContext.Provider key={index} value={getContext(index, items.length)}>
+            <Button
+              active={(id || icon) === ACTIVE}
+              icon={onlyIcons ? text : icon}
+              iconColor={color}
+              onChange={() => {
+                this.select(id)
+                if (controlled && onChange) {
+                  onChange(seg)
+                }
+              }}
+              {...segmentProps}
+              {...itemProps}
+            >
+              {(!onlyIcons && text) || segmentProps['children']}
+            </Button>
+          </UIContext.Provider>
+        )
+      })
+    }
 
     return (
-      <SizedSurface
-        tagName="listitem"
-        size={size}
-        sizePadding={1.4}
-        {...radiusProps}
-        borderWidth={0}
-        background="transparent"
-        row
-        onClick={onClick}
-        glow={glow}
-        glowProps={glowProps}
-        sizeIcon={1}
-        iconProps={{
-          alignSelf: 'flex-start',
-          opacity: 0.6,
-          style: {
-            paddingTop: 5,
-          },
-          ...iconProps,
-        }}
-        style={style}
-        getRef={this.getRef}
-        highlight={shouldHighlight}
-        after={below}
-        {...props}
-      >
-        {!!before && <Before {...beforeProps}>{before}</Before>}
-        <Content overflowHidden={after || before}>
-          {!!(primary || secondary || date) && (
-            <Above>
-              {beforePrimary}
-              {!!(primary || secondary) && (
-                <Prop>
-                  <Text
-                    wordWrap="break-word"
-                    fontSize={fontSize}
-                    fontWeight={fontWeight}
-                    size={size}
-                    editable={editable}
-                    autoselect={autoselect}
-                    onFinishEdit={onFinishEdit}
-                    ellipse={primaryEllipse}
-                    {...primaryProps}
-                  >
-                    {primary}
-                  </Text>
-                  {!!(secondary || date) && (
-                    <Text
-                      size={size * 0.85}
-                      alpha={0.7}
-                      ellipse
-                      {...secondaryProps}
-                    >
-                      {!!date && <ListDate>{date}</ListDate>}
-                      {!!(date && secondary) && <Middot> &middot; </Middot>}
-                      {secondary}
-                    </Text>
-                  )}
-                </Prop>
-              )}
-            </Above>
-          )}
-          {!areChildrenString && <div>{children}</div>}
-          {areChildrenString && (
-            <Text
-              size={size * 0.9}
-              alpha={0.6}
-              ellipse={childrenEllipse}
-              {...childrenProps}
-            >
-              {children}
-            </Text>
-          )}
-        </Content>
-        {!!after && <After {...afterProps}>{after}</After>}
-      </SizedSurface>
+      <Row {...props}>
+        {label && <Label>{label}</Label>}
+        {children}
+      </Row>
     )
   }
 }

@@ -3,10 +3,10 @@ import { cleanupChildren } from './helpers/cleanupChildren'
 import root from 'global'
 import { once } from 'lodash'
 
-process.on('unhandledRejection', error => {
-  console.log('unhandledRejection', error.stack)
-  throw error
-})
+// process.on('unhandledRejection', error => {
+//   console.log('unhandledRejection', error.stack)
+//   throw error
+// })
 
 export async function main() {
   /*

@@ -5,7 +5,7 @@ import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
-import reactFastCompare from 'react-fast-compare'
+import { fastCompareWithoutChildren } from './helpers/fastCompareWithoutChildren'
 import validProp from './helpers/validProp'
 
 export type RawRules = CSSPropertySet & {
@@ -266,7 +266,6 @@ export function createViewFactory(toCSS) {
       if (!hasDynamicStyles && myStyles === state.lastStyles) {
         return null
       }
-      myStyles = { ...myStyles }
       let dynamicStyles
       if (hasDynamicStyles) {
         dynamicStyles = { [id]: {} }
@@ -289,6 +288,8 @@ export function createViewFactory(toCSS) {
         addStyles(id, dynamicStyles, theme(props))
       }
       if (hasDynamicStyles) {
+        // create new object to prevent buggy mutations
+        myStyles = { ...myStyles }
         for (const key in dynamicStyles) {
           myStyles[key] = myStyles[key] || {}
           myStyles[key] = {
@@ -346,7 +347,7 @@ export function createViewFactory(toCSS) {
 
       static getDerivedStateFromProps(props: Props, state: State) {
         const noRecentHMR = isHMREnabled ? !recentHMR() : true
-        const hasSameProps = reactFastCompare(props, state.prevProps)
+        const hasSameProps = fastCompareWithoutChildren(props, state.prevProps)
         const shouldAvoidUpdate = noRecentHMR && hasSameProps
         if (shouldAvoidUpdate) {
           return null
@@ -467,6 +468,7 @@ export function createViewFactory(toCSS) {
     // allow setting theme
     ThemedConstructor.theme = themeFn => {
       ThemedConstructor.themeFn = themeFn
+      return ThemedConstructor
     }
 
     ThemedConstructor.getConfig = () => ({

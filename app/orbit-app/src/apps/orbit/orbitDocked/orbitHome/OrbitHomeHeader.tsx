@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { ThemeObject, attachTheme } from '@mcro/gloss'
+import { memoize } from 'lodash'
 
 const Section = view('section', {
   width: '100%',
@@ -47,11 +48,14 @@ const exploreButton = {
 
 @view
 export class OrbitHomeHeader extends React.Component<Props> {
+  paneSetter = memoize(name => () => {
+    this.props.paneManagerStore.setActivePane(name)
+  })
+
   render() {
     const { paneManagerStore } = this.props
     const homeActive =
-      paneManagerStore.activePane === 'home' ||
-      paneManagerStore.activePane === 'search'
+      paneManagerStore.activePane === 'home' || paneManagerStore.activePane === 'search'
     return (
       <>
         <Section invisible={paneManagerStore.activePane === 'onboard'}>
@@ -60,7 +64,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
               icon="home"
               tooltip="Home"
               active={homeActive}
-              onClick={() => paneManagerStore.setActivePane('home')}
+              onClick={this.paneSetter('home')}
               {...exploreButton}
             />
           )}
@@ -68,14 +72,14 @@ export class OrbitHomeHeader extends React.Component<Props> {
             icon="menu35"
             tooltip="Directory"
             active={paneManagerStore.activePaneFast === 'directory'}
-            onClick={() => paneManagerStore.setActivePane('directory')}
+            onClick={this.paneSetter('directory')}
             {...exploreButton}
           />
           <UI.Button
             icon="app"
             tooltip="Apps"
             active={paneManagerStore.activePaneFast === 'apps'}
-            onClick={() => paneManagerStore.setActivePane('apps')}
+            onClick={this.paneSetter('apps')}
             {...exploreButton}
           />
           {/* <UI.Button
@@ -84,7 +88,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
             tooltip="Settings"
             sizeIcon={1.2}
             active={paneManagerStore.activePaneFast === 'settings'}
-            onClick={() => paneManagerStore.setActivePane('settings')}
+            onClick={this.paneSetter('settings')}
             {...exploreButton}
           /> */}
         </Section>

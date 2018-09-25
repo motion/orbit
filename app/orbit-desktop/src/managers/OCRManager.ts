@@ -72,7 +72,8 @@ export class OCRManager {
     // listen for start toggle
     Desktop.onMessage(Desktop.messages.TOGGLE_OCR, () => {
       log.info('Toggle OCR...')
-      Desktop.setOcrState({ paused: !Desktop.ocrState.paused })
+      this.toggleOCR()
+      // Desktop.setOcrState({ paused: !Desktop.ocrState.paused })
     })
 
     return true
@@ -82,19 +83,25 @@ export class OCRManager {
     await this.oracle.stop()
   }
 
+  async toggleOCR() {
+    if (Desktop.ocrState.paused) {
+      // TODO almost but not working yet
+      await this.oracle.requestAccessibility()
+      if (Desktop.state.operatingSystem.accessibilityPermission) {
+        this.oracle.startWatchingWindows()
+      } else {
+        console.log('No permisisons to read screen... need to show message')
+      }
+    } else {
+      this.oracle.stopWatchingWindows()
+      this.oracle.pause()
+    }
+  }
+
   startOCROnActive = react(
     () => Desktop.ocrState.paused,
     async (paused, { when }) => {
       await when(() => this.started)
-      if (paused) {
-        this.oracle.stopWatchingWindows()
-        this.oracle.pause()
-      } else {
-        // TODO almost but not working yet
-        // this.oracle.requestAccessibility()
-        // this.oracle.checkAccessbility()
-        this.oracle.startWatchingWindows()
-      }
     },
   )
 
@@ -175,11 +182,11 @@ export class OCRManager {
 
     // window movements
     this.oracle.onWindowChange((event, value) => {
-      console.log('got window change', event, value)
       if (event === 'ScrollEvent') {
         this.ocrCurrentApp()
         return
       }
+      console.log('got window change', event, value)
       // console.log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = toJS(Desktop.appState)
       let appState: any = {}

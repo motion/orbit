@@ -190,6 +190,8 @@ export class Oracle {
 
   async requestAccessibility() {
     await this.socketSend('reac')
+    // TODO come up with system to reply with state
+    await sleep(30)
   }
 
   async checkAccessbility() {

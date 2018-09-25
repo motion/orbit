@@ -24,14 +24,12 @@ export class ScreenManager {
 
     // operating info
     this.oracle.onInfo(info => {
-      if (typeof info.supportsTransparency === 'boolean') {
-        Desktop.setState({
-          operatingSystem: {
-            supportsTransparency: info.supportsTransparency,
-          },
-        })
-        return
-      }
+      Desktop.setState({
+        operatingSystem: {
+          accessibilityPermission: info.accessibilityPermission,
+          supportsTransparency: info.supportsTransparency,
+        },
+      })
     })
   }
 

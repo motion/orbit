@@ -67,6 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var curPosition = NSRect()
   private var lastSent = ""
   private var supportsTransparency = false
+  private var accessibilityPermission = false
 
   lazy var window = NSWindow(
     contentRect: NSMakeRect(1413, 0, 500, 900),
@@ -113,20 +114,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     
-    print("spell")
-    let words = "hello world hwo are you doing today in htis cool place."
-    let checker = NSSpellChecker()
-    let spellingRange = checker.checkSpelling(of: words, startingAt: 0)
-    let guesses = checker.guesses(
-      forWordRange: spellingRange,
-      in: words,
-      language: checker.language(),
-      inSpellDocumentWithTag: 0
-      )!
-    print("step 2")
-    let jsonGuesses = try JSONEncoder().encode(guesses)
-    let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
-    
+//    print("spell")
+//    let words = "hello world hwo are you doing today in htis cool place."
+//    let checker = NSSpellChecker()
+//    let spellingRange = checker.checkSpelling(of: words, startingAt: 0)
+//    let guesses = checker.guesses(
+//      forWordRange: spellingRange,
+//      in: words,
+//      language: checker.language(),
+//      inSpellDocumentWithTag: 0
+//      )!
+//    print("step 2")
+//    let jsonGuesses = try JSONEncoder().encode(guesses)
+//    let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
     
     print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
@@ -135,21 +135,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       windo = Windo(emit: self.emit)
 
       // testing trust:
-      let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
-      let options = [checkOptPrompt: true]
-      let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
-      print("trust \(accessEnabled)")
-
-      // testing trust another way:
-      if UIElement.isProcessTrusted(withPrompt: true) {
-        print("is trusted")
-      } else {
-        print("not trusted for watching winodws")
-      }
+//      let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
+//      let options = [checkOptPrompt: true]
+//      let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
+//      print("trust \(accessEnabled)")
      
       do {
         screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
-        screen.start()
       } catch let error as NSError {
         print("Error \(error.domain)")
         print(Thread.callStackSymbols)
@@ -275,6 +267,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     NSApp.applicationIconImage = NSImage.init(contentsOfFile: path)
   }
   
+  func sendOSInfo() {
+    self.emit("""
+    {
+      \"action\": \"info\",
+      \"value\": {
+        \"supportsTransparency\": \(self.supportsTransparency),
+        \"accessibilityPermission\": \(self.accessibilityPermission)
+      }
+    }
+    """)
+  }
+  
   func onMessage(_ text: String) {
     // dont print things that poll...
     if text != "space" && text != "osin" {
@@ -339,7 +343,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     // on start
     if action == "osin" {
-      self.emit("{ \"action\": \"info\", \"value\": { \"supportsTransparency\": \(self.supportsTransparency) } }")
+      self.sendOSInfo()
       return
     }
     if action == "spac" {
@@ -371,11 +375,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       screen.resume()
       return
     }
-    if action == "star" {
-      print("starting screen...")
-      screen.start()
-      return
-    }
     if action == "watc" {
       do {
         print("watching \(text[5..<text.count])")
@@ -394,6 +393,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
       return
     }
+    if action == "star" {
+      print("start screen...")
+      // testing trust another way:
+      if UIElement.isProcessTrusted(withPrompt: true) {
+        self.accessibilityPermission = true
+        screen.start()
+      } else {
+        self.accessibilityPermission = false
+        print("not trusted for watching winodws")
+      }
+      return
+    }
     if action == "clea" {
       screen.clear()
       return
@@ -402,19 +413,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       windo.defocus()
       return
     }
-    // check accessibility
-    if action == "chac" {
-      windo.checkAccessibility()
-      return
-    }
     // request accessibility
     if action == "reac" {
-      windo.requestAccessibility()
+      if UIElement.isProcessTrusted(withPrompt: true) {
+        self.accessibilityPermission = true
+      } else {
+        self.accessibilityPermission = false
+      }
       return
     }
     // start window watching
     if action == "staw" {
-      windo.start()
+      if UIElement.isProcessTrusted(withPrompt: true) {
+        self.accessibilityPermission = true
+        windo.start()
+      } else {
+        self.accessibilityPermission = false
+      }
       return
     }
     // stop window watching

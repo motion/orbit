@@ -62,7 +62,6 @@ const getDate = ({ startDate, endDate }: { startDate?: Date; endDate?: Date }) =
     return `${startInWords}`
   }
   const oneDayInMinutes = 60 * 24 * 1000
-  console.log('difference is', endDate.getTime() - startDate.getTime())
   if (endDate.getTime() - startDate.getTime() <= oneDayInMinutes) {
     return startInWords
   }

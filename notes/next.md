@@ -1,8 +1,10 @@
 # nate
 
+- fix extraheight
+- "stop asking" and "always send" for error reporting
 - add report recent error log in Tray
+- show current app name in Orbit <Tray />
 - make it great
-  - show current app name in Orbit <Tray />
   - Spin orbit <Orb /> when scanning
   - Tooltip on <Orb />
 - cosal engine

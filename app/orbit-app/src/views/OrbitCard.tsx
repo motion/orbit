@@ -25,8 +25,6 @@ const CardWrap = view(UI.View, {
   },
 })
 
-const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-
 const Card = view({
   overflow: 'hidden',
   position: 'relative',
@@ -76,7 +74,7 @@ const Card = view({
         ...card,
         boxShadow: disabledShadow || [cardShadow, borderShadow],
         '&:hover': {
-          boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
+          boxShadow: disabledShadow || [cardShadow, borderShadow, theme.cardHoverGlow],
         },
       }
     } else {

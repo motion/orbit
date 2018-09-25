@@ -93,7 +93,7 @@ class DesktopStore {
       foundIntegrations: {},
     },
     operatingSystem: {
-      isAccessible: false,
+      accessibilityPermission: false,
       macVersion: null,
       supportsTransparency: false,
     },

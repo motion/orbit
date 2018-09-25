@@ -15,24 +15,6 @@ export class ScreenManager {
 
   constructor(oracle: Oracle) {
     this.oracle = oracle
-
-    // for now just enable until re enable oracle
-    if (macosVersion.is('<10.11')) {
-      console.log('older mac, avoiding oracle')
-      return
-    }
-
-    // operating info
-    this.oracle.onInfo(info => {
-      if (typeof info.supportsTransparency === 'boolean') {
-        Desktop.setState({
-          operatingSystem: {
-            supportsTransparency: info.supportsTransparency,
-          },
-        })
-        return
-      }
-    })
   }
 
   start = () => {
@@ -54,12 +36,6 @@ export class ScreenManager {
       this.oracle.socketSend('space')
     }, 400)
     on(this, listener)
-
-    // poll for now for updated transparency setting...
-    const listener2 = setInterval(() => {
-      this.oracle.socketSend('osin')
-    }, 1000 * 10)
-    on(this, listener2)
   }
 
   updateTheme = react(

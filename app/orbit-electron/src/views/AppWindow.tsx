@@ -5,7 +5,6 @@ import { Electron, Desktop, App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
-// @ts-ignore
 import { BrowserWindow } from 'electron'
 import { ElectronStore } from '../stores/ElectronStore'
 

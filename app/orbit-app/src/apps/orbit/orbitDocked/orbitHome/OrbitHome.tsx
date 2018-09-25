@@ -10,7 +10,6 @@ import { BitModel, PersonBitModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
-import { trace } from 'mobx'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -82,14 +81,14 @@ const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
-  {
+  process.env.NODE_ENV === 'development' && {
     id: '7',
     source: 'app1',
     name: 'Test App',
     model: BitModel,
     query: findManyType('app1'),
   },
-]
+].filter(Boolean)
 
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? 'transparent' : 'transparent',

@@ -105,7 +105,7 @@ class Filters {
     outputImage = applyFilter(ThresholdFilterEasy(), for: outputImage)
     
     // write canvas
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+    let context = CIContext(options: convertToOptionalCIContextOptionDictionary([convertFromCIContextOption(CIContextOption.useSoftwareRenderer): false]))
     return context.createCGImage(outputImage, from: outputImage.extent)!
   }
   
@@ -115,7 +115,7 @@ class Filters {
     // threshold
     outputImage = applyFilter(ThresholdFilterEasy(), for: outputImage)
     // write canvas
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+    let context = CIContext(options: convertToOptionalCIContextOptionDictionary([convertFromCIContextOption(CIContextOption.useSoftwareRenderer): false]))
     return context.createCGImage(outputImage, from: outputImage.extent)!
   }
   
@@ -134,7 +134,7 @@ class Filters {
     // threshold
     outputImage = applyFilter(ThresholdFilter(), for: outputImage)
     // write
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+    let context = CIContext(options: convertToOptionalCIContextOptionDictionary([convertFromCIContextOption(CIContextOption.useSoftwareRenderer): false]))
     return context.createCGImage(outputImage, from: outputImage.extent)!
   }
   
@@ -148,8 +148,19 @@ class Filters {
     // threshold
     outputImage = applyFilter(ThresholdBelowFilter(), for: outputImage)
     // write
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+    let context = CIContext(options: convertToOptionalCIContextOptionDictionary([convertFromCIContextOption(CIContextOption.useSoftwareRenderer): false]))
     return context.createCGImage(outputImage, from: outputImage.extent)!
   }
   
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalCIContextOptionDictionary(_ input: [String: Any]?) -> [CIContextOption: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (CIContextOption(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCIContextOption(_ input: CIContextOption) -> String {
+	return input.rawValue
 }

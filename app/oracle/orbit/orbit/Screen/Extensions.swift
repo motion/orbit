@@ -60,7 +60,7 @@ extension Sequence where Iterator.Element: Hashable {
   }
 }
 
-extension Array where Element: Collection, Element.Index == Int, Element.IndexDistance == Int, Element.Iterator.Element: Any {
+extension Array where Element: Collection, Element.Iterator.Element: Any {
   func transpose() -> [[Element.Iterator.Element]] {
     if self.isEmpty { return [] }
     

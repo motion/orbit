@@ -3,7 +3,6 @@ import { view, compose, react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import { AppWindow } from './AppWindow'
-// @ts-ignore
 import { BrowserWindow } from 'electron'
 
 const log = new Logger('electron')

@@ -44,7 +44,6 @@ export class Oracle {
   onRestoredCB = idFn
   onErrorCB = idFn
   onClearCB = idFn
-  onAccessibleCB = idFn
   onSpaceMoveCB = idFn
   onAppStateCB = idFn
   binPath = null
@@ -190,10 +189,8 @@ export class Oracle {
 
   async requestAccessibility() {
     await this.socketSend('reac')
-  }
-
-  async checkAccessbility() {
-    await this.socketSend('chac')
+    // TODO come up with system to reply with state
+    await sleep(30)
   }
 
   async startWatchingWindows() {
@@ -256,28 +253,8 @@ export class Oracle {
     this.onErrorCB = cb
   }
 
-  onAccessible = cb => {
-    this.onAccessibleCB = cb
-  }
-
   onAppState = cb => {
     this.onAppStateCB = cb
-  }
-
-  lastAccessibility = null
-
-  handleAccessibility = async value => {
-    // we just got access, need to restart the oracle process (until we can figure out cleaner way)
-    if (this.lastAccessibility === false && value === true) {
-      console.log('Just got accesibility access, restarting Swift process cleanly...')
-      await this.restart()
-    }
-    // only send on new value
-    const newValue = value !== this.lastAccessibility
-    this.lastAccessibility = value
-    if (newValue) {
-      this.onAccessibleCB(value)
-    }
   }
 
   actions: { [key: string]: Function } = {
@@ -293,7 +270,6 @@ export class Oracle {
     restoredIds: value => {
       this.restoredIds = value
     },
-    accessible: this.handleAccessibility,
     // up to listeners of this class
     clear: val => this.onClearCB(val),
     words: val => this.onWordsCB(val),
@@ -328,7 +304,6 @@ export class Oracle {
     } else {
       binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
     }
-    console.log('bin', bin, 'binDir', binDir)
     if (this.name) {
       // create a named binary link to change the name...
       log.verbose(`linking! ${this.name}`)

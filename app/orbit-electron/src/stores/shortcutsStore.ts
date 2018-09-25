@@ -1,4 +1,3 @@
-// @ts-ignore
 import { globalShortcut } from 'electron'
 import { store, react } from '@mcro/black'
 import { App } from '@mcro/stores'

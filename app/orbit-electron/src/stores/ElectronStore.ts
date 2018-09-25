@@ -3,7 +3,6 @@ import { isEqual, store, debugState, on, react, ensure, sleep } from '@mcro/blac
 import { ShortcutsStore } from './ShortcutsStore'
 import { HoverStateStore } from './HoverStateStore'
 import root from 'global'
-// @ts-ignore
 import { app, screen, clipboard } from 'electron'
 import { Logger } from '@mcro/logger'
 

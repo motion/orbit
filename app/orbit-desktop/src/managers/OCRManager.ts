@@ -1,6 +1,6 @@
 import { Oracle } from '@mcro/oracle'
 import { debounce, last } from 'lodash'
-import { store, isEqual, react } from '@mcro/black'
+import { store, isEqual, react, on } from '@mcro/black'
 import { Desktop, Electron } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import macosVersion from 'macos-version'
@@ -71,9 +71,14 @@ export class OCRManager {
 
     // listen for start toggle
     Desktop.onMessage(Desktop.messages.TOGGLE_OCR, () => {
-      log.info('Toggle OCR...')
-      Desktop.setOcrState({ paused: !Desktop.ocrState.paused })
+      this.toggleOCR()
     })
+
+    // poll for now for updated transparency setting...
+    const listener2 = setInterval(() => {
+      this.oracle.socketSend('osin')
+    }, 1000 * 10)
+    on(this, listener2)
 
     return true
   }
@@ -82,19 +87,38 @@ export class OCRManager {
     await this.oracle.stop()
   }
 
+  async toggleOCR() {
+    if (Desktop.ocrState.paused) {
+      // TODO almost but not working yet
+      await this.oracle.requestAccessibility()
+      if (Desktop.state.operatingSystem.accessibilityPermission) {
+        this.oracle.startWatchingWindows()
+        Desktop.setOcrState({ paused: false })
+      } else {
+        console.log('No permisisons to read screen... need to show message')
+      }
+    } else {
+      this.oracle.stopWatchingWindows()
+      this.oracle.pause()
+      Desktop.setOcrState({ paused: true })
+    }
+  }
+
+  // returns true if no permission
+  pauseIfNoPermission() {
+    if (Desktop.state.operatingSystem.accessibilityPermission === false) {
+      if (Desktop.ocrState.paused === false) {
+        Desktop.setOcrState({ paused: true })
+      }
+      return true
+    }
+    return false
+  }
+
   startOCROnActive = react(
     () => Desktop.ocrState.paused,
     async (paused, { when }) => {
       await when(() => this.started)
-      if (paused) {
-        this.oracle.stopWatchingWindows()
-        this.oracle.pause()
-      } else {
-        // TODO almost but not working yet
-        // this.oracle.requestAccessibility()
-        // this.oracle.checkAccessbility()
-        this.oracle.startWatchingWindows()
-      }
     },
   )
 
@@ -105,28 +129,15 @@ export class OCRManager {
     },
   )
 
-  private attemptStart() {
-    const isAccessible = Desktop.state.operatingSystem.isAccessible
-    const isActive = !Desktop.ocrState.paused
-    if (isAccessible) {
-      if (isActive) {
-        this.oracle.startWatchingWindows()
-      } else {
-        console.log('not active...')
-      }
-    } else {
-      console.log('not acessible...')
-    }
-  }
-
   setupOracleListeners() {
-    // accessiblity check
-    this.oracle.onAccessible(isAccessible => {
-      console.log('isAccessible?', isAccessible)
+    // operating info
+    this.oracle.onInfo(info => {
       Desktop.setState({
-        operatingSystem: { isAccessible },
+        operatingSystem: {
+          accessibilityPermission: info.accessibilityPermission,
+          supportsTransparency: info.supportsTransparency,
+        },
       })
-      this.attemptStart()
     })
 
     // OCR words
@@ -175,11 +186,19 @@ export class OCRManager {
 
     // window movements
     this.oracle.onWindowChange((event, value) => {
-      console.log('got window change', event, value)
+      // pause if no permission
+      if (this.pauseIfNoPermission()) {
+        return
+      }
       if (event === 'ScrollEvent') {
+        // always clear if not paused, you can pause it to prevent clear if you want
+        if (!Desktop.ocrState.paused) {
+          this.setScreenChanged()
+        }
         this.ocrCurrentApp()
         return
       }
+      console.log('got window change', event, value)
       // console.log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = toJS(Desktop.appState)
       let appState: any = {}
@@ -322,10 +341,8 @@ export class OCRManager {
     if (!this.started) {
       return
     }
-    console.log('ocrCurrentApp', Desktop.appState.id)
     clearTimeout(this.clearOCRTm)
     if (!Desktop.appState.id || Desktop.ocrState.paused) {
-      console.log('No id or paused')
       return
     }
     const { name, offset, bounds } = Desktop.appState

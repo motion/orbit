@@ -3,38 +3,59 @@ var keyList = Object.keys
 var hasProp = Object.prototype.hasOwnProperty
 
 function equal(a, b, checkingShallow = false) {
-  if (a === b) return true
+  if (a === b) {
+    return true
+  }
 
   if (a && b && typeof a == 'object' && typeof b == 'object') {
-    var arrA = isArray(a),
-      arrB = isArray(b),
-      i,
-      length,
-      key
-
-    if (arrA && arrB) {
-      length = a.length
-      if (length != b.length) return false
-      for (i = length; i-- !== 0; ) if (!equal(a[i], b[i])) return false
+    // allow custom equality
+    const ukey = a._equalityKey
+    if (ukey && ukey === b._equalityKey) {
       return true
     }
 
-    if (arrA != arrB) return false
+    const isArrA = isArray(a)
+    const isArrB = isArray(b)
+    let i, length, key
 
-    var dateA = a instanceof Date,
-      dateB = b instanceof Date
-    if (dateA != dateB) return false
-    if (dateA && dateB) return a.getTime() == b.getTime()
+    if (isArrA && isArrB) {
+      length = a.length
+      if (length != b.length) return false
+      for (i = length; i-- !== 0; ) {
+        if (!equal(a[i], b[i])) {
+          return false
+        }
+      }
+      return true
+    }
+    if (isArrA != isArrB) {
+      return false
+    }
 
-    var regexpA = a instanceof RegExp,
-      regexpB = b instanceof RegExp
-    if (regexpA != regexpB) return false
-    if (regexpA && regexpB) return a.toString() == b.toString()
+    const dateA = a instanceof Date
+    const dateB = b instanceof Date
+    if (dateA != dateB) {
+      return false
+    }
+    if (dateA && dateB) {
+      return a.getTime() == b.getTime()
+    }
 
-    var keys = keyList(a)
+    const regexpA = a instanceof RegExp
+    const regexpB = b instanceof RegExp
+    if (regexpA != regexpB) {
+      return false
+    }
+    if (regexpA && regexpB) {
+      return a.toString() == b.toString()
+    }
+
+    const keys = keyList(a)
     length = keys.length
 
-    if (length !== keyList(b).length) return false
+    if (length !== keyList(b).length) {
+      return false
+    }
 
     for (i = length; i-- !== 0; ) {
       if (!hasProp.call(b, keys[i])) {
@@ -58,7 +79,9 @@ function equal(a, b, checkingShallow = false) {
         continue
       } else {
         // all other properties should be traversed as usual
-        if (!equal(a[key], b[key])) return false
+        if (!equal(a[key], b[key])) {
+          return false
+        }
       }
     }
 
@@ -72,7 +95,7 @@ function equal(a, b, checkingShallow = false) {
 export function fastCompareWithoutChildren(a, b) {
   if (process.env.NODE_ENV === 'development') {
     try {
-      return equal(a, b)
+      return equal(a, b, true)
     } catch (error) {
       if (
         (error.message && error.message.match(/stack|recursion/i)) ||

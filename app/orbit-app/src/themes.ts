@@ -102,16 +102,21 @@ const macModernTheme = Theme.colorize({
 })
 
 export const themes = {
-  orbit: Theme.fromStyles({
-    background: orbitColor,
-    color: '#fff',
-    borderColor: orbitActiveBg,
-  }),
+  orbit: {
+    _equalityKey: 'orbit',
+    ...Theme.fromStyles({
+      background: orbitColor,
+      color: '#fff',
+      borderColor: orbitActiveBg,
+    }),
+  },
   tooltip: {
+    _equalityKey: 'tooltip',
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
   },
   dark: {
+    _equalityKey: 'dark',
     ...macModernTheme,
     glintColor: [255, 255, 255, 0.2],
     listItemBackground: 'transparent',
@@ -129,6 +134,7 @@ export const themes = {
     colorActive: '#fff',
   },
   light: {
+    _equalityKey: 'light',
     ...macModernTheme,
     listItemBackground: [255, 255, 255, 0.1],
     listItemBackgroundSelected: [255, 255, 255, 0.35],
@@ -145,6 +151,7 @@ export const themes = {
     }),
   },
   tan: {
+    _equalityKey: 'tan',
     ...macModernTheme,
     ...Theme.fromStyles({
       background: tanBg,

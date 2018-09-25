@@ -47,6 +47,17 @@ export class OrbitItemStore {
     this.props.selectionStore.toggleSelected(this.realIndex, 'click')
   }
 
+  handleClickLocation = e => {
+    const { onClickLocation } = this.props
+    if (typeof onClickLocation === 'string') {
+      return Actions.open(onClickLocation)
+    }
+    if (typeof onClickLocation === 'function') {
+      return onClickLocation(e, this.resolvedItem)
+    }
+    console.log('no handler for location')
+  }
+
   open = () => {
     if (!this.props.model || this.props.model.target === 'setting') {
       return

@@ -83,8 +83,7 @@ export class SearchFilterStore /* extends Store */ {
     return this.nlpStore.nlp.parsedQuery || []
   }
 
-  isActive = querySegment =>
-    !this.disabledFilters[querySegment.text.toLowerCase().trim()]
+  isActive = querySegment => !this.disabledFilters[querySegment.text.toLowerCase().trim()]
 
   isntFilter = querySegment => !querySegment.type
   isFilter = querySegment => !!querySegment.type
@@ -131,9 +130,7 @@ export class SearchFilterStore /* extends Store */ {
     if (!this.nlpStore.marks) {
       return null
     }
-    return this.nlpStore.marks.filter(
-      mark => !this.disabledFilters[mark[3].toLowerCase()],
-    )
+    return this.nlpStore.marks.filter(mark => !this.disabledFilters[mark[3].toLowerCase()])
   }
 
   get hasExclusiveFilters() {
@@ -141,9 +138,7 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   get uniqueSettings(): Setting[] {
-    const intSettings = (this.appsStore.appsList || []).filter(
-      x => x.type !== 'setting',
-    )
+    const intSettings = (this.appsStore.appsList || []).filter(x => x.type !== 'setting')
     const unique = uniqBy(intSettings, x => x.type)
     return unique
   }
@@ -173,8 +168,7 @@ export class SearchFilterStore /* extends Store */ {
     // show location filters based on current search
     suggestions = [...suggestions, ...this.searchLocations]
     const hasDates = this.parsedQuery.some(x => x.type === MarkType.Date)
-    const numPeople = this.parsedQuery.filter(x => x.type === MarkType.Person)
-      .length
+    const numPeople = this.parsedQuery.filter(x => x.type === MarkType.Person).length
     if (!hasDates) {
       suggestions = [...suggestions, ...suggestedDates]
     }
@@ -227,13 +221,10 @@ export class SearchFilterStore /* extends Store */ {
       // reset integration inactive filters
       const { integrations } = nlp
       ensure('integrations', integrations && !!integrations.length)
-      this.exclusiveFilters = this.uniqueSettings.reduce(
-        (acc, setting: Setting) => {
-          acc[setting.type] = integrations.some(x => x === setting.type)
-          return acc
-        },
-        {},
-      )
+      this.exclusiveFilters = this.uniqueSettings.reduce((acc, setting: Setting) => {
+        acc[setting.type] = integrations.some(x => x === setting.type)
+        return acc
+      }, {})
     },
   )
 
@@ -250,8 +241,7 @@ export class SearchFilterStore /* extends Store */ {
     },
   )
 
-  hasActiveFilter = name =>
-    this.parsedQuery.some(x => x.text.toLowerCase() === name.toLowerCase())
+  hasActiveFilter = name => this.parsedQuery.some(x => x.text.toLowerCase() === name.toLowerCase())
 
   toggleFilterActive = (name: string) => {
     // if adding a suggested filter, add it dont disable

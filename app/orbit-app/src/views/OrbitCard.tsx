@@ -10,7 +10,6 @@ import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
-import { Actions } from '../actions/Actions'
 import { HighlightText } from './HighlightText'
 import { Glint } from '@mcro/ui'
 
@@ -141,21 +140,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     padding: 8,
   }
 
-  resolvedItem: ResolvedItem
-
-  handleClickLocation = e => {
-    const { onClickLocation } = this.props
-    if (typeof onClickLocation === 'string') {
-      return Actions.open(onClickLocation)
-    }
-    if (typeof onClickLocation === 'function') {
-      return onClickLocation(e, this.resolvedItem)
-    }
-    console.log('no handler')
-  }
-
   getOrbitCard = (resolvedItem: ResolvedItem) => {
-    this.resolvedItem = resolvedItem
     const { icon, location, people, preview, subtitle, title, updatedAt } = resolvedItem
     const {
       afterTitle,

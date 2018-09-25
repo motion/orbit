@@ -3,6 +3,7 @@ import { view, compose } from '@mcro/black'
 import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 import { OrbitSection } from './OrbitSection'
 import { Unpad } from '../../../../views/Unpad'
+import { handleClickLocation } from '../../../../helpers/handleClickLocation'
 
 const decorator = compose(
   view.attach('subPaneStore'),
@@ -35,6 +36,7 @@ export const OrbitCarouselSection = decorator(
               },
               titleFlex: 1,
               titleProps: isPeople ? { ellipse: true } : null,
+              onClickLocation: handleClickLocation,
             }}
             {...props}
           />

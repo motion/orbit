@@ -24,6 +24,7 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
             border={[1, theme.background.lighten(2)]}
             transform={{
               rotate: `${(i + half - total / total) * 12}deg`,
+              x: 1,
             }}
             src={person.photo}
           />

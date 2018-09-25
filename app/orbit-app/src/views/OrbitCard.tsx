@@ -12,6 +12,7 @@ import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { Actions } from '../actions/Actions'
 import { HighlightText } from './HighlightText'
+import { Glint } from '@mcro/ui'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -33,7 +34,7 @@ const Card = view({
     z: 0,
   },
   chromeless: {
-    border: [1, 'transparent'],
+    // border: [1, 'transparent'],
     background: 'transparent',
     padding: [12, 12, 12, 10],
     '&:hover': {
@@ -50,7 +51,6 @@ Card.theme = ({
   theme,
   isSelected,
   background,
-  border,
   padding,
   disableShadow,
   chromeless,
@@ -68,27 +68,28 @@ Card.theme = ({
   card = {
     ...card,
     padding,
-    borderRadius: borderRadius || 7,
+    borderRadius,
     background: background || theme.cardBackground || theme.background.alpha(0.9),
     ...theme.card,
   }
   if (!isSelected) {
+    const borderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColor || 'transparent']
     card = {
       ...card,
-      boxShadow: disabledShadow || [cardShadow],
-      border: border || [1, theme.cardBorderColor || 'transparent'],
+      boxShadow: disabledShadow || [cardShadow, borderShadow],
       '&:hover': {
         boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-        border: [1, [255, 255, 255, 0.25]],
+        // border: [1, [255, 255, 255, 0.25]],
       },
     }
   } else {
+    const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
+    const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
     card = {
       ...card,
-      boxShadow: disabledShadow || [cardShadow, theme.shadowSelected],
-      border: [1, theme.borderSelected],
+      boxShadow,
       '&:hover': {
-        border: [1, theme.borderSelected],
+        boxShadow,
       },
     }
   }
@@ -105,7 +106,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, 0, 3],
+  padding: [0, 0, 4],
 })
 
 const Preview = view({
@@ -136,11 +137,26 @@ const orbitIconProps = {
 @view
 export class OrbitCardInner extends React.Component<OrbitItemProps> {
   static defaultProps = {
+    borderRadius: 7,
     padding: 8,
   }
 
-  getOrbitCard = (contentProps: ResolvedItem) => {
-    const { icon, location, people, preview, subtitle, title, updatedAt } = contentProps
+  resolvedItem: ResolvedItem
+
+  handleClickLocation = e => {
+    const { onClickLocation } = this.props
+    if (typeof onClickLocation === 'string') {
+      return Actions.open(onClickLocation)
+    }
+    if (typeof onClickLocation === 'function') {
+      return onClickLocation(e, this.resolvedItem)
+    }
+    console.log('no handler')
+  }
+
+  getOrbitCard = (resolvedItem: ResolvedItem) => {
+    this.resolvedItem = resolvedItem
+    const { icon, location, people, preview, subtitle, title, updatedAt } = resolvedItem
     const {
       afterTitle,
       borderRadius,
@@ -205,6 +221,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           padding={padding}
           {...cardProps}
         >
+          <Glint borderRadius={borderRadius} />
           {!!icon &&
             !(hide && hide.icon) && (
               <OrbitIcon
@@ -225,6 +242,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
                 ellipse={hasSubtitle && hasMeta ? true : 2}
                 fontWeight={600}
                 maxWidth="calc(100% - 30px)"
+                selectable={false}
                 {...titleProps}
               >
                 {title}
@@ -244,10 +262,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           {hasMeta && (
             <CardSubtitle>
               {!!location && (
-                <RoundButtonSmall
-                  marginLeft={-3}
-                  onClick={onClickLocation ? () => Actions.open(onClickLocation) : null}
-                >
+                <RoundButtonSmall marginLeft={-3} onClick={this.handleClickLocation}>
                   {location}
                 </RoundButtonSmall>
               )}
@@ -273,7 +288,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             </Preview>
           )}
           {typeof children === 'function'
-            ? children(contentProps, props.bit, props.index)
+            ? children(resolvedItem, props.bit, props.index)
             : children}
           {hasPeople && <PeopleRow people={people} />}
         </Card>
@@ -309,11 +324,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       searchTerm,
       ...props
     } = this.props
-    // console.log(
-    //   `${props.index} ${(model && model.id) || props.title}.${pane} ${
-    //     store.isSelected
-    //   }`,
-    // )
+    // console.log(`${props.index} ${(model && model.id) || props.title}.${pane} ${store.isSelected}`)
     if (!model) {
       return this.getOrbitCard(props)
     }
@@ -321,7 +332,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     return (
       <ItemResolver
         model={model}
-        item={item}
         isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}
         onResolvedItem={store.setResolvedItem}

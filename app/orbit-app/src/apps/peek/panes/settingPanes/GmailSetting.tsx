@@ -17,7 +17,10 @@ class GmailSettingStore {
   props: Props
   syncing = {}
   activeTab = 'status'
-  whitelist = new WhitelistManager(this.props.setting)
+  whitelist = new WhitelistManager({
+    setting: this.props.setting,
+    getAll: this.getAllFilterIds.bind(this),
+  })
 
   willUnmount() {
     this.whitelist.dispose()
@@ -27,7 +30,7 @@ class GmailSettingStore {
     this.activeTab = key
   }
 
-  getAllFilterIds = () => {
+  private getAllFilterIds() {
     return this.props.setting.values.foundEmails
   }
 }
@@ -89,10 +92,7 @@ export class GmailSetting extends React.Component<Props & { store?: GmailSetting
                         sortValue: isActive,
                         value: (
                           <ReactiveCheckBox
-                            onChange={store.whitelist.updateWhitelistValueSetter(
-                              email,
-                              store.getAllFilterIds,
-                            )}
+                            onChange={store.whitelist.updateWhitelistValueSetter(email)}
                             isActive={isActive}
                           />
                         ),

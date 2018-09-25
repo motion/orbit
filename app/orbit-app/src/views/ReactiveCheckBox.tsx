@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 
 type Props = {
   isActive?: () => boolean
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (nextValue: boolean, event: React.ChangeEvent<HTMLInputElement>) => void
   [key: string]: any
 }
 
@@ -23,13 +23,17 @@ const preventClick = e => {
 
 @view
 export class ReactiveCheckBox extends React.Component<Props> {
+  onChange = e => {
+    this.props.onChange(!this.props.isActive, e)
+  }
+
   render() {
     const { isActive, onChange, ...props } = this.props
     return (
       <input
         style={{ margin: 'auto' }}
         type="checkbox"
-        onChange={onChange}
+        onChange={this.onChange}
         defaultChecked={isActive()}
         onMouseDown={preventClick}
         {...props}

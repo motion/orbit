@@ -23,7 +23,10 @@ class GithubSettingStore {
     key: 'lastCommit',
     direction: 'up',
   }
-  whitelist = new WhitelistManager(this.props.setting)
+  whitelist = new WhitelistManager({
+    setting: this.props.setting,
+    getAll: this.getAllFilterIds.bind(this),
+  })
 
   async didMount() {
     this.repositories = await loadMany(GithubRepositoryModel, {
@@ -45,7 +48,7 @@ class GithubSettingStore {
     this.active = key
   }
 
-  getAllFilterIds = () => {
+  private getAllFilterIds() {
     return this.repositories.map(repository => repository.nameWithOwner)
   }
 }
@@ -150,7 +153,6 @@ export class GithubSetting extends React.Component<
                           <ReactiveCheckBox
                             onChange={store.whitelist.updateWhitelistValueSetter(
                               repository.nameWithOwner,
-                              store.getAllFilterIds,
                             )}
                             isActive={isActive}
                           />

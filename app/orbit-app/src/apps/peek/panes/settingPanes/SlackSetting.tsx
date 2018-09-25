@@ -25,7 +25,10 @@ class SlackSettingStore {
 
   syncing = {}
   active = 'status'
-  setting = new WhitelistManager(this.props.setting)
+  whitelist = new WhitelistManager({
+    setting: this.props.setting,
+    getAll: this.getAllFilterIds.bind(this),
+  })
 
   async didMount() {
     const channels = await loadMany(SlackChannelModel, {
@@ -66,7 +69,7 @@ class SlackSettingStore {
     this.highlightedRows = rows
   }
 
-  getAllFilterIds = () => {
+  private getAllFilterIds() {
     return this.channels.map(x => x.id)
   }
 }
@@ -90,11 +93,11 @@ export class SlackSetting extends React.Component<Props> {
           </HideablePane>
           <HideablePane invisible={store.active !== 'rooms'}>
             <MultiSelectTableShortcutHandler handlers={{ enter: store.handleEnter }}>
-              <ManageSmartSync store={store} />
+              <ManageSmartSync whitelist={store.whitelist} />
               <View
                 flex={1}
-                opacity={store.setting.isWhitelisting ? 0.5 : 1}
-                pointerEvents={store.setting.isWhitelisting ? 'none' : 'auto'}
+                opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
+                pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'auto'}
               >
                 <SearchableTable
                   virtual
@@ -131,7 +134,7 @@ export class SlackSetting extends React.Component<Props> {
                   onRowHighlighted={store.handleHighlightedRows}
                   rows={store.channels.map((channel, index) => {
                     const topic = channel.topic ? channel.topic.value : ''
-                    const isActive = store.setting.whilistStatusGetter(channel.id)
+                    const isActive = store.whitelist.whilistStatusGetter(channel.id)
                     return {
                       key: `${index}`,
                       columns: {
@@ -156,13 +159,10 @@ export class SlackSetting extends React.Component<Props> {
                           ),
                         },
                         active: {
-                          sortValue: store.setting.whilistStatusGetter(channel.id),
+                          sortValue: store.whitelist.whilistStatusGetter(channel.id),
                           value: (
                             <ReactiveCheckBox
-                              onChange={store.setting.updateWhitelistValueSetter(
-                                channel.id,
-                                store.getAllFilterIds,
-                              )}
+                              onChange={store.whitelist.updateWhitelistValueSetter(channel.id)}
                               isActive={isActive}
                             />
                           ),

@@ -11,12 +11,12 @@ import { SelectionStore } from '../SelectionStore'
 // import { App } from '@mcro/stores'
 // import { memoize } from 'lodash'
 // import { Actions } from '../../../../actions/Actions'
-import { ResolvedItem } from '../../../../components/ItemResolver'
 import { SuggestionBarVerticalPad, SmallVerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 import { chunk } from 'lodash'
+import { handleClickLocation } from '../../../../helpers/handleClickLocation';
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -107,11 +107,6 @@ class OrbitSearchResultsListChunk extends React.Component<{
     )
   }
 
-  handleLocation = (e, item: ResolvedItem) => {
-    e.preventDefault()
-    this.props.searchStore.searchFilterStore.setFilter('location', item.location)
-  }
-
   spaceBetween = <div style={{ flex: 1 }} />
 
   render() {
@@ -132,7 +127,7 @@ class OrbitSearchResultsListChunk extends React.Component<{
           subtitleSpaceBetween={this.spaceBetween}
           isExpanded
           searchTerm={query}
-          onClickLocation={this.handleLocation}
+          onClickLocation={handleClickLocation}
           maxHeight={isConversation ? 380 : 200}
           overflow="hidden"
         >

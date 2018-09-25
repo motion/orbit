@@ -10,8 +10,8 @@ import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
-import { Actions } from '../actions/Actions'
 import { HighlightText } from './HighlightText'
+import { Glint } from '@mcro/ui'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -33,7 +33,7 @@ const Card = view({
     z: 0,
   },
   chromeless: {
-    border: [1, 'transparent'],
+    // border: [1, 'transparent'],
     background: 'transparent',
     padding: [12, 12, 12, 10],
     '&:hover': {
@@ -50,7 +50,6 @@ Card.theme = ({
   theme,
   isSelected,
   background,
-  border,
   padding,
   disableShadow,
   chromeless,
@@ -68,27 +67,27 @@ Card.theme = ({
   card = {
     ...card,
     padding,
-    borderRadius: borderRadius || 7,
+    borderRadius,
     background: background || theme.cardBackground || theme.background.alpha(0.9),
     ...theme.card,
   }
   if (!isSelected) {
+    const borderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColor || 'transparent']
     card = {
       ...card,
-      boxShadow: disabledShadow || [cardShadow],
-      border: border || [1, theme.cardBorderColor || 'transparent'],
+      boxShadow: disabledShadow || [cardShadow, borderShadow],
       '&:hover': {
         boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-        border: [1, [255, 255, 255, 0.25]],
       },
     }
   } else {
+    const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
+    const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
     card = {
       ...card,
-      boxShadow: disabledShadow || [cardShadow, theme.shadowSelected],
-      border: [1, theme.borderSelected],
+      boxShadow,
       '&:hover': {
-        border: [1, theme.borderSelected],
+        boxShadow,
       },
     }
   }
@@ -105,7 +104,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, 0, 3],
+  padding: [0, 0, 4],
 })
 
 const Preview = view({
@@ -129,6 +128,13 @@ const orbitIconProps = {
   },
 }
 
+const Padding = view({
+  position: 'relative',
+  margin: 1,
+  overflow: 'hidden',
+  flex: 1,
+})
+
 @view.attach('selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitItemStore,
@@ -136,11 +142,12 @@ const orbitIconProps = {
 @view
 export class OrbitCardInner extends React.Component<OrbitItemProps> {
   static defaultProps = {
+    borderRadius: 7,
     padding: 8,
   }
 
-  getOrbitCard = (contentProps: ResolvedItem) => {
-    const { icon, location, people, preview, subtitle, title, updatedAt } = contentProps
+  getOrbitCard = (resolvedItem: ResolvedItem) => {
+    const { icon, location, people, preview, subtitle, title, updatedAt } = resolvedItem
     const {
       afterTitle,
       borderRadius,
@@ -202,80 +209,80 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           inGrid={inGrid}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding}
           {...cardProps}
         >
-          {!!icon &&
-            !(hide && hide.icon) && (
-              <OrbitIcon
-                icon={icon}
-                size={20}
-                {...orbitIconProps}
-                position="absolute"
-                top={topPad}
-                right={sidePad}
-                {...iconProps}
-              />
-            )}
-          {!(hide && hide.title) && (
-            <Title>
-              <HighlightText
-                fontSize={14}
-                sizeLineHeight={0.78}
-                ellipse={hasSubtitle && hasMeta ? true : 2}
-                fontWeight={600}
-                maxWidth="calc(100% - 30px)"
-                {...titleProps}
-              >
-                {title}
-              </HighlightText>
-              {afterTitle}
-            </Title>
-          )}
-          {!!titleFlex && <div style={{ flex: titleFlex }} />}
-          {hasSubtitle && (
-            <CardSubtitle paddingRight={30}>
-              <UI.Text alpha={0.55} ellipse {...subtitleProps}>
-                {subtitle}
-              </UI.Text>
-            </CardSubtitle>
-          )}
-          {!hasFourRows && hasDate && <CardSubtitle>{date}</CardSubtitle>}
-          {hasMeta && (
-            <CardSubtitle>
-              {!!location && (
-                <RoundButtonSmall
-                  marginLeft={-3}
-                  onClick={onClickLocation ? () => Actions.open(onClickLocation) : null}
+          <Glint borderRadius={borderRadius} />
+          <Padding style={{ borderRadius, padding }}>
+            {!!icon &&
+              !(hide && hide.icon) && (
+                <OrbitIcon
+                  icon={icon}
+                  size={20}
+                  {...orbitIconProps}
+                  position="absolute"
+                  top={topPad}
+                  right={sidePad}
+                  {...iconProps}
+                />
+              )}
+            {!(hide && hide.title) && (
+              <Title>
+                <HighlightText
+                  fontSize={14}
+                  sizeLineHeight={0.78}
+                  ellipse={hasSubtitle && hasMeta ? true : 2}
+                  fontWeight={600}
+                  maxWidth="calc(100% - 30px)"
+                  selectable={false}
+                  {...titleProps}
                 >
-                  {location}
-                </RoundButtonSmall>
-              )}
-              {subtitleSpaceBetween}
-              {hasFourRows &&
-                hasDate && (
-                  <>
-                    {!!location && <div style={{ width: 5 }} />}
-                    {date}
-                  </>
-                )}
-              {hasPreview && <VerticalSpaceSmall />}
-            </CardSubtitle>
-          )}
-          {hasPreview && (
-            <Preview>
-              {typeof preview !== 'string' && preview}
-              {typeof preview === 'string' && (
-                <UI.Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
-                  {preview}
+                  {title}
+                </HighlightText>
+                {afterTitle}
+              </Title>
+            )}
+            {!!titleFlex && <div style={{ flex: titleFlex }} />}
+            {hasSubtitle && (
+              <CardSubtitle paddingRight={30}>
+                <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                  {subtitle}
                 </UI.Text>
-              )}
-            </Preview>
-          )}
-          {typeof children === 'function'
-            ? children(contentProps, props.bit, props.index)
-            : children}
-          {hasPeople && <PeopleRow people={people} />}
+              </CardSubtitle>
+            )}
+            {!hasFourRows && hasDate && <CardSubtitle>{date}</CardSubtitle>}
+            {hasMeta && (
+              <CardSubtitle>
+                {!!location && (
+                  <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
+                    {location}
+                  </RoundButtonSmall>
+                )}
+                {subtitleSpaceBetween}
+                {hasFourRows &&
+                  hasDate && (
+                    <>
+                      {!!location && <div style={{ width: 5 }} />}
+                      {date}
+                    </>
+                  )}
+                {hasPreview && <VerticalSpaceSmall />}
+              </CardSubtitle>
+            )}
+            {hasPreview && (
+              <Preview>
+                {typeof preview !== 'string' && preview}
+                {typeof preview === 'string' && (
+                  <UI.Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
+                    {preview}
+                  </UI.Text>
+                )}
+              </Preview>
+            )}
+            {typeof children === 'function'
+              ? children(resolvedItem, props.bit, props.index)
+              : children}
+            {hasPeople && <PeopleRow people={people} />}
+          </Padding>
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         {/* {!disableShadow && (
@@ -309,11 +316,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       searchTerm,
       ...props
     } = this.props
-    // console.log(
-    //   `${props.index} ${(model && model.id) || props.title}.${pane} ${
-    //     store.isSelected
-    //   }`,
-    // )
+    // console.log(`${props.index} ${(model && model.id) || props.title}.${pane} ${store.isSelected}`)
     if (!model) {
       return this.getOrbitCard(props)
     }
@@ -321,7 +324,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     return (
       <ItemResolver
         model={model}
-        item={item}
         isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}
         onResolvedItem={store.setResolvedItem}

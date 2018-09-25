@@ -1,10 +1,4 @@
-import {
-  colorToString,
-  isColorLike,
-  snakeToCamel,
-  camelToSnake,
-  hash,
-} from './helpers'
+import { colorToString, isColorLike, snakeToCamel, camelToSnake, hash } from './helpers'
 import { Color } from './types'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { GlossCSSPropertySetFlat } from './cssPropertySet'
@@ -132,8 +126,7 @@ export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
 }
 
 // helpers
-const px = (x: number | string) =>
-  typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x
+const px = (x: number | string) => (typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x)
 
 // style transform creator
 export default function createCSS(options: Object = {}) {
@@ -141,13 +134,12 @@ export default function createCSS(options: Object = {}) {
   const toColor = (color: Color) => colorToString(color, options)
 
   const OBJECT_TRANSFORM = {
-    textShadow: ({ x, y, blur, color }) =>
-      `${px(x)} ${px(y)} ${px(blur)} ${toColor(color)}`,
+    textShadow: ({ x, y, blur, color }) => `${px(x)} ${px(y)} ${px(blur)} ${toColor(color)}`,
     boxShadow: v =>
       v.inset || v.x || v.y || v.blur || v.spread || v.color
-        ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(
-            v.spread,
-          )} ${toColor(v.color)}`
+        ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(v.spread)} ${toColor(
+            v.color,
+          )}`
         : toColor(v),
     background: v =>
       isColor(v)
@@ -168,11 +160,7 @@ export default function createCSS(options: Object = {}) {
     return typeof val === 'number' ? `${val}px` : val
   }
 
-  function processArray(
-    key: string,
-    value: Array<number | string>,
-    level: number = 0,
-  ): string {
+  function processArray(key: string, value: Array<number | string>, level: number = 0): string {
     if (key === 'background') {
       if (isColor(value)) {
         return toColor(value)
@@ -206,15 +194,13 @@ export default function createCSS(options: Object = {}) {
     return value
   }
 
-  const arrayOrObject = (arr, obj) => val =>
-    Array.isArray(val) ? arr(val) : obj(val)
+  const arrayOrObject = (arr, obj) => val => (Array.isArray(val) ? arr(val) : obj(val))
 
   const GRADIENT = {
     linearGradient: (key, object) =>
       `linear-gradient(${arrayOrObject(
         all => processArray(key, all),
-        ({ deg, from, to }) =>
-          `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`,
+        ({ deg, from, to }) => `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`,
       )(object)})`,
     radialGradient: processArray,
   }
@@ -236,6 +222,9 @@ export default function createCSS(options: Object = {}) {
         return toColor(object)
       }
     }
+    // if (key === 'border') {
+    //   return ``
+    // }
     const toReturn = []
     for (const subKey in object) {
       if (!object.hasOwnProperty(subKey)) {
@@ -292,9 +281,7 @@ export default function createCSS(options: Object = {}) {
         respond = true
       } else if (Array.isArray(value)) {
         if (key === 'fontFamily') {
-          toReturn[finalKey] = value
-            .map(x => (x.indexOf(' ') ? `"${x}"` : x))
-            .join(', ')
+          toReturn[finalKey] = value.map(x => (x.indexOf(' ') ? `"${x}"` : x)).join(', ')
         } else if (key === 'position') {
           const isSpecific = value.length === 5
           let index = 0

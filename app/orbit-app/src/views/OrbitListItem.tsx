@@ -11,7 +11,6 @@ import { DateFormat } from './DateFormat'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
-import { Actions } from '../actions/Actions'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
 
@@ -133,18 +132,8 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
     padding: [10, 11],
   }
 
-  getInner = (contentProps: ResolvedItem) => {
-    const {
-      createdAt,
-      icon,
-      location,
-      locationLink,
-      people,
-      preview,
-      subtitle,
-      title,
-      updatedAt,
-    } = contentProps
+  getInner = (resolvedItem: ResolvedItem) => {
+    const { createdAt, icon, location, people, preview, subtitle, title, updatedAt } = resolvedItem
     const {
       afterTitle,
       borderRadius,
@@ -262,11 +251,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                     margin={-3}
                     maxWidth={120}
                     fontWeight={600}
-                    onClick={
-                      onClickLocation
-                        ? e => onClickLocation(e, contentProps)
-                        : () => Actions.open(locationLink)
-                    }
+                    onClick={store.handleClickLocation}
                   >
                     <Text ellipse color={false}>
                       {location}
@@ -314,7 +299,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               )}
             </Preview>
           )}
-          {typeof children === 'function' ? children(contentProps, model, props.index) : children}
+          {typeof children === 'function' ? children(resolvedItem, model, props.index) : children}
           {showPeople &&
             !showSubtitle && (
               <Bottom>
@@ -354,6 +339,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
         isExpanded={isExpanded}
         searchTerm={searchTerm}
         hide={hide}
+        onResolvedItem={store.setResolvedItem}
         {...itemProps}
       >
         {this.getInner}

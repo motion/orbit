@@ -13,7 +13,6 @@ type Props = {
 
 const extraShadow = -20
 const SHADOW_PAD = 100 + extraShadow
-const DOCKED_SHADOW = [0, SHADOW_PAD / 6, SHADOW_PAD, [0, 0, 0, 0.4]]
 
 const Border = view({
   position: 'absolute',
@@ -25,14 +24,15 @@ const Border = view({
   pointerEvents: 'none',
   borderRadius: BORDER_RADIUS + 1,
 })
-
-Border.theme = () => {
+Border.theme = ({ theme }) => {
   // const borderColor = theme.background.lighten(0.4)
   // const borderShadow = [0, 0, 0, 0.5, borderColor]
   // const lightBg = theme.background.lighten(1)
   // const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
+  const isDark = theme.background.isDark()
+  const shadow = [0, SHADOW_PAD / 6, SHADOW_PAD, [0, 0, 0, isDark ? 0.64 : 0.25]]
   return {
-    boxShadow: [DOCKED_SHADOW /* , borderShadow */],
+    boxShadow: [shadow /* , borderShadow */],
   }
 }
 

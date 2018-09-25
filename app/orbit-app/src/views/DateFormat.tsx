@@ -21,5 +21,12 @@ export const DateFormat = ({
   if (differenceInCalendarYears(Date.now(), date) > 0) {
     finalOptions.year = 'numeric'
   }
-  return <>{date.toLocaleDateString(locale, finalOptions).replace(',', '')}</>
+  return (
+    <>
+      {date
+        .toLocaleDateString(locale, finalOptions)
+        .replace(',', '')
+        .replace(/\//g, '·')}
+    </>
+  )
 }

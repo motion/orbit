@@ -76,6 +76,7 @@ export class TimeAgo extends Component<TimeAgoProps> {
           .replace('last ', '')
           .replace(' at ', ' ')
           .replace('today ', '')
+          .replace(/\//g, '·')
       )
     }
   }

@@ -17,17 +17,16 @@ export class MyApp {
   highlightInterestingPeople = react(
     () => Screen.activeApp.words,
     async words => {
-      const people = await Directory.findPeople(words)
-      const peopleTopics = await all(people.map(Person.getRecentBits).map(Language.importantWords))
-      const interestingPeople = []
-      for (const [index, topics] of peopleTopics.entries()) {
-        if (Language.distance(topics, this.myTopics) < Language.Distance.Similar) {
-          interestingPeople.push(people[index])
-        }
-      }
-      const interestingPeopleWordIndex = interestingPeople.map(name => words.indexOf(name)))
-      Screen.highlightWords(interestingPeopleWordIndex, {
-        onHighlight: word => App.show(MyApp, word)
+      let peopleTopics = words
+        |> await Directory.findPeople
+        |> map(Person.getRecentBits)
+        |> map(Language.importantWords)
+        |> await Promise.all
+      let interestingPeopleAt = peopleTopics
+        |> filter(x => Language.distance(?, this.myTopics) < Language.Distance.Similar)
+        |> map(name => words.indexOf(name))
+      Screen.highlightWords(interestingPeopleAt, {
+        onHighlight: word => App.showAt(word)
       })
     },
   )

@@ -1,5 +1,12 @@
 import { Logger } from '@mcro/logger'
-import { Bit, GmailBitData, GmailBitDataParticipant, GmailPersonData, GmailSettingValues, Person } from '@mcro/models'
+import {
+  Bit,
+  GmailBitData,
+  GmailBitDataParticipant,
+  GmailPersonData,
+  GmailSettingValues,
+  Person,
+} from '@mcro/models'
 import { GMailLoader, GmailThread } from '@mcro/services'
 import { getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
@@ -25,7 +32,7 @@ export class GMailSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    let { historyId, max, filter, lastSyncMax, lastSyncFilter, whiteList } = this.setting
+    let { historyId, max, filter, lastSyncMax, lastSyncFilter, whitelist } = this.setting
       .values as GmailSettingValues
     if (!max) max = 50
 
@@ -35,7 +42,7 @@ export class GMailSyncer implements IntegrationSyncer {
       filter,
       lastSyncMax,
       lastSyncFilter,
-      whiteList,
+      whitelist,
     })
 
     // if max or filter has changed - we drop all bits we have and make complete sync again
@@ -85,12 +92,12 @@ export class GMailSyncer implements IntegrationSyncer {
     }
 
     // load emails for whitelisted people separately
-    if (whiteList) {
+    if (whitelist) {
       log.verbose('loading threads from whitelisted people')
       const threadsFromWhiteList: GmailThread[] = []
       await Promise.all(
-        Object.keys(whiteList).map(async email => {
-          if (whiteList[email] === false) return
+        Object.keys(whitelist).map(async email => {
+          if (whitelist[email] === false) return
 
           const threads = await this.loader.loadThreads(max, `from:${email}`)
           const nonDuplicateThreads = threads.filter(thread => {

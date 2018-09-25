@@ -9,5 +9,6 @@ export interface GmailSettingValues {
   filter?: string
   lastSyncFilter?: string
   lastSyncMax?: number
-  whiteList?: any
+  whitelist?: string[]
+  foundEmails?: string[]
 }

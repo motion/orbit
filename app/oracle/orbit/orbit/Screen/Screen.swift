@@ -92,7 +92,7 @@ final class Screen: NSObject {
     // start video
     self.displayId = displayId
     self.session = AVCaptureSession()
-    self.input = AVCaptureScreenInput(displayID: displayId)
+    self.input = AVCaptureScreenInput(displayID: displayId)!
     output = AVCaptureVideoDataOutput()
 
 //    print("output types: \(output.availableVideoCodecTypes) \(output.availableVideoPixelFormatTypes)")
@@ -271,7 +271,7 @@ final class Screen: NSObject {
 
   func setFPS(fps: Int) {
     self.fps = fps
-    self.input.minFrameDuration = CMTimeMake(1, Int32(fps))
+    self.input.minFrameDuration = CMTimeMake(value: 1, timescale: Int32(fps))
   }
 
   func shouldBreak() -> Bool {

@@ -21,7 +21,7 @@ struct AXUIWindowElement : AXUIWindow {
     let val = UnsafeMutablePointer<AnyObject?>.allocate(capacity: 1)
     AXUIElementCopyAttributeValue(element, attribute as CFString, val)
     let ret = handler(val.pointee)
-    val.deallocate(capacity: 1)
+    val.deallocate()
     return ret
   }
   var title : String {
@@ -72,7 +72,7 @@ extension AXUIWindowArray {
     let val = UnsafeMutablePointer<AnyObject?>.allocate(capacity: 1)
     AXUIElementCopyAttributeValue(elm, NSAccessibilityAttributeName.windows as CFString, val)
     let mem = val.pointee as? [AXUIElement] ?? []
-    val.deallocate(capacity: 1)
+    val.deallocate()
     let ary = mem.map({ AXUIWindowElement(element: $0) }) as [AXUIWindow]
     let run = NSWorkspace.shared.runningApplications
     let fin = run.filter({ $0.bundleIdentifier == "com.apple.finder" }).first

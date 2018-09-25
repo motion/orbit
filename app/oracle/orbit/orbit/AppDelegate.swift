@@ -425,7 +425,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     // request accessibility
     if action == "reac" {
-      this.promptForAccesibility()
+      _ = self.promptForAccessibility()
       return
     }
     // start window watching

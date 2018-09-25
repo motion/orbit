@@ -256,6 +256,7 @@
 				TargetAttributes = {
 					CFBEEE1A202D838D005F925A = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
@@ -533,7 +534,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.o.orbit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "New New Orbit";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -556,7 +557,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.o.orbit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "New New Orbit";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

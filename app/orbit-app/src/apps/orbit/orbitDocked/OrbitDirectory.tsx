@@ -97,7 +97,7 @@ export const OrbitDirectory = decorator((props: Props) => {
   console.log('render OrbitDirectory')
   return (
     <SubPane name="directory" fadeBottom>
-      <OrbitDirectoryInner {...props} />
+      <OrbitDirectoryInner key={0} {...props} />
     </SubPane>
   )
 })

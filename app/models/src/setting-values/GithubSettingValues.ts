@@ -1,5 +1,4 @@
 export interface GithubSettingValues {
-
   /**
    * By default we sync all github repositories.
    * This called "sync all mode". We use this mode until whitelist is undefined.

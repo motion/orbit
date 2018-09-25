@@ -144,6 +144,7 @@ const decorator = compose(
 )
 
 export const OrbitDockedChrome = decorator(({ orbitStore, queryStore }: Props) => {
+  console.log('re render docked chrome')
   return (
     <>
       <BlockTop height={60} overflow={SHADOW_PAD}>

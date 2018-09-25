@@ -2,7 +2,6 @@ import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Actions } from '../actions/Actions'
 import { showNotification } from '../helpers/electron/showNotification'
-import { sleep } from '../helpers'
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
 // import orbitPosition from '../helpers/orbitPosition'
 // import { ORBIT_WIDTH } from '@mcro/constants'
@@ -38,7 +37,7 @@ export class AppReactions /* extends Store */ {
 
   async setupReactions() {
     const dispose = App.onMessage(async (msg, value) => {
-      console.log('app message', msg)
+      console.log('app message', msg, Date.now())
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
           App.setOrbitState({ docked: !App.orbitState.docked })

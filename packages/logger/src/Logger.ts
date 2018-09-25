@@ -22,6 +22,7 @@ if (typeof window !== 'undefined') {
 
 // electron doesnt have console.debug...
 const debug = (...args) => (console.debug ? console.debug(...args) : console.info(...args))
+const onlyStrings = str => (typeof str === 'string' ? str : '')
 
 type LoggerOpts = {
   trace?: boolean
@@ -167,7 +168,7 @@ export class Logger {
 
     // group traces to avoid large things clogging console
     if (isTrace) {
-      console.groupCollapsed(this.namespace)
+      console.groupCollapsed(`${this.namespace} ${messages.map(onlyStrings).join(' ')}`)
     }
 
     // output to the console
@@ -189,6 +190,8 @@ export class Logger {
       const existTimer = this.timers.find(timer => timer.message === labelMessage)
       if (existTimer) {
         const delta = (Date.now() - existTimer.time) / 1000
+        // reset it so we can see time since last message each message
+        existTimer.time = Date.now()
         debug(
           `%c${this.namespace}%c${delta}ms`,
           `color: ${color}; font-weight: bold`,
@@ -196,7 +199,6 @@ export class Logger {
           ...messages,
         )
         log.debug(this.namespace, delta, ...messages)
-        this.timers.splice(this.timers.indexOf(existTimer), 1)
       } else {
         debug(
           `%c${this.namespace}%cstarted`,

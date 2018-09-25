@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.2.258",
+  "version": "2.2.282",
   "scripts": {
     "start": "./scripts/build.sh --resume",
     "test-built-app": "./dist/mac/Orbit.app/Contents/MacOS/Orbit",
@@ -11,13 +11,12 @@
   },
   "devDependencies": {
     "debug": "^3.1.0",
-    "electron-builder": "20.28.2",
+    "electron-builder": "20.28.4",
     "electron-rebuild": "1.8.2",
-    "node-abi": "2.4.3",
-    "esm": "^3.0.37",
     "execa": "^0.9.0",
     "fs-extra": "^4.0.2",
     "iohook": "0.2.0",
+    "node-abi": "2.4.4",
     "rimraf": "^2.6.2",
     "verdaccio": "3.6.0"
   }

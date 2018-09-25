@@ -1,5 +1,5 @@
 import { react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 
 export class QueryStore {
   query = App.state.query
@@ -19,6 +19,14 @@ export class QueryStore {
       ensure('is diff', query !== this.query)
       console.log('external query update')
       this.query = query
+    },
+  )
+
+  setAppQueryOnSalientOCR = react(
+    () => Desktop.ocrState.salientWords,
+    words => {
+      ensure('words', !!words)
+      this.query = words.join(' ')
     },
   )
 

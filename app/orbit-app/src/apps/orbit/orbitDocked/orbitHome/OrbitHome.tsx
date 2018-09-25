@@ -10,6 +10,7 @@ import { BitModel, PersonBitModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
+import { trace } from 'mobx'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -81,13 +82,13 @@ const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
-  // {
-  //   id: '7',
-  //   source: 'app1',
-  //   name: 'Test App',
-  //   model: BitModel,
-  //   query: findManyType('app1'),
-  // },
+  {
+    id: '7',
+    source: 'app1',
+    name: 'Test App',
+    model: BitModel,
+    query: findManyType('app1'),
+  },
 ]
 
 const getListStyle = isDraggingOver => ({
@@ -220,6 +221,7 @@ export class OrbitHome extends React.Component<Props> {
   }
 
   render() {
+    console.log('OrbitHome Render')
     const { homeStore } = this.props
     const { results } = homeStore
     let content
@@ -227,35 +229,42 @@ export class OrbitHome extends React.Component<Props> {
       content = (
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable">
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-                {/* <SuggestionBarVerticalPad /> */}
-                {results.map(({ id, name, items, startIndex }, index) => {
-                  const height = name === 'People' ? 60 : 90
-                  return (
-                    <Draggable key={id} draggableId={id} index={index}>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
-                        >
-                          <OrbitCarouselSection
-                            startIndex={startIndex}
-                            items={items}
-                            homeStore={homeStore}
-                            categoryName={name}
-                            cardHeight={height}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  )
-                })}
-                {provided.placeholder}
-              </div>
-            )}
+            {(provided, snapshot) => {
+              return (
+                <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+                  {/* <SuggestionBarVerticalPad /> */}
+                  {results.map(({ id, name, items, startIndex }, index) => {
+                    const height = name === 'People' ? 60 : 90
+                    return (
+                      <Draggable key={id} draggableId={id} index={index}>
+                        {(provided, snapshot) => {
+                          return (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style,
+                              )}
+                            >
+                              <OrbitCarouselSection
+                                startIndex={startIndex}
+                                items={items}
+                                homeStore={homeStore}
+                                categoryName={name}
+                                cardHeight={height}
+                              />
+                            </div>
+                          )
+                        }}
+                      </Draggable>
+                    )
+                  })}
+                  {provided.placeholder}
+                </div>
+              )
+            }}
           </Droppable>
         </DragDropContext>
       )

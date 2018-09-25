@@ -1,4 +1,3 @@
-import 'react-date-range/dist/styles.css' // main style file
 import './calendar.css' // theme css file
 import * as React from 'react'
 import { view, compose } from '@mcro/black'

@@ -1,581 +1,581 @@
-import * as React from 'react'
-import { view, on } from '@mcro/black'
-import { ListItem } from './ListItem'
-import { List as VirtualList } from 'react-virtualized'
-import { isArrayLike } from 'mobx'
-import { CellMeasurer } from 'react-virtualized'
-import { throttle, debounce } from 'lodash'
-import { ItemProps } from './ListItem'
-import AutoSizer from 'react-virtualized-auto-sizer'
+// import * as React from 'react'
+// import { view, on } from '@mcro/black'
+// import { ListItem } from './ListItem'
+// import { List as VirtualList } from 'react-virtualized'
+// import { isArrayLike } from 'mobx'
+// import { CellMeasurer } from 'react-virtualized'
+// import { throttle, debounce } from 'lodash'
+// import { ItemProps } from './ListItem'
+// import AutoSizer from 'react-virtualized-auto-sizer'
 
-const idFn = _ => _
-const SCROLL_BAR_WIDTH = 16
+// const idFn = _ => _
+// const SCROLL_BAR_WIDTH = 16
 
-const ListContain = view({
-  alignItems: 'stretch',
-  overflowX: 'visible',
-})
+// const ListContain = view({
+//   alignItems: 'stretch',
+//   overflowX: 'visible',
+// })
 
-ListContain.theme = props => ({
-  visibility: props.visible ? 'visible' : 'hidden',
-  marginRight: props.hideScrollBar ? -SCROLL_BAR_WIDTH : 0,
-})
+// ListContain.theme = props => ({
+//   visibility: props.visible ? 'visible' : 'hidden',
+//   marginRight: props.hideScrollBar ? -SCROLL_BAR_WIDTH : 0,
+// })
 
-export type ListProps = {
-  hideScrollBar?: boolean
-  defaultSelected?: number
-  children?: React.ReactNode
-  controlled?: boolean
-  flex?: boolean | number
-  getItem?: Function
-  getRef?: Function
-  height?: number
-  horizontal?: boolean
-  itemProps?: Object
-  items?: Array<ItemProps | React.ReactNode>
-  onHighlight?: Function
-  onItemMount?: Function
-  onSelect?: Function
-  parentSize?: { width: number; height: number }
-  rowHeight?: number
-  scrollable?: boolean
-  segmented?: boolean
-  size?: number
-  style?: Object
-  width?: number
-  groupBy?: string
-  selected?: number
-  separatorHeight?: number
-  isSelected?: Function
-  virtualized?: { rowHeight: number | ((a: number) => number) }
-  // force update children
-  updateChildren?: boolean
-  captureClickEvents?: boolean
-  separatorProps?: Object
-  // row to scroll to after render
-  // only tries if different than last scrolled to row
-  scrollToRow?: number
-  // passes react-virtualized onScroll to here
-  onScroll?: Function
-  itemsKey?: string
-  highlight?: any
-}
-
-// type VirtualItemProps = {
-//   index: number
-//   key: string
-//   style: Object
-//   parent: any
+// export type ListProps = {
+//   hideScrollBar?: boolean
+//   defaultSelected?: number
+//   children?: React.ReactNode
+//   controlled?: boolean
+//   flex?: boolean | number
+//   getItem?: Function
+//   getRef?: Function
+//   height?: number
+//   horizontal?: boolean
+//   itemProps?: Object
+//   items?: Array<ItemProps | React.ReactNode>
+//   onHighlight?: Function
+//   onItemMount?: Function
+//   onSelect?: Function
+//   parentSize?: { width: number; height: number }
+//   rowHeight?: number
+//   scrollable?: boolean
+//   segmented?: boolean
+//   size?: number
+//   style?: Object
+//   width?: number
+//   groupBy?: string
+//   selected?: number
+//   separatorHeight?: number
+//   isSelected?: Function
+//   virtualized?: { rowHeight: number | ((a: number) => number) }
+//   // force update children
+//   updateChildren?: boolean
+//   captureClickEvents?: boolean
+//   separatorProps?: Object
+//   // row to scroll to after render
+//   // only tries if different than last scrolled to row
+//   scrollToRow?: number
+//   // passes react-virtualized onScroll to here
+//   onScroll?: Function
+//   itemsKey?: string
+//   highlight?: any
 // }
 
-@view.ui
-class ListInner extends React.PureComponent<ListProps> {
-  static Item = ListItem
+// // type VirtualItemProps = {
+// //   index: number
+// //   key: string
+// //   style: Object
+// //   parent: any
+// // }
 
-  static defaultProps = {
-    getItem: idFn,
-    onHighlight: idFn,
-  }
+// @view.ui
+// class ListInner extends React.PureComponent<ListProps> {
+//   static Item = ListItem
 
-  state = {
-    selected: -1,
-    started: false,
-  }
+//   static defaultProps = {
+//     getItem: idFn,
+//     onHighlight: idFn,
+//   }
 
-  groupedIndex = null
-  cache = null
-  realIndex = null
-  lastSelectionDate = null
-  lastDidReceivePropsDate = null
-  children = null
-  childrenVersion = null
-  didUpdateChildren = null
-  lastScrolledToRow = null
-  onRef = []
-  totalItems = null
-  itemRefs = []
-  virtualListRef = null
-  totalGroups = 0
+//   state = {
+//     selected: -1,
+//     started: false,
+//   }
 
-  constructor(a, b) {
-    super(a, b)
-    this.totalItems = this.getTotalItems(this.props)
-    if (typeof this.props.defaultSelected !== 'undefined') {
-      this.setState({ selected: this.props.defaultSelected })
-    }
-    if (this.props.getRef) {
-      this.props.getRef(this)
-    }
-    this.updateChildren()
-    setTimeout(() => {
-      // TODO stupid ass bugfix, for some reason lists started flickering
-      // likely a bug with our cellmeasurer, or maybe even gloss
-      // this seems to fix for now
-      if (this.props.virtualized) {
-        this.setState({
-          started: true,
-        })
-      }
-    })
-  }
+//   groupedIndex = null
+//   cache = null
+//   realIndex = null
+//   lastSelectionDate = null
+//   lastDidReceivePropsDate = null
+//   children = null
+//   childrenVersion = null
+//   didUpdateChildren = null
+//   lastScrolledToRow = null
+//   onRef = []
+//   totalItems = null
+//   itemRefs = []
+//   virtualListRef = null
+//   totalGroups = 0
 
-  componentDidMount() {
-    if (typeof this.props.scrollToRow === 'number') {
-      this.scrollToRow(this.props.scrollToRow)
-    }
-  }
+//   constructor(a, b) {
+//     super(a, b)
+//     this.totalItems = this.getTotalItems(this.props)
+//     if (typeof this.props.defaultSelected !== 'undefined') {
+//       this.setState({ selected: this.props.defaultSelected })
+//     }
+//     if (this.props.getRef) {
+//       this.props.getRef(this)
+//     }
+//     this.updateChildren()
+//     setTimeout(() => {
+//       // TODO stupid ass bugfix, for some reason lists started flickering
+//       // likely a bug with our cellmeasurer, or maybe even gloss
+//       // this seems to fix for now
+//       if (this.props.virtualized) {
+//         this.setState({
+//           started: true,
+//         })
+//       }
+//     })
+//   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      typeof this.props.scrollToRow === 'number' &&
-      this.props.scrollToRow !== this.lastScrolledToRow
-    ) {
-      this.scrollToRow(this.props.scrollToRow)
-    }
+//   componentDidMount() {
+//     if (typeof this.props.scrollToRow === 'number') {
+//       this.scrollToRow(this.props.scrollToRow)
+//     }
+//   }
 
-    // if we changed children, scroll to row again
-    if (this.didUpdateChildren && typeof this.lastScrolledToRow === 'number') {
-      this.scrollToRow(this.lastScrolledToRow)
-      this.didUpdateChildren = false
-    }
+//   componentDidUpdate(prevProps) {
+//     if (
+//       typeof this.props.scrollToRow === 'number' &&
+//       this.props.scrollToRow !== this.lastScrolledToRow
+//     ) {
+//       this.scrollToRow(this.props.scrollToRow)
+//     }
 
-    // migrated from cWU
-    const { virtualized, selected } = prevProps
-    const totalItems = this.getTotalItems(prevProps)
-    const hasNeverSetChildren = !this.childrenVersion
-    const hasNewSelected =
-      typeof prevProps.selected === 'number' && this.state.selected !== selected
-    const hasNewItems = this.totalItems !== totalItems
-    const hasNewItemsKey =
-      typeof prevProps.itemsKey !== 'undefined' &&
-      prevProps.itemsKey !== this.props.itemsKey
-    this.totalItems = totalItems
-    const shouldUpdateChildren =
-      hasNeverSetChildren ||
-      hasNewSelected ||
-      !virtualized ||
-      prevProps.updateChildren ||
-      hasNewItems ||
-      hasNewItemsKey
-    if (shouldUpdateChildren) {
-      // @ts-ignore
-      this.props = prevProps
-      this.updateChildren()
-    }
-    if (typeof selected !== 'undefined') {
-      this.lastDidReceivePropsDate = Date.now()
-      if (selected !== this.state.selected) {
-        this.setState({ selected })
-      }
-    }
-  }
+//     // if we changed children, scroll to row again
+//     if (this.didUpdateChildren && typeof this.lastScrolledToRow === 'number') {
+//       this.scrollToRow(this.lastScrolledToRow)
+//       this.didUpdateChildren = false
+//     }
 
-  // sitrep
-  forceUpdateGrid = () => {
-    if (!this.virtualListRef) {
-      this.onRef.push(() => this.forceUpdateGrid())
-      return
-    }
-    // seems to work without this step
-    // this.virtualListRef.forceUpdateGrid()
-    this.virtualListRef.recomputeRowHeights(0)
-    this.scrollToRow(this.lastScrolledToRow)
-  }
+//     // migrated from cWU
+//     const { virtualized, selected } = prevProps
+//     const totalItems = this.getTotalItems(prevProps)
+//     const hasNeverSetChildren = !this.childrenVersion
+//     const hasNewSelected =
+//       typeof prevProps.selected === 'number' && this.state.selected !== selected
+//     const hasNewItems = this.totalItems !== totalItems
+//     const hasNewItemsKey =
+//       typeof prevProps.itemsKey !== 'undefined' &&
+//       prevProps.itemsKey !== this.props.itemsKey
+//     this.totalItems = totalItems
+//     const shouldUpdateChildren =
+//       hasNeverSetChildren ||
+//       hasNewSelected ||
+//       !virtualized ||
+//       prevProps.updateChildren ||
+//       hasNewItems ||
+//       hasNewItemsKey
+//     if (shouldUpdateChildren) {
+//       // @ts-ignore
+//       this.props = prevProps
+//       this.updateChildren()
+//     }
+//     if (typeof selected !== 'undefined') {
+//       this.lastDidReceivePropsDate = Date.now()
+//       if (selected !== this.state.selected) {
+//         this.setState({ selected })
+//       }
+//     }
+//   }
 
-  // sitrep
-  scrollToRow = debounce(index => {
-    if (!this.virtualListRef) {
-      this.onRef.push(() => this.scrollToRow(index))
-      return
-    }
-    let row = index
-    if (this.realIndex) {
-      row = index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
-    }
-    this.virtualListRef.scrollToRow(row)
-    this.lastScrolledToRow = index
-  }, 8)
+//   // sitrep
+//   forceUpdateGrid = () => {
+//     if (!this.virtualListRef) {
+//       this.onRef.push(() => this.forceUpdateGrid())
+//       return
+//     }
+//     // seems to work without this step
+//     // this.virtualListRef.forceUpdateGrid()
+//     this.virtualListRef.recomputeRowHeights(0)
+//     this.scrollToRow(this.lastScrolledToRow)
+//   }
 
-  focus() {
-    if (!this.virtualListRef) {
-      return
-    }
-    console.log('should focus but need a dom node')
-    // this.virtualListRef.focus()
-  }
+//   // sitrep
+//   scrollToRow = debounce(index => {
+//     if (!this.virtualListRef) {
+//       this.onRef.push(() => this.scrollToRow(index))
+//       return
+//     }
+//     let row = index
+//     if (this.realIndex) {
+//       row = index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
+//     }
+//     this.virtualListRef.scrollToRow(row)
+//     this.lastScrolledToRow = index
+//   }, 8)
 
-  // sitrep
-  measure = throttle(() => {
-    if (this.virtualListRef) {
-      this.virtualListRef.recomputeRowHeights(0)
-      this.scrollToRow(this.lastScrolledToRow || 0)
-    }
-  }, 6)
+//   focus() {
+//     if (!this.virtualListRef) {
+//       return
+//     }
+//     console.log('should focus but need a dom node')
+//     // this.virtualListRef.focus()
+//   }
 
-  gatherRefs = index => ref => {
-    if (ref) {
-      this.itemRefs[index] = ref
-    }
-  }
+//   // sitrep
+//   measure = throttle(() => {
+//     if (this.virtualListRef) {
+//       this.virtualListRef.recomputeRowHeights(0)
+//       this.scrollToRow(this.lastScrolledToRow || 0)
+//     }
+//   }, 6)
 
-  getTotalItems = props =>
-    props.items ? props.items.length : React.Children.count(props.children)
+//   gatherRefs = index => ref => {
+//     if (ref) {
+//       this.itemRefs[index] = ref
+//     }
+//   }
 
-  isSelected = fn => (...args) =>
-    typeof this.state.selected === 'number' ? fn(...args) : null
+//   getTotalItems = props =>
+//     props.items ? props.items.length : React.Children.count(props.children)
 
-  // wrap weird signature
-  select = selector => {
-    if (typeof selector === 'number') {
-      this.highlightItem(() => selector)
-    } else if (typeof selector === 'function' && this.props.items) {
-      this.highlightItem(() => this.props.items.findIndex(selector))
-    }
-  }
+//   isSelected = fn => (...args) =>
+//     typeof this.state.selected === 'number' ? fn(...args) : null
 
-  highlightItem(setter, event?) {
-    const selected = setter(this.state.selected)
-    const hasSelectCb = !!this.props.onSelect
-    if (hasSelectCb && event && this.props.captureClickEvents) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-    this.lastSelectionDate = Date.now()
-    // only setstate if controlled
-    if (this.props.controlled) {
-      this.setState({ selected }, () => {
-        if (hasSelectCb) {
-          this.props.onSelect(this.selected, selected)
-        }
-      })
-    } else {
-      this.state.selected = selected
-      if (hasSelectCb) {
-        this.props.onSelect(this.selected, selected)
-      }
-    }
-    return selected
-  }
+//   // wrap weird signature
+//   select = selector => {
+//     if (typeof selector === 'number') {
+//       this.highlightItem(() => selector)
+//     } else if (typeof selector === 'function' && this.props.items) {
+//       this.highlightItem(() => this.props.items.findIndex(selector))
+//     }
+//   }
 
-  get selected() {
-    const { selected } = this.state
-    if (selected === null || !this.props.items) {
-      return null
-    } else {
-      return this.props.items[selected]
-    }
-  }
+//   highlightItem(setter, event?) {
+//     const selected = setter(this.state.selected)
+//     const hasSelectCb = !!this.props.onSelect
+//     if (hasSelectCb && event && this.props.captureClickEvents) {
+//       event.preventDefault()
+//       event.stopPropagation()
+//     }
+//     this.lastSelectionDate = Date.now()
+//     // only setstate if controlled
+//     if (this.props.controlled) {
+//       this.setState({ selected }, () => {
+//         if (hasSelectCb) {
+//           this.props.onSelect(this.selected, selected)
+//         }
+//       })
+//     } else {
+//       this.state.selected = selected
+//       if (hasSelectCb) {
+//         this.props.onSelect(this.selected, selected)
+//       }
+//     }
+//     return selected
+//   }
 
-  get showInternalSelection() {
-    if (typeof this.props.selected !== 'undefined') {
-      return true
-    }
-    if (this.props.isSelected) {
-      return false
-    }
-    return this.lastSelectionDate > this.lastDidReceivePropsDate
-  }
+//   get selected() {
+//     const { selected } = this.state
+//     if (selected === null || !this.props.items) {
+//       return null
+//     } else {
+//       return this.props.items[selected]
+//     }
+//   }
 
-  rowRenderer = ({ index, key, style, parent }) => {
-    if (!this.children || !this.children[index]) {
-      console.log('no child', index, this)
-      return null
-    }
-    if (this.props.hideScrollBar) {
-      style.width = `calc(${style.width || '100%'} - ${SCROLL_BAR_WIDTH}px)`
-    }
-    const child = this.children[index]({ style })
-    return (
-      <CellMeasurer
-        cache={this.cache}
-        columnIndex={0}
-        key={key}
-        parent={parent}
-        rowIndex={index}
-      >
-        {child}
-      </CellMeasurer>
-    )
-  }
+//   get showInternalSelection() {
+//     if (typeof this.props.selected !== 'undefined') {
+//       return true
+//     }
+//     if (this.props.isSelected) {
+//       return false
+//     }
+//     return this.lastSelectionDate > this.lastDidReceivePropsDate
+//   }
 
-  getItemProps(index, rowProps, isListItem) {
-    const {
-      onItemMount,
-      size,
-      onSelect,
-      controlled,
-      itemProps,
-      isSelected,
-      selected,
-      segmented,
-      highlight,
-    } = this.props
-    const getRef = this.gatherRefs(index)
-    const props = {
-      ...rowProps,
-      ...(isListItem
-        ? {
-            onItemMount,
-            size,
-            getRef,
-            segmented,
-            highlight,
-            index,
-            isFirstElement: index === 0,
-            isLastElement: index === this.totalItems - 1,
-          }
-        : {
-            ref: getRef,
-          }),
-      ...itemProps,
-    }
-    // fallback key
-    props.key = props.key || index
-    // handle click
-    if (onSelect || controlled) {
-      const ogClick = props.onClick
-      props.onClick = event => {
-        this.highlightItem(() => index, event)
-        if (ogClick) {
-          ogClick.call(this, event)
-        }
-      }
-    }
-    if (!this.props.virtualized && this.props.hideScrollBar) {
-      props.style = props.style || {}
-      props.style.width = `calc(${props.style.width ||
-        '100%'} - ${SCROLL_BAR_WIDTH}px)`
-    }
-    // highlight logic
-    if (controlled && this.showInternalSelection) {
-      // set highlight if necessary
-      props.highlight = index === this.state.selected
-    } else {
-      if (selected === index) {
-        props.highlight = true
-      } else if (isSelected) {
-        props.highlight = isSelected(index)
-      }
-      // if they provide a prop-based isSelected, still track the right index internally
-      if (props.highlight && this.state.selected !== index) {
-        this.state.selected = index
-      }
-    }
-    return props
-  }
+//   rowRenderer = ({ index, key, style, parent }) => {
+//     if (!this.children || !this.children[index]) {
+//       console.log('no child', index, this)
+//       return null
+//     }
+//     if (this.props.hideScrollBar) {
+//       style.width = `calc(${style.width || '100%'} - ${SCROLL_BAR_WIDTH}px)`
+//     }
+//     const child = this.children[index]({ style })
+//     return (
+//       <CellMeasurer
+//         cache={this.cache}
+//         columnIndex={0}
+//         key={key}
+//         parent={parent}
+//         rowIndex={index}
+//       >
+//         {child}
+//       </CellMeasurer>
+//     )
+//   }
 
-  // for items={}
-  // curried so we can avoid work in virtualized contexts
-  getListItem = (cur, index) => rowProps => {
-    const item = this.props.getItem(cur, index)
-    if (!item) {
-      return null
-    }
-    if (React.isValidElement(item)) {
-      return React.cloneElement(
-        item,
-        // @ts-ignore
-        this.getItemProps(index, rowProps, item.type.isListItem),
-      )
-    }
-    // pass object to ListItem
-    return (
-      <ListItem
-        {...this.getItemProps(index, rowProps, true)}
-        {...item}
-        key={item.key || item.id || index}
-      />
-    )
-  }
+//   getItemProps(index, rowProps, isListItem) {
+//     const {
+//       onItemMount,
+//       size,
+//       onSelect,
+//       controlled,
+//       itemProps,
+//       isSelected,
+//       selected,
+//       segmented,
+//       highlight,
+//     } = this.props
+//     const getRef = this.gatherRefs(index)
+//     const props = {
+//       ...rowProps,
+//       ...(isListItem
+//         ? {
+//             onItemMount,
+//             size,
+//             getRef,
+//             segmented,
+//             highlight,
+//             index,
+//             isFirstElement: index === 0,
+//             isLastElement: index === this.totalItems - 1,
+//           }
+//         : {
+//             ref: getRef,
+//           }),
+//       ...itemProps,
+//     }
+//     // fallback key
+//     props.key = props.key || index
+//     // handle click
+//     if (onSelect || controlled) {
+//       const ogClick = props.onClick
+//       props.onClick = event => {
+//         this.highlightItem(() => index, event)
+//         if (ogClick) {
+//           ogClick.call(this, event)
+//         }
+//       }
+//     }
+//     if (!this.props.virtualized && this.props.hideScrollBar) {
+//       props.style = props.style || {}
+//       props.style.width = `calc(${props.style.width ||
+//         '100%'} - ${SCROLL_BAR_WIDTH}px)`
+//     }
+//     // highlight logic
+//     if (controlled && this.showInternalSelection) {
+//       // set highlight if necessary
+//       props.highlight = index === this.state.selected
+//     } else {
+//       if (selected === index) {
+//         props.highlight = true
+//       } else if (isSelected) {
+//         props.highlight = isSelected(index)
+//       }
+//       // if they provide a prop-based isSelected, still track the right index internally
+//       if (props.highlight && this.state.selected !== index) {
+//         this.state.selected = index
+//       }
+//     }
+//     return props
+//   }
 
-  // for children={}
-  getListChildren = children =>
-    React.Children.map(children, (item, index) => rowProps =>
-      React.isValidElement(item)
-        ? React.cloneElement(
-            item,
-            // @ts-ignore
-            this.getItemProps(index, rowProps, item.type.isListItem),
-          )
-        : null,
-    )
+//   // for items={}
+//   // curried so we can avoid work in virtualized contexts
+//   getListItem = (cur, index) => rowProps => {
+//     const item = this.props.getItem(cur, index)
+//     if (!item) {
+//       return null
+//     }
+//     if (React.isValidElement(item)) {
+//       return React.cloneElement(
+//         item,
+//         // @ts-ignore
+//         this.getItemProps(index, rowProps, item.type.isListItem),
+//       )
+//     }
+//     // pass object to ListItem
+//     return (
+//       <ListItem
+//         {...this.getItemProps(index, rowProps, true)}
+//         {...item}
+//         key={item.key || item.id || index}
+//       />
+//     )
+//   }
 
-  // mutative which is odd
-  // sets:
-  //   this.children
-  //   this.groupedIndex
-  //   this.realIndex
-  //   this.totalGroups
-  updateChildren() {
-    const { props } = this
-    const { items, virtualized, groupBy, parentSize, separatorProps } = props
-    const hasChildren = props.children
-    if (!items && !hasChildren) {
-      return null
-    }
-    if (virtualized && !parentSize) {
-      return null
-    }
-    let children
-    if (hasChildren) {
-      children = this.getListChildren(props.children)
-    } else {
-      if (isArrayLike(items)) {
-        children = items.map(this.getListItem)
-      } else {
-        console.error('not array', items)
-        return
-      }
-    }
+//   // for children={}
+//   getListChildren = children =>
+//     React.Children.map(children, (item, index) => rowProps =>
+//       React.isValidElement(item)
+//         ? React.cloneElement(
+//             item,
+//             // @ts-ignore
+//             this.getItemProps(index, rowProps, item.type.isListItem),
+//           )
+//         : null,
+//     )
 
-    // if no need, just get them right away
-    if (!virtualized) {
-      children = children.map(child => child())
-    }
+//   // mutative which is odd
+//   // sets:
+//   //   this.children
+//   //   this.groupedIndex
+//   //   this.realIndex
+//   //   this.totalGroups
+//   updateChildren() {
+//     const { props } = this
+//     const { items, virtualized, groupBy, parentSize, separatorProps } = props
+//     const hasChildren = props.children
+//     if (!items && !hasChildren) {
+//       return null
+//     }
+//     if (virtualized && !parentSize) {
+//       return null
+//     }
+//     let children
+//     if (hasChildren) {
+//       children = this.getListChildren(props.children)
+//     } else {
+//       if (isArrayLike(items)) {
+//         children = items.map(this.getListItem)
+//       } else {
+//         console.error('not array', items)
+//         return
+//       }
+//     }
 
-    // grouping logic
-    const groupedIndex = []
-    let realIndex = []
-    let totalGroups = 0
+//     // if no need, just get them right away
+//     if (!virtualized) {
+//       children = children.map(child => child())
+//     }
 
-    if (groupBy && items) {
-      const groups = []
-      let lastGroup = null
+//     // grouping logic
+//     const groupedIndex = []
+//     let realIndex = []
+//     let totalGroups = 0
 
-      items.forEach((item, itemIndex) => {
-        const index = itemIndex + totalGroups
-        if (lastGroup !== item[groupBy]) {
-          lastGroup = item[groupBy]
-          // if is separator
-          if (lastGroup) {
-            groups.push({ index, name: lastGroup })
-            totalGroups = totalGroups + 1
-            groupedIndex[index] = true // separator
-            groupedIndex[index + 1] = itemIndex // next
-            return
-          }
-        }
-        realIndex[itemIndex] = index - totalGroups
-        groupedIndex[index] = itemIndex
-      })
+//     if (groupBy && items) {
+//       const groups = []
+//       let lastGroup = null
 
-      realIndex = realIndex.filter(x => typeof x !== 'undefined')
+//       items.forEach((item, itemIndex) => {
+//         const index = itemIndex + totalGroups
+//         if (lastGroup !== item[groupBy]) {
+//           lastGroup = item[groupBy]
+//           // if is separator
+//           if (lastGroup) {
+//             groups.push({ index, name: lastGroup })
+//             totalGroups = totalGroups + 1
+//             groupedIndex[index] = true // separator
+//             groupedIndex[index + 1] = itemIndex // next
+//             return
+//           }
+//         }
+//         realIndex[itemIndex] = index - totalGroups
+//         groupedIndex[index] = itemIndex
+//       })
 
-      for (const { index, name } of groups) {
-        const getChild = (extraProps?) => (
-          <div
-            style={{
-              borderBottom: `1px solid #000`,
-              paddingTop: index === 0 ? 10 : 0,
-            }}
-            key={name}
-            {...separatorProps}
-            {...extraProps}
-          >
-            {name}
-          </div>
-        )
-        children.splice(index, 0, !virtualized ? getChild() : getChild)
-      }
-    }
+//       realIndex = realIndex.filter(x => typeof x !== 'undefined')
 
-    // this.cache = new CellMeasurerCache({
-    //   defaultHeight: 50,
-    //   fixedWidth: true,
-    // })
+//       for (const { index, name } of groups) {
+//         const getChild = (extraProps?) => (
+//           <div
+//             style={{
+//               borderBottom: `1px solid #000`,
+//               paddingTop: index === 0 ? 10 : 0,
+//             }}
+//             key={name}
+//             {...separatorProps}
+//             {...extraProps}
+//           >
+//             {name}
+//           </div>
+//         )
+//         children.splice(index, 0, !virtualized ? getChild() : getChild)
+//       }
+//     }
 
-    this.didUpdateChildren = true
-    this.children = children
-    this.totalGroups = totalGroups
-    if (totalGroups) {
-      this.realIndex = realIndex
-      this.groupedIndex = groupedIndex
-    }
-    this.childrenVersion = Math.random()
-    if (virtualized) {
-      on(this, setTimeout(this.forceUpdateGrid))
-    }
-  }
+//     // this.cache = new CellMeasurerCache({
+//     //   defaultHeight: 50,
+//     //   fixedWidth: true,
+//     // })
 
-  setVirtualRef = ref => {
-    if (ref) {
-      this.virtualListRef = ref
-      if (this.onRef.length) {
-        this.onRef.forEach(x => x())
-        this.onRef = []
-      }
-    }
-  }
+//     this.didUpdateChildren = true
+//     this.children = children
+//     this.totalGroups = totalGroups
+//     if (totalGroups) {
+//       this.realIndex = realIndex
+//       this.groupedIndex = groupedIndex
+//     }
+//     this.childrenVersion = Math.random()
+//     if (virtualized) {
+//       on(this, setTimeout(this.forceUpdateGrid))
+//     }
+//   }
 
-  render() {
-    const { children } = this
-    if (!children) {
-      return null
-    }
-    const {
-      virtualized,
-      parentSize,
-      scrollable,
-      style,
-      horizontal,
-      hideScrollBar,
-      onScroll,
-      ...props
-    } = this.props
-    if (virtualized && !parentSize) {
-      return null
-    }
-    let { width, height } = this.props
-    if (parentSize) {
-      height = parentSize.height || height || 0
-      width = parentSize.width || width || 0
-    }
-    if (width && hideScrollBar) {
-      width += SCROLL_BAR_WIDTH
-    }
-    const { totalItems, totalGroups, realIndex } = this
-    return (
-      <ListContain
-        visible={!virtualized || this.state.started}
-        hideScrollBar={hideScrollBar}
-        onScroll={!virtualized && onScroll}
-        style={{
-          height: height || virtualized ? '100%' : 'auto',
-          width,
-          flexFlow: horizontal ? 'row' : null,
-          overflowY: scrollable ? 'scroll' : 'auto',
-          ...style,
-        }}
-        {...props}
-      >
-        {!!virtualized && (
-          <VirtualList
-            deferredMeasurementCache={this.cache}
-            height={height}
-            width={width}
-            ref={this.setVirtualRef}
-            overscanRowCount={10}
-            scrollToIndex={
-              realIndex ? realIndex[this.state.selected] : this.state.selected
-            }
-            rowCount={totalItems + totalGroups}
-            rowRenderer={this.rowRenderer}
-            rowHeight={this.cache.rowHeight}
-            onScroll={onScroll}
-            {...virtualized}
-          />
-        )}
-        {!virtualized && <div style={{ height: 'auto' }}>{children}</div>}
-      </ListContain>
-    )
-  }
-}
+//   setVirtualRef = ref => {
+//     if (ref) {
+//       this.virtualListRef = ref
+//       if (this.onRef.length) {
+//         this.onRef.forEach(x => x())
+//         this.onRef = []
+//       }
+//     }
+//   }
 
-export const List = (props: ListProps) =>
-  props.virtualized ? (
-    <AutoSizer>
-      {parentSize => <ListInner parentSize={parentSize} {...props} />}
-    </AutoSizer>
-  ) : (
-    <ListInner {...props} />
-  )
+//   render() {
+//     const { children } = this
+//     if (!children) {
+//       return null
+//     }
+//     const {
+//       virtualized,
+//       parentSize,
+//       scrollable,
+//       style,
+//       horizontal,
+//       hideScrollBar,
+//       onScroll,
+//       ...props
+//     } = this.props
+//     if (virtualized && !parentSize) {
+//       return null
+//     }
+//     let { width, height } = this.props
+//     if (parentSize) {
+//       height = parentSize.height || height || 0
+//       width = parentSize.width || width || 0
+//     }
+//     if (width && hideScrollBar) {
+//       width += SCROLL_BAR_WIDTH
+//     }
+//     const { totalItems, totalGroups, realIndex } = this
+//     return (
+//       <ListContain
+//         visible={!virtualized || this.state.started}
+//         hideScrollBar={hideScrollBar}
+//         onScroll={!virtualized && onScroll}
+//         style={{
+//           height: height || virtualized ? '100%' : 'auto',
+//           width,
+//           flexFlow: horizontal ? 'row' : null,
+//           overflowY: scrollable ? 'scroll' : 'auto',
+//           ...style,
+//         }}
+//         {...props}
+//       >
+//         {!!virtualized && (
+//           <VirtualList
+//             deferredMeasurementCache={this.cache}
+//             height={height}
+//             width={width}
+//             ref={this.setVirtualRef}
+//             overscanRowCount={10}
+//             scrollToIndex={
+//               realIndex ? realIndex[this.state.selected] : this.state.selected
+//             }
+//             rowCount={totalItems + totalGroups}
+//             rowRenderer={this.rowRenderer}
+//             rowHeight={this.cache.rowHeight}
+//             onScroll={onScroll}
+//             {...virtualized}
+//           />
+//         )}
+//         {!virtualized && <div style={{ height: 'auto' }}>{children}</div>}
+//       </ListContain>
+//     )
+//   }
+// }
+
+// export const List = (props: ListProps) =>
+//   props.virtualized ? (
+//     <AutoSizer>
+//       {parentSize => <ListInner parentSize={parentSize} {...props} />}
+//     </AutoSizer>
+//   ) : (
+//     <ListInner {...props} />
+//   )

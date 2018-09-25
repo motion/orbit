@@ -8,10 +8,7 @@ const sortedBodyCache: WeakMap<
   }
 > = new WeakMap()
 
-export function getSortedRows(
-  maybeSortOrder: TableRowSortOrder,
-  rows: TableRows,
-): TableRows {
+export function getSortedRows(maybeSortOrder: TableRowSortOrder, rows: TableRows): TableRows {
   if (!maybeSortOrder) {
     return rows
   }
@@ -42,8 +39,6 @@ export function getSortedRows(
     rows: sortedRows,
     sortOrder,
   })
-
-  console.log('sorted rows', sortedRows)
 
   return sortedRows
 }

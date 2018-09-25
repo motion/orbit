@@ -1,3 +1,4 @@
+// @ts-ignore
 import { dialog } from 'electron'
 
 export function showConfirmDialog({ type = 'question', title = '', message = '' }): boolean {

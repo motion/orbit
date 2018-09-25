@@ -4,7 +4,4 @@ export const WEB_PREFERENCES = {
   transparentVisuals: true,
   allowRunningInsecureContent: false,
   webSecurity: false,
-  // plugins: true,
-  // scrollBounce: true,
-  // offscreen: true,
 }

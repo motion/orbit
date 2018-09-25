@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.258",
+  "version": "2.2.282",
   "dependencies": {
     "@mcro/orbit": "*"
   },
@@ -14,6 +14,7 @@
     "appId": "com.o.orbit",
     "productName": "Orbit",
     "asar": true,
+    "npmRebuild": false,
     "mac": {
       "target": "zip",
       "icon": "../resources/icon.icns",
@@ -28,7 +29,16 @@
     },
     "files": [
       "**/*",
+      "!**/sqlite3/build**/*",
+      "!**/sqlite3/deps/sqlite-autoconf-*.tar.gz",
+      "!**/figlet/fonts/**/*",
+      "!**/node_modules/electron/**/*",
       "!**/*oracle/orbit/Build/Products/Release**/*",
+      "!**/*.chromium.html",
+      "!**/*demo.gif",
+      "!**/*.test.js",
+      "!**/*.development.js",
+      "!**/*.min.map",
       "!**/*.js.map",
       "!**/*.d.ts",
       "!**/*.ts"

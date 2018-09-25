@@ -3,6 +3,7 @@ import {
   AtlassianSettingSaveCommand,
   AtlassianSettingValuesCredentials,
   Setting,
+  AtlassianSetting,
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
@@ -13,7 +14,7 @@ import { Message } from '../../../../views/Message'
 
 type Props = {
   type: string
-  setting?: Setting
+  setting?: AtlassianSetting
 }
 
 const Statuses = {
@@ -34,7 +35,7 @@ class AtlassianSettingLoginStore {
 
   status: string
   error: string
-  values: AtlassianSettingValuesCredentials = {
+  values: AtlassianSetting['values'] = {
     username: '',
     password: '',
     domain: '',

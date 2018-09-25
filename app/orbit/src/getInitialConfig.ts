@@ -6,7 +6,7 @@ import { GlobalConfig } from '@mcro/config'
 
 export async function getInitialConfig() {
   const isProd = process.env.NODE_ENV !== 'development'
-  const ports = await findContiguousPorts(7, isProd ? 3333 : 3001)
+  const ports = await findContiguousPorts(12, isProd ? 3333 : 3001)
   let config: GlobalConfig
 
   if (!ports) {
@@ -23,13 +23,13 @@ export async function getInitialConfig() {
     // errors are just showing the ports are empty
   }
 
-  const desktopRoot = Path.join(__dirname, '..', '..')
+  const desktopRoot = Path.join(require.resolve('@mcro/orbit-desktop'), '..', '..')
   const appStatic = Path.join(require.resolve('@mcro/orbit-app'), '..', 'dist')
   let nodeBinary = 'node'
-  if (process.env.NODE_ENV !== 'development') {
+  if (isProd) {
     nodeBinary = app.getPath('exe')
   }
-  const dotApp = Path.join(desktopRoot, '..', '..', '..', '..')
+  const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const serverHost = 'localhost'
   config = {
     isProd,
@@ -56,6 +56,7 @@ export async function getInitialConfig() {
       oracleBridge: ports[4],
       mediator: ports[5],
       ocrBridge: ports[6],
+      apps: ports.slice(7)
     },
   }
 

@@ -1,9 +1,7 @@
 import corpusCovarPrecomputed from './corpusCovar'
 import computeCovariance from 'compute-covariance'
 import { toWords, getWordVector, vectors } from './helpers'
-import { Matrix } from 'vectorious/withoutblas'
-import mathjs from 'mathjs'
-const inverseMatrix = mathjs.inv
+import { Matrix } from '@mcro/vectorious'
 
 const corpusCovar = {
   hash: 'corpus',
@@ -36,7 +34,7 @@ export function getCovariance(docs = [], corpusWeight = 1) {
     }
     $matrix = $matrix.add($doc.scale(weight))
   }
-  const inversed = inverseMatrix($matrix.toArray())
+  const inversed = $matrix.inverse().toArray()
 
   return {
     hash: `index${index++}`,

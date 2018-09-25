@@ -48,6 +48,7 @@ class DesktopStore {
     RESET_DATA: 'RESET_DATA',
     SEARCH_INDEX: 'SEARCH_INDEX',
     TOGGLE_SETTING: 'TOGGLE_SETTING',
+    PROXY_FN: 'PROXY_FN',
   }
 
   bridge = Bridge
@@ -65,6 +66,8 @@ class DesktopStore {
       bounds: [0, 0],
     },
     ocrState: {
+      salientWords: null as string[],
+      wordsString: null as string,
       words: null as DesktopStateOCRItem[],
       lines: null as DesktopStateOCRItem[],
       shouldClear: [],

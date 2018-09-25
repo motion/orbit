@@ -38,14 +38,15 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
     const newWhiteListedEmails: string[] = []
     for (let integration of integrations) {
       const values = integration.values as GmailSettingValues
-      const currentWhitelist = values.foundEmails || {}
+      const foundEmails = values.foundEmails || []
+      const whitelist = values.whitelist || []
       for (let email of emails) {
-        if (currentWhitelist[email] === undefined) {
-          currentWhitelist[email] = true
+        if (foundEmails.indexOf(email) === -1) {
+          whitelist.push(email)
           newWhiteListedEmails.push(email)
         }
       }
-      values.foundEmails = currentWhitelist
+      values.whitelist = whitelist
       await integration.save()
     }
     log.info('newly whitelisted emails', newWhiteListedEmails)

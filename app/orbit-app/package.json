@@ -9,7 +9,7 @@
     "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
-    "@babel/runtime": "7.0.0-beta.47",
+    "@babel/runtime": "7.0.0",
     "@mcro/black": "^2.2.1",
     "@mcro/config": "*",
     "@mcro/color": "^2.2.1",

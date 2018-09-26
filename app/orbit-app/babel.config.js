@@ -12,7 +12,7 @@ if (process.env.PUNDLE) {
         presets: [['@mcro/babel-preset-motion']],
       },
       production: {
-        presets: [['@mcro/babel-preset-motion']],
+        presets: [['@mcro/babel-preset-motion', { disable: ['react-hot-loader/babel'] }]],
       },
     },
   }

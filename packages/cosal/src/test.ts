@@ -1,6 +1,7 @@
 import { getCovariance } from './getCovariance'
 import { toCosal } from './toCosal'
-import { getTopWords } from './cosal'
+import { getTopWords, Cosal } from './cosal'
+import testDocs from './test.data'
 
 const data = [
   'ok First one is I started a roadmap ticket to organize post-launch stuff Starting announcements so we can put big things here for people to see, especially for stuff where we all need to run commands or look at something. We should avoid talking about anything here (maybe I\'ll lock it in some way if possible)',
@@ -9,6 +10,18 @@ const data = [
 ]
 
 async function main() {
+  const cosal = new Cosal({ database: '1' })
+
+  await cosal.scan(testDocs.map((text, id) => ({ text, id })))
+  const results = await cosal.search('big southern state')
+
+  console.log(
+    'results',
+    results.map(result => result.pairs.map(x => x.string).join(' ')).slice(0, 5),
+  )
+}
+
+export async function testTopWords() {
   const covar = getCovariance([])
 
   for (const text of data) {

@@ -1,5 +1,5 @@
 import { getCovariance, Covariance } from './getCovariance'
-import { toCosal, Weight } from './toCosal'
+import { toCosal, Pair, CosalDocument } from './toCosal'
 import { uniqBy, sortBy } from 'lodash'
 import { commonWords } from './commonWords'
 import { cosineDistance } from './cosineDistance'
@@ -13,8 +13,13 @@ type CosalOptions = {
   database: string
 }
 
+type Record = {
+  id: number | string
+  text: string
+}
+
 export class Cosal {
-  cosals = null
+  cosals: CosalDocument[] = null
   covariance: Covariance = null
   database: string
 
@@ -25,9 +30,9 @@ export class Cosal {
     this.database = database
   }
 
-  async scan(docs: string[]) {
-    this.covariance = getCovariance(docs.map(doc => ({ doc, weight: 1 })))
-    this.cosals = await Promise.all(docs.map(doc => toCosal(doc, this.covariance)))
+  async scan(records: Record[]) {
+    this.covariance = getCovariance(records.map(record => ({ doc: record.text, weight: 1 })))
+    this.cosals = await Promise.all(records.map(record => toCosal(record.text, this.covariance)))
   }
 
   async search(query: string) {
@@ -40,7 +45,7 @@ export class Cosal {
   }
 }
 
-export async function getWordWeights(text: string, max?: number): Promise<Weight[] | null> {
+export async function getWordWeights(text: string, max?: number): Promise<Pair[] | null> {
   const cosal = await toCosal(text, emptyCovar)
   if (!cosal) {
     return null

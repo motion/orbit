@@ -6,24 +6,24 @@ import { Covariance } from './getCovariance'
 
 export { getCovariance } from './getCovariance'
 
-export type Weight = {
+export type Pair = {
   string: string
   weight: number
 }
 
-export type Cosal = {
+export type CosalDocument = {
   vector: number
-  pairs: Weight[]
+  pairs: Pair[]
 }
 
 const distanceCache = {}
 const zeros = range(100).map(() => 0)
 
 const distance = (vector, inverseCovar: Covariance) => {
-  const vec = new Matrix([vector])
+  const matrix = new Matrix([vector])
   const icMatrix = new Matrix(inverseCovar.matrix)
-  const val1 = vec.multiply(icMatrix)
-  return Math.sqrt(val1.multiply(vec.transpose()).toArray()[0])
+  const val1 = matrix.multiply(icMatrix)
+  return Math.sqrt(val1.multiply(matrix.transpose()).toArray()[0])
 }
 
 const getDistance = (string, vector, inverseCovar: Covariance): number => {
@@ -37,7 +37,10 @@ const getDistance = (string, vector, inverseCovar: Covariance): number => {
 
 // words to distance
 
-export async function toCosal(text: string, inverseCovar: Covariance): Promise<Cosal | null> {
+export async function toCosal(
+  text: string,
+  inverseCovar: Covariance,
+): Promise<CosalDocument | null> {
   const words = toWords(text)
 
   if (words.length === 0) {
@@ -57,16 +60,15 @@ export async function toCosal(text: string, inverseCovar: Covariance): Promise<C
   }
 
   let vector = new Vector(zeros)
+  let pairs: Pair[] = []
+
   for (const [index, wordVector] of wordVectors.entries()) {
     const weight = distances[index]
-    vector = vector.add(new Vector(wordVector.vector).scale(weight))
+    vector = vector.add(new Vector(wordVector).scale(weight))
+    pairs.push({ string: words[index], weight: +distances[index] })
   }
-  const scaledVector = vector.scale(1 / sum(distances)).toArray()
 
-  const pairs = wordVectors.map(({ string }, index) => ({
-    string: `${string}`,
-    weight: +distances[index],
-  }))
+  const scaledVector = vector.scale(1 / sum(distances)).toArray()
 
   return { vector: scaledVector, pairs }
 }

@@ -3,7 +3,7 @@ import computeCovariance from 'compute-covariance'
 import { toWords, getWordVector, vectors } from './helpers'
 import { Matrix } from '@mcro/vectorious'
 
-export type Convariance = {
+export type Covariance = {
   hash: string
   matrix: number[][]
 }
@@ -30,7 +30,7 @@ const docToCovar = doc => {
 let index = 0
 
 // getInverseCovariance
-export function getCovariance(docs = [], corpusWeight = 1): Convariance | null {
+export function getCovariance(docs = [], corpusWeight = 1): Covariance | null {
   let $matrix = new Matrix(corpusCovar.matrix).scale(corpusWeight)
   for (const { weight, doc } of docs) {
     const $doc = docToCovar(doc)

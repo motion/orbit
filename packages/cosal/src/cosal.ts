@@ -1,77 +1,110 @@
+import corpusCovarPrecomputed from './corpusCovar'
 import { getCovariance, Covariance } from './getCovariance'
-import { toCosal, Pair, CosalDocument } from './toCosal'
-import { uniqBy, sortBy } from 'lodash'
+import { toCosal, Pair } from './toCosal'
+import { uniqBy } from 'lodash'
 import { commonWords } from './commonWords'
 import { cosineDistance } from './cosineDistance'
 
 export { getCovariance } from './getCovariance'
 export { toCosal } from './toCosal'
 
-const emptyCovar = getCovariance([])
-
-type CosalOptions = {
-  database: string
-}
-
 type Record = {
-  id: number | string
+  id: string
   text: string
 }
 
+type VectorDB = {
+  [key: string]: number[]
+}
+
+type Result = {
+  id: string
+  distance: number
+}
+
 export class Cosal {
-  cosals: CosalDocument[] = null
+  vectors: VectorDB = {}
   covariance: Covariance = null
-  database: string
 
-  constructor({ database }: CosalOptions) {
-    if (!database) {
-      throw new Error('No database')
+  async scan(newRecords: Record[]) {
+    // this is incremental, passing in previous matrix
+    this.covariance = getCovariance(
+      this.covariance ? this.covariance.matrix : corpusCovarPrecomputed,
+      newRecords.map(record => ({ doc: record.text, weight: 1 })),
+    )
+
+    // update vectors
+    const cosals = await Promise.all(
+      newRecords.map(record => toCosal(record.text, this.covariance)),
+    )
+    for (const [index, record] of newRecords.entries()) {
+      if (this.vectors[record.id]) {
+        throw new Error(`Already have a record id ${record.id}`)
+      }
+      this.vectors[record.id] = cosals[index].vector
     }
-    this.database = database
   }
 
-  async scan(records: Record[]) {
-    this.covariance = getCovariance(records.map(record => ({ doc: record.text, weight: 1 })))
-    this.cosals = await Promise.all(records.map(record => toCosal(record.text, this.covariance)))
-  }
-
-  async search(query: string) {
+  async search(query: string, max = 10): Promise<Result[]> {
     const cosal = await toCosal(query, this.covariance)
-    const distances = this.cosals.map(({ vector }, index) => ({
-      index,
-      distance: cosineDistance(cosal.vector, vector),
-    }))
-    return sortBy(distances, 'distance').map(x => this.cosals[x.index])
-  }
-}
+    const results: Result[] = new Array(max)
+    let len = 0
 
-export async function getWordWeights(text: string, max?: number): Promise<Pair[] | null> {
-  const cosal = await toCosal(text, emptyCovar)
-  if (!cosal) {
-    return null
-  }
-  let pairs = cosal.pairs.filter(x => !commonWords[x.string])
-  let fmax = max
-  if (max) {
-    if (pairs.length > max) {
-      // sort by weight
-      const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase())
-      uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
-      // make sure we get the new last index, could be shorter
-      fmax = Math.min(uniqSorted.length - 1, max)
-      // find our topmost weight
-      const limitWeight = uniqSorted[fmax].weight
-      // now map and filter but keeping original order
-      pairs = pairs.filter(x => x.weight >= limitWeight)
+    for (const id in this.vectors) {
+      const vector = this.vectors[id]
+      const distance = cosineDistance(cosal.vector, vector)
+      for (let i = len; i > -1; i--) {
+        if (!results[i] || distance < results[i].distance) {
+          results[i] = { distance, id }
+          len++
+          break
+        }
+      }
     }
-  }
-  return pairs.slice(0, fmax)
-}
 
-export async function getTopWords(text: string, max?: number) {
-  const words = await this.getWordWeights(text, max)
-  if (!words) {
-    return []
+    return results
+
+    // more inefficient version
+    // const distances = this.cosals.map(({ vector }, index) => ({
+    //   index,
+    //   distance: cosineDistance(cosal.vector, vector),
+    // }))
+    // return sortBy(distances, 'distance').map(x => this.cosals[x.index])
   }
-  return words.map(x => x.string.replace(/\s\s*/g, ' ').trim())
+
+  async persist(file: string) {
+    console.log('write to file', file)
+  }
+
+  async getWordWeights(text: string, max?: number): Promise<Pair[] | null> {
+    const cosal = await toCosal(text, this.covariance)
+    if (!cosal) {
+      return null
+    }
+    let pairs = cosal.pairs.filter(x => !commonWords[x.string])
+    let fmax = max
+    if (max) {
+      if (pairs.length > max) {
+        // sort by weight
+        const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase())
+        uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
+        // make sure we get the new last index, could be shorter
+        fmax = Math.min(uniqSorted.length - 1, max)
+        // find our topmost weight
+        const limitWeight = uniqSorted[fmax].weight
+        // now map and filter but keeping original order
+        pairs = pairs.filter(x => x.weight >= limitWeight)
+        return pairs.slice(0, fmax)
+      }
+    }
+    return pairs
+  }
+
+  async getTopWords(text: string, max?: number) {
+    const words = await this.getWordWeights(text, max)
+    if (!words) {
+      return []
+    }
+    return words.map(x => x.string.replace(/\s\s*/g, ' ').trim())
+  }
 }

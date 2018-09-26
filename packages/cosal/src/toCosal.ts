@@ -12,7 +12,7 @@ export type Pair = {
 }
 
 export type CosalDocument = {
-  vector: number
+  vector: number[]
   pairs: Pair[]
 }
 

@@ -1,4 +1,3 @@
-import corpusCovarPrecomputed from './corpusCovar'
 import computeCovariance from 'compute-covariance'
 import { toWords, getWordVector, vectors } from './helpers'
 import { Matrix } from '@mcro/vectorious'
@@ -10,12 +9,7 @@ export type WeightedDocument = {
 
 export type Covariance = {
   hash: string
-  matrix: number[][]
-}
-
-const corpusCovar = {
-  hash: 'corpus',
-  matrix: corpusCovarPrecomputed,
+  matrix: Matrix
 }
 
 function docToCovar(doc: string): Matrix {
@@ -32,13 +26,17 @@ function docToCovar(doc: string): Matrix {
 
 let index = 0
 
-// getInverseCovariance
-export function getCovariance(docs: WeightedDocument[] = [], corpusWeight = 1): Covariance | null {
-  let matrix = new Matrix(corpusCovar.matrix).scale(corpusWeight)
+export function getCovariance(
+  existingCovariance: number[][] = corpusCovarPrecomputed,
+  docs: WeightedDocument[] = [],
+  corpusWeight = 1,
+): Covariance | null {
+  let matrix = new Matrix(existingCovariance).scale(corpusWeight)
   for (const { weight, doc } of docs) {
     const dc = docToCovar(doc)
     if (!dc) {
-      throw new Error('No document covar')
+      console.log('No document covar')
+      continue
     }
     matrix = matrix.add(dc.scale(weight))
   }

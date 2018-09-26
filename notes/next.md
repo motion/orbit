@@ -34,6 +34,7 @@
 
 # small
 
+- p2p libs: https://news.ycombinator.com/item?id=18077312 https://github.com/libp2p/js-libp2p
 - could open a special link type: orbit://gD7sadhgasdy78aDT7
 - test if we dont need cloud oauth https://laravel.com/docs/5.6/valet#securing-sites
 - website docs https://github.com/pedronauck/docz https://github.com/gatsbyjs/gatsby/tree/master/www/src/pages

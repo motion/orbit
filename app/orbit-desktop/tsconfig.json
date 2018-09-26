@@ -15,6 +15,7 @@
     { "path": "../stores" },
     { "path": "../oracle" },
     { "path": "../entities" },
+    { "path": "../../packages/cosal" },
     { "path": "../../packages/utils" },
     { "path": "../../packages/black" },
     { "path": "../../packages/mediator" },

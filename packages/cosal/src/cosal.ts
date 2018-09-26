@@ -1,27 +1,27 @@
 import { getCovariance } from './getCovariance'
 import { toCosal, Weight } from './toCosal'
 import { uniqBy } from 'lodash'
+import { commonWords } from './commonWords'
 
 export { getCovariance } from './getCovariance'
 export { toCosal } from './toCosal'
 
-let emptyCovar = getCovariance([])
+const emptyCovar = getCovariance([])
 
 export async function getWordWeights(text: string, max?: number): Promise<Weight[] | null> {
-  emptyCovar = emptyCovar || getCovariance([])
   const cosal = await toCosal(text, emptyCovar)
   if (!cosal) {
     return null
   }
-  let pairs = cosal.pairs
+  let pairs = cosal.pairs.filter(x => !commonWords[x.string])
   let fmax = max
   if (max) {
     if (pairs.length > max) {
-      const uniqSorted = uniqBy(pairs, x => x.string)
+      // sort by weight
+      const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase())
+      uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
       // make sure we get the new last index, could be shorter
       fmax = Math.min(uniqSorted.length - 1, max)
-      // sort by weight
-      uniqSorted.sort((a, b) => (a.weight > b.weight ? 1 : -1))
       // find our topmost weight
       const limitWeight = uniqSorted[fmax].weight
       // now map and filter but keeping original order

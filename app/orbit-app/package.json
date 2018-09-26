@@ -48,7 +48,7 @@
     "mobx-react-devtools": "6.0.3",
     "pluralize": "^7.0.0",
     "react-fast-compare": "2.0.2",
-    "react-hot-loader": "4.3.8",
+    "react-hot-loader": "4.3.11",
     "react-spring": "5.7.2",
     "reconnecting-websocket": "4.0.0-rc5",
     "scroll": "2.0.3",
@@ -62,6 +62,7 @@
     "react-draggable": "3.0.5"
   },
   "devDependencies": {
+    "@babel/core": "7.1.0",
     "@mcro/build": "^2.2.1",
     "@types/webpack-env": "1.13.6",
     "@pundle/cli": "3.0.0-beta11",

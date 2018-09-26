@@ -12,24 +12,24 @@ module.exports = function(_, givenOpts) {
     plugins: [
       plug('react-hot-loader/babel'),
       plug('@babel/plugin-transform-runtime', {
-        polyfill: false,
         regenerator: false,
       }),
       plug('@mcro/gloss-displaynames'),
-      plug('@babel/plugin-proposal-export-default-from'),
-      plug('@babel/plugin-proposal-class-properties', {
-        loose: true,
-      }),
+      // plug('@babel/plugin-proposal-export-default-from'),
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,
       }),
-      plug('babel-plugin-lodash'),
+      plug('@babel/plugin-proposal-class-properties', {
+        loose: true,
+      }),
     ],
     presets: opts.presets || [
       plug('@babel/preset-react'),
-      plug('@babel/preset-stage-2', {
+      plug('@babel/preset-env', {
         loose: true,
-        decoratorsLegacy: true,
+        targets: {
+          chrome: '60',
+        },
       }),
       plug('@babel/preset-typescript'),
     ],

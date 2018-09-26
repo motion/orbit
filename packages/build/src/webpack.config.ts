@@ -92,7 +92,7 @@ const config = {
     filename: 'bundle.js',
     publicPath: '/',
     // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
-    globalObject: 'this',
+    globalObject: '(typeof self !== \'undefined\' ? self : this)',
   },
   devServer: {
     historyApiFallback: true,
@@ -106,7 +106,7 @@ const config = {
   devtool: isProd ? 'cheap-module-source-map' : 'inline-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
+    // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias: {
       // if you want to profile in production...

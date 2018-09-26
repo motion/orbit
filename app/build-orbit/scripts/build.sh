@@ -60,10 +60,13 @@ function publish-packages() {
   (cd ../.. && \
     npx lerna exec \
       --ignore "orbit" \
+      --ignore "@mcro/build" \
       --ignore "@mcro/orbit" \
       --ignore "@mcro/playground" \
       --ignore "@mcro/site" \
       --ignore "@mcro/oauth-server" \
+      --ignore "@mcro/babel-preset-motion" \
+      --ignore "@mcro/gloss-displaynames" \
       -- npm publish --force --registry http://localhost:4343)
   # then publish main app with all packages
   (cd ../orbit && npm publish --registry http://localhost:4343 --force)

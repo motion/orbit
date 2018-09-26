@@ -97,10 +97,6 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
-countup.js@^1.9.3:
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/countup.js/-/countup.js-1.9.3.tgz#ce3e50cd7160441e478f07da31895edcc0f1c9dd"
-
 debug@^2.1.3:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -432,15 +428,9 @@ property-information@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/property-information/-/property-information-3.2.0.tgz#fd1483c8fbac61808f5fe359e7693a1f48a58331"
 
-react-countup@3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/react-countup/-/react-countup-3.0.3.tgz#e698a4e28964fe0322a925f52929e3b08db714fd"
-  dependencies:
-    countup.js "^1.9.3"
-
-react-hot-loader@4.3.5:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.5.tgz#d8659839d8072d4b78938a776f29f5f1d2a40170"
+react-hot-loader@4.3.11:
+  version "4.3.11"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.11.tgz#fe5cf7be7700c249b58293f977c1e6e0900f0d87"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"

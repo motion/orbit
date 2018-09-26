@@ -8,6 +8,7 @@
     "build-app": "NODE_ENV=production mcro-build --build --target node"
   },
   "dependencies": {
+    "@babel/runtime": "^7.0.0",
     "@mcro/black": "^2.2.1",
     "@mcro/config": "2.2.1",
     "@mcro/constants": "^2.2.1",

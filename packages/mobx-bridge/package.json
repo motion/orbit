@@ -10,7 +10,7 @@
     "registry": "http://localhost:4343"
   },
   "dependencies": {
-    "@mcro/config": "*",
+    "@mcro/config": "2.2.1",
     "@mcro/black": "^2.2.1",
     "@mcro/logger": "^2.2.1",
     "html5-websocket": "^2.0.2",

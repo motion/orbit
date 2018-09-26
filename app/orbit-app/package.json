@@ -4,6 +4,7 @@
   "main": "./index.js",
   "scripts": {
     "start": "./scripts/start.sh",
+    "start-pundle": "PUNDLE=true ./scripts/start.sh",
     "serve-prod": "static-server -p 3999 -n dist/index.html dist",
     "build-app": "NODE_ENV=production mcro-build --entry ./src/main --build",
     "deploy": "./scripts/deploy.sh"
@@ -11,7 +12,7 @@
   "dependencies": {
     "@babel/runtime": "7.0.0",
     "@mcro/black": "^2.2.1",
-    "@mcro/config": "*",
+    "@mcro/config": "2.2.1",
     "@mcro/color": "^2.2.1",
     "@mcro/constants": "^2.2.1",
     "@mcro/logger": "^2.2.1",
@@ -63,8 +64,8 @@
   "devDependencies": {
     "@mcro/build": "^2.2.1",
     "@types/webpack-env": "1.13.6",
-    "pundle-cli": "3.0.0-beta7",
-    "pundle-preset-default": "3.0.0-beta7"
+    "@pundle/cli": "3.0.0-beta11",
+    "@pundle/preset-default": "3.0.0-beta11"
   },
   "peerDependencies": {
     "electron": "*",

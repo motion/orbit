@@ -11,7 +11,7 @@
     "debug": "electron --require ndb-inspect ./_/main.js"
   },
   "dependencies": {
-    "@mcro/config": "*",
+    "@mcro/config": "2.2.1",
     "@mcro/orbit-app": "*",
     "@mcro/orbit-electron": "^2.2.1",
     "@mcro/orbit-desktop": "^2.2.1",

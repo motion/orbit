@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@mcro/black": "^2.2.1",
-    "@mcro/config": "*",
+    "@mcro/config": "2.2.1",
     "@mcro/constants": "^2.2.1",
     "@mcro/electron-sudo": "*",
     "@mcro/entities": "^2.2.1",

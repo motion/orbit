@@ -1,4 +1,3 @@
-import commonWords from './commonWords'
 import { Vector } from '@mcro/vectorious'
 import { memoize, random, sortBy, reverse } from 'lodash'
 import { readFileSync } from 'fs'
@@ -55,11 +54,6 @@ export const docVec = pairs => {
   })
   return $vec
 }
-
-export const isCommonWord = commonWords
-  .split('\n')
-  .slice(0, 100)
-  .reduce((acc, item) => ({ ...acc, [item]: true }), {})
 
 export function toWords(s) {
   if (!s.replace) return []

@@ -29,7 +29,7 @@ if [ ! -L "./node_modules/@mcro/gloss" ]; then
   bin/link-root-modules
 fi
 echo "installing root"
-yarn install --registry https://registry.yarnpkg.com
+yarn install
 echo "installing packages"
 npx lerna bootstrap --loglevel=warn
 # build everything

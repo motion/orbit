@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "watch": "tsc --watch --preserveWatchOutput",
+    "test": "node ./_/test.js"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

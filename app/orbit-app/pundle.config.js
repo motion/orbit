@@ -1,5 +1,5 @@
 const path = require('path')
-const presetDefault = require('pundle-preset-default')
+const presetDefault = require('@pundle/preset-default')
 
 const pundleConfig = {
   target: 'browser',
@@ -8,6 +8,13 @@ const pundleConfig = {
     transform: {
       typescript: true,
       babel: 7,
+    },
+    optimize: {
+      js: {
+        common: {
+          processNonRootChunks: true,
+        },
+      },
     },
   }),
   rootDirectory: __dirname,

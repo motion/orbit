@@ -9,7 +9,7 @@ import { oracleBinPath } from '../constants'
 import { getGlobalConfig } from '@mcro/config'
 import { getTopWords } from '@mcro/cosal'
 
-const SpellChecker: any = {}
+// const SpellChecker: any = {}
 const log = new Logger('OCRManager')
 const Config = getGlobalConfig()
 const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'

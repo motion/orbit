@@ -22,7 +22,8 @@ export async function onError(error) {
   const errorMessage = `${error.message || ''}\n${error.stack || ''}`
 
   // avoid certain errors that aren't easily catchable (like websockets)...
-  if (errorMessage.indexOf('WebSocket is') > -1) {
+  if (/WebSocket is|syncer/.test(errorMessage)) {
+    console.log('avoiding sending to report')
     return
   }
 

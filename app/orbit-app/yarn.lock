@@ -2,23 +2,23 @@
 # yarn lockfile v1
 
 
-"@babel/code-frame@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-rc.3.tgz#d77a587401f818a3168700f596e41cd6905947b2"
+"@babel/code-frame@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0.tgz#06e2ab19bdb535385559aabb5ba59729482800f8"
   dependencies:
-    "@babel/highlight" "7.0.0-rc.3"
+    "@babel/highlight" "^7.0.0"
 
-"@babel/core@^7.0.0-rc.1":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.0.0-rc.3.tgz#0c3b5c4fcc65ea3fc7c019202aca6cd0b17705e7"
+"@babel/core@^7.0.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.1.0.tgz#08958f1371179f62df6966d8a614003d11faeb04"
   dependencies:
-    "@babel/code-frame" "7.0.0-rc.3"
-    "@babel/generator" "7.0.0-rc.3"
-    "@babel/helpers" "7.0.0-rc.3"
-    "@babel/parser" "7.0.0-rc.3"
-    "@babel/template" "7.0.0-rc.3"
-    "@babel/traverse" "7.0.0-rc.3"
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/code-frame" "^7.0.0"
+    "@babel/generator" "^7.0.0"
+    "@babel/helpers" "^7.1.0"
+    "@babel/parser" "^7.1.0"
+    "@babel/template" "^7.1.0"
+    "@babel/traverse" "^7.1.0"
+    "@babel/types" "^7.0.0"
     convert-source-map "^1.1.0"
     debug "^3.1.0"
     json5 "^0.5.0"
@@ -27,91 +27,91 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/generator@7.0.0-rc.3", "@babel/generator@^7.0.0-rc.1":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.0.0-rc.3.tgz#3267085de2d9b8779bde79052ee5f7070d99a5ab"
+"@babel/generator@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.0.0.tgz#1efd58bffa951dc846449e58ce3a1d7f02d393aa"
   dependencies:
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/types" "^7.0.0"
     jsesc "^2.5.1"
     lodash "^4.17.10"
     source-map "^0.5.0"
     trim-right "^1.0.1"
 
-"@babel/helper-function-name@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-function-name/-/helper-function-name-7.0.0-rc.3.tgz#ddfb3793fe6ca13be7161afa045971b8e82f96e8"
+"@babel/helper-function-name@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-function-name/-/helper-function-name-7.1.0.tgz#a0ceb01685f73355d4360c1247f582bfafc8ff53"
   dependencies:
-    "@babel/helper-get-function-arity" "7.0.0-rc.3"
-    "@babel/template" "7.0.0-rc.3"
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/helper-get-function-arity" "^7.0.0"
+    "@babel/template" "^7.1.0"
+    "@babel/types" "^7.0.0"
 
-"@babel/helper-get-function-arity@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-get-function-arity/-/helper-get-function-arity-7.0.0-rc.3.tgz#b9fb083977e1639aac6c9c06b2de7b849aa6fea5"
+"@babel/helper-get-function-arity@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-get-function-arity/-/helper-get-function-arity-7.0.0.tgz#83572d4320e2a4657263734113c42868b64e49c3"
   dependencies:
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/types" "^7.0.0"
 
-"@babel/helper-module-imports@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.0.0-rc.3.tgz#09207a1d2c528abddd74c259af1836bf34194ff5"
+"@babel/helper-module-imports@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.0.0.tgz#96081b7111e486da4d2cd971ad1a4fe216cc2e3d"
   dependencies:
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/types" "^7.0.0"
 
-"@babel/helper-module-transforms@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-module-transforms/-/helper-module-transforms-7.0.0-rc.3.tgz#dc92b603f42d3567b2d091241569bbf420221cd9"
+"@babel/helper-module-transforms@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-module-transforms/-/helper-module-transforms-7.1.0.tgz#470d4f9676d9fad50b324cdcce5fbabbc3da5787"
   dependencies:
-    "@babel/helper-module-imports" "7.0.0-rc.3"
-    "@babel/helper-simple-access" "7.0.0-rc.3"
-    "@babel/helper-split-export-declaration" "7.0.0-rc.3"
-    "@babel/template" "7.0.0-rc.3"
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/helper-module-imports" "^7.0.0"
+    "@babel/helper-simple-access" "^7.1.0"
+    "@babel/helper-split-export-declaration" "^7.0.0"
+    "@babel/template" "^7.1.0"
+    "@babel/types" "^7.0.0"
     lodash "^4.17.10"
 
-"@babel/helper-plugin-utils@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.0.0-rc.3.tgz#f68392896f4f3b90bdf7e72e5cc7127cdd5441fd"
+"@babel/helper-plugin-utils@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.0.0.tgz#bbb3fbee98661c569034237cc03967ba99b4f250"
 
-"@babel/helper-simple-access@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-simple-access/-/helper-simple-access-7.0.0-rc.3.tgz#c5a316c0838785eab896b7578ee05b1ac8193f2b"
+"@babel/helper-simple-access@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-simple-access/-/helper-simple-access-7.1.0.tgz#65eeb954c8c245beaa4e859da6188f39d71e585c"
   dependencies:
-    "@babel/template" "7.0.0-rc.3"
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/template" "^7.1.0"
+    "@babel/types" "^7.0.0"
 
-"@babel/helper-split-export-declaration@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-split-export-declaration/-/helper-split-export-declaration-7.0.0-rc.3.tgz#42ca01340ddb68ab471f81e6ff2c6270dbdbd113"
+"@babel/helper-split-export-declaration@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-split-export-declaration/-/helper-split-export-declaration-7.0.0.tgz#3aae285c0311c2ab095d997b8c9a94cad547d813"
   dependencies:
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/types" "^7.0.0"
 
-"@babel/helpers@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/helpers/-/helpers-7.0.0-rc.3.tgz#321c6b575d4d2c0e7b9f33ea085b8ecaa1965b24"
+"@babel/helpers@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/helpers/-/helpers-7.1.0.tgz#429bf0f0020be56a4242883432084e3d70a8a141"
   dependencies:
-    "@babel/template" "7.0.0-rc.3"
-    "@babel/traverse" "7.0.0-rc.3"
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/template" "^7.1.0"
+    "@babel/traverse" "^7.1.0"
+    "@babel/types" "^7.0.0"
 
-"@babel/highlight@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/highlight/-/highlight-7.0.0-rc.3.tgz#c2ee83f8e5c0c387279a8c48e06fef2e32027004"
+"@babel/highlight@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/highlight/-/highlight-7.0.0.tgz#f710c38c8d458e6dd9a201afb637fcb781ce99e4"
   dependencies:
     chalk "^2.0.0"
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@babel/parser@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.0.0-rc.3.tgz#859d7b60ef6b939aab5f6d4f4bffbb7bafdc418b"
+"@babel/parser@^7.0.0", "@babel/parser@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.1.0.tgz#a7cd42cb3c12aec52e24375189a47b39759b783e"
 
-"@babel/plugin-transform-modules-commonjs@^7.0.0-rc.1":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-commonjs/-/plugin-transform-modules-commonjs-7.0.0-rc.3.tgz#11792a4314820bb5f149e3f5c7eed10b342220ca"
+"@babel/plugin-transform-modules-commonjs@^7.0.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-commonjs/-/plugin-transform-modules-commonjs-7.1.0.tgz#0a9d86451cbbfb29bd15186306897c67f6f9a05c"
   dependencies:
-    "@babel/helper-module-transforms" "7.0.0-rc.3"
-    "@babel/helper-plugin-utils" "7.0.0-rc.3"
-    "@babel/helper-simple-access" "7.0.0-rc.3"
+    "@babel/helper-module-transforms" "^7.1.0"
+    "@babel/helper-plugin-utils" "^7.0.0"
+    "@babel/helper-simple-access" "^7.1.0"
 
 "@babel/runtime-corejs2@^7.0.0":
   version "7.0.0"
@@ -120,12 +120,11 @@
     core-js "^2.5.7"
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.47.tgz#273f5e71629e80f6cbcd7507503848615e59f7e0"
+"@babel/runtime@7.0.0", "@babel/runtime@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0.tgz#adeb78fedfc855aa05bc041640f3f6f98e85424c"
   dependencies:
-    core-js "^2.5.3"
-    regenerator-runtime "^0.11.1"
+    regenerator-runtime "^0.12.0"
 
 "@babel/runtime@7.0.0-rc.1":
   version "7.0.0-rc.1"
@@ -133,41 +132,358 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0.tgz#adeb78fedfc855aa05bc041640f3f6f98e85424c"
+"@babel/template@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.1.0.tgz#58cc9572e1bfe24fe1537fdf99d839d53e517e22"
   dependencies:
-    regenerator-runtime "^0.12.0"
+    "@babel/code-frame" "^7.0.0"
+    "@babel/parser" "^7.1.0"
+    "@babel/types" "^7.0.0"
 
-"@babel/template@7.0.0-rc.3":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.0.0-rc.3.tgz#2ba7d00f86744762632d06a0ffb0494f8443581f"
+"@babel/traverse@^7.0.0", "@babel/traverse@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.1.0.tgz#503ec6669387efd182c3888c4eec07bcc45d91b2"
   dependencies:
-    "@babel/code-frame" "7.0.0-rc.3"
-    "@babel/parser" "7.0.0-rc.3"
-    "@babel/types" "7.0.0-rc.3"
-
-"@babel/traverse@7.0.0-rc.3", "@babel/traverse@^7.0.0-rc.1":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.0.0-rc.3.tgz#bcf659e46d24244ab51379c849093f8c4e54d239"
-  dependencies:
-    "@babel/code-frame" "7.0.0-rc.3"
-    "@babel/generator" "7.0.0-rc.3"
-    "@babel/helper-function-name" "7.0.0-rc.3"
-    "@babel/helper-split-export-declaration" "7.0.0-rc.3"
-    "@babel/parser" "7.0.0-rc.3"
-    "@babel/types" "7.0.0-rc.3"
+    "@babel/code-frame" "^7.0.0"
+    "@babel/generator" "^7.0.0"
+    "@babel/helper-function-name" "^7.1.0"
+    "@babel/helper-split-export-declaration" "^7.0.0"
+    "@babel/parser" "^7.1.0"
+    "@babel/types" "^7.0.0"
     debug "^3.1.0"
     globals "^11.1.0"
     lodash "^4.17.10"
 
-"@babel/types@7.0.0-rc.3", "@babel/types@^7.0.0-rc.1":
-  version "7.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0-rc.3.tgz#877ebc543b139f4a1e4c9bd8849c25ab9aea8f41"
+"@babel/types@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0.tgz#6e191793d3c854d19c6749989e3bc55f0e962118"
   dependencies:
     esutils "^2.0.2"
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
+
+"@pundle/api@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/api/-/api-3.0.0-beta11.tgz#08a58178bf3ea528746b473ee110257d42f0d1da"
+  dependencies:
+    globrex "^0.1.1"
+    merge-source-map "^1.1.0"
+    node-murmurhash "^2.1.0"
+    p-map "^1.2.0"
+    resolve-from "^4.0.0"
+    sb-fs "^3.0.0"
+    toposort "^2.0.2"
+    yup "^0.26.2"
+
+"@pundle/chunk-generator-css@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/chunk-generator-css/-/chunk-generator-css-3.0.0-beta11.tgz#c3d45510e0f945ad2825c9bd23f893f6b1c3fc5b"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/chunk-generator-html@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/chunk-generator-html/-/chunk-generator-html-3.0.0-beta11.tgz#5fbaccd142b3d6e7805bb9ea5f0ca0c24748dc67"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    globrex "^0.1.1"
+    toposort "^2.0.2"
+
+"@pundle/chunk-generator-js@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/chunk-generator-js/-/chunk-generator-js-3.0.0-beta11.tgz#3ce7708f25bfdc6db176264ee5030b730dc71423"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    sb-fs "^3.0.0"
+    source-map "^0.7.2"
+
+"@pundle/chunk-generator-static@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/chunk-generator-static/-/chunk-generator-static-3.0.0-beta11.tgz#671369fa2d3c33024ca02b335c8b00e7b996e564"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/chunk-transformer-cssnano@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/chunk-transformer-cssnano/-/chunk-transformer-cssnano-3.0.0-beta11.tgz#9c841e532250346fb86bad212fbc7301876ba79c"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    cssnano "^4.0.5"
+    postcss "^7.0.2"
+
+"@pundle/chunk-transformer-uglify@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/chunk-transformer-uglify/-/chunk-transformer-uglify-3.0.0-beta11.tgz#35efebab15c301a56711da584372f4265c6d9866"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    merge-source-map "^1.1.0"
+    terser "^3.8.1"
+    uglify-es "^3.3.9"
+
+"@pundle/cli@3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/cli/-/cli-3.0.0-beta11.tgz#d0c11f152906814a52c420638e00d4bd819bf931"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    "@pundle/core" "^3.0.0-beta11"
+    "@pundle/dev-middleware" "^3.0.0-beta11"
+    chalk "^2.4.1"
+    cool-trim "^1.1.1"
+    cors "^2.8.4"
+    decamelize "^2.0.0"
+    express "^4.16.3"
+    gzip-size "^5.0.0"
+    lodash "^4.17.10"
+    minimist "^1.2.0"
+    mkdirp "^0.5.1"
+    p-map "^1.2.0"
+    pretty-bytes "^5.1.0"
+    sb-fs "^3.0.0"
+    strip-ansi "^4.0.0"
+
+"@pundle/core-load-config@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/core-load-config/-/core-load-config-3.0.0-beta11.tgz#1a6005486b89c32ea56178f21837bacced08bf65"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    lodash "^4.17.10"
+    sb-callsite "^1.1.2"
+    sb-fs "^3.0.0"
+
+"@pundle/core@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/core/-/core-3.0.0-beta11.tgz#9a8d0506e62a25511a8312bccc103dbf5c9aa773"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    "@pundle/core-load-config" "^3.0.0-beta11"
+    chokidar "^2.0.4"
+    lodash "^4.17.10"
+    lowdb "^1.0.0"
+    mkdirp "^0.5.1"
+    p-map "^1.2.0"
+    promise.defer "^1.0.1"
+    sb-communication "5"
+    sb-fs "^3.0.0"
+    sb-promise-queue "^1.0.1"
+
+"@pundle/dev-middleware@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/dev-middleware/-/dev-middleware-3.0.0-beta11.tgz#02ffb6ff14a9e7fabcb3e99e624780360822d624"
+  dependencies:
+    express "^4.16.3"
+    lodash "^4.17.10"
+    mime "^2.3.1"
+    toposort "^2.0.2"
+
+"@pundle/job-transformer-js-common@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/job-transformer-js-common/-/job-transformer-js-common-3.0.0-beta11.tgz#89bc901f462c6dfeb518e5001d9dd32f03d790e8"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/job-transformer-js-dedupe@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/job-transformer-js-dedupe/-/job-transformer-js-dedupe-3.0.0-beta11.tgz#eec2fb049fb83c07cedb33191238e526033bc602"
+  dependencies:
+    escape-regexp "^0.0.1"
+    lodash "^4.17.10"
+    p-map "^1.2.0"
+    sb-fs "^3.0.0"
+    sb-memoize "^2.1.0"
+    semver "^5.5.1"
+
+"@pundle/preset-default@3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/preset-default/-/preset-default-3.0.0-beta11.tgz#d2ff01cc4e92a279408df258b7131439aabf9d5e"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    "@pundle/chunk-generator-css" "^3.0.0-beta11"
+    "@pundle/chunk-generator-html" "^3.0.0-beta11"
+    "@pundle/chunk-generator-js" "^3.0.0-beta11"
+    "@pundle/chunk-generator-static" "^3.0.0-beta11"
+    "@pundle/chunk-transformer-cssnano" "^3.0.0-beta11"
+    "@pundle/chunk-transformer-uglify" "^3.0.0-beta11"
+    "@pundle/job-transformer-js-common" "^3.0.0-beta11"
+    "@pundle/job-transformer-js-dedupe" "^3.0.0-beta11"
+    "@pundle/reporter-cli" "^3.0.0-beta11"
+    "@pundle/resolver-default" "^3.0.0-beta11"
+    "@pundle/transformer-babel" "^3.0.0-beta11"
+    "@pundle/transformer-coffee" "^3.0.0-beta11"
+    "@pundle/transformer-cson" "^3.0.0-beta11"
+    "@pundle/transformer-css" "^3.0.0-beta11"
+    "@pundle/transformer-graphql" "^3.0.0-beta11"
+    "@pundle/transformer-js" "^3.0.0-beta11"
+    "@pundle/transformer-json" "^3.0.0-beta11"
+    "@pundle/transformer-json5" "^3.0.0-beta11"
+    "@pundle/transformer-less" "^3.0.0-beta11"
+    "@pundle/transformer-postcss" "^3.0.0-beta11"
+    "@pundle/transformer-sass" "^3.0.0-beta11"
+    "@pundle/transformer-static" "^3.0.0-beta11"
+    "@pundle/transformer-stylus" "^3.0.0-beta11"
+    "@pundle/transformer-toml" "^3.0.0-beta11"
+    "@pundle/transformer-typescript" "^3.0.0-beta11"
+    "@pundle/transformer-yaml" "^3.0.0-beta11"
+
+"@pundle/reporter-base@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/reporter-base/-/reporter-base-3.0.0-beta11.tgz#aca21b52a3b428a32c589543f4b930d2369fd012"
+
+"@pundle/reporter-cli@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/reporter-cli/-/reporter-cli-3.0.0-beta11.tgz#d3caa2e4a4f013d0781e0cd77a1eee0c43d90cf1"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    "@pundle/reporter-base" "^3.0.0-beta11"
+
+"@pundle/resolver-aliases-browser@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/resolver-aliases-browser/-/resolver-aliases-browser-3.0.0-beta11.tgz#74f51e63f32200de85e407c6d974a9bd6efae60e"
+  dependencies:
+    assert "^1.3.0"
+    browserify-zlib "^0.2.0"
+    buffer "^5.2.0"
+    console-browserify "^1.1.0"
+    constants-browserify "^1.0.0"
+    crypto-browserify "^3.11.0"
+    domain-browser "^1.1.7"
+    events "^3.0.0"
+    https-browserify "^1.0.0"
+    os-browserify "^0.3.0"
+    path-browserify "^1.0.0"
+    process "^0.11.2"
+    punycode "^2.1.0"
+    querystring-es3 "^0.2.1"
+    readable-stream "^3.0.1"
+    stream-browserify "^2.0.1"
+    stream-http "^2.2.1"
+    string_decoder "^1.0.3"
+    timers-browserify-full "0.0.1"
+    tty-browserify "*"
+    url "^0.11.0"
+    util "^0.11.0"
+    vm-browserify "^1.1.0"
+
+"@pundle/resolver-default@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/resolver-default/-/resolver-default-3.0.0-beta11.tgz#a887ff26e2b68cae03e4e61faf34a1e337f0f7a8"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    "@pundle/resolver-aliases-browser" "^3.0.0-beta11"
+    browser-resolve "^1.11.3"
+    lodash "^4.17.10"
+    resolve "^1.8.1"
+
+"@pundle/transformer-babel@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-babel/-/transformer-babel-3.0.0-beta11.tgz#4a3ec366e229f0d5fc591f4ff01f57b6dcc320d9"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    nanomatch "^1.2.13"
+
+"@pundle/transformer-coffee@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-coffee/-/transformer-coffee-3.0.0-beta11.tgz#f14afe3400d0d8b064f06306ef6456094243d0a3"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    nanomatch "^1.2.13"
+
+"@pundle/transformer-cson@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-cson/-/transformer-cson-3.0.0-beta11.tgz#86f51015c0aa0e45982dc585e26dd52fade023c7"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/transformer-css@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-css/-/transformer-css-3.0.0-beta11.tgz#247bb83287bf093017023679939f2adf7f0b4573"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    postcss "^7.0.2"
+    postcss-modules "^1.3.2"
+    postcss-value-parser "^3.3.0"
+
+"@pundle/transformer-graphql@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-graphql/-/transformer-graphql-3.0.0-beta11.tgz#33bd1e08f763df2c384b56b7b5ca82c635255fc1"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/transformer-js@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-js/-/transformer-js-3.0.0-beta11.tgz#3ecae629c5113deb0ce46d41bac2316dbee9f6ec"
+  dependencies:
+    "@babel/core" "^7.0.0"
+    "@babel/generator" "^7.0.0"
+    "@babel/parser" "^7.0.0"
+    "@babel/plugin-transform-modules-commonjs" "^7.0.0"
+    "@babel/traverse" "^7.0.0"
+    "@babel/types" "^7.0.0"
+    "@pundle/api" "^3.0.0-beta11"
+    babel-plugin-inject-node-globals "^3.0.0-beta11"
+
+"@pundle/transformer-json5@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-json5/-/transformer-json5-3.0.0-beta11.tgz#514814445ad288b8fed44e661df1d0dfb020f53a"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/transformer-json@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-json/-/transformer-json-3.0.0-beta11.tgz#845557715acb9e287da20ee1043695639ea0d891"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/transformer-less@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-less/-/transformer-less-3.0.0-beta11.tgz#972310535694038a297d053f17d5abc85c1273c9"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/transformer-postcss@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-postcss/-/transformer-postcss-3.0.0-beta11.tgz#3187f1d990160723f70146940feae761bd9201e6"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/transformer-sass@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-sass/-/transformer-sass-3.0.0-beta11.tgz#aa4db3c12b960c4525bc1509bef01070015c78ea"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/transformer-static@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-static/-/transformer-static-3.0.0-beta11.tgz#b1fddd66105fc8f85b4a12d21caffd4b706429b5"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    mime "^2.3.1"
+
+"@pundle/transformer-stylus@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-stylus/-/transformer-stylus-3.0.0-beta11.tgz#8548a233571b93f902907ee90a9534169e94a5c0"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+
+"@pundle/transformer-toml@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-toml/-/transformer-toml-3.0.0-beta11.tgz#a1e0e616490028232bab6f2fb6b501dba45961ae"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    serialize-to-js "^1.2.1"
+
+"@pundle/transformer-typescript@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-typescript/-/transformer-typescript-3.0.0-beta11.tgz#4338cb92ea798f71d8ec6792c5e3f8454ab47f75"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    nanomatch "^1.2.13"
+
+"@pundle/transformer-yaml@^3.0.0-beta11":
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@pundle/transformer-yaml/-/transformer-yaml-3.0.0-beta11.tgz#eaf966af03814322855f9e8e30d2b7431ac7f8df"
+  dependencies:
+    "@pundle/api" "^3.0.0-beta11"
+    serialize-to-js "^1.2.1"
 
 "@types/node@*":
   version "10.5.7"
@@ -352,6 +668,12 @@ aws-sign2@~0.7.0:
 aws4@^1.6.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
+
+babel-plugin-inject-node-globals@^3.0.0-beta11:
+  version "3.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/babel-plugin-inject-node-globals/-/babel-plugin-inject-node-globals-3.0.0-beta11.tgz#fd16e2cbf313655f5d90437bf95c5f1774eaa0ae"
+  dependencies:
+    lodash "^4.17.11"
 
 bail@^1.0.0:
   version "1.0.3"
@@ -809,7 +1131,7 @@ copy-descriptor@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
 
-core-js@^2.5.3, core-js@^2.5.7:
+core-js@^2.5.7:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
 
@@ -1294,6 +1616,10 @@ es-to-primitive@^1.1.1:
 escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
+
+escape-regexp@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/escape-regexp/-/escape-regexp-0.0.1.tgz#f44bda12d45bbdf9cb7f862ee7e4827b3dd32254"
 
 escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -1813,10 +2139,6 @@ immer@1.7.2:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.7.2.tgz#a51e9723c50b27e132f6566facbec1c85fc69547"
 
-imurmurhash@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
-
 indexes-of@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/indexes-of/-/indexes-of-1.0.1.tgz#f30f716c8e2bd346c7b67d3df3915566a7c05607"
@@ -2305,6 +2627,10 @@ lodash@4, lodash@4.17.10, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.5:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
+lodash@^4.17.11:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+
 loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.1:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
@@ -2562,6 +2888,10 @@ node-emoji@^1.4.1:
   resolved "https://registry.yarnpkg.com/node-emoji/-/node-emoji-1.8.1.tgz#6eec6bfb07421e2148c75c6bba72421f8530a826"
   dependencies:
     lodash.toarray "^4.4.0"
+
+node-murmurhash@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/node-murmurhash/-/node-murmurhash-2.1.0.tgz#26939a971056b77f8132e35715b316d6eeebc040"
 
 node-pre-gyp@^0.10.0:
   version "0.10.3"
@@ -3249,314 +3579,6 @@ public-encrypt@^4.0.0:
     parse-asn1 "^5.0.0"
     randombytes "^2.0.1"
 
-pundle-api@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-api/-/pundle-api-3.0.0-beta7.tgz#a09274298794c899bff6810a43a25cfa8fea8c59"
-  dependencies:
-    globrex "^0.1.1"
-    imurmurhash "^0.1.4"
-    merge-source-map "^1.1.0"
-    p-map "^1.2.0"
-    resolve-from "^4.0.0"
-    yup "^0.26.2"
-
-pundle-chunk-generator-css@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-css/-/pundle-chunk-generator-css-3.0.0-beta7.tgz#387585b8ab14e153241bf3a94ca28de47f84245f"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-chunk-generator-html@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-html/-/pundle-chunk-generator-html-3.0.0-beta7.tgz#547e8bd20a53e2ee1e3d3bab8d81eec5880057e5"
-  dependencies:
-    globrex "^0.1.1"
-    pundle-api "^3.0.0-beta7"
-    toposort "^2.0.2"
-
-pundle-chunk-generator-js@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-js/-/pundle-chunk-generator-js-3.0.0-beta7.tgz#91f67d1732c059283ee090b198c7478a89c327aa"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-    sb-fs "^3.0.0"
-    source-map "^0.7.2"
-
-pundle-chunk-generator-static@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-static/-/pundle-chunk-generator-static-3.0.0-beta7.tgz#0c1039b6888c02c6330d12e36aee1c1116326222"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-chunk-transformer-cssnano@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-transformer-cssnano/-/pundle-chunk-transformer-cssnano-3.0.0-beta7.tgz#e506e4c3bdf89f3a97920249ae715dd9d7e7b534"
-  dependencies:
-    cssnano "^4.0.5"
-    postcss "^7.0.2"
-    pundle-api "^3.0.0-beta7"
-
-pundle-chunk-transformer-uglify@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-transformer-uglify/-/pundle-chunk-transformer-uglify-3.0.0-beta7.tgz#dd2ff65f437b9b7aeb95c210d89d36046b32d259"
-  dependencies:
-    merge-source-map "^1.1.0"
-    pundle-api "^3.0.0-beta7"
-    terser "^3.8.1"
-    uglify-es "^3.3.9"
-
-pundle-cli@3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-cli/-/pundle-cli-3.0.0-beta7.tgz#43d0864b3b2c19a125bd740e5bca91d11d6bcdf2"
-  dependencies:
-    chalk "^2.4.1"
-    cool-trim "^1.1.1"
-    cors "^2.8.4"
-    decamelize "^2.0.0"
-    express "^4.16.3"
-    gzip-size "^5.0.0"
-    lodash "^4.17.10"
-    minimist "^1.2.0"
-    mkdirp "^0.5.1"
-    p-map "^1.2.0"
-    pretty-bytes "^5.1.0"
-    pundle-api "^3.0.0-beta7"
-    pundle-core "^3.0.0-beta7"
-    pundle-dev-middleware "^3.0.0-beta7"
-    sb-fs "^3.0.0"
-    strip-ansi "^4.0.0"
-
-pundle-core-load-config@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-core-load-config/-/pundle-core-load-config-3.0.0-beta7.tgz#774632237c5d9620c377fcd2bc5bc80b153e6d70"
-  dependencies:
-    lodash "^4.17.10"
-    pundle-api "^3.0.0-beta7"
-    sb-callsite "^1.1.2"
-    sb-fs "^3.0.0"
-
-pundle-core@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-core/-/pundle-core-3.0.0-beta7.tgz#71d654c2c5b53f83b96ad928828829983106f5f2"
-  dependencies:
-    chokidar "^2.0.4"
-    lodash "^4.17.10"
-    lowdb "^1.0.0"
-    mkdirp "^0.5.1"
-    p-map "^1.2.0"
-    promise.defer "^1.0.1"
-    pundle-api "^3.0.0-beta7"
-    pundle-core-load-config "^3.0.0-beta7"
-    sb-communication "5"
-    sb-fs "^3.0.0"
-    sb-promise-queue "^1.0.1"
-
-pundle-dev-middleware@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-dev-middleware/-/pundle-dev-middleware-3.0.0-beta7.tgz#ff0f42babbd1e0d3395d35303749cb733e8e74a5"
-  dependencies:
-    express "^4.16.3"
-    lodash "^4.17.10"
-    mime "^2.3.1"
-    toposort "^2.0.2"
-
-pundle-job-transformer-js-common@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-job-transformer-js-common/-/pundle-job-transformer-js-common-3.0.0-beta7.tgz#48e20a922b5edfe00cbc3c714a1aac376d3f3468"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-preset-default@3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-preset-default/-/pundle-preset-default-3.0.0-beta7.tgz#9b286101685a40b40b645e1a25164460c11380d3"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-    pundle-chunk-generator-css "^3.0.0-beta7"
-    pundle-chunk-generator-html "^3.0.0-beta7"
-    pundle-chunk-generator-js "^3.0.0-beta7"
-    pundle-chunk-generator-static "^3.0.0-beta7"
-    pundle-chunk-transformer-cssnano "^3.0.0-beta7"
-    pundle-chunk-transformer-uglify "^3.0.0-beta7"
-    pundle-job-transformer-js-common "^3.0.0-beta7"
-    pundle-reporter-cli "^3.0.0-beta7"
-    pundle-resolver-default "^3.0.0-beta7"
-    pundle-transformer-babel "^3.0.0-beta7"
-    pundle-transformer-coffee "^3.0.0-beta7"
-    pundle-transformer-cson "^3.0.0-beta7"
-    pundle-transformer-css "^3.0.0-beta7"
-    pundle-transformer-graphql "^3.0.0-beta7"
-    pundle-transformer-js "^3.0.0-beta7"
-    pundle-transformer-json "^3.0.0-beta7"
-    pundle-transformer-json5 "^3.0.0-beta7"
-    pundle-transformer-less "^3.0.0-beta7"
-    pundle-transformer-postcss "^3.0.0-beta7"
-    pundle-transformer-sass "^3.0.0-beta7"
-    pundle-transformer-static "^3.0.0-beta7"
-    pundle-transformer-stylus "^3.0.0-beta7"
-    pundle-transformer-toml "^3.0.0-beta7"
-    pundle-transformer-typescript "^3.0.0-beta7"
-    pundle-transformer-yaml "^3.0.0-beta7"
-
-pundle-reporter-base@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-reporter-base/-/pundle-reporter-base-3.0.0-beta7.tgz#05facb2528386499642df8aff67b777c91d78119"
-
-pundle-reporter-cli@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-reporter-cli/-/pundle-reporter-cli-3.0.0-beta7.tgz#857ab582a84ffe2f967ecab135bd0a1505ff6b09"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-    pundle-reporter-base "^3.0.0-beta7"
-
-pundle-resolver-aliases-browser@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-resolver-aliases-browser/-/pundle-resolver-aliases-browser-3.0.0-beta7.tgz#f97b621d4d3b98304f73ba561985ca8663aa360c"
-  dependencies:
-    assert "^1.3.0"
-    browserify-zlib "^0.2.0"
-    buffer "^5.2.0"
-    console-browserify "^1.1.0"
-    constants-browserify "^1.0.0"
-    crypto-browserify "^3.11.0"
-    domain-browser "^1.1.7"
-    events "^3.0.0"
-    https-browserify "^1.0.0"
-    os-browserify "^0.3.0"
-    path-browserify "^1.0.0"
-    process "^0.11.2"
-    punycode "^2.1.0"
-    querystring-es3 "^0.2.1"
-    readable-stream "^3.0.1"
-    stream-browserify "^2.0.1"
-    stream-http "^2.2.1"
-    string_decoder "^1.0.3"
-    timers-browserify-full "0.0.1"
-    tty-browserify "*"
-    url "^0.11.0"
-    util "^0.11.0"
-    vm-browserify "^1.1.0"
-
-pundle-resolver-default@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-resolver-default/-/pundle-resolver-default-3.0.0-beta7.tgz#2c928e6bddf9fd3bf34f51d94a8a7f8745ef6b64"
-  dependencies:
-    browser-resolve "^1.11.3"
-    lodash "^4.17.10"
-    pundle-api "^3.0.0-beta7"
-    pundle-resolver-aliases-browser "^3.0.0-beta7"
-    resolve "^1.8.1"
-    sb-fs "^3.0.0"
-
-pundle-transformer-babel@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-babel/-/pundle-transformer-babel-3.0.0-beta7.tgz#5757606367467b018ebc307af1288f34d7dce03f"
-  dependencies:
-    nanomatch "^1.2.13"
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-coffee@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-coffee/-/pundle-transformer-coffee-3.0.0-beta7.tgz#d9e65a954564d895eefea90c289d3ac5707b6d40"
-  dependencies:
-    nanomatch "^1.2.13"
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-cson@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-cson/-/pundle-transformer-cson-3.0.0-beta7.tgz#50fe61188fcb350ad10a6ac62374e2ab70bc64d9"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-css@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-css/-/pundle-transformer-css-3.0.0-beta7.tgz#abbb01fd083f80b42d2f492cbde0d7646e0685a7"
-  dependencies:
-    postcss "^7.0.2"
-    postcss-modules "^1.3.2"
-    postcss-value-parser "^3.3.0"
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-graphql@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-graphql/-/pundle-transformer-graphql-3.0.0-beta7.tgz#2bdaa13887735b4449782bec277685ee1916b5ad"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-js@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-js/-/pundle-transformer-js-3.0.0-beta7.tgz#b4c0b198d9cfc2db7157a9b915fc2ba82534a6be"
-  dependencies:
-    "@babel/core" "^7.0.0-rc.1"
-    "@babel/generator" "^7.0.0-rc.1"
-    "@babel/plugin-transform-modules-commonjs" "^7.0.0-rc.1"
-    "@babel/traverse" "^7.0.0-rc.1"
-    "@babel/types" "^7.0.0-rc.1"
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-json5@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-json5/-/pundle-transformer-json5-3.0.0-beta7.tgz#2c869c448145e24704816c639cc2d3342b559e6e"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-json@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-json/-/pundle-transformer-json-3.0.0-beta7.tgz#61b422899ed16328084343d2e72483d3d7e0f7da"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-less@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-less/-/pundle-transformer-less-3.0.0-beta7.tgz#331e0c1cb1dc935332c29ff1cc7bf4d7eaf5e238"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-postcss@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-postcss/-/pundle-transformer-postcss-3.0.0-beta7.tgz#e7990c12f8b62f2aa99701e74d24244db894adb7"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-sass@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-sass/-/pundle-transformer-sass-3.0.0-beta7.tgz#0b9bbacb8b1435ac634cec984edd35632aba8715"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-static@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-static/-/pundle-transformer-static-3.0.0-beta7.tgz#c74e239b39562e000e5527f48a2ebfea832763b9"
-  dependencies:
-    mime "^2.3.1"
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-stylus@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-stylus/-/pundle-transformer-stylus-3.0.0-beta7.tgz#3db5c822c83ad1064cd8de1afe182fd8e4bc692b"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-toml@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-toml/-/pundle-transformer-toml-3.0.0-beta7.tgz#c21942096b2dc00fc182710a231c01ad2ef61759"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-    serialize-to-js "^1.2.1"
-
-pundle-transformer-typescript@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-typescript/-/pundle-transformer-typescript-3.0.0-beta7.tgz#81bf5bd2c8aac650b2cf92a385e392a5496bb330"
-  dependencies:
-    nanomatch "^1.2.13"
-    pundle-api "^3.0.0-beta7"
-
-pundle-transformer-yaml@^3.0.0-beta7:
-  version "3.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-yaml/-/pundle-transformer-yaml-3.0.0-beta7.tgz#d256388026d7ae0d754b483dc178dc9c42c5efb2"
-  dependencies:
-    pundle-api "^3.0.0-beta7"
-    serialize-to-js "^1.2.1"
-
 punycode@1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.3.2.tgz#9653a036fb7c1ee42342f2325cceefea3926c48d"
@@ -3674,9 +3696,9 @@ react-fast-compare@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.2.tgz#0560ba7a61a1662d9cea8cd97a0d9db7591bab1c"
 
-react-hot-loader@4.3.8:
-  version "4.3.8"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.8.tgz#81f174a9b70fb5a4d4f2e9134d73659ddcd779cf"
+react-hot-loader@4.3.11:
+  version "4.3.11"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.11.tgz#fe5cf7be7700c249b58293f977c1e6e0900f0d87"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -3803,10 +3825,6 @@ reflect-metadata@^0.1.12:
 regenerate@^1.2.1:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.0.tgz#4a856ec4b56e4077c557589cae85e7a4c8869a11"
-
-regenerator-runtime@^0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
 
 regenerator-runtime@^0.12.0:
   version "0.12.1"
@@ -4013,6 +4031,10 @@ sb-fs@^3.0.0:
     sb-promisify "^2.0.1"
     strip-bom-buf "^1.0.0"
 
+sb-memoize@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/sb-memoize/-/sb-memoize-2.1.0.tgz#f68d92a9a7afd95c76403d316002e91008b2ea2f"
+
 sb-promise-queue@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/sb-promise-queue/-/sb-promise-queue-1.0.1.tgz#f94469157cfbf2cd23f189533350ed524fe8b69b"
@@ -4030,6 +4052,10 @@ scroll@2.0.3:
 semver@^5.1.0, semver@^5.3.0, semver@^5.4.1:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
+
+semver@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.1.tgz#7dfdd8814bdb7cabc7be0fb1d734cfb66c940477"
 
 send@0.16.2:
   version "0.16.2"

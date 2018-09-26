@@ -7,7 +7,7 @@
     "watch": "tsc --build --watch --preserveWatchOutput --verbose"
   },
   "dependencies": {
-    "@mcro/config": "*",
+    "@mcro/config": "2.2.1",
     "@mcro/logger": "^2.2.1",
     "@mcro/models": "^2.2.1",
     "@mcro/r2": "^2.2.1",

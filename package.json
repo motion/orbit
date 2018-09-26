@@ -9,13 +9,10 @@
     "@types/react": "16.4.14"
   },
   "devDependencies": {
-    "@mcro/babel-preset-motion": "2.2.0",
-    "@babel/cli": "7.0.0-beta.47",
-    "@babel/core": "7.0.0-beta.47",
-    "@babel/plugin-syntax-decorators": "7.0.0-beta.47",
-    "@babel/plugin-syntax-jsx": "7.0.0-beta.47",
-    "@babel/plugin-syntax-typescript": "7.0.0-beta.47",
-    "@babel/runtime": "7.0.0-beta.47",
+    "@babel/runtime": "^7.0.0",
+    "@babel/cli": "7.1.0",
+    "@babel/core": "7.1.0",
+    "@mcro/babel-preset-motion": "2.2.2",
     "@types/lodash": "4.14.115",
     "@types/react": "16.4.14",
     "@types/react-dom": "16.0.7",

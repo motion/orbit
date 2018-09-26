@@ -1,9 +1,7 @@
 if (process.env.PUNDLE) {
   module.exports = {
     presets: [
-      [
-        '@mcro/babel-preset-motion' /* , { disable: ['react-hot-loader/babel'] } */,
-      ],
+      ['@mcro/babel-preset-motion' /* , { disable: ['react-hot-loader/babel'] } */],
       ['@babel/preset-env', { targets: { node: '7.0' } }],
     ],
   }
@@ -14,7 +12,7 @@ if (process.env.PUNDLE) {
         presets: [['@mcro/babel-preset-motion']],
       },
       production: {
-        presets: [['@mcro/babel-preset-motion']],
+        presets: [['@mcro/babel-preset-motion', { disable: ['react-hot-loader/babel'] }]],
       },
     },
   }

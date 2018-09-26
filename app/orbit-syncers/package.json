@@ -8,7 +8,7 @@
     "build-app": "NODE_ENV=production mcro-build --build --target node"
   },
   "dependencies": {
-    "@mcro/config": "*",
+    "@mcro/config": "2.2.1",
     "@mcro/entities": "^2.2.1",
     "@mcro/logger": "^2.2.1",
     "@mcro/mediator": "^2.2.1",

@@ -11,7 +11,7 @@
     "@mcro/constants": "^2.2.1",
     "@mcro/mobx-bridge": "^2.2.1",
     "@mcro/models": "^2.2.1",
-    "@mcro/config": "*",
+    "@mcro/config": "2.2.1",
     "global": "^4.3.2",
     "lodash": "4.17.10"
   },

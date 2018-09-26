@@ -2,73 +2,47 @@
 # yarn lockfile v1
 
 
-complex.js@2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/complex.js/-/complex.js-2.0.10.tgz#afac74e4fb9131e8709f9c300420ce58fa36f18d"
-
 compute-covariance@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/compute-covariance/-/compute-covariance-1.0.1.tgz#ea04d9eb813801dcdaebacdf8882ec3f09a21305"
+  integrity sha1-6gTZ64E4Adza66zfiILsPwmiEwU=
   dependencies:
     validate.io-object "^1.0.0"
 
-decimal.js@9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-9.0.1.tgz#1cc8b228177da7ab6498c1cc06eb130a290e6e1e"
-
-escape-latex@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/escape-latex/-/escape-latex-1.0.3.tgz#1b9085e3e66570faabe21f05655643f64e78717a"
-
-fraction.js@4.0.8:
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.0.8.tgz#e53618112e3b36b348c61a81323173bceb01e418"
-
-javascript-natural-sort@0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/javascript-natural-sort/-/javascript-natural-sort-0.7.1.tgz#f9e2303d4507f6d74355a73664d1440fb5a0ef59"
-
-mathjs@^4.1.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-4.4.2.tgz#79a5c8ad92a6434e22dbfac13e223a9bd62d6981"
+fs-extra@7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.0.tgz#8cc3f47ce07ef7b3593a11b9fb245f7e34c041d6"
+  integrity sha512-EglNDLRpmaTWiD/qraZn6HREAEAHJcJOmxNEYwq6xeMKnVMAy3GUcFB+wXt2C6k4CNvB/mP1y/U3dzvKKj5OtQ==
   dependencies:
-    complex.js "2.0.10"
-    decimal.js "9.0.1"
-    escape-latex "1.0.3"
-    fraction.js "4.0.8"
-    javascript-natural-sort "0.7.1"
-    seed-random "2.2.0"
-    tiny-emitter "2.0.2"
-    typed-function "1.0.3"
+    graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
 
-nblas@^1.2.0:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/nblas/-/nblas-1.2.2.tgz#cc750ca672920de59c2074abd4063beee6b83384"
+graceful-fs@^4.1.2, graceful-fs@^4.1.6:
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
+  integrity sha1-Dovf5NHduIVNZOBOp8AOKgJuVlg=
 
-seed-random@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/seed-random/-/seed-random-2.2.0.tgz#2a9b19e250a817099231a5b99a4daf80b7fbed54"
+jsonfile@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
+  integrity sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=
+  optionalDependencies:
+    graceful-fs "^4.1.6"
 
-tiny-emitter@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.2.tgz#82d27468aca5ade8e5fd1e6d22b57dd43ebdfb7c"
-
-typed-function@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.0.3.tgz#57026246214b664a5af45ef0a06679f4453bd090"
+universalify@^0.1.0:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
+  integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
 validate.io-array@^1.0.1:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/validate.io-array/-/validate.io-array-1.0.6.tgz#5b5a2cafd8f8b85abb2f886ba153f2d93a27774d"
+  integrity sha1-W1osr9j4uFq7L4hroVPy2Tond00=
 
 validate.io-object@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/validate.io-object/-/validate.io-object-1.0.4.tgz#dca01eceee390e110dbc2af843c81f7bf33a41ab"
+  integrity sha1-3KAezu45DhENvCr4Q8gfe/M6Qas=
   dependencies:
     validate.io-array "^1.0.1"
-
-vectorious@^4.8.1:
-  version "4.8.2"
-  resolved "https://registry.yarnpkg.com/vectorious/-/vectorious-4.8.2.tgz#2cd03d1e0521282301b6a67ea2b9495de6bf7170"
-  optionalDependencies:
-    nblas "^1.2.0"

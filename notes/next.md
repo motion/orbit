@@ -1,8 +1,12 @@
 # nate
 
 - "stop asking" and "always send" for error reporting
+- "reset orbit db" option if error during startup
 - add report recent error log in Tray
 - show current app name in Orbit <Tray />
+  - can use bounds in https://electronjs.org/docs/api/tray
+    - click on icon shows menu
+    - click on words shows/hides orbit
 - make it great
   - Spin orbit <Orb /> when scanning
   - Tooltip on <Orb />

@@ -1,4 +1,4 @@
-import { getCovariance } from './getCovariance'
+import { getCovariance, Covariance } from './getCovariance'
 import { toCosal, Weight } from './toCosal'
 import { uniqBy, sortBy } from 'lodash'
 import { commonWords } from './commonWords'
@@ -9,9 +9,21 @@ export { toCosal } from './toCosal'
 
 const emptyCovar = getCovariance([])
 
+type CosalOptions = {
+  database: string
+}
+
 export class Cosal {
   cosals = null
-  covariance = null
+  covariance: Covariance = null
+  database: string
+
+  constructor({ database }: CosalOptions) {
+    if (!database) {
+      throw new Error('No database')
+    }
+    this.database = database
+  }
 
   async scan(docs: string[]) {
     this.covariance = getCovariance(docs.map(doc => ({ doc, weight: 1 })))

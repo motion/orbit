@@ -12,7 +12,10 @@ const data = [
 async function main() {
   const cosal = new Cosal({ database: '1' })
 
+  // scan some documents into cosal
   await cosal.scan(testDocs.map((text, id) => ({ text, id })))
+
+  // now do a search
   const results = await cosal.search('big southern state')
 
   console.log(

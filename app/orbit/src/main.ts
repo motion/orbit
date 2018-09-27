@@ -64,9 +64,9 @@ export async function main() {
       desktopProcess.kill('SIGINT')
       syncersProcess.kill('SIGINT')
       try {
+        cleanupChildren(process.pid)
         cleanupChildren(desktopProcess.pid)
         cleanupChildren(syncersProcess.pid)
-        cleanupChildren(process.pid)
       } catch {}
       console.log('bye!')
     } catch (err) {

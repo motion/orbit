@@ -154,6 +154,8 @@ class DesktopStore {
   start = async options => {
     await Bridge.start(this, this.state, options)
   }
+
+  dispose = Bridge.dispose
 }
 
 Desktop = proxySetters(new DesktopStore())

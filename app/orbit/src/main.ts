@@ -38,7 +38,6 @@ export async function main() {
     require('@mcro/orbit-desktop').main()
     // dont keep running
     return
-
   } else if (process.env.IS_SYNCERS) {
     if (!config) {
       throw new Error('Syncers didn\'t receive config!')
@@ -83,6 +82,7 @@ export async function main() {
   process.on('SIGINT', handleExit)
   process.on('SIGSEGV', handleExit)
   process.on('SIGTERM', handleExit)
+  process.on('SIGQUIT', handleExit)
 
   // fork desktop process...
   desktopProcess = require('./startDesktop').startDesktop()

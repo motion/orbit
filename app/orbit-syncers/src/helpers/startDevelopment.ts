@@ -18,7 +18,6 @@ export function startDevelopment(appRoot) {
   }
 
   process.on('exit', exitHandler)
-
   process.on('uncaughtException', err => {
     console.log('uncaughtException', err)
   })

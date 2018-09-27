@@ -32,6 +32,10 @@ export async function main() {
     cleanupChildren()
   })
   process.on('exit', dispose)
+  process.on('SIGINT', dispose)
+  process.on('SIGSEGV', dispose)
+  process.on('SIGTERM', dispose)
+  process.on('SIGQUIT', dispose)
 
   await appRoot.start()
 

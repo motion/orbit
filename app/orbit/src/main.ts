@@ -59,28 +59,20 @@ export async function main() {
   let syncersProcess: ChildProcess
 
   const handleExit = once(async () => {
-    console.log('Electron exit...')
     try {
-      try {
-        desktopProcess.kill('SIGINT')
-        syncersProcess.kill('SIGINT')
-      } catch {}
-      await new Promise(res => setTimeout(res))
+      console.log('Electron handle exit...')
+      desktopProcess.kill('SIGINT')
+      syncersProcess.kill('SIGINT')
       try {
         cleanupChildren(desktopProcess.pid)
         cleanupChildren(syncersProcess.pid)
         cleanupChildren(process.pid)
       } catch {}
-      try {
-        // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
-        process.kill(-desktopProcess.pid)
-        process.kill(-syncersProcess.pid)
-      } catch {}
       console.log('bye!')
     } catch (err) {
-      console.log('error exiting', err)
+      // exec('pkill -9 Orbit')
+      process.exit(0)
     }
-    process.exit(0)
   })
 
   // this works in dev

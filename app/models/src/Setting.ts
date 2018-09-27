@@ -4,6 +4,7 @@ import { SlackSettingValues } from './setting-values/SlackSettingValues'
 import { GmailSettingValues } from './setting-values/GmailSettingValues'
 import { GDriveSettingValues } from './setting-values/GDriveSettingValues'
 import { AtlassianSettingValuesCredentials } from './setting-values/AtlassianSettingValuesCredentials'
+import { GeneralSettingValues } from './setting-values/GeneralSettingValues'
 
 export interface Setting {
   /**
@@ -26,3 +27,4 @@ export type SlackSetting = Setting & { values: SlackSettingValues }
 export type AtlassianSetting = Setting & { values: AtlassianSettingValuesCredentials }
 export type GDriveSetting = Setting & { values: GDriveSettingValues }
 export type GmailSetting = Setting & { values: GmailSettingValues }
+export type GeneralSetting = Setting & { values: GeneralSettingValues }

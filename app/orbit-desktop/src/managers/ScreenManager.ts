@@ -1,7 +1,6 @@
 import { Oracle } from '@mcro/oracle'
 import { store, react, on } from '@mcro/black'
 import { Desktop, Electron, App } from '@mcro/stores'
-import macosVersion from 'macos-version'
 
 // handles the oracle blur window as well as any information relating to the current
 // OS screen state like spaces.
@@ -13,7 +12,7 @@ export class ScreenManager {
   isStarted = false
   oracle: Oracle
 
-  constructor(oracle: Oracle) {
+  constructor({ oracle }: { oracle: Oracle }) {
     this.oracle = oracle
   }
 

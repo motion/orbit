@@ -5,21 +5,15 @@ import { SettingEntity } from '@mcro/entities'
 import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Desktop } from '@mcro/stores'
+import { generalSetting, getGeneralSetting } from '../helpers/getSetting'
 
 const Config = getGlobalConfig()
 const log = new Logger('GeneralSettingManager')
-
-const generalSettingQuery = {
-  type: 'general' as 'general',
-  category: 'general',
-}
 
 // @ts-ignore
 @store
 export class GeneralSettingManager {
   autoLaunch: AutoLaunch
-  offMessages: any
 
   constructor() {
     if (Config.isProd) {
@@ -36,32 +30,21 @@ export class GeneralSettingManager {
     }
     log.info('move me to migration plz')
     this.start()
-
-    this.offMessages = Desktop.onMessage(Desktop.messages.TOGGLE_SETTING, async val => {
-      const setting = await getRepository(SettingEntity).findOne(generalSettingQuery)
-      setting.values[val] = !setting.values[val]
-      await getRepository(SettingEntity).save(setting)
-    })
   }
 
   async start() {
-
-    const values = generalSettingQuery
-    let item = await SettingEntity.findOne({ where: values })
-    if (!item) {
-      item = new SettingEntity()
-      Object.assign(item, values)
-      await getRepository(SettingEntity).save(item)
+    let setting = await getGeneralSetting()
+    if (!setting) {
+      const settingEntity = new SettingEntity()
+      Object.assign(settingEntity, generalSetting)
+      await getRepository(SettingEntity).save(settingEntity)
+      setting = await getGeneralSetting()
     }
-
-    const setting = await getRepository(SettingEntity).findOne(generalSettingQuery)
     this.ensureDefaultSettings(setting)
     this.handleAutoLaunch(setting)
   }
 
-  dispose() {
-    this.offMessages()
-  }
+  dispose() {}
 
   ensureDefaultSettings = async setting => {
     const values = setting.values as GeneralSettingValues

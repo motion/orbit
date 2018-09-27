@@ -1,8 +1,13 @@
 # nate
 
+- multi process with cluster https://gist.github.com/jpoehls/2232358
 - "stop asking" and "always send" for error reporting
+- "reset orbit db" option if error during startup
 - add report recent error log in Tray
 - show current app name in Orbit <Tray />
+  - can use bounds in https://electronjs.org/docs/api/tray
+    - click on icon shows menu
+    - click on words shows/hides orbit
 - make it great
   - Spin orbit <Orb /> when scanning
   - Tooltip on <Orb />
@@ -30,6 +35,7 @@
 
 # small
 
+- p2p libs: https://news.ycombinator.com/item?id=18077312 https://github.com/libp2p/js-libp2p
 - could open a special link type: orbit://gD7sadhgasdy78aDT7
 - test if we dont need cloud oauth https://laravel.com/docs/5.6/valet#securing-sites
 - website docs https://github.com/pedronauck/docz https://github.com/gatsbyjs/gatsby/tree/master/www/src/pages

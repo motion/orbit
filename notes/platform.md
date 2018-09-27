@@ -1,3 +1,12 @@
+# showing apps
+
+- home screen has apps tray above People
+- they are square and larger, can show last update row at bottom
+- for data integrations it can be a generic app:
+  - basically its a news page for that integration
+  - use cosal to generate topics and then recent items under those topics in a fancy grid
+  - plus show recent people you've interacted with perhaps
+
 # creating apps
 
 1. "new"

@@ -28,7 +28,7 @@ module.exports = function(_, givenOpts) {
       plug('@babel/preset-env', {
         loose: true,
         targets: {
-          chrome: '60',
+          chrome: '55',
         },
       }),
       plug('@babel/preset-typescript'),

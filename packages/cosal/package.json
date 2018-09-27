@@ -4,7 +4,8 @@
   "main": "_/cosal.js",
   "dependencies": {
     "compute-covariance": "^1.0.1",
-    "@mcro/vectorious": "*"
+    "@mcro/vectorious": "*",
+    "fs-extra": "7.0.0"
   },
   "scripts": {
     "build": "tsc || true",

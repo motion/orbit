@@ -20,16 +20,18 @@ Object.keys(slang).forEach(word => {
   vectors[word] = vectors[slang[word]]
 })
 
-export const getWordVector = memoize(word => {
-  word = word
-    .replace('.', '')
-    .replace(';', '')
-    .replace(',', '')
-    .toLowerCase()
-  const randomVector = vectors.hello.map(() => random(-0.15, 0.15))
-  const vector = word === 'constructor' ? randomVector : vectors[word] || randomVector
-  return vector
-})
+export const getWordVector = memoize(
+  (word: string): number[] => {
+    word = word
+      .replace('.', '')
+      .replace(';', '')
+      .replace(',', '')
+      .toLowerCase()
+    const randomVector = vectors.hello.map(() => random(-0.15, 0.15))
+    const vector = word === 'constructor' ? randomVector : vectors[word] || randomVector
+    return vector
+  },
+)
 
 const cosineSimilarity = ($v1, $v2) => {
   const dot = $v1.dot($v2)
@@ -55,9 +57,7 @@ export const docVec = pairs => {
   return $vec
 }
 
-export function toWords(s) {
-  if (!s.replace) return []
-
+export function toWords(s: string): string[] {
   return s
     .replace(/&amp;/g, '')
     .replace(/’/g, '\'')

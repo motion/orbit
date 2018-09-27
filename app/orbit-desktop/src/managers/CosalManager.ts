@@ -1,17 +1,59 @@
-// import { Logger } from '@mcro/logger'
-// import { getRepository } from '@mcro/model-bridge'
-// import { BitEntity } from '../entities/BitEntity'
+import { getGeneralSetting } from '../helpers/getSetting'
+import { BitEntity, SettingEntity } from '@mcro/entities'
+import { getRepository } from 'typeorm'
+import { Logger } from '@mcro/logger'
+import { Cosal } from '@mcro/cosal'
+import { chunk } from 'lodash'
 
-// const log = new Logger('CosalManager')
+const log = new Logger('CosalManager')
 
 export class CosalManager {
+  cosal: Cosal
+
+  constructor({ cosal }: { cosal: Cosal }) {
+    this.cosal = cosal
+  }
+
+  get search() {
+    return this.cosal.search
+  }
+
   start = () => {
     this.scanSinceLast()
   }
 
+  private async getLastScan() {
+    const setting = await getGeneralSetting()
+    if (typeof setting.values.cosalIndexUpdatedTo === 'undefined') {
+      setting.values.cosalIndexUpdatedTo = 0
+      await getRepository(SettingEntity).save(setting)
+    }
+    return setting.values.cosalIndexUpdatedTo
+  }
+
   scanSinceLast = async () => {
-    // const bits = await getRepository(BitEntity).find()
-    // for (const bit of bits) {
-    // }
+    const lastScanAt = await this.getLastScan()
+    const bitsSinceLastScan = await getRepository(BitEntity).find({
+      where: { updatedAt: { $moreThan: new Date(lastScanAt) } },
+    })
+    log.info('bitsSinceLastScan', bitsSinceLastScan.length)
+
+    if (!bitsSinceLastScan.length) {
+      return
+    }
+
+    // scan just a few at a time
+    const chunks = chunk(bitsSinceLastScan, 1000)
+    for (const chunk of chunks) {
+      log.verbose(`Scanning ${chunk.length} bits...`)
+      await this.cosal.scan(
+        chunk.map(bit => ({
+          id: bit.id,
+          text: bit.body,
+        })),
+      )
+    }
+
+    log.info('Done scanning new bits')
   }
 }

@@ -7,7 +7,7 @@ import macosVersion from 'macos-version'
 import { toJS } from 'mobx'
 import { oracleBinPath } from '../constants'
 import { getGlobalConfig } from '@mcro/config'
-import { getTopWords } from '@mcro/cosal'
+import { Cosal } from '@mcro/cosal'
 
 // const SpellChecker: any = {}
 const log = new Logger('OCRManager')
@@ -43,6 +43,7 @@ const PREVENT_SCANNING = {
 // @ts-ignore
 @store
 export class OCRManager {
+  cosal: Cosal
   hasResolvedOCR = false
   clearOCRTm: any
   isWatching = ''
@@ -58,6 +59,10 @@ export class OCRManager {
       console.log('should restart ocr it crashed...')
     },
   })
+
+  constructor({ cosal }: { cosal: Cosal }) {
+    this.cosal = cosal
+  }
 
   start = async () => {
     // for now just enable until re enable oracle
@@ -168,7 +173,7 @@ export class OCRManager {
       // console.log('spellchecked string', words.join(' '))
 
       const wordsString = words.join(' ')
-      const salientWords = await getTopWords(wordsString, 5)
+      const salientWords = await this.cosal.getTopWords(wordsString, 5)
 
       this.hasResolvedOCR = true
       Desktop.setOcrState({

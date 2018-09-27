@@ -8,22 +8,22 @@ class Vector {
    * @desc Creates a two-dimensional `Vector` from the supplied arguments.
    **/
   constructor(data) {
-    this.type = Float64Array;
-    this.length = 0;
+    this.type = Float64Array
+    this.length = 0
 
     if (data instanceof Vector) {
-      this.combine(data);
+      this.combine(data)
     } else if (data && data.shape) {
-      this.data = new data.type(data.data);
-      this.length = data.shape[0] * data.shape[1];
-      this.type = data.type;
+      this.data = new data.type(data.data)
+      this.length = data.shape[0] * data.shape[1]
+      this.type = data.type
     } else if (data instanceof Array) {
-      this.data = new this.type(data);
-      this.length = data.length;
+      this.data = new this.type(data)
+      this.length = data.length
     } else if (data && data.buffer && data.buffer instanceof ArrayBuffer) {
-      this.data = data;
-      this.length = data.length;
-      this.type = data.constructor;
+      this.data = data
+      this.length = data.length
+      this.type = data.constructor
     }
   }
 
@@ -36,7 +36,7 @@ class Vector {
    * @returns {Vector} a vector containing the results of binaery operation of `a` and `b`
    **/
   static binOp(a, b, op) {
-    return new Vector(a).binOp(b, op);
+    return new Vector(a).binOp(b, op)
   }
 
   /**
@@ -48,17 +48,14 @@ class Vector {
    **/
   binOp(vector, op) {
     var l1 = this.length,
-        l2 = vector.length;
-    if (l1 !== l2)
-      throw new Error('sizes do not match!');
-    if (!l1 && !l2)
-      return this;
+      l2 = vector.length
+    if (l1 !== l2) throw new Error('sizes do not match!')
+    if (!l1 && !l2) return this
 
-    var i;
-    for (i = 0; i < l1; i++)
-      this.data[i] = op(this.data[i], vector.data[i], i);
+    var i
+    for (i = 0; i < l1; i++) this.data[i] = op(this.data[i], vector.data[i], i)
 
-    return this;
+    return this
   }
 
   /**
@@ -69,7 +66,7 @@ class Vector {
    * @returns {Vector} a vector containing the sum of `a` and `b`
    **/
   static add(a, b) {
-    return new Vector(a).add(b);
+    return new Vector(a).add(b)
   }
 
   /**
@@ -79,7 +76,9 @@ class Vector {
    * @returns {Vector} this
    **/
   add(vector) {
-    return this.binOp(vector, function(a, b) { return a + b });
+    return this.binOp(vector, function(a, b) {
+      return a + b
+    })
   }
 
   /**
@@ -90,7 +89,7 @@ class Vector {
    * @returns {Vector} a vector containing the difference between `a` and `b`
    **/
   static subtract(a, b) {
-    return new Vector(a).subtract(b);
+    return new Vector(a).subtract(b)
   }
 
   /**
@@ -100,7 +99,9 @@ class Vector {
    * @returns {Vector} this
    **/
   subtract(vector) {
-    return this.binOp(vector, function(a, b) { return a - b });
+    return this.binOp(vector, function(a, b) {
+      return a - b
+    })
   }
 
   /**
@@ -111,7 +112,7 @@ class Vector {
    * @returns {Vector} a resultant scaled vector
    **/
   static scale(vector, scalar) {
-    return new Vector(vector).scale(scalar);
+    return new Vector(vector).scale(scalar)
   }
 
   /**
@@ -122,8 +123,8 @@ class Vector {
    **/
   scale(scalar) {
     return this.each(function(_, i, data) {
-      data[i] *= scalar;
-    });
+      data[i] *= scalar
+    })
   }
 
   /**
@@ -133,7 +134,7 @@ class Vector {
    * @returns {Vector} a resultant normalized vector
    **/
   static normalize(vector) {
-    return new Vector(vector).normalize();
+    return new Vector(vector).normalize()
   }
 
   /**
@@ -142,7 +143,7 @@ class Vector {
    * @returns {Vector} a resultant normalized vector
    **/
   normalize() {
-    return this.scale(1 / this.magnitude());
+    return this.scale(1 / this.magnitude())
   }
 
   /**
@@ -154,7 +155,7 @@ class Vector {
    * @returns {Vector} a new resultant projected vector
    **/
   static project(a, b) {
-    return a.project(new Vector(b));
+    return a.project(new Vector(b))
   }
 
   /**
@@ -165,10 +166,10 @@ class Vector {
    * @returns {Vector} `vector`
    **/
   project(vector) {
-    return vector.scale(this.dot(vector) / vector.dot(vector));
+    return vector.scale(this.dot(vector) / vector.dot(vector))
   }
 
-    /**
+  /**
    * Static method. Creates a vector containing optional 'value' (default 0) of `count` size, takes
    * an optional `type` argument which should be an instance of `TypedArray`.
    * @memberof Vector
@@ -178,28 +179,22 @@ class Vector {
    * @returns {Vector} a new vector of the specified size and `type`
    **/
   static fill(count, value, type) {
-    if (count < 0)
-      throw new Error('invalid size');
-    if (count === 0)
-      return new Vector();
-    
+    if (count < 0) throw new Error('invalid size')
+    if (count === 0) return new Vector()
+
     if (value == null) {
-      value = 0.0;
+      value = 0.0
     }
     if (type == null) {
-      type = Float64Array;
+      type = Float64Array
     }
     var data = new type(count),
-        i;
+      i
 
-    if (typeof value === 'function')
-      for (i = 0; i < count; i++)
-        data[i] = value(i);
-    else
-      for (i = 0; i < count; i++)
-        data[i] = value;
+    if (typeof value === 'function') for (i = 0; i < count; i++) data[i] = value(i)
+    else for (i = 0; i < count; i++) data[i] = value
 
-    return new Vector(data);
+    return new Vector(data)
   }
 
   /**
@@ -211,7 +206,7 @@ class Vector {
    * @returns {Vector} a new vector of the specified size and `type`
    **/
   static zeros(count, type) {
-    return Vector.fill(count, 0.0, type);
+    return Vector.fill(count, 0.0, type)
   }
 
   /**
@@ -223,7 +218,7 @@ class Vector {
    * @returns {Vector} a new vector of the specified size and `type`
    **/
   static ones(count, type) {
-    return Vector.fill(count, 1, type);
+    return Vector.fill(count, 1, type)
   }
 
   /**
@@ -239,14 +234,18 @@ class Vector {
    **/
   static random(count, deviation, mean, type) {
     if (deviation == null) {
-      deviation = 1;
+      deviation = 1
     }
     if (mean == null) {
-      mean = 0;
+      mean = 0
     }
-    return Vector.fill(count, function() {
-      return deviation * Math.random() + mean;
-    }, type);
+    return Vector.fill(
+      count,
+      function() {
+        return deviation * Math.random() + mean
+      },
+      type,
+    )
   }
 
   /**
@@ -263,49 +262,45 @@ class Vector {
    **/
   static range() {
     var args = [].slice.call(arguments),
-        backwards = false,
-        start, step, end;
+      backwards = false,
+      start,
+      step,
+      end
 
-    var type = Float64Array;
-    if (typeof args[args.length - 1] === 'function')
-      type = args.pop();
+    var type = Float64Array
+    if (typeof args[args.length - 1] === 'function') type = args.pop()
 
     switch (args.length) {
       case 2:
-        end = args.pop();
-        step = 1;
-        start = args.pop();
-        break;
+        end = args.pop()
+        step = 1
+        start = args.pop()
+        break
       case 3:
-        end = args.pop();
-        step = args.pop();
-        start = args.pop();
-        break;
+        end = args.pop()
+        step = args.pop()
+        start = args.pop()
+        break
       default:
-        throw new Error('invalid range');
+        throw new Error('invalid range')
     }
 
     if (end - start < 0) {
-      var copy = end;
-      end = start;
-      start = copy;
-      backwards = true;
+      var copy = end
+      end = start
+      start = copy
+      backwards = true
     }
 
-    if (step > end - start)
-      throw new Error('invalid range');
+    if (step > end - start) throw new Error('invalid range')
 
     var data = new type(Math.ceil((end - start) / step)),
-        i = start,
-        j = 0;
-    if (backwards)
-      for (; i < end; i += step, j++)
-        data[j] = end - i + start;
-    else
-      for (; i < end; i += step, j++)
-        data[j] = i;
+      i = start,
+      j = 0
+    if (backwards) for (; i < end; i += step, j++) data[j] = end - i + start
+    else for (; i < end; i += step, j++) data[j] = i
 
-    return new Vector(data);
+    return new Vector(data)
   }
 
   /**
@@ -316,7 +311,7 @@ class Vector {
    * @returns {Number} the dot product of the two vectors
    **/
   static dot(a, b) {
-    return a.dot(b);
+    return a.dot(b)
   }
 
   /**
@@ -326,18 +321,17 @@ class Vector {
    * @returns {Number} the dot product of the two vectors
    **/
   dot(vector) {
-    if (this.length !== vector.length)
-      throw new Error('sizes do not match');
+    if (this.length !== vector.length) throw new Error('sizes do not match')
 
     var a = this.data,
-        b = vector.data,
-        result = 0,
-        i, l;
+      b = vector.data,
+      result = 0,
+      i,
+      l
 
-    for (i = 0, l = this.length; i < l; i++)
-      result += a[i] * b[i];
+    for (i = 0, l = this.length; i < l; i++) result += a[i] * b[i]
 
-    return result;
+    return result
   }
 
   /**
@@ -346,16 +340,15 @@ class Vector {
    * @returns {Number} the magnitude (L2 norm) of the vector
    **/
   magnitude() {
-    if (!this.length)
-      return 0;
+    if (!this.length) return 0
 
     var result = 0,
-        data = this.data,
-        i, l;
-    for (i = 0, l = this.length; i < l; i++)
-      result += data[i] * data[i];
+      data = this.data,
+      i,
+      l
+    for (i = 0, l = this.length; i < l; i++) result += data[i] * data[i]
 
-    return Math.sqrt(result);
+    return Math.sqrt(result)
   }
 
   /**
@@ -366,7 +359,7 @@ class Vector {
    * @returns {Number} the angle between the two vectors in radians
    **/
   static angle(a, b) {
-    return a.angle(b);
+    return a.angle(b)
   }
 
   /**
@@ -376,7 +369,7 @@ class Vector {
    * @returns {Number} the angle between the two vectors in radians
    **/
   angle(vector) {
-    return Math.acos(this.dot(vector) / this.magnitude() / vector.magnitude());
+    return Math.acos(this.dot(vector) / this.magnitude() / vector.magnitude())
   }
 
   /**
@@ -387,7 +380,7 @@ class Vector {
    * @returns {Boolean} `true` if the two vectors are equal, `false` otherwise
    **/
   static equals(a, b) {
-    return a.equals(b);
+    return a.equals(b)
   }
 
   /**
@@ -397,13 +390,11 @@ class Vector {
    * @returns {Boolean} `true` if the two vectors are equal, `false` otherwise
    **/
   equals(vector) {
-    if (this.length !== vector.length)
-      return false;
+    if (this.length !== vector.length) return false
 
-    var i = 0;
-    while (i < this.length && this.data[i] === vector.data[i])
-      i++;
-    return i === this.length;
+    var i = 0
+    while (i < this.length && this.data[i] === vector.data[i]) i++
+    return i === this.length
   }
 
   /**
@@ -413,8 +404,8 @@ class Vector {
    **/
   min() {
     return this.reduce(function(acc, item) {
-      return acc < item ? acc : item;
-    }, Number.POSITIVE_INFINITY);
+      return acc < item ? acc : item
+    }, Number.POSITIVE_INFINITY)
   }
 
   /**
@@ -424,8 +415,8 @@ class Vector {
    **/
   max() {
     return this.reduce(function(acc, item) {
-      return acc < item ? item : acc;
-    }, Number.NEGATIVE_INFINITY);
+      return acc < item ? item : acc
+    }, Number.NEGATIVE_INFINITY)
   }
 
   /**
@@ -433,9 +424,9 @@ class Vector {
    * @memberof Vector
    * @param {Number} index
    **/
-  check(index) {  
+  check(index) {
     if (!Number.isFinite(index) || index < 0 || index > this.length - 1)
-      throw new Error('index out of bounds');
+      throw new Error('index out of bounds')
   }
 
   /**
@@ -445,8 +436,8 @@ class Vector {
    * @returns {Number} the element at `index`
    **/
   get(index) {
-    this.check(index);
-    return this.data[index];
+    this.check(index)
+    return this.data[index]
   }
 
   /**
@@ -457,9 +448,9 @@ class Vector {
    * @returns {Vector} this
    **/
   set(index, value) {
-    this.check(index);
-    this.data[index] = value;
-    return this;
+    this.check(index)
+    this.data[index] = value
+    return this
   }
 
   /**
@@ -469,7 +460,7 @@ class Vector {
    * @name Vector#x
    */
   get x() {
-    return this.get(0);
+    return this.get(0)
   }
 
   /**
@@ -479,7 +470,7 @@ class Vector {
    * @name Vector#x
    */
   set x(value) {
-    return this.set(0, value);
+    return this.set(0, value)
   }
 
   /**
@@ -489,7 +480,7 @@ class Vector {
    * @name Vector#y
    */
   get y() {
-    return this.get(1);
+    return this.get(1)
   }
 
   /**
@@ -499,7 +490,7 @@ class Vector {
    * @name Vector#y
    */
   set y(value) {
-    return this.set(1, value);
+    return this.set(1, value)
   }
 
   /**
@@ -509,7 +500,7 @@ class Vector {
    * @name Vector#z
    */
   get z() {
-    return this.get(2);
+    return this.get(2)
   }
 
   /**
@@ -519,7 +510,7 @@ class Vector {
    * @name Vector#z
    */
   set z(value) {
-    return this.set(2, value);
+    return this.set(2, value)
   }
 
   /**
@@ -529,7 +520,7 @@ class Vector {
    * @name Vector#w
    */
   get w() {
-    return this.get(3);
+    return this.get(3)
   }
 
   /**
@@ -539,7 +530,7 @@ class Vector {
    * @name Vector#w
    */
   set w(value) {
-    return this.set(3, value);
+    return this.set(3, value)
   }
 
   /**
@@ -550,7 +541,7 @@ class Vector {
    * @returns {Vector} `b` appended to vector `a`
    **/
   static combine(a, b) {
-    return new Vector(a).combine(b);
+    return new Vector(a).combine(b)
   }
 
   /**
@@ -560,28 +551,27 @@ class Vector {
    * @returns {Vector} `vector` combined with current vector
    **/
   combine(vector) {
-    if (!vector.length)
-      return this;
+    if (!vector.length) return this
     if (!this.length) {
-      this.data = new vector.type(vector.data);
-      this.length = vector.length;
-      this.type = vector.type;
-      return this;
+      this.data = new vector.type(vector.data)
+      this.length = vector.length
+      this.type = vector.type
+      return this
     }
 
     var l1 = this.length,
-        l2 = vector.length,
-        d1 = this.data,
-        d2 = vector.data;
+      l2 = vector.length,
+      d1 = this.data,
+      d2 = vector.data
 
-    var data = new this.type(l1 + l2);
-    data.set(d1);
-    data.set(d2, l1);
+    var data = new this.type(l1 + l2)
+    data.set(d1)
+    data.set(d2, l1)
 
-    this.data = data;
-    this.length = l1 + l2;
+    this.data = data
+    this.length = l1 + l2
 
-    return this;
+    return this
   }
 
   /**
@@ -591,7 +581,7 @@ class Vector {
    * @returns {Vector} `this`
    **/
   push(value) {
-    return this.combine(new Vector([value]));
+    return this.combine(new Vector([value]))
   }
 
   /**
@@ -602,12 +592,11 @@ class Vector {
    **/
   map(callback) {
     var mapped = new Vector(this),
-        data = mapped.data,
-        i;
-    for (i = 0; i < this.length; i++)
-      data[i] = callback.call(mapped, data[i], i, data);
+      data = mapped.data,
+      i
+    for (i = 0; i < this.length; i++) data[i] = callback.call(mapped, data[i], i, data)
 
-    return mapped;
+    return mapped
   }
 
   /**
@@ -618,11 +607,10 @@ class Vector {
    * @returns {Vector} `this`
    **/
   each(callback) {
-    var i;
-    for (i = 0; i < this.length; i++)
-      callback.call(this, this.data[i], i, this.data);
+    var i
+    for (i = 0; i < this.length; i++) callback.call(this, this.data[i], i, this.data)
 
-    return this;
+    return this
   }
 
   /**
@@ -633,16 +621,14 @@ class Vector {
    * @returns {Number} result of reduction
    **/
   reduce(callback, initialValue) {
-    var l = this.length;
-    if (l === 0 && !initialValue)
-      throw new Error('Reduce of empty matrix with no initial value.');
+    var l = this.length
+    if (l === 0 && !initialValue) throw new Error('Reduce of empty matrix with no initial value.')
 
     var i = 0,
-        value = initialValue != null ? initialValue : this.data[i++];
+      value = initialValue != null ? initialValue : this.data[i++]
 
-    for (; i < l; i++)
-      value = callback.call(this, value, this.data[i], i, this.data);
-    return value;
+    for (; i < l; i++) value = callback.call(this, value, this.data[i], i, this.data)
+    return value
   }
 
   /**
@@ -652,16 +638,14 @@ class Vector {
    **/
   toString() {
     var result = ['['],
-        i = 0;
-    
-    if (i < this.length)
-      result.push(this.data[i++]);
-    while (i < this.length)
-      result.push(', ' + this.data[i++]);
-    
-    result.push(']');
+      i = 0
 
-    return result.join('');
+    if (i < this.length) result.push(this.data[i++])
+    while (i < this.length) result.push(', ' + this.data[i++])
+
+    result.push(']')
+
+    return result.join('')
   }
 
   /**
@@ -670,14 +654,10 @@ class Vector {
    * @returns {Array} an array containing all elements of current vector
    **/
   toArray() {
-    if (!this.data)
-      return [];
+    if (!this.data) return []
 
-    return [].slice.call(this.data);
+    return [].slice.call(this.data)
   }
 }
 
-module.exports = Vector;
-try {
-  window.Vector = Vector;
-} catch (e) {}
+module.exports = Vector

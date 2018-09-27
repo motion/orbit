@@ -3,7 +3,6 @@ import { getGlobalConfig } from '@mcro/config'
 import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
-import { BitUtils } from '@mcro/model-utils'
 import {
   AtlassianSettingSaveCommand,
   BitModel,
@@ -38,7 +37,9 @@ import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { KeyboardStore } from './stores/KeyboardStore'
+import { CosalManager } from './managers/CosalManager'
 // import iohook from 'iohook'
+import { Cosal } from '@mcro/cosal'
 
 const log = new Logger('desktop')
 
@@ -53,8 +54,10 @@ export class Root {
   server = new Server()
   stores = null
   mediator: MediatorServer
+  cosal: Cosal
 
   // managers
+  cosalManager: CosalManager
   ocrManager: OCRManager
   appsManager: AppsManager
   screenManager: ScreenManager
@@ -108,19 +111,20 @@ export class Root {
 
     // start managers...
 
-    this.screenManager = new ScreenManager(this.oracle)
+    this.cosal = new Cosal()
+    this.ocrManager = new OCRManager({ cosal: this.cosal })
+    this.cosalManager = new CosalManager({ cosal: this.cosal })
+    this.screenManager = new ScreenManager({ oracle: this.oracle })
     this.appsManager = new AppsManager()
 
     // start oracle after passing into screenManager
     await this.oracle.start()
-
     // then start screenmanager after oracle.start
     this.screenManager.start()
-
     // start oracle related managers once its started
-    this.ocrManager = new OCRManager()
     this.ocrManager.start()
 
+    // start others...
     this.keyboardStore = new KeyboardStore({
       // disable for now it was used for fancy orbit app switching
       // onKeyClear: this.screenManager.lastScreenChange,
@@ -243,5 +247,4 @@ export class Root {
     })
     this.mediator.bootstrap()
   }
-
 }

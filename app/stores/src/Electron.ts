@@ -29,6 +29,10 @@ class ElectronStore {
     focusedAppId: 'app',
     screenSize: [0, 0],
     settingsPosition: [], // todo: settingsState.position
+    updateState: {
+      downloading: false,
+      percent: 0,
+    },
     hoverState: {
       orbitHovered: false,
       peekHovered: {

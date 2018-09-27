@@ -20,7 +20,6 @@ type SlackMessageProps = BitItemResolverProps & {
 const SlackMessageFrame = view(View, {
   padding: [0, 0],
   overflow: 'hidden',
-  alignItems: 'center',
 })
 
 const SlackMessageInner = view({
@@ -46,7 +45,13 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     return (
-      <SlackMessageFrame flexFlow={extraProps.minimal ? 'row' : 'column'} {...decoration.item}>
+      <SlackMessageFrame
+        {...extraProps.minimal && {
+          flexFlow: 'row',
+          alignItems: 'center',
+        }}
+        {...decoration.item}
+      >
         {!hideHeader && (
           <UI.Row alignItems="center" userSelect="none" cursor="default">
             {extraProps.beforeTitle || null}

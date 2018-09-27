@@ -19,6 +19,7 @@
     "@mcro/mediator": "^2.2.1",
     "@mcro/models": "^2.2.1",
     "@mcro/model-utils": "^2.2.1",
+    "@mcro/model-bridge": "^2.2.1",
     "@mcro/oracle": "^2.2.1",
     "@mcro/orbit-app": "^2.2.1",
     "@mcro/r2": "^2.2.1",

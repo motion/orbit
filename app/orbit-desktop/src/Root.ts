@@ -1,11 +1,14 @@
 import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
+// import iohook from 'iohook'
+import { Cosal } from '@mcro/cosal'
 import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
+import { MediatorClient, MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
   AtlassianSettingSaveCommand,
   BitModel,
+  CosalTopWordsCommand,
   GithubRepositoryModel,
   GithubSettingBlacklistCommand,
   JobModel,
@@ -26,20 +29,19 @@ import * as typeorm from 'typeorm'
 import { Connection } from 'typeorm'
 import { oracleOptions } from './constants'
 import { AppsManager } from './managers/appsManager'
+import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
 import { OCRManager } from './managers/OCRManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { Onboard } from './onboard/Onboard'
 import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
+import { CosalTopWordsResolver } from './resolvers/CosalTopWordsResolver'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { KeyboardStore } from './stores/KeyboardStore'
-import { CosalManager } from './managers/CosalManager'
-// import iohook from 'iohook'
-import { Cosal } from '@mcro/cosal'
 
 const log = new Logger('desktop')
 
@@ -53,7 +55,7 @@ export class Root {
   keyboardStore: KeyboardStore
   server = new Server()
   stores = null
-  mediator: MediatorServer
+  mediatorServer: MediatorServer
   cosal: Cosal
 
   // managers
@@ -165,7 +167,7 @@ export class Root {
     root.Root = this
     root.restart = this.restart
     root.Logger = Logger
-    root.mediator = this.mediator
+    root.mediatorServer = this.mediatorServer
     // root.load = async (email: string) => {
     //   console.time("timing")
     //   const bits = getRepository(BitEntity).find({
@@ -212,7 +214,7 @@ export class Root {
    * for communication between processes.
    */
   private registerMediatorServer() {
-    this.mediator = new MediatorServer({
+    this.mediatorServer = new MediatorServer({
       models: [
         SettingModel,
         BitModel,
@@ -227,6 +229,7 @@ export class Root {
         AtlassianSettingSaveCommand,
         GithubSettingBlacklistCommand,
         SlackSettingBlacklistCommand,
+        CosalTopWordsCommand,
       ],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,
@@ -243,8 +246,9 @@ export class Root {
         AtlassianSettingSaveResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
+        CosalTopWordsResolver,
       ],
     })
-    this.mediator.bootstrap()
+    this.mediatorServer.bootstrap()
   }
 }

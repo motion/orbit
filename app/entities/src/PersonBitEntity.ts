@@ -8,42 +8,42 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   target: 'person-bit' = 'person-bit'
 
   @PrimaryColumn()
-  email: string
+  email?: string
 
   @Column({ nullable: true })
   @Index()
-  name: string
+  name?: string
 
   @Column({ type: 'simple-json', default: '{}' })
   @Index()
-  allNames: IntegrationTypeValues
+  allNames?: IntegrationTypeValues
 
   @Column({ nullable: true })
-  photo: string
+  photo?: string
 
   @Column({ type: 'simple-json', default: '{}' })
   @Index()
-  allPhotos: IntegrationTypeValues
+  allPhotos?: IntegrationTypeValues
 
   @Column({ default: false })
-  hasSlack: boolean
+  hasSlack?: boolean
 
   @Column({ default: false })
-  hasGithub: boolean
+  hasGithub?: boolean
 
   @Column({ default: false })
-  hasGdrive: boolean
+  hasGdrive?: boolean
 
   @Column({ default: false })
-  hasJira: boolean
+  hasJira?: boolean
 
   @Column({ default: false })
-  hasConfluence: boolean
+  hasConfluence?: boolean
 
   @Column({ default: false })
-  hasGmail: boolean
+  hasGmail?: boolean
 
   @OneToMany(() => PersonEntity, person => person.personBit)
-  people: Person[]
+  people?: Person[]
 
 }

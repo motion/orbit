@@ -11,6 +11,7 @@
   "references": [
     { "path": "../models" },
     { "path": "../model-utils" },
+    { "path": "../model-bridge" },
     { "path": "../services" },
     { "path": "../stores" },
     { "path": "../oracle" },

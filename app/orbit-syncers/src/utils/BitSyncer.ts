@@ -13,7 +13,7 @@ export class BitSyncer {
    * Syncs given bits in the database.
    */
   static async sync(log: Logger, apiBits: Bit[], dbBits: Bit[]) {
-    log.verbose(`calculating inserted/updated/removed bits`, { apiBits, dbBits })
+    log.info(`calculating inserted/updated/removed bits`, { apiBits, dbBits })
 
     // calculate bits that we need to update in the database
     const insertedBits = apiBits.filter(apiBit => {

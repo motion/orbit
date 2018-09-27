@@ -27,69 +27,69 @@ export class BitEntity extends BaseEntity implements Bit {
   target: 'bit' = 'bit'
 
   @PrimaryColumn()
-  id: number
+  id?: number
 
   @Index()
   @Column({ unique: true })
-  contentHash: number
+  contentHash?: number
 
   @Column({ type: String })
-  integration: IntegrationType
+  integration?: IntegrationType
 
   @Column()
-  settingId: number
+  settingId?: number
 
   @Column({ nullable: true })
-  authorId: number
+  authorId?: number
 
   @Index()
   @Column()
-  title: string
+  title?: string
 
   @Column()
-  body: string
+  body?: string
 
   @Index()
   @Column()
-  type: string
+  type?: string
 
   @Column({ nullable: true })
-  webLink: string
+  webLink?: string
 
   @Column({ nullable: true })
-  desktopLink: string
+  desktopLink?: string
 
   @Column({ type: 'simple-json', default: '{}' })
-  data: BitData
+  data?: BitData
 
   @Column({ type: 'simple-json', default: '{}' })
-  raw: any
+  raw?: any
 
   @Column(() => LocationEntity)
-  location: LocationEntity
+  location?: LocationEntity
 
   @Column()
-  bitCreatedAt: number
+  bitCreatedAt?: number
 
   @Column()
-  bitUpdatedAt: number
+  bitUpdatedAt?: number
 
   @Index()
   @CreateDateColumn()
-  createdAt: Date
+  createdAt?: Date
 
   @Index()
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt?: Date
 
   @ManyToOne(() => PersonEntity)
-  author: Person
+  author?: Person
 
   @ManyToMany(() => PersonEntity, person => person.bits)
   @JoinTable()
-  people: Person[]
+  people?: Person[]
 
   @ManyToOne(() => SettingEntity)
-  setting: Setting
+  setting?: Setting
 
 }

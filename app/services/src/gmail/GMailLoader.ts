@@ -4,7 +4,7 @@ import { GMailFetcher } from './GMailFetcher'
 import { historyQuery, threadQuery, threadsQuery } from './GMailQueries'
 import { GmailHistoryLoadResult, GmailThread } from './GMailTypes'
 
-const log = new Logger('syncer:gmail')
+const log = new Logger('service:gmail:loader')
 
 export class GMailLoader {
   setting: Setting

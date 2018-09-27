@@ -4,15 +4,15 @@ import { Column } from 'typeorm'
 export class LocationEntity implements Location {
 
   @Column({ nullable: true })
-  id: string
+  id?: string
 
   @Column({ nullable: true })
-  name: string
+  name?: string
 
   @Column({ nullable: true })
-  webLink: string
+  webLink?: string
 
   @Column({ nullable: true })
-  desktopLink: string
+  desktopLink?: string
 
 }

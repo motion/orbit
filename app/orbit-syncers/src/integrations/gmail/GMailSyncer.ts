@@ -4,7 +4,7 @@ import { BitUtils, PersonUtils } from '@mcro/model-utils'
 import { Bit, GmailBitData, GmailBitDataParticipant, GmailPersonData, GmailSettingValues } from '@mcro/models'
 import { GMailLoader, GmailThread } from '@mcro/services'
 import { assign, hash, sequence } from '@mcro/utils'
-import { getRepository, In } from 'typeorm'
+import { getManager, getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { createOrUpdatePersonBits } from '../../utils/repository'
 import { GMailMessageParser } from './GMailMessageParser'
@@ -47,7 +47,7 @@ export class GMailSyncer implements IntegrationSyncer {
     }
 
     let addedThreads: GmailThread[] = [],
-      removedBits: BitEntity[] = []
+      removedBits: Bit[] = []
     if (historyId) {
       // load history
       const history = await this.loader.loadHistory(historyId)
@@ -110,7 +110,7 @@ export class GMailSyncer implements IntegrationSyncer {
     // if there are removed threads then remove their bits
     if (removedBits.length) {
       log.verbose('have a bits to be removed', removedBits)
-      await getRepository(BitEntity).remove(removedBits)
+      await getManager().remove(BitEntity, removedBits)
       log.info('bits were removed', removedBits)
     }
 
@@ -195,10 +195,10 @@ export class GMailSyncer implements IntegrationSyncer {
     const firstMessageParser = new GMailMessageParser(firstMessage)
     const lastMessageParser = new GMailMessageParser(lastMessage)
 
-    const bit =
+    const bit: Bit =
       (await getRepository(BitEntity).findOne(id, {
         relations: ['people'],
-      })) || new BitEntity()
+      })) || { target: 'bit' }
 
     const data: GmailBitData = {
       messages,

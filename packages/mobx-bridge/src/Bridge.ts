@@ -122,8 +122,8 @@ export class BridgeManager {
     this.socketManager = new SocketManager({
       masterSource: 'Desktop',
       port: this.port,
-      onState: (source, state, uid) => {
-        log.verbose(`onState ${uid} ${JSON.stringify(state)}`)
+      onState: (source, state, _uid) => {
+        // log.verbose(`onState ${_uid} ${JSON.stringify(state)}`)
         this.deepMergeMutate(stores[source].state, state, {
           ignoreKeyCheck: true,
         })

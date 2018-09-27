@@ -6,7 +6,7 @@ import { queryObjectToQueryString } from '../utils'
 import { GmailFetchOptions } from './GMailTypes'
 
 const Config = getGlobalConfig()
-const log = new Logger('syncer:gmail')
+const log = new Logger('service:gmail:fetcher')
 
 export class GMailFetcher {
   setting: Setting

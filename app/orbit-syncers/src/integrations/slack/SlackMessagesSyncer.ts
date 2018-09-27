@@ -1,6 +1,8 @@
 import { BitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
+import { command } from '@mcro/model-bridge'
 import { Bit, SlackSettingValues } from '@mcro/models'
+import { CosalTopWordsCommand } from '@mcro/models'
 import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
 import { timeout } from '@mcro/utils'
 import { getRepository, MoreThan } from 'typeorm'
@@ -43,6 +45,9 @@ export class SlackMessagesSyncer implements IntegrationSyncer {
       })
       return
     }
+
+    const words = await command(CosalTopWordsCommand, { text: "hello", max: 5 })
+    log.verbose(`got some cosal top words`, words)
 
     // load all slack channels
     log.timer('load API channels')

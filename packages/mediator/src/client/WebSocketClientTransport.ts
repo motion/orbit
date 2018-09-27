@@ -25,7 +25,13 @@ export class WebSocketClientTransport implements ClientTransport {
       this.onConnectedCallbacks = []
     }
     websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
-    websocket.onerror = err => log.error(err)
+    websocket.onerror = err => {
+      if (err.error.indexOf('ECONNREFUSED')) {
+        log.info(`Connection refused ${name}...`)
+      } else {
+        log.error(`Error ${name} ${err.error}`)
+      }
+    }
     websocket.onclose = () => {
       if (websocket._shouldReconnect) {
         websocket._connect()
@@ -52,7 +58,6 @@ export class WebSocketClientTransport implements ClientTransport {
     }
 
     return new Observable(subject => {
-
       // create a new subscription
       const subscription = {
         id,
@@ -66,7 +71,7 @@ export class WebSocketClientTransport implements ClientTransport {
         },
       }
       this.subscriptions.push(subscription)
-      log.verbose(`created a new subscription`, {
+      log.verbose('created a new subscription', {
         id: data.id,
         type: subscription.type,
         name: subscription.name,
@@ -91,7 +96,6 @@ export class WebSocketClientTransport implements ClientTransport {
       }
 
       return () => {
-
         // remove subscription on cancellation
         const index = this.subscriptions.indexOf(subscription)
         if (index !== -1) this.subscriptions.splice(index, 1)
@@ -101,7 +105,7 @@ export class WebSocketClientTransport implements ClientTransport {
           type: 'unsubscribe',
         }
         this.websocket.send(JSON.stringify(data))
-        log.verbose(`removed subscription`, {
+        log.verbose('removed subscription', {
           id: data.id,
           type: subscription.type,
           name: subscription.name,
@@ -121,14 +125,13 @@ export class WebSocketClientTransport implements ClientTransport {
       ...values,
     }
     return new Promise((ok, fail) => {
-
       // we need to send request to the server - here we create a function that does it
       // and if we already have a connection with websockets we execute this function and send a request
       // but if connection isn't established yet, we push function to the list that is going
       // to be executed later on when websocket connection will be established
       const callback = () => {
         try {
-          log.verbose(`sent client data`, query)
+          log.verbose('sent client data', query)
           this.websocket.send(JSON.stringify(query))
         } catch (err) {
           fail(`Failed to execute websocket operation ${JSON.stringify(err)}`)
@@ -183,7 +186,7 @@ export class WebSocketClientTransport implements ClientTransport {
       return
     }
 
-    log.verbose(`received data`, {
+    log.verbose('received data', {
       id: data.id,
       type: subscription.type,
       name: subscription.name,

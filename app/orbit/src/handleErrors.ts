@@ -18,7 +18,7 @@ export async function onError(error) {
     console.log('---no error---', error)
     return
   }
-  console.log('\n\n---error---\n\n', error)
+  console.log('\n\n---error---\n\n', error.message, '\n', error.stack)
   const errorMessage = `${error.message || ''}\n${error.stack || ''}`
 
   // avoid certain errors that aren't easily catchable (like websockets)...

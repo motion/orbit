@@ -1,10 +1,9 @@
 import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
-// import iohook from 'iohook'
 import { Cosal } from '@mcro/cosal'
 import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { MediatorClient, MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
+import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
   AtlassianSettingSaveCommand,
   BitModel,
@@ -36,12 +35,13 @@ import { OCRManager } from './managers/OCRManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { Onboard } from './onboard/Onboard'
 import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
-import { CosalTopWordsResolver } from './resolvers/CosalTopWordsResolver'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { KeyboardStore } from './stores/KeyboardStore'
+import { getCosalResolvers } from './resolvers/getCosalResolvers'
+import { getSearchResolver } from './resolvers/SearchResolver'
 
 const log = new Logger('desktop')
 
@@ -170,45 +170,6 @@ export class Root {
     root.restart = this.restart
     root.Logger = Logger
     root.mediatorServer = this.mediatorServer
-    // root.load = async (email: string) => {
-    //   console.time("timing")
-    //   const bits = getRepository(BitEntity).find({
-    //     where: {
-    //       people: {
-    //         personBit: {
-    //           email: email,
-    //         },
-    //       },
-    //     },
-    //     order: {
-    //       bitUpdatedAt: 'DESC',
-    //     },
-    //     take: 15,
-    //   })
-    //   console.timeEnd("timing")
-    //   return bits
-    // }
-    // root.save = async (count: number) => {
-    //   const setting = await getRepository(SettingEntity).findOne(1)
-    //   const bitCount = await getRepository(BitEntity).count()
-    //   const bits: any[] = []
-    //   for (let i = 0; i < count; i++) {
-    //     bits.push(BitUtils.create({
-    //       id: 400000 + bitCount + i,
-    //       integration: 'test' as any,
-    //       title: '4My bit #' + (bitCount + i),
-    //       body: '',
-    //       type: 'custom',
-    //       bitCreatedAt: Date.now(),
-    //       bitUpdatedAt: Date.now(),
-    //       settingId: setting.id,
-    //     }))
-    //   }
-    //   console.log("saving bit", bits)
-    //   console.time("saving bits")
-    //   await getRepository(BitEntity).save(bits, { chunk: 100 })
-    //   console.timeEnd("saving bits")
-    // }
   }
 
   /**
@@ -248,7 +209,8 @@ export class Root {
         AtlassianSettingSaveResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
-        CosalTopWordsResolver,
+        ...getCosalResolvers(this.cosal),
+        getSearchResolver(this.cosal),
       ],
     })
     this.mediatorServer.bootstrap()

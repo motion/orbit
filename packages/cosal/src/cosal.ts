@@ -10,7 +10,7 @@ export { getCovariance } from './getCovariance'
 export { toCosal } from './toCosal'
 
 type Record = {
-  id: string
+  id: number
   text: string
 }
 
@@ -27,7 +27,8 @@ export class Cosal {
   vectors: VectorDB = {}
   covariance: Covariance = null
 
-  async scan(newRecords: Record[], debug = false) {
+  // incremental scan can add more and more documents
+  async scan(newRecords: Record[]) {
     // this is incremental, passing in previous matrix
     this.covariance = getCovariance(
       this.covariance ? this.covariance.matrix : corpusCovarPrecomputed,
@@ -42,13 +43,12 @@ export class Cosal {
       if (this.vectors[record.id]) {
         throw new Error(`Already have a record id ${record.id}`)
       }
-      if (debug) {
-        console.log('adding', record.id, cosals[index].vector)
-      }
       this.vectors[record.id] = cosals[index].vector
     }
   }
 
+  // goes through all vectors and sorts by smallest distance up to max
+  // TODO better data structure?
   async search(query: string, max = 10): Promise<Result[]> {
     const cosal = await toCosal(query, this.covariance)
     let results: Result[] = []
@@ -64,7 +64,6 @@ export class Cosal {
       if (distance < results[len - 1].distance) {
         const insertIndex = results.findIndex(x => distance < x.distance)
         results.splice(insertIndex, len > max ? 1 : 0, { id, distance })
-        console.log('insert', insertIndex, distance, results[0], results.length)
       }
     }
 

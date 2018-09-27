@@ -7,38 +7,40 @@ const testSentences = [
   'But the tails still come apart. If we ask whether Mike Tyson is stronger than some other very impressive strong person, the answer might very well be “He has better arm strength, but worse grip strength”.',
 ]
 
-const addDocs = [
-  'Heading to the great state of Mississippi at the invitation of their popular and respected Governor, @PhilBryantMS. Look forward to seeing the new Civil Rights Museum!',
-]
+let db = []
 
-let db = [...testDocs]
-
-async function logSearch(cosal, str, printIndexOfId = null) {
+async function logSearch(cosal, str) {
+  console.time('search')
   const results = await cosal.search(str, 10)
-  console.log(str, results.map(result => db[result.id]).slice(0, 5))
-  if (printIndexOfId) {
-    console.log('looking for document id', printIndexOfId)
-    console.log(results.findIndex(x => x.id === printIndexOfId))
+  console.timeEnd('search')
+  console.log(str, JSON.stringify(results.map(result => db[result.id].text).slice(0, 5), null, 2))
+}
+
+function insert(amt = 99) {
+  const next = testDocs
+    .slice(db.length, db.length + amt)
+    .map((text, idx) => ({ text, id: idx + db.length }))
+  db = [...db, ...next]
+  return next
+}
+
+const cosal = new Cosal()
+
+async function main() {
+  incrementalScanTest()
+}
+
+export async function incrementalScanTest() {
+  // lets do 10 inserts and search each time
+  for (let i = 0; i < 10; i++) {
+    const next = insert()
+    console.log('insert', next.length)
+    await cosal.scan(next)
+    await logSearch(cosal, 'big southern state')
   }
 }
 
-async function main() {
-  const cosal = new Cosal()
-
-  // scan some documents into cosal
-  await cosal.scan(testDocs.map((text, id) => ({ text, id: `${id}` })))
-
-  await logSearch(cosal, 'big southern state')
-
-  // scan a few more docs
-  db = [...db, ...addDocs]
-  const newDocs = addDocs.map((text, id) => ({ text, id: `${id + testDocs.length}` }))
-  console.log('add docs', newDocs)
-  await cosal.scan(newDocs)
-
-  console.log('\n now search with more relevant docs')
-  await logSearch(cosal, 'big southern state', newDocs[0].id)
-
+export async function topWordsTest() {
   console.log('\n sentence test')
   for (const text of testSentences) {
     console.log(

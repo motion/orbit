@@ -27,7 +27,7 @@ function docToCovar(doc: string): Matrix {
 let index = 0
 
 export function getCovariance(
-  existingCovariance: number[][] = corpusCovarPrecomputed,
+  existingCovariance: number[][],
   docs: WeightedDocument[] = [],
   corpusWeight = 1,
 ): Covariance | null {

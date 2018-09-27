@@ -1,9 +1,11 @@
-import { getTopWords } from '@mcro/cosal'
 import { SettingEntity, BitEntity } from '@mcro/entities'
 import { BitUtils } from '@mcro/model-utils'
 import { Person, SlackBitData, SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackMessage } from '@mcro/services'
 import { hash } from '@mcro/utils'
+import { Cosal } from '@mcro/cosal'
+
+const { getTopWords } = new Cosal()
 
 const Autolinker = require('autolinker')
 

@@ -5,4 +5,5 @@ export interface GeneralSettingValues {
   darkTheme?: boolean
   realtimeSearch?: boolean
   openShortcut?: string
+  cosalIndexUpdatedTo: number
 }

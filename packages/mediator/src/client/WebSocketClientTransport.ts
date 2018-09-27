@@ -183,7 +183,7 @@ export class WebSocketClientTransport implements ClientTransport {
       return
     }
 
-    log.verbose(`handling data on the client`, {
+    log.verbose(`received data`, {
       id: data.id,
       type: subscription.type,
       name: subscription.name,

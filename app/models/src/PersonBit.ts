@@ -10,60 +10,60 @@ export interface PersonBit {
   /**
    * Person's email address.
    */
-  email: string
+  email?: string
 
   /**
    * Person's name.
    */
-  name: string
+  name?: string
 
   /**
    * All known person names.
    */
-  allNames: IntegrationTypeValues
+  allNames?: IntegrationTypeValues
 
   /**
    * Person's profile photo.
    */
-  photo: string
+  photo?: string
 
   /**
    * All known person photos.
    */
-  allPhotos: IntegrationTypeValues
+  allPhotos?: IntegrationTypeValues
 
   /**
    * People from integrations.
    */
-  people: Person[]
+  people?: Person[]
 
   /**
    * Indicates if person has integrations with Slack.
    */
-  hasSlack: boolean
+  hasSlack?: boolean
 
   /**
    * Indicates if person has integrations with Github.
    */
-  hasGithub: boolean
+  hasGithub?: boolean
 
   /**
    * Indicates if person has integrations with Gdrive.
    */
-  hasGdrive: boolean
+  hasGdrive?: boolean
 
   /**
    * Indicates if person has integrations with Jira.
    */
-  hasJira: boolean
+  hasJira?: boolean
 
   /**
    * Indicates if person has integrations with Confluence.
    */
-  hasConfluence: boolean
+  hasConfluence?: boolean
 
   /**
    * Indicates if person has integrations with Gmail.
    */
-  hasGmail: boolean
+  hasGmail?: boolean
 }

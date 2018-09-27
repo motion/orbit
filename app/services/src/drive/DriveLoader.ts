@@ -11,7 +11,7 @@ import {
 } from './DriveQueries'
 import { DriveComment, DriveFile, DriveLoadedFile, DriveLoadedUser, DriveRevision } from './DriveTypes'
 
-const log = new Logger('syncer:gdrive')
+const log = new Logger('service:gdrive:loader')
 
 export class DriveLoader {
   fetcher: DriveFetcher

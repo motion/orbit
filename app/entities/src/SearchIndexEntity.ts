@@ -4,11 +4,11 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 @Entity()
 export class SearchIndexEntity extends BaseEntity implements SearchIndex {
   @PrimaryGeneratedColumn()
-  id: number
+  id?: number
 
   @Column()
-  title: string
+  title?: string
 
   @Column()
-  body: string
+  body?: string
 }

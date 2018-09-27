@@ -9,7 +9,7 @@ import {
   ConfluenceUser,
 } from './ConfluenceTypes'
 
-const log = new Logger('syncer:confluence:loader')
+const log = new Logger('service:confluence:loader')
 
 /**
  * Loads confluence data from its API.

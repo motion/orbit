@@ -10,21 +10,21 @@ export interface Person {
    */
   target: 'person'
 
-  id: number
-  contentHash: number
-  integration: IntegrationType
-  integrationId: string
-  createdAt: Date
-  updatedAt: Date
-  email: string
-  photo: string
-  name: string
-  setting: Setting
-  settingId: number
-  data: PersonData
-  raw: any
-  personBit: PersonBit
-  webLink: string
-  desktopLink: string
+  id?: number
+  contentHash?: number
+  integration?: IntegrationType
+  integrationId?: string
+  createdAt?: Date
+  updatedAt?: Date
+  email?: string
+  photo?: string
+  name?: string
+  setting?: Setting
+  settingId?: number
+  data?: PersonData
+  raw?: any
+  personBit?: PersonBit
+  webLink?: string
+  desktopLink?: string
 
 }

@@ -3,7 +3,7 @@ import { JiraSettingValues, Setting } from '@mcro/models'
 import { queryObjectToQueryString } from '../utils'
 import { JiraComment, JiraCommentCollection, JiraIssue, JiraIssueCollection, JiraUser } from './JiraTypes'
 
-const log = new Logger('syncer:jira:loader')
+const log = new Logger('service:jira:loader')
 
 /**
  * Loads jira data from its API.

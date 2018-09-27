@@ -9,7 +9,6 @@ export class BitUtils {
    * Returns missing elements of the first bits based on given list of second bits.
    */
   static difference<T extends Bit>(firstBits: T[], secondBits: T[]): T[] {
-    // todo: this can be extracted into @mcro/model-utils
     return firstBits.filter(firstBit => {
       return !secondBits.some(secondBit => {
         return firstBit.id === secondBit.id
@@ -21,7 +20,7 @@ export class BitUtils {
    * Creates a new bit and sets given properties to it.
    */
   static create(properties: Partial<Bit>) {
-    const bit = Object.assign({} as Bit, properties)
+    const bit: Bit = { target: 'bit', ...properties }
     bit.contentHash = this.contentHash(bit)
     return bit
   }

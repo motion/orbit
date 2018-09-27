@@ -30,3 +30,8 @@ export const SlackSettingBlacklistCommand = new Command<
   void,
   { settingId: number, channel: string, blacklisted: boolean }
 >('slack-setting-blacklist')
+
+export const CosalTopWordsCommand = new Command<
+  string[],
+  { text: string, max?: number }
+>('cosal-top-words-command')

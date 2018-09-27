@@ -1,7 +1,7 @@
 import { BitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { BitUtils, PersonUtils } from '@mcro/model-utils'
-import { GDriveBitData, GDrivePersonData } from '@mcro/models'
+import { GDriveBitData, GDrivePersonData, Bit, Person } from '@mcro/models'
 import { DriveLoadedFile, DriveLoadedUser, DriveLoader } from '@mcro/services'
 import { assign, hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
@@ -16,8 +16,8 @@ const log = new Logger('syncer:gdrive')
 export class GDriveSyncer implements IntegrationSyncer {
   private loader: DriveLoader
   private setting: SettingEntity
-  private people: PersonEntity[]
-  private bits: BitEntity[]
+  private people: Person[]
+  private bits: Bit[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
@@ -57,7 +57,7 @@ export class GDriveSyncer implements IntegrationSyncer {
     // saving built bits and people
     log.info('saving bits and people', bits, people)
     await getRepository(PersonEntity).save(people)
-    await createOrUpdatePersonBits(people)
+    await createOrUpdatePersonBits(people as PersonEntity[])
     await getRepository(BitEntity).save(bits)
     log.verbose('bits and people where saved')
   }
@@ -65,13 +65,13 @@ export class GDriveSyncer implements IntegrationSyncer {
   /**
    * Builds a bit from the given gdrive aggregated file.
    */
-  private buildBit(file: DriveLoadedFile): BitEntity {
+  private buildBit(file: DriveLoadedFile): Bit {
     const data: GDriveBitData = {}
     const id = hash(`gdrive-${this.setting.id}-${file.file.id}`)
     const bit = this.bits.find(bit => bit.id === id)
 
     return assign(
-      bit || new BitEntity(),
+      (bit || { target: 'bit' }) as Bit,
       BitUtils.create({
         integration: 'gdrive',
         setting: this.setting,
@@ -103,7 +103,7 @@ export class GDriveSyncer implements IntegrationSyncer {
   /**
    * Creates person entity from a given google drive user.
    */
-  private buildPerson(user: DriveLoadedUser): PersonEntity {
+  private buildPerson(user: DriveLoadedUser): Person {
     const id = hash(`gdrive-${this.setting.id}-${user.email}`)
     const data: GDrivePersonData = {}
     const person = this.people.find(person => person.id === id)

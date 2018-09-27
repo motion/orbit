@@ -36,8 +36,8 @@ app/oracle/swindler/Build
 app/oracle/orbit/orbit.xcodeproj
 app/oracle/swindler/Swindler.xcodeproj
 app/orbit-app/build
-app/orbit-desktop/uploads
-!app/orbit-desktop/uploads/.gitkeep
+app/uploads
+!app/uploads/.gitkeep
 app/orbit-desktop/build
 app/orbit-electron/build
 app/apps-website/site/build

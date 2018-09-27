@@ -14,105 +14,105 @@ export interface Bit {
   /**
    * Bit id.
    */
-  id: number
+  id?: number
 
   /**
    * Integration type.
    * Duplicates information stored in the settings.
    */
-  integration: IntegrationType
+  integration?: IntegrationType
 
   /**
    * Setting id.
    */
-  settingId: number
+  settingId?: number
 
   /**
    * Original bit content author id.
    */
-  authorId: number
+  authorId?: number
 
   /**
    * Bit unique content hash.
    */
-  contentHash: number
+  contentHash?: number
 
   /**
    * Database record creation time.
    */
-  createdAt: Date
+  createdAt?: Date
 
   /**
    * Database record updation time.
    */
-  updatedAt: Date
+  updatedAt?: Date
 
   /**
    * Bit title.
    */
-  title: string
+  title?: string
 
   /**
    * Bit format-less body.
    * Primary used for search.
    */
-  body: string
+  body?: string
 
   /**
    * Content type, for example "conversation", "message", "email", etc.
    */
-  type: string
+  type?: string
 
   /**
    * Time when bit was created on its origin.
    */
-  bitCreatedAt: number
+  bitCreatedAt?: number
 
   /**
    * Time when bit was updated on its origin.
    */
-  bitUpdatedAt: number
+  bitUpdatedAt?: number
 
   /**
    * Web link to this bit on its origin.
    */
-  webLink: string
+  webLink?: string
 
   /**
    * Desktop link to this bit on its origin.
    */
-  desktopLink: string
+  desktopLink?: string
 
   /**
    * Original bit content author.
    */
-  author: Person
+  author?: Person
 
   /**
    * Related to this Bit people.
    */
-  people: Person[]
+  people?: Person[]
 
   /**
    * Setting has multiple bits it owns.
    * Setting is a Bit's owner.
    */
-  setting: Setting
+  setting?: Setting
 
   /**
    * Additional bit data.
    */
-  data: BitData
+  data?: BitData
 
   /**
    * Raw JSON data.
    * Used to debugging purpose current, don't use this property, use "data" property instead.
    */
-  raw: any
+  raw?: any
 
   /**
    * Used for filtering: slack room, github repo, google doc folder, etc
    */
-  location: Location
+  location?: Location
 
 }

@@ -1,26 +1,29 @@
 import { getGlobalConfig } from '@mcro/config'
 import { MediatorClient, WebSocketClientTransport } from '@mcro/mediator'
+import { ClientTransport } from '@mcro/mediator'
 import { randomString } from '@mcro/utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 const name = randomString(5)
-console.log("creating mediatorX")
-export const Mediator = new MediatorClient({
-  transports: [
-    new WebSocketClientTransport(name, new ReconnectingWebSocket(
-      // todo: rename dbBridge to desktopMediator or something since its not only does work with db
-      `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
-      [],
-      { WebSocket },
-    )),
-    new WebSocketClientTransport(name, new ReconnectingWebSocket(
-      `ws://localhost:40001`, // todo: someone would like to extract it into config
-      [],
-      { WebSocket },
-    )),
-  ]
-})
+const transports: ClientTransport[] = []
 
+if (process.env.IS_DESKTOP || (!process.env.IS_DESKTOP && !process.env.IS_SYNCERS)) {
+  transports.push(new WebSocketClientTransport(name, new ReconnectingWebSocket(
+    `ws://localhost:40001`, // todo: someone would like to extract it into config
+    [],
+    { WebSocket },
+  )))
+}
+if (process.env.IS_SYNCERS || (!process.env.IS_DESKTOP && !process.env.IS_SYNCERS)) {
+  transports.push(new WebSocketClientTransport(name, new ReconnectingWebSocket(
+    // todo: rename dbBridge to desktopMediator or something since its not only does work with db
+    `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
+    [],
+    { WebSocket },
+  )))
+}
+
+export const Mediator = new MediatorClient({ transports })
 export const command: MediatorClient["command"] = Mediator.command.bind(Mediator)
 export const observeMany: MediatorClient["observeMany"] = Mediator.observeMany.bind(Mediator)
 export const observeOne: MediatorClient["observeOne"] = Mediator.observeOne.bind(Mediator)

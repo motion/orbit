@@ -8,24 +8,24 @@ export class JobEntity extends BaseEntity implements Job {
   target: 'job' = 'job'
 
   @PrimaryGeneratedColumn()
-  id: number
+  id?: number
 
   @Column()
-  syncer: string
+  syncer?: string
 
   @Column()
-  time: number
+  time?: number
 
   @Column({ type: String })
-  status: JobStatus
+  status?: JobStatus
 
   @Column()
-  message: string
+  message?: string
 
   @Column({ nullable: true })
-  settingId: number
+  settingId?: number
 
   @ManyToOne(() => SettingEntity)
-  setting: Setting
+  setting?: Setting
 
 }

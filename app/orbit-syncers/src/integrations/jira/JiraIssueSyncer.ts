@@ -1,9 +1,9 @@
-import { BitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { JiraBitData, JiraSettingValues } from '@mcro/models'
+import { JiraBitData, JiraSettingValues, Bit, Person } from '@mcro/models'
 import { JiraIssue, JiraLoader } from '@mcro/services'
 import { assign, hash } from '@mcro/utils'
-import { getRepository } from 'typeorm'
+import { getManager, getRepository } from 'typeorm'
 import { BitUtils } from '@mcro/model-utils'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { SyncerUtils } from '../../core/SyncerUtils'
@@ -16,8 +16,8 @@ const log = new Logger('syncer:jira:issue')
 export class JiraIssueSyncer implements IntegrationSyncer {
   private setting: SettingEntity
   private loader: JiraLoader
-  private people: PersonEntity[]
-  private bits: BitEntity[]
+  private people: Person[]
+  private bits: Bit[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
@@ -52,14 +52,14 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     // get a difference to find a removed bits
     const removedBits = BitUtils.difference(this.bits, bits)
     log.verbose('removing bits', removedBits)
-    await getRepository(BitEntity).remove(removedBits)
+    await getManager().remove(BitEntity, removedBits)
     log.verbose('bits were removed')
   }
 
   /**
    * Builds a bit from the given jira issue.
    */
-  private buildBit(issue: JiraIssue) {
+  private buildBit(issue: JiraIssue): Bit {
     const id = hash(`jira-${this.setting.id}-${issue.id}`)
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
@@ -93,7 +93,7 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     // create or update a bit
     const bit = this.bits.find(bit => bit.id === id)
     return assign(
-      bit || new BitEntity(),
+      (bit || { target: 'bit' }) as Bit,
       BitUtils.create({
         integration: 'jira',
         id,

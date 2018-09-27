@@ -12,14 +12,14 @@ export interface Setting {
    */
   target: 'setting'
 
-  id: number
-  identifier: string
-  category: string
-  type: 'general' | 'slack' | 'jira' | 'confluence' | 'github' | 'gmail' | 'gdrive' | 'app1'
-  token: string
-  values: SettingValues
-  createdAt: Date
-  updatedAt: Date
+  id?: number
+  identifier?: string
+  category?: string
+  type?: 'general' | 'slack' | 'jira' | 'confluence' | 'github' | 'gmail' | 'gdrive' | 'app1'
+  token?: string
+  values?: SettingValues
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export type GithubSetting = Setting & { values: GithubSettingValues }

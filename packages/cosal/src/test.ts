@@ -13,9 +13,13 @@ const addDocs = [
 
 let db = [...testDocs]
 
-async function logSearch(cosal, str) {
-  const results = await cosal.search(str)
-  console.log(str, results.map(result => db[result.id]).slice(0, 5)
+async function logSearch(cosal, str, printIndexOfId = null) {
+  const results = await cosal.search(str, 10)
+  console.log(str, results.map(result => db[result.id]).slice(0, 5))
+  if (printIndexOfId) {
+    console.log('looking for document id', printIndexOfId)
+    console.log(results.findIndex(x => x.id === printIndexOfId))
+  }
 }
 
 async function main() {
@@ -28,10 +32,12 @@ async function main() {
 
   // scan a few more docs
   db = [...db, ...addDocs]
-  await cosal.scan(addDocs.map((text, id) => ({ text, id: `${id + testDocs.length}` })))
+  const newDocs = addDocs.map((text, id) => ({ text, id: `${id + testDocs.length}` }))
+  console.log('add docs', newDocs)
+  await cosal.scan(newDocs)
 
   console.log('\n now search with more relevant docs')
-  await logSearch(cosal, 'big southern state')
+  await logSearch(cosal, 'big southern state', newDocs[0].id)
 
   console.log('\n sentence test')
   for (const text of testSentences) {

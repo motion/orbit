@@ -4,6 +4,7 @@ import { toCosal, Pair } from './toCosal'
 import { uniqBy } from 'lodash'
 import { commonWords } from './commonWords'
 import { cosineDistance } from './cosineDistance'
+// import { Matrix } from '@mcro/vectorious'
 
 export { getCovariance } from './getCovariance'
 export { toCosal } from './toCosal'
@@ -26,7 +27,7 @@ export class Cosal {
   vectors: VectorDB = {}
   covariance: Covariance = null
 
-  async scan(newRecords: Record[]) {
+  async scan(newRecords: Record[], debug = false) {
     // this is incremental, passing in previous matrix
     this.covariance = getCovariance(
       this.covariance ? this.covariance.matrix : corpusCovarPrecomputed,
@@ -41,35 +42,33 @@ export class Cosal {
       if (this.vectors[record.id]) {
         throw new Error(`Already have a record id ${record.id}`)
       }
+      if (debug) {
+        console.log('adding', record.id, cosals[index].vector)
+      }
       this.vectors[record.id] = cosals[index].vector
     }
   }
 
   async search(query: string, max = 10): Promise<Result[]> {
     const cosal = await toCosal(query, this.covariance)
-    const results: Result[] = new Array(max)
-    let len = 0
+    let results: Result[] = []
 
     for (const id in this.vectors) {
       const vector = this.vectors[id]
       const distance = cosineDistance(cosal.vector, vector)
-      for (let i = len; i > -1; i--) {
-        if (!results[i] || distance < results[i].distance) {
-          results[i] = { distance, id }
-          len++
-          break
-        }
+      if (!results.length) {
+        results.push({ id, distance })
+        continue
+      }
+      const len = results.length
+      if (distance < results[len - 1].distance) {
+        const insertIndex = results.findIndex(x => distance < x.distance)
+        results.splice(insertIndex, len > max ? 1 : 0, { id, distance })
+        console.log('insert', insertIndex, distance, results[0], results.length)
       }
     }
 
     return results
-
-    // more inefficient version
-    // const distances = this.cosals.map(({ vector }, index) => ({
-    //   index,
-    //   distance: cosineDistance(cosal.vector, vector),
-    // }))
-    // return sortBy(distances, 'distance').map(x => this.cosals[x.index])
   }
 
   async persist(file: string) {

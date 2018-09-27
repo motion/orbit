@@ -1,6 +1,5 @@
 import { clipboard, dialog } from 'electron'
 import open from 'opn'
-// @ts-ignore
 import { logFile } from '@mcro/logger'
 import { pathExists, readFile } from 'fs-extra'
 import { showConfirmDialog } from './showConfirmDialog'
@@ -39,9 +38,10 @@ export async function onError(error) {
     showConfirmDialog({
       type: 'warning',
       title: 'Orbit ran into an error!',
-      message: `Orbit ran into an error:\n${errorMessage.slice(
+      buttons: ['Copy to clipboard', 'Cancel'],
+      message: `Orbit ran into an error:\n\n${errorMessage.slice(
         0,
-        50,
+        250,
       )}...\n\nWould you like to paste error to your clipboard to report it?`,
     })
   ) {
@@ -69,10 +69,10 @@ ${log}`
     const res = dialog.showMessageBox({
       type: 'question',
       title: 'Error copied!',
-      message: 'Quick upload error to Orbit?',
-      buttons: ['Quick report error', 'Open in email', 'No thanks'],
+      message: 'Upload error the Orbit Error report service?',
+      buttons: ['Quick report error', 'Send as email', 'Never ask again', 'No thanks'],
       defaultId: 0,
-      cancelId: 2,
+      cancelId: 3,
     })
     if (res === 0) {
       Raven.captureException(niceError)

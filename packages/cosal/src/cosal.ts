@@ -27,11 +27,19 @@ export class Cosal {
   vectors: VectorDB = {}
   covariance: Covariance = null
 
+  constructor() {
+    // pre-seed it
+    this.covariance = {
+      matrix: corpusCovarPrecomputed,
+      hash: '0',
+    }
+  }
+
   // incremental scan can add more and more documents
   scan = async (newRecords: Record[]) => {
     // this is incremental, passing in previous matrix
     this.covariance = getCovariance(
-      this.covariance ? this.covariance.matrix : corpusCovarPrecomputed,
+      this.covariance.matrix,
       newRecords.map(record => ({ doc: record.text, weight: 1 })),
     )
 

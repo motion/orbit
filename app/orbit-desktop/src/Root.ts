@@ -89,6 +89,8 @@ export class Root {
       open(url)
     })
 
+    this.cosal = new Cosal()
+
     // BEFORE YOUR CONNECT
     // run the databaseManager that runs migrations
     // this ensures things dont err
@@ -113,7 +115,6 @@ export class Root {
 
     // start managers...
 
-    this.cosal = new Cosal()
     this.ocrManager = new OCRManager({ cosal: this.cosal })
     this.cosalManager = new CosalManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ oracle: this.oracle })

@@ -101,6 +101,12 @@ class OrbitDockedContents extends React.PureComponent<Props> {
 @view
 export class OrbitDocked extends React.Component<Props> {
   render() {
+    // a note:
+    // if you try and make this hide on electron hide note one thing:
+    // electron stops rendering the app when its hidden
+    // so if you "hide" here it will actually flicker when it shows again
+    // because it hides in electron before rendering the hide here and then
+    // does the hide/show after the toggle
     log.timer('orbit', '-------- DOCKED ------------')
     const theme = App.state.darkTheme ? 'dark' : 'light'
     return (

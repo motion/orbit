@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -25,6 +25,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: OrbitStore
+  store?: OrbitDockedStore
 }
 
 const OrbitDockedFrame = view(UI.Col, {
@@ -91,12 +92,28 @@ class OrbitDockedContents extends React.PureComponent<Props> {
   }
 }
 
+class OrbitDockedStore {
+  shouldShowOrbitDocked = react(() => {
+    // always show this when only one window
+    // because we hide via electron not here
+    // otherwise use the normal docked
+    if (App.appsState.length === 1) {
+      return true
+    } else {
+      return App.orbitState.docked
+    }
+  })
+}
+
 @view.attach('orbitStore', 'appsStore', 'selectionStore', 'queryStore', 'keyboardStore')
 @view.provide({
   paneManagerStore: PaneManagerStore,
 })
 @view.provide({
   searchStore: SearchStore,
+})
+@view.attach({
+  store: OrbitDockedStore,
 })
 @view
 export class OrbitDocked extends React.Component<Props> {
@@ -111,7 +128,10 @@ export class OrbitDocked extends React.Component<Props> {
     const theme = App.state.darkTheme ? 'dark' : 'light'
     return (
       <UI.Theme name={theme}>
-        <OrbitDockedFrame className={`theme-${theme}`} visible>
+        <OrbitDockedFrame
+          className={`theme-${theme}`}
+          visible={this.props.store.shouldShowOrbitDocked}
+        >
           <OrbitDockedChrome />
           <OrbitDockedContents />
         </OrbitDockedFrame>

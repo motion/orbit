@@ -20,6 +20,7 @@ type SlackMessageProps = BitItemResolverProps & {
 const SlackMessageFrame = view(View, {
   padding: [0, 0],
   overflow: 'hidden',
+  alignItems: 'center',
 })
 
 const SlackMessageInner = view({

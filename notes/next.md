@@ -1,5 +1,6 @@
 # nate
 
+- after download update just restart immediately
 - "stop asking" and "always send" for error reporting
 - "reset orbit db" option if error during startup
 - add report recent error log in Tray

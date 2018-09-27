@@ -209,7 +209,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           disableShadow={disableShadow}
           {...cardProps}
         >
-          <Glint borderRadius={borderRadius} />
+          <Glint opacity={0.75} borderRadius={borderRadius} />
           <Padding style={{ borderRadius, padding }}>
             {!!icon &&
               !(hide && hide.icon) && (

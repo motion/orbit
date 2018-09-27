@@ -17,7 +17,7 @@ export function startDesktop(): ChildProcess {
   try {
     console.log('Starting Desktop:', Config.paths.nodeBinary, args)
     const child = spawn(Config.paths.nodeBinary, args, {
-      detached: true,
+      // detached: true,
       env: {
         PROCESS_NAME: 'desktop',
         STACK_FILTER: 'orbit-desktop',

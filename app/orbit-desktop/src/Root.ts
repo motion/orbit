@@ -147,9 +147,11 @@ export class Root {
   }
 
   dispose = async () => {
+    console.log('Disposing Desktop.Root')
     if (this.disposed) {
       return
     }
+    Desktop.dispose()
     if (this.appsManager) {
       await this.appsManager.dispose()
     }

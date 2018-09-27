@@ -12,11 +12,11 @@ export class WebSocketServerTransport implements ServerTransport {
   private onCallbacks: ((data: TransportRequest) => void)[] = []
 
   constructor(options: { port: number }) {
-    this.websocket = new WebSocketServer({ port: options.port });
+    this.websocket = new WebSocketServer({ port: options.port })
     this.websocket.on('connection', client => {
       log.verbose('client connected')
 
-      const storedClient = { id: "", client/*, lastPong: Date.now()*/ }
+      const storedClient = { id: '', client /*, lastPong: Date.now()*/ }
       this.clients.push(storedClient)
 
       // const pongInterval = setInterval(() => {
@@ -29,7 +29,6 @@ export class WebSocketServerTransport implements ServerTransport {
       // }, 3000);
 
       client.on('message', (str: any) => {
-
         // special code returned by pong sent by client
         // if (str === "PONG") {
         //   storedClient.lastPong = Date.now();
@@ -39,7 +38,7 @@ export class WebSocketServerTransport implements ServerTransport {
 
         // update client id if its a first request it it haven't been set yet
         if (!storedClient.id && result.id) {
-          [storedClient.id] = result.id.split("_")
+          ;[storedClient.id] = result.id.split('_')
         }
 
         this.onCallbacks.forEach(callback => callback(result))
@@ -61,14 +60,13 @@ export class WebSocketServerTransport implements ServerTransport {
   }
 
   send(data: TransportResponse) {
-    const [clientId] = data.id.split("_")
+    const [clientId] = data.id.split('_')
     const client = this.clients.find(client => {
       return client.id === clientId && client.client.readyState === client.client.OPEN
     })
     if (client) {
-      log.verbose(`sending data to "${clientId}"`, data, this.clients)
+      log.verbose(`sending data to ${clientId} client`, data, this.clients.length)
       client.client.send(JSON.stringify(data))
     }
   }
-
 }

@@ -9,7 +9,7 @@ const Config = getGlobalConfig()
 
 export function startSyncers(): ChildProcess {
   // enable remote debugging in dev
-  console.log("Config", Config)
+  console.log('Config', Config)
   const root = Path.join(__dirname, 'main')
   let args = [root]
   if (!Config.isProd) {
@@ -18,7 +18,6 @@ export function startSyncers(): ChildProcess {
   try {
     console.log('Starting Syncers:', Config.paths.nodeBinary, args)
     const child = spawn(Config.paths.nodeBinary, args, {
-      detached: true,
       env: {
         PROCESS_NAME: 'syncers',
         STACK_FILTER: 'orbit-syncers',

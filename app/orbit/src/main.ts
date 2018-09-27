@@ -38,7 +38,6 @@ export async function main() {
     require('@mcro/orbit-desktop').main()
     // dont keep running
     return
-
   } else if (process.env.IS_SYNCERS) {
     if (!config) {
       throw new Error('Syncers didn\'t receive config!')
@@ -62,15 +61,13 @@ export async function main() {
   const handleExit = once(async () => {
     try {
       console.log('Electron handle exit...')
-      console.log('Orbit exiting...')
-      cleanupChildren(desktopProcess.pid)
-      cleanupChildren(syncersProcess.pid)
-      cleanupChildren(process.pid)
       desktopProcess.kill('SIGINT')
       syncersProcess.kill('SIGINT')
-      // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
-      process.kill(-desktopProcess.pid)
-      process.kill(-syncersProcess.pid)
+      try {
+        cleanupChildren(process.pid)
+        cleanupChildren(desktopProcess.pid)
+        cleanupChildren(syncersProcess.pid)
+      } catch {}
       console.log('bye!')
     } catch (err) {
       // exec('pkill -9 Orbit')
@@ -83,10 +80,13 @@ export async function main() {
   process.on('SIGINT', handleExit)
   process.on('SIGSEGV', handleExit)
   process.on('SIGTERM', handleExit)
+  process.on('SIGQUIT', handleExit)
 
   // fork desktop process...
   desktopProcess = require('./startDesktop').startDesktop()
   syncersProcess = require('./startSyncers').startSyncers()
+
+  console.log('WHAT')
 
   if (process.env.IGNORE_ELECTRON !== 'true') {
     await require('./startElectron').startElectron(handleExit)

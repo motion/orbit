@@ -28,11 +28,17 @@ export const CosalTopWordsCommand = new Command<string[], { text: string; max?: 
   'cosal-top-words-command',
 )
 
-type Filter = {
-  type: 'location' | 'integration' | 'type' | 'person'
-  value: string
-}
-
-export const SearchCommand = new Command<string[], { text: string; filters?: Filter[] }>(
-  'cosal-search-command',
-)
+export const SearchCommand = new Command<
+  string[],
+  {
+    query: string
+    sortBy: string
+    startDate: Date
+    endDate: Date
+    integrationFilters: string[]
+    peopleFilters: string[]
+    locationFilters: string[]
+    take: number
+    skip: number
+  }
+>('search-command')

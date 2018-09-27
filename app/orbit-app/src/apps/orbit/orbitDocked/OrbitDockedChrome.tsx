@@ -5,6 +5,7 @@ import { OrbitStore } from '../../OrbitStore'
 import * as UI from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
 import { QueryStore } from './QueryStore'
+import { trace } from 'mobx'
 
 type Props = {
   orbitStore?: OrbitStore
@@ -143,6 +144,7 @@ const decorator = compose(
 
 export const OrbitDockedChrome = decorator(({ orbitStore, queryStore }: Props) => {
   console.log('re render docked chrome')
+  trace()
   return (
     <>
       <BlockTop height={60} overflow={SHADOW_PAD}>

@@ -13,7 +13,7 @@ import {
   GithubRepositoryQueryResult,
 } from './GithubTypes'
 
-const log = new Logger('syncer:github:loader')
+const log = new Logger('service:github:loader')
 
 /**
  * Performs requests GitHub API.

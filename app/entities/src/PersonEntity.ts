@@ -26,54 +26,54 @@ export class PersonEntity extends BaseEntity implements Person {
   target: 'person' = 'person'
 
   @PrimaryColumn()
-  id: number
+  id?: number
 
   @Column({ unique: true })
-  contentHash: number
+  contentHash?: number
 
   @Column({ type: String })
-  integration: IntegrationType
+  integration?: IntegrationType
 
   @Column()
-  integrationId: string
+  integrationId?: string
 
   @Column({ nullable: true })
-  email: string
+  email?: string
 
   @Column({ nullable: true })
-  photo: string
+  photo?: string
 
   @Column()
-  name: string
+  name?: string
 
   @Column()
-  settingId: number
+  settingId?: number
 
   @Column({ type: 'simple-json', default: '{}' })
-  data: PersonData
+  data?: PersonData
 
   @Column({ type: 'simple-json', default: '{}' })
-  raw: any
+  raw?: any
 
   @Column({ nullable: true })
-  webLink: string
+  webLink?: string
 
   @Column({ nullable: true })
-  desktopLink: string
+  desktopLink?: string
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt?: Date
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt?: Date
 
   @ManyToOne(() => SettingEntity)
-  setting: Setting
+  setting?: Setting
 
   @ManyToOne(() => PersonBitEntity, person => person.people)
-  personBit: PersonBit
+  personBit?: PersonBit
 
   @ManyToMany(() => BitEntity, bit => bit.people)
-  bits: Bit[]
+  bits?: Bit[]
 
 }

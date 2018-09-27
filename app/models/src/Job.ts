@@ -10,37 +10,37 @@ export interface Job {
   /**
    * Job id.
    */
-  id: number
+  id?: number
 
   /**
    * Syncer name that run this job.
    */
-  syncer: string
+  syncer?: string
 
   /**
    * Integration id for which this job was executed.
    */
-  settingId: number
+  settingId?: number
 
   /**
    * Integration for which this job was executed.
    */
-  setting: Setting
+  setting?: Setting
 
   /**
    * Time when job was executed.
    */
-  time: number
+  time?: number
 
   /**
    * Execution status.
    */
-  status: string
+  status?: string
 
   /**
    * Execution message.
    */
-  message: string
+  message?: string
 
 }
 

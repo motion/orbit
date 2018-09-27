@@ -3,7 +3,7 @@ import { Setting } from '@mcro/models'
 import { channels, users } from 'slack'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 
-const log = new Logger('syncer:slack:loader')
+const log = new Logger('service:slack:loader')
 
 /**
  * Loads the data from the Slack API.

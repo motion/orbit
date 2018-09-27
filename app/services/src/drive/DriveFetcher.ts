@@ -8,7 +8,7 @@ import { URL } from 'url'
 import { DriveFetchQueryOptions } from './DriveTypes'
 
 const Config = getGlobalConfig()
-const log = new Logger('syncer:gdrive')
+const log = new Logger('service:gdrive:fetcher')
 
 /**
  * Fetches data from Google Drive Api.

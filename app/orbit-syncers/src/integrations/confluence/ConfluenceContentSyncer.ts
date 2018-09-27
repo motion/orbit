@@ -1,11 +1,10 @@
-import { BitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { ConfluenceBitData, ConfluenceSettingValues } from '@mcro/models'
+import { BitUtils } from '@mcro/model-utils'
+import { Bit, ConfluenceBitData, ConfluenceSettingValues, Person } from '@mcro/models'
 import { ConfluenceContent, ConfluenceLoader } from '@mcro/services'
 import { assign, hash } from '@mcro/utils'
-import { BitUtils } from '@mcro/model-utils'
-import { getRepository } from 'typeorm'
-import { BitSyncer } from '../../utils/BitSyncer'
+import { getManager, getRepository } from 'typeorm'
 import { SyncerUtils } from '../../core/SyncerUtils'
 
 const log = new Logger('syncer:confluence:content')
@@ -16,8 +15,8 @@ const log = new Logger('syncer:confluence:content')
 export class ConfluenceContentSyncer {
   private setting: SettingEntity
   private loader: ConfluenceLoader
-  private people: PersonEntity[]
-  private bits: BitEntity[]
+  private people: Person[]
+  private bits: Bit[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
@@ -50,17 +49,16 @@ export class ConfluenceContentSyncer {
     log.verbose('bits were saved')
 
     // get a difference to find a removed bits and remove them
-    // @ts-ignore TODO: nate i ignored this so it builds...
-    const removedBits = BitSyncer.difference(this.bits, bits)
+    const removedBits = BitUtils.difference(this.bits, bits)
     log.verbose('removing bits', removedBits)
-    await getRepository(BitEntity).remove(removedBits)
+    await getManager().remove(BitEntity, removedBits)
     log.verbose('bits were removed')
   }
 
   /**
    * Builds a bit from the given confluence content.
    */
-  private buildBit(content: ConfluenceContent) {
+  private buildBit(content: ConfluenceContent): Bit {
     const values = this.setting.values as ConfluenceSettingValues
     const domain = values.credentials.domain
     const id = hash(`confluence-${this.setting.id}-${content.id}`)
@@ -96,7 +94,7 @@ export class ConfluenceContentSyncer {
     // create or update a bit
     const bit = this.bits.find(bit => bit.id === id)
     return assign(
-      bit || new BitEntity(),
+      (bit || { target: 'bit' }) as Bit,
       BitUtils.create({
         integration: 'confluence',
         id,

@@ -7,27 +7,27 @@ export class SettingEntity extends BaseEntity implements Setting {
   target: 'setting' = 'setting'
 
   @PrimaryGeneratedColumn()
-  id: number
+  id?: number
 
   @Column({ nullable: true, unique: true })
-  identifier: string
+  identifier?: string
 
   @Column()
-  category: string
+  category?: string
 
   @Column("varchar")
-  type: 'general' | IntegrationType
+  type?: 'general' | IntegrationType
 
   @Column({ nullable: true })
-  token: string
+  token?: string
 
   @Column('simple-json', { default: '{}' })
-  values: SettingValues
+  values?: SettingValues
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt?: Date
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt?: Date
 
 }

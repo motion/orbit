@@ -10,7 +10,7 @@ export class PersonUtils {
    * Creates a new bit and sets given properties to it.
    */
   static create(properties: Partial<Person>) {
-    const person = Object.assign({} as Person, properties)
+    const person: Person = { target: 'person', ...properties }
     person.contentHash = this.contentHash(person)
     return person
   }

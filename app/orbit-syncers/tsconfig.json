@@ -10,6 +10,7 @@
   "references": [
     { "path": "../models" },
     { "path": "../model-utils" },
+    { "path": "../model-bridge" },
     { "path": "../entities" },
     { "path": "../services" },
     { "path": "../../packages/debug-apps" },

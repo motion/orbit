@@ -4,7 +4,6 @@ import { Syncer } from './core/Syncer'
 import { SyncerGroup } from './core/SyncerGroup'
 import { GDriveSyncer } from './integrations/gdrive/GDriveSyncer'
 import { GithubIssueSyncer } from './integrations/github/GithubIssueSyncer'
-import { GithubPeopleSyncer } from './integrations/github/GithubPeopleSyncer'
 import { GMailSyncer } from './integrations/gmail/GMailSyncer'
 import { JiraIssueSyncer } from './integrations/jira/JiraIssueSyncer'
 import { JiraPeopleSyncer } from './integrations/jira/JiraPeopleSyncer'
@@ -51,18 +50,11 @@ export const Syncers = [
     constructor: GMailSyncer,
     interval: FIVE_MINUTES,
   }),
-  new SyncerGroup('GithubSyncers', [
-    new Syncer({
-      type: 'github',
-      constructor: GithubPeopleSyncer,
-      interval: TEN_MINUTES,
-    }),
-    new Syncer({
-      type: 'github',
-      constructor: GithubIssueSyncer,
-      interval: TEN_MINUTES,
-    }),
-  ]),
+  new Syncer({
+    type: 'github',
+    constructor: GithubIssueSyncer,
+    interval: TEN_MINUTES,
+  }),
   new SyncerGroup('SlackSyncers', [
     new Syncer({
       type: 'slack',

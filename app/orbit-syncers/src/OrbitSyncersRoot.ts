@@ -31,7 +31,7 @@ import { Syncers } from './Syncers'
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
   connection: Connection
-  mediator: MediatorServer
+  mediatorServer: MediatorServer
 
   async start() {
     await this.createDbConnection()
@@ -73,6 +73,7 @@ export class OrbitSyncersRoot {
     root.typeorm = typeorm
     root.root = this
     root.Logger = Logger
+    root.mediatorServer = this.mediatorServer
     root.Syncers = Syncers.reduce((map, syncerOrGroup) => {
       // since Syncers is an array we need to convert it to object
       // to make them more usable in the REPL.
@@ -116,9 +117,11 @@ export class OrbitSyncersRoot {
    * for communication between processes.
    */
   private setupMediatorServer(): void {
-    this.mediator = new MediatorServer({
+    this.mediatorServer = new MediatorServer({
       models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
-      commands: [SettingForceSyncCommand],
+      commands: [
+        SettingForceSyncCommand
+      ],
       transport: new WebSocketServerTransport({
         port: 40001, // todo: use config?
       }),
@@ -133,7 +136,7 @@ export class OrbitSyncersRoot {
         SettingForceSyncResolver,
       ],
     })
-    this.mediator.bootstrap()
+    this.mediatorServer.bootstrap()
   }
 
   /**

@@ -19,7 +19,7 @@ type VectorDB = {
 }
 
 type Result = {
-  id: string
+  id: number
   distance: number
 }
 
@@ -56,14 +56,15 @@ export class Cosal {
     for (const id in this.vectors) {
       const vector = this.vectors[id]
       const distance = cosineDistance(cosal.vector, vector)
+      const result = { id: +id, distance }
       if (!results.length) {
-        results.push({ id, distance })
+        results.push(result)
         continue
       }
       const len = results.length
       if (distance < results[len - 1].distance) {
         const insertIndex = results.findIndex(x => distance < x.distance)
-        results.splice(insertIndex, len > max ? 1 : 0, { id, distance })
+        results.splice(insertIndex, len > max ? 1 : 0, result)
       }
     }
 

@@ -275,7 +275,7 @@ export class OrbitHome extends React.Component<Props> {
       <SubPane name="home" fadeBottom>
         {content}
         {/* this is a nice lip effect */}
-        <View height={20} />
+        <View height={15} />
       </SubPane>
     )
   }

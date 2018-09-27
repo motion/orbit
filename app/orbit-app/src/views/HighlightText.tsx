@@ -4,7 +4,7 @@ import { HighlightsContext } from '../helpers/contexts/HighlightsContext'
 import { HighlightOptions } from '@mcro/ui'
 
 type Props = TextProps & {
-  options?: HighlightOptions
+  options?: Partial<HighlightOptions>
 }
 
 export const HighlightText = ({ options, children, ...props }: Props) => {

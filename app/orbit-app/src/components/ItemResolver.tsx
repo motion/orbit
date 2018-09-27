@@ -41,6 +41,7 @@ export type ItemResolverProps = {
   onResolvedItem?: (a: ResolvedItem) => any
   extraProps?: {
     beforeTitle?: React.ReactNode
+    minimal?: boolean
   }
 }
 

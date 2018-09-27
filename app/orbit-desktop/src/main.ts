@@ -24,12 +24,13 @@ export async function main() {
   }
 
   // handle exits gracefully
-  const dispose = once(() => {
+  const dispose = once(async () => {
     console.log('Desktop exiting...')
-    appRoot.dispose()
-    // otherwise it wont exit :/
+    await appRoot.dispose()
     process.kill(process.pid)
-    cleanupChildren()
+    try {
+      cleanupChildren()
+    } catch {}
   })
   process.on('exit', dispose)
   process.on('SIGINT', dispose)

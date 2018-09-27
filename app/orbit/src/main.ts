@@ -61,12 +61,16 @@ export async function main() {
   const handleExit = once(async () => {
     try {
       console.log('Electron handle exit...')
-      desktopProcess.kill('SIGINT')
-      syncersProcess.kill('SIGINT')
+      desktopProcess.kill()
+      syncersProcess.kill()
+      try {
+        cleanupChildren(desktopProcess.pid)
+      } catch {}
+      try {
+        cleanupChildren(syncersProcess.pid)
+      } catch {}
       try {
         cleanupChildren(process.pid)
-        cleanupChildren(desktopProcess.pid)
-        cleanupChildren(syncersProcess.pid)
       } catch {}
       console.log('bye!')
     } catch (err) {

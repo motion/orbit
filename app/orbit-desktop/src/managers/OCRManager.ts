@@ -56,7 +56,7 @@ export class OCRManager {
     socketPort: Config.ports.ocrBridge,
     ocr: true,
     onClose: () => {
-      console.log('should restart ocr it crashed...')
+      console.log('ocr closed')
     },
   })
 

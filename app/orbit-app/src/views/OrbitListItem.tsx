@@ -316,6 +316,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       searchTerm,
       isExpanded,
       hide,
+      extraProps,
       ...props
     } = this.props
     // console.verbose(
@@ -334,6 +335,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
         searchTerm={searchTerm}
         hide={hide}
         onResolvedItem={store.setResolvedItem}
+        extraProps={extraProps}
         {...itemProps}
       >
         {this.getInner}

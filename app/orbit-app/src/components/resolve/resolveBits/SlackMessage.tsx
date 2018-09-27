@@ -27,7 +27,7 @@ const SlackMessageInner = view({
 @view
 export class SlackMessage extends React.Component<SlackMessageProps> {
   render() {
-    const { bit, extraProps, message, previousMessage, hide = {}, decoration } = this.props
+    const { bit, extraProps = {}, message, previousMessage, hide = {}, decoration } = this.props
     if (!message.text || !bit) {
       console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -40,19 +40,24 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
       previousWithinOneMinute = message.time - previousMessage.time < 1000 * 60 // todo(nate) can you please check it?
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
+    console.log('extraProps', extraProps)
     return (
       <SlackMessageFrame {...decoration.item}>
         {!hideHeader && (
           <UI.Row flexFlow="row" alignItems="center" userSelect="none" cursor="default">
-            {extraProps ? extraProps.beforeTitle : null}
+            {extraProps.beforeTitle || null}
             {!!person && <RoundButtonPerson background="transparent" person={person} />}
-            <div style={{ width: 6 }} />
-            {!(hide && hide.itemDate) &&
-              (!previousMessage || !previousWithinOneMinute) && (
-                <UI.Text size={0.9} fontWeight={500} alpha={0.5}>
-                  {<DateFormat date={new Date(message.time)} />}
-                </UI.Text>
-              )}
+            {!extraProps.minimal && (
+              <>
+                <div style={{ width: 6 }} />
+                {!(hide && hide.itemDate) &&
+                  (!previousMessage || !previousWithinOneMinute) && (
+                    <UI.Text size={0.9} fontWeight={500} alpha={0.5}>
+                      {<DateFormat date={new Date(message.time)} />}
+                    </UI.Text>
+                  )}
+              </>
+            )}
           </UI.Row>
         )}
         <SlackMessageInner>

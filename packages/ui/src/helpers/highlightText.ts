@@ -1,4 +1,3 @@
-// @ts-ignore
 import { flatten } from 'lodash'
 
 const splitChar = '🂓'
@@ -12,8 +11,8 @@ const cutoff = (str, maxChars) => {
 }
 
 export type HighlightOptions = {
-  text?: string
-  words?: string[]
+  text: string
+  words: string[]
   trimWhitespace?: boolean
   maxChars?: number
   maxSurroundChars?: number
@@ -40,7 +39,7 @@ const isHighlightWord = (str, words) => {
 // not a wonderfully efficient
 // but still great for not too long text
 // and pretty easy to follow
-export const highlightText = (options: HighlightOptions) => {
+export function highlightText(options: HighlightOptions): string {
   const {
     text,
     trimWhitespace,

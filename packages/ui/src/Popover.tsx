@@ -14,9 +14,11 @@ const ArrowContain = view({
   left: '50%',
 })
 
+export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
+
 export type PopoverProps = CSSPropertySet & {
   // can pass function to get isOpen passed in
-  children?: React.ReactNode | ((showPopover: boolean) => React.ReactNode)
+  children?: React.ReactNode | PopoverChildrenFn
   // element or function that returns element, or querySelector to element
   target?: React.ReactNode | (() => React.ReactNode) | string
   open?: boolean
@@ -916,7 +918,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
                 </ArrowContain>
               )}
               <SizedSurface sizeRadius flex={1} ignoreSegment={ignoreSegment} {...props}>
-                {typeof children === 'function' ? children(showPopover) : children}
+                {typeof children === 'function'
+                  ? (children as PopoverChildrenFn)(showPopover)
+                  : children}
               </SizedSurface>
             </PopoverWrap>
           </PopoverContainer>

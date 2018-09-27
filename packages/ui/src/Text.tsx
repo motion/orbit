@@ -7,6 +7,8 @@ import { highlightText, HighlightOptions } from './helpers/highlightText'
 import { propsToTextSize } from './helpers/propsToTextSize'
 import { alphaColor, CSSPropertySet } from '@mcro/gloss'
 
+type ChildrenHlFn = ((Highlights) => JSX.Element | null)
+
 export type TextProps = CSSPropertySet & {
   color?: CSSPropertySet['color'] | false
   editable?: boolean
@@ -36,7 +38,7 @@ export type TextProps = CSSPropertySet & {
   highlight?: HighlightOptions
   wordBreak?: string
   theme?: Object
-  children: React.ReactNode | ((Highlights) => React.ReactNode)
+  children: React.ReactNode | ChildrenHlFn
 }
 
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
@@ -271,7 +273,7 @@ export class Text extends React.Component<TextProps> {
     if (highlight && typeof children === 'function') {
       const highlights = highlightText(highlight)
       finalProps = {
-        children: children({ highlights }),
+        children: (children as ChildrenHlFn)({ highlights }),
       }
     }
 

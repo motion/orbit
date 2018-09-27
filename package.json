@@ -32,7 +32,7 @@
     "mobx": "5.1.2",
     "prettier": "1.14.2",
     "sb-promisify": "^2.0.2",
-    "typescript": "3.1.0-dev.20180906",
+    "typescript": "3.1.1",
     "webpack": "4.19.1",
     "webpack-dev-server": "3.1.8",
     "webpack-cli": "3.1.0"

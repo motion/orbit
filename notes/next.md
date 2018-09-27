@@ -1,5 +1,6 @@
 # nate
 
+- multi process with cluster https://gist.github.com/jpoehls/2232358
 - "stop asking" and "always send" for error reporting
 - "reset orbit db" option if error during startup
 - add report recent error log in Tray

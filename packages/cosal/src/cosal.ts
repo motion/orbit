@@ -28,7 +28,7 @@ export class Cosal {
   covariance: Covariance = null
 
   // incremental scan can add more and more documents
-  async scan(newRecords: Record[]) {
+  scan = async (newRecords: Record[]) => {
     // this is incremental, passing in previous matrix
     this.covariance = getCovariance(
       this.covariance ? this.covariance.matrix : corpusCovarPrecomputed,
@@ -49,7 +49,7 @@ export class Cosal {
 
   // goes through all vectors and sorts by smallest distance up to max
   // TODO better data structure?
-  async search(query: string, max = 10): Promise<Result[]> {
+  search = async (query: string, max = 10): Promise<Result[]> => {
     const cosal = await toCosal(query, this.covariance)
     let results: Result[] = []
 
@@ -74,7 +74,7 @@ export class Cosal {
     console.log('write to file', file)
   }
 
-  async getWordWeights(text: string, max?: number): Promise<Pair[] | null> {
+  getWordWeights = async (text: string, max?: number): Promise<Pair[] | null> => {
     const cosal = await toCosal(text, this.covariance)
     if (!cosal) {
       return null
@@ -98,7 +98,7 @@ export class Cosal {
     return pairs
   }
 
-  async getTopWords(text: string, max?: number) {
+  getTopWords = async (text: string, max?: number) => {
     const words = await this.getWordWeights(text, max)
     if (!words) {
       return []

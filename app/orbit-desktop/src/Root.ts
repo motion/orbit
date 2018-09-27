@@ -39,6 +39,7 @@ import { Server } from './Server'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { CosalManager } from './managers/CosalManager'
 // import iohook from 'iohook'
+import { Cosal } from '@mcro/cosal'
 
 const log = new Logger('desktop')
 
@@ -53,6 +54,7 @@ export class Root {
   server = new Server()
   stores = null
   mediator: MediatorServer
+  cosal: Cosal
 
   // managers
   cosalManager: CosalManager
@@ -109,8 +111,9 @@ export class Root {
 
     // start managers...
 
-    this.ocrManager = new OCRManager()
-    this.cosalManager = new CosalManager()
+    this.cosal = new Cosal()
+    this.ocrManager = new OCRManager({ cosal: this.cosal })
+    this.cosalManager = new CosalManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ oracle: this.oracle })
     this.appsManager = new AppsManager()
 

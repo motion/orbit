@@ -14,7 +14,9 @@ export class CosalManager {
     this.cosal = cosal
   }
 
-  search = this.cosal.search
+  get search() {
+    return this.cosal.search
+  }
 
   start = () => {
     this.scanSinceLast()

@@ -16,7 +16,7 @@ import { PersonBitModel, PersonBit } from '@mcro/models'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
 import { NoResultsDialog } from './views/NoResultsDialog'
 
-const height = 60
+const height = 56
 
 type Props = {
   store?: OrbitDirectoryStore

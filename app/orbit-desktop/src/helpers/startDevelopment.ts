@@ -1,24 +1,9 @@
 export function startDevelopment(appRoot) {
   Error.stackTraceLimit = Infinity
-
   console.log(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
   require('source-map-support/register')
   require('./installGlobals')
-
-  const exitHandler = async (code?: any) => {
-    console.log('handling exit', code)
-    try {
-      if (await appRoot.dispose()) {
-        // otherwise it wont exit :/
-        process.kill(process.pid)
-      }
-    } catch (err) {
-      console.log('error killing', err)
-    }
-  }
-
-  process.on('exit', exitHandler)
 
   process.on('uncaughtException', err => {
     console.log('uncaughtException', err)

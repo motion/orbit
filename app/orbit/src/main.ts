@@ -59,22 +59,28 @@ export async function main() {
   let syncersProcess: ChildProcess
 
   const handleExit = once(async () => {
+    console.log('Electron exit...')
     try {
-      console.log('Electron handle exit...')
-      console.log('Orbit exiting...')
-      cleanupChildren(desktopProcess.pid)
-      cleanupChildren(syncersProcess.pid)
-      cleanupChildren(process.pid)
-      desktopProcess.kill('SIGINT')
-      syncersProcess.kill('SIGINT')
-      // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
-      process.kill(-desktopProcess.pid)
-      process.kill(-syncersProcess.pid)
+      try {
+        desktopProcess.kill('SIGINT')
+        syncersProcess.kill('SIGINT')
+      } catch {}
+      await new Promise(res => setTimeout(res))
+      try {
+        cleanupChildren(desktopProcess.pid)
+        cleanupChildren(syncersProcess.pid)
+        cleanupChildren(process.pid)
+      } catch {}
+      try {
+        // actually kills it https://azimi.me/2014/12/31/kill-child_process-node-js.html
+        process.kill(-desktopProcess.pid)
+        process.kill(-syncersProcess.pid)
+      } catch {}
       console.log('bye!')
     } catch (err) {
-      // exec('pkill -9 Orbit')
-      process.exit(0)
+      console.log('error exiting', err)
     }
+    process.exit(0)
   })
 
   // this works in dev
@@ -87,6 +93,8 @@ export async function main() {
   // fork desktop process...
   desktopProcess = require('./startDesktop').startDesktop()
   syncersProcess = require('./startSyncers').startSyncers()
+
+  console.log('WHAT')
 
   if (process.env.IGNORE_ELECTRON !== 'true') {
     await require('./startElectron').startElectron(handleExit)

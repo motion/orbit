@@ -25,8 +25,10 @@ export async function main() {
 
   // handle exits gracefully
   const dispose = once(() => {
-    console.log('Orbit Desktop exiting...')
+    console.log('Desktop exiting...')
     appRoot.dispose()
+    // otherwise it wont exit :/
+    process.kill(process.pid)
     cleanupChildren()
   })
   process.on('exit', dispose)

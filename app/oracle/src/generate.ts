@@ -160,7 +160,7 @@ async function train() {
 
   while (fonts.length) {
     const font = fonts.pop()
-    await execa(`open`, [`http://localhost:3003/${font}`])
+    await execa('open', [`http://localhost:3003/${font}`])
     await sleep(1000)
     await new Promise(resolve => {
       oracle.onWords(async () => {

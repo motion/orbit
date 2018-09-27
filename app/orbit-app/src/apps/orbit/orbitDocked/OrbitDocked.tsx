@@ -105,7 +105,7 @@ export class OrbitDocked extends React.Component<Props> {
     const theme = App.state.darkTheme ? 'dark' : 'light'
     return (
       <UI.Theme name={theme}>
-        <OrbitDockedFrame className={`theme-${theme}`} visible={App.orbitState.docked}>
+        <OrbitDockedFrame className={`theme-${theme}`} visible>
           <OrbitDockedChrome />
           <OrbitDockedContents />
         </OrbitDockedFrame>

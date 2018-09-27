@@ -308,10 +308,10 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       store,
       pane,
       model,
-      itemProps,
       inGrid,
       item,
       searchTerm,
+      extraProps,
       ...props
     } = this.props
     // console.log(`${props.index} ${(model && model.id) || props.title}.${pane} ${store.isSelected}`)
@@ -325,7 +325,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
         isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}
         onResolvedItem={store.setResolvedItem}
-        {...itemProps}
+        extraProps={extraProps}
       >
         {this.getOrbitCard}
       </ItemResolver>

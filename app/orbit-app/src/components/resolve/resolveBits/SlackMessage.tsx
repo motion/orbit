@@ -8,6 +8,7 @@ import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
 import { Markdown } from '../../../views/Markdown'
 import { BitItemResolverProps } from '../ResolveBit'
+import { HighlightText } from '../../../views/HighlightText'
 
 type SlackMessageProps = BitItemResolverProps & {
   message: SlackBitDataMessage
@@ -18,10 +19,13 @@ type SlackMessageProps = BitItemResolverProps & {
 
 const SlackMessageFrame = view(View, {
   padding: [0, 0],
+  overflow: 'hidden',
 })
 
 const SlackMessageInner = view({
   padding: [2, 16],
+  flex: 1,
+  overflow: 'hidden',
 })
 
 @view
@@ -40,13 +44,18 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
       previousWithinOneMinute = message.time - previousMessage.time < 1000 * 60 // todo(nate) can you please check it?
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
-    console.log('extraProps', extraProps)
     return (
-      <SlackMessageFrame {...decoration.item}>
+      <SlackMessageFrame flexFlow={extraProps.minimal ? 'row' : 'column'} {...decoration.item}>
         {!hideHeader && (
-          <UI.Row flexFlow="row" alignItems="center" userSelect="none" cursor="default">
+          <UI.Row alignItems="center" userSelect="none" cursor="default">
             {extraProps.beforeTitle || null}
-            {!!person && <RoundButtonPerson background="transparent" person={person} />}
+            {!!person && (
+              <RoundButtonPerson
+                hideAvatar={extraProps.minimal}
+                background="transparent"
+                person={person}
+              />
+            )}
             {!extraProps.minimal && (
               <>
                 <div style={{ width: 6 }} />
@@ -61,9 +70,15 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           </UI.Row>
         )}
         <SlackMessageInner>
-          <UI.Text selectable {...decoration.text}>
-            <Markdown className="slack-markdown" source={message.text} />
-          </UI.Text>
+          {extraProps.minimal ? (
+            <HighlightText ellipse {...decoration.text}>
+              {message.text}
+            </HighlightText>
+          ) : (
+            <UI.Text selectable ellipse={extraProps.minimal ? true : null} {...decoration.text}>
+              <Markdown className="slack-markdown" source={message.text} />
+            </UI.Text>
+          )}
         </SlackMessageInner>
       </SlackMessageFrame>
     )

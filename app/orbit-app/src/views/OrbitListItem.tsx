@@ -312,7 +312,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       store,
       pane,
       model,
-      itemProps,
       searchTerm,
       isExpanded,
       hide,
@@ -336,7 +335,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
         hide={hide}
         onResolvedItem={store.setResolvedItem}
         extraProps={extraProps}
-        {...itemProps}
       >
         {this.getInner}
       </ItemResolver>

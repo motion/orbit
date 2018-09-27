@@ -499,7 +499,6 @@ em,
 b,
 strong,
 i {
-  white-space: pre-wrap;
   display: inline;
 }
 

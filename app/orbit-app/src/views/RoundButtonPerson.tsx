@@ -15,9 +15,9 @@ const handleClick = (person: Person) => async e => {
   const personBit = await loadOne(PersonBitModel, {
     args: {
       where: {
-        email: person.email
+        email: person.email,
       },
-    }
+    },
   })
   if (!personBit) {
     console.log('no personBit found', person)
@@ -26,22 +26,23 @@ const handleClick = (person: Person) => async e => {
   }
 }
 
-export const RoundButtonPerson = ({ person, ...props }: PersonButtonProps) => {
+export const RoundButtonPerson = ({ person, hideAvatar, ...props }: PersonButtonProps) => {
   // TODO: avatar value on person
   const avatar = person.photo
   return (
     <RoundButton size={0.95} onClick={handleClick(person)} {...props}>
       <UI.Row alignItems="center">
-        {!!avatar && (
-          <UI.Image
-            src={avatar}
-            borderRadius={100}
-            width={14}
-            height={14}
-            marginRight={6}
-            marginLeft={-1}
-          />
-        )}
+        {!!avatar &&
+          !hideAvatar && (
+            <UI.Image
+              src={avatar}
+              borderRadius={100}
+              width={14}
+              height={14}
+              marginRight={6}
+              marginLeft={-1}
+            />
+          )}
         <UI.Text size={0.95} fontWeight={600} alpha={0.9} alignItems="center">
           {person.name}
         </UI.Text>

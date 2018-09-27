@@ -26,10 +26,14 @@ export class WebSocketClientTransport implements ClientTransport {
     }
     websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     websocket.onerror = err => {
-      if (err.error.indexOf('ECONNREFUSED')) {
-        log.info(`Connection refused ${name}...`)
+      if (err.error) {
+        if (err.error.indexOf('ECONNREFUSED')) {
+          log.info(`Connection refused ${name}...`)
+        } else {
+          log.error(`Error ${name} ${err.error}`)
+        }
       } else {
-        log.error(`Error ${name} ${err.error}`)
+        log.error(err)
       }
     }
     websocket.onclose = () => {

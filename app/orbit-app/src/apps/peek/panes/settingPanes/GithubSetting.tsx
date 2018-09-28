@@ -6,13 +6,10 @@ import * as React from 'react'
 import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { HideablePane } from '../../views/HideablePane'
 import { WhitelistManager } from './stores/WhitelistManager'
-import { PeekContent } from '../../views/PeekContent'
 import { SettingManageRow } from './views/SettingManageRow'
-import { PeekSettingHeader } from './views/PeekSettingHeader'
-import { AppTopicExplorer } from './views/AppTopicExplorer'
 import { PeekSettingProps } from '../PeekSetting'
+import { SimpleAppExplorer } from './views/SimpleAppExplorer'
 
 type Props = PeekSettingProps<GithubSettingModel>
 
@@ -54,19 +51,12 @@ class GithubSettingStore {
 @view
 export class GithubSetting extends React.Component<Props & { store: GithubSettingStore }> {
   render() {
-    const { store, appViewStore, setting } = this.props
+    const { store, setting } = this.props
     return (
-      <>
-        <PeekSettingHeader
-          setting={setting}
-          onClickSettings={appViewStore.activeToggler('settings')}
-          settingsActive={appViewStore.active === 'settings'}
-        />
-        <PeekContent>
-          <HideablePane invisible={appViewStore.active === 'settings'}>
-            <AppTopicExplorer setting={setting} />
-          </HideablePane>
-          <HideablePane invisible={appViewStore.active !== 'settings'}>
+      <SimpleAppExplorer
+        setting={setting}
+        settingsPane={
+          <>
             <SettingManageRow store={store} setting={setting} />
             <View
               flex={1}
@@ -162,9 +152,9 @@ export class GithubSetting extends React.Component<Props & { store: GithubSettin
                 }
               />
             </View>
-          </HideablePane>
-        </PeekContent>
-      </>
+          </>
+        }
+      />
     )
   }
 }

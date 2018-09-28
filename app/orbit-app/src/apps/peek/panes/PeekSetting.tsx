@@ -10,39 +10,19 @@ import * as SettingPanes from './settingPanes'
 export type PeekSettingProps<T extends Setting> = PeekPaneProps<T> & {
   store?: AppInfoStore
   appsStore?: AppsStore
-  appViewStore?: AppViewStore
   setting?: T
 }
 
 const EmptyPane = ({ setting }) => <div>no setting {JSON.stringify(setting)} pane</div>
 
-class AppViewStore {
-  active = 'main'
-  lastActive = 'main'
-
-  setActiveKey = key => {
-    this.lastActive = this.active
-    this.active = key
-  }
-
-  activeToggler = key => () => {
-    if (key === this.active) {
-      this.setActiveKey(this.lastActive)
-    } else {
-      this.setActiveKey(key)
-    }
-  }
-}
-
 @view.attach('appsStore')
 @view.attach({
   store: AppInfoStore,
-  appViewStore: AppViewStore,
 })
 @view
 export class PeekSetting extends React.Component<PeekSettingProps<Setting>> {
   render() {
-    const { model, store, peekStore, appsStore, appViewStore, ...props } = this.props
+    const { model, store, peekStore, appsStore, ...props } = this.props
     if (!model) {
       return null
     }
@@ -54,7 +34,6 @@ export class PeekSetting extends React.Component<PeekSettingProps<Setting>> {
         setting={model}
         appInfoStore={store}
         peekStore={peekStore}
-        appViewStore={appViewStore}
         {...props}
       />
     )

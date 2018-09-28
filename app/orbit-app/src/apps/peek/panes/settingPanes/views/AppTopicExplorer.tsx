@@ -9,6 +9,7 @@ type Props = { setting: Setting }
 
 class AppTopicStore {
   props: Props
+  activeTab = null
   topics = []
   locations = []
   private searchArgs = {
@@ -37,6 +38,7 @@ class AppTopicStore {
     this.locations = await loadMany(SearchLocationsModel, {
       args: this.searchArgs,
     })
+    this.activeTab = this.locations[0] || ''
   }
 }
 
@@ -50,19 +52,17 @@ export class AppTopicExplorer extends React.Component<Props & { store?: AppTopic
     return (
       <Row flex={1}>
         <Sidebar minWidth={150} maxWidth={300} width={200} position="left">
-          <SidebarLabel>Topics</SidebarLabel>
-          {store.topics.map((topic, i) => (
-            <SimpleItem key={i} title={topic} />
+          <SidebarLabel>Locations</SidebarLabel>
+          {store.locations.map((location, i) => (
+            <SimpleItem key={i} title={location} />
           ))}
         </Sidebar>
         <Col overflow="hidden" flex={1}>
-          <Theme select={theme => theme.titleBar || theme}>
-            <Tabs active="first">
-              {store.locations.map((location, i) => (
-                <Tab key={i} width={140} label={location} />
-              ))}
-            </Tabs>
-          </Theme>
+          <Tabs active={store.activeTab} onActive={x => (store.activeTab = x)}>
+            {store.topics.map((topic, i) => (
+              <Tab key={topic} width={140} label={topic} />
+            ))}
+          </Tabs>
 
           <Col flex={1} alignItems="center" justifyContent="center" />
         </Col>

@@ -5,15 +5,17 @@ import * as UI from '@mcro/ui'
 import { WindowControls } from '../../../views/WindowControls'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
-import { PeekContents } from '../PeekPaneProps'
 import { TitleBar } from './TitleBar'
 import { CSSPropertySet } from '@mcro/gloss'
-import { Glint } from '@mcro/ui'
+import { Glint, View, Row } from '@mcro/ui'
 
-type Props = PeekContents & {
+type Props = {
   peekStore?: PeekStore
   theme?: any
   integration?: string
+  before?: React.ReactNode
+  after?: React.ReactNode
+  children?: React.ReactNode
 }
 
 // the full header:
@@ -59,22 +61,6 @@ const Centered = view({
   textAlign: 'center',
 })
 
-const textify = thing => {
-  if (typeof thing === 'string') {
-    return <UI.Text>{thing}</UI.Text>
-  }
-  return thing
-}
-
-const SubTitle = ({ children, before, after }) => (
-  <UI.Row position="relative" padding={[0, 6]} alignItems="center" flex={1} zIndex={1}>
-    {textify(before)}
-    <div style={{ flex: 1 }} />
-    <Centered>{typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}</Centered>
-    {textify(after)}
-  </UI.Row>
-)
-
 const MainHead = view({
   flexFlow: 'row',
   position: 'relative',
@@ -82,27 +68,16 @@ const MainHead = view({
   height: 35,
 })
 
+const HeaderSection = view(Row, {
+  alignItems: 'center',
+  padding: 8,
+})
+
 @attachTheme
 @view
 export class PeekHeaderContent extends React.Component<Props> {
   render() {
-    const {
-      peekStore,
-      title,
-      titleAfter,
-      date,
-      subtitle,
-      subtitleBefore,
-      subtitleAfter,
-      permalink,
-      icon,
-      theme,
-      belowHeadMain,
-      belowHead,
-      integration,
-      ...props
-    } = this.props
-    const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
+    const { peekStore, theme, before, after, children, ...props } = this.props
     const itemConfig = peekStore.state.appConfig.config
     const hideTitleBar = itemConfig && itemConfig.showTitleBar === false
     return (
@@ -131,21 +106,15 @@ export class PeekHeaderContent extends React.Component<Props> {
                     onMax={peekStore.isTorn ? peekStore.handleMaximize : null}
                     onMin={peekStore.isTorn ? peekStore.handleMinimize : null}
                   />
-                  {titleAfter}
+                  <HeaderSection>{before}</HeaderSection>
                 </UI.Row>
               </>
             }
-          >
-            {hideTitleBar ? '' : title}
-          </TitleBar>
-          {hasSubTitle && (
-            <SubTitle before={subtitleBefore} after={subtitleAfter}>
-              {subtitle}
-            </SubTitle>
-          )}
-          {belowHeadMain}
+          />
+          <Centered>{children}</Centered>
+          <View flex={1} />
+          <HeaderSection>{after}</HeaderSection>
         </MainHead>
-        {belowHead}
       </PeekHeaderContain>
     )
   }

@@ -12,6 +12,7 @@ import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'
+import { Theme } from '@mcro/gloss'
 
 export type TabsProps = {
   // Callback for when the active tab has changed.
@@ -19,7 +20,7 @@ export type TabsProps = {
   // The key of the default active tab.
   defaultActive?: string
   // The key of the currently active tab.
-  active?: string | void
+  active?: string | number | void
   // Tab elements.
   children?: Array<any>
   // Whether the tabs can be reordered by the user.
@@ -89,7 +90,7 @@ const TabListItem = view(Row, {
     background,
     '&:hover': {
       background: active ? background : theme.tabBackgroundHover,
-      transition: active ? 'none' : 'all ease 700ms',
+      transition: active ? 'none' : 'all ease-out 500ms',
     },
   }
 })
@@ -129,7 +130,7 @@ const TabContent = view({
   width: '100%',
 })
 
-export function Tabs(props: TabsProps) {
+function TabsInner(props: TabsProps) {
   const { onActive } = props
   const active = props.active == null ? props.defaultActive : props.active
   // array of other components that aren't tabs
@@ -249,5 +250,13 @@ export function Tabs(props: TabsProps) {
       {tabContents}
       {tabSiblings}
     </TabContainer>
+  )
+}
+
+export function Tabs(props) {
+  return (
+    <Theme select={theme => theme.titleBar || theme}>
+      <TabsInner {...props} />
+    </Theme>
   )
 }

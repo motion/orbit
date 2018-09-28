@@ -8,7 +8,7 @@ const sidePad = 16
 const Item = view({
   flexFlow: 'row',
   padding: [0, sidePad],
-  height: 40,
+  height: 36,
   alignItems: 'center',
   inactive: {
     opacity: 0.5,
@@ -21,7 +21,6 @@ const Item = view({
     opacity: 0.8,
   },
 }).theme(({ theme }) => ({
-  borderBottom: [1, theme.borderColor.alpha(0.3)],
   '&:hover': {
     background: theme.backgroundHover,
   },
@@ -43,7 +42,7 @@ export const SimpleItem = ({ inactive = false, after = null, icon = null, title,
         <div style={{ width: 12 }} />
       </>
     )}
-    <ItemTitle>{title}</ItemTitle>
+    <ItemTitle ellipse>{title}</ItemTitle>
     {after}
   </Item>
 )

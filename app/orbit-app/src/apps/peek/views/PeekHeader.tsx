@@ -114,7 +114,7 @@ export class PeekHeaderContent extends React.Component<Props> {
         theme={theme}
         {...props}
       >
-        <Glint borderRadius={7.5} opacity={0.65} top={1} />
+        <Glint borderRadius={7.5} opacity={0.65} top={0.5} />
         <MainHead>
           <TitleBar
             height="100%"

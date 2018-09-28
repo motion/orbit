@@ -1,12 +1,13 @@
 NEXT
 
-1. Create apps distribute via p2p
-2. Home redesign for apps:
-3. Apps + Person have a new app design like the demo app:
+1. Finish search with cosal, maybe fts5
+2. Create apps distribute via p2p
+3. Home redesign for apps:
+4. Apps + Person have a new app design like the demo app:
    1. Sidebar shows their top topics
    2. Main view has Locations in tabs
    3. Main view shows topic \* location bits for that person
-4. AppleScript 2.0:
+5. AppleScript 2.0:
    - Ridiculously easy to build apps
    - Pundle power built right into Orbit
    - Apps have two views:

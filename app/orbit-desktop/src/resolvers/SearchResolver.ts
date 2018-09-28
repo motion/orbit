@@ -1,5 +1,5 @@
-import { resolveCommand } from '@mcro/mediator'
-import { SearchCommand } from '@mcro/models'
+import { resolveMany } from '@mcro/mediator'
+import { SearchResultModel } from '@mcro/models'
 import { Cosal } from '@mcro/cosal'
 import { getSearchQuery } from './getSearchQuery'
 import { getRepository } from 'typeorm'
@@ -39,14 +39,13 @@ const getBasicSearch = async args => {
 }
 
 export const getSearchResolver = (cosal: Cosal) => {
-  cosal
-  return resolveCommand(SearchCommand, async args => {
+  return resolveMany(SearchResultModel, async args => {
     console.time('basicSearch')
     const results = await getBasicSearch(args)
     console.timeEnd('basicSearch')
     if (!results) {
       console.log('expired query')
-      return false
+      return []
     }
     console.log('sending search results...', results)
     return results.slice(args.skip, args.take + args.skip)

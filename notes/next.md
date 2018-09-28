@@ -2,17 +2,11 @@ NEXT
 
 1. Create apps distribute via p2p
 2. Home redesign for apps:
-   - Medium masonry cards that show some sort of topic overview, stats
-   - Slack card for example shows recent topics and recent popular rooms
-   - Then hover/click the Slack card and see:
-     - A trending topic explorer:
-     - Left sidebar has rooms
-     - Right side shows recently active people + topics
-     - Click a topic and it opens a tab in that app
-       - that tab shows a list of conversations filtered by that topic
-   - Other apps can basically actually show the same thing to start
-     - TODO ideate on coolest way
-3. AppleScript 2.0:
+3. Apps + Person have a new app design like the demo app:
+   1. Sidebar shows their top topics
+   2. Main view has Locations in tabs
+   3. Main view shows topic \* location bits for that person
+4. AppleScript 2.0:
    - Ridiculously easy to build apps
    - Pundle power built right into Orbit
    - Apps have two views:

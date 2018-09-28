@@ -52,6 +52,7 @@ NEXT
 
 # Umed
 
+- remove "archived" gmail
 - Really simple throttle to keep cpu from going too much
 - Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
   - for gmail, dont sync full history, but do sync a trailing X months or limited # of items

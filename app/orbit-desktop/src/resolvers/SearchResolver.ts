@@ -4,15 +4,19 @@ import { Cosal } from '@mcro/cosal'
 import { getSearchQuery } from './getSearchQuery'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '@mcro/entities'
+import { Logger } from '@mcro/logger'
+
+const log = new Logger('search')
 
 // a simple way to cache the results based on `query`
-let currentSearch = { query: '', allResults: null }
+let currentSearch = { hash: '', allResults: null }
 let curId = 0
 
 const getBasicSearch = async args => {
   curId = Math.random()
   const id = curId
-  if (args.query === currentSearch.query) {
+  const hash = JSON.stringify(args)
+  if (hash === currentSearch.hash) {
     return currentSearch.allResults
   } else {
     const searchQuery = getSearchQuery({
@@ -28,9 +32,10 @@ const getBasicSearch = async args => {
       peopleFilters: args.peopleFilters,
       locationFilters: args.locationFilters,
     })
+    console.log('searchQuery', searchQuery)
     const allResults = await getRepository(BitEntity).find(searchQuery)
     if (id === curId) {
-      currentSearch = { query: args.query, allResults }
+      currentSearch = { hash, allResults }
       return allResults
     } else {
       return false
@@ -47,7 +52,7 @@ export const getSearchResolver = (cosal: Cosal) => {
       console.log('expired query')
       return []
     }
-    console.log('sending search results...', results)
+    log.verbose('sending search results...', results.length)
     return results.slice(args.skip, args.take + args.skip)
   })
 }

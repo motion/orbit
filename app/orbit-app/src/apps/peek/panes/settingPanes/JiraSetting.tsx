@@ -1,45 +1,35 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { AtlassianSettingLogin } from './AtlassianSettingLogin'
-import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
-import { AppStatusPane } from './AppStatusPane'
-import { Tabs, Tab } from '@mcro/ui'
 import { AtlassianSetting } from '@mcro/models'
+import { PeekSettingProps } from '../PeekSetting'
+import { PeekSettingHeader } from './views/PeekSettingHeader'
+import { PeekContent } from '../../views/PeekContent'
+import { AppTopicExplorer } from './views/AppTopicExplorer'
 
-class JiraSettingStore {
-  active = 'status'
-  setActiveKey = key => {
-    this.active = key
-  }
-}
+type Props = PeekSettingProps<AtlassianSetting>
 
-@view.attach({
-  store: JiraSettingStore,
-})
 @view
-export class JiraSetting extends React.Component<
-  SettingPaneProps & { store: JiraSettingStore; setting: AtlassianSetting }
-> {
+export class JiraSetting extends React.Component<Props> {
   render() {
-    const { store, setting, children } = this.props
-    return children({
-      belowHead: (
-        <Tabs active={store.active} onActive={store.setActiveKey}>
-          <Tab key="status" width="50%" label="Status" />
-          <Tab key="repos" width="50%" label="Repos" />
-        </Tabs>
-      ),
-      content: (
-        <>
-          <HideablePane invisible={store.active !== 'status'}>
-            <AppStatusPane setting={setting} />
+    const { appViewStore, setting } = this.props
+    return (
+      <>
+        <PeekSettingHeader
+          setting={setting}
+          onClickSettings={appViewStore.activeToggler('settings')}
+          settingsActive={appViewStore.active === 'settings'}
+        />
+        <PeekContent>
+          <HideablePane invisible={appViewStore.active === 'settings'}>
+            <AppTopicExplorer />
           </HideablePane>
-          <HideablePane invisible={store.active !== 'repos'}>
-            <AtlassianSettingLogin type="jira" setting={setting} />
+          <HideablePane invisible={appViewStore.active !== 'settings'}>
+            <AtlassianSettingLogin type="confluence" setting={setting} />
           </HideablePane>
-        </>
-      ),
-    })
+        </PeekContent>
+      </>
+    )
   }
 }

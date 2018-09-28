@@ -7,36 +7,56 @@ import { AppInfoStore } from '../../../stores/AppInfoStore'
 import { PeekPaneProps } from '../PeekPaneProps'
 import * as SettingPanes from './settingPanes'
 
-type Props = PeekPaneProps & {
+export type PeekSettingProps<T extends Setting> = PeekPaneProps<T> & {
   store?: AppInfoStore
   appsStore?: AppsStore
-  setting: Setting
+  appViewStore?: AppViewStore
+  setting?: T
 }
 
 const EmptyPane = ({ setting }) => <div>no setting {JSON.stringify(setting)} pane</div>
 
-@view.attach('appsStore')
-@view.attach({
-  store: AppInfoStore,
-})
-@view
-class SettingContent extends React.Component<Props> {
-  render() {
-    const { appsStore, setting, store } = this.props
-    const integration = setting.type
-    const SettingPane = SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
-    return <SettingPane appsStore={appsStore} setting={setting} appInfoStore={store} />
+class AppViewStore {
+  active = 'main'
+  lastActive = 'main'
+
+  setActiveKey = key => {
+    this.lastActive = this.active
+    this.active = key
+  }
+
+  activeToggler = key => () => {
+    if (key === this.active) {
+      this.setActiveKey(this.lastActive)
+    } else {
+      this.setActiveKey(key)
+    }
   }
 }
 
+@view.attach('appsStore')
+@view.attach({
+  store: AppInfoStore,
+  appViewStore: AppViewStore,
+})
 @view
-export class PeekSetting extends React.Component<PeekPaneProps<Setting>> {
+export class PeekSetting extends React.Component<PeekSettingProps<Setting>> {
   render() {
-    const { peekStore, ...props } = this.props
-    const { model } = peekStore.state
+    const { model, store, peekStore, appsStore, appViewStore, ...props } = this.props
     if (!model) {
       return null
     }
-    return <SettingContent setting={model} peekStore={peekStore} {...props} />
+    const integration = model.type
+    const SettingPane = SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
+    return (
+      <SettingPane
+        appsStore={appsStore}
+        setting={model}
+        appInfoStore={store}
+        peekStore={peekStore}
+        appViewStore={appViewStore}
+        {...props}
+      />
+    )
   }
 }

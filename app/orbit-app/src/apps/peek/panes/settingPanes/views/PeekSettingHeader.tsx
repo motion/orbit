@@ -7,14 +7,23 @@ import { TitleBarButton } from '../../../views/TitleBarButton'
 export const PeekSettingHeader = ({
   setting,
   onClickSettings,
+  settingsActive,
 }: {
   setting: Setting
   onClickSettings: Function
+  settingsActive: boolean
 }) => {
   return (
     <PeekHeader
       title={NICE_INTEGRATION_NAMES[setting.type]}
-      titleAfter={<TitleBarButton tooltip="Settings" icon="gear" onClick={onClickSettings} />}
+      subtitleAfter={
+        <TitleBarButton
+          tooltip="Settings"
+          icon="gear"
+          onClick={onClickSettings}
+          active={settingsActive}
+        />
+      }
     />
   )
 }

@@ -1,13 +1,19 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { Text, SearchableTable, Tabs, Tab } from '@mcro/ui'
-import { AppStatusPane } from './AppStatusPane'
+import { Text, SearchableTable, View } from '@mcro/ui'
+import { PeekSettingProps } from '../PeekSetting'
+import { GDriveSetting } from '@mcro/models'
+import { PeekSettingHeader } from './views/PeekSettingHeader'
+import { PeekContent } from '../../views/PeekContent'
+import { AppTopicExplorer } from './views/AppTopicExplorer'
+// import { SettingManageRow } from './views/SettingManageRow'
+
+type Props = PeekSettingProps<GDriveSetting>
 
 class GDocsSettingStore {
-  props: SettingPaneProps
+  props: Props
   active = 'status'
   popularFolders = []
 
@@ -50,70 +56,75 @@ class GDocsSettingStore {
 @view.attach({ store: GDocsSettingStore })
 @view
 export class GdriveSetting extends React.Component<
-  SettingPaneProps & {
+  Props & {
     store?: GDocsSettingStore
   }
 > {
   render() {
-    const { store, setting, children } = this.props
+    const { store, appViewStore, setting } = this.props
     const folders = store.popularFolders
-    return children({
-      belowHead: (
-        <Tabs active={store.active} onActive={store.setActiveKey}>
-          <Tab key="status" width="50%" label="Status" />
-          <Tab key="folders" width="50%" label="Manage" />
-        </Tabs>
-      ),
-      content: (
-        <>
-          <HideablePane invisible={store.active !== 'status'}>
-            <AppStatusPane setting={setting} />
+
+    return (
+      <>
+        <PeekSettingHeader
+          setting={setting}
+          onClickSettings={appViewStore.activeToggler('settings')}
+          settingsActive={appViewStore.active === 'settings'}
+        />
+        <PeekContent>
+          <HideablePane invisible={appViewStore.active === 'settings'}>
+            <AppTopicExplorer />
           </HideablePane>
-          <HideablePane invisible={store.active !== 'folders'}>
-            <SearchableTable
-              virtual
-              rowLineHeight={28}
-              floating={false}
-              columnSizes={{
-                name: 'flex',
-                active: '14%',
-              }}
-              columns={{
-                name: {
-                  value: 'Folder Name',
-                  sortable: true,
-                  resizable: true,
-                },
-                active: {
-                  value: 'Active',
-                  sortable: true,
-                },
-              }}
-              multiHighlight
-              rows={folders.map((file, index) => {
-                return {
-                  key: `${index}`,
-                  columns: {
-                    name: {
-                      sortValue: file.name,
-                      value: file.name,
-                    },
-                    active: {
-                      sortValue: false,
-                      value: <ReactiveCheckBox isActive={this.props.store.onSyncSetter(file.id)} />,
-                    },
+          <HideablePane invisible={appViewStore.active !== 'settings'}>
+            {/* <SettingManageRow store={store} setting={setting} /> */}
+            <View flex={1} opacity={1} pointerEvents={'auto'}>
+              <SearchableTable
+                virtual
+                rowLineHeight={28}
+                floating={false}
+                columnSizes={{
+                  name: 'flex',
+                  active: '14%',
+                }}
+                columns={{
+                  name: {
+                    value: 'Folder Name',
+                    sortable: true,
+                    resizable: true,
                   },
+                  active: {
+                    value: 'Active',
+                    sortable: true,
+                  },
+                }}
+                multiHighlight
+                rows={folders.map((file, index) => {
+                  return {
+                    key: `${index}`,
+                    columns: {
+                      name: {
+                        sortValue: file.name,
+                        value: file.name,
+                      },
+                      active: {
+                        sortValue: false,
+                        value: (
+                          <ReactiveCheckBox isActive={this.props.store.onSyncSetter(file.id)} />
+                        ),
+                      },
+                    },
+                  }
+                })}
+                bodyPlaceholder={
+                  <div style={{ margin: 'auto' }}>
+                    <Text size={1.2}>Loading...</Text>
+                  </div>
                 }
-              })}
-              bodyPlaceholder={
-                <div style={{ margin: 'auto' }}>
-                  <Text size={1.2}>Loading...</Text>
-                </div>
-              }
-            />
+              />
+            </View>
           </HideablePane>
-        </>
-      ),
-    })
+        </PeekContent>
+      </>
+    )
   }
 }

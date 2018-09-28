@@ -27,7 +27,6 @@ export const OrbitAppCard = decorator(
     const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard
-        inactive={!isActive}
         title={NICE_INTEGRATION_NAMES[model.type]}
         titleProps={{
           ellipse: true,

@@ -29,7 +29,6 @@ const Item = view({
 
 const ItemTitle = view(Text, {
   fontWeight: 700,
-  padding: [0, 12],
   justifyContent: 'center',
   fontSize: 14,
   alpha: 0.5,
@@ -38,7 +37,12 @@ const ItemTitle = view(Text, {
 
 export const SimpleItem = ({ inactive = false, after = null, icon = null, title, ...props }) => (
   <Item inactive={inactive} {...props}>
-    {!!icon && <OrbitIcon size={18} icon={icon} />}
+    {!!icon && (
+      <>
+        <OrbitIcon size={18} icon={icon} />
+        <div style={{ width: 12 }} />
+      </>
+    )}
     <ItemTitle>{title}</ItemTitle>
     {after}
   </Item>

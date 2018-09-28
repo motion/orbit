@@ -1,5 +1,6 @@
 import { Command } from '@mcro/mediator'
 import { Setting } from './Setting'
+import { Bit } from './Bit'
 
 export const SettingRemoveCommand = new Command<void, { settingId: number }>('setting-remove')
 
@@ -29,7 +30,7 @@ export const CosalTopWordsCommand = new Command<string[], { text: string; max?: 
 )
 
 export const SearchCommand = new Command<
-  string[],
+  Bit[],
   {
     query: string
     sortBy: string

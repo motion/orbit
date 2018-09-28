@@ -48,7 +48,7 @@ export const getSearchResolver = (cosal: Cosal) => {
       console.log('expired query')
       return false
     }
-    console.log('search me up...')
+    console.log('sending search results...', results)
     return results.slice(args.skip, args.take + args.skip)
   })
 }

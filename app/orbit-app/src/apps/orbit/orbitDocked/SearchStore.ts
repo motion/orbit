@@ -183,11 +183,14 @@ export class SearchStore {
       }
 
       const updateNextResults = async skip => {
-        const nextResults = await command(SearchCommand, {
+        const searchOpts = {
           ...baseFindOptions,
           skip,
           take,
-        })
+        }
+        console.log('Send command', searchOpts)
+        const nextResults = await command(SearchCommand, searchOpts)
+        console.log('got next results', searchOpts, nextResults)
         if (!nextResults) {
           return false
         }

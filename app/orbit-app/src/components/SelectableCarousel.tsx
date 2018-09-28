@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, cancel } from '@mcro/black'
+import { view, react, cancel, ensure } from '@mcro/black'
 import { Carousel, CarouselProps } from './Carousel'
 import { SelectionStore } from '../apps/orbit/orbitDocked/SelectionStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
@@ -19,20 +19,16 @@ class CarouselStore {
 
   handleScrollTo = react(
     () => {
-      const ref = this.carouselRef.current
       const index = this.props.selectionStore.activeIndex
       const isShowing = this.props.isActiveStore ? this.props.isActiveStore.isActive : null
       const { items, offset } = this.props
       const isActive =
-        ref &&
-        isShowing &&
-        typeof index === 'number' &&
-        index >= offset &&
-        index <= offset + items.length
+        isShowing && typeof index === 'number' && index >= offset && index <= offset + items.length
       return isActive ? index : false
     },
     indexIfActive => {
       const carousel = this.carouselRef.current
+      ensure('node', !!carousel)
       const { offset, selectionStore, resetOnInactive } = this.props
       if (indexIfActive == false) {
         if (resetOnInactive) {

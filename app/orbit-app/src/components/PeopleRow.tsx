@@ -17,8 +17,8 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
         {(people || []).map((person, i) => (
           <UI.Image
             key={i}
-            width={14}
-            height={14}
+            width={13}
+            height={13}
             marginRight={-10}
             borderRadius={100}
             border={[1, theme.background.lighten(2)]}

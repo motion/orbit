@@ -15,6 +15,6 @@ export const settingToAppConfig = (setting: Setting): AppConfig => ({
   title: getSettingTitle(setting),
   config: {
     // less tall for settings
-    dimensions: [550, 520],
+    dimensions: [680, 620],
   },
 })

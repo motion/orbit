@@ -10,6 +10,8 @@ import { BitModel, PersonBitModel, SettingModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
+import { OrbitCard } from '../../../../views/OrbitCard'
+import { OrbitAppCard } from '../orbitApps/OrbitAppCard'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -265,6 +267,7 @@ export class OrbitHome extends React.Component<Props> {
                                 homeStore={homeStore}
                                 categoryName={name}
                                 cardHeight={height}
+                                CardView={items[0].target === 'setting' ? OrbitAppCard : OrbitCard}
                               />
                             </div>
                           )

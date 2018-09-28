@@ -5,12 +5,19 @@ import { SubTitle, VerticalSpace } from '../../../../views'
 import { getSettingTitle } from '../../../../helpers/toAppConfig/settingToAppConfig'
 import { Message } from '../../../../views/Message'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
+import { view } from '@mcro/black'
 
 type Props = {
   setting: Setting
   extraMessage?: React.ReactNode
 }
 
+class AppStore {}
+
+@view.attach({
+  store: AppStore,
+})
+@view
 export class AppStatusPane extends React.Component<Props> {
   render() {
     const { setting, extraMessage } = this.props

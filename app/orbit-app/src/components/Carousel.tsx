@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { OrbitCard } from '../views/OrbitCard'
 import { HorizontalScrollRow, HorizontalScrollRowProps } from '../views/HorizontalScrollRow'
 import isEqual from 'react-fast-compare'
 import scroll from 'scroll'
+import { OrbitCard } from '../views/OrbitCard'
+import { OrbitItemProps } from '../views/OrbitItemProps'
 
 export type CarouselProps = HorizontalScrollRowProps & {
+  CardView?: (props: OrbitItemProps<any>) => JSX.Element
   items?: any[]
   verticalPadding?: number
   cardWidth?: number
@@ -19,6 +21,10 @@ export type CarouselProps = HorizontalScrollRowProps & {
 }
 
 export class Carousel extends React.Component<CarouselProps> {
+  static defaultProps = {
+    CardView: OrbitCard,
+  }
+
   frameRef = React.createRef<HTMLDivElement>()
 
   shouldComponentUpdate(nextProps) {
@@ -68,8 +74,10 @@ export class Carousel extends React.Component<CarouselProps> {
       className,
       before,
       after,
+      CardView,
       ...props
     } = this.props
+
     return (
       <HorizontalScrollRow
         forwardRef={this.frameRef}
@@ -78,7 +86,7 @@ export class Carousel extends React.Component<CarouselProps> {
       >
         {before}
         {(items || []).map((item, index) => (
-          <OrbitCard
+          <CardView
             key={`${index}${item.id}`}
             index={index + offset}
             className={`carousel-result-item ${className || ''}`}

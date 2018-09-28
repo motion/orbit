@@ -5,7 +5,7 @@ import { ResolvedItem } from '../components/ItemResolver'
 import { Actions } from '../actions/Actions'
 
 export class OrbitItemStore {
-  props: OrbitItemProps
+  props: OrbitItemProps<any>
   resolvedItem: ResolvedItem = null
   isSelected = false
   cardWrapRef = null

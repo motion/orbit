@@ -1,6 +1,5 @@
 import * as Path from 'path'
 import { getGlobalConfig } from '@mcro/config'
-import { Cosal } from '@mcro/cosal'
 
 const Config = getGlobalConfig()
 const env = process.env.NODE_ENV !== 'development' ? 'orbit' : 'dev'
@@ -16,5 +15,4 @@ export const oracleOptions = {
   socketPort: Config.ports.oracleBridge,
 }
 
-// TODO make this just dependency inject
-export const cosal = new Cosal()
+export const COSAL_DB = Path.join(Config.paths.userData, 'cosal.json')

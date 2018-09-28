@@ -1,7 +1,5 @@
 import React from 'react'
 
-import 'typeface-open-sans'
-
 import icon from '../assets/notch.png'
 import { rhythm } from '../utils/typography'
 
@@ -16,7 +14,7 @@ class Bio extends React.Component {
       >
         <img
           src={icon}
-          alt={'Kyle Mathews'}
+          alt={'Orbit'}
           style={{
             marginRight: rhythm(1 / 2),
             marginBottom: 0,

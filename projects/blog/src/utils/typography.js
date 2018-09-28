@@ -9,8 +9,20 @@ Theme.overrideThemeStyles = () => ({
 
 delete Theme.googleFonts
 
-Theme.headerFontFamily = ['"Open Sans"', 'Helvetica', 'Arial']
-Theme.bodyFontFamily = ['"Open Sans"', 'Helvetica', 'Arial']
+Theme.headerFontFamily = [
+  'system-ui',
+  'BlinkMacSystemFont',
+  'Helvetica Neue',
+  'Helvetica',
+  'sans-serif',
+]
+Theme.bodyFontFamily = [
+  'system-ui',
+  'BlinkMacSystemFont',
+  'Helvetica Neue',
+  'Helvetica',
+  'sans-serif',
+]
 
 const typography = new Typography(Theme)
 

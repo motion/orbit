@@ -4,8 +4,9 @@ import { toCosal, Pair } from './toCosal'
 import { uniqBy } from 'lodash'
 import { commonWords } from './commonWords'
 import { cosineDistance } from './cosineDistance'
-// import { Matrix } from '@mcro/vectorious'
+import { pathExists, readJSON, writeJSON } from 'fs-extra'
 
+// exports
 export { getCovariance } from './getCovariance'
 export { toCosal } from './toCosal'
 
@@ -26,17 +27,43 @@ type Result = {
 export class Cosal {
   vectors: VectorDB = {}
   covariance: Covariance = null
+  database: string
+  started = false
 
-  constructor() {
-    // pre-seed it
-    this.covariance = {
-      matrix: corpusCovarPrecomputed,
-      hash: '0',
+  constructor({ database }: { database?: string } = {}) {
+    this.database = database
+  }
+
+  async start() {
+    if (this.database) {
+      if (!(await pathExists(this.database))) {
+        console.log('No database, starting a new one')
+        this.covariance = {
+          matrix: corpusCovarPrecomputed,
+          hash: '0',
+        }
+        await this.persist()
+      } else {
+        const data = await readJSON(this.database)
+        if (data.hash && data.matrix) {
+          this.covariance = data
+        } else {
+          throw new Error('Invalid database')
+        }
+      }
+    }
+    this.started = true
+  }
+
+  private ensureStarted() {
+    if (!this.started) {
+      throw new Error('You didnt start cosal: await cosal.start()')
     }
   }
 
   // incremental scan can add more and more documents
   scan = async (newRecords: Record[]) => {
+    this.ensureStarted()
     // this is incremental, passing in previous matrix
     this.covariance = getCovariance(
       this.covariance.matrix,
@@ -53,11 +80,14 @@ export class Cosal {
       }
       this.vectors[record.id] = cosals[index].vector
     }
+    // persist after scan
+    await this.persist()
   }
 
   // goes through all vectors and sorts by smallest distance up to max
   // TODO better data structure?
   search = async (query: string, max = 10): Promise<Result[]> => {
+    this.ensureStarted()
     const cosal = await toCosal(query, this.covariance)
     let results: Result[] = []
 
@@ -79,8 +109,10 @@ export class Cosal {
     return results
   }
 
-  async persist(file: string) {
-    console.log('write to file', file)
+  async persist() {
+    if (this.database) {
+      await writeJSON(this.database, this.covariance)
+    }
   }
 
   getWordWeights = async (text: string, max?: number): Promise<Pair[] | null> => {

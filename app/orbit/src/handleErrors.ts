@@ -2,8 +2,8 @@ import { clipboard, dialog } from 'electron'
 import open from 'opn'
 import { logFile } from '@mcro/logger'
 import { pathExists, readFile } from 'fs-extra'
-import { showConfirmDialog } from './showConfirmDialog'
 import Raven from 'raven'
+import { handleExit } from './handleExit'
 
 Raven.config('https://e885a093bbcb4d5fb2527dfe921f7654@sentry.io/1282871').install()
 
@@ -34,17 +34,28 @@ export async function onError(error) {
 
   lastReported = Date.now()
 
-  if (
-    showConfirmDialog({
-      type: 'warning',
-      title: 'Orbit ran into an error!',
-      buttons: ['Copy to clipboard', 'Cancel'],
-      message: `Orbit ran into an error:\n\n${errorMessage.slice(
-        0,
-        250,
-      )}...\n\nWould you like to paste error to your clipboard to report it?`,
-    })
-  ) {
+  const res = dialog.showMessageBox({
+    type: 'warning',
+    title: 'Orbit ran into an error!',
+    buttons: ['Copy to clipboard', 'Quit', 'Cancel'],
+    message: `Orbit ran into an error:\n\n${errorMessage.slice(
+      0,
+      250,
+    )}...\n\nWould you like to paste error to your clipboard to report it?`,
+    defaultId: 0,
+    cancelId: 2,
+  })
+
+  if (res === 2) {
+    handleExit()
+  }
+
+  // quit
+  if (res === 1) {
+    handleExit()
+  }
+
+  if (res === 0) {
     let log = ''
     const logPath = logFile.findLogPath()
     if (await pathExists(logPath)) {

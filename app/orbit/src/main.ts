@@ -1,9 +1,7 @@
 import { setGlobalConfig, GlobalConfig } from '@mcro/config'
-import { cleanupChildren } from './cleanupChildren'
 import { ChildProcess } from 'child_process'
 import WebSocket from 'ws'
 import root from 'global'
-import { once } from 'lodash'
 
 root['WebSocket'] = WebSocket
 
@@ -58,27 +56,9 @@ export async function main() {
   let desktopProcess: ChildProcess
   let syncersProcess: ChildProcess
 
-  const handleExit = once(async () => {
-    try {
-      console.log('Electron handle exit...')
-      desktopProcess.kill()
-      syncersProcess.kill()
-      try {
-        cleanupChildren(desktopProcess.pid)
-      } catch {}
-      try {
-        cleanupChildren(syncersProcess.pid)
-      } catch {}
-      try {
-        cleanupChildren(process.pid)
-      } catch {}
-      console.log('bye!')
-    } catch (err) {
-      // exec('pkill -9 Orbit')
-      process.exit(0)
-    }
-  })
-
+  // exit handling
+  const { handleExit, setupHandleExit } = require('./handleExit')
+  setupHandleExit(desktopProcess, syncersProcess)
   // this works in dev
   process.on('exit', handleExit)
   process.on('SIGINT', handleExit)
@@ -90,10 +70,8 @@ export async function main() {
   desktopProcess = require('./startDesktop').startDesktop()
   syncersProcess = require('./startSyncers').startSyncers()
 
-  console.log('WHAT')
-
   if (process.env.IGNORE_ELECTRON !== 'true') {
-    await require('./startElectron').startElectron(handleExit)
+    await require('./startElectron').startElectron()
     console.log('Started Electron!')
   }
 }

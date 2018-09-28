@@ -1,9 +1,6 @@
 import { spawn, ChildProcess } from 'child_process'
 import { getGlobalConfig } from '@mcro/config'
-// @ts-ignore
-import { app } from 'electron'
 import * as Path from 'path'
-import { onError } from './handleErrors'
 
 const Config = getGlobalConfig()
 
@@ -44,7 +41,7 @@ export function startDesktop(): ChildProcess {
       if (process.env.IS_DESKTOP) {
         console.log('error is', error)
       } else {
-        onError({ stack: error })
+        console.log('CHILD ERROR', error)
       }
     })
 

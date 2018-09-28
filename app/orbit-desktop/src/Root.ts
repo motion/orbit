@@ -27,7 +27,7 @@ import open from 'opn'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection } from 'typeorm'
-import { oracleOptions } from './constants'
+import { oracleOptions, COSAL_DB } from './constants'
 import { AppsManager } from './managers/appsManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
@@ -90,7 +90,9 @@ export class Root {
       open(url)
     })
 
-    this.cosal = new Cosal()
+    this.cosal = new Cosal({
+      database: COSAL_DB,
+    })
 
     // BEFORE YOUR CONNECT
     // run the databaseManager that runs migrations

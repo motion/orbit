@@ -104,7 +104,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, 0, 4],
+  padding: [0, 0, 5],
 })
 
 const Preview = view({
@@ -229,9 +229,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               <Title>
                 <HighlightText
                   fontSize={14}
-                  sizeLineHeight={0.78}
+                  sizeLineHeight={0.75}
                   ellipse={hasSubtitle && hasMeta ? true : 2}
-                  fontWeight={600}
+                  fontWeight={500}
                   maxWidth="calc(100% - 30px)"
                   selectable={false}
                   {...titleProps}

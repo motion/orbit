@@ -7,13 +7,10 @@ import { Text, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { HideablePane } from '../../views/HideablePane'
 import { WhitelistManager } from './stores/WhitelistManager'
 import { PeekSettingProps } from '../PeekSetting'
-import { PeekSettingHeader } from './views/PeekSettingHeader'
-import { PeekContent } from '../../views/PeekContent'
-import { AppTopicExplorer } from './views/AppTopicExplorer'
 import { SettingManageRow } from './views/SettingManageRow'
+import { SimpleAppExplorer } from './views/SimpleAppExplorer'
 
 type Props = PeekSettingProps<SlackSettingModel>
 
@@ -71,19 +68,12 @@ class SlackSettingStore {
 @view
 export class SlackSetting extends React.Component<Props & { store?: SlackSettingStore }> {
   render() {
-    const { store, appViewStore, setting } = this.props
+    const { store, setting } = this.props
     return (
-      <>
-        <PeekSettingHeader
-          setting={setting}
-          onClickSettings={appViewStore.activeToggler('settings')}
-          settingsActive={appViewStore.active === 'settings'}
-        />
-        <PeekContent>
-          <HideablePane invisible={appViewStore.active === 'settings'}>
-            <AppTopicExplorer setting={setting} />
-          </HideablePane>
-          <HideablePane invisible={appViewStore.active !== 'settings'}>
+      <SimpleAppExplorer
+        setting={setting}
+        settingsPane={
+          <>
             <SettingManageRow store={store} setting={setting} />
             <View
               flex={1}
@@ -168,9 +158,9 @@ export class SlackSetting extends React.Component<Props & { store?: SlackSetting
                 }
               />
             </View>
-          </HideablePane>
-        </PeekContent>
-      </>
+          </>
+        }
+      />
     )
   }
 }

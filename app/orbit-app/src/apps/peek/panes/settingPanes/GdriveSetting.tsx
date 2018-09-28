@@ -1,20 +1,15 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { HideablePane } from '../../views/HideablePane'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
 import { PeekSettingProps } from '../PeekSetting'
 import { GDriveSetting } from '@mcro/models'
-import { PeekSettingHeader } from './views/PeekSettingHeader'
-import { PeekContent } from '../../views/PeekContent'
-import { AppTopicExplorer } from './views/AppTopicExplorer'
-// import { SettingManageRow } from './views/SettingManageRow'
+import { SimpleAppExplorer } from './views/SimpleAppExplorer'
 
 type Props = PeekSettingProps<GDriveSetting>
 
 class GDocsSettingStore {
   props: Props
-  active = 'status'
   popularFolders = []
 
   async didMount() {
@@ -47,10 +42,6 @@ class GDocsSettingStore {
     // console.log('get service again')
     return {} // this.props.appsStore.services.gdrive
   }
-
-  setActiveKey = key => {
-    this.active = key
-  }
 }
 
 @view.attach({ store: GDocsSettingStore })
@@ -61,21 +52,14 @@ export class GdriveSetting extends React.Component<
   }
 > {
   render() {
-    const { store, appViewStore, setting } = this.props
+    const { store, setting } = this.props
     const folders = store.popularFolders
 
     return (
-      <>
-        <PeekSettingHeader
-          setting={setting}
-          onClickSettings={appViewStore.activeToggler('settings')}
-          settingsActive={appViewStore.active === 'settings'}
-        />
-        <PeekContent>
-          <HideablePane invisible={appViewStore.active === 'settings'}>
-            <AppTopicExplorer setting={setting} />
-          </HideablePane>
-          <HideablePane invisible={appViewStore.active !== 'settings'}>
+      <SimpleAppExplorer
+        setting={setting}
+        settingsPane={
+          <>
             {/* <SettingManageRow store={store} setting={setting} /> */}
             <View flex={1} opacity={1} pointerEvents={'auto'}>
               <SearchableTable
@@ -122,9 +106,9 @@ export class GdriveSetting extends React.Component<
                 }
               />
             </View>
-          </HideablePane>
-        </PeekContent>
-      </>
+          </>
+        }
+      />
     )
   }
 }

@@ -2,14 +2,11 @@ import { GmailSetting as GmailSettingModel } from '@mcro/models'
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { HideablePane } from '../../views/HideablePane'
 import { WhitelistManager } from './stores/WhitelistManager'
 import { SearchableTable, Text, View } from '@mcro/ui'
-import { PeekContent } from '../../views/PeekContent'
 import { SettingManageRow } from './views/SettingManageRow'
-import { PeekSettingHeader } from './views/PeekSettingHeader'
-import { AppTopicExplorer } from './views/AppTopicExplorer'
 import { PeekSettingProps } from '../PeekSetting'
+import { SimpleAppExplorer } from './views/SimpleAppExplorer'
 
 type Props = PeekSettingProps<GmailSettingModel>
 
@@ -34,19 +31,12 @@ class GmailSettingStore {
 @view
 export class GmailSetting extends React.Component<Props & { store?: GmailSettingStore }> {
   render() {
-    const { store, appViewStore, setting } = this.props
+    const { store, setting } = this.props
     return (
-      <>
-        <PeekSettingHeader
-          setting={setting}
-          onClickSettings={appViewStore.activeToggler('settings')}
-          settingsActive={appViewStore.active === 'settings'}
-        />
-        <PeekContent>
-          <HideablePane invisible={appViewStore.active === 'settings'}>
-            <AppTopicExplorer setting={setting} />
-          </HideablePane>
-          <HideablePane invisible={appViewStore.active !== 'settings'}>
+      <SimpleAppExplorer
+        setting={setting}
+        settingsPane={
+          <>
             <SettingManageRow store={store} setting={setting} />
             <View
               flex={1}
@@ -101,9 +91,9 @@ export class GmailSetting extends React.Component<Props & { store?: GmailSetting
                 }
               />
             </View>
-          </HideablePane>
-        </PeekContent>
-      </>
+          </>
+        }
+      />
     )
   }
 }

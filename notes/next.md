@@ -1,6 +1,6 @@
 # nate
 
-- multi process with cluster https://gist.github.com/jpoehls/2232358
+- all done, closing... better screen
 - "stop asking" and "always send" for error reporting
 - "reset orbit db" option if error during startup
 - add report recent error log in Tray
@@ -20,6 +20,10 @@
 - record video of a demo
 - saved searches on home
 - community - beta build, email, rss updates in app
+
+- refactor: bring `orbit-electron` into `orbit`
+  - clean up the child process fork stuff a tiny bit
+  - cleans up a lot of duplicate packages
 
 # Umed
 

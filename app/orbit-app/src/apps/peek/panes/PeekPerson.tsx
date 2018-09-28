@@ -2,13 +2,15 @@ import { view } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { BitModel, PersonBit, SlackPersonData } from '@mcro/models'
 import * as React from 'react'
-import { Carousel } from '../../../components/Carousel'
 import { AppsStore } from '../../AppsStore'
 import { RoundButton, SubTitle } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { OrbitListItem } from '../../../views/OrbitListItem'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { App } from '@mcro/stores'
+import { Grid } from '../../../views/Grid'
+import { OrbitCard } from '../../../views/OrbitCard'
+import { View } from '@mcro/ui'
 
 type Props = PeekPaneProps & {
   appsStore: AppsStore
@@ -46,7 +48,7 @@ const mapW = 700
 const mapH = 200
 
 const StrongSubTitle = props => (
-  <SubTitle padding={[0, 10]} fontWeight={700} fontSize={16} alpha={0.8} {...props} />
+  <SubTitle padding={[0, 10]} fontWeight={200} fontSize={18} alpha={0.8} {...props} />
 )
 
 const Frame = view({
@@ -71,6 +73,7 @@ const ContentInner = view({
 const CardContent = view({
   position: 'relative',
   zIndex: 3,
+  height: 180,
 })
 
 const Map = view({
@@ -115,7 +118,7 @@ const FadeMapRight = view({
 const Info = view({
   display: 'block',
   position: 'absolute',
-  top: 50,
+  top: 30,
   left: 140,
 })
 
@@ -137,7 +140,10 @@ const Email = view('a', {
 })
 
 const Avatar = view('img', {
-  margin: [-20, 0, 0, -45],
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  margin: [-30, 0, 0, -45],
   width: 200,
   height: 200,
   borderRadius: 1000,
@@ -167,7 +173,7 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
 @view
 export class PeekPerson extends React.Component<Props & { store: PeekPersonStore }> {
   render() {
-    const { appsStore, model, children, store } = this.props
+    const { model, children, store } = this.props
     const person = model as PersonBit
     if (!person) {
       console.log('no person?', person)
@@ -228,30 +234,56 @@ export class PeekPerson extends React.Component<Props & { store: PeekPersonStore
             <ContentInner>
               <Section>
                 <StrongSubTitle>Interested in</StrongSubTitle>
-                <Carousel
-                  items={[
-                    {
-                      title: '#general',
-                      icon: 'slack',
-                      subtitle: '20 people',
-                    },
-                    {
-                      title: '#status',
-                      icon: 'slack',
-                      subtitle: '29 people',
-                    },
-                    {
-                      title: 'motion/orbit',
-                      icon: 'github',
-                      subtitle: '20 people',
-                    },
-                    {
-                      title: '#showoff',
-                      icon: 'slack',
-                      subtitle: '78 people',
-                    },
-                  ]}
-                />
+                <View padding={[10, 15, 0]}>
+                  <Grid columnWidth={120} height={50}>
+                    {[
+                      {
+                        id: 0,
+                        title: 'cosal',
+                        icon: 'slack',
+                      },
+                      {
+                        id: 0,
+                        title: 'cosal',
+                        icon: 'slack',
+                      },
+                      {
+                        id: 0,
+                        title: 'cosal',
+                        icon: 'slack',
+                      },
+                      {
+                        id: 0,
+                        title: 'cosal',
+                        icon: 'slack',
+                      },
+                      {
+                        id: 0,
+                        title: 'cosal',
+                        icon: 'slack',
+                      },
+                      {
+                        id: 0,
+                        title: 'cosal',
+                        icon: 'slack',
+                      },
+                      {
+                        id: 0,
+                        title: 'cosal',
+                        icon: 'slack',
+                      },
+                    ].map((item, index) => (
+                      <OrbitCard
+                        titleProps={{ fontSize: 20, fontWeight: 300 }}
+                        key={item.id}
+                        index={index}
+                        inGrid
+                        borderRadius={4}
+                        {...item}
+                      />
+                    ))}
+                  </Grid>
+                </View>
               </Section>
 
               <Section>

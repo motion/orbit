@@ -40,7 +40,7 @@ class PeekConversationStore {
 }
 
 const SlackConversation = view({
-  padding: 15,
+  padding: [0, 15, 15],
 })
 
 const Unpad = view({

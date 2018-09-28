@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -25,6 +25,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: OrbitStore
+  store?: OrbitDockedStore
 }
 
 const OrbitDockedFrame = view(UI.Col, {
@@ -91,6 +92,19 @@ class OrbitDockedContents extends React.PureComponent<Props> {
   }
 }
 
+class OrbitDockedStore {
+  shouldShowOrbitDocked = react(() => {
+    // always show this when only one window
+    // because we hide via electron not here
+    // otherwise use the normal docked
+    if (App.appsState.length === 1) {
+      return true
+    } else {
+      return App.orbitState.docked
+    }
+  })
+}
+
 @view.attach('orbitStore', 'appsStore', 'selectionStore', 'queryStore', 'keyboardStore')
 @view.provide({
   paneManagerStore: PaneManagerStore,
@@ -98,14 +112,26 @@ class OrbitDockedContents extends React.PureComponent<Props> {
 @view.provide({
   searchStore: SearchStore,
 })
+@view.attach({
+  store: OrbitDockedStore,
+})
 @view
 export class OrbitDocked extends React.Component<Props> {
   render() {
+    // a note:
+    // if you try and make this hide on electron hide note one thing:
+    // electron stops rendering the app when its hidden
+    // so if you "hide" here it will actually flicker when it shows again
+    // because it hides in electron before rendering the hide here and then
+    // does the hide/show after the toggle
     log.timer('orbit', '-------- DOCKED ------------')
     const theme = App.state.darkTheme ? 'dark' : 'light'
     return (
       <UI.Theme name={theme}>
-        <OrbitDockedFrame className={`theme-${theme}`} visible={App.orbitState.docked}>
+        <OrbitDockedFrame
+          className={`theme-${theme}`}
+          visible={this.props.store.shouldShowOrbitDocked}
+        >
           <OrbitDockedChrome />
           <OrbitDockedContents />
         </OrbitDockedFrame>

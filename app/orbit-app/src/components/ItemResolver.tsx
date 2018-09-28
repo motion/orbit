@@ -31,6 +31,11 @@ export type ResolvedItem = {
   integration?: string
 }
 
+export type ItemResolverExtraProps = {
+  beforeTitle?: React.ReactNode
+  minimal?: boolean
+}
+
 export type ItemResolverProps = {
   model?: Bit | Person | PersonBit | Setting
   isExpanded?: boolean
@@ -39,9 +44,7 @@ export type ItemResolverProps = {
   searchTerm?: string
   hide?: ItemHideProps
   onResolvedItem?: (a: ResolvedItem) => any
-  extraProps?: {
-    beforeTitle?: React.ReactNode
-  }
+  extraProps?: ItemResolverExtraProps
 }
 
 export type ItemResolverResolverProps = ItemResolverProps & {

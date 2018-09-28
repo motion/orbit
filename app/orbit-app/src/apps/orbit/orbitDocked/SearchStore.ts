@@ -1,9 +1,8 @@
 import { ensure, react } from '@mcro/black'
-import { loadMany, loadOne } from '@mcro/model-bridge'
-import { Bit, BitModel, PersonBitModel } from '@mcro/models'
+import { loadMany, loadOne, command } from '@mcro/model-bridge'
+import { PersonBitModel, SearchCommand } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { flatten } from 'lodash'
-import { FindOptions } from 'typeorm'
 import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { AppsStore } from '../../AppsStore'
 import { PaneManagerStore } from '../PaneManagerStore'
@@ -14,102 +13,6 @@ import { SearchFilterStore } from './SearchFilterStore'
 import { SelectionGroup, SelectionStore } from './SelectionStore'
 
 const TYPE_DEBOUNCE = 200
-
-const getSearchResults = async ({
-  query,
-  sortBy,
-  take,
-  skip,
-  startDate,
-  endDate,
-  integrationFilters,
-  peopleFilters,
-  locationFilters,
-}) => {
-  const findOptions: FindOptions<Bit> = {
-    where: [],
-    relations: {
-      people: true,
-      author: true,
-    },
-    take,
-    skip,
-  }
-
-  const andConditions: any = {}
-  if (startDate) {
-    andConditions.bitCreatedAt = { $moreThan: startDate.getTime() }
-  }
-  if (endDate) {
-    andConditions.bitCreatedAt = { $lessThan: endDate.getTime() }
-  }
-  if (integrationFilters && integrationFilters.length) {
-    andConditions.integration = { $in: integrationFilters }
-  }
-
-  if (query.length) {
-    const likeString = `%${query.replace(/\s+/g, '%')}%`
-    findOptions.where.push({
-      ...andConditions,
-      title: { $like: likeString },
-    })
-    findOptions.where.push({
-      ...andConditions,
-      body: { $like: likeString },
-    })
-  }
-
-  // SORT
-  if (sortBy) {
-    switch (sortBy) {
-      case 'Relevant':
-        // TODO: i think it is this by default
-        // once we do sprint on better search/hsf5 we can maybe make better
-        break
-      case 'Recent':
-        findOptions.order = {
-          bitCreatedAt: 'desc',
-        }
-        break
-    }
-  } else {
-    findOptions.order = {
-      bitCreatedAt: 'desc',
-    }
-  }
-
-  if (peopleFilters.length) {
-    // essentially, find at least one person
-    for (const name of peopleFilters) {
-      findOptions.where.push({
-        ...andConditions,
-        people: {
-          name: { $like: `%${name}%` },
-        },
-      })
-    }
-  }
-
-  if (locationFilters && locationFilters.length) {
-    for (const location of locationFilters) {
-      findOptions.where.push({
-        location: {
-          name: { $like: `%${location}%` },
-        },
-      })
-    }
-  }
-
-  if (!findOptions.where.length) {
-    if (Object.keys(andConditions).length) {
-      findOptions.where = andConditions
-    } else {
-      findOptions.where = undefined
-    }
-  }
-
-  return await loadMany(BitModel, { args: findOptions })
-}
 
 export class SearchStore {
   props: {
@@ -206,7 +109,8 @@ export class SearchStore {
       if (isFilteringSlack) {
         channelResults = matchSort(
           query.split(' ')[0],
-          /*this.props.appsStore.services.slack.activeChannels*/[].map(channel => ({ // todo: broken by umed, please fix me
+          /*this.props.appsStore.services.slack.activeChannels*/ [].map(channel => ({
+            // todo: broken by umed, please fix me
             id: channel.id,
             title: `#${channel.name}`,
             icon: 'slack',
@@ -217,7 +121,8 @@ export class SearchStore {
         message = `Searching ${channelResults[0].title}`
       }
       // filtered search
-      if (isFilteringChannel/* && this.props.appsStore.services.slack*/) { // todo: broken by umed, please fix me
+      if (isFilteringChannel /* && this.props.appsStore.services.slack*/) {
+        // todo: broken by umed, please fix me
         message = 'SPACE to search selected channel'
         results = channelResults
         return setValue({
@@ -240,9 +145,9 @@ export class SearchStore {
 
       // pagination
       let skip = 0
-      const take = 4
+      const take = 6
       // initial search results max amt:
-      const takeMax = take * 10
+      const takeMax = take * 5
       const sleepBtwn = 80
 
       // query builder pieces
@@ -278,11 +183,14 @@ export class SearchStore {
       }
 
       const updateNextResults = async skip => {
-        const nextResults = await getSearchResults({
+        const searchOpts = {
           ...baseFindOptions,
           skip,
           take,
-        })
+        }
+        console.log('Send command', searchOpts)
+        const nextResults = await command(SearchCommand, searchOpts)
+        console.log('got next results', searchOpts, nextResults)
         if (!nextResults) {
           return false
         }
@@ -348,14 +256,14 @@ export class SearchStore {
           where: {
             name: { $like: `%${searchQuery.split('').join('%')}%` },
           },
-        }
+        },
       })
       const exactPeople = await Promise.all(
         people.map(name => {
           return loadOne(PersonBitModel, {
             args: {
               where: { name: { $like: `%${name}%` } },
-            }
+            },
           })
         }),
       )

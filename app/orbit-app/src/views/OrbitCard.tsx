@@ -69,12 +69,14 @@ const Card = view({
       ...theme.card,
     }
     if (!isSelected) {
-      const borderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColor || 'transparent']
+      const borderColor = theme.cardBorderColor || 'transparent'
+      const borderShadow = ['inset', 0, 0, 0, 1, borderColor]
+      const hoverBorderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColorHover || borderColor]
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow, borderShadow],
         '&:hover': {
-          boxShadow: disabledShadow || [cardShadow, borderShadow, theme.cardHoverGlow],
+          boxShadow: disabledShadow || [cardShadow, hoverBorderShadow, theme.cardHoverGlow],
         },
       }
     } else {
@@ -102,7 +104,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, 0, 4],
+  padding: [0, 0, 5],
 })
 
 const Preview = view({
@@ -209,7 +211,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           disableShadow={disableShadow}
           {...cardProps}
         >
-          <Glint borderRadius={borderRadius} />
+          <Glint opacity={0.75} borderRadius={borderRadius} />
           <Padding style={{ borderRadius, padding }}>
             {!!icon &&
               !(hide && hide.icon) && (
@@ -227,9 +229,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               <Title>
                 <HighlightText
                   fontSize={14}
-                  sizeLineHeight={0.78}
+                  sizeLineHeight={0.75}
                   ellipse={hasSubtitle && hasMeta ? true : 2}
-                  fontWeight={600}
+                  fontWeight={500}
                   maxWidth="calc(100% - 30px)"
                   selectable={false}
                   {...titleProps}
@@ -308,10 +310,10 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       store,
       pane,
       model,
-      itemProps,
       inGrid,
       item,
       searchTerm,
+      extraProps,
       ...props
     } = this.props
     // console.log(`${props.index} ${(model && model.id) || props.title}.${pane} ${store.isSelected}`)
@@ -325,7 +327,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
         isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}
         onResolvedItem={store.setResolvedItem}
-        {...itemProps}
+        extraProps={extraProps}
       >
         {this.getOrbitCard}
       </ItemResolver>

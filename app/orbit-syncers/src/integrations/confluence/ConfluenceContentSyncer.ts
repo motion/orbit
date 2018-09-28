@@ -40,7 +40,6 @@ export class ConfluenceContentSyncer {
     // load pages
     log.verbose('loading content from the api')
     const contents = await this.loader.loadContents()
-    log.verbose('content loaded', contents)
 
     // create bits from them and save them
     const bits = contents.map(content => this.buildBit(content))

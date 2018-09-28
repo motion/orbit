@@ -8,9 +8,6 @@ import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../SearchStore'
 import { SelectionStore } from '../SelectionStore'
-// import { App } from '@mcro/stores'
-// import { memoize } from 'lodash'
-// import { Actions } from '../../../../actions/Actions'
 import { SuggestionBarVerticalPad, SmallVerticalSpace } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
@@ -24,52 +21,6 @@ type Props = {
   selectionStore?: SelectionStore
   name?: string
 }
-
-const Highlight = view({
-  userSelect: 'auto',
-  display: 'block',
-  lineHeight: 18.5,
-  fontSize: 14,
-  padding: [2, 6, 2, 10],
-  margin: [0, 0, 0, 4],
-  fontWeight: 400,
-  borderLeft: [2, 'transparent'],
-  '&:hover': {
-    borderLeftColor: [255, 255, 255, 0.2],
-  },
-}).theme(({ theme }) => ({
-  color: theme.color.alpha(0.95),
-}))
-
-// old highlights based code... keep for just a bit longer...
-// const selectHighlight = (
-//   index,
-//   hlIndex,
-//   selectionStore: SelectionStore,
-// ) => e => {
-//   const isAlreadyAtHighlight = App.peekState.highlightIndex === hlIndex
-//   const isAlreadyAtIndex = selectionStore.activeIndex === index
-//   if (isAlreadyAtHighlight && isAlreadyAtIndex) {
-//     return
-//   }
-//   if (isAlreadyAtIndex) {
-//     e.stopPropagation()
-//   }
-//   Actions.setHighlightIndex(hlIndex)
-//   return
-// }
-// getHighlight = memoize(index => ({ highlights }) => {
-//   const { selectionStore } = this.props
-//   return highlights.map((highlight, hlIndex) => {
-//     return (
-//       <Highlight
-//         key={hlIndex}
-//         dangerouslySetInnerHTML={{ __html: highlight }}
-//         onClick={selectHighlight(index, hlIndex, selectionStore)}
-//       />
-//     )
-//   })
-// })
 
 const hideSlack = {
   title: true,
@@ -129,6 +80,9 @@ class OrbitSearchResultsListChunk extends React.Component<{
           onClickLocation={handleClickLocation}
           maxHeight={isConversation ? 380 : 200}
           overflow="hidden"
+          extraProps={{
+            minimal: true,
+          }}
         >
           {this.getChildren}
         </OrbitListItem>
@@ -182,19 +136,21 @@ const OrbitSearchResultsFrame = view({
 const OrbitSearchResultsContents = view(({ name, searchStore, selectionStore }) => {
   const { isChanging, message } = searchStore
   return (
-    <OrbitSearchResultsFrame
-      style={{
-        opacity: isChanging ? 0.7 : 1,
-      }}
-    >
-      {!!message && <div>{message}</div>}
+    <>
       <OrbitSearchQuickResults searchStore={searchStore} selectionStore={selectionStore} />
-      <OrbitSearchResultsList
-        searchStore={searchStore}
-        selectionStore={selectionStore}
-        name={name}
-      />
-    </OrbitSearchResultsFrame>
+      <OrbitSearchResultsFrame
+        style={{
+          opacity: isChanging ? 0.7 : 1,
+        }}
+      >
+        {!!message && <div>{message}</div>}
+        <OrbitSearchResultsList
+          searchStore={searchStore}
+          selectionStore={selectionStore}
+          name={name}
+        />
+      </OrbitSearchResultsFrame>
+    </>
   )
 })
 

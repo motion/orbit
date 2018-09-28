@@ -1,10 +1,9 @@
 import { clipboard, dialog } from 'electron'
 import open from 'opn'
-// @ts-ignore
 import { logFile } from '@mcro/logger'
 import { pathExists, readFile } from 'fs-extra'
-import { showConfirmDialog } from './showConfirmDialog'
 import Raven from 'raven'
+import { handleExit } from './handleExit'
 
 Raven.config('https://e885a093bbcb4d5fb2527dfe921f7654@sentry.io/1282871').install()
 
@@ -18,7 +17,7 @@ export async function onError(error) {
     console.log('---no error---', error)
     return
   }
-  console.log('\n\n---error---\n\n', error)
+  console.log('\n\n---error---\n\n', error.message, '\n', error.stack)
   const errorMessage = `${error.message || ''}\n${error.stack || ''}`
 
   // avoid certain errors that aren't easily catchable (like websockets)...
@@ -35,16 +34,28 @@ export async function onError(error) {
 
   lastReported = Date.now()
 
-  if (
-    showConfirmDialog({
-      type: 'warning',
-      title: 'Orbit ran into an error!',
-      message: `Orbit ran into an error:\n${errorMessage.slice(
-        0,
-        50,
-      )}...\n\nWould you like to paste error to your clipboard to report it?`,
-    })
-  ) {
+  const res = dialog.showMessageBox({
+    type: 'warning',
+    title: 'Orbit ran into an error!',
+    buttons: ['Copy to clipboard', 'Quit', 'Cancel'],
+    message: `Orbit ran into an error:\n\n${errorMessage.slice(
+      0,
+      250,
+    )}...\n\nWould you like to paste error to your clipboard to report it?`,
+    defaultId: 0,
+    cancelId: 2,
+  })
+
+  if (res === 2) {
+    handleExit()
+  }
+
+  // quit
+  if (res === 1) {
+    handleExit()
+  }
+
+  if (res === 0) {
     let log = ''
     const logPath = logFile.findLogPath()
     if (await pathExists(logPath)) {
@@ -69,10 +80,10 @@ ${log}`
     const res = dialog.showMessageBox({
       type: 'question',
       title: 'Error copied!',
-      message: 'Quick upload error to Orbit?',
-      buttons: ['Quick report error', 'Open in email', 'No thanks'],
+      message: 'Upload error the Orbit Error report service?',
+      buttons: ['Quick report error', 'Send as email', 'Never ask again', 'No thanks'],
       defaultId: 0,
-      cancelId: 2,
+      cancelId: 3,
     })
     if (res === 0) {
       Raven.captureException(niceError)

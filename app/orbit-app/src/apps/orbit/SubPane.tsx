@@ -9,6 +9,7 @@ import { SearchStore } from './orbitDocked/SearchStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
 import { BORDER_RADIUS } from '../../constants'
 import { trace } from 'mobx'
+import isEqual from 'react-fast-compare'
 
 export type SubPaneProps = CSSPropertySet & {
   store?: SubPaneStore
@@ -67,6 +68,15 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
+class StaticContainer extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props.children, nextProps.children)
+  }
+  render() {
+    return this.props.children
+  }
+}
+
 @view.attach('paneManagerStore', 'orbitStore', 'searchStore', 'selectionStore')
 @view.provide({
   subPaneStore: SubPaneStore,
@@ -100,7 +110,9 @@ export class SubPane extends React.Component<SubPaneProps> {
             forwardRef={subPaneStore.paneRef}
             {...props}
           >
-            <PaneContentInner>{children}</PaneContentInner>
+            <PaneContentInner>
+              <StaticContainer>{children}</StaticContainer>
+            </PaneContentInner>
           </Pane>
         </SubPaneInner>
         {after}

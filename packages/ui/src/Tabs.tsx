@@ -62,7 +62,6 @@ const TabListItem = view(Row, {
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   userSelect: 'none',
-  transition: 'all ease 700ms',
 }).theme(({ theme, active }) => {
   const background = active
     ? theme.tabBackgroundActive || theme.background
@@ -72,6 +71,7 @@ const TabListItem = view(Row, {
     background,
     '&:hover': {
       background: active ? background : theme.tabBackgroundHover,
+      transition: active ? 'none' : 'all ease 700ms',
     },
   }
 })

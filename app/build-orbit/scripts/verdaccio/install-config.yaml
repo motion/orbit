@@ -6,10 +6,8 @@ auth:
 
 uplinks:
   yarn:
-    maxage: 512h
     url: https://registry.yarnpkg.com
   npmjs:
-    maxage: 512h
     url: https://registry.npmjs.org
 
 packages:

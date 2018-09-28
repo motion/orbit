@@ -5,9 +5,8 @@ import { SelectionStore } from '../apps/orbit/orbitDocked/SelectionStore'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
-import { ResolvedItem } from '../components/ItemResolver'
+import { ResolvedItem, ItemResolverExtraProps } from '../components/ItemResolver'
 import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
-import { BitItemResolverProps } from '../components/resolve/ResolveBit'
 
 type Model = Bit | PersonBit | Setting
 
@@ -37,7 +36,7 @@ export type OrbitItemProps = CSSPropertySet & {
   pane?: string
   subPane?: string
   model?: Model
-  itemProps?: Partial<BitItemResolverProps>
+  extraProps?: Partial<ItemResolverExtraProps>
   children?:
     | ((a: ResolvedItem, b: Bit | PersonBit | Setting, c: number) => JSX.Element)
     | React.ReactNode

@@ -5,6 +5,7 @@ import { OrbitStore } from '../../OrbitStore'
 import * as UI from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
 import { QueryStore } from './QueryStore'
+import { trace } from 'mobx'
 
 type Props = {
   orbitStore?: OrbitStore
@@ -58,7 +59,7 @@ const Background = view({
   transition: 'all ease 250ms',
 }).theme(({ theme, isTransparent, moreOpaque }) => {
   const isDark = theme.background.isDark()
-  const darkBg = isTransparent ? (moreOpaque ? [30, 30, 30, 0.7] : [0, 0, 0, 0.4]) : [40, 40, 40]
+  const darkBg = isTransparent ? (moreOpaque ? [30, 30, 30, 0.7] : [0, 0, 0, 0.35]) : [40, 40, 40]
   const lightBg = isTransparent ? [255, 255, 255, moreOpaque ? 0.95 : 0.9] : [255, 255, 255]
   return {
     background: isDark ? darkBg : lightBg,
@@ -143,6 +144,7 @@ const decorator = compose(
 
 export const OrbitDockedChrome = decorator(({ orbitStore, queryStore }: Props) => {
   console.log('re render docked chrome')
+  trace()
   return (
     <>
       <BlockTop height={60} overflow={SHADOW_PAD}>

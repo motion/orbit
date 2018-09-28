@@ -3,9 +3,8 @@ import { BitUtils } from '@mcro/model-utils'
 import { Person, SlackBitData, SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackMessage } from '@mcro/services'
 import { hash } from '@mcro/utils'
-import { Cosal } from '@mcro/cosal'
-
-const { getTopWords } = new Cosal()
+import { command } from '@mcro/model-bridge'
+import { CosalTopWordsCommand } from '@mcro/models'
 
 const Autolinker = require('autolinker')
 
@@ -65,12 +64,13 @@ export class SlackBitFactory {
 
     const flatBody = data.messages.map(x => x.text).join(' ')
     // gets the most interesting 10 for title
-    const title = (await getTopWords(flatBody, 10))
+
+    const title = (await command(CosalTopWordsCommand, { text: flatBody, max: 10 }))
       // remove weird chars from title
       .map(x => x.replace(/[^a-zA-Z0-9.-]/g, ''))
       .join(' ')
     // and more for body
-    const body = (await getTopWords(flatBody, 50)).join(' ')
+    const body = (await command(CosalTopWordsCommand, { text: flatBody, max: 50 })).join(' ')
 
     return BitUtils.create({
       settingId: this.setting.id,

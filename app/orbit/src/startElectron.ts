@@ -2,8 +2,9 @@ import { app, dialog } from 'electron'
 import waitPort from 'wait-port'
 import { log } from './log'
 import { getGlobalConfig } from '@mcro/config'
+import { handleExit } from './handleExit'
 
-export async function startElectron(handleExit) {
+export async function startElectron() {
   const Config = getGlobalConfig()
 
   // this works in prod

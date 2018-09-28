@@ -9,5 +9,6 @@
   "references": [
     { "path": "../models" },
     { "path": "../../packages/logger" },
+    { "path": "../../packages/r2" }
   ]
 }

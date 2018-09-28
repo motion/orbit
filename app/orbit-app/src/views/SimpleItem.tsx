@@ -36,9 +36,9 @@ const ItemTitle = view(Text, {
   flex: 1,
 })
 
-export const SimpleItem = ({ inactive = false, after = null, icon, title, ...props }) => (
+export const SimpleItem = ({ inactive = false, after = null, icon = null, title, ...props }) => (
   <Item inactive={inactive} {...props}>
-    <OrbitIcon size={18} icon={icon} />
+    {!!icon && <OrbitIcon size={18} icon={icon} />}
     <ItemTitle>{title}</ItemTitle>
     {after}
   </Item>

@@ -46,3 +46,7 @@ export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
 export const SearchTopicsModel = new Model<string, { query: SearchQuery; count: number }>(
   'SearchTopics',
 )
+
+export const SearchLocationsModel = new Model<string, { query: SearchQuery; count: number }>(
+  'SearchLocationsModel',
+)

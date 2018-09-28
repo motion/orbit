@@ -45,13 +45,29 @@ const TabContainer = view(View, {
 })
 
 const TabList = view(Row, {
-  alignItems: 'stretch',
+  flex: 1,
 }).theme(({ theme }) => ({
   boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
 }))
 
+const TabScrollContainer = view({
+  width: '100%',
+  overflow: 'hidden',
+  height: 25,
+})
+
+const HideScrollBar = view({
+  flexFlow: 'row',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  width: '100%',
+  height: '100%',
+  // scrollbar height
+  paddingBottom: 16,
+  boxSizing: 'content-box',
+})
+
 const TabListItem = view(Row, {
-  flex: 1,
   fontSize: 11,
   fontWeight: 500,
   lineHeight: 22,
@@ -62,11 +78,13 @@ const TabListItem = view(Row, {
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   userSelect: 'none',
-}).theme(({ theme, active }) => {
+}).theme(({ theme, active, width }) => {
   const background = active
     ? theme.tabBackgroundActive || theme.background
     : theme.tabBackground || theme.background
   return {
+    width,
+    flex: typeof width === 'number' ? 'none' : 1,
     color: active ? theme.colorActive : theme.colorBlur,
     background,
     '&:hover': {
@@ -223,7 +241,9 @@ export function Tabs(props: TabsProps) {
     <TabContainer>
       <TabList>
         {before}
-        {tabList}
+        <TabScrollContainer>
+          <HideScrollBar>{tabList}</HideScrollBar>
+        </TabScrollContainer>
         {after}
       </TabList>
       {tabContents}

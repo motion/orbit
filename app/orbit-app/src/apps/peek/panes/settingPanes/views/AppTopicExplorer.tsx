@@ -3,25 +3,39 @@ import * as React from 'react'
 import { SimpleItem } from '../../../../../views/SimpleItem'
 import { view } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import { SearchTopicsModel, Setting } from '@mcro/models'
+import { SearchTopicsModel, Setting, SearchLocationsModel, SearchQuery } from '@mcro/models'
 
 type Props = { setting: Setting }
 
 class AppTopicStore {
   props: Props
-  topics = null
+  topics = []
+  locations = []
+  private searchArgs = {
+    query: {
+      query: '',
+      integrationFilters: [this.props.setting.type],
+      take: 1000,
+      skip: 0,
+      sortBy: 'Recent',
+    } as SearchQuery,
+    count: 20,
+  }
 
   async didMount() {
+    this.loadTopics()
+    this.loadLocations()
+  }
+
+  async loadTopics() {
     this.topics = await loadMany(SearchTopicsModel, {
-      args: {
-        query: {
-          query: '',
-          integrationFilters: [this.props.setting.type],
-          take: 500,
-          skip: 0,
-        },
-        count: 20,
-      },
+      args: this.searchArgs,
+    })
+  }
+
+  async loadLocations() {
+    this.locations = await loadMany(SearchLocationsModel, {
+      args: this.searchArgs,
     })
   }
 }
@@ -36,17 +50,17 @@ export class AppTopicExplorer extends React.Component<Props & { store?: AppTopic
     return (
       <Row flex={1}>
         <Sidebar minWidth={150} maxWidth={300} width={200} position="left">
-          <SidebarLabel>Recent topics</SidebarLabel>
-          {JSON.stringify(store.topics)}
-          <SimpleItem title="Slack" icon="slack" />
-          <SimpleItem title="Github" icon="github" />
-          <SimpleItem title="Jira" icon="jira" />
+          <SidebarLabel>Topics</SidebarLabel>
+          {store.topics.map((topic, i) => (
+            <SimpleItem key={i} title={topic} />
+          ))}
         </Sidebar>
-        <Col flex={1}>
+        <Col overflow="hidden" flex={1}>
           <Theme select={theme => theme.titleBar || theme}>
             <Tabs active="first">
-              <Tab key="first" width="50%" label="First Tab" />
-              <Tab key="second" width="50%" label="Second Tab" />
+              {store.locations.map((location, i) => (
+                <Tab key={i} width={140} label={location} />
+              ))}
             </Tabs>
           </Theme>
 

@@ -1,6 +1,6 @@
 import { ensure, react } from '@mcro/black'
-import { loadMany, loadOne, command } from '@mcro/model-bridge'
-import { PersonBitModel, SearchCommand } from '@mcro/models'
+import { loadMany, loadOne } from '@mcro/model-bridge'
+import { PersonBitModel, SearchResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { flatten } from 'lodash'
 import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
@@ -189,7 +189,7 @@ export class SearchStore {
           take,
         }
         console.log('Send command', searchOpts)
-        const nextResults = await command(SearchCommand, searchOpts)
+        const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
         console.log('got next results', searchOpts, nextResults)
         if (!nextResults) {
           return false

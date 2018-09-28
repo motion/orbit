@@ -1,6 +1,5 @@
 import { Command } from '@mcro/mediator'
 import { Setting } from './Setting'
-import { Bit } from './Bit'
 
 export const SettingRemoveCommand = new Command<void, { settingId: number }>('setting-remove')
 
@@ -28,18 +27,3 @@ export const SlackSettingBlacklistCommand = new Command<
 export const CosalTopWordsCommand = new Command<string[], { text: string; max?: number }>(
   'cosal-top-words-command',
 )
-
-export const SearchCommand = new Command<
-  Bit[],
-  {
-    query: string
-    sortBy: string
-    startDate: Date
-    endDate: Date
-    integrationFilters: string[]
-    peopleFilters: string[]
-    locationFilters: string[]
-    take: number
-    skip: number
-  }
->('search-command')

@@ -14,3 +14,14 @@ export const PersonModel = new Model<Person, FindOptions<Person>, FindOptionsWhe
 export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptionsWhere<Setting>>('Setting')
 export const GithubRepositoryModel = new Model<any, { settingId: number }>('GithubRepository')
 export const SlackChannelModel = new Model<any, { settingId: number }>('SlackChannel')
+export const SearchResultModel = new Model<Bit, {
+  query: string
+  sortBy: string
+  startDate: Date
+  endDate: Date
+  integrationFilters: string[]
+  peopleFilters: string[]
+  locationFilters: string[]
+  take: number
+  skip: number
+}>('SearchResult')

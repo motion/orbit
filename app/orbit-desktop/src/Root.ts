@@ -17,7 +17,7 @@ import {
   SettingRemoveCommand,
   SlackChannelModel,
   SlackSettingBlacklistCommand,
-  SearchCommand,
+  SearchResultModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -191,6 +191,7 @@ export class Root {
         PersonBitModel,
         GithubRepositoryModel,
         SlackChannelModel,
+        SearchResultModel,
       ],
       commands: [
         SettingRemoveCommand,
@@ -198,7 +199,6 @@ export class Root {
         GithubSettingBlacklistCommand,
         SlackSettingBlacklistCommand,
         CosalTopWordsCommand,
-        SearchCommand,
       ],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,

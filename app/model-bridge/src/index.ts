@@ -7,17 +7,17 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 const name = randomString(5)
 const transports: ClientTransport[] = []
 
-if (process.env.IS_DESKTOP || (!process.env.IS_DESKTOP && !process.env.IS_SYNCERS)) {
-  transports.push(new WebSocketClientTransport(name, new ReconnectingWebSocket(
-    `ws://localhost:40001`, // todo: someone would like to extract it into config
-    [],
-    { WebSocket },
-  )))
-}
 if (process.env.IS_SYNCERS || (!process.env.IS_DESKTOP && !process.env.IS_SYNCERS)) {
   transports.push(new WebSocketClientTransport(name, new ReconnectingWebSocket(
     // todo: rename dbBridge to desktopMediator or something since its not only does work with db
     `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
+    [],
+    { WebSocket },
+  )))
+}
+if (process.env.IS_DESKTOP || (!process.env.IS_DESKTOP && !process.env.IS_SYNCERS)) {
+  transports.push(new WebSocketClientTransport(name, new ReconnectingWebSocket(
+    `ws://localhost:40001`, // todo: someone would like to extract it into config
     [],
     { WebSocket },
   )))

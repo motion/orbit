@@ -136,19 +136,21 @@ const OrbitSearchResultsFrame = view({
 const OrbitSearchResultsContents = view(({ name, searchStore, selectionStore }) => {
   const { isChanging, message } = searchStore
   return (
-    <OrbitSearchResultsFrame
-      style={{
-        opacity: isChanging ? 0.7 : 1,
-      }}
-    >
-      {!!message && <div>{message}</div>}
+    <>
       <OrbitSearchQuickResults searchStore={searchStore} selectionStore={selectionStore} />
-      <OrbitSearchResultsList
-        searchStore={searchStore}
-        selectionStore={selectionStore}
-        name={name}
-      />
-    </OrbitSearchResultsFrame>
+      <OrbitSearchResultsFrame
+        style={{
+          opacity: isChanging ? 0.7 : 1,
+        }}
+      >
+        {!!message && <div>{message}</div>}
+        <OrbitSearchResultsList
+          searchStore={searchStore}
+          selectionStore={selectionStore}
+          name={name}
+        />
+      </OrbitSearchResultsFrame>
+    </>
   )
 })
 

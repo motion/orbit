@@ -116,5 +116,5 @@ Talked to Charlie
 Talked to Andy, Charlie
 
 - -- going wide / deep with syncers
-- ++ do cooler stuff: ocr, context, nlp, high level views, topic following
+- ++ do cooler stuff: ocr, context, nlp, apps, more high level overviews, topics/following
 - ++ get it into peoples hands asap, but be sure to get nlp/ocr in place a little

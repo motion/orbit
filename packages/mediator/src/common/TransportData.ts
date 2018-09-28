@@ -28,4 +28,5 @@ export type TransportRequest = {
 export type TransportResponse = {
   id: string
   result: any
+  notFound?: boolean
 }

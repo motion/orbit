@@ -191,6 +191,7 @@ export class WebSocketClientTransport implements ClientTransport {
       type: subscription.type,
       name: subscription.name,
       result: data.result,
+      notFound: data.notFound,
     })
     subscription.onSuccess(data.result)
   }

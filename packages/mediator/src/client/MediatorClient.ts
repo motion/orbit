@@ -18,12 +18,12 @@ export class MediatorClient {
     command: Command<ReturnType, Args>,
     args?: Args,
   ): Promise<ReturnType> {
-    const results = await this.options.transports.map(transport => {
+    const results = await Promise.all(this.options.transports.map(transport => {
       return transport.execute('command', {
         command: command.name,
         args,
       })
-    })
+    }))
     return results.filter(result => result !== undefined)[0]
   }
 

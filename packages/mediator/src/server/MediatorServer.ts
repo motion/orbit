@@ -45,6 +45,11 @@ export class MediatorServer {
       // simply ignore if command was not found - maybe some other server has it defined
       if (!command) {
         log.verbose(`command ${data.command} was not found`, data)
+        this.options.transport.send({
+          id: data.id,
+          result: undefined,
+          notFound: true
+        })
         return
       }
     } else {
@@ -54,6 +59,11 @@ export class MediatorServer {
       // simply ignore if model was not found - maybe some other server has it defined
       if (!model) {
         log.verbose(`model ${data.model} was not found`, data)
+        this.options.transport.send({
+          id: data.id,
+          result: undefined,
+          notFound: true
+        })
         return
       }
     }

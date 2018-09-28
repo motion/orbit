@@ -73,7 +73,7 @@ export class GdriveSetting extends React.Component<
         />
         <PeekContent>
           <HideablePane invisible={appViewStore.active === 'settings'}>
-            <AppTopicExplorer />
+            <AppTopicExplorer setting={setting} />
           </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'settings'}>
             {/* <SettingManageRow store={store} setting={setting} /> */}

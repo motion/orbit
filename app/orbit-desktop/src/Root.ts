@@ -18,6 +18,7 @@ import {
   SlackChannelModel,
   SlackSettingBlacklistCommand,
   SearchResultModel,
+  SearchTopicsModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -43,6 +44,7 @@ import { Server } from './Server'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { getSearchResolver } from './resolvers/SearchResolver'
+import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
 
 const log = new Logger('desktop')
 
@@ -192,6 +194,7 @@ export class Root {
         GithubRepositoryModel,
         SlackChannelModel,
         SearchResultModel,
+        SearchTopicsModel,
       ],
       commands: [
         SettingRemoveCommand,
@@ -217,6 +220,7 @@ export class Root {
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
         getSearchResolver(this.cosal),
+        getSearchTopicsResolver(this.cosal),
       ],
     })
     this.mediatorServer.bootstrap()

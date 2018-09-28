@@ -64,7 +64,7 @@ export class GithubSetting extends React.Component<Props & { store: GithubSettin
         />
         <PeekContent>
           <HideablePane invisible={appViewStore.active === 'settings'}>
-            <AppTopicExplorer />
+            <AppTopicExplorer setting={setting} />
           </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'settings'}>
             <SettingManageRow store={store} setting={setting} />

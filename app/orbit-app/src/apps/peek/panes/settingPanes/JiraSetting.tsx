@@ -23,7 +23,7 @@ export class JiraSetting extends React.Component<Props> {
         />
         <PeekContent>
           <HideablePane invisible={appViewStore.active === 'settings'}>
-            <AppTopicExplorer />
+            <AppTopicExplorer setting={setting} />
           </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'settings'}>
             <AtlassianSettingLogin type="confluence" setting={setting} />

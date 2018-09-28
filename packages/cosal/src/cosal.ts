@@ -115,7 +115,11 @@ export class Cosal {
     }
   }
 
-  getWordWeights = async (text: string, max?: number): Promise<Pair[] | null> => {
+  getWordWeights = async (
+    text: string,
+    max?: number,
+    sortByWeight?: boolean,
+  ): Promise<Pair[] | null> => {
     const cosal = await toCosal(text, this.covariance)
     if (!cosal) {
       return null
@@ -126,7 +130,14 @@ export class Cosal {
       if (pairs.length > max) {
         // sort by weight
         const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase())
-        uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
+        uniqSorted.sort((a, b) => (a.weight > b.weight ? 1 : -1))
+
+        // just return top by weight
+        if (sortByWeight) {
+          return uniqSorted.slice(0, max)
+        }
+
+        // return them in original order, but limited by weight
         // make sure we get the new last index, could be shorter
         fmax = Math.min(uniqSorted.length - 1, max)
         // find our topmost weight
@@ -139,8 +150,8 @@ export class Cosal {
     return pairs
   }
 
-  getTopWords = async (text: string, max?: number) => {
-    const words = await this.getWordWeights(text, max)
+  getTopWords = async (text: string, max?: number, sortByWeight?: boolean) => {
+    const words = await this.getWordWeights(text, max, sortByWeight)
     if (!words) {
       return []
     }

@@ -2,7 +2,7 @@ NEXT
 
 1. Create apps distribute via p2p
 2. Home redesign for apps:
-   - Big masonry cards that show some sort of topic overview, stats
+   - Medium masonry cards that show some sort of topic overview, stats
    - Slack card for example shows recent topics and recent popular rooms
    - Then hover/click the Slack card and see:
      - A trending topic explorer:

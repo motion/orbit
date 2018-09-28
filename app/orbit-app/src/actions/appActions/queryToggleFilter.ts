@@ -5,3 +5,9 @@ export function queryToggleLocationFilter(location: string) {
     App.setState({ query: `${App.state.query.trim()} in:${location}` })
   }
 }
+
+export function queryTogglePersonFilter(person: string) {
+  if (App.state.query.indexOf(person) === -1) {
+    App.setState({ query: `${App.state.query.trim()} ${person}` })
+  }
+}

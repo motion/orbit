@@ -13,6 +13,7 @@ import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
+import { HorizontalSpace } from '.'
 
 const ListFrame = view(UI.View, {
   margin: [0, -1],
@@ -268,7 +269,13 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                   <PeopleRow people={people} />
                 </>
               )}
-              {hide && hide.title && afterHeader}
+              {hide &&
+                hide.title && (
+                  <>
+                    <HorizontalSpace />
+                    {afterHeader}
+                  </>
+                )}
             </ListItemSubtitle>
           )}
           {!showSubtitle &&

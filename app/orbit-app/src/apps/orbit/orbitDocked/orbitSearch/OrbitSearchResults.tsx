@@ -25,7 +25,6 @@ type Props = {
 const hideSlack = {
   title: true,
   people: true,
-  date: true,
 }
 
 const OrbitCardContent = view({

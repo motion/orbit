@@ -93,6 +93,7 @@ export class Root {
     this.cosal = new Cosal({
       database: COSAL_DB,
     })
+    await this.cosal.start()
 
     // BEFORE YOUR CONNECT
     // run the databaseManager that runs migrations

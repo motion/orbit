@@ -34,8 +34,7 @@ function getPublicUrl(appPackageJson) {
 
 function getServedPath(appPackageJson) {
   var publicUrl = getPublicUrl(appPackageJson)
-  var servedUrl =
-    envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/')
+  var servedUrl = envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/')
   return ensureSlash(servedUrl, true)
 }
 
@@ -46,8 +45,6 @@ export default {
   appHtml: resolveApp('index.html'),
   appEntry: resolveApp(process.env.ENTRY || './src/index.js'),
   appPackageJson: resolveApp('package.json'),
-  appNodeModules: resolveApp('node_modules'),
-  modelsNodeModules: resolveApp('../models/node_modules'),
   nodePaths: nodePaths,
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),

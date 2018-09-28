@@ -11,9 +11,10 @@ import { OrbitStore } from './OrbitStore'
 import { Peek } from './peek/Peek'
 
 const getItem = {
-  githubItem: () => loadOne(BitModel, {
-    args: { where: { integration: 'github' }, skip: 6 }
-  }),
+  githubItem: () =>
+    loadOne(BitModel, {
+      args: { where: { integration: 'github' }, skip: 6 },
+    }),
   gdriveSetting: async () => ({
     id: 1,
     title: 'GDocs',

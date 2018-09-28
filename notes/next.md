@@ -1,16 +1,42 @@
+NEXT
+
+1. Create apps distribute via p2p
+2. Home redesign for apps:
+   - Big masonry cards that show some sort of topic overview, stats
+   - Slack card for example shows recent topics and recent popular rooms
+   - Then hover/click the Slack card and see:
+     - A trending topic explorer:
+     - Left sidebar has rooms
+     - Right side shows recently active people + topics
+     - Click a topic and it opens a tab in that app
+       - that tab shows a list of conversations filtered by that topic
+   - Other apps can basically actually show the same thing to start
+     - TODO ideate on coolest way
+3. AppleScript 2.0:
+   - Ridiculously easy to build apps
+   - Pundle power built right into Orbit
+   - Apps have two views:
+     - Main and Peek
+     - Main is the big app on homescreen
+     - Peek is the one you see from searches
+   - Apps can Sync
+   - Apps have Triggers
+   - Apps have cool APIs:
+     - NLP (words, relevancy, search)
+     - Triggers:
+       - Words
+       - Concepts
+       - URLs/App state
+
 # nate
 
 - all done, closing... better screen
 - "stop asking" and "always send" for error reporting
 - "reset orbit db" option if error during startup
-- add report recent error log in Tray
 - show current app name in Orbit <Tray />
   - can use bounds in https://electronjs.org/docs/api/tray
     - click on icon shows menu
     - click on words shows/hides orbit
-- make it great
-  - Spin orbit <Orb /> when scanning
-  - Tooltip on <Orb />
 - cosal engine
   - person profile summaries
   - bit and person relevancy
@@ -18,7 +44,6 @@
 - memory
   - once it scans a few times make it store a Bit
 - record video of a demo
-- saved searches on home
 - community - beta build, email, rss updates in app
 
 - refactor: bring `orbit-electron` into `orbit`
@@ -27,17 +52,14 @@
 
 # Umed
 
-- Slack select all rooms by default (syncer needs to respect settings/set them)
-  - Same with github
 - Really simple throttle to keep cpu from going too much
 - Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
   - for gmail, dont sync full history, but do sync a trailing X months or limited # of items
-- PersonBit query recent + limit
 - Slack.people sometimes still not showing up
 - Github sync auto select everything by default
 - GDocs auto sync most things by default
 
-# small
+# next
 
 - p2p libs: https://news.ycombinator.com/item?id=18077312 https://github.com/libp2p/js-libp2p
 - could open a special link type: orbit://gD7sadhgasdy78aDT7
@@ -45,22 +67,12 @@
 - website docs https://github.com/pedronauck/docz https://github.com/gatsbyjs/gatsby/tree/master/www/src/pages
 - Location as a model
   - This way we can search + generate feeds by Location
-- survey notification if they use it for a few days...
 - manage people (may not want github for example to sync in people)
   - probably by default some integrations are "additive only"
   - so they only sync in on top of existing people
   - also could scan contacts
-- multiselect tables keyboard nav not working:
-  - generally inner app keyboard nav not working
-- showing sync status:
-  - make a SyncStatusStore that takes a setting
-  - ask umed: how to get all JobRepository.Syncer types
-  - in Setting panes show status at bottom or top
 - typing while focused on a peek:
   - reset index to 0 not -1, keeps the peek open as you filter things
-- semi-hide orbit while oauth open so it doesnt cover it
-- after onboard "what can i do / search?"
-- typeform survey to capture a few potential paths
 - clicking location buttons should filter that location
 - clicking a name should search that name
 - find by type (file / link is helpful)
@@ -74,9 +86,6 @@
 - fix integration buttons styling and going inactive after click
 - cmd+z undo in search area (needs to work with toggles...)
 - peek arrow position shouldn't straddle weird borders
-- react-spring for peek placement
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
-- UI.Text not wrapping subtitlePrefix
 - hmr: doesn't store.unmount stores often
-- react: await finishRender() could be interesting

@@ -110,3 +110,11 @@ Talked to Charlie
 
 - Asked about local search
 - Thinks OCR realtime maybe compelling for personal
+
+# Sep 27th
+
+Talked to Andy, Charlie
+
+- -- going wide / deep with syncers
+- ++ do cooler stuff: ocr, context, nlp, apps, more high level overviews, topics/following
+- ++ get it into peoples hands asap, but be sure to get nlp/ocr in place a little

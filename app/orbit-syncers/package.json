@@ -15,7 +15,6 @@
     "@mcro/models": "^2.2.1",
     "@mcro/model-utils": "^2.2.1",
     "@mcro/model-bridge": "^2.2.1",
-    "@mcro/cosal": "*",
     "@mcro/services": "^2.2.1",
     "@mcro/utils": "^2.2.1",
     "autolinker": "^1.7.1",

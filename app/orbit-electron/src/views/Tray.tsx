@@ -65,10 +65,14 @@ export default class TrayEl extends React.Component<{ store?: TrayStore }> {
     return App.state.contextMessage
   }
 
+  handleClick = (_event, bounds, position) => {
+    console.log('click tray', bounds, position)
+  }
+
   render() {
     const { store } = this.props
     return (
-      <Tray image={image} title={this.getTrayMessage()}>
+      <Tray onClick={this.handleClick} image={image} title={this.getTrayMessage()}>
         <TrayItem
           label={`Toggle (${App.orbitState.docked ? 'Hide' : 'Show'})       ⌥ + Space`}
           onClick={() => Electron.sendMessage(App, App.messages.TOGGLE_SHOWN)}

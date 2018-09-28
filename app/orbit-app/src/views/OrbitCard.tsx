@@ -69,12 +69,14 @@ const Card = view({
       ...theme.card,
     }
     if (!isSelected) {
-      const borderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColor || 'transparent']
+      const borderColor = theme.cardBorderColor || 'transparent'
+      const borderShadow = ['inset', 0, 0, 0, 1, borderColor]
+      const hoverBorderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColorHover || borderColor]
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow, borderShadow],
         '&:hover': {
-          boxShadow: disabledShadow || [cardShadow, borderShadow, theme.cardHoverGlow],
+          boxShadow: disabledShadow || [cardShadow, hoverBorderShadow, theme.cardHoverGlow],
         },
       }
     } else {

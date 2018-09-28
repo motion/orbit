@@ -31,18 +31,17 @@ const results = {
   },
 }
 
-export type BitItemResolverProps = ItemResolverResolverProps & { bit: Bit }
-export type BitItemResolver = React.SFC<BitItemResolverProps>
+export type BitItemResolverProps = ItemResolverResolverProps<Bit>
+export type BitItemResolver = React.SFC<BitItemResolverProps & { bit: Bit }>
 
 export const ResolveBit = ({
   model,
   children,
   searchTerm,
   ...props
-}: ItemResolverResolverProps & { model: Bit }) => {
+}: ItemResolverResolverProps<Bit>) => {
   const resolveIntegration = results[model.integration]
-  const Resolver =
-    resolveIntegration && (resolveIntegration[model.type] as BitItemResolver)
+  const Resolver = resolveIntegration && (resolveIntegration[model.type] as BitItemResolver)
   if (!Resolver) {
     console.log('no resolver for', model.integration, model.type)
     return () => <div>no resolver</div>

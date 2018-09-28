@@ -9,10 +9,11 @@ import {
   ItemResolverDecoration,
   ItemResolverDecorationContext,
 } from '../helpers/contexts/ItemResolverDecorationContext'
+import { ResolveApp } from './resolve/ResolveApp'
 
 export type ResolvedItem = {
   id: string
-  type: 'person' | 'bit'
+  type: 'person' | 'bit' | 'app'
   subType?: string
   title: string
   preview?: React.ReactNode
@@ -36,8 +37,10 @@ export type ItemResolverExtraProps = {
   minimal?: boolean
 }
 
-export type ItemResolverProps = {
-  model?: Bit | Person | PersonBit | Setting
+type ResolvableModel = Bit | Person | PersonBit | Setting
+
+export type ItemResolverProps<T extends ResolvableModel> = {
+  model?: T
   isExpanded?: boolean
   children: ((a: ResolvedItem) => React.ReactNode)
   shownLimit?: number
@@ -47,11 +50,16 @@ export type ItemResolverProps = {
   extraProps?: ItemResolverExtraProps
 }
 
-export type ItemResolverResolverProps = ItemResolverProps & {
+export type ItemResolverResolverProps<T extends ResolvableModel> = ItemResolverProps<T> & {
   decoration: ItemResolverDecoration
 }
 
-export const ItemResolver = ({ model, onResolvedItem, children, ...props }: ItemResolverProps) => {
+export const ItemResolver = ({
+  model,
+  onResolvedItem,
+  children,
+  ...props
+}: ItemResolverProps<ResolvableModel>) => {
   let Resolver
   if (!model) {
     return null
@@ -61,6 +69,9 @@ export const ItemResolver = ({ model, onResolvedItem, children, ...props }: Item
   }
   if (model.target === 'bit') {
     Resolver = ResolveBit
+  }
+  if (model.target === 'setting') {
+    Resolver = ResolveApp
   }
   if (!Resolver) {
     Resolver = ResolveEmpty

@@ -6,7 +6,7 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'
 import { View } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { BitModel, PersonBitModel } from '@mcro/models'
+import { BitModel, PersonBitModel, SettingModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
@@ -30,6 +30,18 @@ const findManyType = integration => ({
 })
 
 const allStreams = [
+  {
+    id: '-1',
+    name: 'Apps',
+    source: 'apps',
+    model: SettingModel,
+    query: {
+      where: {
+        category: 'integration',
+      },
+      take: 1000,
+    },
+  },
   {
     id: '0',
     name: 'People',
@@ -81,7 +93,7 @@ const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
-  process.env.NODE_ENV === 'development' && {
+  {
     id: '7',
     source: 'app1',
     name: 'Test App',
@@ -130,7 +142,6 @@ class OrbitHomeStore {
   results = react(
     () => [this.streams, this.sortOrder],
     ([streams, order]) => {
-      console.log('update results', this.sortOrder, order)
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of order) {
@@ -176,6 +187,7 @@ class OrbitHomeStore {
       // get active streams
       const activeStreams = allStreams.filter(
         x =>
+          x.source === 'apps' ||
           x.source === 'people' ||
           x.source === 'app1' ||
           !!appsList.find(app => x.source === app.type),

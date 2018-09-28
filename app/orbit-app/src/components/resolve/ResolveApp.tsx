@@ -1,7 +1,11 @@
-export const ResolveApp = ({ model, children }) =>
+import { ItemResolverProps } from '../ItemResolver'
+import { Setting } from '@mcro/models'
+import { NICE_INTEGRATION_NAMES } from '../../constants'
+
+export const ResolveApp = ({ model, children }: ItemResolverProps<Setting>) =>
   children({
-    id: model.id,
+    id: `${model.id}`,
     type: 'app',
-    title: model.title,
-    icon: `/icons/${model.icon}`,
+    title: NICE_INTEGRATION_NAMES[model.type],
+    icon: model.type,
   })

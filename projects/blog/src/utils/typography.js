@@ -9,8 +9,8 @@ Theme.overrideThemeStyles = () => ({
 
 delete Theme.googleFonts
 
-Theme.headerFontFamily = ['Clear Sans', 'Open Sans', 'Helvetica', 'Arial']
-Theme.bodyFontFamily = ['Clear Sans', 'Open Sans', 'Helvetica', 'Arial']
+Theme.headerFontFamily = ['"Open Sans"', 'Helvetica', 'Arial']
+Theme.bodyFontFamily = ['"Open Sans"', 'Helvetica', 'Arial']
 
 const typography = new Typography(Theme)
 

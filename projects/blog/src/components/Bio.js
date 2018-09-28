@@ -1,6 +1,6 @@
 import React from 'react'
 
-import 'typeface-clear-sans'
+import 'typeface-open-sans'
 
 import icon from '../assets/notch.png'
 import { rhythm } from '../utils/typography'
@@ -25,11 +25,8 @@ class Bio extends React.Component {
           }}
         />
         <p>
-          Welcome to the Orbit development blog. We're building a new way to
-          organize knowledge.{' '}
-          <a href="https://twitter.com/tryorbit">
-            You can follow us on Twitter
-          </a>
+          Welcome to the Orbit development blog. We're building a new way to organize knowledge.{' '}
+          <a href="https://twitter.com/tryorbit">You can follow us on Twitter</a>
         </p>
       </div>
     )

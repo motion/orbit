@@ -25,19 +25,16 @@ NEXT
 
 # nate
 
+- search results peeks:
+  - hover to show
+  - design
+    - bigger font
+    - less clutter
+    - no header
+    - simple topic list
 - all done, closing... better screen
 - "stop asking" and "always send" for error reporting
 - "reset orbit db" option if error during startup
-- show current app name in Orbit <Tray />
-  - can use bounds in https://electronjs.org/docs/api/tray
-    - click on icon shows menu
-    - click on words shows/hides orbit
-- cosal engine
-  - person profile summaries
-  - bit and person relevancy
-  - cosal indexing
-- memory
-  - once it scans a few times make it store a Bit
 - record video of a demo
 - community - beta build, email, rss updates in app
 

@@ -227,7 +227,7 @@ export class Root {
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
-        getSearchResolver(this.cosal),
+        getSearchResolver(this.cosal, this.databaseManager.db),
         getSearchTopicsResolver(this.cosal),
         SearchLocationsResolver,
       ],

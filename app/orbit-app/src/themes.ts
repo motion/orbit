@@ -123,10 +123,38 @@ const light = {
 }
 
 const clearLight = {
+  _equalityKey: 'clearlight',
   ...light,
   ...Theme.fromStyles({
     color: '#fff',
   }),
+}
+
+const dark = {
+  _equalityKey: 'dark',
+  ...macModernTheme,
+  glintColor: [255, 255, 255, 0.2],
+  listItemBackground: 'transparent',
+  listItemBackgroundSelected: [60, 60, 60, 0.2],
+  listItemBackgroundHover: [20, 20, 20, 0.3],
+  cardBackground: [90, 90, 90, 0.35],
+  cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
+  cardBorderColor: [255, 255, 255, 0.07],
+  cardBorderColorHover: [255, 255, 255, 0.2],
+  cardHoverGlow: [0, 0, 0, 3, [0, 0, 0, 0.15]],
+  ...Theme.fromStyles({
+    background: [20, 20, 20, 0.94],
+    backgroundHover: 'rgba(20,20,20,0.2)',
+    color: '#fff',
+    borderColor: '#222',
+  }),
+  colorActive: '#fff',
+}
+
+const clearDark = {
+  _equalityKey: 'clearDark',
+  ...dark,
+  cardBackground: [0, 0, 0, 0.65],
 }
 
 export const themes = {
@@ -143,26 +171,8 @@ export const themes = {
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
   },
-  dark: {
-    _equalityKey: 'dark',
-    ...macModernTheme,
-    glintColor: [255, 255, 255, 0.2],
-    listItemBackground: 'transparent',
-    listItemBackgroundSelected: [60, 60, 60, 0.2],
-    listItemBackgroundHover: [20, 20, 20, 0.3],
-    cardBackground: [90, 90, 90, 0.35],
-    cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
-    cardBorderColor: [255, 255, 255, 0.07],
-    cardBorderColorHover: [255, 255, 255, 0.2],
-    cardHoverGlow: [0, 0, 0, 3, [0, 0, 0, 0.15]],
-    ...Theme.fromStyles({
-      background: [20, 20, 20, 0.94],
-      backgroundHover: 'rgba(20,20,20,0.2)',
-      color: '#fff',
-      borderColor: '#222',
-    }),
-    colorActive: '#fff',
-  },
+  dark,
+  clearDark,
   light,
   clearLight,
   tan: {

@@ -4,6 +4,7 @@ import isEqual from 'react-fast-compare'
 import scroll from 'scroll'
 import { OrbitCard } from '../views/OrbitCard'
 import { OrbitItemProps } from '../views/OrbitItemProps'
+import { RECENT_HMR } from '../constants'
 
 export type CarouselProps = HorizontalScrollRowProps & {
   CardView?: (props: OrbitItemProps<any>) => JSX.Element
@@ -28,7 +29,7 @@ export class Carousel extends React.Component<CarouselProps> {
   frameRef = React.createRef<HTMLDivElement>()
 
   shouldComponentUpdate(nextProps) {
-    return !isEqual(nextProps, this.props)
+    return !isEqual(nextProps, this.props) || RECENT_HMR()
   }
 
   get cardRefs(): HTMLDivElement[] {

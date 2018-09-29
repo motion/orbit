@@ -14,6 +14,7 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
 import { HorizontalSpace } from '.'
+import { RECENT_HMR } from '../constants'
 
 const ListFrame = view(UI.View, {
   margin: [0, -1],
@@ -350,9 +351,9 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
 }
 
 // wrap the outside so we can do much faster shallow renders when need be
-export class OrbitListItem extends React.Component<OrbitItemProps> {
+export class OrbitListItem extends React.Component<OrbitItemProps<any>> {
   shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps)
+    return !isEqual(this.props, nextProps) || RECENT_HMR()
   }
 
   render() {

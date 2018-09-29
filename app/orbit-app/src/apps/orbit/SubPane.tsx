@@ -7,7 +7,7 @@ import { OrbitStore } from '../OrbitStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from './orbitDocked/SearchStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
-import { BORDER_RADIUS } from '../../constants'
+import { BORDER_RADIUS, RECENT_HMR } from '../../constants'
 import { trace } from 'mobx'
 import isEqual from 'react-fast-compare'
 
@@ -70,7 +70,7 @@ const PaneContentInner = view({
 
 class StaticContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props.children, nextProps.children)
+    return !isEqual(this.props.children, nextProps.children) || RECENT_HMR()
   }
   render() {
     return this.props.children

@@ -13,6 +13,7 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
+import { RECENT_HMR } from '../constants'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -347,7 +348,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
 // wrap the outside so we can do much faster shallow renders when need be
 export class OrbitCard extends React.Component<OrbitItemProps<any>> {
   shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps)
+    return !isEqual(this.props, nextProps) || RECENT_HMR()
   }
 
   render() {
@@ -355,7 +356,9 @@ export class OrbitCard extends React.Component<OrbitItemProps<any>> {
       <UI.ThemeContext.Consumer>
         {obj => {
           return (
-            <UI.Theme name={obj.activeThemeName === 'clearLight' ? 'dark' : obj.activeThemeName}>
+            <UI.Theme
+              name={obj.activeThemeName === 'clearLight' ? 'clearDark' : obj.activeThemeName}
+            >
               <OrbitCardInner {...this.props} />
             </UI.Theme>
           )

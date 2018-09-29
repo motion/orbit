@@ -131,9 +131,14 @@ export class Root {
     // start oracle after passing into screenManager
     await this.oracle.start()
     // then start screenmanager after oracle.start
+    // no need to await
     this.screenManager.start()
     // start oracle related managers once its started
+    // no need to await
     this.ocrManager.start()
+
+    // order doesnt matter
+    this.cosalManager.start()
 
     // start others...
     this.keyboardStore = new KeyboardStore({

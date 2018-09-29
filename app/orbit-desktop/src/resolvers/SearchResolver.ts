@@ -5,6 +5,7 @@ import { getSearchQuery } from './getSearchQuery'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
+import { uniqBy } from 'lodash'
 
 const log = new Logger('search')
 
@@ -43,15 +44,26 @@ const getBasicSearch = async args => {
   }
 }
 
+async function cosalSearch(cosal: Cosal, query: string) {
+  console.time('cosalSearch')
+  const res = await cosal.search(query, 20)
+  console.timeEnd('cosalSearch')
+  const ids = res.map(x => x.id)
+  const cosalBits = await getRepository(BitEntity).find({ id: { $in: ids } })
+  return cosalBits
+}
+
 export const getSearchResolver = (cosal: Cosal) => {
   return resolveMany(SearchResultModel, async args => {
-    console.time('basicSearch')
-    const results = await getBasicSearch(args)
-    console.timeEnd('basicSearch')
-    if (!results) {
-      console.log('expired query')
+    const [sqlResults, cosalResults] = await Promise.all([
+      getBasicSearch(args),
+      cosalSearch(cosal, args.query),
+    ])
+    if (sqlResults === false) {
+      console.log('expired query', args.query)
       return []
     }
+    const results = uniqBy([...cosalResults, ...sqlResults], 'id')
     log.verbose('sending search results...', results.length)
     return results.slice(args.skip, args.take + args.skip)
   })

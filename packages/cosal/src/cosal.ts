@@ -64,6 +64,7 @@ export class Cosal {
   // incremental scan can add more and more documents
   scan = async (newRecords: Record[]) => {
     this.ensureStarted()
+
     // this is incremental, passing in previous matrix
     this.covariance = getCovariance(
       this.covariance.matrix,
@@ -78,8 +79,13 @@ export class Cosal {
       if (this.vectors[record.id]) {
         throw new Error(`Already have a record id ${record.id}`)
       }
+      if (!cosals[index]) {
+        console.log('no cosal found for index', index)
+        continue
+      }
       this.vectors[record.id] = cosals[index].vector
     }
+
     // persist after scan
     await this.persist()
   }
@@ -93,6 +99,9 @@ export class Cosal {
 
     for (const id in this.vectors) {
       const vector = this.vectors[id]
+      if (!vector) {
+        continue
+      }
       const distance = cosineDistance(cosal.vector, vector)
       const result = { id: +id, distance }
       if (!results.length) {

@@ -47,8 +47,8 @@ const OrbitFakeInput = view({
 }))
 
 const OrbitCloseControl = view({
-  width: 9,
-  height: 9,
+  width: 8,
+  height: 8,
   borderRadius: 50,
   boxSizing: 'content-box',
   zIndex: 10000,
@@ -58,12 +58,12 @@ const OrbitClose = view({
   position: 'absolute',
   top: 3,
   left: 3,
-  padding: 5,
+  padding: 6,
 }).theme(({ theme }) => {
   const isDark = theme.background.isDark()
   return {
     '& > div': {
-      background: [100, 100, 100],
+      background: isDark ? [80, 80, 80] : [200, 200, 200],
     },
     '&:hover > div': {
       background: isDark ? '#fff' : '#000',

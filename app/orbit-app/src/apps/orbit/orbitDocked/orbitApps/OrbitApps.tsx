@@ -112,7 +112,6 @@ export class OrbitApps extends React.Component<Props> {
                   subPane="apps"
                   total={store.integrations.length}
                   inGrid
-                  borderRadius={4}
                   model={setting}
                   index={index}
                   isActive

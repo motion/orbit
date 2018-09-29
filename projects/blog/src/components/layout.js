@@ -26,7 +26,7 @@ class Template extends React.Component {
             }}
             to={'/'}
           >
-            Orbit Blog
+            Orbit
           </Link>
         </h2>
       )
@@ -46,7 +46,7 @@ class Template extends React.Component {
             }}
             to={'/'}
           >
-            Orbit Blog
+            Orbit
           </Link>
         </h3>
       )

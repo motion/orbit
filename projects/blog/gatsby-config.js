@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: 'Orbit Blog',
+    title: 'Orbit',
     author: 'Nate Wienert',
     description: 'Orbit development blog.',
     siteUrl: 'https://blog.tryorbit.com',

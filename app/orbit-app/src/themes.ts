@@ -154,7 +154,8 @@ const dark = {
 const clearDark = {
   _equalityKey: 'clearDark',
   ...dark,
-  cardBackground: [0, 0, 0, 0.65],
+  cardHoverGlow: [0, 0, 0, 2, [255, 255, 255, 0.15]],
+  cardBackground: [0, 0, 0, 0.5],
 }
 
 export const themes = {

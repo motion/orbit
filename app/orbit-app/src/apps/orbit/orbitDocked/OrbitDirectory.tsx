@@ -124,7 +124,7 @@ const createSection = (people: PersonBit[], letter, getIndex) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
-      <Grid gridAutoRows={height}>
+      <Grid columnWidth={120} gridAutoRows={height}>
         {people.map(person => (
           <DirectoryPersonCard key={person.email} getIndex={getIndex} model={person} />
         ))}
@@ -145,7 +145,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   // not that many, show without sections
   if (total < 20) {
     sections = (
-      <Grid gridAutoRows={height}>
+      <Grid columnWidth={120} gridAutoRows={height}>
         {results.map((person, index) => (
           <DirectoryPersonCard key={person.email} index={index} model={person} />
         ))}

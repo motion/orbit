@@ -1,5 +1,6 @@
 import Typography from 'typography'
 import Theme from 'typography-theme-wordpress-2016'
+import './styles.css'
 
 Theme.overrideThemeStyles = () => ({
   'a.gatsby-resp-image-link': {
@@ -9,22 +10,18 @@ Theme.overrideThemeStyles = () => ({
 
 delete Theme.googleFonts
 
-Theme.headerFontFamily = [
-  'system-ui',
-  'BlinkMacSystemFont',
-  'Helvetica Neue',
-  'Helvetica',
-  'sans-serif',
-]
-Theme.bodyFontFamily = [
-  'system-ui',
-  'BlinkMacSystemFont',
-  'Helvetica Neue',
-  'Helvetica',
-  'sans-serif',
-]
-
-const typography = new Typography(Theme)
+// @ts-ignore
+const typography = new Typography({
+  ...Theme,
+  headerFontFamily: [
+    'system-ui',
+    'BlinkMacSystemFont',
+    'Helvetica Neue',
+    'Helvetica',
+    'sans-serif',
+  ],
+  bodyFontFamily: ['system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica', 'sans-serif'],
+})
 
 // Hot reload typography in development.
 if (process.env.NODE_ENV !== 'production') {

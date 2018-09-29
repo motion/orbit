@@ -58,6 +58,7 @@ export const ItemResolver = ({
   model,
   onResolvedItem,
   children,
+  extraProps = {},
   ...props
 }: ItemResolverProps<ResolvableModel>) => {
   let Resolver
@@ -80,7 +81,7 @@ export const ItemResolver = ({
     <ItemResolverDecorationContext.Consumer>
       {decoration => {
         return (
-          <Resolver decoration={decoration} model={model} {...props}>
+          <Resolver decoration={decoration} model={model} extraProps={extraProps} {...props}>
             {item => {
               // allow getting the item via a prop other than children intended for side effects
               if (onResolvedItem) {

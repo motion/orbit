@@ -247,7 +247,8 @@ export class OrbitHome extends React.Component<Props> {
                 <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                   {/* <SuggestionBarVerticalPad /> */}
                   {results.map(({ id, name, items, startIndex }, index) => {
-                    const height = name === 'People' ? 60 : 90
+                    const height = name === 'People' ? 60 : name === 'Apps' ? 80 : 90
+                    const width = name === 'Apps' ? 120 : 180
                     return (
                       <Draggable key={id} draggableId={id} index={index}>
                         {(provided, snapshot) => {
@@ -267,6 +268,7 @@ export class OrbitHome extends React.Component<Props> {
                                 homeStore={homeStore}
                                 categoryName={name}
                                 cardHeight={height}
+                                cardWidth={width}
                                 CardView={items[0].target === 'setting' ? OrbitAppCard : OrbitCard}
                               />
                             </div>

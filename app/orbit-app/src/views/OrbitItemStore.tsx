@@ -12,7 +12,7 @@ export class OrbitItemStore {
   clickAt = 0
   hoverSettler = null
 
-  didMount() {
+  willMount() {
     if (this.props.hoverToSelect) {
       this.hoverSettler = this.props.selectionStore.getHoverSettler()
       this.hoverSettler.setItem({

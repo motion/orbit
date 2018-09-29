@@ -31,8 +31,8 @@ const results = {
   },
 }
 
-export type BitItemResolverProps = ItemResolverResolverProps<Bit>
-export type BitItemResolver = React.SFC<BitItemResolverProps & { bit: Bit }>
+export type BitItemResolverProps = ItemResolverResolverProps<Bit> & { bit: Bit }
+export type BitItemResolver = React.SFC<BitItemResolverProps>
 
 export const ResolveBit = ({
   model,

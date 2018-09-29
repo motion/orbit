@@ -121,7 +121,7 @@ const Bottom = view({
   store: OrbitItemStore,
 })
 @view
-export class OrbitListInner extends React.Component<OrbitItemProps> {
+export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
   static defaultProps = {
     // offsets -1px on sides for the negative margin we usually use to hide side border
     padding: [10, 11],

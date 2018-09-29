@@ -45,7 +45,7 @@ export function highlightText(options: HighlightOptions): string {
     trimWhitespace,
     maxChars = 500,
     maxSurroundChars = 50,
-    style = 'background: rgba(255, 255, 0, 0.8); color: #000; border-radius: 4px;',
+    style = 'background: rgba(255, 255, 0, 0.75); color: #111; border-radius: 3px;',
     separator = '&nbsp;&middot;&nbsp;',
   } = options
   // lowercase needle

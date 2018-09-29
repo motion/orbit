@@ -93,6 +93,7 @@ export class Carousel extends React.Component<CarouselProps> {
             pane="carousel"
             model={item}
             inGrid
+            hoverToSelect={false}
             {...cardProps}
             style={{
               width: cardWidth,

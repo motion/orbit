@@ -35,7 +35,7 @@ const OrbitCardContent = view({
 })
 
 const SearchResultText = props => <UI.Text wordBreak="break-all" fontWeight={400} {...props} />
-const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ⏎ ') : str)
+const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ') : str)
 
 // stays static and non-reactive to prevent re-rendering during infinite scroll
 class OrbitSearchResultsListChunk extends React.Component<{
@@ -75,6 +75,7 @@ class OrbitSearchResultsListChunk extends React.Component<{
           hide={isConversation ? hideSlack : null}
           subtitleSpaceBetween={this.spaceBetween}
           isExpanded
+          hoverToSelect
           searchTerm={query}
           onClickLocation={handleClickLocation}
           maxHeight={isConversation ? 380 : 200}
@@ -105,7 +106,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
     let curOffset = quickResultsLen
     return (
       <ProvideHighlightsContextWithDefaults
-        value={{ words: query.split(' '), maxChars: 500, maxSurroundChars: 200 }}
+        value={{ words: query.split(' '), maxChars: 500, maxSurroundChars: 80 }}
       >
         {resultsGroups.map((group, index) => {
           const next = (

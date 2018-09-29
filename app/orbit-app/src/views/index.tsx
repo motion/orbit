@@ -125,7 +125,6 @@ export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
     alignItems="center"
     flexFlow="row"
     padding={[4 * verticalSpacing, 0, 10 * verticalSpacing]}
-    opacity={0.75}
     {...props}
   >
     {children}

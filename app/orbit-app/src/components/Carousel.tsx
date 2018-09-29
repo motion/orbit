@@ -66,7 +66,7 @@ export class Carousel extends React.Component<CarouselProps> {
     const {
       items,
       verticalPadding = 3,
-      cardWidth = 180,
+      cardWidth = 170,
       cardHeight = 90,
       cardSpace = 12,
       cardProps = {},

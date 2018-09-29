@@ -63,7 +63,7 @@ const OrbitClose = view({
   const isDark = theme.background.isDark()
   return {
     '& > div': {
-      background: isDark ? [80, 80, 80] : [200, 200, 200],
+      background: isDark ? [80, 80, 80] : [230, 230, 230],
     },
     '&:hover > div': {
       background: isDark ? '#fff' : '#000',

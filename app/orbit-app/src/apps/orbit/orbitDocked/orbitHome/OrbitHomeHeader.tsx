@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { ThemeObject, attachTheme } from '@mcro/gloss'
+import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
 
 const Section = view('section', {
@@ -33,7 +33,7 @@ const exploreButton = {
   borderWidth: 0,
   borderColor: 'transparent',
   background: 'transparent',
-  opacity: 0.35,
+  opacity: 0.5,
   iconProps: {
     size: 11,
   },

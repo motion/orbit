@@ -103,6 +103,32 @@ const macModernTheme = Theme.colorize({
   },
 })
 
+const light = {
+  _equalityKey: 'light',
+  ...macModernTheme,
+  listItemBackground: [255, 255, 255, 0],
+  listItemBackgroundSelected: [255, 255, 255, 0.06],
+  listItemBackgroundHover: [255, 255, 255, 0.04],
+  inputBackground: [255, 255, 255, 0],
+  inputBackgroundActive: [0, 0, 0, 0.1],
+  cardBackground: [250, 250, 250],
+  cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
+  cardBorderColor: [0, 0, 0, 0.1],
+  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
+  ...Theme.fromStyles({
+    background: 'rgba(255,255,255,0.95)',
+    color: '#444',
+    borderColor: '#c5c5c5',
+  }),
+}
+
+const clearLight = {
+  ...light,
+  ...Theme.fromStyles({
+    color: '#fff',
+  }),
+}
+
 export const themes = {
   orbit: {
     _equalityKey: 'orbit',
@@ -137,24 +163,8 @@ export const themes = {
     }),
     colorActive: '#fff',
   },
-  light: {
-    _equalityKey: 'light',
-    ...macModernTheme,
-    listItemBackground: [255, 255, 255, 0.1],
-    listItemBackgroundSelected: [255, 255, 255, 0.35],
-    listItemBackgroundHover: [255, 255, 255, 0.2],
-    inputBackground: [0, 0, 0, 0.05],
-    inputBackgroundActive: [0, 0, 0, 0.1],
-    cardBackground: [255, 255, 255, 0.7],
-    cardShadow: [0, 2, 6, [0, 0, 0, 0.035]],
-    cardBorderColor: [0, 0, 0, 0.1],
-    cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
-    ...Theme.fromStyles({
-      background: 'rgba(255,255,255,0.95)',
-      color: '#444',
-      borderColor: '#c5c5c5',
-    }),
-  },
+  light,
+  clearLight,
   tan: {
     _equalityKey: 'tan',
     ...macModernTheme,

@@ -75,7 +75,6 @@ class OrbitSearchResultsListChunk extends React.Component<{
           hide={isConversation ? hideSlack : null}
           subtitleSpaceBetween={this.spaceBetween}
           isExpanded
-          hoverToSelect
           searchTerm={query}
           onClickLocation={handleClickLocation}
           maxHeight={isConversation ? 380 : 200}

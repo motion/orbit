@@ -20,9 +20,11 @@ const Item = view({
   '&:active': {
     opacity: 0.8,
   },
-}).theme(({ theme }) => ({
+}).theme(({ theme, active }) => ({
+  background: (active && theme.highlightBackground) || 'transparent',
+  color: (active && theme.highlightColor) || 'inherit',
   '&:hover': {
-    background: theme.backgroundHover,
+    background: (active && theme.highlightBackground) || theme.backgroundHover,
   },
 }))
 
@@ -34,15 +36,17 @@ const ItemTitle = view(Text, {
   flex: 1,
 })
 
-export const SimpleItem = ({ inactive = false, after = null, icon = null, title, ...props }) => (
-  <Item inactive={inactive} {...props}>
+export const SimpleItem = ({ after = null, icon = null, title, ...props }) => (
+  <Item {...props}>
     {!!icon && (
       <>
         <OrbitIcon size={18} icon={icon} />
         <div style={{ width: 12 }} />
       </>
     )}
-    <ItemTitle ellipse>{title}</ItemTitle>
+    <ItemTitle ellipse color="inherit">
+      {title}
+    </ItemTitle>
     {after}
   </Item>
 )

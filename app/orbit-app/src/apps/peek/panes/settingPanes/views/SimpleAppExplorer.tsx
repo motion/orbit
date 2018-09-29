@@ -19,6 +19,10 @@ export class AppViewStore {
   active = 'topics'
   lastActive = 'topics'
 
+  setter = key => () => {
+    this.setActiveKey(key)
+  }
+
   setActiveKey = key => {
     this.lastActive = this.active
     this.active = key
@@ -54,8 +58,18 @@ export class SimpleAppExplorer extends React.Component<Props> {
           }
         >
           <SegmentedRow>
-            <TitleBarButton>Topic Explorer</TitleBarButton>
-            <TitleBarButton>Relations Explorer</TitleBarButton>
+            <TitleBarButton
+              onClick={appViewStore.setter('topics')}
+              active={appViewStore.active === 'topics'}
+            >
+              Topic Explorer
+            </TitleBarButton>
+            <TitleBarButton
+              onClick={appViewStore.setter('related')}
+              active={appViewStore.active === 'related'}
+            >
+              Relations Explorer
+            </TitleBarButton>
           </SegmentedRow>
         </PeekHeader>
         <PeekContent>

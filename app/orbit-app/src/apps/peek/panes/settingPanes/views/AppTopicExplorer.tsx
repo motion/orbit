@@ -1,4 +1,4 @@
-import { Row, Sidebar, SidebarLabel, Col, Theme, Tabs, Tab } from '@mcro/ui'
+import { Row, Sidebar, SidebarLabel, Col, Tabs, Tab } from '@mcro/ui'
 import * as React from 'react'
 import { SimpleItem } from '../../../../../views/SimpleItem'
 import { view } from '@mcro/black'
@@ -10,6 +10,7 @@ type Props = { setting: Setting }
 class AppTopicStore {
   props: Props
   activeTab = null
+  activeLocation = null
   topics = []
   locations = []
   private searchArgs = {
@@ -32,13 +33,14 @@ class AppTopicStore {
     this.topics = await loadMany(SearchTopicsModel, {
       args: this.searchArgs,
     })
+    this.activeTab = this.topics[0] || ''
   }
 
   async loadLocations() {
     this.locations = await loadMany(SearchLocationsModel, {
       args: this.searchArgs,
     })
-    this.activeTab = this.locations[0] || ''
+    this.activeLocation = this.locations[0]
   }
 }
 
@@ -54,12 +56,12 @@ export class AppTopicExplorer extends React.Component<Props & { store?: AppTopic
         <Sidebar minWidth={150} maxWidth={300} width={200} position="left">
           <SidebarLabel>Locations</SidebarLabel>
           {store.locations.map((location, i) => (
-            <SimpleItem key={i} title={location} />
+            <SimpleItem key={i} title={location} active={location === store.activeLocation} />
           ))}
         </Sidebar>
         <Col overflow="hidden" flex={1}>
           <Tabs active={store.activeTab} onActive={x => (store.activeTab = x)}>
-            {store.topics.map((topic, i) => (
+            {store.topics.map(topic => (
               <Tab key={topic} width={140} label={topic} />
             ))}
           </Tabs>

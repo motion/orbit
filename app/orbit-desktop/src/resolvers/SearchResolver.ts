@@ -1,53 +1,109 @@
 import { resolveMany } from '@mcro/mediator'
-import { SearchResultModel } from '@mcro/models'
+import sqlite from 'sqlite'
+import { SearchResultModel, SearchQuery } from '@mcro/models'
 import { Cosal } from '@mcro/cosal'
 import { getSearchQuery } from './getSearchQuery'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '@mcro/entities'
+import { Logger } from '@mcro/logger'
+import { uniqBy } from 'lodash'
 
-// a simple way to cache the results based on `query`
-let currentSearch = { query: '', allResults: null }
-let curId = 0
+const log = new Logger('search')
 
-const getBasicSearch = async args => {
-  curId = Math.random()
-  const id = curId
-  if (args.query === currentSearch.query) {
-    return currentSearch.allResults
-  } else {
-    const searchQuery = getSearchQuery({
-      query: args.query,
-      sortBy: args.sortBy,
-      // just get a lot of results for now and we slice them on sending back to UI
-      // we'll need to implement some logic here later to grab more if the args.take > 100
-      take: 100,
-      skip: 0,
-      startDate: args.startDate,
-      endDate: args.endDate,
-      integrationFilters: args.integrationFilters,
-      peopleFilters: args.peopleFilters,
-      locationFilters: args.locationFilters,
-    })
-    const allResults = await getRepository(BitEntity).find(searchQuery)
-    if (id === curId) {
-      currentSearch = { query: args.query, allResults }
-      return allResults
+type SearchArgs = SearchQuery & {
+  database: sqlite.Database
+  cosal: Cosal
+}
+
+const searchCache = doSearch => {
+  // a simple way to cache the results based on `query`
+  let currentSearch = { hash: '', allResults: null }
+  let curId = 0
+
+  return async args => {
+    curId = Math.random()
+    const id = curId
+    const hash = JSON.stringify(args)
+    if (hash === currentSearch.hash) {
+      return currentSearch.allResults
     } else {
-      return false
+      const allResults = await doSearch(args)
+      if (id === curId) {
+        currentSearch = { hash, allResults }
+        return allResults
+      } else {
+        return false
+      }
     }
   }
 }
 
-export const getSearchResolver = (cosal: Cosal) => {
-  return resolveMany(SearchResultModel, async args => {
-    console.time('basicSearch')
-    const results = await getBasicSearch(args)
-    console.timeEnd('basicSearch')
-    if (!results) {
-      console.log('expired query')
-      return []
+// async function ftsSearch(args: SearchArgs) {
+//   const all = await args.database.all(
+//     'SELECT id FROM bit_entity JOIN search_index WHERE search_index MATCH ? ORDER BY rank LIMIT ?',
+//     args.query,
+//     200,
+//   )
+//   const ids = all.map(x => x.id)
+//   return await getRepository(BitEntity).find({ id: { $in: ids } })
+// }
+
+async function cosalSearch(args: SearchArgs) {
+  console.time('cosalSearch')
+  const res = await args.cosal.search(args.query, 200)
+  console.timeEnd('cosalSearch')
+  const ids = res.map(x => x.id)
+  return await getRepository(BitEntity).find({ id: { $in: ids } })
+}
+
+async function likeSearch(args: SearchArgs) {
+  const searchQuery = getSearchQuery({
+    query: args.query,
+    sortBy: args.sortBy,
+    // just get a lot of results for now and we slice them on sending back to UI
+    // we'll need to implement some logic here later to grab more if the args.take > 100
+    take: 100,
+    skip: 0,
+    startDate: args.startDate,
+    endDate: args.endDate,
+    integrationFilters: args.integrationFilters,
+    peopleFilters: args.peopleFilters,
+    locationFilters: args.locationFilters,
+  })
+  console.log('searchQuery', searchQuery)
+  return await getRepository(BitEntity).find(searchQuery)
+}
+
+const doSearch = searchCache(async args => {
+  const [likeResults, cosalResults] = await Promise.all([
+    likeSearch(args),
+    cosalSearch(args),
+    // ftsSearch(args),
+  ])
+  console.log('likeResults', likeResults)
+  console.log('cosalResults', cosalResults)
+  // console.log('ftsResults', ftsResults)
+  // TODO algorithm for merging the three...
+
+  let results = []
+  let restResults = []
+
+  // if we have match between BOTH thats good.. for a start
+  for (const bit of likeResults) {
+    if (cosalResults.findIndex(x => x.id === bit.id) > -1) {
+      results.push(bit)
+    } else {
+      restResults.push(bit)
     }
-    console.log('sending search results...', results)
+  }
+
+  return uniqBy([...results, ...restResults, ...cosalResults], 'id')
+})
+
+export const getSearchResolver = (cosal: Cosal, database: sqlite.Database) => {
+  return resolveMany(SearchResultModel, async args => {
+    const results = await doSearch({ ...args, cosal, database })
+    log.verbose('sending search results...', results.length)
     return results.slice(args.skip, args.take + args.skip)
   })
 }

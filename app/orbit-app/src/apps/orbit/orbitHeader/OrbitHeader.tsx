@@ -7,7 +7,6 @@ import { HeaderProps } from './HeaderProps'
 import { View, Image, Tooltip } from '@mcro/ui'
 import orbIcon from '../../../../public/orb.svg'
 import { Desktop } from '@mcro/stores'
-import { trace } from 'mobx'
 import { Actions } from '../../../actions/Actions'
 
 const OrbitHeaderContainer = view(View, {
@@ -48,20 +47,29 @@ const OrbitFakeInput = view({
 }))
 
 const OrbitCloseControl = view({
-  width: 10,
-  height: 10,
-  borderRadius: 100,
-  position: 'absolute',
-  top: 10,
-  left: 10,
+  width: 8,
+  height: 8,
+  borderRadius: 50,
+  boxSizing: 'content-box',
   zIndex: 10000,
-  background: 'red',
-}).theme(({ theme }) => ({
-  background: theme.borderColor,
-  '&:hover': {
-    background: [100, 0, 0],
-  },
-}))
+})
+
+const OrbitClose = view({
+  position: 'absolute',
+  top: 3,
+  left: 3,
+  padding: 6,
+}).theme(({ theme }) => {
+  const isDark = theme.background.isDark()
+  return {
+    '& > div': {
+      background: isDark ? [80, 80, 80] : [200, 200, 200],
+    },
+    '&:hover > div': {
+      background: isDark ? '#fff' : '#000',
+    },
+  }
+})
 
 @attachTheme
 @view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
@@ -90,7 +98,9 @@ export class OrbitHeader extends React.Component<
       >
         <OrbitFakeInput>
           <Title>
-            <OrbitCloseControl onClick={Actions.closeOrbit} />
+            <OrbitClose onClick={Actions.closeOrbit}>
+              <OrbitCloseControl />
+            </OrbitClose>
             <Tooltip
               target={
                 <Image

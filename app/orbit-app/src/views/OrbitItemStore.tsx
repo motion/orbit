@@ -5,14 +5,14 @@ import { ResolvedItem } from '../components/ItemResolver'
 import { Actions } from '../actions/Actions'
 
 export class OrbitItemStore {
-  props: OrbitItemProps
+  props: OrbitItemProps<any>
   resolvedItem: ResolvedItem = null
   isSelected = false
   cardWrapRef = null
   clickAt = 0
   hoverSettler = null
 
-  didMount() {
+  willMount() {
     if (this.props.hoverToSelect) {
       this.hoverSettler = this.props.selectionStore.getHoverSettler()
       this.hoverSettler.setItem({

@@ -40,7 +40,7 @@ export class AppInfoStore {
   })
 
   get settingId() {
-    return this.props.model ? this.props.model.id : this.props.settingId
+    return +this.props.model.id
   }
 
   willUnmount() {

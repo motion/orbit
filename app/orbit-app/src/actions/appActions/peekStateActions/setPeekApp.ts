@@ -7,6 +7,7 @@ import { PeekTarget } from './types'
 import { personToAppConfig } from '../../../helpers/toAppConfig/personToAppConfig'
 import { bitToAppConfig } from '../../../helpers/toAppConfig/bitToAppConfig'
 import { setAppState } from '../setAppState'
+import { settingToAppConfig } from '../../../helpers/toAppConfig/settingToAppConfig'
 
 type PartialPeekState = { target: PeekTarget } & Partial<typeof App.peekState>
 
@@ -55,5 +56,7 @@ export function getAppConfig(item: PersonBit | Bit | Setting | AppConfig): AppCo
       return personToAppConfig(item as PersonBit)
     case 'bit':
       return bitToAppConfig(item as Bit)
+    case 'setting':
+      return settingToAppConfig(item as Setting)
   }
 }

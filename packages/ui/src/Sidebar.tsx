@@ -22,10 +22,10 @@ const SidebarContainer = view(Col, {
   overflowY: 'auto',
 }).theme(props => ({
   backgroundColor: props.backgroundColor || props.theme.sidebarBackground || '#E8E7E7',
-  borderLeft: props.position === 'right' ? '1px solid #b3b3b3' : 'none',
-  borderTop: props.position === 'bottom' ? '1px solid #b3b3b3' : 'none',
-  borderRight: props.position === 'left' ? '1px solid #b3b3b3' : 'none',
-  borderBottom: props.position === 'top' ? '1px solid #b3b3b3' : 'none',
+  borderLeft: props.position === 'right' ? `1px solid ${props.theme.borderColor}` : 'none',
+  borderTop: props.position === 'bottom' ? `1px solid ${props.theme.borderColor}` : 'none',
+  borderRight: props.position === 'left' ? `1px solid ${props.theme.borderColor}` : 'none',
+  borderBottom: props.position === 'top' ? `1px solid ${props.theme.borderColor}` : 'none',
   textOverflow: props.overflow ? 'ellipsis' : 'auto',
   whiteSpace: props.overflow ? 'nowrap' : 'normal',
 }))

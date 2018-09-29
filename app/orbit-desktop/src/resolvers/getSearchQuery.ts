@@ -1,5 +1,5 @@
 import { FindOptions } from 'typeorm'
-import { Bit } from '@mcro/models'
+import { Bit, SearchQuery } from '@mcro/models'
 
 export const getSearchQuery = ({
   query,
@@ -11,7 +11,7 @@ export const getSearchQuery = ({
   integrationFilters,
   peopleFilters,
   locationFilters,
-}) => {
+}: SearchQuery) => {
   const findOptions: FindOptions<Bit> = {
     where: [],
     relations: {
@@ -66,7 +66,7 @@ export const getSearchQuery = ({
     }
   }
 
-  if (peopleFilters.length) {
+  if (peopleFilters && peopleFilters.length) {
     // essentially, find at least one person
     for (const name of peopleFilters) {
       // @ts-ignore

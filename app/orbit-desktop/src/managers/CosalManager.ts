@@ -34,7 +34,7 @@ export class CosalManager {
   scanSinceLast = async () => {
     const lastScanAt = await this.getLastScan()
     const bitsSinceLastScan = await getRepository(BitEntity).find({
-      where: { updatedAt: { $moreThan: new Date(lastScanAt) } },
+      where: { bitUpdatedAt: { $moreThan: lastScanAt } },
     })
     log.info('bitsSinceLastScan', bitsSinceLastScan.length)
 
@@ -54,6 +54,13 @@ export class CosalManager {
       )
     }
 
+    this.saveLastScanAt()
     log.info('Done scanning new bits')
+  }
+
+  saveLastScanAt = async () => {
+    const setting = await getGeneralSetting()
+    setting.values.cosalIndexUpdatedTo = Date.now()
+    await getRepository(SettingEntity).save(setting)
   }
 }

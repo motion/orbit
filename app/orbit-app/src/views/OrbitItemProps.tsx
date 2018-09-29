@@ -10,7 +10,7 @@ import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
 
 type Model = Bit | PersonBit | Setting
 
-export type OrbitItemProps = CSSPropertySet & {
+export type OrbitItemProps<T extends Model> = CSSPropertySet & {
   theme?: Partial<ThemeObject>
   listItem?: boolean
   hoverToSelect?: boolean
@@ -35,7 +35,7 @@ export type OrbitItemProps = CSSPropertySet & {
   inGrid?: boolean
   pane?: string
   subPane?: string
-  model?: Model
+  model?: T
   extraProps?: Partial<ItemResolverExtraProps>
   children?:
     | ((a: ResolvedItem, b: Bit | PersonBit | Setting, c: number) => JSX.Element)
@@ -52,7 +52,7 @@ export type OrbitItemProps = CSSPropertySet & {
   padding?: number | number[]
   titleFlex?: number
   subtitleProps?: Object
-  getIndex?: (id: Model) => number
+  getIndex?: (id: T) => number
   subtitleSpaceBetween?: React.ReactNode
   searchTerm?: string
   onClickLocation?: (e: Event, item: ResolvedItem) => any

@@ -8,7 +8,7 @@ const sidePad = 16
 const Item = view({
   flexFlow: 'row',
   padding: [0, sidePad],
-  height: 40,
+  height: 36,
   alignItems: 'center',
   inactive: {
     opacity: 0.5,
@@ -20,26 +20,33 @@ const Item = view({
   '&:active': {
     opacity: 0.8,
   },
-}).theme(({ theme }) => ({
-  borderBottom: [1, theme.borderColor.alpha(0.3)],
+}).theme(({ theme, active }) => ({
+  background: (active && theme.highlightBackground) || 'transparent',
+  color: (active && theme.highlightColor) || theme.color,
   '&:hover': {
-    background: theme.backgroundHover,
+    background: (active && theme.highlightBackground) || theme.backgroundHover,
   },
 }))
 
 const ItemTitle = view(Text, {
   fontWeight: 700,
-  padding: [0, 12],
   justifyContent: 'center',
   fontSize: 14,
   alpha: 0.5,
   flex: 1,
 })
 
-export const SimpleItem = ({ inactive = false, after = null, icon, title, ...props }) => (
-  <Item inactive={inactive} {...props}>
-    <OrbitIcon size={18} icon={icon} />
-    <ItemTitle>{title}</ItemTitle>
+export const SimpleItem = ({ after = null, icon = null, title, ...props }) => (
+  <Item {...props}>
+    {!!icon && (
+      <>
+        <OrbitIcon size={18} icon={icon} />
+        <div style={{ width: 12 }} />
+      </>
+    )}
+    <ItemTitle ellipse color="inherit">
+      {title}
+    </ItemTitle>
     {after}
   </Item>
 )

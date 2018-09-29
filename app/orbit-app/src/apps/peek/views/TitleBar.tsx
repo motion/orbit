@@ -3,12 +3,7 @@ import { view } from '@mcro/black'
 import { Text, Row } from '@mcro/ui'
 
 // just the top titlebar:
-export const TitleBar = ({
-  children,
-  before = null,
-  after = null,
-  ...props
-}) => (
+export const TitleBar = ({ children = null, before = null, after = null, ...props }) => (
   <TitleBarContain {...props}>
     {before}
     <TitleBarText>{children}</TitleBarText>

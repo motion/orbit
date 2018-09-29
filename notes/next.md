@@ -1,18 +1,13 @@
 NEXT
 
-1. Create apps distribute via p2p
-2. Home redesign for apps:
-   - Big masonry cards that show some sort of topic overview, stats
-   - Slack card for example shows recent topics and recent popular rooms
-   - Then hover/click the Slack card and see:
-     - A trending topic explorer:
-     - Left sidebar has rooms
-     - Right side shows recently active people + topics
-     - Click a topic and it opens a tab in that app
-       - that tab shows a list of conversations filtered by that topic
-   - Other apps can basically actually show the same thing to start
-     - TODO ideate on coolest way
-3. AppleScript 2.0:
+1. OCR search demo with cosal
+2. Create apps distribute via p2p
+3. Home redesign for apps:
+4. Apps + Person have a new app design like the demo app:
+   1. Sidebar shows their top topics
+   2. Main view has Locations in tabs
+   3. Main view shows topic \* location bits for that person
+5. AppleScript 2.0:
    - Ridiculously easy to build apps
    - Pundle power built right into Orbit
    - Apps have two views:
@@ -30,19 +25,16 @@ NEXT
 
 # nate
 
+- search results peeks:
+  - hover to show
+  - design
+    - bigger font
+    - less clutter
+    - no header
+    - simple topic list
 - all done, closing... better screen
 - "stop asking" and "always send" for error reporting
 - "reset orbit db" option if error during startup
-- show current app name in Orbit <Tray />
-  - can use bounds in https://electronjs.org/docs/api/tray
-    - click on icon shows menu
-    - click on words shows/hides orbit
-- cosal engine
-  - person profile summaries
-  - bit and person relevancy
-  - cosal indexing
-- memory
-  - once it scans a few times make it store a Bit
 - record video of a demo
 - community - beta build, email, rss updates in app
 
@@ -52,6 +44,7 @@ NEXT
 
 # Umed
 
+- remove "archived" gmail
 - Really simple throttle to keep cpu from going too much
 - Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
   - for gmail, dont sync full history, but do sync a trailing X months or limited # of items

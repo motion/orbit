@@ -69,6 +69,7 @@ const macModernTheme = Theme.colorize({
   light30: '#90949c', // Light 30 – Secondary Text & Glyphs - Secondary text and glyphs, meta text and glyphs
   light50: '#4b4f56', // Light 50 – Medium Text & Primary Glyphs - Medium text and primary glyphs
   light80: '#1d2129', // Light 80 – Primary Text - Primary text
+  highlightColor: '#fff',
   highlightBackground: '#4080ff', // used for text selection, tokens, etc.
   highlightBackgroundActive: '#85afee', // active tokens
   frameBorderColor: '#aaa',
@@ -85,6 +86,7 @@ const macModernTheme = Theme.colorize({
     backgroundBottom: '#e2e2e2',
     backgroundBlur: '#f6f6f6',
     borderColor: '#ccc',
+    borderColorActive: '#bbb',
     borderBottomColor: '#ccc',
     borderColorBlur: '#cecece',
     icon: '#6f6f6f',
@@ -126,7 +128,7 @@ export const themes = {
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.2],
-    cardHoverGlow: [0, 0, 0, 3, [0, 0, 0, 0.2]],
+    cardHoverGlow: [0, 0, 0, 3, [0, 0, 0, 0.15]],
     ...Theme.fromStyles({
       background: [20, 20, 20, 0.94],
       backgroundHover: 'rgba(20,20,20,0.2)',
@@ -150,7 +152,7 @@ export const themes = {
     ...Theme.fromStyles({
       background: 'rgba(255,255,255,0.95)',
       color: '#444',
-      borderColor: '#e2e2e2',
+      borderColor: '#c5c5c5',
     }),
   },
   tan: {

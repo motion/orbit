@@ -108,8 +108,11 @@ const SurfaceFrame = view(View, {
       if (inSegment.first) {
         segmentedStyle.borderRightRadius = 0
         segmentedStyle.borderRightWidth = 0
-      }
-      if (inSegment.last) {
+      } else if (inSegment.last) {
+        segmentedStyle.borderLeftRadius = 0
+      } else {
+        segmentedStyle.borderRightRadius = 0
+        segmentedStyle.borderRightWidth = 0
         segmentedStyle.borderLeftRadius = 0
       }
     }

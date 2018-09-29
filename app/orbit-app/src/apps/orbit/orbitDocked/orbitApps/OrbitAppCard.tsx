@@ -5,11 +5,10 @@ import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
 import { SyncStatus } from '../views/SyncStatus'
 import { Text } from '@mcro/ui'
-// import { SyncStatus } from '../views/SyncStatus';
-// import { Row, Col } from '@mcro/ui'
-// import { RoundButtonSmall } from '../../../../views/RoundButtonSmall'
+import { Setting } from '@mcro/models'
+import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 
-type Props = OrbitItemProps &
+type Props = OrbitItemProps<Setting> &
   AppInfoProps & {
     store: AppInfoStore
     isActive?: boolean
@@ -23,17 +22,12 @@ const decorator = compose(
 )
 
 export const OrbitAppCard = decorator(
-  ({ settingId, store, result, isActive, subtitle, ...props }: Props) => {
-    const countSubtitle = !isActive
-      ? ''
-      : store.bitsCount >= 0
-        ? Number(store.bitsCount).toLocaleString()
-        : '...'
+  ({ settingId, store, model, isActive, subtitle, ...props }: Props) => {
+    const countSubtitle = store.bitsCount >= 0 ? Number(store.bitsCount).toLocaleString() : '...'
     const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard
-        inactive={!isActive}
-        title={result.title}
+        title={NICE_INTEGRATION_NAMES[model.type]}
         titleProps={{
           ellipse: true,
         }}
@@ -44,20 +38,14 @@ export const OrbitAppCard = decorator(
         }}
         titleFlex={1}
         date={store.job && store.job.updatedAt}
-        icon={result.icon}
+        icon={model.type}
         iconProps={{
           size: 20,
         }}
         padding={8}
-        result={result}
+        result={model}
         {...props}
       >
-        {/* this will be so you can go straight to the individual home screen */}
-        {/* for this integration which will pre-populate with location rows */}
-        {/* <Row>
-          <Col flex={1} />
-          <RoundButtonSmall>View</RoundButtonSmall>
-        </Row> */}
         <SyncStatus settingId={settingId}>
           {jobs => {
             return (

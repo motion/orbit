@@ -1,9 +1,10 @@
 import { react, on, isEqual, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, Electron } from '@mcro/stores'
 import { OrbitStore } from '../../OrbitStore'
 import { QueryStore } from './QueryStore'
 import { KeyboardStore } from '../../../stores/KeyboardStore'
 import { Actions } from '../../../actions/Actions'
+import { hoverSettler } from '../../../helpers'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 
@@ -131,33 +132,33 @@ export class SelectionStore {
     this.activeIndex = -1
   }
 
-  // getHoverSettler = Helpers.hoverSettler({
-  //   enterDelay: 40,
-  //   betweenDelay: 40,
-  //   onHovered: res => {
-  //     // leave
-  //     if (!res) {
-  //       if (this.activeIndex !== -1) {
-  //         this.leaveIndex = this.activeIndex
-  //       }
-  //       return
-  //     }
-  //     this.leaveIndex = -1
-  //     this.toggleSelected(res.index)
-  //   },
-  // })
-  // clearSelectedOnLeave = react(
-  //   () => [this.leaveIndex, Electron.hoverState.peekHovered],
-  //   async ([leaveIndex, peekHovered], { sleep, when }) => {
-  //     if (!peekHovered) {
-  //       await sleep(100)
-  //     }
-  //     await when(() => !peekHovered)
-  //     await sleep(100)
-  //     ensure('has leave index', leaveIndex > -1)
-  //     this.clearSelected()
-  //   },
-  // )
+  getHoverSettler = hoverSettler({
+    enterDelay: 40,
+    betweenDelay: 40,
+    onHovered: res => {
+      // leave
+      if (!res) {
+        if (this.activeIndex !== -1) {
+          this.leaveIndex = this.activeIndex
+        }
+        return
+      }
+      this.leaveIndex = -1
+      this.toggleSelected(res.index)
+    },
+  })
+  clearSelectedOnLeave = react(
+    () => [this.leaveIndex, Electron.hoverState.peekHovered],
+    async ([leaveIndex, peekHovered], { sleep, when }) => {
+      if (!peekHovered) {
+        await sleep(100)
+      }
+      await when(() => !peekHovered)
+      await sleep(100)
+      ensure('has leave index', leaveIndex > -1)
+      this.clearSelected()
+    },
+  )
 
   toggleSelected = (index, eventType?: string) => {
     if (eventType) {

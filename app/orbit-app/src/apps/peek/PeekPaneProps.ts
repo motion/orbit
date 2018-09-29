@@ -21,9 +21,11 @@ export type PeekContents = {
   after?: React.ReactNode
 }
 
-export type PeekPaneProps = {
+type Model = Bit | PersonBit | Setting
+
+export type PeekPaneProps<T extends Model> = {
   scrollToHighlight?: () => void
-  model?: Bit | PersonBit | Setting
+  model?: T
   selectionStore: SelectionStore
   peekStore: PeekStore
   appConfig: AppConfig

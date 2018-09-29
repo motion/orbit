@@ -13,7 +13,6 @@ import { SimpleItem } from '../../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
 import { fuzzyQueryFilter } from '../../../../helpers'
 import { App } from '@mcro/stores'
-import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 import { settingsList } from '../../../../helpers/settingsList'
 import { NoResultsDialog } from '../views/NoResultsDialog'
 
@@ -68,15 +67,8 @@ class OrbitAppsStore {
     })
   }
 
-  private get allActiveApps() {
-    return this.integrations.map(setting => ({
-      ...settingToAppConfig(setting),
-      setting,
-    }))
-  }
-
   get filteredActiveApps() {
-    return fuzzyQueryFilter(this.activeQuery, this.allActiveApps, {
+    return fuzzyQueryFilter(this.activeQuery, this.integrations, {
       key: 'title',
     })
   }
@@ -113,16 +105,15 @@ export class OrbitApps extends React.Component<Props> {
               gridAutoRows={80}
               margin={[5, -4]}
             >
-              {store.filteredActiveApps.map((result, index) => (
+              {store.filteredActiveApps.map((setting, index) => (
                 <OrbitAppCard
-                  key={result.id}
-                  settingId={+result.id}
+                  key={setting.id}
                   pane="docked"
                   subPane="apps"
                   total={store.integrations.length}
                   inGrid
                   borderRadius={4}
-                  result={result}
+                  model={setting}
                   index={index}
                   isActive
                 />

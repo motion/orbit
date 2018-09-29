@@ -6,10 +6,12 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'
 import { View } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { BitModel, PersonBitModel } from '@mcro/models'
+import { BitModel, PersonBitModel, SettingModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
+import { OrbitCard } from '../../../../views/OrbitCard'
+import { OrbitAppCard } from '../orbitApps/OrbitAppCard'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -30,6 +32,18 @@ const findManyType = integration => ({
 })
 
 const allStreams = [
+  {
+    id: '-1',
+    name: 'Apps',
+    source: 'apps',
+    model: SettingModel,
+    query: {
+      where: {
+        category: 'integration',
+      },
+      take: 1000,
+    },
+  },
   {
     id: '0',
     name: 'People',
@@ -81,7 +95,7 @@ const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
-  process.env.NODE_ENV === 'development' && {
+  {
     id: '7',
     source: 'app1',
     name: 'Test App',
@@ -130,7 +144,6 @@ class OrbitHomeStore {
   results = react(
     () => [this.streams, this.sortOrder],
     ([streams, order]) => {
-      console.log('update results', this.sortOrder, order)
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of order) {
@@ -176,6 +189,7 @@ class OrbitHomeStore {
       // get active streams
       const activeStreams = allStreams.filter(
         x =>
+          x.source === 'apps' ||
           x.source === 'people' ||
           x.source === 'app1' ||
           !!appsList.find(app => x.source === app.type),
@@ -233,7 +247,8 @@ export class OrbitHome extends React.Component<Props> {
                 <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                   {/* <SuggestionBarVerticalPad /> */}
                   {results.map(({ id, name, items, startIndex }, index) => {
-                    const height = name === 'People' ? 60 : 90
+                    const height = name === 'People' ? 60 : name === 'Apps' ? 80 : 90
+                    const width = name === 'Apps' ? 120 : 180
                     return (
                       <Draggable key={id} draggableId={id} index={index}>
                         {(provided, snapshot) => {
@@ -253,6 +268,8 @@ export class OrbitHome extends React.Component<Props> {
                                 homeStore={homeStore}
                                 categoryName={name}
                                 cardHeight={height}
+                                cardWidth={width}
+                                CardView={items[0].target === 'setting' ? OrbitAppCard : OrbitCard}
                               />
                             </div>
                           )

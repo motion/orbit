@@ -32,7 +32,7 @@ export const Peek = decorator(({ selectionStore, peekStore }: Props) => {
   )
 })
 
-type PeekPane = React.SFC<PeekPaneProps>
+type PeekPane = React.SFC<PeekPaneProps<any>>
 
 @view
 class PeekPageInner extends React.Component<Props> {
@@ -56,18 +56,20 @@ class PeekPageInner extends React.Component<Props> {
         peekStore={peekStore}
         selectionStore={selectionStore}
       >
-        {(resolvedProps: PeekContents) => {
-          const { preBody, postBody, content, headerProps, ...restResolvedProps } = resolvedProps
-          return (
-            <>
-              <PeekHeader {...restResolvedProps} {...headerProps} />
-              {preBody}
-              <PeekContent peekStore={peekStore}>{content}</PeekContent>
-              {postBody}
-            </>
-          )
-        }}
+        {this.renderResolvedContent}
       </PeekContentsView>
+    )
+  }
+
+  renderResolvedContent = (resolvedProps: PeekContents) => {
+    const { preBody, postBody, content, headerProps, ...restResolvedProps } = resolvedProps
+    return (
+      <>
+        <PeekHeader {...restResolvedProps} {...headerProps} />
+        {preBody}
+        <PeekContent peekStore={this.props.peekStore}>{content}</PeekContent>
+        {postBody}
+      </>
     )
   }
 }

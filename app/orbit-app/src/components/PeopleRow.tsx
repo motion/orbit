@@ -1,12 +1,21 @@
 import * as React from 'react'
 import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
+import { Actions } from '../actions/Actions'
+import { PersonBit } from '@mcro/models'
+import { memoize } from 'lodash'
 
 const shortName = name => {
   const names = name.split(' ')
   const lastInitial = names[1] ? ` ${names[1][0]}.` : ''
   return `${names[0]}${lastInitial}`
 }
+
+const handleClick = memoize((person: PersonBit) => e => {
+  e.stopPropagation()
+  e.preventDefault()
+  Actions.queryTogglePersonFilter(person.name)
+})
 
 export const PeopleRow = attachTheme(({ people, theme }) => {
   const total = (people || []).length
@@ -33,7 +42,7 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
       <UI.Row alignItems="center">
         <UI.Text size={0.9} alpha={0.6} fontWeight={400}>
           {(people || []).map((person, i) => (
-            <UI.Inline marginRight={4} key={i}>
+            <UI.Inline marginRight={4} key={i} onClick={handleClick(person)}>
               {shortName(person.name)}
             </UI.Inline>
           ))}

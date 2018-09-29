@@ -9,7 +9,7 @@ const options = {
   remove_duplicates: false,
 }
 
-export const ResolveDocument = ({ bit, children, isExpanded }: BitItemResolverProps) =>
+export const ResolveDocument = ({ bit, children, isExpanded, extraProps }: BitItemResolverProps) =>
   children({
     id: `${bit.id}`,
     type: 'bit',
@@ -19,7 +19,7 @@ export const ResolveDocument = ({ bit, children, isExpanded }: BitItemResolverPr
     locationLink: bit.location.desktopLink || bit.location.webLink,
     webLink: bit.webLink,
     desktopLink: bit.webLink,
-    content: isExpanded ? <Markdown source={bit.body} /> : bit.body.slice(0, 200),
+    content: isExpanded && !extraProps.minimal ? <Markdown source={bit.body} /> : bit.body,
     preview: keywordExtract
       .extract(bit.body, options)
       .slice(0, 8)

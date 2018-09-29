@@ -1,23 +1,21 @@
 import { view } from '@mcro/black'
 import { GithubRepositoryModel, GithubSetting as GithubSettingModel } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
-import { Text, View, Tabs, Tab, SearchableTable } from '@mcro/ui'
+import { Text, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { HideablePane } from '../../views/HideablePane'
-import { AppStatusPane } from './AppStatusPane'
-import { SettingPaneProps } from './SettingPaneProps'
 import { WhitelistManager } from './stores/WhitelistManager'
-import { ManageSmartSync } from './views/ManageSmartSync'
+import { SettingManageRow } from './views/SettingManageRow'
+import { PeekSettingProps } from '../PeekSetting'
+import { SimpleAppExplorer } from './views/SimpleAppExplorer'
+
+type Props = PeekSettingProps<GithubSettingModel>
 
 class GithubSettingStore {
-  props: SettingPaneProps & {
-    setting: GithubSettingModel
-  }
+  props: Props
   repositories: GithubRepository[] = []
-  active = 'status'
   userOrgs = []
   sortOrder = {
     key: 'lastCommit',
@@ -44,10 +42,6 @@ class GithubSettingStore {
     this.sortOrder = newOrder
   }
 
-  setActiveKey = key => {
-    this.active = key
-  }
-
   private getAllFilterIds() {
     return this.repositories.map(repository => repository.nameWithOwner)
   }
@@ -55,25 +49,15 @@ class GithubSettingStore {
 
 @view.provide({ store: GithubSettingStore })
 @view
-export class GithubSetting extends React.Component<
-  SettingPaneProps & { store: GithubSettingStore }
-> {
+export class GithubSetting extends React.Component<Props & { store: GithubSettingStore }> {
   render() {
-    const { store, children } = this.props
-    return children({
-      belowHead: (
-        <Tabs active={store.active} onActive={store.setActiveKey}>
-          <Tab key="status" width="50%" label="Status" />
-          <Tab key="repos" width="50%" label="Manage" />
-        </Tabs>
-      ),
-      content: (
-        <>
-          <HideablePane invisible={store.active !== 'status'}>
-            <AppStatusPane setting={this.props.setting} />
-          </HideablePane>
-          <HideablePane invisible={store.active !== 'repos'}>
-            <ManageSmartSync whitelist={store.whitelist} />
+    const { store, setting } = this.props
+    return (
+      <SimpleAppExplorer
+        setting={setting}
+        settingsPane={
+          <>
+            <SettingManageRow store={store} setting={setting} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
@@ -168,9 +152,9 @@ export class GithubSetting extends React.Component<
                 }
               />
             </View>
-          </HideablePane>
-        </>
-      ),
-    })
+          </>
+        }
+      />
+    )
   }
 }

@@ -12,6 +12,7 @@ import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'
+import { Theme } from '@mcro/gloss'
 
 export type TabsProps = {
   // Callback for when the active tab has changed.
@@ -19,7 +20,7 @@ export type TabsProps = {
   // The key of the default active tab.
   defaultActive?: string
   // The key of the currently active tab.
-  active?: string | void
+  active?: string | number | void
   // Tab elements.
   children?: Array<any>
   // Whether the tabs can be reordered by the user.
@@ -45,13 +46,29 @@ const TabContainer = view(View, {
 })
 
 const TabList = view(Row, {
-  alignItems: 'stretch',
+  flex: 1,
 }).theme(({ theme }) => ({
   boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
 }))
 
+const TabScrollContainer = view({
+  width: '100%',
+  overflow: 'hidden',
+  height: 25,
+})
+
+const HideScrollBar = view({
+  flexFlow: 'row',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  width: '100%',
+  height: '100%',
+  // scrollbar height
+  paddingBottom: 16,
+  boxSizing: 'content-box',
+})
+
 const TabListItem = view(Row, {
-  flex: 1,
   fontSize: 11,
   fontWeight: 500,
   lineHeight: 22,
@@ -62,16 +79,18 @@ const TabListItem = view(Row, {
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   userSelect: 'none',
-}).theme(({ theme, active }) => {
+}).theme(({ theme, active, width }) => {
   const background = active
     ? theme.tabBackgroundActive || theme.background
     : theme.tabBackground || theme.background
   return {
+    width,
+    flex: typeof width === 'number' ? 'none' : 1,
     color: active ? theme.colorActive : theme.colorBlur,
     background,
     '&:hover': {
       background: active ? background : theme.tabBackgroundHover,
-      transition: active ? 'none' : 'all ease 700ms',
+      transition: active ? 'none' : 'all ease-out 500ms',
     },
   }
 })
@@ -111,7 +130,7 @@ const TabContent = view({
   width: '100%',
 })
 
-export function Tabs(props: TabsProps) {
+function TabsInner(props: TabsProps) {
   const { onActive } = props
   const active = props.active == null ? props.defaultActive : props.active
   // array of other components that aren't tabs
@@ -223,11 +242,21 @@ export function Tabs(props: TabsProps) {
     <TabContainer>
       <TabList>
         {before}
-        {tabList}
+        <TabScrollContainer>
+          <HideScrollBar>{tabList}</HideScrollBar>
+        </TabScrollContainer>
         {after}
       </TabList>
       {tabContents}
       {tabSiblings}
     </TabContainer>
+  )
+}
+
+export function Tabs(props) {
+  return (
+    <Theme select={theme => theme.titleBar || theme}>
+      <TabsInner {...props} />
+    </Theme>
   )
 }

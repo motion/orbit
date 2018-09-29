@@ -19,13 +19,11 @@ const Avatar = view('img', {
   },
 })
 
-export const ResolvePerson = ({
-  children,
-  model,
-}: ItemResolverResolverProps & { model: PersonBit }) => {
+export const ResolvePerson = ({ children, model }: ItemResolverResolverProps<PersonBit>) => {
   if (!model) {
     return null
   }
+  // @ts-ignore TODO why bad
   const photo = last(model.allPhotos) || model.photo
   return children({
     id: model.email,

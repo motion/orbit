@@ -5,7 +5,7 @@ import { OrbitItemProps } from './OrbitItemProps'
 
 // returns either a card or listItem based on a certain prop
 
-export const OrbitItem = ({ listItem, ...props }: OrbitItemProps) => {
+export const OrbitItem = ({ listItem, ...props }: OrbitItemProps<any>) => {
   if (listItem) {
     return <OrbitListItem {...props} />
   } else {

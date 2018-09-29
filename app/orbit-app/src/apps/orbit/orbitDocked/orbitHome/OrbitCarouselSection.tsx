@@ -36,7 +36,10 @@ export const OrbitCarouselSection = decorator(
                 icon: isPeople,
               },
               titleFlex: 1,
-              titleProps: isPeople ? { ellipse: true } : null,
+              titleProps: {
+                ellipse: true,
+                maxWidth: isPeople ? 'calc(100% - 44px)' : null,
+              },
               onClickLocation: handleClickLocation,
             }}
             {...props}

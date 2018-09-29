@@ -11,7 +11,8 @@ import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
-import { Glint } from '@mcro/ui'
+import { Glint, Row } from '@mcro/ui'
+import { HorizontalSpace } from '.'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -213,18 +214,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
         >
           <Glint opacity={0.75} borderRadius={borderRadius} />
           <Padding style={{ borderRadius, padding }}>
-            {!!icon &&
-              !(hide && hide.icon) && (
-                <OrbitIcon
-                  icon={icon}
-                  size={20}
-                  {...orbitIconProps}
-                  position="absolute"
-                  top={topPad}
-                  right={sidePad}
-                  {...iconProps}
-                />
-              )}
             {!(hide && hide.title) && (
               <Title>
                 <HighlightText
@@ -232,7 +221,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
                   sizeLineHeight={0.78}
                   ellipse={hasSubtitle && hasMeta ? true : 2}
                   fontWeight={500}
-                  maxWidth="calc(100% - 30px)"
                   selectable={false}
                   {...titleProps}
                 >
@@ -281,7 +269,26 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
             {typeof children === 'function'
               ? children(resolvedItem, props.bit, props.index)
               : children}
-            {hasPeople && <PeopleRow people={people} />}
+            {hasPeople && (
+              <Row>
+                <PeopleRow people={people} />
+                {/* to avoid hitting orbit icon */}
+                <HorizontalSpace />
+              </Row>
+            )}
+
+            {!!icon &&
+              !(hide && hide.icon) && (
+                <OrbitIcon
+                  icon={icon}
+                  size={14}
+                  {...orbitIconProps}
+                  position="absolute"
+                  bottom={topPad}
+                  right={sidePad}
+                  {...iconProps}
+                />
+              )}
           </Padding>
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}

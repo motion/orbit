@@ -56,10 +56,17 @@ const parseGithubContents = ({ bit, shownLimit }) => {
   }
 }
 
-export const ResolveTask = ({ bit, children, isExpanded, shownLimit }: BitItemResolverProps) => {
-  const { content, comments } = isExpanded
-    ? parseGithubContents({ bit, shownLimit })
-    : { content: null, comments: null }
+export const ResolveTask = ({
+  bit,
+  children,
+  isExpanded,
+  shownLimit,
+  extraProps,
+}: BitItemResolverProps) => {
+  const { content, comments } =
+    isExpanded && !extraProps.minimal
+      ? parseGithubContents({ bit, shownLimit })
+      : { content: bit.body, comments: null }
   return children({
     id: `${bit.id}`,
     type: 'bit',

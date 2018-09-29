@@ -18,6 +18,8 @@ import {
   SlackChannelModel,
   SlackSettingBlacklistCommand,
   SearchResultModel,
+  SearchTopicsModel,
+  SearchLocationsModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -43,6 +45,8 @@ import { Server } from './Server'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { getSearchResolver } from './resolvers/SearchResolver'
+import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
+import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 
 const log = new Logger('desktop')
 
@@ -127,9 +131,14 @@ export class Root {
     // start oracle after passing into screenManager
     await this.oracle.start()
     // then start screenmanager after oracle.start
+    // no need to await
     this.screenManager.start()
     // start oracle related managers once its started
+    // no need to await
     this.ocrManager.start()
+
+    // order doesnt matter
+    this.cosalManager.start()
 
     // start others...
     this.keyboardStore = new KeyboardStore({
@@ -192,6 +201,8 @@ export class Root {
         GithubRepositoryModel,
         SlackChannelModel,
         SearchResultModel,
+        SearchTopicsModel,
+        SearchLocationsModel,
       ],
       commands: [
         SettingRemoveCommand,
@@ -216,7 +227,9 @@ export class Root {
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
-        getSearchResolver(this.cosal),
+        getSearchResolver(this.cosal, this.databaseManager.db),
+        getSearchTopicsResolver(this.cosal),
+        SearchLocationsResolver,
       ],
     })
     this.mediatorServer.bootstrap()

@@ -2,21 +2,17 @@ import { GmailSetting as GmailSettingModel } from '@mcro/models'
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { SettingPaneProps } from './SettingPaneProps'
-import { HideablePane } from '../../views/HideablePane'
-import { AppStatusPane } from './AppStatusPane'
 import { WhitelistManager } from './stores/WhitelistManager'
-import { Tabs, Tab, SearchableTable, Text, View } from '@mcro/ui'
-import { ManageSmartSync } from './views/ManageSmartSync'
+import { SearchableTable, Text, View } from '@mcro/ui'
+import { SettingManageRow } from './views/SettingManageRow'
+import { PeekSettingProps } from '../PeekSetting'
+import { SimpleAppExplorer } from './views/SimpleAppExplorer'
 
-type Props = SettingPaneProps & {
-  setting: GmailSettingModel
-}
+type Props = PeekSettingProps<GmailSettingModel>
 
 class GmailSettingStore {
   props: Props
   syncing = {}
-  activeTab = 'status'
   whitelist = new WhitelistManager({
     setting: this.props.setting,
     getAll: this.getAllFilterIds.bind(this),
@@ -24,10 +20,6 @@ class GmailSettingStore {
 
   willUnmount() {
     this.whitelist.dispose()
-  }
-
-  setActiveKey = key => {
-    this.activeTab = key
   }
 
   private getAllFilterIds() {
@@ -39,21 +31,13 @@ class GmailSettingStore {
 @view
 export class GmailSetting extends React.Component<Props & { store?: GmailSettingStore }> {
   render() {
-    const { store, children, setting } = this.props
-    return children({
-      belowHead: (
-        <Tabs active={store.activeTab} onActive={store.setActiveKey}>
-          <Tab key="status" width="50%" label="Status" />
-          <Tab key="filters" width="50%" label="Filters" />
-        </Tabs>
-      ),
-      content: (
-        <>
-          <HideablePane invisible={store.activeTab !== 'status'}>
-            <AppStatusPane setting={setting} />
-          </HideablePane>
-          <HideablePane invisible={store.activeTab !== 'filters'}>
-            <ManageSmartSync whitelist={store.whitelist} />
+    const { store, setting } = this.props
+    return (
+      <SimpleAppExplorer
+        setting={setting}
+        settingsPane={
+          <>
+            <SettingManageRow store={store} setting={setting} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
@@ -107,9 +91,9 @@ export class GmailSetting extends React.Component<Props & { store?: GmailSetting
                 }
               />
             </View>
-          </HideablePane>
-        </>
-      ),
-    })
+          </>
+        }
+      />
+    )
   }
 }

@@ -64,6 +64,7 @@ export class Cosal {
   // incremental scan can add more and more documents
   scan = async (newRecords: Record[]) => {
     this.ensureStarted()
+
     // this is incremental, passing in previous matrix
     this.covariance = getCovariance(
       this.covariance.matrix,
@@ -78,8 +79,13 @@ export class Cosal {
       if (this.vectors[record.id]) {
         throw new Error(`Already have a record id ${record.id}`)
       }
+      if (!cosals[index]) {
+        console.log('no cosal found for index', index)
+        continue
+      }
       this.vectors[record.id] = cosals[index].vector
     }
+
     // persist after scan
     await this.persist()
   }
@@ -93,6 +99,9 @@ export class Cosal {
 
     for (const id in this.vectors) {
       const vector = this.vectors[id]
+      if (!vector) {
+        continue
+      }
       const distance = cosineDistance(cosal.vector, vector)
       const result = { id: +id, distance }
       if (!results.length) {
@@ -115,7 +124,11 @@ export class Cosal {
     }
   }
 
-  getWordWeights = async (text: string, max?: number): Promise<Pair[] | null> => {
+  getWordWeights = async (
+    text: string,
+    max?: number,
+    sortByWeight?: boolean,
+  ): Promise<Pair[] | null> => {
     const cosal = await toCosal(text, this.covariance)
     if (!cosal) {
       return null
@@ -126,7 +139,14 @@ export class Cosal {
       if (pairs.length > max) {
         // sort by weight
         const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase())
-        uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
+        uniqSorted.sort((a, b) => (a.weight > b.weight ? 1 : -1))
+
+        // just return top by weight
+        if (sortByWeight) {
+          return uniqSorted.slice(0, max)
+        }
+
+        // return them in original order, but limited by weight
         // make sure we get the new last index, could be shorter
         fmax = Math.min(uniqSorted.length - 1, max)
         // find our topmost weight
@@ -139,8 +159,8 @@ export class Cosal {
     return pairs
   }
 
-  getTopWords = async (text: string, max?: number) => {
-    const words = await this.getWordWeights(text, max)
+  getTopWords = async (text: string, max?: number, sortByWeight?: boolean) => {
+    const words = await this.getWordWeights(text, max, sortByWeight)
     if (!words) {
       return []
     }

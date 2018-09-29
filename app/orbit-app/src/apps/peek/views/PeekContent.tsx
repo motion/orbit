@@ -20,14 +20,13 @@ const ContentInner = view(UI.Col, {
   wordBreak: 'break-word',
 })
 
-export class PeekContent extends React.Component<{ peekStore: PeekStore }> {
+@view.attach('peekStore')
+export class PeekContent extends React.Component<{ peekStore?: PeekStore }> {
   render() {
     const { children, peekStore } = this.props
     return (
       <PeekContentChrome>
-        <ContentInner forwardRef={peekStore.contentFrame}>
-          {children}
-        </ContentInner>
+        <ContentInner forwardRef={peekStore.contentFrame}>{children}</ContentInner>
       </PeekContentChrome>
     )
   }

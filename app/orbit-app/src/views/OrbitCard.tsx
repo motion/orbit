@@ -105,7 +105,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, 0, 5],
+  padding: [0, 0, 4],
 })
 
 const Preview = view({
@@ -180,7 +180,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     const hasSubtitle = !!subtitle
     const hasDate = !!updatedAt
     const hasPeople = !!people && !!people.length
-    const hasFourRows = hasSubtitle || hasPeople
+    const hasFourRows =
+      (hasSubtitle && hasPeople) ||
+      ((hasSubtitle || hasPeople) && titleProps && titleProps.ellipse !== true)
     let topPad = 10
     let sidePad = 10
     if (props.padding) {

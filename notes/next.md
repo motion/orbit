@@ -1,6 +1,6 @@
 NEXT
 
-1. Finish search with cosal, maybe fts5
+1. OCR search demo with cosal
 2. Create apps distribute via p2p
 3. Home redesign for apps:
 4. Apps + Person have a new app design like the demo app:

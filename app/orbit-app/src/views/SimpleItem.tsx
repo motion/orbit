@@ -22,7 +22,7 @@ const Item = view({
   },
 }).theme(({ theme, active }) => ({
   background: (active && theme.highlightBackground) || 'transparent',
-  color: (active && theme.highlightColor) || 'inherit',
+  color: (active && theme.highlightColor) || theme.color,
   '&:hover': {
     background: (active && theme.highlightBackground) || theme.backgroundHover,
   },

@@ -353,7 +353,7 @@ export class OrbitCard extends React.Component<OrbitItemProps<any>> {
       <UI.ThemeContext.Consumer>
         {obj => {
           return (
-            <UI.Theme name={obj.activeThemeName === 'clearLight' ? 'light' : obj.activeThemeName}>
+            <UI.Theme name={obj.activeThemeName === 'clearLight' ? 'dark' : obj.activeThemeName}>
               <OrbitCardInner {...this.props} />
             </UI.Theme>
           )

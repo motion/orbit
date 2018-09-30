@@ -6,7 +6,6 @@ import { capitalize } from 'lodash'
 import { App } from '@mcro/stores'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
-// import { PeekRelated } from '../views/PeekRelated'
 import { View, SegmentedRow, Searchable, SearchableProps } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
 import { Bit } from '@mcro/models'
@@ -26,31 +25,14 @@ const Cmd = view({
   opacity: 0.6,
 })
 
-const extra = 50
-const BottomFloat = view({
-  height: 132 + extra,
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  paddingTop: 50 + extra,
-  pointerEvents: 'none',
-  '& > *': {
-    pointerEvents: 'auto',
-  },
-}).theme(({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.background} 50%)`,
-}))
-
 export const PeekBit = ({
   appConfig,
   model,
   selectionStore,
   peekStore,
   children,
-}: PeekPaneProps) => {
-  const bit = model as Bit
-  const bitPaneName = capitalize(bit.type)
+}: PeekPaneProps<Bit>) => {
+  const bitPaneName = capitalize(model.type)
   const BitPaneContent = PeekBitPanes[bitPaneName]
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {appConfig.subType}</div>
@@ -156,7 +138,7 @@ export const PeekBit = ({
                     <>
                       <ProvideHighlightsContextWithDefaults value={{ words: [searchTerm] }}>
                         <BitPaneContent
-                          bit={bit}
+                          bit={model}
                           peekStore={peekStore}
                           searchTerm={searchTerm}
                           content={content}

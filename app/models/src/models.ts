@@ -38,7 +38,7 @@ export type SearchQuery = {
   peopleFilters?: string[]
   locationFilters?: string[]
   take: number
-  skip: number
+  skip?: number
 }
 
 export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')

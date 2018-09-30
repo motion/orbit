@@ -5,7 +5,7 @@ export const getSearchQuery = ({
   query,
   sortBy,
   take,
-  skip,
+  skip = 0,
   startDate,
   endDate,
   integrationFilters,

@@ -9,8 +9,16 @@ import { command } from '@mcro/model-bridge'
 import { showConfirmDialog } from '../../../../../helpers/electron/showConfirmDialog'
 import { NICE_INTEGRATION_NAMES } from '../../../../../constants'
 import { Actions } from '../../../../../actions/Actions'
+import { view } from '@mcro/black'
+import { AppInfoStore } from '../../../../../stores/AppInfoStore'
+import { WhitelistManager } from '../stores/WhitelistManager'
 
-export class SettingManageRow extends React.Component<{ store: any; setting: Setting }> {
+@view.attach('appInfoStore')
+export class SettingManageRow extends React.Component<{
+  appInfoStore?: AppInfoStore
+  setting: Setting
+  whitelist: WhitelistManager<any>
+}> {
   handleRefresh = async () => {
     command(SettingForceSyncCommand, {
       settingId: this.props.setting.id,
@@ -18,26 +26,28 @@ export class SettingManageRow extends React.Component<{ store: any; setting: Set
   }
 
   removeIntegration = async () => {
-    const { store } = this.props
+    const { appInfoStore } = this.props
     if (
       showConfirmDialog({
         title: 'Remove integration?',
-        message: `Are you sure you want to remove ${NICE_INTEGRATION_NAMES[store.setting.id]}?`,
+        message: `Are you sure you want to remove ${
+          NICE_INTEGRATION_NAMES[appInfoStore.setting.id]
+        }?`,
       })
     ) {
-      console.log('removing', store.setting.id)
+      console.log('removing', appInfoStore.setting.id)
       command(SettingRemoveCommand, {
-        settingId: store.setting.id,
+        settingId: appInfoStore.setting.id,
       })
       Actions.clearPeek()
     }
   }
 
   render() {
-    const { store, setting } = this.props
+    const { setting, appInfoStore, whitelist } = this.props
     return (
-      <Row padding={[6, 15]}>
-        <ManageSmartSync whitelist={store.whitelist} />
+      <Row padding={[6, 15]} alignItems="center">
+        <ManageSmartSync whitelist={whitelist} />
         <View flex={1} />
         <SyncStatus settingId={setting.id}>
           {jobs => {
@@ -52,7 +62,7 @@ export class SettingManageRow extends React.Component<{ store: any; setting: Set
                   </>
                 )}
                 <Text size={0.9} fontWeight={400} alpha={0.6}>
-                  {(+store.bitsCount).toLocaleString()} total
+                  {(+(appInfoStore.bitsCount || 0)).toLocaleString()} total
                 </Text>
                 <TitleBarSpace />
                 <SegmentedRow>

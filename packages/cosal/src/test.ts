@@ -49,7 +49,7 @@ export async function topWordsTest() {
         .map(({ string, weight }) => `${string}-${`${weight}`.slice(2, 3)}`)
         .join(' '),
     )
-    console.log('top words', await cosal.getTopWords(text, 5))
+    console.log('top words', await cosal.getTopWords(text, { max: 5 }))
   }
 }
 

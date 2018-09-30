@@ -51,9 +51,10 @@ class AppTopicStore {
         args: {
           query: topic,
           locationFilters: [location],
+          integrationFilters: [this.props.setting.type],
           skip: 0,
           take: 20,
-          sortBy: 'Recent',
+          sortBy: 'Topic',
         },
       })
       console.log('loading...', res)

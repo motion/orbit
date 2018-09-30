@@ -173,7 +173,7 @@ export class OCRManager {
       // console.log('spellchecked string', words.join(' '))
 
       const wordsString = words.join(' ')
-      const salientWords = await this.cosal.getTopWords(wordsString, 5)
+      const salientWords = await this.cosal.getTopWords(wordsString, { max: 5 })
 
       this.hasResolvedOCR = true
       Desktop.setOcrState({

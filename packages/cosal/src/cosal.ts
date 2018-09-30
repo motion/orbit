@@ -24,6 +24,8 @@ type Result = {
   distance: number
 }
 
+type CosalWordOpts = { max?: number; sortByWeight?: boolean }
+
 export class Cosal {
   vectors: VectorDB = {}
   covariance: Covariance = null
@@ -126,8 +128,7 @@ export class Cosal {
 
   getWordWeights = async (
     text: string,
-    max?: number,
-    sortByWeight?: boolean,
+    { max, sortByWeight }: CosalWordOpts = {},
   ): Promise<Pair[] | null> => {
     const cosal = await toCosal(text, this.covariance)
     if (!cosal) {
@@ -159,8 +160,8 @@ export class Cosal {
     return pairs
   }
 
-  getTopWords = async (text: string, max?: number, sortByWeight?: boolean) => {
-    const words = await this.getWordWeights(text, max, sortByWeight)
+  getTopWords = async (text: string, { max, sortByWeight }: CosalWordOpts = {}) => {
+    const words = await this.getWordWeights(text, { max, sortByWeight })
     if (!words) {
       return []
     }

@@ -112,22 +112,22 @@ export class AppTopicExplorer extends React.Component<Props & { store?: AppTopic
             </View>
           )}
 
-          {(store.currentItems || []).map(item => (
-            <OrbitListItem
-              key={item.id}
-              model={item}
-              margin={0}
-              padding={15}
-              isExpanded
-              theme={{
-                backgroundHover: 'transparent',
-              }}
-            >
-              {({ content }) => content}
-            </OrbitListItem>
-          ))}
-
-          <Col flex={1} alignItems="center" justifyContent="center" />
+          <View overflowY="auto" flex={1}>
+            {(store.currentItems || []).map(item => (
+              <OrbitListItem
+                key={item.id}
+                model={item}
+                margin={0}
+                padding={15}
+                isExpanded
+                theme={{
+                  backgroundHover: 'transparent',
+                }}
+              >
+                {({ content }) => content}
+              </OrbitListItem>
+            ))}
+          </View>
         </Col>
       </Row>
     )

@@ -13,7 +13,7 @@ Let's start with the mission:
 
 > To take back the web as we know it now by giving end-users decentralized control over their data and interface for that data.
 
-To achieve that, we describe Orbit as:
+To achieve that, I like to describe Orbit's goal as to become a popular Operating System:
 
 > An upgrade for your Operating System that integrates all your interesting information into a searchable, explorable, extensible, and (most importantly) beautiful and smart platform.
 

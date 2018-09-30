@@ -7,21 +7,35 @@ It's about time! I'm really excited to start talking about Orbit. It's certainly
 
 I'll start with the most exciting part. We have [our first alpha build]() ready to download. Give it a try. While some of the most interesting parts are barely working, we have pushed hard to get it to where everything we want to do over the next year is roughly in place, auto updates, and looks and feels close to what we want.
 
-So, what is Orbit?
-
 Let's start with the mission:
 
-> To take back the web as we know it now by giving end-users decentralized control over their data and interface for that data.
+> To create a new [aggregation platform]() to shift the balance of power in computing to the user -- with private, decentralized control over all your data and apps.
 
-To achieve that, I like to describe Orbit's goal as to become a popular Operating System:
+And Orbit the product:
 
-> An upgrade for your Operating System that integrates all your interesting information into a searchable, explorable, extensible, and (most importantly) beautiful and smart platform.
+> Orbit is a Smart OS that exists above your existing Operating System with powerful new abilities. It unifies data and makes it useful in context. It exposes it's powerful new technology to users with it's decentralized app store.
 
-I like to think of it a merger of the worlds of _Browser_ and _Operating System_. We used to exclusively edit _Files_, now we work mostly in the _Cloud_.
+Or, in video form:
 
-Where browsers don't deliver on their promise is where operating systems get it right: Fast, unified, searchable, extensible, and privacy-controlled. In the cloud your data is siloed, remote, uncontrolled, slower, and distributed across N incoherent interfaces.
+[video]
 
-We want you to have a beautiful experience for managing all your knowledge in one place, letting you extend and control it. Orbit is re-thinking the Operating System in the world of today: where a "Bit" of information replaces yesterdays "File" (Get it? Or*bit*).
+While this may seem like an overly broad play, I can confidently lay out why each piece is not just necessary, but how they all together are the minimum viable set required to make something "revolutionary".
+
+In low-level features you have:
+
+- Your OS now syncs the cloud to local "files" (we call them Bits, get it?)
+- Search is then powered by fast and relavant on-device NLP
+- A novel state of the art custom OCR engine then runs low-power realtime contextual search that works with everything you do!
+
+But those are just the building blocks. Orbit has been designed from the start to be an "augmented operating system". We realized early on that having rich access to highlighting and displaying contextual information to everything you do is an amazing place for a platform, if you can get the interface right. And I think we are close to that!
+
+- You can build custom integrations in _two_ important ways:
+  - To sync in data from a new source
+  - To build custom apps that leverage context, NLP and a powerful view system with no infrastructure or build system!
+
+I like to think of it a merger of the worlds of _Browser_ and _Operating System_. We used to exclusively edit _Files_, now we work mostly in the _Cloud_. Where browsers give us so much more information, they don't The Promise in some ways where OSes get it right: Fast, unified, searchable, extensible, and privacy-controlled. In the cloud your data is siloed, remote, uncontrolled, slower, and distributed across N incoherent interfaces.
+
+We want you to have a beautiful experience for managing all your knowledge in one place, letting you extend and control it.
 
 #### How we got here
 

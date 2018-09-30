@@ -3,9 +3,9 @@ title: Update One
 date: '2018-09-29T22:12:03.284Z'
 ---
 
-It's about time! I'm really excited to start talking about Orbit. It's certainly been an intense few years building of development but I it's reached the point now where it presents a pretty solution to a number of important problems.
+It's about time! I'm really excited to start talking about Orbit. It's certainly been an intense few years of development, and it feels really great to reach the point where I can start to speak more about it.
 
-I'm also very proud to say we have [our first alpha build]() for download. While it's missing some of the most interesting parts, we've pushed hard to get it to where it can plausibly improve your life today.
+I'll start with the most exciting part. We have [our first alpha build]() ready to download. Give it a try. While some of the most interesting parts are barely working, we have pushed hard to get it to where everything we want to do over the next year is roughly in place, auto updates, and looks and feels close to what we want.
 
 So, what is Orbit?
 
@@ -29,10 +29,10 @@ About two years ago we pivoted. We had wasted too much time chasing problems tha
 
 So in the proceeding months we hypothesized, interviewed, debated, prototyped, and eventually landed on the following problems:
 
-1. Knowledge and information is increasingly siloed and out of our control.
-2. As we rely more and more on cloud-based services, our ability to interpret, explore, search and extend information in any unified way has disappeared.
-3. Intranet systems and Wiki's are almost by definition chronically out of date.
-4. Internal app development in general is a pain in the ass: from environemtn, to build, libraries, UI kit, making it interactive, frontend is a huge pain. And that doesn't include infrastructure: spinning up servers, managing keys, pushing updates... it's all painful.
+1. Day-to-day information is getting more noisy, disparate, and hard to explore/find.
+2. Intranet systems and Wiki's go stale / require too much upkeep to stay relevant.
+3. It's hard to understand who is good at what within companies.
+4. Internal apps are a pain: from build to deploying to maintenace.
 
 #### How we save the internet
 

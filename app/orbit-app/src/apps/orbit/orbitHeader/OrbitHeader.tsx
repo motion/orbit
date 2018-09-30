@@ -37,7 +37,7 @@ const OrbitFakeInput = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  transition: 'background ease-in 300ms',
+  transition: 'background ease-in 200ms 200ms',
   borderRadius: 10,
 }).theme(({ theme }) => ({
   background: theme.inputBackground || theme.background.alpha(0.35),
@@ -63,7 +63,7 @@ const OrbitClose = view({
   const isDark = theme.background.isDark()
   return {
     '& > div': {
-      background: isDark ? [120, 120, 120, 0.5] : [230, 230, 230],
+      background: isDark ? [120, 120, 120, 0.25] : [230, 230, 230, 0.25],
     },
     '&:hover > div': {
       background: isDark ? '#fff' : '#000',

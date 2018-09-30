@@ -7,7 +7,7 @@ export const OrbitSection = ({ title, children, ...props }) => {
   return (
     <>
       <Row {...props}>
-        <SubTitle margin={0} padding={0} fontWeight={500} fontSize={13}>
+        <SubTitle margin={0} padding={[2, 0, 0]} fontWeight={500} fontSize={12}>
           {title}
         </SubTitle>
         <Col flex={1} />

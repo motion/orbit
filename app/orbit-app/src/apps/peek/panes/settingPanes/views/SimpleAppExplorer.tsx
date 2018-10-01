@@ -7,12 +7,20 @@ import { AppTopicExplorer } from './AppTopicExplorer'
 import { TitleBarButton } from '../../../views/TitleBarButton'
 import { NICE_INTEGRATION_NAMES } from '../../../../../constants'
 import { PeekHeader } from '../../../views/PeekHeader'
-import { SegmentedRow } from '@mcro/ui'
+import { SegmentedRow, View } from '@mcro/ui'
 
 type Props = {
   appViewStore?: AppViewStore
   setting: Setting
   settingsPane: React.ReactNode
+}
+
+const AppRelationsExplorer = () => {
+  return (
+    <View flex={1} alignItems="center" justifyContent="center">
+      Under Construction [hardhat.gif]
+    </View>
+  )
 }
 
 export class AppViewStore {
@@ -76,7 +84,9 @@ export class SimpleAppExplorer extends React.Component<Props> {
           <HideablePane invisible={appViewStore.active !== 'topics'}>
             <AppTopicExplorer setting={setting} />
           </HideablePane>
-          <HideablePane invisible={appViewStore.active !== 'related'}>{settingsPane}</HideablePane>
+          <HideablePane invisible={appViewStore.active !== 'related'}>
+            <AppRelationsExplorer setting={setting} />
+          </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'settings'}>{settingsPane}</HideablePane>
         </PeekContent>
       </>

@@ -11,8 +11,9 @@ import { App } from '@mcro/stores'
 import { Grid } from '../../../views/Grid'
 import { OrbitCard } from '../../../views/OrbitCard'
 import { View } from '@mcro/ui'
+import { getTopics } from '../../../loaders/search'
 
-type Props = PeekPaneProps & {
+type Props = PeekPaneProps<PersonBit> & {
   appsStore: AppsStore
 }
 
@@ -24,8 +25,25 @@ class PeekPersonStore {
   }
 
   recentBits = []
+  interestedIn = []
 
   async didMount() {
+    this.loadRecentBits()
+    this.loadInterestedIn()
+  }
+
+  async loadInterestedIn() {
+    this.interestedIn = await getTopics({
+      query: {
+        query: '',
+        take: 500,
+        // peopleFilters: [this.person.name],
+      },
+      count: 15,
+    })
+  }
+
+  async loadRecentBits() {
     this.recentBits = await loadMany(BitModel, {
       args: {
         where: {
@@ -119,7 +137,7 @@ const Info = view({
   display: 'block',
   position: 'absolute',
   top: 30,
-  left: 140,
+  left: 170,
 })
 
 const Name = view({
@@ -142,7 +160,7 @@ const Email = view('a', {
 const Avatar = view('img', {
   position: 'absolute',
   top: 0,
-  right: 0,
+  left: 0,
   margin: [-30, 0, 0, -45],
   width: 200,
   height: 200,
@@ -156,7 +174,7 @@ const Section = view({
 const Links = view({
   position: 'relative',
   top: 25,
-  left: 90,
+  left: 0,
   flexFlow: 'row',
 })
 
@@ -233,53 +251,17 @@ export class PeekPerson extends React.Component<Props & { store: PeekPersonStore
           <Content>
             <ContentInner>
               <Section>
-                <StrongSubTitle>Interested in</StrongSubTitle>
+                <StrongSubTitle>Unique Topics</StrongSubTitle>
                 <View padding={[10, 15, 0]}>
                   <Grid columnWidth={120} height={50}>
-                    {[
-                      {
-                        id: 0,
-                        title: 'cosal',
-                        icon: 'slack',
-                      },
-                      {
-                        id: 0,
-                        title: 'cosal',
-                        icon: 'slack',
-                      },
-                      {
-                        id: 0,
-                        title: 'cosal',
-                        icon: 'slack',
-                      },
-                      {
-                        id: 0,
-                        title: 'cosal',
-                        icon: 'slack',
-                      },
-                      {
-                        id: 0,
-                        title: 'cosal',
-                        icon: 'slack',
-                      },
-                      {
-                        id: 0,
-                        title: 'cosal',
-                        icon: 'slack',
-                      },
-                      {
-                        id: 0,
-                        title: 'cosal',
-                        icon: 'slack',
-                      },
-                    ].map((item, index) => (
+                    {store.interestedIn.map((item, index) => (
                       <OrbitCard
                         titleProps={{ fontSize: 20, fontWeight: 300 }}
-                        key={item.id}
+                        key={item}
                         index={index}
                         inGrid
                         borderRadius={4}
-                        {...item}
+                        title={item}
                       />
                     ))}
                   </Grid>

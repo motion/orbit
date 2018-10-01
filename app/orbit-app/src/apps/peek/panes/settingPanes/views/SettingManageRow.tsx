@@ -26,18 +26,16 @@ export class SettingManageRow extends React.Component<{
   }
 
   removeIntegration = async () => {
-    const { appInfoStore } = this.props
     if (
       showConfirmDialog({
         title: 'Remove integration?',
         message: `Are you sure you want to remove ${
-          NICE_INTEGRATION_NAMES[appInfoStore.setting.id]
+          NICE_INTEGRATION_NAMES[this.props.setting.id]
         }?`,
       })
     ) {
-      console.log('removing', appInfoStore.setting.id)
       command(SettingRemoveCommand, {
-        settingId: appInfoStore.setting.id,
+        settingId: this.props.setting.id,
       })
       Actions.clearPeek()
     }

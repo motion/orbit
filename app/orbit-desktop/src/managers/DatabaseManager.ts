@@ -1,5 +1,5 @@
 import sqlite from 'sqlite'
-import { DATABASE_PATH } from '../constants'
+import { DATABASE_PATH, COSAL_DB } from '../constants'
 import { Logger } from '@mcro/logger'
 import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
@@ -84,6 +84,7 @@ export class DatabaseManager {
   private watchForReset() {
     const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
       log.info(`Removing all data from database at: ${DATABASE_PATH}`)
+      await remove(COSAL_DB)
       await remove(DATABASE_PATH)
       Desktop.sendMessage(
         App,

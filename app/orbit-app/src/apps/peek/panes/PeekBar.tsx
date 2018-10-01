@@ -15,11 +15,11 @@ export const PeekBar = view({
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
-  boxShadow: [[0, 0, 18, [0, 0, 0, 0.07]]],
+  // boxShadow: [[0, 0, 18, [0, 0, 0, 0.07]]],
   // backdropFilter: 'blur(10px)',
 }).theme(({ theme }) => ({
   background: theme.background.alpha(0.98),
-  border: [1, theme.borderColor],
+  border: [1, theme.borderColor.alpha(0.5)],
 }))
 
 PeekBar.Space = view({

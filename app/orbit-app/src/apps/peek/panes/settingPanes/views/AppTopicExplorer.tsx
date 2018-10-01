@@ -47,6 +47,7 @@ class AppTopicStore {
     async ([location, topic], { setValue }) => {
       setValue(null)
       ensure('active topic', !!this.activeTopic)
+      console.log('querying for', topic)
       const res = await loadMany(SearchResultModel, {
         args: {
           query: topic,

@@ -140,7 +140,7 @@ export class Cosal {
       if (pairs.length > max) {
         // sort by weight
         const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase())
-        uniqSorted.sort((a, b) => (a.weight > b.weight ? -1 : 1))
+        uniqSorted.sort((a, b) => (a.weight > b.weight ? 1 : -1))
 
         // just return top by weight
         if (sortByWeight) {

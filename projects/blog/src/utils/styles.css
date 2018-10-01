@@ -5,3 +5,7 @@ body {
 blockquote {
   line-height: 2rem;
 }
+
+li {
+  margin-bottom: 0.35rem;
+}

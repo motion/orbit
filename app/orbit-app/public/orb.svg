@@ -1,31 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="131px" height="132px" viewBox="0 0 131 132" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
-    <title>Oval 4</title>
+    <title>orb</title>
     <desc>Created with Sketch.</desc>
     <defs>
-        <linearGradient x1="23.3528591%" y1="9.96785724%" x2="50%" y2="63.2500342%" id="linearGradient-1">
-            <stop stop-color="#793BB0" offset="0%"></stop>
-            <stop stop-color="#B27EE0" offset="100%"></stop>
-        </linearGradient>
-        <linearGradient x1="27.7357008%" y1="94.3097103%" x2="34.6275359%" y2="54.0919065%" id="linearGradient-2">
-            <stop stop-color="#6BFF45" offset="0%"></stop>
-            <stop stop-color="#04FF9F" offset="0%"></stop>
-            <stop stop-color="#03FF9F" stop-opacity="0.798034525" offset="100%"></stop>
-            <stop stop-color="#00FFA2" stop-opacity="0" offset="100%"></stop>
-        </linearGradient>
-        <linearGradient x1="100%" y1="50%" x2="50%" y2="50%" id="linearGradient-3">
+        <linearGradient x1="100%" y1="50%" x2="50%" y2="50%" id="linearGradient-1">
             <stop stop-color="#FF00C0" offset="0%"></stop>
             <stop stop-color="#FF002B" stop-opacity="0.457008542" offset="100%"></stop>
             <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
         </linearGradient>
-        <path d="M65.4500541,131.68 C29.3335272,131.68 0.0552973504,102.40177 0.0552973504,66.2852433 C0.0552973504,30.1687164 29.3335272,0.890486537 65.4500541,0.890486537 C101.566581,0.890486537 130.844811,30.1687164 130.844811,66.2852433 C130.844811,102.40177 101.566581,131.68 65.4500541,131.68 Z M65.4500541,114.473901 C92.0639149,114.473901 113.638712,92.899104 113.638712,66.2852433 C113.638712,39.6713825 92.0639149,18.0965856 65.4500541,18.0965856 C38.8361933,18.0965856 17.2613964,39.6713825 17.2613964,66.2852433 C17.2613964,92.899104 38.8361933,114.473901 65.4500541,114.473901 Z" id="path-4"></path>
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Oval-4">
-            <use fill="url(#linearGradient-1)" xlink:href="#path-4"></use>
-            <use fill-opacity="0.800000012" fill="url(#linearGradient-2)" xlink:href="#path-4"></use>
-            <use fill="url(#linearGradient-3)" xlink:href="#path-4"></use>
+        <g id="orb" fill-rule="nonzero" fill="#FFFFFF">
+            <g id="path-4-link">
+                <path d="M65.4500541,131.68 C29.3335272,131.68 0.0552973504,102.40177 0.0552973504,66.2852433 C0.0552973504,30.1687164 29.3335272,0.890486537 65.4500541,0.890486537 C101.566581,0.890486537 130.844811,30.1687164 130.844811,66.2852433 C130.844811,102.40177 101.566581,131.68 65.4500541,131.68 Z M65.4500541,114.473901 C92.0639149,114.473901 113.638712,92.899104 113.638712,66.2852433 C113.638712,39.6713825 92.0639149,18.0965856 65.4500541,18.0965856 C38.8361933,18.0965856 17.2613964,39.6713825 17.2613964,66.2852433 C17.2613964,92.899104 38.8361933,114.473901 65.4500541,114.473901 Z" id="path-4"></path>
+            </g>
         </g>
     </g>
 </svg>

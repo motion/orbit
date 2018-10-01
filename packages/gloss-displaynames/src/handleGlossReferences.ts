@@ -2,25 +2,40 @@
 import nodePath from 'path'
 import { looksLike } from './looksLike'
 
-function handleGlossReferences(references, file, babel) {
+function handleGlossReferences(parentNode, references, file, babel) {
   const { types: t, template } = babel
   const buildBuiltInWithConfig = template(`
-    GLOSS(ARGUMENTS).withConfig({displayName: DISPLAY_NAME})
+    IDENTIFIER.withConfig({displayName: "DISPLAY_NAME"})
   `)
 
   references.forEach(reference => {
     const displayName = getDisplayName(reference)
-    // console.log('displayName', displayName)
     handleComponent(reference, displayName)
   })
 
   function handleComponent(path, displayName) {
-    const isBuiltIn = looksLike(path, {
+    const isViewed = looksLike(path, {
       parent: {
         callee: {
           name: 'view',
         },
       },
+    })
+
+    if (!isViewed) {
+      return
+    }
+
+    let topPath = path
+    while (topPath) {
+      if (topPath.parentPath.parentPath.type === 'VariableDeclarator') {
+        break
+      } else {
+        topPath = topPath.parentPath
+      }
+    }
+
+    const isAssigned = looksLike(topPath, {
       parentPath: {
         type: 'CallExpression',
         parentPath: {
@@ -28,16 +43,29 @@ function handleGlossReferences(references, file, babel) {
         },
       },
     })
-    if (!isBuiltIn) {
+
+    if (!isAssigned) {
       return
     }
-    path.parentPath.replaceWith(
+
+    if (displayName === 'Circle') {
+      console.log(path)
+    }
+
+    parentNode.body.push(
       buildBuiltInWithConfig({
-        GLOSS: path.node,
-        ARGUMENTS: path.parent.arguments,
-        DISPLAY_NAME: t.stringLiteral(displayName),
+        IDENTIFIER: displayName,
+        DISPLAY_NAME: displayName,
       }),
     )
+
+    // topPath.replaceWith(
+    //   buildBuiltInWithConfig({
+    //     GLOSS: path.node,
+    //     ARGUMENTS: path.parent.arguments,
+    //     DISPLAY_NAME: t.stringLiteral(displayName),
+    //   }),
+    // )
   }
 
   // credit: https://github.com/styled-components/babel-plugin-styled-components/blob/37a13e9c21c52148ce6e403100df54c0b1561a88/src/visitors/displayNameAndId.js

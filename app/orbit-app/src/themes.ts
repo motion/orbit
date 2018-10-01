@@ -122,14 +122,6 @@ const light = {
   }),
 }
 
-const clearLight = {
-  _equalityKey: 'clearlight',
-  ...light,
-  ...Theme.fromStyles({
-    color: '#fff',
-  }),
-}
-
 const dark = {
   _equalityKey: 'dark',
   ...macModernTheme,
@@ -151,10 +143,20 @@ const dark = {
   colorActive: '#fff',
 }
 
+const clearLight = {
+  _equalityKey: 'clearlight',
+  ...light,
+  ...Theme.fromStyles({
+    color: '#fff',
+    background: 'rgba(255,255,255,0)',
+  }),
+}
+
 const clearDark = {
   _equalityKey: 'clearDark',
   ...dark,
-  cardBackground: [0, 0, 0, 0.65],
+  cardHoverGlow: [0, 0, 0, 2, [255, 255, 255, 0.15]],
+  cardBackground: [65, 65, 65, 0.7],
 }
 
 export const themes = {

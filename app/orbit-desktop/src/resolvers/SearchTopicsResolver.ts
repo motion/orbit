@@ -13,7 +13,7 @@ export const getSearchTopicsResolver = (cosal: Cosal) => {
     const searchQuery = getSearchQuery(query)
     const results = await getRepository(BitEntity).find(searchQuery)
     const resultBodies = results.map(bit => `${bit.title} ${bit.body}`).join(' ')
-    const topics = await cosal.getTopWords(resultBodies, count, true)
+    const topics = await cosal.getTopWords(resultBodies, { max: count, sortByWeight: true })
     log.info(`Sending ${topics.length} topics back from ${results.length} bits`)
     return topics
   })

@@ -57,7 +57,7 @@ export class GithubSetting extends React.Component<Props & { store: GithubSettin
         setting={setting}
         settingsPane={
           <>
-            <SettingManageRow store={store} setting={setting} />
+            <SettingManageRow setting={setting} whitelist={store.whitelist} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}

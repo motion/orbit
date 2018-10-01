@@ -4,10 +4,15 @@ import { observeCount, observeOne } from '@mcro/model-bridge'
 export type AppInfoProps = {
   settingId?: number
   model?: Setting
+  setting?: Setting
 }
 
 export class AppInfoStore {
   props: AppInfoProps
+
+  get settingId() {
+    return +(this.props.model || this.props.setting || { id: null }).id || this.props.settingId
+  }
 
   bitsCount = 0
   private bitsCounts$ = observeCount(BitModel, {
@@ -18,7 +23,7 @@ export class AppInfoStore {
     this.bitsCount = value
   })
 
-  setting = null
+  setting: Setting = null
   private setting$ = observeOne(SettingModel, {
     args: {
       where: {
@@ -38,10 +43,6 @@ export class AppInfoStore {
   }).subscribe(value => {
     this.job = value
   })
-
-  get settingId() {
-    return +this.props.model.id
-  }
 
   willUnmount() {
     this.bitsCounts$.unsubscribe()

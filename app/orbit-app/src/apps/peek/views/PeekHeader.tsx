@@ -5,9 +5,8 @@ import * as UI from '@mcro/ui'
 import { WindowControls } from '../../../views/WindowControls'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
-import { TitleBar } from './TitleBar'
 import { CSSPropertySet } from '@mcro/gloss'
-import { Glint, View, Row } from '@mcro/ui'
+import { Glint, Row, Text, View } from '@mcro/ui'
 
 type Props = {
   peekStore?: PeekStore
@@ -24,6 +23,7 @@ const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
+  padding: [0, 8],
 }).theme(({ invisible, position, theme, focused }) => {
   if (invisible) {
     return null
@@ -63,15 +63,23 @@ const Centered = view({
 
 const MainHead = view({
   flexFlow: 'row',
+  alignItems: 'center',
   position: 'relative',
   flex: 1,
-  height: 35,
+  height: 33,
 })
 
 const HeaderSection = view(Row, {
   alignItems: 'center',
-  padding: 8,
+  height: '100%',
+  position: 'relative',
 })
+
+const TitleBarText = props => (
+  <div style={{ position: 'absolute', top: 0, left: 10, right: 10, bottom: 0 }}>
+    <Text size={1} fontWeight={400} ellipse={1} margin={0} lineHeight="1.5rem" {...props} />
+  </div>
+)
 
 @attachTheme
 @view
@@ -91,29 +99,18 @@ export class PeekHeaderContent extends React.Component<Props> {
       >
         <Glint borderRadius={7.5} opacity={0.65} top={0.5} />
         <MainHead>
-          <TitleBar
-            height="100%"
-            before={
-              <>
-                <UI.Row
-                  flexFlow="row"
-                  padding={hideTitleBar ? 0 : [0, 0, 0, 8]}
-                  height="100%"
-                  alignItems="center"
-                >
-                  <WindowControls
-                    onClose={peekStore.handleClose}
-                    onMax={peekStore.isTorn ? peekStore.handleMaximize : null}
-                    onMin={peekStore.isTorn ? peekStore.handleMinimize : null}
-                  />
-                  <HeaderSection>{before}</HeaderSection>
-                </UI.Row>
-              </>
-            }
+          <WindowControls
+            onClose={peekStore.handleClose}
+            onMax={peekStore.isTorn ? peekStore.handleMaximize : null}
+            onMin={peekStore.isTorn ? peekStore.handleMinimize : null}
           />
-          <Centered>{children}</Centered>
-          <View flex={1} />
-          <HeaderSection>{after}</HeaderSection>
+          {!!before && (
+            <HeaderSection flex={1}>
+              {typeof before === 'string' ? <TitleBarText>{before}</TitleBarText> : before}
+            </HeaderSection>
+          )}
+          {!!children && <Centered>{children}</Centered>}
+          {!!after && <HeaderSection>{after}</HeaderSection>}
         </MainHead>
       </PeekHeaderContain>
     )

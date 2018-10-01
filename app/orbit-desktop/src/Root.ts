@@ -44,7 +44,7 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { KeyboardStore } from './stores/KeyboardStore'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
-import { getSearchResolver } from './resolvers/SearchResolver'
+import { getSearchResolver } from './resolvers/SearchResultResolver'
 import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 

@@ -6,8 +6,7 @@ import { capitalize } from 'lodash'
 import { App } from '@mcro/stores'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
-// import { PeekRelated } from '../views/PeekRelated'
-import { View, SegmentedRow, Searchable, SearchableProps } from '@mcro/ui'
+import { View, SegmentedRow, Searchable } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
 import { Bit } from '@mcro/models'
 import { DateFormat } from '../../../views/DateFormat'
@@ -18,29 +17,9 @@ import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/
 import { ItemResolverDecorationContext } from '../../../helpers/contexts/ItemResolverDecorationContext'
 import { VerticalSpace } from '../../../views'
 
-const SearchablePeek = ({ children, ...props }: SearchableProps) => (
-  <Searchable {...props}>{searchableProps => children(searchableProps)}</Searchable>
-)
-
 const Cmd = view({
   opacity: 0.6,
 })
-
-const extra = 50
-const BottomFloat = view({
-  height: 132 + extra,
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  paddingTop: 50 + extra,
-  pointerEvents: 'none',
-  '& > *': {
-    pointerEvents: 'auto',
-  },
-}).theme(({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.background} 50%)`,
-}))
 
 export const PeekBit = ({
   appConfig,
@@ -48,9 +27,8 @@ export const PeekBit = ({
   selectionStore,
   peekStore,
   children,
-}: PeekPaneProps) => {
-  const bit = model as Bit
-  const bitPaneName = capitalize(bit.type)
+}: PeekPaneProps<Bit>) => {
+  const bitPaneName = capitalize(model.type)
   const BitPaneContent = PeekBitPanes[bitPaneName]
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {appConfig.subType}</div>
@@ -80,50 +58,50 @@ export const PeekBit = ({
           comments,
         }) => {
           return (
-            <SearchablePeek
+            <Searchable
               key={appConfig.id}
               defaultValue={App.state.query}
               // focusOnMount
+              // onEnter={peekStore.goToNextHighlight}
               onChange={() => selectionStore.setHighlightIndex(0)}
-              onEnter={peekStore.goToNextHighlight}
               width={200}
               searchBarProps={{
                 flex: 1,
                 // 1px more for inset shadow
                 padding: [5, 10, 4, 0],
               }}
-              before={<View flex={1} />}
-              after={
-                <>
-                  <TitleBarSpace />
-                  {!!icon && (
-                    <SegmentedRow>
-                      <TitleBarButton
-                        onClick={() => {
-                          Actions.open(locationLink)
-                          Actions.closeOrbit()
-                        }}
-                        icon={<OrbitIcon icon={icon} size={16} />}
-                        tooltip={location}
-                      />
-                      <TitleBarButton
-                        onClick={() => {
-                          Actions.open(desktopLink || webLink)
-                          Actions.closeOrbit()
-                        }}
-                        tooltip="Open"
-                        icon="arrowshare91"
-                      />
-                    </SegmentedRow>
-                  )}
-                </>
-              }
             >
               {({ searchBar, searchTerm }) => {
                 return children({
-                  title,
-                  icon,
-                  belowHeadMain: searchBar,
+                  headerProps: {
+                    before: title,
+                    after: (
+                      <>
+                        {searchBar}
+                        <TitleBarSpace />
+                        {!!icon && (
+                          <SegmentedRow>
+                            <TitleBarButton
+                              onClick={() => {
+                                Actions.open(locationLink)
+                                Actions.closeOrbit()
+                              }}
+                              icon={<OrbitIcon icon={icon} size={16} />}
+                              tooltip={location}
+                            />
+                            <TitleBarButton
+                              onClick={() => {
+                                Actions.open(desktopLink || webLink)
+                                Actions.closeOrbit()
+                              }}
+                              tooltip="Open"
+                              icon="arrowshare91"
+                            />
+                          </SegmentedRow>
+                        )}
+                      </>
+                    ),
+                  },
                   postBody: (
                     <PeekBar>
                       <PeekBar.Button
@@ -156,7 +134,7 @@ export const PeekBit = ({
                     <>
                       <ProvideHighlightsContextWithDefaults value={{ words: [searchTerm] }}>
                         <BitPaneContent
-                          bit={bit}
+                          bit={model}
                           peekStore={peekStore}
                           searchTerm={searchTerm}
                           content={content}
@@ -169,7 +147,7 @@ export const PeekBit = ({
                   ),
                 })
               }}
-            </SearchablePeek>
+            </Searchable>
           )
         }}
       </PeekItemResolver>

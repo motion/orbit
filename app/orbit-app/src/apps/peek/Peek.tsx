@@ -62,10 +62,10 @@ class PeekPageInner extends React.Component<Props> {
   }
 
   renderResolvedContent = (resolvedProps: PeekContents) => {
-    const { preBody, postBody, content, headerProps, ...restResolvedProps } = resolvedProps
+    const { preBody, postBody, content, headerProps } = resolvedProps
     return (
       <>
-        <PeekHeader {...restResolvedProps} {...headerProps} />
+        <PeekHeader {...headerProps} />
         {preBody}
         <PeekContent peekStore={this.props.peekStore}>{content}</PeekContent>
         {postBody}

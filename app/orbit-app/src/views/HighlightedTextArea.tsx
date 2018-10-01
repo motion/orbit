@@ -24,6 +24,9 @@ const Block = view(UI.Block, {
     color: theme.color.lighten(0.1),
     background: theme.background.darken(0.1),
   },
+  '&::placeholder': {
+    color: theme.color.alpha(0.5),
+  },
 }))
 
 type Color = string

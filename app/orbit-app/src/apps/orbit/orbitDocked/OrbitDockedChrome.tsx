@@ -56,11 +56,11 @@ const Background = view({
   bottom: 0,
   zIndex: -1,
   borderRadius: BORDER_RADIUS,
-  transition: 'all ease 250ms',
+  transition: 'all ease 500ms',
 }).theme(({ theme, isTransparent, moreOpaque }) => {
   const isDark = theme.background.isDark()
   const darkBg = isTransparent ? (moreOpaque ? [30, 30, 30, 0.7] : [0, 0, 0, 0.3]) : [40, 40, 40]
-  const lightBg = isTransparent ? [155, 155, 155, moreOpaque ? 0.9 : 0.55] : [255, 255, 255]
+  const lightBg = isTransparent ? [110, 110, 110, moreOpaque ? 0.8 : 0.65] : [255, 255, 255]
   return {
     background: isDark ? darkBg : lightBg,
   }

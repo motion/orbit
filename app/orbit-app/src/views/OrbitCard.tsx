@@ -116,7 +116,7 @@ const Preview = view({
 
 const CardSubtitle = view(UI.View, {
   height: 20,
-  padding: [0, 0, 3, 0],
+  padding: [0, 0, 2, 0],
   flexFlow: 'row',
   alignItems: 'center',
   listItem: {
@@ -182,7 +182,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     const hasDate = !!updatedAt
     const hasPeople = !!people && !!people.length
     const hasFourRows =
-      (hasSubtitle && hasPeople) ||
+      ((hasSubtitle || hasMeta) && hasPeople) ||
       ((hasSubtitle || hasPeople) && titleProps && titleProps.ellipse !== true)
     let topPad = 10
     let sidePad = 10

@@ -142,7 +142,7 @@ export function createViewFactory(toCSS) {
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = Object.keys(propStyles).length
     const isDOM = typeof tagName === 'string'
-    let displayName = 'ComponentName'
+    let displayName = 'View'
     let ThemedConstructor
     let cachedTheme
 

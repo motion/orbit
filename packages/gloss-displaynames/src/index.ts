@@ -1,12 +1,21 @@
 import handleGlossReferences from './handleGlossReferences'
 
-export default function(babel) {
+export default function glossViewDisplayNames(babel) {
+  console.log('START')
   // const { types: t } = babel
   const references = new Set()
+  const referencePaths = {}
   return {
     name: '@mcro/gloss-displaynames',
     visitor: {
       ImportDeclaration(path) {
+        const fileName = path.hub.file.opts.filename
+        // why does babel try and process every file so many times?
+        if (references.has(fileName)) {
+          return
+        }
+        references.add(fileName)
+
         const importSpecifier = path.get('specifiers')[0]
         if (path.node.source.value !== '@mcro/black') {
           return
@@ -19,15 +28,14 @@ export default function(babel) {
         if (name != 'view') {
           return
         }
-        const { referencePaths } = path.scope.getBinding(name)
-        referencePaths.forEach(reference => {
-          references.add(reference)
-        })
+
+        referencePaths[fileName] = path.scope.getBinding(name).referencePaths
       },
       Program: {
-        exit(_, { file }) {
-          // console.log('Array.from(references)', Array.from(references))
-          handleGlossReferences(Array.from(references), file, babel)
+        exit({ node }, { file }) {
+          if (referencePaths[file.opts.filename]) {
+            handleGlossReferences(node, referencePaths[file.opts.filename], file, babel)
+          }
         },
       },
     },

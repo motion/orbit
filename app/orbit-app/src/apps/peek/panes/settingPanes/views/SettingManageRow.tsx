@@ -30,7 +30,7 @@ export class SettingManageRow extends React.Component<{
       showConfirmDialog({
         title: 'Remove integration?',
         message: `Are you sure you want to remove ${
-          NICE_INTEGRATION_NAMES[this.props.setting.id]
+          NICE_INTEGRATION_NAMES[this.props.setting.type]
         }?`,
       })
     ) {

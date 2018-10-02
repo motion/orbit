@@ -44,7 +44,7 @@ I want to live in a world where:
 - You can explore, correlate, build, script and extend it.
 - You can do all of this without having to expose your data to any external company.
 
-Before explaining in any more depth, here is Orbit today:
+That's a tall order and Orbit doesn't do all of this yet. Here is what it does do today:
 
 [video]
 

@@ -57,7 +57,7 @@ I think this solves what would have been a near-impossible distribution story fo
 
 I'd like to revisit Orbit at a slightly higher level, to finish explaining our plan.
 
-## How Orbit works
+### Orbit, In Detail
 
 #### The Bit
 
@@ -67,7 +67,7 @@ The fundamental unit of information. Where SaaS products have their data behind 
 
 The Orbit Home is essentially its Start Menu / Spotlight / Siri. It's your Minority Report interface, powered by bits of information. Right now it shows recent activity, a Directory of people, and your Search bar.
 
-> Option + Space opens Orbit from anywhere in your OS
+> Use Option+Space to open Orbit Home
 
 #### Language
 
@@ -91,22 +91,22 @@ I wanted to mention it now, though, becuase it's relevant to this next section.
 
 Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We plan to add some more flexible ones as well soon including generic Web and API apps.
 
-But Apps can be so much more powerful. More powerful than I think we can ever predict, especially given the incredible stochasticity of information.
+But Apps can be much more powerful and diverse than I think we can ever predict, especially given the incredible stochasticity of information and it's needs. So while I don't think we can build one solution for everyone, I do think we can provide a powerful set of APIs that enable building those experiences.
 
-So we are focusing on just putting the right building blocks in place, and then opening up an App Store to everyone. The blocks will include the Language and Context engines, as well as our extremely mature UI kit and some other interesting pieces. Much more to come here.
+So we want to put the right building blocks in place, and begin testing our own App Store early next year. The blocks will include the Language and Context engines, some augmented features, as well as our mature UI Kit. There's much more to come here.
 
 ### Going forward
 
-There's a lot more I'd like to write about as time goes on. I'll end with this, at the risk of sounding cliche.
+There's a lot more I'd like to write, but I think this does enough to start. I'll end with something that will risk sounding cliché:
 
-I think the biggest feature of Orbit is trust. Orbit won't succeed if it tries to be a traditional company. If you don't feel it will respect your privacy, we've already lost. Orbit will need to be positioned akin to a Web Browser or Operating System. In effect, a fundamental tool that you trust to handle sensitive information. This is very important.
+I think the biggest feature of Orbit is trust. Orbit won't succeed if it tries to be a traditional startup. If you don't feel it will respect your privacy in the long run, we've lost. Orbit will need to be thought of much like a Web Browser or Operating System: in effect, a fundamental tool that you trust to handle sensitive information.
 
-We've designed it in the only way I can think that guarantees that: by handling all data on-device, and never having it send any data outside your computer.
+This is very important. We've designed it in the only way that guarantees that: by never sending data out of your device. To realize that goal we have plans to build a decentralized piece that allows Orbit to sync privately cross-platform and cross-team.
 
-It will be up to our communication and execution to prove that. But I want to also remember that a promise doesn't matter if you don't have a truly great product. The next feed months will be very exciting, to see if we can round out this vision.
+Of course, none of this matters if we don't deliver a truly great product. The next feed months will be very exciting as we attempt to deliver on that.
 
 [Here is our roadmap]().
 
-I am very excited to start sharing our progress with you all.
+I am very excited to start sharing progress with you all.
 
 <br />

@@ -31,62 +31,67 @@ The question it's trying to answer is: why haven't we realized the flexible and 
 
 And I'm not talking about _fanciness_ here. While the interfaces of movies are often ridiculous and impractical (who can keep their arms up like that for more than a few minutes?), what they do get right is a level of fluidity and unification that has actually _regressed_ since the pre-internet era.
 
-Let's boil it down. I want to live in a world where:
+Operating Systems used to give us a lot more flexibility than The Cloud of today. We could for the most part take files and use them across different apps. We could search across all our information.
 
-- You can navigate related knowledge all in one place.
-- You can be confident the information is complete, accurate, up to date.
+But Operating Systems were replaced by browser tabs, and for all the incredible good thats done, the trend has been anti-Iron-Man. I think there's room for a platform that fixes that: by mandating apps on it sync their "data" to a common form in exchange for some really compelling abilities.
+
+I want to live in a world where:
+
+- You can navigate related knowledge under one interface.
+- You can be confident your information is complete, accurate, up to date.
 - You can explore it flexibly: by people, topics, time, etc.
-- It augments you as you normally work, using what you do to show what you missed.
+- You are augmented as you work: seeing contextually relevant information.
 - You can explore, correlate, build, script and extend it.
-- You can do all of this without having to expose it to a 3rd party company.
+- You can do all of this without having to expose your data to any external company.
 
-Before explaining in any more depth, here is Orbit as of today:
+Before explaining in any more depth, here is Orbit today:
 
 [video]
 
-Operating Systems used to give us a lot more flexibility than The Cloud of today. We could for the most part take files and use them across different apps. We could search across all our information.
-
-But Operating Systems were replaced by browser tabs, and ever since the trend has been anti-Iron-Man. I think there's room for a platform that fixes that: by mandating that apps on it sync their "data" to a common form.
-
-If Orbit can do that well enough, we may be able to get enough demand that it will force cloud platforms to let us gain a lot more control over our data. So we can explore it how our films have always imagined it should be.
-
 ### Orbit, The Strategy
 
-Orbit wants to be a _really good platform for knowledge management_, essentially replacing the clunky and stale intranet systems we use today. How do we get there? Orbit is making a big bet: being uniquely user-aligned is the only way to get real distribution.
+Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet systems of today. To do that, it has to have access to basically all of your information.
 
-It has to be _uniquely user aligned_. This isn't just some buzzword. Throughout user testing we consistenly found people hesitant to trust anyone, let alone an early startup with _all of their data_.
+But there's a misaligned incentive there. People don't want to trust a single company with all of their data. But a knowledge platform really should have everything!
 
-But by being completely private, Orbit de-risks "testing the water". A risk-free trial where you can test out Orbit leads us into a far better incentive structure for us.
+We thought we'd reached a roadblock. It was hard to get anyone to install it, even as a trial. We we're stuck at distribution.
 
-It forces us to actually care about the UX. And it lets us avoid becoming a "sales first":
+It took a lot of exploration to realize something though. Computers today are fast, powerful, and have lots of disk space. The knowledge that's actually important to you is often not very large at all. What if we could run Orbit privately, entirely on your computer, and avoid having any cloud or on premise server?
 
-1. The product must sell itself by being actually good.
-2. You can test it with no cost or risk to you or your company.
-3. You can do this without even needing to trust our word, firewall it!
+By doing this, Orbit would de-risk "testing the water". You can actually firewall Orbit so it only has access to sync data directly from your integrations: Gmail, Confluence, Slack and the like.
 
-I think this solves what would have been a near-impossible distribution story for a very early stage startup that's trying to touch all your data. But I understand that distribution is only half the battle.
+That would mean:
 
-### Orbit, The Platform
+1. You can try it risk-free: both in cost and security, unlike the cloud.
+2. There's absolutely no sales cycle or "install" process, unlike on-prem.
 
-#### The Bit
+And with that, we realized, we'd naturally land into a much better incentive structure! A risk-free trial means **the product must actually be good**. We can't hide behind a sales team.
 
-The fundamental unit of information. Where SaaS products have their data behind their own unique interfaces and APIs, Orbit requires its apps to sync data into a common fundamental unit: **The Bit**. A bit to Orbit is like a file to an operating system. It allows Orbit to search, view, and unify disparate data.
+I think this solves what would have been a near-impossible distribution story for a very early stage startup that's trying to unify your data.
 
-#### Orbit Home
+### Orbit, In Detail
 
-The Orbit Home is essentially its Start Menu / Spotlight / Siri. It's your Tony Stark interface, powered by bits of information. Right now it shows recent activity, a Directory of people, and your Search bar.
+[Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and are planning to build.
 
-> Option+Space opens Orbit Home
+#### Bit
+
+We're calling a "file" in orbit a "Bit". Where SaaS products have data behind unique interfaces and APIs, Orbit apps sync to a common fundamental unit: the bit, which can be text or HTML, for now.
+
+#### Home
+
+The Orbit Home is your starting point. It will aim to be the Tony Stark interface, powered by bits of information. For now it's a lot like Spotlight with some recent activity and a directory of people.
+
+> Option+Space opens your Orbit Home
 
 #### Language
 
-Orbit comes with a brand new and [state of the art](https://arxiv.org/pdf/1803.08493.pdf) Natural Language engine. Importantly, it runs quickly on-device, and is custom to you: it's relevancy is powered by both interesting words in English as well as their relative frequency in your corpus. This powers the on-device search, related items, and interesting word extraction.
+Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) Natural Language engine. Importantly, it runs quickly on-device and custom to you: it's relevancy is powered by both interesting words in English as well as their relative frequency in your corpus. This powers our search, related items, and interesting word extraction.
 
 #### Context
 
 Context, or augmented computing, will be the first big step for Orbit to feel magical and deliver on the "future of computing" experience we want to deliver.
 
-It starts with a custom OCR engine we've built that focuses on one thing: being the fastest in the world. We've gotten it down to under 180ms for scanning a large and dense page of text and we have a clear path to haiving it use less than 1% of your total laptop battery when always-on.
+It's powered by a custom OCR engine we've built that focuses on one thing: being the fastest in the world. We've gotten it down to under 180ms for scanning a large and dense page of text and we have a clear path to improve! It will use <1% of your total laptop battery.
 
 What does it mean? When writing an email, talking on Slack, browsing the Web, reading a Jira ticket, or really doing anything you do on your computer, Orbit can understand what you are looking at.
 

@@ -117,11 +117,11 @@ I'll end with something that will risk sounding cliché:
 
 I think the biggest feature of Orbit is trust. Orbit won't succeed if it tries to be a traditional startup. If you don't feel it will respect your privacy in the long run, we've lost. Orbit will need to be thought of like a Browser or Operating System: a fundamental tool you trust to handle sensitive information.
 
-We've designed it in the only I know to guarantee that: by never sending data off your device. To realize the vision though we'll be building a decentralized sync system to let Orbit go cross-platform and multi-user.
+We've designed it in the only I know to guarantee that: by never sending data off your device. Of course, trust doesn't matters if you don't have a great product that meets real needs. The next feed months will be exciting as we attempt to do just that. And your feedback will be the most important part of ensuring that!
 
-Of course, none of this matters if we don't deliver a truly great product that meets real world needs. The next feed months will be very exciting as we attempt to deliver that.
+[Here is my email](nate@tryorbit.com). Please send me any and all inquiries, requests and bugs.
 
-[Here is our roadmap]().
+[Here is our roadmap](). We will update it about once a week.
 
 I am very excited to start sharing progress with you all.
 

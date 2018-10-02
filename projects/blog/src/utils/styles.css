@@ -2,10 +2,31 @@ body {
   line-height: 1.65rem;
 }
 
+p,
+blockquote {
+  margin-bottom: 1.5rem;
+}
+
 blockquote {
   line-height: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 li {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0rem;
+}
+
+ul,
+ol {
+  padding-left: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 2.5rem;
 }

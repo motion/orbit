@@ -110,10 +110,8 @@ export class OrbitItemStore {
       return isPaneActive && nextIsSelected
     },
     async (nextIsSelected, { sleep }) => {
-      if (this.realIndex === 0) {
-        console.log('WE GOT A SELECT', nextIsSelected, this)
-      }
       const { preventAutoSelect, subPaneStore } = this.props
+      console.log(nextIsSelected, this.isSelected, preventAutoSelect, this.target)
       ensure('new index', nextIsSelected !== this.isSelected)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {
@@ -125,7 +123,7 @@ export class OrbitItemStore {
         ensure('target', !!this.target)
         // fluidity
         await sleep()
-        Actions.setPeekApp(this.props.appConfig || this.target, this.position)
+        Actions.setPeekApp(this.target, this.position)
       }
     },
     {

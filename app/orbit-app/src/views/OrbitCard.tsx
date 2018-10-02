@@ -149,7 +149,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
   }
 
   getOrbitCard = (resolvedItem: ResolvedItem) => {
-    const { icon, location, people, preview, subtitle, title, updatedAt } = resolvedItem
+    const { icon, location, people, preview, title, updatedAt } = resolvedItem
     const {
       afterTitle,
       borderRadius,
@@ -175,6 +175,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
       onClickLocation,
       ...props
     } = this.props
+
+    // allow either custom subtitle or resolved one
+    const subtitle = this.props.subtitle || resolvedItem.subtitle
     const { isSelected } = store
     const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)

@@ -16,22 +16,22 @@ type PartialPeekState = { target: PeekTarget } & Partial<typeof App.peekState>
 const DEFAULT_APP_CONFIG: AppConfig = {
   id: '',
   type: '',
-  config: null,
   title: '',
   icon: '',
   subType: '',
   integration: '',
 }
 
+const DEFAULT_APP_CONFIG_CONFIG: AppConfig['config']['initialState'] = {
+  dimensions: null,
+  initialState: null,
+}
+
 export function setPeekApp(item: PersonBit | Bit | Setting | AppConfig, target?: PeekTarget) {
   invariant(item, 'Must pass item')
-  const appConfig = getAppConfig(item)
   setPeekState({
     target: target || App.peekState.target,
-    appConfig: {
-      ...DEFAULT_APP_CONFIG,
-      ...appConfig,
-    },
+    appConfig: getAppConfig(item),
   })
 }
 
@@ -41,6 +41,10 @@ function setPeekState({ target, appConfig }: PartialPeekState) {
     appConfig: {
       ...DEFAULT_APP_CONFIG,
       ...appConfig,
+      config: {
+        ...DEFAULT_APP_CONFIG_CONFIG,
+        ...appConfig.config,
+      },
     },
     target: realTarget,
     ...peekPosition(realTarget, appConfig),

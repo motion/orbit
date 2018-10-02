@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as React from 'react'
 import { Setting } from '@mcro/models'
 import { PeekContent } from '../../../views/PeekContent'
@@ -27,19 +27,24 @@ const AppRelationsExplorer = () => {
 
 export class AppViewStore {
   props: Props
-  active = this.props.initialState.active || 'topics'
-  lastActive = this.props.initialState.active || 'topics'
+
+  active = 'topics'
+  lastActive = 'topics'
 
   setter = key => () => {
     this.setActiveKey(key)
   }
 
   setActiveKey = key => {
+    console.log('got active key', key)
     this.lastActive = this.active
     this.active = key
   }
 
+  updateTab = react(() => (this.props.initialState || {}).active || 'topics', this.setActiveKey)
+
   activeToggler = key => () => {
+    console.log('got toggle key', key)
     if (key === this.active) {
       this.setActiveKey(this.lastActive)
     } else {

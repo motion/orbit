@@ -25,6 +25,7 @@ export const OrbitAppCard = decorator(({ store, model, isActive, subtitle, ...pr
   const countSubtitle = store.bitsCount >= 0 ? Number(store.bitsCount).toLocaleString() : '...'
   return (
     <OrbitCard
+      model={model}
       settingId={model.id}
       title={NICE_INTEGRATION_NAMES[model.type]}
       titleProps={{
@@ -46,7 +47,7 @@ export const OrbitAppCard = decorator(({ store, model, isActive, subtitle, ...pr
       <SyncStatus settingId={model.id}>
         {jobs => {
           return (
-            <Text size={0.9} alpha={0.6}>
+            <Text size={0.85} alpha={0.6}>
               {jobs ? 'Syncing' : ''}
             </Text>
           )

@@ -77,7 +77,6 @@ export class MenuItems extends React.Component<{
           />
           <MenuItem
             label="Show Dev Tools [Peek]"
-            accelerator="Command+Option+i"
             onClick={this.toggleDevTools(`${App.peekState.id}`)}
           />
         </SubMenu>

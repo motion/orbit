@@ -12,7 +12,7 @@ const log = new Logger('syncer:confluence:content')
 /**
  * Syncs Confluence pages and blogs.
  */
-export class ConfluenceContentSyncer {
+export class ConfluenceSyncer {
   private setting: SettingEntity
   private loader: ConfluenceLoader
   private people: Person[]

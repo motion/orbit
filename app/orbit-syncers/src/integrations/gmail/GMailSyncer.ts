@@ -42,7 +42,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
     const values = this.setting.values as GmailSettingValues
     let { historyId, max, monthLimit, filter } = values
-    if (!max) max = 5000
+    if (!max) max = 1000
     if (!monthLimit) monthLimit = 1
     let dropAllBits = false
 
@@ -111,7 +111,7 @@ export class GMailSyncer implements IntegrationSyncer {
       }
     }
 
-    this.log.info('create bits from new threads', addedThreads)
+    this.log.timer('create bits from new threads', addedThreads)
     const apiBits: Bit[] = [], apiPeople: Person[] = []
     for (let thread of addedThreads) {
       const participants = this.extractThreadParticipants(thread)
@@ -120,14 +120,13 @@ export class GMailSyncer implements IntegrationSyncer {
       apiBits.push(bit)
       apiPeople.push(...bit.people)
     }
+    this.log.timer('create bits from new threads', { apiBits, apiPeople })
 
     const personIds = apiPeople.map(person => person.id)
     const personBitIds = apiPeople.map(person => hash(person.email))
     const bitIds = apiBits.map(bit => bit.id)
 
     this.log.timer(`load people, person bits and bits from the database`, {
-      apiPeople,
-      apiBits,
       personIds,
       personBitIds,
       bitIds,

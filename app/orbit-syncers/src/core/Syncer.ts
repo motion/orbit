@@ -84,7 +84,7 @@ export class Syncer {
 
           // update exist in the interval settings to make sure it will have appropriate data in the next syncer run
           for (let interval of this.intervals) {
-            if (interval.setting) {
+            if (interval && interval.setting) {
               const updatedSetting = settings.find(setting => setting.id === interval.setting.id)
               if (updatedSetting) {
                 Object.assign(interval.setting, updatedSetting)

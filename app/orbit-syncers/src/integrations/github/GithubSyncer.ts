@@ -124,13 +124,6 @@ export class GithubSyncer implements IntegrationSyncer {
    */
   private loadDatabasePeople() {
     return getRepository(PersonEntity).find({
-      // select: {
-      //   id: true,
-      //   contentHash: true
-      // },
-      // relations: {
-      //   personBit: true
-      // },
       where: {
         settingId: this.setting.id
       }

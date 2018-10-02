@@ -4,13 +4,21 @@ import { GMailMessage } from '@mcro/services'
 const createDOMPurify = require('dompurify')
 const JSDOM = require('jsdom').JSDOM
 const addrs = require('email-addresses')
-const window = (new JSDOM('')).window
-const DOMPurify = createDOMPurify(window)
 
 /**
  * Parses GMail Message.
  */
 export class GMailMessageParser {
+
+  /**
+   * Message's cached text body (used for performance optimization).
+   */
+  private textBody: string
+
+  /**
+   * Message's cached html body (used for performance optimization).
+   */
+  private htmlBody: string
 
   constructor(private message: GMailMessage) {
   }
@@ -59,33 +67,17 @@ export class GMailMessageParser {
    * Gets message text body.
    */
   getTextBody() {
-    const parts = [
-      ...(this.message.payload.parts || []),
-      this.message.payload,
-    ]
+    this.buildTextBody();
+    this.buildHtmlBody();
 
-    let textBody = ''
-    const textPart = parts.find(part => {
-      return part.mimeType === 'text/plain' && !!part.body && !!part.body.data
-    })
-    if (textPart) {
-      textBody = Buffer.from(textPart.body.data, 'base64').toString('utf8')
-    }
+    if (this.textBody) {
+      return this.textBody
 
-    let htmlBody = ''
-    const htmlPart = parts.find(part => {
-      return part.mimeType === 'text/html' && !!part.body && !!part.body.data
-    })
-    if (htmlPart) {
-      htmlBody = Buffer.from(htmlPart.body.data, 'base64').toString('utf8')
-    }
-
-    if (textBody) {
-      return textBody
-
-    } else if (htmlBody) {
+    } else if (this.htmlBody) {
+      const window = (new JSDOM('')).window
+      const DOMPurify = createDOMPurify(window)
       return DOMPurify
-        .sanitize(htmlBody, { ALLOWED_TAGS: [] })
+        .sanitize(this.htmlBody, { ALLOWED_TAGS: [] })
         .replace(/&nbsp;/gi, ' ')
         .replace(/•/gi, '')
         .trim()
@@ -99,41 +91,65 @@ export class GMailMessageParser {
    * Gets message html body.
    */
   getHtmlBody() {
-    const parts = [
-      ...(this.message.payload.parts || []),
-      this.message.payload,
-    ]
+    this.buildTextBody();
+    this.buildHtmlBody();
 
-    let textBody = ''
-    const textPart = parts.find(part => {
-      return part.mimeType === 'text/plain' && !!part.body && !!part.body.data
-    })
-    if (textPart) {
-      textBody = Buffer.from(textPart.body.data, 'base64').toString('utf8')
-    }
-
-    let htmlBody = ''
-    const htmlPart = parts.find(part => {
-      return part.mimeType === 'text/html' && !!part.body && !!part.body.data
-    })
-    if (htmlPart) {
-      htmlBody = Buffer.from(htmlPart.body.data, 'base64').toString('utf8')
-    }
-
-    if (htmlBody) {
+    if (this.htmlBody) {
+      const window = (new JSDOM('')).window
+      const DOMPurify = createDOMPurify(window)
       return DOMPurify
-        .sanitize(htmlBody)
+        .sanitize(this.htmlBody)
         .replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '')
         .replace(/&nbsp;/gi, ' ')
         .replace(/•/gi, '')
         .trim()
 
-    } else if (textBody) {
-        return textBody
+    } else if (this.textBody) {
+        return this.textBody
 
     } else {
       return this.message.snippet
     }
   }
-  
+
+  /**
+   * Builds message's text body.
+   */
+  private buildTextBody() {
+    if (this.textBody)
+      return
+
+    const parts = [
+      ...(this.message.payload.parts || []),
+      this.message.payload,
+    ]
+
+    const textPart = parts.find(part => {
+      return part.mimeType === 'text/plain' && !!part.body && !!part.body.data
+    })
+    if (textPart) {
+      this.textBody = Buffer.from(textPart.body.data, 'base64').toString('utf8')
+    }
+  }
+
+  /**
+   * Builds message's html body.
+   */
+  private buildHtmlBody() {
+    if (this.htmlBody)
+      return
+
+    const parts = [
+      ...(this.message.payload.parts || []),
+      this.message.payload,
+    ]
+
+    const htmlPart = parts.find(part => {
+      return part.mimeType === 'text/html' && !!part.body && !!part.body.data
+    })
+    if (htmlPart) {
+      this.htmlBody = Buffer.from(htmlPart.body.data, 'base64').toString('utf8')
+    }
+  }
+
 }

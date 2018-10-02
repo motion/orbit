@@ -68,7 +68,7 @@ export const PeekBit = ({
               searchBarProps={{
                 flex: 1,
                 // 1px more for inset shadow
-                padding: [5, 10, 4, 0],
+                padding: [3, 0],
               }}
             >
               {({ searchBar, searchTerm }) => {

@@ -10,8 +10,9 @@ import { PeekPaneProps } from '../PeekPaneProps'
 import { App } from '@mcro/stores'
 import { Grid } from '../../../views/Grid'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { View } from '@mcro/ui'
+import { View, Button, Row } from '@mcro/ui'
 import { getTopics } from '../../../loaders/search'
+import { Masonry } from '../../../views/Masonry'
 
 type Props = PeekPaneProps<PersonBit> & {
   appsStore: AppsStore
@@ -251,21 +252,14 @@ export class PeekPerson extends React.Component<Props & { store: PeekPersonStore
           <Content>
             <ContentInner>
               <Section>
-                <StrongSubTitle>Unique Topics</StrongSubTitle>
-                <View padding={[10, 15, 0]}>
-                  <Grid columnWidth={120} height={50}>
-                    {store.interestedIn.map((item, index) => (
-                      <OrbitCard
-                        titleProps={{ fontSize: 20, fontWeight: 300 }}
-                        key={item}
-                        index={index}
-                        inGrid
-                        borderRadius={4}
-                        title={item}
-                      />
-                    ))}
-                  </Grid>
-                </View>
+                <StrongSubTitle>Recent unique topics</StrongSubTitle>
+                <Row flexFlow="row" flexWrap="wrap" padding={[10, 15, 0]}>
+                  {store.interestedIn.map((item, index) => (
+                    <Button sizeHeight={0.9} margin={[0, 6, 6]} sizeRadius={2} key={index}>
+                      {item}
+                    </Button>
+                  ))}
+                </Row>
               </Section>
 
               <Section>

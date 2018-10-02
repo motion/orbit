@@ -165,6 +165,11 @@ export class Cosal {
     if (!words) {
       return []
     }
-    return words.map(x => x.string.replace(/\s\s*/g, ' ').trim())
+    return (
+      words
+        // filter numbers
+        .filter(word => word.string != `${+word.string}`)
+        .map(x => x.string.replace(/\s\s*/g, ' ').trim())
+    )
   }
 }

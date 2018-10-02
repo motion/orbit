@@ -64,7 +64,7 @@ export function toWords(s: string): string[] {
     .replace(/(?:https?|ftp):\/\/[\n\S]+/g, '')
     .replace(/<.*>/g, '')
     .replace(/[^'.,;őa-z0-9]/gi, ' ')
-    .replace(/.,;/g, ' ')
+    .replace(/.,;$/g, ' ')
     .split(' ')
     .filter(w => w.trim().length > 0)
 }

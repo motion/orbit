@@ -10,17 +10,17 @@ type PersonButtonProps = ButtonProps & {
   person?: Person
 }
 
-const handleClick = (person: Person) => async e => {
+export const handleClickPerson = (email: string) => async e => {
   e.stopPropagation()
   const personBit = await loadOne(PersonBitModel, {
     args: {
       where: {
-        email: person.email,
+        email,
       },
     },
   })
   if (!personBit) {
-    console.log('no personBit found', person)
+    console.log('no personBit found', email)
   } else {
     Actions.togglePeekApp(personBit)
   }
@@ -30,7 +30,7 @@ export const RoundButtonPerson = ({ person, hideAvatar, ...props }: PersonButton
   // TODO: avatar value on person
   const avatar = person.photo
   return (
-    <RoundButton size={0.95} onClick={handleClick(person)} {...props}>
+    <RoundButton size={0.95} onClick={handleClickPerson(person.email)} {...props}>
       <UI.Row alignItems="center">
         {!!avatar &&
           !hideAvatar && (

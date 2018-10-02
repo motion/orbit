@@ -16,7 +16,10 @@ export async function createOrUpdatePersonBits(
   }
 
   // find a person, if not found create a new one
-  let personBit = await getRepository(PersonBitEntity).findOne(person.email, {
+  let personBit = await getRepository(PersonBitEntity).findOne({
+    where: {
+      email: person.email
+    },
     relations: ['people'],
   })
   if (!personBit) {

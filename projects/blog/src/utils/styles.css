@@ -11,6 +11,7 @@ blockquote {
   line-height: 2rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+  border-left: 0.32813rem solid #eee;
 }
 
 li {

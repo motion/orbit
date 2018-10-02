@@ -5,33 +5,33 @@ date: '2018-09-29T22:12:03.284Z'
 
 I'm certainly excited to start talking about Orbit. It's been an intense few years of development and I'm happy we can start to put it out into the world.
 
-But first, what you want: [our first alpha build](). Give it a try. While some interesting pieces are not yet in place, we pushed hard to get to where you can use it and give feedback.
+But first, the great news. Our alpha build is now [available for download](). While some interesting pieces are not yet in place, we pushed hard to get to where you can use it and give feedback.
 
-So, what is Orbit?
+So, what is Orbit? Let's start with our mission:
 
-Let's start with a mission:
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that shifts control over data back -- from companies to individuals -- to create a more flexible, powerful and inuitive knowledge interfaces.
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that shifts the balance of power -- from companies to individuals -- for more flexible, powerful and inuitive control over our knowledge.
-
-The idea is this: incentives and the way platforms are structured today hold us back from being able to use and synchonize all information we create effectively.
-
-### Product
-
-Orbit is a new type of thing. It's a mid point between a Browser and an Operating System -- a knowledge platform that takes disparate information and puts it together.
+Orbit is a new type of thing. It's a mid point between a Browser and an Operating System -- a knowledge platform that takes disparate information and makes much easier to understand, search and explore.
 
 It's trying to change the world as it is today: a world where you have _almost no real control over your information_.
 
-It's a bit easier to frame is like this: why haven't we realized the flexible and powerful interfaces we were promised in Minority Report and Iron Man? Are our current intranet systems the best we can do to give knowledge a "operating system"?
+It's a bit easier to frame is like this:
+
+Where are our Minority Report / Iron Man interfaces? Are intranets the best we can do?
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-And I'm not interested in the _fanciness_ of sci-fi interfaces. While the UI's of movies are often ridiculous and impractical (who can keep their arms up like that for any time?), what they do get right is a level of fluidity, unification and exploration that has actually _regressed_ since the pre-internet era.
+And I'm not referring to the _visual effects_ of Sci-Fi interfaces. While their interfaces are often ridiculous and impractical (how long can you keep your arms up like that?) they do get something right that we don't think about often:
 
-Before the cloud, Operating Systems gave us some level of flexibility. We had files. We could often use them with different apps. We could search and organize them.
+**We want to be able explore information in a unified interface.**
 
-But Operating Systems were replaced by browser tabs, and for all the good that's done, the trend has been strictly anti-Iron-Man since then. I think there's room for a platform that fixes that by doing one thing: mandating apps on it sync their "data" to a common form, like a file.
+And since the advent of the Browser, our ability to do just that has actually _regressed_. In fact before the era of web apps, Operating Systems gave use much more flexibility! All we had were files. We could often use them with different apps, and we could search and organize them and often use them cross-app.
+
+But Operating Systems were replaced by browser tabs, and for all the good that's done, the trend has been strictly anti-Iron-Man.
+
+I think there's room for a platform that fixes that by doing one thing: mandating apps on it sync their "data" to a common form, like a file.
 
 I want to live in a world where:
 
@@ -42,7 +42,7 @@ I want to live in a world where:
 - You can explore, correlate, build, script and extend it.
 - You can do all of this without having to give up your data to 3rd parties.
 
-It's a tall order! Orbit doesn't do all of it, yet. What does Orbit do? Here's a quick demo I recorded today walking through some of the interface:
+Orbit will try and make that possible. Here's a quick demo of it as it stands today:
 
 [video]
 
@@ -50,9 +50,9 @@ It's a tall order! Orbit doesn't do all of it, yet. What does Orbit do? Here's a
 
 Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet systems of today. To do that, it has to have access to basically all of your information.
 
-Early in development we realized there's a problem selling this: people don't want to trust a single company with all of their data.
+Early in development we realized there's a problem trying to do that: no one wants to trust a single company with all of their data.
 
-Talk about misaligned incentives!
+Duh!
 
 We thought we'd reached a roadblock. It was hard to get anyone to install it, even as a trial. We we're stuck at distribution.
 

@@ -97,13 +97,15 @@ So we want to put the right building blocks in place, and begin testing our own 
 
 ### Going forward
 
-There's a lot more I'd like to write, but I think this does enough to start. I'll end with something that will risk sounding cliché:
+There's a lot more I'd like to write, but I think is more than enough to start.
 
-I think the biggest feature of Orbit is trust. Orbit won't succeed if it tries to be a traditional startup. If you don't feel it will respect your privacy in the long run, we've lost. Orbit will need to be thought of much like a Web Browser or Operating System: in effect, a fundamental tool that you trust to handle sensitive information.
+I'll end with something that will risk sounding cliché:
 
-This is very important. We've designed it in the only way that guarantees that: by never sending data out of your device. To realize that goal we have plans to build a decentralized piece that allows Orbit to sync privately cross-platform and cross-team.
+I think the biggest feature of Orbit is trust. Orbit won't succeed if it tries to be a traditional startup. If you don't feel it will respect your privacy in the long run, we've lost. Orbit will need to be thought of like a Browser or Operating System: a fundamental tool you trust to handle sensitive information.
 
-Of course, none of this matters if we don't deliver a truly great product. The next feed months will be very exciting as we attempt to deliver on that.
+We've designed it in the only I know to guarantee that: by never sending data off your device. To realize the vision though we'll be building a decentralized sync system to let Orbit go cross-platform and multi-user.
+
+Of course, none of this matters if we don't deliver a truly great product that meets real world needs. The next feed months will be very exciting as we attempt to deliver that.
 
 [Here is our roadmap]().
 

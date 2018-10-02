@@ -73,6 +73,10 @@ Because you can test our Orbit without any cost, it means **the product must act
 
 [Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and are planning to build.
 
+<div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -520px;">
+  <img alt="Orbit Home" src="./home.jpg" />
+</div>
+
 #### Bit
 
 We're calling a "file" in orbit a "Bit". Where SaaS products have data behind unique interfaces and APIs, Orbit apps sync to a common fundamental unit: the bit, which can be text or HTML, for now.

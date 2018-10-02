@@ -95,13 +95,13 @@ const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
-  {
-    id: '7',
-    source: 'app1',
-    name: 'Test App',
-    model: BitModel,
-    query: findManyType('app1'),
-  },
+  // {
+  //   id: '7',
+  //   source: 'app1',
+  //   name: 'Test App',
+  //   model: BitModel,
+  //   query: findManyType('app1'),
+  // },
 ].filter(Boolean)
 
 const getListStyle = isDraggingOver => ({
@@ -167,7 +167,7 @@ class OrbitHomeStore {
     },
   )
 
-  sortOrder = [0, 1, 2, 3, 4, 5, 6, 7]
+  sortOrder = [0, 1, 2, 3, 4, 5, 6]
 
   reorder = (startIndex, endIndex) => {
     const order = [...this.sortOrder]

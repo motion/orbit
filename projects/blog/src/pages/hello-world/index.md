@@ -15,7 +15,7 @@ Let's start with a mission:
 
 The idea is this: incentives and the way platforms are structured today hold us back from being able to use and synchonize all information we create effectively.
 
-### Orbit, The Thing
+### Product
 
 Orbit is a new type of thing. It's a mid point between a Browser and an Operating System -- a knowledge platform that takes disparate information and puts it together.
 
@@ -46,7 +46,7 @@ It's a tall order! Orbit doesn't do all of it, yet. What does Orbit do? Here's a
 
 [video]
 
-### Orbit, The Strategy
+### Distribution
 
 Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet systems of today. To do that, it has to have access to basically all of your information.
 
@@ -54,22 +54,29 @@ Early in development we realized there's a problem selling this: people don't wa
 
 Talk about misaligned incentives!
 
-#### The solution
-
 We thought we'd reached a roadblock. It was hard to get anyone to install it, even as a trial. We we're stuck at distribution.
 
-It took a lot of exploration to realize something though. Computers today are fast, powerful, and have lots of disk space. The knowledge that's actually important to you is often not very large at all. Could we could run Orbit privately, entirely on your computer, and avoid having any cloud or on premise server touching your data?
+It took a lot of exploration to realize something though. Computers today are powerful with large disks, and on-device ML is feasible and effective. Orbit could run privately and entirely on your computer?
 
-By doing this, Orbit would de-risk letting people "test the water". Today, you can actually firewall Orbit so it only has access to sync data directly from your integrations: Gmail, Confluence, Slack and the so on.
+Traditional models for SaaS applications have two choices, but this would look a lot like a third choice:
 
-It aligns incentives in more ways than one:
+1. Cloud - High security required
+2. On-premise - High install cost
+3. Decentralized - Harder to implement, secure and low install
 
-1. You can try it risk-free: both in cost and security, unlike the cloud.
-2. There's absolutely no sales cycle or "install" process, unlike on-prem.
+This aligns perfectly with what Orbit is trying to achieve: an easy, no-risk way to give it a try. We just have to prove we could do everything on-device.
+
+<div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
+  <div style="margin: auto;  max-width: 100vw;">
+    <img alt="On-Device = Data stays on your computer" src="./illustration.svg" />
+  </img>
+</div>
+
+Today, you can actually firewall Orbit so it only has access to sync data directly from your integrations.
 
 Because you can test our Orbit without any cost, it means **the product must actually be good**. We can't hide behind a sales team. I think this solves what would have been a near-impossible distribution story for a very early stage startup, but also is a great setup to keep our company honest and focused on delivering real value rather than effective sales.
 
-### Orbit, In Detail
+### Platform
 
 [Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and are planning to build.
 
@@ -108,6 +115,15 @@ I wanted to mention it now, though, becuase it's relevant to this next section.
 #### Apps
 
 Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We plan to add some more flexible ones as well soon including generic Web and API apps.
+
+<div style="display: flex; flex-flow: row; height: 120px; max-width: 100%; justify-content: space-between; padding: 30px 0;">
+  <img class="icon" src="./icons/gdrive.svg" />
+  <img class="icon" src="./icons/github.svg" />
+  <img class="icon" src="./icons/gmail.svg" />
+  <img class="icon" src="./icons/jira.svg" />
+  <img class="icon" src="./icons/confluence.svg" />
+  <img class="icon" src="./icons/slack.svg" />
+</div>
 
 But Apps can be much more powerful and diverse than I think we can ever predict, especially given the incredible stochasticity of information and it's needs. So while I don't think we can build one solution for everyone, I do think we can provide a powerful set of APIs that enable building those experiences.
 

@@ -3,6 +3,7 @@ import { PersonBitEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { GithubSettingValues, Person } from '@mcro/models'
 import { GithubLoader } from '@mcro/services'
+import { GithubRepository } from '@mcro/services/_'
 import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
@@ -10,7 +11,7 @@ import { PersonSyncer } from '../../utils/PersonSyncer'
 import { GithubBitFactory } from './GithubBitFactory'
 import { GithubPersonFactory } from './GithubPersonFactory'
 
-export class GithubIssueSyncer implements IntegrationSyncer {
+export class GithubSyncer implements IntegrationSyncer {
   private log: Logger
   private setting: SettingEntity
   private loader: GithubLoader
@@ -19,7 +20,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
 
   constructor(setting: SettingEntity) {
     this.setting = setting
-    this.log = new Logger('syncer:github:' + this.setting.id)
+    this.log = new Logger('syncer:github:' + setting.id)
     this.loader = new GithubLoader(setting)
     this.bitFactory = new GithubBitFactory(setting)
     this.personFactory = new GithubPersonFactory(setting)
@@ -41,7 +42,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     const dbBits = await this.loadDatabaseBits()
     this.log.timer(`load people, person bits and bits from the database`, { dbPeople, dbPersonBits, dbBits })
 
-    // sync each repository
+    // load api data for each repository
     this.log.timer(`load api bits and people`)
     const apiBits: BitEntity[] = []
     const apiPeople: Person[] = []
@@ -57,14 +58,22 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     }
     this.log.timer(`load api bits and people`, { apiBits, apiPeople })
 
-    // saving all the people and bits
-    await PersonSyncer.sync({
+    // syncing all loaded api people
+    await new PersonSyncer({
+      setting: this.setting,
       log: this.log,
       apiPeople,
       dbPeople,
       dbPersonBits,
-    })
-    await BitSyncer.sync(this.log, apiBits, dbBits)
+    }).sync()
+
+    // syncing all loaded bits
+    await new BitSyncer({
+      setting: this.setting,
+      log: this.log,
+      apiBits,
+      dbBits
+    }).sync()
   }
 
   /**
@@ -74,23 +83,31 @@ export class GithubIssueSyncer implements IntegrationSyncer {
   private async loadApiRepositories() {
     
     // load repositories from the API first
-    this.log.timer(`load repositories`)
-    const repositories = await this.loader.loadRepositories()
-    this.log.timer(`load repositories`, repositories)
+    this.log.timer(`load API repositories`)
+    let repositories = await this.loader.loadRepositories()
+    this.log.timer(`load API repositories`, repositories)
     
     // get whitelist, if its not defined just return all loaded repositories 
     const values = this.setting.values as GithubSettingValues
-    if (values.whitelist === undefined) {
-      this.log.verbose(`no whitelist is set for this setting, syncing them all`)
-      return repositories
+    if (values.whitelist !== undefined) {
+      this.log.info(`whitelist is defined, filtering settings by a whitelist`, values.whitelist)
+      repositories = repositories.filter(repository => {
+        return values.whitelist.indexOf(repository.nameWithOwner) !== -1
+      });
+      this.log.info(`filtered repositories by whitelist`, repositories)
     }
 
     // if it was defined return filtered repositories
-    const filtered = repositories.filter(repository => {
-      return values.whitelist.indexOf(repository.nameWithOwner) !== -1
-    });
-    this.log.info(`filtered repositories`, filtered)
-    return filtered
+    if (values.externalRepositories && values.externalRepositories.length > 0) {
+      this.log.info(`externalRepositories are found, adding them as well`, values.externalRepositories)
+      repositories.push(...values.externalRepositories.map(repository => {
+        return {
+          nameWithOwner: repository
+        } as GithubRepository
+      }))
+    }
+
+    return repositories
   }
 
   /**
@@ -139,7 +156,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
         people: true
       },
       where: {
-        email: In(people.map(person => person.email))
+        id: In(people.map(person => person.id))
       }
     })
   }

@@ -3,7 +3,7 @@ import { resolveCommand } from '@mcro/mediator'
 import { SettingForceSyncCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { SettingEntity } from '@mcro/entities'
-import { Syncers } from '../Syncers'
+import { Syncers } from '../core/Syncers'
 import { Syncer } from '../core/Syncer'
 import { SyncerGroup } from '../core/SyncerGroup'
 

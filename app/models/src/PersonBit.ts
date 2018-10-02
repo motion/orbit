@@ -8,7 +8,12 @@ export interface PersonBit {
   target: 'person-bit'
 
   /**
-   * Person's email address.
+   * Unique person id.
+   */
+  id: number
+
+  /**
+   * Unique person email address.
    */
   email?: string
 

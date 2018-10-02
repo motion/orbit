@@ -1,17 +1,20 @@
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
 import { GMailFetcher } from './GMailFetcher'
-import { historyQuery, threadQuery, threadsQuery } from './GMailQueries'
+import { GMailQueries } from './GMailQueries'
 import { GmailHistoryLoadResult, GmailThread } from './GMailTypes'
 
-const log = new Logger('service:gmail:loader')
-
+/**
+ * Loads data from GMail service.
+ */
 export class GMailLoader {
   setting: Setting
   fetcher: GMailFetcher
+  log: Logger
 
   constructor(setting: Setting) {
     this.setting = setting
+    this.log = new Logger('service:gmail:loader:' + this.setting.id)
     this.fetcher = new GMailFetcher(setting)
   }
 
@@ -21,10 +24,12 @@ export class GMailLoader {
    * For example when user receives new messages or removes exist messages.
    */
   async loadHistory(startHistoryId: string, pageToken?: string): Promise<GmailHistoryLoadResult> {
+
     // load a history first
-    log.verbose(pageToken ? 'loading history from the next page' : 'loading history')
-    const result = await this.fetcher.fetch(historyQuery(startHistoryId, pageToken))
-    log.verbose('history loaded', result)
+    this.log.verbose(pageToken ? 'loading history from the next page' : 'loading history')
+    const query = GMailQueries.history(startHistoryId, pageToken)
+    const result = await this.fetcher.fetch(query)
+    this.log.verbose('history loaded', result)
 
     // collect from history list of added/changed and removed thread ids
     let addedThreadIds: string[] = [],
@@ -81,18 +86,22 @@ export class GMailLoader {
    */
   async loadThreads(
     count: number,
+    maxMonths?: number,
     queryFilter?: string,
     filteredIds: string[] = [],
     pageToken?: string,
   ): Promise<GmailThread[]> {
+
     // load all threads first
-    log.verbose(
-      pageToken ? `loading next page threads (max ${count})` : `loading threads (max ${count})`,
-    )
-    const result = await this.fetcher.fetch(threadsQuery(count, queryFilter, pageToken))
+    this.log.verbose(`loading threads`, { count, maxMonths, queryFilter, filteredIds, pageToken })
+    const query = GMailQueries.threads(count > 100 ? 100 : count, queryFilter, pageToken)
+    const result = await this.fetcher.fetch(query)
     if (!result) return []
     let threads = result.threads
     if (!threads) return []
+
+    // load messages for those threads
+    await this.loadMessages(threads)
 
     // if array of filtered thread ids were passed then we load threads until we find all threads by given ids
     // once we found all threads we stop loading threads
@@ -110,7 +119,7 @@ export class GMailLoader {
 
       // this condition means we just found all requested threads, no need to load next page
       if (filteredIds.length === 0) {
-        log.verbose('all requested threads were found')
+        this.log.verbose('all requested threads were found')
         return threads
       }
     }
@@ -119,14 +128,30 @@ export class GMailLoader {
     // once we count is less than one we stop loading threads
     count -= result.threads.length // important to use result.threads here instead of mutated threads
     if (count < 1) {
-      log.verbose('stopped loading, maximum number of threads were loaded', threads.length)
+      this.log.verbose('stopped loading, maximum number of threads were loaded', threads.length)
       return threads
+    }
+
+    // check if we reached email period limitation (e.g. 1 month)
+    if (maxMonths > 0) {
+      const lastThread = threads[threads.length - 1]
+      const lastMessage = lastThread.messages[lastThread.messages.length - 1]
+      if (lastMessage.internalDate) {
+        const lastMessageTime = parseInt(lastMessage.internalDate)
+        const currentDate = new Date()
+        const monthsAgo = currentDate.setMonth(currentDate.getMonth() - 1)
+        if (lastMessageTime <= monthsAgo) {
+          this.log.info(`reached month limit`, { threads, lastThread, lastMessage, lastMessageTime, monthsAgo })
+          return threads
+        }
+      }
     }
 
     // load threads from the next page if available
     if (result.nextPageToken) {
       const nextPageThreads = await this.loadThreads(
         count,
+        maxMonths,
         queryFilter,
         filteredIds,
         result.nextPageToken,
@@ -140,14 +165,16 @@ export class GMailLoader {
   /**
    * Loads thread messages and pushes them into threads.
    */
-  async loadMessages(threads: GmailThread[]): Promise<void> {
-    log.verbose('loading thread messages')
+  private async loadMessages(threads: GmailThread[]): Promise<void> {
+    this.log.verbose('loading thread messages', threads)
     await Promise.all(
       threads.map(async thread => {
-        const result = await this.fetcher.fetch(threadQuery(thread.id))
+        const query = GMailQueries.thread(thread.id)
+        const result = await this.fetcher.fetch(query)
         Object.assign(thread, result)
       }),
     )
-    log.verbose('thread messages are loaded', threads)
+    this.log.verbose('thread messages are loaded', threads)
   }
+
 }

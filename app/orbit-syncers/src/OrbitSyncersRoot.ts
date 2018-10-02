@@ -23,7 +23,7 @@ import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
 import { SyncerGroup } from './core/SyncerGroup'
 import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
-import { Syncers } from './Syncers'
+import { Syncers } from './core/Syncers'
 // import iohook from 'iohook'
 
 // const log = new Logger('orbit-syncers')

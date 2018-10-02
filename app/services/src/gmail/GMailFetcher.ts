@@ -6,13 +6,14 @@ import { queryObjectToQueryString } from '../utils'
 import { GmailFetchOptions } from './GMailTypes'
 
 const Config = getGlobalConfig()
-const log = new Logger('service:gmail:fetcher')
 
 export class GMailFetcher {
   setting: Setting
+  log: Logger
 
   constructor(setting: Setting) {
     this.setting = setting
+    this.log = new Logger('service:gmail:fetcher:' + setting.id)
   }
 
   async fetch<T>(options: GmailFetchOptions<T>): Promise<T> {
@@ -21,7 +22,7 @@ export class GMailFetcher {
 
   private async doFetch(path, query?: { [key: string]: any }, isRetrying = false) {
     const url = `https://www.googleapis.com${path}${queryObjectToQueryString(query)}`
-    log.info('fetching', url)
+    this.log.verbose('fetching', url)
     const response = await fetch(url, {
       mode: 'cors',
       headers: {
@@ -36,7 +37,7 @@ export class GMailFetcher {
         (result.error.message === 'Invalid Credentials' || result.error.code === 401) &&
         !isRetrying
       ) {
-        log.info('refreshing token')
+        this.log.verbose('refreshing token')
         const didRefresh = await this.refreshToken()
         if (didRefresh) {
           return await this.doFetch(path, query, true)

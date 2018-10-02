@@ -65,7 +65,7 @@ export class WebSocketServerTransport implements ServerTransport {
       return client.id === clientId && client.client.readyState === client.client.OPEN
     })
     if (client) {
-      log.verbose(`sending data to ${clientId} client`, data, this.clients.length)
+      log.verbose(`sending data to "${clientId}" client`, data, this.clients.length)
       client.client.send(JSON.stringify(data))
     }
   }

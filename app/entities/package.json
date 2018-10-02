@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "@mcro/models": "^2.2.1",
-    "typeorm": "^0.3.0-alpha.18"
+    "typeorm": "^0.3.0-alpha.19"
   }
 }

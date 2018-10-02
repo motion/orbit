@@ -1,11 +1,16 @@
 import { PersonBitEntity, PersonEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { PersonBitUtils } from '@mcro/model-utils'
-import { Person, PersonBit } from '@mcro/models'
+import { Person, PersonBit, Setting } from '@mcro/models'
 import { uniqBy } from 'lodash'
 import { getManager } from 'typeorm'
+import { SyncerQueries } from './SyncerQueries'
 
+/**
+ * Sync Person options.
+ */
 export interface PersonSyncerOptions {
+  setting: Setting
   log: Logger
   apiPeople: Person[]
   dbPeople: Person[]
@@ -18,12 +23,16 @@ export interface PersonSyncerOptions {
  */
 export class PersonSyncer {
 
+  constructor(private options: PersonSyncerOptions) {
+  }
+
   /**
    * Syncs given people in the database.
+   * Returns saved (inserted and updated) people.
    */
-  static async sync(options: PersonSyncerOptions) {
-    let { log, apiPeople, dbPeople, dbPersonBits, skipRemove } = options
-    log.info(`syncing people and person bits`, options)
+  async sync(): Promise<Person[]> {
+    let { log, apiPeople, dbPeople, dbPersonBits, skipRemove } = this.options
+    log.info(`syncing people and person bits`, this.options)
 
     // filter out people, left only unique people
     apiPeople = uniqBy(apiPeople, person => person.id)
@@ -96,25 +105,51 @@ export class PersonSyncer {
     })
 
     // perform database operations on synced bits
-    if (insertedPeople.length ||
-      updatedPeople.length ||
-      removedPeople.length ||
-      insertedPersonBits.length ||
-      updatedPersonBits.length ||
-      removedPersonBits.length) {
-      log.timer(`save people and person bits in the database`)
-      await getManager().transaction(async manager => {
-        await manager.save(PersonEntity, insertedPeople)
-        await manager.save(PersonEntity, updatedPeople)
-        await manager.remove(PersonEntity, removedPeople)
-        await manager.save(PersonBitEntity, insertedPersonBits)
-        await manager.save(PersonBitEntity, updatedPersonBits)
-        await manager.remove(PersonBitEntity, removedPersonBits)
-      })
-      log.timer(`save people and person bits in the database`)
-    } else {
+    if (!insertedPeople.length &&
+        !updatedPeople.length &&
+        !removedPeople.length &&
+        !insertedPersonBits.length &&
+        !updatedPersonBits.length &&
+        !removedPersonBits.length) {
       log.info(`no changes were detected, people and person bits were not synced`)
+      return
     }
+
+    // there is one problematic use case - if user removes integration during synchronization
+    // we should not sync anything (shouldn't write any new person or bit into the database)
+    // that's why we check if we have job for this particular setting registered
+    // and we do it twice - before saving anything to prevent further operations
+    // and after saving everything to make sure setting wasn't removed or requested for removal
+    // while we were inserting new bits
+    if (await SyncerQueries.isSettingRemoved(this.options.setting.id)) {
+      log.warning(`found a setting in a process of removal, skip syncing`)
+      return
+    }
+
+    log.timer(`save people and person bits in the database`)
+    try {
+      await getManager().transaction(async manager => {
+        await manager.save(PersonEntity, insertedPeople, { chunk: 100 })
+        await manager.save(PersonEntity, updatedPeople, { chunk: 100 })
+        await manager.remove(PersonEntity, removedPeople, { chunk: 100 })
+        await manager.save(PersonBitEntity, insertedPersonBits, { chunk: 100 })
+        await manager.save(PersonBitEntity, updatedPersonBits, { chunk: 100 })
+        await manager.remove(PersonBitEntity, removedPersonBits, { chunk: 100 })
+
+        // before committing transaction we make sure nobody removed setting during period of save
+        // we use non-transactional manager inside this method intentionally
+        if (await SyncerQueries.isSettingRemoved(this.options.setting.id))
+          throw "setting removed"
+      })
+
+    } catch (error) {
+      if (error === "setting removed") {
+        log.warning(`found a setting in a process of removal, skip syncing`)
+        return
+      }
+      throw error
+    }
+    log.timer(`save people and person bits in the database`)
   }
 
 }

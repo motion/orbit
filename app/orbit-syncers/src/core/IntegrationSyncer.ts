@@ -14,6 +14,11 @@ export interface IntegrationSyncer {
 }
 
 /**
+ * Constructor of the integration syncer instance.
+ */
+export type SyncerConstructor = new (setting?: SettingEntity) => IntegrationSyncer
+
+/**
  * Options to be passed to Syncer.
  */
 export interface SyncerOptions {
@@ -34,7 +39,7 @@ export interface SyncerOptions {
   /**
    * Constructor of the integration syncer instance.
    */
-  constructor: new (setting?: SettingEntity) => IntegrationSyncer
+  constructor: SyncerConstructor
 
   /**
    * Interval during which syncers should be executed.

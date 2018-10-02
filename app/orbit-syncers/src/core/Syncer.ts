@@ -1,7 +1,6 @@
 import { JobEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { Setting } from '@mcro/models'
-import { assign } from '@mcro/utils'
+import { Job, Setting } from '@mcro/models'
 import { EntitySubscriberInterface, getConnection, getRepository } from 'typeorm'
 import { SyncerOptions } from './IntegrationSyncer'
 import Timer = NodeJS.Timer
@@ -167,13 +166,15 @@ export class Syncer {
     log.info(`starting ${this.options.constructor.name} syncer`)
 
     // create a new job - the fact that we started a new syncer
-    const job = assign(new JobEntity(), {
+    const job: Job = {
+      target: 'job',
       syncer: this.name,
       setting: setting,
       time: new Date().getTime(),
+      type: 'INTEGRATION_SYNC',
       status: 'PROCESSING',
       message: '',
-    })
+    }
     await getRepository(JobEntity).save(job)
     log.verbose('created a new job', job)
 

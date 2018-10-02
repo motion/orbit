@@ -270,7 +270,7 @@ export class OrbitHome extends React.Component<Props> {
                                 categoryName={name}
                                 cardHeight={height}
                                 cardWidth={width}
-                                CardView={items[0].target === 'setting' ? OrbitAppCard : OrbitCard}
+                                CardView={isApp ? OrbitAppCard : OrbitCard}
                                 cardProps={
                                   isApp && {
                                     hide: { subtitle: true },

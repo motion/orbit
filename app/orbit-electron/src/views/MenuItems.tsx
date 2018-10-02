@@ -11,8 +11,7 @@ export class MenuItems extends React.Component<{
 }> {
   isClosing = false
 
-  toggleDevTools = () => {
-    const id = Electron.state.focusedAppId
+  toggleDevTools = (id = Electron.state.focusedAppId) => () => {
     Electron.setState({
       showDevTools: {
         [id]: !Electron.state.showDevTools[id],
@@ -72,9 +71,14 @@ export class MenuItems extends React.Component<{
           <MenuItemsExtra.Close accelerator="Command+w" onClick={this.handleClose} />
           <MenuItem label="Refresh" accelerator="Command+r" onClick={electronStore.restart} />
           <MenuItem
-            label="Show Dev Tools [App]"
+            label="Show Dev Tools [Focused Window]"
             accelerator="Command+Option+i"
-            onClick={this.toggleDevTools}
+            onClick={this.toggleDevTools()}
+          />
+          <MenuItem
+            label="Show Dev Tools [Peek]"
+            accelerator="Command+Option+i"
+            onClick={this.toggleDevTools(`${App.peekState.id}`)}
           />
         </SubMenu>
       </Menu>

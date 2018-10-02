@@ -3,68 +3,79 @@ title: Update One
 date: '2018-09-29T22:12:03.284Z'
 ---
 
-It's about time! I'm really excited to start talking about Orbit. It's certainly been an intense few years of development, and it feels really great to reach the point where I can start to speak more about it.
+I'm really excited to start talking about Orbit. It's certainly been an intense few years of development and it feels really great to reach the point of putting it out in the world.
 
-I'll start with the most exciting part. We have [our first alpha build]() ready to download. Give it a try. While some of the most interesting parts are barely working, we have pushed hard to get it to where everything we want to do over the next year is roughly in place, auto updates, and looks and feels close to what we want.
+I'll start with the big news: we have [our first alpha build]() ready to download. Give it a try. While some of the most interesting parts are not yet enabled, we have pushed hard to get it to where we can start getting feedback.
 
-Let's start with the mission:
+So, what is Orbit?
 
-> To create a new [aggregation platform]() for your information that shifts power back to the user -- with more flexible, powerful, contextual apps and triggers.
+Let's start with the company mission:
+
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) for information that shifts the balance of power -- from the cloud back to end-users -- with flexible, powerful and beautiful abilities.
 
 ### Orbit, The Product
 
-Orbit is a complement (or perhaps the mid-point between) your Browser and your Operating System. At it's core it's a better way to explore, find, and generally assist you with your knowledge. But it's also trying to change the world as it is today: a world where you have _almost no control over your information_.
+Orbit is a complement (or perhaps the mid-point between) your Browser and your Operating System. It's a "Knowledge OS" that gives you a better way to explore, find and augment your day to day with all your interesting information.
 
-Or, why can't we build Minority Report interfaces for our companies?
+But it's also trying to change the world as it is today: a world where you have _almost no control over your information_.
 
-> We were promised [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), and we were given one-hundred and fourty-four browser tabs.
+The question it's trying to answer is: why can't we build Minority Report / Tony Stark interfaces for our information? Why are intranet systems so bleak?
+
+> We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we go 100 browser tabs.
 
 I want to live in a world where:
 
-- You can navigate all your interesting information in one place.
-- You can explore and search that information with ease.
-- You can see who is doing what and who is good at what, across your services.
-- You can augment what you are doing, in context, with your knowledge.
+- You can navigate knowledge in one place.
+- You can be confident it's is well sorted and up to date.
+- You can explore and search with ease.
+- You can see who is doing what / who is good at what, across many services.
+- You are augmented in a natural way with information, in context, automatically.
 - You can build and use apps that to unify, extend, enhance it.
 - You can do all of this without having to expose your data to a 3rd party company.
-
-So, how do we get there? Orbit makes the bet that by being uniquely user-aligned in incentives (with data privacy as a primary feature), with a unique on-device approach, and of course clearing a high bar in product design, we can make it happen.
 
 Before explaining in any more depth, a demo is worth about ~60,000wps:
 
 [video]
 
-You can think of Orbit as your friendly personal knowledge assistant. It understands handling diverse amounts of sensitive information _can't be done in the cloud_, it's just bad incentive alignement. It also understands people want solutions and not hand-wavy promises, so we are focusing intensely on making the product useful and able to adapt to diverse needs.
+### Orbit, The Strategy
 
-Because Orbit runs privately on-device, we _never touch your data, even the keys!_ It essentially runs in a decentralized fashion, passing over it's settings to your new devices as we support new platforms and teams.
+Orbit wants to be a _really good platform for knowledge management_, essentially replacing clunky intranet systems by breaking down the barrier between Cloud and OS.
 
-It's not just a pitch for Silicon Valley, it's also a great way to allow people to "test the waters". A risk-free trial where you can test out Orbit forces us into a far better incentive structure:
+So, how do we get there? Orbit is making a big bet: that being **uniquely user-aligned** will make it happen.
 
-1. We have nowhere to hide! The product must speak for itself, as there is no lock-in.
-2. You can test it out before committing any money.
-3. You can actually firewall Orbit, guaranteeing your data's privacy.
+How? Well, Orbit runs entirely privately to you, on your computer only, and we _never touch any of your data!_
 
-I think this solves what would have been a near-impossible distribution story for a very early stage startup. But I understand that distribution is only half the battle. I'd like to break down Orbit a little more.
+And this isn't just some techy-pitch. Throughout user testing we consistenly found people hesitant to trust _anyone_, let alone an early startup with _all of their data_.
+
+But by being completely private, Orbit de-risks "testing the water". A risk-free trial where you can test out Orbit leads us into a far better incentive structure, by avoiding the need for leading with Sales:
+
+1. The product must sell itself, you can trust we aren't selling you fools gold.
+2. You can test it out before buying, you don't have to ante up.
+3. You can actually firewall Orbit, you don't even have to trust our security promise!
+
+I think this solves what would have been a near-impossible distribution story for a very early stage startup that's trying to touch all your data. But I understand that distribution is only half the battle.
+
+I'd like to revisit Orbit at a slightly higher level, to finish explaining our plan.
 
 ## How Orbit works
 
-#### Bit
+#### The Bit
 
-Where _x_ SaaS products have data behind _x_ different interfaces, Orbit requires its apps to sync data into a common fundamental unit: the **bit**. A bit to Orbit is like a file to an operating system. It allows Orbit to search, view, and unify disparate data.
+The fundamental unit of information. Where SaaS products have their data behind their own unique interfaces and APIs, Orbit requires its apps to sync data into a common fundamental unit: **The Bit**. A bit to Orbit is like a file to an operating system. It allows Orbit to search, view, and unify disparate data.
 
 #### Home
 
 The Orbit Home is essentially its Start Menu / Spotlight / Siri. It's your Minority Report interface, powered by bits of information. Right now it shows recent activity, a Directory of people, and your Search bar.
 
+> Option + Space opens Orbit from anywhere in your OS
+
 #### Language
 
-Orbit comes with a brand new and [state of the art](https://arxiv.org/pdf/1803.08493.pdf) Natural Language engine. Importantly, it runs extremely quickly and is custom to you: it determines interesting words relative to both English and their frequency of usage in your corpus.
-
-Further, it powers on-device search and related items in Orbit and its apps.
+Orbit comes with a brand new and [state of the art](https://arxiv.org/pdf/1803.08493.pdf) Natural Language engine. Importantly, it runs quickly on-device, and is custom to you: it's relevancy is powered by both interesting words in English as well as their relative frequency in your corpus. This powers the on-device search, related items, and interesting word extraction.
 
 #### Context
 
-Context, or augmented computing, will be the first big step for Orbit to feel magical and deliver on the "future of computing" we want to deliver.
+Context, or augmented computing, will be the first big step for Orbit to feel magical and deliver on the "future of computing" experience we want to deliver.
 
 It starts with a custom OCR engine we've built that focuses on one thing: being the fastest in the world. We've gotten it down to under 180ms for scanning a large and dense page of text and we have a clear path to haiving it use less than 1% of your total laptop battery when always-on.
 

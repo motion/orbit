@@ -5,68 +5,78 @@ date: '2018-09-29T22:12:03.284Z'
 
 I'm really excited to start talking about Orbit. It's certainly been an intense few years of development and it feels really great to reach the point of putting it out in the world.
 
-I'll start with the big news: we have [our first alpha build]() ready to download. Give it a try. While some of the most interesting parts are not yet enabled, we have pushed hard to get it to where we can start getting feedback.
+I'll start with the big news: we have a [first alpha build](). Give it a try. While some of the interesting parts are not yet enabled, we have pushed hard to get it to where we can start getting feedback.
 
 So, what is Orbit?
 
-Let's start with the company mission:
+Let's start with our mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) for information that shifts the balance of power -- from the cloud back to end-users -- with flexible, powerful and beautiful abilities.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that shifts the balance of power -- from companies to individuals -- to give more flexible, powerful and inuitive control over our knowledge.
+
+The idea is this: incentives and the way platforms are structured today hold us back from being able to collaborate, explore and extend the information we create.
 
 ### Orbit, The Product
 
-Orbit is a complement (or perhaps the mid-point between) your Browser and your Operating System. It's a "Knowledge OS" that gives you a better way to explore, find and augment your day to day with all your interesting information.
+Orbit is a new type of thing. It's the mid point between your Browser and your Operating System -- a knowledge platform that aims to take disparate information and make it easy to find, explore and understand.
+
+It's like your own little personal assistant, keeping you up to date as you normally work.
 
 But it's also trying to change the world as it is today: a world where you have _almost no control over your information_.
 
-The question it's trying to answer is: why can't we build Minority Report / Tony Stark interfaces for our information? Why are intranet systems so bleak?
+The question it's trying to answer is: why haven't we realized the flexible and powerful interfaces we were promised in Minority Report and Iron Man? Are our current intranet systems the best we can do to give our company knowledge a "home base"?
+
+![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-I want to live in a world where:
+And I'm not talking about _fanciness_ here. While the interfaces of movies are often ridiculous and impractical (who can keep their arms up like that for more than a few minutes?), what they do get right is a level of fluidity and unification that has actually _regressed_ since the pre-internet era.
 
-- You can navigate your company in one place.
-- You can be confident your information is accurate and up to date.
-- You can explore people, topics, and ideas.
-- You are augmented, in context, no matter what you're doing, with relevant information.
-- You can build and use apps that to unify, extend, enhance it.
-- You can do all of this without having to expose your data to a 3rd party company.
+Let's boil it down. I want to live in a world where:
 
-Before explaining in any more depth, a demo is worth about ~60,000wps:
+- You can navigate related knowledge all in one place.
+- You can be confident the information is complete, accurate, up to date.
+- You can explore it flexibly: by people, topics, time, etc.
+- It augments you as you normally work, using what you do to show what you missed.
+- You can explore, correlate, build, script and extend it.
+- You can do all of this without having to expose it to a 3rd party company.
+
+Before explaining in any more depth, here is Orbit as of today:
 
 [video]
 
+Operating Systems used to give us a lot more flexibility than The Cloud of today. We could for the most part take files and use them across different apps. We could search across all our information.
+
+But Operating Systems were replaced by browser tabs, and ever since the trend has been anti-Iron-Man. I think there's room for a platform that fixes that: by mandating that apps on it sync their "data" to a common form.
+
+If Orbit can do that well enough, we may be able to get enough demand that it will force cloud platforms to let us gain a lot more control over our data. So we can explore it how our films have always imagined it should be.
+
 ### Orbit, The Strategy
 
-Orbit wants to be a _really good platform for knowledge management_, essentially replacing clunky intranet systems by breaking down the barrier between Cloud and OS.
+Orbit wants to be a _really good platform for knowledge management_, essentially replacing the clunky and stale intranet systems we use today. How do we get there? Orbit is making a big bet: being uniquely user-aligned is the only way to get real distribution.
 
-So, how do we get there? Orbit is making a big bet: that being **uniquely user-aligned** will make it happen.
+It has to be _uniquely user aligned_. This isn't just some buzzword. Throughout user testing we consistenly found people hesitant to trust anyone, let alone an early startup with _all of their data_.
 
-How? Well, Orbit runs entirely privately to you, on your computer only, and we _never touch any of your data!_
+But by being completely private, Orbit de-risks "testing the water". A risk-free trial where you can test out Orbit leads us into a far better incentive structure for us.
 
-And this isn't just some techy-pitch. Throughout user testing we consistenly found people hesitant to trust _anyone_, let alone an early startup with _all of their data_.
+It forces us to actually care about the UX. And it lets us avoid becoming a "sales first":
 
-But by being completely private, Orbit de-risks "testing the water". A risk-free trial where you can test out Orbit leads us into a far better incentive structure, by avoiding the need for leading with Sales:
-
-1. The product must sell itself, you can trust we aren't selling you fools gold.
-2. You can test it out before buying, you don't have to ante up.
-3. You can actually firewall Orbit, you don't even have to trust our security promise!
+1. The product must sell itself by being actually good.
+2. You can test it with no cost or risk to you or your company.
+3. You can do this without even needing to trust our word, firewall it!
 
 I think this solves what would have been a near-impossible distribution story for a very early stage startup that's trying to touch all your data. But I understand that distribution is only half the battle.
 
-I'd like to revisit Orbit at a slightly higher level, to finish explaining our plan.
-
-### Orbit, In Detail
+### Orbit, The Platform
 
 #### The Bit
 
 The fundamental unit of information. Where SaaS products have their data behind their own unique interfaces and APIs, Orbit requires its apps to sync data into a common fundamental unit: **The Bit**. A bit to Orbit is like a file to an operating system. It allows Orbit to search, view, and unify disparate data.
 
-#### Home
+#### Orbit Home
 
-The Orbit Home is essentially its Start Menu / Spotlight / Siri. It's your Minority Report interface, powered by bits of information. Right now it shows recent activity, a Directory of people, and your Search bar.
+The Orbit Home is essentially its Start Menu / Spotlight / Siri. It's your Tony Stark interface, powered by bits of information. Right now it shows recent activity, a Directory of people, and your Search bar.
 
-> Use Option+Space to open Orbit Home
+> Option+Space opens Orbit Home
 
 #### Language
 

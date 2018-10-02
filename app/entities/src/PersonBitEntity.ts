@@ -1,5 +1,5 @@
 import { IntegrationTypeValues, Person, PersonBit } from '@mcro/models'
-import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
 import { PersonEntity } from './PersonEntity'
 
 @Entity()
@@ -7,7 +7,7 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
 
   target: 'person-bit' = 'person-bit'
 
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id?: number
 
   @Column({ unique: true })

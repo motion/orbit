@@ -1,4 +1,4 @@
-import { GmailFetchOptions, GmailHistory, GmailThread, GmailThreadResult, GmailUserProfile } from './GMailTypes'
+import { GMailFetchOptions, GMailHistory, GMailThread, GMailThreadResult, GMailUserProfile } from './GMailTypes'
 
 /**
  * GMail queries.
@@ -12,7 +12,7 @@ export class GMailQueries {
    *
    * @see https://developers.google.com/gmail/api/v1/reference/users/getProfile
    */
-  static userProfile(userId = 'me'): GmailFetchOptions<GmailUserProfile> {
+  static userProfile(userId = 'me'): GMailFetchOptions<GMailUserProfile> {
     return {
       url: `/users/${userId}/profile`
     }
@@ -23,7 +23,7 @@ export class GMailQueries {
    *
    * @see https://developers.google.com/gmail/api/v1/reference/users/threads/list
    */
-  static threads(max: number, filter?: string, pageToken?: string, userId = 'me'): GmailFetchOptions<GmailThreadResult> {
+  static threads(max: number, filter?: string, pageToken?: string, userId = 'me'): GMailFetchOptions<GMailThreadResult> {
     return {
       url: `/users/${userId}/threads`,
       query: {
@@ -39,7 +39,7 @@ export class GMailQueries {
    *
    * @see https://developers.google.com/gmail/api/v1/reference/users/threads/get
    */
-  static thread(threadId: string, userId = 'me'): GmailFetchOptions<GmailThread> {
+  static thread(threadId: string, userId = 'me'): GMailFetchOptions<GMailThread> {
     return {
       url: `/users/${userId}/threads/${threadId}`
     }
@@ -51,7 +51,7 @@ export class GMailQueries {
    *
    * @see https://developers.google.com/gmail/api/v1/reference/users/history/list
    */
-  static history(startHistoryId: string, pageToken: string|undefined = undefined, userId = 'me'): GmailFetchOptions<GmailHistory> {
+  static history(startHistoryId: string, pageToken: string|undefined = undefined, userId = 'me'): GMailFetchOptions<GMailHistory> {
     return {
       url: `/users/${userId}/history`,
       query: {

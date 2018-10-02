@@ -10,7 +10,7 @@ export interface PersonBit {
   /**
    * Unique person id.
    */
-  id: number
+  id?: number
 
   /**
    * Unique person email address.

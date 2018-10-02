@@ -1,5 +1,5 @@
 import { GmailBitDataParticipant } from '@mcro/models'
-import { GmailMessage } from '@mcro/services'
+import { GMailMessage } from '@mcro/services'
 
 const createDOMPurify = require('dompurify')
 const JSDOM = require('jsdom').JSDOM
@@ -8,11 +8,11 @@ const window = (new JSDOM('')).window
 const DOMPurify = createDOMPurify(window)
 
 /**
- * Parses Gmail Message.
+ * Parses GMail Message.
  */
 export class GMailMessageParser {
 
-  constructor(private message: GmailMessage) {
+  constructor(private message: GMailMessage) {
   }
   
   /**

@@ -19,9 +19,13 @@ export class BitUtils {
   /**
    * Creates a new bit and sets given properties to it.
    */
-  static create(properties: Partial<Bit>) {
+  static create(properties: Partial<Bit>, integrationId?: string|number) {
     const bit: Bit = { target: 'bit', ...properties }
     bit.contentHash = this.contentHash(bit)
+    if (!bit.settingId && bit.setting)
+      bit.settingId = bit.setting.id
+    if (bit.integration && bit.settingId && integrationId)
+      bit.id = hash(`${bit.integration}-${bit.settingId}-${integrationId}`)
     return bit
   }
 

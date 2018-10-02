@@ -1,5 +1,7 @@
-
-export type GmailFetchOptions<_T> = {
+/**
+ * Interface for GMail query.
+ */
+export type GMailFetchOptions<_T> = {
   url: string
   query?: { [key: string]: any }
 }
@@ -7,7 +9,7 @@ export type GmailFetchOptions<_T> = {
 /**
  * @see https://developers.google.com/gmail/api/v1/reference/users/getProfile
  */
-export type GmailUserProfile = {
+export type GMailUserProfile = {
   emailAddress: string
   messagesTotal: number
   threadsTotal: number
@@ -17,17 +19,17 @@ export type GmailUserProfile = {
 /**
  * @see https://developers.google.com/gmail/api/v1/reference/users/threads#resource
  */
-export type GmailThread = {
+export type GMailThread = {
   id: string
   snippet: string
   historyId: string
-  messages: GmailMessage[]
+  messages: GMailMessage[]
 }
 
 /**
  * @see https://developers.google.com/gmail/api/v1/reference/users/messages#resource
  */
-export type GmailMessage = {
+export type GMailMessage = {
   id: string
   threadId: string
   labelIds: string[]
@@ -57,8 +59,8 @@ export type GmailMessage = {
 /**
  * @see https://developers.google.com/gmail/api/v1/reference/users/threads/list
  */
-export type GmailThreadResult = {
-  threads: GmailThread[]
+export type GMailThreadResult = {
+  threads: GMailThread[]
   nextPageToken: string
   resultSizeEstimate: number
 }
@@ -70,7 +72,7 @@ export type GmailThreadResult = {
  *
  * @see https://developers.google.com/gmail/api/v1/reference/users/history/list
  */
-export type GmailHistory = {
+export type GMailHistory = {
   historyId: string
   nextPageToken: string
   history: {
@@ -78,10 +80,10 @@ export type GmailHistory = {
       id: string
       threadId: string
     }[]
-    messagesAdded: GmailHistoryMessageAction[]
-    messageDeleted: GmailHistoryMessageAction[]
-    labelsAdded: GmailHistoryMessageAction[]
-    labelsRemoved: GmailHistoryMessageAction[]
+    messagesAdded: GMailHistoryMessageAction[]
+    messageDeleted: GMailHistoryMessageAction[]
+    labelsAdded: GMailHistoryMessageAction[]
+    labelsRemoved: GMailHistoryMessageAction[]
   }[]
 }
 
@@ -90,7 +92,7 @@ export type GmailHistory = {
  *
  * @see https://developers.google.com/gmail/api/v1/reference/users/history/list
  */
-export type GmailHistoryMessageAction = {
+export type GMailHistoryMessageAction = {
   message: {
     id: string
     threadId: string
@@ -98,7 +100,7 @@ export type GmailHistoryMessageAction = {
   labelIds?: string[]
 }
 
-export type GmailHistoryLoadResult = {
+export type GMailHistoryLoadResult = {
   historyId: string
   addedThreadIds: string[]
   removedThreadIds: string[]

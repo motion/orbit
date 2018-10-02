@@ -3,32 +3,38 @@ import { Logger } from '@mcro/logger'
 import { Bit, Setting } from '@mcro/models'
 import { chunk } from 'lodash'
 import { getManager } from 'typeorm'
-import { SyncerQueries } from './SyncerQueries'
+import { SyncerRepository } from './SyncerRepository'
 
 /**
  * Sync Bits options.
  */
 export interface BitSyncerOptions {
-  setting: Setting
-  log: Logger
   apiBits: Bit[]
   dbBits: Bit[]
+  removedBits?: Bit[]
+  dropAllBits?: boolean
 }
 
 /**
  * Syncs Bits.
  */
 export class BitSyncer {
+  private setting: Setting
+  private log: Logger
+  private syncerRepository: SyncerRepository
 
-  constructor(private options: BitSyncerOptions) {
+  constructor(setting: Setting, log: Logger) {
+    this.setting = setting
+    this.log = log
+    this.syncerRepository = new SyncerRepository(setting)
   }
 
   /**
    * Syncs given bits in the database.
    */
-  async sync() {
-    let { log, apiBits, dbBits } = this.options
-    log.info(`syncing bits`, this.options)
+  async sync(options: BitSyncerOptions) {
+    this.log.info(`syncing bits`, options)
+    const { apiBits, dbBits } = options
 
     // calculate bits that we need to update in the database
     const insertedBits = apiBits.filter(apiBit => {
@@ -42,9 +48,13 @@ export class BitSyncer {
       return !apiBits.some(apiBit => apiBit.id === dbBit.id)
     })
 
+    // if we have explicitly removed bits set, add them to removing bits
+    if (options.removedBits)
+      removedBits.push(...options.removedBits)
+
     // perform database operations on synced bits
     if (!insertedBits.length && !updatedBits.length && !removedBits.length) {
-      log.verbose(`no changes were detected, nothing was synced`)
+      this.log.info(`no changes were detected, no bits were synced`)
       return
     }
 
@@ -54,14 +64,18 @@ export class BitSyncer {
     // and we do it twice - before saving anything to prevent further operations
     // and after saving everything to make sure setting wasn't removed or requested for removal
     // while we were inserting new bits
-    if (await SyncerQueries.isSettingRemoved(this.options.setting.id)) {
-      log.warning(`found a setting in a process of removal, skip syncing`)
+    if (await this.syncerRepository.isSettingRemoved()) {
+      this.log.warning(`found a setting in a process of removal, skip syncing`)
       return
     }
 
-    log.timer(`save bits in the database`, { insertedBits, updatedBits, removedBits })
+    this.log.timer(`save bits in the database`, { insertedBits, updatedBits, removedBits })
     try {
       await getManager().transaction(async manager => {
+
+        // drop all exist bits if such option was specified
+        if (options.dropAllBits)
+          await manager.delete(BitEntity, { settingId: this.setting.id })
 
         // insert new bits
         if (insertedBits.length > 0) {
@@ -103,7 +117,7 @@ export class BitSyncer {
           })
 
           if (newPeople.length || removedPeople.length) {
-            log.verbose(`found people changes in a bit`, bit, { newPeople, removedPeople })
+            this.log.info(`found people changes in a bit`, bit, { newPeople, removedPeople })
 
             await manager
               .createQueryBuilder(BitEntity, "bit")
@@ -120,15 +134,15 @@ export class BitSyncer {
 
         // before committing transaction we make sure nobody removed setting during period of save
         // we use non-transactional manager inside this method intentionally
-        if (await SyncerQueries.isSettingRemoved(this.options.setting.id))
+        if (await this.syncerRepository.isSettingRemoved())
           throw "setting removed"
 
       })
-      log.timer(`save bits in the database`)
+      this.log.timer(`save bits in the database`)
 
     } catch (error) {
       if (error === "setting removed") {
-        log.warning(`found a setting in a process of removal, skip syncing`)
+        this.log.warning(`found a setting in a process of removal, skip syncing`)
         return
       }
       throw error

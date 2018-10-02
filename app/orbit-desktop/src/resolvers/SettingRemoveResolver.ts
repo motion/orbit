@@ -1,8 +1,9 @@
-import { BitEntity, JobEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { Job, SettingRemoveCommand } from '@mcro/models'
-import { getManager, getRepository } from 'typeorm'
+import { hash } from '@mcro/utils'
+import { getManager, getRepository, In } from 'typeorm'
 
 const log = new Logger('command:setting-remove')
 
@@ -45,7 +46,25 @@ export const SettingRemoveResolver = resolveCommand(SettingRemoveCommand, async 
       await manager.remove(persons, { chunk: 100 })
       log.info('integration people were removed')
 
-      // todo: also update person bit entities
+      // get person bits which we are going to filter and find which ones we will remove
+      log.info('loading person bits related to persons', persons)
+      const personBitIds = persons.map(person => hash(person.email))
+      const personBits = await manager.find(PersonBitEntity, {
+        relations: {
+          people: true
+        },
+        where: {
+          id: In(personBitIds)
+        }
+      })
+      log.info('loaded person bits', personBits)
+
+      // find out which of person bits we will remove
+      const removedPersonBits = personBits.filter(personBit => personBit.people.length === 0)
+      log.info('person bits to be removed', removedPersonBits)
+      await manager.remove(PersonBitEntity, personBits)
+      log.info('person were removed')
+      // todo: update person bit's "hasGmail", "hasSlack", etc. flags too.
 
       // removing jobs (including that one we created just now)
       const jobs = await manager.find(JobEntity, { settingId })

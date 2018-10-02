@@ -2,6 +2,7 @@ import { BitEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/e
 import { Logger } from '@mcro/logger'
 import { Bit, Person, SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
+import { hash } from '@mcro/utils'
 import { getRepository, In, MoreThan } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
@@ -18,6 +19,8 @@ export class SlackSyncer implements IntegrationSyncer {
   private loader: SlackLoader
   private bitFactory: SlackBitFactory
   private personFactory: SlackPersonFactory
+  private personSyncer: PersonSyncer
+  private bitSyncer: BitSyncer
 
   constructor(setting: SettingEntity) {
     this.setting = setting
@@ -25,6 +28,8 @@ export class SlackSyncer implements IntegrationSyncer {
     this.loader = new SlackLoader(this.setting)
     this.bitFactory = new SlackBitFactory(this.setting)
     this.personFactory = new SlackPersonFactory(this.setting)
+    this.personSyncer = new PersonSyncer(setting, this.log)
+    this.bitSyncer = new BitSyncer(setting, this.log)
   }
 
   async run() {
@@ -52,14 +57,7 @@ export class SlackSyncer implements IntegrationSyncer {
     this.log.timer(`load synced people and person bits from the database`, { dbPeople, dbPersonBits })
 
     // sync people
-    await new PersonSyncer({
-      setting: this.setting,
-      log: this.log,
-      apiPeople,
-      dbPeople,
-      dbPersonBits,
-      skipRemove: true,
-    }).sync()
+    await this.personSyncer.sync({ apiPeople, dbPeople, dbPersonBits })
     
     // re-load database people, we need them to deal with bits
     this.log.timer('load synced people from the database')
@@ -128,12 +126,7 @@ export class SlackSyncer implements IntegrationSyncer {
     }
 
     // sync all the bits we have
-    await new BitSyncer({
-      setting: this.setting,
-      log: this.log,
-      apiBits,
-      dbBits
-    }).sync()
+    await this.bitSyncer.sync({ apiBits, dbBits })
 
     // update settings
     this.log.info('update settings', { lastMessageSync })
@@ -145,6 +138,7 @@ export class SlackSyncer implements IntegrationSyncer {
    * Loads all exist database person bits for the given people.
    */
   private loadDatabasePersonBits(people: Person[]) {
+    const ids = people.map(person => hash(person.email))
     return getRepository(PersonBitEntity).find({
       // select: {
       //   id: true,
@@ -154,7 +148,7 @@ export class SlackSyncer implements IntegrationSyncer {
         people: true,
       },
       where: {
-        email: In(people.map(person => person.id)),
+        email: In(ids),
       },
     })
   }

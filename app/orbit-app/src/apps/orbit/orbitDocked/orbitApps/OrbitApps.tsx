@@ -15,6 +15,7 @@ import { fuzzyQueryFilter } from '../../../../helpers'
 import { App } from '@mcro/stores'
 import { settingsList } from '../../../../helpers/settingsList'
 import { NoResultsDialog } from '../views/NoResultsDialog'
+import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 
 type Props = {
   name: string
@@ -108,11 +109,20 @@ export class OrbitApps extends React.Component<Props> {
               {store.filteredActiveApps.map((setting, index) => (
                 <OrbitAppCard
                   key={setting.id}
+                  model={setting}
                   pane="docked"
                   subPane="apps"
                   total={store.integrations.length}
                   inGrid
-                  model={setting}
+                  result={{
+                    ...settingToAppConfig(setting),
+                    config: {
+                      dimensions: [680, 620],
+                      initialState: {
+                        active: 'settings',
+                      },
+                    },
+                  }}
                   index={index}
                   isActive
                 />

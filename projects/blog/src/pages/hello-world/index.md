@@ -21,15 +21,14 @@ But it's also trying to change the world as it is today: a world where you have 
 
 The question it's trying to answer is: why can't we build Minority Report / Tony Stark interfaces for our information? Why are intranet systems so bleak?
 
-> We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we go 100 browser tabs.
+> We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
 I want to live in a world where:
 
-- You can navigate knowledge in one place.
-- You can be confident it's is well sorted and up to date.
-- You can explore and search with ease.
-- You can see who is doing what / who is good at what, across many services.
-- You are augmented in a natural way with information, in context, automatically.
+- You can navigate your company in one place.
+- You can be confident your information is accurate and up to date.
+- You can explore people, topics, and ideas.
+- You are augmented, in context, no matter what you're doing, with relevant information.
 - You can build and use apps that to unify, extend, enhance it.
 - You can do all of this without having to expose your data to a 3rd party company.
 

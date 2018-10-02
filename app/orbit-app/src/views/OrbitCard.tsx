@@ -142,7 +142,7 @@ const Padding = view({
   store: OrbitItemStore,
 })
 @view
-export class OrbitCardInner extends React.Component<OrbitItemProps> {
+export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
   static defaultProps = {
     borderRadius: 7,
     padding: 8,
@@ -178,7 +178,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     const { isSelected } = store
     const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
-    const hasSubtitle = !!subtitle
+    const hasSubtitle = !!subtitle && !(hide && hide.subtitle)
     const hasDate = !!updatedAt
     const hasPeople = !!people && !!people.length
     const hasFourRows =

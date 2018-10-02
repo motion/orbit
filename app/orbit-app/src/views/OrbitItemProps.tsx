@@ -46,7 +46,6 @@ export type OrbitItemProps<T extends Model> = CSSPropertySet & {
   nextUpStyle?: Object
   isSelected?: boolean | Function
   cardProps?: Object
-  item?: AppConfig
   disableShadow?: boolean
   preventAutoSelect?: boolean
   padding?: number | number[]

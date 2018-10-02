@@ -31,10 +31,11 @@ class GmailSettingStore {
 @view
 export class GmailSetting extends React.Component<Props & { store?: GmailSettingStore }> {
   render() {
-    const { store, setting } = this.props
+    const { store, setting, initialState } = this.props
     return (
       <SimpleAppExplorer
         setting={setting}
+        initialState={initialState}
         settingsPane={
           <>
             <SettingManageRow setting={setting} whitelist={store.whitelist} />

@@ -10,10 +10,11 @@ type Props = PeekSettingProps<AtlassianSetting>
 @view
 export class JiraSetting extends React.Component<Props> {
   render() {
-    const { setting } = this.props
+    const { setting, initialState } = this.props
     return (
       <SimpleAppExplorer
         setting={setting}
+        initialState={initialState}
         settingsPane={<AtlassianSettingLogin type="jira" setting={setting} />}
       />
     )

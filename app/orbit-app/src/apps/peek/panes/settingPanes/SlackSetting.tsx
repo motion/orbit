@@ -68,10 +68,11 @@ class SlackSettingStore {
 @view
 export class SlackSetting extends React.Component<Props & { store?: SlackSettingStore }> {
   render() {
-    const { store, setting } = this.props
+    const { store, setting, initialState } = this.props
     return (
       <SimpleAppExplorer
         setting={setting}
+        initialState={initialState}
         settingsPane={
           <>
             <SettingManageRow setting={setting} whitelist={store.whitelist} />

@@ -8,11 +8,13 @@ import { TitleBarButton } from '../../../views/TitleBarButton'
 import { NICE_INTEGRATION_NAMES } from '../../../../../constants'
 import { PeekHeader } from '../../../views/PeekHeader'
 import { SegmentedRow, View } from '@mcro/ui'
+import { AppConfig } from '@mcro/stores'
 
 type Props = {
   appViewStore?: AppViewStore
   setting: Setting
   settingsPane: React.ReactNode
+  initialState: AppConfig['config']['initialState']
 }
 
 const AppRelationsExplorer = () => {
@@ -24,8 +26,9 @@ const AppRelationsExplorer = () => {
 }
 
 export class AppViewStore {
-  active = 'topics'
-  lastActive = 'topics'
+  props: Props
+  active = this.props.initialState.active || 'topics'
+  lastActive = this.props.initialState.active || 'topics'
 
   setter = key => () => {
     this.setActiveKey(key)
@@ -85,7 +88,7 @@ export class SimpleAppExplorer extends React.Component<Props> {
             <AppTopicExplorer setting={setting} />
           </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'related'}>
-            <AppRelationsExplorer setting={setting} />
+            <AppRelationsExplorer />
           </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'settings'}>{settingsPane}</HideablePane>
         </PeekContent>

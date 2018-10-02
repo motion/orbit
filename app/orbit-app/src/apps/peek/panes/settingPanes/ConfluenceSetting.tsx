@@ -10,11 +10,12 @@ type Props = PeekSettingProps<AtlassianSetting>
 @view
 export class ConfluenceSetting extends React.Component<Props> {
   render() {
-    const { setting } = this.props
+    const { setting, initialState } = this.props
     return (
       <SimpleAppExplorer
         setting={setting}
         settingsPane={<AtlassianSettingLogin type="confluence" setting={setting} />}
+        initialState={initialState}
       />
     )
   }

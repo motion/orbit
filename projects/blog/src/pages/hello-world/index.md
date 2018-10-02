@@ -3,48 +3,46 @@ title: Update One
 date: '2018-09-29T22:12:03.284Z'
 ---
 
-I'm really excited to start talking about Orbit. It's certainly been an intense few years of development and it feels really great to reach the point of putting it out in the world.
+I'm certainly excited to start talking about Orbit. It's been an intense few years of development and I'm happy we can start to put it out into the world.
 
-I'll start with the big news: we have a [first alpha build](). Give it a try. While some of the interesting parts are not yet enabled, we have pushed hard to get it to where we can start getting feedback.
+But first, what you want: [our first alpha build](). Give it a try. While some interesting pieces are not yet in place, we pushed hard to get to where you can use it and give feedback.
 
 So, what is Orbit?
 
-Let's start with our mission:
+Let's start with a mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that shifts the balance of power -- from companies to individuals -- to give more flexible, powerful and inuitive control over our knowledge.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that shifts the balance of power -- from companies to individuals -- for more flexible, powerful and inuitive control over our knowledge.
 
-The idea is this: incentives and the way platforms are structured today hold us back from being able to collaborate, explore and extend the information we create.
+The idea is this: incentives and the way platforms are structured today hold us back from being able to use and synchonize all information we create effectively.
 
-### Orbit, The Product
+### Orbit, The Thing
 
-Orbit is a new type of thing. It's the mid point between your Browser and your Operating System -- a knowledge platform that aims to take disparate information and make it easy to find, explore and understand.
+Orbit is a new type of thing. It's a mid point between a Browser and an Operating System -- a knowledge platform that takes disparate information and puts it together.
 
-It's like your own little personal assistant, keeping you up to date as you normally work.
+It's trying to change the world as it is today: a world where you have _almost no real control over your information_.
 
-But it's also trying to change the world as it is today: a world where you have _almost no control over your information_.
-
-The question it's trying to answer is: why haven't we realized the flexible and powerful interfaces we were promised in Minority Report and Iron Man? Are our current intranet systems the best we can do to give our company knowledge a "home base"?
+It's a bit easier to frame is like this: why haven't we realized the flexible and powerful interfaces we were promised in Minority Report and Iron Man? Are our current intranet systems the best we can do to give knowledge a "operating system"?
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-And I'm not talking about _fanciness_ here. While the interfaces of movies are often ridiculous and impractical (who can keep their arms up like that for more than a few minutes?), what they do get right is a level of fluidity and unification that has actually _regressed_ since the pre-internet era.
+And I'm not interested in the _fanciness_ of sci-fi interfaces. While the UI's of movies are often ridiculous and impractical (who can keep their arms up like that for any time?), what they do get right is a level of fluidity, unification and exploration that has actually _regressed_ since the pre-internet era.
 
-Operating Systems used to give us a lot more flexibility than The Cloud of today. We could for the most part take files and use them across different apps. We could search across all our information.
+Before the cloud, Operating Systems gave us some level of flexibility. We had files. We could often use them with different apps. We could search and organize them.
 
-But Operating Systems were replaced by browser tabs, and for all the incredible good thats done, the trend has been anti-Iron-Man. I think there's room for a platform that fixes that: by mandating apps on it sync their "data" to a common form in exchange for some really compelling abilities.
+But Operating Systems were replaced by browser tabs, and for all the good that's done, the trend has been strictly anti-Iron-Man since then. I think there's room for a platform that fixes that by doing one thing: mandating apps on it sync their "data" to a common form, like a file.
 
 I want to live in a world where:
 
-- You can navigate related knowledge under one interface.
-- You can be confident your information is complete, accurate, up to date.
+- You can navigate all related knowledge in one interface.
+- You can be confident it's complete, accurate, up to date.
 - You can explore it flexibly: by people, topics, time, etc.
-- You are augmented as you work: seeing contextually relevant information.
+- You are augmented as you work: with relevant information to whatever you do.
 - You can explore, correlate, build, script and extend it.
-- You can do all of this without having to expose your data to any external company.
+- You can do all of this without having to give up your data to 3rd parties.
 
-That's a tall order and Orbit doesn't do all of this yet. Here is what it does do today:
+It's a tall order! Orbit doesn't do all of it, yet. What does Orbit do? Here's a quick demo I recorded today walking through some of the interface:
 
 [video]
 
@@ -52,22 +50,24 @@ That's a tall order and Orbit doesn't do all of this yet. Here is what it does d
 
 Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet systems of today. To do that, it has to have access to basically all of your information.
 
-But there's a misaligned incentive there. People don't want to trust a single company with all of their data. But a knowledge platform really should have everything!
+Early in development we realized there's a problem selling this: people don't want to trust a single company with all of their data.
+
+Talk about misaligned incentives!
+
+#### The solution
 
 We thought we'd reached a roadblock. It was hard to get anyone to install it, even as a trial. We we're stuck at distribution.
 
-It took a lot of exploration to realize something though. Computers today are fast, powerful, and have lots of disk space. The knowledge that's actually important to you is often not very large at all. What if we could run Orbit privately, entirely on your computer, and avoid having any cloud or on premise server?
+It took a lot of exploration to realize something though. Computers today are fast, powerful, and have lots of disk space. The knowledge that's actually important to you is often not very large at all. Could we could run Orbit privately, entirely on your computer, and avoid having any cloud or on premise server touching your data?
 
-By doing this, Orbit would de-risk "testing the water". You can actually firewall Orbit so it only has access to sync data directly from your integrations: Gmail, Confluence, Slack and the like.
+By doing this, Orbit would de-risk letting people "test the water". Today, you can actually firewall Orbit so it only has access to sync data directly from your integrations: Gmail, Confluence, Slack and the so on.
 
-That would mean:
+It aligns incentives in more ways than one:
 
 1. You can try it risk-free: both in cost and security, unlike the cloud.
 2. There's absolutely no sales cycle or "install" process, unlike on-prem.
 
-And with that, we realized, we'd naturally land into a much better incentive structure! A risk-free trial means **the product must actually be good**. We can't hide behind a sales team.
-
-I think this solves what would have been a near-impossible distribution story for a very early stage startup that's trying to unify your data.
+Because you can test our Orbit without any cost, it means **the product must actually be good**. We can't hide behind a sales team. I think this solves what would have been a near-impossible distribution story for a very early stage startup, but also is a great setup to keep our company honest and focused on delivering real value rather than effective sales.
 
 ### Orbit, In Detail
 

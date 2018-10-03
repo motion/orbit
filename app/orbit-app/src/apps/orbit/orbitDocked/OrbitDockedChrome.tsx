@@ -70,7 +70,7 @@ const OrbitChrome = view(({ moreOpaque, isUpper = false }) => {
   console.log(123)
   return (
     <>
-      {/* <Border /> */}
+      <Border />
       <Chrome />
       <Background
         isUpper={isUpper}

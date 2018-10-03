@@ -78,21 +78,21 @@ This also aligns us in another way: it means **the product must actually be good
 
 ### The details
 
-[Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and are planning to build.
+[Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and some that are in early development.
 
 <div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -520px;">
   <img alt="Orbit Home" src="./home.jpg" />
 </div>
 
+#### Home
+
+The Orbit Home is a flexible unified search and exploration tool for your data. For now it's a lot like Spotlight with some recent activity and a directory of people.
+
+> Option+Space opens Orbit Home
+
 #### Bit
 
 We're calling a "file" in orbit a "Bit". Where SaaS products have data behind unique interfaces and APIs, Orbit apps sync to a common fundamental unit: the bit, which can be text or HTML, for now.
-
-#### Home
-
-The Orbit Home is your starting point. It will aim to be the Tony Stark interface, powered by bits of information. For now it's a lot like Spotlight with some recent activity and a directory of people.
-
-> Option+Space opens your Orbit Home
 
 #### Language
 
@@ -100,21 +100,17 @@ Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) Natu
 
 #### Context
 
-Context, or augmented computing, will be the first big step for Orbit to feel magical and deliver on the "future of computing" experience we want to deliver.
+Context will be the first big step Orbit does to deliver on the "future of computing". It's powered by a custom OCR engine we've built that focuses on one thing: being the fastest in the world. We're close to getting it to use <1% of your total laptop battery.
 
-It's powered by a custom OCR engine we've built that focuses on one thing: being the fastest in the world. We've gotten it down to under 180ms for scanning a large and dense page of text and we have a clear path to improve! It will use <1% of your total laptop battery.
+Why an OCR engine? Whether writing an email in Mail.app, talking on Slack, browsing the Web, or really doing anything you do on your computer, Orbit understands what you are looking at.
 
-What does it mean? When writing an email, talking on Slack, browsing the Web, reading a Jira ticket, or really doing anything you do on your computer, Orbit can understand what you are looking at.
+Combined with our Language engine, it means we can do _meaningful search_ to find extremely relevant items within your knowledgebase based on whatever you're doing. But that's just the start. We can also highlight words and show apps next to them, and script triggers based on activity, words, and other contextual information.
 
-Combined with the NLP engine, it can also do _meaningful search_ to find extremely relevant items within your knowledgebase.
-
-Or rather, _it will_. We have both the OCR and NLP working, but want to spend a few more months cooking it so it is actually useful. Luckily we found an amazing developer who has joined us to specifically to help with this, and it's exciting to see it start to become stable.
-
-I wanted to mention it now, though, becuase it's relevant to this next section.
+We have both the OCR, NLP, and UI working. But we need a few more months to get it to be more stable, useful and well implemented.
 
 #### Apps
 
-Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We plan to add some more flexible ones as well soon including generic Web and API apps.
+Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We will add more flexible ones next such as Web and API crawlers.
 
 <div style="display: flex; flex-flow: row; height: 120px; max-width: 100%; justify-content: space-between; padding: 30px 0;">
   <img class="icon" src="./icons/gdrive.svg" />
@@ -125,23 +121,27 @@ Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira
   <img class="icon" src="./icons/slack.svg" />
 </div>
 
-But Apps can be much more powerful and diverse than I think we can ever predict, especially given the incredible stochasticity of information and it's needs. So while I don't think we can build one solution for everyone, I do think we can provide a powerful set of APIs that enable building those experiences.
+But we can't predict what apps and views on them will be most useful due to the incredible stochasticity of information and its uses. But I do think we can build a set of APIs that enable building those experiences.
 
-So we want to put the right building blocks in place, and begin testing our own App Store early next year. The blocks will include the Language and Context engines, some augmented features, as well as our mature UI Kit. There's much more to come here.
+#### App Store
+
+So with all these pieces in place, we're aiming at releasing an App Store early next year. We'll expose Language and Context, and combine it with our UI Kit and an instant decentralized p2p distribution mechanism. Which means you can deploy apps to your team with no build tools and no infrastructure setup. There's much more to come here.
 
 ### Going forward
 
-There's a lot more I'd like to write, but I think is more than enough to start.
+There's a lot more I'd like to write, but I think is more than enough to start. I'll end with something that will risk sounding cliché:
 
-I'll end with something that will risk sounding cliché:
+The biggest feature of Orbit is trust. If you don't feel it will respect your privacy in the long run, it wont get off the ground. Much like a Browser or Operating System, it should be a fundamental tool you trust to handle sensitive information.
 
-I think the biggest feature of Orbit is trust. Orbit won't succeed if it tries to be a traditional startup. If you don't feel it will respect your privacy in the long run, we've lost. Orbit will need to be thought of like a Browser or Operating System: a fundamental tool you trust to handle sensitive information.
+We've designed it in the only way we know that guarantees that for now: by never sending data off your device. As we go decentralized we'll have to continue to make good security decisions.
 
-We've designed it in the only I know to guarantee that: by never sending data off your device. Of course, trust doesn't matters if you don't have a great product that meets real needs. The next feed months will be exciting as we attempt to do just that. And your feedback will be the most important part of ensuring that!
+Of course, trust doesn't matter if your product doesn't meet real needs. The next feed months will be exciting as we attempt to do that. I'm happy to have you on board early, and your feedback will be the most important part of ensuring that!
 
 [Here is my email](nate@tryorbit.com). Please send me any and all inquiries, requests and bugs.
 
 [Here is our roadmap](). We will update it about once a week.
+
+[Here is our Slack room](). Please do join for more unstructured discussion.
 
 I am very excited to start sharing progress with you all.
 

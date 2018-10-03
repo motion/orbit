@@ -63,10 +63,12 @@ _No one wants to trust any single company with all of their data._
 
 Close friends wouldn't even install early trial versions of Orbit without permission from their team. We wanted to build a better knowledge tool, but having it live in the cloud or on-prem would mean difficult onboarding, and therefore a heavy sales presence.
 
-But -- today, computers are powerful and have lots of memory, and topic modeling / search with modern NLP is orders of magnitude faster and easier to achieve. So, with experimentation, we realized we could build Orbit to run entirely local to your computer. That means:
+But -- today, computers are powerful and have lots of memory. Topic modeling and search with modern NLP is orders of magnitude faster and easier to do. With experimentation, we realized we could run Orbit entirely locally on your computer. That means:
 
-- No handling of user data = easy, risk-free trials.
-- No need for on-premise servier installs = low onboard cost!
+- No handling of user data.
+- No need for on-premise servier installs.
+
+Which lets us do easy, risk-free trials and almost no onboarding process!
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">
@@ -74,7 +76,7 @@ But -- today, computers are powerful and have lots of memory, and topic modeling
   </img>
 </div>
 
-Orbit never sends your data or even your keys outside of your computer. That means you can download and try it without having to trust us: you can entirely firewall Orbit! It also has a huge benefit for our incentives as a company, it means **the product must actually be good**, not the sales team.
+Orbit the company never touches your private data. That means you can download and trial without having to trust us: you can even firewall to check! It also had a huge benefit in terms of incentives. It means as a company **we have to make the product actually good**, as opposed to the sales team.
 
 ### The Product
 

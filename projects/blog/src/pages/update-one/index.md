@@ -137,11 +137,11 @@ We've designed it in the only way we know that guarantees that for now: by never
 
 Of course, trust doesn't matter if your product doesn't meet real needs. The next feed months will be exciting as we attempt to do that. I'm happy to have you on board early, and your feedback will be the most important part of ensuring that!
 
-[Here is my email](nate@tryorbit.com). Please send me any and all inquiries, requests and bugs.
+[Here is my email](mailto:nate@tryorbit.com). Please send me any and all inquiries, requests and bugs.
 
-[Here is our roadmap](). We will update it about once a week.
+[Sign up to the mailing list](https://tryorbit.com). I'll send blog posts out ~monthly along with release noes.
 
-[Here is our Slack room](). Please do join for more unstructured discussion.
+[Here is our Slack room](). Please do join and help us build it!
 
 I am very excited to start sharing progress with you all.
 

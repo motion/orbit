@@ -123,9 +123,7 @@ Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira
 
 But we can't predict what apps and views on them will be most useful due to the incredible stochasticity of information and its uses. But I do think we can build a set of APIs that enable building those experiences.
 
-#### App Store
-
-So with all these pieces in place, we're aiming at releasing an App Store early next year. We'll expose Language and Context, and combine it with our UI Kit and an instant decentralized p2p distribution mechanism. Which means you can deploy apps to your team with no build tools and no infrastructure setup. There's much more to come here.
+So with all these pieces in place, we're aiming at releasing an App Store early next year. We'll expose Language and Context, and combine it with our UI Kit and an one-click decentralized distribution. Which means you can build and deploy apps to your team with no tooling, no infrastructure, and an amazing UI out of the box.
 
 ### Going forward
 

@@ -5,49 +5,47 @@ date: '2018-09-29T22:12:03.284Z'
 
 _Note: this is a message for early insiders, please don't share the link. I'll be going into detail on future product and distribution plans._
 
-I'm certainly excited to start talking about Orbit. It's been an intense few years of development and I'm really glad to be able to put it out into the world.
+I'm certainly excited to start talking about Orbit. It's been an intense few years of development and it feels great to finally get it into the world. What we have now is just the start, but many cool pieces are almost ready.
 
-But first, the good stuff. An alpha build is now [available for download](https://orbitauth.com/download). While some of the interesting pieces are not yet ready, we've pushed hard to get it where it's usable and you can give feedback.
+First, the good stuff. An alpha build is now [available for download](https://orbitauth.com/download). We've pushed hard to get it to where it's usable and we can get valuable feedback.
 
-So, what's Orbit? Let's start with our mission:
+So... what is Orbit? Let's start with a story:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control back to the individual over their web data by creating a flexible, powerful and intuitive knowledge platform.
+You read, you write, you email, you chat, you work. From Slack to Jira to Google Docs to Github. Your knowledge is distributed, and your wiki or intranet portals doesn't cut it. In fact it's often out of date and clunky to use.
 
-Orbit plans to attempt this. As a product though it's easier to understand what it is as an answer to the following question:
+There's something we all feel here, and it has something to do with the vision we've been sold time and time again in movies with sci-fi interfaces:
 
-<center>
-  <p>
-    What is preventing us from exploring our knowledge like Iron Man?
-  </p>
-</center>
+> We wanted [science fiction UX](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
+
+So what exactly is preventing us from exploring our knowledge like Iron Man?
+
+It has something to do with the evolution of information from the OS to the Cloud.
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 <div class="alt">
-  Ergonomically though, can you really keep your arms up like that?
+  Ergonomically though, how long can you really keep your arms up like that?
 </div>
 
-Yes, the fancy effects are a distraction. But these sci-fi interfaces grasp at a real desire: a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
+This brings us to Orbit's mission:
 
-> We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control back to the individual over their web data by creating a flexible, powerful and intuitive knowledge platform.
 
-You read, you write, you email, you chat, you work. From Slack to Jira to Google Docs to Github. Your knowledge base is distributed and Wikis and Intranet systems don't integrate with it. In fact they add yet another source of truth, and therefore staleness.
+While the fancy effects of movies like Minority Report are often distracting, these sci-fi dreams grasp at real desires: for a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
 
-Orbit won't make you Iron Man yet (nor will it have nearly as cool visual effects), but it starts to solve the underlying pain point:
+**We want to be able to explore knowledge in a unified way.**
 
-**I want to be able to explore knowledge in a unified way.**
+To do that it we'll need to fix something wrong with our browsers: they don't let us control any information. And for Orbit do make that work, it will need to be more than just a good product; it will need to become popular enough to convince SaaS companies to play along with it. It needs to be compelling.
 
-To do that that, it needs to do a few things. Beyond a good product, it needs to become popular enough that it can actually convince the various SaaS players to play along. It needs to be a compelling platform for them and it's users.
+So, Orbit will not be a service company, it will be a platform. We don't store your data. Instead, it's much like a Browser or Operating System. A Knowledge OS. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail at unity and control), Orbit is the middle ground: a flexible way to manage bits of information.
 
-Orbit is not a service company: it doesn't store any data itself. It's much closer to a Browser or Operating System. I think of it as a smart knowledge assistant. Where Operating Systems gave us a lot of control and with _files_, and browsers gave us great collaboration, Orbit gives you the middle ground: control and exploration, without losing collaboration.
+Our goals are to let you:
 
-It's goals are to let you:
-
-- Navigate important knowledge quickly and easily.
-- Search it intuitively: by person, topic, and time.
-- Have it augment you as you normally work, in context.
-- Install and build new apps on top of it with ease.
-- Do all of this without having to give up our privacy and security.
+- Navigate knowledge quickly and easily.
+- Search intuitively: by person, topic, and time.
+- Augment relevant information as you normally work.
+- Build and install apps on top of it with ease.
+- Do all of this without giving up privacy or security.
 
 <div class="demo-image"></div>
 
@@ -55,24 +53,20 @@ It's goals are to let you:
   An example Topic Explorer for Github app opened from the Orbit Home
 </div>
 
-From here on out I'm going to go into a bit more depth. You can skip to the end if you just want to get [more information on how to follow us](#going-forward).
-
 ### Distribution: From Roadblock to Selling Point
 
-[Skip to the next section](#the-product) if you don't care for some backstory and distribution model explanation.
+[Skip to the next section](#the-product) if you don't care for some backstory and talk on the distribution model.
 
-Orbit wants to replace clunky and stale intranet systems of today. To do that, it needs to crawl a ton of your information. But, therein lies a misaligned incentive, one we discovered early in user research:
+Orbit wants to replace clunky and stale intranet systems of today. To do that, it needs to crawl a ton of your sensitive information. But, therein lies a misaligned incentive (one we discovered early in user research):
 
 _No one wants to trust any single company with all of their data._
 
-We couldn't even get close friends to install our early trial versions of Orbit. They absolutely needed permission from their team. We wanted to build a better knowledge tool, but having it live in the cloud or on-prem would mean difficult onboarding, and therefore a heavy sales presence.
+Close friends wouldn't even install early trial versions of Orbit without permission from their team. We wanted to build a better knowledge tool, but having it live in the cloud or on-prem would mean difficult onboarding, and therefore a heavy sales presence.
 
-We realized later: computers today are powerful, with large disks. Topic modeling and search using modern ML/NLP is also orders of magnitude faster, better, and more space efficient than even just a year ago.
-
-So we built Orbit to run entirely local to your computer. It gives us some really important advantages over traditional models (Cloud/On-Prem):
+But -- today, computers are powerful and have lots of memory, and topic modeling / search with modern NLP is orders of magnitude faster and easier to achieve. So, with experimentation, we realized we could build Orbit to run entirely local to your computer. That means:
 
 - No handling of user data = easy, risk-free trials.
-- No need to deploy servers on-premise = no need for a sales-forward company!
+- No need for on-premise servier installs = low onboard cost!
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">

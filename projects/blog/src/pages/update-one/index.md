@@ -48,10 +48,8 @@ So you can:
 <div class="demo-image"></div>
 
 <div class="alt">
-  An example Topic Explorer app opened from the Orbit Home
+  An example Topic Explorer for Github app opened from the Orbit Home
 </div>
-
-[video]
 
 From here on out I'm going to go into a bit more depth. You can skip to the end if you just want to get [more information on how to follow us](#going-forward).
 

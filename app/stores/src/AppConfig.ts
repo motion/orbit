@@ -13,5 +13,6 @@ export type AppConfig = {
     dimensions?: [number, number]
     // for auto measuring peek size
     contentSize?: number
+    initialState: { [key: string]: any }
   }
 }

@@ -52,12 +52,13 @@ export class GdriveSetting extends React.Component<
   }
 > {
   render() {
-    const { store, setting } = this.props
+    const { store, setting, initialState } = this.props
     const folders = store.popularFolders
 
     return (
       <SimpleAppExplorer
         setting={setting}
+        initialState={initialState}
         settingsPane={
           <>
             {/* <SettingManageRow store={store} setting={setting} /> */}

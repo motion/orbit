@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as React from 'react'
 import { Setting } from '@mcro/models'
 import { PeekContent } from '../../../views/PeekContent'
@@ -7,15 +7,27 @@ import { AppTopicExplorer } from './AppTopicExplorer'
 import { TitleBarButton } from '../../../views/TitleBarButton'
 import { NICE_INTEGRATION_NAMES } from '../../../../../constants'
 import { PeekHeader } from '../../../views/PeekHeader'
-import { SegmentedRow } from '@mcro/ui'
+import { SegmentedRow, View } from '@mcro/ui'
+import { AppConfig } from '@mcro/stores'
 
 type Props = {
   appViewStore?: AppViewStore
   setting: Setting
   settingsPane: React.ReactNode
+  initialState: AppConfig['config']['initialState']
+}
+
+const AppRelationsExplorer = () => {
+  return (
+    <View flex={1} alignItems="center" justifyContent="center">
+      Under Construction [hardhat.gif]
+    </View>
+  )
 }
 
 export class AppViewStore {
+  props: Props
+
   active = 'topics'
   lastActive = 'topics'
 
@@ -24,11 +36,15 @@ export class AppViewStore {
   }
 
   setActiveKey = key => {
+    console.log('got active key', key)
     this.lastActive = this.active
     this.active = key
   }
 
+  updateTab = react(() => (this.props.initialState || {}).active || 'topics', this.setActiveKey)
+
   activeToggler = key => () => {
+    console.log('got toggle key', key)
     if (key === this.active) {
       this.setActiveKey(this.lastActive)
     } else {
@@ -76,7 +92,9 @@ export class SimpleAppExplorer extends React.Component<Props> {
           <HideablePane invisible={appViewStore.active !== 'topics'}>
             <AppTopicExplorer setting={setting} />
           </HideablePane>
-          <HideablePane invisible={appViewStore.active !== 'related'}>{settingsPane}</HideablePane>
+          <HideablePane invisible={appViewStore.active !== 'related'}>
+            <AppRelationsExplorer />
+          </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'settings'}>{settingsPane}</HideablePane>
         </PeekContent>
       </>

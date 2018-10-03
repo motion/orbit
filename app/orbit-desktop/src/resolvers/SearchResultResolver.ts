@@ -24,7 +24,7 @@ const searchCache = doSearch => {
     curId = Math.random()
     const id = curId
     const hash = JSON.stringify(args)
-    if (hash === currentSearch.hash) {
+    if (hash === currentSearch.hash && currentSearch.allResults) {
       return currentSearch.allResults
     } else {
       const allResults = await doSearch(args)
@@ -32,7 +32,7 @@ const searchCache = doSearch => {
         currentSearch = { hash, allResults }
         return allResults
       } else {
-        return false
+        return []
       }
     }
   }

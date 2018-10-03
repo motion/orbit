@@ -95,13 +95,13 @@ const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
-  {
-    id: '7',
-    source: 'app1',
-    name: 'Test App',
-    model: BitModel,
-    query: findManyType('app1'),
-  },
+  // {
+  //   id: '7',
+  //   source: 'app1',
+  //   name: 'Test App',
+  //   model: BitModel,
+  //   query: findManyType('app1'),
+  // },
 ].filter(Boolean)
 
 const getListStyle = isDraggingOver => ({
@@ -167,7 +167,7 @@ class OrbitHomeStore {
     },
   )
 
-  sortOrder = [0, 1, 2, 3, 4, 5, 6, 7]
+  sortOrder = [0, 1, 2, 3, 4, 5, 6]
 
   reorder = (startIndex, endIndex) => {
     const order = [...this.sortOrder]
@@ -247,8 +247,9 @@ export class OrbitHome extends React.Component<Props> {
                 <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                   {/* <SuggestionBarVerticalPad /> */}
                   {results.map(({ id, name, items, startIndex }, index) => {
-                    const height = name === 'People' ? 60 : name === 'Apps' ? 80 : 80
-                    const width = name === 'Apps' ? 120 : 180
+                    const isApp = name === 'Apps'
+                    const height = name === 'People' ? 60 : isApp ? 80 : 80
+                    const width = isApp ? 100 : 180
                     return (
                       <Draggable key={id} draggableId={id} index={index}>
                         {(provided, snapshot) => {
@@ -269,7 +270,12 @@ export class OrbitHome extends React.Component<Props> {
                                 categoryName={name}
                                 cardHeight={height}
                                 cardWidth={width}
-                                CardView={items[0].target === 'setting' ? OrbitAppCard : OrbitCard}
+                                CardView={isApp ? OrbitAppCard : OrbitCard}
+                                cardProps={
+                                  isApp && {
+                                    hide: { subtitle: true },
+                                  }
+                                }
                               />
                             </div>
                           )

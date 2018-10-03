@@ -1,6 +1,6 @@
 {
-  "alias": "orbitauth.com",
-  "name": "@mcro/oauth-server",
+  "alias": "blog.orbitauth.com",
+  "name": "@mcro/blog",
   "scale": {
     "sfo1": {
       "min": 1,

@@ -110,10 +110,8 @@ export class OrbitItemStore {
       return isPaneActive && nextIsSelected
     },
     async (nextIsSelected, { sleep }) => {
-      if (this.realIndex === 0) {
-        console.log('WE GOT A SELECT', nextIsSelected, this)
-      }
       const { preventAutoSelect, subPaneStore } = this.props
+      console.log(nextIsSelected, this.isSelected, preventAutoSelect, this.target)
       ensure('new index', nextIsSelected !== this.isSelected)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {

@@ -1,4 +1,3 @@
-import keywordExtract from '@mcro/keyword-extract'
 import { GithubBitData, GithubBitDataComment } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
@@ -7,17 +6,13 @@ import { BitItemResolverProps } from '../ResolveBit'
 import { Markdown } from '../../../views/Markdown'
 import { VerticalSpace, HorizontalSpace } from '../../../views'
 import { RoundButtonBorderedSmall } from '../../../views/RoundButtonBordered'
-import { Text } from '@mcro/ui'
-
-const options = {
-  remove_digits: true,
-  return_changed_case: true,
-  remove_duplicates: false,
-}
+import { Text, Icon } from '@mcro/ui'
+import { Actions } from '../../../actions/Actions'
+import { handleClickPerson } from '../../../views/RoundButtonPerson'
 
 const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) => {
   const {
-    author: { avatarUrl, login },
+    author: { avatarUrl, login, email },
     createdAt,
     body,
   } = comment
@@ -28,7 +23,19 @@ const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) =>
           style={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
           src={avatarUrl}
         />
-        <RoundButtonBorderedSmall>{login}</RoundButtonBorderedSmall>
+        <RoundButtonBorderedSmall onClick={handleClickPerson(email)}>
+          {login}{' '}
+          <Icon
+            size={8}
+            name="link"
+            opacity={0.8}
+            marginLeft={2}
+            onClick={e => {
+              e.stopPropagation()
+              Actions.open(`https://github.com/${login}`)
+            }}
+          />
+        </RoundButtonBorderedSmall>
         <HorizontalSpace />
         {!!createdAt && (
           <Text size={0.95} fontWeight={600} alpha={0.8}>
@@ -78,10 +85,5 @@ export const ResolveTask = ({
     people: bit.people,
     content,
     comments,
-    preview:
-      keywordExtract
-        .extract(bit.body, options)
-        .slice(0, 4)
-        .join(' ') || bit.body.slice(0, 400),
   })
 }

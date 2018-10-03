@@ -51,10 +51,11 @@ class GithubSettingStore {
 @view
 export class GithubSetting extends React.Component<Props & { store: GithubSettingStore }> {
   render() {
-    const { store, setting } = this.props
+    const { store, setting, initialState } = this.props
     return (
       <SimpleAppExplorer
         setting={setting}
+        initialState={initialState}
         settingsPane={
           <>
             <SettingManageRow setting={setting} whitelist={store.whitelist} />

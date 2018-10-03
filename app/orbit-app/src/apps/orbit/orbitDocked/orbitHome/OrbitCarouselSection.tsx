@@ -11,7 +11,7 @@ const decorator = compose(
 )
 
 export const OrbitCarouselSection = decorator(
-  ({ subPaneStore, startIndex, items, categoryName, ...props }) => {
+  ({ subPaneStore, startIndex, items, categoryName, cardProps, ...props }) => {
     if (!items.length) {
       return null
     }
@@ -31,16 +31,19 @@ export const OrbitCarouselSection = decorator(
             isActiveStore={subPaneStore}
             resetOnInactive
             cardProps={{
+              titleFlex: 1,
+              onClickLocation: handleClickLocation,
+              ...cardProps,
               hide: {
                 body: !isPeople,
                 icon: isPeople,
+                ...(cardProps ? cardProps.hide : null),
               },
-              titleFlex: 1,
               titleProps: {
                 ellipse: true,
                 maxWidth: isPeople ? 'calc(100% - 44px)' : null,
+                ...(cardProps ? cardProps.titleProps : null),
               },
-              onClickLocation: handleClickLocation,
             }}
             {...props}
           />

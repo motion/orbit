@@ -5,7 +5,7 @@ date: '2018-09-29T22:12:03.284Z'
 
 _Note: this is a message for early insiders, please don't share the link. I'll be going into detail on future product and distribution plans._
 
-I'm certainly excited to start talking about Orbit. It's been an intense few years of development and it feels great to finally get it into the world. What we have now is just the start, but many cool pieces are almost ready.
+I'm excited to start talking about Orbit. It's been an intense few years of development and it feels great to finally get it into the world. What we have now is just the start, but many cool pieces are almost ready.
 
 First, the good stuff. An alpha build is now [available for download](https://orbitauth.com/download). We've pushed hard to get it to where it's usable and we can get valuable feedback.
 

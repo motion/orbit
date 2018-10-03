@@ -31,15 +31,15 @@ While the fancy effects of movies like Minority Report are often distracting, th
 
 This brings us to Orbit's mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over web data back to the individual -- by providing a flexible, powerful and intuitive knowledge platform.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over web data back to the individual -- with a flexible, powerful and intuitive knowledge platform.
 
 **We want to be able to explore knowledge in a unified way.**
 
-And to do that it we'll need to fix something wrong with our browsers: they don't let us control any of our information.
+And to do that we'll need to fix something wrong with browsers / software services: they don't give us any control over our information.
 
-So, Orbit is not a service company, it's a platform. We don't store your data. Instead, it's much like a Browser or Operating System, a platform that helps manage information. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail the the former), Orbit is the middle ground: a flexible way to manage bits of information from many places.
+Orbit is not a service company. We don't store data. Instead, much like a browser or operating system, we're a platform that helps manage information. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail at interop), Orbit is the middle ground: a flexible way to manage bits of information from many places.
 
-Our goals are to let you:
+Our goal is to let you:
 
 - Navigate disparate knowledge quickly and easily.
 - Search intuitively: by person, topic, and time.

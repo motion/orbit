@@ -23,7 +23,7 @@ What is preventing us from exploring our knowledge like Iron Man?
   But ergonomically, how long can you keep your arms up like that?
 </div>
 
-Yes, the fancy effects are a distraction. But these sci-fi interfaces do grasp at a real desire; a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
+Yes, the fancy effects are a distraction. But these sci-fi interfaces grasp at a real desire: a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 

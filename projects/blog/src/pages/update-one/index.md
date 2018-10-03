@@ -13,26 +13,29 @@ So, what's Orbit? Let's start with our mission:
 
 > To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives back control to individuals over their web data -- with a flexible, powerful and intuitive knowledge platform.
 
-Orbit is a new type of thing. It's trying to answer a question that I think that summarizes a variety of pain points we feel today:
+Orbit is a new type of thing. It's actually easiest to illustrate it as an answer to a question.
 
-What's preventing us from exploring our data like Iron Man?
+What is preventing us from exploring our data like Iron Man?
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 <div style="font-size: 11px; text-align: center; margin: -1.5rem 0 1rem; opacity: 0.5;">
-  and how long could you really keep your arms up like that?
+  but ergonomically, how long could you really keep your arms up like that?
 </div>
+
+And yes, the fancy effects are a distraction. But the truth is these sci-fi interfaces all grasp at one thing: a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-From what you read, to what you email and chat about; from Slack and Jira to your team Drive. Our information has become more distributed and less easy to organize.
-Orbit won't make you Iron Man, it won't even have all the cool visual effects. But it can solve a real desire:
+You read, you write, you email, you chat and you work. From Slack to Jira to Google Docs to Github. Information is becoming more and more distributed, and our knowledge is left stale in Wikis and Intranet systems that can't keep up.
+
+Orbit won't make you Iron Man (it also won't have nearly all the cool visual effects). But it can solve a real problem that doesn't have a good solution:
 
 **I want to be able to explore knowledge in a unified way.**
 
-And to do that I think it needs to shift the balance of power from web apps back to individuals by building a compelling platform.
+But to do that I think it needs to catch somewhat of a network effect, so it has the power to shift some control from web apps back to individuals. And do that it needs to be a compelling platform.
 
-Orbit want to be a new type of thing: a complement to the Browser and Operating System. A smart knowledge platform. OS's gave us a lot of control and unity through _files_, but the trend of the web has been one of sandboxed custom interfaces (very anti-Iron Man).
+So, Orbit is a new type of thing: a complement to your Browser and Operating System. A smart knowledge platform. OS's gave us a lot of control and with _files_, but there is no file in the browser, and Orbit wants to re-invent that for the modern era.
 
 We want to be able to:
 

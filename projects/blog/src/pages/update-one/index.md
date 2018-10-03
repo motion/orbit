@@ -9,35 +9,38 @@ But first, the great news. Our alpha build is now [available for download](). Wh
 
 So, what's Orbit? Let's start with our mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives individuals control over siloed web data to create a more flexible, powerful and inuitive knowledge exploration.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives individuals control over siloed web data to create a more flexible, powerful and intuitive knowledge exploration.
 
-Orbit is a new type of thing. It's a mid point between a Browser and an Operating System -- a knowledge platform that takes disparate information and makes much easier to understand, search and explore.
+Orbit is a new type of thing. It's a mid point between a Browser and an Operating System -- a knowledge platform that takes disparate information and makes it easier to understand, search and explore.
 
-We see a trend in the world where the rise of cloud computing has left us with _almost no real control over our information_. You can frame is like this:
+We see a trend in the world: the rise of cloud computing has left us with _almost no real control over our information_. One way I like to frame is is as follows.
 
-What's preventing me from exploring my company like Iron Man?
+What's preventing us from exploring our companies like Iron Man?
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
+<div style="font-size: 11px; text-align: center; margin: -1.5rem 0 1rem; opacity: 0.5;">
+  How long can you keep your arms up like that?
+</div>
+
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-I'm not referring to the _visual effects_ of the movie. While those are ridiculous (how long can you keep your arms up like that?) what Iron Man and basically every Sci Fi movie ever does get right is something that we accidentaly kept running into in user research:
+I'm not referring to the _visual effects_ of the movie. While those are ridiculous, what basically every Sci Fi movie ever does understand is the same desire we kept running into in user research:
 
-**I want to be able to explore information in a unified interface.**
+**I want to be able to explore my company information in a unified way.**
 
-From Slack noise to Jira lag to the black hole of a team Google Drive -- we love these services for what they're designed to do -- but when we're going about our day, they are never at hand.
+From Slack to Jira your team Google Drive -- we love these services for what they're designed to do -- but when going about our day, it's never easy to stay up to date with them or explore our company in an easy way.
 
-The transition to from the OS era to the Browser era has been almost exclusively anti-Iron Man. In 1999 all we used were files, and while collaboration was hard, almost everything else was better: organization, search, and data portability.
+The transition to from the OS era to the Browser era has been almost exclusively anti-Iron Man. In 1999 all we used were files, and while collaboration was nonexistant, almost everything else was better: organization, search, and data portability.
 
-We'd like a world where:
+We want:
 
-- You can navigate important knowledge quickly and easily.
-- You can be confident it's holistic, accurate, up to date.
-- You can slice it in natural ways: by person, topic, and time.
-- You don't have to think about it: it augments you in context as you work.
-- You can easily manage it, extend it, and build apps on top of it.
-- You can do all of this without having to give up your data to a 3rd party.
-- You can do all of this without the whole thing becoming a mess.
+- To navigate important knowledge quickly and easily.
+- To be confident it's holistic, accurate, up to date.
+- To slice it in natural ways: by person, topic, and time.
+- To not have to think about it: with automatic augmenting in context, as you work.
+- To easily manage, extend, and build apps on top of it.
+- To do all of this without having to give up our privacy and security.
 
 Orbit's goal is make this real. Here's a demo:
 
@@ -45,21 +48,23 @@ Orbit's goal is make this real. Here's a demo:
 
 ### Our Secret: Distribution
 
-Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet and portal systems of today. To do that, it is most helpful if it crawls all of your company information. But early in development we realized there's a problem trying to do that: no one wants to trust a single company with _everything_.
+Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet and portal systems of today. To do that, it needs to crawl all of your information. But there was a misaligned incentive here: early in development we realized no one wants to trust any single company with _everything_.
 
 Duh!
 
-We thought we'd reached a roadblock. Huge enterprise sales cycles didn't excite us and they weren't the problem we felt was necessary to solve. But it was impossible to get anyone to install it. We we're stuck at distribution.
+We thought we'd reached a roadblock. Huge enterprise sales cycles didn't excite us and they weren't the problem we felt was necessary to solve. But it was impossible to get anyone to install it without wanting a big demo.
 
-Until we had a realization: computers today are powerful. They have large disks, and NLP algorithms have become as fast as multiplication with just a few MBs of space.
+In frustration, we later had a realization: computers today are _powerful_. They have large disks and fast processors. Further, NLP algorithms have become incredibly fast.
 
-That meant Orbit could run _entirely privately on your computer_. We'd just have to figure out a way to have it sync data between peers, basically adding a third pillar to traditional enteprise app models:
+That meant Orbit could plausibly run _entirely privately on your computer_. We'd just have to figure out a way to have it sync data between peers.
 
-1. **Cloud** - High trust of security required, easy to develop.
-2. **On-premise** - Secure, high install cost, large sales cycle, harder to develop.
-3. **Decentralized** - Secure, low install cost, limited compute and harder to develop.
+In vetting out this model we actually were very happy with it. It basically created a new model for enterprise sales, one that fit our constraints perfectly. Today you either build a Cloud service or sell a company a server they install On-premise. We wanted to make a simple desktop app with some decentralized pieces:
 
-But given the advances in NLP and compute power, it immediately became clear this got rid of our big distribution problem: it aligned our incentives with our users.
+1. Cloud - Have to trust security, lower UX, but easy to develop.
+2. On-premise - Secure, high install cost, large sales cycle, harder to develop.
+3. **Decentralized/On Device** - Secure, low install cost, high UX, but limited compute and harder development.
+
+So we tested our theory of NLP and compute power, and with some interesting work there we're confident we can do good search locally. The rest perfectly aligned with our incentives.
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">
@@ -67,7 +72,9 @@ But given the advances in NLP and compute power, it immediately became clear thi
   </img>
 </div>
 
-So you can try Orbit at no cost: no security risk, no time talking to sales, and no complex install. Just download the app. Which means **the product must actually be good**. It's the alignment we love as product developers, and solves what was a near-impossible distribution story for an early stage startup.
+In english it just means you can try Orbit at no cost and with no risk. No data privacy issues, no time talking to sales, no complex installation. Just download the app.
+
+This also aligns us in another way: it means **the product must actually be good**. It's the alignment we love as product developers, and solves what was a near-impossible distribution story for an early stage startup.
 
 ### The details
 

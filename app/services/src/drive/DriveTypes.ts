@@ -232,17 +232,6 @@ export type DriveLoadedFile = {
   thumbnailFilePath: string
   comments: DriveComment[]
   revisions: DriveRevision[]
+  users: DriveUser[]
   parent?: DriveFile
-}
-
-/**
- * Finally loaded google drive user with all information related to a user.
- */
-export type DriveLoadedUser = {
-  email: string
-  name: string
-  photo: string
-  comments: DriveComment[]
-  revisions: DriveRevision[]
-  files: DriveFile[]
 }

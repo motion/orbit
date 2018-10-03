@@ -1,19 +1,40 @@
 import { BitEntity, PersonEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { Bit } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
 import { chunk } from 'lodash'
 import { getManager } from 'typeorm'
+import { SyncerRepository } from './SyncerRepository'
+
+/**
+ * Sync Bits options.
+ */
+export interface BitSyncerOptions {
+  apiBits: Bit[]
+  dbBits: Bit[]
+  removedBits?: Bit[]
+  dropAllBits?: boolean
+}
 
 /**
  * Syncs Bits.
  */
 export class BitSyncer {
+  private setting: Setting
+  private log: Logger
+  private syncerRepository: SyncerRepository
+
+  constructor(setting: Setting, log: Logger) {
+    this.setting = setting
+    this.log = log
+    this.syncerRepository = new SyncerRepository(setting)
+  }
 
   /**
    * Syncs given bits in the database.
    */
-  static async sync(log: Logger, apiBits: Bit[], dbBits: Bit[]) {
-    log.info(`calculating inserted/updated/removed bits`, { apiBits, dbBits })
+  async sync(options: BitSyncerOptions) {
+    this.log.info(`syncing bits`, options)
+    const { apiBits, dbBits } = options
 
     // calculate bits that we need to update in the database
     const insertedBits = apiBits.filter(apiBit => {
@@ -27,10 +48,34 @@ export class BitSyncer {
       return !apiBits.some(apiBit => apiBit.id === dbBit.id)
     })
 
+    // if we have explicitly removed bits set, add them to removing bits
+    if (options.removedBits)
+      removedBits.push(...options.removedBits)
+
     // perform database operations on synced bits
-    if (insertedBits.length || updatedBits.length || removedBits.length) {
-      log.timer(`save bits in the database`, { insertedBits, updatedBits, removedBits })
+    if (!insertedBits.length && !updatedBits.length && !removedBits.length) {
+      this.log.info(`no changes were detected, no bits were synced`)
+      return
+    }
+
+    // there is one problematic use case - if user removes integration during synchronization
+    // we should not sync anything (shouldn't write any new person or bit into the database)
+    // that's why we check if we have job for this particular setting registered
+    // and we do it twice - before saving anything to prevent further operations
+    // and after saving everything to make sure setting wasn't removed or requested for removal
+    // while we were inserting new bits
+    if (await this.syncerRepository.isSettingRemoved()) {
+      this.log.warning(`found a setting in a process of removal, skip syncing`)
+      return
+    }
+
+    this.log.timer(`save bits in the database`, { insertedBits, updatedBits, removedBits })
+    try {
       await getManager().transaction(async manager => {
+
+        // drop all exist bits if such option was specified
+        if (options.dropAllBits)
+          await manager.delete(BitEntity, { settingId: this.setting.id })
 
         // insert new bits
         if (insertedBits.length > 0) {
@@ -72,7 +117,7 @@ export class BitSyncer {
           })
 
           if (newPeople.length || removedPeople.length) {
-            log.verbose(`found people changes in a bit`, bit, { newPeople, removedPeople })
+            this.log.info(`found people changes in a bit`, bit, { newPeople, removedPeople })
 
             await manager
               .createQueryBuilder(BitEntity, "bit")
@@ -86,10 +131,21 @@ export class BitSyncer {
         if (removedBits.length > 0) {
           await manager.delete(BitEntity, removedBits)
         }
+
+        // before committing transaction we make sure nobody removed setting during period of save
+        // we use non-transactional manager inside this method intentionally
+        if (await this.syncerRepository.isSettingRemoved())
+          throw "setting removed"
+
       })
-      log.timer(`save bits in the database`)
-    } else {
-      log.verbose(`no changes were detected, nothing was synced`)
+      this.log.timer(`save bits in the database`)
+
+    } catch (error) {
+      if (error === "setting removed") {
+        this.log.warning(`found a setting in a process of removal, skip syncing`)
+        return
+      }
+      throw error
     }
   }
 

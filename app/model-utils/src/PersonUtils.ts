@@ -12,6 +12,10 @@ export class PersonUtils {
   static create(properties: Partial<Person>) {
     const person: Person = { target: 'person', ...properties }
     person.contentHash = this.contentHash(person)
+    if (!person.settingId && person.setting)
+      person.settingId = person.setting.id
+    if (person.integration && person.settingId && person.email)
+      person.id = hash(`${person.integration}-${person.settingId}-${person.email}`)
     return person
   }
 

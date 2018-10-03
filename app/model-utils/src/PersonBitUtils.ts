@@ -1,5 +1,6 @@
 import { Person } from '@mcro/models'
 import { PersonBit } from '@mcro/models'
+import { hash } from '@mcro/utils'
 
 /**
  * Common PersonBit utility functions.
@@ -12,8 +13,9 @@ export class PersonBitUtils {
   static createFromPerson(person: Person): PersonBit {
 
     const personBit: PersonBit = {
-      target: "person-bit",
-      email: person.email
+      target: 'person-bit',
+      id: hash(person.email),
+      email: person.email,
     }
 
     // set unfilled properties
@@ -75,7 +77,7 @@ export class PersonBitUtils {
   static merge(personBit1: Partial<PersonBit>, personBit2: Partial<PersonBit>): PersonBit {
 
     const personBit: PersonBit = {
-      target: "person-bit",
+      target: 'person-bit',
       ...personBit1,
       ...personBit2,
     }

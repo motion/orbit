@@ -1,18 +1,22 @@
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
-import { GMailFetcher } from './GMailFetcher'
-import { historyQuery, threadQuery, threadsQuery } from './GMailQueries'
-import { GmailHistoryLoadResult, GmailThread } from './GMailTypes'
+import { GmailSettingValues } from '@mcro/models'
+import { queryObjectToQueryString } from '../utils'
+import { GMailQueries } from './GMailQueries'
+import { GMailFetchOptions, GMailHistoryLoadResult, GMailThread } from './GMailTypes'
+import { getGlobalConfig } from '@mcro/config'
+import * as r2 from '@mcro/r2'
 
-const log = new Logger('service:gmail:loader')
-
+/**
+ * Loads data from GMail service.
+ */
 export class GMailLoader {
   setting: Setting
-  fetcher: GMailFetcher
+  log: Logger
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, log?: Logger) {
     this.setting = setting
-    this.fetcher = new GMailFetcher(setting)
+    this.log = log || new Logger('service:gmail:loader:' + this.setting.id)
   }
 
   /**
@@ -20,11 +24,13 @@ export class GMailLoader {
    * History represents latest changes in user inbox.
    * For example when user receives new messages or removes exist messages.
    */
-  async loadHistory(startHistoryId: string, pageToken?: string): Promise<GmailHistoryLoadResult> {
+  async loadHistory(startHistoryId: string, pageToken?: string): Promise<GMailHistoryLoadResult> {
+
     // load a history first
-    log.verbose(pageToken ? 'loading history from the next page' : 'loading history')
-    const result = await this.fetcher.fetch(historyQuery(startHistoryId, pageToken))
-    log.verbose('history loaded', result)
+    this.log.verbose('loading history', { startHistoryId, pageToken })
+    const query = GMailQueries.history(startHistoryId, pageToken)
+    const result = await this.fetch(query)
+    this.log.verbose('history loaded', result)
 
     // collect from history list of added/changed and removed thread ids
     let addedThreadIds: string[] = [],
@@ -81,18 +87,24 @@ export class GMailLoader {
    */
   async loadThreads(
     count: number,
+    maxMonths?: number,
     queryFilter?: string,
     filteredIds: string[] = [],
     pageToken?: string,
-  ): Promise<GmailThread[]> {
+  ): Promise<GMailThread[]> {
+
     // load all threads first
-    log.verbose(
-      pageToken ? `loading next page threads (max ${count})` : `loading threads (max ${count})`,
-    )
-    const result = await this.fetcher.fetch(threadsQuery(count, queryFilter, pageToken))
+    this.log.verbose(`loading threads`, { count, maxMonths, queryFilter, filteredIds, pageToken })
+    const query = GMailQueries.threads(count > 100 ? 100 : count, queryFilter, pageToken)
+    const result = await this.fetch(query)
+    this.log.verbose(`threads loaded`, result)
+
     if (!result) return []
     let threads = result.threads
     if (!threads) return []
+
+    // load messages for those threads
+    await this.loadMessages(threads)
 
     // if array of filtered thread ids were passed then we load threads until we find all threads by given ids
     // once we found all threads we stop loading threads
@@ -110,7 +122,7 @@ export class GMailLoader {
 
       // this condition means we just found all requested threads, no need to load next page
       if (filteredIds.length === 0) {
-        log.verbose('all requested threads were found')
+        this.log.verbose('all requested threads were found')
         return threads
       }
     }
@@ -119,14 +131,30 @@ export class GMailLoader {
     // once we count is less than one we stop loading threads
     count -= result.threads.length // important to use result.threads here instead of mutated threads
     if (count < 1) {
-      log.verbose('stopped loading, maximum number of threads were loaded', threads.length)
+      this.log.verbose('stopped loading, maximum number of threads were loaded', threads.length)
       return threads
+    }
+
+    // check if we reached email period limitation (e.g. 1 month)
+    if (maxMonths > 0) {
+      const lastThread = threads[threads.length - 1]
+      const lastMessage = lastThread.messages[lastThread.messages.length - 1]
+      if (lastMessage.internalDate) {
+        const lastMessageTime = parseInt(lastMessage.internalDate)
+        const currentDate = new Date()
+        const monthsAgo = currentDate.setMonth(currentDate.getMonth() - 1)
+        if (lastMessageTime <= monthsAgo) {
+          this.log.verbose(`reached month limit`, { threads, lastThread, lastMessage, lastMessageTime, monthsAgo })
+          return threads
+        }
+      }
     }
 
     // load threads from the next page if available
     if (result.nextPageToken) {
       const nextPageThreads = await this.loadThreads(
         count,
+        maxMonths,
         queryFilter,
         filteredIds,
         result.nextPageToken,
@@ -140,14 +168,97 @@ export class GMailLoader {
   /**
    * Loads thread messages and pushes them into threads.
    */
-  async loadMessages(threads: GmailThread[]): Promise<void> {
-    log.verbose('loading thread messages')
+  private async loadMessages(threads: GMailThread[]): Promise<void> {
+    this.log.verbose('loading thread messages', threads)
     await Promise.all(
       threads.map(async thread => {
-        const result = await this.fetcher.fetch(threadQuery(thread.id))
+        const query = GMailQueries.thread(thread.id)
+        const result = await this.fetch(query)
         Object.assign(thread, result)
       }),
     )
-    log.verbose('thread messages are loaded', threads)
+    this.log.verbose('thread messages are loaded', threads)
   }
+
+  /**
+   * Fetches from a given GMail query.
+   */
+  private async fetch<T>(options: GMailFetchOptions<T>): Promise<T> {
+    return this.doFetch('/gmail/v1' + options.url, options.query)
+  }
+
+  /**
+   * Fetches from a given GMail query.
+   */
+  private async doFetch(path, query?: { [key: string]: any }, isRetrying = false) {
+    const url = `https://www.googleapis.com${path}${queryObjectToQueryString(query)}`
+    this.log.verbose('fetching', url)
+    const response = await fetch(url, {
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${this.setting.token}`,
+        'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
+        'Access-Control-Allow-Methods': 'GET',
+      },
+    })
+    let result: any
+    try {
+      result = await response.json()
+    } catch (err) {
+      throw await (await fetch(url, {
+        mode: 'cors',
+        headers: {
+          Authorization: `Bearer ${this.setting.token}`,
+          'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
+          'Access-Control-Allow-Methods': 'GET',
+        },
+      })).text()
+    }
+
+    if (result.error) {
+      if (
+        (result.error.message === 'Invalid Credentials' || result.error.code === 401) &&
+        !isRetrying
+      ) {
+        this.log.verbose('refreshing token')
+        const didRefresh = await this.refreshToken()
+        if (didRefresh) {
+          return await this.doFetch(path, query, true)
+        } else {
+          console.log('Couldnt refresh access toekn :(!')
+          return null
+        }
+      }
+      throw result.error
+    }
+    return result
+  }
+
+  /**
+   * Refreshes OAuth token.
+   */
+  private async refreshToken() {
+    const values = this.setting.values as GmailSettingValues
+    if (!values.oauth.refreshToken) {
+      return null
+    }
+    const reply = await r2.post('https://www.googleapis.com/oauth2/v4/token', {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      formData: {
+        refresh_token: values.oauth.refreshToken,
+        client_id: values.oauth.clientId,
+        client_secret: values.oauth.secret,
+        grant_type: 'refresh_token',
+      },
+    }).json
+    if (reply && reply.access_token) {
+      this.setting.token = reply.access_token
+      // await this.setting.save() // todo broken after extracting into services
+      return true
+    }
+    return false
+  }
+
 }

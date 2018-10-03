@@ -1,3 +1,5 @@
+import { JobStatus } from './JobStatus'
+import { JobType } from './JobType'
 import { Setting } from './Setting'
 
 export interface Job {
@@ -33,9 +35,14 @@ export interface Job {
   time?: number
 
   /**
+   * Job operation type.
+   */
+  type?: JobType
+
+  /**
    * Execution status.
    */
-  status?: string
+  status?: JobStatus
 
   /**
    * Execution message.

@@ -1,23 +1,22 @@
-import { BitEntity, SettingEntity } from '@mcro/entities'
-import { GithubBitData } from '@mcro/models'
+import { BitUtils } from '@mcro/model-utils'
+import { Bit, GithubBitData, Setting } from '@mcro/models'
 import { GithubIssue } from '@mcro/services'
 import { hash } from '@mcro/utils'
-import { BitUtils } from '@mcro/model-utils'
 
 /**
  * Creates a Github Bit.
  */
 export class GithubBitFactory {
-  setting: SettingEntity
+  setting: Setting
 
-  constructor(setting: SettingEntity) {
+  constructor(setting: Setting) {
     this.setting = setting
   }
 
   /**
    * Creates a new bit from a given Github issue.
    */
-  create(issue: GithubIssue): BitEntity {
+  create(issue: GithubIssue): Bit {
     const id = hash(`github-${this.setting.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
@@ -77,6 +76,7 @@ export class GithubBitFactory {
       raw: issue,
       bitCreatedAt: createdAt,
       bitUpdatedAt: updatedAt,
-    }) as BitEntity
+    })
   }
+
 }

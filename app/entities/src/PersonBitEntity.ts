@@ -8,6 +8,9 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   target: 'person-bit' = 'person-bit'
 
   @PrimaryColumn()
+  id?: number
+
+  @Column({ unique: true })
   email?: string
 
   @Column({ nullable: true })

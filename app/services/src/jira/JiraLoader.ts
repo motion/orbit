@@ -3,16 +3,16 @@ import { JiraSettingValues, Setting } from '@mcro/models'
 import { queryObjectToQueryString } from '../utils'
 import { JiraComment, JiraCommentCollection, JiraIssue, JiraIssueCollection, JiraUser } from './JiraTypes'
 
-const log = new Logger('service:jira:loader')
-
 /**
  * Loads jira data from its API.
  */
 export class JiraLoader {
   private setting: Setting
+  private log: Logger
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, log?: Logger) {
     this.setting = setting
+    this.log = log || new Logger('service:jira:loader:' + setting.id)
   }
 
   /**
@@ -124,14 +124,14 @@ export class JiraLoader {
     const qs = queryObjectToQueryString(params)
     const url = `${domain}${path}${qs}`
 
-    log.info(`performing request to ${url}`)
+    this.log.verbose(`performing request to ${url}`)
     const result = await fetch(url, {
       headers: {
         Authorization: `Basic ${credentials}`,
         'Content-Type': 'application/json',
       },
     })
-    log.info(`request ${url} result ok:`, result.ok)
+    this.log.verbose(`request ${url} result ok:`, result.ok)
 
     if (!result.ok) {
       throw new Error(

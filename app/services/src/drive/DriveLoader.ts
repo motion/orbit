@@ -1,7 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
 import * as path from 'path'
-import { sequence } from '../utils'
 import { DriveFetcher } from './DriveFetcher'
 import {
   googleDriveFileCommentQuery,
@@ -9,50 +8,39 @@ import {
   googleDriveFileQuery,
   googleDriveFileRevisionQuery,
 } from './DriveQueries'
-import { DriveComment, DriveFile, DriveLoadedFile, DriveLoadedUser, DriveRevision } from './DriveTypes'
+import { DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveTypes'
+import { uniqBy } from 'lodash'
 
-const log = new Logger('service:gdrive:loader')
-
+/**
+ * Loads data from google drive api.
+ */
 export class DriveLoader {
-  fetcher: DriveFetcher
-  files: DriveLoadedFile[] = []
-  users: DriveLoadedUser[] = []
+  private log: Logger
+  private fetcher: DriveFetcher
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, log?: Logger) {
     this.fetcher = new DriveFetcher(setting)
+    this.log = log || new Logger('service:gdrive:loader:' + setting.id)
   }
 
-  async load(): Promise<void> {
-    log.info(`loading google drive files`)
+  async load(): Promise<DriveLoadedFile[]> {
     const files = await this.loadFiles()
-    log.info(`loaded ${files.length} files`, files)
+    const driveFiles: DriveLoadedFile[] = []
+    for (let file of files) {
 
-    // limit number of files for now
-    // files.splice(10, files.length)
-
-    this.files = await sequence(files, async file => {
       // try to find a file folder to create a Bit.location later on
       let parent: DriveFile
       if (file.parents && file.parents.length)
         parent = files.find(otherFile => otherFile.id === file.parents[0])
 
-      return {
-        file,
-        content: await this.loadFilesContent(file),
-        comments: await this.loadComments(file),
-        revisions: await this.loadRevisions(file),
-        thumbnailFilePath: await this.downloadThumbnail(file),
-        parent,
-      }
-    })
-
-    log.info(`aggregating users from loaded files, comments and revisions`)
-    this.users = []
-    this.files.forEach(file => {
-      [
-        ...file.file.owners,
-        ...file.comments.map(comment => comment.author),
-        ...file.revisions.map(revision => revision.lastModifyingUser),
+      const thumbnailFilePath = await this.downloadThumbnail(file);
+      const content = await this.loadFilesContent(file);
+      const comments = await this.loadComments(file);
+      const revisions = await this.loadRevisions(file);
+      const users = [
+        ...file.owners,
+        ...comments.map(comment => comment.author),
+        ...revisions.map(revision => revision.lastModifyingUser),
       ]
         .filter(user => {
           // some users are not defined in where they come from. we skip such cases
@@ -60,30 +48,18 @@ export class DriveLoader {
           // if author of the comment is current user we don't need to add him to users list
           return user && user.emailAddress && user.me === false
         })
-        .forEach(user => {
-          // make sure we don't have duplicate users - find user by email if it already was added
-          let foundUser: DriveLoadedUser = this.users.find(
-            foundUser => foundUser.name === user.displayName,
-          )
-          if (!foundUser) {
-            foundUser = {
-              email: user.emailAddress,
-              name: user.displayName,
-              photo: user.photoLink,
-              comments: [],
-              revisions: [],
-              files: [],
-            }
-            this.users.push(foundUser)
-          }
 
-          // push file that user owns if its not exist yet
-          if (foundUser.files.indexOf(file.file) === -1)
-            foundUser.files.push(file.file)
-        })
-    })
-
-    log.info(`created ${this.users.length} users`, this.users)
+      driveFiles.push({
+        file,
+        thumbnailFilePath,
+        content,
+        comments,
+        revisions,
+        users: uniqBy(users, user => user.emailAddress),
+        parent,
+      })
+    }
+    return driveFiles
   }
 
   private async loadFiles(pageToken?: string): Promise<DriveFile[]> {
@@ -98,11 +74,11 @@ export class DriveLoader {
   private async loadFilesContent(file: DriveFile): Promise<string> {
     if (file.mimeType !== 'application/vnd.google-apps.document') return ''
 
-    log.info(`loading file content for`, file)
+    this.log.verbose(`loading file content for`, file)
     const content = await this.fetcher.fetch(
       googleDriveFileExportQuery(file.id),
     )
-    log.info(`content for file was loaded`, content)
+    this.log.verbose(`content for file was loaded`, { content })
     return content
   }
 
@@ -113,12 +89,11 @@ export class DriveLoader {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map') return []
 
-    log.info(`loading comments for`, file)
+    this.log.verbose(`loading comments for`, file)
     const result = await this.fetcher.fetch(
       googleDriveFileCommentQuery(file.id, pageToken),
     )
     if (result.nextPageToken) {
-      log.info(`next page found`)
       const nextPageComments = await this.loadComments(
         file,
         result.nextPageToken,
@@ -135,12 +110,11 @@ export class DriveLoader {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
 
-    log.info(`loading revisions for`, file)
+    this.log.verbose(`loading revisions for`, file)
     const result = await this.fetcher.fetch(
       googleDriveFileRevisionQuery(file.id, pageToken),
     )
     if (result.nextPageToken) {
-      log.info(`next page found`)
       const nextPageRevisions = await this.loadRevisions(
         file,
         result.nextPageToken,
@@ -153,11 +127,11 @@ export class DriveLoader {
   private async downloadThumbnail(file: DriveFile): Promise<string> {
     if (!file.thumbnailLink) return ''
 
-    log.info(`downloading file thumbnail for`, file)
+    this.log.verbose(`downloading file thumbnail for`, file)
     const destination = path.normalize(
       __dirname + '/../../../uploads/' + file.id + '.' + file.fileExtension,
     )
     await this.fetcher.downloadFile(file.thumbnailLink, destination)
-    log.info(`thumbnail downloaded and saved as`, destination)
+    this.log.verbose(`thumbnail downloaded and saved as`, destination)
   }
 }

@@ -78,7 +78,7 @@ It was possible we could run Orbit entirely locally on the end-users computer. I
   </img>
 </div>
 
-So, that's the innovation of Orbit's distrbution model. It never sends your data or even your keys outside of your computer. That means you can download and try it without having to trust us: you can entirely firewall Orbit!
+So, that's the innovation of Orbit's distribution model. It never sends your data or even your keys outside of your computer. That means you can download and try it without having to trust us: you can entirely firewall Orbit!
 
 But it also has a huge benefit for incentives within our company. It means **the product must actually be good**. We can't hide behind a sales team.
 

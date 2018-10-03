@@ -15,7 +15,7 @@ So... what is Orbit? Let's start with a story:
 
 You read, you write, you email, you chat, you work. From Slack to Jira to Google Docs to Github. Your knowledge is distributed -- but your wiki and intranet portal doesn't help you or your team stay on top of it. They add another source of truth, they add infrastructure. They are clunky to use, and chronically stale.
 
-There's something missing that we all feel here, and it has to do with the visions we see of futuristic interfaces time and time again in TV and movies, whenever there's a scene showing futuristic computing.
+There's something wrong we all feel here, and it has to do with the visions of futuristic interfaces we see time and time again in TV and film, whenever there's a futuristic computing scene. Why don't we have that level of fluidity?
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 

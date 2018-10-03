@@ -25,7 +25,7 @@ There's something wrong we all feel here, and it has to do with the visions of f
   Ergonomically though, how long can you really keep your arms up like that?
 </div>
 
-What exactly is preventing us from exploring knowledge as easily as Iron Man? While the fancy effects of movies like Iron Man and Minority Report are often distracting, they grasp at a real unmet desire: a level of unification, fluidity, and control that browsers and the web just don't give us today.
+While the fancy effects of movies like Iron Man and Minority Report are often distracting, they grasp at a real unmet desire: a level of unification, fluidity, and control that browsers and the web just don't give us today.
 
 This brings us to Orbit's mission:
 
@@ -33,7 +33,7 @@ This brings us to Orbit's mission:
 
 **We want to be able to explore knowledge in a unified way.**
 
-And to do that we'll need to fix something wrong with browsers / software services: they don't give us any control over our information.
+And to do that we'll need to fix something wrong with browsers and software services today: they don't give us any control over our information.
 
 Orbit is not a service company. We don't store data. Instead, much like a browser or operating system, we're a platform that helps manage information. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail at interop), Orbit is the middle ground: a flexible way to manage bits of information from many places.
 

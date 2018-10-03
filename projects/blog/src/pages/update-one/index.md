@@ -19,7 +19,7 @@ There's something missing that we all feel here, and it has to do with the visio
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-So what exactly is preventing us from exploring as easily like Iron Man?
+So what exactly is preventing us from exploring knowledge as easily as Iron Man?
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 

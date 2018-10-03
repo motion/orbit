@@ -25,25 +25,22 @@ What's preventing us from exploring our data like Iron Man?
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-Orbit won't make you Iron Man. It won't even have all the cool visual effects. But I do think sci-fi movies get at one important desire that the world today lacks:
+From what you read, to what you email and chat about; from Slack and Jira to your team Drive. Our information has become more distributed and less easy to organize.
+Orbit won't make you Iron Man, it won't even have all the cool visual effects. But it can solve a real desire:
 
-**I want to be able to explore my information in a unified way.**
+**I want to be able to explore knowledge in a unified way.**
 
-From what you've read, to what you've talked about; from Slack to Jira to your team Google Drive; our information has become more and more distributed and less and less easy to understand.
+And to do that I think it needs to shift the balance of power from web apps back to individuals by building a compelling platform.
 
-Orbit want to be a new type of thing: like a Browser or Operating System. Where OS's gave us control and unification through _files_ (and with that the control to organize, search in unified ways), the trend of the web has been entirely _anti Iron Man_. Everything has its own unique interface.
+Orbit want to be a new type of thing: a complement to the Browser and Operating System. A smart knowledge platform. OS's gave us a lot of control and unity through _files_, but the trend of the web has been one of sandboxed custom interfaces (very anti-Iron Man).
 
-Orbit is an app platform for web data (and any other type data) that forces its apps to sync everything to a _bit_. A bit is a lot like a file, and it lets us do amazing things that browser do not.
+We want to be able to:
 
-It's goals are:
-
-- To navigate important knowledge quickly and easily.
-- To search it intuitively: by person, topic, and time.
-- To have it augment us, as we work, in context.
-- To install and build new apps on top of it easily.
-- To do all of this without having to give up our privacy and security.
-
-Here's a demo:
+- Navigate important knowledge quickly and easily.
+- Search it intuitively: by person, topic, and time.
+- Have it augment us, as we work, in context.
+- Install and build new apps on top of it easily.
+- Do all of this without having to give up our privacy and security.
 
 [video]
 
@@ -51,19 +48,26 @@ From here on out I'm going to talk just a bit about what makes Orbit unique. You
 
 ### Distribution: From Roadblock to Selling Point
 
-Orbit wants to be a _platform for knowledge management_ and replace most of clunky and stale intranet systems today. To do that, it needs to crawl all of your information. But that creates a misaligned incentive we discovered early in our user research:
+Orbit wants to replace most of clunky and stale intranet systems today. To do that, it needs to crawl most of your information. But that creates a misaligned incentive that we quickly discovered in our user research:
 
-_No one wants to trust any single company with all their data._
+_No one wants to trust any single company with all of their data._
 
-This was a big roadblock. Enterprise sales cycles felt peripheral to the large problem of building a better knowledge manager. But it was impossible to get even close friends to install it at work without wanting permission from managers, a demo, etc.
+This was a big roadblock for us. Enterprise sales cycles felt made the large problem of building a better knowledge manager impossible. Even close friends resisted installing it without getting strong permission from their manager and team.
 
-It was later as we struggled with a way around the sales problem that we had a realization: today computers are powerful. They have large disks and fast processors. Further, accurate NLP algorithms have become incredibly fast.
+We couldn't get anyone to just try it out. Traditionally this would mean moving to an on-premise model, where you let a company install an Orbit server at their office to avoid security issues. But this is an even more laborious sales model.
 
-1. Cloud - Have to trust security, lower UX, but easy to develop.
-2. On-premise - Secure, high install cost, large sales cycle, harder to develop.
-3. **Decentralized/On Device** - Secure, low install cost, high UX, but limited compute and harder development.
+It was later during a discussion that came across a realization: todays computers are powerful. They have large disks and fast processors. Doing interesting topic modeling and search with modern deep learning is now approachable, fast and efficient.
 
-So we tested our theory of NLP and compute power, and with some interesting work there we're confident we can do good search locally. The rest perfectly aligned with our incentives.
+What if we could do it all on the users computer? It would be harder in some ways, but it also would solve all our issues:
+
+- No handling of user data meant easy, risk-free trials.
+- No need to deploy servers on-prem meant no need for a sales-forward company!
+
+We'd need a decentralized sync system for it, and it certainly has its downsides. But they we're downsides well suited to what we want to build:
+
+1. _The Cloud_: Requires high trust in your security, has worse UX, but easy to build.
+2. _On Prem_: Is secure, but at high install cost and sales cycle, harder to develop.
+3. **Orbit: Decentralized/On Device** - Also secure, with low install cost and higher UX, but limited compute power and hard development.
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">
@@ -71,11 +75,11 @@ So we tested our theory of NLP and compute power, and with some interesting work
   </img>
 </div>
 
-This means you can try Orbit at no cost and with no risk. No data privacy issues, no time talking to sales, no expensive installation. Just download the app.
+All of this just means you can download Orbit at no cost, with no risk. No data privacy issues, no time talking to sales, no expensive installation.
 
-This also aligns us with what we think is important: **the product must actually be good**. We aren't incentivized to invest into sales, so we can invest more into a great experience.
+It also aligns us nicely with users: **the product must actually be good**. We can't hide behind a sales team.
 
-### The details
+### How Orbit Works
 
 [Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and some that are in early development.
 
@@ -85,17 +89,17 @@ This also aligns us with what we think is important: **the product must actually
 
 #### Home
 
-The Orbit Home is a flexible unified search and exploration tool for your data. For now it's a lot like Spotlight with some recent activity and a directory of people.
+The Orbit Home is your flexible unified knowledge launcher. For now it's a lot like Spotlight with some recent activity and a directory of people.
 
-> Option+Space opens Orbit Home
+> Use Option+Space to open Orbit anywhere
 
 #### Bit
 
-We're calling a "file" in orbit a "Bit". Where SaaS products have data behind unique interfaces and APIs, Orbit apps sync to a common fundamental unit: the bit, which can be text or HTML, for now.
+We're calling a "file" in orbit a "Bit". Where SaaS products have data behind unique interfaces and APIs, Orbit apps sync to a common fundamental unit: the bit, which can represent Text, HTML, Tasks, Conversations, and more.
 
 #### Language
 
-Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) Natural Language engine. Importantly, it runs quickly on-device and custom to you: it's relevancy is powered by both interesting words in English as well as their relative frequency in your corpus. This powers our search, related items, and interesting word extraction.
+Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) natural language engine. Importantly, it runs quickly on-device and is custom to your knowledge: it's relevancy is powered by interesting words in English as well as their relative frequency in your corpus. This powers search, related items, and interesting word extraction.
 
 #### Context
 

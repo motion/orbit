@@ -11,7 +11,7 @@ But first, the great news. Our alpha build is now [available for download](). Wh
 
 So, what's Orbit? Let's start with our mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives individuals control over siloed web data to create a more flexible, powerful and intuitive knowledge exploration.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) to gives individuals back control over siloed web data -- with a flexible, powerful and intuitive knowledge platform.
 
 Orbit is a new type of thing. It's trying to answer a question that I think that summarizes a variety of pain points we feel today:
 
@@ -25,15 +25,17 @@ What's preventing us from exploring our data like Iron Man?
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-Orbit won't make you Iron Man. It won't even have all the visual effects. But I do think sci-fi movies get at one important desire that the world today lacks.
+Orbit won't make you Iron Man. It won't even have all the cool visual effects. But I do think sci-fi movies get at one important desire that the world today lacks:
 
 **I want to be able to explore my information in a unified way.**
 
-From what you've read to what you've talked about, from Slack to Jira to your team Google Drive, our information has become more and more distributed, and less and less easy to understand.
+From what you've read, to what you've talked about; from Slack to Jira to your team Google Drive; our information has become more and more distributed and less and less easy to understand.
 
-Orbit want to be a new type of thing: the mid-point between a Browser and an Operating System. It will give knowledge a platform to be easier to understand, search, explore and extend. Operating systems gave us files, and with that the control to organize, search, and extend, but the trend towards web apps has been entirely anti-Iron Man. Everything with it's own interface, and nothing we can control.
+Orbit want to be a new type of thing: like a Browser or Operating System. Where OS's gave us control and unification through _files_ (and with that the control to organize, search in unified ways), the trend of the web has been entirely _anti Iron Man_. Everything has its own unique interface.
 
-We want:
+Orbit is an app platform for web data (and any other type data) that forces its apps to sync everything to a _bit_. A bit is a lot like a file, and it lets us do amazing things that browser do not.
+
+It's goals are:
 
 - To navigate important knowledge quickly and easily.
 - To search it intuitively: by person, topic, and time.
@@ -41,11 +43,13 @@ We want:
 - To install and build new apps on top of it easily.
 - To do all of this without having to give up our privacy and security.
 
-Orbit's goal is make this real. Here's a demo:
+Here's a demo:
 
 [video]
 
-### From Roadblock to Feature: Distribution
+From here on out I'm going to talk just a bit about what makes Orbit unique. You can skip to the end if you just want to get [more information on how to follow us](#going-forward).
+
+### Distribution: From Roadblock to Selling Point
 
 Orbit wants to be a _platform for knowledge management_ and replace most of clunky and stale intranet systems today. To do that, it needs to crawl all of your information. But that creates a misaligned incentive we discovered early in our user research:
 

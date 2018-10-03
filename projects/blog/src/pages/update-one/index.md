@@ -19,15 +19,13 @@ There's something missing that we all feel here, and it has to do with the visio
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-So what exactly is preventing us from exploring knowledge as easily as Iron Man?
-
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 <div class="alt">
   Ergonomically though, how long can you really keep your arms up like that?
 </div>
 
-While the fancy effects of movies like Minority Report are often distracting, they grasp at a real unmet desire: a level of unification, fluidity, and control that browsers and the web just don't give us today.
+What exactly is preventing us from exploring knowledge as easily as Iron Man? While the fancy effects of movies like Iron Man and Minority Report are often distracting, they grasp at a real unmet desire: a level of unification, fluidity, and control that browsers and the web just don't give us today.
 
 This brings us to Orbit's mission:
 

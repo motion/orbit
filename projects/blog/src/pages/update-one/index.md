@@ -78,7 +78,7 @@ It meant we could avoid doing a high-trust-needed cloud service or expensive-to-
   </img>
 </div>
 
-So, that's the innovation of Orbit's distrbution model. It never sends your data or even your keys outside of your computer. That manes you can download and try it without having to trust us: you can entirely firewall Orbit!
+So, that's the innovation of Orbit's distrbution model. It never sends your data or even your keys outside of your computer. That means you can download and try it without having to trust us: you can entirely firewall Orbit!
 
 But it also has a huge benefit for incentives within our company. It means **the product must actually be good**. We can't hide behind a sales team.
 
@@ -104,17 +104,15 @@ Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) natu
 
 #### Context
 
-Context will be the first big step Orbit does to deliver on the "future of computing". It's powered by a custom OCR engine we've built that focuses on one thing: being the fastest in the world. We're close to getting it to use <1% of your total laptop battery.
+Context will be the first big step Orbit makes to deliver on the "future of computing" promise. Powered by a novel OCR engine that focuses on one thing: being fast. We're close to having it to use <1% of your laptop battery.
 
-Why an OCR engine? Whether writing an email in Mail.app, talking on Slack, browsing the Web, or really doing anything you do on your computer, Orbit understands what you are looking at.
+Why an OCR engine? It means no matter if you're writing an email in Mail.app, talking on Slack, browsing the Web, or doing anything on your computer, Orbit understands what you are looking at, down to the lines you write.
 
-Combined with our Language engine, it means we can do _meaningful search_ to find extremely relevant items within your knowledgebase based on whatever you're doing. But that's just the start. We can also highlight words and show apps next to them, and script triggers based on activity, words, and other contextual information.
-
-We have both the OCR, NLP, and UI working. But we need a few more months to get it to be more stable, useful and well implemented.
+Combined with the Language engine, it means Orbit can do _meaningful search_ to find extremely relevant items within your knowledgebase based on whatever you're doing. But that's just the start. Context is not yet available in Orbit, but it's close.
 
 #### Apps
 
-Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We will add more flexible ones next such as Web and API crawlers.
+Some apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We will add more flexible ones next such as Web and API crawlers.
 
 <div style="display: flex; flex-flow: row; height: 120px; max-width: 100%; justify-content: space-between; padding: 30px 0;">
   <img class="icon" src="./icons/gdrive.svg" />

@@ -1,5 +1,6 @@
 body {
   line-height: 1.65rem;
+  overflow-x: hidden;
 }
 
 p,

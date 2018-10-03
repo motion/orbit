@@ -9,17 +9,17 @@ I'm certainly excited to start talking about Orbit. It's been an intense few yea
 
 First, the good stuff. An alpha build is now [available for download](https://orbitauth.com/download). We've pushed hard to get it to where it's usable and we can get valuable feedback.
 
+---
+
 So... what is Orbit? Let's start with a story:
 
 You read, you write, you email, you chat, you work. From Slack to Jira to Google Docs to Github. Your knowledge is distributed, and your wiki or intranet portals doesn't cut it. In fact it's often out of date and clunky to use.
 
-There's something we all feel here, and it has something to do with the vision we've been sold time and time again in movies with sci-fi interfaces:
+There's something missing that we all feel here, and it has to do with the visions of futuristic interfaces we see time and time again in tv and movies, whenever they are showing us the future of computing.
 
-> We wanted [science fiction UX](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
+> We want [science fiction UX](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
 So what exactly is preventing us from exploring our knowledge like Iron Man?
-
-It has something to do with the evolution of information from the OS to the Cloud.
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
@@ -27,23 +27,23 @@ It has something to do with the evolution of information from the OS to the Clou
   Ergonomically though, how long can you really keep your arms up like that?
 </div>
 
+While the fancy effects of movies like Iron Man and Minority Report are often distracting, these sci-fi dreams grasp at real desires: a level of fluidity, cohesion, and flexibility that browsers and the web just don't give us today.
+
 This brings us to Orbit's mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control back to the individual over their web data by creating a flexible, powerful and intuitive knowledge platform.
-
-While the fancy effects of movies like Minority Report are often distracting, these sci-fi dreams grasp at real desires: for a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over web data back to the individual -- by providing a flexible, powerful and intuitive knowledge platform.
 
 **We want to be able to explore knowledge in a unified way.**
 
-To do that it we'll need to fix something wrong with our browsers: they don't let us control any information. And for Orbit do make that work, it will need to be more than just a good product; it will need to become popular enough to convince SaaS companies to play along with it. It needs to be compelling.
+And to do that it we'll need to fix something wrong with our browsers: they don't let us control any of our information.
 
-So, Orbit will not be a service company, it will be a platform. We don't store your data. Instead, it's much like a Browser or Operating System. A Knowledge OS. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail at unity and control), Orbit is the middle ground: a flexible way to manage bits of information.
+So, Orbit will not be a service company, it will be a platform. We don't store your data. Instead, it's much like a Browser or Operating System, a platform that helps manage information. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail the the former), Orbit is the middle ground: a flexible way to manage bits of information from many places.
 
 Our goals are to let you:
 
-- Navigate knowledge quickly and easily.
+- Navigate disparate knowledge quickly and easily.
 - Search intuitively: by person, topic, and time.
-- Augment relevant information as you normally work.
+- Augment yourself with relevant information as you work.
 - Build and install apps on top of it with ease.
 - Do all of this without giving up privacy or security.
 

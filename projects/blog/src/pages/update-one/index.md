@@ -37,7 +37,7 @@ This brings us to Orbit's mission:
 
 And to do that it we'll need to fix something wrong with our browsers: they don't let us control any of our information.
 
-So, Orbit will not be a service company, it will be a platform. We don't store your data. Instead, it's much like a Browser or Operating System, a platform that helps manage information. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail the the former), Orbit is the middle ground: a flexible way to manage bits of information from many places.
+So, Orbit is not a service company, it's a platform. We don't store your data. Instead, it's much like a Browser or Operating System, a platform that helps manage information. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail the the former), Orbit is the middle ground: a flexible way to manage bits of information from many places.
 
 Our goals are to let you:
 

@@ -104,6 +104,10 @@ Why an OCR engine? It means no matter if you're writing an email in Mail.app, ta
 
 Combined with the Language engine, it means Orbit can do _meaningful search_ to find extremely relevant items within your knowledgebase based on whatever you're doing. But that's just the start. Context is not yet available in Orbit, but it's close.
 
+#### People
+
+People are a first class concept in Orbit. Using the aggregated information from the apps you plug in and the Language topic modeling, we show topics people are experts in, alongside recent activity.
+
 #### Apps
 
 With all of these pieces together we have apps. Some apps we've built out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We'll be adding more flexible ones next like Web and API crawlers.
@@ -117,9 +121,11 @@ With all of these pieces together we have apps. Some apps we've built out of the
   <img class="icon" src="./icons/slack.svg" />
 </div>
 
-We can't predict what apps and views will be most useful for any one person or company though. As we finish each of the above mentioned parts, along with our interface kit, we are aiming towards opening up an App Store early next year.
+#### App Store
 
-You'll have full access to the Language and Context APIs, our UI Kit, and importantly, a built in live-editing environment with a one-click, decentralized distribution.
+We can't predict what apps and views will be most useful for any one person or company, though. As we finish each of the above mentioned parts, along with our interface kit, we're going to release the App Store (hopefully early next year).
+
+You'll have full access to the Language and Context APIs, our UI Kit, People, and importantly, a built in live-editing environment that lets you one-click decentralized deploy it with no infrastructure required.
 
 ### Going forward
 

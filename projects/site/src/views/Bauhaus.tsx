@@ -14,8 +14,7 @@ export class Bauhaus extends React.Component<{
     // Need to interpolate first, so angles remain sharp
     warp.interpolate(2)
     warp.transform(
-      this.props.warp ||
-        (([x, y]) => [x + 4 * Math.sin(x / 50), y - 4 * -Math.sin(x / 20)]),
+      this.props.warp || (([x, y]) => [x + 4 * Math.sin(x / 50), y - 4 * -Math.sin(x / 20)]),
     )
     warp.update()
   }

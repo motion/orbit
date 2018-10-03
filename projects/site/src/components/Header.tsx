@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { attachTheme } from '@mcro/gloss'
-import { Link } from '~/views'
-import { SectionContent } from '~/views/sectionContent'
-import { BrandLogo } from '~/components'
-import * as Constants from '~/constants'
+import { Link } from '../views'
+import { SectionContent } from '../views/sectionContent'
+import { BrandLogo } from '../components'
+import * as Constants from '../constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
 
@@ -39,7 +39,7 @@ const Nav = view('nav', {
 export class Header extends React.Component {
   render() {
     const { linkProps, theme, scrollTo } = this.props
-    const color = theme.base.color.desaturate(0.2).alpha(0.8)
+    const color = theme.color.desaturate(0.2).alpha(0.8)
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
@@ -66,12 +66,7 @@ export class Header extends React.Component {
                     >
                       Explore
                     </Link>
-                    <Link
-                      isLarge={isLarge}
-                      color={color}
-                      {...linkProps}
-                      to="/about"
-                    >
+                    <Link isLarge={isLarge} color={color} {...linkProps} to="/about">
                       About
                     </Link>
                   </Nav>

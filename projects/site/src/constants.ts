@@ -1,8 +1,6 @@
 import * as UI from '@mcro/ui'
 
-export const isSafari = /^((?!chrome|android).)*safari/i.test(
-  navigator.userAgent,
-)
+export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export const sectionMaxHeight = 1250
 export const sidePad = 40

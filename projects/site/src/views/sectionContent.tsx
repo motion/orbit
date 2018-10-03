@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 
 export const SectionContent = view({
   width: '100%',

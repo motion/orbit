@@ -21,9 +21,7 @@ import { config } from 'react-spring'
 import { throttle } from 'lodash'
 
 const forwardRef = Component => {
-  return React.forwardRef((props, ref) => (
-    <Component {...props} forwardRef={ref} />
-  ))
+  return React.forwardRef((props, ref) => <Component {...props} forwardRef={ref} />)
 }
 
 const bodyBg = Constants.colorMain
@@ -56,15 +54,7 @@ const SectionTitle = props => (
 )
 
 const SectionP = props => (
-  <P
-    size={2.1}
-    sizeLineHeight={1.1}
-    fontWeight={400}
-    titleFont
-    color="#fff"
-    alpha={1}
-    {...props}
-  />
+  <P size={2.1} sizeLineHeight={1.1} fontWeight={400} titleFont color="#fff" alpha={1} {...props} />
 )
 
 const SectionSubP = props => (
@@ -100,11 +90,7 @@ const WaveSVG = view(UI.View, {
   bottom: 0,
   zIndex: 0,
   minWidth: 1000,
-  margin: [
-    '-2.5%',
-    window.innerWidth < 1000 ? (window.innerWidth - 1000) / 2 : 0,
-    0,
-  ],
+  margin: ['-2.5%', window.innerWidth < 1000 ? (window.innerWidth - 1000) / 2 : 0, 0],
   transform: {
     scaleX: -1,
     z: 0,
@@ -142,11 +128,7 @@ const scrollToTrack = (to, track) => {
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
-  slantGradient: [
-    'transparent',
-    borderize(bottomBg.mix(bodyBg)),
-    'transparent',
-  ],
+  slantGradient: ['transparent', borderize(bottomBg.mix(bodyBg)), 'transparent'],
 }
 
 const firstSlant = {
@@ -171,14 +153,7 @@ const VertSpace = () => (
 )
 
 const SectionSubTitle = props => (
-  <Title
-    size={1.7}
-    sizeLineHeight={1.1}
-    titleFont
-    alpha={0.6}
-    fontWeight={400}
-    {...props}
-  />
+  <Title size={1.7} sizeLineHeight={1.1} titleFont alpha={0.6} fontWeight={400} {...props} />
 )
 
 const Pitch = ({ isLarge, scrollTo }) => (
@@ -188,8 +163,8 @@ const Pitch = ({ isLarge, scrollTo }) => (
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      Organize and search everything in your cloud from behind the firewall.
-      It's the ultimate knowledge tool for teams.
+      Organize and search everything in your cloud from behind the firewall. It's the ultimate
+      knowledge tool for teams.
     </SectionSubTitle>
     <VertSpace />
     <SectionSubTitle
@@ -267,10 +242,7 @@ class HomeHeader extends React.Component {
                   opacity: 0.25,
                   transform: { scale: 0.97, y: '-11%', x: '54%' },
                 }}
-                warp={([x, y]) => [
-                  x - 4 * -Math.sin(x / 30),
-                  y - 4 * -Math.sin(x / 30),
-                ]}
+                warp={([x, y]) => [x - 4 * -Math.sin(x / 30), y - 4 * -Math.sin(x / 30)]}
               />
             </Parallax>
             <div
@@ -280,8 +252,7 @@ class HomeHeader extends React.Component {
                 top: 0,
                 left: 0,
                 right: 0,
-                background:
-                  'linear-gradient(-190deg, rgba(255,255,255,0.5), rgba(255,255,255,0))',
+                background: 'linear-gradient(-190deg, rgba(255,255,255,0.5), rgba(255,255,255,0))',
               }}
             />
             <Content id="home-header">
@@ -382,10 +353,7 @@ class SectionSearch extends React.Component {
             <Parallax speed={0.4} zIndex={1}>
               <Bauhaus
                 showCircle
-                warp={([x, y]) => [
-                  x - 4 * -Math.sin(x / 30),
-                  y - 4 * -Math.sin(x / 30),
-                ]}
+                warp={([x, y]) => [x - 4 * -Math.sin(x / 30), y - 4 * -Math.sin(x / 30)]}
                 {...{
                   transformOrigin: 'bottom left',
                   transform: { scale: 0.4, y: sectionHeight * 0.8, x: '-10%' },
@@ -405,13 +373,12 @@ class SectionSearch extends React.Component {
                 </SectionTitle>
                 <VertSpace />
                 <SectionP>
-                  The power of serverless NLP means your internal search is
-                  actually internal.
+                  The power of serverless NLP means your internal search is actually internal.
                 </SectionP>
                 <VertSpace />
                 <SectionSubP>
-                  Search everything from cloud services like Slack and Google
-                  Drive to internal APIs and databases without any setup.
+                  Search everything from cloud services like Slack and Google Drive to internal APIs
+                  and databases without any setup.
                 </SectionSubP>
                 <VertSpace />
                 <UI.View flex={0.5} />
@@ -480,26 +447,17 @@ class SectionProfiles extends React.Component {
               <Slant {...thirdSlant} {...topSlants} />
             </Parallax>
             <Content id="home-profiles" {...{ flex: 1 }}>
-              <UI.View if={!isLarge} flex={1} />
+              {isLarge && <UI.View flex={1} />}
               <UI.View
                 className="profiles"
-                {...(isLarge
-                  ? { width: '45%', margin: ['auto', 0] }
-                  : { margin: ['auto', 0] })}
+                {...(isLarge ? { width: '45%', margin: ['auto', 0] } : { margin: ['auto', 0] })}
               >
-                <SectionTitle size={2.8}>
-                  The ultimate insight into your org
-                </SectionTitle>
+                <SectionTitle size={2.8}>The ultimate insight into your org</SectionTitle>
                 <VertSpace />
                 <SectionSubTitle>
-                  See profiles of everyone in your company generated
-                  automatically.
+                  See profiles of everyone in your company generated automatically.
                 </SectionSubTitle>
                 <VertSpace />
-                <SectionSubP if={false} color="#111" alpha={0.5}>
-                  See recent collaborations, relevant activity, expert topics,
-                  and more.
-                </SectionSubP>
                 <VertSpace />
                 <VertSpace />
                 <div style={{ position: 'relative' }}>
@@ -510,9 +468,7 @@ class SectionProfiles extends React.Component {
                       left: '-10%',
                       right: '-20%',
                       height: '50%',
-                      background: `linear-gradient(${bodyBg.alpha(
-                        0,
-                      )}, ${bodyBg} 70%)`,
+                      background: `linear-gradient(${bodyBg.alpha(0)}, ${bodyBg} 70%)`,
                       zIndex: 100,
                       transform: {
                         z: 1000,
@@ -560,12 +516,7 @@ const Card = ({ title, children, icon }) => (
       alignItems: 'center',
     }}
   >
-    <UI.Icon
-      name={icon}
-      size={46}
-      color="#fff"
-      {...{ margin: [0, 40, 0, 0] }}
-    />
+    <UI.Icon name={icon} size={46} color="#fff" {...{ margin: [0, 40, 0, 0] }} />
     <div style={{ flex: 1 }}>
       <SectionP size={1.5} fontWeight={700} flex={1} marginBottom={5}>
         {title}
@@ -609,17 +560,17 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The Serverless Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.85}>
-                Orbit runs entirely on your desktop with no server. It has a
-                powerful plugin system to unify and display any type of
-                knowledge.
+                Orbit runs entirely on your desktop with no server. It has a powerful plugin system
+                to unify and display any type of knowledge.
               </SectionSubTitle>
               <VertSpace />
-              <SectionSubP size={1.45} alpha={0.7} if={isLarge}>
-                Because it has no server, it only takes a minute to install and
-                never exposes single bit of your private data. We don't like to
-                call it decentralized, but you can think of it as a peer-to-peer
-                intranet system for your team.
-              </SectionSubP>
+              {isLarge && (
+                <SectionSubP size={1.45} alpha={0.7}>
+                  Because it has no server, it only takes a minute to install and never exposes
+                  single bit of your private data. We don't like to call it decentralized, but you
+                  can think of it as a peer-to-peer intranet system for your team.
+                </SectionSubP>
+              )}
               <VertSpace />
               <VertSpace />
             </UI.Col>
@@ -631,8 +582,8 @@ class SectionNoCloud extends React.Component {
                 Download to setup in just a couple minutes.
               </Card>
               <Card icon="business_plug" title="Custom apps">
-                Build custom integrations right on your computer, and deploy to
-                your teams with a click.
+                Build custom integrations right on your computer, and deploy to your teams with a
+                click.
               </Card>
             </UI.Col>
           </div>
@@ -657,12 +608,7 @@ class OrbitPure extends React.Component {
   }
 
   render() {
-    const {
-      scrollTop,
-      restingPosition,
-      lastLockedIndex,
-      sectionHeight,
-    } = this.props
+    const { scrollTop, restingPosition, lastLockedIndex, sectionHeight } = this.props
     return (
       <ParallaxLayer
         ref={ref => (window.orbit = ref)}
@@ -696,10 +642,7 @@ class OrbitPure extends React.Component {
                   sectionHeight < 1100
                     ? Math.min(
                         1,
-                        Math.max(
-                          0.75,
-                          Math.log(1 / ((1300 - sectionHeight) / 1000)),
-                        ) / 1.15,
+                        Math.max(0.75, Math.log(1 / ((1300 - sectionHeight) / 1000))) / 1.15,
                       )
                     : 1,
               },
@@ -765,9 +708,7 @@ class OrbitPure extends React.Component {
                     zIndex: 1000,
                     transition: 'all ease-in 400ms 300ms',
                     opacity: lastLockedIndex === 2 ? 1 : 0,
-                    transform: `translate3d(0,0,${
-                      lastLockedIndex === 2 ? 240 : 0
-                    }px)`,
+                    transform: `translate3d(0,0,${lastLockedIndex === 2 ? 240 : 0}px)`,
                   }}
                 />
               </HomeImg>
@@ -807,9 +748,7 @@ class Orbit extends React.Component {
     const { stopAt } = orbitStore
     const { lockedIndex, lastLockedIndex } = homeStore
     const restingIndex = lockedIndex === -1 ? lastLockedIndex : lockedIndex
-    const restingPosition = [[100, 100], [window.innerWidth, 100], [200, 700]][
-      restingIndex
-    ]
+    const restingPosition = [[100, 100], [window.innerWidth, 100], [200, 700]][restingIndex]
     const scrollTop = typeof stopAt !== 'number' ? false : stopAt
     const orbitProps = {
       scrollTop,
@@ -855,11 +794,7 @@ const notNeg = x => (x < 0 ? 0 : x)
     orbitStopAfter = null
 
     get lastLockedIndex() {
-      return (
-        notNeg(_.lastIndexOf(this.locked, 1)) ||
-        notNeg(_.lastIndexOf(this.locked, 2)) ||
-        0
-      )
+      return notNeg(_.lastIndexOf(this.locked, 1)) || notNeg(_.lastIndexOf(this.locked, 2)) || 0
     }
 
     get lockedIndex() {
@@ -879,13 +814,9 @@ const notNeg = x => (x < 0 ? 0 : x)
           document.querySelector('#home-profiles'),
         ]
         this.nodeOffsets = this.nodes.map(node => {
-          return (
-            document.documentElement.scrollTop + node.getBoundingClientRect().y
-          )
+          return document.documentElement.scrollTop + node.getBoundingClientRect().y
         })
-        const { offsetTop } = document.querySelector(
-          '#home-profiles',
-        ).parentNode
+        const { offsetTop } = document.querySelector('#home-profiles').parentNode
         this.orbitStopAfter = offsetTop
         this.updatePosition()
       })
@@ -954,9 +885,7 @@ export class HomeWrapper extends React.Component {
                     <SectionProfiles {...sectionProps} />
                   </Parallax>
                   <SectionNoCloud {...sectionProps} />
-                  <UI.View
-                    {...{ position: 'relative', zIndex: 999, marginTop: 50 }}
-                  >
+                  <UI.View {...{ position: 'relative', zIndex: 999, marginTop: 50 }}>
                     <UI.View
                       {...{
                         position: 'absolute',

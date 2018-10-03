@@ -1,9 +1,9 @@
-import { Title, SmallTitle } from '~/views'
+import { Title, SmallTitle } from '../views'
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Constants from '~/constants'
-import { Renderer, pProps } from '~/helpers'
+import * as Constants from '../constants'
+import { Renderer, pProps } from '../helpers'
 
 const Post = view({
   position: 'relative',
@@ -45,18 +45,18 @@ export class PostTemplate extends React.Component {
     return (
       <Post>
         <Header>
-          <SmallTitle if={sectionTitle} {...sectionTitleProps}>
-            {sectionTitle}
-          </SmallTitle>
+          {!!sectionTitle && <SmallTitle {...sectionTitleProps}>{sectionTitle}</SmallTitle>}
           <Title italic size={2.7} margin={[0, 0, 10, 0]} {...titleProps}>
             {title}
           </Title>
         </Header>
         <Card>
-          <div if={body}>{Renderer.processSync(body).contents}</div>
-          <UI.PassProps if={paragraphs} {...pProps} {...paragraphProps}>
-            {paragraphs}
-          </UI.PassProps>
+          {!!body && <div>{Renderer.processSync(body).contents}</div>}
+          {!!paragraphs && (
+            <UI.PassProps {...pProps} {...paragraphProps}>
+              {paragraphs}
+            </UI.PassProps>
+          )}
           {children}
         </Card>
       </Post>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'

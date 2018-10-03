@@ -1,11 +1,10 @@
 import Router from '@mcro/router'
-import { HomePage } from '~/pages/HomePage'
-// import { FeaturesPage } from '~/pages/FeaturesPage'
-// import { UseCasesPage } from '~/pages/UseCasesPage'
-import { AboutPage } from '~/pages/AboutPage'
-import { PrivacyPage } from '~/pages/PrivacyPage'
-import { TermsPage } from '~/pages/TermsPage'
-import { BlogPage } from '~/pages/BlogPage'
+import { HomePage } from './pages/HomePage'
+// import { FeaturesPage } from './pages/FeaturesPage'
+// import { UseCasesPage } from './pages/UseCasesPage'
+import { AboutPage } from './pages/AboutPage'
+import { PrivacyPage } from './pages/PrivacyPage'
+import { TermsPage } from './pages/TermsPage'
 
 function runRouter() {
   return new Router({
@@ -16,7 +15,6 @@ function runRouter() {
       '/about': AboutPage,
       '/privacy': PrivacyPage,
       '/terms': TermsPage,
-      '/blog': BlogPage,
     },
   })
 }

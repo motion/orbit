@@ -7,46 +7,43 @@ I'm certainly excited to start talking about Orbit. It's been an intense few yea
 
 But first, the great news. Our alpha build is now [available for download](). While some interesting pieces are not yet in place, we pushed hard to get to where you can use it and give feedback.
 
-So, what is Orbit? Let's start with our mission:
+So, what's Orbit? Let's start with our mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that shifts control over data back -- from companies to individuals -- to create a more flexible, powerful and inuitive knowledge interfaces.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives individuals control over siloed web data to create a more flexible, powerful and inuitive knowledge exploration.
 
 Orbit is a new type of thing. It's a mid point between a Browser and an Operating System -- a knowledge platform that takes disparate information and makes much easier to understand, search and explore.
 
-It's trying to change the world as it is today: a world where you have _almost no real control over your information_.
+We see a trend in the world where the rise of cloud computing has left us with _almost no real control over our information_. You can frame is like this:
 
-It's a bit easier to frame is like this:
-
-Where are our Minority Report / Iron Man interfaces? Are intranets the best we can do?
+What's preventing me from exploring my company like Iron Man?
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-And I'm not referring to the _visual effects_ of Sci-Fi interfaces. While their interfaces are often ridiculous and impractical (how long can you keep your arms up like that?) they do get something right that we don't think about often:
+I'm not referring to the _visual effects_ of the movie. While those are ridiculous (how long can you keep your arms up like that?) what Iron Man and basically every Sci Fi movie ever does get right is something that we accidentaly kept running into in user research:
 
-**We want to be able explore information in a unified interface.**
+**I want to be able to explore information in a unified interface.**
 
-And since the advent of the Browser, our ability to do just that has actually _regressed_. In fact before the era of web apps, Operating Systems gave use much more flexibility! All we had were files. We could often use them with different apps, and we could search and organize them and often use them cross-app.
+From Slack noise to Jira slowness to the black hole of a Google Drive. We often love these services for everything they're designed to do. But when we need to quickly remember or explore them, we're lost. And when it comes to unifying them all? Our intranet portals are a far cry.
 
-But Operating Systems were replaced by browser tabs, and for all the good that's done, the trend has been strictly anti-Iron-Man.
+The transition to the internet has been almost exclusively anti-Iron Man. In 1999 all we used were files and while collaboration was hard, almost everything else was better: organization, search, flexibility, and choice of applications.
 
-I think there's room for a platform that fixes that by doing one thing: mandating apps on it sync their "data" to a common form, like a file.
+We want to live in a world where:
 
-I want to live in a world where:
+- You can navigate important knowledge quickly and easily.
+- You can be confident it's holistic, accurate, up to date.
+- You can slice it in natural ways: by person, topics, and time.
+- It augments you as you naturally work: with information relavent to your context.
+- You can easily manage it, extend it, and build apps on top of it.
+- You can do all of this without having to give up your data to a 3rd party.
+- You can do all of this without the whole thing becoming a mess.
 
-- You can navigate all related knowledge in one interface.
-- You can be confident it's complete, accurate, up to date.
-- You can explore it flexibly: by people, topics, time, etc.
-- You are augmented as you work: with relevant information to whatever you do.
-- You can explore, correlate, build, script and extend it.
-- You can do all of this without having to give up your data to 3rd parties.
-
-Orbit will try and make that possible. Here's a quick demo of it as it stands today:
+Orbit goal is make this real. Here's a quick demo:
 
 [video]
 
-### Distribution
+### Our Secret: Distribution
 
 Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet systems of today. To do that, it has to have access to basically all of your information.
 

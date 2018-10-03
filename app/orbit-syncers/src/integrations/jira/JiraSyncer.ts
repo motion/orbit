@@ -1,12 +1,10 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { Person } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import { JiraLoader, JiraUser } from '@mcro/services'
-import { hash } from '@mcro/utils'
-import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
+import { SyncerRepository } from '../../utils/SyncerRepository'
 import { JiraBitFactory } from './JiraBitFactory'
 import { JiraPersonFactory } from './JiraPersonFactory'
 
@@ -15,23 +13,21 @@ import { JiraPersonFactory } from './JiraPersonFactory'
  */
 export class JiraSyncer implements IntegrationSyncer {
   private log: Logger
-  private setting: SettingEntity
   private loader: JiraLoader
   private bitFactory: JiraBitFactory
   private personFactory: JiraPersonFactory
   private personSyncer: PersonSyncer
   private bitSyncer: BitSyncer
-  // private syncerRepository: SyncerRepository
+  private syncerRepository: SyncerRepository
 
-  constructor(setting: SettingEntity) {
-    this.setting = setting
+  constructor(setting: Setting) {
     this.log = new Logger('syncer:jira:' + setting.id)
     this.loader = new JiraLoader(setting, this.log)
     this.bitFactory = new JiraBitFactory(setting)
     this.personFactory = new JiraPersonFactory(setting)
     this.personSyncer = new PersonSyncer(setting, this.log)
     this.bitSyncer = new BitSyncer(setting, this.log)
-    // this.syncerRepository = new SyncerRepository(setting)
+    this.syncerRepository = new SyncerRepository(setting)
   }
 
   /**
@@ -41,9 +37,9 @@ export class JiraSyncer implements IntegrationSyncer {
 
     // load database data
     this.log.timer(`load people, person bits and bits from the database`)
-    const dbPeople = await this.loadDatabasePeople()
-    const dbPersonBits = await this.loadDatabasePersonBits(dbPeople)
-    const dbBits = await this.loadDatabaseBits()
+    const dbPeople = await this.syncerRepository.loadDatabasePeople()
+    const dbPersonBits = await this.syncerRepository.loadDatabasePersonBits({ people: dbPeople })
+    const dbBits = await this.syncerRepository.loadDatabaseBits()
     this.log.timer(`load people, person bits and bits from the database`, { dbPeople, dbPersonBits, dbBits })
 
     // load users from jira API
@@ -57,16 +53,16 @@ export class JiraSyncer implements IntegrationSyncer {
     const filteredUsers = apiUsers.filter(user => this.checkUser(user))
     this.log.info('users were filtered out', filteredUsers)
 
-    // create entities for each loaded user
+    // create people for loaded user
     this.log.info('creating people for api users')
     const apiPeople = filteredUsers.map(user => this.personFactory.create(user))
     this.log.info('people created', apiPeople)
 
-    // saving person entities and person bits
+    // saving people and person bits
     await this.personSyncer.sync({ apiPeople, dbPeople, dbPersonBits })
 
     // reload database people again
-    const allDbPeople = await this.loadDatabasePeople()
+    const allDbPeople = await this.syncerRepository.loadDatabasePeople()
 
     // load api jira issues
     this.log.timer('load API jira issues')
@@ -85,51 +81,6 @@ export class JiraSyncer implements IntegrationSyncer {
     const email = user.emailAddress || ''
     const ignoredEmail = '@connect.atlassian.com'
     return email.substr(ignoredEmail.length * -1) !== ignoredEmail
-  }
-
-  /**
-   * Loads bits in a given period.
-   */
-  private loadDatabaseBits() {
-    return getRepository(BitEntity).find({
-      select: {
-        id: true,
-        contentHash: true
-      },
-      where: {
-        settingId: this.setting.id
-      }
-    })
-  }
-
-  /**
-   * Loads all exist database people for the current integration.
-   */
-  private loadDatabasePeople() {
-    return getRepository(PersonEntity).find({
-      where: {
-        settingId: this.setting.id
-      }
-    })
-  }
-
-  /**
-   * Loads all exist database person bits for the given people.
-   */
-  private loadDatabasePersonBits(people: Person[]) {
-    const ids = people.map(person => hash(person.email))
-    return getRepository(PersonBitEntity).find({
-      // select: {
-      //   email: true,
-      //   contentHash: true
-      // },
-      relations: {
-        people: true
-      },
-      where: {
-        id: In(ids)
-      }
-    })
   }
 
 }

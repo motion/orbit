@@ -21,7 +21,6 @@ import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
-import { SyncerGroup } from './core/SyncerGroup'
 import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
 import { Syncers } from './core/Syncers'
 // import iohook from 'iohook'
@@ -74,18 +73,8 @@ export class OrbitSyncersRoot {
     root.root = this
     root.Logger = Logger
     root.mediatorServer = this.mediatorServer
-    root.Syncers = Syncers.reduce((map, syncerOrGroup) => {
-      // since Syncers is an array we need to convert it to object
-      // to make them more usable in the REPL.
-      // we are using Syncer constructor name as an object key.
-      if (syncerOrGroup instanceof SyncerGroup) {
-        map[syncerOrGroup.name] = syncerOrGroup
-        for (let syncer of syncerOrGroup.syncers) {
-          map[syncer.name] = syncer
-        }
-      } else {
-        map[syncerOrGroup.name] = syncerOrGroup
-      }
+    root.Syncers = Syncers.reduce((map, syncer) => {
+      map[syncer.name] = syncer
       return map
     }, {})
 

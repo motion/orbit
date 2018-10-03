@@ -1,10 +1,7 @@
-import { SettingEntity, BitEntity } from '@mcro/entities'
-import { BitUtils } from '@mcro/model-utils'
-import { Person, SlackBitData, SlackSettingValues } from '@mcro/models'
-import { SlackChannel, SlackMessage } from '@mcro/services'
-import { hash } from '@mcro/utils'
 import { command } from '@mcro/model-bridge'
-import { CosalTopWordsCommand } from '@mcro/models'
+import { BitUtils } from '@mcro/model-utils'
+import { Bit, CosalTopWordsCommand, Person, Setting, SlackBitData, SlackSettingValues } from '@mcro/models'
+import { SlackChannel, SlackMessage } from '@mcro/services'
 
 const Autolinker = require('autolinker')
 
@@ -12,27 +9,22 @@ const Autolinker = require('autolinker')
  * Creates a Slack Bit.
  */
 export class SlackBitFactory {
-  setting: SettingEntity
+  setting: Setting
 
-  constructor(setting: SettingEntity) {
+  constructor(setting: Setting) {
     this.setting = setting
   }
 
   /**
    * Creates a new bit.
    */
-  async create(
-    channel: SlackChannel,
-    messages: SlackMessage[],
-    allPeople: Person[],
-  ): Promise<BitEntity> {
+  async create(channel: SlackChannel, messages: SlackMessage[], allPeople: Person[]): Promise<Bit> {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
 
     const firstMessage = messages[0]
     const lastMessage = messages[messages.length - 1]
-    const id = hash('slack' + this.setting.id + '_' + channel.id + '_' + firstMessage.ts)
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
     const values = this.setting.values as SlackSettingValues
@@ -75,7 +67,6 @@ export class SlackBitFactory {
     return BitUtils.create({
       settingId: this.setting.id,
       integration: 'slack',
-      id,
       type: 'conversation',
       title,
       body,
@@ -92,7 +83,7 @@ export class SlackBitFactory {
       },
       webLink,
       desktopLink,
-    }) as BitEntity
+    }, channel.id + '_' + firstMessage.ts)
   }
 
   /**

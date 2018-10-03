@@ -201,7 +201,20 @@ export class GMailLoader {
         'Access-Control-Allow-Methods': 'GET',
       },
     })
-    const result = await response.json()
+    let result: any
+    try {
+      result = await response.json()
+    } catch (err) {
+      throw await (await fetch(url, {
+        mode: 'cors',
+        headers: {
+          Authorization: `Bearer ${this.setting.token}`,
+          'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
+          'Access-Control-Allow-Methods': 'GET',
+        },
+      })).text()
+    }
+
     if (result.error) {
       if (
         (result.error.message === 'Invalid Credentials' || result.error.code === 401) &&

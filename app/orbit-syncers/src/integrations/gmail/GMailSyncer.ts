@@ -1,9 +1,8 @@
 import { BitEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { Bit, GmailSettingValues, Setting } from '@mcro/models'
-import { GmailBitDataParticipant, Person } from '@mcro/models'
+import { chunk } from 'lodash'
+import { Bit, GmailBitDataParticipant, GmailSettingValues, Person, Setting } from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
-import { hash } from '@mcro/utils'
 import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
@@ -42,7 +41,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
     const values = this.setting.values as GmailSettingValues
     let { historyId, max, monthLimit, filter } = values
-    if (!max) max = 1000
+    if (!max) max = 100
     if (!monthLimit) monthLimit = 1
     let dropAllBits = false
 
@@ -95,16 +94,20 @@ export class GMailSyncer implements IntegrationSyncer {
       const whitelistEmails = Object
         .keys(values.whitelist)
         .filter(email => values.whitelist[email] === true)
-      const whitelistFilter = whitelistEmails.map(email => "from:" + email).join(" OR ")
 
-      if (whitelistFilter) {
-        this.log.info('loading threads from whitelisted people', whitelistEmails, whitelistFilter)
-        const threads = await this.loader.loadThreads(max, 0, whitelistFilter)
-        const nonDuplicateThreads = threads.filter(thread => {
-          return addedThreads.some(addedThread => addedThread.id === thread.id)
-        })
-        threadsFromWhiteList.push(...nonDuplicateThreads)
-        addedThreads.push(...threadsFromWhiteList)
+      if (whitelistEmails.length > 0) {
+        this.log.info('loading threads from whitelisted people', whitelistEmails)
+        // we split emails into chunks because gmail api can't handle huge queries
+        const emailChunks = chunk(whitelistEmails, 100)
+        for (let emails of emailChunks) {
+          const whitelistFilter = emails.map(email => "from:" + email).join(" OR ")
+          const threads = await this.loader.loadThreads(max, 0, whitelistFilter)
+          const nonDuplicateThreads = threads.filter(thread => {
+            return addedThreads.some(addedThread => addedThread.id === thread.id)
+          })
+          threadsFromWhiteList.push(...nonDuplicateThreads)
+          addedThreads.push(...threadsFromWhiteList)
+        }
         this.log.info('whitelisted people threads loaded', threadsFromWhiteList)
       } else {
         this.log.info(`no enabled people in whitelist were found`)
@@ -123,17 +126,15 @@ export class GMailSyncer implements IntegrationSyncer {
     this.log.timer('create bits from new threads', { apiBits, apiPeople })
 
     const personIds = apiPeople.map(person => person.id)
-    const personBitIds = apiPeople.map(person => hash(person.email))
     const bitIds = apiBits.map(bit => bit.id)
 
     this.log.timer(`load people, person bits and bits from the database`, {
       personIds,
-      personBitIds,
       bitIds,
     })
-    const dbPeople = personIds.length ? await this.syncerRepository.loadDatabasePeople(personIds) : []
-    const dbPersonBits = personBitIds.length ? await this.syncerRepository.loadDatabasePersonBits(personBitIds) : []
-    const dbBits = bitIds.length ? await this.syncerRepository.loadDatabaseBits(bitIds) : []
+    const dbPeople = personIds.length ? await this.syncerRepository.loadDatabasePeople({ ids: personIds }) : []
+    const dbPersonBits = apiPeople.length ? await this.syncerRepository.loadDatabasePersonBits({ people: apiPeople }) : []
+    const dbBits = bitIds.length ? await this.syncerRepository.loadDatabaseBits({ ids: bitIds }) : []
     this.log.timer(`load people, person bits and bits from the database`, {
       dbPeople,
       dbPersonBits,

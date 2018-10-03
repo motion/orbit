@@ -1,7 +1,7 @@
-import { JobEntity, SettingEntity } from '@mcro/entities'
-import { BitEntity, PersonBitEntity, PersonEntity } from '@mcro/entities'
-import { Setting } from '@mcro/models'
-import { getRepository, In } from 'typeorm'
+import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { Bit, Person, PersonBit, Setting } from '@mcro/models'
+import { hash } from '@mcro/utils'
+import { getRepository, In, MoreThan } from 'typeorm'
 
 /**
  * Executes common syncer queries.
@@ -35,15 +35,24 @@ export class SyncerRepository {
   /**
    * Loads bits in a given period.
    */
-  async loadDatabaseBits(bitIds: number[]) {
+  async loadDatabaseBits(options?: {
+    ids?: number[]
+    locationId?: string
+    oldestMessageId?: string
+  }): Promise<Bit[]> {
+    if (!options) options = {}
     return getRepository(BitEntity).find({
       select: {
         id: true,
         contentHash: true
       },
       where: {
-        id: In(bitIds),
-        settingId: this.setting.id
+        id: options.ids ? In(options.ids) : undefined,
+        settingId: this.setting.id,
+        location: {
+          id: options.locationId ? options.locationId : undefined,
+        },
+        bitCreatedAt: options.oldestMessageId ? MoreThan(parseInt(options.oldestMessageId) * 1000) : undefined,
       }
     })
   }
@@ -51,7 +60,10 @@ export class SyncerRepository {
   /**
    * Loads all exist database people for the current integration.
    */
-  async loadDatabasePeople(ids: number[]) {
+  async loadDatabasePeople(options?: {
+    ids?: number[],
+  }): Promise<Person[]> {
+    if (!options) options = {}
     return getRepository(PersonEntity).find({
       // select: {
       //   id: true,
@@ -61,7 +73,7 @@ export class SyncerRepository {
       //   personBit: true
       // },
       where: {
-        id: In(ids),
+        id: options.ids ? In(options.ids) : undefined,
         settingId: this.setting.id
       }
     })
@@ -70,7 +82,14 @@ export class SyncerRepository {
   /**
    * Loads all exist database person bits for the given people.
    */
-  async loadDatabasePersonBits(ids: number[]) {
+  async loadDatabasePersonBits(options?: {
+    // ids?: number[],
+    people?: Person[]
+  }): Promise<PersonBit[]> {
+    if (!options) options = {}
+    const ids = (options.people || [])
+      .filter(person => !!person.email)
+      .map(person => hash(person.email))
     return getRepository(PersonBitEntity).find({
       // select: {
       //   email: true,
@@ -80,7 +99,7 @@ export class SyncerRepository {
         people: true
       },
       where: {
-        id: In(ids)
+        id: ids ? In(ids) : undefined
       }
     })
   }

@@ -71,7 +71,7 @@ export class Syncer {
             this.log.info(`found removed settings, removing their intervals`, removedSettings)
             for (let setting of removedSettings) {
               const interval = this.intervals.find(interval => {
-                return interval.setting && interval.setting.id === setting.id
+                return interval && interval.setting && interval.setting.id === setting.id
               })
               if (interval) {
                 if (interval.running) { // if its running await once it finished
@@ -91,58 +91,6 @@ export class Syncer {
               }
             }
           }
-
-        /**
-         * Subscriber to listen to settings and react.
-         * For example, if new setting was inserted with the given type we need to create an interval for it,
-         * or if setting was removed we need to remove interval to prevent process
-
-      settingEntitySubscriber: EntitySubscriberInterface<SettingEntity> = {
-          beforeRemove: async event => {
-            log.info(
-              'looks like somebody is going to remove a settings, let\'s check if we have timer for it',
-              event,
-            )
-            const interval = this.intervals.find(
-              interval => interval.setting && interval.setting.id === event.entityId,
-            )
-            if (interval) {
-              if (interval.running) {
-                log.info(
-                  'okay we found timer for removed setting and syncronization is running at the moment, let\'s await it before final setting removal',
-                )
-                await interval.running
-                log.info('interval has finished its job, now we can continue to setting removal')
-              } else {
-                log.info(
-                  'interval was found, but its not currently running syncronization, its safe to proceed to setting removal',
-                )
-              }
-            }
-          },
-          afterInsert: async event => {
-            log.info(`looks like new setting was inserted, check if its ${this.options.type}`, event)
-            const setting = await getRepository(SettingEntity).findOne({
-              id: event.entity.id,
-              type: this.options.type,
-            })
-            if (setting) {
-              // we don't need to await here because we don't want to block setting save when its added
-              log.info('okay we have a new setting that we are going to sync')
-              this.runInterval(setting.id, setting.id)
-            }
-          },
-          afterRemove: async event => {
-            log.info('looks like some setting was removed, check if we have it in timers', event)
-            const interval = this.intervals.find(
-              interval => interval.setting && interval.setting.id === event.entityId,
-            )
-            if (interval) {
-              log.info('okay we had interval for it, let\'s removing it now', interval)
-              this.intervals.splice(this.intervals.indexOf(interval))
-            }
-          },
-        }*/
       })
     } else {
       await this.runInterval(0, undefined, force)

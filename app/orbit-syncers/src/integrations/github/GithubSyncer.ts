@@ -1,12 +1,10 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { Bit, GithubSettingValues, Person } from '@mcro/models'
+import { Bit, GithubSettingValues, Person, Setting } from '@mcro/models'
 import { GithubLoader, GithubRepository } from '@mcro/services'
-import { hash } from '@mcro/utils'
-import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
+import { SyncerRepository } from '../../utils/SyncerRepository'
 import { GithubBitFactory } from './GithubBitFactory'
 import { GithubPersonFactory } from './GithubPersonFactory'
 
@@ -15,14 +13,15 @@ import { GithubPersonFactory } from './GithubPersonFactory'
  */
 export class GithubSyncer implements IntegrationSyncer {
   private log: Logger
-  private setting: SettingEntity
+  private setting: Setting
   private loader: GithubLoader
   private bitFactory: GithubBitFactory
   private personFactory: GithubPersonFactory
   private personSyncer: PersonSyncer
   private bitSyncer: BitSyncer
+  private syncerRepository: SyncerRepository
 
-  constructor(setting: SettingEntity) {
+  constructor(setting: Setting) {
     this.setting = setting
     this.log = new Logger('syncer:github:' + setting.id)
     this.loader = new GithubLoader(setting)
@@ -30,8 +29,12 @@ export class GithubSyncer implements IntegrationSyncer {
     this.personFactory = new GithubPersonFactory(setting)
     this.personSyncer = new PersonSyncer(setting, this.log)
     this.bitSyncer = new BitSyncer(setting, this.log)
+    this.syncerRepository = new SyncerRepository(setting)
   }
 
+  /**
+   * Runs synchronization process.
+   */
   async run() {
 
     // if no repositories were selected in settings, we don't do anything
@@ -43,9 +46,9 @@ export class GithubSyncer implements IntegrationSyncer {
 
     // load database data
     this.log.timer(`load people, person bits and bits from the database`)
-    const dbPeople = await this.loadDatabasePeople()
-    const dbPersonBits = await this.loadDatabasePersonBits(dbPeople)
-    const dbBits = await this.loadDatabaseBits()
+    const dbPeople = await this.syncerRepository.loadDatabasePeople()
+    const dbPersonBits = await this.syncerRepository.loadDatabasePersonBits({ people: dbPeople })
+    const dbBits = await this.syncerRepository.loadDatabaseBits()
     this.log.timer(`load people, person bits and bits from the database`, { dbPeople, dbPersonBits, dbBits })
 
     // load api data for each repository
@@ -102,51 +105,6 @@ export class GithubSyncer implements IntegrationSyncer {
     }
 
     return repositories
-  }
-
-  /**
-   * Loads bits in a given period.
-   */
-  private loadDatabaseBits() {
-    return getRepository(BitEntity).find({
-      select: {
-        id: true,
-        contentHash: true
-      },
-      where: {
-        settingId: this.setting.id
-      }
-    })
-  }
-
-  /**
-   * Loads all exist database people for the current integration.
-   */
-  private loadDatabasePeople() {
-    return getRepository(PersonEntity).find({
-      where: {
-        settingId: this.setting.id
-      }
-    })
-  }
-
-  /**
-   * Loads all exist database person bits for the given people.
-   */
-  private loadDatabasePersonBits(people: Person[]) {
-    const ids = people.map(person => hash(person.email))
-    return getRepository(PersonBitEntity).find({
-      // select: {
-      //   email: true,
-      //   contentHash: true
-      // },
-      relations: {
-        people: true
-      },
-      where: {
-        id: In(ids)
-      }
-    })
   }
 
 }

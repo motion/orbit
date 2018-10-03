@@ -1,5 +1,5 @@
 import { ConfluenceSyncer } from '../integrations/confluence/ConfluenceSyncer'
-import { GDriveSyncer } from '../integrations/gdrive/GDriveSyncer'
+import { DriveSyncer } from '../integrations/drive/DriveSyncer'
 import { GithubSyncer } from '../integrations/github/GithubSyncer'
 import { GMailSyncer } from '../integrations/gmail/GMailSyncer'
 import { JiraSyncer } from '../integrations/jira/JiraSyncer'
@@ -24,7 +24,7 @@ export const Syncers = [
   }),
   new Syncer({
     type: 'gdrive',
-    constructor: GDriveSyncer,
+    constructor: DriveSyncer,
     interval: FIVE_MINUTES,
   }),
   new Syncer({

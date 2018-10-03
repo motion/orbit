@@ -1,5 +1,5 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Setting, Bit, GithubBitData } from '@mcro/models'
+import { Bit, GithubBitData, Setting } from '@mcro/models'
 import { GithubIssue } from '@mcro/services'
 import { hash } from '@mcro/utils'
 

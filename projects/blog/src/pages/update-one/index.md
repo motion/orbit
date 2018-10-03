@@ -3,11 +3,11 @@ title: Update One
 date: '2018-09-29T22:12:03.284Z'
 ---
 
-_Note_: this is a message for early insiders, please don't share the link. I'll be going into detail on future product and distribution plans.
+_Note: this is a message for early insiders, please don't share the link. I'll be going into detail on future product and distribution plans._
 
 I'm certainly excited to start talking about Orbit. It's been an intense few years of development and I'm really glad to be able to put it out into the world.
 
-But first, the good stuff. Our alpha build is now [available for download](https://orbitauth.com/download). While some of the interesting pieces are not ready, we pushed hard to get it to where you can use it somewhat reliably and give feedback.
+But first, the good stuff. An alpha build is now [available for download](https://orbitauth.com/download). While some of the interesting pieces are not yet ready, we've pushed hard to get it where it's usable and you can give feedback.
 
 So, what's Orbit? Let's start with our mission:
 
@@ -59,15 +59,17 @@ From here on out I'm going to go into a bit more depth. You can skip to the end 
 
 ### Distribution: From Roadblock to Selling Point
 
-Orbit wants to replace clunky and stale intranet systems today. To do that, it needs to crawl a ton of your information. But that creates a misaligned incentive that we discovered early in user research:
+[Skip to the next section](#the-product) if you don't care for some backstory and distribution model explanation.
+
+Orbit wants to replace clunky and stale intranet systems of today. To do that, it needs to crawl a ton of your information. But, therein lies a misaligned incentive, one we discovered early in user research:
 
 _No one wants to trust any single company with all of their data._
 
-Uh... of course! We couldn't get even our friends to install even a trial version of it. They needed permission from high up. And pitching an on-premise server was even more difficult. We wanted to build a better knowledge tool, not a competent sales team.
+We couldn't even get close friends to install our early trial versions of Orbit. They absolutely needed permission from their team. We wanted to build a better knowledge tool, but having it live in the cloud or on-prem would mean difficult onboarding, and therefore a heavy sales presence.
 
-It was later during discussion that we came across a realization: todays computers are powerful. They have large disks and fast processors. Doing topic modeling and search with modern ML is much more approachable, fast, and space-efficient than just a few years ago.
+We realized later: computers today are powerful, with large disks. Topic modeling and search using modern ML/NLP is also orders of magnitude faster, better, and more space efficient than even just a year ago.
 
-It was possible we could run Orbit entirely locally on the end-users computer. It would be harder in some ways (we'd need a decentralized sync system to sync any "team-level" settings), but it also give us some huge advantages:
+So we built Orbit to run entirely local to your computer. It gives us some really important advantages over traditional models (Cloud/On-Prem):
 
 - No handling of user data = easy, risk-free trials.
 - No need to deploy servers on-premise = no need for a sales-forward company!
@@ -78,11 +80,9 @@ It was possible we could run Orbit entirely locally on the end-users computer. I
   </img>
 </div>
 
-So, that's the innovation of Orbit's distribution model. It never sends your data or even your keys outside of your computer. That means you can download and try it without having to trust us: you can entirely firewall Orbit!
+Orbit never sends your data or even your keys outside of your computer. That means you can download and try it without having to trust us: you can entirely firewall Orbit! It also has a huge benefit for our incentives as a company, it means **the product must actually be good**, not the sales team.
 
-But it also has a huge benefit for incentives within our company. It means **the product must actually be good**. We can't hide behind a sales team.
-
-### The Technical Bits
+### The Product
 
 #### Home
 
@@ -112,7 +112,7 @@ Combined with the Language engine, it means Orbit can do _meaningful search_ to 
 
 #### Apps
 
-Some apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We will add more flexible ones next such as Web and API crawlers.
+With all of these pieces together we have apps. Some apps we've built out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We'll be adding more flexible ones next like Web and API crawlers.
 
 <div style="display: flex; flex-flow: row; height: 120px; max-width: 100%; justify-content: space-between; padding: 30px 0;">
   <img class="icon" src="./icons/gdrive.svg" />
@@ -123,25 +123,19 @@ Some apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Conf
   <img class="icon" src="./icons/slack.svg" />
 </div>
 
-But we can't predict what apps and views on them will be most useful due to the incredible stochasticity of information and its uses. But I do think we can build a set of APIs that enable building those experiences.
+We can't predict what apps and views will be most useful for any one person or company though. As we finish each of the above mentioned parts, along with our interface kit, we are aiming towards opening up an App Store early next year.
 
-So with all these pieces in place, we're aiming at releasing an App Store early next year. We'll expose Language and Context, and combine it with our UI Kit and an one-click decentralized distribution. Which means you can build and deploy apps to your team with no tooling, no infrastructure, and an amazing UI out of the box.
+You'll have full access to the Language and Context APIs, our UI Kit, and importantly, a built in live-editing environment with a one-click, decentralized distribution.
 
 ### Going forward
 
-There's a lot more I'd like to write, this is more than enough to start. I'll end with something that will risk sounding cliché:
+There's a lot more I'd like to write, but I think this is more than enough to start.
 
-The biggest feature of Orbit is trust. If you don't feel it will respect your privacy in the long run, it wont get off the ground. Much like a Browser or Operating System, it should be a fundamental tool you trust to handle sensitive information.
+[Here is my email](mailto:nate@tryorbit.com), send any and all inquiries, requests, bugs.
 
-We've designed it in the only way we know that guarantees that for now: by never sending data off your device. As we go decentralized we'll have to continue to make good security decisions.
+[Sign up to the mailing list](https://tryorbit.com) for blog update emails ~monthly.
 
-Of course, trust doesn't matter if your product doesn't meet real needs. The next feed months will be exciting as we attempt to do that. I'm happy to have you on board early, and your feedback will be the most important part of ensuring that!
-
-[Here is my email](mailto:nate@tryorbit.com). Please send me any and all inquiries, requests and bugs.
-
-[Sign up to the mailing list](https://tryorbit.com). I'll send blog posts out ~monthly along with release noes.
-
-[Here is our Slack room](). Please do join and help us build it!
+[Join our Slack room]()!
 
 I am very excited to start sharing progress with you all.
 

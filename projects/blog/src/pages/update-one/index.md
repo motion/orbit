@@ -63,18 +63,14 @@ Orbit wants to replace clunky and stale intranet systems today. To do that, it n
 
 _No one wants to trust any single company with all of their data._
 
-Yea... of course! We couldn't get even our friends to install a trial version of it. They needed permission from high up. And trying to install an on-premise server would mean even more cumbersome convincing.
+Uh... of course! We couldn't get even our friends to install even a trial version of it. They needed permission from high up. And pitching an on-premise server was even more difficult. We wanted to build a better knowledge tool, not a competent sales team.
 
-We wanted to build a better knowledge tool, not a competent sales team.
+It was later during discussion that we came across a realization: todays computers are powerful. They have large disks and fast processors. Doing topic modeling and search with modern ML is much more approachable, fast, and space-efficient than just a few years ago.
 
-It was later during a discussion that we came across a realization: todays computers are powerful. They have large disks and fast processors. Doing topic modeling and search with modern ML is now approachable, fast, and space-efficient.
+It was possible we could run Orbit entirely locally on the end-users computer. It would be harder in some ways (we'd need a decentralized sync system to sync any "team-level" settings), but it also give us some huge advantages:
 
-It was possible we could run Orbit entirely on the users computer, locally. It would be harder in some ways (we'd need a decentralized sync system), but it also give us some huge advantages:
-
-- No handling of user data means easy, risk-free trials.
-- No need to deploy servers on-prem means no need for a sales-forward company!
-
-It meant we could avoid doing a high-trust-needed cloud service or expensive-to-deploy on-prem install.
+- No handling of user data = easy, risk-free trials.
+- No need to deploy servers on-premise = no need for a sales-forward company!
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">

@@ -13,14 +13,18 @@ So, what's Orbit? Let's start with our mission:
 
 > To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control back to the individual over their web data by creating a flexible, powerful and intuitive knowledge platform.
 
-Orbit is a new type of thing. I think it's actually easiest to understand it as an answer to a question:
+Orbit plans to attempt this. As a product though it's easier to understand what it is as an answer to the following question:
 
-What is preventing us from exploring our knowledge like Iron Man?
+<center>
+  <p>
+    What is preventing us from exploring our knowledge like Iron Man?
+  </p>
+</center>
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 <div class="alt">
-  But ergonomically, how long can you keep your arms up like that?
+  Ergonomically though, can you really keep your arms up like that?
 </div>
 
 Yes, the fancy effects are a distraction. But these sci-fi interfaces grasp at a real desire: a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
@@ -33,7 +37,7 @@ Orbit won't make you Iron Man yet (nor will it have nearly as cool visual effect
 
 **I want to be able to explore knowledge in a unified way.**
 
-To do that that, I think it needs to do a few things. Beyond a good product, it needs to become popular enough that it can actually convince the various SaaS players to play along. It needs to be a compelling platform for them and it's users.
+To do that that, it needs to do a few things. Beyond a good product, it needs to become popular enough that it can actually convince the various SaaS players to play along. It needs to be a compelling platform for them and it's users.
 
 Orbit is not a service company: it doesn't store any data itself. It's much closer to a Browser or Operating System. I think of it as a smart knowledge assistant. Where Operating Systems gave us a lot of control and with _files_, and browsers gave us great collaboration, Orbit gives you the middle ground: control and exploration, without losing collaboration.
 
@@ -129,7 +133,7 @@ So with all these pieces in place, we're aiming at releasing an App Store early 
 
 ### Going forward
 
-There's a lot more I'd like to write, but I think is more than enough to start. I'll end with something that will risk sounding cliché:
+There's a lot more I'd like to write, this is more than enough to start. I'll end with something that will risk sounding cliché:
 
 The biggest feature of Orbit is trust. If you don't feel it will respect your privacy in the long run, it wont get off the ground. Much like a Browser or Operating System, it should be a fundamental tool you trust to handle sensitive information.
 

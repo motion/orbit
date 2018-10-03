@@ -3,6 +3,8 @@ title: Update One
 date: '2018-09-29T22:12:03.284Z'
 ---
 
+_Note_: this is a message for early insiders, please don't share the link. I'll go into a bit more detail on future product and distribution plans.
+
 I'm certainly excited to start talking about Orbit. It's been an intense few years of development and I'm happy we can start to put it out into the world.
 
 But first, the great news. Our alpha build is now [available for download](). While some interesting pieces are not yet in place, we pushed hard to get to where you can use it and give feedback.

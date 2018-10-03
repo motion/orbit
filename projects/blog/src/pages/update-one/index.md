@@ -15,62 +15,66 @@ So, what's Orbit? Let's start with our mission:
 
 Orbit is a new type of thing. It's actually easiest to illustrate it as an answer to a question.
 
-What is preventing us from exploring our data like Iron Man?
+What is preventing us from exploring our knowledge like Iron Man?
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
-<div style="font-size: 11px; text-align: center; margin: -1.5rem 0 1rem; opacity: 0.5;">
-  but ergonomically, how long could you really keep your arms up like that?
+<div class="alt">
+  But ergonomically, how long can you keep your arms up like that?
 </div>
 
-And yes, the fancy effects are a distraction. But the truth is these sci-fi interfaces all grasp at one thing: a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
+Yes, the fancy effects are a distraction. But these sci-fi interfaces do grasp at a real desire: a level of fluidity, cohesion, and flexibility that browsers just don't give us.
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-You read, you write, you email, you chat and you work. From Slack to Jira to Google Docs to Github. Information is becoming more and more distributed, and our knowledge is left stale in Wikis and Intranet systems that can't keep up.
+You read, you write, you email, you chat, you work. From Slack to Jira to Google Docs to Github. Information is becoming more and more distributed and our knowledge is increasibly stale, in outdated Wikis and Intranet systems that can't keep up.
 
-Orbit won't make you Iron Man (it also won't have nearly all the cool visual effects). But it can solve a real problem that doesn't have a good solution:
+Orbit won't make you Iron Man, yet (nor will it have all the cool visual effects). But it can solve the underlying pain point:
 
 **I want to be able to explore knowledge in a unified way.**
 
-But to do that I think it needs to catch somewhat of a network effect, so it has the power to shift some control from web apps back to individuals. And do that it needs to be a compelling platform.
+To do that that, I think it needs to do a few things well. Beyond a good product, it needs to become popular enough that it can actually convince the various SaaS players to come to the table. It needs to be a compelling platform for them. I'll try and explain more of the why's and how's of that in this post.
 
-So, Orbit is a new type of thing: a complement to your Browser and Operating System. A smart knowledge platform. OS's gave us a lot of control and with _files_, but there is no file in the browser, and Orbit wants to re-invent that for the modern era.
+Orbit is a new type of platform, not a service: it doesn't have any data itself. Think of it as a complement to your Browser and Operating System. A smart knowledge assistant. Where Operating Systems gave us a lot of control and with _files_, and browsers gave us great collaboration, Orbit tries to find the middle ground: exploration, control and unification in the world of the web.
 
-We want to be able to:
+So you can:
 
 - Navigate important knowledge quickly and easily.
 - Search it intuitively: by person, topic, and time.
-- Have it augment us, as we work, in context.
+- Have it augment you as you normally work, in context.
 - Install and build new apps on top of it easily.
 - Do all of this without having to give up our privacy and security.
 
+<div class="demo-image"></div>
+
+<div class="alt">
+  An example Topic Explorer app opened from the Orbit Home
+</div>
+
 [video]
 
-From here on out I'm going to talk just a bit about what makes Orbit unique. You can skip to the end if you just want to get [more information on how to follow us](#going-forward).
+From here on out I'm going to go into a bit more depth. You can skip to the end if you just want to get [more information on how to follow us](#going-forward).
 
 ### Distribution: From Roadblock to Selling Point
 
-Orbit wants to replace most of clunky and stale intranet systems today. To do that, it needs to crawl most of your information. But that creates a misaligned incentive that we quickly discovered in our user research:
+Orbit wants to replace most of clunky and stale intranet systems today. To do that, it needs to crawl a ton of your information. But that creates a misaligned incentive that we discovered early in user research:
 
 _No one wants to trust any single company with all of their data._
 
-This was a big roadblock for us. Enterprise sales cycles felt made the large problem of building a better knowledge manager impossible. Even close friends resisted installing it without getting strong permission from their manager and team.
+Of course. We couldn't get anyone to just try out a Cloud version of it. But going on-prem meant cumbersome enterprise sales. We wanted to build a better knowledge tool, not a competent sales team. It would take a ton of resources and force us to cater to single companies.
 
-We couldn't get anyone to just try it out. Traditionally this would mean moving to an on-premise model, where you let a company install an Orbit server at their office to avoid security issues. But this is an even more laborious sales model.
+It was later during a discussion that we came across a realization: todays computers are powerful. They have large disks and fast processors. Doing topic modeling and search with modern ML is now approachable, fast, and space-efficient.
 
-It was later during a discussion that we came across a realization: todays computers are powerful. They have large disks and fast processors. Doing topic modeling and search with modern ML is now approachable, fast and space-efficient.
-
-What if we could do it all on the users computer? It would be harder in some ways, but it also would solve all our issues:
+So, could we do entirely on the users computer? It would be harder in some ways (we'd need a decentralized sync system), but it also would solve all our issues:
 
 - No handling of user data meant easy, risk-free trials.
 - No need to deploy servers on-prem meant no need for a sales-forward company!
 
-We'd need a decentralized sync system for it, and it certainly has its downsides. But they downsides we'rer _well suited to do_. Let's look at the three options we faced, as they stand:
+These were really big advantages. Our options were:
 
-1. The Cloud: Requires high trust in your security, has worse UX, but easy to build.
-2. On Prem: Secure, but at high install cost and sales cycle, very hard to develop.
-3. **Orbit: Decentralized/On Device** - Also secure, with low install cost and higher UX, limited compute and somewhat hard to develop.
+1. The Cloud - Requires high trust in your security (so no trial) and maintaining secure infrastructure, but more compute power.
+2. On Prem - Secure, but at high install cost and sales cycle, hard to maintain, high compute power.
+3. **Orbit: Decentralized/On Device** - Very secure with no risk trails and no infrastructure, limited compute and a bit trickier multi-user sync.
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">
@@ -78,21 +82,19 @@ We'd need a decentralized sync system for it, and it certainly has its downsides
   </img>
 </div>
 
-All of this just means you can download Orbit at no cost, with no risk. No data privacy issues, no time talking to sales, no expensive installation.
+So, this is what Orbit does. Orbit never sends your data, or your keys, outside of your computer. You can download and try it without having to trust us: you can firewall Orbit!
 
-It also aligns us nicely with users: **the product must actually be good**. We can't hide behind a sales team.
+But it also has a huge benefit for incentives: it means **the product must actually be good**. We can't hide behind a sales team.
 
-### How Orbit Works
-
-[Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and some that are in early development.
-
-<div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -520px;">
-  <img alt="Orbit Home" src="./home.jpg" />
-</div>
+### The Technical Bits
 
 #### Home
 
 The Orbit Home is your flexible unified knowledge launcher. For now it's a lot like Spotlight with some recent activity and a directory of people.
+
+<div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; left: -580px;">
+  <img alt="Orbit Home" src="./home.jpg" />
+</div>
 
 > Use Option+Space to open Orbit anywhere
 

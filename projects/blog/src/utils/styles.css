@@ -40,3 +40,19 @@ h6 {
 .icon {
   width: 10%;
 }
+
+.demo-image {
+  width: calc(1278px / 1.5);
+  height: calc(821px / 1.5);
+  background: url(../pages/update-one/demo.jpg) no-repeat;
+  background-size: 100% 100%;
+  transform-origin: top left;
+  margin-bottom: 20px;
+}
+
+.alt {
+  font-size: 12px;
+  text-align: center;
+  margin: -1.5rem 0 1rem;
+  opacity: 0.5;
+}

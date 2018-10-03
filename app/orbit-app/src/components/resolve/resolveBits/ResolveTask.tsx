@@ -1,4 +1,3 @@
-import keywordExtract from '@mcro/keyword-extract'
 import { GithubBitData, GithubBitDataComment } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
@@ -10,12 +9,6 @@ import { RoundButtonBorderedSmall } from '../../../views/RoundButtonBordered'
 import { Text, Icon } from '@mcro/ui'
 import { Actions } from '../../../actions/Actions'
 import { handleClickPerson } from '../../../views/RoundButtonPerson'
-
-const options = {
-  remove_digits: true,
-  return_changed_case: true,
-  remove_duplicates: false,
-}
 
 const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) => {
   const {
@@ -92,10 +85,5 @@ export const ResolveTask = ({
     people: bit.people,
     content,
     comments,
-    preview:
-      keywordExtract
-        .extract(bit.body, options)
-        .slice(0, 4)
-        .join(' ') || bit.body.slice(0, 400),
   })
 }

@@ -158,12 +158,13 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
     const showDate = !!createdAt && !(hide && hide.date)
     const showIcon = !!icon && !(hide && hide.icon)
     const showTitle = !(hide && hide.title)
-    const showPeople =
+    const showPeople = !!(
       !(hide && hide.people) &&
       (model.target === 'bit' && model.integration !== 'slack') &&
       people &&
       people.length &&
       people[0].data['profile']
+    )
     const showPreview = !!preview && !children && !(hide && hide.body)
     const afterHeader = (
       <AfterHeader>

@@ -59,18 +59,18 @@ This was a big roadblock for us. Enterprise sales cycles felt made the large pro
 
 We couldn't get anyone to just try it out. Traditionally this would mean moving to an on-premise model, where you let a company install an Orbit server at their office to avoid security issues. But this is an even more laborious sales model.
 
-It was later during a discussion that came across a realization: todays computers are powerful. They have large disks and fast processors. Doing interesting topic modeling and search with modern deep learning is now approachable, fast and efficient.
+It was later during a discussion that we came across a realization: todays computers are powerful. They have large disks and fast processors. Doing topic modeling and search with modern ML is now approachable, fast and space-efficient.
 
 What if we could do it all on the users computer? It would be harder in some ways, but it also would solve all our issues:
 
 - No handling of user data meant easy, risk-free trials.
 - No need to deploy servers on-prem meant no need for a sales-forward company!
 
-We'd need a decentralized sync system for it, and it certainly has its downsides. But they we're downsides well suited to what we want to build:
+We'd need a decentralized sync system for it, and it certainly has its downsides. But they downsides we'rer _well suited to do_. Let's look at the three options we faced, as they stand:
 
-1. _The Cloud_: Requires high trust in your security, has worse UX, but easy to build.
-2. _On Prem_: Is secure, but at high install cost and sales cycle, harder to develop.
-3. **Orbit: Decentralized/On Device** - Also secure, with low install cost and higher UX, but limited compute power and hard development.
+1. The Cloud: Requires high trust in your security, has worse UX, but easy to build.
+2. On Prem: Secure, but at high install cost and sales cycle, very hard to develop.
+3. **Orbit: Decentralized/On Device** - Also secure, with low install cost and higher UX, limited compute and somewhat hard to develop.
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">

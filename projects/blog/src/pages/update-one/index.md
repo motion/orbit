@@ -25,43 +25,41 @@ I'm not referring to the _visual effects_ of the movie. While those are ridiculo
 
 **I want to be able to explore information in a unified interface.**
 
-From Slack noise to Jira slowness to the black hole of a Google Drive. We often love these services for everything they're designed to do. But when we need to quickly remember or explore them, we're lost. And when it comes to unifying them all? Our intranet portals are a far cry.
+From Slack noise to Jira lag to the black hole of a team Google Drive -- we love these services for what they're designed to do -- but when we're going about our day, they are never at hand.
 
-The transition to the internet has been almost exclusively anti-Iron Man. In 1999 all we used were files and while collaboration was hard, almost everything else was better: organization, search, flexibility, and choice of applications.
+The transition to from the OS era to the Browser era has been almost exclusively anti-Iron Man. In 1999 all we used were files, and while collaboration was hard, almost everything else was better: organization, search, and data portability.
 
-We want to live in a world where:
+We'd like a world where:
 
 - You can navigate important knowledge quickly and easily.
 - You can be confident it's holistic, accurate, up to date.
-- You can slice it in natural ways: by person, topics, and time.
-- It augments you as you naturally work: with information relavent to your context.
+- You can slice it in natural ways: by person, topic, and time.
+- You don't have to think about it: it augments you in context as you work.
 - You can easily manage it, extend it, and build apps on top of it.
 - You can do all of this without having to give up your data to a 3rd party.
 - You can do all of this without the whole thing becoming a mess.
 
-Orbit goal is make this real. Here's a quick demo:
+Orbit's goal is make this real. Here's a demo:
 
 [video]
 
 ### Our Secret: Distribution
 
-Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet systems of today. To do that, it has to have access to basically all of your information.
-
-Early in development we realized there's a problem trying to do that: no one wants to trust a single company with all of their data.
+Orbit wants to be a _really good platform for knowledge management_, replacing clunky and stale intranet and portal systems of today. To do that, it is most helpful if it crawls all of your company information. But early in development we realized there's a problem trying to do that: no one wants to trust a single company with _everything_.
 
 Duh!
 
-We thought we'd reached a roadblock. It was hard to get anyone to install it, even as a trial. We we're stuck at distribution.
+We thought we'd reached a roadblock. Huge enterprise sales cycles didn't excite us and they weren't the problem we felt was necessary to solve. But it was impossible to get anyone to install it. We we're stuck at distribution.
 
-It took a lot of exploration to realize something though. Computers today are powerful with large disks, and on-device ML is feasible and effective. Orbit could run privately and entirely on your computer?
+Until we had a realization: computers today are powerful. They have large disks, and NLP algorithms have become as fast as multiplication with just a few MBs of space.
 
-Traditional models for SaaS applications have two choices, but this would look a lot like a third choice:
+That meant Orbit could run _entirely privately on your computer_. We'd just have to figure out a way to have it sync data between peers, basically adding a third pillar to traditional enteprise app models:
 
-1. Cloud - High security required
-2. On-premise - High install cost
-3. Decentralized - Harder to implement, secure and low install
+1. **Cloud** - High trust of security required, easy to develop.
+2. **On-premise** - Secure, high install cost, large sales cycle, harder to develop.
+3. **Decentralized** - Secure, low install cost, limited compute and harder to develop.
 
-This aligns perfectly with what Orbit is trying to achieve: an easy, no-risk way to give it a try. We just have to prove we could do everything on-device.
+But given the advances in NLP and compute power, it immediately became clear this got rid of our big distribution problem: it aligned our incentives with our users.
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">
@@ -69,11 +67,9 @@ This aligns perfectly with what Orbit is trying to achieve: an easy, no-risk way
   </img>
 </div>
 
-Today, you can actually firewall Orbit so it only has access to sync data directly from your integrations.
+So you can try Orbit at no cost: no security risk, no time talking to sales, and no complex install. Just download the app. Which means **the product must actually be good**. It's the alignment we love as product developers, and solves what was a near-impossible distribution story for an early stage startup.
 
-Because you can test our Orbit without any cost, it means **the product must actually be good**. We can't hide behind a sales team. I think this solves what would have been a near-impossible distribution story for a very early stage startup, but also is a great setup to keep our company honest and focused on delivering real value rather than effective sales.
-
-### Platform
+### The details
 
 [Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and are planning to build.
 

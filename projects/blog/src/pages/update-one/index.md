@@ -55,7 +55,7 @@ Our goal is to let you:
 
 ### Distribution: From Roadblock to Selling Point
 
-[Skip to the next section](#the-product) if you don't care for some backstory and talk on the distribution model.
+[Skip to the Product section](#the-product) if you don't care for backstory and distribution model.
 
 Orbit wants to replace clunky and stale intranet systems of today. To do that, it needs to crawl a ton of your sensitive information. But, therein lies a misaligned incentive (one we discovered early in user research):
 

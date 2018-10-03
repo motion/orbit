@@ -13,13 +13,13 @@ First, the good stuff. An alpha build is now [available for download](https://or
 
 So... what is Orbit? Let's start with a story:
 
-You read, you write, you email, you chat, you work. From Slack to Jira to Google Docs to Github. Your knowledge is distributed, and your wiki or intranet portals doesn't cut it. In fact it's often out of date and clunky to use.
+You read, you write, you email, you chat, you work. From Slack to Jira to Google Docs to Github. Your knowledge is distributed -- but your wiki and intranet portal doesn't help you or your team stay on top of it. They add another source of truth, they add infrastructure. They are clunky to use, and chronically stale.
 
-There's something missing that we all feel here, and it has to do with the visions of futuristic interfaces we see time and time again in tv and movies, whenever they are showing us the future of computing.
+There's something missing that we all feel here, and it has to do with the visions we see of futuristic interfaces time and time again in TV and movies, whenever there's a scene showing futuristic computing.
 
-> We want [science fiction UX](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
+> We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-So what exactly is preventing us from exploring our knowledge like Iron Man?
+So what exactly is preventing us from exploring as easily like Iron Man?
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
@@ -27,7 +27,7 @@ So what exactly is preventing us from exploring our knowledge like Iron Man?
   Ergonomically though, how long can you really keep your arms up like that?
 </div>
 
-While the fancy effects of movies like Iron Man and Minority Report are often distracting, these sci-fi dreams grasp at real desires: a level of fluidity, cohesion, and flexibility that browsers and the web just don't give us today.
+While the fancy effects of movies like Iron Man and Minority Report are often distracting, they grasp at a real unmet desire: a level of unification, fluidity, and control that browsers and the web just don't give us today.
 
 This brings us to Orbit's mission:
 

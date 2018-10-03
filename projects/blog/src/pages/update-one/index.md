@@ -27,7 +27,7 @@ So what exactly is preventing us from exploring knowledge as easily as Iron Man?
   Ergonomically though, how long can you really keep your arms up like that?
 </div>
 
-While the fancy effects of movies like Iron Man and Minority Report are often distracting, they grasp at a real unmet desire: a level of unification, fluidity, and control that browsers and the web just don't give us today.
+While the fancy effects of movies like Minority Report are often distracting, they grasp at a real unmet desire: a level of unification, fluidity, and control that browsers and the web just don't give us today.
 
 This brings us to Orbit's mission:
 

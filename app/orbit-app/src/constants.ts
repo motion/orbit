@@ -21,7 +21,7 @@ export const RECENT_HMR = () =>
 
 export const NICE_INTEGRATION_NAMES = {
   slack: 'Slack',
-  gdrive: 'Google Docs',
+  gdrive: 'Google Drive',
   gmail: 'Gmail',
   confluence: 'Confluence',
   jira: 'Jira',

@@ -11,7 +11,7 @@ But first, the great news. Our alpha build is now [available for download](). Wh
 
 So, what's Orbit? Let's start with our mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) to gives individuals back control over siloed web data -- with a flexible, powerful and intuitive knowledge platform.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives back control to individuals over their web data -- with a flexible, powerful and intuitive knowledge platform.
 
 Orbit is a new type of thing. It's trying to answer a question that I think that summarizes a variety of pain points we feel today:
 

@@ -97,7 +97,6 @@ export class SubPane extends React.Component<SubPaneProps> {
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
     console.log('rendering subpane...', this.props.name)
-    trace()
     return (
       <SubPaneFrame isActive={isActive}>
         {before}

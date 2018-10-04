@@ -13,7 +13,8 @@
     "@mcro/models": "^2.2.1",
     "@mcro/config": "2.2.1",
     "global": "^4.3.2",
-    "lodash": "4.17.10"
+    "lodash": "4.17.10",
+    "keen-tracking": "4.0.6"
   },
   "peerDependencies": {
     "mobx": "*"

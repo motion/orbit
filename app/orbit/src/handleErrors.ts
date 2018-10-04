@@ -18,6 +18,10 @@ export async function onError(error) {
     return
   }
   console.log('\n\n---error---\n\n', error.message, '\n', error.stack)
+
+  // in insider mode capture exceptions
+  Raven.captureException(error.stack)
+
   const errorMessage = `${error.message || ''}\n${error.stack || ''}`
 
   // avoid certain errors that aren't easily catchable (like websockets)...
@@ -80,7 +84,7 @@ ${log}`
     const res = dialog.showMessageBox({
       type: 'question',
       title: 'Error copied!',
-      message: 'Upload error the Orbit Error report service?',
+      message: 'Upload error/log to Orbit?',
       buttons: ['Quick report error', 'Send as email', 'Never ask again', 'No thanks'],
       defaultId: 0,
       cancelId: 3,

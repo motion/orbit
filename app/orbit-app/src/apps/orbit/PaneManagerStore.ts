@@ -6,6 +6,7 @@ import { Actions } from '../../actions/Actions'
 import { observeOne } from '@mcro/model-bridge'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
 import { OrbitStore } from '../OrbitStore'
+import { autoTrack } from '../../stores/Track'
 
 type Panes = 'home' | 'directory' | 'apps' | 'settings' | 'onboard' | 'search'
 
@@ -36,6 +37,8 @@ export class PaneManagerStore {
   })
 
   didMount() {
+    on(this, autoTrack(this, ['hasOnboarded', 'lastKey', 'paneIndex']))
+
     // set pane manager store... todo make better
     this.props.orbitStore.appReactionsStore.setPaneManagerStore(this)
 

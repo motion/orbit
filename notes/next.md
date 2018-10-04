@@ -1,4 +1,3 @@
-- enter email screen on first onboard step, send via sentry
 - add sentry analytics
 - all done, closing... screen
 - remove ocr for now

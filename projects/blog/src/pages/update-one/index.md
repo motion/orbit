@@ -31,11 +31,15 @@ This brings us to Orbit's mission:
 
 > To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over web data back to the individual -- with a flexible, powerful and intuitive knowledge platform.
 
-**We want to be able to explore knowledge in a unified way.**
+It's a basic desire we ran into time and time again in user research:
 
-And to do that we'll need to fix something wrong with browsers and software services today: they don't give us any control over our information.
+**"I want to be able to understand my knowledgebase, and I can't."**
 
-Orbit is not a service company. We don't store data. Instead, much like a browser or operating system, we're a platform that helps manage information. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail at interop), Orbit is the middle ground: a flexible way to manage bits of information from many places.
+In the last year, we've spent a lot of building something to help solve this problem. It fixes something that browsers and software services fail at today: they don't give us control over our information.
+
+To fix that, we're building a platform instead of a service. We don't store data. Instead, much like a browser or operating system, Orbit just helps explore and manage information. Traditional operating systems gave us a lot of control (with _files_), browsers give us collaboration (and _lock in_).
+
+Orbit gives control back through a decentralized knowledge explorer. A flexible way to manage bits of information from many places.
 
 Our goal is to let you:
 

@@ -4,7 +4,7 @@ import { observeMany } from '@mcro/model-bridge'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'
-import { View } from '@mcro/ui'
+import { View, Button } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel, SettingModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
@@ -12,6 +12,8 @@ import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { OrbitAppCard } from '../orbitApps/OrbitAppCard'
+import { VerticalSpace } from '../../../../views'
+import { SubTitle } from '../../../../views/SubTitle'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -297,6 +299,11 @@ export class OrbitHome extends React.Component<Props> {
     return (
       <SubPane name="home" fadeBottom>
         {content}
+        {results.length === 1 && (
+          <View alignItems="center" justifyContent="center" padding={25}>
+            <SubTitle>You're searching the app store & no results found.</SubTitle>
+          </View>
+        )}
         {/* this is a nice lip effect */}
         <View height={15} />
       </SubPane>

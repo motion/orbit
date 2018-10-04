@@ -9,7 +9,7 @@ import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { AppsStore } from '../../../AppsStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { Title, VerticalSpace } from '../../../../views'
+import { Title, VerticalSpace, InputRow } from '../../../../views'
 // import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
@@ -299,10 +299,20 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
             </Centered>
           )}
         </OnboardFrame>
-        <OnboardFrame>
+        {/* <OnboardFrame>
           <Title size={1.4} fontWeight={500}>
-            Set up a few apps
+            Insider: unlock with email.
           </Title>
+
+          <VerticalSpace />
+
+          <InputRow label="Email Address" />
+
+          <VerticalSpace />
+          <VerticalSpace />
+        </OnboardFrame> */}
+        <OnboardFrame>
+          <Title>Set up a few apps</Title>
 
           <VerticalSpace />
 

@@ -22,7 +22,7 @@ There's something wrong here. I think it's best explained by the gap between the
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 <div class="alt">
-  Ergonomically, though, how long can you keep your arms like that?
+  Ergonomically though, how long can you you use this?
 </div>
 
 While the overdone effects of movies like Iron Man and Minority Report are a distraction, what these movies do grasp is a real unmet desire: unification, fluidity, and control. The web and the browsers we surf it with today just don't give us that.

@@ -8,7 +8,10 @@ creating important bug list for tomorrow, since really want to release it by end
 - fix doesnt work on fresh start db
 ```
 
-- look at cosal save flow and fix
+- add a bunch of integrations to test
+- fix topic explorer apps:
+  - super slow query
+  - look at cosal save flow and fix
 - improve search, attempt fts integration
 
 NEXT

@@ -21,4 +21,12 @@ Our secondary goal will be to get a prototype of Context / realtime search relea
 - Apps:
   - Website crawler syncer
 
+## November - December
+
+The rest of the year will focus on getting into what we'll consider ready for Beta:
+
+- Most of it will be focused on stability, usability, and bugfixing
+- Integrating the Context and getting it to be usable
+- Integrating the App Store, local development environment, and p2p distribution
+
 <br />

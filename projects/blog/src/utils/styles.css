@@ -49,6 +49,7 @@ h6 {
   background-size: 100% 100%;
   transform-origin: top left;
   margin-bottom: 20px;
+  margin-top: -40px;
 }
 
 .alt {
@@ -56,4 +57,16 @@ h6 {
   text-align: center;
   margin: -1.5rem 0 1.5rem;
   opacity: 0.5;
+}
+
+.graphic {
+  margin: 2.5rem -20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ccc;
+}
+
+.graphic img {
+  margin-bottom: -7px;
 }

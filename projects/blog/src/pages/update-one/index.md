@@ -126,11 +126,13 @@ If you're interested in building apps on top of Orbit, get in touch with me belo
 
 There's a lot more I'd like to write, but I think this is more than enough to start. Right now Orbit is buggy and incomplete, but the underlying technology is all there. It took a ton of hard problem solving to get it to where it is, and it's really well set up to move quickly now. I look forward to all of your bug reports :).
 
-[Here is my email](mailto:nate@tryorbit.com) send me any and all inquiries, requests, issues.
+<p>
+  <a href="mailto:nate@tryorbit.com">Here is my email</a>, send any and all inquiries, requests, issues.
+</p>
 
 [Sign up to the mailing list](https://tryorbit.com) for blog update emails ~monthly.
 
-[Join our Slack room]() and [the download link again](https://orbitauth.com/download), for those who missed it.
+[Join our Slack room](http://slack.tryorbit.com) and [the download link again](/releases), for those who missed it.
 
 Let's start a revolution!
 

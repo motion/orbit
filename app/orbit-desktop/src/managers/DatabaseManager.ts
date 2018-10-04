@@ -22,6 +22,9 @@ export class DatabaseManager {
     // connect models next
     await connectModels(Entities)
 
+    console.log('done connecting models...')
+    await sleep(100)
+
     const table = await getConnection().query(
       'SELECT name FROM sqlite_master WHERE type="table" AND name="search_index"',
     )

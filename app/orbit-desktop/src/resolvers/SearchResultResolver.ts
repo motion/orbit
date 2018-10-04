@@ -11,7 +11,6 @@ import { uniqBy } from 'lodash'
 const log = new Logger('search')
 
 type SearchArgs = SearchQuery & {
-  database: sqlite.Database
   cosal: Cosal
 }
 
@@ -117,9 +116,9 @@ const doSearch = searchCache(async args => {
   return uniqBy([...results, ...restResults], 'id')
 })
 
-export const getSearchResolver = (cosal: Cosal, database: sqlite.Database) => {
+export const getSearchResolver = (cosal: Cosal) => {
   return resolveMany(SearchResultModel, async args => {
-    const results = await doSearch({ ...args, cosal, database })
+    const results = await doSearch({ ...args, cosal })
     log.verbose('sending search results...', results.length)
     return results.slice(args.skip, args.take + args.skip)
   })

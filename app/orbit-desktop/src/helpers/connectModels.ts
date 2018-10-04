@@ -1,5 +1,6 @@
 import { createConnection } from 'typeorm'
 import { DATABASE_PATH } from '../constants'
+import { migrations } from '../migrations'
 
 export default async function connectModels(models) {
   try {
@@ -7,11 +8,13 @@ export default async function connectModels(models) {
       name: 'default',
       type: 'sqlite',
       database: DATABASE_PATH,
+      migrations,
       // location: 'default',
       entities: models,
       logging: ['error'],
       logger: 'simple-console',
       synchronize: true,
+      migrationsRun: true,
       busyErrorRetry: 1000,
       enableWAL: true,
 

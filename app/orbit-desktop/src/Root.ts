@@ -13,13 +13,13 @@ import {
   JobModel,
   PersonBitModel,
   PersonModel,
+  SearchLocationsModel,
+  SearchResultModel,
+  SearchTopicsModel,
   SettingModel,
   SettingRemoveCommand,
   SlackChannelModel,
   SlackSettingBlacklistCommand,
-  SearchResultModel,
-  SearchTopicsModel,
-  SearchLocationsModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -28,8 +28,9 @@ import macosVersion from 'macos-version'
 import open from 'opn'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
-import { Connection } from 'typeorm'
-import { oracleOptions, COSAL_DB } from './constants'
+import { getConnection } from 'typeorm'
+import { COSAL_DB, oracleOptions } from './constants'
+import { writeOrbitConfig } from './helpers'
 import { AppsManager } from './managers/appsManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
@@ -38,16 +39,15 @@ import { OCRManager } from './managers/OCRManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { Onboard } from './onboard/Onboard'
 import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
+import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
+import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
+import { getSearchResolver } from './resolvers/SearchResultResolver'
+import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { KeyboardStore } from './stores/KeyboardStore'
-import { getCosalResolvers } from './resolvers/getCosalResolvers'
-import { getSearchResolver } from './resolvers/SearchResultResolver'
-import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
-import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
-import { writeOrbitConfig } from './helpers'
 
 const log = new Logger('desktop')
 
@@ -55,7 +55,6 @@ export class Root {
   config = getGlobalConfig()
   oracle: Oracle
   isReconnecting = false
-  connection?: Connection
   onboard: Onboard
   disposed = false
   keyboardStore: KeyboardStore
@@ -105,7 +104,6 @@ export class Root {
     // this ensures things dont err
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
-    this.connection = this.databaseManager.getConnection()
 
     this.registerMediatorServer()
 
@@ -218,7 +216,7 @@ export class Root {
         port: getGlobalConfig().ports.dbBridge,
       }),
       resolvers: [
-        ...typeormResolvers(this.connection, [
+        ...typeormResolvers(getConnection(), [
           { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },
@@ -230,7 +228,7 @@ export class Root {
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
-        getSearchResolver(this.cosal, this.databaseManager.db),
+        getSearchResolver(this.cosal),
         getSearchTopicsResolver(this.cosal),
         SearchLocationsResolver,
       ],

@@ -6,7 +6,6 @@ import { Disposable } from 'event-kit'
 import { updateProps } from './helpers/updateProps'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import { StoreHMR } from '@mcro/store-hmr'
-import isEqual from 'react-fast-compare'
 
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}

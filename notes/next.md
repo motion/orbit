@@ -3,9 +3,9 @@
 creating important bug list for tomorrow, since really want to release it by end of day tm:
 
 ```
-- fix slack login
-- fix clear all data button
-- fix doesnt work on fresh start db
+- dont see anything in google drive, all i see is "got settings in syncer"
+- fix slack login: http://slack.tryorbit.com/
+- fix clear all data button (not sure if still broken after my sleep fix)
 ```
 
 - debug slowness on topic model queries any why react doesnt exit quickly despite that

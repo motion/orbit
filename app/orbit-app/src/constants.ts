@@ -29,6 +29,15 @@ export const NICE_INTEGRATION_NAMES = {
   app1: 'Custom App',
 }
 
+export const SHORT_INTEGRATION_NAMES = {
+  slack: 'Slack',
+  gdrive: 'GDrive',
+  gmail: 'Gmail',
+  confluence: 'Confluence',
+  jira: 'Jira',
+  github: 'Github',
+}
+
 export const EMPTY_ITEM = {
   id: '',
   title: '',

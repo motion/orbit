@@ -5,9 +5,9 @@ import { OrbitItemProps } from '../../../../views/OrbitItemProps'
 import { SyncStatus } from '../views/SyncStatus'
 import { Text } from '@mcro/ui'
 import { Setting } from '@mcro/models'
-import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { view } from '@mcro/black'
+import { SHORT_INTEGRATION_NAMES } from '../../../../constants'
 
 type Props = OrbitItemProps<Setting> &
   AppInfoProps & {
@@ -23,7 +23,7 @@ const Centered = view({
 })
 
 export const OrbitAppIconCard = ({ store, model, isActive, subtitle, ...props }: Props) => {
-  const name = NICE_INTEGRATION_NAMES[model.type]
+  const name = SHORT_INTEGRATION_NAMES[model.type]
   return (
     <OrbitCard model={model} chromeless {...props}>
       <Centered>

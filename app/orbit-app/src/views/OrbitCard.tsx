@@ -75,7 +75,11 @@ const Card = view({
         ...card,
         boxShadow: disabledShadow || [cardShadow, borderShadow],
         '&:hover': {
-          boxShadow: disabledShadow || [cardShadow, hoverBorderShadow, theme.cardHoverGlow],
+          boxShadow: disabledShadow || [
+            cardShadow,
+            hoverBorderShadow,
+            chromeless ? null : theme.cardHoverGlow,
+          ],
         },
       }
     } else {

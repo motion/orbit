@@ -242,7 +242,7 @@ export class OrbitHome extends React.Component<Props> {
         items={items}
         homeStore={homeStore}
         categoryName={name === 'Apps' ? null : name}
-        cardHeight={75}
+        cardHeight={45}
         cardWidth={60}
         CardView={OrbitAppIconCard}
       />

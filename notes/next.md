@@ -8,6 +8,7 @@ creating important bug list for tomorrow, since really want to release it by end
 - fix doesnt work on fresh start db
 ```
 
+- debug slowness on topic model queries any why react doesnt exit quickly despite that
 - add a bunch of integrations to test
 - fix topic explorer apps:
   - super slow query

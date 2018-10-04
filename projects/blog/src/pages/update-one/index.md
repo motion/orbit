@@ -63,14 +63,12 @@ Orbit wants to replace clunky and stale intranet systems of today. To do that, i
 
 _No one wants to trust any single company with all of their data._
 
-Close friends wouldn't even install early trial versions of Orbit without permission from their team. We wanted to build a better knowledge tool, but having it live in the cloud or on-prem would mean difficult onboarding, and therefore a heavy sales presence.
+Close friends wouldn't even install early trial versions of Orbit without permission from their team. We wanted to build a better knowledge tool, but having it live in the cloud or on-prem would mean difficult onboarding and thus a heavy sales need.
 
-But -- today, computers are powerful and have lots of memory. Topic modeling and search with modern NLP is orders of magnitude faster and easier to do. With experimentation, we realized we could run Orbit entirely locally on your computer. That means:
+But todays computers are powerful. They have lots of memory. Topic modeling and search with modern NLP is orders of magnitude faster and easier to do than just a couple years ago. We realized with just a bit more care towards compute power we could run Orbit entirely locally on your computer. That meant:
 
-- No handling of user data.
-- No need for on-premise servier installs.
-
-Which lets us do easy, risk-free trials and almost no onboarding process!
+- No handling of user data - risk-free trials.
+- No need for on-prem server - low onboard cost.
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">
@@ -78,7 +76,7 @@ Which lets us do easy, risk-free trials and almost no onboarding process!
   </img>
 </div>
 
-Today when you download Orbit it works like this. We never see a bit of your data, and you can use a firewall to be sure. We'll have to get good at communicating the secure side of Orbit on launch.
+Today when you download Orbit it realizes this plan, without some of our decentralized sync system. It never sends a bit of your data outside your computer and you can use a firewall it to be sure.
 
 ### The Product
 

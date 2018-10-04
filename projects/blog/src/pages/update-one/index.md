@@ -37,9 +37,9 @@ It's an answer to a general desire we ran into time and time again during user r
 
 For the last two years we've been building something to help solve this. It fixes what browsers and cloud services fail at today: we don't have any control of our information.
 
-To do that, Orbit was built as a platform, not a service. We don't store data. Instead, much like a browser or operating system, Orbit just helps explore existing information. Where operating systems give us a lot of control (with _files_) and browsers give us great collaboration (with _lock in_), Orbit gives us a merger of the two.
+To do that, Orbit was built as a platform, not a service. We don't store data. Instead, much like a browser or operating system, Orbit just helps explore existing information. Where operating systems gave us a lot of control (with _files_) and browsers gave us great collaboration (with less control), Orbit splits the difference.
 
-It does this by running privately on your device, allowing centralized cloud services to come together into a decentralized knowledge explorer. We want Orbit to allow you to:
+It does this by running on your device, syncing centralized cloud services into a decentralized knowledge explorer. We want Orbit to allow you to:
 
 - Navigate disparate knowledge quickly and easily.
 - Search intuitively by person, topic, and time.
@@ -59,12 +59,9 @@ To replace the stale and clunky intranet systems of today, Orbit will need to cr
 
 _No one wants to trust any single company with all of their data._
 
-Even our close friends didn't want to install early trial versions of Orbit to use at fast-and-loose startups. We wanted to build a better knowledge tool, but it became clear that having it live in the cloud or on-prem would mean high risk trails, difficult onboarding, and thus a need for a sales-forward team.
+Even our close friends didn't want to install early trial versions of Orbit to use at their relatively fast-and-loose startups. We wanted to build a better knowledge tool, but it became clear that having it live in the cloud or on-prem would mean security questions, difficult onboarding, and therefore a sales-forward team.
 
-But today, computers are powerful. They have lots of memory. Topic modeling and search with modern NLP is orders of magnitude faster and easier to do than just a couple years ago. In frustration with our failed sales, we realized that with some optimization, we could run Orbit entirely locally on your computer. And if we did, we could avoid a server altogether. That would mean:
-
-- No handling of user data = risk-free trials.
-- No need for on-prem server = low onboard cost.
+But we realized, today, computers are powerful, with lots of memory. Modern NLP is orders of magnitude faster and easier to do than just a couple years ago. In frustration with our failed sales, we had an idea: run Orbit entirely locally on your computer. If we could, we'd avoid our distribution problem.
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">
@@ -72,11 +69,9 @@ But today, computers are powerful. They have lots of memory. Topic modeling and 
   </img>
 </div>
 
-Today, Orbit it realizes this (minus some of the decentralized sync system we are working on). It never sends a bit of your data outside your computer, you can even firewall it just to be sure. We'll write more on security in the coming months.
+Today, Orbit realizes this strategy (without some of the decentralized pieces we are still working on). It never sends a bit of your data outside your computer (you can even firewall it to be sure). We'll write more on this in the coming months.
 
 ### The Product
-
-#### Home
 
 The Orbit Home is your flexible unified knowledge launcher. For now it's a lot like Spotlight with some recent activity and a directory of people.
 
@@ -88,7 +83,7 @@ The Orbit Home is your flexible unified knowledge launcher. For now it's a lot l
 
 #### Bit
 
-We're calling a "file" in orbit a "Bit". Where SaaS products have data behind unique interfaces and APIs, Orbit apps sync to a common fundamental unit: the bit, which can represent Text, HTML, Tasks, Conversations, and more.
+We're calling a file in orbit a "Bit". Where your OS has files and apps, and SaaS products have a plethora of unique interfaces and APIs, Orbit has bits and apps. A bit can represent Text, HTML, Tasks, Conversations, Documents, and more.
 
 #### Language
 

@@ -49,6 +49,7 @@ h6 {
   background-size: 100% 100%;
   transform-origin: top left;
   margin-bottom: 20px;
+  margin-top: -40px;
 }
 
 .alt {

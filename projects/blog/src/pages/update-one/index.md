@@ -68,7 +68,7 @@ But -- today, computers are powerful and have lots of memory. Topic modeling and
 
 Which lets us do easy, risk-free trials and almost no onboarding process!
 
-<div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
+<div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">
     <img alt="On-Device = Data stays on your computer" src="./illustration.svg" />
   </img>

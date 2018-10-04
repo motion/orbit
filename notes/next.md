@@ -1,6 +1,6 @@
-- make blog download link go to a new page that has download button
-  - make it say it sends analytics back on crashes and usage so we can track beta usage
-  - add sentry analytics
+- disable ocr
+- all done, closing... screen
+- add sentry analytics
 
 NEXT
 

@@ -4,7 +4,6 @@ import { PersonEntity } from './PersonEntity'
 
 @Entity()
 export class PersonBitEntity extends BaseEntity implements PersonBit {
-
   target: 'person-bit' = 'person-bit'
 
   @PrimaryColumn()
@@ -48,5 +47,4 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
 
   @OneToMany(() => PersonEntity, person => person.personBit)
   people?: Person[]
-
 }

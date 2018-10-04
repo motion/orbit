@@ -46,7 +46,6 @@ class DesktopStore {
     OPEN: 'OPEN',
     CLEAR_OPTION: 'CLEAR_OPTION',
     RESET_DATA: 'RESET_DATA',
-    SEARCH_INDEX: 'SEARCH_INDEX',
     PROXY_FN: 'PROXY_FN',
   }
 

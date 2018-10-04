@@ -48,10 +48,6 @@ function handleGlossReferences(parentNode, references, file, babel) {
       return
     }
 
-    if (displayName === 'Circle') {
-      console.log(path)
-    }
-
     parentNode.body.push(
       buildBuiltInWithConfig({
         IDENTIFIER: displayName,

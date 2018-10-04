@@ -35,7 +35,8 @@ Normally we'd be running a local proxy to capture them entirely on your computer
 
 #### Known Bugs
 
-- Topic modeling can invert, returning least relevant words rather than most.
+- Slack says "not authorized", still works but is confusing for now.
+- Topic modeling "invert" bug, can return least relevant words rather than most.
 - Resizing screens, moving screens, moving spaces can glitch.
 - Syncers still need some work to throttle, sync in chunks.
 - Date and people filtering can get tripped up.

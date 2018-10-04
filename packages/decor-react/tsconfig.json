@@ -6,5 +6,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../decor" }, { "path": "../helpers" }]
+  "references": [{ "path": "../decor" }, { "path": "../helpers" }, { "path": "../store-hmr" }]
 }

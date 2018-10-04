@@ -7,7 +7,7 @@ _Note: this is for early insiders, please don't share the link. I'll go into som
 
 I'm really excited to start talking about Orbit. It's been an intense few years of development to get here so it feels great to be able to share it with you all.
 
-First, the good stuff. An early build is now [available for download](https://orbitauth.com/download). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
+First, the good stuff. An early build is now [available for download](/releases). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
 
 ---
 

@@ -2,7 +2,6 @@ import { Location } from '@mcro/models'
 import { Column } from 'typeorm'
 
 export class LocationEntity implements Location {
-
   @Column({ nullable: true })
   id?: string
 
@@ -14,5 +13,4 @@ export class LocationEntity implements Location {
 
   @Column({ nullable: true })
   desktopLink?: string
-
 }

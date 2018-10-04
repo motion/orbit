@@ -19,16 +19,16 @@ class Template extends React.Component {
             color: '#985FC9',
           }}
         >
-          <Link
+          <a
             style={{
               boxShadow: 'none',
               textDecoration: 'none',
               color: 'inherit',
             }}
-            to={'/'}
+            href={'https://tryorbit.com'}
           >
             Orbit
-          </Link>
+          </a>
         </h2>
       )
     } else {

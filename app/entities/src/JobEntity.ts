@@ -4,7 +4,6 @@ import { SettingEntity } from './SettingEntity'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {
-
   target: 'job' = 'job'
 
   @PrimaryGeneratedColumn()
@@ -30,5 +29,4 @@ export class JobEntity extends BaseEntity implements Job {
 
   @ManyToOne(() => SettingEntity)
   setting?: Setting
-
 }

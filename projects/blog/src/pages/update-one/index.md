@@ -31,7 +31,7 @@ This brings us to Orbit's mission:
 
 > To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over data back to the individual -- with a flexible, powerful and intuitive knowledge tool.
 
-It's an answer to a basic desire we ran into time and time again during user research:
+It's an answer to a general desire we ran into time and time again during user research:
 
 **"I want to understand my knowledgebase, and I can't."**
 

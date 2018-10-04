@@ -5,7 +5,7 @@ date: '2018-09-29T22:12:03.284Z'
 
 _Note: this is for early insiders, please don't share the link. I'll go into some more detailed product and distribution plans._
 
-I'm really excited to start talking about Orbit. It's been an intense few years of development to get here so it feels great to finally start talking about it.
+I'm really excited to start talking about Orbit. It's been an intense few years of development to get here so it feels great to be able to share it with you all.
 
 First, the good stuff. An early build is now [available for download](https://orbitauth.com/download). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
 
@@ -25,11 +25,11 @@ There's something wrong here. I think it's best explained by the gap between the
   Ergonomically, though, how long can you keep your arms like that?
 </div>
 
-While the overdone effects of movies like Iron Man and Minority Report are a distraction, what these movies do grasp is a real unmet desire: unification, fluidity, and control that the web and the browsers we surf it with just don't give us today.
+While the overdone effects of movies like Iron Man and Minority Report are a distraction, what these movies do grasp is a real unmet desire: unification, fluidity, and control. The web and the browsers we surf it with today just don't give us that.
 
 This brings us to Orbit's mission:
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over data back to the individual -- a flexible, powerful and intuitive knowledge tool.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over data back to the individual -- with a flexible, powerful and intuitive knowledge tool.
 
 It's an answer to a basic desire we ran into time and time again during user research:
 

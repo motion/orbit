@@ -23,8 +23,9 @@ class Bio extends React.Component {
           }}
         />
         <p>
-          Welcome to the Orbit development blog. We're building a new way to organize knowledge.{' '}
-          <a href="https://tryorbit.com">Join the mailing list for updates</a>.
+          We're building a new way to organize knowledge.
+          <br />
+          <a href="https://tryorbit.com">Join our mailing list for monthly updates</a>.
         </p>
       </div>
     )

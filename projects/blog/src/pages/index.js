@@ -10,10 +10,7 @@ import { rhythm } from '../utils/typography'
 class BlogIndex extends React.Component {
   render() {
     const siteTitle = get(this, 'props.data.site.siteMetadata.title')
-    const siteDescription = get(
-      this,
-      'props.data.site.siteMetadata.description'
-    )
+    const siteDescription = get(this, 'props.data.site.siteMetadata.description')
     const posts = get(this, 'props.data.allMarkdownRemark.edges')
 
     return (
@@ -27,7 +24,7 @@ class BlogIndex extends React.Component {
         {posts.map(({ node }) => {
           const title = get(node, 'frontmatter.title') || node.fields.slug
           return (
-            <div key={node.fields.slug}>
+            <div className="post" key={node.fields.slug}>
               <h3
                 style={{
                   marginBottom: rhythm(1 / 4),

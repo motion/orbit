@@ -44,8 +44,8 @@ export class SettingManageRow extends React.Component<{
   render() {
     const { setting, appInfoStore, whitelist } = this.props
     return (
-      <Row padding={[6, 15]} alignItems="center">
-        <ManageSmartSync whitelist={whitelist} />
+      <Row padding={[6, 15]} alignItems="center" background="#eee">
+        {!!whitelist ? <ManageSmartSync whitelist={whitelist} /> : <Text>Sync active.</Text>}
         <View flex={1} />
         <SyncStatus settingId={setting.id}>
           {jobs => {

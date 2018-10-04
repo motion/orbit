@@ -1,5 +1,3 @@
-- all done, closing... screen
-- remove ocr for now
 - log as many bugs as possible for umed in syncers
 - look at cosal save flow and fix
 - improve search, attempt fts integration

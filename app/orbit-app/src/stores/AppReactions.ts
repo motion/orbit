@@ -43,23 +43,6 @@ export class AppReactions /* extends Store */ {
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:
-          if (this.paneManagerStore) {
-            if (this.paneManagerStore.shouldOnboard) {
-              console.log('avoid during onboard')
-              return
-            }
-            if (this.paneManagerStore.activePane === 'apps') {
-              console.log('avoid in apps')
-              return
-            }
-          }
-          // hacky, wait a bit for tear to sync
-          // await sleep(100)
-          // // if we recently tore a peek window it will trigger a HIDE, but ignore it
-          // if (Date.now() - App.state.lastTear < 200) {
-          //   console.log('ignore hide from tear')
-          //   return
-          // }
           App.setOrbitState({ docked: false })
           return
         case App.messages.SHOW:

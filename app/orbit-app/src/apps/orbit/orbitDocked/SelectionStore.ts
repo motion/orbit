@@ -24,6 +24,7 @@ export type SelectionGroup = {
   name?: string
   items: any[]
   type: 'row' | 'column'
+  startIndex?: number
   [key: string]: any
 }
 

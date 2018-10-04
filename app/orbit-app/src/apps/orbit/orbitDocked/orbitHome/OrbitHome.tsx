@@ -13,6 +13,7 @@ import { SyncStatusAll } from '../views/SyncStatusAll'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { OrbitAppCard } from '../orbitApps/OrbitAppCard'
 import { SubTitle } from '../../../../views/SubTitle'
+import { OrbitAppIconCard } from '../orbitApps/OrbitAppIconCard'
 // import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
@@ -235,6 +236,24 @@ export class OrbitHome extends React.Component<Props> {
     this.props.homeStore.reorder(result.source.index, result.destination.index)
   }
 
+  renderApps({ name, items, startIndex }: SelectionGroup) {
+    const { homeStore } = this.props
+    return (
+      <OrbitCarouselSection
+        startIndex={startIndex}
+        items={items}
+        homeStore={homeStore}
+        categoryName={name === 'Apps' ? null : name}
+        cardHeight={80}
+        cardWidth={80}
+        CardView={OrbitAppIconCard}
+        cardProps={{
+          hide: { subtitle: true },
+        }}
+      />
+    )
+  }
+
   render() {
     console.log('OrbitHome Render')
     const { homeStore } = this.props
@@ -248,10 +267,14 @@ export class OrbitHome extends React.Component<Props> {
               return (
                 <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                   {/* <SuggestionBarVerticalPad /> */}
+                  {results[0].name === 'Apps' && this.renderApps(results[0])}
                   {results.map(({ id, name, items, startIndex }, index) => {
+                    if (name === 'Apps') {
+                      return null
+                    }
                     const isApp = name === 'Apps'
                     const height = name === 'People' ? 60 : isApp ? 65 : 80
-                    const width = isApp ? 90 : 180
+                    const width = 180
                     return (
                       <Draggable key={id} draggableId={id} index={index}>
                         {(provided, snapshot) => {
@@ -272,12 +295,7 @@ export class OrbitHome extends React.Component<Props> {
                                 categoryName={name === 'Apps' ? null : name}
                                 cardHeight={height}
                                 cardWidth={width}
-                                CardView={isApp ? OrbitAppCard : OrbitCard}
-                                cardProps={
-                                  isApp && {
-                                    hide: { subtitle: true },
-                                  }
-                                }
+                                CardView={OrbitCard}
                               />
                             </div>
                           )

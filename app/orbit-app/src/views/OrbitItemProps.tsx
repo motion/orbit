@@ -11,6 +11,7 @@ import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
 type Model = Bit | PersonBit | Setting
 
 export type OrbitItemProps<T extends Model> = CSSPropertySet & {
+  chromeless?: boolean
   theme?: Partial<ThemeObject>
   listItem?: boolean
   hoverToSelect?: boolean

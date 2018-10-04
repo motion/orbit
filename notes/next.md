@@ -1,4 +1,3 @@
-- add sentry analytics
 - all done, closing... screen
 - remove ocr for now
 - log as many bugs as possible for umed in syncers

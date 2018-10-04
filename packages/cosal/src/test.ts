@@ -1,5 +1,6 @@
 import { Cosal } from './cosal'
 import testDocs from './test.data'
+import { remove } from 'fs-extra'
 
 const testSentences = [
   'ok First one is I started a roadmap ticket to organize post-launch stuff Starting announcements so we can put big things here for people to see, especially for stuff where we all need to run commands or look at something. We should avoid talking about anything here (maybe I\'ll lock it in some way if possible)',
@@ -13,27 +14,49 @@ async function logSearch(cosal, str) {
   console.time('search')
   const results = await cosal.search(str, 10)
   console.timeEnd('search')
+  console.log('raw ids', results.map(x => x.id))
   console.log(str, JSON.stringify(results.map(result => db[result.id].text).slice(0, 5), null, 2))
 }
 
-function insert(amt = 99) {
+function insert(amt = 99, offset = 0) {
   const next = testDocs
-    .slice(db.length, db.length + amt)
+    .slice(db.length + offset, db.length + amt + offset)
     .map((text, idx) => ({ text, id: idx + db.length }))
   db = [...db, ...next]
   return next
 }
 
-const cosal = new Cosal()
+let cosal = new Cosal()
 
 async function main() {
-  incrementalScanTest()
+  await cosal.start()
+  // incrementalScanTest()
+  await scanAndPersistTest()
 }
 
-export async function incrementalScanTest() {
+export async function scanAndPersistTest() {
+  await remove('/tmp/cosal.json')
+  await cosal.setDatabase('/tmp/cosal.json')
+  await incrementalScanTest()
+  await cosal.persist()
+  console.log('\n\nPERSIST AND RE_RUN\n\n')
+  // now reload...
+  cosal = new Cosal({ database: '/tmp/cosal.json' })
+  await cosal.start()
+
+  console.log('\n\n\n\nOKOKOKOK this should be THE SAME as the last one..')
+  await logSearch(cosal, 'big southern state')
+
+  console.log('NOW ADD EVEN MORE>...\n\n\n\n\n\n')
+
+  // scan even more docs...
+  await incrementalScanTest(500)
+}
+
+export async function incrementalScanTest(offset = 0) {
   // lets do 10 inserts and search each time
-  for (let i = 0; i < 10; i++) {
-    const next = insert()
+  for (let i = 0; i < 5; i++) {
+    const next = insert(100, offset)
     console.log('insert', next.length)
     await cosal.scan(next)
     await logSearch(cosal, 'big southern state')

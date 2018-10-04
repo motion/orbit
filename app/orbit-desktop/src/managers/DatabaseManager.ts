@@ -29,8 +29,21 @@ export class DatabaseManager {
       await this.createSearchIndices()
     }
 
-    // then create search index tables
-    this.watchForReset()
+    // watch for reset all data command
+    const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
+      await this.resetAllData()
+      Desktop.sendMessage(
+        App,
+        App.messages.NOTIFICATION,
+        JSON.stringify({
+          title: 'Deleted successfully!',
+          message: 'Restarting...',
+        }),
+      )
+      await sleep(500)
+      Desktop.sendMessage(Electron, Electron.messages.RESTART)
+    })
+    this.subscriptions.add({ dispose })
 
     // then do some setup
     await ensureCustomApp()
@@ -91,23 +104,10 @@ export class DatabaseManager {
     `)
   }
 
-  private watchForReset() {
-    const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
-      log.info(`Removing all data from database at: ${DATABASE_PATH}`)
-      await remove(COSAL_DB)
-      await remove(DATABASE_PATH)
-      Desktop.sendMessage(
-        App,
-        App.messages.NOTIFICATION,
-        JSON.stringify({
-          title: 'Deleted successfully!',
-          message: 'Restarting...',
-        }),
-      )
-      await sleep(500)
-      Desktop.sendMessage(Electron, Electron.messages.RESTART)
-    })
-    this.subscriptions.add({ dispose })
+  private async resetAllData() {
+    log.info(`Removing all data from database at: ${DATABASE_PATH}`)
+    await remove(COSAL_DB)
+    await remove(DATABASE_PATH)
   }
 
   removeSearchIndex = async () => {

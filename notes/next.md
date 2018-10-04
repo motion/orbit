@@ -1,4 +1,13 @@
 - log as many bugs as possible for umed in syncers
+
+creating important bug list for tomorrow, since really want to release it by end of day tm:
+
+```
+- fix slack login
+- fix clear all data button
+- fix doesnt work on fresh start db
+```
+
 - look at cosal save flow and fix
 - improve search, attempt fts integration
 - better post-onboard screen, show a message about syncing perhaps

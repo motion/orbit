@@ -100,7 +100,10 @@ export function parseSearchQuery(query: string): NLPResponse {
   function highlightIfClear(word, className) {
     const start = lowerCaseQuery.indexOf(word.toLowerCase())
     const end = start + word.length
-    addMarkIfClear([Math.max(0, start), end, className, word])
+    const impartialMatch = query[end] !== '' && query[end] !== undefined
+    if (!impartialMatch) {
+      addMarkIfClear([Math.max(0, start), end, className, word])
+    }
   }
 
   // @ts-ignore

@@ -10,9 +10,6 @@ creating important bug list for tomorrow, since really want to release it by end
 
 - look at cosal save flow and fix
 - improve search, attempt fts integration
-- better post-onboard screen, show a message about syncing perhaps
-- in directory empty show 'directory' not apps
-- make it easier to report bugs via Orbit
 
 NEXT
 

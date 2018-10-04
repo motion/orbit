@@ -300,8 +300,8 @@ export class OrbitHome extends React.Component<Props> {
       <SubPane name="home" fadeBottom>
         {content}
         {results.length === 1 && (
-          <View alignItems="center" justifyContent="center" padding={25}>
-            <SubTitle>You're searching the app store & no results found.</SubTitle>
+          <View alignItems="center" justifyContent="center" padding={[15, 25, 0]}>
+            <SubTitle>Sync is running, no bits yet!</SubTitle>
           </View>
         )}
         {/* this is a nice lip effect */}

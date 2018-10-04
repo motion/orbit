@@ -7,6 +7,7 @@ import { view } from '@mcro/black'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
+  subName: string
 }
 
 @view.attach('paneManagerStore')
@@ -15,7 +16,7 @@ export class NoResultsDialog extends React.Component<Props> {
     return (
       <>
         <View alignItems="center" justifyContent="center" padding={25}>
-          <Views.SubTitle>You're searching the app store & no results found.</Views.SubTitle>
+          <Views.SubTitle>You're searching {this.props.subName} & no results found.</Views.SubTitle>
           <VerticalSpace />
           <Button onClick={() => this.props.paneManagerStore.setActivePane('home')} size={1.2}>
             Search Orbit Instead

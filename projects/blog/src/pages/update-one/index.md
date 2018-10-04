@@ -35,11 +35,9 @@ It's a basic desire we ran into time and time again in user research:
 
 **"I want to be able to understand my knowledgebase, and I can't."**
 
-In the last year, we've spent a lot of building something to help solve this problem. It fixes something that browsers and software services fail at today: they don't give us control over our information.
+For the last two years we've been building something to help solve this problem. It fixes a pain point browsers and cloud services fail at today: they don't give us any control over our information.
 
-To fix that, we're building a platform instead of a service. We don't store data. Instead, much like a browser or operating system, Orbit just helps explore and manage information. Traditional operating systems gave us a lot of control (with _files_), browsers give us collaboration (and _lock in_).
-
-Orbit gives control back through a decentralized knowledge explorer. A flexible way to manage bits of information from many places.
+In order to right that, Orbit is a platform and not a service. We don't store data. Instead, much like a browser or operating system, Orbit just helps explore and manage existing information. Traditional operating systems gave us a lot of control (with _files_) where browsers give us collaboration (and _lock in_). Orbit moves control back to us by running privately on your device - a decentralized knowledge explorer. It's a flexible platform for managing bits of information from many places.
 
 Our goal is to let you:
 

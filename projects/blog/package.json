@@ -39,6 +39,6 @@
     "start": "serve public/",
     "develop": "gatsby develop",
     "build": "gatsby build",
-    "deploy": "now"
+    "deploy": "now && now alias"
   }
 }

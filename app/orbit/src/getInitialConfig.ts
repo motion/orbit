@@ -31,12 +31,14 @@ export async function getInitialConfig() {
   }
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const serverHost = 'localhost'
+  const userData = app.getPath('userData')
   config = {
     isProd,
     paths: {
+      orbitConfig: Path.join(userData, 'orbit.json'),
       desktopRoot,
       appStatic,
-      userData: app.getPath('userData'),
+      userData,
       nodeBinary,
       resources: Path.join(app.getAppPath(), '..'),
       dotApp,
@@ -56,7 +58,7 @@ export async function getInitialConfig() {
       oracleBridge: ports[4],
       mediator: ports[5],
       ocrBridge: ports[6],
-      apps: ports.slice(7)
+      apps: ports.slice(7),
     },
   }
 

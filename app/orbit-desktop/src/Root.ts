@@ -47,6 +47,7 @@ import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { getSearchResolver } from './resolvers/SearchResultResolver'
 import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
+import { writeOrbitConfig } from './helpers'
 
 const log = new Logger('desktop')
 
@@ -165,6 +166,8 @@ export class Root {
     if (this.disposed) {
       return
     }
+    console.log('writing orbit config...')
+    await writeOrbitConfig()
     Desktop.dispose()
     if (this.appsManager) {
       await this.appsManager.dispose()

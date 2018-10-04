@@ -74,7 +74,7 @@ Which lets us do easy, risk-free trials and almost no onboarding process!
   </img>
 </div>
 
-Orbit the company never touches your private data. That means you can download and trial without having to trust us: you can even firewall to check! It also had a huge benefit in terms of incentives. It means as a company **we have to make the product actually good**, as opposed to the sales team.
+Today when you download Orbit it works like this. We never see a bit of your data, and you can use a firewall to be sure. We'll have to get good at communicating the secure side of Orbit on launch.
 
 ### The Product
 

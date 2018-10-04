@@ -27,7 +27,12 @@ export class OrbitItemStore {
 
   handleClick = e => {
     // so we can control the speed of doubleclicks
-    if (Date.now() - this.clickAt < 220) {
+    if (Date.now() - this.clickAt < 280) {
+      // allow double click of location
+      if (Date.now() - this.lastClickLocation < 280) {
+        this.searchLocation()
+        return
+      }
       this.open()
       Actions.closeOrbit()
       e.stopPropagation()
@@ -47,13 +52,19 @@ export class OrbitItemStore {
     this.props.selectionStore.toggleSelected(this.realIndex, 'click')
   }
 
-  handleClickLocation = e => {
+  lastClickLocation = Date.now()
+
+  handleClickLocation = () => {
+    this.lastClickLocation = Date.now()
+  }
+
+  searchLocation = () => {
     const { onClickLocation } = this.props
     if (typeof onClickLocation === 'string') {
       return Actions.open(onClickLocation)
     }
     if (typeof onClickLocation === 'function') {
-      return onClickLocation(e, this.resolvedItem)
+      return onClickLocation(this.resolvedItem)
     }
     console.log('no handler for location')
   }

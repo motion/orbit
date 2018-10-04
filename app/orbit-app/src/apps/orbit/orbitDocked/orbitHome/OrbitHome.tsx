@@ -11,10 +11,8 @@ import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
 import { OrbitCard } from '../../../../views/OrbitCard'
-import { OrbitAppCard } from '../orbitApps/OrbitAppCard'
 import { SubTitle } from '../../../../views/SubTitle'
 import { OrbitAppIconCard } from '../orbitApps/OrbitAppIconCard'
-// import { OrbitGridSection } from './OrbitGridSection'
 
 type Props = {
   name: string

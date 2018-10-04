@@ -53,7 +53,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
         {...decoration.item}
       >
         {!hideHeader && (
-          <UI.Row alignItems="center" userSelect="none" cursor="default">
+          <UI.Row alignItems="center" userSelect="none" cursor="default" padding={[5, 0]}>
             {extraProps.beforeTitle || null}
             {!!person && (
               <RoundButtonPerson

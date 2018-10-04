@@ -35,6 +35,7 @@ Normally we'd be running a local proxy to capture them entirely on your computer
 
 #### Known Bugs
 
+- Clicking between certain items within the peek window doesn't work.
 - Slack says "not authorized", still works but is confusing for now.
 - Topic modeling "invert" bug, can return least relevant words rather than most.
 - Resizing screens, moving screens, moving spaces can glitch.

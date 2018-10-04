@@ -49,7 +49,6 @@ NEXT
     - less clutter
     - no header
     - simple topic list
-- all done, closing... better screen
 - "stop asking" and "always send" for error reporting
 - "reset orbit db" option if error during startup
 - record video of a demo

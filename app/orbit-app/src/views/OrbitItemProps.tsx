@@ -55,5 +55,5 @@ export type OrbitItemProps<T extends Model> = CSSPropertySet & {
   getIndex?: (id: T) => number
   subtitleSpaceBetween?: React.ReactNode
   searchTerm?: string
-  onClickLocation?: (e: Event, item: ResolvedItem) => any
+  onClickLocation?: (item: ResolvedItem, e?: Event) => any
 }

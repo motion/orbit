@@ -64,7 +64,7 @@ export const PeekBit = ({
               // focusOnMount
               // onEnter={peekStore.goToNextHighlight}
               onChange={() => selectionStore.setHighlightIndex(0)}
-              width={200}
+              width={150}
               searchBarProps={{
                 flex: 1,
                 // 1px more for inset shadow
@@ -95,8 +95,9 @@ export const PeekBit = ({
                                 Actions.closeOrbit()
                               }}
                               tooltip="Open"
-                              icon="arrowshare91"
-                            />
+                            >
+                              Open
+                            </TitleBarButton>
                           </SegmentedRow>
                         )}
                       </>

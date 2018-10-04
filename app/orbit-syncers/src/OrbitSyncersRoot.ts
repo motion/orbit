@@ -33,15 +33,19 @@ export class OrbitSyncersRoot {
   mediatorServer: MediatorServer
 
   async start() {
-    await this.createDbConnection()
-    this.setupMediatorServer()
-    this.registerREPLGlobals()
-    this.startSyncers()
+    setTimeout(async () => {
+      await this.createDbConnection()
+      this.setupMediatorServer()
+      this.registerREPLGlobals()
+      await this.startSyncers()
+    }, 10000)
   }
 
   async dispose() {
-    await this.connection.close()
-    await this.stopSyncers()
+    if (this.connection) {
+      await this.connection.close()
+      await this.stopSyncers()
+    }
     return true
   }
 
@@ -77,28 +81,6 @@ export class OrbitSyncersRoot {
       map[syncer.name] = syncer
       return map
     }, {})
-
-    // root.save = async (count: number) => {
-    //   const setting = await getRepository(SettingEntity).findOne(1)
-    //   const bitCount = await getRepository(BitEntity).count()
-    //   const bits: any[] = []
-    //   for (let i = 0; i < count; i++) {
-    //     bits.push(BitUtils.create({
-    //       id: 1000 + bitCount + i,
-    //       integration: 'test' as any,
-    //       title: '3My bit #' + (bitCount + i),
-    //       body: '',
-    //       type: 'custom',
-    //       bitCreatedAt: Date.now(),
-    //       bitUpdatedAt: Date.now(),
-    //       settingId: setting.id,
-    //     }))
-    //   }
-    //   console.log("saving bit", bits)
-    //   console.time("saving bits")
-    //   await getRepository(BitEntity).save(bits, { chunk: 100, transaction: false })
-    //   console.timeEnd("saving bits")
-    // }
   }
 
   /**
@@ -132,15 +114,11 @@ export class OrbitSyncersRoot {
    * Starts all the syncers.
    * We start syncers with a small timeout to prevent app-overload.
    */
-  private startSyncers() {
-    setTimeout(
-      () =>
-        Promise.all(
-          Syncers.map(syncer => {
-            return syncer.start()
-          }),
-        ),
-      10000,
+  private async startSyncers() {
+    await Promise.all(
+      Syncers.map(syncer => {
+        return syncer.start()
+      })
     )
   }
 

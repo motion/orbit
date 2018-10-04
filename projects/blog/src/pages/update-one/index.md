@@ -13,7 +13,7 @@ First, the good stuff. An early build is now [available for download](https://or
 
 So... what is Orbit? Let's start with a story:
 
-You read, write, email, chat, document, ticket... you're productive. From Slack to Jira, Google Docs to Github. Your knowledge is distributed -- but a wiki or intranet portal doesn't really help sort it. They add extra sources of truth, and infrastructure. They are clunky to use and chronically stale.
+You read, write, email, chat, document, ticket... you're productive. From Slack to Jira, Google Docs to Github. Your knowledge is distributed -- but your wiki is out of date and intranet portal doesn't search very well. They're an extra source of truth, infrastructure, and a cumbersome part of your day.
 
 There's something wrong here. I think it's best explained by the gap between the sci-fi interfaces we've seen for decades in TV and film and the reality of how we work today.
 

@@ -21,6 +21,7 @@ export class RootView extends React.Component {
   }, 20)
 
   componentDidMount() {
+    window['RootView'] = this
     window.addEventListener('resize', this.handleWindowResize)
 
     // prevent scroll bounce

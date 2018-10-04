@@ -10,6 +10,7 @@ import { SelectionStore } from './orbitDocked/SelectionStore'
 import { BORDER_RADIUS, RECENT_HMR } from '../../constants'
 import { trace } from 'mobx'
 import isEqual from 'react-fast-compare'
+import { onlyUpdateOnChanged } from '../../helpers/onlyUpdateOnChanged'
 
 export type SubPaneProps = CSSPropertySet & {
   store?: SubPaneStore
@@ -69,9 +70,8 @@ const PaneContentInner = view({
 })
 
 class StaticContainer extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props.children, nextProps.children) || RECENT_HMR()
-  }
+  shouldComponentUpdate = onlyUpdateOnChanged.bind(this)
+
   render() {
     return this.props.children
   }

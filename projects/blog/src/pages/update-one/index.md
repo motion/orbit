@@ -124,7 +124,7 @@ If you're interested in building apps on top of Orbit, get in touch with me belo
 
 ### Going forward
 
-There's a lot more I'd like to write, but I think this is more than enough to start. Right now Orbit is buggy and incomplete, but the underlying technology is all there. It took a ton of hard problem solving to get it to where it is, and it's really well set up to move quickly now. I look forward to all of your bug reports :).
+There's a lot more I'd like to write, but I think this is more than enough to start. Right now Orbit is incomplete and changing fast, but the pieces are in place to make it really come together soon. It will likely change dramatically over the next few months, so please do send over any weird or high level changes you'd like to see.
 
 <p>
   <a href="mailto:nate@tryorbit.com">Here is my email</a>, send any and all inquiries, requests, issues.

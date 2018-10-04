@@ -14,6 +14,7 @@ import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { RECENT_HMR } from '../constants'
+import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -68,7 +69,7 @@ const Card = view({
     }
     if (!isSelected) {
       const borderColor = theme.cardBorderColor || 'transparent'
-      const borderShadow = ['inset', 0, 0, 0, 1, borderColor]
+      const borderShadow = chromeless ? null : ['inset', 0, 0, 0, 1, borderColor]
       const hoverBorderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColorHover || borderColor]
       card = {
         ...card,
@@ -234,7 +235,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
                       fontSize={14}
                       sizeLineHeight={0.78}
                       ellipse={hasSubtitle && hasMeta ? true : 2}
-                      fontWeight={500}
+                      fontWeight={400}
                       selectable={false}
                       {...titleProps}
                     >
@@ -360,9 +361,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
 
 // wrap the outside so we can do much faster shallow renders when need be
 export class OrbitCard extends React.Component<OrbitItemProps<any>> {
-  shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps) || RECENT_HMR()
-  }
+  shouldComponentUpdate = onlyUpdateOnChanged
 
   render() {
     return (

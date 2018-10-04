@@ -8,7 +8,6 @@ import { Setting } from '@mcro/models'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { view } from '@mcro/black'
-import { VerticalSpace } from '../../../../views'
 
 type Props = OrbitItemProps<Setting> &
   AppInfoProps & {
@@ -20,6 +19,7 @@ const Centered = view({
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
+  padding: [2, 0, 0],
 })
 
 export const OrbitAppIconCard = ({ store, model, isActive, subtitle, ...props }: Props) => {
@@ -27,12 +27,12 @@ export const OrbitAppIconCard = ({ store, model, isActive, subtitle, ...props }:
   return (
     <OrbitCard model={model} chromeless {...props}>
       <Centered>
-        <OrbitIcon icon={model.type} size={32} />
-        <VerticalSpace small />
+        <OrbitIcon icon={model.type} size={28} />
+        <div style={{ height: 7 }} />
         <SyncStatus settingId={model.id}>
           {jobs => {
             return (
-              <Text size={0.85} alpha={0.6}>
+              <Text size={0.85} alpha={0.6} ellipse>
                 {jobs ? 'Syncing...' : name}
               </Text>
             )

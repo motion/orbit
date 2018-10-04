@@ -244,12 +244,9 @@ export class OrbitHome extends React.Component<Props> {
         items={items}
         homeStore={homeStore}
         categoryName={name === 'Apps' ? null : name}
-        cardHeight={80}
-        cardWidth={80}
+        cardHeight={75}
+        cardWidth={60}
         CardView={OrbitAppIconCard}
-        cardProps={{
-          hide: { subtitle: true },
-        }}
       />
     )
   }
@@ -272,8 +269,7 @@ export class OrbitHome extends React.Component<Props> {
                     if (name === 'Apps') {
                       return null
                     }
-                    const isApp = name === 'Apps'
-                    const height = name === 'People' ? 60 : isApp ? 65 : 80
+                    const height = name === 'People' ? 60 : 80
                     const width = 180
                     return (
                       <Draggable key={id} draggableId={id} index={index}>
@@ -323,7 +319,7 @@ export class OrbitHome extends React.Component<Props> {
           </View>
         )}
         {/* this is a nice lip effect */}
-        <View height={15} />
+        <View height={18} />
       </SubPane>
     )
   }

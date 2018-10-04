@@ -64,7 +64,7 @@ export function storeProvidable(userOptions, Helpers) {
       // return HoC
       // dont use class properties on this, react-hot-loader seems to pick it up even if cold()
 
-      class StoreProvider extends React.Component {
+      class StoreProvider extends React.PureComponent {
         props: any | { __contextualStores?: Object }
         _props: any
         stores: any
@@ -79,10 +79,6 @@ export function storeProvidable(userOptions, Helpers) {
           super(a, b)
           this.setupProps()
           this.setupStores()
-        }
-
-        shouldComponentUpdate(nextProps) {
-          return !isEqual(this.props, nextProps)
         }
 
         // PureComponent means this is only called when props are not shallow equal

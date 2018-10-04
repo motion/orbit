@@ -1,10 +1,11 @@
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
 import Media from 'react-media'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import * as Constants from '~/constants'
-import { MailIcon } from '~/views/icons'
-import Router from '~/router'
+import * as Constants from '../constants'
+import { MailIcon } from '../views/icons'
+import Router from '../router'
+import { attachTheme } from '@mcro/gloss'
 
 export * from './Section'
 
@@ -61,7 +62,7 @@ export const Title = attachTheme(
           fontFamily={TITLE_FONT_FAMILY}
           // Eesti font adds space at bottom
           marginBottom="-1%"
-          color={theme.titleColor || theme.base.color.desaturate(0.3).rotate(-90)}
+          color={theme.titleColor || theme.color.desaturate(0.3).rotate(-90)}
           alpha={0.8}
           {...props}
         >
@@ -77,7 +78,7 @@ export const SubTitle = attachTheme(({ theme, size = 3, ...props }) => (
     {isSmall => (
       <Title
         size={size}
-        color={theme.subTitleColor || theme.base.color}
+        color={theme.subTitleColor || theme.color}
         {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
         {...props}
       />
@@ -204,7 +205,7 @@ export const Border = attachTheme(({ theme, width = 4, color, type = 'dotted', .
       position: 'absolute',
       left: -30,
       right: -30,
-      borderBottom: [width, type, color || theme.base.color.alpha(0.08)],
+      borderBottom: [width, type, color || theme.color.alpha(0.08)],
       transform: {
         y: -2,
       },
@@ -230,7 +231,7 @@ export const FadedArea = attachTheme(
             width: 100,
             zIndex: 100,
             background: `linear-gradient(to right, transparent, ${fadeBackground ||
-              theme.base.background} 80%)`,
+              theme.background} 80%)`,
           }}
         />
       )}
@@ -242,7 +243,7 @@ export const FadedArea = attachTheme(
             width: 100,
             zIndex: 100,
             background: `linear-gradient(to left, transparent, ${fadeBackground ||
-              theme.base.background} 80%)`,
+              theme.background} 80%)`,
           }}
         />
       )}
@@ -253,7 +254,7 @@ export const FadedArea = attachTheme(
             top: 'auto',
             height: 100,
             zIndex: 100,
-            background: `linear-gradient(transparent, ${fadeBackground || theme.base.background})`,
+            background: `linear-gradient(transparent, ${fadeBackground || theme.background})`,
           }}
         />
       )}
@@ -263,11 +264,11 @@ export const FadedArea = attachTheme(
             width: '100%',
             paddingBottom: '100%',
             borderRadius: 1000,
-            boxShadow: [[0, 0, 0, 250, theme.base.background]],
+            boxShadow: [[0, 0, 0, 250, theme.background]],
             border: [
               [
                 2,
-                theme.base.background
+                theme.background
                   .darken(0.2)
                   .desaturate(0.4)
                   .alpha(0.5),
@@ -390,8 +391,8 @@ export const A = view(UI.Inline, {
   padding: [3, 2],
   borderBottom: [2, 'transparent'],
 }).theme(({ theme, active, ...props }) => {
-  const bg = theme.base.background.darken(0.1).desaturate(0.1)
-  const color = UI.color(props.color || theme.base.color)
+  const bg = theme.background.darken(0.1).desaturate(0.1)
+  const color = UI.color(props.color || theme.color)
   const activeStyle = active && {
     borderBottom: [2, bg],
   }
@@ -464,7 +465,9 @@ export const HomeImg = ({ children, style, borderProps, ...props }) => (
 
 export const FeatureSubTitle = props => (
   <Media query={Constants.screen.large}>
-    {isLarge => <P if={isLarge} size={1.9} alpha={0.7} {...{ marginBottom: 20 }} {...props} />}
+    {isLarge =>
+      (isLarge && <P size={1.9} alpha={0.7} {...{ marginBottom: 20 }} {...props} />) || null
+    }
   </Media>
 )
 

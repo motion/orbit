@@ -1,15 +1,8 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
-import {
-  controller,
-  AnimatedValue,
-  createAnimatedComponent,
-  SpringAnimation,
-  config,
-} from 'react-spring'
+import { controller, AnimatedValue, SpringAnimation, config, animated } from 'react-spring'
 import * as _ from 'lodash'
 
-const AnimatedDiv = createAnimatedComponent('div')
 const { Provider, Consumer } = React.createContext(null)
 
 function getScrollType(horizontal) {
@@ -76,9 +69,9 @@ export class ParallaxLayer extends React.PureComponent {
   }
 
   updateEffect(effect, to, immediate) {
-    const { config, impl } = this.parent.props
+    const { config, controller } = this.parent.props
     if (!immediate) {
-      controller(effect, { to, ...config }, impl).start()
+      controller(effect, { to, ...config }, controller).start()
     } else {
       effect.setValue(to)
     }
@@ -136,7 +129,7 @@ export class ParallaxLayer extends React.PureComponent {
       }
     }
     return (
-      <AnimatedDiv
+      <animated.div
         {...props}
         className={className}
         style={{
@@ -154,7 +147,7 @@ export class ParallaxLayer extends React.PureComponent {
         }}
       >
         {children}
-      </AnimatedDiv>
+      </animated.div>
     )
   }
 
@@ -181,13 +174,13 @@ export class Parallax extends React.PureComponent {
     pages: PropTypes.number.isRequired,
     config: PropTypes.object,
     horizontal: PropTypes.bool,
-    impl: PropTypes.func,
+    controller: PropTypes.func,
   }
 
   static defaultProps = {
     config: config.slow,
     horizontal: false,
-    impl: SpringAnimation,
+    controller: controller,
   }
 
   state = { ready: false }
@@ -215,11 +208,7 @@ export class Parallax extends React.PureComponent {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateRaf, false)
-    this.props.scrollingElement.removeEventListener(
-      'scroll',
-      this.onScroll,
-      false,
-    )
+    this.props.scrollingElement.removeEventListener('scroll', this.onScroll, false)
   }
 
   componentDidUpdate() {
@@ -249,8 +238,7 @@ export class Parallax extends React.PureComponent {
       this.props.container[scrollType] = this.current = this.offset * this.space
     }
     if (this.content) {
-      this.content.style[horizontal ? 'width' : 'height'] = `${this.space *
-        this.props.pages}px`
+      this.content.style[horizontal ? 'width' : 'height'] = `${this.space * this.props.pages}px`
     }
     this.layers.forEach(layer => {
       layer.setHeight(this.space, true)
@@ -269,7 +257,7 @@ export class Parallax extends React.PureComponent {
   }
 
   scrollTo(offset) {
-    const { horizontal, config, impl } = this.props
+    const { horizontal, config, controller } = this.props
     const scrollType = getScrollType(horizontal)
     this.scrollStop()
     this.offset = offset
@@ -278,23 +266,11 @@ export class Parallax extends React.PureComponent {
     this.animatedScroll.addListener(({ value }) => {
       target[scrollType] = value
     })
-    controller(
-      this.animatedScroll,
-      { to: offset * this.space, ...config },
-      impl,
-    ).start()
+    controller(this.animatedScroll, { to: offset * this.space, ...config }, controller).start()
   }
 
   render() {
-    const {
-      style,
-      innerStyle,
-      pages,
-      className,
-      children,
-      horizontal,
-      showAbsolute,
-    } = this.props
+    const { style, innerStyle, pages, className, children, horizontal, showAbsolute } = this.props
     return (
       <>
         <div
@@ -323,10 +299,7 @@ export class Parallax extends React.PureComponent {
             </div>
           ) : null}
         </div>
-        <div
-          if={!showAbsolute}
-          style={{ height: this.props.pageHeight * pages }}
-        />
+        {!showAbsolute && <div style={{ height: this.props.pageHeight * pages }} />}
       </>
     )
   }

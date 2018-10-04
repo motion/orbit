@@ -2,13 +2,6 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0.tgz#adeb78fedfc855aa05bc041640f3f6f98e85424c"
-  integrity sha512-7hGhzlcmg01CvH1EHdSPVXYX1aJ8KCEyz6I9xYIi/asDtzBPMyMhVibhM/K6g/5qnKBwjZtp10bNZIEFTRW1MA==
-  dependencies:
-    regenerator-runtime "^0.12.0"
-
 "@types/node@*":
   version "10.10.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.10.2.tgz#2a55b8d66f6945efc5da38489774e551248aa169"
@@ -1223,11 +1216,6 @@ reflect-metadata@^0.1.12:
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.12.tgz#311bf0c6b63cd782f228a81abe146a2bfa9c56f2"
   integrity sha512-n+IyV+nGz3+0q3/Yf1ra12KpCyi001bi4XFxSjbiWWjfqb52iTTtpGXmCCAOWWIAn9KEuFZKGqBERHmrtScZ3A==
 
-regenerator-runtime@^0.12.0:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
-  integrity sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
-
 request-promise-core@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.1.tgz#3eee00b2c5aa83239cfb04c5700da36f81cd08b6"
@@ -1540,10 +1528,10 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-typeorm@^0.3.0-alpha.18:
-  version "0.3.0-alpha.18"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.18.tgz#e7757957b55411792b2dfb66a95d6eb1f24ce10a"
-  integrity sha512-u5z6AT5sAMa7c4ZUbIs4mIfit7uzPlpU4NiPgykEeVRlyFSopXZOuYT844GGDREOuIrI3uTU2l1v58ZLmoNmbA==
+typeorm@^0.3.0-alpha.19:
+  version "0.3.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.19.tgz#f4ec4b239e101e600a2077a85c692656a6870ec4"
+  integrity sha512-+eBESmBChkDWr+Xrjyb+TjGr8YIvV8ska9McFX4UdfS9ibABnBSqUZbVRXhuLqJqkxBkHWwRALweEAeQ54/40Q==
   dependencies:
     "@types/zen-observable" "^0.8.0"
     app-root-path "^2.0.1"

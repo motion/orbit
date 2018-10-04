@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { SectionContent } from '~/views/sectionContent'
-import { Title, P, Link } from '~/views'
-import { BrandLogo, Join } from '~/components'
-import * as Constants from '~/constants'
+import { SectionContent } from '../views/sectionContent'
+import { Title, P, Link } from '../views'
+import { BrandLogo, Join } from '../components'
+import * as Constants from '../constants'
 import * as UI from '@mcro/ui'
 
 const SmallTitle = props => (
@@ -101,47 +101,45 @@ export class Footer extends React.Component {
           </UI.View>
           <UI.View {...{ padding: [50, 0, 100, 0] }}>
             <Sections>
-              <StartSection if={!noCallToAction}>
-                <BrandLogo />
-                <br />
-                <Contact
-                  style={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                  }}
-                  href="mailto:natewienert@gmail.com"
-                >
-                  Get in touch
-                </Contact>
-                <br />
-                <br />
-                <br />
-                <small style={{ opacity: 0.5 }}>
-                  © Orbit 2018, all rights reserved.
-                </small>
-              </StartSection>
+              {noCallToAction && (
+                <StartSection>
+                  <BrandLogo />
+                  <br />
+                  <Contact
+                    style={{
+                      fontWeight: 500,
+                      textDecoration: 'none',
+                    }}
+                    href="mailto:natewienert@gmail.com"
+                  >
+                    Get in touch
+                  </Contact>
+                  <br />
+                  <br />
+                  <br />
+                  <small style={{ opacity: 0.5 }}>© Orbit 2018, all rights reserved.</small>
+                </StartSection>
+              )}
               <EndSections>
                 <Section>
                   <SmallTitle>Company</SmallTitle>
                   <Nav>
-                    <FootLink if={false} to="/features">
+                    {/* <FootLink if={false} to="/features">
                       Features
                     </FootLink>
                     <FootLink if={false} to="/use-cases">
                       Use Cases
-                    </FootLink>
+                    </FootLink> */}
                     <FootLink to="/about">About Us</FootLink>
                   </Nav>
                 </Section>
-                <Section if={false}>
+                {/* <Section if={false}>
                   <SmallTitle>Follow</SmallTitle>
                   <Nav>
                     <FootLink if={false} to="/blog">
                       Blog
                     </FootLink>
-                    <FootLink to="https://twitter.com/tryorbit">
-                      Twitter
-                    </FootLink>
+                    <FootLink to="https://twitter.com/tryorbit">Twitter</FootLink>
                     <FootLink to="https://github.com/motion">Github</FootLink>
                   </Nav>
                 </Section>
@@ -151,7 +149,7 @@ export class Footer extends React.Component {
                     <FootLink to="/privacy">Privacy Policy</FootLink>
                     <FootLink to="/terms">Terms of Use</FootLink>
                   </Nav>
-                </Section>
+                </Section> */}
               </EndSections>
             </Sections>
           </UI.View>

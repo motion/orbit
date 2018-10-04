@@ -1,10 +1,10 @@
-import { Header, Footer, PostTemplate } from '~/components'
+import { Header, Footer, PostTemplate } from '../components'
 import { P2, Section, SubTitle } from '../views'
-import { SectionContent } from '~/views/sectionContent'
+import { SectionContent } from '../views/sectionContent'
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 import { Bauhaus } from '../views/Bauhaus'
 
 @view
@@ -48,57 +48,49 @@ export class AboutPage extends React.Component {
                 paragraphs={
                   <UI.PassProps>
                     <P2>
-                      Your team is growing and so are its organizational
-                      problems. Work chat is noisy. What's going on across the
-                      company? Discovery just doesn't work with modern services.
-                      Intranet systems want to solve important problems, but
-                      remain outdated.
+                      Your team is growing and so are its organizational problems. Work chat is
+                      noisy. What's going on across the company? Discovery just doesn't work with
+                      modern services. Intranet systems want to solve important problems, but remain
+                      outdated.
                     </P2>
                     <P2>
-                      Orbit takes a new approach. Here's three things we learned
-                      in building a modern knowledge management system.
+                      Orbit takes a new approach. Here's three things we learned in building a
+                      modern knowledge management system.
                     </P2>
                     <P2>
                       <strong>It has to be on device.</strong>
                       <br />
-                      You don't want a cloud service to be managing{' '}
-                      <em>all your sensitive data</em>. On device is a no-risk,
-                      no-hassle solution with the easiest possible onboarding:
-                      just download an app. Your sensitive data absolutely never
-                      leaves your company firewall.
+                      You don't want a cloud service to be managing <em>all your sensitive data</em>
+                      . On device is a no-risk, no-hassle solution with the easiest possible
+                      onboarding: just download an app. Your sensitive data absolutely never leaves
+                      your company firewall.
                     </P2>
                     <P2>
                       <strong>It can't add yet another source of truth.</strong>
                       <br />
-                      Is a stale wiki a universal constant, or can we do better?
-                      Whether you use a wiki or not, Orbit makes your knowledge
-                      much more useful. Unifying all your services with smart
-                      sorting means people can trust answers from it to be the
-                      most recent available: whether from a Slack conversation,
-                      document, ticket, or knowledgebase.
+                      Is a stale wiki a universal constant, or can we do better? Whether you use a
+                      wiki or not, Orbit makes your knowledge much more useful. Unifying all your
+                      services with smart sorting means people can trust answers from it to be the
+                      most recent available: whether from a Slack conversation, document, ticket, or
+                      knowledgebase.
                     </P2>
                     <P2>
                       <strong>It has to be a pleasant part of your day.</strong>
                       <br />
-                      In order to be useful Orbit has to be a place people want
-                      to check in with. It has to work with the tools you
-                      already have, be always at hand on your desktop, and never
-                      get in the way. Design is of the highest importance.
+                      In order to be useful Orbit has to be a place people want to check in with. It
+                      has to work with the tools you already have, be always at hand on your
+                      desktop, and never get in the way. Design is of the highest importance.
                     </P2>
                     <SubTitle>A unique approach</SubTitle>
                     <P2>
-                      Orbit aims to reinvent the way companies operate by giving
-                      them an on device brain. It's a beautiful intranet system
-                      for today, without any infrastructure necessary. We're
-                      rethinking knowledge management from the ground up and
-                      we're excited to share it with the world.
+                      Orbit aims to reinvent the way companies operate by giving them an on device
+                      brain. It's a beautiful intranet system for today, without any infrastructure
+                      necessary. We're rethinking knowledge management from the ground up and we're
+                      excited to share it with the world.
                     </P2>
                     <P2>
                       Signup for early access, and{' '}
-                      <a href="mailto:natewienert@gmail.com">
-                        let us know what you think
-                      </a>
-                      .
+                      <a href="mailto:natewienert@gmail.com">let us know what you think</a>.
                     </P2>
                   </UI.PassProps>
                 }

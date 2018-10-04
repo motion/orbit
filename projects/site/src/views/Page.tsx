@@ -1,17 +1,16 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { SectionContent } from '~/views/sectionContent'
-import { ParallaxLayer } from '~/components/Parallax'
+import { SectionContent } from './sectionContent'
+import { ParallaxLayer } from '../components/Parallax'
 
 const NormalLayer = view.attach('homeStore')(({ homeStore, ...props }) => {
-  return (
-    <SectionContent style={{ height: homeStore.sectionHeight }} {...props} />
-  )
+  return <SectionContent style={{ height: homeStore.sectionHeight }} {...props} />
 })
 
 @view
 export class Page extends React.Component {
-  render({ offset, children, zIndex = 0 }) {
+  render() {
+    const { offset, children, zIndex = 0 } = this.props
     const baseZIndex = zIndex
     const Parallax = ({ zIndex = 0, ...props }) => (
       <ParallaxLayer
@@ -23,10 +22,7 @@ export class Page extends React.Component {
       />
     )
     const Content = props => (
-      <NormalLayer
-        style={{ position: 'relative', zIndex: 1 + zIndex }}
-        {...props}
-      />
+      <NormalLayer style={{ position: 'relative', zIndex: 1 + zIndex }} {...props} />
     )
     return (
       <>

@@ -1,3 +1,7 @@
+- make blog download link go to a new page that has download button
+  - make it say it sends analytics back on crashes and usage so we can track beta usage
+  - add sentry analytics
+
 NEXT
 
 1. OCR search demo with cosal

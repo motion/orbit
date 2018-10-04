@@ -1,7 +1,6 @@
 import handleGlossReferences from './handleGlossReferences'
 
 export default function glossViewDisplayNames(babel) {
-  console.log('START')
   // const { types: t } = babel
   const references = new Set()
   const referencePaths = {}

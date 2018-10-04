@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Header, Footer, PostTemplate } from '~/components'
-import { Section } from '~/views'
-import { SectionContent } from '~/views/sectionContent'
+import { Header, Footer, PostTemplate } from '../components'
+import { Section } from '../views'
+import { SectionContent } from '../views/sectionContent'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 
 const text = `This privacy notice discloses the privacy practices for tryorbit.com. This privacy notice applies solely to information collected by this website. It will notify you of the following:
 

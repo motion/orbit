@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import jsonp from 'jsonp'
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
+import { attachTheme } from '@mcro/gloss'
 
 const queryString = query => {
   const esc = encodeURIComponent
@@ -146,17 +147,4 @@ export class Join extends React.Component {
       </Section>
     )
   }
-
-  // static theme = ({ theme }) => {
-  //   // const bg = theme.base.background
-  //   // const isLight = bg.isLight()
-  //   // const adjust = isLight ? 'darken' : 'lighten'
-  //   // const amt = isLight ? 0.1 : 1
-  //   return {
-  //     input: {
-  //       color: theme.base.color,
-  //       // WebkitTextFillColor: `${theme.base.color.alpha(0.7)} !important`,
-  //     },
-  //   }
-  // }
 }

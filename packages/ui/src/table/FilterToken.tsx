@@ -14,7 +14,7 @@ import { findDOMNode } from 'react-dom'
 import { colors } from '../helpers/colors'
 
 // @ts-ignore
-const Electron = electronRequire('electron')
+const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 
 const Token = view(Text, {
   display: 'inline-flex',

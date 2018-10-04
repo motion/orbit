@@ -3,74 +3,70 @@ title: Update One
 date: '2018-09-29T22:12:03.284Z'
 ---
 
-_Note_: this is a message for early insiders, please don't share the link. I'll go into a bit more detail on future product and distribution plans.
+_Note: this is a message for early insiders, please don't share the link. I'll be going into detail on future product and distribution plans._
 
-I'm certainly excited to start talking about Orbit. It's been an intense few years of development and I'm happy we can start to put it out into the world.
+I'm excited to start talking about Orbit. It's been an intense few years of development and it feels great to finally get it into the world. What we have now is just the start, but many cool pieces are almost ready.
 
-But first, the great news. Our alpha build is now [available for download](). While some interesting pieces are not yet in place, we pushed hard to get to where you can use it and give feedback.
+First, the good stuff. An alpha build is now [available for download](https://orbitauth.com/download). We've pushed hard to get it to where it's usable and we can get valuable feedback.
 
-So, what's Orbit? Let's start with our mission:
+---
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives back control to individuals over their web data -- with a flexible, powerful and intuitive knowledge platform.
+So... what is Orbit? Let's start with a story:
 
-Orbit is a new type of thing. It's actually easiest to illustrate it as an answer to a question.
+You read, you write, you email, you chat, you work. From Slack to Jira to Google Docs to Github. Your knowledge is distributed -- but your wiki and intranet portal doesn't help you or your team stay on top of it. They add another source of truth, they add infrastructure. They are clunky to use, and chronically stale.
 
-What is preventing us from exploring our data like Iron Man?
-
-![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
-
-<div style="font-size: 11px; text-align: center; margin: -1.5rem 0 1rem; opacity: 0.5;">
-  but ergonomically, how long could you really keep your arms up like that?
-</div>
-
-And yes, the fancy effects are a distraction. But the truth is these sci-fi interfaces all grasp at one thing: a level of fluidity, cohesion, and flexibility that browsers just don't give us today.
+There's something wrong we all feel here, and it has to do with the visions of futuristic interfaces we see time and time again in TV and film, whenever there's a futuristic computing scene. Why don't we have that level of fluidity?
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
-You read, you write, you email, you chat and you work. From Slack to Jira to Google Docs to Github. Information is becoming more and more distributed, and our knowledge is left stale in Wikis and Intranet systems that can't keep up.
+![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
-Orbit won't make you Iron Man (it also won't have nearly all the cool visual effects). But it can solve a real problem that doesn't have a good solution:
+<div class="alt">
+  Ergonomically though, how long can you really keep your arms up like that?
+</div>
 
-**I want to be able to explore knowledge in a unified way.**
+While the fancy effects of movies like Iron Man and Minority Report are often distracting, they grasp at a real unmet desire: a level of unification, fluidity, and control that browsers and the web just don't give us today.
 
-But to do that I think it needs to catch somewhat of a network effect, so it has the power to shift some control from web apps back to individuals. And do that it needs to be a compelling platform.
+This brings us to Orbit's mission:
 
-So, Orbit is a new type of thing: a complement to your Browser and Operating System. A smart knowledge platform. OS's gave us a lot of control and with _files_, but there is no file in the browser, and Orbit wants to re-invent that for the modern era.
+> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over web data back to the individual -- with a flexible, powerful and intuitive knowledge platform.
 
-We want to be able to:
+**We want to be able to explore knowledge in a unified way.**
 
-- Navigate important knowledge quickly and easily.
-- Search it intuitively: by person, topic, and time.
-- Have it augment us, as we work, in context.
-- Install and build new apps on top of it easily.
-- Do all of this without having to give up our privacy and security.
+And to do that we'll need to fix something wrong with browsers and software services today: they don't give us any control over our information.
 
-[video]
+Orbit is not a service company. We don't store data. Instead, much like a browser or operating system, we're a platform that helps manage information. Where traditional operating systems gave us a lots of control (via _files_), and where browsers give us great collaboration (but fail at interop), Orbit is the middle ground: a flexible way to manage bits of information from many places.
 
-From here on out I'm going to talk just a bit about what makes Orbit unique. You can skip to the end if you just want to get [more information on how to follow us](#going-forward).
+Our goal is to let you:
+
+- Navigate disparate knowledge quickly and easily.
+- Search intuitively: by person, topic, and time.
+- Augment yourself with relevant information as you work.
+- Build and install apps on top of it with ease.
+- Do all of this without giving up privacy or security.
+
+<div class="demo-image"></div>
+
+<div class="alt">
+  An example Topic Explorer for Github app opened from the Orbit Home
+</div>
 
 ### Distribution: From Roadblock to Selling Point
 
-Orbit wants to replace most of clunky and stale intranet systems today. To do that, it needs to crawl most of your information. But that creates a misaligned incentive that we quickly discovered in our user research:
+[Skip to the Product section](#the-product) if you don't care for backstory and distribution model.
+
+Orbit wants to replace clunky and stale intranet systems of today. To do that, it needs to crawl a ton of your sensitive information. But, therein lies a misaligned incentive (one we discovered early in user research):
 
 _No one wants to trust any single company with all of their data._
 
-This was a big roadblock for us. Enterprise sales cycles felt made the large problem of building a better knowledge manager impossible. Even close friends resisted installing it without getting strong permission from their manager and team.
+Close friends wouldn't even install early trial versions of Orbit without permission from their team. We wanted to build a better knowledge tool, but having it live in the cloud or on-prem would mean difficult onboarding, and therefore a heavy sales presence.
 
-We couldn't get anyone to just try it out. Traditionally this would mean moving to an on-premise model, where you let a company install an Orbit server at their office to avoid security issues. But this is an even more laborious sales model.
+But -- today, computers are powerful and have lots of memory. Topic modeling and search with modern NLP is orders of magnitude faster and easier to do. With experimentation, we realized we could run Orbit entirely locally on your computer. That means:
 
-It was later during a discussion that we came across a realization: todays computers are powerful. They have large disks and fast processors. Doing topic modeling and search with modern ML is now approachable, fast and space-efficient.
+- No handling of user data.
+- No need for on-premise servier installs.
 
-What if we could do it all on the users computer? It would be harder in some ways, but it also would solve all our issues:
-
-- No handling of user data meant easy, risk-free trials.
-- No need to deploy servers on-prem meant no need for a sales-forward company!
-
-We'd need a decentralized sync system for it, and it certainly has its downsides. But they downsides we'rer _well suited to do_. Let's look at the three options we faced, as they stand:
-
-1. The Cloud: Requires high trust in your security, has worse UX, but easy to build.
-2. On Prem: Secure, but at high install cost and sales cycle, very hard to develop.
-3. **Orbit: Decentralized/On Device** - Also secure, with low install cost and higher UX, limited compute and somewhat hard to develop.
+Which lets us do easy, risk-free trials and almost no onboarding process!
 
 <div style="margin: 2.5rem -20%; display: flex; align-items: center; justify-content: center;">
   <div style="margin: auto;  max-width: 100vw;">
@@ -78,21 +74,17 @@ We'd need a decentralized sync system for it, and it certainly has its downsides
   </img>
 </div>
 
-All of this just means you can download Orbit at no cost, with no risk. No data privacy issues, no time talking to sales, no expensive installation.
+Orbit the company never touches your private data. That means you can download and trial without having to trust us: you can even firewall to check! It also had a huge benefit in terms of incentives. It means as a company **we have to make the product actually good**, as opposed to the sales team.
 
-It also aligns us nicely with users: **the product must actually be good**. We can't hide behind a sales team.
-
-### How Orbit Works
-
-[Skip to the end](#going-forward) if you aren't interested in feature-level details! This section goes into some of what we've built and some that are in early development.
-
-<div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -520px;">
-  <img alt="Orbit Home" src="./home.jpg" />
-</div>
+### The Product
 
 #### Home
 
 The Orbit Home is your flexible unified knowledge launcher. For now it's a lot like Spotlight with some recent activity and a directory of people.
+
+<div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -560px;">
+  <img alt="Orbit Home" src="./home.jpg" />
+</div>
 
 > Use Option+Space to open Orbit anywhere
 
@@ -106,17 +98,19 @@ Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) natu
 
 #### Context
 
-Context will be the first big step Orbit does to deliver on the "future of computing". It's powered by a custom OCR engine we've built that focuses on one thing: being the fastest in the world. We're close to getting it to use <1% of your total laptop battery.
+Context will be the first big step Orbit makes to deliver on the "future of computing" promise. Powered by a novel OCR engine that focuses on one thing: being fast. We're close to having it to use <1% of your laptop battery.
 
-Why an OCR engine? Whether writing an email in Mail.app, talking on Slack, browsing the Web, or really doing anything you do on your computer, Orbit understands what you are looking at.
+Why an OCR engine? It means no matter if you're writing an email in Mail.app, talking on Slack, browsing the Web, or doing anything on your computer, Orbit understands what you are looking at, down to the lines you write.
 
-Combined with our Language engine, it means we can do _meaningful search_ to find extremely relevant items within your knowledgebase based on whatever you're doing. But that's just the start. We can also highlight words and show apps next to them, and script triggers based on activity, words, and other contextual information.
+Combined with the Language engine, it means Orbit can do _meaningful search_ to find extremely relevant items within your knowledgebase based on whatever you're doing. But that's just the start. Context is not yet available in Orbit, but it's close.
 
-We have both the OCR, NLP, and UI working. But we need a few more months to get it to be more stable, useful and well implemented.
+#### People
+
+People are a first class concept in Orbit. Using the aggregated information from the apps you plug in and the Language topic modeling, we show topics people are experts in, alongside recent activity.
 
 #### Apps
 
-Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We will add more flexible ones next such as Web and API crawlers.
+With all of these pieces together we have apps. Some apps we've built out of the box: Gmail, Google Docs, Github, Slack, Jira, and Confluence. We'll be adding more flexible ones next like Web and API crawlers.
 
 <div style="display: flex; flex-flow: row; height: 120px; max-width: 100%; justify-content: space-between; padding: 30px 0;">
   <img class="icon" src="./icons/gdrive.svg" />
@@ -127,25 +121,21 @@ Some beautiful apps come out of the box: Gmail, Google Docs, Github, Slack, Jira
   <img class="icon" src="./icons/slack.svg" />
 </div>
 
-But we can't predict what apps and views on them will be most useful due to the incredible stochasticity of information and its uses. But I do think we can build a set of APIs that enable building those experiences.
+#### App Store
 
-So with all these pieces in place, we're aiming at releasing an App Store early next year. We'll expose Language and Context, and combine it with our UI Kit and an one-click decentralized distribution. Which means you can build and deploy apps to your team with no tooling, no infrastructure, and an amazing UI out of the box.
+We can't predict what apps and views will be most useful for any one person or company, though. As we finish each of the above mentioned parts, along with our interface kit, we're going to release the App Store (hopefully early next year).
+
+You'll have full access to the Language and Context APIs, our UI Kit, People, and importantly, a built in live-editing environment that lets you one-click decentralized deploy it with no infrastructure required.
 
 ### Going forward
 
-There's a lot more I'd like to write, but I think is more than enough to start. I'll end with something that will risk sounding cliché:
+There's a lot more I'd like to write, but I think this is more than enough to start.
 
-The biggest feature of Orbit is trust. If you don't feel it will respect your privacy in the long run, it wont get off the ground. Much like a Browser or Operating System, it should be a fundamental tool you trust to handle sensitive information.
+[Here is my email](mailto:nate@tryorbit.com), send any and all inquiries, requests, bugs.
 
-We've designed it in the only way we know that guarantees that for now: by never sending data off your device. As we go decentralized we'll have to continue to make good security decisions.
+[Sign up to the mailing list](https://tryorbit.com) for blog update emails ~monthly.
 
-Of course, trust doesn't matter if your product doesn't meet real needs. The next feed months will be exciting as we attempt to do that. I'm happy to have you on board early, and your feedback will be the most important part of ensuring that!
-
-[Here is my email](nate@tryorbit.com). Please send me any and all inquiries, requests and bugs.
-
-[Here is our roadmap](). We will update it about once a week.
-
-[Here is our Slack room](). Please do join for more unstructured discussion.
+[Join our Slack room]()!
 
 I am very excited to start sharing progress with you all.
 

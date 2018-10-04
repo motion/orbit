@@ -69,7 +69,8 @@
     "sqlite": "3.0.0",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.19",
-    "ws": "6.0.0"
+    "ws": "6.0.0",
+    "semver": "5.5.1"
   },
   "peerDependencies": {
     "mobx": "*"

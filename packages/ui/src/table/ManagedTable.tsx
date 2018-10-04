@@ -29,7 +29,7 @@ import ContextMenu from '../ContextMenu'
 import { getSortedRows } from './getSortedRows'
 
 // @ts-ignore
-const Electron = electronRequire('electron')
+const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 const clipboard = Electron.clipboard
 
 const filterRows = (

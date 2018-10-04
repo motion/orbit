@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Logo } from '~/views/logo'
+import { Logo } from '../views/logo'
 import * as UI from '@mcro/ui'
-import Router from '~/router'
-import * as Constants from '~/constants'
+import Router from '../router'
+import * as Constants from '../constants'
 import Media from 'react-media'
 
 @view
@@ -15,7 +15,7 @@ export class BrandLogo extends React.Component<{ white?: boolean }> {
   render() {
     const { white, ...props } = this.props
     const { hovered } = this.state
-    const coloredFill = UI.color('#000') //theme.base.background.darken(0.5).desaturate(0.65)
+    const coloredFill = UI.color('#000') //theme.background.darken(0.5).desaturate(0.65)
     const fill = hovered ? coloredFill.alpha(0.9) : coloredFill
     return (
       <Media query={Constants.screen.large}>

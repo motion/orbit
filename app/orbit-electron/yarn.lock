@@ -3178,10 +3178,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typeorm@^0.3.0-alpha.18:
-  version "0.3.0-alpha.18"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.18.tgz#e7757957b55411792b2dfb66a95d6eb1f24ce10a"
-  integrity sha512-u5z6AT5sAMa7c4ZUbIs4mIfit7uzPlpU4NiPgykEeVRlyFSopXZOuYT844GGDREOuIrI3uTU2l1v58ZLmoNmbA==
+typeorm@^0.3.0-alpha.19:
+  version "0.3.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.19.tgz#f4ec4b239e101e600a2077a85c692656a6870ec4"
+  integrity sha512-+eBESmBChkDWr+Xrjyb+TjGr8YIvV8ska9McFX4UdfS9ibABnBSqUZbVRXhuLqJqkxBkHWwRALweEAeQ54/40Q==
   dependencies:
     "@types/zen-observable" "^0.8.0"
     app-root-path "^2.0.1"

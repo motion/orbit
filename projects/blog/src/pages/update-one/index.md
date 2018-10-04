@@ -76,7 +76,7 @@ But todays computers are powerful. They have lots of memory. Topic modeling and 
   </img>
 </div>
 
-Today when you download Orbit it realizes this plan, without some of our decentralized sync system. It never sends a bit of your data outside your computer and you can use a firewall it to be sure.
+Today when you download Orbit it realizes this plan, without some of our decentralized sync system. It never sends a bit of your data outside your computer, you can use your firewall to be sure.
 
 ### The Product
 

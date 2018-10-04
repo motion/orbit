@@ -4,7 +4,7 @@ import { observeMany } from '@mcro/model-bridge'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'
-import { View, Button } from '@mcro/ui'
+import { View } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel, SettingModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
@@ -12,7 +12,6 @@ import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { OrbitAppCard } from '../orbitApps/OrbitAppCard'
-import { VerticalSpace } from '../../../../views'
 import { SubTitle } from '../../../../views/SubTitle'
 // import { OrbitGridSection } from './OrbitGridSection'
 
@@ -38,6 +37,7 @@ const allStreams = [
     id: '-1',
     name: 'Apps',
     source: 'apps',
+    showTitle: false,
     model: SettingModel,
     query: {
       where: {
@@ -250,8 +250,8 @@ export class OrbitHome extends React.Component<Props> {
                   {/* <SuggestionBarVerticalPad /> */}
                   {results.map(({ id, name, items, startIndex }, index) => {
                     const isApp = name === 'Apps'
-                    const height = name === 'People' ? 60 : isApp ? 80 : 80
-                    const width = isApp ? 100 : 180
+                    const height = name === 'People' ? 60 : isApp ? 65 : 80
+                    const width = isApp ? 90 : 180
                     return (
                       <Draggable key={id} draggableId={id} index={index}>
                         {(provided, snapshot) => {
@@ -269,7 +269,7 @@ export class OrbitHome extends React.Component<Props> {
                                 startIndex={startIndex}
                                 items={items}
                                 homeStore={homeStore}
-                                categoryName={name}
+                                categoryName={name === 'Apps' ? null : name}
                                 cardHeight={height}
                                 cardWidth={width}
                                 CardView={isApp ? OrbitAppCard : OrbitCard}

@@ -129,14 +129,14 @@ You'll have full access to the Language and Context APIs, our UI Kit, People, an
 
 ### Going forward
 
-There's a lot more I'd like to write, but I think this is more than enough to start.
+There's a lot more I'd like to write, but I think this is more than enough to start. Right now Orbit is buggy and incomplete, but the underlying technology is all there. It took a ton of hard problem solving to get it to where it is, and it's really well set up to move quickly now. I look forward to all of your bug reports :).
 
-[Here is my email](mailto:nate@tryorbit.com), send any and all inquiries, requests, bugs.
+[Here is my email](mailto:nate@tryorbit.com) send me any and all inquiries, requests, issues.
 
 [Sign up to the mailing list](https://tryorbit.com) for blog update emails ~monthly.
 
-[Join our Slack room]()!
+[Join our Slack room]() and [the download link again](https://orbitauth.com/download), for those who missed it.
 
-I am very excited to start sharing progress with you all.
+Let's start a revolution!
 
 <br />

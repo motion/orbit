@@ -1,10 +1,11 @@
-- fix quit in prod doesnt quit again
-- fix Person topics
 - Blog
-  - put one app viewer image earlier
-  - mobile fixes
+  - minority report + iron man image, with nice split in middle
+  - put one app image earlier
   - Language - cosal demo image
   - Context - embed/link OCR demo video
+  - mobile fixes
+- fix quit in prod doesnt quit again
+- fix Person topics
 - add a bunch of integrations to test
 - fix topic explorer apps:
   - look at cosal save flow and fix

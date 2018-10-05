@@ -1,5 +1,7 @@
 - fix Person topics
 - Blog
+  - put one app viewer image earlier
+  - mobile fixes
   - Language - cosal demo image
   - Context - embed/link OCR demo video
 - add a bunch of integrations to test

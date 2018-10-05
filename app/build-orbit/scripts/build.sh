@@ -129,4 +129,4 @@ mv stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app
 
 # see stage-app/package.json for options
 echo "electron-builder..."
-(cd stage-app && DEBUG=electron-osx-sign* npx electron-builder -p always)
+(cd stage-app && npx electron-builder -p always)

@@ -77,12 +77,10 @@ Today, Orbit realizes this strategy. It runs, syncs, searches -- does everything
 
 For now Orbit is a lot like Spotlight with a Home. The Home shows recent activity, a directory of people, and the apps you've installed.
 
-> Use the shortcut Option+Space to open Orbit from anywhere.
-
 Orbit will grow to become more akin to a knowledge assistant. It will get better at understanding natural english, sorting for staleness, augmenting you as you work, and summarizing large amounts of noisy data into more useful views. It will also become a lot more contextually aware, which I'll explain in the Context section.
 
-<div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -560px;">
-  <img alt="Orbit Home" src="./home.jpg" />
+<div style="width: 361px; border-radius: 20px; overflow: hidden; position: absolute; right: -400px;">
+  <img alt="Orbit Home" src="./nlp.jpg" />
 </div>
 
 #### Bit
@@ -104,6 +102,10 @@ Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) natu
 Context will be the first big step Orbit makes to deliver on the "future of computing" promise. Powered by a novel OCR engine that focuses on one thing: being fast. We're close to having it to use <1% of your laptop battery.
 
 Why an OCR engine? It means no matter if you're writing an email in Mail.app, talking on Slack, browsing the Web, or doing anything on your computer, Orbit understands what you are looking at, down to the lines you write.
+
+<div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -540px;">
+  <img alt="Orbit Home" src="./home.jpg" />
+</div>
 
 Combined with the Language engine, it means Orbit can do _meaningful search_ to find extremely relevant items within your knowledgebase based on whatever you're doing. But that's just the start. Context is not yet available in Orbit, but it's close.
 

@@ -31,7 +31,7 @@ The web today has become a world of silos. Browsers are silo-explorers, and tabs
 
 So, Orbit's mission:
 
-> To create an [aggregation platform](https://stratechery.com/2017/defining-aggregators/) for information to bring control of our data back to us in a flexible, powerful, intuitive way.
+> To create an [aggregation platform](https://stratechery.com/2017/defining-aggregators/) for information, so we can control and understand our data flexibly and intuitively.
 
 I think of Orbit as the answer to the desire we ran into time and again in user research. It can be summarized as:
 
@@ -39,7 +39,7 @@ I think of Orbit as the answer to the desire we ran into time and again in user 
 
 ## Orbit
 
-Orbit is ultimately a play to upgrade our operating systems and re-decentralize the web. To do so it's designed as platform, and not service. This distinction is important. Instead of storing data or adding a new source of truth, Orbit just helps manage your existing information (much like browsers and operating systems).
+Orbit is ultimately a play to upgrade our operating systems and give us control over our data. To do so it's designed as decentralized platform, and not service. This distinction is important: instead of storing data or adding a new source of truth, Orbit just helps manage existing information (much like a browser or operating system).
 
 Operating systems gave us a lot of control with _files_. [In some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/) they even had beautiful unified interfaces for contacts, calendars and messages. Meanwhile browsers give us the ability to explore widely, but we lose a lot of the control. Orbit wants to tilt us back to being able to manage, understand, and organize information. We want to enable you to:
 

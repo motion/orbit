@@ -33,7 +33,7 @@ Browsers and the web we use today is a world of silos and tabs that make it incr
 
 It's an answer to a general desire we ran into time and time again during user research, in many different forms, that can be summarized as:
 
-**"I want to understand my knowledgebase, and I can't."**
+**"I want to understand my knowledgebase, and can't."**
 
 For the last two years we've been building something to help solve this. It fixes what browsers and cloud services fail at today: we don't have any control of our information.
 

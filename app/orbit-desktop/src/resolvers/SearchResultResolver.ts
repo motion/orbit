@@ -48,10 +48,20 @@ const searchCache = doSearch => {
 
 async function cosalSearch(args: SearchArgs): Promise<BitEntity[]> {
   console.time('cosalSearch')
-  const res = await args.cosal.search(args.query, 200)
+  const query = `${args.query} ${args.peopleFilters.join(' ')} ${args.locationFilters.join(
+    ' ',
+  )}`.trim()
+  if (!query) {
+    return []
+  }
+  const res = await args.cosal.search(query, 200)
   console.timeEnd('cosalSearch')
   const ids = res.map(x => x.id)
-  return await getRepository(BitEntity).find({ id: { $in: ids } })
+  if (ids.length) {
+    return await getRepository(BitEntity).find({ id: { $in: ids } })
+  } else {
+    return []
+  }
 }
 
 async function likeSearch(args: SearchArgs): Promise<BitEntity[]> {

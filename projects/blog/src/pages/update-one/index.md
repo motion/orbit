@@ -7,7 +7,7 @@ _Note: this is for early insiders, please don't share the link. I'll go into som
 
 I'm really excited to start talking about Orbit. It's been in intense development for a while now, so it feels great to put it into the world.
 
-First, the good stuff. An early build is now [available for download](/releases). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
+First, the good stuff. We're sending out the first builds to [mailing list subscribers](https://tryorbit.com). Please join and I'll send it to you as well.
 
 ---
 
@@ -132,9 +132,9 @@ Apps will have full access to the People, Language and Context APIs, our UI Kit,
 
 If you're interested in building apps on top of Orbit, get in touch with me below. I'll set up a Slack room where we can play with early builds and build cool apps together.
 
-### Going forward
+### Join our Orbit
 
-There's a lot more I'd like to write, but I think this is more than enough to start. Keep in mind this is a really early build, and we have a lot of pieces almost ready, so thing will change quickly from here. I'd love to take your feedback in as much as possible to help shape it in the right way.
+There's a lot more I'd like to write, but this enough to start. Keep in mind these are early builds, we're putting a lot in motion but it's not quite to a revolution, yet. That said we have some interesting parts ready to fall in place. I'd love your feedback as much as possible keep our momentum on the right path.
 
 I'll keep our [roadmap](/roadmap) updated and send [mailing list](https://tryorbit.com) updates ~monthly.
 
@@ -142,8 +142,6 @@ I'll keep our [roadmap](/roadmap) updated and send [mailing list](https://tryorb
   <a href="mailto:nate@tryorbit.com">Here is my email</a>, send any and all inquiries, requests, issues.
 </p>
 
-[Join our Slack room](http://slack.tryorbit.com) and [the download link again](/releases), for those who missed it.
-
-Let's start a revolution!
+[Join our Slack room](http://slack.tryorbit.com) if you'd like to discuss or give detailed feedback.
 
 <br />

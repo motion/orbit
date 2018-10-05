@@ -1,17 +1,22 @@
 import { FindOptions } from 'typeorm'
 import { Bit, SearchQuery } from '@mcro/models'
+import { Logger } from '@mcro/logger'
 
-export const getSearchQuery = ({
-  query,
-  sortBy,
-  take,
-  skip = 0,
-  startDate,
-  endDate,
-  integrationFilters,
-  peopleFilters,
-  locationFilters,
-}: SearchQuery) => {
+const log = new Logger('getSearchQuery')
+
+export const getSearchQuery = (args: SearchQuery) => {
+  log.info('args', args)
+  const {
+    query,
+    sortBy,
+    take,
+    skip = 0,
+    startDate,
+    endDate,
+    integrationFilters,
+    peopleFilters,
+    locationFilters,
+  } = args
   const findOptions: FindOptions<Bit> = {
     where: [],
     relations: {
@@ -24,10 +29,10 @@ export const getSearchQuery = ({
 
   const andConditions: any = {}
   if (startDate) {
-    andConditions.bitCreatedAt = { $moreThan: startDate.getTime() }
+    andConditions.bitCreatedAt = { $moreThan: new Date(startDate).getTime() }
   }
   if (endDate) {
-    andConditions.bitCreatedAt = { $lessThan: endDate.getTime() }
+    andConditions.bitCreatedAt = { $lessThan: new Date(endDate).getTime() }
   }
   if (integrationFilters && integrationFilters.length) {
     andConditions.integration = { $in: integrationFilters }

@@ -115,6 +115,7 @@ export class ElectronStore {
   }
 
   handleQuit = () => {
-    process.exit(0)
+    console.log('handling quit...')
+    root.handleExit()
   }
 }

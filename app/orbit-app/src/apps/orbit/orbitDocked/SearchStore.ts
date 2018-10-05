@@ -250,25 +250,21 @@ export class SearchStore {
       await when(() => this.nlpStore.nlp.query === query)
       const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
       // fuzzy people results
-      const allResults = await loadMany(PersonBitModel, {
-        args: {
-          take: 3,
-          where: {
-            name: { $like: `%${searchQuery.split('').join('%')}%` },
-          },
-        },
-      })
-      const exactPeople = await Promise.all(
-        people.map(name => {
-          return loadOne(PersonBitModel, {
-            args: {
-              where: { name: { $like: `%${name}%` } },
-            },
-          })
-        }),
+      const allResults = flatten(
+        await Promise.all(
+          people.map(name =>
+            loadMany(PersonBitModel, {
+              args: {
+                take: 6,
+                where: {
+                  name: { $like: `%${name.split(' ').join('%')}%` },
+                },
+              },
+            }),
+          ),
+        ),
       )
       const results = flatten([
-        ...exactPeople,
         integrations.map(name => ({ name, icon: name })),
         ...matchSort(searchQuery, flatten(allResults)),
       ]).filter(Boolean)

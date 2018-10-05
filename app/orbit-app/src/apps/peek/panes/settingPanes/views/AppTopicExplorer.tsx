@@ -1,4 +1,4 @@
-import { Row, Sidebar, SidebarLabel, Col, Tabs, Tab, View } from '@mcro/ui'
+import { Row, Sidebar, SidebarLabel, Col, View } from '@mcro/ui'
 import * as React from 'react'
 import { SimpleItem } from '../../../../../views/SimpleItem'
 import { view, react, ensure } from '@mcro/black'

@@ -5,7 +5,7 @@ date: '2018-09-29T22:12:03.284Z'
 
 _Note: this is for early insiders, please don't share the link. I'll go into some more detailed product and distribution plans._
 
-I'm really excited to start talking about Orbit. It's been an intense few years of development to get here so it feels great to be able to share it with you all.
+I'm really excited to start talking about Orbit. It's been an intense few years of development so it feels great to put it into the world.
 
 First, the good stuff. An early build is now [available for download](/releases). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
 
@@ -13,7 +13,7 @@ First, the good stuff. An early build is now [available for download](/releases)
 
 So... what is Orbit? Let's start with a story:
 
-You read, write, email, chat, document, ticket... you're productive. From Slack to Jira, Google Docs to Github. Your knowledge is distributed -- but your wiki is out of date and intranet portal doesn't search very well. They're an extra source of truth, infrastructure, and a cumbersome part of your day.
+You read, write, email, chat, document, and ticket... from Slack to Jira, Google Docs to Github. Your knowledge is distributed -- but your wiki and intranet portal are out of date. They're an extra source of truth, infrastructure, and are cumbersome.
 
 There's something wrong here. I think it's best explained by the gap between the sci-fi interfaces we've seen for decades in TV and film and the reality of how we work today.
 

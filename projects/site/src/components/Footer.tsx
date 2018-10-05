@@ -133,14 +133,12 @@ export class Footer extends React.Component {
                     <FootLink to="/about">About Us</FootLink>
                   </Nav>
                 </Section>
-                {/* <Section if={false}>
+                <Section>
                   <SmallTitle>Follow</SmallTitle>
                   <Nav>
-                    <FootLink if={false} to="/blog">
-                      Blog
-                    </FootLink>
-                    <FootLink to="https://twitter.com/tryorbit">Twitter</FootLink>
-                    <FootLink to="https://github.com/motion">Github</FootLink>
+                    <FootLink to="http://blog.orbitauth.com">Blog</FootLink>
+                    {/* <FootLink to="https://twitter.com/tryorbit">Twitter</FootLink> */}
+                    {/* <FootLink to="https://github.com/motion">Github</FootLink> */}
                   </Nav>
                 </Section>
                 <Section>
@@ -149,7 +147,7 @@ export class Footer extends React.Component {
                     <FootLink to="/privacy">Privacy Policy</FootLink>
                     <FootLink to="/terms">Terms of Use</FootLink>
                   </Nav>
-                </Section> */}
+                </Section>
               </EndSections>
             </Sections>
           </UI.View>

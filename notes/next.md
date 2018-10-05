@@ -1,18 +1,5 @@
 - log as many bugs as possible for umed in syncers
 
-creating important bug list for tomorrow, since really want to release it by end of day tm:
-
-```
-- dont see anything in google drive, all i see is "got settings in syncer"
-- fix slack login: http://slack.tryorbit.com/
-- fix clear all data button (not sure if still broken after my sleep fix)
-- seeing really slow queries:
-  - if you open one of the app icons youll see some logs in desktop for
-  - line 15 of SearchTopicsResolver
-- slack conversation PeekBitConversation: the "Related & Nearby" query doesn't work "bitCreatedAt moreThan is failing", it should show the "next" conversation there so you can scroll down for more
-- A similar slow query is happening in AppTopicExplorer (when you click an app icon line 69 SearchTopicsModel)
-```
-
 - add a bunch of integrations to test
 - fix topic explorer apps:
   - look at cosal save flow and fix

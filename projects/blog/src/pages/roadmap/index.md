@@ -6,6 +6,7 @@ title: Roadmap
 
 - Goals
   - Stability, bugs and topic modeling improvements
+  - Slack search improvements - better grouping, display
   - Re-organizing apps to be a bit more flexible and clear
   - First version of Context
   - Begin on custom app architecture

@@ -47,7 +47,10 @@
       {
         "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources",
         "to": ".",
-        "filter": "**/*"
+        "filter": [
+          "**/*",
+          "!run"
+        ]
       },
       {
         "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Frameworks",

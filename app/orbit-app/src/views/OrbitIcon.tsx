@@ -44,6 +44,11 @@ const adjust = {
       y: '-1%',
     },
   },
+  github: {
+    transform: {
+      x: '-1%',
+    },
+  },
   confluence: {
     transform: {
       // y: '-31%',

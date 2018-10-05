@@ -1,3 +1,4 @@
+- fix quit in prod doesnt quit again
 - fix Person topics
 - Blog
   - put one app viewer image earlier

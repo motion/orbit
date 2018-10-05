@@ -28,12 +28,11 @@ export class SlackBitFactory {
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
     const values = this.setting.values as SlackSettingValues
-    const team = values.oauth.info.team
-    const webLink = `https://${team.domain}.slack.com/archives/${
+    const webLink = `https://${values.team.domain}.slack.com/archives/${
       channel.id
     }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
-      team.id
+      values.team.id
     }`
     const mentionedPeople = this.findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
@@ -78,8 +77,8 @@ export class SlackBitFactory {
       location: {
         id: channel.id,
         name: channel.name,
-        webLink: `https://${team.domain}.slack.com/archives/${channel.id}`,
-        desktopLink: `slack://channel?id=${channel.id}&team=${team.id}`,
+        webLink: `https://${values.team.domain}.slack.com/archives/${channel.id}`,
+        desktopLink: `slack://channel?id=${channel.id}&team=${values.team.id}`,
       },
       webLink,
       desktopLink,

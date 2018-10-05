@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
-import { channels, users } from 'slack'
-import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
+import { team, channels, users } from 'slack'
+import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
 
 const log = new Logger('service:slack:loader')
 
@@ -13,6 +13,18 @@ export class SlackLoader {
 
   constructor(setting: Setting) {
     this.setting = setting
+  }
+
+  /**
+   * Loads slack team info.
+   *
+   * @see https://api.slack.com/methods/team.info
+   */
+  async loadTeam(): Promise<SlackTeam> {
+    const options = { token: this.setting.token }
+    log.verbose(`request to team.info`, options)
+    const response = await team.info(options)
+    return response.team
   }
 
   /**

@@ -39,6 +39,21 @@ export class SlackSyncer implements IntegrationSyncer {
    */
   async run() {
 
+    // load team info
+    this.log.timer(`load team info from API`)
+    const team = await this.loader.loadTeam()
+    this.log.timer(`load team info from API`)
+
+    // update settings with team info
+    const values = this.setting.values as SlackSettingValues
+    values.team = {
+      id: team.id,
+      name: team.name,
+      domain: team.domain,
+      icon: team.icon.image_132
+    }
+    await getRepository(SettingEntity).save(this.setting)
+
     this.log.timer(`load API users`)
     const apiUsers = await this.loader.loadUsers()
     this.log.timer(`load API users`, apiUsers)
@@ -79,7 +94,6 @@ export class SlackSyncer implements IntegrationSyncer {
     this.log.info('filtering only selected channels', activeChannels)
 
     // go through all channels
-    const values = this.setting.values as SlackSettingValues
     const lastMessageSync = values.lastMessageSync || {}
     const apiBits: Bit[] = [],
       dbBits: Bit[] = []

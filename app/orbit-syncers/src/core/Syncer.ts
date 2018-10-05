@@ -177,21 +177,23 @@ export class Syncer {
       this.intervals[index] = {
         setting,
         timer: setInterval(async () => {
-          // if we still have previous interval running - we don't do anything
-          if (this.intervals[index].running) {
-            this.log.info(
-              `tried to run ${
-                this.name
-              } based on interval, but synchronization is already running, skipping`,
-            )
-            return
-          }
+          if (this.intervals[index]) {
+            // if we still have previous interval running - we don't do anything
+            if (this.intervals[index].running) {
+              this.log.info(
+                `tried to run ${
+                  this.name
+                  } based on interval, but synchronization is already running, skipping`,
+              )
+              return
+            }
 
-          const setting = await getRepository(SettingEntity).findOne({ id: settingId })
-          this.intervals[index].setting = setting
-          this.intervals[index].running = this.runSyncer(setting)
-          await this.intervals[index].running
-          this.intervals[index].running = undefined
+            const setting = await getRepository(SettingEntity).findOne({ id: settingId })
+            this.intervals[index].setting = setting
+            this.intervals[index].running = this.runSyncer(setting)
+            await this.intervals[index].running
+            this.intervals[index].running = undefined
+          }
         }, this.options.interval),
       }
     }

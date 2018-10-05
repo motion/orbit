@@ -24,8 +24,8 @@ export class SlackPersonFactory {
       name: user.profile.real_name || user.name,
       data: { tz: user.tz } as SlackPersonData,
       raw: user,
-      webLink: `https://${values.oauth.info.team.id}.slack.com/messages/${user.id}`,
-      desktopLink: `slack://user?team=${values.oauth.info.team.id}&id=${user.id}`,
+      webLink: `https://${values.team.id}.slack.com/messages/${user.id}`,
+      desktopLink: `slack://user?team=${values.team.id}&id=${user.id}`,
       email: user.profile.email,
       photo: user.profile.image_512,
     })

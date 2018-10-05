@@ -13,7 +13,7 @@ export default function Strategy(options, verify) {
     'identity.avatar',
     'identity.team',
   ]
-  options.skipUserProfile = false
+  options.skipUserProfile = true
 
   this.profileUrl =
     options.profileUrl || 'https://slack.com/api/users.identity?token=' // requires 'identity.basic' scope
@@ -24,11 +24,11 @@ export default function Strategy(options, verify) {
 
   // warn is not enough scope
   // Details on Slack's identity scope - https://api.slack.com/methods/users.identity
-  if (!this._skipUserProfile && this._scope.indexOf('identity.basic') === -1) {
-    console.warn(
-      'Scope \'identity.basic\' is required to retrieve Slack user profile',
-    )
-  }
+  // if (!this._skipUserProfile && this._scope.indexOf('identity.basic') === -1) {
+  //   console.warn(
+  //     'Scope \'identity.basic\' is required to retrieve Slack user profile',
+  //   )
+  // }
 }
 
 /**
@@ -70,7 +70,7 @@ Strategy.prototype.userProfile = function(accessToken, done) {
 
         if (!profile.ok) {
           if (profile.error) {
-            done({ message: profile.error })
+            done(JSON.stringify(profile))
           } else {
             profile.error = null
             done(null, profile)

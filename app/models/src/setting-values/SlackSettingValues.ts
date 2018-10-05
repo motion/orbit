@@ -4,16 +4,14 @@ export interface SlackSettingValues {
     refreshToken: string
     secret: string
     clientId: string
-
-    // slack-specific
-    info?: {
-      team?: {
-        id?: string
-        domain?: string
-      }
-    }
   }
   channels?: Array<string>
   lastAttachmentSync?: { [key: string]: string }
   lastMessageSync?: { [key: string]: string }
+  team: {
+    id: string
+    name: string
+    domain: string
+    icon: string
+  }
 }

@@ -17,7 +17,6 @@
 		AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC267214B410200834167 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE6EC270214B416700834167 /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC265214B410200834167 /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		AEFA929B214B5AC800721292 /* run in Resources */ = {isa = PBXBuildFile; fileRef = AEFA929A214B5AC800721292 /* run */; };
 		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
 		CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */; };
@@ -71,15 +70,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CF0BCD7A202E0C120012723C /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -90,7 +80,6 @@
 		AE6EC266214B410200834167 /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
 		AE6EC267214B410200834167 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
-		AEFA929A214B5AC800721292 /* run */ = {isa = PBXFileReference; lastKnownFileType = folder; name = run; path = ../pyocr/dist/run; sourceTree = "<group>"; };
 		CF0BCD68202E0A620012723C /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
 		CF0BCD82202E0E0F0012723C /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
@@ -184,7 +173,6 @@
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
-				AEFA929A214B5AC800721292 /* run */,
 				CF0BCD68202E0A620012723C /* Swindler.xcodeproj */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
@@ -231,7 +219,6 @@
 				CFBEEE19202D838D005F925A /* Resources */,
 				CF0BCD70202E0A790012723C /* CopyFiles */,
 				AED62E5D21533732006BB1F9 /* Carthage copy */,
-				CF0BCD7A202E0C120012723C /* CopyFiles */,
 				AE496FAB211BD8A5008319A0 /* ShellScript */,
 			);
 			buildRules = (
@@ -308,7 +295,6 @@
 				AE6EC269214B410200834167 /* PromiseKit.framework.dSYM in Resources */,
 				AE6EC26E214B410200834167 /* SwiftWebSocket.framework.dSYM in Resources */,
 				AE6EC26A214B410200834167 /* AXSwift.framework.dSYM in Resources */,
-				AEFA929B214B5AC800721292 /* run in Resources */,
 				CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -454,7 +440,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -508,7 +494,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

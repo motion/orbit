@@ -125,8 +125,8 @@ rm -r dist/mac/Orbit.app || true
 (cd stage-app && ../node_modules/.bin/electron-rebuild --version 3.0.0-beta.1)
 # so desktop node subprocess can use it
 rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
-cp -r stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64
+mv stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64
 
 # see stage-app/package.json for options
 echo "electron-builder..."
-(cd stage-app && npx electron-builder -p always)
+(cd stage-app && DEBUG=electron-osx-sign* npx electron-builder -p always)

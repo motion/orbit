@@ -51,7 +51,7 @@ export class AppsManager {
         if (shouldAdd) {
           const icon = join(Config.paths.desktopRoot, 'assets', 'icon.png')
           log.info(`create process -- ${id} with icon ${icon}`)
-          const oracle = await this.spawnOracle(id, 'Test', icon)
+          const oracle = await this.spawnOracle(id, icon)
           this.processes = [
             ...this.processes,
             {
@@ -64,7 +64,7 @@ export class AppsManager {
     },
   )
 
-  async spawnOracle(id: number, name, iconPath: string) {
+  async spawnOracle(id: number, iconPath: string) {
     const oracle = new Oracle({
       // name,
       ...oracleOptions,

@@ -13,25 +13,25 @@ First, the good stuff. An early build is now [available for download](/releases)
 
 So... what is Orbit? Let's start with a story:
 
-You read, write, email, chat, document, and ticket... from Slack to Jira, Google Docs to Github. Your knowledge is distributed -- but your wiki and intranet portal are out of date. They're an extra source of truth, infrastructure, and are cumbersome.
+You read, write, email, chat, document, and ticket... from Slack to Jira, GDocs to Github. Your knowledge is distributed and your wiki and intranet portal are out of date -- they're another source of truth, a cumbersome point of interaction, and yet more infrastructure to maintain.
 
-There's something wrong here. I think it's best explained by the gap between the sci-fi interfaces we've seen for decades in TV and film and the reality of how we work today.
+There's a trend that's happening that feels wrong. I think it's best explained by the gap between the sci-fi interfaces we've seen for decades in media contrasted with the reality of how we work today.
 
-> We asked for [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), we got 100 browser tabs.
+> We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 <div class="alt">
-  Ergonomically though, how long can you you use this?
+  Ergonomically though, we can do better.
 </div>
 
-While the overdone effects of movies like Iron Man and Minority Report are a distraction, what they do grasp is a real unmet desire: unification, fluidity, and control. The web and the browsers we surf it with today just don't give us that.
+While the overdone effects of Iron Man and Minority Report may be a distraction, these movies do grasp is a real and unmet desire: for unification, fluidity, and control.
 
-This brings us to Orbit's mission:
+Browsers and the web we use today is a world of silos and tabs that make it incredibly hard to figure out what's going on. This brings us to Orbit's mission:
 
 > To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over data back to the individual -- with a flexible, powerful and intuitive knowledge tool.
 
-It's an answer to a general desire we ran into time and time again during user research:
+It's an answer to a general desire we ran into time and time again during user research, in many different forms, that can be summarized as:
 
 **"I want to understand my knowledgebase, and I can't."**
 

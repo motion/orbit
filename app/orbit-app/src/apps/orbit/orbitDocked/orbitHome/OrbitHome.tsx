@@ -144,7 +144,9 @@ class OrbitHomeStore {
 
   results = react(
     () => [this.streams, this.sortOrder],
-    ([streams, order]) => {
+    async ([streams, order], { sleep }) => {
+      // avoid doing it to much during rapid initial updates...
+      await sleep(50)
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of order) {

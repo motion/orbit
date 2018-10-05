@@ -37,9 +37,7 @@ It's an answer to a general desire we ran into time and time again during user r
 
 For the last two years we've been building something to help solve this. It fixes what browsers and cloud services fail at today: we don't have any control of our information.
 
-To do that, Orbit was built as a platform, not a service. We don't store data. Instead, much like a browser or operating system, Orbit just helps explore existing information. Where operating systems gave us a lot of control (with _files_) and browsers gave us great collaboration (with less control), Orbit splits the difference.
-
-It does this by running on your device, syncing centralized cloud services into a decentralized knowledge explorer. We want Orbit to allow you to:
+To fix this, we're building Orbit as a platform, not a service. Instead of storing data, much like a browser or operating system, Orbit just explores existing information. Operating systems gave us a lot of control (with _files_) and browsers gave us great collaboration (albeit with less control). Orbit is creating a middle ground. We want to enable you to:
 
 - Navigate disparate knowledge quickly and easily.
 - Search intuitively by person, topic, and time.

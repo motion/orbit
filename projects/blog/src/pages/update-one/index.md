@@ -69,7 +69,7 @@ But we realized, today, computers are powerful, with lots of memory. Modern NLP 
   </img>
 </div>
 
-Today, Orbit realizes this strategy (without some of the decentralized pieces we are still working on). It never sends a bit of your data outside your computer (you can even firewall it to be sure). We'll write more on this in the coming months.
+Today, Orbit realizes this strategy (without some of the decentralized pieces we are still working on). It never sends a bit of your data outside your computer, you can firewall it to be sure.
 
 ### The Product
 

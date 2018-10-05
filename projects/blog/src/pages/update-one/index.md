@@ -5,7 +5,7 @@ date: '2018-09-29T22:12:03.284Z'
 
 _Note: this is for early insiders, please don't share the link. I'll go into some more detailed product and distribution plans._
 
-I'm really excited to start talking about Orbit. It's under intense development for a while now, so it feels great to put it into the world.
+I'm really excited to start talking about Orbit. It's been in intense development for a while now, so it feels great to put it into the world.
 
 First, the good stuff. An early build is now [available for download](/releases). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
 
@@ -13,7 +13,7 @@ First, the good stuff. An early build is now [available for download](/releases)
 
 I'd like to introduce Orbit. Let's start with a story:
 
-You read, write, email, chat, document, and ticket... from Slack to Jira, GDocs to Github. Your knowledge is distributed across many services and internal wiki's and portals don't keep up -- they're another source of truth, a cumbersome point of interaction, and more infrastructure to maintain.
+You read, write, email, chat, document, and ticket... from Slack to Jira, GDocs to Github. Your knowledge is distributed across many services, and internal wiki's and portals don't keep up -- they're another source of truth, a cumbersome point of interaction, and more infrastructure to maintain.
 
 There's a trend that's happening in our world, and it's preventing us from staying on top of whats going on in our companies and in our digital lives. Before going into detail, I think it's actually best explained by the gap between the sci-fi interfaces we dream of in film and TV, contrasted with the reality of how we work today.
 

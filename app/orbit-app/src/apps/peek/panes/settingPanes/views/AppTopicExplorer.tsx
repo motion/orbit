@@ -68,7 +68,7 @@ class AppTopicStore {
     async location => {
       const topics = await loadMany(SearchTopicsModel, {
         args: produce(this.searchArgs, args => {
-          args.query.take = 300
+          args.query.take = 3000
           args.query.locationFilters = [location]
         }),
       })

@@ -89,6 +89,7 @@ export const getSearchQuery = (args: SearchQuery) => {
     for (const location of locationFilters) {
       // @ts-ignore
       findOptions.where.push({
+        ...andConditions,
         location: {
           name: location,
         },

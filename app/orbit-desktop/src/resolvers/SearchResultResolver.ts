@@ -55,7 +55,7 @@ async function searchCosalIds(args: SearchArgs, includeFilters = false): Promise
   if (!query) {
     return []
   }
-  return (await args.cosal.search(query, 300)).map(x => x.id)
+  return (await args.cosal.search(query, Math.max(300, args.take))).map(x => x.id)
 }
 
 async function cosalSearch(args: SearchArgs, includeFilters = false): Promise<BitEntity[]> {

@@ -12,10 +12,7 @@ This is the first alpha, so obligatory tadas: 🎉🎉🎉.
 
 There's no way around the fact that this will likely break. We've only tested it in limited scenarios, so you are helping us more than we are giving you anything. Thank you.
 
-With that in mind, I've enabled some very light analytics in the insider releases. We aren't sending or tracking any of your private data and you can still firewall it if you'd like, but it will really save us all time. Orbit will send:
-
-- Crash reports (just the error stacks).
-- Abstracted usage metadata every 10 minutes.
+With that in mind, I've enabled some light analytics for the insider releases. We aren't sending or tracking any private data, and you can firewall it, but it should save a lot of time. Orbit will send just crash reports error stacks and very high level metadata.
 
 ### A note on security
 

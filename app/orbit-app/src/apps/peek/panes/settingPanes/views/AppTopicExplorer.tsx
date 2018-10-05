@@ -1,4 +1,4 @@
-import { Row, Sidebar, SidebarLabel, Col, Tabs, Tab, View } from '@mcro/ui'
+import { Row, Sidebar, SidebarLabel, Col, View } from '@mcro/ui'
 import * as React from 'react'
 import { SimpleItem } from '../../../../../views/SimpleItem'
 import { view, react, ensure } from '@mcro/black'
@@ -12,6 +12,8 @@ import {
 } from '@mcro/models'
 import { OrbitListItem } from '../../../../../views/OrbitListItem'
 import produce from 'immer'
+import { RoundButtonBordered } from '../../../../../views/RoundButtonBordered'
+import { memoize } from 'lodash'
 
 type Props = { setting: Setting }
 
@@ -24,7 +26,7 @@ class AppTopicStore {
     query: {
       query: '',
       integrationFilters: [this.props.setting.type],
-      take: 1000,
+      take: 100,
       skip: 0,
       sortBy: 'Recent',
     } as SearchQuery,
@@ -47,7 +49,6 @@ class AppTopicStore {
     async ([location, topic], { setValue }) => {
       setValue(null)
       ensure('active topic', !!this.activeTopic)
-      console.log('querying for', topic)
       const res = await loadMany(SearchResultModel, {
         args: {
           query: topic,
@@ -58,7 +59,6 @@ class AppTopicStore {
           sortBy: 'Topic',
         },
       })
-      console.log('loading...', res)
       return res
     },
   )
@@ -79,6 +79,10 @@ class AppTopicStore {
       defaultValue: [],
     },
   )
+
+  activeTopicSetter = memoize(val => () => {
+    this.activeTopic = val
+  })
 }
 
 @view.attach({
@@ -102,14 +106,29 @@ export class AppTopicExplorer extends React.Component<Props & { store?: AppTopic
           ))}
         </Sidebar>
         <Col overflow="hidden" flex={1}>
-          <Tabs active={store.activeTopic} onActive={x => (store.activeTopic = x)}>
+          {/* <Tabs active={store.activeTopic} onActive={x => (store.activeTopic = x)}>
             {store.topics.map(topic => (
               <Tab key={topic} width={140} label={topic} />
             ))}
-          </Tabs>
+          </Tabs> */}
+
+          <Row flexFlow="wrap" padding={[15, 15, 0]}>
+            {store.topics.map(topic => (
+              <RoundButtonBordered
+                flex={0}
+                key={topic}
+                active={store.activeTopic === topic}
+                width={140}
+                margin={[0, 2, 5]}
+                onClick={store.activeTopicSetter(topic)}
+              >
+                {topic}
+              </RoundButtonBordered>
+            ))}
+          </Row>
 
           {!store.currentItems && (
-            <View alignItems="center" justifyContent="center">
+            <View flex={1} alignItems="center" justifyContent="center">
               Loading...
             </View>
           )}

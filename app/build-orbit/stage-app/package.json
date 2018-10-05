@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.293",
+  "version": "2.2.295",
   "dependencies": {
     "@mcro/orbit": "*"
   },
@@ -47,7 +47,10 @@
       {
         "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources",
         "to": ".",
-        "filter": "**/*"
+        "filter": [
+          "**/*",
+          "!run"
+        ]
       },
       {
         "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Frameworks",

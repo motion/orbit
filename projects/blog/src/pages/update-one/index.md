@@ -124,7 +124,7 @@ If you're interested in building apps on top of Orbit, get in touch with me belo
 
 ### Going forward
 
-There's a lot more I'd like to write, but I think this is more than enough to start. Right now Orbit is incomplete and changing fast, but the pieces are in place to make it really come together soon. It will likely change dramatically over the next few months, so please do send over any weird or high level changes you'd like to see.
+There's a lot more I'd like to write, but I think this is more than enough to start. Keep in mind this is a really early build, but at the same time we have a lot of pieces in place or almost in place. Things will change quickly, and I'd love to take your feedback in as much as possible to help shape it in the right way.
 
 I'll keep our [roadmap](/roadmap) updated and send [mailing list](https://tryorbit.com) updates ~monthly.
 

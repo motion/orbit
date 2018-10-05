@@ -40,6 +40,13 @@ const adjust = {
   gmail: {
     transform: {
       scale: 0.95,
+      x: '-1%',
+      y: '-1%',
+    },
+  },
+  github: {
+    transform: {
+      x: '-1%',
     },
   },
   confluence: {
@@ -84,12 +91,7 @@ export const OrbitIcon = attachTheme(
     }
     if (!iconImg) {
       return (
-        <UI.Icon
-          name={icon}
-          size={size * (preventAdjust ? 1 : 0.8)}
-          color={color}
-          {...props}
-        />
+        <UI.Icon name={icon} size={size * (preventAdjust ? 1 : 0.8)} color={color} {...props} />
       )
     }
     return (

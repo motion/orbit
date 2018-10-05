@@ -1,17 +1,9 @@
-- log as many bugs as possible for umed in syncers
-
-creating important bug list for tomorrow, since really want to release it by end of day tm:
-
-```
-- dont see anything in google drive, all i see is "got settings in syncer"
-- fix slack login: http://slack.tryorbit.com/
-- fix clear all data button (not sure if still broken after my sleep fix)
-```
-
-- debug slowness on topic model queries any why react doesnt exit quickly despite that
+- fix Person topics
+- Blog
+  - Language - cosal demo image
+  - Context - embed/link OCR demo video
 - add a bunch of integrations to test
 - fix topic explorer apps:
-  - super slow query
   - look at cosal save flow and fix
 - improve search, attempt fts integration
 
@@ -49,23 +41,13 @@ NEXT
     - less clutter
     - no header
     - simple topic list
-- "stop asking" and "always send" for error reporting
-- "reset orbit db" option if error during startup
 - record video of a demo
 - community - beta build, email, rss updates in app
-
-- refactor: bring `orbit-electron` into `orbit`
-  - clean up the child process fork stuff a tiny bit
-  - cleans up a lot of duplicate packages
 
 # Umed
 
 - remove "archived" gmail
 - Really simple throttle to keep cpu from going too much
-- Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
-  - for gmail, dont sync full history, but do sync a trailing X months or limited # of items
-- Slack.people sometimes still not showing up
-- Github sync auto select everything by default
 - GDocs auto sync most things by default
 
 # next

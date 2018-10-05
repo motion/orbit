@@ -70,7 +70,7 @@ export default class TrayEl extends React.Component<{ store?: TrayStore }> {
   }
 
   render() {
-    const { store } = this.props
+    // const { store } = this.props
     return (
       <Tray onClick={this.handleClick} image={image} title={this.getTrayMessage()}>
         <TrayItem
@@ -83,12 +83,21 @@ export default class TrayEl extends React.Component<{ store?: TrayStore }> {
           onClick={() => Electron.sendMessage(App, App.messages.TOGGLE_SETTINGS)}
         />
         <TrayItem
+          label="Report Bug"
+          onClick={() =>
+            Electron.sendMessage(
+              Desktop,
+              Desktop.messages.OPEN,
+              'https://github.com/motion/orbit-insiders/issues/new',
+            )
+          }
+        />
+        {/* <TrayItem
           label="Realtime search"
           type="checkbox"
-          /* store.generalSetting && store.generalSetting.values.realtimeSearch */
           checked={false}
           onClick={store.toggleRealtime}
-        />
+        /> */}
         <TrayItem type="separator" />
         <TrayItem label="Quit" onClick={() => process.exit(0)} />
       </Tray>

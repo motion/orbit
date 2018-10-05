@@ -136,6 +136,7 @@ const SurfaceFrame = view(View, {
     background: 'transparent',
   }
   let surfaceStyles = {
+    padding: props.padding,
     margin: props.margin,
     fontWeight: props.fontWeight,
     color: props.color || props.theme.color,
@@ -174,6 +175,7 @@ const Element = view({
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
+  overflow: 'hidden',
   noInnerElement: {
     display: 'none',
   },
@@ -197,6 +199,10 @@ const Element = view({
   return {
     ...props,
     ...(props.inline && inlineStyle),
+    ...(props.ellipse && {
+      textOverflow: 'ellipse',
+      whiteSpace: 'nowrap',
+    }),
     width: `calc(100% ${iconNegativePad})`,
     ...elementStyle,
   }
@@ -267,6 +273,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       icon: this.props.icon,
       lineHeight: this.props.lineHeight,
       fontWeight: this.props.fontWeight,
+      ellipse: this.props.ellipse,
     }
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height + 1}px`

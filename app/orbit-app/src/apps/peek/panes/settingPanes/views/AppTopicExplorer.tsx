@@ -120,6 +120,7 @@ export class AppTopicExplorer extends React.Component<Props & { store?: AppTopic
                 active={store.activeTopic === topic}
                 width={140}
                 margin={[0, 2, 5]}
+                sizePadding
                 onClick={store.activeTopicSetter(topic)}
               >
                 {topic}

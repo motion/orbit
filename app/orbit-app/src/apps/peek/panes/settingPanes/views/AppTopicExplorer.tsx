@@ -12,6 +12,8 @@ import {
 } from '@mcro/models'
 import { OrbitListItem } from '../../../../../views/OrbitListItem'
 import produce from 'immer'
+import { RoundButtonBordered } from '../../../../../views/RoundButtonBordered'
+import { memoize } from 'lodash'
 
 type Props = { setting: Setting }
 
@@ -79,6 +81,10 @@ class AppTopicStore {
       defaultValue: [],
     },
   )
+
+  activeTopicSetter = memoize(val => () => {
+    this.activeTopic = val
+  })
 }
 
 @view.attach({
@@ -102,14 +108,29 @@ export class AppTopicExplorer extends React.Component<Props & { store?: AppTopic
           ))}
         </Sidebar>
         <Col overflow="hidden" flex={1}>
-          <Tabs active={store.activeTopic} onActive={x => (store.activeTopic = x)}>
+          {/* <Tabs active={store.activeTopic} onActive={x => (store.activeTopic = x)}>
             {store.topics.map(topic => (
               <Tab key={topic} width={140} label={topic} />
             ))}
-          </Tabs>
+          </Tabs> */}
+
+          <Row flexFlow="wrap" padding={[15, 15, 0]}>
+            {store.topics.map(topic => (
+              <RoundButtonBordered
+                flex={0}
+                key={topic}
+                active={store.activeTopic === topic}
+                width={140}
+                margin={[0, 2, 5]}
+                onClick={store.activeTopicSetter(topic)}
+              >
+                {topic}
+              </RoundButtonBordered>
+            ))}
+          </Row>
 
           {!store.currentItems && (
-            <View alignItems="center" justifyContent="center">
+            <View flex={1} alignItems="center" justifyContent="center">
               Loading...
             </View>
           )}

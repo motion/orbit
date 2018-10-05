@@ -6,12 +6,13 @@ creating important bug list for tomorrow, since really want to release it by end
 - dont see anything in google drive, all i see is "got settings in syncer"
 - fix slack login: http://slack.tryorbit.com/
 - fix clear all data button (not sure if still broken after my sleep fix)
+- seeing really slow queries:
+  - if you open one of the app icons youll see some logs in desktop for
+  - line 15 of SearchTopicsResolver
 ```
 
-- debug slowness on topic model queries any why react doesnt exit quickly despite that
 - add a bunch of integrations to test
 - fix topic explorer apps:
-  - super slow query
   - look at cosal save flow and fix
 - improve search, attempt fts integration
 

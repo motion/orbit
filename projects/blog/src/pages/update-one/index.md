@@ -63,7 +63,7 @@ To replace stale and clunky intranets of today, Orbit will crawl a lot of your s
 
 We wanted to focus on building a better knowledge tool, but it became clear having Orbit in the cloud or on-prem would force us to build a good sales team, and take resources away from the already very hard task of a building a difficult product.
 
-The solution we found came out of frustration with this tension, and out of a realization: todays computers are powerful, and todays NLP is orders of magnitude faster and easier than just a couple of years ago. Could do it all on-device?
+The solution we found came out of frustration with this tension, and out of a realization: today's computers are powerful, and today's NLP is orders of magnitude faster and easier than just a couple of years ago. Could do it all on-device?
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">

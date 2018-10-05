@@ -91,7 +91,7 @@ We're calling a file in orbit a _Bit_. Where your OS has files and apps, and Saa
 
 #### Language
 
-Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) natural language engine. Importantly, it runs quickly on-device and is custom to your knowledge: it's relevancy is powered by the meaning and frequency of words in English \* their frequency in your corpus.
+Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) natural language engine. Importantly, it runs quickly on-device and is custom to your knowledge: it's relevancy is powered by the meaning of words in English and their frequency in your corpus.
 
 ![Cosal word importance](/cosal.jpg)
 

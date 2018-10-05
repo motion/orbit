@@ -26,7 +26,7 @@ class AppTopicStore {
     query: {
       query: '',
       integrationFilters: [this.props.setting.type],
-      take: 1000,
+      take: 100,
       skip: 0,
       sortBy: 'Recent',
     } as SearchQuery,
@@ -49,7 +49,6 @@ class AppTopicStore {
     async ([location, topic], { setValue }) => {
       setValue(null)
       ensure('active topic', !!this.activeTopic)
-      console.log('querying for', topic)
       const res = await loadMany(SearchResultModel, {
         args: {
           query: topic,
@@ -60,7 +59,6 @@ class AppTopicStore {
           sortBy: 'Topic',
         },
       })
-      console.log('loading...', res)
       return res
     },
   )

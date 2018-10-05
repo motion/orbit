@@ -2,7 +2,7 @@ import { ensure, react } from '@mcro/black'
 import { loadMany, loadOne } from '@mcro/model-bridge'
 import { PersonBitModel, SearchResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { flatten } from 'lodash'
+import { flatten, uniqBy } from 'lodash'
 import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { AppsStore } from '../../AppsStore'
 import { PaneManagerStore } from '../PaneManagerStore'
@@ -250,19 +250,22 @@ export class SearchStore {
       await when(() => this.nlpStore.nlp.query === query)
       const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
       // fuzzy people results
-      const allResults = flatten(
-        await Promise.all(
-          people.map(name =>
-            loadMany(PersonBitModel, {
-              args: {
-                take: 6,
-                where: {
-                  name: { $like: `%${name.split(' ').join('%')}%` },
+      const allResults = uniqBy(
+        flatten(
+          await Promise.all(
+            people.map(name =>
+              loadMany(PersonBitModel, {
+                args: {
+                  take: 6,
+                  where: {
+                    name: { $like: `%${name.split(' ').join('%')}%` },
+                  },
                 },
-              },
-            }),
+              }),
+            ),
           ),
         ),
+        x => x.name,
       )
       const results = flatten([
         integrations.map(name => ({ name, icon: name })),

@@ -32,7 +32,7 @@ export class NLPStore /* extends Store */ {
       },
     },
   }).subscribe(values => {
-    this.peopleNames = values.map(person => person.name)
+    this.peopleNames = values.map(person => person.name).filter(x => x.trim().length > 1)
   })
 
   willUnmount() {

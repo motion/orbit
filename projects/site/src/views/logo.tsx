@@ -21,16 +21,11 @@ export const Logo = ({
       width={naturalWidth}
       height={naturalHeight}
       viewBox={`0 0 ${naturalWidth} ${naturalHeight}`}
+      style={css}
       {...props}
     >
       <defs>
-        <linearGradient
-          x1="82.4177949%"
-          y1="0%"
-          x2="0%"
-          y2="71.1546076%"
-          id="linearGradient-1"
-        >
+        <linearGradient x1="82.4177949%" y1="0%" x2="0%" y2="71.1546076%" id="linearGradient-1">
           <stop stopColor="#B27EE0" offset="0%" />
           <stop stopColor="#793BB0" offset="100%" />
         </linearGradient>

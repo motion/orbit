@@ -1,7 +1,8 @@
 import { view } from '@mcro/black'
 import * as Constants from '../constants'
+import { View } from '@mcro/ui'
 
-export const SectionContent = view({
+export const SectionContent = view(View, {
   width: '100%',
   minWidth: Constants.smallSize,
   maxWidth: Constants.mediumSize,

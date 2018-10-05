@@ -1,6 +1,5 @@
 import * as React from 'react'
-import PropTypes from 'prop-types'
-import { controller, AnimatedValue, SpringAnimation, config, animated } from 'react-spring'
+import { controller, AnimatedValue, config, animated } from 'react-spring'
 import * as _ from 'lodash'
 
 const { Provider, Consumer } = React.createContext(null)
@@ -12,13 +11,12 @@ function getScrollType(horizontal) {
 const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
 const START_TRANSLATE = 'translate(0px,0px)'
 
-export class ParallaxLayer extends React.PureComponent {
-  static propTypes = {
-    factor: PropTypes.number,
-    offset: PropTypes.number,
-    speed: PropTypes.number,
-  }
-
+export class ParallaxLayer extends React.PureComponent<{
+  factor: number
+  offset: number
+  speed: number
+  className?: string
+}> {
   static defaultProps = {
     factor: 1,
     offset: 0,
@@ -69,9 +67,9 @@ export class ParallaxLayer extends React.PureComponent {
   }
 
   updateEffect(effect, to, immediate) {
-    const { config, controller } = this.parent.props
+    const { config, impl } = this.parent.props
     if (!immediate) {
-      controller(effect, { to, ...config }, controller).start()
+      controller(effect, { to, ...config }, impl).start()
     } else {
       effect.setValue(to)
     }
@@ -166,21 +164,18 @@ export class ParallaxLayer extends React.PureComponent {
   }
 }
 
-export class Parallax extends React.PureComponent {
+export class Parallax extends React.PureComponent<{
+  scrollingElement: HTMLDivElement
+  config?: Object
+  horizontal?: boolean
+  className?: string
+}> {
   // TODO keep until major release
   static Layer = ParallaxLayer
-
-  static propTypes = {
-    pages: PropTypes.number.isRequired,
-    config: PropTypes.object,
-    horizontal: PropTypes.bool,
-    controller: PropTypes.func,
-  }
 
   static defaultProps = {
     config: config.slow,
     horizontal: false,
-    controller: controller,
   }
 
   state = { ready: false }
@@ -191,6 +186,7 @@ export class Parallax extends React.PureComponent {
   busy = false
 
   moveItems = () => {
+    console.log('move items...', this.layers)
     this.layers.forEach(layer => layer.setPosition(this.space, this.current))
     this.busy = false
   }
@@ -219,6 +215,7 @@ export class Parallax extends React.PureComponent {
     if (this.props.paused) {
       return
     }
+    console.log('scroll', this.busy)
     const { horizontal } = this.props
     if (!this.busy) {
       this.busy = true
@@ -257,7 +254,7 @@ export class Parallax extends React.PureComponent {
   }
 
   scrollTo(offset) {
-    const { horizontal, config, controller } = this.props
+    const { horizontal, config, impl } = this.props
     const scrollType = getScrollType(horizontal)
     this.scrollStop()
     this.offset = offset
@@ -266,7 +263,7 @@ export class Parallax extends React.PureComponent {
     this.animatedScroll.addListener(({ value }) => {
       target[scrollType] = value
     })
-    controller(this.animatedScroll, { to: offset * this.space, ...config }, controller).start()
+    controller(this.animatedScroll, { to: offset * this.space, ...config }, impl).start()
   }
 
   render() {

@@ -136,14 +136,14 @@ If you're interested in building apps on top of Orbit, get in touch with me belo
 
 ### Join our Orbit
 
-There's a lot more I'd like to write, but this enough to start. Keep in mind these are early builds, we're putting a lot in motion but it's not quite to a revolution, yet. That said we have some interesting parts ready to fall in place. I'd love your feedback as much as possible keep our momentum on the right path.
+There's a lot more I'd like to write, but this enough to start. Keep in mind these are early builds, we're putting a lot in motion but it's not quite to a revolution, yet. That said we have some interesting parts ready to fall in place. I'd love your feedback, as much as possible, to keep us on the right path.
 
-I'll keep our [roadmap](/roadmap) updated and send [mailing list](https://tryorbit.com) updates ~monthly.
+Our [roadmap](/roadmap) and [mailing list](https://tryorbit.com).
 
 <p>
-  <a href="mailto:nate@tryorbit.com">Here is my email</a>, send any and all inquiries, requests, issues.
+  <a href="mailto:nate@tryorbit.com">My email</a>, send any inquiries, requests, issues.
 </p>
 
-[Join our Slack room](http://slack.tryorbit.com) if you'd like to discuss or give detailed feedback.
+[Join our Slack room](http://slack.tryorbit.com) if you'd like to discuss more or give detailed feedback.
 
 <br />

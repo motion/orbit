@@ -25,7 +25,7 @@ There's a trend that's happening in our world, and it's preventing us from stayi
   Ergonomically though, we can do better.
 </div>
 
-The visual effects of Iron Man and Minority Report not be necessary, but these movies do grasp at a real and unmet desire today: unification, fluidity, and better control over our information.
+The visual effects of Iron Man and Minority Report may not be necessary, but these movies do grasp at a real and unmet desire today: unification, fluidity, and better control over our information.
 
 The world today is becoming a world of silos inside web services. Browsers are silo-explorers, and tabs are how they maintain it. We think if you want to fix applications and the data we explore, you have to break out of the tab. Where we once had _files_ in operating systems that gave us portability, today we have no equivalent. Futher, even when we can export data from a service, we have no good interface to put it to use.
 
@@ -43,7 +43,7 @@ For the last two years we've been building something to help solve this. It fixe
 
 To fix this, Orbit is a play to help re-decentralize the web. It does this as a platform, as opposed to a service. Instead of storing data or adding a new source of truth, Orbit just explores your existing information (much like a browser or operating system).
 
-Operating systems gave us a lot of control with _files_, [in some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/) they even gave us beautiful on-device interfaces to unify contacts, calendars and messaging. Where browsers give us great ability to explore widely (with less control), Orbit is creating a way to manage, understand, and organize more narrowly. We want to enable you to:
+Operating systems gave us a lot of control with _files_, [in some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/) they even gave us beautiful on-device interfaces to unify contacts, calendars and messaging. Where browsers give us great ability to explore widely (with less control), Orbit is creating a way to manage, understand, and organize more narrowly, but with a lot of control and flexibility. We want to enable you to:
 
 - Navigate disparate knowledge quickly and easily.
 - Search intuitively by person, topic, and time.
@@ -61,9 +61,9 @@ Operating systems gave us a lot of control with _files_, [in some forms](https:/
 
 To replace stale and clunky intranets of today, Orbit will crawl a lot of your sensitive information. But that creates a tension for a typical startup: _no one wants any one company to handle literally all of their data_. It's a misaligned incentive that we ran into it early in our user research. Even close friends wouldn't install trial versions of Orbit to use at relatively fast-and-loose startups, without clearance from higher up.
 
-We wanted to focus on building a better knowledge tool but it became clear that having it live in the cloud or on-prem would force us more time getting good at answering security questions or selling to enterprises than on the already hard problems we were facing.
+We wanted to focus on building a better knowledge tool, but it became clear having Orbit in the cloud or on-prem would force us to build a good sales team, and take resources away from the already very hard task of a building a difficult product.
 
-The solution we found came out of frustration with this tension, and out of a realization: todays computers are powerful and NLP is orders of magnitude faster and easier than it was just a couple years ago. What if we could do it all on your device?
+The solution we found came out of frustration with this tension, and out of a realization: todays computers are powerful, and todays NLP is orders of magnitude faster and easier than it was just a couple years ago. What if we could do it all on your device?
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">
@@ -75,7 +75,7 @@ Today, Orbit realizes this strategy. It runs, syncs, searches -- does everything
 
 ### The Features
 
-For now Orbit is a lot like Spotlight with a Home, which shows recent activity and a directory of people in your cloud and apps you have installed. As we move forward we want it to be a lot more contextual, which I'll explain more in the Context section.
+For now Orbit is a lot like Spotlight with a Home that shows recent activity, a directory of people in your cloud, and apps you have installed. As we move forward we want it to be a lot more contextual, which I'll explain more in the Context section.
 
 > Use the shortcut Option+Space to open Orbit from anywhere.
 

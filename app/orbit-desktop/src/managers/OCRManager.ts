@@ -54,7 +54,8 @@ export class OCRManager {
   oracle = new Oracle({
     binPath: oracleBinPath,
     socketPort: Config.ports.ocrBridge,
-    ocr: true,
+    // disable for now
+    // ocr: true,
     onClose: () => {
       console.log('ocr closed')
     },

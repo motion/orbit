@@ -5,7 +5,7 @@ date: '2018-09-29T22:12:03.284Z'
 
 _Note: this is for early insiders, please don't share the link. I'll go into some more detailed product and distribution plans._
 
-I'm really excited to start talking about Orbit. It's been an intense few years of development to get here so it feels great to be able to share it with you all.
+I'm really excited to start talking about Orbit. It's been an intense few years of development so it feels great to put it into the world.
 
 First, the good stuff. An early build is now [available for download](/releases). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
 
@@ -13,33 +13,31 @@ First, the good stuff. An early build is now [available for download](/releases)
 
 So... what is Orbit? Let's start with a story:
 
-You read, write, email, chat, document, ticket... you're productive. From Slack to Jira, Google Docs to Github. Your knowledge is distributed -- but your wiki is out of date and intranet portal doesn't search very well. They're an extra source of truth, infrastructure, and a cumbersome part of your day.
+You read, write, email, chat, document, and ticket... from Slack to Jira, GDocs to Github. Your knowledge is distributed and your wiki and intranet portal are out of date -- they're another source of truth, a cumbersome point of interaction, and yet more infrastructure to maintain.
 
-There's something wrong here. I think it's best explained by the gap between the sci-fi interfaces we've seen for decades in TV and film and the reality of how we work today.
+There's a trend that's happening that feels wrong. I think it's best explained by the gap between the sci-fi interfaces we've seen for decades in media contrasted with the reality of how we work today.
 
-> We asked for [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), we got 100 browser tabs.
+> We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
 ![iron man](http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg)
 
 <div class="alt">
-  Ergonomically though, how long can you you use this?
+  Ergonomically though, we can do better.
 </div>
 
-While the overdone effects of movies like Iron Man and Minority Report are a distraction, what they do grasp is a real unmet desire: unification, fluidity, and control. The web and the browsers we surf it with today just don't give us that.
+While the overdone effects of Iron Man and Minority Report may be a distraction, these movies do grasp is a real and unmet desire: for unification, fluidity, and control.
 
-This brings us to Orbit's mission:
+Browsers and the web we use today is a world of silos and tabs that make it incredibly hard to figure out what's going on. This brings us to Orbit's mission:
 
 > To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over data back to the individual -- with a flexible, powerful and intuitive knowledge tool.
 
-It's an answer to a general desire we ran into time and time again during user research:
+It's an answer to a general desire we ran into time and time again during user research, in many different forms, that can be summarized as:
 
-**"I want to understand my knowledgebase, and I can't."**
+**"I want to understand my knowledgebase, and can't."**
 
 For the last two years we've been building something to help solve this. It fixes what browsers and cloud services fail at today: we don't have any control of our information.
 
-To do that, Orbit was built as a platform, not a service. We don't store data. Instead, much like a browser or operating system, Orbit just helps explore existing information. Where operating systems gave us a lot of control (with _files_) and browsers gave us great collaboration (with less control), Orbit splits the difference.
-
-It does this by running on your device, syncing centralized cloud services into a decentralized knowledge explorer. We want Orbit to allow you to:
+To fix this, we're building Orbit as a platform, not a service. Instead of storing data, much like a browser or operating system, Orbit just explores existing information. Operating systems gave us a lot of control (with _files_) and browsers gave us great collaboration (albeit with less control). Orbit is creating a middle ground. We want to enable you to:
 
 - Navigate disparate knowledge quickly and easily.
 - Search intuitively by person, topic, and time.
@@ -55,13 +53,11 @@ It does this by running on your device, syncing centralized cloud services into 
 
 ### Distribution: From Roadblock to Selling Point
 
-To replace the stale and clunky intranet systems of today, Orbit will need to crawl a ton of your sensitive information. But, in doing so there lies a tension in misaligned incentives, one we discovered early in our user research:
+To replace stale and clunky intranets of today, Orbit will crawl a lot of your sensitive information. But _no one wants any one company to handle literally all of their data_. It's a misaligned incentive that we ran into it early in our user research. Even close friends wouldn't install trial versions of Orbit to use at relatively fast-and-loose startups without clearance from higher up.
 
-_No one wants to trust any single company with all of their data._
+We wanted to focus on building a better knowledge tool but it became clear that having it live in the cloud or on-prem somewhere would force us to spend more time getting good at answering security questions or deploying servers at enterprises than at actually investing in the hard problems we were already facing in the product.
 
-Even our close friends didn't want to install early trial versions of Orbit to use at their relatively fast-and-loose startups. We wanted to build a better knowledge tool, but it became clear that having it live in the cloud or on-prem would mean security questions, difficult onboarding, and therefore a sales-forward team.
-
-But we realized, today, computers are powerful, with lots of memory. Modern NLP is orders of magnitude faster and easier to do than just a couple years ago. In frustration with our failed sales, we had an idea: run Orbit entirely locally on your computer. If we could, we'd avoid our distribution problem.
+The solution we've found came later, out of a realization: todays computers are powerful. Modern NLP is orders of magnitude faster and easier than it was just years ago. What if we could run it all privately and locally on your device?
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">
@@ -69,7 +65,7 @@ But we realized, today, computers are powerful, with lots of memory. Modern NLP 
   </img>
 </div>
 
-Today, Orbit realizes this strategy (without some of the decentralized pieces we are still working on). It never sends a bit of your data outside your computer (you can even firewall it to be sure). We'll write more on this in the coming months.
+Today, Orbit realizes this strategy. We still need to finish some of the decentralized team-level sync features, but it will never send a bit of your data outside your computer. You can firewall it to be sure.
 
 ### The Product
 

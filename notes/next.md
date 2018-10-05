@@ -1,5 +1,8 @@
+- fix quit in prod doesnt quit again
 - fix Person topics
 - Blog
+  - put one app viewer image earlier
+  - mobile fixes
   - Language - cosal demo image
   - Context - embed/link OCR demo video
 - add a bunch of integrations to test
@@ -52,6 +55,7 @@ NEXT
 
 # next
 
+- 0-9 grouping for OrbitDirectory section
 - p2p libs: https://news.ycombinator.com/item?id=18077312 https://github.com/libp2p/js-libp2p
 - could open a special link type: orbit://gD7sadhgasdy78aDT7
 - test if we dont need cloud oauth https://laravel.com/docs/5.6/valet#securing-sites

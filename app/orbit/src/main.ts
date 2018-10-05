@@ -58,7 +58,7 @@ export async function main() {
 
   // exit handling
   const { handleExit, setupHandleExit } = require('./handleExit')
-  setupHandleExit(desktopProcess, syncersProcess)
+  setupHandleExit([desktopProcess, syncersProcess])
   // this works in dev
   process.on('exit', handleExit)
   process.on('SIGINT', handleExit)

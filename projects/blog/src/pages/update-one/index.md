@@ -75,11 +75,11 @@ Today, Orbit realizes this strategy. It runs, syncs, searches -- does everything
 
 ### The Features
 
-For now Orbit is a lot like Spotlight with a Home that shows recent activity, a directory of people in your cloud, and apps you have installed. As we move forward we want it to be a lot more contextual, which I'll explain more in the Context section.
+For now Orbit is a lot like Spotlight with a Home. The Home shows recent activity, a directory of people, and the apps you've installed.
 
 > Use the shortcut Option+Space to open Orbit from anywhere.
 
-Orbit will become more akin to a knowledge assistant in time. It will get better at understanding natural english queries, sorting stale items out automatically, augmenting you as you work normally much like Rapportive, and summarizing large amounts of noisy data into useful views.
+Orbit will grow to become more akin to a knowledge assistant. It will get better at understanding natural english, sorting for staleness, augmenting you as you work, and summarizing large amounts of noisy data into more useful views. It will also become a lot more contextually aware, which I'll explain in the Context section.
 
 <div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -560px;">
   <img alt="Orbit Home" src="./home.jpg" />

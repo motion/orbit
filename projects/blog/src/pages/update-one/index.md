@@ -5,17 +5,17 @@ date: '2018-09-29T22:12:03.284Z'
 
 _Note: this is for early insiders, please don't share the link. I'll go into some more detailed product and distribution plans._
 
-I'm really excited to start talking about Orbit. It's been an intense few years of development so it feels great to put it into the world.
+I'm really excited to start talking about Orbit. It's under intense development for a while now, so it feels great to put it into the world.
 
 First, the good stuff. An early build is now [available for download](/releases). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
 
 ---
 
-So... what is Orbit? Let's start with a story:
+I'd like to introduce Orbit. Let's start with a story:
 
-You read, write, email, chat, document, and ticket... from Slack to Jira, GDocs to Github. Your knowledge is distributed and your wiki and intranet portal are out of date -- they're another source of truth, a cumbersome point of interaction, and yet more infrastructure to maintain.
+You read, write, email, chat, document, and ticket... from Slack to Jira, GDocs to Github. Your knowledge is distributed across many services and internal wiki's and portals don't keep up -- they're another source of truth, a cumbersome point of interaction, and more infrastructure to maintain.
 
-There's a trend that's happening that feels wrong. I think it's best explained by the gap between the sci-fi interfaces we've seen for decades in media contrasted with the reality of how we work today.
+There's a trend that's happening in our world, and it's preventing us from staying on top of whats going on in our companies and in our digital lives. Before going into detail, I think it's actually best explained by the gap between the sci-fi interfaces we dream of in film and TV, contrasted with the reality of how we work today.
 
 > We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100 browser tabs.
 
@@ -25,39 +25,45 @@ There's a trend that's happening that feels wrong. I think it's best explained b
   Ergonomically though, we can do better.
 </div>
 
-While the overdone effects of Iron Man and Minority Report may be a distraction, these movies do grasp is a real and unmet desire: for unification, fluidity, and control.
+The visual effects of Iron Man and Minority Report not be necessary, but these movies do grasp at a real and unmet desire today: unification, fluidity, and better control over our information.
 
-Browsers and the web we use today is a world of silos and tabs that make it incredibly hard to figure out what's going on. This brings us to Orbit's mission:
+The world today is becoming a world of silos inside web services. Browsers are silo-explorers, and tabs are how they maintain it. We think if you want to fix applications and the data we explore, you have to break out of the tab. Where we once had _files_ in operating systems that gave us portability, today we have no equivalent. Futher, even when we can export data from a service, we have no good interface to put it to use.
 
-> To create a new [aggregation platform](https://stratechery.com/2017/defining-aggregators/) that gives control over data back to the individual -- with a flexible, powerful and intuitive knowledge tool.
+This brings us to Orbit's mission:
 
-It's an answer to a general desire we ran into time and time again during user research, in many different forms, that can be summarized as:
+> To create a new [aggregator](https://stratechery.com/2017/defining-aggregators/) of information that gives control of our data back to us -- with a flexible, powerful, intuitive platform.
 
-**"I want to understand my knowledgebase, and can't."**
+I think of Orbit as the answer to a general desire we ran into time and time again in user research, in many different forms, that can be summarized as:
 
-For the last two years we've been building something to help solve this. It fixes what browsers and cloud services fail at today: we don't have any control of our information.
+<p><center><b>"I want to understand/organize my knowledgebase, and can't."</b></center></p>
 
-To fix this, we're building Orbit as a platform, not a service. Instead of storing data, much like a browser or operating system, Orbit just explores existing information. Operating systems gave us a lot of control (with _files_) and browsers gave us great collaboration (albeit with less control). Orbit is creating a middle ground. We want to enable you to:
+## Orbit
+
+For the last two years we've been building something to help solve this. It fixes what browsers and cloud services fail at today: we can't unify and manage our information.
+
+To fix this, Orbit is a play to help re-decentralize the web. It does this as a platform, as opposed to a service. Instead of storing data or adding a new source of truth, Orbit just explores your existing information (much like a browser or operating system).
+
+Operating systems gave us a lot of control with _files_, [in some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/) they even gave us beautiful on-device interfaces to unify contacts, calendars and messaging. Where browsers give us great ability to explore widely (with less control), Orbit is creating a way to manage, understand, and organize more narrowly. We want to enable you to:
 
 - Navigate disparate knowledge quickly and easily.
 - Search intuitively by person, topic, and time.
-- Augment your day with relevant information as you work.
-- Build and install internal tools on top of it with ease.
+- Augment your day with information you may normally miss, as you work.
+- Build, extend and install helpful information apps with ease.
 - Do all of this without giving up privacy or security.
 
 <div class="demo-image"></div>
 
 <div class="alt">
-  An example Topic Explorer for Github app opened from the Orbit Home
+  A Topic Explorer for Github app, opened in Orbit
 </div>
 
 ### Distribution: From Roadblock to Selling Point
 
-To replace stale and clunky intranets of today, Orbit will crawl a lot of your sensitive information. But _no one wants any one company to handle literally all of their data_. It's a misaligned incentive that we ran into it early in our user research. Even close friends wouldn't install trial versions of Orbit to use at relatively fast-and-loose startups without clearance from higher up.
+To replace stale and clunky intranets of today, Orbit will crawl a lot of your sensitive information. But that creates a tension for a typical startup: _no one wants any one company to handle literally all of their data_. It's a misaligned incentive that we ran into it early in our user research. Even close friends wouldn't install trial versions of Orbit to use at relatively fast-and-loose startups, without clearance from higher up.
 
-We wanted to focus on building a better knowledge tool but it became clear that having it live in the cloud or on-prem somewhere would force us to spend more time getting good at answering security questions or deploying servers at enterprises than at actually investing in the hard problems we were already facing in the product.
+We wanted to focus on building a better knowledge tool but it became clear that having it live in the cloud or on-prem would force us more time getting good at answering security questions or selling to enterprises than on the already hard problems we were facing.
 
-The solution we've found came later, out of a realization: todays computers are powerful. Modern NLP is orders of magnitude faster and easier than it was just years ago. What if we could run it all privately and locally on your device?
+The solution we found came out of frustration with this tension, and out of a realization: todays computers are powerful and NLP is orders of magnitude faster and easier than it was just a couple years ago. What if we could do it all on your device?
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">
@@ -65,25 +71,33 @@ The solution we've found came later, out of a realization: todays computers are 
   </img>
 </div>
 
-Today, Orbit realizes this strategy. We still need to finish some of the decentralized team-level sync features, but it will never send a bit of your data outside your computer. You can firewall it to be sure.
+Today, Orbit realizes this strategy. It runs, syncs, searches -- does everything -- completely private to your computer. We still need to finish some of the team-level syncing features, but we have a guarantee: we'll never handle your data outside of your computer. Today, you can even firewall Orbit just to be safe.
 
-### The Product
+### The Features
 
-The Orbit Home is your flexible unified knowledge launcher. For now it's a lot like Spotlight with some recent activity and a directory of people.
+For now Orbit is a lot like Spotlight with a Home, which shows recent activity and a directory of people in your cloud and apps you have installed. As we move forward we want it to be a lot more contextual, which I'll explain more in the Context section.
+
+> Use the shortcut Option+Space to open Orbit from anywhere.
+
+Orbit will become more akin to a knowledge assistant in time. It will get better at understanding natural english queries, sorting stale items out automatically, augmenting you as you work normally much like Rapportive, and summarizing large amounts of noisy data into useful views.
 
 <div style="width: 480px; border-radius: 20px; overflow: hidden; position: absolute; right: -560px;">
   <img alt="Orbit Home" src="./home.jpg" />
 </div>
 
-> Use Option+Space to open Orbit anywhere
-
 #### Bit
 
-We're calling a file in orbit a "Bit". Where your OS has files and apps, and SaaS products have a plethora of unique interfaces and APIs, Orbit has bits and apps. A bit can represent Text, HTML, Tasks, Conversations, Documents, and more.
+We're calling a file in orbit a _Bit_. Where your OS has files and apps, and SaaS products have a plethora of unique interfaces and APIs, Orbit has bits and apps which give us a consistent interface. A bit can represent Text, HTML, Tasks, Conversations, Documents, and more.
 
 #### Language
 
-Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) natural language engine. Importantly, it runs quickly on-device and is custom to your knowledge: it's relevancy is powered by interesting words in English as well as their relative frequency in your corpus. This powers search, related items, and interesting word extraction.
+Orbit comes with a [state of the art](https://arxiv.org/pdf/1803.08493.pdf) natural language engine. Importantly, it runs quickly on-device and is custom to your knowledge: it's relevancy is powered by the meaning and frequency of words in English \* their frequency in your corpus.
+
+![Cosal word importance](/cosal.jpg)
+
+<div class="alt">
+  Cosal showing relative word interestingness in realtime.
+</div>
 
 #### Context
 

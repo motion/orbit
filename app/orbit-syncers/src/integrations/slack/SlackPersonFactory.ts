@@ -1,6 +1,6 @@
 import { PersonUtils } from '@mcro/model-utils'
 import { Person, Setting, SlackPersonData, SlackSettingValues } from '@mcro/models'
-import { SlackUser } from '@mcro/services'
+import { SlackUser, SlackTeam } from '@mcro/services'
 
 /**
  * Creates a Slack Person.
@@ -15,8 +15,7 @@ export class SlackPersonFactory {
   /**
    * Creates a single integration person from given Slack user.
    */
-  create(user: SlackUser): Person {
-    const values = this.setting.values as SlackSettingValues
+  create(user: SlackUser, team: SlackTeam): Person {
     return PersonUtils.create({
       setting: this.setting,
       integration: 'slack',
@@ -24,8 +23,8 @@ export class SlackPersonFactory {
       name: user.profile.real_name || user.name,
       data: { tz: user.tz, team: user.team_id } as SlackPersonData,
       raw: user,
-      webLink: `https://${values.oauth.info.team.id}.slack.com/messages/${user.id}`,
-      desktopLink: `slack://user?team=${values.oauth.info.team.id}&id=${user.id}`,
+      webLink: `https://${team.domain}.slack.com/messages/${user.id}`,
+      desktopLink: `slack://user?team=${team.id}&id=${user.id}`,
       email: user.profile.email,
       photo: user.profile.image_512,
     })

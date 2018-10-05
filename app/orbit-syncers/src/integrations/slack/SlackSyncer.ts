@@ -48,10 +48,12 @@ export class SlackSyncer implements IntegrationSyncer {
     })
     this.log.info('filtered API users (non bots)', filteredApiUsers)
 
+    const team = await this.loader.loadTeam()
+
     // creating entities for them
     this.log.info('finding and creating people for users', filteredApiUsers)
     const apiPeople = filteredApiUsers.map(user => {
-      return this.personFactory.create(user)
+      return this.personFactory.create(user, team)
     })
 
     // load all people and person bits from the local database
@@ -122,11 +124,11 @@ export class SlackSyncer implements IntegrationSyncer {
         const conversations = this.createConversation(filteredMessages)
         this.log.info(`created ${conversations.length} conversations`, conversations)
 
-        const team = await this.loader.loadTeam()
-
         // create bits from conversations
         const savedConversations = await Promise.all(
-          conversations.map(messages => this.bitFactory.create(channel, messages, allDbPeople, team)),
+          conversations.map(messages =>
+            this.bitFactory.create(channel, messages, allDbPeople, team),
+          ),
         )
 
         apiBits.push(...savedConversations)

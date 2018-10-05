@@ -110,13 +110,12 @@ export class Server {
       }
       log.info('got auth value', values)
       finishOauth(req.params.service, values)
-      res.send(
-        `
+      res.send(`
 <html>
   <head>
     <title>Orbit Auth Complete</title>
-    <style type="text/css">
-      * { box-sizing: border-box; display: flex; }
+    <style>
+      body * { box-sizing: border-box; display: flex; flex-flow: column; }
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
         margin: 0;
@@ -130,7 +129,7 @@ export class Server {
     </style>
   </head>
   <body>
-    <div style="flex: 1; align-items: center; justify-content: center;">
+    <div style="height: 100%; width: 100%; align-items: center; justify-content: center;">
       <div style="width: 400px; padding: 20px; margin: auto;">
         <h2>All set!</h2>
         <p>
@@ -140,8 +139,7 @@ export class Server {
     </div>
   </body>
 </html>
-`,
-      )
+`)
     })
   }
 }

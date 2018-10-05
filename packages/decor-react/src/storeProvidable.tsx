@@ -6,7 +6,6 @@ import { Disposable } from 'event-kit'
 import { updateProps } from './helpers/updateProps'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import { StoreHMR } from '@mcro/store-hmr'
-import isEqual from 'react-fast-compare'
 
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
@@ -64,7 +63,7 @@ export function storeProvidable(userOptions, Helpers) {
       // return HoC
       // dont use class properties on this, react-hot-loader seems to pick it up even if cold()
 
-      class StoreProvider extends React.Component {
+      class StoreProvider extends React.PureComponent {
         props: any | { __contextualStores?: Object }
         _props: any
         stores: any
@@ -79,10 +78,6 @@ export function storeProvidable(userOptions, Helpers) {
           super(a, b)
           this.setupProps()
           this.setupStores()
-        }
-
-        shouldComponentUpdate(nextProps) {
-          return !isEqual(this.props, nextProps)
         }
 
         // PureComponent means this is only called when props are not shallow equal

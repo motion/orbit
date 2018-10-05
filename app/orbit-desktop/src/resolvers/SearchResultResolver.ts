@@ -1,5 +1,4 @@
 import { resolveMany } from '@mcro/mediator'
-import sqlite from 'sqlite'
 import { SearchResultModel, SearchQuery } from '@mcro/models'
 import { Cosal } from '@mcro/cosal'
 import { getSearchQuery } from './getSearchQuery'
@@ -47,7 +46,7 @@ const searchCache = doSearch => {
 //   return await getRepository(BitEntity).find({ id: { $in: ids } })
 // }
 
-async function cosalSearch(args: SearchArgs) {
+async function cosalSearch(args: SearchArgs): Promise<BitEntity[]> {
   console.time('cosalSearch')
   const res = await args.cosal.search(args.query, 200)
   console.timeEnd('cosalSearch')
@@ -55,7 +54,7 @@ async function cosalSearch(args: SearchArgs) {
   return await getRepository(BitEntity).find({ id: { $in: ids } })
 }
 
-async function likeSearch(args: SearchArgs) {
+async function likeSearch(args: SearchArgs): Promise<BitEntity[]> {
   const searchQuery = getSearchQuery({
     query: args.query,
     sortBy: args.sortBy,

@@ -47,7 +47,6 @@ import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
-import { KeyboardStore } from './stores/KeyboardStore'
 
 const log = new Logger('desktop')
 
@@ -57,7 +56,6 @@ export class Root {
   isReconnecting = false
   onboard: Onboard
   disposed = false
-  keyboardStore: KeyboardStore
   server = new Server()
   stores = null
   mediatorServer: MediatorServer
@@ -94,16 +92,16 @@ export class Root {
       open(url)
     })
 
+    // FIRST THING
+    // databaserunner runs your migrations which everything can be impacted by...
+    // leave it as high up here as possible
+    this.databaseManager = new DatabaseManager()
+    await this.databaseManager.start()
+
     this.cosal = new Cosal({
       database: COSAL_DB,
     })
     await this.cosal.start()
-
-    // BEFORE YOUR CONNECT
-    // run the databaseManager that runs migrations
-    // this ensures things dont err
-    this.databaseManager = new DatabaseManager()
-    await this.databaseManager.start()
 
     this.registerMediatorServer()
 
@@ -138,13 +136,6 @@ export class Root {
 
     // order doesnt matter
     this.cosalManager.start()
-
-    // start others...
-    this.keyboardStore = new KeyboardStore({
-      // disable for now it was used for fancy orbit app switching
-      // onKeyClear: this.screenManager.lastScreenChange,
-    })
-    this.keyboardStore.start()
     await this.server.start()
 
     // this watches for store mounts/unmounts and attaches them here for debugging

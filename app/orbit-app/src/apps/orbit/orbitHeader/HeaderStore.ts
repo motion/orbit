@@ -103,7 +103,8 @@ export class HeaderStore {
   }
 
   onClickOrb = () => {
-    App.sendMessage(Desktop, Desktop.messages.TOGGLE_OCR)
+    App.sendMessage(App, App.messages.HIDE)
+    // App.sendMessage(Desktop, Desktop.messages.TOGGLE_OCR)
   }
 
   goHome = () => {

@@ -1,11 +1,4 @@
-import {
-  Bit,
-  IntegrationType,
-  Person,
-  PersonBit,
-  PersonData,
-  Setting,
-} from '@mcro/models'
+import { Bit, IntegrationType, Person, PersonBit, PersonData, Setting } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -22,7 +15,6 @@ import { SettingEntity } from './SettingEntity'
 
 @Entity()
 export class PersonEntity extends BaseEntity implements Person {
-
   target: 'person' = 'person'
 
   @PrimaryColumn()
@@ -75,5 +67,4 @@ export class PersonEntity extends BaseEntity implements Person {
 
   @ManyToMany(() => BitEntity, bit => bit.people)
   bits?: Bit[]
-
 }

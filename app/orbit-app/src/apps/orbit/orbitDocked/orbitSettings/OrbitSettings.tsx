@@ -140,11 +140,6 @@ export class OrbitSettings extends React.Component<Props> {
         <Views.Title>Settings</Views.Title>
         {!!store.generalSetting && (
           <Section>
-            <Views.FormRow label="Account">
-              <Theme name="orbit">
-                <Button size={1.1}>Add Account</Button>
-              </Theme>
-            </Views.FormRow>
             <Views.CheckBoxRow
               checked={store.generalSetting.values.autoLaunch}
               onChange={store.generalChange('autoLaunch')}

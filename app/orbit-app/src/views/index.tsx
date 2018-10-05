@@ -37,13 +37,19 @@ export const FormRow = ({ label, children }) => (
   </FormTableRow>
 )
 
-export const InputRow = ({ label, type = 'input', value, onChange }) => (
+export const InputRow = ({
+  label,
+  type = 'input',
+  value = undefined,
+  onChange = null,
+  ...props
+}) => (
   <FormTableRow>
     <FormTableLabel>
       <Label>{label}</Label>
     </FormTableLabel>
     <FormTableValue>
-      <Input value={value} onChange={e => onChange(e.target.value)} type={type} />
+      <Input value={value} onChange={e => onChange(e.target.value)} type={type} {...props} />
     </FormTableValue>
   </FormTableRow>
 )

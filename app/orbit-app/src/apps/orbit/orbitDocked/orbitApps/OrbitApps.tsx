@@ -149,7 +149,7 @@ export class OrbitApps extends React.Component<Props> {
             </Unpad>
           </>
         )}
-        {!hasFilteredApps && <NoResultsDialog />}
+        {!hasFilteredApps && <NoResultsDialog subName="the app store" />}
       </SubPane>
     )
   }

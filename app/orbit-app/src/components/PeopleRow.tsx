@@ -17,11 +17,21 @@ const handleClick = memoize((person: PersonBit) => e => {
   Actions.queryTogglePersonFilter(person.name)
 })
 
+const Person = props => (
+  <UI.Inline marginRight={4} onClick={handleClick(props.person)}>
+    {shortName(props.person.name)}
+    {props.after}
+  </UI.Inline>
+)
+
 export const PeopleRow = attachTheme(({ people, theme }) => {
   const total = (people || []).length
+  if (total === 0) {
+    return null
+  }
   const half = total / 2
   return (
-    <UI.Row alignItems="center">
+    <UI.Row alignItems="center" marginRight={20} maxWidth="calc(100% - 20px)">
       <UI.Row marginRight={14} alignItems="center">
         {(people || []).map((person, i) => (
           <UI.Image
@@ -39,13 +49,17 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
           />
         ))}
       </UI.Row>
-      <UI.Row alignItems="center">
+      <UI.Row alignItems="center" flex={1} overflow="hidden" whiteSpace="nowrap">
         <UI.Text size={0.9} alpha={0.6} fontWeight={400}>
-          {(people || []).map((person, i) => (
-            <UI.Inline marginRight={4} key={i} onClick={handleClick(person)}>
-              {shortName(person.name)}
-            </UI.Inline>
-          ))}
+          {people.length <= 2 &&
+            (people || []).map((person, i) => (
+              <Person key={i} person={person} after={i < people.length - 1 ? ',' : ''} />
+            ))}
+          {people.length > 2 && (
+            <>
+              <Person person={people[0]} /> +{people.length - 1}
+            </>
+          )}
         </UI.Text>
       </UI.Row>
     </UI.Row>

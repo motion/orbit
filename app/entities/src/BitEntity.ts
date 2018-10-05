@@ -1,10 +1,4 @@
-import {
-  Bit,
-  BitData,
-  IntegrationType,
-  Person,
-  Setting,
-} from '@mcro/models'
+import { Bit, BitData, IntegrationType, Person, Setting } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -23,7 +17,6 @@ import { SettingEntity } from './SettingEntity'
 
 @Entity()
 export class BitEntity extends BaseEntity implements Bit {
-  
   target: 'bit' = 'bit'
 
   @PrimaryColumn()
@@ -91,5 +84,4 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @ManyToOne(() => SettingEntity)
   setting?: Setting
-
 }

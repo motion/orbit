@@ -40,9 +40,8 @@ export function getCovariance(
     }
     matrix = matrix.add(dc.scale(weight))
   }
-  const inversed = matrix.inverse().toArray()
   return {
     hash: `index${index++ % Number.MAX_SAFE_INTEGER}`,
-    matrix: inversed,
+    matrix: matrix.inverse().toArray(),
   }
 }

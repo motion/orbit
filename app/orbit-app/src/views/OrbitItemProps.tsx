@@ -11,6 +11,7 @@ import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
 type Model = Bit | PersonBit | Setting
 
 export type OrbitItemProps<T extends Model> = CSSPropertySet & {
+  chromeless?: boolean
   theme?: Partial<ThemeObject>
   listItem?: boolean
   hoverToSelect?: boolean
@@ -54,5 +55,5 @@ export type OrbitItemProps<T extends Model> = CSSPropertySet & {
   getIndex?: (id: T) => number
   subtitleSpaceBetween?: React.ReactNode
   searchTerm?: string
-  onClickLocation?: (e: Event, item: ResolvedItem) => any
+  onClickLocation?: (item: ResolvedItem, e?: Event) => any
 }

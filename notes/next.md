@@ -1,6 +1,19 @@
-- make blog download link go to a new page that has download button
-  - make it say it sends analytics back on crashes and usage so we can track beta usage
-  - add sentry analytics
+- log as many bugs as possible for umed in syncers
+
+creating important bug list for tomorrow, since really want to release it by end of day tm:
+
+```
+- dont see anything in google drive, all i see is "got settings in syncer"
+- fix slack login: http://slack.tryorbit.com/
+- fix clear all data button (not sure if still broken after my sleep fix)
+```
+
+- debug slowness on topic model queries any why react doesnt exit quickly despite that
+- add a bunch of integrations to test
+- fix topic explorer apps:
+  - super slow query
+  - look at cosal save flow and fix
+- improve search, attempt fts integration
 
 NEXT
 
@@ -36,7 +49,6 @@ NEXT
     - less clutter
     - no header
     - simple topic list
-- all done, closing... better screen
 - "stop asking" and "always send" for error reporting
 - "reset orbit db" option if error during startup
 - record video of a demo

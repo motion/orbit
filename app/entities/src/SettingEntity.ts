@@ -1,9 +1,15 @@
 import { IntegrationType, Setting, SettingValues } from '@mcro/models'
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 @Entity()
 export class SettingEntity extends BaseEntity implements Setting {
-
   target: 'setting' = 'setting'
 
   @PrimaryGeneratedColumn()
@@ -15,7 +21,7 @@ export class SettingEntity extends BaseEntity implements Setting {
   @Column()
   category?: string
 
-  @Column("varchar")
+  @Column('varchar')
   type?: 'general' | IntegrationType
 
   @Column({ nullable: true })
@@ -29,5 +35,4 @@ export class SettingEntity extends BaseEntity implements Setting {
 
   @UpdateDateColumn()
   updatedAt?: Date
-
 }

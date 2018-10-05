@@ -77,6 +77,8 @@ export class TimeAgo extends Component<TimeAgoProps> {
           .replace(' at ', ' ')
           .replace('today ', '')
           .replace(/\//g, '·')
+          .replace(' PM', 'pm')
+          .replace(' AM', 'am')
       )
     }
   }

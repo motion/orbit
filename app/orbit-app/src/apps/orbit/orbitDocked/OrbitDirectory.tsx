@@ -139,7 +139,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   const { results } = store
   const total = results.length
   if (!total) {
-    return <NoResultsDialog />
+    return <NoResultsDialog subName="the directory" />
   }
   let sections
   // not that many, show without sections

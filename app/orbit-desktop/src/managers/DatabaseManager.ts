@@ -19,22 +19,37 @@ export class DatabaseManager {
   searchIndexListener: ReturnType<typeof Desktop.onMessage>
 
   async start() {
-
     // connect models next
     await connectModels(Entities)
 
-    const table = await getConnection().query('SELECT name FROM sqlite_master WHERE type="table" AND name="search_index"')
+    console.log('done connecting models...')
+    await sleep(100)
+
+    const table = await getConnection().query(
+      'SELECT name FROM sqlite_master WHERE type="table" AND name="search_index"',
+    )
     if (table.length === 0) {
       await this.createSearchIndices()
     }
 
-    // then create search index tables
-    this.watchForReset()
+    // watch for reset all data command
+    const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
+      await this.resetAllData()
+      Desktop.sendMessage(
+        App,
+        App.messages.NOTIFICATION,
+        JSON.stringify({
+          title: 'Deleted successfully!',
+          message: 'Restarting...',
+        }),
+      )
+      await sleep(500)
+      Desktop.sendMessage(Electron, Electron.messages.RESTART)
+    })
+    this.subscriptions.add({ dispose })
 
     // then do some setup
     await ensureCustomApp()
-
-    this.temporarySearchResults()
   }
 
   dispose() {
@@ -92,42 +107,10 @@ export class DatabaseManager {
     `)
   }
 
-  private temporarySearchResults() {
-    this.searchIndexListener = Desktop.onMessage(
-      Desktop.messages.SEARCH_INDEX,
-      async searchString => {
-        const query = `SELECT id FROM bit_entity JOIN search_index WHERE search_index MATCH ? ORDER BY rank LIMIT 1000`
-        const all = await getConnection().query(query, [searchString]) // todo: check it
-        const answer = all.map(x => x.id)
-        Desktop.sendMessage(
-          App,
-          App.messages.SEARCH_INDEX_ANSWER,
-          JSON.stringify({
-            searchString,
-            answer,
-          }),
-        )
-      },
-    )
-  }
-
-  private watchForReset() {
-    const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
-      log.info(`Removing all data from database at: ${DATABASE_PATH}`)
-      await remove(COSAL_DB)
-      await remove(DATABASE_PATH)
-      Desktop.sendMessage(
-        App,
-        App.messages.NOTIFICATION,
-        JSON.stringify({
-          title: 'Deleted successfully!',
-          message: 'Restarting...',
-        }),
-      )
-      await sleep(500)
-      Desktop.sendMessage(Electron, Electron.messages.RESTART)
-    })
-    this.subscriptions.add({ dispose })
+  private async resetAllData() {
+    log.info(`Removing all data from database at: ${DATABASE_PATH}`)
+    await remove(COSAL_DB)
+    await remove(DATABASE_PATH)
   }
 
   removeSearchIndex = async () => {
@@ -137,5 +120,4 @@ export class DatabaseManager {
     await getConnection().query('DROP TRIGGER after_bit_update')
     await getConnection().query('DROP TRIGGER after_bit_delete')
   }
-
 }

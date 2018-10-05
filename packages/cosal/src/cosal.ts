@@ -38,23 +38,34 @@ export class Cosal {
 
   async start() {
     if (this.database) {
-      if (!(await pathExists(this.database))) {
-        console.log('No database, starting a new one')
-        this.covariance = {
-          matrix: corpusCovarPrecomputed,
-          hash: '0',
-        }
-        await this.persist()
-      } else {
-        const data = await readJSON(this.database)
-        if (data.hash && data.matrix) {
-          this.covariance = data
-        } else {
-          throw new Error('Invalid database')
-        }
-      }
+      await this.setDatabase(this.database)
+    } else {
+      this.loadPrecomputedDatabase()
     }
     this.started = true
+  }
+
+  async setDatabase(database: string) {
+    this.database = database
+    this.loadPrecomputedDatabase()
+    if (!(await pathExists(database))) {
+      await this.persist()
+    } else {
+      const { records, covariance } = await readJSON(database)
+      if (covariance.hash && covariance.matrix) {
+        this.vectors = records
+        this.covariance = covariance
+      } else {
+        throw new Error('Invalid database')
+      }
+    }
+  }
+
+  private loadPrecomputedDatabase() {
+    this.covariance = {
+      matrix: corpusCovarPrecomputed,
+      hash: '0',
+    }
   }
 
   private ensureStarted() {
@@ -122,7 +133,7 @@ export class Cosal {
 
   async persist() {
     if (this.database) {
-      await writeJSON(this.database, this.covariance)
+      await writeJSON(this.database, { covariance: this.covariance, records: this.vectors })
     }
   }
 

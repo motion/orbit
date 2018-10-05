@@ -11,8 +11,8 @@ import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
 import { OrbitCard } from '../../../../views/OrbitCard'
-import { OrbitAppCard } from '../orbitApps/OrbitAppCard'
-// import { OrbitGridSection } from './OrbitGridSection'
+import { SubTitle } from '../../../../views/SubTitle'
+import { OrbitAppIconCard } from '../orbitApps/OrbitAppIconCard'
 
 type Props = {
   name: string
@@ -36,6 +36,7 @@ const allStreams = [
     id: '-1',
     name: 'Apps',
     source: 'apps',
+    showTitle: false,
     model: SettingModel,
     query: {
       where: {
@@ -233,6 +234,21 @@ export class OrbitHome extends React.Component<Props> {
     this.props.homeStore.reorder(result.source.index, result.destination.index)
   }
 
+  renderApps({ name, items, startIndex }: SelectionGroup) {
+    const { homeStore } = this.props
+    return (
+      <OrbitCarouselSection
+        startIndex={startIndex}
+        items={items}
+        homeStore={homeStore}
+        categoryName={name === 'Apps' ? null : name}
+        cardHeight={45}
+        cardWidth={60}
+        CardView={OrbitAppIconCard}
+      />
+    )
+  }
+
   render() {
     console.log('OrbitHome Render')
     const { homeStore } = this.props
@@ -246,10 +262,13 @@ export class OrbitHome extends React.Component<Props> {
               return (
                 <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                   {/* <SuggestionBarVerticalPad /> */}
+                  {results[0].name === 'Apps' && this.renderApps(results[0])}
                   {results.map(({ id, name, items, startIndex }, index) => {
-                    const isApp = name === 'Apps'
-                    const height = name === 'People' ? 60 : isApp ? 80 : 80
-                    const width = isApp ? 100 : 180
+                    if (name === 'Apps') {
+                      return null
+                    }
+                    const height = name === 'People' ? 60 : 80
+                    const width = 180
                     return (
                       <Draggable key={id} draggableId={id} index={index}>
                         {(provided, snapshot) => {
@@ -267,15 +286,10 @@ export class OrbitHome extends React.Component<Props> {
                                 startIndex={startIndex}
                                 items={items}
                                 homeStore={homeStore}
-                                categoryName={name}
+                                categoryName={name === 'Apps' ? null : name}
                                 cardHeight={height}
                                 cardWidth={width}
-                                CardView={isApp ? OrbitAppCard : OrbitCard}
-                                cardProps={
-                                  isApp && {
-                                    hide: { subtitle: true },
-                                  }
-                                }
+                                CardView={OrbitCard}
                               />
                             </div>
                           )
@@ -297,8 +311,13 @@ export class OrbitHome extends React.Component<Props> {
     return (
       <SubPane name="home" fadeBottom>
         {content}
+        {results.length === 1 && (
+          <View alignItems="center" justifyContent="center" padding={[15, 25, 0]}>
+            <SubTitle>Sync is running, no bits yet!</SubTitle>
+          </View>
+        )}
         {/* this is a nice lip effect */}
-        <View height={15} />
+        <View height={18} />
       </SubPane>
     )
   }

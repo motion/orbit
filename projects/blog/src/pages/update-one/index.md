@@ -7,7 +7,7 @@ _Note: this is for early insiders, please don't share the link. I'll go into som
 
 I'm really excited to start talking about Orbit. It's been an intense few years of development to get here so it feels great to be able to share it with you all.
 
-First, the good stuff. An early build is now [available for download](https://orbitauth.com/download). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
+First, the good stuff. An early build is now [available for download](/releases). We've pushed hard to get it to usable for feedback, but be warned it's alpha quality.
 
 ---
 
@@ -124,13 +124,15 @@ If you're interested in building apps on top of Orbit, get in touch with me belo
 
 ### Going forward
 
-There's a lot more I'd like to write, but I think this is more than enough to start. Right now Orbit is buggy and incomplete, but the underlying technology is all there. It took a ton of hard problem solving to get it to where it is, and it's really well set up to move quickly now. I look forward to all of your bug reports :).
+There's a lot more I'd like to write, but I think this is more than enough to start. Right now Orbit is incomplete and changing fast, but the pieces are in place to make it really come together soon. It will likely change dramatically over the next few months, so please do send over any weird or high level changes you'd like to see.
 
-[Here is my email](mailto:nate@tryorbit.com) send me any and all inquiries, requests, issues.
+I'll keep our [roadmap](/roadmap) updated and send [mailing list](https://tryorbit.com) updates ~monthly.
 
-[Sign up to the mailing list](https://tryorbit.com) for blog update emails ~monthly.
+<p>
+  <a href="mailto:nate@tryorbit.com">Here is my email</a>, send any and all inquiries, requests, issues.
+</p>
 
-[Join our Slack room]() and [the download link again](https://orbitauth.com/download), for those who missed it.
+[Join our Slack room](http://slack.tryorbit.com) and [the download link again](/releases), for those who missed it.
 
 Let's start a revolution!
 

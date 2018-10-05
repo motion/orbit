@@ -5,6 +5,7 @@ import { Text, SearchableTable, View } from '@mcro/ui'
 import { PeekSettingProps } from '../PeekSetting'
 import { GDriveSetting } from '@mcro/models'
 import { SimpleAppExplorer } from './views/SimpleAppExplorer'
+import { SettingManageRow } from './views/SettingManageRow'
 
 type Props = PeekSettingProps<GDriveSetting>
 
@@ -61,7 +62,7 @@ export class GdriveSetting extends React.Component<
         initialState={initialState}
         settingsPane={
           <>
-            {/* <SettingManageRow store={store} setting={setting} /> */}
+            <SettingManageRow setting={setting} whitelist={null} />
             <View flex={1} opacity={1} pointerEvents={'auto'}>
               <SearchableTable
                 virtual

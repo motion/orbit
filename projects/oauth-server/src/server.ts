@@ -120,7 +120,7 @@ export class Server {
           const values: OauthValues = req.user || req['currentUser']
           const value = encodeURIComponent(JSON.stringify(values))
           const secret = encodeURIComponent(strategy.config.credentials.clientSecret)
-          const clientId = encodeURIComponent(strategy.config.credentials.clientId)
+          const clientId = encodeURIComponent(strategy.config.credentials.clientID)
           res.send(`
 <html>
   <head>

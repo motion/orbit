@@ -22,7 +22,7 @@ export class SlackPersonFactory {
       integration: 'slack',
       integrationId: user.id,
       name: user.profile.real_name || user.name,
-      data: { tz: user.tz } as SlackPersonData,
+      data: { tz: user.tz, team: user.team_id } as SlackPersonData,
       raw: user,
       webLink: `https://${values.oauth.info.team.id}.slack.com/messages/${user.id}`,
       desktopLink: `slack://user?team=${values.oauth.info.team.id}&id=${user.id}`,
@@ -30,5 +30,4 @@ export class SlackPersonFactory {
       photo: user.profile.image_512,
     })
   }
-
 }

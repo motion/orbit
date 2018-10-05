@@ -229,7 +229,8 @@ const Pitch = ({ isLarge, scrollTo }) => (
 
 @view
 class HomeHeader extends React.Component {
-  render({ scrollTo, sectionHeight }) {
+  render() {
+    const { scrollTo, sectionHeight } = this.props
     return (
       <Page offset={0}>
         {({ Parallax, Content }) => (

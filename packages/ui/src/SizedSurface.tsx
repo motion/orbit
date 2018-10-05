@@ -49,9 +49,7 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
   }
   if (sizePadding) {
     const padSize = num(sizePadding) * size
-    const padding = !!sizePadding
-      ? [sizeHeight ? 0 : padSize * 1.5, 9 * padSize]
-      : 0
+    const padding = !!sizePadding ? [sizeHeight ? 0 : padSize * 1.5, 9 * padSize] : 0
     pass.padding = padding
   }
   if (sizeMargin) {
@@ -65,7 +63,6 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
   if (circular) {
     pass.width = height
     pass.borderRadius = size * 1000
-    pass.noInnerElement = true
   }
   // clamp radius to max, because we use it for Glint/Hoverglow in Surface and they need actual radius
   if (pass.borderRadius) {

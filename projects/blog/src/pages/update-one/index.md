@@ -5,9 +5,7 @@ date: '2018-09-29T22:12:03.284Z'
 
 _Note: this is for early insiders, please don't share the link. I'll go into some more detailed product and distribution plans._
 
-I'm really excited to start talking about Orbit. It's been in intense development for a while now, so it feels great to put it into the world.
-
-First, the good stuff. We're sending out the first builds to [mailing list subscribers](https://tryorbit.com). Please join and I'll send it to you as well.
+I'm really excited to start talking about Orbit. It's been under intense development, so it feels great to get it out to the world. We're starting today to send alpha builds to [mailing list subscribers](https://tryorbit.com). Please do sign up and I'll send it your way!
 
 ---
 
@@ -37,11 +35,13 @@ I think of Orbit as the answer to the desire we ran into time and again in user 
 
 <p><center><b>"I want to understand/organize my knowledgebase, and can't."</b></center></p>
 
-## Orbit
+## A new deal
 
-Orbit is ultimately a play to upgrade our operating systems and give us control over our data. To do so it's designed as decentralized platform, and not service. This distinction is important: instead of storing data or adding a new source of truth, Orbit just helps manage existing information (much like a browser or operating system).
+Orbit is ultimately a play to give us much more control over our data. To do so it's designed as decentralized platform: think of it as an operating system rather than a service. This distinction is important. Instead of storing data or adding a source of truth, Orbit just manages existing information (a lot like browsers and OS's do).
 
-Operating systems gave us a lot of control with _files_. [In some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/) they even had beautiful unified interfaces for contacts, calendars and messages. Meanwhile browsers give us the ability to explore widely, but we lose a lot of the control. Orbit wants to tilt us back to being able to manage, understand, and organize information. We want to enable you to:
+Operating systems gave us a lot of control, via _files_. [In some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/) they even had beautiful cross-cloud unified contacts, calendars and messages. Browsers gave us the ability to explore widely, but lost a lot of the control we had in files.
+
+Orbit wants to tilt us back to being able to manage, understand, and organize information. It aims to let you:
 
 - Navigate disparate knowledge quickly and easily.
 - Search intuitively by person, topic, time.
@@ -61,7 +61,7 @@ To replace stale and clunky intranets of today, Orbit will need to crawl a lot o
 
 We wanted to focus on building a better knowledge tool, but it was clear having Orbit in the cloud or on-prem would force us to build a good sales team rather than focus on an already-difficult-enough product.
 
-The solution we eventually came to allows us to solve this tension. We came to a realization: today's computers are powerful and NLP orders of magnitude faster/easier than years ago. If we could do it all on your device, we'd be able to give users complete privacy and avoid any on-premise install.
+The solution we eventually came to allows us to undo this tension. It was a realization: today's computers are powerful and NLP orders of magnitude faster/easier than years ago. If we could do it all on your device, we'd be able to give users complete privacy and avoid any on-premise install.
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">

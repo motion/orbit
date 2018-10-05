@@ -433,16 +433,15 @@ export const LinkSimple = ({ to, ...props }) => (
 
 export const HomeImg = ({ children, style, borderProps, ...props }) => (
   <>
-    <img
+    <UI.Image
       {...{
         width: 1100 / 2,
         height: 2014 / 2,
         overflow: 'hidden',
         borderRadius: 17,
         userSelect: 'none',
-        border: [1, '#ddd'],
+        ...style,
       }}
-      style={style}
       {...props}
     />
     <UI.View

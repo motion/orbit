@@ -114,6 +114,19 @@ const getAllStyles = (baseId, target, rawStyles) => {
   }
 }
 
+function getSelector(className: string, namespace: string) {
+  if (namespace[0] === '@') {
+    return '.' + className
+  }
+  const sub = namespace.indexOf('&')
+  if (sub === 0) {
+    return '.' + className + namespace.slice(1)
+  } else if (sub > 0) {
+    return '.' + className + namespace.slice(sub + 1)
+  }
+  return '.' + className
+}
+
 export function createViewFactory(toCSS) {
   const tracker = new Map()
   const rulesToClass = new WeakMap()
@@ -182,19 +195,6 @@ export function createViewFactory(toCSS) {
       }
       cachedTheme = result
       return result
-    }
-
-    function getSelector(className: string, namespace: string) {
-      if (namespace[0] === '@') {
-        return '.' + className
-      }
-      const sub = namespace.indexOf('&')
-      if (sub === 0) {
-        return '.' + className + namespace.slice(1)
-      } else if (sub > 0) {
-        return '.' + className + namespace.slice(sub + 1)
-      }
-      return '.' + className
     }
 
     function addRules(displayName: string, rules: BaseRules, namespace) {
@@ -418,12 +418,7 @@ export function createViewFactory(toCSS) {
           }
         }
 
-        return React.createElement(
-          // accept custom tagname overrides
-          element,
-          finalProps,
-          children,
-        )
+        return React.createElement(element, finalProps, children)
       }
     }
 
@@ -458,7 +453,6 @@ export function createViewFactory(toCSS) {
 
     ThemedConstructor.withConfig = config => {
       if (config.displayName) {
-        // set tagname and displayname
         displayName = config.displayName
         ThemedConstructor.displayName = config.displayName
       }

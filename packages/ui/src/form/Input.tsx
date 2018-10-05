@@ -11,7 +11,7 @@ export type InputProps = SizedSurfaceProps & {
   }
   sync?: { get: () => any; set: (a: any) => void }
   onEnter?: Function
-  type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password'
+  type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password' | 'email'
   name?: string
   form?: Object
   elementProps?: Object
@@ -24,6 +24,7 @@ class InputPlain extends React.PureComponent<InputProps> {
   static defaultProps = {
     size: 1,
     type: 'input',
+    tagName: 'input',
     elementProps: {},
     forwardRef: React.createRef<HTMLInputElement>(),
   }
@@ -65,31 +66,23 @@ class InputPlain extends React.PureComponent<InputProps> {
   syncSet = e => this.props.sync.set(e.target.value)
 
   render() {
-    const {
-      sync,
-      elementProps,
-      onChange,
-      value,
-      forwardRef,
-      ...props
-    } = this.props
-    const finalProps = { ...elementProps } as InputProps
-    if (sync && elementProps) {
+    const { sync, onChange, value, forwardRef, uiContext, ...props } = this.props
+    const finalProps = {} as InputProps
+    if (sync) {
       finalProps.value = sync.get()
       finalProps.onChange = this.syncSet
     }
     return (
       <SizedSurface
-        // @ts-ignore
         width="100%"
         sizeFont
         sizePadding
         sizeHeight
         sizeLineHeight
         sizeRadius
+        noInnerElement
         borderWidth={1}
-        tagName="input"
-        elementProps={{
+        {...{
           value,
           onChange,
           forwardRef,

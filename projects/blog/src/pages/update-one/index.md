@@ -65,7 +65,7 @@ The solution we've found came later, out of a realization: todays computers are 
   </img>
 </div>
 
-Today, Orbit realizes this strategy. We still need to finish some of the decentralized team-level sync features, but as of today it never sends a bit of your data outside your computer. You can firewall it to be sure.
+Today, Orbit realizes this strategy. We still need to finish some of the decentralized team-level sync features, but it will never send a bit of your data outside your computer. You can firewall it to be sure.
 
 ### The Product
 

@@ -19,7 +19,6 @@ const Centered = view({
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
-  padding: [2, 0, 0],
 })
 
 export const OrbitAppIconCard = ({

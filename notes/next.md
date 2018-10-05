@@ -9,12 +9,14 @@ creating important bug list for tomorrow, since really want to release it by end
 - seeing really slow queries:
   - if you open one of the app icons youll see some logs in desktop for
   - line 15 of SearchTopicsResolver
+- slack conversation PeekBitConversation: the "Related & Nearby" query doesn't work "bitCreatedAt moreThan is failing", it should show the "next" conversation there so you can scroll down for more
 ```
 
 - add a bunch of integrations to test
 - fix topic explorer apps:
   - look at cosal save flow and fix
 - improve search, attempt fts integration
+- we may want to group slack conversations by bigger amounts...
 
 NEXT
 

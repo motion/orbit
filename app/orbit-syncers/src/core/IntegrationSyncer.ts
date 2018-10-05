@@ -1,5 +1,5 @@
-import { IntegrationType } from '@mcro/models'
-import { SettingEntity } from '@mcro/entities'
+import { Logger } from '@mcro/logger'
+import { IntegrationType, Setting } from '@mcro/models'
 
 /**
  * Interface for integration syncers.
@@ -16,7 +16,7 @@ export interface IntegrationSyncer {
 /**
  * Constructor of the integration syncer instance.
  */
-export type SyncerConstructor = new (setting?: SettingEntity) => IntegrationSyncer
+export type SyncerConstructor = new (setting?: Setting, log?: Logger) => IntegrationSyncer
 
 /**
  * Options to be passed to Syncer.

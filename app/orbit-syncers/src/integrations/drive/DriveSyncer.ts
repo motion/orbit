@@ -21,9 +21,9 @@ export class DriveSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, log?: Logger) {
     this.setting = setting
-    this.log = new Logger('syncer:drive:' + setting.id)
+    this.log = log || new Logger('syncer:drive:' + setting.id)
     this.loader = new DriveLoader(this.setting)
     this.bitFactory = new DriveBitFactory(setting)
     this.personFactory = new DrivePersonFactory(setting)

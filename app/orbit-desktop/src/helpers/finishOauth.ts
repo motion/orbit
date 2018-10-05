@@ -1,3 +1,5 @@
+import { Setting } from '@mcro/models'
+import { IntegrationType } from '@mcro/models'
 import { Desktop, App } from '@mcro/stores'
 import { SettingEntity } from '@mcro/entities'
 import { getRepository } from 'typeorm'
@@ -15,7 +17,7 @@ type OauthValues = {
   refreshToken?: string
 }
 
-export const finishOauth = (type: string, values: OauthValues) => {
+export const finishOauth = (type: IntegrationType, values: OauthValues) => {
   // close window
   closeChromeTabWithUrlStarting(`${Config.urls.server}/auth/${type}`)
   // create setting
@@ -24,28 +26,30 @@ export const finishOauth = (type: string, values: OauthValues) => {
   Desktop.sendMessage(App, App.messages.SHOW_APPS, type)
 }
 
-const createSetting = async (type: string, values: OauthValues) => {
+const createSetting = async (type: IntegrationType, values: OauthValues) => {
+  console.log("OAUTH VALUES", values)
   if (!values.token) {
     throw new Error(`No token returned ${JSON.stringify(values)}`)
   }
   // todo: have a resolver for identifiers based on integration
-  const oauthid = (values.info && values.info.id) || 'none'
-  const identifier = `${oauthid}-${type}`
-  let setting
-  // update if its the same identifier from the oauth
-  if (identifier) {
-    setting = await getRepository(SettingEntity).findOne({ identifier })
-  }
-  if (!setting) {
-    setting = new SettingEntity()
-  }
-  setting.category = 'integration'
-  setting.identifier = identifier
-  setting.type = type
-  setting.token = values.token
-  setting.values = {
-    ...setting.values,
-    oauth: { ...values }, // todo
+  // const oauthid = (values.info && values.info.id) || 'none'
+  // const identifier = `${oauthid}-${type}`
+  // let setting
+  // // update if its the same identifier from the oauth
+  // if (identifier) {
+  //   setting = await getRepository(SettingEntity).findOne({ identifier })
+  // }
+  // if (!setting) {
+  //   setting = new SettingEntity()
+  // }
+  const setting = {
+    category: 'integration',
+    identifier: type + await getRepository(SettingEntity).count(), // adding count temporary to prevent unique constraint error
+    type: type,
+    token: values.token,
+    values: {
+      oauth: { ...values },
+    }
   }
   await getRepository(SettingEntity).save(setting)
 }

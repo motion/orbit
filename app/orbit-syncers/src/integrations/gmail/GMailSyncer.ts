@@ -25,9 +25,9 @@ export class GMailSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, log?: Logger) {
     this.setting = setting
-    this.log = new Logger('syncer:gmail:' + setting.id)
+    this.log = log || new Logger('syncer:gmail:' + setting.id)
     this.loader = new GMailLoader(setting, this.log)
     this.bitFactory = new GMailBitFactory(setting)
     this.personFactory = new GMailPersonFactory(setting)

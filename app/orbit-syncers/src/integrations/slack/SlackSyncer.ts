@@ -23,9 +23,9 @@ export class SlackSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, log?: Logger) {
     this.setting = setting
-    this.log = new Logger('syncer:slack:' + setting.id)
+    this.log = log || new Logger('syncer:slack:' + setting.id)
     this.loader = new SlackLoader(this.setting)
     this.bitFactory = new SlackBitFactory(this.setting)
     this.personFactory = new SlackPersonFactory(this.setting)

@@ -19,8 +19,8 @@ export class ConfluenceSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting) {
-    this.log = new Logger('syncer:confluence:' + setting.id)
+  constructor(setting: Setting, log?: Logger) {
+    this.log = log || new Logger('syncer:confluence:' + setting.id)
     this.loader = new ConfluenceLoader(setting, this.log)
     this.bitFactory = new ConfluenceBitFactory(setting)
     this.personFactory = new ConfluencePersonFactory(setting)

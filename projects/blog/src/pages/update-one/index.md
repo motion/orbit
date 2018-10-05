@@ -59,11 +59,11 @@ Operating systems gave us a lot of control with _files_. [In some forms](https:/
 
 ### Distribution: From Roadblock to Selling Point
 
-To replace stale and clunky intranets of today, Orbit will crawl a lot of your sensitive information. But that creates a tension for a typical startup: _no one wants any one company to handle literally all of their data_. It's a misaligned incentive that we ran into it early in our user research. Even close friends wouldn't install trial versions of Orbit to use at relatively fast-and-loose startups, without clearance from higher up.
+To replace stale and clunky intranets of today, Orbit will crawl a lot of your sensitive information. But that creates a tension for a typical startup: _no one wants any one company to handle literally all of their data_. It's a misaligned incentive we ran into early in user research. Even our close friends wouldn't install a trial version at a relatively fast-and-loose startups without their team's permission.
 
-We wanted to focus on building a better knowledge tool, but it became clear having Orbit in the cloud or on-prem would force us to build a good sales team, and take resources away from the already very hard task of a building a difficult product.
+We wanted to focus on building a better knowledge tool, but it was clear having Orbit in the cloud or on-prem would force us to build a good sales team, rather than focus on an already difficult-enough product.
 
-The solution we found came out of frustration with this tension, and out of a realization: today's computers are powerful, and today's NLP is orders of magnitude faster and easier than just a couple of years ago. Could do it all on-device?
+The solution we came to was due to a realization: today's computers are powerful, and NLP orders of magnitude faster/easier than just a couple years ago. We could do it all on your device, if we were careful.
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">
@@ -71,7 +71,7 @@ The solution we found came out of frustration with this tension, and out of a re
   </img>
 </div>
 
-Today, Orbit realizes this strategy. It runs, syncs, searches -- does everything -- completely private to your computer. We still need to finish some of the team-level syncing features, but we have a guarantee: we'll never handle your data outside of your computer. Today, you can even firewall Orbit just to be safe.
+Today, Orbit realizes this strategy. It runs, syncs, searches -- does everything -- completely private to your computer. We still need to finish some of the team sync features, but we have a guarantee: we'll never handle your data outside your computer. You can even firewall Orbit just to be safe.
 
 ### The Features
 

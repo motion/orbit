@@ -90,7 +90,7 @@ export const getSearchQuery = (args: SearchQuery) => {
       // @ts-ignore
       findOptions.where.push({
         location: {
-          name: { $like: `%${location}%` },
+          name: location,
         },
       })
     }

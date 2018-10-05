@@ -48,9 +48,9 @@ const searchCache = doSearch => {
 
 async function cosalSearch(args: SearchArgs): Promise<BitEntity[]> {
   console.time('cosalSearch')
-  const query = `${args.query} ${args.peopleFilters.join(' ')} ${args.locationFilters.join(
-    ' ',
-  )}`.trim()
+  const query = `${args.query} ${(args.peopleFilters || []).join(' ')} ${(
+    args.locationFilters || []
+  ).join(' ')}`.trim()
   if (!query) {
     return []
   }

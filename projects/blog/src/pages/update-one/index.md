@@ -43,7 +43,7 @@ For the last two years we've been building something to help solve this. It fixe
 
 To fix this, Orbit is a play to help re-decentralize the web. It does this as a platform, as opposed to a service. Instead of storing data or adding a new source of truth, Orbit just explores your existing information (much like a browser or operating system).
 
-Operating systems gave us a lot of control with _files_, [in some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/) they even gave us beautiful on-device interfaces to unify contacts, calendars and messaging. Where browsers give us great ability to explore widely (with less control), Orbit is creating a way to manage, understand, and organize more narrowly, but with a lot of control and flexibility. We want to enable you to:
+Operating systems gave us a lot of control with _files_. [In some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/) they even gave us beautiful unified interfaces of contacts, calendars and messages. Meanwhile browsers give us the ability to explore widely (with less control). Orbit wants to give us back some flexiblity: to manage, understand, and organize our information. We want to enable you to:
 
 - Navigate disparate knowledge quickly and easily.
 - Search intuitively by person, topic, and time.

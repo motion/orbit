@@ -1,10 +1,11 @@
-- log as many bugs as possible for umed in syncers
-
+- fix Person topics
+- Blog
+  - Language - cosal demo image
+  - Context - embed/link OCR demo video
 - add a bunch of integrations to test
 - fix topic explorer apps:
   - look at cosal save flow and fix
 - improve search, attempt fts integration
-- we may want to group slack conversations by bigger amounts...
 
 NEXT
 
@@ -40,23 +41,13 @@ NEXT
     - less clutter
     - no header
     - simple topic list
-- "stop asking" and "always send" for error reporting
-- "reset orbit db" option if error during startup
 - record video of a demo
 - community - beta build, email, rss updates in app
-
-- refactor: bring `orbit-electron` into `orbit`
-  - clean up the child process fork stuff a tiny bit
-  - cleans up a lot of duplicate packages
 
 # Umed
 
 - remove "archived" gmail
 - Really simple throttle to keep cpu from going too much
-- Auto sync more by default: everything should just "sync" a lot when you add it (default whitelist a lot)
-  - for gmail, dont sync full history, but do sync a trailing X months or limited # of items
-- Slack.people sometimes still not showing up
-- Github sync auto select everything by default
 - GDocs auto sync most things by default
 
 # next

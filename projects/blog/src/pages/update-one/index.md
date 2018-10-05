@@ -57,7 +57,7 @@ Operating systems gave us a lot of control with _files_. [In some forms](https:/
 
 ### Distribution: From Roadblock to Selling Point
 
-To replace stale and clunky intranets of today, Orbit will need to crawl a lot of your sensitive information. But that creates a tension: _no one wants any one company to handle 100% of their data_. It's a misaligned incentive we ran into early in user research. Even close friends at a relatively fast-and-loose startups we're hesitant to install a trial!
+To replace stale and clunky intranets of today, Orbit will need to crawl a lot of your sensitive information. But that creates a tension: _no one wants any one company to handle 100% of their data_. It's a misaligned incentive we ran into early in user research. Even close friends at relatively fast-and-loose startups were hesitant to install it!
 
 We wanted to focus on building a better knowledge tool, but it was clear having Orbit in the cloud or on-prem would force us to build a good sales team rather than focus on an already-difficult-enough product.
 

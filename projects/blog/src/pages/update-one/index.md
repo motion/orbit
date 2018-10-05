@@ -53,13 +53,11 @@ To fix this, we're building Orbit as a platform, not a service. Instead of stori
 
 ### Distribution: From Roadblock to Selling Point
 
-To replace the stale and clunky intranet systems of today, Orbit will need to crawl a ton of your sensitive information. But, in doing so there lies a tension in misaligned incentives, one we discovered early in our user research:
+To replace stale and clunky intranets of today, Orbit will crawl a lot of your sensitive information. But _no one wants any one company to handle literally all of their data_. It's a misaligned incentive that we ran into it early in our user research. Even close friends wouldn't install trial versions of Orbit to use at relatively fast-and-loose startups without clearance from higher up.
 
-_No one wants to trust any single company with all of their data._
+We wanted to focus on building a better knowledge tool but it became clear that having it live in the cloud or on-prem somewhere would force us to spend more time getting good at answering security questions or deploying servers at enterprises than at actually investing in the hard problems we were already facing in the product.
 
-Even our close friends didn't want to install early trial versions of Orbit to use at their relatively fast-and-loose startups. We wanted to build a better knowledge tool, but it became clear that having it live in the cloud or on-prem would mean security questions, difficult onboarding, and therefore a sales-forward team.
-
-But we realized, today, computers are powerful, with lots of memory. Modern NLP is orders of magnitude faster and easier to do than just a couple years ago. In frustration with our failed sales, we had an idea: run Orbit entirely locally on your computer. If we could, we'd avoid our distribution problem.
+The solution we've found came later, out of a realization: todays computers are powerful. Modern NLP is orders of magnitude faster and easier than it was just years ago. What if we could run it all privately and locally on your device?
 
 <div class="graphic">
   <div style="margin: auto;  max-width: 100vw;">
@@ -67,7 +65,7 @@ But we realized, today, computers are powerful, with lots of memory. Modern NLP 
   </img>
 </div>
 
-Today, Orbit realizes this strategy (without some of the decentralized pieces we are still working on). It never sends a bit of your data outside your computer, you can firewall it to be sure.
+Today, Orbit realizes this strategy. We still need to finish some of the decentralized team-level sync features, but as of today it never sends a bit of your data outside your computer. You can firewall it to be sure.
 
 ### The Product
 

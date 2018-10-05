@@ -77,7 +77,7 @@ const HeaderSection = view(Row, {
 
 const TitleBarText = props => (
   <div style={{ position: 'absolute', top: 0, left: 10, right: 10, bottom: 0 }}>
-    <Text size={1} fontWeight={400} ellipse={1} margin={0} lineHeight="1.5rem" {...props} />
+    <Text size={0.95} fontWeight={400} ellipse={1} margin={0} lineHeight="1.5rem" {...props} />
   </div>
 )
 

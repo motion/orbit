@@ -11,7 +11,7 @@ const decorator = compose(
 )
 
 export const OrbitCarouselSection = decorator(
-  ({ subPaneStore, startIndex, items, categoryName, cardProps, ...props }) => {
+  ({ subPaneStore, startIndex, items, categoryName, cardProps, margin, ...props }) => {
     if (!items.length) {
       return null
     }
@@ -21,7 +21,7 @@ export const OrbitCarouselSection = decorator(
         title={categoryName}
         alignItems="center"
         padding={[startIndex === 0 ? 4 : 6, 0, 0]}
-        marginBottom={-2}
+        margin={margin || [0, 0, -2]}
       >
         <Unpad>
           <SelectableCarousel

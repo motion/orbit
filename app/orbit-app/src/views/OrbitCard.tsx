@@ -13,7 +13,6 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
-import { RECENT_HMR } from '../constants'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 
 const VerticalSpaceSmall = view({
@@ -37,7 +36,6 @@ const Card = view({
   },
   chromeless: {
     background: 'transparent',
-    padding: [12, 12, 12, 10],
     '&:hover': {
       background: [0, 0, 0, 0.025],
     },

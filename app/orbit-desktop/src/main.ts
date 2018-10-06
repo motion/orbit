@@ -27,10 +27,10 @@ export async function main() {
   const dispose = once(async () => {
     console.log('Desktop exiting...')
     await appRoot.dispose()
-    process.kill(process.pid)
     try {
       cleanupChildren()
     } catch {}
+    process.exit(0)
   })
   process.on('exit', dispose)
   process.on('SIGINT', dispose)

@@ -33,7 +33,7 @@ module.exports = {
           'gatsby-remark-prismjs',
           'gatsby-remark-copy-linked-files',
           'gatsby-remark-smartypants',
-          'gatsby-remark-autolink-headers'
+          'gatsby-remark-autolink-headers',
         ],
       },
     },
@@ -42,7 +42,7 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-google-analytics',
       options: {
-        //trackingId: `ADD YOUR TRACKING ID HERE`,
+        trackingId: 'UA-120198406-1',
       },
     },
     'gatsby-plugin-feed',
@@ -58,7 +58,6 @@ module.exports = {
         icon: 'src/assets/gatsby-icon.png',
       },
     },
-    'gatsby-plugin-offline',
     'gatsby-plugin-react-helmet',
     {
       resolve: 'gatsby-plugin-typography',

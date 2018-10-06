@@ -7,9 +7,7 @@ import { OrbitStore } from '../OrbitStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from './orbitDocked/SearchStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
-import { BORDER_RADIUS, RECENT_HMR } from '../../constants'
-import { trace } from 'mobx'
-import isEqual from 'react-fast-compare'
+import { BORDER_RADIUS } from '../../constants'
 import { onlyUpdateOnChanged } from '../../helpers/onlyUpdateOnChanged'
 
 export type SubPaneProps = CSSPropertySet & {
@@ -70,7 +68,9 @@ const PaneContentInner = view({
 })
 
 class StaticContainer extends React.Component {
-  shouldComponentUpdate = onlyUpdateOnChanged.bind(this)
+  shouldComponentUpdate(a, b, c) {
+    return onlyUpdateOnChanged.call(this, a, b, c)
+  }
 
   render() {
     return this.props.children

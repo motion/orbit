@@ -11,8 +11,9 @@ const log = new Logger('SearchTopicsResolver')
 export const getSearchTopicsResolver = (cosal: Cosal) => {
   return resolveMany(SearchTopicsModel, async ({ query, count }) => {
     const searchQuery = getSearchQuery(query)
-    log.info('SearchTopics query', query)
+    log.info('SearchTopics query', searchQuery)
     const results = await getRepository(BitEntity).find(searchQuery)
+    log.info('got results', results)
     const resultBodies = results.map(bit => `${bit.title} ${bit.body}`).join(' ')
     const topics = await cosal.getTopWords(resultBodies, { max: count, sortByWeight: true })
     log.info(`Sending ${topics.length} topics back from ${results.length} bits`)

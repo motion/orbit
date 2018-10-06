@@ -46,15 +46,31 @@ const searchCache = doSearch => {
 //   return await getRepository(BitEntity).find({ id: { $in: ids } })
 // }
 
-async function cosalSearch(args: SearchArgs): Promise<BitEntity[]> {
-  console.time('cosalSearch')
-  const res = await args.cosal.search(args.query, 200)
-  console.timeEnd('cosalSearch')
-  const ids = res.map(x => x.id)
-  return await getRepository(BitEntity).find({ id: { $in: ids } })
+async function searchCosalIds(args: SearchArgs, includeFilters = false): Promise<number[]> {
+  const otherFilters = `${(args.peopleFilters || []).join(' ')} ${(args.locationFilters || []).join(
+    ' ',
+  )}`
+  const query = `${args.query} ${includeFilters ? otherFilters : ''}`.trim()
+  log.info(`Cosal search: ${query}`)
+  if (!query) {
+    return []
+  }
+  return (await args.cosal.search(query, Math.max(300, args.take))).map(x => x.id)
+}
+
+async function cosalSearch(args: SearchArgs, includeFilters = false): Promise<BitEntity[]> {
+  const ids = await searchCosalIds(args, includeFilters)
+  if (ids.length) {
+    return await getRepository(BitEntity).find({ id: { $in: ids } })
+  } else {
+    return []
+  }
 }
 
 async function likeSearch(args: SearchArgs): Promise<BitEntity[]> {
+  if (args.sortBy === 'Topic') {
+    return []
+  }
   const searchQuery = getSearchQuery({
     query: args.query,
     sortBy: args.sortBy,
@@ -72,45 +88,47 @@ async function likeSearch(args: SearchArgs): Promise<BitEntity[]> {
   return await getRepository(BitEntity).find(searchQuery)
 }
 
+// we'll get a lot of cosal results
+// and then do a search for the ids that match the filters
+async function doTopicSearch(args: SearchArgs) {
+  const bits = await cosalSearch(args)
+  console.log('doTopic', args, bits)
+  // simpler filter...
+  return bits.filter(bit => {
+    const ints = args.integrationFilters
+    const locs = args.locationFilters
+    if (ints && ints.some(x => bit.integration === x)) {
+      return true
+    }
+    if (locs && locs.some(x => bit.location.name === x)) {
+      return true
+    }
+    return false
+  })
+}
+
 const doSearch = searchCache(async args => {
-  const [likeResults, cosalResults] = await Promise.all([
-    likeSearch(args),
-    cosalSearch(args),
-    // ftsSearch(args),
-  ])
+  if (args.sortBy == 'Topic') {
+    return await doTopicSearch(args)
+  }
+
+  const [likeResults, cosalResults] = await Promise.all([likeSearch(args), cosalSearch(args)])
   console.log('likeResults', likeResults)
   console.log('cosalResults', cosalResults)
-  // console.log('ftsResults', ftsResults)
-  // TODO algorithm for merging the three...
 
   let results = []
   let restResults = []
 
-  const preferTopics = args.sortBy === 'Topic'
-
-  // only use cosal for the topic based
-  if (preferTopics) {
-    for (const bit of cosalResults) {
-      if (likeResults.findIndex(x => x.id === bit.id) > -1) {
-        results.push(bit)
-      } else {
-        restResults.push(bit)
-      }
+  // if we have match between BOTH thats good.. for a start
+  for (const bit of likeResults) {
+    if (cosalResults.findIndex(x => x.id === bit.id) > -1) {
+      results.push(bit)
+    } else {
+      restResults.push(bit)
     }
-    // throw in the like results so we return them all
-    restResults = [...restResults, ...likeResults]
-  } else {
-    // if we have match between BOTH thats good.. for a start
-    for (const bit of likeResults) {
-      if (cosalResults.findIndex(x => x.id === bit.id) > -1) {
-        results.push(bit)
-      } else {
-        restResults.push(bit)
-      }
-    }
-    // throw in the cosal results so we return them all
-    restResults = [...restResults, ...cosalResults]
   }
+  // throw in the cosal results so we return them all
+  restResults = [...restResults, ...cosalResults]
 
   return uniqBy([...results, ...restResults], 'id')
 })

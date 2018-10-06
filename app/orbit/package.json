@@ -27,7 +27,8 @@
     "fs-extra": "7.0.0",
     "electron": "3.0.1",
     "raven": "2.6.4",
-    "ws": "6.0.0"
+    "ws": "6.0.0",
+    "global": "4.3.2"
   },
   "devDependencies": {
     "ndb": "1.0.25",

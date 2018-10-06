@@ -6,7 +6,6 @@ import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
-import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
@@ -363,7 +362,9 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
 
 // wrap the outside so we can do much faster shallow renders when need be
 export class OrbitCard extends React.Component<OrbitItemProps<any>> {
-  shouldComponentUpdate = onlyUpdateOnChanged
+  shouldComponentUpdate(a, b, c) {
+    return onlyUpdateOnChanged.call(this, a, b, c)
+  }
 
   render() {
     return (

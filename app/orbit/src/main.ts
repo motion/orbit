@@ -58,7 +58,6 @@ export async function main() {
 
   // exit handling
   const { handleExit, setupHandleExit } = require('./handleExit')
-  setupHandleExit(desktopProcess, syncersProcess)
   // this works in dev
   process.on('exit', handleExit)
   process.on('SIGINT', handleExit)
@@ -69,6 +68,8 @@ export async function main() {
   // fork desktop process...
   desktopProcess = require('./startDesktop').startDesktop()
   syncersProcess = require('./startSyncers').startSyncers()
+
+  setupHandleExit([desktopProcess, syncersProcess])
 
   if (process.env.IGNORE_ELECTRON !== 'true') {
     await require('./startElectron').startElectron()

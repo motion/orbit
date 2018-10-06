@@ -607,6 +607,8 @@ class OrbitPure extends React.Component {
             right: 0,
             top: 0,
             width: '50%',
+            borderRadius: 16,
+            overflow: 'hidden',
           }}
         >
           <UI.Col
@@ -646,6 +648,7 @@ class OrbitPure extends React.Component {
                   height: 2014 / 2,
                   background: '#F3F3F3',
                   borderRadius: 17,
+                  overflow: 'hidden',
                 }}
               />
               <HomeImg

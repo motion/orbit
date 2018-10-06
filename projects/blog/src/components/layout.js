@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'gatsby'
+// import { Link } from 'gatsby'
 
 import { rhythm, scale } from '../utils/typography'
 
@@ -40,16 +40,16 @@ class Template extends React.Component {
             color: '#985FC9',
           }}
         >
-          <Link
+          <a
             style={{
               boxShadow: 'none',
               textDecoration: 'none',
               color: 'inherit',
             }}
-            to={'/'}
+            href={'https://tryorbit.com'}
           >
             Orbit
-          </Link>
+          </a>
         </h3>
       )
     }

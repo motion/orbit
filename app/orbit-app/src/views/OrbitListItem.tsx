@@ -6,7 +6,6 @@ import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
-import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import { OrbitItemProps } from './OrbitItemProps'
@@ -14,7 +13,6 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
 import { HorizontalSpace } from '.'
-import { RECENT_HMR } from '../constants'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 
 const ListFrame = view(UI.View, {
@@ -354,7 +352,9 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
 
 // wrap the outside so we can do much faster shallow renders when need be
 export class OrbitListItem extends React.Component<OrbitItemProps<any>> {
-  shouldComponentUpdate = onlyUpdateOnChanged
+  shouldComponentUpdate(a, b, c) {
+    return onlyUpdateOnChanged.call(this, a, b, c)
+  }
 
   render() {
     return <OrbitListInner {...this.props} />

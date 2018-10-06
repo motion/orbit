@@ -100,7 +100,7 @@ export function parseSearchQuery(query: string): NLPResponse {
   function highlightIfClear(word, className) {
     const start = lowerCaseQuery.indexOf(word.toLowerCase())
     const end = start + word.length
-    const impartialMatch = query[end] !== '' && query[end] !== undefined
+    const impartialMatch = query[end] !== ' ' && query[end] !== undefined
     if (!impartialMatch) {
       addMarkIfClear([Math.max(0, start), end, className, word])
     }
@@ -122,9 +122,6 @@ export function parseSearchQuery(query: string): NLPResponse {
     const mark: Mark = [0, words[0].length, MarkType.Integration, words[0]]
     marks.push(mark)
   }
-
-  // sort marks in order of occurance
-  marks = marks.sort((a, b) => (a[0] > b[0] ? 1 : -1))
 
   for (const dateString of dates) {
     highlightIfClear(dateString, MarkType.Date)
@@ -154,11 +151,15 @@ export function parseSearchQuery(query: string): NLPResponse {
     }
   }
 
+  // AFTER doing all the marks, sort them
+  // sort marks in order of occurance
+  marks.sort((a, b) => (a[0] > b[0] ? 1 : -1))
+
   // date
   const date: DateRange = Sherlockjs.parse(query)
   // better "now", sherlock often says a few hours earlier than actually now
   // also sherlock puts startDate to now but it logically is endDate (and we parse later startdates if found)
-  if (dates.map(x => x.indexOf('now') > -1).length) {
+  if (dates.filter(x => x.indexOf('now') > -1).length) {
     date.startDate = null
     date.endDate = new Date()
   }
@@ -237,11 +238,15 @@ export function parseSearchQuery(query: string): NLPResponse {
     }
   }
 
+  // filter empty spaces
+  parsedQuery = parsedQuery.filter(x => x.text !== ' ')
+
   const searchQuery = parsedQuery
     .filter(x => !x.type)
     .map(x => x.text.trim())
     .join(' ')
     .trim()
+
   const people = parsedQuery.filter(x => x.type === MarkType.Person).map(x => x.text)
 
   return {

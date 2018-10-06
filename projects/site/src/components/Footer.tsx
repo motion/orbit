@@ -66,7 +66,7 @@ const EndSections = view({
 const Section = view({
   margin: [0, '10%'],
   [Constants.screen.smallQuery]: {
-    margin: [0, -40, 40],
+    // margin: [0, -40, 40],
   },
 })
 

@@ -28,7 +28,7 @@ const recentHMR = () => {
 // so they override &:hover and &:hover
 // TODO: make sure &:active:hover is below below
 // TODO: and make sure &:focus:hover is below below
-const pseudoSort = a => (a.indexOf('&:active') === 0 ? 1 : -1)
+const pseudoSort = a => (a[0] === '@' || a.indexOf('&:active') === 0 ? 1 : -1)
 
 const arrToDict = obj => {
   if (Array.isArray(obj)) {
@@ -114,9 +114,9 @@ const getAllStyles = (baseId, target, rawStyles) => {
   }
 }
 
-function getSelector(className: string, namespace: string) {
+function getSelector(className: string, namespace: string, tagName: string = '') {
   if (namespace[0] === '@') {
-    return '.' + className
+    return tagName + '.' + className
   }
   const sub = namespace.indexOf('&')
   if (sub === 0) {
@@ -150,11 +150,10 @@ export function createViewFactory(toCSS) {
       target = 'div'
       rawStyles = a
     }
-    const tagName = isSimpleView ? targetConfig.tagName : target
+    const targetElement = isSimpleView ? targetConfig.targetElement : target
     const id = `${uid()}`
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = Object.keys(propStyles).length
-    const isDOM = typeof tagName === 'string'
     let displayName = 'View'
     let ThemedConstructor
     let cachedTheme
@@ -197,7 +196,7 @@ export function createViewFactory(toCSS) {
       return result
     }
 
-    function addRules(displayName: string, rules: BaseRules, namespace) {
+    function addRules(displayName: string, rules: BaseRules, namespace, tagName: string) {
       // if these rules have been cached to a className then retrieve it
       const cachedClass = rulesToClass.get(rules)
       if (cachedClass) {
@@ -217,7 +216,7 @@ export function createViewFactory(toCSS) {
       // this is the first time we've found this className
       if (!tracker.has(className)) {
         // build up the correct selector, explode on commas to allow multiple selectors
-        const selector = getSelector(className, namespace)
+        const selector = getSelector(className, namespace, tagName)
         // insert the new style text
         tracker.set(className, {
           displayName,
@@ -239,7 +238,13 @@ export function createViewFactory(toCSS) {
       return className
     }
 
-    function generateClassnames(styles, state, props: CSSPropertySet, prevProps: CSSPropertySet) {
+    function generateClassnames(
+      styles,
+      state,
+      props: CSSPropertySet,
+      prevProps: CSSPropertySet,
+      tagName: string,
+    ) {
       // if this is a secondary render then check if the props are essentially equivalent
       const extraClassNames = []
       let myStyles = styles
@@ -303,9 +308,10 @@ export function createViewFactory(toCSS) {
       // sort so we properly order pseudo keys
       const keys = Object.keys(myStyles)
       const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
+
       // add rules
       for (const namespace of sortedStyleKeys) {
-        const className = addRules(displayName, myStyles[namespace], namespace)
+        const className = addRules(displayName, myStyles[namespace], namespace, tagName)
         classNames.push(className)
         // if this is the first mount render or we didn't previously have this class then add it as new
         if (prevProps == null || !prevClasses.includes(className)) {
@@ -358,9 +364,10 @@ export function createViewFactory(toCSS) {
         if (ignoreAttrs && !state.ignoreAttrs) {
           nextState.ignoreAttrs = arrToDict(ignoreAttrs)
         }
+        const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
         return {
           ...nextState,
-          ...generateClassnames(styles, state, props, state.prevProps),
+          ...generateClassnames(styles, state, props, state.prevProps, tag),
           prevProps: props,
         }
       }
@@ -375,7 +382,7 @@ export function createViewFactory(toCSS) {
         // dont pass down theme
         const { children, forwardRef, theme, ...props } = this.props
         let finalProps
-        const element = props.tagName || tagName
+        const element = props.tagName || targetElement
 
         if (typeof element === 'string') {
           // if it's a DOM element, pass DOM attributes only
@@ -400,7 +407,7 @@ export function createViewFactory(toCSS) {
 
         // forwardRef
         if (forwardRef) {
-          if (isDOM) {
+          if (typeof element === 'string') {
             // dom ref
             finalProps.ref = forwardRef
           } else {
@@ -468,7 +475,7 @@ export function createViewFactory(toCSS) {
     ThemedConstructor.getConfig = () => ({
       id,
       displayName,
-      tagName,
+      targetElement,
       ignoreAttrs: getIgnoreAttrs(),
       styles: { ...styles },
       propStyles: { ...propStyles },

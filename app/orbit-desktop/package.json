@@ -68,7 +68,7 @@
     "source-map-support": "^0.4.16",
     "sqlite": "3.0.0",
     "turndown": "4.0.2",
-    "typeorm": "^0.3.0-alpha.20",
+    "typeorm": "^0.3.0-alpha.21",
     "ws": "6.0.0",
     "semver": "5.5.1"
   },

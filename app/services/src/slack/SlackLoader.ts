@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
-import { team, channels, users, team } from 'slack'
-import { SlackChannel, SlackMessage, SlackTeam, SlackUser, SlackTeam } from './SlackTypes'
+import { channels, users, team } from 'slack'
+import { SlackChannel, SlackMessage, SlackUser, SlackTeam } from './SlackTypes'
 
 const log = new Logger('service:slack:loader')
 

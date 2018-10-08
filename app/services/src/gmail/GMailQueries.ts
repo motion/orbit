@@ -27,8 +27,8 @@ export class GMailQueries {
     return {
       url: `/users/${userId}/threads`,
       query: {
+        pageToken,
         maxResults: max,
-        nextPageToken: pageToken,
         q: filter,
       }
     }
@@ -56,7 +56,7 @@ export class GMailQueries {
       url: `/users/${userId}/history`,
       query: {
         startHistoryId,
-        nextPageToken: pageToken
+        pageToken
       }
     }
   }

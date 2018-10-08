@@ -40,15 +40,16 @@ export class GMailSyncer implements IntegrationSyncer {
     this.log.info('sync settings', this.setting.values)
 
     const values = this.setting.values as GmailSettingValues
-    let { historyId, max, monthLimit, filter } = values
-    if (!max) max = 100
-    if (!monthLimit) monthLimit = 1
     let dropAllBits = false
+    let { historyId, max, daysLimit, filter } = values
+    if (!max) max = 10000
+    if (!daysLimit) daysLimit = 30
+    filter = filter ? filter : `newer_than:${daysLimit}d`
 
     // if max or filter has changed - we drop all bits and make complete sync again
     if ((values.lastSyncMax !== undefined && max !== values.lastSyncMax) ||
         (values.lastSyncFilter !== undefined && filter !== values.lastSyncFilter) ||
-        (values.lastSyncMonthLimit !== undefined && monthLimit !== values.lastSyncMonthLimit)) {
+        (values.lastSyncDaysLimit !== undefined && daysLimit !== values.lastSyncDaysLimit)) {
       this.log.info(`last syncronization settings mismatch, need to drop all integration bits and start a clean history`)
       dropAllBits = true
       historyId = null
@@ -81,8 +82,8 @@ export class GMailSyncer implements IntegrationSyncer {
         this.log.info('no removed messages in history were found')
       }
     } else {
-      this.log.timer('load all threads', { max, monthLimit, filter })
-      addedThreads = await this.loader.loadThreads(max, monthLimit, filter)
+      this.log.timer('load all threads', { max, daysLimit, filter })
+      addedThreads = await this.loader.loadThreads(max, filter)
       historyId = addedThreads.length > 0 ? addedThreads[0].historyId : null
       this.log.timer('load all threads', addedThreads)
     }
@@ -149,7 +150,7 @@ export class GMailSyncer implements IntegrationSyncer {
     this.log.info('updating sync settings')
     values.historyId = historyId
     values.lastSyncFilter = filter
-    values.lastSyncMonthLimit = monthLimit
+    values.lastSyncDaysLimit = daysLimit
     values.lastSyncMax = max
     await getRepository(SettingEntity).save(this.setting)
   }

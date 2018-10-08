@@ -62,7 +62,7 @@ export const SettingRemoveResolver = resolveCommand(SettingRemoveCommand, async 
       // find out which of person bits we will remove
       const removedPersonBits = personBits.filter(personBit => personBit.people.length === 0)
       log.info('person bits to be removed', removedPersonBits)
-      await manager.remove(PersonBitEntity, personBits)
+      await manager.remove(PersonBitEntity, removedPersonBits, { chunk: 100 })
       log.info('person were removed')
       // todo: update person bit's "hasGmail", "hasSlack", etc. flags too.
 

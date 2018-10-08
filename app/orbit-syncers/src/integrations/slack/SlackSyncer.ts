@@ -64,8 +64,6 @@ export class SlackSyncer implements IntegrationSyncer {
     })
     this.log.info('filtered API users (non bots)', filteredApiUsers)
 
-    const team = await this.loader.loadTeam()
-
     // creating entities for them
     this.log.info('finding and creating people for users', filteredApiUsers)
     const apiPeople = filteredApiUsers.map(user => {
@@ -142,7 +140,7 @@ export class SlackSyncer implements IntegrationSyncer {
         // create bits from conversations
         const savedConversations = await Promise.all(
           conversations.map(messages =>
-            this.bitFactory.create(channel, messages, allDbPeople, team),
+            this.bitFactory.create(channel, messages, allDbPeople),
           ),
         )
 

@@ -5,7 +5,6 @@ import { queryObjectToQueryString } from '../utils'
 import { GMailQueries } from './GMailQueries'
 import { GMailFetchOptions, GMailHistoryLoadResult, GMailThread } from './GMailTypes'
 import { getGlobalConfig } from '@mcro/config'
-import * as r2 from '@mcro/r2'
 
 /**
  * Loads data from GMail service.
@@ -52,10 +51,10 @@ export class GMailLoader {
           })
         }
         if (history.labelsAdded) {
-          const trashed = history.labelsAdded.filter(
-            action => action.labelIds.indexOf('TRASH') !== -1,
-          )
-          trashed.forEach(action => {
+          const trashedOrSpam = history.labelsAdded.filter(action => {
+            return action.labelIds.indexOf('TRASH') !== -1 && action.labelIds.indexOf('SPAM') !== -1
+          })
+          trashedOrSpam.forEach(action => {
             const threadId = action.message.threadId
             if (deletedThreadIds.indexOf(threadId) === -1) deletedThreadIds.push(threadId)
           })
@@ -87,14 +86,13 @@ export class GMailLoader {
    */
   async loadThreads(
     count: number,
-    maxMonths?: number,
     queryFilter?: string,
     filteredIds: string[] = [],
     pageToken?: string,
   ): Promise<GMailThread[]> {
 
     // load all threads first
-    this.log.verbose(`loading threads`, { count, maxMonths, queryFilter, filteredIds, pageToken })
+    this.log.verbose(`loading threads`, { count, queryFilter, filteredIds, pageToken })
     const query = GMailQueries.threads(count > 100 ? 100 : count, queryFilter, pageToken)
     const result = await this.fetch(query)
     this.log.verbose(`threads loaded`, result)
@@ -136,25 +134,24 @@ export class GMailLoader {
     }
 
     // check if we reached email period limitation (e.g. 1 month)
-    if (maxMonths > 0) {
-      const lastThread = threads[threads.length - 1]
-      const lastMessage = lastThread.messages[lastThread.messages.length - 1]
-      if (lastMessage.internalDate) {
-        const lastMessageTime = parseInt(lastMessage.internalDate)
-        const currentDate = new Date()
-        const monthsAgo = currentDate.setMonth(currentDate.getMonth() - 1)
-        if (lastMessageTime <= monthsAgo) {
-          this.log.verbose(`reached month limit`, { threads, lastThread, lastMessage, lastMessageTime, monthsAgo })
-          return threads
-        }
-      }
-    }
+    // if (maxMonths > 0) {
+    //   const lastThread = threads[threads.length - 1]
+    //   const lastMessage = lastThread.messages[lastThread.messages.length - 1]
+    //   if (lastMessage.internalDate) {
+    //     const lastMessageTime = parseInt(lastMessage.internalDate)
+    //     const currentDate = new Date()
+    //     const monthsAgo = currentDate.setMonth(currentDate.getMonth() - 1)
+    //     if (lastMessageTime <= monthsAgo) {
+    //       this.log.verbose(`reached month limit`, { threads, lastThread, lastMessage, lastMessageTime, monthsAgo })
+    //       return threads
+    //     }
+    //   }
+    // }
 
     // load threads from the next page if available
     if (result.nextPageToken) {
       const nextPageThreads = await this.loadThreads(
         count,
-        maxMonths,
         queryFilter,
         filteredIds,
         result.nextPageToken,
@@ -225,7 +222,7 @@ export class GMailLoader {
         if (didRefresh) {
           return await this.doFetch(path, query, true)
         } else {
-          console.log('Couldnt refresh access toekn :(!')
+          console.log('Cannot refresh access token', result)
           return null
         }
       }
@@ -237,28 +234,43 @@ export class GMailLoader {
   /**
    * Refreshes OAuth token.
    */
-  private async refreshToken() {
+  private async refreshToken() { // todo: create a separate loader component, replacements for r2
     const values = this.setting.values as GmailSettingValues
     if (!values.oauth.refreshToken) {
       return null
     }
-    const reply = await r2.post('https://www.googleapis.com/oauth2/v4/token', {
+
+    const formData = {
+      refresh_token: values.oauth.refreshToken,
+      client_id: values.oauth.clientId,
+      client_secret: values.oauth.secret,
+      grant_type: 'refresh_token',
+    }
+    const body = Object
+      .keys(formData)
+      .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(formData[k])}`)
+      .join('&')
+
+    const response = await fetch('https://www.googleapis.com/oauth2/v4/token', {
+      body,
+      method: 'post',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      formData: {
-        refresh_token: values.oauth.refreshToken,
-        client_id: values.oauth.clientId,
-        client_secret: values.oauth.secret,
-        grant_type: 'refresh_token',
-      },
-    }).json
-    if (reply && reply.access_token) {
-      this.setting.token = reply.access_token
-      // await this.setting.save() // todo broken after extracting into services
-      return true
+    })
+
+    const reply = await response.json()
+    if (reply.error) {
+      throw reply.error
+
+    } else {
+      if (reply && reply.access_token) {
+        this.setting.token = reply.access_token
+        // await this.setting.save() // todo broken after extracting into services
+        return true
+      }
+      return false
     }
-    return false
   }
 
 }

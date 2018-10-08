@@ -101,6 +101,13 @@ export class Logger {
   }
 
   /**
+   * Cleans log timers.
+   */
+  clean() {
+    this.timers = []
+  }
+
+  /**
    * Chainable API to trace the current log
    * can be used like:
    *    log.trace.info(...)

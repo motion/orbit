@@ -53,7 +53,7 @@ export class Syncer {
       if (force) {
         const settings = await getRepository(SettingEntity).find()
         for (let setting of settings) {
-          await this.runInterval(setting.id, true)
+          await this.runInterval(setting, true)
         }
 
       } else {
@@ -99,7 +99,7 @@ export class Syncer {
     if (newSettings.length) {
       this.log.info(`found new settings, creating intervals for them`, newSettings)
       for (let setting of newSettings) {
-        await this.runInterval(setting.id)
+        await this.runInterval(setting)
       }
     }
 
@@ -109,15 +109,17 @@ export class Syncer {
       this.log.info(`found removed settings, removing their intervals`, removedSettings)
       for (let setting of removedSettings) {
         const interval = this.intervals.find(interval => {
-          return interval && interval.setting && interval.setting.id === setting.id
+          return interval.setting && interval.setting.id === setting.id
         })
         if (interval) {
           if (interval.running) { // if its running await once it finished
             await interval.running
           }
-          this.intervals.splice(this.intervals.indexOf(interval))
+          clearInterval(interval.timer)
+          this.intervals.splice(this.intervals.indexOf(interval), 1)
         }
       }
+      this.log.info(`intervals were removed`, this.intervals)
     }
 
   }
@@ -125,12 +127,11 @@ export class Syncer {
   /**
    * Runs interval to run a syncer.
    */
-  private async runInterval(settingId?: number, force = false) {
+  private async runInterval(setting: Setting, force = false) {
 
-    let interval: SyncerInterval|undefined, setting: Setting|undefined
-    if (settingId) {
-      interval = this.intervals.find(interval => interval.setting.id === settingId)
-      setting = await getRepository(SettingEntity).findOne({ id: settingId })
+    let interval: SyncerInterval|undefined
+    if (setting) {
+      interval = this.intervals.find(interval => interval.setting.id === setting.id)
     }
     const log = new Logger(
       'syncer:' +
@@ -142,8 +143,9 @@ export class Syncer {
     if (force === false) {
       const lastJob = await getRepository(JobEntity).findOne({
         where: {
+          type: 'INTEGRATION_SYNC',
           syncer: this.name,
-          settingId: settingId,
+          settingId: setting.id,
         },
         order: {
           time: 'desc',
@@ -153,12 +155,12 @@ export class Syncer {
         const jobTime = lastJob.time + this.options.interval
         const currentTime = new Date().getTime()
         const needToWait = jobTime - currentTime
-        const jobName = this.name + (settingId ? ':' + settingId : '')
+        const jobName = this.name + (setting.id ? ':' + setting.id : '')
 
         // if app was closed when syncer was in processing
         if (lastJob.status === 'PROCESSING' && !interval) {
           log.info(
-            'found job for ${jobName} but it left uncompleted ' +
+            `found job for ${jobName} but it left uncompleted ` +
             '(probably app was closed before job completion). ' +
             'Removing stale job and run synchronization again',
           )
@@ -170,15 +172,14 @@ export class Syncer {
                 'until enough interval time will pass before we execute a new job',
               { jobTime, currentTime, needToWait, lastJob },
             )
-            setTimeout(() => this.runInterval(settingId), needToWait)
+            setTimeout(() => this.runInterval(setting), needToWait)
             return
           }
+          log.info(
+            `found last executed job for ${this.name} and its okay to execute a new job`,
+            lastJob,
+          )
         }
-      } else {
-        log.info(
-          `found last executed job for ${this.name} and its okay to execute a new job`,
-          lastJob,
-        )
       }
     }
 
@@ -189,13 +190,17 @@ export class Syncer {
         await interval.running
 
       clearInterval(interval.timer)
-      this.intervals.splice(this.intervals.indexOf(interval))
+      this.intervals.splice(this.intervals.indexOf(interval), 1)
     }
+
+    // run syncer
+    const syncerPromise = this.runSyncer(log, setting) // note: don't await it
 
     // create interval to run syncer periodically
     if (this.options.interval) {
       interval = {
         setting,
+        running: syncerPromise,
         timer: setInterval(async () => {
           // if we still have previous interval running - we don't do anything
           if (interval.running) {
@@ -203,18 +208,16 @@ export class Syncer {
             return
           }
 
-          const setting = await getRepository(SettingEntity).findOne({ id: settingId })
-          interval.setting = setting
-          interval.running = this.runSyncer(log, setting)
+          // re-load setting again just to make sure we have a new version of it
+          const latestSetting = await getRepository(SettingEntity).findOne({ id: setting.id })
+          interval.setting = latestSetting
+          interval.running = this.runSyncer(log, latestSetting)
           await interval.running
           interval.running = undefined
         }, this.options.interval),
       }
       this.intervals.push(interval)
     }
-
-    // run syncer
-    await this.runSyncer(log, setting)
   }
 
   /**
@@ -237,12 +240,15 @@ export class Syncer {
     log.info('created a new job', job)
 
     try {
+      log.clean() // clean syncer timers, do a fresh logger start
       const syncer = new this.options.constructor(setting, log)
       await syncer.run()
 
       // update our job (finish successfully)
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
+      log.info(`job updated`, job)
+
     } catch (error) {
       log.error(`${this.options.constructor.name} sync err`, error)
 
@@ -254,9 +260,10 @@ export class Syncer {
         } else {
           job.message = JSON.stringify(error)
         }
-      } catch (err) {
+      } catch (error) {
         job.message = ''
       }
+      log.info(`updating job`, job)
       await getRepository(JobEntity).save(job)
     }
     log.info(`${this.options.constructor.name} finished`)

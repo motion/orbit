@@ -63,6 +63,7 @@ export type SlackTeam = {
     image_88: string
     image_102: string
     image_132: string
+    image_original: string
   }
 }
 
@@ -103,13 +104,4 @@ export type SlackUser = {
   is_ultra_restricted: boolean
   is_bot: boolean
   updated: number
-}
-
-export type SlackTeam = {
-  domain: string
-  icon: {
-    image_original: string
-  }
-  id: string
-  name: string
 }

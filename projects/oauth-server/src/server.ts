@@ -118,41 +118,19 @@ export class Server {
         Passport.authenticate(name, options, null),
         (req, res) => {
           const values: OauthValues = req.user || req['currentUser']
+          const value = encodeURIComponent(JSON.stringify(values))
+          const secret = encodeURIComponent(strategy.config.credentials.clientSecret)
+          const clientId = encodeURIComponent(strategy.config.credentials.clientID)
           res.send(`
 <html>
   <head>
-    <title>Finish Orbit Auth</title>
+    <title>...</title>
     <script>
-      var url = "http://private.tryorbit.com/authCallback/${name}?value=${encodeURIComponent(
-            JSON.stringify(values),
-          )}&secret=${encodeURIComponent(
-            strategy.config.credentials.clientSecret,
-          )}&clientId=${encodeURIComponent(strategy.config.credentials.clientId)}"
-      window.location = url
+      window.location = "http://private.tryorbit.com/authCallback/${name}?value=${value}&secret=${secret}&clientId=${clientId}"
     </script>
-    <style type="text/css">
-      * { box-sizing: border-box; display: flex; }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
-        margin: 0;
-        padding: 0;
-        color: #333;
-        background: #fff;
-        font-size: 16px;
-        line-height: 1.5rem;
-        font-weight: 300;
-      }
-    </style>
   </head>
   <body>
-    <div style="flex: 1; align-items: center; justify-content: center;">
-      <div style="width: 400px; padding: 20px; margin: auto;">
-        <h2>All set!</h2>
-        <p>
-          Orbit will now start scanning this integration privately on your device. You can close this tab.
-        </p>
-      </div>
-    </div>
+    passing to private proxy...
   </body>
 </html>
 `)

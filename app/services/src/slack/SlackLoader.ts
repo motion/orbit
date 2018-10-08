@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
-import { team, channels, users } from 'slack'
-import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
+import { team, channels, users, team } from 'slack'
+import { SlackChannel, SlackMessage, SlackTeam, SlackUser, SlackTeam } from './SlackTypes'
 
 const log = new Logger('service:slack:loader')
 
@@ -33,17 +33,15 @@ export class SlackLoader {
    * @see https://api.slack.com/methods/users.list
    */
   async loadUsers(cursor?: string): Promise<SlackUser[]> {
-
     const options = {
       token: this.setting.token,
       limit: 1000,
       cursor: cursor,
     }
-    log.verbose(`request to users.list`, options)
+    log.verbose('request to users.list', options)
     const response = await users.list(options)
 
-    const nextPageCursor =
-      response.response_metadata && response.response_metadata.next_cursor
+    const nextPageCursor = response.response_metadata && response.response_metadata.next_cursor
     if (nextPageCursor) {
       const nextPageUsers = await this.loadUsers(nextPageCursor)
       return [...nextPageUsers, ...response.members]
@@ -58,16 +56,14 @@ export class SlackLoader {
    * @see https://api.slack.com/methods/channels.list
    */
   async loadChannels(cursor?: string): Promise<SlackChannel[]> {
-
     const options = {
       token: this.setting.token,
       cursor: cursor,
     }
-    log.verbose(`request to channels.list`, options)
+    log.verbose('request to channels.list', options)
     const response = await channels.list(options)
 
-    const nextPageCursor =
-      response.response_metadata && response.response_metadata.next_cursor
+    const nextPageCursor = response.response_metadata && response.response_metadata.next_cursor
     if (nextPageCursor) {
       const nextPageChannels = await this.loadChannels(nextPageCursor)
       return [...nextPageChannels, ...response.channels]
@@ -93,7 +89,6 @@ export class SlackLoader {
     oldestMessageId?: string,
     latestMessageId?: string,
   ): Promise<SlackMessage[]> {
-
     const options = {
       token: this.setting.token,
       channel: channelId,
@@ -101,7 +96,7 @@ export class SlackLoader {
       oldest: oldestMessageId,
       latest: latestMessageId,
     }
-    log.verbose(`request to channels.history`, options)
+    log.verbose('request to channels.history', options)
     const response = await channels.history(options)
 
     if (response.has_more === true) {

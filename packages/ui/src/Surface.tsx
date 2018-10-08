@@ -51,7 +51,7 @@ export type SurfaceProps = CSSPropertySet & {
   tooltip?: string
   tooltipProps?: Object
   uiContext?: { inSegment?: { first: boolean; last: boolean; index: number } }
-  width?: number
+  width?: number | string
   alpha?: number
   dimmed?: boolean
   disabled?: boolean
@@ -136,6 +136,7 @@ const SurfaceFrame = view(View, {
     background: 'transparent',
   }
   let surfaceStyles = {
+    padding: props.padding,
     margin: props.margin,
     fontWeight: props.fontWeight,
     color: props.color || props.theme.color,
@@ -174,6 +175,7 @@ const Element = view({
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
+  overflow: 'hidden',
   noInnerElement: {
     display: 'none',
   },
@@ -197,6 +199,10 @@ const Element = view({
   return {
     ...props,
     ...(props.inline && inlineStyle),
+    ...(props.ellipse && {
+      textOverflow: 'ellipse',
+      whiteSpace: 'nowrap',
+    }),
     width: `calc(100% ${iconNegativePad})`,
     ...elementStyle,
   }
@@ -267,9 +273,13 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       icon: this.props.icon,
       lineHeight: this.props.lineHeight,
       fontWeight: this.props.fontWeight,
-    }
+      ellipse: this.props.ellipse,
+    } as Partial<SurfaceProps>
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height + 1}px`
+    }
+    if (noInnerElement) {
+      throughProps.tagName = tagName
     }
     return (
       <SurfaceFrame
@@ -282,38 +292,41 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         userStyle={style}
         className={`${this.uniq} ${className || ''}`}
       >
-        {glint ? (
-          <Glint key={0} size={size} opacity={0.2} borderRadius={props.borderRadius} />
-        ) : null}
-        {icon && !stringIcon ? <div>{icon}</div> : null}
-        {icon && stringIcon ? (
-          <Icon
-            // @ts-ignore
-            order={icon && iconAfter ? 3 : 'auto'}
-            name={`${icon}`}
-            size={getIconSize(this.props)}
-            {...iconProps}
-          />
-        ) : null}
-        {glow && !dimmed && !disabled ? (
-          <HoverGlow
-            full
-            scale={1.1}
-            opacity={0.35}
-            borderRadius={+props.borderRadius}
-            {...glowProps}
-          />
-        ) : null}
-        {!noInnerElement &&
-          !!children && (
-            <Element tagName={tagName} {...throughProps} {...elementProps} disabled={disabled}>
-              {children}
-            </Element>
-          )}
-        {!!tooltip && (
-          <Tooltip target={`.${this.uniq}`} {...tooltipProps}>
-            {tooltip}
-          </Tooltip>
+        {noInnerElement ? null : (
+          <>
+            {glint ? (
+              <Glint key={0} size={size} opacity={0.2} borderRadius={props.borderRadius} />
+            ) : null}
+            {icon && !stringIcon ? <div>{icon}</div> : null}
+            {icon && stringIcon ? (
+              <Icon
+                // @ts-ignore
+                order={icon && iconAfter ? 3 : 'auto'}
+                name={`${icon}`}
+                size={getIconSize(this.props)}
+                {...iconProps}
+              />
+            ) : null}
+            {glow && !dimmed && !disabled ? (
+              <HoverGlow
+                full
+                scale={1.1}
+                opacity={0.35}
+                borderRadius={+props.borderRadius}
+                {...glowProps}
+              />
+            ) : null}
+            {!!children && (
+              <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
+                {children}
+              </Element>
+            )}
+            {!!tooltip && (
+              <Tooltip target={`.${this.uniq}`} {...tooltipProps}>
+                {tooltip}
+              </Tooltip>
+            )}
+          </>
         )}
       </SurfaceFrame>
     )

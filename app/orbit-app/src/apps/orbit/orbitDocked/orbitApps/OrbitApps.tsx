@@ -133,7 +133,7 @@ export class OrbitApps extends React.Component<Props> {
         )}
         {hasFilteredApps && (
           <>
-            <Views.SubTitle>Add App</Views.SubTitle>
+            <Views.SubTitle>App Store</Views.SubTitle>
             <Unpad>
               {store.filteredAvailableApps.map(item => {
                 return (

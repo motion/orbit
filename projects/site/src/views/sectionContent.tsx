@@ -15,7 +15,7 @@ export const SectionContent = view(View, {
   },
   [Constants.screen.smallQuery]: {
     width: '100%',
-    height: 'auto',
+    // height: 'auto',
     minWidth: 'auto',
     maxWidth: 'auto',
     padding: [0, '5%'],

@@ -321,26 +321,6 @@ class SectionSearch extends React.Component {
             <Parallax speed={0.1}>
               <WaveBanner fill={waveColor} />
             </Parallax>
-            {/* <Parallax
-              speed={-0.02}
-              zIndex={2}
-              effects={
-                !Constants.isSafari && {
-                  // seems opacity effect causes paints... shouldnt be bad test uncomment in fuutre
-                  opacity: x => {
-                    const fadeAfter = 1.2
-                    if (x < fadeAfter) {
-                      return x * Math.log(x * 10)
-                    }
-                    return fadeAfter * 2 - x
-                  },
-                }
-              }
-            >
-              <SectionContentParallax>
-
-              </SectionContentParallax>
-            </Parallax> */}
             <Parallax speed={0.3} zIndex={-1}>
               <Bauhaus
                 showTriangle
@@ -627,6 +607,8 @@ class OrbitPure extends React.Component {
             right: 0,
             top: 0,
             width: '50%',
+            borderRadius: 16,
+            overflow: 'hidden',
           }}
         >
           <UI.Col
@@ -666,6 +648,7 @@ class OrbitPure extends React.Component {
                   height: 2014 / 2,
                   background: '#F3F3F3',
                   borderRadius: 17,
+                  overflow: 'hidden',
                 }}
               />
               <HomeImg
@@ -760,10 +743,6 @@ class Orbit extends React.Component {
     return <OrbitPure {...orbitProps} />
   }
 }
-
-setTimeout(() => {
-  console.log('Orbit', Orbit)
-})
 
 const lockedPosition = (node, pct = 0.6) => {
   const { y } = node.getBoundingClientRect()

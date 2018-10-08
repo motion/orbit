@@ -1,7 +1,13 @@
 import { command } from '@mcro/model-bridge'
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, CosalTopWordsCommand, Person, Setting, SlackBitData, SlackSettingValues } from '@mcro/models'
-import { SlackChannel, SlackMessage } from '@mcro/services'
+import {
+  Bit,
+  CosalTopWordsCommand,
+  Person,
+  Setting,
+  SlackBitData,
+} from '@mcro/models'
+import { SlackChannel, SlackMessage, SlackTeam } from '@mcro/services'
 
 const Autolinker = require('autolinker')
 
@@ -18,7 +24,7 @@ export class SlackBitFactory {
   /**
    * Creates a new bit.
    */
-  async create(channel: SlackChannel, messages: SlackMessage[], allPeople: Person[]): Promise<Bit> {
+  async create(channel: SlackChannel, messages: SlackMessage[], allPeople: Person[], team: SlackTeam): Promise<Bit> {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
@@ -27,8 +33,7 @@ export class SlackBitFactory {
     const lastMessage = messages[messages.length - 1]
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
-    const values = this.setting.values as SlackSettingValues
-    const webLink = `https://${values.team.domain}.slack.com/archives/${
+    const webLink = `https://${team.domain}.slack.com/archives/${
       channel.id
     }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
@@ -77,12 +82,13 @@ export class SlackBitFactory {
       location: {
         id: channel.id,
         name: channel.name,
-        webLink: `https://${values.team.domain}.slack.com/archives/${channel.id}`,
-        desktopLink: `slack://channel?id=${channel.id}&team=${values.team.id}`,
+        webLink: `https://${team.domain}.slack.com/archives/${channel.id}`,
+        desktopLink: `slack://channel?id=${channel.id}&team=${team.id}`,
       },
       webLink,
       desktopLink,
-    }, channel.id + '_' + firstMessage.ts)
+    },
+    channel.id + '_' + firstMessage.ts)
   }
 
   /**

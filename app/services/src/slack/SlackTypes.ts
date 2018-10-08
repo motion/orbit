@@ -104,3 +104,12 @@ export type SlackUser = {
   is_bot: boolean
   updated: number
 }
+
+export type SlackTeam = {
+  domain: string
+  icon: {
+    image_original: string
+  }
+  id: string
+  name: string
+}

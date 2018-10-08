@@ -1,7 +1,11 @@
-- fix Person topics
 - Blog
+  - minority report + iron man image, with nice split in middle
+  - put one app image earlier
   - Language - cosal demo image
   - Context - embed/link OCR demo video
+  - mobile fixes
+- fix quit in prod doesnt quit again
+- fix Person topics
 - add a bunch of integrations to test
 - fix topic explorer apps:
   - look at cosal save flow and fix
@@ -52,6 +56,7 @@ NEXT
 
 # next
 
+- 0-9 grouping for OrbitDirectory section
 - p2p libs: https://news.ycombinator.com/item?id=18077312 https://github.com/libp2p/js-libp2p
 - could open a special link type: orbit://gD7sadhgasdy78aDT7
 - test if we dont need cloud oauth https://laravel.com/docs/5.6/valet#securing-sites

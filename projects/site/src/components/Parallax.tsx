@@ -186,7 +186,6 @@ export class Parallax extends React.PureComponent<{
   busy = false
 
   moveItems = () => {
-    console.log('move items...', this.layers)
     this.layers.forEach(layer => layer.setPosition(this.space, this.current))
     this.busy = false
   }

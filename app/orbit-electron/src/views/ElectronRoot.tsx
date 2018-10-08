@@ -1,4 +1,4 @@
-import { App as AppWindow } from '@mcro/reactron'
+import { App } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import * as React from 'react'
 import Tray from './Tray'
@@ -36,7 +36,7 @@ export class ElectronRoot extends React.Component {
       devTools = [tools.mobx, tools.react]
     }
     return (
-      <AppWindow
+      <App
         onBeforeQuit={electronStore.handleBeforeQuit}
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
@@ -46,7 +46,7 @@ export class ElectronRoot extends React.Component {
         <OrbitWindow />
         <AppWindows />
         <Tray />
-      </AppWindow>
+      </App>
     )
   }
 }

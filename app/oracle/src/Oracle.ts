@@ -4,11 +4,11 @@ import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { Logger } from '@mcro/logger'
 import { OracleBridge, SocketSender } from './OracleBridge'
-import { link, mkdir } from 'fs'
+import { mkdir } from 'fs'
 import { promisify } from 'util'
-import { remove } from 'fs-extra'
+// import { remove } from 'fs-extra'
 
-const linkify = promisify(link)
+// const linkify = promisify(link)
 const log = new Logger('oracle')
 const idFn = _ => _
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -309,16 +309,17 @@ export class Oracle {
       binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
     }
     if (this.name) {
+      // this may cause issues with signing, disable...
       // create a named binary link to change the name...
-      log.verbose(`linking! ${this.name}`)
-      const linkBin = Path.join(binDir, this.name)
-      try {
-        await remove(linkBin)
-        await linkify(Path.join(binDir, bin), linkBin)
-      } catch (err) {
-        log.verbose('Got potentially inconsequential link err', err)
-      }
-      bin = this.name
+      // log.verbose(`linking! ${this.name}`)
+      // const linkBin = Path.join(binDir, this.name)
+      // try {
+      //   await remove(linkBin)
+      //   await linkify(Path.join(binDir, bin), linkBin)
+      // } catch (err) {
+      //   log.verbose('Got potentially inconsequential link err', err)
+      //
+      // bin = this.name
     }
     const env = {
       RUN_OCR: `${this.options.ocr}`,

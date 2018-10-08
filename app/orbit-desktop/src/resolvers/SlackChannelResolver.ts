@@ -20,6 +20,6 @@ export const SlackChannelManyResolver = resolveMany(SlackChannelModel, async ({ 
   log.info('loading channels from the slack', { setting })
   const loader = new SlackLoader(setting)
   const channels = await loader.loadChannels()
-  log.info('loaded channels', channels)
+  log.info('loaded channels', channels.map(x => x.id))
   return channels
 })

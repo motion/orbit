@@ -54,31 +54,36 @@ export class SlackSyncer implements IntegrationSyncer {
     }
     await getRepository(SettingEntity).save(this.setting)
 
-    this.log.timer(`load API users`)
+    this.log.timer('load API users')
     const apiUsers = await this.loader.loadUsers()
-    this.log.timer(`load API users`, apiUsers)
+    this.log.timer('load API users', apiUsers.length)
 
     // filter out bots and strange users without emails
     const filteredApiUsers = apiUsers.filter(user => {
       return user.is_bot === false && user.profile.email
     })
-    this.log.info(`filtered API users (non bots)`, filteredApiUsers)
+    this.log.info('filtered API users (non bots)', filteredApiUsers)
+
+    const team = await this.loader.loadTeam()
 
     // creating entities for them
-    this.log.info(`finding and creating people for users`, filteredApiUsers)
+    this.log.info('finding and creating people for users', filteredApiUsers)
     const apiPeople = filteredApiUsers.map(user => {
-      return this.personFactory.create(user)
+      return this.personFactory.create(user, team)
     })
 
     // load all people and person bits from the local database
-    this.log.timer(`load synced people and person bits from the database`)
+    this.log.timer('load synced people and person bits from the database')
     const dbPeople = await this.syncerRepository.loadDatabasePeople()
     const dbPersonBits = await this.syncerRepository.loadDatabasePersonBits({ people: dbPeople })
-    this.log.timer(`load synced people and person bits from the database`, { dbPeople, dbPersonBits })
+    this.log.timer('load synced people and person bits from the database', {
+      dbPeople,
+      dbPersonBits,
+    })
 
     // sync people
     await this.personSyncer.sync({ apiPeople, dbPeople, dbPersonBits })
-    
+
     // re-load database people, we need them to deal with bits
     this.log.timer('load synced people from the database')
     const allDbPeople = await this.syncerRepository.loadDatabasePeople()
@@ -111,7 +116,7 @@ export class SlackSyncer implements IntegrationSyncer {
       this.log.timer(`loading ${channel.name}(#${channel.id}) database bits`, { oldestMessageId })
       const existBits = await this.syncerRepository.loadDatabaseBits({
         locationId: channel.id,
-        oldestMessageId
+        oldestMessageId,
       })
       dbBits.push(...existBits)
       this.log.timer(`loading ${channel.name}(#${channel.id}) database bits`, existBits)
@@ -136,7 +141,9 @@ export class SlackSyncer implements IntegrationSyncer {
 
         // create bits from conversations
         const savedConversations = await Promise.all(
-          conversations.map(messages => this.bitFactory.create(channel, messages, allDbPeople)),
+          conversations.map(messages =>
+            this.bitFactory.create(channel, messages, allDbPeople, team),
+          ),
         )
 
         apiBits.push(...savedConversations)
@@ -161,7 +168,8 @@ export class SlackSyncer implements IntegrationSyncer {
    */
   private filterChannelsBySettings(channels: SlackChannel[]) {
     const values = this.setting.values as SlackSettingValues
-    const settingChannels = values.channels /* || {
+    const settingChannels =
+      values.channels /* || {
       'C0SAU3124': true,
       'CBV9PGSGG': true,
       'C316QRE1J': true,
@@ -171,9 +179,7 @@ export class SlackSyncer implements IntegrationSyncer {
     // if no channels in settings are selected then return all channels
     if (!settingChannels) return channels
 
-    const settingsChannelIds = Object
-      .keys(settingChannels)
-      .filter(key => settingChannels[key])
+    const settingsChannelIds = Object.keys(settingChannels).filter(key => settingChannels[key])
 
     return channels.filter(channel => {
       return settingsChannelIds.indexOf(channel.id) !== -1

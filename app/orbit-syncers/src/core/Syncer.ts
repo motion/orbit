@@ -209,7 +209,7 @@ export class Syncer {
           }
 
           // re-load setting again just to make sure we have a new version of it
-          const latestSetting = await getRepository(SettingEntity).findOne({ id: setting.id })
+          const latestSetting = setting ? await getRepository(SettingEntity).findOne({ id: setting.id }) : undefined
           interval.setting = latestSetting
           interval.running = this.runSyncer(log, latestSetting)
           await interval.running

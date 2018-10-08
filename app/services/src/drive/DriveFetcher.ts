@@ -24,32 +24,37 @@ export class DriveFetcher {
    */
   downloadFile(url: string, dest: string): Promise<void> {
     return new Promise((ok, fail) => {
-      const file = fs.createWriteStream(dest)
-      const urlObject = new URL(url)
-      https.get(
-        {
-          protocol: urlObject.protocol,
-          host: urlObject.host,
-          port: urlObject.port,
-          path: urlObject.pathname,
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${this.setting.token}`,
+      try {
+        const file = fs.createWriteStream(dest)
+        const urlObject = new URL(url)
+        https.get(
+          {
+            protocol: urlObject.protocol,
+            host: urlObject.host,
+            port: urlObject.port,
+            path: urlObject.pathname,
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${this.setting.token}`,
+            },
           },
-        },
-        function(response) {
-          response.pipe(file)
-          file
-            .on('finish', function() {
-              file.close()
-              ok()
-            })
-            .on('error', function(err) {
-              // Handle errors
-              fail(err.message)
-            })
-        },
-      )
+          function(response) {
+            response.pipe(file)
+            file
+              .on('finish', function() {
+                file.close()
+                ok()
+              })
+              .on('error', function(err) {
+                // Handle errors
+                fail(err.message)
+              })
+          },
+        )
+
+      } catch (err) {
+        fail(err)
+      }
     })
   }
 

@@ -4,7 +4,7 @@ import { observeMany } from '@mcro/model-bridge'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'
-import { View, Row, SegmentedRow, Popover } from '@mcro/ui'
+import { View, Row, SegmentedRow, Popover, Text } from '@mcro/ui'
 import { BitModel, PersonBitModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
@@ -44,6 +44,119 @@ const findManyType = integration => ({
   relations: ['people'],
   order: { bitCreatedAt: 'DESC' },
 })
+
+const fakeData = [
+  {
+    id: 0,
+    location: '#status',
+    integration: 'slack',
+    topics: [
+      'repositories',
+      'offerings',
+      'weight.surge.sh',
+      'dimensions',
+      'observeMany',
+      'debounce',
+    ],
+    counts: 22,
+    people: [
+      { id: 0, photo: 'https://avatars0.githubusercontent.com/u/1280719?v=4', name: 'JulianGindi' },
+      {
+        id: 1,
+        photo:
+          'https://secure.gravatar.com/avatar/2eb48ec7c59931a508930b78ab0f6f96.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F7fa9%2Fimg%2Favatars%2Fava_0002-512.png',
+        name: 'Andrew Hsu',
+      },
+    ],
+  },
+  {
+    id: 0,
+    location: 'atom',
+    integration: 'github',
+    topics: ['Object', 'dirname', 'deprecated', 'SyntaxError', 'observeMany', 'debounce'],
+    counts: 18,
+    people: [
+      { id: 0, photo: 'https://avatars0.githubusercontent.com/u/1280719?v=4', name: 'JulianGindi' },
+      {
+        id: 1,
+        photo:
+          'https://secure.gravatar.com/avatar/2eb48ec7c59931a508930b78ab0f6f96.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F7fa9%2Fimg%2Favatars%2Fava_0002-512.png',
+        name: 'Andrew Hsu',
+      },
+    ],
+  },
+  {
+    id: 0,
+    location: '#general',
+    integration: 'slack',
+    topics: ['syncer', 'running', 'execution', 'dimensions', 'observeMany', 'debounce'],
+    counts: 22,
+    people: [
+      { id: 0, photo: 'https://avatars0.githubusercontent.com/u/1280719?v=4', name: 'JulianGindi' },
+      {
+        id: 1,
+        photo:
+          'https://secure.gravatar.com/avatar/2eb48ec7c59931a508930b78ab0f6f96.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F7fa9%2Fimg%2Favatars%2Fava_0002-512.png',
+        name: 'Andrew Hsu',
+      },
+    ],
+  },
+  {
+    id: 0,
+    location: '#status',
+    integration: 'slack',
+    topics: [
+      'repositories',
+      'offerings',
+      'weight.surge.sh',
+      'dimensions',
+      'observeMany',
+      'debounce',
+    ],
+    counts: 22,
+    people: [
+      { id: 0, icon: 'https://avatars0.githubusercontent.com/u/1280719?v=4', name: 'JulianGindi' },
+      {
+        id: 1,
+        icon:
+          'https://secure.gravatar.com/avatar/2eb48ec7c59931a508930b78ab0f6f96.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F7fa9%2Fimg%2Favatars%2Fava_0002-512.png',
+        name: 'Andrew Hsu',
+      },
+    ],
+  },
+  {
+    id: 0,
+    location: 'atom',
+    integration: 'github',
+    topics: ['Object', 'dirname', 'deprecated', 'SyntaxError', 'observeMany', 'debounce'],
+    counts: 18,
+    people: [
+      { id: 0, icon: 'https://avatars0.githubusercontent.com/u/1280719?v=4', name: 'JulianGindi' },
+      {
+        id: 1,
+        icon:
+          'https://secure.gravatar.com/avatar/2eb48ec7c59931a508930b78ab0f6f96.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F7fa9%2Fimg%2Favatars%2Fava_0002-512.png',
+        name: 'Andrew Hsu',
+      },
+    ],
+  },
+  {
+    id: 0,
+    location: '#general',
+    integration: 'slack',
+    topics: ['syncer', 'running', 'execution', 'dimensions', 'observeMany', 'debounce'],
+    counts: 22,
+    people: [
+      { id: 0, icon: 'https://avatars0.githubusercontent.com/u/1280719?v=4', name: 'JulianGindi' },
+      {
+        id: 1,
+        icon:
+          'https://secure.gravatar.com/avatar/2eb48ec7c59931a508930b78ab0f6f96.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F7fa9%2Fimg%2Favatars%2Fava_0002-512.png',
+        name: 'Andrew Hsu',
+      },
+    ],
+  },
+]
 
 const allStreams = [
   // {
@@ -316,14 +429,16 @@ export class OrbitHome extends React.Component<Props> {
           <SubPane name="home" fadeBottom before={before}>
             <Unpad>
               <OrbitMasonry
-                items={flatten(results.map(res => res.items)).map((item, index) => (
+                items={fakeData.map((item, index) => (
                   <OrbitCard
                     key={index}
-                    model={item}
                     index={index}
-                    inGrid
-                    style={index % 2 === 0 ? { marginLeft: 8 } : { marginRight: 8 }}
-                  />
+                    title={item.location}
+                    people={item.people}
+                    icon={item.integration}
+                  >
+                    <Text size={1.2}>{item.topics.join(' ')}</Text>
+                  </OrbitCard>
                 ))}
               />
             </Unpad>

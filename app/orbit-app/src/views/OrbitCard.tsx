@@ -238,7 +238,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
                       fontSize={14}
                       sizeLineHeight={0.78}
                       ellipse={hasSubtitle && hasMeta ? true : 2}
-                      fontWeight={400}
+                      fontWeight={500}
                       selectable={false}
                       {...titleProps}
                     >

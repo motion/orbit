@@ -7,19 +7,21 @@ import {
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
 
-const middleSpace = 6
-const width = ORBIT_WIDTH - middleSpace
+const middleSpace = 3
+const width = ORBIT_WIDTH
 const columnCount = 2
 const columnWidth = width / columnCount
 
 type Props = {
   items: any[]
   overscanByPixels?: number
+  sidePad?: number
 }
 
 export class OrbitMasonry extends React.Component<Props> {
   static defaultProps = {
     overscanByPixels: 1000,
+    sidePad: 6,
   }
 
   cache = new CellMeasurerCache({
@@ -39,7 +41,15 @@ export class OrbitMasonry extends React.Component<Props> {
     const item = this.props.items[index]
     return (
       <CellMeasurer cache={this.cache} index={index} key={key} parent={parent}>
-        <div style={style}>{item}</div>
+        <div
+          style={{
+            ...style,
+            paddingLeft: style.left === 0 ? this.props.sidePad : 0,
+            paddingRight: style.left === 0 ? 0 : this.props.sidePad,
+          }}
+        >
+          {item}
+        </div>
       </CellMeasurer>
     )
   }

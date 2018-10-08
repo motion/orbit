@@ -91,14 +91,7 @@ const dimStyle = {
   },
 }
 
-// fontFamily: inherit on both fixes elements
-const SurfaceFrame = view(View, {
-  flexFlow: 'row',
-  alignItems: 'center',
-  fontFamily: 'inherit',
-  position: 'relative',
-}).theme(props => {
-  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
+const getSegmentRadius = props => {
   // support being inside a segmented list
   let segmentedStyle: any
   if (!props.ignoreSegment) {
@@ -117,6 +110,17 @@ const SurfaceFrame = view(View, {
       }
     }
   }
+  return segmentedStyle
+}
+
+// fontFamily: inherit on both fixes elements
+const SurfaceFrame = view(View, {
+  flexFlow: 'row',
+  alignItems: 'center',
+  fontFamily: 'inherit',
+  position: 'relative',
+}).theme(props => {
+  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -159,7 +163,7 @@ const SurfaceFrame = view(View, {
     ...(props.active && { '&:hover': themeStyles['&:active'] }),
     ...propsToTextSize(props),
     ...chromelessStyle,
-    ...segmentedStyle,
+    ...props.segmentedStyle,
   }
   return alphaColor(surfaceStyles, props.alpha)
 })
@@ -259,6 +263,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       className,
       ...props
     } = this.props
+    const segmentedStyle = getSegmentRadius(this.props)
     const selectedTheme = themeSelect ? themeSelect(theme) : theme
     const stringIcon = typeof icon === 'string'
     // goes to both
@@ -291,11 +296,22 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         forwardRef={forwardRef}
         userStyle={style}
         className={`${this.uniq} ${className || ''}`}
+        segmentedStyle={segmentedStyle}
       >
         {noInnerElement ? null : (
           <>
             {glint ? (
-              <Glint key={0} size={size} opacity={0.2} borderRadius={props.borderRadius} />
+              <Glint
+                key={0}
+                size={size}
+                opacity={0.2}
+                borderLeftRadius={
+                  segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
+                }
+                borderRightRadius={
+                  segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
+                }
+              />
             ) : null}
             {icon && !stringIcon ? <div>{icon}</div> : null}
             {icon && stringIcon ? (

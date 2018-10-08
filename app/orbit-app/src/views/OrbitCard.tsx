@@ -20,7 +20,7 @@ const VerticalSpaceSmall = view({
 
 const CardWrap = view(UI.View, {
   position: 'relative',
-  width: '100%',
+  flex: 1,
   transform: {
     z: 0,
   },
@@ -30,6 +30,8 @@ const Card = view({
   overflow: 'hidden',
   position: 'relative',
   maxHeight: '100%',
+  // this is for the shadow to not overflow...
+  margin: 2,
   transform: {
     z: 0,
   },

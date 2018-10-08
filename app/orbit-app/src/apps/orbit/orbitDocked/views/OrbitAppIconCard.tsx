@@ -2,7 +2,7 @@ import * as React from 'react'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
-import { SyncStatus } from '../views/SyncStatus'
+import { SyncStatus } from './SyncStatus'
 import { Text } from '@mcro/ui'
 import { Setting } from '@mcro/models'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
@@ -41,11 +41,7 @@ export const OrbitAppIconCard = ({
               {(syncJobs, removeJobs) => {
                 return (
                   <Text size={0.85} alpha={0.6} ellipse>
-                    {
-                      syncJobs.length ? 'Syncing...' :
-                      removeJobs.length ? 'Removing...' :
-                        name
-                    }
+                    {syncJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}
                   </Text>
                 )
               }}

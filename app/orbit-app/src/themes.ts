@@ -135,7 +135,7 @@ const dark = {
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardBorderColor: [255, 255, 255, 0.07],
   cardBorderColorHover: [255, 255, 255, 0.15],
-  cardHoverGlow: [0, 0, 0, 3, [0, 0, 0, 0.15]],
+  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   ...Theme.fromStyles({
     background: [20, 20, 20, 0.94],
     backgroundHover: 'rgba(20,20,20,0.2)',

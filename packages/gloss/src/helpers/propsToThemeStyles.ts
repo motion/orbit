@@ -43,10 +43,7 @@ type ThemeStyles = {
   themeStylesFromProps?: Partial<ThemeObject>
 }
 
-export const propsToThemeStyles = (
-  props,
-  mapPropStylesToPseudos?: boolean,
-): ThemeStyles => {
+export const propsToThemeStyles = (props, mapPropStylesToPseudos?: boolean): ThemeStyles => {
   const theme = props.theme
   let styles = {
     color: theme.color,
@@ -72,9 +69,11 @@ export const propsToThemeStyles = (
   let stylesFromProps
   for (const themeKey in config) {
     const { postfix, pseudoKey, booleanProp, extraStyleProp } = config[themeKey]
-    const booleanOn = booleanProp && props[booleanProp] === true
-    let pseudoStyle =
-      pseudoKey || booleanOn ? collectStylesForPseudo(theme, postfix) : null
+    const booleanOn = typeof booleanProp !== 'undefined' && props[booleanProp] === true
+    if (props[booleanProp] === false) {
+      continue
+    }
+    let pseudoStyle = pseudoKey || booleanOn ? collectStylesForPseudo(theme, postfix) : null
     // add in any overrideStyles
     if (mapPropStylesToPseudos && typeof props[extraStyleProp] === 'object') {
       pseudoStyle = {

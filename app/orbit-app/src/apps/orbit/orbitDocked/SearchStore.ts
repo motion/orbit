@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { loadMany, loadOne } from '@mcro/model-bridge'
+import { loadMany } from '@mcro/model-bridge'
 import { PersonBitModel, SearchResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { flatten, uniqBy } from 'lodash'

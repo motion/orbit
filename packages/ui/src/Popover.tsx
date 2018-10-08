@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
-import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle, isEqual, omit } from 'lodash'
 import { Arrow } from './Arrow'
@@ -8,6 +7,7 @@ import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
 import { Color, CSSPropertySet } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
+import { Theme } from '@mcro/gloss'
 
 const ArrowContain = view({
   position: 'absolute',
@@ -17,6 +17,7 @@ const ArrowContain = view({
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
 
 export type PopoverProps = CSSPropertySet & {
+  theme?: string
   // can pass function to get isOpen passed in
   children?: React.ReactNode | PopoverChildrenFn
   // element or function that returns element, or querySelector to element
@@ -31,7 +32,7 @@ export type PopoverProps = CSSPropertySet & {
   top?: number
   // the distance the popover is from the target
   // so it displays nicely spaced away
-  distance: number
+  distance?: number
   // open when target is clicked
   openOnClick?: boolean
   // open automatically when target is hovered
@@ -171,9 +172,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,
-    distance: 10,
-    arrowSize: 24,
-    forgiveness: 15,
+    distance: 14,
+    arrowSize: 14,
+    forgiveness: 20,
     towards: 'auto',
     openAnimation: 'slide 300ms',
     closeAnimation: 'bounce 300ms',
@@ -237,7 +238,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     this.mounted = true
     const { openOnClick, closeOnClick, closeOnEsc, open } = this.curProps
     this.listenForResize()
-    this.setTarget()
     if (openOnClick || closeOnClick) {
       this.listenForClickAway()
     }
@@ -253,6 +253,14 @@ export class Popover extends React.PureComponent<PopoverProps> {
         }
       })
     }
+    const child = findDOMNode(this) as HTMLDivElement
+    if (!child.classList.contains('popover')) {
+      this.target = child
+      if (this.target) {
+        this.listenForClick()
+        this.listenForHover()
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -265,7 +273,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (this.state.setPosition) {
       this.setPosition()
       this.setOpenOrClosed(this.props)
-      this.setTarget()
       this.setState({ setPosition: false })
     }
     if (this.props.onDidOpen) {
@@ -386,18 +393,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   clearHovered() {
     return new Promise(resolve => this.setState({ menuHovered: 0, targetHovered: 0 }, resolve))
-  }
-
-  setTarget() {
-    this.target = (this.targetRef && this.targetRef.current) || getTarget(this.curProps.target)
-    // couldnt forward ref...
-    if (!this.target) {
-      this.target = findDOMNode(this)
-    }
-    if (this.target) {
-      this.listenForClick()
-      this.listenForHover()
-    }
   }
 
   get isHovered() {
@@ -678,6 +673,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
     const setHovered = () => {
+      console.log('set hovered')
       this.hoverStateSet(name, true)
     }
     const setUnhovered = () => {
@@ -794,6 +790,21 @@ export class Popover extends React.PureComponent<PopoverProps> {
     }
   }
 
+  controlledTarget = target => {
+    const targetProps = {
+      ref: this.targetRef,
+      active: false,
+    }
+    if (this.props.passActive) {
+      targetProps.active = this.state.isOpen && !this.state.closing
+    }
+    const { acceptsHovered } = target.type
+    if (acceptsHovered) {
+      targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = this.showPopover
+    }
+    return React.cloneElement(target, targetProps)
+  }
+
   render() {
     const {
       adjust,
@@ -830,6 +841,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       style,
       elevation,
       ignoreSegment,
+      theme,
       ...props
     } = this.props
     const {
@@ -844,87 +856,83 @@ export class Popover extends React.PureComponent<PopoverProps> {
       direction,
     } = this.state
     const { showPopover } = this
-    const controlledTarget = target => {
-      const targetProps = {
-        ref: this.targetRef,
-        active: false,
-      }
-      if (passActive) {
-        targetProps.active = isOpen && !closing
-      }
-      const { acceptsHovered } = target.type
-      if (acceptsHovered) {
-        targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = showPopover
-      }
-      return React.cloneElement(target, targetProps)
-    }
+    const portal = (
+      <Portal>
+        <PopoverContainer
+          data-towards={direction}
+          isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
+          isOpen={showPopover}
+          isClosing={closing}
+          className="popover"
+        >
+          {!!overlay && (
+            <Overlay
+              forwardRef={this.overlayRef}
+              isShown={showPopover && !closing}
+              onClick={e => this.handleOverlayClick(e)}
+              overlay={overlay}
+            />
+          )}
+          <PopoverWrap
+            {...popoverProps}
+            isOpen={!closing && !!showPopover}
+            forwardRef={this.setPopoverRef}
+            distance={distance}
+            forgiveness={forgiveness}
+            showForgiveness={showForgiveness}
+            animation={isOpen ? closeAnimation : openAnimation}
+            style={{
+              ...style,
+              top: top || 'auto',
+              bottom: bottom || 'auto',
+              left,
+              width,
+              // because things that extend downwards wont always fill all the way
+              // so arrow will be floating, so lets make it always expand fully down
+              // when the popover arrow is at bottom
+              height: direction === 'top' ? height || maxHeight : height,
+              maxHeight,
+            }}
+          >
+            {!noArrow && (
+              <ArrowContain
+                style={{
+                  top: arrowTop,
+                  marginLeft: arrowLeft,
+                  zIndex: 100000000000, // above any shadows
+                }}
+              >
+                <Arrow
+                  background={
+                    typeof background === 'string' && background !== 'transparent'
+                      ? background
+                      : null
+                  }
+                  size={arrowSize}
+                  towards={INVERSE[direction]}
+                  boxShadow={getShadow(shadow, elevation)}
+                />
+              </ArrowContain>
+            )}
+            <SizedSurface
+              sizeRadius
+              flex={1}
+              ignoreSegment={ignoreSegment}
+              hover={false}
+              {...props}
+            >
+              {typeof children === 'function'
+                ? (children as PopoverChildrenFn)(showPopover)
+                : children}
+            </SizedSurface>
+          </PopoverWrap>
+        </PopoverContainer>
+      </Portal>
+    )
     return (
       <>
-        {React.isValidElement(target) && controlledTarget(target)}
-        <Portal>
-          <PopoverContainer
-            data-towards={direction}
-            isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
-            isOpen={showPopover}
-            isClosing={closing}
-          >
-            {!!overlay && (
-              <Overlay
-                forwardRef={this.overlayRef}
-                isShown={showPopover && !closing}
-                onClick={e => this.handleOverlayClick(e)}
-                overlay={overlay}
-              />
-            )}
-            <PopoverWrap
-              {...popoverProps}
-              isOpen={!closing && !!showPopover}
-              forwardRef={this.setPopoverRef}
-              distance={distance}
-              forgiveness={forgiveness}
-              showForgiveness={showForgiveness}
-              animation={isOpen ? closeAnimation : openAnimation}
-              style={{
-                ...style,
-                top: top || 'auto',
-                bottom: bottom || 'auto',
-                left,
-                width,
-                // because things that extend downwards wont always fill all the way
-                // so arrow will be floating, so lets make it always expand fully down
-                // when the popover arrow is at bottom
-                height: direction === 'top' ? height || maxHeight : height,
-                maxHeight,
-              }}
-            >
-              {!noArrow && (
-                <ArrowContain
-                  style={{
-                    top: arrowTop,
-                    marginLeft: arrowLeft,
-                    zIndex: 100000000000, // above any shadows
-                  }}
-                >
-                  <Arrow
-                    background={
-                      typeof background === 'string' && background !== 'transparent'
-                        ? background
-                        : null
-                    }
-                    size={arrowSize}
-                    towards={INVERSE[direction]}
-                    boxShadow={getShadow(shadow, elevation)}
-                  />
-                </ArrowContain>
-              )}
-              <SizedSurface sizeRadius flex={1} ignoreSegment={ignoreSegment} {...props}>
-                {typeof children === 'function'
-                  ? (children as PopoverChildrenFn)(showPopover)
-                  : children}
-              </SizedSurface>
-            </PopoverWrap>
-          </PopoverContainer>
-        </Portal>
+        {React.isValidElement(target) && this.controlledTarget(target)}
+        {theme ? <Theme>{portal}</Theme> : portal}
       </>
     )
   }

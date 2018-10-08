@@ -7,8 +7,9 @@ import { observeOne } from '@mcro/model-bridge'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
 import { OrbitStore } from '../OrbitStore'
 import { autoTrack } from '../../stores/Track'
+import { memoize } from 'lodash'
 
-type Panes = 'home' | 'directory' | 'apps' | 'settings' | 'onboard' | 'search'
+type Panes = 'home' | 'favorites' | 'topics' | 'settings' | 'onboard'
 
 export class PaneManagerStore {
   props: {
@@ -17,7 +18,7 @@ export class PaneManagerStore {
     keyboardStore: KeyboardStore
   }
 
-  panes: Partial<Panes>[] = ['home', 'directory', 'apps', 'settings']
+  panes: Partial<Panes>[] = ['home', 'favorites', 'topics', 'settings']
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
@@ -82,9 +83,11 @@ export class PaneManagerStore {
       ensure('focused', this.props.orbitStore.inputFocused)
       if (this.props.selectionStore.activeIndex === -1) {
         if (key === 'right') {
+          ensure('within keyable range', this.paneIndex < 2)
           this.setPaneIndex(this.paneIndex + 1)
         }
         if (key === 'left') {
+          ensure('within keyable range', this.paneIndex > 0)
           this.setPaneIndex(this.paneIndex - 1)
         }
       }
@@ -110,20 +113,11 @@ export class PaneManagerStore {
     },
   )
 
-  setDirectoryOnAt = react(
-    () => App.state.query[0] === '@',
-    isDir => {
-      if (isDir) {
-        this.setActivePane('directory')
-      } else if (this.activePane === 'directory') {
-        this.setActivePane(this.lastActivePane)
-      }
-    },
-  )
-
   setActivePane = name => {
     this.setPaneIndex(this.panes.findIndex(val => val === name))
   }
+
+  activePaneSetter = memoize(name => () => this.setActivePane(name))
 
   beforeSetPane = () => {
     // clear selection results on change pane
@@ -170,12 +164,7 @@ export class PaneManagerStore {
       }
       // let activePaneFast be a frame ahead
       await sleep(32)
-      let active = this.panes[this.paneIndex]
-      if (active === 'home' && !!App.state.query) {
-        active = 'search'
-      }
-      ensure('not active', active !== this.activePane)
-      return active
+      return this.panes[this.paneIndex]
     },
   )
 

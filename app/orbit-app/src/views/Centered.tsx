@@ -10,4 +10,5 @@ export const Centered = view({
   alignItems: 'center',
   justifyContent: 'center',
   textAlign: 'center',
+  zIndex: 0,
 })

@@ -16,6 +16,18 @@ export class SlackLoader {
   }
 
   /**
+   * Loads slack team info.
+   *
+   * @see https://api.slack.com/methods/team.info
+   */
+  async loadTeam(): Promise<SlackTeam> {
+    const options = { token: this.setting.token }
+    log.verbose(`request to team.info`, options)
+    const response = await team.info(options)
+    return response.team
+  }
+
+  /**
    * Loads all slack users.
    *
    * @see https://api.slack.com/methods/users.list
@@ -102,9 +114,4 @@ export class SlackLoader {
     return response.messages
   }
 
-  async loadTeam(): Promise<SlackTeam> {
-    return (await team.info({
-      token: this.setting.token,
-    })).team
-  }
 }

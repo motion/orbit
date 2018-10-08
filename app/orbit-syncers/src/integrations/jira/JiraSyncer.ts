@@ -20,8 +20,8 @@ export class JiraSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting) {
-    this.log = new Logger('syncer:jira:' + setting.id)
+  constructor(setting: Setting, log?: Logger) {
+    this.log = log || new Logger('syncer:jira:' + setting.id)
     this.loader = new JiraLoader(setting, this.log)
     this.bitFactory = new JiraBitFactory(setting)
     this.personFactory = new JiraPersonFactory(setting)

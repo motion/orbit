@@ -5,7 +5,7 @@ import { view } from '@mcro/black'
 
 type Props = {
   settingId: number
-  children: (a: Job[]) => React.ReactNode
+  children: (syncJobs: Job[], removeJobs: Job[]) => React.ReactNode
 }
 
 // const syncers = {
@@ -41,9 +41,8 @@ class SyncStatusStore {
 export class SyncStatus extends React.Component<{ store?: SyncStatusStore } & Props> {
   render() {
     const { store, children } = this.props
-    if (!store.activeJobs.length) {
-      return children(null)
-    }
-    return children(store.activeJobs)
+    const syncJobs = store.activeJobs.filter(job => job.type === 'INTEGRATION_SYNC')
+    const removeJobs = store.activeJobs.filter(job => job.type === 'INTEGRATION_REMOVE')
+    return children(syncJobs, removeJobs)
   }
 }

@@ -21,9 +21,9 @@ export class GithubSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, log?: Logger) {
     this.setting = setting
-    this.log = new Logger('syncer:github:' + setting.id)
+    this.log = log || new Logger('syncer:github:' + setting.id)
     this.loader = new GithubLoader(setting)
     this.bitFactory = new GithubBitFactory(setting)
     this.personFactory = new GithubPersonFactory(setting)

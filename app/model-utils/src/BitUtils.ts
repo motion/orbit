@@ -33,22 +33,20 @@ export class BitUtils {
    * Creates a content hash for a given bit.
    */
   static contentHash(bit: Bit): number {
-    return hash(
-      [
-        bit.id,
-        bit.integration,
-        bit.settingId,
-        bit.title,
-        bit.body,
-        bit.type,
-        bit.webLink,
-        bit.desktopLink,
-        bit.data,
-        bit.location,
-        bit.bitCreatedAt,
-        bit.bitUpdatedAt,
-        bit.authorId,
-      ].filter(item => item !== null && item !== undefined),
-    )
+    return hash([
+      bit.id,
+      bit.integration,
+      bit.setting ? bit.setting.id : bit.settingId,
+      bit.title,
+      bit.body,
+      bit.type,
+      bit.webLink,
+      bit.desktopLink,
+      bit.data,
+      bit.location,
+      bit.bitCreatedAt,
+      bit.bitUpdatedAt,
+      bit.authorId,
+    ].filter(item => item !== null && item !== undefined))
   }
 }

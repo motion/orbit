@@ -23,9 +23,9 @@ export class SlackSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, log?: Logger) {
     this.setting = setting
-    this.log = new Logger('syncer:slack:' + setting.id)
+    this.log = log || new Logger('syncer:slack:' + setting.id)
     this.loader = new SlackLoader(this.setting)
     this.bitFactory = new SlackBitFactory(this.setting)
     this.personFactory = new SlackPersonFactory(this.setting)
@@ -38,6 +38,22 @@ export class SlackSyncer implements IntegrationSyncer {
    * Runs synchronization process.
    */
   async run() {
+
+    // load team info
+    this.log.timer(`load team info from API`)
+    const team = await this.loader.loadTeam()
+    this.log.timer(`load team info from API`)
+
+    // update settings with team info
+    const values = this.setting.values as SlackSettingValues
+    values.team = {
+      id: team.id,
+      name: team.name,
+      domain: team.domain,
+      icon: team.icon.image_132
+    }
+    await getRepository(SettingEntity).save(this.setting)
+
     this.log.timer('load API users')
     const apiUsers = await this.loader.loadUsers()
     this.log.timer('load API users', apiUsers.length)
@@ -47,8 +63,6 @@ export class SlackSyncer implements IntegrationSyncer {
       return user.is_bot === false && user.profile.email
     })
     this.log.info('filtered API users (non bots)', filteredApiUsers)
-
-    const team = await this.loader.loadTeam()
 
     // creating entities for them
     this.log.info('finding and creating people for users', filteredApiUsers)
@@ -83,7 +97,6 @@ export class SlackSyncer implements IntegrationSyncer {
     this.log.info('filtering only selected channels', activeChannels)
 
     // go through all channels
-    const values = this.setting.values as SlackSettingValues
     const lastMessageSync = values.lastMessageSync || {}
     const apiBits: Bit[] = [],
       dbBits: Bit[] = []
@@ -127,7 +140,7 @@ export class SlackSyncer implements IntegrationSyncer {
         // create bits from conversations
         const savedConversations = await Promise.all(
           conversations.map(messages =>
-            this.bitFactory.create(channel, messages, allDbPeople, team),
+            this.bitFactory.create(channel, messages, allDbPeople),
           ),
         )
 

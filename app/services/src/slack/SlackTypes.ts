@@ -48,6 +48,26 @@ export type SlackMessage = {
 }
 
 /**
+ * Slack team.
+ *
+ * @see https://api.slack.com/methods/team.info
+ */
+export type SlackTeam = {
+  id: string
+  name: string
+  domain: string
+  icon: {
+    image_34: string
+    image_44: string
+    image_68: string
+    image_88: string
+    image_102: string
+    image_132: string
+    image_original: string
+  }
+}
+
+/**
  * Slack user.
  *
  * @see https://api.slack.com/types/user
@@ -84,13 +104,4 @@ export type SlackUser = {
   is_ultra_restricted: boolean
   is_bot: boolean
   updated: number
-}
-
-export type SlackTeam = {
-  domain: string
-  icon: {
-    image_original: string
-  }
-  id: string
-  name: string
 }

@@ -27,7 +27,7 @@ export class PersonUtils {
       person.id,
       person.integration,
       person.integrationId,
-      person.settingId,
+      person.setting ? person.setting.id : person.settingId,
       person.email,
       person.photo,
       person.name,

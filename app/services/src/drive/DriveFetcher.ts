@@ -1,7 +1,6 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { GDriveSettingValues, Setting } from '@mcro/models'
-import * as r2 from '@mcro/r2'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
@@ -25,32 +24,37 @@ export class DriveFetcher {
    */
   downloadFile(url: string, dest: string): Promise<void> {
     return new Promise((ok, fail) => {
-      const file = fs.createWriteStream(dest)
-      const urlObject = new URL(url)
-      https.get(
-        {
-          protocol: urlObject.protocol,
-          host: urlObject.host,
-          port: urlObject.port,
-          path: urlObject.pathname,
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${this.setting.token}`,
+      try {
+        const file = fs.createWriteStream(dest)
+        const urlObject = new URL(url)
+        https.get(
+          {
+            protocol: urlObject.protocol,
+            host: urlObject.host,
+            port: urlObject.port,
+            path: urlObject.pathname,
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${this.setting.token}`,
+            },
           },
-        },
-        function(response) {
-          response.pipe(file)
-          file
-            .on('finish', function() {
-              file.close()
-              ok()
-            })
-            .on('error', function(err) {
-              // Handle errors
-              fail(err.message)
-            })
-        },
-      )
+          function(response) {
+            response.pipe(file)
+            file
+              .on('finish', function() {
+                file.close()
+                ok()
+              })
+              .on('error', function(err) {
+                // Handle errors
+                fail(err.message)
+              })
+          },
+        )
+
+      } catch (err) {
+        fail(err)
+      }
     })
   }
 
@@ -73,11 +77,11 @@ export class DriveFetcher {
     })
     const result = json ? await response.json() : await response.text()
     if (result.error && result.error.code === 401 /* && !isRetrying*/) {
-      const didRefresh = await this.refreshToken(this.setting)
+      const didRefresh = await this.refreshToken()
       if (didRefresh) {
         return await this.fetch(options)
       } else {
-        console.log('Couldnt refresh access token :(', result)
+        console.log('Cannot refresh access token', result)
         throw result.error
       }
     } else if (result.error) {
@@ -88,32 +92,44 @@ export class DriveFetcher {
   }
 
   /**
-   * Refreshes access token used to access google api.
-   *
-   * todo: need to move this logic into Setting check method,
-   * todo: its a setting responsibility to control its access token state
+   * Refreshes OAuth token.
    */
-  private async refreshToken(setting: Setting) {
-    const values = setting.values as GDriveSettingValues
+  private async refreshToken() { // todo: create a separate loader component, replacements for r2
+    const values = this.setting.values as GDriveSettingValues
     if (!values.oauth.refreshToken) {
       return null
     }
-    const reply = await r2.post('https://www.googleapis.com/oauth2/v4/token', {
+
+    const formData = {
+      refresh_token: values.oauth.refreshToken,
+      client_id: values.oauth.clientId,
+      client_secret: values.oauth.secret,
+      grant_type: 'refresh_token',
+    }
+    const body = Object
+      .keys(formData)
+      .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(formData[k])}`)
+      .join('&')
+
+    const response = await fetch('https://www.googleapis.com/oauth2/v4/token', {
+      body,
+      method: 'post',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      formData: {
-        refresh_token: values.oauth.refreshToken,
-        client_id: values.oauth.clientId,
-        client_secret: values.oauth.secret,
-        grant_type: 'refresh_token',
-      },
-    }).json
-    if (reply && reply.access_token) {
-      setting.token = reply.access_token
-      // await this.setting.save() // todo broken after extracting into services
-      return true
+    })
+
+    const reply = await response.json()
+    if (reply.error) {
+      throw reply.error
+
+    } else {
+      if (reply && reply.access_token) {
+        this.setting.token = reply.access_token
+        // await this.setting.save() // todo broken after extracting into services
+        return true
+      }
+      return false
     }
-    return false
   }
 }

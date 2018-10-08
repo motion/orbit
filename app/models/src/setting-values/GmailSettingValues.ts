@@ -15,9 +15,9 @@ export interface GmailSettingValues {
   max?: number
 
   /**
-   * Maximal number of month to load email from current day.
+   * Maximal number of days to load email from current day.
    */
-  monthLimit?: number
+  daysLimit?: number
 
   /**
    * Special GMail filter, used to filter threads by given filter query.
@@ -47,10 +47,10 @@ export interface GmailSettingValues {
   lastSyncMax?: number
 
   /**
-   * Last executed month limit.
+   * Last executed days limit.
    * Used to understand if we need to re-sync all gmail data.
    */
-  lastSyncMonthLimit?: number
+  lastSyncDaysLimit?: number
 
   /**
    * GMail OAuth authentication data.

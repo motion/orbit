@@ -48,13 +48,17 @@ export class SettingManageRow extends React.Component<{
         {!!whitelist ? <ManageSmartSync whitelist={whitelist} /> : <Text>Sync active.</Text>}
         <View flex={1} />
         <SyncStatus settingId={setting.id}>
-          {jobs => {
+          {(syncJobs, removeJobs) => {
             return (
               <>
-                {jobs && (
+                {(syncJobs.length || removeJobs.length) && (
                   <>
                     <Text size={0.9} fontWeight={400} alpha={0.6}>
-                      Syncing...
+                      {
+                        syncJobs.length ? 'Syncing...' :
+                        removeJobs.length ? 'Removing...' :
+                        name
+                      }
                     </Text>
                     <TitleBarSpace />
                   </>
@@ -65,12 +69,13 @@ export class SettingManageRow extends React.Component<{
                 <TitleBarSpace />
                 <SegmentedRow>
                   <TitleBarButton
+                    disabled={removeJobs.length > 0 || syncJobs.length > 0}
                     icon="remove"
                     tooltip="Remove integration"
                     onClick={this.removeIntegration}
                   />
                   <TitleBarButton
-                    disabled={!!jobs}
+                    disabled={removeJobs.length > 0 || syncJobs.length > 0}
                     tooltip="Sync"
                     icon="refresh"
                     onClick={this.handleRefresh}

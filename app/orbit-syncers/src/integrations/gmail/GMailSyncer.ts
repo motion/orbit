@@ -47,15 +47,20 @@ export class GMailSyncer implements IntegrationSyncer {
     filter = filter ? filter : `newer_than:${daysLimit}d`
 
     // if max or filter has changed - we drop all bits and make complete sync again
-    if ((values.lastSyncMax !== undefined && max !== values.lastSyncMax) ||
-        (values.lastSyncFilter !== undefined && filter !== values.lastSyncFilter) ||
-        (values.lastSyncDaysLimit !== undefined && daysLimit !== values.lastSyncDaysLimit)) {
-      this.log.info(`last syncronization settings mismatch, need to drop all integration bits and start a clean history`)
+    if (
+      (values.lastSyncMax !== undefined && max !== values.lastSyncMax) ||
+      (values.lastSyncFilter !== undefined && filter !== values.lastSyncFilter) ||
+      (values.lastSyncDaysLimit !== undefined && daysLimit !== values.lastSyncDaysLimit)
+    ) {
+      this.log.info(
+        'last syncronization settings mismatch, need to drop all integration bits and start a clean history',
+      )
       dropAllBits = true
       historyId = null
     }
 
-    let addedThreads: GMailThread[] = [], removedBits: Bit[] = []
+    let addedThreads: GMailThread[] = [],
+      removedBits: Bit[] = []
     if (historyId) {
       // load history
       const history = await this.loader.loadHistory(historyId)
@@ -63,8 +68,11 @@ export class GMailSyncer implements IntegrationSyncer {
 
       // load threads for newly added / changed threads
       if (history.addedThreadIds.length) {
-        this.log.timer('load all threads until we find following thread ids', history.addedThreadIds)
-        addedThreads = await this.loader.loadThreads(max, 0, filter, history.addedThreadIds)
+        this.log.timer(
+          'load all threads until we find following thread ids',
+          history.addedThreadIds,
+        )
+        addedThreads = await this.loader.loadThreads(max, filter, history.addedThreadIds)
         this.log.timer('load all threads until we find following thread ids', addedThreads)
       } else {
         this.log.info('no added / changed messages in history were found')
@@ -90,19 +98,19 @@ export class GMailSyncer implements IntegrationSyncer {
 
     // load emails for whitelisted people separately
     if (values.whitelist) {
-      this.log.info(`checking whitelist`, values.whitelist)
+      this.log.info('checking whitelist', values.whitelist)
       const threadsFromWhiteList: GMailThread[] = []
-      const whitelistEmails = Object
-        .keys(values.whitelist)
-        .filter(email => values.whitelist[email] === true)
+      const whitelistEmails = Object.keys(values.whitelist).filter(
+        email => values.whitelist[email] === true,
+      )
 
       if (whitelistEmails.length > 0) {
         this.log.info('loading threads from whitelisted people', whitelistEmails)
         // we split emails into chunks because gmail api can't handle huge queries
         const emailChunks = chunk(whitelistEmails, 100)
         for (let emails of emailChunks) {
-          const whitelistFilter = emails.map(email => "from:" + email).join(" OR ")
-          const threads = await this.loader.loadThreads(max, 0, whitelistFilter)
+          const whitelistFilter = emails.map(email => 'from:' + email).join(' OR ')
+          const threads = await this.loader.loadThreads(max, whitelistFilter)
           const nonDuplicateThreads = threads.filter(thread => {
             return addedThreads.some(addedThread => addedThread.id === thread.id)
           })
@@ -111,12 +119,13 @@ export class GMailSyncer implements IntegrationSyncer {
         }
         this.log.info('whitelisted people threads loaded', threadsFromWhiteList)
       } else {
-        this.log.info(`no enabled people in whitelist were found`)
+        this.log.info('no enabled people in whitelist were found')
       }
     }
 
     this.log.timer('create bits from new threads', addedThreads)
-    const apiBits: Bit[] = [], apiPeople: Person[] = []
+    const apiBits: Bit[] = [],
+      apiPeople: Person[] = []
     for (let thread of addedThreads) {
       const participants = this.extractThreadParticipants(thread)
       const bit = this.bitFactory.create(thread)
@@ -129,14 +138,20 @@ export class GMailSyncer implements IntegrationSyncer {
     const personIds = apiPeople.map(person => person.id)
     const bitIds = apiBits.map(bit => bit.id)
 
-    this.log.timer(`load people, person bits and bits from the database`, {
+    this.log.timer('load people, person bits and bits from the database', {
       personIds,
       bitIds,
     })
-    const dbPeople = personIds.length ? await this.syncerRepository.loadDatabasePeople({ ids: personIds }) : []
-    const dbPersonBits = apiPeople.length ? await this.syncerRepository.loadDatabasePersonBits({ people: apiPeople }) : []
-    const dbBits = bitIds.length ? await this.syncerRepository.loadDatabaseBits({ ids: bitIds }) : []
-    this.log.timer(`load people, person bits and bits from the database`, {
+    const dbPeople = personIds.length
+      ? await this.syncerRepository.loadDatabasePeople({ ids: personIds })
+      : []
+    const dbPersonBits = apiPeople.length
+      ? await this.syncerRepository.loadDatabasePersonBits({ people: apiPeople })
+      : []
+    const dbBits = bitIds.length
+      ? await this.syncerRepository.loadDatabaseBits({ ids: bitIds })
+      : []
+    this.log.timer('load people, person bits and bits from the database', {
       dbPeople,
       dbPersonBits,
       dbBits,
@@ -166,8 +181,7 @@ export class GMailSyncer implements IntegrationSyncer {
       for (let participant of participants) {
         const inAllParticipant = allParticipants.find(p => p.email === participant.email)
         if (inAllParticipant) {
-          if (!inAllParticipant.name && participant.name)
-            inAllParticipant.name = participant.name
+          if (!inAllParticipant.name && participant.name) inAllParticipant.name = participant.name
         } else {
           allParticipants.push(participant)
         }
@@ -175,5 +189,4 @@ export class GMailSyncer implements IntegrationSyncer {
     }
     return allParticipants
   }
-
 }

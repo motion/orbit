@@ -7,6 +7,7 @@ import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { CSSPropertySet } from '@mcro/gloss'
 import { Glint, Row, Text, View } from '@mcro/ui'
+import { Centered } from '../../../views/Centered'
 
 type Props = {
   peekStore?: PeekStore
@@ -47,18 +48,6 @@ const PeekHeaderContain = view(UI.View, {
     }
   }
   return style
-})
-
-const Centered = view({
-  position: 'absolute',
-  top: 0,
-  left: 100,
-  right: 100,
-  bottom: 0,
-  overflow: 'hidden',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
 })
 
 const MainHead = view({

@@ -6,7 +6,6 @@ import { OrbitSettings } from './orbitSettings/OrbitSettings'
 import { OrbitHomeHeader } from './orbitHome/OrbitHomeHeader'
 import { OrbitHeader } from '../orbitHeader/OrbitHeader'
 import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
-import { OrbitDirectory } from './OrbitDirectory'
 import { OrbitApps } from './orbitApps/OrbitApps'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
@@ -81,7 +80,6 @@ class OrbitDockedContents extends React.PureComponent<Props> {
           <div style={{ position: 'relative', flex: 1 }}>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
-            <OrbitDirectory name="directory" />
             <OrbitApps name="apps" />
             <OrbitSearchResults name="docked-search" />
             <OrbitSettings name="settings" />

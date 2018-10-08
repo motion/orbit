@@ -4,7 +4,7 @@ import { observeMany } from '@mcro/model-bridge'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'
-import { View } from '@mcro/ui'
+import { View, Row, SegmentedRow, Button } from '@mcro/ui'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { BitModel, PersonBitModel, SettingModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
@@ -13,6 +13,7 @@ import { SyncStatusAll } from '../views/SyncStatusAll'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { SubTitle } from '../../../../views/SubTitle'
 import { OrbitAppIconCard } from '../orbitApps/OrbitAppIconCard'
+import { Centered } from '../../../../views/Centered'
 
 type Props = {
   name: string
@@ -32,19 +33,19 @@ const findManyType = integration => ({
 })
 
 const allStreams = [
-  {
-    id: '-1',
-    name: 'Apps',
-    source: 'apps',
-    showTitle: false,
-    model: SettingModel,
-    query: {
-      where: {
-        category: 'integration',
-      },
-      take: 1000,
-    },
-  },
+  // {
+  //   id: '-1',
+  //   name: 'Apps',
+  //   source: 'apps',
+  //   showTitle: false,
+  //   model: SettingModel,
+  //   query: {
+  //     where: {
+  //       category: 'integration',
+  //     },
+  //     take: 1000,
+  //   },
+  // },
   {
     id: '0',
     name: 'People',
@@ -146,7 +147,7 @@ class OrbitHomeStore {
     () => [this.streams, this.sortOrder],
     async ([streams, order], { sleep }) => {
       // avoid doing it to much during rapid initial updates...
-      await sleep(50)
+      await sleep(150)
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of order) {
@@ -218,6 +219,8 @@ class OrbitHomeStore {
   )
 }
 
+const NavButton = props => <Button sizeRadius={3} {...props} />
+
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore', 'appsStore')
 @view.attach({
   homeStore: OrbitHomeStore,
@@ -267,8 +270,6 @@ export class OrbitHome extends React.Component<Props> {
             {(provided, snapshot) => {
               return (
                 <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-                  {/* <SuggestionBarVerticalPad /> */}
-                  {results[0].name === 'Apps' && this.renderApps(results[0])}
                   {results.map(({ id, name, items, startIndex }, index) => {
                     if (name === 'Apps') {
                       return null
@@ -314,8 +315,24 @@ export class OrbitHome extends React.Component<Props> {
       // show sync status when empty
       content = <SyncStatusAll />
     }
+
     return (
       <SubPane name="home" fadeBottom>
+        <Row position="relative" alignItems="center" padding={[3, 0]}>
+          <NavButton icon="clock">Today</NavButton>
+          <Centered>
+            <SegmentedRow>
+              <NavButton icon="clock" tooltip="Recent" active />
+              <NavButton icon="favourite" tooltip="Favorite" />
+              <NavButton icon="menu35" tooltip="Lists" />
+            </SegmentedRow>
+          </Centered>
+          <View flex={1} />
+          <SegmentedRow>
+            <NavButton icon="funnel" />
+            <NavButton icon="all">All</NavButton>
+          </SegmentedRow>
+        </Row>
         {content}
         {results.length === 1 && (
           <View alignItems="center" justifyContent="center" padding={[15, 25, 0]}>

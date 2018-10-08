@@ -38,7 +38,7 @@ export class ElectronRoot extends React.Component {
     return (
       <App
         onBeforeQuit={electronStore.handleBeforeQuit}
-        onQuit={electronStore.handleQuit}
+        onWillQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
         devTools={devTools}
       >

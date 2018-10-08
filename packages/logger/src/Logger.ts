@@ -181,16 +181,28 @@ export class Logger {
     // output to the console
     // todo: in the production we'll need to output into our statistics/logger servers
     if (level === 'error') {
-      console.error(`%c${this.namespace}`, 'color: white; background-color: red; padding: 0 2px; margin: 0 2px', ...messages)
+      console.error(
+        `%c${this.namespace}`,
+        'color: white; background-color: red; padding: 0 2px; margin: 0 2px',
+        ...messages,
+      )
       log.error(this.namespace, ...messages)
     } else if (level === 'warning') {
-      console.warn(`%c${this.namespace}`, 'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px', ...messages)
+      console.warn(
+        `%c${this.namespace}`,
+        'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px',
+        ...messages,
+      )
       log.warn(this.namespace, ...messages)
     } else if (level === 'verbose') {
       debug(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
       log.debug(this.namespace, ...messages)
     } else if (level === 'info') {
-      console.info(`%c${this.namespace}`, `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`, ...messages)
+      console.info(
+        `%c${this.namespace}`,
+        `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`,
+        ...messages,
+      )
       log.info(this.namespace, ...messages)
     } else if (level === 'timer') {
       const labelMessage = messages[0]

@@ -45,10 +45,14 @@ export const OrbitAppCard = decorator(({ store, model, isActive, subtitle, ...pr
       {...props}
     >
       <SyncStatus settingId={model.id}>
-        {jobs => {
+        {(syncJobs, removeJobs) => {
           return (
             <Text size={0.85} alpha={0.6}>
-              {jobs ? 'Syncing' : ''}
+              {
+                syncJobs.length ? 'Syncing' :
+                removeJobs.length ? 'Removing' :
+                ''
+              }
             </Text>
           )
         }}

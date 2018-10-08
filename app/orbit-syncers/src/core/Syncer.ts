@@ -145,7 +145,7 @@ export class Syncer {
         where: {
           type: 'INTEGRATION_SYNC',
           syncer: this.name,
-          settingId: setting.id,
+          settingId: setting ? setting.id : undefined,
         },
         order: {
           time: 'desc',
@@ -155,7 +155,7 @@ export class Syncer {
         const jobTime = lastJob.time + this.options.interval
         const currentTime = new Date().getTime()
         const needToWait = jobTime - currentTime
-        const jobName = this.name + (setting.id ? ':' + setting.id : '')
+        const jobName = this.name + (setting ? ':' + setting.id : '')
 
         // if app was closed when syncer was in processing
         if (lastJob.status === 'PROCESSING' && !interval) {
@@ -217,6 +217,10 @@ export class Syncer {
         }, this.options.interval),
       }
       this.intervals.push(interval)
+
+      // its important to finish initially created interval and clean it
+      await interval.running
+      interval.running = undefined
     }
   }
 

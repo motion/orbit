@@ -21,7 +21,8 @@ export const SettingForceSyncResolver = resolveCommand(
     for (let syncer of Syncers) {
       if (syncer instanceof Syncer) {
         if (syncer.options.type === setting.type) {
-          await syncer.runSyncer(log, setting)
+          const syncerLogger = new Logger(`command:setting-force-sync:${setting.type}:${setting.id}`)
+          await syncer.runSyncer(syncerLogger, setting)
         }
       }
     }

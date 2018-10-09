@@ -56,7 +56,8 @@ export class OrbitHomeHeader extends React.Component<Props> {
 
   render() {
     const { paneManagerStore } = this.props
-    const homeActive = paneManagerStore.activePane === 'home'
+    const homeActive =
+      paneManagerStore.activePane === 'home' || paneManagerStore.activePane === 'explore'
     return (
       <>
         <Section invisible={paneManagerStore.activePane === 'onboard'}>

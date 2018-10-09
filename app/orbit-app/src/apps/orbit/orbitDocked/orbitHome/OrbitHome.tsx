@@ -384,7 +384,8 @@ export class OrbitHome extends React.Component<Props> {
           target={<NavButton icon="clock">24h</NavButton>}
           adjust={[180, 0]}
           background
-          borderRadius={3}
+          borderRadius={6}
+          elevation={4}
           theme="light"
         >
           <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
@@ -419,7 +420,8 @@ export class OrbitHome extends React.Component<Props> {
           closeOnEsc
           target={<NavButton icon="funnel">All</NavButton>}
           adjust={[-10, 0]}
-          borderRadius={3}
+          borderRadius={6}
+          elevation={4}
           theme="light"
         >
           <View padding={10}>

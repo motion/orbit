@@ -83,7 +83,7 @@ export class PaneManagerStore {
       ensure('focused', this.props.orbitStore.inputFocused)
       if (this.props.selectionStore.activeIndex === -1) {
         if (key === 'right') {
-          ensure('within keyable range', this.paneIndex < 2)
+          ensure('within keyable range', this.paneIndex < 1)
           this.setPaneIndex(this.paneIndex + 1)
         }
         if (key === 'left') {

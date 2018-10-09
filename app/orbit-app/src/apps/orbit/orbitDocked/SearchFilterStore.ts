@@ -145,7 +145,7 @@ export class SearchFilterStore /* extends Store */ {
 
   get integrationFilters(): SearchFilter[] {
     const { exclusiveFilters } = this
-    return this.uniqueSettings.map(setting => ({
+    return this.uniqueSettings.filter(x => x.type !== 'app1').map(setting => ({
       type: setting.type,
       icon: setting.type,
       name: this.appsStore.getTitle(setting),

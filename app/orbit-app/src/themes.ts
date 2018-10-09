@@ -57,7 +57,7 @@ const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 // })
 
 const macModernTheme = Theme.colorize({
-  shadowSelected: [0, 0, 0, 2, '#90b1e433'],
+  shadowSelected: '0 0 0 2px #90b1e433', // [0, 0, 0, 2, '#90b1e433'],
   borderSelected: '#90b1e4ee',
 
   white: '#fff',
@@ -103,6 +103,8 @@ const macModernTheme = Theme.colorize({
   },
 })
 
+console.log('macModernTheme', macModernTheme)
+
 const light = {
   _equalityKey: 'light',
   ...macModernTheme,
@@ -141,7 +143,7 @@ const dark = {
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
     color: '#fff',
-    borderColor: [0, 0, 0, 0.25],
+    borderColor: [1, 1, 1, 0.25],
   }),
   // buttonBackground: [40, 40, 40, 0.2],
   // buttonBackgroundActive: [20, 20, 20, 0.2],

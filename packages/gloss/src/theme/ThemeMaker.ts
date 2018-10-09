@@ -52,7 +52,6 @@ const opposite = color => {
     : color.mix(color.lightness(1)).lightness(25)
 }
 
-const isValidColorString = s => typeof s === 'string' && s.indexOf('gradient') === -1
 const isPlainObj = o => typeof o == 'object' && o.constructor == Object
 
 export class ThemeMaker {
@@ -65,10 +64,7 @@ export class ThemeMaker {
       if (isPlainObj(val)) {
         // recurse into objects
         res[key] = this.colorize(val)
-      } else if (isValidColorString(val)) {
-        res[key] = colorize(val)
       } else {
-        // could be color or something weird
         try {
           res[key] = colorize(val)
         } catch {

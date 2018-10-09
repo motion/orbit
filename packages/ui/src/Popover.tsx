@@ -923,6 +923,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
             ignoreSegment={ignoreSegment}
             hover={false}
             overflow="visible"
+            boxShadow={getShadow(shadow, elevation)}
             {...backgroundProp}
             {...props}
           >

@@ -4,10 +4,11 @@ import { attachTheme, ThemeObject, Theme } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
-import { View, Image, Popover, Row, Col, Text, Icon, Button } from '@mcro/ui'
+import { View, Image, Popover, Row, Col, Button } from '@mcro/ui'
 import orbIcon from '../../../../public/orb.svg'
 import { Desktop } from '@mcro/stores'
 import { Actions } from '../../../actions/Actions'
+import { RowItem } from './RowItem'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -74,44 +75,6 @@ const OrbitClose = view({
     },
   }
 })
-
-const RowItemFrame = view(Row, {
-  minHeight: 30,
-  padding: [4, 8],
-  alignItems: 'center',
-  '&:hover': {
-    background: '#f2f2f2',
-  },
-})
-
-const RowItem = ({ orb = null, title = null, icon = null, subtitle = null, ...props }) => {
-  return (
-    <RowItemFrame padding={subtitle ? 8 : [4, 8]} {...props}>
-      {!!orb && (
-        <View
-          borderRadius={100}
-          borderColor={orb}
-          borderWidth={2}
-          borderStyle="solid"
-          marginRight={8}
-          width={12}
-          height={12}
-        />
-      )}
-      <Col flex={1}>
-        <Text sizeLineHeight={0.8} size={1} fontWeight={600}>
-          {title}
-        </Text>
-        {!!subtitle && (
-          <Text sizeLineHeight={0.8} size={0.9} alpha={0.5}>
-            20 people
-          </Text>
-        )}
-      </Col>
-      {!!icon && <Icon name={icon} size={14} opacity={0.5} />}
-    </RowItemFrame>
-  )
-}
 
 const Disable = view({
   flex: 'inherit',

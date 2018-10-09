@@ -225,6 +225,7 @@ export class OrbitHome extends React.Component<Props> {
         <SubPane name="explore" fadeBottom>
           {navSpace}
           <OrbitExplore />
+          <VerticalSpace />
         </SubPane>
       </>
     )

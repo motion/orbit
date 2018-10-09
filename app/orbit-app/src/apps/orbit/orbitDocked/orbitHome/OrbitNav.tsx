@@ -18,7 +18,7 @@ export class OrbitNav extends React.Component<{
   render() {
     const { paneManagerStore, searchStore } = this.props
     return (
-      <>
+      <View position="relative" zIndex={100}>
         <div style={{ height: 2 }} />
         <Row position="relative" alignItems="center" padding={[0, 10]}>
           <SegmentedRow>
@@ -108,7 +108,7 @@ export class OrbitNav extends React.Component<{
           </SegmentedRow>
         </Row>
         <div style={{ height: 8 }} />
-      </>
+      </View>
     )
   }
 }

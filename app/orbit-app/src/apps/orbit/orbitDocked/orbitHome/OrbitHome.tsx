@@ -185,20 +185,22 @@ export class OrbitHome extends React.Component<Props> {
 
   render() {
     console.log('OrbitHome Render')
-    const { searchStore } = this.props
-    const before = <OrbitNav />
-    if (searchStore.hasQueryVal) {
-      console.log('has query val...')
-      return (
-        <SubPane name="home" fadeBottom before={before}>
-          <OrbitSearchQuickResults />
-          <OrbitSearchMasonry />
-        </SubPane>
-      )
-    }
+    // const { searchStore } = this.props
+    // if (searchStore.hasQueryVal) {
+    //   console.log('has query val...')
+    //   return (
+    //     <SubPane name="home" fadeBottom before={before}>
+    //       <OrbitSearchQuickResults />
+    //       <OrbitSearchMasonry />
+    //     </SubPane>
+    //   )
+    // }
+    const navSpace = <div style={{ height: 35, pointerEvents: 'none' }} />
     return (
       <>
-        <SubPane name="home" fadeBottom before={before}>
+        <OrbitNav />
+        <SubPane name="home" fadeBottom>
+          {navSpace}
           {/* {results[0].name === 'Apps' ? this.renderApps(results[0]) : null} */}
           <Unpad>
             <OrbitSearchQuickResults />
@@ -220,7 +222,8 @@ export class OrbitHome extends React.Component<Props> {
           </Unpad>
           <VerticalSpace />
         </SubPane>
-        <SubPane name="explore" fadeBottom before={before}>
+        <SubPane name="explore" fadeBottom>
+          {navSpace}
           <OrbitExplore />
         </SubPane>
       </>

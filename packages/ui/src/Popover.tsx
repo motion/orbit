@@ -265,6 +265,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (this.target) {
       this.listenForClick()
       this.listenForHover()
+      console.log('this', this, this.target, this.targetNode)
+      on(this, this.targetNode, 'click', this.handleTargetClick)
     }
   }
 
@@ -648,15 +650,16 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (!(this.target instanceof HTMLElement)) {
       return
     }
-    this.removeListenForHover()
-    this.listeners = this.addHoverListeners('target', this.target)
+    this.removeListeners()
+    this.addHoverListeners('target', this.target)
     // noHoverOnChildren === no hover on the actual popover child element
     if (!this.curProps.noHoverOnChildren) {
-      this.listeners = [...this.listeners, ...this.addHoverListeners('menu', this.popoverRef)]
+      this.addHoverListeners('menu', this.popoverRef)
     }
   }
 
-  removeListenForHover() {
+  removeListeners() {
+    console.log('removing listeners...')
     for (const listener of this.listeners) {
       listener()
     }
@@ -739,7 +742,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     // if noHoverOnChildren it reduces bugs to just not check hovered state
     const onMouseLeave = noHoverOnChildren ? setUnhovered : onLeave
     listeners.push(on(this, node, 'mouseleave', onMouseLeave))
-    return listeners
+    this.listeners = [...this.listeners, ...listeners]
   }
 
   // hover helpers
@@ -793,6 +796,29 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (typeof open === 'undefined') {
       return !!(openOnHover && this.isHovered) || !!(openOnClick && isOpen)
     }
+  }
+
+  get targetNode() {
+    if (this.target instanceof HTMLElement) {
+      return this.target
+    }
+    if (this.targetRef) {
+      return this.targetRef.current
+    } else {
+      return getTarget(this.target)
+    }
+  }
+
+  handleTargetClick = () => {
+    console.log('clearing hover')
+    // after click, remove hover listeners until mouseleave
+    this.removeListeners()
+    const off = on(this, this.targetNode, 'mouseleave', () => {
+      console.log('re add them')
+      off()
+      this.listenForHover()
+    })
+    this.hoverStateSet('target', false)
   }
 
   controlledTarget = target => {

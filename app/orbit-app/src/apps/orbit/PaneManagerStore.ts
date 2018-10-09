@@ -9,7 +9,7 @@ import { OrbitStore } from '../OrbitStore'
 import { autoTrack } from '../../stores/Track'
 import { memoize } from 'lodash'
 
-type Panes = 'home' | 'favorites' | 'topics' | 'settings' | 'onboard'
+type Panes = 'home' | 'explore' | 'settings' | 'onboard'
 
 export class PaneManagerStore {
   props: {
@@ -18,7 +18,7 @@ export class PaneManagerStore {
     keyboardStore: KeyboardStore
   }
 
-  panes: Partial<Panes>[] = ['home', 'favorites', 'topics', 'settings']
+  panes: Partial<Panes>[] = ['home', 'explore', 'settings']
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true

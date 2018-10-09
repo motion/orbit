@@ -8,6 +8,7 @@ import { SizedSurface } from './SizedSurface'
 import { Color, CSSPropertySet } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
 import { Theme } from '@mcro/gloss'
+import { getTarget } from './helpers/getTarget'
 
 const ArrowContain = view({
   position: 'absolute',
@@ -71,7 +72,7 @@ export type PopoverProps = CSSPropertySet & {
   onOpen?: Function
   height?: number
   width?: number
-  background?: Color | boolean
+  background?: true | Color
   passActive?: boolean
   popoverProps?: Object
   shadow?: boolean | string
@@ -236,7 +237,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   componentDidMount() {
     this.mounted = true
-    const { openOnClick, closeOnClick, closeOnEsc, open } = this.curProps
+    const { openOnClick, closeOnClick, closeOnEsc, open, target } = this.curProps
     this.listenForResize()
     if (openOnClick || closeOnClick) {
       this.listenForClickAway()
@@ -253,13 +254,17 @@ export class Popover extends React.PureComponent<PopoverProps> {
         }
       })
     }
-    const child = findDOMNode(this) as HTMLDivElement
-    if (!child.classList.contains('popover')) {
-      this.target = child
-      if (this.target) {
-        this.listenForClick()
-        this.listenForHover()
+    if (typeof target === 'string') {
+      this.target = getTarget(target)
+    } else {
+      const child = findDOMNode(this) as HTMLDivElement
+      if (!child.classList.contains('popover')) {
+        this.target = child
       }
+    }
+    if (this.target) {
+      this.listenForClick()
+      this.listenForHover()
     }
   }
 
@@ -856,6 +861,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       direction,
     } = this.state
     const { showPopover } = this
+    const backgroundProp = background === true ? null : { background }
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}
@@ -911,7 +917,15 @@ export class Popover extends React.PureComponent<PopoverProps> {
               />
             </ArrowContain>
           )}
-          <SizedSurface sizeRadius flex={1} ignoreSegment={ignoreSegment} hover={false} {...props}>
+          <SizedSurface
+            sizeRadius
+            flex={1}
+            ignoreSegment={ignoreSegment}
+            hover={false}
+            overflow="visible"
+            {...backgroundProp}
+            {...props}
+          >
             {typeof children === 'function'
               ? (children as PopoverChildrenFn)(showPopover)
               : children}

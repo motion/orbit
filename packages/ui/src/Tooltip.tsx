@@ -13,11 +13,7 @@ const defaultOnClick = e => {
   console.log('no click on tooltip')
 }
 
-export const Tooltip = ({
-  themeName,
-  onClick = defaultOnClick,
-  ...props
-}: TooltipProps) => (
+export const Tooltip = ({ themeName, onClick = defaultOnClick, ...props }: TooltipProps) => (
   <Theme name="tooltip">
     <Popover
       background

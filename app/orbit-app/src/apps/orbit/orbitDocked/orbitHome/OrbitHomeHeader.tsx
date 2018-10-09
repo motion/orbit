@@ -39,10 +39,12 @@ const exploreButton = {
   },
   hoverStyle: {
     opacity: 0.6,
+    background: 'transparent',
   },
   activeStyle: {
     opacity: 1,
     fontWeight: 701,
+    background: 'transparent',
   },
 }
 

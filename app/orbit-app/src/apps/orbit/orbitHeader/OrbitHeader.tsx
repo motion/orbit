@@ -4,7 +4,7 @@ import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
-import { View, Image, Tooltip } from '@mcro/ui'
+import { View, Image, Tooltip, Popover, Row, Col, Text, Icon } from '@mcro/ui'
 import orbIcon from '../../../../public/orb.svg'
 import { Desktop } from '@mcro/stores'
 import { Actions } from '../../../actions/Actions'
@@ -101,7 +101,13 @@ export class OrbitHeader extends React.Component<
             <OrbitClose onClick={Actions.closeOrbit}>
               <OrbitCloseControl />
             </OrbitClose>
-            <Tooltip
+            <Popover
+              openOnClick
+              adjust={[65, 0]}
+              theme="light"
+              borderRadius={5}
+              width={200}
+              background="#fff"
               target={
                 <Image
                   src={orbIcon}
@@ -123,8 +129,19 @@ export class OrbitHeader extends React.Component<
                 />
               }
             >
-              Toggle Realtime Search
-            </Tooltip>
+              <Row flex={1} padding={[8, 10]} alignItems="center">
+                <View borderRadius={100} background="blue" marginRight={5} width={16} height={16} />
+                <Col flex={1}>
+                  <Text sizeLineHeight={0.8} size={1} fontWeight={600}>
+                    Orbit
+                  </Text>
+                  <Text sizeLineHeight={0.8} size={0.9} alpha={0.5}>
+                    20 people
+                  </Text>
+                </Col>
+                <Icon name="gear" size={14} opacity={0.5} />
+              </Row>
+            </Popover>
             <OrbitHeaderInput headerStore={headerStore} theme={theme} />
           </Title>
           {!!after && <After>{after}</After>}

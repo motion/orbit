@@ -137,12 +137,15 @@ const dark = {
   cardBorderColorHover: [255, 255, 255, 0.15],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   ...Theme.fromStyles({
-    background: [40, 40, 40, 0.25],
+    background: [19, 19, 19, 0.25],
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
     color: '#fff',
-    borderColor: [35, 35, 35, 0.5],
+    borderColor: [0, 0, 0, 0.25],
   }),
+  // buttonBackground: [40, 40, 40, 0.2],
+  // buttonBackgroundActive: [20, 20, 20, 0.2],
+  // buttonBackgroundHover: [50, 50, 50, 0.2],
   colorActive: '#fff',
 }
 

@@ -179,7 +179,6 @@ const Element = view({
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
-  overflow: 'hidden',
   noInnerElement: {
     display: 'none',
   },
@@ -201,6 +200,7 @@ const Element = view({
     elementStyle.marginRight = props.iconPad
   }
   return {
+    overflow: 'hidden',
     ...props,
     ...(props.inline && inlineStyle),
     ...(props.ellipse && {
@@ -279,6 +279,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       lineHeight: this.props.lineHeight,
       fontWeight: this.props.fontWeight,
       ellipse: this.props.ellipse,
+      overflow: this.props.overflow,
     } as Partial<SurfaceProps>
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height + 1}px`

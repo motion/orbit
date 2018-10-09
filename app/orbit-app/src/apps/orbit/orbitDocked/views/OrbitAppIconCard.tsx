@@ -33,10 +33,10 @@ export const OrbitAppIconCard = ({
   return (
     <OrbitCard padding={3} borderRadius={100} model={model} chromeless {...props}>
       <Centered>
-        <OrbitIcon icon={model.type} size={28} />
+        <OrbitIcon icon={model.type} size={20} />
         {!hideTitle && (
           <>
-            <div style={{ height: 7 }} />
+            <div style={{ height: 2 }} />
             <SyncStatus settingId={model.id}>
               {(syncJobs, removeJobs) => {
                 return (

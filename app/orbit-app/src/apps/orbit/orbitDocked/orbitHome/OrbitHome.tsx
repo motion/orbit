@@ -5,7 +5,7 @@ import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'
 import { View, Row, SegmentedRow, Popover, Text } from '@mcro/ui'
-import { BitModel, PersonBitModel } from '@mcro/models'
+import { BitModel, PersonBitModel, SettingModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
 import { SyncStatusAll } from '../views/SyncStatusAll'
@@ -159,19 +159,19 @@ const fakeData = [
 ]
 
 const allStreams = [
-  // {
-  //   id: '-1',
-  //   name: 'Apps',
-  //   source: 'apps',
-  //   showTitle: false,
-  //   model: SettingModel,
-  //   query: {
-  //     where: {
-  //       category: 'integration',
-  //     },
-  //     take: 1000,
-  //   },
-  // },
+  {
+    id: '-1',
+    name: 'Apps',
+    source: 'apps',
+    showTitle: false,
+    model: SettingModel,
+    query: {
+      where: {
+        category: 'integration',
+      },
+      take: 1000,
+    },
+  },
   {
     id: '0',
     name: 'People',
@@ -350,19 +350,22 @@ export class OrbitHome extends React.Component<Props> {
   renderApps({ name, items, startIndex }: SelectionGroup) {
     const { homeStore } = this.props
     return (
-      <OrbitCarouselSection
-        startIndex={startIndex}
-        items={items}
-        homeStore={homeStore}
-        categoryName={name === 'Apps' ? null : name}
-        cardHeight={45}
-        cardWidth={45}
-        margin={[0, 0, -5]}
-        CardView={OrbitAppIconCard}
-        cardProps={{
-          hideTitle: true,
-        }}
-      />
+      <>
+        <OrbitCarouselSection
+          startIndex={startIndex}
+          items={items}
+          homeStore={homeStore}
+          categoryName={name === 'Apps' ? null : name}
+          cardHeight={30}
+          cardWidth={30}
+          cardSpace={5}
+          CardView={OrbitAppIconCard}
+          cardProps={{
+            hideTitle: true,
+          }}
+        />
+        <VerticalSpace small />
+      </>
     )
   }
 
@@ -373,68 +376,66 @@ export class OrbitHome extends React.Component<Props> {
     let content
     const nav = (
       <Row position="relative" alignItems="center" padding={[0, 10]}>
-        <SegmentedRow>
-          <NavButton
-            onClick={paneManagerStore.activePaneSetter('home')}
-            active={paneManagerStore.activePane === 'home'}
-            icon="home"
-            tooltip="Overview"
-          />
-          <NavButton
-            onClick={paneManagerStore.activePaneSetter('topics')}
-            active={paneManagerStore.activePane === 'topics'}
-            icon="menu35"
-            tooltip="Topics"
-          />
-        </SegmentedRow>
+        <Popover
+          openOnClick
+          openOnHover
+          closeOnEsc
+          target={<NavButton icon="clock">24h</NavButton>}
+          adjust={[-10, 0]}
+          borderRadius={3}
+          theme="light"
+        >
+          <View width={440} height={300} className="calendar-dom" padding={10}>
+            <DateRangePicker
+              onChange={searchStore.searchFilterStore.onChangeDate}
+              ranges={[searchStore.searchFilterStore.dateState]}
+            />
+          </View>
+        </Popover>
+
         <Centered>
-          <NavButton>Orbit</NavButton>
+          <SegmentedRow>
+            <NavButton
+              onClick={paneManagerStore.activePaneSetter('home')}
+              active={paneManagerStore.activePane === 'home'}
+              icon="home"
+              tooltip="Overview"
+            />
+            <NavButton
+              onClick={paneManagerStore.activePaneSetter('explore')}
+              active={paneManagerStore.activePane === 'explore'}
+              icon="menu35"
+              tooltip="Explore"
+            />
+          </SegmentedRow>
         </Centered>
         <View flex={1} />
-        <SegmentedRow>
-          <Popover
-            openOnClick
-            openOnHover
-            closeOnEsc
-            target={<NavButton icon="clock">24h</NavButton>}
-            adjust={[-10, 0]}
-            borderRadius={3}
-            theme="light"
-          >
-            <View width={440} height={300} className="calendar-dom" padding={10}>
-              <DateRangePicker
-                onChange={searchStore.searchFilterStore.onChangeDate}
-                ranges={[searchStore.searchFilterStore.dateState]}
-              />
-            </View>
-          </Popover>
-          <Popover
-            openOnClick
-            openOnHover
-            closeOnEsc
-            target={<NavButton icon="funnel">All</NavButton>}
-            adjust={[-10, 0]}
-            borderRadius={3}
-            theme="light"
-          >
-            <View padding={10}>
-              <OrbitFilters />
-            </View>
-          </Popover>
-        </SegmentedRow>
+        <Popover
+          openOnClick
+          openOnHover
+          closeOnEsc
+          target={<NavButton icon="funnel">All</NavButton>}
+          adjust={[-10, 0]}
+          borderRadius={3}
+          theme="light"
+        >
+          <View padding={10}>
+            <OrbitFilters />
+          </View>
+        </Popover>
       </Row>
     )
     const before = (
       <>
         <div style={{ height: 5 }} />
         {nav}
-        <div style={{ height: 12 }} />
       </>
     )
     if (results.length) {
       return (
         <>
           <SubPane name="home" fadeBottom before={before}>
+            {/* {results[0].name === 'Apps' ? this.renderApps(results[0]) : null} */}
             <Unpad>
               <OrbitMasonry
                 items={fakeData.map((item, index) => (
@@ -454,11 +455,8 @@ export class OrbitHome extends React.Component<Props> {
             </Unpad>
             <VerticalSpace />
           </SubPane>
-          <SubPane name="favorites" fadeBottom before={before}>
-            <Title>Favorites</Title>
-          </SubPane>
-          <SubPane name="topics" fadeBottom before={before}>
-            <Title>Topics</Title>
+          <SubPane name="explore" fadeBottom before={before}>
+            <Title>Explore</Title>
           </SubPane>
         </>
       )

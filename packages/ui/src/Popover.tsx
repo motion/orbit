@@ -824,6 +824,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
       this.listenForHover()
     })
     this.hoverStateSet('target', false)
+    this.hoverStateSet('menu', false)
+    this.setState({ isOpen: false })
   }
 
   controlledTarget = target => {

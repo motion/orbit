@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
 import { Portal } from './helpers/portal'
-import { isNumber, debounce, throttle, isEqual, omit } from 'lodash'
+import { isNumber, debounce, throttle, isEqual, omit, Cancelable } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
@@ -671,10 +671,10 @@ export class Popover extends React.PureComponent<PopoverProps> {
     enter: { target: null, menu: null },
   }
 
-  delayOpenIfHover = null
+  delayOpenIfHover: Cancelable & (() => void) = null
 
   private cancelIfWillOpen() {
-    if (this.delayOpenIfHover && typeof this.delayOpenIfHover.cancel === 'function') {
+    if (this.delayOpenIfHover && this.delayOpenIfHover.cancel) {
       this.delayOpenIfHover.cancel()
     }
   }
@@ -701,6 +701,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       }
     }
 
+    this.cancelIfWillOpen()
     this.delayOpenIfHover = debounce(openIfOver, isTarget ? delay : 0)
 
     const closeIfOut = () => {
@@ -823,9 +824,15 @@ export class Popover extends React.PureComponent<PopoverProps> {
       off()
       this.listenForHover()
     })
-    this.hoverStateSet('target', false)
-    this.hoverStateSet('menu', false)
-    this.setState({ isOpen: false })
+    const close = () => {
+      this.hoverStateSet('target', false)
+      this.hoverStateSet('menu', false)
+      this.setState({ isOpen: false })
+    }
+    // hacky but temporary solution to it opening sometimes
+    close()
+    setTimeout(close, 16)
+    setTimeout(close, 40)
   }
 
   controlledTarget = target => {

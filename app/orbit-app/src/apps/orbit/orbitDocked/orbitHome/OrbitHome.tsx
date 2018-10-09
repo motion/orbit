@@ -14,12 +14,12 @@ import { SubTitle } from '../../../../views/SubTitle'
 import { OrbitAppIconCard } from '../views/OrbitAppIconCard'
 import { Centered } from '../../../../views/Centered'
 import { OrbitMasonry } from '../../../../views/OrbitMasonry'
-import { flatten } from 'lodash'
 import { Unpad } from '../../../../views/Unpad'
 import { VerticalSpace, Title } from '../../../../views'
 import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
 import { SearchStore } from '../SearchStore'
+import { OrbitFilters } from './OrbitFilters'
 
 // import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 // <OrbitSuggestionBar
@@ -372,55 +372,63 @@ export class OrbitHome extends React.Component<Props> {
     const { results } = homeStore
     let content
     const nav = (
-      <Row position="relative" alignItems="center" padding={[3, 10]}>
-        <Popover
-          openOnClick
-          openOnHover
-          closeOnEsc
-          target={<NavButton icon="clock">Today</NavButton>}
-          adjust={[180, 0]}
-          borderRadius={3}
-        >
-          <View width={440} height={300} className="calendar-dom" padding={10}>
-            <DateRangePicker
-              onChange={searchStore.searchFilterStore.onChangeDate}
-              ranges={[searchStore.searchFilterStore.dateState]}
-            />
-          </View>
-        </Popover>
+      <Row position="relative" alignItems="center" padding={[0, 10]}>
+        <SegmentedRow>
+          <NavButton
+            onClick={paneManagerStore.activePaneSetter('home')}
+            active={paneManagerStore.activePane === 'home'}
+            icon="home"
+            tooltip="Overview"
+          />
+          <NavButton
+            onClick={paneManagerStore.activePaneSetter('topics')}
+            active={paneManagerStore.activePane === 'topics'}
+            icon="menu35"
+            tooltip="Topics"
+          />
+        </SegmentedRow>
         <Centered>
-          <SegmentedRow>
-            <NavButton
-              onClick={paneManagerStore.activePaneSetter('home')}
-              active={paneManagerStore.activePane === 'home'}
-              icon="clock"
-              tooltip="Recent"
-            />
-            <NavButton
-              onClick={paneManagerStore.activePaneSetter('favorites')}
-              active={paneManagerStore.activePane === 'favorites'}
-              icon="favourite"
-              tooltip="Favorite"
-            />
-            <NavButton
-              onClick={paneManagerStore.activePaneSetter('topics')}
-              active={paneManagerStore.activePane === 'topics'}
-              icon="menu35"
-              tooltip="Topics"
-            />
-          </SegmentedRow>
+          <NavButton>Orbit</NavButton>
         </Centered>
         <View flex={1} />
         <SegmentedRow>
-          <NavButton icon="funnel" />
-          <NavButton>All</NavButton>
+          <Popover
+            openOnClick
+            openOnHover
+            closeOnEsc
+            target={<NavButton icon="clock">24h</NavButton>}
+            adjust={[-10, 0]}
+            borderRadius={3}
+            theme="light"
+          >
+            <View width={440} height={300} className="calendar-dom" padding={10}>
+              <DateRangePicker
+                onChange={searchStore.searchFilterStore.onChangeDate}
+                ranges={[searchStore.searchFilterStore.dateState]}
+              />
+            </View>
+          </Popover>
+          <Popover
+            openOnClick
+            openOnHover
+            closeOnEsc
+            target={<NavButton icon="funnel">All</NavButton>}
+            adjust={[-10, 0]}
+            borderRadius={3}
+            theme="light"
+          >
+            <View padding={10}>
+              <OrbitFilters />
+            </View>
+          </Popover>
         </SegmentedRow>
       </Row>
     )
     const before = (
       <>
+        <div style={{ height: 5 }} />
         {nav}
-        <VerticalSpace />
+        <div style={{ height: 12 }} />
       </>
     )
     if (results.length) {
@@ -436,6 +444,8 @@ export class OrbitHome extends React.Component<Props> {
                     title={item.location}
                     people={item.people}
                     icon={item.integration}
+                    subtitle={<>{item.counts} new</>}
+                    date={new Date()}
                   >
                     <Text size={1.2}>{item.topics.join(' ')}</Text>
                   </OrbitCard>

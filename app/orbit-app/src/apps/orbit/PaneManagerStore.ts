@@ -94,14 +94,6 @@ export class PaneManagerStore {
     },
   )
 
-  setActivePaneHomeOnSearchInSettings = react(
-    () => App.state.query,
-    () => {
-      ensure('on settings', this.activePane === 'settings')
-      this.setActivePane('home')
-    },
-  )
-
   setTrayTitleOnPaneChange = react(
     () => this.activePane === 'onboard',
     onboard => {

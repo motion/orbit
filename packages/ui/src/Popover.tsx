@@ -856,83 +856,73 @@ export class Popover extends React.PureComponent<PopoverProps> {
       direction,
     } = this.state
     const { showPopover } = this
-    const portal = (
-      <Portal>
-        <PopoverContainer
-          data-towards={direction}
-          isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
-          isOpen={showPopover}
-          isClosing={closing}
-          className="popover"
+    const popoverContent = (
+      <PopoverContainer
+        data-towards={direction}
+        isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
+        isOpen={showPopover}
+        isClosing={closing}
+        className="popover"
+      >
+        {!!overlay && (
+          <Overlay
+            forwardRef={this.overlayRef}
+            isShown={showPopover && !closing}
+            onClick={e => this.handleOverlayClick(e)}
+            overlay={overlay}
+          />
+        )}
+        <PopoverWrap
+          {...popoverProps}
+          isOpen={!closing && !!showPopover}
+          forwardRef={this.setPopoverRef}
+          distance={distance}
+          forgiveness={forgiveness}
+          showForgiveness={showForgiveness}
+          animation={isOpen ? closeAnimation : openAnimation}
+          style={{
+            ...style,
+            top: top || 'auto',
+            bottom: bottom || 'auto',
+            left,
+            width,
+            // because things that extend downwards wont always fill all the way
+            // so arrow will be floating, so lets make it always expand fully down
+            // when the popover arrow is at bottom
+            height: direction === 'top' ? height || maxHeight : height,
+            maxHeight,
+          }}
         >
-          {!!overlay && (
-            <Overlay
-              forwardRef={this.overlayRef}
-              isShown={showPopover && !closing}
-              onClick={e => this.handleOverlayClick(e)}
-              overlay={overlay}
-            />
-          )}
-          <PopoverWrap
-            {...popoverProps}
-            isOpen={!closing && !!showPopover}
-            forwardRef={this.setPopoverRef}
-            distance={distance}
-            forgiveness={forgiveness}
-            showForgiveness={showForgiveness}
-            animation={isOpen ? closeAnimation : openAnimation}
-            style={{
-              ...style,
-              top: top || 'auto',
-              bottom: bottom || 'auto',
-              left,
-              width,
-              // because things that extend downwards wont always fill all the way
-              // so arrow will be floating, so lets make it always expand fully down
-              // when the popover arrow is at bottom
-              height: direction === 'top' ? height || maxHeight : height,
-              maxHeight,
-            }}
-          >
-            {!noArrow && (
-              <ArrowContain
-                style={{
-                  top: arrowTop,
-                  marginLeft: arrowLeft,
-                  zIndex: 100000000000, // above any shadows
-                }}
-              >
-                <Arrow
-                  background={
-                    typeof background === 'string' && background !== 'transparent'
-                      ? background
-                      : null
-                  }
-                  size={arrowSize}
-                  towards={INVERSE[direction]}
-                  boxShadow={getShadow(shadow, elevation)}
-                />
-              </ArrowContain>
-            )}
-            <SizedSurface
-              sizeRadius
-              flex={1}
-              ignoreSegment={ignoreSegment}
-              hover={false}
-              {...props}
+          {!noArrow && (
+            <ArrowContain
+              style={{
+                top: arrowTop,
+                marginLeft: arrowLeft,
+                zIndex: 100000000000, // above any shadows
+              }}
             >
-              {typeof children === 'function'
-                ? (children as PopoverChildrenFn)(showPopover)
-                : children}
-            </SizedSurface>
-          </PopoverWrap>
-        </PopoverContainer>
-      </Portal>
+              <Arrow
+                background={
+                  typeof background === 'string' && background !== 'transparent' ? background : null
+                }
+                size={arrowSize}
+                towards={INVERSE[direction]}
+                boxShadow={getShadow(shadow, elevation)}
+              />
+            </ArrowContain>
+          )}
+          <SizedSurface sizeRadius flex={1} ignoreSegment={ignoreSegment} hover={false} {...props}>
+            {typeof children === 'function'
+              ? (children as PopoverChildrenFn)(showPopover)
+              : children}
+          </SizedSurface>
+        </PopoverWrap>
+      </PopoverContainer>
     )
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
-        {theme ? <Theme>{portal}</Theme> : portal}
+        <Portal>{theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent}</Portal>
       </>
     )
   }

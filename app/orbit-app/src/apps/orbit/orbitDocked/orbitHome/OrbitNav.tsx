@@ -28,7 +28,7 @@ export class OrbitNav extends React.Component<{
               closeOnEsc
               closeOnClickAway
               target={<NavButton icon="calendar">Any</NavButton>}
-              adjust={[180, 0]}
+              adjust={[190, 0]}
               background
               borderRadius={6}
               elevation={4}
@@ -70,7 +70,7 @@ export class OrbitNav extends React.Component<{
               <NavButton
                 onClick={paneManagerStore.activePaneSetter('explore')}
                 active={paneManagerStore.activePane === 'explore'}
-                icon="menu3"
+                icon="pin"
                 tooltip="Explore"
               />
             </SegmentedRow>
@@ -85,6 +85,7 @@ export class OrbitNav extends React.Component<{
               theme="light"
               width={200}
               background
+              adjust={[-10, 0]}
               borderRadius={6}
               elevation={4}
               target={
@@ -111,7 +112,9 @@ export class OrbitNav extends React.Component<{
                 <Row margin={5} alignItems="center">
                   <View flex={1} />
                   <Theme theme={{ background: '#fff', color: '#444' }}>
-                    <Button icon="add">Create</Button>
+                    <Button ignoreSegment icon="add">
+                      Create
+                    </Button>
                   </Theme>
                 </Row>
               </Col>

@@ -12,9 +12,11 @@ const RowItemFrame = view(Row, {
   },
 })
 
+const leftPad = 10
+
 export const RowItem = ({ orb = null, title = null, icon = null, subtitle = null, ...props }) => {
   return (
-    <RowItemFrame padding={subtitle ? 8 : [4, 8]} {...props}>
+    <RowItemFrame padding={subtitle ? leftPad : [4, leftPad]} {...props}>
       {!!orb && (
         <View
           borderRadius={100}

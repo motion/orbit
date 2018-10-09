@@ -845,7 +845,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
       shadow,
       style,
       elevation,
-      ignoreSegment,
       theme,
       ...props
     } = this.props
@@ -920,7 +919,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
           <SizedSurface
             sizeRadius
             flex={1}
-            ignoreSegment={ignoreSegment}
+            ignoreSegment
             hover={false}
             overflow="visible"
             boxShadow={getShadow(shadow, elevation)}

@@ -5,6 +5,8 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore } from '../SelectionStore'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { OrbitSearchCard } from './OrbitSearchCard'
+import { OrbitMasonry } from '../../../../views/OrbitMasonry'
+import { Unpad } from '../../../../views/Unpad'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -23,22 +25,26 @@ export class OrbitSearchMasonry extends React.Component<Props> {
     }
     const quickResultsLen = searchStore.quickSearchState.results.length
     return (
-      <ProvideHighlightsContextWithDefaults
-        value={{ words: query.split(' '), maxChars: 500, maxSurroundChars: 80 }}
-      >
-        {results.map((model, index) => {
-          return (
-            <OrbitSearchCard
-              key={`${index}`}
-              index={index}
-              offset={quickResultsLen}
-              query={query}
-              model={model}
-              searchStore={searchStore}
-            />
-          )
-        })}
-      </ProvideHighlightsContextWithDefaults>
+      <Unpad>
+        <ProvideHighlightsContextWithDefaults
+          value={{ words: query.split(' '), maxChars: 500, maxSurroundChars: 80 }}
+        >
+          <OrbitMasonry
+            items={results.map((model, index) => {
+              return (
+                <OrbitSearchCard
+                  key={`${index}`}
+                  index={index}
+                  offset={quickResultsLen}
+                  query={query}
+                  model={model}
+                  searchStore={searchStore}
+                />
+              )
+            })}
+          />
+        </ProvideHighlightsContextWithDefaults>
+      </Unpad>
     )
   }
 }

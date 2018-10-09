@@ -140,9 +140,9 @@ export class SearchStore {
 
       // pagination
       let skip = 0
-      const take = 6
+      const take = 12
       // initial search results max amt:
-      const takeMax = take * 5
+      const takeMax = take
       const sleepBtwn = 80
 
       // query builder pieces

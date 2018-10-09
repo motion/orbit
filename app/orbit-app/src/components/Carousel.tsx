@@ -27,10 +27,6 @@ export class Carousel extends React.Component<CarouselProps> {
 
   frameRef = React.createRef<HTMLDivElement>()
 
-  shouldComponentUpdate(a, b, c) {
-    return onlyUpdateOnChanged.call(this, a, b, c)
-  }
-
   get cardRefs(): HTMLDivElement[] {
     return Array.from(this.frameRef.current.querySelectorAll('.carousel-result-item'))
   }

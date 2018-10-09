@@ -49,6 +49,7 @@ class CarouselStore {
 @view.attach({
   store: CarouselStore,
 })
+@view
 export class SelectableCarousel extends React.Component<Props> {
   render() {
     const { store, selectionStore, cardWidth = 180, cardHeight = 95, ...props } = this.props

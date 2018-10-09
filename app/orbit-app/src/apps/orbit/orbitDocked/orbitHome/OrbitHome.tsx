@@ -21,6 +21,7 @@ import { DateRangePicker } from 'react-date-range'
 import { SearchStore } from '../SearchStore'
 import { OrbitFilters } from './OrbitFilters'
 import { OrbitSearchMasonry } from './OrbitSearchMasonry'
+import { OrbitSearchQuickResults } from '../orbitSearch/OrbitSearchQuickResults'
 
 // import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 // <OrbitSuggestionBar
@@ -377,24 +378,27 @@ export class OrbitHome extends React.Component<Props> {
     let content
     const nav = (
       <Row position="relative" alignItems="center" padding={[0, 10]}>
-        <Popover
-          openOnClick
-          openOnHover
-          closeOnEsc
-          target={<NavButton icon="clock">24h</NavButton>}
-          adjust={[180, 0]}
-          background
-          borderRadius={6}
-          elevation={4}
-          theme="light"
-        >
-          <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
-            <DateRangePicker
-              onChange={searchStore.searchFilterStore.onChangeDate}
-              ranges={[searchStore.searchFilterStore.dateState]}
-            />
-          </View>
-        </Popover>
+        <SegmentedRow>
+          <Popover
+            openOnClick
+            openOnHover
+            closeOnEsc
+            target={<NavButton icon="calendar">All</NavButton>}
+            adjust={[180, 0]}
+            background
+            borderRadius={6}
+            elevation={4}
+            theme="light"
+          >
+            <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
+              <DateRangePicker
+                onChange={searchStore.searchFilterStore.onChangeDate}
+                ranges={[searchStore.searchFilterStore.dateState]}
+              />
+            </View>
+          </Popover>
+          <NavButton icon="arrowup" tooltip="Trending" />
+        </SegmentedRow>
 
         <Centered>
           <SegmentedRow>
@@ -441,6 +445,7 @@ export class OrbitHome extends React.Component<Props> {
       console.log('has query val...')
       return (
         <SubPane name="home" fadeBottom before={before}>
+          <OrbitSearchQuickResults />
           <OrbitSearchMasonry />
         </SubPane>
       )
@@ -450,6 +455,7 @@ export class OrbitHome extends React.Component<Props> {
         <>
           <SubPane name="home" fadeBottom before={before}>
             {/* {results[0].name === 'Apps' ? this.renderApps(results[0]) : null} */}
+            <OrbitSearchQuickResults />
             <Unpad>
               <OrbitMasonry
                 items={fakeData.map((item, index) => (

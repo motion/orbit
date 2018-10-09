@@ -104,7 +104,7 @@ export class SearchStore {
       if (isFilteringSlack) {
         channelResults = matchSort(
           query.split(' ')[0],
-          /*this.props.appsStore.services.slack.activeChannels*/ [].map(channel => ({
+          /*this.props.appsStore.services.slack.activeChannels*/[].map(channel => ({
             // todo: broken by umed, please fix me
             id: channel.id,
             title: `#${channel.name}`,
@@ -237,34 +237,31 @@ export class SearchStore {
   }
 
   quickSearchState = react(
-    () => this.activeQuery,
+    () => App.state.query,
     async (query, { sleep, when }) => {
       ensure('query', !!query)
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE * 0.5)
       await when(() => this.nlpStore.nlp.query === query)
       const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
+      console.log('----------', people, query)
       // fuzzy people results
-      const allResults = uniqBy(
-        flatten(
-          await Promise.all(
-            people.map(name =>
-              loadMany(PersonBitModel, {
-                args: {
-                  take: 6,
-                  where: {
-                    name: { $like: `%${name.split(' ').join('%')}%` },
-                  },
-                },
-              }),
-            ),
-          ),
-        ),
-        x => x.name,
-      )
+      const peopleRes = await loadMany(PersonBitModel, {
+        args: {
+          take: 6,
+          // @ts-ignore
+          where: [...people, ...query.split(' ')].map(name => ({
+            name: { $like: `%${name.split(' ').join('%')}%` },
+          }))
+        },
+      })
+      console.log('>>>>>>>>>>>>>', peopleRes)
+      // @ts-ignore
+      const peopleResUniq = uniqBy(peopleRes, x => x.name)
+      console.log('quick - peopleResUniq', peopleResUniq)
       const results = flatten([
         integrations.map(name => ({ name, icon: name })),
-        ...matchSort(searchQuery, flatten(allResults)),
+        ...matchSort(searchQuery, peopleResUniq),
       ]).filter(Boolean)
       return {
         query,

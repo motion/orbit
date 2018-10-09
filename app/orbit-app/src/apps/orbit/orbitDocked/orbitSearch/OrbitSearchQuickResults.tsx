@@ -1,18 +1,11 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { SearchStore } from '../SearchStore'
-import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore } from '../SelectionStore'
 import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 
-const decorate = compose(
-  view.attach('selectionStore'),
-  view,
-)
-
 type Props = {
-  paneManagerStore?: PaneManagerStore
-  searchStore: SearchStore
+  searchStore?: SearchStore
   selectionStore: SelectionStore
 }
 
@@ -28,8 +21,13 @@ const cardProps = {
   inGrid: true,
 }
 
+const decorate = compose(
+  view.attach('searchStore', 'selectionStore'),
+  view,
+)
 export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
   const { results } = searchStore.quickSearchState
+  console.log('results', results)
   if (!results.length) {
     return null
   }

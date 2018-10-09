@@ -55,6 +55,9 @@ export type PopoverProps = CSSPropertySet & {
   noHoverOnChildren?: boolean
   // size of shown arrow
   arrowSize?: number
+  // close when you click outside it
+  closeOnClickAway?: boolean
+  // close when you click inside it
   closeOnClick?: boolean
   closeOnEsc?: boolean
   // which direction it shows towards
@@ -248,9 +251,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   componentDidMount() {
     this.mounted = true
-    const { openOnClick, closeOnClick, closeOnEsc, open, target } = this.curProps
+    const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.curProps
     this.listenForResize()
-    if (openOnClick || closeOnClick) {
+    if (openOnClick || closeOnClick || closeOnClickAway) {
       this.listenForClickAway()
     }
     if (open) {
@@ -390,16 +393,19 @@ export class Popover extends React.PureComponent<PopoverProps> {
   listenForClickAway() {
     on(this, window, 'click', e => {
       const { showPopover } = this
-      const { keepOpenOnClickTarget, open, closeOnClick } = this.curProps
+      const { keepOpenOnClickTarget, open, closeOnClick, closeOnClickAway } = this.curProps
       // forced open or hidden
       if (open || !showPopover) {
         return
       }
       // closeOnClickPopover
-      if (closeOnClick && !this.wasJustClicked) {
-        this.stopListeningUntilNextMouseEnter()
-        this.setState({ isPinnedOpen: false })
-        this.close()
+      if (closeOnClick && this.wasJustClicked) {
+        this.forceClose()
+        e.stopPropagation()
+        return
+      }
+      if (closeOnClickAway && !this.wasJustClicked) {
+        this.forceClose()
         e.stopPropagation()
         return
       }

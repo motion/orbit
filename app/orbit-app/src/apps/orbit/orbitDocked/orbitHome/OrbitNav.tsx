@@ -26,6 +26,7 @@ export class OrbitNav extends React.Component<{
               openOnClick
               openOnHover
               closeOnEsc
+              closeOnClickAway
               target={<NavButton icon="calendar">Any</NavButton>}
               adjust={[180, 0]}
               background
@@ -45,6 +46,7 @@ export class OrbitNav extends React.Component<{
               openOnHover
               background
               closeOnEsc
+              closeOnClickAway
               target={<NavButton icon="funnel">All</NavButton>}
               adjust={[-10, 0]}
               borderRadius={6}

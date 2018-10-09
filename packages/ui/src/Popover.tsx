@@ -869,39 +869,39 @@ export class Popover extends React.PureComponent<PopoverProps> {
   render() {
     const {
       adjust,
-      openAnimation,
-      closeAnimation,
       arrowSize,
+      background,
       children,
+      closeAnimation,
       closeOnClick,
+      closeOnEsc,
       delay,
       distance,
-      forgiveness,
-      showForgiveness,
       edgePadding,
+      elevation,
+      forgiveness,
       height,
+      keepOpenOnClickTarget,
       left: _left,
       noArrow,
       noHoverOnChildren,
       onClose,
+      onDidOpen,
       open,
+      openAnimation,
       openOnClick,
       openOnHover,
       overlay,
-      target,
-      top: _top,
-      towards,
-      width,
-      keepOpenOnClickTarget,
-      onDidOpen,
-      closeOnEsc,
-      background,
       passActive,
       popoverProps,
       shadow,
+      showForgiveness,
       style,
-      elevation,
+      target,
       theme,
+      top: _top,
+      towards,
+      width,
       ...props
     } = this.props
     const {
@@ -916,7 +916,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       direction,
     } = this.state
     const { showPopover } = this
-    const backgroundProp = background === true ? null : { background }
+    const backgroundProp = background === true ? null : { background: `${background}` }
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
 import { Portal } from './helpers/portal'
-import { isNumber, debounce, throttle, isEqual, omit, Cancelable } from 'lodash'
+import { isNumber, debounce, throttle, isEqual, omit, Cancelable, last } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
@@ -16,6 +16,15 @@ const ArrowContain = view({
 })
 
 type DebouncedFn = Cancelable & (() => void)
+
+const openPopovers = new Set()
+
+export const PopoverState = {
+  openPopovers,
+  closeLast: () => {
+    last([...openPopovers]).forceClose()
+  }
+}
 
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
 
@@ -193,7 +202,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
   // TODO: weird unmount/mounted
   unmounted = false
   mounted = false
-  isClickingTarget = false
   targetRef = React.createRef<HTMLDivElement>()
   popoverRef = null
 
@@ -210,6 +218,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     arrowTop: 0,
     arrowLeft: 0,
     arrowInnerTop: 0,
+    isPinnedOpen: 0,
     isOpen: false,
     direction: null,
     delay: 16,
@@ -247,15 +256,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (open) {
       this.open()
     }
-    if (closeOnEsc) {
-      on(this, window, 'keyup', e => {
-        if (e.keyCode === 27 && this.showPopover) {
-          e.preventDefault()
-          e.stopPropagation()
-          this.close()
-        }
-      })
-    }
     if (typeof target === 'string') {
       this.target = getTarget(target)
     } else {
@@ -268,6 +268,16 @@ export class Popover extends React.PureComponent<PopoverProps> {
       this.listenForClick()
       this.listenForHover()
       on(this, this.target, 'click', this.handleTargetClick)
+      if (closeOnEsc) {
+        on(this, this.target.parentNode, 'keyup', e => {
+          if (e.keyCode === 27 && this.showPopover) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.setState({ isPinnedOpen: 0 })
+            this.close()
+          }
+        })
+      }
     }
   }
 
@@ -278,6 +288,11 @@ export class Popover extends React.PureComponent<PopoverProps> {
   shouldSendDidOpen = true
 
   componentDidUpdate() {
+    if (this.showPopover) {
+      PopoverState.openPopovers.add(this)
+    } else {
+      PopoverState.openPopovers.delete(this)
+    }
     if (this.state.setPosition) {
       this.setPosition()
       this.setOpenOrClosed(this.props)
@@ -305,7 +320,13 @@ export class Popover extends React.PureComponent<PopoverProps> {
     })
   }
 
-  open() {
+  forceClose = () => {
+    this.stopListeningUntilNextMouseEnter()
+    this.setState({ isPinnedOpen: 0 })
+    this.close()
+  }
+
+  private open() {
     this.setPosition(() => {
       this.setState({ isOpen: true }, () => {
         if (this.curProps.onOpen) {
@@ -315,7 +336,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     })
   }
 
-  close = () => {
+  private close = () => {
     return new Promise(resolve => {
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {
@@ -353,47 +374,48 @@ export class Popover extends React.PureComponent<PopoverProps> {
     // click away to close
     this.targetClickOff = on(this, this.target, 'click', e => {
       e.stopPropagation()
-      this.isClickingTarget = true
-      if (typeof this.curProps.open === 'undefined') {
-        if (this.state.isOpen) {
-          this.close()
-        } else {
-          this.open()
-        }
+      console.log(this.state, this.showPopover, this)
+      if (this.state.isPinnedOpen) {
+        this.forceClose()
+      } else {
+        this.setState({ isPinnedOpen: Date.now() })
       }
-      on(
-        this,
-        setTimeout(() => {
-          this.isClickingTarget = false
-        }),
-      )
     })
+  }
+
+  get wasJustClicked() {
+    return Date.now() - this.state.isPinnedOpen < 10
   }
 
   listenForClickAway() {
     on(this, window, 'click', e => {
-      const { showPopover, isClickingTarget } = this
+      const { showPopover } = this
       const { keepOpenOnClickTarget, open, closeOnClick } = this.curProps
       // forced open or hidden
       if (open || !showPopover) {
         return
       }
       // closeOnClickPopover
-      if (closeOnClick && !isClickingTarget) {
+      if (closeOnClick && !this.wasJustClicked) {
         this.stopListeningUntilNextMouseEnter()
+        this.setState({ isPinnedOpen: false })
         this.close()
         e.stopPropagation()
         return
       }
       // closeOnClickTarget
-      if (!keepOpenOnClickTarget && isClickingTarget) {
+      if (!keepOpenOnClickTarget && this.wasJustClicked) {
+        this.setState({ isPinnedOpen: false })
         this.close()
         e.stopPropagation()
       }
     })
   }
 
-  async stopListeningUntilNextMouseEnter() {
+  private stopListeningUntilNextMouseEnter = async () => {
+    if (this.state.isPinnedOpen) {
+      return
+    }
     const hovered = this.isHovered
     this.cancelIfWillOpen()
     await this.clearHovered()
@@ -704,14 +726,12 @@ export class Popover extends React.PureComponent<PopoverProps> {
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
     const setHovered = () => {
-      console.log('set hovered')
       this.hoverStateSet(name, true)
     }
     const setUnhovered = () => {
       this.hoverStateSet(name, false)
     }
     const openIfOver = () => {
-      console.log('open if over', node, this.isNodeHovered)
       if (this.isNodeHovered(node)) {
         setHovered()
       }
@@ -808,12 +828,12 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   get showPopover() {
-    const { isOpen } = this.state
+    const { isOpen, isPinnedOpen } = this.state
     const { openOnHover, open, openOnClick } = this.props
     if (!this.mounted) {
       return false
     }
-    if (open || isOpen) {
+    if (open || isOpen || isPinnedOpen) {
       return true
     }
     if (typeof open === 'undefined') {
@@ -822,8 +842,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   handleTargetClick = () => {
-    console.log('handling target click..')
-    this.stopListeningUntilNextMouseEnter()
+    setTimeout(this.stopListeningUntilNextMouseEnter)
   }
 
   controlledTarget = target => {
@@ -832,7 +851,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       active: false,
     }
     if (this.props.passActive) {
-      targetProps.active = this.state.isOpen && !this.state.closing
+      targetProps.active = this.showPopover
     }
     const { acceptsHovered } = target.type
     if (acceptsHovered) {

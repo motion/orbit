@@ -4,6 +4,7 @@ import { SelectionStore } from '../../apps/orbit/orbitDocked/SelectionStore'
 import { Actions } from '../../actions/Actions'
 import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
+import { PopoverState } from '@mcro/ui'
 
 type Props = {
   selectionStore: SelectionStore
@@ -30,6 +31,10 @@ export const MainShortcutHandler = decorator(({ selectionStore, children }: Prop
     },
     escape: () => {
       console.log('escape')
+      if (PopoverState.openPopovers.size > 0) {
+        PopoverState.closeLast()
+        return
+      }
       // clear peek first
       if (App.peekState.appConfig) {
         return Actions.clearPeek()

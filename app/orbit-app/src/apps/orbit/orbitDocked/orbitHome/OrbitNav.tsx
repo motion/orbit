@@ -87,7 +87,9 @@ export class OrbitNav extends React.Component<{
               elevation={4}
               target={
                 <NavButton>
-                  <View border={[2, 'blue']} borderRadius={100} width={12} height={12} />
+                  <View background="#222" borderRadius={100} width={14} height={14} alignItems="center" justifyContent="center">
+                    <View border={[2, 'lightblue']} borderRadius={100} width={10} height={10} />
+                  </View>
                 </NavButton>
               }
             >

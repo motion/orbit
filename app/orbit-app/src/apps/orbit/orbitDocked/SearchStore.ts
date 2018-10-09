@@ -239,7 +239,12 @@ export class SearchStore {
   quickSearchState = react(
     () => App.state.query,
     async (query, { sleep, when }) => {
-      ensure('query', !!query)
+      if (!query) {
+        return {
+          query,
+          results: await loadMany(PersonBitModel, { args: { take: 6 } })
+        }
+      }
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE * 0.5)
       await when(() => this.nlpStore.nlp.query === query)

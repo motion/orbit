@@ -97,7 +97,10 @@ const getSegmentRadius = props => {
   if (!props.ignoreSegment) {
     if (props.uiContext && props.uiContext.inSegment) {
       const { inSegment } = props.uiContext
-      segmentedStyle = {}
+      segmentedStyle = {
+        borderRightRadius: props.borderRadius,
+        borderLeftRadius: props.borderRadius,
+      }
       if (inSegment.first) {
         segmentedStyle.borderRightRadius = 0
         segmentedStyle.borderRightWidth = 0
@@ -306,6 +309,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
                 key={0}
                 size={size}
                 opacity={0.2}
+                debug={this.props.debug}
                 borderLeftRadius={
                   segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
                 }

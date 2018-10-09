@@ -1,13 +1,13 @@
-import * as React from "react";
-import { PaneManagerStore } from "../../PaneManagerStore";
-import { SearchStore } from "../SearchStore";
-import { Row, SegmentedRow, Popover, View, Col, Theme, Button } from "@mcro/ui";
-import { NavButton } from "../../../../views/NavButton";
+import * as React from 'react'
+import { PaneManagerStore } from '../../PaneManagerStore'
+import { SearchStore } from '../SearchStore'
+import { Row, SegmentedRow, Popover, View, Col, Theme, Button } from '@mcro/ui'
+import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
-import { OrbitFilters } from "./OrbitFilters";
-import { Centered } from "../../../../views/Centered";
-import { RowItem } from "../../orbitHeader/RowItem";
-import { view } from "@mcro/black";
+import { OrbitFilters } from './OrbitFilters'
+import { Centered } from '../../../../views/Centered'
+import { RowItem } from '../../orbitHeader/RowItem'
+import { view } from '@mcro/black'
 
 @view.attach('paneManagerStore', 'searchStore')
 @view
@@ -89,7 +89,14 @@ export class OrbitNav extends React.Component<{
               elevation={4}
               target={
                 <NavButton>
-                  <View background="#222" borderRadius={100} width={14} height={14} alignItems="center" justifyContent="center">
+                  <View
+                    background="#222"
+                    borderRadius={100}
+                    width={14}
+                    height={14}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
                     <View border={[2, 'lightblue']} borderRadius={100} width={10} height={10} />
                   </View>
                 </NavButton>

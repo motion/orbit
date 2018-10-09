@@ -38,14 +38,16 @@ export const Glint = view({
     theme,
     ...props
   }: Props) => {
-    const radiusStyle = borderRadius && {
-      borderRadius,
-    }
-    const rightRadiusStyle = borderRightRadius && {
-      [isUndef(bottom) ? 'borderTopRightRadius' : 'borderBottomRightRadius']: borderRightRadius,
-    }
-    const leftRadiusStyle = borderLeftRadius && {
-      [isUndef(bottom) ? 'borderTopLeftRadius' : 'borderBottomLeftRadius']: borderLeftRadius,
+    const radiusStyle = {
+      ...(borderRadius && {
+        borderRadius,
+      }),
+      ...(borderRightRadius && {
+        [isUndef(bottom) ? 'borderTopRightRadius' : 'borderBottomRightRadius']: borderRightRadius,
+      }),
+      ...(borderLeftRadius && {
+        [isUndef(bottom) ? 'borderTopLeftRadius' : 'borderBottomLeftRadius']: borderLeftRadius,
+      }),
     }
     return {
       opacity,
@@ -54,10 +56,7 @@ export const Glint = view({
       transform: { y: y * (bottom ? 1 : -1), z: 0 },
       borderTop: isUndef(bottom) && [size, theme.glintColor || color],
       borderBottom: !isUndef(bottom) && [size, theme.glintColor || color],
-      // retina border
       ...radiusStyle,
-      ...rightRadiusStyle,
-      ...leftRadiusStyle,
       ...props,
     }
   },

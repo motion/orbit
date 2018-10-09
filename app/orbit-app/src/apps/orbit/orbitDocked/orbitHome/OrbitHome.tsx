@@ -381,11 +381,12 @@ export class OrbitHome extends React.Component<Props> {
           openOnHover
           closeOnEsc
           target={<NavButton icon="clock">24h</NavButton>}
-          adjust={[-10, 0]}
+          adjust={[180, 0]}
+          background
           borderRadius={3}
           theme="light"
         >
-          <View width={440} height={300} className="calendar-dom" padding={10}>
+          <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
             <DateRangePicker
               onChange={searchStore.searchFilterStore.onChangeDate}
               ranges={[searchStore.searchFilterStore.dateState]}
@@ -413,6 +414,7 @@ export class OrbitHome extends React.Component<Props> {
         <Popover
           openOnClick
           openOnHover
+          background
           closeOnEsc
           target={<NavButton icon="funnel">All</NavButton>}
           adjust={[-10, 0]}

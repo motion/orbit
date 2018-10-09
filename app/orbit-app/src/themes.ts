@@ -116,7 +116,7 @@ const light = {
   cardBorderColor: [0, 0, 0, 0.1],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
-    background: 'rgba(255,255,255,0.95)',
+    background: '#fff',
     color: '#444',
     borderColor: '#c5c5c5',
   }),

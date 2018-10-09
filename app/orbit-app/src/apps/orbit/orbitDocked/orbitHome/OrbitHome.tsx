@@ -455,8 +455,8 @@ export class OrbitHome extends React.Component<Props> {
         <>
           <SubPane name="home" fadeBottom before={before}>
             {/* {results[0].name === 'Apps' ? this.renderApps(results[0]) : null} */}
-            <OrbitSearchQuickResults />
             <Unpad>
+              <OrbitSearchQuickResults />
               <OrbitMasonry
                 items={fakeData.map((item, index) => (
                   <OrbitCard

@@ -112,7 +112,7 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, 0, 4],
+  padding: [0, 0, 2],
   padRight: {
     paddingRight: 20
   }

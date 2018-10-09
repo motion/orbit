@@ -399,13 +399,13 @@ export class OrbitHome extends React.Component<Props> {
             <NavButton
               onClick={paneManagerStore.activePaneSetter('home')}
               active={paneManagerStore.activePane === 'home'}
-              icon="home"
+              icon="uichart"
               tooltip="Overview"
             />
             <NavButton
               onClick={paneManagerStore.activePaneSetter('explore')}
               active={paneManagerStore.activePane === 'explore'}
-              icon="menu35"
+              icon="pin"
               tooltip="Explore"
             />
           </SegmentedRow>

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { attachTheme, ThemeObject, Theme } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
-import { View, Image, Tooltip, Popover, Row, Col, Text, Icon } from '@mcro/ui'
+import { View, Image, Tooltip, Popover, Row, Col, Text, Icon, Button } from '@mcro/ui'
 import orbIcon from '../../../../public/orb.svg'
 import { Desktop } from '@mcro/stores'
 import { Actions } from '../../../actions/Actions'
@@ -71,6 +71,44 @@ const OrbitClose = view({
   }
 })
 
+const RowItemFrame = view(Row, {
+  minHeight: 30,
+  padding: [4, 8],
+  alignItems: 'center',
+  '&:hover': {
+    background: '#f2f2f2',
+  },
+})
+
+const RowItem = ({ orb = null, title = null, icon = null, subtitle = null, ...props }) => {
+  return (
+    <RowItemFrame {...props}>
+      {!!orb && (
+        <View
+          borderRadius={100}
+          borderColor={orb}
+          borderWidth={2}
+          borderStyle="solid"
+          marginRight={8}
+          width={12}
+          height={12}
+        />
+      )}
+      <Col flex={1}>
+        <Text sizeLineHeight={0.8} size={1} fontWeight={600}>
+          {title}
+        </Text>
+        {!!subtitle && (
+          <Text sizeLineHeight={0.8} size={0.9} alpha={0.5}>
+            20 people
+          </Text>
+        )}
+      </Col>
+      {!!icon && <Icon name={icon} size={14} opacity={0.5} />}
+    </RowItemFrame>
+  )
+}
+
 @attachTheme
 @view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
 @view.attach({
@@ -108,6 +146,7 @@ export class OrbitHeader extends React.Component<
               borderRadius={5}
               width={200}
               background="#fff"
+              overflow="hidden"
               target={
                 <Image
                   src={orbIcon}
@@ -129,18 +168,18 @@ export class OrbitHeader extends React.Component<
                 />
               }
             >
-              <Row flex={1} padding={[8, 10]} alignItems="center">
-                <View borderRadius={100} background="blue" marginRight={5} width={16} height={16} />
-                <Col flex={1}>
-                  <Text sizeLineHeight={0.8} size={1} fontWeight={600}>
-                    Orbit
-                  </Text>
-                  <Text sizeLineHeight={0.8} size={0.9} alpha={0.5}>
-                    20 people
-                  </Text>
-                </Col>
-                <Icon name="gear" size={14} opacity={0.5} />
-              </Row>
+              <Col flex={1}>
+                <RowItem orb="blue" title="Orbit" subtitle="20 people" icon="gear" />
+                <View flex={1} margin={[2, 10]} background="#eee" height={1} />
+                <RowItem orb="grey" title="Personal" />
+                <RowItem orb="red" title="Discuss Things" />
+
+                <Row margin={5} alignItems="flex-end">
+                  <Theme theme={{ background: '#fff', color: '#444' }}>
+                    <Button icon="add">Create</Button>
+                  </Theme>
+                </Row>
+              </Col>
             </Popover>
             <OrbitHeaderInput headerStore={headerStore} theme={theme} />
           </Title>

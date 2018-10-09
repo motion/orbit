@@ -195,7 +195,7 @@ export class OrbitHome extends React.Component<Props> {
     //     </SubPane>
     //   )
     // }
-    const navSpace = <div style={{ height: 35, pointerEvents: 'none' }} />
+    const navSpace = <div style={{ height: 38, pointerEvents: 'none' }} />
     return (
       <>
         <OrbitNav />

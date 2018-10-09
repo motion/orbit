@@ -15,6 +15,8 @@ const ArrowContain = view({
   left: '50%',
 })
 
+type DebouncedFn = Cancelable & (() => void)
+
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
 
 export type PopoverProps = CSSPropertySet & {
@@ -265,8 +267,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (this.target) {
       this.listenForClick()
       this.listenForHover()
-      console.log('this', this, this.target, this.targetNode)
-      on(this, this.targetNode, 'click', this.handleTargetClick)
+      on(this, this.target, 'click', this.handleTargetClick)
     }
   }
 
@@ -393,9 +394,18 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   async stopListeningUntilNextMouseEnter() {
+    const hovered = this.isHovered
+    this.cancelIfWillOpen()
     await this.clearHovered()
     this.close()
-    on(this, setTimeout(() => this.listenForHover(), 100))
+    // after click, remove hover listeners until mouseleave
+    if (hovered) {
+      this.removeListeners()
+      const off = on(this, this.target, 'mouseleave', () => {
+        off()
+        this.listenForHover()
+      })
+    }
   }
 
   clearHovered() {
@@ -659,7 +669,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   removeListeners() {
-    console.log('removing listeners...')
     for (const listener of this.listeners) {
       listener()
     }
@@ -671,11 +680,17 @@ export class Popover extends React.PureComponent<PopoverProps> {
     enter: { target: null, menu: null },
   }
 
-  delayOpenIfHover: Cancelable & (() => void) = null
+  delayOpenIfHover = {
+    target: null as DebouncedFn,
+    menu: null as DebouncedFn
+  }
 
   private cancelIfWillOpen() {
-    if (this.delayOpenIfHover && this.delayOpenIfHover.cancel) {
-      this.delayOpenIfHover.cancel()
+    for (const key in this.delayOpenIfHover) {
+      const fn = this.delayOpenIfHover[key]
+      if (fn && fn.cancel) {
+        fn.cancel()
+      }
     }
   }
 
@@ -696,13 +711,14 @@ export class Popover extends React.PureComponent<PopoverProps> {
       this.hoverStateSet(name, false)
     }
     const openIfOver = () => {
+      console.log('open if over', node, this.isNodeHovered)
       if (this.isNodeHovered(node)) {
         setHovered()
       }
     }
 
     this.cancelIfWillOpen()
-    this.delayOpenIfHover = debounce(openIfOver, isTarget ? delay : 0)
+    this.delayOpenIfHover[name] = debounce(openIfOver, isTarget ? delay : 0)
 
     const closeIfOut = () => {
       // avoid if too soon
@@ -731,7 +747,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       if (isTarget && this.state.menuHovered) {
         openIfOver()
       } else {
-        this.delayOpenIfHover()
+        this.delayOpenIfHover[name]()
       }
     }
     // 🐛 target should close slower than menu opens
@@ -805,34 +821,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
     }
   }
 
-  get targetNode() {
-    if (this.target instanceof HTMLElement) {
-      return this.target
-    }
-    if (this.targetRef) {
-      return this.targetRef.current
-    } else {
-      return getTarget(this.target)
-    }
-  }
-
   handleTargetClick = () => {
-    this.cancelIfWillOpen()
-    // after click, remove hover listeners until mouseleave
-    this.removeListeners()
-    const off = on(this, this.targetNode, 'mouseleave', () => {
-      off()
-      this.listenForHover()
-    })
-    const close = () => {
-      this.hoverStateSet('target', false)
-      this.hoverStateSet('menu', false)
-      this.setState({ isOpen: false })
-    }
-    // hacky but temporary solution to it opening sometimes
-    close()
-    setTimeout(close, 16)
-    setTimeout(close, 40)
+    console.log('handling target click..')
+    this.stopListeningUntilNextMouseEnter()
   }
 
   controlledTarget = target => {

@@ -83,16 +83,24 @@ export class HeaderStore {
     },
   )
 
+  blurQueryOnSettingsPane = react(
+    () => this.props.paneManagerStore.activePane === 'settings',
+    isSettings => {
+      ensure('isSettings', isSettings)
+      this.inputRef.current.blur()
+    }
+  )
+
   updateInputOnPaneChange = react(
-    () => this.props.paneManagerStore.activePane,
-    pane => {
-      ensure('pane not search or home', pane !== 'search' && pane !== 'home')
+    () => /home|explore/.test(this.props.paneManagerStore.activePane),
+    isSearchablePane => {
+      ensure('isSearchablePane', isSearchablePane)
       this.props.queryStore.clearQuery()
       this.focus()
     },
   )
 
-  onClickInput = () => {}
+  onClickInput = () => { }
 
   onHoverIcon = () => {
     this.iconHovered = true

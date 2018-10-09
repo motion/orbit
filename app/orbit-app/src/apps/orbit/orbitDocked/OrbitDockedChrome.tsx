@@ -60,8 +60,8 @@ const Background = view({
   const isDark = theme.background.isDark()
   const darkBg = isTransparent
     ? moreOpaque
-      ? [15, 15, 15, 0.3]
-      : [15, 15, 15, 0.15]
+      ? [6, 6, 6, 0.25]
+      : [6, 6, 6, 0.05]
     : [40, 40, 40]
   const lightBg = isTransparent ? [110, 110, 110, moreOpaque ? 0.8 : 0.65] : [255, 255, 255]
   return {

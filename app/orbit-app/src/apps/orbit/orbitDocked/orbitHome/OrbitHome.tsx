@@ -143,6 +143,13 @@ class OrbitHomeStore {
   props: Props
 }
 
+const Interactive = view({
+  disabled: {
+    opacity: 0,
+    pointerEvents: 'none'
+  }
+})
+
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore', 'appsStore')
 @view.attach({
   homeStore: OrbitHomeStore,
@@ -151,14 +158,6 @@ class OrbitHomeStore {
 export class OrbitHome extends React.Component<Props> {
   span2 = {
     gridColumnEnd: 'span 2',
-  }
-
-  onDragEnd = result => {
-    // dropped outside the list
-    if (!result.destination) {
-      return
-    }
-    this.props.homeStore.reorder(result.source.index, result.destination.index)
   }
 
   renderApps({ name, items, startIndex }: SelectionGroup) {
@@ -196,9 +195,12 @@ export class OrbitHome extends React.Component<Props> {
     //   )
     // }
     const navSpace = <div style={{ height: 38, pointerEvents: 'none' }} />
+    const { activePane } = this.props.paneManagerStore
     return (
       <>
-        <OrbitNav />
+        <Interactive disabled={!/home|explore/.test(activePane)}>
+          <OrbitNav />
+        </Interactive>
         <SubPane name="home" fadeBottom>
           {navSpace}
           {/* {results[0].name === 'Apps' ? this.renderApps(results[0]) : null} */}

@@ -50,7 +50,7 @@ const OrbitDockedInner = view({
   position: 'relative',
   zIndex: 4,
   // this may cause slowness in hover state css, or did for at one point
-  overflow: 'hidden',
+  // overflow: 'hidden',
   pointerEvents: 'none',
   flex: 1,
   borderBottomRadius: BORDER_RADIUS,

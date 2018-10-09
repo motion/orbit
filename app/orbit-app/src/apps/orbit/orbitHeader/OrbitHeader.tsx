@@ -4,7 +4,7 @@ import { attachTheme, ThemeObject, Theme } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
-import { View, Image, Tooltip, Popover, Row, Col, Text, Icon, Button } from '@mcro/ui'
+import { View, Image, Popover, Row, Col, Text, Icon, Button } from '@mcro/ui'
 import orbIcon from '../../../../public/orb.svg'
 import { Desktop } from '@mcro/stores'
 import { Actions } from '../../../actions/Actions'
@@ -39,6 +39,10 @@ const OrbitFakeInput = view({
   justifyContent: 'stretch',
   transition: 'background ease-in 200ms 200ms',
   borderRadius: 10,
+  inactive: {
+    opacity: 0.5,
+    pointerEvents: 'none',
+  },
 }).theme(({ theme }) => ({
   background: theme.inputBackground || theme.background.alpha(0.35),
   '&:active': {
@@ -108,6 +112,14 @@ const RowItem = ({ orb = null, title = null, icon = null, subtitle = null, ...pr
     </RowItemFrame>
   )
 }
+
+const Disable = view({
+  flex: 'inherit',
+  when: {
+    opacity: 0.5,
+    pointerEvents: 'none',
+  },
+})
 
 @attachTheme
 @view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
@@ -182,7 +194,9 @@ export class OrbitHeader extends React.Component<
                 </Row>
               </Col>
             </Popover>
-            <OrbitHeaderInput headerStore={headerStore} theme={theme} />
+            <Disable when={paneManagerStore.activePane === 'settings'}>
+              <OrbitHeaderInput headerStore={headerStore} theme={theme} />
+            </Disable>
           </Title>
           {!!after && <After>{after}</After>}
         </OrbitFakeInput>

@@ -4,7 +4,7 @@ import { observeMany } from '@mcro/model-bridge'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../SelectionStore'
-import { View, Row, SegmentedRow, Popover, Text } from '@mcro/ui'
+import { View, Row, SegmentedRow, Popover, Text, Col, Theme, Button } from '@mcro/ui'
 import { BitModel, PersonBitModel, SettingModel } from '@mcro/models'
 import { OrbitCarouselSection } from './OrbitCarouselSection'
 import { AppsStore } from '../../../AppsStore'
@@ -22,6 +22,7 @@ import { SearchStore } from '../SearchStore'
 import { OrbitFilters } from './OrbitFilters'
 import { OrbitSearchMasonry } from './OrbitSearchMasonry'
 import { OrbitSearchQuickResults } from '../orbitSearch/OrbitSearchQuickResults'
+import { RowItem } from '../../orbitHeader/RowItem';
 
 // import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 // <OrbitSuggestionBar
@@ -378,36 +379,60 @@ export class OrbitHome extends React.Component<Props> {
     let content
     const nav = (
       <Row position="relative" alignItems="center" padding={[0, 10]}>
-        <SegmentedRow>
-          <Popover
-            openOnClick
-            openOnHover
-            closeOnEsc
-            target={<NavButton icon="calendar">All</NavButton>}
-            adjust={[180, 0]}
-            background
-            borderRadius={6}
-            elevation={4}
-            theme="light"
-          >
-            <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
-              <DateRangePicker
-                onChange={searchStore.searchFilterStore.onChangeDate}
-                ranges={[searchStore.searchFilterStore.dateState]}
-              />
-            </View>
-          </Popover>
-          <NavButton icon="arrowup" tooltip="Trending" />
-        </SegmentedRow>
+        <Popover
+          openOnClick
+          openOnHover
+          closeOnEsc
+          target={<NavButton icon="calendar">Any</NavButton>}
+          adjust={[180, 0]}
+          background
+          borderRadius={6}
+          elevation={4}
+          theme="light"
+        >
+          <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
+            <DateRangePicker
+              onChange={searchStore.searchFilterStore.onChangeDate}
+              ranges={[searchStore.searchFilterStore.dateState]}
+            />
+          </View>
+        </Popover>
 
         <Centered>
           <SegmentedRow>
             <NavButton
               onClick={paneManagerStore.activePaneSetter('home')}
               active={paneManagerStore.activePane === 'home'}
-              icon="uichart"
+              icon="arrow-up"
               tooltip="Overview"
             />
+            <Popover
+              openOnClick
+              theme="light"
+              width={200}
+              background
+              borderRadius={6}
+              elevation={4}
+              target={
+                <NavButton>
+                  <View border={[2, 'blue']} borderRadius={100} width={12} height={12} />
+                </NavButton>
+              }
+            >
+              <Col borderRadius={6} overflow="hidden" flex={1}>
+                <RowItem orb="blue" title="Orbit" subtitle="20 people" icon="gear" />
+                <View flex={1} margin={[2, 10]} background="#eee" height={1} />
+                <RowItem orb="grey" title="Me" />
+                <RowItem orb="red" title="discuss-things" />
+
+                <Row margin={5} alignItems="center">
+                  <View flex={1} />
+                  <Theme theme={{ background: '#fff', color: '#444' }}>
+                    <Button icon="add">Create</Button>
+                  </Theme>
+                </Row>
+              </Col>
+            </Popover>
             <NavButton
               onClick={paneManagerStore.activePaneSetter('explore')}
               active={paneManagerStore.activePane === 'explore'}

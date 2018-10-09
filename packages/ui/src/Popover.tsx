@@ -924,8 +924,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
             hover={false}
             overflow="visible"
             boxShadow={getShadow(shadow, elevation)}
-            {...backgroundProp}
             {...props}
+            {...backgroundProp}
           >
             {typeof children === 'function'
               ? (children as PopoverChildrenFn)(showPopover)

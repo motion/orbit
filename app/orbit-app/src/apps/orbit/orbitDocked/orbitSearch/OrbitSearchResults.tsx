@@ -94,11 +94,10 @@ class OrbitSearchResultsListChunk extends React.Component<{
 class OrbitSearchResultsList extends React.Component<Props> {
   render() {
     const { searchStore } = this.props
-    const { results } = searchStore.searchState
+    const { results, query } = searchStore.searchState
     if (!results || !results.length) {
       return null
     }
-    const query = searchStore.searchState.query
     const quickResultsLen = searchStore.quickSearchState.results.length
     const chunkAmt = 6
     const resultsGroups = chunk(results, chunkAmt)

@@ -20,6 +20,7 @@ import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
 import { SearchStore } from '../SearchStore'
 import { OrbitFilters } from './OrbitFilters'
+import { OrbitSearchMasonry } from './OrbitSearchMasonry'
 
 // import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 // <OrbitSuggestionBar
@@ -429,10 +430,19 @@ export class OrbitHome extends React.Component<Props> {
     )
     const before = (
       <>
-        <div style={{ height: 5 }} />
+        <div style={{ height: 2 }} />
         {nav}
+        <div style={{ height: 8 }} />
       </>
     )
+    if (searchStore.hasQueryVal) {
+      console.log('has query val...')
+      return (
+        <SubPane name="home" fadeBottom before={before}>
+          <OrbitSearchMasonry />
+        </SubPane>
+      )
+    }
     if (results.length) {
       return (
         <>

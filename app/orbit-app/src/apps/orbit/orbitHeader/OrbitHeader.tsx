@@ -82,7 +82,7 @@ const RowItemFrame = view(Row, {
 
 const RowItem = ({ orb = null, title = null, icon = null, subtitle = null, ...props }) => {
   return (
-    <RowItemFrame {...props}>
+    <RowItemFrame padding={subtitle ? 8 : [4, 8]} {...props}>
       {!!orb && (
         <View
           borderRadius={100}
@@ -171,10 +171,11 @@ export class OrbitHeader extends React.Component<
               <Col flex={1}>
                 <RowItem orb="blue" title="Orbit" subtitle="20 people" icon="gear" />
                 <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-                <RowItem orb="grey" title="Personal" />
-                <RowItem orb="red" title="Discuss Things" />
+                <RowItem orb="grey" title="Me" />
+                <RowItem orb="red" title="discuss-things" />
 
-                <Row margin={5} alignItems="flex-end">
+                <Row margin={5} alignItems="center">
+                  <View flex={1} />
                   <Theme theme={{ background: '#fff', color: '#444' }}>
                     <Button icon="add">Create</Button>
                   </Theme>

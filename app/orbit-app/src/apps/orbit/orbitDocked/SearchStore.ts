@@ -47,16 +47,9 @@ export class SearchStore {
     },
   )
 
-  activeQuery = react(
-    () => [App.state.query, this.isActive],
-    ([query, isActive]) => {
-      ensure('is active', isActive)
-      return query
-    },
-    {
-      defaultValue: App.state.query,
-    },
-  )
+  get activeQuery() {
+    return App.state.query
+  }
 
   // aggregated results for selection store
   results = react(
@@ -75,12 +68,14 @@ export class SearchStore {
   }
 
   get isActive() {
-    return this.props.paneManagerStore.activePane === 'search'
+    return this.props.paneManagerStore.activePane === 'home' && this.hasQueryVal
   }
 
   hasQuery = () => {
     return !!this.activeQuery
   }
+
+  hasQueryVal = react(this.hasQuery, _ => _)
 
   searchState = react(
     () => [
@@ -125,11 +120,11 @@ export class SearchStore {
         // todo: broken by umed, please fix me
         message = 'SPACE to search selected channel'
         results = channelResults
-        return setValue({
+        return {
           query,
           message,
           results,
-        })
+        }
       }
 
       // regular search

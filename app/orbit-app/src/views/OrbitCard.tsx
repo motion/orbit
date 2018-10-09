@@ -285,7 +285,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
                   </Preview>
                 )}
                 {typeof children === 'function'
-                  ? children(resolvedItem, props.bit, props.index)
+                  ? children(resolvedItem, props.model, props.index)
                   : children}
                 {hasPeople && (
                   <Row>

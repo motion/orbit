@@ -57,7 +57,7 @@ const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 // })
 
 const macModernTheme = Theme.colorize({
-  shadowSelected: [0, 0, 0, 3, '#90b1e433'],
+  shadowSelected: '0 0 0 2px #90b1e433', // [0, 0, 0, 2, '#90b1e433'],
   borderSelected: '#90b1e4ee',
 
   white: '#fff',
@@ -103,6 +103,8 @@ const macModernTheme = Theme.colorize({
   },
 })
 
+console.log('macModernTheme', macModernTheme)
+
 const light = {
   _equalityKey: 'light',
   ...macModernTheme,
@@ -116,7 +118,7 @@ const light = {
   cardBorderColor: [0, 0, 0, 0.1],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
-    background: 'rgba(255,255,255,0.95)',
+    background: '#fff',
     color: '#444',
     borderColor: '#c5c5c5',
   }),
@@ -126,8 +128,8 @@ const dark = {
   _equalityKey: 'dark',
   ...macModernTheme,
   glintColor: [255, 255, 255, 0.2],
-  inputBackground: [20, 20, 20, 0.2],
-  inputBackgroundActive: [20, 20, 20, 0.5],
+  inputBackground: [20, 20, 20, 0],
+  inputBackgroundActive: [20, 20, 20, 0.2],
   listItemBackground: 'transparent',
   listItemBackgroundSelected: [60, 60, 60, 0.2],
   listItemBackgroundHover: [20, 20, 20, 0.3],
@@ -135,13 +137,17 @@ const dark = {
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardBorderColor: [255, 255, 255, 0.07],
   cardBorderColorHover: [255, 255, 255, 0.15],
-  cardHoverGlow: [0, 0, 0, 3, [0, 0, 0, 0.15]],
+  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   ...Theme.fromStyles({
-    background: [20, 20, 20, 0.94],
-    backgroundHover: 'rgba(20,20,20,0.2)',
+    background: [19, 19, 19, 0.05],
+    backgroundHover: [20, 20, 20, 0.2],
+    backgroundActive: [30, 30, 30, 0.65],
     color: '#fff',
-    borderColor: '#222',
+    borderColor: [1, 1, 1, 0.25],
   }),
+  // buttonBackground: [40, 40, 40, 0.2],
+  // buttonBackgroundActive: [20, 20, 20, 0.2],
+  // buttonBackgroundHover: [50, 50, 50, 0.2],
   colorActive: '#fff',
 }
 

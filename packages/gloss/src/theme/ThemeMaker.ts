@@ -1,4 +1,4 @@
-import $ from '@mcro/color'
+import colorize from '@mcro/color'
 import { Color } from '@mcro/css'
 import { ThemeObject } from '../types'
 
@@ -52,8 +52,6 @@ const opposite = color => {
     : color.mix(color.lightness(1)).lightness(25)
 }
 
-const isValidColorString = s =>
-  typeof s === 'string' && s.indexOf('gradient') === -1
 const isPlainObj = o => typeof o == 'object' && o.constructor == Object
 
 export class ThemeMaker {
@@ -66,11 +64,12 @@ export class ThemeMaker {
       if (isPlainObj(val)) {
         // recurse into objects
         res[key] = this.colorize(val)
-      } else if (isValidColorString(val)) {
-        res[key] = $(val)
       } else {
-        // could be color or something weird
-        res[key] = val
+        try {
+          res[key] = colorize(val)
+        } catch {
+          res[key] = val
+        }
       }
     }
     return res
@@ -85,7 +84,7 @@ export class ThemeMaker {
     }
     let background
     try {
-      background = $(bgName)
+      background = colorize(bgName)
     } catch (e) {
       if (e.message.indexOf('parse color from string') > -1) {
         return null
@@ -106,41 +105,28 @@ export class ThemeMaker {
       return this.cache[key]
     }
     const { background, color, borderColor, ...rest } = styleObject
-    const backgroundColored = background ? $(background) : opposite($(color))
+    const backgroundColored = background ? colorize(background) : opposite(colorize(color))
     // some handy basic styles
     const base = this.colorize({
       background: backgroundColored,
-      color:
-        color ||
-        roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmt)),
+      color: color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmt)),
       borderColor: borderColor || increaseContrast(backgroundColored, smallAmt),
     })
-    const hover = {
-      colorHover: increaseContrast(base.color, smallAmt),
-      backgroundHover: increaseContrast(base.background, smallAmt),
-      borderColorHover: increaseContrast(base.borderColor, smallAmt),
-    }
-    const active = {
-      ...base,
-      borderColorActive: decreaseContrast(base.borderColor, smallAmt),
-    }
-    const blur = {
-      backgroundBlur: darken(base.background, largeAmt),
-      colorBlur: darken(base.color, largeAmt),
-      borderColorBlur: darken(base.borderColor, largeAmt),
-    }
-    const focus = {
-      backgroundFocus: decreaseContrast(base.background, largeAmt),
-      borderColorFocus: decreaseContrast(base.borderColor, largeAmt),
-    }
     // flattened
     const res = {
       ...this.colorize({
         ...base,
-        ...hover,
-        ...active,
-        ...blur,
-        ...focus,
+        colorHover: increaseContrast(base.color, smallAmt),
+        backgroundHover: increaseContrast(base.background, smallAmt),
+        borderColorHover: increaseContrast(base.borderColor, smallAmt),
+        backgroundActiveHover: increaseContrast(base.background, largeAmt),
+        backgroundActive: decreaseContrast(base.background, largeAmt),
+        borderColorActive: decreaseContrast(base.borderColor, smallAmt),
+        backgroundBlur: darken(base.background, largeAmt),
+        colorBlur: darken(base.color, largeAmt),
+        borderColorBlur: darken(base.borderColor, largeAmt),
+        backgroundFocus: decreaseContrast(base.background, largeAmt),
+        borderColorFocus: decreaseContrast(base.borderColor, largeAmt),
         // ensure rest is last so they can override anything
         ...rest,
       }),

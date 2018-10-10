@@ -1,22 +1,35 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
-import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
-import { isNumber, debounce, throttle, isEqual, omit } from 'lodash'
+import { isNumber, debounce, throttle, isEqual, omit, Cancelable, last } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
 import { Color, CSSPropertySet } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
+import { Theme } from '@mcro/gloss'
+import { getTarget } from './helpers/getTarget'
 
 const ArrowContain = view({
   position: 'absolute',
   left: '50%',
 })
 
+type DebouncedFn = Cancelable & (() => void)
+
+const openPopovers = new Set()
+
+export const PopoverState = {
+  openPopovers,
+  closeLast: () => {
+    last([...openPopovers]).forceClose()
+  },
+}
+
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
 
 export type PopoverProps = CSSPropertySet & {
+  theme?: string
   // can pass function to get isOpen passed in
   children?: React.ReactNode | PopoverChildrenFn
   // element or function that returns element, or querySelector to element
@@ -31,7 +44,7 @@ export type PopoverProps = CSSPropertySet & {
   top?: number
   // the distance the popover is from the target
   // so it displays nicely spaced away
-  distance: number
+  distance?: number
   // open when target is clicked
   openOnClick?: boolean
   // open automatically when target is hovered
@@ -42,6 +55,9 @@ export type PopoverProps = CSSPropertySet & {
   noHoverOnChildren?: boolean
   // size of shown arrow
   arrowSize?: number
+  // close when you click outside it
+  closeOnClickAway?: boolean
+  // close when you click inside it
   closeOnClick?: boolean
   closeOnEsc?: boolean
   // which direction it shows towards
@@ -70,7 +86,7 @@ export type PopoverProps = CSSPropertySet & {
   onOpen?: Function
   height?: number
   width?: number
-  background?: Color | boolean
+  background?: true | Color
   passActive?: boolean
   popoverProps?: Object
   shadow?: boolean | string
@@ -171,9 +187,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,
-    distance: 10,
-    arrowSize: 24,
-    forgiveness: 15,
+    distance: 14,
+    arrowSize: 14,
+    forgiveness: 20,
     towards: 'auto',
     openAnimation: 'slide 300ms',
     closeAnimation: 'bounce 300ms',
@@ -189,7 +205,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
   // TODO: weird unmount/mounted
   unmounted = false
   mounted = false
-  isClickingTarget = false
   targetRef = React.createRef<HTMLDivElement>()
   popoverRef = null
 
@@ -206,6 +221,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     arrowTop: 0,
     arrowLeft: 0,
     arrowInnerTop: 0,
+    isPinnedOpen: 0,
     isOpen: false,
     direction: null,
     delay: 16,
@@ -235,23 +251,36 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   componentDidMount() {
     this.mounted = true
-    const { openOnClick, closeOnClick, closeOnEsc, open } = this.curProps
+    const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.curProps
     this.listenForResize()
-    this.setTarget()
-    if (openOnClick || closeOnClick) {
+    if (openOnClick || closeOnClick || closeOnClickAway) {
       this.listenForClickAway()
     }
     if (open) {
       this.open()
     }
-    if (closeOnEsc) {
-      on(this, window, 'keyup', e => {
-        if (e.keyCode === 27 && this.showPopover) {
-          e.preventDefault()
-          e.stopPropagation()
-          this.close()
-        }
-      })
+    if (typeof target === 'string') {
+      this.target = getTarget(target)
+    } else {
+      const child = findDOMNode(this) as HTMLDivElement
+      if (!child.classList.contains('popover')) {
+        this.target = child
+      }
+    }
+    if (this.target) {
+      this.listenForClick()
+      this.listenForHover()
+      on(this, this.target, 'click', this.handleTargetClick)
+      if (closeOnEsc) {
+        on(this, this.target.parentNode, 'keyup', e => {
+          if (e.keyCode === 27 && this.showPopover) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.setState({ isPinnedOpen: 0 })
+            this.close()
+          }
+        })
+      }
     }
   }
 
@@ -262,10 +291,14 @@ export class Popover extends React.PureComponent<PopoverProps> {
   shouldSendDidOpen = true
 
   componentDidUpdate() {
+    if (this.showPopover) {
+      PopoverState.openPopovers.add(this)
+    } else {
+      PopoverState.openPopovers.delete(this)
+    }
     if (this.state.setPosition) {
       this.setPosition()
       this.setOpenOrClosed(this.props)
-      this.setTarget()
       this.setState({ setPosition: false })
     }
     if (this.props.onDidOpen) {
@@ -290,7 +323,13 @@ export class Popover extends React.PureComponent<PopoverProps> {
     })
   }
 
-  open() {
+  forceClose = () => {
+    this.stopListeningUntilNextMouseEnter()
+    this.setState({ isPinnedOpen: 0 })
+    this.close()
+  }
+
+  private open() {
     this.setPosition(() => {
       this.setState({ isOpen: true }, () => {
         if (this.curProps.onOpen) {
@@ -300,7 +339,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     })
   }
 
-  close = () => {
+  private close = () => {
     return new Promise(resolve => {
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {
@@ -338,66 +377,66 @@ export class Popover extends React.PureComponent<PopoverProps> {
     // click away to close
     this.targetClickOff = on(this, this.target, 'click', e => {
       e.stopPropagation()
-      this.isClickingTarget = true
-      if (typeof this.curProps.open === 'undefined') {
-        if (this.state.isOpen) {
-          this.close()
-        } else {
-          this.open()
-        }
+      console.log(this.state, this.showPopover, this)
+      if (this.state.isPinnedOpen) {
+        this.forceClose()
+      } else {
+        this.setState({ isPinnedOpen: Date.now() })
       }
-      on(
-        this,
-        setTimeout(() => {
-          this.isClickingTarget = false
-        }),
-      )
     })
+  }
+
+  get wasJustClicked() {
+    return Date.now() - this.state.isPinnedOpen < 10
   }
 
   listenForClickAway() {
     on(this, window, 'click', e => {
-      const { showPopover, isClickingTarget } = this
-      const { keepOpenOnClickTarget, open, closeOnClick } = this.curProps
+      const { showPopover } = this
+      const { keepOpenOnClickTarget, open, closeOnClick, closeOnClickAway } = this.curProps
       // forced open or hidden
       if (open || !showPopover) {
         return
       }
+      if (keepOpenOnClickTarget && this.wasJustClicked) {
+        return
+      }
       // closeOnClickPopover
-      if (closeOnClick && !isClickingTarget) {
-        this.stopListeningUntilNextMouseEnter()
-        this.close()
+      if (closeOnClick && this.wasJustClicked) {
+        console.log('close on click')
+        this.forceClose()
         e.stopPropagation()
         return
       }
-      // closeOnClickTarget
-      if (!keepOpenOnClickTarget && isClickingTarget) {
-        this.close()
+      if (closeOnClickAway && !this.wasJustClicked) {
+        console.log('close on away')
+        this.forceClose()
         e.stopPropagation()
+        return
       }
     })
   }
 
-  async stopListeningUntilNextMouseEnter() {
+  private stopListeningUntilNextMouseEnter = async () => {
+    if (this.state.isPinnedOpen) {
+      return
+    }
+    const hovered = this.isHovered
+    this.cancelIfWillOpen()
     await this.clearHovered()
     this.close()
-    on(this, setTimeout(() => this.listenForHover(), 100))
+    // after click, remove hover listeners until mouseleave
+    if (hovered) {
+      this.removeListeners()
+      const off = on(this, this.target, 'mouseleave', () => {
+        off()
+        this.listenForHover()
+      })
+    }
   }
 
   clearHovered() {
     return new Promise(resolve => this.setState({ menuHovered: 0, targetHovered: 0 }, resolve))
-  }
-
-  setTarget() {
-    this.target = (this.targetRef && this.targetRef.current) || getTarget(this.curProps.target)
-    // couldnt forward ref...
-    if (!this.target) {
-      this.target = findDOMNode(this)
-    }
-    if (this.target) {
-      this.listenForClick()
-      this.listenForHover()
-    }
   }
 
   get isHovered() {
@@ -648,15 +687,15 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (!(this.target instanceof HTMLElement)) {
       return
     }
-    this.removeListenForHover()
-    this.listeners = this.addHoverListeners('target', this.target)
+    this.removeListeners()
+    this.addHoverListeners('target', this.target)
     // noHoverOnChildren === no hover on the actual popover child element
     if (!this.curProps.noHoverOnChildren) {
-      this.listeners = [...this.listeners, ...this.addHoverListeners('menu', this.popoverRef)]
+      this.addHoverListeners('menu', this.popoverRef)
     }
   }
 
-  removeListenForHover() {
+  removeListeners() {
     for (const listener of this.listeners) {
       listener()
     }
@@ -666,6 +705,20 @@ export class Popover extends React.PureComponent<PopoverProps> {
   lastEvent = {
     leave: { target: null, menu: null },
     enter: { target: null, menu: null },
+  }
+
+  delayOpenIfHover = {
+    target: null as DebouncedFn,
+    menu: null as DebouncedFn,
+  }
+
+  private cancelIfWillOpen() {
+    for (const key in this.delayOpenIfHover) {
+      const fn = this.delayOpenIfHover[key]
+      if (fn && fn.cancel) {
+        fn.cancel()
+      }
+    }
   }
 
   addHoverListeners(name, node) {
@@ -689,7 +742,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
       }
     }
 
-    const delayOpenIfHover = debounce(openIfOver, isTarget ? delay : 0)
+    this.cancelIfWillOpen()
+    this.delayOpenIfHover[name] = debounce(openIfOver, isTarget ? delay : 0)
 
     const closeIfOut = () => {
       // avoid if too soon
@@ -699,9 +753,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       if (!this.isNodeHovered(node)) {
         setUnhovered()
         // cancel previous
-        if (typeof delayOpenIfHover.cancel === 'function') {
-          delayOpenIfHover.cancel()
-        }
+        this.cancelIfWillOpen()
       }
       // ensure check if we have a delay open
       if (delay && isTarget) {
@@ -720,7 +772,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       if (isTarget && this.state.menuHovered) {
         openIfOver()
       } else {
-        delayOpenIfHover()
+        this.delayOpenIfHover[name]()
       }
     }
     // 🐛 target should close slower than menu opens
@@ -738,7 +790,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     // if noHoverOnChildren it reduces bugs to just not check hovered state
     const onMouseLeave = noHoverOnChildren ? setUnhovered : onLeave
     listeners.push(on(this, node, 'mouseleave', onMouseLeave))
-    return listeners
+    this.listeners = [...this.listeners, ...listeners]
   }
 
   // hover helpers
@@ -781,12 +833,12 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   get showPopover() {
-    const { isOpen } = this.state
+    const { isOpen, isPinnedOpen } = this.state
     const { openOnHover, open, openOnClick } = this.props
     if (!this.mounted) {
       return false
     }
-    if (open || isOpen) {
+    if (open || isOpen || isPinnedOpen) {
       return true
     }
     if (typeof open === 'undefined') {
@@ -794,42 +846,61 @@ export class Popover extends React.PureComponent<PopoverProps> {
     }
   }
 
+  handleTargetClick = () => {
+    setTimeout(this.stopListeningUntilNextMouseEnter)
+  }
+
+  controlledTarget = target => {
+    const targetProps = {
+      ref: this.targetRef,
+      active: false,
+    }
+    if (this.props.passActive) {
+      targetProps.active = this.showPopover
+    }
+    const { acceptsHovered } = target.type
+    if (acceptsHovered) {
+      targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = this.showPopover
+    }
+    return React.cloneElement(target, targetProps)
+  }
+
   render() {
     const {
       adjust,
-      openAnimation,
-      closeAnimation,
       arrowSize,
+      background,
       children,
+      closeAnimation,
       closeOnClick,
+      closeOnEsc,
       delay,
       distance,
-      forgiveness,
-      showForgiveness,
       edgePadding,
+      elevation,
+      forgiveness,
       height,
+      keepOpenOnClickTarget,
       left: _left,
       noArrow,
       noHoverOnChildren,
       onClose,
+      onDidOpen,
       open,
+      openAnimation,
       openOnClick,
       openOnHover,
       overlay,
-      target,
-      top: _top,
-      towards,
-      width,
-      keepOpenOnClickTarget,
-      onDidOpen,
-      closeOnEsc,
-      background,
       passActive,
       popoverProps,
       shadow,
+      showForgiveness,
       style,
-      elevation,
-      ignoreSegment,
+      target,
+      theme,
+      top: _top,
+      towards,
+      width,
       ...props
     } = this.props
     const {
@@ -844,87 +915,83 @@ export class Popover extends React.PureComponent<PopoverProps> {
       direction,
     } = this.state
     const { showPopover } = this
-    const controlledTarget = target => {
-      const targetProps = {
-        ref: this.targetRef,
-        active: false,
-      }
-      if (passActive) {
-        targetProps.active = isOpen && !closing
-      }
-      const { acceptsHovered } = target.type
-      if (acceptsHovered) {
-        targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = showPopover
-      }
-      return React.cloneElement(target, targetProps)
-    }
-    return (
-      <>
-        {React.isValidElement(target) && controlledTarget(target)}
-        <Portal>
-          <PopoverContainer
-            data-towards={direction}
-            isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
-            isOpen={showPopover}
-            isClosing={closing}
-          >
-            {!!overlay && (
-              <Overlay
-                forwardRef={this.overlayRef}
-                isShown={showPopover && !closing}
-                onClick={e => this.handleOverlayClick(e)}
-                overlay={overlay}
-              />
-            )}
-            <PopoverWrap
-              {...popoverProps}
-              isOpen={!closing && !!showPopover}
-              forwardRef={this.setPopoverRef}
-              distance={distance}
-              forgiveness={forgiveness}
-              showForgiveness={showForgiveness}
-              animation={isOpen ? closeAnimation : openAnimation}
+    const backgroundProp = background === true ? null : { background: `${background}` }
+    const popoverContent = (
+      <PopoverContainer
+        data-towards={direction}
+        isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
+        isOpen={showPopover}
+        isClosing={closing}
+        className="popover"
+      >
+        {!!overlay && (
+          <Overlay
+            forwardRef={this.overlayRef}
+            isShown={showPopover && !closing}
+            onClick={e => this.handleOverlayClick(e)}
+            overlay={overlay}
+          />
+        )}
+        <PopoverWrap
+          {...popoverProps}
+          isOpen={!closing && !!showPopover}
+          forwardRef={this.setPopoverRef}
+          distance={distance}
+          forgiveness={forgiveness}
+          showForgiveness={showForgiveness}
+          animation={isOpen ? closeAnimation : openAnimation}
+          style={{
+            ...style,
+            top: top || 'auto',
+            bottom: bottom || 'auto',
+            left,
+            width,
+            // because things that extend downwards wont always fill all the way
+            // so arrow will be floating, so lets make it always expand fully down
+            // when the popover arrow is at bottom
+            height: direction === 'top' ? height || maxHeight : height,
+            maxHeight,
+          }}
+        >
+          {!noArrow && (
+            <ArrowContain
               style={{
-                ...style,
-                top: top || 'auto',
-                bottom: bottom || 'auto',
-                left,
-                width,
-                // because things that extend downwards wont always fill all the way
-                // so arrow will be floating, so lets make it always expand fully down
-                // when the popover arrow is at bottom
-                height: direction === 'top' ? height || maxHeight : height,
-                maxHeight,
+                top: arrowTop,
+                marginLeft: arrowLeft,
+                zIndex: 100000000000, // above any shadows
               }}
             >
-              {!noArrow && (
-                <ArrowContain
-                  style={{
-                    top: arrowTop,
-                    marginLeft: arrowLeft,
-                    zIndex: 100000000000, // above any shadows
-                  }}
-                >
-                  <Arrow
-                    background={
-                      typeof background === 'string' && background !== 'transparent'
-                        ? background
-                        : null
-                    }
-                    size={arrowSize}
-                    towards={INVERSE[direction]}
-                    boxShadow={getShadow(shadow, elevation)}
-                  />
-                </ArrowContain>
-              )}
-              <SizedSurface sizeRadius flex={1} ignoreSegment={ignoreSegment} {...props}>
-                {typeof children === 'function'
-                  ? (children as PopoverChildrenFn)(showPopover)
-                  : children}
-              </SizedSurface>
-            </PopoverWrap>
-          </PopoverContainer>
-        </Portal>
+              <Arrow
+                background={
+                  typeof background === 'string' && background !== 'transparent' ? background : null
+                }
+                size={arrowSize}
+                towards={INVERSE[direction]}
+                boxShadow={getShadow(shadow, elevation)}
+              />
+            </ArrowContain>
+          )}
+          <SizedSurface
+            sizeRadius
+            flex={1}
+            ignoreSegment
+            hover={false}
+            overflow="visible"
+            boxShadow={getShadow(shadow, elevation)}
+            {...props}
+            {...backgroundProp}
+          >
+            {typeof children === 'function'
+              ? (children as PopoverChildrenFn)(showPopover)
+              : children}
+          </SizedSurface>
+        </PopoverWrap>
+      </PopoverContainer>
+    )
+    return (
+      <>
+        {React.isValidElement(target) && this.controlledTarget(target)}
+        <Portal>{theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent}</Portal>
       </>
     )
   }

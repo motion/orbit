@@ -66,7 +66,6 @@ const adjust = {
 
 export const OrbitIcon = attachTheme(
   ({
-    icon,
     imageStyle = null,
     orbitIconStyle = null,
     size = 25,
@@ -80,6 +79,7 @@ export const OrbitIcon = attachTheme(
       width: size,
       height: size,
     }
+    const icon = props.icon || props.name
     const extImg = icon.indexOf('http') === 0 ? icon : null
     let iconImg = icons[icon] ? icons[icon] : extImg
     // white icon if dark background + white icon exists

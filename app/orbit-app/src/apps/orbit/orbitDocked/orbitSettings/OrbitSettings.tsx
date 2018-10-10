@@ -1,179 +1,86 @@
-import { ensure, react, view } from '@mcro/black'
-import { observeOne, save } from '@mcro/model-bridge'
-import { SettingModel } from '@mcro/models'
-import { App, Desktop } from '@mcro/stores'
-import { Button, Theme } from '@mcro/ui'
+import { view } from '@mcro/black'
 import * as React from 'react'
-import { showConfirmDialog } from '../../../../helpers/electron/showConfirmDialog'
-import * as Views from '../../../../views'
-import { Input } from '../../../../views/Input'
-import { ShortcutCapture } from '../../../../views/ShortcutCapture'
-import { AppsStore } from '../../../AppsStore'
-import { PaneManagerStore } from '../../PaneManagerStore'
 import { SubPane } from '../../SubPane'
-import { SearchStore } from '../SearchStore'
+import { OrbitSettingsApps } from './OrbitSettingsApps'
+import { OrbitSettingsGeneral } from './OrbitSettingsGeneral'
+import { OrbitSettingsTeam } from './OrbitSettingsTeam'
+import { SegmentedRow, Button, Row } from '@mcro/ui'
+import { memoize } from 'lodash'
+import { VerticalSpace } from '../../../../views'
+import { PaneManagerStore } from '../../PaneManagerStore'
 
-const eventCharsToNiceChars = {
-  alt: '⌥',
-  cmd: '⌘',
-  ctrl: '⌃',
-}
-
-const niceToElectron = {
-  '⌥': 'Option',
-  '⌘': 'CommmandOrCtrl',
-  '⌃': 'Ctrl',
-}
-
-const electronToNice = {
-  Option: '⌥',
-  CommmandOrCtrl: '⌘',
-  Ctrl: '⌃',
-}
-
-const niceCharsToElectronChars = (charString: string) => {
-  let final = charString
-  for (const char in niceToElectron) {
-    final = final.replace(char, niceToElectron[char])
-  }
-  return final
-}
-
-const electronToNiceChars = (charString: string) => {
-  let final = charString
-  for (const char in electronToNice) {
-    final = final.replace(char, electronToNice[char])
-  }
-  return final
-}
-
-type Props = {
-  name: string
-  store?: OrbitSettingsStore
-  searchStore?: SearchStore
-  paneManagerStore?: PaneManagerStore
-  appsStore?: AppsStore
-}
-
-class OrbitSettingsStore {
-  props: Props
-
-  get isPaneActive() {
-    return this.props.paneManagerStore.activePane === this.props.name
-  }
-
-  generalSetting = null
-  generalSetting$ = observeOne(SettingModel, {
-    args: { where: { type: 'general', category: 'general' } },
-  }).subscribe(value => {
-    this.generalSetting = value
-  })
-
-  willUnmount() {
-    this.generalSetting$.unsubscribe()
-  }
-
-  settingSetup = react(
-    () => this.generalSetting,
-    setting => {
-      ensure('setting', !!setting)
-      // TODO: this query is returning a Job for some reason... @umed
-      ensure('setting values', !!setting.values)
-      App.setState({ darkTheme: setting.values.darkTheme })
-    },
-  )
-
-  generalChange = prop => val => {
-    console.log('handleChange', prop, val)
-    this.generalSetting.values[prop] = val
-    save(SettingModel, this.generalSetting)
-  }
-
-  changeTheme = val => {
-    this.generalChange('darkTheme')(val)
-    App.setState({ darkTheme: val })
-  }
-
-  shortcutChange = val => {
-    this.generalChange('openShortcut')(niceCharsToElectronChars(val))
-  }
-
-  focusShortcut = () => {
-    App.setOrbitState({ shortcutInputFocused: true })
-  }
-
-  blurShortcut = () => {
-    App.setOrbitState({ shortcutInputFocused: false })
-  }
-}
-
-const Section = view({
-  padding: [0, 0, 20],
+const Pane = view({
+  height: 0,
+  opacity: 0,
+  pointerEvents: 'none',
+  isShown: {
+    height: 'auto',
+    opacity: 1,
+    pointerEvents: 'inherit',
+  },
 })
 
-@view.attach('searchStore', 'paneManagerStore', 'appsStore')
+class OrbitSettingsStore {
+  active = 'apps'
+
+  activeSetter = memoize(val => () => (this.active = val))
+}
+
+@view.attach('paneManagerStore')
 @view.attach({
   store: OrbitSettingsStore,
 })
 @view
-export class OrbitSettings extends React.Component<Props> {
-  handleClearAllData = () => {
-    if (
-      showConfirmDialog({
-        title: 'Delete all Orbit local data?',
-        message: 'This will delete all Orbit data and restart Orbit.',
-      })
-    ) {
-      App.sendMessage(Desktop, Desktop.messages.RESET_DATA)
+export class OrbitSettings extends React.Component<{
+  name: string
+  store?: OrbitSettingsStore
+  paneManagerStore?: PaneManagerStore
+}> {
+  buttonProps = (store: OrbitSettingsStore, val: string) => {
+    return {
+      onClick: store.activeSetter(val),
+      active: val === store.active,
     }
   }
 
   render() {
-    const { name, store } = this.props
-    if (store.generalSetting && !store.generalSetting.values) {
-      console.error('weird error')
-      return null
-    }
+    const { name, store, paneManagerStore } = this.props
+    const isActive = paneManagerStore.activePane === 'settings'
     return (
-      <SubPane name={name} fadeBottom>
-        <Views.VerticalSpace />
-        <Views.Title>Settings</Views.Title>
-        {!!store.generalSetting && (
-          <Section>
-            <Views.CheckBoxRow
-              checked={store.generalSetting.values.autoLaunch}
-              onChange={store.generalChange('autoLaunch')}
-            >
-              Start on Login
-            </Views.CheckBoxRow>
-            <Views.CheckBoxRow
-              checked={store.generalSetting.values.autoUpdate}
-              onChange={store.generalChange('autoUpdate')}
-            >
-              Auto Update
-            </Views.CheckBoxRow>
-            <Views.CheckBoxRow
-              checked={store.generalSetting.values.darkTheme}
-              onChange={store.changeTheme}
-            >
-              Dark Theme
-            </Views.CheckBoxRow>
-            <Views.FormRow label="Open shortcut">
-              <ShortcutCapture
-                defaultValue={electronToNiceChars(store.generalSetting.values.openShortcut)}
-                onUpdate={store.shortcutChange}
-                modifierChars={eventCharsToNiceChars}
-                element={<Input onFocus={store.focusShortcut} onBlur={store.blurShortcut} />}
-              />
-            </Views.FormRow>
+      <SubPane
+        name={name}
+        overflow="visible"
+        before={
+          <Row
+            flex={1}
+            height={35}
+            position="absolute"
+            top={-47}
+            left={100}
+            right={100}
+            pointerEvents="none"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <SegmentedRow pointerEvents={isActive ? 'auto' : 'none'}>
+              <Button {...this.buttonProps(store, 'apps')}>Apps</Button>
+              <Button {...this.buttonProps(store, 'team')}>Team</Button>
+              <Button {...this.buttonProps(store, 'general')}>General</Button>
+            </SegmentedRow>
+          </Row>
+        }
+      >
+        <VerticalSpace />
 
-            <Views.FormRow label="Account">
-              <Theme name="orbit">
-                <Button onClick={this.handleClearAllData}>Clear all data</Button>
-              </Theme>
-            </Views.FormRow>
-          </Section>
-        )}
+        <Pane isShown={store.active === 'apps'}>
+          <OrbitSettingsApps />
+        </Pane>
+        <Pane isShown={store.active === 'team'}>
+          <OrbitSettingsTeam />
+        </Pane>
+        <Pane isShown={store.active === 'general'}>
+          <OrbitSettingsGeneral />
+        </Pane>
       </SubPane>
     )
   }

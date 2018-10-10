@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { loadMany, loadOne } from '@mcro/model-bridge'
+import { loadMany } from '@mcro/model-bridge'
 import { PersonBitModel, SearchResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { flatten, uniqBy } from 'lodash'
@@ -47,16 +47,9 @@ export class SearchStore {
     },
   )
 
-  activeQuery = react(
-    () => [App.state.query, this.isActive],
-    ([query, isActive]) => {
-      ensure('is active', isActive)
-      return query
-    },
-    {
-      defaultValue: App.state.query,
-    },
-  )
+  get activeQuery() {
+    return App.state.query
+  }
 
   // aggregated results for selection store
   results = react(
@@ -75,12 +68,14 @@ export class SearchStore {
   }
 
   get isActive() {
-    return this.props.paneManagerStore.activePane === 'search'
+    return this.props.paneManagerStore.activePane === 'home'
   }
 
   hasQuery = () => {
     return !!this.activeQuery
   }
+
+  hasQueryVal = react(this.hasQuery, _ => _)
 
   searchState = react(
     () => [
@@ -92,14 +87,6 @@ export class SearchStore {
       this.searchFilterStore.dateState,
     ],
     async ([query], { sleep, whenChanged, when, setValue }) => {
-      if (!query) {
-        return {
-          query,
-          results: [],
-          finished: true,
-        }
-      }
-
       let results
       let channelResults
       let message
@@ -125,11 +112,11 @@ export class SearchStore {
         // todo: broken by umed, please fix me
         message = 'SPACE to search selected channel'
         results = channelResults
-        return setValue({
+        return {
           query,
           message,
           results,
-        })
+        }
       }
 
       // regular search
@@ -145,9 +132,9 @@ export class SearchStore {
 
       // pagination
       let skip = 0
-      const take = 6
+      const take = 12
       // initial search results max amt:
-      const takeMax = take * 5
+      const takeMax = take
       const sleepBtwn = 80
 
       // query builder pieces
@@ -157,7 +144,10 @@ export class SearchStore {
         activeQuery,
         dateState,
         sortBy,
+        searchBy,
       } = this.searchFilterStore
+
+      console.log('activeFilters', activeFilters)
 
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
@@ -174,6 +164,7 @@ export class SearchStore {
       const { startDate, endDate } = dateState
       const baseFindOptions = {
         query: activeQuery,
+        searchBy,
         sortBy,
         startDate,
         endDate,
@@ -188,7 +179,6 @@ export class SearchStore {
           skip,
           take,
         }
-        console.log('Send command', searchOpts)
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
         console.log('got next results', searchOpts, nextResults)
         if (!nextResults) {
@@ -244,32 +234,31 @@ export class SearchStore {
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep, when }) => {
-      ensure('query', !!query)
+      if (!query) {
+        return {
+          query,
+          results: await loadMany(PersonBitModel, { args: { take: 6 } }),
+        }
+      }
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE * 0.5)
       await when(() => this.nlpStore.nlp.query === query)
       const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
       // fuzzy people results
-      const allResults = uniqBy(
-        flatten(
-          await Promise.all(
-            people.map(name =>
-              loadMany(PersonBitModel, {
-                args: {
-                  take: 6,
-                  where: {
-                    name: { $like: `%${name.split(' ').join('%')}%` },
-                  },
-                },
-              }),
-            ),
-          ),
-        ),
-        x => x.name,
-      )
+      const peopleRes = await loadMany(PersonBitModel, {
+        args: {
+          take: 6,
+          // @ts-ignore
+          where: [...people, ...query.split(' ')].map(name => ({
+            name: { $like: `%${name.split(' ').join('%')}%` },
+          })),
+        },
+      })
+      // @ts-ignore
+      const peopleResUniq = uniqBy(peopleRes, x => x.name)
       const results = flatten([
         integrations.map(name => ({ name, icon: name })),
-        ...matchSort(searchQuery, flatten(allResults)),
+        ...matchSort(searchQuery, peopleResUniq),
       ]).filter(Boolean)
       return {
         query,

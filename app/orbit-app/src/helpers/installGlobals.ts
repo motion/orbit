@@ -14,6 +14,7 @@ import { getGlobalConfig } from '@mcro/config'
 import { Actions } from '../actions/Actions'
 import { stringify } from '@mcro/helpers'
 import * as Models from '@mcro/models'
+import { PopoverState } from '@mcro/ui';
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -33,6 +34,7 @@ const toJS = obj => {
 }
 
 // the heavy hitters
+window['PopoverState'] = PopoverState
 window['React'] = React
 window['Constants'] = Constants
 window['Mobx'] = Mobx

@@ -91,20 +91,16 @@ const dimStyle = {
   },
 }
 
-// fontFamily: inherit on both fixes elements
-const SurfaceFrame = view(View, {
-  flexFlow: 'row',
-  alignItems: 'center',
-  fontFamily: 'inherit',
-  position: 'relative',
-}).theme(props => {
-  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
+const getSegmentRadius = props => {
   // support being inside a segmented list
   let segmentedStyle: any
   if (!props.ignoreSegment) {
     if (props.uiContext && props.uiContext.inSegment) {
       const { inSegment } = props.uiContext
-      segmentedStyle = {}
+      segmentedStyle = {
+        borderRightRadius: props.borderRadius,
+        borderLeftRadius: props.borderRadius,
+      }
       if (inSegment.first) {
         segmentedStyle.borderRightRadius = 0
         segmentedStyle.borderRightWidth = 0
@@ -117,6 +113,17 @@ const SurfaceFrame = view(View, {
       }
     }
   }
+  return segmentedStyle
+}
+
+// fontFamily: inherit on both fixes elements
+const SurfaceFrame = view(View, {
+  flexFlow: 'row',
+  alignItems: 'center',
+  fontFamily: 'inherit',
+  position: 'relative',
+}).theme(props => {
+  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -159,7 +166,7 @@ const SurfaceFrame = view(View, {
     ...(props.active && { '&:hover': themeStyles['&:active'] }),
     ...propsToTextSize(props),
     ...chromelessStyle,
-    ...segmentedStyle,
+    ...props.segmentedStyle,
   }
   return alphaColor(surfaceStyles, props.alpha)
 })
@@ -175,7 +182,6 @@ const Element = view({
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
-  overflow: 'hidden',
   noInnerElement: {
     display: 'none',
   },
@@ -197,6 +203,7 @@ const Element = view({
     elementStyle.marginRight = props.iconPad
   }
   return {
+    overflow: 'hidden',
     ...props,
     ...(props.inline && inlineStyle),
     ...(props.ellipse && {
@@ -259,6 +266,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       className,
       ...props
     } = this.props
+    const segmentedStyle = getSegmentRadius(this.props)
     const selectedTheme = themeSelect ? themeSelect(theme) : theme
     const stringIcon = typeof icon === 'string'
     // goes to both
@@ -274,6 +282,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       lineHeight: this.props.lineHeight,
       fontWeight: this.props.fontWeight,
       ellipse: this.props.ellipse,
+      overflow: this.props.overflow,
     } as Partial<SurfaceProps>
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height + 1}px`
@@ -291,11 +300,23 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         forwardRef={forwardRef}
         userStyle={style}
         className={`${this.uniq} ${className || ''}`}
+        segmentedStyle={segmentedStyle}
       >
         {noInnerElement ? null : (
           <>
             {glint ? (
-              <Glint key={0} size={size} opacity={0.2} borderRadius={props.borderRadius} />
+              <Glint
+                key={0}
+                size={size}
+                opacity={0.2}
+                debug={this.props.debug}
+                borderLeftRadius={
+                  segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
+                }
+                borderRightRadius={
+                  segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
+                }
+              />
             ) : null}
             {icon && !stringIcon ? <div>{icon}</div> : null}
             {icon && stringIcon ? (

@@ -3,7 +3,7 @@ import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
-import { SyncStatus } from '../views/SyncStatus'
+import { SyncStatus } from './SyncStatus'
 import { Text } from '@mcro/ui'
 import { Setting } from '@mcro/models'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
@@ -48,11 +48,7 @@ export const OrbitAppCard = decorator(({ store, model, isActive, subtitle, ...pr
         {(syncJobs, removeJobs) => {
           return (
             <Text size={0.85} alpha={0.6}>
-              {
-                syncJobs.length ? 'Syncing' :
-                removeJobs.length ? 'Removing' :
-                ''
-              }
+              {syncJobs.length ? 'Syncing' : removeJobs.length ? 'Removing' : ''}
             </Text>
           )
         }}

@@ -50,6 +50,7 @@
     "react-fast-compare": "2.0.2",
     "react-hot-loader": "4.3.11",
     "react-spring": "5.7.2",
+    "react-virtualized": "9.20.1",
     "reconnecting-websocket": "4.0.0-rc5",
     "scroll": "2.0.3",
     "sherlockjs": "1.4.0",

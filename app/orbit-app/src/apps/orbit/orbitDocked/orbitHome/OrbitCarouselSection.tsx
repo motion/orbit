@@ -20,7 +20,7 @@ export const OrbitCarouselSection = decorator(
       <OrbitSection
         title={categoryName}
         alignItems="center"
-        padding={[startIndex === 0 ? 4 : 6, 0, 0]}
+        padding={[startIndex === 0 ? 0 : 2, 0, 0]}
         margin={margin || [0, 0, -2]}
       >
         <Unpad>

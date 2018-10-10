@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view, compose } from '@mcro/black'
-import { View } from '@mcro/ui'
-import * as UI from '@mcro/ui'
+import { View, Icon, ClearButton, Tooltip } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { QueryStore } from '../orbitDocked/QueryStore'
 import { HeaderStore } from './HeaderStore'
 import { ThemeObject } from '@mcro/gloss'
 import { OrbitStore } from '../../OrbitStore'
+import { SearchStore } from '../orbitDocked/SearchStore'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -22,15 +22,25 @@ type Props = {
   queryStore?: QueryStore
   headerStore: HeaderStore
   orbitStore?: OrbitStore
+  searchStore?: SearchStore
 }
 
 const decorator = compose(
-  view.attach('orbitStore', 'queryStore'),
+  view.attach('orbitStore', 'queryStore', 'searchStore'),
   view,
 )
 
+const Interactive = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+  disabled: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
+})
+
 export const OrbitHeaderInput = decorator(
-  ({ orbitStore, queryStore, theme, headerStore }: Props) => {
+  ({ orbitStore, queryStore, theme, headerStore, searchStore }: Props) => {
     return (
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
@@ -52,7 +62,18 @@ export const OrbitHeaderInput = decorator(
           onClick={headerStore.onClickInput}
           placeholder={headerStore.placeholder}
         />
-        <UI.ClearButton onClick={queryStore.clearQuery} opacity={App.state.query ? 1 : 0} />
+        <Interactive disabled={!searchStore.hasQueryVal}>
+          <Tooltip
+            target={
+              <ClearButton>
+                <Icon name="pin" size={8} margin="auto" />
+              </ClearButton>
+            }
+          >
+            Pin
+          </Tooltip>
+          <ClearButton onClick={queryStore.clearQuery} />
+        </Interactive>
       </View>
     )
   },

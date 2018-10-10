@@ -20,7 +20,7 @@ const VerticalSpaceSmall = view({
 
 const CardWrap = view(UI.View, {
   position: 'relative',
-  width: '100%',
+  flex: 1,
   transform: {
     z: 0,
   },
@@ -30,6 +30,8 @@ const Card = view({
   overflow: 'hidden',
   position: 'relative',
   maxHeight: '100%',
+  // this is for the shadow to not overflow...
+  margin: 2,
   transform: {
     z: 0,
   },
@@ -64,7 +66,17 @@ const Card = view({
       background: background || theme.cardBackground || theme.background.alpha(0.9),
       ...theme.card,
     }
-    if (!isSelected) {
+    if (isSelected === true) {
+      const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
+      const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
+      card = {
+        ...card,
+        boxShadow,
+        '&:hover': {
+          boxShadow,
+        },
+      }
+    } else {
       const borderColor = theme.cardBorderColor || 'transparent'
       const borderShadow = chromeless ? null : ['inset', 0, 0, 0, 1, borderColor]
       const hoverBorderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColorHover || borderColor]
@@ -77,16 +89,6 @@ const Card = view({
             hoverBorderShadow,
             chromeless ? null : theme.cardHoverGlow,
           ],
-        },
-      }
-    } else {
-      const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
-      const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
-      card = {
-        ...card,
-        boxShadow,
-        '&:hover': {
-          boxShadow,
         },
       }
     }
@@ -110,7 +112,10 @@ const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, 0, 4],
+  padding: [0, 0, 2],
+  padRight: {
+    paddingRight: 20
+  }
 })
 
 const Preview = view({
@@ -126,6 +131,9 @@ const CardSubtitle = view(UI.View, {
   listItem: {
     margin: [6, 0, 0],
   },
+  padRight: {
+    paddingRight: 20
+  }
 })
 
 const orbitIconProps = {
@@ -184,6 +192,8 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
     // allow either custom subtitle or resolved one
     const subtitle = this.props.subtitle || resolvedItem.subtitle
     const { isSelected } = store
+
+    const hasTitle = !(hide && hide.title)
     const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
     const hasSubtitle = !!subtitle && !(hide && hide.subtitle)
@@ -203,7 +213,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
         sidePad = props.padding
       }
     }
-    const date = hasDate && (
+    const dateContent = hasDate && (
       <UI.Text alpha={0.65} size={0.9} ellipse>
         <DateFormat date={new Date(updatedAt)} nice />
       </UI.Text>
@@ -227,87 +237,87 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
           {chromeless ? (
             children
           ) : (
-            <>
-              <Glint opacity={0.75} borderRadius={borderRadius} />
-              <Padding style={{ borderRadius, padding }}>
-                {!(hide && hide.title) && (
-                  <Title>
-                    <HighlightText
-                      fontSize={14}
-                      sizeLineHeight={0.78}
-                      ellipse={hasSubtitle && hasMeta ? true : 2}
-                      fontWeight={400}
-                      selectable={false}
-                      {...titleProps}
-                    >
-                      {title}
-                    </HighlightText>
-                    {afterTitle}
-                  </Title>
-                )}
-                {!!titleFlex && <div style={{ flex: titleFlex }} />}
-                {hasSubtitle && (
-                  <CardSubtitle paddingRight={30}>
-                    <UI.Text alpha={0.55} ellipse {...subtitleProps}>
-                      {subtitle}
-                    </UI.Text>
-                  </CardSubtitle>
-                )}
-                {!hasFourRows && hasDate && <CardSubtitle>{date}</CardSubtitle>}
-                {hasMeta && (
-                  <CardSubtitle>
-                    {!!location && (
-                      <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
-                        {location}
-                      </RoundButtonSmall>
-                    )}
-                    {subtitleSpaceBetween}
-                    {hasFourRows &&
-                      hasDate && (
-                        <>
-                          {!!location && <div style={{ width: 5 }} />}
-                          {date}
-                        </>
-                      )}
-                    {hasPreview && <VerticalSpaceSmall />}
-                  </CardSubtitle>
-                )}
-                {hasPreview && (
-                  <Preview>
-                    {typeof preview !== 'string' && preview}
-                    {typeof preview === 'string' && (
-                      <UI.Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
-                        {preview}
-                      </UI.Text>
-                    )}
-                  </Preview>
-                )}
-                {typeof children === 'function'
-                  ? children(resolvedItem, props.bit, props.index)
-                  : children}
-                {hasPeople && (
-                  <Row>
-                    <PeopleRow people={people} />
-                    {/* to avoid hitting orbit icon */}
-                    <HorizontalSpace />
-                  </Row>
-                )}
-
-                {!!icon &&
-                  !(hide && hide.icon) && (
-                    <OrbitIcon
-                      icon={icon}
-                      size={14}
-                      {...orbitIconProps}
-                      position="absolute"
-                      bottom={topPad}
-                      right={sidePad}
-                      {...iconProps}
-                    />
+              <>
+                <Glint opacity={0.75} borderRadius={borderRadius} />
+                <Padding style={{ borderRadius, padding }}>
+                  {hasTitle && (
+                    <Title padRight>
+                      <HighlightText
+                        fontSize={14}
+                        sizeLineHeight={0.78}
+                        ellipse={hasSubtitle && hasMeta ? true : 2}
+                        fontWeight={500}
+                        selectable={false}
+                        {...titleProps}
+                      >
+                        {title}
+                      </HighlightText>
+                      {afterTitle}
+                    </Title>
                   )}
-              </Padding>
-            </>
-          )}
+                  {!!titleFlex && <div style={{ flex: titleFlex }} />}
+                  {hasSubtitle && (
+                    <CardSubtitle padRight={!hasTitle} paddingRight={30}>
+                      <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                        {subtitle}
+                      </UI.Text>
+                    </CardSubtitle>
+                  )}
+                  {!hasFourRows && hasDate && <CardSubtitle padRight={!hasTitle}>{dateContent}</CardSubtitle>}
+                  {hasMeta && (
+                    <CardSubtitle padRight={!hasTitle}>
+                      {!!location && (
+                        <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
+                          {location}
+                        </RoundButtonSmall>
+                      )}
+                      {subtitleSpaceBetween}
+                      {hasFourRows &&
+                        hasDate && (
+                          <>
+                            {!!location && <div style={{ width: 5 }} />}
+                            {dateContent}
+                          </>
+                        )}
+                      {hasPreview && <VerticalSpaceSmall />}
+                    </CardSubtitle>
+                  )}
+                  {hasPreview && (
+                    <Preview>
+                      {typeof preview !== 'string' && preview}
+                      {typeof preview === 'string' && (
+                        <UI.Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
+                          {preview}
+                        </UI.Text>
+                      )}
+                    </Preview>
+                  )}
+                  {typeof children === 'function'
+                    ? children(resolvedItem, props.model, props.index)
+                    : children}
+                  {hasPeople && (
+                    <Row>
+                      <PeopleRow people={people} />
+                      {/* to avoid hitting orbit icon */}
+                      <HorizontalSpace />
+                    </Row>
+                  )}
+
+                  {!!icon &&
+                    !(hide && hide.icon) && (
+                      <OrbitIcon
+                        icon={icon}
+                        size={14}
+                        {...orbitIconProps}
+                        position="absolute"
+                        top={topPad}
+                        right={sidePad}
+                        {...iconProps}
+                      />
+                    )}
+                </Padding>
+              </>
+            )}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         {/* {!disableShadow && (
@@ -370,11 +380,12 @@ export class OrbitCard extends React.Component<OrbitItemProps<any>> {
     return (
       <UI.ThemeContext.Consumer>
         {obj => {
+          const themeName = obj.activeThemeName === 'clearLight' ? 'clearDark' : obj.activeThemeName
           return (
             <UI.Theme
-              name={obj.activeThemeName === 'clearLight' ? 'clearDark' : obj.activeThemeName}
+              name={themeName}
             >
-              <OrbitCardInner {...this.props} />
+              <OrbitCardInner key={themeName} {...this.props} />
             </UI.Theme>
           )
         }}

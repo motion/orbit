@@ -38,8 +38,12 @@ export class SearchFilterStore /* extends Store */ {
   extraFiltersVisible = false
   disabledFilters = {}
   exclusiveFilters = {}
-  sortBy = 'Recent'
+  // sort by
   sortOptions = ['Relevant', 'Recent']
+  sortBy = this.sortOptions[0] as 'Relevant' | 'Recent'
+  // search by
+  searchOptions = ['Bit', 'Topic']
+  searchBy = this.searchOptions[0] as 'Topic' | 'Bit'
 
   dateState: DateSelections = {
     startDate: null,
@@ -145,7 +149,7 @@ export class SearchFilterStore /* extends Store */ {
 
   get integrationFilters(): SearchFilter[] {
     const { exclusiveFilters } = this
-    return this.uniqueSettings.map(setting => ({
+    return this.uniqueSettings.filter(x => x.type !== 'app1').map(setting => ({
       type: setting.type,
       icon: setting.type,
       name: this.appsStore.getTitle(setting),
@@ -254,6 +258,11 @@ export class SearchFilterStore /* extends Store */ {
       ...this.disabledFilters,
       [key]: !this.disabledFilters[key],
     }
+  }
+
+  toggleSearchBy = () => {
+    const cur = this.searchOptions.indexOf(this.searchBy)
+    this.searchBy = this.searchOptions[(cur + 1) % this.searchOptions.length]
   }
 
   toggleSortBy = () => {

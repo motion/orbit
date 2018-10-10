@@ -321,6 +321,7 @@ class Characters {
         if buffer[next] >= isBlackIfUnder { continue }
         // already visited
         if visited[next] != nil { continue }
+        // found a black pixel! success found next move
         // ensure backwards x pixels are also black
         // avoids small connections 
         for x in backwardsRange {

@@ -7,6 +7,7 @@ import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { DateRangePicker } from 'react-date-range'
 import { formatDistance, differenceInCalendarDays } from 'date-fns'
 import { SearchStore } from '../SearchStore'
+import { NavButton } from '../../../../views/NavButton'
 
 const SearchFilters = view(UI.Col, {
   padding: [0, 12],
@@ -88,19 +89,6 @@ type Props = {
   searchStore?: SearchStore
 }
 
-const FilterButton = props => (
-  <UI.Button
-    chromeless
-    glint={false}
-    size={1}
-    sizePadding={0.9}
-    sizeRadius={3}
-    alpha={0.8}
-    fontWeight={600}
-    {...props}
-  />
-)
-
 const IntegrationFiltersRow = view({
   flexFlow: 'row',
   alignItems: 'center',
@@ -117,16 +105,16 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   return (
     <>
       <SearchFilterBar>
-        <FilterButton
+        <NavButton
           {...searchFilterStore.dateHover.props}
           active={searchFilterStore.dateHover.isStuck()}
         >
           {getDate(searchFilterStore.dateState) || 'Any time'}
-        </FilterButton>
-        <div style={{ width: 2 }} />
+        </NavButton>
+        {/* <div style={{ width: 2 }} />
         <FilterButton onClick={searchFilterStore.toggleSortBy}>
           {searchFilterStore.sortBy}
-        </FilterButton>
+        </FilterButton> */}
         <UI.Col flex={1} />
         {searchFilterStore.integrationFilters.length > 1 && (
           <IntegrationFiltersRow>

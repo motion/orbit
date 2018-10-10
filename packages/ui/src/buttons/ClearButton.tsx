@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { View } from '../blocks/View'
+import { Icon } from '../Icon'
 
 const ClearClickableArea = view({
   padding: 5,
@@ -14,13 +15,14 @@ const ClearFrame = view(View, {
   fontSize: 14,
   lineHeight: 13,
   fontWeight: 600,
-  width: 16,
-  height: 16,
+  width: 18,
+  height: 18,
   borderRadius: 999,
   textAlign: 'center',
+  alignItems: 'center',
+  justifyContent: 'center',
   backgroundColor: 'rgba(0,0,0,0.1)',
   color: [255, 255, 255, 0.8],
-  display: 'block',
   cursor: 'default',
 })
 
@@ -31,6 +33,7 @@ export const ClearButton = ({
   onMouseUp = null,
   onMouseEnter = null,
   onMouseLeave = null,
+  children = <Icon name="remove" size={8} margin="auto" />,
   ...props
 }) => (
   <ClearClickableArea
@@ -43,6 +46,6 @@ export const ClearButton = ({
       onMouseLeave,
     }}
   >
-    <ClearFrame {...props}>&times;</ClearFrame>
+    <ClearFrame {...props}>{children}</ClearFrame>
   </ClearClickableArea>
 )

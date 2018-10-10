@@ -2,8 +2,7 @@ import { ensure, react, view } from '@mcro/black'
 import { Setting, SettingModel } from '@mcro/models'
 import * as React from 'react'
 import { observeMany } from '@mcro/model-bridge'
-import { OrbitAppCard } from './OrbitAppCard'
-import { SubPane } from '../../SubPane'
+import { OrbitAppCard } from '../views/OrbitAppCard'
 import * as Views from '../../../../views'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore } from '../SelectionStore'
@@ -14,11 +13,9 @@ import { Button } from '@mcro/ui'
 import { fuzzyQueryFilter } from '../../../../helpers'
 import { App } from '@mcro/stores'
 import { settingsList } from '../../../../helpers/settingsList'
-import { NoResultsDialog } from '../views/NoResultsDialog'
 import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 
 type Props = {
-  name: string
   store?: OrbitAppsStore
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore
@@ -27,6 +24,7 @@ type Props = {
 class OrbitAppsStore {
   props: Props
   integrations: Setting[] = []
+  activeQuery = ''
   private integrations$ = observeMany(SettingModel, {
     args: {
       where: { category: 'integration' },
@@ -43,15 +41,6 @@ class OrbitAppsStore {
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
   }
-
-  // this is the searchbar value, active only when this pane is active
-  private activeQuery = react(
-    () => [this.isActive, App.state.query],
-    ([isActive, query]) => {
-      ensure('active', isActive)
-      return query
-    },
-  )
 
   // this updates SelectionStore to handle keyboard movements
   setSelectionHandler = react(
@@ -91,14 +80,11 @@ const Unpad = view({
   store: OrbitAppsStore,
 })
 @view
-export class OrbitApps extends React.Component<Props> {
+export class OrbitSettingsApps extends React.Component<Props> {
   render() {
-    const { name, store } = this.props
-    const hasFilteredApps = !!store.filteredAvailableApps.length
+    const { store } = this.props
     return (
-      <SubPane name={name} fadeBottom>
-        <Views.SmallVerticalSpace />
-        <Views.Title>Apps</Views.Title>
+      <>
         {!!store.filteredActiveApps.length && (
           <>
             <Grid
@@ -131,26 +117,21 @@ export class OrbitApps extends React.Component<Props> {
             <Views.VertSpace />
           </>
         )}
-        {hasFilteredApps && (
-          <>
-            <Views.SubTitle>App Store</Views.SubTitle>
-            <Unpad>
-              {store.filteredAvailableApps.map(item => {
-                return (
-                  <SimpleItem
-                    key={item.id}
-                    onClick={addIntegrationClickHandler(item)}
-                    title={item.title}
-                    icon={item.icon}
-                    after={<Button size={0.9}>Add</Button>}
-                  />
-                )
-              })}
-            </Unpad>
-          </>
-        )}
-        {!hasFilteredApps && <NoResultsDialog subName="the app store" />}
-      </SubPane>
+        <Views.SubTitle>App Store</Views.SubTitle>
+        <Unpad>
+          {store.filteredAvailableApps.map(item => {
+            return (
+              <SimpleItem
+                key={item.id}
+                onClick={addIntegrationClickHandler(item)}
+                title={item.title}
+                icon={item.icon}
+                after={<Button size={0.9}>Add</Button>}
+              />
+            )
+          })}
+        </Unpad>
+      </>
     )
   }
 }

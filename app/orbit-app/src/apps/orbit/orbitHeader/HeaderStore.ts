@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { react, ensure } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { HeaderProps } from './HeaderProps'
 import { Actions } from '../../../actions/Actions'
 
@@ -23,16 +23,6 @@ export class HeaderStore {
       return null
     }
     return () => activeMarks
-  }
-
-  get placeholder() {
-    const { activePane } = this.props.paneManagerStore
-    if (activePane === 'apps') {
-      return 'Find apps...'
-    }
-    if (activePane === 'directory') {
-      return 'Search people...'
-    }
   }
 
   onInput = () => {
@@ -83,10 +73,18 @@ export class HeaderStore {
     },
   )
 
+  blurQueryOnSettingsPane = react(
+    () => this.props.paneManagerStore.activePane === 'settings',
+    isSettings => {
+      ensure('isSettings', isSettings)
+      this.inputRef.current.blur()
+    },
+  )
+
   updateInputOnPaneChange = react(
-    () => this.props.paneManagerStore.activePane,
-    pane => {
-      ensure('pane not search or home', pane !== 'search' && pane !== 'home')
+    () => /home|explore/.test(this.props.paneManagerStore.activePane),
+    isSearchablePane => {
+      ensure('isSearchablePane', isSearchablePane)
       this.props.queryStore.clearQuery()
       this.focus()
     },

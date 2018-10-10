@@ -6,14 +6,12 @@ import { OrbitSettings } from './orbitSettings/OrbitSettings'
 import { OrbitHomeHeader } from './orbitHome/OrbitHomeHeader'
 import { OrbitHeader } from '../orbitHeader/OrbitHeader'
 import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
-import { OrbitApps } from './orbitApps/OrbitApps'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { BORDER_RADIUS } from '../../../constants'
 import { SearchStore } from './SearchStore'
 import { OrbitStore } from '../../OrbitStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { Logger } from '@mcro/logger'
@@ -52,7 +50,7 @@ const OrbitDockedInner = view({
   position: 'relative',
   zIndex: 4,
   // this may cause slowness in hover state css, or did for at one point
-  overflow: 'hidden',
+  // overflow: 'hidden',
   pointerEvents: 'none',
   flex: 1,
   borderBottomRadius: BORDER_RADIUS,
@@ -64,7 +62,6 @@ const OrbitDockedInner = view({
 @view.attach('paneManagerStore', 'searchStore')
 class OrbitDockedContents extends React.PureComponent<Props> {
   render() {
-    console.log('>>>>> i hsould be rendering.........')
     const { searchStore, paneManagerStore } = this.props
     return (
       <>
@@ -72,15 +69,10 @@ class OrbitDockedContents extends React.PureComponent<Props> {
           borderRadius={BORDER_RADIUS}
           after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
         />
-        <OrbitSuggestionBar
-          paneManagerStore={paneManagerStore}
-          filterStore={searchStore.searchFilterStore}
-        />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
-            <OrbitApps name="apps" />
             <OrbitSearchResults name="docked-search" />
             <OrbitSettings name="settings" />
           </div>

@@ -1,13 +1,14 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { attachTheme, ThemeObject, Theme } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
-import { View, Image, Tooltip } from '@mcro/ui'
+import { View, Image, Popover, Row, Col, Button } from '@mcro/ui'
 import orbIcon from '../../../../public/orb.svg'
 import { Desktop } from '@mcro/stores'
 import { Actions } from '../../../actions/Actions'
+import { RowItem } from './RowItem'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -39,6 +40,10 @@ const OrbitFakeInput = view({
   justifyContent: 'stretch',
   transition: 'background ease-in 200ms 200ms',
   borderRadius: 10,
+  inactive: {
+    opacity: 0.5,
+    pointerEvents: 'none',
+  },
 }).theme(({ theme }) => ({
   background: theme.inputBackground || theme.background.alpha(0.35),
   '&:active': {
@@ -71,6 +76,14 @@ const OrbitClose = view({
   }
 })
 
+const Disable = view({
+  flex: 'inherit',
+  when: {
+    opacity: 0.5,
+    pointerEvents: 'none',
+  },
+})
+
 @attachTheme
 @view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
 @view.attach({
@@ -101,31 +114,27 @@ export class OrbitHeader extends React.Component<
             <OrbitClose onClick={Actions.closeOrbit}>
               <OrbitCloseControl />
             </OrbitClose>
-            <Tooltip
-              target={
-                <Image
-                  src={orbIcon}
-                  width={20}
-                  height={20}
-                  margin={['auto', 10]}
-                  onMouseEnter={headerStore.onHoverIcon}
-                  onMouseLeave={headerStore.onUnHoverIcon}
-                  onClick={headerStore.onClickOrb}
-                  opacity={Desktop.ocrState.paused ? 0.3 : 1}
-                  transform={{
-                    y: -0.5,
-                  }}
-                  {...{
-                    '&:hover': {
-                      opacity: Desktop.ocrState.paused ? 0.6 : 1,
-                    },
-                  }}
-                />
-              }
-            >
-              Toggle Realtime Search
-            </Tooltip>
-            <OrbitHeaderInput headerStore={headerStore} theme={theme} />
+            <Image
+              src={orbIcon}
+              width={20}
+              height={20}
+              margin={['auto', 10]}
+              onMouseEnter={headerStore.onHoverIcon}
+              onMouseLeave={headerStore.onUnHoverIcon}
+              onClick={headerStore.onClickOrb}
+              opacity={Desktop.ocrState.paused ? 0.3 : 1}
+              transform={{
+                y: -0.5,
+              }}
+              {...{
+                '&:hover': {
+                  opacity: Desktop.ocrState.paused ? 0.6 : 1,
+                },
+              }}
+            />
+            <Disable when={paneManagerStore.activePane === 'settings'}>
+              <OrbitHeaderInput headerStore={headerStore} theme={theme} />
+            </Disable>
           </Title>
           {!!after && <After>{after}</After>}
         </OrbitFakeInput>

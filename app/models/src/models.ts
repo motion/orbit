@@ -31,7 +31,8 @@ export const SlackChannelModel = new Model<any, { settingId: number }>('SlackCha
 
 export type SearchQuery = {
   query: string
-  sortBy?: string
+  sortBy?: 'Recent' | 'Relevant'
+  searchBy?: 'Topic' | 'Bit'
   startDate?: Date
   endDate?: Date
   integrationFilters?: string[]
@@ -43,6 +44,18 @@ export type SearchQuery = {
 
 export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
 
+export type GroupResult = {
+  title: string
+  locations: string[]
+  integrations: string[]
+  topics: string[]
+  count: number
+  people: { id: number; icon: string; name: string }
+}
+
+export const SearchGroupModel = new Model<GroupResult, SearchQuery>('SearchResult')
+
+// TODO: RENAME THIS TO GetTopicsForSearchModel
 export const SearchTopicsModel = new Model<string, { query: SearchQuery; count: number }>(
   'SearchTopics',
 )

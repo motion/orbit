@@ -4,9 +4,9 @@ import { attachTheme } from '@mcro/gloss'
 import { Button } from './Button'
 import { Row } from './blocks/Row'
 import { UIContext } from './helpers/contexts'
-import { Color } from '@mcro/css'
+import { Color, CSSPropertySet } from '@mcro/css'
 
-type SegmentedRowProps = {
+type SegmentedRowProps = CSSPropertySet & {
   active?: number
   defaultActive?: number
   controlled?: boolean

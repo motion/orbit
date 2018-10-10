@@ -52,7 +52,7 @@ export class OrbitSettings extends React.Component<{
           >
             <SegmentedRow pointerEvents={isActive ? 'auto' : 'none'}>
               <Button {...this.buttonProps(paneManagerStore, 'apps')}>Apps</Button>
-              <Button {...this.buttonProps(paneManagerStore, 'team')}>Team</Button>
+              <Button {...this.buttonProps(paneManagerStore, 'team')}>Spaces</Button>
               <Button {...this.buttonProps(paneManagerStore, 'general')}>General</Button>
             </SegmentedRow>
           </Row>

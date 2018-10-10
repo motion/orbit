@@ -14,6 +14,7 @@ type Props = {
 const rootShortcuts = {
   openCurrent: 'command+enter',
   copyLink: 'command+shift+c',
+  // esc
   escape: 'esc',
 }
 

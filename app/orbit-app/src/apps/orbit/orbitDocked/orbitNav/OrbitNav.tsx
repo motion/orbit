@@ -27,14 +27,14 @@ export class OrbitNav extends React.Component<{
               delay={100}
               openOnClick
               openOnHover
-              closeOnEsc
               closeOnClickAway
               target={
                 <NavButton icon="calendar">
-                  {getDateAbbreviated(searchStore.searchFilterStore.dateState) || 'Any'}
+                  {getDateAbbreviated(searchStore.searchFilterStore.dateState)}
                 </NavButton>
               }
-              adjust={[190, 0]}
+              alignPopover="left"
+              adjust={[200, 0]}
               background
               borderRadius={6}
               elevation={4}
@@ -52,10 +52,9 @@ export class OrbitNav extends React.Component<{
               openOnClick
               openOnHover
               background
-              closeOnEsc
               closeOnClickAway
               target={<NavButton icon="funnel">All</NavButton>}
-              adjust={[-10, 0]}
+              alignPopover="left"
               borderRadius={6}
               elevation={4}
               theme="light"
@@ -67,9 +66,9 @@ export class OrbitNav extends React.Component<{
           </SegmentedRow>
           <OrbitSuggestionBar />
           <SegmentedRow>
-            <NavButton onClick={searchStore.searchFilterStore.toggleSearchBy} width={55}>
+            {/* <NavButton onClick={searchStore.searchFilterStore.toggleSearchBy} width={55}>
               {searchStore.searchFilterStore.searchBy}
-            </NavButton>
+            </NavButton> */}
             <Popover
               delay={100}
               openOnClick

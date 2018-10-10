@@ -116,7 +116,7 @@ export class OrbitNav extends React.Component<{
                 </ClearButton>
               }
             >
-              Pin to Orbit
+              Pin to Orbit home
             </Tooltip>
           </Interactive>
 

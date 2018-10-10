@@ -93,14 +93,6 @@ type Props = {
 
 const opacityScale = [1, 0.9, 0.8, 0.7, 0.5]
 
-const hideFilterPanes = {
-  settings: true,
-  onboard: true,
-  directory: true,
-  apps: true,
-  home: true,
-}
-
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
@@ -108,11 +100,11 @@ const decorator = compose(
   view.attach('searchStore', 'paneManagerStore'),
   view,
 )
-export const OrbitSuggestionBar = decorator(({ searchStore, paneManagerStore }: Props) => {
+export const OrbitSuggestionBar = decorator(({ searchStore }: Props) => {
   const filterStore = searchStore.searchFilterStore
   filterStore.disabledFilters
   return (
-    <SuggestionBar visible={hideFilterPanes[paneManagerStore.activePane] ? false : true}>
+    <SuggestionBar visible>
       <HorizontalScroll height={28}>
         {filterStore.allFilters.map((filter, index) => (
           <SuggestionButton

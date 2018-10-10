@@ -13,6 +13,7 @@ import { OrbitSearchMasonry } from './OrbitSearchMasonry'
 import { OrbitSearchQuickResults } from '../orbitSearch/OrbitSearchQuickResults'
 import { OrbitNav } from './OrbitNav'
 import { OrbitExplore } from './orbitExplore/OrbitExplore'
+import { View } from '@mcro/ui'
 
 type Props = {
   name: string
@@ -214,7 +215,9 @@ export class OrbitHome extends React.Component<Props> {
         </SubPane>
         <SubPane name="explore" fadeBottom>
           {navSpace}
-          <OrbitExplore />
+          <View margin={[0, -6]}>
+            <OrbitExplore />
+          </View>
           <VerticalSpace />
         </SubPane>
       </>

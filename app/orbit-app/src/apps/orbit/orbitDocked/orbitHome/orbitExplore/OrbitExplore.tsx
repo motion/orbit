@@ -1,13 +1,13 @@
 import * as React from 'react'
-import { view, react, ensure } from '@mcro/black';
+import { view, react, ensure } from '@mcro/black'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { PaneManagerStore } from '../../../PaneManagerStore';
-import { SelectionStore, SelectionGroup } from '../../SelectionStore';
-import { AppsStore } from '../../../../AppsStore';
-import { OrbitCarouselSection } from '../OrbitCarouselSection';
-import { OrbitCard } from '../../../../../views/OrbitCard';
-import { observeMany } from '@mcro/model-bridge';
-import { allStreams } from './allStreams';
+import { PaneManagerStore } from '../../../PaneManagerStore'
+import { SelectionStore, SelectionGroup } from '../../SelectionStore'
+import { AppsStore } from '../../../../AppsStore'
+import { OrbitCarouselSection } from '../OrbitCarouselSection'
+import { OrbitCard } from '../../../../../views/OrbitCard'
+import { observeMany } from '@mcro/model-bridge'
+import { allStreams } from './allStreams'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -124,7 +124,7 @@ class OrbitExploreStore {
 
 @view.attach('paneManagerStore', 'selectionStore', 'appsStore')
 @view.attach({
-  store: OrbitExploreStore
+  store: OrbitExploreStore,
 })
 @view
 export class OrbitExplore extends React.Component<Props> {
@@ -159,16 +159,15 @@ export class OrbitExplore extends React.Component<Props> {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style,
-                            )}
+                            style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                           >
                             <OrbitCarouselSection
                               startIndex={startIndex}
                               items={items}
                               homeStore={store}
                               categoryName={name === 'Apps' ? null : name}
+                              cardSpace={6}
+                              horizontalPadding={12}
                               cardHeight={height}
                               cardWidth={width}
                               CardView={OrbitCard}
@@ -185,7 +184,6 @@ export class OrbitExplore extends React.Component<Props> {
           }}
         </Droppable>
       </DragDropContext>
-
     )
   }
 }

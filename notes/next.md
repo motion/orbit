@@ -1,3 +1,11 @@
+UMED:
+
+- finish web crawler
+- team account / management
+- search relevancy - build a dataset, test, improve, use cosal, etc
+
+* multiple highlights not working in search results
+
 NEXT:
 
 1. Redesign, get umed working on teams as much as possible

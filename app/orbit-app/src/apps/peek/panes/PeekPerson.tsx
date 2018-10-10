@@ -8,11 +8,8 @@ import { OrbitIcon } from '../../../views/OrbitIcon'
 import { OrbitListItem } from '../../../views/OrbitListItem'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { App } from '@mcro/stores'
-import { Grid } from '../../../views/Grid'
-import { OrbitCard } from '../../../views/OrbitCard'
-import { View, Button, Row } from '@mcro/ui'
-import { getTopics } from '../../../loaders/search'
-import { Masonry } from '../../../views/Masonry'
+import { Button, Row } from '@mcro/ui'
+// import { getTopics } from '../../../loaders/search'
 
 type Props = PeekPaneProps<PersonBit> & {
   appsStore: AppsStore
@@ -34,14 +31,14 @@ class PeekPersonStore {
   }
 
   async loadInterestedIn() {
-    this.interestedIn = await getTopics({
-      query: {
-        query: '',
-        take: 500,
-        // peopleFilters: [this.person.name],
-      },
-      count: 15,
-    })
+    // this.interestedIn = await getTopics({
+    //   query: {
+    //     query: '',
+    //     take: 500,
+    //     // peopleFilters: [this.person.name],
+    //   },
+    //   count: 15,
+    // })
   }
 
   async loadRecentBits() {

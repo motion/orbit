@@ -46,7 +46,7 @@ export const OrbitHeaderInput = decorator(
         <HighlightedTextArea
           width="100%"
           fontWeight={400}
-          fontSize={16}
+          fontSize={18}
           lineHeight={22}
           border="none"
           display="block"

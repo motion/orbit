@@ -31,7 +31,7 @@ const hideSlack = {
 // stays static and non-reactive to prevent re-rendering during infinite scroll
 export class OrbitSearchCard extends React.Component<Props> {
   getChildren = ({ content }, bit) => {
-    return bit.integration === 'slack' ? (
+    return bit && bit.integration === 'slack' ? (
       <SearchResultText>{content}</SearchResultText>
     ) : (
       <OrbitCardContent>
@@ -46,7 +46,7 @@ export class OrbitSearchCard extends React.Component<Props> {
 
   render() {
     const { model, index, query } = this.props
-    const isConversation = model.integration === 'slack'
+    const isConversation = model && model.integration === 'slack'
     console.log('model', model)
     return (
       <OrbitCard

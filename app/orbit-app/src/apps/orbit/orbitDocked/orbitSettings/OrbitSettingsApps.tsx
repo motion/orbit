@@ -1,4 +1,4 @@
-import { ensure, react, view } from '@mcro/black'
+import { view } from '@mcro/black'
 import { Setting, SettingModel } from '@mcro/models'
 import * as React from 'react'
 import { observeMany } from '@mcro/model-bridge'
@@ -11,7 +11,6 @@ import { Grid } from '../../../../views/Grid'
 import { SimpleItem } from '../../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
 import { fuzzyQueryFilter } from '../../../../helpers'
-import { App } from '@mcro/stores'
 import { settingsList } from '../../../../helpers/settingsList'
 import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 
@@ -36,20 +35,6 @@ class OrbitAppsStore {
   willUnmount() {
     this.integrations$.unsubscribe()
   }
-
-  // when pane is active
-  get isActive() {
-    return this.props.paneManagerStore.activePane === this.props.name
-  }
-
-  // this updates SelectionStore to handle keyboard movements
-  setSelectionHandler = react(
-    () => [this.isActive, this.filteredActiveApps],
-    ([isActive]) => {
-      ensure('is active', isActive)
-      this.props.selectionStore.setResults([{ type: 'column', items: this.filteredActiveApps }])
-    },
-  )
 
   get filteredAvailableApps() {
     return fuzzyQueryFilter(this.activeQuery, this.allAvailableApps, {

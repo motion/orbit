@@ -88,6 +88,16 @@ export const SmallVerticalSpace = view({
   height: 10,
 })
 
+export const HorizontalScroll = view(Row, {
+  overflowX: 'scroll',
+  flex: 1,
+  flexFlow: 'row',
+  alignItems: 'center',
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+})
+
 export const HorizontalSpace = view({
   width: 10,
 })

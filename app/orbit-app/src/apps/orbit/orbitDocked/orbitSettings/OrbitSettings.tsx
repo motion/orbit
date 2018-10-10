@@ -19,6 +19,10 @@ const Pane = view({
   },
 })
 
+const SettingButton = props => (
+  <Button width={90} sizeIcon={1.1} elementProps={{ width: 'auto' }} {...props} />
+)
+
 @view.attach('paneManagerStore')
 @view
 export class OrbitSettings extends React.Component<{
@@ -51,9 +55,15 @@ export class OrbitSettings extends React.Component<{
             justifyContent="center"
           >
             <SegmentedRow pointerEvents={isActive ? 'auto' : 'none'}>
-              <Button {...this.buttonProps(paneManagerStore, 'apps')}>Apps</Button>
-              <Button {...this.buttonProps(paneManagerStore, 'team')}>Spaces</Button>
-              <Button {...this.buttonProps(paneManagerStore, 'general')}>General</Button>
+              <SettingButton icon="users_single-01" {...this.buttonProps(paneManagerStore, 'apps')}>
+                Me
+              </SettingButton>
+              <SettingButton icon="objects_planet" {...this.buttonProps(paneManagerStore, 'team')}>
+                Spaces
+              </SettingButton>
+              <SettingButton icon="gear" {...this.buttonProps(paneManagerStore, 'general')}>
+                Settings
+              </SettingButton>
             </SegmentedRow>
           </Row>
         }

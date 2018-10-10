@@ -68,6 +68,7 @@ export class OrbitNav extends React.Component<{
               openOnClick
               openOnHover
               closeOnClickAway
+              group="filters"
               target={
                 <NavButton icon="calendar">
                   {getDateAbbreviated(searchStore.searchFilterStore.dateState)}
@@ -92,6 +93,7 @@ export class OrbitNav extends React.Component<{
               openOnClick
               openOnHover
               background
+              group="filters"
               closeOnClickAway
               target={<NavButton icon="funnel">All</NavButton>}
               alignPopover="left"
@@ -135,6 +137,7 @@ export class OrbitNav extends React.Component<{
               adjust={[-10, 0]}
               borderRadius={6}
               elevation={4}
+              group="filters"
               target={
                 <NavButton>
                   <View

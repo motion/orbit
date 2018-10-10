@@ -32,6 +32,9 @@ export const PopoverState = {
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
 
 export type PopoverProps = CSSPropertySet & {
+  // if you set a group, it acts as an ID that makes sure only ONE popover
+  // within that ID is ever open
+  group?: string
   theme?: string
   // can pass function to get isOpen passed in
   children?: React.ReactNode | PopoverChildrenFn
@@ -297,6 +300,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   componentDidUpdate() {
     if (this.showPopover) {
       PopoverState.openPopovers.add(this)
+      this.closeOthersWithinGroup()
     } else {
       PopoverState.openPopovers.delete(this)
     }
@@ -896,6 +900,19 @@ export class Popover extends React.PureComponent<PopoverProps> {
       targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = this.showPopover
     }
     return React.cloneElement(target, targetProps)
+  }
+
+  closeOthersWithinGroup() {
+    if (this.props.group) {
+      for (const popover of [...PopoverState.openPopovers]) {
+        if (popover === this) {
+          continue
+        }
+        if (popover.props.group === this.props.group) {
+          popover.forceClose()
+        }
+      }
+    }
   }
 
   render() {

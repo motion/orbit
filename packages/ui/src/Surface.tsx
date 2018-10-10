@@ -210,7 +210,7 @@ const Element = view({
       textOverflow: 'ellipse',
       whiteSpace: 'nowrap',
     }),
-    width: `calc(100% ${iconNegativePad})`,
+    width: props.width || `calc(100% ${iconNegativePad})`,
     ...elementStyle,
   }
 })

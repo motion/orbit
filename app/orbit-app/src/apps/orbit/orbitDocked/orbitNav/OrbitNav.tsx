@@ -10,6 +10,7 @@ import { RowItem } from '../../orbitHeader/RowItem'
 import { view } from '@mcro/black'
 import { getDateAbbreviated } from './getDateAbbreviated'
 import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
+import { OrbitIcon } from '../../../../views/OrbitIcon'
 
 @view.attach('paneManagerStore', 'searchStore')
 @view
@@ -18,7 +19,8 @@ export class OrbitNav extends React.Component<{
   searchStore?: SearchStore
 }> {
   render() {
-    const { searchStore } = this.props
+    log(`render orbiut nav....`)
+    const { searchStore, paneManagerStore } = this.props
     return (
       <View position="relative" zIndex={100}>
         <Row position="relative" alignItems="center" padding={[0, 10]}>
@@ -72,6 +74,9 @@ export class OrbitNav extends React.Component<{
             <Popover
               delay={100}
               openOnClick
+              openOnHover
+              closeOnClick
+              closeOnClickAway
               theme="light"
               width={200}
               background
@@ -94,7 +99,20 @@ export class OrbitNav extends React.Component<{
               }
             >
               <Col borderRadius={6} overflow="hidden" flex={1}>
-                <RowItem orb="blue" title="Orbit" subtitle="20 people" icon="gear" />
+                <RowItem
+                  orb="blue"
+                  title="Orbit"
+                  subtitle="20 people"
+                  after={
+                    <OrbitIcon
+                      onClick={paneManagerStore.goToTeamSettings}
+                      name="gear"
+                      size={14}
+                      opacity={0.5}
+                    />
+                  }
+                  hover={false}
+                />
                 <View flex={1} margin={[2, 10]} background="#eee" height={1} />
                 <RowItem orb="grey" title="Me" />
                 <RowItem orb="red" title="discuss-things" />

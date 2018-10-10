@@ -7,14 +7,25 @@ const RowItemFrame = view(Row, {
   minHeight: 30,
   padding: [4, 8],
   alignItems: 'center',
-  '&:hover': {
-    background: '#f2f2f2',
-  },
-})
+}).theme(({ hover }) => ({
+  '&:hover':
+    hover === false
+      ? null
+      : {
+          background: '#f2f2f2',
+        },
+}))
 
 const leftPad = 10
 
-export const RowItem = ({ orb = null, title = null, icon = null, subtitle = null, ...props }) => {
+export const RowItem = ({
+  orb = null,
+  title = null,
+  icon = null,
+  after = null,
+  subtitle = null,
+  ...props
+}) => {
   return (
     <RowItemFrame padding={subtitle ? leftPad : [4, leftPad]} {...props}>
       {!!orb && (
@@ -38,6 +49,7 @@ export const RowItem = ({ orb = null, title = null, icon = null, subtitle = null
           </Text>
         )}
       </Col>
+      {after}
       {!!icon && <OrbitIcon name={icon} size={14} opacity={0.5} />}
     </RowItemFrame>
   )

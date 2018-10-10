@@ -68,6 +68,7 @@ const Interactive = view({
 })
 
 @view.attach('paneManagerStore', 'searchStore')
+@view
 class OrbitDockedContents extends React.PureComponent<Props> {
   render() {
     const { paneManagerStore } = this.props
@@ -79,7 +80,7 @@ class OrbitDockedContents extends React.PureComponent<Props> {
         />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
-            <Interactive disabled={!/home|search/.test(paneManagerStore.activePane)}>
+            <Interactive disabled={/home|search/.test(paneManagerStore.activePane) === false}>
               <OrbitNav />
             </Interactive>
             <OrbitOnboard name="onboard" />

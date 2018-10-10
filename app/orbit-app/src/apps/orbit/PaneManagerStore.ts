@@ -23,6 +23,7 @@ export class PaneManagerStore {
   forceOnboard = null
   hasOnboarded = true
   lastKey = { key: null, at: Date.now() }
+  subPane = null
 
   generalSetting = null
   generalSetting$ = observeOne(SettingModel, {
@@ -175,4 +176,13 @@ export class PaneManagerStore {
       Actions.clearPeek()
     },
   )
+
+  subPaneSetter = memoize(val => () => {
+    this.subPane = val
+  })
+
+  goToTeamSettings = () => {
+    this.setActivePane('settings')
+    this.subPane = 'team'
+  }
 }

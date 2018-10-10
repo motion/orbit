@@ -5,7 +5,6 @@ import { OrbitSettingsApps } from './OrbitSettingsApps'
 import { OrbitSettingsGeneral } from './OrbitSettingsGeneral'
 import { OrbitSettingsTeam } from './OrbitSettingsTeam'
 import { SegmentedRow, Button, Row } from '@mcro/ui'
-import { memoize } from 'lodash'
 import { VerticalSpace } from '../../../../views'
 import { PaneManagerStore } from '../../PaneManagerStore'
 
@@ -20,31 +19,21 @@ const Pane = view({
   },
 })
 
-class OrbitSettingsStore {
-  active = 'apps'
-
-  activeSetter = memoize(val => () => (this.active = val))
-}
-
 @view.attach('paneManagerStore')
-@view.attach({
-  store: OrbitSettingsStore,
-})
 @view
 export class OrbitSettings extends React.Component<{
   name: string
-  store?: OrbitSettingsStore
   paneManagerStore?: PaneManagerStore
 }> {
-  buttonProps = (store: OrbitSettingsStore, val: string) => {
+  buttonProps = (store: PaneManagerStore, val: string) => {
     return {
-      onClick: store.activeSetter(val),
-      active: val === store.active,
+      onClick: store.subPaneSetter(val),
+      active: val === store.subPane,
     }
   }
 
   render() {
-    const { name, store, paneManagerStore } = this.props
+    const { name, paneManagerStore } = this.props
     const isActive = paneManagerStore.activePane === 'settings'
     return (
       <SubPane
@@ -56,29 +45,28 @@ export class OrbitSettings extends React.Component<{
             height={35}
             position="absolute"
             top={-47}
-            left={100}
-            right={100}
-            pointerEvents="none"
+            left={150}
+            right={150}
             alignItems="center"
             justifyContent="center"
           >
             <SegmentedRow pointerEvents={isActive ? 'auto' : 'none'}>
-              <Button {...this.buttonProps(store, 'apps')}>Apps</Button>
-              <Button {...this.buttonProps(store, 'team')}>Team</Button>
-              <Button {...this.buttonProps(store, 'general')}>General</Button>
+              <Button {...this.buttonProps(paneManagerStore, 'apps')}>Apps</Button>
+              <Button {...this.buttonProps(paneManagerStore, 'team')}>Team</Button>
+              <Button {...this.buttonProps(paneManagerStore, 'general')}>General</Button>
             </SegmentedRow>
           </Row>
         }
       >
         <VerticalSpace />
 
-        <Pane isShown={store.active === 'apps'}>
+        <Pane isShown={paneManagerStore.subPane === 'apps'}>
           <OrbitSettingsApps />
         </Pane>
-        <Pane isShown={store.active === 'team'}>
+        <Pane isShown={paneManagerStore.subPane === 'team'}>
           <OrbitSettingsTeam />
         </Pane>
-        <Pane isShown={store.active === 'general'}>
+        <Pane isShown={paneManagerStore.subPane === 'general'}>
           <OrbitSettingsGeneral />
         </Pane>
       </SubPane>

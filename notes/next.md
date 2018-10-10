@@ -1,3 +1,17 @@
+NEXT:
+
+1. Redesign, get umed working on teams as much as possible
+2. fix filters
+3. keyboard shortcut for filters as well
+4. QuickResults - not just people but any bit, have peek open automatically on search!
+5. improve keynav a lot with moving through peek
+6. keyboard shortcut reference toggle pane
+7. improve performance a lot so things arent lagging at all
+8. make keyboard shortcuts more clear as well to people
+9. improve peek display quite a bit
+10. probably search virtual masonry
+11. get switch orbits smooth
+
 - NOT decentralized to start...
 - it just syncs metadata "ids" and such...
 - One person manages an Orbit

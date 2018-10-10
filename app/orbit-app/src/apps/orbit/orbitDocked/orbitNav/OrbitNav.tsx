@@ -2,7 +2,18 @@ import './calendar.css' // theme css file
 import * as React from 'react'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../SearchStore'
-import { Row, SegmentedRow, Popover, View, Col, Theme, Button } from '@mcro/ui'
+import {
+  Row,
+  SegmentedRow,
+  Popover,
+  View,
+  Col,
+  Theme,
+  Button,
+  ClearButton,
+  Tooltip,
+  Icon,
+} from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
 import { OrbitFilters } from '../orbitHome/OrbitFilters'
@@ -13,12 +24,23 @@ import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { App } from '@mcro/stores'
 import { reaction } from 'mobx'
+import { QueryStore } from '../QueryStore'
 
-@view.attach('paneManagerStore', 'searchStore')
+const Interactive = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+  disabled: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
+})
+
+@view.attach('paneManagerStore', 'searchStore', 'queryStore')
 @view
 export class OrbitNav extends React.Component<{
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
+  queryStore?: QueryStore
 }> {
   spaceSwitcherRef = React.createRef<Popover>()
 
@@ -36,7 +58,7 @@ export class OrbitNav extends React.Component<{
 
   render() {
     log(`render orbiut nav....`)
-    const { searchStore, paneManagerStore } = this.props
+    const { searchStore, paneManagerStore, queryStore } = this.props
     return (
       <View position="relative" zIndex={100}>
         <Row position="relative" alignItems="center" padding={[0, 10]}>
@@ -83,6 +105,19 @@ export class OrbitNav extends React.Component<{
             </Popover>
           </SegmentedRow>
           <OrbitSuggestionBar />
+
+          <Interactive disabled={!searchStore.hasQueryVal}>
+            <Tooltip
+              target={
+                <ClearButton>
+                  <Icon name="pin" size={8} margin="auto" />
+                </ClearButton>
+              }
+            >
+              Pin to Orbit
+            </Tooltip>
+          </Interactive>
+
           <SegmentedRow>
             {/* <NavButton onClick={searchStore.searchFilterStore.toggleSearchBy} width={55}>
               {searchStore.searchFilterStore.searchBy}

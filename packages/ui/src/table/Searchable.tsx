@@ -107,7 +107,8 @@ export const SearchInput = view(TableInput, {
   flexGrow: 1,
   background: 'transparent',
   height: '100%',
-  flex: 1,
+  maxWidth: '100%',
+  width: 'calc(100% - 30px)',
   lineHeight: '100%',
   marginLeft: 2,
   '&::-webkit-input-placeholder': {
@@ -424,6 +425,11 @@ export class Searchable extends React.PureComponent<Props, State> {
           <SearchClearButton
             onClick={this.clear}
             visible={!!this.state.searchTerm || this.state.filters.length > 0}
+            position="relative"
+            zIndex={2}
+            // weirdly this fixes a strange overlap bug
+            flex={1}
+            marginLeft={5}
           />
         </SearchBoxView>
         {after}

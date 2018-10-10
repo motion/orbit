@@ -23,7 +23,7 @@ export class PaneManagerStore {
   forceOnboard = null
   hasOnboarded = true
   lastKey = { key: null, at: Date.now() }
-  subPane = null
+  subPane = 'apps'
 
   generalSetting = null
   generalSetting$ = observeOne(SettingModel, {

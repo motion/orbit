@@ -9,10 +9,10 @@ export const getDateAbbreviated = ({ startDate, endDate }: DateRange) => {
   if (!startDate) {
     return 'Any'
   }
-  const days = differenceInCalendarDays(new Date(), endDate)
+  const days = differenceInCalendarDays(new Date(), startDate)
   console.log('days ago', days, startDate, endDate)
   if (days < 7) {
-    return `${Math.round(days / 7)}d`
+    return `${Math.max(1, days)}d`
   }
   if (days < 8) {
     return '1wk'
@@ -27,7 +27,7 @@ export const getDateAbbreviated = ({ startDate, endDate }: DateRange) => {
     return '1mo'
   }
   if (days < 365 - 30) {
-    return `${Math.round(365 / days)}mo`
+    return `${Math.max(1, Math.round(365 / days / 30))}mo`
   }
-  return `${Math.round((365 + 180) / days)}yr`
+  return `${Math.max(1, Math.round((365 + 180) / days / 12))}yr`
 }

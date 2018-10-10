@@ -46,7 +46,7 @@ export const OrbitHeaderInput = decorator(
         <HighlightedTextArea
           width="100%"
           fontWeight={400}
-          fontSize={16}
+          fontSize={18}
           lineHeight={22}
           border="none"
           display="block"
@@ -63,15 +63,6 @@ export const OrbitHeaderInput = decorator(
           placeholder={headerStore.placeholder}
         />
         <Interactive disabled={!searchStore.hasQueryVal}>
-          <Tooltip
-            target={
-              <ClearButton>
-                <Icon name="pin" size={8} margin="auto" />
-              </ClearButton>
-            }
-          >
-            Pin
-          </Tooltip>
           <ClearButton onClick={queryStore.clearQuery} />
         </Interactive>
       </View>

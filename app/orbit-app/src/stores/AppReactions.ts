@@ -1,8 +1,9 @@
 import { store, react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, Electron } from '@mcro/stores'
 import { Actions } from '../actions/Actions'
 import { showNotification } from '../helpers/electron/showNotification'
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
+import { PopoverState } from '@mcro/ui'
 // import orbitPosition from '../helpers/orbitPosition'
 // import { ORBIT_WIDTH } from '@mcro/constants'
 // const log = debug('AppReactions')
@@ -86,6 +87,14 @@ export class AppReactions /* extends Store */ {
     () => {
       ensure('is hidden', !App.orbitState.docked)
       Actions.clearPeek()
+    },
+  )
+
+  clearPopoversOnMouseLeave = react(
+    () => Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered,
+    hovered => {
+      ensure('not hovered', !hovered)
+      PopoverState.closeAll()
     },
   )
 

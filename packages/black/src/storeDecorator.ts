@@ -1,13 +1,13 @@
 import decor from '@mcro/decor'
 import { subscribable, emittable } from '@mcro/decor-classes'
-import automagical from '@mcro/automagical'
+import automagic from '@mcro/automagical'
 import { CompositeDisposable } from 'event-kit'
 
 // import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 export { on } from '@mcro/helpers'
 
-export const storeDecorator: any = decor([emittable, subscribable, automagical])
+export const storeDecorator: any = decor([emittable, subscribable, automagic])
 
 export const storeOptions = {
   storeDecorator,

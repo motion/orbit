@@ -3,7 +3,6 @@ import * as UI from '@mcro/ui'
 import { view, compose } from '@mcro/black'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../orbitDocked/SearchStore'
-import { HorizontalScroll } from '../../../views'
 
 const dateBg = UI.color('#ffb049')
 
@@ -53,6 +52,17 @@ const SuggestionBar = view(UI.Row, {
   },
 })
 
+const HorizontalScroll = view({
+  height: 28,
+  overflowX: 'scroll',
+  flex: 1,
+  flexFlow: 'row',
+  alignItems: 'center',
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+})
+
 const suggestionTheme = theme => ({
   background: theme.background.alpha(0.2),
   color: theme.color.alpha(0.6),
@@ -93,6 +103,14 @@ type Props = {
 
 const opacityScale = [1, 0.9, 0.8, 0.7, 0.5]
 
+const hideFilterPanes = {
+  settings: true,
+  onboard: true,
+  directory: true,
+  apps: true,
+  home: true,
+}
+
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
@@ -100,12 +118,12 @@ const decorator = compose(
   view.attach('searchStore', 'paneManagerStore'),
   view,
 )
-export const OrbitSuggestionBar = decorator(({ searchStore }: Props) => {
+export const OrbitSuggestionBar = decorator(({ searchStore, paneManagerStore }: Props) => {
   const filterStore = searchStore.searchFilterStore
   filterStore.disabledFilters
   return (
-    <SuggestionBar visible>
-      <HorizontalScroll height={28}>
+    <SuggestionBar visible={hideFilterPanes[paneManagerStore.activePane] ? false : true}>
+      <HorizontalScroll>
         {filterStore.allFilters.map((filter, index) => (
           <SuggestionButton
             key={`${filter.text}${filter.active}`}

@@ -24,7 +24,7 @@ const Blur = view(View, {
   width: 200,
   height: 200,
   margin: [-100, 0, 0, -100],
-  filter: 'blur(50px)',
+  filter: 'blur(40px)',
   transition: 'all ease 3000ms',
   position: 'absolute',
   top: '50%',

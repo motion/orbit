@@ -86,6 +86,7 @@ class AppStore {
     contextMessage: '',
     acceptsForwarding: false,
     lastTear: 0,
+    showSpaceSwitcher: 0,
   })
 
   get peekState() {

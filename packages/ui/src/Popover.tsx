@@ -24,11 +24,17 @@ export const PopoverState = {
   closeLast: () => {
     last([...openPopovers]).forceClose()
   },
+  closeAll: () => {
+    ;[...openPopovers].map(x => x.forceClose())
+  },
 }
 
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
 
 export type PopoverProps = CSSPropertySet & {
+  // if you set a group, it acts as an ID that makes sure only ONE popover
+  // within that ID is ever open
+  group?: string
   theme?: string
   // can pass function to get isOpen passed in
   children?: React.ReactNode | PopoverChildrenFn
@@ -63,6 +69,8 @@ export type PopoverProps = CSSPropertySet & {
   // which direction it shows towards
   // default determine direction automatically
   towards?: 'auto' | 'left' | 'right' | 'bottom' | 'top'
+  // popover can aim to be centered or left aligned on the target
+  alignPopover?: 'left' | 'center'
   padding?: number[] | number
   onMouseEnter?: Function
   onMouseLeave?: Function
@@ -272,12 +280,11 @@ export class Popover extends React.PureComponent<PopoverProps> {
       this.listenForHover()
       on(this, this.target, 'click', this.handleTargetClick)
       if (closeOnEsc) {
-        on(this, this.target.parentNode, 'keyup', e => {
-          if (e.keyCode === 27 && this.showPopover) {
+        on(this, findDOMNode(this).parentNode.querySelector('.popover-portal'), 'keyup', e => {
+          if (e.keyCode === 27) {
             e.preventDefault()
             e.stopPropagation()
-            this.setState({ isPinnedOpen: 0 })
-            this.close()
+            this.forceClose()
           }
         })
       }
@@ -293,6 +300,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   componentDidUpdate() {
     if (this.showPopover) {
       PopoverState.openPopovers.add(this)
+      this.closeOthersWithinGroup()
     } else {
       PopoverState.openPopovers.delete(this)
     }
@@ -329,7 +337,15 @@ export class Popover extends React.PureComponent<PopoverProps> {
     this.close()
   }
 
-  private open() {
+  toggleOpen = () => {
+    if (this.showPopover) {
+      this.forceClose()
+    } else {
+      this.open()
+    }
+  }
+
+  open = () => {
     this.setPosition(() => {
       this.setState({ isOpen: true }, () => {
         if (this.curProps.onOpen) {
@@ -339,7 +355,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     })
   }
 
-  private close = () => {
+  close = () => {
     return new Promise(resolve => {
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {
@@ -398,18 +414,21 @@ export class Popover extends React.PureComponent<PopoverProps> {
       if (open || !showPopover) {
         return
       }
-      if (keepOpenOnClickTarget && this.wasJustClicked) {
+      const clickedTarget = this.wasJustClicked
+      if (keepOpenOnClickTarget && clickedTarget) {
         return
       }
+      console.log(e, this)
       // closeOnClickPopover
-      if (closeOnClick && this.wasJustClicked) {
-        console.log('close on click')
+      if (closeOnClick && clickedTarget) {
         this.forceClose()
         e.stopPropagation()
         return
       }
-      if (closeOnClickAway && !this.wasJustClicked) {
-        console.log('close on away')
+      const clickedInPopover =
+        e.path.findIndex(x => (x as HTMLDivElement).classList.contains('popover-portal')) > -1
+      if (closeOnClickAway && !clickedTarget && !clickedInPopover) {
+        console.log('close on away', clickedInPopover)
         this.forceClose()
         e.stopPropagation()
         return
@@ -567,6 +586,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   get x() {
     const { direction, popoverSize, targetBounds, forgiveness } = this
+    const { alignPopover } = this.props
     if (!targetBounds) {
       return 0
     }
@@ -574,15 +594,25 @@ export class Popover extends React.PureComponent<PopoverProps> {
     const { adjust, distance, arrowSize } = this.curProps
     // measurements
     const popoverHalfWidth = popoverSize.width / 2
-    const targetCenter = targetBounds.left + targetBounds.width / 2
     const arrowCenter = window.innerWidth - popoverHalfWidth
+    const targetCenter = targetBounds.left + targetBounds.width / 2
 
+    let popoverAimForCenter = targetCenter
     let left
     let arrowLeft = 0 // defaults to 0
+
+    if (alignPopover === 'left') {
+      popoverAimForCenter = targetBounds.left
+    }
+
     // auto for now will just be top/bottom
     // in future it needs to measure target and then determine
     if (VERTICAL) {
-      left = this.edgePad(targetCenter - popoverHalfWidth, window.innerWidth, popoverSize.width)
+      left = this.edgePad(
+        popoverAimForCenter - popoverHalfWidth,
+        window.innerWidth,
+        popoverSize.width,
+      )
       // arrow
       if (targetCenter < popoverHalfWidth) {
         // ON LEFT SIDE
@@ -616,6 +646,13 @@ export class Popover extends React.PureComponent<PopoverProps> {
     // adjustments
     left += adjust[0]
     arrowLeft -= adjust[0]
+
+    // adjust arrow for alignment
+    if (alignPopover === 'left') {
+      // move it back to the left the amount we move popover right
+      arrowLeft += targetCenter - targetBounds.left
+    }
+
     return { arrowLeft, left }
   }
 
@@ -865,6 +902,19 @@ export class Popover extends React.PureComponent<PopoverProps> {
     return React.cloneElement(target, targetProps)
   }
 
+  closeOthersWithinGroup() {
+    if (this.props.group) {
+      for (const popover of [...PopoverState.openPopovers]) {
+        if (popover === this) {
+          continue
+        }
+        if (popover.props.group === this.props.group) {
+          popover.forceClose()
+        }
+      }
+    }
+  }
+
   render() {
     const {
       adjust,
@@ -991,7 +1041,11 @@ export class Popover extends React.PureComponent<PopoverProps> {
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
-        <Portal>{theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent}</Portal>
+        <Portal>
+          <span className="popover-portal">
+            {theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent}
+          </span>
+        </Portal>
       </>
     )
   }

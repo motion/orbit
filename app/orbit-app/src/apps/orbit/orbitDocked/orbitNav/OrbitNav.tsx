@@ -1,35 +1,81 @@
+import './calendar.css' // theme css file
 import * as React from 'react'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../SearchStore'
-import { Row, SegmentedRow, Popover, View, Col, Theme, Button } from '@mcro/ui'
+import {
+  Row,
+  SegmentedRow,
+  Popover,
+  View,
+  Col,
+  Theme,
+  Button,
+  ClearButton,
+  Tooltip,
+  Icon,
+} from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
-import { OrbitFilters } from './OrbitFilters'
-import { Centered } from '../../../../views/Centered'
+import { OrbitFilters } from '../orbitHome/OrbitFilters'
 import { RowItem } from '../../orbitHeader/RowItem'
 import { view } from '@mcro/black'
+import { getDateAbbreviated } from './getDateAbbreviated'
+import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
+import { OrbitIcon } from '../../../../views/OrbitIcon'
+import { App } from '@mcro/stores'
+import { reaction } from 'mobx'
+import { QueryStore } from '../QueryStore'
 
-@view.attach('paneManagerStore', 'searchStore')
+const Interactive = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+  disabled: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
+})
+
+@view.attach('paneManagerStore', 'searchStore', 'queryStore')
 @view
 export class OrbitNav extends React.Component<{
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
+  queryStore?: QueryStore
 }> {
+  spaceSwitcherRef = React.createRef<Popover>()
+
+  spaceOpener = reaction(
+    () => App.state.showSpaceSwitcher,
+    () => {
+      console.log(this.spaceSwitcherRef.current)
+      this.spaceSwitcherRef.current.toggleOpen()
+    },
+  )
+
+  componenWillUnmount() {
+    this.spaceOpener()
+  }
+
   render() {
-    const { paneManagerStore, searchStore } = this.props
+    log(`render orbiut nav....`)
+    const { searchStore, paneManagerStore, queryStore } = this.props
     return (
       <View position="relative" zIndex={100}>
-        <div style={{ height: 2 }} />
         <Row position="relative" alignItems="center" padding={[0, 10]}>
           <SegmentedRow>
             <Popover
               delay={100}
               openOnClick
               openOnHover
-              closeOnEsc
               closeOnClickAway
-              target={<NavButton icon="calendar">Any</NavButton>}
-              adjust={[190, 0]}
+              group="filters"
+              target={
+                <NavButton icon="calendar">
+                  {getDateAbbreviated(searchStore.searchFilterStore.dateState)}
+                </NavButton>
+              }
+              alignPopover="left"
+              adjust={[200, 0]}
               background
               borderRadius={6}
               elevation={4}
@@ -47,10 +93,10 @@ export class OrbitNav extends React.Component<{
               openOnClick
               openOnHover
               background
-              closeOnEsc
+              group="filters"
               closeOnClickAway
               target={<NavButton icon="funnel">All</NavButton>}
-              adjust={[-10, 0]}
+              alignPopover="left"
               borderRadius={6}
               elevation={4}
               theme="light"
@@ -60,39 +106,38 @@ export class OrbitNav extends React.Component<{
               </View>
             </Popover>
           </SegmentedRow>
+          <OrbitSuggestionBar />
 
-          <Centered>
-            <SegmentedRow>
-              <NavButton
-                onClick={paneManagerStore.activePaneSetter('home')}
-                active={paneManagerStore.activePane === 'home'}
-                icon="home"
-                tooltip="Overview"
-              />
-              <NavButton
-                onClick={paneManagerStore.activePaneSetter('explore')}
-                active={paneManagerStore.activePane === 'explore'}
-                icon="pin"
-                tooltip="Explore"
-              />
-            </SegmentedRow>
-          </Centered>
-
-          <View flex={1} />
+          <Interactive disabled={!searchStore.hasQueryVal}>
+            <Tooltip
+              target={
+                <ClearButton>
+                  <Icon name="pin" size={8} margin="auto" />
+                </ClearButton>
+              }
+            >
+              Pin to Orbit home
+            </Tooltip>
+          </Interactive>
 
           <SegmentedRow>
-            <NavButton onClick={searchStore.searchFilterStore.toggleSearchBy} width={55}>
+            {/* <NavButton onClick={searchStore.searchFilterStore.toggleSearchBy} width={55}>
               {searchStore.searchFilterStore.searchBy}
-            </NavButton>
+            </NavButton> */}
             <Popover
+              ref={this.spaceSwitcherRef}
               delay={100}
               openOnClick
+              openOnHover
+              closeOnClick
+              closeOnClickAway
               theme="light"
               width={200}
               background
               adjust={[-10, 0]}
               borderRadius={6}
               elevation={4}
+              group="filters"
               target={
                 <NavButton>
                   <View
@@ -109,7 +154,20 @@ export class OrbitNav extends React.Component<{
               }
             >
               <Col borderRadius={6} overflow="hidden" flex={1}>
-                <RowItem orb="blue" title="Orbit" subtitle="20 people" icon="gear" />
+                <RowItem
+                  orb="blue"
+                  title="Orbit"
+                  subtitle="20 people"
+                  after={
+                    <OrbitIcon
+                      onClick={paneManagerStore.goToTeamSettings}
+                      name="gear"
+                      size={14}
+                      opacity={0.5}
+                    />
+                  }
+                  hover={false}
+                />
                 <View flex={1} margin={[2, 10]} background="#eee" height={1} />
                 <RowItem orb="grey" title="Me" />
                 <RowItem orb="red" title="discuss-things" />
@@ -126,7 +184,6 @@ export class OrbitNav extends React.Component<{
             </Popover>
           </SegmentedRow>
         </Row>
-        <div style={{ height: 8 }} />
       </View>
     )
   }

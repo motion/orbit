@@ -13,7 +13,6 @@ export default function glossViewDisplayNames(babel) {
         if (references.has(fileName)) {
           return
         }
-        references.add(fileName)
 
         const importSpecifier = path.get('specifiers')[0]
         if (path.node.source.value !== '@mcro/black') {
@@ -24,10 +23,12 @@ export default function glossViewDisplayNames(babel) {
             local: { name },
           },
         } = importSpecifier
+
         if (name != 'view') {
           return
         }
 
+        references.add(fileName)
         referencePaths[fileName] = path.scope.getBinding(name).referencePaths
       },
       Program: {

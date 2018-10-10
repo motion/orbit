@@ -12,8 +12,10 @@ type Props = {
 }
 
 const rootShortcuts = {
+  switchSpaces: 'command+k',
   openCurrent: 'command+enter',
   copyLink: 'command+shift+c',
+  // esc
   escape: 'esc',
 }
 
@@ -21,6 +23,9 @@ const decorator = compose(view.attach('selectionStore'))
 
 export const MainShortcutHandler = decorator(({ selectionStore, children }: Props) => {
   const handlers = {
+    switchSpaces: () => {
+      Actions.showSpaceSwitcher()
+    },
     openCurrent: () => {
       console.log('openCurrent')
       Actions.openItem(selectionStore.selectedItem)

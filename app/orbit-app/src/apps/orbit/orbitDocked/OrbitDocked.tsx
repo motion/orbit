@@ -15,6 +15,7 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { Logger } from '@mcro/logger'
+import { OrbitNav } from './orbitNav/OrbitNav'
 
 const log = new Logger('OrbitDocked')
 
@@ -59,10 +60,18 @@ const OrbitDockedInner = view({
   },
 })
 
+const Interactive = view({
+  disabled: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
+})
+
 @view.attach('paneManagerStore', 'searchStore')
+@view
 class OrbitDockedContents extends React.PureComponent<Props> {
   render() {
-    const { searchStore, paneManagerStore } = this.props
+    const { paneManagerStore } = this.props
     return (
       <>
         <OrbitHeader
@@ -71,6 +80,9 @@ class OrbitDockedContents extends React.PureComponent<Props> {
         />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
+            <Interactive disabled={/home|search/.test(paneManagerStore.activePane) === false}>
+              <OrbitNav />
+            </Interactive>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
             <OrbitSearchResults name="docked-search" />

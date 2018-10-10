@@ -9,7 +9,7 @@ import { OrbitStore } from '../OrbitStore'
 import { autoTrack } from '../../stores/Track'
 import { memoize } from 'lodash'
 
-type Panes = 'home' | 'explore' | 'settings' | 'onboard'
+type Panes = 'home' | 'search' | 'settings' | 'onboard'
 
 export class PaneManagerStore {
   props: {
@@ -18,11 +18,12 @@ export class PaneManagerStore {
     keyboardStore: KeyboardStore
   }
 
-  panes: Partial<Panes>[] = ['home', 'explore', 'settings']
+  panes: Partial<Panes>[] = ['home', 'search', 'settings']
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
   lastKey = { key: null, at: Date.now() }
+  subPane = 'apps'
 
   generalSetting = null
   generalSetting$ = observeOne(SettingModel, {
@@ -156,7 +157,15 @@ export class PaneManagerStore {
       }
       // let activePaneFast be a frame ahead
       await sleep(32)
-      return this.panes[this.paneIndex]
+      let active = this.panes[this.paneIndex]
+      if (active === 'home' && !!App.state.query) {
+        active = 'search'
+      }
+      if (active === 'search' && !App.state.query) {
+        active = 'home'
+      }
+      ensure('changed', active !== this.activePane)
+      return active
     },
   )
 
@@ -170,4 +179,13 @@ export class PaneManagerStore {
       Actions.clearPeek()
     },
   )
+
+  subPaneSetter = memoize(val => () => {
+    this.subPane = val
+  })
+
+  goToTeamSettings = () => {
+    this.setActivePane('settings')
+    this.subPane = 'team'
+  }
 }

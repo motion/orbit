@@ -13,7 +13,6 @@ import { Button } from '@mcro/ui'
 import { fuzzyQueryFilter } from '../../../../helpers'
 import { App } from '@mcro/stores'
 import { settingsList } from '../../../../helpers/settingsList'
-import { NoResultsDialog } from '../views/NoResultsDialog'
 import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 
 type Props = {
@@ -25,6 +24,7 @@ type Props = {
 class OrbitAppsStore {
   props: Props
   integrations: Setting[] = []
+  activeQuery = ''
   private integrations$ = observeMany(SettingModel, {
     args: {
       where: { category: 'integration' },
@@ -41,15 +41,6 @@ class OrbitAppsStore {
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
   }
-
-  // this is the searchbar value, active only when this pane is active
-  private activeQuery = react(
-    () => [this.isActive, App.state.query],
-    ([isActive, query]) => {
-      ensure('active', isActive)
-      return query
-    },
-  )
 
   // this updates SelectionStore to handle keyboard movements
   setSelectionHandler = react(
@@ -92,7 +83,6 @@ const Unpad = view({
 export class OrbitSettingsApps extends React.Component<Props> {
   render() {
     const { store } = this.props
-    const hasFilteredApps = !!store.filteredAvailableApps.length
     return (
       <>
         {!!store.filteredActiveApps.length && (
@@ -127,25 +117,20 @@ export class OrbitSettingsApps extends React.Component<Props> {
             <Views.VertSpace />
           </>
         )}
-        {hasFilteredApps && (
-          <>
-            <Views.SubTitle>App Store</Views.SubTitle>
-            <Unpad>
-              {store.filteredAvailableApps.map(item => {
-                return (
-                  <SimpleItem
-                    key={item.id}
-                    onClick={addIntegrationClickHandler(item)}
-                    title={item.title}
-                    icon={item.icon}
-                    after={<Button size={0.9}>Add</Button>}
-                  />
-                )
-              })}
-            </Unpad>
-          </>
-        )}
-        {!hasFilteredApps && <NoResultsDialog subName="the app store" />}
+        <Views.SubTitle>App Store</Views.SubTitle>
+        <Unpad>
+          {store.filteredAvailableApps.map(item => {
+            return (
+              <SimpleItem
+                key={item.id}
+                onClick={addIntegrationClickHandler(item)}
+                title={item.title}
+                icon={item.icon}
+                after={<Button size={0.9}>Add</Button>}
+              />
+            )
+          })}
+        </Unpad>
       </>
     )
   }

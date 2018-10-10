@@ -68,7 +68,7 @@ export class SearchStore {
   }
 
   get isActive() {
-    return this.props.paneManagerStore.activePane === 'home'
+    return this.props.paneManagerStore.activePane === 'search'
   }
 
   hasQuery = () => {
@@ -147,8 +147,6 @@ export class SearchStore {
         searchBy,
       } = this.searchFilterStore
 
-      console.log('activeFilters', activeFilters)
-
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
       const integrationFilters = [
@@ -180,7 +178,6 @@ export class SearchStore {
           take,
         }
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
-        console.log('got next results', searchOpts, nextResults)
         if (!nextResults) {
           return false
         }

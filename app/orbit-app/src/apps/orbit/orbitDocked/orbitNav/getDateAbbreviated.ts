@@ -10,6 +10,7 @@ export const getDateAbbreviated = ({ startDate, endDate }: DateRange) => {
     return 'Any'
   }
   const days = differenceInCalendarDays(new Date(), endDate)
+  console.log('days ago', days, startDate, endDate)
   if (days < 7) {
     return `${Math.round(days / 7)}d`
   }

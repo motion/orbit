@@ -179,7 +179,6 @@ export class OrbitSearchResults extends React.Component<Props> {
             searchStore={searchStore}
             name={name}
           />
-          <SmallVerticalSpace />
         </ItemResolverDecorationContext.Provider>
       </SubPane>
     )

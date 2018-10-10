@@ -24,6 +24,9 @@ export const PopoverState = {
   closeLast: () => {
     last([...openPopovers]).forceClose()
   },
+  closeAll: () => {
+    ;[...openPopovers].map(x => x.forceClose())
+  },
 }
 
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)

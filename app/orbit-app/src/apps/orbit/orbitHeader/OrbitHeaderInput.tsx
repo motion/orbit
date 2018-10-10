@@ -70,7 +70,7 @@ export const OrbitHeaderInput = decorator(
               </ClearButton>
             }
           >
-            Pin
+            Pin to Home
           </Tooltip>
           <ClearButton onClick={queryStore.clearQuery} />
         </Interactive>

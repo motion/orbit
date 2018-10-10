@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
-import { SearchFilterStore } from '../orbitDocked/SearchFilterStore'
+import { view, compose } from '@mcro/black'
 import { PaneManagerStore } from '../PaneManagerStore'
+import { SearchStore } from '../orbitDocked/SearchStore'
 
 const dateBg = UI.color('#ffb049')
 
@@ -30,12 +30,13 @@ const activeThemes = {
 }
 
 const SuggestionBar = view(UI.Row, {
+  flex: 1,
+  height: '100%',
+  overflow: 'hidden',
   position: 'relative',
   // above subpane
   zIndex: 10,
   padding: [0, 15, 0],
-  // have this take up no height because it lets us not have an awkward gap when this is not visible
-  height: 0,
   transition: 'all ease 90ms 40ms',
   opacity: 0,
   pointerEvents: 'none',
@@ -95,7 +96,7 @@ const SuggestionBarFade = view({
 })
 
 type Props = {
-  filterStore?: SearchFilterStore
+  searchStore?: SearchStore
   paneManagerStore: PaneManagerStore
 }
 
@@ -112,7 +113,12 @@ const hideFilterPanes = {
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
-export const OrbitSuggestionBar = view(({ filterStore, paneManagerStore }: Props) => {
+const decorator = compose(
+  view.attach('searchStore', 'paneManagerStore'),
+  view,
+)
+export const OrbitSuggestionBar = decorator(({ searchStore, paneManagerStore }: Props) => {
+  const filterStore = searchStore.searchFilterStore
   filterStore.disabledFilters
   return (
     <SuggestionBar visible={hideFilterPanes[paneManagerStore.activePane] ? false : true}>

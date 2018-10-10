@@ -5,9 +5,9 @@ import * as UI from '@mcro/ui'
 import { RoundButton } from '../../../../views'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { DateRangePicker } from 'react-date-range'
-import { formatDistance, differenceInCalendarDays } from 'date-fns'
 import { SearchStore } from '../SearchStore'
 import { NavButton } from '../../../../views/NavButton'
+import { getDateAbbreviated } from '../orbitNav/getDateAbbreviated'
 
 const SearchFilters = view(UI.Col, {
   padding: [0, 12],
@@ -33,58 +33,6 @@ const ExtraFilters = view(UI.View, {
   },
 })
 
-const simplerDateWords = str => str.replace('about ', '').replace('less than a minute', 'now')
-const monthNames = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
-
-const getSuffix = str => {
-  const m = str.match(/(months|days|weeks)/)
-  return m ? m[0] : null
-}
-
-const getDate = ({ startDate, endDate }: { startDate?: Date; endDate?: Date }) => {
-  if (!startDate) {
-    return null
-  }
-  let startInWords = simplerDateWords(formatDistance(Date.now(), startDate))
-  if (!endDate) {
-    return `${startInWords}`
-  }
-  const oneDayInMinutes = 60 * 24 * 1000
-  if (endDate.getTime() - startDate.getTime() <= oneDayInMinutes) {
-    return startInWords
-  }
-  // if pretty recent we can show week/day level word diff
-  const dayDiff = differenceInCalendarDays(new Date(), endDate)
-  if (dayDiff < 30) {
-    const endInWords = simplerDateWords(formatDistance(Date.now(), endDate))
-    // we can remove the first suffix for brevity
-    if (getSuffix(endInWords) === getSuffix(startInWords)) {
-      startInWords = startInWords.replace(` ${getSuffix(startInWords)}`, '')
-    }
-    return `${startInWords} - ${endInWords}`
-  }
-  // if older we should just show month level words
-  const startMonth = monthNames[startDate.getMonth()]
-  const endMonth = monthNames[endDate.getMonth()]
-  if (startMonth === endMonth) {
-    return startMonth
-  }
-  return `${startMonth.slice(0, 3)} - ${endMonth.slice(0, 3)}}`
-}
-
 type Props = {
   searchStore?: SearchStore
 }
@@ -109,7 +57,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
           {...searchFilterStore.dateHover.props}
           active={searchFilterStore.dateHover.isStuck()}
         >
-          {getDate(searchFilterStore.dateState) || 'Any time'}
+          {getDateAbbreviated(searchFilterStore.dateState) || 'Any time'}
         </NavButton>
         {/* <div style={{ width: 2 }} />
         <FilterButton onClick={searchFilterStore.toggleSortBy}>

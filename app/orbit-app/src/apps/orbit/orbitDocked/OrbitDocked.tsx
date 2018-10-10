@@ -15,7 +15,7 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { Logger } from '@mcro/logger'
-import { OrbitNav } from './orbitHome/OrbitNav'
+import { OrbitNav } from './orbitNav/OrbitNav'
 
 const log = new Logger('OrbitDocked')
 
@@ -82,7 +82,6 @@ class OrbitDockedContents extends React.PureComponent<Props> {
             <Interactive disabled={!/home|search/.test(paneManagerStore.activePane)}>
               <OrbitNav />
             </Interactive>
-
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
             <OrbitSearchResults name="docked-search" />

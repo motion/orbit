@@ -5,9 +5,12 @@ import { SearchStore } from '../SearchStore'
 import { Row, SegmentedRow, Popover, View, Col, Theme, Button } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
-import { OrbitFilters } from './OrbitFilters'
+import { OrbitFilters } from '../orbitHome/OrbitFilters'
 import { RowItem } from '../../orbitHeader/RowItem'
 import { view } from '@mcro/black'
+import { getDateAbbreviated } from './getDateAbbreviated'
+import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
+import { Centered } from '../../../../views/Centered'
 
 @view.attach('paneManagerStore', 'searchStore')
 @view
@@ -19,7 +22,6 @@ export class OrbitNav extends React.Component<{
     const { searchStore } = this.props
     return (
       <View position="relative" zIndex={100}>
-        <div style={{ height: 2 }} />
         <Row position="relative" alignItems="center" padding={[0, 10]}>
           <SegmentedRow>
             <Popover
@@ -28,7 +30,11 @@ export class OrbitNav extends React.Component<{
               openOnHover
               closeOnEsc
               closeOnClickAway
-              target={<NavButton icon="calendar">Any</NavButton>}
+              target={
+                <NavButton icon="calendar">
+                  {getDateAbbreviated(searchStore.searchFilterStore.dateState) || 'Any'}
+                </NavButton>
+              }
               adjust={[190, 0]}
               background
               borderRadius={6}
@@ -60,26 +66,7 @@ export class OrbitNav extends React.Component<{
               </View>
             </Popover>
           </SegmentedRow>
-
-          {/* <Centered>
-            <SegmentedRow>
-              <NavButton
-                onClick={paneManagerStore.activePaneSetter('home')}
-                active={paneManagerStore.activePane === 'home'}
-                icon="home"
-                tooltip="Overview"
-              />
-              <NavButton
-                onClick={paneManagerStore.activePaneSetter('explore')}
-                active={paneManagerStore.activePane === 'explore'}
-                icon="pin"
-                tooltip="Explore"
-              />
-            </SegmentedRow>
-          </Centered> */}
-
-          <View flex={1} />
-
+          <OrbitSuggestionBar />
           <SegmentedRow>
             <NavButton onClick={searchStore.searchFilterStore.toggleSearchBy} width={55}>
               {searchStore.searchFilterStore.searchBy}
@@ -126,7 +113,6 @@ export class OrbitNav extends React.Component<{
             </Popover>
           </SegmentedRow>
         </Row>
-        <div style={{ height: 8 }} />
       </View>
     )
   }

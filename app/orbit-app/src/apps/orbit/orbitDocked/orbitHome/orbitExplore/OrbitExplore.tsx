@@ -38,7 +38,7 @@ class OrbitExploreStore {
   sortOrder = [0, 1, 2, 3, 4, 5, 6]
 
   get isActive() {
-    return this.props.paneManagerStore.activePane === 'explore'
+    return this.props.paneManagerStore.activePane === 'home'
   }
 
   setSelectionHandler = react(

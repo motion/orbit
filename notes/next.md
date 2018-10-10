@@ -1,6 +1,6 @@
+- NOT decentralized to start...
+- it just syncs metadata "ids" and such...
 - One person manages an Orbit
-- They can pin any "search" to home
-- Anyone they invite can pin a result to a search
 
 # Signup / Teams
 

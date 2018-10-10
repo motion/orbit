@@ -69,7 +69,7 @@ const Interactive = view({
 
 @view.attach('paneManagerStore', 'searchStore')
 @view
-class OrbitDockedContents extends React.PureComponent<Props> {
+class OrbitDockedContents extends React.Component<Props> {
   render() {
     const { paneManagerStore } = this.props
     return (

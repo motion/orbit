@@ -330,7 +330,15 @@ export class Popover extends React.PureComponent<PopoverProps> {
     this.close()
   }
 
-  private open() {
+  toggleOpen = () => {
+    if (this.showPopover) {
+      this.forceClose()
+    } else {
+      this.open()
+    }
+  }
+
+  open = () => {
     this.setPosition(() => {
       this.setState({ isOpen: true }, () => {
         if (this.curProps.onOpen) {
@@ -340,7 +348,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     })
   }
 
-  private close = () => {
+  close = () => {
     return new Promise(resolve => {
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {

@@ -11,6 +11,8 @@ import { view } from '@mcro/black'
 import { getDateAbbreviated } from './getDateAbbreviated'
 import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
+import { App } from '@mcro/stores'
+import { reaction } from 'mobx'
 
 @view.attach('paneManagerStore', 'searchStore')
 @view
@@ -18,6 +20,20 @@ export class OrbitNav extends React.Component<{
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
 }> {
+  spaceSwitcherRef = React.createRef<Popover>()
+
+  spaceOpener = reaction(
+    () => App.state.showSpaceSwitcher,
+    () => {
+      console.log(this.spaceSwitcherRef.current)
+      this.spaceSwitcherRef.current.toggleOpen()
+    },
+  )
+
+  componenWillUnmount() {
+    this.spaceOpener()
+  }
+
   render() {
     log(`render orbiut nav....`)
     const { searchStore, paneManagerStore } = this.props
@@ -72,6 +88,7 @@ export class OrbitNav extends React.Component<{
               {searchStore.searchFilterStore.searchBy}
             </NavButton> */}
             <Popover
+              ref={this.spaceSwitcherRef}
               delay={100}
               openOnClick
               openOnHover

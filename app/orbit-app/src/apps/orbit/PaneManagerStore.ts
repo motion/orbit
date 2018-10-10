@@ -161,6 +161,9 @@ export class PaneManagerStore {
       if (active === 'home' && !!App.state.query) {
         active = 'search'
       }
+      if (active === 'search' && !App.state.query) {
+        active = 'home'
+      }
       ensure('changed', active !== this.activePane)
       return active
     },

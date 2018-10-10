@@ -23,6 +23,7 @@ export class OrbitNav extends React.Component<{
         <Row position="relative" alignItems="center" padding={[0, 10]}>
           <SegmentedRow>
             <Popover
+              delay={100}
               openOnClick
               openOnHover
               closeOnEsc
@@ -42,6 +43,7 @@ export class OrbitNav extends React.Component<{
               </View>
             </Popover>
             <Popover
+              delay={100}
               openOnClick
               openOnHover
               background
@@ -83,6 +85,7 @@ export class OrbitNav extends React.Component<{
               {searchStore.searchFilterStore.searchBy}
             </NavButton>
             <Popover
+              delay={100}
               openOnClick
               theme="light"
               width={200}

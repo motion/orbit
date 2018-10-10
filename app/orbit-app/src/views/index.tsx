@@ -44,15 +44,15 @@ export const InputRow = ({
   onChange = null,
   ...props
 }) => (
-    <FormTableRow>
-      <FormTableLabel>
-        <Label>{label}</Label>
-      </FormTableLabel>
-      <FormTableValue>
-        <Input value={value} onChange={e => onChange(e.target.value)} type={type} {...props} />
-      </FormTableValue>
-    </FormTableRow>
-  )
+  <FormTableRow>
+    <FormTableLabel>
+      <Label>{label}</Label>
+    </FormTableLabel>
+    <FormTableValue>
+      <Input value={value} onChange={e => onChange(e.target.value)} type={type} {...props} />
+    </FormTableValue>
+  </FormTableRow>
+)
 
 export const CheckBoxRow = ({
   name = `checkbox-${Math.random()}`,
@@ -60,22 +60,24 @@ export const CheckBoxRow = ({
   checked,
   onChange,
 }) => (
-    <FormTableRow>
-      <FormTableLabel>
-        <Label htmlFor={name}>{children}</Label>
-      </FormTableLabel>
-      <FormTableValue>
-        <input
-          id={name}
-          name={name}
-          checked={checked}
-          onChange={onChange && (e => onChange(e.target.checked))}
-          style={{ margin: `auto 4px` }}
-          type="checkbox"
-        />
-      </FormTableValue>
-    </FormTableRow>
-  )
+  <FormTableRow>
+    <FormTableLabel>
+      <Label htmlFor={name}>{children}</Label>
+    </FormTableLabel>
+    <FormTableValue>
+      <input
+        id={name}
+        name={name}
+        checked={checked}
+        onChange={onChange && (e => onChange(e.target.checked))}
+        style={{ margin: `auto 4px` }}
+        type="checkbox"
+      />
+    </FormTableValue>
+  </FormTableRow>
+)
+
+export const OrbitNavVerticalPad = () => <div style={{ height: 38, pointerEvents: 'none' }} />
 
 export const SuggestionBarVerticalPad = view({
   height: 24,

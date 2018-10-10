@@ -4,11 +4,10 @@ import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { SubPane } from '../../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
-import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../SearchStore'
 import { SelectionStore } from '../SelectionStore'
-import { SuggestionBarVerticalPad, SmallVerticalSpace } from '../../../../views'
+import { SmallVerticalSpace, OrbitNavVerticalPad } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
@@ -157,31 +156,14 @@ const OrbitSearchResultsContents = view(({ name, searchStore, selectionStore }) 
 export class OrbitSearchResults extends React.Component<Props> {
   render() {
     const { searchStore, selectionStore, name } = this.props
-    const hideHeight = searchStore.searchFilterStore.extraFiltersVisible
-      ? 0
-      : searchStore.searchFilterStore.extraFiltersHeight
-    const transform = {
-      y: -hideHeight,
-    }
     return (
       <SubPane
         transition="none"
         paddingLeft={0}
         paddingRight={0}
-        containerStyle={{
-          transition: 'all ease 150ms',
-          transform,
-          height: '100%',
-          flex: 'none',
-        }}
         name="search"
         extraCondition={this.props.searchStore.hasQuery}
-        before={
-          <>
-            <SuggestionBarVerticalPad />
-            <OrbitSearchFilters />
-          </>
-        }
+        before={<OrbitNavVerticalPad />}
         onScrollNearBottom={this.props.searchStore.loadMore}
       >
         <ItemResolverDecorationContext.Provider

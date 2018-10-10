@@ -1,3 +1,4 @@
+import './calendar.css' // theme css file
 import * as React from 'react'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../SearchStore'
@@ -5,7 +6,6 @@ import { Row, SegmentedRow, Popover, View, Col, Theme, Button } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
 import { OrbitFilters } from './OrbitFilters'
-import { Centered } from '../../../../views/Centered'
 import { RowItem } from '../../orbitHeader/RowItem'
 import { view } from '@mcro/black'
 
@@ -16,7 +16,7 @@ export class OrbitNav extends React.Component<{
   searchStore?: SearchStore
 }> {
   render() {
-    const { paneManagerStore, searchStore } = this.props
+    const { searchStore } = this.props
     return (
       <View position="relative" zIndex={100}>
         <div style={{ height: 2 }} />
@@ -61,7 +61,7 @@ export class OrbitNav extends React.Component<{
             </Popover>
           </SegmentedRow>
 
-          <Centered>
+          {/* <Centered>
             <SegmentedRow>
               <NavButton
                 onClick={paneManagerStore.activePaneSetter('home')}
@@ -76,7 +76,7 @@ export class OrbitNav extends React.Component<{
                 tooltip="Explore"
               />
             </SegmentedRow>
-          </Centered>
+          </Centered> */}
 
           <View flex={1} />
 

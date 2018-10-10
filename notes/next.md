@@ -1,3 +1,61 @@
+- One person manages an Orbit
+- They can pin any "search" to home
+- Anyone they invite can pin a result to a search
+
+# Signup / Teams
+
+## Step 1, basic teams
+
+Basically we will have this onboard process:
+
+_Onboarding_
+
+It has the following steps:
+
+1. Add some integrations
+2. It uses those integrations to search for any existing Spaces
+3. If it finds them, it shows you them and lets you click "join"
+4. If you are approved to join them (by being inside an approved integration, say, Slack) then you are let in
+5. Done
+
+Now you will be taken to your home screen. It will show you how to switch spaces (CMD+K to switch easily). By default you are on your personal Space. You can select to go to our space (the Orbit space).
+
+When you do it reads a configuration for that Space and sees which Integrations you should have:
+
+- ['slack/motion-core', 'github/motion', 'drive/motion', ...]
+- if you are missing any of those integrations it shows a banner at the top of the Home area:
+
+"You have 2/5 integrations, please add the rest >>>"
+
+- That links to the Settings > Team pane where it shows apps you "should have" and you can add them.
+
+_Creating a Space_
+
+If you can't join any spaces it will prompt you to create a space. This is the same screen you'd see when creating a space normally through Settings > Team > Create New...
+
+It shows a form:
+
+- "name" input
+- pick a colored Orb icon
+- add some integrations
+- you can choose which integrations are the "authenticator" integrations (Slack, GDrive, Gmail, Github for now...)
+- Create button
+
+Then it can show you a link to invite people, maybe offer to post it in Slack #general if it's slack.
+
+## Step 2, management features
+
+_Pinning_
+
+We can allow people to do two thigns:
+
+1. Pin a search to the "pinned searches"
+2. Pin an item within a search to that search
+
+If they do 1 then that searchs shows up on the pinned list. It will look like a queue much like the old home with the little queues, except they can manage the queues.
+
+If they do 2 it will just show it in the top quick results queue that lives above every search. Eventually we can allow sorting of that as well but for now it will just go to the top of that queue.
+
 # Teams
 
 Teams will need shared config. It will look like this:

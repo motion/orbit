@@ -40,10 +40,10 @@ export class SearchFilterStore /* extends Store */ {
   exclusiveFilters = {}
   // sort by
   sortOptions = ['Relevant', 'Recent']
-  sortBy = this.sortOptions[0]
+  sortBy = this.sortOptions[0] as 'Relevant' | 'Recent'
   // search by
-  searchOptions = ['Topic', 'Thing']
-  searchBy = this.searchOptions[0]
+  searchOptions = ['Bit', 'Topic']
+  searchBy = this.searchOptions[0] as 'Topic' | 'Bit'
 
   dateState: DateSelections = {
     startDate: null,

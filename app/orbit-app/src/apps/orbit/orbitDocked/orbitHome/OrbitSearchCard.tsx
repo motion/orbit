@@ -11,7 +11,6 @@ type Props = {
   model: Bit
   index: number
   query: string
-  offset: number
   searchStore: SearchStore
 }
 

@@ -79,7 +79,7 @@ export class OrbitNav extends React.Component<{
           <View flex={1} />
 
           <SegmentedRow>
-            <NavButton onClick={searchStore.searchFilterStore.toggleSearchBy}>
+            <NavButton onClick={searchStore.searchFilterStore.toggleSearchBy} width={55}>
               {searchStore.searchFilterStore.searchBy}
             </NavButton>
             <Popover

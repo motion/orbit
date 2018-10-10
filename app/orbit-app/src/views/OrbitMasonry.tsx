@@ -6,6 +6,7 @@ import {
   Masonry,
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { OrbitSearchCard } from '../apps/orbit/orbitDocked/orbitHome/OrbitSearchCard'
 
 const middleSpace = 3
 const width = ORBIT_WIDTH
@@ -16,12 +17,19 @@ type Props = {
   items: any[]
   overscanByPixels?: number
   sidePad?: number
+  height?: number
+  offset?: number
+  cardProps?: Object
+  CardView: any
 }
 
 export class OrbitMasonry extends React.Component<Props> {
   static defaultProps = {
     overscanByPixels: 1000,
     sidePad: 6,
+    height: 600,
+    offset: 0,
+    CardView: OrbitSearchCard,
   }
 
   cache = new CellMeasurerCache({
@@ -39,6 +47,7 @@ export class OrbitMasonry extends React.Component<Props> {
 
   cellRenderer = ({ index, key, parent, style }) => {
     const item = this.props.items[index]
+    const { CardView } = this.props
     return (
       <CellMeasurer cache={this.cache} index={index} key={key} parent={parent}>
         <div
@@ -48,7 +57,7 @@ export class OrbitMasonry extends React.Component<Props> {
             paddingRight: style.left === 0 ? 0 : this.props.sidePad,
           }}
         >
-          {item}
+          <CardView index={index + this.props.offset} {...this.props.cardProps} model={item} />
         </div>
       </CellMeasurer>
     )
@@ -61,7 +70,7 @@ export class OrbitMasonry extends React.Component<Props> {
         cellMeasurerCache={this.cache}
         cellPositioner={this.cellPositioner}
         cellRenderer={this.cellRenderer}
-        height={600}
+        height={this.props.height}
         width={width}
         overscanByPixels={this.props.overscanByPixels}
       />

@@ -68,7 +68,7 @@ async function cosalSearch(args: SearchArgs, includeFilters = false): Promise<Bi
 }
 
 async function likeSearch(args: SearchArgs): Promise<BitEntity[]> {
-  if (args.sortBy === 'Topic') {
+  if (args.searchBy === 'Topic') {
     return []
   }
   const searchQuery = getSearchQuery({
@@ -107,8 +107,8 @@ async function doTopicSearch(args: SearchArgs) {
   })
 }
 
-const doSearch = searchCache(async args => {
-  if (args.sortBy == 'Topic') {
+const doSearch = searchCache(async (args: SearchArgs) => {
+  if (args.searchBy == 'Topic') {
     return await doTopicSearch(args)
   }
 

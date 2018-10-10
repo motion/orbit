@@ -30,6 +30,15 @@ const decorator = compose(
   view,
 )
 
+const Interactive = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+  disabled: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
+})
+
 export const OrbitHeaderInput = decorator(
   ({ orbitStore, queryStore, theme, headerStore, searchStore }: Props) => {
     return (
@@ -53,16 +62,18 @@ export const OrbitHeaderInput = decorator(
           onClick={headerStore.onClickInput}
           placeholder={headerStore.placeholder}
         />
-        <Tooltip
-          target={
-            <ClearButton opacity={searchStore.hasQueryVal ? 1 : 0}>
-              <Icon name="pin" size={8} margin="auto" />
-            </ClearButton>
-          }
-        >
-          Pin
-        </Tooltip>
-        <ClearButton onClick={queryStore.clearQuery} opacity={searchStore.hasQueryVal ? 1 : 0} />
+        <Interactive disabled={!searchStore.hasQueryVal}>
+          <Tooltip
+            target={
+              <ClearButton>
+                <Icon name="pin" size={8} margin="auto" />
+              </ClearButton>
+            }
+          >
+            Pin
+          </Tooltip>
+          <ClearButton onClick={queryStore.clearQuery} />
+        </Interactive>
       </View>
     )
   },

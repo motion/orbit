@@ -68,7 +68,7 @@ export class SearchStore {
   }
 
   get isActive() {
-    return this.props.paneManagerStore.activePane === 'home' && this.hasQueryVal
+    return this.props.paneManagerStore.activePane === 'home'
   }
 
   hasQuery = () => {
@@ -87,14 +87,6 @@ export class SearchStore {
       this.searchFilterStore.dateState,
     ],
     async ([query], { sleep, whenChanged, when, setValue }) => {
-      if (!query) {
-        return {
-          query,
-          results: [],
-          finished: true,
-        }
-      }
-
       let results
       let channelResults
       let message
@@ -152,6 +144,7 @@ export class SearchStore {
         activeQuery,
         dateState,
         sortBy,
+        searchBy,
       } = this.searchFilterStore
 
       console.log('activeFilters', activeFilters)
@@ -171,6 +164,7 @@ export class SearchStore {
       const { startDate, endDate } = dateState
       const baseFindOptions = {
         query: activeQuery,
+        searchBy,
         sortBy,
         startDate,
         endDate,

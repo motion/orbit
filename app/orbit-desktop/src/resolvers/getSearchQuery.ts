@@ -55,7 +55,6 @@ export const getSearchQuery = (args: SearchQuery) => {
   // SORT
   if (sortBy) {
     switch (sortBy) {
-      case 'Topic':
       case 'Relevant':
         // TODO: i think it is this by default
         // once we do sprint on better search/hsf5 we can maybe make better

@@ -114,49 +114,24 @@ export class OrbitHeader extends React.Component<
             <OrbitClose onClick={Actions.closeOrbit}>
               <OrbitCloseControl />
             </OrbitClose>
-            <Popover
-              openOnClick
-              adjust={[65, 0]}
-              theme="light"
-              borderRadius={5}
-              width={200}
-              background="#fff"
-              overflow="hidden"
-              target={
-                <Image
-                  src={orbIcon}
-                  width={20}
-                  height={20}
-                  margin={['auto', 10]}
-                  onMouseEnter={headerStore.onHoverIcon}
-                  onMouseLeave={headerStore.onUnHoverIcon}
-                  onClick={headerStore.onClickOrb}
-                  opacity={Desktop.ocrState.paused ? 0.3 : 1}
-                  transform={{
-                    y: -0.5,
-                  }}
-                  {...{
-                    '&:hover': {
-                      opacity: Desktop.ocrState.paused ? 0.6 : 1,
-                    },
-                  }}
-                />
-              }
-            >
-              <Col flex={1}>
-                <RowItem orb="blue" title="Orbit" subtitle="20 people" icon="gear" />
-                <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-                <RowItem orb="grey" title="Me" />
-                <RowItem orb="red" title="discuss-things" />
-
-                <Row margin={5} alignItems="center">
-                  <View flex={1} />
-                  <Theme theme={{ background: '#fff', color: '#444' }}>
-                    <Button icon="add">Create</Button>
-                  </Theme>
-                </Row>
-              </Col>
-            </Popover>
+            <Image
+              src={orbIcon}
+              width={20}
+              height={20}
+              margin={['auto', 10]}
+              onMouseEnter={headerStore.onHoverIcon}
+              onMouseLeave={headerStore.onUnHoverIcon}
+              onClick={headerStore.onClickOrb}
+              opacity={Desktop.ocrState.paused ? 0.3 : 1}
+              transform={{
+                y: -0.5,
+              }}
+              {...{
+                '&:hover': {
+                  opacity: Desktop.ocrState.paused ? 0.6 : 1,
+                },
+              }}
+            />
             <Disable when={paneManagerStore.activePane === 'settings'}>
               <OrbitHeaderInput headerStore={headerStore} theme={theme} />
             </Disable>

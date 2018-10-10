@@ -23,7 +23,7 @@ export const PopoverState = {
   openPopovers,
   closeLast: () => {
     last([...openPopovers]).forceClose()
-  }
+  },
 }
 
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
@@ -398,22 +398,21 @@ export class Popover extends React.PureComponent<PopoverProps> {
       if (open || !showPopover) {
         return
       }
+      if (keepOpenOnClickTarget && this.wasJustClicked) {
+        return
+      }
       // closeOnClickPopover
       if (closeOnClick && this.wasJustClicked) {
+        console.log('close on click')
         this.forceClose()
         e.stopPropagation()
         return
       }
       if (closeOnClickAway && !this.wasJustClicked) {
+        console.log('close on away')
         this.forceClose()
         e.stopPropagation()
         return
-      }
-      // closeOnClickTarget
-      if (!keepOpenOnClickTarget && this.wasJustClicked) {
-        this.setState({ isPinnedOpen: false })
-        this.close()
-        e.stopPropagation()
       }
     })
   }
@@ -710,7 +709,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   delayOpenIfHover = {
     target: null as DebouncedFn,
-    menu: null as DebouncedFn
+    menu: null as DebouncedFn,
   }
 
   private cancelIfWillOpen() {

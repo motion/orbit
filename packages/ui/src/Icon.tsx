@@ -32,7 +32,7 @@ const heightPadding = x => {
   if (Array.isArray(x)) {
     return x[0] + (typeof x[2] === 'number' ? x[2] : x[0])
   }
-  return x
+  return 0
 }
 
 const cache = {}

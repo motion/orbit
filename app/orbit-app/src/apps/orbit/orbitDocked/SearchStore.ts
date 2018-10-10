@@ -104,7 +104,7 @@ export class SearchStore {
       if (isFilteringSlack) {
         channelResults = matchSort(
           query.split(' ')[0],
-          /*this.props.appsStore.services.slack.activeChannels*/[].map(channel => ({
+          /*this.props.appsStore.services.slack.activeChannels*/ [].map(channel => ({
             // todo: broken by umed, please fix me
             id: channel.id,
             title: `#${channel.name}`,
@@ -154,6 +154,8 @@ export class SearchStore {
         sortBy,
       } = this.searchFilterStore
 
+      console.log('activeFilters', activeFilters)
+
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
       const integrationFilters = [
@@ -183,7 +185,6 @@ export class SearchStore {
           skip,
           take,
         }
-        console.log('Send command', searchOpts)
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
         console.log('got next results', searchOpts, nextResults)
         if (!nextResults) {
@@ -237,19 +238,18 @@ export class SearchStore {
   }
 
   quickSearchState = react(
-    () => App.state.query,
+    () => this.activeQuery,
     async (query, { sleep, when }) => {
       if (!query) {
         return {
           query,
-          results: await loadMany(PersonBitModel, { args: { take: 6 } })
+          results: await loadMany(PersonBitModel, { args: { take: 6 } }),
         }
       }
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE * 0.5)
       await when(() => this.nlpStore.nlp.query === query)
       const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
-      console.log('----------', people, query)
       // fuzzy people results
       const peopleRes = await loadMany(PersonBitModel, {
         args: {
@@ -257,13 +257,11 @@ export class SearchStore {
           // @ts-ignore
           where: [...people, ...query.split(' ')].map(name => ({
             name: { $like: `%${name.split(' ').join('%')}%` },
-          }))
+          })),
         },
       })
-      console.log('>>>>>>>>>>>>>', peopleRes)
       // @ts-ignore
       const peopleResUniq = uniqBy(peopleRes, x => x.name)
-      console.log('quick - peopleResUniq', peopleResUniq)
       const results = flatten([
         integrations.map(name => ({ name, icon: name })),
         ...matchSort(searchQuery, peopleResUniq),

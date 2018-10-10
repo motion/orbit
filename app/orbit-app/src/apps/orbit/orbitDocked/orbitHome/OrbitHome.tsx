@@ -14,8 +14,8 @@ import { VerticalSpace } from '../../../../views'
 import { SearchStore } from '../SearchStore'
 import { OrbitSearchMasonry } from './OrbitSearchMasonry'
 import { OrbitSearchQuickResults } from '../orbitSearch/OrbitSearchQuickResults'
-import { OrbitNav } from './OrbitNav';
-import { OrbitExplore } from './orbitExplore/OrbitExplore';
+import { OrbitNav } from './OrbitNav'
+import { OrbitExplore } from './orbitExplore/OrbitExplore'
 
 type Props = {
   name: string
@@ -146,8 +146,8 @@ class OrbitHomeStore {
 const Interactive = view({
   disabled: {
     opacity: 0,
-    pointerEvents: 'none'
-  }
+    pointerEvents: 'none',
+  },
 })
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore', 'appsStore')
@@ -206,7 +206,8 @@ export class OrbitHome extends React.Component<Props> {
           {/* {results[0].name === 'Apps' ? this.renderApps(results[0]) : null} */}
           <Unpad>
             <OrbitSearchQuickResults />
-            <OrbitMasonry
+            <OrbitSearchMasonry />
+            {/* <OrbitMasonry
               items={fakeData.map((item, index) => (
                 <OrbitCard
                   key={index}
@@ -220,7 +221,7 @@ export class OrbitHome extends React.Component<Props> {
                   <Text size={1.2}>{item.topics.join(' ')}</Text>
                 </OrbitCard>
               ))}
-            />
+            /> */}
           </Unpad>
           <VerticalSpace />
         </SubPane>

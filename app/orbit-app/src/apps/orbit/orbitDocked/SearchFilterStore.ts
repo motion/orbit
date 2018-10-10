@@ -38,8 +38,12 @@ export class SearchFilterStore /* extends Store */ {
   extraFiltersVisible = false
   disabledFilters = {}
   exclusiveFilters = {}
-  sortBy = 'Recent'
+  // sort by
   sortOptions = ['Relevant', 'Recent']
+  sortBy = this.sortOptions[0]
+  // search by
+  searchOptions = ['Topic', 'Thing']
+  searchBy = this.searchOptions[0]
 
   dateState: DateSelections = {
     startDate: null,
@@ -254,6 +258,11 @@ export class SearchFilterStore /* extends Store */ {
       ...this.disabledFilters,
       [key]: !this.disabledFilters[key],
     }
+  }
+
+  toggleSearchBy = () => {
+    const cur = this.searchOptions.indexOf(this.searchBy)
+    this.searchBy = this.searchOptions[(cur + 1) % this.searchOptions.length]
   }
 
   toggleSortBy = () => {

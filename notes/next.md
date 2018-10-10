@@ -107,6 +107,8 @@ NEXT
 
 # next
 
+- cmd+z to undo, necessary for suggestions to work otherwise you click one and you cant undo
+- suggestions also don't properly work, click 'status' and it doesnt highlight, you can click status again
 - p2p libs: https://news.ycombinator.com/item?id=18077312 https://github.com/libp2p/js-libp2p
 - could open a special link type: orbit://gD7sadhgasdy78aDT7
 - test if we dont need cloud oauth https://laravel.com/docs/5.6/valet#securing-sites

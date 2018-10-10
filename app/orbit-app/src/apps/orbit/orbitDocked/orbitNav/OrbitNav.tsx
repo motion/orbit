@@ -10,7 +10,6 @@ import { RowItem } from '../../orbitHeader/RowItem'
 import { view } from '@mcro/black'
 import { getDateAbbreviated } from './getDateAbbreviated'
 import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
-import { Centered } from '../../../../views/Centered'
 
 @view.attach('paneManagerStore', 'searchStore')
 @view

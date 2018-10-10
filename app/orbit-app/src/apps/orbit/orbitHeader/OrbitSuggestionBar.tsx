@@ -57,6 +57,7 @@ const HorizontalScroll = view({
   overflowX: 'scroll',
   flex: 1,
   flexFlow: 'row',
+  alignItems: 'center',
   '&::-webkit-scrollbar': {
     display: 'none',
   },

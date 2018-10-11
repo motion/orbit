@@ -6,19 +6,28 @@ import { RowItem } from '../../orbitHeader/RowItem'
 
 type Props = {
   searchStore?: SearchStore
+  store?: OrbitFiltersStore
+}
+
+class OrbitFiltersStore {
+  filterQuery = ''
+  setQuery = e => (this.filterQuery = e.target.value)
 }
 
 const decorate = compose(
+  view.attach({
+    store: OrbitFiltersStore,
+  }),
   view.attach('searchStore'),
   view,
 )
-export const OrbitFilters = decorate(({ searchStore }: Props) => {
+export const OrbitFilters = decorate(({ searchStore, store }: Props) => {
   const { searchFilterStore } = searchStore
-  const hasActiveFilters = !!searchFilterStore.integrationFilters.find(x => x.active)
+  // const hasActiveFilters = !!searchFilterStore.integrationFilters.find(x => x.active)
   return (
     <>
-      <SearchInput />
-      <Row>
+      <SearchInput onChange={store.setQuery} value={store.filterQuery} />
+      <Row flex={1}>
         <Col>
           {searchFilterStore.integrationFilters.length > 1 &&
             searchFilterStore.integrationFilters.map((filter, i) => {
@@ -30,10 +39,9 @@ export const OrbitFilters = decorate(({ searchStore }: Props) => {
                   {...filter.active && {
                     opacity: 1,
                   }}
-                  {...hasActiveFilters &&
-                    !filter.active && {
-                      opacity: 0.5,
-                    }}
+                  {...!filter.active && {
+                    opacity: 0.5,
+                  }}
                   activeStyle={{
                     background: 'transparent',
                   }}
@@ -47,7 +55,7 @@ export const OrbitFilters = decorate(({ searchStore }: Props) => {
               )
             })}
         </Col>
-        <Col>
+        <Col flex={1} overflowY="auto">
           <RowItem title="#status" />
           <RowItem title="#general" />
           <RowItem title="#revolution" />

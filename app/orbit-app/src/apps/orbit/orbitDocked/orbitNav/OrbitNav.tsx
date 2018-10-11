@@ -74,7 +74,7 @@ export class OrbitNav extends React.Component<{
                 </NavButton>
               }
               alignPopover="left"
-              adjust={[200, 0]}
+              adjust={[220, 0]}
               background
               borderRadius={6}
               elevation={4}
@@ -96,12 +96,13 @@ export class OrbitNav extends React.Component<{
               closeOnClickAway
               target={<NavButton icon="funnel" />}
               alignPopover="left"
-              adjust={[30, 0]}
+              adjust={[54, 0]}
               borderRadius={6}
+              overflow="hidden"
               elevation={4}
               theme="light"
             >
-              <View width={250}>
+              <View width={220}>
                 <OrbitFilters />
               </View>
             </Popover>

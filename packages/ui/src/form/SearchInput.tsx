@@ -53,7 +53,7 @@ export const SearchInnerInput = view(TableInput, {
 }))
 
 export const SearchIcon = view(Icon, {
-  margin: [-1, 6, 0],
+  margin: [0, 6, 0],
   minWidth: 16,
 })
 
@@ -77,7 +77,7 @@ export const SearchBox = view(View, {
   },
 }).theme(({ theme }) => ({
   background: theme.background,
-  border: [1, theme.borderColor],
+  border: [1, theme.borderColor.alpha(0.8)],
 }))
 
 export const SearchInput = attachTheme(
@@ -86,23 +86,22 @@ export const SearchInput = attachTheme(
     before = null,
     placeholder = null,
     searchBarProps = null,
-    searchInputProps = null,
     after = null,
     actions = null,
     filters = [] as Filter[],
-    visible = false,
     onClickClear = null,
     focusedToken = null,
     filterProps = null,
     theme = null,
+    value = null,
+    ...props
   }) => (
     <SearchBar position="relative" zIndex="1" key="searchbar" {...searchBarProps}>
       {before}
       <SearchBox width={width} tabIndex={-1}>
         <SearchIcon
           name="ui-1_zoom"
-          // @ts-ignore
-          color={theme.color.alpha(0.5)}
+          color={theme.color ? theme.color.alpha(0.5) : '#555'}
           size={16}
         />
         {filters.map((filter, i) => (
@@ -114,10 +113,11 @@ export const SearchInput = attachTheme(
             {...filterProps}
           />
         ))}
-        <SearchInnerInput placeholder={placeholder} {...searchInputProps} />
+        <SearchInnerInput placeholder={placeholder} {...props} />
         <SearchClearButton
           onClick={onClickClear}
-          visible={visible}
+          visible={value && !!value.length}
+          opacity={1}
           position="relative"
           zIndex={2}
           // weirdly this fixes a strange overlap bug

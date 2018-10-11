@@ -4,13 +4,12 @@ import { PaneManagerStore } from '../../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../../SelectionStore'
 import { AppsStore } from '../../../../AppsStore'
 import { OrbitCarouselSection } from '../OrbitCarouselSection'
-import { OrbitCard } from '../../../../../views/OrbitCard'
 import { observeMany } from '@mcro/model-bridge'
 import { allStreams } from './allStreams'
 import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { pullAll, difference, sortBy } from 'lodash'
+import { pullAll, difference } from 'lodash'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -26,17 +25,19 @@ const rowHeight = (group: SelectionGroup) => cardHeight(group) + TITLE_HEIGHT
 const SortableItem = SortableElement(({ value }: { value: SelectionGroup }) => {
   const { name, items, startIndex } = value
   const width = 180
+  const sectionKey = items.map(x => `${x.id}`).join(' ')
+  console.log('SortableItem', sectionKey)
   return (
     <div style={{ pointerEvents: 'all', height: rowHeight(value) }}>
       <OrbitCarouselSection
-        startIndex={startIndex}
+        key={sectionKey}
+        offset={startIndex}
         items={items}
         categoryName={name}
         cardSpace={6}
         horizontalPadding={12}
         cardHeight={cardHeight(value)}
         cardWidth={width}
-        CardView={OrbitCard}
       />
     </div>
   )
@@ -127,14 +128,16 @@ class OrbitExploreStore {
       )
       // setup stream subscriptions
       for (const { id, name, model, query } of activeStreams) {
-        // add this id of not in sort order
-        if (this.sortOrder.indexOf(+id) === -1) {
-          this.sortOrder.push(+id)
-        }
         // @ts-ignore
         const subscription = observeMany(model, {
           args: query,
         }).subscribe(values => {
+          if (values.length) {
+            // add this id of not in sort order
+            if (this.sortOrder.indexOf(+id) === -1) {
+              this.sortOrder.push(+id)
+            }
+          }
           this.streams = {
             ...this.streams,
             [id]: { values, name },
@@ -184,6 +187,8 @@ export class OrbitExplore extends React.Component<Props> {
         ref={instance => (store.SortableList = instance)}
         items={results}
         onSortEnd={store.onSortEnd}
+        pressDelay={20}
+        distance={10}
       />
     )
   }

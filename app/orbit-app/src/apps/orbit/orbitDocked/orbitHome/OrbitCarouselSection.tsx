@@ -1,17 +1,28 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
-import { SelectableCarousel } from '../../../../components/SelectableCarousel'
+import { view } from '@mcro/black'
+import {
+  SelectableCarousel,
+  SelectableCarouselProps,
+} from '../../../../components/SelectableCarousel'
 import { OrbitSection } from './OrbitSection'
 import { Unpad } from '../../../../views/Unpad'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
+import { SubPaneStore } from '../../SubPaneStore'
 
-const decorator = compose(
-  view.attach('subPaneStore'),
-  view,
-)
+type Props = SelectableCarouselProps & {
+  categoryName?: string
+  margin?: number
+  subPaneStore?: SubPaneStore
+}
 
-export const OrbitCarouselSection = decorator(
-  ({ subPaneStore, startIndex, items, categoryName, cardProps, margin, ...props }) => {
+@view.attach('subPaneStore')
+export class OrbitCarouselSection extends React.Component<Props> {
+  shouldComponentUpdate() {
+    return false
+  }
+
+  render() {
+    const { subPaneStore, offset, items, categoryName, cardProps, margin, ...props } = this.props
     if (!items.length) {
       return null
     }
@@ -20,13 +31,13 @@ export const OrbitCarouselSection = decorator(
       <OrbitSection
         title={categoryName}
         alignItems="center"
-        padding={[startIndex === 0 ? 0 : 2, 0, 0]}
+        padding={[offset === 0 ? 0 : 2, 0, 0]}
         margin={margin || [0, 0, -2]}
       >
         <Unpad>
           <SelectableCarousel
             items={items}
-            offset={startIndex}
+            offset={offset}
             horizontalPadding={10}
             isActiveStore={subPaneStore}
             resetOnInactive
@@ -50,5 +61,5 @@ export const OrbitCarouselSection = decorator(
         </Unpad>
       </OrbitSection>
     )
-  },
-)
+  }
+}

@@ -3,7 +3,6 @@ import { HorizontalScrollRow, HorizontalScrollRowProps } from '../views/Horizont
 import scroll from 'scroll'
 import { OrbitCard } from '../views/OrbitCard'
 import { OrbitItemProps } from '../views/OrbitItemProps'
-import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 
 export type CarouselProps = HorizontalScrollRowProps & {
   CardView?: (props: OrbitItemProps<any>) => JSX.Element
@@ -20,7 +19,7 @@ export type CarouselProps = HorizontalScrollRowProps & {
   className?: string
 }
 
-export class Carousel extends React.Component<CarouselProps> {
+export class Carousel extends React.PureComponent<CarouselProps> {
   static defaultProps = {
     CardView: OrbitCard,
   }

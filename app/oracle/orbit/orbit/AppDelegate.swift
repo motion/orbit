@@ -258,6 +258,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       if theme == "medium" {
         blurryView.material = NSVisualEffectView.Material.mediumLight
       }
+      if theme == "popover" {
+        blurryView.material = NSVisualEffectView.Material.popover
+      }
+      if theme == "appearanceBased" {
+        blurryView.material = NSVisualEffectView.Material.appearanceBased
+      }
+      if #available(OSX 10.14, *) {
+        if theme == "contentBackground" {
+          blurryView.material = NSVisualEffectView.Material.contentBackground
+        }
+        if theme == "appearanceBased" {
+          blurryView.material = NSVisualEffectView.Material.appearanceBased
+        }
+        if theme == "sheet" {
+          blurryView.material = NSVisualEffectView.Material.sheet
+        }
+        if theme == "underPageBackground" {
+          blurryView.material = NSVisualEffectView.Material.underPageBackground
+        }
+        if theme == "toolTip" {
+          blurryView.material = NSVisualEffectView.Material.toolTip
+        }
+        if theme == "fullScreenUI" {
+          blurryView.material = NSVisualEffectView.Material.fullScreenUI
+        }
+        if theme == "sidebar" {
+          blurryView.material = NSVisualEffectView.Material.sidebar
+        }
+      }
     } else {
       // Fallback on earlier versions
     }

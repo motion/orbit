@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { View } from '../blocks/View'
 import { Icon } from '../Icon'
 
-const ClearClickableArea = view({
+const ClearClickableArea = view(View, {
   padding: 5,
   '&:hover > *': {
     backgroundColor: 'rgba(0,0,0,0.45)',
@@ -34,10 +34,14 @@ export const ClearButton = ({
   onMouseEnter = null,
   onMouseLeave = null,
   children = <Icon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
+  opacity = null,
+  hover = null,
   ...props
 }) => (
   <ClearClickableArea
     {...{
+      opacity,
+      '&:hover': hover,
       onClick,
       onHover,
       onMouseDown,

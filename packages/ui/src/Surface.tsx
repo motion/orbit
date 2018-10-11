@@ -91,6 +91,11 @@ const dimStyle = {
   },
 }
 
+const chromelessStyle = {
+  borderColor: 'transparent',
+  background: 'transparent',
+}
+
 const getSegmentRadius = props => {
   // support being inside a segmented list
   let segmentedStyle: any
@@ -138,10 +143,6 @@ const SurfaceFrame = view(View, {
   const hoverIconStyle = {
     color: props.iconHoverColor || themeStyles.colorHover,
   }
-  const chromelessStyle = props.chromeless && {
-    borderColor: 'transparent',
-    background: 'transparent',
-  }
   let surfaceStyles = {
     padding: props.padding,
     margin: props.margin,
@@ -165,7 +166,7 @@ const SurfaceFrame = view(View, {
     ...themeStylesFromProps,
     ...(props.active && { '&:hover': themeStyles['&:active'] }),
     ...propsToTextSize(props),
-    ...chromelessStyle,
+    ...(props.chromeless && chromelessStyle),
     ...props.segmentedStyle,
   }
   return alphaColor(surfaceStyles, props.alpha)
@@ -304,7 +305,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       >
         {noInnerElement ? null : (
           <>
-            {glint ? (
+            {glint && !props.chromeless ? (
               <Glint
                 key={0}
                 size={size}

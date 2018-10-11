@@ -65,7 +65,7 @@ export class OrbitSettingsTeam extends React.Component<{ appsStore?: AppsStore }
             { bg: '#222', color: '#985FC9', name: 'Orbit', active: true },
           ].map(({ bg, color, name, active }, i) => (
             <OrbitSpaceCard key={i} active={active} label={name}>
-              <OrbitOrb bg={bg} color={color} />
+              <OrbitOrb background={bg} color={color} />
             </OrbitSpaceCard>
           ))}
         </HorizontalScroll>

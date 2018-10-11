@@ -1,15 +1,24 @@
 import * as React from 'react'
-import { View } from '@mcro/ui'
+import { View, color as colorize } from '@mcro/ui'
 
-export const OrbitOrb = ({ bg, color }) => (
+export const OrbitOrb = ({ size = 32, background, background2 = null, color }) => (
   <View
-    background={bg}
-    borderRadius={100}
-    width={32}
-    height={32}
+    background={`linear-gradient(20deg, ${colorize(background)}, ${background2 || '#000'})`}
+    borderRadius={size}
+    width={size}
+    height={size}
     alignItems="center"
     justifyContent="center"
   >
-    <View border={[2, color]} borderRadius={100} width={28} height={28} />
+    <View
+      border={[2, color]}
+      borderRadius={size}
+      width={size}
+      height={size}
+      transform={{
+        scale: 0.6,
+      }}
+      margin="auto"
+    />
   </View>
 )

@@ -73,7 +73,7 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
               <Views.VerticalSpace />
 
               <Views.FormRow label="Icon">
-                <OrbitOrb bg="black" color="red" />
+                <OrbitOrb background="black" color="red" />
               </Views.FormRow>
 
               <Views.VerticalSpace />

@@ -85,7 +85,7 @@ class OrbitDockedContents extends React.Component<Props> {
             </Interactive>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
-            <OrbitSearchResults name="docked-search" />
+            <OrbitSearchResults />
             <OrbitSettings name="settings" />
           </div>
         </OrbitDockedInner>

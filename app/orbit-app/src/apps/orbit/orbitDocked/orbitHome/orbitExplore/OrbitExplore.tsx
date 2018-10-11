@@ -51,9 +51,9 @@ class VirtualList extends React.Component<{ items: SelectionGroup[] }> {
       <List
         ref={instance => (this.List = instance)}
         rowHeight={({ index }) => rowHeight(items[index])}
-        rowRenderer={({ index }) => {
+        rowRenderer={({ index, key }) => {
           const group = items[index]
-          return <SortableItem index={index} value={group} />
+          return <SortableItem key={key} index={index} value={group} />
         }}
         rowCount={items.length}
         width={ORBIT_WIDTH}
@@ -187,8 +187,7 @@ export class OrbitExplore extends React.Component<Props> {
         ref={instance => (store.SortableList = instance)}
         items={results}
         onSortEnd={store.onSortEnd}
-        pressDelay={20}
-        distance={10}
+        distance={16}
       />
     )
   }

@@ -132,10 +132,7 @@ export class SearchStore {
 
       // pagination
       let skip = 0
-      const take = 12
-      // initial search results max amt:
-      const takeMax = take
-      const sleepBtwn = 80
+      const take = 18
 
       // query builder pieces
       const {
@@ -190,15 +187,7 @@ export class SearchStore {
       }
 
       // do initial search
-      for (let i = 0; i < takeMax / take; i += 1) {
-        skip = i * take
-        const updated = await updateNextResults(skip)
-        if (!updated) {
-          break
-        }
-        // get next page results
-        await sleep(sleepBtwn)
-      }
+      await updateNextResults(0)
 
       // infinite scroll
       this.loadMoreAmount = 0

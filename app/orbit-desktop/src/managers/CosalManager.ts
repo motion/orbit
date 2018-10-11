@@ -3,12 +3,13 @@ import { BitEntity, SettingEntity } from '@mcro/entities'
 import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { Cosal } from '@mcro/cosal'
-import { chunk } from 'lodash'
+import { chunk, zip, flattenDeep, flatten } from 'lodash'
 
 const log = new Logger('CosalManager')
 
 export class CosalManager {
   cosal: Cosal
+  scanTopicsInt: any
 
   constructor({ cosal }: { cosal: Cosal }) {
     this.cosal = cosal
@@ -20,6 +21,11 @@ export class CosalManager {
 
   start = () => {
     this.scanSinceLast()
+    this.scanTopics()
+  }
+
+  dispose() {
+    clearInterval(this.scanTopicsInt)
   }
 
   private async getLastScan() {
@@ -62,5 +68,37 @@ export class CosalManager {
     const setting = await getGeneralSetting()
     setting.values.cosalIndexUpdatedTo = Date.now()
     await getRepository(SettingEntity).save(setting)
+  }
+
+  scanTopics = () => {
+    this.scanTopicsInt = setInterval(this.doScanTopics, 1000 * 60 * 15)
+  }
+
+  doScanTopics = async () => {
+    console.time('doScanTopics')
+    const topTopics = await this.getGlobalTopTopics()
+    const setting = await getGeneralSetting()
+    setting.values.topTopics = topTopics
+    await getRepository(SettingEntity).save(setting)
+    console.timeEnd('doScanTopics')
+  }
+
+  getGlobalTopTopics = async () => {
+    const totalBits = await getRepository(BitEntity).count()
+    if (!totalBits) {
+      return []
+    }
+    const maxPerGroup = 5000
+    const numScans = Math.ceil(totalBits / maxPerGroup)
+    let allTopics: string[][] = []
+    for (let i = 0; i < numScans; i++) {
+      const bits = await getRepository(BitEntity).find({ take: maxPerGroup, skip: maxPerGroup * i })
+      const bodies = bits.map(bit => `${bit.title} ${bit.body}`).join(' ')
+      const topics = await this.cosal.getTopWords(bodies, { max: 10, sortByWeight: true })
+      // dont flatten
+      allTopics = [...allTopics, topics]
+    }
+    const topTopics = flatten(flatten(zip(allTopics)))
+    return topTopics
   }
 }

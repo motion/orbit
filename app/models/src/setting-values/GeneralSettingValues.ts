@@ -6,4 +6,5 @@ export interface GeneralSettingValues {
   realtimeSearch?: boolean
   openShortcut?: string
   cosalIndexUpdatedTo: number
+  topTopics: string[]
 }

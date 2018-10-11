@@ -29,7 +29,7 @@ export const OrbitFilters = decorate(({ searchStore, store }: Props) => {
   // const hasActiveFilters = !!searchFilterStore.integrationFilters.find(x => x.active)
   return (
     <>
-      <Row height={42} width="100%" alignItems="center" padding={[6, 6, 3, 6]}>
+      <Row height={40} width="100%" alignItems="center" padding={[6, 6, 3, 6]}>
         <SearchInput padding={0} flex={1} onChange={store.setQuery} value={store.filterQuery} />
         {/* TODO once we have some filters toggled we can use this to clear all */}
         {false && <RoundButton icon="furniture_light" />}

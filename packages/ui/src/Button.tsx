@@ -84,7 +84,7 @@ const ButtonInner = ({
   )
 }
 
-export const Button = props => {
+export const Button = (props: ButtonProps) => {
   if (props.acceptsHovered) {
     return (
       <UIContext.Consumer>

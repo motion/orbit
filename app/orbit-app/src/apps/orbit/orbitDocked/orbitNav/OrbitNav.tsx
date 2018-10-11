@@ -57,8 +57,7 @@ export class OrbitNav extends React.Component<{
   }
 
   render() {
-    log(`render orbiut nav....`)
-    const { searchStore, paneManagerStore, queryStore } = this.props
+    const { searchStore, paneManagerStore } = this.props
     return (
       <View position="relative" zIndex={100}>
         <Row position="relative" alignItems="center" padding={[0, 10]}>
@@ -95,13 +94,14 @@ export class OrbitNav extends React.Component<{
               background
               group="filters"
               closeOnClickAway
-              target={<NavButton icon="funnel">All</NavButton>}
+              target={<NavButton icon="funnel" />}
               alignPopover="left"
+              adjust={[30, 0]}
               borderRadius={6}
               elevation={4}
               theme="light"
             >
-              <View padding={10}>
+              <View width={250}>
                 <OrbitFilters />
               </View>
             </Popover>

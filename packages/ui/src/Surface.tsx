@@ -285,7 +285,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       overflow: this.props.overflow,
     } as Partial<SurfaceProps>
     if (sizeLineHeight) {
-      throughProps.lineHeight = `${height + 1}px`
+      throughProps.lineHeight = `${height}px`
     }
     if (noInnerElement) {
       throughProps.tagName = tagName

@@ -50,7 +50,7 @@ export const RowItem = ({
         )}
       </Col>
       {after}
-      {!!icon && <OrbitIcon name={icon} size={14} opacity={0.5} />}
+      {!!icon && <OrbitIcon name={icon} size={14} />}
     </RowItemFrame>
   )
 }

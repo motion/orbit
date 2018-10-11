@@ -9,6 +9,7 @@ import { Color, CSSPropertySet } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
 import { Theme } from '@mcro/gloss'
 import { getTarget } from './helpers/getTarget'
+import { MergeUIContext } from './helpers/contexts'
 
 const ArrowContain = view({
   position: 'absolute',
@@ -899,7 +900,11 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (acceptsHovered) {
       targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = this.showPopover
     }
-    return React.cloneElement(target, targetProps)
+    return (
+      <MergeUIContext value={{ hovered: this.showPopover }}>
+        {React.cloneElement(target, targetProps)}
+      </MergeUIContext>
+    )
   }
 
   closeOthersWithinGroup() {

@@ -5,32 +5,13 @@
  * @format
  */
 
-import { view, on } from '@mcro/black'
+import { on } from '@mcro/black'
 import { Filter, FilterIncludeExclude } from './types'
 import * as React from 'react'
-import { Row } from '../blocks/Row'
-import { TableInput } from './TableInput'
-import { colors } from '../helpers/colors'
-import { View } from '../blocks/View'
-import { Icon } from '../Icon'
-import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
-import { ClearButton } from '../buttons/ClearButton'
-
-const SearchClearButton = view(ClearButton, {
-  position: 'absolute',
-  right: 6,
-  top: '50%',
-  marginTop: -9,
-  opacity: 0,
-  pointerEvents: 'none',
-  visible: {
-    opacity: 1,
-    pointerEvents: 'auto',
-  },
-})
+import { SearchInput } from '../form/SearchInput'
 
 type State = {
   filters: Filter[]
@@ -71,67 +52,9 @@ type Props = {
   before?: React.ReactNode
   after?: React.ReactNode
   theme?: ThemeObject
-  SearchBoxView?: React.ReactInstance
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
-
-const SearchBar = view(Row, {
-  height: '100%',
-  maxHeight: 40,
-  padding: 5,
-  alignItems: 'center',
-})
-
-export const SearchBox = view(View, {
-  position: 'relative',
-  flexFlow: 'row',
-  borderRadius: '999em',
-  height: '100%',
-  flex: 1,
-  alignItems: 'center',
-  paddingLeft: 4,
-  '&:focus-within': {
-    boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
-  },
-}).theme(({ theme }) => ({
-  background: theme.background,
-  border: [1, theme.borderColor],
-}))
-
-export const SearchInput = view(TableInput, {
-  fontWeight: 400,
-  fontSize: 14,
-  padding: 0,
-  paddingBottom: 1, // fixes visual height
-  flexGrow: 1,
-  background: 'transparent',
-  height: '100%',
-  maxWidth: '100%',
-  width: 'calc(100% - 30px)',
-  lineHeight: '100%',
-  marginLeft: 2,
-  '&::-webkit-input-placeholder': {
-    color: colors.placeholder,
-    fontWeight: 300,
-  },
-}).theme(({ focus, theme }) => ({
-  color: theme.color,
-  border: focus ? '1px solid black' : 0,
-  '&::-webkit-input-placeholder': {
-    color: theme.color,
-  },
-}))
-
-export const SearchIcon = view(Icon, {
-  margin: [-1, 6, 0],
-  minWidth: 16,
-})
-
-const Actions = view(Row, {
-  marginLeft: 8,
-  flexShrink: 0,
-})
 
 @attachTheme
 export class Searchable extends React.PureComponent<Props, State> {
@@ -385,71 +308,40 @@ export class Searchable extends React.PureComponent<Props, State> {
       searchInputProps,
       before,
       after,
-      theme,
       width,
-      SearchBoxView = SearchBox,
       children,
     } = this.props
-
-    const searchBar = (
-      <SearchBar position="relative" zIndex="1" key="searchbar" {...searchBarProps}>
-        {before}
-        <SearchBoxView width={width} tabIndex={-1}>
-          <SearchIcon
-            name="ui-1_zoom"
-            // @ts-ignore
-            color={theme.color.alpha(0.5)}
-            size={16}
-          />
-          {this.state.filters.map((filter, i) => (
-            <FilterToken
-              key={`${filter.key}:${filter.type}`}
-              index={i}
-              filter={filter}
-              focused={i === this.state.focusedToken}
-              onFocus={this.onTokenFocus}
-              onDelete={this.removeFilter}
-              onReplace={this.replaceFilter}
-              onBlur={this.onTokenBlur}
-            />
-          ))}
-          <SearchInput
-            placeholder={placeholder}
-            onChange={this.onChangeSearchTerm}
-            value={this.state.searchTerm}
-            forwardRef={this.inputRef}
-            onFocus={this.onInputFocus}
-            onBlur={this.onInputBlur}
-            {...searchInputProps}
-          />
-          <SearchClearButton
-            onClick={this.clear}
-            visible={!!this.state.searchTerm || this.state.filters.length > 0}
-            position="relative"
-            zIndex={2}
-            // weirdly this fixes a strange overlap bug
-            flex={1}
-            marginLeft={5}
-          />
-        </SearchBoxView>
-        {after}
-        {actions != null ? <Actions>{actions}</Actions> : null}
-      </SearchBar>
-    )
-
     return children({
       addFilter: this.addFilter,
       searchTerm: this.state.searchTerm,
-      searchBar: searchBar,
+      searchBar: (
+        <SearchInput
+          placeholder={placeholder}
+          actions={actions}
+          searchBarProps={searchBarProps}
+          before={before}
+          after={after}
+          width={width}
+          visible={!!this.state.searchTerm || this.state.filters.length > 0}
+          onClickClear={this.clear}
+          focusedToken={this.state.focusedToken}
+          filterProps={{
+            onFocus: this.onTokenFocus,
+            onDelete: this.removeFilter,
+            onReplace: this.replaceFilter,
+            onBlur: this.onTokenBlur,
+          }}
+          searchInputProps={{
+            onChange: this.onChangeSearchTerm,
+            value: this.state.searchTerm,
+            forwardRef: this.inputRef,
+            onFocus: this.onInputFocus,
+            onBlur: this.onInputBlur,
+            ...searchInputProps,
+          }}
+        />
+      ),
       filters: this.state.filters,
     })
   }
 }
-
-// export function Searchable<T extends object>(
-//   Component: React.Component<T>,
-// ): React.Component<T & SearchableProps> {
-
-//   // @ts-ignore
-//   return attachTheme(SearchableComponent)
-// }

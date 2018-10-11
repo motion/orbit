@@ -66,6 +66,7 @@ export * from './effects/TiltHoverGlow'
 export * from './effects/Glint'
 
 // form
+export * from './form/SearchInput'
 export * from './form/Input'
 export * from './form/Checkbox'
 export * from './form/Label'

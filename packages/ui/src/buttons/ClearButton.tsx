@@ -33,7 +33,7 @@ export const ClearButton = ({
   onMouseUp = null,
   onMouseEnter = null,
   onMouseLeave = null,
-  children = <Icon name="remove" size={8} margin="auto" />,
+  children = <Icon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
   ...props
 }) => (
   <ClearClickableArea

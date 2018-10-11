@@ -33,7 +33,7 @@ export const SearchInnerInput = view(TableInput, {
   fontSize: 14,
   padding: 0,
   paddingBottom: 1, // fixes visual height
-  flexGrow: 1,
+  flex: 1,
   background: 'transparent',
   height: '100%',
   maxWidth: '100%',
@@ -77,7 +77,7 @@ export const SearchBox = view(View, {
   },
 }).theme(({ theme }) => ({
   background: theme.background,
-  border: [1, theme.borderColor.alpha(0.8)],
+  border: [1, theme.borderColor.alpha(0.5)],
 }))
 
 export const SearchInput = attachTheme(
@@ -94,9 +94,18 @@ export const SearchInput = attachTheme(
     filterProps = null,
     theme = null,
     value = null,
+    flex = null,
+    padding = 5,
     ...props
   }) => (
-    <SearchBar position="relative" zIndex="1" key="searchbar" {...searchBarProps}>
+    <SearchBar
+      position="relative"
+      zIndex="1"
+      key="searchbar"
+      flex={flex}
+      padding={padding}
+      {...searchBarProps}
+    >
       {before}
       <SearchBox width={width} tabIndex={-1}>
         <SearchIcon

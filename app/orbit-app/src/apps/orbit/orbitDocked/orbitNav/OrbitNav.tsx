@@ -102,7 +102,7 @@ export class OrbitNav extends React.Component<{
               elevation={4}
               theme="light"
             >
-              <View width={220}>
+              <View width={220} height={220}>
                 <OrbitFilters />
               </View>
             </Popover>

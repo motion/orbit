@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { UIContext } from './helpers/contexts'
+import { MergeUIContext } from './helpers/contexts'
 import { Color, CSSPropertySet } from '@mcro/css'
 import { Row } from './blocks/Row'
 
@@ -75,14 +75,14 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
             typeof child === 'string' || typeof child === 'number' ? <span>{child}</span> : child
 
           return (
-            <UIContext.Provider key={index} value={this.getContext(index, realChildren.length)}>
+            <MergeUIContext key={index} value={this.getContext(index, realChildren.length)}>
               {itemProps
                 ? React.cloneElement(finalChild, {
                     ...itemProps,
                     ...finalChild.props,
                   }) /* merge child props so they can override */
                 : finalChild}
-            </UIContext.Provider>
+            </MergeUIContext>
           )
         })
         .filter(Boolean)

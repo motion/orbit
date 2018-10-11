@@ -95,6 +95,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   }
 
   componentDidMount() {
+    window.x = this
     if (this.props.scrollingElement) {
       this.resizeObserver.observe(this.props.scrollingElement)
       this.measure()
@@ -152,60 +153,54 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   render() {
     const { scrollToIndex, scrollingElement, searchStore } = this.props
-    console.log('items...', this, scrollingElement, this.state.height)
-    const shouldVirtualize = this.items.length > 10
-    // always render the first 10 items so we can measure and show height accurately
-    const firstItems = this.items.map((item, index) => (
-      <ListItem
-        key={item.id}
-        model={item}
-        index={index}
-        offset={this.props.offset}
-        query={searchStore.activeQuery}
-      />
-    ))
-    if (!this.state.height) {
-      return firstItems
-    }
+    // double render the first few items so we can measure height, but hide them
+    const firstItems = this.items
+      .slice(0, 10)
+      .map((item, index) => (
+        <ListItem
+          key={item.id}
+          model={item}
+          index={index}
+          offset={this.props.offset}
+          query={searchStore.activeQuery}
+        />
+      ))
     return (
       <>
         <div
-          style={
-            shouldVirtualize
-              ? {
-                  opacity: 0,
-                  pointerEvents: 'none',
-                  zIndex: -1,
-                }
-              : null
-          }
+          style={{
+            opacity: 0,
+            pointerEvents: 'none',
+            zIndex: -1,
+          }}
         >
           {firstItems}
         </div>
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            zIndex: 1,
-            pointerEvents: shouldVirtualize ? 'inherit' : 'none',
-          }}
-        >
-          <List
-            ref={this.listRef}
-            deferredMeasurementCache={this.cache}
-            height={this.state.height}
-            width={scrollingElement.clientWidth}
-            rowHeight={this.cache.rowHeight}
-            overscanRowCount={20}
-            rowCount={this.items.length}
-            estimatedRowSize={100}
-            rowRenderer={this.rowRenderer}
-            scrollToIndex={scrollToIndex}
-          />
-        </div>
+        {!!this.state.height && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              zIndex: 1,
+            }}
+          >
+            <List
+              ref={this.listRef}
+              deferredMeasurementCache={this.cache}
+              height={this.state.height}
+              width={scrollingElement.clientWidth}
+              rowHeight={this.cache.rowHeight}
+              overscanRowCount={20}
+              rowCount={this.items.length}
+              estimatedRowSize={100}
+              rowRenderer={this.rowRenderer}
+              scrollToIndex={scrollToIndex}
+            />
+          </div>
+        )}
       </>
     )
   }

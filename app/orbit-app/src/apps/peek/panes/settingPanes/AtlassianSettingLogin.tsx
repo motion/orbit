@@ -115,7 +115,7 @@ export class AtlassianSettingLogin extends React.Component<
           permissions. As always with Orbit, this information is <strong>completely private</strong>{' '}
           to you.
         </Message>
-        <Views.VertSpace />
+        <Views.VerticalSpace />
         <UI.Col margin="auto" width={370}>
           <UI.Col padding={[0, 10]}>
             <Views.Table>
@@ -136,7 +136,7 @@ export class AtlassianSettingLogin extends React.Component<
                 onChange={this.handleChange('password')}
               />
             </Views.Table>
-            <Views.VertSpace />
+            <Views.VerticalSpace />
             <UI.Theme
               theme={{
                 color: '#fff',
@@ -150,7 +150,7 @@ export class AtlassianSettingLogin extends React.Component<
                 </UI.Button>
               )}
             </UI.Theme>
-            <Views.VertSpace />
+            <Views.VerticalSpace />
             {error && <Message>{error}</Message>}
           </UI.Col>
         </UI.Col>

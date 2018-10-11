@@ -7,8 +7,10 @@ import { Grid } from '../../../../views/Grid'
 import { AppsStore } from '../../../AppsStore'
 import { OrbitAppCard } from '../views/OrbitAppCard'
 import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
+import { ToggleApp } from './ToggleApp'
+import { OrbitOrb } from './OrbitOrb'
 
-const OrbitSpaceCard = view({
+const OrbitSpaceCardFrame = view({
   borderRadius: 6,
   padding: [10, 18],
   marginRight: 6,
@@ -23,6 +25,17 @@ const OrbitSpaceCard = view({
   },
 })
 
+const OrbitSpaceCard = ({ children, label, active = false, ...props }) => (
+  <OrbitSpaceCardFrame active={active} {...props}>
+    <View width={32} height={32} alignItems="center" justifyContent="center">
+      {children}
+    </View>
+    <SubTitle size={0.9} fontWeight={500}>
+      {label}
+    </SubTitle>
+  </OrbitSpaceCardFrame>
+)
+
 @view.attach('appsStore')
 @view
 export class OrbitSettingsTeam extends React.Component<{ appsStore?: AppsStore }> {
@@ -32,34 +45,29 @@ export class OrbitSettingsTeam extends React.Component<{ appsStore?: AppsStore }
       <>
         <SubTitle>Spaces</SubTitle>
         <HorizontalScroll height={84}>
+          <ToggleApp
+            appConfig={{
+              type: 'view',
+              id: 'confluence',
+              subType: 'NewOrbitPane',
+              title: 'New Orbit',
+              icon: 'orbit',
+            }}
+          >
+            <OrbitSpaceCard label="New">
+              <View width={32} height={32} alignItems="center" justifyContent="center">
+                <Icon name="add" size={10} />
+              </View>
+            </OrbitSpaceCard>
+          </ToggleApp>
           {[
             { bg: '#333', color: '#fff', name: 'Me' },
             { bg: '#222', color: '#985FC9', name: 'Orbit', active: true },
           ].map(({ bg, color, name, active }, i) => (
-            <OrbitSpaceCard key={i} active={active}>
-              <View
-                background={bg}
-                borderRadius={100}
-                width={32}
-                height={32}
-                alignItems="center"
-                justifyContent="center"
-              >
-                <View border={[2, color]} borderRadius={100} width={28} height={28} />
-              </View>
-              <SubTitle size={0.9} fontWeight={500}>
-                {name}
-              </SubTitle>
+            <OrbitSpaceCard key={i} active={active} label={name}>
+              <OrbitOrb bg={bg} color={color} />
             </OrbitSpaceCard>
           ))}
-          <OrbitSpaceCard>
-            <View width={32} height={32} alignItems="center" justifyContent="center">
-              <Icon name="add" size={10} />
-            </View>
-            <SubTitle size={0.9} fontWeight={500}>
-              New
-            </SubTitle>
-          </OrbitSpaceCard>
         </HorizontalScroll>
         <VerticalSpace />
         <Title>Orbit</Title>

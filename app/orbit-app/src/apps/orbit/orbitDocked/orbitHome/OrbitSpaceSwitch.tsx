@@ -48,7 +48,7 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
         group="filters"
         target={
           <NavButton chromeless {...props}>
-            <OrbitOrb size={16} background={'green'} color="#985FC9" />
+            <OrbitOrb size={16} background={'#DDADDA'} color="#985FC9" />
           </NavButton>
         }
       >

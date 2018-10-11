@@ -7,7 +7,6 @@ import { AppsStore } from '../../../AppsStore'
 import { VerticalSpace, OrbitNavVerticalPad } from '../../../../views'
 import { SearchStore } from '../SearchStore'
 import { OrbitExplore } from './orbitExplore/OrbitExplore'
-import { Orbital } from '../../../../views/Orbital'
 
 type Props = {
   name: string
@@ -29,7 +28,6 @@ export class OrbitHome extends React.Component<Props> {
         paddingLeft={6}
         paddingRight={6}
       >
-        <Orbital key={0} type="isocahedron" />
         <OrbitExplore />
         <VerticalSpace />
       </SubPane>

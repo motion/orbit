@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { attachTheme } from '@mcro/gloss'
 import { Button } from './Button'
 import { Row } from './blocks/Row'
-import { UIContext } from './helpers/contexts'
+import { MergeUIContext } from './helpers/contexts'
 import { Color } from '@mcro/css'
 
 type SegmentedRowProps = {
@@ -109,14 +109,14 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
             typeof child === 'string' || typeof child === 'number' ? <span>{child}</span> : child
 
           return (
-            <UIContext.Provider key={index} value={getContext(index, realChildren.length)}>
+            <MergeUIContext key={index} value={getContext(index, realChildren.length)}>
               {itemProps
                 ? React.cloneElement(finalChild, {
                     ...itemProps,
                     ...finalChild.props,
                   }) /* merge child props so they can override */
                 : finalChild}
-            </UIContext.Provider>
+            </MergeUIContext>
           )
         })
         .filter(Boolean)
@@ -131,7 +131,7 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
           return <div style={{ flex: segmentProps.flex }} />
         }
         return (
-          <UIContext.Provider key={index} value={getContext(index, items.length)}>
+          <MergeUIContext key={index} value={getContext(index, items.length)}>
             <Button
               active={(id || icon) === ACTIVE}
               icon={onlyIcons ? text : icon}
@@ -147,7 +147,7 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
             >
               {(!onlyIcons && text) || segmentProps['children']}
             </Button>
-          </UIContext.Provider>
+          </MergeUIContext>
         )
       })
     }

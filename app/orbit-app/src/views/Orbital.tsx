@@ -5,8 +5,8 @@ import { View } from '@mcro/ui'
 type Props = {
   start?: boolean
   draggable?: boolean
-  width?: 96
-  height?: 96
+  width?: number
+  height?: number
   type?: 'dodecahedron' | 'isocahedron' | 'sphere'
 }
 
@@ -25,8 +25,7 @@ export class Orbital extends React.Component<Props> {
     const { width, height } = this.props
     var w = Math.round(width * 0.92)
     var h = Math.round(height * 0.92)
-    var minWindowSize = Math.min(w * 4, h * 4)
-    var zoom = Math.floor(minWindowSize / w)
+    var zoom = 1
     var pixelRatio = window.devicePixelRatio || 1
     zoom *= pixelRatio
     var canvasWidth = (canvas.width = w * zoom)
@@ -47,6 +46,7 @@ export class Orbital extends React.Component<Props> {
       h,
     })
 
+    this.orbital.show()
     this.handleUpdate()
   }
 

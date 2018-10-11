@@ -981,8 +981,8 @@ export function generateOrbital({ type, canvas, canvasWidth, canvasHeight, w, h,
     dodecahedron: () => {
       var dodecahedron = new Anchor({
         addTo: scene,
-        translate: { x: -4, y: -4 },
-        scale: 0.75,
+        translate: { x: 0, y: 0 },
+        scale: 1,
       })
 
       solids.push(dodecahedron)
@@ -1088,28 +1088,48 @@ export function generateOrbital({ type, canvas, canvasWidth, canvasHeight, w, h,
   var dragStartAngleX, dragStartAngleY
 
   let playing = false
+  let stopped = false
 
   function animate() {
     if (playing) {
       update()
       render()
+    }
+    if (!stopped) {
       requestAnimationFrame(animate)
     }
   }
 
+  const start = () => {
+    shapes[type]()
+    stopped = false
+    playing = true
+    animate()
+  }
+
+  const stop = () => {
+    stopped = true
+  }
+
   return {
-    start: () => {
-      shapes[type]()
-      playing = true
-      animate()
+    show: () => {
+      start()
+      stop()
     },
+    stop,
+    start,
     pause: () => {
       playing = false
     },
     setupDrag: () => {
       return new Dragger({
         startElement: canvas,
+        onPointerUp: () => {
+          playing = false
+        },
         onPointerDown: function() {
+          playing = true
+          animate()
           isRotating = false
           dragStartAngleX = viewRotation.x
           dragStartAngleY = viewRotation.y

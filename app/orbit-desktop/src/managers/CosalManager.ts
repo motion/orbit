@@ -72,6 +72,7 @@ export class CosalManager {
 
   scanTopics = () => {
     this.scanTopicsInt = setInterval(this.doScanTopics, 1000 * 60 * 15)
+    this.doScanTopics()
   }
 
   doScanTopics = async () => {

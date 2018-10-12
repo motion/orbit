@@ -239,11 +239,10 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         const isValid = curID === reactionID
         let changed
         if (!IS_PROD && !preventLog) {
-          console.groupCollapsed(
+          console.log(
             `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
+            ...(changed || []),
           )
-          console.log(...(changed || []))
-          console.groupEnd()
         }
         if (isValid) {
           changed = update(val)

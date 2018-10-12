@@ -230,6 +230,9 @@ export class SearchStore {
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep }) => {
+      if (!query) {
+        return { results: [] }
+      }
       await sleep(TYPE_DEBOUNCE * 0.5)
       return {
         results: await loadMany(SearchPinnedResultModel, { args: { query } }),

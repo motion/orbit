@@ -113,7 +113,9 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   private resizeOnChange = reaction(
     () => this.items && Math.random(),
     () => {
-      this.listRef.forceUpdateGrid()
+      if (this.listRef) {
+        this.listRef.forceUpdateGrid()
+      }
     },
   )
 
@@ -139,7 +141,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     this.resizeOnChange()
   }
 
-  private offset() {
+  private get offset() {
     return this.props.searchStore.quickSearchState.results.length
   }
 

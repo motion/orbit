@@ -880,7 +880,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       return true
     }
     if (typeof open === 'undefined') {
-      return openOnHover && this.isHovered
+      return !!(openOnHover && this.isHovered)
     }
   }
 

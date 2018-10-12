@@ -61,8 +61,15 @@ export class SearchStore {
   setActivePaneToSearchOnIntegrationFilters = react(
     () => this.searchFilterStore.hasIntegrationFilters,
     hasIntegrationFilters => {
-      console.log('hasIntegrationFilters', hasIntegrationFilters)
       ensure('hasIntegrationFilters', hasIntegrationFilters)
+      this.props.paneManagerStore.setActivePane('search')
+    },
+  )
+
+  setActivePaneOnDateFilter = react(
+    () => this.searchFilterStore.hasDateFilter,
+    hasDateFilter => {
+      ensure('hasDateFilter', hasDateFilter)
       this.props.paneManagerStore.setActivePane('search')
     },
   )
@@ -203,6 +210,8 @@ export class SearchStore {
       defaultValue: { results: [], query: '', finished: false },
     },
   )
+
+  hasSearchResults = react(() => !!this.searchState.results.length, _ => _)
 
   // todo
   remoteRowCount = 1000

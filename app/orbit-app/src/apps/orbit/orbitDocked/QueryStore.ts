@@ -30,7 +30,7 @@ export class QueryStore {
     },
   )
 
-  hasQuery = react(() => !!this.query.length)
+  hasQuery = react(() => !!this.query.length, _ => _)
 
   clearQuery = () => {
     this.query = ''

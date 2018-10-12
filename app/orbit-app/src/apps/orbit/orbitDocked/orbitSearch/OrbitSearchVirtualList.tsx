@@ -8,7 +8,7 @@ import {
 } from 'react-virtualized'
 import { SearchStore } from '../SearchStore'
 import { view, ensure } from '@mcro/black'
-import { Text } from '@mcro/ui'
+import { Text, View } from '@mcro/ui'
 import { HighlightText } from '../../../../views/HighlightText'
 import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
@@ -20,6 +20,7 @@ import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contex
 import { SelectionStore } from '../SelectionStore'
 import { OrbitItemSingleton } from '../../../../views/OrbitItemStore'
 import { SubPaneStore } from '../../SubPaneStore'
+import { Banner } from '../../../../views/Banner'
 
 type Props = {
   searchStore?: SearchStore
@@ -275,6 +276,13 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     )
     window.x = this
     trace()
+    if (!this.items.length) {
+      return (
+        <View margin={[10, 0]}>
+          <Banner>No results</Banner>
+        </View>
+      )
+    }
     return (
       <ProvideHighlightsContextWithDefaults
         value={{

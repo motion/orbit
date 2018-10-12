@@ -1,12 +1,18 @@
 import * as React from 'react'
-import { WindowScroller, List, CellMeasurerCache, CellMeasurer } from 'react-virtualized'
+import {
+  WindowScroller,
+  List,
+  CellMeasurerCache,
+  CellMeasurer,
+  InfiniteLoader,
+} from 'react-virtualized'
 import { SearchStore } from '../SearchStore'
 import { view } from '@mcro/black'
 import { Text } from '@mcro/ui'
 import { HighlightText } from '../../../../views/HighlightText'
 import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
-import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
+import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { Bit } from '@mcro/models'
 import { reaction } from 'mobx'
 import { debounce } from 'lodash'
@@ -14,7 +20,6 @@ import { debounce } from 'lodash'
 type Props = {
   scrollingElement: HTMLDivElement
   scrollToIndex?: number
-  offset: number
   searchStore: SearchStore
 }
 
@@ -93,7 +98,7 @@ const SortableList = SortableContainer(VirtualList, { withRef: true })
 @view
 export class OrbitSearchVirtualList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()
-  listRef = React.createRef<List>()
+  listRef: List
 
   state = {
     height: 0,
@@ -107,7 +112,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   private resizeOnChange = reaction(
     () => this.items && Math.random(),
     () => {
-      this.resizeAll()
+      this.listRef.forceUpdateGrid()
     },
   )
 
@@ -122,16 +127,19 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   }
 
   componentDidMount() {
-    window.x = this
     if (this.props.scrollingElement) {
       this.resizeObserver.observe(this.props.scrollingElement)
       this.measure()
     }
   }
 
-  compoenntWillUnmount() {
+  componentWillUnmount() {
     this.resizeObserver.disconnect()
     this.resizeOnChange()
+  }
+
+  private offset() {
+    return this.props.searchStore.quickSearchState.results.length
   }
 
   private measure = () => {
@@ -143,7 +151,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   resizeObserver = new ResizeObserver(this.measure)
 
   private rowRenderer = ({ index, parent, key, style }) => {
-    const { searchStore, offset } = this.props
+    const { searchStore } = this.props
     return (
       <CellMeasurer
         key={key}
@@ -158,7 +166,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
             key={key}
             model={this.items[index]}
             index={index}
-            realIndex={index + offset}
+            realIndex={index + this.offset}
             query={searchStore.activeQuery}
           />
         </div>
@@ -174,13 +182,13 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     console.log('resizing all...')
     this.shouldResizeAll = false
     this.cache.clearAll()
-    if (this.listRef.current) {
-      this.listRef.current.recomputeRowHeights()
+    if (this.listRef) {
+      this.listRef.recomputeRowHeights()
     }
   })
 
   render() {
-    const { scrollToIndex, scrollingElement, searchStore, offset } = this.props
+    const { scrollToIndex, scrollingElement, searchStore } = this.props
     // double render the first few items so we can measure height, but hide them
     const firstItems = this.items
       .slice(0, 10)
@@ -188,7 +196,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
         <ListItem
           key={item.id}
           model={item}
-          realIndex={index + offset}
+          realIndex={index + this.offset}
           query={searchStore.activeQuery}
         />
       ))
@@ -214,20 +222,35 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
               zIndex: 1,
             }}
           >
-            <SortableList
-              forwardRef={this.listRef}
-              items={this.items}
-              deferredMeasurementCache={this.cache}
-              height={this.state.height}
-              width={scrollingElement.clientWidth}
-              rowHeight={this.cache.rowHeight}
-              overscanRowCount={20}
-              rowCount={this.items.length}
-              estimatedRowSize={100}
-              rowRenderer={this.rowRenderer}
-              scrollToIndex={scrollToIndex}
-              distance={20}
-            />
+            <InfiniteLoader
+              isRowLoaded={searchStore.isRowLoaded}
+              loadMoreRows={searchStore.loadMore}
+              rowCount={searchStore.remoteRowCount}
+            >
+              {({ onRowsRendered, registerChild }) => (
+                <SortableList
+                  forwardRef={ref => {
+                    if (ref) {
+                      console.log('loading listRef', ref)
+                      registerChild(ref)
+                      this.listRef = ref
+                    }
+                  }}
+                  items={this.items}
+                  deferredMeasurementCache={this.cache}
+                  height={this.state.height}
+                  width={scrollingElement.clientWidth}
+                  rowHeight={this.cache.rowHeight}
+                  overscanRowCount={20}
+                  rowCount={this.items.length}
+                  estimatedRowSize={100}
+                  rowRenderer={this.rowRenderer}
+                  scrollToIndex={scrollToIndex}
+                  distance={20}
+                  onRowsRendered={onRowsRendered}
+                />
+              )}
+            </InfiniteLoader>
           </div>
         )}
       </>

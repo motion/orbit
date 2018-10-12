@@ -43,7 +43,6 @@ const OrbitSearchResultsContents = decorator(
           <OrbitSearchVirtualList
             searchStore={searchStore}
             scrollingElement={subPaneStore.paneNode}
-            offset={searchStore.quickSearchState.results.length}
           />
         </OrbitSearchResultsFrame>
       </>

@@ -22,7 +22,7 @@ export class SearchStore {
     queryStore: QueryStore
   }
 
-  loadMoreAmount = 0
+  nextRows = { startIndex: 0, endIndex: 0 }
   curFindOptions = null
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore({
@@ -168,11 +168,12 @@ export class SearchStore {
         locationFilters,
       }
 
-      const updateNextResults = async skip => {
+      const updateNextResults = async ({ startIndex, endIndex }) => {
+        console.log('loading rows from', startIndex, endIndex)
         const searchOpts = {
           ...baseFindOptions,
-          skip,
-          take,
+          skip: startIndex,
+          take: Math.max(0, endIndex - startIndex),
         }
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
         if (!nextResults) {
@@ -187,15 +188,15 @@ export class SearchStore {
       }
 
       // do initial search
-      await updateNextResults(0)
+      await updateNextResults({ startIndex: 0, endIndex: take })
 
       // infinite scroll
-      this.loadMoreAmount = 0
+      this.nextRows = null
       while (true) {
         // wait for load more event
-        await whenChanged(() => this.loadMoreAmount)
+        await whenChanged(() => this.nextRows)
         skip += take
-        const updated = await updateNextResults(skip)
+        const updated = await updateNextResults(this.nextRows)
         if (!updated) {
           break
         }
@@ -213,8 +214,15 @@ export class SearchStore {
     },
   )
 
-  loadMore = () => {
-    this.loadMoreAmount++
+  // todo
+  remoteRowCount = 1000
+
+  loadMore = ({ startIndex, endIndex }) => {
+    this.nextRows = { startIndex, endIndex }
+  }
+
+  isRowLoaded = ({ index }) => {
+    return index < this.searchState.results.length
   }
 
   quickSearchState = react(

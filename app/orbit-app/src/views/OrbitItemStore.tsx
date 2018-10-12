@@ -121,14 +121,14 @@ export class OrbitItemStore {
       return isPaneActive && nextIsSelected
     },
     async (nextIsSelected, { sleep }) => {
-      const { preventAutoSelect, subPaneStore } = this.props
+      const { preventAutoSelect, scrollIntoView } = this.props
       console.log(nextIsSelected, this.isSelected, preventAutoSelect, this.target)
       ensure('new index', nextIsSelected !== this.isSelected)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {
-        if (subPaneStore) {
+        if (scrollIntoView) {
           if (!this.didClick) {
-            subPaneStore.scrollIntoView(this.cardWrapRef)
+            scrollIntoView(this.realIndex, this.cardWrapRef)
           }
         }
         ensure('target', !!this.target)

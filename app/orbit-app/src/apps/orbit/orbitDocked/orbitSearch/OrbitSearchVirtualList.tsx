@@ -130,6 +130,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   state = {
     height: 0,
+    isSorting: false,
   }
 
   private shouldResizeAll = false
@@ -194,11 +195,12 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   // @ts-ignore
   resizeObserver = new ResizeObserver(this.measure)
 
-  private rowRenderer = ({ index, parent, key, style }) => {
+  private rowRenderer = ({ index, parent, style }) => {
     const { searchStore } = this.props
+    const model = this.items[index]
     return (
       <CellMeasurer
-        key={key}
+        key={`${model.id}`}
         cache={this.cache}
         columnIndex={0}
         parent={parent}
@@ -207,8 +209,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
       >
         <div style={style}>
           <SortableListItem
-            key={key}
-            model={this.items[index]}
+            model={model}
             index={index}
             realIndex={index + this.offset}
             query={searchStore.activeQuery}
@@ -231,6 +232,14 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     }
   })
 
+  handleSortEnd = () => {
+    this.setState({ isSorting: false })
+  }
+
+  handleSortStart = () => {
+    this.setState({ isSorting: true })
+  }
+
   render() {
     const { scrollingElement, searchStore } = this.props
     log(`render OrbitSearchVirtualList`)
@@ -249,6 +258,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
               bottom: 0,
               left: 0,
               zIndex: 1,
+              userSelect: this.state.isSorting ? 'none' : 'inherit',
             }}
           >
             <InfiniteLoader
@@ -276,6 +286,8 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                   rowRenderer={this.rowRenderer}
                   distance={20}
                   onRowsRendered={onRowsRendered}
+                  onSortStart={this.handleSortStart}
+                  onSortEnd={this.handleSortEnd}
                 />
               )}
             </InfiniteLoader>

@@ -4,6 +4,11 @@ import { OrbitItemProps } from './OrbitItemProps'
 import { ResolvedItem } from '../components/ItemResolver'
 import { Actions } from '../actions/Actions'
 
+// TEMP i dont want to write the three level hoist to make this work quite yet
+export const OrbitItemSingleton = {
+  lastClick: Date.now(),
+}
+
 export class OrbitItemStore {
   props: OrbitItemProps<any>
   resolvedItem: ResolvedItem = null
@@ -38,6 +43,7 @@ export class OrbitItemStore {
       e.stopPropagation()
     }
     this.clickAt = Date.now()
+    OrbitItemSingleton.lastClick = this.clickAt
     if (this.props.onClick) {
       this.props.onClick(e, this.cardWrapRef)
       return

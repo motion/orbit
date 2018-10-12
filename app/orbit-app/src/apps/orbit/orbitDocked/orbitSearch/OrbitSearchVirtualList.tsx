@@ -7,7 +7,7 @@ import {
   InfiniteLoader,
 } from 'react-virtualized'
 import { SearchStore } from '../SearchStore'
-import { view } from '@mcro/black'
+import { view, ensure } from '@mcro/black'
 import { Text } from '@mcro/ui'
 import { HighlightText } from '../../../../views/HighlightText'
 import { OrbitListItem } from '../../../../views/OrbitListItem'
@@ -18,6 +18,7 @@ import { reaction } from 'mobx'
 import { debounce } from 'lodash'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../SelectionStore'
+import { OrbitItemSingleton } from '../../../../views/OrbitItemStore'
 
 type Props = {
   scrollingElement: HTMLDivElement
@@ -144,8 +145,9 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   private scrollToRow = reaction(
     () => this.props.selectionStore.activeIndex,
     index => {
+      ensure('clicked recently', Date.now() - OrbitItemSingleton.lastClick < 50)
       if (this.listRef) {
-        this.listRef.scrollToRow(index)
+        this.listRef.scrollToRow(index - this.offset)
       }
     },
   )

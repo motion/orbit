@@ -11,6 +11,7 @@ import { BORDER_RADIUS } from '../../constants'
 import { onlyUpdateOnChanged } from '../../helpers/onlyUpdateOnChanged'
 
 export type SubPaneProps = CSSPropertySet & {
+  preventScroll?: boolean
   store?: SubPaneStore
   style?: Object
   after?: React.ReactNode
@@ -50,6 +51,9 @@ const Pane = view(UI.View, {
     '& > *': {
       pointerEvents: 'auto',
     },
+  },
+  preventScroll: {
+    overflowY: 'hidden',
   },
 }).theme(({ isLeft, isActive }) => ({
   opacity: isActive ? 1 : 0,
@@ -93,6 +97,7 @@ export class SubPane extends React.Component<SubPaneProps> {
       name,
       before,
       containerStyle,
+      preventScroll,
       ...props
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
@@ -107,6 +112,7 @@ export class SubPane extends React.Component<SubPaneProps> {
             style={style}
             height={subPaneStore.contentHeightLimited}
             forwardRef={subPaneStore.paneRef}
+            preventScroll={preventScroll}
             {...props}
           >
             <PaneContentInner>

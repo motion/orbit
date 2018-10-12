@@ -1,6 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import { PersonBitModel, SearchResultModel } from '@mcro/models'
+import { PersonBitModel, SearchResultModel, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { flatten, uniqBy } from 'lodash'
 import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
@@ -86,42 +86,11 @@ export class SearchStore {
       this.searchFilterStore.sortBy,
       this.searchFilterStore.dateState,
     ],
-    async ([query], { sleep, whenChanged, when, setValue }) => {
-      let results
-      let channelResults
-      let message
-      // do stuff to prepare for getting results...
-      const isFilteringSlack = query[0] === '#'
-      const isFilteringChannel = isFilteringSlack && query.indexOf(' ') === -1
-      if (isFilteringSlack) {
-        channelResults = matchSort(
-          query.split(' ')[0],
-          /*this.props.appsStore.services.slack.activeChannels*/ [].map(channel => ({
-            // todo: broken by umed, please fix me
-            id: channel.id,
-            title: `#${channel.name}`,
-            icon: 'slack',
-          })),
-        )
-      }
-      if (isFilteringSlack && !isFilteringChannel) {
-        message = `Searching ${channelResults[0].title}`
-      }
-      // filtered search
-      if (isFilteringChannel /* && this.props.appsStore.services.slack*/) {
-        // todo: broken by umed, please fix me
-        message = 'SPACE to search selected channel'
-        results = channelResults
-        return {
-          query,
-          message,
-          results,
-        }
-      }
-
-      // regular search
-
-      results = []
+    async (
+      [query],
+      { sleep, whenChanged, when, setValue },
+    ): Promise<{ results: Bit[]; finished?: boolean; query: string }> => {
+      let results = []
       // if typing, wait a bit
       if (this.searchState.query !== query) {
         // debounce a little for fast typer
@@ -131,7 +100,6 @@ export class SearchStore {
       }
 
       // pagination
-      let skip = 0
       const take = 18
 
       // query builder pieces
@@ -183,6 +151,7 @@ export class SearchStore {
         setValue({
           results,
           query,
+          finished: false,
         })
         return true
       }
@@ -195,13 +164,11 @@ export class SearchStore {
       while (true) {
         // wait for load more event
         await whenChanged(() => this.nextRows)
-        skip += take
         const updated = await updateNextResults(this.nextRows)
         if (!updated) {
           break
         }
       }
-
       // finished
       return {
         query,

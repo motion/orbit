@@ -4,15 +4,14 @@ import { View, Row, Col, Text } from '@mcro/ui'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 
 const RowItemFrame = view(Row, {
-  minHeight: 30,
-  padding: [4, 8],
+  padding: [2, 8],
   alignItems: 'center',
-}).theme(({ hover }) => ({
+}).theme(({ hover, theme }) => ({
   '&:hover':
     hover === false
       ? null
       : {
-          background: '#f2f2f2',
+          background: theme.background,
         },
 }))
 
@@ -27,7 +26,7 @@ export const RowItem = ({
   ...props
 }) => {
   return (
-    <RowItemFrame padding={subtitle ? leftPad : [4, leftPad]} {...props}>
+    <RowItemFrame padding={subtitle ? leftPad : [2, leftPad]} {...props}>
       {!!orb && (
         <View
           borderRadius={100}

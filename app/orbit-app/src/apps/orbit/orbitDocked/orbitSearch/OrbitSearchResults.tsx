@@ -63,7 +63,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         name="search"
         extraCondition={this.props.searchStore.hasQuery}
         before={<OrbitNavVerticalPad />}
-        unScrollable
+        preventScroll
       >
         <ItemResolverDecorationContext.Provider
           value={{

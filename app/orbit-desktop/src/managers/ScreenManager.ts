@@ -38,7 +38,7 @@ export class ScreenManager {
   }
 
   updateTheme = react(
-    () => (App.state.darkTheme ? 'dark' : 'light'),
+    () => (App.state.darkTheme ? 'ultra' : 'light'),
     async (theme, { when }) => {
       await when(() => this.isStarted)
       this.oracle.themeWindow(theme)

@@ -55,7 +55,7 @@ const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]
 
 type ListItemProps = {
   model: Bit
-  query: string
+  query?: string
   style?: Object
   cache?: any
   parent?: any
@@ -84,6 +84,7 @@ const ListItem = ({ model, realIndex, query, ignoreSelection }: ListItemProps) =
       overflow="hidden"
       extraProps={{
         minimal: true,
+        preventSelect: true,
       }}
       ignoreSelection={ignoreSelection}
     >
@@ -101,7 +102,7 @@ class VirtualList extends React.Component<any> {
 const SortableListItem = SortableElement(ListItem)
 const SortableList = SortableContainer(VirtualList, { withRef: true })
 
-const FirstItems = ({ items, offset, searchStore }) => {
+const FirstItems = ({ items, offset }) => {
   return (
     <div
       style={{
@@ -111,13 +112,7 @@ const FirstItems = ({ items, offset, searchStore }) => {
       }}
     >
       {items.slice(0, 10).map((item, index) => (
-        <ListItem
-          key={item.id}
-          model={item}
-          realIndex={index + offset}
-          query={searchStore.activeQuery}
-          ignoreSelection
-        />
+        <ListItem key={item.id} model={item} realIndex={index + offset} ignoreSelection />
       ))}
     </div>
   )
@@ -212,7 +207,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
             model={model}
             index={index}
             realIndex={index + this.offset}
-            query={searchStore.activeQuery}
+            query={searchStore.searchState.query}
           />
         </div>
       </CellMeasurer>
@@ -242,13 +237,17 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   render() {
     const { scrollingElement, searchStore } = this.props
-    log(`render OrbitSearchVirtualList`)
+    log(`render OrbitSearchVirtualList ${searchStore.searchState.query}`)
     return (
       <ProvideHighlightsContextWithDefaults
-        value={{ words: searchStore.activeQuery.split(' '), maxChars: 500, maxSurroundChars: 80 }}
+        value={{
+          words: [searchStore.searchState.query.split(' ')],
+          maxChars: 500,
+          maxSurroundChars: 80,
+        }}
       >
         {/* double render the first few items so we can measure height, but hide them */}
-        <FirstItems items={this.items} offset={this.offset} searchStore={searchStore} />
+        <FirstItems items={this.items} offset={this.offset} />
         {!!this.state.height && (
           <div
             style={{
@@ -258,7 +257,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
               bottom: 0,
               left: 0,
               zIndex: 1,
-              userSelect: this.state.isSorting ? 'none' : 'inherit',
             }}
           >
             <InfiniteLoader
@@ -284,10 +282,12 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                   rowCount={this.items.length}
                   estimatedRowSize={100}
                   rowRenderer={this.rowRenderer}
-                  distance={20}
+                  pressDelay={40}
+                  pressThreshold={10}
                   onRowsRendered={onRowsRendered}
                   onSortStart={this.handleSortStart}
                   onSortEnd={this.handleSortEnd}
+                  lockAxis="y"
                 />
               )}
             </InfiniteLoader>

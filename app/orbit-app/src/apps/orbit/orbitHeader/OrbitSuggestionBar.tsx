@@ -63,7 +63,7 @@ const suggestionTheme = theme => ({
 const SuggestionButton = props => (
   <UI.Button
     glint={false}
-    size={0.9}
+    size={0.95}
     sizeRadius={0}
     sizeHeight={0.8}
     sizePadding={0.3}
@@ -105,17 +105,17 @@ const decorator = compose(
 export const OrbitSuggestionBar = decorator(({ searchStore }: Props) => {
   const filterStore = searchStore.searchFilterStore
   const dateFilter = getDateAbbreviated(searchStore.searchFilterStore.dateState)
-  const hasTextualDateFilter = filterStore.allFilters.findIndex(x => x.type === 'date') > -1
+  const hasTextualDateFilter = !!filterStore.activeDateFilters.length
   filterStore.disabledFilters
   return (
     <SuggestionBar visible>
-      <HorizontalScroll height={28}>
+      <HorizontalScroll height={25}>
         {!!dateFilter &&
           !hasTextualDateFilter && (
             <SuggestionButton
               onClick={filterStore.clearDate}
               opacity={1}
-              borderBottom={[2, getBorderColor({ type: 'date' })]}
+              borderBottom={[2, activeThemes.date.borderColor]}
             >
               {dateFilter}
             </SuggestionButton>

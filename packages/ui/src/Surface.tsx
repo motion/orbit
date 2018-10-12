@@ -228,6 +228,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,
     size: 1,
+    alignItems: 'center',
   }
 
   static contextTypes = {
@@ -265,6 +266,8 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       padding,
       margin,
       className,
+      alignItems,
+      justifyContent,
       ...props
     } = this.props
     const segmentedStyle = getSegmentRadius(this.props)
@@ -272,6 +275,8 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
     const stringIcon = typeof icon === 'string'
     // goes to both
     const throughProps = {
+      alignItems,
+      justifyContent,
       theme: selectedTheme,
       sizeIcon: this.props.sizeIcon,
       iconSize: this.props.iconSize,

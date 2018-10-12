@@ -38,11 +38,11 @@ export class SearchFilterStore /* extends Store */ {
   disabledFilters = {}
   exclusiveFilters = {}
   // sort by
-  sortOptions = ['Relevant', 'Recent']
-  sortBy = this.sortOptions[0] as 'Relevant' | 'Recent'
+  sortOptions = ['Relevant', 'Recent'] as ('Relevant' | 'Recent')[]
+  sortBy = this.sortOptions[0]
   // search by
-  searchOptions = ['Bit', 'Topic']
-  searchBy = this.searchOptions[0] as 'Topic' | 'Bit'
+  searchOptions = ['Bit', 'Topic'] as ('Topic' | 'Bit')[]
+  searchBy = this.searchOptions[0]
 
   dateState: DateSelections = {
     startDate: null,
@@ -63,6 +63,10 @@ export class SearchFilterStore /* extends Store */ {
 
   setExtraFiltersVisible = target => {
     this.extraFiltersVisible = !!target
+  }
+
+  clearDate = () => {
+    this.dateState = { startDate: null, endDate: null }
   }
 
   get extraHeight() {

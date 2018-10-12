@@ -20,6 +20,7 @@ import {
   SettingRemoveCommand,
   SlackChannelModel,
   SlackSettingBlacklistCommand,
+  SearchPinnedResultModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -47,6 +48,7 @@ import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
+import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 
 const log = new Logger('desktop')
 
@@ -195,6 +197,7 @@ export class Root {
         SearchResultModel,
         SearchTopicsModel,
         SearchLocationsModel,
+        SearchPinnedResultModel,
       ],
       commands: [
         SettingRemoveCommand,
@@ -222,6 +225,7 @@ export class Root {
         getSearchResolver(this.cosal),
         getSearchTopicsResolver(this.cosal),
         SearchLocationsResolver,
+        SearchPinnedResolver,
       ],
     })
     this.mediatorServer.bootstrap()

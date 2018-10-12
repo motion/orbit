@@ -1,3 +1,10 @@
+NATE:
+
+- quick search results
+- pin sprint:
+  - no sorting on actual search results
+  - "pin" icon on search results
+
 UMED:
 
 - finish web crawler

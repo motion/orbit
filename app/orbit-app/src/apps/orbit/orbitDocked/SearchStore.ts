@@ -2,8 +2,7 @@ import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { PersonBitModel, SearchResultModel, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { flatten, uniqBy } from 'lodash'
-import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
+import { uniqBy } from 'lodash'
 import { AppsStore } from '../../AppsStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { NLPStore } from './NLPStore'
@@ -228,6 +227,22 @@ export class SearchStore {
     return find.index < this.searchState.results.length
   }
 
+  getQuickResults = async (query: string, people: string[]) => {
+    // fuzzy people results
+    const where = [...people, ...query.split(' ')].map(name => ({
+      name: { $like: `%${name.split(' ').join('%')}%` },
+    }))
+    const peopleResults = await loadMany(PersonBitModel, {
+      args: {
+        take: 6,
+        // @ts-ignore
+        where,
+      },
+    })
+    const peopleResultsUniq = uniqBy(peopleResults, x => x['name'])
+    return peopleResultsUniq
+  }
+
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep, when }) => {
@@ -239,24 +254,13 @@ export class SearchStore {
       }
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE * 0.5)
+      // ...but it still waits for nlp to finish
       await when(() => this.nlpStore.nlp.query === query)
-      const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
-      // fuzzy people results
-      const peopleRes = await loadMany(PersonBitModel, {
-        args: {
-          take: 6,
-          // @ts-ignore
-          where: [...people, ...query.split(' ')].map(name => ({
-            name: { $like: `%${name.split(' ').join('%')}%` },
-          })),
-        },
-      })
-      // @ts-ignore
-      const peopleResUniq = uniqBy(peopleRes, x => x.name)
-      const results = flatten([
-        integrations.map(name => ({ name, icon: name })),
-        ...matchSort(searchQuery, peopleResUniq),
-      ]).filter(Boolean)
+      // get segments without the filters
+      const { activeQuery } = this.searchFilterStore
+      // and some other stuff
+      const { people } = this.nlpStore.nlp
+      const results = await this.getQuickResults(activeQuery, people)
       return {
         query,
         results,

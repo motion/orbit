@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { SearchStore } from '../SearchStore'
-import { Row } from '@mcro/ui'
-import { RowItem } from '../../orbitHeader/RowItem'
+import { Row, Button } from '@mcro/ui'
+import { OrbitIcon } from '../../../../views/OrbitIcon'
 
 type Props = {
   searchStore?: SearchStore
@@ -22,9 +22,12 @@ export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {
       {searchFilterStore.integrationFilters.length > 1 &&
         searchFilterStore.integrationFilters.map((filter, i) => {
           return (
-            <RowItem
+            <Button
               key={`${filter.icon}${i}`}
-              icon={filter.icon}
+              chromeless
+              size={0.9}
+              sizePadding={0.8}
+              active={filter.active}
               onClick={searchFilterStore.integrationFilterToggler(filter)}
               {...filter.active && {
                 opacity: 1,
@@ -32,16 +35,15 @@ export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {
               {...!filter.active && {
                 opacity: 0.5,
               }}
-              activeStyle={{
-                background: 'transparent',
-              }}
               hoverStyle={{
-                filter: 'none',
                 opacity: filter.active ? 1 : 0.75,
               }}
+              activeStyle={{
+                opacity: 1,
+              }}
             >
-              {filter.name}
-            </RowItem>
+              <OrbitIcon name={filter.icon} size={18} />
+            </Button>
           )
         })}
     </Row>

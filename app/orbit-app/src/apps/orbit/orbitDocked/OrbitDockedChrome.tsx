@@ -58,7 +58,7 @@ const Background = view({
   transition: 'all ease 500ms',
 }).theme(({ theme, isTransparent, moreOpaque }) => {
   const isDark = theme.background.isDark()
-  const darkBg = isTransparent ? (moreOpaque ? [10, 10, 10, 0.58] : [0, 0, 0, 0.49]) : [40, 40, 40]
+  const darkBg = isTransparent ? (moreOpaque ? [10, 10, 10, 0.25] : [0, 0, 0, 0]) : [40, 40, 40]
   const lightBg = isTransparent ? [110, 110, 110, moreOpaque ? 0.8 : 0.65] : [255, 255, 255]
   return {
     background: isDark ? darkBg : lightBg,
@@ -66,7 +66,6 @@ const Background = view({
 })
 
 const OrbitChrome = view(({ moreOpaque, isUpper = false }) => {
-  console.log(123)
   return (
     <>
       <Border />

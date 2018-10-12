@@ -86,7 +86,11 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
               {message.text}
             </HighlightText>
           ) : (
-            <UI.Text selectable ellipse={extraProps.minimal ? true : null} {...decoration.text}>
+            <UI.Text
+              selectable={!extraProps.preventSelect}
+              ellipse={extraProps.minimal ? true : null}
+              {...decoration.text}
+            >
               <Markdown className="slack-markdown" source={message.text} />
             </UI.Text>
           )}

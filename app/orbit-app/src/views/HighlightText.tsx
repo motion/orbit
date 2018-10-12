@@ -18,6 +18,13 @@ export const HighlightText = ({ options, children, ...props }: Props) => {
   return (
     <HighlightsContext.Consumer>
       {options => {
+        const highlight =
+          options.words &&
+          (options.words.length > 1 ||
+            // avoid too short of words
+            (options.words[0] && options.words[0].length > 1))
+            ? options
+            : null
         return (
           <Text
             tagName="div"
@@ -25,13 +32,7 @@ export const HighlightText = ({ options, children, ...props }: Props) => {
             display="block"
             selectable
             {...extraProps}
-            highlight={
-              options.words.length > 1 ||
-              // avoid too short of words
-              (options.words[0] && options.words[0].length > 1)
-                ? options
-                : null
-            }
+            highlight={highlight}
             {...props}
           >
             {children}

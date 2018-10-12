@@ -2,12 +2,12 @@ import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view, compose } from '@mcro/black'
 import { View, Icon, ClearButton, Tooltip } from '@mcro/ui'
-import { App } from '@mcro/stores'
 import { QueryStore } from '../orbitDocked/QueryStore'
 import { HeaderStore } from './HeaderStore'
 import { ThemeObject } from '@mcro/gloss'
 import { OrbitStore } from '../../OrbitStore'
 import { SearchStore } from '../orbitDocked/SearchStore'
+import { PaneManagerStore } from '../PaneManagerStore'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -23,10 +23,11 @@ type Props = {
   headerStore: HeaderStore
   orbitStore?: OrbitStore
   searchStore?: SearchStore
+  paneManagerStore?: PaneManagerStore
 }
 
 const decorator = compose(
-  view.attach('orbitStore', 'queryStore', 'searchStore'),
+  view.attach('paneManagerStore', 'orbitStore', 'queryStore', 'searchStore'),
   view,
 )
 
@@ -40,7 +41,7 @@ const Interactive = view({
 })
 
 export const OrbitHeaderInput = decorator(
-  ({ orbitStore, queryStore, theme, headerStore, searchStore }: Props) => {
+  ({ orbitStore, queryStore, theme, headerStore, paneManagerStore }: Props) => {
     return (
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
@@ -60,9 +61,8 @@ export const OrbitHeaderInput = decorator(
           onKeyDown={handleKeyDown}
           forwardRef={headerStore.inputRef}
           onClick={headerStore.onClickInput}
-          placeholder={headerStore.placeholder}
         />
-        <Interactive disabled={!searchStore.hasQueryVal}>
+        <Interactive disabled={paneManagerStore.activePane !== 'search'}>
           <ClearButton opacity={0} hover={{ opacity: 1 }} onClick={queryStore.clearQuery} />
           <div style={{ width: 5 }} />
           <Tooltip

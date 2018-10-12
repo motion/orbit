@@ -14,16 +14,17 @@ import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { Bit } from '@mcro/models'
-import { reaction } from 'mobx'
+import { reaction, trace } from 'mobx'
 import { debounce } from 'lodash'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../SelectionStore'
 import { OrbitItemSingleton } from '../../../../views/OrbitItemStore'
+import { SubPaneStore } from '../../SubPaneStore'
 
 type Props = {
-  scrollingElement: HTMLDivElement
   searchStore?: SearchStore
   selectionStore?: SelectionStore
+  subPaneStore?: SubPaneStore
 }
 
 const hideSlack = {
@@ -55,7 +56,7 @@ const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]
 
 type ListItemProps = {
   model: Bit
-  query: string
+  query?: string
   style?: Object
   cache?: any
   parent?: any
@@ -66,30 +67,36 @@ type ListItemProps = {
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
-const ListItem = ({ model, realIndex, query, ignoreSelection }: ListItemProps) => {
-  const isConversation = model.integration === 'slack'
-  console.log('i', realIndex)
-  return (
-    <OrbitListItem
-      pane="docked-search"
-      subPane="search"
-      index={realIndex}
-      model={model}
-      hide={isConversation ? hideSlack : null}
-      subtitleSpaceBetween={spaceBetween}
-      isExpanded
-      searchTerm={query}
-      onClickLocation={handleClickLocation}
-      maxHeight={isConversation ? 380 : 200}
-      overflow="hidden"
-      extraProps={{
-        minimal: true,
-      }}
-      ignoreSelection={ignoreSelection}
-    >
-      {renderListItemChildren}
-    </OrbitListItem>
-  )
+class ListItem extends React.PureComponent<ListItemProps> {
+  render() {
+    const { model, realIndex, query, ignoreSelection } = this.props
+    const isConversation = model.integration === 'slack'
+    if (!ignoreSelection) {
+      console.log('i', realIndex)
+    }
+    return (
+      <OrbitListItem
+        pane="docked-search"
+        subPane="search"
+        index={realIndex}
+        model={model}
+        hide={isConversation ? hideSlack : null}
+        subtitleSpaceBetween={spaceBetween}
+        isExpanded
+        searchTerm={query}
+        onClickLocation={handleClickLocation}
+        maxHeight={isConversation ? 380 : 200}
+        overflow="hidden"
+        extraProps={{
+          minimal: true,
+          preventSelect: true,
+        }}
+        ignoreSelection={ignoreSelection}
+      >
+        {renderListItemChildren}
+      </OrbitListItem>
+    )
+  }
 }
 
 class VirtualList extends React.Component<any> {
@@ -101,7 +108,7 @@ class VirtualList extends React.Component<any> {
 const SortableListItem = SortableElement(ListItem)
 const SortableList = SortableContainer(VirtualList, { withRef: true })
 
-const FirstItems = ({ items, offset, searchStore }) => {
+const FirstItems = view(({ items, searchStore }) => {
   return (
     <div
       style={{
@@ -114,16 +121,16 @@ const FirstItems = ({ items, offset, searchStore }) => {
         <ListItem
           key={item.id}
           model={item}
-          realIndex={index + offset}
-          query={searchStore.activeQuery}
+          realIndex={index + searchStore.quickSearchState.results.length}
           ignoreSelection
         />
       ))}
     </div>
   )
-}
+})
 
-@view.attach('searchStore', 'selectionStore')
+@view.attach('searchStore', 'selectionStore', 'subPaneStore')
+@view
 export class OrbitSearchVirtualList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List
@@ -138,14 +145,17 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     defaultHeight: 60,
     fixedWidth: true,
   })
+
   private resizeOnChange = reaction(
     () => this.items && Math.random(),
     () => {
       if (this.listRef) {
+        console.log('forceUpdateGrid')
         this.listRef.forceUpdateGrid()
       }
     },
   )
+
   private scrollToRow = reaction(
     () => this.props.selectionStore.activeIndex - this.offset,
     index => {
@@ -160,19 +170,27 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     },
   )
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.scrollingElement && this.props.scrollingElement) {
-      this.resizeObserver.observe(this.props.scrollingElement)
-      this.measure()
-    }
+  get paneNode() {
+    return this.props.subPaneStore.paneNode
+  }
+
+  observing = false
+
+  componentDidUpdate() {
+    this.observePaneSize()
     if (this.shouldResizeAll) {
       this.resizeAll()
     }
   }
 
   componentDidMount() {
-    if (this.props.scrollingElement) {
-      this.resizeObserver.observe(this.props.scrollingElement)
+    this.observePaneSize()
+  }
+
+  observePaneSize() {
+    if (!this.observing && this.paneNode) {
+      this.observing = true
+      this.resizeObserver.observe(this.paneNode)
       this.measure()
     }
   }
@@ -188,8 +206,12 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   }
 
   private measure = () => {
-    if (this.props.scrollingElement.clientHeight !== this.state.height) {
-      this.setState({ height: this.props.scrollingElement.clientHeight })
+    if (this.paneNode.clientHeight !== this.state.height) {
+      const height = this.paneNode.clientHeight
+      if (height !== this.state.height) {
+        console.log('setting height', height)
+        this.setState({ height })
+      }
     }
   }
   // @ts-ignore
@@ -212,7 +234,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
             model={model}
             index={index}
             realIndex={index + this.offset}
-            query={searchStore.activeQuery}
+            query={searchStore.searchState.query}
           />
         </div>
       </CellMeasurer>
@@ -233,22 +255,36 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   })
 
   handleSortEnd = () => {
-    this.setState({ isSorting: false })
+    if (this.state.isSorting) {
+      this.setState({ isSorting: false })
+    }
   }
 
   handleSortStart = () => {
-    this.setState({ isSorting: true })
+    if (!this.state.isSorting) {
+      this.setState({ isSorting: true })
+    }
   }
 
   render() {
-    const { scrollingElement, searchStore } = this.props
-    log(`render OrbitSearchVirtualList`)
+    const { searchStore } = this.props
+    log(
+      `render OrbitSearchVirtualList (${this.items.length}) ${this.state.height} ${
+        searchStore.searchState.query
+      }`,
+    )
+    window.x = this
+    trace()
     return (
       <ProvideHighlightsContextWithDefaults
-        value={{ words: searchStore.activeQuery.split(' '), maxChars: 500, maxSurroundChars: 80 }}
+        value={{
+          words: searchStore.searchState.query.split(' '),
+          maxChars: 500,
+          maxSurroundChars: 80,
+        }}
       >
         {/* double render the first few items so we can measure height, but hide them */}
-        <FirstItems items={this.items} offset={this.offset} searchStore={searchStore} />
+        <FirstItems items={this.items} searchStore={searchStore} />
         {!!this.state.height && (
           <div
             style={{
@@ -258,7 +294,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
               bottom: 0,
               left: 0,
               zIndex: 1,
-              userSelect: this.state.isSorting ? 'none' : 'inherit',
             }}
           >
             <InfiniteLoader
@@ -270,7 +305,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                 <SortableList
                   forwardRef={ref => {
                     if (ref) {
-                      console.log('loading listRef', ref)
                       registerChild(ref)
                       this.listRef = ref
                     }
@@ -278,16 +312,18 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                   items={this.items}
                   deferredMeasurementCache={this.cache}
                   height={this.state.height}
-                  width={scrollingElement.clientWidth}
+                  width={this.paneNode.clientWidth}
                   rowHeight={this.cache.rowHeight}
                   overscanRowCount={20}
                   rowCount={this.items.length}
                   estimatedRowSize={100}
                   rowRenderer={this.rowRenderer}
-                  distance={20}
+                  pressDelay={120}
+                  pressThreshold={17}
                   onRowsRendered={onRowsRendered}
                   onSortStart={this.handleSortStart}
                   onSortEnd={this.handleSortEnd}
+                  lockAxis="y"
                 />
               )}
             </InfiniteLoader>

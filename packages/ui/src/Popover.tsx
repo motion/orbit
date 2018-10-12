@@ -872,7 +872,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   get showPopover() {
     const { isOpen, isPinnedOpen } = this.state
-    const { openOnHover, open, openOnClick } = this.props
+    const { openOnHover, open } = this.props
     if (!this.mounted) {
       return false
     }
@@ -880,7 +880,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       return true
     }
     if (typeof open === 'undefined') {
-      return !!(openOnHover && this.isHovered) || !!(openOnClick && isOpen)
+      return !!(openOnHover && this.isHovered)
     }
   }
 

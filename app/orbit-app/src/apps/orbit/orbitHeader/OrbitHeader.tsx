@@ -101,7 +101,6 @@ export class OrbitHeader extends React.Component<
   render() {
     const { headerStore, paneManagerStore, after, theme, borderRadius } = this.props
     const headerBg = theme.background
-    console.log('render OrbitHeader')
     return (
       <OrbitHeaderContainer
         headerBg={headerBg}

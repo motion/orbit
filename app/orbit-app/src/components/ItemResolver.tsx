@@ -35,6 +35,7 @@ export type ResolvedItem = {
 export type ItemResolverExtraProps = {
   beforeTitle?: React.ReactNode
   minimal?: boolean
+  preventSelect?: boolean
 }
 
 type ResolvableModel = Bit | Person | PersonBit | Setting

@@ -8,9 +8,10 @@ import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from './orbitDocked/SearchStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
 import { BORDER_RADIUS } from '../../constants'
-import { onlyUpdateOnChanged } from '../../helpers/onlyUpdateOnChanged'
+import { StaticContainer } from '../../views/StaticContainer'
 
 export type SubPaneProps = CSSPropertySet & {
+  preventScroll?: boolean
   store?: SubPaneStore
   style?: Object
   after?: React.ReactNode
@@ -30,7 +31,7 @@ const SubPaneFrame = view(UI.FullScreen, {
   opacity: 0,
   isActive: {
     opacity: 1,
-    pointerEvents: 'all',
+    pointerEvents: 'inherit',
   },
 })
 
@@ -45,11 +46,14 @@ const Pane = view(UI.View, {
   borderBottomRadius: BORDER_RADIUS,
   padding: [0, 12],
   margin: [0, 0, 0],
-  // pointerEvents: 'none',
+  pointerEvents: 'none',
   isActive: {
     '& > *': {
       pointerEvents: 'auto',
     },
+  },
+  preventScroll: {
+    overflowY: 'hidden',
   },
 }).theme(({ isLeft, isActive }) => ({
   opacity: isActive ? 1 : 0,
@@ -67,16 +71,6 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-class StaticContainer extends React.Component {
-  shouldComponentUpdate(a, b, c) {
-    return onlyUpdateOnChanged.call(this, a, b, c)
-  }
-
-  render() {
-    return this.props.children
-  }
-}
-
 @view.attach('paneManagerStore', 'orbitStore', 'searchStore', 'selectionStore')
 @view.provide({
   subPaneStore: SubPaneStore,
@@ -93,10 +87,10 @@ export class SubPane extends React.Component<SubPaneProps> {
       name,
       before,
       containerStyle,
+      preventScroll,
       ...props
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
-    console.log('rendering subpane...', this.props.name)
     return (
       <SubPaneFrame isActive={isActive}>
         {before}
@@ -107,6 +101,7 @@ export class SubPane extends React.Component<SubPaneProps> {
             style={style}
             height={subPaneStore.contentHeightLimited}
             forwardRef={subPaneStore.paneRef}
+            preventScroll={preventScroll}
             {...props}
           >
             <PaneContentInner>

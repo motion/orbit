@@ -3,6 +3,7 @@ import { view, compose } from '@mcro/black'
 import { SearchStore } from '../SearchStore'
 import { SelectionStore } from '../SelectionStore'
 import { SelectableCarousel } from '../../../../components/SelectableCarousel'
+import { Text, Surface, Theme } from '@mcro/ui'
 
 type Props = {
   searchStore?: SearchStore
@@ -29,7 +30,15 @@ export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
   const { results } = searchStore.quickSearchState
   console.log('results', results)
   if (!results.length) {
-    return null
+    return (
+      <Theme name="clearDark">
+        <Surface alignItems="center" justifyContent="center" padding={[6, 10]}>
+          <Text size={0.95} alpha={0.9} fontWeight={400}>
+            Drop result here to pin
+          </Text>
+        </Surface>
+      </Theme>
+    )
   }
   return (
     <>

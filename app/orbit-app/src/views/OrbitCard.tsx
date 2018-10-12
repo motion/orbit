@@ -114,8 +114,8 @@ const Title = view({
   justifyContent: 'space-between',
   padding: [0, 0, 2],
   padRight: {
-    paddingRight: 20
-  }
+    paddingRight: 20,
+  },
 })
 
 const Preview = view({
@@ -132,8 +132,8 @@ const CardSubtitle = view(UI.View, {
     margin: [6, 0, 0],
   },
   padRight: {
-    paddingRight: 20
-  }
+    paddingRight: 20,
+  },
 })
 
 const orbitIconProps = {
@@ -222,7 +222,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
       <CardWrap
         {...hoverToSelect && !inactive && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
-        zIndex={isSelected ? 5 : 4}
         {...props}
       >
         <Card
@@ -237,87 +236,88 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
           {chromeless ? (
             children
           ) : (
-              <>
-                <Glint opacity={0.75} borderRadius={borderRadius} />
-                <Padding style={{ borderRadius, padding }}>
-                  {hasTitle && (
-                    <Title padRight>
-                      <HighlightText
-                        fontSize={14}
-                        sizeLineHeight={0.78}
-                        ellipse={hasSubtitle && hasMeta ? true : 2}
-                        fontWeight={500}
-                        selectable={false}
-                        {...titleProps}
-                      >
-                        {title}
-                      </HighlightText>
-                      {afterTitle}
-                    </Title>
-                  )}
-                  {!!titleFlex && <div style={{ flex: titleFlex }} />}
-                  {hasSubtitle && (
-                    <CardSubtitle padRight={!hasTitle} paddingRight={30}>
-                      <UI.Text alpha={0.55} ellipse {...subtitleProps}>
-                        {subtitle}
-                      </UI.Text>
-                    </CardSubtitle>
-                  )}
-                  {!hasFourRows && hasDate && <CardSubtitle padRight={!hasTitle}>{dateContent}</CardSubtitle>}
-                  {hasMeta && (
-                    <CardSubtitle padRight={!hasTitle}>
-                      {!!location && (
-                        <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
-                          {location}
-                        </RoundButtonSmall>
-                      )}
-                      {subtitleSpaceBetween}
-                      {hasFourRows &&
-                        hasDate && (
-                          <>
-                            {!!location && <div style={{ width: 5 }} />}
-                            {dateContent}
-                          </>
-                        )}
-                      {hasPreview && <VerticalSpaceSmall />}
-                    </CardSubtitle>
-                  )}
-                  {hasPreview && (
-                    <Preview>
-                      {typeof preview !== 'string' && preview}
-                      {typeof preview === 'string' && (
-                        <UI.Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
-                          {preview}
-                        </UI.Text>
-                      )}
-                    </Preview>
-                  )}
-                  {typeof children === 'function'
-                    ? children(resolvedItem, props.model, props.index)
-                    : children}
-                  {hasPeople && (
-                    <Row>
-                      <PeopleRow people={people} />
-                      {/* to avoid hitting orbit icon */}
-                      <HorizontalSpace />
-                    </Row>
-                  )}
-
-                  {!!icon &&
-                    !(hide && hide.icon) && (
-                      <OrbitIcon
-                        icon={icon}
-                        size={14}
-                        {...orbitIconProps}
-                        position="absolute"
-                        top={topPad}
-                        right={sidePad}
-                        {...iconProps}
-                      />
+            <>
+              <Glint opacity={0.75} borderRadius={borderRadius} />
+              <Padding style={{ borderRadius, padding }}>
+                {hasTitle && (
+                  <Title padRight>
+                    <HighlightText
+                      fontSize={14}
+                      sizeLineHeight={0.78}
+                      ellipse={hasSubtitle && hasMeta ? true : 2}
+                      fontWeight={500}
+                      selectable={false}
+                      {...titleProps}
+                    >
+                      {title}
+                    </HighlightText>
+                    {afterTitle}
+                  </Title>
+                )}
+                {!!titleFlex && <div style={{ flex: titleFlex }} />}
+                {hasSubtitle && (
+                  <CardSubtitle padRight={!hasTitle} paddingRight={30}>
+                    <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                      {subtitle}
+                    </UI.Text>
+                  </CardSubtitle>
+                )}
+                {!hasFourRows &&
+                  hasDate && <CardSubtitle padRight={!hasTitle}>{dateContent}</CardSubtitle>}
+                {hasMeta && (
+                  <CardSubtitle padRight={!hasTitle}>
+                    {!!location && (
+                      <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
+                        {location}
+                      </RoundButtonSmall>
                     )}
-                </Padding>
-              </>
-            )}
+                    {subtitleSpaceBetween}
+                    {hasFourRows &&
+                      hasDate && (
+                        <>
+                          {!!location && <div style={{ width: 5 }} />}
+                          {dateContent}
+                        </>
+                      )}
+                    {hasPreview && <VerticalSpaceSmall />}
+                  </CardSubtitle>
+                )}
+                {hasPreview && (
+                  <Preview>
+                    {typeof preview !== 'string' && preview}
+                    {typeof preview === 'string' && (
+                      <UI.Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
+                        {preview}
+                      </UI.Text>
+                    )}
+                  </Preview>
+                )}
+                {typeof children === 'function'
+                  ? children(resolvedItem, props.model, props.index)
+                  : children}
+                {hasPeople && (
+                  <Row>
+                    <PeopleRow people={people} />
+                    {/* to avoid hitting orbit icon */}
+                    <HorizontalSpace />
+                  </Row>
+                )}
+
+                {!!icon &&
+                  !(hide && hide.icon) && (
+                    <OrbitIcon
+                      icon={icon}
+                      size={14}
+                      {...orbitIconProps}
+                      position="absolute"
+                      top={topPad}
+                      right={sidePad}
+                      {...iconProps}
+                    />
+                  )}
+              </Padding>
+            </>
+          )}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         {/* {!disableShadow && (
@@ -382,9 +382,7 @@ export class OrbitCard extends React.Component<OrbitItemProps<any>> {
         {obj => {
           const themeName = obj.activeThemeName === 'clearLight' ? 'clearDark' : obj.activeThemeName
           return (
-            <UI.Theme
-              name={themeName}
-            >
+            <UI.Theme name={themeName}>
               <OrbitCardInner key={themeName} {...this.props} />
             </UI.Theme>
           )

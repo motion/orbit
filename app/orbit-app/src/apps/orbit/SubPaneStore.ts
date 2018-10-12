@@ -129,28 +129,6 @@ export class SubPaneStore {
     this.onPaneNearEdges()
   }
 
-  scrollIntoView = throttle((card: HTMLDivElement) => {
-    const pane = this.paneNode
-    if (!pane) {
-      return
-    }
-    const cardOffset = getTopOffset(card, pane)
-    // too high
-    if (cardOffset < pane.scrollTop) {
-      // if near top just go all the way, otherwise subtract small amt for glow
-      const scrollTop = cardOffset < 200 ? 0 : cardOffset - 3
-      pane.scrollTop = scrollTop
-      return
-    }
-    pane.scrollTop = cardOffset - 20
-    // too low
-    // const cardBottom = cardOffset + card.clientHeight
-    // const paneBottomVisible = pane.scrollTop + pane.clientHeight
-    // if (cardBottom > paneBottomVisible) {
-    //   pane.scrollTop = cardBottom - pane.clientHeight + 100 // for some reason we need this extra
-    // }
-  }, 30)
-
   updateHeight = async () => {
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()

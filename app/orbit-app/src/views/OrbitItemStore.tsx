@@ -130,15 +130,10 @@ export class OrbitItemStore {
       return isPaneActive && nextIsSelected
     },
     async (nextIsSelected, { sleep }) => {
-      const { preventAutoSelect, scrollIntoView } = this.props
+      const { preventAutoSelect } = this.props
       ensure('new index', nextIsSelected !== this.isSelected)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {
-        if (scrollIntoView) {
-          if (!this.didClick) {
-            scrollIntoView(this.realIndex, this.cardWrapRef)
-          }
-        }
         ensure('target', !!this.target)
         // fluidity
         await sleep()

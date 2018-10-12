@@ -427,7 +427,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
         return
       }
       const clickedInPopover =
-        e.path.findIndex(x => (x as HTMLDivElement).classList.contains('popover-portal')) > -1
+        e.path.findIndex(
+          x => x instanceof HTMLDivElement && x.classList.contains('popover-portal'),
+        ) > -1
       if (closeOnClickAway && !clickedTarget && !clickedInPopover) {
         console.log('close on away', clickedInPopover)
         this.forceClose()

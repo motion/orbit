@@ -107,6 +107,8 @@ export class SearchStore {
   searchState = react(
     () => [
       this.activeQuery,
+      // depends on pane
+      this.props.paneManagerStore.activePane,
       // filter updates
       this.searchFilterStore.activeFilters,
       this.searchFilterStore.exclusiveFilters,
@@ -114,9 +116,11 @@ export class SearchStore {
       this.searchFilterStore.dateState,
     ],
     async (
-      [query],
+      [query, activePane],
       { sleep, whenChanged, when, setValue },
     ): Promise<{ results: Bit[]; finished?: boolean; query: string }> => {
+      ensure('on search', activePane === 'search')
+
       let results = []
       // if typing, wait a bit
       if (this.searchState.query !== query) {

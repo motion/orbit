@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
-import { view, compose } from '@mcro/black'
+import { view } from '@mcro/black'
 import { View, Icon, ClearButton, Tooltip } from '@mcro/ui'
 import { QueryStore } from '../orbitDocked/QueryStore'
 import { HeaderStore } from './HeaderStore'
@@ -26,11 +26,6 @@ type Props = {
   paneManagerStore?: PaneManagerStore
 }
 
-const decorator = compose(
-  view.attach('paneManagerStore', 'orbitStore', 'queryStore', 'searchStore'),
-  view,
-)
-
 const Interactive = view({
   flexFlow: 'row',
   alignItems: 'center',
@@ -40,8 +35,17 @@ const Interactive = view({
   },
 })
 
-export const OrbitHeaderInput = decorator(
-  ({ orbitStore, queryStore, theme, headerStore, paneManagerStore }: Props) => {
+@view.attach('paneManagerStore', 'orbitStore', 'queryStore', 'searchStore')
+@view
+export class OrbitHeaderInput extends React.Component<Props> {
+  clearSearch = () => {
+    this.props.queryStore.clearQuery()
+    this.props.searchStore.searchFilterStore.resetAllFilters()
+    this.props.paneManagerStore.setActivePane('home')
+  }
+
+  render() {
+    const { orbitStore, queryStore, theme, headerStore, paneManagerStore } = this.props
     return (
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
@@ -63,7 +67,7 @@ export const OrbitHeaderInput = decorator(
           onClick={headerStore.onClickInput}
         />
         <Interactive disabled={paneManagerStore.activePane !== 'search'}>
-          <ClearButton opacity={0} hover={{ opacity: 1 }} onClick={queryStore.clearQuery} />
+          <ClearButton opacity={0} hover={{ opacity: 1 }} onClick={this.clearSearch} />
           <div style={{ width: 5 }} />
           <Tooltip
             target={
@@ -77,5 +81,5 @@ export const OrbitHeaderInput = decorator(
         </Interactive>
       </View>
     )
-  },
-)
+  }
+}

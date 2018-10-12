@@ -4,7 +4,6 @@ import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
-import { OrbitSpaceSwitch } from './OrbitSpaceSwitch'
 
 const Section = view('section', {
   width: '100%',

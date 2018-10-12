@@ -146,9 +146,9 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     () => this.props.selectionStore.activeIndex,
     index => {
       ensure('clicked recently', Date.now() - OrbitItemSingleton.lastClick < 50)
-      if (this.listRef) {
-        this.listRef.scrollToRow(index - this.offset)
-      }
+      ensure('valid index', index > -1)
+      ensure('has list', !!this.listRef)
+      this.listRef.scrollToRow(index - this.offset)
     },
   )
 

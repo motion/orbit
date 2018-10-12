@@ -73,6 +73,7 @@ const SuggestionButton = props => (
     borderColor="transparent"
     borderWidth={0}
     marginRight={6}
+    borderTop={[2, 'transparent']}
     {...props}
   />
 )

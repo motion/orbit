@@ -148,6 +148,7 @@ export class SelectionStore {
       this.toggleSelected(res.index)
     },
   })
+
   clearSelectedOnLeave = react(
     () => [this.leaveIndex, Electron.hoverState.peekHovered],
     async ([leaveIndex, peekHovered], { sleep, when }) => {

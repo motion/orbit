@@ -4,7 +4,6 @@ import { memoize, uniqBy } from 'lodash'
 import { MarkType, NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
-import { hoverSettler } from '../../../helpers/hoverSettler'
 import { QueryStore } from './QueryStore'
 import { SearchStore } from './SearchStore'
 

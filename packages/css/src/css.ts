@@ -331,7 +331,9 @@ export default function createCSS(options: Object = {}) {
       }
       throw new Error(
         `${(opts && opts.errorMessage) ||
-          'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`,
+          'Error'}: Invalid style value for ${key}: ${JSON.stringify(
+          value,
+        )}, in styles: ${JSON.stringify(styles)}`,
       )
     }
 

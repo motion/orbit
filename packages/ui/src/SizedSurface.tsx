@@ -45,20 +45,22 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
   }
   if (sizeFont) {
     const fontSize = LINE_HEIGHT * 0.45 * num(sizeFont) * size
-    pass.fontSize = fontSize
+    pass.fontSize = Math.round(fontSize)
   }
   if (sizePadding) {
     const padSize = num(sizePadding) * size
-    const padding = !!sizePadding ? [sizeHeight ? 0 : padSize * 1.5, 9 * padSize] : 0
+    const padding = !!sizePadding
+      ? [sizeHeight ? 0 : Math.round(padSize * 1.5), Math.round(9 * padSize)]
+      : 0
     pass.padding = padding
   }
   if (sizeMargin) {
     const margin = num(sizeMargin) * 0.25 * size
-    pass.margin = margin
+    pass.margin = Math.round(margin)
   }
   if (sizeRadius) {
     const radius = num(sizeRadius) * 8 * size
-    pass.borderRadius = radius
+    pass.borderRadius = Math.round(radius)
   }
   if (circular) {
     pass.width = height
@@ -66,12 +68,12 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
   }
   // clamp radius to max, because we use it for Glint/Hoverglow in Surface and they need actual radius
   if (pass.borderRadius) {
-    pass.borderRadius = Math.min(height / 2, pass.borderRadius)
+    pass.borderRadius = Math.round(Math.min(height / 2, pass.borderRadius))
   }
   // icon already tracks height so no need to size it from here
   if (sizeIcon) {
     pass.sizeIcon = num(sizeIcon)
   }
-  const iconPad = LINE_HEIGHT * 0.2 * num(sizeHeight)
+  const iconPad = Math.round(LINE_HEIGHT * 0.2 * num(sizeHeight))
   return <Surface {...pass} size={size} iconPad={iconPad} {...rest} />
 }

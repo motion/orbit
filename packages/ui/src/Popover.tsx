@@ -394,7 +394,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     // click away to close
     this.targetClickOff = on(this, this.target, 'click', e => {
       e.stopPropagation()
-      console.log(this.state, this.showPopover, this)
       if (this.state.isPinnedOpen) {
         this.forceClose()
       } else {

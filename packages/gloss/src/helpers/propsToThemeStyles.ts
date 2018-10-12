@@ -1,4 +1,5 @@
 import { ThemeObject } from '../types'
+import { styleVal } from './propsToStyles'
 
 // resolves props into styles for valid css
 // backs up to theme colors if not found
@@ -56,13 +57,13 @@ export const propsToThemeStyles = (props, mapPropStylesToPseudos?: boolean): The
   if (props.background || props.borderColor || props.color) {
     propOverrides = {}
     if (props.background) {
-      propOverrides.background = props.background
+      propOverrides.background = styleVal(theme, props.background)
     }
     if (props.color) {
-      propOverrides.color = props.color
+      propOverrides.color = styleVal(theme, props.color)
     }
     if (props.borderColor) {
-      propOverrides.borderColor = props.borderColor
+      propOverrides.borderColor = styleVal(theme, props.borderColor)
     }
   }
 

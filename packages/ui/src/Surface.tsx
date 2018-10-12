@@ -160,11 +160,12 @@ const SurfaceFrame = view(View, {
     ...(props.dim && dimStyle),
     ...props.userStyle,
     // note: base theme styles go *above* propsToStyles...
-    ...themeStyles,
+    ...(!props.chromeless && themeStyles),
     ...propsToStyles(props),
     // ...whereas theme styles passed in as ovverrides go in here
     ...themeStylesFromProps,
-    ...(props.active && { '&:hover': themeStyles['&:active'] }),
+    ...(!props.chromeless &&
+      props.active && { '&:hover': props.activeHoverStylee || themeStyles['&:active'] }),
     ...propsToTextSize(props),
     ...(props.chromeless && chromelessStyle),
     ...props.segmentedStyle,

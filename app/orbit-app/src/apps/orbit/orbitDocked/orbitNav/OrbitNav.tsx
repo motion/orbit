@@ -5,7 +5,7 @@ import { Row, Popover, View } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
 import { OrbitFilters } from '../orbitHome/OrbitFilters'
-import { view } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
 import { QueryStore } from '../QueryStore'
 import { hoverSettler } from '../../../../helpers'
@@ -14,7 +14,7 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 class OrbitNavStore {
   filtersWidth: number | string = 'auto'
   hoveredFilters = false
-  filtersRef = React.createRef<HTMLDivElement>()
+  filtersRef = null as HTMLDivElement
   // @ts-ignore
   resizeObserver = new ResizeObserver(() => this.measureFilters())
   hoverSettle = hoverSettler({
@@ -25,17 +25,25 @@ class OrbitNavStore {
     },
   })()
 
-  didMount() {
-    this.resizeObserver.observe(this.filtersRef.current)
-  }
+  observeFiltersRef = react(
+    () => this.filtersRef,
+    ref => {
+      ensure('ref', !!ref)
+      this.resizeObserver.observe(ref)
+    },
+  )
 
   willUnmount() {
     this.resizeObserver.disconnect()
   }
 
+  setFilterRef = ref => {
+    this.filtersRef = ref
+  }
+
   private measureFilters = () => {
     if (this.filtersRef) {
-      this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.current.clientWidth)
+      this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.clientWidth)
     }
   }
 }
@@ -85,6 +93,10 @@ export class OrbitNav extends React.Component<{
             </Popover>
             <NavButton
               icon="funnel40"
+              background={theme => {
+                console.log('theme', theme)
+                return store.hoverSettle.isStuck() ? theme.background : '#fff'
+              }}
               opacity={
                 store.hoverSettle.isStuck() || !!searchStore.searchFilterStore.hasIntegrationFilters
                   ? 1
@@ -104,7 +116,7 @@ export class OrbitNav extends React.Component<{
             <OrbitFilters
               width={store.filtersWidth === 0 ? 'auto' : store.filtersWidth}
               opacity={store.hoveredFilters ? 1 : 0}
-              forwardRef={store.filtersRef}
+              forwardRef={store.setFilterRef}
               {...hoverProps}
             />
             <OrbitSuggestionBar />

@@ -230,16 +230,16 @@ export class SearchStore {
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep }) => {
-      if (!query) {
-        return { results: [] }
-      }
+      // this will keep the "last query" always active by cancelling on empty
+      ensure('has query', !!query)
       await sleep(TYPE_DEBOUNCE * 0.5)
       return {
+        query,
         results: await loadMany(SearchPinnedResultModel, { args: { query } }),
       }
     },
     {
-      defaultValue: { results: [] },
+      defaultValue: { query: App.state.query, results: [] },
     },
   )
 }

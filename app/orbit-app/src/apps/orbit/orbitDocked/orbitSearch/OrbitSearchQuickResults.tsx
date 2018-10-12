@@ -4,6 +4,7 @@ import { SearchStore } from '../SearchStore'
 import { SelectionStore } from '../SelectionStore'
 import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 import { Banner } from '../../../../views/Banner'
+import { View } from '@mcro/ui'
 
 type Props = {
   searchStore?: SearchStore
@@ -27,23 +28,23 @@ const decorate = compose(
   view,
 )
 export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
-  const quickResults = searchStore.quickSearchState.results
-  console.log('quickResults', quickResults)
-  if (!quickResults.length && searchStore.hasSearchResults) {
+  const { activeQuery } = searchStore
+  const { results, query } = searchStore.quickSearchState
+  if (!!query && !results.length && searchStore.hasSearchResults) {
     return <Banner>Drop result here to pin</Banner>
   }
   return (
-    <>
+    <View opacity={activeQuery === query ? 1 : 0.5}>
       <SelectableCarousel
         offset={0}
         cardHeight={58}
         cardWidth={180}
         cardSpace={4}
         cardProps={cardProps}
-        items={quickResults}
+        items={results}
         horizontalPadding={6}
       />
       <div style={{ height: 6 }} />
-    </>
+    </View>
   )
 })

@@ -17,11 +17,12 @@ import { Bit } from '@mcro/models'
 import { reaction } from 'mobx'
 import { debounce } from 'lodash'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
+import { SelectionStore } from '../SelectionStore'
 
 type Props = {
   scrollingElement: HTMLDivElement
-  scrollToIndex?: number
-  searchStore: SearchStore
+  searchStore?: SearchStore
+  selectionStore?: SelectionStore
 }
 
 const hideSlack = {
@@ -65,6 +66,7 @@ const spaceBetween = <div style={{ flex: 1 }} />
 
 const ListItem = ({ model, realIndex, query }: ListItemProps) => {
   const isConversation = model.integration === 'slack'
+  console.log('i', realIndex)
   return (
     <OrbitListItem
       pane="docked-search"
@@ -96,6 +98,28 @@ class VirtualList extends React.Component<any> {
 const SortableListItem = SortableElement(ListItem)
 const SortableList = SortableContainer(VirtualList, { withRef: true })
 
+const FirstItems = ({ items, offset, searchStore }) => {
+  return (
+    <div
+      style={{
+        opacity: 0,
+        pointerEvents: 'none',
+        zIndex: -1,
+      }}
+    >
+      {items.slice(0, 10).map((item, index) => (
+        <ListItem
+          key={item.id}
+          model={item}
+          realIndex={index + offset}
+          query={searchStore.activeQuery}
+        />
+      ))}
+    </div>
+  )
+}
+
+@view.attach('searchStore', 'selectionStore')
 @view
 export class OrbitSearchVirtualList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()
@@ -191,31 +215,16 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   })
 
   render() {
-    const { scrollToIndex, scrollingElement, searchStore } = this.props
-    // double render the first few items so we can measure height, but hide them
-    const firstItems = this.items
-      .slice(0, 10)
-      .map((item, index) => (
-        <ListItem
-          key={item.id}
-          model={item}
-          realIndex={index + this.offset}
-          query={searchStore.activeQuery}
-        />
-      ))
+    const { scrollingElement, searchStore, selectionStore } = this.props
+    // re-render on this value change, dont delete this
+    selectionStore.activeIndex
+    console.log('scroll to', selectionStore.activeIndex - this.offset)
     return (
       <ProvideHighlightsContextWithDefaults
         value={{ words: searchStore.activeQuery.split(' '), maxChars: 500, maxSurroundChars: 80 }}
       >
-        <div
-          style={{
-            opacity: 0,
-            pointerEvents: 'none',
-            zIndex: -1,
-          }}
-        >
-          {firstItems}
-        </div>
+        {/* double render the first few items so we can measure height, but hide them */}
+        <FirstItems items={this.items} offset={this.offset} searchStore={searchStore} />
         {!!this.state.height && (
           <div
             style={{
@@ -250,9 +259,9 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                   rowCount={this.items.length}
                   estimatedRowSize={100}
                   rowRenderer={this.rowRenderer}
-                  scrollToIndex={scrollToIndex}
                   distance={20}
                   onRowsRendered={onRowsRendered}
+                  scrollToIndex={selectionStore.activeIndex - this.offset}
                 />
               )}
             </InfiniteLoader>

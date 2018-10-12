@@ -42,7 +42,6 @@ const OrbitSearchResultsContents = decorator(
         >
           <OrbitSearchVirtualList
             key={searchStore.searchState.query}
-            searchStore={searchStore}
             scrollingElement={subPaneStore.paneNode}
           />
         </OrbitSearchResultsFrame>

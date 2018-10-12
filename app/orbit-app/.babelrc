@@ -1,7 +1,12 @@
 {
   "env": {
     "development": {
-      "presets": [["@mcro/babel-preset-motion"]]
+      "presets": [
+        [
+          "@mcro/babel-preset-motion",
+          { "disable": ["@babel/plugin-transform-react-inline-elements"] }
+        ]
+      ]
     },
     "production": {
       "presets": [["@mcro/babel-preset-motion", { "disable": ["react-hot-loader/babel"] }]]

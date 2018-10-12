@@ -7,7 +7,7 @@ type DateRange = {
 
 export const getDateAbbreviated = ({ startDate, endDate }: DateRange) => {
   if (!startDate) {
-    return 'Any'
+    return ''
   }
   const days = differenceInCalendarDays(new Date(), startDate)
   console.log('days ago', days, startDate, endDate)

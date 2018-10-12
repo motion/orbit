@@ -28,6 +28,9 @@ function handleGlossReferences(parentNode, references, file, babel) {
 
     let topPath = path
     while (topPath) {
+      if (!topPath.parentPath || !topPath.parentPath.parentPath) {
+        break
+      }
       if (topPath.parentPath.parentPath.type === 'VariableDeclarator') {
         break
       } else {

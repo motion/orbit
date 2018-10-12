@@ -17,7 +17,6 @@ export class GMailBitFactory {
    * Creates a new bit from a given GMail thread.
    */
   create(thread: GMailThread): Bit {
-
     const body = thread.messages
       .map(message => {
         const parser = new GMailMessageParser(message)
@@ -40,19 +39,22 @@ export class GMailBitFactory {
     const firstMessageParser = new GMailMessageParser(firstMessage)
     const lastMessageParser = new GMailMessageParser(lastMessage)
 
-    return BitUtils.create({
-      integration: 'gmail',
-      type: 'mail',
-      title: firstMessageParser.getTitle(),
-      body,
-      data: {
-        messages
-      } as GmailBitData,
-      // raw: thread,
-      bitCreatedAt: firstMessageParser.getDate(),
-      bitUpdatedAt: lastMessageParser.getDate(),
-      webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
-      settingId: this.setting.id,
-    }, thread.id)
+    return BitUtils.create(
+      {
+        integration: 'gmail',
+        type: 'mail',
+        title: `${firstMessageParser.getTitle()}`,
+        body,
+        data: {
+          messages,
+        } as GmailBitData,
+        // raw: thread,
+        bitCreatedAt: firstMessageParser.getDate(),
+        bitUpdatedAt: lastMessageParser.getDate(),
+        webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
+        settingId: this.setting.id,
+      },
+      thread.id,
+    )
   }
 }

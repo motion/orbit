@@ -198,7 +198,6 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
       <ListFrame
         {...hoverToSelect && !inactive && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
-        zIndex={isSelected ? 5 : 4}
         {...props}
       >
         <ListItem

@@ -9,6 +9,7 @@ import { Color, CSSPropertySet } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
 import { Theme } from '@mcro/gloss'
 import { getTarget } from './helpers/getTarget'
+import { MergeUIContext } from './helpers/contexts'
 
 const ArrowContain = view({
   position: 'absolute',
@@ -767,12 +768,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
     const { delay, noHoverOnChildren } = this.curProps
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
-    const setHovered = () => {
-      this.hoverStateSet(name, true)
-    }
-    const setUnhovered = () => {
-      this.hoverStateSet(name, false)
-    }
+    const setHovered = () => this.hoverStateSet(name, true)
+    const setUnhovered = () => this.hoverStateSet(name, false)
     const openIfOver = () => {
       if (this.isNodeHovered(node)) {
         setHovered()
@@ -781,29 +778,31 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
     this.cancelIfWillOpen()
     this.delayOpenIfHover[name] = debounce(openIfOver, isTarget ? delay : 0)
+    let retryOutTm = null
 
-    const closeIfOut = () => {
-      // avoid if too soon
-      if (isPopover && Date.now() - this.state.menuHovered < 200) {
-        return null
-      }
+    const unhover = () => {
       if (!this.isNodeHovered(node)) {
         setUnhovered()
-        // cancel previous
         this.cancelIfWillOpen()
       }
+    }
+
+    const closeIfOut = () => {
+      clearTimeout(retryOutTm)
+      // avoid if too soon
+      if (isPopover && Date.now() - this.state.menuHovered < 200) {
+        retryOutTm = setTimeout(closeIfOut, 100)
+        on(this, retryOutTm)
+        return null
+      }
+      unhover()
       // ensure check if we have a delay open
       if (delay && isTarget) {
-        on(
-          this,
-          setTimeout(() => {
-            if (!this.isNodeHovered(node)) {
-              setUnhovered()
-            }
-          }, delay),
-        )
+        const tm = setTimeout(unhover, delay)
+        on(this, tm)
       }
     }
+
     // this will avoid the delay open if its already open
     const onEnter = () => {
       if (isTarget && this.state.menuHovered) {
@@ -812,8 +811,10 @@ export class Popover extends React.PureComponent<PopoverProps> {
         this.delayOpenIfHover[name]()
       }
     }
+
     // 🐛 target should close slower than menu opens
     const onLeave = isTarget ? debounce(closeIfOut, 80) : closeIfOut
+
     // logic for enter/leave
     listeners.push(
       on(this, node, 'mouseenter', () => {
@@ -899,7 +900,11 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (acceptsHovered) {
       targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = this.showPopover
     }
-    return React.cloneElement(target, targetProps)
+    return (
+      <MergeUIContext value={{ hovered: this.showPopover }}>
+        {React.cloneElement(target, targetProps)}
+      </MergeUIContext>
+    )
   }
 
   closeOthersWithinGroup() {

@@ -18,7 +18,6 @@ class TrackSingleton {
   }
 
   event(name: string, details: Object) {
-    console.log('tracking....', name, details)
     this.eventLog.push({ name, details })
   }
 }

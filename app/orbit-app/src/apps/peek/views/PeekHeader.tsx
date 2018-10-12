@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { WindowControls } from '../../../views/WindowControls'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { CSSPropertySet } from '@mcro/gloss'
-import { Glint, Row, Text, View } from '@mcro/ui'
+import { Glint, Row, Text } from '@mcro/ui'
 import { Centered } from '../../../views/Centered'
 
 type Props = {
@@ -70,11 +69,11 @@ const TitleBarText = props => (
   </div>
 )
 
-@attachTheme
+@view.attach('peekStore')
 @view
 export class PeekHeaderContent extends React.Component<Props> {
   render() {
-    const { peekStore, theme, before, after, children, ...props } = this.props
+    const { peekStore, before, after, children, ...props } = this.props
     const itemConfig = peekStore.state.appConfig.config
     const hideTitleBar = itemConfig && itemConfig.showTitleBar === false
     return (
@@ -83,7 +82,6 @@ export class PeekHeaderContent extends React.Component<Props> {
         draggable
         focused
         onDragStart={peekStore.onDragStart}
-        theme={theme}
         {...props}
       >
         <Glint borderRadius={7.5} opacity={0.65} top={0.5} />
@@ -106,10 +104,8 @@ export class PeekHeaderContent extends React.Component<Props> {
   }
 }
 
-export const PeekHeader = view.attach('peekStore')(
-  view(props => (
-    <UI.Theme select={theme => theme.titleBar || theme}>
-      <PeekHeaderContent {...props} />
-    </UI.Theme>
-  )),
+export const PeekHeader = props => (
+  <UI.Theme select={theme => theme.titleBar || theme}>
+    <PeekHeaderContent {...props} />
+  </UI.Theme>
 )

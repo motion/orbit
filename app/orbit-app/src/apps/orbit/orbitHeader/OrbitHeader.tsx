@@ -1,14 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { attachTheme, ThemeObject, Theme } from '@mcro/gloss'
+import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
-import { View, Image, Popover, Row, Col, Button } from '@mcro/ui'
-import orbIcon from '../../../../public/orb.svg'
+import { View } from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
 import { Actions } from '../../../actions/Actions'
-import { RowItem } from './RowItem'
+import { OrbitSpaceSwitch } from '../orbitDocked/orbitHome/OrbitSpaceSwitch'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -114,15 +113,9 @@ export class OrbitHeader extends React.Component<
             <OrbitClose onClick={Actions.closeOrbit}>
               <OrbitCloseControl />
             </OrbitClose>
-            <Image
-              src={orbIcon}
-              width={20}
-              height={20}
-              margin={['auto', 10]}
-              onMouseEnter={headerStore.onHoverIcon}
-              onMouseLeave={headerStore.onUnHoverIcon}
+            <OrbitSpaceSwitch
               onClick={headerStore.onClickOrb}
-              opacity={Desktop.ocrState.paused ? 0.3 : 1}
+              margin={['auto', 0]}
               transform={{
                 y: -0.5,
               }}

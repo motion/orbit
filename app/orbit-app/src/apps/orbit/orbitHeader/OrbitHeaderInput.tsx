@@ -63,7 +63,17 @@ export const OrbitHeaderInput = decorator(
           placeholder={headerStore.placeholder}
         />
         <Interactive disabled={!searchStore.hasQueryVal}>
-          <ClearButton onClick={queryStore.clearQuery} />
+          <ClearButton opacity={0} hover={{ opacity: 1 }} onClick={queryStore.clearQuery} />
+          <div style={{ width: 5 }} />
+          <Tooltip
+            target={
+              <ClearButton width={22} height={22}>
+                <Icon name="pin" size={10} margin="auto" />
+              </ClearButton>
+            }
+          >
+            Pin to Orbit home
+          </Tooltip>
         </Interactive>
       </View>
     )

@@ -132,10 +132,6 @@ export const Title = ({ verticalSpacing = 1, children, ...props }) => (
   </UI.Text>
 )
 
-export const VertSpace = view({
-  height: 20,
-})
-
 export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
   <UI.Text
     alpha={0.7}

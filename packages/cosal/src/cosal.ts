@@ -139,7 +139,7 @@ export class Cosal {
 
   getWordWeights = async (
     text: string,
-    { max, sortByWeight }: CosalWordOpts = {},
+    { max = 10, sortByWeight }: CosalWordOpts = {},
   ): Promise<Pair[] | null> => {
     const cosal = await toCosal(text, this.covariance)
     if (!cosal) {
@@ -171,7 +171,7 @@ export class Cosal {
     return pairs
   }
 
-  getTopWords = async (text: string, { max, sortByWeight }: CosalWordOpts = {}) => {
+  getTopWords = async (text: string, { max = 10, sortByWeight }: CosalWordOpts = {}) => {
     const words = await this.getWordWeights(text, { max, sortByWeight })
     if (!words) {
       return []

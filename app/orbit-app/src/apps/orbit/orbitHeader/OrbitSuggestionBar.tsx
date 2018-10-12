@@ -4,6 +4,7 @@ import { view, compose } from '@mcro/black'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../orbitDocked/SearchStore'
 import { HorizontalScroll } from '../../../views'
+import { getDateAbbreviated } from '../orbitDocked/orbitNav/getDateAbbreviated'
 
 const dateBg = UI.color('#ffb049')
 
@@ -72,6 +73,7 @@ const SuggestionButton = props => (
     borderColor="transparent"
     borderWidth={0}
     marginRight={6}
+    borderTop={[2, 'transparent']}
     {...props}
   />
 )
@@ -102,10 +104,22 @@ const decorator = compose(
 )
 export const OrbitSuggestionBar = decorator(({ searchStore }: Props) => {
   const filterStore = searchStore.searchFilterStore
+  const dateFilter = getDateAbbreviated(searchStore.searchFilterStore.dateState)
+  const hasTextualDateFilter = filterStore.allFilters.findIndex(x => x.type === 'date') > -1
   filterStore.disabledFilters
   return (
     <SuggestionBar visible>
       <HorizontalScroll height={28}>
+        {!!dateFilter &&
+          !hasTextualDateFilter && (
+            <SuggestionButton
+              onClick={filterStore.clearDate}
+              opacity={1}
+              borderBottom={[2, getBorderColor({ type: 'date' })]}
+            >
+              {dateFilter}
+            </SuggestionButton>
+          )}
         {filterStore.allFilters.map((filter, index) => (
           <SuggestionButton
             key={`${filter.text}${filter.active}`}

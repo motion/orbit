@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
+import { UIContext } from './helpers/contexts'
 
-export type ButtonProps = SizedSurfaceProps & React.HTMLAttributes<HTMLButtonElement>
+export type ButtonProps = SizedSurfaceProps &
+  React.HTMLAttributes<HTMLButtonElement> & {
+    acceptsHovered?: boolean
+  }
 
 const buttonStyles = {
   outline: 0,
@@ -25,7 +29,7 @@ const buttonThemeSelect = theme => {
   return selectFromPrefix(theme, 'button')
 }
 
-export const Button = ({
+const ButtonInner = ({
   badge,
   children,
   theme,
@@ -78,4 +82,21 @@ export const Button = ({
       {children}
     </SizedSurface>
   )
+}
+
+export const Button = (props: ButtonProps) => {
+  if (props.acceptsHovered) {
+    return (
+      <UIContext.Consumer>
+        {uiContext =>
+          typeof uiContext.hovered === 'boolean' ? (
+            <ButtonInner hover={uiContext.hovered} {...props} />
+          ) : (
+            <ButtonInner {...props} />
+          )
+        }
+      </UIContext.Consumer>
+    )
+  }
+  return <ButtonInner {...props} />
 }

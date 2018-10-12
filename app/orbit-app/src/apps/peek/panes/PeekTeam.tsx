@@ -4,7 +4,7 @@ import { PeekPaneProps } from '../PeekPaneProps'
 // import * as UI from '@mcro/ui'
 
 @view
-export class PeekTeam extends React.Component<PeekPaneProps> {
+export class PeekTeam extends React.Component<PeekPaneProps<any>> {
   render() {
     return null
     // const BitContent = bitContents(bit)

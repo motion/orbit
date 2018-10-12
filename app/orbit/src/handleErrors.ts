@@ -51,7 +51,7 @@ export async function onError(error) {
   })
 
   if (res === 2) {
-    handleExit()
+    return
   }
 
   // quit

@@ -1,6 +1,33 @@
+UMED:
+
+- finish web crawler
+- team account / management
+- search relevancy - build a dataset, test, improve, use cosal, etc
+
+* multiple highlights not working in search results
+
+NEXT:
+
+1. Redesign, get umed working on teams as much as possible
+2. QuickResults:
+
+- not just people but any bit, have peek open automatically on search!
+- generate topics in desktop every so often that have interesting search results
+- show those in the quickresults bar
+
+4. fix filters
+5. keyboard shortcut for filters as well
+6. improve keynav a lot with moving through peek
+7. keyboard shortcut reference toggle pane
+8. improve performance a lot so things arent lagging at all
+9. make keyboard shortcuts more clear as well to people
+10. improve peek display quite a bit
+11. probably search virtual masonry
+12. get switch orbits smooth
+
+- NOT decentralized to start...
+- it just syncs metadata "ids" and such to our servers...
 - One person manages an Orbit
-- They can pin any "search" to home
-- Anyone they invite can pin a result to a search
 
 # Signup / Teams
 

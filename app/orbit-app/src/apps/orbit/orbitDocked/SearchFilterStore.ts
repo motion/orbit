@@ -4,7 +4,6 @@ import { memoize, uniqBy } from 'lodash'
 import { MarkType, NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
-import { hoverSettler } from '../../../helpers/hoverSettler'
 import { QueryStore } from './QueryStore'
 import { SearchStore } from './SearchStore'
 
@@ -50,22 +49,11 @@ export class SearchFilterStore /* extends Store */ {
     endDate: null,
   }
 
-  dateHover = hoverSettler({
-    enterDelay: 400,
-    leaveDelay: 400,
-  })()
-
   constructor({ queryStore, appsStore, nlpStore, searchStore }) {
     this.appsStore = appsStore
     this.nlpStore = nlpStore
     this.queryStore = queryStore
     this.searchStore = searchStore
-  }
-
-  willMount() {
-    this.dateHover.setOnHovered(target => {
-      this.setExtraFiltersVisible(target)
-    })
   }
 
   // todo: this should replace any existing filters of same type
@@ -118,6 +106,10 @@ export class SearchFilterStore /* extends Store */ {
     return this.queryFilters.filter(x => !x.active)
   }
 
+  get hasDateFilter() {
+    return !!this.dateState.endDate || !!this.dateState.startDate
+  }
+
   get activeDateFilters() {
     return this.activeFilters.filter(part => part.type === MarkType.Date)
   }
@@ -145,6 +137,10 @@ export class SearchFilterStore /* extends Store */ {
     const intSettings = (this.appsStore.appsList || []).filter(x => x.type !== 'setting')
     const unique = uniqBy(intSettings, x => x.type)
     return unique
+  }
+
+  get hasIntegrationFilters() {
+    return this.integrationFilters.some(x => x.active)
   }
 
   get integrationFilters(): SearchFilter[] {

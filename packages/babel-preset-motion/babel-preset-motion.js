@@ -22,6 +22,7 @@ module.exports = function(_, givenOpts) {
       plug('@babel/plugin-proposal-class-properties', {
         loose: true,
       }),
+      plug('@babel/plugin-transform-react-inline-elements'),
     ],
     presets: opts.presets || [
       plug('@babel/preset-react'),

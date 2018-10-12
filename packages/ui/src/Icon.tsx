@@ -49,6 +49,8 @@ const IconInner = view(View, {
   userSelect: 'none',
   alignItems: 'center',
   justifyContent: 'center',
+  // transform: { scale: 0.25 },
+  // transformOrigin: 'center left',
 }).theme(({ padding, width: propWidth, height: propHeight, size, theme, color }) => {
   const width = (propWidth || size) + widthPadding(padding)
   const height = (propHeight || size) + heightPadding(padding)
@@ -56,7 +58,7 @@ const IconInner = view(View, {
     color: color || theme.iconColor || theme.color,
     width,
     height,
-    fontSize: size,
+    fontSize: size, // * 4,
     lineHeight: `${size / 12}rem`, // scale where 1 when 14
   }
 })

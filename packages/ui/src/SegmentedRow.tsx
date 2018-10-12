@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { UIContext } from './helpers/contexts'
+import { MergeUIContext } from './helpers/contexts'
 import { Color, CSSPropertySet } from '@mcro/css'
+import { Row } from './blocks/Row'
 
 type SegmentedRowProps = CSSPropertySet & {
   active?: number
@@ -39,21 +40,22 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
     return hasState ? this.state.active : this.props.defaultActive
   }
 
+  getContext = (index, length) =>
+    this.props.spaced
+      ? {}
+      : {
+          ...this.props.uiContext,
+          inSegment: {
+            first: index === 0,
+            last: index === length - 1,
+            index,
+          },
+        }
+
   render() {
-    const { children: children_, stretch, uiContext, itemProps: itemProps_, spaced } = this.props
+    const { children: children_, stretch, itemProps: itemProps_, spaced, ...props } = this.props
     let itemProps = itemProps_ as any
     let children = children_
-    const getContext = (index, length) =>
-      spaced
-        ? {}
-        : {
-            ...uiContext,
-            inSegment: {
-              first: index === 0,
-              last: index === length - 1,
-              index,
-            },
-          }
     if (spaced) {
       itemProps = itemProps || {}
       itemProps.marginLeft = typeof spaced === 'number' ? spaced : 5
@@ -64,7 +66,7 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
     }
     const realChildren = children && React.Children.map(children, _ => _).filter(Boolean)
     if (realChildren.length > 1) {
-      return realChildren
+      children = realChildren
         .map((child, index) => {
           if (!child) {
             return false
@@ -73,18 +75,18 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
             typeof child === 'string' || typeof child === 'number' ? <span>{child}</span> : child
 
           return (
-            <UIContext.Provider key={index} value={getContext(index, realChildren.length)}>
+            <MergeUIContext key={index} value={this.getContext(index, realChildren.length)}>
               {itemProps
                 ? React.cloneElement(finalChild, {
                     ...itemProps,
                     ...finalChild.props,
                   }) /* merge child props so they can override */
                 : finalChild}
-            </UIContext.Provider>
+            </MergeUIContext>
           )
         })
         .filter(Boolean)
     }
-    return children
+    return <Row {...props}>{children}</Row>
   }
 }

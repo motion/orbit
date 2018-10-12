@@ -13,6 +13,7 @@ import { Button } from '@mcro/ui'
 import { fuzzyQueryFilter } from '../../../../helpers'
 import { settingsList } from '../../../../helpers/settingsList'
 import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
+import { Unpad } from '../../../../views/Unpad'
 
 type Props = {
   store?: OrbitAppsStore
@@ -56,10 +57,6 @@ class OrbitAppsStore {
   }
 }
 
-const Unpad = view({
-  margin: [0, -16],
-})
-
 @view.attach('selectionStore', 'paneManagerStore')
 @view.attach({
   store: OrbitAppsStore,
@@ -88,7 +85,7 @@ export class OrbitSettingsApps extends React.Component<Props> {
                   result={{
                     ...settingToAppConfig(setting),
                     config: {
-                      dimensions: [680, 620],
+                      dimensions: [620, 620],
                       initialState: {
                         active: 'settings',
                       },
@@ -99,7 +96,7 @@ export class OrbitSettingsApps extends React.Component<Props> {
                 />
               ))}
             </Grid>
-            <Views.VertSpace />
+            <Views.VerticalSpace />
           </>
         )}
         <Views.SubTitle>App Store</Views.SubTitle>

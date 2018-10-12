@@ -4,7 +4,7 @@ import { Carousel, CarouselProps } from './Carousel'
 import { SelectionStore } from '../apps/orbit/orbitDocked/SelectionStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
 
-type Props = CarouselProps & {
+export type SelectableCarouselProps = CarouselProps & {
   selectionStore?: SelectionStore
   store?: CarouselStore
   offset: number
@@ -13,7 +13,7 @@ type Props = CarouselProps & {
 }
 
 class CarouselStore {
-  props: Props
+  props: SelectableCarouselProps
 
   carouselRef = React.createRef<Carousel>()
 
@@ -50,7 +50,7 @@ class CarouselStore {
   store: CarouselStore,
 })
 @view
-export class SelectableCarousel extends React.Component<Props> {
+export class SelectableCarousel extends React.Component<SelectableCarouselProps> {
   render() {
     const { store, selectionStore, cardWidth = 180, cardHeight = 95, ...props } = this.props
     return (

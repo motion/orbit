@@ -8,6 +8,8 @@ import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { Bit } from '@mcro/models'
+import { reaction } from 'mobx'
+import { debounce } from 'lodash'
 
 type Props = {
   scrollingElement: HTMLDivElement
@@ -45,25 +47,26 @@ const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]
 
 type ListItemProps = {
   model: Bit
-  index: number
-  offset: number
   query: string
   style?: Object
   cache?: any
   parent?: any
   width?: number
+  realIndex: number
 }
 
-const ListItem = ({ model, index, offset, query }: ListItemProps) => {
+const spaceBetween = <div style={{ flex: 1 }} />
+
+const ListItem = ({ model, realIndex, query }: ListItemProps) => {
   const isConversation = model.integration === 'slack'
   return (
     <OrbitListItem
-      pane={name}
+      pane="docked-search"
       subPane="search"
-      index={index + offset}
+      index={realIndex}
       model={model}
       hide={isConversation ? hideSlack : null}
-      subtitleSpaceBetween={<div style={{ flex: 1 }} />}
+      subtitleSpaceBetween={spaceBetween}
       isExpanded
       searchTerm={query}
       onClickLocation={handleClickLocation}
@@ -101,6 +104,12 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     defaultHeight: 60,
     fixedWidth: true,
   })
+  private resizeOnChange = reaction(
+    () => this.items && Math.random(),
+    () => {
+      this.resizeAll()
+    },
+  )
 
   componentDidUpdate(prevProps) {
     if (!prevProps.scrollingElement && this.props.scrollingElement) {
@@ -122,6 +131,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   compoenntWillUnmount() {
     this.resizeObserver.disconnect()
+    this.resizeOnChange()
   }
 
   private measure = () => {
@@ -148,7 +158,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
             key={key}
             model={this.items[index]}
             index={index}
-            offset={offset}
+            realIndex={index + offset}
             query={searchStore.activeQuery}
           />
         </div>
@@ -160,16 +170,17 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     return this.props.searchStore.searchState.results || []
   }
 
-  private resizeAll = () => {
+  private resizeAll = debounce(() => {
+    console.log('resizing all...')
     this.shouldResizeAll = false
     this.cache.clearAll()
     if (this.listRef.current) {
       this.listRef.current.recomputeRowHeights()
     }
-  }
+  })
 
   render() {
-    const { scrollToIndex, scrollingElement, searchStore } = this.props
+    const { scrollToIndex, scrollingElement, searchStore, offset } = this.props
     // double render the first few items so we can measure height, but hide them
     const firstItems = this.items
       .slice(0, 10)
@@ -177,8 +188,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
         <ListItem
           key={item.id}
           model={item}
-          index={index}
-          offset={this.props.offset}
+          realIndex={index + offset}
           query={searchStore.activeQuery}
         />
       ))

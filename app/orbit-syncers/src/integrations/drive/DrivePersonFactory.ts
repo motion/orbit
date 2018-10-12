@@ -1,5 +1,5 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { GDrivePersonData, Person, Setting } from '@mcro/models'
+import { DrivePersonData, Person, Setting } from '@mcro/models'
 import { DriveUser } from '@mcro/services'
 
 /**
@@ -23,7 +23,7 @@ export class DrivePersonFactory {
       name: user.displayName,
       email: user.emailAddress,
       photo: user.photoLink,
-      data: {} as GDrivePersonData,
+      data: {} as DrivePersonData,
       raw: user,
     })
   }

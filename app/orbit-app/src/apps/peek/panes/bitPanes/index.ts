@@ -1,5 +1,6 @@
 export * from './PeekBitDocument'
 export * from './PeekBitMail'
+export * from './PeekBitWebsite'
 export * from './PeekBitFile'
 export * from './PeekBitConversation'
 export * from './PeekBitTask'

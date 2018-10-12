@@ -11,6 +11,7 @@ import iconGithub from '../../public/icons/github.svg'
 import iconGithubWhite from '../../public/icons/github-white.svg'
 import iconConfluence from '../../public/icons/confluence.svg'
 import iconJira from '../../public/icons/jira.svg'
+import iconWebsite from '../../public/icons/website.svg'
 
 const icons = {
   gcalendar: iconGCalendar,
@@ -23,6 +24,7 @@ const icons = {
   githubWhite: iconGithubWhite,
   confluence: iconConfluence,
   jira: iconJira,
+  website: iconWebsite,
 }
 
 const adjust = {

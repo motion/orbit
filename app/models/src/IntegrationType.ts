@@ -5,6 +5,7 @@ export type IntegrationType =
   | 'github'
   | 'jira'
   | 'confluence'
+  | 'website'
   | 'app1'
 
 export type IntegrationTypeValues = {
@@ -14,4 +15,5 @@ export type IntegrationTypeValues = {
   github?: string
   jira?: string
   confluence?: string
+  website?: string
 }

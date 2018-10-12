@@ -79,7 +79,7 @@ export default class Crawler {
   selectors = null
   promiseEnds = []
 
-  constructor(options: Options) {
+  constructor(options) {
     this.options = options || {}
   }
 

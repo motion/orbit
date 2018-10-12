@@ -1,5 +1,6 @@
 import { ConfluenceBitData } from './ConfluenceBitData'
-import { GDriveBitData } from './GDriveBitData'
+import { WebsiteBitData } from './WebsiteBitData'
+import { DriveBitData } from './DriveBitData'
 import { GithubBitData } from './GithubBitData'
 import { GmailBitData } from './GmailBitData'
 import { JiraBitData } from './JiraBitData'
@@ -14,4 +15,5 @@ export type BitData =
   | GmailBitData
   | JiraBitData
   | SlackBitData
-  | GDriveBitData
+  | DriveBitData
+  | WebsiteBitData

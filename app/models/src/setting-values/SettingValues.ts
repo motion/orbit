@@ -1,5 +1,6 @@
 import { ConfluenceSettingValues } from './ConfluenceSettingValues'
-import { GDriveSettingValues } from './GDriveSettingValues'
+import { WebsiteSettingValues } from './WebsiteSettingValues'
+import { DriveSettingValues } from './DriveSettingValues'
 import { GeneralSettingValues } from './GeneralSettingValues'
 import { GithubSettingValues } from './GithubSettingValues'
 import { GmailSettingValues } from './GmailSettingValues'
@@ -10,7 +11,8 @@ export type SettingValues =
   | GeneralSettingValues
   | ConfluenceSettingValues
   | JiraSettingValues
-  | GDriveSettingValues
+  | DriveSettingValues
   | GmailSettingValues
   | GithubSettingValues
   | SlackSettingValues
+  | WebsiteSettingValues

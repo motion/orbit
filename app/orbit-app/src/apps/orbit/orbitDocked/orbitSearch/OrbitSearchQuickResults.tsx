@@ -30,8 +30,12 @@ const decorate = compose(
 export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
   const { activeQuery } = searchStore
   const { results, query } = searchStore.quickSearchState
-  if (!!query && !results.length && searchStore.hasSearchResults) {
-    return <Banner>Drop result here to pin</Banner>
+  if (!results.length && searchStore.hasSearchResults) {
+    if (!!query) {
+      return <Banner>Drop result here to pin</Banner>
+    } else {
+      return null
+    }
   }
   return (
     <View opacity={activeQuery === query ? 1 : 0.5}>

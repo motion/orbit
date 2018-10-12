@@ -1,13 +1,13 @@
 import * as React from 'react'
-import { WindowScroller, AutoSizer, List, CellMeasurerCache, CellMeasurer } from 'react-virtualized'
+import { WindowScroller, List, CellMeasurerCache, CellMeasurer } from 'react-virtualized'
 import { SearchStore } from '../SearchStore'
 import { view } from '@mcro/black'
 import { Text } from '@mcro/ui'
 import { HighlightText } from '../../../../views/HighlightText'
 import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
-import { ORBIT_WIDTH } from '@mcro/constants'
-import { PointerEventsProperty } from 'csstype'
+import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
+import { Bit } from '@mcro/models'
 
 type Props = {
   scrollingElement: HTMLDivElement
@@ -33,13 +33,33 @@ const renderListItemChildren = ({ content }, bit) => {
   )
 }
 
-const ListItem = ({ model, index, offset, query }) => {
+const OrbitCardContent = view({
+  padding: [6, 0],
+  flex: 1,
+  overflow: 'hidden',
+  whiteSpace: 'pre',
+})
+
+const SearchResultText = props => <Text wordBreak="break-all" fontWeight={400} {...props} />
+const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ') : str)
+
+type ListItemProps = {
+  model: Bit
+  index: number
+  offset: number
+  query: string
+  style?: Object
+  cache?: any
+  parent?: any
+  width?: number
+}
+
+const ListItem = ({ model, index, offset, query }: ListItemProps) => {
   const isConversation = model.integration === 'slack'
   return (
     <OrbitListItem
       pane={name}
       subPane="search"
-      key={model.id}
       index={index + offset}
       model={model}
       hide={isConversation ? hideSlack : null}
@@ -58,15 +78,14 @@ const ListItem = ({ model, index, offset, query }) => {
   )
 }
 
-const OrbitCardContent = view({
-  padding: [6, 0],
-  flex: 1,
-  overflow: 'hidden',
-  whiteSpace: 'pre',
-})
+class VirtualList extends React.Component<any> {
+  render() {
+    return <List {...this.props} ref={this.props.forwardRef} />
+  }
+}
 
-const SearchResultText = props => <Text wordBreak="break-all" fontWeight={400} {...props} />
-const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ') : str)
+const SortableListItem = SortableElement(ListItem)
+const SortableList = SortableContainer(VirtualList, { withRef: true })
 
 @view
 export class OrbitSearchVirtualList extends React.Component<Props> {
@@ -77,7 +96,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     height: 0,
   }
 
-  private lastWidth = 0
   private shouldResizeAll = false
   private cache = new CellMeasurerCache({
     defaultHeight: 60,
@@ -116,20 +134,19 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   private rowRenderer = ({ index, parent, key, style }) => {
     const { searchStore, offset } = this.props
-    const row = this.items[index]
     return (
       <CellMeasurer
+        key={key}
         cache={this.cache}
         columnIndex={0}
-        key={key}
         parent={parent}
         rowIndex={index}
-        width={this.lastWidth}
+        width={this.cache}
       >
         <div style={style}>
-          <ListItem
-            key={`${key}item`}
-            model={row}
+          <SortableListItem
+            key={key}
+            model={this.items[index]}
             index={index}
             offset={offset}
             query={searchStore.activeQuery}
@@ -187,8 +204,9 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
               zIndex: 1,
             }}
           >
-            <List
-              ref={this.listRef}
+            <SortableList
+              forwardRef={this.listRef}
+              items={this.items}
               deferredMeasurementCache={this.cache}
               height={this.state.height}
               width={scrollingElement.clientWidth}

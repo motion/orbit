@@ -26,11 +26,10 @@ const SortableItem = SortableElement(({ value }: { value: SelectionGroup }) => {
   const { name, items, startIndex } = value
   const width = 180
   const sectionKey = items.map(x => `${x.id}`).join(' ')
-  console.log('SortableItem', sectionKey)
   return (
-    <div style={{ pointerEvents: 'all', height: rowHeight(value) }}>
+    <div key={sectionKey} style={{ pointerEvents: 'all', height: rowHeight(value) }}>
       <OrbitCarouselSection
-        key={sectionKey}
+        key={sectionKey + 'section'}
         offset={startIndex}
         items={items}
         categoryName={name}

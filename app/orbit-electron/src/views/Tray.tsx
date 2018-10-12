@@ -40,6 +40,7 @@ class TrayStore {
     const generalSetting = await loadOne(SettingModel, { args: generalSettingWhere })
     await save(SettingModel, {
       ...generalSetting,
+      // @ts-ignore
       values: {
         ...generalSetting.values,
         realtimeSearch: !(generalSetting.values as GeneralSettingValues).realtimeSearch,

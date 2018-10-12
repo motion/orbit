@@ -8,7 +8,7 @@ import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from './orbitDocked/SearchStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
 import { BORDER_RADIUS } from '../../constants'
-import { onlyUpdateOnChanged } from '../../helpers/onlyUpdateOnChanged'
+import { StaticContainer } from '../../views/StaticContainer'
 
 export type SubPaneProps = CSSPropertySet & {
   preventScroll?: boolean
@@ -70,16 +70,6 @@ const SubPaneInner = view(UI.View, {
 const PaneContentInner = view({
   position: 'relative',
 })
-
-class StaticContainer extends React.Component {
-  shouldComponentUpdate(a, b, c) {
-    return onlyUpdateOnChanged.call(this, a, b, c)
-  }
-
-  render() {
-    return this.props.children
-  }
-}
 
 @view.attach('paneManagerStore', 'orbitStore', 'searchStore', 'selectionStore')
 @view.provide({

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, log } from '@mcro/black'
 import { SubPane } from '../../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -9,6 +9,7 @@ import { OrbitNavVerticalPad } from '../../../../views'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
 import { SubPaneStore } from '../../SubPaneStore'
+import { StaticContainer } from '../../../../views/StaticContainer'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -25,30 +26,23 @@ const OrbitSearchResultsFrame = view({
 })
 
 // separate view to prevent a few renders...
-const decorator = compose(
-  view.attach('subPaneStore'),
-  view,
-)
-const OrbitSearchResultsContents = decorator(
-  ({ searchStore, selectionStore, subPaneStore }: Props) => {
-    const { isChanging } = searchStore
-    return (
-      <>
-        <OrbitSearchQuickResults searchStore={searchStore} selectionStore={selectionStore} />
-        <OrbitSearchResultsFrame
-          style={{
-            opacity: isChanging ? 0.7 : 1,
-          }}
-        >
-          <OrbitSearchVirtualList
-            key={searchStore.searchState.results.map(x => `${x.id}`).join('')}
-            scrollingElement={subPaneStore.paneNode}
-          />
-        </OrbitSearchResultsFrame>
-      </>
-    )
-  },
-)
+const OrbitSearchResultsContents = view(({ searchStore, selectionStore }: Props) => {
+  log(`render only if change...`)
+  return (
+    <>
+      <OrbitSearchQuickResults searchStore={searchStore} selectionStore={selectionStore} />
+      <OrbitSearchResultsFrame
+        style={{
+          opacity: searchStore.isChanging ? 0.7 : 1,
+        }}
+      >
+        <StaticContainer>
+          <OrbitSearchVirtualList />
+        </StaticContainer>
+      </OrbitSearchResultsFrame>
+    </>
+  )
+})
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore')
 @view

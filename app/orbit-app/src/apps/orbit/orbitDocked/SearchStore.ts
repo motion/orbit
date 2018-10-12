@@ -220,12 +220,12 @@ export class SearchStore {
   // todo
   remoteRowCount = 1000
 
-  loadMore = ({ startIndex, endIndex }) => {
-    this.nextRows = { startIndex, endIndex }
+  loadMore = ({ startIndex, stopIndex }) => {
+    this.nextRows = { startIndex, endIndex: stopIndex }
   }
 
-  isRowLoaded = ({ index }) => {
-    return index < this.searchState.results.length
+  isRowLoaded = find => {
+    return find.index < this.searchState.results.length
   }
 
   quickSearchState = react(

@@ -25,11 +25,9 @@ const rowHeight = (group: SelectionGroup) => cardHeight(group) + TITLE_HEIGHT
 const SortableItem = SortableElement(({ value }: { value: SelectionGroup }) => {
   const { name, items, startIndex } = value
   const width = 180
-  const sectionKey = items.map(x => `${x.id}`).join(' ')
   return (
-    <div key={sectionKey} style={{ pointerEvents: 'all', height: rowHeight(value) }}>
+    <div style={{ pointerEvents: 'all', height: rowHeight(value) }}>
       <OrbitCarouselSection
-        key={sectionKey + 'section'}
         offset={startIndex}
         items={items}
         categoryName={name}
@@ -51,8 +49,15 @@ class VirtualList extends React.Component<{ items: SelectionGroup[] }> {
         ref={instance => (this.List = instance)}
         rowHeight={({ index }) => rowHeight(items[index])}
         rowRenderer={({ index, key }) => {
+          console.log('key', key)
           const group = items[index]
-          return <SortableItem key={key} index={index} value={group} />
+          return (
+            <SortableItem
+              key={group.items.map(x => `${x.id}`).join(' ')}
+              index={index}
+              value={group}
+            />
+          )
         }}
         rowCount={items.length}
         width={ORBIT_WIDTH}

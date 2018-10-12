@@ -241,7 +241,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     return (
       <ProvideHighlightsContextWithDefaults
         value={{
-          words: [searchStore.searchState.query.split(' ')],
+          words: searchStore.searchState.query.split(' '),
           maxChars: 500,
           maxSurroundChars: 80,
         }}

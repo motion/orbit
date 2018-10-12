@@ -47,6 +47,26 @@ export class SearchStore {
     },
   )
 
+  setActivePaneOnChangeQuery = react(
+    () => !!App.state.query,
+    query => {
+      if (!query) {
+        this.props.paneManagerStore.setActivePane('home')
+      } else {
+        this.props.paneManagerStore.setActivePane('search')
+      }
+    },
+  )
+
+  setActivePaneToSearchOnIntegrationFilters = react(
+    () => this.searchFilterStore.hasIntegrationFilters,
+    hasIntegrationFilters => {
+      console.log('hasIntegrationFilters', hasIntegrationFilters)
+      ensure('hasIntegrationFilters', hasIntegrationFilters)
+      this.props.paneManagerStore.setActivePane('search')
+    },
+  )
+
   get activeQuery() {
     return App.state.query
   }

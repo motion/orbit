@@ -1,12 +1,20 @@
 import * as React from 'react'
 
-export const HighlightsContext = React.createContext({
+const defaultValue = {
   words: [] as string[],
   maxSurroundChars: Infinity,
   maxChars: Infinity,
-})
+}
 
-export const ProvideHighlightsContextWithDefaults = ({ value, children }) => (
+export const HighlightsContext = React.createContext(defaultValue)
+
+export const ProvideHighlightsContextWithDefaults = ({
+  value,
+  children,
+}: {
+  value: typeof defaultValue
+  children: any
+}) => (
   <HighlightsContext.Provider
     value={{
       maxSurroundChars: Infinity,

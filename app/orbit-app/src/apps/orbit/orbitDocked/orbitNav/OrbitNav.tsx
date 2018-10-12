@@ -119,7 +119,7 @@ export class OrbitNav extends React.Component<{
           </Popover> */}
 
           <Row
-            transition="all ease 120ms"
+            transition="transform ease 120ms, opacity ease 80ms 80ms"
             transform={{
               x: store.hoveredFilters ? 0 : -store.filtersWidth,
             }}

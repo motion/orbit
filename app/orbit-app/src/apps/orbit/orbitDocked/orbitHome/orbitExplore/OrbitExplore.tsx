@@ -26,7 +26,7 @@ const SortableItem = SortableElement(({ value }: { value: SelectionGroup }) => {
   const { name, items, startIndex } = value
   const width = 180
   return (
-    <div style={{ pointerEvents: 'all', height: rowHeight(value) }}>
+    <div style={{ height: rowHeight(value) }}>
       <OrbitCarouselSection
         offset={startIndex}
         items={items}

@@ -41,7 +41,7 @@ const OrbitSearchResultsContents = decorator(
           }}
         >
           <OrbitSearchVirtualList
-            key={searchStore.searchState.query}
+            key={searchStore.searchState.results.map(x => `${x.id}`).join('')}
             scrollingElement={subPaneStore.paneNode}
           />
         </OrbitSearchResultsFrame>
@@ -61,7 +61,6 @@ export class OrbitSearchResults extends React.Component<Props> {
         paddingLeft={0}
         paddingRight={0}
         name="search"
-        extraCondition={this.props.searchStore.hasQuery}
         before={<OrbitNavVerticalPad />}
         preventScroll
       >

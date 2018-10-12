@@ -31,7 +31,7 @@ const SubPaneFrame = view(UI.FullScreen, {
   opacity: 0,
   isActive: {
     opacity: 1,
-    pointerEvents: 'all',
+    pointerEvents: 'inherit',
   },
 })
 
@@ -46,7 +46,7 @@ const Pane = view(UI.View, {
   borderBottomRadius: BORDER_RADIUS,
   padding: [0, 12],
   margin: [0, 0, 0],
-  // pointerEvents: 'none',
+  pointerEvents: 'none',
   isActive: {
     '& > *': {
       pointerEvents: 'auto',
@@ -101,7 +101,6 @@ export class SubPane extends React.Component<SubPaneProps> {
       ...props
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
-    console.log('rendering subpane...', this.props.name)
     return (
       <SubPaneFrame isActive={isActive}>
         {before}

@@ -113,10 +113,13 @@ export class SearchStore {
       let results = []
       // if typing, wait a bit
       if (this.searchState.query !== query) {
-        // debounce a little for fast typer
-        await sleep(TYPE_DEBOUNCE)
-        // wait for nlp to give us results
-        await when(() => this.nlpStore.nlp.query === query)
+        // if no query, we dont need to debounce or wait for nlp
+        if (query) {
+          // debounce a little for fast typer
+          await sleep(TYPE_DEBOUNCE)
+          // wait for nlp to give us results
+          await when(() => this.nlpStore.nlp.query === query)
+        }
       }
 
       // pagination

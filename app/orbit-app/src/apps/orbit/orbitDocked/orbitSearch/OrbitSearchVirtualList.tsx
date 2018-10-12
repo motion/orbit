@@ -237,7 +237,12 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   render() {
     const { scrollingElement, searchStore } = this.props
-    log(`render OrbitSearchVirtualList ${searchStore.searchState.query}`)
+    log(
+      `render OrbitSearchVirtualList (${this.items.length}) ${this.state.height} ${
+        searchStore.searchState.query
+      }`,
+    )
+    window.x = this
     return (
       <ProvideHighlightsContextWithDefaults
         value={{
@@ -268,7 +273,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                 <SortableList
                   forwardRef={ref => {
                     if (ref) {
-                      console.log('loading listRef', ref)
                       registerChild(ref)
                       this.listRef = ref
                     }

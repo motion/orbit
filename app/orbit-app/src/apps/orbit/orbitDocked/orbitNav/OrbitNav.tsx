@@ -21,7 +21,6 @@ class OrbitNavStore {
     enterDelay: 40,
     betweenDelay: 40,
     onHovered: res => {
-      console.log('hoveer', res)
       this.hoveredFilters = !!res
     },
   })()
@@ -36,7 +35,6 @@ class OrbitNavStore {
 
   private measureFilters = () => {
     if (this.filtersRef) {
-      console.log('measueree', this.filtersRef.current)
       this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.current.clientWidth)
     }
   }
@@ -96,30 +94,9 @@ export class OrbitNav extends React.Component<{
               {...hoverProps}
             />
           </Row>
-          {/* <Popover
-            delay={100}
-            openOnClick
-            openOnHover
-            background
-            group="filters"
-            closeOnClickAway
-            target={
-
-            }
-            alignPopover="left"
-            adjust={[54, 0]}
-            borderRadius={6}
-            overflow="hidden"
-            elevation={4}
-            theme="light"
-          >
-            <View width={220} height={220}>
-              <OrbitFilters />
-            </View>
-          </Popover> */}
 
           <Row
-            transition="transform ease 120ms, opacity ease 80ms 80ms"
+            transition="transform ease 120ms, opacity ease 180ms 180ms"
             transform={{
               x: store.hoveredFilters ? 0 : -store.filtersWidth,
             }}

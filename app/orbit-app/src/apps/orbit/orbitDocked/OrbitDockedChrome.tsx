@@ -66,7 +66,6 @@ const Background = view({
 })
 
 const OrbitChrome = view(({ moreOpaque, isUpper = false }) => {
-  console.log(123)
   return (
     <>
       <Border />

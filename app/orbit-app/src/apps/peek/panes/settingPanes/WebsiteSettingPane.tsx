@@ -4,8 +4,8 @@ import { Setting, SettingModel, WebsiteSetting, WebsiteSettingValues } from '@mc
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { WebsiteCrawledData } from '../../../../../../orbit-syncers/src/integrations/website/WebsiteCrawledData'
-import * as Views from '../../../../views'
 import { Message } from '../../../../views/Message'
+import { Table, InputRow, VerticalSpace } from '../../../../views'
 
 type Props = {
   type: string
@@ -53,7 +53,7 @@ export class WebsiteSettingPane extends React.Component<
   // if (!values.username || !values.password || !values.domain)
   // if (values.domain.indexOf('http') !== 0)
 
-   addIntegration = async e => {
+  addIntegration = async e => {
     e.preventDefault()
     const { setting, values } = this.props.store
     setting.values = { ...setting.values, ...values }
@@ -61,9 +61,7 @@ export class WebsiteSettingPane extends React.Component<
     await save(SettingModel, setting)
   }
 
-  handleChange = (prop: keyof WebsiteCrawledData) => (
-    val: WebsiteCrawledData[typeof prop],
-  ) => {
+  handleChange = (prop: keyof WebsiteCrawledData) => (val: WebsiteCrawledData[typeof prop]) => {
     this.props.store.values = {
       ...this.props.store.values,
       [prop]: val,
@@ -74,26 +72,24 @@ export class WebsiteSettingPane extends React.Component<
     const { values } = this.props.store
     return (
       <UI.Col tagName="form" onSubmit={this.addIntegration} padding={20}>
-        <Message>
-          Enter website URL
-        </Message>
-        <Views.VertSpace />
+        <Message>Enter website URL</Message>
+        <VerticalSpace />
         <UI.Col margin="auto" width={370}>
           <UI.Col padding={[0, 10]}>
-            <Views.Table>
-              <Views.InputRow
+            <Table>
+              <InputRow
                 label="Website URL"
                 value={values.url}
                 onChange={this.handleChange('url')}
               />
-            </Views.Table>
-            <Views.VertSpace />
+            </Table>
+            <VerticalSpace />
             <UI.Theme>
               <UI.Button type="submit" onClick={this.addIntegration}>
                 Save
               </UI.Button>
             </UI.Theme>
-            <Views.VertSpace />
+            <VerticalSpace />
           </UI.Col>
         </UI.Col>
       </UI.Col>

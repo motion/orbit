@@ -216,6 +216,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
               estimatedRowSize={100}
               rowRenderer={this.rowRenderer}
               scrollToIndex={scrollToIndex}
+              distance={20}
             />
           </div>
         )}

@@ -120,7 +120,6 @@ const FirstItems = ({ items, offset, searchStore }) => {
 }
 
 @view.attach('searchStore', 'selectionStore')
-@view
 export class OrbitSearchVirtualList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List
@@ -139,6 +138,14 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     () => {
       if (this.listRef) {
         this.listRef.forceUpdateGrid()
+      }
+    },
+  )
+  private scrollToRow = reaction(
+    () => this.props.selectionStore.activeIndex,
+    index => {
+      if (this.listRef) {
+        this.listRef.scrollToRow(index)
       }
     },
   )
@@ -163,6 +170,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   componentWillUnmount() {
     this.resizeObserver.disconnect()
     this.resizeOnChange()
+    this.scrollToRow()
   }
 
   private get offset() {
@@ -215,10 +223,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   })
 
   render() {
-    const { scrollingElement, searchStore, selectionStore } = this.props
-    // re-render on this value change, dont delete this
-    selectionStore.activeIndex
-    console.log('scroll to', selectionStore.activeIndex - this.offset)
+    const { scrollingElement, searchStore } = this.props
     return (
       <ProvideHighlightsContextWithDefaults
         value={{ words: searchStore.activeQuery.split(' '), maxChars: 500, maxSurroundChars: 80 }}
@@ -261,7 +266,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                   rowRenderer={this.rowRenderer}
                   distance={20}
                   onRowsRendered={onRowsRendered}
-                  scrollToIndex={selectionStore.activeIndex - this.offset}
                 />
               )}
             </InfiniteLoader>

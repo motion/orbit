@@ -186,7 +186,6 @@ export class SelectionStore {
       return
     }
     const activeIndex = this.getNextIndex(this.activeIndex, direction)
-    console.log('move next index', activeIndex)
     if (activeIndex !== this.activeIndex) {
       this.toggleSelected(activeIndex)
     }

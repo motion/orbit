@@ -112,6 +112,9 @@ export class OrbitItemStore {
   // this cancels to prevent renders very aggressively
   updateIsSelected = react(
     () => {
+      if (this.props.ignoreSelection) {
+        return false
+      }
       const activeIndex = this.props.selectionStore && this.props.selectionStore.activeIndex
       const isPaneActive = this.props.subPaneStore && this.props.subPaneStore.isActive
       const isSelected =
@@ -128,7 +131,6 @@ export class OrbitItemStore {
     },
     async (nextIsSelected, { sleep }) => {
       const { preventAutoSelect, scrollIntoView } = this.props
-      console.log(nextIsSelected, this.isSelected, preventAutoSelect, this.target)
       ensure('new index', nextIsSelected !== this.isSelected)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {

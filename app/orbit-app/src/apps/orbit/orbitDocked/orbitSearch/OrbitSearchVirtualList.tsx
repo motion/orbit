@@ -61,11 +61,12 @@ type ListItemProps = {
   parent?: any
   width?: number
   realIndex: number
+  ignoreSelection?: boolean
 }
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
-const ListItem = ({ model, realIndex, query }: ListItemProps) => {
+const ListItem = ({ model, realIndex, query, ignoreSelection }: ListItemProps) => {
   const isConversation = model.integration === 'slack'
   console.log('i', realIndex)
   return (
@@ -84,6 +85,7 @@ const ListItem = ({ model, realIndex, query }: ListItemProps) => {
       extraProps={{
         minimal: true,
       }}
+      ignoreSelection={ignoreSelection}
     >
       {renderListItemChildren}
     </OrbitListItem>
@@ -114,6 +116,7 @@ const FirstItems = ({ items, offset, searchStore }) => {
           model={item}
           realIndex={index + offset}
           query={searchStore.activeQuery}
+          ignoreSelection
         />
       ))}
     </div>
@@ -145,9 +148,13 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   private scrollToRow = reaction(
     () => this.props.selectionStore.activeIndex - this.offset,
     index => {
-      ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
-      ensure('valid index', index > -1)
-      ensure('has list', !!this.listRef)
+      try {
+        ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
+        ensure('valid index', index > -1)
+        ensure('has list', !!this.listRef)
+      } catch {
+        return
+      }
       this.listRef.scrollToRow(index)
     },
   )
@@ -226,6 +233,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   render() {
     const { scrollingElement, searchStore } = this.props
+    log(`render OrbitSearchVirtualList`)
     return (
       <ProvideHighlightsContextWithDefaults
         value={{ words: searchStore.activeQuery.split(' '), maxChars: 500, maxSurroundChars: 80 }}

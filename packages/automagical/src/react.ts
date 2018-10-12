@@ -27,22 +27,21 @@ function tsWatch(options) {
   }
 }
 
+type ReactVal =
+  | null
+  | number
+  | string
+  | Object
+  | [any]
+  | [any, any]
+  | [any, any, any]
+  | [any, any, any, any]
+  | [any, any, any, any, any]
+  | [any, any, any, any, any, any]
+  | [any, any, any, any, any, any, any]
+
 // @react decorator
-export function react<
-  A extends
-    | null
-    | number
-    | string
-    | Object
-    | [any]
-    | [any, any]
-    | [any, any, any]
-    | [any, any, any, any]
-    | [any, any, any, any, any]
-    | [any, any, any, any, any, any]
-    | [any, any, any, any, any, any, any],
-  B
->(
+export function react<A extends ReactVal, B>(
   a: () => A,
   b?: ((a: A, helpers: ReactionHelpers) => B | Promise<B>) | ReactionOptions,
   c?: ReactionOptions,

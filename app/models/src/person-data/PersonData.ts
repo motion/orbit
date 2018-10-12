@@ -1,5 +1,5 @@
 import { ConfluencePersonData } from './ConfluencePersonData'
-import { GDrivePersonData } from './GDrivePersonData'
+import { DrivePersonData } from './DrivePersonData'
 import { GithubPersonData } from './GithubPersonData'
 import { GmailPersonData } from './GmailPersonData'
 import { JiraPersonData } from './JiraPersonData'
@@ -14,4 +14,4 @@ export type PersonData =
   | GmailPersonData
   | JiraPersonData
   | SlackPersonData
-  | GDrivePersonData
+  | DrivePersonData

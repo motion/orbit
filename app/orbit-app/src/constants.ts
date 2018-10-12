@@ -26,6 +26,7 @@ export const NICE_INTEGRATION_NAMES = {
   confluence: 'Confluence',
   jira: 'Jira',
   github: 'Github',
+  website: 'Website',
   app1: 'Custom App',
 }
 
@@ -35,6 +36,7 @@ export const SHORT_INTEGRATION_NAMES = {
   gmail: 'Gmail',
   confluence: 'Confluence',
   jira: 'Jira',
+  website: 'Website',
   github: 'Github',
 }
 
@@ -94,6 +96,11 @@ export const PEEK_THEMES = {
       darkenTitleBarAmount: 0.04,
       background: '#D2675E',
       color: 'white',
+    },
+    website: {
+      darkenTitleBarAmount: 0.04,
+      background: '#a1b5cc',
+      color: '#444',
     },
   },
 }

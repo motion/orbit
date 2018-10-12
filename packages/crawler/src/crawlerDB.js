@@ -1,7 +1,7 @@
 import { sortBy } from 'lodash'
 import { Logger } from '@mcro/logger'
 
-const log = new Logger(crawler:db')
+const log = new Logger('crawler:db')
 
 export default class CrawlerDB {
   crawled = []

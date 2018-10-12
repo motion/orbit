@@ -48,6 +48,15 @@ export const settingsList: SettingConfig[] = [
     title: 'Jira',
     icon: 'jira',
   },
+  {
+    id: 'website',
+    type: 'view',
+    subType: 'WebsiteSetupPane',
+    integration: 'website',
+    title: 'Crawl Website',
+    icon: 'website',
+    // auth: false,
+  },
   // {
   //   id: 'website',
   //   type: 'setting',

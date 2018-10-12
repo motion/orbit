@@ -75,6 +75,13 @@ export const allStreams = [
     model: BitModel,
     query: findManyType('jira'),
   },
+  {
+    id: '7',
+    source: 'website',
+    name: 'Websites',
+    model: BitModel,
+    query: findManyType('website'),
+  },
   // {
   //   id: '7',
   //   source: 'app1',

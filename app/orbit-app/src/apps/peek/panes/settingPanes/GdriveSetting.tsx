@@ -3,11 +3,11 @@ import { view } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
 import { PeekSettingProps } from '../PeekSetting'
-import { GDriveSetting } from '@mcro/models'
+import { DriveSetting } from '@mcro/models'
 import { SimpleAppExplorer } from './views/SimpleAppExplorer'
 import { SettingManageRow } from './views/SettingManageRow'
 
-type Props = PeekSettingProps<GDriveSetting>
+type Props = PeekSettingProps<DriveSetting>
 
 class GDocsSettingStore {
   props: Props

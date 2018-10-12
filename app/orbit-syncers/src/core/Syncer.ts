@@ -51,7 +51,7 @@ export class Syncer {
 
       // in force mode we simply load all settings and run them, we don't need to create a subscription
       if (force) {
-        const settings = await getRepository(SettingEntity).find()
+        const settings = await getRepository(SettingEntity).find({ type: this.options.type })
         for (let setting of settings) {
           await this.runInterval(setting, true)
         }
@@ -136,7 +136,7 @@ export class Syncer {
     const log = new Logger(
       'syncer:' +
       (setting ? setting.type + ":" + setting.id : '') +
-      (force ? 'force' : '')
+      (force ? ' (force)' : '')
     )
 
     // get the last run job
@@ -197,7 +197,7 @@ export class Syncer {
     const syncerPromise = this.runSyncer(log, setting) // note: don't await it
 
     // create interval to run syncer periodically
-    if (this.options.interval) {
+    if (this.options.interval && force === false) {
       interval = {
         setting,
         running: syncerPromise,

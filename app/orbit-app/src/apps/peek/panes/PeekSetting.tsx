@@ -32,7 +32,8 @@ export class PeekSetting extends React.Component<PeekSettingProps<Setting>> {
       return null
     }
     const integration = model.type
-    const SettingPane = SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
+    const SettingPane = SettingPanes[`${capitalize(integration)}Setting`] ||
+        SettingPanes[`${capitalize(integration)}SettingPane`] || EmptyPane // todo: too dynamic
     return (
       <SettingPane
         appsStore={appsStore}

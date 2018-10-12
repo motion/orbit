@@ -1,6 +1,6 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { GDriveSettingValues, Setting } from '@mcro/models'
+import { DriveSettingValues, Setting } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
@@ -95,7 +95,7 @@ export class DriveFetcher {
    * Refreshes OAuth token.
    */
   private async refreshToken() { // todo: create a separate loader component, replacements for r2
-    const values = this.setting.values as GDriveSettingValues
+    const values = this.setting.values as DriveSettingValues
     if (!values.oauth.refreshToken) {
       return null
     }

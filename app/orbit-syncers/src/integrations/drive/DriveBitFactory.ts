@@ -1,5 +1,5 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, GDriveBitData, Setting } from '@mcro/models'
+import { Bit, DriveBitData, Setting } from '@mcro/models'
 import { DriveLoadedFile } from '@mcro/services'
 
 /**
@@ -22,7 +22,7 @@ export class DriveBitFactory {
       type: 'document',
       title: file.file.name,
       body: file.content || 'empty',
-      data: {} as GDriveBitData,
+      data: {} as DriveBitData,
       raw: file,
       webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
       location: file.parent

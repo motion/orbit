@@ -6,6 +6,7 @@ import { ResolveMail } from './resolveBits/ResolveMail'
 import { ResolveTask } from './resolveBits/ResolveTask'
 import { ItemResolverResolverProps } from '../ItemResolver'
 import { Bit } from '@mcro/models'
+import { ResolveWebsite } from './resolveBits/ResolveWebsite'
 
 const results = {
   slack: {
@@ -25,6 +26,9 @@ const results = {
   },
   jira: {
     document: ResolveDocument,
+  },
+  website: {
+    website: ResolveWebsite,
   },
   app1: {
     custom: ResolveCustom,

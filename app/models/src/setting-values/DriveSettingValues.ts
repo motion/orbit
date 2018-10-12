@@ -1,4 +1,4 @@
-export interface GDriveSettingValues {
+export interface DriveSettingValues {
   oauth: {
     refreshToken: string
     secret: string

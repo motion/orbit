@@ -143,12 +143,12 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     },
   )
   private scrollToRow = reaction(
-    () => this.props.selectionStore.activeIndex,
+    () => this.props.selectionStore.activeIndex - this.offset,
     index => {
-      ensure('clicked recently', Date.now() - OrbitItemSingleton.lastClick < 50)
+      ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
       ensure('valid index', index > -1)
       ensure('has list', !!this.listRef)
-      this.listRef.scrollToRow(index - this.offset)
+      this.listRef.scrollToRow(index)
     },
   )
 

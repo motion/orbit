@@ -16,6 +16,7 @@ import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { Bit } from '@mcro/models'
 import { reaction } from 'mobx'
 import { debounce } from 'lodash'
+import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 
 type Props = {
   scrollingElement: HTMLDivElement
@@ -201,7 +202,9 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
         />
       ))
     return (
-      <>
+      <ProvideHighlightsContextWithDefaults
+        value={{ words: searchStore.activeQuery.split(' '), maxChars: 500, maxSurroundChars: 80 }}
+      >
         <div
           style={{
             opacity: 0,
@@ -253,7 +256,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
             </InfiniteLoader>
           </div>
         )}
-      </>
+      </ProvideHighlightsContextWithDefaults>
     )
   }
 }

@@ -179,7 +179,7 @@ const INVERSE = {
 }
 
 const DEFAULT_SHADOW = '0 0px 2px rgba(0,0,0,0.15)'
-const ELEVATION_SHADOW = x => [0, x * 1.5, x * 3.5, [0, 0, 0, 0.1]]
+const ELEVATION_SHADOW = x => [0, x * 2, x * 4, [0, 0, 0, 0.1 * ((x + 1) / 2)]]
 
 const getShadow = (shadow, elevation) => {
   let base = shadow === true ? [DEFAULT_SHADOW] : shadow || []

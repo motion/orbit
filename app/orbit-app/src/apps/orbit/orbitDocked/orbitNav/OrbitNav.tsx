@@ -12,7 +12,7 @@ import { hoverSettler } from '../../../../helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
 
 class OrbitNavStore {
-  filtersWidth: number | string = 'auto'
+  filtersWidth = 0
   hoveredFilters = false
   filtersRef = null as HTMLDivElement
   // @ts-ignore
@@ -58,6 +58,8 @@ export class OrbitNav extends React.Component<{
   queryStore?: QueryStore
   store?: OrbitNavStore
 }> {
+  navButtonBg = theme => (this.props.store.hoverSettle.isStuck() ? theme.background : 'transparent')
+
   render() {
     const { searchStore, store } = this.props
     const { onClick, ...hoverProps } = store.hoverSettle.props
@@ -93,12 +95,12 @@ export class OrbitNav extends React.Component<{
             </Popover>
             <NavButton
               icon="funnel40"
-              background={theme => {
-                console.log('theme', theme)
-                return store.hoverSettle.isStuck() ? theme.background : '#fff'
-              }}
+              key={store.hoverSettle.isStuck()}
+              background={this.navButtonBg}
               opacity={
-                store.hoverSettle.isStuck() || !!searchStore.searchFilterStore.hasIntegrationFilters
+                store.hoveredFilters ||
+                store.hoverSettle.isStuck() ||
+                !!searchStore.searchFilterStore.hasIntegrationFilters
                   ? 1
                   : 0.5
               }
@@ -113,12 +115,13 @@ export class OrbitNav extends React.Component<{
               x: store.hoveredFilters ? 0 : -store.filtersWidth,
             }}
           >
-            <OrbitFilters
-              width={store.filtersWidth === 0 ? 'auto' : store.filtersWidth}
-              opacity={store.hoveredFilters ? 1 : 0}
-              forwardRef={store.setFilterRef}
-              {...hoverProps}
-            />
+            <View width={store.filtersWidth === 0 ? 'auto' : store.filtersWidth}>
+              <OrbitFilters
+                opacity={store.hoveredFilters ? 1 : 0}
+                forwardRef={store.setFilterRef}
+                {...hoverProps}
+              />
+            </View>
             <OrbitSuggestionBar />
           </Row>
         </Row>

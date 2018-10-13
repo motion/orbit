@@ -1,4 +1,4 @@
-Orbit
+Orbit aka Clippy X
 
 Your Private Work Assistant
 

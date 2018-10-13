@@ -42,7 +42,9 @@ class OrbitNavStore {
   }
 
   private measureFilters = () => {
-    if (this.filtersRef) {
+    if (this.filtersWidth !== 0) {
+      this.filtersWidth = 0
+    } else {
       this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.clientWidth)
     }
   }
@@ -59,6 +61,7 @@ export class OrbitNav extends React.Component<{
   store?: OrbitNavStore
 }> {
   navButtonBg = theme => (this.props.store.hoverSettle.isStuck() ? theme.background : 'transparent')
+  setStuck = () => this.props.store.hoverSettle.setStuck(true)
 
   render() {
     const { searchStore, store } = this.props
@@ -119,6 +122,7 @@ export class OrbitNav extends React.Component<{
               <OrbitFilters
                 opacity={store.hoveredFilters ? 1 : 0}
                 forwardRef={store.setFilterRef}
+                onClick={this.setStuck}
                 {...hoverProps}
               />
             </View>

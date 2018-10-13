@@ -1,5 +1,8 @@
 make search actually good
 
+- cosal
+  - play around more with cosal, figure out if we can do any interesting relevancy
+  - put some UX together with nice peek windows to do relevancy with things
 - search relevancy - build a dataset, test, improve, use cosal, etc
   - build up some bigger data to test on
   - build up some search terms to test and iterate on
@@ -8,11 +11,12 @@ make search actually good
   - bigger peek windows
   - have peek open automatically on search
     - on new searches reset index to 0 not -1, keeps the peek open as you filter things
-- goal:
-  - be able to try a couple things and find recent stuff almost always
+  - GROUP together conversations in search results by much bigger amounts
+    - and then in peek windows you can see them all together
     - join together ALL slack conversations that match your query in the results window into infinite scroll!!!!!
       - that way you can search one thing, see slack, hit results
       - also would let you group together slack things much more easily
+  - GOAL: be able to try a couple things and find recent stuff almost always
 - look into better topic based search / high level search
 - generate topics in desktop - show them in quickresults?
 - smarter, better, less buggy, syncers

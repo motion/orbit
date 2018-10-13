@@ -111,7 +111,8 @@ export function hoverSettler({
           select(e.currentTarget)
         }
       } else {
-        if (stuck.get() && stuck.get() !== e.currentTarget) {
+        console.log('click', stuck.get())
+        if (stuck.get() && stuck.get() !== true && stuck.get() !== e.currentTarget) {
           return
         }
         stuck.set(false)

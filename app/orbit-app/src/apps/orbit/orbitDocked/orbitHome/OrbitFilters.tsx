@@ -22,10 +22,11 @@ export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {
     <Row {...props}>
       <FilterButton
         onClick={searchFilterStore.toggleSortBy}
+        opacity={0.8}
         iconProps={{
-          size: 16,
+          size: 14,
         }}
-        icon={searchFilterStore.sortBy === 'Recent' ? 'clock' : 'eye'}
+        icon={searchFilterStore.sortBy === 'Recent' ? 'clock' : 'target'}
         tooltip={searchFilterStore.sortBy}
       />
       {searchFilterStore.integrationFilters.length > 1 &&

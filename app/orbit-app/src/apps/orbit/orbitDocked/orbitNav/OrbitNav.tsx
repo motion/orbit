@@ -5,18 +5,24 @@ import { Row, Popover, View } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
 import { OrbitFilters } from '../orbitHome/OrbitFilters'
-import { view, react, ensure } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
 import { QueryStore } from '../QueryStore'
 import { hoverSettler } from '../../../../helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
 
+type Props = {
+  searchStore?: SearchStore
+  queryStore?: QueryStore
+  store?: OrbitNavStore
+}
+
 class OrbitNavStore {
+  props: Props
+
   filtersWidth = 0
   hoveredFilters = false
   filtersRef = null as HTMLDivElement
-  // @ts-ignore
-  resizeObserver = new ResizeObserver(() => this.measureFilters())
   hoverSettle = hoverSettler({
     enterDelay: 40,
     betweenDelay: 40,
@@ -25,27 +31,25 @@ class OrbitNavStore {
     },
   })()
 
-  observeFiltersRef = react(
-    () => this.filtersRef,
-    ref => {
-      ensure('ref', !!ref)
-      this.resizeObserver.observe(ref)
-    },
-  )
-
-  willUnmount() {
-    this.resizeObserver.disconnect()
-  }
-
   setFilterRef = ref => {
     this.filtersRef = ref
   }
 
-  private measureFilters = () => {
-    if (this.filtersWidth !== 0) {
-      this.filtersWidth = 0
-    } else {
+  measureFilters = react(
+    () => this.props.searchStore.searchFilterStore.integrationFilters.length,
+    () => {
+      console.log('measure...')
       this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.clientWidth)
+    },
+  )
+
+  handleToggleFilters = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log('click...')
+    this.hoverSettle.toggleStuck()
+    if (!this.hoverSettle.isStuck()) {
+      this.hoveredFilters = false
     }
   }
 }
@@ -55,11 +59,7 @@ class OrbitNavStore {
   store: OrbitNavStore,
 })
 @view
-export class OrbitNav extends React.Component<{
-  searchStore?: SearchStore
-  queryStore?: QueryStore
-  store?: OrbitNavStore
-}> {
+export class OrbitNav extends React.Component<Props> {
   navButtonBg = theme => (this.props.store.hoverSettle.isStuck() ? theme.background : 'transparent')
   setStuck = () => this.props.store.hoverSettle.setStuck(true)
 
@@ -107,7 +107,7 @@ export class OrbitNav extends React.Component<{
                   ? 1
                   : 0.5
               }
-              onClick={onClick}
+              onClick={store.handleToggleFilters}
               {...hoverProps}
             />
           </Row>
@@ -118,14 +118,16 @@ export class OrbitNav extends React.Component<{
               x: store.hoveredFilters ? 0 : -store.filtersWidth,
             }}
           >
-            <View width={store.filtersWidth === 0 ? 'auto' : store.filtersWidth}>
-              <OrbitFilters
-                opacity={store.hoveredFilters ? 1 : 0}
-                forwardRef={store.setFilterRef}
-                onClick={this.setStuck}
-                {...hoverProps}
-              />
-            </View>
+            <View width={store.filtersWidth === 0 ? 'auto' : store.filtersWidth} />
+            <OrbitFilters
+              opacity={store.hoveredFilters ? 1 : 0}
+              forwardRef={store.setFilterRef}
+              onClick={this.setStuck}
+              position="absolute"
+              top={0}
+              left={0}
+              {...hoverProps}
+            />
             <OrbitSuggestionBar />
           </Row>
         </Row>

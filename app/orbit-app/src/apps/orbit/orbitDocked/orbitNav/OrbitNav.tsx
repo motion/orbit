@@ -38,7 +38,7 @@ class OrbitNavStore {
   measureFilters = react(
     () => this.props.searchStore.searchFilterStore.integrationFilters.length,
     () => {
-      console.log('measure...')
+      console.log('measure...', this.filtersRef.clientWidth)
       this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.clientWidth)
     },
   )
@@ -118,7 +118,7 @@ export class OrbitNav extends React.Component<Props> {
               x: store.hoveredFilters ? 0 : -store.filtersWidth,
             }}
           >
-            <View width={store.filtersWidth === 0 ? 'auto' : store.filtersWidth} />
+            <View width={store.filtersWidth} />
             <OrbitFilters
               opacity={store.hoveredFilters ? 1 : 0}
               forwardRef={store.setFilterRef}

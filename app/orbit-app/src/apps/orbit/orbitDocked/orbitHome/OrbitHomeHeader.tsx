@@ -8,7 +8,7 @@ import { memoize } from 'lodash'
 const Section = view('section', {
   width: '100%',
   flexFlow: 'row',
-  padding: [0, 6, 0, 12],
+  padding: [0, 6],
   alignItems: 'center',
   transition: 'all ease 500ms',
   transform: {

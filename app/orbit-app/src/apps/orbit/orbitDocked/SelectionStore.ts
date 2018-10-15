@@ -107,11 +107,13 @@ export class SelectionStore {
 
   setSelectedOnSearch = react(
     () => [!!this.results && Math.random(), this.props.queryStore.query],
-    () => {
+    async (_, { sleep }) => {
       const hasResults = !!this.results.length
       // select first item on search
       if (hasResults) {
         ensure('results should auto select', this.resultsIn[0].shouldAutoSelect)
+        // dont be too too aggressive with the popup
+        await sleep(100)
         this.activeIndex = 0
       } else {
         this.clearSelected()

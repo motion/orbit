@@ -109,7 +109,7 @@ export class OrbitItemStore {
     return getIndex ? getIndex(model) : index
   }
 
-  // this cancels to prevent renders very aggressively
+  // this cancels aggresively to prevent renders
   updateIsSelected = react(
     () => {
       if (this.props.ignoreSelection) {
@@ -137,6 +137,7 @@ export class OrbitItemStore {
         ensure('target', !!this.target)
         // fluidity
         await sleep()
+        console.log('WOAH WOAH WOAH select me', this.props)
         Actions.setPeekApp(this.target, this.position)
       }
     },

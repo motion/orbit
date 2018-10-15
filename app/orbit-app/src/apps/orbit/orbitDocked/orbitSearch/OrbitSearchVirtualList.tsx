@@ -223,7 +223,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     const model = this.items[index]
     return (
       <CellMeasurer
-        key={`${model.id}`}
+        key={`${model.id}${index}`}
         cache={this.cache}
         columnIndex={0}
         parent={parent}

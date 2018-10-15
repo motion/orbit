@@ -95,16 +95,19 @@ class OrbitDockedContents extends React.Component<Props> {
 }
 
 class OrbitDockedStore {
-  shouldShowOrbitDocked = react(() => {
-    // always show this when only one window
-    // because we hide via electron not here
-    // otherwise use the normal docked
-    if (App.appsState.length === 1) {
-      return true
-    } else {
-      return App.orbitState.docked
-    }
-  })
+  // always show this when only one window
+  // because we hide via electron not here
+  // otherwise use the normal docked
+  shouldShowOrbitDocked = react(
+    () => [App.appsState.length, App.orbitState.docked],
+    ([numApps, isDocked]) => {
+      if (numApps === 1) {
+        return true
+      } else {
+        return isDocked
+      }
+    },
+  )
 }
 
 @view.attach('orbitStore', 'appsStore', 'selectionStore', 'queryStore', 'keyboardStore')

@@ -1,7 +1,7 @@
 import { react, view } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import {
-  AtlassianSettingSaveCommand,
+  SettingSaveCommand,
   AtlassianSettingValuesCredentials,
   Setting,
   AtlassianSetting,
@@ -82,7 +82,7 @@ export class AtlassianSettingLogin extends React.Component<
 
     // send command to the desktop
     this.props.store.status = Statuses.LOADING
-    const result = await command(AtlassianSettingSaveCommand, {
+    const result = await command(SettingSaveCommand, {
       setting,
     })
 

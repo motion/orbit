@@ -19,6 +19,9 @@ export class SettingEntity extends BaseEntity implements Setting {
   identifier?: string
 
   @Column()
+  name?: string
+
+  @Column()
   category?: string
 
   @Column('varchar')

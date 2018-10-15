@@ -3,7 +3,7 @@ import { Setting } from '@mcro/models'
 import { GmailSettingValues } from '@mcro/models'
 import { queryObjectToQueryString } from '../utils'
 import { GMailQueries } from './GMailQueries'
-import { GMailFetchOptions, GMailHistoryLoadResult, GMailThread } from './GMailTypes'
+import { GMailFetchOptions, GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailTypes'
 import { getGlobalConfig } from '@mcro/config'
 
 /**
@@ -16,6 +16,17 @@ export class GMailLoader {
   constructor(setting: Setting, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('service:gmail:loader:' + this.setting.id)
+  }
+
+  /**
+   * Loads user's GMail profile.
+   */
+  async loadProfile(): Promise<GMailUserProfile> {
+    this.log.timer('loading user profile')
+    const query = GMailQueries.userProfile()
+    const result = await this.fetch(query)
+    this.log.timer('loading user profile', result)
+    return result
   }
 
   /**

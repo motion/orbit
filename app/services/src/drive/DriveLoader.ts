@@ -3,12 +3,13 @@ import { Setting } from '@mcro/models'
 import * as path from 'path'
 import { DriveFetcher } from './DriveFetcher'
 import {
+  googleDriveAboutQuery,
   googleDriveFileCommentQuery,
   googleDriveFileExportQuery,
   googleDriveFileQuery,
   googleDriveFileRevisionQuery,
 } from './DriveQueries'
-import { DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveTypes'
+import { DriveComment, DriveFile, DriveAbout, DriveLoadedFile, DriveRevision } from './DriveTypes'
 import { uniqBy } from 'lodash'
 
 /**
@@ -23,8 +24,18 @@ export class DriveLoader {
     this.log = log || new Logger('service:gdrive:loader:' + setting.id)
   }
 
-  async load(): Promise<DriveLoadedFile[]> {
-    const files = await this.loadFiles()
+  /**
+   * Loads generation "about" information of current drive account.
+   */
+  async loadAbout(): Promise<DriveAbout> {
+    return await this.fetcher.fetch(googleDriveAboutQuery())
+  }
+
+  /**
+   * Loads google drive files.
+   */
+  async loadFiles(): Promise<DriveLoadedFile[]> {
+    const files = await this.loadPagedFiles()
     const driveFiles: DriveLoadedFile[] = []
     for (let file of files) {
       // try to find a file folder to create a Bit.location later on
@@ -60,10 +71,10 @@ export class DriveLoader {
     return driveFiles
   }
 
-  private async loadFiles(pageToken?: string): Promise<DriveFile[]> {
+  private async loadPagedFiles(pageToken?: string): Promise<DriveFile[]> {
     const result = await this.fetcher.fetch(googleDriveFileQuery(pageToken))
     if (result.nextPageToken) {
-      const nextPageFiles = await this.loadFiles(result.nextPageToken)
+      const nextPageFiles = await this.loadPagedFiles(result.nextPageToken)
       return [...result.files, ...nextPageFiles]
     }
     return result.files

@@ -54,6 +54,11 @@ focus on what we can make really a big improvement in day to day first:
 - location as a model
   - lets us query locations for sub-searches
 
+## profiles beta:
+
+- quick actions: talk in slack, send email
+- bigger, beautiful overview design
+
 # next
 
 - clicking location buttons should filter that location

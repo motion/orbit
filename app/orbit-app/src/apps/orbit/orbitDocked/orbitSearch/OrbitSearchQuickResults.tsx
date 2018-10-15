@@ -28,7 +28,7 @@ const decorate = compose(
   view,
 )
 export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
-  const { activeQuery } = searchStore
+  const { isActive, activeQuery } = searchStore
   const { results, query } = searchStore.quickSearchState
   if (!results.length) {
     if (!!query && searchStore.hasSearchResults) {
@@ -38,7 +38,7 @@ export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
     }
   }
   return (
-    <View opacity={activeQuery === query ? 1 : 0.5}>
+    <View opacity={isActive && activeQuery === query ? 1 : 0.5}>
       <SelectableCarousel
         offset={0}
         cardHeight={58}

@@ -72,9 +72,16 @@ export class SearchStore {
     },
   )
 
-  get activeQuery() {
-    return App.state.query
-  }
+  activeQuery = react(
+    () => [App.state.query, this.isActive],
+    ([query]) => {
+      ensure('isActive', this.isActive)
+      return query
+    },
+    {
+      defaultValue: App.state.query,
+    },
+  )
 
   // aggregated results for selection store
   results = react(
@@ -213,7 +220,15 @@ export class SearchStore {
     },
   )
 
-  hasSearchResults = react(() => !!this.searchState.results.length, _ => _)
+  searchResultsLength = react(
+    () => this.searchState.results.length + this.quickSearchState.results.length,
+    _ => _,
+    {
+      defaultValue: 0,
+    },
+  )
+
+  hasSearchResults = react(() => !!this.searchResultsLength, _ => _, { defaultValue: false })
 
   // todo
   remoteRowCount = 1000
@@ -229,8 +244,6 @@ export class SearchStore {
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep }) => {
-      // this will keep the "last query" always active by cancelling on empty
-      ensure('has query', !!query)
       await sleep(TYPE_DEBOUNCE * 0.5)
       return {
         query,

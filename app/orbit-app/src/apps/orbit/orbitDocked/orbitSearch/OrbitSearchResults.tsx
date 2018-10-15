@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose, log } from '@mcro/black'
+import { view, log } from '@mcro/black'
 import { SubPane } from '../../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import { PaneManagerStore } from '../../PaneManagerStore'

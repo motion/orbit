@@ -13,7 +13,7 @@ type Props = {
 
 const rootShortcuts = {
   switchSpaces: 'command+k',
-  openCurrent: 'command+enter',
+  openCurrent: 'enter',
   copyLink: 'command+shift+c',
   // esc
   escape: 'esc',

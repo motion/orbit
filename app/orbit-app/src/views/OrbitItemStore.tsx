@@ -140,8 +140,5 @@ export class OrbitItemStore {
         Actions.setPeekApp(this.target, this.position)
       }
     },
-    {
-      deferFirstRun: true,
-    },
   )
 }

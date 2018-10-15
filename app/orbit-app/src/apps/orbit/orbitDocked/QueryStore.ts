@@ -8,7 +8,7 @@ export class QueryStore {
     () => this.query,
     async (query, { sleep }) => {
       // slight debounce for super fast typing
-      await sleep(50)
+      await sleep(30)
       App.setState({ query })
     },
   )

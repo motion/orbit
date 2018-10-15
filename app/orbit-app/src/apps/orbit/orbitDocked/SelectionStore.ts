@@ -22,6 +22,7 @@ export type SelectionResult = {
 
 export type SelectionGroup = {
   name?: string
+  shouldAutoSelect?: boolean
   items: any[]
   type: 'row' | 'column'
   startIndex?: number
@@ -44,7 +45,7 @@ export class SelectionStore {
   lastSelectAt = 0
   _activeIndex = -1
   results: SelectionResult[] = null
-  private resultsIn = null
+  private resultsIn: SelectionGroup[] = null
 
   didMount() {
     on(this, this.props.keyboardStore, 'key', (key: string) => {
@@ -104,11 +105,17 @@ export class SelectionStore {
     return null
   }
 
-  clearSelectedOnSearch = react(
-    () => this.props.queryStore.query,
-    async (_, { sleep }) => {
-      await sleep(16)
-      this.clearSelected()
+  setSelectedOnSearch = react(
+    () => [!!this.results && Math.random(), this.props.queryStore.query],
+    () => {
+      const hasResults = !!this.results.length
+      // select first item on search
+      if (hasResults) {
+        ensure('results should auto select', this.resultsIn[0].shouldAutoSelect)
+        this.activeIndex = 0
+      } else {
+        this.clearSelected()
+      }
     },
   )
 

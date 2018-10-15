@@ -82,8 +82,8 @@ export class SearchStore {
     async ([query, quickState, searchState], { when }) => {
       await when(() => query === quickState.query && query === searchState.query)
       return [
-        { type: 'row', items: quickState.results },
-        { type: 'column', items: searchState.results },
+        { type: 'row', shouldAutoSelect: true, items: quickState.results },
+        { type: 'column', shouldAutoSelect: true, items: searchState.results },
       ] as SelectionGroup[]
     },
   )

@@ -78,16 +78,6 @@ const SuggestionButton = props => (
   />
 )
 
-const SuggestionBarFade = view({
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  width: '14%',
-  zIndex: 1000,
-  pointerEvents: 'none',
-})
-
 type Props = {
   searchStore?: SearchStore
   paneManagerStore: PaneManagerStore
@@ -132,7 +122,6 @@ export const OrbitSuggestionBar = decorator(({ searchStore }: Props) => {
         ))}
         <UI.View width={50} />
       </HorizontalScroll>
-      <SuggestionBarFade />
     </SuggestionBar>
   )
 })

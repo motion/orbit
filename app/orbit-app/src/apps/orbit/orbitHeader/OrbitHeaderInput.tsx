@@ -67,8 +67,8 @@ export class OrbitHeaderInput extends React.Component<Props> {
           onClick={headerStore.onClickInput}
         />
         <Interactive disabled={paneManagerStore.activePane !== 'search'}>
-          <ClearButton opacity={0} hover={{ opacity: 1 }} onClick={this.clearSearch} />
-          <div style={{ width: 5 }} />
+          <ClearButton /* opacity={0} hover={{ opacity: 1 }} */ onClick={this.clearSearch} />
+          {/* <div style={{ width: 5 }} />
           <Tooltip
             target={
               <ClearButton width={22} height={22}>
@@ -77,7 +77,7 @@ export class OrbitHeaderInput extends React.Component<Props> {
             }
           >
             Pin to Orbit home
-          </Tooltip>
+          </Tooltip> */}
         </Interactive>
       </View>
     )

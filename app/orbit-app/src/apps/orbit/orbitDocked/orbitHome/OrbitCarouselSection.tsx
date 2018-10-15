@@ -46,7 +46,7 @@ export class OrbitCarouselSection extends React.Component<Props> {
               onClickLocation: handleClickLocation,
               ...cardProps,
               hide: {
-                body: !isPeople,
+                body: true,
                 icon: isPeople,
                 ...(cardProps ? cardProps.hide : null),
               },

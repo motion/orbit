@@ -14,7 +14,7 @@ Orbit is a private personal work assistant. It has two basic assumptions:
 - You want to easily get answers and quickly find things from across your work information.
 - You don't want to give up any privacy in order to do that.
 
-The rest of this post basically goes heavily into vision and history. If you just want to try our orbit, I recommend signing up and I'll get in touch!
+The rest of this post basically goes heavily into our vision and history. If you'd just like to try Orbit, just sign up or skip to the end to learn how to follow more.
 
 ## Why Orbit
 
@@ -69,19 +69,17 @@ Today, Orbit runs, syncs, searches -- does everything -- privately on your compu
 
 ### The Features
 
-For now Orbit is a lot like Spotlight, with a Home. The Home shows recent activity, people, and apps you've installed.
-
-Orbit will grow to become more akin to a knowledge assistant. It will get better at understanding english queries, sorting staleness, augmenting as you work, and summarizing noisy data. It will also become more contextually aware, which I explain a bit more in the Context section.
+For now Orbit is a lot like Spotlight, with a Home. The Home shows recent activity, people, and apps you've installed. Over time Orbit will grow to become more akin to a knowledge assistant. It will get better at understanding english queries, sorting staleness, augmenting as you work, and summarizing noisy data. It will also become more contextually aware, which I explain a bit more in the Context section.
 
 <div style="width: 361px; border-radius: 20px; overflow: hidden; position: absolute; right: -400px;">
   <img alt="Orbit Home" src="./nlp.jpg" />
 </div>
 
-We have some interesting pieces in place. You can intuitively search using NLP phrasing by time, people, date ranges, integrations and more. We build profiles of people from across your cloud. But we have a long way to go. Over the next months we'll be working to make Orbit far better at answering questions accurately and more intuitively.
+We have some interesting pieces in place. You can intuitively search using natural language by time, people, date ranges, integrations and more. We build profiles of people from across your cloud, and we allow you to explore your data intuitively. But we have a long way to go, and we'll update with interesting information here as we go.
 
 ### Join our Orbit
 
-Keep in mind the builds today are early. There are interesting pieces we are still putting work into, so I think the next few months will see some intersting progress. I'd love your feedback along the way to keep us on the right path.
+Keep in mind the builds today are early and the interesting pieces are still in development. I think the next few months will see it grow into something much more usable. I'd love your feedback along the way to keep us on the right path.
 
 Our [roadmap](/roadmap) and [mailing list](https://tryorbit.com).
 

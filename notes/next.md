@@ -4,19 +4,23 @@ high level:
 
 focus on what we can make really a big improvement in day to day first:
 
-1. much faster:
-   - auto open peeks, better peek display, better search results display
-   - make keyboard and everything smooth and fast with no jitter
-2. really accurate:
+# Project Fluidity
+
+- auto open peeks, better peek display, better search results display
+- make keyboard and everything smooth and fast with no jitter
+
+# Project Results
 
 - fine tune the plain sql searches quite a bit
 - fix various bugs in filtering and searching
 - enable fts5 and integrate with filtering system
 - get cosal better integrated and design data set to test its capabilities
 
-3. fix bugs and make it work better
+# Project BugBusters
 
 - lots of sync stuff, space saving, smarter sync startegies, etc
+
+## in depth...
 
 - cosal
   - play around more with cosal, figure out if we can do any interesting relevancy

@@ -29,6 +29,10 @@ export const GithubRepositoryModel = new Model<any, { settingId: number }>('Gith
 
 export const SlackChannelModel = new Model<any, { settingId: number }>('SlackChannel')
 
+export const SearchPinnedResultModel = new Model<Bit | PersonBit, { query: string }>(
+  'SearchPinnedResultModel',
+)
+
 export type SearchQuery = {
   query: string
   sortBy?: 'Recent' | 'Relevant'

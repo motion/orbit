@@ -236,14 +236,18 @@ export class SearchFilterStore /* extends Store */ {
     () => !!this.queryStore.query,
     hasQuery => {
       ensure('no query', !hasQuery)
-      this.disabledFilters = {}
-      this.exclusiveFilters = {}
-      this.dateState = {
-        startDate: null,
-        endDate: null,
-      }
+      this.resetAllFilters()
     },
   )
+
+  resetAllFilters = () => {
+    this.disabledFilters = {}
+    this.exclusiveFilters = {}
+    this.dateState = {
+      startDate: null,
+      endDate: null,
+    }
+  }
 
   hasActiveFilter = name => this.parsedQuery.some(x => x.text.toLowerCase() === name.toLowerCase())
 

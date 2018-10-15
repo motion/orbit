@@ -38,7 +38,7 @@ const SuggestionBar = view(UI.Row, {
   position: 'relative',
   // above subpane
   zIndex: 10,
-  padding: [0, 15, 0],
+  padding: [0, 10],
   transition: 'all ease 90ms 40ms',
   opacity: 0,
   pointerEvents: 'none',

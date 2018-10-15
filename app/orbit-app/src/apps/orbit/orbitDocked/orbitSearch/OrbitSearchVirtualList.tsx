@@ -8,7 +8,7 @@ import {
 } from 'react-virtualized'
 import { SearchStore } from '../SearchStore'
 import { view, ensure } from '@mcro/black'
-import { Text } from '@mcro/ui'
+import { Text, View } from '@mcro/ui'
 import { HighlightText } from '../../../../views/HighlightText'
 import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
@@ -20,6 +20,7 @@ import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contex
 import { SelectionStore } from '../SelectionStore'
 import { OrbitItemSingleton } from '../../../../views/OrbitItemStore'
 import { SubPaneStore } from '../../SubPaneStore'
+import { Banner } from '../../../../views/Banner'
 
 type Props = {
   searchStore?: SearchStore
@@ -150,8 +151,8 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     () => this.items && Math.random(),
     () => {
       if (this.listRef) {
-        console.log('forceUpdateGrid')
-        this.listRef.forceUpdateGrid()
+        console.log('updat yo')
+        this.resizeAll()
       }
     },
   )
@@ -254,17 +255,17 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     }
   })
 
-  handleSortEnd = () => {
-    if (this.state.isSorting) {
-      this.setState({ isSorting: false })
-    }
-  }
+  // handleSortEnd = () => {
+  //   if (this.state.isSorting) {
+  //     this.setState({ isSorting: false })
+  //   }
+  // }
 
-  handleSortStart = () => {
-    if (!this.state.isSorting) {
-      this.setState({ isSorting: true })
-    }
-  }
+  // handleSortStart = () => {
+  //   if (!this.state.isSorting) {
+  //     this.setState({ isSorting: true })
+  //   }
+  // }
 
   render() {
     const { searchStore } = this.props
@@ -275,6 +276,13 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     )
     window.x = this
     trace()
+    if (!this.items.length) {
+      return (
+        <View margin={[10, 0]}>
+          <Banner>No results</Banner>
+        </View>
+      )
+    }
     return (
       <ProvideHighlightsContextWithDefaults
         value={{
@@ -321,8 +329,8 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                   pressDelay={120}
                   pressThreshold={17}
                   onRowsRendered={onRowsRendered}
-                  onSortStart={this.handleSortStart}
-                  onSortEnd={this.handleSortEnd}
+                  // onSortStart={this.handleSortStart}
+                  // onSortEnd={this.handleSortEnd}
                   lockAxis="y"
                 />
               )}

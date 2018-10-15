@@ -1,9 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import { PersonBitModel, SearchResultModel, Bit } from '@mcro/models'
+import { SearchResultModel, Bit, SearchPinnedResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { flatten, uniqBy } from 'lodash'
-import { matchSort } from '../../../stores/helpers/searchStoreHelpers'
 import { AppsStore } from '../../AppsStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { NLPStore } from './NLPStore'
@@ -61,8 +59,15 @@ export class SearchStore {
   setActivePaneToSearchOnIntegrationFilters = react(
     () => this.searchFilterStore.hasIntegrationFilters,
     hasIntegrationFilters => {
-      console.log('hasIntegrationFilters', hasIntegrationFilters)
       ensure('hasIntegrationFilters', hasIntegrationFilters)
+      this.props.paneManagerStore.setActivePane('search')
+    },
+  )
+
+  setActivePaneOnDateFilter = react(
+    () => this.searchFilterStore.hasDateFilter,
+    hasDateFilter => {
+      ensure('hasDateFilter', hasDateFilter)
       this.props.paneManagerStore.setActivePane('search')
     },
   )
@@ -100,6 +105,8 @@ export class SearchStore {
   searchState = react(
     () => [
       this.activeQuery,
+      // depends on pane
+      this.props.paneManagerStore.activePane,
       // filter updates
       this.searchFilterStore.activeFilters,
       this.searchFilterStore.exclusiveFilters,
@@ -107,9 +114,11 @@ export class SearchStore {
       this.searchFilterStore.dateState,
     ],
     async (
-      [query],
+      [query, activePane],
       { sleep, whenChanged, when, setValue },
     ): Promise<{ results: Bit[]; finished?: boolean; query: string }> => {
+      ensure('on search', activePane === 'search')
+
       let results = []
       // if typing, wait a bit
       if (this.searchState.query !== query) {
@@ -204,53 +213,32 @@ export class SearchStore {
     },
   )
 
+  hasSearchResults = react(() => !!this.searchState.results.length, _ => _)
+
   // todo
   remoteRowCount = 1000
 
-  loadMore = ({ startIndex, endIndex }) => {
-    this.nextRows = { startIndex, endIndex }
+  loadMore = ({ startIndex, stopIndex }) => {
+    this.nextRows = { startIndex, endIndex: stopIndex }
   }
 
-  isRowLoaded = ({ index }) => {
-    return index < this.searchState.results.length
+  isRowLoaded = find => {
+    return find.index < this.searchState.results.length
   }
 
   quickSearchState = react(
     () => this.activeQuery,
-    async (query, { sleep, when }) => {
-      if (!query) {
-        return {
-          query,
-          results: await loadMany(PersonBitModel, { args: { take: 6 } }),
-        }
-      }
-      // slightly faster for quick search
+    async (query, { sleep }) => {
+      // this will keep the "last query" always active by cancelling on empty
+      ensure('has query', !!query)
       await sleep(TYPE_DEBOUNCE * 0.5)
-      await when(() => this.nlpStore.nlp.query === query)
-      const { people, searchQuery, integrations /* , nouns */ } = this.nlpStore.nlp
-      // fuzzy people results
-      const peopleRes = await loadMany(PersonBitModel, {
-        args: {
-          take: 6,
-          // @ts-ignore
-          where: [...people, ...query.split(' ')].map(name => ({
-            name: { $like: `%${name.split(' ').join('%')}%` },
-          })),
-        },
-      })
-      // @ts-ignore
-      const peopleResUniq = uniqBy(peopleRes, x => x.name)
-      const results = flatten([
-        integrations.map(name => ({ name, icon: name })),
-        ...matchSort(searchQuery, peopleResUniq),
-      ]).filter(Boolean)
       return {
         query,
-        results,
+        results: await loadMany(SearchPinnedResultModel, { args: { query } }),
       }
     },
     {
-      defaultValue: { results: [] },
+      defaultValue: { query: App.state.query, results: [] },
     },
   )
 }

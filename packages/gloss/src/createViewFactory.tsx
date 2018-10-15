@@ -230,16 +230,12 @@ export function createViewFactory(toCSS) {
         } else {
           sheet.insert(className, `${selector} {\n${css}\n}`)
         }
-        // if there's no dynamic rules then cache this
-        if (true) {
-          rulesToClass.set(rules, className)
-        }
+        rulesToClass.set(rules, className)
       }
       return className
     }
 
     function generateClassnames(
-      styles,
       state,
       props: CSSPropertySet,
       prevProps: CSSPropertySet,
@@ -247,7 +243,7 @@ export function createViewFactory(toCSS) {
     ) {
       // if this is a secondary render then check if the props are essentially equivalent
       const extraClassNames = []
-      let myStyles = styles
+      let myStyles = { ...styles }
       // if passed any classes from another styled component, ignore that class and merge in their
       // resolved styles
       if (props.className) {
@@ -367,7 +363,7 @@ export function createViewFactory(toCSS) {
         const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
         return {
           ...nextState,
-          ...generateClassnames(styles, state, props, state.prevProps, tag),
+          ...generateClassnames(state, props, state.prevProps, tag),
           prevProps: props,
         }
       }

@@ -4,12 +4,11 @@ import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
-import { OrbitSpaceSwitch } from './OrbitSpaceSwitch'
 
 const Section = view('section', {
   width: '100%',
   flexFlow: 'row',
-  padding: [0, 6, 0, 12],
+  padding: [0, 6],
   alignItems: 'center',
   transition: 'all ease 500ms',
   transform: {

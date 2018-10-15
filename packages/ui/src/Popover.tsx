@@ -179,7 +179,7 @@ const INVERSE = {
 }
 
 const DEFAULT_SHADOW = '0 0px 2px rgba(0,0,0,0.15)'
-const ELEVATION_SHADOW = x => [0, x * 1.5, x * 3.5, [0, 0, 0, 0.1]]
+const ELEVATION_SHADOW = x => [0, x * 2, x * 4, [0, 0, 0, 0.1 * ((x + 1) / 2)]]
 
 const getShadow = (shadow, elevation) => {
   let base = shadow === true ? [DEFAULT_SHADOW] : shadow || []
@@ -394,7 +394,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     // click away to close
     this.targetClickOff = on(this, this.target, 'click', e => {
       e.stopPropagation()
-      console.log(this.state, this.showPopover, this)
       if (this.state.isPinnedOpen) {
         this.forceClose()
       } else {
@@ -427,7 +426,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
         return
       }
       const clickedInPopover =
-        e.path.findIndex(x => (x as HTMLDivElement).classList.contains('popover-portal')) > -1
+        e.path.findIndex(
+          x => x instanceof HTMLDivElement && x.classList.contains('popover-portal'),
+        ) > -1
       if (closeOnClickAway && !clickedTarget && !clickedInPopover) {
         console.log('close on away', clickedInPopover)
         this.forceClose()

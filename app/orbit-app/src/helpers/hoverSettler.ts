@@ -94,10 +94,7 @@ export function hoverSettler({
           select(target)
         }
       } else {
-        itemLastEnterTm = lastEnter = setTimeout(
-          () => select(target),
-          enterDelay,
-        )
+        itemLastEnterTm = lastEnter = setTimeout(() => select(target), enterDelay)
       }
     }
 
@@ -114,7 +111,7 @@ export function hoverSettler({
           select(e.currentTarget)
         }
       } else {
-        if (stuck.get() && stuck.get() !== e.currentTarget) {
+        if (stuck.get() && stuck.get() !== true && stuck.get() !== e.currentTarget) {
           return
         }
         stuck.set(false)
@@ -169,6 +166,8 @@ export function hoverSettler({
         curOnHovered = onHovered
       },
       isStuck: () => stuck.get(),
+      toggleStuck: () => stuck.set(!stuck.get()),
+      setStuck: val => stuck.set(val),
       props: {
         onMouseEnter,
         onMouseLeave,

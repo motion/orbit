@@ -1,12 +1,4 @@
-import * as React from 'react'
-import keywordExtract from '@mcro/keyword-extract'
 import { BitItemResolverProps } from '../ResolveBit'
-
-const options = {
-  remove_digits: true,
-  return_changed_case: true,
-  remove_duplicates: false,
-}
 
 export const ResolveWebsite = ({ bit, children }: BitItemResolverProps) =>
   children({
@@ -19,8 +11,4 @@ export const ResolveWebsite = ({ bit, children }: BitItemResolverProps) =>
     webLink: bit.webLink,
     desktopLink: bit.webLink,
     content: bit.body,
-    preview: keywordExtract
-      .extract(bit.body, options)
-      .slice(0, 8)
-      .join(' '),
   })

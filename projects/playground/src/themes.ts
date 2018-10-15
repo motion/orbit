@@ -11,4 +11,8 @@ export const themes = {
     background: '#111',
     color: '#fff',
   }),
+  tooltip: {
+    background: 'rgba(20,20,20,0.94)',
+    color: '#fff',
+  },
 }

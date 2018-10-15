@@ -5,7 +5,6 @@ import { SubPane } from '../../SubPane'
 import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { AppsStore } from '../../../AppsStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -15,8 +14,9 @@ import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 // import { MessageDark } from '../../../../views/Message'
 import { GeneralSettingValues } from '@mcro/models'
-import { settingsList } from '../../../../helpers/settingsList'
+import { settingsList, SettingConfig } from '../../../../helpers/settingsList'
 import { BlurryGuys } from './BlurryGuys'
+import { SimpleItem } from '../../../../views/SimpleItem'
 
 type Props = {
   appsStore?: AppsStore
@@ -24,12 +24,11 @@ type Props = {
   store?: OnboardStore
 }
 
-const sidePad = 16
 const controlsHeight = 50
 const framePad = 30
 const numFrames = 3
 // subtract padding from parent
-const frameWidth = ORBIT_WIDTH - sidePad * 2
+const frameWidth = ORBIT_WIDTH
 
 const OnboardFrame = view({
   position: 'relative',
@@ -48,8 +47,8 @@ const Centered = view({
 const Controls = view({
   flexFlow: 'row',
   position: 'absolute',
-  bottom: 15,
-  right: 0,
+  bottom: 16,
+  right: 16,
   alignItems: 'center',
   disabled: {
     pointerEvents: 'none',
@@ -76,40 +75,8 @@ const FrameAnimate = view({
 }))
 
 const Unpad = view({
-  margin: [0, -sidePad - framePad],
+  margin: [0, -framePad],
 })
-
-const Item = view({
-  flexFlow: 'row',
-  padding: [0, sidePad + 4],
-  height: 42,
-  alignItems: 'center',
-  inactive: {
-    opacity: 0.5,
-    filter: 'grayscale(0.5)',
-  },
-  '&:hover': {
-    background: [0, 0, 0, 0.05],
-  },
-  '&:active': {
-    opacity: 0.8,
-  },
-}).theme(({ theme }) => ({
-  borderBottom: [1, theme.borderColor.alpha(0.2)],
-}))
-
-const ItemTitle = props => (
-  <Text
-    {...{
-      fontWeight: 400,
-      padding: [0, 12],
-      justifyContent: 'center',
-      fontSize: 15,
-      flex: 1,
-    }}
-    {...props}
-  />
-)
 
 const AddButton = ({ disabled, ...props }) =>
   disabled ? (
@@ -198,6 +165,8 @@ class OnboardStore {
   }
 }
 
+const filterApps = (app: SettingConfig) => app.type !== 'website'
+
 const decorator = compose(
   view.attach('appsStore', 'paneManagerStore'),
   view.attach({
@@ -205,7 +174,6 @@ const decorator = compose(
   }),
   view,
 )
-
 export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: Props) => {
   if (paneManagerStore.activePane !== 'onboard') {
     return null
@@ -221,14 +189,17 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const integrations = settingsList.sort((a, b) => a.id.localeCompare(b.id)).map(integration => {
-    return {
-      ...integration,
-      added: !!(appsStore.appsList || []).find(x => x.type === integration.id),
-    }
-  })
+  const integrations = settingsList
+    .filter(filterApps)
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map(integration => {
+      return {
+        ...integration,
+        added: !!(appsStore.appsList || []).find(x => x.type === integration.id),
+      }
+    })
   return (
-    <SubPane name="onboard">
+    <SubPane name="onboard" paddingLeft={0} paddingRight={0}>
       <BlurryGuys />
       <FrameAnimate curFrame={store.curFrame}>
         <OnboardFrame>
@@ -319,17 +290,18 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
           <Unpad>
             {integrations.map(item => {
               return (
-                <Item
+                <SimpleItem
                   key={item.id}
+                  title={item.title}
+                  icon={item.icon}
                   inactive={item.added}
                   onClick={item.added ? null : addIntegrationClickHandler(item)}
-                >
-                  <OrbitIcon size={18} icon={item.icon} />
-                  <ItemTitle>{item.title}</ItemTitle>
-                  <AddButton size={0.9} disabled={item.added}>
-                    {item.added ? <Icon size={16} name="check" color="green" /> : 'Add'}
-                  </AddButton>
-                </Item>
+                  after={
+                    <AddButton size={0.9} disabled={item.added}>
+                      {item.added ? <Icon size={16} name="check" color="green" /> : 'Add'}
+                    </AddButton>
+                  }
+                />
               )
             })}
           </Unpad>

@@ -1,7 +1,7 @@
 import { IntegrationType } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
 
-type SettingConfig = AppConfig & { id: IntegrationType }
+export type SettingConfig = AppConfig & { id: IntegrationType }
 
 export const settingsList: SettingConfig[] = [
   {

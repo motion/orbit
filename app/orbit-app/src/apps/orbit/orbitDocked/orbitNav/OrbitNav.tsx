@@ -71,6 +71,7 @@ export class OrbitNav extends React.Component<Props> {
     const { searchStore, store } = this.props
     const { onClick, ...hoverProps } = store.hoverSettle.props
     const { searchFilterStore } = searchStore
+    const stickFilters = store.hoverSettle.isStuck()
     return (
       <View position="relative" zIndex={100} overflow="hidden">
         <Row position="relative" alignItems="center" padding={[0, 10]}>
@@ -103,10 +104,11 @@ export class OrbitNav extends React.Component<Props> {
             </Popover>
             <NavButton
               icon="funnel40"
-              key={store.hoverSettle.isStuck()}
+              // otherwise it wasnt picking up styles...
+              key={`${stickFilters}`}
               background={this.navButtonBg}
               opacity={
-                store.showFilters || !!searchStore.searchFilterStore.hasIntegrationFilters ? 1 : 0.5
+                stickFilters || !!searchStore.searchFilterStore.hasIntegrationFilters ? 1 : 0.5
               }
               onClick={store.handleToggleFilters}
               {...hoverProps}

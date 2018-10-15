@@ -130,9 +130,6 @@ const SurfaceFrame = view(View, {
 }).theme(props => {
   const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   const propStyles = propsToStyles(props)
-  if (props.hoverStyle) {
-    console.log('theme styles', themeStyles, themeStylesFromProps, propStyles)
-  }
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',

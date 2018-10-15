@@ -18,7 +18,7 @@ make search actually good
       - also would let you group together slack things much more easily
   - GOAL: be able to try a couple things and find recent stuff almost always
 - look into better topic based search / high level search
-- generate topics in desktop - show them in quickresults?
+  - generate topics in desktop - show them in quickresults?
 - smarter, better, less buggy, syncers
   - remove "archived" gmail
   - sync more until space filled

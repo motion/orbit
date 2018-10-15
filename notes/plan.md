@@ -10,7 +10,7 @@ How Orbit Works
 - It builds a model of what you care about by topic modeling your cloud data.
 - It understands what you're doing as you do it.
 
-3. Orbit helps you and your team be more effective, less distracted, and in the know.
+1. Orbit helps you be more in sync with less interruptions
 
 - Personalized, instant search gets you through the day smoothly
 - Smart realtime contextual results as you work

@@ -141,8 +141,9 @@ export class OrbitNav extends React.Component<Props> {
 
           <NavButton
             onClick={searchFilterStore.toggleSortBy}
-            icon={searchFilterStore.sortBy === 'Recent' ? 'clock' : 'target'}
+            icon={searchFilterStore.sortBy === 'Recent' ? 'arrow-min-down' : 'chart'}
             tooltip={searchFilterStore.sortBy}
+            opacity={0.5}
           />
         </Row>
       </View>

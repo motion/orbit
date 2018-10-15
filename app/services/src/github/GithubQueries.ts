@@ -112,6 +112,25 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
               }
             }
           }
+          comments(first: 100) {
+            edges {
+              node {
+                author {
+                  ... on User {
+                    id
+                    login
+                    location
+                    avatarUrl
+                    bio
+                    email
+                    name
+                  }
+                }
+                createdAt
+                body
+              }
+            }
+          }
           participants(first: 100) {
             edges {
               node {
@@ -137,6 +156,75 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
               }
             }
           }
+        }
+      }
+    }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+`
+
+export const GithubPullRequestsQuery = `
+query GithubPullRequestsQuery($organization: String!, $repository: String!, $cursor: String) {
+  repository(owner: $organization, name: $repository) {
+    id
+    name
+    pullRequests(first: 5, after: $cursor) {
+      totalCount
+      pageInfo {
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {          
+          id
+          title
+          number
+          body
+          bodyText
+          updatedAt
+          createdAt
+          url
+          closed
+          repository {
+            id
+            name
+            url
+            owner {
+              login
+            }
+          }
+          author {
+            ... on User {
+              id
+              login
+              location
+              avatarUrl
+              bio
+              email
+              name
+            }
+          }
+          assignees(first: 100) {
+            edges {
+              node {
+                ... on User {
+                  id
+                  login
+                  location
+                  avatarUrl
+                  bio
+                  email
+                  name
+                }
+              }
+            }
+          }
           comments(first: 100) {
             edges {
               node {
@@ -153,6 +241,72 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
                 }
                 createdAt
                 body
+              }
+            }
+          }
+          commits(first: 100) {
+            edges {
+              node {
+                commit {
+                  author {
+                    email
+                    name
+                    avatarUrl
+                    user {
+                      ... on User {
+                        id
+                        login
+                        location
+                        avatarUrl
+                        bio
+                        email
+                        name
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          labels(first: 10) {
+            edges {
+              node {
+                name
+                description
+                color
+                url
+              }
+            }
+          }
+          participants(first: 100) {
+            edges {
+              node {
+                ... on User {
+                  id
+                  login
+                  location
+                  avatarUrl
+                  bio
+                  email
+                  name
+                }
+              }
+            }
+          }
+          reviews(first: 100) {
+            edges {
+              node {
+                author {
+                  ... on User {
+                    id
+                    login
+                    location
+                    avatarUrl
+                    bio
+                    email
+                    name
+                  }
+                }
               }
             }
           }

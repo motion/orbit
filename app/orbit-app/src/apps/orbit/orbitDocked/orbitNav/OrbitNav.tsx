@@ -4,7 +4,7 @@ import { SearchStore } from '../SearchStore'
 import { Row, Popover, View } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { DateRangePicker } from 'react-date-range'
-import { OrbitFilters } from '../orbitHome/OrbitFilters'
+import { OrbitFilters, FilterButton } from '../orbitHome/OrbitFilters'
 import { view, react } from '@mcro/black'
 import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
 import { QueryStore } from '../QueryStore'
@@ -35,8 +35,12 @@ class OrbitNavStore {
     this.filtersRef = ref
   }
 
+  get showFilters() {
+    return this.hoveredFilters || this.hoverSettle.isStuck()
+  }
+
   measureFilters = react(
-    () => this.props.searchStore.searchFilterStore.integrationFilters.length,
+    () => [this.props.searchStore.searchFilterStore.integrationFilters.length, this.showFilters],
     () => {
       console.log('measure...', this.filtersRef.clientWidth)
       this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.clientWidth)
@@ -66,6 +70,7 @@ export class OrbitNav extends React.Component<Props> {
   render() {
     const { searchStore, store } = this.props
     const { onClick, ...hoverProps } = store.hoverSettle.props
+    const { searchFilterStore } = searchStore
     return (
       <View position="relative" zIndex={100} overflow="hidden">
         <Row position="relative" alignItems="center" padding={[0, 10]}>
@@ -101,35 +106,44 @@ export class OrbitNav extends React.Component<Props> {
               key={store.hoverSettle.isStuck()}
               background={this.navButtonBg}
               opacity={
-                store.hoveredFilters ||
-                store.hoverSettle.isStuck() ||
-                !!searchStore.searchFilterStore.hasIntegrationFilters
-                  ? 1
-                  : 0.5
+                store.showFilters || !!searchStore.searchFilterStore.hasIntegrationFilters ? 1 : 0.5
               }
               onClick={store.handleToggleFilters}
               {...hoverProps}
             />
           </Row>
 
-          <Row
-            transition="transform ease 120ms, opacity ease 180ms 180ms"
-            transform={{
-              x: store.hoveredFilters ? 0 : -store.filtersWidth,
-            }}
-          >
-            <View width={store.filtersWidth} />
-            <OrbitFilters
-              opacity={store.hoveredFilters ? 1 : 0}
-              forwardRef={store.setFilterRef}
-              onClick={this.setStuck}
-              position="absolute"
-              top={0}
-              left={0}
-              {...hoverProps}
-            />
-            <OrbitSuggestionBar />
+          {/* overflow contain row */}
+          <Row position="absolute" left={70} right={45} overflow="hidden">
+            <Row
+              width={`calc(100% + ${store.filtersWidth}px)`}
+              marginRight={-store.filtersWidth}
+              transition="transform ease 120ms, opacity ease 180ms 180ms"
+              transform={{
+                x: store.showFilters ? 0 : -store.filtersWidth,
+              }}
+            >
+              <View width={store.filtersWidth} />
+              <OrbitFilters
+                opacity={store.showFilters ? 1 : 0}
+                forwardRef={store.setFilterRef}
+                onClick={this.setStuck}
+                position="absolute"
+                top={0}
+                left={0}
+                {...hoverProps}
+              />
+              <OrbitSuggestionBar />
+            </Row>
           </Row>
+
+          <View flex={1} />
+
+          <NavButton
+            onClick={searchFilterStore.toggleSortBy}
+            icon={searchFilterStore.sortBy === 'Recent' ? 'clock' : 'target'}
+            tooltip={searchFilterStore.sortBy}
+          />
         </Row>
       </View>
     )

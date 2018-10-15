@@ -10,7 +10,7 @@ type Props = {
   width?: number
 }
 
-const FilterButton = props => <Button chromeless size={0.9} sizePadding={0.8} {...props} />
+export const FilterButton = props => <Button chromeless size={0.9} sizePadding={0.8} {...props} />
 
 const decorate = compose(
   view.attach('searchStore'),
@@ -20,15 +20,6 @@ export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {
   const { searchFilterStore } = searchStore
   return (
     <Row {...props}>
-      <FilterButton
-        onClick={searchFilterStore.toggleSortBy}
-        opacity={0.8}
-        iconProps={{
-          size: 14,
-        }}
-        icon={searchFilterStore.sortBy === 'Recent' ? 'clock' : 'target'}
-        tooltip={searchFilterStore.sortBy}
-      />
       {searchFilterStore.integrationFilters.length > 1 &&
         searchFilterStore.integrationFilters.map((filter, i) => {
           return (
@@ -36,6 +27,7 @@ export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {
               key={`${filter.icon}${i}`}
               active={filter.active}
               onClick={searchFilterStore.integrationFilterToggler(filter)}
+              tooltip={filter.name}
               {...filter.active && {
                 opacity: 1,
               }}
@@ -49,7 +41,7 @@ export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {
                 opacity: 1,
               }}
             >
-              <OrbitIcon name={filter.icon} size={18} />
+              <OrbitIcon name={filter.icon} size={16} />
             </FilterButton>
           )
         })}

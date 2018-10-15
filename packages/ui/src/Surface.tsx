@@ -129,6 +129,10 @@ const SurfaceFrame = view(View, {
   position: 'relative',
 }).theme(props => {
   const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
+  const propStyles = propsToStyles(props)
+  if (props.hoverStyle) {
+    console.log('theme styles', themeStyles, themeStylesFromProps, propStyles)
+  }
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -161,7 +165,7 @@ const SurfaceFrame = view(View, {
     ...props.userStyle,
     // note: base theme styles go *above* propsToStyles...
     ...(!props.chromeless && themeStyles),
-    ...propsToStyles(props),
+    ...propStyles,
     // ...whereas theme styles passed in as ovverrides go in here
     ...themeStylesFromProps,
     ...(!props.chromeless &&
@@ -169,6 +173,12 @@ const SurfaceFrame = view(View, {
     ...propsToTextSize(props),
     ...(props.chromeless && chromelessStyle),
     ...props.segmentedStyle,
+    '&:hover': {
+      ...themeStyles['&:hover'],
+      ...propStyles['&:hover'],
+      // @ts-ignore
+      ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
+    },
   }
   return alphaColor(surfaceStyles, props.alpha)
 })

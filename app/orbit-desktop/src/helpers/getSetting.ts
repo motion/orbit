@@ -5,6 +5,7 @@ import { GeneralSetting } from '@mcro/models'
 export const generalSetting = {
   type: 'general' as 'general',
   category: 'general',
+  name: 'general'
 }
 
 export async function getSetting(query) {

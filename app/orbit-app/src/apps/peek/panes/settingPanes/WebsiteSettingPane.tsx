@@ -1,11 +1,11 @@
 import { react, view } from '@mcro/black'
-import { save } from '@mcro/model-bridge'
-import { Setting, SettingModel, WebsiteSetting, WebsiteSettingValues } from '@mcro/models'
+import { command } from '@mcro/model-bridge'
+import { Setting, SettingSaveCommand, WebsiteSetting, WebsiteSettingValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { WebsiteCrawledData } from '../../../../../../orbit-syncers/src/integrations/website/WebsiteCrawledData'
+import { InputRow, Table, VerticalSpace } from '../../../../views'
 import { Message } from '../../../../views/Message'
-import { Table, InputRow, VerticalSpace } from '../../../../views'
 
 type Props = {
   type: string
@@ -57,8 +57,21 @@ export class WebsiteSettingPane extends React.Component<
     e.preventDefault()
     const { setting, values } = this.props.store
     setting.values = { ...setting.values, ...values }
+    setting.name = values.url
     console.log(`adding integration!`, setting)
-    await save(SettingModel, setting)
+    const result = await command(SettingSaveCommand, {
+      setting,
+    })
+
+    // update status on success of fail
+    if (result.success) {
+      // this.props.store.status = Statuses.SUCCESS
+      // this.props.store.error = null
+      // Actions.clearPeek()
+    } else {
+      // this.props.store.status = Statuses.FAIL
+      // this.props.store.error = result.error
+    }
   }
 
   handleChange = (prop: keyof WebsiteCrawledData) => (val: WebsiteCrawledData[typeof prop]) => {

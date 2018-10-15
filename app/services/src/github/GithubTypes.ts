@@ -130,6 +130,100 @@ export type GithubIssue = {
   }
 }
 
+export type GithubPullRequestQueryResult = {
+  repository: {
+    id: string
+    name: string
+    pullRequests: {
+      totalCount: number
+      pageInfo: {
+        hasNextPage: boolean
+      }
+      edges: {
+        cursor: string
+        node: GithubPullRequest
+      }[]
+    }
+  }
+  rateLimit: {
+    limit: number
+    cost: number
+    remaining: number
+    resetAt: string
+  }
+}
+
+export type GithubCommit = {
+  email: string
+  name: string
+  avatarUrl: string
+  user: GithubPerson|null
+}
+
+export type GithubPullRequest = {
+  id: string
+  title: string
+  number: number
+  body: string
+  bodyText: string
+  createdAt: string
+  updatedAt: string
+  closed: boolean
+  author: GithubPerson
+  url: string
+  repository: {
+    id: string
+    name: string
+    url: string
+    owner: {
+      login: string
+    }
+  }
+  assignees: {
+    edges: {
+      node: GithubPerson
+    }[]
+  }
+  comments: {
+    edges: {
+      node: {
+        author: GithubPerson
+        createdAt: string
+        body: string
+      }
+    }[]
+  }
+  commits: {
+    edges: {
+      node: {
+        commit: GithubCommit
+      }
+    }[]
+  }
+  labels: {
+    edges: {
+      node: {
+        name: string
+        description: string
+        color: string
+        url: string
+      }
+    }[]
+  }
+  reviews: {
+    edges: {
+      node: {
+        author: GithubPerson
+      }
+    }[]
+  }
+  participants: {
+    edges: {
+      node: GithubPerson
+    }[]
+  }
+}
+
 export type GithubPeopleQueryResult = {
   organization: {
     members: {

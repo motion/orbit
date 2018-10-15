@@ -58,12 +58,23 @@ export class GithubSyncer implements IntegrationSyncer {
     for (let repository of repositories) {
       const [organization, repositoryName] = repository.nameWithOwner.split('/')
       const issues = await this.loader.loadIssues(organization, repositoryName)
+      this.log.timer(`loading ${repository.nameWithOwner} issues`)
       for (let issue of issues) {
-        const bit = this.bitFactory.create(issue)
+        const bit = this.bitFactory.createFromIssue(issue)
         bit.people = this.personFactory.createFromIssue(issue)
         apiBits.push(bit)
         apiPeople.push(...bit.people)
       }
+      this.log.timer(`loading ${repository.nameWithOwner} issues`, issues)
+      this.log.timer(`loading ${repository.nameWithOwner} pull requests`)
+      const prs = await this.loader.loadPullRequests(organization, repositoryName)
+      for (let pr of prs) {
+        const bit = this.bitFactory.createFromIssue(pr)
+        bit.people = this.personFactory.createFromPullRequest(pr)
+        apiBits.push(bit)
+        apiPeople.push(...bit.people)
+      }
+      this.log.timer(`loading ${repository.nameWithOwner} pull requests`, prs)
     }
     this.log.timer(`load api bits and people`, { apiBits, apiPeople })
 

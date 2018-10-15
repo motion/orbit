@@ -1,7 +1,6 @@
 import { uniq } from 'lodash'
 import URI from 'urijs'
 
-
 /**
  * Crawl a website.
  */

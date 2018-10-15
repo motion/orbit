@@ -18,7 +18,7 @@ export async function ensureCustomApp() {
   }
   let setting = await SettingEntity.findOne(vals)
   if (!setting) {
-    setting = await getRepository(SettingEntity).save(Object.assign(new SettingEntity(), vals))
+    setting = await getRepository(SettingEntity).save(Object.assign(new SettingEntity(), vals, { name: 'custom' }))
   }
 
   const bit = BitUtils.create({

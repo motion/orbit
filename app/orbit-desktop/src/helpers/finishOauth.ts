@@ -1,18 +1,16 @@
-import { Setting } from '@mcro/models'
-import { IntegrationType } from '@mcro/models'
-import { Desktop, App } from '@mcro/stores'
+import { getGlobalConfig } from '@mcro/config'
 import { SettingEntity } from '@mcro/entities'
+import { IntegrationType, Setting, SlackSettingValues } from '@mcro/models'
+import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
+import { App, Desktop } from '@mcro/stores'
 import { getRepository } from 'typeorm'
 import { closeChromeTabWithUrlStarting } from '../helpers/injections'
-import { getGlobalConfig } from '@mcro/config'
 
 const Config = getGlobalConfig()
 
 type OauthValues = {
   token: string
-  info: {
-    id: string
-  }
+  info: any
   error?: string
   refreshToken?: string
 }
@@ -42,14 +40,51 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
   // if (!setting) {
   //   setting = new SettingEntity()
   // }
-  const setting = {
+  const setting: Setting = {
+    target: 'setting',
     category: 'integration',
     identifier: type + await getRepository(SettingEntity).count(), // adding count temporary to prevent unique constraint error
     type: type,
     token: values.token,
     values: {
       oauth: { ...values },
-    }
+    } as any
   }
+
+  if (type === "slack") {
+
+    // load team info
+    const loader = new SlackLoader(setting)
+    const team = await loader.loadTeam()
+
+    // update settings with team info
+    const values = setting.values as SlackSettingValues
+    values.team = {
+      id: team.id,
+      name: team.name,
+      domain: team.domain,
+      icon: team.icon.image_132
+    }
+    setting.name = team.name
+
+  } else if (type === "github") {
+    setting.name = values.info.username
+
+  } else if (type === "gdrive") {
+
+    // load account info
+    const loader = new DriveLoader(setting)
+    const about = await loader.loadAbout()
+    setting.name = about.user.emailAddress
+
+  } else if (type === "gmail") {
+
+    // load account info
+    const loader = new GMailLoader(setting)
+    const profile = await loader.loadProfile()
+    setting.name = profile.emailAddress
+
+  }
+
   await getRepository(SettingEntity).save(setting)
 }

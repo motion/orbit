@@ -50,7 +50,7 @@ export class DriveSyncer implements IntegrationSyncer {
 
     // load users from API
     this.log.timer('load files and people from API')
-    const files = await this.loader.load()
+    const files = await this.loader.loadFiles()
     this.log.timer('load files and people from API', files)
 
     // create people for loaded user

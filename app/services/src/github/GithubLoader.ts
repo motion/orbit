@@ -1,14 +1,20 @@
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
-import { GithubIssueQuery, GithubOrganizationsQuery, GithubPeopleQuery, GithubRepositoriesQuery } from './GithubQueries'
+import {
+  GithubIssueQuery,
+  GithubOrganizationsQuery,
+  GithubPeopleQuery,
+  GithubPullRequestsQuery,
+  GithubRepositoriesQuery,
+} from './GithubQueries'
 import {
   GithubIssue,
   GithubIssueQueryResult,
   GithubOrganization,
   GithubOrganizationsQueryResult,
   GithubPeopleQueryResult,
-  GithubPerson,
+  GithubPerson, GithubPullRequest, GithubPullRequestQueryResult,
   GithubRepository,
   GithubRepositoryQueryResult,
 } from './GithubTypes'
@@ -67,6 +73,20 @@ export class GithubLoader {
       issues
     )
     return issues
+  }
+
+  /**
+   * Loads all pull requests.
+   */
+  async loadPullRequests(organization: string, repository: string): Promise<GithubPullRequest[]> {
+    log.verbose(`loading ${organization}/${repository} pull requests`)
+    const prs = await this.loadPullRequestsByCursor(organization, repository)
+    log.verbose(
+      `loading is finished. Loaded ${prs.length} pull requests. ` +
+      `Total query cost: ${this.totalCost}/${this.remainingCost}`,
+      prs
+    )
+    return prs
   }
 
   /**
@@ -185,6 +205,46 @@ export class GithubLoader {
     }
 
     return issues
+  }
+
+  private async loadPullRequestsByCursor(
+    organization: string,
+    repository: string,
+    cursor?: string,
+  ): Promise<GithubPullRequest[]> {
+
+    // send a request to the github and load first/next 100 issues
+    const results = await this.fetchFromGitHub<GithubPullRequestQueryResult>(
+      this.setting.token,
+      GithubPullRequestsQuery,
+      {
+        organization,
+        repository,
+        cursor,
+      },
+    )
+
+    // query was made. calculate total costs
+    this.totalCost += results.rateLimit.cost
+    this.remainingCost = results.rateLimit.remaining
+
+    const edges = results.repository.pullRequests.edges
+    const prs = edges.map(edge => edge.node)
+    const totalCount = results.repository.pullRequests.totalCount
+    log.verbose(`${prs.length} PRs were loaded`, results)
+
+    // if there is a next page we execute next query to api to get all repository issues
+    // to get next issues we need a cursor from the last loaded edge
+    // and tell github to load issues "after" that cursor
+    // cursor basically is a token github returns
+    if (results.repository.pullRequests.pageInfo.hasNextPage) {
+      const lastEdgeCursor = edges[edges.length - 1].cursor
+      log.verbose(`loading next 100 PRs. Total count is ${totalCount}`)
+      const nextPagePRs = await this.loadPullRequestsByCursor(organization, repository, lastEdgeCursor)
+      return [...prs, ...nextPagePRs]
+    }
+
+    return prs
   }
 
   private async loadPeopleByCursor(organization: string, cursor?: string): Promise<GithubPerson[]> {

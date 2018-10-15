@@ -235,3 +235,12 @@ export type DriveLoadedFile = {
   users: DriveUser[]
   parent?: DriveFile
 }
+
+/**
+ * Drive general information.
+ *
+ * @see https://developers.google.com/drive/api/v3/reference/about/get
+ */
+export type DriveAbout = {
+  user: DriveUser
+}

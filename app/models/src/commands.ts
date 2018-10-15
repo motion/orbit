@@ -9,10 +9,10 @@ export const SettingForceSyncCommand = new Command<void, { settingId: number }>(
 
 export const SettingOnboardFinishCommand = new Command<void, void>('setting-onboard-finish')
 
-export const AtlassianSettingSaveCommand = new Command<
+export const SettingSaveCommand = new Command<
   { success: boolean; error?: string },
   { setting: Setting }
->('attlassian-setting-save')
+>('setting-save')
 
 export const GithubSettingBlacklistCommand = new Command<
   void,

@@ -5,7 +5,7 @@ import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } fr
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
-  AtlassianSettingSaveCommand,
+  SettingSaveCommand,
   BitModel,
   CosalTopWordsCommand,
   GithubRepositoryModel,
@@ -39,7 +39,7 @@ import { GeneralSettingManager } from './managers/GeneralSettingManager'
 import { OCRManager } from './managers/OCRManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { Onboard } from './onboard/Onboard'
-import { AtlassianSettingSaveResolver } from './resolvers/AtlassianSettingSaveResolver'
+import { SettingSaveResolver } from './resolvers/SettingSaveResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
@@ -200,8 +200,8 @@ export class Root {
         SearchPinnedResultModel,
       ],
       commands: [
+        SettingSaveCommand,
         SettingRemoveCommand,
-        AtlassianSettingSaveCommand,
         GithubSettingBlacklistCommand,
         SlackSettingBlacklistCommand,
         CosalTopWordsCommand,
@@ -218,7 +218,7 @@ export class Root {
           { entity: PersonBitEntity, models: [PersonBitModel] },
         ]),
         SettingRemoveResolver,
-        AtlassianSettingSaveResolver,
+        SettingSaveResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),

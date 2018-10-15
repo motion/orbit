@@ -1,9 +1,24 @@
 import {
   DriveCommentResponse,
   DriveFetchQueryOptions,
-  DriveFileResponse,
+  DriveFileResponse, DriveAbout,
   DriveRevisionResponse,
 } from './DriveTypes'
+
+/**
+ * @see https://developers.google.com/drive/api/v3/reference/about/get
+ */
+export function googleDriveAboutQuery(): DriveFetchQueryOptions<DriveAbout> {
+  return {
+    json: true,
+    url: '/about',
+    query: {
+      fields: [
+        'user'
+      ],
+    },
+  }
+}
 
 /**
  * @see https://developers.google.com/drive/api/v3/reference/files/list

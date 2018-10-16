@@ -33,29 +33,35 @@ export type ItemResolverExtraProps = {
 type ResolvableModel = Bit | Person | PersonBit | Setting
 
 const normalizers = {
-  bit: (bit: Bit) => {
+  bit: (bit: Bit): NormalizedItem => {
     return {
-      id: bit.id,
       type: 'bit',
+      id: `${bit.id}`,
+      title: bit.title,
+      icon: bit.integration,
+      webLink: bit.webLink,
+      people: bit.people,
+      location: bit.location.name,
+      locationLink: bit.location.desktopLink || bit.location.webLink,
+      desktopLink: bit.desktopLink,
       subType: bit.type,
       integration: bit.integration,
       createdAt: new Date(bit.bitCreatedAt),
       updatedAt: new Date(bit.bitUpdatedAt),
     }
   },
-  setting: model => ({
-    id: `${model.id}`,
+  setting: (model): NormalizedItem => ({
     type: 'app',
+    id: `${model.id}`,
     title: model.type,
     icon: model.type,
   }),
-  'person-bit': (person: PersonBit) => {
-    const photo = last(person.allPhotos as any) || person.photo
+  'person-bit': (person: PersonBit): NormalizedItem => {
     return {
-      id: person.email,
       type: 'person',
+      id: person.email,
       title: person.name,
-      icon: photo,
+      icon: last(person.allPhotos as any) || person.photo,
       subtitle: person.email,
       // createdAt: person.createdAt,
       // updatedAt: person.updatedAt,

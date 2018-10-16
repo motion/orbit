@@ -112,9 +112,10 @@ export class Syncer {
           return interval.setting && interval.setting.id === setting.id
         })
         if (interval) {
-          if (interval.running) { // if its running await once it finished
-            await interval.running
-          }
+          // commented because we can't await it since setting is already missing inside at this moment
+          // if (interval.running) { // if its running await once it finished
+          //   await interval.running
+          // }
           clearInterval(interval.timer)
           this.intervals.splice(this.intervals.indexOf(interval), 1)
         }

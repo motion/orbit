@@ -12,17 +12,17 @@ export const ServiceLoadThrottlingOptions = {
     /**
      * Delay before users load.
      */
-    users: 10,
+    users: 100,
 
     /**
      * Delay before channels load.
      */
-    channels: 10,
+    channels: 100,
 
     /**
      * Delay before messages load.
      */
-    messages: 10
+    messages: 100
 
   },
 
@@ -34,17 +34,17 @@ export const ServiceLoadThrottlingOptions = {
     /**
      * Delay before users load.
      */
-    users: 10,
+    users: 100,
 
     /**
      * Delay before issues load.
      */
-    issues: 10,
+    issues: 100,
 
     /**
      * Delay before issue comments load.
      */
-    comments: 10
+    comments: 100
 
   },
 
@@ -56,17 +56,17 @@ export const ServiceLoadThrottlingOptions = {
     /**
      * Delay before users load.
      */
-    users: 10,
+    users: 100,
 
     /**
      * Delay before content load.
      */
-    contents: 10,
+    contents: 100,
 
     /**
      * Delay before issue comments load.
      */
-    comments: 10
+    comments: 100
 
   },
 
@@ -78,27 +78,27 @@ export const ServiceLoadThrottlingOptions = {
     /**
      * Delay before files load.
      */
-    files: 10,
+    files: 100,
 
     /**
      * Delay before file content load.
      */
-    fileContent: 10,
+    fileContent: 100,
 
     /**
      * Delay before file comments load.
      */
-    comments: 10,
+    comments: 100,
 
     /**
      * Delay before file revisions load.
      */
-    revisions: 10,
+    revisions: 100,
 
     /**
      * Delay before file thumbnail download.
      */
-    thumbnailDownload: 10
+    thumbnailDownload: 100
 
   },
 
@@ -110,27 +110,27 @@ export const ServiceLoadThrottlingOptions = {
     /**
      * Delay before organizations list load.
      */
-    organizations: 10,
+    organizations: 100,
 
     /**
      * Delay before file repositories load.
      */
-    repositories: 10,
+    repositories: 100,
 
     /**
      * Delay before issues load.
      */
-    issues: 10,
+    issues: 100,
 
     /**
      * Delay before pull requests load.
      */
-    pullRequests: 10,
+    pullRequests: 100,
 
     /**
      * Delay before file users load.
      */
-    users: 10
+    users: 100
 
   },
 
@@ -142,17 +142,17 @@ export const ServiceLoadThrottlingOptions = {
     /**
      * Delay before history list load.
      */
-    history: 10,
+    history: 100,
 
     /**
      * Delay before threads load.
      */
-    threads: 10,
+    threads: 100,
 
     /**
      * Delay before messages load.
      */
-    messages: 10,
+    messages: 100,
 
   }
 

@@ -15,7 +15,7 @@ export class SlackApp extends React.Component<OrbitAppMainProps<'slack'>> {
 
     return (
       <Surface flexFlow="column" hover={false} noInnerElement padding={16} flex={1}>
-        <Row flex={1}>
+        <Row alignItems="center" height={38}>
           {searchBar}
           <TitleBarSpace />
           <SegmentedRow>

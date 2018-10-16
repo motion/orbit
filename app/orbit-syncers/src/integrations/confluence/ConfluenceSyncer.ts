@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { Setting } from '@mcro/models'
+import { ConfluenceSetting } from '@mcro/models'
 import { ConfluenceLoader, ConfluenceUser } from '@mcro/services'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
@@ -19,7 +19,7 @@ export class ConfluenceSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting, log?: Logger) {
+  constructor(setting: ConfluenceSetting, log?: Logger) {
     this.log = log || new Logger('syncer:confluence:' + setting.id)
     this.loader = new ConfluenceLoader(setting, this.log)
     this.bitFactory = new ConfluenceBitFactory(setting)

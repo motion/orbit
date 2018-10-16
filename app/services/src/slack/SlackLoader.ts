@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
-import { Setting } from '@mcro/models'
-import { channels, users, team } from 'slack'
-import { SlackChannel, SlackMessage, SlackUser, SlackTeam } from './SlackTypes'
+import { SlackSetting } from '@mcro/models'
+import { channels, team, users } from 'slack'
+import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
 
 const log = new Logger('service:slack:loader')
 
@@ -9,9 +9,9 @@ const log = new Logger('service:slack:loader')
  * Loads the data from the Slack API.
  */
 export class SlackLoader {
-  setting: Setting
+  private setting: SlackSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: SlackSetting) {
     this.setting = setting
   }
 

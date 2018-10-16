@@ -1,5 +1,5 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, JiraBitData, JiraSettingValues, Person, Setting } from '@mcro/models'
+import { Bit, JiraBitData, JiraSettingValues, Person, JiraSetting } from '@mcro/models'
 import { JiraIssue } from '@mcro/services'
 import { SyncerUtils } from '../../core/SyncerUtils'
 
@@ -7,9 +7,9 @@ import { SyncerUtils } from '../../core/SyncerUtils'
  * Creates a Jira Bit.
  */
 export class JiraBitFactory {
-  private setting: Setting
+  private setting: JiraSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: JiraSetting) {
     this.setting = setting
   }
 

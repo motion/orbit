@@ -1,14 +1,10 @@
+import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { Setting } from '@mcro/models'
+import { DriveSetting } from '@mcro/models'
 import * as path from 'path'
-import { DriveFetcher } from './DriveFetcher'
-import {
-  googleDriveAboutQuery,
-  googleDriveFileCommentQuery,
-  googleDriveFileExportQuery,
-  googleDriveFileQuery,
-  googleDriveFileRevisionQuery,
-} from './DriveQueries'
+import { ServiceLoader } from '../loader/ServiceLoader'
+import { ServiceLoaderSettingSaveCallback } from '../loader/ServiceLoaderTypes'
+import { DriveQueries } from './DriveQueries'
 import { DriveComment, DriveFile, DriveAbout, DriveLoadedFile, DriveRevision } from './DriveTypes'
 import { uniqBy } from 'lodash'
 
@@ -16,19 +12,26 @@ import { uniqBy } from 'lodash'
  * Loads data from google drive api.
  */
 export class DriveLoader {
+  private setting: DriveSetting
   private log: Logger
-  private fetcher: DriveFetcher
+  private loader: ServiceLoader
 
-  constructor(setting: Setting, log?: Logger) {
-    this.fetcher = new DriveFetcher(setting)
+  constructor(setting: DriveSetting, log?: Logger, saveCallback?: ServiceLoaderSettingSaveCallback) {
     this.log = log || new Logger('service:gdrive:loader:' + setting.id)
+    this.loader = new ServiceLoader(
+      this.setting,
+      this.log,
+      this.baseUrl(),
+      this.requestHeaders(),
+      saveCallback
+    )
   }
 
   /**
    * Loads generation "about" information of current drive account.
    */
   async loadAbout(): Promise<DriveAbout> {
-    return await this.fetcher.fetch(googleDriveAboutQuery())
+    return await this.loader.load(DriveQueries.about())
   }
 
   /**
@@ -44,7 +47,7 @@ export class DriveLoader {
         parent = files.find(otherFile => otherFile.id === file.parents[0])
 
       const thumbnailFilePath = await this.downloadThumbnail(file)
-      const content = await this.loadFilesContent(file)
+      const content = await this.loadFileContent(file)
       const comments = await this.loadComments(file)
       const revisions = await this.loadRevisions(file)
       const users = [
@@ -71,8 +74,11 @@ export class DriveLoader {
     return driveFiles
   }
 
+  /**
+   * Loads files in a paginated result.
+   */
   private async loadPagedFiles(pageToken?: string): Promise<DriveFile[]> {
-    const result = await this.fetcher.fetch(googleDriveFileQuery(pageToken))
+    const result = await this.loader.load(DriveQueries.files(pageToken))
     if (result.nextPageToken) {
       const nextPageFiles = await this.loadPagedFiles(result.nextPageToken)
       return [...result.files, ...nextPageFiles]
@@ -80,21 +86,27 @@ export class DriveLoader {
     return result.files
   }
 
-  private async loadFilesContent(file: DriveFile): Promise<string> {
+  /**
+   * Loads file's content.
+   */
+  private async loadFileContent(file: DriveFile): Promise<string> {
     if (file.mimeType !== 'application/vnd.google-apps.document') return ''
 
     this.log.verbose('loading file content for', file)
-    const content = await this.fetcher.fetch(googleDriveFileExportQuery(file.id))
+    const content = await this.loader.load(DriveQueries.fileExport(file.id))
     this.log.verbose('content for file was loaded', { content })
     return content
   }
 
+  /**
+   * Loads file comments.
+   */
   private async loadComments(file: DriveFile, pageToken?: string): Promise<DriveComment[]> {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map') return []
 
     this.log.verbose('loading comments for', file)
-    const result = await this.fetcher.fetch(googleDriveFileCommentQuery(file.id, pageToken))
+    const result = await this.loader.load(DriveQueries.fileComments(file.id, pageToken))
     if (result.nextPageToken) {
       const nextPageComments = await this.loadComments(file, result.nextPageToken)
       return [...result.comments, ...nextPageComments]
@@ -102,12 +114,15 @@ export class DriveLoader {
     return result.comments
   }
 
+  /**
+   * Loads file revisions.
+   */
   private async loadRevisions(file: DriveFile, pageToken?: string): Promise<DriveRevision[]> {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
 
     this.log.verbose('loading revisions for', file)
-    const result = await this.fetcher.fetch(googleDriveFileRevisionQuery(file.id, pageToken))
+    const result = await this.loader.load(DriveQueries.fileRevisions(file.id, pageToken))
     if (result.nextPageToken) {
       const nextPageRevisions = await this.loadRevisions(file, result.nextPageToken)
       return [...result.revisions, ...nextPageRevisions]
@@ -115,6 +130,9 @@ export class DriveLoader {
     return result.revisions
   }
 
+  /**
+   * Downloads file thumbnail.
+   */
   private async downloadThumbnail(file: DriveFile): Promise<string> {
     if (!file.thumbnailLink) return ''
 
@@ -122,7 +140,29 @@ export class DriveLoader {
     const destination = path.normalize(
       __dirname + '/../../../uploads/' + file.id + '.' + file.fileExtension,
     )
-    await this.fetcher.downloadFile(file.thumbnailLink, destination)
+    await this.loader.downloadFile({
+      path: file.thumbnailLink,
+      destination
+    })
     this.log.verbose('thumbnail downloaded and saved as', destination)
   }
+
+  /**
+   * Builds base url for the service loader queries.
+   */
+  private baseUrl(): string {
+    return 'https://content.googleapis.com/drive/v3'
+  }
+
+  /**
+   * Builds request headers for the service loader queries.
+   */
+  private requestHeaders() {
+    return {
+      Authorization: `Bearer ${this.setting.token}`,
+      'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
+      'Access-Control-Allow-Methods': 'GET',
+    }
+  }
+
 }

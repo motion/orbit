@@ -1,6 +1,8 @@
+import { SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { Bit, Person, Setting } from '@mcro/models'
+import { Bit, Person, DriveSetting } from '@mcro/models'
 import { DriveLoader } from '@mcro/services'
+import { getRepository } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
@@ -12,7 +14,7 @@ import { DrivePersonFactory } from './DrivePersonFactory'
  * Syncs Google Drive files.
  */
 export class DriveSyncer implements IntegrationSyncer {
-  private setting: Setting
+  private setting: DriveSetting
   private log: Logger
   private loader: DriveLoader
   private bitFactory: DriveBitFactory
@@ -21,10 +23,10 @@ export class DriveSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting, log?: Logger) {
+  constructor(setting: DriveSetting, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('syncer:drive:' + setting.id)
-    this.loader = new DriveLoader(this.setting)
+    this.loader = new DriveLoader(this.setting, this.log, setting => getRepository(SettingEntity).save(setting))
     this.bitFactory = new DriveBitFactory(setting)
     this.personFactory = new DrivePersonFactory(setting)
     this.personSyncer = new PersonSyncer(setting, this.log)

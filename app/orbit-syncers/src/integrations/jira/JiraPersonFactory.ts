@@ -1,14 +1,14 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { JiraPersonData, Person, Setting } from '@mcro/models'
+import { JiraPersonData, Person, JiraSetting } from '@mcro/models'
 import { JiraUser } from '@mcro/services'
 
 /**
  * Creates a Jira Person.
  */
 export class JiraPersonFactory {
-  private setting: Setting
+  private setting: JiraSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: JiraSetting) {
     this.setting = setting
   }
 

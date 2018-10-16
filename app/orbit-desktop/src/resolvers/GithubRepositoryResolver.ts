@@ -27,7 +27,7 @@ export const GithubRepositoryManyResolver = resolveMany(
     }
 
     log.info(`loading repositories from the github`, { setting })
-    const loader = new GithubLoader(setting)
+    const loader = new GithubLoader(setting, log)
     const repositories = await loader.loadRepositories()
     log.info(`loaded repositories`, repositories)
     return repositories

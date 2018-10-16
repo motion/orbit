@@ -1,18 +1,21 @@
 import { Logger } from '@mcro/logger'
-import { JiraSettingValues, Setting } from '@mcro/models'
-import { queryObjectToQueryString } from '../utils'
-import { JiraComment, JiraCommentCollection, JiraIssue, JiraIssueCollection, JiraUser } from './JiraTypes'
+import { JiraSetting } from '@mcro/models'
+import { ServiceLoader } from '../loader/ServiceLoader'
+import { JiraQueries } from './JiraQueries'
+import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
 
 /**
  * Loads jira data from its API.
  */
 export class JiraLoader {
-  private setting: Setting
+  private setting: JiraSetting
   private log: Logger
+  private loader: ServiceLoader
 
-  constructor(setting: Setting, log?: Logger) {
+  constructor(setting: JiraSetting, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('service:jira:loader:' + setting.id)
+    this.loader = new ServiceLoader(this.setting, this.log, this.baseUrl(), this.requestHeaders())
   }
 
   /**
@@ -20,11 +23,7 @@ export class JiraLoader {
    * Returns void if successful, throws an error if fails.
    */
   async test(): Promise<void> {
-    await this.fetch<JiraUser[]>('/rest/api/2/user/search', {
-      maxResults: 1,
-      startAt: 0,
-      username: '_',
-    })
+    await this.loader.load(JiraQueries.test())
   }
 
   /**
@@ -32,12 +31,7 @@ export class JiraLoader {
    */
   async loadUsers(startAt: number = 0): Promise<JiraUser[]> {
     const maxResults = 1000
-    const url = '/rest/api/2/user/search'
-    const users = await this.fetch<JiraUser[]>(url, {
-      maxResults,
-      startAt,
-      username: '_',
-    })
+    const users = await this.loader.load(JiraQueries.users(startAt, maxResults))
 
     // since we can only load max 1000 people per request, we check if we have more people to load
     // then execute recursive call to load next 1000 people. Since users API does not return total
@@ -55,13 +49,7 @@ export class JiraLoader {
    */
   async loadIssues(startAt: number = 0): Promise<JiraIssue[]> {
     const maxResults = 100
-    const url = '/rest/api/2/search'
-    const response = await this.fetch<JiraIssueCollection>(url, {
-      fields: '*all',
-      maxResults,
-      startAt,
-      expand: 'renderedFields',
-    })
+    const response = await this.loader.load(JiraQueries.issues(startAt, maxResults))
 
     // load content comments
     for (let issue of response.issues) {
@@ -84,21 +72,10 @@ export class JiraLoader {
 
   /**
    * Loads jira issue's comments.
-   *
-   * @see https://developer.atlassian.com/cloud/jira/platform/rest/#api-api-2-issue-issueIdOrKey-comment-get
    */
-  private async loadComments(
-    issueId: string,
-    startAt = 0,
-    maxResults = 25,
-  ): Promise<JiraComment[]> {
-    const response = await this.fetch<JiraCommentCollection>(
-      `/rest/api/2/issue/${issueId}/comment`,
-      {
-        startAt,
-        maxResults,
-      },
-    )
+  private async loadComments(issueId: string, startAt = 0, maxResults = 25): Promise<JiraComment[]> {
+    const query = JiraQueries.comments(issueId, startAt, maxResults)
+    const response = await this.loader.load(query)
     if (response.comments.length < response.total) {
       return [
         ...response.comments,
@@ -110,35 +87,19 @@ export class JiraLoader {
   }
 
   /**
-   * Performs HTTP request to the atlassian to get requested data.
+   * Builds base url for the service loader queries.
    */
-  private async fetch<T>(
-    path: string,
-    params?: { [key: string]: any },
-  ): Promise<T> {
-    const values = this.setting.values as JiraSettingValues
-    const { username, password, domain } = values.credentials
-    const credentials = Buffer.from(`${username}:${password}`).toString(
-      'base64',
-    )
-    const qs = queryObjectToQueryString(params)
-    const url = `${domain}${path}${qs}`
-
-    this.log.verbose(`performing request to ${url}`)
-    const result = await fetch(url, {
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        'Content-Type': 'application/json',
-      },
-    })
-    this.log.verbose(`request ${url} result ok:`, result.ok)
-
-    if (!result.ok) {
-      throw new Error(
-        `[${result.status}] ${result.statusText}: ${await result.text()}`,
-      )
-    }
-
-    return result.json()
+  private baseUrl(): string {
+    return this.setting.values.credentials.domain
   }
+
+  /**
+   * Builds request headers for the service loader queries.
+   */
+  private requestHeaders() {
+    const { username, password } = this.setting.values.credentials
+    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
+    return { Authorization: `Basic ${credentials}` }
+  }
+
 }

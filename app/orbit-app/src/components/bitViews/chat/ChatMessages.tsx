@@ -13,6 +13,9 @@ export const ChatMessages = ({
 }) => {
   // TODO abstract it into "message" type data
   const messages = (bit.data as SlackBitData).messages
+  if (!messages) {
+    return null
+  }
   return (
     <>
       {messages.map((message, index) => (

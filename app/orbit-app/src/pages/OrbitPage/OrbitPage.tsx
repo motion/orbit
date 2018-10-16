@@ -4,11 +4,11 @@ import { OrbitStore } from './OrbitStore'
 import { AppsStore } from '../../stores/AppsStore'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
-import { OrbitDocked } from './orbit/orbitDocked/OrbitDocked'
-import { QueryStore } from './orbit/orbitDocked/QueryStore'
 import { KeyboardStore } from '../../stores/KeyboardStore'
-import { SelectionStore } from './orbit/orbitDocked/SelectionStore'
 import { HighlightsPage } from '../HighlightsPage/HighlightsPage'
+import { QueryStore } from './orbitDocked/QueryStore'
+import { SelectionStore } from './orbitDocked/SelectionStore'
+import { OrbitDocked } from './orbitDocked/OrbitDocked'
 
 @view.provide({
   appsStore: AppsStore,

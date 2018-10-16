@@ -6,9 +6,9 @@ import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { Actions } from '../actions/Actions'
 import { settingToAppConfig } from '../helpers/toAppConfig/settingToAppConfig'
-import { OrbitDocked } from './orbit/orbitDocked/OrbitDocked'
 import { OrbitStore } from './OrbitPage/OrbitStore'
-import { Peek } from './peek/Peek'
+import { AppPage } from './AppPage/AppPage'
+import { OrbitDocked } from './OrbitPage/orbitDocked/OrbitDocked'
 
 const getItem = {
   githubItem: () =>
@@ -37,7 +37,7 @@ export class IsolatePeek extends React.Component {
         height: 10,
       })
     })
-    return <Peek fixed />
+    return <AppPage />
   }
 }
 

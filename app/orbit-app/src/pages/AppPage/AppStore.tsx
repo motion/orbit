@@ -5,22 +5,22 @@ import { App } from '@mcro/stores'
 import * as React from 'react'
 import { Actions } from '../../actions/Actions'
 
-type PeekStoreItemState = typeof App.peekState & {
+type AppStoreItemState = typeof App.peekState & {
   model: PersonBit | Bit | Setting
 }
 
-export type PeekStoreState = {
+export type AppStoreState = {
   willShow: boolean
   willStayShown: boolean
   willHide: boolean
   isShown: boolean
-  curState: PeekStoreItemState
-  lastState: PeekStoreItemState
+  curState: AppStoreItemState
+  lastState: AppStoreItemState
   torn: boolean
   resolvedModel: boolean
 }
 
-export class PeekStore {
+export class AppStore {
   props: {
     id: number
     fixed?: boolean
@@ -71,7 +71,7 @@ export class PeekStore {
         ...lastState,
         ...rest,
       }
-      let nextState: PeekStoreState = {
+      let nextState: AppStoreState = {
         resolvedModel: false,
         torn,
         lastState,
@@ -119,7 +119,7 @@ export class PeekStore {
     },
   )
 
-  state: PeekStoreItemState = react(
+  state: AppStoreItemState = react(
     () => {
       const { lastState, curState, willHide } = this.internalState
       if (willHide) {
@@ -136,8 +136,8 @@ export class PeekStore {
   autoSizeAfterRender = react(
     () =>
       this.appState.appConfig &&
-      this.appState.appConfig.config &&
-      this.appState.appConfig.config.contentSize &&
+      this.appState.appConfig.viewConfig &&
+      this.appState.appConfig.viewConfig.contentSize &&
       this.internalState.resolvedModel &&
       (this.state.model['id'] || this.state.model['email']),
     id => {
@@ -199,9 +199,6 @@ export class PeekStore {
   }
 
   get framePosition() {
-    if (!this.state) {
-      return [0, 0]
-    }
     const { willShow, willStayShown, willHide, state } = this
     if (!state) {
       return [0, 0]

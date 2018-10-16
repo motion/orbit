@@ -3,8 +3,7 @@ import { view } from '@mcro/black'
 import { AppsStore } from '../../stores/AppsStore'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
-import { PeekStore } from './AppStore'
-import {} from '@mcro/black'
+import { AppStore } from './AppStore'
 import * as UI from '@mcro/ui'
 import { PeekFrame } from '../../apps/views/PeekFrame'
 import { SelectionStore } from '../OrbitPage/orbitDocked/SelectionStore'
@@ -18,7 +17,7 @@ import { SelectionStore } from '../OrbitPage/orbitDocked/SelectionStore'
 //     <>
 //       <PeekHeader {...headerProps} />
 //       {preBody}
-//       <PeekContent peekStore={this.props.peekStore}>{content}</PeekContent>
+//       <PeekContent appStore={this.props.appStore}>{content}</PeekContent>
 //       {postBody}
 //     </>
 //   )
@@ -26,7 +25,7 @@ import { SelectionStore } from '../OrbitPage/orbitDocked/SelectionStore'
 
 type Props = {
   appsStore?: AppsStore
-  peekStore?: PeekStore
+  appStore?: AppStore
   selectionStore?: SelectionStore
 }
 
@@ -35,7 +34,7 @@ type Props = {
   appsStore: AppsStore,
 })
 @view.provide({
-  peekStore: PeekStore,
+  appStore: AppStore,
 })
 export class AppPage extends React.Component<Props> {
   render() {
@@ -53,29 +52,21 @@ export class AppPage extends React.Component<Props> {
   }
 }
 
-@view.attach('appsStore', 'selectionStore', 'peekStore')
+@view.attach('appsStore', 'appStore')
 @view
 class AppPageContent extends React.Component<Props> {
   render() {
-    const { appsStore, peekStore, selectionStore } = this.props
-    if (!peekStore.state) {
+    const { appsStore, appStore } = this.props
+    if (!appStore.state) {
       return null
     }
-    const { appConfig, model } = peekStore.state
+    const { appConfig, model } = appStore.state
     const type = appConfig.type
     const View = appsStore.allAppsObj[type].views.main
     if (!View) {
       console.error('none', type)
       return <div>no pane found</div>
     }
-    return (
-      <View
-        key={appConfig.id}
-        model={model}
-        appConfig={appConfig}
-        peekStore={peekStore}
-        selectionStore={selectionStore}
-      />
-    )
+    return <View key={appConfig.id} model={model} appStore={appStore} />
   }
 }

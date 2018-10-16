@@ -2,29 +2,27 @@ import { FindOptions } from 'typeorm'
 import {
   IntegrationSetting,
   IntegrationType,
-  SettingModel,
-  PersonBitModel,
-  BitModel,
   Bit,
   PersonBit,
   Setting,
   GenericBit,
 } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
+import { AppStore } from '../pages/AppPage/AppStore'
 
 // typeof BitModel | typeof SettingModel | typeof PersonBitModel
 
 type IntegrationTypeToModelType = {
-  slack: typeof BitModel
-  github: typeof BitModel
-  gmail: typeof BitModel
-  jira: typeof BitModel
-  confluence: typeof BitModel
-  website: typeof BitModel
-  gdrive: typeof BitModel
-  app1: typeof BitModel
-  people: typeof PersonBitModel
-  apps: typeof SettingModel
+  slack: Bit
+  github: Bit
+  gmail: Bit
+  jira: Bit
+  confluence: Bit
+  website: Bit
+  gdrive: Bit
+  app1: Bit
+  people: PersonBit
+  apps: Setting
 }
 
 type ModelTypeByIntegrationType<A extends IntegrationType> = IntegrationTypeToModelType[A]
@@ -37,9 +35,9 @@ export type OrbitApp<A extends IntegrationType> = {
   instanceConfig: AppConfig
   defaultQuery?: FindOptions<ModelTypeByIntegrationType<A>>
   views: {
-    main: React.ReactNode
-    item: React.ReactNode
-    setting: React.ReactNode
+    main: React.SFC<ItemResolverProps<ModelTypeByIntegrationType<A>> & { appStore: AppStore }>
+    item: React.SFC<ItemResolverProps<ModelTypeByIntegrationType<A>>>
+    setting: React.SFC<ItemResolverProps<ModelTypeByIntegrationType<A>>>
   }
 }
 

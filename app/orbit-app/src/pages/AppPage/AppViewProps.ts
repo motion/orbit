@@ -1,5 +1,5 @@
 import { Bit, PersonBit, Setting } from '@mcro/models'
-import { PeekStore } from './AppStore'
+import { AppStore } from './AppStore'
 import { AppConfig } from '@mcro/stores'
 import { AppsStore } from '../../stores/AppsStore'
 import { SelectionStore } from '../OrbitPage/orbitDocked/SelectionStore'
@@ -11,7 +11,7 @@ export type AppViewProps<T extends Model> = {
   model?: T
   selectionStore: SelectionStore
   appsStore: AppsStore
-  peekStore: PeekStore
+  peekStore: AppStore
   appConfig: AppConfig
   children: React.ReactNode
 }

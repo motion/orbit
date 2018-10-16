@@ -34,9 +34,9 @@
     "prettier": "1.14.2",
     "sb-promisify": "^2.0.2",
     "typescript": "3.1.1",
-    "webpack": "4.19.1",
-    "webpack-dev-server": "3.1.8",
-    "webpack-cli": "3.1.0"
+    "webpack": "4.20.2",
+    "webpack-dev-server": "3.1.9",
+    "webpack-cli": "3.1.2"
   },
   "scripts": {
     "watch": "source .env && build --watch",

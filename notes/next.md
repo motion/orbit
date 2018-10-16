@@ -59,7 +59,9 @@ focus on what we can make really a big improvement in day to day first:
 - quick actions: talk in slack, send email
 - bigger, beautiful overview design
 
-# next
+# next / ideas
+
+- live tiles? allow apps to show some interesting info up front
 
 - clicking location buttons should filter that location
 - clicking a name should search that name

@@ -47,29 +47,23 @@ export class ServiceLoader {
     }
 
     // execute query
-    this.log.timer(`request to ${url}`)
+    this.log.vtimer(`request to ${url}`)
     const result = await fetch(url, {
       mode: options.cors ? 'cors' : undefined,
       headers,
     })
-    this.log.timer(`request to ${url}`, result)
+    const responseBody: any = options.plain ? await result.text() : result.json()
+    this.log.vtimer(`request to ${url}`, result)
 
     // throw error if there is an error
-    if (!result.ok) {
-      throw new Error(`[${result.status}] ${result.statusText}: ${await result.text()}`)
-    }
-
-    // get response body and check it for errors
-    const responseBody: any = options.plain ? await result.text() : result.json()
-    if (responseBody.error) {
-
-      // if result error related to authorization and access token problem, try to refresh it
-      if (autoRefreshTokens === true && (responseBody.error.message === 'Invalid Credentials' || responseBody.error.code === 401)) {
-        await this.refreshGoogleToken(this.setting as GmailSetting|DriveSetting)
+    if (!result.ok || responseBody.error) {
+      if (autoRefreshTokens === true && result.status === 401) {
+        this.log.warning('refreshing oauth token')
+        await this.refreshGoogleToken(this.setting as GmailSetting | DriveSetting)
         return this.load(options, false)
       }
-
-      throw new Error(`Service loader error: ${JSON.stringify(responseBody.error)}`)
+      const error = typeof responseBody === 'object' ? JSON.stringify(responseBody) : responseBody
+      throw new Error(`[${result.status}] ${result.statusText}: ${error}`)
     }
 
     return responseBody

@@ -1,6 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { GithubSetting } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
+import { ServiceLoadThrottlingOptions } from '../../options'
 import {
   GithubIssueQuery,
   GithubOrganizationsQuery,
@@ -20,6 +21,7 @@ import {
   GithubRepository,
   GithubRepositoryQueryResult,
 } from './GithubTypes'
+import { sleep } from '@mcro/utils'
 
 /**
  * Performs requests GitHub API.
@@ -108,6 +110,7 @@ export class GithubLoader {
   private async loadOrganizationsByCursor(
     cursor?: string,
   ): Promise<GithubOrganization[]> {
+    await sleep(ServiceLoadThrottlingOptions.github.organizations)
 
     // send a request to the github and load first/next 100 repositories
     const results = await this.fetchFromGitHub<GithubOrganizationsQueryResult>(
@@ -140,6 +143,7 @@ export class GithubLoader {
   private async loadRepositoriesByCursor(
     cursor?: string,
   ): Promise<GithubRepository[]> {
+    await sleep(ServiceLoadThrottlingOptions.github.repositories)
 
     // send a request to the github and load first/next 100 repositories
     const results = await this.fetchFromGitHub<GithubRepositoryQueryResult>(
@@ -174,6 +178,7 @@ export class GithubLoader {
     repository: string,
     cursor?: string,
   ): Promise<GithubIssue[]> {
+    await sleep(ServiceLoadThrottlingOptions.github.issues)
 
     // send a request to the github and load first/next 100 issues
     const results = await this.fetchFromGitHub<GithubIssueQueryResult>(
@@ -214,6 +219,7 @@ export class GithubLoader {
     repository: string,
     cursor?: string,
   ): Promise<GithubPullRequest[]> {
+    await sleep(ServiceLoadThrottlingOptions.github.pullRequests)
 
     // send a request to the github and load first/next 100 issues
     const results = await this.fetchFromGitHub<GithubPullRequestQueryResult>(
@@ -250,6 +256,8 @@ export class GithubLoader {
   }
 
   private async loadPeopleByCursor(organization: string, cursor?: string): Promise<GithubPerson[]> {
+    await sleep(ServiceLoadThrottlingOptions.github.users)
+
     // send a request to the github and load first/next 100 people
     this.log.verbose(`Loading ${cursor ? 'next' : 'first'} 100 people`)
     const results = await this.fetchFromGitHub<GithubPeopleQueryResult>(
@@ -287,6 +295,7 @@ export class GithubLoader {
     return issues
   }
 
+  // todo.
   private async fetchFromGitHub<T>(token: string, query: string, variables: object): Promise<T> {
     // todo: replace with fetch here
     const queryName = query
@@ -294,7 +303,7 @@ export class GithubLoader {
       .replace('query', '')
       .replace('mutation', '')
       .trim()
-      .concat("(", JSON.stringify(variables), ")")
+      .concat('(', JSON.stringify(variables), ')')
 
     const uri = 'https://api.github.com/graphql'
     this.log.verbose(`request to ${uri}?${queryName}`)

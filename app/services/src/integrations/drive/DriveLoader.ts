@@ -1,9 +1,11 @@
+import { sleep } from '@mcro/utils'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { DriveSetting } from '@mcro/models'
 import * as path from 'path'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoaderSettingSaveCallback } from '../../loader/ServiceLoaderTypes'
+import { ServiceLoadThrottlingOptions } from '../../options'
 import { DriveQueries } from './DriveQueries'
 import { DriveComment, DriveFile, DriveAbout, DriveLoadedFile, DriveRevision } from './DriveTypes'
 import { uniqBy } from 'lodash'
@@ -38,6 +40,7 @@ export class DriveLoader {
    * Loads google drive files.
    */
   async loadFiles(): Promise<DriveLoadedFile[]> {
+
     const files = await this.loadPagedFiles()
     const driveFiles: DriveLoadedFile[] = []
     for (let file of files) {
@@ -78,6 +81,7 @@ export class DriveLoader {
    * Loads files in a paginated result.
    */
   private async loadPagedFiles(pageToken?: string): Promise<DriveFile[]> {
+    await sleep(ServiceLoadThrottlingOptions.drive.files)
     const result = await this.loader.load(DriveQueries.files(pageToken))
     if (result.nextPageToken) {
       const nextPageFiles = await this.loadPagedFiles(result.nextPageToken)
@@ -92,6 +96,8 @@ export class DriveLoader {
   private async loadFileContent(file: DriveFile): Promise<string> {
     if (file.mimeType !== 'application/vnd.google-apps.document') return ''
 
+    await sleep(ServiceLoadThrottlingOptions.drive.fileContent)
+
     this.log.verbose('loading file content for', file)
     const content = await this.loader.load(DriveQueries.fileExport(file.id))
     this.log.verbose('content for file was loaded', { content })
@@ -104,6 +110,8 @@ export class DriveLoader {
   private async loadComments(file: DriveFile, pageToken?: string): Promise<DriveComment[]> {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map') return []
+
+    await sleep(ServiceLoadThrottlingOptions.drive.comments)
 
     this.log.verbose('loading comments for', file)
     const result = await this.loader.load(DriveQueries.fileComments(file.id, pageToken))
@@ -121,6 +129,8 @@ export class DriveLoader {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
 
+    await sleep(ServiceLoadThrottlingOptions.drive.revisions)
+
     this.log.verbose('loading revisions for', file)
     const result = await this.loader.load(DriveQueries.fileRevisions(file.id, pageToken))
     if (result.nextPageToken) {
@@ -135,6 +145,8 @@ export class DriveLoader {
    */
   private async downloadThumbnail(file: DriveFile): Promise<string> {
     if (!file.thumbnailLink) return ''
+
+    await sleep(ServiceLoadThrottlingOptions.drive.thumbnailDownload)
 
     this.log.verbose('downloading file thumbnail for', file)
     const destination = path.normalize(

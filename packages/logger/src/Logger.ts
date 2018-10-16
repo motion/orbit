@@ -101,6 +101,14 @@ export class Logger {
   }
 
   /**
+   * Creates a timer that logs messages in a verbose mode and tracks a period between
+   * given label message and next timer call with the same label message.
+   */
+  vtimer(label: string, ...messages: any[]) {
+    this.log('vtimer', [label, ...messages])
+  }
+
+  /**
    * Cleans log timers.
    */
   clean() {
@@ -119,7 +127,7 @@ export class Logger {
   /**
    * Executes logging.
    */
-  private log(level: 'verbose' | 'info' | 'warning' | 'error' | 'timer', messages: any[]) {
+  private log(level: 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer', messages: any[]) {
     // don't log if we have logging disabled
     const index = LoggerSettings.disables.indexOf(this.namespace)
     if (level !== 'error' && index !== -1) return
@@ -204,28 +212,30 @@ export class Logger {
         ...messages,
       )
       log.info(this.namespace, ...messages)
-    } else if (level === 'timer') {
+    } else if (level === 'timer' || level === 'vtimer') {
+      const consoleLog = level === 'timer' ? console.info.bind(console) : console.debug.bind(console);
+      const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log);
       const labelMessage = messages[0]
       const existTimer = this.timers.find(timer => timer.message === labelMessage)
       if (existTimer) {
         const delta = (Date.now() - existTimer.time) / 1000
         // reset it so we can see time since last message each message
         existTimer.time = Date.now()
-        console.info(
+        consoleLog(
           `%c${this.namespace}%c${delta}ms`,
           `color: ${color}; font-weight: bold`,
           'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
           ...messages,
         )
-        log.info(this.namespace, delta, ...messages)
+        defaultLog(this.namespace, delta, ...messages)
       } else {
-        console.info(
+        consoleLog(
           `%c${this.namespace}%cstarted`,
           `color: ${color}; font-weight: bold`,
           'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
           ...messages,
         )
-        log.info(this.namespace, 'started', ...messages)
+        defaultLog(this.namespace, 'started', ...messages)
         this.timers.push({ time: Date.now(), message: messages[0] })
       }
     } else {

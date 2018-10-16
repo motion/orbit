@@ -1,6 +1,8 @@
 import { Logger } from '@mcro/logger'
+import { sleep } from '@mcro/utils'
 import { JiraSetting } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
+import { ServiceLoadThrottlingOptions } from '../../options'
 import { JiraQueries } from './JiraQueries'
 import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
 
@@ -30,6 +32,8 @@ export class JiraLoader {
    * Loads users from the jira api.
    */
   async loadUsers(startAt: number = 0): Promise<JiraUser[]> {
+    await sleep(ServiceLoadThrottlingOptions.jira.users)
+
     const maxResults = 1000
     const users = await this.loader.load(JiraQueries.users(startAt, maxResults))
 
@@ -48,6 +52,8 @@ export class JiraLoader {
    * Loads jira issues from the jira api.
    */
   async loadIssues(startAt: number = 0): Promise<JiraIssue[]> {
+    await sleep(ServiceLoadThrottlingOptions.jira.issues)
+
     const maxResults = 100
     const response = await this.loader.load(JiraQueries.issues(startAt, maxResults))
 
@@ -74,6 +80,8 @@ export class JiraLoader {
    * Loads jira issue's comments.
    */
   private async loadComments(issueId: string, startAt = 0, maxResults = 25): Promise<JiraComment[]> {
+    await sleep(ServiceLoadThrottlingOptions.jira.comments)
+
     const query = JiraQueries.comments(issueId, startAt, maxResults)
     const response = await this.loader.load(query)
     if (response.comments.length < response.total) {

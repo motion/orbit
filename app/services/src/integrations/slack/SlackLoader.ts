@@ -1,18 +1,20 @@
 import { Logger } from '@mcro/logger'
 import { SlackSetting } from '@mcro/models'
+import { sleep } from '@mcro/utils'
 import { channels, team, users } from 'slack'
+import { ServiceLoadThrottlingOptions } from '../../options'
 import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
-
-const log = new Logger('service:slack:loader')
 
 /**
  * Loads the data from the Slack API.
  */
 export class SlackLoader {
   private setting: SlackSetting
+  private log: Logger
 
-  constructor(setting: SlackSetting) {
+  constructor(setting: SlackSetting, log?: Logger) {
     this.setting = setting
+    this.log = log || new Logger('service:slack:loader:' + setting.id)
   }
 
   /**
@@ -22,7 +24,7 @@ export class SlackLoader {
    */
   async loadTeam(): Promise<SlackTeam> {
     const options = { token: this.setting.token }
-    log.verbose(`request to team.info`, options)
+    this.log.verbose(`request to team.info`, options)
     const response = await team.info(options)
     return response.team
   }
@@ -33,12 +35,14 @@ export class SlackLoader {
    * @see https://api.slack.com/methods/users.list
    */
   async loadUsers(cursor?: string): Promise<SlackUser[]> {
+    await sleep(ServiceLoadThrottlingOptions.slack.users)
+
     const options = {
       token: this.setting.token,
       limit: 1000,
       cursor: cursor,
     }
-    log.verbose('request to users.list', options)
+    this.log.verbose('request to users.list', options)
     const response = await users.list(options)
 
     const nextPageCursor = response.response_metadata && response.response_metadata.next_cursor
@@ -56,11 +60,13 @@ export class SlackLoader {
    * @see https://api.slack.com/methods/channels.list
    */
   async loadChannels(cursor?: string): Promise<SlackChannel[]> {
+    await sleep(ServiceLoadThrottlingOptions.slack.channels)
+
     const options = {
       token: this.setting.token,
       cursor: cursor,
     }
-    log.verbose('request to channels.list', options)
+    this.log.verbose('request to channels.list', options)
     const response = await channels.list(options)
 
     const nextPageCursor = response.response_metadata && response.response_metadata.next_cursor
@@ -89,6 +95,8 @@ export class SlackLoader {
     oldestMessageId?: string,
     latestMessageId?: string,
   ): Promise<SlackMessage[]> {
+    await sleep(ServiceLoadThrottlingOptions.slack.messages)
+
     const options = {
       token: this.setting.token,
       channel: channelId,
@@ -96,7 +104,7 @@ export class SlackLoader {
       oldest: oldestMessageId,
       latest: latestMessageId,
     }
-    log.verbose('request to channels.history', options)
+    this.log.verbose('request to channels.history', options)
     const response = await channels.history(options)
 
     if (response.has_more === true) {

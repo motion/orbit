@@ -1,6 +1,8 @@
 import { Logger } from '@mcro/logger'
+import { sleep } from '@mcro/utils'
 import { ConfluenceSetting } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
+import { ServiceLoadThrottlingOptions } from '../../options'
 import { ConfluenceQueries } from './ConfluenceQueries'
 import { ConfluenceComment, ConfluenceContent, ConfluenceGroup, ConfluenceUser } from './ConfluenceTypes'
 
@@ -36,6 +38,8 @@ export class ConfluenceLoader {
     start = 0,
     limit = 25,
   ): Promise<ConfluenceContent[]> {
+    await sleep(ServiceLoadThrottlingOptions.confluence.contents)
+
     // without type specified we load everything
     if (!type) {
       const pages = await this.loadContents('page', start, limit)
@@ -81,6 +85,7 @@ export class ConfluenceLoader {
     start = 0,
     limit = 25,
   ): Promise<ConfluenceComment[]> {
+    await sleep(ServiceLoadThrottlingOptions.confluence.comments)
     // scopes we use here:
     // 1. history.createdBy - used to get comment author
 
@@ -147,6 +152,8 @@ export class ConfluenceLoader {
     start = 0,
     limit = 200,
   ): Promise<ConfluenceUser[]> {
+    await sleep(ServiceLoadThrottlingOptions.confluence.users)
+
     const response = await this.loader.load(ConfluenceQueries.groupMembers(groupName))
     if (response.results.length < response.size) {
       return [

@@ -3,8 +3,10 @@ import { Logger } from '@mcro/logger'
 import { GmailSetting } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoaderSettingSaveCallback } from '../../loader/ServiceLoaderTypes'
+import { ServiceLoadThrottlingOptions } from '../../options'
 import { GMailQueries } from './GMailQueries'
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailTypes'
+import { sleep } from '@mcro/utils'
 
 /**
  * Loads data from GMail service.
@@ -42,6 +44,7 @@ export class GMailLoader {
    * For example when user receives new messages or removes exist messages.
    */
   async loadHistory(startHistoryId: string, pageToken?: string): Promise<GMailHistoryLoadResult> {
+    await sleep(ServiceLoadThrottlingOptions.gmail.history)
 
     // load a history first
     this.log.verbose('loading history', { startHistoryId, pageToken })
@@ -107,6 +110,7 @@ export class GMailLoader {
     filteredIds: string[] = [],
     pageToken?: string,
   ): Promise<GMailThread[]> {
+    await sleep(ServiceLoadThrottlingOptions.gmail.threads)
 
     // load all threads first
     this.log.verbose(`loading threads`, { count, queryFilter, filteredIds, pageToken })
@@ -183,6 +187,8 @@ export class GMailLoader {
    * Loads thread messages and pushes them into threads.
    */
   private async loadMessages(threads: GMailThread[]): Promise<void> {
+    await sleep(ServiceLoadThrottlingOptions.gmail.messages)
+
     this.log.verbose('loading thread messages', threads)
     await Promise.all(
       threads.map(async thread => {

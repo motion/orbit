@@ -1,17 +1,8 @@
 import * as React from 'react'
-import { ResolvePerson } from './resolve/ResolvePerson'
-import { ResolveBit } from './resolve/ResolveBit'
-import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit, PersonBit } from '@mcro/models'
-import { ItemHideProps } from '../types/ItemHideProps'
 import { Setting } from '@mcro/models'
-import {
-  ItemResolverDecoration,
-  ItemResolverDecorationContext,
-} from '../helpers/contexts/ItemResolverDecorationContext'
-import { ResolveApp } from './resolve/ResolveApp'
 
-export type ResolvedItem = {
+export type NormalizedItem = {
   id: string
   type: 'person' | 'bit' | 'app'
   subType?: string
@@ -40,59 +31,41 @@ export type ItemResolverExtraProps = {
 
 type ResolvableModel = Bit | Person | PersonBit | Setting
 
-export type ItemResolverProps<T extends ResolvableModel> = {
-  model?: T
-  isExpanded?: boolean
-  children: ((a: ResolvedItem) => React.ReactNode)
-  shownLimit?: number
-  searchTerm?: string
-  hide?: ItemHideProps
-  onResolvedItem?: (a: ResolvedItem) => any
-  extraProps?: ItemResolverExtraProps
+const normalizers = {
+  bit: (bit: Bit) => {
+    return {
+      id: bit.id,
+      type: 'bit',
+      subType: bit.type,
+      integration: bit.integration,
+      createdAt: new Date(bit.bitCreatedAt),
+      updatedAt: new Date(bit.bitUpdatedAt),
+    }
+  },
+  app: model => ({
+    id: `${model.id}`,
+    type: 'app',
+    title: model.type,
+    icon: model.type,
+  }),
+  person: (person: PersonBit) => {
+    // @ts-ignore TODO why bad
+    const photo = last(person.allPhotos) || person.photo
+    return {
+      id: person.email,
+      type: 'person',
+      title: person.name,
+      icon: photo,
+      subtitle: person.email,
+      // createdAt: person.createdAt,
+      // updatedAt: person.updatedAt,
+    }
+  },
 }
 
-export type ItemResolverResolverProps<T extends ResolvableModel> = ItemResolverProps<T> & {
-  decoration: ItemResolverDecoration
-}
-
-export const ItemResolver = ({
-  model,
-  onResolvedItem,
-  children,
-  extraProps = {},
-  ...props
-}: ItemResolverProps<ResolvableModel>) => {
-  let Resolver
+export const normalizeItem = ({ model }: { model: ResolvableModel }): NormalizedItem => {
   if (!model) {
-    return null
+    throw new Error('Called normalize without a model')
   }
-  if (model.target === 'person' || model.target === 'person-bit') {
-    Resolver = ResolvePerson
-  }
-  if (model.target === 'bit') {
-    Resolver = ResolveBit
-  }
-  if (model.target === 'setting') {
-    Resolver = ResolveApp
-  }
-  if (!Resolver) {
-    Resolver = ResolveEmpty
-  }
-  return (
-    <ItemResolverDecorationContext.Consumer>
-      {decoration => {
-        return (
-          <Resolver decoration={decoration} model={model} extraProps={extraProps} {...props}>
-            {item => {
-              // allow getting the item via a prop other than children intended for side effects
-              if (onResolvedItem) {
-                onResolvedItem(item)
-              }
-              return children(item)
-            }}
-          </Resolver>
-        )
-      }}
-    </ItemResolverDecorationContext.Consumer>
-  )
+  return normalizers[model.target](model)
 }

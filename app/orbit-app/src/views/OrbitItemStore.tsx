@@ -1,7 +1,7 @@
 import { react, ensure } from '@mcro/black'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
-import { ResolvedItem } from '../components/ItemResolver'
+import { NormalizedItem } from '../components/ItemResolver'
 import { Actions } from '../actions/Actions'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
@@ -11,7 +11,7 @@ export const OrbitItemSingleton = {
 
 export class OrbitItemStore {
   props: OrbitItemProps<any>
-  resolvedItem: ResolvedItem = null
+  resolvedItem: NormalizedItem = null
   isSelected = false
   cardWrapRef = null
   clickAt = 0
@@ -87,7 +87,7 @@ export class OrbitItemStore {
     this.cardWrapRef = cardWrapRef
   }
 
-  setResolvedItem = (item: ResolvedItem) => {
+  setResolvedItem = (item: NormalizedItem) => {
     this.resolvedItem = item
   }
 

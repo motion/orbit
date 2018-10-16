@@ -3,6 +3,7 @@ import { observeMany } from '@mcro/model-bridge'
 import { getApps } from '../apps'
 import { react } from '@mcro/black'
 import { OrbitApp } from '../apps/types'
+import { keyBy } from 'lodash'
 
 type GenericApp = OrbitApp<any> & {
   isActive: boolean
@@ -26,11 +27,19 @@ export class AppsStore {
         type =>
           ({
             ...getApps[type]({}),
+            source: type, // todo remove...
             isActive: apps.findIndex(x => x.source === type),
           } as GenericApp),
       )
     },
+    {
+      defaultValue: [],
+    },
   )
+
+  allAppsObj = react(() => this.allApps, x => keyBy(x, 'source'), {
+    defaultValue: {},
+  })
 
   private settingsList$ = observeMany(SettingModel, {
     args: {

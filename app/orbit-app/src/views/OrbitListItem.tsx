@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
+import { normalizeItem, NormalizedItem } from '../components/ItemResolver'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
@@ -127,7 +127,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
     padding: [10, 11],
   }
 
-  getInner = (resolvedItem: ResolvedItem) => {
+  getInner = (resolvedItem: Partial<NormalizedItem>) => {
     const { createdAt, icon, location, people, preview, subtitle, title, updatedAt } = resolvedItem
     const {
       afterTitle,
@@ -314,38 +314,12 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
   }
 
   render() {
-    const {
-      selectionStore,
-      store,
-      pane,
-      model,
-      searchTerm,
-      isExpanded,
-      hide,
-      extraProps,
-      ...props
-    } = this.props
-    // console.verbose(
-    //   `${props.index} ${(model && (model.id || model.email)) || props.title}.${pane} ${
-    //     store.isSelected
-    //   }`,
-    // )
-    if (!model) {
-      return this.getInner(props)
-    }
+    const { store, model } = this.props
     store.isSelected
-    return (
-      <ItemResolver
-        model={model}
-        isExpanded={isExpanded}
-        searchTerm={searchTerm}
-        hide={hide}
-        onResolvedItem={store.setResolvedItem}
-        extraProps={extraProps}
-      >
-        {this.getInner}
-      </ItemResolver>
-    )
+    if (!model) {
+      return this.getInner(this.props)
+    }
+    return this.getInner(normalizeItem(model))
   }
 }
 

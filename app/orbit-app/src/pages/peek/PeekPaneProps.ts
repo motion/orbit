@@ -2,6 +2,7 @@ import { Bit, PersonBit, Setting } from '@mcro/models'
 import { PeekStore } from './stores/PeekStore'
 import { AppConfig } from '@mcro/stores'
 import { SelectionStore } from '../orbit/orbitDocked/SelectionStore'
+import { AppsStore } from '../AppsStore';
 
 export type PeekContents = {
   title?: React.ReactNode
@@ -27,6 +28,7 @@ export type PeekPaneProps<T extends Model> = {
   scrollToHighlight?: () => void
   model?: T
   selectionStore: SelectionStore
+  appsStore: AppsStore
   peekStore: PeekStore
   appConfig: AppConfig
   children: (a: PeekContents) => JSX.Element

@@ -10,6 +10,7 @@ import {
   Setting,
   GenericBit,
 } from '@mcro/models'
+import { AppConfig } from '@mcro/stores'
 
 // typeof BitModel | typeof SettingModel | typeof PersonBitModel
 
@@ -33,10 +34,7 @@ export type OrbitApp<A extends IntegrationType> = {
   integrationName: string
   displayName: string
   model: ModelTypeByIntegrationType<A>
-  config: {
-    icon: string
-    iconLight?: string
-  }
+  instanceConfig: AppConfig
   defaultQuery?: FindOptions<ModelTypeByIntegrationType<A>>
   views: {
     main: React.ReactNode
@@ -51,7 +49,7 @@ export type GetOrbitApp<A extends IntegrationType> = (setting: IntegrationSettin
 
 export type GetOrbitApps = { [key in IntegrationType]: GetOrbitApp<IntegrationType> }
 
-type ResolvableModel = Bit | PersonBit | Setting
+export type ResolvableModel = Bit | PersonBit | Setting
 
 export type ItemHideProps = {
   people?: boolean

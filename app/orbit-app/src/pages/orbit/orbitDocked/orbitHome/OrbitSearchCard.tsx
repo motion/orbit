@@ -30,7 +30,7 @@ const hideSlack = {
 
 // stays static and non-reactive to prevent re-rendering during infinite scroll
 export class OrbitSearchCard extends React.Component<Props> {
-  getChildren = ({ content }, bit) => {
+  getChildren = ({ content }, bit, _number) => {
     return bit && bit.integration === 'slack' ? (
       <SearchResultText>{content}</SearchResultText>
     ) : (

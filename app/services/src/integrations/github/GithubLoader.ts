@@ -2,13 +2,7 @@ import { Logger } from '@mcro/logger'
 import { GithubSetting } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
 import { ServiceLoadThrottlingOptions } from '../../options'
-import {
-  GithubIssueQuery,
-  GithubOrganizationsQuery,
-  GithubPeopleQuery,
-  GithubPullRequestsQuery,
-  GithubRepositoriesQuery,
-} from './GithubQueries'
+import { GithubQueries } from './GithubQueries'
 import {
   GithubIssue,
   GithubIssueQueryResult,
@@ -115,7 +109,7 @@ export class GithubLoader {
     // send a request to the github and load first/next 100 repositories
     const results = await this.fetchFromGitHub<GithubOrganizationsQueryResult>(
       this.setting.token,
-      GithubOrganizationsQuery,
+      GithubQueries.organizations(),
       {
         cursor,
       },
@@ -148,7 +142,7 @@ export class GithubLoader {
     // send a request to the github and load first/next 100 repositories
     const results = await this.fetchFromGitHub<GithubRepositoryQueryResult>(
       this.setting.token,
-      GithubRepositoriesQuery,
+      GithubQueries.repositories(),
       {
         cursor,
       },
@@ -183,7 +177,7 @@ export class GithubLoader {
     // send a request to the github and load first/next 100 issues
     const results = await this.fetchFromGitHub<GithubIssueQueryResult>(
       this.setting.token,
-      GithubIssueQuery,
+      GithubQueries.issues(),
       {
         organization,
         repository,
@@ -224,7 +218,7 @@ export class GithubLoader {
     // send a request to the github and load first/next 100 issues
     const results = await this.fetchFromGitHub<GithubPullRequestQueryResult>(
       this.setting.token,
-      GithubPullRequestsQuery,
+      GithubQueries.pullRequests(),
       {
         organization,
         repository,
@@ -262,7 +256,7 @@ export class GithubLoader {
     this.log.verbose(`Loading ${cursor ? 'next' : 'first'} 100 people`)
     const results = await this.fetchFromGitHub<GithubPeopleQueryResult>(
       this.setting.token,
-      GithubPeopleQuery,
+      GithubQueries.people(),
       {
         organization,
         cursor,

@@ -7,7 +7,7 @@ import * as React from 'react'
 import { Actions } from '../actions/Actions'
 import { settingToAppConfig } from '../helpers/toAppConfig/settingToAppConfig'
 import { OrbitDocked } from './orbit/orbitDocked/OrbitDocked'
-import { OrbitStore } from './OrbitStore'
+import { OrbitStore } from './OrbitPage/OrbitStore'
 import { Peek } from './peek/Peek'
 
 const getItem = {

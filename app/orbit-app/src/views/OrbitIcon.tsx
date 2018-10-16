@@ -2,7 +2,7 @@ import { attachTheme } from '@mcro/gloss'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { compose, view } from '@mcro/black'
-import { AppsStore } from '../pages/AppsStore'
+import { AppsStore } from '../stores/AppsStore'
 
 const adjust = {
   icon: {

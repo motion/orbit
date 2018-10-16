@@ -9,7 +9,13 @@ import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { pullAll, difference } from 'lodash'
-import { IntegrationType } from '@mcro/models'
+import { PersonBitModel, BitModel, SettingModel } from '@mcro/models'
+
+const models = {
+  'person-bit': PersonBitModel,
+  bit: BitModel,
+  app: SettingModel,
+}
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -123,21 +129,22 @@ class OrbitExploreStore {
       }
       const disposers = []
       // setup stream subscriptions
-      for (const stringId in apps) {
-        const id = stringId as IntegrationType
-        const { name, model, defaultQuery } = apps[id]
+      for (const app of apps) {
+        const model = models[app.integration]
+        console.log('model', model, app.integration)
+        const { displayName, defaultQuery } = app
         const subscription = observeMany(model, {
           args: defaultQuery as any,
         }).subscribe(values => {
           if (values.length) {
             // add this id of not in sort order
-            if (this.sortOrder.indexOf(+id) === -1) {
-              this.sortOrder.push(+id)
+            if (this.sortOrder.indexOf(displayName) === -1) {
+              this.sortOrder.push(displayName)
             }
           }
           this.streams = {
             ...this.streams,
-            [id]: { values, name },
+            [displayName]: { values, name: displayName },
           }
         })
         disposers.push(() => subscription.unsubscribe())

@@ -1,3 +1,4 @@
+import { Component } from 'react'
 import { FindOptions } from 'typeorm'
 import {
   IntegrationSetting,
@@ -27,19 +28,20 @@ type IntegrationTypeToModelType = {
 
 type ModelFromIntegration<A extends IntegrationType> = IntegrationTypeToModelType[A]
 
-export type OrbitAppView<A extends IntegrationType> = React.SFC<ItemResolverProps<ModelFromIntegration<A>>>
-export type OrbitAppMainView<A extends IntegrationType> = OrbitAppView<A> & { appStore: AppStore }
+export type OrbitAppProps<A extends IntegrationType> = ItemResolverProps<ModelFromIntegration<A>>
+export type OrbitAppMainProps<A extends IntegrationType> = OrbitAppProps<A> & { appStore: AppStore }
 
 export type OrbitApp<A extends IntegrationType> = {
-  source: A
+  source: 'bit' | 'person-bit' | 'setting'
+  integration: A
   integrationName: string
   displayName: string
   instanceConfig?: AppConfig
   defaultQuery?: FindOptions<ModelFromIntegration<A>>
   views: {
-    main: OrbitAppMainView<A>
-    item: OrbitAppView<A>
-    setting: OrbitAppView<A>
+    main: Component<OrbitAppMainProps<A>, any, any>
+    item: Component<OrbitAppProps<A>, any, any>
+    setting: Component<OrbitAppProps<A>, any, any>
   }
 }
 

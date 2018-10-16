@@ -127,8 +127,17 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
     padding: [10, 11],
   }
 
-  getInner = (resolvedItem: Partial<NormalizedItem>) => {
-    const { createdAt, icon, location, people, preview, subtitle, title, updatedAt } = resolvedItem
+  getInner = (normalizedItem: Partial<NormalizedItem>) => {
+    const {
+      createdAt,
+      icon,
+      location,
+      people,
+      preview,
+      subtitle,
+      title,
+      updatedAt,
+    } = normalizedItem
     const {
       afterTitle,
       borderRadius,
@@ -300,7 +309,9 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
               )}
             </Preview>
           )}
-          {typeof children === 'function' ? children(resolvedItem, model, props.index) : children}
+          {typeof children === 'function'
+            ? children(normalizedItem as NormalizedItem, model, props.index)
+            : children}
           {showPeople &&
             !showSubtitle && (
               <Bottom>
@@ -314,10 +325,13 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
   }
 
   render() {
-    const { store, model } = this.props
+    const { store, model, direct } = this.props
     store.isSelected
-    if (!model) {
+    if (direct) {
       return this.getInner(this.props)
+    }
+    if (!model) {
+      return null
     }
     return this.getInner(normalizeItem(model))
   }

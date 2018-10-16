@@ -42,7 +42,7 @@ const normalizers = {
       updatedAt: new Date(bit.bitUpdatedAt),
     }
   },
-  app: model => ({
+  setting: model => ({
     id: `${model.id}`,
     type: 'app',
     title: model.type,
@@ -63,7 +63,7 @@ const normalizers = {
   },
 }
 
-export const normalizeItem = ({ model }: { model: ResolvableModel }): NormalizedItem => {
+export const normalizeItem = (model: ResolvableModel): NormalizedItem => {
   if (!model) {
     throw new Error('Called normalize without a model')
   }

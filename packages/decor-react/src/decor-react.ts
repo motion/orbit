@@ -1,7 +1,5 @@
 export * from './contextual'
 export * from './emitsMount'
-export * from './extendsReact'
-export * from './renderArgumentable'
 export * from './storeAttachable'
 export * from './storeProvidable'
 export * from './wrapHOC'

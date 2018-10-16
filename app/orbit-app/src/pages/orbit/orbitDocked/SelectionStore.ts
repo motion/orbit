@@ -44,7 +44,7 @@ export class SelectionStore {
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
-  results: SelectionResult[] = null
+  results: SelectionResult[] | null = null
   private resultsIn: SelectionGroup[] = null
 
   didMount() {
@@ -108,7 +108,7 @@ export class SelectionStore {
   setSelectedOnSearch = react(
     () => [!!this.results && Math.random(), this.props.queryStore.query],
     async (_, { sleep }) => {
-      const hasResults = !!this.results.length
+      const hasResults = this.results && !!this.results.length
       // select first item on search
       if (hasResults) {
         ensure('results should auto select', this.resultsIn[0].shouldAutoSelect)

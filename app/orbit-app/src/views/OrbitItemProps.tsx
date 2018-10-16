@@ -10,6 +10,8 @@ import { ResolvableModel } from '../apps/types'
 
 export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySet &
   Partial<NormalizedItem> & {
+    // whether to avoid model resolving and just use props
+    direct?: boolean
     ignoreSelection?: boolean
     chromeless?: boolean
     theme?: Partial<ThemeObject>

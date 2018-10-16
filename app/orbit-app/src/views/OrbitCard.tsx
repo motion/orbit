@@ -13,6 +13,7 @@ import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
+import { ResolvableModel } from '../apps/types'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -154,7 +155,7 @@ const Padding = view({
   store: OrbitItemStore,
 })
 @view
-export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
+export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableModel>> {
   static defaultProps = {
     borderRadius: 7,
     padding: 8,
@@ -340,17 +341,20 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
   }
 
   render() {
-    const { store, model } = this.props
+    const { store, model, direct } = this.props
     store.isSelected
-    if (!model) {
+    if (direct) {
       return this.getInner(this.props)
+    }
+    if (!model) {
+      return null
     }
     return this.getInner(normalizeItem(model))
   }
 }
 
 // wrap the outside so we can do much faster shallow renders when need be
-export class OrbitCard extends React.Component<OrbitItemProps<any>> {
+export class OrbitCard extends React.Component<OrbitItemProps<ResolvableModel>> {
   shouldComponentUpdate(a, b, c) {
     return onlyUpdateOnChanged.call(this, a, b, c)
   }

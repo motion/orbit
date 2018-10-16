@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { PeekStore } from '../../pages/peek/PeekStore'
+import { AppStore } from '../../pages/AppPage/AppStore'
 
 const PeekContentChrome = view(UI.Col, {
   flex: 1,
@@ -20,13 +20,13 @@ const ContentInner = view(UI.Col, {
   wordBreak: 'break-word',
 })
 
-@view.attach('peekStore')
-export class PeekContent extends React.Component<{ peekStore?: PeekStore }> {
+@view.attach('appStore')
+export class ScrollableContent extends React.Component<{ appStore?: AppStore }> {
   render() {
-    const { children, peekStore } = this.props
+    const { children, appStore } = this.props
     return (
       <PeekContentChrome>
-        <ContentInner forwardRef={peekStore.contentFrame}>{children}</ContentInner>
+        <ContentInner forwardRef={appStore.contentFrame}>{children}</ContentInner>
       </PeekContentChrome>
     )
   }

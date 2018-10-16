@@ -25,19 +25,21 @@ type IntegrationTypeToModelType = {
   apps: Setting
 }
 
-type ModelTypeByIntegrationType<A extends IntegrationType> = IntegrationTypeToModelType[A]
+type ModelFromIntegration<A extends IntegrationType> = IntegrationTypeToModelType[A]
+
+export type OrbitAppView<A extends IntegrationType> = React.SFC<ItemResolverProps<ModelFromIntegration<A>>>
+export type OrbitAppMainView<A extends IntegrationType> = OrbitAppView<A> & { appStore: AppStore }
 
 export type OrbitApp<A extends IntegrationType> = {
   source: A
   integrationName: string
   displayName: string
-  model: ModelTypeByIntegrationType<A>
-  instanceConfig: AppConfig
-  defaultQuery?: FindOptions<ModelTypeByIntegrationType<A>>
+  instanceConfig?: AppConfig
+  defaultQuery?: FindOptions<ModelFromIntegration<A>>
   views: {
-    main: React.SFC<ItemResolverProps<ModelTypeByIntegrationType<A>> & { appStore: AppStore }>
-    item: React.SFC<ItemResolverProps<ModelTypeByIntegrationType<A>>>
-    setting: React.SFC<ItemResolverProps<ModelTypeByIntegrationType<A>>>
+    main: OrbitAppMainView<A>
+    item: OrbitAppView<A>
+    setting: OrbitAppView<A>
   }
 }
 

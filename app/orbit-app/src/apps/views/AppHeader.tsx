@@ -2,14 +2,14 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { WindowControls } from '../../views/WindowControls'
-import { PeekStore } from '../../pages/peek/PeekStore'
 import * as Constants from '../../constants'
 import { CSSPropertySet } from '@mcro/gloss'
 import { Glint, Row, Text } from '@mcro/ui'
 import { Centered } from '../../views/Centered'
+import { AppStore } from '../../pages/AppPage/AppStore'
 
 type Props = {
-  peekStore?: PeekStore
+  appStore?: AppStore
   theme?: any
   integration?: string
   before?: React.ReactNode
@@ -18,7 +18,7 @@ type Props = {
 }
 
 // the full header:
-const PeekHeaderContain = view(UI.View, {
+const AppHeaderContain = view(UI.View, {
   background: 'transparent',
   zIndex: 100,
   overflow: 'hidden',
@@ -69,27 +69,27 @@ const TitleBarText = props => (
   </div>
 )
 
-@view.attach('peekStore')
+@view.attach('appStore')
 @view
-export class PeekHeaderContent extends React.Component<Props> {
+export class AppHeaderContent extends React.Component<Props> {
   render() {
-    const { peekStore, before, after, children, ...props } = this.props
-    const itemConfig = peekStore.state.appConfig.config
-    const hideTitleBar = itemConfig && itemConfig.showTitleBar === false
+    const { appStore, before, after, children, ...props } = this.props
+    const { viewConfig } = appStore.state.appConfig
+    const hideTitleBar = viewConfig && viewConfig.showTitleBar === false
     return (
-      <PeekHeaderContain
+      <AppHeaderContain
         invisible={hideTitleBar}
         draggable
         focused
-        onDragStart={peekStore.onDragStart}
+        onDragStart={appStore.onDragStart}
         {...props}
       >
         <Glint borderRadius={7.5} opacity={0.65} top={0.5} />
         <MainHead>
           <WindowControls
-            onClose={peekStore.handleClose}
-            onMax={peekStore.isTorn ? peekStore.handleMaximize : null}
-            onMin={peekStore.isTorn ? peekStore.handleMinimize : null}
+            onClose={appStore.handleClose}
+            onMax={appStore.isTorn ? appStore.handleMaximize : null}
+            onMin={appStore.isTorn ? appStore.handleMinimize : null}
           />
           {!!before && (
             <HeaderSection flex={1}>
@@ -99,13 +99,13 @@ export class PeekHeaderContent extends React.Component<Props> {
           {!!children && <Centered>{children}</Centered>}
           {!!after && <HeaderSection>{after}</HeaderSection>}
         </MainHead>
-      </PeekHeaderContain>
+      </AppHeaderContain>
     )
   }
 }
 
-export const PeekHeader = props => (
+export const AppHeader = props => (
   <UI.Theme select={theme => theme.titleBar || theme}>
-    <PeekHeaderContent {...props} />
+    <AppHeaderContent {...props} />
   </UI.Theme>
 )

@@ -28,8 +28,17 @@ type IntegrationTypeToModelType = {
 
 type ModelFromIntegration<A extends IntegrationType> = IntegrationTypeToModelType[A]
 
-export type OrbitAppProps<A extends IntegrationType> = ItemResolverProps<ModelFromIntegration<A>>
-export type OrbitAppMainProps<A extends IntegrationType> = OrbitAppProps<A> & { appStore: AppStore }
+export type OrbitAppProps<A extends IntegrationType> = ItemResolverProps<
+  ModelFromIntegration<A>
+> & {
+  bit: GenericBit<A>
+}
+
+export type OrbitAppMainProps<A extends IntegrationType> = OrbitAppProps<A> & {
+  appStore: AppStore
+  searchBar: React.ReactNode
+  searchTerm: string
+}
 
 export type OrbitApp<A extends IntegrationType> = {
   source: 'bit' | 'person-bit' | 'setting'

@@ -454,6 +454,7 @@ body * {
   display: flex;
   flex-flow: column;
   box-sizing: border-box;
+  align-items: stretch;
   flex-shrink: 0;
   outline: 0;
 }

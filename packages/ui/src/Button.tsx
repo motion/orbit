@@ -47,6 +47,8 @@ const ButtonInner = ({
   return (
     <SizedSurface
       tagName="button"
+      alignItems="center"
+      flexFlow="row"
       style={{ ...buttonStyles, ...style }}
       elementProps={{
         justifyContent: 'center',

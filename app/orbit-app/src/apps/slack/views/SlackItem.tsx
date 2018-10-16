@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SlackBitDataMessage } from '@mcro/models'
-import { SlackMessage } from './views/SlackMessage'
-import { OrbitAppProps } from '../types'
+import { SlackMessage } from './SlackMessage'
+import { OrbitAppProps } from '../../types'
 
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)

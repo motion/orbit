@@ -1,11 +1,11 @@
-import { SlackApp } from './SlackApp'
-import { SlackSettings } from './SlackSettings'
+import { SlackApp } from './views/SlackApp'
+import { SlackSettings } from './views/SlackSettings'
 import { Setting, GenericBit } from '@mcro/models'
 // @ts-ignore
 import iconSlack from '../../../public/icons/slack.svg'
 import { GetOrbitApp, ItemProps } from '../types'
 import { findManyType } from '../helpers/queries'
-import { SlackItem } from './SlackItem'
+import { SlackItem } from './views/SlackItem'
 
 export const slack: GetOrbitApp<'slack'> = (setting?: Setting) => ({
   config: {

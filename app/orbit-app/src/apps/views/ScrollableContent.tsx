@@ -7,7 +7,6 @@ const PeekContentChrome = view(UI.Col, {
   flex: 1,
   position: 'relative',
   zIndex: 0,
-  background: '#fbfbfb',
   // without this, things strangely overflow
   overflow: 'hidden',
 })

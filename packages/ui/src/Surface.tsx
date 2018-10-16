@@ -123,8 +123,6 @@ const getSegmentRadius = props => {
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = view(View, {
-  flexFlow: 'row',
-  alignItems: 'center',
   fontFamily: 'inherit',
   position: 'relative',
 }).theme(props => {
@@ -236,7 +234,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,
     size: 1,
-    alignItems: 'center',
   }
 
   static contextTypes = {
@@ -316,7 +313,9 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         className={`${this.uniq} ${className || ''}`}
         segmentedStyle={segmentedStyle}
       >
-        {noInnerElement ? null : (
+        {noInnerElement ? (
+          children
+        ) : (
           <>
             {glint && !props.chromeless ? (
               <Glint

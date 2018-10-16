@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { JiraSetting } from '@mcro/models'
-import { ServiceLoader } from '../loader/ServiceLoader'
+import { ServiceLoader } from '../../loader/ServiceLoader'
 import { JiraQueries } from './JiraQueries'
 import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
 

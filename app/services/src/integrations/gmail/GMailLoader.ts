@@ -1,8 +1,8 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { GmailSetting } from '@mcro/models'
-import { ServiceLoader } from '../loader/ServiceLoader'
-import { ServiceLoaderSettingSaveCallback } from '../loader/ServiceLoaderTypes'
+import { ServiceLoader } from '../../loader/ServiceLoader'
+import { ServiceLoaderSettingSaveCallback } from '../../loader/ServiceLoaderTypes'
 import { GMailQueries } from './GMailQueries'
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailTypes'
 

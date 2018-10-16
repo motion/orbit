@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { ConfluenceSetting } from '@mcro/models'
-import { ServiceLoader } from '../loader/ServiceLoader'
+import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ConfluenceQueries } from './ConfluenceQueries'
 import { ConfluenceComment, ConfluenceContent, ConfluenceGroup, ConfluenceUser } from './ConfluenceTypes'
 
@@ -38,10 +38,9 @@ export class ConfluenceLoader {
   ): Promise<ConfluenceContent[]> {
     // without type specified we load everything
     if (!type) {
-      return Promise.all([
-        ...(await this.loadContents('page', start, limit)),
-        ...(await this.loadContents('blogpost', start, limit)),
-      ])
+      const pages = await this.loadContents('page', start, limit)
+      const blogs = await this.loadContents('blogpost', start, limit)
+      return Promise.all([...pages, ...blogs])
     }
 
     // scopes we use here:

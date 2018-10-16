@@ -1,4 +1,4 @@
-import { ServiceLoaderLoadOptions } from '../loader/ServiceLoaderTypes'
+import { ServiceLoaderLoadOptions } from '../../loader/ServiceLoaderTypes'
 import {
   ConfluenceCollection,
   ConfluenceComment,

@@ -4,6 +4,7 @@ import { Bit, BitModel, PersonBit, PersonBitModel, Setting, SettingModel } from 
 import { App } from '@mcro/stores'
 import * as React from 'react'
 import { Actions } from '../../actions/Actions'
+import { APP_ID } from '../../constants'
 
 type AppStoreItemState = typeof App.peekState & {
   model: PersonBit | Bit | Setting
@@ -22,8 +23,11 @@ export type AppStoreState = {
 
 export class AppStore {
   props: {
-    id: number
     fixed?: boolean
+  }
+
+  get id() {
+    return APP_ID
   }
 
   dragOffset?: [number, number] = null
@@ -40,7 +44,7 @@ export class AppStore {
 
   // appConfig given the id
   appState = react(
-    () => App.appsState.find(x => x.id === this.props.id),
+    () => App.appsState.find(x => x.id === this.id),
     async (appState, { sleep, state }) => {
       if (!appState.torn && state.hasResolvedOnce) {
         await sleep(60)
@@ -261,10 +265,10 @@ export class AppStore {
   // where we can reset the dragOffset in the same frame
   finishDrag = false
   resetDragOffsetOnFinishDrag = react(
-    () => App.getAppState(this.props.id).position,
+    () => App.getAppState(this.id).position,
     () => {
       ensure('finished drag', this.finishDrag)
-      console.log('finish drag?', this.dragOffset, App.appsState[this.props.id].position)
+      console.log('finish drag?', this.dragOffset, App.appsState[this.id].position)
       this.dragOffset = [0, 0]
       this.finishDrag = false
     },

@@ -62,11 +62,21 @@ class AppPageContent extends React.Component<Props> {
     }
     const { appConfig, model } = appStore.state
     const type = appConfig.type
-    const View = appsStore.allAppsObj[type].views.main
-    if (!View) {
-      console.error('none', type)
-      return <div>no pane found</div>
+
+    switch (type) {
+      case 'bit':
+        const app = appsStore.allAppsObj[appConfig.integration]
+        if (!app) {
+          console.log('no app', type, appConfig, appStore)
+          return null
+        }
+        const View = app.views.main
+        return <View key={appConfig.id} model={model} appStore={appStore} />
+      case 'person-bit':
+      // return <PeekPer
+      case 'setting':
+      default:
+        return <div>invalid type found {type}</div>
     }
-    return <View key={appConfig.id} model={model} appStore={appStore} />
   }
 }

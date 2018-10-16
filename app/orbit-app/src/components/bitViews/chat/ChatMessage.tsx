@@ -7,7 +7,11 @@ import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
 import { Markdown } from '../../../views/Markdown'
 import { HighlightText } from '../../../views/HighlightText'
-import { SlackAppProps } from '../slack'
+import { SlackAppProps } from '../../../apps/slack/slack'
+import {
+  ItemResolverDecorationContext,
+  ItemResolverDecoration,
+} from '../../../helpers/contexts/ItemResolverDecorationContext'
 
 type SlackMessageProps = SlackAppProps & {
   message: SlackBitDataMessage
@@ -26,8 +30,9 @@ const SlackMessageInner = view({
   overflow: 'hidden',
 })
 
-@view
-export class SlackMessage extends React.Component<SlackMessageProps> {
+export class ChatMessageContent extends React.Component<
+  SlackMessageProps & { decoration: ItemResolverDecoration }
+> {
   render() {
     const { bit, extraProps = {}, message, previousMessage, hide = {}, decoration } = this.props
     if (!message.text || !bit) {
@@ -97,3 +102,9 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
     )
   }
 }
+
+export const ChatMessage = props => (
+  <ItemResolverDecorationContext.Consumer>
+    {decoration => <ChatMessageContent decoration={decoration} {...props} />}
+  </ItemResolverDecorationContext.Consumer>
+)

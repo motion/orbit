@@ -1,44 +1,59 @@
 import * as React from 'react'
 import { OrbitAppMainProps } from '../../types'
 import { ScrollableContent } from '../../views/ScrollableContent'
-import { Row, SegmentedRow, Surface } from '@mcro/ui'
-import { TitleBarSpace } from '../../views/TitleBarSpace'
-import { TitleBarButton } from '../../views/TitleBarButton'
-import { Actions } from '../../../actions/Actions'
-import { normalizeItem } from '../../../components/ItemResolver'
-import { OrbitIcon } from '../../../views/OrbitIcon'
+import { Surface, View } from '@mcro/ui'
+import { AppStatusBar } from '../../views/AppStatusBar'
+import { BitTitleBar } from '../../views/BitTitleBar'
+import { view } from '@mcro/black'
+import { observeMany } from '@mcro/model-bridge'
+import { BitModel } from '@mcro/models'
+import { ChatMessages } from '../../../components/bitViews/chat/ChatMessages'
 
-export class SlackApp extends React.Component<OrbitAppMainProps<'slack'>> {
+type Props = OrbitAppMainProps<'slack'>
+
+class SlackAppStore {
+  props: Props
+
+  nextConversations = []
+  private nextConversations$ = observeMany(BitModel, {
+    args: {
+      where: {
+        integration: this.props.bit.integration,
+        type: this.props.bit.type,
+        bitCreatedAt: {
+          $moreThan: this.props.bit.bitCreatedAt,
+        },
+      },
+      relations: ['people'],
+      take: 5,
+      order: {
+        bitCreatedAt: 'DESC',
+      },
+    },
+  }).subscribe(values => {
+    this.nextConversations = values
+  })
+
+  willUnmount() {
+    this.nextConversations$.unsubscribe()
+  }
+}
+
+@view.attach({
+  store: SlackAppStore,
+})
+export class SlackApp extends React.Component<Props & { store: SlackAppStore }> {
   render() {
-    const { searchBar, bit } = this.props
-    const { icon, location, locationLink, desktopLink, webLink } = normalizeItem(bit)
-
+    const { bit } = this.props
     return (
       <Surface flexFlow="column" hover={false} noInnerElement padding={16} flex={1}>
-        <Row alignItems="center" height={38}>
-          {searchBar}
-          <TitleBarSpace />
-          <SegmentedRow>
-            <TitleBarButton
-              onClick={() => {
-                Actions.open(locationLink)
-                Actions.closeOrbit()
-              }}
-              icon={<OrbitIcon icon={icon} size={16} />}
-              tooltip={location}
-            />
-            <TitleBarButton
-              onClick={() => {
-                Actions.open(desktopLink || webLink)
-                Actions.closeOrbit()
-              }}
-              tooltip="Open"
-            >
-              Open
-            </TitleBarButton>
-          </SegmentedRow>
-        </Row>
-        <ScrollableContent>123</ScrollableContent>
+        <BitTitleBar {...this.props} />
+
+        <ScrollableContent>
+          <View padding={[16, 0]}>{!!bit && <ChatMessages bit={bit} />}</View>
+        </ScrollableContent>
+
+        <AppStatusBar {...this.props} />
       </Surface>
     )
   }

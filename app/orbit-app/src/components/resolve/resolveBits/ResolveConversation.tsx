@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SlackMessage } from '../../../apps/slack/views/SlackMessage'
+import { SlackMessage } from '../../bitViews/chat/ChatMessage'
 import { SlackBitData, SlackBitDataMessage } from '@mcro/models'
 import { BitItemResolverProps } from '../ResolveBit'
 

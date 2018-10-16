@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { RoundButton } from '../views'
 import { Row, Text } from '@mcro/ui'
+import { RoundButton } from '.'
 
-export const PeekBar = view({
+export const StatusBar = view({
   margin: 5,
   borderRadius: 7,
   padding: [0, 4],
@@ -22,11 +22,11 @@ export const PeekBar = view({
   border: [1, theme.borderColor.alpha(0.5)],
 }))
 
-PeekBar.Space = view({
+StatusBar.Space = view({
   width: 10,
 })
 
-const peekBarTextProps = {
+const AppStatusBarTextProps = {
   alignItems: 'center',
   fontWeight: 500,
   alpha: 0.8,
@@ -34,8 +34,8 @@ const peekBarTextProps = {
   fontSize: 12,
 }
 
-PeekBar.Button = props => <RoundButton {...peekBarTextProps} {...props} />
+StatusBar.Button = props => <RoundButton {...AppStatusBarTextProps} {...props} />
 
-PeekBar.Text = props => <Text {...peekBarTextProps} {...props} />
+StatusBar.Text = props => <Text {...AppStatusBarTextProps} {...props} />
 
-PeekBar.Section = props => <Row alignItems="center" {...props} />
+StatusBar.Section = props => <Row alignItems="center" {...props} />

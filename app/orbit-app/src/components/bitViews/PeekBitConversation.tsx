@@ -11,34 +11,6 @@ type Props = PeekBitPaneProps & {
   store: PeekConversationStore
 }
 
-class PeekConversationStore {
-  props: Props
-
-  nextConversations = []
-  private nextConversations$ = observeMany(BitModel, {
-    args: {
-      where: {
-        integration: this.props.bit.integration,
-        type: this.props.bit.type,
-        bitCreatedAt: {
-          $moreThan: this.props.bit.bitCreatedAt,
-        },
-      },
-      relations: ['people'],
-      take: 5,
-      order: {
-        bitCreatedAt: 'DESC',
-      },
-    },
-  }).subscribe(values => {
-    this.nextConversations = values
-  })
-
-  willUnmount() {
-    this.nextConversations$.unsubscribe()
-  }
-}
-
 const SlackConversation = view({
   padding: [0, 15, 15],
 })

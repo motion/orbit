@@ -10,6 +10,7 @@ import {
 } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
 import { AppStore } from '../pages/AppPage/AppStore'
+import { NormalizedItem } from '../components/ItemResolver'
 
 // typeof BitModel | typeof SettingModel | typeof PersonBitModel
 
@@ -26,12 +27,26 @@ type IntegrationTypeToModelType = {
   apps: Setting
 }
 
+export type ItemResolverProps<T extends ResolvableModel> = {
+  model?: T
+  isExpanded?: boolean
+  shownLimit?: number
+  searchTerm?: string
+  hide?: ItemHideProps
+  extraProps?: ItemResolverExtraProps
+}
+
+export type ItemProps<A extends GenericBit<any>> = ItemResolverProps<any> & {
+  bit: A
+}
+
 type ModelFromIntegration<A extends IntegrationType> = IntegrationTypeToModelType[A]
 
 export type OrbitAppProps<A extends IntegrationType> = ItemResolverProps<
   ModelFromIntegration<A>
 > & {
   bit: GenericBit<A>
+  normalizedItem: NormalizedItem
 }
 
 export type OrbitAppMainProps<A extends IntegrationType> = OrbitAppProps<A> & {
@@ -77,18 +92,4 @@ export type ItemResolverExtraProps = {
   beforeTitle?: React.ReactNode
   minimal?: boolean
   preventSelect?: boolean
-}
-
-export type ItemResolverProps<T extends ResolvableModel> = {
-  model?: ResolvableModel
-  isExpanded?: boolean
-  shownLimit?: number
-  searchTerm?: string
-  hide?: ItemHideProps
-  onResolvedItem?: (a: T) => any
-  extraProps?: ItemResolverExtraProps
-}
-
-export type ItemProps<A extends GenericBit<any>> = ItemResolverProps<any> & {
-  bit: A
 }

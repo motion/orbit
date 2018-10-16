@@ -10,6 +10,8 @@ import { AppFrame } from './AppFrame'
 import { AppBitView } from '../../apps/AppBitView'
 import { Searchable } from '@mcro/ui'
 import { App } from '@mcro/stores'
+import { normalizeItem } from '../../components/ItemResolver'
+import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 
 type Props = {
   appsStore?: AppsStore
@@ -51,7 +53,6 @@ class AppPageContent extends React.Component<Props> {
       const { appConfig, model } = appStore.state
       const app = appsStore.allAppsObj[appConfig.integration]
       if (!app) {
-        console.log('no app', appConfig, appStore)
         return NullView
       }
       const View = app.views.main
@@ -61,6 +62,15 @@ class AppPageContent extends React.Component<Props> {
         </AppBitView>
       )
     },
+    person: () => {
+      return props => <div>person</div>
+    },
+    setting: () => {
+      return props => <div>setting</div>
+    },
+    app: () => {
+      return props => <div>app</div>
+    },
   }
 
   render() {
@@ -68,7 +78,8 @@ class AppPageContent extends React.Component<Props> {
     if (!appStore.state) {
       return null
     }
-    const { appConfig } = appStore.state
+    const { model, appConfig } = appStore.state
+    console.log('appConfig.type', appConfig.type)
     const TypeView = this.viewsByType[appConfig.type]() || NullView
     // ideally this would be different:
     // you'd have a AppSearchable + AppSearchable.Input, and you could use them lower down the tree
@@ -88,7 +99,16 @@ class AppPageContent extends React.Component<Props> {
         }}
       >
         {({ searchBar, searchTerm }) => {
-          return <TypeView searchBar={searchBar} searchTerm={searchTerm} />
+          return (
+            // dont searchTerm by spaces, its used for searching the whole term here
+            <ProvideHighlightsContextWithDefaults value={{ words: [searchTerm] }}>
+              <TypeView
+                searchBar={searchBar}
+                searchTerm={searchTerm}
+                normalizedItem={normalizeItem(model)}
+              />
+            </ProvideHighlightsContextWithDefaults>
+          )
         }}
       </Searchable>
     )

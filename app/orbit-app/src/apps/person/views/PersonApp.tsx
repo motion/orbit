@@ -9,7 +9,6 @@ import { OrbitListItem } from '../views/OrbitListItem'
 import { PeekPaneProps } from '../pages/peek/PeekPaneProps'
 import { App } from '@mcro/stores'
 import { Button, Row } from '@mcro/ui'
-// import { getTopics } from '../../../loaders/search'
 
 type Props = PeekPaneProps<PersonBit> & {
   appsStore: AppsStore

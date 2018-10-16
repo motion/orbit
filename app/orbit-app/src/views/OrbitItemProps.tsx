@@ -39,7 +39,7 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySet &
     subPane?: string
     model?: T
     extraProps?: Partial<ItemResolverExtraProps>
-    children?: ((a: NormalizedItem, b: T, c: number) => React.ReactNode) | JSX.Element
+    children?: ((a: NormalizedItem, b?: T, c?: number) => React.ReactNode) | JSX.Element
     onClick?: Function
     onSelect?: (a: HTMLElement) => any
     borderRadius?: number

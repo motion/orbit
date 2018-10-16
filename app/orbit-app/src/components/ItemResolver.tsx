@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Person, Bit, PersonBit } from '@mcro/models'
 import { Setting } from '@mcro/models'
+import { last } from 'lodash'
 
 export type NormalizedItem = {
   id: string
@@ -48,9 +49,8 @@ const normalizers = {
     title: model.type,
     icon: model.type,
   }),
-  person: (person: PersonBit) => {
-    // @ts-ignore TODO why bad
-    const photo = last(person.allPhotos) || person.photo
+  'person-bit': (person: PersonBit) => {
+    const photo = last(person.allPhotos as any) || person.photo
     return {
       id: person.email,
       type: 'person',
@@ -66,6 +66,10 @@ const normalizers = {
 export const normalizeItem = (model: ResolvableModel): NormalizedItem => {
   if (!model) {
     throw new Error('Called normalize without a model')
+  }
+  if (!normalizers[model.target]) {
+    console.log('error with model', model)
+    return {}
   }
   return normalizers[model.target](model)
 }

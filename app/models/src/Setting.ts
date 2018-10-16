@@ -45,3 +45,16 @@ export type JiraSetting = Setting & { values: JiraSettingValues }
 export type ConfluenceSetting = Setting & { values: ConfluenceSettingValues }
 export type GeneralSetting = Setting & { values: GeneralSettingValues }
 export type WebsiteSetting = Setting & { values: WebsiteSettingValues }
+
+export type AllSettings = {
+  github: GithubSetting
+  slack: SlackSetting
+  gmail: GmailSetting
+  jira: JiraSetting
+  confluence: ConfluenceSetting
+  website: WebsiteSetting
+  gdrive: DriveSetting
+  app1: any
+}
+
+export type IntegrationSetting<A extends IntegrationType> = AllSettings[A]

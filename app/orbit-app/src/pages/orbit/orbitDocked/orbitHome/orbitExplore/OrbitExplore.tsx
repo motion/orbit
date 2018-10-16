@@ -5,11 +5,11 @@ import { SelectionStore, SelectionGroup } from '../../SelectionStore'
 import { AppsStore } from '../../../../AppsStore'
 import { OrbitCarouselSection } from '../OrbitCarouselSection'
 import { observeMany } from '@mcro/model-bridge'
-import { allStreams } from './allStreams'
 import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { pullAll, difference } from 'lodash'
+import { IntegrationType } from '@mcro/models'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -115,26 +115,19 @@ class OrbitExploreStore {
   )
 
   state = react(
-    () => this.props.appsStore.appsList,
-    appsList => {
+    () => this.props.appsStore.apps,
+    apps => {
       // dispose on re-run
       if (this.state) {
         this.state.dispose()
       }
       const disposers = []
-      // get active streams
-      const activeStreams = allStreams.filter(
-        x =>
-          x.source === 'apps' ||
-          x.source === 'people' ||
-          x.source === 'app1' ||
-          !!appsList.find(app => x.source === app.type),
-      )
       // setup stream subscriptions
-      for (const { id, name, model, query } of activeStreams) {
-        // @ts-ignore
+      for (const stringId in apps) {
+        const id = stringId as IntegrationType
+        const { name, model, defaultQuery } = apps[id]
         const subscription = observeMany(model, {
-          args: query,
+          args: defaultQuery as any,
         }).subscribe(values => {
           if (values.length) {
             // add this id of not in sort order
@@ -150,7 +143,7 @@ class OrbitExploreStore {
         disposers.push(() => subscription.unsubscribe())
       }
       // remove old sorts if removed
-      const removed = difference(activeStreams.map(x => +x.id), this.sortOrder)
+      const removed = difference(Object.keys(apps), this.sortOrder)
       if (removed.length) {
         console.log('to remove', removed)
         this.sortOrder = pullAll(this.sortOrder, removed)

@@ -1,9 +1,21 @@
 import { SettingModel, Setting } from '@mcro/models'
-import { getSettingTitle } from '../helpers/toAppConfig/settingToAppConfig'
 import { observeMany } from '@mcro/model-bridge'
+import { OrbitApps, getApps } from '../apps'
+import { react } from '@mcro/black'
 
 export class AppsStore {
   appsList: Setting[] = []
+
+  apps = react(
+    () => this.appsList,
+    settings => {
+      const res: OrbitApps = {}
+      for (const setting of settings) {
+        res[setting.type] = getApps[setting.type](setting)
+      }
+      return res
+    },
+  )
 
   private appsList$ = observeMany(SettingModel, {
     args: {
@@ -18,6 +30,4 @@ export class AppsStore {
   willUnmount() {
     this.appsList$.unsubscribe()
   }
-
-  getTitle = getSettingTitle
 }

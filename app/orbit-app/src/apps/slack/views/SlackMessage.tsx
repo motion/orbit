@@ -7,10 +7,10 @@ import { ItemHideProps } from '../../../types/ItemHideProps'
 import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
 import { Markdown } from '../../../views/Markdown'
-import { BitItemResolverProps } from '../ResolveBit'
 import { HighlightText } from '../../../views/HighlightText'
+import { SlackAppProps } from '../slack'
 
-type SlackMessageProps = BitItemResolverProps & {
+type SlackMessageProps = SlackAppProps & {
   message: SlackBitDataMessage
   previousMessage?: SlackBitDataMessage
   highlight?: Object

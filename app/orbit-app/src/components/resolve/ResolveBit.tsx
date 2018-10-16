@@ -5,7 +5,7 @@ import { ResolveCustom } from './resolveBits/ResolveCustom'
 import { ResolveMail } from './resolveBits/ResolveMail'
 import { ResolveTask } from './resolveBits/ResolveTask'
 import { ItemResolverResolverProps } from '../ItemResolver'
-import { Bit } from '@mcro/models'
+import { Bit, IntegrationType } from '@mcro/models'
 import { ResolveWebsite } from './resolveBits/ResolveWebsite'
 
 const results = {
@@ -35,8 +35,10 @@ const results = {
   },
 }
 
-export type BitItemResolverProps = ItemResolverResolverProps<Bit> & { bit: Bit }
-export type BitItemResolver = React.SFC<BitItemResolverProps>
+export type BitItemResolverProps<A extends IntegrationType> = ItemResolverResolverProps<Bit> & {
+  bit: A
+}
+export type BitItemResolver = React.SFC<BitItemResolverProps<any>>
 
 export const ResolveBit = ({
   model,

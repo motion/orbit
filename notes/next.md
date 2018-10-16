@@ -1,5 +1,30 @@
 umed:
 
+- beginnings of building good search
+
+  - build up dataset
+
+    - join a bunch of slack rooms publicly available
+      - https://www.google.com/search?q=public+developer+slack+rooms&oq=public+developer+slack+rooms&aqs=chrome..69i57.3105j0j1&sourceid=chrome&ie=UTF-8
+    - add as many as you possible can
+    - also just add a TON of github repos actually...
+    - lets try and get some serious size, like 5GB of data or so
+    - you can then just export your settings config and send to me so i can use them too
+
+  - build up tests
+
+    - lets make a special search-test package
+    - gather test queries
+      - scroll through certain slack rooms / github repos and try and find unique examples of queries you'd expect to find things
+      - and then basically store the ID of the bit and the query you'd like to find it
+      - build up about 50 of these across all these different integrations
+    - create a test script
+      - the script can just give us a "score" which is just how "high up" those results return for each query.
+
+- fts search
+
+  - basically just use a few queries and get fts working, then integrate with SearchResultsCommand
+
 - folder syncer:
 
   - can we pull it off without insane complexity?

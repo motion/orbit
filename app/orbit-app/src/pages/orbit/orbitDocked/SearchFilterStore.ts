@@ -138,7 +138,7 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   get uniqueSettings(): Setting[] {
-    const intSettings = (this.appsStore.appsList || []).filter(x => x.type !== 'setting')
+    const intSettings = (this.appsStore.settingsList || []).filter(x => x.type !== 'setting')
     const unique = uniqBy(intSettings, x => x.type)
     return unique
   }

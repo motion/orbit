@@ -3,7 +3,6 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
-import { ItemHideProps } from '../../../types/ItemHideProps'
 import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
 import { Markdown } from '../../../views/Markdown'
@@ -14,7 +13,6 @@ type SlackMessageProps = SlackAppProps & {
   message: SlackBitDataMessage
   previousMessage?: SlackBitDataMessage
   highlight?: Object
-  hide: ItemHideProps
 }
 
 const SlackMessageFrame = view(View, {

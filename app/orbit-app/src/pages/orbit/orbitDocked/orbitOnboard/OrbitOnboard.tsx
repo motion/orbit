@@ -195,7 +195,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
     .map(integration => {
       return {
         ...integration,
-        added: !!(appsStore.appsList || []).find(x => x.type === integration.id),
+        added: !!(appsStore.settingsList || []).find(x => x.type === integration.id),
       }
     })
   return (

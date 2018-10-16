@@ -1,6 +1,5 @@
 import { slack } from './slack/slack'
-import { IntegrationType } from '@mcro/models'
-import { GetOrbitApp, OrbitApp } from './types'
+import { GetOrbitApp, GetOrbitApps } from './types'
 
 // import iconGCalendar from '../../public/icons/gcalendar.svg'
 // import iconGDocs from '../../public/icons/gdocs.svg'
@@ -12,10 +11,6 @@ import { GetOrbitApp, OrbitApp } from './types'
 // import iconConfluence from '../../public/icons/confluence.svg'
 // import iconJira from '../../public/icons/jira.svg'
 // import iconWebsite from '../../public/icons/website.svg'
-
-export type GetOrbitApps = { [key in IntegrationType]: GetOrbitApp<IntegrationType> }
-
-export type OrbitApps = { [key in IntegrationType]: OrbitApp<IntegrationType> }
 
 export const getApps: GetOrbitApps = {
   slack,

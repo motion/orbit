@@ -45,7 +45,11 @@ export type OrbitApp<A extends IntegrationType> = {
   }
 }
 
+export type OrbitApps = { [key in IntegrationType]: OrbitApp<IntegrationType> }
+
 export type GetOrbitApp<A extends IntegrationType> = (setting: IntegrationSetting<A>) => OrbitApp<A>
+
+export type GetOrbitApps = { [key in IntegrationType]: GetOrbitApp<IntegrationType> }
 
 type ResolvableModel = Bit | PersonBit | Setting
 
@@ -69,7 +73,6 @@ export type ItemResolverExtraProps = {
 export type ItemResolverProps<T extends ResolvableModel> = {
   model?: ResolvableModel
   isExpanded?: boolean
-  children: ((a: T) => React.ReactNode)
   shownLimit?: number
   searchTerm?: string
   hide?: ItemHideProps

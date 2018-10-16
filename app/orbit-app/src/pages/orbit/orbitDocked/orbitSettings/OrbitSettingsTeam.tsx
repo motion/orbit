@@ -76,13 +76,13 @@ export class OrbitSettingsTeam extends React.Component<{ appsStore?: AppsStore }
           gridAutoRows={80}
           margin={[5, -4]}
         >
-          {appsStore.appsList.map((app, index) => (
+          {appsStore.settingsList.map((app, index) => (
             <OrbitAppCard
               key={app.id}
               model={app}
               pane="docked"
               subPane="apps"
-              total={appsStore.appsList.length}
+              total={appsStore.settingsList.length}
               inGrid
               result={{
                 ...settingToAppConfig(app),

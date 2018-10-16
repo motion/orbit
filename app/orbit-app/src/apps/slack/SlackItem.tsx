@@ -16,7 +16,7 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
 
 export class SlackItem extends React.Component<SlackAppProps> {
   render() {
-    const { bit, searchTerm, shownLimit, extraProps } = this.props
+    const { bit, searchTerm, shownLimit } = this.props
     const { data, people } = bit
     return getMessages(data.messages, { searchTerm, shownLimit }).map((message, index) => {
       for (let person of people) {
@@ -28,10 +28,9 @@ export class SlackItem extends React.Component<SlackAppProps> {
       return (
         <SlackMessage
           key={index}
-          extraProps={extraProps}
+          {...this.props}
           message={message}
           previousMessage={data.messages[index - 1]}
-          hide={hide}
         />
       )
     })

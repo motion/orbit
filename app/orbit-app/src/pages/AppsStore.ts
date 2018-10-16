@@ -1,33 +1,43 @@
 import { SettingModel, Setting } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
-import { OrbitApps, getApps } from '../apps'
+import { getApps } from '../apps'
 import { react } from '@mcro/black'
+import { OrbitApp } from '../apps/types'
 
 export class AppsStore {
-  appsList: Setting[] = []
+  settingsList: Setting[] = []
 
-  apps = react(
-    () => this.appsList,
-    settings => {
-      const res: OrbitApps = {}
-      for (const setting of settings) {
-        res[setting.type] = getApps[setting.type](setting)
-      }
-      return res
+  allApps = Object.keys(getApps).map(key => getApps[key]({}))
+
+  activeApps = react(
+    () => this.settingsList,
+    appsList => {
+      return appsList.map(setting => getApps[setting.type](setting) as OrbitApp<any>)
     },
   )
 
-  private appsList$ = observeMany(SettingModel, {
+  // pass in a blank setting so we can access the OrbitApp configs
+  genericActiveApps = react(
+    () => this.activeApps,
+    apps => {
+      return Object.keys(getApps).map(type => ({
+        ...getApps[type]({}),
+        isActive: apps.findIndex(x => x.source === type),
+      }))
+    },
+  )
+
+  private settingsList$ = observeMany(SettingModel, {
     args: {
       where: {
         type: { $not: 'general' },
       },
     },
   }).subscribe(values => {
-    this.appsList = values
+    this.settingsList = values
   })
 
   willUnmount() {
-    this.appsList$.unsubscribe()
+    this.settingsList$.unsubscribe()
   }
 }

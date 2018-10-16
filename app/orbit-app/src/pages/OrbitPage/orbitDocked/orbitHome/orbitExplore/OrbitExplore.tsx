@@ -130,8 +130,8 @@ class OrbitExploreStore {
       const disposers = []
       // setup stream subscriptions
       for (const app of apps) {
-        const model = models[app.integration]
-        console.log('model', model, app.integration)
+        const model = models[app.source]
+        console.log('model', model, app.source)
         const { displayName, defaultQuery } = app
         const subscription = observeMany(model, {
           args: defaultQuery as any,

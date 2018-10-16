@@ -11,7 +11,6 @@
     "@mcro/logger": "^2.2.1",
     "@mcro/models": "^2.2.1",
     "@mcro/utils": "^2.2.1",
-    "apollo-fetch": "^0.7.0",
     "slack": "^11.0.0"
   },
   "peerDependencies": {

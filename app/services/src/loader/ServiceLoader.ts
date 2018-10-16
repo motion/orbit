@@ -22,8 +22,8 @@ export class ServiceLoader {
 
   constructor(setting: Setting,
               log: Logger,
-              baseUrl: string,
-              headers: ServiceLoaderKeyValue,
+              baseUrl?: string,
+              headers?: ServiceLoaderKeyValue,
               saveCallback?: ServiceLoaderSettingSaveCallback) {
     this.setting = setting
     this.log = log
@@ -40,23 +40,28 @@ export class ServiceLoader {
     // prepare data
     const qs = this.queryObjectToQueryString(options.query)
     const url = `${this.baseUrl}${options.path}${qs}`
-    const headers = {
+    const headers: any = {
       ...this.headers,
       ...(options.headers || {}),
-      'Content-Type': 'application/json',
+    }
+
+    if (!options.plain) {
+      headers['Content-Type'] = 'application/json'
     }
 
     // execute query
     this.log.vtimer(`request to ${url}`)
     const result = await fetch(url, {
       mode: options.cors ? 'cors' : undefined,
+      method: options.method || 'get',
+      body: options.body || undefined,
       headers,
     })
     const responseBody: any = options.plain ? await result.text() : result.json()
     this.log.vtimer(`request to ${url}`, result)
 
     // throw error if there is an error
-    if (!result.ok || responseBody.error) {
+    if (!result.ok || responseBody.error || responseBody.errors) {
       if (autoRefreshTokens === true && result.status === 401) {
         this.log.warning('refreshing oauth token')
         await this.refreshGoogleToken(this.setting as GmailSetting | DriveSetting)

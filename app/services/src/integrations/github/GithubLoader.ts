@@ -1,6 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { GithubSetting } from '@mcro/models'
-import { createApolloFetch } from 'apollo-fetch'
+import { sleep } from '@mcro/utils'
+import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { GithubQueries } from './GithubQueries'
 import {
@@ -15,7 +16,6 @@ import {
   GithubRepository,
   GithubRepositoryQueryResult,
 } from './GithubTypes'
-import { sleep } from '@mcro/utils'
 
 /**
  * Performs requests GitHub API.
@@ -23,12 +23,19 @@ import { sleep } from '@mcro/utils'
 export class GithubLoader {
   private setting: GithubSetting
   private log: Logger
+  private loader: ServiceLoader
   private totalCost: number = 0
   private remainingCost: number = 0
 
   constructor(setting: GithubSetting, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('service:github:loader:' + setting.id)
+    this.loader = new ServiceLoader(
+      this.setting,
+      this.log,
+      this.baseUrl(),
+      this.requestHeaders()
+    )
   }
 
   /**
@@ -107,8 +114,7 @@ export class GithubLoader {
     await sleep(ServiceLoadThrottlingOptions.github.organizations)
 
     // send a request to the github and load first/next 100 repositories
-    const results = await this.fetchFromGitHub<GithubOrganizationsQueryResult>(
-      this.setting.token,
+    const results = await this.load<GithubOrganizationsQueryResult>(
       GithubQueries.organizations(),
       {
         cursor,
@@ -140,8 +146,7 @@ export class GithubLoader {
     await sleep(ServiceLoadThrottlingOptions.github.repositories)
 
     // send a request to the github and load first/next 100 repositories
-    const results = await this.fetchFromGitHub<GithubRepositoryQueryResult>(
-      this.setting.token,
+    const results = await this.load<GithubRepositoryQueryResult>(
       GithubQueries.repositories(),
       {
         cursor,
@@ -175,8 +180,7 @@ export class GithubLoader {
     await sleep(ServiceLoadThrottlingOptions.github.issues)
 
     // send a request to the github and load first/next 100 issues
-    const results = await this.fetchFromGitHub<GithubIssueQueryResult>(
-      this.setting.token,
+    const results = await this.load<GithubIssueQueryResult>(
       GithubQueries.issues(),
       {
         organization,
@@ -216,8 +220,7 @@ export class GithubLoader {
     await sleep(ServiceLoadThrottlingOptions.github.pullRequests)
 
     // send a request to the github and load first/next 100 issues
-    const results = await this.fetchFromGitHub<GithubPullRequestQueryResult>(
-      this.setting.token,
+    const results = await this.load<GithubPullRequestQueryResult>(
       GithubQueries.pullRequests(),
       {
         organization,
@@ -254,8 +257,7 @@ export class GithubLoader {
 
     // send a request to the github and load first/next 100 people
     this.log.verbose(`Loading ${cursor ? 'next' : 'first'} 100 people`)
-    const results = await this.fetchFromGitHub<GithubPeopleQueryResult>(
-      this.setting.token,
+    const results = await this.load<GithubPeopleQueryResult>(
       GithubQueries.people(),
       {
         organization,
@@ -289,9 +291,26 @@ export class GithubLoader {
     return issues
   }
 
-  // todo.
-  private async fetchFromGitHub<T>(token: string, query: string, variables: object): Promise<T> {
-    // todo: replace with fetch here
+  /**
+   * Builds base url for the service loader queries.
+   */
+  private baseUrl(): string {
+    return 'https://api.github.com/graphql'
+  }
+
+  /**
+   * Builds request headers for the service loader queries.
+   */
+  private requestHeaders() {
+    return {
+      Authorization: `Bearer ${this.setting.token}`
+    }
+  }
+
+  /**
+   * Executes load query.
+   */
+  private async load<T>(query: string, variables: object): Promise<T> {
     const queryName = query
       .substr(0, query.indexOf('(') !== -1 ? query.indexOf('(') : query.length)
       .replace('query', '')
@@ -299,30 +318,13 @@ export class GithubLoader {
       .trim()
       .concat('(', JSON.stringify(variables), ')')
 
-    const uri = 'https://api.github.com/graphql'
-    this.log.verbose(`request to ${uri}?${queryName}`)
-    const results = createApolloFetch({
-      uri: 'https://api.github.com/graphql',
-    }).use(({ options }, next) => {
-      if (!options.headers) {
-        options.headers = {}
-      }
-      options.headers['Authorization'] = `bearer ${token}`
-      next()
-    })({ query, variables })
-
-    if ((results as any).message) {
-      throw new Error(results as any)
-    }
-    return results.then(results => {
-      if (results.errors) {
-        // this.log.error(`error requesting ${uri}?${queryName}`, results.errors)
-        throw new Error(JSON.stringify(results))
-      }
-
-      // this.log.verbose(`result of ${uri}?${queryName}`, results.data)
-      return results.data
+    const result: any = await this.loader.load({
+      path: '?' + queryName,
+      method: 'post',
+      body: JSON.stringify({ query, variables })
     })
+    console.log(result)
+    return result.data
   }
 
 }

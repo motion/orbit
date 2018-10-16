@@ -40,6 +40,16 @@ export interface ServiceLoaderLoadOptions<_T = any> {
    */
   plain?: boolean
 
+  /**
+   * Request method. GET by default.
+   */
+  method?: string
+
+  /**
+   * Request body.
+   */
+  body?: string
+
 }
 
 /**

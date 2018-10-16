@@ -2,14 +2,14 @@ import * as React from 'react'
 import { view, compose, react, ensure } from '@mcro/black'
 import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { PeekStore } from '../../pages/peek/PeekStore'
 import * as Constants from '../../constants'
 import { ThemeObject } from '@mcro/gloss'
 import { App } from '@mcro/stores'
+import { AppStore } from './AppStore'
 
 type Props = {
-  store?: PeekArrowStore
-  peekStore: PeekStore
+  store?: AppArrowStore
+  appStore: AppStore
   borderShadow: any
   theme: ThemeObject
 }
@@ -24,10 +24,10 @@ const maxTopOffset = 32
 const arrowSize = 14
 const peekOnRight = false
 
-class PeekArrowStore {
+class AppArrowStore {
   props: Props
 
-  hide = react(() => this.props.peekStore.isTorn, _ => _)
+  hide = react(() => this.props.appStore.isTorn, _ => _)
 
   arrowY = react(
     () => App.peekState,
@@ -47,11 +47,10 @@ class PeekArrowStore {
 
 const decorator = compose(
   attachTheme,
-  view.attach({ store: PeekArrowStore }),
+  view.attach({ store: AppArrowStore }),
   view,
 )
-
-export const PeekFrameArrow = decorator(({ store, theme, borderShadow }: Props) => {
+export const AppFrameArrow = decorator(({ store, theme, borderShadow }: Props) => {
   if (store.hide) {
     return null
   }

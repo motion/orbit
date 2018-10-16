@@ -2,16 +2,16 @@ import * as React from 'react'
 import { view, compose, react, ensure } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
-import { PeekFrameArrow } from './PeekFrameArrow'
 import { ResizableBox } from '../../views/ResizableBox'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { setAppState } from '../../actions/appActions/setAppState'
 import { debounce } from 'lodash'
 import { Actions } from '../../actions/Actions'
 import { AppStore } from '../../pages/AppPage/AppStore'
+import { AppFrameArrow } from './AppFrameArrow'
 
-type PeekFrameProps = {
-  store?: PeekFrameStore
+type AppFrameProps = {
+  store?: AppFrameStore
   appStore: AppStore
   children: any
   theme?: ThemeObject
@@ -43,8 +43,8 @@ const PeekMain = view(UI.View, {
   opacity: 1,
 })
 
-class PeekFrameStore {
-  props: PeekFrameProps
+class AppFrameStore {
+  props: AppFrameProps
   size: [number, number] = [0, 0]
 
   updateSizeFromAppState = react(
@@ -75,15 +75,6 @@ class PeekFrameStore {
   )
 }
 
-const decorator = compose(
-  attachTheme,
-  view.attach('appStore'),
-  view.attach({
-    store: PeekFrameStore,
-  }),
-  view,
-)
-
 const PeekFrameContainer = view(UI.View, {
   // alignItems: 'flex-end',
   position: 'absolute',
@@ -91,7 +82,15 @@ const PeekFrameContainer = view(UI.View, {
   zIndex: 2,
 })
 
-export const PeekFrame = decorator(({ appStore, store, children, theme }: PeekFrameProps) => {
+const decorator = compose(
+  attachTheme,
+  view.attach('appStore'),
+  view.attach({
+    store: AppFrameStore,
+  }),
+  view,
+)
+export const AppFrame = decorator(({ appStore, store, children, theme }: AppFrameProps) => {
   const { isShown, willShow, willHide, state, willStayShown, framePosition } = appStore
   if (!state || !state.position || !state.position.length || !state.target) {
     return null
@@ -131,7 +130,7 @@ export const PeekFrame = decorator(({ appStore, store, children, theme }: PeekFr
         height={size[1]}
         pointerEvents={isShown ? 'auto' : 'none'}
       >
-        <PeekFrameArrow appStore={appStore} borderShadow={borderShadow} />
+        <AppFrameArrow appStore={appStore} borderShadow={borderShadow} />
         <UI.Col flex={1} padding={padding} margin={margin}>
           <UI.Col position="relative" flex={1}>
             <PeekFrameBorder boxShadow={[borderShadow]} />

@@ -297,8 +297,11 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
                 log.verbose(`${logName} [${curID}] cancelled`)
               }
             } else {
-              console.log(`throwing err from ${logName}`, err)
-              throw new Error(err)
+              console.log(`reaction error in ${logName}`)
+              setTimeout(() => {
+                throw err
+              })
+              throw err
             }
           })
         return

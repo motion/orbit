@@ -66,7 +66,7 @@ export class AppStore {
       const isShown = !!appConfig && (torn || App.orbitState.docked)
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
-      const curState = {
+      const curState: AppStoreItemState = {
         torn,
         ...lastState,
         ...rest,
@@ -200,12 +200,12 @@ export class AppStore {
 
   get framePosition() {
     const { willShow, willStayShown, willHide, state } = this
-    if (!state) {
+    if (!state || !state.position) {
       return [0, 0]
     }
     // determine x adjustments
     const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
-    const position = this.state.position
+    const position = state.position
     let x = position[0]
     let y = position[1] + animationAdjust
     if (this.dragOffset) {

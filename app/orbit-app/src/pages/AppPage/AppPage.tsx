@@ -5,8 +5,8 @@ import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShort
 import { AppWrapper } from '../../views'
 import { AppStore } from './AppStore'
 import * as UI from '@mcro/ui'
-import { PeekFrame } from '../../apps/views/PeekFrame'
 import { SelectionStore } from '../OrbitPage/orbitDocked/SelectionStore'
+import { AppFrame } from './AppFrame'
 
 // import { PeekContent } from '../../apps/views/PeekContent'
 // import { PeekHeader } from '../../apps/views/PeekHeader'
@@ -42,9 +42,9 @@ export class AppPage extends React.Component<Props> {
       <MainShortcutHandler>
         <AppWrapper>
           <UI.Theme name="light">
-            <PeekFrame>
+            <AppFrame>
               <AppPageContent />
-            </PeekFrame>
+            </AppFrame>
           </UI.Theme>
         </AppWrapper>
       </MainShortcutHandler>

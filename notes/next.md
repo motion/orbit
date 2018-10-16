@@ -1,3 +1,36 @@
+umed:
+
+- folder syncer:
+
+  - can we pull it off without insane complexity?
+  - smart sync could handle this
+
+- "smart sync"
+
+  - part 1, "index as you search":
+    - we sync as much as we can, but avoid filling hard drive too much (for all syncers)
+    - we have a separate direct search endpoint though for every integration
+      - so for drive we have something like POST `/api/drive/search?q=${query}`
+    - when you search we debounce heavily (about 1s) and then hit these endpoints
+    - we then scan the "topmost" few bits from each endpoint and slide in a "extra results" drawer at the bottom of the search results list
+      - that way it doesn't disrupt the current results at all, but you can still see it
+      - we scan these items in automatically for "next" searches
+    - we should cache these smart syncs so we don't keep "redoing" them, just every so often per-search-term
+  - part 2, "garbage cleaning"
+    - we want an idea of unimportant things
+    - we store every search you type in (again debounce by a bit)
+    - we determine what you care about:
+      - we use:
+        - all your searches as a high weight
+        - all your recent bits (onces produced by you)
+    - every so often we do a "garbage clean" (if we are near size limits):
+      - we take the oldest items from each integration
+      - we use the "what you care about" set of items + cosal to do similarity
+      - this can be adjusted in a few ways as well (for last 100 search terms do direct search too)
+      - we can also use the global bit set to find "interesting things to company recently"
+      - and then we run over the old items and clean them
+      - this can basically be "score" based, where we come up with a scoring function that takes in recentness, interestingness-to-me, and interestingness-to-everything-in-this-space
+
 make search actually good
 
 high level:

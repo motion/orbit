@@ -4,10 +4,12 @@ import { getApps } from '../apps'
 import { react } from '@mcro/black'
 import { OrbitApp } from '../apps/types'
 
+type GenericApp = OrbitApp<any> & {
+  isActive: boolean
+}
+
 export class AppsStore {
   settingsList: Setting[] = []
-
-  allApps = Object.keys(getApps).map(key => getApps[key]({}))
 
   activeApps = react(
     () => this.settingsList,
@@ -17,13 +19,16 @@ export class AppsStore {
   )
 
   // pass in a blank setting so we can access the OrbitApp configs
-  genericActiveApps = react(
+  allApps = react(
     () => this.activeApps,
     apps => {
-      return Object.keys(getApps).map(type => ({
-        ...getApps[type]({}),
-        isActive: apps.findIndex(x => x.source === type),
-      }))
+      return Object.keys(getApps).map(
+        type =>
+          ({
+            ...getApps[type]({}),
+            isActive: apps.findIndex(x => x.source === type),
+          } as GenericApp),
+      )
     },
   )
 

@@ -1,8 +1,7 @@
 import { store, react, ensure } from '@mcro/black'
 import { AppsStore } from '../../AppsStore'
-import { memoize, uniqBy } from 'lodash'
+import { memoize } from 'lodash'
 import { MarkType, NLPResponse } from './nlpStore/types'
-import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
 import { QueryStore } from './QueryStore'
 import { SearchStore } from './SearchStore'
@@ -137,23 +136,17 @@ export class SearchFilterStore /* extends Store */ {
     return Object.keys(this.exclusiveFilters).length
   }
 
-  get uniqueSettings(): Setting[] {
-    const intSettings = (this.appsStore.settingsList || []).filter(x => x.type !== 'setting')
-    const unique = uniqBy(intSettings, x => x.type)
-    return unique
-  }
-
   get hasIntegrationFilters() {
     return this.integrationFilters.some(x => x.active)
   }
 
   get integrationFilters(): SearchFilter[] {
     const { exclusiveFilters } = this
-    return this.uniqueSettings.filter(x => x.type !== 'app1').map(setting => ({
-      type: setting.type,
-      icon: setting.type,
-      name: this.appsStore.getTitle(setting),
-      active: this.hasExclusiveFilters ? exclusiveFilters[setting.type] : false,
+    return this.appsStore.allApps.map(app => ({
+      type: app.source,
+      icon: app.config.icon,
+      name: app.integrationName,
+      active: this.hasExclusiveFilters ? exclusiveFilters[app.source] : false,
     }))
   }
 
@@ -186,7 +179,7 @@ export class SearchFilterStore /* extends Store */ {
   searchLocations = react(
     () => this.searchStore.searchState,
     async ({ results }, { sleep }) => {
-      ensure('results', !!results && results.length)
+      ensure('results', !!results && !!results.length)
       await sleep(100)
       return [...new Set(results.map(x => x.location && x.location.name))]
         .filter(Boolean)
@@ -223,10 +216,9 @@ export class SearchFilterStore /* extends Store */ {
     (nlp: NLPResponse) => {
       ensure('nlp', !!nlp)
       // reset integration inactive filters
-      const { integrations } = nlp
-      ensure('integrations', integrations && !!integrations.length)
-      this.exclusiveFilters = this.uniqueSettings.reduce((acc, setting: Setting) => {
-        acc[setting.type] = integrations.some(x => x === setting.type)
+      ensure('integrations', nlp.integrations && !!nlp.integrations.length)
+      this.exclusiveFilters = this.appsStore.allApps.filter(x => x.isActive).reduce((acc, app) => {
+        acc[app.source] = nlp.integrations.some(x => x === app.source)
         return acc
       }, {})
     },

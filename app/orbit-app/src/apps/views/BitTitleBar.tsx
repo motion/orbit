@@ -1,45 +1,20 @@
 import * as React from 'react'
-import { Row, SegmentedRow, Text, View } from '@mcro/ui'
+import { Row } from '@mcro/ui'
 import { OrbitAppMainProps } from '../types'
 import { TitleBarSpace } from '../views/TitleBarSpace'
-import { TitleBarButton } from '../views/TitleBarButton'
-import { Actions } from '../../actions/Actions'
-import { OrbitIcon } from '../../views/OrbitIcon'
-import { App } from '@mcro/stores'
+import { BitTitleActions } from './BitTitleActions'
+import { AppSimpleTitleBar } from './AppSimpleTitleBar'
 
 export class BitTitleBar extends React.Component<OrbitAppMainProps<'slack'>> {
   render() {
-    const { SearchBar, normalizedItem } = this.props
-    const { title, icon, location, locationLink, desktopLink, webLink } = normalizedItem
+    const { searchBar, normalizedItem } = this.props
     return (
       <>
-        <View position="absolute" top={3} left={0} right={0} alignItems="center">
-          <Text selectable={false} size={0.85} fontWeight={600} alignItems="center">
-            {title}
-          </Text>
-        </View>
+        <AppSimpleTitleBar normalizedItem={normalizedItem} />
         <Row alignItems="center" height={38} margin={[5, 0, 0]}>
-          <SearchBar defaultValue={App.state.query} />
+          {searchBar}
           <TitleBarSpace />
-          <SegmentedRow>
-            <TitleBarButton
-              onClick={() => {
-                Actions.open(locationLink)
-                Actions.closeOrbit()
-              }}
-              icon={<OrbitIcon icon={icon} size={16} />}
-              tooltip={location}
-            />
-            <TitleBarButton
-              onClick={() => {
-                Actions.open(desktopLink || webLink)
-                Actions.closeOrbit()
-              }}
-              tooltip="Open"
-            >
-              Open
-            </TitleBarButton>
-          </SegmentedRow>
+          <BitTitleActions normalizedItem={normalizedItem} />
         </Row>
       </>
     )

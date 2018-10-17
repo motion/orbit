@@ -52,7 +52,7 @@ export type OrbitAppProps<A extends IntegrationType> = ItemResolverProps<
 
 export type OrbitAppMainProps<A extends IntegrationType> = OrbitAppProps<A> & {
   appStore: AppStore
-  SearchBar: SearchBarType
+  searchBar: SearchBarType
   searchTerm: string
 }
 

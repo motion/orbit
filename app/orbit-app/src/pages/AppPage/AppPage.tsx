@@ -5,19 +5,16 @@ import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShort
 import { AppWrapper } from '../../views'
 import { AppStore } from './AppStore'
 import * as UI from '@mcro/ui'
-import { SelectionStore } from '../OrbitPage/orbitDocked/SelectionStore'
 import { AppFrame } from './AppFrame'
 import { AppBitView } from '../../apps/AppBitView'
-import { Searchable } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { normalizeItem } from '../../components/ItemResolver'
-import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { WindowControls } from '../../views/WindowControls'
+import { AppSearchable } from '../../apps/views/AppSearchable'
 
 type Props = {
   appsStore?: AppsStore
   appStore?: AppStore
-  selectionStore?: SelectionStore
 }
 
 @view.attach('searchStore')
@@ -57,7 +54,7 @@ const HiddenControls = view({
   },
 })
 
-@view.attach('appsStore', 'selectionStore', 'appStore')
+@view.attach('appsStore', 'appStore')
 @view
 class AppPageContent extends React.Component<Props> {
   viewsByType = {
@@ -87,7 +84,7 @@ class AppPageContent extends React.Component<Props> {
   }
 
   render() {
-    const { appStore, selectionStore } = this.props
+    const { appStore } = this.props
     if (!appStore.state) {
       return null
     }
@@ -109,32 +106,9 @@ class AppPageContent extends React.Component<Props> {
             }}
           />
         </HiddenControls>
-        <Searchable
-          key={appConfig.id}
-          defaultValue={App.state.query}
-          // focusOnMount
-          // onEnter={peekStore.goToNextHighlight}
-          onChange={() => selectionStore.setHighlightIndex(0)}
-          width={150}
-          searchBarProps={{
-            flex: 1,
-            // 1px more for inset shadow
-            padding: [3, 0],
-          }}
-        >
-          {({ SearchBar, searchTerm }) => {
-            return (
-              // dont searchTerm by spaces, its used for searching the whole term here
-              <ProvideHighlightsContextWithDefaults value={{ words: [searchTerm] }}>
-                <TypeView
-                  SearchBar={SearchBar}
-                  searchTerm={searchTerm}
-                  normalizedItem={normalizeItem(model)}
-                />
-              </ProvideHighlightsContextWithDefaults>
-            )
-          }}
-        </Searchable>
+        <AppSearchable>
+          <TypeView normalizedItem={normalizeItem(model)} />
+        </AppSearchable>
       </>
     )
   }

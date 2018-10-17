@@ -26,12 +26,12 @@ export type SearchableProps = Props & {
   filters: Array<Filter>
 }
 
-export type SearchBarType = React.SFC<SearchInputProps>
+export type SearchBarType = React.ReactElement<React.SFC<SearchInputProps>>
 
 export type SearchableChildProps = {
   addFilter: (filter: Filter) => void
   searchTerm: string
-  SearchBar: SearchBarType
+  searchBar: SearchBarType
   filters: Filter[]
 }
 
@@ -176,6 +176,7 @@ export class Searchable extends React.PureComponent<Props, State> {
         this.state.focusedToken === -1 &&
         this.state.searchTerm === '' &&
         this._inputRef &&
+        this.state.filters.length > 0 &&
         !this.state.filters[this.state.filters.length - 1].persistent
       ) {
         this._inputRef.blur()
@@ -316,7 +317,7 @@ export class Searchable extends React.PureComponent<Props, State> {
     return children({
       addFilter: this.addFilter,
       searchTerm: this.state.searchTerm,
-      SearchBar: props => (
+      searchBar: (
         <SearchInput
           placeholder={placeholder}
           actions={actions}
@@ -339,7 +340,6 @@ export class Searchable extends React.PureComponent<Props, State> {
           onFocus={this.onInputFocus}
           onBlur={this.onInputBlur}
           {...searchInputProps}
-          {...props}
         />
       ),
       filters: this.state.filters,

@@ -19,7 +19,7 @@ const voidFn = () => void 0
 
 type SubscribableLike = {
   subscribe: Function
-  cancel: Function
+  unsubscribe: Function
 }
 
 // hacky for now
@@ -65,6 +65,7 @@ export function automagicReact(
   let prev
   let stopReaction
   let disposed = false
+  let subscriber: SubscribableLike
 
   // state allows end-users to track certain things in complex reactions
   // for now its just `hasResolvedOnce` which lets them do things on first run
@@ -91,20 +92,21 @@ export function automagicReact(
       // for subscribable support
       // cancel previous whenever a new one comes in
       const val = getCurrentValue()
-      if (automagicOptions.isSubscribable(val)) {
+      if (subscriber) {
         console.log('canceling last...', val)
-        const subscribable = val as SubscribableLike
-        subscribable.cancel()
+        subscriber.unsubscribe()
+        subscriber = null
       }
       // subscribe to new one and use that instead of setting directly
       if (automagicOptions.isSubscribable(newValue)) {
         console.log('subscribing to new...', newValue)
-        const subscribable = newValue as SubscribableLike
-        subscribable.subscribe(value => {
+        subscriber = newValue as SubscribableLike
+        subscriber.subscribe(value => {
           console.log('setting from subscirber...', value)
           current.set(value)
         })
-        return ['new subscriber', subscribable]
+        obj.subscriptions.add({ dispose: () => subscriber && subscriber.unsubscribe() })
+        return ['new subscriber', subscriber]
       }
     }
     // return diff in dev mode

@@ -5,7 +5,7 @@ import { TitleBarSpace } from '../views/TitleBarSpace'
 import { BitTitleActions } from './BitTitleActions'
 import { AppSimpleTitleBar } from './AppSimpleTitleBar'
 
-export class BitTitleBar extends React.Component<OrbitAppMainProps<'slack'>> {
+export class BitTitleBar extends React.Component<OrbitAppMainProps<any>> {
   render() {
     const { searchBar, normalizedItem } = this.props
     return (

@@ -10,7 +10,7 @@ const Cmd = view({
   opacity: 0.6,
 })
 
-export const AppStatusBar = ({ appStore, normalizedItem }: OrbitAppMainProps<'slack'>) => {
+export const AppStatusBar = ({ appStore, normalizedItem }: OrbitAppMainProps<any>) => {
   const { location, locationLink, updatedAt } = normalizedItem
   return (
     <StatusBar>

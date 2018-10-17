@@ -70,11 +70,11 @@ export type OrbitApp<A extends AppType> = {
     icon?: string
     iconLight?: string
   }
-  source: 'bit' | 'person-bit' | 'setting'
+  source: ModelFromType<A>['target']
   integration?: A
   integrationName?: string
   instanceConfig?: AppConfig
-  defaultQuery?: FindOptions<ModelFromType<A>>
+  defaultQuery?: any | FindOptions<ModelFromType<A>> // TODO umed
   views: {
     main: Component<OrbitAppMainProps<A>, any, any>
     item: Component<OrbitAppProps<A>, any, any>

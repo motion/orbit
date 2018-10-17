@@ -1,5 +1,6 @@
 import { slack } from './directory/slack/slack'
 import { github } from './directory/github/github'
+import { gmail } from './directory/gmail/gmail'
 import { GetOrbitApp, GetOrbitApps } from './types'
 
 // import iconGCalendar from '../../public/icons/gcalendar.svg'
@@ -15,7 +16,7 @@ export const getApps: GetOrbitApps = {
   slack,
   github,
   person: (slack as unknown) as GetOrbitApp<'person'>,
-  gmail: (slack as unknown) as GetOrbitApp<'gmail'>,
+  gmail,
   gdrive: (slack as unknown) as GetOrbitApp<'gdrive'>,
   jira: (slack as unknown) as GetOrbitApp<'jira'>,
   confluence: (slack as unknown) as GetOrbitApp<'confluence'>,

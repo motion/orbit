@@ -22,7 +22,7 @@ export class SlackItem extends React.Component<OrbitAppProps<'slack'>> {
       return null
     }
     const { data, people } = bit
-    if (!data) {
+    if (!data || !data.messages) {
       console.log('no messages...', bit)
       return null
     }

@@ -1,19 +1,19 @@
 import { GithubApp } from './views/GithubApp'
 import { GithubSettings } from './views/GithubSettings'
-import { Setting, GenericBit } from '@mcro/models'
+import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/github.svg'
 // @ts-ignore
 import iconLight from '../../../../public/icons/github-white.svg'
-import { GetOrbitApp, ItemProps } from '../../types'
+import { GetOrbitApp } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { GithubItem } from './views/GithubItem'
 
 export const github: GetOrbitApp<'github'> = (setting?: Setting) => ({
   source: 'bit',
-  integration: 'slack',
-  integrationName: 'Slack',
-  defaultQuery: (findManyType('slack') as unknown) as any,
+  integration: 'github',
+  integrationName: 'Github',
+  defaultQuery: findManyType('github'),
   display: {
     name: setting.name,
     icon,
@@ -25,5 +25,3 @@ export const github: GetOrbitApp<'github'> = (setting?: Setting) => ({
     setting: GithubSettings,
   },
 })
-
-export type SlackAppProps = ItemProps<GenericBit<'slack'>>

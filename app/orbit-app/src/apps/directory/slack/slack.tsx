@@ -11,7 +11,7 @@ export const slack: GetOrbitApp<'slack'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'slack',
   integrationName: 'Slack',
-  defaultQuery: (findManyType('slack') as unknown) as any,
+  defaultQuery: findManyType('slack'),
   display: {
     name: setting.name,
     icon: iconSlack,

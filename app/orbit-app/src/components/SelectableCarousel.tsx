@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view, react, cancel, ensure } from '@mcro/black'
 import { Carousel, CarouselProps } from './Carousel'
-import { SelectionStore } from '../apps/orbit/orbitDocked/SelectionStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
 
 export type SelectableCarouselProps = CarouselProps & {
   selectionStore?: SelectionStore

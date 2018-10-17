@@ -323,7 +323,6 @@ export class GithubLoader {
       method: 'post',
       body: JSON.stringify({ query, variables })
     })
-    console.log(result)
     return result.data
   }
 

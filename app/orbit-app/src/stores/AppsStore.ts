@@ -41,7 +41,11 @@ export class AppsStore {
     defaultValue: {},
   })
 
-  getView = (type: IntegrationType | 'person' | 'app', viewType: 'main' | 'setting' | 'item') => {
+  getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {
+    console.log('getting type', type)
+    if (!this.allAppsObj[type]) {
+      return () => 'none'
+    }
     return this.allAppsObj[type].views[viewType]
   }
 

@@ -154,7 +154,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
     } = this.props
     const { isSelected } = store
     const ItemView = this.props.appsStore.getView(
-      item.type === 'bit' ? item.integration : item.type,
+      item.type === 'bit' ? item.integration : 'person',
       'item',
     )
     const hasChildren = typeof this.props.children !== 'undefined'

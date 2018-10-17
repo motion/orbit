@@ -144,7 +144,7 @@ export class SearchFilterStore /* extends Store */ {
     const { exclusiveFilters } = this
     return this.appsStore.allApps.map(app => ({
       type: app.source,
-      icon: app.config.icon,
+      icon: app.display.icon,
       name: app.integrationName,
       active: this.hasExclusiveFilters ? exclusiveFilters[app.source] : false,
     }))

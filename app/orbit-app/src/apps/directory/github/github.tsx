@@ -4,7 +4,7 @@ import { Setting, GenericBit } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/github.svg'
 // @ts-ignore
-import iconLight from '../../../../public/icons/github-icon-light.svg'
+import iconLight from '../../../../public/icons/github-white.svg'
 import { GetOrbitApp, ItemProps } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { GithubItem } from './views/GithubItem'

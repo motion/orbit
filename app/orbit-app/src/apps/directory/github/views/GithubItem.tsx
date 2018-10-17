@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { OrbitAppProps } from '../../../types'
 import { GithubBitDataComment, GithubBitData } from '@mcro/models'
 import { RoundButtonBorderedSmall } from '../../../../views/RoundButtonBordered'
 import { handleClickPerson } from '../../../../views/RoundButtonPerson'
@@ -8,6 +7,7 @@ import { Actions } from '../../../../actions/Actions'
 import { HorizontalSpace, VerticalSpace } from '../../../../views'
 import { DateFormat } from '../../../../views/DateFormat'
 import { Markdown } from '../../../../views/Markdown'
+import { OrbitAppProps } from '../../../types'
 
 const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) => {
   const {

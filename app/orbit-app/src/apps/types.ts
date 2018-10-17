@@ -16,7 +16,7 @@ import { AppInfoStore } from '../stores/AppInfoStore'
 
 // typeof BitModel | typeof SettingModel | typeof PersonBitModel
 
-type IntegrationTypeToModelType = {
+type AppTypeToModelType = {
   slack: Bit
   github: Bit
   gmail: Bit
@@ -25,11 +25,15 @@ type IntegrationTypeToModelType = {
   website: Bit
   gdrive: Bit
   app1: Bit
-  people: PersonBit
+  person: PersonBit
   apps: Setting
 }
 
-export type ItemResolverProps<T extends ResolvableModel> = {
+type AppType = IntegrationType | 'person'
+
+type ModelFromType<A extends AppType> = AppTypeToModelType[A]
+
+export type OrbitGenericProps<T extends ResolvableModel> = {
   model?: T
   isExpanded?: boolean
   shownLimit?: number
@@ -38,15 +42,13 @@ export type ItemResolverProps<T extends ResolvableModel> = {
   extraProps?: ItemResolverExtraProps
 }
 
-export type ItemProps<A extends GenericBit<any>> = ItemResolverProps<any> & {
+export type OrbitGenericAppProps<A extends AppType> = OrbitGenericProps<ModelFromType<A>>
+
+export type ItemProps<A extends GenericBit<any>> = OrbitGenericProps<any> & {
   bit: A
 }
 
-type ModelFromIntegration<A extends IntegrationType> = IntegrationTypeToModelType[A]
-
-export type OrbitAppProps<A extends IntegrationType> = ItemResolverProps<
-  ModelFromIntegration<A>
-> & {
+export type OrbitAppProps<A extends IntegrationType> = OrbitGenericProps<ModelFromType<A>> & {
   bit: GenericBit<A>
   normalizedItem: NormalizedItem
 }
@@ -64,7 +66,7 @@ export type OrbitAppSettingProps<T extends Setting> = {
   appStore: AppStore
 }
 
-export type OrbitApp<A extends IntegrationType> = {
+export type OrbitApp<A extends AppType> = {
   display?: {
     name: string
     icon?: string
@@ -74,7 +76,7 @@ export type OrbitApp<A extends IntegrationType> = {
   integration: A
   integrationName: string
   instanceConfig?: AppConfig
-  defaultQuery?: FindOptions<ModelFromIntegration<A>>
+  defaultQuery?: FindOptions<ModelFromType<A>>
   views: {
     main: Component<OrbitAppMainProps<A>, any, any>
     item: Component<OrbitAppProps<A>, any, any>
@@ -83,11 +85,11 @@ export type OrbitApp<A extends IntegrationType> = {
   }
 }
 
-export type OrbitApps = { [key in IntegrationType]: OrbitApp<IntegrationType> }
+export type OrbitApps = { [key in AppType]: OrbitApp<AppType> }
 
-export type GetOrbitApp<A extends IntegrationType> = (setting: IntegrationSetting<A>) => OrbitApp<A>
+export type GetOrbitApp<A extends AppType> = (setting: IntegrationSetting<A>) => OrbitApp<A>
 
-export type GetOrbitApps = { [key in IntegrationType]: GetOrbitApp<IntegrationType> }
+export type GetOrbitApps = { [key in AppType]: GetOrbitApp<AppType> }
 
 export type ResolvableModel = Bit | PersonBit | Setting
 

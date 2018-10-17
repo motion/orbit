@@ -184,14 +184,15 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
   store: PeekPersonStore,
 })
 @view
-export class PeekPerson extends React.Component<Props & { store: PeekPersonStore }> {
+export class PersonApp extends React.Component<Props & { store: PeekPersonStore }> {
   render() {
     const { model, children, store } = this.props
     const person = model as PersonBit
     if (!person) {
       console.log('no person?', person)
-      return children({})
+      return null
     }
+    return <div>hi</div>
     // return children({
     //   title: person.name,
     //   headerProps: {

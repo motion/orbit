@@ -12,6 +12,7 @@ import { normalizeItem } from '../../components/ItemResolver'
 import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../apps/views/AppSearchable'
 import { AppSetting, AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
+import { OrbitApp } from '../../apps/types'
 
 type Props = {
   appsStore?: AppsStore
@@ -58,48 +59,47 @@ const HiddenControls = view({
 @view.attach('appsStore', 'appStore')
 @view
 class AppPageContent extends React.Component<Props> {
+  getView = (viewType: keyof OrbitApp<any>['views']) => {
+    const { appStore, appsStore } = this.props
+    const { appConfig } = appStore.state
+    const app = appsStore.allAppsObj[appConfig.integration]
+    if (!app) {
+      return NullView
+    }
+    return app.views[viewType]
+  }
+
   viewsByType = {
     bit: () => {
-      const { appStore, appsStore } = this.props
-      const { appConfig, model } = appStore.state
-      const app = appsStore.allAppsObj[appConfig.integration]
-      if (!app) {
-        return NullView
-      }
-      const View = app.views.main
-      return props => (
+      const { appStore } = this.props
+      const View = this.getView('main')
+      return view(props => (
         <AppBitView>
-          <View key={appConfig.id} bit={model} appStore={appStore} {...props} />
+          <View bit={appStore.state.model} appStore={appStore} {...props} />
         </AppBitView>
-      )
+      ))
     },
     person: () => {
       return props => <div>person</div>
     },
     setting: () => {
-      const { appStore, appsStore } = this.props
-      const { appConfig, model } = appStore.state
-      const app = appsStore.allAppsObj[appConfig.integration]
-      if (!app) {
-        return NullView
-      }
-      const View = app.views.main
-      return props => {
+      const { appStore } = this.props
+      const View = this.getView('setting')
+      return view(props => {
         return (
           <AttachAppInfoStore>
             {appInfoStore => (
               <View
-                key={appConfig.id}
-                appConfig={appConfig}
+                appConfig={appStore.state.appConfig}
                 appInfoStore={appInfoStore}
-                setting={model}
+                setting={appStore.state.model}
                 appStore={appStore}
                 {...props}
               />
             )}
           </AttachAppInfoStore>
         )
-      }
+      })
     },
     app: () => {
       return props => <div>app</div>

@@ -22,7 +22,7 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   integration: '',
 }
 
-const DEFAULT_APP_CONFIG_CONFIG: AppConfig['config']['initialState'] = {
+const DEFAULT_APP_CONFIG_CONFIG: AppConfig['viewConfig']['initialState'] = {
   dimensions: null,
   initialState: null,
 }
@@ -41,9 +41,9 @@ function setPeekState({ target, appConfig }: PartialPeekState) {
     appConfig: {
       ...DEFAULT_APP_CONFIG,
       ...appConfig,
-      config: {
+      viewConfig: {
         ...DEFAULT_APP_CONFIG_CONFIG,
-        ...appConfig.config,
+        ...appConfig.viewConfig,
       },
     },
     target: realTarget,

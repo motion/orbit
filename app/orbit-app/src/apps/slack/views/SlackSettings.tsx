@@ -68,6 +68,7 @@ class SlackSettingStore {
 @view
 export class SlackSettings extends React.Component<Props & { store?: SlackSettingStore }> {
   render() {
+    console.log('waht', this.props)
     const {
       store,
       setting,

@@ -9,7 +9,7 @@ export function personToAppConfig(person: PersonBit): AppConfig {
     type: 'person',
     integration: '',
     subType: '',
-    config: {
+    viewConfig: {
       showTitleBar: false,
       dimensions: [600, 680],
     },

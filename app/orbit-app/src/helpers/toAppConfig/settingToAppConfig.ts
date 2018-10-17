@@ -13,7 +13,7 @@ export const settingToAppConfig = (setting: Setting): AppConfig => ({
   integration: setting.type,
   icon: setting.type,
   title: getSettingTitle(setting),
-  config: {
+  viewConfig: {
     // less tall for settings
     dimensions: [680, 620],
   },

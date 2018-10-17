@@ -22,6 +22,9 @@ export async function onError(error) {
   // in insider mode capture exceptions
   Raven.captureException(error.stack)
 
+  // for beta just report
+  return
+
   const errorMessage = `${error.message || ''}\n${error.stack || ''}`
 
   // avoid certain errors that aren't easily catchable (like websockets)...

@@ -14,7 +14,7 @@ export const BitTitleActions = ({ normalizedItem }: { normalizedItem: Normalized
           Actions.closeOrbit()
         }}
         icon={<OrbitIcon icon={normalizedItem.icon} size={16} />}
-        tooltip={location}
+        tooltip={normalizedItem.location}
       />
       <TitleBarButton
         onClick={() => {

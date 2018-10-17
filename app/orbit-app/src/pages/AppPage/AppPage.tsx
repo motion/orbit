@@ -107,7 +107,13 @@ class AppPageContent extends React.Component<Props> {
           />
         </HiddenControls>
         <AppSearchable>
-          <TypeView normalizedItem={normalizeItem(model)} />
+          {({ searchBar, searchTerm }) => (
+            <TypeView
+              normalizedItem={normalizeItem(model)}
+              searchBar={searchBar}
+              searchTerm={searchTerm}
+            />
+          )}
         </AppSearchable>
       </>
     )

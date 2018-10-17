@@ -1,15 +1,20 @@
 import * as React from 'react'
-import { Searchable } from '@mcro/ui'
+import { Searchable, SearchBarType } from '@mcro/ui'
 import { view } from '@mcro/black'
 import { AppStore } from '../../pages/AppPage/AppStore'
 import { App } from '@mcro/stores'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
 
+type SearchChildProps = {
+  searchBar: SearchBarType
+  searchTerm: string
+}
+
 type Props = {
   appStore?: AppStore
   selectionStore?: SelectionStore
-  children?: React.ReactNode
+  children?: (a: SearchChildProps) => React.ReactNode
 }
 
 @view.attach('selectionStore', 'appStore')
@@ -36,8 +41,7 @@ export class AppSearchable extends React.Component<Props> {
           return (
             // dont searchTerm by spaces, its used for searching the whole term here
             <ProvideHighlightsContextWithDefaults value={{ words: [searchTerm] }}>
-              {searchBar}
-              {children}
+              {children({ searchBar, searchTerm })}
             </ProvideHighlightsContextWithDefaults>
           )
         }}

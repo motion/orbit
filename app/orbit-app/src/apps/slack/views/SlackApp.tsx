@@ -48,11 +48,9 @@ export class SlackApp extends React.Component<Props & { store: SlackAppStore }> 
     return (
       <Surface flexFlow="column" hover={false} noInnerElement padding={16} flex={1}>
         <BitTitleBar {...this.props} />
-
         <ScrollableContent>
           <View padding={[16, 0]}>{!!bit && <ChatMessages bit={bit} />}</View>
         </ScrollableContent>
-
         <AppStatusBar {...this.props} />
       </Surface>
     )

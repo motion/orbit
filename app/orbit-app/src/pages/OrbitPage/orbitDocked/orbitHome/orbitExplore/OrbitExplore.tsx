@@ -132,19 +132,19 @@ class OrbitExploreStore {
       for (const app of apps) {
         const model = models[app.source]
         console.log('model', model, app.source)
-        const { displayName, defaultQuery } = app
+        const { display, defaultQuery } = app
         const subscription = observeMany(model, {
           args: defaultQuery as any,
         }).subscribe(values => {
           if (values.length) {
             // add this id of not in sort order
-            if (this.sortOrder.indexOf(displayName) === -1) {
-              this.sortOrder.push(displayName)
+            if (this.sortOrder.indexOf(display.name) === -1) {
+              this.sortOrder.push(display.name)
             }
           }
           this.streams = {
             ...this.streams,
-            [displayName]: { values, name: displayName },
+            [display.name]: { values, name: display.name },
           }
         })
         disposers.push(() => subscription.unsubscribe())

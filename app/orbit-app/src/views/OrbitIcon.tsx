@@ -69,7 +69,7 @@ export const OrbitIcon = decorator(
     const { allAppsObj } = appsStore
     let iconImg = extImg
     if (allAppsObj[icon]) {
-      const config = allAppsObj[icon].config
+      const config = allAppsObj[icon].display
       if (config) {
         const isDark = theme.background.isDark && theme.background.isDark()
         iconImg = isDark ? config.iconLight || config.icon : config.icon

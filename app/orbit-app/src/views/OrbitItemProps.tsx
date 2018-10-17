@@ -3,10 +3,11 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { NormalizedItem, ItemResolverExtraProps } from '../components/ItemResolver'
 import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
-import { SelectionStore } from '../pages/orbit/orbitDocked/SelectionStore'
-import { PaneManagerStore } from '../pages/orbit/PaneManagerStore'
-import { SubPaneStore } from '../pages/orbit/SubPaneStore'
 import { ResolvableModel } from '../apps/types'
+import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
+import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
+import { SubPaneStore } from '../pages/OrbitPage/SubPaneStore'
+import { AppsStore } from '../stores/AppsStore'
 
 export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySet &
   Partial<NormalizedItem> & {
@@ -17,6 +18,7 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySet &
     theme?: Partial<ThemeObject>
     listItem?: boolean
     hoverToSelect?: boolean
+    appsStore?: AppsStore
     selectionStore?: SelectionStore
     paneManagerStore?: PaneManagerStore
     subPaneStore?: SubPaneStore
@@ -39,7 +41,9 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySet &
     subPane?: string
     model?: T
     extraProps?: Partial<ItemResolverExtraProps>
-    children?: ((a: NormalizedItem, b?: T, c?: number) => React.ReactNode) | JSX.Element
+    children?:
+      | ((normalizedItem: NormalizedItem, model?: T, index?: number) => JSX.Element)
+      | JSX.Element
     onClick?: Function
     onSelect?: (a: HTMLElement) => any
     borderRadius?: number

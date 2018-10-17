@@ -11,7 +11,7 @@ import { App } from '@mcro/stores'
 import { normalizeItem } from '../../components/ItemResolver'
 import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../apps/views/AppSearchable'
-import { AppSetting, AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
+import { AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
 import { OrbitApp } from '../../apps/types'
 
 type Props = {

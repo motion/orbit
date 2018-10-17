@@ -33,7 +33,7 @@ const hideSlack = {
   people: true,
 }
 
-const renderListItemChildren = ({ content }, bit) => {
+const renderListItemChildren = ({ content = null }, bit) => {
   return bit.integration === 'slack' ? (
     <SearchResultText>{content}</SearchResultText>
   ) : (
@@ -72,9 +72,6 @@ class ListItem extends React.PureComponent<ListItemProps> {
   render() {
     const { model, realIndex, query, ignoreSelection } = this.props
     const isConversation = model.integration === 'slack'
-    if (!ignoreSelection) {
-      console.log('i', realIndex)
-    }
     return (
       <OrbitListItem
         pane="docked-search"

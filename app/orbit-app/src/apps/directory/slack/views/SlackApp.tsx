@@ -1,13 +1,13 @@
 import * as React from 'react'
-import { OrbitAppMainProps } from '../../types'
-import { ScrollableContent } from '../../views/ScrollableContent'
+import { OrbitAppMainProps } from '../../../types'
+import { ScrollableContent } from '../../../views/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
-import { AppStatusBar } from '../../views/AppStatusBar'
-import { BitTitleBar } from '../../views/BitTitleBar'
+import { AppStatusBar } from '../../../views/AppStatusBar'
+import { BitTitleBar } from '../../../views/BitTitleBar'
 import { view, ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
-import { ChatMessages } from '../../../components/bitViews/chat/ChatMessages'
+import { ChatMessages } from '../../../../components/bitViews/chat/ChatMessages'
 
 type Props = OrbitAppMainProps<'slack'>
 
@@ -41,6 +41,7 @@ class SlackAppStore {
 @view.attach({
   store: SlackAppStore,
 })
+@view
 export class SlackApp extends React.Component<Props & { store: SlackAppStore }> {
   render() {
     const { bit } = this.props

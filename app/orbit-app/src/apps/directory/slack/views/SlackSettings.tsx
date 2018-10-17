@@ -1,18 +1,18 @@
 import { view } from '@mcro/black'
-import { SlackChannelModel, SlackSetting as SlackSettingModel } from '@mcro/models'
+import { SlackChannelModel, SlackSetting } from '@mcro/models'
 import { SlackChannel } from '@mcro/services'
 import { orderBy } from 'lodash'
 import { loadMany } from '@mcro/model-bridge'
 import { Text, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
-import { DateFormat } from '../../../views/DateFormat'
-import { ReactiveCheckBox } from '../../../views/ReactiveCheckBox'
-import { WhitelistManager } from '../../stores/WhitelistManager'
-import { SimpleAppExplorer } from '../../views/SimpleAppExplorer'
-import { SettingManageRow } from '../../views/SettingManageRow'
-import { OrbitAppSettingProps } from '../../types'
+import { DateFormat } from '../../../../views/DateFormat'
+import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import { WhitelistManager } from '../../../stores/WhitelistManager'
+import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
+import { SettingManageRow } from '../../../views/SettingManageRow'
+import { OrbitAppSettingProps } from '../../../types'
 
-type Props = OrbitAppSettingProps<SlackSettingModel>
+type Props = OrbitAppSettingProps<SlackSetting>
 
 class SlackSettingStore {
   props: Props
@@ -68,7 +68,6 @@ class SlackSettingStore {
 @view
 export class SlackSettings extends React.Component<Props & { store?: SlackSettingStore }> {
   render() {
-    console.log('waht', this.props)
     const {
       store,
       setting,

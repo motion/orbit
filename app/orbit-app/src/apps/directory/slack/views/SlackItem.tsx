@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SlackBitDataMessage } from '@mcro/models'
-import { OrbitAppProps } from '../../types'
-import { ChatMessage } from '../../../components/bitViews/chat/ChatMessage'
+import { OrbitAppProps } from '../../../types'
+import { ChatMessage } from '../../../../components/bitViews/chat/ChatMessage'
 
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)
@@ -18,6 +18,10 @@ export class SlackItem extends React.Component<OrbitAppProps<'slack'>> {
   render() {
     const { bit, searchTerm, shownLimit } = this.props
     const { data, people } = bit
+    if (!data) {
+      console.log('no messages...', bit)
+      return null
+    }
     return getMessages(data.messages, { searchTerm, shownLimit }).map((message, index) => {
       for (let person of people) {
         message.text = message.text.replace(

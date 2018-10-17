@@ -1,4 +1,4 @@
-import { SettingModel, Setting } from '@mcro/models'
+import { SettingModel, Setting, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 import { getApps } from '../apps'
 import { react } from '@mcro/black'
@@ -40,6 +40,10 @@ export class AppsStore {
   allAppsObj = react(() => this.allApps, x => keyBy(x, 'source'), {
     defaultValue: {},
   })
+
+  getView = (type: IntegrationType | 'person' | 'app', viewType: 'main' | 'setting' | 'item') => {
+    return this.allAppsObj[type].views[viewType]
+  }
 
   private settingsList$ = observeMany(SettingModel, {
     args: {

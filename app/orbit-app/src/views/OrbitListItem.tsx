@@ -116,7 +116,7 @@ const Bottom = view({
   alignItems: 'center',
 })
 
-@view.attach('selectionStore', 'paneManagerStore', 'subPaneStore')
+@view.attach('appsStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitItemStore,
 })
@@ -127,17 +127,8 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
     padding: [10, 11],
   }
 
-  getInner = (normalizedItem: Partial<NormalizedItem>) => {
-    const {
-      createdAt,
-      icon,
-      location,
-      people,
-      preview,
-      subtitle,
-      title,
-      updatedAt,
-    } = normalizedItem
+  getInner = (item: Partial<NormalizedItem>) => {
+    const { createdAt, icon, location, people, preview, subtitle, title, updatedAt } = item
     const {
       afterTitle,
       borderRadius,
@@ -162,6 +153,12 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
       ...props
     } = this.props
     const { isSelected } = store
+    const ItemView = this.props.appsStore.getView(
+      item.type === 'bit' ? item.integration : item.type,
+      'item',
+    )
+    const hasChildren = typeof this.props.children !== 'undefined'
+    const showChildren = !(hide && hide.body)
     const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
     const showDate = !!createdAt && !(hide && hide.date)
     const showIcon = !!icon && !(hide && hide.icon)
@@ -309,9 +306,11 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
               )}
             </Preview>
           )}
-          {typeof children === 'function'
-            ? children(normalizedItem as NormalizedItem, model, props.index)
-            : children}
+          {hasChildren && children}
+          {!hasChildren &&
+            showChildren && (
+              <ItemView bit={this.props.model} searchTerm={this.props.searchTerm} shownLimit={10} />
+            )}
           {showPeople &&
             !showSubtitle && (
               <Bottom>

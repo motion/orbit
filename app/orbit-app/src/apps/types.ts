@@ -65,16 +65,21 @@ export type OrbitAppSettingProps<T extends Setting> = {
 }
 
 export type OrbitApp<A extends IntegrationType> = {
+  display?: {
+    name: string
+    icon?: string
+    iconLight?: string
+  }
   source: 'bit' | 'person-bit' | 'setting'
   integration: A
   integrationName: string
-  displayName: string
   instanceConfig?: AppConfig
   defaultQuery?: FindOptions<ModelFromIntegration<A>>
   views: {
     main: Component<OrbitAppMainProps<A>, any, any>
     item: Component<OrbitAppProps<A>, any, any>
     setting: Component<OrbitAppProps<A>, any, any>
+    setup?: Component<any>
   }
 }
 

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Person, Bit, PersonBit } from '@mcro/models'
+import { Person, Bit, PersonBit, IntegrationType } from '@mcro/models'
 import { Setting } from '@mcro/models'
 import { last } from 'lodash'
 
@@ -21,7 +21,7 @@ export type NormalizedItem = {
   people?: Person[]
   searchTerm?: string
   subtitle?: React.ReactNode
-  integration?: string
+  integration?: IntegrationType
 }
 
 export type ItemResolverExtraProps = {

@@ -1,4 +1,4 @@
-import { slack } from './slack/slack'
+import { slack } from './bitApps/slack/slack'
 import { GetOrbitApp, GetOrbitApps } from './types'
 
 // import iconGCalendar from '../../public/icons/gcalendar.svg'

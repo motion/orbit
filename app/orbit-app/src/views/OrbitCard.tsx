@@ -150,7 +150,7 @@ const Padding = view({
   flex: 1,
 })
 
-@view.attach('selectionStore', 'paneManagerStore', 'subPaneStore')
+@view.attach('appsStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitItemStore,
 })
@@ -193,7 +193,12 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
     // allow either custom subtitle or resolved one
     const subtitle = this.props.subtitle || item.subtitle
     const { isSelected } = store
-
+    const ItemView = this.props.appsStore.getView(
+      item.type === 'bit' ? item.integration : item.type,
+      'item',
+    )
+    const hasChildren = typeof this.props.children !== 'undefined'
+    const showChildren = !(hide && hide.body)
     const hasTitle = !(hide && hide.title)
     const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
@@ -293,9 +298,15 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
                     )}
                   </Preview>
                 )}
-                {typeof children === 'function'
-                  ? children(item, props.model, props.index)
-                  : children}
+                {hasChildren && children}
+                {!hasChildren &&
+                  showChildren && (
+                    <ItemView
+                      model={this.props.model}
+                      searchTerm={this.props.searchTerm}
+                      shownLimit={10}
+                    />
+                  )}
                 {hasPeople && (
                   <Row>
                     <PeopleRow people={people} />

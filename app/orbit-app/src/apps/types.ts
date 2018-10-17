@@ -14,8 +14,6 @@ import { NormalizedItem } from '../components/ItemResolver'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../stores/AppInfoStore'
 
-// typeof BitModel | typeof SettingModel | typeof PersonBitModel
-
 type AppTypeToModelType = {
   slack: Bit
   github: Bit
@@ -48,12 +46,12 @@ export type ItemProps<A extends GenericBit<any>> = OrbitGenericProps<any> & {
   bit: A
 }
 
-export type OrbitAppProps<A extends IntegrationType> = OrbitGenericProps<ModelFromType<A>> & {
+export type OrbitAppProps<A extends AppType> = OrbitGenericProps<ModelFromType<A>> & {
   bit: GenericBit<A>
   normalizedItem: NormalizedItem
 }
 
-export type OrbitAppMainProps<A extends IntegrationType> = OrbitAppProps<A> & {
+export type OrbitAppMainProps<A extends AppType> = OrbitAppProps<A> & {
   appStore: AppStore
   searchBar: SearchBarType
   searchTerm: string
@@ -73,14 +71,14 @@ export type OrbitApp<A extends AppType> = {
     iconLight?: string
   }
   source: 'bit' | 'person-bit' | 'setting'
-  integration: A
-  integrationName: string
+  integration?: A
+  integrationName?: string
   instanceConfig?: AppConfig
   defaultQuery?: FindOptions<ModelFromType<A>>
   views: {
     main: Component<OrbitAppMainProps<A>, any, any>
     item: Component<OrbitAppProps<A>, any, any>
-    setting: Component<OrbitAppProps<A>, any, any>
+    setting?: Component<OrbitAppProps<A>, any, any>
     setup?: Component<any>
   }
 }

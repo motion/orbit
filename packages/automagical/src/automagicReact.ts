@@ -17,10 +17,8 @@ const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
 
-type SubscribableLike = {
-  subscribe: Function
-  unsubscribe: Function
-}
+type Subscription = { unsubscribe: Function }
+type SubscribableLike = { subscribe: (a: any) => Subscription }
 
 // hacky for now
 Root.__trackStateChanges = {}
@@ -65,7 +63,7 @@ export function automagicReact(
   let prev
   let stopReaction
   let disposed = false
-  let subscriber: SubscribableLike
+  let subscriber: Subscription
 
   // state allows end-users to track certain things in complex reactions
   // for now its just `hasResolvedOnce` which lets them do things on first run
@@ -100,8 +98,8 @@ export function automagicReact(
       // subscribe to new one and use that instead of setting directly
       if (automagicOptions.isSubscribable(newValue)) {
         console.log('subscribing to new...', newValue)
-        subscriber = newValue as SubscribableLike
-        subscriber.subscribe(value => {
+        const newSubscriber = newValue as SubscribableLike
+        subscriber = newSubscriber.subscribe(value => {
           console.log('setting from subscirber...', value)
           current.set(value)
         })

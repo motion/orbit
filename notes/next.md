@@ -1,5 +1,7 @@
 umed:
 
+- get crawler to use chromium in electron so we can release it
+
 - beginnings of building good search
 
   - build up dataset

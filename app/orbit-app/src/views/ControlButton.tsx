@@ -11,21 +11,27 @@ const icons = {
   z: controlZ,
 }
 
-export const ControlButtonChrome = view(UI.Col, {
+const ControlButtonForgiveness = view().theme(({ size, forgiveness }) => ({
+  padding: forgiveness,
+  margin: -forgiveness,
+  width: size + forgiveness * 2,
+  height: size + forgiveness * 2,
+  '& img': {
+    opacity: 0,
+  },
+  '&:hover img': {
+    opacity: 0.65,
+  },
+}))
+
+const ControlButtonChrome = view(UI.Col, {
   width: 12,
   height: 12,
   padding: 2,
-  margin: [0, 4],
   borderRadius: 100,
   alignItems: 'center',
   justifyContent: 'center',
   pointerEvents: 'auto',
-  '& > img': {
-    opacity: 0,
-  },
-  '&:hover > img': {
-    opacity: 0.5,
-  },
 }).theme(({ theme, borderWidth, ...props }) => {
   const background = props.background || theme.background.darken(0.2).desaturate(0.2)
   const borderColor = props.borderColor || UI.color(background).darken(0.1)
@@ -42,10 +48,12 @@ const Img = view('img', {
   cursor: 'default',
 })
 
-export const ControlButton = ({ icon, ...props }) => {
+export const ControlButton = ({ icon, forgiveness = 3, size, ...props }) => {
   return (
-    <ControlButtonChrome {...props}>
-      <Img src={icons[icon]} />
-    </ControlButtonChrome>
+    <ControlButtonForgiveness forgiveness={forgiveness} size={size}>
+      <ControlButtonChrome width={size} height={size} {...props}>
+        <Img src={icons[icon]} />
+      </ControlButtonChrome>
+    </ControlButtonForgiveness>
   )
 }

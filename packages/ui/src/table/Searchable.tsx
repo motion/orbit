@@ -11,7 +11,7 @@ import * as React from 'react'
 import PropTypes from 'prop-types'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
-import { SearchInput } from '../form/SearchInput'
+import { SearchInput, SearchInputProps } from '../form/SearchInput'
 
 type State = {
   filters: Filter[]
@@ -26,10 +26,12 @@ export type SearchableProps = Props & {
   filters: Array<Filter>
 }
 
+export type SearchBarType = React.SFC<SearchInputProps>
+
 export type SearchableChildProps = {
   addFilter: (filter: Filter) => void
   searchTerm: string
-  searchBar: React.ReactNode
+  SearchBar: SearchBarType
   filters: Filter[]
 }
 
@@ -314,7 +316,7 @@ export class Searchable extends React.PureComponent<Props, State> {
     return children({
       addFilter: this.addFilter,
       searchTerm: this.state.searchTerm,
-      searchBar: (
+      SearchBar: props => (
         <SearchInput
           placeholder={placeholder}
           actions={actions}
@@ -337,6 +339,7 @@ export class Searchable extends React.PureComponent<Props, State> {
           onFocus={this.onInputFocus}
           onBlur={this.onInputBlur}
           {...searchInputProps}
+          {...props}
         />
       ),
       filters: this.state.filters,

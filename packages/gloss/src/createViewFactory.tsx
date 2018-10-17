@@ -457,7 +457,7 @@ export function createViewFactory(toCSS) {
     ThemedConstructor.withConfig = config => {
       if (config.displayName) {
         displayName = config.displayName
-        ThemedConstructor.displayName = config.displayName
+        ThemedConstructor.displayName = displayName
       }
       return ThemedConstructor
     }

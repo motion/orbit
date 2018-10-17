@@ -5,20 +5,21 @@ import { TitleBarSpace } from '../views/TitleBarSpace'
 import { TitleBarButton } from '../views/TitleBarButton'
 import { Actions } from '../../actions/Actions'
 import { OrbitIcon } from '../../views/OrbitIcon'
+import { App } from '@mcro/stores'
 
 export class BitTitleBar extends React.Component<OrbitAppMainProps<'slack'>> {
   render() {
-    const { searchBar, normalizedItem } = this.props
+    const { SearchBar, normalizedItem } = this.props
     const { title, icon, location, locationLink, desktopLink, webLink } = normalizedItem
     return (
       <>
         <View position="absolute" top={3} left={0} right={0} alignItems="center">
-          <Text size={0.85} fontWeight={600} alignItems="center">
+          <Text selectable={false} size={0.85} fontWeight={600} alignItems="center">
             {title}
           </Text>
         </View>
         <Row alignItems="center" height={38} margin={[5, 0, 0]}>
-          {searchBar}
+          <SearchBar defaultValue={App.state.query} />
           <TitleBarSpace />
           <SegmentedRow>
             <TitleBarButton

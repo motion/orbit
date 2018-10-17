@@ -96,10 +96,10 @@ type Props = {
   filter: Filter
   focused: boolean
   index: number
-  onFocus: (focusedToken: number) => void
-  onBlur: () => void
-  onDelete: (deletedToken: number) => void
-  onReplace: (index: number, filter: Filter) => void
+  onFocus?: (focusedToken: number) => void
+  onBlur?: () => void
+  onDelete?: (deletedToken: number) => void
+  onReplace?: (index: number, filter: Filter) => void
 }
 
 export class FilterToken extends PureComponent {

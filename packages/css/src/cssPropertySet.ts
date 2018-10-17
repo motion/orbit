@@ -14,19 +14,8 @@ export type alignContent =
   | 'space-between'
   | 'space-around'
   | 'stretch'
-export type alignItems =
-  | 'flex-start'
-  | 'flex-end'
-  | 'center'
-  | 'baseline'
-  | 'stretch'
-export type alignSelf =
-  | 'auto'
-  | 'flex-start'
-  | 'flex-end'
-  | 'center'
-  | 'baseline'
-  | 'stretch'
+export type alignItems = 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
+export type alignSelf = 'auto' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 export type all = 'initial' | 'inherit' | 'unset'
 export type animation = singleAnimation
 export type animationDelay = number
@@ -77,11 +66,7 @@ export type borderBottomStyle = brStyle
 export type borderBottomWidth = borderWidth
 export type borderCollapse = 'collapse' | 'separate'
 export type borderColor = color | Array<number | string | Color>
-export type borderImage =
-  | borderImageSource
-  | borderImageSlice
-  | string
-  | borderImageRepeat
+export type borderImage = borderImageSource | borderImageSlice | string | borderImageRepeat
 export type borderImageOutset = string
 export type borderImageRepeat = string
 export type borderImageSlice = string | number | 'fill'
@@ -115,12 +100,7 @@ export type boxFlex = number
 export type boxFlexGroup = number
 export type boxLines = 'single' | 'multiple'
 export type boxOrdinalGroup = number
-export type boxOrient =
-  | 'horizontal'
-  | 'vertical'
-  | 'inline-axis'
-  | 'block-axis'
-  | 'inherit'
+export type boxOrient = 'horizontal' | 'vertical' | 'inline-axis' | 'block-axis' | 'inherit'
 export type boxPack = 'start' | 'center' | 'end' | 'justify'
 type boxShadowSyntax = {
   x?: number
@@ -165,12 +145,7 @@ export type breakBefore =
   | 'column'
   | 'avoid-region'
   | 'region'
-export type breakInside =
-  | 'auto'
-  | 'avoid'
-  | 'avoid-page'
-  | 'avoid-column'
-  | 'avoid-region'
+export type breakInside = 'auto' | 'avoid' | 'avoid-page' | 'avoid-column' | 'avoid-region'
 export type captionSide =
   | 'top'
   | 'bottom'
@@ -178,13 +153,7 @@ export type captionSide =
   | 'block-end'
   | 'inline-start'
   | 'inline-end'
-export type clear =
-  | 'none'
-  | 'left'
-  | 'right'
-  | 'both'
-  | 'inline-start'
-  | 'inline-end'
+export type clear = 'none' | 'left' | 'right' | 'both' | 'inline-start' | 'inline-end'
 export type clip = string | 'auto'
 export type clipPath = string | 'none'
 export type columnCount = number | 'auto'
@@ -268,13 +237,7 @@ export type display =
   | 'ruby-base-container'
   | 'ruby-text-container'
   | 'contents'
-export type displayInside =
-  | 'auto'
-  | 'block'
-  | 'table'
-  | 'flex'
-  | 'grid'
-  | 'ruby'
+export type displayInside = 'auto' | 'block' | 'table' | 'flex' | 'grid' | 'ruby'
 export type displayList = 'none' | 'list-item'
 export type displayOutside =
   | 'block-level'
@@ -537,36 +500,14 @@ export type shapeMargin = lengthPercentage
 export type shapeOutside = 'none' | shapeBox | string
 export type tabSize = number
 export type tableLayout = 'auto' | 'fixed'
-export type textAlign =
-  | 'start'
-  | 'end'
-  | 'left'
-  | 'right'
-  | 'center'
-  | 'justify'
-  | 'match-parent'
-export type textAlignLast =
-  | 'auto'
-  | 'start'
-  | 'end'
-  | 'left'
-  | 'right'
-  | 'center'
-  | 'justify'
+export type textAlign = 'start' | 'end' | 'left' | 'right' | 'center' | 'justify' | 'match-parent'
+export type textAlignLast = 'auto' | 'start' | 'end' | 'left' | 'right' | 'center' | 'justify'
 export type textCombineUpright = 'none' | 'all' | string
-export type textDecoration =
-  | textDecorationLine
-  | textDecorationStyle
-  | textDecorationColor
+export type textDecoration = textDecorationLine | textDecorationStyle | textDecorationColor
 export type textDecorationColor = color
 export type textDecorationLine = 'none' | string
 export type textDecorationSkip = 'none' | string
-export type textDecorationStyle =
-  | 'solid'
-  | 'double'
-  | 'dotted'
-  | 'dashed'
-  | 'wavy'
+export type textDecorationStyle = 'solid' | 'double' | 'dotted' | 'dashed' | 'wavy'
 export type textEmphasis = textEmphasisStyle | textEmphasisColor
 export type textEmphasisColor = color
 export type textEmphasisPosition = string
@@ -574,11 +515,7 @@ export type textEmphasisStyle = 'none' | string
 export type textIndent = string | 'hanging' | 'each-line'
 export type textOrientation = 'mixed' | 'upright' | 'sideways'
 export type textOverflow = 'clip' | 'ellipsis'
-export type textRendering =
-  | 'auto'
-  | 'optimizeSpeed'
-  | 'optimizeLegibility'
-  | 'geometricPrecision'
+export type textRendering = 'auto' | 'optimizeSpeed' | 'optimizeLegibility' | 'geometricPrecision'
 type textShadowSyntax = {
   x?: number
   y?: number
@@ -587,12 +524,7 @@ type textShadowSyntax = {
 }
 export type textShadow = 'none' | string | textShadowSyntax
 export type textSizeAdjust = 'none' | 'auto' | string
-export type textTransform =
-  | 'none'
-  | 'capitalize'
-  | 'uppercase'
-  | 'lowercase'
-  | 'full-width'
+export type textTransform = 'none' | 'capitalize' | 'uppercase' | 'lowercase' | 'full-width'
 export type textUnderlinePosition = 'auto' | string
 export type touchAction = 'auto' | 'none' | string | 'manipulation'
 type transformSyntax = {
@@ -643,27 +575,11 @@ export type verticalAlign =
   | string
   | number
 export type visibility = 'visible' | 'hidden' | 'collapse'
-export type whiteSpace =
-  | 'inherit'
-  | 'normal'
-  | 'pre'
-  | 'nowrap'
-  | 'pre-wrap'
-  | 'pre-line'
+export type whiteSpace = 'inherit' | 'normal' | 'pre' | 'nowrap' | 'pre-wrap' | 'pre-line'
 export type widows = number
-export type width =
-  | string
-  | 'available'
-  | 'min-content'
-  | 'max-content'
-  | 'fit-content'
-  | 'auto'
+export type width = string | 'available' | 'min-content' | 'max-content' | 'fit-content' | 'auto'
 export type willChange = 'auto' | animatableFeature
-export type wordBreak =
-  | 'normal'
-  | 'break-all'
-  | 'keep-all'
-  | nonStandardWordBreak
+export type wordBreak = 'normal' | 'break-all' | 'keep-all' | nonStandardWordBreak
 export type wordSpacing = 'normal' | lengthPercentage
 export type wordWrap = 'normal' | 'break-word'
 export type writingMode =
@@ -717,44 +633,12 @@ export type markerEnd = 'none' | string
 export type markerMid = 'none' | string
 export type markerStart = 'none' | string
 export type pause = pauseBefore | pauseAfter
-export type pauseAfter =
-  | number
-  | 'none'
-  | 'x-weak'
-  | 'weak'
-  | 'medium'
-  | 'strong'
-  | 'x-strong'
-export type pauseBefore =
-  | number
-  | 'none'
-  | 'x-weak'
-  | 'weak'
-  | 'medium'
-  | 'strong'
-  | 'x-strong'
+export type pauseAfter = number | 'none' | 'x-weak' | 'weak' | 'medium' | 'strong' | 'x-strong'
+export type pauseBefore = number | 'none' | 'x-weak' | 'weak' | 'medium' | 'strong' | 'x-strong'
 export type rest = restBefore | restAfter
-export type restAfter =
-  | number
-  | 'none'
-  | 'x-weak'
-  | 'weak'
-  | 'medium'
-  | 'strong'
-  | 'x-strong'
-export type restBefore =
-  | number
-  | 'none'
-  | 'x-weak'
-  | 'weak'
-  | 'medium'
-  | 'strong'
-  | 'x-strong'
-export type shapeRendering =
-  | 'auto'
-  | 'optimizeSpeed'
-  | 'crispEdges'
-  | 'geometricPrecision'
+export type restAfter = number | 'none' | 'x-weak' | 'weak' | 'medium' | 'strong' | 'x-strong'
+export type restBefore = number | 'none' | 'x-weak' | 'weak' | 'medium' | 'strong' | 'x-strong'
+export type shapeRendering = 'auto' | 'optimizeSpeed' | 'crispEdges' | 'geometricPrecision'
 export type src = string
 export type speak = 'auto' | 'none' | 'normal'
 export type speakAs = 'normal' | 'spell-out' | 'digits' | string
@@ -768,13 +652,7 @@ export type strokeOpacity = number
 export type strokeWidth = svgLength
 export type textAnchor = 'start' | 'middle' | 'end'
 export type unicodeRange = string
-export type voiceBalance =
-  | number
-  | 'left'
-  | 'center'
-  | 'right'
-  | 'leftwards'
-  | 'rightwards'
+export type voiceBalance = number | 'left' | 'center' | 'right' | 'leftwards' | 'rightwards'
 export type voiceDuration = 'auto' | number
 export type voiceFamily = string | 'preserve'
 export type voicePitch = number | 'absolute' | string
@@ -822,13 +700,7 @@ export type compositeStyle =
   | 'destination-atop'
   | 'xor'
 export type compositeOperator = 'add' | 'subtract' | 'intersect' | 'exclude'
-export type finalBgLayer =
-  | bgImage
-  | string
-  | repeatStyle
-  | attachment
-  | box
-  | backgroundColor
+export type finalBgLayer = bgImage | string | repeatStyle | attachment | box | backgroundColor
 export type geometryBox = shapeBox | 'fill-box' | 'stroke-box' | 'view-box'
 export type gridLine = 'auto' | string
 export type lengthPercentage = number | string
@@ -852,11 +724,7 @@ export type singleAnimation =
   | singleAnimationFillMode
   | singleAnimationPlayState
   | singleAnimationName
-export type singleAnimationDirection =
-  | 'normal'
-  | 'reverse'
-  | 'alternate'
-  | 'alternate-reverse'
+export type singleAnimationDirection = 'normal' | 'reverse' | 'alternate' | 'alternate-reverse'
 export type singleAnimationFillMode = 'none' | 'forwards' | 'backwards' | 'both'
 export type singleAnimationIterationCount = number
 export type singleAnimationName = 'none' | string
@@ -873,12 +741,7 @@ export type singleTransitionTimingFunction =
   | 'step-end'
   | string
 export type singleTransitionProperty = 'all' | string
-export type trackBreadth =
-  | lengthPercentage
-  | string
-  | 'min-content'
-  | 'max-content'
-  | 'auto'
+export type trackBreadth = lengthPercentage | string | 'min-content' | 'max-content' | 'auto'
 export type trackSize = trackBreadth | string
 export type nonStandardWordBreak = 'break-word'
 export type blendMode =
@@ -904,7 +767,7 @@ export type paint = 'none' | 'currentColor' | color | string
 export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
-export type CSSPropertySetFlat = {
+export type CSSPropertySetStrict = {
   alignContent?: alignContent
   alignItems?: alignItems
   alignSelf?: alignSelf
@@ -1274,14 +1137,14 @@ export type CSSPropertySetFlat = {
   zoom?: zoom
 }
 
-export type GlossCSSPropertySetFlat = CSSPropertySetFlat & {
+export type GlossCSSPropertySetStrict = CSSPropertySetStrict & {
   borderLeftRadius: number
   borderRightRadius: number
   borderBottomRadius: number
   borderTopRadius: number
 }
 
-export type CSSPropertySet = CSSPropertySetFlat & {
+export type CSSPropertySet = CSSPropertySetStrict & {
   // because we have '& > .something'
-  [key: string]: any
+  [key: string]: CSSPropertySetStrict
 }

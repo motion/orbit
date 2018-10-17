@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { ControlButton } from './ControlButton'
+import { View } from '@mcro/ui'
 
 export const WindowControls = ({
+  spaceBetween = 4,
   onClose = null,
   onMax = null,
   onMin = null,
@@ -22,22 +24,28 @@ export const WindowControls = ({
         />
       )}
       {!!onMax && (
-        <ControlButton
-          onClick={onMax}
-          icon="y"
-          background="#F6BE4F"
-          {...itemProps}
-          {...maxProps}
-        />
+        <>
+          <View width={spaceBetween} />
+          <ControlButton
+            onClick={onMax}
+            icon="y"
+            background="#F6BE4F"
+            {...itemProps}
+            {...maxProps}
+          />
+        </>
       )}
       {!!onMin && (
-        <ControlButton
-          onClick={onMin}
-          icon="z"
-          background="#62C554"
-          {...itemProps}
-          {...minProps}
-        />
+        <>
+          <View width={spaceBetween} />
+          <ControlButton
+            onClick={onMin}
+            icon="z"
+            background="#62C554"
+            {...itemProps}
+            {...minProps}
+          />
+        </>
       )}
     </>
   )

@@ -13,6 +13,7 @@ import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../apps/views/AppSearchable'
 import { AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
 import { OrbitApp } from '../../apps/types'
+import { PersonApp } from '../../apps/directory/person/PersonApp'
 
 type Props = {
   appsStore?: AppsStore
@@ -80,7 +81,8 @@ class AppPageContent extends React.Component<Props> {
       ))
     },
     person: () => {
-      return props => <div>person</div>
+      const { appStore } = this.props
+      return props => <PersonApp model={appStore.state.model} {...props} />
     },
     setting: () => {
       const { appStore } = this.props

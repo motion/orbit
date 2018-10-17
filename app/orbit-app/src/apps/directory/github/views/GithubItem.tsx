@@ -49,6 +49,10 @@ const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) =>
 }
 
 const parseGithubContents = ({ bit, shownLimit }) => {
+  if (!bit) {
+    console.log('no bit', bit)
+    return {}
+  }
   let commentComponents
   const { comments, body } = bit.data as GithubBitData
   if (comments) {
@@ -62,7 +66,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
   }
 }
 
-export class GithubItem extends React.Component<OrbitAppProps<'slack'>> {
+export class GithubItem extends React.Component<OrbitAppProps<'github'>> {
   render() {
     const { bit, shownLimit } = this.props
     const { content, comments } = parseGithubContents({ bit, shownLimit })

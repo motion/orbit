@@ -27,7 +27,7 @@ export class SlackItem extends React.Component<OrbitAppProps<'slack'>> {
       return null
     }
     return getMessages(data.messages, { searchTerm, shownLimit }).map((message, index) => {
-      for (let person of people) {
+      for (let person of people || []) {
         message.text = message.text.replace(
           new RegExp(`<@${person.integrationId}>`, 'g'),
           '@' + person.name,

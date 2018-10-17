@@ -3,14 +3,13 @@ import { loadMany } from '@mcro/model-bridge'
 import { BitModel, PersonBit, SlackPersonData } from '@mcro/models'
 import * as React from 'react'
 import { App } from '@mcro/stores'
-import { Button, Row } from '@mcro/ui'
+import { Button, Row, Surface } from '@mcro/ui'
 import { SubTitle } from '../../../views/SubTitle'
 import { RoundButton } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
+import { OrbitListItem } from '../../../views/OrbitListItem'
 
-type Props = PeekPaneProps<PersonBit> & {
-  appsStore: AppsStore
-}
+type Props = any
 
 class PeekPersonStore {
   props: Props
@@ -186,13 +185,100 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
 @view
 export class PersonApp extends React.Component<Props & { store: PeekPersonStore }> {
   render() {
-    const { model, children, store } = this.props
+    const { model, store } = this.props
     const person = model as PersonBit
     if (!person) {
       console.log('no person?', person)
       return null
     }
-    return <div>hi</div>
+    return (
+      <Surface
+        flexFlow="column"
+        hover={false}
+        noInnerElement
+        flex={1}
+        borderRadius={10}
+        overflow="hidden"
+      >
+        <Frame>
+          <CardContent>
+            <Avatar src={person.photo} />
+            <Info>
+              <Name>{person.name}</Name>
+              <br />
+              <Email href={`mailto:${person.email}`}>{person.email}</Email>
+              <br />
+              <Links>
+                {/* <IntegrationButton
+              icon="slack"
+              href={`slack://user?team=${setting.values.oauth.info.team.id}&id=${person.integrationId}`}
+            >
+              Slack
+            </IntegrationButton> */}
+                <IntegrationButton
+                  icon="zoom"
+                  size={12}
+                  onClick={() => App.setState({ query: `${person.name} documents` })}
+                >
+                  Documents
+                </IntegrationButton>
+                <IntegrationButton
+                  icon="zoom"
+                  size={12}
+                  onClick={() => App.setState({ query: `${person.name} tasks` })}
+                >
+                  Tasks
+                </IntegrationButton>
+              </Links>
+            </Info>
+          </CardContent>
+          <Map>
+            <FadeMap />
+            <FadeMapRight />
+            <MapImg
+              src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
+                ((person.data as SlackPersonData) || {}).tz
+              }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
+            />
+          </Map>
+          <Content>
+            <ContentInner>
+              <Section>
+                <StrongSubTitle>Recent unique topics</StrongSubTitle>
+                <Row flexFlow="row" flexWrap="wrap" padding={[10, 15, 0]}>
+                  {store.interestedIn.map((item, index) => (
+                    <Button sizeHeight={0.9} margin={[0, 6, 6]} sizeRadius={2} key={index}>
+                      {item}
+                    </Button>
+                  ))}
+                </Row>
+              </Section>
+
+              <Section>
+                <StrongSubTitle>Recently</StrongSubTitle>
+                {(store.recentBits || []).map(bit => {
+                  return (
+                    <OrbitListItem
+                      key={bit.id}
+                      model={bit}
+                      margin={0}
+                      padding={15}
+                      isExpanded
+                      theme={{
+                        backgroundHover: 'transparent',
+                      }}
+                    >
+                      {({ content }) => content}
+                    </OrbitListItem>
+                  )
+                })}
+              </Section>
+            </ContentInner>
+          </Content>
+        </Frame>
+      </Surface>
+    )
+    // return <div>hi</div>
     // return children({
     //   title: person.name,
     //   headerProps: {
@@ -203,82 +289,7 @@ export class PersonApp extends React.Component<Props & { store: PeekPersonStore 
     //     right: 0,
     //   },
     //   content: (
-    //     <Frame>
-    //       <CardContent>
-    //         <Avatar src={person.photo} />
-    //         <Info>
-    //           <Name>{person.name}</Name>
-    //           <br />
-    //           <Email href={`mailto:${person.email}`}>{person.email}</Email>
-    //           <br />
-    //           <Links>
-    //             {/* <IntegrationButton
-    //               icon="slack"
-    //               href={`slack://user?team=${setting.values.oauth.info.team.id}&id=${person.integrationId}`}
-    //             >
-    //               Slack
-    //             </IntegrationButton> */}
-    //             <IntegrationButton
-    //               icon="zoom"
-    //               size={12}
-    //               onClick={() => App.setState({ query: `${person.name} documents` })}
-    //             >
-    //               Documents
-    //             </IntegrationButton>
-    //             <IntegrationButton
-    //               icon="zoom"
-    //               size={12}
-    //               onClick={() => App.setState({ query: `${person.name} tasks` })}
-    //             >
-    //               Tasks
-    //             </IntegrationButton>
-    //           </Links>
-    //         </Info>
-    //       </CardContent>
-    //       <Map>
-    //         <FadeMap />
-    //         <FadeMapRight />
-    //         <MapImg
-    //           src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
-    //             ((person.data as SlackPersonData) || {}).tz
-    //           }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
-    //         />
-    //       </Map>
-    //       <Content>
-    //         <ContentInner>
-    //           <Section>
-    //             <StrongSubTitle>Recent unique topics</StrongSubTitle>
-    //             <Row flexFlow="row" flexWrap="wrap" padding={[10, 15, 0]}>
-    //               {store.interestedIn.map((item, index) => (
-    //                 <Button sizeHeight={0.9} margin={[0, 6, 6]} sizeRadius={2} key={index}>
-    //                   {item}
-    //                 </Button>
-    //               ))}
-    //             </Row>
-    //           </Section>
 
-    //           <Section>
-    //             <StrongSubTitle>Recently</StrongSubTitle>
-    //             {(store.recentBits || []).map(bit => {
-    //               return (
-    //                 <OrbitListItem
-    //                   key={bit.id}
-    //                   model={bit}
-    //                   margin={0}
-    //                   padding={15}
-    //                   isExpanded
-    //                   theme={{
-    //                     backgroundHover: 'transparent',
-    //                   }}
-    //                 >
-    //                   {({ content }) => content}
-    //                 </OrbitListItem>
-    //               )
-    //             })}
-    //           </Section>
-    //         </ContentInner>
-    //       </Content>
-    //     </Frame>
     //   ),
     // })
   }

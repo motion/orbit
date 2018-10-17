@@ -11,6 +11,7 @@ import { App } from '@mcro/stores'
 import { normalizeItem } from '../../components/ItemResolver'
 import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../apps/views/AppSearchable'
+import { AppSetting, AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
 
 type Props = {
   appsStore?: AppsStore
@@ -76,7 +77,29 @@ class AppPageContent extends React.Component<Props> {
       return props => <div>person</div>
     },
     setting: () => {
-      return props => <div>setting</div>
+      const { appStore, appsStore } = this.props
+      const { appConfig, model } = appStore.state
+      const app = appsStore.allAppsObj[appConfig.integration]
+      if (!app) {
+        return NullView
+      }
+      const View = app.views.main
+      return props => {
+        return (
+          <AttachAppInfoStore>
+            {appInfoStore => (
+              <View
+                key={appConfig.id}
+                appConfig={appConfig}
+                appInfoStore={appInfoStore}
+                setting={model}
+                appStore={appStore}
+                {...props}
+              />
+            )}
+          </AttachAppInfoStore>
+        )
+      }
     },
     app: () => {
       return props => <div>app</div>

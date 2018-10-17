@@ -1,17 +1,17 @@
 import * as React from 'react'
 import { Row, View, Text, SegmentedRow } from '@mcro/ui'
 import { ManageSmartSync } from './ManageSmartSync'
-import { SyncStatus } from '../../../../orbit/orbitDocked/views/SyncStatus'
-import { TitleBarSpace } from '../../../views/TitleBarSpace'
-import { TitleBarButton } from '../../../views/TitleBarButton'
 import { Setting, SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/models'
 import { command } from '@mcro/model-bridge'
-import { showConfirmDialog } from '../../../../../helpers/electron/showConfirmDialog'
-import { NICE_INTEGRATION_NAMES } from '../../../../../constants'
-import { Actions } from '../../../../../actions/Actions'
 import { view } from '@mcro/black'
-import { AppInfoStore } from '../../../../../stores/AppInfoStore'
 import { WhitelistManager } from '../stores/WhitelistManager'
+import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
+import { AppInfoStore } from '../../stores/AppInfoStore'
+import { NICE_INTEGRATION_NAMES } from '../../constants'
+import { Actions } from '../../actions/Actions'
+import { SyncStatus } from '../../pages/OrbitPage/orbitDocked/views/SyncStatus'
+import { TitleBarSpace } from './TitleBarSpace'
+import { TitleBarButton } from './TitleBarButton'
 
 @view.attach('appInfoStore')
 export class SettingManageRow extends React.Component<{
@@ -54,11 +54,7 @@ export class SettingManageRow extends React.Component<{
                 {(syncJobs.length || removeJobs.length) && (
                   <>
                     <Text size={0.9} fontWeight={400} alpha={0.6}>
-                      {
-                        syncJobs.length ? 'Syncing...' :
-                        removeJobs.length ? 'Removing...' :
-                        name
-                      }
+                      {syncJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}
                     </Text>
                     <TitleBarSpace />
                   </>

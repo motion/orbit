@@ -1,12 +1,7 @@
 import { view, react } from '@mcro/black'
 import * as React from 'react'
 import { Setting } from '@mcro/models'
-import { PeekContent } from '../../../views/PeekContent'
-import { HideablePane } from '../../../views/HideablePane'
 import { AppTopicExplorer } from './AppTopicExplorer'
-import { TitleBarButton } from '../../../views/TitleBarButton'
-import { NICE_INTEGRATION_NAMES } from '../../../../../constants'
-import { PeekHeader } from '../../../views/PeekHeader'
 import { SegmentedRow, View } from '@mcro/ui'
 import { AppConfig } from '@mcro/stores'
 
@@ -14,7 +9,7 @@ type Props = {
   appViewStore?: AppViewStore
   setting: Setting
   settingsPane: React.ReactNode
-  initialState: AppConfig['config']['initialState']
+  initialState: AppConfig['viewConfig']['initialState']
 }
 
 const AppRelationsExplorer = () => {

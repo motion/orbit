@@ -11,7 +11,8 @@ import {
 import { AppConfig } from '@mcro/stores'
 import { AppStore } from '../pages/AppPage/AppStore'
 import { NormalizedItem } from '../components/ItemResolver'
-import { SearchBarType } from '@mcro/ui';
+import { SearchBarType } from '@mcro/ui'
+import { AppInfoStore } from '../stores/AppInfoStore'
 
 // typeof BitModel | typeof SettingModel | typeof PersonBitModel
 
@@ -54,6 +55,13 @@ export type OrbitAppMainProps<A extends IntegrationType> = OrbitAppProps<A> & {
   appStore: AppStore
   searchBar: SearchBarType
   searchTerm: string
+}
+
+export type OrbitAppSettingProps<T extends Setting> = {
+  appConfig: AppConfig
+  appInfoStore: AppInfoStore
+  setting: T
+  appStore: AppStore
 }
 
 export type OrbitApp<A extends IntegrationType> = {

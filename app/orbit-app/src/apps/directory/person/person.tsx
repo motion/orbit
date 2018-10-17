@@ -7,7 +7,7 @@ export const person: GetOrbitApp<'person'> = (setting?: Setting) => ({
   source: 'person-bit',
   display: {
     name: setting.name,
-    icon: setting,
+    icon: 'person',
   },
   views: {
     main: PersonApp,

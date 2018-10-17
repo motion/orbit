@@ -157,7 +157,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
       item.type === 'bit' ? item.integration : 'person',
       'item',
     )
-    const hasChildren = typeof this.props.children !== 'undefined'
+    const childrenFunction = typeof this.props.children === 'function'
     const showChildren = !(hide && hide.body)
     const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
     const showDate = !!createdAt && !(hide && hide.date)
@@ -306,10 +306,15 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
               )}
             </Preview>
           )}
-          {hasChildren && children}
-          {!hasChildren &&
+          {showChildren && !childrenFunction && children}
+          {childrenFunction &&
             showChildren && (
-              <ItemView bit={this.props.model} searchTerm={this.props.searchTerm} shownLimit={10} />
+              <ItemView
+                bit={this.props.model}
+                searchTerm={this.props.searchTerm}
+                shownLimit={10}
+                renderChildren={childrenFunction}
+              />
             )}
           {showPeople &&
             !showSubtitle && (

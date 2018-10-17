@@ -4,6 +4,10 @@ import { Setting } from '@mcro/models'
 import { AppTopicExplorer } from './AppTopicExplorer'
 import { SegmentedRow, View } from '@mcro/ui'
 import { AppConfig } from '@mcro/stores'
+import { TitleBarButton } from './TitleBarButton'
+import { NICE_INTEGRATION_NAMES } from '../../constants'
+import { ScrollableContent } from './ScrollableContent'
+import { HideablePane } from './HideablePane'
 
 type Props = {
   appViewStore?: AppViewStore
@@ -57,33 +61,28 @@ export class SimpleAppExplorer extends React.Component<Props> {
     const { setting, settingsPane, appViewStore } = this.props
     return (
       <>
-        <PeekHeader
-          before={NICE_INTEGRATION_NAMES[setting.type]}
-          after={
-            <TitleBarButton
-              tooltip="Settings"
-              icon="gear"
-              onClick={appViewStore.activeToggler('settings')}
-              active={appViewStore.active === 'settings'}
-            />
-          }
-        >
-          <SegmentedRow>
-            <TitleBarButton
-              onClick={appViewStore.setter('topics')}
-              active={appViewStore.active === 'topics'}
-            >
-              Topic Explorer
-            </TitleBarButton>
-            <TitleBarButton
-              onClick={appViewStore.setter('related')}
-              active={appViewStore.active === 'related'}
-            >
-              Relations Explorer
-            </TitleBarButton>
-          </SegmentedRow>
-        </PeekHeader>
-        <PeekContent>
+        {NICE_INTEGRATION_NAMES[setting.type]}
+        <TitleBarButton
+          tooltip="Settings"
+          icon="gear"
+          onClick={appViewStore.activeToggler('settings')}
+          active={appViewStore.active === 'settings'}
+        />
+        <SegmentedRow>
+          <TitleBarButton
+            onClick={appViewStore.setter('topics')}
+            active={appViewStore.active === 'topics'}
+          >
+            Topic Explorer
+          </TitleBarButton>
+          <TitleBarButton
+            onClick={appViewStore.setter('related')}
+            active={appViewStore.active === 'related'}
+          >
+            Relations Explorer
+          </TitleBarButton>
+        </SegmentedRow>
+        <ScrollableContent>
           <HideablePane invisible={appViewStore.active !== 'topics'}>
             <AppTopicExplorer setting={setting} />
           </HideablePane>
@@ -91,7 +90,7 @@ export class SimpleAppExplorer extends React.Component<Props> {
             <AppRelationsExplorer />
           </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'settings'}>{settingsPane}</HideablePane>
-        </PeekContent>
+        </ScrollableContent>
       </>
     )
   }

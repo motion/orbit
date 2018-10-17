@@ -1,6 +1,5 @@
 import { Row, Sidebar, SidebarLabel, Col, View } from '@mcro/ui'
 import * as React from 'react'
-import { SimpleItem } from '../../../../../views/SimpleItem'
 import { view, react, ensure } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import {
@@ -10,10 +9,11 @@ import {
   SearchQuery,
   SearchResultModel,
 } from '@mcro/models'
-import { OrbitListItem } from '../../../../../views/OrbitListItem'
 import produce from 'immer'
-import { RoundButtonBordered } from '../../../../../views/RoundButtonBordered'
 import { memoize } from 'lodash'
+import { RoundButtonBordered } from '../../views/RoundButtonBordered'
+import { SimpleItem } from '../../views/SimpleItem'
+import { OrbitListItem } from '../../views/OrbitListItem'
 
 type Props = { setting: Setting }
 

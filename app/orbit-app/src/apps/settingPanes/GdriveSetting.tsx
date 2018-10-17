@@ -2,10 +2,10 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
-import { PeekSettingProps } from '../PeekSetting'
+import { PeekSettingProps } from '../../stores/AttachAppInfoStore'
 import { DriveSetting } from '@mcro/models'
-import { SimpleAppExplorer } from './views/SimpleAppExplorer'
-import { SettingManageRow } from './views/SettingManageRow'
+import { SimpleAppExplorer } from '../views/SimpleAppExplorer'
+import { SettingManageRow } from '../views/SettingManageRow'
 
 type Props = PeekSettingProps<DriveSetting>
 

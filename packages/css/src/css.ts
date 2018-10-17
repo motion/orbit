@@ -1,7 +1,7 @@
 import { colorToString, isColorLike, snakeToCamel, camelToSnake, hash } from './helpers'
 import { Color } from './types'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
-import { GlossCSSPropertySetFlat } from './cssPropertySet'
+import { CSSPropertySet } from './cssPropertySet'
 
 export const cssNameMap = CAMEL_TO_SNAKE
 
@@ -102,7 +102,7 @@ const unitlessNumberProperties = new Set([
   'strokeWidth',
 ])
 
-type CSSPropertyKey = keyof GlossCSSPropertySetFlat
+type CSSPropertyKey = keyof CSSPropertySet
 type ValidCSSPropertyMap = { [key in CSSPropertyKey]: boolean }
 
 const allCSSAttr = {}

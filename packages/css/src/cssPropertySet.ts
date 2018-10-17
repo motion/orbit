@@ -767,7 +767,7 @@ export type paint = 'none' | 'currentColor' | color | string
 export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
-export type CSSPropertySetStrict = {
+export type OriginalCSSPropertySetStrict = {
   alignContent?: alignContent
   alignItems?: alignItems
   alignSelf?: alignSelf
@@ -1137,14 +1137,14 @@ export type CSSPropertySetStrict = {
   zoom?: zoom
 }
 
-export type GlossCSSPropertySetStrict = CSSPropertySetStrict & {
-  borderLeftRadius: number
-  borderRightRadius: number
-  borderBottomRadius: number
-  borderTopRadius: number
+export type CSSPropertySetStrict = OriginalCSSPropertySetStrict & {
+  borderLeftRadius?: number
+  borderRightRadius?: number
+  borderBottomRadius?: number
+  borderTopRadius?: number
 }
 
 export type CSSPropertySet = CSSPropertySetStrict & {
   // because we have '& > .something'
-  [key: string]: CSSPropertySetStrict
+  [key: string]: CSSPropertySetStrict | any
 }

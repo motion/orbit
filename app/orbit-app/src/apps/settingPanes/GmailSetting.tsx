@@ -4,9 +4,9 @@ import { view } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from './stores/WhitelistManager'
 import { SearchableTable, Text, View } from '@mcro/ui'
-import { SettingManageRow } from './views/SettingManageRow'
-import { PeekSettingProps } from '../PeekSetting'
-import { SimpleAppExplorer } from './views/SimpleAppExplorer'
+import { SettingManageRow } from '../views/SettingManageRow'
+import { PeekSettingProps } from '../../stores/AttachAppInfoStore'
+import { SimpleAppExplorer } from '../views/SimpleAppExplorer'
 
 type Props = PeekSettingProps<GmailSettingModel>
 

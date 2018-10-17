@@ -2,8 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 import { AtlassianSetting } from '@mcro/models'
-import { PeekSettingProps } from '../PeekSetting'
-import { SimpleAppExplorer } from './views/SimpleAppExplorer'
+import { PeekSettingProps } from '../../stores/AttachAppInfoStore'
+import { SimpleAppExplorer } from '../views/SimpleAppExplorer'
 
 type Props = PeekSettingProps<AtlassianSetting>
 

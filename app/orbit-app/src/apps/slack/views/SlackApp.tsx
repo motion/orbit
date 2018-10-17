@@ -4,7 +4,7 @@ import { ScrollableContent } from '../../views/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../views/AppStatusBar'
 import { BitTitleBar } from '../../views/BitTitleBar'
-import { view } from '@mcro/black'
+import { view, ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
 import { ChatMessages } from '../../../components/bitViews/chat/ChatMessages'
@@ -14,29 +14,28 @@ type Props = OrbitAppMainProps<'slack'>
 class SlackAppStore {
   props: Props
 
-  nextConversations = []
-  private nextConversations$ = observeMany(BitModel, {
-    args: {
-      where: {
-        integration: this.props.bit.integration,
-        type: this.props.bit.type,
-        bitCreatedAt: {
-          $moreThan: this.props.bit.bitCreatedAt,
+  nextConversations = react(
+    () => this.props.bit,
+    bit => {
+      ensure('bit', !!bit)
+      return observeMany(BitModel, {
+        args: {
+          where: {
+            integration: bit.integration,
+            type: bit.type,
+            bitCreatedAt: {
+              $moreThan: bit.bitCreatedAt,
+            },
+          },
+          relations: ['people'],
+          take: 5,
+          order: {
+            bitCreatedAt: 'DESC',
+          },
         },
-      },
-      relations: ['people'],
-      take: 5,
-      order: {
-        bitCreatedAt: 'DESC',
-      },
+      })
     },
-  }).subscribe(values => {
-    this.nextConversations = values
-  })
-
-  willUnmount() {
-    this.nextConversations$.unsubscribe()
-  }
+  )
 }
 
 @view.attach({

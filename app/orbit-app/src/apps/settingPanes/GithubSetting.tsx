@@ -7,9 +7,9 @@ import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from './stores/WhitelistManager'
-import { SettingManageRow } from './views/SettingManageRow'
-import { PeekSettingProps } from '../PeekSetting'
-import { SimpleAppExplorer } from './views/SimpleAppExplorer'
+import { SettingManageRow } from '../views/SettingManageRow'
+import { PeekSettingProps } from '../../stores/AttachAppInfoStore'
+import { SimpleAppExplorer } from '../views/SimpleAppExplorer'
 
 type Props = PeekSettingProps<GithubSettingModel>
 

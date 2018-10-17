@@ -10,11 +10,17 @@ import {
   diffLog,
   toJSDeep,
 } from './helpers'
+import { AutomagicOptions } from './automagical'
 
 const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
+
+type SubscribableLike = {
+  subscribe: Function
+  cancel: Function
+}
 
 // hacky for now
 Root.__trackStateChanges = {}
@@ -23,7 +29,13 @@ let id = 1
 const uid = () => id++ % Number.MAX_VALUE
 
 // watches values in an autorun, and resolves their results
-export function automagicReact(obj: MagicalObject, method, val, userOptions) {
+export function automagicReact(
+  obj: MagicalObject,
+  method,
+  val,
+  userOptions,
+  automagicOptions: AutomagicOptions,
+) {
   const {
     delayValue,
     defaultValue,
@@ -74,6 +86,27 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       }
     }
     state.hasResolvedOnce = true
+    // subscribable handling
+    if (automagicOptions && automagicOptions.isSubscribable) {
+      // for subscribable support
+      // cancel previous whenever a new one comes in
+      const val = getCurrentValue()
+      if (automagicOptions.isSubscribable(val)) {
+        console.log('canceling last...', val)
+        const subscribable = val as SubscribableLike
+        subscribable.cancel()
+      }
+      // subscribe to new one and use that instead of setting directly
+      if (automagicOptions.isSubscribable(newValue)) {
+        console.log('subscribing to new...', newValue)
+        const subscribable = newValue as SubscribableLike
+        subscribable.subscribe(value => {
+          console.log('setting from subscirber...', value)
+          current.set(value)
+        })
+        return ['new subscriber', subscribable]
+      }
+    }
     // return diff in dev mode
     let res
     if (!IS_PROD) {

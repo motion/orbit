@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Text } from '@mcro/ui'
-import { CheckBox } from '../../../../../views/ReactiveCheckBox'
-import { HorizontalSpace } from '../../../../../views'
 import { WhitelistManager } from '../stores/WhitelistManager'
+import { CheckBox } from '../../views/ReactiveCheckBox'
+import { HorizontalSpace } from '../../views'
 
 export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any> }) => {
   return (

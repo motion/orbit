@@ -145,7 +145,7 @@ class AppPageContent extends React.Component<Props> {
         <AppSearchable>
           {({ searchBar, searchTerm }) => (
             <TypeView
-              normalizedItem={normalizeItem(model)}
+              normalizedItem={model ? normalizeItem(model) : null}
               searchBar={searchBar}
               searchTerm={searchTerm}
             />

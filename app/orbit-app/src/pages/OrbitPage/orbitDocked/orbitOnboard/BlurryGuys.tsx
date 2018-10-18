@@ -11,7 +11,7 @@ class BlurryStore {
     () => {
       this.guys = this.guys.map(x =>
         x.map(y =>
-          Math.min(80, Math.max(-20, y + Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1))),
+          Math.min(100, Math.max(-20, y + Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1))),
         ),
       )
     },
@@ -24,8 +24,9 @@ const Blur = view(View, {
   width: 200,
   height: 200,
   margin: [-100, 0, 0, -100],
-  filter: 'blur(40px)',
-  transition: 'all ease 3000ms',
+  filter: 'blur(50px)',
+  opacity: 0.7,
+  transition: 'all ease 6000ms',
   position: 'absolute',
   top: '50%',
   left: '50%',

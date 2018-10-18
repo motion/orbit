@@ -134,7 +134,11 @@ export const AppFrame = decorator(({ appStore, store, children, theme }: AppFram
         <UI.Col flex={1} padding={padding} margin={margin}>
           <UI.Col position="relative" flex={1}>
             <PeekFrameBorder boxShadow={[borderShadow]} />
-            <PeekMain boxShadow={boxShadow} borderRadius={Constants.PEEK_BORDER_RADIUS}>
+            <PeekMain
+              background={theme.background}
+              boxShadow={boxShadow}
+              borderRadius={Constants.PEEK_BORDER_RADIUS}
+            >
               {children}
             </PeekMain>
           </UI.Col>

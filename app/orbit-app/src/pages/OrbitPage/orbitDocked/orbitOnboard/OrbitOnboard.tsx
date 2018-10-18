@@ -14,9 +14,9 @@ import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 // import { MessageDark } from '../../../../views/Message'
 import { GeneralSettingValues } from '@mcro/models'
-import { settingsList, SettingConfig } from '../../../../helpers/settingsList'
 import { BlurryGuys } from './BlurryGuys'
 import { SimpleItem } from '../../../../views/SimpleItem'
+import { OrbitApp, AppType } from '../../../../apps/types'
 
 type Props = {
   appsStore?: AppsStore
@@ -165,7 +165,7 @@ class OnboardStore {
   }
 }
 
-const filterApps = (app: SettingConfig) => app.type !== 'website'
+const filterApps = (app: OrbitApp<AppType>) => !!app.integration && app.integration !== 'website'
 
 const decorator = compose(
   view.attach('appsStore', 'paneManagerStore'),
@@ -189,13 +189,13 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const integrations = settingsList
+  const integrations = appsStore.allApps
     .filter(filterApps)
-    .sort((a, b) => a.id.localeCompare(b.id))
-    .map(integration => {
+    .sort((a, b) => a.integration.localeCompare(b.integration))
+    .map(app => {
       return {
-        ...integration,
-        added: !!(appsStore.settingsList || []).find(x => x.type === integration.id),
+        ...app,
+        added: !!(appsStore.activeApps || []).find(x => x.integration === app.integration),
       }
     })
   return (
@@ -292,10 +292,10 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
               return (
                 <SimpleItem
                   key={item.id}
-                  title={item.title}
-                  icon={item.icon}
+                  title={item.display.name}
+                  icon={item.display.icon}
                   inactive={item.added}
-                  onClick={item.added ? null : addIntegrationClickHandler(item)}
+                  onClick={item.added ? null : addIntegrationClickHandler(item.instanceConfig)}
                   after={
                     <AddButton size={0.9} disabled={item.added}>
                       {item.added ? <Icon size={16} name="check" color="green" /> : 'Add'}

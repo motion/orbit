@@ -1,11 +1,10 @@
 import { view } from '@mcro/black'
 import { loadOne } from '@mcro/model-bridge'
-import { BitModel, SettingModel } from '@mcro/models'
+import { BitModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { Actions } from '../actions/Actions'
-import { settingToAppConfig } from '../helpers/toAppConfig/settingToAppConfig'
 import { OrbitStore } from './OrbitPage/OrbitStore'
 import { AppPage } from './AppPage/AppPage'
 import { OrbitDocked } from './OrbitPage/orbitDocked/OrbitDocked'
@@ -21,8 +20,8 @@ const getItem = {
     type: 'setting',
     integration: 'gdrive',
   }),
-  githubSetting: async () =>
-    loadOne(SettingModel, { args: { where: { type: 'github' } } }).then(settingToAppConfig),
+  // githubSetting: async () =>
+  //   loadOne(SettingModel, { args: { where: { type: 'github' } } }).then(settingToAppConfig),
 }
 
 @view

@@ -65,7 +65,7 @@ export const OrbitIcon = decorator(
       height: size,
     }
     const icon = props.icon || props.name
-    const extImg = icon && icon.indexOf('http') === 0 ? icon : null
+    const extImg = icon && (icon[0] === '/' || icon.indexOf('http') === 0) ? icon : null
     const { allAppsObj } = appsStore
     let iconImg = extImg
     if (allAppsObj[icon]) {

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Setting } from '@mcro/models'
 import { View, Icon, Row } from '@mcro/ui'
 import { SubTitle, VerticalSpace } from '../../../../views'
-import { getSettingTitle } from '../../../../helpers/toAppConfig/settingToAppConfig'
 import { Message } from '../../../../views/Message'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { view } from '@mcro/black'
@@ -23,7 +22,7 @@ export class AppStatusPane extends React.Component<Props> {
     const { setting, extraMessage } = this.props
     return (
       <View flex={1} alignItems="center" justifyContent="center" padding={30}>
-        <SubTitle size={2.8}>{getSettingTitle(setting)} is active.</SubTitle>
+        <SubTitle size={2.8}>Active</SubTitle>
         <VerticalSpace />
         <Row alignItems="center">
           <OrbitIcon size={28} icon={setting.type} />

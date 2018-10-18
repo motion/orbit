@@ -6,7 +6,6 @@ import { Message } from '../../../../views/Message'
 import { OrbitOrb } from '../../../orbit/orbitDocked/orbitSettings/OrbitOrb'
 import { AppsStore } from '../../../AppsStore'
 import { OrbitAppCard } from '../../../orbit/orbitDocked/views/OrbitAppCard'
-import { settingToAppConfig } from '../../../../helpers/toAppConfig/settingToAppConfig'
 import { Grid } from '../../../../views/Grid'
 
 type Props = {
@@ -92,7 +91,7 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
                     subPane="apps"
                     total={appsStore.settingsList.length}
                     inGrid
-                    result={settingToAppConfig(app)}
+                    // result={settingToAppConfig(app)}
                     index={index}
                     isActive
                   />

@@ -1,6 +1,6 @@
 import { SettingModel, Setting, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
-import { allApps } from '../apps'
+import { allApps, getApps } from '../apps'
 import { react } from '@mcro/black'
 import { OrbitApp, ResolvableModel } from '../apps/types'
 import { keyBy } from 'lodash'
@@ -65,7 +65,7 @@ export class AppsStore {
 
   getAppFromSetting = (setting: Setting): OrbitApp<any> => {
     return {
-      ...allApps[setting.type],
+      ...getApps[setting.type](setting),
       setting,
     }
   }

@@ -8,13 +8,13 @@ import { GmailItem } from './views/GmailItem'
 import { GmailSettings } from './views/GmailSettings'
 
 export const gmail: GetOrbitApp<'gmail'> = (setting?: Setting) => ({
-  id: setting.id,
   source: 'bit',
   integration: 'gmail',
   integrationName: 'Gmail',
   defaultQuery: findManyType('gmail'),
   display: {
     name: setting.name,
+    itemName: 'thread',
     icon,
   },
   views: {

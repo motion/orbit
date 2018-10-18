@@ -10,12 +10,12 @@ type GenericApp = OrbitApp<any> & {
   isActive: boolean
 }
 
-export const appToAppConfig = (app: OrbitApp<any>, model?: ResolvableModel): AppConfig => {
+export const appToAppConfig = (app: OrbitApp<any>): AppConfig => {
   if (!app) {
     throw new Error(`No app given: ${JSON.stringify(app)}`)
   }
   return {
-    id: `${(model && model.id) || app.id || Math.random()}`,
+    id: `${(app.setting && app.setting.id) || Math.random()}`,
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,
@@ -31,7 +31,7 @@ export class AppsStore {
   activeApps = react(
     () => this.appSettings,
     appSettings => {
-      return appSettings.map(setting => getApps[setting.type](setting) as OrbitApp<any>)
+      return appSettings.map(this.getAppFromSetting)
     },
   )
 
@@ -52,28 +52,28 @@ export class AppsStore {
     },
   )
 
-  allAppsObj = react(() => this.allApps, x => keyBy(x, 'integration'), {
+  appByIntegration = react(() => this.allApps, x => keyBy(x, 'integration'), {
     defaultValue: {},
   })
 
   getAppFromSetting = (setting: Setting): OrbitApp<any> => {
     return {
-      ...this.allAppsObj[setting.type],
-      id: setting.id,
+      ...getApps[setting.type](setting),
+      setting,
     }
   }
 
   getAppConfig = (model: ResolvableModel): AppConfig => {
     const type = model.target === 'bit' ? model.integration : 'person'
-    console.log('gett app config for', type, this.allAppsObj)
-    return appToAppConfig(this.allAppsObj[type], model)
+    console.log('gett app config for', type, this.appByIntegration)
+    return appToAppConfig(this.appByIntegration[type], model)
   }
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {
-    if (!this.allAppsObj[type]) {
+    if (!this.appByIntegration[type]) {
       return () => 'none'
     }
-    return this.allAppsObj[type].views[viewType]
+    return this.appByIntegration[type].views[viewType]
   }
 
   private appSettings$ = observeMany(SettingModel, {

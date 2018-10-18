@@ -7,7 +7,7 @@ import { Grid } from '../../../../views/Grid'
 import { SimpleItem } from '../../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
 import { Unpad } from '../../../../views/Unpad'
-import { AppsStore, appToAppConfig } from '../../../../stores/AppsStore'
+import { AppsStore } from '../../../../stores/AppsStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
 
 type Props = {
@@ -38,23 +38,13 @@ export class OrbitSettingsApps extends React.Component<Props> {
                     key={model.id}
                     index={index}
                     isActive
+                    app={app}
                     model={model}
                     activeCondition={this.isSubPaneSelected}
                     pane="docked"
                     subPane="apps"
                     total={appsStore.activeApps.length}
                     inGrid
-                    appConfig={{
-                      ...appToAppConfig(app, model),
-                      type: 'setting',
-                      viewConfig: {
-                        ...app.viewConfig,
-                        dimensions: [620, 620],
-                        initialState: {
-                          active: 'settings',
-                        },
-                      },
-                    }}
                   />
                 )
               })}

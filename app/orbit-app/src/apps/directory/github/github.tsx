@@ -10,13 +10,13 @@ import { findManyType } from '../../helpers/queries'
 import { GithubItem } from './views/GithubItem'
 
 export const github: GetOrbitApp<'github'> = (setting?: Setting) => ({
-  id: setting.id,
   source: 'bit',
   integration: 'github',
   integrationName: 'Github',
   defaultQuery: findManyType('github'),
   display: {
     name: setting.name,
+    itemName: 'task',
     icon,
     iconLight,
   },

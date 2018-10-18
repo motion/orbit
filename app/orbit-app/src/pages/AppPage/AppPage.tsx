@@ -63,7 +63,7 @@ class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitApp<any>['views']) => {
     const { appStore, appsStore } = this.props
     const { appConfig } = appStore.state
-    const app = appsStore.allAppsObj[appConfig.integration]
+    const app = appsStore.appByIntegration[appConfig.integration]
     if (!app) {
       return NullView
     }

@@ -81,7 +81,7 @@ export class OrbitSettingsTeam extends React.Component<{
           gridAutoRows={80}
           margin={[5, -4]}
         >
-          {appsStore.appSettings.map((app, index) => (
+          {/* {appsStore.appSettings.map((app, index) => (
             <OrbitAppCard
               key={app.id}
               model={app}
@@ -102,7 +102,7 @@ export class OrbitSettingsTeam extends React.Component<{
               index={index}
               isActive
             />
-          ))}
+          ))} */}
         </Grid>
         <VerticalSpace />
       </>

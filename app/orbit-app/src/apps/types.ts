@@ -65,9 +65,10 @@ export type OrbitAppSettingProps<T extends Setting> = {
 }
 
 export type OrbitApp<A extends AppType> = {
-  id?: number
+  setting?: Setting
   display?: {
     name: string
+    itemName?: string
     icon?: string
     iconLight?: string
   }
@@ -86,7 +87,7 @@ export type OrbitApp<A extends AppType> = {
 
 export type OrbitApps = { [key in AppType]: OrbitApp<AppType> }
 
-export type GetOrbitApp<A extends AppType> = (setting: IntegrationSetting<A>) => OrbitApp<A>
+export type GetOrbitApp<A extends AppType> = (setting: Setting) => OrbitApp<A>
 
 export type GetOrbitApps = { [key in AppType]: GetOrbitApp<AppType> }
 

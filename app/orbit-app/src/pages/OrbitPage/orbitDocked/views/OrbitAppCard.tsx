@@ -55,7 +55,7 @@ export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...pro
       }}
       {...props}
     >
-      <SyncStatus settingId={app.setting.id}>
+      <SyncStatus settingId={app.setting ? app.setting.id : null}>
         {(syncJobs, removeJobs) => {
           return (
             <>

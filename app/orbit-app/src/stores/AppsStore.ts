@@ -10,12 +10,12 @@ type GenericApp = OrbitApp<any> & {
   isActive: boolean
 }
 
-export const appToAppConfig = (app: OrbitApp<any>): AppConfig => {
+export const appToAppConfig = (app: OrbitApp<any>, model?: ResolvableModel): AppConfig => {
   if (!app) {
     throw new Error(`No app given: ${JSON.stringify(app)}`)
   }
   return {
-    id: `${(app.setting && app.setting.id) || Math.random()}`,
+    id: `${(model && model.id) || (app.setting && app.setting.id) || Math.random()}`,
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,

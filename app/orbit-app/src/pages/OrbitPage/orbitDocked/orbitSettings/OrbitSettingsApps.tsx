@@ -32,18 +32,16 @@ export class OrbitSettingsApps extends React.Component<Props> {
               margin={[5, -4]}
             >
               {appsStore.activeApps.map((app, index) => {
-                const model = appsStore.appSettings[index]
                 return (
                   <OrbitAppCard
-                    key={model.id}
+                    key={app.setting.id}
                     index={index}
+                    total={appsStore.activeApps.length}
+                    activeCondition={this.isSubPaneSelected}
                     isActive
                     app={app}
-                    model={model}
-                    activeCondition={this.isSubPaneSelected}
                     pane="docked"
                     subPane="apps"
-                    total={appsStore.activeApps.length}
                     inGrid
                   />
                 )

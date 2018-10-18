@@ -123,6 +123,9 @@ class AppPageContent extends React.Component<Props> {
     if (!getView) {
       return <div>error getting view {JSON.stringify(appConfig)}</div>
     }
+    if (appConfig.type === 'bit' && !model) {
+      return null
+    }
     const TypeView = getView() || NullView
     // ideally this would be different:
     // you'd have a AppSearchable + AppSearchable.Input, and you could use them lower down the tree

@@ -81,28 +81,19 @@ export class OrbitSettingsTeam extends React.Component<{
           gridAutoRows={80}
           margin={[5, -4]}
         >
-          {/* {appsStore.appSettings.map((app, index) => (
+          {appsStore.allApps.map((app, index) => (
             <OrbitAppCard
-              key={app.id}
-              model={app}
-              total={appsStore.appSettings.length}
+              key={index}
+              app={app}
+              total={appsStore.allApps.length}
               inGrid
               activeCondition={this.isSubPaneSelected}
               pane="docked"
               subPane="apps"
-              appConfig={{
-                // ...settingToAppConfig(app),
-                config: {
-                  dimensions: [680, 620],
-                  initialState: {
-                    active: 'settings',
-                  },
-                },
-              }}
               index={index}
               isActive
             />
-          ))} */}
+          ))}
         </Grid>
         <VerticalSpace />
       </>

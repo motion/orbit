@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { OrbitAppMainProps } from '../../../types'
-import { ScrollableContent } from '../../../views/ScrollableContent'
+import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
-import { AppStatusBar } from '../../../views/AppStatusBar'
-import { BitTitleBar } from '../../../views/BitTitleBar'
+import { AppStatusBar } from '../../../views/layout/AppStatusBar'
+import { BitTitleBar } from '../../../views/layout/BitTitleBar'
 import { view, ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
-import { ChatMessages } from '../../../../components/bitViews/chat/ChatMessages'
+import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
 
 type Props = OrbitAppMainProps<'slack'>
 

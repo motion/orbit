@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { NormalizedItem } from '../../components/ItemResolver'
+import { NormalizedItem } from '../../../helpers/normalizeItem'
 import { SegmentedRow } from '@mcro/ui'
 import { TitleBarButton } from './TitleBarButton'
-import { Actions } from '../../actions/Actions'
-import { OrbitIcon } from '../../views/OrbitIcon'
+import { Actions } from '../../../actions/Actions'
+import { OrbitIcon } from '../../../views/OrbitIcon'
 
 export const BitTitleActions = ({ normalizedItem }: { normalizedItem: NormalizedItem }) => {
   return (

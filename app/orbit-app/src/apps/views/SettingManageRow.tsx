@@ -9,8 +9,8 @@ import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { AppInfoStore } from '../../stores/AppInfoStore'
 import { Actions } from '../../actions/Actions'
 import { SyncStatus } from '../../pages/OrbitPage/orbitDocked/views/SyncStatus'
-import { TitleBarSpace } from './TitleBarSpace'
-import { TitleBarButton } from './TitleBarButton'
+import { TitleBarSpace } from './layout/TitleBarSpace'
+import { TitleBarButton } from './layout/TitleBarButton'
 import { AppsStore } from '../../stores/AppsStore'
 
 @view.attach('appsStore', 'appInfoStore')

@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { WindowControls } from '../../views/WindowControls'
-import * as Constants from '../../constants'
+import { WindowControls } from '../../../views/WindowControls'
+import * as Constants from '../../../constants'
 import { CSSPropertySet } from '@mcro/gloss'
 import { Glint, Row, Text } from '@mcro/ui'
-import { Centered } from '../../views/Centered'
-import { AppStore } from '../../pages/AppPage/AppStore'
+import { Centered } from '../../../views/Centered'
+import { AppStore } from '../../../pages/AppPage/AppStore'
 
 type Props = {
   appStore?: AppStore

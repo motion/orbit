@@ -8,7 +8,7 @@ import { AtlassianSettingLogin } from '../../../views/shared/AtlassianSettingLog
 type Props = OrbitAppSettingProps<AtlassianSetting>
 
 @view
-export class JiraSettings extends React.Component<Props> {
+export class ConfluenceSettings extends React.Component<Props> {
   render() {
     const {
       setting,
@@ -20,7 +20,7 @@ export class JiraSettings extends React.Component<Props> {
       <SimpleAppExplorer
         setting={setting}
         initialState={initialState}
-        settingsPane={<AtlassianSettingLogin type="jira" setting={setting} />}
+        settingsPane={<AtlassianSettingLogin type="confluence" setting={setting} />}
       />
     )
   }

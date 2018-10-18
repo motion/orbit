@@ -10,7 +10,7 @@ import {
 } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
 import { AppStore } from '../pages/AppPage/AppStore'
-import { NormalizedItem } from '../components/ItemResolver'
+import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../stores/AppInfoStore'
 

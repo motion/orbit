@@ -1,7 +1,6 @@
 import keywordExtract from '@mcro/keyword-extract'
 import { GmailBitData } from '@mcro/models'
 import { getHeader } from '../../../helpers'
-import { BitItemResolverProps } from '../ResolveBit'
 
 const options = {
   remove_digits: true,
@@ -19,7 +18,7 @@ export const removeQuoted = str => {
   // .replace(/(\s+\n$)+/gm, '')
 }
 
-export const ResolveMail = ({ bit, children }: BitItemResolverProps) => {
+export const ResolveMail = ({ bit, children }) => {
   // for now do location as the person name
   let location = ''
   const { messages } = bit.data as GmailBitData

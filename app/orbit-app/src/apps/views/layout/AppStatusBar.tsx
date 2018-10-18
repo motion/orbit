@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { StatusBar } from '../../views/StatusBar'
-import { Actions } from '../../actions/Actions'
+import { StatusBar } from '../../../views/StatusBar'
+import { Actions } from '../../../actions/Actions'
 import { View } from '@mcro/ui'
-import { DateFormat } from '../../views/DateFormat'
+import { DateFormat } from '../../../views/DateFormat'
 import { view } from '@mcro/black'
-import { OrbitAppMainProps } from '../types'
+import { OrbitAppMainProps } from '../../types'
 
 const Cmd = view({
   opacity: 0.6,

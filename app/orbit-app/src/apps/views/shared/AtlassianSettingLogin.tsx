@@ -8,9 +8,9 @@ import {
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { Actions } from '../../../../actions/Actions'
-import * as Views from '../../../../views'
-import { Message } from '../../../../views/Message'
+import { Actions } from '../../../actions/Actions'
+import * as Views from '../../../views'
+import { Message } from '../../../views/Message'
 
 type Props = {
   type: string

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, Text } from '@mcro/ui'
-import { NormalizedItem } from '../../components/ItemResolver'
+import { NormalizedItem } from '../../../helpers/normalizeItem'
 
 export const AppSimpleTitleBar = ({ normalizedItem }: { normalizedItem: NormalizedItem }) => {
   return (

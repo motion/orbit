@@ -1,7 +1,7 @@
 import { AppConfig } from '@mcro/stores'
 import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
-import { NormalizedItem, ItemResolverExtraProps } from '../components/ItemResolver'
+import { NormalizedItem, ItemResolverExtraProps } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
 import { ResolvableModel } from '../apps/types'
 import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'

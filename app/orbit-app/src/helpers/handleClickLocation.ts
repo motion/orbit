@@ -1,4 +1,4 @@
-import { NormalizedItem } from '../components/ItemResolver'
+import { NormalizedItem } from './normalizeItem'
 import { Actions } from '../actions/Actions'
 
 export function handleClickLocation(item: NormalizedItem, e?: Event) {

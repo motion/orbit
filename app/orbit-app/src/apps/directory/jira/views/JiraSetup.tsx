@@ -1,4 +1,4 @@
 import * as React from 'react'
-import { AtlassianSettingLogin } from '../settingPanes/AtlassianSettingLogin'
+import { AtlassianSettingLogin } from '../../../views/shared/AtlassianSettingLogin'
 
 export const JiraSetupPane = () => <AtlassianSettingLogin type="jira" />

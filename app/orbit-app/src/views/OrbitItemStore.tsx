@@ -1,7 +1,7 @@
 import { react, ensure } from '@mcro/black'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
-import { NormalizedItem } from '../components/ItemResolver'
+import { NormalizedItem } from '../helpers/normalizeItem'
 import { Actions } from '../actions/Actions'
 import { ResolvableModel } from '../apps/types'
 

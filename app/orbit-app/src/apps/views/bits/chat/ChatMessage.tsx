@@ -1,19 +1,18 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { SlackBitDataMessage } from '@mcro/models'
-import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
-import { View } from '@mcro/ui'
-import { DateFormat } from '../../../views/DateFormat'
-import { Markdown } from '../../../views/Markdown'
-import { HighlightText } from '../../../views/HighlightText'
-import { SlackAppProps } from '../../../apps/slack/slack'
+import { OrbitApp } from '../../../types'
+import { View, Row, Text } from '@mcro/ui'
 import {
-  ItemResolverDecorationContext,
   ItemResolverDecoration,
-} from '../../../helpers/contexts/ItemResolverDecorationContext'
+  ItemResolverDecorationContext,
+} from '../../../../helpers/contexts/ItemResolverDecorationContext'
+import { RoundButtonPerson } from '../../../../views/RoundButtonPerson'
+import { DateFormat } from '../../../../views/DateFormat'
+import { HighlightText } from '../../../../views/HighlightText'
+import { Markdown } from '../../../../views/Markdown'
 
-type SlackMessageProps = SlackAppProps & {
+type SlackMessageProps = OrbitApp<'slack'> & {
   message: SlackBitDataMessage
   previousMessage?: SlackBitDataMessage
   highlight?: Object
@@ -56,7 +55,7 @@ export class ChatMessageContent extends React.Component<
         {...decoration.item}
       >
         {!hideHeader && (
-          <UI.Row
+          <Row
             alignItems="center"
             userSelect="none"
             cursor="default"
@@ -75,13 +74,13 @@ export class ChatMessageContent extends React.Component<
                 <div style={{ width: 6 }} />
                 {!(hide && hide.itemDate) &&
                   (!previousMessage || !previousWithinOneMinute) && (
-                    <UI.Text size={0.9} fontWeight={500} alpha={0.5}>
+                    <Text size={0.9} fontWeight={500} alpha={0.5}>
                       {<DateFormat date={new Date(message.time)} />}
-                    </UI.Text>
+                    </Text>
                   )}
               </>
             )}
-          </UI.Row>
+          </Row>
         )}
         <SlackMessageInner>
           {extraProps.minimal ? (
@@ -89,13 +88,13 @@ export class ChatMessageContent extends React.Component<
               {message.text}
             </HighlightText>
           ) : (
-            <UI.Text
+            <Text
               selectable={!extraProps.preventSelect}
               ellipse={extraProps.minimal ? true : null}
               {...decoration.text}
             >
               <Markdown className="slack-markdown" source={message.text} />
-            </UI.Text>
+            </Text>
           )}
         </SlackMessageInner>
       </SlackMessageFrame>

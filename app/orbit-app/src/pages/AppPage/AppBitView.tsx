@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ItemResolverDecorationContext } from '../helpers/contexts/ItemResolverDecorationContext'
+import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
 
 export class AppBitView extends React.Component {
   render() {

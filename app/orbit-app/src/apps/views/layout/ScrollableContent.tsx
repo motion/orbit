@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { AppStore } from '../../pages/AppPage/AppStore'
+import { AppStore } from '../../../pages/AppPage/AppStore'
 
 const PeekContentChrome = view(UI.Col, {
   flex: 1,

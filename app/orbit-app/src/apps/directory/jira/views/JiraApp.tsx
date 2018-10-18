@@ -4,7 +4,7 @@ import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
 import { BitTitleBar } from '../../../views/layout/BitTitleBar'
-import { Markdown } from '../../../../views/Markdown'
+import { Document } from '../../../views/bits/document/Document'
 
 export class JiraApp extends React.Component<OrbitAppMainProps<'jira'>> {
   render() {
@@ -14,7 +14,7 @@ export class JiraApp extends React.Component<OrbitAppMainProps<'jira'>> {
         <BitTitleBar {...this.props} />
         <ScrollableContent>
           <View padding={[16, 0]}>
-            <Markdown source={bit.body} />
+            <Document title={bit.title}>{bit.body}</Document>
           </View>
         </ScrollableContent>
         <AppStatusBar {...this.props} />

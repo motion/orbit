@@ -4,7 +4,7 @@ import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
 import { BitTitleBar } from '../../../views/layout/BitTitleBar'
-import { Markdown } from '../../../../views/Markdown'
+import { Document } from '../../../views/bits/document/Document'
 
 export class ConfluenceApp extends React.Component<OrbitAppMainProps<'confluence'>> {
   render() {
@@ -14,7 +14,7 @@ export class ConfluenceApp extends React.Component<OrbitAppMainProps<'confluence
         <BitTitleBar {...this.props} />
         <ScrollableContent>
           <View padding={[16, 0]}>
-            <Markdown source={bit.body} />
+            <Document title={bit.title}>{bit.body}</Document>
           </View>
         </ScrollableContent>
         <AppStatusBar {...this.props} />

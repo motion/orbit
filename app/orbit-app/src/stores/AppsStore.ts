@@ -31,7 +31,7 @@ export class AppsStore {
   activeApps = react(
     () => this.appSettings,
     appSettings => {
-      return appSettings.map(this.getAppFromSetting)
+      return appSettings.filter(x => !!allApps[x.type]).map(this.getAppFromSetting)
     },
   )
 

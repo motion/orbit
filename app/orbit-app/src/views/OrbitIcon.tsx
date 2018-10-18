@@ -65,14 +65,14 @@ export const OrbitIcon = decorator(
       height: size,
     }
     const icon = props.icon || props.name
-    const extImg = icon.indexOf('http') === 0 ? icon : null
+    const extImg = icon && icon.indexOf('http') === 0 ? icon : null
     const { allAppsObj } = appsStore
     let iconImg = extImg
     if (allAppsObj[icon]) {
-      const config = allAppsObj[icon].display
-      if (config) {
+      const display = allAppsObj[icon].display
+      if (display) {
         const isDark = theme.background.isDark && theme.background.isDark()
-        iconImg = isDark ? config.iconLight || config.icon : config.icon
+        iconImg = isDark ? display.iconLight || display.icon : display.icon
       } else {
         console.log('no config for...', icon)
       }

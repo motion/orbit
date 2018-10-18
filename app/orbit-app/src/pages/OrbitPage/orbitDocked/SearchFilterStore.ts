@@ -5,10 +5,11 @@ import { MarkType, NLPResponse } from './nlpStore/types'
 import { NLPStore } from './NLPStore'
 import { QueryStore } from './QueryStore'
 import { SearchStore } from './SearchStore'
+import { IntegrationType } from '@mcro/models'
 
 export type SearchFilter = {
   type: string
-  icon: string
+  integration: IntegrationType
   name: string
   active: boolean
 }
@@ -144,7 +145,7 @@ export class SearchFilterStore /* extends Store */ {
     const { exclusiveFilters } = this
     return this.appsStore.allApps.map(app => ({
       type: app.source,
-      icon: app.display.icon,
+      integration: app.integration,
       name: app.integrationName,
       active: this.hasExclusiveFilters ? exclusiveFilters[app.source] : false,
     }))

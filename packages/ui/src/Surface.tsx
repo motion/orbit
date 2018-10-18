@@ -152,7 +152,6 @@ const SurfaceFrame = view(View, {
     justifyContent: props.justify || props.justifyContent,
     alignSelf: props.alignSelf,
     borderStyle: props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
-    ...circularStyles,
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
     ...(props.dimmed && dimmedStyle),
@@ -164,10 +163,11 @@ const SurfaceFrame = view(View, {
     // ...whereas theme styles passed in as ovverrides go in here
     ...themeStylesFromProps,
     ...(!props.chromeless &&
-      props.active && { '&:hover': props.activeHoverStylee || themeStyles['&:active'] }),
+      props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
     ...propsToTextSize(props),
     ...(props.chromeless && chromelessStyle),
     ...props.segmentedStyle,
+    ...circularStyles,
     '&:hover': {
       ...themeStyles['&:hover'],
       ...propStyles['&:hover'],

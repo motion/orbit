@@ -7,14 +7,15 @@ import { view } from '@mcro/black'
 import { WhitelistManager } from '../stores/WhitelistManager'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { AppInfoStore } from '../../stores/AppInfoStore'
-import { NICE_INTEGRATION_NAMES } from '../../constants'
 import { Actions } from '../../actions/Actions'
 import { SyncStatus } from '../../pages/OrbitPage/orbitDocked/views/SyncStatus'
 import { TitleBarSpace } from './TitleBarSpace'
 import { TitleBarButton } from './TitleBarButton'
+import { AppsStore } from '../../stores/AppsStore'
 
-@view.attach('appInfoStore')
+@view.attach('appsStore', 'appInfoStore')
 export class SettingManageRow extends React.Component<{
+  appsStore?: AppsStore
   appInfoStore?: AppInfoStore
   setting: Setting
   whitelist: WhitelistManager<any>
@@ -30,7 +31,7 @@ export class SettingManageRow extends React.Component<{
       showConfirmDialog({
         title: 'Remove integration?',
         message: `Are you sure you want to remove ${
-          NICE_INTEGRATION_NAMES[this.props.setting.type]
+          this.props.appsStore.getAppFromSetting(this.props.setting).display.name
         }?`,
       })
     ) {

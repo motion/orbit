@@ -7,12 +7,12 @@ import { Text } from '@mcro/ui'
 import { Setting } from '@mcro/models'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { view } from '@mcro/black'
-import { SHORT_INTEGRATION_NAMES } from '../../../../constants'
 
 type Props = OrbitItemProps<Setting> &
   AppInfoProps & {
     store: AppInfoStore
     isActive?: boolean
+    hideTitle?: boolean
   }
 
 const Centered = view({
@@ -29,7 +29,6 @@ export const OrbitAppIconCard = ({
   subtitle,
   ...props
 }: Props) => {
-  const name = SHORT_INTEGRATION_NAMES[model.type]
   return (
     <OrbitCard padding={3} borderRadius={100} model={model} chromeless {...props}>
       <Centered>

@@ -56,6 +56,13 @@ export class AppsStore {
     defaultValue: {},
   })
 
+  getAppFromSetting = (setting: Setting): OrbitApp<any> => {
+    return {
+      ...this.allAppsObj[setting.type],
+      id: setting.id,
+    }
+  }
+
   getAppConfig = (model: ResolvableModel): AppConfig => {
     const type = model.target === 'bit' ? model.integration : 'person'
     console.log('gett app config for', type, this.allAppsObj)

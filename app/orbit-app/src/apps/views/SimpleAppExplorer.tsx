@@ -5,11 +5,12 @@ import { AppTopicExplorer } from './AppTopicExplorer'
 import { SegmentedRow, View } from '@mcro/ui'
 import { AppConfig } from '@mcro/stores'
 import { TitleBarButton } from './TitleBarButton'
-import { NICE_INTEGRATION_NAMES } from '../../constants'
 import { ScrollableContent } from './ScrollableContent'
 import { HideablePane } from './HideablePane'
+import { AppsStore } from '../../stores/AppsStore'
 
 type Props = {
+  appsStore?: AppsStore
   appViewStore?: AppViewStore
   setting: Setting
   settingsPane: React.ReactNode
@@ -52,16 +53,18 @@ export class AppViewStore {
   }
 }
 
+@view.attach('appsStore')
 @view.attach({
   appViewStore: AppViewStore,
 })
 @view
 export class SimpleAppExplorer extends React.Component<Props> {
   render() {
-    const { setting, settingsPane, appViewStore } = this.props
+    const { appsStore, setting, settingsPane, appViewStore } = this.props
+    const app = appsStore.getAppFromSetting(setting)
     return (
       <>
-        {NICE_INTEGRATION_NAMES[setting.type]}
+        {app.display.name}
         <TitleBarButton
           tooltip="Settings"
           icon="gear"

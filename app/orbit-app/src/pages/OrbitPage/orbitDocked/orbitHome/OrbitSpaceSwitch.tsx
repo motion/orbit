@@ -68,7 +68,7 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
             hover={false}
           />
           <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-          <RowItem orb="grey" title="Me" />
+          <RowItem orb="grey" ti tle="Me" />
           <RowItem orb="red" title="discuss-things" />
 
           <Row margin={5} alignItems="center">

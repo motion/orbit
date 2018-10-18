@@ -94,7 +94,7 @@ export class OrbitItemStore {
   }
 
   get appConfig() {
-    return this.props.result || this.props.appsStore.getAppConfig(this.props.model)
+    return this.props.appConfig || this.props.appsStore.getAppConfig(this.props.model)
   }
 
   get position() {
@@ -114,18 +114,25 @@ export class OrbitItemStore {
   // this cancels aggresively to prevent renders
   updateIsSelected = react(
     () => {
-      if (this.props.ignoreSelection) {
+      const {
+        activeCondition,
+        ignoreSelection,
+        selectionStore,
+        subPaneStore,
+        isSelected,
+      } = this.props
+      if (ignoreSelection) {
         return false
       }
-      const activeIndex = this.props.selectionStore && this.props.selectionStore.activeIndex
-      const isPaneActive = this.props.subPaneStore && this.props.subPaneStore.isActive
-      const isSelected =
-        typeof this.props.isSelected === 'function'
-          ? this.props.isSelected()
-          : this.props.isSelected
+      if (activeCondition && activeCondition() === false) {
+        return false
+      }
+      const activeIndex = selectionStore && selectionStore.activeIndex
+      const isPaneActive = subPaneStore && subPaneStore.isActive
+      const willBeSelected = typeof isSelected === 'function' ? isSelected() : isSelected
       let nextIsSelected
-      if (typeof isSelected === 'boolean') {
-        nextIsSelected = isSelected
+      if (typeof willBeSelected === 'boolean') {
+        nextIsSelected = willBeSelected
       } else {
         nextIsSelected = activeIndex === this.realIndex
       }

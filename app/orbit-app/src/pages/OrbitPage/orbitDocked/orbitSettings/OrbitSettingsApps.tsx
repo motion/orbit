@@ -2,24 +2,24 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import { OrbitAppCard } from '../views/OrbitAppCard'
 import * as Views from '../../../../views'
-import { PaneManagerStore } from '../../PaneManagerStore'
-import { SelectionStore } from '../SelectionStore'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { Grid } from '../../../../views/Grid'
 import { SimpleItem } from '../../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
 import { Unpad } from '../../../../views/Unpad'
-import { AppsStore } from '../../../../stores/AppsStore'
+import { AppsStore, appToAppConfig } from '../../../../stores/AppsStore'
+import { PaneManagerStore } from '../../PaneManagerStore'
 
 type Props = {
+  appsStore?: AppsStore
   paneManagerStore?: PaneManagerStore
-  selectionStore?: SelectionStore
-  appsStore: AppsStore
 }
 
-@view.attach('appsStore')
+@view.attach('appsStore', 'paneManagerStore')
 @view
 export class OrbitSettingsApps extends React.Component<Props> {
+  isSubPaneSelected = () => this.props.paneManagerStore.subPane === 'apps'
+
   render() {
     const { appsStore } = this.props
     return (
@@ -31,39 +31,44 @@ export class OrbitSettingsApps extends React.Component<Props> {
               gridAutoRows={80}
               margin={[5, -4]}
             >
-              {appsStore.activeApps.map((app, index) => (
-                <OrbitAppCard
-                  key={app.integration}
-                  model={app}
-                  pane="docked"
-                  subPane="apps"
-                  total={appsStore.activeApps.length}
-                  inGrid
-                  app={{
-                    ...app.instanceConfig,
-                    type: 'setting',
-                    viewConfig: {
-                      dimensions: [620, 620],
-                      initialState: {
-                        active: 'settings',
+              {appsStore.activeApps.map((app, index) => {
+                const model = appsStore.appSettings[index]
+                return (
+                  <OrbitAppCard
+                    key={model.id}
+                    index={index}
+                    isActive
+                    model={model}
+                    activeCondition={this.isSubPaneSelected}
+                    pane="docked"
+                    subPane="apps"
+                    total={appsStore.activeApps.length}
+                    inGrid
+                    appConfig={{
+                      ...appToAppConfig(app, model),
+                      type: 'setting',
+                      viewConfig: {
+                        ...app.viewConfig,
+                        dimensions: [620, 620],
+                        initialState: {
+                          active: 'settings',
+                        },
                       },
-                    },
-                  }}
-                  index={index}
-                  isActive
-                />
-              ))}
+                    }}
+                  />
+                )
+              })}
             </Grid>
             <Views.VerticalSpace />
           </>
         )}
         <Views.SubTitle>Add app</Views.SubTitle>
         <Unpad>
-          {appsStore.allApps.map(app => {
+          {appsStore.allApps.map((app, index) => {
             return (
               <SimpleItem
-                key={app.integration}
-                onClick={addIntegrationClickHandler(app.instanceConfig)}
+                key={`${index}${app.integration}`}
+                onClick={addIntegrationClickHandler(app.viewConfig)}
                 title={app.integrationName}
                 icon={app.display.icon}
                 after={<Button size={0.9}>Add</Button>}

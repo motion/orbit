@@ -83,15 +83,15 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
                 gridAutoRows={80}
                 margin={[5, -4]}
               >
-                {appsStore.settingsList.map((app, index) => (
+                {appsStore.appSettings.map((app, index) => (
                   <OrbitAppCard
                     key={app.id}
                     model={app}
                     pane="docked"
                     subPane="apps"
-                    total={appsStore.settingsList.length}
+                    total={appsStore.appSettings.length}
                     inGrid
-                    // result={settingToAppConfig(app)}
+                    // appConfig={settingToAppConfig(app)}
                     index={index}
                     isActive
                   />

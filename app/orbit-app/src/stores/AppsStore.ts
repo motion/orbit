@@ -10,9 +10,12 @@ type GenericApp = OrbitApp<any> & {
   isActive: boolean
 }
 
-const appToAppConfig = (app: OrbitApp<any>, model?: ResolvableModel): AppConfig => {
+export const appToAppConfig = (app: OrbitApp<any>, model?: ResolvableModel): AppConfig => {
+  if (!app) {
+    throw new Error(`No app given: ${JSON.stringify(app)}`)
+  }
   return {
-    id: `${model.id || app.id || Math.random()}`,
+    id: `${(model && model.id) || app.id || Math.random()}`,
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,
@@ -23,12 +26,12 @@ const appToAppConfig = (app: OrbitApp<any>, model?: ResolvableModel): AppConfig 
 }
 
 export class AppsStore {
-  settingsList: Setting[] = []
+  appSettings: Setting[] = []
 
   activeApps = react(
-    () => this.settingsList,
-    appsList => {
-      return appsList.map(setting => getApps[setting.type](setting) as OrbitApp<any>)
+    () => this.appSettings,
+    appSettings => {
+      return appSettings.map(setting => getApps[setting.type](setting) as OrbitApp<any>)
     },
   )
 
@@ -60,24 +63,23 @@ export class AppsStore {
   }
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {
-    console.log('getting type', type)
     if (!this.allAppsObj[type]) {
       return () => 'none'
     }
     return this.allAppsObj[type].views[viewType]
   }
 
-  private settingsList$ = observeMany(SettingModel, {
+  private appSettings$ = observeMany(SettingModel, {
     args: {
       where: {
         type: { $not: 'general' },
       },
     },
   }).subscribe(values => {
-    this.settingsList = values
+    this.appSettings = values
   })
 
   willUnmount() {
-    this.settingsList$.unsubscribe()
+    this.appSettings$.unsubscribe()
   }
 }

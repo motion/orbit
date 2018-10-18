@@ -120,11 +120,8 @@ class AppPageContent extends React.Component<Props> {
     const { model, appConfig } = appStore.state
     console.log('appConfig.type', appConfig.type, 'App.state.query', App.state.query)
     const getView = this.viewsByType[appConfig.type]
-    if (!model) {
-      return <div>no model</div>
-    }
     if (!getView) {
-      return <div>error getting view {appConfig.type}</div>
+      return <div>error getting view {JSON.stringify(appConfig)}</div>
     }
     const TypeView = getView() || NullView
     // ideally this would be different:

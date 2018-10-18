@@ -55,11 +55,10 @@ class VirtualList extends React.Component<{ items: SelectionGroup[] }> {
         ref={instance => (this.List = instance)}
         rowHeight={({ index }) => rowHeight(items[index])}
         rowRenderer={({ index, key }) => {
-          console.log('key', key)
           const group = items[index]
           return (
             <SortableItem
-              key={group.items.map(x => `${x.id}`).join(' ')}
+              key={`${key}${index}${group.items.map(x => `${x.id}`).join(' ')}`}
               index={index}
               value={group}
             />
@@ -131,7 +130,6 @@ class OrbitExploreStore {
       // setup stream subscriptions
       for (const app of apps) {
         const model = models[app.source]
-        console.log('model', model, app.source)
         const { display, defaultQuery } = app
         const subscription = observeMany(model, {
           args: defaultQuery as any,

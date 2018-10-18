@@ -2,16 +2,18 @@ import { AppConfig } from '@mcro/stores'
 import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
 import { NormalizedItem, ItemResolverExtraProps } from '../components/ItemResolver'
-import { ThemeObject, CSSPropertySet } from '@mcro/gloss'
+import { ThemeObject } from '@mcro/gloss'
 import { ResolvableModel } from '../apps/types'
 import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
 import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
 import { SubPaneStore } from '../pages/OrbitPage/SubPaneStore'
 import { AppsStore } from '../stores/AppsStore'
+import { CSSPropertySetStrict } from '../../../../packages/css/_/cssPropertySet'
 
-export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySet &
+export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
     // whether to avoid model resolving and just use props
+    activeCondition?: () => boolean
     direct?: boolean
     ignoreSelection?: boolean
     chromeless?: boolean
@@ -25,7 +27,7 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySet &
     subtitle?: React.ReactNode
     date?: React.ReactNode
     icon?: React.ReactNode
-    result?: AppConfig
+    appConfig?: AppConfig
     index?: number
     store?: OrbitItemStore
     isExpanded?: boolean

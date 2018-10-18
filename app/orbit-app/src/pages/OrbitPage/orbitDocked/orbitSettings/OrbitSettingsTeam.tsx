@@ -8,6 +8,7 @@ import { AppsStore } from '../../../../stores/AppsStore'
 import { OrbitAppCard } from '../views/OrbitAppCard'
 import { ToggleApp } from './ToggleApp'
 import { OrbitOrb } from './OrbitOrb'
+import { PaneManagerStore } from '../../PaneManagerStore'
 
 const OrbitSpaceCardFrame = view({
   borderRadius: 6,
@@ -35,9 +36,14 @@ const OrbitSpaceCard = ({ children, label, active = false, ...props }) => (
   </OrbitSpaceCardFrame>
 )
 
-@view.attach('appsStore')
+@view.attach('paneManagerStore', 'appsStore')
 @view
-export class OrbitSettingsTeam extends React.Component<{ appsStore?: AppsStore }> {
+export class OrbitSettingsTeam extends React.Component<{
+  appsStore?: AppsStore
+  paneManagerStore?: PaneManagerStore
+}> {
+  isSubPaneSelected = () => this.props.paneManagerStore.subPane === 'apps'
+
   render() {
     const { appsStore } = this.props
     return (
@@ -75,15 +81,16 @@ export class OrbitSettingsTeam extends React.Component<{ appsStore?: AppsStore }
           gridAutoRows={80}
           margin={[5, -4]}
         >
-          {appsStore.settingsList.map((app, index) => (
+          {appsStore.appSettings.map((app, index) => (
             <OrbitAppCard
               key={app.id}
               model={app}
+              total={appsStore.appSettings.length}
+              inGrid
+              activeCondition={this.isSubPaneSelected}
               pane="docked"
               subPane="apps"
-              total={appsStore.settingsList.length}
-              inGrid
-              result={{
+              appConfig={{
                 // ...settingToAppConfig(app),
                 config: {
                   dimensions: [680, 620],

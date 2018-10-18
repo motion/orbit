@@ -35,15 +35,22 @@ export class AppsStore {
     },
   )
 
+  // this is every possible app (that uses a bit), just turned into array
+  get appsList(): OrbitApp<any>[] {
+    return Object.keys(allApps)
+      .map(x => allApps[x])
+      .filter(x => x.source === 'bit')
+  }
+
   // pass in a blank setting so we can access the OrbitApp configs
   allApps = react(
     () => this.activeApps,
-    apps => {
-      return Object.keys(allApps).map(
-        type =>
+    activeApps => {
+      return this.appsList.map(
+        app =>
           ({
-            ...allApps[type],
-            isActive: apps.findIndex(x => x.integration === type),
+            ...app,
+            isActive: !!activeApps.find(x => x.integration === app.integration),
           } as GenericApp),
       )
     },

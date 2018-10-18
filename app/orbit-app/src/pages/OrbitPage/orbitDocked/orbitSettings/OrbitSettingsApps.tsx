@@ -53,19 +53,17 @@ export class OrbitSettingsApps extends React.Component<Props> {
         )}
         <Views.SubTitle>Add app</Views.SubTitle>
         <Unpad>
-          {Object.keys(allApps)
-            .map(x => allApps[x])
-            .map((app, index) => {
-              return (
-                <SimpleItem
-                  key={`${index}${app.integration}`}
-                  onClick={addAppClickHandler(app)}
-                  title={app.integrationName}
-                  icon={app.integration}
-                  after={<Button size={0.9}>Add</Button>}
-                />
-              )
-            })}
+          {appsStore.allApps.map((app, index) => {
+            return (
+              <SimpleItem
+                key={`${index}${app.integration}`}
+                onClick={addAppClickHandler(app)}
+                title={app.integrationName}
+                icon={app.integration}
+                after={<Button size={0.9}>Add</Button>}
+              />
+            )
+          })}
         </Unpad>
       </>
     )

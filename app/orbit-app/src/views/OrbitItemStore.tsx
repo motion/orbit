@@ -136,10 +136,11 @@ export class OrbitItemStore {
       ensure('new index', nextIsSelected !== this.isSelected)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {
+        console.log('is selected...', this.target)
         ensure('target', !!this.target)
         // fluidity
         await sleep()
-        console.log('WOAH WOAH WOAH select me', this.props)
+        console.log('WOAH WOAH WOAH select me', this.props, this.target, this.position)
         Actions.setPeekApp(this.target, this.position)
       }
     },

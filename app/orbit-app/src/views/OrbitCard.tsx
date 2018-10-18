@@ -360,6 +360,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
     if (!model) {
       return null
     }
+    console.log('model is', model)
     return this.getInner(normalizeItem(model))
   }
 }

@@ -2,11 +2,24 @@ import { SettingModel, Setting, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 import { getApps } from '../apps'
 import { react } from '@mcro/black'
-import { OrbitApp, AppType, ResolvableModel } from '../apps/types'
+import { OrbitApp, ResolvableModel } from '../apps/types'
 import { keyBy } from 'lodash'
+import { AppConfig } from '@mcro/stores'
 
 type GenericApp = OrbitApp<any> & {
   isActive: boolean
+}
+
+const appToAppConfig = (app: OrbitApp<any>): AppConfig => {
+  return {
+    id: `${app.id || Math.random()}`,
+    icon: app.display.icon,
+    iconLight: app.display.iconLight,
+    title: app.display.name,
+    type: app.source,
+    integration: app.integration,
+    viewConfig: app.viewConfig,
+  }
 }
 
 export class AppsStore {
@@ -41,9 +54,9 @@ export class AppsStore {
     defaultValue: {},
   })
 
-  getAppConfig = (model: ResolvableModel) => {
+  getAppConfig = (model: ResolvableModel): AppConfig => {
     const type = model.target === 'bit' ? model.integration : 'person'
-    return this.allAppsObj[type].instanceConfig
+    return appToAppConfig(this.allAppsObj[type])
   }
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {

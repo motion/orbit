@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { AtlassianSetting } from '@mcro/models'
 import { OrbitAppSettingProps } from '../../../types'
-import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
+import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { AtlassianSettingLogin } from '../../../views/shared/AtlassianSettingLogin'
 
 type Props = OrbitAppSettingProps<AtlassianSetting>

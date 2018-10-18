@@ -8,8 +8,8 @@ import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { OrbitAppSettingProps } from '../../../types'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
-import { SettingManageRow } from '../../../views/SettingManageRow'
+import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
+import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitAppSettingProps<GithubSetting>
 

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Setting } from '@mcro/models'
 import { View, Icon, Row } from '@mcro/ui'
-import { SubTitle, VerticalSpace } from '../../../../views'
-import { Message } from '../../../../views/Message'
-import { OrbitIcon } from '../../../../views/OrbitIcon'
+import { SubTitle, VerticalSpace } from '../../../views'
+import { Message } from '../../../views/Message'
+import { OrbitIcon } from '../../../views/OrbitIcon'
 import { view } from '@mcro/black'
 
 type Props = {

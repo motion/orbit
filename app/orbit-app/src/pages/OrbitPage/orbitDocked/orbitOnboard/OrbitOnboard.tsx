@@ -189,15 +189,9 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const integrations = appsStore.allApps
+  const allAppsSorted = appsStore.allApps
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
-    .map(app => {
-      return {
-        ...app,
-        added: !!(appsStore.activeApps || []).find(x => x.integration === app.integration),
-      }
-    })
   return (
     <SubPane name="onboard" paddingLeft={0} paddingRight={0}>
       <BlurryGuys />
@@ -288,17 +282,17 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
           <VerticalSpace />
 
           <Unpad>
-            {integrations.map(item => {
+            {allAppsSorted.map(item => {
               return (
                 <SimpleItem
                   key={item.integration}
                   title={item.integrationName}
                   icon={item.integration}
-                  inactive={item.added}
-                  onClick={item.added ? null : addAppClickHandler(item)}
+                  inactive={item.isActive}
+                  onClick={item.isActive ? null : addAppClickHandler(item)}
                   after={
-                    <AddButton size={0.9} disabled={item.added}>
-                      {item.added ? <Icon size={16} name="check" color="green" /> : 'Add'}
+                    <AddButton size={0.9} disabled={item.isActive}>
+                      {item.isActive ? <Icon size={16} name="check" color="green" /> : 'Add'}
                     </AddButton>
                   }
                 />

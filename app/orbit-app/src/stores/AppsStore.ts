@@ -1,6 +1,6 @@
 import { SettingModel, Setting, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
-import { getApps } from '../apps'
+import { allApps } from '../apps'
 import { react } from '@mcro/black'
 import { OrbitApp, ResolvableModel } from '../apps/types'
 import { keyBy } from 'lodash'
@@ -39,11 +39,11 @@ export class AppsStore {
   allApps = react(
     () => this.activeApps,
     apps => {
-      return Object.keys(getApps).map(
+      return Object.keys(allApps).map(
         type =>
           ({
-            ...getApps[type]({}),
-            isActive: apps.findIndex(x => x.source === type),
+            ...allApps[type],
+            isActive: apps.findIndex(x => x.integration === type),
           } as GenericApp),
       )
     },
@@ -58,7 +58,7 @@ export class AppsStore {
 
   getAppFromSetting = (setting: Setting): OrbitApp<any> => {
     return {
-      ...getApps[setting.type](setting),
+      ...allApps[setting.type],
       setting,
     }
   }

@@ -111,7 +111,6 @@ export class OrbitItemStore {
     return getIndex ? getIndex(model) : index
   }
 
-  // this cancels aggresively to prevent renders
   updateIsSelected = react(
     () => {
       const {
@@ -121,28 +120,34 @@ export class OrbitItemStore {
         subPaneStore,
         isSelected,
       } = this.props
-      if (ignoreSelection) {
-        return false
+      if (typeof isSelected === 'undefined') {
+        if (!selectionStore) {
+          return false
+        }
+        if (ignoreSelection) {
+          return false
+        }
+        if (activeCondition && activeCondition() === false) {
+          return false
+        }
+        if (!subPaneStore || !subPaneStore.isActive) {
+          return false
+        }
       }
-      if (activeCondition && activeCondition() === false) {
-        return false
-      }
-      const activeIndex = selectionStore && selectionStore.activeIndex
-      const isPaneActive = subPaneStore && subPaneStore.isActive
-      const willBeSelected = typeof isSelected === 'function' ? isSelected() : isSelected
-      let nextIsSelected
-      if (typeof willBeSelected === 'boolean') {
-        nextIsSelected = willBeSelected
+      const forceSelected = typeof isSelected === 'function' ? isSelected() : isSelected
+      let next
+      if (typeof forceSelected === 'boolean') {
+        next = forceSelected
       } else {
-        nextIsSelected = activeIndex === this.realIndex
+        next = selectionStore.activeIndex === this.realIndex
       }
-      return isPaneActive && nextIsSelected
+      return next
     },
-    async (nextIsSelected, { sleep }) => {
+    async (isSelected, { sleep }) => {
       const { preventAutoSelect } = this.props
-      ensure('new index', nextIsSelected !== this.isSelected)
-      this.isSelected = nextIsSelected
-      if (nextIsSelected && !preventAutoSelect) {
+      ensure('new index', isSelected !== this.isSelected)
+      this.isSelected = isSelected
+      if (isSelected && !preventAutoSelect) {
         ensure('appConfig`', !!this.appConfig)
         // fluidity
         await sleep()

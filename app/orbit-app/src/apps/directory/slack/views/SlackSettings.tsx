@@ -8,8 +8,8 @@ import * as React from 'react'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
-import { SettingManageRow } from '../../../views/SettingManageRow'
+import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
+import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 import { OrbitAppSettingProps } from '../../../types'
 
 type Props = OrbitAppSettingProps<SlackSetting>

@@ -4,8 +4,8 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
 import { DriveSetting } from '@mcro/models'
 import { OrbitAppSettingProps } from '../../../types'
-import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
-import { SettingManageRow } from '../../../views/SettingManageRow'
+import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
+import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitAppSettingProps<DriveSetting>
 

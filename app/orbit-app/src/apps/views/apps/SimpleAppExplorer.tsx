@@ -4,10 +4,10 @@ import { Setting } from '@mcro/models'
 import { AppTopicExplorer } from './AppTopicExplorer'
 import { SegmentedRow, View } from '@mcro/ui'
 import { AppConfig } from '@mcro/stores'
-import { TitleBarButton } from './layout/TitleBarButton'
-import { ScrollableContent } from './layout/ScrollableContent'
-import { HideablePane } from './HideablePane'
-import { AppsStore } from '../../stores/AppsStore'
+import { TitleBarButton } from '../layout/TitleBarButton'
+import { ScrollableContent } from '../layout/ScrollableContent'
+import { HideablePane } from '../../../views/HideablePane'
+import { AppsStore } from '../../../stores/AppsStore'
 
 type Props = {
   appsStore?: AppsStore

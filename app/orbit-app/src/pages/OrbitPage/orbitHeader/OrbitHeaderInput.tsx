@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view } from '@mcro/black'
-import { View, ClearButton } from '@mcro/ui'
+import { View, ClearButton, Icon } from '@mcro/ui'
 import { QueryStore } from '../orbitDocked/QueryStore'
 import { HeaderStore } from './HeaderStore'
 import { ThemeObject } from '@mcro/gloss'
@@ -67,7 +67,9 @@ export class OrbitHeaderInput extends React.Component<Props> {
           onClick={headerStore.onClickInput}
         />
         <Interactive disabled={paneManagerStore.activePane !== 'search'}>
-          <ClearButton /* opacity={0} hover={{ opacity: 1 }} */ onClick={this.clearSearch} />
+          <ClearButton /* opacity={0} hover={{ opacity: 1 }} */ onClick={this.clearSearch}>
+            <Icon name="arrow-min-left" size={8} opacity={0.8} margin="auto" />
+          </ClearButton>
           {/* <div style={{ width: 5 }} />
           <Tooltip
             target={

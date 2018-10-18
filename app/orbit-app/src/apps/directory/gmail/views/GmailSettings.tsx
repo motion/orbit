@@ -4,9 +4,9 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import { OrbitAppSettingProps } from '../../../types'
 import { GmailSetting } from '@mcro/models'
-import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
+import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { SettingManageRow } from '../../../views/SettingManageRow'
+import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitAppSettingProps<GmailSetting>
 

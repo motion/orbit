@@ -1,4 +1,4 @@
-import { GetOrbitApp, GetOrbitApps } from './types'
+import { GetOrbitApp, GetOrbitApps, AppType, OrbitApp } from './types'
 import { slack } from './directory/slack/slack'
 import { github } from './directory/github/github'
 import { gmail } from './directory/gmail/gmail'
@@ -17,3 +17,17 @@ export const getApps: GetOrbitApps = {
   website: (slack as unknown) as GetOrbitApp<'website'>,
   app1: (slack as unknown) as GetOrbitApp<'app1'>,
 }
+
+type OrbitApps = { [key in AppType]: OrbitApp<any> }
+
+//
+// All orbit app configs
+// pass in "blank" setting to get the basic information for each app
+//
+export const allApps: OrbitApps = Object.keys(getApps).reduce(
+  (acc, key) => ({
+    ...acc,
+    [key]: getApps[key]({}),
+  }),
+  {} as OrbitApps,
+)

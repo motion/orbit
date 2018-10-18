@@ -5,6 +5,7 @@ import { gmail } from './directory/gmail/gmail'
 import { jira } from './directory/jira/jira'
 import { confluence } from './directory/confluence/confluence'
 import { drive } from './directory/drive/drive'
+import { website } from './directory/website/website'
 
 export const getApps: GetOrbitApps = {
   slack,
@@ -13,8 +14,8 @@ export const getApps: GetOrbitApps = {
   jira,
   confluence,
   drive,
+  website,
   person: (slack as unknown) as GetOrbitApp<'person'>,
-  website: (slack as unknown) as GetOrbitApp<'website'>,
   app1: (slack as unknown) as GetOrbitApp<'app1'>,
 }
 

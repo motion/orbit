@@ -1,4 +1,3 @@
-import * as React from 'react'
-import { WebsiteSettingPane } from '../settingPanes/WebsiteSettingPane'
+import { WebsiteSetupPane } from './WebsiteSetupPane'
 
-export const WebsiteSetupPane = () => <WebsiteSettingPane type="website" />
+export const WebsiteSetup = WebsiteSetupPane

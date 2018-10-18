@@ -15,7 +15,6 @@ type AppTypeToModelType = {
   confluence: Bit
   website: Bit
   drive: Bit
-  app1: Bit
   person: PersonBit
   apps: Setting
 }

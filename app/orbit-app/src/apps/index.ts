@@ -6,6 +6,7 @@ import { jira } from './directory/jira/jira'
 import { confluence } from './directory/confluence/confluence'
 import { drive } from './directory/drive/drive'
 import { website } from './directory/website/website'
+import { person } from './directory/person/person'
 
 export const getApps: GetOrbitApps = {
   slack,
@@ -15,8 +16,7 @@ export const getApps: GetOrbitApps = {
   confluence,
   drive,
   website,
-  person: (slack as unknown) as GetOrbitApp<'person'>,
-  app1: (slack as unknown) as GetOrbitApp<'app1'>,
+  person,
 }
 
 type OrbitApps = { [key in AppType]: OrbitApp<any> }

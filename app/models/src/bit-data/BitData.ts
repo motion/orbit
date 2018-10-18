@@ -28,7 +28,6 @@ export type AllBitData = {
   website: WebsiteBitData
   confluence: ConfluenceBitData
   jira: JiraBitData
-  app1: any
 }
 
 export type GenericBit<A extends IntegrationType> = Bit & {

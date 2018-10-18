@@ -54,7 +54,6 @@ export type AllSettings = {
   confluence: ConfluenceSetting
   website: WebsiteSetting
   drive: DriveSetting
-  app1: any
 }
 
 export type IntegrationSetting<A extends IntegrationType> = AllSettings[A]

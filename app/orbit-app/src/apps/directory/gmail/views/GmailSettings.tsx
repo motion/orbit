@@ -5,7 +5,7 @@ import { SearchableTable, Text, View } from '@mcro/ui'
 import { OrbitAppSettingProps } from '../../../types'
 import { GmailSetting } from '@mcro/models'
 import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
-import { WhitelistManager } from '../../../stores/WhitelistManager'
+import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/SettingManageRow'
 
 type Props = OrbitAppSettingProps<GmailSetting>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Text } from '@mcro/ui'
-import { WhitelistManager } from '../stores/WhitelistManager'
+import { WhitelistManager } from '../helpers/WhitelistManager'
 import { CheckBox } from '../../views/ReactiveCheckBox'
 import { HorizontalSpace } from '../../views'
 

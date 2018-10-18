@@ -7,7 +7,7 @@ import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { OrbitAppSettingProps } from '../../../types'
-import { WhitelistManager } from '../../../stores/WhitelistManager'
+import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/SettingManageRow'
 

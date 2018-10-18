@@ -40,7 +40,6 @@ export class AppsStore {
         type =>
           ({
             ...getApps[type]({}),
-            source: type, // todo remove...
             isActive: apps.findIndex(x => x.source === type),
           } as GenericApp),
       )

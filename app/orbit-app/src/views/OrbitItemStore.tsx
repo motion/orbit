@@ -93,7 +93,7 @@ export class OrbitItemStore {
     this.resolvedItem = item
   }
 
-  get target() {
+  get appConfig() {
     return this.props.result || this.props.appsStore.getAppConfig(this.props.model)
   }
 
@@ -136,12 +136,11 @@ export class OrbitItemStore {
       ensure('new index', nextIsSelected !== this.isSelected)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {
-        console.log('is selected...', this.target)
-        ensure('target', !!this.target)
+        ensure('appConfig`', !!this.appConfig)
         // fluidity
         await sleep()
-        console.log('WOAH WOAH WOAH select me', this.props, this.target, this.position)
-        Actions.setPeekApp(this.target, this.position)
+        console.log('WOAH WOAH WOAH select me', this.props, this.appConfig, this.position)
+        Actions.setPeekApp(this.appConfig, this.position)
       }
     },
   )

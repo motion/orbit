@@ -1,12 +1,13 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
-import * as Views from '../../../../views'
-import { Message } from '../../../../views/Message'
-import { OrbitOrb } from '../../../orbit/orbitDocked/orbitSettings/OrbitOrb'
-import { AppsStore } from '../../../AppsStore'
-import { OrbitAppCard } from '../../../orbit/orbitDocked/views/OrbitAppCard'
-import { Grid } from '../../../../views/Grid'
+import { Title, VerticalSpace, Table, InputRow, FormRow } from '../../views'
+import { OrbitOrb } from '../../pages/OrbitPage/orbitDocked/orbitSettings/OrbitOrb'
+import { SubTitle } from '../../views/SubTitle'
+import { Grid } from '../../views/Grid'
+import { OrbitAppCard } from '../../pages/OrbitPage/orbitDocked/views/OrbitAppCard'
+import { Message } from '../../views/Message'
+import { AppsStore } from '../../stores/AppsStore'
 
 type Props = {
   type: string
@@ -58,26 +59,22 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
     const { values, status, error } = this.props.store
     return (
       <UI.Col tagName="form" onSubmit={this.addIntegration} padding={20}>
-        <Views.Title>New Orbit</Views.Title>
-        <Views.VerticalSpace />
+        <Title>New Orbit</Title>
+        <VerticalSpace />
         <UI.Col margin="auto" width={370}>
           <UI.Col padding={[0, 10]}>
-            <Views.Table>
-              <Views.InputRow
-                label="Name"
-                value={values.domain}
-                onChange={this.handleChange('name')}
-              />
+            <Table>
+              <InputRow label="Name" value={values.domain} onChange={this.handleChange('name')} />
 
-              <Views.VerticalSpace />
+              <VerticalSpace />
 
-              <Views.FormRow label="Icon">
+              <FormRow label="Icon">
                 <OrbitOrb background="black" color="red" />
-              </Views.FormRow>
+              </FormRow>
 
-              <Views.VerticalSpace />
+              <VerticalSpace />
 
-              <Views.SubTitle>Default Apps</Views.SubTitle>
+              <SubTitle>Default Apps</SubTitle>
               <Grid
                 gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
                 gridAutoRows={80}
@@ -97,9 +94,9 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
                   />
                 ))}
               </Grid>
-            </Views.Table>
+            </Table>
 
-            <Views.VerticalSpace />
+            <VerticalSpace />
 
             <UI.Theme
               theme={{
@@ -114,7 +111,7 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
                 </UI.Button>
               )}
             </UI.Theme>
-            <Views.VerticalSpace />
+            <VerticalSpace />
             {error && <Message>{error}</Message>}
           </UI.Col>
         </UI.Col>

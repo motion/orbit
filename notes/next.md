@@ -1,3 +1,5 @@
+- get "gm" to show recent gmail instantly
+
 umed:
 
 - get crawler to use chromium in electron so we can release it
@@ -126,3 +128,11 @@ focus on what we can make really a big improvement in day to day first:
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
 - hmr: doesn't store.unmount stores often
+
+### IF things are failing in about 6 months (assuming launch in about 4 months, beta in 2)
+
+prototype out a much nicer launch page with the Orbit Ora, like this:
+
+https://thehelm.com/
+
+But basically have it be a tool for any type of app. Orbit can show them inside the actual pane itself.

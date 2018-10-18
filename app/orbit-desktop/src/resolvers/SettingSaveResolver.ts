@@ -24,12 +24,12 @@ export const SettingSaveResolver = resolveCommand(
       // send test request to atlassian server to check setting credentials
       log.info('saving setting', setting)
       if (setting.type === 'jira') {
-        const loader = new JiraLoader(setting)
+        const loader = new JiraLoader(setting as JiraSetting, log)
         await loader.test()
         setting.name = extractTeamNameFromDomain((setting as JiraSetting).values.credentials.domain)
 
       } else if (setting.type === 'confluence') {
-        const loader = new ConfluenceLoader(setting)
+        const loader = new ConfluenceLoader(setting as ConfluenceSetting, log)
         await loader.test()
         setting.name = extractTeamNameFromDomain((setting as ConfluenceSetting).values.credentials.domain)
 

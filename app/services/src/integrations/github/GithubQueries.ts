@@ -1,4 +1,13 @@
-export const GithubRepositoriesQuery = `
+/**
+ * Github Queries.
+ */
+export class GithubQueries {
+
+  /**
+   * Repositories query.
+   */
+  static repositories() {
+    return `
 query GithubRepositoriesQuery($cursor: String) {
   viewer {
     repositories(first: 100, after: $cursor) {
@@ -29,8 +38,10 @@ query GithubRepositoriesQuery($cursor: String) {
   }
 }
 `
+  }
 
-export const GithubOrganizationsQuery = `
+  static organizations() {
+    return `
 query GithubOrganizationsQuery($cursor: String) {
   viewer {
     organizations(first: 100, after: $cursor) {
@@ -55,8 +66,13 @@ query GithubOrganizationsQuery($cursor: String) {
   }
 }
 `
+  }
 
-export const GithubIssueQuery = `
+  /**
+   * Issues query.
+   */
+  static issues() {
+    return `
 query GithubIssueQuery($organization: String!, $repository: String!, $cursor: String) {
   repository(owner: $organization, name: $repository) {
     id
@@ -168,8 +184,13 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
   }
 }
 `
+  }
 
-export const GithubPullRequestsQuery = `
+  /**
+   * Pull requests query.
+   */
+  static pullRequests() {
+    return `
 query GithubPullRequestsQuery($organization: String!, $repository: String!, $cursor: String) {
   repository(owner: $organization, name: $repository) {
     id
@@ -322,8 +343,13 @@ query GithubPullRequestsQuery($organization: String!, $repository: String!, $cur
   }
 }
 `
+  }
 
-export const GithubPeopleQuery = `
+  /**
+   * People query.
+   */
+  static people() {
+    return `
 query GithubPeopleQuery($organization: String!, $cursor: String) {
   organization(login: $organization) {
     members(first: 100, after: $cursor) {
@@ -353,3 +379,6 @@ query GithubPeopleQuery($organization: String!, $cursor: String) {
   }
 }
 `
+  }
+
+}

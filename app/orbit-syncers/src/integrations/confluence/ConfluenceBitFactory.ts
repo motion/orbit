@@ -1,5 +1,5 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, ConfluenceBitData, ConfluenceSettingValues, Person, Setting } from '@mcro/models'
+import { Bit, ConfluenceBitData, ConfluenceSettingValues, Person, ConfluenceSetting } from '@mcro/models'
 import { ConfluenceContent } from '@mcro/services'
 import { SyncerUtils } from '../../core/SyncerUtils'
 
@@ -7,9 +7,9 @@ import { SyncerUtils } from '../../core/SyncerUtils'
  * Creates a Confluence Bit.
  */
 export class ConfluenceBitFactory {
-  private setting: Setting
+  private setting: ConfluenceSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: ConfluenceSetting) {
     this.setting = setting
   }
 

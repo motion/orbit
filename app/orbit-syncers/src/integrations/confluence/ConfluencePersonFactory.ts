@@ -1,14 +1,14 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { ConfluencePersonData, ConfluenceSettingValues, Person, Setting } from '@mcro/models'
+import { ConfluencePersonData, ConfluenceSettingValues, Person, ConfluenceSetting } from '@mcro/models'
 import { ConfluenceUser } from '@mcro/services'
 
 /**
  * Creates a Confluence Person.
  */
 export class ConfluencePersonFactory {
-  private setting: Setting
+  private setting: ConfluenceSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: ConfluenceSetting) {
     this.setting = setting
   }
 

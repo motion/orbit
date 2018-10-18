@@ -1,14 +1,15 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, Setting, WebsiteBitData } from '@mcro/models'
+import { Bit, WebsiteBitData } from '@mcro/models'
+import { WebsiteSetting } from '@mcro/models'
 import { WebsiteCrawledData } from './WebsiteCrawledData'
 
 /**
  * Creates a website Bit.
  */
 export class WebsiteBitFactory {
-  private setting: Setting
+  private setting: WebsiteSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: WebsiteSetting) {
     this.setting = setting
   }
 

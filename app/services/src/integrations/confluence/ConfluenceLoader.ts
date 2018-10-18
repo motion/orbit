@@ -1,24 +1,23 @@
 import { Logger } from '@mcro/logger'
-import { ConfluenceSettingValues, Setting } from '@mcro/models'
-import { queryObjectToQueryString } from '../utils'
-import {
-  ConfluenceCollection,
-  ConfluenceComment,
-  ConfluenceContent,
-  ConfluenceGroup,
-  ConfluenceUser,
-} from './ConfluenceTypes'
+import { sleep } from '@mcro/utils'
+import { ConfluenceSetting } from '@mcro/models'
+import { ServiceLoader } from '../../loader/ServiceLoader'
+import { ServiceLoadThrottlingOptions } from '../../options'
+import { ConfluenceQueries } from './ConfluenceQueries'
+import { ConfluenceComment, ConfluenceContent, ConfluenceGroup, ConfluenceUser } from './ConfluenceTypes'
 
 /**
  * Loads confluence data from its API.
  */
 export class ConfluenceLoader {
-  private setting: Setting
+  private setting: ConfluenceSetting
   private log: Logger
+  private loader: ServiceLoader
 
-  constructor(setting: Setting, log?: Logger) {
+  constructor(setting: ConfluenceSetting, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('service:confluence:loader:' + setting.id)
+    this.loader = new ServiceLoader(this.setting, this.log, this.baseUrl(), this.requestHeaders())
   }
 
   /**
@@ -26,10 +25,7 @@ export class ConfluenceLoader {
    * Returns void if successful, throws an error if fails.
    */
   async test(): Promise<void> {
-    await this.fetch<ConfluenceCollection<ConfluenceContent>>('/wiki/rest/api/content', {
-      limit: 1,
-      start: 0,
-    })
+    await this.loader.load(ConfluenceQueries.test())
   }
 
   /**
@@ -42,12 +38,13 @@ export class ConfluenceLoader {
     start = 0,
     limit = 25,
   ): Promise<ConfluenceContent[]> {
+    await sleep(ServiceLoadThrottlingOptions.confluence.contents)
+
     // without type specified we load everything
     if (!type) {
-      return Promise.all([
-        ...(await this.loadContents('page', start, limit)),
-        ...(await this.loadContents('blogpost', start, limit)),
-      ])
+      const pages = await this.loadContents('page', start, limit)
+      const blogs = await this.loadContents('blogpost', start, limit)
+      return Promise.all([...pages, ...blogs])
     }
 
     // scopes we use here:
@@ -56,16 +53,7 @@ export class ConfluenceLoader {
     // 3. space - used to get "location/directory" of the page
     // 4. body.styled_view - used to get bit body / page content (with html styles included)
 
-    const response = await this.fetch<ConfluenceCollection<ConfluenceContent>>(
-      '/wiki/rest/api/content',
-      {
-        type,
-        start,
-        limit,
-        expand:
-          'childTypes.all,space,body.styled_view,history,history.lastUpdated,history.contributors,history.contributors.publishers',
-      },
-    )
+    const response = await this.loader.load(ConfluenceQueries.contents(type, start, limit))
 
     // load content comments
     for (let content of response.results) {
@@ -97,17 +85,11 @@ export class ConfluenceLoader {
     start = 0,
     limit = 25,
   ): Promise<ConfluenceComment[]> {
+    await sleep(ServiceLoadThrottlingOptions.confluence.comments)
     // scopes we use here:
     // 1. history.createdBy - used to get comment author
 
-    const response = await this.fetch<ConfluenceCollection<ConfluenceComment>>(
-      `/wiki/rest/api/content/${contentId}/child/comment`,
-      {
-        start,
-        limit,
-        expand: 'history.createdBy',
-      },
-    )
+    const response = await this.loader.load(ConfluenceQueries.comments(contentId, start, limit))
     if (response.results.length < response.size) {
       return [
         ...response.results,
@@ -149,9 +131,7 @@ export class ConfluenceLoader {
    * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-get
    */
   private async loadGroups(start = 0, limit = 200): Promise<ConfluenceGroup[]> {
-    const response = await this.fetch<ConfluenceCollection<ConfluenceGroup>>(
-      '/wiki/rest/api/group',
-    )
+    const response = await this.loader.load(ConfluenceQueries.groups())
     if (response.results.length < response.size) {
       return [
         ...response.results,
@@ -172,10 +152,9 @@ export class ConfluenceLoader {
     start = 0,
     limit = 200,
   ): Promise<ConfluenceUser[]> {
-    const response = await this.fetch<ConfluenceCollection<ConfluenceUser>>(
-      `/wiki/rest/api/group/${groupName}/member`,
-      { expand: 'operations,details.personal' },
-    )
+    await sleep(ServiceLoadThrottlingOptions.confluence.users)
+
+    const response = await this.loader.load(ConfluenceQueries.groupMembers(groupName))
     if (response.results.length < response.size) {
       return [
         ...response.results,
@@ -187,33 +166,19 @@ export class ConfluenceLoader {
   }
 
   /**
-   * Performs HTTP request to the atlassian to get requested data.
+   * Builds base url for the service loader queries.
    */
-  private async fetch<T>(
-    path: string,
-    params?: { [key: string]: any },
-  ): Promise<T> {
-    const values = this.setting.values as ConfluenceSettingValues
-    const { username, password, domain } = values.credentials
-    const credentials = Buffer.from(`${username}:${password}`).toString(
-      'base64',
-    )
-    const qs = queryObjectToQueryString(params)
-    const url = `${domain}${path}${qs}`
-
-    this.log.verbose(`performing request to ${url}`)
-    const result = await fetch(url, {
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        'Content-Type': 'application/json',
-      },
-    })
-    this.log.verbose(`request ${url} result ok:`, result.ok)
-    if (!result.ok)
-      throw new Error(
-        `[${result.status}] ${result.statusText}: ${await result.text()}`,
-      )
-
-    return result.json()
+  private baseUrl(): string {
+    return this.setting.values.credentials.domain
   }
+
+  /**
+   * Builds request headers for the service loader queries.
+   */
+  private requestHeaders() {
+    const { username, password } = this.setting.values.credentials
+    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
+    return { Authorization: `Basic ${credentials}` }
+  }
+
 }

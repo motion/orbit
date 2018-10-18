@@ -6,7 +6,10 @@ import URI from 'urijs'
  */
 export class WebsiteCrawlerUtils {
 
-  static disallowedExtensions = [
+  /**
+   * List of extensions found in a link that are disallowed for querying.
+   */
+  private static disallowedExtensions = [
     '.png',
     '.jpg',
     '.gif',

@@ -112,9 +112,10 @@ export class Syncer {
           return interval.setting && interval.setting.id === setting.id
         })
         if (interval) {
-          if (interval.running) { // if its running await once it finished
-            await interval.running
-          }
+          // commented because we can't await it since setting is already missing inside at this moment
+          // if (interval.running) { // if its running await once it finished
+          //   await interval.running
+          // }
           clearInterval(interval.timer)
           this.intervals.splice(this.intervals.indexOf(interval), 1)
         }
@@ -228,7 +229,6 @@ export class Syncer {
    * Runs syncer immediately.
    */
   async runSyncer(log: Logger, setting?: Setting) {
-    log.info(`starting ${this.options.constructor.name} syncer`)
 
     // create a new job - the fact that we started a new syncer
     const job: Job = {
@@ -245,6 +245,7 @@ export class Syncer {
 
     try {
       log.clean() // clean syncer timers, do a fresh logger start
+      log.timer(`syncing ${this.options.constructor.name}`)
       const syncer = new this.options.constructor(setting, log)
       await syncer.run()
 
@@ -252,6 +253,7 @@ export class Syncer {
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
       log.info(`job updated`, job)
+      log.timer(`syncing ${this.options.constructor.name}`)
 
     } catch (error) {
       log.error(`${this.options.constructor.name} sync err`, error)
@@ -270,7 +272,6 @@ export class Syncer {
       log.info(`updating job`, job)
       await getRepository(JobEntity).save(job)
     }
-    log.info(`${this.options.constructor.name} finished`)
   }
 
 }

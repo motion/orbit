@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { Setting } from '@mcro/models'
+import { JiraSetting } from '@mcro/models'
 import { JiraLoader, JiraUser } from '@mcro/services'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
@@ -20,7 +20,7 @@ export class JiraSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting, log?: Logger) {
+  constructor(setting: JiraSetting, log?: Logger) {
     this.log = log || new Logger('syncer:jira:' + setting.id)
     this.loader = new JiraLoader(setting, this.log)
     this.bitFactory = new JiraBitFactory(setting)

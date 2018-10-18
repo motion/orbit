@@ -1,5 +1,5 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { GithubPersonData, Person, Setting } from '@mcro/models'
+import { GithubPersonData, Person, GithubSetting } from '@mcro/models'
 import { GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { uniqBy } from 'lodash'
@@ -8,9 +8,9 @@ import { uniqBy } from 'lodash'
  * Creates a Github Person.
  */
 export class GithubPersonFactory {
-  setting: Setting
+  private setting: GithubSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: GithubSetting) {
     this.setting = setting
   }
 

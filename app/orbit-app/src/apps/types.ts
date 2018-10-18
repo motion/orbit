@@ -1,13 +1,6 @@
 import { Component } from 'react'
 import { FindOptions } from 'typeorm'
-import {
-  IntegrationSetting,
-  IntegrationType,
-  Bit,
-  PersonBit,
-  Setting,
-  GenericBit,
-} from '@mcro/models'
+import { IntegrationType, Bit, PersonBit, Setting, GenericBit } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
 import { AppStore } from '../pages/AppPage/AppStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
@@ -21,7 +14,7 @@ type AppTypeToModelType = {
   jira: Bit
   confluence: Bit
   website: Bit
-  gdrive: Bit
+  drive: Bit
   app1: Bit
   person: PersonBit
   apps: Setting
@@ -76,7 +69,7 @@ export type OrbitApp<A extends AppType> = {
   integration?: A
   integrationName?: string
   defaultQuery?: any | FindOptions<ModelFromType<A>> // TODO umed
-  viewConfig?: any
+  viewConfig?: AppConfig['viewConfig']
   views: {
     main: Component<OrbitAppMainProps<A>, any, any>
     item: Component<OrbitAppProps<A>, any, any>

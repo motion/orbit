@@ -57,8 +57,8 @@ export class PersonBitUtils {
       case 'github':
         personBit.hasGithub = true
         break
-      case 'gdrive':
-        personBit.hasGdrive = true
+      case 'drive':
+        personBit.hasDrive = true
         break
       case 'slack':
         personBit.hasSlack = true

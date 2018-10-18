@@ -2,7 +2,7 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import { OrbitAppCard } from '../views/OrbitAppCard'
 import * as Views from '../../../../views'
-import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
+import { addAppClickHandler } from '../../../../helpers/addAppClickHandler'
 import { Grid } from '../../../../views/Grid'
 import { SimpleItem } from '../../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
@@ -56,9 +56,9 @@ export class OrbitSettingsApps extends React.Component<Props> {
             return (
               <SimpleItem
                 key={`${index}${app.integration}`}
-                onClick={addIntegrationClickHandler(app.viewConfig)}
+                onClick={addAppClickHandler(app)}
                 title={app.integrationName}
-                icon={app.display.icon}
+                icon={app.integration}
                 after={<Button size={0.9}>Add</Button>}
               />
             )

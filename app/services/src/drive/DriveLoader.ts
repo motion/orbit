@@ -21,7 +21,7 @@ export class DriveLoader {
 
   constructor(setting: Setting, log?: Logger) {
     this.fetcher = new DriveFetcher(setting)
-    this.log = log || new Logger('service:gdrive:loader:' + setting.id)
+    this.log = log || new Logger('service:drive:loader:' + setting.id)
   }
 
   /**

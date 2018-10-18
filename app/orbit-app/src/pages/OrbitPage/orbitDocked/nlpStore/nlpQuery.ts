@@ -19,7 +19,7 @@ const prefixes = {
 const integrationFilters = {
   slack: 'slack',
   gmail: 'gmail',
-  gdrive: 'gdrive',
+  drive: 'drive',
   confluence: 'confluence',
   jira: 'jira',
   github: 'github',

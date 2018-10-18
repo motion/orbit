@@ -24,7 +24,7 @@ export type AllBitData = {
   github: GithubBitData
   slack: SlackBitData
   gmail: GmailBitData
-  gdrive: DriveBitData
+  drive: DriveBitData
   website: WebsiteBitData
   confluence: ConfluenceBitData
   jira: JiraBitData

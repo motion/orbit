@@ -33,13 +33,11 @@ export class OrbitCardTeam extends React.Component<any> {
       >
         <UI.PassProps
           size={16}
-          css={
-            isExpanded ? { margin: [0, 0, 0, 12] } : { margin: [0, 12, 0, 0] }
-          }
+          css={isExpanded ? { margin: [0, 0, 0, 12] } : { margin: [0, 12, 0, 0] }}
         >
           <OrbitIcon icon="slack" />
           <OrbitIcon icon="github" />
-          <OrbitIcon icon="gdrive" />
+          <OrbitIcon icon="drive" />
           <OrbitIcon icon="gmail" />
         </UI.PassProps>
       </UI.View>
@@ -54,11 +52,7 @@ export class OrbitCardTeam extends React.Component<any> {
         {...props}
       >
         {(_, { background }) => (
-          <OrbitCardTeamContent
-            connections={connections}
-            background={background}
-            {...this.props}
-          />
+          <OrbitCardTeamContent connections={connections} background={background} {...this.props} />
         )}
       </OrbitCard>
     )
@@ -74,9 +68,7 @@ class OrbitCardTeamContent extends React.Component<any> {
     const extraHeight = isExpanded ? 20 : 5
     return (
       <React.Fragment>
-        <UI.View
-          css={{ flexFlow: 'row', padding: [10 + extraHeight, 0, extraHeight] }}
-        >
+        <UI.View css={{ flexFlow: 'row', padding: [10 + extraHeight, 0, extraHeight] }}>
           <UI.View
             css={{
               position: 'relative',
@@ -142,17 +134,12 @@ class OrbitCardTeamContent extends React.Component<any> {
             })}
           </UI.View>
           <UI.View if={isExpanded} css={{ padding: [0, 15], flex: 1 }}>
-            <UI.Text
-              if={false}
-              ellipse={1}
-              css={{ marginBottom: 3, width: '100%' }}
-              size={1.2}
-            >
-              <strong>Topics</strong>&nbsp;&nbsp;{topics}
+            <UI.Text if={false} ellipse={1} css={{ marginBottom: 3, width: '100%' }} size={1.2}>
+              <strong>Topics</strong>
+              &nbsp;&nbsp;
+              {topics}
             </UI.Text>
-            <section
-              css={{ flexFlow: 'row', flex: 1, margin: [-extraHeight, 0] }}
-            >
+            <section css={{ flexFlow: 'row', flex: 1, margin: [-extraHeight, 0] }}>
               {recently.map((item, index) => (
                 <UI.View
                   key={index}
@@ -177,12 +164,7 @@ class OrbitCardTeamContent extends React.Component<any> {
                       ...imageStyle,
                     }}
                   />
-                  <UI.Text
-                    ellipse={1}
-                    size={1.3}
-                    css={{ width: '93%' }}
-                    fontWeight={600}
-                  >
+                  <UI.Text ellipse={1} size={1.3} css={{ width: '93%' }} fontWeight={600}>
                     {item.title}
                   </UI.Text>
                   {item.title}

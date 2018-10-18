@@ -2,14 +2,14 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
-import { PeekSettingProps } from '../../stores/AttachAppInfoStore'
 import { DriveSetting } from '@mcro/models'
-import { SimpleAppExplorer } from '../views/SimpleAppExplorer'
-import { SettingManageRow } from '../views/SettingManageRow'
+import { OrbitAppSettingProps } from '../../../types'
+import { SimpleAppExplorer } from '../../../views/SimpleAppExplorer'
+import { SettingManageRow } from '../../../views/SettingManageRow'
 
-type Props = PeekSettingProps<DriveSetting>
+type Props = OrbitAppSettingProps<DriveSetting>
 
-class GDocsSettingStore {
+class DriveSettingsStore {
   props: Props
   popularFolders = []
 
@@ -41,19 +41,25 @@ class GDocsSettingStore {
   get service(): any {
     // todo: broken by umed please fix me
     // console.log('get service again')
-    return {} // this.props.appsStore.services.gdrive
+    return {} // this.props.appsStore.services.drive
   }
 }
 
-@view.attach({ store: GDocsSettingStore })
+@view.attach({ store: DriveSettingsStore })
 @view
-export class GdriveSetting extends React.Component<
+export class DriveSettings extends React.Component<
   Props & {
-    store?: GDocsSettingStore
+    store?: DriveSettingsStore
   }
 > {
   render() {
-    const { store, setting, initialState } = this.props
+    const {
+      store,
+      setting,
+      appConfig: {
+        viewConfig: { initialState },
+      },
+    } = this.props
     const folders = store.popularFolders
 
     return (

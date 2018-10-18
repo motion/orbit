@@ -1,7 +1,7 @@
 import * as React from 'react'
 import gcalendar from '../../public/logos/gcalendar.svg'
 import gdocs from '../../public/logos/gdocs.svg'
-import gdrive from '../../public/logos/gdrive.svg'
+import drive from '../../public/logos/drive.svg'
 import gmail from '../../public/logos/gmail.svg'
 import gsheets from '../../public/logos/gsheets.svg'
 import slack from '../../public/logos/slack.svg'
@@ -15,7 +15,7 @@ const icons = {
   dropbox,
   gcalendar,
   gdocs,
-  gdrive,
+  drive,
   gmail,
   gsheets,
   slack,

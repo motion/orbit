@@ -14,11 +14,11 @@ const getItem = {
     loadOne(BitModel, {
       args: { where: { integration: 'github' }, skip: 6 },
     }),
-  gdriveSetting: async () => ({
+  driveSetting: async () => ({
     id: 1,
     title: 'GDocs',
     type: 'setting',
-    integration: 'gdrive',
+    integration: 'drive',
   }),
   // githubSetting: async () =>
   //   loadOne(SettingModel, { args: { where: { type: 'github' } } }).then(settingToAppConfig),

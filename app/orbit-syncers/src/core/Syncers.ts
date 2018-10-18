@@ -24,7 +24,7 @@ export const Syncers = [
     interval: TEN_MINUTES,
   }),
   new Syncer({
-    type: 'gdrive',
+    type: 'drive',
     constructor: DriveSyncer,
     interval: FIVE_MINUTES,
   }),

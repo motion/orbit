@@ -17,7 +17,7 @@ export class DriveBitFactory {
    */
   create(file: DriveLoadedFile): Bit {
     return BitUtils.create({
-      integration: 'gdrive',
+      integration: 'drive',
       setting: this.setting,
       type: 'document',
       title: file.file.name,

@@ -376,7 +376,7 @@ class SectionSearch extends React.Component {
                     <Icon name="slack" {...iconProps} />
                   </IntIcon>
                   <IntIcon>
-                    <Icon name="gdrive" {...iconProps} />
+                    <Icon name="drive" {...iconProps} />
                   </IntIcon>
                   <IntIcon>
                     <Icon name="gmail" {...iconProps} />

@@ -24,7 +24,7 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
       where: [
         { hasSlack: true },
         { hasGithub: true },
-        { hasGdrive: true },
+        { hasDrive: true },
         { hasJira: true },
         { hasConfluence: true },
         // { hasGmail: true },

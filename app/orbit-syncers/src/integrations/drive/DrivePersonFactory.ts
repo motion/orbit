@@ -19,7 +19,7 @@ export class DrivePersonFactory {
     return PersonUtils.create({
       setting: this.setting,
       integrationId: user.emailAddress,
-      integration: 'gdrive',
+      integration: 'drive',
       name: user.displayName,
       email: user.emailAddress,
       photo: user.photoLink,

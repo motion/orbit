@@ -10,7 +10,7 @@ type Props = {
 
 // const syncers = {
 //   github: ['GithubIssueSyncer', 'GithubPeopleSyncer'],
-//   gdrive: ['GDriveSyncer'],
+//   drive: ['DriveSyncer'],
 //   gmail: ['GMailSyncer', 'MailWhitelisterSyncer'],
 //   jira: ['JiraIssueSyncer', 'JiraPeopleSyncer'],
 //   confluence: ['ConfluenceContentSyncer', 'ConfluencePeopleSyncer'],

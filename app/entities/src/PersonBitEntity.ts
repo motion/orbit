@@ -34,7 +34,7 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   hasGithub?: boolean
 
   @Column({ default: false })
-  hasGdrive?: boolean
+  hasDrive?: boolean
 
   @Column({ default: false })
   hasJira?: boolean

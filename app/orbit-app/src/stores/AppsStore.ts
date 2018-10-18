@@ -65,7 +65,6 @@ export class AppsStore {
 
   getAppConfig = (model: ResolvableModel): AppConfig => {
     const type = model.target === 'bit' ? model.integration : 'person'
-    console.log('gett app config for', type, this.appByIntegration)
     return appToAppConfig(this.appByIntegration[type], model)
   }
 

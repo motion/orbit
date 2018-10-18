@@ -53,11 +53,11 @@ export default {
       prompt: 'consent',
     },
   },
-  gdrive: {
+  drive: {
     strategy: GoogleStrategy,
     config: {
       credentials: {
-        callbackURL: 'https://orbitauth.com/auth/gdrive/callback',
+        callbackURL: 'https://orbitauth.com/auth/drive/callback',
         clientID:
           '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com',
         clientSecret: 'LLXP2Vq36socQtgXy_XQqLOW',

@@ -70,7 +70,7 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
   } else if (type === "github") {
     setting.name = values.info.username
 
-  } else if (type === "gdrive") {
+  } else if (type === "drive") {
 
     // load account info
     const loader = new DriveLoader(setting)

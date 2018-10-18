@@ -20,7 +20,7 @@ Orbit gives both of them back to you.
 
 ## Your Data
 
-Orbit syncs data 100% privately to your device, we never even have access your keys. For once your Slack, Jira, Confluence, Gmail, Gdrive, and many other integrations can live privately, instantly, and easily accessible right on your desktop.
+Orbit syncs data 100% privately to your device, we never even have access your keys. For once your Slack, Jira, Confluence, Gmail, Drive, and many other integrations can live privately, instantly, and easily accessible right on your desktop.
 
 ## Your Apps
 

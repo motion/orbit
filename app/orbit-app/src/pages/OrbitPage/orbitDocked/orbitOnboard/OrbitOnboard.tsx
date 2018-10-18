@@ -5,7 +5,7 @@ import { SubPane } from '../../SubPane'
 import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
+import { addAppClickHandler } from '../../../../helpers/addAppClickHandler'
 import { AppsStore } from '../../../../stores/AppsStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { Title, VerticalSpace } from '../../../../views'
@@ -291,11 +291,11 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
             {integrations.map(item => {
               return (
                 <SimpleItem
-                  key={item.id}
+                  key={item.setting.id}
                   title={item.display.name}
-                  icon={item.display.icon}
+                  icon={item.integration}
                   inactive={item.added}
-                  onClick={item.added ? null : addIntegrationClickHandler(item.instanceConfig)}
+                  onClick={item.added ? null : addAppClickHandler(item)}
                   after={
                     <AddButton size={0.9} disabled={item.added}>
                       {item.added ? <Icon size={16} name="check" color="green" /> : 'Add'}

@@ -53,7 +53,7 @@ export type AllSettings = {
   jira: JiraSetting
   confluence: ConfluenceSetting
   website: WebsiteSetting
-  gdrive: DriveSetting
+  drive: DriveSetting
   app1: any
 }
 

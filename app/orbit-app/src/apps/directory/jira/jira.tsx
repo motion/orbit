@@ -6,6 +6,7 @@ import icon from '../../../../public/icons/jira.svg'
 import { GetOrbitApp } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { JiraItem } from './views/JiraItem'
+import { JiraSetup } from './views/JiraSetup'
 
 export const jira: GetOrbitApp<'jira'> = (setting?: Setting) => ({
   source: 'bit',
@@ -21,5 +22,6 @@ export const jira: GetOrbitApp<'jira'> = (setting?: Setting) => ({
     main: JiraApp,
     item: JiraItem,
     setting: JiraSettings,
+    setup: JiraSetup,
   },
 })

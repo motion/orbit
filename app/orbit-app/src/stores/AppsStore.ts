@@ -10,9 +10,9 @@ type GenericApp = OrbitApp<any> & {
   isActive: boolean
 }
 
-const appToAppConfig = (app: OrbitApp<any>): AppConfig => {
+const appToAppConfig = (app: OrbitApp<any>, model?: ResolvableModel): AppConfig => {
   return {
-    id: `${app.id || Math.random()}`,
+    id: `${model.id || app.id || Math.random()}`,
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,
@@ -49,13 +49,14 @@ export class AppsStore {
     },
   )
 
-  allAppsObj = react(() => this.allApps, x => keyBy(x, 'source'), {
+  allAppsObj = react(() => this.allApps, x => keyBy(x, 'integration'), {
     defaultValue: {},
   })
 
   getAppConfig = (model: ResolvableModel): AppConfig => {
     const type = model.target === 'bit' ? model.integration : 'person'
-    return appToAppConfig(this.allAppsObj[type])
+    console.log('gett app config for', type, this.allAppsObj)
+    return appToAppConfig(this.allAppsObj[type], model)
   }
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {

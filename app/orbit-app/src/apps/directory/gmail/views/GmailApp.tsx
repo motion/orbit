@@ -12,11 +12,11 @@ export class GmailApp extends React.Component<OrbitAppMainProps<'gmail'>> {
     return (
       <View padding={16} flex={1}>
         <BitTitleBar {...this.props} />
-        <ScrollableContent>
-          <View padding={[16, 0]}>
+        <View margin={[0, -30]}>
+          <ScrollableContent>
             <Thread bit={bit} />
-          </View>
-        </ScrollableContent>
+          </ScrollableContent>
+        </View>
         <AppStatusBar {...this.props} />
       </View>
     )

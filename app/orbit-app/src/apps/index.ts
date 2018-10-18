@@ -1,4 +1,4 @@
-import { GetOrbitApp, GetOrbitApps, AppType, OrbitApp } from './types'
+import { GetOrbitApps, AppType, OrbitApp } from './types'
 import { slack } from './directory/slack/slack'
 import { github } from './directory/github/github'
 import { gmail } from './directory/gmail/gmail'

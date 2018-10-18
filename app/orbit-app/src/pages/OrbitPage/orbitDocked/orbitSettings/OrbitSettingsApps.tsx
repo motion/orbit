@@ -9,7 +9,6 @@ import { Button } from '@mcro/ui'
 import { Unpad } from '../../../../views/Unpad'
 import { AppsStore } from '../../../../stores/AppsStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { allApps } from '../../../../apps'
 
 type Props = {
   appsStore?: AppsStore

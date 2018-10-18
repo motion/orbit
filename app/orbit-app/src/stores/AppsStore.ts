@@ -2,7 +2,7 @@ import { SettingModel, Setting, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 import { getApps } from '../apps'
 import { react } from '@mcro/black'
-import { OrbitApp } from '../apps/types'
+import { OrbitApp, AppType, ResolvableModel } from '../apps/types'
 import { keyBy } from 'lodash'
 
 type GenericApp = OrbitApp<any> & {
@@ -40,6 +40,11 @@ export class AppsStore {
   allAppsObj = react(() => this.allApps, x => keyBy(x, 'source'), {
     defaultValue: {},
   })
+
+  getAppConfig = (model: ResolvableModel) => {
+    const type = model.target === 'bit' ? model.integration : 'person'
+    return this.allAppsObj[type].instanceConfig
+  }
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {
     console.log('getting type', type)

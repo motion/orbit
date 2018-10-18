@@ -27,7 +27,7 @@ type AppTypeToModelType = {
   apps: Setting
 }
 
-type AppType = IntegrationType | 'person'
+export type AppType = IntegrationType | 'person'
 
 type ModelFromType<A extends AppType> = AppTypeToModelType[A]
 
@@ -65,6 +65,7 @@ export type OrbitAppSettingProps<T extends Setting> = {
 }
 
 export type OrbitApp<A extends AppType> = {
+  id?: number
   display?: {
     name: string
     icon?: string

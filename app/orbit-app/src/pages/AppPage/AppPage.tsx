@@ -106,6 +106,10 @@ class AppPageContent extends React.Component<Props> {
     app: () => {
       return props => <div>app</div>
     },
+    setup: () => {
+      const View = this.getView('setup')
+      return () => <View />
+    },
   }
 
   render() {
@@ -115,7 +119,11 @@ class AppPageContent extends React.Component<Props> {
     }
     const { model, appConfig } = appStore.state
     console.log('appConfig.type', appConfig.type, 'App.state.query', App.state.query)
-    const TypeView = this.viewsByType[appConfig.type]() || NullView
+    const getView = this.viewsByType[appConfig.type]
+    if (!getView) {
+      return <div>error getting view {appConfig.type}</div>
+    }
+    const TypeView = getView() || NullView
     // ideally this would be different:
     // you'd have a AppSearchable + AppSearchable.Input, and you could use them lower down the tree
     // but that requires some custom context and time we dont have just yet

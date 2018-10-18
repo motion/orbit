@@ -8,6 +8,7 @@ import { findManyType } from '../../helpers/queries'
 import { SlackItem } from './views/SlackItem'
 
 export const slack: GetOrbitApp<'slack'> = (setting?: Setting) => ({
+  id: setting.id,
   source: 'bit',
   integration: 'slack',
   integrationName: 'Slack',

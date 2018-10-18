@@ -1,16 +1,17 @@
-import { Setting, GenericBit } from '@mcro/models'
+import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/gmail.svg'
-import { GetOrbitApp, ItemProps } from '../../types'
+import { GetOrbitApp } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { GmailApp } from './views/GmailApp'
 import { GmailItem } from './views/GmailItem'
 import { GmailSettings } from './views/GmailSettings'
 
 export const gmail: GetOrbitApp<'gmail'> = (setting?: Setting) => ({
+  id: setting.id,
   source: 'bit',
-  integration: 'slack',
-  integrationName: 'Slack',
+  integration: 'gmail',
+  integrationName: 'Gmail',
   defaultQuery: findManyType('gmail'),
   display: {
     name: setting.name,

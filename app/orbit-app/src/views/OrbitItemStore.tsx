@@ -3,6 +3,7 @@ import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../components/ItemResolver'
 import { Actions } from '../actions/Actions'
+import { ResolvableModel } from '../apps/types'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -10,7 +11,8 @@ export const OrbitItemSingleton = {
 }
 
 export class OrbitItemStore {
-  props: OrbitItemProps<any>
+  props: OrbitItemProps<ResolvableModel>
+
   resolvedItem: NormalizedItem = null
   isSelected = false
   cardWrapRef = null
@@ -92,7 +94,7 @@ export class OrbitItemStore {
   }
 
   get target() {
-    return this.props.result || this.props.model
+    return this.props.result || this.props.appsStore.getAppConfig(this.props.model)
   }
 
   get position() {

@@ -8,6 +8,7 @@ import { findManyType } from '../../helpers/queries'
 import { JiraItem } from './views/JiraItem'
 
 export const jira: GetOrbitApp<'jira'> = (setting?: Setting) => ({
+  id: setting.id,
   source: 'bit',
   integration: 'jira',
   integrationName: 'Jira',

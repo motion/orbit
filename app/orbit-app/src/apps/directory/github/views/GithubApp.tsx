@@ -4,16 +4,18 @@ import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
 import { BitTitleBar } from '../../../views/layout/BitTitleBar'
-import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
+import { Task } from '../../../views/bits/task/Task'
 
-export class GithubApp extends React.Component<OrbitAppMainProps<'slack'>> {
+export class GithubApp extends React.Component<OrbitAppMainProps<'github'>> {
   render() {
     const { bit } = this.props
     return (
       <View padding={16} flex={1}>
         <BitTitleBar {...this.props} />
         <ScrollableContent>
-          <View padding={[16, 0]}>{!!bit && <ChatMessages bit={bit} />}</View>
+          <View padding={[16, 0]}>
+            <Task body={bit.body} comments={bit.data.comments} />
+          </View>
         </ScrollableContent>
         <AppStatusBar {...this.props} />
       </View>

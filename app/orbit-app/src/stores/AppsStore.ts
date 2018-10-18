@@ -72,7 +72,12 @@ export class AppsStore {
 
   getAppConfig = (model: ResolvableModel): AppConfig => {
     const type = model.target === 'bit' ? model.integration : 'person'
-    return appToAppConfig(this.appByIntegration[type], model)
+    const app = this.appByIntegration[type]
+    if (!app) {
+      console.log('no app', type, this.appByIntegration)
+      return null
+    }
+    return appToAppConfig(app, model)
   }
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {

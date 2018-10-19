@@ -51,7 +51,6 @@ export class DriveFetcher {
               })
           },
         )
-
       } catch (err) {
         fail(err)
       }
@@ -94,7 +93,8 @@ export class DriveFetcher {
   /**
    * Refreshes OAuth token.
    */
-  private async refreshToken() { // todo: create a separate loader component, replacements for r2
+  private async refreshToken() {
+    // todo: create a separate loader component, replacements for r2
     const values = this.setting.values as DriveSettingValues
     if (!values.oauth.refreshToken) {
       return null
@@ -106,8 +106,7 @@ export class DriveFetcher {
       client_secret: values.oauth.secret,
       grant_type: 'refresh_token',
     }
-    const body = Object
-      .keys(formData)
+    const body = Object.keys(formData)
       .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(formData[k])}`)
       .join('&')
 
@@ -122,7 +121,6 @@ export class DriveFetcher {
     const reply = await response.json()
     if (reply.error) {
       throw reply.error
-
     } else {
       if (reply && reply.access_token) {
         this.setting.token = reply.access_token

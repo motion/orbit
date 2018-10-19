@@ -1,9 +1,7 @@
-
 /**
  * Options based on which fetch query to Google Drive Api will be performed.
  */
 export type DriveFetchQueryOptions<_R> = {
-
   /**
    * Url segment to where query should be performed.
    */

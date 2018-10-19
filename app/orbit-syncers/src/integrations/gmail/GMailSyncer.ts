@@ -1,7 +1,13 @@
 import { BitEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { chunk } from 'lodash'
-import { Bit, GmailBitDataParticipant, GmailSettingValues, Person, GmailSetting } from '@mcro/models'
+import {
+  Bit,
+  GmailBitDataParticipant,
+  GmailSettingValues,
+  Person,
+  GmailSetting,
+} from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
 import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
@@ -28,7 +34,9 @@ export class GMailSyncer implements IntegrationSyncer {
   constructor(setting: GmailSetting, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('syncer:gmail:' + setting.id)
-    this.loader = new GMailLoader(setting, this.log, setting => getRepository(SettingEntity).save(setting))
+    this.loader = new GMailLoader(setting, this.log, setting =>
+      getRepository(SettingEntity).save(setting),
+    )
     this.bitFactory = new GMailBitFactory(setting)
     this.personFactory = new GMailPersonFactory(setting)
     this.personSyncer = new PersonSyncer(setting, this.log)

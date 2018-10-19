@@ -20,11 +20,13 @@ export class ServiceLoader {
   private headers: ServiceLoaderKeyValue
   private saveCallback?: ServiceLoaderSettingSaveCallback
 
-  constructor(setting: Setting,
-              log: Logger,
-              baseUrl?: string,
-              headers?: ServiceLoaderKeyValue,
-              saveCallback?: ServiceLoaderSettingSaveCallback) {
+  constructor(
+    setting: Setting,
+    log: Logger,
+    baseUrl?: string,
+    headers?: ServiceLoaderKeyValue,
+    saveCallback?: ServiceLoaderSettingSaveCallback,
+  ) {
     this.setting = setting
     this.log = log
     this.baseUrl = baseUrl || ''
@@ -35,8 +37,10 @@ export class ServiceLoader {
   /**
    * Performs HTTP request to the atlassian to get requested data.
    */
-  async load<T>(options: ServiceLoaderLoadOptions<T>, autoRefreshTokens: boolean = true): Promise<T> {
-
+  async load<T>(
+    options: ServiceLoaderLoadOptions<T>,
+    autoRefreshTokens: boolean = true,
+  ): Promise<T> {
     // prepare data
     const qs = this.queryObjectToQueryString(options.query)
     const url = `${this.baseUrl}${options.path}${qs}`
@@ -78,7 +82,6 @@ export class ServiceLoader {
    * Downloads given file.
    */
   downloadFile(options: ServiceLoaderDownloadFileOptions): Promise<void> {
-
     // prepare data
     const qs = this.queryObjectToQueryString(options.query)
     const url = `${this.baseUrl}${options.path}${qs}`
@@ -113,7 +116,6 @@ export class ServiceLoader {
               })
           },
         )
-
       } catch (err) {
         fail(err)
       }
@@ -123,8 +125,7 @@ export class ServiceLoader {
   /**
    * Refreshes Google API token.
    */
-  private async refreshGoogleToken(setting: GmailSetting|DriveSetting) {
-
+  private async refreshGoogleToken(setting: GmailSetting | DriveSetting) {
     // check if we have credentials defined
     if (!setting.values.oauth)
       throw new Error(`OAuth values are not defined in the given setting (#${setting.id})`)
@@ -139,8 +140,7 @@ export class ServiceLoader {
       client_secret: setting.values.oauth.secret,
       grant_type: 'refresh_token',
     }
-    const body = Object
-      .keys(formData)
+    const body = Object.keys(formData)
       .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(formData[k])}`)
       .join('&')
 
@@ -155,11 +155,9 @@ export class ServiceLoader {
 
     // get a response
     const reply = await response.json()
-    if (reply.error)
-      throw reply.error
+    if (reply.error) throw reply.error
 
-    if (!reply.access_token)
-      throw new Error(`No access token was found in refresh token response`)
+    if (!reply.access_token) throw new Error('No access token was found in refresh token response')
 
     // update tokens in the setting
     setting.token = reply.access_token
@@ -176,20 +174,20 @@ export class ServiceLoader {
     return true
   }
 
-
   /**
    * Converts simple query object to a URL query string.
    * For example { a: "hello", b: "world" } getting converting into ?a=hello&b=world.
    * Skips undefined properties.
    */
-  private queryObjectToQueryString(query: { [key: string]: any }|undefined): string {
-    if (!query || !Object.keys(query).length)
-      return ''
+  private queryObjectToQueryString(query: { [key: string]: any } | undefined): string {
+    if (!query || !Object.keys(query).length) return ''
 
-    return '?' + Object.keys(query)
-      .filter(key => query[key] !== undefined)
-      .map(key => `${key}=${query[key]}`)
-      .join('&')
+    return (
+      '?' +
+      Object.keys(query)
+        .filter(key => query[key] !== undefined)
+        .map(key => `${key}=${query[key]}`)
+        .join('&')
+    )
   }
-
 }

@@ -1,10 +1,19 @@
 # actual be useful/fun/10x better at exploration
 
+this should be:
+
+- much more obviously valuable
+- much more explorable
+- unifies Home/Search completely
+
 - home redo:
   - top carousel of "categories"
     - "Recent Interactions"
     - "My Topics"
     - ...locations/people sorted by most recently interacted
+    - these categories can define their default results set preferences
+      - "minimal" "sort by recent"
+      - "grouped by location" "sort by relevance"
   - this lets us "default select" the first one without there being a peek
   - which means you can pop open orbit and then tab through them easily
   - also, since that is the same as "quick results"

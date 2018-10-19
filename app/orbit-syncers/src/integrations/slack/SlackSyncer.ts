@@ -1,6 +1,6 @@
 import { SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { Bit, Setting, SlackSettingValues } from '@mcro/models'
+import { Bit, SlackSetting, SlackSettingValues } from '@mcro/models'
 import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
@@ -15,7 +15,7 @@ import { SlackPersonFactory } from './SlackPersonFactory'
  */
 export class SlackSyncer implements IntegrationSyncer {
   private log: Logger
-  private setting: Setting
+  private setting: SlackSetting
   private loader: SlackLoader
   private bitFactory: SlackBitFactory
   private personFactory: SlackPersonFactory
@@ -23,10 +23,10 @@ export class SlackSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting, log?: Logger) {
+  constructor(setting: SlackSetting, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('syncer:slack:' + setting.id)
-    this.loader = new SlackLoader(this.setting)
+    this.loader = new SlackLoader(this.setting, this.log)
     this.bitFactory = new SlackBitFactory(this.setting)
     this.personFactory = new SlackPersonFactory(this.setting)
     this.personSyncer = new PersonSyncer(setting, this.log)

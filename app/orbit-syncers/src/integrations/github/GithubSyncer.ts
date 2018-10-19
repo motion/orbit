@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { Bit, GithubSettingValues, Person, Setting } from '@mcro/models'
+import { Bit, GithubSettingValues, Person, GithubSetting } from '@mcro/models'
 import { GithubLoader, GithubRepository } from '@mcro/services'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
@@ -13,7 +13,7 @@ import { GithubPersonFactory } from './GithubPersonFactory'
  */
 export class GithubSyncer implements IntegrationSyncer {
   private log: Logger
-  private setting: Setting
+  private setting: GithubSetting
   private loader: GithubLoader
   private bitFactory: GithubBitFactory
   private personFactory: GithubPersonFactory
@@ -21,10 +21,10 @@ export class GithubSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting, log?: Logger) {
+  constructor(setting: GithubSetting, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('syncer:github:' + setting.id)
-    this.loader = new GithubLoader(setting)
+    this.loader = new GithubLoader(setting, this.log)
     this.bitFactory = new GithubBitFactory(setting)
     this.personFactory = new GithubPersonFactory(setting)
     this.personSyncer = new PersonSyncer(setting, this.log)

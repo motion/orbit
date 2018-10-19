@@ -1,14 +1,14 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, DriveBitData, Setting } from '@mcro/models'
+import { Bit, DriveBitData, DriveSetting } from '@mcro/models'
 import { DriveLoadedFile } from '@mcro/services'
 
 /**
  * Creates a Drive Bit.
  */
 export class DriveBitFactory {
-  private setting: Setting
+  private setting: DriveSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: DriveSetting) {
     this.setting = setting
   }
 

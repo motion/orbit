@@ -1,12 +1,4 @@
 /**
- * Interface for GMail query.
- */
-export type GMailFetchOptions<_T> = {
-  url: string
-  query?: { [key: string]: any }
-}
-
-/**
  * @see https://developers.google.com/gmail/api/v1/reference/users/getProfile
  */
 export type GMailUserProfile = {

@@ -1,6 +1,6 @@
 import { command } from '@mcro/model-bridge'
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, CosalTopWordsCommand, Person, Setting, SlackBitData, SlackSettingValues } from '@mcro/models'
+import { Bit, CosalTopWordsCommand, Person, SlackBitData, SlackSetting } from '@mcro/models'
 import { SlackChannel, SlackMessage } from '@mcro/services'
 
 const Autolinker = require('autolinker')
@@ -9,9 +9,9 @@ const Autolinker = require('autolinker')
  * Creates a Slack Bit.
  */
 export class SlackBitFactory {
-  setting: Setting
+  private setting: SlackSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: SlackSetting) {
     this.setting = setting
   }
 
@@ -27,12 +27,11 @@ export class SlackBitFactory {
     const lastMessage = messages[messages.length - 1]
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
-    const values = this.setting.values as SlackSettingValues
-    const webLink = `https://${values.team.domain}.slack.com/archives/${
+    const webLink = `https://${this.setting.values.team.domain}.slack.com/archives/${
       channel.id
     }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
-      values.team.id
+      this.setting.values.team.id
     }`
     const mentionedPeople = this.findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
@@ -77,8 +76,8 @@ export class SlackBitFactory {
       location: {
         id: channel.id,
         name: channel.name,
-        webLink: `https://${values.team.domain}.slack.com/archives/${channel.id}`,
-        desktopLink: `slack://channel?id=${channel.id}&team=${values.team.id}`,
+        webLink: `https://${this.setting.values.team.domain}.slack.com/archives/${channel.id}`,
+        desktopLink: `slack://channel?id=${channel.id}&team=${this.setting.values.team.id}`,
       },
       webLink,
       desktopLink,

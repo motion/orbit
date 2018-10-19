@@ -7,6 +7,7 @@ import {
   SlackSettingBlacklistCommand,
   SlackSettingValues,
 } from '@mcro/models'
+import { GithubSetting } from '@mcro/models'
 import { GithubLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { SettingEntity } from '@mcro/entities'
@@ -27,7 +28,7 @@ export const GithubRepositoryManyResolver = resolveMany(
     }
 
     log.info(`loading repositories from the github`, { setting })
-    const loader = new GithubLoader(setting)
+    const loader = new GithubLoader(setting as GithubSetting, log)
     const repositories = await loader.loadRepositories()
     log.info(`loaded repositories`, repositories)
     return repositories

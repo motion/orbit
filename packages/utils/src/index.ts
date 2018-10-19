@@ -49,6 +49,14 @@ export function timeout<T>(ms: number, callback: () => T | Promise<T>): Promise<
 }
 
 /**
+ * Creates a promise that resolves in a given number of milliseconds.
+ */
+export function sleep(ms: number) {
+  if (!ms) return Promise.resolve()
+  return new Promise(res => setTimeout(res, ms))
+}
+
+/**
  * Generates a hash number for a given object.
  * Make sure given object does not have circular structure.
  *

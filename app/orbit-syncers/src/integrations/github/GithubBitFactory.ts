@@ -1,5 +1,5 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, GithubBitData, Setting } from '@mcro/models'
+import { Bit, GithubBitData, GithubSetting } from '@mcro/models'
 import { GithubIssue, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 
@@ -7,9 +7,9 @@ import { hash } from '@mcro/utils'
  * Creates a Github Bit.
  */
 export class GithubBitFactory {
-  setting: Setting
+  private setting: GithubSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: GithubSetting) {
     this.setting = setting
   }
 

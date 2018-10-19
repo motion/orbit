@@ -1,4 +1,5 @@
-import { GMailFetchOptions, GMailHistory, GMailThread, GMailThreadResult, GMailUserProfile } from './GMailTypes'
+import { ServiceLoaderLoadOptions } from '../../loader/ServiceLoaderTypes'
+import { GMailHistory, GMailThread, GMailThreadResult, GMailUserProfile } from './GMailTypes'
 
 /**
  * GMail queries.
@@ -12,9 +13,9 @@ export class GMailQueries {
    *
    * @see https://developers.google.com/gmail/api/v1/reference/users/getProfile
    */
-  static userProfile(userId = 'me'): GMailFetchOptions<GMailUserProfile> {
+  static userProfile(userId = 'me'): ServiceLoaderLoadOptions<GMailUserProfile> {
     return {
-      url: `/users/${userId}/profile`
+      path: `/users/${userId}/profile`
     }
   }
 
@@ -23,9 +24,9 @@ export class GMailQueries {
    *
    * @see https://developers.google.com/gmail/api/v1/reference/users/threads/list
    */
-  static threads(max: number, filter?: string, pageToken?: string, userId = 'me'): GMailFetchOptions<GMailThreadResult> {
+  static threads(max: number, filter?: string, pageToken?: string, userId = 'me'): ServiceLoaderLoadOptions<GMailThreadResult> {
     return {
-      url: `/users/${userId}/threads`,
+      path: `/users/${userId}/threads`,
       query: {
         pageToken,
         maxResults: max,
@@ -39,9 +40,9 @@ export class GMailQueries {
    *
    * @see https://developers.google.com/gmail/api/v1/reference/users/threads/get
    */
-  static thread(threadId: string, userId = 'me'): GMailFetchOptions<GMailThread> {
+  static thread(threadId: string, userId = 'me'): ServiceLoaderLoadOptions<GMailThread> {
     return {
-      url: `/users/${userId}/threads/${threadId}`
+      path: `/users/${userId}/threads/${threadId}`
     }
   }
 
@@ -51,9 +52,9 @@ export class GMailQueries {
    *
    * @see https://developers.google.com/gmail/api/v1/reference/users/history/list
    */
-  static history(startHistoryId: string, pageToken: string|undefined = undefined, userId = 'me'): GMailFetchOptions<GMailHistory> {
+  static history(startHistoryId: string, pageToken: string|undefined = undefined, userId = 'me'): ServiceLoaderLoadOptions<GMailHistory> {
     return {
-      url: `/users/${userId}/history`,
+      path: `/users/${userId}/history`,
       query: {
         startHistoryId,
         pageToken

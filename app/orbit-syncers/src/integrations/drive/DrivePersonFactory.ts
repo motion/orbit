@@ -1,14 +1,14 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { DrivePersonData, Person, Setting } from '@mcro/models'
+import { DrivePersonData, Person, DriveSetting } from '@mcro/models'
 import { DriveUser } from '@mcro/services'
 
 /**
  * Creates a Drive Person.
  */
 export class DrivePersonFactory {
-  private setting: Setting
+  private setting: DriveSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: DriveSetting) {
     this.setting = setting
   }
 

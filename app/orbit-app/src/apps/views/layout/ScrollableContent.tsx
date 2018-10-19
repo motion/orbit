@@ -12,6 +12,7 @@ const PeekContentChrome = view(UI.Col, {
 })
 
 const ContentInner = view(UI.Col, {
+  overflowX: 'auto',
   overflowY: 'auto',
   flex: 1,
   fontSize: 16,

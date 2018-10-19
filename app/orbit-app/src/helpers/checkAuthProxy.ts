@@ -3,7 +3,6 @@ import { getGlobalConfig } from '@mcro/config'
 export const checkAuthProxy = () => {
   return new Promise(res => {
     const testUrl = `${getGlobalConfig().urls.authProxy}/hello`
-    console.log(`Checking testurl: ${testUrl}`)
     // timeout
     const tm = setTimeout(() => res(false), 500)
     fetch(testUrl)
@@ -14,8 +13,8 @@ export const checkAuthProxy = () => {
           res(true)
         }
       })
-      .catch(err => {
-        console.log('check err', err)
+      .catch(() => {
+        console.log('proxy not active')
         res(false)
       })
   })

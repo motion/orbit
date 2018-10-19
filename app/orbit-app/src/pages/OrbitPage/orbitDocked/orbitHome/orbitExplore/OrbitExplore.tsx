@@ -8,9 +8,10 @@ import { observeMany } from '@mcro/model-bridge'
 import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { pullAll, difference } from 'lodash'
+import { pullAll, difference, memoize } from 'lodash'
 import { PersonBitModel, BitModel, SettingModel } from '@mcro/models'
 import { allApps } from '../../../../../apps'
+import { action } from 'mobx'
 
 const models = {
   'person-bit': PersonBitModel,
@@ -47,7 +48,7 @@ const SortableItem = SortableElement(({ value }: { value: SelectionGroup }) => {
   )
 })
 
-class VirtualList extends React.Component<{ items: SelectionGroup[] }> {
+class VirtualCarouselRow extends React.Component<{ items: SelectionGroup[] }> {
   List: any
   render() {
     const { items } = this.props
@@ -73,7 +74,7 @@ class VirtualList extends React.Component<{ items: SelectionGroup[] }> {
   }
 }
 
-const SortableList = SortableContainer(VirtualList, { withRef: true })
+const SortableCarouselRow = SortableContainer(VirtualCarouselRow, { withRef: true })
 
 class OrbitExploreStore {
   props: Props
@@ -96,7 +97,8 @@ class OrbitExploreStore {
 
   results = react(
     () => [this.streams, this.sortOrder],
-    ([streams]) => {
+    async ([streams], { sleep }) => {
+      await sleep(200)
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of this.sortOrder) {
@@ -134,26 +136,14 @@ class OrbitExploreStore {
         const { display, defaultQuery } = app
         const subscription = observeMany(model, {
           args: defaultQuery as any,
-        }).subscribe(values => {
-          if (values.length) {
-            // add this id of not in sort order
-            if (this.sortOrder.indexOf(display.name) === -1) {
-              this.sortOrder.push(display.name)
-            }
-          }
-          this.streams = {
-            ...this.streams,
-            [display.name]: { values, name: display.name },
-          }
-        })
+        }).subscribe(this.updateStreams(display.name))
         disposers.push(() => subscription.unsubscribe())
       }
       // remove old sorts if removed
       const removed = difference(Object.keys(apps), this.sortOrder)
       if (removed.length) {
-        console.log('to remove', removed)
         this.sortOrder = pullAll(this.sortOrder, removed)
-        console.log('removed deleted', this.sortOrder)
+        console.log('removed streams', removed)
       }
       return {
         dispose: () => disposers.map(x => x()),
@@ -161,7 +151,22 @@ class OrbitExploreStore {
     },
   )
 
-  SortableList: any
+  updateStreams = memoize(name =>
+    action((values: any[]) => {
+      if (values.length) {
+        // add this id of not in sort order
+        if (this.sortOrder.indexOf(name) === -1) {
+          this.sortOrder.push(name)
+        }
+      }
+      this.streams = {
+        ...this.streams,
+        [name]: { values, name },
+      }
+    }),
+  )
+
+  SortableCarouselRow: any
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
@@ -169,7 +174,7 @@ class OrbitExploreStore {
       this.sortOrder = arrayMove(this.sortOrder, oldIndex, newIndex)
       console.log('new sort', this.sortOrder)
       // We need to inform React Virtualized that the items have changed heights
-      const instance = this.SortableList.getWrappedInstance()
+      const instance = this.SortableCarouselRow.getWrappedInstance()
       instance.List.recomputeRowHeights()
       instance.forceUpdate()
     }
@@ -186,8 +191,8 @@ export class OrbitExplore extends React.Component<Props> {
     const { store } = this.props
     const { results } = store
     return (
-      <SortableList
-        ref={instance => (store.SortableList = instance)}
+      <SortableCarouselRow
+        ref={instance => (store.SortableCarouselRow = instance)}
         items={results}
         onSortEnd={store.onSortEnd}
         distance={16}

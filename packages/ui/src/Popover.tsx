@@ -971,6 +971,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       direction,
     } = this.state
     const { showPopover } = this
+    // console.log('render popover', showPopover, this.state)
     const backgroundProp = background === true ? null : { background: `${background}` }
     const popoverContent = (
       <PopoverContainer

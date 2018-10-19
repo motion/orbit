@@ -244,7 +244,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   }
 
   private resizeAll = debounce(() => {
-    console.log('resizing all...')
     this.shouldResizeAll = false
     this.cache.clearAll()
     if (this.listRef) {

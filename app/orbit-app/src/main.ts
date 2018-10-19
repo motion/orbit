@@ -13,7 +13,6 @@ async function main() {
 
   // set config before app starts...
   const config = await r2.get('/config').json
-  console.log('got config', config)
   setGlobalConfig(config)
 
   await App.start()

@@ -10,7 +10,6 @@ export const getDateAbbreviated = ({ startDate, endDate }: DateRange) => {
     return ''
   }
   const days = differenceInCalendarDays(new Date(), startDate)
-  console.log('days ago', days, startDate, endDate)
   if (days < 7) {
     return `${Math.max(1, days)}d`
   }

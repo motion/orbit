@@ -26,7 +26,7 @@ const transitions = (store: AppStore) => {
   return 'transform ease 100ms'
 }
 
-const PeekFrameBorder = view(UI.View, {
+const AppFrameBorder = view(UI.View, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -37,7 +37,7 @@ const PeekFrameBorder = view(UI.View, {
   pointerEvents: 'none',
 })
 
-const PeekMain = view(UI.View, {
+const AppMainContent = view(UI.View, {
   flex: 1,
   overflow: 'hidden',
   opacity: 1,
@@ -133,14 +133,14 @@ export const AppFrame = decorator(({ appStore, store, children, theme }: AppFram
         <AppFrameArrow appStore={appStore} borderShadow={borderShadow} />
         <UI.Col flex={1} padding={padding} margin={margin}>
           <UI.Col position="relative" flex={1}>
-            <PeekFrameBorder boxShadow={[borderShadow]} />
-            <PeekMain
+            <AppFrameBorder boxShadow={[borderShadow]} />
+            <AppMainContent
               background={theme.background}
               boxShadow={boxShadow}
               borderRadius={Constants.PEEK_BORDER_RADIUS}
             >
               {children}
-            </PeekMain>
+            </AppMainContent>
           </UI.Col>
         </UI.Col>
       </PeekFrameContainer>

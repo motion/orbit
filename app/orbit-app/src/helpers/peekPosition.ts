@@ -169,7 +169,7 @@ function getPeekPositionFromTarget(target, lastPeek, appConfig?: AppConfig): Win
   if (App.orbitState.docked) {
     // for now lets not allow things to overlap the docked frame
     // comment this out if you want them to
-    x = App.orbitState.position[0] - pW - 10
+    x = App.orbitState.position[0] - pW
   }
 
   return {

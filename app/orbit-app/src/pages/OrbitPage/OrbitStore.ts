@@ -45,8 +45,8 @@ export class OrbitStore {
     () => this.contentHeight,
     () => {
       App.setOrbitState({
-        size: [ORBIT_WIDTH, this.contentHeight + 20],
-        position: [window.innerWidth - ORBIT_WIDTH, 0],
+        size: [ORBIT_WIDTH, this.contentHeight],
+        position: [window.innerWidth - ORBIT_WIDTH - 10, 10],
       })
     },
   )

@@ -59,7 +59,7 @@ class VirtualList extends React.Component<{ items: SelectionGroup[] }> {
           const group = items[index]
           return (
             <SortableItem
-              key={`${key}${index}${group.items.map(x => `${x.id}`).join(' ')}`}
+              key={`${key}${group.items.map(x => `${x.id}`).join(' ')}`}
               index={index}
               value={group}
             />

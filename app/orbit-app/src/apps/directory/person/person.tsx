@@ -7,7 +7,7 @@ export const person: GetOrbitApp<'person'> = (_setting?: Setting) => ({
   source: 'person-bit',
   appName: 'Directory',
   defaultQuery: {
-    take: 20,
+    take: 40,
   },
   display: {
     name: 'Directory',

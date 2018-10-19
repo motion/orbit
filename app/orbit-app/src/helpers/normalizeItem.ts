@@ -22,6 +22,7 @@ export type NormalizedItem = {
   searchTerm?: string
   subtitle?: React.ReactNode
   integration?: IntegrationType
+  avatar?: string
 }
 
 export type ItemResolverExtraProps = {
@@ -61,8 +62,9 @@ const normalizers = {
       type: 'person',
       id: person.email,
       title: person.name,
-      icon: last(person.allPhotos as any) || person.photo,
+      icon: 'person',
       subtitle: person.email,
+      avatar: last(person.allPhotos as any) || person.photo,
       // createdAt: person.createdAt,
       // updatedAt: person.updatedAt,
     }

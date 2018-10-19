@@ -14,6 +14,7 @@ import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 import { ResolvableModel } from '../apps/types'
+import { Avatar } from './Avatar'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -162,7 +163,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
   }
 
   getInner = (item: Partial<NormalizedItem>) => {
-    const { icon, location, people, preview, title, updatedAt } = item
+    const { avatar, icon, location, people, preview, title, updatedAt } = item
     const {
       afterTitle,
       borderRadius,
@@ -298,6 +299,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
                     )}
                   </Preview>
                 )}
+                {!!avatar && <Avatar src={avatar} />}
                 {hasChildren && children}
                 {!hasChildren &&
                   showChildren && (

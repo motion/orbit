@@ -1,8 +1,8 @@
 import Router from '@mcro/router'
-import { OrbitPage } from './apps/OrbitPage'
-import { IsolatePage } from './apps/IsolatePage'
-import { AppPage } from './apps/AppPage'
-import { HighlightsPage } from './apps/HighlightsPage'
+import { OrbitPage } from './pages/OrbitPage/OrbitPage'
+import { IsolatePage } from './pages/IsolatePage'
+import { AppPage } from './pages/AppPage/AppPage'
+import { HighlightsPage } from './pages/HighlightsPage/HighlightsPage'
 
 let AppRouter
 

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
+import { normalizeItem, NormalizedItem } from '../helpers/normalizeItem'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
@@ -13,6 +13,8 @@ import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
+import { ResolvableModel } from '../apps/types'
+import { Avatar } from './Avatar'
 
 const VerticalSpaceSmall = view({
   height: 5,
@@ -149,19 +151,19 @@ const Padding = view({
   flex: 1,
 })
 
-@view.attach('selectionStore', 'paneManagerStore', 'subPaneStore')
+@view.attach('appsStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitItemStore,
 })
 @view
-export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
+export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableModel>> {
   static defaultProps = {
     borderRadius: 7,
     padding: 8,
   }
 
-  getOrbitCard = (resolvedItem: ResolvedItem) => {
-    const { icon, location, people, preview, title, updatedAt } = resolvedItem
+  getInner = (item: Partial<NormalizedItem>) => {
+    const { avatar, icon, location, people, preview, title, updatedAt } = item
     const {
       afterTitle,
       borderRadius,
@@ -190,9 +192,14 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
     } = this.props
 
     // allow either custom subtitle or resolved one
-    const subtitle = this.props.subtitle || resolvedItem.subtitle
+    const subtitle = this.props.subtitle || item.subtitle
     const { isSelected } = store
-
+    const ItemView = this.props.appsStore.getView(
+      item.type === 'bit' ? item.integration : 'person',
+      'item',
+    )
+    const hasChildren = typeof this.props.children !== 'undefined'
+    const showChildren = !(hide && hide.body)
     const hasTitle = !(hide && hide.title)
     const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
@@ -292,9 +299,17 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
                     )}
                   </Preview>
                 )}
-                {typeof children === 'function'
-                  ? children(resolvedItem, props.model, props.index)
-                  : children}
+                {!!avatar && <Avatar src={avatar} />}
+                {hasChildren && children}
+                {!hasChildren &&
+                  showChildren && (
+                    <ItemView
+                      model={this.props.model}
+                      searchTerm={this.props.searchTerm}
+                      shownLimit={10}
+                      extraProps={this.props.extraProps}
+                    />
+                  )}
                 {hasPeople && (
                   <Row>
                     <PeopleRow people={people} />
@@ -340,38 +355,20 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<any>> {
   }
 
   render() {
-    const {
-      selectionStore,
-      store,
-      pane,
-      model,
-      inGrid,
-      item,
-      searchTerm,
-      extraProps,
-      ...props
-    } = this.props
-    // console.log(`${props.index} ${(model && model.id) || props.title}.${pane} ${store.isSelected}`)
-    if (!model) {
-      return this.getOrbitCard(props)
-    }
+    const { store, model, direct } = this.props
     store.isSelected
-    return (
-      <ItemResolver
-        model={model}
-        isExpanded={this.props.isExpanded}
-        searchTerm={searchTerm}
-        onResolvedItem={store.setResolvedItem}
-        extraProps={extraProps}
-      >
-        {this.getOrbitCard}
-      </ItemResolver>
-    )
+    if (direct) {
+      return this.getInner(this.props)
+    }
+    if (!model) {
+      return null
+    }
+    return this.getInner(normalizeItem(model))
   }
 }
 
 // wrap the outside so we can do much faster shallow renders when need be
-export class OrbitCard extends React.Component<OrbitItemProps<any>> {
+export class OrbitCard extends React.Component<OrbitItemProps<ResolvableModel>> {
   shouldComponentUpdate(a, b, c) {
     return onlyUpdateOnChanged.call(this, a, b, c)
   }

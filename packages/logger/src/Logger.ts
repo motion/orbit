@@ -127,7 +127,10 @@ export class Logger {
   /**
    * Executes logging.
    */
-  private log(level: 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer', messages: any[]) {
+  private log(
+    level: 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer',
+    messages: any[],
+  ) {
     // don't log if we have logging disabled
     const index = LoggerSettings.disables.indexOf(this.namespace)
     if (level !== 'error' && index !== -1) return
@@ -213,8 +216,9 @@ export class Logger {
       )
       log.info(this.namespace, ...messages)
     } else if (level === 'timer' || level === 'vtimer') {
-      const consoleLog = level === 'timer' ? console.info.bind(console) : console.debug.bind(console);
-      const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log);
+      const consoleLog =
+        level === 'timer' ? console.info.bind(console) : console.debug.bind(console)
+      const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log)
       const labelMessage = messages[0]
       const existTimer = this.timers.find(timer => timer.message === labelMessage)
       if (existTimer) {

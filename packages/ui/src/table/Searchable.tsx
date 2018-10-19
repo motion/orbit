@@ -11,7 +11,7 @@ import * as React from 'react'
 import PropTypes from 'prop-types'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
-import { SearchInput } from '../form/SearchInput'
+import { SearchInput, SearchInputProps } from '../form/SearchInput'
 
 type State = {
   filters: Filter[]
@@ -26,10 +26,12 @@ export type SearchableProps = Props & {
   filters: Array<Filter>
 }
 
+export type SearchBarType = React.ReactElement<React.SFC<SearchInputProps>>
+
 export type SearchableChildProps = {
   addFilter: (filter: Filter) => void
   searchTerm: string
-  searchBar: React.ReactNode
+  searchBar: SearchBarType
   filters: Filter[]
 }
 
@@ -174,6 +176,7 @@ export class Searchable extends React.PureComponent<Props, State> {
         this.state.focusedToken === -1 &&
         this.state.searchTerm === '' &&
         this._inputRef &&
+        this.state.filters.length > 0 &&
         !this.state.filters[this.state.filters.length - 1].persistent
       ) {
         this._inputRef.blur()

@@ -18,14 +18,18 @@ export class DriveLoader {
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(setting: DriveSetting, log?: Logger, saveCallback?: ServiceLoaderSettingSaveCallback) {
-    this.log = log || new Logger('service:gdrive:loader:' + setting.id)
+  constructor(
+    setting: DriveSetting,
+    log?: Logger,
+    saveCallback?: ServiceLoaderSettingSaveCallback,
+  ) {
+    this.log = log || new Logger('service:drive:loader:' + setting.id)
     this.loader = new ServiceLoader(
       this.setting,
       this.log,
       this.baseUrl(),
       this.requestHeaders(),
-      saveCallback
+      saveCallback,
     )
   }
 
@@ -40,7 +44,6 @@ export class DriveLoader {
    * Loads google drive files.
    */
   async loadFiles(): Promise<DriveLoadedFile[]> {
-
     const files = await this.loadPagedFiles()
     const driveFiles: DriveLoadedFile[] = []
     for (let file of files) {
@@ -154,7 +157,7 @@ export class DriveLoader {
     )
     await this.loader.downloadFile({
       path: file.thumbnailLink,
-      destination
+      destination,
     })
     this.log.verbose('thumbnail downloaded and saved as', destination)
   }
@@ -176,5 +179,4 @@ export class DriveLoader {
       'Access-Control-Allow-Methods': 'GET',
     }
   }
-
 }

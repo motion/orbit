@@ -75,6 +75,8 @@ class InputPlain extends React.PureComponent<InputProps> {
     return (
       <SizedSurface
         width="100%"
+        alignItems="center"
+        flexFlow="row"
         sizeFont
         sizePadding
         sizeHeight

@@ -1,15 +1,13 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
-// import * as UI from '@mcro/ui'
+import { view } from '@mcro/black'
 import { themes } from './themes'
+import { Button } from '@mcro/ui'
 import { ThemeProvide } from '@mcro/gloss'
 // import { OrbitCard } from '../../app/src/apps/orbit/OrbitCard'
-import { TestHMR } from './TestHMR'
-import createCss from '@mcro/css'
+// import { TestHMR } from './TestHMR'
+// import createCss from '@mcro/css'
 
-const css = createCss()
-
-console.log('css', css({ lineHeight: 10 }))
+// const css = createCss()
 
 if (process.env.NODE_ENV === 'development') {
   if (module.hot && module.hot.addStatusHandler) {
@@ -76,7 +74,9 @@ const RootViewInner = () => {
   return (
     <ThemeProvide themes={themes} activeTheme="light">
       <div style={{ pointerEvents: 'all', width: '100%', height: '100%' }}>
-        <TestHMR />
+        <Button tooltip="hi">test</Button>
+
+        {/* <TestHMR /> */}
 
         {/* <div style={{ flex: 1, overflowY: 'scroll' }}>
           <box style={{ height: 500 }} />

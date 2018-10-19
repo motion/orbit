@@ -1,7 +1,0 @@
-export * from './SlackSetting'
-export * from './GithubSetting'
-export * from './GmailSetting'
-export * from './GdriveSetting'
-export * from './ConfluenceSetting'
-export * from './JiraSetting'
-export * from './WebsiteSettingPane'

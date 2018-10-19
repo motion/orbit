@@ -142,6 +142,7 @@ a.anchor {
   line-height: 1.25rem;
   user-select: auto;
   font-size: 14px;
+  white-space: pre-line;
 }
 
 .markdown ul,
@@ -453,6 +454,7 @@ body * {
   display: flex;
   flex-flow: column;
   box-sizing: border-box;
+  align-items: stretch;
   flex-shrink: 0;
   outline: 0;
 }

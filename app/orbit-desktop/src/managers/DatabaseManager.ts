@@ -5,7 +5,6 @@ import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
 import { sleep } from '../helpers'
-import { ensureCustomApp } from '../helpers/ensureCustomApp'
 import connectModels from '../helpers/connectModels'
 import { Entities } from '@mcro/entities'
 
@@ -47,9 +46,6 @@ export class DatabaseManager {
       Desktop.sendMessage(Electron, Electron.messages.RESTART)
     })
     this.subscriptions.add({ dispose })
-
-    // then do some setup
-    await ensureCustomApp()
   }
 
   dispose() {

@@ -24,7 +24,7 @@ Normally we'd be running a local proxy to capture them entirely on your computer
 
 #### Features
 
-- Apps included: Slack, Gmail, GDrive, Github, Jira, Confluence.
+- Apps included: Slack, Gmail, Drive, Github, Jira, Confluence.
 - Orbit Home with keyboard nav, topic search.
 - Search with natural language by people, date, integration, time.
 - Person directory works in minimal form.

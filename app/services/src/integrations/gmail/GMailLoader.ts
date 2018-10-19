@@ -16,7 +16,11 @@ export class GMailLoader {
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(setting: GmailSetting, log?: Logger, saveCallback?: ServiceLoaderSettingSaveCallback) {
+  constructor(
+    setting: GmailSetting,
+    log?: Logger,
+    saveCallback?: ServiceLoaderSettingSaveCallback,
+  ) {
     this.setting = setting
     this.log = log || new Logger('service:gmail:loader:' + this.setting.id)
     this.loader = new ServiceLoader(
@@ -24,7 +28,7 @@ export class GMailLoader {
       this.log,
       this.baseUrl(),
       this.requestHeaders(),
-      saveCallback
+      saveCallback,
     )
   }
 
@@ -113,10 +117,10 @@ export class GMailLoader {
     await sleep(ServiceLoadThrottlingOptions.gmail.threads)
 
     // load all threads first
-    this.log.verbose(`loading threads`, { count, queryFilter, filteredIds, pageToken })
+    this.log.verbose('loading threads', { count, queryFilter, filteredIds, pageToken })
     const query = GMailQueries.threads(count > 100 ? 100 : count, queryFilter, pageToken)
     const result = await this.loader.load(query)
-    this.log.verbose(`threads loaded`, result)
+    this.log.verbose('threads loaded', result)
 
     if (!result) return []
     let threads = result.threads
@@ -216,5 +220,4 @@ export class GMailLoader {
       'Access-Control-Allow-Methods': 'GET',
     }
   }
-
 }

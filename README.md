@@ -34,7 +34,7 @@ run electron
   /electron         # electron app (very light for now, powered by reactron)
   /models           # TypeORM models, shared by all apps ^^
   /oracle           # Swift, gives us deep hooks into OS state
-  /services         # Oauth integration helpers (Github.getRepos, GDrive.getFiles...)
+  /services         # Oauth integration helpers (Github.getRepos, Drive.getFiles...)
   /site             # public facing website
   /stores           # Singleton top level stores, one per app (App, Desktop, Electron)
 

@@ -10,11 +10,15 @@ import {
   diffLog,
   toJSDeep,
 } from './helpers'
+import { AutomagicOptions } from './automagical'
 
 const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
+
+type Subscription = { unsubscribe: Function }
+type SubscribableLike = { subscribe: (a: any) => Subscription }
 
 // hacky for now
 Root.__trackStateChanges = {}
@@ -23,7 +27,13 @@ let id = 1
 const uid = () => id++ % Number.MAX_VALUE
 
 // watches values in an autorun, and resolves their results
-export function automagicReact(obj: MagicalObject, method, val, userOptions) {
+export function automagicReact(
+  obj: MagicalObject,
+  method,
+  val,
+  userOptions,
+  automagicOptions: AutomagicOptions,
+) {
   const {
     delayValue,
     defaultValue,
@@ -53,6 +63,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   let prev
   let stopReaction
   let disposed = false
+  let subscriber: Subscription
 
   // state allows end-users to track certain things in complex reactions
   // for now its just `hasResolvedOnce` which lets them do things on first run
@@ -74,6 +85,28 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       }
     }
     state.hasResolvedOnce = true
+    // subscribable handling
+    if (automagicOptions && automagicOptions.isSubscribable) {
+      // for subscribable support
+      // cancel previous whenever a new one comes in
+      const val = getCurrentValue()
+      if (subscriber) {
+        console.log('canceling last...', val)
+        subscriber.unsubscribe()
+        subscriber = null
+      }
+      // subscribe to new one and use that instead of setting directly
+      if (automagicOptions.isSubscribable(newValue)) {
+        console.log('subscribing to new...', newValue)
+        const newSubscriber = newValue as SubscribableLike
+        subscriber = newSubscriber.subscribe(value => {
+          console.log('setting from subscirber...', value)
+          current.set(value)
+        })
+        obj.subscriptions.add({ dispose: () => subscriber && subscriber.unsubscribe() })
+        return ['new subscriber', subscriber]
+      }
+    }
     // return diff in dev mode
     let res
     if (!IS_PROD) {
@@ -297,8 +330,11 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
                 log.verbose(`${logName} [${curID}] cancelled`)
               }
             } else {
-              console.log(`throwing err from ${logName}`, err)
-              throw new Error(err)
+              console.log(`reaction error in ${logName}`)
+              setTimeout(() => {
+                throw err
+              })
+              throw err
             }
           })
         return

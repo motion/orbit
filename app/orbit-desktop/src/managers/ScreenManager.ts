@@ -1,5 +1,5 @@
 import { Oracle } from '@mcro/oracle'
-import { store, react, on } from '@mcro/black'
+import { store, react, on, ensure } from '@mcro/black'
 import { Desktop, Electron, App } from '@mcro/stores'
 
 // handles the oracle blur window as well as any information relating to the current
@@ -37,9 +37,14 @@ export class ScreenManager {
     on(this, listener)
   }
 
+  get shouldShowBackgroundWindow() {
+    return process.env.IGNORE_ELECTRON !== 'true'
+  }
+
   updateTheme = react(
     () => (App.state.darkTheme ? 'ultra' : 'light'),
     async (theme, { when }) => {
+      ensure('shouldShowBackgroundWindow', this.shouldShowBackgroundWindow)
       await when(() => this.isStarted)
       this.oracle.themeWindow(theme)
     },
@@ -47,9 +52,9 @@ export class ScreenManager {
 
   updateWindowVisibility = react(
     () => App.orbitState.docked,
-    async (visible, { when, sleep }) => {
+    async (visible, { when }) => {
       await when(() => this.isStarted)
-      if (visible) {
+      if (visible && this.shouldShowBackgroundWindow) {
         this.oracle.showWindow()
       } else {
         this.oracle.hideWindow()
@@ -77,7 +82,9 @@ export class ScreenManager {
   )
 
   private positionOrbit(position = this.getPosition()) {
-    this.oracle.positionWindow(position)
+    if (this.shouldShowBackgroundWindow) {
+      this.oracle.positionWindow(position)
+    }
   }
 
   private getPosition() {

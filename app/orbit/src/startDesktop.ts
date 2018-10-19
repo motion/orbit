@@ -16,6 +16,8 @@ export function startDesktop(): ChildProcess {
     const child = spawn(Config.paths.nodeBinary, args, {
       // detached: true,
       env: {
+        // pass down process args...
+        ...process.env,
         PROCESS_NAME: 'desktop',
         STACK_FILTER: 'orbit-desktop',
         ELECTRON_RUN_AS_NODE: 1,

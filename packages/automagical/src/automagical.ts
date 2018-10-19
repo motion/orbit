@@ -20,12 +20,16 @@ const log = new Logger('automagical')
 const isFunction = val => typeof val === 'function'
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
 
-export function automagicClass() {
+export type AutomagicOptions = {
+  isSubscribable?: (a: any) => boolean
+}
+
+export function automagicClass(options: AutomagicOptions = {}) {
   if (!this.__automagical) {
     this.__automagical = {}
   }
   if (!this.__automagical.started) {
-    decorateClassWithAutomagic(this)
+    decorateClassWithAutomagic(this, options)
     if (this.__automagical.watchers) {
       for (const watcher of this.__automagical.watchers) {
         watcher()
@@ -78,7 +82,7 @@ function getAutoRunDescriptors(obj) {
   return res
 }
 
-function decorateClassWithAutomagic(obj: MagicalObject) {
+function decorateClassWithAutomagic(obj: MagicalObject, options: AutomagicOptions) {
   let descriptors = {}
   for (const key of Object.keys(obj)) {
     descriptors[key] = Object.getOwnPropertyDescriptor(obj, key)
@@ -92,7 +96,7 @@ function decorateClassWithAutomagic(obj: MagicalObject) {
     if (FILTER_KEYS[method]) {
       continue
     }
-    const decor = decorateMethodWithAutomagic(obj, method, descriptors[method])
+    const decor = decorateMethodWithAutomagic(obj, method, descriptors[method], options)
     if (decor) {
       decorations[method] = decor
     }
@@ -105,12 +109,13 @@ function decorateMethodWithAutomagic(
   target: MagicalObject,
   method: string,
   descriptor: PropertyDescriptor,
+  options: AutomagicOptions,
 ) {
   // non decorator reactions
   if (descriptor && descriptor.value) {
     if (descriptor.value instanceof Reaction) {
       const reaction = descriptor.value
-      automagicReact(target, method, reaction.reaction, reaction.options)
+      automagicReact(target, method, reaction.reaction, reaction.options, options)
       return
     }
     if (descriptor.value.__IS_DEEP) {
@@ -134,6 +139,7 @@ function decorateMethodWithAutomagic(
       method,
       value,
       typeof value.IS_AUTO_RUN === 'object' ? value.IS_AUTO_RUN : undefined,
+      options,
     )
     return
   }

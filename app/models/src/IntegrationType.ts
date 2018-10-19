@@ -1,17 +1,16 @@
 export type IntegrationType =
   | 'slack'
   | 'gmail'
-  | 'gdrive'
+  | 'drive'
   | 'github'
   | 'jira'
   | 'confluence'
   | 'website'
-  | 'app1'
 
 export type IntegrationTypeValues = {
   slack?: string
   gmail?: string
-  gdrive?: string
+  drive?: string
   github?: string
   jira?: string
   confluence?: string

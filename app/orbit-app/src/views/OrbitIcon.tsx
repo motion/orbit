@@ -1,31 +1,8 @@
 import { attachTheme } from '@mcro/gloss'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import iconGCalendar from '../../public/icons/gcalendar.svg'
-import iconGDocs from '../../public/icons/gdocs.svg'
-import iconGDrive from '../../public/icons/gdrive.svg'
-import iconGMail from '../../public/icons/gmail.svg'
-import iconGSheets from '../../public/icons/gsheets.svg'
-import iconSlack from '../../public/icons/slack.svg'
-import iconGithub from '../../public/icons/github.svg'
-import iconGithubWhite from '../../public/icons/github-white.svg'
-import iconConfluence from '../../public/icons/confluence.svg'
-import iconJira from '../../public/icons/jira.svg'
-import iconWebsite from '../../public/icons/website.svg'
-
-const icons = {
-  gcalendar: iconGCalendar,
-  gdocs: iconGDocs,
-  gdrive: iconGDrive,
-  gmail: iconGMail,
-  gsheets: iconGSheets,
-  slack: iconSlack,
-  github: iconGithub,
-  githubWhite: iconGithubWhite,
-  confluence: iconConfluence,
-  jira: iconJira,
-  website: iconWebsite,
-}
+import { compose, view } from '@mcro/black'
+import { AppsStore } from '../stores/AppsStore'
 
 const adjust = {
   icon: {
@@ -66,8 +43,14 @@ const adjust = {
   },
 }
 
-export const OrbitIcon = attachTheme(
+const decorator = compose(
+  attachTheme,
+  view.attach('appsStore'),
+  view,
+)
+export const OrbitIcon = decorator(
   ({
+    appsStore = null as AppsStore,
     imageStyle = null,
     orbitIconStyle = null,
     size = 25,
@@ -82,13 +65,16 @@ export const OrbitIcon = attachTheme(
       height: size,
     }
     const icon = props.icon || props.name
-    const extImg = icon.indexOf('http') === 0 ? icon : null
-    let iconImg = icons[icon] ? icons[icon] : extImg
-    // white icon if dark background + white icon exists
-    if (icons[icon] && theme.background.isDark && theme.background.isDark()) {
-      const whiteKey = `${icon}White`
-      if (icons[whiteKey]) {
-        iconImg = icons[whiteKey]
+    const extImg = icon && (icon[0] === '/' || icon.indexOf('http') === 0) ? icon : null
+    const { appByIntegration } = appsStore
+    let iconImg = extImg
+    if (appByIntegration[icon]) {
+      const display = appByIntegration[icon].display
+      if (display) {
+        const isDark = theme.background.isDark && theme.background.isDark()
+        iconImg = isDark ? display.iconLight || display.icon : display.icon
+      } else {
+        console.log('no config for...', icon)
       }
     }
     if (!iconImg) {

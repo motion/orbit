@@ -12,11 +12,12 @@ export const ProvideHighlightsContextWithDefaults = ({
   value,
   children,
 }: {
-  value: typeof defaultValue
+  value: Partial<typeof defaultValue>
   children: any
 }) => (
   <HighlightsContext.Provider
     value={{
+      words: [],
       maxSurroundChars: Infinity,
       maxChars: Infinity,
       ...value,

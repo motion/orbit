@@ -53,9 +53,9 @@ export interface PersonBit {
   hasGithub?: boolean
 
   /**
-   * Indicates if person has integrations with Gdrive.
+   * Indicates if person has integrations with Drive.
    */
-  hasGdrive?: boolean
+  hasDrive?: boolean
 
   /**
    * Indicates if person has integrations with Jira.

@@ -5,6 +5,8 @@ import { GithubBitData } from './GithubBitData'
 import { GmailBitData } from './GmailBitData'
 import { JiraBitData } from './JiraBitData'
 import { SlackBitData } from './SlackBitData'
+import { IntegrationType } from '../IntegrationType'
+import { Bit } from '../Bit'
 
 /**
  * What Bit.data property can be.
@@ -17,3 +19,18 @@ export type BitData =
   | SlackBitData
   | DriveBitData
   | WebsiteBitData
+
+export type AllBitData = {
+  github: GithubBitData
+  slack: SlackBitData
+  gmail: GmailBitData
+  drive: DriveBitData
+  website: WebsiteBitData
+  confluence: ConfluenceBitData
+  jira: JiraBitData
+}
+
+export type GenericBit<A extends IntegrationType> = Bit & {
+  type: A
+  data: AllBitData[A]
+}

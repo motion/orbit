@@ -89,7 +89,7 @@ export class CosalManager {
     if (!totalBits) {
       return []
     }
-    const maxPerGroup = 5000
+    const maxPerGroup = 2000
     const numScans = Math.ceil(totalBits / maxPerGroup)
     let allTopics: string[][] = []
     for (let i = 0; i < numScans; i++) {

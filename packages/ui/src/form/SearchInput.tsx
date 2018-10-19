@@ -5,10 +5,11 @@ import { TableInput } from '../table/TableInput'
 import { colors } from '../helpers/colors'
 import { View } from '../blocks/View'
 import { Icon } from '../Icon'
-import { FilterToken } from '../table/FilterToken'
 import { ClearButton } from '../buttons/ClearButton'
 import { Filter } from '../table/types'
-import { attachTheme } from '@mcro/gloss'
+import { attachTheme, ThemeObject, CSSPropertySet } from '@mcro/gloss'
+import { FilterToken } from '../table/FilterToken'
+import color from '@mcro/color'
 
 const SearchClearButton = view(ClearButton, {
   position: 'absolute',
@@ -80,15 +81,29 @@ export const SearchBox = view(View, {
   border: [1, theme.borderColor.alpha(0.5)],
 }))
 
+export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
+  CSSPropertySet & {
+    before?: React.ReactNode
+    searchBarProps?: Object
+    after?: React.ReactNode
+    actions?: React.ReactNode
+    filters?: Filter[]
+    onClickClear?: Function
+    focusedToken?: number
+    filterProps?: Object
+    theme?: ThemeObject
+    visible?: boolean
+  }
+
 export const SearchInput = attachTheme(
   ({
-    width = '100%' as string | number,
+    width = '100%',
     before = null,
     placeholder = null,
     searchBarProps = null,
     after = null,
     actions = null,
-    filters = [] as Filter[],
+    filters = [],
     onClickClear = null,
     focusedToken = null,
     filterProps = null,
@@ -96,8 +111,9 @@ export const SearchInput = attachTheme(
     value = null,
     flex = null,
     padding = 5,
+    visible,
     ...props
-  }) => (
+  }: SearchInputProps) => (
     <SearchBar
       position="relative"
       zIndex="1"
@@ -110,7 +126,7 @@ export const SearchInput = attachTheme(
       <SearchBox width={width} tabIndex={-1}>
         <SearchIcon
           name="ui-1_zoom"
-          color={theme.color ? theme.color.alpha(0.5) : '#555'}
+          color={theme.color ? color(theme.color).alpha(0.5) : '#555'}
           size={16}
         />
         {filters.map((filter, i) => (
@@ -125,7 +141,7 @@ export const SearchInput = attachTheme(
         <SearchInnerInput placeholder={placeholder} {...props} />
         <SearchClearButton
           onClick={onClickClear}
-          visible={value && !!value.length}
+          visible={typeof visible === 'boolean' ? visible : value && !!value.length}
           opacity={1}
           position="relative"
           zIndex={2}

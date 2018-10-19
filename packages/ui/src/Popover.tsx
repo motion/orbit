@@ -982,6 +982,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       >
         {!!overlay && (
           <Overlay
+            key={0}
             forwardRef={this.overlayRef}
             isShown={showPopover && !closing}
             onClick={e => this.handleOverlayClick(e)}
@@ -989,6 +990,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
           />
         )}
         <PopoverWrap
+          key={1}
           {...popoverProps}
           isOpen={!closing && !!showPopover}
           forwardRef={this.setPopoverRef}

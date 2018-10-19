@@ -155,12 +155,12 @@ export function createViewFactory(toCSS) {
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = Object.keys(propStyles).length
     let displayName = 'View'
-    let ThemedConstructor
+    let ThemedView
     let cachedTheme
 
     function getIgnoreAttrs() {
       const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
-      return ThemedConstructor.ignoreAttrs || targetAttrs
+      return ThemedView.ignoreAttrs || targetAttrs
     }
 
     function getTheme() {
@@ -168,7 +168,7 @@ export function createViewFactory(toCSS) {
         return cachedTheme
       }
       let themes = []
-      let view = ThemedConstructor
+      let view = ThemedView
       // collect the themes going up the tree
       while (view) {
         if (view.themeFn) {
@@ -338,7 +338,9 @@ export function createViewFactory(toCSS) {
       prevProps?: Object
     }
 
-    class Constructor extends React.PureComponent<Props> {
+    class SimpleView extends React.PureComponent<Props> {
+      static displayName = 'SimpleView'
+
       state = {
         classNames: [],
         extraClassNames: [],
@@ -426,16 +428,16 @@ export function createViewFactory(toCSS) {
     }
 
     // attach themes from context
-    ThemedConstructor = props => {
+    ThemedView = props => {
       // // avoid theme tree if not necessary
-      if (!ThemedConstructor.themeFn) {
-        return <Constructor {...props} />
+      if (!ThemedView.themeFn) {
+        return <SimpleView {...props} />
       }
       return (
         <ThemeContext.Consumer>
           {({ allThemes, activeThemeName }) => {
             if (!allThemes) {
-              return <Constructor {...props} />
+              return <SimpleView {...props} />
             }
             let theme = allThemes[activeThemeName]
             // allow simple overriding of the theme using props:
@@ -446,29 +448,30 @@ export function createViewFactory(toCSS) {
                 ...props.theme,
               }
             }
-            return <Constructor {...props} theme={theme} />
+            return <SimpleView {...props} theme={theme} />
           }}
         </ThemeContext.Consumer>
       )
     }
 
-    ThemedConstructor[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+    ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
 
-    ThemedConstructor.withConfig = config => {
+    ThemedView.withConfig = config => {
       if (config.displayName) {
         displayName = config.displayName
-        ThemedConstructor.displayName = config.displayName
+        ThemedView.displayName = `themed(${displayName})`
+        SimpleView.displayName = displayName
       }
-      return ThemedConstructor
+      return ThemedView
     }
 
     // allow setting theme
-    ThemedConstructor.theme = themeFn => {
-      ThemedConstructor.themeFn = themeFn
-      return ThemedConstructor
+    ThemedView.theme = themeFn => {
+      ThemedView.themeFn = themeFn
+      return ThemedView
     }
 
-    ThemedConstructor.getConfig = () => ({
+    ThemedView.getConfig = () => ({
       id,
       displayName,
       targetElement,
@@ -478,6 +481,6 @@ export function createViewFactory(toCSS) {
       child: isSimpleView ? target : null,
     })
 
-    return ThemedConstructor
+    return ThemedView
   }
 }

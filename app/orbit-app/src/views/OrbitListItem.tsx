@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
+import { normalizeItem, NormalizedItem } from '../helpers/normalizeItem'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
@@ -116,7 +116,7 @@ const Bottom = view({
   alignItems: 'center',
 })
 
-@view.attach('selectionStore', 'paneManagerStore', 'subPaneStore')
+@view.attach('appsStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitItemStore,
 })
@@ -127,8 +127,8 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
     padding: [10, 11],
   }
 
-  getInner = (resolvedItem: ResolvedItem) => {
-    const { createdAt, icon, location, people, preview, subtitle, title, updatedAt } = resolvedItem
+  getInner = (item: Partial<NormalizedItem>) => {
+    const { createdAt, icon, location, people, preview, subtitle, title, updatedAt } = item
     const {
       afterTitle,
       borderRadius,
@@ -153,6 +153,12 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
       ...props
     } = this.props
     const { isSelected } = store
+    const ItemView = this.props.appsStore.getView(
+      item.type === 'bit' ? item.integration : 'person',
+      'item',
+    )
+    const childrenFunction = typeof this.props.children === 'function'
+    const showChildren = !(hide && hide.body)
     const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
     const showDate = !!createdAt && !(hide && hide.date)
     const showIcon = !!icon && !(hide && hide.icon)
@@ -300,7 +306,17 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
               )}
             </Preview>
           )}
-          {typeof children === 'function' ? children(resolvedItem, model, props.index) : children}
+          {showChildren && !childrenFunction && children}
+          {childrenFunction &&
+            showChildren && (
+              <ItemView
+                bit={this.props.model}
+                searchTerm={this.props.searchTerm}
+                shownLimit={10}
+                renderChildren={childrenFunction}
+                extraProps={this.props.extraProps}
+              />
+            )}
           {showPeople &&
             !showSubtitle && (
               <Bottom>
@@ -314,38 +330,15 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
   }
 
   render() {
-    const {
-      selectionStore,
-      store,
-      pane,
-      model,
-      searchTerm,
-      isExpanded,
-      hide,
-      extraProps,
-      ...props
-    } = this.props
-    // console.verbose(
-    //   `${props.index} ${(model && (model.id || model.email)) || props.title}.${pane} ${
-    //     store.isSelected
-    //   }`,
-    // )
-    if (!model) {
-      return this.getInner(props)
-    }
+    const { store, model, direct } = this.props
     store.isSelected
-    return (
-      <ItemResolver
-        model={model}
-        isExpanded={isExpanded}
-        searchTerm={searchTerm}
-        hide={hide}
-        onResolvedItem={store.setResolvedItem}
-        extraProps={extraProps}
-      >
-        {this.getInner}
-      </ItemResolver>
-    )
+    if (direct) {
+      return this.getInner(this.props)
+    }
+    if (!model) {
+      return null
+    }
+    return this.getInner(normalizeItem(model))
   }
 }
 

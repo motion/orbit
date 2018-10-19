@@ -1,8 +1,10 @@
 import { react, ensure } from '@mcro/black'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
-import { ResolvedItem } from '../components/ItemResolver'
+import { NormalizedItem } from '../helpers/normalizeItem'
 import { Actions } from '../actions/Actions'
+import { ResolvableModel } from '../apps/types'
+import { getAppConfig } from '../stores/AppsStore'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -10,8 +12,9 @@ export const OrbitItemSingleton = {
 }
 
 export class OrbitItemStore {
-  props: OrbitItemProps<any>
-  resolvedItem: ResolvedItem = null
+  props: OrbitItemProps<ResolvableModel>
+
+  resolvedItem: NormalizedItem = null
   isSelected = false
   cardWrapRef = null
   clickAt = 0
@@ -87,12 +90,12 @@ export class OrbitItemStore {
     this.cardWrapRef = cardWrapRef
   }
 
-  setResolvedItem = (item: ResolvedItem) => {
+  setResolvedItem = (item: NormalizedItem) => {
     this.resolvedItem = item
   }
 
-  get target() {
-    return this.props.result || this.props.model
+  get appConfig() {
+    return this.props.appConfig || getAppConfig(this.props.model)
   }
 
   get position() {
@@ -109,39 +112,49 @@ export class OrbitItemStore {
     return getIndex ? getIndex(model) : index
   }
 
-  // this cancels to prevent renders very aggressively
   updateIsSelected = react(
     () => {
-      if (this.props.ignoreSelection) {
-        return false
+      const {
+        activeCondition,
+        ignoreSelection,
+        selectionStore,
+        subPaneStore,
+        isSelected,
+      } = this.props
+      if (typeof isSelected === 'undefined') {
+        if (!selectionStore) {
+          return false
+        }
+        if (ignoreSelection) {
+          return false
+        }
+        if (activeCondition && activeCondition() === false) {
+          return false
+        }
+        if (!subPaneStore || !subPaneStore.isActive) {
+          return false
+        }
       }
-      const activeIndex = this.props.selectionStore && this.props.selectionStore.activeIndex
-      const isPaneActive = this.props.subPaneStore && this.props.subPaneStore.isActive
-      const isSelected =
-        typeof this.props.isSelected === 'function'
-          ? this.props.isSelected()
-          : this.props.isSelected
-      let nextIsSelected
-      if (typeof isSelected === 'boolean') {
-        nextIsSelected = isSelected
+      const forceSelected = typeof isSelected === 'function' ? isSelected() : isSelected
+      let next
+      if (typeof forceSelected === 'boolean') {
+        next = forceSelected
       } else {
-        nextIsSelected = activeIndex === this.realIndex
+        next = selectionStore.activeIndex === this.realIndex
       }
-      return isPaneActive && nextIsSelected
+      return next
     },
-    async (nextIsSelected, { sleep }) => {
+    async (isSelected, { sleep }) => {
       const { preventAutoSelect } = this.props
-      ensure('new index', nextIsSelected !== this.isSelected)
-      this.isSelected = nextIsSelected
-      if (nextIsSelected && !preventAutoSelect) {
-        ensure('target', !!this.target)
+      ensure('new index', isSelected !== this.isSelected)
+      this.isSelected = isSelected
+      if (isSelected && !preventAutoSelect) {
+        ensure('appConfig`', !!this.appConfig)
         // fluidity
         await sleep()
-        Actions.setPeekApp(this.target, this.position)
+        console.log('WOAH WOAH WOAH select me', this.props, this.appConfig, this.position)
+        Actions.setPeekApp(this.appConfig, this.position)
       }
-    },
-    {
-      deferFirstRun: true,
     },
   )
 }

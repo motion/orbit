@@ -15,7 +15,7 @@ export function startDevelopment(appRoot) {
       }
     }
     console.log('Desktop: Possibly Unhandled Rejection')
-    console.log(promise, reason)
+    console.log(reason.message)
     console.log(reason.stack)
   })
 }

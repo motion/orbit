@@ -1,13 +1,14 @@
 export type AppConfig = {
   id: string
   icon: string
+  iconLight?: string
   title: string
   type: string
   integration?: string
   subType?: string
   // allow various things to be passed as config
   // to help configure the peek window
-  config?: {
+  viewConfig?: {
     showTitleBar?: boolean
     viewPane?: string
     dimensions?: [number, number]

@@ -1,7 +1,7 @@
-import { ResolvedItem } from '../components/ItemResolver'
+import { NormalizedItem } from './normalizeItem'
 import { Actions } from '../actions/Actions'
 
-export function handleClickLocation(item: ResolvedItem, e?: Event) {
+export function handleClickLocation(item: NormalizedItem, e?: Event) {
   if (e) {
     e.preventDefault()
     e.stopPropagation()

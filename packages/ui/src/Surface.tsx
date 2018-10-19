@@ -123,16 +123,11 @@ const getSegmentRadius = props => {
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = view(View, {
-  flexFlow: 'row',
-  alignItems: 'center',
   fontFamily: 'inherit',
   position: 'relative',
 }).theme(props => {
   const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   const propStyles = propsToStyles(props)
-  if (props.hoverStyle) {
-    console.log('theme styles', themeStyles, themeStylesFromProps, propStyles)
-  }
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -157,7 +152,6 @@ const SurfaceFrame = view(View, {
     justifyContent: props.justify || props.justifyContent,
     alignSelf: props.alignSelf,
     borderStyle: props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
-    ...circularStyles,
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
     ...(props.dimmed && dimmedStyle),
@@ -169,10 +163,11 @@ const SurfaceFrame = view(View, {
     // ...whereas theme styles passed in as ovverrides go in here
     ...themeStylesFromProps,
     ...(!props.chromeless &&
-      props.active && { '&:hover': props.activeHoverStylee || themeStyles['&:active'] }),
+      props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
     ...propsToTextSize(props),
     ...(props.chromeless && chromelessStyle),
     ...props.segmentedStyle,
+    ...circularStyles,
     '&:hover': {
       ...themeStyles['&:hover'],
       ...propStyles['&:hover'],
@@ -239,7 +234,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,
     size: 1,
-    alignItems: 'center',
   }
 
   static contextTypes = {
@@ -319,7 +313,9 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         className={`${this.uniq} ${className || ''}`}
         segmentedStyle={segmentedStyle}
       >
-        {noInnerElement ? null : (
+        {noInnerElement ? (
+          children
+        ) : (
           <>
             {glint && !props.chromeless ? (
               <Glint

@@ -20,7 +20,9 @@ export const storeOptions = {
         value: true,
       })
       if (store.automagic) {
-        store.automagic()
+        store.automagic({
+          isSubscribable: x => x && typeof x.subscribe === 'function',
+        })
       }
     }
     if (store.setupSubscribables) {

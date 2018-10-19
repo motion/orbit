@@ -1,5 +1,5 @@
 import decor from '@mcro/decor'
-import { storeProvidable, storeAttachable, renderArgumentable, emitsMount } from '@mcro/decor-react'
+import { storeProvidable, storeAttachable, emitsMount } from '@mcro/decor-react'
 import { subscribable } from '@mcro/decor-classes'
 import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
@@ -26,7 +26,6 @@ export interface ViewDecorator {
 
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
-  renderArgumentable,
   enable.mobx && reactObservable,
   [storeProvidable, storeOptions],
   emitsMount,

@@ -1,6 +1,0 @@
-export { PeekBit as Bit } from './PeekBit'
-export { PeekEmpty as Empty } from './PeekEmpty'
-export { PeekSetting as Setting } from './PeekSetting'
-export { PeekPerson as Person } from './PeekPerson'
-export { PeekTeam as Team } from './PeekTeam'
-export { PeekView as View } from './PeekView'

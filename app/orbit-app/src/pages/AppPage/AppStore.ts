@@ -173,7 +173,7 @@ export class AppStore {
     if (type === 'person' || type === 'person-bit') {
       selectedItem = await loadOne(PersonBitModel, {
         args: {
-          where: { email: id },
+          where: { id },
           relations: ['people'],
         },
       })

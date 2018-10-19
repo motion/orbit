@@ -286,7 +286,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
               return (
                 <SimpleItem
                   key={item.integration}
-                  title={item.integrationName}
+                  title={item.appName}
                   icon={item.integration}
                   inactive={item.isActive}
                   onClick={item.isActive ? null : addAppClickHandler(item)}

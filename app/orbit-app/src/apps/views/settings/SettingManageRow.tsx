@@ -11,11 +11,10 @@ import { Actions } from '../../../actions/Actions'
 import { SyncStatus } from '../../../pages/OrbitPage/orbitDocked/views/SyncStatus'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { TitleBarButton } from '../layout/TitleBarButton'
-import { AppsStore } from '../../../stores/AppsStore'
+import { getAppFromSetting } from '../../../stores/AppsStore'
 
-@view.attach('appsStore', 'appInfoStore')
+@view.attach('appInfoStore')
 export class SettingManageRow extends React.Component<{
-  appsStore?: AppsStore
   appInfoStore?: AppInfoStore
   setting: Setting
   whitelist: WhitelistManager<any>
@@ -31,7 +30,7 @@ export class SettingManageRow extends React.Component<{
       showConfirmDialog({
         title: 'Remove integration?',
         message: `Are you sure you want to remove ${
-          this.props.appsStore.getAppFromSetting(this.props.setting).display.name
+          getAppFromSetting(this.props.setting).display.name
         }?`,
       })
     ) {

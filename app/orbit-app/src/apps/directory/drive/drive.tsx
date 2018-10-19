@@ -10,7 +10,7 @@ import { DriveItem } from './views/DriveItem'
 export const drive: GetOrbitApp<'drive'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'drive',
-  integrationName: 'Drive',
+  appName: 'Drive',
   defaultQuery: findManyType('drive'),
   display: {
     name: setting.name,

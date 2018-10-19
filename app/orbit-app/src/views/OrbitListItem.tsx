@@ -314,6 +314,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
                 searchTerm={this.props.searchTerm}
                 shownLimit={10}
                 renderChildren={childrenFunction}
+                extraProps={this.props.extraProps}
               />
             )}
           {showPeople &&

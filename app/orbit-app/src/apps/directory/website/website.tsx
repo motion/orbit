@@ -11,7 +11,7 @@ import { WebsiteSetup } from './views/WebsiteSetup'
 export const website: GetOrbitApp<'website'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'website',
-  integrationName: 'Website',
+  appName: 'Website',
   defaultQuery: findManyType('website'),
   display: {
     name: setting.name,

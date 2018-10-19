@@ -57,7 +57,7 @@ export class OrbitSettingsApps extends React.Component<Props> {
               <SimpleItem
                 key={`${index}${app.integration}`}
                 onClick={addAppClickHandler(app)}
-                title={app.integrationName}
+                title={app.appName}
                 icon={app.integration}
                 after={<Button size={0.9}>Add</Button>}
               />

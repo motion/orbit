@@ -11,7 +11,7 @@ import { ConfluenceSetup } from './views/ConfluenceSetup'
 export const confluence: GetOrbitApp<'confluence'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'confluence',
-  integrationName: 'Confluence',
+  appName: 'Confluence',
   defaultQuery: findManyType('confluence'),
   display: {
     name: setting.name,

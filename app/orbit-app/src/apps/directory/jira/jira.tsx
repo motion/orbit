@@ -11,7 +11,7 @@ import { JiraSetup } from './views/JiraSetup'
 export const jira: GetOrbitApp<'jira'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'jira',
-  integrationName: 'Jira',
+  appName: 'Jira',
   defaultQuery: findManyType('jira'),
   display: {
     name: setting.name,

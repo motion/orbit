@@ -10,6 +10,23 @@ type GenericApp = OrbitApp<any> & {
   isActive: boolean
 }
 
+export const getAppFromSetting = (setting: Setting): OrbitApp<any> => {
+  return {
+    ...getApps[setting.type](setting),
+    setting,
+  }
+}
+
+export const getAppConfig = (model: ResolvableModel): AppConfig => {
+  const type = model.target === 'bit' ? model.integration : 'person'
+  const app = allApps[type]
+  if (!app) {
+    console.log('no app', type, allApps)
+    return null
+  }
+  return appToAppConfig(app, model)
+}
+
 export const appToAppConfig = (app: OrbitApp<any>, model?: ResolvableModel): AppConfig => {
   if (!app) {
     throw new Error(`No app given: ${JSON.stringify(app)}`)
@@ -31,7 +48,7 @@ export class AppsStore {
   activeApps = react(
     () => this.appSettings,
     appSettings => {
-      return appSettings.filter(x => !!allApps[x.type]).map(this.getAppFromSetting)
+      return appSettings.filter(x => !!allApps[x.type]).map(getAppFromSetting)
     },
   )
 
@@ -62,23 +79,6 @@ export class AppsStore {
   appByIntegration = react(() => this.allApps, x => keyBy(x, 'integration'), {
     defaultValue: {},
   })
-
-  getAppFromSetting = (setting: Setting): OrbitApp<any> => {
-    return {
-      ...getApps[setting.type](setting),
-      setting,
-    }
-  }
-
-  getAppConfig = (model: ResolvableModel): AppConfig => {
-    const type = model.target === 'bit' ? model.integration : 'person'
-    const app = this.appByIntegration[type]
-    if (!app) {
-      console.log('no app', type, this.appByIntegration)
-      return null
-    }
-    return appToAppConfig(app, model)
-  }
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {
     if (!this.appByIntegration[type]) {

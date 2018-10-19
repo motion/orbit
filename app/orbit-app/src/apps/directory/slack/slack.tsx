@@ -1,16 +1,16 @@
 import { SlackApp } from './views/SlackApp'
 import { SlackSettings } from './views/SlackSettings'
-import { Setting, GenericBit } from '@mcro/models'
+import { Setting } from '@mcro/models'
 // @ts-ignore
 import iconSlack from '../../../../public/icons/slack.svg'
-import { GetOrbitApp, ItemProps } from '../../types'
+import { GetOrbitApp } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { SlackItem } from './views/SlackItem'
 
 export const slack: GetOrbitApp<'slack'> = (setting?: Setting) => ({
   source: 'bit',
+  appName: 'Slack',
   integration: 'slack',
-  integrationName: 'Slack',
   defaultQuery: findManyType('slack'),
   display: {
     name: setting.name,
@@ -23,5 +23,3 @@ export const slack: GetOrbitApp<'slack'> = (setting?: Setting) => ({
     setting: SlackSettings,
   },
 })
-
-export type SlackAppProps = ItemProps<GenericBit<'slack'>>

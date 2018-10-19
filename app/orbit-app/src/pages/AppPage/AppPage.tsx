@@ -13,7 +13,7 @@ import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../apps/views/apps/AppSearchable'
 import { AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
 import { OrbitApp } from '../../apps/types'
-import { PersonApp } from '../../apps/directory/person/PersonApp'
+import { allApps } from '../../apps'
 
 type Props = {
   appsStore?: AppsStore
@@ -80,9 +80,16 @@ class AppPageContent extends React.Component<Props> {
         </AppBitView>
       ))
     },
-    person: () => {
+    'person-bit': () => {
       const { appStore } = this.props
-      return props => <PersonApp model={appStore.state.model} {...props} />
+      return view(props => {
+        console.log('rendeirn g person-bit', appStore)
+        if (!appStore.state.model) {
+          return <div>nope</div>
+        }
+        const View = allApps.person.views.main
+        return <View model={appStore.state.model} {...props} />
+      })
     },
     setting: () => {
       const { appStore } = this.props

@@ -23,23 +23,36 @@ export type AppType = IntegrationType | 'person'
 
 type ModelFromType<A extends AppType> = AppTypeToModelType[A]
 
-export type OrbitGenericProps<T extends ResolvableModel> = {
+export type AppProps<T extends ResolvableModel> = {
   model?: T
   isExpanded?: boolean
   shownLimit?: number
   searchTerm?: string
-  hide?: ItemHideProps
-  extraProps?: ItemResolverExtraProps
+  hide?: {
+    people?: boolean
+    title?: boolean
+    icon?: boolean
+    subtitle?: boolean
+    body?: boolean
+    itemDate?: boolean
+    date?: boolean
+    meta?: boolean
+  }
+  extraProps?: {
+    beforeTitle?: React.ReactNode
+    minimal?: boolean
+    preventSelect?: boolean
+  }
 }
 
-export type OrbitGenericAppProps<A extends AppType> = OrbitGenericProps<ModelFromType<A>>
+// for all apps, including non-bit apps
+export type OrbitGenericAppProps<A extends AppType> = AppProps<ModelFromType<A>>
 
-export type ItemProps<A extends GenericBit<any>> = OrbitGenericProps<any> & {
-  bit: A
-}
-
-export type OrbitAppProps<A extends AppType> = OrbitGenericProps<ModelFromType<A>> & {
-  bit: GenericBit<A>
+// for just "bit" apps
+// much more common / external facing
+// so give it the nicer name
+export type OrbitAppProps<A extends AppType> = AppProps<ModelFromType<A>> & {
+  bit: GenericBit<any>
   normalizedItem: NormalizedItem
 }
 
@@ -66,7 +79,7 @@ export type OrbitApp<A extends AppType> = {
   }
   source: ModelFromType<A>['target']
   integration?: A
-  integrationName?: string
+  appName?: string
   defaultQuery?: any | FindOptions<ModelFromType<A>> // TODO umed
   viewConfig?: AppConfig['viewConfig']
   views: {
@@ -84,20 +97,3 @@ export type GetOrbitApp<A extends AppType> = (setting: Setting) => OrbitApp<A>
 export type GetOrbitApps = { [key in AppType]: GetOrbitApp<AppType> }
 
 export type ResolvableModel = Bit | PersonBit | Setting
-
-export type ItemHideProps = {
-  people?: boolean
-  title?: boolean
-  icon?: boolean
-  subtitle?: boolean
-  body?: boolean
-  itemDate?: boolean
-  date?: boolean
-  meta?: boolean
-}
-
-export type ItemResolverExtraProps = {
-  beforeTitle?: React.ReactNode
-  minimal?: boolean
-  preventSelect?: boolean
-}

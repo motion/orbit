@@ -7,10 +7,9 @@ import { AppConfig } from '@mcro/stores'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { ScrollableContent } from '../layout/ScrollableContent'
 import { HideablePane } from '../../../views/HideablePane'
-import { AppsStore } from '../../../stores/AppsStore'
+import { getAppFromSetting } from '../../../stores/AppsStore'
 
 type Props = {
-  appsStore?: AppsStore
   appViewStore?: AppViewStore
   setting: Setting
   settingsPane: React.ReactNode
@@ -53,15 +52,14 @@ export class AppViewStore {
   }
 }
 
-@view.attach('appsStore')
 @view.attach({
   appViewStore: AppViewStore,
 })
 @view
 export class SimpleAppExplorer extends React.Component<Props> {
   render() {
-    const { appsStore, setting, settingsPane, appViewStore } = this.props
-    const app = appsStore.getAppFromSetting(setting)
+    const { setting, settingsPane, appViewStore } = this.props
+    const app = getAppFromSetting(setting)
     return (
       <>
         {app.display.name}

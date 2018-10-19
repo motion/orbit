@@ -1,9 +1,8 @@
 import { AppConfig } from '@mcro/stores'
 import { OrbitItemStore } from './OrbitItemStore'
-import { ItemHideProps } from '../types/ItemHideProps'
-import { NormalizedItem, ItemResolverExtraProps } from '../helpers/normalizeItem'
+import { NormalizedItem } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
-import { ResolvableModel } from '../apps/types'
+import { ResolvableModel, AppProps } from '../apps/types'
 import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
 import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
 import { SubPaneStore } from '../pages/OrbitPage/SubPaneStore'
@@ -36,13 +35,13 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     titleProps?: Object
     inactive?: boolean
     iconProps?: Object
-    hide?: ItemHideProps
+    hide?: AppProps<any>['hide']
+    extraProps?: Partial<AppProps<any>['extraProps']>
     className?: string
     inGrid?: boolean
     pane?: string
     subPane?: string
     model?: T
-    extraProps?: Partial<ItemResolverExtraProps>
     children?:
       | ((normalizedItem: NormalizedItem, model?: T, index?: number) => JSX.Element)
       | JSX.Element

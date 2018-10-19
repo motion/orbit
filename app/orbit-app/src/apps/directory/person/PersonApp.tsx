@@ -8,8 +8,9 @@ import { SubTitle } from '../../../views/SubTitle'
 import { RoundButton } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { OrbitListItem } from '../../../views/OrbitListItem'
+import { OrbitGenericAppProps } from '../../types'
 
-type Props = any
+type Props = OrbitGenericAppProps<'person'>
 
 class PeekPersonStore {
   props: Props
@@ -185,6 +186,7 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
 @view
 export class PersonApp extends React.Component<Props & { store: PeekPersonStore }> {
   render() {
+    console.log('rendering person app...')
     const { model, store } = this.props
     const person = model as PersonBit
     if (!person) {

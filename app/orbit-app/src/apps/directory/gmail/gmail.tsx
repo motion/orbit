@@ -10,7 +10,7 @@ import { GmailSettings } from './views/GmailSettings'
 export const gmail: GetOrbitApp<'gmail'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'gmail',
-  integrationName: 'Gmail',
+  appName: 'Gmail',
   defaultQuery: findManyType('gmail'),
   display: {
     name: setting.name,

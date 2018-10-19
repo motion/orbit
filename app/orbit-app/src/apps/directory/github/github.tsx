@@ -12,7 +12,7 @@ import { GithubItem } from './views/GithubItem'
 export const github: GetOrbitApp<'github'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'github',
-  integrationName: 'Github',
+  appName: 'Github',
   defaultQuery: findManyType('github'),
   display: {
     name: setting.name,

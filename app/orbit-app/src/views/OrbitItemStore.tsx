@@ -4,6 +4,7 @@ import { OrbitItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { Actions } from '../actions/Actions'
 import { ResolvableModel } from '../apps/types'
+import { getAppConfig } from '../stores/AppsStore'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -94,7 +95,7 @@ export class OrbitItemStore {
   }
 
   get appConfig() {
-    return this.props.appConfig || this.props.appsStore.getAppConfig(this.props.model)
+    return this.props.appConfig || getAppConfig(this.props.model)
   }
 
   get position() {

@@ -29,7 +29,7 @@ export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...pro
     <OrbitCard
       direct
       model={app.setting}
-      title={app.integrationName}
+      title={app.appName}
       titleProps={{
         ellipse: true,
       }}

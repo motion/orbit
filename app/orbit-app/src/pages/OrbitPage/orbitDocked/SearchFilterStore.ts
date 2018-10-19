@@ -142,12 +142,11 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   get integrationFilters(): SearchFilter[] {
-    const { exclusiveFilters } = this
     return this.appsStore.allApps.map(app => ({
       type: app.source,
       integration: app.integration,
       name: app.appName,
-      active: this.hasExclusiveFilters ? exclusiveFilters[app.source] : false,
+      active: this.hasExclusiveFilters ? this.exclusiveFilters[app.source] : false,
     }))
   }
 
@@ -219,7 +218,7 @@ export class SearchFilterStore /* extends Store */ {
       // reset integration inactive filters
       ensure('integrations', nlp.integrations && !!nlp.integrations.length)
       this.exclusiveFilters = this.appsStore.allApps.filter(x => x.isActive).reduce((acc, app) => {
-        acc[app.source] = nlp.integrations.some(x => x === app.source)
+        acc[app.integration] = nlp.integrations.some(x => x === app.integration)
         return acc
       }, {})
     },

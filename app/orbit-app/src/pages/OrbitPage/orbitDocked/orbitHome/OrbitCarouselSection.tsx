@@ -26,7 +26,7 @@ export class OrbitCarouselSection extends React.Component<Props> {
     if (!items.length) {
       return null
     }
-    const isPeople = categoryName === 'People'
+    const isPeople = categoryName === 'Directory'
     return (
       <OrbitSection
         title={categoryName}

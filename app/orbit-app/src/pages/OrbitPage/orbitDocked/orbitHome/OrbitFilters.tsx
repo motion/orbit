@@ -20,33 +20,35 @@ const decorate = compose(
 )
 export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {
   const { searchFilterStore } = searchStore
+  if (!searchFilterStore.integrationFilters.length) {
+    return null
+  }
   return (
     <Row {...props}>
-      {searchFilterStore.integrationFilters.length > 1 &&
-        searchFilterStore.integrationFilters.map((filter, i) => {
-          return (
-            <FilterButton
-              key={`${filter.integration}${i}`}
-              active={filter.active}
-              onClick={searchFilterStore.integrationFilterToggler(filter)}
-              tooltip={filter.name}
-              {...filter.active && {
-                opacity: 1,
-              }}
-              {...!filter.active && {
-                opacity: 0.5,
-              }}
-              hoverStyle={{
-                opacity: filter.active ? 1 : 0.75,
-              }}
-              activeStyle={{
-                opacity: 1,
-              }}
-            >
-              <OrbitIcon name={filter.integration} size={16} />
-            </FilterButton>
-          )
-        })}
+      {searchFilterStore.integrationFilters.map((filter, i) => {
+        return (
+          <FilterButton
+            key={`${filter.integration}${i}`}
+            active={filter.active}
+            onClick={searchFilterStore.integrationFilterToggler(filter)}
+            tooltip={filter.name}
+            {...filter.active && {
+              opacity: 1,
+            }}
+            {...!filter.active && {
+              opacity: 0.5,
+            }}
+            hoverStyle={{
+              opacity: filter.active ? 1 : 0.75,
+            }}
+            activeStyle={{
+              opacity: 1,
+            }}
+          >
+            <OrbitIcon name={filter.integration} size={16} />
+          </FilterButton>
+        )
+      })}
     </Row>
   )
 })

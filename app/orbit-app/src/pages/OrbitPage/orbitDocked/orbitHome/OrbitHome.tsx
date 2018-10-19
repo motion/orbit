@@ -30,6 +30,7 @@ export class OrbitHome extends React.Component<Props> {
       >
         <OrbitExplore />
         <VerticalSpace />
+        <VerticalSpace small />
       </SubPane>
     )
   }

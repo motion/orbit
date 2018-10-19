@@ -29,6 +29,11 @@ umed:
 
   - basically just use a few queries and get fts working, then integrate with SearchResultsCommand
 
+- rss syncer also can it be super easy to add?
+
+  - maybe orbit can detect links
+  - or you can paste into the searchbar to subscribe
+
 - folder syncer:
 
   - can we pull it off without insane complexity?

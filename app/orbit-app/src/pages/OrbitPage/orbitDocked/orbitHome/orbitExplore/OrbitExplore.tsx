@@ -26,7 +26,7 @@ type Props = {
 }
 
 const TITLE_HEIGHT = 30
-const cardHeight = (group: SelectionGroup) => (group.name === 'People' ? 60 : 80)
+const cardHeight = (group: SelectionGroup) => (group.name === 'Directory' ? 60 : 80)
 const rowHeight = (group: SelectionGroup) => cardHeight(group) + TITLE_HEIGHT
 
 const SortableItem = SortableElement(({ value }: { value: SelectionGroup }) => {

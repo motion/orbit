@@ -7,8 +7,12 @@ export class QueryStore {
   updateAppQuery = react(
     () => this.query,
     async (query, { sleep }) => {
-      // slight debounce for super fast typing
-      await sleep(30)
+      // debounce a bit for fast typer
+      await sleep(40)
+      // debounce even more on one letter queries, because who searcht that anyway
+      if (App.state.query.length === 0 && query.length === 1) {
+        await sleep(50)
+      }
       App.setState({ query })
     },
   )

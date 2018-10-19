@@ -92,11 +92,11 @@ export class ScreenManager {
     const [x, y] = position
     const [width, height] = size
     return {
-      x: Math.round(x - 10),
+      x: Math.round(x),
       // mac topbar 23
-      y: Math.round(y + 23 + 10),
+      y: Math.round(y + 23),
       width: Math.round(width),
-      height: Math.round(height - 30),
+      height: Math.round(height - 10),
     }
   }
 }

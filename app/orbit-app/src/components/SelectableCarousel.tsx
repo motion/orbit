@@ -7,7 +7,6 @@ import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
 export type SelectableCarouselProps = CarouselProps & {
   selectionStore?: SelectionStore
   store?: CarouselStore
-  offset: number
   isActiveStore?: { isActive?: boolean }
   resetOnInactive?: boolean
 }

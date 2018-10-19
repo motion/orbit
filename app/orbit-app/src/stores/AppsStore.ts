@@ -50,6 +50,9 @@ export class AppsStore {
     appSettings => {
       return appSettings.filter(x => !!allApps[x.type]).map(getAppFromSetting)
     },
+    {
+      defaultValue: [],
+    },
   )
 
   // this is every possible app (that uses a bit), just turned into array

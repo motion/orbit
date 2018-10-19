@@ -375,17 +375,18 @@ export class OrbitCard extends React.Component<OrbitItemProps<ResolvableModel>> 
   }
 
   render() {
-    return (
-      <UI.ThemeContext.Consumer>
-        {obj => {
-          const themeName = obj.activeThemeName === 'clearLight' ? 'clearDark' : obj.activeThemeName
-          return (
-            <UI.Theme name={themeName}>
-              <OrbitCardInner key={themeName} {...this.props} />
-            </UI.Theme>
-          )
-        }}
-      </UI.ThemeContext.Consumer>
-    )
+    return <OrbitCardInner {...this.props} />
+    // return (
+    //   <UI.ThemeContext.Consumer>
+    //     {obj => {
+    //       const themeName = obj.activeThemeName === 'clearLight' ? 'clearDark' : obj.activeThemeName
+    //       return (
+    //         <UI.Theme name={themeName}>
+
+    //         </UI.Theme>
+    //       )
+    //     }}
+    //   </UI.ThemeContext.Consumer>
+    // )
   }
 }

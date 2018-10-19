@@ -30,7 +30,7 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     index?: number
     store?: OrbitItemStore
     isExpanded?: boolean
-    style?: Object
+    style?: any
     afterTitle?: React.ReactNode
     titleProps?: Object
     inactive?: boolean

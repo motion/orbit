@@ -137,7 +137,7 @@ const dark = {
   cardBorderColorHover: [255, 255, 255, 0.15],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   ...Theme.fromStyles({
-    background: [19, 19, 19, 0.05],
+    background: [19, 19, 19, 0.95],
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
     color: '#fff',
@@ -161,8 +161,18 @@ const clearLight = {
 const clearDark = {
   _equalityKey: 'clearDark',
   ...dark,
-  cardHoverGlow: [0, 0, 0, 2, [255, 255, 255, 0.15]],
-  cardBackground: [65, 65, 65, 0.5],
+  ...Theme.colorize({
+    background: [19, 19, 19, 0.05],
+    cardHoverGlow: [0, 0, 0, 2, [255, 255, 255, 0.15]],
+    cardBackground: [65, 65, 65, 0.5],
+  }),
+}
+
+const semiDark = {
+  _equalityKey: 'semi-dark',
+  ...dark,
+  background: 'linear-gradient(rgba(45,45,45,0.45), rgba(30,30,30,0.45))',
+  backgroundHover: 'linear-gradient(rgba(45,45,45,0.2), rgba(30,30,30,0.2))',
 }
 
 export const themes = {
@@ -183,6 +193,7 @@ export const themes = {
   clearDark,
   light,
   clearLight,
+  'semi-dark': semiDark,
   tan: {
     _equalityKey: 'tan',
     ...macModernTheme,

@@ -8,22 +8,31 @@ import { SettingModel, GeneralSettingValues } from '@mcro/models'
 import { OrbitStore } from './OrbitStore'
 import { autoTrack } from '../../stores/Track'
 import { memoize } from 'lodash'
+import { AppsStore } from '../../stores/AppsStore'
 
-type Panes = 'home' | 'search' | 'settings' | 'onboard'
+type Panes = 'home' | 'settings' | 'onboard' | string
 
 export class PaneManagerStore {
   props: {
+    appsStore: AppsStore
     orbitStore: OrbitStore
     selectionStore: SelectionStore
     keyboardStore: KeyboardStore
   }
 
-  panes: Partial<Panes>[] = ['home', 'search', 'settings']
+  panes: Partial<Panes>[] = ['home', 'settings']
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
   lastKey = { key: null, at: Date.now() }
   subPane = 'apps'
+
+  setPanes = react(
+    () => this.props.appsStore.activeApps,
+    apps => {
+      this.panes = ['home', ...apps.map(x => x.display.name), 'settings']
+    },
+  )
 
   generalSetting = null
   generalSetting$ = observeOne(SettingModel, {

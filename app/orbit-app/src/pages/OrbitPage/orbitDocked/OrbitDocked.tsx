@@ -85,7 +85,7 @@ class OrbitDockedContents extends React.Component<Props> {
             </Interactive>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
-            <OrbitSearchResults />
+            {/* <OrbitSearchResults /> */}
             <OrbitSettings name="settings" />
           </div>
         </OrbitDockedInner>
@@ -130,7 +130,7 @@ export class OrbitDocked extends React.Component<Props> {
     // because it hides in electron before rendering the hide here and then
     // does the hide/show after the toggle
     log.timer('orbit', '-------- DOCKED ------------')
-    const theme = App.state.darkTheme ? 'dark' : 'clearLight'
+    const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (
       <UI.Theme name={theme}>
         <OrbitDockedFrame

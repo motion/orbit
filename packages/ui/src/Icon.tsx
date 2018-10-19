@@ -74,6 +74,9 @@ export class Icon extends React.Component<IconProps> {
 
   render() {
     const { tooltip, tooltipProps, name, type, children, color, ...props } = this.props
+    if (!name) {
+      return null
+    }
     let content
     if (name[0] === '/') {
       return <img src={name} {...props} />

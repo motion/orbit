@@ -127,6 +127,9 @@ export class SelectionStore {
       ensure('no active index', !this.hasActiveIndex)
       Actions.clearPeek()
     },
+    {
+      deferFirstRun: true,
+    },
   )
 
   clearSelectedOnClosePeek = react(

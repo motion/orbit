@@ -305,6 +305,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
                   showChildren && (
                     <ItemView
                       model={this.props.model}
+                      bit={this.props.model}
                       searchTerm={this.props.searchTerm}
                       shownLimit={10}
                       extraProps={this.props.extraProps}

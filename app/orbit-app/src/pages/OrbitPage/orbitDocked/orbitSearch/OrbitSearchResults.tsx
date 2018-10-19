@@ -27,7 +27,6 @@ const OrbitSearchResultsFrame = view({
 
 // separate view to prevent a few renders...
 const OrbitSearchResultsContents = view(({ searchStore, selectionStore }: Props) => {
-  log(`render only if change...`)
   return (
     <>
       <OrbitSearchQuickResults searchStore={searchStore} selectionStore={selectionStore} />

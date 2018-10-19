@@ -176,7 +176,6 @@ export class SearchStore {
       }
 
       const updateNextResults = async ({ startIndex, endIndex }) => {
-        console.log('loading rows from', startIndex, endIndex)
         const searchOpts = {
           ...baseFindOptions,
           skip: startIndex,

@@ -310,6 +310,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
           {childrenFunction &&
             showChildren && (
               <ItemView
+                model={this.props.model}
                 bit={this.props.model}
                 searchTerm={this.props.searchTerm}
                 shownLimit={10}

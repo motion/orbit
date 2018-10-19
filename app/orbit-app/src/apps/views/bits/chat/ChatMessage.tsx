@@ -35,7 +35,6 @@ export class ChatMessageContent extends React.Component<
   render() {
     const { bit, extraProps = {}, message, previousMessage, hide = {}, decoration } = this.props
     if (!message.text || !bit) {
-      console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
     const person = (bit.people || []).find(person => person.integrationId === message.user)

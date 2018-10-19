@@ -42,7 +42,6 @@ class OrbitNavStore {
   measureFilters = react(
     () => [this.props.searchStore.searchFilterStore.integrationFilters.length, this.showFilters],
     () => {
-      console.log('measure...', this.filtersRef.clientWidth)
       this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.clientWidth)
     },
   )

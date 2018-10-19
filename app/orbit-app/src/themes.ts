@@ -103,8 +103,6 @@ const macModernTheme = Theme.colorize({
   },
 })
 
-console.log('macModernTheme', macModernTheme)
-
 const light = {
   _equalityKey: 'light',
   ...macModernTheme,

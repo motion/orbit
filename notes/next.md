@@ -1,4 +1,7 @@
-- get "gm" to show recent gmail instantly
+- some slack messages empty
+  - no messagetext/bit ({"user":"U0K6FMG5R","text":"","time":1539916580000})
+
+* get "gm" to show recent gmail instantly
 
 umed:
 

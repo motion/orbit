@@ -88,6 +88,9 @@ export class HeaderStore {
       this.props.queryStore.clearQuery()
       this.focus()
     },
+    {
+      deferFirstRun: true,
+    },
   )
 
   onClickInput = () => {}

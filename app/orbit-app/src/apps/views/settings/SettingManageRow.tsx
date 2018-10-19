@@ -51,7 +51,7 @@ export class SettingManageRow extends React.Component<{
           {(syncJobs, removeJobs) => {
             return (
               <>
-                {(syncJobs.length || removeJobs.length) && (
+                {!!(syncJobs.length || removeJobs.length) && (
                   <>
                     <Text size={0.9} fontWeight={400} alpha={0.6}>
                       {syncJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}

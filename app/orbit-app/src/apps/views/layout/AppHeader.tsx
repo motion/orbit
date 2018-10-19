@@ -86,11 +86,6 @@ export class AppHeaderContent extends React.Component<Props> {
       >
         <Glint borderRadius={7.5} opacity={0.65} top={0.5} />
         <MainHead>
-          <WindowControls
-            onClose={appStore.handleClose}
-            onMax={appStore.isTorn ? appStore.handleMaximize : null}
-            onMin={appStore.isTorn ? appStore.handleMinimize : null}
-          />
           {!!before && (
             <HeaderSection flex={1}>
               {typeof before === 'string' ? <TitleBarText>{before}</TitleBarText> : before}

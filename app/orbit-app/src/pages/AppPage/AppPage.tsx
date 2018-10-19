@@ -52,6 +52,7 @@ const HiddenControls = view({
   opacity: 0,
   padding: [6, 4, 6],
   zIndex: 1000,
+  pointerEvents: 'none',
   '&:hover': {
     opacity: 1,
   },

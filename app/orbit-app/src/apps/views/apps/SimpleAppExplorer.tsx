@@ -8,6 +8,8 @@ import { TitleBarButton } from '../layout/TitleBarButton'
 import { ScrollableContent } from '../layout/ScrollableContent'
 import { HideablePane } from '../../../views/HideablePane'
 import { getAppFromSetting } from '../../../stores/AppsStore'
+import { TitleBar } from '../layout/TitleBar'
+import { AppHeader } from '../layout/AppHeader'
 
 type Props = {
   appViewStore?: AppViewStore
@@ -62,27 +64,37 @@ export class SimpleAppExplorer extends React.Component<Props> {
     const app = getAppFromSetting(setting)
     return (
       <>
-        {app.display.name}
-        <TitleBarButton
-          tooltip="Settings"
-          icon="gear"
-          onClick={appViewStore.activeToggler('settings')}
-          active={appViewStore.active === 'settings'}
-        />
-        <SegmentedRow>
-          <TitleBarButton
-            onClick={appViewStore.setter('topics')}
-            active={appViewStore.active === 'topics'}
-          >
-            Topic Explorer
-          </TitleBarButton>
-          <TitleBarButton
-            onClick={appViewStore.setter('related')}
-            active={appViewStore.active === 'related'}
-          >
-            Relations Explorer
-          </TitleBarButton>
-        </SegmentedRow>
+        <AppHeader
+          before={
+            <>
+              {app.appName} - {app.display.name}
+            </>
+          }
+          after={
+            <TitleBarButton
+              tooltip="Settings"
+              icon="gear"
+              onClick={appViewStore.activeToggler('settings')}
+              active={appViewStore.active === 'settings'}
+            />
+          }
+        >
+          <SegmentedRow>
+            <TitleBarButton
+              onClick={appViewStore.setter('topics')}
+              active={appViewStore.active === 'topics'}
+            >
+              Topic Explorer
+            </TitleBarButton>
+            <TitleBarButton
+              onClick={appViewStore.setter('related')}
+              active={appViewStore.active === 'related'}
+            >
+              Relations Explorer
+            </TitleBarButton>
+          </SegmentedRow>
+        </AppHeader>
+
         <ScrollableContent>
           <HideablePane invisible={appViewStore.active !== 'topics'}>
             <AppTopicExplorer setting={setting} />

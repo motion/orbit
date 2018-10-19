@@ -16,6 +16,7 @@ const ControlButtonForgiveness = view().theme(({ size, forgiveness }) => ({
   margin: -forgiveness,
   width: size + forgiveness * 2,
   height: size + forgiveness * 2,
+  pointerEvents: 'auto',
   '& img': {
     opacity: 0,
   },

@@ -18,7 +18,6 @@ export class SlackItem extends React.Component<OrbitAppProps<'slack'>> {
   render() {
     const { bit, searchTerm, shownLimit } = this.props
     if (!bit) {
-      console.trace('no bit!', this.props)
       return null
     }
     const { data, people } = bit

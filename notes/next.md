@@ -1,7 +1,30 @@
-- some slack messages empty
+# actual be useful/fun/10x better at exploration
+
+- home redo:
+  - top carousel of "categories"
+    - "Recent Interactions"
+    - "My Topics"
+    - ...locations/people sorted by most recently interacted
+  - this lets us "default select" the first one without there being a peek
+  - which means you can pop open orbit and then tab through them easily
+  - also, since that is the same as "quick results"
+    - typing filters it and can unify quick filters now nicely
+    - "gm" filters the gmail carousel item
+      - that then shows condensed recent gmail items
+  - then below the carousel, show that "result set"
+    - this can basically be search, so they are actually the same thing now
+    - just empty search
+    - could explore having a search option for "split by location", "split by topic"
+      - that would bring back the old "list of carousels" option
+- top bar in search is actual a "filter by" by
+  - topics, recent people youve interacted with
+- condensed search view by default
+- recent items by default in search (weighted much higher)
+
+* some slack messages empty
   - no messagetext/bit ({"user":"U0K6FMG5R","text":"","time":1539916580000})
 
-* get "gm" to show recent gmail instantly
+- get "gm" to show recent gmail instantly
 
 umed:
 

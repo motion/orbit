@@ -29,20 +29,21 @@ export class OrbitHome extends React.Component<Props> {
     console.log('OrbitHome Render')
     return (
       <>
-        <View position="relative" zIndex={1000} margin={[20, 0, 0]}>
+        <View position="relative" zIndex={1000} margin={[8, 0, 0]}>
           <SelectableCarousel
-            cardWidth={52}
-            cardHeight={52}
+            cardWidth={56}
+            cardHeight={56}
             cardSpace={0}
+            horizontalPadding={20}
             CardView={OrbitAppIconCard}
             items={[
               {
                 title: 'Orbit',
-                children: <OrbitOrb size={36} background={'#DDADDA'} color="#985FC9" />,
+                children: <OrbitOrb size={28} background={'#DDADDA'} color="#985FC9" />,
               },
               ...appsStore.activeApps.map(app => ({
                 title: app.display.name,
-                children: <OrbitIcon size={36} name={app.integration} />,
+                children: <OrbitIcon size={28} name={app.integration} />,
               })),
               // {
               //   title: 'Gmail',

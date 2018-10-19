@@ -49,17 +49,19 @@ export const OrbitAppIconCard = (props: Props) => {
     ...restProps
   } = props
   console.log('props are', props)
+  const isSelected = model.title === 'Orbit'
   return (
     <Col
-      marginRight={16}
+      marginRight={20}
       width={style.width}
-      heigth={style.height + 20}
+      heigth={style.height + 15}
       alignItems="center"
       justifyContent="center"
     >
       <OrbitCard
-        direct
         chromeless
+        isSelected={isSelected}
+        direct
         style={style}
         padding={3}
         borderRadius={100}
@@ -74,11 +76,11 @@ export const OrbitAppIconCard = (props: Props) => {
           sizeRadius={3}
           height={17}
           maxWidth={70}
-          margin={[-7, 0, 0]}
+          margin={[-4, 0, 0]}
           padding={[0, 6]}
           glint
         >
-          <Text size={0.9} sizeLineHeight={0.9} fontWeight={400} ellipse>
+          <Text size={0.9} sizeLineHeight={0.9} ellipse>
             {model.title}
           </Text>
         </SizedSurface>

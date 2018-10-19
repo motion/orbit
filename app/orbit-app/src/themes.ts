@@ -163,16 +163,16 @@ const clearDark = {
   ...dark,
   ...Theme.colorize({
     background: [19, 19, 19, 0.05],
-    cardHoverGlow: [0, 0, 0, 2, [255, 255, 255, 0.15]],
-    cardBackground: [65, 65, 65, 0.5],
+    // cardHoverGlow: [0, 0, 0, 2, [255, 255, 255, 0.15]],
+    // cardBackground: [65, 65, 65, 0.5],
   }),
 }
 
 const semiDark = {
   _equalityKey: 'semi-dark',
   ...dark,
-  background: 'linear-gradient(rgba(45,45,45,0.45), rgba(30,30,30,0.45))',
-  backgroundHover: 'linear-gradient(rgba(45,45,45,0.2), rgba(30,30,30,0.2))',
+  background: 'linear-gradient(rgba(45,45,45,0.15), rgba(30,30,30,0.15))',
+  backgroundHover: 'linear-gradient(rgba(45,45,45,0.1), rgba(30,30,30,0.1))',
 }
 
 export const themes = {

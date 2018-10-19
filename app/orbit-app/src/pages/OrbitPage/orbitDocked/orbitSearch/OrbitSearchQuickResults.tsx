@@ -15,10 +15,7 @@ const cardProps = {
   pane: 'docked-search',
   subPane: 'search',
   titleProps: {
-    ellipse: true,
-  },
-  hide: {
-    icon: true,
+    ellipse: 2,
   },
   inGrid: true,
 }
@@ -41,7 +38,7 @@ export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
     <View opacity={isActive && activeQuery === query ? 1 : 0.5}>
       <SelectableCarousel
         offset={0}
-        cardHeight={58}
+        cardHeight={80}
         cardWidth={180}
         cardSpace={4}
         cardProps={cardProps}

@@ -1,1 +1,6 @@
 declare const electronRequire: (a: string) => any
+
+declare module '*.svg' {
+  const content: any;
+  export default content;
+}

@@ -10,7 +10,7 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
-import { OrbitAppSettingProps } from '../../../types'
+import { OrbitAppProps, OrbitAppSettingProps } from '../../../types'
 
 type Props = OrbitAppSettingProps<SlackSetting>
 
@@ -66,7 +66,7 @@ class SlackSettingStore {
 
 @view.attach({ store: SlackSettingStore })
 @view
-export class SlackSettings extends React.Component<Props & { store?: SlackSettingStore }> {
+export class SlackSettings extends React.Component<OrbitAppProps<'slack'> & Props & { store?: SlackSettingStore }> {
   render() {
     const {
       store,

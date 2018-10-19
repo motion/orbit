@@ -8,6 +8,13 @@ export const person: GetOrbitApp<'person'> = (_setting?: Setting) => ({
   appName: 'Directory',
   defaultQuery: {
     take: 40,
+    where: {
+      people: {
+        bits: {
+          $moreThan: 1
+        }
+      }
+    }
   },
   display: {
     name: 'Directory',

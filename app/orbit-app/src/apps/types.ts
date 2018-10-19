@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { FindOptions } from 'typeorm'
 import { IntegrationType, Bit, PersonBit, Setting, GenericBit } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
+import { IntegrationSyncer } from '../../../orbit-syncers/src/core/IntegrationSyncer'
 import { AppStore } from '../pages/AppPage/AppStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
@@ -83,10 +84,10 @@ export type OrbitApp<A extends AppType> = {
   defaultQuery?: any | FindOptions<ModelFromType<A>> // TODO umed
   viewConfig?: AppConfig['viewConfig']
   views: {
-    main: Component<OrbitAppMainProps<A>, any, any>
-    item: Component<OrbitAppProps<A>, any, any>
-    setting?: Component<OrbitAppProps<A>, any, any>
-    setup?: Component<any>
+    main: new (...args: any[]) => Component<OrbitAppMainProps<A>, any, any>
+    item: new (...args: any[]) => Component<OrbitAppProps<A>, any, any>
+    setting?: new (...args: any[]) => Component<OrbitAppProps<A>, any, any>
+    setup?: new (...args: any[]) => Component<any>
   }
 }
 

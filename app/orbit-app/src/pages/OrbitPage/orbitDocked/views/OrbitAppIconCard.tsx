@@ -75,7 +75,7 @@ export const OrbitAppIconCard = (props: Props) => {
           size={0.9}
           sizeRadius={3}
           height={17}
-          maxWidth={70}
+          maxWidth={style.width - 4}
           margin={[-4, 0, 0]}
           padding={[0, 6]}
           glint

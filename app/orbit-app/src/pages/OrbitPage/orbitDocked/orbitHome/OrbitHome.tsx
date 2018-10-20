@@ -27,23 +27,24 @@ export class OrbitHome extends React.Component<Props> {
   render() {
     const { appsStore } = this.props
     console.log('OrbitHome Render')
+    const size = 32
     return (
       <>
         <View position="relative" zIndex={1000} margin={[8, 0, 0]}>
           <SelectableCarousel
-            cardWidth={56}
-            cardHeight={56}
+            cardWidth={size}
+            cardHeight={size}
             cardSpace={0}
-            horizontalPadding={20}
+            horizontalPadding={16}
             CardView={OrbitAppIconCard}
             items={[
               {
                 title: 'Orbit',
-                children: <OrbitOrb size={28} background={'#DDADDA'} color="#985FC9" />,
+                children: <OrbitOrb size={size - 10} background={'#DDADDA'} color="#985FC9" />,
               },
               ...appsStore.activeApps.map(app => ({
                 title: app.display.name,
-                children: <OrbitIcon size={28} name={app.integration} />,
+                children: <OrbitIcon size={size - 10} name={app.integration} />,
               })),
               // {
               //   title: 'Gmail',
@@ -53,9 +54,6 @@ export class OrbitHome extends React.Component<Props> {
           />
         </View>
         <SubPane name="home" before={<OrbitNavVerticalPad />} paddingLeft={6} paddingRight={6}>
-          <View padding={[0, 6]}>
-            <Title>Orbit</Title>
-          </View>
           <OrbitExplore />
           <VerticalSpace />
           <VerticalSpace small />

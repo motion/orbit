@@ -18,9 +18,9 @@ import { OrbitNav } from './orbitNav/OrbitNav'
 import { View } from '@mcro/ui'
 import { SelectableCarousel } from '../../../components/SelectableCarousel'
 import { OrbitAppIconCard } from './views/OrbitAppIconCard'
-import { OrbitOrb } from './orbitSettings/OrbitOrb'
 import { AppsStore } from '../../../stores/AppsStore'
 import { OrbitIcon } from '../../../views/OrbitIcon'
+import { SVG } from '../../../views/SVG'
 
 const log = new Logger('OrbitDocked')
 
@@ -101,27 +101,66 @@ class OrbitDockedContents extends React.Component<Props> {
                   items={[
                     {
                       title: 'Recent',
-                      children: <OrbitIcon color={color} size={iconSize} name="home" />,
+                      children: (
+                        <SVG
+                          fill="#fff"
+                          svg={require('!raw-loader!../../../../public/streamline/01-Interface Essential/01-Home/house.svg')}
+                        />
+                      ),
                     },
                     {
                       title: 'People',
-                      children: <OrbitIcon color={color} size={iconSize} name="usersmultiple" />,
+                      children: (
+                        <SVG
+                          fill="#fff"
+                          svg={require('!raw-loader!../../../../public/streamline/17-Users/16-Geomertic-Close Up-Multiple Users/multiple-neutral-2.svg')}
+                        />
+                      ),
                     },
                     {
                       title: 'Topics',
-                      children: <OrbitIcon color={color} size={iconSize} name="chat" />,
+                      children: (
+                        <SVG
+                          fill="#fff"
+                          svg={require('!raw-loader!../../../../public/streamline/21-Messages-Chat-Smileys/03-Conversation/conversation-chat-1.svg')}
+                        />
+                      ),
                     },
                     {
                       title: 'My List',
-                      children: <OrbitIcon color={color} size={iconSize} name="bullet-list" />,
+                      children: (
+                        <SVG
+                          fill="#fff"
+                          svg={require('!raw-loader!../../../../public/streamline/01-Interface Essential/03-Menu/navigation-menu-3.svg')}
+                        />
+                      ),
                     },
                     {
                       title: 'Memory',
-                      children: <OrbitIcon color={color} size={iconSize} name="brain" />,
+                      children: (
+                        <SVG
+                          fill="#fff"
+                          svg={require('!raw-loader!../../../../public/streamline/17-Users/10-Geomertic-Close Up-Single User-Neutral/single-neutral-search.svg')}
+                        />
+                      ),
+                    },
+                    {
+                      title: 'Help',
+                      children: (
+                        <SVG
+                          fill="#fff"
+                          svg={require('!raw-loader!../../../../public/streamline/01-Interface Essential/16-Help/question-help-message.svg')}
+                        />
+                      ),
                     },
                     {
                       title: 'New',
-                      children: <OrbitIcon color={color} size={iconSize} name="simple-add" />,
+                      children: (
+                        <SVG
+                          fill="#fff"
+                          svg={require('!raw-loader!../../../../public/streamline/01-Interface Essential/43-Remove-Add/add.svg')}
+                        />
+                      ),
                     },
                   ]}
                 />

@@ -32,6 +32,7 @@
     "react-sortable-hoc": "0.8.3",
     "remark-emoji": "2.0.1",
     "typeorm": "^0.3.0-alpha.22",
+    "react-svg-inline": "2.1.1",
     "immer": "1.7.2",
     "react-markdown": "3.6.0",
     "arrford": "2.0.1",

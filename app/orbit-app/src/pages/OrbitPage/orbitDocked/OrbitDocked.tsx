@@ -5,7 +5,6 @@ import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
 import { OrbitHomeHeader } from './orbitHome/OrbitHomeHeader'
 import { OrbitHeader } from '../orbitHeader/OrbitHeader'
-import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { BORDER_RADIUS } from '../../../constants'
@@ -16,6 +15,12 @@ import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { Logger } from '@mcro/logger'
 import { OrbitNav } from './orbitNav/OrbitNav'
+import { View } from '@mcro/ui'
+import { SelectableCarousel } from '../../../components/SelectableCarousel'
+import { OrbitAppIconCard } from './views/OrbitAppIconCard'
+import { OrbitOrb } from './orbitSettings/OrbitOrb'
+import { AppsStore } from '../../../stores/AppsStore'
+import { OrbitIcon } from '../../../views/OrbitIcon'
 
 const log = new Logger('OrbitDocked')
 
@@ -23,6 +28,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: OrbitStore
+  appsStore?: AppsStore
   store?: OrbitDockedStore
 }
 
@@ -67,11 +73,12 @@ const Interactive = view({
   },
 })
 
-@view.attach('paneManagerStore', 'searchStore')
+@view.attach('appsStore', 'paneManagerStore', 'searchStore')
 @view
 class OrbitDockedContents extends React.Component<Props> {
   render() {
-    const { paneManagerStore } = this.props
+    const { appsStore, paneManagerStore } = this.props
+    const size = 32
     return (
       <>
         <OrbitHeader
@@ -81,6 +88,24 @@ class OrbitDockedContents extends React.Component<Props> {
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <Interactive disabled={/home|search/.test(paneManagerStore.activePane) === false}>
+              <View position="relative" zIndex={1000} margin={[12, 0, 0]}>
+                <SelectableCarousel
+                  cardWidth={size}
+                  cardHeight={size}
+                  cardSpace={0}
+                  horizontalPadding={16}
+                  CardView={OrbitAppIconCard}
+                  cardProps={{
+                    hideTitle: true,
+                  }}
+                  items={[
+                    ...appsStore.activeApps.map(app => ({
+                      title: app.display.name,
+                      children: <OrbitIcon size={size - 10} name={app.integration} />,
+                    })),
+                  ]}
+                />
+              </View>
               <OrbitNav />
             </Interactive>
             <OrbitOnboard name="onboard" />

@@ -54,7 +54,7 @@ export const OrbitAppIconCard = (props: Props) => {
     <Col
       marginRight={20}
       width={style.width}
-      heigth={style.height + 15}
+      heigth={style.height + hideTitle ? 0 : 15}
       alignItems="center"
       justifyContent="center"
     >
@@ -76,13 +76,15 @@ export const OrbitAppIconCard = (props: Props) => {
           sizeRadius={3}
           height={17}
           maxWidth={style.width - 4}
-          margin={[-4, 0, 0]}
           padding={[0, 6]}
           glint
+          tooltip={model.title}
         >
-          <Text size={0.9} sizeLineHeight={0.9} ellipse>
-            {model.title}
-          </Text>
+          {!hideTitle && (
+            <Text size={0.9} sizeLineHeight={0.9} ellipse>
+              {model.title}
+            </Text>
+          )}
         </SizedSurface>
       </Theme>
     </Col>

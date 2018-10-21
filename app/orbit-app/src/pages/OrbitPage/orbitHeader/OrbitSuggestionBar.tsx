@@ -63,16 +63,16 @@ const suggestionTheme = theme => ({
 const SuggestionButton = props => (
   <UI.Button
     glint={false}
-    size={0.95}
+    size={1}
     sizeRadius={0}
     sizeHeight={0.8}
     sizePadding={0.3}
-    fontWeight={600}
+    fontWeight={500}
     themeSelect={suggestionTheme}
     background="transparent"
     borderColor="transparent"
     borderWidth={0}
-    marginRight={6}
+    marginRight={8}
     borderTop={[2, 'transparent']}
     {...props}
   />

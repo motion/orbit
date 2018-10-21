@@ -77,8 +77,10 @@ const Interactive = view({
 @view
 class OrbitDockedContents extends React.Component<Props> {
   render() {
-    const { appsStore, paneManagerStore } = this.props
-    const size = 32
+    const { paneManagerStore } = this.props
+    const size = 52
+    const iconSize = 24
+    const color = '#fff'
     return (
       <>
         <OrbitHeader
@@ -88,25 +90,42 @@ class OrbitDockedContents extends React.Component<Props> {
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <Interactive disabled={/home|search/.test(paneManagerStore.activePane) === false}>
-              <View position="relative" zIndex={1000} margin={[12, 0, 0]}>
+              <OrbitNav />
+              <View position="relative" zIndex={1000} margin={[20, 0, 0]}>
                 <SelectableCarousel
                   cardWidth={size}
                   cardHeight={size}
                   cardSpace={0}
-                  horizontalPadding={16}
+                  horizontalPadding={20}
                   CardView={OrbitAppIconCard}
-                  cardProps={{
-                    hideTitle: true,
-                  }}
                   items={[
-                    ...appsStore.activeApps.map(app => ({
-                      title: app.display.name,
-                      children: <OrbitIcon size={size - 10} name={app.integration} />,
-                    })),
+                    {
+                      title: 'Recent',
+                      children: <OrbitIcon color={color} size={iconSize} name="home" />,
+                    },
+                    {
+                      title: 'People',
+                      children: <OrbitIcon color={color} size={iconSize} name="usersmultiple" />,
+                    },
+                    {
+                      title: 'Topics',
+                      children: <OrbitIcon color={color} size={iconSize} name="chat" />,
+                    },
+                    {
+                      title: 'My List',
+                      children: <OrbitIcon color={color} size={iconSize} name="bullet-list" />,
+                    },
+                    {
+                      title: 'Memory',
+                      children: <OrbitIcon color={color} size={iconSize} name="brain" />,
+                    },
+                    {
+                      title: 'New',
+                      children: <OrbitIcon color={color} size={iconSize} name="simple-add" />,
+                    },
                   ]}
                 />
               </View>
-              <OrbitNav />
             </Interactive>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />

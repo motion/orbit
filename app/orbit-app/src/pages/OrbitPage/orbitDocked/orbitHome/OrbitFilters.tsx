@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { SearchStore } from '../SearchStore'
-import { Row, Button } from '@mcro/ui'
+import { Row, Button, Popover, View } from '@mcro/ui'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
+import { NavButton } from '../../../../views/NavButton'
+import { DateRangePicker } from 'react-date-range'
 
 type Props = {
   searchStore?: SearchStore
@@ -25,6 +27,38 @@ export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {
   }
   return (
     <Row {...props}>
+      <NavButton
+        onClick={searchFilterStore.toggleSortBy}
+        icon={searchFilterStore.sortBy === 'Recent' ? 'sort' : 'trend'}
+        tooltip={searchFilterStore.sortBy}
+        opacity={0.5}
+      />
+      <Popover
+        delay={100}
+        openOnClick
+        openOnHover
+        closeOnClickAway
+        group="filters"
+        target={
+          <NavButton
+            icon="calendar"
+            opacity={searchStore.searchFilterStore.hasDateFilter ? 1 : 0.5}
+          />
+        }
+        alignPopover="left"
+        adjust={[220, 0]}
+        background
+        borderRadius={6}
+        elevation={4}
+        theme="light"
+      >
+        <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
+          <DateRangePicker
+            onChange={searchStore.searchFilterStore.onChangeDate}
+            ranges={[searchStore.searchFilterStore.dateState]}
+          />
+        </View>
+      </Popover>
       {searchFilterStore.integrationFilters.map((filter, i) => {
         return (
           <FilterButton

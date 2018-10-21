@@ -71,7 +71,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
             />
           )}
           <UI.Button
-            icon="app"
+            icon="menudot"
             tooltip="Settings"
             active={paneManagerStore.activePaneFast === 'settings'}
             onClick={this.paneSetter('settings')}

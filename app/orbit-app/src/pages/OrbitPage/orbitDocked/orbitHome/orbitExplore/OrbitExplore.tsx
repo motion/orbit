@@ -79,7 +79,17 @@ const SortableCarouselRow = SortableContainer(VirtualCarouselRow, { withRef: tru
 class OrbitExploreStore {
   props: Props
   streams: { [a: string]: { values: any[]; name: string } } = {}
-  sortOrder = []
+
+  // sort order with date
+  private sortedAt = 0
+  private _sortOrder = []
+  get sortOrder() {
+    return this._sortOrder
+  }
+  set sortOrder(val) {
+    this.sortedAt = Date.now()
+    this._sortOrder = val
+  }
 
   get isActive() {
     return this.props.paneManagerStore.activePane === 'home'
@@ -98,7 +108,9 @@ class OrbitExploreStore {
   results = react(
     () => [this.streams, this.sortOrder],
     async ([streams], { sleep }) => {
-      await sleep(200)
+      if (Date.now() - this.sortedAt > 10) {
+        await sleep(200)
+      }
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of this.sortOrder) {

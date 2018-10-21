@@ -59,7 +59,6 @@ export const OrbitAppIconCard = (props: Props) => {
       justifyContent="center"
     >
       <OrbitCard
-        chromeless
         isSelected={isSelected}
         direct
         style={style}
@@ -72,16 +71,16 @@ export const OrbitAppIconCard = (props: Props) => {
       </OrbitCard>
       <Theme name="semi-dark">
         <SizedSurface
-          size={0.9}
+          size={0.8}
           sizeRadius={3}
           height={17}
-          maxWidth={style.width - 4}
-          padding={[0, 6]}
+          maxWidth={style.width * 1.4}
+          padding={[0, 4]}
           glint
           tooltip={model.title}
         >
           {!hideTitle && (
-            <Text size={0.9} sizeLineHeight={0.9} ellipse>
+            <Text size={0.85} sizeLineHeight={0.9} ellipse>
               {model.title}
             </Text>
           )}

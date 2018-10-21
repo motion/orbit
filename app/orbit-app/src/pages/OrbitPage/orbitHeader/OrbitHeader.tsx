@@ -8,7 +8,6 @@ import { View } from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
 import { Actions } from '../../../actions/Actions'
 import { OrbitSpaceSwitch } from '../orbitDocked/orbitHome/OrbitSpaceSwitch'
-import { OrbitOrb } from '../orbitDocked/orbitSettings/OrbitOrb'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -113,12 +112,9 @@ export class OrbitHeader extends React.Component<
             <OrbitClose onClick={Actions.closeOrbit}>
               <OrbitCloseControl />
             </OrbitClose>
-            <OrbitOrb
-              size={16}
-              background="rgba(20, 20, 20, 0.15)"
-              color="rgba(0, 0, 0, 0.26)"
+            <OrbitSpaceSwitch
               onClick={headerStore.onClickOrb}
-              margin={['auto', 10]}
+              margin={['auto', 0]}
               transform={{
                 y: -0.5,
               }}

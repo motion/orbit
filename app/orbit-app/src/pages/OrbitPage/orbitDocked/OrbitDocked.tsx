@@ -75,6 +75,8 @@ const Interactive = view({
 @view.attach('appsStore', 'paneManagerStore', 'searchStore')
 @view
 class OrbitDockedContents extends React.Component<Props> {
+  isSelected = index => index === this.props.paneManagerStore.paneIndex
+
   render() {
     const { paneManagerStore } = this.props
     const size = 52
@@ -90,13 +92,17 @@ class OrbitDockedContents extends React.Component<Props> {
               <OrbitNav />
               <View position="relative" zIndex={1000} margin={[20, 0, 0]}>
                 <SelectableCarousel
+                  debug
+                  offset={0}
+                  shouldScrollToActive
+                  activeIndex={paneManagerStore.paneIndex}
                   cardWidth={size}
                   cardHeight={size}
                   cardSpace={0}
                   horizontalPadding={20}
                   CardView={OrbitAppIconCard}
                   cardProps={{
-                    isSelected: index => index === paneManagerStore.paneIndex,
+                    isSelected: this.isSelected,
                   }}
                   items={[
                     {

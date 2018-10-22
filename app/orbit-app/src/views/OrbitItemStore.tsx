@@ -95,7 +95,7 @@ export class OrbitItemStore {
   }
 
   get appConfig() {
-    return this.props.appConfig || getAppConfig(this.props.model)
+    return this.props.appConfig || this.props.model ? getAppConfig(this.props.model) : null
   }
 
   get position() {
@@ -153,7 +153,6 @@ export class OrbitItemStore {
         ensure('appConfig`', !!this.appConfig)
         // fluidity
         await sleep()
-        console.log('WOAH WOAH WOAH select me', this.props, this.appConfig, this.position)
         Actions.setPeekApp(this.appConfig, this.position)
       }
     },

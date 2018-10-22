@@ -152,10 +152,10 @@ class OrbitExploreStore {
         disposers.push(() => subscription.unsubscribe())
       }
       // remove old sorts if removed
-      const removed = difference(Object.keys(apps), this.sortOrder)
+      const removed = difference(this.sortOrder, Object.keys(apps))
       if (removed.length) {
         this.sortOrder = pullAll(this.sortOrder, removed)
-        console.log('removed streams', removed)
+        console.log('removed streams', Object.keys(apps), removed, this.sortOrder)
       }
       return {
         dispose: () => disposers.map(x => x()),

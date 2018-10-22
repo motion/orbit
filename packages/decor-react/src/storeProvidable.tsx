@@ -76,7 +76,11 @@ export function storeProvidable(userOptions, Helpers) {
 
         constructor(a, b) {
           super(a, b)
-          this.setupProps()
+          Mobx.extendObservable(
+            this,
+            { _props: getNonReactElementProps(this.props) },
+            { _props: Mobx.observable.shallow },
+          )
           this.setupStores()
         }
 
@@ -102,17 +106,6 @@ export function storeProvidable(userOptions, Helpers) {
           if (this.disposeStores) {
             this.disposeStores()
           }
-        }
-
-        // for reactive props in stores
-        // 🐛 must run this before this.setupStore()
-        setupProps() {
-          if (this._props) {
-            return
-          }
-          const properties = { _props: getNonReactElementProps(this.props) }
-          // shallow
-          Mobx.extendObservable(this, properties, null, { deep: false })
         }
 
         setupStores() {

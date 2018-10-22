@@ -146,7 +146,6 @@ const findIconName = name => {
 
 export const Icon = ({ name, ...props }) => {
   const iconName = findIconName(name)
-  console.log('iconName', iconName)
   if (!iconName) {
     return null
   }

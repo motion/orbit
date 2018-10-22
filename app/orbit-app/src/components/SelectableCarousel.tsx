@@ -5,10 +5,13 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
 
 export type SelectableCarouselProps = CarouselProps & {
+  offset: number
   selectionStore?: SelectionStore
   store?: CarouselStore
   isActiveStore?: { isActive?: boolean }
   resetOnInactive?: boolean
+  activeIndex?: number
+  shouldScrollToActive?: boolean
 }
 
 class CarouselStore {
@@ -16,13 +19,29 @@ class CarouselStore {
 
   carouselRef = React.createRef<Carousel>()
 
+  get activeIndex() {
+    if (typeof this.props.activeIndex === 'number') {
+      return this.props.activeIndex
+    }
+    return this.props.selectionStore.activeIndex
+  }
+
+  get shouldScroll() {
+    if (typeof this.props.shouldScrollToActive === 'boolean') {
+      return this.props.shouldScrollToActive
+    }
+    return this.props.isActiveStore ? this.props.isActiveStore.isActive : false
+  }
+
   handleScrollTo = react(
     () => {
-      const index = this.props.selectionStore.activeIndex
-      const isShowing = this.props.isActiveStore ? this.props.isActiveStore.isActive : null
+      const index = this.activeIndex
       const { items, offset } = this.props
       const isActive =
-        isShowing && typeof index === 'number' && index >= offset && index <= offset + items.length
+        this.shouldScroll &&
+        typeof index === 'number' &&
+        index >= offset &&
+        index <= offset + items.length
       return isActive ? index : false
     },
     indexIfActive => {
@@ -32,11 +51,13 @@ class CarouselStore {
       if (indexIfActive == false) {
         if (resetOnInactive) {
           carousel.scrollTo(0)
+        } else {
+          throw cancel
         }
-        throw cancel
+      } else {
+        const wasClicked = selectionStore.selectEvent === 'click'
+        carousel.scrollTo(indexIfActive - offset, { onlyIfOutside: wasClicked })
       }
-      const wasClicked = selectionStore.selectEvent === 'click'
-      carousel.scrollTo(indexIfActive - offset, { onlyIfOutside: wasClicked })
     },
     {
       deferFirstRun: true,

@@ -70,6 +70,8 @@ export type OrbitAppSettingProps<T extends Setting> = {
   appStore: AppStore
 }
 
+type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
+
 export type OrbitApp<A extends AppType> = {
   setting?: Setting
   display?: {
@@ -84,10 +86,10 @@ export type OrbitApp<A extends AppType> = {
   defaultQuery?: any | FindOptions<ModelFromType<A>> // TODO umed
   viewConfig?: AppConfig['viewConfig']
   views: {
-    main: new (...args: any[]) => Component<OrbitAppMainProps<A>, any, any>
-    item: new (...args: any[]) => Component<OrbitAppProps<A>, any, any>
-    setting?: new (...args: any[]) => Component<OrbitAppProps<A>, any, any>
-    setup?: new (...args: any[]) => Component<any>
+    main: GenericComponent<OrbitAppMainProps<A>>
+    item: GenericComponent<OrbitAppProps<A>>
+    setting?: GenericComponent<OrbitAppSettingProps<Setting>>
+    setup?: GenericComponent<any>
   }
 }
 

@@ -48,7 +48,6 @@ export const OrbitAppIconCard = (props: Props) => {
     style,
     ...restProps
   } = props
-  console.log('props are', props)
   return (
     <Col
       marginRight={20}

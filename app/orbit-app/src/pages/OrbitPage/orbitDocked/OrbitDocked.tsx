@@ -19,7 +19,7 @@ import { View } from '@mcro/ui'
 import { SelectableCarousel } from '../../../components/SelectableCarousel'
 import { OrbitAppIconCard } from './views/OrbitAppIconCard'
 import { AppsStore } from '../../../stores/AppsStore'
-import { SVG } from '../../../views/SVG'
+import { Icon } from '../../../views/Icon'
 
 const log = new Logger('OrbitDocked')
 
@@ -101,66 +101,31 @@ class OrbitDockedContents extends React.Component<Props> {
                   items={[
                     {
                       title: 'Recent',
-                      children: (
-                        <SVG
-                          fill="#fff"
-                          svg={require('!raw-loader!../../../../public/streamline/01-Interface Essential/01-Home/house.svg')}
-                        />
-                      ),
+                      children: <Icon name="house" />,
                     },
                     {
                       title: 'People',
-                      children: (
-                        <SVG
-                          fill="#fff"
-                          svg={require('!raw-loader!../../../../public/streamline/17-Users/16-Geomertic-Close Up-Multiple Users/multiple-neutral-2.svg')}
-                        />
-                      ),
+                      children: <Icon name="multipleNeutral2" />,
                     },
                     {
                       title: 'Topics',
-                      children: (
-                        <SVG
-                          fill="#fff"
-                          svg={require('!raw-loader!../../../../public/streamline/21-Messages-Chat-Smileys/03-Conversation/conversation-chat-1.svg')}
-                        />
-                      ),
+                      children: <Icon name="singleNeutralChat" />,
                     },
                     {
                       title: 'My List',
-                      children: (
-                        <SVG
-                          fill="#fff"
-                          svg={require('!raw-loader!../../../../public/streamline/01-Interface Essential/03-Menu/navigation-menu-3.svg')}
-                        />
-                      ),
+                      children: <Icon name="listBullets" />,
                     },
                     {
                       title: 'Memory',
-                      children: (
-                        <SVG
-                          fill="#fff"
-                          svg={require('!raw-loader!../../../../public/streamline/17-Users/10-Geomertic-Close Up-Single User-Neutral/single-neutral-search.svg')}
-                        />
-                      ),
+                      children: <Icon name="singleNeutralSearch" />,
                     },
                     {
                       title: 'Help',
-                      children: (
-                        <SVG
-                          fill="#fff"
-                          svg={require('!raw-loader!../../../../public/streamline/01-Interface Essential/16-Help/question-help-message.svg')}
-                        />
-                      ),
+                      children: <Icon name="questionHelpMessage" />,
                     },
                     {
                       title: 'New',
-                      children: (
-                        <SVG
-                          fill="#fff"
-                          svg={require('!raw-loader!../../../../public/streamline/01-Interface Essential/43-Remove-Add/add.svg')}
-                        />
-                      ),
+                      children: <Icon name="add" />,
                     },
                   ]}
                 />

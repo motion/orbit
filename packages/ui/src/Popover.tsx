@@ -962,7 +962,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       left,
       arrowTop,
       arrowLeft,
-      isOpen,
+      // isOpen,
       closing,
       maxHeight,
       direction,

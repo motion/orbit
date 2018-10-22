@@ -10,10 +10,10 @@ import { AppBitView } from './AppBitView'
 import { App } from '@mcro/stores'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { WindowControls } from '../../views/WindowControls'
-import { AppSearchable } from '../../apps/views/apps/AppSearchable'
+import { AppSearchable } from '../../integrations/views/apps/AppSearchable'
 import { AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
-import { OrbitIntegration } from '../../apps/types'
-import { allApps } from '../../apps'
+import { OrbitIntegration } from '../../integrations/types'
+import { allApps } from '../../integrations'
 
 type Props = {
   appsStore?: AppsStore

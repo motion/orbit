@@ -6,7 +6,7 @@ import {
   Masonry,
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitSearchCard } from '../apps/orbit/orbitDocked/orbitHome/OrbitSearchCard'
+import { OrbitSearchCard } from '../pages/OrbitPage/orbitDocked/orbitHome/OrbitSearchCard'
 
 const middleSpace = 3
 const width = ORBIT_WIDTH

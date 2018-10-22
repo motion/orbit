@@ -13,7 +13,7 @@ import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
-import { ResolvableModel } from '../apps/types'
+import { ResolvableModel } from '../integrations/types'
 import { Avatar } from './Avatar'
 
 const VerticalSpaceSmall = view({

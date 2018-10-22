@@ -1,8 +1,8 @@
 import { SettingModel, Setting, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
-import { allApps, getApps } from '../apps'
+import { allApps, getApps } from '../integrations'
 import { react } from '@mcro/black'
-import { OrbitIntegration, ResolvableModel } from '../apps/types'
+import { OrbitIntegration, ResolvableModel } from '../integrations/types'
 import { keyBy } from 'lodash'
 import { AppConfig } from '@mcro/stores'
 

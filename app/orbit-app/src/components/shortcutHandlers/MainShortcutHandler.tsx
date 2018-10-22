@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
-import { SelectionStore } from '../../apps/orbit/orbitDocked/SelectionStore'
 import { Actions } from '../../actions/Actions'
 import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
+import { SelectionStore } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
 
 type Props = {
   selectionStore: SelectionStore

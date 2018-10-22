@@ -3,7 +3,7 @@ import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { Actions } from '../actions/Actions'
-import { ResolvableModel } from '../apps/types'
+import { ResolvableModel } from '../integrations/types'
 import { getAppConfig } from '../stores/AppsStore'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet

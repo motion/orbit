@@ -2,7 +2,7 @@ import { checkAuthProxy } from './checkAuthProxy'
 import { promptForAuthProxy } from './promptForAuthProxy'
 import { memoize } from 'lodash'
 import { Actions } from '../actions/Actions'
-import { OrbitIntegration } from '../apps/types'
+import { OrbitIntegration } from '../integrations/types'
 import { appToAppConfig } from '../stores/AppsStore'
 
 const promptForProxy = async () => {

@@ -6,7 +6,7 @@ import { OrbitItemProps } from '../../../../views/OrbitItemProps'
 import { SyncStatus } from './SyncStatus'
 import { Text } from '@mcro/ui'
 import { Setting } from '@mcro/models'
-import { OrbitIntegration } from '../../../../apps/types'
+import { OrbitIntegration } from '../../../../integrations/types'
 import { appToAppConfig } from '../../../../stores/AppsStore'
 import pluralize from 'pluralize'
 

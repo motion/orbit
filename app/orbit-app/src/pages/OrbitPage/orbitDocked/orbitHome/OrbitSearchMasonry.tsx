@@ -5,6 +5,9 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore } from '../SelectionStore'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { OrbitMasonry } from '../../../../views/OrbitMasonry'
+import { loadMany } from '@mcro/model-bridge'
+import { BitModel } from '@mcro/models'
+import { App } from '@mcro/stores'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -12,26 +15,35 @@ type Props = {
   selectionStore?: SelectionStore
 }
 
+class TopicsStore {
+  results = []
+
+  async didMount() {
+    this.results = await loadMany(BitModel, {
+      args: {
+        take: 20,
+      },
+    })
+  }
+}
+
 @view.attach('paneManagerStore', 'searchStore', 'selectionStore')
+@view.attach({
+  store: TopicsStore,
+})
 @view
-export class OrbitSearchMasonry extends React.Component<Props> {
+export class OrbitSearchMasonry extends React.Component<Props & { store?: TopicsStore }> {
   render() {
-    const { searchStore } = this.props
-    const { results, query } = searchStore.searchState
-    if (!results || !results.length) {
-      return null
-    }
-    const quickResultsLen = searchStore.quickSearchState.results.length
+    const { results } = this.props.store
     return (
       <ProvideHighlightsContextWithDefaults
-        value={{ words: query.split(' '), maxChars: 500, maxSurroundChars: 80 }}
+        value={{ words: App.state.query.split(' '), maxChars: 500, maxSurroundChars: 80 }}
       >
         <OrbitMasonry
           items={results}
-          offset={quickResultsLen}
+          offset={0}
           cardProps={{
-            query,
-            searchStore,
+            query: App.state.query,
           }}
         />
       </ProvideHighlightsContextWithDefaults>

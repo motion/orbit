@@ -3,7 +3,7 @@ import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { Actions } from '../actions/Actions'
-import { ResolvableModel } from '../apps/types'
+import { ResolvableModel } from '../integrations/types'
 import { getAppConfig } from '../stores/AppsStore'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
@@ -33,7 +33,7 @@ export class OrbitItemStore {
     return Date.now() - this.clickAt < 50
   }
 
-  handleClick = e => {
+  handleClick = (e: React.SyntheticEvent<MouseEvent>) => {
     // so we can control the speed of doubleclicks
     if (Date.now() - this.clickAt < 280) {
       // allow double click of location
@@ -51,11 +51,11 @@ export class OrbitItemStore {
       this.props.onClick(e, this.cardWrapRef)
       return
     }
-    if (this.props.onSelect) {
-      this.props.onSelect(this.cardWrapRef)
+    if (this.props.inactive) {
       return
     }
-    if (this.props.inactive) {
+    if (this.props.onSelect) {
+      this.props.onSelect(this.realIndex, this.appConfig, e.target as HTMLDivElement)
       return
     }
     this.props.selectionStore.toggleSelected(this.realIndex, 'click')
@@ -95,7 +95,7 @@ export class OrbitItemStore {
   }
 
   get appConfig() {
-    return this.props.appConfig || getAppConfig(this.props.model)
+    return this.props.appConfig || this.props.model ? getAppConfig(this.props.model) : null
   }
 
   get position() {
@@ -135,7 +135,8 @@ export class OrbitItemStore {
           return false
         }
       }
-      const forceSelected = typeof isSelected === 'function' ? isSelected() : isSelected
+      const forceSelected =
+        typeof isSelected === 'function' ? isSelected(this.realIndex) : isSelected
       let next
       if (typeof forceSelected === 'boolean') {
         next = forceSelected
@@ -145,15 +146,18 @@ export class OrbitItemStore {
       return next
     },
     async (isSelected, { sleep }) => {
-      const { preventAutoSelect } = this.props
+      const { onSelect, preventAutoSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected && !preventAutoSelect) {
-        ensure('appConfig`', !!this.appConfig)
-        // fluidity
-        await sleep()
-        console.log('WOAH WOAH WOAH select me', this.props, this.appConfig, this.position)
-        Actions.setPeekApp(this.appConfig, this.position)
+        if (onSelect) {
+          onSelect(this.realIndex, this.appConfig)
+        } else {
+          ensure('appConfig`', !!this.appConfig)
+          // fluidity
+          await sleep()
+          Actions.setPeekApp(this.appConfig, this.position)
+        }
       }
     },
   )

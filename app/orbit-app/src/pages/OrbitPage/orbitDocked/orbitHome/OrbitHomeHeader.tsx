@@ -33,9 +33,9 @@ const exploreButton = {
   borderWidth: 0,
   borderColor: 'transparent',
   background: 'transparent',
-  opacity: 0.5,
+  opacity: 0.25,
   iconProps: {
-    size: 11,
+    size: 12,
   },
   hoverStyle: {
     opacity: 0.6,
@@ -56,22 +56,20 @@ export class OrbitHomeHeader extends React.Component<Props> {
 
   render() {
     const { paneManagerStore } = this.props
-    const homeActive =
-      paneManagerStore.activePane === 'home' || paneManagerStore.activePane === 'search'
+    const showHomeButton = paneManagerStore.activePane === 'settings'
     return (
       <>
         <Section invisible={paneManagerStore.activePane === 'onboard'}>
-          {!homeActive && (
+          {showHomeButton && (
             <UI.Button
               icon="home"
               tooltip="Home"
-              active={homeActive}
               onClick={this.paneSetter('home')}
               {...exploreButton}
             />
           )}
           <UI.Button
-            icon="app"
+            icon="gear"
             tooltip="Settings"
             active={paneManagerStore.activePaneFast === 'settings'}
             onClick={this.paneSetter('settings')}

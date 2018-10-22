@@ -186,13 +186,15 @@ export class WebSocketClientTransport implements ClientTransport {
       return
     }
 
-    log.verbose('received data', {
-      id: data.id,
-      type: subscription.type,
-      name: subscription.name,
-      result: data.result,
-      notFound: data.notFound,
-    })
+    if (process.env.NODE_ENV === 'development') {
+      log.verbose('received data', {
+        id: data.id,
+        type: subscription.type,
+        name: subscription.name,
+        result: data.result,
+        notFound: data.notFound,
+      })
+    }
     subscription.onSuccess(data.result)
   }
 }

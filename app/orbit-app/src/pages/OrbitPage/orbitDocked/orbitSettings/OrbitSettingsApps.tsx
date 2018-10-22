@@ -24,19 +24,19 @@ export class OrbitSettingsApps extends React.Component<Props> {
     const { appsStore } = this.props
     return (
       <>
-        {!!appsStore.allApps.length && (
+        {!!appsStore.activeIntegrations.length && (
           <>
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
               gridAutoRows={80}
               margin={[5, -4]}
             >
-              {appsStore.activeApps.map((app, index) => {
+              {appsStore.activeIntegrations.map((app, index) => {
                 return (
                   <OrbitAppCard
                     key={app.setting.id}
                     index={index}
-                    total={appsStore.activeApps.length}
+                    total={appsStore.activeIntegrations.length}
                     activeCondition={this.isSubPaneSelected}
                     isActive
                     app={app}
@@ -52,7 +52,7 @@ export class OrbitSettingsApps extends React.Component<Props> {
         )}
         <Views.SubTitle>Add app</Views.SubTitle>
         <Unpad>
-          {appsStore.allApps.map((app, index) => {
+          {appsStore.allIntegrations.map((app, index) => {
             return (
               <SimpleItem
                 key={`${index}${app.integration}`}

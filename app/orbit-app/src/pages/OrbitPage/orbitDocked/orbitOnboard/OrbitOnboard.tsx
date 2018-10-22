@@ -16,7 +16,7 @@ import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 import { GeneralSettingValues } from '@mcro/models'
 import { BlurryGuys } from './BlurryGuys'
 import { SimpleItem } from '../../../../views/SimpleItem'
-import { OrbitApp, AppType } from '../../../../apps/types'
+import { OrbitIntegration, ItemType } from '../../../../integrations/types'
 
 type Props = {
   appsStore?: AppsStore
@@ -165,7 +165,8 @@ class OnboardStore {
   }
 }
 
-const filterApps = (app: OrbitApp<AppType>) => !!app.integration && app.integration !== 'website'
+const filterApps = (app: OrbitIntegration<ItemType>) =>
+  !!app.integration && app.integration !== 'website'
 
 const decorator = compose(
   view.attach('appsStore', 'paneManagerStore'),
@@ -189,7 +190,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const allAppsSorted = appsStore.allApps
+  const allAppsSorted = appsStore.integrationsMap
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
   return (

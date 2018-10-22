@@ -251,18 +251,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     }
   })
 
-  // handleSortEnd = () => {
-  //   if (this.state.isSorting) {
-  //     this.setState({ isSorting: false })
-  //   }
-  // }
-
-  // handleSortStart = () => {
-  //   if (!this.state.isSorting) {
-  //     this.setState({ isSorting: true })
-  //   }
-  // }
-
   render() {
     const { searchStore } = this.props
     log(
@@ -270,7 +258,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
         searchStore.searchState.query
       }`,
     )
-    window.x = this
     trace()
     if (!this.items.length) {
       return (
@@ -325,8 +312,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
                   pressDelay={120}
                   pressThreshold={17}
                   onRowsRendered={onRowsRendered}
-                  // onSortStart={this.handleSortStart}
-                  // onSortEnd={this.handleSortEnd}
                   lockAxis="y"
                 />
               )}

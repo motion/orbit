@@ -8,8 +8,8 @@ export const NavButton = props => (
     borderColor="transparent"
     glint={false}
     sizeRadius={3}
-    sizeIcon={1.25}
-    sizeHeight={0.9}
+    sizeIcon={1.3}
+    sizeHeight={1}
     {...props}
   />
 )

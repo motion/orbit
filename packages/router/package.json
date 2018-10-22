@@ -15,7 +15,7 @@
     "url-pattern": "1.0.3"
   },
   "peerDependencies": {
-    "mobx": "5.5.0"
+    "mobx": "5.5.1"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

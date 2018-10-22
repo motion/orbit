@@ -10,8 +10,8 @@ import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-ho
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { pullAll, difference, memoize } from 'lodash'
 import { PersonBitModel, BitModel, SettingModel } from '@mcro/models'
-import { allApps } from '../../../../../apps'
 import { action } from 'mobx'
+import { allIntegrations } from '../../../../../integrations'
 
 const models = {
   'person-bit': PersonBitModel,
@@ -79,7 +79,17 @@ const SortableCarouselRow = SortableContainer(VirtualCarouselRow, { withRef: tru
 class OrbitExploreStore {
   props: Props
   streams: { [a: string]: { values: any[]; name: string } } = {}
-  sortOrder = []
+
+  // sort order with date
+  private sortedAt = 0
+  private _sortOrder = []
+  get sortOrder() {
+    return this._sortOrder
+  }
+  set sortOrder(val) {
+    this.sortedAt = Date.now()
+    this._sortOrder = val
+  }
 
   get isActive() {
     return this.props.paneManagerStore.activePane === 'home'
@@ -98,7 +108,9 @@ class OrbitExploreStore {
   results = react(
     () => [this.streams, this.sortOrder],
     async ([streams], { sleep }) => {
-      await sleep(200)
+      if (Date.now() - this.sortedAt > 10) {
+        await sleep(200)
+      }
       let results: SelectionGroup[] = []
       let offset = 0
       for (const id of this.sortOrder) {
@@ -123,7 +135,7 @@ class OrbitExploreStore {
   )
 
   state = react(
-    () => [allApps.person, ...this.props.appsStore.activeApps],
+    () => [allIntegrations.person, ...this.props.appsStore.activeIntegrations],
     apps => {
       // dispose on re-run
       if (this.state) {
@@ -140,10 +152,10 @@ class OrbitExploreStore {
         disposers.push(() => subscription.unsubscribe())
       }
       // remove old sorts if removed
-      const removed = difference(Object.keys(apps), this.sortOrder)
+      const removed = difference(this.sortOrder, Object.keys(apps))
       if (removed.length) {
         this.sortOrder = pullAll(this.sortOrder, removed)
-        console.log('removed streams', removed)
+        console.log('removed streams', Object.keys(apps), removed, this.sortOrder)
       }
       return {
         dispose: () => disposers.map(x => x()),

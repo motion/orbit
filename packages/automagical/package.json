@@ -15,7 +15,7 @@
     "@types/webpack-env": "*"
   },
   "peerDependencies": {
-    "mobx": "5.5.0"
+    "mobx": "5.5.1"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

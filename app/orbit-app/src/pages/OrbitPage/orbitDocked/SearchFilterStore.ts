@@ -32,9 +32,6 @@ export class SearchFilterStore /* extends Store */ {
   appsStore: AppsStore
   nlpStore: NLPStore
   searchStore: SearchStore
-
-  extraFiltersHeight = 325
-  extraFiltersVisible = false
   disabledFilters = {}
   exclusiveFilters = {}
   // sort by
@@ -61,16 +58,8 @@ export class SearchFilterStore /* extends Store */ {
     console.log('should set filter', type, value)
   }
 
-  setExtraFiltersVisible = target => {
-    this.extraFiltersVisible = !!target
-  }
-
   clearDate = () => {
     this.dateState = { startDate: null, endDate: null }
-  }
-
-  get extraHeight() {
-    return this.extraFiltersVisible ? this.extraFiltersHeight : 0
   }
 
   // this contains the segments we found via nlp in order of search
@@ -142,7 +131,7 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   get integrationFilters(): SearchFilter[] {
-    return this.appsStore.allApps.map(app => ({
+    return this.appsStore.activeIntegrations.map(app => ({
       type: app.source,
       integration: app.integration,
       name: app.appName,
@@ -217,7 +206,7 @@ export class SearchFilterStore /* extends Store */ {
       ensure('nlp', !!nlp)
       // reset integration inactive filters
       ensure('integrations', nlp.integrations && !!nlp.integrations.length)
-      this.exclusiveFilters = this.appsStore.allApps.filter(x => x.isActive).reduce((acc, app) => {
+      this.exclusiveFilters = this.appsStore.activeIntegrations.reduce((acc, app) => {
         acc[app.integration] = nlp.integrations.some(x => x === app.integration)
         return acc
       }, {})

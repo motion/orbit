@@ -8,22 +8,32 @@ import { SettingModel, GeneralSettingValues } from '@mcro/models'
 import { OrbitStore } from './OrbitStore'
 import { autoTrack } from '../../stores/Track'
 import { memoize } from 'lodash'
+import { AppsStore } from '../../stores/AppsStore'
 
-type Panes = 'home' | 'search' | 'settings' | 'onboard'
+type Panes = 'home' | 'settings' | 'onboard' | string
 
 export class PaneManagerStore {
   props: {
+    appsStore: AppsStore
     orbitStore: OrbitStore
     selectionStore: SelectionStore
     keyboardStore: KeyboardStore
   }
 
-  panes: Partial<Panes>[] = ['home', 'search', 'settings']
+  panes: Partial<Panes>[] = ['home', 'directory', 'topics', 'list', 'help', 'search', 'settings']
+  keyablePanes = [0, 5]
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
   lastKey = { key: null, at: Date.now() }
   subPane = 'apps'
+
+  // setPanes = react(
+  //   () => this.props.appsStore.activeIntegrations,
+  //   apps => {
+  //     this.panes = ['home', ...apps.map(x => x.display.name), 'settings']
+  //   },
+  // )
 
   generalSetting = null
   generalSetting$ = observeOne(SettingModel, {
@@ -84,11 +94,11 @@ export class PaneManagerStore {
       ensure('focused', this.props.orbitStore.inputFocused)
       if (this.props.selectionStore.activeIndex === -1) {
         if (key === 'right') {
-          ensure('within keyable range', this.paneIndex < 1)
+          ensure('within keyable range', this.paneIndex < this.keyablePanes[1])
           this.setPaneIndex(this.paneIndex + 1)
         }
         if (key === 'left') {
-          ensure('within keyable range', this.paneIndex > 0)
+          ensure('within keyable range', this.paneIndex > this.keyablePanes[0])
           this.setPaneIndex(this.paneIndex - 1)
         }
       }

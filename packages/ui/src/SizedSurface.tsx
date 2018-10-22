@@ -67,7 +67,7 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
     pass.borderRadius = size * 1000
   }
   // clamp radius to max, because we use it for Glint/Hoverglow in Surface and they need actual radius
-  if (pass.borderRadius) {
+  if (pass.borderRadius && typeof height === 'number') {
     pass.borderRadius = Math.round(Math.min(height / 2, pass.borderRadius))
   }
   // icon already tracks height so no need to size it from here

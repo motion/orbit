@@ -2,7 +2,7 @@ import { AppConfig } from '@mcro/stores'
 import { OrbitItemStore } from './OrbitItemStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
-import { ResolvableModel, AppProps } from '../apps/types'
+import { ResolvableModel, OrbitItemProps } from '../integrations/types'
 import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
 import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
 import { SubPaneStore } from '../pages/OrbitPage/SubPaneStore'
@@ -30,13 +30,13 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     index?: number
     store?: OrbitItemStore
     isExpanded?: boolean
-    style?: Object
+    style?: any
     afterTitle?: React.ReactNode
     titleProps?: Object
     inactive?: boolean
     iconProps?: Object
-    hide?: AppProps<any>['hide']
-    extraProps?: Partial<AppProps<any>['extraProps']>
+    hide?: OrbitItemProps<any>['hide']
+    extraProps?: Partial<OrbitItemProps<any>['extraProps']>
     className?: string
     inGrid?: boolean
     pane?: string
@@ -46,7 +46,7 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
       | ((normalizedItem: NormalizedItem, model?: T, index?: number) => JSX.Element)
       | JSX.Element
     onClick?: Function
-    onSelect?: (a: HTMLElement) => any
+    onSelect?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
     borderRadius?: number
     nextUpStyle?: Object
     isSelected?: boolean | Function

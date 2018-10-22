@@ -1,7 +1,14 @@
-- some slack messages empty
-  - no messagetext/bit ({"user":"U0K6FMG5R","text":"","time":1539916580000})
+# October
 
-* get "gm" to show recent gmail instantly
+Nate:
+
+- Apps
+  - List app
+- Search
+  - condensed search view by default
+  - recent items by default in search (weighted much higher)
+- Spaces
+  - Switch spaces
 
 umed:
 
@@ -122,7 +129,6 @@ focus on what we can make really a big improvement in day to day first:
 
 # next / ideas
 
-- live tiles? allow apps to show some interesting info up front
 - find by type (file / link is helpful)
 - search results date strategy:
   - do separators based on time periods:

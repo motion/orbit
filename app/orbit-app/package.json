@@ -28,13 +28,12 @@
     "@mcro/stores": "^2.2.1",
     "@mcro/ui": "^2.2.1",
     "react-date-range": "1.0.0-beta",
-    "react-linkify": "0.2.2",
     "react-sortable-hoc": "0.8.3",
     "remark-emoji": "2.0.1",
     "typeorm": "^0.3.0-alpha.22",
+    "react-svg-inline": "2.1.1",
     "immer": "1.7.2",
     "react-markdown": "3.6.0",
-    "arrford": "2.0.1",
     "compromise": "11.11.0",
     "date-fns": "2.0.0-alpha.16",
     "event-kit": "^2.5.0",
@@ -71,7 +70,7 @@
   },
   "peerDependencies": {
     "electron": "3.0.1",
-    "mobx": "5.1.2",
+    "mobx": "5.5.1",
     "react": "16.5.2",
     "react-dom": "16.5.2"
   },

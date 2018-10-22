@@ -2,36 +2,47 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SelectionStore } from '../SelectionStore'
-import { AppsStore } from '../../../../stores/AppsStore'
 import { VerticalSpace, OrbitNavVerticalPad } from '../../../../views'
-import { SearchStore } from '../SearchStore'
 import { OrbitExplore } from './orbitExplore/OrbitExplore'
+import { OrbitDirectory } from '../OrbitDirectory'
+import { OrbitSearchMasonry } from './OrbitSearchMasonry'
+import { ListApp } from '../../../../apps/list/ListApp'
 
 type Props = {
   name: string
-  searchStore?: SearchStore
   paneManagerStore?: PaneManagerStore
-  selectionStore?: SelectionStore
-  appsStore?: AppsStore
 }
 
+@view.attach('paneManagerStore')
 @view
 export class OrbitHome extends React.Component<Props> {
   render() {
     console.log('OrbitHome Render')
     return (
-      <SubPane
-        name="home"
-        fadeBottom
-        before={<OrbitNavVerticalPad />}
-        paddingLeft={6}
-        paddingRight={6}
-      >
-        <OrbitExplore />
-        <VerticalSpace />
-        <VerticalSpace small />
-      </SubPane>
+      <>
+        <SubPane name="home" before={<OrbitNavVerticalPad />} paddingLeft={6} paddingRight={6}>
+          <OrbitExplore />
+          <VerticalSpace />
+          <VerticalSpace small />
+        </SubPane>
+        <SubPane
+          name="directory"
+          before={<OrbitNavVerticalPad />}
+          paddingLeft={12}
+          paddingRight={12}
+        >
+          <OrbitDirectory />
+          <VerticalSpace />
+        </SubPane>
+        <SubPane name="topics" before={<OrbitNavVerticalPad />} paddingLeft={0} paddingRight={0}>
+          <OrbitSearchMasonry />
+          <VerticalSpace />
+        </SubPane>
+        <SubPane name="list" before={<OrbitNavVerticalPad />} paddingLeft={0} paddingRight={0}>
+          <ListApp />
+          <VerticalSpace />
+        </SubPane>
+      </>
     )
   }
 }

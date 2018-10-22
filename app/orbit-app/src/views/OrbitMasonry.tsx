@@ -6,7 +6,7 @@ import {
   Masonry,
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitSearchCard } from '../apps/orbit/orbitDocked/orbitHome/OrbitSearchCard'
+import { OrbitSearchCard } from '../pages/OrbitPage/orbitDocked/orbitHome/OrbitSearchCard'
 
 const middleSpace = 3
 const width = ORBIT_WIDTH
@@ -53,6 +53,7 @@ export class OrbitMasonry extends React.Component<Props> {
         <div
           style={{
             ...style,
+            width: style.width - (this.props.sidePad || 0) / 2,
             paddingLeft: style.left === 0 ? this.props.sidePad : 0,
             paddingRight: style.left === 0 ? 0 : this.props.sidePad,
           }}

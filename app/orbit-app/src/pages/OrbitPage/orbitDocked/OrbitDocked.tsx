@@ -5,7 +5,6 @@ import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
 import { OrbitHomeHeader } from './orbitHome/OrbitHomeHeader'
 import { OrbitHeader } from '../orbitHeader/OrbitHeader'
-import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { BORDER_RADIUS } from '../../../constants'
@@ -16,6 +15,12 @@ import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { Logger } from '@mcro/logger'
 import { OrbitNav } from './orbitNav/OrbitNav'
+import { View } from '@mcro/ui'
+import { SelectableCarousel } from '../../../components/SelectableCarousel'
+import { OrbitAppIconCard } from './views/OrbitAppIconCard'
+import { AppsStore } from '../../../stores/AppsStore'
+import { Icon } from '../../../views/Icon'
+import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
 
 const log = new Logger('OrbitDocked')
 
@@ -23,6 +28,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: OrbitStore
+  appsStore?: AppsStore
   store?: OrbitDockedStore
 }
 
@@ -67,11 +73,19 @@ const Interactive = view({
   },
 })
 
-@view.attach('paneManagerStore', 'searchStore')
+@view.attach('appsStore', 'paneManagerStore', 'searchStore')
 @view
 class OrbitDockedContents extends React.Component<Props> {
+  isSelected = index => index === this.props.paneManagerStore.paneIndex
+
+  onSelect = (index, config) => {
+    this.props.paneManagerStore.setPaneIndex(index)
+    console.log('selected', index, config)
+  }
+
   render() {
     const { paneManagerStore } = this.props
+    const size = 52
     return (
       <>
         <OrbitHeader
@@ -80,8 +94,50 @@ class OrbitDockedContents extends React.Component<Props> {
         />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
-            <Interactive disabled={/home|search/.test(paneManagerStore.activePane) === false}>
+            <Interactive disabled={/settings/.test(paneManagerStore.activePane)}>
               <OrbitNav />
+              <View position="relative" zIndex={1000} margin={[20, 0, 0]}>
+                <SelectableCarousel
+                  offset={0}
+                  // shouldScrollToActive
+                  activeIndex={paneManagerStore.paneIndex}
+                  cardWidth={size}
+                  cardHeight={size}
+                  cardSpace={0}
+                  horizontalPadding={20}
+                  CardView={OrbitAppIconCard}
+                  cardProps={{
+                    isSelected: this.isSelected,
+                    onSelect: this.onSelect,
+                  }}
+                  items={[
+                    {
+                      title: 'Orbit',
+                      children: <Icon name="house" />,
+                    },
+                    {
+                      title: 'People',
+                      children: <Icon name="multipleNeutral2" />,
+                    },
+                    {
+                      title: 'Topics',
+                      children: <Icon name="singleNeutralChat" />,
+                    },
+                    {
+                      title: 'My List',
+                      children: <Icon name="listBullets" />,
+                    },
+                    {
+                      title: 'Help',
+                      children: <Icon name="questionCircle" />,
+                    },
+                    {
+                      title: 'New',
+                      children: <Icon name="add" />,
+                    },
+                  ]}
+                />
+              </View>
             </Interactive>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
@@ -130,7 +186,7 @@ export class OrbitDocked extends React.Component<Props> {
     // because it hides in electron before rendering the hide here and then
     // does the hide/show after the toggle
     log.timer('orbit', '-------- DOCKED ------------')
-    const theme = App.state.darkTheme ? 'dark' : 'clearLight'
+    const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (
       <UI.Theme name={theme}>
         <OrbitDockedFrame

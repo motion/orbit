@@ -69,9 +69,7 @@ export type SurfaceProps = CSSPropertySet & {
 const getIconSize = props => {
   return (
     props.iconSize ||
-    Math.round(
-      (props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1) * 100,
-    ) / 100
+    Math.round((props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1))
   )
 }
 

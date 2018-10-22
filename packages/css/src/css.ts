@@ -318,12 +318,9 @@ export default function createCSS(options: Object = {}) {
       }
       // shorthands
       if (SHORTHANDS[key]) {
-        key = SHORTHANDS[key]
-        if (Array.isArray(key)) {
-          for (let k of key) {
-            k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
-            toReturn[k] = addPx(value)
-          }
+        for (let k of SHORTHANDS[key]) {
+          k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
+          toReturn[k] = addPx(value)
         }
       }
       if (respond) {

@@ -49,7 +49,6 @@ export const OrbitAppIconCard = (props: Props) => {
     ...restProps
   } = props
   console.log('props are', props)
-  const isSelected = model.title === 'Orbit'
   return (
     <Col
       marginRight={20}
@@ -58,15 +57,7 @@ export const OrbitAppIconCard = (props: Props) => {
       alignItems="center"
       justifyContent="center"
     >
-      <OrbitCard
-        isSelected={isSelected}
-        direct
-        style={style}
-        padding={3}
-        borderRadius={100}
-        flex="none"
-        {...restProps}
-      >
+      <OrbitCard direct style={style} padding={3} borderRadius={100} flex="none" {...restProps}>
         <Centered>{model.children}</Centered>
       </OrbitCard>
       <Theme name="semi-dark">

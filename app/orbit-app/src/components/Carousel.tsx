@@ -85,10 +85,8 @@ export class Carousel extends React.PureComponent<CarouselProps> {
             key={`${index}${item.id}`}
             index={index + offset}
             className={`carousel-result-item ${className || ''}`}
-            pane="carousel"
             model={item}
             inGrid
-            hoverToSelect={false}
             {...cardProps}
             style={{
               width: cardWidth,

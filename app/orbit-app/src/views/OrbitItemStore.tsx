@@ -135,7 +135,8 @@ export class OrbitItemStore {
           return false
         }
       }
-      const forceSelected = typeof isSelected === 'function' ? isSelected() : isSelected
+      const forceSelected =
+        typeof isSelected === 'function' ? isSelected(this.realIndex) : isSelected
       let next
       if (typeof forceSelected === 'boolean') {
         next = forceSelected

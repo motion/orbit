@@ -19,7 +19,6 @@ import { View } from '@mcro/ui'
 import { SelectableCarousel } from '../../../components/SelectableCarousel'
 import { OrbitAppIconCard } from './views/OrbitAppIconCard'
 import { AppsStore } from '../../../stores/AppsStore'
-import { OrbitIcon } from '../../../views/OrbitIcon'
 import { SVG } from '../../../views/SVG'
 
 const log = new Logger('OrbitDocked')
@@ -79,8 +78,6 @@ class OrbitDockedContents extends React.Component<Props> {
   render() {
     const { paneManagerStore } = this.props
     const size = 52
-    const iconSize = 24
-    const color = '#fff'
     return (
       <>
         <OrbitHeader
@@ -89,7 +86,7 @@ class OrbitDockedContents extends React.Component<Props> {
         />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
-            <Interactive disabled={/home|search/.test(paneManagerStore.activePane) === false}>
+            <Interactive disabled={/settings/.test(paneManagerStore.activePane)}>
               <OrbitNav />
               <View position="relative" zIndex={1000} margin={[20, 0, 0]}>
                 <SelectableCarousel
@@ -98,6 +95,9 @@ class OrbitDockedContents extends React.Component<Props> {
                   cardSpace={0}
                   horizontalPadding={20}
                   CardView={OrbitAppIconCard}
+                  cardProps={{
+                    isSelected: index => index === paneManagerStore.paneIndex,
+                  }}
                   items={[
                     {
                       title: 'Recent',

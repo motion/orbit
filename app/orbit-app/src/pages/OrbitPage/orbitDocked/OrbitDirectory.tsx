@@ -38,7 +38,7 @@ class OrbitDirectoryStore {
   }
 
   get isActive() {
-    return this.props.paneManagerStore.activePane === this.props.name
+    return this.props.paneManagerStore.activePane === 'directory'
   }
 
   setSelectionHandler = react(

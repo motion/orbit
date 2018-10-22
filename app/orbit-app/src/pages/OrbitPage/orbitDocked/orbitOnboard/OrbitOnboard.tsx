@@ -190,7 +190,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const allAppsSorted = appsStore.allApps
+  const allAppsSorted = appsStore.integrationsMap
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
   return (

@@ -135,7 +135,7 @@ class OrbitExploreStore {
   )
 
   state = react(
-    () => [allApps.person, ...this.props.appsStore.activeApps],
+    () => [allApps.person, ...this.props.appsStore.activeIntegrations],
     apps => {
       // dispose on re-run
       if (this.state) {

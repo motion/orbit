@@ -1,6 +1,6 @@
 import { SettingModel, Setting, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
-import { allApps, getApps } from '../integrations'
+import { allIntegrations, getIntegrations } from '../integrations'
 import { react } from '@mcro/black'
 import { OrbitIntegration, ResolvableModel } from '../integrations/types'
 import { keyBy } from 'lodash'
@@ -12,16 +12,16 @@ type GenericApp = OrbitIntegration<any> & {
 
 export const getAppFromSetting = (setting: Setting): OrbitIntegration<any> => {
   return {
-    ...getApps[setting.type](setting),
+    ...getIntegrations[setting.type](setting),
     setting,
   }
 }
 
 export const getAppConfig = (model: ResolvableModel): AppConfig => {
   const type = model.target === 'bit' ? model.integration : 'person'
-  const app = allApps[type]
+  const app = allIntegrations[type]
   if (!app) {
-    console.log('no app', type, allApps)
+    console.log('no app', type, allIntegrations)
     return null
   }
   return appToAppConfig(app, model)
@@ -45,10 +45,10 @@ export const appToAppConfig = (app: OrbitIntegration<any>, model?: ResolvableMod
 export class AppsStore {
   appSettings: Setting[] = []
 
-  activeApps = react(
+  activeIntegrations = react(
     () => this.appSettings,
     appSettings => {
-      return appSettings.filter(x => !!allApps[x.type]).map(getAppFromSetting)
+      return appSettings.filter(x => !!allIntegrations[x.type]).map(getAppFromSetting)
     },
     {
       defaultValue: [],
@@ -56,17 +56,17 @@ export class AppsStore {
   )
 
   // this is every possible app (that uses a bit), just turned into array
-  get appsList(): OrbitIntegration<any>[] {
-    return Object.keys(allApps)
-      .map(x => allApps[x])
+  get integrations(): OrbitIntegration<any>[] {
+    return Object.keys(allIntegrations)
+      .map(x => allIntegrations[x])
       .filter(x => x.source === 'bit')
   }
 
   // pass in a blank setting so we can access the OrbitApp configs
-  allApps = react(
-    () => this.activeApps,
+  allIntegrations = react(
+    () => this.activeIntegrations,
     activeApps => {
-      return this.appsList.map(
+      return this.integrations.map(
         app =>
           ({
             ...app,
@@ -79,15 +79,15 @@ export class AppsStore {
     },
   )
 
-  appByIntegration = react(() => this.allApps, x => keyBy(x, 'integration'), {
+  allIntegrationsMap = react(() => this.allIntegrations, x => keyBy(x, 'integration'), {
     defaultValue: {},
   })
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {
-    if (!this.appByIntegration[type]) {
+    if (!this.allIntegrationsMap[type]) {
       return () => 'none'
     }
-    return this.appByIntegration[type].views[viewType]
+    return this.allIntegrationsMap[type].views[viewType]
   }
 
   private appSettings$ = observeMany(SettingModel, {

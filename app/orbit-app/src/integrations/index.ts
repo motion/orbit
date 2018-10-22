@@ -8,7 +8,7 @@ import { drive } from './directory/drive/drive'
 import { website } from './directory/website/website'
 import { person } from './directory/person/person'
 
-export const getApps: GetOrbitIntegrations = {
+export const getIntegrations: GetOrbitIntegrations = {
   slack,
   github,
   gmail,
@@ -23,10 +23,10 @@ export const getApps: GetOrbitIntegrations = {
 // All orbit app configs
 // pass in "blank" setting to get the basic information for each app
 //
-export const allApps: OrbitIntegrations = Object.keys(getApps).reduce(
+export const allIntegrations: OrbitIntegrations = Object.keys(getIntegrations).reduce(
   (acc, key) => ({
     ...acc,
-    [key]: getApps[key]({}),
+    [key]: getIntegrations[key]({}),
   }),
   {} as OrbitIntegrations,
 )

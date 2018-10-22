@@ -30,7 +30,7 @@ export class OrbitHome extends React.Component<Props> {
           <VerticalSpace />
           <VerticalSpace small />
         </SubPane>
-        {appsStore.activeApps.map(app => (
+        {appsStore.activeIntegrations.map(app => (
           <SubPane
             name={app.display.name}
             key={app.setting.id}

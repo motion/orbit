@@ -28,7 +28,7 @@ export class PaneManagerStore {
   subPane = 'apps'
 
   setPanes = react(
-    () => this.props.appsStore.activeApps,
+    () => this.props.appsStore.activeIntegrations,
     apps => {
       this.panes = ['home', ...apps.map(x => x.display.name), 'settings']
     },

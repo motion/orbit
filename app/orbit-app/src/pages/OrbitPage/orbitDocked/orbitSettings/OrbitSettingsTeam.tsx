@@ -81,11 +81,11 @@ export class OrbitSettingsTeam extends React.Component<{
           gridAutoRows={80}
           margin={[5, -4]}
         >
-          {appsStore.allApps.map((app, index) => (
+          {appsStore.activeIntegrations.map((app, index) => (
             <OrbitAppCard
               key={index}
               app={app}
-              total={appsStore.allApps.length}
+              total={appsStore.activeIntegrations.length}
               inGrid
               activeCondition={this.isSubPaneSelected}
               pane="docked"

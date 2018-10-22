@@ -13,7 +13,7 @@ import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../integrations/views/apps/AppSearchable'
 import { AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
 import { OrbitIntegration } from '../../integrations/types'
-import { allApps } from '../../integrations'
+import { allIntegrations } from '../../integrations'
 
 type Props = {
   appsStore?: AppsStore
@@ -64,7 +64,7 @@ class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitIntegration<any>['views']) => {
     const { appStore, appsStore } = this.props
     const { appConfig } = appStore.state
-    const app = appsStore.appByIntegration[appConfig.integration]
+    const app = appsStore.allIntegrationsMap[appConfig.integration]
     if (!app) {
       return NullView
     }
@@ -88,7 +88,7 @@ class AppPageContent extends React.Component<Props> {
         if (!appStore.state.model) {
           return <div>nope</div>
         }
-        const View = allApps.person.views.main
+        const View = allIntegrations.person.views.main
         return <View model={appStore.state.model} {...props} />
       })
     },

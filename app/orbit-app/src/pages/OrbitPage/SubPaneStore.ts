@@ -6,15 +6,6 @@ import { App } from '@mcro/stores'
 import { Actions } from '../../actions/Actions'
 import { sleep } from '../../helpers'
 
-function getTopOffset(element, parent?) {
-  let offset = 0
-  while (element && element !== parent) {
-    offset += element.offsetTop - element.scrollTop + element.clientTop
-    element = element.offsetParent
-  }
-  return offset
-}
-
 export class SubPaneStore {
   props: SubPaneProps
 
@@ -86,19 +77,8 @@ export class SubPaneStore {
     return window.innerHeight - 50
   }
 
-  // TODO hacky
-  // this is the expandable filterpane in searches
-  get expandedHeight() {
-    let addHeight = 0
-    if (this.props.name === 'search') {
-      const { extraHeight } = this.props.searchStore.searchFilterStore
-      addHeight = extraHeight ? extraHeight + 14 : 0
-    }
-    return addHeight
-  }
-
   get fullHeight() {
-    const fullHeight = this.expandedHeight + this.contentHeight + this.aboveContentHeight
+    const fullHeight = this.contentHeight + this.aboveContentHeight
     const minHeight = 90
     // never go all the way to bottom, cap min and max
     return Math.max(minHeight, Math.min(this.maxHeight, fullHeight))
@@ -133,10 +113,6 @@ export class SubPaneStore {
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
     // get top from here because its not affected by scroll
-    if (this.expandedHeight) {
-      // wait for animation... hacky...
-      await sleep(250)
-    }
     const { top } = this.subPaneInner.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {
       this.aboveContentHeight = Math.max(0, top)

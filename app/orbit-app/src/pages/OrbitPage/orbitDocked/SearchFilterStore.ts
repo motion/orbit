@@ -32,9 +32,6 @@ export class SearchFilterStore /* extends Store */ {
   appsStore: AppsStore
   nlpStore: NLPStore
   searchStore: SearchStore
-
-  extraFiltersHeight = 325
-  extraFiltersVisible = false
   disabledFilters = {}
   exclusiveFilters = {}
   // sort by
@@ -61,16 +58,8 @@ export class SearchFilterStore /* extends Store */ {
     console.log('should set filter', type, value)
   }
 
-  setExtraFiltersVisible = target => {
-    this.extraFiltersVisible = !!target
-  }
-
   clearDate = () => {
     this.dateState = { startDate: null, endDate: null }
-  }
-
-  get extraHeight() {
-    return this.extraFiltersVisible ? this.extraFiltersHeight : 0
   }
 
   // this contains the segments we found via nlp in order of search

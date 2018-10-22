@@ -6,95 +6,25 @@ import {
   CellMeasurer,
   InfiniteLoader,
 } from 'react-virtualized'
-import { SearchStore } from '../SearchStore'
+import { SearchStore } from '../../pages/OrbitPage/orbitDocked/SearchStore'
 import { view, ensure } from '@mcro/black'
-import { Text, View } from '@mcro/ui'
-import { HighlightText } from '../../../../views/HighlightText'
-import { OrbitListItem } from '../../../../views/OrbitListItem'
-import { handleClickLocation } from '../../../../helpers/handleClickLocation'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { Bit } from '@mcro/models'
-import { reaction, trace } from 'mobx'
+import { View } from '@mcro/ui'
+import { SortableContainer } from 'react-sortable-hoc'
+import { reaction } from 'mobx'
 import { debounce } from 'lodash'
-import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
-import { SelectionStore } from '../SelectionStore'
-import { OrbitItemSingleton } from '../../../../views/OrbitItemStore'
-import { SubPaneStore } from '../../SubPaneStore'
-import { Banner } from '../../../../views/Banner'
+import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
+import { SelectionStore } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
+import { OrbitItemSingleton } from '../OrbitItemStore'
+import { SubPaneStore } from '../../pages/OrbitPage/SubPaneStore'
+import { Banner } from '../Banner'
+import { SortableListItem } from './SortableListItem'
+import { FirstItems } from './FirstItems'
 
 type Props = {
+  items?: any[]
   searchStore?: SearchStore
   selectionStore?: SelectionStore
   subPaneStore?: SubPaneStore
-}
-
-const hideSlack = {
-  title: true,
-  people: true,
-}
-
-const renderListItemChildren = ({ content = null }, bit) => {
-  return bit.integration === 'slack' ? (
-    <SearchResultText>{content}</SearchResultText>
-  ) : (
-    <OrbitCardContent>
-      <HighlightText whiteSpace="normal" alpha={0.65} options={{ maxSurroundChars: 100 }}>
-        {collapseWhitespace(content)}
-      </HighlightText>
-    </OrbitCardContent>
-  )
-}
-
-const OrbitCardContent = view({
-  padding: [6, 0],
-  flex: 1,
-  overflow: 'hidden',
-  whiteSpace: 'pre',
-})
-
-const SearchResultText = props => <Text wordBreak="break-all" fontWeight={400} {...props} />
-const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ') : str)
-
-type ListItemProps = {
-  model: Bit
-  query?: string
-  style?: Object
-  cache?: any
-  parent?: any
-  width?: number
-  realIndex: number
-  ignoreSelection?: boolean
-}
-
-const spaceBetween = <div style={{ flex: 1 }} />
-
-class ListItem extends React.PureComponent<ListItemProps> {
-  render() {
-    const { model, realIndex, query, ignoreSelection } = this.props
-    const isConversation = model.integration === 'slack'
-    return (
-      <OrbitListItem
-        pane="docked-search"
-        subPane="search"
-        index={realIndex}
-        model={model}
-        hide={isConversation ? hideSlack : null}
-        subtitleSpaceBetween={spaceBetween}
-        isExpanded
-        searchTerm={query}
-        onClickLocation={handleClickLocation}
-        maxHeight={isConversation ? 380 : 200}
-        overflow="hidden"
-        extraProps={{
-          minimal: true,
-          preventSelect: true,
-        }}
-        ignoreSelection={ignoreSelection}
-      >
-        {renderListItemChildren}
-      </OrbitListItem>
-    )
-  }
 }
 
 class VirtualList extends React.Component<any> {
@@ -103,33 +33,11 @@ class VirtualList extends React.Component<any> {
   }
 }
 
-const SortableListItem = SortableElement(ListItem)
 const SortableList = SortableContainer(VirtualList, { withRef: true })
-
-const FirstItems = view(({ items, searchStore }) => {
-  return (
-    <div
-      style={{
-        opacity: 0,
-        pointerEvents: 'none',
-        zIndex: -1,
-      }}
-    >
-      {items.slice(0, 10).map((item, index) => (
-        <ListItem
-          key={item.id}
-          model={item}
-          realIndex={index + searchStore.quickSearchState.results.length}
-          ignoreSelection
-        />
-      ))}
-    </div>
-  )
-})
 
 @view.attach('searchStore', 'selectionStore', 'subPaneStore')
 @view
-export class OrbitSearchVirtualList extends React.Component<Props> {
+export class OrbitCustomList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List
 
@@ -240,7 +148,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   }
 
   get items() {
-    return this.props.searchStore.searchState.results || []
+    return this.props.items || []
   }
 
   private resizeAll = debounce(() => {
@@ -253,12 +161,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   render() {
     const { searchStore } = this.props
-    log(
-      `render OrbitSearchVirtualList (${this.items.length}) ${this.state.height} ${
-        searchStore.searchState.query
-      }`,
-    )
-    trace()
     if (!this.items.length) {
       return (
         <View margin={[10, 0]}>

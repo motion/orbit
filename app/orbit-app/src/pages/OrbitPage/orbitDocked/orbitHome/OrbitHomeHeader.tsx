@@ -33,9 +33,9 @@ const exploreButton = {
   borderWidth: 0,
   borderColor: 'transparent',
   background: 'transparent',
-  opacity: 0.5,
+  opacity: 0.25,
   iconProps: {
-    size: 11,
+    size: 12,
   },
   hoverStyle: {
     opacity: 0.6,
@@ -69,7 +69,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
             />
           )}
           <UI.Button
-            icon="menudot"
+            icon="gear"
             tooltip="Settings"
             active={paneManagerStore.activePaneFast === 'settings'}
             onClick={this.paneSetter('settings')}

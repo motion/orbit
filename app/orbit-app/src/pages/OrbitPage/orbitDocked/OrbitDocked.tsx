@@ -20,6 +20,7 @@ import { SelectableCarousel } from '../../../components/SelectableCarousel'
 import { OrbitAppIconCard } from './views/OrbitAppIconCard'
 import { AppsStore } from '../../../stores/AppsStore'
 import { Icon } from '../../../views/Icon'
+import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
 
 const log = new Logger('OrbitDocked')
 
@@ -140,7 +141,7 @@ class OrbitDockedContents extends React.Component<Props> {
             </Interactive>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
-            {/* <OrbitSearchResults /> */}
+            <OrbitSearchResults />
             <OrbitSettings name="settings" />
           </div>
         </OrbitDockedInner>

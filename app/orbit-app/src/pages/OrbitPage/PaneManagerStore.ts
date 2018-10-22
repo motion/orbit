@@ -20,7 +20,8 @@ export class PaneManagerStore {
     keyboardStore: KeyboardStore
   }
 
-  panes: Partial<Panes>[] = ['home', 'directory', 'topics', 'list', 'help', 'settings']
+  panes: Partial<Panes>[] = ['home', 'directory', 'topics', 'list', 'help', 'search', 'settings']
+  keyablePanes = [0, 5]
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
@@ -93,11 +94,11 @@ export class PaneManagerStore {
       ensure('focused', this.props.orbitStore.inputFocused)
       if (this.props.selectionStore.activeIndex === -1) {
         if (key === 'right') {
-          ensure('within keyable range', this.panes[this.paneIndex + 1] !== 'settings')
+          ensure('within keyable range', this.paneIndex < this.keyablePanes[1])
           this.setPaneIndex(this.paneIndex + 1)
         }
         if (key === 'left') {
-          ensure('within keyable range', this.paneIndex > 0)
+          ensure('within keyable range', this.paneIndex > this.keyablePanes[0])
           this.setPaneIndex(this.paneIndex - 1)
         }
       }

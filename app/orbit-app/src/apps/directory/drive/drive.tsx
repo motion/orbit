@@ -3,11 +3,11 @@ import { DriveSettings } from './views/DriveSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/drive.svg'
-import { GetOrbitApp, OrbitApp } from '../../types'
+import { GetOrbitIntegration, OrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { DriveItem } from './views/DriveItem'
 
-export const drive: GetOrbitApp<'drive'> = (setting?: Setting) => ({
+export const drive: GetOrbitIntegration<'drive'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'drive',
   appName: 'Drive',
@@ -24,4 +24,4 @@ export const drive: GetOrbitApp<'drive'> = (setting?: Setting) => ({
   },
 })
 
-export type DriveOrbitApp = OrbitApp<'drive'>
+export type DriveOrbitApp = OrbitIntegration<'drive'>

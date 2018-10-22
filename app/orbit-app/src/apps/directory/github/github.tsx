@@ -5,11 +5,11 @@ import { Setting } from '@mcro/models'
 import icon from '../../../../public/icons/github.svg'
 // @ts-ignore
 import iconLight from '../../../../public/icons/github-white.svg'
-import { GetOrbitApp } from '../../types'
+import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { GithubItem } from './views/GithubItem'
 
-export const github: GetOrbitApp<'github'> = (setting?: Setting) => ({
+export const github: GetOrbitIntegration<'github'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'github',
   appName: 'Github',

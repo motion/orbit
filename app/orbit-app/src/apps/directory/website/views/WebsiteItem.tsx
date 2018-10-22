@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { OrbitAppProps } from '../../../types'
+import { OrbitIntegrationProps } from '../../../types'
 import { Markdown } from '../../../../views/Markdown'
 
-export class WebsiteItem extends React.Component<OrbitAppProps<'website'>> {
+export class WebsiteItem extends React.Component<OrbitIntegrationProps<'website'>> {
   render() {
     return <Markdown source={this.props.bit.body} />
   }

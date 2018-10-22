@@ -1,13 +1,13 @@
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/gmail.svg'
-import { GetOrbitApp } from '../../types'
+import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { GmailApp } from './views/GmailApp'
 import { GmailItem } from './views/GmailItem'
 import { GmailSettings } from './views/GmailSettings'
 
-export const gmail: GetOrbitApp<'gmail'> = (setting?: Setting) => ({
+export const gmail: GetOrbitIntegration<'gmail'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'gmail',
   appName: 'Gmail',

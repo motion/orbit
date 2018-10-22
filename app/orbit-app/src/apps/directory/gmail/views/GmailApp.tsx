@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { OrbitAppMainProps } from '../../../types'
+import { OrbitIntegrationMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
 import { BitTitleBar } from '../../../views/layout/BitTitleBar'
 // import { Thread } from '../../../views/bits/thread/Thread'
 
-export class GmailApp extends React.Component<OrbitAppMainProps<'gmail'>> {
+export class GmailApp extends React.Component<OrbitIntegrationMainProps<'gmail'>> {
   render() {
     // const { bit } = this.props
     return (

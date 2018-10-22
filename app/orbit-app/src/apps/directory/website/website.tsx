@@ -3,12 +3,12 @@ import { WebsiteSettings } from './views/WebsiteSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/website.svg'
-import { GetOrbitApp } from '../../types'
+import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { WebsiteItem } from './views/WebsiteItem'
 import { WebsiteSetup } from './views/WebsiteSetup'
 
-export const website: GetOrbitApp<'website'> = (setting?: Setting) => ({
+export const website: GetOrbitIntegration<'website'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'website',
   appName: 'Website',

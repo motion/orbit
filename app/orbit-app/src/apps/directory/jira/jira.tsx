@@ -3,12 +3,12 @@ import { JiraSettings } from './views/JiraSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/jira.svg'
-import { GetOrbitApp } from '../../types'
+import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { JiraItem } from './views/JiraItem'
 import { JiraSetup } from './views/JiraSetup'
 
-export const jira: GetOrbitApp<'jira'> = (setting?: Setting) => ({
+export const jira: GetOrbitIntegration<'jira'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'jira',
   appName: 'Jira',

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { OrbitAppMainProps } from '../../../types'
+import { OrbitIntegrationMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
@@ -7,7 +7,7 @@ import { BitTitleBar } from '../../../views/layout/BitTitleBar'
 import { Readability } from '../../../views/bits/readability/Readability'
 import { Title } from '../../../../views'
 
-export class WebsiteApp extends React.Component<OrbitAppMainProps<'website'>> {
+export class WebsiteApp extends React.Component<OrbitIntegrationMainProps<'website'>> {
   render() {
     const { bit } = this.props
     return (

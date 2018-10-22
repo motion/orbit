@@ -2,15 +2,15 @@ import { SettingModel, Setting, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 import { allApps, getApps } from '../apps'
 import { react } from '@mcro/black'
-import { OrbitApp, ResolvableModel } from '../apps/types'
+import { OrbitIntegration, ResolvableModel } from '../apps/types'
 import { keyBy } from 'lodash'
 import { AppConfig } from '@mcro/stores'
 
-type GenericApp = OrbitApp<any> & {
+type GenericApp = OrbitIntegration<any> & {
   isActive: boolean
 }
 
-export const getAppFromSetting = (setting: Setting): OrbitApp<any> => {
+export const getAppFromSetting = (setting: Setting): OrbitIntegration<any> => {
   return {
     ...getApps[setting.type](setting),
     setting,
@@ -27,7 +27,7 @@ export const getAppConfig = (model: ResolvableModel): AppConfig => {
   return appToAppConfig(app, model)
 }
 
-export const appToAppConfig = (app: OrbitApp<any>, model?: ResolvableModel): AppConfig => {
+export const appToAppConfig = (app: OrbitIntegration<any>, model?: ResolvableModel): AppConfig => {
   if (!app) {
     throw new Error(`No app given: ${JSON.stringify(app)}`)
   }
@@ -56,7 +56,7 @@ export class AppsStore {
   )
 
   // this is every possible app (that uses a bit), just turned into array
-  get appsList(): OrbitApp<any>[] {
+  get appsList(): OrbitIntegration<any>[] {
     return Object.keys(allApps)
       .map(x => allApps[x])
       .filter(x => x.source === 'bit')

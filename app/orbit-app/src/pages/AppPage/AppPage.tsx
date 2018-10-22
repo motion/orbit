@@ -12,7 +12,7 @@ import { normalizeItem } from '../../helpers/normalizeItem'
 import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../apps/views/apps/AppSearchable'
 import { AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
-import { OrbitApp } from '../../apps/types'
+import { OrbitIntegration } from '../../apps/types'
 import { allApps } from '../../apps'
 
 type Props = {
@@ -61,7 +61,7 @@ const HiddenControls = view({
 @view.attach('appsStore', 'appStore')
 @view
 class AppPageContent extends React.Component<Props> {
-  getView = (viewType: keyof OrbitApp<any>['views']) => {
+  getView = (viewType: keyof OrbitIntegration<any>['views']) => {
     const { appStore, appsStore } = this.props
     const { appConfig } = appStore.state
     const app = appsStore.appByIntegration[appConfig.integration]

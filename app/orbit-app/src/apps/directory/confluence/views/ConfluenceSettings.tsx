@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { AtlassianSetting } from '@mcro/models'
-import { OrbitAppSettingProps } from '../../../types'
+import { OrbitIntegrationSettingProps } from '../../../types'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { AtlassianSettingLogin } from '../../../views/shared/AtlassianSettingLogin'
 
-type Props = OrbitAppSettingProps<AtlassianSetting>
+type Props = OrbitIntegrationSettingProps<AtlassianSetting>
 
 @view
 export class ConfluenceSettings extends React.Component<Props> {

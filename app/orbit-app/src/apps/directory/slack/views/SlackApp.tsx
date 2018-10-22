@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { OrbitAppMainProps } from '../../../types'
+import { OrbitIntegrationMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
@@ -9,7 +9,7 @@ import { observeMany } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
 import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
 
-type Props = OrbitAppMainProps<'slack'>
+type Props = OrbitIntegrationMainProps<'slack'>
 
 class SlackAppStore {
   props: Props

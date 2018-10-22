@@ -1,8 +1,7 @@
-import { Component } from 'react'
+import * as React from 'react'
 import { FindOptions } from 'typeorm'
 import { IntegrationType, Bit, PersonBit, Setting, GenericBit } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
-import { IntegrationSyncer } from '../../../orbit-syncers/src/core/IntegrationSyncer'
 import { AppStore } from '../pages/AppPage/AppStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
@@ -20,11 +19,11 @@ type AppTypeToModelType = {
   apps: Setting
 }
 
-export type AppType = IntegrationType | 'person'
+export type ItemType = IntegrationType | 'person'
 
-type ModelFromType<A extends AppType> = AppTypeToModelType[A]
+type ModelFromType<A extends ItemType> = AppTypeToModelType[A]
 
-export type AppProps<T extends ResolvableModel> = {
+export type OrbitItemProps<T extends ResolvableModel> = {
   model?: T
   isExpanded?: boolean
   shownLimit?: number
@@ -47,23 +46,23 @@ export type AppProps<T extends ResolvableModel> = {
 }
 
 // for all apps, including non-bit apps
-export type OrbitGenericAppProps<A extends AppType> = AppProps<ModelFromType<A>>
+export type OrbitGenericIntegrationProps<A extends ItemType> = OrbitItemProps<ModelFromType<A>>
 
 // for just "bit" apps
 // much more common / external facing
 // so give it the nicer name
-export type OrbitAppProps<A extends AppType> = AppProps<ModelFromType<A>> & {
+export type OrbitIntegrationProps<A extends ItemType> = OrbitItemProps<ModelFromType<A>> & {
   bit: GenericBit<any>
   normalizedItem: NormalizedItem
 }
 
-export type OrbitAppMainProps<A extends AppType> = OrbitAppProps<A> & {
+export type OrbitIntegrationMainProps<A extends ItemType> = OrbitIntegrationProps<A> & {
   appStore: AppStore
   searchBar: SearchBarType
   searchTerm: string
 }
 
-export type OrbitAppSettingProps<T extends Setting> = {
+export type OrbitIntegrationSettingProps<T extends Setting> = {
   appConfig: AppConfig
   appInfoStore: AppInfoStore
   setting: T
@@ -72,7 +71,7 @@ export type OrbitAppSettingProps<T extends Setting> = {
 
 type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
-export type OrbitApp<A extends AppType> = {
+export type OrbitIntegration<A extends ItemType> = {
   setting?: Setting
   display?: {
     name: string
@@ -86,17 +85,17 @@ export type OrbitApp<A extends AppType> = {
   defaultQuery?: any | FindOptions<ModelFromType<A>> // TODO umed
   viewConfig?: AppConfig['viewConfig']
   views: {
-    main: GenericComponent<OrbitAppMainProps<A>>
-    item: GenericComponent<OrbitAppProps<A>>
-    setting?: GenericComponent<OrbitAppSettingProps<Setting>>
+    main: GenericComponent<OrbitIntegrationMainProps<A>>
+    item: GenericComponent<OrbitIntegrationProps<A>>
+    setting?: GenericComponent<OrbitIntegrationSettingProps<Setting>>
     setup?: GenericComponent<any>
   }
 }
 
-export type OrbitApps = { [key in AppType]: OrbitApp<AppType> }
+export type OrbitIntegrations = { [key in ItemType]: OrbitIntegration<ItemType> }
 
-export type GetOrbitApp<A extends AppType> = (setting: Setting) => OrbitApp<A>
+export type GetOrbitIntegration<A extends ItemType> = (setting: Setting) => OrbitIntegration<A>
 
-export type GetOrbitApps = { [key in AppType]: GetOrbitApp<AppType> }
+export type GetOrbitIntegrations = { [key in ItemType]: GetOrbitIntegration<ItemType> }
 
 export type ResolvableModel = Bit | PersonBit | Setting

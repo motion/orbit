@@ -2,13 +2,13 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SearchableTable, Text, View } from '@mcro/ui'
-import { OrbitAppSettingProps } from '../../../types'
+import { OrbitIntegrationSettingProps } from '../../../types'
 import { GmailSetting } from '@mcro/models'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitAppSettingProps<GmailSetting>
+type Props = OrbitIntegrationSettingProps<GmailSetting>
 
 class GmailSettingStore {
   props: Props

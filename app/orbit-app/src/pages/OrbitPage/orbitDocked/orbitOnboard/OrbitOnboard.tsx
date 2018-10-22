@@ -16,7 +16,7 @@ import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 import { GeneralSettingValues } from '@mcro/models'
 import { BlurryGuys } from './BlurryGuys'
 import { SimpleItem } from '../../../../views/SimpleItem'
-import { OrbitApp, AppType } from '../../../../apps/types'
+import { OrbitIntegration, IntegrationType } from '../../../../apps/types'
 
 type Props = {
   appsStore?: AppsStore
@@ -165,7 +165,8 @@ class OnboardStore {
   }
 }
 
-const filterApps = (app: OrbitApp<AppType>) => !!app.integration && app.integration !== 'website'
+const filterApps = (app: OrbitIntegration<IntegrationType>) =>
+  !!app.integration && app.integration !== 'website'
 
 const decorator = compose(
   view.attach('appsStore', 'paneManagerStore'),

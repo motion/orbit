@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { OrbitAppProps } from '../../../types'
+import { OrbitIntegrationProps } from '../../../types'
 import { Task } from '../../../views/bits/task/Task'
 
-export class GithubItem extends React.Component<OrbitAppProps<'github'>> {
+export class GithubItem extends React.Component<OrbitIntegrationProps<'github'>> {
   render() {
     const { bit } = this.props
     if (!bit) {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { SlackBitDataMessage } from '@mcro/models'
-import { OrbitAppProps } from '../../../types'
+import { OrbitIntegrationProps } from '../../../types'
 import { View, Row, Text } from '@mcro/ui'
 import {
   ItemResolverDecoration,
@@ -12,7 +12,7 @@ import { DateFormat } from '../../../../views/DateFormat'
 import { HighlightText } from '../../../../views/HighlightText'
 import { Markdown } from '../../../../views/Markdown'
 
-type SlackMessageProps = OrbitAppProps<'slack'> & {
+type SlackMessageProps = OrbitIntegrationProps<'slack'> & {
   message: SlackBitDataMessage
   previousMessage?: SlackBitDataMessage
   highlight?: Object

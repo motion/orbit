@@ -3,12 +3,12 @@ import { ConfluenceSettings } from './views/ConfluenceSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/confluence.svg'
-import { GetOrbitApp } from '../../types'
+import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { ConfluenceItem } from './views/ConfluenceItem'
 import { ConfluenceSetup } from './views/ConfluenceSetup'
 
-export const confluence: GetOrbitApp<'confluence'> = (setting?: Setting) => ({
+export const confluence: GetOrbitIntegration<'confluence'> = (setting?: Setting) => ({
   source: 'bit',
   integration: 'confluence',
   appName: 'Confluence',

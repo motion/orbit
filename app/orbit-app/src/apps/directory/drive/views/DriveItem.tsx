@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { OrbitAppProps } from '../../../types'
+import { OrbitIntegrationProps } from '../../../types'
 import { Markdown } from '../../../../views/Markdown'
 
-export class DriveItem extends React.Component<OrbitAppProps<'drive'>> {
+export class DriveItem extends React.Component<OrbitIntegrationProps<'drive'>> {
   render() {
     const { bit } = this.props
     return <Markdown source={bit.body} />

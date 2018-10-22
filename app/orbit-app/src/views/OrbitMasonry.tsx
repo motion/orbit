@@ -53,6 +53,7 @@ export class OrbitMasonry extends React.Component<Props> {
         <div
           style={{
             ...style,
+            width: style.width - (this.props.sidePad || 0) / 2,
             paddingLeft: style.left === 0 ? this.props.sidePad : 0,
             paddingRight: style.left === 0 ? 0 : this.props.sidePad,
           }}

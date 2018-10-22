@@ -33,7 +33,7 @@ export class OrbitHome extends React.Component<Props> {
           <OrbitDirectory />
           <VerticalSpace />
         </SubPane>
-        <SubPane name="topics" before={<OrbitNavVerticalPad />} paddingLeft={6} paddingRight={6}>
+        <SubPane name="topics" before={<OrbitNavVerticalPad />} paddingLeft={0} paddingRight={0}>
           <OrbitSearchMasonry />
           <VerticalSpace />
         </SubPane>

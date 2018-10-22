@@ -127,12 +127,8 @@ class OrbitDockedContents extends React.Component<Props> {
                       children: <Icon name="listBullets" />,
                     },
                     {
-                      title: 'Memory',
-                      children: <Icon name="singleNeutralSearch" />,
-                    },
-                    {
                       title: 'Help',
-                      children: <Icon name="questionHelpMessage" />,
+                      children: <Icon name="questionCircle" />,
                     },
                     {
                       title: 'New',

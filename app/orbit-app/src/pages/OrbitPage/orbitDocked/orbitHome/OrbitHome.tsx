@@ -2,26 +2,20 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SelectionStore } from '../SelectionStore'
-import { AppsStore } from '../../../../stores/AppsStore'
-import { VerticalSpace, OrbitNavVerticalPad, Title } from '../../../../views'
-import { SearchStore } from '../SearchStore'
+import { VerticalSpace, OrbitNavVerticalPad } from '../../../../views'
 import { OrbitExplore } from './orbitExplore/OrbitExplore'
-import { View } from '@mcro/ui'
+import { OrbitDirectory } from '../OrbitDirectory'
+import { OrbitSearchMasonry } from './OrbitSearchMasonry'
 
 type Props = {
   name: string
-  searchStore?: SearchStore
   paneManagerStore?: PaneManagerStore
-  selectionStore?: SelectionStore
-  appsStore?: AppsStore
 }
 
-@view.attach('appsStore', 'paneManagerStore')
+@view.attach('paneManagerStore')
 @view
 export class OrbitHome extends React.Component<Props> {
   render() {
-    const { appsStore } = this.props
     console.log('OrbitHome Render')
     return (
       <>
@@ -30,22 +24,19 @@ export class OrbitHome extends React.Component<Props> {
           <VerticalSpace />
           <VerticalSpace small />
         </SubPane>
-        {appsStore.activeIntegrations.map(app => (
-          <SubPane
-            name={app.display.name}
-            key={app.setting.id}
-            before={<OrbitNavVerticalPad />}
-            paddingLeft={6}
-            paddingRight={6}
-          >
-            <View padding={[0, 6]}>
-              <Title>{app.display.name}</Title>
-            </View>
-            <OrbitExplore />
-            <VerticalSpace />
-            <VerticalSpace small />
-          </SubPane>
-        ))}
+        <SubPane
+          name="directory"
+          before={<OrbitNavVerticalPad />}
+          paddingLeft={12}
+          paddingRight={12}
+        >
+          <OrbitDirectory />
+          <VerticalSpace />
+        </SubPane>
+        <SubPane name="topics" before={<OrbitNavVerticalPad />} paddingLeft={6} paddingRight={6}>
+          <OrbitSearchMasonry />
+          <VerticalSpace />
+        </SubPane>
       </>
     )
   }

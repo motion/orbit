@@ -4,7 +4,7 @@ import { SearchStore } from '../SearchStore'
 import { Row, View } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { OrbitFilters } from '../orbitHome/OrbitFilters'
-import { view, react } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
 import { QueryStore } from '../QueryStore'
 import { hoverSettler } from '../../../../helpers'
@@ -41,6 +41,7 @@ class OrbitNavStore {
   measureFilters = react(
     () => [this.props.searchStore.searchFilterStore.integrationFilters.length, this.showFilters],
     () => {
+      ensure('this.filtersRef', !!this.filtersRef)
       this.filtersWidth = Math.min(ORBIT_WIDTH, this.filtersRef.clientWidth)
     },
   )

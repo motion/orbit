@@ -20,19 +20,19 @@ export class PaneManagerStore {
     keyboardStore: KeyboardStore
   }
 
-  panes: Partial<Panes>[] = ['home', 'settings']
+  panes: Partial<Panes>[] = ['home', 'directory', 'topics', 'list', 'help', 'settings']
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
   lastKey = { key: null, at: Date.now() }
   subPane = 'apps'
 
-  setPanes = react(
-    () => this.props.appsStore.activeIntegrations,
-    apps => {
-      this.panes = ['home', ...apps.map(x => x.display.name), 'settings']
-    },
-  )
+  // setPanes = react(
+  //   () => this.props.appsStore.activeIntegrations,
+  //   apps => {
+  //     this.panes = ['home', ...apps.map(x => x.display.name), 'settings']
+  //   },
+  // )
 
   generalSetting = null
   generalSetting$ = observeOne(SettingModel, {
@@ -93,7 +93,7 @@ export class PaneManagerStore {
       ensure('focused', this.props.orbitStore.inputFocused)
       if (this.props.selectionStore.activeIndex === -1) {
         if (key === 'right') {
-          ensure('within keyable range', this.paneIndex < 1)
+          ensure('within keyable range', this.panes[this.paneIndex + 1] !== 'settings')
           this.setPaneIndex(this.paneIndex + 1)
         }
         if (key === 'left') {

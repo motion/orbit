@@ -46,12 +46,6 @@ const Pane = view(UI.View, {
   borderBottomRadius: BORDER_RADIUS,
   padding: [0, 12],
   margin: [0, 0, 0],
-  pointerEvents: 'none',
-  isActive: {
-    '& > *': {
-      pointerEvents: 'auto',
-    },
-  },
   preventScroll: {
     overflowY: 'hidden',
   },

@@ -10,8 +10,8 @@ import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-ho
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { pullAll, difference, memoize } from 'lodash'
 import { PersonBitModel, BitModel, SettingModel } from '@mcro/models'
-import { allApps } from '../../../../../apps'
 import { action } from 'mobx'
+import { allIntegrations } from '../../../../../integrations'
 
 const models = {
   'person-bit': PersonBitModel,
@@ -135,7 +135,7 @@ class OrbitExploreStore {
   )
 
   state = react(
-    () => [allApps.person, ...this.props.appsStore.activeIntegrations],
+    () => [allIntegrations.person, ...this.props.appsStore.activeIntegrations],
     apps => {
       // dispose on re-run
       if (this.state) {

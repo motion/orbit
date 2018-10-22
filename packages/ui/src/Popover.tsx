@@ -332,10 +332,10 @@ export class Popover extends React.PureComponent<PopoverProps> {
     })
   }
 
-  forceClose = () => {
+  forceClose = async () => {
     this.stopListeningUntilNextMouseEnter()
-    this.setState({ isPinnedOpen: 0 })
-    this.close()
+    await this.startClosing()
+    this.setState({ closing: false, isPinnedOpen: 0, isOpen: false })
   }
 
   toggleOpen = () => {
@@ -356,26 +356,23 @@ export class Popover extends React.PureComponent<PopoverProps> {
     })
   }
 
-  close = () => {
-    return new Promise(resolve => {
+  startClosing = () => {
+    return new Promise(async resolve => {
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {
           this.curProps.onClose()
         }
-
-        on(
-          this,
-          setTimeout(() => {
-            this.setState({ closing: false, isOpen: false }, () => {
-              if (this.props.onDidClose) {
-                this.props.onDidClose()
-              }
-            })
-            resolve()
-          }, 300),
-        )
+        setTimeout(resolve, 300)
       })
     })
+  }
+
+  close = async () => {
+    await this.startClosing()
+    this.setState({ closing: false, isOpen: false })
+    if (this.props.onDidClose) {
+      this.props.onDidClose()
+    }
   }
 
   targetClickOff = null
@@ -998,7 +995,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
           distance={distance}
           forgiveness={forgiveness}
           showForgiveness={showForgiveness}
-          animation={isOpen ? closeAnimation : openAnimation}
+          animation={openAnimation}
           style={{
             ...style,
             top: top || 'auto',

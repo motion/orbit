@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, ensure } from '@mcro/black'
 import { Popover, View, Col, Row, Button, Theme } from '@mcro/ui'
 import { reaction } from 'mobx'
 import { App } from '@mcro/stores'
@@ -21,7 +21,7 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
   spaceOpener = reaction(
     () => App.state.showSpaceSwitcher,
     () => {
-      console.log(this.spaceSwitcherRef.current)
+      ensure('this.spaceSwitcherRef.current', !!this.spaceSwitcherRef.current)
       this.spaceSwitcherRef.current.toggleOpen()
     },
   )

@@ -5,7 +5,7 @@ import { PersonItem } from './PersonItem'
 
 export const person: GetOrbitIntegration<'person'> = (_setting?: Setting) => ({
   source: 'person-bit',
-  appName: 'Directory',
+  appName: 'People',
   defaultQuery: {
     take: 30,
     where: {

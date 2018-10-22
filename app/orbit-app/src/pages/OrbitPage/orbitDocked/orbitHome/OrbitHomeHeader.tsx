@@ -56,16 +56,14 @@ export class OrbitHomeHeader extends React.Component<Props> {
 
   render() {
     const { paneManagerStore } = this.props
-    const homeActive =
-      paneManagerStore.activePane === 'home' || paneManagerStore.activePane === 'search'
+    const showHomeButton = paneManagerStore.activePane === 'settings'
     return (
       <>
         <Section invisible={paneManagerStore.activePane === 'onboard'}>
-          {!homeActive && (
+          {showHomeButton && (
             <UI.Button
               icon="home"
               tooltip="Home"
-              active={homeActive}
               onClick={this.paneSetter('home')}
               {...exploreButton}
             />

@@ -46,7 +46,7 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
       | ((normalizedItem: NormalizedItem, model?: T, index?: number) => JSX.Element)
       | JSX.Element
     onClick?: Function
-    onSelect?: (a: HTMLElement) => any
+    onSelect?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
     borderRadius?: number
     nextUpStyle?: Object
     isSelected?: boolean | Function

@@ -77,6 +77,11 @@ const Interactive = view({
 class OrbitDockedContents extends React.Component<Props> {
   isSelected = index => index === this.props.paneManagerStore.paneIndex
 
+  onSelect = (index, config) => {
+    this.props.paneManagerStore.setPaneIndex(index)
+    console.log('selected', index, config)
+  }
+
   render() {
     const { paneManagerStore } = this.props
     const size = 52
@@ -92,9 +97,8 @@ class OrbitDockedContents extends React.Component<Props> {
               <OrbitNav />
               <View position="relative" zIndex={1000} margin={[20, 0, 0]}>
                 <SelectableCarousel
-                  debug
                   offset={0}
-                  shouldScrollToActive
+                  // shouldScrollToActive
                   activeIndex={paneManagerStore.paneIndex}
                   cardWidth={size}
                   cardHeight={size}
@@ -103,10 +107,11 @@ class OrbitDockedContents extends React.Component<Props> {
                   CardView={OrbitAppIconCard}
                   cardProps={{
                     isSelected: this.isSelected,
+                    onSelect: this.onSelect,
                   }}
                   items={[
                     {
-                      title: 'Recent',
+                      title: 'Orbit',
                       children: <Icon name="house" />,
                     },
                     {

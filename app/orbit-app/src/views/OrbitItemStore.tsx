@@ -33,7 +33,7 @@ export class OrbitItemStore {
     return Date.now() - this.clickAt < 50
   }
 
-  handleClick = e => {
+  handleClick = (e: React.SyntheticEvent<MouseEvent>) => {
     // so we can control the speed of doubleclicks
     if (Date.now() - this.clickAt < 280) {
       // allow double click of location
@@ -51,11 +51,11 @@ export class OrbitItemStore {
       this.props.onClick(e, this.cardWrapRef)
       return
     }
-    if (this.props.onSelect) {
-      this.props.onSelect(this.cardWrapRef)
+    if (this.props.inactive) {
       return
     }
-    if (this.props.inactive) {
+    if (this.props.onSelect) {
+      this.props.onSelect(this.realIndex, this.appConfig, e.target as HTMLDivElement)
       return
     }
     this.props.selectionStore.toggleSelected(this.realIndex, 'click')
@@ -146,14 +146,18 @@ export class OrbitItemStore {
       return next
     },
     async (isSelected, { sleep }) => {
-      const { preventAutoSelect } = this.props
+      const { onSelect, preventAutoSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected && !preventAutoSelect) {
-        ensure('appConfig`', !!this.appConfig)
-        // fluidity
-        await sleep()
-        Actions.setPeekApp(this.appConfig, this.position)
+        if (onSelect) {
+          onSelect(this.realIndex, this.appConfig)
+        } else {
+          ensure('appConfig`', !!this.appConfig)
+          // fluidity
+          await sleep()
+          Actions.setPeekApp(this.appConfig, this.position)
+        }
       }
     },
   )

@@ -11,11 +11,11 @@ export type CarouselProps = HorizontalScrollRowProps & {
   cardWidth?: number
   cardHeight?: number
   cardSpace?: number
-  cardProps?: Object
+  cardProps?: OrbitItemProps<any>
   before?: React.ReactNode
   after?: React.ReactNode
   children?: React.ReactNode
-  offset?: number
+  offset: number
   className?: string
 }
 

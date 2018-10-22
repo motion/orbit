@@ -69,11 +69,12 @@ export const OrbitAppIconCard = (props: Props) => {
           glint
           tooltip={model.title}
         >
-          {!hideTitle && (
-            <Text size={0.85} sizeLineHeight={0.9} ellipse>
-              {model.title}
-            </Text>
-          )}
+          {!hideTitle &&
+            !!model.title && (
+              <Text size={0.85} sizeLineHeight={0.9} ellipse>
+                {model.title}
+              </Text>
+            )}
         </SizedSurface>
       </Theme>
     </Col>

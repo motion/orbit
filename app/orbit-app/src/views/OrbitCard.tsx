@@ -200,7 +200,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
     )
     const hasChildren = typeof this.props.children !== 'undefined'
     const showChildren = !(hide && hide.body)
-    const hasTitle = !(hide && hide.title)
+    const hasTitle = !!title && !(hide && hide.title)
     const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
     const hasSubtitle = !!subtitle && !(hide && hide.subtitle)

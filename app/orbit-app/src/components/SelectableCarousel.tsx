@@ -5,7 +5,6 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
 
 export type SelectableCarouselProps = CarouselProps & {
-  offset: number
   selectionStore?: SelectionStore
   store?: CarouselStore
   isActiveStore?: { isActive?: boolean }

@@ -2,16 +2,16 @@ import * as React from 'react'
 import { HorizontalScrollRow, HorizontalScrollRowProps } from '../views/HorizontalScrollRow'
 import scroll from 'scroll'
 import { OrbitCard } from '../views/OrbitCard'
-import { OrbitItemProps } from '../views/OrbitItemProps'
+import { ItemProps } from '../views/OrbitItemProps'
 
 export type CarouselProps = HorizontalScrollRowProps & {
-  CardView?: (props: OrbitItemProps<any>) => JSX.Element
+  CardView?: (props: ItemProps<any>) => JSX.Element
   items?: any[]
   verticalPadding?: number
   cardWidth?: number
   cardHeight?: number
   cardSpace?: number
-  cardProps?: OrbitItemProps<any>
+  cardProps?: ItemProps<any>
   before?: React.ReactNode
   after?: React.ReactNode
   children?: React.ReactNode

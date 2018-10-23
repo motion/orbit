@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
-import { OrbitItemProps } from '../../../../views/OrbitItemProps'
+import { ItemProps } from '../../../../views/OrbitItemProps'
 import { SyncStatus } from './SyncStatus'
 import { Text } from '@mcro/ui'
 import { Setting } from '@mcro/models'
@@ -10,7 +10,7 @@ import { OrbitIntegration } from '../../../../integrations/types'
 import { appToAppConfig } from '../../../../stores/AppsStore'
 import pluralize from 'pluralize'
 
-type Props = OrbitItemProps<Setting> &
+type Props = ItemProps<Setting> &
   AppInfoProps & {
     app?: OrbitIntegration<any>
     store: AppInfoStore

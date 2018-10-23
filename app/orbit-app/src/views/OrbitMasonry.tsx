@@ -7,6 +7,7 @@ import {
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitSearchCard } from '../pages/OrbitPage/orbitDocked/orbitHome/OrbitSearchCard'
+import { ItemProps } from './OrbitItemProps'
 
 const middleSpace = 3
 const width = ORBIT_WIDTH
@@ -19,8 +20,9 @@ type Props = {
   sidePad?: number
   height?: number
   offset?: number
-  cardProps?: Object
+  cardProps?: ItemProps<any>
   CardView: any
+  direct?: boolean
 }
 
 export class OrbitMasonry extends React.Component<Props> {
@@ -46,19 +48,20 @@ export class OrbitMasonry extends React.Component<Props> {
   })
 
   cellRenderer = ({ index, key, parent, style }) => {
-    const item = this.props.items[index]
-    const { CardView } = this.props
+    const { CardView, items, cardProps, sidePad, offset } = this.props
+    const item = items[index]
+    const itemProps = cardProps && cardProps.direct ? item : { model: item }
     return (
       <CellMeasurer cache={this.cache} index={index} key={key} parent={parent}>
         <div
           style={{
             ...style,
-            width: style.width - (this.props.sidePad || 0) / 2,
-            paddingLeft: style.left === 0 ? this.props.sidePad : 0,
-            paddingRight: style.left === 0 ? 0 : this.props.sidePad,
+            width: style.width - (sidePad || 0) / 2,
+            paddingLeft: style.left === 0 ? sidePad : 0,
+            paddingRight: style.left === 0 ? 0 : sidePad,
           }}
         >
-          <CardView index={index + this.props.offset} {...this.props.cardProps} model={item} />
+          <CardView index={index + offset} {...cardProps} {...itemProps} />
         </div>
       </CellMeasurer>
     )

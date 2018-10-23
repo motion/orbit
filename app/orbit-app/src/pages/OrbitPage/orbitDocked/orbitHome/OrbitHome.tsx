@@ -5,8 +5,8 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { OrbitNavVerticalPad } from '../../../../views'
 import { OrbitExplore } from './orbitExplore/OrbitExplore'
 import { OrbitDirectory } from '../OrbitDirectory'
-import { OrbitSearchMasonry } from './OrbitSearchMasonry'
 import { ListApp } from '../../../../apps/list/ListApp'
+import { TopicsApp } from '../../../../apps/topics/TopicsApp'
 
 type Props = {
   name: string
@@ -38,7 +38,7 @@ export class OrbitHome extends React.Component<Props> {
           <Lip />
         </SubPane>
         <SubPane name="topics" before={<OrbitNavVerticalPad />} paddingLeft={0} paddingRight={0}>
-          <OrbitSearchMasonry />
+          <TopicsApp />
           <Lip />
         </SubPane>
         <SubPane name="list" before={<OrbitNavVerticalPad />} paddingLeft={0} paddingRight={0}>

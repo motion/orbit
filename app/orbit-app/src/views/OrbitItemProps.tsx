@@ -9,7 +9,7 @@ import { SubPaneStore } from '../pages/OrbitPage/SubPaneStore'
 import { AppsStore } from '../stores/AppsStore'
 import { CSSPropertySetStrict } from '../../../../packages/css/_/cssPropertySet'
 
-export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
+export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
     // whether to avoid model resolving and just use props
     activeCondition?: () => boolean

@@ -8,7 +8,7 @@ import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import { DateFormat } from './DateFormat'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import { OrbitItemProps } from './OrbitItemProps'
+import { ItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
@@ -121,7 +121,7 @@ const Bottom = view({
   store: OrbitItemStore,
 })
 @view
-export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
+export class OrbitListInner extends React.Component<ItemProps<any>> {
   static defaultProps = {
     // offsets -1px on sides for the negative margin we usually use to hide side border
     padding: [10, 11],
@@ -344,7 +344,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps<any>> {
 }
 
 // wrap the outside so we can do much faster shallow renders when need be
-export class OrbitListItem extends React.Component<OrbitItemProps<any>> {
+export class OrbitListItem extends React.Component<ItemProps<any>> {
   shouldComponentUpdate(a, b, c) {
     return onlyUpdateOnChanged.call(this, a, b, c)
   }

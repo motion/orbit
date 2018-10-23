@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
-import { OrbitItemProps } from '../../../../views/OrbitItemProps'
+import { ItemProps } from '../../../../views/OrbitItemProps'
 import { Setting } from '@mcro/models'
 import { view } from '@mcro/black'
 import { SubTitle } from '../../../../views/SubTitle'
 import { Col, Surface, SizedSurface, Theme, Text } from '@mcro/ui'
 
-type Props = OrbitItemProps<Setting> &
+type Props = ItemProps<Setting> &
   AppInfoProps & {
     store: AppInfoStore
     isActive?: boolean

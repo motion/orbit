@@ -21,7 +21,7 @@ export class DatabaseManager {
     // connect models next
     await connectModels(Entities)
 
-    console.log('done connecting models...')
+    // bugfix: sql errors happened here if i didnt wait... @nate
     await sleep(100)
 
     const table = await getConnection().query(

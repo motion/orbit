@@ -2,16 +2,20 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { VerticalSpace, OrbitNavVerticalPad } from '../../../../views'
+import { OrbitNavVerticalPad } from '../../../../views'
 import { OrbitExplore } from './orbitExplore/OrbitExplore'
 import { OrbitDirectory } from '../OrbitDirectory'
-import { OrbitSearchMasonry } from './OrbitSearchMasonry'
 import { ListApp } from '../../../../apps/list/ListApp'
+import { TopicsApp } from '../../../../apps/topics/TopicsApp'
 
 type Props = {
   name: string
   paneManagerStore?: PaneManagerStore
 }
+
+const Lip = view({
+  height: 24,
+})
 
 @view.attach('paneManagerStore')
 @view
@@ -22,8 +26,7 @@ export class OrbitHome extends React.Component<Props> {
       <>
         <SubPane name="home" before={<OrbitNavVerticalPad />} paddingLeft={6} paddingRight={6}>
           <OrbitExplore />
-          <VerticalSpace />
-          <VerticalSpace small />
+          <Lip />
         </SubPane>
         <SubPane
           name="directory"
@@ -32,15 +35,15 @@ export class OrbitHome extends React.Component<Props> {
           paddingRight={12}
         >
           <OrbitDirectory />
-          <VerticalSpace />
+          <Lip />
         </SubPane>
         <SubPane name="topics" before={<OrbitNavVerticalPad />} paddingLeft={0} paddingRight={0}>
-          <OrbitSearchMasonry />
-          <VerticalSpace />
+          <TopicsApp />
+          <Lip />
         </SubPane>
         <SubPane name="list" before={<OrbitNavVerticalPad />} paddingLeft={0} paddingRight={0}>
           <ListApp />
-          <VerticalSpace />
+          <Lip />
         </SubPane>
       </>
     )

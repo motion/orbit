@@ -1,6 +1,6 @@
 import { react, ensure } from '@mcro/black'
 import { getTargetPosition } from '../helpers/getTargetPosition'
-import { OrbitItemProps } from './OrbitItemProps'
+import { ItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { Actions } from '../actions/Actions'
 import { ResolvableModel } from '../integrations/types'
@@ -12,7 +12,7 @@ export const OrbitItemSingleton = {
 }
 
 export class OrbitItemStore {
-  props: OrbitItemProps<ResolvableModel>
+  props: ItemProps<ResolvableModel>
 
   resolvedItem: NormalizedItem = null
   isSelected = false
@@ -159,6 +159,9 @@ export class OrbitItemStore {
           Actions.setPeekApp(this.appConfig, this.position)
         }
       }
+    },
+    {
+      deferFirstRun: true,
     },
   )
 }

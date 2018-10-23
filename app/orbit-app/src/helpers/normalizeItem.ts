@@ -77,7 +77,7 @@ export const normalizeItem = (model: ResolvableModel): NormalizedItem => {
   }
   if (!normalizers[model.target]) {
     console.log('error with model', model)
-    return {}
+    return model as any
   }
   return normalizers[model.target](model)
 }

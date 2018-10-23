@@ -1,5 +1,6 @@
 {
   "git.ignoreLimitWarning": true,
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "workbench.settings.openDefaultKeybindings": true
+  "workbench.settings.openDefaultKeybindings": true,
+  "python.linting.pylintEnabled": false
 }

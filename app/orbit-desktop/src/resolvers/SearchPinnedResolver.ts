@@ -64,6 +64,9 @@ const searchBits = async query => {
 }
 
 export const SearchPinnedResolver = resolveMany(SearchPinnedResultModel, async ({ query }) => {
+  if (!query) {
+    return []
+  }
   const [people, bits] = await Promise.all([searchPeople(query), searchBits(query)])
   const sortedPeople = sortByQuery(query, people)
   const lessSortedPeople = sortByQuerySubSets(query, people)

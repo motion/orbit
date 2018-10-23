@@ -72,8 +72,8 @@ export class Root {
   databaseManager: DatabaseManager
 
   start = async () => {
-    log.verbose('Start Desktop Store..')
-    // iohook.start(false)
+    log.info('Start Desktop Store..')
+
     await Desktop.start({
       ignoreSelf: true,
       master: true,
@@ -210,6 +210,7 @@ export class Root {
         port: getGlobalConfig().ports.dbBridge,
       }),
       resolvers: [
+        // @ts-ignore
         ...typeormResolvers(getConnection(), [
           { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },

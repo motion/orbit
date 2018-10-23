@@ -9,8 +9,10 @@ import { HighlightsPage } from '../HighlightsPage/HighlightsPage'
 import { QueryStore } from './orbitDocked/QueryStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
 import { OrbitDocked } from './orbitDocked/OrbitDocked'
+import { SettingStore } from '../../stores/SettingStore'
 
 @view.provide({
+  settingStore: SettingStore,
   appsStore: AppsStore,
   orbitStore: OrbitStore,
 })

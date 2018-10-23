@@ -7,7 +7,7 @@ import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import { DateFormat } from './DateFormat'
-import { OrbitItemProps } from './OrbitItemProps'
+import { ItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
@@ -156,7 +156,7 @@ const Padding = view({
   store: OrbitItemStore,
 })
 @view
-export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableModel>> {
+export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> {
   static defaultProps = {
     borderRadius: 7,
     padding: 8,
@@ -357,6 +357,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
 
   render() {
     const { store, model, direct } = this.props
+    // lets react to this, keep this here to ensure we do
     store.isSelected
     if (direct) {
       return this.getInner(this.props)
@@ -369,7 +370,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
 }
 
 // wrap the outside so we can do much faster shallow renders when need be
-export class OrbitCard extends React.Component<OrbitItemProps<ResolvableModel>> {
+export class OrbitCard extends React.Component<ItemProps<ResolvableModel>> {
   shouldComponentUpdate(a, b, c) {
     return onlyUpdateOnChanged.call(this, a, b, c)
   }

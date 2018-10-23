@@ -18,7 +18,9 @@ export async function start() {
     window['Root'] = rootStore
     rootStore.rootView = RootView
   }
-  ReactDOM.render(<RootView />, document.querySelector('#app'))
+  // @ts-ignore
+  const rootNode = ReactDOM.unstable_createRoot(document.querySelector('#app'))
+  rootNode.render(<RootView />)
 }
 
 start()

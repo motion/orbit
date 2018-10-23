@@ -22,24 +22,18 @@ export class ResizableBox extends React.Component<ResizableProps, State> {
         // @ts-ignore
         e.persist()
       }
-      this.setState(
-        size,
-        () => this.props.onResize && this.props.onResize(e, data),
-      )
+      this.setState(size, () => this.props.onResize && this.props.onResize(e, data))
     } else {
       this.setState(size)
     }
   }
 
-  componentWillReceiveProps(nextProps: ResizableProps) {
-    if (
-      nextProps.width !== this.props.width ||
-      nextProps.height !== this.props.height
-    ) {
-      this.setState({
-        width: nextProps.width,
-        height: nextProps.height,
-      })
+  static getDerivedStateFromProps(props, state) {
+    if (props.width !== state.width || props.height !== state.height) {
+      return {
+        width: props.width,
+        height: props.height,
+      }
     }
   }
 

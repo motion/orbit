@@ -23,7 +23,7 @@ type State = {
 export type SearchableProps = Props & {
   addFilter: (filter: Filter) => void
   searchTerm: string
-  filters: Array<Filter>
+  filters: Filter[]
 }
 
 export type SearchBarType = React.ReactElement<React.SFC<SearchInputProps>>

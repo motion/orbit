@@ -90,13 +90,12 @@ export class OrbitSyncersRoot {
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
       models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
-      commands: [
-        SettingForceSyncCommand
-      ],
+      commands: [SettingForceSyncCommand],
       transport: new WebSocketServerTransport({
         port: 40001, // todo: use config?
       }),
       resolvers: [
+        // @ts-ignore
         ...typeormResolvers(this.connection, [
           { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },
@@ -118,7 +117,7 @@ export class OrbitSyncersRoot {
     await Promise.all(
       Syncers.map(syncer => {
         return syncer.start()
-      })
+      }),
     )
   }
 

@@ -166,8 +166,7 @@ export class Cosal {
         // find our topmost weight
         const limitWeight = res[fmax].weight
         // now map and filter but keeping original order
-        pairs = pairs.filter(x => x.weight >= limitWeight)
-        return pairs.slice(0, fmax)
+        return res.filter(x => x.weight >= limitWeight).slice(0, fmax)
       }
     }
     return pairs

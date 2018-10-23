@@ -76,6 +76,7 @@ export class CosalManager {
   }
 
   doScanTopics = async () => {
+    console.trace('scanning topics')
     console.time('doScanTopics')
     const topTopics = await this.getGlobalTopTopics()
     const setting = await getGeneralSetting()

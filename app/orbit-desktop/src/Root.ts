@@ -72,8 +72,8 @@ export class Root {
   databaseManager: DatabaseManager
 
   start = async () => {
-    log.verbose('Start Desktop Store..')
-    // iohook.start(false)
+    log.info('Start Desktop Store..')
+
     await Desktop.start({
       ignoreSelf: true,
       master: true,

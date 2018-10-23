@@ -96,6 +96,7 @@ function install-packages() {
   cd ./stage-app
     rm -r node_modules || true
     rm package-lock.json || true
+    export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
     npm install --production --registry http://localhost:4343
   cd -
   # kill verdaccio

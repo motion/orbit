@@ -15,13 +15,13 @@ import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { Logger } from '@mcro/logger'
 import { OrbitNav } from './orbitNav/OrbitNav'
-import { View, Image } from '@mcro/ui'
+import { View } from '@mcro/ui'
 import { SelectableCarousel } from '../../../components/SelectableCarousel'
 import { OrbitAppIconCard } from './views/OrbitAppIconCard'
 import { AppsStore } from '../../../stores/AppsStore'
 import { Icon } from '../../../views/Icon'
 import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
-import notch from './notch.png'
+// import notch from './notch.png'
 
 const log = new Logger('OrbitDocked')
 
@@ -115,7 +115,7 @@ class OrbitDockedContents extends React.Component<Props> {
                   items={[
                     {
                       title: 'Orbit',
-                      children: <Image src={notch} width={30 * 0.8219} height={30} />,
+                      children: <Icon name="house" />,
                     },
                     {
                       title: 'Me',

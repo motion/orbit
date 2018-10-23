@@ -38,8 +38,8 @@ export class OrbitHome extends React.Component<Props> {
         <SubPane
           name="directory"
           before={<OrbitNavVerticalPad />}
-          paddingLeft={12}
-          paddingRight={12}
+          paddingLeft={10}
+          paddingRight={10}
         >
           <OrbitDirectory />
           <Lip />

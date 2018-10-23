@@ -8,11 +8,15 @@ export const generalSettingQuery = {
 }
 
 export class SettingStore {
-  setting: GeneralSetting = null
+  setting: GeneralSetting = {
+    values: {},
+  } as any
 
   private setting$ = observeOne(SettingModel, { args: { where: generalSettingQuery } }).subscribe(
     value => {
-      this.setting = value as GeneralSetting
+      if (value) {
+        this.setting = value as GeneralSetting
+      }
     },
   )
 

@@ -50,7 +50,7 @@ export const OrbitAppIconCard = (props: Props) => {
   } = props
   return (
     <Col
-      marginRight={20}
+      marginRight={15}
       width={style.width}
       heigth={style.height + hideTitle ? 0 : 15}
       alignItems="center"

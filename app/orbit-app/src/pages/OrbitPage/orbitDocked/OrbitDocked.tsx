@@ -15,12 +15,13 @@ import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { Logger } from '@mcro/logger'
 import { OrbitNav } from './orbitNav/OrbitNav'
-import { View } from '@mcro/ui'
+import { View, Image } from '@mcro/ui'
 import { SelectableCarousel } from '../../../components/SelectableCarousel'
 import { OrbitAppIconCard } from './views/OrbitAppIconCard'
 import { AppsStore } from '../../../stores/AppsStore'
 import { Icon } from '../../../views/Icon'
 import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
+import notch from './notch.png'
 
 const log = new Logger('OrbitDocked')
 
@@ -85,7 +86,7 @@ class OrbitDockedContents extends React.Component<Props> {
 
   render() {
     const { paneManagerStore } = this.props
-    const size = 52
+    const size = 48
     return (
       <>
         <OrbitHeader
@@ -109,14 +110,19 @@ class OrbitDockedContents extends React.Component<Props> {
                   cardProps={{
                     isSelected: this.isSelected,
                     onSelect: this.onSelect,
+                    chromeless: true,
                   }}
                   items={[
                     {
                       title: 'Orbit',
-                      children: <Icon name="house" />,
+                      children: <Image src={notch} width={30 * 0.8219} height={30} />,
                     },
                     {
-                      title: 'People',
+                      title: 'Me',
+                      children: <Icon name="singleNeutral" />,
+                    },
+                    {
+                      title: 'Directory',
                       children: <Icon name="multipleNeutral2" />,
                     },
                     {
@@ -124,7 +130,7 @@ class OrbitDockedContents extends React.Component<Props> {
                       children: <Icon name="singleNeutralChat" />,
                     },
                     {
-                      title: 'My List',
+                      title: 'Onboarding',
                       children: <Icon name="listBullets" />,
                     },
                     {

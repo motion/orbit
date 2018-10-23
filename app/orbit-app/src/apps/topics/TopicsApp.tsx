@@ -19,9 +19,6 @@ class TopicsStore {
 
   get results() {
     const { setting } = this.props.settingStore
-    if (!setting) {
-      return []
-    }
     const topics = setting.values.topTopics || []
     return topics.map(topic => ({
       title: topic,

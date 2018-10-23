@@ -7,6 +7,7 @@ import { OrbitExplore } from './orbitExplore/OrbitExplore'
 import { OrbitDirectory } from '../OrbitDirectory'
 import { ListApp } from '../../../../apps/list/ListApp'
 import { TopicsApp } from '../../../../apps/topics/TopicsApp'
+import { MeApp } from '../../../../apps/me/MeApp'
 
 type Props = {
   name: string
@@ -26,6 +27,10 @@ export class OrbitHome extends React.Component<Props> {
       <>
         <SubPane name="home" before={<OrbitNavVerticalPad />} paddingLeft={6} paddingRight={6}>
           <OrbitExplore />
+          <Lip />
+        </SubPane>
+        <SubPane name="me" before={<OrbitNavVerticalPad />} paddingLeft={6} paddingRight={6}>
+          <MeApp />
           <Lip />
         </SubPane>
         <SubPane

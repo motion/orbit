@@ -18,10 +18,12 @@ class TopicsStore {
   props: Props
 
   get results() {
-    if (!this.props.settingStore.setting) {
+    const { setting } = this.props.settingStore
+    if (!setting) {
       return []
     }
-    return this.props.settingStore.setting.values.topTopics.map(topic => ({
+    const topics = setting.values.topTopics || []
+    return topics.map(topic => ({
       title: topic,
       content: 'hello world',
     }))

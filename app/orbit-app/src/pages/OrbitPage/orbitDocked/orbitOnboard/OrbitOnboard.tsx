@@ -17,8 +17,10 @@ import { GeneralSettingValues } from '@mcro/models'
 import { BlurryGuys } from './BlurryGuys'
 import { SimpleItem } from '../../../../views/SimpleItem'
 import { OrbitIntegration, ItemType } from '../../../../integrations/types'
+import { SettingStore } from '../../../../stores/SettingStore'
 
 type Props = {
+  settingStore?: SettingStore
   appsStore?: AppsStore
   paneManagerStore?: PaneManagerStore
   store?: OnboardStore
@@ -146,17 +148,9 @@ class OnboardStore {
       this.props.paneManagerStore.setActivePane('home')
       this.props.paneManagerStore.forceOnboard = false
       // save setting
-      const generalSetting = await loadOne(SettingModel, {
-        args: {
-          where: {
-            type: 'general',
-            category: 'general',
-          },
-        },
+      await this.props.settingStore.update({
+        hasOnboarded: true,
       })
-      const values = generalSetting.values as GeneralSettingValues
-      values.hasOnboarded = true
-      await save(SettingModel, generalSetting)
     }
 
     // go to next frame
@@ -169,7 +163,7 @@ const filterApps = (app: OrbitIntegration<ItemType>) =>
   !!app.integration && app.integration !== 'website'
 
 const decorator = compose(
-  view.attach('appsStore', 'paneManagerStore'),
+  view.attach('settingStore', 'appsStore', 'paneManagerStore'),
   view.attach({
     store: OnboardStore,
   }),
@@ -190,7 +184,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const allAppsSorted = appsStore.integrationsMap
+  const allAppsSorted = appsStore.allIntegrations
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
   return (

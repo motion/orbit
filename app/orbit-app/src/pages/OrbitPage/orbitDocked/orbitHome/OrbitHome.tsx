@@ -85,6 +85,16 @@ export class OrbitHome extends React.Component<Props> {
                 icon: 'zoom',
                 description: `Horizontal list of queries you organize and pin.`,
               },
+              {
+                title: 'Topic List',
+                icon: 'chat',
+                description: `Custom list of topics that lead into searches.`,
+              },
+              {
+                title: 'Directory',
+                icon: 'index',
+                description: `Directory of People or Lists for navigation.`,
+              },
             ].map((item, index) => (
               <OrbitCard
                 key={index}

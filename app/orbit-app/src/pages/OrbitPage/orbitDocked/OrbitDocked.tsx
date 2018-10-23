@@ -94,7 +94,7 @@ class OrbitDockedContents extends React.Component<Props> {
         />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
-            <Interactive disabled={/settings/.test(paneManagerStore.activePane)}>
+            <Interactive disabled={/settings|onboard/.test(paneManagerStore.activePane)}>
               <OrbitNav />
               <View position="relative" zIndex={1000} margin={[20, 0, 0]}>
                 <SelectableCarousel

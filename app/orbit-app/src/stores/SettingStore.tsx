@@ -1,5 +1,5 @@
-import { observeOne } from '@mcro/model-bridge'
-import { SettingModel, GeneralSetting } from '@mcro/models'
+import { observeOne, save } from '@mcro/model-bridge'
+import { SettingModel, GeneralSetting, GeneralSettingValues } from '@mcro/models'
 
 export const generalSettingQuery = {
   type: 'general' as 'general',
@@ -15,6 +15,14 @@ export class SettingStore {
       this.setting = value as GeneralSetting
     },
   )
+
+  update = async (values: Partial<GeneralSettingValues>) => {
+    this.setting.values = {
+      ...this.setting.values,
+      ...values,
+    }
+    await save(SettingModel, this.setting as any)
+  }
 
   willUnmount() {
     this.setting$.unsubscribe()

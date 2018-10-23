@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../pages/OrbitPage/PaneManagerStore'
 import { SearchStore } from '../../pages/OrbitPage/orbitDocked/SearchStore'
 import { SelectionStore } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
@@ -22,7 +21,10 @@ class TopicsStore {
     if (!this.props.settingStore.setting) {
       return []
     }
-    return this.props.settingStore.setting.values.topTopics
+    return this.props.settingStore.setting.values.topTopics.map(topic => ({
+      title: topic,
+      content: 'hello world',
+    }))
   }
 }
 
@@ -43,7 +45,7 @@ export class TopicsApp extends React.Component<Props & { store?: TopicsStore }> 
           offset={0}
           cardProps={{
             direct: true,
-            query: App.state.query,
+            // query: App.state.query,
           }}
         />
       </ProvideHighlightsContextWithDefaults>

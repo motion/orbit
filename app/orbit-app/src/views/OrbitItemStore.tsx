@@ -160,5 +160,8 @@ export class OrbitItemStore {
         }
       }
     },
+    {
+      deferFirstRun: true,
+    },
   )
 }

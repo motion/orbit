@@ -6,8 +6,10 @@ import {
   Masonry,
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitSearchCard } from '../pages/OrbitPage/orbitDocked/orbitHome/OrbitSearchCard'
+// NOTE THIS IS HOW WE DO SEARCH
+// import { OrbitSearchCard } from '../pages/OrbitPage/orbitDocked/orbitHome/OrbitSearchCard'
 import { ItemProps } from './OrbitItemProps'
+import { OrbitCard } from './OrbitCard'
 
 const middleSpace = 3
 const width = ORBIT_WIDTH
@@ -31,7 +33,7 @@ export class OrbitMasonry extends React.Component<Props> {
     sidePad: 6,
     height: 600,
     offset: 0,
-    CardView: OrbitSearchCard,
+    CardView: OrbitCard,
   }
 
   cache = new CellMeasurerCache({
@@ -61,7 +63,7 @@ export class OrbitMasonry extends React.Component<Props> {
             paddingRight: style.left === 0 ? 0 : sidePad,
           }}
         >
-          <CardView index={index + offset} {...cardProps} {...itemProps} />
+          <CardView direct index={index + offset} {...cardProps} {...itemProps} />
         </div>
       </CellMeasurer>
     )

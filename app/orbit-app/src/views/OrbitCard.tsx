@@ -357,8 +357,10 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
 
   render() {
     const { store, model, direct } = this.props
+    // lets react to this, keep this here to ensure we do
     store.isSelected
     if (direct) {
+      console.log('getting inner', this.props)
       return this.getInner(this.props)
     }
     if (!model) {

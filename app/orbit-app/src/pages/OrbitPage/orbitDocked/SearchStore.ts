@@ -89,6 +89,7 @@ export class SearchStore {
   updateSearchHistoryOnSearch = react(
     () => this.activeQuery,
     async (query, { sleep }) => {
+      ensure('has query', !!query)
       await sleep(2000)
       const { settingStore } = this.props
       // init

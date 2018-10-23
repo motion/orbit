@@ -2,7 +2,6 @@ import corpusCovarPrecomputed from './corpusCovar'
 import { getCovariance, Covariance } from './getCovariance'
 import { toCosal, Pair } from './toCosal'
 import { uniqBy } from 'lodash'
-import { commonWords } from './commonWords'
 import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON } from 'fs-extra'
 
@@ -24,7 +23,7 @@ type Result = {
   distance: number
 }
 
-type CosalWordOpts = { max?: number; sortByWeight?: boolean }
+type CosalWordOpts = { max?: number; sortByWeight?: boolean; uniqueWords?: boolean }
 
 export class Cosal {
   vectors: VectorDB = {}
@@ -139,7 +138,7 @@ export class Cosal {
 
   getWordWeights = async (
     text: string,
-    { max = 10, sortByWeight }: CosalWordOpts = {},
+    { max = 10, sortByWeight, uniqueWords }: CosalWordOpts = {},
   ): Promise<Pair[] | null> => {
     const cosal = await toCosal(text, this.covariance)
     if (!cosal) {
@@ -149,21 +148,23 @@ export class Cosal {
     let fmax = max
     if (max) {
       if (pairs.length > max) {
-        // sort by weight
-        const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase()).sort(
-          (a, b) => b.weight - a.weight,
-        )
+        let res = pairs
 
-        // just return top by weight
-        if (sortByWeight) {
-          return uniqSorted.slice(0, max)
+        // uniqueWords
+        if (uniqueWords) {
+          res = uniqBy(pairs, x => x.string.toLowerCase())
         }
 
-        // return them in original order, but limited by weight
-        // make sure we get the new last index, could be shorter
-        fmax = Math.min(uniqSorted.length - 1, max)
+        // sortByWeight
+        if (sortByWeight) {
+          return res.sort((a, b) => b.weight - a.weight).slice(0, max)
+        }
+
+        // max, in order they appeared in
+        // get new last index (could be shorter)
+        fmax = Math.min(res.length - 1, max)
         // find our topmost weight
-        const limitWeight = uniqSorted[fmax].weight
+        const limitWeight = res[fmax].weight
         // now map and filter but keeping original order
         pairs = pairs.filter(x => x.weight >= limitWeight)
         return pairs.slice(0, fmax)
@@ -173,7 +174,7 @@ export class Cosal {
   }
 
   getTopWords = async (text: string, { max = 10, sortByWeight }: CosalWordOpts = {}) => {
-    const words = await this.getWordWeights(text, { max, sortByWeight })
+    const words = await this.getWordWeights(text, { max, sortByWeight, uniqueWords: true })
     if (!words) {
       return []
     }

@@ -210,6 +210,7 @@ export class Root {
         port: getGlobalConfig().ports.dbBridge,
       }),
       resolvers: [
+        // @ts-ignore
         ...typeormResolvers(getConnection(), [
           { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },

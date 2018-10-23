@@ -38,7 +38,7 @@ export class MeApp extends React.Component<Props & { store?: MeStore }> {
         value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}
       >
         <SubTitle>Recently Searched</SubTitle>
-        {recentSearches.map(search => (
+        {recentSearches.filter(x => !!`${x}`.trim()).map(search => (
           <SimpleItem key={search} title={search} />
         ))}
 

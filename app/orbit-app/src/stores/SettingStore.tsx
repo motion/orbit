@@ -12,6 +12,10 @@ export class SettingStore {
     values: {},
   } as any
 
+  get values() {
+    return this.setting.values as GeneralSettingValues
+  }
+
   private setting$ = observeOne(SettingModel, { args: { where: generalSettingQuery } }).subscribe(
     value => {
       if (value) {

@@ -44,7 +44,7 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     model?: T
     children?:
       | ((normalizedItem: NormalizedItem, model?: T, index?: number) => JSX.Element)
-      | JSX.Element
+      | React.ReactNode
     onClick?: Function
     onSelect?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
     borderRadius?: number

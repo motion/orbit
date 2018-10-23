@@ -27,10 +27,11 @@ export class PaneManagerStore {
     'topics',
     'list',
     'help',
+    'new',
     'search',
     'settings',
   ]
-  keyablePanes = [0, 5]
+  keyablePanes = [0, 6]
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true

@@ -1,8 +1,10 @@
 import { BitEntity, PersonEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { Bit, Setting } from '@mcro/models'
+import { Bit, GithubSetting, Setting } from '@mcro/models'
+import { GithubIssue, GithubPullRequest } from '@mcro/services'
+import { hash } from '@mcro/utils'
 import { chunk } from 'lodash'
-import { getManager } from 'typeorm'
+import { getManager, getRepository } from 'typeorm'
 import { SyncerRepository } from './SyncerRepository'
 
 /**
@@ -27,6 +29,28 @@ export class BitSyncer {
     this.setting = setting
     this.log = log
     this.syncerRepository = new SyncerRepository(setting)
+  }
+
+
+  /**
+   * Creates a bit id.
+   */
+  static buildId(setting: GithubSetting, data: GithubIssue|GithubPullRequest)
+  static buildId(setting: Setting, data: any) {
+    if (setting.type === "github") {
+      return hash(`${setting.type}-${setting.id}-${data}`)
+    }
+  }
+
+
+  async syncOne(bit: Bit): Promise<void> {
+
+    // there is one problematic use case - if user removes integration during synchronization
+    // we should not sync anything (shouldn't write any new person or bit into the database)
+    // if (this.syncerRepository.isSettingRemoved())
+    //   throw new Error(`Setting wasn't found, looks like it was removed, stopping sync`)
+
+    await getRepository(BitEntity).save(bit)
   }
 
   /**

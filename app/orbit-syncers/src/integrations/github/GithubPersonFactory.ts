@@ -19,16 +19,10 @@ export class GithubPersonFactory {
    * people from them.
    */
   createFromIssue(issue: GithubIssue): Person[] {
-    const comments = issue.comments.edges.map(edge => edge.node)
-
-    const githubPeople = uniqBy([
-      issue.author,
-      ...comments.map(comment => comment.author),
-      ...issue.assignees.edges.map(user => user.node),
-      ...issue.participants.edges.map(user => user.node),
-    ], 'id').filter(user => !!user)
-
-    return githubPeople.map(githubPerson => this.createFromGithubUser(githubPerson))
+    return issue.participants.edges
+      .map(user => user.node)
+      .filter(user => !!user)
+      .map(githubPerson => this.createFromGithubUser(githubPerson))
   }
 
   /**
@@ -43,7 +37,6 @@ export class GithubPersonFactory {
     const githubPeople = uniqBy([
       pr.author,
       ...comments.map(comment => comment.author),
-      ...pr.assignees.edges.map(user => user.node),
       ...pr.participants.edges.map(user => user.node),
       ...reviews.map(user => user.author),
       ...commits.filter(commit => !!commit.user).map(commit => commit.user)

@@ -4,11 +4,11 @@
 export class GithubQueries {
 
   /**
-   * Repositories query.
+   * User repositories query.
    */
-  static repositories() {
+  static userRepositories() {
     return `
-query GithubRepositoriesQuery($cursor: String) {
+query GithubUserRepositoriesQuery($cursor: String) {
   viewer {
     repositories(first: 100, after: $cursor) {
       totalCount
@@ -23,10 +23,44 @@ query GithubRepositoriesQuery($cursor: String) {
           nameWithOwner
           url
           pushedAt
-          issues {
+          updatedAt
+          issues(first: 1, orderBy: { direction: DESC, field: UPDATED_AT }) {
             totalCount
+            nodes {
+              updatedAt
+            }
           }
         }
+      }
+    }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+`
+  }
+
+  /**
+   * Repository query.
+   */
+  static repository() {
+    return `
+query GithubRepositoryQuery($owner: String!, $name: String!) {
+  repository(owner: $owner, name: $name) {
+    id
+    name
+    nameWithOwner
+    url
+    pushedAt
+    updatedAt
+    issues(first: 1, orderBy: { direction: DESC, field: UPDATED_AT }) {
+      totalCount
+      nodes {
+        updatedAt
       }
     }
   }
@@ -73,102 +107,139 @@ query GithubOrganizationsQuery($cursor: String) {
    */
   static issues() {
     return `
-query GithubIssueQuery($organization: String!, $repository: String!, $cursor: String) {
+query GithubIssueQuery($organization: String!, $repository: String!, $first: Int!, $cursor: String) {
   repository(owner: $organization, name: $repository) {
     id
     name
-    issues(first: 5, after: $cursor) {
+    issues(first: $first, after: $cursor, orderBy: { direction: DESC, field: UPDATED_AT }) {
       totalCount
       pageInfo {
+        endCursor
         hasNextPage
       }
-      edges {
-        cursor
-        node {          
+      nodes {
+        id
+        title
+        number
+        body
+        bodyText
+        updatedAt
+        createdAt
+        url
+        closed
+        repository {
           id
-          title
-          number
-          body
-          bodyText
-          updatedAt
-          createdAt
+          name
           url
-          closed
-          repository {
+          owner {
+            login
+          }
+        }
+        author {
+          ... on User {
             id
+            login
+            location
+            avatarUrl
+            bio
+            email
             name
-            url
-            owner {
-              login
-            }
           }
-          author {
-            ... on User {
-              id
-              login
-              location
-              avatarUrl
-              bio
-              email
-              name
-            }
-          }
-          assignees(first: 100) {
-            edges {
-              node {
-                ... on User {
-                  id
-                  login
-                  location
-                  avatarUrl
-                  bio
-                  email
-                  name
-                }
-              }
-            }
-          }
-          comments(first: 100) {
-            edges {
-              node {
-                author {
-                  ... on User {
-                    id
-                    login
-                    location
-                    avatarUrl
-                    bio
-                    email
-                    name
-                  }
-                }
-                createdAt
-                body
-              }
-            }
-          }
-          participants(first: 100) {
-            edges {
-              node {
-                ... on User {
-                  id
-                  login
-                  location
-                  avatarUrl
-                  bio
-                  email
-                  name
-                }
-              }
-            }
-          }
-          labels(first: 10) {
-            edges {
-              node {
+        }
+        comments {
+          totalCount
+        }
+        participants(first: 100) {
+          edges {
+            node {
+              ... on User {
+                id
+                login
+                location
+                avatarUrl
+                bio
+                email
                 name
-                description
-                color
-                url
+              }
+            }
+          }
+        }
+        labels(first: 10) {
+          edges {
+            node {
+              name
+              description
+              color
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+`
+  }
+
+  /**
+   * Issue comments query.
+   */
+  static comments() {
+    return `
+query GithubCommentsQuery($organization: String!, $repository: String!, $issueOrPrNumber: Int!, $first: Int!, $cursor: String) {
+  repository(owner: $organization, name: $repository) {
+    id
+    name
+    issueOrPullRequest(number: $issueOrPrNumber) {
+      ... on Issue {
+        comments(first: $first, after: $cursor) {
+          totalCount
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+          nodes {
+            createdAt
+            body
+            author {
+              ... on User {
+                id
+                login
+                location
+                avatarUrl
+                bio
+                email
+                name
+              }
+            }
+          }
+        }
+      }
+      ... on PullRequest {
+        comments(first: $first, after: $cursor) {
+          totalCount
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+          nodes {
+            createdAt
+            body
+            author {
+              ... on User {
+                id
+                login
+                location
+                avatarUrl
+                bio
+                email
+                name
               }
             }
           }
@@ -191,11 +262,11 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
    */
   static pullRequests() {
     return `
-query GithubPullRequestsQuery($organization: String!, $repository: String!, $cursor: String) {
+query GithubPullRequestsQuery($organization: String!, $repository: String!, $first: Int!, $cursor: String) {
   repository(owner: $organization, name: $repository) {
     id
     name
-    pullRequests(first: 5, after: $cursor) {
+    pullRequests(first: $first, after: $cursor) {
       totalCount
       pageInfo {
         hasNextPage

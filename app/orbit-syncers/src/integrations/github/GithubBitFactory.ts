@@ -1,6 +1,6 @@
 import { BitUtils } from '@mcro/model-utils'
 import { Bit, GithubBitData, GithubSetting } from '@mcro/models'
-import { GithubIssue, GithubPullRequest } from '@mcro/services'
+import { GithubIssue, GithubComment, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 
 /**
@@ -16,7 +16,7 @@ export class GithubBitFactory {
   /**
    * Creates a new bit from a given Github issue.
    */
-  createFromIssue(issue: GithubIssue|GithubPullRequest): Bit {
+  createFromIssue(issue: GithubIssue|GithubPullRequest, comments: GithubComment[]): Bit {
     const id = hash(`github-${this.setting.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
@@ -24,18 +24,18 @@ export class GithubBitFactory {
     const data: GithubBitData = {
       closed: issue.closed,
       body: issue.body,
-      comments: issue.comments.edges.map(edge => {
+      comments: comments.map(comment => {
         // note: if user is removed on a github comment will have author set to "null"
         return {
-          author: edge.node.author
+          author: comment.author
             ? {
-                avatarUrl: edge.node.author.avatarUrl,
-                login: edge.node.author.login,
-                email: edge.node.author.email,
+                avatarUrl: comment.author.avatarUrl,
+                login: comment.author.login,
+                email: comment.author.email,
               }
             : undefined,
-          createdAt: edge.node.createdAt,
-          body: edge.node.body,
+          createdAt: comment.createdAt,
+          body: comment.body,
         }
       }),
       author: issue.author
@@ -50,11 +50,6 @@ export class GithubBitFactory {
         description: label.node.description,
         color: label.node.color,
         url: label.node.url,
-      })),
-      assignees: issue.assignees.edges.map(user => ({
-        avatarUrl: user.node.avatarUrl,
-        login: user.node.login,
-        email: user.node.email,
       })),
     }
 

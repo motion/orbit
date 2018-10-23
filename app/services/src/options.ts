@@ -123,6 +123,11 @@ export const ServiceLoadThrottlingOptions = {
     issues: 100,
 
     /**
+     * Delay before issue or pull request comments load.
+     */
+    comments: 0,
+
+    /**
      * Delay before pull requests load.
      */
     pullRequests: 100,

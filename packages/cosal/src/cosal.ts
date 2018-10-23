@@ -145,13 +145,14 @@ export class Cosal {
     if (!cosal) {
       return null
     }
-    let pairs = cosal.pairs.filter(x => !commonWords[x.string])
+    let pairs = cosal.pairs
     let fmax = max
     if (max) {
       if (pairs.length > max) {
         // sort by weight
-        const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase())
-        uniqSorted.sort((a, b) => (a.weight > b.weight ? 1 : -1))
+        const uniqSorted = uniqBy(pairs, x => x.string.toLowerCase()).sort(
+          (a, b) => b.weight - a.weight,
+        )
 
         // just return top by weight
         if (sortByWeight) {

@@ -105,7 +105,7 @@ export class GithubLoader {
     await sleep(ServiceLoadThrottlingOptions.github.issues)
 
     // send a request to the github and load first/next 100 issues
-    const first = 100 // number of issues to load per page
+    const first = 50 // number of issues to load per page
     const results = await this.load<GithubIssueQueryResult>(GithubQueries.issues(), {
       organization,
       repository,

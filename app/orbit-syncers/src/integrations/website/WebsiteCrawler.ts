@@ -1,9 +1,10 @@
 import { Logger } from '@mcro/logger'
 import { WebsiteSetting } from '@mcro/models'
-import { WebsiteCrawledData } from './WebsiteCrawledData'
 import * as fs from 'fs'
 import * as path from 'path'
+import { WebsiteCrawledData } from './WebsiteCrawledData'
 import { WebsiteCrawlerUtils } from './WebsiteCrawlerUtils'
+
 const puppeteer = require('puppeteer')
 const getUrls = require('get-urls')
 

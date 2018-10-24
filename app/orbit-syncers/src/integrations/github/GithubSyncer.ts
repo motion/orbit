@@ -77,19 +77,21 @@ export class GithubSyncer implements IntegrationSyncer {
       }
       const lastSyncInfo = this.setting.values.lastSyncRepositories[repository.nameWithOwner]
 
+      // DEPRECATED: WE DO NOT NEED THIS CODE. IT ONLY BRINGS PROBLEMS - FOR HUGE REPOSITORIES IT TAKES FOREVER TO LOAD THEIR ISSUES
+      // AND SINCE THEY ARE HUGE THEY ARE POPULAR AND NEW ISSUES KEEP COMING. LET IT JUST SYNC, WE WILL GET NEW ISSUES ON NEXT SYNC ITERATION
       // if we have a last sync cursor left (means we need to continue syncing from that position)
       // load the total count of issues in the repository first
       // to compare it with the total number of issues we used last time
       // if total number of issues differs it means some new issues were added
       // and we can't use our last synced date because otherwise we'll miss those newly added issues
-      if (lastSyncInfo.lastCursorTotalCount && repository.issues.totalCount !== lastSyncInfo.lastCursorTotalCount) {
-        this.log.verbose(`looks like repository got new issues since last cursor, resetting cursor, starting sync from the beginning`)
-        lastSyncInfo.lastCursor = undefined
-        lastSyncInfo.lastCursorSyncedDate = undefined
-        lastSyncInfo.lastCursorLoadedCount = undefined
-        lastSyncInfo.lastCursorTotalCount = undefined
-        await getRepository(SettingEntity).save(this.setting)
-      }
+      // if (lastSyncInfo.lastCursorTotalCount && repository.issues.totalCount !== lastSyncInfo.lastCursorTotalCount) {
+      //   this.log.verbose(`looks like repository got new issues since last cursor, resetting cursor, starting sync from the beginning`)
+      //   lastSyncInfo.lastCursor = undefined
+      //   lastSyncInfo.lastCursorSyncedDate = undefined
+      //   lastSyncInfo.lastCursorLoadedCount = undefined
+      //   lastSyncInfo.lastCursorTotalCount = undefined
+      //   await getRepository(SettingEntity).save(this.setting)
+      // }
 
       if (lastSyncInfo.lastSyncedDate &&
           repository.issues.nodes.length &&
@@ -114,7 +116,6 @@ export class GithubSyncer implements IntegrationSyncer {
           lastSyncInfo.lastCursor = undefined
           lastSyncInfo.lastCursorSyncedDate = undefined
           lastSyncInfo.lastCursorLoadedCount = undefined
-          lastSyncInfo.lastCursorTotalCount = undefined
           await getRepository(SettingEntity).save(this.setting)
 
           return false // this tells from the callback to stop issue proceeding
@@ -124,7 +125,6 @@ export class GithubSyncer implements IntegrationSyncer {
         // we don't want to sync issues less then this date
         if (!lastSyncInfo.lastCursorSyncedDate) {
           lastSyncInfo.lastCursorSyncedDate = updatedAt
-          lastSyncInfo.lastCursorTotalCount = repository.issues.totalCount
           this.log.verbose(`looks like its the first syncing issue, set last synced date`, lastSyncInfo)
           await getRepository(SettingEntity).save(this.setting)
         }
@@ -181,7 +181,6 @@ export class GithubSyncer implements IntegrationSyncer {
           lastSyncInfo.lastCursor = undefined
           lastSyncInfo.lastCursorSyncedDate = undefined
           lastSyncInfo.lastCursorLoadedCount = undefined
-          lastSyncInfo.lastCursorTotalCount = undefined
           await getRepository(SettingEntity).save(this.setting)
           return true
         }

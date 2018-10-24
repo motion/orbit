@@ -21,7 +21,7 @@ export class SettingStore {
       ...this.setting.values,
       ...values,
     }
-    await save(SettingModel, this.setting as any)
+    await save(SettingModel, this.setting)
   }
 
   willUnmount() {

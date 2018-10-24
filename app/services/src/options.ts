@@ -125,7 +125,7 @@ export const ServiceLoadThrottlingOptions = {
     /**
      * Delay before issue or pull request comments load.
      */
-    comments: 0,
+    comments: 100,
 
     /**
      * Delay before pull requests load.

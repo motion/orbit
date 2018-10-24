@@ -34,14 +34,6 @@ export interface GithubSettingValuesLastSyncRepositoryInfo {
    */
   lastCursorLoadedCount?: number
 
-  /**
-   * Total number of issues for the given repository at the moment of the last sync.
-   *
-   * The reason we store this count - we don't need to use last cursor if total count has changed since last sync,
-   * because we'll miss issues from the beginning.
-   */
-  lastCursorTotalCount?: number
-
 }
 
 export interface GithubSettingValues {

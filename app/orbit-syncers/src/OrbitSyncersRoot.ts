@@ -33,6 +33,7 @@ export class OrbitSyncersRoot {
   mediatorServer: MediatorServer
 
   async start() {
+    // console.log('path', path.join(app.getAppPath(), '..', '..') + '/Frameworks/Electron Framework.framework/Versions/A')
     setTimeout(async () => {
       await this.createDbConnection()
       this.setupMediatorServer()

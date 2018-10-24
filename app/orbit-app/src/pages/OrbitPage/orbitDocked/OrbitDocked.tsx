@@ -21,6 +21,7 @@ import { OrbitAppIconCard } from './views/OrbitAppIconCard'
 import { AppsStore } from '../../../stores/AppsStore'
 import { Icon } from '../../../views/Icon'
 import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
+// import notch from './notch.png'
 
 const log = new Logger('OrbitDocked')
 
@@ -85,7 +86,7 @@ class OrbitDockedContents extends React.Component<Props> {
 
   render() {
     const { paneManagerStore } = this.props
-    const size = 52
+    const size = 46
     return (
       <>
         <OrbitHeader
@@ -96,7 +97,7 @@ class OrbitDockedContents extends React.Component<Props> {
           <div style={{ position: 'relative', flex: 1 }}>
             <Interactive disabled={/settings|onboard/.test(paneManagerStore.activePane)}>
               <OrbitNav />
-              <View position="relative" zIndex={1000} margin={[20, 0, 0]}>
+              <View position="relative" zIndex={1000} margin={[18, 0, 0]}>
                 <SelectableCarousel
                   offset={0}
                   // shouldScrollToActive
@@ -104,36 +105,43 @@ class OrbitDockedContents extends React.Component<Props> {
                   cardWidth={size}
                   cardHeight={size}
                   cardSpace={0}
+                  afterSpace={false}
                   horizontalPadding={20}
                   CardView={OrbitAppIconCard}
                   cardProps={{
                     isSelected: this.isSelected,
                     onSelect: this.onSelect,
+                    // background: 'transparent',
+                    chromeless: true,
                   }}
                   items={[
                     {
                       title: 'Orbit',
-                      children: <Icon name="house" />,
+                      children: <Icon size={18} name="house" />,
                     },
                     {
-                      title: 'People',
-                      children: <Icon name="multipleNeutral2" />,
+                      title: 'Me',
+                      children: <Icon size={18} name="singleNeutral" />,
+                    },
+                    {
+                      title: 'Directory',
+                      children: <Icon size={18} name="multipleNeutral2" />,
                     },
                     {
                       title: 'Topics',
-                      children: <Icon name="singleNeutralChat" />,
+                      children: <Icon size={18} name="singleNeutralChat" />,
                     },
                     {
-                      title: 'My List',
-                      children: <Icon name="listBullets" />,
+                      title: 'Onboarding',
+                      children: <Icon size={18} name="listBullets" />,
                     },
                     {
                       title: 'Help',
-                      children: <Icon name="questionCircle" />,
+                      children: <Icon size={18} name="questionCircle" />,
                     },
                     {
                       title: 'New',
-                      children: <Icon name="add" />,
+                      children: <Icon size={18} style={{ opacity: 0.5 }} name="add" />,
                     },
                   ]}
                 />
@@ -166,7 +174,14 @@ class OrbitDockedStore {
   )
 }
 
-@view.attach('orbitStore', 'appsStore', 'selectionStore', 'queryStore', 'keyboardStore')
+@view.attach(
+  'settingStore',
+  'orbitStore',
+  'appsStore',
+  'selectionStore',
+  'queryStore',
+  'keyboardStore',
+)
 @view.provide({
   paneManagerStore: PaneManagerStore,
 })

@@ -15,18 +15,18 @@ import deepEqual from 'react-fast-compare'
 
 type Props = ManagedTableProps &
   SearchableProps & {
-    defaultFilters: Array<Filter>
+    defaultFilters: Filter[]
     filter: any
     filterValue: any
   }
 
 type State = {
   filterRows: (row: TableBodyRow) => boolean
+  filters: Filter[]
+  searchTerm: string
 }
 
-const filterRowsFactory = (filters: Array<Filter>, searchTerm: string) => (
-  row: TableBodyRow,
-): boolean =>
+const filterRowsFactory = (filters: Filter[], searchTerm: string) => (row: TableBodyRow): boolean =>
   filters
     .map((filter: Filter) => {
       if (filter.type === 'enum' && row.type != null) {
@@ -53,30 +53,28 @@ const filterRowsFactory = (filters: Array<Filter>, searchTerm: string) => (
         .includes(searchTerm.toLowerCase())
     : true)
 
-class SearchableManagedTable extends React.PureComponent<Props> {
+class SearchableManagedTable extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultFilters: [],
   }
 
-  state: State = {
+  state = {
     filterRows: filterRowsFactory(this.props.filters, this.props.searchTerm),
+    filters: null,
+    searchTerm: '',
   }
 
   componentDidMount() {
     this.props.defaultFilters.map(this.props.addFilter)
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    // ManagedTable is a PureComponent and does not update when this.filterRows
-    // would return a different value. This is why we update the funtion reference
-    // once the results of the function changed.
-    if (
-      nextProps.searchTerm !== this.props.searchTerm ||
-      !deepEqual(this.props.filters, nextProps.filters)
-    ) {
-      this.setState({
-        filterRows: filterRowsFactory(nextProps.filters, nextProps.searchTerm),
-      })
+  static getDerivedStateFromProps(props, state) {
+    if (props.searchTerm !== state.searchTerm || !deepEqual(state.filters, props.filters)) {
+      return {
+        filterRows: filterRowsFactory(props.filters, props.searchTerm),
+        searchTerm: props.searchTerm,
+        filters: props.filters,
+      }
     }
   }
 

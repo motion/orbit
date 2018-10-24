@@ -6,13 +6,10 @@ import { OrbitIcon } from '../../../views/OrbitIcon'
 const RowItemFrame = view(Row, {
   padding: [2, 8],
   alignItems: 'center',
-}).theme(({ hover, theme }) => ({
-  '&:hover':
-    hover === false
-      ? null
-      : {
-          background: theme.background,
-        },
+}).theme(({ theme }) => ({
+  '&:hover': {
+    background: theme.backgroundHover,
+  },
 }))
 
 const leftPad = 10
@@ -26,7 +23,7 @@ export const RowItem = ({
   ...props
 }) => {
   return (
-    <RowItemFrame padding={subtitle ? leftPad : [2, leftPad]} {...props}>
+    <RowItemFrame padding={leftPad} {...props}>
       {!!orb && (
         <View
           borderRadius={100}

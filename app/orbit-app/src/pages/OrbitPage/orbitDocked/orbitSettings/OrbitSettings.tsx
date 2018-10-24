@@ -20,7 +20,7 @@ const Pane = view({
 })
 
 const SettingButton = props => (
-  <Button width={90} sizeIcon={1.1} elementProps={{ width: 'auto' }} {...props} />
+  <Button width={90} sizeIcon={1.1} sizeRadius={2} elementProps={{ width: 'auto' }} {...props} />
 )
 
 @view.attach('paneManagerStore')

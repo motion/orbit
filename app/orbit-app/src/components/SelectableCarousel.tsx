@@ -11,6 +11,7 @@ export type SelectableCarouselProps = CarouselProps & {
   resetOnInactive?: boolean
   activeIndex?: number
   shouldScrollToActive?: boolean
+  afterSpace?: number | boolean
 }
 
 class CarouselStore {
@@ -71,11 +72,19 @@ class CarouselStore {
 @view
 export class SelectableCarousel extends React.Component<SelectableCarouselProps> {
   render() {
-    const { store, selectionStore, cardWidth = 180, cardHeight = 95, ...props } = this.props
+    const {
+      store,
+      selectionStore,
+      cardWidth = 180,
+      cardHeight = 95,
+      afterSpace = true,
+      ...props
+    } = this.props
+    const afterWidth = typeof afterSpace === 'number' ? afterSpace : ORBIT_WIDTH - cardWidth - 26
     return (
       <Carousel
         ref={store.carouselRef}
-        after={<div style={{ width: ORBIT_WIDTH - cardWidth - 20 }} />}
+        after={!!afterSpace && <div style={{ width: afterWidth }} />}
         cardWidth={cardWidth}
         cardHeight={cardHeight}
         {...props}

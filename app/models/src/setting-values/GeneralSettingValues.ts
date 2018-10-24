@@ -7,4 +7,6 @@ export interface GeneralSettingValues {
   openShortcut?: string
   cosalIndexUpdatedTo: number
   topTopics: string[]
+  recentSearches?: string[]
+  pinnedBits?: string[]
 }

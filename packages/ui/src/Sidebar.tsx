@@ -100,9 +100,9 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
     position: 'left',
   }
 
-  componentWillReceiveProps(nextProps: SidebarProps) {
-    if (!this.state.userChange) {
-      this.setState({ width: nextProps.width, height: nextProps.height })
+  static getDerivedStateFromProps(props, state) {
+    if (!props.userChange && (state.width !== props.width || state.height !== props.height)) {
+      return { width: props.width, height: props.height }
     }
   }
 

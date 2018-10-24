@@ -20,8 +20,18 @@ export class PaneManagerStore {
     keyboardStore: KeyboardStore
   }
 
-  panes: Partial<Panes>[] = ['home', 'directory', 'topics', 'list', 'help', 'search', 'settings']
-  keyablePanes = [0, 5]
+  panes: Partial<Panes>[] = [
+    'home',
+    'me',
+    'directory',
+    'topics',
+    'list',
+    'help',
+    'new',
+    'search',
+    'settings',
+  ]
+  keyablePanes = [0, 6]
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true

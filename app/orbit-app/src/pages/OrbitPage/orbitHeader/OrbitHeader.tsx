@@ -113,7 +113,7 @@ export class OrbitHeader extends React.Component<
               <OrbitCloseControl />
             </OrbitClose>
             <OrbitSpaceSwitch
-              onClick={headerStore.onClickOrb}
+              // onClick={headerStore.onClickOrb}
               margin={['auto', 0]}
               transform={{
                 y: -0.5,

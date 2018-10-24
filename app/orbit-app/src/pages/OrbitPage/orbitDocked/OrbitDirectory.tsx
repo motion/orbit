@@ -108,7 +108,7 @@ const createSection = (people: PersonBit[], letter, getIndex) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
-      <Grid columnWidth={120} gridAutoRows={height}>
+      <Grid columnWidth={120} gridAutoRows={height} gridGap={6}>
         {people.map(person => (
           <DirectoryPersonCard key={person.email} getIndex={getIndex} model={person} />
         ))}
@@ -133,9 +133,9 @@ export const OrbitDirectory = decorator(({ store }: Props) => {
   }
   let sections
   // not that many, show without sections
-  if (total < 20) {
+  if (total < 10) {
     sections = (
-      <Grid columnWidth={120} gridAutoRows={height}>
+      <Grid columnWidth={120} gridAutoRows={height} gridGap={6}>
         {results.map((person, index) => (
           <DirectoryPersonCard key={person.email} index={index} model={person} />
         ))}

@@ -188,6 +188,7 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
       title: _ignoreTitle,
       onClickLocation,
       chromeless,
+      activeStyle,
       ...props
     } = this.props
 
@@ -199,7 +200,7 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
       'item',
     )
     const hasChildren = typeof this.props.children !== 'undefined'
-    const showChildren = !(hide && hide.body)
+    const showChildren = !this.props.direct && !(hide && hide.body)
     const hasTitle = !!title && !(hide && hide.title)
     const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
@@ -230,6 +231,7 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
         {...hoverToSelect && !inactive && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         {...props}
+        {...isSelected && activeStyle}
       >
         <Card
           isSelected={isSelected}

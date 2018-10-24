@@ -9,6 +9,8 @@ import { MarkType } from './nlpStore/types'
 import { QueryStore } from './QueryStore'
 import { SearchFilterStore } from './SearchFilterStore'
 import { SelectionGroup, SelectionStore } from './SelectionStore'
+import { SettingStore } from '../../../stores/SettingStore'
+import { uniq } from 'lodash'
 
 const TYPE_DEBOUNCE = 200
 
@@ -18,6 +20,7 @@ export class SearchStore {
     selectionStore: SelectionStore
     appsStore: AppsStore
     queryStore: QueryStore
+    settingStore: SettingStore
   }
 
   nextRows = { startIndex: 0, endIndex: 0 }
@@ -80,6 +83,24 @@ export class SearchStore {
     },
     {
       defaultValue: App.state.query,
+    },
+  )
+
+  updateSearchHistoryOnSearch = react(
+    () => this.activeQuery,
+    async (query, { sleep }) => {
+      ensure('has query', !!query)
+      await sleep(2000)
+      const { settingStore } = this.props
+      // init
+      if (!settingStore.values.recentSearches) {
+        settingStore.update({ recentSearches: [query] })
+        return
+      }
+      const recentSearches = uniq([...settingStore.values.recentSearches, query]).slice(0, 50)
+      settingStore.update({
+        recentSearches,
+      })
     },
   )
 

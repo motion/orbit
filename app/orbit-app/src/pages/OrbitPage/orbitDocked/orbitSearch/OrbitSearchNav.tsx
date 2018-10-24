@@ -1,7 +1,7 @@
 import './calendar.css' // theme css file
 import * as React from 'react'
 import { SearchStore } from '../SearchStore'
-import { Row, View } from '@mcro/ui'
+import { Row, View, Popover } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { OrbitFilters } from '../orbitHome/OrbitFilters'
 import { view, react, ensure } from '@mcro/black'
@@ -9,6 +9,7 @@ import { OrbitSuggestionBar } from './OrbitSuggestionBar'
 import { QueryStore } from '../QueryStore'
 import { hoverSettler } from '../../../../helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { DateRangePicker } from 'react-date-range'
 
 type Props = {
   searchStore?: SearchStore
@@ -69,11 +70,43 @@ export class OrbitSearchNav extends React.Component<Props> {
   render() {
     const { searchStore, store } = this.props
     const { onClick, ...hoverProps } = store.hoverSettle.props
-    // const { searchFilterStore } = searchStore
+    const { searchFilterStore } = searchStore
     const stickFilters = store.hoverSettle.isStuck()
     return (
-      <Row position="relative" alignItems="center" padding={[0, 10]}>
+      <Row position="relative" alignItems="center" padding={[0, 6, 12]}>
         <Row position="relative" zIndex={1}>
+          <Popover
+            delay={100}
+            openOnClick
+            openOnHover
+            closeOnClickAway
+            group="filters"
+            target={
+              <NavButton
+                icon="calendar"
+                opacity={searchStore.searchFilterStore.hasDateFilter ? 1 : 0.5}
+              />
+            }
+            alignPopover="left"
+            adjust={[220, 0]}
+            background
+            borderRadius={6}
+            elevation={4}
+            theme="light"
+          >
+            <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
+              <DateRangePicker
+                onChange={searchStore.searchFilterStore.onChangeDate}
+                ranges={[searchStore.searchFilterStore.dateState]}
+              />
+            </View>
+          </Popover>
+          <NavButton
+            onClick={searchFilterStore.toggleSortBy}
+            icon={searchFilterStore.sortBy === 'Recent' ? 'sort' : 'trend'}
+            tooltip={searchFilterStore.sortBy}
+            opacity={0.5}
+          />
           <NavButton
             icon="funnel41"
             // otherwise it wasnt picking up styles...
@@ -88,7 +121,7 @@ export class OrbitSearchNav extends React.Component<Props> {
         </Row>
 
         {/* overflow contain row */}
-        <Row position="absolute" left={40} right={0} overflow="hidden">
+        <Row position="absolute" left={110} right={0} overflow="hidden">
           <Row
             width={`calc(100% + ${store.filtersWidth}px)`}
             marginRight={-store.filtersWidth}

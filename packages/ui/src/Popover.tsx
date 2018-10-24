@@ -333,8 +333,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    if (prevState.showPopover !== this.state.showPopover) {
-      this.props.onChangeVisibility(this.state.showPopover)
+    if (this.props.onChangeVisibility) {
+      if (prevState.showPopover !== this.state.showPopover) {
+        this.props.onChangeVisibility(this.state.showPopover)
+      }
     }
     if (this.showPopover) {
       PopoverState.openPopovers.add(this)

@@ -1,3 +1,25 @@
+# sync with umed
+
+- go over what data needs to be synced and how
+- we need to work in a way that most unblocks each other
+
+i think this can look like this:
+
+week 1:
+
+- nate: interfaces for account, team, space
+- umed: account and team simplest possible backend we can plug into
+
+week 2:
+
+- nate: interfaces for improved search/directory and other apps
+- umed: link in account, team, space into UI, then move into app data
+
+week 3:
+
+- nate: performance, polish and bugfixing based on last week
+- umed: finishing any account/team, performance, etc
+
 # October
 
 Nate:

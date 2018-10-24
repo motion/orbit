@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, compose, react } from '@mcro/black'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { View } from '@mcro/ui'
+import { memoize } from 'lodash'
 
 const framePad = 30
 const frameWidth = ORBIT_WIDTH
@@ -17,6 +18,7 @@ const SliderPaneContainer = view(View, {
 const SliderContainer = view(View, {
   flexFlow: 'row',
   transition: 'all ease 200ms',
+  alignItems: 'flex-start',
 }).theme(({ curFrame, numFrames }) => ({
   width: frameWidth * numFrames,
   '& > div': {
@@ -31,17 +33,53 @@ const SliderContainer = view(View, {
   },
 }))
 
-export const Slider = ({ curFrame = 0, numFrames = 0, children, ...props }) => {
-  return (
-    <SliderContainer
-      curFrame={curFrame}
-      numFrames={numFrames || React.Children.count(children)}
-      {...props}
-    >
-      {children}
-    </SliderContainer>
+type Props = {
+  curFrame: number
+  children?: React.ReactElement<any>[]
+}
+
+class SliderStore {
+  props: Props
+  height = 0
+  refs = []
+
+  setRef = memoize(index => ref => {
+    this.refs[index] = ref
+  })
+
+  updateHeight = react(
+    () => [this.props.curFrame, this.refs],
+    ([index]) => {
+      console.log('refs', this.refs)
+      if (this.refs[index]) {
+        this.height = this.refs[index].clientHeight || 100
+      }
+    },
   )
 }
+
+const decorate = compose(
+  view.attach({
+    store: SliderStore,
+  }),
+  view,
+)
+export const Slider = decorate(
+  ({ curFrame = 0, children, store, ...props }: Props & { store: SliderStore }) => {
+    return (
+      <SliderContainer
+        height={store.height}
+        curFrame={curFrame}
+        numFrames={React.Children.count(children)}
+        {...props}
+      >
+        {React.Children.map(children, (child, index) =>
+          React.cloneElement(child as React.ReactElement<any>, { forwardRef: store.setRef(index) }),
+        )}
+      </SliderContainer>
+    )
+  },
+)
 
 export const SliderPane = ({ children, ...props }) => {
   return <SliderPaneContainer {...props}>{children}</SliderPaneContainer>

@@ -65,12 +65,7 @@ class MeStore {
   ]
 }
 
-const Centered = view({
-  justifyContent: 'center',
-  flex: 1,
-})
-
-const Pane = props => <SliderPane padding={[0, 14]} {...props} />
+const Pane = props => <SliderPane padding={[20, 14, 40]} {...props} />
 
 @view.attach('settingStore')
 @view.attach({
@@ -112,7 +107,7 @@ export class NewApp extends React.Component<Props & { store?: MeStore }> {
 
           <Pane>
             <Title>New {store.activeAppName.toLowerCase()}</Title>
-            <Centered>{store.activeAppName === 'List' && <AppListSetup />}</Centered>
+            {store.activeAppName === 'List' && <AppListSetup />}
           </Pane>
         </Slider>
 

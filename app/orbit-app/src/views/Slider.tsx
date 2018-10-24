@@ -19,6 +19,7 @@ const SliderContainer = view(View, {
   flexFlow: 'row',
   transition: 'transform ease 200ms, opacity ease 200ms',
   alignItems: 'flex-start',
+  overflow: 'hidden',
 }).theme(({ curFrame, numFrames }) => ({
   width: frameWidth * numFrames,
   '& > div': {

@@ -1,3 +1,10 @@
+this week:
+
+- switching between spaces
+- fix space creation pane
+- fix settings panes showing
+- mock onboard: add integrations => show available orbits to join
+
 # sync with umed
 
 - go over what data needs to be synced and how

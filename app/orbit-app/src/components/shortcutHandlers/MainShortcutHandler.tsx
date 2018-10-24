@@ -22,6 +22,15 @@ const rootShortcuts = {
   up: 'up',
   left: 'left',
   right: 'right',
+  1: 'command+1',
+  2: 'command+2',
+  3: 'command+3',
+  4: 'command+4',
+  5: 'command+5',
+  6: 'command+6',
+  7: 'command+7',
+  8: 'command+8',
+  9: 'command+9',
 }
 
 const decorate = compose(view.attach('selectionStore', 'paneManagerStore'))
@@ -74,6 +83,15 @@ export const MainShortcutHandler = decorate(
       down: movePaneOrSelection(Direction.down),
       left: movePaneOrSelection(Direction.left),
       right: movePaneOrSelection(Direction.right),
+      1: paneManagerStore.activePaneSetter(1 - 1),
+      2: paneManagerStore.activePaneSetter(2 - 1),
+      3: paneManagerStore.activePaneSetter(3 - 1),
+      4: paneManagerStore.activePaneSetter(4 - 1),
+      5: paneManagerStore.activePaneSetter(5 - 1),
+      6: paneManagerStore.activePaneSetter(6 - 1),
+      7: paneManagerStore.activePaneSetter(7 - 1),
+      8: paneManagerStore.activePaneSetter(8 - 1),
+      9: paneManagerStore.activePaneSetter(9 - 1),
     }
 
     return (

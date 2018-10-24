@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { AppsStore } from '../../stores/AppsStore'
-import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
+// import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
 import { AppStore } from './AppStore'
 import * as UI from '@mcro/ui'
@@ -30,15 +30,15 @@ type Props = {
 export class AppPage extends React.Component<Props> {
   render() {
     return (
-      <MainShortcutHandler>
-        <AppWrapper>
-          <UI.Theme name="light">
-            <AppFrame>
-              <AppPageContent />
-            </AppFrame>
-          </UI.Theme>
-        </AppWrapper>
-      </MainShortcutHandler>
+      // <MainShortcutHandler>
+      <AppWrapper>
+        <UI.Theme name="light">
+          <AppFrame>
+            <AppPageContent />
+          </AppFrame>
+        </UI.Theme>
+      </AppWrapper>
+      // </MainShortcutHandler>
     )
   }
 }

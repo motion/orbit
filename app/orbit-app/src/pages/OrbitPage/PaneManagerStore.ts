@@ -28,7 +28,7 @@ export class PaneManagerStore {
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
-  subPane = 'apps'
+  subPane = 'team'
 
   lastActivePane = react(() => this.activePane, {
     delayValue: true,

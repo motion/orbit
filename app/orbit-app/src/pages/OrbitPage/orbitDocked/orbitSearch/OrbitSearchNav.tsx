@@ -88,7 +88,7 @@ export class OrbitSearchNav extends React.Component<Props> {
         </Row>
 
         {/* overflow contain row */}
-        <Row position="absolute" left={40} right={45} overflow="hidden">
+        <Row position="absolute" left={40} right={0} overflow="hidden">
           <Row
             width={`calc(100% + ${store.filtersWidth}px)`}
             marginRight={-store.filtersWidth}

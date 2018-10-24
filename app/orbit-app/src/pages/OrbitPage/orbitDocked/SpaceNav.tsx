@@ -22,7 +22,7 @@ export class SpaceNav extends React.Component<Props> {
     const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), activeSpace.panes.length - 1)
     const activeItem = activeSpace.panes[curIndex]
     return (
-      <Row position="relative" zIndex={1000} padding={[8, 12]} alignItems="center">
+      <Row position="relative" zIndex={1000} padding={[4, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
         <View padding={[0, 11, 1, 2]}>
           <Icon size={16} name={activeItem.icon} />

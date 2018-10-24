@@ -148,6 +148,10 @@ export const OrbitDirectory = decorator(({ store }: Props) => {
     let lastPersonLetter
     for (const [index, person] of results.entries()) {
       let letter = person.name[0].toLowerCase()
+      // is number
+      if (+person.name[0] === +person.name[0]) {
+        letter = '0-9'
+      }
       const isNewSection = lastPersonLetter && letter !== lastPersonLetter
       const isLastSection = index === total - 1
       if ((isNewSection || isLastSection) && nextPeople.length) {

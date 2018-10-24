@@ -5,31 +5,31 @@ export class SpaceStore {
   panes = [
     {
       title: 'Home',
-      icon: <Icon size={14} name="house" />,
+      icon: <Icon size={16} name="house" />,
     },
     {
       title: 'Search',
-      icon: <Icon size={14} name="singleNeutralSearch" />,
+      icon: <Icon size={16} name="singleNeutralSearch" />,
     },
     {
       title: 'People',
-      icon: <Icon size={14} name="multipleNeutral2" />,
+      icon: <Icon size={16} name="multipleNeutral2" />,
     },
     {
       title: 'Topics',
-      icon: <Icon size={14} name="singleNeutralChat" />,
+      icon: <Icon size={16} name="singleNeutralChat" />,
     },
     {
       title: 'Onboarding',
-      icon: <Icon size={14} name="listBullets" />,
+      icon: <Icon size={16} name="listBullets" />,
     },
     {
       title: 'Help',
-      icon: <Icon size={14} name="questionCircle" />,
+      icon: <Icon size={16} name="questionCircle" />,
     },
     {
       title: 'New',
-      icon: <Icon size={14} name="add" />,
+      icon: <Icon size={16} name="add" />,
       show: false,
     },
   ]

@@ -130,7 +130,7 @@ export class PaneManagerStore {
     this.setPaneIndex(this.panes.findIndex(val => val === name))
   }
 
-  activePaneSetter = memoize(name => () => this.setActivePane(name))
+  activePaneSetter = memoize(index => () => this.setPaneIndex(index))
 
   beforeSetPane = () => {
     // clear selection results on change pane

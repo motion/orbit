@@ -10,7 +10,7 @@ import { ItemResolverDecorationContext } from '../../../../helpers/contexts/Item
 import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
 import { SubPaneStore } from '../../SubPaneStore'
 import { StaticContainer } from '../../../../views/StaticContainer'
-import { OrbitNav } from '../orbitNav/OrbitNav'
+import { OrbitSearchNav } from './OrbitSearchNav'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -58,7 +58,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         before={<OrbitNavVerticalPad />}
         preventScroll
       >
-        <OrbitNav />
+        <OrbitSearchNav />
         <ItemResolverDecorationContext.Provider
           value={{
             item: null,

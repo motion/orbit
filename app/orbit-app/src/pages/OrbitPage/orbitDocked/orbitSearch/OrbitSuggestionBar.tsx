@@ -1,10 +1,10 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, compose } from '@mcro/black'
-import { PaneManagerStore } from '../PaneManagerStore'
-import { SearchStore } from '../orbitDocked/SearchStore'
-import { HorizontalScroll } from '../../../views'
-import { getDateAbbreviated } from '../orbitDocked/orbitNav/getDateAbbreviated'
+import { PaneManagerStore } from '../../PaneManagerStore'
+import { SearchStore } from '../SearchStore'
+import { HorizontalScroll } from '../../../../views'
+import { getDateAbbreviated } from './getDateAbbreviated'
 
 const dateBg = UI.color('#ffb049')
 

@@ -5,10 +5,10 @@ import { reaction } from 'mobx'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { NavButton } from '../../../../views/NavButton'
-import { RowItem } from '../../orbitHeader/RowItem'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { OrbitOrb } from '../orbitSettings/OrbitOrb'
 import { CSSPropertySet } from '@mcro/gloss'
+import { RowItem } from '../../../../views/RowItem'
 
 type Props = { paneManagerStore?: PaneManagerStore } & React.HTMLProps<HTMLDivElement> &
   CSSPropertySet

@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import { View, Row, Col, Text } from '@mcro/ui'
-import { OrbitIcon } from '../../../views/OrbitIcon'
+import { OrbitIcon } from './OrbitIcon';
 
 const RowItemFrame = view(Row, {
   padding: [2, 8],

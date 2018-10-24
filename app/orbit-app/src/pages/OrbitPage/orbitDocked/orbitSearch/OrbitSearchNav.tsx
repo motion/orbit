@@ -5,7 +5,7 @@ import { Row, View } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { OrbitFilters } from '../orbitHome/OrbitFilters'
 import { view, react, ensure } from '@mcro/black'
-import { OrbitSuggestionBar } from '../../orbitHeader/OrbitSuggestionBar'
+import { OrbitSuggestionBar } from './OrbitSuggestionBar'
 import { QueryStore } from '../QueryStore'
 import { hoverSettler } from '../../../../helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
@@ -62,7 +62,7 @@ class OrbitNavStore {
   store: OrbitNavStore,
 })
 @view
-export class OrbitNav extends React.Component<Props> {
+export class OrbitSearchNav extends React.Component<Props> {
   navButtonBg = theme => (this.props.store.hoverSettle.isStuck() ? theme.background : 'transparent')
   setStuck = () => this.props.store.hoverSettle.setStuck(true)
 

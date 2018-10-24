@@ -4,7 +4,7 @@ import { view, react, ensure } from '@mcro/black'
 import { compose } from '@mcro/helpers'
 import { observeMany } from '@mcro/model-bridge'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { Title, VerticalSpace, SmallVerticalSpace } from '../../../views'
+import { SmallVerticalSpace, SubPaneTitle, SubPaneSection } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { Grid } from '../../../views/Grid'
@@ -164,10 +164,8 @@ export const OrbitDirectory = decorator(({ store }: Props) => {
   }
   return (
     <ProvideHighlightsContextWithDefaults value={{ words: store.peopleQuery.split(' ') }}>
-      <SmallVerticalSpace />
-      <Title>Directory</Title>
-      {sections}
-      <VerticalSpace />
+      <SubPaneTitle>Directory</SubPaneTitle>
+      <SubPaneSection>{sections}</SubPaneSection>
     </ProvideHighlightsContextWithDefaults>
   )
 })

@@ -20,11 +20,15 @@ type Props = {
 
 class SpaceSwitchStore {
   props: Props
+  popoverContentRef = React.createRef<HTMLDivElement>()
   selectedIndex = 0
   open = false
 
   setOpen = open => {
     this.open = open
+    if (this.popoverContentRef.current) {
+      this.popoverContentRef.current.focus()
+    }
   }
 
   get spaces() {
@@ -81,6 +85,10 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
       up: store.up,
     }
 
+    if (store.open) {
+      console.log('FOCUSING ON SHORTCUTS...')
+    }
+
     return (
       <FocusableShortcutHandler focused={store.open} shortcuts={shortcuts} handlers={handlers}>
         <Popover
@@ -104,7 +112,7 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
             </NavButton>
           }
         >
-          <Col borderRadius={6} overflow="hidden" flex={1}>
+          <Col forwardRef={store.popoverContentRef} borderRadius={6} overflow="hidden" flex={1}>
             <RowItem
               orb={activeSpace.color}
               title={activeSpace.name}

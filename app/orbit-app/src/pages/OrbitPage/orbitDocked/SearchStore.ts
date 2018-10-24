@@ -48,7 +48,7 @@ export class SearchStore {
     },
   )
 
-  setActivePaneOnChangeQuery = react(
+  setActivePaneOnHasQuery = react(
     () => !!App.state.query,
     query => {
       if (!query) {

@@ -10,7 +10,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
 }
 
-export const SpaceNavHeight = () => <div style={{ height: 64, pointerEvents: 'none' }} />
+export const SpaceNavHeight = () => <div style={{ height: 52, pointerEvents: 'none' }} />
 
 @view.attach('spaceStore', 'paneManagerStore')
 @view
@@ -24,7 +24,7 @@ export class SpaceNav extends React.Component<Props> {
     return (
       <Row position="relative" zIndex={1000} padding={[8, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
-        <View padding={[0, 10, 1, 2]}>
+        <View padding={[0, 11, 1, 2]}>
           <Icon size={16} name={activeItem.icon} />
         </View>
         <Row>
@@ -47,13 +47,14 @@ export class SpaceNav extends React.Component<Props> {
           ))}
         </Row>
 
-        <View flex={1} />
+        <View flex={1} minWidth={10} />
 
         <Button
           borderWidth={0}
           glint={false}
           circular
           icon={<Icon size={10} name={newPane.icon} />}
+          onClick={paneManagerStore.activePaneSetter(paneManagerStore.panes.indexOf('new'))}
         />
       </Row>
     )

@@ -17,7 +17,7 @@ const SliderPaneContainer = view(View, {
 
 const SliderContainer = view(View, {
   flexFlow: 'row',
-  transition: 'all ease 200ms',
+  transition: 'transform ease 200ms, opacity ease 200ms',
   alignItems: 'flex-start',
 }).theme(({ curFrame, numFrames }) => ({
   width: frameWidth * numFrames,

@@ -2,10 +2,8 @@
 
 Nate:
 
-- Apps
-  - List app
 - Search
-  - condensed search view by default
+  - condensed, grouped search with far better display of each item
   - recent items by default in search (weighted much higher)
 - Spaces
   - Switch spaces

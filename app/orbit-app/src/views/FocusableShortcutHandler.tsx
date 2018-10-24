@@ -11,6 +11,6 @@ type Props = {
   children?: React.ReactNode
 }
 
-export const FocusableShortcutHandler = ({ shortcuts, handlers, focused, ...props }: Props) => {
-  return <HotKeys keyMap={shortcuts} handlers={handlers} focused={focused} {...props} />
+export const FocusableShortcutHandler = ({ shortcuts, handlers, ...props }: Props) => {
+  return <HotKeys keyMap={shortcuts} handlers={handlers} {...props} />
 }

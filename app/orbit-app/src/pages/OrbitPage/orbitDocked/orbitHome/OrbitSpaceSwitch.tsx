@@ -21,15 +21,23 @@ type Props = {
 class SpaceSwitchStore {
   props: Props
   selectedIndex = 0
+  open = false
+
+  setOpen = open => {
+    this.open = open
+  }
+
   get spaces() {
     return this.props.spaceStore.spaces
   }
 
-  down = () => {
+  down = e => {
+    e.stopPropagation()
     this.selectedIndex = Math.min(this.selectedIndex + 1, this.spaces.length - 1)
   }
 
-  up = () => {
+  up = e => {
+    e.stopPropagation()
     this.selectedIndex = Math.max(this.selectedIndex - 1, 0)
   }
 }
@@ -74,65 +82,57 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
     }
 
     return (
-      <Popover
-        ref={this.spaceSwitcherRef}
-        delay={100}
-        openOnClick
-        openOnHover
-        closeOnClick
-        closeOnClickAway
-        theme="light"
-        width={200}
-        background
-        adjust={[66, 0]}
-        borderRadius={6}
-        elevation={6}
-        group="filters"
-        target={
-          <NavButton chromeless {...props}>
-            <OrbitOrb size={16} background={'#DDADDA'} color="#985FC9" />
-          </NavButton>
-        }
-      >
-        {shown => {
-          return (
-            <FocusableShortcutHandler
-              shortcuts={shortcuts}
-              handlers={handlers}
-              focused={shown}
-              style={{ flex: 1 }}
-            >
-              <Col borderRadius={6} overflow="hidden" flex={1}>
-                <RowItem
-                  orb={activeSpace.color}
-                  title={activeSpace.name}
-                  subtitle="20 people"
-                  after={
-                    <OrbitIcon
-                      onClick={paneManagerStore.goToTeamSettings}
-                      name="gear"
-                      size={14}
-                      opacity={0.5}
-                    />
-                  }
-                  hover={false}
+      <FocusableShortcutHandler focused={store.open} shortcuts={shortcuts} handlers={handlers}>
+        <Popover
+          ref={this.spaceSwitcherRef}
+          delay={100}
+          openOnClick
+          openOnHover
+          // closeOnClick
+          closeOnClickAway
+          theme="light"
+          width={200}
+          background
+          adjust={[66, 0]}
+          borderRadius={6}
+          elevation={6}
+          group="filters"
+          onChangeVisibility={store.setOpen}
+          target={
+            <NavButton chromeless {...props}>
+              <OrbitOrb size={16} background={'#DDADDA'} color="#985FC9" />
+            </NavButton>
+          }
+        >
+          <Col borderRadius={6} overflow="hidden" flex={1}>
+            <RowItem
+              orb={activeSpace.color}
+              title={activeSpace.name}
+              subtitle="20 people"
+              after={
+                <OrbitIcon
+                  onClick={paneManagerStore.goToTeamSettings}
+                  name="gear"
+                  size={14}
+                  opacity={0.5}
                 />
-                <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-                {inactiveSpaces.map((space, index) => {
-                  return (
-                    <RowItem
-                      key={space.name}
-                      selected={selectedIndex === index + 1}
-                      orb={space.color}
-                      title={space.name}
-                    />
-                  )
-                })}
-              </Col>
-            </FocusableShortcutHandler>
-          )
-        }}
-      </Popover>
+              }
+              hover={false}
+            />
+            <View flex={1} margin={[2, 10]} background="#eee" height={1} />
+            {inactiveSpaces.map((space, index) => {
+              return (
+                <RowItem
+                  key={space.name}
+                  selected={selectedIndex === index + 1}
+                  orb={space.color}
+                  title={space.name}
+                />
+              )
+            })}
+          </Col>
+        </Popover>
+      </FocusableShortcutHandler>
     )
   }
 }

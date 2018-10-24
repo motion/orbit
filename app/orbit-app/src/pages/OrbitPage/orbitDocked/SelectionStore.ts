@@ -80,7 +80,9 @@ export class SelectionStore {
 
   setSelectedOnSearch = react(
     () => [!!this.results && Math.random(), this.props.queryStore.query],
-    async (_, { sleep }) => {
+    async (_, { sleep, when }) => {
+      // wait for a query to exist
+      await when(() => !!App.state.query)
       const hasResults = this.results && !!this.results.length
       // select first item on search
       if (hasResults) {

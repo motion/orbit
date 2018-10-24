@@ -16,6 +16,8 @@ const SpaceNavAfter = view({
   right: 8,
 })
 
+export const SpaceNavHeight = () => <div style={{ height: 62, pointerEvents: 'none' }} />
+
 @view.attach('spaceStore', 'paneManagerStore')
 @view
 export class SpaceNav extends React.Component<Props> {

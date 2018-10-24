@@ -42,7 +42,6 @@ export class OrbitSettings extends React.Component<{
     return (
       <SubPane
         name={name}
-        overflow="visible"
         before={
           <Row
             flex={1}

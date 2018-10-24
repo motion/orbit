@@ -10,6 +10,8 @@ import { SelectionStore } from './orbitDocked/SelectionStore'
 import { OrbitDocked } from './orbitDocked/OrbitDocked'
 import { SettingStore } from '../../stores/SettingStore'
 import { SpaceStore } from '../../stores/SpaceStore'
+import { PaneManagerStore } from './PaneManagerStore'
+import { SearchStore } from './orbitDocked/SearchStore'
 
 @view.provide({
   settingStore: SettingStore,
@@ -24,6 +26,12 @@ import { SpaceStore } from '../../stores/SpaceStore'
 })
 @view.provide({
   selectionStore: SelectionStore,
+})
+@view.provide({
+  paneManagerStore: PaneManagerStore,
+})
+@view.provide({
+  searchStore: SearchStore,
 })
 export class OrbitPage extends React.Component<{
   appsStore: AppsStore

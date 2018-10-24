@@ -1,4 +1,4 @@
-import { react, on, ensure } from '@mcro/black'
+import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionStore, Direction } from './orbitDocked/SelectionStore'
 import { Actions } from '../../actions/Actions'
@@ -93,10 +93,8 @@ export class PaneManagerStore {
     })
   }
 
-  onKey = react(
-    () => this.props.selectionStore.lastMove,
-    ({ direction }) => {
-      ensure('focused', this.props.orbitStore.inputFocused)
+  move = (direction: Direction) => {
+    try {
       if (this.props.selectionStore.activeIndex === -1) {
         if (direction === Direction.right) {
           ensure('within keyable range', this.paneIndex < this.keyablePanes[1])
@@ -107,8 +105,12 @@ export class PaneManagerStore {
           this.setPaneIndex(this.paneIndex - 1)
         }
       }
-    },
-  )
+    } catch (e) {
+      if (e !== ReactionRejectionError) {
+        throw e
+      }
+    }
+  }
 
   setTrayTitleOnPaneChange = react(
     () => this.activePane === 'onboard',

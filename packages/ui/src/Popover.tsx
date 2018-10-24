@@ -764,11 +764,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     this.listeners = []
   }
 
-  lastEvent = {
-    leave: { target: null, menu: null },
-    enter: { target: null, menu: null },
-  }
-
   delayOpenIfHover = {
     target: null as DebouncedFn,
     menu: null as DebouncedFn,
@@ -859,9 +854,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   hoverStateSet(name, isHovered) {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
-      // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
-      const key = `${name}Hovered`
-      this.setState({ [key]: isHovered ? Date.now() : false })
+      const val = isHovered ? Date.now() : 0
+      if (name === 'target') {
+        this.setState({ targetHovered: val })
+      } else {
+        this.setState({ menuHovered: val })
+      }
     }
     if (isHovered) {
       if (openOnHover) {

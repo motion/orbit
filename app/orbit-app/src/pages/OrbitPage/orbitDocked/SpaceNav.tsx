@@ -10,12 +10,6 @@ type Props = {
   paneManagerStore?: PaneManagerStore
 }
 
-const SpaceNavAfter = view({
-  position: 'absolute',
-  top: 12,
-  right: 8,
-})
-
 export const SpaceNavHeight = () => <div style={{ height: 64, pointerEvents: 'none' }} />
 
 @view.attach('spaceStore', 'paneManagerStore')
@@ -27,17 +21,11 @@ export class SpaceNav extends React.Component<Props> {
     const newPane = activeSpace.panes.find(x => x.title === 'New')
     const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), activeSpace.panes.length - 1)
     const activeItem = activeSpace.panes[curIndex]
-    // const isHome = activeItem.title === 'Home'
     return (
       <Row position="relative" zIndex={1000} padding={[8, 12]} alignItems="center">
         <View padding={[0, 10, 0, 0]}>
           <Icon size={18} name={activeItem.icon} />
         </View>
-        {/* <Row padding={[0, 0, 7]} alignItems="center">
-          <Text size={1.4} fontWeight={700} margin={[-4, isHome ? 0 : 7]} transform={{ y: -0.5 }}>
-            {isHome ? 'Orbit' : activeItem.title}
-          </Text>
-        </Row> */}
         <Row>
           {spaceStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => (
             <Text
@@ -52,7 +40,6 @@ export class SpaceNav extends React.Component<Props> {
               transform={{
                 scale: curIndex === index ? 1.1 : 1,
               }}
-              transition="transform ease-in 150ms"
             >
               {pane.title}
             </Text>
@@ -61,9 +48,12 @@ export class SpaceNav extends React.Component<Props> {
 
         <View flex={1} />
 
-        <SpaceNavAfter>
-          <Button borderWidth={0} glint={false} circular icon={newPane.icon} />
-        </SpaceNavAfter>
+        <Button
+          borderWidth={0}
+          glint={false}
+          circular
+          icon={<Icon size={10} name={newPane.icon} />}
+        />
       </Row>
     )
   }

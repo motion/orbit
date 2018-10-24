@@ -4,7 +4,7 @@ import { Actions } from '../../actions/Actions'
 import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
-import { SelectionStore } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
+import { SelectionStore, Direction } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
 
 type Props = {
   selectionStore: SelectionStore
@@ -15,8 +15,11 @@ const rootShortcuts = {
   switchSpaces: 'command+k',
   openCurrent: 'enter',
   copyLink: 'command+shift+c',
-  // esc
   escape: 'esc',
+  down: 'down',
+  up: 'up',
+  left: 'left',
+  right: 'right',
 }
 
 const decorator = compose(view.attach('selectionStore'))
@@ -53,6 +56,10 @@ export const MainShortcutHandler = decorator(({ selectionStore, children }: Prop
         return Actions.closeOrbit()
       }
     },
+    up: () => selectionStore.move(Direction.up),
+    down: () => selectionStore.move(Direction.down),
+    left: () => selectionStore.move(Direction.left),
+    right: () => selectionStore.move(Direction.right),
   }
 
   return (

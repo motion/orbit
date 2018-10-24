@@ -1,7 +1,6 @@
 import { react, on, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { SelectionStore } from './orbitDocked/SelectionStore'
-import { KeyboardStore } from '../../stores/KeyboardStore'
+import { SelectionStore, Direction } from './orbitDocked/SelectionStore'
 import { Actions } from '../../actions/Actions'
 import { observeOne } from '@mcro/model-bridge'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
@@ -17,7 +16,6 @@ export class PaneManagerStore {
     appsStore: AppsStore
     orbitStore: OrbitStore
     selectionStore: SelectionStore
-    keyboardStore: KeyboardStore
   }
 
   panes: Partial<Panes>[] = [
@@ -35,7 +33,6 @@ export class PaneManagerStore {
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
-  lastKey = { key: null, at: Date.now() }
   subPane = 'apps'
 
   // setPanes = react(
@@ -59,7 +56,7 @@ export class PaneManagerStore {
   })
 
   didMount() {
-    on(this, autoTrack(this, ['hasOnboarded', 'lastKey', 'paneIndex']))
+    on(this, autoTrack(this, ['hasOnboarded', 'paneIndex']))
 
     // set pane manager store... todo make better
     this.props.orbitStore.appReactionsStore.setPaneManagerStore(this)
@@ -72,10 +69,6 @@ export class PaneManagerStore {
         this.generalSetting = generalSetting
       }),
     )
-
-    on(this, this.props.keyboardStore, 'key', key => {
-      this.lastKey = { key, at: Date.now() }
-    })
 
     const disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       this.setActivePane('settings')
@@ -98,16 +91,15 @@ export class PaneManagerStore {
   }
 
   onKey = react(
-    () => this.lastKey,
-    ({ key }) => {
-      ensure('key', !!key)
+    () => this.props.selectionStore.lastMove,
+    ({ direction }) => {
       ensure('focused', this.props.orbitStore.inputFocused)
       if (this.props.selectionStore.activeIndex === -1) {
-        if (key === 'right') {
+        if (direction === Direction.right) {
           ensure('within keyable range', this.paneIndex < this.keyablePanes[1])
           this.setPaneIndex(this.paneIndex + 1)
         }
-        if (key === 'left') {
+        if (direction === Direction.left) {
           ensure('within keyable range', this.paneIndex > this.keyablePanes[0])
           this.setPaneIndex(this.paneIndex - 1)
         }

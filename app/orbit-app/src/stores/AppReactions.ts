@@ -4,31 +4,16 @@ import { Actions } from '../actions/Actions'
 import { showNotification } from '../helpers/electron/showNotification'
 import { PopoverState } from '@mcro/ui'
 import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
-// import orbitPosition from '../helpers/orbitPosition'
-// import { ORBIT_WIDTH } from '@mcro/constants'
-// const log = debug('AppReactions')
 
-// const appTarget = ({ offset = null, bounds = null } = {}) => {
-//   if (!offset || !bounds) return null
-//   const [left, top] = offset
-//   const [width, height] = bounds
-//   return { top, left, width, height }
-// }
-
-// @ts-ignore
 @store
-export class AppReactions /* extends Store */ {
-  onPinKey = null
-
+export class AppReactions {
   // ew
   paneManagerStore: PaneManagerStore
   setPaneManagerStore = (store: PaneManagerStore) => {
     this.paneManagerStore = store
   }
 
-  constructor({ onPinKey }) {
-    // super()
-    this.onPinKey = onPinKey
+  constructor() {
     this.setupReactions()
   }
 
@@ -71,11 +56,6 @@ export class AppReactions /* extends Store */ {
           Actions.closeApp(+value)
           return
       }
-      if (msg.indexOf(App.messages.PIN) === 0) {
-        const key = msg.split('-')[1]
-        App.setOrbitState({ pinned: true })
-        this.onPinKey(key.toLowerCase())
-      }
     })
     this.subscriptions.add({
       dispose,
@@ -97,145 +77,4 @@ export class AppReactions /* extends Store */ {
       PopoverState.closeAll()
     },
   )
-
-  // disable sidebar  for now
-
-  // toggle() {
-  //   if (App.orbitState.hidden) {
-  //     this.show()
-  //   } else {
-  //     App.actions.hide()
-  //   }
-  // }
-
-  // show() {
-  //   App.setOrbitState({ hidden: false })
-  // }
-
-  // handleHoldingOption = react(
-  //   () => Desktop.isHoldingOption,
-  //   async (isHoldingOption, { sleep }) => {
-  //     if (App.orbitState.pinned || App.orbitState.docked) {
-  //       throw cancel
-  //     }
-  //     if (!isHoldingOption) {
-  //       if (!App.orbitState.pinned && App.isMouseInActiveArea) {
-  //         log.info('prevent hide while mouseover after release hold')
-  //         throw cancel
-  //       }
-  //       App.setOrbitState({ hidden: true })
-  //       throw cancel
-  //     }
-  //     await sleep(140)
-  //     App.setOrbitState({ hidden: false })
-  //     // await sleep(3500)
-  //     // this.updatePinned(true)
-  //   },
-  //   { log: 'state' },
-  // )
-
-  // onPinned = react(
-  //   () => App.orbitState.pinned,
-  //   pinned => {
-  //     if (pinned) {
-  //       App.setOrbitState({ hidden: false })
-  //     } else {
-  //       App.setOrbitState({ hidden: true })
-  //     }
-  //   },
-  //   { log: 'state' },
-  // )
-
-  // TODO: re-enable these
-
-  // clearPeekOnReposition = react(
-  //   () => App.orbitState.position,
-  //   App.actions.clearPeek,
-  // )
-
-  // react
-  // clearPeekOnMouseOut = [
-  //   () => Electron.hoverState.peekHovered,
-  //   async (mouseOver, { sleep }) => {
-  //     if (mouseOver || Electron.hoverState.orbitHovered) {
-  //       return
-  //     }
-  //     // wait a bit
-  //     await sleep(400)
-  //     App.clearPeek()
-  //   },
-  // ]
-
-  // hide orbit on unfocus
-  // focusedOnOrbit = react(
-  //   () => Desktop.state.focusedOnOrbit,
-  //   willBeFocusedOnOrbit => {
-  //     if (this.focusedOnOrbit && !willBeFocusedOnOrbit) {
-  //       App.setOrbitState({ orbitDocked: false })
-  //     }
-  //   }
-  // )
-
-  // showOrbitOnHoverWord = react(
-  //   () => App.hoveredWordName,
-  //   async (word, { sleep }) => {
-  //     if (Desktop.isHoldingOption) {
-  //       throw cancel
-  //     }
-  //     const hidden = !word
-  //     await sleep(hidden ? 50 : 500)
-  //     App.setOrbitState({ hidden })
-  //   },
-  // )
-
-  // hideOrbitOnMouseOut = react(
-  //   () => [
-  //     Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered,
-  //     App.peekState.target,
-  //   ],
-  //   async ([mouseOver], { sleep }) => {
-  //     const isShown = !App.orbitState.hidden
-  //     if (!isShown || mouseOver || App.orbitState.pinned) {
-  //       throw cancel
-  //     }
-  //     // some leeway on mouse leave
-  //     await sleep(150)
-  //     if (Desktop.isHoldingOption) {
-  //       throw cancel
-  //     }
-  //     console.log('hiding orbit from mouseout')
-  //     App.setOrbitState({ hidden: true })
-  //   },
-  //   {
-  //     delay: 32,
-  //     log: 'state',
-  //   },
-  // )
-
-  // repositioningFromAppState = react(
-  //   () => [appTarget(Desktop.appState), Desktop.linesBoundingBox],
-  //   ([appBB, linesBB]) => {
-  //     // prefer using lines bounding box, fall back to app
-  //     const box = linesBB || appBB
-  //     if (!box) {
-  //       throw cancel
-  //     }
-  //     let { size, orbitOnLeft, orbitDocked } = orbitPosition(box)
-  //     // before for sidebar we used "{position} = orbitPosition(box)"
-  //     // in future, put sidebar onto different state area
-  //     // if (linesBB) {
-  //     //   // add padding
-  //     //   position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
-  //     // } else {
-  //     //   // remove padding
-  //     //   position[0] += orbitOnLeft ? SCREEN_PAD : -SCREEN_PAD
-  //     // }
-  //     App.setOrbitState({
-  //       position: [window.innerWidth - ORBIT_WIDTH, 0],
-  //       size,
-  //       orbitOnLeft,
-  //       orbitDocked,
-  //     })
-  //   },
-  // )
 }

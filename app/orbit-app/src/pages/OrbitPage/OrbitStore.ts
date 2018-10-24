@@ -5,7 +5,6 @@ import { AppReactions } from '../../stores/AppReactions'
 
 export class OrbitStore {
   contentHeight = 0
-  onPinKeyCB = null
   inputFocused = false
 
   onFocus = () => {
@@ -22,9 +21,7 @@ export class OrbitStore {
     return window.innerHeight - this.contentHeight
   }
 
-  appReactionsStore = new AppReactions({
-    onPinKey: key => this.onPinKeyCB(key),
-  })
+  appReactionsStore = new AppReactions()
 
   async willMount() {
     // show orbit on startup
@@ -35,10 +32,6 @@ export class OrbitStore {
 
   willUnmount() {
     this.appReactionsStore.dispose()
-  }
-
-  onPinKey = cb => {
-    this.onPinKeyCB = cb
   }
 
   updateAppOrbitStateOnResize = react(

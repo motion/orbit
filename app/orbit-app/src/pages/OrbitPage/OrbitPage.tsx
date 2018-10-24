@@ -4,7 +4,6 @@ import { OrbitStore } from './OrbitStore'
 import { AppsStore } from '../../stores/AppsStore'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
-import { KeyboardStore } from '../../stores/KeyboardStore'
 import { HighlightsPage } from '../HighlightsPage/HighlightsPage'
 import { QueryStore } from './orbitDocked/QueryStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
@@ -22,7 +21,6 @@ import { SpaceStore } from '../../stores/SpaceStore'
 })
 @view.provide({
   queryStore: QueryStore,
-  keyboardStore: KeyboardStore,
 })
 @view.provide({
   selectionStore: SelectionStore,

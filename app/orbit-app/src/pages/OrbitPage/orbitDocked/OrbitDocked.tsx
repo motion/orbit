@@ -121,14 +121,7 @@ class OrbitDockedStore {
   )
 }
 
-@view.attach(
-  'settingStore',
-  'orbitStore',
-  'appsStore',
-  'selectionStore',
-  'queryStore',
-  'keyboardStore',
-)
+@view.attach('settingStore', 'orbitStore', 'appsStore', 'selectionStore', 'queryStore')
 @view.provide({
   paneManagerStore: PaneManagerStore,
 })

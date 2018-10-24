@@ -1,14 +1,13 @@
-import { react, on, isEqual, ensure } from '@mcro/black'
+import { react, isEqual, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import { OrbitStore } from '../OrbitStore'
 import { QueryStore } from './QueryStore'
-import { KeyboardStore } from '../../../stores/KeyboardStore'
 import { Actions } from '../../../actions/Actions'
 import { hoverSettler } from '../../../helpers'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 
-enum Direction {
+export enum Direction {
   left = 'left',
   right = 'right',
   up = 'up',
@@ -34,9 +33,9 @@ export class SelectionStore {
   props: {
     orbitStore: OrbitStore
     queryStore: QueryStore
-    keyboardStore: KeyboardStore
   }
 
+  lastMove = { at: 0, direction: Direction.down }
   highlightIndex = -1
   lastPinKey = ''
   selectEvent = ''
@@ -46,42 +45,16 @@ export class SelectionStore {
   _activeIndex = -1
   results: SelectionResult[] | null = null
   private resultsIn: SelectionGroup[] = null
+  clearOff: any
 
   didMount() {
-    on(this, this.props.keyboardStore, 'key', (key: string) => {
-      if (Direction[key]) {
-        this.setSelectEvent('key')
-        this.move(Direction[key])
-      }
-      if (key === 'enter') {
-        console.log('global enter')
-        // Actions.openItem(this.selectedItem)
-        // Actions.closeOrbit()
-      }
-    })
-
-    this.props.orbitStore.onPinKey(key => {
-      if (key === 'Delete') {
-        this.props.queryStore.setQuery('')
-        return
-      }
-      const { query } = this.props.queryStore
-      if (!this.lastPinKey || this.lastPinKey != query[query.length - 1]) {
-        this.props.queryStore.setQuery(key)
-      } else {
-        this.props.queryStore.setQuery(query + key)
-      }
-      // this.lastPinKey = key
-    })
-    const disposeAppListen = App.onMessage(App.messages.CLEAR_SELECTED, () => {
+    this.clearOff = App.onMessage(App.messages.CLEAR_SELECTED, () => {
       this.clearSelected()
     })
+  }
 
-    this.subscriptions.add({
-      dispose: () => {
-        disposeAppListen()
-      },
-    })
+  willUnmount() {
+    this.clearOff()
   }
 
   get activeIndex() {
@@ -194,9 +167,13 @@ export class SelectionStore {
     return false
   }
 
-  move = (direction: Direction) => {
+  move = (direction: Direction, selectEvent?: 'key') => {
     if (!this.results) {
       return
+    }
+    if (selectEvent) {
+      this.lastMove = { at: Date.now(), direction }
+      this.setSelectEvent(selectEvent)
     }
     const activeIndex = this.getNextIndex(this.activeIndex, direction)
     if (activeIndex !== this.activeIndex) {

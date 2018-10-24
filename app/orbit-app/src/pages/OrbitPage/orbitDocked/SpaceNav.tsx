@@ -26,13 +26,13 @@ export class SpaceNav extends React.Component<Props> {
     const isHome = activeItem.title === 'Home'
     return (
       <View position="relative" zIndex={1000} padding={[8, 12, 0]}>
-        <Row padding={[0, 2, 7]} alignItems="center">
+        <Row padding={[0, 0, 7]} alignItems="center">
           {isHome ? null : activeItem.icon}
           {/* <Text size={1.25} fontWeight={300} marginLeft={8} alpha={isHome ? 1 : 0.8}>
             Orbit
           </Text> */}
 
-          <Text size={1.35} fontWeight={700} margin={[-4, isHome ? 0 : 7]} transform={{ y: -0.5 }}>
+          <Text size={1.4} fontWeight={700} margin={[-4, isHome ? 0 : 7]} transform={{ y: -0.5 }}>
             {isHome ? 'Orbit' : activeItem.title}
           </Text>
         </Row>

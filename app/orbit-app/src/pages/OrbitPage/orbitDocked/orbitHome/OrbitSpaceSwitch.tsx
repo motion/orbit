@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, ensure } from '@mcro/black'
-import { Popover, View, Col, Row, Button, Theme } from '@mcro/ui'
+import { Popover, View, Col } from '@mcro/ui'
 import { reaction } from 'mobx'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -36,6 +36,7 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
       <Popover
         ref={this.spaceSwitcherRef}
         delay={100}
+        openOnClick
         openOnHover
         closeOnClick
         closeOnClickAway
@@ -68,17 +69,8 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
             hover={false}
           />
           <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-          <RowItem orb="grey" ti tle="Me" />
+          <RowItem orb="grey" title="Me" />
           <RowItem orb="red" title="discuss-things" />
-
-          <Row margin={5} alignItems="center">
-            <View flex={1} />
-            <Theme theme={{ background: '#fff', color: '#444' }}>
-              <Button ignoreSegment icon="add">
-                Create
-              </Button>
-            </Theme>
-          </Row>
         </Col>
       </Popover>
     )

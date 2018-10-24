@@ -67,7 +67,7 @@ const SuggestionButton = props => (
     sizeRadius={0}
     sizeHeight={0.8}
     sizePadding={0.3}
-    fontWeight={500}
+    fontWeight={400}
     themeSelect={suggestionTheme}
     background="transparent"
     borderColor="transparent"

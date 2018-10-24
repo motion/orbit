@@ -33,11 +33,11 @@ class VirtualList extends React.Component<any> {
   }
 }
 
-const SortableList = SortableContainer(VirtualList, { withRef: true })
+const SortableListContainer = SortableContainer(VirtualList, { withRef: true })
 
 @view.attach('searchStore', 'selectionStore', 'subPaneStore')
 @view
-export class OrbitCustomList extends React.Component<Props> {
+export class SortableList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List
 
@@ -195,7 +195,7 @@ export class OrbitCustomList extends React.Component<Props> {
               rowCount={searchStore.remoteRowCount}
             >
               {({ onRowsRendered, registerChild }) => (
-                <SortableList
+                <SortableListContainer
                   forwardRef={ref => {
                     if (ref) {
                       registerChild(ref)

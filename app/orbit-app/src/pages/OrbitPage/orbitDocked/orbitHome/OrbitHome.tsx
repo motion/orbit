@@ -48,7 +48,13 @@ export class OrbitHome extends React.Component<Props> {
           <TopicsApp />
           <Lip />
         </SubPane>
-        <SubPane name="list" before={<OrbitNavVerticalPad />} paddingLeft={0} paddingRight={0}>
+        <SubPane
+          preventScroll
+          name="list"
+          before={<OrbitNavVerticalPad />}
+          paddingLeft={0}
+          paddingRight={0}
+        >
           <ListApp />
           <Lip />
         </SubPane>
@@ -56,13 +62,13 @@ export class OrbitHome extends React.Component<Props> {
           help me
           <Lip />
         </SubPane>
-        <SubPane name="new" before={<OrbitNavVerticalPad />} paddingLeft={10} paddingRight={10}>
-          <Title>New app</Title>
+        <SubPane name="new" before={<OrbitNavVerticalPad />} paddingLeft={12} paddingRight={12}>
+          <Title>Add app</Title>
           <Grid
             gridTemplateColumns="repeat(auto-fill, minmax(180px, 1fr))"
             gridAutoRows={90}
-            gridGap={12}
-            margin={[5, 0]}
+            gridGap={6}
+            margin={[5, -4]}
           >
             {[
               {
@@ -98,7 +104,7 @@ export class OrbitHome extends React.Component<Props> {
             ].map((item, index) => (
               <OrbitCard
                 key={index}
-                titleProps={{ fontSize: 22, fontWeight: 300 }}
+                titleProps={{ fontSize: 18, fontWeight: 300 }}
                 title={item.title}
                 icon={item.icon}
                 inGrid

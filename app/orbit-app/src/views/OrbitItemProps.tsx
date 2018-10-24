@@ -12,6 +12,7 @@ import { CSSPropertySetStrict } from '../../../../packages/css/_/cssPropertySet'
 export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
     // whether to avoid model resolving and just use props
+    activeStyle?: Object
     activeCondition?: () => boolean
     direct?: boolean
     ignoreSelection?: boolean

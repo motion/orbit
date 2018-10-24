@@ -77,7 +77,7 @@ export const CheckBoxRow = ({
   </FormTableRow>
 )
 
-export const OrbitNavVerticalPad = () => <div style={{ height: 76, pointerEvents: 'none' }} />
+export const OrbitNavVerticalPad = () => <div style={{ height: 60, pointerEvents: 'none' }} />
 
 export const SuggestionBarVerticalPad = view({
   height: 24,

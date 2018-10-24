@@ -20,13 +20,12 @@ export class PaneManagerStore {
 
   panes: Partial<Panes>[] = [
     'home',
-    'me',
-    'directory',
+    'search',
+    'people',
     'topics',
     'list',
     'help',
     'new',
-    'search',
     'settings',
   ]
   keyablePanes = [0, 6]
@@ -34,6 +33,10 @@ export class PaneManagerStore {
   forceOnboard = null
   hasOnboarded = true
   subPane = 'apps'
+
+  lastActivePane = react(() => this.activePane, {
+    delayValue: true,
+  })
 
   // setPanes = react(
   //   () => this.props.appsStore.activeIntegrations,
@@ -175,7 +178,13 @@ export class PaneManagerStore {
     },
   )
 
-  lastActivePane = react(() => this.activePane, _ => _, { delayValue: true })
+  setActivePaneSearch = () => {
+    this.setActivePane('search')
+  }
+
+  setActivePaneToPrevious = () => {
+    this.setActivePane(this.lastActivePane)
+  }
 
   clearPeekOnActivePaneChange = react(
     () => this.activePane,

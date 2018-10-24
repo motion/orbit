@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { View, Text, Row, Button } from '@mcro/ui'
 import { SpaceStore } from '../../../stores/SpaceStore'
+import { Icon } from '../../../views/Icon'
 
 type Props = {
   spaceStore?: SpaceStore
@@ -28,11 +29,7 @@ export class SpaceNav extends React.Component<Props> {
     return (
       <View position="relative" zIndex={1000} padding={[8, 12, 0]}>
         <Row padding={[0, 0, 7]} alignItems="center">
-          {isHome ? null : activeItem.icon}
-          {/* <Text size={1.25} fontWeight={300} marginLeft={8} alpha={isHome ? 1 : 0.8}>
-            Orbit
-          </Text> */}
-
+          {isHome ? null : <Icon size={14} name={activeItem.icon} />}
           <Text size={1.4} fontWeight={700} margin={[-4, isHome ? 0 : 7]} transform={{ y: -0.5 }}>
             {isHome ? 'Orbit' : activeItem.title}
           </Text>

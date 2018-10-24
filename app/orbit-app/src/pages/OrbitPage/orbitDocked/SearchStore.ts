@@ -52,9 +52,9 @@ export class SearchStore {
     () => !!App.state.query,
     query => {
       if (!query) {
-        this.props.paneManagerStore.setActivePane('home')
+        this.props.paneManagerStore.setActivePaneToPrevious()
       } else {
-        this.props.paneManagerStore.setActivePane('search')
+        this.props.paneManagerStore.setActivePaneSearch()
       }
     },
   )
@@ -63,7 +63,7 @@ export class SearchStore {
     () => this.searchFilterStore.hasIntegrationFilters,
     hasIntegrationFilters => {
       ensure('hasIntegrationFilters', hasIntegrationFilters)
-      this.props.paneManagerStore.setActivePane('search')
+      this.props.paneManagerStore.setActivePaneSearch()
     },
   )
 
@@ -71,7 +71,7 @@ export class SearchStore {
     () => this.searchFilterStore.hasDateFilter,
     hasDateFilter => {
       ensure('hasDateFilter', hasDateFilter)
-      this.props.paneManagerStore.setActivePane('search')
+      this.props.paneManagerStore.setActivePaneSearch()
     },
   )
 

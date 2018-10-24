@@ -14,6 +14,9 @@ import { PersonBitModel, PersonBit } from '@mcro/models'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
 import { NoResultsDialog } from './views/NoResultsDialog'
 import { GridTitle } from '../../../views/GridTitle'
+import { List } from 'react-virtualized'
+import { ORBIT_WIDTH } from '@mcro/constants'
+import { View } from '@mcro/ui'
 
 const height = 56
 
@@ -23,6 +26,8 @@ type Props = {
   selectionStore: SelectionStore
   name: string
 }
+
+type ResultSection = { title: string; results: PersonBit[]; height: number }
 
 class OrbitDirectoryStore {
   props: Props
@@ -38,7 +43,7 @@ class OrbitDirectoryStore {
   }
 
   get isActive() {
-    return this.props.paneManagerStore.activePane === 'directory'
+    return this.props.paneManagerStore.activePane === 'people'
   }
 
   setSelectionHandler = react(
@@ -81,6 +86,56 @@ class OrbitDirectoryStore {
     { defaultValue: [] },
   )
 
+  get resultSections(): ResultSection[] {
+    const total = this.results.length
+    const perRow = 3
+    const height = 60
+    const separatorHeight = 10
+    const sectionHeight = num => Math.ceil(num / perRow) * height + separatorHeight
+    let sections: ResultSection[] = []
+    // not that many, show just one section
+    if (total < 10) {
+      sections = [
+        {
+          title: 'All',
+          results: this.results,
+          height: sectionHeight(total),
+        },
+      ]
+    } else {
+      // create sections by letter
+      let nextPeople = []
+      let lastPersonLetter
+      for (const [index, person] of this.results.entries()) {
+        let letter = person.name[0].toLowerCase()
+        // is number
+        if (+person.name[0] === +person.name[0]) {
+          letter = '0-9'
+        }
+        const isNewSection = lastPersonLetter && letter !== lastPersonLetter
+        const isLastSection = index === total - 1
+        if ((isNewSection || isLastSection) && nextPeople.length) {
+          if (!lastPersonLetter) {
+            lastPersonLetter = letter
+          }
+          sections = [
+            ...sections,
+            {
+              title: lastPersonLetter.toUpperCase(),
+              results: nextPeople,
+              height: sectionHeight(nextPeople.length),
+            },
+          ]
+          nextPeople = [person]
+        } else {
+          nextPeople.push(person)
+        }
+        lastPersonLetter = letter
+      }
+    }
+    return sections
+  }
+
   getIndex = item => {
     return this.results.findIndex(x => x.email === item.email)
   }
@@ -104,17 +159,25 @@ const DirectoryPersonCard = props => (
   />
 )
 
-const createSection = (people: PersonBit[], letter, getIndex) => {
+const PersonSection = ({
+  people,
+  title,
+  getIndex,
+}: {
+  people: PersonBit[]
+  title: string
+  getIndex: any
+}) => {
   return (
-    <React.Fragment key={letter}>
-      <GridTitle>{letter}</GridTitle>
+    <View padding={[0, 10]}>
+      <GridTitle>{title}</GridTitle>
       <Grid columnWidth={120} gridAutoRows={height} gridGap={6}>
         {people.map(person => (
           <DirectoryPersonCard key={person.email} getIndex={getIndex} model={person} />
         ))}
       </Grid>
       <SmallVerticalSpace />
-    </React.Fragment>
+    </View>
   )
 }
 
@@ -126,49 +189,31 @@ const decorator = compose(
 )
 export const OrbitDirectory = decorator(({ store }: Props) => {
   console.log('render OrbitDirectoryInner')
-  const { results } = store
+  const { results, resultSections } = store
   const total = results.length
   if (!total) {
     return <NoResultsDialog subName="the directory" />
   }
-  let sections
-  // not that many, show without sections
-  if (total < 10) {
-    sections = (
-      <Grid columnWidth={120} gridAutoRows={height} gridGap={6}>
-        {results.map((person, index) => (
-          <DirectoryPersonCard key={person.email} index={index} model={person} />
-        ))}
-      </Grid>
-    )
-  } else {
-    // create sections by letter
-    sections = []
-    let nextPeople = []
-    let lastPersonLetter
-    for (const [index, person] of results.entries()) {
-      let letter = person.name[0].toLowerCase()
-      // is number
-      if (+person.name[0] === +person.name[0]) {
-        letter = '0-9'
-      }
-      const isNewSection = lastPersonLetter && letter !== lastPersonLetter
-      const isLastSection = index === total - 1
-      if ((isNewSection || isLastSection) && nextPeople.length) {
-        if (!lastPersonLetter) {
-          lastPersonLetter = letter
-        }
-        sections.push(createSection(nextPeople, lastPersonLetter.toUpperCase(), store.getIndex))
-        nextPeople = [person]
-      } else {
-        nextPeople.push(person)
-      }
-      lastPersonLetter = letter
-    }
-  }
   return (
     <ProvideHighlightsContextWithDefaults value={{ words: store.peopleQuery.split(' ') }}>
-      <SubPaneSection>{sections}</SubPaneSection>
+      <List
+        // ref={instance => (this.List = instance)}
+        rowHeight={({ index }) => resultSections[index].height}
+        rowRenderer={({ index, key }) => {
+          const section = resultSections[index]
+          return (
+            <PersonSection
+              key={`${key}${section.title}`}
+              title={section.title}
+              people={section.results}
+              getIndex={store.getIndex}
+            />
+          )
+        }}
+        rowCount={resultSections.length}
+        width={ORBIT_WIDTH}
+        height={resultSections.reduce((a, b) => a + b.height, 0)}
+      />
     </ProvideHighlightsContextWithDefaults>
   )
 })

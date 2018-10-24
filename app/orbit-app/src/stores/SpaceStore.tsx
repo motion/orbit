@@ -15,30 +15,37 @@ export class SpaceStore {
       color: 'blue',
       panes: [
         {
+          id: 'home',
           title: 'Home',
           icon: 'house',
         },
         {
+          id: 'search',
           title: 'Search',
           icon: 'singleNeutralSearch',
         },
         {
+          id: 'people',
           title: 'People',
           icon: 'multipleNeutral2',
         },
         {
+          id: 'topics',
           title: 'Topics',
           icon: 'singleNeutralChat',
         },
         {
+          id: 'onboarding',
           title: 'Onboarding',
           icon: 'listBullets',
         },
         {
+          id: 'help',
           title: 'Help',
           icon: 'questionCircle',
         },
         {
+          id: 'new',
           title: 'New',
           icon: 'add',
           show: false,

@@ -50,7 +50,7 @@ export class OrbitHome extends React.Component<Props> {
         </SubPane>
         <SubPane
           preventScroll
-          name="list"
+          name="onboarding"
           before={<SpaceNavHeight />}
           paddingLeft={0}
           paddingRight={0}

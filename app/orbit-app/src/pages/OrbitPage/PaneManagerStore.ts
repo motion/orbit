@@ -8,6 +8,7 @@ import { OrbitStore } from './OrbitStore'
 import { autoTrack } from '../../stores/Track'
 import { memoize } from 'lodash'
 import { AppsStore } from '../../stores/AppsStore'
+import { SpaceStore } from '../../stores/SpaceStore'
 
 type Panes = 'home' | 'settings' | 'onboard' | string
 
@@ -16,18 +17,13 @@ export class PaneManagerStore {
     appsStore: AppsStore
     orbitStore: OrbitStore
     selectionStore: SelectionStore
+    spaceStore?: SpaceStore
   }
 
-  panes: Partial<Panes>[] = [
-    'home',
-    'search',
-    'people',
-    'topics',
-    'list',
-    'help',
-    'new',
-    'settings',
-  ]
+  get panes(): Partial<Panes>[] {
+    return [...this.props.spaceStore.activeSpace.panes.map(p => p.id), 'settings']
+  }
+
   keyablePanes = [0, 6]
   paneIndex = 0
   forceOnboard = null

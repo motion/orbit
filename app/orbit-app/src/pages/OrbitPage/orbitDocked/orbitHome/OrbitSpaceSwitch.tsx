@@ -9,11 +9,35 @@ import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { OrbitOrb } from '../orbitSettings/OrbitOrb'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RowItem } from '../../../../views/RowItem'
+import { FocusableShortcutHandler } from '../../../../views/FocusableShortcutHandler'
+import { SpaceStore } from '../../../../stores/SpaceStore'
 
-type Props = { paneManagerStore?: PaneManagerStore } & React.HTMLProps<HTMLDivElement> &
+type Props = {
+  paneManagerStore?: PaneManagerStore
+  spaceStore?: SpaceStore
+} & React.HTMLProps<HTMLDivElement> &
   CSSPropertySet
 
-@view.attach('paneManagerStore')
+class SpaceSwitchStore {
+  props: Props
+  selectedIndex = 0
+  get spaces() {
+    return this.props.spaceStore.spaces
+  }
+
+  down = () => {
+    this.selectedIndex = Math.min(this.selectedIndex + 1, this.spaces.length - 1)
+  }
+
+  up = () => {
+    this.selectedIndex = Math.max(this.selectedIndex - 1, 0)
+  }
+}
+
+@view.attach('spaceStore', 'paneManagerStore')
+@view.attach({
+  store: SpaceSwitchStore,
+})
 @view
 export class OrbitSpaceSwitch extends React.Component<Props> {
   spaceSwitcherRef = React.createRef<Popover>()
@@ -31,7 +55,24 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
   }
 
   render() {
-    const { paneManagerStore, ...props } = this.props
+    const { paneManagerStore, spaceStore, store, ...props } = this.props
+    const { activeSpace, inactiveSpaces } = spaceStore
+    const { selectedIndex } = store
+
+    const shortcuts = {
+      select: 'enter',
+      up: 'up',
+      down: 'down',
+    }
+    const handlers = {
+      select: () => {
+        console.log('should switch space')
+        // switch active space
+      },
+      down: store.down,
+      up: store.up,
+    }
+
     return (
       <Popover
         ref={this.spaceSwitcherRef}
@@ -53,25 +94,44 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
           </NavButton>
         }
       >
-        <Col borderRadius={6} overflow="hidden" flex={1}>
-          <RowItem
-            orb="blue"
-            title="Orbit"
-            subtitle="20 people"
-            after={
-              <OrbitIcon
-                onClick={paneManagerStore.goToTeamSettings}
-                name="gear"
-                size={14}
-                opacity={0.5}
-              />
-            }
-            hover={false}
-          />
-          <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-          <RowItem orb="grey" title="Me" />
-          <RowItem orb="red" title="discuss-things" />
-        </Col>
+        {shown => {
+          return (
+            <FocusableShortcutHandler
+              shortcuts={shortcuts}
+              handlers={handlers}
+              focused={shown}
+              style={{ flex: 1 }}
+            >
+              <Col borderRadius={6} overflow="hidden" flex={1}>
+                <RowItem
+                  orb={activeSpace.color}
+                  title={activeSpace.name}
+                  subtitle="20 people"
+                  after={
+                    <OrbitIcon
+                      onClick={paneManagerStore.goToTeamSettings}
+                      name="gear"
+                      size={14}
+                      opacity={0.5}
+                    />
+                  }
+                  hover={false}
+                />
+                <View flex={1} margin={[2, 10]} background="#eee" height={1} />
+                {inactiveSpaces.map((space, index) => {
+                  return (
+                    <RowItem
+                      key={space.name}
+                      selected={selectedIndex === index + 1}
+                      orb={space.color}
+                      title={space.name}
+                    />
+                  )
+                })}
+              </Col>
+            </FocusableShortcutHandler>
+          )
+        }}
       </Popover>
     )
   }

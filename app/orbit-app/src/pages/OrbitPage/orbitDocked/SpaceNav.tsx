@@ -20,9 +20,10 @@ const SpaceNavAfter = view({
 export class SpaceNav extends React.Component<Props> {
   render() {
     const { spaceStore, paneManagerStore } = this.props
-    const newPane = spaceStore.panes.find(x => x.title === 'New')
-    const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), spaceStore.panes.length - 1)
-    const activeItem = spaceStore.panes[curIndex]
+    const { activeSpace } = spaceStore
+    const newPane = activeSpace.panes.find(x => x.title === 'New')
+    const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), activeSpace.panes.length - 1)
+    const activeItem = activeSpace.panes[curIndex]
     const isHome = activeItem.title === 'Home'
     return (
       <View position="relative" zIndex={1000} padding={[8, 12, 0]}>
@@ -37,7 +38,7 @@ export class SpaceNav extends React.Component<Props> {
           </Text>
         </Row>
         <Row margin={-4}>
-          {spaceStore.panes.filter(x => x.title !== 'New').map((pane, index) => (
+          {spaceStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => (
             <Text
               key={pane.title}
               fontWeight={200}

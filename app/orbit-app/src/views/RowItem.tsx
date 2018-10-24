@@ -1,12 +1,13 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import { View, Row, Col, Text } from '@mcro/ui'
-import { OrbitIcon } from './OrbitIcon';
+import { OrbitIcon } from './OrbitIcon'
 
 const RowItemFrame = view(Row, {
   padding: [2, 8],
   alignItems: 'center',
-}).theme(({ theme }) => ({
+}).theme(({ theme, selected }) => ({
+  background: selected ? theme.backgroundHover : 'transparent',
   '&:hover': {
     background: theme.backgroundHover,
   },
@@ -20,10 +21,11 @@ export const RowItem = ({
   icon = null,
   after = null,
   subtitle = null,
+  selected = false,
   ...props
 }) => {
   return (
-    <RowItemFrame padding={leftPad} {...props}>
+    <RowItemFrame padding={leftPad} selected={selected} {...props}>
       {!!orb && (
         <View
           borderRadius={100}

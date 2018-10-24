@@ -1,36 +1,59 @@
-import * as React from 'react'
-import { Icon } from '../views/Icon'
-
 export class SpaceStore {
-  panes = [
+  activeIndex = 0
+
+  get activeSpace() {
+    return this.spaces[this.activeIndex]
+  }
+
+  get inactiveSpaces() {
+    return this.spaces.filter((_, i) => i !== this.activeIndex)
+  }
+
+  spaces = [
     {
-      title: 'Home',
-      icon: <Icon size={16} name="house" />,
+      name: 'Orbit',
+      color: 'blue',
+      panes: [
+        {
+          title: 'Home',
+          icon: 'house',
+        },
+        {
+          title: 'Search',
+          icon: 'singleNeutralSearch',
+        },
+        {
+          title: 'People',
+          icon: 'multipleNeutral2',
+        },
+        {
+          title: 'Topics',
+          icon: 'singleNeutralChat',
+        },
+        {
+          title: 'Onboarding',
+          icon: 'listBullets',
+        },
+        {
+          title: 'Help',
+          icon: 'questionCircle',
+        },
+        {
+          title: 'New',
+          icon: 'add',
+          show: false,
+        },
+      ],
     },
     {
-      title: 'Search',
-      icon: <Icon size={16} name="singleNeutralSearch" />,
+      name: 'Me',
+      color: 'gray',
+      panes: [],
     },
     {
-      title: 'People',
-      icon: <Icon size={16} name="multipleNeutral2" />,
-    },
-    {
-      title: 'Topics',
-      icon: <Icon size={16} name="singleNeutralChat" />,
-    },
-    {
-      title: 'Onboarding',
-      icon: <Icon size={16} name="listBullets" />,
-    },
-    {
-      title: 'Help',
-      icon: <Icon size={16} name="questionCircle" />,
-    },
-    {
-      title: 'New',
-      icon: <Icon size={16} name="add" />,
-      show: false,
+      name: 'Discussions',
+      color: 'red',
+      panes: [],
     },
   ]
 }

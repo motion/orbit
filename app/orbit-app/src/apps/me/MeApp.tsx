@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { SettingStore } from '../../stores/SettingStore'
 import { SimpleItem } from '../../views/SimpleItem'
-import { SubTitle } from '../../views/SubTitle'
+import { SubPaneTitle, SubPaneSubTitle } from '../../views'
 
 type Props = {
   settingStore?: SettingStore
@@ -32,19 +32,15 @@ class MeStore {
 @view
 export class MeApp extends React.Component<Props & { store?: MeStore }> {
   render() {
-    const { recentSearches, pinnedBits } = this.props.store
+    const { recentSearches /* , pinnedBits */ } = this.props.store
     return (
       <ProvideHighlightsContextWithDefaults
         value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}
       >
-        <SubTitle>Recently Searched</SubTitle>
+        <SubPaneTitle>Me</SubPaneTitle>
+        <SubPaneSubTitle>Recently</SubPaneSubTitle>
         {recentSearches.map(search => (
           <SimpleItem key={search} title={search} />
-        ))}
-
-        <SubTitle>Pinned</SubTitle>
-        {pinnedBits.map(bit => (
-          <SimpleItem key={bit} title={bit} />
         ))}
       </ProvideHighlightsContextWithDefaults>
     )

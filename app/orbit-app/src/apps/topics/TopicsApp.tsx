@@ -6,6 +6,7 @@ import { SelectionStore } from '../../pages/OrbitPage/orbitDocked/SelectionStore
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { OrbitMasonry } from '../../views/OrbitMasonry'
 import { SettingStore } from '../../stores/SettingStore'
+import { SubPaneTitle } from '../../views'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -39,6 +40,7 @@ export class TopicsApp extends React.Component<Props & { store?: TopicsStore }> 
       <ProvideHighlightsContextWithDefaults
         value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}
       >
+        <SubPaneTitle>Popular</SubPaneTitle>
         <OrbitMasonry
           items={results}
           offset={0}

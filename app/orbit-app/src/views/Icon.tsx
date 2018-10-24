@@ -150,5 +150,5 @@ export const Icon = ({ name, ...props }) => {
     return null
   }
   const icon = icons[iconName]
-  return <SVG fill="#fff" svg={icon} {...props} />
+  return <SVG fill="#fff" svg={icon} cleanup={['title', 'desc']} {...props} />
 }

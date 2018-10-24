@@ -133,7 +133,7 @@ export const OrbitDirectory = decorator(({ store }: Props) => {
   }
   let sections
   // not that many, show without sections
-  if (total < 20) {
+  if (total < 10) {
     sections = (
       <Grid columnWidth={120} gridAutoRows={height} gridGap={6}>
         {results.map((person, index) => (

@@ -24,8 +24,8 @@ export class SpaceNav extends React.Component<Props> {
     return (
       <Row position="relative" zIndex={1000} padding={[8, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
-        <View padding={[0, 10, 1, 0]}>
-          <Icon size={18} name={activeItem.icon} />
+        <View padding={[0, 10, 1, 2]}>
+          <Icon size={16} name={activeItem.icon} />
         </View>
         <Row>
           {spaceStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => (

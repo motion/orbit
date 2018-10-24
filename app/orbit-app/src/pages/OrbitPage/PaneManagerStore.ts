@@ -102,9 +102,10 @@ export class PaneManagerStore {
         }
       }
     } catch (e) {
-      if (e !== ReactionRejectionError) {
-        throw e
+      if (e instanceof ReactionRejectionError) {
+        return
       }
+      throw e
     }
   }
 

@@ -140,16 +140,7 @@ export type GithubPullRequestQueryResult = {
   repository: {
     id: string
     name: string
-    pullRequests: {
-      totalCount: number
-      pageInfo: {
-        hasNextPage: boolean
-      }
-      edges: {
-        cursor: string
-        node: GithubPullRequest
-      }[]
-    }
+    pullRequests: GithubPaginatedResult<GithubPullRequest>
   }
 } & GithubRateLimitResult
 
@@ -185,13 +176,7 @@ export type GithubPullRequest = {
     }[]
   }
   comments: {
-    edges: {
-      node: {
-        author: GithubPerson
-        createdAt: string
-        body: string
-      }
-    }[]
+    totalCount: number
   }
   commits: {
     edges: {

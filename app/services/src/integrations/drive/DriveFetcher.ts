@@ -1,6 +1,6 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { DriveSettingValues, Setting } from '@mcro/models'
+import { DriveSetting } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
@@ -13,9 +13,9 @@ const log = new Logger('service:drive:fetcher')
  * Fetches data from Google Drive Api.
  */
 export class DriveFetcher {
-  private setting: Setting
+  private setting: DriveSetting
 
-  constructor(setting: Setting) {
+  constructor(setting: DriveSetting) {
     this.setting = setting
   }
 
@@ -95,7 +95,7 @@ export class DriveFetcher {
    */
   private async refreshToken() {
     // todo: create a separate loader component, replacements for r2
-    const values = this.setting.values as DriveSettingValues
+    const values = this.setting.values
     if (!values.oauth.refreshToken) {
       return null
     }

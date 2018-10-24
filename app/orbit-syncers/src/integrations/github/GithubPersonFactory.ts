@@ -30,13 +30,11 @@ export class GithubPersonFactory {
    * people from them.
    */
   createFromPullRequest(pr: GithubPullRequest): Person[] {
-    const comments = pr.comments.edges.map(edge => edge.node)
     const commits = pr.commits.edges.map(edge => edge.node.commit)
     const reviews = pr.reviews.edges.map(edge => edge.node)
 
     const githubPeople = uniqBy([
       pr.author,
-      ...comments.map(comment => comment.author),
       ...pr.participants.edges.map(user => user.node),
       ...reviews.map(user => user.author),
       ...commits.filter(commit => !!commit.user).map(commit => commit.user)

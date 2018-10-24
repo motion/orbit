@@ -1,15 +1,11 @@
-import { BitEntity, PersonBitEntity, PersonEntity } from '@mcro/entities'
-import { SettingEntity } from '@mcro/entities/_'
+import { BitEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { PersonBitUtils } from '@mcro/model-utils'
-import { Bit, GithubSetting, GithubSettingValues, Person } from '@mcro/models'
-import { GithubSettingValuesLastSyncRepositoryInfo } from '@mcro/models'
-import { GithubLoader } from '@mcro/services'
+import { GithubSetting, GithubSettingValues, GithubSettingValuesLastSyncRepositoryInfo } from '@mcro/models'
+import { GithubIssue, GithubLoader, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
-import { uniqBy } from 'lodash'
-import { getRepository, In, Not } from 'typeorm'
+import { getRepository } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
-import { SyncerRepository } from '../../utils/SyncerRepository'
 import { GithubBitFactory } from './GithubBitFactory'
 import { GithubPersonFactory } from './GithubPersonFactory'
 
@@ -26,9 +22,6 @@ export class GithubSyncer implements IntegrationSyncer {
   private loader: GithubLoader
   private bitFactory: GithubBitFactory
   private personFactory: GithubPersonFactory
-  // private personSyncer: PersonSyncer
-  // private bitSyncer: BitSyncer
-  private syncerRepository: SyncerRepository
 
   constructor(setting: GithubSetting, log?: Logger) {
     this.setting = setting
@@ -36,9 +29,6 @@ export class GithubSyncer implements IntegrationSyncer {
     this.loader = new GithubLoader(setting, this.log)
     this.bitFactory = new GithubBitFactory(setting)
     this.personFactory = new GithubPersonFactory(setting)
-    // this.personSyncer = new PersonSyncer(setting, this.log)
-    // this.bitSyncer = new BitSyncer(setting, this.log)
-    this.syncerRepository = new SyncerRepository(setting)
   }
 
   /**
@@ -53,181 +43,182 @@ export class GithubSyncer implements IntegrationSyncer {
       return
     }
 
-    // load database data
-    this.log.timer(`load people, person bits and bits from the database`)
-    const dbPeople = await this.syncerRepository.loadDatabasePeople()
-    const dbPersonBits = await this.syncerRepository.loadDatabasePersonBits({ people: dbPeople })
-    const dbBits = await this.syncerRepository.loadDatabaseBits()
-    this.log.timer(`load people, person bits and bits from the database`, { dbPeople, dbPersonBits, dbBits })
+    // initial default settings
+    if (!this.setting.values.lastSyncIssues) this.setting.values.lastSyncIssues = {}
+    if (!this.setting.values.lastSyncPullRequests) this.setting.values.lastSyncPullRequests = {}
 
-    // load api data for each repository
+    // go through all repositories and sync them all
     this.log.timer(`load api bits and people`)
-    // const bitIds: number[] = [],
-    //   peopleIds: number[] = [],
-    //   personBitIds: number[] = []
-
-    const apiBits: Bit[] = []
-    const apiPeople: Person[] = []
-    if (!this.setting.values.lastSyncRepositories) this.setting.values.lastSyncRepositories = {}
     for (let repository of repositories) {
-      this.log.timer(`sync ${repository.nameWithOwner} issues`)
+
+      if (!this.setting.values.lastSyncIssues[repository.nameWithOwner])
+        this.setting.values.lastSyncIssues[repository.nameWithOwner] = {}
+      if (!this.setting.values.lastSyncPullRequests[repository.nameWithOwner])
+        this.setting.values.lastSyncPullRequests[repository.nameWithOwner] = {}
+
+      const lastSyncIssues = this.setting.values.lastSyncIssues[repository.nameWithOwner]
+      const lastSyncPullRequests = this.setting.values.lastSyncPullRequests[repository.nameWithOwner]
       const [organization, repositoryName] = repository.nameWithOwner.split('/')
-      if (!this.setting.values.lastSyncRepositories[repository.nameWithOwner]) {
-        this.setting.values.lastSyncRepositories[repository.nameWithOwner] = {}
-      }
-      const lastSyncInfo = this.setting.values.lastSyncRepositories[repository.nameWithOwner]
 
-      // DEPRECATED: WE DO NOT NEED THIS CODE. IT ONLY BRINGS PROBLEMS - FOR HUGE REPOSITORIES IT TAKES FOREVER TO LOAD THEIR ISSUES
-      // AND SINCE THEY ARE HUGE THEY ARE POPULAR AND NEW ISSUES KEEP COMING. LET IT JUST SYNC, WE WILL GET NEW ISSUES ON NEXT SYNC ITERATION
-      // if we have a last sync cursor left (means we need to continue syncing from that position)
-      // load the total count of issues in the repository first
-      // to compare it with the total number of issues we used last time
-      // if total number of issues differs it means some new issues were added
-      // and we can't use our last synced date because otherwise we'll miss those newly added issues
-      // if (lastSyncInfo.lastCursorTotalCount && repository.issues.totalCount !== lastSyncInfo.lastCursorTotalCount) {
-      //   this.log.verbose(`looks like repository got new issues since last cursor, resetting cursor, starting sync from the beginning`)
-      //   lastSyncInfo.lastCursor = undefined
-      //   lastSyncInfo.lastCursorSyncedDate = undefined
-      //   lastSyncInfo.lastCursorLoadedCount = undefined
-      //   lastSyncInfo.lastCursorTotalCount = undefined
-      //   await getRepository(SettingEntity).save(this.setting)
-      // }
-
-      if (lastSyncInfo.lastSyncedDate &&
+      // compare repository's first issue updated date with our last synced date to make sure
+      // something has changed since our last sync. If nothing was changed we skip issues sync
+      if (lastSyncIssues.lastSyncedDate &&
           repository.issues.nodes.length &&
-          new Date(repository.issues.nodes[0].updatedAt).getTime() === lastSyncInfo.lastSyncedDate) {
-        this.log.verbose(`looks like nothing was changed in a repository from our last sync, skipping`)
-        continue
+          new Date(repository.issues.nodes[0].updatedAt).getTime() === lastSyncIssues.lastSyncedDate) {
+        this.log.verbose(`looks like nothing was changed in a ${repository.nameWithOwner} repository issues from our last sync, skipping`)
+
+      } else {
+        // load repository issues and sync them in a stream
+        this.log.timer(`sync ${repository.nameWithOwner} issues`)
+        await this.loader.loadIssues({
+          organization,
+          repository: repositoryName,
+          cursor: lastSyncIssues.lastCursor,
+          loadedCount: lastSyncIssues.lastCursorLoadedCount || 0,
+          handler: (issue, cursor, loadedCount, lastIssue) => {
+            return this.handleIssueOrPullRequest({
+              issueOrPullRequest: issue,
+              organization,
+              repositoryName,
+              cursor,
+              loadedCount,
+              lastIssue,
+              lastSyncInfo: lastSyncIssues,
+            })
+          }
+        })
+        this.log.timer(`sync ${repository.nameWithOwner} issues`)
       }
 
-      await this.loader.loadIssues(organization, repositoryName, lastSyncInfo.lastCursor, lastSyncInfo.lastCursorLoadedCount || 0, async (issue, cursor, loadedCount, lastIssue) => {
-        const updatedAt = new Date(issue.updatedAt).getTime()
+      // compare repository's first PR updated date with our last synced date to make sure
+      // something has changed since our last sync. If nothing was changed we skip PRs sync
+      if (lastSyncPullRequests.lastSyncedDate &&
+        repository.pullRequests.nodes.length &&
+        new Date(repository.pullRequests.nodes[0].updatedAt).getTime() === lastSyncPullRequests.lastSyncedDate) {
+        this.log.verbose(`looks like nothing was changed in a ${repository.nameWithOwner} repository PRs from our last sync, skipping`)
 
-        // if we have synced stuff previously already, we need to prevent same issues syncing
-        // check if issue's updated date is newer than our last synced date
-        this.log.verbose(`checking when issue was updated last time`, { lastSyncInfo, updatedAt, issue })
-        if (lastSyncInfo.lastSyncedDate && updatedAt <= lastSyncInfo.lastSyncedDate) {
-          this.log.verbose(`reached last synced date, stop syncing...`, { issue, updatedAt, lastSyncInfo })
-
-          // if its actually older we don't need to sync this issue and all next ones (since they are sorted by updated date)
-          if (lastSyncInfo.lastCursorSyncedDate) { // important check, because we can be in this block without loading by cursor
-            lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
+      } else {
+        // load repository pull requests and sync them in a stream
+        this.log.timer(`sync ${repository.nameWithOwner} pull requests`)
+        await this.loader.loadPullRequests({
+          organization,
+          repository: repositoryName,
+          cursor: lastSyncPullRequests.lastCursor,
+          loadedCount: lastSyncPullRequests.lastCursorLoadedCount || 0,
+          handler: (issue, cursor, loadedCount, lastIssue) => {
+            return this.handleIssueOrPullRequest({
+              issueOrPullRequest: issue,
+              organization,
+              repositoryName,
+              cursor,
+              loadedCount,
+              lastIssue,
+              lastSyncInfo: lastSyncPullRequests,
+            })
           }
-          lastSyncInfo.lastCursor = undefined
-          lastSyncInfo.lastCursorSyncedDate = undefined
-          lastSyncInfo.lastCursorLoadedCount = undefined
-          await getRepository(SettingEntity).save(this.setting)
+        })
+        this.log.timer(`sync ${repository.nameWithOwner} pull requests`)
+      }
 
-          return false // this tells from the callback to stop issue proceeding
-        }
-
-        // for the first ever synced issue we store its updated date, and next time we make sync again
-        // we don't want to sync issues less then this date
-        if (!lastSyncInfo.lastCursorSyncedDate) {
-          lastSyncInfo.lastCursorSyncedDate = updatedAt
-          this.log.verbose(`looks like its the first syncing issue, set last synced date`, lastSyncInfo)
-          await getRepository(SettingEntity).save(this.setting)
-        }
-
-        const comments = issue.comments.totalCount > 0 ? await this.loader.loadComments(organization, repositoryName, issue.number) : []
-
-        // load issue bit from the database
-        // const bitId = hash(`github-${this.setting.id}-${issue.id}`)
-        // const dbBit = await getRepository(BitEntity).findOne(bitId)
-
-        const bit = this.bitFactory.createFromIssue(issue, comments)
-        bit.people = this.personFactory.createFromIssue(issue)
-        apiBits.push(bit)
-        apiPeople.push(...bit.people)
-
-        // remove people duplicates
-        bit.people = uniqBy(bit.people, person => person.id)
-
-        // for people without emails we create "virtual" email
-        for (let person of bit.people) {
-          if (!person.email) {
-            person.email = person.name + ' from ' + person.integration
-          }
-        }
-
-        // find person bit with email
-        const personBits = await Promise.all(bit.people.map(async person => {
-          const dbPersonBit = await getRepository(PersonBitEntity).findOne(hash(person.email))
-          const newPersonBit = PersonBitUtils.createFromPerson(person)
-          const personBit = PersonBitUtils.merge(newPersonBit, dbPersonBit || {})
-
-          // push person to person bit's people
-          const hasPerson = personBit.people.some(existPerson => existPerson.id === person.id)
-          if (!hasPerson) {
-            personBit.people.push(person)
-          }
-
-          return personBit
-        }))
-
-        this.log.verbose(`syncing`, { issue, bit, people: bit.people, personBits })
-        await getRepository(PersonEntity).save(bit.people)
-        await getRepository(PersonBitEntity).save(personBits)
-        await getRepository(BitEntity).save(bit)
-
-        // bitIds.push(bit.id)
-        // peopleIds.push(...bit.people.map(person => person.id))
-        // personBitIds.push(...personBits.map(personBit => personBit.id))
-
-        // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
-        if (lastIssue) {
-          this.log.verbose(`looks like its the last issue in this sync, removing last cursor and setting last sync date`, lastSyncInfo)
-          lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
-          lastSyncInfo.lastCursor = undefined
-          lastSyncInfo.lastCursorSyncedDate = undefined
-          lastSyncInfo.lastCursorLoadedCount = undefined
-          await getRepository(SettingEntity).save(this.setting)
-          return true
-        }
-
-        // update last sync settings to make sure we continue from the last point in the case if application will stop
-        if (lastSyncInfo.lastCursor !== cursor) {
-          this.log.verbose(`updating last cursor in settings`, { cursor })
-          lastSyncInfo.lastCursor = cursor
-          lastSyncInfo.lastCursorLoadedCount = loadedCount
-          await getRepository(SettingEntity).save(this.setting)
-        }
-
-        return true
-      })
-
-      this.log.timer(`sync ${repository.nameWithOwner} issues`)
     }
-    this.log.timer(`load api bits and people`, { apiBits, apiPeople })
+    this.log.timer(`load api bits and people`)
 
-    // since we never load all issues (we load only until we face last synced one by its updation date)
-    // we can't know if we have issues removed before that updation date
+    // todo: make a person cleanup
+  }
 
-    // removing not loaded bits and people
-    /*const removedBits = await getRepository(BitEntity).find({
-      where: {
-        id: Not(In(bitIds)),
-        settingId: this.setting.id,
-      }
-    })
-    const removedPeople = await getRepository(PersonEntity).find({
-      where: {
-        id: Not(In(peopleIds)),
-        settingId: this.setting.id,
-      }
-    })
-    const allDbPersonBits = await getRepository(PersonBitEntity).find({
-      relations: {
-        people: true
-      }
-    })
-    const removedPersonBits = allDbPersonBits.filter(personBit => personBit.people.length === 0)
+  /**
+   * Handles a single issue or pull request from loaded issues/PRs stream.
+   */
+  private async handleIssueOrPullRequest(options?: {
+    issueOrPullRequest: GithubIssue | GithubPullRequest
+    organization: string
+    repositoryName: string
+    cursor: string
+    loadedCount: number
+    lastIssue: boolean
+    lastSyncInfo: GithubSettingValuesLastSyncRepositoryInfo
+  }) {
+    const { issueOrPullRequest, organization, repositoryName, cursor, loadedCount, lastIssue, lastSyncInfo } = options
+    const updatedAt = new Date(issueOrPullRequest.updatedAt).getTime()
 
-    this.log.timer(`remove old synced data`, { removedBits, removedPeople, removedPersonBits })
-    await getRepository(BitEntity).remove(removedBits)
-    await getRepository(PersonEntity).remove(removedPeople)
-    await getRepository(PersonBitEntity).remove(removedPersonBits)
-    this.log.timer(`remove old synced data`)*/
+    // if we have synced stuff previously already, we need to prevent same issues syncing
+    // check if issue's updated date is newer than our last synced date
+    if (lastSyncInfo.lastSyncedDate && updatedAt <= lastSyncInfo.lastSyncedDate) {
+      this.log.verbose(`reached last synced date, stop syncing...`, { issueOrPullRequest, updatedAt, lastSyncInfo })
+
+      // if its actually older we don't need to sync this issue and all next ones (since they are sorted by updated date)
+      if (lastSyncInfo.lastCursorSyncedDate) { // important check, because we can be in this block without loading by cursor
+        lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
+      }
+      lastSyncInfo.lastCursor = undefined
+      lastSyncInfo.lastCursorSyncedDate = undefined
+      lastSyncInfo.lastCursorLoadedCount = undefined
+      await getRepository(SettingEntity).save(this.setting)
+
+      return false // this tells from the callback to stop issue proceeding
+    }
+
+    // for the first ever synced issue we store its updated date, and once sync is done,
+    // next time we make sync again we don't want to sync issues less then this date
+    if (!lastSyncInfo.lastCursorSyncedDate) {
+      lastSyncInfo.lastCursorSyncedDate = updatedAt
+      this.log.verbose(`looks like its the first syncing issue, set last synced date`, lastSyncInfo)
+      await getRepository(SettingEntity).save(this.setting)
+    }
+
+    const comments = issueOrPullRequest.comments.totalCount > 0 ? await this.loader.loadComments(organization, repositoryName, issueOrPullRequest.number) : []
+
+    // load issue bit from the database
+    const bit = this.bitFactory.createFromIssue(issueOrPullRequest, comments)
+    bit.people = this.personFactory.createFromIssue(issueOrPullRequest)
+
+    // for people without emails we create "virtual" email
+    for (let person of bit.people) {
+      if (!person.email) {
+        person.email = person.name + ' from ' + person.integration
+      }
+    }
+
+    // find person bit with email
+    const personBits = await Promise.all(bit.people.map(async person => {
+      const dbPersonBit = await getRepository(PersonBitEntity).findOne(hash(person.email))
+      const newPersonBit = PersonBitUtils.createFromPerson(person)
+      const personBit = PersonBitUtils.merge(newPersonBit, dbPersonBit || {})
+
+      // push person to person bit's people
+      const hasPerson = personBit.people.some(existPerson => existPerson.id === person.id)
+      if (!hasPerson) {
+        personBit.people.push(person)
+      }
+
+      return personBit
+    }))
+
+    this.log.verbose(`syncing`, { issueOrPullRequest, bit, people: bit.people, personBits })
+    await getRepository(PersonEntity).save(bit.people, { listeners: false })
+    await getRepository(PersonBitEntity).save(personBits, { listeners: false })
+    await getRepository(BitEntity).save(bit, { listeners: false })
+
+    // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
+    if (lastIssue) {
+      this.log.verbose(`looks like its the last issue in this sync, removing last cursor and setting last sync date`, lastSyncInfo)
+      lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
+      lastSyncInfo.lastCursor = undefined
+      lastSyncInfo.lastCursorSyncedDate = undefined
+      lastSyncInfo.lastCursorLoadedCount = undefined
+      await getRepository(SettingEntity).save(this.setting)
+      return true
+    }
+
+    // update last sync settings to make sure we continue from the last point in the case if application will stop
+    if (lastSyncInfo.lastCursor !== cursor) {
+      this.log.verbose(`updating last cursor in settings`, { cursor })
+      lastSyncInfo.lastCursor = cursor
+      lastSyncInfo.lastCursorLoadedCount = loadedCount
+      await getRepository(SettingEntity).save(this.setting)
+    }
+
+    return true
   }
 
   /**
@@ -235,13 +226,13 @@ export class GithubSyncer implements IntegrationSyncer {
    * Gets into count whitelisted repositories.
    */
   private async loadApiRepositories() {
-    
+
     // load repositories from the API first
     this.log.timer(`load API repositories`)
     let repositories = [] // await this.loader.loadUserRepositories()
     this.log.timer(`load API repositories`, repositories)
-    
-    // get whitelist, if its not defined just return all loaded repositories 
+
+    // get whitelist, if its not defined just return all loaded repositories
     const values = this.setting.values as GithubSettingValues
     if (values.whitelist !== undefined) {
       this.log.info(`whitelist is defined, filtering settings by a whitelist`, values.whitelist)

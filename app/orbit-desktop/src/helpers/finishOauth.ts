@@ -1,7 +1,13 @@
 import { getGlobalConfig } from '@mcro/config'
 import { SettingEntity } from '@mcro/entities'
-import { IntegrationType, Setting, SlackSetting, SlackSettingValues } from '@mcro/models'
-import { DriveSetting, GmailSetting } from '@mcro/models'
+import {
+  DriveSetting,
+  GmailSetting,
+  IntegrationType,
+  Setting,
+  SlackSetting,
+  SlackSettingValues,
+} from '@mcro/models'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { App, Desktop } from '@mcro/stores'
 import { getRepository } from 'typeorm'
@@ -45,7 +51,7 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
     target: 'setting',
     category: 'integration',
     identifier: type + (await getRepository(SettingEntity).count()), // adding count temporary to prevent unique constraint error
-    type: type,
+    type: type as any,
     token: values.token,
     values: {
       oauth: { ...values },
@@ -53,7 +59,6 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
   }
 
   if (setting.type === 'slack') {
-    // load team info
     const loader = new SlackLoader(setting as SlackSetting)
     const team = await loader.loadTeam()
 

@@ -53,10 +53,18 @@ export interface GithubSettingValues {
   externalRepositories: string[]
 
   /**
-   * Information about repository last sync.
+   * Information about repository issues last sync.
    * Used to implement partial syncing.
    */
-  lastSyncRepositories: {
+  lastSyncIssues: {
+    [repository: string]: GithubSettingValuesLastSyncRepositoryInfo
+  }
+
+  /**
+   * Information about repository pull requests last sync.
+   * Used to implement partial syncing.
+   */
+  lastSyncPullRequests: {
     [repository: string]: GithubSettingValuesLastSyncRepositoryInfo
   }
 

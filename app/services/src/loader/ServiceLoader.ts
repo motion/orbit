@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { DriveSetting, GmailSetting, Setting } from '@mcro/models'
+import { Setting, DriveSetting, GmailSetting } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'

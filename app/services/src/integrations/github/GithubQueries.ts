@@ -30,6 +30,12 @@ query GithubUserRepositoriesQuery($cursor: String) {
               updatedAt
             }
           }
+          pullRequests(first: 1, orderBy: { direction: DESC, field: UPDATED_AT }) {
+            totalCount
+            nodes {
+              updatedAt
+            }
+          }
         }
       }
     }
@@ -58,6 +64,12 @@ query GithubRepositoryQuery($owner: String!, $name: String!) {
     pushedAt
     updatedAt
     issues(first: 1, orderBy: { direction: DESC, field: UPDATED_AT }) {
+      totalCount
+      nodes {
+        updatedAt
+      }
+    }
+    pullRequests(first: 1, orderBy: { direction: DESC, field: UPDATED_AT }) {
       totalCount
       nodes {
         updatedAt
@@ -266,45 +278,60 @@ query GithubPullRequestsQuery($organization: String!, $repository: String!, $fir
   repository(owner: $organization, name: $repository) {
     id
     name
-    pullRequests(first: $first, after: $cursor) {
+    pullRequests(first: $first, after: $cursor, orderBy: { direction: DESC, field: UPDATED_AT }) {
       totalCount
       pageInfo {
+        endCursor
         hasNextPage
       }
-      edges {
-        cursor
-        node {          
+      nodes {
+        id
+        title
+        number
+        body
+        bodyText
+        updatedAt
+        createdAt
+        url
+        closed
+        repository {
           id
-          title
-          number
-          body
-          bodyText
-          updatedAt
-          createdAt
+          name
           url
-          closed
-          repository {
+          owner {
+            login
+          }
+        }
+        author {
+          ... on User {
             id
+            login
+            location
+            avatarUrl
+            bio
+            email
             name
-            url
-            owner {
-              login
+          }
+        }
+        assignees(first: 100) {
+          edges {
+            node {
+              ... on User {
+                id
+                login
+                location
+                avatarUrl
+                bio
+                email
+                name
+              }
             }
           }
-          author {
-            ... on User {
-              id
-              login
-              location
-              avatarUrl
-              bio
-              email
-              name
-            }
-          }
-          assignees(first: 100) {
-            edges {
-              node {
+        }
+        comments(first: 100) {
+          edges {
+            node {
+              author {
                 ... on User {
                   id
                   login
@@ -315,64 +342,64 @@ query GithubPullRequestsQuery($organization: String!, $repository: String!, $fir
                   name
                 }
               }
+              createdAt
+              body
             }
           }
-          comments(first: 100) {
-            edges {
-              node {
+        }
+        commits(first: 100) {
+          edges {
+            node {
+              commit {
                 author {
-                  ... on User {
-                    id
-                    login
-                    location
-                    avatarUrl
-                    bio
-                    email
-                    name
-                  }
-                }
-                createdAt
-                body
-              }
-            }
-          }
-          commits(first: 100) {
-            edges {
-              node {
-                commit {
-                  author {
-                    email
-                    name
-                    avatarUrl
-                    user {
-                      ... on User {
-                        id
-                        login
-                        location
-                        avatarUrl
-                        bio
-                        email
-                        name
-                      }
+                  email
+                  name
+                  avatarUrl
+                  user {
+                    ... on User {
+                      id
+                      login
+                      location
+                      avatarUrl
+                      bio
+                      email
+                      name
                     }
                   }
                 }
               }
             }
           }
-          labels(first: 10) {
-            edges {
-              node {
+        }
+        labels(first: 10) {
+          edges {
+            node {
+              name
+              description
+              color
+              url
+            }
+          }
+        }
+        participants(first: 100) {
+          edges {
+            node {
+              ... on User {
+                id
+                login
+                location
+                avatarUrl
+                bio
+                email
                 name
-                description
-                color
-                url
               }
             }
           }
-          participants(first: 100) {
-            edges {
-              node {
+        }
+        reviews(first: 100) {
+          edges {
+            node {
+              author {
                 ... on User {
                   id
                   login
@@ -381,23 +408,6 @@ query GithubPullRequestsQuery($organization: String!, $repository: String!, $fir
                   bio
                   email
                   name
-                }
-              }
-            }
-          }
-          reviews(first: 100) {
-            edges {
-              node {
-                author {
-                  ... on User {
-                    id
-                    login
-                    location
-                    avatarUrl
-                    bio
-                    email
-                    name
-                  }
                 }
               }
             }

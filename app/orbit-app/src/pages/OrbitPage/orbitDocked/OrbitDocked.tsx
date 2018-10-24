@@ -97,7 +97,7 @@ class OrbitDockedContents extends React.Component<Props> {
           <div style={{ position: 'relative', flex: 1 }}>
             <Interactive disabled={/settings|onboard/.test(paneManagerStore.activePane)}>
               <OrbitNav />
-              <View position="relative" zIndex={1000} margin={[16, 0, 0]}>
+              <View position="relative" zIndex={1000} margin={[18, 0, 0]}>
                 <SelectableCarousel
                   offset={0}
                   // shouldScrollToActive

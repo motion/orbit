@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { FormRow } from '../../views'
 import { Input } from '../../views/Input'
-import { Theme, Button, Col, View } from '@mcro/ui'
-import { BottomControls } from '../../views/BottomControls'
+import { View } from '@mcro/ui'
 
 export class AppListSetup extends React.Component {
   render() {
@@ -11,13 +10,6 @@ export class AppListSetup extends React.Component {
         <FormRow label="Name">
           <Input />
         </FormRow>
-
-        <BottomControls>
-          <Col flex={1} />
-          <Theme name="orbit">
-            <Button>Create</Button>
-          </Theme>
-        </BottomControls>
       </View>
     )
   }

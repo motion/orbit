@@ -3,9 +3,10 @@ import { view } from '@mcro/black'
 import { SettingStore } from '../../stores/SettingStore'
 import { SliderPane, Slider } from '../../views/Slider'
 import { Title } from '../../views'
-import { Grid, Text } from '@mcro/ui'
+import { Grid, Text, Col, Theme, Button } from '@mcro/ui'
 import { OrbitCard } from '../../views/OrbitCard'
 import { AppListSetup } from './AppListSetup'
+import { BottomControls } from '../../views/BottomControls'
 
 type Props = {
   settingStore?: SettingStore
@@ -24,6 +25,10 @@ class MeStore {
 
   setActiveApp = index => {
     this.activeApp = index
+  }
+
+  goBack = () => {
+    this.activeApp--
   }
 
   apps = [
@@ -60,7 +65,12 @@ class MeStore {
   ]
 }
 
-const Pane = props => <SliderPane padding={[0, 12]} {...props} />
+const Centered = view({
+  justifyContent: 'center',
+  flex: 1,
+})
+
+const Pane = props => <SliderPane padding={[0, 14]} {...props} />
 
 @view.attach('settingStore')
 @view.attach({
@@ -71,39 +81,53 @@ export class NewApp extends React.Component<Props & { store?: MeStore }> {
   render() {
     const { store } = this.props
     return (
-      <Slider curFrame={store.activeApp + 1}>
-        <Pane>
-          <Title>Add app</Title>
-          <Grid
-            gridTemplateColumns="repeat(auto-fill, minmax(180px, 1fr))"
-            gridAutoRows={90}
-            gridGap={6}
-            margin={[5, -4]}
-          >
-            {store.apps.map((item, index) => (
-              <OrbitCard
-                key={index}
-                titleProps={{ fontSize: 18, fontWeight: 300 }}
-                title={item.title}
-                icon={item.icon}
-                inGrid
-                direct
-                index={index}
-                onSelect={store.setActiveApp}
-              >
-                <Text size={1.15} alpha={0.6}>
-                  {item.description}
-                </Text>
-              </OrbitCard>
-            ))}
-          </Grid>
-        </Pane>
+      <>
+        <Slider curFrame={store.activeApp + 1}>
+          <Pane>
+            <Title>Add app</Title>
+            <Grid
+              gridTemplateColumns="repeat(auto-fill, minmax(180px, 1fr))"
+              gridAutoRows={90}
+              gridGap={6}
+              margin={[5, -4]}
+            >
+              {store.apps.map((item, index) => (
+                <OrbitCard
+                  key={index}
+                  titleProps={{ fontSize: 18, fontWeight: 300 }}
+                  title={item.title}
+                  icon={item.icon}
+                  inGrid
+                  direct
+                  index={index}
+                  onSelect={store.setActiveApp}
+                >
+                  <Text size={1.15} alpha={0.6}>
+                    {item.description}
+                  </Text>
+                </OrbitCard>
+              ))}
+            </Grid>
+          </Pane>
 
-        <Pane>
-          <Title>Create new {store.activeAppName.toLowerCase()}</Title>
-          {store.activeAppName === 'List' && <AppListSetup />}
-        </Pane>
-      </Slider>
+          <Pane>
+            <Title>New {store.activeAppName.toLowerCase()}</Title>
+            <Centered>{store.activeAppName === 'List' && <AppListSetup />}</Centered>
+          </Pane>
+        </Slider>
+
+        <BottomControls invisible={store.activeApp === -1}>
+          {store.activeApp > -1 && (
+            <Button chromeless onClick={store.goBack}>
+              Back
+            </Button>
+          )}
+          <Col flex={1} />
+          <Theme name="orbit">
+            <Button>Create</Button>
+          </Theme>
+        </BottomControls>
+      </>
     )
   }
 }

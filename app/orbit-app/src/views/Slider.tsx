@@ -10,7 +10,7 @@ const controlsHeight = 50
 const SliderPaneContainer = view(View, {
   position: 'relative',
   width: frameWidth,
-  minHeight: 300,
+  minHeight: 100,
   padding: [20, framePad, 20 + controlsHeight],
 })
 

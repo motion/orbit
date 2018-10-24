@@ -96,8 +96,7 @@ class OrbitDockedContents extends React.Component<Props> {
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <Interactive disabled={/settings|onboard/.test(paneManagerStore.activePane)}>
-              <OrbitNav />
-              <View position="relative" zIndex={1000} margin={[18, 0, 0]}>
+              <View position="relative" zIndex={1000} margin={[10, 0, 0]}>
                 <SelectableCarousel
                   offset={0}
                   // shouldScrollToActive
@@ -117,31 +116,31 @@ class OrbitDockedContents extends React.Component<Props> {
                   items={[
                     {
                       title: 'Orbit',
-                      children: <Icon size={18} name="house" />,
+                      children: <Icon size={16} name="house" />,
                     },
                     {
                       title: 'Me',
-                      children: <Icon size={18} name="singleNeutral" />,
+                      children: <Icon size={16} name="singleNeutral" />,
                     },
                     {
                       title: 'Directory',
-                      children: <Icon size={18} name="multipleNeutral2" />,
+                      children: <Icon size={16} name="multipleNeutral2" />,
                     },
                     {
                       title: 'Topics',
-                      children: <Icon size={18} name="singleNeutralChat" />,
+                      children: <Icon size={16} name="singleNeutralChat" />,
                     },
                     {
                       title: 'Onboarding',
-                      children: <Icon size={18} name="listBullets" />,
+                      children: <Icon size={16} name="listBullets" />,
                     },
                     {
                       title: 'Help',
-                      children: <Icon size={18} name="questionCircle" />,
+                      children: <Icon size={16} name="questionCircle" />,
                     },
                     {
                       title: 'New',
-                      children: <Icon size={18} style={{ opacity: 0.5 }} name="add" />,
+                      children: <Icon size={16} style={{ opacity: 0.5 }} name="add" />,
                     },
                   ]}
                 />

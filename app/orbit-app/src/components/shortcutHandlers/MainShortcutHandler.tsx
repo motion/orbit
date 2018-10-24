@@ -29,7 +29,8 @@ export const MainShortcutHandler = decorate(
   ({ selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {
       if (
-        selectionStore.activeIndex === -1 &&
+        (selectionStore.activeIndex === -1 ||
+          (selectionStore.activeIndex === 0 && paneManagerStore.activePane === 'search')) &&
         (direction === Direction.left || direction === Direction.right)
       ) {
         paneManagerStore.move(direction)

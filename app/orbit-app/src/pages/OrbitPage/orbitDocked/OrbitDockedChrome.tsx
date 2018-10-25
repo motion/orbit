@@ -136,13 +136,11 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
 
 // this view has two halves so it can animate smoothly without causing layout reflows
 
-const decorator = compose(
+const decorate = compose(
   view.attach('orbitStore', 'queryStore'),
   view,
 )
-
-export const OrbitDockedChrome = decorator(({ orbitStore, queryStore }: Props) => {
-  console.log('re render docked chrome')
+export const OrbitDockedChrome = decorate(({ orbitStore, queryStore }: Props) => {
   return (
     <>
       <BlockTop height={60} overflow={SHADOW_PAD}>

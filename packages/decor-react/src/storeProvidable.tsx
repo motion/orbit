@@ -88,9 +88,12 @@ export function storeProvidable(userOptions, Helpers) {
           this.setupStores()
         }
 
+        // nice name for update props action
+        updateProps = Mobx.action(`${this.name}.updateProps`, updateProps)
+
         // PureComponent means this is only called when props are not shallow equal
         componentDidUpdate() {
-          updateProps(this._props, this.props)
+          this.updateProps(this._props, this.props)
         }
 
         componentDidCatch(error) {

@@ -51,12 +51,11 @@ export class SearchStore {
   activeQuery = react(
     () => [this.isActive, App.state.query],
     ([active, query]) => {
-      console.log('getting something...', active, query)
       ensure('active', active)
       return query
     },
     {
-      defaultValue: log(App.state.query, 'waht wht'),
+      defaultValue: App.state.query,
     },
   )
 
@@ -117,10 +116,8 @@ export class SearchStore {
     ],
     async (
       [query, activePane],
-      { sleep, whenChanged, when, setValue, state },
+      { whenChanged, when, setValue, state },
     ): Promise<{ results: Bit[]; finished?: boolean; query: string }> => {
-      console.log('react to', query)
-
       // let it do one pre-search
       if (state.hasResolvedOnce) {
         ensure('on search', activePane === 'search')
@@ -128,11 +125,10 @@ export class SearchStore {
 
       let results = []
       // if typing, wait a bit
-      if (this.searchState.query !== query) {
+      const isChangingQuery = this.searchState.query !== query
+      if (isChangingQuery) {
         // if no query, we dont need to debounce or wait for nlp
         if (query) {
-          // debounce a little for fast typer
-          await sleep(TYPE_DEBOUNCE)
           // wait for nlp to give us results
           await when(() => this.nlpStore.nlp.query === query)
         }
@@ -186,7 +182,6 @@ export class SearchStore {
           return false
         }
         results = [...results, ...nextResults]
-        console.log('setting value', query, results)
         setValue({
           results,
           query,
@@ -208,7 +203,6 @@ export class SearchStore {
           break
         }
       }
-      console.log('done finish', query)
       // finished
       return {
         query,

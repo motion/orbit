@@ -17,6 +17,9 @@ const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
 
+let id = 1
+const nextID = () => id++ % Number.MAX_VALUE
+
 type Subscription = { unsubscribe: Function }
 type SubscribableLike = { subscribe: (a: any) => Subscription }
 
@@ -45,7 +48,6 @@ export function automagicReact(
 
   let mobxOptions = options as Mobx.IReactionOptions
   let id = 1
-  const nextRun = () => id++ % Number.MAX_VALUE
 
   // we run immediately by default
   // its the 95% use case and causes less bugs
@@ -258,7 +260,7 @@ export function automagicReact(
   function watcher(reactionFn) {
     return function __watcherCb(reactValArg) {
       reset()
-      reactionID = nextRun()
+      reactionID = nextID()
       const curID = reactionID
       const start = Date.now()
       Root.__trackStateChanges.isActive = true

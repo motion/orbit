@@ -12,7 +12,6 @@ import {
 } from './helpers'
 import { AutomagicOptions } from './automagical'
 
-const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
@@ -55,7 +54,7 @@ export function automagicReact(
   const methodName = `${getReactionName(obj)}.${method}`
   const logName = `${methodName}${delayLog}`
   let preventLog = options.log === false
-  let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE, {
+  let current = Mobx.observable.box(defaultValue, {
     name: logName,
     deep: false,
   })
@@ -293,6 +292,7 @@ export function automagicReact(
           reactionHelpers,
         )
       } catch (err) {
+        reset()
         // got a nice cancel!
         if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
           if (!IS_PROD) {
@@ -311,7 +311,7 @@ export function automagicReact(
       if (result instanceof Promise) {
         result
           .then(val => {
-            if (!reactionID) {
+            if (curID !== reactionID) {
               if (!IS_PROD && !preventLog) {
                 log.info(`${logName} 🚫`)
               }

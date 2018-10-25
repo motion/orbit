@@ -7,6 +7,7 @@ export type ReactionHelpers = {
   whenChanged: <A>(condition: () => A, dontCompare?: boolean) => Promise<A>
   state: {
     hasResolvedOnce: boolean
+    iteration?: number
   }
 }
 

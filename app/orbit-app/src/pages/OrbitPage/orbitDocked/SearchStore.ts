@@ -41,9 +41,9 @@ export class SearchStore {
   }
 
   setSelectionHandler = react(
-    () => [this.isActive, this.results],
-    ([isActive]) => {
-      ensure('is active', isActive)
+    () => this.results && this.isActive && Math.random(),
+    () => {
+      ensure('is active', this.isActive)
       this.props.selectionStore.setResults(this.results)
     },
   )
@@ -182,6 +182,7 @@ export class SearchStore {
           return false
         }
         results = [...results, ...nextResults]
+        console.log('setvalue', query)
         setValue({
           results,
           query,
@@ -204,6 +205,7 @@ export class SearchStore {
         }
       }
       // finished
+      console.log('finish', query)
       return {
         query,
         results,

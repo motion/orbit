@@ -1,3 +1,9 @@
+export type Space = {
+  name: string
+  color: string[]
+  panes?: { id: string; title: string; icon: string; show?: boolean }[]
+}
+
 export class SpaceStore {
   activeIndex = 0
 
@@ -9,7 +15,7 @@ export class SpaceStore {
     return this.spaces.filter((_, i) => i !== this.activeIndex)
   }
 
-  spaces = [
+  spaces: Space[] = [
     {
       name: 'Orbit',
       color: ['blue', 'green'],

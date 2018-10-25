@@ -23,7 +23,6 @@ const Lip = view({
 @view
 export class OrbitHome extends React.Component<Props> {
   render() {
-    console.log('OrbitHome Render')
     return (
       <>
         <SubPane name="home" before={<SpaceNavHeight />} paddingLeft={6} paddingRight={6}>

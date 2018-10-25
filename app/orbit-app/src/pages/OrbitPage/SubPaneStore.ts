@@ -112,6 +112,9 @@ export class SubPaneStore {
   }
 
   updateHeight = async () => {
+    if (!this.paneInnerNode) {
+      return
+    }
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
     // get top from here because its not affected by scroll
@@ -134,6 +137,9 @@ export class SubPaneStore {
 
   onPaneNearEdges = () => {
     const pane = this.paneNode
+    if (!pane) {
+      return
+    }
     const innerHeight = this.paneInnerNode.clientHeight
     const scrolledTo = pane.scrollTop + pane.clientHeight
     const isAtBottom = scrolledTo >= innerHeight

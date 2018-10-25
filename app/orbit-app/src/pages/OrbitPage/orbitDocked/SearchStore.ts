@@ -86,15 +86,22 @@ export class SearchStore {
 
   // aggregated results for selection store
   results = react(
-    () => [this.activeQuery, this.quickSearchState, this.searchState],
-    async ([query, quickState, searchState], { when, setValue }) => {
+    () => {
+      this.activeQuery
+      this.quickSearchState
+      this.searchState
+      return Math.random()
+    },
+    async (_, { when, setValue }) => {
+      const { activeQuery, quickSearchState, searchState } = this
+      console.log('update the selection store...', activeQuery)
       // two stage so we do quick search faster
-      await when(() => query === quickState.query)
+      await when(() => activeQuery === quickSearchState.query)
       let res: SelectionGroup[] = [
-        { type: 'row', shouldAutoSelect: true, items: quickState.results },
+        { type: 'row', shouldAutoSelect: true, items: quickSearchState.results },
       ]
       setValue(res)
-      await when(() => query === searchState.query)
+      await when(() => activeQuery === searchState.query)
       return [...res, { type: 'column', shouldAutoSelect: true, items: searchState.results }]
     },
   )

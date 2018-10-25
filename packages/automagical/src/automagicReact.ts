@@ -22,6 +22,27 @@ type SubscribableLike = { subscribe: (a: any) => Subscription }
 // hacky for now
 Root.__trackStateChanges = {}
 
+const logGroup = (name, globalChanged, result, changed, reactionArgs?) => {
+  const getReactionLog = () => (reactionArgs ? ['\n   reaction args:', toJSDeep(reactionArgs)] : [])
+  const hasGlobalChanges = globalChanged && !!Object.keys(globalChanged).length
+  const hasLocalChanges = !!changed.length
+  const hasChanges = hasGlobalChanges || hasLocalChanges
+  // dont group if nothing much to report...
+  if (!hasChanges) {
+    console.log(`${name}`, ...getReactionLog())
+    return
+  }
+  console.groupCollapsed(`${name}`)
+  if (hasLocalChanges) {
+    console.log(...getReactionLog(), '\nchanged', ...(changed || []))
+  }
+  if (hasGlobalChanges) {
+    console.log('  global changed:', ...logRes(result))
+    console.log('  store changed', globalChanged)
+  }
+  console.groupEnd()
+}
+
 // watches values in an autorun, and resolves their results
 export function automagicReact(
   obj: MagicalObject,
@@ -287,10 +308,8 @@ export function automagicReact(
           changed = update(val)
         }
         if (!IS_PROD && !preventLog) {
-          console.log(
-            `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
-            ...(isValid ? changed : [] || []),
-          )
+          const name = `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`
+          logGroup(name, globalChanged, val, changed, reactValArg)
         }
         if (!isValid) {
           throw SHARED_REJECTION_ERROR
@@ -357,21 +376,7 @@ export function automagicReact(
       // only log after first run, we could have a way to log this still
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog && !delayValue) {
-          console.groupCollapsed(`${logName} ${reactionID}`)
-          if (globalChanged && Object.keys(globalChanged).length) {
-            console.log('reaction', reactValArg)
-            console.log('changed', ...logRes(result))
-            console.log('Store changed', globalChanged)
-          } else {
-            if (options.log !== 'state') {
-              console.log(
-                'reaction',
-                ...(isReaction ? ['\n        args:', toJSDeep(reactValArg)] : []),
-              )
-              console.log('changed', ...(changed || []))
-            }
-          }
-          console.groupEnd()
+          logGroup(`${logName} ${id}`, globalChanged, result, changed, reactValArg)
         }
       }
     }

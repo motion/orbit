@@ -17,9 +17,6 @@ const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
 
-let id = 1
-const nextID = () => id++ % Number.MAX_VALUE
-
 type Subscription = { unsubscribe: Function }
 type SubscribableLike = { subscribe: (a: any) => Subscription }
 
@@ -260,7 +257,8 @@ export function automagicReact(
   function watcher(reactionFn) {
     return function __watcherCb(reactValArg) {
       reset()
-      reactionID = nextID()
+      id = id + 1
+      reactionID = id
       const curID = reactionID
       const start = Date.now()
       Root.__trackStateChanges.isActive = true

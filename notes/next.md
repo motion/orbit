@@ -1,3 +1,11 @@
+search:
+
+- query to avoid loading `data` and `body`
+- quickresults: this can avoid a call alltogether
+  - just do it in memory!
+  - basically: load all recent bits + all people in memory
+    - when you type it just filters them (webworker or desktop?)
+
 this week:
 
 - fix settings panes showing

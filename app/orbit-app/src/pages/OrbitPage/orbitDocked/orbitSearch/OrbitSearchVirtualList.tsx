@@ -206,7 +206,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     if (this.paneNode.clientHeight !== this.state.height) {
       const height = this.paneNode.clientHeight
       if (height !== this.state.height) {
-        console.log('setting height', height)
         this.setState({ height })
       }
     }

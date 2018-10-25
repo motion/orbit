@@ -188,7 +188,6 @@ const decorator = compose(
   }),
 )
 export const OrbitDirectory = decorator(({ store }: Props) => {
-  console.log('render OrbitDirectoryInner')
   const { results, resultSections } = store
   const total = results.length
   if (!total) {

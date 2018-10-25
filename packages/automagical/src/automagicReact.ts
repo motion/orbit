@@ -52,6 +52,7 @@ export function automagicReact(
   // its the 95% use case and causes less bugs
   mobxOptions.fireImmediately = !deferFirstRun
 
+  const isReaction = Array.isArray(val)
   const delayLog = options && options.delay >= 0 ? ` ..${options.delay}ms ` : ''
   const methodName = `${getReactionName(obj)}.${method}`
   const logName = `${methodName}${delayLog}`
@@ -80,9 +81,6 @@ export function automagicReact(
     if (delayValue) {
       value = prev
       prev = newValue
-      if (!preventLog) {
-        log.info(`delayValue ${logName}`, value)
-      }
     }
     state.hasResolvedOnce = true
     // subscribable handling
@@ -111,6 +109,9 @@ export function automagicReact(
     let res
     if (!IS_PROD) {
       res = diffLog(toJSDeep(getCurrentValue()), toJSDeep(value))
+      if (delayValue) {
+        res = [...res, 'delayValue']
+      }
     }
     current.set(value)
     return res
@@ -130,8 +131,6 @@ export function automagicReact(
   if (obj.subscriptions && obj.subscriptions.add) {
     obj.subscriptions.add({ dispose })
   }
-
-  const isReaction = Array.isArray(val)
 
   function run() {
     setTimeout(() => {
@@ -342,22 +341,25 @@ export function automagicReact(
 
       const changed = update(result)
 
-      if (!IS_PROD && !preventLog && !delayValue) {
-        console.groupCollapsed(`${logName} ${reactionID}`)
-        if (globalChanged && Object.keys(globalChanged).length) {
-          console.log('reaction', reactValArg)
-          console.log('changed', ...logRes(result))
-          console.log('Store changed', globalChanged)
-        } else {
-          if (options.log !== 'state') {
-            console.log(
-              'reaction',
-              ...(isReaction ? ['\n        args:', toJSDeep(reactValArg)] : []),
-            )
-            console.log('changed', ...(changed || []))
+      // only log after first run, we could have a way to log this still
+      if (state.hasResolvedOnce) {
+        if (!IS_PROD && !preventLog && !delayValue) {
+          console.groupCollapsed(`${logName} ${reactionID}`)
+          if (globalChanged && Object.keys(globalChanged).length) {
+            console.log('reaction', reactValArg)
+            console.log('changed', ...logRes(result))
+            console.log('Store changed', globalChanged)
+          } else {
+            if (options.log !== 'state') {
+              console.log(
+                'reaction',
+                ...(isReaction ? ['\n        args:', toJSDeep(reactValArg)] : []),
+              )
+              console.log('changed', ...(changed || []))
+            }
           }
+          console.groupEnd()
         }
-        console.groupEnd()
       }
     }
   }

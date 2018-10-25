@@ -47,6 +47,7 @@ export class SubPaneStore {
     },
     _ => _,
     {
+      onlyUpdateIfChanged: true,
       defaultValue: {
         isActive: false,
         isLeft: this.isLeft(),
@@ -85,7 +86,9 @@ export class SubPaneStore {
 
   lastHeight = react(() => this.fullHeight, _ => _, { delayValue: true })
 
-  contentHeightLimited = react(() => this.fullHeight - this.aboveContentHeight)
+  contentHeightLimited = react(() => this.fullHeight - this.aboveContentHeight, _ => _, {
+    onlyUpdateIfChanged: true,
+  })
 
   setAppHeightOnHeightChange = react(
     () => [this.fullHeight, this.positionState.isActive],

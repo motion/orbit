@@ -1,7 +1,13 @@
 export type Space = {
   name: string
   color: string[]
-  panes?: { id: string; title: string; icon: string; show?: boolean }[]
+  panes?: {
+    id: string
+    title: string
+    icon: string
+    show?: boolean
+    trigger?: string
+  }[]
 }
 
 export class SpaceStore {
@@ -34,21 +40,19 @@ export class SpaceStore {
           id: 'people',
           title: 'People',
           icon: 'multipleNeutral2',
+          trigger: '@',
         },
         {
           id: 'topics',
           title: 'Topics',
           icon: 'singleNeutralChat',
+          trigger: '#',
         },
         {
-          id: 'onboarding',
-          title: 'Onboarding',
+          id: 'list',
+          title: 'Lists',
           icon: 'listBullets',
-        },
-        {
-          id: 'help',
-          title: 'Help',
-          icon: 'questionCircle',
+          trigger: '/',
         },
         {
           id: 'new',

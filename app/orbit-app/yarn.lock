@@ -4255,10 +4255,10 @@ react-hot-loader@4.3.11:
     react-lifecycles-compat "^3.0.4"
     shallowequal "^1.0.2"
 
-react-hotkeys@1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-1.1.4.tgz#a0712aa2e0c03a759fd7885808598497a4dace72"
-  integrity sha1-oHEqouDAOnWf14hYCFmEl6TaznI=
+react-hotkeys@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-1.0.6.tgz#471901a428c015304d3998bdfcc2920ad4fc295c"
+  integrity sha1-RxkBpCjAFTBNOZi9/MKSCtT8KVw=
   dependencies:
     lodash.isboolean "^3.0.3"
     lodash.isequal "^4.5.0"

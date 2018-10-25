@@ -56,7 +56,7 @@
     "simple-quadtree": "^0.1.3",
     "turndown": "4.0.2",
     "webpack-runtime-require": "0.3.0",
-    "react-hotkeys": "1.1.4",
+    "react-hotkeys": "1.0.6",
     "mobx-utils": "5.0.2",
     "key-event-to-string": "1.2.0",
     "react-draggable": "3.0.5"
@@ -71,8 +71,8 @@
   "peerDependencies": {
     "electron": "3.0.1",
     "mobx": "5.5.1",
-    "react": "16.5.2",
-    "react-dom": "16.5.2"
+    "react": "16.6.0",
+    "react-dom": "16.6.0"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

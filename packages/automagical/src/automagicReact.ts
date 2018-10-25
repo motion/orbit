@@ -23,9 +23,6 @@ type SubscribableLike = { subscribe: (a: any) => Subscription }
 // hacky for now
 Root.__trackStateChanges = {}
 
-let id = 1
-const uid = () => id++ % Number.MAX_VALUE
-
 // watches values in an autorun, and resolves their results
 export function automagicReact(
   obj: MagicalObject,
@@ -47,6 +44,8 @@ export function automagicReact(
   })
 
   let mobxOptions = options as Mobx.IReactionOptions
+  let id = 1
+  const nextRun = () => id++ % Number.MAX_VALUE
 
   // we run immediately by default
   // its the 95% use case and causes less bugs
@@ -259,7 +258,7 @@ export function automagicReact(
   function watcher(reactionFn) {
     return function __watcherCb(reactValArg) {
       reset()
-      reactionID = uid()
+      reactionID = nextRun()
       const curID = reactionID
       const start = Date.now()
       Root.__trackStateChanges.isActive = true
@@ -342,7 +341,7 @@ export function automagicReact(
       const changed = update(result)
 
       // only log after first run, we could have a way to log this still
-      if (state.hasResolvedOnce) {
+      if (reactionID > 1) {
         if (!IS_PROD && !preventLog && !delayValue) {
           console.groupCollapsed(`${logName} ${reactionID}`)
           if (globalChanged && Object.keys(globalChanged).length) {

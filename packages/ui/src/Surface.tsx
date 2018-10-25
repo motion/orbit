@@ -235,10 +235,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
     size: 1,
   }
 
-  static contextTypes = {
-    provided: object,
-  }
-
   uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
 
   render() {

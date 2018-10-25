@@ -35,6 +35,7 @@ export class SlackItem extends React.Component<OrbitIntegrationProps<'slack'>> {
       return (
         <ChatMessage
           key={index}
+          {...this.props}
           message={message}
           previousMessage={data.messages[index - 1]}
           hide={hide}

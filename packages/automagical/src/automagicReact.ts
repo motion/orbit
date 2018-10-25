@@ -289,7 +289,7 @@ export function automagicReact(
         if (!IS_PROD && !preventLog) {
           console.log(
             `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
-            ...(changed || []),
+            ...(isValid ? changed : [] || []),
           )
         }
         if (!isValid) {

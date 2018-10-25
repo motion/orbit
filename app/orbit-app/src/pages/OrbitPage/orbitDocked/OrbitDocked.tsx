@@ -14,13 +14,8 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { Logger } from '@mcro/logger'
-import { OrbitNav } from './orbitNav/OrbitNav'
-import { View } from '@mcro/ui'
-import { SelectableCarousel } from '../../../components/SelectableCarousel'
-import { OrbitAppIconCard } from './views/OrbitAppIconCard'
 import { AppsStore } from '../../../stores/AppsStore'
-import { Icon } from '../../../views/Icon'
-import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
+import { SpaceNav } from './SpaceNav'
 // import notch from './notch.png'
 
 const log = new Logger('OrbitDocked')
@@ -86,70 +81,16 @@ class OrbitDockedContents extends React.Component<Props> {
 
   render() {
     const { paneManagerStore } = this.props
-    const size = 46
     return (
       <>
-        <OrbitHeader
-          borderRadius={BORDER_RADIUS}
-          after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
-        />
+        <OrbitHeader borderRadius={BORDER_RADIUS} after={<OrbitHomeHeader />} />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
-            <Interactive disabled={/settings|onboard/.test(paneManagerStore.activePane)}>
-              <OrbitNav />
-              <View position="relative" zIndex={1000} margin={[18, 0, 0]}>
-                <SelectableCarousel
-                  offset={0}
-                  // shouldScrollToActive
-                  activeIndex={paneManagerStore.paneIndex}
-                  cardWidth={size}
-                  cardHeight={size}
-                  cardSpace={0}
-                  afterSpace={false}
-                  horizontalPadding={20}
-                  CardView={OrbitAppIconCard}
-                  cardProps={{
-                    isSelected: this.isSelected,
-                    onSelect: this.onSelect,
-                    // background: 'transparent',
-                    chromeless: true,
-                  }}
-                  items={[
-                    {
-                      title: 'Orbit',
-                      children: <Icon size={18} name="house" />,
-                    },
-                    {
-                      title: 'Me',
-                      children: <Icon size={18} name="singleNeutral" />,
-                    },
-                    {
-                      title: 'Directory',
-                      children: <Icon size={18} name="multipleNeutral2" />,
-                    },
-                    {
-                      title: 'Topics',
-                      children: <Icon size={18} name="singleNeutralChat" />,
-                    },
-                    {
-                      title: 'Onboarding',
-                      children: <Icon size={18} name="listBullets" />,
-                    },
-                    {
-                      title: 'Help',
-                      children: <Icon size={18} name="questionCircle" />,
-                    },
-                    {
-                      title: 'New',
-                      children: <Icon size={18} style={{ opacity: 0.5 }} name="add" />,
-                    },
-                  ]}
-                />
-              </View>
+            <Interactive disabled={/^(settings|onboard)$/.test(paneManagerStore.activePane)}>
+              <SpaceNav />
             </Interactive>
             <OrbitOnboard name="onboard" />
             <OrbitHome name="home" />
-            <OrbitSearchResults />
             <OrbitSettings name="settings" />
           </div>
         </OrbitDockedInner>
@@ -174,20 +115,6 @@ class OrbitDockedStore {
   )
 }
 
-@view.attach(
-  'settingStore',
-  'orbitStore',
-  'appsStore',
-  'selectionStore',
-  'queryStore',
-  'keyboardStore',
-)
-@view.provide({
-  paneManagerStore: PaneManagerStore,
-})
-@view.provide({
-  searchStore: SearchStore,
-})
 @view.attach({
   store: OrbitDockedStore,
 })

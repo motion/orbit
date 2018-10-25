@@ -1,6 +1,6 @@
 import colorize from '@mcro/color'
 import { Color } from '@mcro/css'
-import { ThemeObject } from '../types'
+import { ThemeObject } from '@mcro/css'
 
 type ColorObject = { [a: string]: Color }
 

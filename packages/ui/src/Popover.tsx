@@ -102,6 +102,7 @@ export type PopoverProps = CSSPropertySet & {
   style?: Object
   elevation?: number
   ignoreSegment?: boolean
+  onChangeVisibility?: (visibility: boolean) => any
 }
 
 const PopoverContainer = view({
@@ -179,7 +180,7 @@ const INVERSE = {
 }
 
 const DEFAULT_SHADOW = '0 0px 2px rgba(0,0,0,0.15)'
-const ELEVATION_SHADOW = x => [0, x * 2, x * 4, [0, 0, 0, 0.1 * ((x + 1) / 2)]]
+const ELEVATION_SHADOW = x => [0, x * 2, x * 4, [0, 0, 0, 0.1 * ((x + 0.5) / 3)]]
 
 const getShadow = (shadow, elevation) => {
   let base = shadow === true ? [DEFAULT_SHADOW] : shadow || []
@@ -191,8 +192,50 @@ const getShadow = (shadow, elevation) => {
 }
 const calcForgiveness = (forgiveness, distance) => (forgiveness > distance ? distance : forgiveness)
 
+const initialState = {
+  showPopover: false,
+  targetHovered: 0,
+  menuHovered: 0,
+  top: 0,
+  left: 0,
+  bottom: 0,
+  arrowTop: 0,
+  arrowLeft: 0,
+  arrowInnerTop: 0,
+  isPinnedOpen: 0,
+  isOpen: false,
+  direction: null,
+  delay: 16,
+  props: {} as PopoverProps,
+  setPosition: false,
+  closing: false,
+  maxHeight: null,
+}
+
+type State = typeof initialState
+
+const isHovered = (props: PopoverProps, state: State) => {
+  const { targetHovered, menuHovered } = state
+  if (props.noHoverOnChildren) {
+    return targetHovered
+  }
+  return targetHovered || menuHovered
+}
+
+const showPopover = (props: PopoverProps, state: State) => {
+  const { isOpen, isPinnedOpen } = state
+  const { openOnHover, open } = props
+  if (open || isOpen || isPinnedOpen) {
+    return true
+  }
+  if (typeof open === 'undefined') {
+    return !!(openOnHover && isHovered(props, state))
+  }
+  return false
+}
+
 @view.ui
-export class Popover extends React.PureComponent<PopoverProps> {
+export class Popover extends React.PureComponent<PopoverProps, State> {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,
@@ -221,41 +264,30 @@ export class Popover extends React.PureComponent<PopoverProps> {
     this.popoverRef = ref
   }
 
-  state = {
-    targetHovered: 0,
-    menuHovered: 0,
-    top: 0,
-    left: 0,
-    bottom: 0,
-    arrowTop: 0,
-    arrowLeft: 0,
-    arrowInnerTop: 0,
-    isPinnedOpen: 0,
-    isOpen: false,
-    direction: null,
-    delay: 16,
-    props: {} as PopoverProps,
-    setPosition: false,
-    closing: false,
-    maxHeight: null,
-  }
+  state = initialState
 
   // curProps is always up to date, so we dont have to thread props around a ton
   // also, nicely lets us define get fn helpers
 
   static getDerivedStateFromProps(props, state) {
+    let nextState: Partial<Popover['state']> = {}
     if (!isEqual(omit(props, ['children']), omit(state.props, ['children']))) {
-      return {
+      nextState = {
         setPosition: true,
         props,
       }
     }
     if (state.setPosition) {
-      return {
-        setPosition: false,
-      }
+      nextState.setPosition = false
     }
-    return null
+    const nextShow = showPopover(props, state)
+    if (nextShow !== state.showPopover) {
+      nextState.showPopover = nextShow
+    }
+    if (!Object.keys(nextState).length) {
+      return null
+    }
+    return nextState
   }
 
   componentDidMount() {
@@ -296,9 +328,16 @@ export class Popover extends React.PureComponent<PopoverProps> {
     this.unmounted = true
   }
 
-  shouldSendDidOpen = true
+  get showPopover() {
+    return this.state.showPopover
+  }
 
-  componentDidUpdate() {
+  componentDidUpdate(_prevProps, prevState) {
+    if (this.props.onChangeVisibility) {
+      if (prevState.showPopover !== this.state.showPopover) {
+        this.props.onChangeVisibility(this.state.showPopover)
+      }
+    }
     if (this.showPopover) {
       PopoverState.openPopovers.add(this)
       this.closeOthersWithinGroup()
@@ -311,11 +350,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
       this.setState({ setPosition: false })
     }
     if (this.props.onDidOpen) {
-      if (this.shouldSendDidOpen && this.showPopover) {
+      if (this.showPopover) {
         this.props.onDidOpen()
-        this.shouldSendDidOpen = false
-      } else if (!this.shouldSendDidOpen && !this.showPopover) {
-        this.shouldSendDidOpen = true
       }
     }
   }
@@ -458,15 +494,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   get isHovered() {
-    const target = this.target
-    if (!target) {
-      return false
-    }
-    const { targetHovered, menuHovered } = this.state
-    if (this.curProps.noHoverOnChildren) {
-      return targetHovered
-    }
-    return targetHovered || menuHovered
+    return isHovered(this.props, this.state)
   }
 
   // transitions between open and closed
@@ -738,11 +766,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     this.listeners = []
   }
 
-  lastEvent = {
-    leave: { target: null, menu: null },
-    enter: { target: null, menu: null },
-  }
-
   delayOpenIfHover = {
     target: null as DebouncedFn,
     menu: null as DebouncedFn,
@@ -833,9 +856,12 @@ export class Popover extends React.PureComponent<PopoverProps> {
   hoverStateSet(name, isHovered) {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
-      // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
-      const key = `${name}Hovered`
-      this.setState({ [key]: isHovered ? Date.now() : false })
+      const val = isHovered ? Date.now() : 0
+      if (name === 'target') {
+        this.setState({ targetHovered: val })
+      } else {
+        this.setState({ menuHovered: val })
+      }
     }
     if (isHovered) {
       if (openOnHover) {
@@ -865,20 +891,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
   overlayRef = ref => {
     if (ref) {
       on(this, ref, 'contextmenu', e => this.handleOverlayClick(e))
-    }
-  }
-
-  get showPopover() {
-    const { isOpen, isPinnedOpen } = this.state
-    const { openOnHover, open } = this.props
-    if (!this.mounted) {
-      return false
-    }
-    if (open || isOpen || isPinnedOpen) {
-      return true
-    }
-    if (typeof open === 'undefined') {
-      return !!(openOnHover && this.isHovered)
     }
   }
 

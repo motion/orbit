@@ -1,4 +1,4 @@
-import { ThemeObject } from '../types'
+import { ThemeObject } from '@mcro/css'
 import { styleVal } from './propsToStyles'
 
 // resolves props into styles for valid css
@@ -57,13 +57,13 @@ export const propsToThemeStyles = (props, mapPropStylesToPseudos?: boolean): The
   if (props.background || props.borderColor || props.color) {
     propOverrides = {}
     if (props.background) {
-      propOverrides.background = styleVal(theme, props.background)
+      propOverrides.background = styleVal(props.background, theme)
     }
     if (props.color) {
-      propOverrides.color = styleVal(theme, props.color)
+      propOverrides.color = styleVal(props.color, theme)
     }
     if (props.borderColor) {
-      propOverrides.borderColor = styleVal(theme, props.borderColor)
+      propOverrides.borderColor = styleVal(props.borderColor, theme)
     }
   }
 

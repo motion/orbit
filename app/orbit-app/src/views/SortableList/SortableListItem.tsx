@@ -4,6 +4,7 @@ import { handleClickLocation } from '../../helpers/handleClickLocation'
 import { renderListItemChildren } from './renderListItemChildren'
 import { Bit } from '@mcro/models'
 import { SortableElement } from 'react-sortable-hoc'
+import { ItemProps } from '../OrbitItemProps'
 
 type ListItemProps = {
   model: Bit
@@ -14,6 +15,7 @@ type ListItemProps = {
   width?: number
   realIndex: number
   ignoreSelection?: boolean
+  itemProps?: ItemProps<any>
 }
 
 const spaceBetween = <div style={{ flex: 1 }} />
@@ -25,7 +27,7 @@ const hideSlack = {
 
 export class ListItem extends React.PureComponent<ListItemProps> {
   render() {
-    const { model, realIndex, query, ignoreSelection } = this.props
+    const { model, realIndex, query, ignoreSelection, itemProps } = this.props
     const isConversation = model.integration === 'slack'
     return (
       <OrbitListItem
@@ -45,6 +47,7 @@ export class ListItem extends React.PureComponent<ListItemProps> {
           preventSelect: true,
         }}
         ignoreSelection={ignoreSelection}
+        {...itemProps}
       >
         {renderListItemChildren}
       </OrbitListItem>

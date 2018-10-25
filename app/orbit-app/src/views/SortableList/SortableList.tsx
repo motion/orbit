@@ -19,9 +19,11 @@ import { SubPaneStore } from '../../pages/OrbitPage/SubPaneStore'
 import { Banner } from '../Banner'
 import { SortableListItem } from './SortableListItem'
 import { FirstItems } from './FirstItems'
+import { ItemProps } from '../OrbitItemProps'
 
 type Props = {
   items?: any[]
+  itemProps?: ItemProps<any>
   searchStore?: SearchStore
   selectionStore?: SelectionStore
   subPaneStore?: SubPaneStore
@@ -141,6 +143,7 @@ export class SortableList extends React.Component<Props> {
             index={index}
             realIndex={index + this.offset}
             query={searchStore.searchState.query}
+            itemProps={this.props.itemProps}
           />
         </div>
       </CellMeasurer>

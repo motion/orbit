@@ -686,11 +686,6 @@ array-unique@^0.3.2:
   resolved "https://registry.yarnpkg.com/array-unique/-/array-unique-0.3.2.tgz#a894b75d4bc4f6cd679ef3244a9fd8f46ae2d428"
   integrity sha1-qJS3XUvE9s1nnvMkSp/Y9Gri1Cg=
 
-arrford@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/arrford/-/arrford-2.0.1.tgz#22a59f059200db9af67f969053edd8e8bb148fb8"
-  integrity sha1-IqWfBZIA25r2f5aQU+3Y6LsUj7g=
-
 asn1.js@^4.0.0:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-4.10.1.tgz#b9c2bf5805f1e64aadeed6df3a2bfafb5a73f5a0"
@@ -2974,13 +2969,6 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-linkify-it@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-2.0.3.tgz#d94a4648f9b1c179d64fa97291268bdb6ce9434f"
-  integrity sha1-2UpGSPmxwXnWT6lykSaL22zpQ08=
-  dependencies:
-    uc.micro "^1.0.1"
-
 loader-utils@^0.2.16:
   version "0.2.17"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-0.2.17.tgz#f86e6374d43205a6e6c60e9196f17c0299bfb348"
@@ -4283,15 +4271,6 @@ react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-linkify@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-linkify/-/react-linkify-0.2.2.tgz#55b99b1cc7244446a0f9bdebbe13b2c30f789e65"
-  integrity sha512-0S8cvUNtEgfJpIGDPKklyrnrTffJ63WuJAc4KaYLBihl5TjgH5cHUmYD+AXLpsV+CVmfoo/56SUNfrZcY4zYMQ==
-  dependencies:
-    linkify-it "^2.0.3"
-    prop-types "^15.5.8"
-    tlds "^1.57.0"
-
 react-list@^0.8.8:
   version "0.8.10"
   resolved "https://registry.yarnpkg.com/react-list/-/react-list-0.8.10.tgz#5bd4864051409c5d3eff34110def54c05af062e6"
@@ -5137,11 +5116,6 @@ timsort@^0.3.0:
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
 
-tlds@^1.57.0:
-  version "1.203.1"
-  resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.203.1.tgz#4dc9b02f53de3315bc98b80665e13de3edfc1dfc"
-  integrity sha512-7MUlYyGJ6rSitEZ3r1Q1QNV8uSIzapS8SmmhSusBuIc7uIxPPwsKllEP0GRp1NS6Ik6F+fRZvnjDWm3ecv2hDw==
-
 to-arraybuffer@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/to-arraybuffer/-/to-arraybuffer-1.0.1.tgz#7d229b1fcc637e466ca081180836a7aabff83f43"
@@ -5288,11 +5262,6 @@ typeorm@^0.3.0-alpha.22:
     yargonaut "^1.1.2"
     yargs "^11.1.0"
     zen-observable "^0.8.9"
-
-uc.micro@^1.0.1:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.5.tgz#0c65f15f815aa08b560a61ce8b4db7ffc3f45376"
-  integrity sha512-JoLI4g5zv5qNyT09f4YAvEZIIV1oOjqnewYg5D38dkQljIzpPT296dbIGvKro3digYI1bkb7W6EP1y4uDlmzLg==
 
 uglify-es@^3.3.9:
   version "3.3.9"

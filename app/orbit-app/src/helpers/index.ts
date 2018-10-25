@@ -9,7 +9,11 @@ export const deepClone = obj => (obj ? JSON.parse(JSON.stringify(obj)) : obj)
 
 export const getSlackDate = (time: number) => new Date(time)
 
-export const fuzzyQueryFilter = (query, results, extraOpts?) =>
+export const fuzzyQueryFilter = (
+  query: string,
+  results: { title?: string; name?: string }[],
+  extraOpts?,
+) =>
   !query
     ? results
     : fuzzySort
@@ -25,5 +29,4 @@ export * from './hoverSettler'
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-export const getHeader = (message, key) =>
-  message.participants.find(x => x.type === key)
+export const getHeader = (message, key) => message.participants.find(x => x.type === key)

@@ -1,7 +1,6 @@
-import { react, on, ensure } from '@mcro/black'
+import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { SelectionStore } from './orbitDocked/SelectionStore'
-import { KeyboardStore } from '../../stores/KeyboardStore'
+import { SelectionStore, Direction } from './orbitDocked/SelectionStore'
 import { Actions } from '../../actions/Actions'
 import { observeOne } from '@mcro/model-bridge'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
@@ -9,6 +8,7 @@ import { OrbitStore } from './OrbitStore'
 import { autoTrack } from '../../stores/Track'
 import { memoize } from 'lodash'
 import { AppsStore } from '../../stores/AppsStore'
+import { SpaceStore } from '../../stores/SpaceStore'
 
 type Panes = 'home' | 'settings' | 'onboard' | string
 
@@ -17,26 +17,23 @@ export class PaneManagerStore {
     appsStore: AppsStore
     orbitStore: OrbitStore
     selectionStore: SelectionStore
-    keyboardStore: KeyboardStore
+    spaceStore?: SpaceStore
   }
 
-  panes: Partial<Panes>[] = [
-    'home',
-    'me',
-    'directory',
-    'topics',
-    'list',
-    'help',
-    'new',
-    'search',
-    'settings',
-  ]
+  get panes(): Partial<Panes>[] {
+    return [...this.props.spaceStore.activeSpace.panes.map(p => p.id), 'settings']
+  }
+
   keyablePanes = [0, 6]
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true
-  lastKey = { key: null, at: Date.now() }
-  subPane = 'apps'
+  subPane = 'team'
+
+  lastActivePane = react(() => this.activePane, _ => _, {
+    delayValue: true,
+    onlyUpdateIfChanged: true,
+  })
 
   // setPanes = react(
   //   () => this.props.appsStore.activeIntegrations,
@@ -59,7 +56,7 @@ export class PaneManagerStore {
   })
 
   didMount() {
-    on(this, autoTrack(this, ['hasOnboarded', 'lastKey', 'paneIndex']))
+    on(this, autoTrack(this, ['hasOnboarded', 'paneIndex']))
 
     // set pane manager store... todo make better
     this.props.orbitStore.appReactionsStore.setPaneManagerStore(this)
@@ -72,10 +69,6 @@ export class PaneManagerStore {
         this.generalSetting = generalSetting
       }),
     )
-
-    on(this, this.props.keyboardStore, 'key', key => {
-      this.lastKey = { key, at: Date.now() }
-    })
 
     const disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       this.setActivePane('settings')
@@ -97,23 +90,25 @@ export class PaneManagerStore {
     })
   }
 
-  onKey = react(
-    () => this.lastKey,
-    ({ key }) => {
-      ensure('key', !!key)
-      ensure('focused', this.props.orbitStore.inputFocused)
+  move = (direction: Direction) => {
+    try {
       if (this.props.selectionStore.activeIndex === -1) {
-        if (key === 'right') {
+        if (direction === Direction.right) {
           ensure('within keyable range', this.paneIndex < this.keyablePanes[1])
           this.setPaneIndex(this.paneIndex + 1)
         }
-        if (key === 'left') {
+        if (direction === Direction.left) {
           ensure('within keyable range', this.paneIndex > this.keyablePanes[0])
           this.setPaneIndex(this.paneIndex - 1)
         }
       }
-    },
-  )
+    } catch (e) {
+      if (e instanceof ReactionRejectionError) {
+        return
+      }
+      throw e
+    }
+  }
 
   setTrayTitleOnPaneChange = react(
     () => this.activePane === 'onboard',
@@ -127,11 +122,13 @@ export class PaneManagerStore {
   )
 
   setActivePane = name => {
-    this.setPaneIndex(this.panes.findIndex(val => val === name))
+    const nextIndex = this.panes.findIndex(val => val === name)
+    this.setPaneIndex(nextIndex)
   }
 
-  activePaneSetter = memoize(name => () => this.setActivePane(name))
+  activePaneSetter = memoize(index => () => this.setPaneIndex(index))
 
+  // TODO weird pattern
   beforeSetPane = () => {
     // clear selection results on change pane
     this.props.selectionStore.setResults(null)
@@ -144,8 +141,8 @@ export class PaneManagerStore {
     if (index < 0) {
       return
     }
-    this.beforeSetPane()
     if (index !== this.paneIndex) {
+      this.beforeSetPane()
       this.paneIndex = index
     }
   }
@@ -183,7 +180,13 @@ export class PaneManagerStore {
     },
   )
 
-  lastActivePane = react(() => this.activePane, _ => _, { delayValue: true })
+  setActivePaneSearch = () => {
+    this.setActivePane('search')
+  }
+
+  setActivePaneToPrevious = () => {
+    this.setActivePane(this.lastActivePane)
+  }
 
   clearPeekOnActivePaneChange = react(
     () => this.activePane,

@@ -16,7 +16,7 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
 
 export class SlackItem extends React.Component<OrbitIntegrationProps<'slack'>> {
   render() {
-    const { bit, searchTerm, shownLimit } = this.props
+    const { bit, searchTerm, shownLimit, extraProps, hide } = this.props
     if (!bit) {
       return null
     }
@@ -35,9 +35,10 @@ export class SlackItem extends React.Component<OrbitIntegrationProps<'slack'>> {
       return (
         <ChatMessage
           key={index}
-          {...this.props}
           message={message}
           previousMessage={data.messages[index - 1]}
+          hide={hide}
+          extraProps={extraProps}
         />
       )
     })

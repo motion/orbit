@@ -1,15 +1,14 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { SubPane } from '../../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../SearchStore'
 import { SelectionStore } from '../SelectionStore'
-import { OrbitNavVerticalPad } from '../../../../views'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
 import { SubPaneStore } from '../../SubPaneStore'
 import { StaticContainer } from '../../../../views/StaticContainer'
+import { OrbitSearchNav } from './OrbitSearchNav'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -49,14 +48,8 @@ export class OrbitSearchResults extends React.Component<Props> {
   render() {
     const { searchStore, selectionStore, subPaneStore, name } = this.props
     return (
-      <SubPane
-        transition="none"
-        paddingLeft={0}
-        paddingRight={0}
-        name="search"
-        before={<OrbitNavVerticalPad />}
-        preventScroll
-      >
+      <>
+        <OrbitSearchNav />
         <ItemResolverDecorationContext.Provider
           value={{
             item: null,
@@ -72,7 +65,7 @@ export class OrbitSearchResults extends React.Component<Props> {
             name={name}
           />
         </ItemResolverDecorationContext.Provider>
-      </SubPane>
+      </>
     )
   }
 }

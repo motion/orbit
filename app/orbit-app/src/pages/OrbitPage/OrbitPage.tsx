@@ -4,12 +4,14 @@ import { OrbitStore } from './OrbitStore'
 import { AppsStore } from '../../stores/AppsStore'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
-import { KeyboardStore } from '../../stores/KeyboardStore'
 import { HighlightsPage } from '../HighlightsPage/HighlightsPage'
 import { QueryStore } from './orbitDocked/QueryStore'
 import { SelectionStore } from './orbitDocked/SelectionStore'
 import { OrbitDocked } from './orbitDocked/OrbitDocked'
 import { SettingStore } from '../../stores/SettingStore'
+import { SpaceStore } from '../../stores/SpaceStore'
+import { PaneManagerStore } from './PaneManagerStore'
+import { SearchStore } from './orbitDocked/SearchStore'
 
 @view.provide({
   settingStore: SettingStore,
@@ -17,11 +19,19 @@ import { SettingStore } from '../../stores/SettingStore'
   orbitStore: OrbitStore,
 })
 @view.provide({
+  spaceStore: SpaceStore,
+})
+@view.provide({
   queryStore: QueryStore,
-  keyboardStore: KeyboardStore,
 })
 @view.provide({
   selectionStore: SelectionStore,
+})
+@view.provide({
+  paneManagerStore: PaneManagerStore,
+})
+@view.provide({
+  searchStore: SearchStore,
 })
 export class OrbitPage extends React.Component<{
   appsStore: AppsStore

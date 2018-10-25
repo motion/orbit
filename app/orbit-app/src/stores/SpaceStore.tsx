@@ -12,7 +12,7 @@ export class SpaceStore {
   spaces = [
     {
       name: 'Orbit',
-      color: 'blue',
+      color: ['blue', 'green'],
       panes: [
         {
           id: 'home',
@@ -54,12 +54,12 @@ export class SpaceStore {
     },
     {
       name: 'Me',
-      color: 'gray',
+      color: ['red', 'gray'],
       panes: [],
     },
     {
       name: 'Discussions',
-      color: 'red',
+      color: ['blue', 'red'],
       panes: [],
     },
   ]

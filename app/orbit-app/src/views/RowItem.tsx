@@ -1,10 +1,11 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import { View, Row, Col, Text } from '@mcro/ui'
+import { Row, Col, Text, View } from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
+import { OrbitOrb } from '../pages/OrbitPage/orbitDocked/orbitSettings/OrbitOrb'
 
 const RowItemFrame = view(Row, {
-  padding: [2, 8],
+  padding: [3, 8],
   alignItems: 'center',
 }).theme(({ theme, selected }) => ({
   background: selected ? theme.backgroundHover : 'transparent',
@@ -16,7 +17,7 @@ const RowItemFrame = view(Row, {
 const leftPad = 10
 
 export const RowItem = ({
-  orb = null,
+  orb = ['blue', 'red'],
   title = null,
   icon = null,
   after = null,
@@ -26,19 +27,10 @@ export const RowItem = ({
 }) => {
   return (
     <RowItemFrame padding={leftPad} selected={selected} {...props}>
-      {!!orb && (
-        <View
-          borderRadius={100}
-          borderColor={orb}
-          borderWidth={2}
-          borderStyle="solid"
-          marginRight={8}
-          width={12}
-          height={12}
-        />
-      )}
+      <OrbitOrb size={16} background={orb[0]} color={orb[1]} />
+      <View width={10} />
       <Col flex={1}>
-        <Text sizeLineHeight={0.8} size={1} fontWeight={600}>
+        <Text sizeLineHeight={0.8} size={1.15} fontWeight={600}>
           {title}
         </Text>
         {!!subtitle && (

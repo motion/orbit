@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
+import { View } from '@mcro/ui'
 
 const Section = view('section', {
   width: '100%',
@@ -56,11 +57,11 @@ export class OrbitHomeHeader extends React.Component<Props> {
 
   render() {
     const { paneManagerStore } = this.props
-    const showHomeButton = paneManagerStore.activePane === 'settings'
+    const onSettings = paneManagerStore.activePane === 'settings'
     return (
       <>
         <Section invisible={paneManagerStore.activePane === 'onboard'}>
-          {showHomeButton && (
+          {onSettings && (
             <UI.Button
               icon="home"
               tooltip="Home"
@@ -69,7 +70,16 @@ export class OrbitHomeHeader extends React.Component<Props> {
             />
           )}
           <UI.Button
-            icon="gear"
+            icon={
+              <View
+                border={[1, '#999']}
+                background={onSettings ? '#999' : 'transparent'}
+                opacity={1}
+                width={12}
+                height={12}
+                borderRadius={100}
+              />
+            }
             tooltip="Settings"
             active={paneManagerStore.activePaneFast === 'settings'}
             onClick={this.paneSetter('settings')}

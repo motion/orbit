@@ -89,6 +89,7 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
       console.log('FOCUSING ON SHORTCUTS...')
     }
 
+    const borderRadius = 8
     return (
       <FocusableShortcutHandler focused={store.open} shortcuts={shortcuts} handlers={handlers}>
         <Popover
@@ -99,10 +100,10 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
           // closeOnClick
           closeOnClickAway
           theme="light"
-          width={200}
+          width={300}
           background
-          adjust={[66, 0]}
-          borderRadius={6}
+          adjust={[116, 0]}
+          borderRadius={borderRadius}
           elevation={6}
           group="filters"
           onChangeVisibility={store.setOpen}
@@ -112,32 +113,39 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
             </NavButton>
           }
         >
-          <Col forwardRef={store.popoverContentRef} borderRadius={6} overflow="hidden" flex={1}>
-            <RowItem
-              orb={activeSpace.color}
-              title={activeSpace.name}
-              subtitle="20 people"
-              after={
-                <OrbitIcon
-                  onClick={paneManagerStore.goToTeamSettings}
-                  name="gear"
-                  size={14}
-                  opacity={0.5}
-                />
-              }
-              hover={false}
-            />
-            <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-            {inactiveSpaces.map((space, index) => {
-              return (
-                <RowItem
-                  key={space.name}
-                  selected={selectedIndex === index + 1}
-                  orb={space.color}
-                  title={space.name}
-                />
-              )
-            })}
+          <Col
+            forwardRef={store.popoverContentRef}
+            borderRadius={borderRadius}
+            overflow="hidden"
+            flex={1}
+          >
+            <View overflowY="auto" maxHeight={300}>
+              <RowItem
+                orb={activeSpace.color}
+                title={activeSpace.name}
+                subtitle="20 people"
+                after={
+                  <OrbitIcon
+                    onClick={paneManagerStore.goToTeamSettings}
+                    name="gear"
+                    size={14}
+                    opacity={0.5}
+                  />
+                }
+                hover={false}
+              />
+              <View flex={1} margin={[2, 10]} background="#eee" height={1} />
+              {inactiveSpaces.map((space, index) => {
+                return (
+                  <RowItem
+                    key={space.name}
+                    selected={selectedIndex === index + 1}
+                    orb={space.color}
+                    title={space.name}
+                  />
+                )
+              })}
+            </View>
           </Col>
         </Popover>
       </FocusableShortcutHandler>

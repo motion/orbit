@@ -118,3 +118,16 @@ Talked to Andy, Charlie
 - -- going wide / deep with syncers
 - ++ do cooler stuff: ocr, context, nlp, apps, more high level overviews, topics/following
 - ++ get it into peoples hands asap, but be sure to get nlp/ocr in place a little
+
+# Oct 25th
+
+Talked to Alex Kolicich, Ted, Anand, Jan
+
+- ++ syncers wide
+- -- custom apps
+- ++ panes with sorting etc
+- -- teams / account, do later
+- ++ make search really fast and well done
+- ++ better peek windows with light exploration
+- ++ better profiles
+- ++ need to do more up front design thinking over OCR use cases

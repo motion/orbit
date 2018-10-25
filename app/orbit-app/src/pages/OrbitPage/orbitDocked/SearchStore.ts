@@ -14,6 +14,8 @@ import { uniq } from 'lodash'
 
 const TYPE_DEBOUNCE = 200
 
+type SearchState = { results: Bit[]; finished?: boolean; query: string }
+
 export class SearchStore {
   props: {
     paneManagerStore: PaneManagerStore
@@ -106,22 +108,18 @@ export class SearchStore {
 
   searchState = react(
     () => [
-      this.activeQuery,
-      // depends on pane
-      this.props.paneManagerStore.activePane,
+      App.state.query,
       // filter updates
       this.searchFilterStore.activeFilters,
       this.searchFilterStore.exclusiveFilters,
       this.searchFilterStore.sortBy,
       this.searchFilterStore.dateState,
     ],
-    async (
-      [query, activePane],
-      { whenChanged, when, setValue, state },
-    ): Promise<{ results: Bit[]; finished?: boolean; query: string }> => {
-      // let it do one pre-search
-      if (state.hasResolvedOnce) {
-        ensure('on search', activePane === 'search')
+    async ([query], { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
+      // if not on this pane, delay it a bit
+      if (!this.isActive) {
+        await idle()
+        await sleep(500)
       }
 
       let results = []

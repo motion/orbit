@@ -110,7 +110,9 @@ export function automagicReact(
         res = [...res, 'delayValue']
       }
     }
-    current.set(value)
+    if (!onlyUpdateIfChanged || (onlyUpdateIfChanged && value !== getCurrentValue())) {
+      current.set(value)
+    }
     return res
   }
 
@@ -178,6 +180,18 @@ export function automagicReact(
       const sleepTimeout = setTimeout(() => resolve(), ms)
       rejections.push(() => {
         clearTimeout(sleepTimeout)
+        reject(SHARED_REJECTION_ERROR)
+      })
+    })
+  }
+
+  const idle = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      // @ts-ignore
+      let handle = requestIdleCallback(resolve)
+      rejections.push(() => {
+        // @ts-ignore
+        cancelIdleCallback(handle)
         reject(SHARED_REJECTION_ERROR)
       })
     })
@@ -251,6 +265,7 @@ export function automagicReact(
     when,
     whenChanged,
     state,
+    idle,
   }
 
   function watcher(reactionFn) {
@@ -258,7 +273,7 @@ export function automagicReact(
       reset()
       id = id + 1
       reactionID = id
-      const curID = reactionID
+      let curID = reactionID
       const start = Date.now()
       Root.__trackStateChanges.isActive = true
 
@@ -293,7 +308,8 @@ export function automagicReact(
           reactionHelpers,
         )
       } catch (err) {
-        reset()
+        // could be some setTimeouts or something, ensure its still cancelled
+        curID = -1
         // got a nice cancel!
         if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
           if (!IS_PROD) {

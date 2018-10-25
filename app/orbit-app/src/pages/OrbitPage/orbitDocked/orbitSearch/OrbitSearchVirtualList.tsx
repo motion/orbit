@@ -251,6 +251,10 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     }
   })
 
+  isRowLoaded = find => {
+    return find.index < this.props.searchStore.searchState.results.length
+  }
+
   render() {
     const { searchStore } = this.props
     log(
@@ -288,7 +292,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
             }}
           >
             <InfiniteLoader
-              isRowLoaded={searchStore.isRowLoaded}
+              isRowLoaded={this.isRowLoaded}
               loadMoreRows={searchStore.loadMore}
               rowCount={searchStore.remoteRowCount}
             >

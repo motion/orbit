@@ -257,10 +257,6 @@ export class SearchStore {
     this.nextRows = { startIndex, endIndex: stopIndex }
   }
 
-  isRowLoaded = find => {
-    return find.index < this.searchState.results.length
-  }
-
   quickSearchState = react(
     () => this.activeQuery,
     async (query, { sleep }) => {

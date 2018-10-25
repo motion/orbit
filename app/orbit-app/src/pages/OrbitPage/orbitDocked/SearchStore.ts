@@ -182,7 +182,6 @@ export class SearchStore {
           return false
         }
         results = [...results, ...nextResults]
-        console.log('setvalue', query)
         setValue({
           results,
           query,
@@ -205,7 +204,6 @@ export class SearchStore {
         }
       }
       // finished
-      console.log('finish', query)
       return {
         query,
         results,

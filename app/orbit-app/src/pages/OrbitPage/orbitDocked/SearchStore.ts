@@ -48,33 +48,6 @@ export class SearchStore {
     },
   )
 
-  setActivePaneOnHasQuery = react(
-    () => !!App.state.query,
-    query => {
-      if (!query) {
-        this.props.paneManagerStore.setActivePaneToPrevious()
-      } else {
-        this.props.paneManagerStore.setActivePaneSearch()
-      }
-    },
-  )
-
-  setActivePaneToSearchOnIntegrationFilters = react(
-    () => this.searchFilterStore.hasIntegrationFilters,
-    hasIntegrationFilters => {
-      ensure('hasIntegrationFilters', hasIntegrationFilters)
-      this.props.paneManagerStore.setActivePaneSearch()
-    },
-  )
-
-  setActivePaneOnDateFilter = react(
-    () => this.searchFilterStore.hasDateFilter,
-    hasDateFilter => {
-      ensure('hasDateFilter', hasDateFilter)
-      this.props.paneManagerStore.setActivePaneSearch()
-    },
-  )
-
   activeQuery = react(
     () => [App.state.query, this.isActive],
     ([query]) => {

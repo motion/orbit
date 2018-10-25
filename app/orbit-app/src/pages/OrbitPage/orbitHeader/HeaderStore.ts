@@ -22,7 +22,8 @@ export class HeaderStore {
     if (!activeMarks) {
       return null
     }
-    return () => activeMarks
+    const markPositions = activeMarks.map(x => [x[0], x[1]])
+    return () => markPositions
   }
 
   onInput = () => {

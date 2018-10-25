@@ -15,8 +15,8 @@ export enum Direction {
 }
 
 export type SelectionResult = {
+  id: string
   moves?: Direction[]
-  item: any
 }
 
 export type SelectionGroup = {
@@ -69,13 +69,6 @@ export class SelectionStore {
 
   get hasActiveIndex() {
     return this.activeIndex > -1
-  }
-
-  get selectedItem() {
-    if (this.results) {
-      return this.results[this.activeIndex].item
-    }
-    return null
   }
 
   setSelectedOnSearch = react(
@@ -269,8 +262,8 @@ export class SelectionStore {
     for (const [groupIndex, { items, type }] of resultGroups.entries()) {
       if (type === 'row') {
         const downMoves = groupIndex < numGroups ? [Direction.down, Direction.up] : [Direction.up]
-        const nextMoves = items.map((item, index) => ({
-          item,
+        const nextMoves = items.map(({ id }, index) => ({
+          id,
           moves: [
             index < items.length - 1 ? Direction.right : null,
             index > 0 ? Direction.left : null,
@@ -281,7 +274,7 @@ export class SelectionStore {
       }
       if (type === 'column') {
         const hasPrevResults = !!results.length
-        const nextMoves = items.map((item, index) => {
+        const nextMoves = items.map(({ id }, index) => {
           const moves = []
           if (index < items.length - 1) {
             moves.push(Direction.down)
@@ -289,7 +282,7 @@ export class SelectionStore {
           if (hasPrevResults || index > 0) {
             moves.push(Direction.up)
           }
-          return { moves, item }
+          return { moves, id }
         })
         results = [...results, ...nextMoves]
       }
@@ -301,15 +294,7 @@ export class SelectionStore {
     if (!this.results) {
       throw new Error('Calling index before')
     }
-    return this.results.findIndex(x => x.item.id === id)
-  }
-
-  openSelected = () => {
-    if (this.selectedItem) {
-      Actions.openItem(this.selectedItem)
-      return true
-    }
-    return false
+    return this.results.findIndex(x => x.id === id)
   }
 
   setHighlightIndex = index => {

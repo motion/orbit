@@ -50,6 +50,10 @@ export class SearchStore {
     },
   )
 
+  get selectedItem() {
+    return this.searchState.results[this.props.selectionStore.activeIndex]
+  }
+
   activeQuery = react(
     () => [this.isActive, App.state.query],
     ([active, query]) => {

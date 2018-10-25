@@ -5,7 +5,7 @@
  * @format
  */
 
-import { view } from '@mcro/black'
+import { view, isEqual } from '@mcro/black'
 import { Rect } from './helpers/geometry'
 import * as React from 'react'
 
@@ -17,7 +17,7 @@ type OrderableProps = {
   items: { [key: string]: any }
   orientation: OrderableOrientation
   onChange?: (order: OrderableOrder, key: string) => void
-  order?: OrderableOrder | void
+  order?: OrderableOrder
   className?: string
   reverse?: boolean
   altKey?: boolean
@@ -27,8 +27,9 @@ type OrderableProps = {
 }
 
 type OrderableState = {
-  order?: OrderableOrder | void
-  movingOrder?: OrderableOrder | void
+  shouldUpdate?: boolean
+  order?: OrderableOrder
+  movingOrder?: OrderableOrder
 }
 
 type TabSizes = {
@@ -73,49 +74,51 @@ class OrderableItem extends React.Component<{
 }
 
 export class Orderable extends React.Component<OrderableProps, OrderableState> {
-  constructor(props: OrderableProps, context: Object) {
-    super(props, context)
-    this.tabRefs = {}
-    this.state = { order: props.order }
-    this.setProps(props)
+  tabRefs: {
+    [key: string]: HTMLElement | void
+  } = {}
+  state = {
+    order: null,
+    shouldUpdate: false,
+    movingOrder: null,
   }
 
   _mousemove?: any
   _mouseup?: any
   timer: any
-
   sizeKey: 'width' | 'height'
   offsetKey: 'left' | 'top'
   mouseKey: 'offsetX' | 'offsetY'
   screenKey: 'screenX' | 'screenY'
-
   containerRef?: HTMLElement
-  tabRefs: {
-    [key: string]: HTMLElement | void
-  }
 
   static defaultProps = {
     dragOpacity: 1,
     moveDelay: 50,
   }
 
-  setProps(props: OrderableProps) {
-    const { orientation } = props
-    this.sizeKey = orientation === 'horizontal' ? 'width' : 'height'
-    this.offsetKey = orientation === 'horizontal' ? 'left' : 'top'
-    this.mouseKey = orientation === 'horizontal' ? 'offsetX' : 'offsetY'
-    this.screenKey = orientation === 'horizontal' ? 'screenX' : 'screenY'
-  }
-
   shouldComponentUpdate() {
     return !this.state.movingOrder
   }
 
-  componentWillReceiveProps(nextProps: OrderableProps) {
-    this.setState({
-      order: nextProps.order,
-    })
-    this.setProps(nextProps)
+  static getDerivedStateFromProps(props, state) {
+    if (!isEqual(props.order, state.order)) {
+      return {
+        shouldUpdate: true,
+        order: props.order,
+      }
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.state.shouldUpdate) {
+      const { orientation } = this.props
+      this.sizeKey = orientation === 'horizontal' ? 'width' : 'height'
+      this.offsetKey = orientation === 'horizontal' ? 'left' : 'top'
+      this.mouseKey = orientation === 'horizontal' ? 'offsetX' : 'offsetY'
+      this.screenKey = orientation === 'horizontal' ? 'screenX' : 'screenY'
+      this.setState({ shouldUpdate: false })
+    }
   }
 
   startMove = (key: string, event: React.MouseEvent) => {

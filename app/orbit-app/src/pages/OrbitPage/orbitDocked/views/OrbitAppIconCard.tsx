@@ -4,8 +4,7 @@ import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
 import { ItemProps } from '../../../../views/OrbitItemProps'
 import { Setting } from '@mcro/models'
 import { view } from '@mcro/black'
-import { SubTitle } from '../../../../views/SubTitle'
-import { Col, Surface, SizedSurface, Theme, Text } from '@mcro/ui'
+import { Col, SizedSurface, Theme, Text } from '@mcro/ui'
 
 type Props = ItemProps<Setting> &
   AppInfoProps & {
@@ -50,13 +49,27 @@ export const OrbitAppIconCard = (props: Props) => {
   } = props
   return (
     <Col
-      marginRight={20}
+      marginRight={14}
       width={style.width}
       heigth={style.height + hideTitle ? 0 : 15}
       alignItems="center"
       justifyContent="center"
     >
-      <OrbitCard direct style={style} padding={3} borderRadius={100} flex="none" {...restProps}>
+      <OrbitCard
+        direct
+        opacity={0.75}
+        activeStyle={{ opacity: 1 }}
+        {...{
+          '&:hover': {
+            opacity: 1,
+          },
+        }}
+        style={style}
+        padding={3}
+        borderRadius={100}
+        flex="none"
+        {...restProps}
+      >
         <Centered>{model.children}</Centered>
       </OrbitCard>
       <Theme name="semi-dark">
@@ -67,7 +80,7 @@ export const OrbitAppIconCard = (props: Props) => {
           maxWidth={style.width * 1.4}
           padding={[0, 4]}
           glint
-          tooltip={model.title}
+          // tooltip={model.title}
         >
           {!hideTitle &&
             !!model.title && (

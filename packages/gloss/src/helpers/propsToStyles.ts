@@ -24,5 +24,5 @@ export const propsToStyles = props => {
       styles[key] = styleVal(props[key], theme)
     }
   }
-  return alphaColor(styles, props.alpha)
+  return alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })
 }

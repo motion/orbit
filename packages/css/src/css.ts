@@ -7,7 +7,7 @@ export const cssNameMap = CAMEL_TO_SNAKE
 
 // exports
 export { CSSPropertySet } from './cssPropertySet'
-export { Transform, Color } from './types'
+export { Transform, Color, ThemeObject } from './types'
 export * from './helpers'
 
 type Opts = {

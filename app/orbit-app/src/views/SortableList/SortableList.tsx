@@ -19,9 +19,11 @@ import { SubPaneStore } from '../../pages/OrbitPage/SubPaneStore'
 import { Banner } from '../Banner'
 import { SortableListItem } from './SortableListItem'
 import { FirstItems } from './FirstItems'
+import { ItemProps } from '../OrbitItemProps'
 
 type Props = {
   items?: any[]
+  itemProps?: ItemProps<any>
   searchStore?: SearchStore
   selectionStore?: SelectionStore
   subPaneStore?: SubPaneStore
@@ -33,11 +35,11 @@ class VirtualList extends React.Component<any> {
   }
 }
 
-const SortableList = SortableContainer(VirtualList, { withRef: true })
+const SortableListContainer = SortableContainer(VirtualList, { withRef: true })
 
 @view.attach('searchStore', 'selectionStore', 'subPaneStore')
 @view
-export class OrbitCustomList extends React.Component<Props> {
+export class SortableList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List
 
@@ -141,6 +143,7 @@ export class OrbitCustomList extends React.Component<Props> {
             index={index}
             realIndex={index + this.offset}
             query={searchStore.searchState.query}
+            itemProps={this.props.itemProps}
           />
         </div>
       </CellMeasurer>
@@ -195,7 +198,7 @@ export class OrbitCustomList extends React.Component<Props> {
               rowCount={searchStore.remoteRowCount}
             >
               {({ onRowsRendered, registerChild }) => (
-                <SortableList
+                <SortableListContainer
                   forwardRef={ref => {
                     if (ref) {
                       registerChild(ref)

@@ -53,6 +53,7 @@ export type SurfaceProps = CSSPropertySet & {
   uiContext?: { inSegment?: { first: boolean; last: boolean; index: number } }
   width?: number | string
   alpha?: number
+  alphaHover?: number
   dimmed?: boolean
   disabled?: boolean
   placeholderColor?: Color
@@ -173,7 +174,7 @@ const SurfaceFrame = view(View, {
       ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
     },
   }
-  return alphaColor(surfaceStyles, props.alpha)
+  return alphaColor(surfaceStyles, { alpha: props.alpha, alphaHover: props.alphaHover })
 })
 
 const Element = view({

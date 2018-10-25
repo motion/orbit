@@ -23,7 +23,7 @@ type Position = {
   height: number
 }
 
-const sizes = [[500, 760]]
+const sizes = [[500, 960]]
 
 // dynamic peek size
 // always slightly taller than wide

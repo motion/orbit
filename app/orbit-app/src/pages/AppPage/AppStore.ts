@@ -234,6 +234,7 @@ export class AppStore {
   initMouseDown = null
 
   onDragStart = e => {
+    console.log('drag titlebar...')
     e.preventDefault()
     this.tearPeek()
     this.clearDragHandlers()

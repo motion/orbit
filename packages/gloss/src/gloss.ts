@@ -5,7 +5,6 @@ import { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
 import { Color } from '@mcro/css'
 
 export { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
-export { ThemeObject } from './types'
 export { alphaColor } from './helpers/alphaColor'
 export { propsToStyles } from './helpers/propsToStyles'
 export { propsToThemeStyles } from './helpers/propsToThemeStyles'
@@ -14,13 +13,7 @@ export { ThemeMaker } from './theme/ThemeMaker'
 export { ThemeProvide } from './theme/ThemeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
-export {
-  CSSPropertySet,
-  cssNameMap,
-  psuedoKeys,
-  validCSSAttr,
-  Color,
-} from '@mcro/css'
+export { ThemeObject, CSSPropertySet, cssNameMap, psuedoKeys, validCSSAttr, Color } from '@mcro/css'
 
 // bugfixing a typescript bug... remove if this compiles without this
 export type Color2 = Color
@@ -38,9 +31,7 @@ export const colorToString = obj => {
     return `rgb(${inner})`
   }
   if (model === 'hsl') {
-    const inner = `${color[0]}, ${Math.round(color[1])}%, ${Math.round(
-      color[2],
-    )}%`
+    const inner = `${color[0]}, ${Math.round(color[1])}%, ${Math.round(color[2])}%`
     if (hasAlpha) {
       return `hsla(${inner}, ${valpha})`
     }

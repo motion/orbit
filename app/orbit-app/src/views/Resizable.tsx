@@ -57,25 +57,17 @@ export class Resizable extends React.Component<Props, State> {
     slackH: 0,
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  static getDerivedStateFromProps(props, state) {
     // If parent changes height/width, set that in our state.
-    if (
-      !this.state.resizing &&
-      (nextProps.width !== this.props.width ||
-        nextProps.height !== this.props.height)
-    ) {
-      this.setState({
-        width: nextProps.width,
-        height: nextProps.height,
-      })
+    if (!state.resizing && (props.width !== state.width || props.height !== state.height)) {
+      return {
+        width: props.width,
+        height: props.height,
+      }
     }
   }
 
-  lockAspectRatio(
-    width: number,
-    height: number,
-    aspectRatio: number,
-  ): [number, number] {
+  lockAspectRatio(width: number, height: number, aspectRatio: number): [number, number] {
     height = width / aspectRatio
     width = height * aspectRatio
     return [width, height]
@@ -128,10 +120,7 @@ export class Resizable extends React.Component<Props, State> {
    * @return {Function}           Handler function.
    */
   resizeHandler(handlerName: string): any {
-    return (
-      e: React.MouseEvent,
-      { node, deltaX, deltaY }: DragCallbackData,
-    ) => {
+    return (e: React.MouseEvent, { node, deltaX, deltaY }: DragCallbackData) => {
       // Axis restrictions
       const canDragX = this.props.axis === 'both' || this.props.axis === 'x'
       const canDragY = this.props.axis === 'both' || this.props.axis === 'y'
@@ -191,9 +180,7 @@ export class Resizable extends React.Component<Props, State> {
       ...props
     } = this.props
 
-    const className = props.className
-      ? `${props.className} react-resizable`
-      : 'react-resizable'
+    const className = props.className ? `${props.className} react-resizable` : 'react-resizable'
 
     // What we're doing here is getting the child of this element, and cloning it with this element's props.
     // We are then defining its children as:

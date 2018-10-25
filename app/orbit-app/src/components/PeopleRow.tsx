@@ -33,7 +33,7 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
   return (
     <UI.Row alignItems="center" marginRight={20} maxWidth="calc(100% - 20px)">
       <UI.Row marginRight={14} alignItems="center">
-        {(people || []).map((person, i) => (
+        {(people || []).slice(0, 3).map((person, i) => (
           <UI.Image
             key={i}
             width={13}

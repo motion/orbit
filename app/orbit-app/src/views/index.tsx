@@ -77,8 +77,6 @@ export const CheckBoxRow = ({
   </FormTableRow>
 )
 
-export const OrbitNavVerticalPad = () => <div style={{ height: 130, pointerEvents: 'none' }} />
-
 export const SuggestionBarVerticalPad = view({
   height: 24,
   pointerEvents: 'none',
@@ -110,27 +108,15 @@ export const VerticalSpace = view({
   },
 })
 
-export const Circle = view({
-  display: 'inline-block',
-  borderRadius: 100,
-  width: 18,
-  height: 18,
-  lineHeight: '18px',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  boxShadow: [[0, 0, 0, 0.5, highlightColor]],
-  color: highlightColor,
-  fontWeight: 500,
-  fontSize: 12,
-  margin: [-3, 4, 0, -2],
-})
-
 export const Title = ({ verticalSpacing = 1, children, ...props }) => (
-  <UI.Text size={1.35} fontWeight={700} margin={[0, 0, 12 * verticalSpacing]} {...props}>
+  <UI.Text size={1.35} fontWeight={700} marginBottom={12 * verticalSpacing} {...props}>
     {children}
   </UI.Text>
 )
+
+export const SubPaneTitle = props => {
+  return <Title marginLeft={12} marginRight={12} {...props} />
+}
 
 export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
   <UI.Text
@@ -145,6 +131,14 @@ export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
     {children}
   </UI.Text>
 )
+
+export const SubPaneSubTitle = props => {
+  return <SubTitle marginLeft={12} marginRight={12} {...props} />
+}
+
+export const SubPaneSection = view({
+  padding: [0, 12],
+})
 
 export const Link = props => (
   <UI.Text cursor="pointer" fontWeight={400} color="#8b2bec" display="inline" {...props} />

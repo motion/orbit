@@ -153,7 +153,7 @@ export function createViewFactory(toCSS) {
     const targetElement = isSimpleView ? targetConfig.targetElement : target
     const id = `${uid()}`
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
-    const hasPropStyles = Object.keys(propStyles).length
+    const hasPropStyles = !!Object.keys(propStyles).length
     let displayName = 'View'
     let ThemedView
     let cachedTheme

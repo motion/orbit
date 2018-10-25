@@ -144,11 +144,28 @@ const findIconName = name => {
   return false
 }
 
-export const Icon = ({ name, ...props }) => {
+export const Icon = ({ name, size = 32, style = null, ...props }) => {
   const iconName = findIconName(name)
   if (!iconName) {
     return null
   }
   const icon = icons[iconName]
-  return <SVG fill="#fff" svg={icon} {...props} />
+  return (
+    <SVG
+      fill="#fff"
+      svg={icon}
+      width={`${size}`}
+      height={`${size}`}
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        width: size,
+        height: size,
+        ...style,
+      }}
+      cleanup={['title', 'desc', 'width', 'height']}
+      {...props}
+    />
+  )
 }

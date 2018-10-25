@@ -4,7 +4,7 @@ import { OrbitCard } from '../../../../views/OrbitCard'
 import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
 import { ItemProps } from '../../../../views/OrbitItemProps'
 import { SyncStatus } from './SyncStatus'
-import { Text } from '@mcro/ui'
+import { Text, Icon } from '@mcro/ui'
 import { Setting } from '@mcro/models'
 import { OrbitIntegration } from '../../../../integrations/types'
 import { appToAppConfig } from '../../../../stores/AppsStore'
@@ -24,7 +24,9 @@ const decorator = compose(
 )
 
 export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...props }: Props) => {
-  const countSubtitle = store.bitsCount >= 0 ? Number(store.bitsCount).toLocaleString() : '...'
+  let countSubtitle = store.bitsCount >= 0 ? Number(store.bitsCount).toLocaleString() : '...'
+  const commaIndex = countSubtitle.indexOf(',')
+  countSubtitle = commaIndex > -1 ? `${countSubtitle.slice(0, commaIndex)}k` : countSubtitle
   return (
     <OrbitCard
       direct
@@ -61,7 +63,13 @@ export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...pro
             <>
               <Text size={0.85} alpha={0.6}>
                 {countSubtitle} {pluralize(app.display.itemName || 'item', countSubtitle)}
-                {syncJobs.length ? ' | Syncing' : removeJobs.length ? ' | Removing' : ''}
+                {syncJobs.length ? (
+                  <Icon size={12} name="refresh" />
+                ) : removeJobs.length ? (
+                  <Icon size={12} name="refresh" />
+                ) : (
+                  ''
+                )}
               </Text>
             </>
           )

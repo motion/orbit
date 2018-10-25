@@ -1,11 +1,47 @@
+this week:
+
+- when moving between panes they should "carry" the search
+  - it should pre-search the next pane, _after_ current one finishes... :/
+- switching between spaces
+- fix space creation pane
+- fix settings panes showing
+- mock onboard: add integrations => show available orbits to join
+- animatee the orbit while searching..
+
+goals:
+
+- want to have much better step by step plan, deliverables and review of progress
+- want to have high level goals for november, december, january
+- want to have detailed goals for november fully mapped out
+
+# sync with umed
+
+- go over what data needs to be synced and how
+- we need to work in a way that most unblocks each other
+
+i think this can look like this:
+
+week 1:
+
+- nate: interfaces for account, team, space
+- umed: account and team simplest possible backend we can plug into
+
+week 2:
+
+- nate: interfaces for improved search/directory and other apps
+- umed: link in account, team, space into UI, then move into app data
+
+week 3:
+
+- nate: performance, polish and bugfixing based on last week
+- umed: finishing any account/team, performance, etc
+
 # October
 
 Nate:
 
-- Apps
-  - List app
 - Search
-  - condensed search view by default
+  - condensed, grouped search with far better display of each item
   - recent items by default in search (weighted much higher)
 - Spaces
   - Switch spaces

@@ -9,37 +9,34 @@ import { alphaColor, CSSPropertySet } from '@mcro/gloss'
 
 type ChildrenHlFn = ((Highlights) => JSX.Element | null)
 
-export type TextProps = CSSPropertySet & {
-  color?: CSSPropertySet['color'] | false
-  editable?: boolean
-  autoselect?: boolean
-  selectable?: boolean
-  onFinishEdit?: Function
-  onCancelEdit?: Function
-  getRef?: Function
-  ellipse?: boolean | number
-  tagName?: string
-  lines?: number
-  alpha?: number
-  onKeyDown?: Function
-  opacity?: number
-  size?: number
-  onClick?: Function
-  onMouseEnter?: Function
-  onMouseLeave?: Function
-  style?: Object
-  placeholder?: string
-  lineHeight?: number
-  sizeLineHeight?: number
-  className?: string
-  measure?: boolean
-  onMeasure?: Function
-  sizeMethod?: string
-  highlight?: HighlightOptions
-  wordBreak?: string
-  theme?: Object
-  children: React.ReactNode | ChildrenHlFn
-}
+export type TextProps = CSSPropertySet &
+  React.HTMLProps<HTMLParagraphElement> & {
+    color?: CSSPropertySet['color'] | false
+    editable?: boolean
+    autoselect?: boolean
+    selectable?: boolean
+    onFinishEdit?: Function
+    onCancelEdit?: Function
+    getRef?: Function
+    ellipse?: boolean | number
+    tagName?: string
+    lines?: number
+    alpha?: number
+    onKeyDown?: Function
+    opacity?: number
+    size?: number
+    style?: Object
+    placeholder?: string
+    lineHeight?: number
+    sizeLineHeight?: number
+    measure?: boolean
+    onMeasure?: Function
+    sizeMethod?: string
+    highlight?: HighlightOptions
+    wordBreak?: string
+    theme?: Object
+    children: React.ReactNode | ChildrenHlFn
+  }
 
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
@@ -55,7 +52,7 @@ const TextBlock = view(InlineBlock, {
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ theme, color, alpha }) => {
+}).theme(({ theme, color, alpha, alphaHover }) => {
   if (color === false) {
     return {
       color: 'inherit',
@@ -65,7 +62,10 @@ const TextBlock = view(InlineBlock, {
     {
       color: color || theme.color,
     },
-    alpha,
+    {
+      alpha,
+      alphaHover,
+    },
   )
 })
 

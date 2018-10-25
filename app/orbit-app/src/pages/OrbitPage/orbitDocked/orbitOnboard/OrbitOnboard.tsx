@@ -1,10 +1,7 @@
-import { loadOne, save } from '@mcro/model-bridge'
-import { SettingModel } from '@mcro/models'
 import * as React from 'react'
 import { SubPane } from '../../SubPane'
 import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View, Icon } from '@mcro/ui'
-import { ORBIT_WIDTH } from '@mcro/constants'
 import { addAppClickHandler } from '../../../../helpers/addAppClickHandler'
 import { AppsStore } from '../../../../stores/AppsStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -13,11 +10,12 @@ import { Title, VerticalSpace } from '../../../../views'
 import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 // import { MessageDark } from '../../../../views/Message'
-import { GeneralSettingValues } from '@mcro/models'
 import { BlurryGuys } from './BlurryGuys'
 import { SimpleItem } from '../../../../views/SimpleItem'
 import { OrbitIntegration, ItemType } from '../../../../integrations/types'
 import { SettingStore } from '../../../../stores/SettingStore'
+import { SliderPane, Slider } from '../../../../views/Slider'
+import { BottomControls } from '../../../../views/BottomControls'
 
 type Props = {
   settingStore?: SettingStore
@@ -26,18 +24,9 @@ type Props = {
   store?: OnboardStore
 }
 
-const controlsHeight = 50
 const framePad = 30
-const numFrames = 3
+export const numFrames = 3
 // subtract padding from parent
-const frameWidth = ORBIT_WIDTH
-
-const OnboardFrame = view({
-  position: 'relative',
-  width: frameWidth,
-  minHeight: 300,
-  padding: [20, framePad, 20 + controlsHeight],
-})
 
 const Centered = view({
   margin: 'auto',
@@ -45,36 +34,6 @@ const Centered = view({
   justifyContent: 'center',
   textAlign: 'center',
 })
-
-const Controls = view({
-  flexFlow: 'row',
-  position: 'absolute',
-  bottom: 16,
-  right: 16,
-  alignItems: 'center',
-  disabled: {
-    pointerEvents: 'none',
-    filter: 'grayscale(100%)',
-    opacity: 0.8,
-  },
-})
-
-const FrameAnimate = view({
-  flexFlow: 'row',
-  width: frameWidth * numFrames,
-  transition: 'all ease 200ms',
-}).theme(({ curFrame }) => ({
-  '& > div': {
-    transition: 'all ease-in 500ms',
-    opacity: 0,
-  },
-  [`& > div:nth-child(${curFrame + 1})`]: {
-    opacity: 1,
-  },
-  transform: {
-    x: -frameWidth * curFrame,
-  },
-}))
 
 const Unpad = view({
   margin: [0, -framePad],
@@ -190,8 +149,8 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
   return (
     <SubPane name="onboard" paddingLeft={0} paddingRight={0}>
       <BlurryGuys />
-      <FrameAnimate curFrame={store.curFrame}>
-        <OnboardFrame>
+      <Slider curFrame={store.curFrame}>
+        <SliderPane>
           {store.accepted === null && (
             <Centered>
               <br />
@@ -258,8 +217,8 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
               </Text>
             </Centered>
           )}
-        </OnboardFrame>
-        {/* <OnboardFrame>
+        </SliderPane>
+        {/* <SliderPane>
           <Title size={1.4} fontWeight={500}>
             Insider: unlock with email.
           </Title>
@@ -270,8 +229,8 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
 
           <VerticalSpace />
           <VerticalSpace />
-        </OnboardFrame> */}
-        <OnboardFrame>
+        </SliderPane> */}
+        <SliderPane>
           <Title>Set up a few apps</Title>
 
           <VerticalSpace />
@@ -297,8 +256,8 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
 
           <VerticalSpace />
           <VerticalSpace />
-        </OnboardFrame>
-        <OnboardFrame>
+        </SliderPane>
+        <SliderPane>
           <Centered>
             <Text size={2.5} fontWeight={600}>
               All set!
@@ -316,9 +275,9 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
               Orbit has many keyboard controls, try using your arrow keys from the home screen!
             </Text>
           </Centered>
-        </OnboardFrame>
-      </FrameAnimate>
-      <Controls disabled={store.disableButtons}>
+        </SliderPane>
+      </Slider>
+      <BottomControls disabled={store.disableButtons}>
         {store.curFrame > 1 && (
           <Button chromeless onClick={store.prevFrame}>
             Back
@@ -336,7 +295,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
             {buttonText[store.curFrame]}
           </Button>
         </Theme>
-      </Controls>
+      </BottomControls>
     </SubPane>
   )
 })

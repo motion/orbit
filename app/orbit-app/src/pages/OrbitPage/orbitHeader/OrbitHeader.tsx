@@ -14,7 +14,7 @@ const OrbitHeaderContainer = view(View, {
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  padding: [9, 9, 7, 9],
+  padding: [9, 7, 7, 7],
   transition: 'all ease-in 300ms',
   zIndex: 4,
 })
@@ -113,7 +113,7 @@ export class OrbitHeader extends React.Component<
               <OrbitCloseControl />
             </OrbitClose>
             <OrbitSpaceSwitch
-              onClick={headerStore.onClickOrb}
+              // onClick={headerStore.onClickOrb}
               margin={['auto', 0]}
               transform={{
                 y: -0.5,

@@ -4,7 +4,6 @@ import { throttle } from 'lodash'
 import { SubPaneProps } from './SubPane'
 import { App } from '@mcro/stores'
 import { Actions } from '../../actions/Actions'
-import { sleep } from '../../helpers'
 
 export class SubPaneStore {
   props: SubPaneProps

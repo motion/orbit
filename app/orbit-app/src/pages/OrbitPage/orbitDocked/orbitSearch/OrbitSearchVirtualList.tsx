@@ -148,7 +148,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     () => this.items && Math.random(),
     () => {
       if (this.listRef) {
-        console.log('updat yo')
         this.resizeAll()
       }
     },

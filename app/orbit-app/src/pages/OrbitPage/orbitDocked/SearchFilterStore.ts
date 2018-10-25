@@ -166,10 +166,11 @@ export class SearchFilterStore /* extends Store */ {
 
   // unique locations currently in search results list
   searchLocations = react(
-    () => this.searchStore.searchState,
-    async ({ results }, { sleep }) => {
+    () => this.searchStore.searchState && Math.random(),
+    async (_, { sleep }) => {
+      const results = this.searchStore.searchState.results
       ensure('results', !!results && !!results.length)
-      await sleep(100)
+      await sleep(300)
       return [...new Set(results.map(x => x.location && x.location.name))]
         .filter(Boolean)
         .map(text => ({

@@ -1,11 +1,5 @@
 import * as React from 'react'
-import {
-  WindowScroller,
-  List,
-  CellMeasurerCache,
-  CellMeasurer,
-  InfiniteLoader,
-} from 'react-virtualized'
+import { WindowScroller, List, CellMeasurerCache, CellMeasurer } from 'react-virtualized'
 import { SearchStore } from '../../pages/OrbitPage/orbitDocked/SearchStore'
 import { view, ensure } from '@mcro/black'
 import { View } from '@mcro/ui'
@@ -58,7 +52,6 @@ export class SortableList extends React.Component<Props> {
     () => this.items && Math.random(),
     () => {
       if (this.listRef) {
-        console.log('updat yo')
         this.resizeAll()
       }
     },
@@ -192,35 +185,25 @@ export class SortableList extends React.Component<Props> {
               zIndex: 1,
             }}
           >
-            <InfiniteLoader
-              isRowLoaded={searchStore.isRowLoaded}
-              loadMoreRows={searchStore.loadMore}
-              rowCount={searchStore.remoteRowCount}
-            >
-              {({ onRowsRendered, registerChild }) => (
-                <SortableListContainer
-                  forwardRef={ref => {
-                    if (ref) {
-                      registerChild(ref)
-                      this.listRef = ref
-                    }
-                  }}
-                  items={this.items}
-                  deferredMeasurementCache={this.cache}
-                  height={this.state.height}
-                  width={this.paneNode.clientWidth}
-                  rowHeight={this.cache.rowHeight}
-                  overscanRowCount={20}
-                  rowCount={this.items.length}
-                  estimatedRowSize={100}
-                  rowRenderer={this.rowRenderer}
-                  pressDelay={120}
-                  pressThreshold={17}
-                  onRowsRendered={onRowsRendered}
-                  lockAxis="y"
-                />
-              )}
-            </InfiniteLoader>
+            <SortableListContainer
+              forwardRef={ref => {
+                if (ref) {
+                  this.listRef = ref
+                }
+              }}
+              items={this.items}
+              deferredMeasurementCache={this.cache}
+              height={this.state.height}
+              width={this.paneNode.clientWidth}
+              rowHeight={this.cache.rowHeight}
+              overscanRowCount={20}
+              rowCount={this.items.length}
+              estimatedRowSize={100}
+              rowRenderer={this.rowRenderer}
+              pressDelay={120}
+              pressThreshold={17}
+              lockAxis="y"
+            />
           </div>
         )}
       </ProvideHighlightsContextWithDefaults>

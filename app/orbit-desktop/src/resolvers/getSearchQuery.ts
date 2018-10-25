@@ -25,6 +25,21 @@ export const getSearchQuery = (args: SearchQuery) => {
     },
     take,
     skip,
+    // dont select data
+    // select: [
+    //   'title',
+    //   'bitCreatedAt',
+    //   'bitUpdatedAt',
+    //   'author',
+    //   'authorId',
+    //   'createdAt',
+    //   'id',
+    //   'integration',
+    //   'people',
+    //   'webLink',
+    //   'desktopLink',
+    //   'type',
+    // ],
   }
 
   const andConditions: any = {}

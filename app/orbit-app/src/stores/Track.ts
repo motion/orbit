@@ -10,8 +10,12 @@ class TrackSingleton {
       if (!this.eventLog.length) {
         return
       }
-      for (const { name, details } of this.eventLog) {
-        track.recordEvent(name, details)
+      try {
+        for (const { name, details } of this.eventLog) {
+          track.recordEvent(name, details)
+        }
+      } catch {
+        // they blocked it...
       }
       this.eventLog = []
     }, 1000 * 10)

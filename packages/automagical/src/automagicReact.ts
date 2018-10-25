@@ -268,15 +268,16 @@ export function automagicReact(
       const updateAsyncValue = val => {
         const isValid = curID === reactionID
         let changed
+        if (isValid) {
+          changed = update(val)
+        }
         if (!IS_PROD && !preventLog) {
           console.log(
             `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
             ...(changed || []),
           )
         }
-        if (isValid) {
-          changed = update(val)
-        } else {
+        if (!isValid) {
           throw SHARED_REJECTION_ERROR
         }
       }

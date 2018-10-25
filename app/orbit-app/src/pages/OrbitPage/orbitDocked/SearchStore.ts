@@ -56,6 +56,7 @@ export class SearchStore {
     },
     {
       defaultValue: App.state.query,
+      onlyUpdateIfChanged: true,
     },
   )
 

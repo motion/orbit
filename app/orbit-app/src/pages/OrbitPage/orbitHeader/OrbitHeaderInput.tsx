@@ -26,26 +26,11 @@ type Props = {
   paneManagerStore?: PaneManagerStore
 }
 
-const Interactive = view({
-  flexFlow: 'row',
-  alignItems: 'center',
-  disabled: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-})
-
 @view.attach('paneManagerStore', 'orbitStore', 'queryStore', 'searchStore')
 @view
 export class OrbitHeaderInput extends React.Component<Props> {
-  clearSearch = () => {
-    this.props.queryStore.clearQuery()
-    this.props.searchStore.searchFilterStore.resetAllFilters()
-    this.props.paneManagerStore.setActivePane('home')
-  }
-
   render() {
-    const { orbitStore, queryStore, theme, headerStore, paneManagerStore } = this.props
+    const { orbitStore, queryStore, theme, headerStore } = this.props
     return (
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
@@ -66,21 +51,6 @@ export class OrbitHeaderInput extends React.Component<Props> {
           forwardRef={headerStore.inputRef}
           onClick={headerStore.onClickInput}
         />
-        <Interactive disabled={paneManagerStore.activePane !== 'search'}>
-          <ClearButton /* opacity={0} hover={{ opacity: 1 }} */ onClick={this.clearSearch}>
-            <Icon name="arrow-min-left" size={8} opacity={0.8} margin="auto" />
-          </ClearButton>
-          {/* <div style={{ width: 5 }} />
-          <Tooltip
-            target={
-              <ClearButton width={22} height={22}>
-                <Icon name="pin" size={10} margin="auto" />
-              </ClearButton>
-            }
-          >
-            Pin to Orbit home
-          </Tooltip> */}
-        </Interactive>
       </View>
     )
   }

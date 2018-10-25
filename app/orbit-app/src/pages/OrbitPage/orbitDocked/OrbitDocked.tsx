@@ -83,10 +83,7 @@ class OrbitDockedContents extends React.Component<Props> {
     const { paneManagerStore } = this.props
     return (
       <>
-        <OrbitHeader
-          borderRadius={BORDER_RADIUS}
-          after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
-        />
+        <OrbitHeader borderRadius={BORDER_RADIUS} after={<OrbitHomeHeader />} />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <Interactive disabled={/^(settings|onboard)$/.test(paneManagerStore.activePane)}>

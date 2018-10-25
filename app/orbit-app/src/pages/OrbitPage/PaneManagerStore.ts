@@ -30,8 +30,9 @@ export class PaneManagerStore {
   hasOnboarded = true
   subPane = 'team'
 
-  lastActivePane = react(() => this.activePane, {
+  lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
+    onlyUpdateIfChanged: true,
   })
 
   // setPanes = react(
@@ -121,11 +122,13 @@ export class PaneManagerStore {
   )
 
   setActivePane = name => {
-    this.setPaneIndex(this.panes.findIndex(val => val === name))
+    const nextIndex = this.panes.findIndex(val => val === name)
+    this.setPaneIndex(nextIndex)
   }
 
   activePaneSetter = memoize(index => () => this.setPaneIndex(index))
 
+  // TODO weird pattern
   beforeSetPane = () => {
     // clear selection results on change pane
     this.props.selectionStore.setResults(null)
@@ -138,8 +141,8 @@ export class PaneManagerStore {
     if (index < 0) {
       return
     }
-    this.beforeSetPane()
     if (index !== this.paneIndex) {
+      this.beforeSetPane()
       this.paneIndex = index
     }
   }

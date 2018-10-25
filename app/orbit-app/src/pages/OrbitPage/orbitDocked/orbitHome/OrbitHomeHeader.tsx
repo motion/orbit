@@ -4,7 +4,9 @@ import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
-import { View } from '@mcro/ui'
+import { View, ClearButton, Icon } from '@mcro/ui'
+import { SearchStore } from '../SearchStore'
+import { QueryStore } from '../QueryStore'
 
 const Section = view('section', {
   width: '100%',
@@ -22,7 +24,9 @@ const Section = view('section', {
 })
 
 type Props = {
-  paneManagerStore: PaneManagerStore
+  searchStore?: SearchStore
+  queryStore?: QueryStore
+  paneManagerStore?: PaneManagerStore
   theme?: ThemeObject
 }
 
@@ -49,11 +53,27 @@ const exploreButton = {
   },
 }
 
+const Interactive = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+  disabled: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
+})
+
+@view.attach('queryStore', 'searchStore', 'paneManagerStore')
 @view
 export class OrbitHomeHeader extends React.Component<Props> {
   paneSetter = memoize(name => () => {
     this.props.paneManagerStore.setActivePane(name)
   })
+
+  clearSearch = () => {
+    this.props.queryStore.clearQuery()
+    this.props.searchStore.searchFilterStore.resetAllFilters()
+    this.props.paneManagerStore.setActivePane('home')
+  }
 
   render() {
     const { paneManagerStore } = this.props
@@ -61,14 +81,17 @@ export class OrbitHomeHeader extends React.Component<Props> {
     return (
       <>
         <Section invisible={paneManagerStore.activePane === 'onboard'}>
-          {onSettings && (
-            <UI.Button
-              icon="home"
-              tooltip="Home"
-              onClick={this.paneSetter('home')}
-              {...exploreButton}
-            />
-          )}
+          <Interactive disabled={!/^(search|settings)$/.test(paneManagerStore.activePane)}>
+            <ClearButton
+              onClick={
+                paneManagerStore.activePane === 'search'
+                  ? this.clearSearch
+                  : paneManagerStore.setActivePaneToPrevious
+              }
+            >
+              <Icon name="arrow-min-left" size={8} opacity={0.8} margin="auto" />
+            </ClearButton>
+          </Interactive>
           <UI.Button
             icon={
               <View

@@ -11,6 +11,7 @@ import { CSSPropertySet } from '@mcro/gloss'
 import { RowItem } from '../../../../views/RowItem'
 import { FocusableShortcutHandler } from '../../../../views/FocusableShortcutHandler'
 import { SpaceStore } from '../../../../stores/SpaceStore'
+import { Icon } from '../../../../views/Icon'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -104,7 +105,7 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
           background
           adjust={[116, 0]}
           borderRadius={borderRadius}
-          elevation={6}
+          elevation={7}
           group="filters"
           onChangeVisibility={store.setOpen}
           target={
@@ -145,6 +146,17 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
                   />
                 )
               })}
+              <RowItem
+                orb={['#eee', '#eee']}
+                title="Create new space..."
+                titleProps={{
+                  fontWeight: 400,
+                  size: 1,
+                  alpha: 0.8,
+                }}
+                after={<Icon name="addcircle" size={14} fill="#444" />}
+                hover={false}
+              />
             </View>
           </Col>
         </Popover>

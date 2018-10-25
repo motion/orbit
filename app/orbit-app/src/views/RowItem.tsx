@@ -5,7 +5,7 @@ import { OrbitIcon } from './OrbitIcon'
 import { OrbitOrb } from '../pages/OrbitPage/orbitDocked/orbitSettings/OrbitOrb'
 
 const RowItemFrame = view(Row, {
-  padding: [3, 8],
+  padding: [4, 8],
   alignItems: 'center',
 }).theme(({ theme, selected }) => ({
   background: selected ? theme.backgroundHover : 'transparent',
@@ -23,6 +23,7 @@ export const RowItem = ({
   after = null,
   subtitle = null,
   selected = false,
+  titleProps = null,
   ...props
 }) => {
   return (
@@ -30,7 +31,7 @@ export const RowItem = ({
       <OrbitOrb size={16} background={orb[0]} color={orb[1]} />
       <View width={10} />
       <Col flex={1}>
-        <Text sizeLineHeight={0.8} size={1.15} fontWeight={600}>
+        <Text sizeLineHeight={0.8} size={1.15} fontWeight={600} {...titleProps}>
           {title}
         </Text>
         {!!subtitle && (

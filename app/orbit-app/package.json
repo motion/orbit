@@ -71,8 +71,8 @@
   "peerDependencies": {
     "electron": "3.0.1",
     "mobx": "5.5.1",
-    "react": "16.6.0",
-    "react-dom": "16.6.0"
+    "react": "16.7.0-alpha.0",
+    "react-dom": "16.7.0-alpha.0"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

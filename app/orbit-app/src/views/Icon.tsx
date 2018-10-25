@@ -144,7 +144,8 @@ const findIconName = name => {
   return false
 }
 
-export const Icon = ({ name, size = 32, style = null, ...props }) => {
+// @ts-ignore @types/react
+export const Icon = React.memo(({ name, size = 32, style = null, ...props }) => {
   const iconName = findIconName(name)
   if (!iconName) {
     return null
@@ -168,4 +169,4 @@ export const Icon = ({ name, size = 32, style = null, ...props }) => {
       {...props}
     />
   )
-}
+})

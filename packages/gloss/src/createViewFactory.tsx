@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { ThemeContext, ThemeContextType } from './theme/ThemeContext'
-import { CSSPropertySet, validCSSAttr, ThemeObject } from '@mcro/css'
+import { ThemeContext } from './theme/ThemeContext'
+import { CSSPropertySet, validCSSAttr } from '@mcro/css'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
@@ -155,11 +155,12 @@ export function createViewFactory(toCSS) {
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = !!Object.keys(propStyles).length
     let displayName = 'View'
+    let ThemedView
     let cachedTheme
 
     function getIgnoreAttrs() {
       const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
-      return SimpleView.ignoreAttrs || targetAttrs
+      return ThemedView.ignoreAttrs || targetAttrs
     }
 
     function getTheme() {
@@ -167,7 +168,7 @@ export function createViewFactory(toCSS) {
         return cachedTheme
       }
       let themes = []
-      let view = SimpleView
+      let view = ThemedView
       // collect the themes going up the tree
       while (view) {
         if (view.themeFn) {
@@ -239,7 +240,6 @@ export function createViewFactory(toCSS) {
       props: CSSPropertySet,
       prevProps: CSSPropertySet,
       tagName: string,
-      contextualTheme: ThemeObject,
     ) {
       // if this is a secondary render then check if the props are essentially equivalent
       const extraClassNames = []
@@ -286,8 +286,6 @@ export function createViewFactory(toCSS) {
         }
       }
       if (theme) {
-        // lets see if mutation doesnt screw us here...
-        props.theme = contextualTheme
         addStyles(id, dynamicStyles, theme(props))
       }
       if (hasDynamicStyles) {
@@ -342,31 +340,6 @@ export function createViewFactory(toCSS) {
 
     class SimpleView extends React.PureComponent<Props> {
       static displayName = 'SimpleView'
-      static contextType = ThemeContext
-
-      static themeFn = null
-      static ignoreAttrs = null
-      static getConfig = () => ({
-        id,
-        displayName,
-        targetElement,
-        ignoreAttrs: getIgnoreAttrs(),
-        styles: { ...styles },
-        propStyles: { ...propStyles },
-        child: isSimpleView ? target : null,
-      })
-      static withConfig = config => {
-        if (config.displayName) {
-          displayName = config.displayName
-          SimpleView.displayName = `themed(${displayName})`
-          SimpleView.displayName = displayName
-        }
-        return SimpleView
-      }
-      static theme = themeFn => {
-        SimpleView.themeFn = themeFn
-        return SimpleView
-      }
 
       state = {
         classNames: [],
@@ -376,8 +349,7 @@ export function createViewFactory(toCSS) {
         prevProps: null,
       }
 
-      static getDerivedStateFromProps(props: Props, state: State, context: ThemeContextType) {
-        // console.log('we have context?', context)
+      static getDerivedStateFromProps(props: Props, state: State) {
         const noRecentHMR = isHMREnabled ? !recentHMR() : true
         const hasSameProps = fastCompareWithoutChildren(props, state.prevProps)
         const shouldAvoidUpdate = noRecentHMR && hasSameProps
@@ -393,7 +365,7 @@ export function createViewFactory(toCSS) {
         const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
         return {
           ...nextState,
-          ...generateClassnames(state, props, state.prevProps, tag, context.activeTheme),
+          ...generateClassnames(state, props, state.prevProps, tag),
           prevProps: props,
         }
       }
@@ -406,7 +378,7 @@ export function createViewFactory(toCSS) {
 
       render() {
         // dont pass down theme
-        const { children, forwardRef, ...props } = this.props
+        const { children, forwardRef, theme, ...props } = this.props
         let finalProps
         const element = props.tagName || targetElement
 
@@ -455,35 +427,57 @@ export function createViewFactory(toCSS) {
       }
     }
 
-    // // attach themes from context
-    // ThemedView = props => {
-    //   // // avoid theme tree if not necessary
-    //   if (!ThemedView.themeFn) {
-    //     return <SimpleView {...props} />
-    //   }
-    //   return (
-    //     <ThemeContext.Consumer>
-    //       {({ allThemes, activeThemeName }) => {
-    //         if (!allThemes) {
-    //           return <SimpleView {...props} />
-    //         }
-    //         let theme = allThemes[activeThemeName]
-    //         // allow simple overriding of the theme using props:
-    //         // <Button theme={{ backgroundHover: 'transparent' }} />
-    //         if (typeof props.theme === 'object') {
-    //           theme = {
-    //             ...theme,
-    //             ...props.theme,
-    //           }
-    //         }
-    //         return <SimpleView {...props} theme={theme} />
-    //       }}
-    //     </ThemeContext.Consumer>
-    //   )
-    // }
+    // attach themes from context
+    // @ts-ignore via old @types/react
+    ThemedView = React.memo(props => {
+      // // avoid theme tree if not necessary
+      if (!ThemedView.themeFn) {
+        return <SimpleView {...props} />
+      }
+      // @ts-ignore via old @types/react
+      const { allThemes, activeThemeName } = React.useContext(ThemeContext)
+      if (!allThemes) {
+        return <SimpleView {...props} />
+      }
+      let theme = allThemes[activeThemeName]
+      // allow simple overriding of the theme using props:
+      // <Button theme={{ backgroundHover: 'transparent' }} />
+      if (typeof props.theme === 'object') {
+        theme = {
+          ...theme,
+          ...props.theme,
+        }
+      }
+      return <SimpleView {...props} theme={theme} />
+    })
 
-    SimpleView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+    ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
 
-    return SimpleView as any
+    ThemedView.withConfig = config => {
+      if (config.displayName) {
+        displayName = config.displayName
+        ThemedView.displayName = `themed(${displayName})`
+        SimpleView.displayName = displayName
+      }
+      return ThemedView
+    }
+
+    // allow setting theme
+    ThemedView.theme = themeFn => {
+      ThemedView.themeFn = themeFn
+      return ThemedView
+    }
+
+    ThemedView.getConfig = () => ({
+      id,
+      displayName,
+      targetElement,
+      ignoreAttrs: getIgnoreAttrs(),
+      styles: { ...styles },
+      propStyles: { ...propStyles },
+      child: isSimpleView ? target : null,
+    })
+
+    return ThemedView
   }
 }

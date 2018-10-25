@@ -25,39 +25,29 @@ export const Glint = view({
   right: 0,
   height: 10,
   zIndex: 10000,
-}).theme(
-  ({
-    bottom,
-    borderLeftRadius,
-    borderRadius = 0,
-    borderRightRadius,
-    opacity = 0.5,
-    color = '#fff',
-    size = 1,
-    y = 0.5,
-    theme,
-    ...props
-  }: Props) => {
-    const radiusStyle = {
-      ...(borderRadius && {
-        borderRadius,
-      }),
-      ...(borderRightRadius && {
-        [isUndef(bottom) ? 'borderTopRightRadius' : 'borderBottomRightRadius']: borderRightRadius,
-      }),
-      ...(borderLeftRadius && {
-        [isUndef(bottom) ? 'borderTopLeftRadius' : 'borderBottomLeftRadius']: borderLeftRadius,
-      }),
-    }
-    return {
-      opacity,
-      top: 0,
-      height: '100%',
-      transform: { y: y * (bottom ? 1 : -1), z: 0 },
-      borderTop: isUndef(bottom) && [size, theme.glintColor || color],
-      borderBottom: !isUndef(bottom) && [size, theme.glintColor || color],
-      ...radiusStyle,
-      ...props,
-    }
-  },
-)
+}).theme((props: Props) => {
+  const radiusStyle = {
+    ...(props.borderRadius && {
+      borderRadius: props.borderRadius,
+    }),
+    ...(props.borderRightRadius && {
+      [isUndef(props.bottom)
+        ? 'borderTopRightRadius'
+        : 'borderBottomRightRadius']: props.borderRightRadius,
+    }),
+    ...(props.borderLeftRadius && {
+      [isUndef(props.bottom)
+        ? 'borderTopLeftRadius'
+        : 'borderBottomLeftRadius']: props.borderLeftRadius,
+    }),
+  }
+  return {
+    opacity: props.opacity,
+    top: 0,
+    height: '100%',
+    transform: { y: props.y * (props.bottom ? 1 : -1), z: 0 },
+    borderTop: isUndef(props.bottom) && [props.size, props.theme.glintColor || props.color],
+    borderBottom: !isUndef(props.bottom) && [props.size, props.theme.glintColor || props.color],
+    ...radiusStyle,
+  }
+})

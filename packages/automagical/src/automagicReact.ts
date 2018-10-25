@@ -44,7 +44,7 @@ export function automagicReact(
   })
 
   let mobxOptions = options as Mobx.IReactionOptions
-  let id = 1
+  let id = deferFirstRun ? 1 : 0
 
   // we run immediately by default
   // its the 95% use case and causes less bugs

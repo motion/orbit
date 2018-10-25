@@ -49,7 +49,7 @@ export class CosalManager {
     }
 
     // scan just a few at a time
-    const chunks = chunk(bitsSinceLastScan, 1000)
+    const chunks = chunk(bitsSinceLastScan, 100)
     for (const chunk of chunks) {
       log.verbose(`Scanning ${chunk.length} bits...`)
       await this.cosal.scan(

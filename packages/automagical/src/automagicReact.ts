@@ -329,10 +329,7 @@ export function automagicReact(
               }
             } else {
               console.log(`reaction error in ${logName}`)
-              setTimeout(() => {
-                throw err
-              })
-              throw err
+              console.error(err)
             }
           })
         return

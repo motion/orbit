@@ -202,8 +202,9 @@ export class SearchFilterStore /* extends Store */ {
   )
 
   resetIntegrationFiltersOnNLPChange = react(
-    () => this.nlpStore.nlp,
-    (nlp: NLPResponse) => {
+    () => this.nlpStore.nlp && Math.random(),
+    () => {
+      const nlp = this.nlpStore.nlp
       ensure('nlp', !!nlp)
       // reset integration inactive filters
       ensure('integrations', nlp.integrations && !!nlp.integrations.length)

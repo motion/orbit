@@ -49,13 +49,14 @@ export class SearchStore {
   )
 
   activeQuery = react(
-    () => [App.state.query, this.isActive],
-    ([query]) => {
-      ensure('isActive', this.isActive)
+    () => [this.isActive, App.state.query],
+    ([active, query]) => {
+      console.log('getting something...', active, query)
+      ensure('active', active)
       return query
     },
     {
-      defaultValue: App.state.query,
+      defaultValue: log(App.state.query, 'waht wht'),
     },
   )
 
@@ -116,9 +117,14 @@ export class SearchStore {
     ],
     async (
       [query, activePane],
-      { sleep, whenChanged, when, setValue },
+      { sleep, whenChanged, when, setValue, state },
     ): Promise<{ results: Bit[]; finished?: boolean; query: string }> => {
-      ensure('on search', activePane === 'search')
+      console.log('react to', query)
+
+      // let it do one pre-search
+      if (state.hasResolvedOnce) {
+        ensure('on search', activePane === 'search')
+      }
 
       let results = []
       // if typing, wait a bit
@@ -180,6 +186,7 @@ export class SearchStore {
           return false
         }
         results = [...results, ...nextResults]
+        console.log('setting value', query, results)
         setValue({
           results,
           query,
@@ -201,6 +208,7 @@ export class SearchStore {
           break
         }
       }
+      console.log('done finish', query)
       // finished
       return {
         query,

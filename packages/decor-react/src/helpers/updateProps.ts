@@ -1,7 +1,8 @@
 import { difference } from 'lodash'
-import isEqual from 'react-fast-compare'
+import isEqualReact from 'react-fast-compare'
 import * as Mobx from 'mobx'
 import { getNonReactElementProps } from './getNonReactElementProps'
+import { isValidElement } from 'react'
 
 const granluarUpdate = (props, nextProps) => {
   const nextPropsFinal = getNonReactElementProps(nextProps)
@@ -15,13 +16,18 @@ const granluarUpdate = (props, nextProps) => {
       now = Date.now()
     }
     // this is the actual comparison
-    if (!isEqual(props[prop], nextPropsFinal[prop])) {
+    const a = props[prop]
+    const b = nextPropsFinal[prop]
+    const isSame = a === b
+    const isSameReact = isValidElement(a) && isEqualReact(a, b)
+    const hasChanged = !(isSame || isSameReact)
+    if (hasChanged) {
       props[prop] = nextPropsFinal[prop]
     }
     // 🏎 ...log the warning here
     if (process.env.NODE_ENV === 'development') {
       if (Date.now() - now > 4) {
-        console.warn('slow ass compare!', prop, props[prop], nextPropsFinal[prop])
+        console.warn('slow ass compare!', Date.now() - now, prop, props[prop], nextPropsFinal[prop])
       }
     }
   }

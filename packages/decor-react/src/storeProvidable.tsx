@@ -70,6 +70,10 @@ export function storeProvidable(userOptions, Helpers) {
         willReloadListener: Disposable
         clearUnusedStores = null
 
+        state = {
+          error: null,
+        }
+
         get name() {
           return Klass.name
         }
@@ -87,6 +91,10 @@ export function storeProvidable(userOptions, Helpers) {
         // PureComponent means this is only called when props are not shallow equal
         componentDidUpdate() {
           updateProps(this._props, this.props)
+        }
+
+        componentDidCatch(error) {
+          this.setState({ error })
         }
 
         componentDidMount() {
@@ -198,6 +206,13 @@ export function storeProvidable(userOptions, Helpers) {
         }
 
         render() {
+          if (this.state.error) {
+            return (
+              <div style={{ flex: 1, background: 'red', color: '#fff', padding: 10 }}>
+                {JSON.stringify(this.state.error)}
+              </div>
+            )
+          }
           clearTimeout(this.clearUnusedStores)
           const { __contextualStores, __hmrPath, ...props } = this.props
           const children = <Klass {...props} {...this.stores} />

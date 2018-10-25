@@ -1,16 +1,17 @@
 import * as React from 'react'
 import { view, ensure } from '@mcro/black'
-import { Popover, View, Col } from '@mcro/ui'
+import { Popover, View, Col, Input, Surface, SizedSurface, Row } from '@mcro/ui'
 import { reaction } from 'mobx'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { NavButton } from '../../../../views/NavButton'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { OrbitOrb } from '../orbitSettings/OrbitOrb'
-import { CSSPropertySet } from '@mcro/gloss'
+import { CSSPropertySet, Theme } from '@mcro/gloss'
 import { RowItem } from '../../../../views/RowItem'
 import { FocusableShortcutHandler } from '../../../../views/FocusableShortcutHandler'
-import { SpaceStore } from '../../../../stores/SpaceStore'
+import { SpaceStore, Space } from '../../../../stores/SpaceStore'
+import { fuzzyQueryFilter } from '../../../../helpers'
 import { Icon } from '../../../../views/Icon'
 
 type Props = {
@@ -24,12 +25,35 @@ class SpaceSwitchStore {
   popoverContentRef = React.createRef<HTMLDivElement>()
   selectedIndex = 0
   open = false
+  query = ''
 
   setOpen = open => {
     this.open = open
     if (this.popoverContentRef.current) {
       this.popoverContentRef.current.focus()
     }
+  }
+
+  get searchableSpaces(): (Space & { props?: Object })[] {
+    return [
+      ...this.props.spaceStore.inactiveSpaces,
+      {
+        name: 'Create new space...',
+        color: ['#eee', '#eee'],
+        props: {
+          titleProps: {
+            fontWeight: 400,
+            size: 1,
+            alpha: 0.8,
+          },
+          after: <Icon name="addcircle" size={14} fill="#444" />,
+        },
+      },
+    ]
+  }
+
+  get filteredSpaces() {
+    return fuzzyQueryFilter(this.query, this.searchableSpaces)
   }
 
   get spaces() {
@@ -63,14 +87,14 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
     },
   )
 
-  componenWillUnmount() {
+  componentWillUnmount() {
     this.spaceOpener()
   }
 
   render() {
     const { paneManagerStore, spaceStore, store, ...props } = this.props
-    const { activeSpace, inactiveSpaces } = spaceStore
-    const { selectedIndex } = store
+    const { activeSpace } = spaceStore
+    const { selectedIndex, filteredSpaces } = store
 
     const shortcuts = {
       select: 'enter',
@@ -99,7 +123,7 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
           openOnClick
           openOnHover
           // closeOnClick
-          closeOnClickAway
+          // closeOnClickAway
           theme="light"
           width={300}
           background
@@ -120,6 +144,14 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
             overflow="hidden"
             flex={1}
           >
+            <Theme name="light">
+              <View padding={5}>
+                <Row background="#eee">
+                  <Icon name="search" size={12} />
+                  <View tagName="input" placeholder="Search..." />
+                </Row>
+              </View>
+            </Theme>
             <View overflowY="auto" maxHeight={300}>
               <RowItem
                 orb={activeSpace.color}
@@ -136,27 +168,17 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
                 hover={false}
               />
               <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-              {inactiveSpaces.map((space, index) => {
+              {filteredSpaces.map((space, index) => {
                 return (
                   <RowItem
                     key={space.name}
                     selected={selectedIndex === index + 1}
                     orb={space.color}
                     title={space.name}
+                    {...space.props}
                   />
                 )
               })}
-              <RowItem
-                orb={['#eee', '#eee']}
-                title="Create new space..."
-                titleProps={{
-                  fontWeight: 400,
-                  size: 1,
-                  alpha: 0.8,
-                }}
-                after={<Icon name="addcircle" size={14} fill="#444" />}
-                hover={false}
-              />
             </View>
           </Col>
         </Popover>

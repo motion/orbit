@@ -79,6 +79,7 @@ export class Icon extends React.Component<IconProps> {
     }
     let content
     if (name[0] === '/') {
+      // @ts-ignore
       return <img src={name} {...props} />
     }
     if (!name) {

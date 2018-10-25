@@ -83,7 +83,11 @@ class InputPlain extends React.PureComponent<InputProps> {
         sizeLineHeight
         sizeRadius
         noInnerElement
+        glint={false}
         borderWidth={1}
+        // @ts-ignore
+        background={theme => theme.inputBackground || theme.background}
+        borderColor={theme => theme.inputBorderColor || theme.borderColor}
         {...{
           value,
           onChange,

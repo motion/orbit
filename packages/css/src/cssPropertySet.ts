@@ -1,4 +1,4 @@
-import { Color } from './types'
+import { Color, ThemeObject } from './types'
 
 /**
  * Copyright 2018-present Facebook.
@@ -32,16 +32,16 @@ export type backdropFilter = 'none' | string
 export type backfaceVisibility = 'visible' | 'hidden'
 type backgroundSyntax = {
   attachment?: attachment
-  color?: color
+  color?: Color
   image?: bgImage
   position?: string
   repeat?: repeatStyle
 }
-export type background = string | number[] | finalBgLayer | backgroundSyntax
+export type background = string | number[] | finalBgLayer | backgroundSyntax | Color
 export type backgroundAttachment = attachment
 export type backgroundBlendMode = blendMode
 export type backgroundClip = box
-export type backgroundColor = color
+export type backgroundColor = Color
 export type backgroundImage = bgImage
 export type backgroundOrigin = box
 export type backgroundPosition = string
@@ -51,13 +51,13 @@ export type backgroundRepeat = repeatStyle
 export type backgroundSize = bgSize
 export type blockSize = width
 type borderSyntax = Array<number | string>
-export type border = borderWidth | brStyle | color | borderSyntax
-export type borderBlockEnd = borderWidth | borderStyle | color
-export type borderBlockEndColor = color
+export type border = borderWidth | brStyle | Color | borderSyntax
+export type borderBlockEnd = borderWidth | borderStyle | Color
+export type borderBlockEndColor = Color
 export type borderBlockEndStyle = borderStyle
 export type borderBlockEndWidth = borderWidth
-export type borderBlockStart = borderWidth | borderStyle | color
-export type borderBlockStartColor = color
+export type borderBlockStart = borderWidth | borderStyle | Color
+export type borderBlockStartColor = Color
 export type borderBlockStartStyle = borderStyle
 export type borderBlockStartWidth = borderWidth
 export type borderBottomLeftRadius = lengthPercentage
@@ -65,25 +65,25 @@ export type borderBottomRightRadius = lengthPercentage
 export type borderBottomStyle = brStyle
 export type borderBottomWidth = borderWidth
 export type borderCollapse = 'collapse' | 'separate'
-export type borderColor = color | Array<number | string | Color>
+export type borderColor = Color | Array<number | string | Color>
 export type borderImage = borderImageSource | borderImageSlice | string | borderImageRepeat
 export type borderImageOutset = string
 export type borderImageRepeat = string
 export type borderImageSlice = string | number | 'fill'
 export type borderImageSource = 'none' | string
 export type borderImageWidth = string
-export type borderInlineEnd = borderWidth | borderStyle | color
-export type borderInlineEndColor = color
+export type borderInlineEnd = borderWidth | borderStyle | Color
+export type borderInlineEndColor = Color
 export type borderInlineEndStyle = borderStyle
 export type borderInlineEndWidth = borderWidth
-export type borderInlineStart = borderWidth | borderStyle | color
-export type borderInlineStartColor = color
+export type borderInlineStart = borderWidth | borderStyle | Color
+export type borderInlineStartColor = Color
 export type borderInlineStartStyle = borderStyle
 export type borderInlineStartWidth = borderWidth
-export type borderLeftColor = color
+export type borderLeftColor = Color
 export type borderLeftStyle = brStyle
 export type borderLeftWidth = borderWidth
-export type borderRightColor = color
+export type borderRightColor = Color
 export type borderRightStyle = brStyle
 export type borderRightWidth = borderWidth
 export type borderRadius = lengthPercentage
@@ -160,7 +160,7 @@ export type columnCount = number | 'auto'
 export type columnFill = 'auto' | 'balance'
 export type columnGap = number | 'normal'
 export type columnRule = columnRuleWidth | columnRuleStyle | columnRuleColor
-export type columnRuleColor = color
+export type columnRuleColor = Color
 export type columnRuleStyle = brStyle
 export type columnRuleWidth = borderWidth
 export type columnSpan = 'none' | 'all'
@@ -442,10 +442,10 @@ export type orphans = number
 type outlineSyntax = {
   width?: borderWidth
   style?: brStyle
-  color?: color
+  color?: Color
 }
 export type outline = string | outlineSyntax
-export type outlineColor = color | 'invert'
+export type outlineColor = Color | 'invert'
 export type outlineOffset = number
 export type outlineStyle = 'auto' | brStyle
 export type outlineWidth = borderWidth
@@ -504,12 +504,12 @@ export type textAlign = 'start' | 'end' | 'left' | 'right' | 'center' | 'justify
 export type textAlignLast = 'auto' | 'start' | 'end' | 'left' | 'right' | 'center' | 'justify'
 export type textCombineUpright = 'none' | 'all' | string
 export type textDecoration = textDecorationLine | textDecorationStyle | textDecorationColor
-export type textDecorationColor = color
+export type textDecorationColor = Color
 export type textDecorationLine = 'none' | string
 export type textDecorationSkip = 'none' | string
 export type textDecorationStyle = 'solid' | 'double' | 'dotted' | 'dashed' | 'wavy'
 export type textEmphasis = textEmphasisStyle | textEmphasisColor
-export type textEmphasisColor = color
+export type textEmphasisColor = Color
 export type textEmphasisPosition = string
 export type textEmphasisStyle = 'none' | string
 export type textIndent = string | 'hanging' | 'each-line'
@@ -686,7 +686,7 @@ export type brStyle =
   | 'inset'
   | 'outset'
 export type borderWidth = number | 'thin' | 'medium' | 'thick' | string
-export type color = string | Color | number[]
+export type Color = string | Color | number[]
 export type compositeStyle =
   | 'clear'
   | 'copy'
@@ -763,378 +763,383 @@ export type blendMode =
   | 'luminosity'
 export type maskImage = maskReference
 export type outlineRadius = borderRadius
-export type paint = 'none' | 'currentColor' | color | string
+export type paint = 'none' | 'currentColor' | Color | string
 export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
+type CSSPropertyVal<A> = A
+// for functional values
+// | ((theme: ThemeObject) => A)
+// | ((theme: ThemeObject, props: Object) => A)
+
 export type OriginalCSSPropertySetStrict = {
-  alignContent?: alignContent
-  alignItems?: alignItems
-  alignSelf?: alignSelf
-  all?: all
-  animation?: animation
-  animationDelay?: animationDelay
-  animationDirection?: animationDirection
-  animationDuration?: animationDuration
-  animationFillMode?: animationFillMode
-  animationIterationCount?: animationIterationCount
-  animationName?: animationName
-  animationPlayState?: animationPlayState
-  animationTimingFunction?: animationTimingFunction
-  appearance?: appearance
-  azimuth?: azimuth
-  backdropFilter?: backdropFilter
-  backfaceVisibility?: backfaceVisibility
-  background?: background
-  backgroundAttachment?: backgroundAttachment
-  backgroundBlendMode?: backgroundBlendMode
-  backgroundClip?: backgroundClip
-  backgroundColor?: backgroundColor
-  backgroundImage?: backgroundImage
-  backgroundOrigin?: backgroundOrigin
-  backgroundPosition?: backgroundPosition
-  backgroundPositionX?: backgroundPositionX
-  backgroundPositionY?: backgroundPositionY
-  backgroundRepeat?: backgroundRepeat
-  backgroundSize?: backgroundSize
-  blockSize?: blockSize
-  border?: border
-  borderBlockEnd?: borderBlockEnd
-  borderBlockEndColor?: borderBlockEndColor
-  borderBlockEndStyle?: borderBlockEndStyle
-  borderBlockEndWidth?: borderBlockEndWidth
-  borderBlockStart?: borderBlockStart
-  borderBlockStartColor?: borderBlockStartColor
-  borderBlockStartStyle?: borderBlockStartStyle
-  borderBlockStartWidth?: borderBlockStartWidth
-  borderBottom?: border
-  borderBottomColor?: color
-  borderBottomLeftRadius?: borderBottomLeftRadius
-  borderBottomRightRadius?: borderBottomRightRadius
-  borderBottomStyle?: borderBottomStyle
-  borderBottomWidth?: borderBottomWidth
-  borderCollapse?: borderCollapse
-  borderColor?: borderColor
-  borderImage?: borderImage
-  borderImageOutset?: borderImageOutset
-  borderImageRepeat?: borderImageRepeat
-  borderImageSlice?: borderImageSlice
-  borderImageSource?: borderImageSource
-  borderImageWidth?: borderImageWidth
-  borderInlineEnd?: borderInlineEnd
-  borderInlineEndColor?: borderInlineEndColor
-  borderInlineEndStyle?: borderInlineEndStyle
-  borderInlineEndWidth?: borderInlineEndWidth
-  borderInlineStart?: borderInlineStart
-  borderInlineStartColor?: borderInlineStartColor
-  borderInlineStartStyle?: borderInlineStartStyle
-  borderInlineStartWidth?: borderInlineStartWidth
-  borderLeft?: border
-  borderLeftColor?: borderLeftColor
-  borderLeftStyle?: borderLeftStyle
-  borderLeftWidth?: borderLeftWidth
-  borderRadius?: borderRadius
-  borderRight?: border
-  borderRightColor?: borderRightColor
-  borderRightStyle?: borderRightStyle
-  borderRightWidth?: borderRightWidth
-  borderSpacing?: borderSpacing
-  borderStyle?: borderStyle
-  borderTop?: border
-  borderTopColor?: color
-  borderTopLeftRadius?: borderTopLeftRadius
-  borderTopRightRadius?: borderTopRightRadius
-  borderTopStyle?: borderTopStyle
-  borderTopWidth?: borderTopWidth
-  borderWidth?: borderWidth
-  bottom?: number | string
-  boxAlign?: boxAlign
-  boxDecorationBreak?: boxDecorationBreak
-  boxDirection?: boxDirection
-  boxFlex?: boxFlex
-  boxFlexGroup?: boxFlexGroup
-  boxLines?: boxLines
-  boxOrdinalGroup?: boxOrdinalGroup
-  boxOrient?: boxOrient
-  boxPack?: boxPack
-  boxShadow?: boxShadow
-  boxSizing?: boxSizing
-  boxSuppress?: boxSuppress
-  breakAfter?: breakAfter
-  breakBefore?: breakBefore
-  breakInside?: breakInside
-  captionSide?: captionSide
-  clear?: clear
-  clip?: clip
-  clipPath?: clipPath
-  color?: color
-  columnCount?: columnCount
-  columnFill?: columnFill
-  columnGap?: columnGap
-  columnRule?: columnRule
-  columnRuleColor?: columnRuleColor
-  columnRuleStyle?: columnRuleStyle
-  columnRuleWidth?: columnRuleWidth
-  columnSpan?: columnSpan
-  columnWidth?: columnWidth
-  columns?: columns
-  contain?: contain
-  content?: content
-  counterIncrement?: counterIncrement
-  counterReset?: counterReset
-  cursor?: cursor
-  direction?: direction
-  display?: display
-  displayInside?: displayInside
-  displayList?: displayList
-  displayOutside?: displayOutside
-  emptyCells?: emptyCells
-  filter?: filter
-  flex?: flex
-  flexBasis?: flexBasis
-  flexDirection?: flexDirection
-  flexFlow?: flexFlow
-  flexGrow?: flexGrow
-  flexShrink?: flexShrink
-  flexWrap?: flexWrap
-  float?: float
-  font?: font
-  fontFamily?: fontFamily
-  fontFeatureSettings?: fontFeatureSettings
-  fontKerning?: fontKerning
-  fontLanguageOverride?: fontLanguageOverride
-  fontSize?: fontSize
-  fontSizeAdjust?: fontSizeAdjust
-  fontStretch?: fontStretch
-  fontStyle?: fontStyle
-  fontSynthesis?: fontSynthesis
-  fontVariant?: fontVariant
-  fontVariantAlternates?: fontVariantAlternates
-  fontVariantCaps?: fontVariantCaps
-  fontVariantEastAsian?: fontVariantEastAsian
-  fontVariantLigatures?: fontVariantLigatures
-  fontVariantNumeric?: fontVariantNumeric
-  fontVariantPosition?: fontVariantPosition
-  fontWeight?: fontWeight
-  grid?: grid
-  gridArea?: gridArea
-  gridAutoColumns?: gridAutoColumns
-  gridAutoFlow?: gridAutoFlow
-  gridAutoRows?: gridAutoRows
-  gridColumn?: gridColumn
-  gridColumnEnd?: gridColumnEnd
-  gridColumnGap?: gridColumnGap
-  gridColumnStart?: gridColumnStart
-  gridGap?: gridGap
-  gridRow?: gridRow
-  gridRowEnd?: gridRowEnd
-  gridRowGap?: gridRowGap
-  gridRowStart?: gridRowStart
-  gridTemplate?: gridTemplate
-  gridTemplateAreas?: gridTemplateAreas
-  gridTemplateColumns?: gridTemplateColumns
-  gridTemplateRows?: gridTemplateRows
-  height?: number | string
-  hyphens?: hyphens
-  imageOrientation?: imageOrientation
-  imageRendering?: imageRendering
-  imageResolution?: imageResolution
-  imeMode?: imeMode
-  initialLetter?: initialLetter
-  initialLetterAlign?: initialLetterAlign
-  inlineSize?: inlineSize
-  isolation?: isolation
-  justifyContent?: justifyContent
-  left?: number | string
-  letterSpacing?: letterSpacing
-  lineBreak?: lineBreak
-  lineHeight?: lineHeight
-  listStyle?: listStyle
-  listStyleImage?: listStyleImage
-  listStylePosition?: listStylePosition
-  listStyleType?: listStyleType
-  margin?: margin
-  marginBlockEnd?: marginBlockEnd
-  marginBlockStart?: marginBlockStart
-  marginBottom?: marginBottom
-  marginInlineEnd?: marginInlineEnd
-  marginInlineStart?: marginInlineStart
-  marginLeft?: marginLeft
-  marginRight?: marginRight
-  marginTop?: marginTop
-  markerOffset?: markerOffset
-  mask?: mask
-  maskClip?: maskClip
-  maskComposite?: maskComposite
-  maskImage?: maskImage
-  maskMode?: maskMode
-  maskOrigin?: maskOrigin
-  maskPosition?: maskPosition
-  maskRepeat?: maskRepeat
-  maskSize?: maskSize
-  maskType?: maskType
-  maxBlockSize?: maxBlockSize
-  maxHeight?: maxHeight
-  maxInlineSize?: maxInlineSize
-  maxWidth?: maxWidth
-  minBlockSize?: minBlockSize
-  minHeight?: minHeight
-  minInlineSize?: minInlineSize
-  minWidth?: minWidth
-  mixBlendMode?: mixBlendMode
-  motion?: motion
-  motionOffset?: motionOffset
-  motionPath?: motionPath
-  motionRotation?: motionRotation
-  objectFit?: objectFit
-  objectPosition?: objectPosition
-  offsetBlockEnd?: offsetBlockEnd
-  offsetBlockStart?: offsetBlockStart
-  offsetInlineEnd?: offsetInlineEnd
-  offsetInlineStart?: offsetInlineStart
-  opacity?: opacity
-  order?: order
-  orphans?: orphans
-  outline?: outline
-  outlineColor?: outlineColor
-  outlineOffset?: outlineOffset
-  outlineStyle?: outlineStyle
-  outlineWidth?: outlineWidth
-  overflow?: overflow
-  overflowClipBox?: overflowClipBox
-  overflowWrap?: overflowWrap
-  overflowX?: overflowX
-  overflowY?: overflowY
-  padding?: padding
-  paddingBlockEnd?: paddingBlockEnd
-  paddingBlockStart?: paddingBlockStart
-  paddingBottom?: paddingBottom
-  paddingInlineEnd?: paddingInlineEnd
-  paddingInlineStart?: paddingInlineStart
-  paddingLeft?: paddingLeft
-  paddingRight?: paddingRight
-  paddingTop?: paddingTop
-  paddingH?: number | string
-  paddingV?: number | string
-  marginH?: number | string
-  marginV?: number | string
-  pageBreakAfter?: pageBreakAfter
-  pageBreakBefore?: pageBreakBefore
-  pageBreakInside?: pageBreakInside
-  perspective?: perspective
-  perspectiveOrigin?: perspectiveOrigin
-  pointerEvents?: pointerEvents
-  position?: position
-  quotes?: quotes
-  resize?: resize
-  right?: number | string
-  rubyAlign?: rubyAlign
-  rubyMerge?: rubyMerge
-  rubyPosition?: rubyPosition
-  scrollBehavior?: scrollBehavior
-  scrollSnapCoordinate?: scrollSnapCoordinate
-  scrollSnapDestination?: scrollSnapDestination
-  scrollSnapPointsX?: scrollSnapPointsX
-  scrollSnapPointsY?: scrollSnapPointsY
-  scrollSnapType?: scrollSnapType
-  scrollSnapTypeX?: scrollSnapTypeX
-  scrollSnapTypeY?: scrollSnapTypeY
-  shapeImageThreshold?: shapeImageThreshold
-  shapeMargin?: shapeMargin
-  shapeOutside?: shapeOutside
-  tabSize?: tabSize
-  tableLayout?: tableLayout
-  textAlign?: textAlign
-  textAlignLast?: textAlignLast
-  textCombineUpright?: textCombineUpright
-  textDecoration?: textDecoration
-  textDecorationColor?: textDecorationColor
-  textDecorationLine?: textDecorationLine
-  textDecorationSkip?: textDecorationSkip
-  textDecorationStyle?: textDecorationStyle
-  textEmphasis?: textEmphasis
-  textEmphasisColor?: textEmphasisColor
-  textEmphasisPosition?: textEmphasisPosition
-  textEmphasisStyle?: textEmphasisStyle
-  textIndent?: textIndent
-  textOrientation?: textOrientation
-  textOverflow?: textOverflow
-  textRendering?: textRendering
-  textShadow?: textShadow
-  textSizeAdjust?: textSizeAdjust
-  textTransform?: textTransform
-  textUnderlinePosition?: textUnderlinePosition
-  top?: number | string
-  touchAction?: touchAction
-  transform?: transform
-  transformBox?: transformBox
-  transformOrigin?: transformOrigin
-  transformStyle?: transformStyle
-  transition?: transition
-  transitionDelay?: transitionDelay
-  transitionDuration?: transitionDuration
-  transitionProperty?: transitionProperty
-  transitionTimingFunction?: transitionTimingFunction
-  unicodeBidi?: unicodeBidi
-  userSelect?: userSelect
-  verticalAlign?: verticalAlign
-  visibility?: visibility
-  whiteSpace?: whiteSpace
-  widows?: widows
-  width?: number | string
-  willChange?: willChange
-  wordBreak?: wordBreak
-  wordSpacing?: wordSpacing
-  wordWrap?: wordWrap
-  writingMode?: writingMode
-  zIndex?: zIndex
-  alignmentBaseline?: alignmentBaseline
-  baselineShift?: baselineShift
-  behavior?: behavior
-  clipRule?: clipRule
-  cue?: cue
-  cueAfter?: cueAfter
-  cueBefore?: cueBefore
-  dominantBaseline?: dominantBaseline
-  fill?: fill
-  fillOpacity?: fillOpacity
-  fillRule?: fillRule
-  glyphOrientationHorizontal?: glyphOrientationHorizontal
-  glyphOrientationVertical?: glyphOrientationVertical
-  kerning?: kerning
-  marker?: marker
-  markerEnd?: markerEnd
-  markerMid?: markerMid
-  markerStart?: markerStart
-  pause?: pause
-  pauseAfter?: pauseAfter
-  pauseBefore?: pauseBefore
-  rest?: rest
-  restAfter?: restAfter
-  restBefore?: restBefore
-  shapeRendering?: shapeRendering
-  src?: src
-  speak?: speak
-  speakAs?: speakAs
-  stroke?: stroke
-  strokeDasharray?: strokeDasharray
-  strokeDashoffset?: strokeDashoffset
-  strokeLinecap?: strokeLinecap
-  strokeLinejoin?: strokeLinejoin
-  strokeMiterlimit?: strokeMiterlimit
-  strokeOpacity?: strokeOpacity
-  strokeWidth?: strokeWidth
-  textAnchor?: textAnchor
-  unicodeRange?: unicodeRange
-  voiceBalance?: voiceBalance
-  voiceDuration?: voiceDuration
-  voiceFamily?: voiceFamily
-  voicePitch?: voicePitch
-  voiceRange?: voiceRange
-  voiceRate?: voiceRate
-  voiceStress?: voiceStress
-  voiceVolume?: voiceVolume
-  zoom?: zoom
+  alignContent?: CSSPropertyVal<alignContent>
+  alignItems?: CSSPropertyVal<alignItems>
+  alignSelf?: CSSPropertyVal<alignSelf>
+  all?: CSSPropertyVal<all>
+  animation?: CSSPropertyVal<animation>
+  animationDelay?: CSSPropertyVal<animationDelay>
+  animationDirection?: CSSPropertyVal<animationDirection>
+  animationDuration?: CSSPropertyVal<animationDuration>
+  animationFillMode?: CSSPropertyVal<animationFillMode>
+  animationIterationCount?: CSSPropertyVal<animationIterationCount>
+  animationName?: CSSPropertyVal<animationName>
+  animationPlayState?: CSSPropertyVal<animationPlayState>
+  animationTimingFunction?: CSSPropertyVal<animationTimingFunction>
+  appearance?: CSSPropertyVal<appearance>
+  azimuth?: CSSPropertyVal<azimuth>
+  backdropFilter?: CSSPropertyVal<backdropFilter>
+  backfaceVisibility?: CSSPropertyVal<backfaceVisibility>
+  background?: CSSPropertyVal<background>
+  backgroundAttachment?: CSSPropertyVal<backgroundAttachment>
+  backgroundBlendMode?: CSSPropertyVal<backgroundBlendMode>
+  backgroundClip?: CSSPropertyVal<backgroundClip>
+  backgroundColor?: CSSPropertyVal<backgroundColor>
+  backgroundImage?: CSSPropertyVal<backgroundImage>
+  backgroundOrigin?: CSSPropertyVal<backgroundOrigin>
+  backgroundPosition?: CSSPropertyVal<backgroundPosition>
+  backgroundPositionX?: CSSPropertyVal<backgroundPositionX>
+  backgroundPositionY?: CSSPropertyVal<backgroundPositionY>
+  backgroundRepeat?: CSSPropertyVal<backgroundRepeat>
+  backgroundSize?: CSSPropertyVal<backgroundSize>
+  blockSize?: CSSPropertyVal<blockSize>
+  border?: CSSPropertyVal<border>
+  borderBlockEnd?: CSSPropertyVal<borderBlockEnd>
+  borderBlockEndColor?: CSSPropertyVal<borderBlockEndColor>
+  borderBlockEndStyle?: CSSPropertyVal<borderBlockEndStyle>
+  borderBlockEndWidth?: CSSPropertyVal<borderBlockEndWidth>
+  borderBlockStart?: CSSPropertyVal<borderBlockStart>
+  borderBlockStartColor?: CSSPropertyVal<borderBlockStartColor>
+  borderBlockStartStyle?: CSSPropertyVal<borderBlockStartStyle>
+  borderBlockStartWidth?: CSSPropertyVal<borderBlockStartWidth>
+  borderBottom?: CSSPropertyVal<border>
+  borderBottomColor?: CSSPropertyVal<Color>
+  borderBottomLeftRadius?: CSSPropertyVal<borderBottomLeftRadius>
+  borderBottomRightRadius?: CSSPropertyVal<borderBottomRightRadius>
+  borderBottomStyle?: CSSPropertyVal<borderBottomStyle>
+  borderBottomWidth?: CSSPropertyVal<borderBottomWidth>
+  borderCollapse?: CSSPropertyVal<borderCollapse>
+  borderColor?: CSSPropertyVal<borderColor>
+  borderImage?: CSSPropertyVal<borderImage>
+  borderImageOutset?: CSSPropertyVal<borderImageOutset>
+  borderImageRepeat?: CSSPropertyVal<borderImageRepeat>
+  borderImageSlice?: CSSPropertyVal<borderImageSlice>
+  borderImageSource?: CSSPropertyVal<borderImageSource>
+  borderImageWidth?: CSSPropertyVal<borderImageWidth>
+  borderInlineEnd?: CSSPropertyVal<borderInlineEnd>
+  borderInlineEndColor?: CSSPropertyVal<borderInlineEndColor>
+  borderInlineEndStyle?: CSSPropertyVal<borderInlineEndStyle>
+  borderInlineEndWidth?: CSSPropertyVal<borderInlineEndWidth>
+  borderInlineStart?: CSSPropertyVal<borderInlineStart>
+  borderInlineStartColor?: CSSPropertyVal<borderInlineStartColor>
+  borderInlineStartStyle?: CSSPropertyVal<borderInlineStartStyle>
+  borderInlineStartWidth?: CSSPropertyVal<borderInlineStartWidth>
+  borderLeft?: CSSPropertyVal<border>
+  borderLeftColor?: CSSPropertyVal<borderLeftColor>
+  borderLeftStyle?: CSSPropertyVal<borderLeftStyle>
+  borderLeftWidth?: CSSPropertyVal<borderLeftWidth>
+  borderRadius?: CSSPropertyVal<borderRadius>
+  borderRight?: CSSPropertyVal<border>
+  borderRightColor?: CSSPropertyVal<borderRightColor>
+  borderRightStyle?: CSSPropertyVal<borderRightStyle>
+  borderRightWidth?: CSSPropertyVal<borderRightWidth>
+  borderSpacing?: CSSPropertyVal<borderSpacing>
+  borderStyle?: CSSPropertyVal<borderStyle>
+  borderTop?: CSSPropertyVal<border>
+  borderTopColor?: CSSPropertyVal<Color>
+  borderTopLeftRadius?: CSSPropertyVal<borderTopLeftRadius>
+  borderTopRightRadius?: CSSPropertyVal<borderTopRightRadius>
+  borderTopStyle?: CSSPropertyVal<borderTopStyle>
+  borderTopWidth?: CSSPropertyVal<borderTopWidth>
+  borderWidth?: CSSPropertyVal<borderWidth>
+  bottom?: CSSPropertyVal<number | string>
+  boxAlign?: CSSPropertyVal<boxAlign>
+  boxDecorationBreak?: CSSPropertyVal<boxDecorationBreak>
+  boxDirection?: CSSPropertyVal<boxDirection>
+  boxFlex?: CSSPropertyVal<boxFlex>
+  boxFlexGroup?: CSSPropertyVal<boxFlexGroup>
+  boxLines?: CSSPropertyVal<boxLines>
+  boxOrdinalGroup?: CSSPropertyVal<boxOrdinalGroup>
+  boxOrient?: CSSPropertyVal<boxOrient>
+  boxPack?: CSSPropertyVal<boxPack>
+  boxShadow?: CSSPropertyVal<boxShadow>
+  boxSizing?: CSSPropertyVal<boxSizing>
+  boxSuppress?: CSSPropertyVal<boxSuppress>
+  breakAfter?: CSSPropertyVal<breakAfter>
+  breakBefore?: CSSPropertyVal<breakBefore>
+  breakInside?: CSSPropertyVal<breakInside>
+  captionSide?: CSSPropertyVal<captionSide>
+  clear?: CSSPropertyVal<clear>
+  clip?: CSSPropertyVal<clip>
+  clipPath?: CSSPropertyVal<clipPath>
+  color?: CSSPropertyVal<Color>
+  columnCount?: CSSPropertyVal<columnCount>
+  columnFill?: CSSPropertyVal<columnFill>
+  columnGap?: CSSPropertyVal<columnGap>
+  columnRule?: CSSPropertyVal<columnRule>
+  columnRuleColor?: CSSPropertyVal<columnRuleColor>
+  columnRuleStyle?: CSSPropertyVal<columnRuleStyle>
+  columnRuleWidth?: CSSPropertyVal<columnRuleWidth>
+  columnSpan?: CSSPropertyVal<columnSpan>
+  columnWidth?: CSSPropertyVal<columnWidth>
+  columns?: CSSPropertyVal<columns>
+  contain?: CSSPropertyVal<contain>
+  content?: CSSPropertyVal<content>
+  counterIncrement?: CSSPropertyVal<counterIncrement>
+  counterReset?: CSSPropertyVal<counterReset>
+  cursor?: CSSPropertyVal<cursor>
+  direction?: CSSPropertyVal<direction>
+  display?: CSSPropertyVal<display>
+  displayInside?: CSSPropertyVal<displayInside>
+  displayList?: CSSPropertyVal<displayList>
+  displayOutside?: CSSPropertyVal<displayOutside>
+  emptyCells?: CSSPropertyVal<emptyCells>
+  filter?: CSSPropertyVal<filter>
+  flex?: CSSPropertyVal<flex>
+  flexBasis?: CSSPropertyVal<flexBasis>
+  flexDirection?: CSSPropertyVal<flexDirection>
+  flexFlow?: CSSPropertyVal<flexFlow>
+  flexGrow?: CSSPropertyVal<flexGrow>
+  flexShrink?: CSSPropertyVal<flexShrink>
+  flexWrap?: CSSPropertyVal<flexWrap>
+  float?: CSSPropertyVal<float>
+  font?: CSSPropertyVal<font>
+  fontFamily?: CSSPropertyVal<fontFamily>
+  fontFeatureSettings?: CSSPropertyVal<fontFeatureSettings>
+  fontKerning?: CSSPropertyVal<fontKerning>
+  fontLanguageOverride?: CSSPropertyVal<fontLanguageOverride>
+  fontSize?: CSSPropertyVal<fontSize>
+  fontSizeAdjust?: CSSPropertyVal<fontSizeAdjust>
+  fontStretch?: CSSPropertyVal<fontStretch>
+  fontStyle?: CSSPropertyVal<fontStyle>
+  fontSynthesis?: CSSPropertyVal<fontSynthesis>
+  fontVariant?: CSSPropertyVal<fontVariant>
+  fontVariantAlternates?: CSSPropertyVal<fontVariantAlternates>
+  fontVariantCaps?: CSSPropertyVal<fontVariantCaps>
+  fontVariantEastAsian?: CSSPropertyVal<fontVariantEastAsian>
+  fontVariantLigatures?: CSSPropertyVal<fontVariantLigatures>
+  fontVariantNumeric?: CSSPropertyVal<fontVariantNumeric>
+  fontVariantPosition?: CSSPropertyVal<fontVariantPosition>
+  fontWeight?: CSSPropertyVal<fontWeight>
+  grid?: CSSPropertyVal<grid>
+  gridArea?: CSSPropertyVal<gridArea>
+  gridAutoColumns?: CSSPropertyVal<gridAutoColumns>
+  gridAutoFlow?: CSSPropertyVal<gridAutoFlow>
+  gridAutoRows?: CSSPropertyVal<gridAutoRows>
+  gridColumn?: CSSPropertyVal<gridColumn>
+  gridColumnEnd?: CSSPropertyVal<gridColumnEnd>
+  gridColumnGap?: CSSPropertyVal<gridColumnGap>
+  gridColumnStart?: CSSPropertyVal<gridColumnStart>
+  gridGap?: CSSPropertyVal<gridGap>
+  gridRow?: CSSPropertyVal<gridRow>
+  gridRowEnd?: CSSPropertyVal<gridRowEnd>
+  gridRowGap?: CSSPropertyVal<gridRowGap>
+  gridRowStart?: CSSPropertyVal<gridRowStart>
+  gridTemplate?: CSSPropertyVal<gridTemplate>
+  gridTemplateAreas?: CSSPropertyVal<gridTemplateAreas>
+  gridTemplateColumns?: CSSPropertyVal<gridTemplateColumns>
+  gridTemplateRows?: CSSPropertyVal<gridTemplateRows>
+  height?: CSSPropertyVal<number | string>
+  hyphens?: CSSPropertyVal<hyphens>
+  imageOrientation?: CSSPropertyVal<imageOrientation>
+  imageRendering?: CSSPropertyVal<imageRendering>
+  imageResolution?: CSSPropertyVal<imageResolution>
+  imeMode?: CSSPropertyVal<imeMode>
+  initialLetter?: CSSPropertyVal<initialLetter>
+  initialLetterAlign?: CSSPropertyVal<initialLetterAlign>
+  inlineSize?: CSSPropertyVal<inlineSize>
+  isolation?: CSSPropertyVal<isolation>
+  justifyContent?: CSSPropertyVal<justifyContent>
+  left?: CSSPropertyVal<number | string>
+  letterSpacing?: CSSPropertyVal<letterSpacing>
+  lineBreak?: CSSPropertyVal<lineBreak>
+  lineHeight?: CSSPropertyVal<lineHeight>
+  listStyle?: CSSPropertyVal<listStyle>
+  listStyleImage?: CSSPropertyVal<listStyleImage>
+  listStylePosition?: CSSPropertyVal<listStylePosition>
+  listStyleType?: CSSPropertyVal<listStyleType>
+  margin?: CSSPropertyVal<margin>
+  marginBlockEnd?: CSSPropertyVal<marginBlockEnd>
+  marginBlockStart?: CSSPropertyVal<marginBlockStart>
+  marginBottom?: CSSPropertyVal<marginBottom>
+  marginInlineEnd?: CSSPropertyVal<marginInlineEnd>
+  marginInlineStart?: CSSPropertyVal<marginInlineStart>
+  marginLeft?: CSSPropertyVal<marginLeft>
+  marginRight?: CSSPropertyVal<marginRight>
+  marginTop?: CSSPropertyVal<marginTop>
+  markerOffset?: CSSPropertyVal<markerOffset>
+  mask?: CSSPropertyVal<mask>
+  maskClip?: CSSPropertyVal<maskClip>
+  maskComposite?: CSSPropertyVal<maskComposite>
+  maskImage?: CSSPropertyVal<maskImage>
+  maskMode?: CSSPropertyVal<maskMode>
+  maskOrigin?: CSSPropertyVal<maskOrigin>
+  maskPosition?: CSSPropertyVal<maskPosition>
+  maskRepeat?: CSSPropertyVal<maskRepeat>
+  maskSize?: CSSPropertyVal<maskSize>
+  maskType?: CSSPropertyVal<maskType>
+  maxBlockSize?: CSSPropertyVal<maxBlockSize>
+  maxHeight?: CSSPropertyVal<maxHeight>
+  maxInlineSize?: CSSPropertyVal<maxInlineSize>
+  maxWidth?: CSSPropertyVal<maxWidth>
+  minBlockSize?: CSSPropertyVal<minBlockSize>
+  minHeight?: CSSPropertyVal<minHeight>
+  minInlineSize?: CSSPropertyVal<minInlineSize>
+  minWidth?: CSSPropertyVal<minWidth>
+  mixBlendMode?: CSSPropertyVal<mixBlendMode>
+  motion?: CSSPropertyVal<motion>
+  motionOffset?: CSSPropertyVal<motionOffset>
+  motionPath?: CSSPropertyVal<motionPath>
+  motionRotation?: CSSPropertyVal<motionRotation>
+  objectFit?: CSSPropertyVal<objectFit>
+  objectPosition?: CSSPropertyVal<objectPosition>
+  offsetBlockEnd?: CSSPropertyVal<offsetBlockEnd>
+  offsetBlockStart?: CSSPropertyVal<offsetBlockStart>
+  offsetInlineEnd?: CSSPropertyVal<offsetInlineEnd>
+  offsetInlineStart?: CSSPropertyVal<offsetInlineStart>
+  opacity?: CSSPropertyVal<opacity>
+  order?: CSSPropertyVal<order>
+  orphans?: CSSPropertyVal<orphans>
+  outline?: CSSPropertyVal<outline>
+  outlineColor?: CSSPropertyVal<outlineColor>
+  outlineOffset?: CSSPropertyVal<outlineOffset>
+  outlineStyle?: CSSPropertyVal<outlineStyle>
+  outlineWidth?: CSSPropertyVal<outlineWidth>
+  overflow?: CSSPropertyVal<overflow>
+  overflowClipBox?: CSSPropertyVal<overflowClipBox>
+  overflowWrap?: CSSPropertyVal<overflowWrap>
+  overflowX?: CSSPropertyVal<overflowX>
+  overflowY?: CSSPropertyVal<overflowY>
+  padding?: CSSPropertyVal<padding>
+  paddingBlockEnd?: CSSPropertyVal<paddingBlockEnd>
+  paddingBlockStart?: CSSPropertyVal<paddingBlockStart>
+  paddingBottom?: CSSPropertyVal<paddingBottom>
+  paddingInlineEnd?: CSSPropertyVal<paddingInlineEnd>
+  paddingInlineStart?: CSSPropertyVal<paddingInlineStart>
+  paddingLeft?: CSSPropertyVal<paddingLeft>
+  paddingRight?: CSSPropertyVal<paddingRight>
+  paddingTop?: CSSPropertyVal<paddingTop>
+  paddingH?: CSSPropertyVal<number | string>
+  paddingV?: CSSPropertyVal<number | string>
+  marginH?: CSSPropertyVal<number | string>
+  marginV?: CSSPropertyVal<number | string>
+  pageBreakAfter?: CSSPropertyVal<pageBreakAfter>
+  pageBreakBefore?: CSSPropertyVal<pageBreakBefore>
+  pageBreakInside?: CSSPropertyVal<pageBreakInside>
+  perspective?: CSSPropertyVal<perspective>
+  perspectiveOrigin?: CSSPropertyVal<perspectiveOrigin>
+  pointerEvents?: CSSPropertyVal<pointerEvents>
+  position?: CSSPropertyVal<position>
+  quotes?: CSSPropertyVal<quotes>
+  resize?: CSSPropertyVal<resize>
+  right?: CSSPropertyVal<number | string>
+  rubyAlign?: CSSPropertyVal<rubyAlign>
+  rubyMerge?: CSSPropertyVal<rubyMerge>
+  rubyPosition?: CSSPropertyVal<rubyPosition>
+  scrollBehavior?: CSSPropertyVal<scrollBehavior>
+  scrollSnapCoordinate?: CSSPropertyVal<scrollSnapCoordinate>
+  scrollSnapDestination?: CSSPropertyVal<scrollSnapDestination>
+  scrollSnapPointsX?: CSSPropertyVal<scrollSnapPointsX>
+  scrollSnapPointsY?: CSSPropertyVal<scrollSnapPointsY>
+  scrollSnapType?: CSSPropertyVal<scrollSnapType>
+  scrollSnapTypeX?: CSSPropertyVal<scrollSnapTypeX>
+  scrollSnapTypeY?: CSSPropertyVal<scrollSnapTypeY>
+  shapeImageThreshold?: CSSPropertyVal<shapeImageThreshold>
+  shapeMargin?: CSSPropertyVal<shapeMargin>
+  shapeOutside?: CSSPropertyVal<shapeOutside>
+  tabSize?: CSSPropertyVal<tabSize>
+  tableLayout?: CSSPropertyVal<tableLayout>
+  textAlign?: CSSPropertyVal<textAlign>
+  textAlignLast?: CSSPropertyVal<textAlignLast>
+  textCombineUpright?: CSSPropertyVal<textCombineUpright>
+  textDecoration?: CSSPropertyVal<textDecoration>
+  textDecorationColor?: CSSPropertyVal<textDecorationColor>
+  textDecorationLine?: CSSPropertyVal<textDecorationLine>
+  textDecorationSkip?: CSSPropertyVal<textDecorationSkip>
+  textDecorationStyle?: CSSPropertyVal<textDecorationStyle>
+  textEmphasis?: CSSPropertyVal<textEmphasis>
+  textEmphasisColor?: CSSPropertyVal<textEmphasisColor>
+  textEmphasisPosition?: CSSPropertyVal<textEmphasisPosition>
+  textEmphasisStyle?: CSSPropertyVal<textEmphasisStyle>
+  textIndent?: CSSPropertyVal<textIndent>
+  textOrientation?: CSSPropertyVal<textOrientation>
+  textOverflow?: CSSPropertyVal<textOverflow>
+  textRendering?: CSSPropertyVal<textRendering>
+  textShadow?: CSSPropertyVal<textShadow>
+  textSizeAdjust?: CSSPropertyVal<textSizeAdjust>
+  textTransform?: CSSPropertyVal<textTransform>
+  textUnderlinePosition?: CSSPropertyVal<textUnderlinePosition>
+  top?: CSSPropertyVal<number | string>
+  touchAction?: CSSPropertyVal<touchAction>
+  transform?: CSSPropertyVal<transform>
+  transformBox?: CSSPropertyVal<transformBox>
+  transformOrigin?: CSSPropertyVal<transformOrigin>
+  transformStyle?: CSSPropertyVal<transformStyle>
+  transition?: CSSPropertyVal<transition>
+  transitionDelay?: CSSPropertyVal<transitionDelay>
+  transitionDuration?: CSSPropertyVal<transitionDuration>
+  transitionProperty?: CSSPropertyVal<transitionProperty>
+  transitionTimingFunction?: CSSPropertyVal<transitionTimingFunction>
+  unicodeBidi?: CSSPropertyVal<unicodeBidi>
+  userSelect?: CSSPropertyVal<userSelect>
+  verticalAlign?: CSSPropertyVal<verticalAlign>
+  visibility?: CSSPropertyVal<visibility>
+  whiteSpace?: CSSPropertyVal<whiteSpace>
+  widows?: CSSPropertyVal<widows>
+  width?: CSSPropertyVal<number | string>
+  willChange?: CSSPropertyVal<willChange>
+  wordBreak?: CSSPropertyVal<wordBreak>
+  wordSpacing?: CSSPropertyVal<wordSpacing>
+  wordWrap?: CSSPropertyVal<wordWrap>
+  writingMode?: CSSPropertyVal<writingMode>
+  zIndex?: CSSPropertyVal<zIndex>
+  alignmentBaseline?: CSSPropertyVal<alignmentBaseline>
+  baselineShift?: CSSPropertyVal<baselineShift>
+  behavior?: CSSPropertyVal<behavior>
+  clipRule?: CSSPropertyVal<clipRule>
+  cue?: CSSPropertyVal<cue>
+  cueAfter?: CSSPropertyVal<cueAfter>
+  cueBefore?: CSSPropertyVal<cueBefore>
+  dominantBaseline?: CSSPropertyVal<dominantBaseline>
+  fill?: CSSPropertyVal<fill>
+  fillOpacity?: CSSPropertyVal<fillOpacity>
+  fillRule?: CSSPropertyVal<fillRule>
+  glyphOrientationHorizontal?: CSSPropertyVal<glyphOrientationHorizontal>
+  glyphOrientationVertical?: CSSPropertyVal<glyphOrientationVertical>
+  kerning?: CSSPropertyVal<kerning>
+  marker?: CSSPropertyVal<marker>
+  markerEnd?: CSSPropertyVal<markerEnd>
+  markerMid?: CSSPropertyVal<markerMid>
+  markerStart?: CSSPropertyVal<markerStart>
+  pause?: CSSPropertyVal<pause>
+  pauseAfter?: CSSPropertyVal<pauseAfter>
+  pauseBefore?: CSSPropertyVal<pauseBefore>
+  rest?: CSSPropertyVal<rest>
+  restAfter?: CSSPropertyVal<restAfter>
+  restBefore?: CSSPropertyVal<restBefore>
+  shapeRendering?: CSSPropertyVal<shapeRendering>
+  src?: CSSPropertyVal<src>
+  speak?: CSSPropertyVal<speak>
+  speakAs?: CSSPropertyVal<speakAs>
+  stroke?: CSSPropertyVal<stroke>
+  strokeDasharray?: CSSPropertyVal<strokeDasharray>
+  strokeDashoffset?: CSSPropertyVal<strokeDashoffset>
+  strokeLinecap?: CSSPropertyVal<strokeLinecap>
+  strokeLinejoin?: CSSPropertyVal<strokeLinejoin>
+  strokeMiterlimit?: CSSPropertyVal<strokeMiterlimit>
+  strokeOpacity?: CSSPropertyVal<strokeOpacity>
+  strokeWidth?: CSSPropertyVal<strokeWidth>
+  textAnchor?: CSSPropertyVal<textAnchor>
+  unicodeRange?: CSSPropertyVal<unicodeRange>
+  voiceBalance?: CSSPropertyVal<voiceBalance>
+  voiceDuration?: CSSPropertyVal<voiceDuration>
+  voiceFamily?: CSSPropertyVal<voiceFamily>
+  voicePitch?: CSSPropertyVal<voicePitch>
+  voiceRange?: CSSPropertyVal<voiceRange>
+  voiceRate?: CSSPropertyVal<voiceRate>
+  voiceStress?: CSSPropertyVal<voiceStress>
+  voiceVolume?: CSSPropertyVal<voiceVolume>
+  zoom?: CSSPropertyVal<zoom>
 }
 
 export type CSSPropertySetStrict = OriginalCSSPropertySetStrict & {
@@ -1144,7 +1149,7 @@ export type CSSPropertySetStrict = OriginalCSSPropertySetStrict & {
   borderTopRadius?: number
 }
 
-export type CSSPropertySet = CSSPropertySetStrict & {
+export type CSSPropertySet = {
   // because we have '& > .something'
   [key: string]: CSSPropertySetStrict | any
-}
+} & CSSPropertySetStrict

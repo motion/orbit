@@ -11,6 +11,34 @@ class ListsStore {
       title: 'First List',
       subtitle: '10 items',
     },
+    {
+      id: 1,
+      index: 1,
+      type: 'list',
+      title: 'Next list',
+      subtitle: '3 items',
+    },
+    {
+      id: 2,
+      index: 2,
+      type: 'list',
+      title: 'Third list',
+      subtitle: '34 items',
+    },
+    {
+      id: 3,
+      index: 3,
+      type: 'list',
+      title: 'Items I Really Like',
+      subtitle: '100 items',
+    },
+    {
+      id: 4,
+      index: 4,
+      type: 'list',
+      title: 'Another Another List',
+      subtitle: '1 items',
+    },
   ]
 }
 

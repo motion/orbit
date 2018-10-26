@@ -11,6 +11,7 @@ import { SearchFilterStore } from './SearchFilterStore'
 import { SelectionGroup, SelectionStore } from './SelectionStore'
 import { SettingStore } from '../../../stores/SettingStore'
 import { uniq } from 'lodash'
+import { trace } from 'mobx'
 
 const TYPE_DEBOUNCE = 200
 
@@ -98,14 +99,17 @@ export class SearchStore {
       const { activeQuery, quickSearchState, searchState } = this
       // two stage so we do quick search faster
       await when(() => activeQuery === quickSearchState.query)
-      let res = [
-        {
-          type: 'row',
-          shouldAutoSelect: true,
-          ids: quickSearchState.results.map(x => x.id),
-        } as SelectionGroup,
-      ]
-      setValue(res)
+      let res = []
+      if (quickSearchState.results.length) {
+        res = [
+          {
+            type: 'row',
+            shouldAutoSelect: true,
+            ids: quickSearchState.results.map(x => x.id),
+          } as SelectionGroup,
+        ]
+        setValue(res)
+      }
       await when(() => activeQuery === searchState.query)
       return [
         ...res,
@@ -133,15 +137,13 @@ export class SearchStore {
   hasQueryVal = react(this.hasQuery, _ => _)
 
   searchState = react(
-    () => {
-      // update to query or filter changes
-      App.state.query
-      this.searchFilterStore.activeFilters
-      this.searchFilterStore.exclusiveFilters
-      this.searchFilterStore.sortBy
-      this.searchFilterStore.dateState
-      return Math.random()
-    },
+    () => [
+      App.state.query,
+      this.searchFilterStore.activeFilters,
+      this.searchFilterStore.exclusiveFilters,
+      this.searchFilterStore.sortBy,
+      this.searchFilterStore.dateState,
+    ],
     async (_, { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
       const query = App.state.query
       console.log('SEARCH STATE REACT', this.isActive, query)

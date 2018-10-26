@@ -80,16 +80,17 @@ export function automagicReact(
     // nice name that shows some prop info for instance...
     get full() {
       const props = obj.props
-      const interestingProps = ['id', 'index', 'name', 'title']
-      let res = ''
-      for (const prop of interestingProps) {
-        const val = props[prop]
-        if (typeof val === 'string' || typeof val === 'number') {
-          res += `${prop}: ${val}`
+      if (props) {
+        let res = ''
+        for (const prop of ['id', 'index', 'name', 'title']) {
+          const val = props[prop]
+          if (typeof val === 'string' || typeof val === 'number') {
+            res += `${prop}: ${val}`
+          }
         }
-      }
-      if (res.length) {
-        return `${storeName}(${res}).${methodName}`
+        if (res.length) {
+          return `${storeName}(${res}).${methodName}`
+        }
       }
       return `${storeName}${methodName}`
     },

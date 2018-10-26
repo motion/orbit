@@ -31,5 +31,5 @@ export type MagicalObject = Object & {
     deep?: {}
     started?: boolean
   }
-  props?: {}
+  props?: { [key: string]: any }
 }

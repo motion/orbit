@@ -202,14 +202,16 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     return this.props.searchStore.quickSearchState.results.length
   }
 
-  private measure = () => {
+  private measure = debounce(() => {
     if (this.paneNode.clientHeight !== this.state.height) {
       const height = this.paneNode.clientHeight
       if (height !== this.state.height) {
+        console.log('measure complete, old height', this.state.height, 'new height', height)
         this.setState({ height })
       }
     }
-  }
+  }, 16)
+
   // @ts-ignore
   resizeObserver = new ResizeObserver(this.measure)
 

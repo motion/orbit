@@ -67,7 +67,7 @@ export const diffLog = (a, b) => {
     return []
   }
   if (!b || typeof b !== 'object' || Array.isArray(b)) {
-    return ['\nnew value:\n', niceLogObj(b)]
+    return ['\n =>', niceLogObj(b)]
   }
   // object
   const diff = whatsNew(a, b)

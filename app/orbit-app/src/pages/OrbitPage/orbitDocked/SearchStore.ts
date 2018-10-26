@@ -43,10 +43,10 @@ export class SearchStore {
   }
 
   setSelectionHandler = react(
-    () => this.results && this.isActive && Math.random(),
+    () => this.selectionResults && this.isActive && Math.random(),
     () => {
       ensure('is active', this.isActive)
-      this.props.selectionStore.setResults(this.results)
+      this.props.selectionStore.setResults(this.selectionResults)
     },
   )
 
@@ -85,7 +85,7 @@ export class SearchStore {
   )
 
   // aggregated results for selection store
-  results = react(
+  selectionResults = react(
     () => {
       this.activeQuery
       this.quickSearchState
@@ -93,8 +93,9 @@ export class SearchStore {
       return Math.random()
     },
     async (_, { when, setValue }) => {
+      // dont update selection results until necessary
+      await when(() => this.isActive)
       const { activeQuery, quickSearchState, searchState } = this
-      console.log('update the selection store...', activeQuery)
       // two stage so we do quick search faster
       await when(() => activeQuery === quickSearchState.query)
       let res = [
@@ -139,8 +140,8 @@ export class SearchStore {
 
       // if not on this pane, delay it a bit
       if (!this.isActive) {
+        await sleep(750)
         await idle()
-        await sleep(500)
         console.log('done now lets do something')
       }
 

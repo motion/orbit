@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { ListItem } from './SortableListItem'
 
-export const FirstItems = view(({ items, searchStore }) => {
+export const FirstItems = view(({ items, searchStore, itemProps }) => {
   return (
     <div
       style={{
@@ -17,6 +17,7 @@ export const FirstItems = view(({ items, searchStore }) => {
           model={item}
           realIndex={index + searchStore.quickSearchState.results.length}
           ignoreSelection
+          {...itemProps}
         />
       ))}
     </div>

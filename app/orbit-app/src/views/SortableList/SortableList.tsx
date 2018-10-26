@@ -124,7 +124,7 @@ export class SortableList extends React.Component<Props & { store?: SortableList
             index={index}
             realIndex={index + store.offset}
             query={searchStore.searchState.query}
-            itemProps={this.props.itemProps}
+            {...this.props.itemProps}
           />
         </div>
       </CellMeasurer>
@@ -132,7 +132,7 @@ export class SortableList extends React.Component<Props & { store?: SortableList
   }
 
   render() {
-    const { store, searchStore } = this.props
+    const { store, searchStore, itemProps } = this.props
     if (!store.items.length) {
       return (
         <View margin={[10, 0]}>
@@ -149,7 +149,7 @@ export class SortableList extends React.Component<Props & { store?: SortableList
         }}
       >
         {/* double render the first few items so we can measure height, but hide them */}
-        <FirstItems items={store.items} searchStore={searchStore} />
+        <FirstItems items={store.items} searchStore={searchStore} itemProps={itemProps} />
         {!!store.height && (
           <div
             style={{

@@ -333,13 +333,10 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
   render() {
     const { store, model, direct } = this.props
     store.isSelected
-    if (direct) {
-      return this.getInner(this.props)
-    }
     if (!model) {
       return null
     }
-    return this.getInner(normalizeItem(model))
+    return this.getInner(direct ? model : normalizeItem(model))
   }
 }
 

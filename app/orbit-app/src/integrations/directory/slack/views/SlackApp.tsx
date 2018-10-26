@@ -109,8 +109,8 @@ export class SlackApp extends React.Component<Props & { store: SlackAppStore }> 
               {!!bit && <ChatMessages bit={bit} />}
             </div>
             <ConvoGroup bits={store.nextConvos} />
-            {/* ensure we have room to scroll */}
-            <View height={300} />
+            {/* ensure we have room to scroll down */}
+            <View height={Math.max(0, 6 - Math.min(4, store.nextConvos.length)) * 100} />
           </View>
         </ScrollableContent>
         <AppStatusBar {...this.props} />

@@ -57,7 +57,6 @@ export class OrbitHome extends React.Component<Props> {
         </SubPane>
         {this.props.spaceStore.activeSpace.panes.filter(x => !x.static).map(pane => {
           const App = apps[pane.type]
-          console.log('pane.type', pane.type, pane, App)
           return (
             <SubPane
               name={pane.id}

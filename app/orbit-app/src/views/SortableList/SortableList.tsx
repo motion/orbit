@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { WindowScroller, List, CellMeasurerCache, CellMeasurer } from 'react-virtualized'
 import { SearchStore } from '../../pages/OrbitPage/orbitDocked/SearchStore'
-import { view, ensure } from '@mcro/black'
+import { view, ensure, react } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
-import { reaction } from 'mobx'
-import { debounce } from 'lodash'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
 import { OrbitItemSingleton } from '../OrbitItemStore'
@@ -28,46 +26,37 @@ class VirtualList extends React.Component<any> {
     return <List {...this.props} ref={this.props.forwardRef} />
   }
 }
-
 const SortableListContainer = SortableContainer(VirtualList, { withRef: true })
 
-@view.attach('searchStore', 'selectionStore', 'subPaneStore')
-@view
-export class SortableList extends React.Component<Props> {
+class SortableListStore {
+  props: Props
   windowScrollerRef = React.createRef<WindowScroller>()
-  listRef: List
-
-  state = {
-    height: 0,
-    isSorting: false,
-  }
-
-  private shouldResizeAll = false
-  private cache = new CellMeasurerCache({
+  listRef = React.createRef<List>()
+  height = 0
+  isSorting = false
+  observing = false
+  // @ts-ignore
+  resizeObserver = new ResizeObserver(() => this.measure)
+  cache = new CellMeasurerCache({
     defaultHeight: 60,
     fixedWidth: true,
   })
 
-  private resizeOnChange = reaction(
-    () => this.items && Math.random(),
+  resizeOnChange = react(
+    () => this.props.items && Math.random(),
     () => {
-      if (this.listRef) {
-        this.resizeAll()
-      }
+      ensure('this.listRef', !!this.listRef.current)
+      this.resizeAll()
     },
   )
 
-  private scrollToRow = reaction(
+  scrollToRow = react(
     () => this.props.selectionStore.activeIndex - this.offset,
     index => {
-      try {
-        ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
-        ensure('valid index', index > -1)
-        ensure('has list', !!this.listRef)
-      } catch {
-        return
-      }
-      this.listRef.scrollToRow(index)
+      ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
+      ensure('valid index', index > -1)
+      ensure('has list', !!this.listRef.current)
+      this.listRef.current.scrollToRow(index)
     },
   )
 
@@ -75,65 +64,65 @@ export class SortableList extends React.Component<Props> {
     return this.props.subPaneStore.paneNode
   }
 
-  observing = false
-
-  componentDidUpdate() {
-    this.observePaneSize()
-    if (this.shouldResizeAll) {
-      this.resizeAll()
-    }
-  }
-
-  componentDidMount() {
-    this.observePaneSize()
-  }
-
-  observePaneSize() {
-    if (!this.observing && this.paneNode) {
-      this.observing = true
-      this.resizeObserver.observe(this.paneNode)
-      this.measure()
-    }
-  }
-
-  componentWillUnmount() {
+  willUnmount() {
     this.resizeObserver.disconnect()
-    this.resizeOnChange()
-    this.scrollToRow()
   }
 
-  private get offset() {
+  observePaneSize = react(
+    () => this.props.subPaneStore.paneNode,
+    node => {
+      ensure('node', !!node)
+      ensure('!this.observing', !this.observing)
+      this.observing = true
+      this.resizeObserver.observe(node)
+      this.measure()
+    },
+  )
+
+  get offset() {
     return 0
   }
 
+  get items() {
+    return this.props.items || []
+  }
+
   private measure = () => {
-    if (this.paneNode.clientHeight !== this.state.height) {
-      const height = this.paneNode.clientHeight
-      if (height !== this.state.height) {
-        this.setState({ height })
-      }
+    console.log('measure', this.paneNode.clientHeight)
+    if (this.paneNode.clientHeight !== this.height) {
+      this.height = this.paneNode.clientHeight
     }
   }
-  // @ts-ignore
-  resizeObserver = new ResizeObserver(this.measure)
 
+  private resizeAll = () => {
+    this.cache.clearAll()
+    if (this.listRef.current) [this.listRef.current.recomputeRowHeights()]
+  }
+}
+
+@view.attach('searchStore', 'selectionStore', 'subPaneStore')
+@view.attach({
+  store: SortableListStore,
+})
+@view
+export class SortableList extends React.Component<Props & { store?: SortableListStore }> {
   private rowRenderer = ({ index, parent, style }) => {
-    const { searchStore } = this.props
-    const model = this.items[index]
+    const { searchStore, store } = this.props
+    const model = store.items[index]
     return (
       <CellMeasurer
         key={`${model.id}${index}`}
-        cache={this.cache}
+        cache={store.cache}
         columnIndex={0}
         parent={parent}
         rowIndex={index}
-        width={this.cache}
+        width={store.cache}
       >
         <div style={style}>
           <SortableListItem
             model={model}
             index={index}
-            realIndex={index + this.offset}
+            realIndex={index + store.offset}
             query={searchStore.searchState.query}
             itemProps={this.props.itemProps}
           />
@@ -142,21 +131,9 @@ export class SortableList extends React.Component<Props> {
     )
   }
 
-  get items() {
-    return this.props.items || []
-  }
-
-  private resizeAll = debounce(() => {
-    this.shouldResizeAll = false
-    this.cache.clearAll()
-    if (this.listRef) {
-      this.listRef.recomputeRowHeights()
-    }
-  })
-
   render() {
-    const { searchStore } = this.props
-    if (!this.items.length) {
+    const { store, searchStore } = this.props
+    if (!store.items.length) {
       return (
         <View margin={[10, 0]}>
           <Banner>No results</Banner>
@@ -172,8 +149,8 @@ export class SortableList extends React.Component<Props> {
         }}
       >
         {/* double render the first few items so we can measure height, but hide them */}
-        <FirstItems items={this.items} searchStore={searchStore} />
-        {!!this.state.height && (
+        <FirstItems items={store.items} searchStore={searchStore} />
+        {!!store.height && (
           <div
             style={{
               position: 'absolute',
@@ -185,18 +162,14 @@ export class SortableList extends React.Component<Props> {
             }}
           >
             <SortableListContainer
-              forwardRef={ref => {
-                if (ref) {
-                  this.listRef = ref
-                }
-              }}
-              items={this.items}
-              deferredMeasurementCache={this.cache}
-              height={this.state.height}
-              width={this.paneNode.clientWidth}
-              rowHeight={this.cache.rowHeight}
+              forwardRef={store.listRef}
+              items={store.items}
+              deferredMeasurementCache={store.cache}
+              height={store.height}
+              width={store.paneNode.clientWidth}
+              rowHeight={store.cache.rowHeight}
               overscanRowCount={20}
-              rowCount={this.items.length}
+              rowCount={store.items.length}
               estimatedRowSize={100}
               rowRenderer={this.rowRenderer}
               pressDelay={120}

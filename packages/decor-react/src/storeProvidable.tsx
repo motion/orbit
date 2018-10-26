@@ -97,6 +97,7 @@ export function storeProvidable(userOptions, Helpers) {
         }
 
         componentDidCatch(error) {
+          console.log('catching error in store', error)
           this.setState({ error })
         }
 

@@ -21,7 +21,25 @@ const ContentInner = view(UI.Col, {
 })
 
 @view.attach('appStore')
-export class ScrollableContent extends React.Component<{ appStore?: AppStore }> {
+export class ScrollableContent extends React.Component<{ scrollTo?: string; appStore?: AppStore }> {
+  componentDidMount() {
+    this.updateScroll()
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.scrollTo !== prevProps.scrollTo) {
+      this.updateScroll()
+    }
+  }
+
+  updateScroll() {
+    const { appStore, scrollTo } = this.props
+    if (scrollTo) {
+      const node = appStore.contentFrame.current
+      const div = node.querySelector(scrollTo) as HTMLDivElement
+      node.scrollTop = div.offsetTop
+    }
+  }
+
   render() {
     const { children, appStore } = this.props
     return (

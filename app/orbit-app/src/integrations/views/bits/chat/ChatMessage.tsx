@@ -54,7 +54,7 @@ export class ChatMessage extends React.Component<SlackMessageProps> {
             alignItems="center"
             userSelect="none"
             cursor="default"
-            padding={[extraProps.minimal ? 0 : 5, 0]}
+            padding={[extraProps.minimal ? 0 : 3, 0]}
           >
             {extraProps.beforeTitle || null}
             {!!person && (

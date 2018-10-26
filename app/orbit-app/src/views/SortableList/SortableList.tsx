@@ -103,7 +103,7 @@ export class SortableList extends React.Component<Props> {
   }
 
   private get offset() {
-    return this.props.searchStore.quickSearchState.results.length
+    return 0
   }
 
   private measure = () => {

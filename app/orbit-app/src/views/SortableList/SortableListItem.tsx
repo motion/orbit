@@ -31,8 +31,8 @@ export class ListItem extends React.PureComponent<ListItemProps> {
     const isConversation = model.integration === 'slack'
     return (
       <OrbitListItem
-        pane="docked-search"
-        subPane="search"
+        // pane="docked-search"
+        // subPane="search"
         index={realIndex}
         model={model}
         hide={isConversation ? hideSlack : null}

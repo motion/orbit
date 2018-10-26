@@ -54,13 +54,19 @@ export class OrbitHome extends React.Component<Props> {
           paddingRight={0}
         >
           <ListsApp />
-          <Lip />
         </SubPane>
         {this.props.spaceStore.activeSpace.panes.filter(x => !x.static).map(pane => {
           const App = apps[pane.type]
+          console.log('pane.type', pane.type, pane, App)
           return (
-            <SubPane key={pane.id}>
-              <App />
+            <SubPane
+              name={pane.id}
+              key={pane.id}
+              before={<SpaceNavHeight />}
+              paddingLeft={0}
+              paddingRight={0}
+            >
+              <App title={pane.title} />
             </SubPane>
           )
         })}

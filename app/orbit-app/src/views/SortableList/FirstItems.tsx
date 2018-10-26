@@ -11,7 +11,7 @@ export const FirstItems = view(({ items, searchStore }) => {
         zIndex: -1,
       }}
     >
-      {items.slice(0, 10).map((item, index) => (
+      {items.slice(0, 30).map((item, index) => (
         <ListItem
           key={item.id}
           model={item}

@@ -1,24 +1,29 @@
 import * as React from 'react'
 import { SortableList } from '../../views/SortableList/SortableList'
 import { view } from '@mcro/black'
+import { loadMany } from '@mcro/model-bridge'
+import { BitModel } from '@mcro/models'
+import { Title } from '../../views'
 
 class ListStore {
-  items = [
-    {
-      id: 0,
-      type: 'list',
-      title: 'First List',
-      subtitle: '10 items',
-    },
-  ]
+  lists = []
+
+  async didMount() {
+    this.lists = await loadMany(BitModel, { args: { take: 20 } })
+  }
 }
 
 @view.attach({
   store: ListStore,
 })
 @view
-export class ListApp extends React.Component<{ store?: ListStore }> {
+export class ListApp extends React.Component<{ title?: string; store?: ListStore }> {
   render() {
-    return <SortableList items={this.props.store.items} itemProps={{ direct: true }} />
+    return (
+      <>
+        <Title>{this.props.title}</Title>
+        <SortableList items={this.props.store.lists} />
+      </>
+    )
   }
 }

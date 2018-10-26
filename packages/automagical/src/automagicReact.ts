@@ -92,7 +92,7 @@ export function automagicReact(
           return `${storeName}(${res}).${methodName}`
         }
       }
-      return `${storeName}${methodName}`
+      return `${storeName}.${methodName}`
     },
   }
 

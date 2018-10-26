@@ -9,7 +9,7 @@ import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { pullAll, difference, memoize } from 'lodash'
-import { PersonBitModel, BitModel, SettingModel } from '@mcro/models'
+import { PersonBitModel, BitModel, SettingModel, Bit, PersonBit } from '@mcro/models'
 import { action } from 'mobx'
 import { allIntegrations } from '../../../../../integrations'
 
@@ -60,13 +60,7 @@ class VirtualCarouselRow extends React.Component<{ items: SelectionGroup[] }> {
         rowHeight={({ index }) => rowHeight(items[index], index === items.length - 1)}
         rowRenderer={({ index, key }) => {
           const group = items[index]
-          return (
-            <SortableItem
-              key={`${key}${group.items.map(x => `${x.id}`).join(' ')}`}
-              index={index}
-              value={group}
-            />
-          )
+          return <SortableItem key={`${key}${group.ids.join(' ')}`} index={index} value={group} />
         }}
         rowCount={items.length}
         width={ORBIT_WIDTH}
@@ -80,7 +74,7 @@ const SortableCarouselRow = SortableContainer(VirtualCarouselRow, { withRef: tru
 
 class OrbitExploreStore {
   props: Props
-  streams: { [a: string]: { values: any[]; name: string } } = {}
+  streams: { [a: string]: { values: (Bit | PersonBit)[]; name: string } } = {}
 
   // sort order with date
   private sortedAt = 0
@@ -110,7 +104,7 @@ class OrbitExploreStore {
   results = react(
     () => [this.streams, this.sortOrder],
     async ([streams], { sleep }) => {
-      if (Date.now() - this.sortedAt > 10) {
+      if (Date.now() - this.sortedAt > 16) {
         await sleep(200)
       }
       let results: SelectionGroup[] = []
@@ -123,6 +117,7 @@ class OrbitExploreStore {
         results.push({
           name,
           type: 'row',
+          ids: values.map(item => item.id),
           items: values,
           startIndex: offset,
           id,

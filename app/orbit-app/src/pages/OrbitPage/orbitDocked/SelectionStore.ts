@@ -4,6 +4,7 @@ import { OrbitStore } from '../OrbitStore'
 import { QueryStore } from './QueryStore'
 import { Actions } from '../../../actions/Actions'
 import { hoverSettler } from '../../../helpers'
+import { ResolvableModel } from '../../../integrations/types'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 
@@ -15,14 +16,17 @@ export enum Direction {
 }
 
 export type SelectionResult = {
-  id: string
+  id: number
   moves?: Direction[]
 }
 
 export type SelectionGroup = {
   name?: string
   shouldAutoSelect?: boolean
-  items: any[]
+  // id array
+  ids: number[]
+  // optionally put the full items...
+  items?: ResolvableModel[]
   type: 'row' | 'column'
   startIndex?: number
   [key: string]: any
@@ -259,13 +263,14 @@ export class SelectionStore {
     let results: SelectionResult[] = []
     // calculate moves
     const numGroups = resultGroups.length
-    for (const [groupIndex, { items, type }] of resultGroups.entries()) {
+    for (const [groupIndex, selectionResult] of resultGroups.entries()) {
+      const { ids, type } = selectionResult
       if (type === 'row') {
         const downMoves = groupIndex < numGroups ? [Direction.down, Direction.up] : [Direction.up]
-        const nextMoves = items.map(({ id }, index) => ({
+        const nextMoves = ids.map((id, index) => ({
           id,
           moves: [
-            index < items.length - 1 ? Direction.right : null,
+            index < ids.length - 1 ? Direction.right : null,
             index > 0 ? Direction.left : null,
             ...downMoves,
           ].filter(Boolean),
@@ -274,9 +279,9 @@ export class SelectionStore {
       }
       if (type === 'column') {
         const hasPrevResults = !!results.length
-        const nextMoves = items.map(({ id }, index) => {
+        const nextMoves = ids.map((id, index) => {
           const moves = []
-          if (index < items.length - 1) {
+          if (index < ids.length - 1) {
             moves.push(Direction.down)
           }
           if (hasPrevResults || index > 0) {

@@ -50,7 +50,7 @@ class OrbitDirectoryStore {
     () => [this.isActive, this.results],
     ([isActive]) => {
       ensure('is active', isActive)
-      this.props.selectionStore.setResults([{ type: 'column', items: this.results }])
+      this.props.selectionStore.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
     },
   )
 

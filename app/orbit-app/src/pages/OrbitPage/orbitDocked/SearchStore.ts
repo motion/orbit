@@ -99,13 +99,21 @@ export class SearchStore {
       // two stage so we do quick search faster
       await when(() => activeQuery === quickSearchState.query)
       let res = [
-        { type: 'row', shouldAutoSelect: true, items: quickSearchState.results } as SelectionGroup,
+        {
+          type: 'row',
+          shouldAutoSelect: true,
+          ids: quickSearchState.results.map(x => x.id),
+        } as SelectionGroup,
       ]
       setValue(res)
       await when(() => activeQuery === searchState.query)
       return [
         ...res,
-        { type: 'column', shouldAutoSelect: true, items: searchState.results } as SelectionGroup,
+        {
+          type: 'column',
+          shouldAutoSelect: true,
+          ids: searchState.results.map(x => x.id),
+        } as SelectionGroup,
       ]
     },
   )

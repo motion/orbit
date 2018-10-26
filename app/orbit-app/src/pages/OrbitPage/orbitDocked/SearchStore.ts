@@ -124,19 +124,24 @@ export class SearchStore {
   hasQueryVal = react(this.hasQuery, _ => _)
 
   searchState = react(
-    () => [
-      App.state.query,
+    () => {
+      App.state.query
       // filter updates
-      this.searchFilterStore.activeFilters,
-      this.searchFilterStore.exclusiveFilters,
-      this.searchFilterStore.sortBy,
-      this.searchFilterStore.dateState,
-    ],
-    async ([query], { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
+      this.searchFilterStore.activeFilters
+      this.searchFilterStore.exclusiveFilters
+      this.searchFilterStore.sortBy
+      this.searchFilterStore.dateState
+      return Math.random()
+    },
+    async (_, { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
+      const query = App.state.query
+      console.log('SEARCH STATE REACT', this.isActive, query)
+
       // if not on this pane, delay it a bit
       if (!this.isActive) {
         await idle()
         await sleep(500)
+        console.log('done now lets do something')
       }
 
       let results = []
@@ -208,6 +213,11 @@ export class SearchStore {
 
       // do initial search
       await updateNextResults({ startIndex: 0, endIndex: take })
+
+      // wait for active before loading more than one page of results
+      if (!this.isActive) {
+        await when(() => this.isActive)
+      }
 
       // infinite scroll
       this.nextRows = null

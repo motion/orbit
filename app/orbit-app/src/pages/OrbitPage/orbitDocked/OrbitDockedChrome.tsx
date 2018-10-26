@@ -72,7 +72,9 @@ const OrbitChrome = view(({ moreOpaque, isUpper = false }) => {
       <Chrome />
       <Background
         isUpper={isUpper}
-        isTransparent={Desktop.state.operatingSystem.supportsTransparency}
+        isTransparent={
+          window['notInElectron'] ? false : Desktop.state.operatingSystem.supportsTransparency
+        }
         moreOpaque={moreOpaque}
       />
     </>

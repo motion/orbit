@@ -400,7 +400,7 @@ export function createViewFactory(toCSS) {
         }
 
         // className
-        const className = this.state.classNames.concat(this.state.extraClassNames).join(' ')
+        let className = this.state.classNames.concat(this.state.extraClassNames).join(' ')
         finalProps.className = className
 
         // forwardRef

@@ -3,10 +3,12 @@ export type Space = {
   color: string[]
   panes?: {
     id: string
+    type?: 'list' | 'lists'
     title: string
     icon: string
     show?: boolean
     trigger?: string
+    static?: boolean
   }[]
 }
 
@@ -30,35 +32,42 @@ export class SpaceStore {
           id: 'home',
           title: 'Home',
           icon: 'house',
+          static: true,
         },
         {
           id: 'search',
           title: 'Search',
           icon: 'singleNeutralSearch',
+          static: true,
         },
         {
           id: 'people',
           title: 'People',
           icon: 'multipleNeutral2',
           trigger: '@',
+          static: true,
         },
         {
-          id: 'topics',
-          title: 'Topics',
-          icon: 'singleNeutralChat',
-          trigger: '#',
-        },
-        {
-          id: 'list',
+          id: 'lists',
+          type: 'lists',
           title: 'Lists',
           icon: 'listBullets',
           trigger: '/',
+          static: true,
+        },
+        {
+          id: 'mylist',
+          type: 'list',
+          title: 'First List',
+          icon: 'singleNeutralChat',
+          // trigger: '#',
         },
         {
           id: 'new',
           title: 'New',
           icon: 'add',
           show: false,
+          static: true,
         },
       ],
     },

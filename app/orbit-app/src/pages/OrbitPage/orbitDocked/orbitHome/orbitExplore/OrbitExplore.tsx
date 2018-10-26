@@ -26,9 +26,11 @@ type Props = {
   store?: OrbitExploreStore
 }
 
+const lipSize = 20
 const TITLE_HEIGHT = 30
 const cardHeight = (group: SelectionGroup) => (group.name === 'Directory' ? 60 : 80)
-const rowHeight = (group: SelectionGroup) => cardHeight(group) + TITLE_HEIGHT
+const rowHeight = (group: SelectionGroup, isLast?) =>
+  cardHeight(group) + TITLE_HEIGHT + (isLast ? lipSize : 0)
 
 const SortableItem = SortableElement(({ value }: { value: SelectionGroup }) => {
   const { name, items, startIndex } = value
@@ -55,7 +57,7 @@ class VirtualCarouselRow extends React.Component<{ items: SelectionGroup[] }> {
     return (
       <List
         ref={instance => (this.List = instance)}
-        rowHeight={({ index }) => rowHeight(items[index])}
+        rowHeight={({ index }) => rowHeight(items[index], index === items.length - 1)}
         rowRenderer={({ index, key }) => {
           const group = items[index]
           return (
@@ -68,7 +70,7 @@ class VirtualCarouselRow extends React.Component<{ items: SelectionGroup[] }> {
         }}
         rowCount={items.length}
         width={ORBIT_WIDTH}
-        height={items.reduce((a, b) => a + rowHeight(b), 0)}
+        height={items.reduce((a, b) => a + rowHeight(b), lipSize)}
       />
     )
   }

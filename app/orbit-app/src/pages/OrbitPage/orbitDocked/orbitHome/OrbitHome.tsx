@@ -27,7 +27,6 @@ export class OrbitHome extends React.Component<Props> {
       <>
         <SubPane name="home" before={<SpaceNavHeight />} paddingLeft={6} paddingRight={6}>
           <OrbitExplore />
-          <Lip />
         </SubPane>
         <SubPane
           name="search"
@@ -37,7 +36,6 @@ export class OrbitHome extends React.Component<Props> {
           paddingRight={0}
         >
           <OrbitSearchResults />
-          <Lip />
         </SubPane>
         <SubPane name="people" before={<SpaceNavHeight />} paddingLeft={0} paddingRight={0}>
           <OrbitDirectory />

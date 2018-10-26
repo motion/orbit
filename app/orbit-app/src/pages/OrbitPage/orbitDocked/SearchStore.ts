@@ -97,12 +97,15 @@ export class SearchStore {
       console.log('update the selection store...', activeQuery)
       // two stage so we do quick search faster
       await when(() => activeQuery === quickSearchState.query)
-      let res: SelectionGroup[] = [
-        { type: 'row', shouldAutoSelect: true, items: quickSearchState.results },
+      let res = [
+        { type: 'row', shouldAutoSelect: true, items: quickSearchState.results } as SelectionGroup,
       ]
       setValue(res)
       await when(() => activeQuery === searchState.query)
-      return [...res, { type: 'column', shouldAutoSelect: true, items: searchState.results }]
+      return [
+        ...res,
+        { type: 'column', shouldAutoSelect: true, items: searchState.results } as SelectionGroup,
+      ]
     },
   )
 

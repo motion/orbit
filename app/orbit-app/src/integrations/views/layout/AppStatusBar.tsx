@@ -31,11 +31,11 @@ export const AppStatusBar = ({ appStore, normalizedItem }: OrbitIntegrationMainP
       <View flex={1} />
       <StatusBar.Section>
         <StatusBar.Button onClick={appStore.copyItem}>
-          Copy Link <Cmd>⌘+Shift+C</Cmd>
+          Copy Link <Cmd>⌘+C</Cmd>
         </StatusBar.Button>
         <View width={5} />
         <StatusBar.Button onClick={appStore.openItem}>
-          Open <Cmd>⌘+Enter</Cmd>
+          Open <Cmd>Enter</Cmd>
         </StatusBar.Button>
       </StatusBar.Section>
     </StatusBar>

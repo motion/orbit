@@ -24,7 +24,7 @@ export class SpaceNav extends React.Component<Props> {
     return (
       <Row position="relative" zIndex={1000} padding={[3, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
-        <View padding={[0, 11, 1, 2]}>
+        <View padding={[0, 12, 1, 2]}>
           <Icon size={16} name={activeItem.icon} />
         </View>
         <Row>
@@ -39,7 +39,7 @@ export class SpaceNav extends React.Component<Props> {
               padding={4}
               onClick={paneManagerStore.activePaneSetter(index)}
               transform={{
-                scale: curIndex === index ? 1.1 : 1,
+                scale: curIndex === index ? 1.15 : 1,
               }}
             >
               {pane.title}

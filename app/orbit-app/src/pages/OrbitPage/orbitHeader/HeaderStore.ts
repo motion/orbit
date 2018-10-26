@@ -78,6 +78,7 @@ export class HeaderStore {
     () => this.props.paneManagerStore.activePane === 'settings',
     isSettings => {
       ensure('isSettings', isSettings)
+      ensure('ref', !!this.inputRef.current)
       this.inputRef.current.blur()
     },
   )

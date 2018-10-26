@@ -32,7 +32,7 @@ export class AppPage extends React.Component<Props> {
     return (
       // <MainShortcutHandler>
       <AppWrapper>
-        <UI.Theme name="light">
+        <UI.Theme name="dark">
           <AppFrame>
             <AppPageContent />
           </AppFrame>

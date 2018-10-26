@@ -99,16 +99,15 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
 export class SlackApp extends React.Component<Props & { store: SlackAppStore }> {
   render() {
     const { bit, store } = this.props
-    if (!store.prevConvos.length) {
-      return null
-    }
     return (
       <Surface flexFlow="column" hover={false} noInnerElement padding={[16, 12]} flex={1}>
         <BitTitleBar {...this.props} />
-        <ScrollableContent scrollTo="#start">
+        <ScrollableContent key={store.prevConvos.length} scrollTo="#start">
           <View padding={[16, 0]}>
             <ConvoGroup bits={store.prevConvos.reverse()} />
-            <div id="start">{!!bit && <ChatMessages bit={bit} />}</div>
+            <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
+              {!!bit && <ChatMessages bit={bit} />}
+            </div>
             <ConvoGroup bits={store.nextConvos} />
           </View>
         </ScrollableContent>

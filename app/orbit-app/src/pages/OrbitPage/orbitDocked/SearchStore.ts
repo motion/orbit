@@ -125,8 +125,8 @@ export class SearchStore {
 
   searchState = react(
     () => {
+      // update to query or filter changes
       App.state.query
-      // filter updates
       this.searchFilterStore.activeFilters
       this.searchFilterStore.exclusiveFilters
       this.searchFilterStore.sortBy

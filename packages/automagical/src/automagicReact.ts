@@ -22,7 +22,7 @@ type SubscribableLike = { subscribe: (a: any) => Subscription }
 // hacky for now
 Root.__trackStateChanges = {}
 
-const logGroup = (name, globalChanged, result, changed, reactionArgs?) => {
+const logGroup = (name, result, changed, reactionArgs, globalChanged?) => {
   const getReactionLog = () => (reactionArgs ? ['\n   reaction args:', toJSDeep(reactionArgs)] : [])
   const hasGlobalChanges = globalChanged && !!Object.keys(globalChanged).length
   const hasLocalChanges = !!changed.length
@@ -309,7 +309,7 @@ export function automagicReact(
         }
         if (!IS_PROD && !preventLog) {
           const name = `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`
-          logGroup(name, globalChanged, val, changed, reactValArg)
+          logGroup(name, val, changed, reactValArg)
         }
         if (!isValid) {
           throw SHARED_REJECTION_ERROR
@@ -376,7 +376,7 @@ export function automagicReact(
       // only log after first run, we could have a way to log this still
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog && !delayValue) {
-          logGroup(`${logName} ${id}`, globalChanged, result, changed, reactValArg)
+          logGroup(`${logName} ${id}`, result, changed, reactValArg, globalChanged)
         }
       }
     }

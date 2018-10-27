@@ -52,7 +52,6 @@ export class ListsApp extends React.Component<{ store?: ListsStore }> {
     console.log('----------------', this.props.store.state)
     return (
       <>
-        123123 123 123
         <SortableList items={this.props.store.lists} itemProps={{ direct: true }} />
       </>
     )

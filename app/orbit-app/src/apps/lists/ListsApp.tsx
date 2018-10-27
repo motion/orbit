@@ -3,6 +3,7 @@ import { SortableList } from '../../views/SortableList/SortableList'
 import { view } from '@mcro/black'
 
 class ListsStore {
+  state = Math.random()
   lists = [
     {
       id: 0,
@@ -48,6 +49,12 @@ class ListsStore {
 @view
 export class ListsApp extends React.Component<{ store?: ListsStore }> {
   render() {
-    return <SortableList items={this.props.store.lists} itemProps={{ direct: true }} />
+    console.log('----------------', this.props.store.state)
+    return (
+      <>
+        123123 123 123
+        <SortableList items={this.props.store.lists} itemProps={{ direct: true }} />
+      </>
+    )
   }
 }

@@ -155,8 +155,64 @@ export function createViewFactory(toCSS) {
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = !!Object.keys(propStyles).length
     let displayName = 'View'
-    let ThemedView
     let cachedTheme
+
+    class ThemedView extends React.Component<any> {
+      static contextType = ThemeContext
+      static displayName
+      static ignoreAttrs
+      static themeFn
+
+      static withConfig = config => {
+        if (config.displayName) {
+          displayName = config.displayName
+          ThemedView.displayName = `themed(${displayName})`
+          SimpleView.displayName = displayName
+        }
+        return ThemedView
+      }
+
+      // allow setting theme
+      static theme = themeFn => {
+        ThemedView.themeFn = themeFn
+        return ThemedView
+      }
+
+      static getConfig = () => ({
+        id,
+        displayName,
+        targetElement,
+        ignoreAttrs: getIgnoreAttrs(),
+        styles: { ...styles },
+        propStyles: { ...propStyles },
+        child: isSimpleView ? target : null,
+      })
+
+      render() {
+        // // avoid theme tree if not necessary
+        if (!ThemedView.themeFn) {
+          return <SimpleView {...this.props} />
+        }
+        // @ts-ignore via old @types/react
+        const { allThemes, activeThemeName } = this.context
+        if (!allThemes) {
+          return <SimpleView {...this.props} />
+        }
+        let theme = allThemes[activeThemeName]
+        // allow simple overriding of the theme using props:
+        // <Button theme={{ backgroundHover: 'transparent' }} />
+        if (typeof this.props.theme === 'object') {
+          theme = {
+            ...theme,
+            ...this.props.theme,
+          }
+        }
+        return <SimpleView {...this.props} theme={theme} />
+      }
+    }
+
+    // for easy checking
+    ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
 
     function getIgnoreAttrs() {
       const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
@@ -338,7 +394,7 @@ export function createViewFactory(toCSS) {
       prevProps?: Object
     }
 
-    class SimpleView extends React.PureComponent<Props> {
+    class SimpleView extends React.Component<Props> {
       static displayName = 'SimpleView'
 
       state = {
@@ -427,57 +483,6 @@ export function createViewFactory(toCSS) {
       }
     }
 
-    // attach themes from context
-    // @ts-ignore via old @types/react
-    ThemedView = React.memo(props => {
-      // // avoid theme tree if not necessary
-      if (!ThemedView.themeFn) {
-        return <SimpleView {...props} />
-      }
-      // @ts-ignore via old @types/react
-      const { allThemes, activeThemeName } = React.useContext(ThemeContext)
-      if (!allThemes) {
-        return <SimpleView {...props} />
-      }
-      let theme = allThemes[activeThemeName]
-      // allow simple overriding of the theme using props:
-      // <Button theme={{ backgroundHover: 'transparent' }} />
-      if (typeof props.theme === 'object') {
-        theme = {
-          ...theme,
-          ...props.theme,
-        }
-      }
-      return <SimpleView {...props} theme={theme} />
-    })
-
-    ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
-
-    ThemedView.withConfig = config => {
-      if (config.displayName) {
-        displayName = config.displayName
-        ThemedView.displayName = `themed(${displayName})`
-        SimpleView.displayName = displayName
-      }
-      return ThemedView
-    }
-
-    // allow setting theme
-    ThemedView.theme = themeFn => {
-      ThemedView.themeFn = themeFn
-      return ThemedView
-    }
-
-    ThemedView.getConfig = () => ({
-      id,
-      displayName,
-      targetElement,
-      ignoreAttrs: getIgnoreAttrs(),
-      styles: { ...styles },
-      propStyles: { ...propStyles },
-      child: isSimpleView ? target : null,
-    })
-
-    return ThemedView
+    return ThemedView as any
   }
 }

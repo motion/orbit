@@ -11,9 +11,11 @@ const pundleConfig = {
     },
     optimize: {
       js: {
-        common: {
-          processNonRootChunks: true,
-        },
+        dedupe: true,
+        common: true,
+        // common: {
+        //   processNonRootChunks: true,
+        // },
       },
     },
   }),

@@ -59,20 +59,25 @@ export function storeProvidable(userOptions, Helpers) {
       }
 
       Klass.__hmrId = 0
+      const updatePropAction = Mobx.action(`${Klass.name}.updateProps`, updateProps)
 
       // return HoC
-      // dont use class properties on this, react-hot-loader seems to pick it up even if cold()
+      // ️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️
+      // dont use class properties on this, react-hot-loader seems to reset it up even if cold()
+      // ️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️
 
       class StoreProvider extends React.PureComponent {
+        static contextType = StoreContext
+
         props: any | { __contextualStores?: Object }
         _props: any
         stores: any
         willReloadListener: Disposable
-        clearUnusedStores = null
+        clearUnusedStores: any
 
-        state = {
-          error: null,
-        }
+        // state = {
+        //   error: null,
+        // }
 
         get name() {
           return Klass.name
@@ -88,18 +93,14 @@ export function storeProvidable(userOptions, Helpers) {
           this.setupStores()
         }
 
-        // nice name for update props action
-        updateProps = Mobx.action(`${this.name}.updateProps`, updateProps)
-
         // PureComponent means this is only called when props are not shallow equal
         componentDidUpdate() {
-          this.updateProps(this._props, this.props)
+          updatePropAction(this._props, this.props)
         }
 
-        componentDidCatch(error) {
-          console.log('catching error in store', error)
-          this.setState({ error })
-        }
+        // componentDidCatch(error) {
+        //   this.setState({ error: `${error}` })
+        // }
 
         componentDidMount() {
           root.loadedStores.add(this)
@@ -141,21 +142,21 @@ export function storeProvidable(userOptions, Helpers) {
 
             // hmr hot reload stores, has to be after intantiating to get the real source
             if (process.env.NODE_ENV === 'development') {
+              console.log('wut', cachedStores, name, __hmrPath)
               if (cachedStores && cachedStores[name]) {
                 // matching source, hot reload
                 if (
                   nextStore.constructor.toString() === cachedStores[name].constructor.toString()
                 ) {
+                  console.log('hmr!', cachedStores[name])
                   // we have a hydratable store, hot swap it in!
                   this.stores[name] = cachedStores[name]
                   cachedStores[name].__wasHotReloaded = true
-                  // be sure to clean up the temporary unused comparison store
-                  unmountStore(name, nextStore)
                 } else {
-                  cachedStores[name].__wasHotReloaded = false
                   Klass.__hmrId = Math.random()
                   // 🐛 we force a key update in the line above so it will re-render and check for unused
                   this.clearUnusedStores = setTimeout(() => {
+                    console.log('unmounting...', cachedStores[name].constructor.name)
                     unmountStore(name, cachedStores[name])
                   }, 200)
                 }
@@ -180,6 +181,7 @@ export function storeProvidable(userOptions, Helpers) {
           for (const name in this.stores) {
             const store = this.stores[name]
             if (store.__wasHotReloaded) {
+              console.log('avoiding dispose of hot reloaded store...', store)
               continue
             }
             unmountStore(name, store)
@@ -187,10 +189,12 @@ export function storeProvidable(userOptions, Helpers) {
         }
 
         onWillReloadStores() {
+          console.log('cache it up', this.props.__hmrPath)
           storeHMRCache[this.props.__hmrPath] = this.stores
         }
 
-        childContextStores(parentStores) {
+        childContextStores() {
+          const parentStores = this.context
           if (options.warnOnOverwriteStore && parentStores) {
             for (const name in Stores) {
               if (!parentStores[name]) continue
@@ -210,45 +214,31 @@ export function storeProvidable(userOptions, Helpers) {
         }
 
         render() {
-          if (this.state.error) {
-            return (
-              <div style={{ flex: 1, background: 'red', color: '#fff', padding: 10 }}>
-                {JSON.stringify(this.state.error)}
-              </div>
-            )
-          }
+          // if (this.state.error) {
+          //   return (
+          //     <div style={{ flex: 1, background: 'red', color: '#fff', padding: 10 }}>
+          //       {this.state.error}
+          //     </div>
+          //   )
+          // }
           clearTimeout(this.clearUnusedStores)
-          const { __contextualStores, __hmrPath, ...props } = this.props
+          const { __hmrPath, ...props } = this.props
           const children = <Klass {...props} {...this.stores} />
           if (context) {
-            const childStores = this.childContextStores(__contextualStores)
+            const childStores = this.childContextStores()
             return <StoreContext.Provider value={childStores}>{children}</StoreContext.Provider>
           }
           return children
         }
       }
 
-      let StoreProviderWithContext: any = StoreProvider
-
-      // we need to merge parent stores down
-      if (context) {
-        StoreProviderWithContext = props => (
-          <StoreContext.Consumer>
-            {stores => {
-              const contextProps = stores ? { __contextualStores: stores } : null
-              return <StoreProvider {...contextProps} {...props} />
-            }}
-          </StoreContext.Consumer>
-        )
-      }
-
       // hmr keypath for dev mode
       const WithPath =
         process.env.NODE_ENV !== 'development'
-          ? StoreProviderWithContext
+          ? StoreProvider
           : props => (
               <StoreHMR key={Klass.__hmrId}>
-                <StoreProviderWithContext {...props} />
+                <StoreProvider {...props} />
               </StoreHMR>
             )
 

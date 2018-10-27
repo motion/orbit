@@ -5,9 +5,9 @@ import { view, on, isEqual } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
 import { throttle } from 'lodash'
-import { Router } from '@mcro/router'
+import { router } from './router'
 
-export class RootView extends React.Component<{ router: Router }> {
+export class RootView extends React.Component {
   state = {
     error: null,
   }
@@ -91,10 +91,10 @@ export class RootView extends React.Component<{ router: Router }> {
         </UI.Col>
       )
     }
-    const CurrentPage = this.props.router.activeView || NotFound
+    const CurrentPage = router.activeView || NotFound
     return (
       <UI.ThemeProvide themes={themes}>
-        <CurrentPage key={Router.key} {...Router.params} />
+        <CurrentPage key={router.key} {...router.params} />
       </UI.ThemeProvide>
     )
   }

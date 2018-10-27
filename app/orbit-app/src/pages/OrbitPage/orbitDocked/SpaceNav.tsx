@@ -50,9 +50,7 @@ export class SpaceNav extends React.Component<Props> {
             )
           })}
         </Row>
-
         <View flex={1} minWidth={10} />
-
         <Button
           borderWidth={0}
           glint={false}

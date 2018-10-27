@@ -135,7 +135,6 @@ export class OrbitDocked extends React.Component<Props> {
           className={`theme-${theme}`}
           visible={this.props.store.shouldShowOrbitDocked}
         >
-          123
           <OrbitDockedChrome />
           <OrbitDockedContents />
         </OrbitDockedFrame>

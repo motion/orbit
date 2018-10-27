@@ -3,20 +3,6 @@ import '../public/styles/nucleo.css'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import './RootViewHMR'
-import { Router } from '@mcro/router'
-import { OrbitPage } from './pages/OrbitPage/OrbitPage'
-import { AppPage } from './pages/AppPage/AppPage'
-import { HighlightsPage } from './pages/HighlightsPage/HighlightsPage'
-import { IsolatePage } from './pages/IsolatePage'
-
-const router = new Router({
-  routes: {
-    '/': OrbitPage,
-    '/app': AppPage,
-    '/highlights': HighlightsPage,
-    '/isolate': IsolatePage,
-  },
-})
 
 export async function start() {
   // re-require for hmr to capture new value
@@ -30,7 +16,7 @@ export async function start() {
     window['Root'] = rootStore
     rootStore.rootView = RootView
   }
-  ReactDOM.render(<RootView router={router} />, document.querySelector('#app'))
+  ReactDOM.render(<RootView />, document.querySelector('#app'))
 }
 
 start()

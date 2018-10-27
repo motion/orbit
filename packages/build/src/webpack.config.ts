@@ -103,7 +103,7 @@ const config = {
   },
   // inline source map allows chrome remote debugger to access it
   // see: https://stackoverflow.com/questions/27671390/why-inline-source-maps
-  devtool: isProd ? 'cheap-module-source-map' : 'inline-source-map',
+  devtool: isProd ? 'cheap-module-source-map' : 'cheap-module-eval-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
@@ -114,6 +114,9 @@ const config = {
       // 'schedule/tracking': 'schedule/tracking-profiling',
       '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
       'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
+      react: Path.resolve(cwd, 'node_modules', 'react'),
+      'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
+      'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
     },
   },
   resolveLoader: {
@@ -128,12 +131,12 @@ const config = {
       },
       {
         test: /\.[jt]sx?$/,
-        use: ['cache-loader', 'thread-loader', 'babel-loader'],
+        use: ['thread-loader', 'babel-loader'],
         exclude: /node_modules/,
       },
       {
         test: /\.css$/,
-        use: ['cache-loader', 'style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(ttf|eot|woff|woff2)$/,

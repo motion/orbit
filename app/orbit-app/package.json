@@ -59,7 +59,9 @@
     "react-hotkeys": "1.0.6",
     "mobx-utils": "5.0.2",
     "key-event-to-string": "1.2.0",
-    "react-draggable": "3.0.5"
+    "react-draggable": "3.0.5",
+    "react": "16.6.0",
+    "react-dom": "16.6.0"
   },
   "devDependencies": {
     "@babel/core": "7.1.0",
@@ -70,9 +72,7 @@
   },
   "peerDependencies": {
     "electron": "3.0.1",
-    "mobx": "5.5.1",
-    "react": "16.7.0-alpha.0",
-    "react-dom": "16.7.0-alpha.0"
+    "mobx": "^5.5.2"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

@@ -65,7 +65,7 @@ export class SpaceStore {
         {
           id: 'new',
           title: 'New',
-          icon: 'add',
+          icon: 'menu',
           show: false,
           static: true,
         },

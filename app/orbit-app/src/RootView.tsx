@@ -1,13 +1,13 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { NotFound } from './views/NotFound'
-import Router from './router'
 import { view, on, isEqual } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
 import { throttle } from 'lodash'
+import { Router } from '@mcro/router'
 
-export class RootView extends React.Component {
+export class RootView extends React.Component<{ router: Router }> {
   state = {
     error: null,
   }
@@ -91,7 +91,7 @@ export class RootView extends React.Component {
         </UI.Col>
       )
     }
-    const CurrentPage = Router.activeView || NotFound
+    const CurrentPage = this.props.router.activeView || NotFound
     return (
       <UI.ThemeProvide themes={themes}>
         <CurrentPage key={Router.key} {...Router.params} />

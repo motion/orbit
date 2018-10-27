@@ -69,6 +69,8 @@ const icons = {
   messagesBubble: require('!raw-loader!../../public/streamline/messages-bubble.svg'),
   messagesBubbleSquare: require('!raw-loader!../../public/streamline/messages-bubble-square.svg'),
   messagesBubbleSquareTyping1: require('!raw-loader!../../public/streamline/messages-bubble-square-typing-1.svg'),
+  menu: require('!raw-loader!../../public/streamline/menu.svg'),
+  menu2: require('!raw-loader!../../public/streamline/menu2.svg'),
   module: require('!raw-loader!../../public/streamline/module.svg'),
   multipleActionsAdd: require('!raw-loader!../../public/streamline/multiple-actions-add.svg'),
   multipleActionsEdit1: require('!raw-loader!../../public/streamline/multiple-actions-edit-1.svg'),

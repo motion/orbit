@@ -1,5 +1,12 @@
 search:
 
+- dont underestimate how far you can get by just making search great
+  - search images
+  - search links
+  - better previews/results
+  - bigger peek better clearer display
+  - clearer shortcuts
+  - pin to list
 - #searchbytopic
 - /filtergroups
 - query to avoid loading `data` and `body`

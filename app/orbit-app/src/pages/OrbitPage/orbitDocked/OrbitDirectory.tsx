@@ -86,6 +86,16 @@ class OrbitDirectoryStore {
     { defaultValue: [] },
   )
 
+  get emailToIndex() {
+    const res = {}
+    for (const [index, { email }] of this.results.entries()) {
+      res[email] = index
+    }
+    return res
+  }
+
+  getIndex = res => this.emailToIndex[res.email]
+
   get resultSections(): ResultSection[] {
     const total = this.results.length
     const perRow = 3
@@ -134,10 +144,6 @@ class OrbitDirectoryStore {
       }
     }
     return sections
-  }
-
-  getIndex = item => {
-    return this.results.findIndex(x => x.email === item.email)
   }
 }
 

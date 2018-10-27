@@ -1,11 +1,13 @@
-import { react, isEqual, ensure } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import { OrbitStore } from '../OrbitStore'
 import { QueryStore } from './QueryStore'
 import { Actions } from '../../../actions/Actions'
 import { hoverSettler } from '../../../helpers'
+import { ResolvableModel } from '../../../integrations/types'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
+const resultsKey = (x: SelectionGroup[]) => x.map(y => y.ids.join('')).join('')
 
 export enum Direction {
   left = 'left',
@@ -14,15 +16,17 @@ export enum Direction {
   down = 'down',
 }
 
-export type SelectionResult = {
+export type MovesMap = {
+  id: number
+  autoSelect?: boolean
   moves?: Direction[]
-  item: any
 }
 
 export type SelectionGroup = {
   name?: string
   shouldAutoSelect?: boolean
-  items: any[]
+  ids: number[]
+  items?: ResolvableModel[] // optionally store full items...
   type: 'row' | 'column'
   startIndex?: number
   [key: string]: any
@@ -37,14 +41,12 @@ export class SelectionStore {
 
   lastMove = { at: 0, direction: Direction.down }
   highlightIndex = -1
-  lastPinKey = ''
   selectEvent = ''
-  quickIndex = 0
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
-  results: SelectionResult[] | null = null
-  private resultsIn: SelectionGroup[] = null
+  movesMap: MovesMap[] | null = null
+  private lastResultsKey = ''
   clearOff: any
 
   didMount() {
@@ -71,24 +73,17 @@ export class SelectionStore {
     return this.activeIndex > -1
   }
 
-  get selectedItem() {
-    if (this.results) {
-      return this.results[this.activeIndex].item
-    }
-    return null
-  }
-
   setSelectedOnSearch = react(
-    () => [!!this.results && Math.random(), this.props.queryStore.query],
-    async (_, { sleep, when }) => {
-      // wait for a query to exist
-      await when(() => !!App.state.query)
-      const hasResults = this.results && !!this.results.length
+    () => this.movesMap && App.state.query && Math.random(),
+    async (_, { sleep }) => {
+      ensure('query', !!App.state.query)
+      const hasResults = this.movesMap && !!this.movesMap.length
       // select first item on search
       if (hasResults) {
-        ensure('results should auto select', this.resultsIn[0].shouldAutoSelect)
+        ensure('results should auto select', this.movesMap[0].autoSelect)
         // dont be too too aggressive with the popup
-        await sleep(100)
+        await sleep(200)
+        console.log('selecting first result automatically', this.movesMap)
         this.activeIndex = 0
       } else {
         this.clearSelected()
@@ -170,7 +165,7 @@ export class SelectionStore {
   }
 
   move = (direction: Direction, selectEvent?: 'key') => {
-    if (!this.results) {
+    if (!this.movesMap) {
       return
     }
     if (selectEvent) {
@@ -184,7 +179,7 @@ export class SelectionStore {
   }
 
   getNextIndex = (curIndex, direction: Direction) => {
-    if (!this.results) {
+    if (!this.movesMap) {
       return -1
     }
     if (curIndex === 0 && direction === Direction.up) {
@@ -192,18 +187,18 @@ export class SelectionStore {
     }
     if (curIndex === -1) {
       if (direction === Direction.down) {
-        return this.results.length ? 0 : -1
+        return this.movesMap.length ? 0 : -1
       }
       return
     }
-    const maxIndex = this.results.length - 1
-    const curResult = this.results[curIndex]
+    const maxIndex = this.movesMap.length - 1
+    const curResult = this.movesMap[curIndex]
     const nowInRow = isInRow(curResult)
     if (!nowInRow) {
       // move to begining of previous row if going up into it
       if (direction === Direction.up) {
         const prevIndex = curIndex - 1
-        const prevIsRow = isInRow(this.results[prevIndex])
+        const prevIsRow = isInRow(this.movesMap[prevIndex])
         if (prevIsRow) {
           const movesToNextRow = this.movesToNextRow(Direction.left, prevIndex)
           return prevIndex + movesToNextRow
@@ -236,7 +231,7 @@ export class SelectionStore {
 
   movesToNextRow = (dir, curIndex) => {
     const amt = dir === 'right' ? 1 : -1
-    const all = this.results
+    const all = this.movesMap
     const hasMove = index => all[index] && all[index].moves.indexOf(dir) > -1
     let movesToNextRow = amt
     while (hasMove(curIndex + movesToNextRow)) {
@@ -253,26 +248,33 @@ export class SelectionStore {
   }
 
   setResults = (resultGroups: SelectionGroup[]) => {
-    const lastResults = this.resultsIn
-    this.resultsIn = resultGroups
+    // no results
     if (!resultGroups) {
-      this.results = null
+      this.lastResultsKey = ''
+      this.movesMap = null
       return
     }
-    // avoid unecessary updates
-    if (lastResults && isEqual(lastResults, resultGroups)) {
+
+    // not updated
+    const nextKey = resultsKey(resultGroups)
+    if (nextKey === this.lastResultsKey) {
       return
     }
-    let results: SelectionResult[] = []
+    this.lastResultsKey = nextKey
+
+    // is updated
+    let results: MovesMap[] = []
     // calculate moves
     const numGroups = resultGroups.length
-    for (const [groupIndex, { items, type }] of resultGroups.entries()) {
+    for (const [groupIndex, selectionResult] of resultGroups.entries()) {
+      const { ids, type, shouldAutoSelect } = selectionResult
       if (type === 'row') {
         const downMoves = groupIndex < numGroups ? [Direction.down, Direction.up] : [Direction.up]
-        const nextMoves = items.map((item, index) => ({
-          item,
+        const nextMoves = ids.map((id, index) => ({
+          id,
+          autoSelect: shouldAutoSelect,
           moves: [
-            index < items.length - 1 ? Direction.right : null,
+            index < ids.length - 1 ? Direction.right : null,
             index > 0 ? Direction.left : null,
             ...downMoves,
           ].filter(Boolean),
@@ -281,35 +283,27 @@ export class SelectionStore {
       }
       if (type === 'column') {
         const hasPrevResults = !!results.length
-        const nextMoves = items.map((item, index) => {
+        const nextMoves = ids.map((id, index) => {
           const moves = []
-          if (index < items.length - 1) {
+          if (index < ids.length - 1) {
             moves.push(Direction.down)
           }
           if (hasPrevResults || index > 0) {
             moves.push(Direction.up)
           }
-          return { moves, item }
+          return { moves, id }
         })
         results = [...results, ...nextMoves]
       }
     }
-    this.results = results
+    this.movesMap = results
   }
 
   getIndexForItem = id => {
-    if (!this.results) {
+    if (!this.movesMap) {
       throw new Error('Calling index before')
     }
-    return this.results.findIndex(x => x.item.id === id)
-  }
-
-  openSelected = () => {
-    if (this.selectedItem) {
-      Actions.openItem(this.selectedItem)
-      return true
-    }
-    return false
+    return this.movesMap.findIndex(x => x.id === id)
   }
 
   setHighlightIndex = index => {

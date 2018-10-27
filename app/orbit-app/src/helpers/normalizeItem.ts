@@ -42,8 +42,9 @@ const normalizers = {
       icon: bit.integration,
       webLink: bit.webLink,
       people: bit.people,
-      location: bit.location.name,
-      locationLink: bit.location.desktopLink || bit.location.webLink,
+      location: bit.location ? bit.location.name : '',
+      locationLink:
+        bit.desktopLink || bit.webLink || bit.location.desktopLink || bit.location.webLink,
       desktopLink: bit.desktopLink,
       subType: bit.type,
       integration: bit.integration,

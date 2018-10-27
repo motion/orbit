@@ -30,7 +30,7 @@ export const RoundButtonPerson = ({ person, hideAvatar, ...props }: PersonButton
   // TODO: avatar value on person
   const avatar = person.photo
   return (
-    <RoundButton size={0.95} onClick={handleClickPerson(person.email)} {...props}>
+    <RoundButton size={0.95} sizeHeight={0.8} onClick={handleClickPerson(person.email)} {...props}>
       <UI.Row alignItems="center">
         {!!avatar &&
           !hideAvatar && (

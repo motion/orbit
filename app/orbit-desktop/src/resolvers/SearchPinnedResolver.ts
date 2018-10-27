@@ -34,8 +34,9 @@ const sortByQuerySubSets = <T extends any[]>(query, results: T): T => {
 }
 
 const searchPeople = async query => {
+  console.time(`searchPeople ${query}`)
   const words = query.split(' ')
-  return await getRepository(PersonBitEntity).find({
+  const res = await getRepository(PersonBitEntity).find({
     take: 12,
     where: [
       ...words.map(word => ({
@@ -50,17 +51,24 @@ const searchPeople = async query => {
       })),
     ],
   })
+  console.timeEnd(`searchPeople ${query}`)
+  return res
 }
 
 const searchBits = async query => {
-  return await getRepository(BitEntity).find({
+  console.time(`searchBits ${query}`)
+  const res = await getRepository(BitEntity).find({
     take: 12,
     where: query.split(' ').map(part => ({
+      // for recent stuff
+      // bitCreatedAt: { $moreThan:  },
       title: {
         $like: `%${part}%`,
       },
     })),
   })
+  console.timeEnd(`searchBits ${query}`)
+  return res
 }
 
 export const SearchPinnedResolver = resolveMany(SearchPinnedResultModel, async ({ query }) => {
@@ -72,7 +80,6 @@ export const SearchPinnedResolver = resolveMany(SearchPinnedResultModel, async (
   const lessSortedPeople = sortByQuerySubSets(query, people)
   const sortedBits = sortByQuery(query, bits)
   const lessSortedBits = sortByQuerySubSets(query, bits)
-  console.log('got em', people, sortedPeople, lessSortedPeople, fuzzy)
   return uniqBy(
     [...sortedPeople, ...lessSortedPeople, ...sortedBits, ...lessSortedBits],
     x => x.id || x['email'],

@@ -115,7 +115,7 @@ const FirstItems = view(({ items, searchStore }) => {
         zIndex: -1,
       }}
     >
-      {items.slice(0, 10).map((item, index) => (
+      {items.map((item, index) => (
         <ListItem
           key={item.id}
           model={item}
@@ -148,7 +148,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     () => this.items && Math.random(),
     () => {
       if (this.listRef) {
-        console.log('updat yo')
         this.resizeAll()
       }
     },
@@ -203,15 +202,16 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     return this.props.searchStore.quickSearchState.results.length
   }
 
-  private measure = () => {
+  private measure = debounce(() => {
     if (this.paneNode.clientHeight !== this.state.height) {
       const height = this.paneNode.clientHeight
       if (height !== this.state.height) {
-        console.log('setting height', height)
+        console.log('measure complete, old height', this.state.height, 'new height', height)
         this.setState({ height })
       }
     }
-  }
+  }, 16)
+
   // @ts-ignore
   resizeObserver = new ResizeObserver(this.measure)
 
@@ -251,12 +251,15 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
     }
   })
 
+  isRowLoaded = find => {
+    return find.index < this.props.searchStore.searchState.results.length
+  }
+
   render() {
     const { searchStore } = this.props
     log(
-      `render OrbitSearchVirtualList (${this.items.length}) ${this.state.height} ${
-        searchStore.searchState.query
-      }`,
+      `render OrbitSearchVirtualList (${this.items.length}) ${this.state.height}`,
+      searchStore.searchState.query,
     )
     trace()
     if (!this.items.length) {
@@ -274,8 +277,12 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
           maxSurroundChars: 80,
         }}
       >
-        {/* double render the first few items so we can measure height, but hide them */}
-        <FirstItems items={this.items} searchStore={searchStore} />
+        {/* double render the first few items so we can measure height, but hide them, if we have lots of results just show a large bar */}
+        {this.items.length < 20 ? (
+          <FirstItems items={this.items.slice(0, 20)} searchStore={searchStore} />
+        ) : (
+          <div style={{ height: 2000 }} />
+        )}
         {!!this.state.height && (
           <div
             style={{
@@ -288,7 +295,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
             }}
           >
             <InfiniteLoader
-              isRowLoaded={searchStore.isRowLoaded}
+              isRowLoaded={this.isRowLoaded}
               loadMoreRows={searchStore.loadMore}
               rowCount={searchStore.remoteRowCount}
             >

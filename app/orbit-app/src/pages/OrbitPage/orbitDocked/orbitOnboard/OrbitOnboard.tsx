@@ -59,6 +59,7 @@ class OnboardStore {
   pendingMove = false
 
   async didMount() {
+    console.log('mounting OrbitOnboard')
     await this.checkAlreadyProxied()
     if (this.accepted && this.curFrame === 0) {
       this.nextFrame()

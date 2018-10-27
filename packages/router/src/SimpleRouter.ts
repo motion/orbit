@@ -1,6 +1,6 @@
 import Route from 'url-pattern'
 
-export default class Router {
+export class SimpleRouter {
   routes: {}
   history: any
   routeTable: { [path: string]: Route }

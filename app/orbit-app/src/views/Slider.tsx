@@ -51,7 +51,6 @@ class SliderStore {
   updateHeight = react(
     () => [this.props.curFrame, this.refs],
     ([index]) => {
-      console.log('refs', this.refs)
       if (this.refs[index]) {
         this.height = this.refs[index].clientHeight || 100
       }

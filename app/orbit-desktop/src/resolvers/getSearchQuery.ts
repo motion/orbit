@@ -25,6 +25,18 @@ export const getSearchQuery = (args: SearchQuery) => {
     },
     take,
     skip,
+    // select: {
+    //   id: true,
+    //   title: true,
+    //   body: true,
+    //   bitCreatedAt: true,
+    //   bitUpdatedAt: true,
+    //   createdAt: true,
+    //   integration: true,
+    //   type: true,
+    //   people: true,
+    //   location: { id: true, name: true, desktopLink: true, webLink: true },
+    // },
   }
 
   const andConditions: any = {}

@@ -5,8 +5,10 @@ export type ReactionHelpers = {
   sleep: (ms?: number) => Promise<void>
   when: (condition: () => boolean, ms?: number) => Promise<void>
   whenChanged: <A>(condition: () => A, dontCompare?: boolean) => Promise<A>
+  idle: () => Promise<void>
   state: {
     hasResolvedOnce: boolean
+    iteration?: number
   }
 }
 
@@ -29,5 +31,5 @@ export type MagicalObject = Object & {
     deep?: {}
     started?: boolean
   }
-  props?: {}
+  props?: { [key: string]: any }
 }

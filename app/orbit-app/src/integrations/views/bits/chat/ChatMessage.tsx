@@ -3,10 +3,7 @@ import { view } from '@mcro/black'
 import { SlackBitDataMessage } from '@mcro/models'
 import { OrbitIntegrationProps } from '../../../types'
 import { View, Row, Text } from '@mcro/ui'
-import {
-  ItemResolverDecoration,
-  ItemResolverDecorationContext,
-} from '../../../../helpers/contexts/ItemResolverDecorationContext'
+import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 import { RoundButtonPerson } from '../../../../views/RoundButtonPerson'
 import { DateFormat } from '../../../../views/DateFormat'
 import { HighlightText } from '../../../../views/HighlightText'
@@ -21,6 +18,10 @@ type SlackMessageProps = OrbitIntegrationProps<'slack'> & {
 const SlackMessageFrame = view(View, {
   padding: [0, 0],
   overflow: 'hidden',
+  minimal: {
+    flexFlow: 'row',
+    alignItems: 'center',
+  },
 })
 
 const SlackMessageInner = view({
@@ -29,11 +30,12 @@ const SlackMessageInner = view({
   overflow: 'hidden',
 })
 
-export class ChatMessageContent extends React.Component<
-  SlackMessageProps & { decoration: ItemResolverDecoration }
-> {
+export class ChatMessage extends React.Component<SlackMessageProps> {
+  static contextType = ItemResolverDecorationContext
+
   render() {
-    const { bit, extraProps = {}, message, previousMessage, hide = {}, decoration } = this.props
+    const { bit, extraProps = {}, message, previousMessage, hide = {} } = this.props
+    const decoration = this.context
     if (!message.text || !bit) {
       return null
     }
@@ -46,19 +48,13 @@ export class ChatMessageContent extends React.Component<
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     return (
-      <SlackMessageFrame
-        {...extraProps.minimal && {
-          flexFlow: 'row',
-          alignItems: 'center',
-        }}
-        {...decoration.item}
-      >
+      <SlackMessageFrame minimal={extraProps.minimal} {...decoration.item}>
         {!hideHeader && (
           <Row
             alignItems="center"
             userSelect="none"
             cursor="default"
-            padding={[extraProps.minimal ? 0 : 5, 0]}
+            padding={[extraProps.minimal ? 0 : 3, 0]}
           >
             {extraProps.beforeTitle || null}
             {!!person && (
@@ -100,9 +96,3 @@ export class ChatMessageContent extends React.Component<
     )
   }
 }
-
-export const ChatMessage = props => (
-  <ItemResolverDecorationContext.Consumer>
-    {decoration => <ChatMessageContent decoration={decoration} {...props} />}
-  </ItemResolverDecorationContext.Consumer>
-)

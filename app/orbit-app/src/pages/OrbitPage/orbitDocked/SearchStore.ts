@@ -11,8 +11,11 @@ import { SearchFilterStore } from './SearchFilterStore'
 import { SelectionGroup, SelectionStore } from './SelectionStore'
 import { SettingStore } from '../../../stores/SettingStore'
 import { uniq } from 'lodash'
+import { trace } from 'mobx'
 
 const TYPE_DEBOUNCE = 200
+
+type SearchState = { results: Bit[]; finished?: boolean; query: string }
 
 export class SearchStore {
   props: {
@@ -41,48 +44,26 @@ export class SearchStore {
   }
 
   setSelectionHandler = react(
-    () => [this.isActive, this.results],
-    ([isActive]) => {
-      ensure('is active', isActive)
-      this.props.selectionStore.setResults(this.results)
+    () => this.selectionResults && this.isActive && Math.random(),
+    () => {
+      ensure('is active', this.isActive)
+      this.props.selectionStore.setResults(this.selectionResults)
     },
   )
 
-  setActivePaneOnHasQuery = react(
-    () => !!App.state.query,
-    query => {
-      if (!query) {
-        this.props.paneManagerStore.setActivePaneToPrevious()
-      } else {
-        this.props.paneManagerStore.setActivePaneSearch()
-      }
-    },
-  )
-
-  setActivePaneToSearchOnIntegrationFilters = react(
-    () => this.searchFilterStore.hasIntegrationFilters,
-    hasIntegrationFilters => {
-      ensure('hasIntegrationFilters', hasIntegrationFilters)
-      this.props.paneManagerStore.setActivePaneSearch()
-    },
-  )
-
-  setActivePaneOnDateFilter = react(
-    () => this.searchFilterStore.hasDateFilter,
-    hasDateFilter => {
-      ensure('hasDateFilter', hasDateFilter)
-      this.props.paneManagerStore.setActivePaneSearch()
-    },
-  )
+  get selectedItem() {
+    return this.searchState.results[this.props.selectionStore.activeIndex]
+  }
 
   activeQuery = react(
-    () => [App.state.query, this.isActive],
-    ([query]) => {
-      ensure('isActive', this.isActive)
+    () => [this.isActive, App.state.query],
+    ([active, query]) => {
+      ensure('active', active)
       return query
     },
     {
       defaultValue: App.state.query,
+      onlyUpdateIfChanged: true,
     },
   )
 
@@ -105,14 +86,39 @@ export class SearchStore {
   )
 
   // aggregated results for selection store
-  results = react(
-    () => [this.activeQuery, this.quickSearchState, this.searchState],
-    async ([query, quickState, searchState], { when }) => {
-      await when(() => query === quickState.query && query === searchState.query)
+  selectionResults = react(
+    () => {
+      this.activeQuery
+      this.quickSearchState
+      this.searchState
+      return Math.random()
+    },
+    async (_, { when, setValue }) => {
+      // dont update selection results until necessary
+      await when(() => this.isActive)
+      const { activeQuery, quickSearchState, searchState } = this
+      // two stage so we do quick search faster
+      await when(() => activeQuery === quickSearchState.query)
+      let res = []
+      if (quickSearchState.results.length) {
+        res = [
+          {
+            type: 'row',
+            shouldAutoSelect: true,
+            ids: quickSearchState.results.map(x => x.id),
+          } as SelectionGroup,
+        ]
+        setValue(res)
+      }
+      await when(() => activeQuery === searchState.query)
       return [
-        { type: 'row', shouldAutoSelect: true, items: quickState.results },
-        { type: 'column', shouldAutoSelect: true, items: searchState.results },
-      ] as SelectionGroup[]
+        ...res,
+        {
+          type: 'column',
+          shouldAutoSelect: true,
+          ids: searchState.results.map(x => x.id),
+        } as SelectionGroup,
+      ]
     },
   )
 
@@ -132,28 +138,29 @@ export class SearchStore {
 
   searchState = react(
     () => [
-      this.activeQuery,
-      // depends on pane
-      this.props.paneManagerStore.activePane,
-      // filter updates
+      App.state.query,
       this.searchFilterStore.activeFilters,
       this.searchFilterStore.exclusiveFilters,
       this.searchFilterStore.sortBy,
       this.searchFilterStore.dateState,
     ],
-    async (
-      [query, activePane],
-      { sleep, whenChanged, when, setValue },
-    ): Promise<{ results: Bit[]; finished?: boolean; query: string }> => {
-      ensure('on search', activePane === 'search')
+    async (_, { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
+      const query = App.state.query
+      console.log('SEARCH STATE REACT', this.isActive, query)
+
+      // if not on this pane, delay it a bit
+      if (!this.isActive) {
+        await sleep(750)
+        await idle()
+        console.log('done now lets do something')
+      }
 
       let results = []
       // if typing, wait a bit
-      if (this.searchState.query !== query) {
+      const isChangingQuery = this.searchState.query !== query
+      if (isChangingQuery) {
         // if no query, we dont need to debounce or wait for nlp
         if (query) {
-          // debounce a little for fast typer
-          await sleep(TYPE_DEBOUNCE)
           // wait for nlp to give us results
           await when(() => this.nlpStore.nlp.query === query)
         }
@@ -218,6 +225,11 @@ export class SearchStore {
       // do initial search
       await updateNextResults({ startIndex: 0, endIndex: take })
 
+      // wait for active before loading more than one page of results
+      if (!this.isActive) {
+        await when(() => this.isActive)
+      }
+
       // infinite scroll
       this.nextRows = null
       while (true) {
@@ -255,10 +267,6 @@ export class SearchStore {
 
   loadMore = ({ startIndex, stopIndex }) => {
     this.nextRows = { startIndex, endIndex: stopIndex }
-  }
-
-  isRowLoaded = find => {
-    return find.index < this.searchState.results.length
   }
 
   quickSearchState = react(

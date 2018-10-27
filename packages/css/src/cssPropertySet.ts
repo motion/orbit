@@ -1,4 +1,4 @@
-import { Color, ThemeObject } from './types'
+import { Color } from './types'
 
 /**
  * Copyright 2018-present Facebook.

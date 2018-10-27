@@ -29,7 +29,7 @@ const sizes = [[500, 960]]
 // always slightly taller than wide
 // capped between a set range
 const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
-  const config = appConfig && appConfig.config
+  const config = appConfig && appConfig.viewConfig
   let preferred
   if (config && config.dimensions) {
     preferred = config.dimensions

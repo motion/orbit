@@ -8,13 +8,13 @@ export const person: GetOrbitIntegration<'person'> = (_setting?: Setting) => ({
   appName: 'People',
   defaultQuery: {
     take: 30,
-    where: {
-      people: {
-        bits: {
-          $moreThan: 3,
-        },
-      },
-    },
+    // where: {
+    //   people: {
+    //     bits: {
+    //       $moreThan: 3,
+    //     },
+    //   },
+    // },
   },
   display: {
     name: 'Directory',

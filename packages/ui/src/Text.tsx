@@ -95,8 +95,7 @@ export type Highlights = {
   highlights: string[]
 }
 
-@view.ui
-export class Text extends React.Component<TextProps> {
+export class Text extends React.PureComponent<TextProps> {
   selected = false
   editable = false
   node = null

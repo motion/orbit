@@ -14,11 +14,11 @@ type Props = {
   theme: ThemeObject
 }
 
-const getBackground = (y, theme) => {
-  if (y < 20) return theme.titleBar.background
-  if (y < 40) return theme.titleBar.backgroundBottom
-  return theme.background
-}
+// const getBackground = (y, theme) => {
+//   if (y < 20) return theme.titleBar.background
+//   if (y < 40) return theme.titleBar.backgroundBottom
+//   return theme.background
+// }
 
 const maxTopOffset = 32
 const arrowSize = 14
@@ -45,16 +45,15 @@ class AppArrowStore {
   )
 }
 
-const decorator = compose(
+const decorate = compose(
   attachTheme,
   view.attach({ store: AppArrowStore }),
   view,
 )
-export const AppFrameArrow = decorator(({ store, theme, borderShadow }: Props) => {
+export const AppFrameArrow = decorate(({ store, theme, borderShadow }: Props) => {
   if (store.hide) {
     return null
   }
-  log(`RENDER ${store.arrowY}`)
   return (
     <UI.Arrow
       position="absolute"
@@ -63,7 +62,7 @@ export const AppFrameArrow = decorator(({ store, theme, borderShadow }: Props) =
       transition="transform ease 80ms"
       size={arrowSize}
       towards={peekOnRight ? 'left' : 'right'}
-      background={getBackground(store.arrowY, theme)}
+      background={theme.background}
       boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
       transform={{
         y: store.arrowY,

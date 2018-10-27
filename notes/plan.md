@@ -1,17 +1,13 @@
 Orbit aka Clippy X
 
-Your Private Work Assistant
+Your Personal Work Assistant
 
-How Orbit Works
+# Step 1, Personal
 
-1. Orbit scans everything in your cloud, privately on your device
-2. Orbit understands you:
+Search + People + Lists
 
-- It builds a model of what you care about by topic modeling your cloud data.
-- It understands what you're doing as you do it.
+Lists:
 
-1. Orbit helps you be more in sync with less interruptions
+can be curated or just a search
 
-- Personalized, instant search gets you through the day smoothly
-- Smart realtime contextual results as you work
-- Ask questions and get answers across your knowledgebase
+/filter

@@ -22,7 +22,8 @@ export class HeaderStore {
     if (!activeMarks) {
       return null
     }
-    return () => activeMarks
+    const markPositions = activeMarks.map(x => [x[0], x[1]])
+    return () => markPositions
   }
 
   onInput = () => {
@@ -77,6 +78,7 @@ export class HeaderStore {
     () => this.props.paneManagerStore.activePane === 'settings',
     isSettings => {
       ensure('isSettings', isSettings)
+      ensure('ref', !!this.inputRef.current)
       this.inputRef.current.blur()
     },
   )

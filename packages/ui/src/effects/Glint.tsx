@@ -36,7 +36,6 @@ export const Glint = view({
     size = 1,
     y = 0.5,
     theme,
-    ...props
   }: Props) => {
     const radiusStyle = {
       ...(borderRadius && {
@@ -57,7 +56,6 @@ export const Glint = view({
       borderTop: isUndef(bottom) && [size, theme.glintColor || color],
       borderBottom: !isUndef(bottom) && [size, theme.glintColor || color],
       ...radiusStyle,
-      ...props,
     }
   },
 )

@@ -2,7 +2,12 @@
   "env": {
     "development": {
       "plugins": ["@babel/plugin-transform-modules-commonjs"],
-      "presets": [["@mcro/babel-preset-motion"]]
+      "presets": [
+        [
+          "@mcro/babel-preset-motion",
+          { "disable": ["@babel/plugin-transform-react-inline-elements"] }
+        ]
+      ]
     }
   }
 }

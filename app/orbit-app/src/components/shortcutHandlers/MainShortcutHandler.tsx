@@ -6,10 +6,12 @@ import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
 import { SelectionStore, Direction } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
 import { PaneManagerStore } from '../../pages/OrbitPage/PaneManagerStore'
+import { SearchStore } from '../../pages/OrbitPage/orbitDocked/SearchStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
   selectionStore: SelectionStore
+  searchStore?: SearchStore
   children?: React.ReactNode
 }
 
@@ -33,9 +35,9 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-const decorate = compose(view.attach('selectionStore', 'paneManagerStore'))
+const decorate = compose(view.attach('selectionStore', 'searchStore', 'paneManagerStore'))
 export const MainShortcutHandler = decorate(
-  ({ selectionStore, paneManagerStore, children }: Props) => {
+  ({ searchStore, selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {
       if (
         (selectionStore.activeIndex === -1 ||
@@ -54,11 +56,11 @@ export const MainShortcutHandler = decorate(
       },
       openCurrent: () => {
         console.log('openCurrent')
-        Actions.openItem(selectionStore.selectedItem)
+        Actions.openItem(searchStore.selectedItem)
       },
       copyLink: async () => {
         console.log('copyLink')
-        Actions.copyLink(selectionStore.selectedItem)
+        Actions.copyLink(searchStore.selectedItem)
       },
       escape: () => {
         console.log('escape')

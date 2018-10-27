@@ -22,7 +22,6 @@ if (typeof window !== 'undefined') {
 
 // electron doesnt have console.debug...
 const debug = (...args) => (console.debug ? console.debug(...args) : console.info(...args))
-const onlyStrings = str => (typeof str === 'string' ? str : '')
 
 type LoggerOpts = {
   trace?: boolean
@@ -149,6 +148,7 @@ export class Logger {
 
     // adds a stack trace
     // only do this in development it adds a decent amount of overhead
+    let traceLog
     if (isTrace) {
       let where = new Error().stack
       const { STACK_FILTER } = process.env
@@ -180,13 +180,14 @@ export class Logger {
           .join('\n')
       }
       if (where) {
-        messages = [...messages, `\n${where}`]
+        traceLog = `\n${where}`
       }
     }
 
     // group traces to avoid large things clogging console
     if (isTrace) {
-      console.groupCollapsed(`${this.namespace} ${messages.map(onlyStrings).join(' ')}`)
+      console.groupCollapsed(`${this.namespace}`)
+      console.log(traceLog)
     }
 
     // output to the console

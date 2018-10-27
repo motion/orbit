@@ -6,7 +6,7 @@ class TestStore2 {
 
   willMount() {
     setTimeout(() => {
-      this.state = 'yeeeeeeeeeeee2'
+      this.state = 'yeeeeee2'
     }, 1000)
   }
 }

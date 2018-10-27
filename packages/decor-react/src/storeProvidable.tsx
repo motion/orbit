@@ -58,6 +58,9 @@ export function storeProvidable(userOptions, Helpers) {
         Helpers.emit('store.mount', { name, thing: store })
       }
 
+      // ️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️
+      // make sure this is static when set here, or hmr wont work
+      // ️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️
       Klass.__hmrId = 0
       const updatePropAction = Mobx.action(`${Klass.name}.updateProps`, updateProps)
 
@@ -189,7 +192,6 @@ export function storeProvidable(userOptions, Helpers) {
         }
 
         onWillReloadStores() {
-          console.log('cache it up', this.props.__hmrPath)
           storeHMRCache[this.props.__hmrPath] = this.stores
         }
 

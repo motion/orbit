@@ -112,7 +112,7 @@ export class OrbitHeader extends React.Component<
               <OrbitCloseControl />
             </OrbitClose>
             <OrbitSpaceSwitch />
-            <Disable when={paneManagerStore.activePane === 'settings'}>
+            <Disable when={headerStore.disableSearch}>
               <OrbitHeaderInput headerStore={headerStore} theme={theme} />
             </Disable>
           </Title>

@@ -181,13 +181,14 @@ const PersonSection = ({
   )
 }
 
-const decorator = compose(
+const decorate = compose(
   view.attach('selectionStore', 'paneManagerStore'),
   view.attach({
     store: OrbitDirectoryStore,
   }),
+  view,
 )
-export const OrbitDirectory = decorator(({ store }: Props) => {
+export const OrbitDirectory = decorate(({ store }: Props) => {
   const { results, resultSections } = store
   const total = results.length
   if (!total) {

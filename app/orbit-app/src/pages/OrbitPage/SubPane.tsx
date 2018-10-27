@@ -98,9 +98,7 @@ export class SubPane extends React.Component<SubPaneProps> {
             preventScroll={preventScroll}
             {...props}
           >
-            <PaneContentInner>
-              <StaticContainer>{children}</StaticContainer>
-            </PaneContentInner>
+            <PaneContentInner>{children}</PaneContentInner>
           </Pane>
         </SubPaneInner>
         {after}

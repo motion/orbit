@@ -10,8 +10,8 @@ function equal(a, b, checkingShallow = false) {
   if (a && b && typeof a == 'object' && typeof b == 'object') {
     // allow custom equality
     const ukey = a._equalityKey
-    if (ukey && ukey === b._equalityKey) {
-      return true
+    if (ukey) {
+      return ukey === b._equalityKey
     }
 
     const isArrA = isArray(a)

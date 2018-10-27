@@ -1,3 +1,18 @@
+design:
+
+- topic based exploration
+- memory and pinning/adding content
+
+topics:
+
+- use cosal to filter down large wikipedia title list
+- clean up list to be somewhat interesting topics
+- build a small repl with cosal to test
+- test:
+  - get topmost topics based on given corpus
+  - then take those topics find top X documents close to them
+  - show that as a list of lists and see if it looks interesting
+
 search:
 
 - dont underestimate how far you can get by just making search great

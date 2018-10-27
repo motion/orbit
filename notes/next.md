@@ -1,5 +1,12 @@
 umed:
 
+questions:
+
+- a query for bits made by "me"
+- also can't we unify the profile for "me" very easily?
+
+  - if so, then on a team level as everyone adds themselves into orbit we can unify all profiles between them!
+
 - step 1 go over design
 - grouped search results:
   - first group by recent-ness. last 2 weeks, 2 months, all.
@@ -23,6 +30,21 @@ umed:
   alltime: [ ... ],
 }
 ```
+
+nate:
+
+- two ways to get interesting topics:
+  - topic modeling exploration:
+    - setup test script environment
+    - using cosal:
+      - scan documents using cosal
+      - if you find bi/tri-grams of salient words, store
+      - count times you see those bi/tri-grams
+      - do for whole corpus
+      - sort by most counted and use that for topics
+    - using pre-defined:
+      - take recent 3000 bits you've produced
+      - sort most salient topics to those bits and product topic list
 
 design:
 

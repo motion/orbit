@@ -49,7 +49,7 @@ export class CosalManager {
     }
 
     // scan just a few at a time
-    const chunks = chunk(bitsSinceLastScan, 100)
+    const chunks = chunk(bitsSinceLastScan, 5)
     for (const chunk of chunks) {
       log.verbose(`Scanning ${chunk.length} bits...`)
       await this.cosal.scan(
@@ -76,7 +76,6 @@ export class CosalManager {
   }
 
   doScanTopics = async () => {
-    console.trace('scanning topics')
     console.time('doScanTopics')
     const topTopics = await this.getGlobalTopTopics()
     const setting = await getGeneralSetting()
@@ -86,11 +85,12 @@ export class CosalManager {
   }
 
   getGlobalTopTopics = async () => {
+    console.warn('SCANNING ALL BITS MAY BE SUPER SLOW...')
     const totalBits = await getRepository(BitEntity).count()
     if (!totalBits) {
       return []
     }
-    const maxPerGroup = 2000
+    const maxPerGroup = 50
     const numScans = Math.ceil(totalBits / maxPerGroup)
     let allTopics: string[][] = []
     for (let i = 0; i < numScans; i++) {

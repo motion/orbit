@@ -1,6 +1,7 @@
 search:
 
-- # goes to search and shows locations
+- #searchbytopic
+- /filtergroups
 - query to avoid loading `data` and `body`
 - quickresults: this can avoid a call alltogether
   - just do it in memory!

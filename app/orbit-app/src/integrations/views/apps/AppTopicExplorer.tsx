@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view, react, ensure } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import {
-  SearchTopicsModel,
+  SalientWordsModel,
   Setting,
   SearchLocationsModel,
   SearchQuery,
@@ -66,7 +66,7 @@ class AppTopicStore {
   topics = react(
     () => this.activeLocation,
     async location => {
-      const topics = await loadMany(SearchTopicsModel, {
+      const topics = await loadMany(SalientWordsModel, {
         args: produce(this.searchArgs, args => {
           args.query.take = 3000
           args.query.locationFilters = [location]

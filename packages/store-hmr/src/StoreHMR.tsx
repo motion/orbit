@@ -14,7 +14,6 @@ export class StoreHMR extends React.Component {
   }
 
   render() {
-    console.log('render StoreHMR', this.state.path)
     return React.cloneElement(this.props.children, {
       __hmrPath: this.state.path,
     })

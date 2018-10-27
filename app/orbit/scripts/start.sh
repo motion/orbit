@@ -4,6 +4,11 @@ cd $(dirname $0)/..
 FLAGS=$@
 
 # start repl debugger
+if [[ "$FLAGS" =~ "--ignore-syncers" ]]; then
+  export DISABLE_SYNCERS="true"
+fi
+
+# start repl debugger
 if [[ "$FLAGS" =~ "--ignore-repl" ]]; then
   echo "ignoring repl"
 else

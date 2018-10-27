@@ -57,8 +57,6 @@ export type GroupResult = {
   people: { id: number; icon: string; name: string }
 }
 
-export const SearchGroupModel = new Model<GroupResult, SearchQuery>('SearchResult')
-
 export const SalientWordsModel = new Model<string, { query: SearchQuery; count: number }>(
   'SalientWords',
 )

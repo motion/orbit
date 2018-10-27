@@ -107,6 +107,8 @@ export class Root {
     })
     await this.cosal.start()
 
+    this['x'] = getSearchByTopicResolver(this.cosal)
+
     this.registerMediatorServer()
 
     this.onboard = new Onboard()

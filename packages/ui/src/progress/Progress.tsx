@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { ProgressBar } from './progressBar'
 import { ProgressCircle } from './progressCircle'
 
@@ -13,7 +12,6 @@ type Props = {
   lineWidth?: any
 }
 
-@view.ui
 export class Progress extends React.Component<Props> {
   static Bar = ProgressBar
   static Circle = ProgressCircle

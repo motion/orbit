@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { viewEmitter } from '@mcro/black'
 import { TestHMR } from './TestHMR'
 // import { themes } from './themes'
 // import { Button } from '@mcro/ui'
@@ -19,8 +19,7 @@ if (process.env.NODE_ENV === 'development') {
       module.hot.addStatusHandler(status => {
         if (status === 'prepare') {
           console.log('prep hmr')
-          view.emit('will-hmr')
-          view.provide.emit('will-hmr')
+          viewEmitter.emit('will-hmr')
         }
       })
     }

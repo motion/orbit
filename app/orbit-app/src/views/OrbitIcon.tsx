@@ -1,7 +1,7 @@
 import { attachTheme } from '@mcro/gloss'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { compose, view } from '@mcro/black'
+import { compose, view, attach } from '@mcro/black'
 import { AppsStore } from '../stores/AppsStore'
 
 const adjust = {
@@ -45,7 +45,7 @@ const adjust = {
 
 const decorator = compose(
   attachTheme,
-  view.attach('appsStore'),
+  attach('appsStore'),
   view,
 )
 export const OrbitIcon = decorator(

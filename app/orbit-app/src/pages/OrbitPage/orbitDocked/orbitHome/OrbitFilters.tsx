@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, attach } from '@mcro/black'
 import { SearchStore } from '../SearchStore'
 import { Row, Button } from '@mcro/ui'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
@@ -15,7 +15,7 @@ export const FilterButton = props => (
 )
 
 const decorate = compose(
-  view.attach('searchStore'),
+  attach('searchStore'),
   view,
 )
 export const OrbitFilters = decorate(({ searchStore, ...props }: Props) => {

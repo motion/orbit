@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, attach } from '@mcro/black'
 import { BORDER_RADIUS, CHROME_PAD } from '../../../constants'
 import { OrbitStore } from '../OrbitStore'
 import * as UI from '@mcro/ui'
@@ -139,7 +139,7 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
 // this view has two halves so it can animate smoothly without causing layout reflows
 
 const decorate = compose(
-  view.attach('orbitStore', 'queryStore'),
+  attach('orbitStore', 'queryStore'),
   view,
 )
 export const OrbitDockedChrome = decorate(({ orbitStore, queryStore }: Props) => {

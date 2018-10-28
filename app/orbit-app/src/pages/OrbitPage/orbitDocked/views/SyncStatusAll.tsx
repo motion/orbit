@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observeMany } from '@mcro/model-bridge'
 import { JobModel, Job } from '@mcro/models'
-import { view } from '@mcro/black'
+import { attach } from '@mcro/black'
 import { SubTitle } from '../../../../views/SubTitle'
 
 class SyncStatusAllStore {
@@ -21,7 +21,7 @@ class SyncStatusAllStore {
   }
 }
 
-@view.attach({
+@attach({
   store: SyncStatusAllStore,
 })
 export class SyncStatusAll extends React.Component<{ store?: SyncStatusAllStore }> {

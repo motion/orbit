@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, ensure } from '@mcro/black'
+import { view, react, ensure, attach } from '@mcro/black'
 import { PaneManagerStore } from '../../../PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../../SelectionStore'
 import { AppsStore } from '../../../../../stores/AppsStore'
@@ -190,8 +190,8 @@ class OrbitExploreStore {
   }
 }
 
-@view.attach('paneManagerStore', 'selectionStore', 'appsStore')
-@view.attach({
+@attach('paneManagerStore', 'selectionStore', 'appsStore')
+@attach({
   store: OrbitExploreStore,
 })
 @view

@@ -118,7 +118,7 @@ export function storeProvidable(userOptions, Helpers) {
             this.willReloadListener.dispose()
           }
           root.loadedStores.delete(this)
-          // if you remove @view.attach({ store: ... }) it tries to remove it here but its gone
+          // if you remove @attach({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()
           }

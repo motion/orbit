@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { OrbitExplore } from './orbitExplore/OrbitExplore'
@@ -25,7 +25,7 @@ const apps = {
   list: ListApp,
 }
 
-@view.attach('spaceStore', 'paneManagerStore')
+@attach('spaceStore', 'paneManagerStore')
 @view
 export class OrbitHome extends React.Component<Props> {
   render() {
@@ -34,7 +34,7 @@ export class OrbitHome extends React.Component<Props> {
         <SubPane name="home" before={<SpaceNavHeight />} paddingLeft={6} paddingRight={6}>
           <OrbitExplore />
         </SubPane>
-        <SubPane
+        {/* <SubPane
           name="search"
           preventScroll
           before={<SpaceNavHeight />}
@@ -72,7 +72,7 @@ export class OrbitHome extends React.Component<Props> {
         <SubPane name="new" before={<SpaceNavHeight />} paddingLeft={0} paddingRight={0}>
           <NewApp />
           <Lip />
-        </SubPane>
+        </SubPane> */}
       </>
     )
   }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { SettingStore } from '../../stores/SettingStore'
 import { SliderPane, Slider } from '../../views/Slider'
 import { Title } from '../../views'
@@ -67,8 +67,8 @@ class MeStore {
 
 const Pane = props => <SliderPane padding={[20, 14, 40]} {...props} />
 
-@view.attach('settingStore')
-@view.attach({
+@attach('settingStore')
+@attach({
   store: MeStore,
 })
 @view

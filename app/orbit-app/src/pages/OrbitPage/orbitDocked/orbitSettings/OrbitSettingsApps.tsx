@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import * as React from 'react'
 import { OrbitAppCard } from '../views/OrbitAppCard'
 import * as Views from '../../../../views'
@@ -15,7 +15,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
 }
 
-@view.attach('appsStore', 'paneManagerStore')
+@attach('appsStore', 'paneManagerStore')
 @view
 export class OrbitSettingsApps extends React.Component<Props> {
   isSubPaneSelected = () => this.props.paneManagerStore.subPane === 'apps'

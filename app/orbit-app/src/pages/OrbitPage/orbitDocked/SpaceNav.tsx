@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { View, Text, Row, Button } from '@mcro/ui'
 import { SpaceStore } from '../../../stores/SpaceStore'
@@ -12,7 +12,7 @@ type Props = {
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
-@view.attach('spaceStore', 'paneManagerStore')
+@attach('spaceStore', 'paneManagerStore')
 @view
 export class SpaceNav extends React.Component<Props> {
   render() {

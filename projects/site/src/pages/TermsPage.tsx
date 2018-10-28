@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Header, Footer, PostTemplate } from '../components'
 import { P2, Section } from '../views'
 import { SectionContent } from '../views/sectionContent'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../constants'
 
@@ -78,7 +77,6 @@ These Terms, including any legal notices and disclaimers contained on this Websi
 
 These Terms will be governed by and construed in accordance with the laws of the State of California, and you submit to the non-exclusive jurisdiction of the state and federal courts located in California for the resolution of any disputes.`
 
-@view.ui
 export class TermsPage extends React.Component {
   render() {
     return (

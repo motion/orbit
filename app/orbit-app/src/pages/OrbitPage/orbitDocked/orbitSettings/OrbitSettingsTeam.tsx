@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { Title, HorizontalScroll, VerticalSpace } from '../../../../views'
 import { SubTitle } from '../../../../views/SubTitle'
 import { View, Icon } from '@mcro/ui'
@@ -36,7 +36,7 @@ const OrbitSpaceCard = ({ children, label, active = false, ...props }) => (
   </OrbitSpaceCardFrame>
 )
 
-@view.attach('paneManagerStore', 'appsStore')
+@attach('paneManagerStore', 'appsStore')
 @view
 export class OrbitSettingsTeam extends React.Component<{
   appsStore?: AppsStore

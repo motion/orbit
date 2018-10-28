@@ -227,7 +227,6 @@ const baseIconStyle = {
 
 // @ts-ignore
 @attachTheme
-@view.ui
 export class SurfaceInner extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,

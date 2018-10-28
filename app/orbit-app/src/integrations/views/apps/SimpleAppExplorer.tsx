@@ -1,4 +1,4 @@
-import { view, react } from '@mcro/black'
+import { view, react, attach } from '@mcro/black'
 import * as React from 'react'
 import { Setting } from '@mcro/models'
 import { AppTopicExplorer } from './AppTopicExplorer'
@@ -54,7 +54,7 @@ export class AppViewStore {
   }
 }
 
-@view.attach({
+@attach({
   appViewStore: AppViewStore,
 })
 @view

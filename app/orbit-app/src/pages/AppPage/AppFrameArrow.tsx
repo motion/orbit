@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose, react, ensure } from '@mcro/black'
+import { view, compose, react, ensure, attach } from '@mcro/black'
 import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
@@ -47,7 +47,7 @@ class AppArrowStore {
 
 const decorate = compose(
   attachTheme,
-  view.attach({ store: AppArrowStore }),
+  attach({ store: AppArrowStore }),
   view,
 )
 export const AppFrameArrow = decorate(({ store, theme, borderShadow }: Props) => {

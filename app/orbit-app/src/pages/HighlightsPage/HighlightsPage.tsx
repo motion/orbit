@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attach } from '@mcro/black'
 import quadtree from 'simple-quadtree'
 import { Desktop } from '@mcro/stores'
 import { OCRWord } from './OcrWord'
@@ -121,7 +121,7 @@ class HighlightsStore {
   }
 }
 
-@view.attach({
+@attach({
   store: HighlightsStore,
 })
 @view

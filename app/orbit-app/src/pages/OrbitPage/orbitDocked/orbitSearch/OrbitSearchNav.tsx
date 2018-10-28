@@ -4,7 +4,7 @@ import { SearchStore } from '../SearchStore'
 import { Row, View, Popover } from '@mcro/ui'
 import { NavButton } from '../../../../views/NavButton'
 import { OrbitFilters } from '../orbitHome/OrbitFilters'
-import { view, react, ensure } from '@mcro/black'
+import { view, react, ensure, attach } from '@mcro/black'
 import { OrbitSuggestionBar } from './OrbitSuggestionBar'
 import { QueryStore } from '../QueryStore'
 import { hoverSettler } from '../../../../helpers'
@@ -58,8 +58,8 @@ class OrbitNavStore {
   }
 }
 
-@view.attach('searchStore', 'queryStore')
-@view.attach({
+@attach('searchStore', 'queryStore')
+@attach({
   store: OrbitNavStore,
 })
 @view

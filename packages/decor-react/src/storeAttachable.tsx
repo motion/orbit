@@ -15,17 +15,14 @@ export function storeAttachable(options): ContextAttacher {
               return <View {...props} />
             }
             let stores = {}
-            if (
-              options.stores.length === 1 &&
-              typeof options.stores[0] === 'object'
-            ) {
+            if (options.stores.length === 1 && typeof options.stores[0] === 'object') {
               // allow object attach style:
-              // @view.attach({ name: StoreReference })
+              // @attach({ name: StoreReference })
               for (const name of Object.keys(options.stores[0])) {
                 stores[name] = allStores[name]
               }
             } else {
-              // or use string @view.attach('appStore')
+              // or use string @attach('appStore')
               for (const name of options.stores) {
                 stores[name] = allStores[name]
               }

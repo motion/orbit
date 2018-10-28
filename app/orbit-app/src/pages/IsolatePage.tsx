@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, provide } from '@mcro/black'
 import { loadOne } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -50,7 +50,7 @@ export class IsolateHome extends React.Component {
   }
 }
 
-@view.provide({
+@provide({
   orbitStore: OrbitStore,
 })
 export class IsolatePage extends React.Component {

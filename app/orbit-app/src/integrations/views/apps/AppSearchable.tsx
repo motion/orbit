@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Searchable, SearchBarType } from '@mcro/ui'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { AppStore } from '../../../pages/AppPage/AppStore'
 import { App } from '@mcro/stores'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
@@ -17,7 +17,7 @@ type Props = {
   children?: (a: SearchChildProps) => React.ReactNode
 }
 
-@view.attach('selectionStore', 'appStore')
+@attach('selectionStore', 'appStore')
 @view
 export class AppSearchable extends React.Component<Props> {
   render() {

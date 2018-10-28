@@ -66,7 +66,6 @@
 // //   parent: any
 // // }
 
-// @view.ui
 // class ListInner extends React.PureComponent<ListProps> {
 //   static Item = ListItem
 

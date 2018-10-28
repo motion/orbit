@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { QueryStore } from '../orbitDocked/QueryStore'
 import { HeaderStore } from './HeaderStore'
@@ -26,7 +26,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
 }
 
-@view.attach('paneManagerStore', 'orbitStore', 'queryStore', 'searchStore')
+@attach('paneManagerStore', 'orbitStore', 'queryStore', 'searchStore')
 @view
 export class OrbitHeaderInput extends React.Component<Props> {
   render() {

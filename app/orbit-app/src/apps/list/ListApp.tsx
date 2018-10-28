@@ -13,7 +13,7 @@ class ListStore {
   }
 }
 
-@view.attach({
+@attach({
   store: ListStore,
 })
 @view

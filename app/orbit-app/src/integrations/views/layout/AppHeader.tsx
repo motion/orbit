@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../../constants'
 import { CSSPropertySet } from '@mcro/gloss'
@@ -68,7 +68,7 @@ const TitleBarText = props => (
   </div>
 )
 
-@view.attach('appStore')
+@attach('appStore')
 @view
 export class AppHeaderContent extends React.Component<Props> {
   render() {

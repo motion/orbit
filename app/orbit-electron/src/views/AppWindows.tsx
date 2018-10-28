@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose, react } from '@mcro/black'
+import { view, compose, react, attach } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import { AppWindow } from './AppWindow'
@@ -21,12 +21,11 @@ class AppWindowsStore {
 }
 
 const decorator = compose(
-  view.attach({
+  attach({
     store: AppWindowsStore,
   }),
-  view.electron,
+  view,
 )
-
 export const AppWindows = decorator(({ store }: { store: AppWindowsStore }) => {
   const appsState = store.appsStateDebounced
   if (!appsState) {

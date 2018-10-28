@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { SearchStore } from '../SearchStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore } from '../SelectionStore'
@@ -27,8 +27,8 @@ class TopicsStore {
   }
 }
 
-@view.attach('paneManagerStore', 'searchStore', 'selectionStore')
-@view.attach({
+@attach('paneManagerStore', 'searchStore', 'selectionStore')
+@attach({
   store: TopicsStore,
 })
 @view

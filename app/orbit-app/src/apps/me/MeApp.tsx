@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { SettingStore } from '../../stores/SettingStore'
 import { SimpleItem } from '../../views/SimpleItem'
@@ -25,8 +25,8 @@ class MeStore {
   }
 }
 
-@view.attach('settingStore')
-@view.attach({
+@attach('settingStore')
+@attach({
   store: MeStore,
 })
 @view

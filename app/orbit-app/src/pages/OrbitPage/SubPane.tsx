@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach, provide } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
@@ -65,8 +65,8 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-@view.attach('paneManagerStore', 'orbitStore', 'searchStore', 'selectionStore')
-@view.provide({
+@attach('paneManagerStore', 'orbitStore', 'searchStore', 'selectionStore')
+@provide({
   subPaneStore: SubPaneStore,
 })
 @view

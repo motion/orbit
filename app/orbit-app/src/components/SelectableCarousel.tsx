@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, cancel, ensure } from '@mcro/black'
+import { view, react, cancel, ensure, attach } from '@mcro/black'
 import { Carousel, CarouselProps } from './Carousel'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { SelectionStore } from '../pages/OrbitPage/orbitDocked/SelectionStore'
@@ -65,8 +65,8 @@ class CarouselStore {
   )
 }
 
-@view.attach('selectionStore')
-@view.attach({
+@attach('selectionStore')
+@attach({
   store: CarouselStore,
 })
 @view

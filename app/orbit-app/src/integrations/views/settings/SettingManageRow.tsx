@@ -3,7 +3,7 @@ import { Row, View, Text, SegmentedRow } from '@mcro/ui'
 import { ManageSmartSync } from './ManageSmartSync'
 import { Setting, SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/models'
 import { command } from '@mcro/model-bridge'
-import { view } from '@mcro/black'
+import { attach } from '@mcro/black'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 import { AppInfoStore } from '../../../stores/AppInfoStore'
@@ -13,7 +13,7 @@ import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { getAppFromSetting } from '../../../stores/AppsStore'
 
-@view.attach('appInfoStore')
+@attach('appInfoStore')
 export class SettingManageRow extends React.Component<{
   appInfoStore?: AppInfoStore
   setting: Setting

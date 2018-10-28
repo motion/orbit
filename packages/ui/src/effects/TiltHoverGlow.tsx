@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Tilt } from './Tilt'
 import { HoverGlow, HoverGlowProps } from './HoverGlow'
 
@@ -16,7 +15,6 @@ type TiltHoverGlowProps = {
   shadowProps?: Object
 }
 
-@view.ui
 export class TiltHoverGlow extends React.PureComponent<TiltHoverGlowProps> {
   version() {
     return 1

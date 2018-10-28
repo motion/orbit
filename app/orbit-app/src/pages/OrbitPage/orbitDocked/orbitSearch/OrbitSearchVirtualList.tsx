@@ -7,7 +7,7 @@ import {
   InfiniteLoader,
 } from 'react-virtualized'
 import { SearchStore } from '../SearchStore'
-import { view, ensure } from '@mcro/black'
+import { view, ensure, attach } from '@mcro/black'
 import { Text, View } from '@mcro/ui'
 import { HighlightText } from '../../../../views/HighlightText'
 import { OrbitListItem } from '../../../../views/OrbitListItem'
@@ -127,7 +127,7 @@ const FirstItems = view(({ items, searchStore }) => {
   )
 })
 
-@view.attach('searchStore', 'selectionStore', 'subPaneStore')
+@attach('searchStore', 'selectionStore', 'subPaneStore')
 @view
 export class OrbitSearchVirtualList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()

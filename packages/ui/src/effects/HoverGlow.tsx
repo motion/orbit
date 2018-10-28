@@ -57,9 +57,7 @@ function getScrollParent(element) {
     if (excludeStaticParent && style.position === 'static') {
       continue
     }
-    if (
-      overflowRegex.test(style.overflow + style.overflowY + style.overflowX)
-    ) {
+    if (overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) {
       return parent
     }
   }
@@ -83,7 +81,6 @@ const Glow = view({
   left: '50%',
 })
 
-@view.ui
 export class HoverGlow extends React.Component<HoverGlowProps> {
   static acceptsHovered = 'show'
 
@@ -263,13 +260,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const durationArg = show ? durationOut : durationIn
     const duration = durationArg >= 0 ? durationArg : _duration
     if (!this.state.mounted) {
-      return (
-        <Overlay
-          key="hoverglow"
-          forwardRef={this.rootRef}
-          style={{ opacity: 0 }}
-        />
-      )
+      return <Overlay key="hoverglow" forwardRef={this.rootRef} style={{ opacity: 0 }} />
     }
     // find width / height (full == match size of container)
     let width = size || propWidth
@@ -304,12 +295,8 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       if (!inverse) return coord
       return -coord
     }
-    const translateX = inversed(
-      bounded(resisted(x), width * scale, this.state.bounds.width),
-    )
-    const translateY = inversed(
-      bounded(resisted(y), height * scale, this.state.bounds.height),
-    )
+    const translateX = inversed(bounded(resisted(x), width * scale, this.state.bounds.width))
+    const translateY = inversed(bounded(resisted(y), height * scale, this.state.bounds.height))
     const extraScale = clicked ? clickScale : 1
     const glow = (
       <Overlay
@@ -327,8 +314,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
         <Glow
           style={{
             zIndex: behind ? -1 : 1,
-            willChange:
-              this.state.willTrack || this.state.track ? 'transform' : '',
+            willChange: this.state.willTrack || this.state.track ? 'transform' : '',
             transition: `
               transform linear ${duration}ms
             `,
@@ -354,9 +340,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
               // backdropFilter,
               zIndex,
               background:
-                background || gradient
-                  ? `radial-gradient(${color}, transparent 70%)`
-                  : color,
+                background || gradient ? `radial-gradient(${color}, transparent 70%)` : color,
               borderRadius,
               transition: `
                   opacity linear ${duration}ms

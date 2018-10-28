@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
@@ -62,7 +62,7 @@ const Interactive = view({
   },
 })
 
-@view.attach('queryStore', 'searchStore', 'paneManagerStore')
+@attach('queryStore', 'searchStore', 'paneManagerStore')
 @view
 export class OrbitHomeHeader extends React.Component<Props> {
   paneSetter = memoize(name => () => {

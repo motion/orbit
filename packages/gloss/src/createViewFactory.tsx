@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ThemeContext } from './theme/ThemeContext'
-import { CSSPropertySet, validCSSAttr } from '@mcro/css'
+import { CSSPropertySet, validCSSAttr, ThemeObject } from '@mcro/css'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
@@ -14,15 +14,20 @@ export type RawRules = CSSPropertySet & {
 export type BaseRules = {
   [key: string]: string | number
 }
-type Props = CSSPropertySet
 
-const isHMREnabled =
-  process.env.NODE_ENV === 'development' && typeof module !== 'undefined' && !!module['hot']
+type SimpleViewProps = React.HTMLProps<any> & CSSPropertySet & { theme?: ThemeObject }
 
-const recentHMR = () => {
-  const lastHMR = +window['__lastHMR']
-  return Date.now() - lastHMR < 400
+export type SimpleView = React.SFC<SimpleViewProps> & {
+  theme: ((a: SimpleViewProps & { theme: ThemeObject }) => CSSPropertySet)
 }
+
+// const isHMREnabled =
+//   process.env.NODE_ENV === 'development' && typeof module !== 'undefined' && !!module['hot']
+
+// const recentHMR = () => {
+//   const lastHMR = +window['__lastHMR']
+//   return Date.now() - lastHMR < 400
+// }
 
 // ensures &:active psuedo selectors are always placed below
 // so they override &:hover and &:hover
@@ -136,7 +141,7 @@ export function createViewFactory(toCSS) {
   let idCounter = 1
   const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
-  return function createView(a: any, b: RawRules) {
+  return function createView(a: any, b: RawRules): SimpleView {
     let target = a || 'div'
     let rawStyles = b
     let targetConfig
@@ -157,7 +162,7 @@ export function createViewFactory(toCSS) {
     let displayName = 'View'
     let cachedTheme
 
-    class ThemedView extends React.Component<any> {
+    class ThemedView extends React.Component<SimpleViewProps> {
       static contextType = ThemeContext
       static displayName
       static ignoreAttrs
@@ -167,7 +172,7 @@ export function createViewFactory(toCSS) {
         if (config.displayName) {
           displayName = config.displayName
           ThemedView.displayName = `themed(${displayName})`
-          SimpleView.displayName = displayName
+          GlossView.displayName = displayName
         }
         return ThemedView
       }
@@ -191,12 +196,12 @@ export function createViewFactory(toCSS) {
       render() {
         // // avoid theme tree if not necessary
         if (!ThemedView.themeFn) {
-          return <SimpleView {...this.props} />
+          return <GlossView {...this.props} />
         }
         // @ts-ignore via old @types/react
         const { allThemes, activeThemeName } = this.context
         if (!allThemes) {
-          return <SimpleView {...this.props} />
+          return <GlossView {...this.props} />
         }
         let theme = allThemes[activeThemeName]
         // allow simple overriding of the theme using props:
@@ -207,7 +212,7 @@ export function createViewFactory(toCSS) {
             ...this.props.theme,
           }
         }
-        return <SimpleView {...this.props} theme={theme} />
+        return <GlossView {...this.props} theme={theme} />
       }
     }
 
@@ -394,7 +399,7 @@ export function createViewFactory(toCSS) {
       prevProps?: Object
     }
 
-    class SimpleView extends React.Component<Props> {
+    class GlossView extends React.Component<SimpleViewProps> {
       static displayName = 'SimpleView'
 
       state = {
@@ -405,13 +410,14 @@ export function createViewFactory(toCSS) {
         prevProps: null,
       }
 
-      static getDerivedStateFromProps(props: Props, state: State) {
-        const noRecentHMR = isHMREnabled ? !recentHMR() : true
-        const hasSameProps = fastCompareWithoutChildren(props, state.prevProps)
-        const shouldAvoidUpdate = noRecentHMR && hasSameProps
-        if (shouldAvoidUpdate) {
+      static getDerivedStateFromProps(props: SimpleViewProps, state: State) {
+        // const recentlyHMRed = recentHMR()
+        // if (!recentlyHMRed) {
+        // props havent changed
+        if (fastCompareWithoutChildren(props, state.prevProps)) {
           return null
         }
+        // }
         let nextState: Partial<State> = {}
         // update ignore attributes
         ignoreAttrs = ignoreAttrs || getIgnoreAttrs()

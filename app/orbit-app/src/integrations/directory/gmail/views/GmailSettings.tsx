@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import { OrbitIntegrationSettingProps } from '../../../types'
@@ -27,7 +27,7 @@ class GmailSettingStore {
   }
 }
 
-@view.attach({ store: GmailSettingStore })
+@attach({ store: GmailSettingStore })
 @view
 export class GmailSettings extends React.Component<Props & { store?: GmailSettingStore }> {
   render() {

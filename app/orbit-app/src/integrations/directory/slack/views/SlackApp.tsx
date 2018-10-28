@@ -4,7 +4,7 @@ import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
 import { BitTitleBar } from '../../../views/layout/BitTitleBar'
-import { view, ensure, react } from '@mcro/black'
+import { view, ensure, react, attach } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { BitModel, GenericBit, Bit } from '@mcro/models'
 import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
@@ -92,7 +92,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   )
 }
 
-@view.attach({
+@attach({
   store: SlackAppStore,
 })
 @view

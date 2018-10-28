@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, attach } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
 import { ItemProps } from '../../../../views/OrbitItemProps'
@@ -17,7 +17,7 @@ type Props = ItemProps<Setting> &
   }
 
 const decorator = compose(
-  view.attach({
+  attach({
     store: AppInfoStore,
   }),
   view,

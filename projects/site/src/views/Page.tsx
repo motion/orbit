@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, attach } from '@mcro/black'
 import { SectionContent } from './sectionContent'
 import { ParallaxLayer } from '../components/Parallax'
 
 const decorate = compose(
-  view.attach('homeStore'),
+  attach('homeStore'),
   view,
 )
 const NormalLayer = decorate(({ homeStore, ...props }) => {

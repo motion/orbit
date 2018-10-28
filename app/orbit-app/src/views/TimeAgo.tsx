@@ -79,11 +79,13 @@ export class TimeAgo extends Component<TimeAgoProps> {
           .replace(/\//g, '·')
           .replace(' PM', 'pm')
           .replace(' AM', 'am')
+          .replace('yesterday', 'yday')
       )
     }
   }
 
   render() {
+    return 1232
     return this.getParsedDate()
   }
 }

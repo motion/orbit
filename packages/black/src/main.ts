@@ -1,5 +1,5 @@
-export * from './view'
-export * from './storeDecorator'
+export { view, viewEmitter, provide, attach } from './view'
+export { store } from './storeDecorator'
 export * from './helpers/log'
 export * from './helpers/mobx'
 export { deep } from './helpers/deep'

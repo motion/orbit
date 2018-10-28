@@ -3,21 +3,35 @@
 cd $(dirname $0)/..
 FLAGS=$@
 
-# start repl debugger
+#
+# FLAGS
+#
+
 if [[ "$FLAGS" =~ "--ignore-syncers" ]]; then
+  echo "DISABLE SYNCERS"
   export DISABLE_SYNCERS="true"
 fi
+if [[ "$FLAGS" =~ "--ignore-electron" ]]; then
+  echo "DISABLE ELECTRON"
+  export IGNORE_ELECTRON="true"
+fi
 
-# start repl debugger
+#
+# START repl debugger
+#
+
 if [[ "$FLAGS" =~ "--ignore-repl" ]]; then
-  echo "ignoring repl"
+  echo "DISABLE REPL"
 else
   (cd ../orbit-repl && npm start &)
 fi
 
-# start webpack-dev-server
+#
+# START orbit-app
+#
+
 if [[ "$FLAGS" =~ "--ignore-app" ]]; then
-  echo "ignoring app"
+  echo "DISABLE APP"
 else
   if [ "$1" = "start-prod" ]; then
     ../orbit-app/scripts/start.sh start-prod &
@@ -26,14 +40,14 @@ else
   fi
 fi
 
+#
+# START orbit-electron (and orbit-desktop via that)
+#
+
 if [[ "$FLAGS" =~ "--disable-watch" ]]; then
-  echo "not watching backend for changes..."
+  echo "DISABLE WATCH"
   ./scripts/run-orbit.sh
 else
-  if [[ "$FLAGS" =~ "--ignore-electron" ]]; then
-    export IGNORE_ELECTRON="true"
-  fi
-
   export PROCESS_NAME="electron"
   export STACK_FILTER="orbit-electron"
   # start app
@@ -44,6 +58,10 @@ else
     --delay 0.5 \
     --exec './scripts/run-orbit.sh'
 fi
+
+#
+# END
+#
 
 echo "bye orbit!"
 

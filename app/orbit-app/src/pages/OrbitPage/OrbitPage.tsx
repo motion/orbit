@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { provide } from '@mcro/black'
 import { OrbitStore } from './OrbitStore'
 import { AppsStore } from '../../stores/AppsStore'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
@@ -13,24 +13,24 @@ import { SpaceStore } from '../../stores/SpaceStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from './orbitDocked/SearchStore'
 
-@view.provide({
+@provide({
   settingStore: SettingStore,
   appsStore: AppsStore,
   orbitStore: OrbitStore,
 })
-@view.provide({
+@provide({
   spaceStore: SpaceStore,
 })
-@view.provide({
+@provide({
   queryStore: QueryStore,
 })
-@view.provide({
+@provide({
   selectionStore: SelectionStore,
 })
-@view.provide({
+@provide({
   paneManagerStore: PaneManagerStore,
 })
-@view.provide({
+@provide({
   searchStore: SearchStore,
 })
 export class OrbitPage extends React.Component<{

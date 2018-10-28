@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { App } from '@mcro/stores'
-import { view, react, ensure } from '@mcro/black'
+import { view, react, ensure, attach } from '@mcro/black'
 import { compose } from '@mcro/helpers'
 import { observeMany } from '@mcro/model-bridge'
 import { OrbitCard } from '../../../views/OrbitCard'
@@ -188,8 +188,8 @@ const PersonSection = ({
 }
 
 const decorate = compose(
-  view.attach('selectionStore', 'paneManagerStore'),
-  view.attach({
+  attach('selectionStore', 'paneManagerStore'),
+  attach({
     store: OrbitDirectoryStore,
   }),
   view,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -69,7 +69,7 @@ const Interactive = view({
   },
 })
 
-@view.attach('appsStore', 'paneManagerStore', 'searchStore')
+@attach('appsStore', 'paneManagerStore', 'searchStore')
 @view
 class OrbitDockedContents extends React.Component<Props> {
   isSelected = index => index === this.props.paneManagerStore.paneIndex
@@ -89,9 +89,9 @@ class OrbitDockedContents extends React.Component<Props> {
             <Interactive disabled={/^(settings|onboard)$/.test(paneManagerStore.activePane)}>
               <SpaceNav />
             </Interactive>
-            <OrbitOnboard name="onboard" />
+            {/* <OrbitOnboard name="onboard" /> */}
             <OrbitHome name="home" />
-            <OrbitSettings name="settings" />
+            {/* <OrbitSettings name="settings" /> */}
           </div>
         </OrbitDockedInner>
       </>
@@ -115,7 +115,7 @@ class OrbitDockedStore {
   )
 }
 
-@view.attach({
+@attach({
   store: OrbitDockedStore,
 })
 @view

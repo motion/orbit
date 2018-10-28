@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
@@ -83,8 +83,8 @@ const Disable = view({
 })
 
 @attachTheme
-@view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
-@view.attach({
+@attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
+@attach({
   headerStore: HeaderStore,
 })
 @view

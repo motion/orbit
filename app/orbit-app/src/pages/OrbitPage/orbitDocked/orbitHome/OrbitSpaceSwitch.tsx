@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { view, ensure } from '@mcro/black'
-import { Popover, View, Col, Input, Surface, SizedSurface, Row } from '@mcro/ui'
+import { view, ensure, attach } from '@mcro/black'
+import { Popover, View, Col, Row } from '@mcro/ui'
 import { reaction, trace } from 'mobx'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -71,8 +71,8 @@ class SpaceSwitchStore {
   }
 }
 
-@view.attach('spaceStore', 'paneManagerStore')
-@view.attach({
+@attach('spaceStore', 'paneManagerStore')
+@attach({
   store: SpaceSwitchStore,
 })
 @view

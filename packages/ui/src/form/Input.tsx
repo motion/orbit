@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { UIContext } from '../helpers/contexts'
 
@@ -19,7 +18,6 @@ export type InputProps = SizedSurfaceProps & {
   forwardRef: any
 }
 
-@view.ui
 class InputPlain extends React.PureComponent<InputProps> {
   static defaultProps = {
     size: 1,

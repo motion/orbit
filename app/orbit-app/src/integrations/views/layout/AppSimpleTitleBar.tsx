@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, Text } from '@mcro/ui'
 import { NormalizedItem } from '../../../helpers/normalizeItem'
-import { compose, view } from '@mcro/black'
+import { compose, view, attach } from '@mcro/black'
 import { AppStore } from '../../../pages/AppPage/AppStore'
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 }
 
 const decorate = compose(
-  view.attach('appStore'),
+  attach('appStore'),
   view,
 )
 export const AppSimpleTitleBar = decorate(({ appStore, normalizedItem }: Props) => {

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Header, Footer, PostTemplate } from '../components'
 import { Section } from '../views'
 import { SectionContent } from '../views/sectionContent'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../constants'
 
@@ -39,7 +38,6 @@ If you feel that we are not abiding by this privacy policy, you should contact u
 
 We use "cookies" on this site. A cookie is a piece of data stored on a site visitor's hard drive to help us improve your access to our site and identify repeat visitors to our site. For instance, when we use a cookie to identify you, you would not have to log in a password more than once, thereby saving time while on our site. Cookies can also enable us to track and target the interests of our users to enhance the experience on our site. Usage of a cookie is in no way linked to any personally identifiable information on our site.`
 
-@view.ui
 export class PrivacyPage extends React.Component {
   render() {
     return (

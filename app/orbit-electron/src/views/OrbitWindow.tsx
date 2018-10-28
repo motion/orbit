@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, ensure, sleep } from '@mcro/black'
+import { view, react, ensure, sleep, attach, provide } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -111,11 +111,11 @@ class OrbitWindowStore {
   }
 }
 
-@view.attach('electronStore')
-@view.provide({
+@attach('electronStore')
+@provide({
   store: OrbitWindowStore,
 })
-@view.electron
+@view
 export class OrbitWindow extends React.Component<Props> {
   state = {
     show: false,

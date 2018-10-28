@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SortableList } from '../../views/SortableList/SortableList'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 
 class ListsStore {
   state = Math.random()
@@ -43,7 +43,7 @@ class ListsStore {
   ]
 }
 
-@view.attach({
+@attach({
   store: ListsStore,
 })
 @view

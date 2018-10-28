@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom'
 import './RootViewHMR'
 
 export async function start() {
+  console.log('start')
   // re-require for hmr to capture new value
   const { RootView } = require('./RootViewHMR')
   // Root is the topmost store essentially

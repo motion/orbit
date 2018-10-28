@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../SearchStore'
@@ -42,7 +42,7 @@ const OrbitSearchResultsContents = view(({ searchStore, selectionStore }: Props)
   )
 })
 
-@view.attach('searchStore', 'selectionStore', 'paneManagerStore')
+@attach('searchStore', 'selectionStore', 'paneManagerStore')
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   render() {

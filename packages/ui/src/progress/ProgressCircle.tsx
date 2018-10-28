@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Color } from '@mcro/gloss'
 
 type Props = {

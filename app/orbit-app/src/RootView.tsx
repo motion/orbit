@@ -40,7 +40,7 @@ export class RootView extends React.Component {
     })
 
     // reset errors on hmr
-    on(this, view, 'will-hmr', () => this.setState({ error: null }))
+    on(this, viewEmitter, 'will-hmr', () => this.setState({ error: null }))
   }
 
   componentDidCatch(error) {

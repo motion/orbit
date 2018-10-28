@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SortableList } from '../../views/SortableList/SortableList'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
 import { Title } from '../../views'

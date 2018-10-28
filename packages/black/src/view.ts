@@ -71,16 +71,18 @@ export const attach = (...stores) => {
 }
 
 export const viewEmitter = {
-  on: (event, cb) => {
-    const off = blackDecorator.on(event, cb)
-    const off2 = providable.on(event, cb)
-    return () => {
-      off.dispose()
-      off2.dispose()
+  on: (action, cb) => {
+    const off = blackDecorator.on(action, cb)
+    const off2 = providable.on(action, cb)
+    return {
+      dispose: () => {
+        off.dispose()
+        off2.dispose()
+      },
     }
   },
-  emit: event => {
-    blackDecorator.emit(event)
-    providable.emit(event)
+  emit: action => {
+    blackDecorator.emit(action)
+    providable.emit(action)
   },
 }

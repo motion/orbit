@@ -23,28 +23,32 @@ type Watchable = {
 }
 
 type Subscriber = { unsubscribe: Function }
-type OnAble =
-  | number
-  | NodeJS.Timer
-  | Disposable
-  | MutationObserver
-  | Watchable
-  | Subscriber
+type OnAble = number | NodeJS.Timer | Disposable | MutationObserver | Watchable | Subscriber
 
 // fuck electron doesnt have timers
 const looksLikeTimeout = thing => thing && !!thing._idleTimeout
 
 // because instanceof breaks idk
 const looksLikeDisposable = thing =>
-  thing &&
-  typeof thing.dispose === 'function' &&
-  !thing.subscribe &&
-  !thing.emitter
+  thing && typeof thing.dispose === 'function' && !thing.subscribe && !thing.emitter
+
+// adds this.subscriptions to a class at call-time
+function patchSubscribers(subject) {
+  if (subject && !subject.subscriptions) {
+    subject.subscriptions = new CompositeDisposable()
+    // dispose
+    const oComponentWillUnmount = subject.componentWillUnmount
+    subject.componentWillUnmount = function() {
+      subject.subscriptions.dispose()
+      oComponentWillUnmount && oComponentWillUnmount.call(subject, arguments)
+    }
+  }
+}
 
 // 1. listens to a lots of things:
 // 2. adds it onto this.subscriptions
 // 3. returns an off function
-export default function on(
+export function on(
   subject: Subject,
   target: OnAble,
   eventName: String | Function,
@@ -53,6 +57,7 @@ export default function on(
   if (!target) {
     throw new Error('No target given')
   }
+  patchSubscribers(subject)
   // Timer
   if (typeof target === 'number' || looksLikeTimeout(target)) {
     const dispose = () => clearTimeout(target as NodeJS.Timer)

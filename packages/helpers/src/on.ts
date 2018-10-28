@@ -11,10 +11,6 @@ const IsomorphicMutationObserver: typeof MutationObserver = isBrowser
   ? RealMutationObserver
   : class FakeMutationObserver {}
 
-type Subject = {
-  subscriptions: CompositeDisposable
-}
-
 type Watchable = {
   subscribe?: Function
   emitter?: Function
@@ -23,7 +19,7 @@ type Watchable = {
 }
 
 type Subscriber = { unsubscribe: Function }
-type OnAble = number | NodeJS.Timer | Disposable | MutationObserver | Watchable | Subscriber
+type OnAble = number | NodeJS.Timer | Disposable | MutationObserver | Watchable | Subscriber | HTMLElement | HTMLDivElement
 
 // fuck electron doesnt have timers
 const looksLikeTimeout = thing => thing && !!thing._idleTimeout
@@ -49,10 +45,10 @@ function patchSubscribers(subject) {
 // 2. adds it onto this.subscriptions
 // 3. returns an off function
 export function on(
-  subject: Subject,
+  subject: any,
   target: OnAble,
-  eventName: String | Function,
-  callback: Function,
+  eventName?: String | Function,
+  callback?: Function,
 ) {
   if (!target) {
     throw new Error('No target given')

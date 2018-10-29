@@ -1,4 +1,4 @@
-export type Space = {
+export type Pane = {
   id: string
   type?: 'list' | 'lists'
   title: string
@@ -11,10 +11,10 @@ export type Space = {
 export type Orbit = {
   name: string
   color: string[]
-  spaces?: Space[]
+  panes?: Pane[]
 }
 
-const getPanes = (): Space[] => {
+const getPanes = (): Pane[] => {
   return [
     {
       id: 'home',
@@ -64,28 +64,28 @@ export class OrbitStore {
   activeIndex = 0
 
   get activeSpace() {
-    return this.spaces[this.activeIndex]
+    return this.orbits[this.activeIndex]
   }
 
   get inactiveSpaces() {
-    return this.spaces.filter((_, i) => i !== this.activeIndex)
+    return this.orbits.filter((_, i) => i !== this.activeIndex)
   }
 
-  spaces: Orbit[] = [
+  orbits: Orbit[] = [
     {
       name: 'Orbit',
       color: ['blue', 'green'],
-      spaces: getPanes(),
+      panes: getPanes(),
     },
     {
       name: 'Me',
       color: ['red', 'gray'],
-      spaces: [],
+      panes: [],
     },
     {
       name: 'Discussions',
       color: ['blue', 'red'],
-      spaces: [],
+      panes: [],
     },
   ]
 }

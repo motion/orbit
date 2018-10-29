@@ -27,9 +27,7 @@ export type SubPaneProps = CSSPropertySet & {
 
 const SubPaneFrame = view(UI.FullScreen, {
   pointerEvents: 'none',
-  opacity: 0,
   isActive: {
-    opacity: 1,
     pointerEvents: 'inherit',
   },
 })
@@ -39,7 +37,7 @@ const Pane = view(UI.View, {
   top: 0,
   right: 0,
   left: 0,
-  transition: 'all ease 120ms',
+  transition: 'all ease 100ms',
   overflowX: 'hidden',
   overflowY: 'auto',
   borderBottomRadius: BORDER_RADIUS,

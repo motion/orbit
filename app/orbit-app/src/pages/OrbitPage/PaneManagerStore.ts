@@ -23,7 +23,7 @@ export class PaneManagerStore {
   }
 
   get panes(): Partial<Panes>[] {
-    return [...this.props.orbitStore.activeSpace.spaces.map(p => p.id), 'settings']
+    return [...this.props.orbitStore.activeSpace.panes.map(p => p.id), 'settings']
   }
 
   keyablePanes = [0, 6]
@@ -51,7 +51,7 @@ export class PaneManagerStore {
   setActivePaneOnTrigger = react(
     () => this.props.queryStore.query[0],
     firstChar => {
-      for (const { id, trigger } of this.props.orbitStore.activeSpace.spaces) {
+      for (const { id, trigger } of this.props.orbitStore.activeSpace.panes) {
         if (trigger && trigger === firstChar) {
           this.setActivePane(id)
           return

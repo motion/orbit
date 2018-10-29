@@ -12,7 +12,7 @@ import { RowItem } from '../../../../views/RowItem'
 import { FocusableShortcutHandler } from '../../../../views/FocusableShortcutHandler'
 import { fuzzyQueryFilter } from '../../../../helpers'
 import { Icon } from '../../../../views/Icon'
-import { OrbitStore } from '../../../../stores/OrbitStore'
+import { OrbitStore, Orbit } from '../../../../stores/OrbitStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -57,7 +57,7 @@ class SpaceSwitchStore {
   }
 
   get spaces() {
-    return this.props.orbitStore.spaces
+    return this.props.orbitStore.orbits
   }
 
   down = e => {

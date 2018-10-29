@@ -18,12 +18,9 @@ export class SpaceNav extends React.Component<Props> {
   render() {
     const { orbitStore, paneManagerStore } = this.props
     const { activeSpace } = orbitStore
-    const newPane = activeSpace.spaces.find(x => x.title === 'New')
-    const curIndex = Math.min(
-      Math.max(0, paneManagerStore.paneIndex),
-      activeSpace.spaces.length - 1,
-    )
-    const activeItem = activeSpace.spaces[curIndex]
+    const newPane = activeSpace.panes.find(x => x.title === 'New')
+    const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), activeSpace.panes.length - 1)
+    const activeItem = activeSpace.panes[curIndex]
     return (
       <Row position="relative" zIndex={1000} padding={[3, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
@@ -31,7 +28,7 @@ export class SpaceNav extends React.Component<Props> {
           <Icon size={16} name={activeItem.icon} />
         </View>
         <Row>
-          {orbitStore.activeSpace.spaces.filter(x => x.title !== 'New').map((pane, index) => {
+          {orbitStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => {
             const isActive = curIndex === index
             return (
               <Text
@@ -40,7 +37,7 @@ export class SpaceNav extends React.Component<Props> {
                 size={1.1}
                 alpha={isActive ? 1 : 0.5}
                 alphaHover={isActive ? 1 : 0.7}
-                marginRight={6}
+                marginRight={8}
                 padding={4}
                 onClick={paneManagerStore.activePaneSetter(index)}
                 transform={{

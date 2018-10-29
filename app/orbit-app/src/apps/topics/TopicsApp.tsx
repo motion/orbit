@@ -17,9 +17,9 @@ type Props = {
 }
 
 const icons = {
-  0: ['neutral', 'gray'],
-  1: ['upArrow', 'green'],
-  2: ['downArrow', 'red'],
+  0: ['neutral', 'rgba(255,255,255,0.25)'],
+  1: ['upArrow', 'rgb(34, 127, 34)'],
+  2: ['downArrow', 'rgb(167, 34, 34)'],
 }
 
 class TopicsStore {
@@ -43,13 +43,13 @@ class TopicsStore {
 function TopicList({ results }) {
   return (
     <>
-      {results.slice(0, 10).map(res => (
+      {results.map(res => (
         <Row key={res.title} {...{ padding: [10, 14] }}>
-          <View flex={1}>
-            <Text size={1.2}>{res.title}</Text>
-          </View>
           <View paddingRight={10} margin={['auto', 0]}>
             <Icon {...res.iconProps} />
+          </View>
+          <View flex={1}>
+            <Text size={1.2}>{res.title}</Text>
           </View>
         </Row>
       ))}
@@ -72,12 +72,12 @@ export class TopicsApp extends React.Component<Props & { store?: TopicsStore }> 
         <Row>
           <View width="50%">
             <Section padTitle title="Trending" type="search-list">
-              <TopicList results={results} />
+              <TopicList results={results.slice(0, 10)} />
             </Section>
           </View>
-          <View width="50%">
+          <View width="50%" borderLeft={[1, [0, 0, 0, 0.1]]}>
             <Section padTitle title="Me" type="search-list">
-              <TopicList results={results} />
+              <TopicList results={results.slice(10, 20)} />
             </Section>
           </View>
         </Row>

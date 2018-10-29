@@ -210,7 +210,7 @@ export function createViewFactory(toCSS) {
             ...this.props.theme,
           }
         }
-        return <GlossView {...this.props} theme={this.props.theme || theme} />
+        return <GlossView {...this.props} theme={theme} />
       }
     }
 

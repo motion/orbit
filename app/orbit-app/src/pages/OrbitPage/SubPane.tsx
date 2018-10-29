@@ -25,9 +25,14 @@ export type SubPaneProps = CSSPropertySet & {
   selectionStore?: SelectionStore
 }
 
+// we cant animate out as of yet because we are changing the height
+// so it would show overflowing content as the main pane got smaller
+// changing opacity here will be instant so avoid that bug
 const SubPaneFrame = view(UI.FullScreen, {
   pointerEvents: 'none',
+  opacity: 0,
   isActive: {
+    opacity: 1,
     pointerEvents: 'inherit',
   },
 })

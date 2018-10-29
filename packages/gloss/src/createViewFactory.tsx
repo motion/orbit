@@ -6,7 +6,6 @@ import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import validProp from './helpers/validProp'
-// import { hashSum } from './helpers/hashSum'
 
 export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
@@ -20,14 +19,6 @@ type SimpleViewProps = React.HTMLProps<any> & CSSPropertySet & { theme?: ThemeOb
 export type SimpleView = React.SFC<SimpleViewProps> & {
   theme: ((a: SimpleViewProps & { theme: ThemeObject }) => CSSPropertySet)
 }
-
-// const isHMREnabled =
-//   process.env.NODE_ENV === 'development' && typeof module !== 'undefined' && !!module['hot']
-
-// const recentHMR = () => {
-//   const lastHMR = +window['__lastHMR']
-//   return Date.now() - lastHMR < 400
-// }
 
 // ensures &:active psuedo selectors are always placed below
 // so they override &:hover and &:hover
@@ -44,59 +35,6 @@ const arrToDict = obj => {
   }
   return obj
 }
-
-// const valCache = new WeakMap()
-
-// const hashVal = val => {
-//   // ignore react children
-//   if (val && val['_owner'] && val['$$typeof']) {
-//     return ''
-//   }
-//   if (!val) {
-//     return val
-//   }
-//   if (valCache.has(val)) {
-//     return valCache.get(val)
-//   }
-//   if (Array.isArray(val)) {
-//     return val.map(hashVal)
-//   }
-//   if (val._equalityKey) {
-//     return val._equalityKey
-//   }
-//   const type = typeof val
-//   if (type === 'string' || type === 'number' || type === 'boolean') {
-//     return val
-//   }
-//   const res = hashSum(val)
-//   valCache.set(val, res)
-//   return res
-// }
-
-// const shouldUpdateHash = (props, ignoreAttrs) => {
-//   let hash = ''
-//   for (const key in props) {
-//     const val = props[key]
-//     // ignore attrs
-//     if (ignoreAttrs && !ignoreAttrs[key]) {
-//       continue
-//     }
-//     if (process.env.NODE_ENV === 'development') {
-//       try {
-//         hash == hashVal(val)
-//       } catch (err) {
-//         console.log('err', key, val, typeof val)
-//         console.log('error', err)
-//       }
-//     } else {
-//       hash == hashVal(val)
-//     }
-//   }
-//   console.log('returnig has', hash)
-//   return hash
-// }
-
-// import sonar
 
 const addStyles = (id, baseStyles, nextStyles) => {
   const propStyles = {}
@@ -350,7 +288,7 @@ export function createViewFactory(toCSS) {
           }
         }
       }
-      if (theme) {
+      if (themeFn) {
         addStyles(id, dynamicStyles, themeFn({ ...props, theme }))
       }
       if (hasDynamicStyles) {
@@ -413,17 +351,15 @@ export function createViewFactory(toCSS) {
       // @ts-ignore react hooks
       const { allThemes, activeThemeName } = React.useContext(ThemeContext)
 
-      let theme
-      if (getTheme()) {
-        theme = allThemes[activeThemeName]
-        // merge themes option
-        if (typeof props.theme === 'object') {
-          theme = {
-            ...theme,
-            ...props.theme,
-          }
+      let theme = allThemes[activeThemeName]
+      // merge themes option
+      if (typeof props.theme === 'object') {
+        theme = {
+          ...theme,
+          ...props.theme,
         }
       }
+
       const nextClassNames = getClassNamesFromProps(classNames, props, theme)
       if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
         setClassNames(nextClassNames)

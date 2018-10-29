@@ -59,7 +59,8 @@ export class PaneManagerStore {
       }
       if (firstChar && this.activePane === 'home') {
         this.setActivePane('search')
-      } else if (this.activePane === 'search') {
+      }
+      if (!firstChar && this.activePane === 'search') {
         this.setActivePane('home')
       }
     },

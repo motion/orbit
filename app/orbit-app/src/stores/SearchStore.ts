@@ -11,7 +11,6 @@ import { SearchFilterStore } from './SearchFilterStore'
 import { SelectionGroup, SelectionStore } from './SelectionStore'
 import { SettingStore } from './SettingStore'
 import { uniq } from 'lodash'
-import { trace } from 'mobx'
 
 const TYPE_DEBOUNCE = 200
 

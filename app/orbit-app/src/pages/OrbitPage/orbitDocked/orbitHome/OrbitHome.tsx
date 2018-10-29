@@ -10,6 +10,7 @@ import { NewApp } from '../../../../apps/new/NewApp'
 import { OrbitSearchResults } from '../orbitSearch/OrbitSearchResults'
 import { SpaceNavHeight } from '../SpaceNav'
 import { OrbitStore } from '../../../../stores/OrbitStore'
+import { TopicsApp } from '../../../../apps/topics/TopicsApp'
 
 type Props = {
   name: string
@@ -31,8 +32,8 @@ export class OrbitHome extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubPane name="home" before={<SpaceNavHeight />} paddingLeft={6} paddingRight={6}>
-          <OrbitExplore />
+        <SubPane name="home" before={<SpaceNavHeight />} paddingLeft={0} paddingRight={0}>
+          <TopicsApp />
         </SubPane>
         {/* <SubPane
           name="search"
@@ -72,6 +73,9 @@ export class OrbitHome extends React.Component<Props> {
         <SubPane name="new" before={<SpaceNavHeight />} paddingLeft={0} paddingRight={0}>
           <NewApp />
           <Lip />
+        </SubPane> */}
+        {/* <SubPane name="recently" before={<SpaceNavHeight />} paddingLeft={6} paddingRight={6}>
+          <OrbitExplore />
         </SubPane> */}
       </>
     )

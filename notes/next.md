@@ -18,13 +18,16 @@ questions:
   - return a structure that represents this all nicely to display:
 
 ```
-[
-  { type: 'conversation', results: [] }.
-  { type: 'document', results: [] },
-  { type: 'mail', results: [] },
-  { type: 'task', results: [] },
-  { type: 'group', summary: { conversation: 20, mail: 10, document: 2 } }
-]
+{
+  type: 'grouped',
+  summary: { conversation: 20, mail: 10, document: 2 },
+  results: {
+    { type: 'conversation', results: [] }.
+    { type: 'document', results: [] },
+    { type: 'mail', results: [] },
+    { type: 'task', results: [] },
+  }
+}
 ```
 
 nate:
@@ -230,11 +233,3 @@ focus on what we can make really a big improvement in day to day first:
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
 - hmr: doesn't store.unmount stores often
-
-### IF things are failing in about 6 months (assuming launch in about 4 months, beta in 2)
-
-prototype out a much nicer launch page with the Orbit Ora, like this:
-
-https://thehelm.com/
-
-But basically have it be a tool for any type of app. Orbit can show them inside the actual pane itself.

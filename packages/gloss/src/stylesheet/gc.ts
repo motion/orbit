@@ -55,12 +55,7 @@ export class GarbageCollector {
   }
 
   // component has been mounted so make sure it's being depended on
-  registerClassUse(uid: number, name: string) {
-    const key = `${uid}${name}`
-    if (this.activeUids.has(key)) {
-      return
-    }
-    this.activeUids.add(key)
+  registerClassUse(name: string) {
     const count = this.usedClasses.get(name) || 0
     this.usedClasses.set(name, count + 1)
     if (this.classRemovalQueue.has(name)) {
@@ -72,13 +67,7 @@ export class GarbageCollector {
   }
 
   // component has been unmounted so remove it's dependencies
-  deregisterClassUse(uid: number, name: string) {
-    const key = `${uid}${name}`
-    // prevent double deletes
-    if (!this.activeUids.has(key)) {
-      return
-    }
-    this.activeUids.delete(key)
+  deregisterClassUse(name: string) {
     let count = this.usedClasses.get(name)
     if (count == null) {
       return

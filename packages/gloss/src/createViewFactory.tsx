@@ -212,11 +212,6 @@ function compileTheme(ogView) {
   return result
 }
 
-type ClassesState = {
-  classNames: string[]
-  extraClassNames: string[]
-}
-
 export function createViewFactory(toCSS) {
   const tracker = new Map()
   const rulesToClass = new WeakMap()
@@ -270,6 +265,14 @@ export function createViewFactory(toCSS) {
     let rawStyles = b
     let targetConfig
     let ignoreAttrs
+
+    // update ignore attributes
+    setTimeout(() => {
+      const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
+      const attrArr = ThemedView.ignoreAttrs || targetAttrs
+      ignoreAttrs = arrToDict(attrArr)
+    })
+
     const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
     if (isSimpleView) {
       targetConfig = target.getConfig()
@@ -287,11 +290,6 @@ export function createViewFactory(toCSS) {
     let cachedTheme
     let ThemedView
 
-    function getIgnoreAttrs() {
-      const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
-      return ThemedView.ignoreAttrs || targetAttrs
-    }
-
     function getTheme() {
       if (typeof cachedTheme !== 'undefined') {
         return cachedTheme
@@ -302,14 +300,13 @@ export function createViewFactory(toCSS) {
     }
 
     function generateClassnames(
-      uid: number,
-      state: ClassesState,
+      classNames: string[] | null,
       props: CSSPropertySet,
       tagName: string,
       theme: ThemeObject,
     ) {
       // if this is a secondary render then check if the props are essentially equivalent
-      const extraClassNames = []
+      let extraClassNames = null
       let myStyles = { ...styles }
       // if passed any classes from another styled component, ignore that class and merge in their
       // resolved styles
@@ -324,6 +321,7 @@ export function createViewFactory(toCSS) {
               [namespace]: style,
             }
           } else {
+            extraClassNames = extraClassNames || []
             extraClassNames.push(className)
           }
         }
@@ -366,7 +364,7 @@ export function createViewFactory(toCSS) {
           }
         }
       }
-      const nextClassNames = []
+      let nextClassNames
       // sort so we properly order pseudo keys
       const keys = Object.keys(myStyles)
       const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
@@ -374,79 +372,69 @@ export function createViewFactory(toCSS) {
       // add rules
       for (const namespace of sortedStyleKeys) {
         const className = addRules(displayName, myStyles[namespace], namespace, tagName)
+        nextClassNames = nextClassNames || []
         nextClassNames.push(className)
         // if this is the first mount render or we didn't previously have this class then add it as new
-        if (state.classNames == null || !state.classNames.includes(className)) {
-          gc.registerClassUse(uid, className)
+        if (classNames == null || !classNames.includes(className)) {
+          gc.registerClassUse(className)
         }
       }
       // check what classNames have been removed if this is a secondary render
-      if (state.classNames !== null) {
-        for (const className of state.classNames) {
+      if (classNames !== null) {
+        for (const className of classNames) {
           // if this previous class isn't in the current classes then deregister it
-          if (!nextClassNames.includes(className)) {
-            gc.deregisterClassUse(uid, className)
+          if (!nextClassNames || !nextClassNames.includes(className)) {
+            gc.deregisterClassUse(className)
           }
         }
       }
-      return {
-        classNames: nextClassNames,
-        extraClassNames,
+      if (!extraClassNames) {
+        return nextClassNames
       }
+      if (!nextClassNames) {
+        return extraClassNames
+      }
+      return [...nextClassNames, ...extraClassNames]
     }
 
     function getClassNamesFromProps(
-      uid: number,
-      state: ClassesState,
+      classNames: string[],
       props: SimpleViewProps,
       theme: ThemeObject,
     ) {
       const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-      return generateClassnames(uid, state, props, tag, theme)
+      return generateClassnames(classNames, props, tag, theme)
     }
 
     // @ts-ignore react hooks
     ThemedView = React.memo((props: SimpleViewProps) => {
       // @ts-ignore react hooks
-      let [uid] = React.useState(Math.random())
-      // @ts-ignore react hooks
-      const [state, setClasses] = React.useState({
-        classNames: null,
-        extraClassNames: [],
-      } as ClassesState)
-
-      // update ignore attributes
-      ignoreAttrs = ignoreAttrs || arrToDict(getIgnoreAttrs())
-
+      const [classNames, setClassNames] = React.useState(null)
       // @ts-ignore react hooks
       const { allThemes, activeThemeName } = React.useContext(ThemeContext)
 
-      // @ts-ignore react hooks
-      React.useEffect(() => {
-        let theme
-        if (getTheme()) {
-          theme = allThemes[activeThemeName]
-          // merge themes option
-          if (typeof props.theme === 'object') {
-            theme = {
-              ...theme,
-              ...props.theme,
-            }
+      let theme
+      if (getTheme()) {
+        theme = allThemes[activeThemeName]
+        // merge themes option
+        if (typeof props.theme === 'object') {
+          theme = {
+            ...theme,
+            ...props.theme,
           }
         }
-
-        const nextState = getClassNamesFromProps(uid, state, props, theme)
-        if (JSON.stringify(nextState) !== JSON.stringify(state)) {
-          setClasses(nextState)
-        }
-      })
+      }
+      const nextClassNames = getClassNamesFromProps(classNames, props, theme)
+      if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
+        setClassNames(nextClassNames)
+      }
 
       // @ts-ignore
       React.useEffect(() => {
         return () => {
-          if (state.classNames) {
-            for (const name of state.classNames) {
-              gc.deregisterClassUse(uid, name)
+          if (classNames) {
+            for (const name of classNames) {
+              gc.deregisterClassUse(name)
             }
           }
         }
@@ -469,8 +457,8 @@ export function createViewFactory(toCSS) {
       }
 
       // className
-      if (state.classNames) {
-        finalProps.className = state.classNames.concat(state.extraClassNames).join(' ')
+      if (classNames) {
+        finalProps.className = classNames.join(' ')
       }
 
       // forwardRef
@@ -485,9 +473,9 @@ export function createViewFactory(toCSS) {
       }
 
       // ignoreAttrs
-      if (state.ignoreAttrs && typeof state.ignoreAttrs === 'object') {
+      if (ignoreAttrs && typeof ignoreAttrs === 'object') {
         for (const prop in props) {
-          if (state.ignoreAttrs[prop]) {
+          if (ignoreAttrs[prop]) {
             delete finalProps[prop]
           }
         }
@@ -515,7 +503,7 @@ export function createViewFactory(toCSS) {
       id,
       displayName,
       targetElement,
-      ignoreAttrs: getIgnoreAttrs(),
+      ignoreAttrs,
       styles: { ...styles },
       propStyles: { ...propStyles },
       child: isSimpleView ? target : null,

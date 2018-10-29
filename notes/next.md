@@ -18,17 +18,13 @@ questions:
   - return a structure that represents this all nicely to display:
 
 ```
-{
-  recent: [
-    { type: 'conversation', results: [] }.
-    { type: 'document', results: [] },
-    { type: 'mail', results: [] },
-    { type: 'task', results: [] },
-    { type: 'group', summary: { conversation: 20, mail: 10, document: 2 } }
-  ],
-  semirecent: [ ... ],
-  alltime: [ ... ],
-}
+[
+  { type: 'conversation', results: [] }.
+  { type: 'document', results: [] },
+  { type: 'mail', results: [] },
+  { type: 'task', results: [] },
+  { type: 'group', summary: { conversation: 20, mail: 10, document: 2 } }
+]
 ```
 
 nate:

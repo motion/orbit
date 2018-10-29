@@ -19,7 +19,20 @@ type Watchable = {
 }
 
 type Subscriber = { unsubscribe: Function }
-type OnAble = number | NodeJS.Timer | Disposable | MutationObserver | Watchable | Subscriber | HTMLElement | HTMLDivElement
+
+type ElementLike = Element
+| HTMLElement
+| HTMLDivElement
+| Window
+
+type OnAble =
+  | number
+  | NodeJS.Timer
+  | Disposable
+  | MutationObserver
+  | Watchable
+  | Subscriber
+  | ElementLike
 
 // fuck electron doesnt have timers
 const looksLikeTimeout = thing => thing && !!thing._idleTimeout

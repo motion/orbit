@@ -1,10 +1,18 @@
-import { Bit } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
 import { hash } from '@mcro/utils'
 
 /**
  * Common Bit utility functions.
  */
 export class BitUtils {
+
+  /**
+   * Creates a bit id.
+   */
+  static id(setting: Setting, data: string) {
+    return hash(`${setting.type}-${setting.id}-${data}`)
+  }
+
   /**
    * Returns missing elements of the first bits based on given list of second bits.
    */

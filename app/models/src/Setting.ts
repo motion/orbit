@@ -6,11 +6,10 @@ import { GeneralSettingValues } from './setting-values/GeneralSettingValues'
 import { GithubSettingValues } from './setting-values/GithubSettingValues'
 import { GmailSettingValues } from './setting-values/GmailSettingValues'
 import { JiraSettingValues } from './setting-values/JiraSettingValues'
-import { SettingValues } from './setting-values/SettingValues'
 import { SlackSettingValues } from './setting-values/SlackSettingValues'
 import { WebsiteSettingValues } from './setting-values/WebsiteSettingValues'
 
-export interface Setting {
+export type BaseSetting = {
   /**
    * Target type.
    */
@@ -29,25 +28,23 @@ export interface Setting {
   name?: string
   identifier?: string
   category?: string
-  type?: 'general' | IntegrationType
   token?: string
-  values?: SettingValues
   createdAt?: Date
   updatedAt?: Date
 }
 
-export type GithubSetting = Setting & { type: 'github'; values: GithubSettingValues }
-export type SlackSetting = Setting & { type: 'slack'; values: SlackSettingValues }
-export type AtlassianSetting = Setting & {
+export type GithubSetting = BaseSetting & { type?: 'github'; values?: GithubSettingValues }
+export type SlackSetting = BaseSetting & { type?: 'slack'; values?: SlackSettingValues }
+export type AtlassianSetting = BaseSetting & {
   type: 'confluence' | 'jira'
   values: AtlassianSettingValuesCredentials
 }
-export type DriveSetting = Setting & { type: 'gdrive'; values: DriveSettingValues }
-export type GmailSetting = Setting & { type: 'gmail'; values: GmailSettingValues }
-export type JiraSetting = Setting & { type: 'jira'; values: JiraSettingValues }
-export type ConfluenceSetting = Setting & { type: 'confluence'; values: ConfluenceSettingValues }
-export type GeneralSetting = Setting & { type: 'general'; values: GeneralSettingValues }
-export type WebsiteSetting = Setting & { type: 'website'; values: WebsiteSettingValues }
+export type DriveSetting = BaseSetting & { type?: 'drive'; values?: DriveSettingValues }
+export type GmailSetting = BaseSetting & { type?: 'gmail'; values?: GmailSettingValues }
+export type JiraSetting = BaseSetting & { type?: 'jira'; values?: JiraSettingValues }
+export type ConfluenceSetting = BaseSetting & { type?: 'confluence'; values?: ConfluenceSettingValues }
+export type GeneralSetting = BaseSetting & { type?: 'general'; values?: GeneralSettingValues }
+export type WebsiteSetting = BaseSetting & { type?: 'website'; values?: WebsiteSettingValues }
 
 export type AllSettings = {
   github: GithubSetting
@@ -58,5 +55,14 @@ export type AllSettings = {
   website: WebsiteSetting
   drive: DriveSetting
 }
+
+export type Setting = GeneralSetting
+  | SlackSetting
+  | DriveSetting
+  | GmailSetting
+  | JiraSetting
+  | ConfluenceSetting
+  | WebsiteSetting
+  | GithubSetting
 
 export type IntegrationSetting<A extends IntegrationType> = AllSettings[A]

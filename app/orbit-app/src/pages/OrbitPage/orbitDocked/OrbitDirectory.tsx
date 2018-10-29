@@ -32,7 +32,7 @@ type ResultSection = { title: string; results: PersonBit[]; height: number }
 class OrbitDirectoryStore {
   props: Props
   allPeople = []
-  private allPeople$ = observeMany(PersonBitModel).subscribe(people => {
+  private allPeople$ = observeMany(PersonBitModel, { args: { take: 100 } }).subscribe(people => {
     if (!people) return
     const sorted = sortBy(people.filter(x => !!x.name), x => x.name.toLowerCase())
     this.allPeople = sorted

@@ -5,8 +5,8 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
 import { View, ClearButton, Icon } from '@mcro/ui'
-import { SearchStore } from '../SearchStore'
-import { QueryStore } from '../QueryStore'
+import { SearchStore } from '../../../../stores/SearchStore'
+import { QueryStore } from '../../../../stores/QueryStore'
 
 const Section = view('section', {
   width: '100%',

@@ -1,10 +1,10 @@
 import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { NLPResponse } from './nlpStore/types'
+import { NLPResponse } from '../pages/OrbitPage/orbitDocked/nlpStore/types'
 
 // runs off thread
 // @ts-ignore
-import initNlp from './nlpStore/nlpQueryWorker'
+import initNlp from '../pages/OrbitPage/orbitDocked/nlpStore/nlpQueryWorker'
 import { PersonBitModel } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 const { parseSearchQuery, setUserNames } = initNlp()

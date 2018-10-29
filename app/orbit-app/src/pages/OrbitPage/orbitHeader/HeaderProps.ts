@@ -1,7 +1,7 @@
-import { SearchStore } from '../orbitDocked/SearchStore'
+import { SearchStore } from '../../../stores/SearchStore'
 import { PaneManagerStore } from '../PaneManagerStore'
-import { QueryStore } from '../orbitDocked/QueryStore'
-import { SelectionStore } from '../orbitDocked/SelectionStore'
+import { QueryStore } from '../../../stores/QueryStore'
+import { SelectionStore } from '../../../stores/SelectionStore'
 
 export type HeaderProps = {
   searchStore?: SearchStore

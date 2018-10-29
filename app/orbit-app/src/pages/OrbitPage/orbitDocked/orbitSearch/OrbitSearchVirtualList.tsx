@@ -6,7 +6,7 @@ import {
   CellMeasurer,
   InfiniteLoader,
 } from 'react-virtualized'
-import { SearchStore } from '../SearchStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 import { view, ensure, attach } from '@mcro/black'
 import { Text, View } from '@mcro/ui'
 import { HighlightText } from '../../../../views/HighlightText'
@@ -17,7 +17,7 @@ import { Bit } from '@mcro/models'
 import { reaction, trace } from 'mobx'
 import { debounce } from 'lodash'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
-import { SelectionStore } from '../SelectionStore'
+import { SelectionStore } from '../../../../stores/SelectionStore'
 import { OrbitItemSingleton } from '../../../../views/OrbitItemStore'
 import { SubPaneStore } from '../../SubPaneStore'
 import { Banner } from '../../../../views/Banner'

@@ -1,9 +1,9 @@
 import { react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { AppReactions } from '../../stores/AppReactions'
+import { AppReactions } from './AppReactions'
 
-export class OrbitStore {
+export class OrbitWindowStore {
   contentHeight = 0
   inputFocused = false
 

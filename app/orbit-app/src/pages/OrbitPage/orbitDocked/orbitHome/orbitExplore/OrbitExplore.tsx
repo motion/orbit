@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react, ensure, attach } from '@mcro/black'
 import { PaneManagerStore } from '../../../PaneManagerStore'
-import { SelectionStore, SelectionGroup } from '../../SelectionStore'
+import { SelectionStore, SelectionGroup } from '../../../../../stores/SelectionStore'
 import { AppsStore } from '../../../../../stores/AppsStore'
 import { OrbitCarouselSection } from '../OrbitCarouselSection'
 import { observeMany } from '@mcro/model-bridge'

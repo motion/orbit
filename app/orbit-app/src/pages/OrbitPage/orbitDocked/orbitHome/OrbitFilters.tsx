@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
-import { SearchStore } from '../SearchStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 import { Row, Button } from '@mcro/ui'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 

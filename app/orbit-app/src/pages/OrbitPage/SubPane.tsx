@@ -3,12 +3,11 @@ import { view, attach, provide } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
-import { OrbitStore } from './OrbitStore'
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from './orbitDocked/SearchStore'
-import { SelectionStore } from './orbitDocked/SelectionStore'
+import { SearchStore } from '../../stores/SearchStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 import { BORDER_RADIUS } from '../../constants'
-import { StaticContainer } from '../../views/StaticContainer'
 
 export type SubPaneProps = CSSPropertySet & {
   preventScroll?: boolean
@@ -20,7 +19,7 @@ export type SubPaneProps = CSSPropertySet & {
   name?: string
   onScrollNearBottom?: Function
   extraCondition?: () => boolean
-  orbitStore?: OrbitStore
+  orbitWindowStore?: OrbitWindowStore
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   selectionStore?: SelectionStore
@@ -65,7 +64,7 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-@attach('paneManagerStore', 'orbitStore', 'searchStore', 'selectionStore')
+@attach('paneManagerStore', 'orbitWindowStore', 'searchStore', 'selectionStore')
 @provide({
   subPaneStore: SubPaneStore,
 })

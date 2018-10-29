@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, compose, attach } from '@mcro/black'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SearchStore } from '../SearchStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 import { HorizontalScroll } from '../../../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
 

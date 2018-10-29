@@ -10,7 +10,7 @@ import { Input } from '../../../../views/Input'
 import { ShortcutCapture } from '../../../../views/ShortcutCapture'
 import { AppsStore } from '../../../../stores/AppsStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SearchStore } from '../SearchStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 
 const eventCharsToNiceChars = {
   alt: '⌥',

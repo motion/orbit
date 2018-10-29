@@ -6,7 +6,7 @@ import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
 import { View } from '@mcro/ui'
 import { Actions } from '../../../actions/Actions'
-import { OrbitSpaceSwitch } from '../orbitDocked/orbitHome/OrbitSpaceSwitch'
+import { OrbitSwitch } from '../orbitDocked/orbitHome/OrbitSwitch'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -111,7 +111,7 @@ export class OrbitHeader extends React.Component<
             <OrbitClose onClick={Actions.closeOrbit}>
               <OrbitCloseControl />
             </OrbitClose>
-            <OrbitSpaceSwitch />
+            <OrbitSwitch />
             <Disable when={headerStore.disableSearch}>
               <OrbitHeaderInput headerStore={headerStore} theme={theme} />
             </Disable>

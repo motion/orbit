@@ -2,11 +2,11 @@ import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
-import { QueryStore } from '../orbitDocked/QueryStore'
+import { QueryStore } from '../../../stores/QueryStore'
 import { HeaderStore } from './HeaderStore'
 import { ThemeObject } from '@mcro/gloss'
-import { OrbitStore } from '../OrbitStore'
-import { SearchStore } from '../orbitDocked/SearchStore'
+import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
+import { SearchStore } from '../../../stores/SearchStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
 const handleKeyDown = e => {
@@ -21,16 +21,16 @@ type Props = {
   theme: ThemeObject
   queryStore?: QueryStore
   headerStore: HeaderStore
-  orbitStore?: OrbitStore
+  orbitWindowStore?: OrbitWindowStore
   searchStore?: SearchStore
   paneManagerStore?: PaneManagerStore
 }
 
-@attach('paneManagerStore', 'orbitStore', 'queryStore', 'searchStore')
+@attach('paneManagerStore', 'orbitWindowStore', 'queryStore', 'searchStore')
 @view
 export class OrbitHeaderInput extends React.Component<Props> {
   render() {
-    const { orbitStore, queryStore, theme, headerStore } = this.props
+    const { orbitWindowStore, queryStore, theme, headerStore } = this.props
     return (
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
@@ -45,8 +45,8 @@ export class OrbitHeaderInput extends React.Component<Props> {
           highlight={headerStore.highlightWords}
           color={theme.color}
           onChange={queryStore.onChangeQuery}
-          onFocus={orbitStore.onFocus}
-          onBlur={orbitStore.onBlur}
+          onFocus={orbitWindowStore.onFocus}
+          onBlur={orbitWindowStore.onBlur}
           onKeyDown={handleKeyDown}
           forwardRef={headerStore.inputRef}
           onClick={headerStore.onClickInput}

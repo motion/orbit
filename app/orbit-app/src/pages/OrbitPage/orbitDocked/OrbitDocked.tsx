@@ -8,8 +8,8 @@ import { OrbitHeader } from '../orbitHeader/OrbitHeader'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { BORDER_RADIUS } from '../../../constants'
-import { SearchStore } from './SearchStore'
-import { OrbitStore } from '../OrbitStore'
+import { SearchStore } from '../../../stores/SearchStore'
+import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
@@ -23,7 +23,7 @@ const log = new Logger('OrbitDocked')
 type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
-  appStore?: OrbitStore
+  appStore?: OrbitWindowStore
   appsStore?: AppsStore
   store?: OrbitDockedStore
 }

@@ -4,7 +4,7 @@ import { view, attach } from '@mcro/black'
 import { AppStore } from '../../../pages/AppPage/AppStore'
 import { App } from '@mcro/stores'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
-import { SelectionStore } from '../../../pages/OrbitPage/orbitDocked/SelectionStore'
+import { SelectionStore } from '../../../stores/SelectionStore'
 
 type SearchChildProps = {
   searchBar: SearchBarType

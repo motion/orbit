@@ -2,25 +2,28 @@ import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { View, Text, Row, Button } from '@mcro/ui'
-import { SpaceStore } from '../../../stores/SpaceStore'
+import { OrbitStore } from '../../../stores/OrbitStore'
 import { Icon } from '../../../views/Icon'
 
 type Props = {
-  spaceStore?: SpaceStore
+  orbitStore?: OrbitStore
   paneManagerStore?: PaneManagerStore
 }
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
-@attach('spaceStore', 'paneManagerStore')
+@attach('orbitStore', 'paneManagerStore')
 @view
 export class SpaceNav extends React.Component<Props> {
   render() {
-    const { spaceStore, paneManagerStore } = this.props
-    const { activeSpace } = spaceStore
-    const newPane = activeSpace.panes.find(x => x.title === 'New')
-    const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), activeSpace.panes.length - 1)
-    const activeItem = activeSpace.panes[curIndex]
+    const { orbitStore, paneManagerStore } = this.props
+    const { activeSpace } = orbitStore
+    const newPane = activeSpace.spaces.find(x => x.title === 'New')
+    const curIndex = Math.min(
+      Math.max(0, paneManagerStore.paneIndex),
+      activeSpace.spaces.length - 1,
+    )
+    const activeItem = activeSpace.spaces[curIndex]
     return (
       <Row position="relative" zIndex={1000} padding={[3, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
@@ -28,7 +31,7 @@ export class SpaceNav extends React.Component<Props> {
           <Icon size={16} name={activeItem.icon} />
         </View>
         <Row>
-          {spaceStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => {
+          {orbitStore.activeSpace.spaces.filter(x => x.title !== 'New').map((pane, index) => {
             const isActive = curIndex === index
             return (
               <Text

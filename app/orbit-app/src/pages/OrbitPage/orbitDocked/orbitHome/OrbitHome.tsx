@@ -9,12 +9,12 @@ import { ListsApp } from '../../../../apps/lists/ListsApp'
 import { NewApp } from '../../../../apps/new/NewApp'
 import { OrbitSearchResults } from '../orbitSearch/OrbitSearchResults'
 import { SpaceNavHeight } from '../SpaceNav'
-import { SpaceStore } from '../../../../stores/SpaceStore'
+import { OrbitStore } from '../../../../stores/OrbitStore'
 
 type Props = {
   name: string
   paneManagerStore?: PaneManagerStore
-  spaceStore?: SpaceStore
+  orbitStore?: OrbitStore
 }
 
 const Lip = view({
@@ -25,7 +25,7 @@ const apps = {
   list: ListApp,
 }
 
-@attach('spaceStore', 'paneManagerStore')
+@attach('orbitStore', 'paneManagerStore')
 @view
 export class OrbitHome extends React.Component<Props> {
   render() {
@@ -55,7 +55,7 @@ export class OrbitHome extends React.Component<Props> {
         >
           <ListsApp />
         </SubPane>
-        {this.props.spaceStore.activeSpace.panes.filter(x => !x.static).map(pane => {
+        {this.props.orbitStore.activeSpace.panes.filter(x => !x.static).map(pane => {
           const App = apps[pane.type]
           return (
             <SubPane

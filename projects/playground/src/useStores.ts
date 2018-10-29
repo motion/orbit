@@ -1,6 +1,6 @@
 // @ts-ignore
 import { isValidElement, useContext, useState, useEffect } from 'react'
-import { action, autorun, extendObservable, observable } from 'mobx'
+import { action, autorun, observable } from 'mobx'
 const isEqualReact = (a, b) => a && b
 const difference = (a, b) => a && b
 
@@ -37,17 +37,18 @@ const updateProps = (props, nextProps) => {
   }
 }
 
-const useStoreWithProps = (Store, props) => {
+const useStoreWithReactiveProps = (Store, props) => {
   const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
-  const storeProps = extendObservable(
-    this,
-    { _props: getNonReactElementProps(props) },
-    { _props: observable.shallow },
+  const storeProps = observable(
+    {
+      props: getNonReactElementProps(props),
+    },
+    { props: observable.shallow },
   )
   const getProps = {
     configurable: true,
     get: () => storeProps,
-    set() { /* ignore */ },
+    set() {},
   }
   Object.defineProperty(Store.prototype, 'props', getProps)
   const store = new Store()
@@ -58,27 +59,31 @@ const useStoreWithProps = (Store, props) => {
   return store
 }
 
-export const useStore = <A>(Store: new () => A, keys: Array<keyof A>, props?): A => {
-  const store = useStoreWithProps(Store, props)
+export const useStore = <A>(Store: new () => A, keys: Array<keyof A>, props: Object): A => {
+  const store = useStoreWithReactiveProps(Store, props)
   const setState = useState(0)[1]
-  useEffect(() => autorun(() => {
-    for (const key of keys) {
-      store[key]
-    }
-    setState(Math.random())
-  }))
+  useEffect(() =>
+    autorun(() => {
+      for (const key of keys) {
+        store[key]
+      }
+      setState(Math.random())
+    }),
+  )
   return store
 }
 
 export const useParentStore = <A>(Store: new () => A, keys: Array<keyof A>): A => {
   const store = useContext(Store)
   const setState = useState(0)[1]
-  useEffect(() => autorun(() => {
-    for (const key of keys) {
-      store[key]
-    }
-    setState(Math.random())
-  }))
+  useEffect(() =>
+    autorun(() => {
+      for (const key of keys) {
+        store[key]
+      }
+      setState(Math.random())
+    }),
+  )
   return store
 }
 
@@ -93,9 +98,5 @@ class MyStore {
 function MyView(props) {
   const { state } = useParentStore(MyStore, ['state'])
   const { otherState } = useStore(MyStore, ['otherState'], props)
-  return (
-    <div>
-      {state} {otherState}
-    </div>
-  )
+  return `${state}${otherState}`
 }

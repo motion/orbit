@@ -204,15 +204,7 @@ export function createViewFactory(toCSS) {
           return <GlossView {...this.props} />
         }
         let theme = allThemes[activeThemeName]
-        // allow simple overriding of the theme using props:
-        // <Button theme={{ backgroundHover: 'transparent' }} />
-        if (typeof this.props.theme === 'object') {
-          theme = {
-            ...theme,
-            ...this.props.theme,
-          }
-        }
-        return <GlossView {...this.props} theme={theme} />
+        return <GlossView {...this.props} theme={this.props.theme || theme} />
       }
     }
 
@@ -411,10 +403,20 @@ export function createViewFactory(toCSS) {
       }
 
       static getDerivedStateFromProps(props: SimpleViewProps, state: State) {
+        const start = Date.now()
         // const recentlyHMRed = recentHMR()
         // if (!recentlyHMRed) {
         // props havent changed
         if (fastCompareWithoutChildren(props, state.prevProps)) {
+          if (Date.now() - start > 16) {
+            console.log(
+              'skipped a frame diffing props',
+              Date.now() - start,
+              displayName,
+              props,
+              state,
+            )
+          }
           return null
         }
         // }
@@ -425,11 +427,21 @@ export function createViewFactory(toCSS) {
           nextState.ignoreAttrs = arrToDict(ignoreAttrs)
         }
         const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-        return {
+        nextState = {
           ...nextState,
           ...generateClassnames(state, props, state.prevProps, tag),
           prevProps: props,
         }
+        if (Date.now() - start > 16) {
+          console.log(
+            'skipped a frame generating styles',
+            Date.now() - start,
+            displayName,
+            props,
+            state,
+          )
+        }
+        return nextState
       }
 
       componentWillUnmount() {

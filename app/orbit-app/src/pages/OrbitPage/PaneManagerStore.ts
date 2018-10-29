@@ -57,10 +57,10 @@ export class PaneManagerStore {
           return
         }
       }
-      if (firstChar) {
+      if (firstChar && this.activePane === 'home') {
         this.setActivePane('search')
-      } else {
-        this.setActivePaneToPrevious()
+      } else if (this.activePane === 'search') {
+        this.setActivePane('home')
       }
     },
   )

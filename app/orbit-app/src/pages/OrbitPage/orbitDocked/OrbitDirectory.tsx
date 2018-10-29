@@ -4,7 +4,7 @@ import { view, react, ensure, attach } from '@mcro/black'
 import { compose } from '@mcro/helpers'
 import { observeMany } from '@mcro/model-bridge'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { SmallVerticalSpace, SubPaneSection } from '../../../views'
+import { SmallVerticalSpace } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { Grid } from '../../../views/Grid'
@@ -79,9 +79,12 @@ class OrbitDirectoryStore {
       if (!query) {
         return people
       }
-      return Helpers.fuzzyQueryFilter(query, people, {
+      console.time('filtering')
+      const filtered = Helpers.fuzzyQueryFilter(query, people, {
         key: 'name',
       })
+      console.timeEnd('filtering')
+      return filtered
     },
     { defaultValue: [] },
   )
@@ -97,17 +100,19 @@ class OrbitDirectoryStore {
   getIndex = res => this.emailToIndex[res.email]
 
   get resultSections(): ResultSection[] {
+    console.time('People.resultSections')
+    const isFiltering = !!this.peopleQuery.length
     const total = this.results.length
     const perRow = 3
     const height = 60
-    const separatorHeight = 10
+    const separatorHeight = 25
     const sectionHeight = num => Math.ceil(num / perRow) * height + separatorHeight
     let sections: ResultSection[] = []
     // not that many, show just one section
-    if (total < 10) {
+    if (isFiltering || total < 10) {
       sections = [
         {
-          title: 'All',
+          title: isFiltering ? this.peopleQuery : 'All',
           results: this.results,
           height: sectionHeight(total),
         },
@@ -143,6 +148,7 @@ class OrbitDirectoryStore {
         lastPersonLetter = letter
       }
     }
+    console.timeEnd('People.resultSections')
     return sections
   }
 }
@@ -187,6 +193,8 @@ const PersonSection = ({
   )
 }
 
+const lipHeight = 30
+
 const decorate = compose(
   attach('selectionStore', 'paneManagerStore'),
   attach({
@@ -218,7 +226,7 @@ export const OrbitDirectory = decorate(({ store }: Props) => {
         }}
         rowCount={resultSections.length}
         width={ORBIT_WIDTH}
-        height={resultSections.reduce((a, b) => a + b.height, 0)}
+        height={resultSections.reduce((a, b) => a + b.height, 0) + lipHeight}
       />
     </ProvideHighlightsContextWithDefaults>
   )

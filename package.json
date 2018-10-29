@@ -2,8 +2,8 @@
   "name": "orbit-monorepo",
   "dependencies": {
     "global": "^4.3.2",
-    "react": "16.6.0",
-    "react-dom": "16.6.0"
+    "react": "16.7.0-alpha.0",
+    "react-dom": "16.7.0-alpha.0"
   },
   "resolutions": {
     "@types/react": "16.4.18",

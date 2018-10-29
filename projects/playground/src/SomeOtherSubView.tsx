@@ -20,7 +20,7 @@ const subDecorator = compose(
 export const SomeOtherSubView = subDecorator(({ store, id }) => {
   return (
     <div>
-      123
+      123 123
       {id}: {store.state}
     </div>
   )

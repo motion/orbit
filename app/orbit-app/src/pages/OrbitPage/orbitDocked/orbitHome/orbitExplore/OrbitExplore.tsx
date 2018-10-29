@@ -9,7 +9,7 @@ import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { pullAll, difference, memoize } from 'lodash'
-import { PersonBitModel, BitModel, SettingModel } from '@mcro/models'
+import { PersonBitModel, BitModel, SettingModel, Bit, PersonBit } from '@mcro/models'
 import { action } from 'mobx'
 import { allIntegrations } from '../../../../../integrations'
 
@@ -26,9 +26,11 @@ type Props = {
   store?: OrbitExploreStore
 }
 
+const lipSize = 20
 const TITLE_HEIGHT = 30
 const cardHeight = (group: SelectionGroup) => (group.name === 'Directory' ? 60 : 80)
-const rowHeight = (group: SelectionGroup) => cardHeight(group) + TITLE_HEIGHT
+const rowHeight = (group: SelectionGroup, isLast?) =>
+  cardHeight(group) + TITLE_HEIGHT + (isLast ? lipSize : 0)
 
 const SortableItem = SortableElement(({ value }: { value: SelectionGroup }) => {
   const { name, items, startIndex } = value
@@ -55,20 +57,14 @@ class VirtualCarouselRow extends React.Component<{ items: SelectionGroup[] }> {
     return (
       <List
         ref={instance => (this.List = instance)}
-        rowHeight={({ index }) => rowHeight(items[index])}
+        rowHeight={({ index }) => rowHeight(items[index], index === items.length - 1)}
         rowRenderer={({ index, key }) => {
           const group = items[index]
-          return (
-            <SortableItem
-              key={`${key}${group.items.map(x => `${x.id}`).join(' ')}`}
-              index={index}
-              value={group}
-            />
-          )
+          return <SortableItem key={`${key}${group.ids.join(' ')}`} index={index} value={group} />
         }}
         rowCount={items.length}
         width={ORBIT_WIDTH}
-        height={items.reduce((a, b) => a + rowHeight(b), 0)}
+        height={items.reduce((a, b) => a + rowHeight(b), lipSize)}
       />
     )
   }
@@ -78,7 +74,7 @@ const SortableCarouselRow = SortableContainer(VirtualCarouselRow, { withRef: tru
 
 class OrbitExploreStore {
   props: Props
-  streams: { [a: string]: { values: any[]; name: string } } = {}
+  streams: { [a: string]: { values: (Bit | PersonBit)[]; name: string } } = {}
 
   // sort order with date
   private sortedAt = 0
@@ -108,7 +104,7 @@ class OrbitExploreStore {
   results = react(
     () => [this.streams, this.sortOrder],
     async ([streams], { sleep }) => {
-      if (Date.now() - this.sortedAt > 10) {
+      if (Date.now() - this.sortedAt > 16) {
         await sleep(200)
       }
       let results: SelectionGroup[] = []
@@ -121,6 +117,7 @@ class OrbitExploreStore {
         results.push({
           name,
           type: 'row',
+          ids: values.map(item => item.id),
           items: values,
           startIndex: offset,
           id,

@@ -24,36 +24,38 @@ export class SpaceNav extends React.Component<Props> {
     return (
       <Row position="relative" zIndex={1000} padding={[3, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
-        <View padding={[0, 11, 1, 2]}>
+        <View padding={[0, 12, 1, 2]}>
           <Icon size={16} name={activeItem.icon} />
         </View>
         <Row>
-          {spaceStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => (
-            <Text
-              key={pane.title}
-              fontWeight={200}
-              size={1.1}
-              alpha={curIndex === index ? 1 : 0.5}
-              alphaHover={curIndex === index ? 1 : 0.7}
-              marginRight={6}
-              padding={4}
-              onClick={paneManagerStore.activePaneSetter(index)}
-              transform={{
-                scale: curIndex === index ? 1.1 : 1,
-              }}
-            >
-              {pane.title}
-            </Text>
-          ))}
+          {spaceStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => {
+            const isActive = curIndex === index
+            return (
+              <Text
+                key={pane.title}
+                fontWeight={200}
+                size={1.1}
+                alpha={isActive ? 1 : 0.5}
+                alphaHover={isActive ? 1 : 0.7}
+                marginRight={6}
+                padding={4}
+                onClick={paneManagerStore.activePaneSetter(index)}
+                transform={{
+                  scale: isActive ? 1.15 : 1,
+                  y: isActive ? -0.5 : 0,
+                }}
+              >
+                {pane.title}
+              </Text>
+            )
+          })}
         </Row>
-
         <View flex={1} minWidth={10} />
-
         <Button
           borderWidth={0}
           glint={false}
           circular
-          icon={<Icon size={10} name={newPane.icon} />}
+          icon={<Icon size={16} name={newPane.icon} />}
           onClick={paneManagerStore.activePaneSetter(paneManagerStore.panes.indexOf('new'))}
         />
       </Row>

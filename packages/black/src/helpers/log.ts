@@ -118,9 +118,9 @@ export function log(...args) {
     return
   }
   doCutoff = true
-  const res = doLog(...args)
+  doLog(...args)
   doCutoff = false
-  return res
+  return args[0]
 }
 
 // @ts-ignore
@@ -129,7 +129,8 @@ log.full = function(...args) {
     return
   }
   doCutoff = false
-  return doLog(...args)
+  doLog(...args)
+  return args[0]
 }
 
 function wrapLogger(wrapFn, parent, name) {
@@ -147,9 +148,9 @@ function wrapLogger(wrapFn, parent, name) {
       this.state &&
       Object.keys(this.state).reduce(
         (acc, key, i) =>
-          ` | ${key.slice(0, 9).padEnd(10)}: ${`${this.state[key]}`
-            .slice(0, 9)
-            .padEnd(10)}${i % 3 === 0 ? '\n' : ''}${acc}`,
+          ` | ${key.slice(0, 9).padEnd(10)}: ${`${this.state[key]}`.slice(0, 9).padEnd(10)}${
+            i % 3 === 0 ? '\n' : ''
+          }${acc}`,
         '',
       )
     console.log(

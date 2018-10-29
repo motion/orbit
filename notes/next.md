@@ -1,10 +1,17 @@
+search:
+
+- # goes to search and shows locations
+- query to avoid loading `data` and `body`
+- quickresults: this can avoid a call alltogether
+  - just do it in memory!
+  - basically: load all recent bits + all people in memory
+    - when you type it just filters them (webworker or desktop?)
+
 this week:
 
-- when moving between panes they should "carry" the search
-  - it should pre-search the next pane, _after_ current one finishes... :/
-- switching between spaces
-- fix space creation pane
 - fix settings panes showing
+- it should pre-search the next pane, _after_ current one finishes... :/ (idle() callback)
+- fix space creation pane
 - mock onboard: add integrations => show available orbits to join
 - animatee the orbit while searching..
 

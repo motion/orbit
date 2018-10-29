@@ -1,7 +1,15 @@
 export type Space = {
   name: string
   color: string[]
-  panes?: { id: string; title: string; icon: string; show?: boolean }[]
+  panes?: {
+    id: string
+    type?: 'list' | 'lists'
+    title: string
+    icon: string
+    show?: boolean
+    trigger?: string
+    static?: boolean
+  }[]
 }
 
 export class SpaceStore {
@@ -24,37 +32,42 @@ export class SpaceStore {
           id: 'home',
           title: 'Home',
           icon: 'house',
+          static: true,
         },
         {
           id: 'search',
           title: 'Search',
           icon: 'singleNeutralSearch',
+          static: true,
         },
         {
           id: 'people',
           title: 'People',
           icon: 'multipleNeutral2',
+          trigger: '@',
+          static: true,
         },
         {
-          id: 'topics',
-          title: 'Topics',
-          icon: 'singleNeutralChat',
-        },
-        {
-          id: 'onboarding',
-          title: 'Onboarding',
+          id: 'lists',
+          type: 'lists',
+          title: 'Lists',
           icon: 'listBullets',
+          trigger: '/',
+          static: true,
         },
         {
-          id: 'help',
-          title: 'Help',
-          icon: 'questionCircle',
+          id: 'mylist',
+          type: 'list',
+          title: 'First List',
+          icon: 'singleNeutralChat',
+          // trigger: '#',
         },
         {
           id: 'new',
           title: 'New',
-          icon: 'add',
+          icon: 'menu',
           show: false,
+          static: true,
         },
       ],
     },

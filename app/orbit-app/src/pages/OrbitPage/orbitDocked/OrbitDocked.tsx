@@ -100,9 +100,9 @@ class OrbitDockedContents extends React.Component<Props> {
 }
 
 class OrbitDockedStore {
-  // always show this when only one window
-  // because we hide via electron not here
-  // otherwise use the normal docked
+  // when we open an app window we have to change our strategy for showing/hiding orbit
+  // with only one open we just use electron show/hide entire app, so return true
+  // otherwise we use in-app logic here
   shouldShowOrbitDocked = react(
     () => [App.appsState.length, App.orbitState.docked],
     ([numApps, isDocked]) => {
@@ -127,7 +127,7 @@ export class OrbitDocked extends React.Component<Props> {
     // so if you "hide" here it will actually flicker when it shows again
     // because it hides in electron before rendering the hide here and then
     // does the hide/show after the toggle
-    log.timer('orbit', '-------- DOCKED ------------')
+    log.info('orbit', '-------- DOCKED ------------')
     const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (
       <UI.Theme name={theme}>

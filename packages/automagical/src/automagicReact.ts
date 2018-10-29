@@ -12,7 +12,6 @@ import {
 } from './helpers'
 import { AutomagicOptions } from './automagical'
 
-const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
@@ -23,8 +22,26 @@ type SubscribableLike = { subscribe: (a: any) => Subscription }
 // hacky for now
 Root.__trackStateChanges = {}
 
-let id = 1
-const uid = () => id++ % Number.MAX_VALUE
+const logGroup = (name, result, changed, reactionArgs, globalChanged?) => {
+  const getReactionLog = () => (reactionArgs ? ['react(() =>', toJSDeep(reactionArgs), ')'] : [])
+  const hasGlobalChanges = globalChanged && !!Object.keys(globalChanged).length
+  const hasLocalChanges = !!changed.length
+  const hasChanges = hasGlobalChanges || hasLocalChanges
+  // dont group if nothing much to report...
+  if (!hasChanges) {
+    console.log(`${name}`, ...getReactionLog())
+    return
+  }
+  console.groupCollapsed(`${name}`)
+  if (hasLocalChanges) {
+    console.log(...getReactionLog(), ...(changed || []))
+  }
+  if (hasGlobalChanges) {
+    console.log('  global changed:', ...logRes(result))
+    console.log('  store changed', globalChanged)
+  }
+  console.groupEnd()
+}
 
 // watches values in an autorun, and resolves their results
 export function automagicReact(
@@ -45,19 +62,43 @@ export function automagicReact(
     name: method,
     ...userOptions,
   })
+  const isReaction = Array.isArray(val)
 
   let mobxOptions = options as Mobx.IReactionOptions
+  let id = deferFirstRun ? 1 : 0
 
   // we run immediately by default
   // its the 95% use case and causes less bugs
   mobxOptions.fireImmediately = !deferFirstRun
 
-  const delayLog = options && options.delay >= 0 ? ` ..${options.delay}ms ` : ''
-  const methodName = `${getReactionName(obj)}.${method}`
-  const logName = `${methodName}${delayLog}`
+  // name for logs
+  const delayName = options && options.delay >= 0 ? ` ..${options.delay}ms ` : ''
+  const storeName = getReactionName(obj)
+  const methodName = `${method}`
+  const name = {
+    simple: `${storeName}.${methodName}${delayName}`,
+    // nice name that shows some prop info for instance...
+    get full() {
+      const props = obj.props
+      if (props) {
+        let res = ''
+        for (const prop of ['id', 'index', 'name', 'title']) {
+          const val = props[prop]
+          if (typeof val === 'string' || typeof val === 'number') {
+            res += `${prop}: ${val}`
+          }
+        }
+        if (res.length) {
+          return `${storeName}(${res}).${methodName}`
+        }
+      }
+      return `${storeName}.${methodName}`
+    },
+  }
+
   let preventLog = options.log === false
-  let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE, {
-    name: logName,
+  let current = Mobx.observable.box(defaultValue, {
+    name: name.simple,
     deep: false,
   })
   let prev
@@ -75,14 +116,11 @@ export function automagicReact(
     return current.get()
   }
 
-  function update(newValue) {
+  function update(newValue, log?) {
     let value = newValue
     if (delayValue) {
       value = prev
       prev = newValue
-      if (!preventLog) {
-        log.info(`delayValue ${logName}`, value)
-      }
     }
     state.hasResolvedOnce = true
     // subscribable handling
@@ -108,12 +146,20 @@ export function automagicReact(
       }
     }
     // return diff in dev mode
-    let res
+    let changed
     if (!IS_PROD) {
-      res = diffLog(toJSDeep(getCurrentValue()), toJSDeep(value))
+      changed = diffLog(toJSDeep(getCurrentValue()), toJSDeep(value))
+      if (delayValue) {
+        changed = [...changed, 'delayValue']
+      }
     }
-    current.set(value)
-    return res
+    if (!onlyUpdateIfChanged || (onlyUpdateIfChanged && value !== getCurrentValue())) {
+      if (log && !IS_PROD && !preventLog) {
+        logGroup(name.full, val, changed, log.args)
+      }
+      current.set(value)
+    }
+    return changed
   }
 
   function dispose() {
@@ -131,8 +177,6 @@ export function automagicReact(
     obj.subscriptions.add({ dispose })
   }
 
-  const isReaction = Array.isArray(val)
-
   function run() {
     setTimeout(() => {
       if (disposed) {
@@ -141,13 +185,13 @@ export function automagicReact(
       }
       if (isReaction) {
         if (typeof val[1] !== 'function') {
-          throw new Error(`Reaction requires second function. ${logName} got ${typeof val}`)
+          throw new Error(`Reaction requires second function. ${name.simple} got ${typeof val}`)
         }
         // reaction
         stopReaction = Mobx.reaction(val[0], watcher(val[1]), mobxOptions)
       } else {
         if (typeof val !== 'function') {
-          throw new Error(`Reaction requires function. ${logName} got ${typeof val}`)
+          throw new Error(`Reaction requires function. ${name.simple} got ${typeof val}`)
         }
         //autorun
         stopReaction = Mobx.autorun(watcher(val), mobxOptions)
@@ -182,6 +226,18 @@ export function automagicReact(
       const sleepTimeout = setTimeout(() => resolve(), ms)
       rejections.push(() => {
         clearTimeout(sleepTimeout)
+        reject(SHARED_REJECTION_ERROR)
+      })
+    })
+  }
+
+  const idle = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      // @ts-ignore
+      let handle = requestIdleCallback(resolve)
+      rejections.push(() => {
+        // @ts-ignore
+        cancelIdleCallback(handle)
         reject(SHARED_REJECTION_ERROR)
       })
     })
@@ -255,13 +311,15 @@ export function automagicReact(
     when,
     whenChanged,
     state,
+    idle,
   }
 
   function watcher(reactionFn) {
     return function __watcherCb(reactValArg) {
       reset()
-      reactionID = uid()
-      const curID = reactionID
+      id = id + 1
+      reactionID = id
+      let curID = reactionID
       const start = Date.now()
       Root.__trackStateChanges.isActive = true
 
@@ -270,15 +328,17 @@ export function automagicReact(
       // async update helpers
       const updateAsyncValue = val => {
         const isValid = curID === reactionID
-        let changed
-        if (!IS_PROD && !preventLog) {
-          console.log(
-            `${logName} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() - start}ms`,
-            ...(changed || []),
-          )
-        }
         if (isValid) {
-          changed = update(val)
+          if (process.env.NODE_ENV === 'development') {
+            // more verbose logging in dev
+            update(val, {
+              name: `${name.simple} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() -
+                start}ms`,
+              args: reactValArg,
+            })
+          } else {
+            update(val)
+          }
         } else {
           throw SHARED_REJECTION_ERROR
         }
@@ -295,10 +355,12 @@ export function automagicReact(
           reactionHelpers,
         )
       } catch (err) {
+        // could be some setTimeouts or something, ensure its still cancelled
+        curID = -1
         // got a nice cancel!
         if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
           if (!IS_PROD) {
-            log.verbose(`${logName} [${curID}] cancelled: ${err.message}`)
+            log.verbose(`${name.simple} [${curID}] cancelled: ${err.message}`)
           }
           return
         }
@@ -313,9 +375,9 @@ export function automagicReact(
       if (result instanceof Promise) {
         result
           .then(val => {
-            if (!reactionID) {
+            if (curID !== reactionID) {
               if (!IS_PROD && !preventLog) {
-                log.info(`${logName} 🚫`)
+                log.info(`${name.simple} 🚫`)
               }
               // cancelled before finishing
               return
@@ -327,14 +389,11 @@ export function automagicReact(
           .catch(err => {
             if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
               if (!IS_PROD) {
-                log.verbose(`${logName} [${curID}] cancelled`)
+                log.verbose(`${name.simple} [${curID}] cancelled`)
               }
             } else {
-              console.log(`reaction error in ${logName}`)
-              setTimeout(() => {
-                throw err
-              })
-              throw err
+              console.log(`reaction error in ${name.simple}`)
+              console.error(err)
             }
           })
         return
@@ -342,22 +401,11 @@ export function automagicReact(
 
       const changed = update(result)
 
-      if (!IS_PROD && !preventLog && !delayValue) {
-        console.groupCollapsed(`${logName} ${reactionID}`)
-        if (globalChanged && Object.keys(globalChanged).length) {
-          console.log('reaction', reactValArg)
-          console.log('changed', ...logRes(result))
-          console.log('Store changed', globalChanged)
-        } else {
-          if (options.log !== 'state') {
-            console.log(
-              'reaction',
-              ...(isReaction ? ['\n        args:', toJSDeep(reactValArg)] : []),
-            )
-            console.log('changed', ...(changed || []))
-          }
+      // only log after first run, we could have a way to log this still
+      if (reactionID > 1) {
+        if (!IS_PROD && !preventLog && !delayValue) {
+          logGroup(`${name.full} ${id}`, result, changed, reactValArg, globalChanged)
         }
-        console.groupEnd()
       }
     }
   }

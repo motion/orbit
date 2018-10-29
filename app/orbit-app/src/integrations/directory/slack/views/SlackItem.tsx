@@ -2,6 +2,7 @@ import * as React from 'react'
 import { SlackBitDataMessage } from '@mcro/models'
 import { OrbitIntegrationProps } from '../../../types'
 import { ChatMessage } from '../../../views/bits/chat/ChatMessage'
+import { HighlightText } from '../../../../views/HighlightText'
 
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)
@@ -21,6 +22,9 @@ export class SlackItem extends React.Component<OrbitIntegrationProps<'slack'>> {
       return null
     }
     const { data, people } = bit
+    if (extraProps && extraProps.minimal) {
+      return <HighlightText>{bit.body}</HighlightText>
+    }
     if (!data || !data.messages) {
       console.log('no messages...', bit)
       return null
@@ -35,6 +39,7 @@ export class SlackItem extends React.Component<OrbitIntegrationProps<'slack'>> {
       return (
         <ChatMessage
           key={index}
+          {...this.props}
           message={message}
           previousMessage={data.messages[index - 1]}
           hide={hide}

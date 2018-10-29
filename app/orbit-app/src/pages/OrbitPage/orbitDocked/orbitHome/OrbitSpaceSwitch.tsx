@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, ensure } from '@mcro/black'
 import { Popover, View, Col, Input, Surface, SizedSurface, Row } from '@mcro/ui'
-import { reaction } from 'mobx'
+import { reaction, trace } from 'mobx'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { NavButton } from '../../../../views/NavButton'
@@ -91,32 +91,33 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
     this.spaceOpener()
   }
 
+  shortcuts = {
+    select: 'enter',
+    up: 'up',
+    down: 'down',
+  }
+
+  handlers = {
+    select: () => {
+      console.log('should switch space')
+      // switch active space
+    },
+    down: this.props.store.down,
+    up: this.props.store.up,
+  }
+
   render() {
     const { paneManagerStore, spaceStore, store, ...props } = this.props
     const { activeSpace } = spaceStore
     const { selectedIndex, filteredSpaces } = store
-
-    const shortcuts = {
-      select: 'enter',
-      up: 'up',
-      down: 'down',
-    }
-    const handlers = {
-      select: () => {
-        console.log('should switch space')
-        // switch active space
-      },
-      down: store.down,
-      up: store.up,
-    }
-
-    if (store.open) {
-      console.log('FOCUSING ON SHORTCUTS...')
-    }
-
     const borderRadius = 8
+    trace()
     return (
-      <FocusableShortcutHandler focused={store.open} shortcuts={shortcuts} handlers={handlers}>
+      <FocusableShortcutHandler
+        focused={store.open}
+        shortcuts={this.shortcuts}
+        handlers={this.handlers}
+      >
         <Popover
           ref={this.spaceSwitcherRef}
           delay={100}
@@ -133,7 +134,14 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
           group="filters"
           onChangeVisibility={store.setOpen}
           target={
-            <NavButton chromeless {...props}>
+            <NavButton
+              chromeless
+              margin={['auto', 0]}
+              transform={{
+                y: -0.5,
+              }}
+              {...props}
+            >
               <OrbitOrb size={16} background={'#DDADDA'} color="#985FC9" />
             </NavButton>
           }

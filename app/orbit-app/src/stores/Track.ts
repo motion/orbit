@@ -6,12 +6,16 @@ class TrackSingleton {
 
   constructor() {
     // send events in 10 minute intervals
-    setInterval(() => {
+    setInterval(async () => {
       if (!this.eventLog.length) {
         return
       }
-      for (const { name, details } of this.eventLog) {
-        track.recordEvent(name, details)
+      try {
+        for (const { name, details } of this.eventLog) {
+          await track.recordEvent(name, details)
+        }
+      } catch {
+        // they blocked it...
       }
       this.eventLog = []
     }, 1000 * 10)

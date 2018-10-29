@@ -4,8 +4,6 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import './RootViewHMR'
 
-// separate this so hmr works nicely
-
 export async function start() {
   // re-require for hmr to capture new value
   const { RootView } = require('./RootViewHMR')

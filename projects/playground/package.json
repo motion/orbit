@@ -12,10 +12,9 @@
     "@mcro/black": "^2.2.1",
     "@mcro/build": "^2.2.1",
     "@mcro/gloss": "^2.2.1",
-    "@mcro/ui": "^2.2.1"
-  },
-  "peerDependencies": {
-    "react": "16.5.2",
-    "react-dom": "16.5.2"
+    "@mcro/ui": "^2.2.1",
+    "react-hot-loader": "4.3.1",
+    "react": "^16.5.0",
+    "react-dom": "^16.5.0"
   }
 }

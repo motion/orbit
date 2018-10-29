@@ -1,5 +1,6 @@
 import { Reaction } from './constants'
 import { ReactionOptions, ReactionHelpers } from './types'
+import Observable from 'zen-observable'
 
 // decorator to do reactions
 
@@ -27,6 +28,8 @@ function tsWatch(options) {
   }
 }
 
+type UnwrapObservable<A> = A extends Observable<infer U> ? U : A
+
 type ReactVal =
   | null
   | number
@@ -46,7 +49,7 @@ export function react<A extends ReactVal, B>(
   b?: ((a: A, helpers: ReactionHelpers) => B | Promise<B>) | ReactionOptions,
   c?: ReactionOptions,
   opts?: ReactionOptions,
-): B {
+): UnwrapObservable<B> {
   if (typeof a === 'function') {
     if (typeof b === 'function') {
       // @ts-ignore

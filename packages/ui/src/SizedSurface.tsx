@@ -18,7 +18,8 @@ export type SizedSurfaceProps = SurfaceProps & {
 
 const num = x => (x === true ? 1 : x)
 
-export const SizedSurface = (props: SizedSurfaceProps) => {
+// @ts-ignore @types/react
+export const SizedSurface = React.memo((props: SizedSurfaceProps) => {
   const {
     size = 1,
     sizeHeight,
@@ -76,4 +77,4 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
   }
   const iconPad = Math.round(LINE_HEIGHT * 0.2 * num(sizeHeight))
   return <Surface {...pass} size={size} iconPad={iconPad} {...rest} />
-}
+})

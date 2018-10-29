@@ -50,7 +50,7 @@ class OrbitDirectoryStore {
     () => [this.isActive, this.results],
     ([isActive]) => {
       ensure('is active', isActive)
-      this.props.selectionStore.setResults([{ type: 'column', items: this.results }])
+      this.props.selectionStore.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
     },
   )
 
@@ -188,7 +188,6 @@ const decorator = compose(
   }),
 )
 export const OrbitDirectory = decorator(({ store }: Props) => {
-  console.log('render OrbitDirectoryInner')
   const { results, resultSections } = store
   const total = results.length
   if (!total) {

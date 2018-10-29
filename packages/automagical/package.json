@@ -7,6 +7,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "zen-observable": "^0.8.10",
     "@mcro/logger": "^2.2.1",
     "json-stringify-pretty-compact": "1.2.0",
     "global": "^4.3.2"
@@ -15,7 +16,7 @@
     "@types/webpack-env": "*"
   },
   "peerDependencies": {
-    "mobx": "5.5.1"
+    "mobx": "^5.5.2"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

@@ -14,7 +14,7 @@
     "@mcro/logger": "*",
     "ws": "6.0.0",
     "typeorm": "^0.3.0-alpha.22",
-    "zen-observable": "0.8.9",
+    "zen-observable": "^0.8.10",
     "@types/zen-observable": "0.8.0"
   }
 }

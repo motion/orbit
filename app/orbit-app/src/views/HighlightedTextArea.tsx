@@ -35,7 +35,7 @@ type Props = CSSPropertySet & {
   openMark?: string
   closeMark?: string
   value?: string
-  highlight?: (a: string) => Array<[number, number]> | RegExp | { [index: number]: Color }
+  highlight?: (a?: string) => number[][] | RegExp | { [index: number]: Color }
   onChange?: Function
   onFocus?: Function
   onBlur?: Function

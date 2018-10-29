@@ -1,7 +1,7 @@
 {
   "name": "@mcro/router",
   "version": "2.2.1",
-  "main": "_/index.js",
+  "main": "_/Router.js",
   "sideEffects": false,
   "author": "Motion (http://motion.io)",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "url-pattern": "1.0.3"
   },
   "peerDependencies": {
-    "mobx": "5.5.1"
+    "mobx": "^5.5.2"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

@@ -153,10 +153,13 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       ...props
     } = this.props
     const { isSelected } = store
-    const ItemView = this.props.appsStore.getView(
-      item.type === 'bit' ? item.integration : 'person',
-      'item',
-    )
+    let ItemView
+    if (!this.props.direct) {
+      let ItemView = this.props.appsStore.getView(
+        item.type === 'bit' ? item.integration : 'person',
+        'item',
+      )
+    }
     const childrenFunction = typeof this.props.children === 'function'
     const showChildren = !(hide && hide.body)
     const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
@@ -307,7 +310,8 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
             </Preview>
           )}
           {showChildren && !childrenFunction && children}
-          {childrenFunction &&
+          {!!ItemView &&
+            childrenFunction &&
             showChildren && (
               <ItemView
                 model={this.props.model}
@@ -333,13 +337,10 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
   render() {
     const { store, model, direct } = this.props
     store.isSelected
-    if (direct) {
-      return this.getInner(this.props)
-    }
     if (!model) {
       return null
     }
-    return this.getInner(normalizeItem(model))
+    return this.getInner(direct ? model : normalizeItem(model))
   }
 }
 

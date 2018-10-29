@@ -3,12 +3,13 @@ import { SortableList } from '../../views/SortableList/SortableList'
 import { view } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
+import { Title } from '../../views'
 
 class ListStore {
-  results = []
+  lists = []
 
   async didMount() {
-    this.results = await loadMany(BitModel, { args: { take: 20 } })
+    this.lists = await loadMany(BitModel, { args: { take: 20 } })
   }
 }
 
@@ -16,8 +17,13 @@ class ListStore {
   store: ListStore,
 })
 @view
-export class ListApp extends React.Component<{ store?: ListStore }> {
+export class ListApp extends React.Component<{ title?: string; store?: ListStore }> {
   render() {
-    return <SortableList items={this.props.store.results} />
+    return (
+      <>
+        <Title>{this.props.title}</Title>
+        <SortableList items={this.props.store.lists} />
+      </>
+    )
   }
 }

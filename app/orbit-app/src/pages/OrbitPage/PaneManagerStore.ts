@@ -1,4 +1,4 @@
-import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
+import { react, on, ensure, ReactionRejectionError, cancel } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionStore, Direction } from './orbitDocked/SelectionStore'
 import { Actions } from '../../actions/Actions'
@@ -9,6 +9,7 @@ import { autoTrack } from '../../stores/Track'
 import { memoize } from 'lodash'
 import { AppsStore } from '../../stores/AppsStore'
 import { SpaceStore } from '../../stores/SpaceStore'
+import { QueryStore } from './orbitDocked/QueryStore'
 
 type Panes = 'home' | 'settings' | 'onboard' | string
 
@@ -18,6 +19,7 @@ export class PaneManagerStore {
     orbitStore: OrbitStore
     selectionStore: SelectionStore
     spaceStore?: SpaceStore
+    queryStore?: QueryStore
   }
 
   get panes(): Partial<Panes>[] {
@@ -29,19 +31,10 @@ export class PaneManagerStore {
   forceOnboard = null
   hasOnboarded = true
   subPane = 'team'
-
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
     onlyUpdateIfChanged: true,
   })
-
-  // setPanes = react(
-  //   () => this.props.appsStore.activeIntegrations,
-  //   apps => {
-  //     this.panes = ['home', ...apps.map(x => x.display.name), 'settings']
-  //   },
-  // )
-
   generalSetting = null
   generalSetting$ = observeOne(SettingModel, {
     args: {
@@ -54,6 +47,23 @@ export class PaneManagerStore {
     const values = generalSetting.values as GeneralSettingValues
     this.hasOnboarded = values.hasOnboarded
   })
+
+  setActivePaneOnTrigger = react(
+    () => this.props.queryStore.query[0],
+    firstChar => {
+      for (const { id, trigger } of this.props.spaceStore.activeSpace.panes) {
+        if (trigger && trigger === firstChar) {
+          this.setActivePane(id)
+          return
+        }
+      }
+      if (firstChar) {
+        this.setActivePane('search')
+      } else {
+        this.setActivePaneToPrevious()
+      }
+    },
+  )
 
   didMount() {
     on(this, autoTrack(this, ['hasOnboarded', 'paneIndex']))
@@ -179,10 +189,6 @@ export class PaneManagerStore {
       return active
     },
   )
-
-  setActivePaneSearch = () => {
-    this.setActivePane('search')
-  }
 
   setActivePaneToPrevious = () => {
     this.setActivePane(this.lastActivePane)

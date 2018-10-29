@@ -12,7 +12,7 @@ export const BarInner = view({
   height: 1,
   borderRadius: 100,
 }).theme(({ theme }) => ({
-  background: theme.borderColor,
+  background: theme.borderColor.alpha(0.35),
 }))
 
 export const Divider = props => (

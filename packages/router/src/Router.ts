@@ -1,15 +1,12 @@
 import { observable, computed, action, autorun } from 'mobx'
-import Router from './router'
+import { SimpleRouter } from './SimpleRouter'
 import browserHistory from 'history/createBrowserHistory'
 
 const properRoute = path => (path.indexOf('/') === 0 ? path : `/${path}`)
 const LENGTH_KEY = 'router.historyLength'
 const historyLength = 0 //Number(localStorage.getItem(LENGTH_KEY)) || 0
 const historyDirection = val =>
-  localStorage.setItem(
-    LENGTH_KEY,
-    Number(localStorage.getItem(LENGTH_KEY)) + val,
-  )
+  localStorage.setItem(LENGTH_KEY, Number(localStorage.getItem(LENGTH_KEY)) + val)
 
 type RouterProps = {
   routes: {
@@ -18,8 +15,8 @@ type RouterProps = {
   history?: any
 }
 
-export class ObservableRouter {
-  router: Router
+export class Router {
+  router: SimpleRouter
   routes: any
   history: any
 
@@ -54,7 +51,7 @@ export class ObservableRouter {
       }
     }
     // setup router
-    this.router = new Router({
+    this.router = new SimpleRouter({
       history: this.history,
       routes: routeMap,
     })
@@ -149,8 +146,7 @@ export class ObservableRouter {
   @action
   set = (key, val) => {
     const Route = this.router.routeTable[`/${this.route}`]
-    const params =
-      typeof key === 'object' ? this.setObject(key) : this.setParam(key, val)
+    const params = typeof key === 'object' ? this.setObject(key) : this.setParam(key, val)
     const newPath = Route.stringify(params)
     if (newPath !== this.path) {
       this.path = newPath
@@ -191,5 +187,3 @@ export class ObservableRouter {
     return this.path === path
   }
 }
-
-export default ObservableRouter

@@ -87,7 +87,7 @@ const BlockFrame = view(UI.View, {
 })
 
 const BlockTop = ({ overflow, height, children }) => (
-  <BlockFrame top={-overflow} right={-overflow} left={-overflow}>
+  <BlockFrame debug top={-overflow} right={-overflow} left={-overflow}>
     <div
       style={{
         height: overflow + height,

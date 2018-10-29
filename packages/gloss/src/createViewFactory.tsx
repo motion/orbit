@@ -5,7 +5,6 @@ import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
-import { fastCompareWithoutChildren } from './helpers/fastCompareWithoutChildren'
 import validProp from './helpers/validProp'
 
 export type RawRules = CSSPropertySet & {
@@ -159,63 +158,9 @@ export function createViewFactory(toCSS) {
     const id = `${uid()}`
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = !!Object.keys(propStyles).length
-    let displayName = 'View'
+    let displayName = 'GlossView'
     let cachedTheme
-
-    class ThemedView extends React.Component<SimpleViewProps> {
-      static contextType = ThemeContext
-      static displayName
-      static ignoreAttrs
-      static themeFn
-
-      static withConfig = config => {
-        if (config.displayName) {
-          displayName = config.displayName
-          ThemedView.displayName = `themed(${displayName})`
-          GlossView.displayName = displayName
-        }
-        return ThemedView
-      }
-
-      // allow setting theme
-      static theme = themeFn => {
-        ThemedView.themeFn = themeFn
-        return ThemedView
-      }
-
-      static getConfig = () => ({
-        id,
-        displayName,
-        targetElement,
-        ignoreAttrs: getIgnoreAttrs(),
-        styles: { ...styles },
-        propStyles: { ...propStyles },
-        child: isSimpleView ? target : null,
-      })
-
-      render() {
-        // // avoid theme tree if not necessary
-        if (!ThemedView.themeFn) {
-          return <GlossView {...this.props} />
-        }
-        // @ts-ignore via old @types/react
-        const { allThemes, activeThemeName } = this.context
-        if (!allThemes) {
-          return <GlossView {...this.props} />
-        }
-        let theme = allThemes[activeThemeName]
-        if (typeof this.props.theme === 'object') {
-          theme = {
-            ...theme,
-            ...this.props.theme,
-          }
-        }
-        return <GlossView {...this.props} theme={theme} />
-      }
-    }
-
-    // for easy checking
-    ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+    let ThemedView
 
     function getIgnoreAttrs() {
       const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
@@ -295,10 +240,10 @@ export function createViewFactory(toCSS) {
     }
 
     function generateClassnames(
-      state,
+      state: State,
       props: CSSPropertySet,
-      prevProps: CSSPropertySet,
       tagName: string,
+      theme: ThemeObject,
     ) {
       // if this is a secondary render then check if the props are essentially equivalent
       const extraClassNames = []
@@ -320,12 +265,12 @@ export function createViewFactory(toCSS) {
           }
         }
       }
-      const theme = getTheme()
+      const themeFn = getTheme()
       const hasDynamicStyles = theme || hasPropStyles
       // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
-      if (!hasDynamicStyles && myStyles === state.lastStyles) {
-        return null
-      }
+      // if (!hasDynamicStyles && myStyles === state.lastStyles) {
+      //   return null
+      // }
       let dynamicStyles
       if (hasDynamicStyles) {
         dynamicStyles = { [id]: {} }
@@ -345,7 +290,7 @@ export function createViewFactory(toCSS) {
         }
       }
       if (theme) {
-        addStyles(id, dynamicStyles, theme(props))
+        addStyles(id, dynamicStyles, themeFn({ ...props, theme }))
       }
       if (hasDynamicStyles) {
         // create new object to prevent buggy mutations
@@ -358,7 +303,6 @@ export function createViewFactory(toCSS) {
           }
         }
       }
-      const prevClasses = state.classNames
       const classNames = []
       // sort so we properly order pseudo keys
       const keys = Object.keys(myStyles)
@@ -369,125 +313,148 @@ export function createViewFactory(toCSS) {
         const className = addRules(displayName, myStyles[namespace], namespace, tagName)
         classNames.push(className)
         // if this is the first mount render or we didn't previously have this class then add it as new
-        if (prevProps == null || !prevClasses.includes(className)) {
-          gc.registerClassUse(className)
+        if (state.classNames == null || !state.classNames.includes(className)) {
+          gc.registerClassUse(state.uid, className)
         }
       }
       // check what classNames have been removed if this is a secondary render
-      if (prevProps != null) {
-        for (const className of prevClasses) {
+      if (state.classNames !== null) {
+        for (const className of state.classNames) {
           // if this previous class isn't in the current classes then deregister it
           if (!classNames.includes(className)) {
-            gc.deregisterClassUse(className)
+            gc.deregisterClassUse(state.uid, className)
           }
         }
       }
       return {
         classNames,
-        lastStyles: myStyles,
         extraClassNames,
       }
     }
 
     type State = {
+      uid?: number
       classNames: string[]
       extraClassNames: string[]
-      lastStyles?: Object
-      ignoreAttrs?: Object
-      prevProps?: Object
+      // TODO check this its a bit weird, we can probably do a hidden defineProp for equality
     }
 
-    class GlossView extends React.Component<SimpleViewProps> {
-      static displayName = 'SimpleView'
+    function getClassNamesFromProps(state: State, props: SimpleViewProps, theme: ThemeObject) {
+      // update ignore attributes
+      ignoreAttrs = ignoreAttrs || arrToDict(getIgnoreAttrs())
+      const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
+      return generateClassnames(state, props, tag, theme)
+    }
 
-      state = {
-        classNames: [],
+    // @ts-ignore react hooks
+    ThemedView = React.memo((props: SimpleViewProps) => {
+      // @ts-ignore react hooks
+      const [state, setState] = React.useState({
+        uid: Math.random(),
+        classNames: null,
         extraClassNames: [],
-        lastStyles: null,
-        ignoreAttrs: null,
-        prevProps: null,
+      } as State)
+
+      // @ts-ignore react hooks
+      const { allThemes, activeThemeName } = React.useContext(ThemeContext)
+
+      // @ts-ignore react hooks
+      React.useEffect(() => {
+        let theme
+        if (getTheme()) {
+          theme = allThemes[activeThemeName]
+          // merge themes option
+          if (typeof props.theme === 'object') {
+            theme = {
+              ...theme,
+              ...props.theme,
+            }
+          }
+        }
+
+        const nextState = getClassNamesFromProps(state, props, theme)
+        if (JSON.stringify(nextState) !== JSON.stringify(state)) {
+          setState(nextState)
+        }
+
+        return () => {
+          if (state.classNames) {
+            for (const name of state.classNames) {
+              gc.deregisterClassUse(state.uid, name)
+            }
+          }
+        }
+      })
+
+      let finalProps
+      const element = props.tagName || targetElement
+
+      if (typeof element === 'string') {
+        // if it's a DOM element, pass DOM attributes only
+        finalProps = {}
+        for (const key in props) {
+          if (validProp(key)) {
+            finalProps[key] = props[key]
+          }
+        }
+      } else {
+        // if it's passing down to a Component, pass anything
+        finalProps = props
       }
 
-      static getDerivedStateFromProps(props: SimpleViewProps, state: State) {
-        // const recentlyHMRed = recentHMR()
-        // if (!recentlyHMRed) {
-        // props havent changed
-        if (fastCompareWithoutChildren(props, state.prevProps)) {
-          return null
-        }
-        // }
-        let nextState: Partial<State> = {}
-        // update ignore attributes
-        ignoreAttrs = ignoreAttrs || getIgnoreAttrs()
-        if (ignoreAttrs && !state.ignoreAttrs) {
-          nextState.ignoreAttrs = arrToDict(ignoreAttrs)
-        }
-        const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-        nextState = {
-          ...nextState,
-          ...generateClassnames(state, props, state.prevProps, tag),
-          prevProps: props,
-        }
-        return nextState
+      // className
+      if (state.classNames) {
+        finalProps.className = state.classNames.concat(state.extraClassNames).join(' ')
       }
 
-      componentWillUnmount() {
-        for (const name of this.state.classNames) {
-          gc.deregisterClassUse(name)
-        }
-      }
-
-      render() {
-        // dont pass down theme
-        const { children, forwardRef, theme, ...props } = this.props
-        let finalProps
-        const element = props.tagName || targetElement
-
+      // forwardRef
+      if (props.forwardRef) {
         if (typeof element === 'string') {
-          // if it's a DOM element, pass DOM attributes only
-          finalProps = {}
-          for (const key in props) {
-            if (validProp(key)) {
-              finalProps[key] = props[key]
-            }
-          }
+          // dom ref
+          finalProps.ref = props.forwardRef
         } else {
-          // if it's passing down to a Component, pass anything
-          finalProps = props
-          // pass the theme down... if not a dom element
-          // maybe risky in terms of weirdness/unexpected behavior
-          // but it would save a lot of perf stuff attaching tons of context
-          // finalProps.theme = finalProps.theme || theme
+          // probably another styled component so pass it down
+          finalProps.forwardRef = props.forwardRef
         }
-
-        // className
-        let className = this.state.classNames.concat(this.state.extraClassNames).join(' ')
-        finalProps.className = className
-
-        // forwardRef
-        if (forwardRef) {
-          if (typeof element === 'string') {
-            // dom ref
-            finalProps.ref = forwardRef
-          } else {
-            // probably another styled component so pass it down
-            finalProps.forwardRef = forwardRef
-          }
-        }
-
-        // ignoreAttrs
-        if (this.state.ignoreAttrs && typeof this.state.ignoreAttrs === 'object') {
-          for (const prop in props) {
-            if (this.state.ignoreAttrs[prop]) {
-              delete finalProps[prop]
-            }
-          }
-        }
-
-        return React.createElement(element, finalProps, children)
       }
-    }
 
-    return ThemedView as any
+      // ignoreAttrs
+      if (state.ignoreAttrs && typeof state.ignoreAttrs === 'object') {
+        for (const prop in props) {
+          if (state.ignoreAttrs[prop]) {
+            delete finalProps[prop]
+          }
+        }
+      }
+
+      return React.createElement(element, finalProps, props.children)
+    })
+
+    ThemedView.themeFn = null
+    ThemedView.displayName = 'SimpleView'
+    ThemedView.ignoreAttrs = null
+    ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+    ThemedView.withConfig = config => {
+      if (config.displayName) {
+        displayName = config.displayName
+        ThemedView.displayName = displayName
+      }
+      return ThemedView
+    }
+    ThemedView.theme = themeFn => {
+      ThemedView.themeFn = themeFn
+      return ThemedView
+    }
+    ThemedView.getConfig = () => ({
+      id,
+      displayName,
+      targetElement,
+      ignoreAttrs: getIgnoreAttrs(),
+      styles: { ...styles },
+      propStyles: { ...propStyles },
+      child: isSimpleView ? target : null,
+    })
+
+    return ThemedView
   }
 }

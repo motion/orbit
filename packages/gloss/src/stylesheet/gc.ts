@@ -27,23 +27,23 @@ type RulesToClass = WeakMap<BaseRules, string>
 const invariant = require('invariant')
 
 export class GarbageCollector {
+  // used to keep track of what classes are actively in use
+  usedClasses = new Map<string, number>()
+  // classes to be removed, we put this in a queue and perform it in bulk rather than straight away
+  // since by the time the next tick happens this style could have been reinserted
+  classRemovalQueue = new Set<string>()
+  // uid registered queue
+  activeUids = new Set<number>()
+
   constructor(sheet: StyleSheet, tracker: Tracker, rulesToClass: RulesToClass) {
     this.sheet = sheet
     this.tracker = tracker
-    // used to keep track of what classes are actively in use
-    this.usedClasses = new Map()
-    // classes to be removed, we put this in a queue and perform it in bulk rather than straight away
-    // since by the time the next tick happens this style could have been reinserted
-    this.classRemovalQueue = new Set()
-
     this.rulesToClass = rulesToClass
   }
 
   tracker: Tracker
   sheet: StyleSheet
-  usedClasses: Map<string, number>
   garbageTimer?: NodeJS.Timer
-  classRemovalQueue: Set<string>
   rulesToClass: RulesToClass
 
   hasQueuedCollection(): boolean {
@@ -55,7 +55,10 @@ export class GarbageCollector {
   }
 
   // component has been mounted so make sure it's being depended on
-  registerClassUse(name: string) {
+  registerClassUse(uid: number, name: string) {
+    if (this.activeUids.has(uid)) {
+      return
+    }
     const count = this.usedClasses.get(name) || 0
     this.usedClasses.set(name, count + 1)
     if (this.classRemovalQueue.has(name)) {
@@ -67,7 +70,12 @@ export class GarbageCollector {
   }
 
   // component has been unmounted so remove it's dependencies
-  deregisterClassUse(name: string) {
+  deregisterClassUse(uid: number, name: string) {
+    // prevent double deletes
+    if (!this.activeUids.has(uid)) {
+      return
+    }
+    this.activeUids.delete(uid)
     let count = this.usedClasses.get(name)
     if (count == null) {
       return

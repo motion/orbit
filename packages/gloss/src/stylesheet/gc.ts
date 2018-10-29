@@ -33,7 +33,7 @@ export class GarbageCollector {
   // since by the time the next tick happens this style could have been reinserted
   classRemovalQueue = new Set<string>()
   // uid registered queue
-  activeUids = new Set<number>()
+  activeUids = new Set<string>()
 
   constructor(sheet: StyleSheet, tracker: Tracker, rulesToClass: RulesToClass) {
     this.sheet = sheet
@@ -56,9 +56,11 @@ export class GarbageCollector {
 
   // component has been mounted so make sure it's being depended on
   registerClassUse(uid: number, name: string) {
-    if (this.activeUids.has(uid)) {
+    const key = `${uid}${name}`
+    if (this.activeUids.has(key)) {
       return
     }
+    this.activeUids.add(key)
     const count = this.usedClasses.get(name) || 0
     this.usedClasses.set(name, count + 1)
     if (this.classRemovalQueue.has(name)) {
@@ -71,11 +73,12 @@ export class GarbageCollector {
 
   // component has been unmounted so remove it's dependencies
   deregisterClassUse(uid: number, name: string) {
+    const key = `${uid}${name}`
     // prevent double deletes
-    if (!this.activeUids.has(uid)) {
+    if (!this.activeUids.has(key)) {
       return
     }
-    this.activeUids.delete(uid)
+    this.activeUids.delete(key)
     let count = this.usedClasses.get(name)
     if (count == null) {
       return

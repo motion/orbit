@@ -6,6 +6,7 @@ import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import validProp from './helpers/validProp'
+// import { hashSum } from './helpers/hashSum'
 
 export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
@@ -43,6 +44,57 @@ const arrToDict = obj => {
   }
   return obj
 }
+
+// const valCache = new WeakMap()
+
+// const hashVal = val => {
+//   // ignore react children
+//   if (val && val['_owner'] && val['$$typeof']) {
+//     return ''
+//   }
+//   if (!val) {
+//     return val
+//   }
+//   if (valCache.has(val)) {
+//     return valCache.get(val)
+//   }
+//   if (Array.isArray(val)) {
+//     return val.map(hashVal)
+//   }
+//   if (val._equalityKey) {
+//     return val._equalityKey
+//   }
+//   const type = typeof val
+//   if (type === 'string' || type === 'number' || type === 'boolean') {
+//     return val
+//   }
+//   const res = hashSum(val)
+//   valCache.set(val, res)
+//   return res
+// }
+
+// const shouldUpdateHash = (props, ignoreAttrs) => {
+//   let hash = ''
+//   for (const key in props) {
+//     const val = props[key]
+//     // ignore attrs
+//     if (ignoreAttrs && !ignoreAttrs[key]) {
+//       continue
+//     }
+//     if (process.env.NODE_ENV === 'development') {
+//       try {
+//         hash == hashVal(val)
+//       } catch (err) {
+//         console.log('err', key, val, typeof val)
+//         console.log('error', err)
+//       }
+//     } else {
+//       hash == hashVal(val)
+//     }
+//   }
+//   console.log('returnig has', hash)
+//   return hash
+// }
 
 // import sonar
 
@@ -131,6 +183,40 @@ function getSelector(className: string, namespace: string, tagName: string = '')
   return '.' + className
 }
 
+function compileTheme(ogView) {
+  let view = ogView
+  let themes = []
+  // collect the themes going up the tree
+  while (view) {
+    if (view.themeFn) {
+      themes.push(view.themeFn)
+    }
+    view = view.getConfig().child
+  }
+  let result
+  if (!themes.length) {
+    result = null
+  } else {
+    result = props => {
+      let styles = {}
+      // from most important to least
+      for (const theme of themes) {
+        styles = {
+          ...theme(props),
+          ...styles,
+        }
+      }
+      return styles
+    }
+  }
+  return result
+}
+
+type ClassesState = {
+  classNames: string[]
+  extraClassNames: string[]
+}
+
 export function createViewFactory(toCSS) {
   const tracker = new Map()
   const rulesToClass = new WeakMap()
@@ -138,7 +224,46 @@ export function createViewFactory(toCSS) {
   const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 
   let idCounter = 1
-  const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
+  const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
+
+  function addRules(displayName: string, rules: BaseRules, namespace, tagName: string) {
+    // if these rules have been cached to a className then retrieve it
+    const cachedClass = rulesToClass.get(rules)
+    if (cachedClass) {
+      return cachedClass
+    }
+    const declarations = []
+    const style = toCSS(rules)
+    // generate css declarations based on the style object
+    for (const key in style) {
+      const val = style[key]
+      declarations.push(`  ${key}: ${val};`)
+    }
+    const css = declarations.join('\n')
+    // build the class name with the display name of the styled component and a unique id based on the css and namespace
+    const className = displayName + '__' + hash(namespace + css)
+    // for media queries
+    // this is the first time we've found this className
+    if (!tracker.has(className)) {
+      // build up the correct selector, explode on commas to allow multiple selectors
+      const selector = getSelector(className, namespace, tagName)
+      // insert the new style text
+      tracker.set(className, {
+        displayName,
+        namespace,
+        rules,
+        selector,
+        style,
+      })
+      if (namespace[0] === '@') {
+        sheet.insert(namespace, `${namespace} {\n${selector} {\n${css}\n}\n}`)
+      } else {
+        sheet.insert(className, `${selector} {\n${css}\n}`)
+      }
+      rulesToClass.set(rules, className)
+    }
+    return className
+  }
 
   return function createView(a: any, b: RawRules): SimpleView {
     let target = a || 'div'
@@ -155,7 +280,7 @@ export function createViewFactory(toCSS) {
       rawStyles = a
     }
     const targetElement = isSimpleView ? targetConfig.targetElement : target
-    const id = `${uid()}`
+    const id = `${viewId()}`
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = !!Object.keys(propStyles).length
     let displayName = 'GlossView'
@@ -171,76 +296,14 @@ export function createViewFactory(toCSS) {
       if (typeof cachedTheme !== 'undefined') {
         return cachedTheme
       }
-      let themes = []
-      let view = ThemedView
-      // collect the themes going up the tree
-      while (view) {
-        if (view.themeFn) {
-          themes.push(view.themeFn)
-        }
-        view = view.getConfig().child
-      }
-      let result
-      if (!themes.length) {
-        result = null
-      } else {
-        result = props => {
-          let styles = {}
-          // from most important to least
-          for (const theme of themes) {
-            styles = {
-              ...theme(props),
-              ...styles,
-            }
-          }
-          return styles
-        }
-      }
+      const result = compileTheme(ThemedView)
       cachedTheme = result
       return result
     }
 
-    function addRules(displayName: string, rules: BaseRules, namespace, tagName: string) {
-      // if these rules have been cached to a className then retrieve it
-      const cachedClass = rulesToClass.get(rules)
-      if (cachedClass) {
-        return cachedClass
-      }
-      const declarations = []
-      const style = toCSS(rules)
-      // generate css declarations based on the style object
-      for (const key in style) {
-        const val = style[key]
-        declarations.push(`  ${key}: ${val};`)
-      }
-      const css = declarations.join('\n')
-      // build the class name with the display name of the styled component and a unique id based on the css and namespace
-      const className = displayName + '__' + hash(namespace + css)
-      // for media queries
-      // this is the first time we've found this className
-      if (!tracker.has(className)) {
-        // build up the correct selector, explode on commas to allow multiple selectors
-        const selector = getSelector(className, namespace, tagName)
-        // insert the new style text
-        tracker.set(className, {
-          displayName,
-          namespace,
-          rules,
-          selector,
-          style,
-        })
-        if (namespace[0] === '@') {
-          sheet.insert(namespace, `${namespace} {\n${selector} {\n${css}\n}\n}`)
-        } else {
-          sheet.insert(className, `${selector} {\n${css}\n}`)
-        }
-        rulesToClass.set(rules, className)
-      }
-      return className
-    }
-
     function generateClassnames(
-      state: State,
+      uid: number,
+      state: ClassesState,
       props: CSSPropertySet,
       tagName: string,
       theme: ThemeObject,
@@ -303,7 +366,7 @@ export function createViewFactory(toCSS) {
           }
         }
       }
-      const classNames = []
+      const nextClassNames = []
       // sort so we properly order pseudo keys
       const keys = Object.keys(myStyles)
       const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
@@ -311,49 +374,49 @@ export function createViewFactory(toCSS) {
       // add rules
       for (const namespace of sortedStyleKeys) {
         const className = addRules(displayName, myStyles[namespace], namespace, tagName)
-        classNames.push(className)
+        nextClassNames.push(className)
         // if this is the first mount render or we didn't previously have this class then add it as new
         if (state.classNames == null || !state.classNames.includes(className)) {
-          gc.registerClassUse(state.uid, className)
+          gc.registerClassUse(uid, className)
         }
       }
       // check what classNames have been removed if this is a secondary render
       if (state.classNames !== null) {
         for (const className of state.classNames) {
           // if this previous class isn't in the current classes then deregister it
-          if (!classNames.includes(className)) {
-            gc.deregisterClassUse(state.uid, className)
+          if (!nextClassNames.includes(className)) {
+            gc.deregisterClassUse(uid, className)
           }
         }
       }
       return {
-        classNames,
+        classNames: nextClassNames,
         extraClassNames,
       }
     }
 
-    type State = {
-      uid?: number
-      classNames: string[]
-      extraClassNames: string[]
-      // TODO check this its a bit weird, we can probably do a hidden defineProp for equality
-    }
-
-    function getClassNamesFromProps(state: State, props: SimpleViewProps, theme: ThemeObject) {
-      // update ignore attributes
-      ignoreAttrs = ignoreAttrs || arrToDict(getIgnoreAttrs())
+    function getClassNamesFromProps(
+      uid: number,
+      state: ClassesState,
+      props: SimpleViewProps,
+      theme: ThemeObject,
+    ) {
       const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-      return generateClassnames(state, props, tag, theme)
+      return generateClassnames(uid, state, props, tag, theme)
     }
 
     // @ts-ignore react hooks
     ThemedView = React.memo((props: SimpleViewProps) => {
       // @ts-ignore react hooks
-      const [state, setState] = React.useState({
-        uid: Math.random(),
+      let [uid] = React.useState(Math.random())
+      // @ts-ignore react hooks
+      const [state, setClasses] = React.useState({
         classNames: null,
         extraClassNames: [],
-      } as State)
+      } as ClassesState)
+
+      // update ignore attributes
+      ignoreAttrs = ignoreAttrs || arrToDict(getIgnoreAttrs())
 
       // @ts-ignore react hooks
       const { allThemes, activeThemeName } = React.useContext(ThemeContext)
@@ -372,22 +435,25 @@ export function createViewFactory(toCSS) {
           }
         }
 
-        const nextState = getClassNamesFromProps(state, props, theme)
+        const nextState = getClassNamesFromProps(uid, state, props, theme)
         if (JSON.stringify(nextState) !== JSON.stringify(state)) {
-          setState(nextState)
-        }
-
-        return () => {
-          if (state.classNames) {
-            for (const name of state.classNames) {
-              gc.deregisterClassUse(state.uid, name)
-            }
-          }
+          setClasses(nextState)
         }
       })
 
-      let finalProps
+      // @ts-ignore
+      React.useEffect(() => {
+        return () => {
+          if (state.classNames) {
+            for (const name of state.classNames) {
+              gc.deregisterClassUse(uid, name)
+            }
+          }
+        }
+      }, [])
+
       const element = props.tagName || targetElement
+      let finalProps
 
       if (typeof element === 'string') {
         // if it's a DOM element, pass DOM attributes only

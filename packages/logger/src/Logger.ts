@@ -186,7 +186,7 @@ export class Logger {
 
     // group traces to avoid large things clogging console
     if (isTrace) {
-      console.groupCollapsed(`${this.namespace}`)
+      console.groupCollapsed(`${this.namespace}`, ...messages)
       console.log(traceLog)
     }
 

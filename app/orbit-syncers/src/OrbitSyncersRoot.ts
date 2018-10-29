@@ -65,6 +65,7 @@ export class OrbitSyncersRoot {
       logger: 'simple-console',
       synchronize: false,
       busyErrorRetry: 1000,
+      maxQueryExecutionTime: 3000,
       enableWAL: true,
     })
   }

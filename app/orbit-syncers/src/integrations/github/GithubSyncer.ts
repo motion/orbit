@@ -75,14 +75,15 @@ export class GithubSyncer implements IntegrationSyncer {
           repository: repositoryName,
           cursor: lastSyncIssues.lastCursor,
           loadedCount: lastSyncIssues.lastCursorLoadedCount || 0,
-          handler: (issue, cursor, loadedCount, lastIssue) => {
+          handler: (issue, cursor, loadedCount, isLast) => {
             return this.handleIssueOrPullRequest({
+              type: "issue",
               issueOrPullRequest: issue,
               organization,
               repositoryName,
               cursor,
               loadedCount,
-              lastIssue,
+              lastIssue: isLast,
               lastSyncInfo: lastSyncIssues,
             })
           }
@@ -105,14 +106,15 @@ export class GithubSyncer implements IntegrationSyncer {
           repository: repositoryName,
           cursor: lastSyncPullRequests.lastCursor,
           loadedCount: lastSyncPullRequests.lastCursorLoadedCount || 0,
-          handler: (issue, cursor, loadedCount, lastIssue) => {
+          handler: (issue, cursor, loadedCount, isLast) => {
             return this.handleIssueOrPullRequest({
+              type: "pull-request",
               issueOrPullRequest: issue,
               organization,
               repositoryName,
               cursor,
               loadedCount,
-              lastIssue,
+              lastIssue: isLast,
               lastSyncInfo: lastSyncPullRequests,
             })
           }
@@ -130,6 +132,7 @@ export class GithubSyncer implements IntegrationSyncer {
    * Handles a single issue or pull request from loaded issues/PRs stream.
    */
   private async handleIssueOrPullRequest(options?: {
+    type: "issue"|"pull-request",
     issueOrPullRequest: GithubIssue | GithubPullRequest
     organization: string
     repositoryName: string
@@ -138,7 +141,7 @@ export class GithubSyncer implements IntegrationSyncer {
     lastIssue: boolean
     lastSyncInfo: GithubSettingValuesLastSyncRepositoryInfo
   }) {
-    const { issueOrPullRequest, organization, repositoryName, cursor, loadedCount, lastIssue, lastSyncInfo } = options
+    const { type, issueOrPullRequest, organization, repositoryName, cursor, loadedCount, lastIssue, lastSyncInfo } = options
     const updatedAt = new Date(issueOrPullRequest.updatedAt).getTime()
 
     // if we have synced stuff previously already, we need to prevent same issues syncing
@@ -153,7 +156,7 @@ export class GithubSyncer implements IntegrationSyncer {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(SettingEntity).save(this.setting)
+      await getRepository(SettingEntity).save(this.setting, { listeners: false })
 
       return false // this tells from the callback to stop issue proceeding
     }
@@ -163,14 +166,18 @@ export class GithubSyncer implements IntegrationSyncer {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       this.log.verbose(`looks like its the first syncing issue, set last synced date`, lastSyncInfo)
-      await getRepository(SettingEntity).save(this.setting)
+      await getRepository(SettingEntity).save(this.setting, { listeners: false })
     }
 
     const comments = issueOrPullRequest.comments.totalCount > 0 ? await this.loader.loadComments(organization, repositoryName, issueOrPullRequest.number) : []
 
     // load issue bit from the database
     const bit = this.bitFactory.createFromIssue(issueOrPullRequest, comments)
-    bit.people = this.personFactory.createFromIssue(issueOrPullRequest)
+    if (type === "issue") {
+      bit.people = this.personFactory.createFromIssue(issueOrPullRequest)
+    } else { // pull request
+      bit.people = this.personFactory.createFromPullRequest(issueOrPullRequest as GithubPullRequest)
+    }
 
     // for people without emails we create "virtual" email
     for (let person of bit.people) {
@@ -206,7 +213,7 @@ export class GithubSyncer implements IntegrationSyncer {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(SettingEntity).save(this.setting)
+      await getRepository(SettingEntity).save(this.setting, { listeners: false })
       return true
     }
 
@@ -215,7 +222,7 @@ export class GithubSyncer implements IntegrationSyncer {
       this.log.verbose(`updating last cursor in settings`, { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getRepository(SettingEntity).save(this.setting)
+      await getRepository(SettingEntity).save(this.setting, { listeners: false })
     }
 
     return true

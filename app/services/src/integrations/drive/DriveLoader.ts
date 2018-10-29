@@ -23,6 +23,7 @@ export class DriveLoader {
     log?: Logger,
     saveCallback?: ServiceLoaderSettingSaveCallback,
   ) {
+    this.setting = setting
     this.log = log || new Logger('service:drive:loader:' + setting.id)
     this.loader = new ServiceLoader(
       this.setting,
@@ -43,10 +44,12 @@ export class DriveLoader {
   /**
    * Loads google drive files.
    */
-  async loadFiles(): Promise<DriveLoadedFile[]> {
-    const files = await this.loadPagedFiles()
-    const driveFiles: DriveLoadedFile[] = []
-    for (let file of files) {
+  async loadFiles(cursor: string|undefined, handler: (file: DriveLoadedFile, cursor?: string, isLast?: boolean) => Promise<boolean>|boolean): Promise<void> {
+    await sleep(ServiceLoadThrottlingOptions.drive.files)
+
+    const { files, nextPageToken } = await this.loader.load(DriveQueries.files(cursor))
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
       // try to find a file folder to create a Bit.location later on
       let parent: DriveFile
       if (file.parents && file.parents.length)
@@ -67,7 +70,7 @@ export class DriveLoader {
         return user && user.emailAddress && user.me === false
       })
 
-      driveFiles.push({
+      const driveFile: DriveLoadedFile = {
         file,
         thumbnailFilePath,
         content,
@@ -75,22 +78,24 @@ export class DriveLoader {
         revisions,
         users: uniqBy(users, user => user.emailAddress),
         parent,
-      })
-    }
-    return driveFiles
-  }
+      }
+      try {
+        const isLast = i === files.length - 1 && !!nextPageToken
+        const result = await handler(driveFile, nextPageToken, isLast)
 
-  /**
-   * Loads files in a paginated result.
-   */
-  private async loadPagedFiles(pageToken?: string): Promise<DriveFile[]> {
-    await sleep(ServiceLoadThrottlingOptions.drive.files)
-    const result = await this.loader.load(DriveQueries.files(pageToken))
-    if (result.nextPageToken) {
-      const nextPageFiles = await this.loadPagedFiles(result.nextPageToken)
-      return [...result.files, ...nextPageFiles]
+        // if callback returned true we don't continue syncing
+        if (result === false) {
+          this.log.info(`stopped issues syncing, no need to sync more`, { file: driveFile, index: i })
+          return // return from the function, not from the loop!
+        }
+      } catch (error) {
+        this.log.warning(`error during file handling`, driveFile, error)
+      }
     }
-    return result.files
+
+    if (nextPageToken) {
+      await this.loadFiles(nextPageToken, handler)
+    }
   }
 
   /**
@@ -153,7 +158,7 @@ export class DriveLoader {
 
     this.log.verbose('downloading file thumbnail for', file)
     const destination = path.normalize(
-      __dirname + '/../../../uploads/' + file.id + '.' + file.fileExtension,
+      __dirname + '/../../../../uploads/' + file.id + '.' + file.fileExtension,
     )
     await this.loader.downloadFile({
       path: file.thumbnailLink,

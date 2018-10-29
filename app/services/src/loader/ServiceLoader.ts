@@ -62,7 +62,7 @@ export class ServiceLoader {
       headers,
     })
     const responseBody: any = options.plain ? await result.text() : await result.json()
-    this.log.vtimer(`request to ${url}`, result, responseBody)
+    this.log.vtimer(`request to ${url}`, { response: result, body: responseBody })
 
     // throw error if there is an error
     if (!result.ok || responseBody.error || responseBody.errors) {

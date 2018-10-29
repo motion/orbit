@@ -8,13 +8,14 @@ export const person: GetOrbitIntegration<'person'> = (_setting?: Setting) => ({
   appName: 'People',
   defaultQuery: {
     take: 30,
-    where: {
-      people: {
-        bits: {
-          $moreThan: 3,
-        },
-      },
-    },
+    // todo: this causes big performance issues. We need to re-implement it later (store bits counter in the PersonBit entity)
+    // where: {
+    //   people: {
+    //     bits: {
+    //       $moreThan: 3,
+    //     },
+    //   },
+    // },
   },
   display: {
     name: 'Directory',

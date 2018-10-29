@@ -25,7 +25,7 @@ export interface GithubLoaderIssueOrPullRequestStreamOptions {
   repository: string
   cursor: string
   loadedCount: number
-  handler: (issue: GithubIssue, cursor?: string, loadedCount?: number, lastIssue?: boolean) => Promise<boolean>|boolean
+  handler: (issue: GithubIssue, cursor?: string, loadedCount?: number, isLast?: boolean) => Promise<boolean>|boolean
 }
 
 /**
@@ -141,7 +141,7 @@ export class GithubLoader {
           return // return from the function, not from the loop!
         }
       } catch (error) {
-        this.log.warning(`Error during issue handling `, issues[i], error)
+        this.log.warning(`error during issue handling`, issues[i], error)
       }
     }
 

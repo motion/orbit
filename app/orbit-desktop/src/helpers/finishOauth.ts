@@ -36,6 +36,12 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
   if (!values.token) {
     throw new Error(`No token returned ${JSON.stringify(values)}`)
   }
+
+  // temporary fix
+  if ((type as any) === 'gdrive') {
+    type = 'drive'
+  }
+
   // todo: have a resolver for identifiers based on integration
   // const oauthid = (values.info && values.info.id) || 'none'
   // const identifier = `${oauthid}-${type}`

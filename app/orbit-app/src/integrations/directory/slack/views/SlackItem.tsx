@@ -16,20 +16,28 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
 }
 
 export class SlackItem extends React.Component<OrbitIntegrationProps<'slack'>> {
+  static itemProps = {
+    hide: {
+      people: true,
+      title: true,
+    },
+  }
+
   render() {
     const { bit, searchTerm, shownLimit, extraProps, hide } = this.props
     if (!bit) {
       return null
     }
     const { data, people } = bit
-    if (extraProps && extraProps.minimal) {
-      return <HighlightText>{bit.body}</HighlightText>
-    }
     if (!data || !data.messages) {
       console.log('no messages...', bit)
       return null
     }
-    return getMessages(data.messages, { searchTerm, shownLimit }).map((message, index) => {
+    const messages = getMessages(data.messages, { searchTerm, shownLimit })
+    if (extraProps && extraProps.minimal) {
+      return <HighlightText>{messages.map(message => message.text).join(' ')}</HighlightText>
+    }
+    return messages.map((message, index) => {
       for (let person of people || []) {
         message.text = message.text.replace(
           new RegExp(`<@${person.integrationId}>`, 'g'),

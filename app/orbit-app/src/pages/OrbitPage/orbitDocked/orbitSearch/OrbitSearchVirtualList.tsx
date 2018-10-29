@@ -8,11 +8,10 @@ import {
 } from 'react-virtualized'
 import { SearchStore } from '../../../../stores/SearchStore'
 import { view, ensure, attach } from '@mcro/black'
-import { Text, View } from '@mcro/ui'
+import { View } from '@mcro/ui'
 import { HighlightText } from '../../../../views/HighlightText'
 import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { Bit } from '@mcro/models'
 import { reaction, trace } from 'mobx'
 import { debounce } from 'lodash'
@@ -28,15 +27,8 @@ type Props = {
   subPaneStore?: SubPaneStore
 }
 
-const hideSlack = {
-  title: true,
-  people: true,
-}
-
-const renderListItemChildren = ({ content = null }, bit) => {
-  return bit.integration === 'slack' ? (
-    <SearchResultText>{content}</SearchResultText>
-  ) : (
+const renderListItemChildren = ({ content = null }) => {
+  return (
     <OrbitCardContent>
       <HighlightText whiteSpace="normal" alpha={0.65} options={{ maxSurroundChars: 100 }}>
         {collapseWhitespace(content)}
@@ -52,7 +44,6 @@ const OrbitCardContent = view({
   whiteSpace: 'pre',
 })
 
-const SearchResultText = props => <Text wordBreak="break-all" fontWeight={400} {...props} />
 const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ') : str)
 
 type ListItemProps = {
@@ -62,7 +53,7 @@ type ListItemProps = {
   cache?: any
   parent?: any
   width?: number
-  realIndex: number
+  index: number
   ignoreSelection?: boolean
 }
 
@@ -70,20 +61,18 @@ const spaceBetween = <div style={{ flex: 1 }} />
 
 class ListItem extends React.PureComponent<ListItemProps> {
   render() {
-    const { model, realIndex, query, ignoreSelection } = this.props
-    const isConversation = model.integration === 'slack'
+    const { model, index, query, ignoreSelection } = this.props
     return (
       <OrbitListItem
         pane="docked-search"
         subPane="search"
-        index={realIndex}
+        index={index}
         model={model}
-        hide={isConversation ? hideSlack : null}
         subtitleSpaceBetween={spaceBetween}
         isExpanded
         searchTerm={query}
         onClickLocation={handleClickLocation}
-        maxHeight={isConversation ? 380 : 200}
+        maxHeight={200}
         overflow="hidden"
         extraProps={{
           minimal: true,
@@ -96,15 +85,6 @@ class ListItem extends React.PureComponent<ListItemProps> {
     )
   }
 }
-
-class VirtualList extends React.Component<any> {
-  render() {
-    return <List {...this.props} ref={this.props.forwardRef} />
-  }
-}
-
-const SortableListItem = SortableElement(ListItem)
-const SortableList = SortableContainer(VirtualList, { withRef: true })
 
 const FirstItems = view(({ items, searchStore }) => {
   return (
@@ -119,7 +99,7 @@ const FirstItems = view(({ items, searchStore }) => {
         <ListItem
           key={item.id}
           model={item}
-          realIndex={index + searchStore.quickSearchState.results.length}
+          index={index + searchStore.quickSearchState.results.length}
           ignoreSelection
         />
       ))}
@@ -228,10 +208,9 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
         width={this.cache}
       >
         <div style={style}>
-          <SortableListItem
+          <ListItem
             model={model}
-            index={index}
-            realIndex={index + this.offset}
+            index={index + this.offset}
             query={searchStore.searchState.query}
           />
         </div>
@@ -300,8 +279,8 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
               rowCount={searchStore.remoteRowCount}
             >
               {({ onRowsRendered, registerChild }) => (
-                <SortableList
-                  forwardRef={ref => {
+                <List
+                  ref={ref => {
                     if (ref) {
                       registerChild(ref)
                       this.listRef = ref

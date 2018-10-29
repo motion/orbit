@@ -155,7 +155,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     const { isSelected } = store
     let ItemView
     if (!this.props.direct) {
-      let ItemView = this.props.appsStore.getView(
+      ItemView = this.props.appsStore.getView(
         item.type === 'bit' ? item.integration : 'person',
         'item',
       )
@@ -320,6 +320,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                 shownLimit={10}
                 renderChildren={childrenFunction}
                 extraProps={this.props.extraProps}
+                {...ItemView.itemProps}
               />
             )}
           {showPeople &&

@@ -1,5 +1,5 @@
 import { observeOne, save } from '@mcro/model-bridge'
-import { SettingModel, GeneralSetting, GeneralSettingValues } from '@mcro/models'
+import { SettingModel, Setting } from '@mcro/models'
 
 export const generalSettingQuery = {
   type: 'general' as 'general',
@@ -8,23 +8,22 @@ export const generalSettingQuery = {
 }
 
 export class SettingStore {
-  setting: GeneralSetting = {
+  setting: Setting = {
+    target: 'setting',
     values: {},
-  } as any
-
-  get values() {
-    return this.setting.values as GeneralSettingValues
   }
 
-  private setting$ = observeOne(SettingModel, { args: { where: generalSettingQuery } }).subscribe(
-    value => {
-      if (value) {
-        this.setting = value as GeneralSetting
-      }
-    },
-  )
+  get values() {
+    return this.setting.values as Setting['values']
+  }
 
-  update = async (values: Partial<GeneralSettingValues>) => {
+  private setting$ = observeOne(SettingModel).subscribe(value => {
+    if (value) {
+      this.setting = value
+    }
+  })
+
+  update = async (values: Partial<Setting['values']>) => {
     this.setting.values = {
       ...this.setting.values,
       ...values,

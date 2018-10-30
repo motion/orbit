@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { sleep } from '@mcro/utils'
-import { JiraSetting } from '@mcro/models'
+import { JiraSource } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { JiraQueries } from './JiraQueries'
@@ -10,11 +10,11 @@ import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
  * Loads jira data from its API.
  */
 export class JiraLoader {
-  private setting: JiraSetting
+  private setting: JiraSource
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(setting: JiraSetting, log?: Logger) {
+  constructor(setting: JiraSource, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('service:jira:loader:' + setting.id)
     this.loader = new ServiceLoader(this.setting, this.log, this.baseUrl(), this.requestHeaders())
@@ -79,7 +79,11 @@ export class JiraLoader {
   /**
    * Loads jira issue's comments.
    */
-  private async loadComments(issueId: string, startAt = 0, maxResults = 25): Promise<JiraComment[]> {
+  private async loadComments(
+    issueId: string,
+    startAt = 0,
+    maxResults = 25,
+  ): Promise<JiraComment[]> {
     await sleep(ServiceLoadThrottlingOptions.jira.comments)
 
     const query = JiraQueries.comments(issueId, startAt, maxResults)
@@ -109,5 +113,4 @@ export class JiraLoader {
     const credentials = Buffer.from(`${username}:${password}`).toString('base64')
     return { Authorization: `Basic ${credentials}` }
   }
-
 }

@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { OrbitIntegrationMainProps } from '../../../types'
+import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
 import { BitTitleBar } from '../../../views/layout/BitTitleBar'
 import { Document } from '../../../views/bits/document/Document'
 
-export class ConfluenceApp extends React.Component<OrbitIntegrationMainProps<'confluence'>> {
+export class ConfluenceApp extends React.Component<OrbitSourceMainProps<'confluence'>> {
   render() {
     const { bit } = this.props
     return (

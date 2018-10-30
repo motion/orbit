@@ -1,10 +1,8 @@
-
 /**
  * Information about repository last sync.
  * Used to implement partial syncing.
  */
-export interface GithubSettingValuesLastSyncRepositoryInfo {
-
+export interface GithubSourceValuesLastSyncRepositoryInfo {
   /**
    * Updated date of the last synced issue.
    * We don't need to query github issues/prs from the api older than this date for sync.
@@ -33,10 +31,9 @@ export interface GithubSettingValuesLastSyncRepositoryInfo {
    * Number of issues was loaded and synced from the last cursor.
    */
   lastCursorLoadedCount?: number
-
 }
 
-export interface GithubSettingValues {
+export interface GithubSourceValues {
   /**
    * By default we sync all github repositories.
    * This called "sync all mode". We use this mode until whitelist is undefined.
@@ -57,7 +54,7 @@ export interface GithubSettingValues {
    * Used to implement partial syncing.
    */
   lastSyncIssues: {
-    [repository: string]: GithubSettingValuesLastSyncRepositoryInfo
+    [repository: string]: GithubSourceValuesLastSyncRepositoryInfo
   }
 
   /**
@@ -65,7 +62,7 @@ export interface GithubSettingValues {
    * Used to implement partial syncing.
    */
   lastSyncPullRequests: {
-    [repository: string]: GithubSettingValuesLastSyncRepositoryInfo
+    [repository: string]: GithubSourceValuesLastSyncRepositoryInfo
   }
 
   oauth: {

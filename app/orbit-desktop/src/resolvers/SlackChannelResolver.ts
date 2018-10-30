@@ -1,7 +1,7 @@
 import { SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
-import { SlackChannelModel, SlackSetting } from '@mcro/models'
+import { SlackChannelModel, SlackSource } from '@mcro/models'
 import { SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 
@@ -11,7 +11,7 @@ export const SlackChannelManyResolver = resolveMany(SlackChannelModel, async ({ 
   const setting = (await getRepository(SettingEntity).findOne({
     id: settingId,
     type: 'slack',
-  }) as SlackSetting)
+  })) as SlackSource
   if (!setting) {
     log.error('cannot find requested slack setting', { settingId })
     return

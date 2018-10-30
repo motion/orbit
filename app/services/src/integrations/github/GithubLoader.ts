@@ -1,12 +1,13 @@
 import { Logger } from '@mcro/logger'
-import { GithubSetting } from '@mcro/models'
+import { GithubSource } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { GithubQueries } from './GithubQueries'
 import {
   GithubCommentsResponse,
-  GithubIssue, GithubComment,
+  GithubIssue,
+  GithubComment,
   GithubIssueQueryResult,
   GithubOrganization,
   GithubOrganizationsQueryResult,
@@ -14,7 +15,8 @@ import {
   GithubPerson,
   GithubPullRequestQueryResult,
   GithubRepository,
-  GithubUserRepositoriesQueryResult, GithubRepositoryQueryResult,
+  GithubUserRepositoriesQueryResult,
+  GithubRepositoryQueryResult,
 } from './GithubTypes'
 
 /**
@@ -25,40 +27,40 @@ export interface GithubLoaderIssueOrPullRequestStreamOptions {
   repository: string
   cursor: string
   loadedCount: number
-  handler: (issue: GithubIssue, cursor?: string, loadedCount?: number, isLast?: boolean) => Promise<boolean>|boolean
+  handler: (
+    issue: GithubIssue,
+    cursor?: string,
+    loadedCount?: number,
+    isLast?: boolean,
+  ) => Promise<boolean> | boolean
 }
 
 /**
  * Performs requests GitHub API.
  */
 export class GithubLoader {
-  private setting: GithubSetting
+  private setting: GithubSource
   private log: Logger
   private loader: ServiceLoader
   private totalCost: number = 0
   private remainingCost: number = 0
 
-  constructor(setting: GithubSetting, log?: Logger) {
+  constructor(setting: GithubSource, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('service:github:loader:' + setting.id)
-    this.loader = new ServiceLoader(
-      this.setting,
-      this.log,
-      this.baseUrl(),
-      this.requestHeaders()
-    )
+    this.loader = new ServiceLoader(this.setting, this.log, this.baseUrl(), this.requestHeaders())
   }
 
   /**
    * Loads all user organizations.
    */
   async loadOrganizations(): Promise<GithubOrganization[]> {
-    this.log.verbose(`loading organizations`)
+    this.log.verbose('loading organizations')
     const organizations = await this.loadOrganizationsByCursor()
     this.log.verbose(
       `loading is finished. Loaded ${organizations.length} issues. ` +
-      `Total query cost: ${this.totalCost}/${this.remainingCost}`,
-      organizations
+        `Total query cost: ${this.totalCost}/${this.remainingCost}`,
+      organizations,
     )
     return organizations
   }
@@ -67,12 +69,12 @@ export class GithubLoader {
    * Loads all user repositories.
    */
   async loadUserRepositories(): Promise<GithubRepository[]> {
-    this.log.verbose(`loading repositories`)
+    this.log.verbose('loading repositories')
     const repositories = await this.loadRepositoriesByCursor()
     this.log.verbose(
       `loading is finished. Loaded ${repositories.length} issues. ` +
-      `Total query cost: ${this.totalCost}/${this.remainingCost}`,
-      repositories
+        `Total query cost: ${this.totalCost}/${this.remainingCost}`,
+      repositories,
     )
     return repositories
   }
@@ -81,7 +83,7 @@ export class GithubLoader {
    * Loads repository information for all given repository names.
    */
   async loadRepositories(names: string[]): Promise<GithubRepository[]> {
-    this.log.vtimer(`repositories load`, names)
+    this.log.vtimer('repositories load', names)
 
     const repositories: GithubRepository[] = []
     for (let name of names) {
@@ -89,18 +91,15 @@ export class GithubLoader {
       const [organization, repositoryName] = name
         .replace('http://github.com/', '')
         .replace('https://github.com/', '')
-        .split("/")
-      const result = await this.load<GithubRepositoryQueryResult>(
-        GithubQueries.repository(),
-        {
-          owner: organization,
-          name: repositoryName
-        },
-      )
+        .split('/')
+      const result = await this.load<GithubRepositoryQueryResult>(GithubQueries.repository(), {
+        owner: organization,
+        name: repositoryName,
+      })
       repositories.push(result.repository)
     }
 
-    this.log.vtimer(`repositories load`, repositories)
+    this.log.vtimer('repositories load', repositories)
     return repositories
   }
 
@@ -127,7 +126,10 @@ export class GithubLoader {
     const issues = results.repository.issues.nodes
     const totalCount = results.repository.issues.totalCount
     const lastEdgeCursor = hasNextPage ? results.repository.issues.pageInfo.endCursor : undefined
-    this.log.verbose(`${issues.length} issues were loaded (${loadedCount + issues.length} of ${totalCount})`, results)
+    this.log.verbose(
+      `${issues.length} issues were loaded (${loadedCount + issues.length} of ${totalCount})`,
+      results,
+    )
 
     // run streaming callback for each loaded issue
     for (let i = 0; i < issues.length; i++) {
@@ -137,11 +139,14 @@ export class GithubLoader {
 
         // if callback returned true we don't continue syncing
         if (result === false) {
-          this.log.info(`stopped issues syncing, no need to sync more`, { issue: issues[i], index: i })
+          this.log.info('stopped issues syncing, no need to sync more', {
+            issue: issues[i],
+            index: i,
+          })
           return // return from the function, not from the loop!
         }
       } catch (error) {
-        this.log.warning(`error during issue handling`, issues[i], error)
+        this.log.warning('error during issue handling', issues[i], error)
       }
     }
 
@@ -155,7 +160,7 @@ export class GithubLoader {
         repository,
         cursor: lastEdgeCursor,
         loadedCount: loadedCount + issues.length,
-        handler
+        handler,
       })
     }
   }
@@ -182,22 +187,36 @@ export class GithubLoader {
     const hasNextPage = results.repository.pullRequests.pageInfo.hasNextPage
     const pullRequests = results.repository.pullRequests.nodes
     const totalCount = results.repository.pullRequests.totalCount
-    const lastEdgeCursor = hasNextPage ? results.repository.pullRequests.pageInfo.endCursor : undefined
-    this.log.verbose(`${pullRequests.length} pull request were loaded (${loadedCount + pullRequests.length} of ${totalCount})`, results)
+    const lastEdgeCursor = hasNextPage
+      ? results.repository.pullRequests.pageInfo.endCursor
+      : undefined
+    this.log.verbose(
+      `${pullRequests.length} pull request were loaded (${loadedCount +
+        pullRequests.length} of ${totalCount})`,
+      results,
+    )
 
     // run streaming callback for each loaded issue
     for (let i = 0; i < pullRequests.length; i++) {
       try {
         const isLast = i === pullRequests.length - 1 && hasNextPage === false
-        const result = await handler(pullRequests[i], lastEdgeCursor, loadedCount + pullRequests.length, isLast)
+        const result = await handler(
+          pullRequests[i],
+          lastEdgeCursor,
+          loadedCount + pullRequests.length,
+          isLast,
+        )
 
         // if callback returned true we don't continue syncing
         if (result === false) {
-          this.log.info(`stopped pull request syncing, no need to sync more`, { issue: pullRequests[i], index: i })
+          this.log.info('stopped pull request syncing, no need to sync more', {
+            issue: pullRequests[i],
+            index: i,
+          })
           return // return from the function, not from the loop!
         }
       } catch (error) {
-        this.log.warning(`Error during pull request handling `, pullRequests[i], error)
+        this.log.warning('Error during pull request handling ', pullRequests[i], error)
       }
     }
 
@@ -211,7 +230,7 @@ export class GithubLoader {
         repository,
         cursor: lastEdgeCursor,
         loadedCount: loadedCount + pullRequests.length,
-        handler
+        handler,
       })
     }
   }
@@ -219,11 +238,13 @@ export class GithubLoader {
   /**
    * Loads all issue/pull request comments.
    */
-  async loadComments(organization: string,
-                    repository: string,
-                    issueOrPrNumber: number,
-                    cursor?: string,
-                    loadedCount = 0): Promise<GithubComment[]> {
+  async loadComments(
+    organization: string,
+    repository: string,
+    issueOrPrNumber: number,
+    cursor?: string,
+    loadedCount = 0,
+  ): Promise<GithubComment[]> {
     await sleep(ServiceLoadThrottlingOptions.github.comments)
 
     // send a request to the github and load first/next 100 issues
@@ -244,7 +265,10 @@ export class GithubLoader {
     const comments = commentsNode.nodes
     const totalCount = commentsNode.totalCount
     loadedCount += comments.length
-    this.log.verbose(`${comments.length} comments were loaded (${loadedCount} of ${totalCount})`, results)
+    this.log.verbose(
+      `${comments.length} comments were loaded (${loadedCount} of ${totalCount})`,
+      results,
+    )
 
     // if there is a next page we execute next query to api to get all repository issues
     // to get next issues we need a cursor from the last loaded edge
@@ -252,7 +276,13 @@ export class GithubLoader {
     // cursor basically is a token github returns
     if (commentsNode.pageInfo.hasNextPage) {
       const lastEdgeCursor = commentsNode.pageInfo.endCursor
-      const nextPageComments = await this.loadComments(organization, repository, issueOrPrNumber, lastEdgeCursor, loadedCount)
+      const nextPageComments = await this.loadComments(
+        organization,
+        repository,
+        issueOrPrNumber,
+        lastEdgeCursor,
+        loadedCount,
+      )
       return [...comments, ...nextPageComments]
     }
 
@@ -267,24 +297,19 @@ export class GithubLoader {
     const people = await this.loadPeopleByCursor(organization)
     this.log.verbose(
       `Loading is finished. Loaded ${people.length} issues. ` +
-      `Total query cost: ${this.totalCost}/${this.remainingCost}`,
-      people
+        `Total query cost: ${this.totalCost}/${this.remainingCost}`,
+      people,
     )
     return people
   }
 
-  private async loadOrganizationsByCursor(
-    cursor?: string,
-  ): Promise<GithubOrganization[]> {
+  private async loadOrganizationsByCursor(cursor?: string): Promise<GithubOrganization[]> {
     await sleep(ServiceLoadThrottlingOptions.github.organizations)
 
     // send a request to the github and load first/next 100 repositories
-    const results = await this.load<GithubOrganizationsQueryResult>(
-      GithubQueries.organizations(),
-      {
-        cursor,
-      },
-  )
+    const results = await this.load<GithubOrganizationsQueryResult>(GithubQueries.organizations(), {
+      cursor,
+    })
 
     // query was made. calculate total costs
     this.totalCost += results.rateLimit.cost
@@ -305,9 +330,7 @@ export class GithubLoader {
     return organizations
   }
 
-  private async loadRepositoriesByCursor(
-    cursor?: string,
-  ): Promise<GithubRepository[]> {
+  private async loadRepositoriesByCursor(cursor?: string): Promise<GithubRepository[]> {
     await sleep(ServiceLoadThrottlingOptions.github.repositories)
 
     // send a request to the github and load first/next 100 repositories
@@ -342,13 +365,10 @@ export class GithubLoader {
 
     // send a request to the github and load first/next 100 people
     this.log.verbose(`Loading ${cursor ? 'next' : 'first'} 100 people`)
-    const results = await this.load<GithubPeopleQueryResult>(
-      GithubQueries.people(),
-      {
-        organization,
-        cursor,
-      },
-    )
+    const results = await this.load<GithubPeopleQueryResult>(GithubQueries.people(), {
+      organization,
+      cursor,
+    })
 
     // query was made. calculate total costs
     this.totalCost += results.rateLimit.cost
@@ -358,7 +378,9 @@ export class GithubLoader {
     const issues = edges.map(edge => edge.node)
     if (!cursor) {
       this.log.verbose(`${issues.length} people were loaded`)
-      this.log.verbose(`There are ${results.organization.members.totalCount} people in the repository`)
+      this.log.verbose(
+        `There are ${results.organization.members.totalCount} people in the repository`,
+      )
     } else {
       this.log.verbose(`Next ${issues.length} people were loaded`)
     }
@@ -388,7 +410,7 @@ export class GithubLoader {
    */
   private requestHeaders() {
     return {
-      Authorization: `Bearer ${this.setting.token}`
+      Authorization: `Bearer ${this.setting.token}`,
     }
   }
 
@@ -406,9 +428,8 @@ export class GithubLoader {
     const result: any = await this.loader.load({
       path: '?' + queryName,
       method: 'post',
-      body: JSON.stringify({ query, variables })
+      body: JSON.stringify({ query, variables }),
     })
     return result.data
   }
-
 }

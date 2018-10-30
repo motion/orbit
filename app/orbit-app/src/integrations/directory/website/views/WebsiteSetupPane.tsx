@@ -1,6 +1,6 @@
 import { react, view, attach } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
-import { Setting, SettingSaveCommand, WebsiteSetting, WebsiteSettingValues } from '@mcro/models'
+import { Setting, SettingSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { InputRow, Table, VerticalSpace } from '../../../../views'
@@ -18,14 +18,14 @@ export interface WebsiteCrawledData {
 }
 
 type Props = {
-  setting?: WebsiteSetting
+  setting?: WebsiteSource
 }
 
 class WebsiteSetupStore {
   props: Props
   // setting: Setting
 
-  values: WebsiteSettingValues = {
+  values: WebsiteSourceValues = {
     url: '',
   }
 

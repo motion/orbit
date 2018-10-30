@@ -1,11 +1,5 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Source } from '@mcro/models'
 
 @Entity()
 export class SettingEntity extends BaseEntity {
@@ -14,27 +8,6 @@ export class SettingEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column({ nullable: true, unique: true })
-  identifier?: string
-
-  @Column()
-  name?: string
-
-  @Column()
-  category?: string
-
-  @Column('varchar')
-  type?: any
-
-  @Column({ nullable: true })
-  token?: string
-
   @Column('simple-json', { default: '{}' })
-  values?: any
-
-  @CreateDateColumn()
-  createdAt?: Date
-
-  @UpdateDateColumn()
-  updatedAt?: Date
+  values?: Source['values']
 }

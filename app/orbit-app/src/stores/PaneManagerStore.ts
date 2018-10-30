@@ -2,7 +2,7 @@ import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionStore, Direction } from './SelectionStore'
 import { observeOne } from '@mcro/model-bridge'
-import { SettingModel, GeneralSettingValues } from '@mcro/models'
+import { SettingModel } from '@mcro/models'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
 import { OrbitStore } from './OrbitStore'
@@ -32,15 +32,7 @@ export class PaneManagerStore {
     onlyUpdateIfChanged: true,
   })
   generalSetting = null
-  generalSetting$ = observeOne(SettingModel, {
-    args: {
-      where: {
-        type: 'general',
-        category: 'general',
-      },
-    },
-  }).subscribe(generalSetting => {
-    const values = generalSetting.values as GeneralSettingValues
+  generalSetting$ = observeOne(SettingModel).subscribe(({ values }) => {
     this.hasOnboarded = values.hasOnboarded
   })
 
@@ -70,9 +62,7 @@ export class PaneManagerStore {
 
     on(
       this,
-      observeOne(SettingModel, {
-        args: { where: { type: 'general', category: 'general' } },
-      }).subscribe(generalSetting => {
+      observeOne(SettingModel).subscribe(generalSetting => {
         this.generalSetting = generalSetting
       }),
     )

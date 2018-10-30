@@ -1,13 +1,13 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { GmailBitDataParticipant, GmailPersonData, Person, GmailSetting } from '@mcro/models'
+import { GmailBitDataParticipant, GmailPersonData, Person, GmailSource } from '@mcro/models'
 
 /**
  * Creates a GMail Person.
  */
 export class GMailPersonFactory {
-  private setting: GmailSetting
+  private setting: GmailSource
 
-  constructor(setting: GmailSetting) {
+  constructor(setting: GmailSource) {
     this.setting = setting
   }
 
@@ -23,9 +23,7 @@ export class GMailPersonFactory {
       webLink: 'mailto:' + participant.email,
       desktopLink: 'mailto:' + participant.email,
       email: participant.email,
-      data: {
-
-      } as GmailPersonData,
+      data: {} as GmailPersonData,
       raw: participant,
     })
   }

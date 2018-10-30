@@ -2,14 +2,13 @@ import { BitData } from './bit-data/BitData'
 import { IntegrationType } from './IntegrationType'
 import { Location } from './Location'
 import { Person } from './Person'
-import { Setting } from './Setting'
+import { Source } from './Source'
 
 export interface Bit {
-
   /**
    * Target type.
    */
-  target: "bit"
+  target: 'bit'
 
   /**
    * Bit id.
@@ -23,9 +22,9 @@ export interface Bit {
   integration?: IntegrationType
 
   /**
-   * Setting id.
+   * Source id.
    */
-  settingId?: number
+  sourceId?: number
 
   /**
    * Original bit content author id.
@@ -94,10 +93,10 @@ export interface Bit {
   people?: Person[]
 
   /**
-   * Setting has multiple bits it owns.
-   * Setting is a Bit's owner.
+   * Source has multiple bits it owns.
+   * Source is a Bit's owner.
    */
-  setting?: Setting
+  source?: Source
 
   /**
    * Additional bit data.
@@ -114,5 +113,4 @@ export interface Bit {
    * Used for filtering: slack room, github repo, google doc folder, etc
    */
   location?: Location
-
 }

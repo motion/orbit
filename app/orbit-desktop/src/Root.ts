@@ -9,7 +9,7 @@ import {
   BitModel,
   CosalTopWordsCommand,
   GithubRepositoryModel,
-  GithubSettingBlacklistCommand,
+  GithubSourceBlacklistCommand,
   JobModel,
   PersonBitModel,
   PersonModel,
@@ -19,7 +19,7 @@ import {
   SettingModel,
   SettingRemoveCommand,
   SlackChannelModel,
-  SlackSettingBlacklistCommand,
+  SlackSourceBlacklistCommand,
   SearchPinnedResultModel,
   SearchByTopicModel,
 } from '@mcro/models'
@@ -207,8 +207,8 @@ export class Root {
       commands: [
         SettingSaveCommand,
         SettingRemoveCommand,
-        GithubSettingBlacklistCommand,
-        SlackSettingBlacklistCommand,
+        GithubSourceBlacklistCommand,
+        SlackSourceBlacklistCommand,
         CosalTopWordsCommand,
       ],
       transport: new WebSocketServerTransport({

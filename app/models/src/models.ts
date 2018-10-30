@@ -4,8 +4,8 @@ import { Bit } from './Bit'
 import { Job } from './Job'
 import { Person } from './Person'
 import { PersonBit } from './PersonBit'
+import { Source } from './Source'
 import { Setting } from './Setting'
-// import { GithubRepository, SlackChannel } from '@mcro/services'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
@@ -25,9 +25,13 @@ export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptions
   'Setting',
 )
 
-export const GithubRepositoryModel = new Model<any, { settingId: number }>('GithubRepository')
+export const SourceModel = new Model<Source, FindOptions<Source>, FindOptionsWhere<Source>>(
+  'Source',
+)
 
-export const SlackChannelModel = new Model<any, { settingId: number }>('SlackChannel')
+export const GithubRepositoryModel = new Model<any, { sourceId: number }>('GithubRepository')
+
+export const SlackChannelModel = new Model<any, { sourceId: number }>('SlackChannel')
 
 export const SearchPinnedResultModel = new Model<Bit | PersonBit, { query: string }>(
   'SearchPinnedResultModel',

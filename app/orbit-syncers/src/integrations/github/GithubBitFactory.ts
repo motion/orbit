@@ -1,5 +1,5 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, GithubBitData, GithubSetting } from '@mcro/models'
+import { Bit, GithubBitData, GithubSource } from '@mcro/models'
 import { GithubIssue, GithubComment, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 
@@ -7,16 +7,16 @@ import { hash } from '@mcro/utils'
  * Creates a Github Bit.
  */
 export class GithubBitFactory {
-  private setting: GithubSetting
+  private setting: GithubSource
 
-  constructor(setting: GithubSetting) {
+  constructor(setting: GithubSource) {
     this.setting = setting
   }
 
   /**
    * Creates a new bit from a given Github issue.
    */
-  createFromIssue(issue: GithubIssue|GithubPullRequest, comments: GithubComment[]): Bit {
+  createFromIssue(issue: GithubIssue | GithubPullRequest, comments: GithubComment[]): Bit {
     console.log('got comments', comments)
     const id = hash(`github-${this.setting.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
@@ -74,6 +74,4 @@ export class GithubBitFactory {
       bitUpdatedAt: updatedAt,
     })
   }
-
-
 }

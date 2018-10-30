@@ -1,4 +1,4 @@
-import { Bit, IntegrationType, Person, PersonBit, PersonData, Setting } from '@mcro/models'
+import { Bit, IntegrationType, Person, PersonBit, PersonData, Source } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -11,7 +11,7 @@ import {
 } from 'typeorm'
 import { BitEntity } from './BitEntity'
 import { PersonBitEntity } from './PersonBitEntity'
-import { SettingEntity } from './SettingEntity'
+import { SourceEntity } from './SourceEntity'
 
 @Entity()
 export class PersonEntity extends BaseEntity implements Person {
@@ -39,7 +39,7 @@ export class PersonEntity extends BaseEntity implements Person {
   name?: string
 
   @Column()
-  settingId?: number
+  sourceId?: number
 
   @Column({ type: 'simple-json', default: '{}' })
   data?: PersonData
@@ -59,8 +59,8 @@ export class PersonEntity extends BaseEntity implements Person {
   @UpdateDateColumn()
   updatedAt?: Date
 
-  @ManyToOne(() => SettingEntity)
-  setting?: Setting
+  @ManyToOne(() => SourceEntity)
+  source?: Source
 
   @ManyToOne(() => PersonBitEntity, person => person.people)
   personBit?: PersonBit

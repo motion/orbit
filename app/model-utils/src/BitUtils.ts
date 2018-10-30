@@ -1,16 +1,15 @@
-import { Bit, Setting } from '@mcro/models'
+import { Bit, Source } from '@mcro/models'
 import { hash } from '@mcro/utils'
 
 /**
  * Common Bit utility functions.
  */
 export class BitUtils {
-
   /**
    * Creates a bit id.
    */
-  static id(setting: Setting, data: string) {
-    return hash(`${setting.type}-${setting.id}-${data}`)
+  static id(source: Source, data: string) {
+    return hash(`${source.type}-${source.id}-${data}`)
   }
 
   /**
@@ -27,13 +26,12 @@ export class BitUtils {
   /**
    * Creates a new bit and sets given properties to it.
    */
-  static create(properties: Partial<Bit>, integrationId?: string|number) {
+  static create(properties: Partial<Bit>, integrationId?: string | number) {
     const bit: Bit = { target: 'bit', ...properties }
     bit.contentHash = this.contentHash(bit)
-    if (!bit.settingId && bit.setting)
-      bit.settingId = bit.setting.id
-    if (bit.integration && bit.settingId && integrationId)
-      bit.id = hash(`${bit.integration}-${bit.settingId}-${integrationId}`)
+    if (!bit.sourceId && bit.source) bit.sourceId = bit.source.id
+    if (bit.integration && bit.sourceId && integrationId)
+      bit.id = hash(`${bit.integration}-${bit.sourceId}-${integrationId}`)
     return bit
   }
 
@@ -41,20 +39,22 @@ export class BitUtils {
    * Creates a content hash for a given bit.
    */
   static contentHash(bit: Bit): number {
-    return hash([
-      bit.id,
-      bit.integration,
-      bit.setting ? bit.setting.id : bit.settingId,
-      bit.title,
-      bit.body,
-      bit.type,
-      bit.webLink,
-      bit.desktopLink,
-      bit.data,
-      bit.location,
-      bit.bitCreatedAt,
-      bit.bitUpdatedAt,
-      bit.authorId,
-    ].filter(item => item !== null && item !== undefined))
+    return hash(
+      [
+        bit.id,
+        bit.integration,
+        bit.source ? bit.source.id : bit.sourceId,
+        bit.title,
+        bit.body,
+        bit.type,
+        bit.webLink,
+        bit.desktopLink,
+        bit.data,
+        bit.location,
+        bit.bitCreatedAt,
+        bit.bitUpdatedAt,
+        bit.authorId,
+      ].filter(item => item !== null && item !== undefined),
+    )
   }
 }

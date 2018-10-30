@@ -1,6 +1,6 @@
-import { Job, JobStatus, JobType, Setting } from '@mcro/models'
+import { Job, JobStatus, JobType, Source } from '@mcro/models'
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { SettingEntity } from './SettingEntity'
+import { SourceEntity } from './SourceEntity'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {
@@ -25,8 +25,8 @@ export class JobEntity extends BaseEntity implements Job {
   message?: string
 
   @Column({ nullable: true })
-  settingId?: number
+  sourceId?: number
 
-  @ManyToOne(() => SettingEntity)
-  setting?: Setting
+  @ManyToOne(() => SourceEntity)
+  source?: Source
 }

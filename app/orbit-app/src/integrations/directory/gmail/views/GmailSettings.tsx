@@ -2,15 +2,15 @@ import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SearchableTable, Text, View } from '@mcro/ui'
-import { OrbitIntegrationSettingProps } from '../../../types'
-import { GmailSetting } from '@mcro/models'
+import { OrbitSourceSettingProps } from '../../../types'
+import { GmailSource } from '@mcro/models'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitIntegrationSettingProps<GmailSetting>
+type Props = OrbitSourceSettingProps<GmailSource>
 
-class GmailSettingStore {
+class GmailSourceStore {
   props: Props
   syncing = {}
   whitelist = new WhitelistManager({
@@ -27,9 +27,9 @@ class GmailSettingStore {
   }
 }
 
-@attach({ store: GmailSettingStore })
+@attach({ store: GmailSourceStore })
 @view
-export class GmailSettings extends React.Component<Props & { store?: GmailSettingStore }> {
+export class GmailSources extends React.Component<Props & { store?: GmailSourceStore }> {
   render() {
     const {
       store,

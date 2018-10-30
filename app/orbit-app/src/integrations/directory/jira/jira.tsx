@@ -1,5 +1,5 @@
 import { JiraApp } from './views/JiraApp'
-import { JiraSettings } from './views/JiraSettings'
+import { JiraSources } from './views/JiraSources'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/jira.svg'
@@ -9,7 +9,7 @@ import { JiraItem } from './views/JiraItem'
 import { JiraSetup } from './views/JiraSetup'
 
 export const jira: GetOrbitIntegration<'jira'> = (setting?: Setting) => ({
-  source: 'bit',
+  modelType: 'bit',
   integration: 'jira',
   appName: 'Jira',
   defaultQuery: findManyType('jira'),
@@ -21,7 +21,7 @@ export const jira: GetOrbitIntegration<'jira'> = (setting?: Setting) => ({
   views: {
     main: JiraApp,
     item: JiraItem,
-    setting: JiraSettings,
+    setting: JiraSources,
     setup: JiraSetup,
   },
 })

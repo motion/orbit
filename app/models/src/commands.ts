@@ -1,27 +1,25 @@
 import { Command } from '@mcro/mediator'
-import { Setting } from './Setting'
+import { Source } from './Source'
 
-export const SettingRemoveCommand = new Command<void, { settingId: number }>('setting-remove')
+export const SourceRemoveCommand = new Command<void, { sourceId: number }>('setting-remove')
 
-export const SettingForceSyncCommand = new Command<void, { settingId: number }>(
-  'setting-force-sync',
-)
+export const SourceForceSyncCommand = new Command<void, { sourceId: number }>('setting-force-sync')
 
 export const SettingOnboardFinishCommand = new Command<void, void>('setting-onboard-finish')
 
-export const SettingSaveCommand = new Command<
+export const SourceSaveCommand = new Command<
   { success: boolean; error?: string },
-  { setting: Setting }
+  { source: Source }
 >('setting-save')
 
-export const GithubSettingBlacklistCommand = new Command<
+export const GithubSourceBlacklistCommand = new Command<
   void,
-  { settingId: number; repository: string; blacklisted: boolean }
+  { sourceId: number; repository: string; blacklisted: boolean }
 >('github-setting-blacklist')
 
-export const SlackSettingBlacklistCommand = new Command<
+export const SlackSourceBlacklistCommand = new Command<
   void,
-  { settingId: number; channel: string; blacklisted: boolean }
+  { sourceId: number; channel: string; blacklisted: boolean }
 >('slack-setting-blacklist')
 
 export const CosalTopWordsCommand = new Command<string[], { text: string; max?: number }>(

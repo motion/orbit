@@ -1,10 +1,10 @@
 import { store, react } from '@mcro/black'
-import { SettingModel, GithubSetting, SlackSetting, GmailSetting } from '@mcro/models'
+import { SettingModel, GithubSource, SlackSource, GmailSource } from '@mcro/models'
 import { save } from '@mcro/model-bridge'
 import produce from 'immer'
 import { memoize } from 'lodash'
 
-type SettingWithWhiteList = GithubSetting | SlackSetting | GmailSetting
+type SettingWithWhiteList = GithubSource | SlackSource | GmailSource
 
 type Options<T> = {
   setting: T

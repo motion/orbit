@@ -7,6 +7,7 @@ import { Desktop } from '@mcro/stores'
 import { getRepository } from 'typeorm'
 import { PortForwardStore } from './PortForwardStore'
 import { GeneralSettingValues } from '@mcro/models'
+import { getGeneralSetting } from '../helpers/getSetting'
 
 const chromeDbPaths = [
   Path.join(
@@ -40,13 +41,7 @@ export class Onboard {
   }
 
   async start() {
-
-    this.generalSetting = await SettingEntity.findOne({
-      where: {
-        type: 'general',
-        category: 'general',
-      }
-    })
+    this.generalSetting = await getGeneralSetting()
     if (!this.generalSetting) {
       this.generalSetting = new SettingEntity()
       Object.assign(this.generalSetting, {
@@ -55,7 +50,6 @@ export class Onboard {
       })
       await getRepository(SettingEntity).save(this.generalSetting)
     }
-
     const values = this.generalSetting.values as GeneralSettingValues
     if (!values.hasOnboarded) {
       await this.scanHistory()

@@ -1,6 +1,6 @@
 import { PersonBitEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { GmailSettingValues } from '@mcro/models'
+import { GmailSourceValues } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 
@@ -19,7 +19,7 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
    */
   async run() {
     // load person because we need emails that we want to whitelist
-    this.log.info(`loading person bits`)
+    this.log.info('loading person bits')
     const personBits = await getRepository(PersonBitEntity).find({
       where: [
         { hasSlack: true },
@@ -31,9 +31,7 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
       ],
     })
     this.log.info('person bits were loaded', personBits)
-    const emails = personBits
-      .map(person => person.email)
-      .filter(email => email.indexOf('@') !== -1)
+    const emails = personBits.map(person => person.email).filter(email => email.indexOf('@') !== -1)
     this.log.info('emails from the person bits', emails)
 
     // next we find all gmail integrations to add those emails to their whitelists
@@ -46,9 +44,9 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
     // update whitelist settings in integrations
     const newWhiteListedEmails: string[] = []
     for (let integration of integrations) {
-      const values = integration.values as GmailSettingValues
+      const values = integration.values as GmailSourceValues
       const foundEmails = values.foundEmails || []
-      const whitelist = { }
+      const whitelist = {}
       for (let email of emails) {
         if (foundEmails.indexOf(email) === -1) {
           whitelist[email] = true
@@ -60,5 +58,4 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
     }
     this.log.info('newly whitelisted emails', newWhiteListedEmails)
   }
-
 }

@@ -1,13 +1,7 @@
 import { BitEntity, SettingEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { chunk } from 'lodash'
-import {
-  Bit,
-  GmailBitDataParticipant,
-  GmailSettingValues,
-  Person,
-  GmailSetting,
-} from '@mcro/models'
+import { Bit, GmailBitDataParticipant, GmailSourceValues, Person, GmailSource } from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
 import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
@@ -23,7 +17,7 @@ import { GMailPersonFactory } from './GMailPersonFactory'
  */
 export class GMailSyncer implements IntegrationSyncer {
   private log: Logger
-  private setting: GmailSetting
+  private setting: GmailSource
   private loader: GMailLoader
   private bitFactory: GMailBitFactory
   private personFactory: GMailPersonFactory
@@ -31,7 +25,7 @@ export class GMailSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: GmailSetting, log?: Logger) {
+  constructor(setting: GmailSource, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('syncer:gmail:' + setting.id)
     this.loader = new GMailLoader(setting, this.log, setting =>
@@ -47,7 +41,7 @@ export class GMailSyncer implements IntegrationSyncer {
   async run() {
     this.log.info('sync settings', this.setting.values)
 
-    const values = this.setting.values as GmailSettingValues
+    const values = this.setting.values as GmailSourceValues
     let dropAllBits = false
     let { historyId, max, daysLimit, filter } = values
     if (!max) max = 10000

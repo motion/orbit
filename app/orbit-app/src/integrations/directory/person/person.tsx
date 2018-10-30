@@ -4,7 +4,7 @@ import { PersonApp } from './PersonApp'
 import { PersonItem } from './PersonItem'
 
 export const person: GetOrbitIntegration<'person'> = (_setting?: Setting) => ({
-  source: 'person-bit',
+  modelType: 'person-bit',
   appName: 'People',
   defaultQuery: {
     take: 30,

@@ -8,10 +8,10 @@ import { SubTitle } from '../../../views/SubTitle'
 import { RoundButton } from '../../../views'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { OrbitListItem } from '../../../views/OrbitListItem'
-import { OrbitGenericIntegrationProps, OrbitIntegrationMainProps } from '../../types'
+import { OrbitGenericSourceProps, OrbitSourceMainProps } from '../../types'
 import { PEEK_BORDER_RADIUS } from '../../../constants'
 
-type Props = OrbitGenericIntegrationProps<'person'>
+type Props = OrbitGenericSourceProps<'person'>
 
 class PeekPersonStore {
   props: Props
@@ -188,7 +188,7 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
 })
 @view
 export class PersonApp extends React.Component<
-  OrbitIntegrationMainProps<'person'> & { store?: PeekPersonStore }
+  OrbitSourceMainProps<'person'> & { store?: PeekPersonStore }
 > {
   render() {
     console.log('rendering person app...')

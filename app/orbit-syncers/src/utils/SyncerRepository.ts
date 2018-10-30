@@ -1,5 +1,5 @@
 import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
-import { Bit, Person, PersonBit, Setting } from '@mcro/models'
+import { Bit, Person, PersonBit, Source } from '@mcro/models'
 import { hash } from '@mcro/utils'
 import { getRepository, In, MoreThan } from 'typeorm'
 
@@ -7,9 +7,9 @@ import { getRepository, In, MoreThan } from 'typeorm'
  * Executes common syncer queries.
  */
 export class SyncerRepository {
-  private setting: Setting
-  
-  constructor(setting: Setting) {
+  private setting: Source
+
+  constructor(setting: Source) {
     this.setting = setting
   }
 
@@ -18,16 +18,14 @@ export class SyncerRepository {
    */
   async isSettingRemoved(): Promise<boolean> {
     const setting = await getRepository(SettingEntity).findOne(this.setting.id)
-    if (!setting)
-      return true
+    if (!setting) return true
 
     const jobs = await getRepository(JobEntity).find({
       settingId: this.setting.id,
-      type: "INTEGRATION_REMOVE",
-      status: "PROCESSING"
+      type: 'INTEGRATION_REMOVE',
+      status: 'PROCESSING',
     })
-    if (jobs.length > 0)
-      return true
+    if (jobs.length > 0) return true
 
     return false
   }
@@ -44,7 +42,7 @@ export class SyncerRepository {
     return getRepository(BitEntity).find({
       select: {
         id: true,
-        contentHash: true
+        contentHash: true,
       },
       where: {
         id: options.ids ? In(options.ids) : undefined,
@@ -52,17 +50,17 @@ export class SyncerRepository {
         location: {
           id: options.locationId ? options.locationId : undefined,
         },
-        bitCreatedAt: options.oldestMessageId ? MoreThan(parseInt(options.oldestMessageId) * 1000) : undefined,
-      }
+        bitCreatedAt: options.oldestMessageId
+          ? MoreThan(parseInt(options.oldestMessageId) * 1000)
+          : undefined,
+      },
     })
   }
 
   /**
    * Loads all exist database people for the current integration.
    */
-  async loadDatabasePeople(options?: {
-    ids?: number[],
-  }): Promise<Person[]> {
+  async loadDatabasePeople(options?: { ids?: number[] }): Promise<Person[]> {
     if (!options) options = {}
     return getRepository(PersonEntity).find({
       // select: {
@@ -74,8 +72,8 @@ export class SyncerRepository {
       // },
       where: {
         id: options.ids ? In(options.ids) : undefined,
-        settingId: this.setting.id
-      }
+        settingId: this.setting.id,
+      },
     })
   }
 
@@ -96,12 +94,11 @@ export class SyncerRepository {
       //   contentHash: true
       // },
       relations: {
-        people: true
+        people: true,
       },
       where: {
-        id: ids ? In(ids) : undefined
-      }
+        id: ids ? In(ids) : undefined,
+      },
     })
   }
-
 }

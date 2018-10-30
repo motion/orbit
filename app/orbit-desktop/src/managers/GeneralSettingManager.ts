@@ -1,11 +1,10 @@
 import { store } from '@mcro/black'
-import { GeneralSettingValues } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '@mcro/entities'
 import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { generalSetting, getGeneralSetting } from '../helpers/getSetting'
+import { Setting } from '@mcro/models'
 
 const Config = getGlobalConfig()
 const log = new Logger('GeneralSettingManager')
@@ -32,42 +31,33 @@ export class GeneralSettingManager {
     this.start()
   }
 
+  defaultSettingValues = {
+    openShortcut: 'Option+Space',
+    autoLaunch: true,
+    autoUpdate: true,
+    darkTheme: true,
+  } as Setting['values']
+
   async start() {
-    let setting = await getGeneralSetting()
+    let setting = await getRepository(SettingEntity).findOne()
     if (!setting) {
       const settingEntity = new SettingEntity()
-      Object.assign(settingEntity, generalSetting)
+      Object.assign(settingEntity, { values: this.defaultSettingValues })
       await getRepository(SettingEntity).save(settingEntity)
-      setting = await getGeneralSetting()
+      setting = await getRepository(SettingEntity).findOne()
     }
-    this.ensureDefaultSettings(setting)
     this.handleAutoLaunch(setting)
   }
 
   dispose() {}
 
-  ensureDefaultSettings = async setting => {
-    const values = setting.values as GeneralSettingValues
-    if (Object.keys(values).length) {
-      return
-    }
-    log.info('New setting, set defaults...')
-    setting.values = {
-      openShortcut: 'Option+Space',
-      autoLaunch: true,
-      autoUpdate: true,
-      darkTheme: true,
-    } as GeneralSettingValues
-    await getRepository(SettingEntity).save(setting)
-  }
-
-  handleAutoLaunch = setting => {
+  handleAutoLaunch = (setting: Setting) => {
     if (!this.autoLaunch) {
       log.verbose('Autolaunch disabled in dev mode')
       return
     }
     const isEnabled = this.autoLaunch.isEnabled()
-    const values = setting.values as GeneralSettingValues
+    const values = setting.values
     if (values.autoLaunch) {
       if (!isEnabled) {
         this.autoLaunch.enable()

@@ -1,43 +1,43 @@
-import { BitModel, SettingModel, JobModel, Setting } from '@mcro/models'
+import { BitModel, SourceModel, JobModel, Source } from '@mcro/models'
 import { observeCount, observeOne } from '@mcro/model-bridge'
 
 export type AppInfoProps = {
-  settingId?: number
-  model?: Setting
-  setting?: Setting
+  sourceId?: number
+  model?: Source
+  source?: Source
 }
 
 export class AppInfoStore {
   props: AppInfoProps
 
-  get settingId() {
-    return +(this.props.model || this.props.setting || { id: null }).id || this.props.settingId
+  get sourceId() {
+    return +(this.props.model || this.props.source || { id: null }).id || this.props.sourceId
   }
 
   bitsCount = 0
   private bitsCounts$ = observeCount(BitModel, {
     args: {
-      settingId: this.settingId,
+      sourceId: this.sourceId,
     },
   }).subscribe(value => {
     this.bitsCount = value
   })
 
-  setting: Setting = null
-  private setting$ = observeOne(SettingModel, {
+  source: Source = null
+  private source$ = observeOne(SourceModel, {
     args: {
       where: {
-        id: this.settingId,
+        id: this.sourceId,
       },
     },
   }).subscribe(value => {
-    this.setting = value
+    this.source = value
   })
 
   job = null
   private job$ = observeOne(JobModel, {
     args: {
-      where: { settingId: this.settingId },
+      where: { sourceId: this.sourceId },
       order: { id: 'DESC' },
     },
   }).subscribe(value => {
@@ -46,7 +46,7 @@ export class AppInfoStore {
 
   willUnmount() {
     this.bitsCounts$.unsubscribe()
-    this.setting$.unsubscribe()
+    this.source$.unsubscribe()
     this.job$.unsubscribe()
   }
 }

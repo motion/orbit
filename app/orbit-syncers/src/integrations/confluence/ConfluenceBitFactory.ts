@@ -1,5 +1,11 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, ConfluenceBitData, ConfluenceSettingValues, Person, ConfluenceSetting } from '@mcro/models'
+import {
+  Bit,
+  ConfluenceBitData,
+  ConfluenceSourceValues,
+  Person,
+  ConfluenceSource,
+} from '@mcro/models'
 import { ConfluenceContent } from '@mcro/services'
 import { SyncerUtils } from '../../core/SyncerUtils'
 
@@ -7,9 +13,9 @@ import { SyncerUtils } from '../../core/SyncerUtils'
  * Creates a Confluence Bit.
  */
 export class ConfluenceBitFactory {
-  private setting: ConfluenceSetting
+  private setting: ConfluenceSource
 
-  constructor(setting: ConfluenceSetting) {
+  constructor(setting: ConfluenceSource) {
     this.setting = setting
   }
 
@@ -17,7 +23,7 @@ export class ConfluenceBitFactory {
    * Builds a bit from the given confluence content.
    */
   create(content: ConfluenceContent, allPeople: Person[]): Bit {
-    const values = this.setting.values as ConfluenceSettingValues
+    const values = this.setting.values as ConfluenceSourceValues
     const domain = values.credentials.domain
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
@@ -44,25 +50,28 @@ export class ConfluenceBitFactory {
     })
 
     // create or update a bit
-    return BitUtils.create({
-      integration: 'confluence',
-      setting: this.setting,
-      type: 'document',
-      title: content.title,
-      author,
-      body,
-      data: { content: cleanHtml } as ConfluenceBitData,
-      raw: content,
-      location: {
-        id: content.space.id,
-        name: content.space.name,
-        webLink: domain + '/wiki' + content.space._links.webui,
-        desktopLink: '',
+    return BitUtils.create(
+      {
+        integration: 'confluence',
+        setting: this.setting,
+        type: 'document',
+        title: content.title,
+        author,
+        body,
+        data: { content: cleanHtml } as ConfluenceBitData,
+        raw: content,
+        location: {
+          id: content.space.id,
+          name: content.space.name,
+          webLink: domain + '/wiki' + content.space._links.webui,
+          desktopLink: '',
+        },
+        webLink: domain + '/wiki' + content._links.webui,
+        people,
+        bitCreatedAt,
+        bitUpdatedAt,
       },
-      webLink: domain + '/wiki' + content._links.webui,
-      people,
-      bitCreatedAt,
-      bitUpdatedAt,
-    }, content.id)
+      content.id,
+    )
   }
 }

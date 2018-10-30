@@ -1,5 +1,5 @@
 import { view, attach } from '@mcro/black'
-import { SlackChannelModel, SlackSetting } from '@mcro/models'
+import { SlackChannelModel, SlackSource } from '@mcro/models'
 import { SlackChannel } from '@mcro/services'
 import { orderBy } from 'lodash'
 import { loadMany } from '@mcro/model-bridge'
@@ -10,11 +10,11 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
-import { OrbitIntegrationProps, OrbitIntegrationSettingProps } from '../../../types'
+import { OrbitIntegrationProps, OrbitSourceSettingProps } from '../../../types'
 
-type Props = OrbitIntegrationSettingProps<SlackSetting>
+type Props = OrbitSourceSettingProps<SlackSource>
 
-class SlackSettingStore {
+class SlackSourceStore {
   props: Props
   channels: SlackChannel[] = []
 
@@ -64,10 +64,10 @@ class SlackSettingStore {
   }
 }
 
-@attach({ store: SlackSettingStore })
+@attach({ store: SlackSourceStore })
 @view
-export class SlackSettings extends React.Component<
-  OrbitIntegrationProps<'slack'> & Props & { store?: SlackSettingStore }
+export class SlackSources extends React.Component<
+  OrbitIntegrationProps<'slack'> & Props & { store?: SlackSourceStore }
 > {
   render() {
     const {

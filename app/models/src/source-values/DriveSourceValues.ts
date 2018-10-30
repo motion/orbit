@@ -1,10 +1,8 @@
-
 /**
  * Information about last sync.
  * Used to implement partial syncing.
  */
 export interface DriveLastSyncInfo {
-
   /**
    * Updated date of the last synced file.
    * We don't need to query files from the api older than this date for sync.
@@ -28,11 +26,9 @@ export interface DriveLastSyncInfo {
    * which will become different already, thus invalid.
    */
   lastCursorSyncedDate?: number
-
 }
 
-export interface DriveSettingValues {
-
+export interface DriveSourceValues {
   oauth: {
     refreshToken: string
     secret: string
@@ -40,5 +36,4 @@ export interface DriveSettingValues {
   }
 
   lastSync: DriveLastSyncInfo
-
 }

@@ -1,12 +1,12 @@
 import { getGlobalConfig } from '@mcro/config'
 import { SettingEntity } from '@mcro/entities'
 import {
-  DriveSetting,
-  GmailSetting,
+  DriveSource,
+  GmailSource,
   IntegrationType,
   Setting,
-  SlackSetting,
-  SlackSettingValues,
+  SlackSource,
+  SlackSourceValues,
 } from '@mcro/models'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { App, Desktop } from '@mcro/stores'
@@ -65,11 +65,11 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
   }
 
   if (setting.type === 'slack') {
-    const loader = new SlackLoader(setting as SlackSetting)
+    const loader = new SlackLoader(setting as SlackSource)
     const team = await loader.loadTeam()
 
     // update settings with team info
-    const values = setting.values as SlackSettingValues
+    const values = setting.values as SlackSourceValues
     values.team = {
       id: team.id,
       name: team.name,
@@ -81,12 +81,12 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
     setting.name = values.info.username
   } else if (setting.type === 'drive') {
     // load account info
-    const loader = new DriveLoader(setting as DriveSetting)
+    const loader = new DriveLoader(setting as DriveSource)
     const about = await loader.loadAbout()
     setting.name = about.user.emailAddress
   } else if (setting.type === 'gmail') {
     // load account info
-    const loader = new GMailLoader(setting as GmailSetting)
+    const loader = new GMailLoader(setting as GmailSource)
     const profile = await loader.loadProfile()
     setting.name = profile.emailAddress
   }

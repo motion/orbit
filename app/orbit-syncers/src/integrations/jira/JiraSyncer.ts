@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { JiraSetting } from '@mcro/models'
+import { JiraSource } from '@mcro/models'
 import { JiraLoader, JiraUser } from '@mcro/services'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
@@ -20,7 +20,7 @@ export class JiraSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: JiraSetting, log?: Logger) {
+  constructor(setting: JiraSource, log?: Logger) {
     this.log = log || new Logger('syncer:jira:' + setting.id)
     this.loader = new JiraLoader(setting, this.log)
     this.bitFactory = new JiraBitFactory(setting)
@@ -34,13 +34,16 @@ export class JiraSyncer implements IntegrationSyncer {
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-
     // load database data
-    this.log.timer(`load people, person bits and bits from the database`)
+    this.log.timer('load people, person bits and bits from the database')
     const dbPeople = await this.syncerRepository.loadDatabasePeople()
     const dbPersonBits = await this.syncerRepository.loadDatabasePersonBits({ people: dbPeople })
     const dbBits = await this.syncerRepository.loadDatabaseBits()
-    this.log.timer(`load people, person bits and bits from the database`, { dbPeople, dbPersonBits, dbBits })
+    this.log.timer('load people, person bits and bits from the database', {
+      dbPeople,
+      dbPersonBits,
+      dbBits,
+    })
 
     // load users from jira API
     this.log.timer('load API people')
@@ -82,5 +85,4 @@ export class JiraSyncer implements IntegrationSyncer {
     const ignoredEmail = '@connect.atlassian.com'
     return email.substr(ignoredEmail.length * -1) !== ignoredEmail
   }
-
 }

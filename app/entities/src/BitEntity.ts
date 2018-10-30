@@ -1,4 +1,4 @@
-import { Bit, BitData, IntegrationType, Person, Setting } from '@mcro/models'
+import { Bit, BitData, IntegrationType, Person, Source } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -13,7 +13,7 @@ import {
 } from 'typeorm'
 import { LocationEntity } from './LocationEntity'
 import { PersonEntity } from './PersonEntity'
-import { SettingEntity } from './SettingEntity'
+import { SourceEntity } from './SourceEntity'
 
 @Entity()
 export class BitEntity extends BaseEntity implements Bit {
@@ -30,7 +30,7 @@ export class BitEntity extends BaseEntity implements Bit {
   integration?: IntegrationType
 
   @Column()
-  settingId?: number
+  sourceId?: number
 
   @Column({ nullable: true })
   authorId?: number
@@ -82,6 +82,6 @@ export class BitEntity extends BaseEntity implements Bit {
   @JoinTable()
   people?: Person[]
 
-  @ManyToOne(() => SettingEntity)
-  setting?: Setting
+  @ManyToOne(() => SourceEntity)
+  source?: Source
 }

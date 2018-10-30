@@ -1,8 +1,7 @@
 /**
  * Additional GMail setting's values.
  */
-export interface GmailSettingValues {
-
+export interface GmailSourceValues {
   /**
    * History is an advanced cursor.
    * History id represents latest loaded cursor.
@@ -60,5 +59,4 @@ export interface GmailSettingValues {
     secret: string
     clientId: string
   }
-
 }

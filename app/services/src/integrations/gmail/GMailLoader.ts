@@ -1,8 +1,8 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { GmailSetting } from '@mcro/models'
+import { GmailSource } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
-import { ServiceLoaderSettingSaveCallback } from '../../loader/ServiceLoaderTypes'
+import { ServiceLoaderSourceSaveCallback } from '../../loader/ServiceLoaderTypes'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { GMailQueries } from './GMailQueries'
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailTypes'
@@ -12,19 +12,15 @@ import { sleep } from '@mcro/utils'
  * Loads data from GMail service.
  */
 export class GMailLoader {
-  private setting: GmailSetting
+  private source: GmailSource
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(
-    setting: GmailSetting,
-    log?: Logger,
-    saveCallback?: ServiceLoaderSettingSaveCallback,
-  ) {
-    this.setting = setting
-    this.log = log || new Logger('service:gmail:loader:' + this.setting.id)
+  constructor(setting: GmailSource, log?: Logger, saveCallback?: ServiceLoaderSourceSaveCallback) {
+    this.source = setting
+    this.log = log || new Logger('service:gmail:loader:' + this.source.id)
     this.loader = new ServiceLoader(
-      this.setting,
+      this.source,
       this.log,
       this.baseUrl(),
       this.requestHeaders(),
@@ -215,7 +211,7 @@ export class GMailLoader {
    */
   private requestHeaders() {
     return {
-      Authorization: `Bearer ${this.setting.token}`,
+      Authorization: `Bearer ${this.source.token}`,
       'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
       'Access-Control-Allow-Methods': 'GET',
     }

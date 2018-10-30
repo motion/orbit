@@ -4,13 +4,13 @@ import { Actions } from '../../../actions/Actions'
 import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
 import { view } from '@mcro/black'
-import { OrbitIntegrationMainProps } from '../../types'
+import { OrbitSourceMainProps } from '../../types'
 
 const Cmd = view({
   opacity: 0.6,
 })
 
-export const AppStatusBar = ({ appStore, normalizedItem }: OrbitIntegrationMainProps<any>) => {
+export const AppStatusBar = ({ appStore, normalizedItem }: OrbitSourceMainProps<any>) => {
   const { location, locationLink, updatedAt } = normalizedItem
   return (
     <StatusBar>

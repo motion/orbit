@@ -1,10 +1,9 @@
 import { IntegrationType } from './IntegrationType'
 import { PersonData } from './person-data/PersonData'
 import { PersonBit } from './PersonBit'
-import { Setting } from './Setting'
+import { Source } from './Source'
 
 export interface Person {
-
   /**
    * Target type.
    */
@@ -19,12 +18,11 @@ export interface Person {
   email?: string
   photo?: string
   name?: string
-  setting?: Setting
-  settingId?: number
+  source?: Source
+  sourceId?: number
   data?: PersonData
   raw?: any
   personBit?: PersonBit
   webLink?: string
   desktopLink?: string
-
 }

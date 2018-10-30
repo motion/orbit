@@ -1,5 +1,5 @@
 import { ConfluenceApp } from './views/ConfluenceApp'
-import { ConfluenceSettings } from './views/ConfluenceSettings'
+import { ConfluenceSources } from './views/ConfluenceSources'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/confluence.svg'
@@ -9,7 +9,7 @@ import { ConfluenceItem } from './views/ConfluenceItem'
 import { ConfluenceSetup } from './views/ConfluenceSetup'
 
 export const confluence: GetOrbitIntegration<'confluence'> = (setting?: Setting) => ({
-  source: 'bit',
+  modelType: 'bit',
   integration: 'confluence',
   appName: 'Confluence',
   defaultQuery: findManyType('confluence'),
@@ -21,7 +21,7 @@ export const confluence: GetOrbitIntegration<'confluence'> = (setting?: Setting)
   views: {
     main: ConfluenceApp,
     item: ConfluenceItem,
-    setting: ConfluenceSettings,
+    setting: ConfluenceSources,
     setup: ConfluenceSetup,
   },
 })

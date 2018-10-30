@@ -2,14 +2,14 @@ import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
-import { DriveSetting } from '@mcro/models'
-import { OrbitIntegrationSettingProps } from '../../../types'
+import { DriveSource } from '@mcro/models'
+import { OrbitSourceSettingProps } from '../../../types'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitIntegrationSettingProps<DriveSetting>
+type Props = OrbitSourceSettingProps<DriveSource>
 
-class DriveSettingsStore {
+class DriveSourcesStore {
   props: Props
   popularFolders = []
 
@@ -45,11 +45,11 @@ class DriveSettingsStore {
   }
 }
 
-@attach({ store: DriveSettingsStore })
+@attach({ store: DriveSourcesStore })
 @view
-export class DriveSettings extends React.Component<
+export class DriveSources extends React.Component<
   Props & {
-    store?: DriveSettingsStore
+    store?: DriveSourcesStore
   }
 > {
   render() {

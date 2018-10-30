@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { WebsiteSetting } from '@mcro/models'
+import { WebsiteSource } from '@mcro/models'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
@@ -16,7 +16,7 @@ export class WebsiteSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: WebsiteSetting, log?: Logger) {
+  constructor(setting: WebsiteSource, log?: Logger) {
     this.log = log || new Logger('syncer:crawler:' + setting.id)
     this.crawler = new WebsiteCrawler(setting, this.log)
     this.bitFactory = new WebsiteBitFactory(setting)
@@ -28,11 +28,10 @@ export class WebsiteSyncer implements IntegrationSyncer {
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-
     // load database data
-    this.log.timer(`load bits from the database`)
+    this.log.timer('load bits from the database')
     const dbBits = await this.syncerRepository.loadDatabaseBits()
-    this.log.timer(`load bits from the database`, { dbBits })
+    this.log.timer('load bits from the database', { dbBits })
 
     // load users from jira API
     this.log.timer('crawl site')
@@ -43,5 +42,4 @@ export class WebsiteSyncer implements IntegrationSyncer {
     const apiBits = crawledData.map(crawledData => this.bitFactory.create(crawledData))
     await this.bitSyncer.sync({ apiBits, dbBits })
   }
-
 }

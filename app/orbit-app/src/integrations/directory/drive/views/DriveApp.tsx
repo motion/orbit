@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { OrbitIntegrationMainProps } from '../../../types'
+import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
 import { BitTitleBar } from '../../../views/layout/BitTitleBar'
 import { Markdown } from '../../../../views/Markdown'
 
-export class DriveApp extends React.Component<OrbitIntegrationMainProps<'drive'>> {
+export class DriveApp extends React.Component<OrbitSourceMainProps<'drive'>> {
   render() {
     const { bit } = this.props
     return (

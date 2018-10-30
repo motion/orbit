@@ -1,19 +1,19 @@
 import { view, provide } from '@mcro/black'
-import { GithubRepositoryModel, GithubSetting } from '@mcro/models'
+import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
 import { Text, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { OrbitIntegrationSettingProps } from '../../../types'
+import { OrbitSourceSettingProps } from '../../../types'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitIntegrationSettingProps<GithubSetting>
+type Props = OrbitSourceSettingProps<GithubSource>
 
-class GithubSettingStore {
+class GithubSourceStore {
   props: Props
   repositories: GithubRepository[] = []
   userOrgs = []
@@ -47,9 +47,9 @@ class GithubSettingStore {
   }
 }
 
-@provide({ store: GithubSettingStore })
+@provide({ store: GithubSourceStore })
 @view
-export class GithubSettings extends React.Component<Props & { store: GithubSettingStore }> {
+export class GithubSources extends React.Component<Props & { store: GithubSourceStore }> {
   render() {
     const {
       store,

@@ -36,7 +36,7 @@ const Border = view({
 })
 
 // @ts-ignore
-const Chrome = view({
+const ChromeFrame = view({
   position: 'absolute',
   top: -CHROME_PAD,
   left: -CHROME_PAD,
@@ -65,11 +65,11 @@ const Background = view({
   }
 })
 
-const OrbitChrome = view(({ moreOpaque, isUpper = false }) => {
+const Chrome = view(({ moreOpaque, isUpper = false }) => {
   return (
     <>
       <Border />
-      <Chrome />
+      <ChromeFrame />
       <Background
         isUpper={isUpper}
         isTransparent={
@@ -142,11 +142,11 @@ const decorate = compose(
   attach('orbitWindowStore', 'queryStore'),
   view,
 )
-export const OrbitDockedChrome = decorate(({ orbitWindowStore, queryStore }: Props) => {
+export const OrbitChrome = decorate(({ orbitWindowStore, queryStore }: Props) => {
   return (
     <>
       <BlockTop height={60} overflow={SHADOW_PAD}>
-        <OrbitChrome isUpper moreOpaque={queryStore.hasQuery} />
+        <Chrome isUpper moreOpaque={queryStore.hasQuery} />
       </BlockTop>
       <BlockBottom
         above={60}
@@ -154,7 +154,7 @@ export const OrbitDockedChrome = decorate(({ orbitWindowStore, queryStore }: Pro
         maxHeight={window.innerHeight - 20}
         overflow={SHADOW_PAD}
       >
-        <OrbitChrome moreOpaque={queryStore.hasQuery} />
+        <Chrome moreOpaque={queryStore.hasQuery} />
       </BlockBottom>
     </>
   )

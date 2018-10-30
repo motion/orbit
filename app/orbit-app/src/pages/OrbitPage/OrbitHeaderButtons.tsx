@@ -4,8 +4,8 @@ import * as UI from '@mcro/ui'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
 import { View, ClearButton, Icon } from '@mcro/ui'
-import { QueryStore } from '../../../stores/QueryStore/QueryStore'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
 
 const Section = view('section', {
   width: '100%',
@@ -62,7 +62,7 @@ const Interactive = view({
 
 @attach('queryStore', 'paneManagerStore')
 @view
-export class OrbitAfterHeader extends React.Component<Props> {
+export class OrbitHeaderButtons extends React.Component<Props> {
   paneSetter = memoize(name => () => {
     this.props.paneManagerStore.setActivePane(name)
   })

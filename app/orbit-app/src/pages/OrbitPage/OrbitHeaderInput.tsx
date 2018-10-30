@@ -1,13 +1,12 @@
 import * as React from 'react'
-import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
+import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { view, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
-import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { HeaderStore } from './HeaderStore'
 import { ThemeObject } from '@mcro/gloss'
-import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
-import { SearchStore } from '../../../apps/search/SearchStore'
-import { PaneManagerStore } from '../PaneManagerStore'
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -22,11 +21,10 @@ type Props = {
   queryStore?: QueryStore
   headerStore: HeaderStore
   orbitWindowStore?: OrbitWindowStore
-  searchStore?: SearchStore
   paneManagerStore?: PaneManagerStore
 }
 
-@attach('paneManagerStore', 'orbitWindowStore', 'queryStore', 'searchStore')
+@attach('paneManagerStore', 'orbitWindowStore', 'queryStore')
 @view
 export class OrbitHeaderInput extends React.Component<Props> {
   render() {

@@ -132,12 +132,6 @@ export class PaneManagerStore {
 
   activePaneSetter = memoize(index => () => this.setPaneIndex(index))
 
-  // TODO weird pattern
-  beforeSetPane = () => {
-    // clear selection results on change pane
-    this.props.selectionStore.setResults(null)
-  }
-
   setPaneIndex = index => {
     if (index > this.panes.length - 1) {
       return
@@ -146,7 +140,8 @@ export class PaneManagerStore {
       return
     }
     if (index !== this.paneIndex) {
-      this.beforeSetPane()
+      // clear selection results on change pane
+      this.props.selectionStore.setResults(null)
       this.paneIndex = index
     }
   }

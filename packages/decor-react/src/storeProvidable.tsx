@@ -182,7 +182,6 @@ export function storeProvidable(userOptions, Helpers) {
           for (const name in this.stores) {
             const store = this.stores[name]
             if (store.__wasHotReloaded) {
-              console.log('avoiding dispose of hot reloaded store...', store)
               continue
             }
             unmountStore(name, store)

@@ -94,6 +94,7 @@ class OrbitDockedContents extends React.Component<Props> {
             <OrbitOnboard name="onboard" />
             {this.props.orbitStore.activeSpace.panes.map(pane => {
               const App = apps[pane.type]
+              console.log('App', App, pane.type)
               return (
                 <SubPane
                   name={pane.type}

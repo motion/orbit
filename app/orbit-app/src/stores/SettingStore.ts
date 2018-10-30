@@ -1,5 +1,6 @@
 import { observeOne, save } from '@mcro/model-bridge'
 import { SettingModel, Setting } from '@mcro/models'
+import { generalSettingQuery } from '../helpers/queries'
 
 export class SettingStore {
   setting: Setting = {
@@ -11,7 +12,7 @@ export class SettingStore {
     return this.setting.values as Setting['values']
   }
 
-  private setting$ = observeOne(SettingModel, { args: { name: 'general' } }).subscribe(value => {
+  private setting$ = observeOne(SettingModel, generalSettingQuery).subscribe(value => {
     if (value) {
       this.setting = value
     }

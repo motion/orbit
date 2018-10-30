@@ -8,6 +8,7 @@ import { memoize } from 'lodash'
 import { OrbitStore } from './OrbitStore'
 import { QueryStore } from './QueryStore/QueryStore'
 import { Actions } from '../actions/Actions'
+import { generalSettingQuery } from '../helpers/queries'
 
 type Panes = 'home' | 'settings' | 'onboard' | string
 
@@ -32,11 +33,9 @@ export class PaneManagerStore {
     onlyUpdateIfChanged: true,
   })
   generalSetting = null
-  generalSetting$ = observeOne(SettingModel, { args: { name: 'general' } }).subscribe(
-    ({ values }) => {
-      this.hasOnboarded = values.hasOnboarded
-    },
-  )
+  generalSetting$ = observeOne(SettingModel, generalSettingQuery).subscribe(({ values }) => {
+    this.hasOnboarded = values.hasOnboarded
+  })
 
   setActivePaneOnTrigger = react(
     () => this.props.queryStore.query[0],

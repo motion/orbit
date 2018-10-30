@@ -10,6 +10,7 @@ import { Input } from '../../../views/Input'
 import { ShortcutCapture } from '../../../views/ShortcutCapture'
 import { AppsStore } from '../../../stores/AppsStore'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { generalSettingQuery } from '../../../helpers/queries'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -55,7 +56,7 @@ class OrbitSettingsStore {
   props: Props
 
   generalSetting = null
-  generalSetting$ = observeOne(SettingModel, { args: { name: 'general' } }).subscribe(value => {
+  generalSetting$ = observeOne(SettingModel, generalSettingQuery).subscribe(value => {
     this.generalSetting = value
   })
 

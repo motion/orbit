@@ -15,26 +15,18 @@ const onPort = async cb => {
   }
 }
 
-// @ts-ignore
 @store
 export class RootStore {
-  started = false
   stores = null
   views = null
   errors = []
 
   constructor() {
     this.catchErrors()
-    this.started = true
     debugState(({ stores, views }) => {
       this.stores = stores
       this.views = views
     })
-  }
-
-  injectReactDevTools() {
-    const script = document.createElement('script')
-    script.src = 'http://localhost:8097'
   }
 
   async restart() {

@@ -59,7 +59,7 @@ export class AppsStore {
   get sources(): OrbitIntegration<any>[] {
     return Object.keys(allIntegrations)
       .map(x => allIntegrations[x])
-      .filter(x => x.source === 'bit')
+      .filter(x => x.modelType === 'bit')
   }
 
   // pass in a blank source so we can access the OrbitApp configs

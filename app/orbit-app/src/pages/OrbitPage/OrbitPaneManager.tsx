@@ -47,7 +47,7 @@ const Interactive = view({
   },
 })
 
-@attach('orbitStore', 'appsStore', 'searchStore', 'selectionStore')
+@attach('queryStore', 'orbitStore', 'appsStore', 'searchStore', 'selectionStore')
 @provide({
   paneManagerStore: PaneManagerStore,
 })

@@ -127,7 +127,7 @@ export class QueryFilterStore {
   }
 
   get integrationFilters(): SearchFilter[] {
-    return this.appsStore.activeIntegrations.map(app => ({
+    return this.appsStore.activeSources.map(app => ({
       type: app.source,
       integration: app.integration,
       name: app.appName,
@@ -185,7 +185,7 @@ export class QueryFilterStore {
       ensure('nlp', !!nlp)
       // reset integration inactive filters
       ensure('integrations', nlp.integrations && !!nlp.integrations.length)
-      this.exclusiveFilters = this.appsStore.activeIntegrations.reduce((acc, app) => {
+      this.exclusiveFilters = this.appsStore.activeSources.reduce((acc, app) => {
         acc[app.integration] = nlp.integrations.some(x => x === app.integration)
         return acc
       }, {})

@@ -7,16 +7,15 @@ import { observeMany } from '@mcro/model-bridge'
 import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { pullAll, difference, memoize } from 'lodash'
-import { PersonBitModel, BitModel, SettingModel, Bit, PersonBit } from '@mcro/models'
-import { action } from 'mobx'
+import { pullAll, difference } from 'lodash'
+import { PersonBitModel, BitModel, SourceModel, Bit, PersonBit } from '@mcro/models'
 import { allIntegrations } from '../../integrations'
 import { OrbitCarouselSection } from '../../components/OrbitCarouselSection'
 
 const models = {
   'person-bit': PersonBitModel,
   bit: BitModel,
-  app: SettingModel,
+  app: SourceModel,
 }
 
 type Props = {
@@ -132,7 +131,7 @@ class HomeAppStore {
   )
 
   state = react(
-    () => [allIntegrations.person, ...this.props.appsStore.activeIntegrations],
+    () => [allIntegrations.person, ...this.props.appsStore.activeSources],
     apps => {
       // dispose on re-run
       if (this.state) {
@@ -141,7 +140,7 @@ class HomeAppStore {
       const disposers = []
       // setup stream subscriptions
       for (const app of apps) {
-        const model = models[app.source]
+        const model = models[app.modelType]
         const { display, defaultQuery } = app
         const subscription = observeMany(model, {
           args: defaultQuery as any,
@@ -160,20 +159,18 @@ class HomeAppStore {
     },
   )
 
-  updateStreams = memoize(name =>
-    action((values: any[]) => {
-      if (values.length) {
-        // add this id of not in sort order
-        if (this.sortOrder.indexOf(name) === -1) {
-          this.sortOrder.push(name)
-        }
+  updateStreams = name => (values: any[]) => {
+    if (values.length) {
+      // add this id of not in sort order
+      if (this.sortOrder.indexOf(name) === -1) {
+        this.sortOrder.push(name)
       }
-      this.streams = {
-        ...this.streams,
-        [name]: { values, name },
-      }
-    }),
-  )
+    }
+    this.streams = {
+      ...this.streams,
+      [name]: { values, name },
+    }
+  }
 
   SortableCarouselRow: any
 

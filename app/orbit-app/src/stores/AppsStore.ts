@@ -45,7 +45,7 @@ export const appToAppConfig = (app: OrbitIntegration<any>, model?: ResolvableMod
 export class AppsStore {
   appSources: Source[] = []
 
-  activeIntegrations = react(
+  activeSources = react(
     () => this.appSources,
     appSources => {
       return appSources.filter(x => !!allIntegrations[x.type]).map(getAppFromSource)
@@ -56,17 +56,17 @@ export class AppsStore {
   )
 
   // this is every possible app (that uses a bit), just turned into array
-  get integrations(): OrbitIntegration<any>[] {
+  get sources(): OrbitIntegration<any>[] {
     return Object.keys(allIntegrations)
       .map(x => allIntegrations[x])
       .filter(x => x.source === 'bit')
   }
 
   // pass in a blank source so we can access the OrbitApp configs
-  allIntegrations = react(
-    () => this.activeIntegrations,
+  allSources = react(
+    () => this.activeSources,
     activeApps => {
-      return this.integrations.map(
+      return this.sources.map(
         app =>
           ({
             ...app,
@@ -79,15 +79,15 @@ export class AppsStore {
     },
   )
 
-  allIntegrationsMap = react(() => this.allIntegrations, x => keyBy(x, 'integration'), {
+  allSourcesMap = react(() => this.allSources, x => keyBy(x, 'integration'), {
     defaultValue: {},
   })
 
   getView = (type: IntegrationType | 'person', viewType: 'main' | 'source' | 'item') => {
-    if (!this.allIntegrationsMap[type]) {
+    if (!this.allSourcesMap[type]) {
       return () => 'none'
     }
-    return this.allIntegrationsMap[type].views[viewType]
+    return this.allSourcesMap[type].views[viewType]
   }
 
   private appSources$ = observeMany(SourceModel).subscribe(values => {

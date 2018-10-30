@@ -66,10 +66,10 @@ export const OrbitIcon = decorator(
     }
     const icon = props.icon || props.name
     const extImg = icon && (icon[0] === '/' || icon.indexOf('http') === 0) ? icon : null
-    const { allIntegrationsMap } = appsStore
+    const allSourcesMap = appsStore.allSourcesMap
     let iconImg = extImg
-    if (allIntegrationsMap[icon]) {
-      const display = allIntegrationsMap[icon].display
+    if (allSourcesMap[icon]) {
+      const display = allSourcesMap[icon].display
       if (display) {
         const isDark = theme.background.isDark && theme.background.isDark()
         iconImg = isDark ? display.iconLight || display.icon : display.icon

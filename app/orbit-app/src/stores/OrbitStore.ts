@@ -53,7 +53,7 @@ const getPanes = (): Pane[] => {
     {
       id: 'new',
       title: 'New',
-      icon: 'menu',
+      icon: 'cog',
       show: false,
       static: true,
     },

@@ -51,13 +51,13 @@ export class SpaceNav extends React.Component<Props> {
           })}
         </Row>
         <View flex={1} minWidth={10} />
-        <Button
+        {/* <Button
           borderWidth={0}
           glint={false}
           circular
           icon={<Icon size={16} name={newPane.icon} />}
           onClick={paneManagerStore.activePaneSetter(paneManagerStore.panes.indexOf('new'))}
-        />
+        /> */}
       </Row>
     )
   }

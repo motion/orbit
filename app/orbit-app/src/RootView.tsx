@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { NotFound } from './views/NotFound'
-import { view, on, isEqual, viewEmitter } from '@mcro/black'
+import { on, isEqual, viewEmitter } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
 import { throttle } from 'lodash'

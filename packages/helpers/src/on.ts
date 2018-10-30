@@ -20,10 +20,7 @@ type Watchable = {
 
 type Subscriber = { unsubscribe: Function }
 
-type ElementLike = Element
-| HTMLElement
-| HTMLDivElement
-| Window
+type ElementLike = Element | HTMLElement | HTMLDivElement | Window | Document
 
 type OnAble =
   | number
@@ -33,6 +30,7 @@ type OnAble =
   | Watchable
   | Subscriber
   | ElementLike
+  | { on: Function; emit: Function }
 
 // fuck electron doesnt have timers
 const looksLikeTimeout = thing => thing && !!thing._idleTimeout

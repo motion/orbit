@@ -45,6 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
   let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
+  let shouldShowTray = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
   let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
   let queue = AsyncGroup()
@@ -123,11 +124,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    statusItem.highlightMode = false
-    if let button = statusItem.button {
-      print("SETTING THE BUTTON")
-      button.image = NSImage(named:NSImage.Name("tray"))
-      button.action = #selector(self.doSomeAction(sender:))
+    if (shouldShowTray) {
+      statusItem.highlightMode = false
+      if let button = statusItem.button {
+        print("SETTING THE BUTTON")
+        button.image = NSImage(named:NSImage.Name("tray"))
+        button.action = #selector(self.doSomeAction(sender:))
+      }
     }
 
     

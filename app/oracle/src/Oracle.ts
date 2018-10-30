@@ -26,6 +26,7 @@ export class Oracle {
   options = {
     ocr: false,
     appWindow: false,
+    showTray: false,
   }
   process: ChildProcess
   oracleBridge: OracleBridge
@@ -63,6 +64,7 @@ export class Oracle {
     binPath = null,
     env = null,
     ocr = false,
+    showTray = false,
     appWindow = false,
     onClose = null,
   } = {}) {
@@ -74,6 +76,7 @@ export class Oracle {
     this.options = {
       ocr,
       appWindow,
+      showTray,
     }
     this.onClose = onClose
     macosVersion.assertGreaterThanOrEqualTo('10.11')
@@ -325,6 +328,7 @@ export class Oracle {
       RUN_OCR: `${this.options.ocr}`,
       RUN_APP_WINDOW: `${this.options.appWindow}`,
       SOCKET_PORT: `${this.socketPort}`,
+      SHOW_TRAY: `${this.options.showTray}`,
       ...this.env,
     }
     const stringEnv = JSON.stringify(env, null, 2)

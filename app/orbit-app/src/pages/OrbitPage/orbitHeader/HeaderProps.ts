@@ -1,10 +1,8 @@
-import { SearchStore } from '../../../stores/SearchStore'
-import { PaneManagerStore } from '../PaneManagerStore'
-import { QueryStore } from '../../../stores/QueryStore'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../../stores/SelectionStore'
+import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 
 export type HeaderProps = {
-  searchStore?: SearchStore
   paneManagerStore?: PaneManagerStore
   queryStore?: QueryStore
   selectionStore?: SelectionStore

@@ -3,26 +3,19 @@ import { App, Electron } from '@mcro/stores'
 import { Actions } from '../actions/Actions'
 import { showNotification } from '../helpers/electron/showNotification'
 import { PopoverState } from '@mcro/ui'
-import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
 
 @store
 export class AppReactions {
-  // ew
-  paneManagerStore: PaneManagerStore
-  setPaneManagerStore = (store: PaneManagerStore) => {
-    this.paneManagerStore = store
-  }
-
   constructor() {
     this.setupReactions()
   }
 
   dispose() {
-    this.subscriptions.dispose()
+    this.dispose()
   }
 
   async setupReactions() {
-    const dispose = App.onMessage(async (msg, value) => {
+    this.dispose = App.onMessage(async (msg, value) => {
       console.log('app message', msg, Date.now())
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
@@ -36,15 +29,6 @@ export class AppReactions {
           return
         case App.messages.HIDE_PEEK:
           return Actions.clearPeek()
-        case App.messages.PIN:
-          App.setOrbitState({ pinned: true })
-          return
-        case App.messages.UNPIN:
-          App.setOrbitState({ pinned: false })
-          return
-        case App.messages.TOGGLE_PINNED:
-          App.setOrbitState({ pinned: !App.orbitState.pinned })
-          return
         case App.messages.NOTIFICATION:
           const val = JSON.parse(msg)
           showNotification({
@@ -56,9 +40,6 @@ export class AppReactions {
           Actions.closeApp(+value)
           return
       }
-    })
-    this.subscriptions.add({
-      dispose,
     })
   }
 

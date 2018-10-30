@@ -5,7 +5,7 @@ import { AppConfig } from '@mcro/stores'
 import { AppStore } from '../pages/AppPage/AppStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
-import { AppInfoStore } from '../stores/AppInfoStore'
+import { AppInfoStore } from '../components/AppInfoStore'
 
 type AppTypeToModelType = {
   slack: Bit

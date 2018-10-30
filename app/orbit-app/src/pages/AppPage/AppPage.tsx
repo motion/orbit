@@ -11,7 +11,7 @@ import { App } from '@mcro/stores'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../integrations/views/apps/AppSearchable'
-import { AttachAppInfoStore } from '../../stores/AttachAppInfoStore'
+import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
 import { OrbitIntegration } from '../../integrations/types'
 import { allIntegrations } from '../../integrations'
 
@@ -20,7 +20,6 @@ type Props = {
   appStore?: AppStore
 }
 
-@attach('searchStore')
 @provide({
   appsStore: AppsStore,
 })

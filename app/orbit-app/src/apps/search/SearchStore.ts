@@ -2,15 +2,13 @@ import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, Bit, SearchPinnedResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { AppsStore } from './AppsStore'
-import { NLPStore } from './NLPStore'
-import { QueryStore } from './QueryStore'
-import { SearchFilterStore } from './SearchFilterStore'
-import { SelectionGroup, SelectionStore } from './SelectionStore'
-import { SettingStore } from './SettingStore'
+import { AppsStore } from '../../stores/AppsStore'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { SelectionGroup, SelectionStore } from '../../stores/SelectionStore'
+import { SettingStore } from '../../stores/SettingStore'
 import { uniq } from 'lodash'
-import { PaneManagerStore } from './PaneManagerStore'
-import { MarkType } from './nlpStore/types'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { MarkType } from '../../stores/QueryStore/types'
 
 const TYPE_DEBOUNCE = 200
 
@@ -25,22 +23,16 @@ export class SearchStore {
     settingStore: SettingStore
   }
 
+  get queryFilters() {
+    return this.props.queryStore.queryFilters
+  }
+
+  get nlpStore() {
+    return this.props.queryStore.nlpStore
+  }
+
   nextRows = { startIndex: 0, endIndex: 0 }
   curFindOptions = null
-  nlpStore = new NLPStore()
-  searchFilterStore = new SearchFilterStore({
-    queryStore: this.props.queryStore,
-    appsStore: this.props.appsStore,
-    nlpStore: this.nlpStore,
-    searchStore: this,
-  })
-
-  willUnmount() {
-    // @ts-ignore
-    this.nlpStore.subscriptions.dispose()
-    // @ts-ignore
-    this.searchFilterStore.subscriptions.dispose()
-  }
 
   setSelectionHandler = react(
     () => this.selectionResults && this.isActive && Math.random(),
@@ -103,7 +95,7 @@ export class SearchStore {
         res = [
           {
             type: 'row',
-            shouldAutoSelect: true,
+            // shouldAutoSelect: true,
             ids: quickSearchState.results.map(x => x.id),
           } as SelectionGroup,
         ]
@@ -114,7 +106,7 @@ export class SearchStore {
         ...res,
         {
           type: 'column',
-          shouldAutoSelect: true,
+          // shouldAutoSelect: true,
           ids: searchState.results.map(x => x.id),
         } as SelectionGroup,
       ]
@@ -138,10 +130,10 @@ export class SearchStore {
   searchState = react(
     () => [
       App.state.query,
-      this.searchFilterStore.activeFilters,
-      this.searchFilterStore.exclusiveFilters,
-      this.searchFilterStore.sortBy,
-      this.searchFilterStore.dateState,
+      this.queryFilters.activeFilters,
+      this.queryFilters.exclusiveFilters,
+      this.queryFilters.sortBy,
+      this.queryFilters.dateState,
     ],
     async (_, { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
       const query = App.state.query
@@ -176,7 +168,7 @@ export class SearchStore {
         dateState,
         sortBy,
         searchBy,
-      } = this.searchFilterStore
+      } = this.queryFilters
 
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)

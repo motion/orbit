@@ -1,8 +1,28 @@
 import { react, ensure } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
+import { AppsStore } from '../AppsStore'
+import { QueryFilterStore } from './QueryFiltersStore'
+import { NLPStore } from './NLPStore'
 
 export class QueryStore {
+  props: {
+    appsStore: AppsStore
+  }
+
   query = App.state.query
+
+  nlpStore = new NLPStore()
+
+  queryFilters = new QueryFilterStore({
+    queryStore: this,
+    appsStore: this.props.appsStore,
+    nlpStore: this.nlpStore,
+  })
+
+  willUnmount() {
+    this.nlpStore['subscriptions'].dispose()
+    this.queryFilters['subscriptions'].dispose()
+  }
 
   updateAppQuery = react(
     () => this.query,
@@ -26,18 +46,11 @@ export class QueryStore {
     },
   )
 
-  setAppQueryOnSalientOCR = react(
-    () => Desktop.ocrState.salientWords,
-    words => {
-      ensure('words', !!words)
-      this.query = words.join(' ')
-    },
-  )
-
   hasQuery = react(() => !!this.query.length, _ => _)
 
   clearQuery = () => {
     this.query = ''
+    this.queryFilters.resetAllFilters()
   }
 
   setQuery = value => {

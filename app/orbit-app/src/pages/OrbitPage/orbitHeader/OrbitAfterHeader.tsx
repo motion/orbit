@@ -4,8 +4,7 @@ import * as UI from '@mcro/ui'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
 import { View, ClearButton, Icon } from '@mcro/ui'
-import { SearchStore } from '../../../stores/SearchStore'
-import { QueryStore } from '../../../stores/QueryStore'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 
 const Section = view('section', {
@@ -24,7 +23,6 @@ const Section = view('section', {
 })
 
 type Props = {
-  searchStore?: SearchStore
   queryStore?: QueryStore
   paneManagerStore?: PaneManagerStore
   theme?: ThemeObject
@@ -62,7 +60,7 @@ const Interactive = view({
   },
 })
 
-@attach('queryStore', 'searchStore', 'paneManagerStore')
+@attach('queryStore', 'paneManagerStore')
 @view
 export class OrbitAfterHeader extends React.Component<Props> {
   paneSetter = memoize(name => () => {
@@ -71,7 +69,6 @@ export class OrbitAfterHeader extends React.Component<Props> {
 
   clearSearch = () => {
     this.props.queryStore.clearQuery()
-    this.props.searchStore.searchFilterStore.resetAllFilters()
     this.props.paneManagerStore.setActivePane('home')
   }
 

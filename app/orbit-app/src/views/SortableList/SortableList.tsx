@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { WindowScroller, List, CellMeasurerCache, CellMeasurer } from 'react-virtualized'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from '../../apps/search/SearchStore'
 import { view, ensure, react, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'

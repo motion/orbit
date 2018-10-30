@@ -4,7 +4,6 @@ import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
-import { SearchStore } from '../stores/SearchStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { BORDER_RADIUS } from '../constants'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
@@ -21,7 +20,6 @@ export type SubPaneProps = CSSPropertySet & {
   extraCondition?: () => boolean
   orbitWindowStore?: OrbitWindowStore
   paneManagerStore?: PaneManagerStore
-  searchStore?: SearchStore
   selectionStore?: SelectionStore
 }
 
@@ -67,7 +65,7 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-@attach('paneManagerStore', 'orbitWindowStore', 'searchStore', 'selectionStore')
+@attach('paneManagerStore', 'orbitWindowStore', 'selectionStore')
 @provide({
   subPaneStore: SubPaneStore,
 })

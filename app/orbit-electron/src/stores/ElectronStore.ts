@@ -94,10 +94,6 @@ export class ElectronStore {
     Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
   }
 
-  togglePinned = () => {
-    Electron.sendMessage(App, App.messages.TOGGLE_PINNED)
-  }
-
   restart() {
     if (process.env.NODE_ENV === 'development') {
       require('touch')(require('path').join(__dirname, '..', '..', '_', 'main.js'))

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from '../search/SearchStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { SettingStore } from '../../stores/SettingStore'

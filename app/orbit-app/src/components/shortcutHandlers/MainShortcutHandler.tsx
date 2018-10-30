@@ -5,13 +5,11 @@ import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
 import { SelectionStore, Direction } from '../../stores/SelectionStore'
-import { PaneManagerStore } from '../../pages/OrbitPage/PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore';
 
 type Props = {
   paneManagerStore?: PaneManagerStore
   selectionStore: SelectionStore
-  searchStore?: SearchStore
   children?: React.ReactNode
 }
 
@@ -35,9 +33,9 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-const decorate = compose(attach('selectionStore', 'searchStore', 'paneManagerStore'))
+const decorate = compose(attach('selectionStore', 'paneManagerStore'))
 export const MainShortcutHandler = decorate(
-  ({ searchStore, selectionStore, paneManagerStore, children }: Props) => {
+  ({ selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {
       if (
         (selectionStore.activeIndex === -1 ||
@@ -56,11 +54,13 @@ export const MainShortcutHandler = decorate(
       },
       openCurrent: () => {
         console.log('openCurrent')
-        Actions.openItem(searchStore.selectedItem)
+        // Actions.openSelectedItem()
+        // Actions.openItem(searchStore.selectedItem)
       },
       copyLink: async () => {
         console.log('copyLink')
-        Actions.copyLink(searchStore.selectedItem)
+        // Actions.copySelectedItemLink()
+        // Actions.copyLink(searchStore.selectedItem)
       },
       escape: () => {
         console.log('escape')

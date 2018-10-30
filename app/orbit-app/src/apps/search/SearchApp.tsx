@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from './SearchStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
 import { SubPaneStore } from '../../components/SubPaneStore'

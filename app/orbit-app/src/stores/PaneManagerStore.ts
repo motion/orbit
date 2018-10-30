@@ -3,20 +3,16 @@ import { App } from '@mcro/stores'
 import { SelectionStore, Direction } from './SelectionStore'
 import { observeOne } from '@mcro/model-bridge'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
-import { OrbitWindowStore } from './OrbitWindowStore'
-import { autoTrack } from './Track'
+import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
-import { AppsStore } from './AppsStore'
 import { OrbitStore } from './OrbitStore'
-import { QueryStore } from './QueryStore'
+import { QueryStore } from './QueryStore/QueryStore'
 import { Actions } from '../actions/Actions'
 
 type Panes = 'home' | 'settings' | 'onboard' | string
 
 export class PaneManagerStore {
   props: {
-    appsStore: AppsStore
-    orbitWindowStore: OrbitWindowStore
     selectionStore: SelectionStore
     orbitStore?: OrbitStore
     queryStore?: QueryStore
@@ -66,11 +62,11 @@ export class PaneManagerStore {
     },
   )
 
+  disposeToggleSettings: any
+  disposeShowApps: any
+
   didMount() {
     on(this, autoTrack(this, ['hasOnboarded', 'paneIndex']))
-
-    // set pane manager store... todo make better
-    this.props.orbitWindowStore.appReactionsStore.setPaneManagerStore(this)
 
     on(
       this,
@@ -81,24 +77,21 @@ export class PaneManagerStore {
       }),
     )
 
-    const disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+    this.disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       this.setActivePane('settings')
       App.setOrbitState({ docked: true })
     })
 
-    const disposeShowApps = App.onMessage(App.messages.SHOW_APPS, () => {
+    this.disposeShowApps = App.onMessage(App.messages.SHOW_APPS, () => {
       this.setActivePane('apps')
       App.setOrbitState({ docked: true })
     })
+  }
 
-    // @ts-ignore
-    this.subscriptions.add({
-      dispose: () => {
-        this.generalSetting$.unsubscribe()
-        disposeToggleSettings()
-        disposeShowApps()
-      },
-    })
+  willUnmount() {
+    this.generalSetting$.unsubscribe()
+    this.disposeToggleSettings()
+    this.disposeShowApps()
   }
 
   move = (direction: Direction) => {

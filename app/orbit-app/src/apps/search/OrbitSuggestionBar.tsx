@@ -2,9 +2,9 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, compose, attach } from '@mcro/black'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
 import { HorizontalScroll } from '../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
 
 const dateBg = UI.color('#ffb049')
 
@@ -79,7 +79,7 @@ const SuggestionButton = props => (
 )
 
 type Props = {
-  searchStore?: SearchStore
+  queryStore?: QueryStore
   paneManagerStore: PaneManagerStore
 }
 
@@ -92,9 +92,9 @@ const decorator = compose(
   attach('searchStore', 'paneManagerStore'),
   view,
 )
-export const OrbitSuggestionBar = decorator(({ searchStore }: Props) => {
-  const filterStore = searchStore.searchFilterStore
-  const dateFilter = getDateAbbreviated(searchStore.searchFilterStore.dateState)
+export const OrbitSuggestionBar = decorator(({ queryStore }: Props) => {
+  const filterStore = queryStore.queryFilters
+  const dateFilter = getDateAbbreviated(queryStore.queryFilters.dateState)
   const hasTextualDateFilter = !!filterStore.activeDateFilters.length
   filterStore.disabledFilters
   return (

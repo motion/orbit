@@ -2,11 +2,11 @@ import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
-import { QueryStore } from '../../../stores/QueryStore'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { HeaderStore } from './HeaderStore'
 import { ThemeObject } from '@mcro/gloss'
 import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
-import { SearchStore } from '../../../stores/SearchStore'
+import { SearchStore } from '../../../apps/search/SearchStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
 const handleKeyDown = e => {

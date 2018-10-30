@@ -1,5 +1,5 @@
 export type Pane = {
-  type: 'home' | 'search' | 'people' | 'topcis' | 'lists'
+  type: 'home' | 'search' | 'people' | 'topics' | 'lists'
   title: string
   icon: string
   show?: boolean

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
 import { OrbitCard } from '../views/OrbitCard'
-import { AppInfoStore, AppInfoProps } from '../stores/AppInfoStore'
+import { AppInfoStore, AppInfoProps } from './AppInfoStore'
 import { ItemProps } from '../views/OrbitItemProps'
 import { SyncStatus } from './SyncStatus'
 import { Text, Icon } from '@mcro/ui'

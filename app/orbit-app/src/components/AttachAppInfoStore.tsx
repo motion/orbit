@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AppInfoStore } from '../stores/AppInfoStore'
+import { AppInfoStore } from './AppInfoStore'
 import { attach, provide } from '@mcro/black'
 
 @attach('appStore', 'appsStore')

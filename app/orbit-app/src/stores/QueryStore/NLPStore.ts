@@ -6,7 +6,7 @@ import { App } from '@mcro/stores'
 import initNlp from './nlpStore/nlpQueryWorker'
 import { PersonBitModel } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
-import { NLPResponse } from './nlpStore/types'
+import { NLPResponse } from './types'
 const { parseSearchQuery, setUserNames } = initNlp()
 // @ts-ignore
 window.nlpWorker = { parseSearchQuery, setUserNames }

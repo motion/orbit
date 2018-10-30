@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from './SearchStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { SelectableCarousel } from '../../components/SelectableCarousel'
 import { Banner } from '../../views/Banner'

@@ -18,7 +18,7 @@ export class HeaderStore {
   iconHovered = false
 
   get highlightWords() {
-    const { activeMarks } = this.props.searchStore.searchFilterStore
+    const { activeMarks } = this.props.queryStore.queryFilters
     if (!activeMarks) {
       return null
     }

@@ -6,7 +6,7 @@ import {
   CellMeasurer,
   InfiniteLoader,
 } from 'react-virtualized'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from './SearchStore'
 import { view, ensure, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { HighlightText } from '../../views/HighlightText'

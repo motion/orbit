@@ -1,10 +1,9 @@
 import { store, react, ensure } from '@mcro/black'
-import { AppsStore } from './AppsStore'
+import { AppsStore } from '../AppsStore'
 import { memoize } from 'lodash'
-import { MarkType } from './nlpStore/types'
+import { MarkType } from './types'
 import { NLPStore } from './NLPStore'
 import { QueryStore } from './QueryStore'
-import { SearchStore } from './SearchStore'
 import { IntegrationType } from '@mcro/models'
 
 export type SearchFilter = {
@@ -25,13 +24,11 @@ const suggestedDates = [
   { text: 'Last Month', type: MarkType.Date },
 ]
 
-// @ts-ignore
 @store
-export class SearchFilterStore /* extends Store */ {
+export class QueryFilterStore {
   queryStore: QueryStore
   appsStore: AppsStore
   nlpStore: NLPStore
-  searchStore: SearchStore
   disabledFilters = {}
   exclusiveFilters = {}
   // sort by
@@ -46,11 +43,10 @@ export class SearchFilterStore /* extends Store */ {
     endDate: null,
   }
 
-  constructor({ queryStore, appsStore, nlpStore, searchStore }) {
+  constructor({ queryStore, appsStore, nlpStore }) {
     this.appsStore = appsStore
     this.nlpStore = nlpStore
     this.queryStore = queryStore
-    this.searchStore = searchStore
   }
 
   // todo: this should replace any existing filters of same type
@@ -152,7 +148,7 @@ export class SearchFilterStore /* extends Store */ {
     }
     let suggestions = []
     // show location filters based on current search
-    suggestions = [...suggestions, ...this.searchLocations]
+    suggestions = [...suggestions]
     const hasDates = this.parsedQuery.some(x => x.type === MarkType.Date)
     const numPeople = this.parsedQuery.filter(x => x.type === MarkType.Person).length
     if (!hasDates) {
@@ -163,25 +159,6 @@ export class SearchFilterStore /* extends Store */ {
     }
     return suggestions
   }
-
-  // unique locations currently in search results list
-  searchLocations = react(
-    () => this.searchStore.searchState && Math.random(),
-    async (_, { sleep }) => {
-      const results = this.searchStore.searchState.results
-      ensure('results', !!results && !!results.length)
-      await sleep(300)
-      return [...new Set(results.map(x => x.location && x.location.name))]
-        .filter(Boolean)
-        .map(text => ({
-          text,
-          type: MarkType.Location,
-        }))
-    },
-    {
-      defaultValue: [],
-    },
-  )
 
   updateDateStateOnNLPDate = react(
     () => this.activeDateFilters,

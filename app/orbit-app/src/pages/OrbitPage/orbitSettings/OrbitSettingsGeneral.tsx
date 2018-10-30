@@ -9,7 +9,6 @@ import * as Views from '../../../views'
 import { Input } from '../../../views/Input'
 import { ShortcutCapture } from '../../../views/ShortcutCapture'
 import { AppsStore } from '../../../stores/AppsStore'
-import { SearchStore } from '../../../stores/SearchStore'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 
 const eventCharsToNiceChars = {
@@ -48,7 +47,6 @@ const electronToNiceChars = (charString: string) => {
 
 type Props = {
   store?: OrbitSettingsStore
-  searchStore?: SearchStore
   paneManagerStore?: PaneManagerStore
   appsStore?: AppsStore
 }
@@ -105,7 +103,7 @@ const Section = view({
   padding: [0, 0, 20],
 })
 
-@attach('searchStore', 'paneManagerStore', 'appsStore')
+@attach('paneManagerStore', 'appsStore')
 @attach({
   store: OrbitSettingsStore,
 })

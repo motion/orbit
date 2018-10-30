@@ -1,6 +1,8 @@
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import * as React from 'react'
+// @ts-ignore react hooks
+import { ConcurrentMode } from 'react'
 import ReactDOM from 'react-dom'
 import './RootViewHMR'
 
@@ -17,7 +19,12 @@ export async function start() {
     window['Root'] = rootStore
     rootStore.rootView = RootView
   }
-  ReactDOM.render(<RootView />, document.querySelector('#app'))
+  ReactDOM.render(
+    <ConcurrentMode>
+      <RootView />
+    </ConcurrentMode>,
+    document.querySelector('#app'),
+  )
 }
 
 start()

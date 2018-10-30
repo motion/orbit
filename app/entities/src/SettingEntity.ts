@@ -1,4 +1,3 @@
-import { IntegrationType, Setting, SettingValues } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -9,7 +8,7 @@ import {
 } from 'typeorm'
 
 @Entity()
-export class SettingEntity extends BaseEntity implements Setting {
+export class SettingEntity extends BaseEntity {
   target: 'setting' = 'setting'
 
   @PrimaryGeneratedColumn()
@@ -25,13 +24,13 @@ export class SettingEntity extends BaseEntity implements Setting {
   category?: string
 
   @Column('varchar')
-  type?: 'general' | IntegrationType
+  type?: any
 
   @Column({ nullable: true })
   token?: string
 
   @Column('simple-json', { default: '{}' })
-  values?: SettingValues
+  values?: any
 
   @CreateDateColumn()
   createdAt?: Date

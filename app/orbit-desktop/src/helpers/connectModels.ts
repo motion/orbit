@@ -16,6 +16,7 @@ export default async function connectModels(models) {
       synchronize: true,
       migrationsRun: true,
       busyErrorRetry: 1000,
+      maxQueryExecutionTime: 3000,
       enableWAL: true,
 
     }).then(connection => {

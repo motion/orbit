@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { DriveSetting, GmailSetting, Setting } from '@mcro/models'
+import { Setting, DriveSetting, GmailSetting } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
@@ -54,19 +54,19 @@ export class ServiceLoader {
     }
 
     // execute query
-    this.log.vtimer(`request to ${url}`)
+    this.log.vtimer(`request to ${url}`, headers)
     const result = await fetch(url, {
       mode: options.cors ? 'cors' : undefined,
       method: options.method || 'get',
       body: options.body || undefined,
       headers,
     })
-    const responseBody: any = options.plain ? await result.text() : result.json()
-    this.log.vtimer(`request to ${url}`, result)
+    const responseBody: any = options.plain ? await result.text() : await result.json()
+    this.log.vtimer(`request to ${url}`, { response: result, body: responseBody })
 
     // throw error if there is an error
     if (!result.ok || responseBody.error || responseBody.errors) {
-      if (autoRefreshTokens === true && result.status === 401) {
+      if ((this.setting.type === "gmail" || this.setting.type === "drive") && autoRefreshTokens === true && result.status === 401) {
         this.log.warning('refreshing oauth token')
         await this.refreshGoogleToken(this.setting as GmailSetting | DriveSetting)
         return this.load(options, false)

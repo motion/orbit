@@ -30,6 +30,7 @@ export class NLPStore /* extends Store */ {
       select: {
         name: true,
       },
+      take: 100
     },
   }).subscribe(values => {
     this.peopleNames = values.map(person => person.name).filter(x => x.trim().length > 1)

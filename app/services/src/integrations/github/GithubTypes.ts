@@ -1,4 +1,22 @@
 
+export type GithubPaginatedResult<T> = {
+  totalCount: number
+  pageInfo: {
+    endCursor: string
+    hasNextPage: boolean
+  }
+  nodes: T[]
+}
+
+export type GithubRateLimitResult = {
+  rateLimit: {
+    limit: number
+    cost: number
+    remaining: number
+    resetAt: string
+  }
+}
+
 export interface GithubRepository {
   id: string
   name: string
@@ -10,7 +28,7 @@ export interface GithubRepository {
   }
 }
 
-export type GithubRepositoryQueryResult = {
+export type GithubUserRepositoriesQueryResult = {
   viewer: {
     repositories: {
       edges: {
@@ -23,12 +41,10 @@ export type GithubRepositoryQueryResult = {
       totalCount: number
     }
   }
-  rateLimit: {
-    limit: number
-    cost: number
-    remaining: number
-    resetAt: string
-  }
+} & GithubRateLimitResult
+
+export type GithubRepositoryQueryResult = {
+  repository: GithubRepository
 }
 
 export type GithubOrganizationsQueryResult = {
@@ -44,36 +60,15 @@ export type GithubOrganizationsQueryResult = {
       totalCount: number
     }
   }
-  rateLimit: {
-    limit: number
-    cost: number
-    remaining: number
-    resetAt: string
-  }
-}
+} & GithubRateLimitResult
 
 export type GithubIssueQueryResult = {
   repository: {
     id: string
     name: string
-    issues: {
-      totalCount: number
-      pageInfo: {
-        hasNextPage: boolean
-      }
-      edges: {
-        cursor: string
-        node: GithubIssue
-      }[]
-    }
+    issues: GithubPaginatedResult<GithubIssue>
   }
-  rateLimit: {
-    limit: number
-    cost: number
-    remaining: number
-    resetAt: string
-  }
-}
+} & GithubRateLimitResult
 
 export type GithubOrganization = {
   id: string
@@ -120,38 +115,34 @@ export type GithubIssue = {
     }
   }
   comments: {
-    edges: {
-      node: {
-        author: GithubPerson
-        createdAt: string
-        body: string
-      }
-    }[]
+    totalCount: number
   }
 }
+
+export type GithubComment = {
+  author: GithubPerson
+  createdAt: string
+  body: string
+}
+
+export type GithubCommentsResponse = {
+  repository: {
+    id: string
+    name: string
+    issueOrPullRequest: {
+      id: string
+      comments: GithubPaginatedResult<GithubComment>
+    }
+  }
+} & GithubRateLimitResult
 
 export type GithubPullRequestQueryResult = {
   repository: {
     id: string
     name: string
-    pullRequests: {
-      totalCount: number
-      pageInfo: {
-        hasNextPage: boolean
-      }
-      edges: {
-        cursor: string
-        node: GithubPullRequest
-      }[]
-    }
+    pullRequests: GithubPaginatedResult<GithubPullRequest>
   }
-  rateLimit: {
-    limit: number
-    cost: number
-    remaining: number
-    resetAt: string
-  }
-}
+} & GithubRateLimitResult
 
 export type GithubCommit = {
   email: string
@@ -185,13 +176,7 @@ export type GithubPullRequest = {
     }[]
   }
   comments: {
-    edges: {
-      node: {
-        author: GithubPerson
-        createdAt: string
-        body: string
-      }
-    }[]
+    totalCount: number
   }
   commits: {
     edges: {
@@ -237,13 +222,7 @@ export type GithubPeopleQueryResult = {
       }[]
     }
   }
-  rateLimit: {
-    limit: number
-    cost: number
-    remaining: number
-    resetAt: string
-  }
-}
+} & GithubRateLimitResult
 
 export type GithubPerson = {
   id: string

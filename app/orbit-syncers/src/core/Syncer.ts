@@ -245,7 +245,7 @@ export class Syncer {
 
     try {
       log.clean() // clean syncer timers, do a fresh logger start
-      log.timer(`syncing ${this.options.constructor.name}`)
+      log.timer(`${this.options.constructor.name} sync`)
       const syncer = new this.options.constructor(setting, log)
       await syncer.run()
 
@@ -253,7 +253,7 @@ export class Syncer {
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
       log.info(`job updated`, job)
-      log.timer(`syncing ${this.options.constructor.name}`)
+      log.timer(`${this.options.constructor.name} sync`)
 
     } catch (error) {
       log.error(`${this.options.constructor.name} sync err`, error)

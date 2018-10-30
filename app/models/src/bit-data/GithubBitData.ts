@@ -3,7 +3,6 @@ export interface GithubBitData {
   body: string
   labels: GithubBitDataLabel[]
   author: GithubBitDataUser
-  assignees: GithubBitDataUser[]
   comments: GithubBitDataComment[]
 }
 

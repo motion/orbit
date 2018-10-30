@@ -27,10 +27,10 @@ export const GithubRepositoryManyResolver = resolveMany(
       return
     }
 
-    log.info(`loading repositories from the github`, { setting })
+    log.timer(`load user repositories`, { setting })
     const loader = new GithubLoader(setting as GithubSetting, log)
-    const repositories = await loader.loadRepositories()
-    log.info(`loaded repositories`, repositories)
+    const repositories = await loader.loadUserRepositories()
+    log.timer(`load user repositories`, repositories)
     return repositories
   },
 )

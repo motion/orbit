@@ -1,4 +1,4 @@
-import { view } from '../view'
+import { viewEmitter } from '../view'
 
 const simpleObject = storeSet => {
   const res = {}
@@ -49,12 +49,10 @@ export function debugState(callback) {
     update()
   }
 
-  view.on('store.mount', mount(stores))
-  view.on('store.unmount', unmount(stores))
-  view.provide.on('store.mount', mount(stores))
-  view.provide.on('store.unmount', unmount(stores))
-  view.on('view.mount', mount(views))
-  view.on('view.unmount', unmount(views))
+  viewEmitter.on('store.mount', mount(stores))
+  viewEmitter.on('store.unmount', unmount(stores))
+  viewEmitter.on('view.mount', mount(views))
+  viewEmitter.on('view.unmount', unmount(views))
 
   // send first one right away
   sendUpdate()

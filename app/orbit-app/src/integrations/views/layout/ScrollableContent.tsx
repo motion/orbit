@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { AppStore } from '../../../pages/AppPage/AppStore'
 
@@ -20,7 +20,7 @@ const ContentInner = view(UI.Col, {
   wordBreak: 'break-word',
 })
 
-@view.attach('appStore')
+@attach('appStore')
 export class ScrollableContent extends React.Component<{ scrollTo?: string; appStore?: AppStore }> {
   componentDidMount() {
     this.updateScroll()

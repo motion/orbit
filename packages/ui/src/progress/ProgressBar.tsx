@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 // import $ from '@mcro/color'
 
 // type Props = {
@@ -9,7 +8,6 @@ import { view } from '@mcro/black'
 //   percent: number | string,
 // }
 
-@view.ui
 export class ProgressBar extends React.Component {
   static defaultProps = {
     width: 90,

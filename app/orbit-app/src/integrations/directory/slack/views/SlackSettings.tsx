@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { SlackChannelModel, SlackSetting } from '@mcro/models'
 import { SlackChannel } from '@mcro/services'
 import { orderBy } from 'lodash'
@@ -64,7 +64,7 @@ class SlackSettingStore {
   }
 }
 
-@view.attach({ store: SlackSettingStore })
+@attach({ store: SlackSettingStore })
 @view
 export class SlackSettings extends React.Component<
   OrbitIntegrationProps<'slack'> & Props & { store?: SlackSettingStore }

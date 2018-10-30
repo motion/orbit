@@ -57,13 +57,12 @@ export type GroupResult = {
   people: { id: number; icon: string; name: string }
 }
 
-export const SearchGroupModel = new Model<GroupResult, SearchQuery>('SearchResult')
-
-// TODO: RENAME THIS TO GetTopicsForSearchModel
-export const SearchTopicsModel = new Model<string, { query: SearchQuery; count: number }>(
-  'SearchTopics',
+export const SalientWordsModel = new Model<string, { query: SearchQuery; count: number }>(
+  'SalientWords',
 )
 
 export const SearchLocationsModel = new Model<string, { query: SearchQuery; count: number }>(
   'SearchLocationsModel',
 )
+
+export const SearchByTopicModel = new Model<Bit, { query: string; count: number }>('SearchByTopic')

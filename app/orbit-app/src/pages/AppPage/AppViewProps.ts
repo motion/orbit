@@ -2,7 +2,7 @@ import { Bit, PersonBit, Setting } from '@mcro/models'
 import { AppStore } from './AppStore'
 import { AppConfig } from '@mcro/stores'
 import { AppsStore } from '../../stores/AppsStore'
-import { SelectionStore } from '../OrbitPage/orbitDocked/SelectionStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 
 type Model = Bit | PersonBit | Setting
 

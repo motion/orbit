@@ -1,34 +1,34 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { View, Text, Row, Button } from '@mcro/ui'
-import { SpaceStore } from '../../../stores/SpaceStore'
+import { OrbitStore } from '../../../stores/OrbitStore'
 import { Icon } from '../../../views/Icon'
 
 type Props = {
-  spaceStore?: SpaceStore
+  orbitStore?: OrbitStore
   paneManagerStore?: PaneManagerStore
 }
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
-@view.attach('spaceStore', 'paneManagerStore')
+@attach('orbitStore', 'paneManagerStore')
 @view
 export class SpaceNav extends React.Component<Props> {
   render() {
-    const { spaceStore, paneManagerStore } = this.props
-    const { activeSpace } = spaceStore
+    const { orbitStore, paneManagerStore } = this.props
+    const { activeSpace } = orbitStore
     const newPane = activeSpace.panes.find(x => x.title === 'New')
     const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), activeSpace.panes.length - 1)
     const activeItem = activeSpace.panes[curIndex]
     return (
-      <Row position="relative" zIndex={1000} padding={[3, 12]} alignItems="center">
+      <Row position="relative" zIndex={1000} padding={[0, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
-        <View padding={[0, 12, 1, 2]}>
+        <View padding={[0, 12, 1, 4]}>
           <Icon size={16} name={activeItem.icon} />
         </View>
         <Row>
-          {spaceStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => {
+          {orbitStore.activeSpace.panes.filter(x => x.title !== 'New').map((pane, index) => {
             const isActive = curIndex === index
             return (
               <Text
@@ -38,7 +38,7 @@ export class SpaceNav extends React.Component<Props> {
                 alpha={isActive ? 1 : 0.5}
                 alphaHover={isActive ? 1 : 0.7}
                 marginRight={6}
-                padding={4}
+                padding={[4, 8]}
                 onClick={paneManagerStore.activePaneSetter(index)}
                 transform={{
                   scale: isActive ? 1.15 : 1,

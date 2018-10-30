@@ -30,18 +30,18 @@ const Card = view({
   },
 })
 
-@view.ui
 export class PostTemplate extends React.Component {
-  render({
-    body,
-    paragraphs,
-    paragraphProps,
-    title,
-    titleProps,
-    sectionTitle,
-    sectionTitleProps,
-    children,
-  }) {
+  render() {
+    const {
+      body,
+      paragraphs,
+      paragraphProps,
+      title,
+      titleProps,
+      sectionTitle,
+      sectionTitleProps,
+      children,
+    } = this.props
     return (
       <Post>
         <Header>

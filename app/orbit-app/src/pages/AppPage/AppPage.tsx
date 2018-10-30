@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, provide, attach } from '@mcro/black'
 import { AppsStore } from '../../stores/AppsStore'
 // import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
@@ -20,11 +20,11 @@ type Props = {
   appStore?: AppStore
 }
 
-@view.attach('searchStore')
-@view.provide({
+@attach('searchStore')
+@provide({
   appsStore: AppsStore,
 })
-@view.provide({
+@provide({
   appStore: AppStore,
 })
 export class AppPage extends React.Component<Props> {
@@ -58,7 +58,7 @@ const HiddenControls = view({
   },
 })
 
-@view.attach('appsStore', 'appStore')
+@attach('appsStore', 'appStore')
 @view
 class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitIntegration<any>['views']) => {

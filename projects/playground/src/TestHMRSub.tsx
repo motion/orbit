@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, attach } from '@mcro/black'
 import { SomeOtherSubView } from './SomeOtherSubView'
 
 class TestStore {
@@ -12,7 +12,7 @@ class TestStore {
 }
 
 const decorator = compose(
-  view.attach({
+  attach({
     store: TestStore,
   }),
   view,

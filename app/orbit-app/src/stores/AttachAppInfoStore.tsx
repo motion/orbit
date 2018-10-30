@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { AppInfoStore } from '../stores/AppInfoStore'
-import { view } from '@mcro/black'
+import { attach, provide } from '@mcro/black'
 
-@view.attach('appStore', 'appsStore')
-@view.provide({
+@attach('appStore', 'appsStore')
+@provide({
   appInfoStore: AppInfoStore,
 })
 export class AttachAppInfoStore extends React.Component<{

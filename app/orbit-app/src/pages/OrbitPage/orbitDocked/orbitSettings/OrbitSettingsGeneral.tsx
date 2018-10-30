@@ -1,4 +1,4 @@
-import { ensure, react, view } from '@mcro/black'
+import { ensure, react, view, attach } from '@mcro/black'
 import { observeOne, save } from '@mcro/model-bridge'
 import { SettingModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
@@ -10,7 +10,7 @@ import { Input } from '../../../../views/Input'
 import { ShortcutCapture } from '../../../../views/ShortcutCapture'
 import { AppsStore } from '../../../../stores/AppsStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SearchStore } from '../SearchStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -109,8 +109,8 @@ const Section = view({
   padding: [0, 0, 20],
 })
 
-@view.attach('searchStore', 'paneManagerStore', 'appsStore')
-@view.attach({
+@attach('searchStore', 'paneManagerStore', 'appsStore')
+@attach({
   store: OrbitSettingsStore,
 })
 @view

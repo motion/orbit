@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -8,8 +8,8 @@ import { OrbitHeader } from '../orbitHeader/OrbitHeader'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { BORDER_RADIUS } from '../../../constants'
-import { SearchStore } from './SearchStore'
-import { OrbitStore } from '../OrbitStore'
+import { SearchStore } from '../../../stores/SearchStore'
+import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
@@ -23,7 +23,7 @@ const log = new Logger('OrbitDocked')
 type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
-  appStore?: OrbitStore
+  appStore?: OrbitWindowStore
   appsStore?: AppsStore
   store?: OrbitDockedStore
 }
@@ -69,7 +69,7 @@ const Interactive = view({
   },
 })
 
-@view.attach('appsStore', 'paneManagerStore', 'searchStore')
+@attach('appsStore', 'paneManagerStore', 'searchStore')
 @view
 class OrbitDockedContents extends React.Component<Props> {
   isSelected = index => index === this.props.paneManagerStore.paneIndex
@@ -89,9 +89,9 @@ class OrbitDockedContents extends React.Component<Props> {
             <Interactive disabled={/^(settings|onboard)$/.test(paneManagerStore.activePane)}>
               <SpaceNav />
             </Interactive>
-            <OrbitOnboard name="onboard" />
+            {/* <OrbitOnboard name="onboard" /> */}
             <OrbitHome name="home" />
-            <OrbitSettings name="settings" />
+            {/* <OrbitSettings name="settings" /> */}
           </div>
         </OrbitDockedInner>
       </>
@@ -115,7 +115,7 @@ class OrbitDockedStore {
   )
 }
 
-@view.attach({
+@attach({
   store: OrbitDockedStore,
 })
 @view

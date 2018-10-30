@@ -4,7 +4,7 @@ import { View, Icon, Row } from '@mcro/ui'
 import { SubTitle, VerticalSpace } from '../../../views'
 import { Message } from '../../../views/Message'
 import { OrbitIcon } from '../../../views/OrbitIcon'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 
 type Props = {
   setting: Setting
@@ -13,7 +13,7 @@ type Props = {
 
 class AppStore {}
 
-@view.attach({
+@attach({
   store: AppStore,
 })
 @view

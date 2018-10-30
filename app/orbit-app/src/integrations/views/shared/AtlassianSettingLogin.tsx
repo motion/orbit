@@ -1,4 +1,4 @@
-import { react, view } from '@mcro/black'
+import { react, view, attach } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import {
   SettingSaveCommand,
@@ -64,7 +64,7 @@ class AtlassianSettingLoginStore {
   )
 }
 
-@view.attach({
+@attach({
   store: AtlassianSettingLoginStore,
 })
 @view

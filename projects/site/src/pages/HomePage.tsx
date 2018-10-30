@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, provide, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Footer } from '../components'
 import { SectionContent } from '../views/sectionContent'
@@ -721,8 +721,8 @@ class OrbitStore {
   }
 }
 
-@view.attach('homeStore')
-@view.attach({
+@attach('homeStore')
+@attach({
   orbitStore: OrbitStore,
 })
 @view
@@ -760,7 +760,7 @@ const lockedPosition = (node, pct = 0.6) => {
 
 const notNeg = x => (x < 0 ? 0 : x)
 
-@view.provide({
+@provide({
   homeStore: class HomeStore {
     nodes = []
     nodeOffsets = []

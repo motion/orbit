@@ -1,9 +1,9 @@
 import { react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { AppReactions } from '../../stores/AppReactions'
+import { AppReactions } from './AppReactions'
 
-export class OrbitStore {
+export class OrbitWindowStore {
   contentHeight = 0
   inputFocused = false
 
@@ -36,7 +36,9 @@ export class OrbitStore {
 
   updateAppOrbitStateOnResize = react(
     () => this.contentHeight,
-    () => {
+    async (_, { sleep }) => {
+      // sleep here because often the socket is actually faster than the html
+      await sleep()
       App.setOrbitState({
         size: [ORBIT_WIDTH, this.contentHeight],
         position: [window.innerWidth - ORBIT_WIDTH - 10, 10],

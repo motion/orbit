@@ -5,6 +5,11 @@ class TrackSingleton {
   eventLog = []
 
   constructor() {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('avoid tracking in development mode')
+      return
+    }
+
     // send events in 10 minute intervals
     setInterval(async () => {
       if (!this.eventLog.length) {

@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { view, ensure } from '@mcro/black'
-import { Popover, View, Col, Input, Surface, SizedSurface, Row } from '@mcro/ui'
+import { view, ensure, attach } from '@mcro/black'
+import { Popover, View, Col, Row } from '@mcro/ui'
 import { reaction, trace } from 'mobx'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -10,13 +10,13 @@ import { OrbitOrb } from '../orbitSettings/OrbitOrb'
 import { CSSPropertySet, Theme } from '@mcro/gloss'
 import { RowItem } from '../../../../views/RowItem'
 import { FocusableShortcutHandler } from '../../../../views/FocusableShortcutHandler'
-import { SpaceStore, Space } from '../../../../stores/SpaceStore'
 import { fuzzyQueryFilter } from '../../../../helpers'
 import { Icon } from '../../../../views/Icon'
+import { OrbitStore, Orbit } from '../../../../stores/OrbitStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
-  spaceStore?: SpaceStore
+  orbitStore?: OrbitStore
 } & React.HTMLProps<HTMLDivElement> &
   CSSPropertySet
 
@@ -34,9 +34,9 @@ class SpaceSwitchStore {
     }
   }
 
-  get searchableSpaces(): (Space & { props?: Object })[] {
+  get searchableSpaces(): (Orbit & { props?: Object })[] {
     return [
-      ...this.props.spaceStore.inactiveSpaces,
+      ...this.props.orbitStore.inactiveSpaces,
       {
         name: 'Create new space...',
         color: ['#eee', '#eee'],
@@ -57,7 +57,7 @@ class SpaceSwitchStore {
   }
 
   get spaces() {
-    return this.props.spaceStore.spaces
+    return this.props.orbitStore.orbits
   }
 
   down = e => {
@@ -71,12 +71,12 @@ class SpaceSwitchStore {
   }
 }
 
-@view.attach('spaceStore', 'paneManagerStore')
-@view.attach({
+@attach('orbitStore', 'paneManagerStore')
+@attach({
   store: SpaceSwitchStore,
 })
 @view
-export class OrbitSpaceSwitch extends React.Component<Props> {
+export class OrbitSwitch extends React.Component<Props> {
   spaceSwitcherRef = React.createRef<Popover>()
 
   spaceOpener = reaction(
@@ -107,8 +107,8 @@ export class OrbitSpaceSwitch extends React.Component<Props> {
   }
 
   render() {
-    const { paneManagerStore, spaceStore, store, ...props } = this.props
-    const { activeSpace } = spaceStore
+    const { paneManagerStore, orbitStore, store, ...props } = this.props
+    const { activeSpace } = orbitStore
     const { selectedIndex, filteredSpaces } = store
     const borderRadius = 8
     trace()

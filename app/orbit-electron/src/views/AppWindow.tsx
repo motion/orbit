@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose, react, ensure } from '@mcro/black'
+import { view, compose, react, ensure, attach } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
@@ -102,13 +102,12 @@ class AppWindowStore {
 }
 
 const decorator = compose(
-  view.attach('electronStore'),
-  view.attach({
+  attach('electronStore'),
+  attach({
     store: AppWindowStore,
   }),
-  view.electron,
+  view,
 )
-
 export const AppWindow = decorator(({ id, store, isPeek }: Props & { store: AppWindowStore }) => {
   log.info(`Rendering app window ${id} at url ${store.url}`)
   return (

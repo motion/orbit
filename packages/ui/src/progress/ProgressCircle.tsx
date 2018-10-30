@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Color } from '@mcro/gloss'
 
 type Props = {
@@ -11,7 +10,6 @@ type Props = {
   lineWidth: number
 }
 
-@view.ui
 export class ProgressCircle extends React.Component<Props> {
   static defaultProps = {
     backgroundColor: [0, 0, 0, 1],
@@ -22,15 +20,7 @@ export class ProgressCircle extends React.Component<Props> {
   }
 
   render() {
-    const {
-      lineType,
-      backgroundColor,
-      lineColor,
-      lineWidth,
-      size,
-      percent,
-      ...props
-    } = this.props
+    const { lineType, backgroundColor, lineColor, lineWidth, size, percent, ...props } = this.props
     const radius = size - lineWidth / 2
     const length = Math.PI * 2 * radius
     const pathString = `
@@ -45,12 +35,7 @@ export class ProgressCircle extends React.Component<Props> {
     }
 
     return (
-      <svg
-        width={size}
-        height={size}
-        viewBox={`0 0 ${size * 2} ${size * 2}`}
-        {...props}
-      >
+      <svg width={size} height={size} viewBox={`0 0 ${size * 2} ${size * 2}`} {...props}>
         <path
           d={pathString}
           stroke={`${backgroundColor}`}

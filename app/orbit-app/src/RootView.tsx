@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { NotFound } from './views/NotFound'
-import { view, on, isEqual } from '@mcro/black'
+import { on, isEqual, viewEmitter } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
 import { throttle } from 'lodash'
@@ -40,7 +40,7 @@ export class RootView extends React.Component {
     })
 
     // reset errors on hmr
-    on(this, view, 'will-hmr', () => this.setState({ error: null }))
+    on(this, viewEmitter, 'will-hmr', () => this.setState({ error: null }))
   }
 
   componentDidCatch(error) {
@@ -91,6 +91,7 @@ export class RootView extends React.Component {
         </UI.Col>
       )
     }
+    console.log('RootView.render')
     const CurrentPage = router.activeView || NotFound
     return (
       <UI.ThemeProvide themes={themes}>
@@ -107,8 +108,7 @@ if (process.env.NODE_ENV === 'development') {
         if (status === 'prepare') {
           // for gloss to update styles
           window['__lastHMR'] = Date.now()
-          view.emit('will-hmr')
-          view.provide.emit('will-hmr')
+          viewEmitter.emit('will-hmr')
         }
       })
     }

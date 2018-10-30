@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attach } from '@mcro/black'
 import { now } from 'mobx-utils'
 import { View } from '@mcro/ui'
 
@@ -43,7 +43,7 @@ const Blur = view(View, {
   }
 })
 
-@view.attach({
+@attach({
   store: BlurryStore,
 })
 @view

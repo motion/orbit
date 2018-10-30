@@ -15,12 +15,13 @@ import {
   PersonModel,
   SearchLocationsModel,
   SearchResultModel,
-  SearchTopicsModel,
+  SalientWordsModel,
   SettingModel,
   SettingRemoveCommand,
   SlackChannelModel,
   SlackSettingBlacklistCommand,
   SearchPinnedResultModel,
+  SearchByTopicModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -44,11 +45,12 @@ import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { getSearchResolver } from './resolvers/SearchResultResolver'
-import { getSearchTopicsResolver } from './resolvers/SearchTopicsResolver'
+import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
+import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
 
 const log = new Logger('desktop')
 
@@ -104,6 +106,8 @@ export class Root {
       database: COSAL_DB,
     })
     await this.cosal.start()
+
+    this['x'] = getSearchByTopicResolver(this.cosal)
 
     this.registerMediatorServer()
 
@@ -195,9 +199,10 @@ export class Root {
         GithubRepositoryModel,
         SlackChannelModel,
         SearchResultModel,
-        SearchTopicsModel,
+        SalientWordsModel,
         SearchLocationsModel,
         SearchPinnedResultModel,
+        SearchByTopicModel,
       ],
       commands: [
         SettingSaveCommand,
@@ -223,8 +228,9 @@ export class Root {
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
+        getSearchByTopicResolver(this.cosal),
         getSearchResolver(this.cosal),
-        getSearchTopicsResolver(this.cosal),
+        getSalientWordsResolver(this.cosal),
         SearchLocationsResolver,
         SearchPinnedResolver,
       ],

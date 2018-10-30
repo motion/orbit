@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose, react, ensure } from '@mcro/black'
+import { view, compose, react, ensure, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
 import { ResizableBox } from '../../views/ResizableBox'
@@ -84,8 +84,8 @@ const PeekFrameContainer = view(UI.View, {
 
 const decorator = compose(
   attachTheme,
-  view.attach('appStore'),
-  view.attach({
+  attach('appStore'),
+  attach({
     store: AppFrameStore,
   }),
   view,

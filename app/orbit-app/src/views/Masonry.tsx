@@ -15,7 +15,6 @@ export type MasonryProps = {
   measureKey?: number
 }
 
-@view.ui
 export class Masonry extends React.PureComponent<MasonryProps> {
   static defaultProps = {
     measureKey: 0,
@@ -29,10 +28,7 @@ export class Masonry extends React.PureComponent<MasonryProps> {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (
-      state.measureKey !== props.measureKey ||
-      !isEqual(props.children, state.children)
-    ) {
+    if (state.measureKey !== props.measureKey || !isEqual(props.children, state.children)) {
       return {
         measured: false,
         measureKey: props.measureKey,
@@ -60,26 +56,21 @@ export class Masonry extends React.PureComponent<MasonryProps> {
     for (const item of Array.from(this.gridNode.children)) {
       const content = item.firstChild as HTMLDivElement
       const contentHeight = content.clientHeight
-      const rowSpan = Math.ceil(
-        (contentHeight + gridGap) / (rowHeight + gridGap),
-      )
+      const rowSpan = Math.ceil((contentHeight + gridGap) / (rowHeight + gridGap))
       styles.push({ gridRowEnd: `span ${rowSpan}` })
     }
-    const gridChildren = React.Children.map(
-      this.props.children,
-      (child, index) => {
-        if (typeof child === 'string' || typeof child === 'number') {
-          return child
-        }
-        return React.cloneElement(child, {
-          inGrid: true,
-          style: {
-            ...styles[index],
-            ...child.props.style,
-          },
-        })
-      },
-    )
+    const gridChildren = React.Children.map(this.props.children, (child, index) => {
+      if (typeof child === 'string' || typeof child === 'number') {
+        return child
+      }
+      return React.cloneElement(child, {
+        inGrid: true,
+        style: {
+          ...styles[index],
+          ...child.props.style,
+        },
+      })
+    })
     this.setState({
       gridChildren,
       measured: true,
@@ -110,10 +101,7 @@ export class Masonry extends React.PureComponent<MasonryProps> {
       )
     }
     return (
-      <MasonryGrid
-        style={{ ...style, gridAutoRows: rowHeight, gridGap, gridColumnGap }}
-        {...props}
-      >
+      <MasonryGrid style={{ ...style, gridAutoRows: rowHeight, gridGap, gridColumnGap }} {...props}>
         {this.state.gridChildren}
       </MasonryGrid>
     )

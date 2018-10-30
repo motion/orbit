@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SearchStore } from '../SearchStore'
-import { SelectionStore } from '../SelectionStore'
+import { SearchStore } from '../../../../stores/SearchStore'
+import { SelectionStore } from '../../../../stores/SelectionStore'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
 import { SubPaneStore } from '../../SubPaneStore'
@@ -42,7 +42,7 @@ const OrbitSearchResultsContents = view(({ searchStore, selectionStore }: Props)
   )
 })
 
-@view.attach('searchStore', 'selectionStore', 'paneManagerStore')
+@attach('searchStore', 'selectionStore', 'paneManagerStore')
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   render() {

@@ -1,29 +1,29 @@
-import { react, on, ensure, ReactionRejectionError, cancel } from '@mcro/black'
+import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { SelectionStore, Direction } from './orbitDocked/SelectionStore'
+import { SelectionStore, Direction } from '../../stores/SelectionStore'
 import { Actions } from '../../actions/Actions'
 import { observeOne } from '@mcro/model-bridge'
 import { SettingModel, GeneralSettingValues } from '@mcro/models'
-import { OrbitStore } from './OrbitStore'
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { autoTrack } from '../../stores/Track'
 import { memoize } from 'lodash'
 import { AppsStore } from '../../stores/AppsStore'
-import { SpaceStore } from '../../stores/SpaceStore'
-import { QueryStore } from './orbitDocked/QueryStore'
+import { OrbitStore } from '../../stores/OrbitStore'
+import { QueryStore } from '../../stores/QueryStore'
 
 type Panes = 'home' | 'settings' | 'onboard' | string
 
 export class PaneManagerStore {
   props: {
     appsStore: AppsStore
-    orbitStore: OrbitStore
+    orbitWindowStore: OrbitWindowStore
     selectionStore: SelectionStore
-    spaceStore?: SpaceStore
+    orbitStore?: OrbitStore
     queryStore?: QueryStore
   }
 
   get panes(): Partial<Panes>[] {
-    return [...this.props.spaceStore.activeSpace.panes.map(p => p.id), 'settings']
+    return [...this.props.orbitStore.activeSpace.panes.map(p => p.id), 'settings']
   }
 
   keyablePanes = [0, 6]
@@ -51,16 +51,17 @@ export class PaneManagerStore {
   setActivePaneOnTrigger = react(
     () => this.props.queryStore.query[0],
     firstChar => {
-      for (const { id, trigger } of this.props.spaceStore.activeSpace.panes) {
+      for (const { id, trigger } of this.props.orbitStore.activeSpace.panes) {
         if (trigger && trigger === firstChar) {
           this.setActivePane(id)
           return
         }
       }
-      if (firstChar) {
+      if (firstChar && this.activePane === 'home') {
         this.setActivePane('search')
-      } else {
-        this.setActivePaneToPrevious()
+      }
+      if (!firstChar && this.activePane === 'search') {
+        this.setActivePane('home')
       }
     },
   )
@@ -69,7 +70,7 @@ export class PaneManagerStore {
     on(this, autoTrack(this, ['hasOnboarded', 'paneIndex']))
 
     // set pane manager store... todo make better
-    this.props.orbitStore.appReactionsStore.setPaneManagerStore(this)
+    this.props.orbitWindowStore.appReactionsStore.setPaneManagerStore(this)
 
     on(
       this,

@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
 import { View } from '@mcro/ui'
 import { Actions } from '../../../actions/Actions'
-import { OrbitSpaceSwitch } from '../orbitDocked/orbitHome/OrbitSpaceSwitch'
+import { OrbitSwitch } from '../orbitDocked/orbitHome/OrbitSwitch'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -83,8 +83,8 @@ const Disable = view({
 })
 
 @attachTheme
-@view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
-@view.attach({
+@attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
+@attach({
   headerStore: HeaderStore,
 })
 @view
@@ -111,8 +111,8 @@ export class OrbitHeader extends React.Component<
             <OrbitClose onClick={Actions.closeOrbit}>
               <OrbitCloseControl />
             </OrbitClose>
-            <OrbitSpaceSwitch />
-            <Disable when={paneManagerStore.activePane === 'settings'}>
+            <OrbitSwitch />
+            <Disable when={headerStore.disableSearch}>
               <OrbitHeaderInput headerStore={headerStore} theme={theme} />
             </Disable>
           </Title>

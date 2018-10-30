@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { Title, VerticalSpace, Table, InputRow, FormRow } from '../../views'
@@ -39,8 +39,8 @@ class CreateSpaceStore {
   }
 }
 
-@view.attach('appsStore')
-@view.attach({
+@attach('appsStore')
+@attach({
   store: CreateSpaceStore,
 })
 @view

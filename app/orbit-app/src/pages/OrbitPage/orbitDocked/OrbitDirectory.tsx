@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { App } from '@mcro/stores'
-import { view, react, ensure } from '@mcro/black'
+import { view, react, ensure, attach } from '@mcro/black'
 import { compose } from '@mcro/helpers'
 import { observeMany } from '@mcro/model-bridge'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { SmallVerticalSpace, SubPaneSection } from '../../../views'
+import { SmallVerticalSpace } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
-import { SelectionStore } from './SelectionStore'
+import { SelectionStore } from '../../../stores/SelectionStore'
 import { PersonBitModel, PersonBit } from '@mcro/models'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
 import { NoResultsDialog } from './views/NoResultsDialog'
@@ -79,25 +79,40 @@ class OrbitDirectoryStore {
       if (!query) {
         return people
       }
-      return Helpers.fuzzyQueryFilter(query, people, {
+      console.time('filtering')
+      const filtered = Helpers.fuzzyQueryFilter(query, people, {
         key: 'name',
       })
+      console.timeEnd('filtering')
+      return filtered
     },
     { defaultValue: [] },
   )
 
+  get emailToIndex() {
+    const res = {}
+    for (const [index, { email }] of this.results.entries()) {
+      res[email] = index
+    }
+    return res
+  }
+
+  getIndex = res => this.emailToIndex[res.email]
+
   get resultSections(): ResultSection[] {
+    console.time('People.resultSections')
+    const isFiltering = !!this.peopleQuery.length
     const total = this.results.length
     const perRow = 3
     const height = 60
-    const separatorHeight = 10
+    const separatorHeight = 25
     const sectionHeight = num => Math.ceil(num / perRow) * height + separatorHeight
     let sections: ResultSection[] = []
     // not that many, show just one section
-    if (total < 10) {
+    if (isFiltering || total < 10) {
       sections = [
         {
-          title: 'All',
+          title: isFiltering ? this.peopleQuery : 'All',
           results: this.results,
           height: sectionHeight(total),
         },
@@ -133,11 +148,8 @@ class OrbitDirectoryStore {
         lastPersonLetter = letter
       }
     }
+    console.timeEnd('People.resultSections')
     return sections
-  }
-
-  getIndex = item => {
-    return this.results.findIndex(x => x.email === item.email)
   }
 }
 
@@ -181,13 +193,16 @@ const PersonSection = ({
   )
 }
 
-const decorator = compose(
-  view.attach('selectionStore', 'paneManagerStore'),
-  view.attach({
+const lipHeight = 30
+
+const decorate = compose(
+  attach('selectionStore', 'paneManagerStore'),
+  attach({
     store: OrbitDirectoryStore,
   }),
+  view,
 )
-export const OrbitDirectory = decorator(({ store }: Props) => {
+export const OrbitDirectory = decorate(({ store }: Props) => {
   const { results, resultSections } = store
   const total = results.length
   if (!total) {
@@ -211,7 +226,7 @@ export const OrbitDirectory = decorator(({ store }: Props) => {
         }}
         rowCount={resultSections.length}
         width={ORBIT_WIDTH}
-        height={resultSections.reduce((a, b) => a + b.height, 0)}
+        height={resultSections.reduce((a, b) => a + b.height, 0) + lipHeight}
       />
     </ProvideHighlightsContextWithDefaults>
   )

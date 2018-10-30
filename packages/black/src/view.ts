@@ -4,25 +4,20 @@ import { subscribable } from '@mcro/decor-classes'
 import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
 import createGloss, {
-  isGlossArguments,
+  SimpleView,
   GLOSS_IGNORE_COMPONENT_SYMBOL,
   CSSPropertySet,
+  isGlossArguments,
 } from '@mcro/gloss'
 import { DecorCompiledDecorator } from '@mcro/decor'
-import { RawRules } from '@mcro/gloss/_/createViewFactory'
 
-export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
-
-export interface ViewDecorator {
-  (a?: string | Function | CSSPropertySet, b?: CSSPropertySet): any
-  on: typeof blackDecorator.on
-  emitter: typeof blackDecorator.emitter
-  emit: typeof blackDecorator.emit
-  ui: ReturnType<typeof decor>
-  electron: ReturnType<typeof decor>
-  provide: any
-  attach: any
-}
+type SimpleViewDecorator<
+  A extends string | Function | CSSPropertySet,
+  B extends CSSPropertySet
+> = ((
+  a?: A,
+  b?: B,
+) => A extends string | CSSPropertySet ? SimpleView : B extends CSSPropertySet ? SimpleView : any)
 
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
@@ -30,61 +25,64 @@ const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   [storeProvidable, storeOptions],
   emitsMount,
 ]
+const blackDecorator: DecorCompiledDecorator<any> = decor(decorations({ mobx: true, ui: true }))
+const { createView } = createGloss()
 
-export const blackDecorator: DecorCompiledDecorator<any> = decor(
-  // @ts-ignore
-  decorations({ mobx: true, ui: true }),
-)
-
-function createViewDecorator(): ViewDecorator {
-  const { createView } = createGloss()
-
-  const view = <ViewDecorator>function view(a?, b?) {
-    // simple views: view(), view({}), view('div', {}), view(OtherView, {})
-    if (isGlossArguments(a, b)) {
-      return createView(a, b as RawRules)
-    }
-    const View = a as Function
-    // class views
-    // patch this in for now...
-    const shouldPatchConfig = !View.prototype && !View['withConfig']
-    let aFinal
-    if (shouldPatchConfig) {
-      a['withConfig'] = function(config) {
-        if (config.displayName) {
-          a['displayName'] = config.displayName
-        }
-        return aFinal
+// @view
+export const view = <SimpleViewDecorator<any, any>>function view(a?, b?) {
+  // simple views: view(), view({}), view('div', {}), view(OtherView, {})
+  if (isGlossArguments(a, b)) {
+    return createView(a, b)
+  }
+  const View = a as Function
+  // class views
+  // patch this in for now...
+  const shouldPatchConfig = !View.prototype && !View['withConfig']
+  let aFinal
+  if (shouldPatchConfig) {
+    a['withConfig'] = function(config) {
+      if (config.displayName) {
+        a['displayName'] = config.displayName
       }
+      return aFinal
     }
-    // class/function
-    aFinal = blackDecorator(a)
-    return aFinal
   }
-  // pass on emitter
-  view.emitter = blackDecorator.emitter
-  view.on = blackDecorator.on
-  view.emit = blackDecorator.emit
-  // other decorators
-  view.ui = decor(decorations({ ui: true }))
-  view.electron = decor(decorations({ mobx: true, ui: false }))
-  const providable = decor([[storeProvidable, storeOptions]])
-  view.provide = stores => providable({ stores, context: true })
-  view.provide.on = providable.on
-  view.provide.emit = providable.emit
-  view.attach = (...stores) => {
-    // this allows attaching stores locally
-    if (typeof stores[0] === 'object') {
-      return blackDecorator({
-        stores: stores[0],
-        [GLOSS_IGNORE_COMPONENT_SYMBOL]: true,
-      })
-    }
-    // and this allows attaching contextual stores
-    // @ts-ignore
-    return decor([[storeAttachable, { stores }]])
-  }
-  return view
+  // class/function
+  aFinal = blackDecorator(a)
+  return aFinal
 }
 
-export const view: ViewDecorator = createViewDecorator()
+// @provide
+const providable = decor([[storeProvidable, storeOptions]])
+export const provide = stores => providable({ stores, context: true })
+
+// @attach
+export const attach = (...stores) => {
+  // this allows attaching stores locally
+  if (typeof stores[0] === 'object') {
+    return blackDecorator({
+      stores: stores[0],
+      [GLOSS_IGNORE_COMPONENT_SYMBOL]: true,
+    })
+  }
+  // and this allows attaching contextual stores
+  // @ts-ignore
+  return decor([[storeAttachable, { stores }]])
+}
+
+export const viewEmitter = {
+  on: (action, cb) => {
+    const off = blackDecorator.on(action, cb)
+    const off2 = providable.on(action, cb)
+    return {
+      dispose: () => {
+        off.dispose()
+        off2.dispose()
+      },
+    }
+  },
+  emit: action => {
+    blackDecorator.emit(action)
+    providable.emit(action)
+  },
+}

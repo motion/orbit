@@ -1,5 +1,5 @@
 import { App } from '@mcro/reactron'
-import { view } from '@mcro/black'
+import { view, provide } from '@mcro/black'
 import * as React from 'react'
 import Tray from './Tray'
 import { MenuItems } from './MenuItems'
@@ -7,10 +7,10 @@ import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
 import { AppWindows } from './AppWindows'
 
-@view.provide({
+@provide({
   electronStore: ElectronStore,
 })
-@view.electron
+@view
 export class ElectronRoot extends React.Component {
   props: {
     electronStore?: ElectronStore

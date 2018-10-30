@@ -32,7 +32,6 @@ const Label = view({
 
 // @ts-ignore
 @attachTheme
-@view.ui
 export class SegmentedRow extends React.Component<SegmentedRowProps> {
   state = {
     active: null,

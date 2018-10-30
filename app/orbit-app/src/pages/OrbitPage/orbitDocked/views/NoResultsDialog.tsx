@@ -3,14 +3,14 @@ import { VerticalSpace } from '../../../../views'
 import { Button, View } from '@mcro/ui'
 import * as Views from '../../../../views'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { view } from '@mcro/black'
+import { attach } from '@mcro/black'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
   subName: string
 }
 
-@view.attach('paneManagerStore')
+@attach('paneManagerStore')
 export class NoResultsDialog extends React.Component<Props> {
   render() {
     return (

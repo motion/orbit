@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
-import { SearchStore } from '../SearchStore'
+import { view, attach } from '@mcro/black'
+import { SearchStore } from '../../../../stores/SearchStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SelectionStore } from '../SelectionStore'
+import { SelectionStore } from '../../../../stores/SelectionStore'
 import { ProvideHighlightsContextWithDefaults } from '../../../../helpers/contexts/HighlightsContext'
 import { OrbitMasonry } from '../../../../views/OrbitMasonry'
 import { loadMany } from '@mcro/model-bridge'
@@ -27,8 +27,8 @@ class TopicsStore {
   }
 }
 
-@view.attach('paneManagerStore', 'searchStore', 'selectionStore')
-@view.attach({
+@attach('paneManagerStore', 'searchStore', 'selectionStore')
+@attach({
   store: TopicsStore,
 })
 @view

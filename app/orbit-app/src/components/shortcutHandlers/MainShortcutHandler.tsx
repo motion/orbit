@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { compose, attach } from '@mcro/black'
 import { Actions } from '../../actions/Actions'
 import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
-import { SelectionStore, Direction } from '../../pages/OrbitPage/orbitDocked/SelectionStore'
+import { SelectionStore, Direction } from '../../stores/SelectionStore'
 import { PaneManagerStore } from '../../pages/OrbitPage/PaneManagerStore'
-import { SearchStore } from '../../pages/OrbitPage/orbitDocked/SearchStore'
+import { SearchStore } from '../../stores/SearchStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -35,7 +35,7 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-const decorate = compose(view.attach('selectionStore', 'searchStore', 'paneManagerStore'))
+const decorate = compose(attach('selectionStore', 'searchStore', 'paneManagerStore'))
 export const MainShortcutHandler = decorate(
   ({ searchStore, selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {

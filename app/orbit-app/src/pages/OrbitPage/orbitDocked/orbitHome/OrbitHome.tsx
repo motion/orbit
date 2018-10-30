@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { OrbitExplore } from './orbitExplore/OrbitExplore'
@@ -9,12 +9,13 @@ import { ListsApp } from '../../../../apps/lists/ListsApp'
 import { NewApp } from '../../../../apps/new/NewApp'
 import { OrbitSearchResults } from '../orbitSearch/OrbitSearchResults'
 import { SpaceNavHeight } from '../SpaceNav'
-import { SpaceStore } from '../../../../stores/SpaceStore'
+import { OrbitStore } from '../../../../stores/OrbitStore'
+import { TopicsApp } from '../../../../apps/topics/TopicsApp'
 
 type Props = {
   name: string
   paneManagerStore?: PaneManagerStore
-  spaceStore?: SpaceStore
+  orbitStore?: OrbitStore
 }
 
 const Lip = view({
@@ -25,14 +26,14 @@ const apps = {
   list: ListApp,
 }
 
-@view.attach('spaceStore', 'paneManagerStore')
+@attach('orbitStore', 'paneManagerStore')
 @view
 export class OrbitHome extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubPane name="home" before={<SpaceNavHeight />} paddingLeft={6} paddingRight={6}>
-          <OrbitExplore />
+        <SubPane name="home" before={<SpaceNavHeight />} paddingLeft={0} paddingRight={0}>
+          <TopicsApp />
         </SubPane>
         <SubPane
           name="search"
@@ -55,7 +56,7 @@ export class OrbitHome extends React.Component<Props> {
         >
           <ListsApp />
         </SubPane>
-        {this.props.spaceStore.activeSpace.panes.filter(x => !x.static).map(pane => {
+        {this.props.orbitStore.activeSpace.panes.filter(x => !x.static).map(pane => {
           const App = apps[pane.type]
           return (
             <SubPane
@@ -72,6 +73,9 @@ export class OrbitHome extends React.Component<Props> {
         <SubPane name="new" before={<SpaceNavHeight />} paddingLeft={0} paddingRight={0}>
           <NewApp />
           <Lip />
+        </SubPane>
+        <SubPane name="recently" before={<SpaceNavHeight />} paddingLeft={6} paddingRight={6}>
+          <OrbitExplore />
         </SubPane>
       </>
     )

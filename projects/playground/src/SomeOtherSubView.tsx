@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view, compose, attach } from '@mcro/black'
 
 class TestStore2 {
   state = 'wut2'
@@ -12,7 +12,7 @@ class TestStore2 {
 }
 
 const subDecorator = compose(
-  view.attach({
+  attach({
     store: TestStore2,
   }),
   view,
@@ -20,7 +20,7 @@ const subDecorator = compose(
 export const SomeOtherSubView = subDecorator(({ store, id }) => {
   return (
     <div>
-      123
+      123 123
       {id}: {store.state}
     </div>
   )

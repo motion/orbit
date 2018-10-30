@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SearchStore } from '../SearchStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 import { view } from '@mcro/black'
 import { HighlightText } from '../../../../views/HighlightText'
 import { Text } from '@mcro/ui'

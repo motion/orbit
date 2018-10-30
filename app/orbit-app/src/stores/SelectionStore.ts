@@ -1,10 +1,9 @@
 import { react, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
-import { OrbitStore } from '../OrbitStore'
 import { QueryStore } from './QueryStore'
-import { Actions } from '../../../actions/Actions'
-import { hoverSettler } from '../../../helpers'
-import { ResolvableModel } from '../../../integrations/types'
+import { Actions } from '../actions/Actions'
+import { hoverSettler } from '../helpers'
+import { ResolvableModel } from '../integrations/types'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 const resultsKey = (x: SelectionGroup[]) => x.map(y => y.ids.join('')).join('')
@@ -35,7 +34,6 @@ export type SelectionGroup = {
 // selection store
 export class SelectionStore {
   props: {
-    orbitStore: OrbitStore
     queryStore: QueryStore
   }
 

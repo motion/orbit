@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { loadOne, observeOne, save } from '@mcro/model-bridge'
 import { GeneralSettingValues, SettingModel } from '@mcro/models'
 import { Tray, TrayItem } from '@mcro/reactron'
@@ -54,10 +54,10 @@ class TrayStore {
   }
 }
 
-@view.attach({
+@attach({
   store: TrayStore,
 })
-@view.electron
+@view
 export default class TrayEl extends React.Component<{ store?: TrayStore }> {
   getTrayMessage = () => {
     if (Electron.state.updateState.downloading) {

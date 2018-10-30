@@ -1,14 +1,13 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach, provide } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
-import { OrbitStore } from './OrbitStore'
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from './orbitDocked/SearchStore'
-import { SelectionStore } from './orbitDocked/SelectionStore'
+import { SearchStore } from '../../stores/SearchStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 import { BORDER_RADIUS } from '../../constants'
-import { StaticContainer } from '../../views/StaticContainer'
 
 export type SubPaneProps = CSSPropertySet & {
   preventScroll?: boolean
@@ -20,12 +19,15 @@ export type SubPaneProps = CSSPropertySet & {
   name?: string
   onScrollNearBottom?: Function
   extraCondition?: () => boolean
-  orbitStore?: OrbitStore
+  orbitWindowStore?: OrbitWindowStore
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   selectionStore?: SelectionStore
 }
 
+// we cant animate out as of yet because we are changing the height
+// so it would show overflowing content as the main pane got smaller
+// changing opacity here will be instant so avoid that bug
 const SubPaneFrame = view(UI.FullScreen, {
   pointerEvents: 'none',
   opacity: 0,
@@ -40,7 +42,7 @@ const Pane = view(UI.View, {
   top: 0,
   right: 0,
   left: 0,
-  transition: 'all ease 120ms',
+  transition: 'all ease 100ms',
   overflowX: 'hidden',
   overflowY: 'auto',
   borderBottomRadius: BORDER_RADIUS,
@@ -65,8 +67,8 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-@view.attach('paneManagerStore', 'orbitStore', 'searchStore', 'selectionStore')
-@view.provide({
+@attach('paneManagerStore', 'orbitWindowStore', 'searchStore', 'selectionStore')
+@provide({
   subPaneStore: SubPaneStore,
 })
 @view
@@ -98,9 +100,7 @@ export class SubPane extends React.Component<SubPaneProps> {
             preventScroll={preventScroll}
             {...props}
           >
-            <PaneContentInner>
-              <StaticContainer>{children}</StaticContainer>
-            </PaneContentInner>
+            <PaneContentInner>{children}</PaneContentInner>
           </Pane>
         </SubPaneInner>
         {after}

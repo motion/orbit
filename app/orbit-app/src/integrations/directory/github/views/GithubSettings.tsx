@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, provide } from '@mcro/black'
 import { GithubRepositoryModel, GithubSetting } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
 import { Text, View, SearchableTable } from '@mcro/ui'
@@ -47,7 +47,7 @@ class GithubSettingStore {
   }
 }
 
-@view.provide({ store: GithubSettingStore })
+@provide({ store: GithubSettingStore })
 @view
 export class GithubSettings extends React.Component<Props & { store: GithubSettingStore }> {
   render() {

@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { BitModel, PersonBit, SlackPersonData } from '@mcro/models'
 import * as React from 'react'
@@ -182,8 +182,8 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
   </RoundButton>
 )
 
-@view.attach('appsStore', 'queryStore')
-@view.attach({
+@attach('appsStore', 'queryStore')
+@attach({
   store: PeekPersonStore,
 })
 @view

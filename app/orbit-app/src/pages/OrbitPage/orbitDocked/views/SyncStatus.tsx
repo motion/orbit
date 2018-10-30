@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observeMany } from '@mcro/model-bridge'
 import { JobModel, Job } from '@mcro/models'
-import { view } from '@mcro/black'
+import { attach } from '@mcro/black'
 
 type Props = {
   settingId: number
@@ -35,7 +35,7 @@ class SyncStatusStore {
   }
 }
 
-@view.attach({
+@attach({
   store: SyncStatusStore,
 })
 export class SyncStatus extends React.Component<{ store?: SyncStatusStore } & Props> {

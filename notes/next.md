@@ -1,6 +1,96 @@
+umed:
+so lets start with my desires:
+
+• move search forward a lot, but without me directing too much
+• have you update more often as you go, i'd like to see a few status updates as you go through your day so i know what you're spending time on, thinking about, etc, so we can properly discuss
+
+things i can see being very helpful over the next month from you:
+
+1. grouped by time search (we should chat about this)
+1. testing search with various filters, fixing performance
+1. syncing a lot of data to test and fix performance
+1. fixing syncers to avoid overfilling hard drive
+1. splitting out locations into a new model so we can use them for various things
+1. create a unified profile for the person using orbit: we should get information on their gmail, slack, github and we can figure out their emails they use across them to link them together (more on this during call)
+1. creating a link-crawler that can be hooked into any syncer with an option (so if theres a link in slack we can crawl that link using the website-crawler and add it as a bit)
+1. improving the way we handle raw vs formatted data on bits so its more consistent
+1. fixing google drive settings pane so it works and we can select folders using a searchbar
+1. search-based sync where we can index more stuff based on their searches by hitting the API for their search directly
+1. see if we can get website-crawler working using their chrome or just download puppeteer into a shared config directory we make
+1. refactor how we do multi-process so its much easier to split them up if we need, and help split out the topic modeling process (CosalManager right now)
+1. separate the process that handles the blurry window background because that one really cant afford to be interrupted, can even make the browser process directly connect to the switch websocket server for this
+
+   questions:
+
+- a query for bits made by "me"
+- also can't we unify the profile for "me" very easily?
+
+  - if so, then on a team level as everyone adds themselves into orbit we can unify all profiles between them!
+
+- step 1 go over design
+- grouped search results:
+  - first group by recent-ness. last 2 weeks, 2 months, all.
+  - within each group
+    - do a search and get back results
+    - group those results by type (conversation, document mail)
+    - sort those items within those groups by most relevant using cosal as well as the groups themselves
+  - return a summary-like structure of this
+  - return a structure that represents this all nicely to display:
+
+```
+{
+  type: 'grouped',
+  summary: { conversation: 20, mail: 10, document: 2 },
+  results: {
+    { type: 'conversation', results: [] }.
+    { type: 'document', results: [] },
+    { type: 'mail', results: [] },
+    { type: 'task', results: [] },
+  }
+}
+```
+
+nate:
+
+- two ways to get interesting topics:
+  - topic modeling exploration:
+    - setup test script environment
+    - using cosal:
+      - scan documents using cosal
+      - if you find bi/tri-grams of salient words, store
+      - count times you see those bi/tri-grams
+      - do for whole corpus
+      - sort by most counted and use that for topics
+    - using pre-defined:
+      - take recent 3000 bits you've produced
+      - sort most salient topics to those bits and product topic list
+
+design:
+
+- topic based exploration
+- memory and pinning/adding content
+
+topics:
+
+- use cosal to filter down large wikipedia title list
+- clean up list to be somewhat interesting topics
+- build a small repl with cosal to test
+- test:
+  - get topmost topics based on given corpus
+  - then take those topics find top X documents close to them
+  - show that as a list of lists and see if it looks interesting
+
 search:
 
-- # goes to search and shows locations
+- dont underestimate how far you can get by just making search great
+  - search images
+  - search links
+  - better previews/results
+  - bigger peek better clearer display
+  - clearer shortcuts
+  - pin to list
+- #searchbytopic
+- /filtergroups
 - query to avoid loading `data` and `body`
 - quickresults: this can avoid a call alltogether
   - just do it in memory!
@@ -20,28 +110,6 @@ goals:
 - want to have much better step by step plan, deliverables and review of progress
 - want to have high level goals for november, december, january
 - want to have detailed goals for november fully mapped out
-
-# sync with umed
-
-- go over what data needs to be synced and how
-- we need to work in a way that most unblocks each other
-
-i think this can look like this:
-
-week 1:
-
-- nate: interfaces for account, team, space
-- umed: account and team simplest possible backend we can plug into
-
-week 2:
-
-- nate: interfaces for improved search/directory and other apps
-- umed: link in account, team, space into UI, then move into app data
-
-week 3:
-
-- nate: performance, polish and bugfixing based on last week
-- umed: finishing any account/team, performance, etc
 
 # October
 
@@ -185,11 +253,3 @@ focus on what we can make really a big improvement in day to day first:
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
 - hmr: doesn't store.unmount stores often
-
-### IF things are failing in about 6 months (assuming launch in about 4 months, beta in 2)
-
-prototype out a much nicer launch page with the Orbit Ora, like this:
-
-https://thehelm.com/
-
-But basically have it be a tool for any type of app. Orbit can show them inside the actual pane itself.

@@ -234,7 +234,6 @@ const showPopover = (props: PopoverProps, state: State) => {
   return false
 }
 
-@view.ui
 export class Popover extends React.PureComponent<PopoverProps, State> {
   static acceptsHovered = 'open'
   static defaultProps = {
@@ -1068,6 +1067,3 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     )
   }
 }
-
-// @ts-ignore
-Popover.acceptsHovered = 'open'

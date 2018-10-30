@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SubPane } from '../../SubPane'
-import { view, compose, sleep } from '@mcro/black'
+import { view, compose, sleep, attach } from '@mcro/black'
 import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { addAppClickHandler } from '../../../../helpers/addAppClickHandler'
 import { AppsStore } from '../../../../stores/AppsStore'
@@ -123,8 +123,8 @@ const filterApps = (app: OrbitIntegration<ItemType>) =>
   !!app.integration && app.integration !== 'website'
 
 const decorator = compose(
-  view.attach('settingStore', 'appsStore', 'paneManagerStore'),
-  view.attach({
+  attach('settingStore', 'appsStore', 'paneManagerStore'),
+  attach({
     store: OnboardStore,
   }),
   view,

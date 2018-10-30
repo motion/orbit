@@ -1,11 +1,21 @@
-import { react, view } from '@mcro/black'
+import { react, view, attach } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import { Setting, SettingSaveCommand, WebsiteSetting, WebsiteSettingValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { WebsiteCrawledData } from '../../../../../../orbit-syncers/src/integrations/website/WebsiteCrawledData'
 import { InputRow, Table, VerticalSpace } from '../../../../views'
 import { Message } from '../../../../views/Message'
+
+/**
+ * Crawled website data.
+ * Used to create a bit from.
+ */
+export interface WebsiteCrawledData {
+  url: string
+  title: string
+  textContent: string
+  content: string
+}
 
 type Props = {
   setting?: WebsiteSetting
@@ -37,7 +47,7 @@ class WebsiteSetupStore {
   )
 }
 
-@view.attach({
+@attach({
   store: WebsiteSetupStore,
 })
 @view

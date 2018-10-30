@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose, react } from '@mcro/black'
+import { view, compose, react, attach } from '@mcro/black'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { View } from '@mcro/ui'
 import { memoize } from 'lodash'
@@ -59,7 +59,7 @@ class SliderStore {
 }
 
 const decorate = compose(
-  view.attach({
+  attach({
     store: SliderStore,
   }),
   view,

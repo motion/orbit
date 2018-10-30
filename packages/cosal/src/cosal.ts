@@ -4,6 +4,7 @@ import { toCosal, Pair } from './toCosal'
 import { uniqBy } from 'lodash'
 import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON } from 'fs-extra'
+import { vectors } from './helpers'
 
 // exports
 export { getCovariance } from './getCovariance'
@@ -26,6 +27,7 @@ type Result = {
 type CosalWordOpts = { max?: number; sortByWeight?: boolean; uniqueWords?: boolean }
 
 export class Cosal {
+  allVectors = vectors
   vectors: VectorDB = {}
   covariance: Covariance = null
   database: string

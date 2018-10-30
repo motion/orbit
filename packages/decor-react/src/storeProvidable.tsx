@@ -118,7 +118,7 @@ export function storeProvidable(userOptions, Helpers) {
             this.willReloadListener.dispose()
           }
           root.loadedStores.delete(this)
-          // if you remove @view.attach({ store: ... }) it tries to remove it here but its gone
+          // if you remove @attach({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()
           }
@@ -145,13 +145,11 @@ export function storeProvidable(userOptions, Helpers) {
 
             // hmr hot reload stores, has to be after intantiating to get the real source
             if (process.env.NODE_ENV === 'development') {
-              console.log('wut', cachedStores, name, __hmrPath)
               if (cachedStores && cachedStores[name]) {
                 // matching source, hot reload
                 if (
                   nextStore.constructor.toString() === cachedStores[name].constructor.toString()
                 ) {
-                  console.log('hmr!', cachedStores[name])
                   // we have a hydratable store, hot swap it in!
                   this.stores[name] = cachedStores[name]
                   cachedStores[name].__wasHotReloaded = true
@@ -184,7 +182,6 @@ export function storeProvidable(userOptions, Helpers) {
           for (const name in this.stores) {
             const store = this.stores[name]
             if (store.__wasHotReloaded) {
-              console.log('avoiding dispose of hot reloaded store...', store)
               continue
             }
             unmountStore(name, store)

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
 import { normalizeItem, NormalizedItem } from '../helpers/normalizeItem'
@@ -151,8 +151,8 @@ const Padding = view({
   flex: 1,
 })
 
-@view.attach('appsStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
-@view.attach({
+@attach('appsStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
+@attach({
   store: OrbitItemStore,
 })
 @view

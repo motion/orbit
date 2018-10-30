@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view, compose } from '@mcro/black'
+import { view, compose, attach } from '@mcro/black'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SearchStore } from '../SearchStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 import { HorizontalScroll } from '../../../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
@@ -89,7 +89,7 @@ const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
 const decorator = compose(
-  view.attach('searchStore', 'paneManagerStore'),
+  attach('searchStore', 'paneManagerStore'),
   view,
 )
 export const OrbitSuggestionBar = decorator(({ searchStore }: Props) => {

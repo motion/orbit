@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import * as React from 'react'
 import { SubPane } from '../../SubPane'
 import { OrbitSettingsApps } from './OrbitSettingsApps'
@@ -23,7 +23,7 @@ const SettingButton = props => (
   <Button width={90} sizeIcon={1.1} sizeRadius={2} elementProps={{ width: 'auto' }} {...props} />
 )
 
-@view.attach('paneManagerStore')
+@attach('paneManagerStore')
 @view
 export class OrbitSettings extends React.Component<{
   name: string

@@ -91,9 +91,9 @@ export class Searchable extends React.PureComponent<Props, State> {
         this._inputRef.focus()
       }
     }
-    const node = findDOMNode(this)
+    const node = findDOMNode(this) as HTMLDivElement
     if (node) {
-      on(this, findDOMNode(this), 'keydown', this.onKeyDown)
+      on(this, node, 'keydown', this.onKeyDown)
     } else {
       console.log('no searchable node!')
     }

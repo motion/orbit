@@ -128,6 +128,10 @@ const icons = {
   viewOff: require('!raw-loader!../../public/streamline/view-off.svg'),
   zoomIn: require('!raw-loader!../../public/streamline/zoom-in.svg'),
   zoomOut: require('!raw-loader!../../public/streamline/zoom-out.svg'),
+  // custom icons
+  neutral: require('!raw-loader!../../public/icons/neutral.svg'),
+  upArrow: require('!raw-loader!../../public/icons/up-arrow.svg'),
+  downArrow: require('!raw-loader!../../public/icons/down-arrow.svg'),
 }
 
 const iconNames = Object.keys(icons)
@@ -147,7 +151,7 @@ const findIconName = name => {
 }
 
 // @ts-ignore @types/react
-export const Icon = React.memo(({ name, size = 32, style = null, ...props }) => {
+export const Icon = React.memo(({ name, fill = '#fff', size = 32, style = null, ...props }) => {
   const iconName = findIconName(name)
   if (!iconName) {
     return null
@@ -155,7 +159,7 @@ export const Icon = React.memo(({ name, size = 32, style = null, ...props }) => 
   const icon = icons[iconName]
   return (
     <SVG
-      fill="#fff"
+      fill={fill}
       svg={icon}
       width={`${size}`}
       height={`${size}`}
@@ -167,7 +171,7 @@ export const Icon = React.memo(({ name, size = 32, style = null, ...props }) => 
         height: size,
         ...style,
       }}
-      cleanup={['title', 'desc', 'width', 'height']}
+      cleanup={['fill', 'title', 'desc']}
       {...props}
     />
   )

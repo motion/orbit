@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { MergeUIContext } from './helpers/contexts'
 import { Color, CSSPropertySet } from '@mcro/css'
 import { Row } from './blocks/Row'
@@ -19,7 +18,6 @@ type SegmentedRowProps = CSSPropertySet & {
   spaced?: boolean
 }
 
-@view.ui
 export class SegmentedRow extends React.Component<SegmentedRowProps> {
   state = {
     active: null,

@@ -65,9 +65,13 @@ export async function main() {
   process.on('SIGTERM', handleExit)
   process.on('SIGQUIT', handleExit)
 
-  // fork desktop process...
+  // start sub-processes...
+  // desktop
   desktopProcess = require('./startDesktop').startDesktop()
-  syncersProcess = require('./startSyncers').startSyncers()
+  // syncers
+  if (!process.env.DISABLE_SYNCERS) {
+    syncersProcess = require('./startSyncers').startSyncers()
+  }
 
   setupHandleExit([desktopProcess, syncersProcess])
 

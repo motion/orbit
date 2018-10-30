@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { attach } from '@mcro/black'
 import {
   SelectableCarousel,
   SelectableCarouselProps,
 } from '../../../../components/SelectableCarousel'
-import { OrbitSection } from './OrbitSection'
+import { Section } from '../../../../components/Section'
 import { Unpad } from '../../../../views/Unpad'
 import { handleClickLocation } from '../../../../helpers/handleClickLocation'
 import { SubPaneStore } from '../../SubPaneStore'
@@ -15,7 +15,7 @@ type Props = SelectableCarouselProps & {
   subPaneStore?: SubPaneStore
 }
 
-@view.attach('subPaneStore')
+@attach('subPaneStore')
 export class OrbitCarouselSection extends React.Component<Props> {
   shouldComponentUpdate() {
     return false
@@ -28,7 +28,7 @@ export class OrbitCarouselSection extends React.Component<Props> {
     }
     const isPeople = categoryName === 'Directory'
     return (
-      <OrbitSection
+      <Section
         title={categoryName}
         alignItems="center"
         padding={[offset === 0 ? 0 : 2, 0, 0]}
@@ -59,7 +59,7 @@ export class OrbitCarouselSection extends React.Component<Props> {
             {...props}
           />
         </Unpad>
-      </OrbitSection>
+      </Section>
     )
   }
 }

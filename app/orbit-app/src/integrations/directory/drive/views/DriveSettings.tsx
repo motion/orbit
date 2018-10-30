@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
 import { DriveSetting } from '@mcro/models'
@@ -45,7 +45,7 @@ class DriveSettingsStore {
   }
 }
 
-@view.attach({ store: DriveSettingsStore })
+@attach({ store: DriveSettingsStore })
 @view
 export class DriveSettings extends React.Component<
   Props & {

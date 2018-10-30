@@ -1,10 +1,13 @@
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import * as React from 'react'
+// @ts-ignore react hooks
+import { ConcurrentMode } from 'react'
 import ReactDOM from 'react-dom'
 import './RootViewHMR'
 
 export async function start() {
+  console.log('start')
   // re-require for hmr to capture new value
   const { RootView } = require('./RootViewHMR')
   // Root is the topmost store essentially
@@ -16,7 +19,13 @@ export async function start() {
     window['Root'] = rootStore
     rootStore.rootView = RootView
   }
-  ReactDOM.render(<RootView />, document.querySelector('#app'))
+  ReactDOM.render(
+    // <ConcurrentMode>
+      <RootView />
+    // </ConcurrentMode>
+    ,
+    document.querySelector('#app'),
+  )
 }
 
 start()

@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Menu, SubMenu, MenuItem, MenuItemsExtra } from '@mcro/reactron'
-import { view } from '@mcro/black'
+import { view, attach } from '@mcro/black'
 import { Electron, App, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 
-@view.attach('electronStore')
-@view.electron
+@attach('electronStore')
+@view
 export class MenuItems extends React.Component<{
   electronStore?: ElectronStore
 }> {

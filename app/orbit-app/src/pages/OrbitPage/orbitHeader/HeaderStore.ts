@@ -95,6 +95,8 @@ export class HeaderStore {
     },
   )
 
+  disableSearch = react(() => this.props.paneManagerStore.activePane === 'settings', _ => _)
+
   onClickInput = () => {}
 
   onHoverIcon = () => {

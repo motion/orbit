@@ -4,6 +4,7 @@ import { createViewFactory } from './createViewFactory'
 import { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
 import { Color } from '@mcro/css'
 
+export { SimpleView } from './createViewFactory'
 export { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
 export { alphaColor } from './helpers/alphaColor'
 export { propsToStyles } from './helpers/propsToStyles'

@@ -20,9 +20,10 @@ export async function start() {
     rootStore.rootView = RootView
   }
   ReactDOM.render(
-    <ConcurrentMode>
+    // <ConcurrentMode>
       <RootView />
-    </ConcurrentMode>,
+    // </ConcurrentMode>
+    ,
     document.querySelector('#app'),
   )
 }

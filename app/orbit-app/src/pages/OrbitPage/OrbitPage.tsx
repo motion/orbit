@@ -9,7 +9,6 @@ import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitDocked } from './OrbitDocked'
 import { SettingStore } from '../../stores/SettingStore'
-import { SearchStore } from '../../apps/search/SearchStore'
 import { OrbitStore } from '../../stores/OrbitStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 
@@ -29,9 +28,6 @@ import { PaneManagerStore } from '../../stores/PaneManagerStore'
 })
 @provide({
   paneManagerStore: PaneManagerStore,
-})
-@provide({
-  searchStore: SearchStore,
 })
 export class OrbitPage extends React.Component {
   render() {

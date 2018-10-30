@@ -89,7 +89,7 @@ const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
 const decorator = compose(
-  attach('searchStore', 'paneManagerStore'),
+  attach('queryStore', 'paneManagerStore'),
   view,
 )
 export const OrbitSuggestionBar = decorator(({ queryStore }: Props) => {

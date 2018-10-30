@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
+import { view, attach, provide } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
@@ -42,8 +42,8 @@ const OrbitSearchResultsContents = view(({ searchStore, selectionStore }: Props)
   )
 })
 
-@attach('selectionStore', 'paneManagerStore')
-@attach({
+@attach('queryStore', 'selectionStore', 'paneManagerStore')
+@provide({
   searchStore: SearchStore,
 })
 @view

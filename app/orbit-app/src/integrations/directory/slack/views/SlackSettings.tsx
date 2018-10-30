@@ -14,7 +14,7 @@ import { OrbitIntegrationProps, OrbitSourceSettingProps } from '../../../types'
 
 type Props = OrbitSourceSettingProps<SlackSource>
 
-class SlackSourceStore {
+class SlackSettingStore {
   props: Props
   channels: SlackChannel[] = []
 
@@ -64,10 +64,10 @@ class SlackSourceStore {
   }
 }
 
-@attach({ store: SlackSourceStore })
+@attach({ store: SlackSettingStore })
 @view
-export class SlackSources extends React.Component<
-  OrbitIntegrationProps<'slack'> & Props & { store?: SlackSourceStore }
+export class SlackSettings extends React.Component<
+  OrbitIntegrationProps<'slack'> & Props & { store?: SlackSettingStore }
 > {
   render() {
     const {

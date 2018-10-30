@@ -5,11 +5,11 @@ import { Text, SearchableTable, View } from '@mcro/ui'
 import { DriveSource } from '@mcro/models'
 import { OrbitSourceSettingProps } from '../../../types'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
-import { SettingManageRow } from '../../../views/sources/SettingManageRow'
+import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<DriveSource>
 
-class DriveSourcesStore {
+class DriveSettingsStore {
   props: Props
   popularFolders = []
 
@@ -45,11 +45,11 @@ class DriveSourcesStore {
   }
 }
 
-@attach({ store: DriveSourcesStore })
+@attach({ store: DriveSettingsStore })
 @view
-export class DriveSources extends React.Component<
+export class DriveSettings extends React.Component<
   Props & {
-    store?: DriveSourcesStore
+    store?: DriveSettingsStore
   }
 > {
   render() {

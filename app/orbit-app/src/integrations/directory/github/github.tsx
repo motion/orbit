@@ -1,5 +1,5 @@
 import { GithubApp } from './views/GithubApp'
-import { GithubSources } from './views/GithubSources'
+import { GithubSettings } from './views/GithubSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/github.svg'
@@ -23,6 +23,6 @@ export const github: GetOrbitIntegration<'github'> = (setting?: Setting) => ({
   views: {
     main: GithubApp,
     item: GithubItem,
-    setting: GithubSources,
+    setting: GithubSettings,
   },
 })

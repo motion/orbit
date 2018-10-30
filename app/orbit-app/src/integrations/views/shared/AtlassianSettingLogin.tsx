@@ -3,8 +3,8 @@ import { command } from '@mcro/model-bridge'
 import {
   SourceSaveCommand,
   AtlassianSourceValuesCredentials,
-  Setting,
   AtlassianSource,
+  Source,
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
@@ -14,7 +14,7 @@ import { Message } from '../../../views/Message'
 
 type Props = {
   type: string
-  setting?: AtlassianSource
+  source?: AtlassianSource
 }
 
 const Statuses = {
@@ -29,9 +29,9 @@ const buttonThemes = {
   [Statuses.FAIL]: 'darkred',
 }
 
-class AtlassianSourceLoginStore {
+class AtlassianSettingLoginStore {
   props: Props
-  // setting: Setting
+  // source: Setting
 
   status: string
   error: string
@@ -41,10 +41,10 @@ class AtlassianSourceLoginStore {
     domain: '',
   }
 
-  setting = react(
-    () => this.props.setting,
+  source = react(
+    () => this.props.source,
     async propSetting => {
-      // if setting was sent via component props then use it
+      // if source was sent via component props then use it
       if (propSetting) {
         this.values = propSetting.values.credentials
         return propSetting
@@ -59,31 +59,31 @@ class AtlassianSourceLoginStore {
         category: 'integration',
         type: this.props.type,
         token: null,
-      } as Setting
+      } as Source
     },
   )
 }
 
 @attach({
-  store: AtlassianSourceLoginStore,
+  store: AtlassianSettingLoginStore,
 })
 @view
-export class AtlassianSourceLogin extends React.Component<
-  Props & { store?: AtlassianSourceLoginStore }
+export class AtlassianSettingLogin extends React.Component<
+  Props & { store?: AtlassianSettingLoginStore }
 > {
   // if (!values.username || !values.password || !values.domain)
   // if (values.domain.indexOf('http') !== 0)
 
   addIntegration = async e => {
     e.preventDefault()
-    const { setting } = this.props.store
-    setting.values = { ...setting.values, credentials: this.props.store.values }
-    console.log(`adding integration!`, setting)
+    const { source } = this.props.store
+    source.values = { ...source.values, credentials: this.props.store.values }
+    console.log(`adding integration!`, source)
 
     // send command to the desktop
     this.props.store.status = Statuses.LOADING
     const result = await command(SourceSaveCommand, {
-      setting,
+      source,
     })
 
     // update status on success of fail

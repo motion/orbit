@@ -10,7 +10,7 @@ import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<GmailSource>
 
-class GmailSourceStore {
+class GmailSettingStore {
   props: Props
   syncing = {}
   whitelist = new WhitelistManager({
@@ -27,9 +27,9 @@ class GmailSourceStore {
   }
 }
 
-@attach({ store: GmailSourceStore })
+@attach({ store: GmailSettingStore })
 @view
-export class GmailSources extends React.Component<Props & { store?: GmailSourceStore }> {
+export class GmailSettings extends React.Component<Props & { store?: GmailSettingStore }> {
   render() {
     const {
       store,

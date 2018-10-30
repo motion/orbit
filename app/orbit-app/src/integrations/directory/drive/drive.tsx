@@ -1,5 +1,5 @@
 import { DriveApp } from './views/DriveApp'
-import { DriveSources } from './views/DriveSources'
+import { DriveSettings } from './views/DriveSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/drive.svg'
@@ -20,7 +20,7 @@ export const drive: GetOrbitIntegration<'drive'> = (setting?: Setting) => ({
   views: {
     main: DriveApp,
     item: DriveItem,
-    setting: DriveSources,
+    setting: DriveSettings,
   },
 })
 

@@ -1,3 +1,3 @@
 import { WebsiteSetupPane } from './WebsiteSetupPane'
 
-export const WebsiteSources = WebsiteSetupPane
+export const WebsiteSettings = WebsiteSetupPane

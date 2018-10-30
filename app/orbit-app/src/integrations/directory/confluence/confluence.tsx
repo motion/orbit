@@ -1,5 +1,5 @@
 import { ConfluenceApp } from './views/ConfluenceApp'
-import { ConfluenceSources } from './views/ConfluenceSources'
+import { ConfluenceSettings } from './views/ConfluenceSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/confluence.svg'
@@ -21,7 +21,7 @@ export const confluence: GetOrbitIntegration<'confluence'> = (setting?: Setting)
   views: {
     main: ConfluenceApp,
     item: ConfluenceItem,
-    setting: ConfluenceSources,
+    setting: ConfluenceSettings,
     setup: ConfluenceSetup,
   },
 })

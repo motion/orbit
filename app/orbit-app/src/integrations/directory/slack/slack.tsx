@@ -1,5 +1,5 @@
 import { SlackApp } from './views/SlackApp'
-import { SlackSources } from './views/SlackSources'
+import { SlackSettings } from './views/SlackSettings'
 import { Setting } from '@mcro/models'
 import iconSlack from '../../../../public/icons/slack.svg'
 import { GetOrbitIntegration } from '../../types'
@@ -19,6 +19,6 @@ export const slack: GetOrbitIntegration<'slack'> = (setting?: Setting) => ({
   views: {
     main: SlackApp,
     item: SlackItem,
-    setting: SlackSources,
+    setting: SlackSettings,
   },
 })

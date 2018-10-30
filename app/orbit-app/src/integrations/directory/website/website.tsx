@@ -1,5 +1,5 @@
 import { WebsiteApp } from './views/WebsiteApp'
-import { WebsiteSources } from './views/WebsiteSources'
+import { WebsiteSettings } from './views/WebsiteSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/website.svg'
@@ -21,7 +21,7 @@ export const website: GetOrbitIntegration<'website'> = (setting?: Setting) => ({
   views: {
     main: WebsiteApp,
     item: WebsiteItem,
-    setting: WebsiteSources,
+    setting: WebsiteSettings,
     setup: WebsiteSetup,
   },
 })

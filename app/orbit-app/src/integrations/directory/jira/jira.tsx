@@ -1,5 +1,5 @@
 import { JiraApp } from './views/JiraApp'
-import { JiraSources } from './views/JiraSources'
+import { JiraSettings } from './views/JiraSettings'
 import { Setting } from '@mcro/models'
 // @ts-ignore
 import icon from '../../../../public/icons/jira.svg'
@@ -21,7 +21,7 @@ export const jira: GetOrbitIntegration<'jira'> = (setting?: Setting) => ({
   views: {
     main: JiraApp,
     item: JiraItem,
-    setting: JiraSources,
+    setting: JiraSettings,
     setup: JiraSetup,
   },
 })

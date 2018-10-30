@@ -13,7 +13,7 @@ import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<GithubSource>
 
-class GithubSourceStore {
+class GithubSettingStore {
   props: Props
   repositories: GithubRepository[] = []
   userOrgs = []
@@ -47,9 +47,9 @@ class GithubSourceStore {
   }
 }
 
-@provide({ store: GithubSourceStore })
+@provide({ store: GithubSettingStore })
 @view
-export class GithubSources extends React.Component<Props & { store: GithubSourceStore }> {
+export class GithubSettings extends React.Component<Props & { store: GithubSettingStore }> {
   render() {
     const {
       store,

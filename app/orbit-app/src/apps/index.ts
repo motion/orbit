@@ -1,5 +1,0 @@
-export { HomeApp } from './home/HomeApp'
-export { ListsApp } from './lists/ListsApp'
-export { TopicsApp } from './topics/TopicsApp'
-export { PeopleApp } from './people/PeopleApp'
-export { SearchApp } from './search/SearchApp'

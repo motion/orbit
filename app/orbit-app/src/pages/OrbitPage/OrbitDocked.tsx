@@ -17,7 +17,7 @@ import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { SubPane } from '../../components/SubPane'
 import { OrbitStore } from '../../stores/OrbitStore'
 // import notch from './notch.png'
-import * as Apps from '../../apps'
+import { apps } from '../../apps/apps'
 
 const log = new Logger('OrbitDocked')
 
@@ -93,7 +93,7 @@ class OrbitDockedContents extends React.Component<Props> {
             </Interactive>
             <OrbitOnboard name="onboard" />
             {this.props.orbitStore.activeSpace.panes.map(pane => {
-              const App = Apps[pane.type]
+              const App = apps[pane.type]
               return (
                 <SubPane
                   name={pane.id}

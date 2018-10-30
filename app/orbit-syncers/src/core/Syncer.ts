@@ -22,7 +22,7 @@ interface SyncerInterval {
  *
  * Some of the syncer requirements:
  *
- *   1. we need to sync whens setting changes
+ *   1. we need to sync whens source changes
  *   2. we need to sync periodically (each hour lets say)
  *   3. record errors and progress
  *   4. don’t sync again if sync already running (lock)
@@ -48,7 +48,7 @@ export class Syncer {
    */
   async start(force = false) {
     if (this.options.type) {
-      // in force mode we simply load all settings and run them, we don't need to create a subscription
+      // in force mode we simply load all sources and run them, we don't need to create a subscription
       if (force) {
         const sources = await getRepository(SourceEntity).find({ type: this.options.type })
         for (let source of sources) {
@@ -58,7 +58,7 @@ export class Syncer {
         this.subscription = observeMany(SettingModel, {
           // @ts-ignore
           args: { where: { type: this.options.type } },
-        }).subscribe(async settings => this.reactOnSettingsChanges(settings))
+        }).subscribe(async sources => this.reactOnSettingsChanges(sources))
       }
     } else {
       await this.runInterval(undefined, force)
@@ -82,39 +82,37 @@ export class Syncer {
   }
 
   /**
-   * Reacts on setting changes - manages settings lifecycle and how syncer deals with it.
+   * Reacts on source changes - manages sources lifecycle and how syncer deals with it.
    */
   private async reactOnSettingsChanges(sources: Source[]) {
-    this.log.info('got settings in syncer', sources)
+    this.log.info('got sources in syncer', sources)
 
     const intervalSettings = this.intervals
       .filter(interval => !!interval.source)
       .map(interval => interval.source)
 
-    const settingIds = sources.map(setting => setting.id)
-    const intervalSettingIds = intervalSettings.map(setting => setting.id)
+    const sourceIds = sources.map(source => source.id)
+    const intervalSettingIds = intervalSettings.map(source => source.id)
 
-    // find new settings (for those we don't have intervals) and run intervals for them
-    const newSettings = sources.filter(setting => intervalSettingIds.indexOf(setting.id) === -1)
+    // find new sources (for those we don't have intervals) and run intervals for them
+    const newSettings = sources.filter(source => intervalSettingIds.indexOf(source.id) === -1)
     if (newSettings.length) {
-      this.log.info('found new settings, creating intervals for them', newSettings)
-      for (let setting of newSettings) {
-        await this.runInterval(setting)
+      this.log.info('found new sources, creating intervals for them', newSettings)
+      for (let source of newSettings) {
+        await this.runInterval(source)
       }
     }
 
-    // find removed settings and remove intervals for them if they exist
-    const removedSettings = intervalSettings.filter(
-      setting => settingIds.indexOf(setting.id) === -1,
-    )
+    // find removed sources and remove intervals for them if they exist
+    const removedSettings = intervalSettings.filter(source => sourceIds.indexOf(source.id) === -1)
     if (removedSettings.length) {
-      this.log.info('found removed settings, removing their intervals', removedSettings)
-      for (let setting of removedSettings) {
+      this.log.info('found removed sources, removing their intervals', removedSettings)
+      for (let source of removedSettings) {
         const interval = this.intervals.find(interval => {
-          return interval.source && interval.source.id === setting.id
+          return interval.source && interval.source.id === source.id
         })
         if (interval) {
-          // commented because we can't await it since setting is already missing inside at this moment
+          // commented because we can't await it since source is already missing inside at this moment
           // if (interval.running) { // if its running await once it finished
           //   await interval.running
           // }
@@ -144,7 +142,7 @@ export class Syncer {
         where: {
           type: 'INTEGRATION_SYNC',
           syncer: this.name,
-          settingId: source ? source.id : undefined,
+          sourceId: source ? source.id : undefined,
         },
         order: {
           time: 'desc',
@@ -212,7 +210,7 @@ export class Syncer {
             return
           }
 
-          // re-load setting again just to make sure we have a new version of it
+          // re-load source again just to make sure we have a new version of it
           const latestSource = source
             ? await getRepository(SourceEntity).findOne({ id: source.id })
             : undefined

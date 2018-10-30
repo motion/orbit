@@ -1,4 +1,4 @@
-import { SettingEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { Bit, SlackSource, SlackSourceValues } from '@mcro/models'
 import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
@@ -51,7 +51,7 @@ export class SlackSyncer implements IntegrationSyncer {
       domain: team.domain,
       icon: team.icon.image_132,
     }
-    await getRepository(SettingEntity).save(this.source)
+    await getRepository(SourceEntity).save(this.source)
 
     this.log.timer('load API users')
     const apiUsers = await this.loader.loadUsers()
@@ -155,7 +155,7 @@ export class SlackSyncer implements IntegrationSyncer {
     // update sources
     this.log.info('update sources', { lastMessageSync })
     values.lastMessageSync = lastMessageSync
-    await getRepository(SettingEntity).save(this.source)
+    await getRepository(SourceEntity).save(this.source)
   }
 
   /**

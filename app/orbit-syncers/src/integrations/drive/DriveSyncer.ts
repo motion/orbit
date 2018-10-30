@@ -1,4 +1,4 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { PersonBitUtils } from '@mcro/model-utils'
 import { DriveSource } from '@mcro/models'
@@ -23,7 +23,7 @@ export class DriveSyncer implements IntegrationSyncer {
     this.source = source
     this.log = log || new Logger('syncer:drive:' + source.id)
     this.loader = new DriveLoader(this.source, this.log, source =>
-      getRepository(SettingEntity).save(source),
+      getRepository(SourceEntity).save(source),
     )
     this.bitFactory = new DriveBitFactory(source)
     this.personFactory = new DrivePersonFactory(source)
@@ -53,7 +53,7 @@ export class DriveSyncer implements IntegrationSyncer {
         }
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SettingEntity).save(this.source)
+        await getRepository(SourceEntity).save(this.source)
 
         return false // this tells from the callback to stop file proceeding
       }
@@ -63,7 +63,7 @@ export class DriveSyncer implements IntegrationSyncer {
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
         this.log.verbose('looks like its the first syncing file, set last synced date', lastSync)
-        await getRepository(SettingEntity).save(this.source)
+        await getRepository(SourceEntity).save(this.source)
       }
 
       const bit = this.bitFactory.create(file)
@@ -107,7 +107,7 @@ export class DriveSyncer implements IntegrationSyncer {
         lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SettingEntity).save(this.source)
+        await getRepository(SourceEntity).save(this.source)
         return true
       }
 
@@ -115,7 +115,7 @@ export class DriveSyncer implements IntegrationSyncer {
       if (lastSync.lastCursor !== cursor) {
         this.log.verbose('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
-        await getRepository(SettingEntity).save(this.source)
+        await getRepository(SourceEntity).save(this.source)
       }
 
       return true

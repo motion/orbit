@@ -1,27 +1,27 @@
-import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { Job, SettingRemoveCommand } from '@mcro/models'
+import { Job, SourceRemoveCommand } from '@mcro/models'
 import { hash } from '@mcro/utils'
 import { getManager, getRepository, In } from 'typeorm'
 
-const log = new Logger('command:setting-remove')
+const log = new Logger('command:source-remove')
 
-export const SettingRemoveResolver = resolveCommand(SettingRemoveCommand, async ({ settingId }) => {
-  // load setting that we should remove
-  const setting = await getRepository(SettingEntity).findOne({
-    id: settingId,
+export const SourceRemoveResolver = resolveCommand(SourceRemoveCommand, async ({ sourceId }) => {
+  // load source that we should remove
+  const source = await getRepository(SourceEntity).findOne({
+    id: sourceId,
   })
-  if (!setting) {
-    log.info('error - cannot find requested setting', { settingId })
+  if (!source) {
+    log.info('error - cannot find requested source', { sourceId })
     return
   }
 
-  // create a job about removing setting
+  // create a job about removing source
   const job: Job = {
     target: 'job',
     syncer: '',
-    setting: setting,
+    source,
     time: new Date().getTime(),
     type: 'INTEGRATION_REMOVE',
     status: 'PROCESSING',
@@ -30,18 +30,18 @@ export const SettingRemoveResolver = resolveCommand(SettingRemoveCommand, async 
   await getRepository(JobEntity).save(job)
   log.info('created a new job', job)
 
-  // remove setting and all its related data
-  log.info('removing setting', setting)
+  // remove source and all its related data
+  log.info('removing source', source)
   await getManager()
     .transaction(async manager => {
       // removing all synced bits
-      const bits = await manager.find(BitEntity, { settingId })
+      const bits = await manager.find(BitEntity, { sourceId })
       log.info('removing bits...', bits)
       await manager.remove(bits, { chunk: 100 })
       log.info('bits were removed')
 
       // removing all integration people
-      const persons = await manager.find(PersonEntity, { settingId })
+      const persons = await manager.find(PersonEntity, { sourceId })
       log.info('removing integration people...', persons)
       await manager.remove(persons, { chunk: 100 })
       log.info('integration people were removed')
@@ -51,11 +51,11 @@ export const SettingRemoveResolver = resolveCommand(SettingRemoveCommand, async 
       const personBitIds = persons.map(person => hash(person.email))
       const personBits = await manager.find(PersonBitEntity, {
         relations: {
-          people: true
+          people: true,
         },
         where: {
-          id: In(personBitIds)
-        }
+          id: In(personBitIds),
+        },
       })
       log.info('loaded person bits', personBits)
 
@@ -67,18 +67,18 @@ export const SettingRemoveResolver = resolveCommand(SettingRemoveCommand, async 
       // todo: update person bit's "hasGmail", "hasSlack", etc. flags too.
 
       // removing jobs (including that one we created just now)
-      const jobs = await manager.find(JobEntity, { settingId })
+      const jobs = await manager.find(JobEntity, { sourceId })
       log.info('removing jobs...', jobs)
       await manager.remove(jobs)
       log.info('jobs were removed')
 
-      // removing setting itself
-      log.info('finally removing setting itself...')
-      await manager.remove(setting)
-      log.info('setting was removed')
+      // removing source itself
+      log.info('finally removing source itself...')
+      await manager.remove(source)
+      log.info('source was removed')
     })
     .catch(async error => {
-      log.error('error during setting removal', error)
+      log.error('error during source removal', error)
       await getRepository(JobEntity).remove(job as JobEntity)
     })
 })

@@ -1,10 +1,10 @@
 import { react, view, attach } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import {
-  SettingSaveCommand,
-  AtlassianSettingValuesCredentials,
+  SourceSaveCommand,
+  AtlassianSourceValuesCredentials,
   Setting,
-  AtlassianSetting,
+  AtlassianSource,
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
@@ -14,7 +14,7 @@ import { Message } from '../../../views/Message'
 
 type Props = {
   type: string
-  setting?: AtlassianSetting
+  setting?: AtlassianSource
 }
 
 const Statuses = {
@@ -29,13 +29,13 @@ const buttonThemes = {
   [Statuses.FAIL]: 'darkred',
 }
 
-class AtlassianSettingLoginStore {
+class AtlassianSourceLoginStore {
   props: Props
   // setting: Setting
 
   status: string
   error: string
-  values: AtlassianSetting['values'] = {
+  values: AtlassianSource['values'] = {
     username: '',
     password: '',
     domain: '',
@@ -65,11 +65,11 @@ class AtlassianSettingLoginStore {
 }
 
 @attach({
-  store: AtlassianSettingLoginStore,
+  store: AtlassianSourceLoginStore,
 })
 @view
-export class AtlassianSettingLogin extends React.Component<
-  Props & { store?: AtlassianSettingLoginStore }
+export class AtlassianSourceLogin extends React.Component<
+  Props & { store?: AtlassianSourceLoginStore }
 > {
   // if (!values.username || !values.password || !values.domain)
   // if (values.domain.indexOf('http') !== 0)
@@ -82,7 +82,7 @@ export class AtlassianSettingLogin extends React.Component<
 
     // send command to the desktop
     this.props.store.status = Statuses.LOADING
-    const result = await command(SettingSaveCommand, {
+    const result = await command(SourceSaveCommand, {
       setting,
     })
 
@@ -97,8 +97,8 @@ export class AtlassianSettingLogin extends React.Component<
     }
   }
 
-  handleChange = (prop: keyof AtlassianSettingValuesCredentials) => (
-    val: AtlassianSettingValuesCredentials[typeof prop],
+  handleChange = (prop: keyof AtlassianSourceValuesCredentials) => (
+    val: AtlassianSourceValuesCredentials[typeof prop],
   ) => {
     this.props.store.values = {
       ...this.props.store.values,

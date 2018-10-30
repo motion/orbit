@@ -1,4 +1,4 @@
-import { BitEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { chunk } from 'lodash'
 import { Bit, GmailBitDataParticipant, GmailSourceValues, Person, GmailSource } from '@mcro/models'
@@ -29,7 +29,7 @@ export class GMailSyncer implements IntegrationSyncer {
     this.source = source
     this.log = log || new Logger('syncer:gmail:' + source.id)
     this.loader = new GMailLoader(source, this.log, source =>
-      getRepository(SettingEntity).save(source),
+      getRepository(SourceEntity).save(source),
     )
     this.bitFactory = new GMailBitFactory(source)
     this.personFactory = new GMailPersonFactory(source)
@@ -169,7 +169,7 @@ export class GMailSyncer implements IntegrationSyncer {
     values.lastSyncFilter = filter
     values.lastSyncDaysLimit = daysLimit
     values.lastSyncMax = max
-    await getRepository(SettingEntity).save(this.source)
+    await getRepository(SourceEntity).save(this.source)
   }
 
   /**

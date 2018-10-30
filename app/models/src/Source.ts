@@ -1,5 +1,5 @@
 import { IntegrationType } from './IntegrationType'
-import { AtlassianSettingValuesCredentials } from './source-values/AtlassianSourceValuesCredentials'
+import { AtlassianSourceValuesCredentials } from './source-values/AtlassianSourceValuesCredentials'
 import { ConfluenceSourceValues } from './source-values/ConfluenceSourceValues'
 import { DriveSourceValues } from './source-values/DriveSourceValues'
 import { GithubSourceValues } from './source-values/GithubSourceValues'
@@ -36,7 +36,7 @@ export type GithubSource = BaseSource & { type?: 'github'; values?: GithubSource
 export type SlackSource = BaseSource & { type?: 'slack'; values?: SlackSourceValues }
 export type AtlassianSource = BaseSource & {
   type: 'confluence' | 'jira'
-  values: AtlassianSettingValuesCredentials
+  values: AtlassianSourceValuesCredentials
 }
 export type DriveSource = BaseSource & { type?: 'drive'; values?: DriveSourceValues }
 export type GmailSource = BaseSource & { type?: 'gmail'; values?: GmailSourceValues }

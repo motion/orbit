@@ -1,10 +1,10 @@
 import { getGlobalConfig } from '@mcro/config'
-import { SettingEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/entities'
 import {
   DriveSource,
   GmailSource,
   IntegrationType,
-  Setting,
+  Source,
   SlackSource,
   SlackSourceValues,
 } from '@mcro/models'
@@ -26,12 +26,12 @@ export const finishOauth = (type: IntegrationType, values: OauthValues) => {
   // close window
   closeChromeTabWithUrlStarting(`${Config.urls.server}/auth/${type}`)
   // create setting
-  createSetting(type, values)
+  createSource(type, values)
   // show Orbit again
   Desktop.sendMessage(App, App.messages.SHOW_APPS, type)
 }
 
-const createSetting = async (type: IntegrationType, values: OauthValues) => {
+const createSource = async (type: IntegrationType, values: OauthValues) => {
   console.log('OAUTH VALUES', values)
   if (!values.token) {
     throw new Error(`No token returned ${JSON.stringify(values)}`)
@@ -48,15 +48,15 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
   // let setting
   // // update if its the same identifier from the oauth
   // if (identifier) {
-  //   setting = await getRepository(SettingEntity).findOne({ identifier })
+  //   setting = await getRepository(SourceEntity).findOne({ identifier })
   // }
   // if (!setting) {
-  //   setting = new SettingEntity()
+  //   setting = new SourceEntity()
   // }
-  const setting: Setting = {
-    target: 'setting',
+  const setting: Source = {
+    target: 'source',
     category: 'integration',
-    identifier: type + (await getRepository(SettingEntity).count()), // adding count temporary to prevent unique constraint error
+    identifier: type + (await getRepository(SourceEntity).count()), // adding count temporary to prevent unique constraint error
     type: type as any,
     token: values.token,
     values: {
@@ -91,5 +91,5 @@ const createSetting = async (type: IntegrationType, values: OauthValues) => {
     setting.name = profile.emailAddress
   }
 
-  await getRepository(SettingEntity).save(setting)
+  await getRepository(SourceEntity).save(setting)
 }

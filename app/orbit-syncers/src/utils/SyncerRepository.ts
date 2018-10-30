@@ -7,21 +7,21 @@ import { getRepository, In, MoreThan } from 'typeorm'
  * Executes common syncer queries.
  */
 export class SyncerRepository {
-  private setting: Source
+  private source: Source
 
-  constructor(setting: Source) {
-    this.setting = setting
+  constructor(source: Source) {
+    this.source = source
   }
 
   /**
-   * Makes sure setting isn't removed or in process of removal.
+   * Makes sure source isn't removed or in process of removal.
    */
   async isSettingRemoved(): Promise<boolean> {
-    const setting = await getRepository(SettingEntity).findOne(this.setting.id)
-    if (!setting) return true
+    const source = await getRepository(SettingEntity).findOne(this.source.id)
+    if (!source) return true
 
     const jobs = await getRepository(JobEntity).find({
-      settingId: this.setting.id,
+      sourceId: this.source.id,
       type: 'INTEGRATION_REMOVE',
       status: 'PROCESSING',
     })
@@ -46,7 +46,7 @@ export class SyncerRepository {
       },
       where: {
         id: options.ids ? In(options.ids) : undefined,
-        settingId: this.setting.id,
+        sourceId: this.source.id,
         location: {
           id: options.locationId ? options.locationId : undefined,
         },
@@ -72,7 +72,7 @@ export class SyncerRepository {
       // },
       where: {
         id: options.ids ? In(options.ids) : undefined,
-        settingId: this.setting.id,
+        sourceId: this.source.id,
       },
     })
   }

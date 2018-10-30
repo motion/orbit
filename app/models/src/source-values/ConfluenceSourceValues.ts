@@ -1,5 +1,5 @@
-import { AtlassianSettingValuesCredentials } from './AtlassianSourceValuesCredentials'
+import { AtlassianSourceValuesCredentials } from './AtlassianSourceValuesCredentials'
 
 export interface ConfluenceSourceValues {
-  credentials: AtlassianSettingValuesCredentials
+  credentials: AtlassianSourceValuesCredentials
 }

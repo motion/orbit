@@ -4,7 +4,7 @@ import { JobModel, Job } from '@mcro/models'
 import { attach } from '@mcro/black'
 
 type Props = {
-  settingId: number
+  sourceId: number
   children: (syncJobs: Job[], removeJobs: Job[]) => React.ReactNode
 }
 
@@ -23,7 +23,7 @@ class SyncStatusStore {
     args: {
       where: {
         status: 'PROCESSING',
-        settingId: this.props.settingId,
+        sourceId: this.props.sourceId,
       },
     },
   }).subscribe(val => {

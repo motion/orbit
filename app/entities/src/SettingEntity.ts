@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { Source } from '@mcro/models'
+import { Setting } from '@mcro/models'
 
 @Entity()
 export class SettingEntity extends BaseEntity {
@@ -9,5 +9,5 @@ export class SettingEntity extends BaseEntity {
   id?: number
 
   @Column('simple-json', { default: '{}' })
-  values?: Source['values']
+  values?: Setting['values']
 }

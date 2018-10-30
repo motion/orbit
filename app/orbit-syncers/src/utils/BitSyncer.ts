@@ -25,19 +25,19 @@ export class BitSyncer {
   private log: Logger
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Source, log: Logger) {
-    this.source = setting
+  constructor(source: Source, log: Logger) {
+    this.source = source
     this.log = log
-    this.syncerRepository = new SyncerRepository(setting)
+    this.syncerRepository = new SyncerRepository(source)
   }
 
   /**
    * Creates a bit id.
    */
-  static buildId(setting: GithubSource, data: GithubIssue | GithubPullRequest)
-  static buildId(setting: Source, data: any) {
-    if (setting.type === 'github') {
-      return hash(`${setting.type}-${setting.id}-${data}`)
+  static buildId(source: GithubSource, data: GithubIssue | GithubPullRequest)
+  static buildId(source: Source, data: any) {
+    if (source.type === 'github') {
+      return hash(`${source.type}-${source.id}-${data}`)
     }
   }
 
@@ -80,12 +80,12 @@ export class BitSyncer {
 
     // there is one problematic use case - if user removes integration during synchronization
     // we should not sync anything (shouldn't write any new person or bit into the database)
-    // that's why we check if we have job for this particular setting registered
+    // that's why we check if we have job for this particular source registered
     // and we do it twice - before saving anything to prevent further operations
-    // and after saving everything to make sure setting wasn't removed or requested for removal
+    // and after saving everything to make sure source wasn't removed or requested for removal
     // while we were inserting new bits
     if (await this.syncerRepository.isSettingRemoved()) {
-      this.log.warning('found a setting in a process of removal, skip syncing')
+      this.log.warning('found a source in a process of removal, skip syncing')
       return
     }
 
@@ -93,7 +93,7 @@ export class BitSyncer {
     try {
       await getManager().transaction(async manager => {
         // drop all exist bits if such option was specified
-        if (options.dropAllBits) await manager.delete(BitEntity, { settingId: this.source.id })
+        if (options.dropAllBits) await manager.delete(BitEntity, { sourceId: this.source.id })
 
         // insert new bits
         if (insertedBits.length > 0) {
@@ -148,14 +148,14 @@ export class BitSyncer {
           await manager.delete(BitEntity, removedBits)
         }
 
-        // before committing transaction we make sure nobody removed setting during period of save
+        // before committing transaction we make sure nobody removed source during period of save
         // we use non-transactional manager inside this method intentionally
-        if (await this.syncerRepository.isSettingRemoved()) throw 'setting removed'
+        if (await this.syncerRepository.isSettingRemoved()) throw 'source removed'
       })
       this.log.timer('save bits in the database')
     } catch (error) {
-      if (error === 'setting removed') {
-        this.log.warning('found a setting in a process of removal, skip syncing')
+      if (error === 'source removed') {
+        this.log.warning('found a source in a process of removal, skip syncing')
         return
       }
       throw error

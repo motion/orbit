@@ -1,4 +1,4 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { PersonBitUtils } from '@mcro/model-utils'
 import {
@@ -182,7 +182,7 @@ export class GithubSyncer implements IntegrationSyncer {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(SettingEntity).save(this.source, { listeners: false })
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
 
       return false // this tells from the callback to stop issue proceeding
     }
@@ -192,7 +192,7 @@ export class GithubSyncer implements IntegrationSyncer {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       this.log.verbose('looks like its the first syncing issue, set last synced date', lastSyncInfo)
-      await getRepository(SettingEntity).save(this.source, { listeners: false })
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
     }
 
     const comments =
@@ -248,7 +248,7 @@ export class GithubSyncer implements IntegrationSyncer {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(SettingEntity).save(this.source, { listeners: false })
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
       return true
     }
 
@@ -257,7 +257,7 @@ export class GithubSyncer implements IntegrationSyncer {
       this.log.verbose('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getRepository(SettingEntity).save(this.source, { listeners: false })
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
     }
 
     return true

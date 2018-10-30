@@ -1,11 +1,18 @@
 import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
-import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import {
+  BitEntity,
+  JobEntity,
+  PersonBitEntity,
+  PersonEntity,
+  SettingEntity,
+  SourceEntity,
+} from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
-  SettingSaveCommand,
+  SourceSaveCommand,
   BitModel,
   CosalTopWordsCommand,
   GithubRepositoryModel,
@@ -17,11 +24,12 @@ import {
   SearchResultModel,
   SalientWordsModel,
   SettingModel,
-  SettingRemoveCommand,
+  SourceRemoveCommand,
   SlackChannelModel,
   SlackSourceBlacklistCommand,
   SearchPinnedResultModel,
   SearchByTopicModel,
+  SourceModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -40,13 +48,13 @@ import { GeneralSettingManager } from './managers/GeneralSettingManager'
 import { OCRManager } from './managers/OCRManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { Onboard } from './onboard/Onboard'
-import { SettingSaveResolver } from './resolvers/SettingSaveResolver'
+import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { getSearchResolver } from './resolvers/SearchResultResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
-import { SettingRemoveResolver } from './resolvers/SettingRemoveResolver'
+import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
@@ -205,8 +213,8 @@ export class Root {
         SearchByTopicModel,
       ],
       commands: [
-        SettingSaveCommand,
-        SettingRemoveCommand,
+        SourceSaveCommand,
+        SourceRemoveCommand,
         GithubSourceBlacklistCommand,
         SlackSourceBlacklistCommand,
         CosalTopWordsCommand,
@@ -217,14 +225,15 @@ export class Root {
       resolvers: [
         // @ts-ignore
         ...typeormResolvers(getConnection(), [
+          { entity: SourceEntity, models: [SourceModel] },
           { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },
           { entity: PersonEntity, models: [PersonModel] },
           { entity: PersonBitEntity, models: [PersonBitModel] },
         ]),
-        SettingRemoveResolver,
-        SettingSaveResolver,
+        SourceRemoveResolver,
+        SourceSaveResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),

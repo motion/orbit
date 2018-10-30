@@ -14,16 +14,15 @@ export async function start() {
   // We export it so you can access a number of helpers
   if (!window['Root']) {
     console.timeEnd('splash')
-    const { RootStore } = require('./stores/RootStore')
+    const { RootStore } = require('./RootStore')
     const rootStore = new RootStore()
     window['Root'] = rootStore
     rootStore.rootView = RootView
   }
   ReactDOM.render(
     // <ConcurrentMode>
-      <RootView />
+    <RootView />,
     // </ConcurrentMode>
-    ,
     document.querySelector('#app'),
   )
 }

@@ -1,29 +1,25 @@
 import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-
-// runs off thread
-// @ts-ignore
-import initNlp from './nlpStore/nlpQueryWorker'
 import { PersonBitModel } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 import { NLPResponse } from './types'
+// to run in web worker
+import initNlp from './nlpQueryWorker'
 const { parseSearchQuery, setUserNames } = initNlp()
-// @ts-ignore
-window.nlpWorker = { parseSearchQuery, setUserNames }
 
-// runs on thread
+// to run it on thread
 // import { parseSearchQuery, setUserNames } from './nlpStore/nlpQuery'
 
-const DEFAULT_NLP = {
+const DEFAULT_NLP: Partial<NLPResponse> = {
+  query: '',
   date: {
     startDate: null,
     endDate: null,
   },
 }
 
-// @ts-ignore
 @store
-export class NLPStore /* extends Store */ {
+export class NLPStore {
   peopleNames = null
   peopleNames$ = observeMany(PersonBitModel, {
     args: {
@@ -44,7 +40,7 @@ export class NLPStore /* extends Store */ {
     return this.nlp.marks
   }
 
-  nlp: NLPResponse = react(
+  nlp = react(
     // fastest (sync) link to search
     () => App.state.query,
     async (query, { sleep }) => {

@@ -42,7 +42,10 @@ const OrbitSearchResultsContents = view(({ searchStore, selectionStore }: Props)
   )
 })
 
-@attach('searchStore', 'selectionStore', 'paneManagerStore')
+@attach('selectionStore', 'paneManagerStore')
+@attach({
+  searchStore: SearchStore,
+})
 @view
 export class SearchApp extends React.Component<Props> {
   render() {

@@ -1,7 +1,7 @@
 import { store, react, ensure } from '@mcro/black'
 import { AppsStore } from './AppsStore'
 import { memoize } from 'lodash'
-import { MarkType } from '../pages/OrbitPage/orbitDocked/nlpStore/types'
+import { MarkType } from './nlpStore/types'
 import { NLPStore } from './NLPStore'
 import { QueryStore } from './QueryStore'
 import { SearchStore } from './SearchStore'

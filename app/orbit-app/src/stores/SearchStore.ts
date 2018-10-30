@@ -3,14 +3,14 @@ import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, Bit, SearchPinnedResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { AppsStore } from './AppsStore'
-import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
 import { NLPStore } from './NLPStore'
-import { MarkType } from '../pages/OrbitPage/orbitDocked/nlpStore/types'
 import { QueryStore } from './QueryStore'
 import { SearchFilterStore } from './SearchFilterStore'
 import { SelectionGroup, SelectionStore } from './SelectionStore'
 import { SettingStore } from './SettingStore'
 import { uniq } from 'lodash'
+import { PaneManagerStore } from './PaneManagerStore'
+import { MarkType } from './nlpStore/types'
 
 const TYPE_DEBOUNCE = 200
 

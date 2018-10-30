@@ -7,7 +7,7 @@ import * as React from 'react'
 import { Actions } from '../actions/Actions'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { AppPage } from './AppPage/AppPage'
-import { OrbitDocked } from './OrbitPage/orbitDocked/OrbitDocked'
+import { OrbitDocked } from './OrbitPage/OrbitDocked'
 
 const getItem = {
   githubItem: () =>

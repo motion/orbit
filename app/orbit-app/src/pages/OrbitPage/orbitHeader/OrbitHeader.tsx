@@ -6,7 +6,8 @@ import { HeaderStore } from './HeaderStore'
 import { HeaderProps } from './HeaderProps'
 import { View } from '@mcro/ui'
 import { Actions } from '../../../actions/Actions'
-import { OrbitSwitch } from '../orbitDocked/orbitHome/OrbitSwitch'
+import { OrbitSwitch } from './OrbitSwitch'
+import { OrbitAfterHeader } from './OrbitAfterHeader'
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
@@ -98,7 +99,7 @@ export class OrbitHeader extends React.Component<
   }
 > {
   render() {
-    const { headerStore, paneManagerStore, after, theme, borderRadius } = this.props
+    const { headerStore, paneManagerStore, theme, borderRadius } = this.props
     const headerBg = theme.background
     return (
       <OrbitHeaderContainer
@@ -116,7 +117,9 @@ export class OrbitHeader extends React.Component<
               <OrbitHeaderInput headerStore={headerStore} theme={theme} />
             </Disable>
           </Title>
-          {!!after && <After>{after}</After>}
+          <After>
+            <OrbitAfterHeader />
+          </After>
         </OrbitFakeInput>
       </OrbitHeaderContainer>
     )

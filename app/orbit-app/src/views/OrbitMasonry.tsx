@@ -6,8 +6,6 @@ import {
   Masonry,
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
-// NOTE THIS IS HOW WE DO SEARCH
-// import { OrbitSearchCard } from '../pages/OrbitPage/orbitDocked/orbitHome/OrbitSearchCard'
 import { ItemProps } from './OrbitItemProps'
 import { OrbitCard } from './OrbitCard'
 

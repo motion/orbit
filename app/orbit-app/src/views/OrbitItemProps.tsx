@@ -4,10 +4,10 @@ import { NormalizedItem } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
 import { ResolvableModel, OrbitItemProps } from '../integrations/types'
 import { SelectionStore } from '../stores/SelectionStore'
-import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
-import { SubPaneStore } from '../pages/OrbitPage/SubPaneStore'
+import { SubPaneStore } from '../components/SubPaneStore'
 import { AppsStore } from '../stores/AppsStore'
 import { CSSPropertySetStrict } from '../../../../packages/css/_/cssPropertySet'
+import { PaneManagerStore } from '../stores/PaneManagerStore'
 
 export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {

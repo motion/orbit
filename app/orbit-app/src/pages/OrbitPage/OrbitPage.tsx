@@ -7,11 +7,11 @@ import { AppWrapper } from '../../views'
 import { HighlightsPage } from '../HighlightsPage/HighlightsPage'
 import { QueryStore } from '../../stores/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
-import { OrbitDocked } from './orbitDocked/OrbitDocked'
+import { OrbitDocked } from './OrbitDocked'
 import { SettingStore } from '../../stores/SettingStore'
-import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from '../../stores/SearchStore'
 import { OrbitStore } from '../../stores/OrbitStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
 
 @provide({
   settingStore: SettingStore,

@@ -6,7 +6,7 @@ import { chunk, zip, flatten } from 'lodash'
 
 const log = new Logger('CosalManager')
 
-const getGeneralSetting = () => getRepository(SettingEntity).findOne()
+const getGeneralSetting = () => getRepository(SettingEntity).findOne({ name: 'general' })
 
 export class CosalManager {
   cosal: Cosal

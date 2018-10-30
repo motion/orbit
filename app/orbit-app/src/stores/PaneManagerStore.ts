@@ -32,9 +32,11 @@ export class PaneManagerStore {
     onlyUpdateIfChanged: true,
   })
   generalSetting = null
-  generalSetting$ = observeOne(SettingModel).subscribe(({ values }) => {
-    this.hasOnboarded = values.hasOnboarded
-  })
+  generalSetting$ = observeOne(SettingModel, { args: { name: 'general' } }).subscribe(
+    ({ values }) => {
+      this.hasOnboarded = values.hasOnboarded
+    },
+  )
 
   setActivePaneOnTrigger = react(
     () => this.props.queryStore.query[0],

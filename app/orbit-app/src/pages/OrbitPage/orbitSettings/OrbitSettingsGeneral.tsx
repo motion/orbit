@@ -55,7 +55,7 @@ class OrbitSettingsStore {
   props: Props
 
   generalSetting = null
-  generalSetting$ = observeOne(SettingModel).subscribe(value => {
+  generalSetting$ = observeOne(SettingModel, { args: { name: 'general' } }).subscribe(value => {
     this.generalSetting = value
   })
 

@@ -39,7 +39,7 @@ export class Onboard {
   }
 
   async start() {
-    this.generalSetting = await getRepository(SettingEntity).findOne()
+    this.generalSetting = await getRepository(SettingEntity).findOne({ name: 'general' })
     if (!this.generalSetting.values.hasOnboarded) {
       await this.scanHistory()
     }

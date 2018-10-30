@@ -31,20 +31,21 @@ export class GeneralSettingManager {
     this.start()
   }
 
-  defaultSettingValues = {
-    openShortcut: 'Option+Space',
-    autoLaunch: true,
-    autoUpdate: true,
-    darkTheme: true,
-  } as Setting['values']
-
   async start() {
-    let setting = await getRepository(SettingEntity).findOne()
+    let setting = await getRepository(SettingEntity).findOne({ name: 'general' })
     if (!setting) {
       const settingEntity = new SettingEntity()
-      Object.assign(settingEntity, { values: this.defaultSettingValues })
+      Object.assign(settingEntity, {
+        name: 'general',
+        values: {
+          openShortcut: 'Option+Space',
+          autoLaunch: true,
+          autoUpdate: true,
+          darkTheme: true,
+        },
+      })
       await getRepository(SettingEntity).save(settingEntity)
-      setting = await getRepository(SettingEntity).findOne()
+      setting = await getRepository(SettingEntity).findOne({ name: 'general' })
     }
     this.handleAutoLaunch(setting)
   }

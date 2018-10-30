@@ -48,7 +48,7 @@ export class MediatorServer {
         this.options.transport.send({
           id: data.id,
           result: undefined,
-          notFound: true
+          notFound: true,
         })
         return
       }
@@ -62,7 +62,7 @@ export class MediatorServer {
         this.options.transport.send({
           id: data.id,
           result: undefined,
-          notFound: true
+          notFound: true,
         })
         return
       }
@@ -70,24 +70,39 @@ export class MediatorServer {
 
     // find a resolver
     const resolver = this.options.resolvers.find(resolver => {
-      if (data.type === 'command')
+      if (data.type === 'command') {
         return resolver.type === 'command' && resolver.command === command
-      if (data.type === 'save') return resolver.type === 'save' && resolver.model === model
-      if (data.type === 'remove') return resolver.type === 'remove' && resolver.model === model
-      if (data.type === 'loadOne') return resolver.type === 'one' && resolver.model === model
-      if (data.type === 'loadMany') return resolver.type === 'many' && resolver.model === model
-      if (data.type === 'loadManyAndCount')
+      }
+      if (data.type === 'save') {
+        return resolver.type === 'save' && resolver.model === model
+      }
+      if (data.type === 'remove') {
+        return resolver.type === 'remove' && resolver.model === model
+      }
+      if (data.type === 'loadOne') {
+        return resolver.type === 'one' && resolver.model === model
+      }
+      if (data.type === 'loadMany') {
+        return resolver.type === 'many' && resolver.model === model
+      }
+      if (data.type === 'loadManyAndCount') {
         return resolver.type === 'manyAndCount' && resolver.model === model
-      if (data.type === 'loadCount') return resolver.type === 'count' && resolver.model === model
-      if (data.type === 'observeOne')
+      }
+      if (data.type === 'loadCount') {
+        return resolver.type === 'count' && resolver.model === model
+      }
+      if (data.type === 'observeOne') {
         return resolver.type === 'observeOne' && resolver.model === model
-      if (data.type === 'observeMany')
+      }
+      if (data.type === 'observeMany') {
         return resolver.type === 'observeMany' && resolver.model === model
-      if (data.type === 'observeManyAndCount')
+      }
+      if (data.type === 'observeManyAndCount') {
         return resolver.type === 'observeManyAndCount' && resolver.model === model
-      if (data.type === 'observeCount')
+      }
+      if (data.type === 'observeCount') {
         return resolver.type === 'observeCount' && resolver.model === model
-
+      }
       return false
     })
 

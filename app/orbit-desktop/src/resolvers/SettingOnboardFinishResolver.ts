@@ -9,7 +9,7 @@ const log = new Logger('command:setting-onboard-finish')
 export const SettingOnboardFinishResolver = resolveCommand(
   SettingOnboardFinishCommand,
   async () => {
-    const setting = await getRepository(SettingEntity).findOne()
+    const setting = await getRepository(SettingEntity).findOne({ name: 'general' })
     if (!setting) {
       log.info('error - cannot find general setting')
       return

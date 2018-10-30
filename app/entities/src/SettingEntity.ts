@@ -8,6 +8,9 @@ export class SettingEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number
 
+  @Column()
+  name?: string
+
   @Column('simple-json', { default: '{}' })
   values?: Setting['values']
 }

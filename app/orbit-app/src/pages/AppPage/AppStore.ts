@@ -185,11 +185,7 @@ export class AppStore {
         },
       })
     } else if (type === 'setting') {
-      selectedItem = await loadOne(SettingModel, {
-        args: {
-          where: { id },
-        },
-      })
+      selectedItem = await loadOne(SettingModel)
     }
     return selectedItem
   }

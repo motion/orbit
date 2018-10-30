@@ -199,6 +199,7 @@ export class Root {
   private registerMediatorServer() {
     this.mediatorServer = new MediatorServer({
       models: [
+        SourceModel,
         SettingModel,
         BitModel,
         JobModel,

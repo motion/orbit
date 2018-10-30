@@ -9,8 +9,8 @@ export type Setting = {
     darkTheme?: boolean
     realtimeSearch?: boolean
     openShortcut?: string
-    cosalIndexUpdatedTo: number
-    topTopics: string[]
+    cosalIndexUpdatedTo?: number
+    topTopics?: string[]
     recentSearches?: string[]
     pinnedBits?: string[]
   }

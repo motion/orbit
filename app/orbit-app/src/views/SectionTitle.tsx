@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { SubTitle } from '../views'
-import { RoundButtonSmall } from '../views/RoundButtonSmall'
+import { SubTitle } from '.'
+import { RoundButtonSmall } from './RoundButtonSmall'
 import { Row } from '@mcro/ui'
 import { view } from '@mcro/black'
 

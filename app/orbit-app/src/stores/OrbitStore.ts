@@ -51,13 +51,13 @@ export class OrbitStore {
         trigger: '@',
         static: true,
       },
-      {
-        type: 'topics',
-        title: 'Topics',
-        icon: 'singleNeutralChat',
-        trigger: '#',
-        static: true,
-      },
+      // {
+      //   type: 'topics',
+      //   title: 'Topics',
+      //   icon: 'singleNeutralChat',
+      //   trigger: '#',
+      //   static: true,
+      // },
       {
         type: 'lists',
         title: 'Lists',

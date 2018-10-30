@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { attach } from '@mcro/black'
 import { SelectableCarousel, SelectableCarouselProps } from './SelectableCarousel'
-import { Section } from './Section'
+import { Section } from '../views/Section'
 import { Unpad } from '../views/Unpad'
 import { handleClickLocation } from '../helpers/handleClickLocation'
 import { SubPaneStore } from './SubPaneStore'

@@ -5,7 +5,7 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { SettingStore } from '../../stores/SettingStore'
 import { View, Row, Text } from '@mcro/ui'
-import { Section } from '../../components/Section'
+import { Section } from '../../views/Section'
 import { Icon } from '../../views/Icon'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 

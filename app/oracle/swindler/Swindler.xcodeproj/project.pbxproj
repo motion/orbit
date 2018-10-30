@@ -20,10 +20,8 @@
 		2F86CEE41BD6DAD7007E8C29 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F86CEE31BD6DAD7007E8C29 /* State.swift */; };
 		2F9E31A91BF050AF00EAD248 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9E31A81BF050AF00EAD248 /* Property.swift */; };
 		2FEEA2E31C1E6E9200CD515E /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FEEA2E21C1E6E9200CD515E /* Log.swift */; };
-		AED62E522153339B006BB1F9 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED62E502153339B006BB1F9 /* PromiseKit.framework */; };
+		AED62E522153339B006BB1F9 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED62E502153339B006BB1F9 /* PromiseKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		AED62E532153339B006BB1F9 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED62E512153339B006BB1F9 /* AXSwift.framework */; };
-		AED62E5821533655006BB1F9 /* PromiseKit.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AED62E5621533655006BB1F9 /* PromiseKit.framework.dSYM */; };
-		AED62E5921533655006BB1F9 /* AXSwift.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AED62E5721533655006BB1F9 /* AXSwift.framework.dSYM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,10 +56,10 @@
 		2FEEA2AC1C1E041200CD515E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2FEEA2C41C1E09A300CD515E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		2FEEA2E21C1E6E9200CD515E /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		AE9BDBC82188E3F900ACDDAF /* AXSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = AXSwift.framework.dSYM; path = ../orbit/Carthage/Build/Mac/AXSwift.framework.dSYM; sourceTree = "<group>"; };
+		AE9BDBC92188E40000ACDDAF /* PromiseKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PromiseKit.framework.dSYM; path = ../orbit/Carthage/Build/Mac/PromiseKit.framework.dSYM; sourceTree = "<group>"; };
 		AED62E502153339B006BB1F9 /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/Mac/PromiseKit.framework; sourceTree = "<group>"; };
 		AED62E512153339B006BB1F9 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
-		AED62E5621533655006BB1F9 /* PromiseKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PromiseKit.framework.dSYM; path = Carthage/Build/Mac/PromiseKit.framework.dSYM; sourceTree = "<group>"; };
-		AED62E5721533655006BB1F9 /* AXSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = AXSwift.framework.dSYM; path = Carthage/Build/Mac/AXSwift.framework.dSYM; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,8 +87,8 @@
 		2F86CEBC1BD60117007E8C29 = {
 			isa = PBXGroup;
 			children = (
-				AED62E5721533655006BB1F9 /* AXSwift.framework.dSYM */,
-				AED62E5621533655006BB1F9 /* PromiseKit.framework.dSYM */,
+				AE9BDBC92188E40000ACDDAF /* PromiseKit.framework.dSYM */,
+				AE9BDBC82188E3F900ACDDAF /* AXSwift.framework.dSYM */,
 				2F86CEC81BD60117007E8C29 /* Swindler */,
 				2F86CEC71BD60117007E8C29 /* Products */,
 				9E4447A2F5E7EB6E92464F87 /* Frameworks */,
@@ -215,8 +213,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AED62E5821533655006BB1F9 /* PromiseKit.framework.dSYM in Resources */,
-				AED62E5921533655006BB1F9 /* AXSwift.framework.dSYM in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

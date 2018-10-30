@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
-import { Section } from './Section'
+import { Section } from '../views/Section'
 import { Masonry } from '../views/Masonry'
 import { OrbitCard } from '../views/OrbitCard'
 

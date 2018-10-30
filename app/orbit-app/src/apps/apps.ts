@@ -6,8 +6,8 @@ import { SearchApp } from './search/SearchApp'
 
 export const apps = {
   home: HomeApp,
-  lists: ListsApp,
-  topics: TopicsApp,
-  people: PeopleApp,
   search: SearchApp,
+  people: PeopleApp,
+  topics: TopicsApp,
+  lists: ListsApp,
 }

@@ -1,6 +1,5 @@
 export type Pane = {
-  id: string
-  type?: 'list' | 'lists'
+  type: 'home' | 'search' | 'people' | 'topcis' | 'lists'
   title: string
   icon: string
   show?: boolean
@@ -31,13 +30,13 @@ export class OrbitStore {
   getPanes = (): Pane[] => {
     return [
       {
-        id: 'home',
+        type: 'home',
         title: 'Home',
         icon: 'house',
         static: true,
       },
       {
-        id: 'search',
+        type: 'search',
         title: 'Search',
         icon: 'singleNeutralSearch',
         static: true,
@@ -46,34 +45,33 @@ export class OrbitStore {
         },
       },
       {
-        id: 'people',
+        type: 'people',
         title: 'People',
         icon: 'multipleNeutral2',
         trigger: '@',
         static: true,
       },
       {
-        id: 'topics',
+        type: 'topics',
         title: 'Topics',
         icon: 'singleNeutralChat',
         trigger: '#',
         static: true,
       },
       {
-        id: 'lists',
         type: 'lists',
         title: 'Lists',
         icon: 'listBullets',
         trigger: '/',
         static: true,
       },
-      {
-        id: 'new',
-        title: 'New',
-        icon: 'cog',
-        show: false,
-        static: true,
-      },
+      // {
+      //   type: 'new',
+      //   title: 'New',
+      //   icon: 'cog',
+      //   show: false,
+      //   static: true,
+      // },
     ]
   }
 

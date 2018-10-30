@@ -96,8 +96,8 @@ class OrbitDockedContents extends React.Component<Props> {
               const App = apps[pane.type]
               return (
                 <SubPane
-                  name={pane.id}
-                  key={pane.id}
+                  name={pane.type}
+                  key={pane.type}
                   before={<SpaceNavHeight />}
                   paddingLeft={0}
                   paddingRight={0}

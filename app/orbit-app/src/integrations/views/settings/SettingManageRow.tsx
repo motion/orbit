@@ -11,7 +11,7 @@ import { Actions } from '../../../actions/Actions'
 import { SyncStatus } from '../../../components/SyncStatus'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { TitleBarButton } from '../layout/TitleBarButton'
-import { getAppFromSetting } from '../../../stores/AppsStore'
+import { getAppFromSource } from '../../../stores/AppsStore'
 
 @attach('appInfoStore')
 export class SettingManageRow extends React.Component<{
@@ -30,7 +30,7 @@ export class SettingManageRow extends React.Component<{
       showConfirmDialog({
         title: 'Remove integration?',
         message: `Are you sure you want to remove ${
-          getAppFromSetting(this.props.setting).display.name
+          getAppFromSource(this.props.setting).display.name
         }?`,
       })
     ) {

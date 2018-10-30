@@ -13,28 +13,28 @@ import { DrivePersonFactory } from './DrivePersonFactory'
  * Syncs Google Drive files.
  */
 export class DriveSyncer implements IntegrationSyncer {
-  private setting: DriveSource
+  private source: DriveSource
   private log: Logger
   private loader: DriveLoader
   private bitFactory: DriveBitFactory
   private personFactory: DrivePersonFactory
 
-  constructor(setting: DriveSource, log?: Logger) {
-    this.setting = setting
-    this.log = log || new Logger('syncer:drive:' + setting.id)
-    this.loader = new DriveLoader(this.setting, this.log, setting =>
-      getRepository(SettingEntity).save(setting),
+  constructor(source: DriveSource, log?: Logger) {
+    this.source = source
+    this.log = log || new Logger('syncer:drive:' + source.id)
+    this.loader = new DriveLoader(this.source, this.log, source =>
+      getRepository(SettingEntity).save(source),
     )
-    this.bitFactory = new DriveBitFactory(setting)
-    this.personFactory = new DrivePersonFactory(setting)
+    this.bitFactory = new DriveBitFactory(source)
+    this.personFactory = new DrivePersonFactory(source)
   }
 
   /**
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-    if (!this.setting.values.lastSync) this.setting.values.lastSync = {}
-    const lastSync = this.setting.values.lastSync
+    if (!this.source.values.lastSync) this.source.values.lastSync = {}
+    const lastSync = this.source.values.lastSync
 
     // load users from API
     this.log.timer('load files and people from API')
@@ -53,7 +53,7 @@ export class DriveSyncer implements IntegrationSyncer {
         }
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SettingEntity).save(this.setting)
+        await getRepository(SettingEntity).save(this.source)
 
         return false // this tells from the callback to stop file proceeding
       }
@@ -63,7 +63,7 @@ export class DriveSyncer implements IntegrationSyncer {
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
         this.log.verbose('looks like its the first syncing file, set last synced date', lastSync)
-        await getRepository(SettingEntity).save(this.setting)
+        await getRepository(SettingEntity).save(this.source)
       }
 
       const bit = this.bitFactory.create(file)
@@ -101,13 +101,13 @@ export class DriveSyncer implements IntegrationSyncer {
       // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
       if (isLast) {
         this.log.verbose(
-          'looks like its the last issue in this sync, removing last cursor and setting last sync date',
+          'looks like its the last issue in this sync, removing last cursor and source last sync date',
           lastSync,
         )
         lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SettingEntity).save(this.setting)
+        await getRepository(SettingEntity).save(this.source)
         return true
       }
 
@@ -115,7 +115,7 @@ export class DriveSyncer implements IntegrationSyncer {
       if (lastSync.lastCursor !== cursor) {
         this.log.verbose('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
-        await getRepository(SettingEntity).save(this.setting)
+        await getRepository(SettingEntity).save(this.source)
       }
 
       return true

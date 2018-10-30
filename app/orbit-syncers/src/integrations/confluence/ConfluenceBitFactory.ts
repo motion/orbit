@@ -13,17 +13,17 @@ import { SyncerUtils } from '../../core/SyncerUtils'
  * Creates a Confluence Bit.
  */
 export class ConfluenceBitFactory {
-  private setting: ConfluenceSource
+  private source: ConfluenceSource
 
-  constructor(setting: ConfluenceSource) {
-    this.setting = setting
+  constructor(source: ConfluenceSource) {
+    this.source = source
   }
 
   /**
    * Builds a bit from the given confluence content.
    */
   create(content: ConfluenceContent, allPeople: Person[]): Bit {
-    const values = this.setting.values as ConfluenceSourceValues
+    const values = this.source.values as ConfluenceSourceValues
     const domain = values.credentials.domain
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
@@ -53,7 +53,7 @@ export class ConfluenceBitFactory {
     return BitUtils.create(
       {
         integration: 'confluence',
-        setting: this.setting,
+        source: this.source,
         type: 'document',
         title: content.title,
         author,

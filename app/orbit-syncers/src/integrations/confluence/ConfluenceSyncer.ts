@@ -19,14 +19,14 @@ export class ConfluenceSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: ConfluenceSource, log?: Logger) {
-    this.log = log || new Logger('syncer:confluence:' + setting.id)
-    this.loader = new ConfluenceLoader(setting, this.log)
-    this.bitFactory = new ConfluenceBitFactory(setting)
-    this.personFactory = new ConfluencePersonFactory(setting)
-    this.personSyncer = new PersonSyncer(setting, this.log)
-    this.bitSyncer = new BitSyncer(setting, this.log)
-    this.syncerRepository = new SyncerRepository(setting)
+  constructor(source: ConfluenceSource, log?: Logger) {
+    this.log = log || new Logger('syncer:confluence:' + source.id)
+    this.loader = new ConfluenceLoader(source, this.log)
+    this.bitFactory = new ConfluenceBitFactory(source)
+    this.personFactory = new ConfluencePersonFactory(source)
+    this.personSyncer = new PersonSyncer(source, this.log)
+    this.bitSyncer = new BitSyncer(source, this.log)
+    this.syncerRepository = new SyncerRepository(source)
   }
 
   /**

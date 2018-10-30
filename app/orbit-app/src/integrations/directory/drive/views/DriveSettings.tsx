@@ -5,7 +5,7 @@ import { Text, SearchableTable, View } from '@mcro/ui'
 import { DriveSource } from '@mcro/models'
 import { OrbitSourceSettingProps } from '../../../types'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
-import { SettingManageRow } from '../../../views/settings/SettingManageRow'
+import { SettingManageRow } from '../../../views/sources/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<DriveSource>
 
@@ -29,8 +29,8 @@ class DriveSourcesStore {
     this.popularFolders = files
   }
 
-  get setting() {
-    return this.props.setting
+  get source() {
+    return this.props.source
   }
 
   onSyncSetter = id => () => {
@@ -55,7 +55,7 @@ export class DriveSources extends React.Component<
   render() {
     const {
       store,
-      setting,
+      source,
       appConfig: {
         viewConfig: { initialState },
       },
@@ -64,11 +64,11 @@ export class DriveSources extends React.Component<
 
     return (
       <SimpleAppExplorer
-        setting={setting}
+        source={source}
         initialState={initialState}
         settingsPane={
           <>
-            <SettingManageRow setting={setting} whitelist={null} />
+            <SettingManageRow source={source} whitelist={null} />
             <View flex={1} opacity={1} pointerEvents={'auto'}>
               <SearchableTable
                 virtual

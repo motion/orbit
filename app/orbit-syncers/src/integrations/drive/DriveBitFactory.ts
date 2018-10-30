@@ -6,10 +6,10 @@ import { DriveLoadedFile } from '@mcro/services'
  * Creates a Drive Bit.
  */
 export class DriveBitFactory {
-  private setting: DriveSource
+  private source: DriveSource
 
-  constructor(setting: DriveSource) {
-    this.setting = setting
+  constructor(source: DriveSource) {
+    this.source = source
   }
 
   /**
@@ -19,7 +19,7 @@ export class DriveBitFactory {
     return BitUtils.create(
       {
         integration: 'drive',
-        setting: this.setting,
+        source: this.source,
         type: 'document',
         title: file.file.name,
         body: file.content || 'empty',

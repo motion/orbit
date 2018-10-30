@@ -16,12 +16,12 @@ export class WebsiteSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: WebsiteSource, log?: Logger) {
-    this.log = log || new Logger('syncer:crawler:' + setting.id)
-    this.crawler = new WebsiteCrawler(setting, this.log)
-    this.bitFactory = new WebsiteBitFactory(setting)
-    this.bitSyncer = new BitSyncer(setting, this.log)
-    this.syncerRepository = new SyncerRepository(setting)
+  constructor(source: WebsiteSource, log?: Logger) {
+    this.log = log || new Logger('syncer:crawler:' + source.id)
+    this.crawler = new WebsiteCrawler(source, this.log)
+    this.bitFactory = new WebsiteBitFactory(source)
+    this.bitSyncer = new BitSyncer(source, this.log)
+    this.syncerRepository = new SyncerRepository(source)
   }
 
   /**

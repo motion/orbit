@@ -7,10 +7,10 @@ import { SyncerUtils } from '../../core/SyncerUtils'
  * Creates a Jira Bit.
  */
 export class JiraBitFactory {
-  private setting: JiraSource
+  private source: JiraSource
 
-  constructor(setting: JiraSource) {
-    this.setting = setting
+  constructor(source: JiraSource) {
+    this.source = source
   }
 
   /**
@@ -19,7 +19,7 @@ export class JiraBitFactory {
   create(issue: JiraIssue, allPeople: Person[]): Bit {
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
-    const values = this.setting.values as JiraSourceValues
+    const values = this.source.values as JiraSourceValues
     const domain = values.credentials.domain
     const body = SyncerUtils.stripHtml(issue.renderedFields.description)
     const cleanHtml = SyncerUtils.sanitizeHtml(issue.renderedFields.description)
@@ -45,7 +45,7 @@ export class JiraBitFactory {
     return BitUtils.create(
       {
         integration: 'jira',
-        setting: this.setting,
+        source: this.source,
         type: 'document',
         title: issue.fields.summary,
         body,

@@ -6,10 +6,10 @@ import { SlackUser, SlackTeam } from '@mcro/services'
  * Creates a Slack Person.
  */
 export class SlackPersonFactory {
-  private setting: SlackSource
+  private source: SlackSource
 
-  constructor(setting: SlackSource) {
-    this.setting = setting
+  constructor(source: SlackSource) {
+    this.source = source
   }
 
   /**
@@ -17,7 +17,7 @@ export class SlackPersonFactory {
    */
   create(user: SlackUser, team: SlackTeam): Person {
     return PersonUtils.create({
-      setting: this.setting,
+      source: this.source,
       integration: 'slack',
       integrationId: user.id,
       name: user.profile.real_name || user.name,

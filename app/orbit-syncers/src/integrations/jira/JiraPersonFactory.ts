@@ -6,10 +6,10 @@ import { JiraUser } from '@mcro/services'
  * Creates a Jira Person.
  */
 export class JiraPersonFactory {
-  private setting: JiraSource
+  private source: JiraSource
 
-  constructor(setting: JiraSource) {
-    this.setting = setting
+  constructor(source: JiraSource) {
+    this.source = source
   }
 
   /**
@@ -18,7 +18,7 @@ export class JiraPersonFactory {
   create(user: JiraUser): Person {
     return PersonUtils.create({
       integration: 'jira',
-      setting: this.setting,
+      source: this.source,
       integrationId: user.accountId,
       name: user.displayName,
       email: user.emailAddress,

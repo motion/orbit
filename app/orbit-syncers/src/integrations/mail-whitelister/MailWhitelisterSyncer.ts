@@ -1,4 +1,4 @@
-import { PersonBitEntity, SettingEntity } from '@mcro/entities'
+import { PersonBitEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { GmailSourceValues } from '@mcro/models'
 import { getRepository } from 'typeorm'
@@ -36,7 +36,7 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
 
     // next we find all gmail integrations to add those emails to their whitelists
     this.log.info('loading gmail integrations')
-    const integrations = await getRepository(SettingEntity).find({
+    const integrations = await getRepository(SourceEntity).find({
       where: { type: 'gmail' },
     })
     this.log.info('loaded gmail integrations', integrations)
@@ -54,7 +54,7 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
         }
       }
       values.whitelist = whitelist
-      await getRepository(SettingEntity).save(integration)
+      await getRepository(SourceEntity).save(integration)
     }
     this.log.info('newly whitelisted emails', newWhiteListedEmails)
   }

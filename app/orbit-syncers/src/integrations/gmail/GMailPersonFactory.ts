@@ -5,10 +5,10 @@ import { GmailBitDataParticipant, GmailPersonData, Person, GmailSource } from '@
  * Creates a GMail Person.
  */
 export class GMailPersonFactory {
-  private setting: GmailSource
+  private source: GmailSource
 
-  constructor(setting: GmailSource) {
-    this.setting = setting
+  constructor(source: GmailSource) {
+    this.source = source
   }
 
   /**
@@ -19,7 +19,7 @@ export class GMailPersonFactory {
       integrationId: participant.email,
       integration: 'gmail',
       name: participant.name || '',
-      settingId: this.setting.id,
+      sourceId: this.source.id,
       webLink: 'mailto:' + participant.email,
       desktopLink: 'mailto:' + participant.email,
       email: participant.email,

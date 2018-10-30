@@ -1,19 +1,18 @@
 import { view, react, attach } from '@mcro/black'
 import * as React from 'react'
-import { Setting } from '@mcro/models'
+import { Source } from '@mcro/models'
 import { AppTopicExplorer } from './AppTopicExplorer'
 import { SegmentedRow, View } from '@mcro/ui'
 import { AppConfig } from '@mcro/stores'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { ScrollableContent } from '../layout/ScrollableContent'
 import { HideablePane } from '../../../views/HideablePane'
-import { getAppFromSetting } from '../../../stores/AppsStore'
-import { TitleBar } from '../layout/TitleBar'
+import { getAppFromSource } from '../../../stores/AppsStore'
 import { AppHeader } from '../layout/AppHeader'
 
 type Props = {
   appViewStore?: AppViewStore
-  setting: Setting
+  source: Source
   settingsPane: React.ReactNode
   initialState: AppConfig['viewConfig']['initialState']
 }
@@ -60,8 +59,8 @@ export class AppViewStore {
 @view
 export class SimpleAppExplorer extends React.Component<Props> {
   render() {
-    const { setting, settingsPane, appViewStore } = this.props
-    const app = getAppFromSetting(setting)
+    const { source, settingsPane, appViewStore } = this.props
+    const app = getAppFromSource(source)
     return (
       <>
         <AppHeader
@@ -74,8 +73,8 @@ export class SimpleAppExplorer extends React.Component<Props> {
             <TitleBarButton
               tooltip="Settings"
               icon="gear"
-              onClick={appViewStore.activeToggler('settings')}
-              active={appViewStore.active === 'settings'}
+              onClick={appViewStore.activeToggler('sources')}
+              active={appViewStore.active === 'sources'}
             />
           }
         >
@@ -97,12 +96,12 @@ export class SimpleAppExplorer extends React.Component<Props> {
 
         <ScrollableContent>
           <HideablePane invisible={appViewStore.active !== 'topics'}>
-            <AppTopicExplorer setting={setting} />
+            <AppTopicExplorer source={source} />
           </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'related'}>
             <AppRelationsExplorer />
           </HideablePane>
-          <HideablePane invisible={appViewStore.active !== 'settings'}>{settingsPane}</HideablePane>
+          <HideablePane invisible={appViewStore.active !== 'sources'}>{settingsPane}</HideablePane>
         </ScrollableContent>
       </>
     )

@@ -25,14 +25,14 @@ const readabilityCode = `(function(){
  * Crawl a website.
  */
 export class WebsiteCrawler {
-  private setting: WebsiteSource
+  private source: WebsiteSource
   private log: Logger
   private visitedLinks: string[] = []
   private allData: WebsiteCrawledData[] = []
   private maxLinks = 100
 
-  constructor(setting: WebsiteSource, log: Logger) {
-    this.setting = setting
+  constructor(source: WebsiteSource, log: Logger) {
+    this.source = source
     this.log = log
   }
 
@@ -42,8 +42,8 @@ export class WebsiteCrawler {
   async run(): Promise<WebsiteCrawledData[]> {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
-    this.visitedLinks.push(this.setting.values.url)
-    await this.visit(page, this.setting.values.url)
+    this.visitedLinks.push(this.source.values.url)
+    await this.visit(page, this.source.values.url)
     await browser.close()
     return this.allData
   }

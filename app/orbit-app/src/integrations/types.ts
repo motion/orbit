@@ -64,7 +64,7 @@ export type OrbitSourceMainProps<A extends ItemType> = OrbitIntegrationProps<A> 
 export type OrbitSourceSettingProps<T extends Source> = {
   appConfig: AppConfig
   appInfoStore: AppInfoStore
-  setting: T
+  source: T
   appStore: AppStore
 }
 
@@ -86,7 +86,7 @@ export type OrbitIntegration<A extends ItemType> = {
   views: {
     main: GenericComponent<OrbitSourceMainProps<A>>
     item: GenericComponent<OrbitIntegrationProps<A>>
-    setting?: GenericComponent<OrbitSourceSettingProps<Source>>
+    source?: GenericComponent<OrbitSourceSettingProps<Source>>
     setup?: GenericComponent<any>
   }
 }

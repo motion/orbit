@@ -15,7 +15,7 @@ import { SlackPersonFactory } from './SlackPersonFactory'
  */
 export class SlackSyncer implements IntegrationSyncer {
   private log: Logger
-  private setting: SlackSource
+  private source: SlackSource
   private loader: SlackLoader
   private bitFactory: SlackBitFactory
   private personFactory: SlackPersonFactory
@@ -23,15 +23,15 @@ export class SlackSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: SlackSource, log?: Logger) {
-    this.setting = setting
-    this.log = log || new Logger('syncer:slack:' + setting.id)
-    this.loader = new SlackLoader(this.setting, this.log)
-    this.bitFactory = new SlackBitFactory(this.setting)
-    this.personFactory = new SlackPersonFactory(this.setting)
-    this.personSyncer = new PersonSyncer(setting, this.log)
-    this.bitSyncer = new BitSyncer(setting, this.log)
-    this.syncerRepository = new SyncerRepository(setting)
+  constructor(source: SlackSource, log?: Logger) {
+    this.source = source
+    this.log = log || new Logger('syncer:slack:' + source.id)
+    this.loader = new SlackLoader(this.source, this.log)
+    this.bitFactory = new SlackBitFactory(this.source)
+    this.personFactory = new SlackPersonFactory(this.source)
+    this.personSyncer = new PersonSyncer(source, this.log)
+    this.bitSyncer = new BitSyncer(source, this.log)
+    this.syncerRepository = new SyncerRepository(source)
   }
 
   /**
@@ -43,15 +43,15 @@ export class SlackSyncer implements IntegrationSyncer {
     const team = await this.loader.loadTeam()
     this.log.timer('load team info from API')
 
-    // update settings with team info
-    const values = this.setting.values as SlackSourceValues
+    // update sources with team info
+    const values = this.source.values as SlackSourceValues
     values.team = {
       id: team.id,
       name: team.name,
       domain: team.domain,
       icon: team.icon.image_132,
     }
-    await getRepository(SettingEntity).save(this.setting)
+    await getRepository(SettingEntity).save(this.source)
 
     this.log.timer('load API users')
     const apiUsers = await this.loader.loadUsers()
@@ -91,7 +91,7 @@ export class SlackSyncer implements IntegrationSyncer {
     const allChannels = await this.loader.loadChannels()
     this.log.timer('load API channels', allChannels)
 
-    // filter out channels based on user settings
+    // filter out channels based on user sources
     const activeChannels = this.filterChannelsBySettings(allChannels)
     this.log.info('filtering only selected channels', activeChannels)
 
@@ -143,7 +143,7 @@ export class SlackSyncer implements IntegrationSyncer {
 
         apiBits.push(...savedConversations)
 
-        // update last message sync setting
+        // update last message sync source
         // note: we need to use loaded messages, not filtered
         lastMessageSync[channel.id] = loadedMessages[0].ts
       }
@@ -152,18 +152,18 @@ export class SlackSyncer implements IntegrationSyncer {
     // sync all the bits we have
     await this.bitSyncer.sync({ apiBits, dbBits })
 
-    // update settings
-    this.log.info('update settings', { lastMessageSync })
+    // update sources
+    this.log.info('update sources', { lastMessageSync })
     values.lastMessageSync = lastMessageSync
-    await getRepository(SettingEntity).save(this.setting)
+    await getRepository(SettingEntity).save(this.source)
   }
 
   /**
-   * Filters given slack channels by channels in the settings.
+   * Filters given slack channels by channels in the sources.
    */
   private filterChannelsBySettings(channels: SlackChannel[]) {
-    const values = this.setting.values as SlackSourceValues
-    const settingChannels =
+    const values = this.source.values as SlackSourceValues
+    const sourceChannels =
       values.channels /* || {
       'C0SAU3124': true,
       'CBV9PGSGG': true,
@@ -171,13 +171,13 @@ export class SlackSyncer implements IntegrationSyncer {
       'C221Y7CMN': true,
     }*/
 
-    // if no channels in settings are selected then return all channels
-    if (!settingChannels) return channels
+    // if no channels in sources are selected then return all channels
+    if (!sourceChannels) return channels
 
-    const settingsChannelIds = Object.keys(settingChannels).filter(key => settingChannels[key])
+    const sourcesChannelIds = Object.keys(sourceChannels).filter(key => sourceChannels[key])
 
     return channels.filter(channel => {
-      return settingsChannelIds.indexOf(channel.id) !== -1
+      return sourcesChannelIds.indexOf(channel.id) !== -1
     })
   }
 

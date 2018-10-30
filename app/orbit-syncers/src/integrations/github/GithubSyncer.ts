@@ -18,21 +18,21 @@ import { GithubPersonFactory } from './GithubPersonFactory'
  *
  * One important note regarding to github bits syncing - issues and PRs in github never be removed,
  * which means we never remove github bits during regular sync.
- * We only remove when some setting change (for example user don't sync specific repository anymore).
+ * We only remove when some source change (for example user don't sync specific repository anymore).
  */
 export class GithubSyncer implements IntegrationSyncer {
   private log: Logger
-  private setting: GithubSource
+  private source: GithubSource
   private loader: GithubLoader
   private bitFactory: GithubBitFactory
   private personFactory: GithubPersonFactory
 
-  constructor(setting: GithubSource, log?: Logger) {
-    this.setting = setting
-    this.log = log || new Logger('syncer:github:' + setting.id)
-    this.loader = new GithubLoader(setting, this.log)
-    this.bitFactory = new GithubBitFactory(setting)
-    this.personFactory = new GithubPersonFactory(setting)
+  constructor(source: GithubSource, log?: Logger) {
+    this.source = source
+    this.log = log || new Logger('syncer:github:' + source.id)
+    this.loader = new GithubLoader(source, this.log)
+    this.bitFactory = new GithubBitFactory(source)
+    this.personFactory = new GithubPersonFactory(source)
   }
 
   /**
@@ -47,21 +47,19 @@ export class GithubSyncer implements IntegrationSyncer {
     }
 
     // initial default settings
-    if (!this.setting.values.lastSyncIssues) this.setting.values.lastSyncIssues = {}
-    if (!this.setting.values.lastSyncPullRequests) this.setting.values.lastSyncPullRequests = {}
+    if (!this.source.values.lastSyncIssues) this.source.values.lastSyncIssues = {}
+    if (!this.source.values.lastSyncPullRequests) this.source.values.lastSyncPullRequests = {}
 
     // go through all repositories and sync them all
     this.log.timer('load api bits and people')
     for (let repository of repositories) {
-      if (!this.setting.values.lastSyncIssues[repository.nameWithOwner])
-        this.setting.values.lastSyncIssues[repository.nameWithOwner] = {}
-      if (!this.setting.values.lastSyncPullRequests[repository.nameWithOwner])
-        this.setting.values.lastSyncPullRequests[repository.nameWithOwner] = {}
+      if (!this.source.values.lastSyncIssues[repository.nameWithOwner])
+        this.source.values.lastSyncIssues[repository.nameWithOwner] = {}
+      if (!this.source.values.lastSyncPullRequests[repository.nameWithOwner])
+        this.source.values.lastSyncPullRequests[repository.nameWithOwner] = {}
 
-      const lastSyncIssues = this.setting.values.lastSyncIssues[repository.nameWithOwner]
-      const lastSyncPullRequests = this.setting.values.lastSyncPullRequests[
-        repository.nameWithOwner
-      ]
+      const lastSyncIssues = this.source.values.lastSyncIssues[repository.nameWithOwner]
+      const lastSyncPullRequests = this.source.values.lastSyncPullRequests[repository.nameWithOwner]
       const [organization, repositoryName] = repository.nameWithOwner.split('/')
 
       // compare repository's first issue updated date with our last synced date to make sure
@@ -184,7 +182,7 @@ export class GithubSyncer implements IntegrationSyncer {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(SettingEntity).save(this.setting, { listeners: false })
+      await getRepository(SettingEntity).save(this.source, { listeners: false })
 
       return false // this tells from the callback to stop issue proceeding
     }
@@ -194,7 +192,7 @@ export class GithubSyncer implements IntegrationSyncer {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       this.log.verbose('looks like its the first syncing issue, set last synced date', lastSyncInfo)
-      await getRepository(SettingEntity).save(this.setting, { listeners: false })
+      await getRepository(SettingEntity).save(this.source, { listeners: false })
     }
 
     const comments =
@@ -243,14 +241,14 @@ export class GithubSyncer implements IntegrationSyncer {
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (lastIssue) {
       this.log.verbose(
-        'looks like its the last issue in this sync, removing last cursor and setting last sync date',
+        'looks like its the last issue in this sync, removing last cursor and source last sync date',
         lastSyncInfo,
       )
       lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(SettingEntity).save(this.setting, { listeners: false })
+      await getRepository(SettingEntity).save(this.source, { listeners: false })
       return true
     }
 
@@ -259,7 +257,7 @@ export class GithubSyncer implements IntegrationSyncer {
       this.log.verbose('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getRepository(SettingEntity).save(this.setting, { listeners: false })
+      await getRepository(SettingEntity).save(this.source, { listeners: false })
     }
 
     return true
@@ -276,7 +274,7 @@ export class GithubSyncer implements IntegrationSyncer {
     this.log.timer('load API repositories', repositories)
 
     // get whitelist, if its not defined just return all loaded repositories
-    const values = this.setting.values as GithubSourceValues
+    const values = this.source.values as GithubSourceValues
     if (values.whitelist !== undefined) {
       this.log.info('whitelist is defined, filtering settings by a whitelist', values.whitelist)
       repositories = repositories.filter(repository => {

@@ -9,7 +9,6 @@ const addrs = require('email-addresses')
  * Parses GMail Message.
  */
 export class GMailMessageParser {
-
   /**
    * Message's cached text body (used for performance optimization).
    */
@@ -20,17 +19,15 @@ export class GMailMessageParser {
    */
   private htmlBody: string
 
-  constructor(private message: GMailMessage) {
-  }
-  
+  constructor(private message: GMailMessage) {}
+
   /**
    * Gets the date from the Gmail message.
    * Returns Date object if message contains a date, otherwise returns undefined
    */
   getDate(): number {
     const dateHeader = this.message.payload.headers.find(x => x.name === 'Date')
-    if (dateHeader && dateHeader.value)
-      return new Date(dateHeader.value).getTime()
+    if (dateHeader && dateHeader.value) return new Date(dateHeader.value).getTime()
 
     return parseInt(this.message.internalDate)
   }
@@ -39,7 +36,7 @@ export class GMailMessageParser {
    * Gets the title from the Gmail message.
    * Returns a string if message contains a title, otherwise returns undefined
    */
-  getTitle(): string|undefined {
+  getTitle(): string | undefined {
     const dateHeader = this.message.payload.headers.find(x => x.name === 'Subject')
     return dateHeader && dateHeader.value ? dateHeader.value : undefined
   }
@@ -51,9 +48,9 @@ export class GMailMessageParser {
   getParticipants(): GmailBitDataParticipant[] {
     const participants: GmailBitDataParticipant[] = []
     this.message.payload.headers
-      .filter(header => header.name === 'From' || header.name === 'To'  || header.name === 'Cc')
+      .filter(header => header.name === 'From' || header.name === 'To' || header.name === 'Cc')
       .forEach(header => {
-        const type: 'from'|'to' = header.name === 'From' ? 'from' : 'to'
+        const type: 'from' | 'to' = header.name === 'From' ? 'from' : 'to'
         const emails = addrs.parseAddressList(header.value)
         emails.forEach(email => {
           participants.push({ name: email.name, email: email.address, type })
@@ -67,21 +64,18 @@ export class GMailMessageParser {
    * Gets message text body.
    */
   getTextBody() {
-    this.buildTextBody();
-    this.buildHtmlBody();
+    this.buildTextBody()
+    this.buildHtmlBody()
 
     if (this.textBody) {
       return this.textBody
-
     } else if (this.htmlBody) {
-      const window = (new JSDOM('')).window
+      const window = new JSDOM('').window
       const DOMPurify = createDOMPurify(window)
-      return DOMPurify
-        .sanitize(this.htmlBody, { ALLOWED_TAGS: [] })
+      return DOMPurify.sanitize(this.htmlBody, { ALLOWED_TAGS: [] })
         .replace(/&nbsp;/gi, ' ')
         .replace(/•/gi, '')
         .trim()
-
     } else {
       return this.message.snippet
     }
@@ -91,22 +85,19 @@ export class GMailMessageParser {
    * Gets message html body.
    */
   getHtmlBody() {
-    this.buildTextBody();
-    this.buildHtmlBody();
+    this.buildTextBody()
+    this.buildHtmlBody()
 
     if (this.htmlBody) {
-      const window = (new JSDOM('')).window
+      const window = new JSDOM('').window
       const DOMPurify = createDOMPurify(window)
-      return DOMPurify
-        .sanitize(this.htmlBody)
+      return DOMPurify.sanitize(this.htmlBody)
         .replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '')
         .replace(/&nbsp;/gi, ' ')
         .replace(/•/gi, '')
         .trim()
-
     } else if (this.textBody) {
-        return this.textBody
-
+      return this.textBody
     } else {
       return this.message.snippet
     }
@@ -116,13 +107,9 @@ export class GMailMessageParser {
    * Builds message's text body.
    */
   private buildTextBody() {
-    if (this.textBody)
-      return
+    if (this.textBody) return
 
-    const parts = [
-      ...(this.message.payload.parts || []),
-      this.message.payload,
-    ]
+    const parts = [...(this.message.payload.parts || []), this.message.payload]
 
     const textPart = parts.find(part => {
       return part.mimeType === 'text/plain' && !!part.body && !!part.body.data
@@ -136,13 +123,9 @@ export class GMailMessageParser {
    * Builds message's html body.
    */
   private buildHtmlBody() {
-    if (this.htmlBody)
-      return
+    if (this.htmlBody) return
 
-    const parts = [
-      ...(this.message.payload.parts || []),
-      this.message.payload,
-    ]
+    const parts = [...(this.message.payload.parts || []), this.message.payload]
 
     const htmlPart = parts.find(part => {
       return part.mimeType === 'text/html' && !!part.body && !!part.body.data
@@ -151,5 +134,4 @@ export class GMailMessageParser {
       this.htmlBody = Buffer.from(htmlPart.body.data, 'base64').toString('utf8')
     }
   }
-
 }

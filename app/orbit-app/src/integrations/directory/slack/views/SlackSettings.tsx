@@ -20,14 +20,14 @@ class SlackSourceStore {
 
   syncing = {}
   whitelist = new WhitelistManager({
-    setting: this.props.setting,
+    source: this.props.source,
     getAll: this.getAllFilterIds.bind(this),
   })
 
   async didMount() {
     const channels = await loadMany(SlackChannelModel, {
       args: {
-        settingId: this.props.setting.id,
+        sourceId: this.props.source.id,
       },
     })
     this.channels = orderBy(channels, ['is_private', 'num_members'], ['asc', 'desc'])
@@ -72,18 +72,18 @@ export class SlackSources extends React.Component<
   render() {
     const {
       store,
-      setting,
+      source,
       appConfig: {
         viewConfig: { initialState },
       },
     } = this.props
     return (
       <SimpleAppExplorer
-        setting={setting}
+        source={source}
         initialState={initialState}
         settingsPane={
           <>
-            <SettingManageRow setting={setting} whitelist={store.whitelist} />
+            <SettingManageRow source={source} whitelist={store.whitelist} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}

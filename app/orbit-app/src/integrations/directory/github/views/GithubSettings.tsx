@@ -22,14 +22,14 @@ class GithubSourceStore {
     direction: 'up',
   }
   whitelist = new WhitelistManager({
-    setting: this.props.setting,
+    source: this.props.source,
     getAll: this.getAllFilterIds.bind(this),
   })
 
   async didMount() {
     this.repositories = await loadMany(GithubRepositoryModel, {
       args: {
-        settingId: this.props.setting.id,
+        sourceId: this.props.source.id,
       },
     })
   }
@@ -53,18 +53,18 @@ export class GithubSources extends React.Component<Props & { store: GithubSource
   render() {
     const {
       store,
-      setting,
+      source,
       appConfig: {
         viewConfig: { initialState },
       },
     } = this.props
     return (
       <SimpleAppExplorer
-        setting={setting}
+        source={source}
         initialState={initialState}
         settingsPane={
           <>
-            <SettingManageRow setting={setting} whitelist={store.whitelist} />
+            <SettingManageRow source={source} whitelist={store.whitelist} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}

@@ -1,4 +1,4 @@
-import { SettingModel, Setting, IntegrationType } from '@mcro/models'
+import { SourceModel, Source, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 import { allIntegrations, getIntegrations } from '../integrations'
 import { react } from '@mcro/black'
@@ -10,10 +10,10 @@ type GenericApp = OrbitIntegration<any> & {
   isActive: boolean
 }
 
-export const getAppFromSetting = (setting: Setting): OrbitIntegration<any> => {
+export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
   return {
-    ...getIntegrations[setting.type](setting),
-    setting,
+    ...getIntegrations[source.type](source),
+    source,
   }
 }
 
@@ -32,23 +32,23 @@ export const appToAppConfig = (app: OrbitIntegration<any>, model?: ResolvableMod
     throw new Error(`No app given: ${JSON.stringify(app)}`)
   }
   return {
-    id: `${(model && model.id) || (app.setting && app.setting.id) || Math.random()}`,
+    id: `${(model && model.id) || (app.source && app.source.id) || Math.random()}`,
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,
-    type: app.source,
+    type: app.modelType,
     integration: app.integration,
     viewConfig: app.viewConfig,
   }
 }
 
 export class AppsStore {
-  appSettings: Setting[] = []
+  appSources: Source[] = []
 
   activeIntegrations = react(
-    () => this.appSettings,
-    appSettings => {
-      return appSettings.filter(x => !!allIntegrations[x.type]).map(getAppFromSetting)
+    () => this.appSources,
+    appSources => {
+      return appSources.filter(x => !!allIntegrations[x.type]).map(getAppFromSource)
     },
     {
       defaultValue: [],
@@ -62,7 +62,7 @@ export class AppsStore {
       .filter(x => x.source === 'bit')
   }
 
-  // pass in a blank setting so we can access the OrbitApp configs
+  // pass in a blank source so we can access the OrbitApp configs
   allIntegrations = react(
     () => this.activeIntegrations,
     activeApps => {
@@ -83,24 +83,18 @@ export class AppsStore {
     defaultValue: {},
   })
 
-  getView = (type: IntegrationType | 'person', viewType: 'main' | 'setting' | 'item') => {
+  getView = (type: IntegrationType | 'person', viewType: 'main' | 'source' | 'item') => {
     if (!this.allIntegrationsMap[type]) {
       return () => 'none'
     }
     return this.allIntegrationsMap[type].views[viewType]
   }
 
-  private appSettings$ = observeMany(SettingModel, {
-    args: {
-      where: {
-        type: { $not: 'general' },
-      },
-    },
-  }).subscribe(values => {
-    this.appSettings = values
+  private appSources$ = observeMany(SourceModel).subscribe(values => {
+    this.appSources = values
   })
 
   willUnmount() {
-    this.appSettings$.unsubscribe()
+    this.appSources$.unsubscribe()
   }
 }

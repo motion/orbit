@@ -14,7 +14,7 @@ class GmailSourceStore {
   props: Props
   syncing = {}
   whitelist = new WhitelistManager({
-    setting: this.props.setting,
+    source: this.props.source,
     getAll: this.getAllFilterIds.bind(this),
   })
 
@@ -23,7 +23,7 @@ class GmailSourceStore {
   }
 
   private getAllFilterIds() {
-    return this.props.setting.values.foundEmails
+    return this.props.source.values.foundEmails
   }
 }
 
@@ -33,18 +33,18 @@ export class GmailSources extends React.Component<Props & { store?: GmailSourceS
   render() {
     const {
       store,
-      setting,
+      source,
       appConfig: {
         viewConfig: { initialState },
       },
     } = this.props
     return (
       <SimpleAppExplorer
-        setting={setting}
+        source={source}
         initialState={initialState}
         settingsPane={
           <>
-            <SettingManageRow setting={setting} whitelist={store.whitelist} />
+            <SettingManageRow source={source} whitelist={store.whitelist} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
@@ -70,7 +70,7 @@ export class GmailSources extends React.Component<Props & { store?: GmailSourceS
                   },
                 }}
                 multiHighlight
-                rows={(setting.values.foundEmails || []).map((email, index) => {
+                rows={(source.values.foundEmails || []).map((email, index) => {
                   const isActive = store.whitelist.whilistStatusGetter(email)
                   return {
                     key: `${index}`,

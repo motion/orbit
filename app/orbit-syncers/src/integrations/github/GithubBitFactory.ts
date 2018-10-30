@@ -7,10 +7,10 @@ import { hash } from '@mcro/utils'
  * Creates a Github Bit.
  */
 export class GithubBitFactory {
-  private setting: GithubSource
+  private source: GithubSource
 
-  constructor(setting: GithubSource) {
-    this.setting = setting
+  constructor(source: GithubSource) {
+    this.source = source
   }
 
   /**
@@ -18,7 +18,7 @@ export class GithubBitFactory {
    */
   createFromIssue(issue: GithubIssue | GithubPullRequest, comments: GithubComment[]): Bit {
     console.log('got comments', comments)
-    const id = hash(`github-${this.setting.id}-${issue.id}`)
+    const id = hash(`github-${this.source.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
 
@@ -56,7 +56,7 @@ export class GithubBitFactory {
 
     return BitUtils.create({
       id,
-      settingId: this.setting.id,
+      sourceId: this.source.id,
       integration: 'github',
       type: 'task',
       title: issue.title,

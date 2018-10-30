@@ -45,7 +45,7 @@ export const Syncers = [
   }),
   new Syncer({
     constructor: MailWhitelisterSyncer,
-    interval: TEN_MINUTES
+    interval: TEN_MINUTES,
   }),
   new Syncer({
     type: 'website',

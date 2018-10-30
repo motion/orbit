@@ -7,10 +7,10 @@ import { GMailMessageParser } from './GMailMessageParser'
  * Creates a GMail Bit.
  */
 export class GMailBitFactory {
-  private setting: GmailSource
+  private source: GmailSource
 
-  constructor(setting: GmailSource) {
-    this.setting = setting
+  constructor(source: GmailSource) {
+    this.source = source
   }
 
   /**
@@ -52,7 +52,7 @@ export class GMailBitFactory {
         bitCreatedAt: firstMessageParser.getDate(),
         bitUpdatedAt: lastMessageParser.getDate(),
         webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
-        settingId: this.setting.id,
+        sourceId: this.source.id,
       },
       thread.id,
     )

@@ -6,10 +6,10 @@ import { DriveUser } from '@mcro/services'
  * Creates a Drive Person.
  */
 export class DrivePersonFactory {
-  private setting: DriveSource
+  private source: DriveSource
 
-  constructor(setting: DriveSource) {
-    this.setting = setting
+  constructor(source: DriveSource) {
+    this.source = source
   }
 
   /**
@@ -17,7 +17,7 @@ export class DrivePersonFactory {
    */
   create(user: DriveUser): Person {
     return PersonUtils.create({
-      setting: this.setting,
+      source: this.source,
       integrationId: user.emailAddress,
       integration: 'drive',
       name: user.displayName,

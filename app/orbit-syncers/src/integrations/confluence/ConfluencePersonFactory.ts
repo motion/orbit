@@ -11,20 +11,20 @@ import { ConfluenceUser } from '@mcro/services'
  * Creates a Confluence Person.
  */
 export class ConfluencePersonFactory {
-  private setting: ConfluenceSource
+  private source: ConfluenceSource
 
-  constructor(setting: ConfluenceSource) {
-    this.setting = setting
+  constructor(source: ConfluenceSource) {
+    this.source = source
   }
 
   /**
    * Creates person entity from a given Confluence user.
    */
   create(user: ConfluenceUser): Person {
-    const values = this.setting.values as ConfluenceSourceValues
+    const values = this.source.values as ConfluenceSourceValues
     return PersonUtils.create({
       integration: 'confluence',
-      setting: this.setting,
+      source: this.source,
       integrationId: user.accountId,
       name: user.displayName,
       email: user.details.personal.email,

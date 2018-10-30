@@ -8,10 +8,10 @@ import { uniqBy } from 'lodash'
  * Creates a Github Person.
  */
 export class GithubPersonFactory {
-  private setting: GithubSource
+  private source: GithubSource
 
-  constructor(setting: GithubSource) {
-    this.setting = setting
+  constructor(source: GithubSource) {
+    this.source = source
   }
 
   /**
@@ -57,12 +57,12 @@ export class GithubPersonFactory {
    * Creates a single integration person from given Github user.
    */
   createFromGithubUser(githubPerson: GithubPerson): Person {
-    const id = hash(`github-${this.setting.id}-${githubPerson.id}`)
+    const id = hash(`github-${this.source.id}-${githubPerson.id}`)
     const data: GithubPersonData = {}
 
     return PersonUtils.create({
       id,
-      setting: this.setting,
+      source: this.source,
       integrationId: githubPerson.id,
       integration: 'github',
       name: githubPerson.login,
@@ -78,12 +78,12 @@ export class GithubPersonFactory {
    * Creates a single integration person from a commit.
    */
   createFromCommit(commit: GithubCommit): Person {
-    const id = hash(`github-${this.setting.id}-commit-user-${commit.email}`)
+    const id = hash(`github-${this.source.id}-commit-user-${commit.email}`)
     const data: GithubPersonData = {}
 
     return PersonUtils.create({
       id,
-      setting: this.setting,
+      source: this.source,
       integrationId: undefined,
       integration: 'github',
       name: commit.name,

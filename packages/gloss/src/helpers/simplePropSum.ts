@@ -1,7 +1,5 @@
 import { hashSum } from './hashSum'
 
-window['hashSum'] = hashSum
-
 const valCache = new WeakMap()
 
 const hashVal = val => {
@@ -15,15 +13,21 @@ const hashVal = val => {
   if (valCache.has(val)) {
     return valCache.get(val)
   }
-  if (Array.isArray(val)) {
-    return val.map(hashVal).join('')
+  const type = typeof val
+  if (type === 'string' || type === 'number' || type === 'boolean') {
+    return val
+  }
+  // functions and classes we should just use a key for the instance
+  if (val.constructor) {
+    const key = Math.random()
+    valCache.set(val, key)
+    return key
   }
   if (val._equalityKey) {
     return val._equalityKey
   }
-  const type = typeof val
-  if (type === 'string' || type === 'number' || type === 'boolean') {
-    return val
+  if (Array.isArray(val)) {
+    return val.map(hashVal).join('')
   }
   const res = hashSum(val)
   valCache.set(val, res)
@@ -37,7 +41,7 @@ export const simplePropSum = props => {
     const val = props[key]
     hash += hashVal(val)
   }
-  if (Date.now() - start > 100) {
+  if (Date.now() - start > 8) {
     debugger
   }
   return hash

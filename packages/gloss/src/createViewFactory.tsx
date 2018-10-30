@@ -6,6 +6,7 @@ import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import validProp from './helpers/validProp'
+import { simplePropSum } from './helpers/simplePropSum'
 
 export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
@@ -346,23 +347,29 @@ export function createViewFactory(toCSS) {
 
     // @ts-ignore react hooks
     ThemedView = React.memo((props: SimpleViewProps) => {
+      // @ts-ignore
+      const propKey = React.useRef(null)
       // @ts-ignore react hooks
       const [classNames, setClassNames] = React.useState(null)
       // @ts-ignore react hooks
       const { allThemes, activeThemeName } = React.useContext(ThemeContext)
 
-      let theme = allThemes[activeThemeName]
-      // merge themes option
-      if (typeof props.theme === 'object') {
-        theme = {
-          ...theme,
-          ...props.theme,
+      // update styles
+      const nextKey = simplePropSum(props)
+      if (propKey.current !== nextKey) {
+        propKey.current = nextKey
+        let theme = allThemes[activeThemeName]
+        // merge themes option
+        if (typeof props.theme === 'object') {
+          theme = {
+            ...theme,
+            ...props.theme,
+          }
         }
-      }
-
-      const nextClassNames = getClassNamesFromProps(classNames, props, theme)
-      if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
-        setClassNames(nextClassNames)
+        const nextClassNames = getClassNamesFromProps(classNames, props, theme)
+        if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
+          setClassNames(nextClassNames)
+        }
       }
 
       // @ts-ignore

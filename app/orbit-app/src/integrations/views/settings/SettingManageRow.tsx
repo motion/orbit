@@ -7,7 +7,7 @@ import { attach } from '@mcro/black'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 import { AppInfoStore } from '../../../components/AppInfoStore'
-import { Actions } from '../../../actions/Actions'
+import { AppActions } from '../../../actions/AppActions'
 import { SyncStatus } from '../../../components/SyncStatus'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { TitleBarButton } from '../layout/TitleBarButton'
@@ -37,7 +37,7 @@ export class SettingManageRow extends React.Component<{
       command(SourceRemoveCommand, {
         sourceId: this.props.source.id,
       })
-      Actions.clearPeek()
+      AppActions.clearPeek()
     }
   }
 

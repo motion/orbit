@@ -1,7 +1,7 @@
 import { react, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import { QueryStore } from './QueryStore/QueryStore'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { hoverSettler } from '../helpers'
 import { ResolvableModel } from '../integrations/types'
 
@@ -93,7 +93,7 @@ export class SelectionStore {
     () => this.activeIndex,
     () => {
       ensure('no active index', !this.hasActiveIndex)
-      Actions.clearPeek()
+      AppActions.clearPeek()
     },
     {
       deferFirstRun: true,

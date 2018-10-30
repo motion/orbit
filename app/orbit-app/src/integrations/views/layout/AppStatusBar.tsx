@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StatusBar } from '../../../views/StatusBar'
-import { Actions } from '../../../actions/Actions'
+import { AppActions } from '../../../actions/AppActions'
 import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
 import { view } from '@mcro/black'
@@ -17,7 +17,7 @@ export const AppStatusBar = ({ appStore, normalizedItem }: OrbitSourceMainProps<
       <StatusBar.Button
         onClick={e => {
           e.stopPropagation()
-          Actions.open(locationLink)
+          AppActions.open(locationLink)
         }}
       >
         {location}

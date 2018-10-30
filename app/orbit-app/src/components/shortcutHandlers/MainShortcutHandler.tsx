@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { compose, attach } from '@mcro/black'
-import { Actions } from '../../actions/Actions'
+import { AppActions } from '../../actions/AppActions'
 import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
@@ -50,7 +50,7 @@ export const MainShortcutHandler = decorate(
 
     const handlers = {
       switchSpaces: () => {
-        Actions.showSpaceSwitcher()
+        AppActions.showSpaceSwitcher()
       },
       openCurrent: () => {
         console.log('openCurrent')
@@ -70,15 +70,15 @@ export const MainShortcutHandler = decorate(
         }
         // clear peek first
         if (App.peekState.appConfig) {
-          return Actions.clearPeek()
+          return AppActions.clearPeek()
         }
         // then orbit query
         if (App.state.query) {
-          return Actions.clearSearch()
+          return AppActions.clearSearch()
         }
         // then orbit itself
         if (App.state.orbitState.docked) {
-          return Actions.closeOrbit()
+          return AppActions.closeOrbit()
         }
       },
       up: movePaneOrSelection(Direction.up),

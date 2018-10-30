@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Actions } from '../../../actions/Actions'
+import { AppActions } from '../../../actions/AppActions'
 import { AppConfig } from '@mcro/stores'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import { findDOMNode } from 'react-dom'
@@ -9,7 +9,7 @@ export class ToggleApp extends React.Component<{
   children: React.ReactElement<any>
 }> {
   handleClick = () => {
-    Actions.togglePeekApp(
+    AppActions.togglePeekApp(
       this.props.appConfig,
       getTargetPosition(findDOMNode(this) as HTMLDivElement),
     )

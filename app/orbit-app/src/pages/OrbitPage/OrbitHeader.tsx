@@ -3,7 +3,7 @@ import { view, attach } from '@mcro/black'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { View } from '@mcro/ui'
-import { Actions } from '../../actions/Actions'
+import { AppActions } from '../../actions/AppActions'
 import { OrbitSwitch } from './OrbitSwitch'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
@@ -129,7 +129,7 @@ export class HeaderStore {
   goHome = () => {
     const activePane = this.props.paneManagerStore.activePane
     if (activePane === 'home' || activePane === 'search') {
-      Actions.closeOrbit()
+      AppActions.closeOrbit()
     } else {
       this.props.paneManagerStore.setActivePane('home')
     }
@@ -162,7 +162,7 @@ export class OrbitHeader extends React.Component<
       >
         <OrbitFakeInput>
           <Title>
-            <OrbitClose onClick={Actions.closeOrbit}>
+            <OrbitClose onClick={AppActions.closeOrbit}>
               <OrbitCloseControl />
             </OrbitClose>
             <OrbitSwitch />

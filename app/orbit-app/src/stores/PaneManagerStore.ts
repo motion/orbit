@@ -7,7 +7,7 @@ import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
 import { OrbitStore } from './OrbitStore'
 import { QueryStore } from './QueryStore/QueryStore'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { generalSettingQuery } from '../helpers/queries'
 
 type Panes = 'home' | 'settings' | 'onboard' | string
@@ -109,9 +109,9 @@ export class PaneManagerStore {
     () => this.activePane === 'onboard',
     onboard => {
       if (onboard) {
-        Actions.setContextMessage('Welcome to Orbit...')
+        AppActions.setContextMessage('Welcome to Orbit...')
       } else {
-        Actions.setContextMessage('Orbit')
+        AppActions.setContextMessage('Orbit')
       }
     },
   )
@@ -179,7 +179,7 @@ export class PaneManagerStore {
     pane => {
       ensure('pane', !!pane)
       ensure('target', !!App.peekState.target)
-      Actions.clearPeek()
+      AppActions.clearPeek()
     },
   )
 

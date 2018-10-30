@@ -3,7 +3,7 @@ import { on, react, ensure } from '@mcro/black'
 import { throttle } from 'lodash'
 import { SubPaneProps } from './SubPane'
 import { App } from '@mcro/stores'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 
 export class SubPaneStore {
   props: SubPaneProps
@@ -130,7 +130,7 @@ export class SubPaneStore {
     this.onPaneNearEdges()
     if (App.peekState.target) {
       if (Date.now() - this.props.selectionStore.lastSelectAt > 200) {
-        Actions.clearPeek()
+        AppActions.clearPeek()
       }
     }
   }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { PersonBit } from '@mcro/models'
 import { memoize } from 'lodash'
 
@@ -14,7 +14,7 @@ const shortName = name => {
 const handleClick = memoize((person: PersonBit) => e => {
   e.stopPropagation()
   e.preventDefault()
-  Actions.queryTogglePersonFilter(person.name)
+  AppActions.queryTogglePersonFilter(person.name)
 })
 
 const Person = props => (

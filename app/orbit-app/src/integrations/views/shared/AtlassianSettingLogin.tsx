@@ -8,7 +8,7 @@ import {
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { Actions } from '../../../actions/Actions'
+import { AppActions } from '../../../actions/AppActions'
 import * as Views from '../../../views'
 import { Message } from '../../../views/Message'
 
@@ -90,7 +90,7 @@ export class AtlassianSettingLogin extends React.Component<
     if (result.success) {
       this.props.store.status = Statuses.SUCCESS
       this.props.store.error = null
-      Actions.clearPeek()
+      AppActions.clearPeek()
     } else {
       this.props.store.status = Statuses.FAIL
       this.props.store.error = result.error

@@ -1,6 +1,6 @@
 import { store, react, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { showNotification } from '../helpers/electron/showNotification'
 import { PopoverState } from '@mcro/ui'
 
@@ -18,8 +18,8 @@ export class AppReactions {
     this.dispose = App.onMessage(async (msg, value) => {
       console.log('app message', msg, Date.now())
       switch (msg) {
-        case App.messages.TOGGLE_SHOWN:
-          App.setOrbitState({ docked: !App.orbitState.docked })
+        case App.messages.TRAY_EVENT:
+          AppActions.trayEvent(value)
           return
         case App.messages.HIDE:
           App.setOrbitState({ docked: false })
@@ -27,8 +27,6 @@ export class AppReactions {
         case App.messages.SHOW:
           App.setOrbitState({ docked: true })
           return
-        case App.messages.HIDE_PEEK:
-          return Actions.clearPeek()
         case App.messages.NOTIFICATION:
           const val = JSON.parse(msg)
           showNotification({
@@ -37,7 +35,7 @@ export class AppReactions {
           })
           return
         case App.messages.CLOSE_APP:
-          Actions.closeApp(+value)
+          AppActions.closeApp(+value)
           return
       }
     })
@@ -47,7 +45,7 @@ export class AppReactions {
     () => App.orbitState.docked,
     () => {
       ensure('is hidden', !App.orbitState.docked)
-      Actions.clearPeek()
+      AppActions.clearPeek()
     },
   )
 

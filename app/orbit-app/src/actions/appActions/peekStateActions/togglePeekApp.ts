@@ -1,6 +1,6 @@
 import { App, AppConfig } from '@mcro/stores'
 import { PeekTarget } from './types'
-import { Actions } from '../../Actions'
+import { AppActions } from '../../AppActions'
 import { setPeekApp } from './setPeekApp'
 import { Logger } from '@mcro/logger'
 
@@ -11,7 +11,7 @@ const isEqual = (a, b) => a && b && id(a) === id(b)
 export function togglePeekApp(appConfig: AppConfig, target?: PeekTarget) {
   log.info('togglePeekApp', appConfig)
   if (isEqual(App.peekState.appConfig, appConfig)) {
-    Actions.clearPeek()
+    AppActions.clearPeek()
   } else {
     setPeekApp(appConfig, target)
   }

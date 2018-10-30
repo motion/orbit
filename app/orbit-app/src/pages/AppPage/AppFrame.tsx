@@ -6,7 +6,7 @@ import { ResizableBox } from '../../views/ResizableBox'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { setAppState } from '../../actions/appActions/setAppState'
 import { debounce } from 'lodash'
-import { Actions } from '../../actions/Actions'
+import { AppActions } from '../../actions/AppActions'
 import { AppStore } from '../../pages/AppPage/AppStore'
 import { AppFrameArrow } from './AppFrameArrow'
 
@@ -62,7 +62,7 @@ class AppFrameStore {
 
   tearOnFinishResize = debounce(() => {
     if (this.props.appStore.isPeek) {
-      Actions.tearPeek()
+      AppActions.tearPeek()
     }
   }, 100)
 

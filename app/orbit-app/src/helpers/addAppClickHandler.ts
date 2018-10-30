@@ -1,7 +1,7 @@
 import { checkAuthProxy } from './checkAuthProxy'
 import { promptForAuthProxy } from './promptForAuthProxy'
 import { memoize } from 'lodash'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { OrbitIntegration } from '../integrations/types'
 import { appToAppConfig } from '../stores/AppsStore'
 
@@ -19,7 +19,7 @@ export const addAppClickHandler = memoize(
     console.log('add integration', currentTarget, app)
     if (app.views.setup) {
       // if this view wants to show a "setup" pane...
-      Actions.togglePeekApp(
+      AppActions.togglePeekApp(
         {
           ...appToAppConfig(app),
           type: 'setup',
@@ -28,9 +28,9 @@ export const addAppClickHandler = memoize(
       )
     } else {
       // ...otherwise we open browser to oauth
-      Actions.clearPeek()
+      AppActions.clearPeek()
       if (await promptForProxy()) {
-        Actions.openAuth(app.integration)
+        AppActions.openAuth(app.integration)
         return true
       } else {
         console.log('failed proxy prompt... show something')

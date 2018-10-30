@@ -2,7 +2,7 @@ import { react, ensure } from '@mcro/black'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { ItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { ResolvableModel } from '../integrations/types'
 import { getAppConfig } from '../stores/AppsStore'
 
@@ -42,7 +42,7 @@ export class OrbitItemStore {
         return
       }
       this.open()
-      Actions.closeOrbit()
+      AppActions.closeOrbit()
       e.stopPropagation()
     }
     this.clickAt = Date.now()
@@ -70,7 +70,7 @@ export class OrbitItemStore {
   searchLocation = () => {
     const { onClickLocation } = this.props
     if (typeof onClickLocation === 'string') {
-      return Actions.open(onClickLocation)
+      return AppActions.open(onClickLocation)
     }
     if (typeof onClickLocation === 'function') {
       return onClickLocation(this.resolvedItem)
@@ -82,7 +82,7 @@ export class OrbitItemStore {
     if (!this.props.model || this.props.model.target === 'setting') {
       return
     }
-    Actions.openItem(this.props.model)
+    AppActions.openItem(this.props.model)
   }
 
   setCardWrapRef = cardWrapRef => {
@@ -156,7 +156,7 @@ export class OrbitItemStore {
           ensure('appConfig`', !!this.appConfig)
           // fluidity
           await sleep()
-          Actions.setPeekApp(this.appConfig, this.position)
+          AppActions.setPeekApp(this.appConfig, this.position)
         }
       }
     },

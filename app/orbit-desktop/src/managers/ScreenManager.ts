@@ -5,7 +5,6 @@ import { Desktop, Electron, App } from '@mcro/stores'
 // handles the oracle blur window as well as any information relating to the current
 // OS screen state like spaces.
 
-// @ts-ignore
 @store
 export class ScreenManager {
   clearTimeout?: Function
@@ -18,6 +17,15 @@ export class ScreenManager {
 
   start = () => {
     this.isStarted = true
+
+    this.oracle.onAppState(state => {
+      switch (state) {
+        case 'TrayToggleMemory':
+        case 'TrayPin':
+        case 'TrayToggleOrbit':
+          Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
+      }
+    })
 
     // space move
     let mvtm

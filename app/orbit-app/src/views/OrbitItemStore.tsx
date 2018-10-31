@@ -159,7 +159,6 @@ export class OrbitItemStore {
           ensure('appConfig`', !!this.appConfig)
           // fluidity
           await sleep()
-          debugger
           AppActions.setPeekApp(this.appConfig, this.position)
         }
       }

@@ -1,3 +1,38 @@
+# Ora - your memory
+
+## first option: realtime
+
+hover over it to see whats contextually relevant in a dropdown
+
+```
+   [ · | 📌 | ⭕️ ]
+     ˄
+[ Contextual item ]
+[ Contextual item2 ]
+[ Contextual item3 ]
+```
+
+## second option: lists
+
+hover to pin to a list
+
+```
+   [ · | 📌 | ⭕️ ]
+         ˄
+     [ List 1 ]
+     [ List 2 ]
+     [ List 3 ]
+```
+
+## third option: orbit
+
+click to toggle your orbit search
+
+```
+   [ · | 📌 | ⭕️ ]
+              ˄
+```
+
 umed:
 
 1. grouped by time search (we should chat about this)

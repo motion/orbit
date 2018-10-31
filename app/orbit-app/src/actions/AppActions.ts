@@ -1,4 +1,4 @@
-import * as AllAppActions from './appActions'
+import * as AllAppActions from './appActionsHandlers'
 import { setupActions } from '../helpers/setupActions'
 
 export const AppActions = setupActions({

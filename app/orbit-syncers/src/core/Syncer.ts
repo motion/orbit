@@ -2,7 +2,7 @@ import { JobEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { Subscription } from '@mcro/mediator'
 import { observeMany } from '@mcro/model-bridge'
-import { Job, Source, SettingModel } from '@mcro/models'
+import { Job, Source, SourceModel } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { SyncerOptions } from './IntegrationSyncer'
 import Timer = NodeJS.Timer
@@ -55,7 +55,7 @@ export class Syncer {
           await this.runInterval(source, true)
         }
       } else {
-        this.subscription = observeMany(SettingModel, {
+        this.subscription = observeMany(SourceModel, {
           // @ts-ignore
           args: { where: { type: this.options.type } },
         }).subscribe(async sources => this.reactOnSettingsChanges(sources))

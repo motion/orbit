@@ -4,7 +4,7 @@ import { view, react, ensure, attach } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import {
   SalientWordsModel,
-  Setting,
+  Source,
   SearchLocationsModel,
   SearchQuery,
   SearchResultModel,
@@ -15,7 +15,7 @@ import { RoundButtonBordered } from '../../../views/RoundButtonBordered'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { OrbitListItem } from '../../../views/OrbitListItem'
 
-type Props = { setting: Setting }
+type Props = { source: Source }
 
 class AppTopicStore {
   props: Props
@@ -25,7 +25,7 @@ class AppTopicStore {
   private searchArgs = {
     query: {
       query: '',
-      integrationFilters: [this.props.setting.type],
+      integrationFilters: [this.props.source.type],
       take: 100,
       skip: 0,
       sortBy: 'Recent',
@@ -53,7 +53,7 @@ class AppTopicStore {
         args: {
           query: topic,
           locationFilters: [location],
-          integrationFilters: [this.props.setting.type],
+          integrationFilters: [this.props.source.type],
           skip: 0,
           take: 20,
           sortBy: 'Topic',

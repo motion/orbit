@@ -1,6 +1,6 @@
 import { cancel, ensure, on, react, sleep } from '@mcro/black'
 import { loadOne } from '@mcro/model-bridge'
-import { Bit, BitModel, PersonBit, PersonBitModel, Setting, SettingModel } from '@mcro/models'
+import { Bit, BitModel, PersonBit, PersonBitModel, Setting, SourceModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
@@ -184,8 +184,12 @@ export class AppStore {
           relations: ['people'],
         },
       })
-    } else if (type === 'setting') {
-      selectedItem = await loadOne(SettingModel)
+    } else if (type === 'source') {
+      selectedItem = await loadOne(SourceModel, {
+        args: {
+          where: { id },
+        },
+      })
     }
     return selectedItem
   }

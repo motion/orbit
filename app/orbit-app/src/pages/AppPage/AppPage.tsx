@@ -16,12 +16,12 @@ import { OrbitIntegration } from '../../integrations/types'
 import { allIntegrations } from '../../integrations'
 
 type Props = {
-  sourcesStore?: SourcesStore
+  appsStore?: SourcesStore
   appStore?: AppStore
 }
 
 @provide({
-  sourcesStore: SourcesStore,
+  appsStore: SourcesStore,
 })
 @provide({
   appStore: AppStore,
@@ -57,13 +57,13 @@ const HiddenControls = view({
   },
 })
 
-@attach('sourcesStore', 'appStore')
+@attach('appsStore', 'appStore')
 @view
 class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitIntegration<any>['views']) => {
-    const { appStore, sourcesStore } = this.props
+    const { appStore, appsStore } = this.props
     const { appConfig } = appStore.state
-    const app = sourcesStore.allSourcesMap[appConfig.integration]
+    const app = appsStore.allSourcesMap[appConfig.integration]
     if (!app) {
       return NullView
     }
@@ -91,7 +91,7 @@ class AppPageContent extends React.Component<Props> {
         return <View model={appStore.state.model} {...props} />
       })
     },
-    setting: () => {
+    source: () => {
       const { appStore } = this.props
       const View = this.getView('setting')
       return view(props => {
@@ -101,7 +101,7 @@ class AppPageContent extends React.Component<Props> {
               <View
                 appConfig={appStore.state.appConfig}
                 appInfoStore={appInfoStore}
-                setting={appStore.state.model}
+                source={appStore.state.model}
                 appStore={appStore}
                 {...props}
               />

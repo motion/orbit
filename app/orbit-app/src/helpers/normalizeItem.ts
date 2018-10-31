@@ -5,7 +5,7 @@ import { last } from 'lodash'
 
 export type NormalizedItem = {
   id: string
-  type: 'person' | 'bit' | 'app'
+  type: 'person' | 'bit' | 'source'
   subType?: string
   title: string
   preview?: React.ReactNode
@@ -52,8 +52,8 @@ const normalizers = {
       updatedAt: new Date(bit.bitUpdatedAt),
     }
   },
-  setting: (model): NormalizedItem => ({
-    type: 'app',
+  source: (model): NormalizedItem => ({
+    type: 'source',
     id: `${model.id}`,
     title: model.type,
     icon: model.type,

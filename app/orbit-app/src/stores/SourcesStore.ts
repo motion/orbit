@@ -18,6 +18,9 @@ export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
 }
 
 export const getAppConfig = (model: ResolvableModel): AppConfig => {
+  if (model.target === 'source') {
+    throw new Error('Doesn\'t handle sources')
+  }
   const type = model.target === 'bit' ? model.integration : 'person'
   const app = allIntegrations[type]
   if (!app) {

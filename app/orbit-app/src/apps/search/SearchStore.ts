@@ -1,18 +1,18 @@
 import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import { SearchResultModel, Bit, SearchPinnedResultModel } from '@mcro/models'
+import { SearchResult, SearchResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { SourcesStore } from '../../stores/SourcesStore'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SelectionGroup, SelectionStore } from '../../stores/SelectionStore'
-import { SettingStore } from '../../stores/SettingStore'
 import { uniq } from 'lodash'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { MarkType } from '../../stores/QueryStore/types'
+import { SelectionGroup, SelectionStore } from '../../stores/SelectionStore'
+import { SettingStore } from '../../stores/SettingStore'
+import { SourcesStore } from '../../stores/SourcesStore'
 
 const TYPE_DEBOUNCE = 200
 
-type SearchState = { results: Bit[]; finished?: boolean; query: string }
+type SearchState = { results: SearchResult[]; finished?: boolean; query: string }
 
 export class SearchStore {
   props: {
@@ -92,22 +92,25 @@ export class SearchStore {
       await when(() => activeQuery === quickSearchState.query)
       let res = []
       if (quickSearchState.results.length) {
+        const quickSearchBits = quickSearchState.results.reduce((bits, result) => [...bits, ...result.bits], [])
         res = [
           {
             type: 'row',
             // shouldAutoSelect: true,
-            ids: quickSearchState.results.map(x => x.id),
+            ids: quickSearchBits.map(x => x.id),
           } as SelectionGroup,
         ]
         setValue(res)
       }
       await when(() => activeQuery === searchState.query)
+
+      const searchBits = searchState.results.reduce((bits, result) => [...bits, ...result.bits], [])
       return [
         ...res,
         {
           type: 'column',
           // shouldAutoSelect: true,
-          ids: searchState.results.map(x => x.id),
+          ids: searchBits.map(x => x.id),
         } as SelectionGroup,
       ]
     },
@@ -145,7 +148,7 @@ export class SearchStore {
         await idle()
       }
 
-      let results = []
+      let results: SearchResult[] = []
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query
       if (isChangingQuery) {
@@ -193,9 +196,11 @@ export class SearchStore {
         locationFilters,
       }
 
-      const updateNextResults = async ({ startIndex, endIndex }) => {
+      const updateNextResults = async ({ skipBits, group, startIndex, endIndex }) => {
         const searchOpts = {
           ...baseFindOptions,
+          group,
+          skipBits,
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
@@ -213,10 +218,15 @@ export class SearchStore {
       }
 
       // do initial search
-      await updateNextResults({ startIndex: 0, endIndex: take })
+      await updateNextResults({ skipBits: true, group: 'accurate', startIndex: 0, endIndex: take })
+      await updateNextResults({ skipBits: true, group: 'last-day', startIndex: 0, endIndex: take })
+      await updateNextResults({ skipBits: true, group: 'last-week', startIndex: 0, endIndex: take })
+      await updateNextResults({ skipBits: true, group: 'overall', startIndex: 0, endIndex: take })
+      // console.log("SEARCH RESULTS", results)
 
       // wait for active before loading more than one page of results
-      if (!this.isActive) {
+      // disabling infinite scroll for now since we have a grouped results
+      /*if (!this.isActive) {
         await when(() => this.isActive)
       }
 
@@ -229,7 +239,7 @@ export class SearchStore {
         if (!updated) {
           break
         }
-      }
+      }*/
       // finished
       return {
         query,
@@ -265,7 +275,7 @@ export class SearchStore {
       await sleep(TYPE_DEBOUNCE * 0.5)
       return {
         query,
-        results: await loadMany(SearchPinnedResultModel, { args: { query } }),
+        results: [] // await loadMany(SearchPinnedResultModel, { args: { query } }),
       }
     },
     {

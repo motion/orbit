@@ -236,10 +236,10 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
 
   render() {
     const { searchStore } = this.props
-    log(
-      `render OrbitSearchVirtualList (${this.items.length}) ${this.state.height}`,
-      searchStore.searchState.query,
-    )
+    // log(
+    //   `render OrbitSearchVirtualList (${this.items.length}) ${this.state.height}`,
+    //   searchStore.searchState.query,
+    // )
     trace()
     if (!this.items.length) {
       return (

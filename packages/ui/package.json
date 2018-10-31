@@ -14,6 +14,7 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0",
     "@mcro/black": "^2.2.1",
+    "@mcro/helpers": "^2.2.1",
     "@mcro/color": "^2.2.1",
     "@mcro/gloss": "^2.2.1",
     "@mcro/css": "^2.2.1",

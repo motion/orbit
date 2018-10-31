@@ -33,7 +33,7 @@ export class WebsiteSyncer implements IntegrationSyncer {
     const dbBits = await this.syncerRepository.loadDatabaseBits()
     this.log.timer('load bits from the database', { dbBits })
 
-    // load users from jira API
+    // load users from internet
     this.log.timer('crawl site')
     const crawledData = await this.crawler.run()
     this.log.timer('crawl site', crawledData)

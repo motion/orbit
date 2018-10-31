@@ -84,10 +84,10 @@ export class BitSyncer {
     // and we do it twice - before saving anything to prevent further operations
     // and after saving everything to make sure source wasn't removed or requested for removal
     // while we were inserting new bits
-    if (await this.syncerRepository.isSettingRemoved()) {
-      this.log.warning('found a source in a process of removal, skip syncing')
-      return
-    }
+    // if (await this.syncerRepository.isSettingRemoved()) {
+    //   this.log.warning('found a source in a process of removal, skip syncing')
+    //   return
+    // }
 
     this.log.timer('save bits in the database', { insertedBits, updatedBits, removedBits })
     try {
@@ -150,14 +150,14 @@ export class BitSyncer {
 
         // before committing transaction we make sure nobody removed source during period of save
         // we use non-transactional manager inside this method intentionally
-        if (await this.syncerRepository.isSettingRemoved()) throw 'source removed'
+        // if (await this.syncerRepository.isSettingRemoved()) throw 'source removed'
       })
       this.log.timer('save bits in the database')
     } catch (error) {
-      if (error === 'source removed') {
-        this.log.warning('found a source in a process of removal, skip syncing')
-        return
-      }
+      // if (error === 'source removed') {
+      //   this.log.warning('found a source in a process of removal, skip syncing')
+      //   return
+      // }
       throw error
     }
   }

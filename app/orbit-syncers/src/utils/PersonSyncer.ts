@@ -126,10 +126,10 @@ export class PersonSyncer {
     // and we do it twice - before saving anything to prevent further operations
     // and after saving everything to make sure setting wasn't removed or requested for removal
     // while we were inserting new bits
-    if (await this.syncerRepository.isSettingRemoved()) {
-      this.log.warning(`found a setting in a process of removal, skip syncing`)
-      return
-    }
+    // if (await this.syncerRepository.isSettingRemoved()) {
+    //   this.log.warning(`found a setting in a process of removal, skip syncing`)
+    //   return
+    // }
 
     this.log.timer(`save people and person bits in the database`)
     try {
@@ -143,15 +143,15 @@ export class PersonSyncer {
 
         // before committing transaction we make sure nobody removed setting during period of save
         // we use non-transactional manager inside this method intentionally
-        if (await this.syncerRepository.isSettingRemoved())
-          throw 'setting removed'
+        // if (await this.syncerRepository.isSettingRemoved())
+        //   throw 'setting removed'
       })
 
     } catch (error) {
-      if (error === 'setting removed') {
-        this.log.warning(`found a setting in a process of removal, skip syncing`)
-        return
-      }
+      // if (error === 'setting removed') {
+      //   this.log.warning(`found a setting in a process of removal, skip syncing`)
+      //   return
+      // }
       throw error
     }
     this.log.timer(`save people and person bits in the database`)

@@ -14,3 +14,4 @@ export const stringify = x => JSON.stringify(toJS(x), null, 2)
 
 export * from './watchModel'
 export * from './compose'
+export * from './highlightText'

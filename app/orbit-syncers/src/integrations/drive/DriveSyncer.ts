@@ -1,7 +1,7 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { PersonBitUtils } from '@mcro/model-utils'
-import { DriveSetting } from '@mcro/models'
+import { DriveSource } from '@mcro/models'
 import { DriveLoader } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
@@ -13,27 +13,28 @@ import { DrivePersonFactory } from './DrivePersonFactory'
  * Syncs Google Drive files.
  */
 export class DriveSyncer implements IntegrationSyncer {
-  private setting: DriveSetting
+  private source: DriveSource
   private log: Logger
   private loader: DriveLoader
   private bitFactory: DriveBitFactory
   private personFactory: DrivePersonFactory
 
-  constructor(setting: DriveSetting, log?: Logger) {
-    this.setting = setting
-    this.log = log || new Logger('syncer:drive:' + setting.id)
-    this.loader = new DriveLoader(this.setting, this.log, setting => getRepository(SettingEntity).save(setting))
-    this.bitFactory = new DriveBitFactory(setting)
-    this.personFactory = new DrivePersonFactory(setting)
+  constructor(source: DriveSource, log?: Logger) {
+    this.source = source
+    this.log = log || new Logger('syncer:drive:' + source.id)
+    this.loader = new DriveLoader(this.source, this.log, source =>
+      getRepository(SourceEntity).save(source),
+    )
+    this.bitFactory = new DriveBitFactory(source)
+    this.personFactory = new DrivePersonFactory(source)
   }
 
   /**
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-
-    if (!this.setting.values.lastSync) this.setting.values.lastSync = {}
-    const lastSync = this.setting.values.lastSync
+    if (!this.source.values.lastSync) this.source.values.lastSync = {}
+    const lastSync = this.source.values.lastSync
 
     // load users from API
     this.log.timer('load files and people from API')
@@ -43,15 +44,16 @@ export class DriveSyncer implements IntegrationSyncer {
       // if we have synced stuff previously already, we need to prevent same files syncing
       // check if file's updated date is newer than our last synced date
       if (lastSync.lastSyncedDate && updatedAt <= lastSync.lastSyncedDate) {
-        this.log.verbose(`reached last synced date, stop syncing...`, { file, updatedAt, lastSync })
+        this.log.verbose('reached last synced date, stop syncing...', { file, updatedAt, lastSync })
 
         // if its actually older we don't need to sync this file and all next ones (since they are sorted by updated date)
-        if (lastSync.lastCursorSyncedDate) { // important check, because we can be in this block without loading by cursor
+        if (lastSync.lastCursorSyncedDate) {
+          // important check, because we can be in this block without loading by cursor
           lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         }
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SettingEntity).save(this.setting)
+        await getRepository(SourceEntity).save(this.source)
 
         return false // this tells from the callback to stop file proceeding
       }
@@ -60,8 +62,8 @@ export class DriveSyncer implements IntegrationSyncer {
       // next time we make sync again we don't want to sync files less then this date
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
-        this.log.verbose(`looks like its the first syncing file, set last synced date`, lastSync)
-        await getRepository(SettingEntity).save(this.setting)
+        this.log.verbose('looks like its the first syncing file, set last synced date', lastSync)
+        await getRepository(SourceEntity).save(this.source)
       }
 
       const bit = this.bitFactory.create(file)
@@ -75,47 +77,49 @@ export class DriveSyncer implements IntegrationSyncer {
       }
 
       // find person bit with email
-      const personBits = await Promise.all(bit.people.map(async person => {
-        const dbPersonBit = await getRepository(PersonBitEntity).findOne(hash(person.email))
-        const newPersonBit = PersonBitUtils.createFromPerson(person)
-        const personBit = PersonBitUtils.merge(newPersonBit, dbPersonBit || {})
+      const personBits = await Promise.all(
+        bit.people.map(async person => {
+          const dbPersonBit = await getRepository(PersonBitEntity).findOne(hash(person.email))
+          const newPersonBit = PersonBitUtils.createFromPerson(person)
+          const personBit = PersonBitUtils.merge(newPersonBit, dbPersonBit || {})
 
-        // push person to person bit's people
-        const hasPerson = personBit.people.some(existPerson => existPerson.id === person.id)
-        if (!hasPerson) {
-          personBit.people.push(person)
-        }
+          // push person to person bit's people
+          const hasPerson = personBit.people.some(existPerson => existPerson.id === person.id)
+          if (!hasPerson) {
+            personBit.people.push(person)
+          }
 
-        return personBit
-      }))
+          return personBit
+        }),
+      )
 
-      this.log.verbose(`syncing`, { file, bit, people: bit.people, personBits })
+      this.log.verbose('syncing', { file, bit, people: bit.people, personBits })
       await getRepository(PersonEntity).save(bit.people, { listeners: false })
       await getRepository(PersonBitEntity).save(personBits, { listeners: false })
       await getRepository(BitEntity).save(bit, { listeners: false })
 
       // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
       if (isLast) {
-        this.log.verbose(`looks like its the last issue in this sync, removing last cursor and setting last sync date`, lastSync)
+        this.log.verbose(
+          'looks like its the last issue in this sync, removing last cursor and source last sync date',
+          lastSync,
+        )
         lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SettingEntity).save(this.setting)
+        await getRepository(SourceEntity).save(this.source)
         return true
       }
 
       // update last sync settings to make sure we continue from the last point in the case if application will stop
       if (lastSync.lastCursor !== cursor) {
-        this.log.verbose(`updating last cursor in settings`, { cursor })
+        this.log.verbose('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
-        await getRepository(SettingEntity).save(this.setting)
+        await getRepository(SourceEntity).save(this.source)
       }
 
       return true
-
     })
     this.log.timer('load files and people from API', files)
-
   }
-
 }

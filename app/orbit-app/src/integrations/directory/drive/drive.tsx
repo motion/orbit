@@ -8,7 +8,7 @@ import { findManyType } from '../../helpers/queries'
 import { DriveItem } from './views/DriveItem'
 
 export const drive: GetOrbitIntegration<'drive'> = (setting?: Setting) => ({
-  source: 'bit',
+  modelType: 'bit',
   integration: 'drive',
   appName: 'Drive',
   defaultQuery: findManyType('drive'),

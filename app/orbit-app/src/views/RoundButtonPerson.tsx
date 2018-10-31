@@ -3,7 +3,7 @@ import { Person, PersonBitModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { ButtonProps } from '@mcro/ui'
 import * as React from 'react'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { RoundButton } from './RoundButton'
 
 type PersonButtonProps = ButtonProps & {
@@ -22,7 +22,7 @@ export const handleClickPerson = (email: string) => async e => {
   if (!personBit) {
     console.log('no personBit found', email)
   } else {
-    Actions.togglePeekApp(personBit)
+    AppActions.togglePeekApp(personBit)
   }
 }
 

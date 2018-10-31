@@ -2,12 +2,12 @@ import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
-import { DriveSetting } from '@mcro/models'
-import { OrbitIntegrationSettingProps } from '../../../types'
+import { DriveSource } from '@mcro/models'
+import { OrbitSourceSettingProps } from '../../../types'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitIntegrationSettingProps<DriveSetting>
+type Props = OrbitSourceSettingProps<DriveSource>
 
 class DriveSettingsStore {
   props: Props
@@ -29,8 +29,8 @@ class DriveSettingsStore {
     this.popularFolders = files
   }
 
-  get setting() {
-    return this.props.setting
+  get source() {
+    return this.props.source
   }
 
   onSyncSetter = id => () => {
@@ -41,7 +41,7 @@ class DriveSettingsStore {
   get service(): any {
     // todo: broken by umed please fix me
     // console.log('get service again')
-    return {} // this.props.appsStore.services.drive
+    return {} // this.props.sourcesStore.services.drive
   }
 }
 
@@ -55,7 +55,7 @@ export class DriveSettings extends React.Component<
   render() {
     const {
       store,
-      setting,
+      source,
       appConfig: {
         viewConfig: { initialState },
       },
@@ -64,11 +64,11 @@ export class DriveSettings extends React.Component<
 
     return (
       <SimpleAppExplorer
-        setting={setting}
+        source={source}
         initialState={initialState}
         settingsPane={
           <>
-            <SettingManageRow setting={setting} whitelist={null} />
+            <SettingManageRow source={source} whitelist={null} />
             <View flex={1} opacity={1} pointerEvents={'auto'}>
               <SearchableTable
                 virtual

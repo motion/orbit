@@ -1,5 +1,5 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, GmailBitData, GmailSetting } from '@mcro/models'
+import { Bit, GmailBitData, GmailSource } from '@mcro/models'
 import { GMailThread } from '@mcro/services'
 import { GMailMessageParser } from './GMailMessageParser'
 
@@ -7,10 +7,10 @@ import { GMailMessageParser } from './GMailMessageParser'
  * Creates a GMail Bit.
  */
 export class GMailBitFactory {
-  private setting: GmailSetting
+  private source: GmailSource
 
-  constructor(setting: GmailSetting) {
-    this.setting = setting
+  constructor(source: GmailSource) {
+    this.source = source
   }
 
   /**
@@ -52,7 +52,7 @@ export class GMailBitFactory {
         bitCreatedAt: firstMessageParser.getDate(),
         bitUpdatedAt: lastMessageParser.getDate(),
         webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
-        settingId: this.setting.id,
+        sourceId: this.source.id,
       },
       thread.id,
     )

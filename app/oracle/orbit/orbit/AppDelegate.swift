@@ -5,10 +5,22 @@ import Cocoa
 import PromiseKit
 import Darwin
 
-let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
-let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
-let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
-let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
+enum InterfaceStyle : String {
+  case Dark, Light
+  init() {
+    let type = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
+    self = InterfaceStyle(rawValue: type)!
+  }
+}
+
+// super hack: node doesnt see the stdout for who knows what reason
+// so we re-route everything to stderr with a ! in front
+// cringe alert
+
+func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+  //  Swift.print(items[0], separator:separator, terminator: terminator)
+  fputs("!\(items.map { "\($0)" }.joined(separator: separator))\(terminator)", __stderrp)
+}
 
 struct Position: Decodable {
   let x: Int
@@ -27,39 +39,15 @@ struct WordsReply: Codable {
   let id: Int
 }
 
-class BlurryEffectView: NSVisualEffectView {
-  override func updateLayer() {
-    super.updateLayer()
-    
-    let backdrop = self.layer!.sublayers!.first!
-    
-    if backdrop.sublayers != nil {
-      for sublayer in backdrop.sublayers! {
-        if sublayer.name == "Backdrop" {
-          for filter in sublayer.filters! {
-            print("------------------- \(type(of: filter))")
-            //          let f = filter as [Filter]
-            //          if filter.respondsToSelector("name") {
-            //            if filter.name == "Backdrop" {
-            //
-            //            }
-            //          }
-          }
-        }
-      }
-    }
-  }
-}
-
-enum InterfaceStyle : String {
-  case Dark, Light
-  init() {
-    let type = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
-    self = InterfaceStyle(rawValue: type)!
-  }
-}
-
+@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
+  
+  let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
+  let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
+  let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
+  let shouldShowTray = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
+  let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
+
   let queue = AsyncGroup()
   var socketBridge: SocketBridge!
   var windo: Windo!
@@ -68,6 +56,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var lastSent = ""
   private var supportsTransparency = false
   private var accessibilityPermission = false
+  
+  let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
 
   lazy var window = NSWindow(
     contentRect: NSMakeRect(1413, 0, 500, 900),
@@ -76,7 +66,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     defer: false,
     screen: nil
   )
-  var blurryView = BlurryEffectView(frame: NSMakeRect(0, 0, 500, 900))
+  var blurryView = NSVisualEffectView(frame: NSMakeRect(0, 0, 500, 900))
 
   private func emit(_ msg: String) {
     self.socketBridge.send(msg)
@@ -111,8 +101,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.emit("{ \"action\": \"appState\", \"value\": \"exit\" }")
     return NSApplication.TerminateReply.terminateNow
   }
+  
+  
+  @objc func doSomeAction(sender: NSStatusItem) {
+    let event = NSApp.currentEvent!
+    if event.type == NSEvent.EventType.rightMouseUp {
+      // Right button click
+      print("right clcik")
+    } else {
+      let location = event.locationInWindow
+      print("clicked \(event.locationInWindow.x)")
+      if (location.x < 45) {
+        self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleMemory\" }")
+      }
+      else if (location.x < 73) {
+        self.emit("{ \"action\": \"appState\", \"value\": \"TrayPin\" }")
+      }
+      else {
+        self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleOrbit\" }")
+      }
+    }
+  }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
+    if (shouldShowTray) {
+      statusItem.highlightMode = false
+      if let button = statusItem.button {
+        print("SETTING THE BUTTON")
+        button.image = NSImage(named:NSImage.Name("tray"))
+        button.action = #selector(self.doSomeAction(sender:))
+      }
+    }
+
     
 //    print("spell")
 //    let words = "hello world hwo are you doing today in htis cool place."
@@ -480,4 +500,3 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     print("recorder stopped, exiting...")
   }
 }
-

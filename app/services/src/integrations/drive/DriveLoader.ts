@@ -1,10 +1,10 @@
 import { sleep } from '@mcro/utils'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { DriveSetting } from '@mcro/models'
+import { DriveSource } from '@mcro/models'
 import * as path from 'path'
 import { ServiceLoader } from '../../loader/ServiceLoader'
-import { ServiceLoaderSettingSaveCallback } from '../../loader/ServiceLoaderTypes'
+import { ServiceLoaderSourceSaveCallback } from '../../loader/ServiceLoaderTypes'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { DriveQueries } from './DriveQueries'
 import { DriveComment, DriveFile, DriveAbout, DriveLoadedFile, DriveRevision } from './DriveTypes'
@@ -14,19 +14,15 @@ import { uniqBy } from 'lodash'
  * Loads data from google drive api.
  */
 export class DriveLoader {
-  private setting: DriveSetting
+  private source: DriveSource
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(
-    setting: DriveSetting,
-    log?: Logger,
-    saveCallback?: ServiceLoaderSettingSaveCallback,
-  ) {
-    this.setting = setting
-    this.log = log || new Logger('service:drive:loader:' + setting.id)
+  constructor(source: DriveSource, log?: Logger, saveCallback?: ServiceLoaderSourceSaveCallback) {
+    this.source = source
+    this.log = log || new Logger('service:drive:loader:' + source.id)
     this.loader = new ServiceLoader(
-      this.setting,
+      this.source,
       this.log,
       this.baseUrl(),
       this.requestHeaders(),
@@ -44,7 +40,14 @@ export class DriveLoader {
   /**
    * Loads google drive files.
    */
-  async loadFiles(cursor: string|undefined, handler: (file: DriveLoadedFile, cursor?: string, isLast?: boolean) => Promise<boolean>|boolean): Promise<void> {
+  async loadFiles(
+    cursor: string | undefined,
+    handler: (
+      file: DriveLoadedFile,
+      cursor?: string,
+      isLast?: boolean,
+    ) => Promise<boolean> | boolean,
+  ): Promise<void> {
     await sleep(ServiceLoadThrottlingOptions.drive.files)
 
     const { files, nextPageToken } = await this.loader.load(DriveQueries.files(cursor))
@@ -85,11 +88,14 @@ export class DriveLoader {
 
         // if callback returned true we don't continue syncing
         if (result === false) {
-          this.log.info(`stopped issues syncing, no need to sync more`, { file: driveFile, index: i })
+          this.log.info('stopped issues syncing, no need to sync more', {
+            file: driveFile,
+            index: i,
+          })
           return // return from the function, not from the loop!
         }
       } catch (error) {
-        this.log.warning(`error during file handling`, driveFile, error)
+        this.log.warning('error during file handling', driveFile, error)
       }
     }
 
@@ -179,7 +185,7 @@ export class DriveLoader {
    */
   private requestHeaders() {
     return {
-      Authorization: `Bearer ${this.setting.token}`,
+      Authorization: `Bearer ${this.source.token}`,
       'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
       'Access-Control-Allow-Methods': 'GET',
     }

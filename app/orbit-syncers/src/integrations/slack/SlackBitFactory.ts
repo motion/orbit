@@ -1,6 +1,6 @@
 import { command } from '@mcro/model-bridge'
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, CosalTopWordsCommand, Person, SlackBitData, SlackSetting } from '@mcro/models'
+import { Bit, CosalTopWordsCommand, Person, SlackBitData, SlackSource } from '@mcro/models'
 import { SlackChannel, SlackMessage } from '@mcro/services'
 
 const Autolinker = require('autolinker')
@@ -9,10 +9,10 @@ const Autolinker = require('autolinker')
  * Creates a Slack Bit.
  */
 export class SlackBitFactory {
-  private setting: SlackSetting
+  private source: SlackSource
 
-  constructor(setting: SlackSetting) {
-    this.setting = setting
+  constructor(source: SlackSource) {
+    this.source = source
   }
 
   /**
@@ -27,11 +27,11 @@ export class SlackBitFactory {
     const lastMessage = messages[messages.length - 1]
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
-    const webLink = `https://${this.setting.values.team.domain}.slack.com/archives/${
+    const webLink = `https://${this.source.values.team.domain}.slack.com/archives/${
       channel.id
     }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
-      this.setting.values.team.id
+      this.source.values.team.id
     }`
     const mentionedPeople = this.findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
@@ -62,27 +62,29 @@ export class SlackBitFactory {
     // and more for body
     const body = (await command(CosalTopWordsCommand, { text: flatBody, max: 50 })).join(' ')
 
-    return BitUtils.create({
-      settingId: this.setting.id,
-      integration: 'slack',
-      type: 'conversation',
-      title,
-      body,
-      data,
-      // raw: { channel, messages },
-      bitCreatedAt,
-      bitUpdatedAt,
-      people,
-      location: {
-        id: channel.id,
-        name: channel.name,
-        webLink: `https://${this.setting.values.team.domain}.slack.com/archives/${channel.id}`,
-        desktopLink: `slack://channel?id=${channel.id}&team=${this.setting.values.team.id}`,
+    return BitUtils.create(
+      {
+        sourceId: this.source.id,
+        integration: 'slack',
+        type: 'conversation',
+        title,
+        body,
+        data,
+        // raw: { channel, messages },
+        bitCreatedAt,
+        bitUpdatedAt,
+        people,
+        location: {
+          id: channel.id,
+          name: channel.name,
+          webLink: `https://${this.source.values.team.domain}.slack.com/archives/${channel.id}`,
+          desktopLink: `slack://channel?id=${channel.id}&team=${this.source.values.team.id}`,
+        },
+        webLink,
+        desktopLink,
       },
-      webLink,
-      desktopLink,
-    },
-    channel.id + '_' + firstMessage.ts)
+      channel.id + '_' + firstMessage.ts,
+    )
   }
 
   /**

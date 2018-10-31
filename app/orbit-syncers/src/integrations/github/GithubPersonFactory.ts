@@ -1,5 +1,5 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { GithubPersonData, Person, GithubSetting } from '@mcro/models'
+import { GithubPersonData, Person, GithubSource } from '@mcro/models'
 import { GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { uniqBy } from 'lodash'
@@ -8,10 +8,10 @@ import { uniqBy } from 'lodash'
  * Creates a Github Person.
  */
 export class GithubPersonFactory {
-  private setting: GithubSetting
+  private source: GithubSource
 
-  constructor(setting: GithubSetting) {
-    this.setting = setting
+  constructor(source: GithubSource) {
+    this.source = source
   }
 
   /**
@@ -33,12 +33,15 @@ export class GithubPersonFactory {
     const commits = pr.commits.edges.map(edge => edge.node.commit)
     const reviews = pr.reviews.edges.map(edge => edge.node)
 
-    const githubPeople = uniqBy([
-      pr.author,
-      ...pr.participants.edges.map(user => user.node),
-      ...reviews.map(user => user.author),
-      ...commits.filter(commit => !!commit.user).map(commit => commit.user)
-    ], 'id').filter(user => !!user)
+    const githubPeople = uniqBy(
+      [
+        pr.author,
+        ...pr.participants.edges.map(user => user.node),
+        ...reviews.map(user => user.author),
+        ...commits.filter(commit => !!commit.user).map(commit => commit.user),
+      ],
+      'id',
+    ).filter(user => !!user)
 
     const usersFromCommit = commits.filter(commit => {
       return !commit.user && githubPeople.find(person => person.email === commit.email)
@@ -46,7 +49,7 @@ export class GithubPersonFactory {
 
     return [
       ...githubPeople.map(githubPerson => this.createFromGithubUser(githubPerson)),
-      ...usersFromCommit.map(commit => this.createFromCommit(commit))
+      ...usersFromCommit.map(commit => this.createFromCommit(commit)),
     ]
   }
 
@@ -54,13 +57,12 @@ export class GithubPersonFactory {
    * Creates a single integration person from given Github user.
    */
   createFromGithubUser(githubPerson: GithubPerson): Person {
-
-    const id = hash(`github-${this.setting.id}-${githubPerson.id}`)
+    const id = hash(`github-${this.source.id}-${githubPerson.id}`)
     const data: GithubPersonData = {}
 
     return PersonUtils.create({
       id,
-      setting: this.setting,
+      source: this.source,
       integrationId: githubPerson.id,
       integration: 'github',
       name: githubPerson.login,
@@ -68,7 +70,7 @@ export class GithubPersonFactory {
       email: githubPerson.email,
       photo: githubPerson.avatarUrl,
       // raw: githubPerson,
-      data
+      data,
     })
   }
 
@@ -76,13 +78,12 @@ export class GithubPersonFactory {
    * Creates a single integration person from a commit.
    */
   createFromCommit(commit: GithubCommit): Person {
-
-    const id = hash(`github-${this.setting.id}-commit-user-${commit.email}`)
+    const id = hash(`github-${this.source.id}-commit-user-${commit.email}`)
     const data: GithubPersonData = {}
 
     return PersonUtils.create({
       id,
-      setting: this.setting,
+      source: this.source,
       integrationId: undefined,
       integration: 'github',
       name: commit.name,
@@ -90,8 +91,7 @@ export class GithubPersonFactory {
       email: commit.email,
       photo: commit.avatarUrl,
       // raw: commit,
-      data
+      data,
     })
   }
-
 }

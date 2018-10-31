@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { FindOptions } from 'typeorm'
-import { IntegrationType, Bit, PersonBit, Setting, GenericBit } from '@mcro/models'
+import { IntegrationType, Bit, PersonBit, Source, GenericBit } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
 import { AppStore } from '../pages/AppPage/AppStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
-import { AppInfoStore } from '../stores/AppInfoStore'
+import { AppInfoStore } from '../components/AppInfoStore'
 
 type AppTypeToModelType = {
   slack: Bit
@@ -16,7 +16,6 @@ type AppTypeToModelType = {
   website: Bit
   drive: Bit
   person: PersonBit
-  apps: Setting
 }
 
 export type ItemType = IntegrationType | 'person'
@@ -46,7 +45,7 @@ export type OrbitItemProps<T extends ResolvableModel> = {
 }
 
 // for all apps, including non-bit apps
-export type OrbitGenericIntegrationProps<A extends ItemType> = OrbitItemProps<ModelFromType<A>>
+export type OrbitGenericSourceProps<A extends ItemType> = OrbitItemProps<ModelFromType<A>>
 
 // for just "bit" apps
 // much more common / external facing
@@ -56,46 +55,46 @@ export type OrbitIntegrationProps<A extends ItemType> = OrbitItemProps<ModelFrom
   normalizedItem: NormalizedItem
 }
 
-export type OrbitIntegrationMainProps<A extends ItemType> = OrbitIntegrationProps<A> & {
+export type OrbitSourceMainProps<A extends ItemType> = OrbitIntegrationProps<A> & {
   appStore: AppStore
   searchBar: SearchBarType
   searchTerm: string
 }
 
-export type OrbitIntegrationSettingProps<T extends Setting> = {
+export type OrbitSourceSettingProps<T extends Source> = {
   appConfig: AppConfig
   appInfoStore: AppInfoStore
-  setting: T
+  source: T
   appStore: AppStore
 }
 
 type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
 export type OrbitIntegration<A extends ItemType> = {
-  setting?: Setting
+  source?: Source
   display?: {
     name: string
     itemName?: string
     icon?: string
     iconLight?: string
   }
-  source: ModelFromType<A>['target']
+  modelType: ModelFromType<A>['target']
   integration?: A
   appName?: string
   defaultQuery?: any | FindOptions<ModelFromType<A>> // TODO umed
   viewConfig?: AppConfig['viewConfig']
   views: {
-    main: GenericComponent<OrbitIntegrationMainProps<A>>
+    main: GenericComponent<OrbitSourceMainProps<A>>
     item: GenericComponent<OrbitIntegrationProps<A>>
-    setting?: GenericComponent<OrbitIntegrationSettingProps<Setting>>
+    source?: GenericComponent<OrbitSourceSettingProps<Source>>
     setup?: GenericComponent<any>
   }
 }
 
 export type OrbitIntegrations = { [key in ItemType]: OrbitIntegration<ItemType> }
 
-export type GetOrbitIntegration<A extends ItemType> = (setting: Setting) => OrbitIntegration<A>
+export type GetOrbitIntegration<A extends ItemType> = (source: Source) => OrbitIntegration<A>
 
 export type GetOrbitIntegrations = { [key in ItemType]: GetOrbitIntegration<ItemType> }
 
-export type ResolvableModel = Bit | PersonBit | Setting
+export type ResolvableModel = Bit | PersonBit | Source

@@ -1,13 +1,12 @@
 import { JobStatus } from './JobStatus'
 import { JobType } from './JobType'
-import { Setting } from './Setting'
+import { Source } from './Source'
 
 export interface Job {
-
   /**
    * Target type.
    */
-  target: "job"
+  target: 'job'
 
   /**
    * Job id.
@@ -22,12 +21,12 @@ export interface Job {
   /**
    * Integration id for which this job was executed.
    */
-  settingId?: number
+  sourceId?: number
 
   /**
    * Integration for which this job was executed.
    */
-  setting?: Setting
+  source?: Source
 
   /**
    * Time when job was executed.
@@ -48,6 +47,4 @@ export interface Job {
    * Execution message.
    */
   message?: string
-
 }
-

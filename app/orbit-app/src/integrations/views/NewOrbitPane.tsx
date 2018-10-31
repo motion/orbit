@@ -2,16 +2,16 @@ import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { Title, VerticalSpace, Table, InputRow, FormRow } from '../../views'
-import { OrbitOrb } from '../../pages/OrbitPage/orbitDocked/orbitSettings/OrbitOrb'
 import { SubTitle } from '../../views/SubTitle'
 import { Grid } from '../../views/Grid'
-import { OrbitAppCard } from '../../pages/OrbitPage/orbitDocked/views/OrbitAppCard'
 import { Message } from '../../views/Message'
-import { AppsStore } from '../../stores/AppsStore'
+import { SourcesStore } from '../../stores/SourcesStore'
+import { OrbitOrb } from '../../views/OrbitOrb'
+import { OrbitAppCard } from '../../components/OrbitAppCard'
 
 type Props = {
   type: string
-  appsStore?: AppsStore
+  sourcesStore?: SourcesStore
 }
 
 const Statuses = {
@@ -39,7 +39,7 @@ class CreateSpaceStore {
   }
 }
 
-@attach('appsStore')
+@attach('sourcesStore')
 @attach({
   store: CreateSpaceStore,
 })
@@ -55,7 +55,7 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
   }
 
   render() {
-    const { appsStore } = this.props
+    const { sourcesStore } = this.props
     const { values, status, error } = this.props.store
     return (
       <UI.Col tagName="form" onSubmit={this.addIntegration} padding={20}>
@@ -80,13 +80,13 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
                 gridAutoRows={80}
                 margin={[5, -4]}
               >
-                {appsStore.appSettings.map((app, index) => (
+                {sourcesStore.sources.map((app, index) => (
                   <OrbitAppCard
-                    key={app.id}
+                    key={app.integration}
                     model={app}
                     pane="docked"
                     subPane="apps"
-                    total={appsStore.appSettings.length}
+                    total={sourcesStore.sources.length}
                     inGrid
                     // appConfig={settingToAppConfig(app)}
                     index={index}

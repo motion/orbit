@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { Setting, DriveSetting, GmailSetting } from '@mcro/models'
+import { Source, DriveSource, GmailSource } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
@@ -7,27 +7,27 @@ import {
   ServiceLoaderDownloadFileOptions,
   ServiceLoaderKeyValue,
   ServiceLoaderLoadOptions,
-  ServiceLoaderSettingSaveCallback,
+  ServiceLoaderSourceSaveCallback,
 } from './ServiceLoaderTypes'
 
 /**
  * Loader (fetcher) from service.
  */
 export class ServiceLoader {
-  private setting: Setting
+  private source: Source
   private log: Logger
   private baseUrl: string
   private headers: ServiceLoaderKeyValue
-  private saveCallback?: ServiceLoaderSettingSaveCallback
+  private saveCallback?: ServiceLoaderSourceSaveCallback
 
   constructor(
-    setting: Setting,
+    source: Source,
     log: Logger,
     baseUrl?: string,
     headers?: ServiceLoaderKeyValue,
-    saveCallback?: ServiceLoaderSettingSaveCallback,
+    saveCallback?: ServiceLoaderSourceSaveCallback,
   ) {
-    this.setting = setting
+    this.source = source
     this.log = log
     this.baseUrl = baseUrl || ''
     this.headers = headers || {}
@@ -66,9 +66,13 @@ export class ServiceLoader {
 
     // throw error if there is an error
     if (!result.ok || responseBody.error || responseBody.errors) {
-      if ((this.setting.type === "gmail" || this.setting.type === "drive") && autoRefreshTokens === true && result.status === 401) {
+      if (
+        (this.source.type === 'gmail' || this.source.type === 'drive') &&
+        autoRefreshTokens === true &&
+        result.status === 401
+      ) {
         this.log.warning('refreshing oauth token')
-        await this.refreshGoogleToken(this.setting as GmailSetting | DriveSetting)
+        await this.refreshGoogleToken(this.source as GmailSource | DriveSource)
         return this.load(options, false)
       }
       const error = typeof responseBody === 'object' ? JSON.stringify(responseBody) : responseBody
@@ -125,19 +129,19 @@ export class ServiceLoader {
   /**
    * Refreshes Google API token.
    */
-  private async refreshGoogleToken(setting: GmailSetting | DriveSetting) {
+  private async refreshGoogleToken(source: GmailSource | DriveSource) {
     // check if we have credentials defined
-    if (!setting.values.oauth)
-      throw new Error(`OAuth values are not defined in the given setting (#${setting.id})`)
+    if (!source.values.oauth)
+      throw new Error(`OAuth values are not defined in the given source (#${source.id})`)
 
-    if (!setting.values.oauth.refreshToken)
-      throw new Error(`Refresh token is not set in the given setting (#${setting.id})`)
+    if (!source.values.oauth.refreshToken)
+      throw new Error(`Refresh token is not set in the given source (#${source.id})`)
 
     // setup a data we are going to send
     const formData = {
-      refresh_token: setting.values.oauth.refreshToken,
-      client_id: setting.values.oauth.clientId,
-      client_secret: setting.values.oauth.secret,
+      refresh_token: source.values.oauth.refreshToken,
+      client_id: source.values.oauth.clientId,
+      client_secret: source.values.oauth.secret,
       grant_type: 'refresh_token',
     }
     const body = Object.keys(formData)
@@ -159,16 +163,16 @@ export class ServiceLoader {
 
     if (!reply.access_token) throw new Error('No access token was found in refresh token response')
 
-    // update tokens in the setting
-    setting.token = reply.access_token
+    // update tokens in the source
+    source.token = reply.access_token
     if (reply.refresh_token) {
-      setting.values.oauth.refreshToken = reply.refresh_token
+      source.values.oauth.refreshToken = reply.refresh_token
     }
 
     // execute save callback if defined
     // we use save callback instead of direct save because our services package is cross-platform
     if (this.saveCallback) {
-      await this.saveCallback(setting)
+      await this.saveCallback(source)
     }
 
     return true

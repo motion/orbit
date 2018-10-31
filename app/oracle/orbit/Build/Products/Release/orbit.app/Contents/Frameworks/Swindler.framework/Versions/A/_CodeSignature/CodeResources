@@ -4,25 +4,9 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Resources/AXSwift.framework.dSYM/Contents/Info.plist</key>
-		<data>
-		NZRae6TuABcK/3KKDYXs7oIMKqU=
-		</data>
-		<key>Resources/AXSwift.framework.dSYM/Contents/Resources/DWARF/AXSwift</key>
-		<data>
-		/mft7sgiu6Y/PZ8mC8xBAkLgZjM=
-		</data>
 		<key>Resources/Info.plist</key>
 		<data>
 		QhSqalnESNW54tmUGJol8K+NwDM=
-		</data>
-		<key>Resources/PromiseKit.framework.dSYM/Contents/Info.plist</key>
-		<data>
-		wjhvY79OBlfn9OiJxbes+YC0OcI=
-		</data>
-		<key>Resources/PromiseKit.framework.dSYM/Contents/Resources/DWARF/PromiseKit</key>
-		<data>
-		Th2Hoju7ufIq9vfKFAcKfXS1I74=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -31,32 +15,10 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			vJTQjcnbOh/hlyDihXda4tEsnDE=
+			jgJtyuE9RcUP+ThMmjTYU9fP7cA=
 			</data>
 			<key>requirement</key>
-			<string>cdhash H"e395bf6f473d1500790ceecad37b06007b530317" or cdhash H"bc94d08dc9db3a1fe19720e285775ae2d12c9c31"</string>
-		</dict>
-		<key>Resources/AXSwift.framework.dSYM/Contents/Info.plist</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			NZRae6TuABcK/3KKDYXs7oIMKqU=
-			</data>
-			<key>hash2</key>
-			<data>
-			9e5q289GPltB5426DUtJKiokjwULCh0OYHH8DZDECvY=
-			</data>
-		</dict>
-		<key>Resources/AXSwift.framework.dSYM/Contents/Resources/DWARF/AXSwift</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			/mft7sgiu6Y/PZ8mC8xBAkLgZjM=
-			</data>
-			<key>hash2</key>
-			<data>
-			zio0dDmhmQlwBb0/WWMq58n4NJQNEZJWB/MMIDiF3PI=
-			</data>
+			<string>cdhash H"4a9c78d31ea6a959b72820fb7995742ee4b5969f" or cdhash H"8e026dcae13d45c50ff9384c9a34d853d7cfedc0"</string>
 		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
@@ -67,28 +29,6 @@
 			<key>hash2</key>
 			<data>
 			mQLC0gFLK1c7GtipxXRRHgMGRJq3OYrq20K7ScJF66A=
-			</data>
-		</dict>
-		<key>Resources/PromiseKit.framework.dSYM/Contents/Info.plist</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			wjhvY79OBlfn9OiJxbes+YC0OcI=
-			</data>
-			<key>hash2</key>
-			<data>
-			0UvX0rzl3hBD/bFe3120cuZGUwK1tWQGfar1FzkhaNA=
-			</data>
-		</dict>
-		<key>Resources/PromiseKit.framework.dSYM/Contents/Resources/DWARF/PromiseKit</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Th2Hoju7ufIq9vfKFAcKfXS1I74=
-			</data>
-			<key>hash2</key>
-			<data>
-			tPGA9p7FkEPLzMiImMcHoEvt1mkRadCzf7nmzzK1joM=
 			</data>
 		</dict>
 	</dict>

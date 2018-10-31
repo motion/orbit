@@ -1,5 +1,5 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, JiraBitData, JiraSettingValues, Person, JiraSetting } from '@mcro/models'
+import { Bit, JiraBitData, JiraSourceValues, Person, JiraSource } from '@mcro/models'
 import { JiraIssue } from '@mcro/services'
 import { SyncerUtils } from '../../core/SyncerUtils'
 
@@ -7,10 +7,10 @@ import { SyncerUtils } from '../../core/SyncerUtils'
  * Creates a Jira Bit.
  */
 export class JiraBitFactory {
-  private setting: JiraSetting
+  private source: JiraSource
 
-  constructor(setting: JiraSetting) {
-    this.setting = setting
+  constructor(source: JiraSource) {
+    this.source = source
   }
 
   /**
@@ -19,7 +19,7 @@ export class JiraBitFactory {
   create(issue: JiraIssue, allPeople: Person[]): Bit {
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
-    const values = this.setting.values as JiraSettingValues
+    const values = this.source.values as JiraSourceValues
     const domain = values.credentials.domain
     const body = SyncerUtils.stripHtml(issue.renderedFields.description)
     const cleanHtml = SyncerUtils.sanitizeHtml(issue.renderedFields.description)
@@ -42,27 +42,30 @@ export class JiraBitFactory {
     })
 
     // create or update a bit
-    return BitUtils.create({
-      integration: 'jira',
-      setting: this.setting,
-      type: 'document',
-      title: issue.fields.summary,
-      body,
-      author,
-      data: {
-        content: cleanHtml,
-      } as JiraBitData,
-      raw: issue,
-      location: {
-        id: issue.fields.project.id,
-        name: issue.fields.project.name,
-        webLink: domain + '/browse/' + issue.fields.project.key,
-        desktopLink: '',
+    return BitUtils.create(
+      {
+        integration: 'jira',
+        source: this.source,
+        type: 'document',
+        title: issue.fields.summary,
+        body,
+        author,
+        data: {
+          content: cleanHtml,
+        } as JiraBitData,
+        raw: issue,
+        location: {
+          id: issue.fields.project.id,
+          name: issue.fields.project.name,
+          webLink: domain + '/browse/' + issue.fields.project.key,
+          desktopLink: '',
+        },
+        webLink: domain + '/browse/' + issue.key,
+        people,
+        bitCreatedAt,
+        bitUpdatedAt,
       },
-      webLink: domain + '/browse/' + issue.key,
-      people,
-      bitCreatedAt,
-      bitUpdatedAt,
-    }, issue.id)
+      issue.id,
+    )
   }
 }

@@ -1,17 +1,15 @@
 import * as React from 'react'
 import { compose, attach } from '@mcro/black'
-import { Actions } from '../../actions/Actions'
+import { AppActions } from '../../actions/AppActions'
 import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
 import { SelectionStore, Direction } from '../../stores/SelectionStore'
-import { PaneManagerStore } from '../../pages/OrbitPage/PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore';
 
 type Props = {
   paneManagerStore?: PaneManagerStore
   selectionStore: SelectionStore
-  searchStore?: SearchStore
   children?: React.ReactNode
 }
 
@@ -35,9 +33,9 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-const decorate = compose(attach('selectionStore', 'searchStore', 'paneManagerStore'))
+const decorate = compose(attach('selectionStore', 'paneManagerStore'))
 export const MainShortcutHandler = decorate(
-  ({ searchStore, selectionStore, paneManagerStore, children }: Props) => {
+  ({ selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {
       if (
         (selectionStore.activeIndex === -1 ||
@@ -52,15 +50,17 @@ export const MainShortcutHandler = decorate(
 
     const handlers = {
       switchSpaces: () => {
-        Actions.showSpaceSwitcher()
+        AppActions.showSpaceSwitcher()
       },
       openCurrent: () => {
         console.log('openCurrent')
-        Actions.openItem(searchStore.selectedItem)
+        // Actions.openSelectedItem()
+        // Actions.openItem(searchStore.selectedItem)
       },
       copyLink: async () => {
         console.log('copyLink')
-        Actions.copyLink(searchStore.selectedItem)
+        // Actions.copySelectedItemLink()
+        // Actions.copyLink(searchStore.selectedItem)
       },
       escape: () => {
         console.log('escape')
@@ -70,15 +70,15 @@ export const MainShortcutHandler = decorate(
         }
         // clear peek first
         if (App.peekState.appConfig) {
-          return Actions.clearPeek()
+          return AppActions.clearPeek()
         }
         // then orbit query
         if (App.state.query) {
-          return Actions.clearSearch()
+          return AppActions.clearSearch()
         }
         // then orbit itself
         if (App.state.orbitState.docked) {
-          return Actions.closeOrbit()
+          return AppActions.closeOrbit()
         }
       },
       up: movePaneOrSelection(Direction.up),

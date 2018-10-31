@@ -1,11 +1,12 @@
-import { getGeneralSetting } from '../helpers/getSetting'
 import { BitEntity, SettingEntity } from '@mcro/entities'
 import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { Cosal } from '@mcro/cosal'
-import { chunk, zip, flattenDeep, flatten } from 'lodash'
+import { chunk, zip, flatten } from 'lodash'
 
 const log = new Logger('CosalManager')
+
+const getGeneralSetting = () => getRepository(SettingEntity).findOne({ name: 'general' })
 
 export class CosalManager {
   cosal: Cosal

@@ -2,7 +2,7 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import { Row, Col, Text, View } from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { OrbitOrb } from '../pages/OrbitPage/orbitDocked/orbitSettings/OrbitOrb'
+import { OrbitOrb } from './OrbitOrb'
 
 const RowItemFrame = view(Row, {
   padding: [4, 8],

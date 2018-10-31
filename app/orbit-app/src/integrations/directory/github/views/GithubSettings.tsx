@@ -1,17 +1,17 @@
 import { view, provide } from '@mcro/black'
-import { GithubRepositoryModel, GithubSetting } from '@mcro/models'
+import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
 import { Text, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
-import { OrbitIntegrationSettingProps } from '../../../types'
+import { OrbitSourceSettingProps } from '../../../types'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitIntegrationSettingProps<GithubSetting>
+type Props = OrbitSourceSettingProps<GithubSource>
 
 class GithubSettingStore {
   props: Props
@@ -22,14 +22,14 @@ class GithubSettingStore {
     direction: 'up',
   }
   whitelist = new WhitelistManager({
-    setting: this.props.setting,
+    source: this.props.source,
     getAll: this.getAllFilterIds.bind(this),
   })
 
   async didMount() {
     this.repositories = await loadMany(GithubRepositoryModel, {
       args: {
-        settingId: this.props.setting.id,
+        sourceId: this.props.source.id,
       },
     })
   }
@@ -53,18 +53,18 @@ export class GithubSettings extends React.Component<Props & { store: GithubSetti
   render() {
     const {
       store,
-      setting,
+      source,
       appConfig: {
         viewConfig: { initialState },
       },
     } = this.props
     return (
       <SimpleAppExplorer
-        setting={setting}
+        source={source}
         initialState={initialState}
         settingsPane={
           <>
-            <SettingManageRow setting={setting} whitelist={store.whitelist} />
+            <SettingManageRow source={source} whitelist={store.whitelist} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}

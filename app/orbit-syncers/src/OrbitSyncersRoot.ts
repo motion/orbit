@@ -5,6 +5,7 @@ import {
   JobEntity,
   PersonBitEntity,
   PersonEntity,
+  SourceEntity,
   SettingEntity,
 } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
@@ -14,18 +15,16 @@ import {
   JobModel,
   PersonBitModel,
   PersonModel,
-  SettingForceSyncCommand,
+  SourceForceSyncCommand,
+  SourceModel,
   SettingModel,
 } from '@mcro/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
-import { SettingForceSyncResolver } from './resolvers/SettingForceSyncResolver'
+import { SourceForceSyncResolver } from './resolvers/SourceForceSyncResolver'
 import { Syncers } from './core/Syncers'
-// import iohook from 'iohook'
-
-// const log = new Logger('orbit-syncers')
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
@@ -33,6 +32,7 @@ export class OrbitSyncersRoot {
   mediatorServer: MediatorServer
 
   async start() {
+    // @umed tihs may be...
     // console.log('path', path.join(app.getAppPath(), '..', '..') + '/Frameworks/Electron Framework.framework/Versions/A')
     setTimeout(async () => {
       await this.createDbConnection()
@@ -91,21 +91,21 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [SettingModel, BitModel, JobModel, PersonModel, PersonBitModel],
-      commands: [SettingForceSyncCommand],
+      models: [SettingModel, SourceModel, BitModel, JobModel, PersonModel, PersonBitModel],
+      commands: [SourceForceSyncCommand],
       transport: new WebSocketServerTransport({
         port: 40001, // todo: use config?
       }),
       resolvers: [
-        // @ts-ignore
         ...typeormResolvers(this.connection, [
           { entity: SettingEntity, models: [SettingModel] },
+          { entity: SourceEntity, models: [SourceModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },
           { entity: PersonEntity, models: [PersonModel] },
           { entity: PersonBitEntity, models: [PersonBitModel] },
         ]),
-        SettingForceSyncResolver,
+        SourceForceSyncResolver,
       ],
     })
     this.mediatorServer.bootstrap()

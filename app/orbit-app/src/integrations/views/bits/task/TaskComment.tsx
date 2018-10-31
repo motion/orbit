@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Row, Icon, Text } from '@mcro/ui'
 import { RoundButtonBorderedSmall } from '../../../../views/RoundButtonBordered'
 import { handleClickPerson } from '../../../../views/RoundButtonPerson'
-import { Actions } from '../../../../actions/Actions'
+import { AppActions } from '../../../../actions/AppActions'
 import { HorizontalSpace, VerticalSpace } from '../../../../views'
 import { DateFormat } from '../../../../views/DateFormat'
 import { Markdown } from '../../../../views/Markdown'
@@ -36,7 +36,7 @@ export const TaskComment = ({ author, createdAt, children }: TaskCommentLike) =>
             onClick={e => {
               e.stopPropagation()
               // TODO: make generic
-              Actions.open(`https://github.com/${login}`)
+              AppActions.open(`https://github.com/${login}`)
             }}
           />
         </RoundButtonBorderedSmall>

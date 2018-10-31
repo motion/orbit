@@ -1,28 +1,28 @@
 import { store, react } from '@mcro/black'
-import { SettingModel, GithubSetting, SlackSetting, GmailSetting } from '@mcro/models'
+import { SourceModel, GithubSource, SlackSource, GmailSource } from '@mcro/models'
 import { save } from '@mcro/model-bridge'
 import produce from 'immer'
 import { memoize } from 'lodash'
 
-type SettingWithWhiteList = GithubSetting | SlackSetting | GmailSetting
+type SettingWithWhiteList = GithubSource | SlackSource | GmailSource
 
 type Options<T> = {
-  setting: T
+  source: T
   getAll: () => string[]
 }
 
 @store
 export class WhitelistManager<T extends SettingWithWhiteList> {
-  setting: T = null
+  source: T = null
   values: T['values'] = null
   getAll: Options<T>['getAll']
 
-  constructor({ setting, getAll }: Options<T>) {
-    this.setting = setting
+  constructor({ source, getAll }: Options<T>) {
+    this.source = source
     this.getAll = getAll
     // copy it onto the store so we get instant mutations in views
     // then we react later and save it to the async model
-    this.values = { ...setting.values }
+    this.values = { ...source.values }
   }
 
   get isWhitelisting() {
@@ -32,8 +32,8 @@ export class WhitelistManager<T extends SettingWithWhiteList> {
   saveSettingOnValuesUpdate = react(
     () => this.values,
     values => {
-      this.setting.values = values
-      save(SettingModel, this.setting)
+      this.source.values = values
+      save(SourceModel, this.source)
     },
   )
 

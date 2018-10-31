@@ -116,7 +116,7 @@ const Bottom = view({
   alignItems: 'center',
 })
 
-@attach('appsStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
+@attach('sourcesStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @attach({
   store: OrbitItemStore,
 })
@@ -155,7 +155,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     const { isSelected } = store
     let ItemView
     if (!this.props.direct) {
-      ItemView = this.props.appsStore.getView(
+      ItemView = this.props.sourcesStore.getView(
         item.type === 'bit' ? item.integration : 'person',
         'item',
       )

@@ -1,5 +1,5 @@
 import { view, attach } from '@mcro/black'
-import { SlackChannelModel, SlackSetting } from '@mcro/models'
+import { SlackChannelModel, SlackSource } from '@mcro/models'
 import { SlackChannel } from '@mcro/services'
 import { orderBy } from 'lodash'
 import { loadMany } from '@mcro/model-bridge'
@@ -10,9 +10,9 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
-import { OrbitIntegrationProps, OrbitIntegrationSettingProps } from '../../../types'
+import { OrbitIntegrationProps, OrbitSourceSettingProps } from '../../../types'
 
-type Props = OrbitIntegrationSettingProps<SlackSetting>
+type Props = OrbitSourceSettingProps<SlackSource>
 
 class SlackSettingStore {
   props: Props
@@ -20,14 +20,14 @@ class SlackSettingStore {
 
   syncing = {}
   whitelist = new WhitelistManager({
-    setting: this.props.setting,
+    source: this.props.source,
     getAll: this.getAllFilterIds.bind(this),
   })
 
   async didMount() {
     const channels = await loadMany(SlackChannelModel, {
       args: {
-        settingId: this.props.setting.id,
+        sourceId: this.props.source.id,
       },
     })
     this.channels = orderBy(channels, ['is_private', 'num_members'], ['asc', 'desc'])
@@ -72,18 +72,18 @@ export class SlackSettings extends React.Component<
   render() {
     const {
       store,
-      setting,
+      source,
       appConfig: {
         viewConfig: { initialState },
       },
     } = this.props
     return (
       <SimpleAppExplorer
-        setting={setting}
+        source={source}
         initialState={initialState}
         settingsPane={
           <>
-            <SettingManageRow setting={setting} whitelist={store.whitelist} />
+            <SettingManageRow source={source} whitelist={store.whitelist} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}

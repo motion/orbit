@@ -1,28 +1,25 @@
 import { Logger } from '@mcro/logger'
-import { IntegrationType, Setting } from '@mcro/models'
+import { IntegrationType, Source } from '@mcro/models'
 
 /**
  * Interface for integration syncers.
  */
 export interface IntegrationSyncer {
-
   /**
    * Runs sync process of the integration.
    */
   run(): Promise<void>
-
 }
 
 /**
  * Constructor of the integration syncer instance.
  */
-export type SyncerConstructor = new (setting?: Setting, log?: Logger) => IntegrationSyncer
+export type SyncerConstructor = new (setting?: Source, log?: Logger) => IntegrationSyncer
 
 /**
  * Options to be passed to Syncer.
  */
 export interface SyncerOptions {
-
   /**
    * Syncer name.
    * By default equals to implementation constructor name.

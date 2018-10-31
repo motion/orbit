@@ -1,13 +1,7 @@
-import { BitEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { chunk } from 'lodash'
-import {
-  Bit,
-  GmailBitDataParticipant,
-  GmailSettingValues,
-  Person,
-  GmailSetting,
-} from '@mcro/models'
+import { Bit, GmailBitDataParticipant, GmailSourceValues, Person, GmailSource } from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
 import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
@@ -23,7 +17,7 @@ import { GMailPersonFactory } from './GMailPersonFactory'
  */
 export class GMailSyncer implements IntegrationSyncer {
   private log: Logger
-  private setting: GmailSetting
+  private source: GmailSource
   private loader: GMailLoader
   private bitFactory: GMailBitFactory
   private personFactory: GMailPersonFactory
@@ -31,23 +25,23 @@ export class GMailSyncer implements IntegrationSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: GmailSetting, log?: Logger) {
-    this.setting = setting
-    this.log = log || new Logger('syncer:gmail:' + setting.id)
-    this.loader = new GMailLoader(setting, this.log, setting =>
-      getRepository(SettingEntity).save(setting),
+  constructor(source: GmailSource, log?: Logger) {
+    this.source = source
+    this.log = log || new Logger('syncer:gmail:' + source.id)
+    this.loader = new GMailLoader(source, this.log, source =>
+      getRepository(SourceEntity).save(source),
     )
-    this.bitFactory = new GMailBitFactory(setting)
-    this.personFactory = new GMailPersonFactory(setting)
-    this.personSyncer = new PersonSyncer(setting, this.log)
-    this.bitSyncer = new BitSyncer(setting, this.log)
-    this.syncerRepository = new SyncerRepository(setting)
+    this.bitFactory = new GMailBitFactory(source)
+    this.personFactory = new GMailPersonFactory(source)
+    this.personSyncer = new PersonSyncer(source, this.log)
+    this.bitSyncer = new BitSyncer(source, this.log)
+    this.syncerRepository = new SyncerRepository(source)
   }
 
   async run() {
-    this.log.info('sync settings', this.setting.values)
+    this.log.info('sync sources', this.source.values)
 
-    const values = this.setting.values as GmailSettingValues
+    const values = this.source.values as GmailSourceValues
     let dropAllBits = false
     let { historyId, max, daysLimit, filter } = values
     if (!max) max = 10000
@@ -61,7 +55,7 @@ export class GMailSyncer implements IntegrationSyncer {
       (values.lastSyncDaysLimit !== undefined && daysLimit !== values.lastSyncDaysLimit)
     ) {
       this.log.info(
-        'last syncronization settings mismatch, need to drop all integration bits and start a clean history',
+        'last syncronization sources mismatch, need to drop all integration bits and start a clean history',
       )
       dropAllBits = true
       historyId = null
@@ -90,7 +84,7 @@ export class GMailSyncer implements IntegrationSyncer {
       if (history.removedThreadIds.length) {
         this.log.info('found actions in history for thread removals', history.removedThreadIds)
         removedBits = await getRepository(BitEntity).find({
-          settingId: this.setting.id,
+          sourceId: this.source.id,
           id: In(history.removedThreadIds),
         })
         this.log.info('found bits to be removed', removedBits)
@@ -169,13 +163,13 @@ export class GMailSyncer implements IntegrationSyncer {
     await this.personSyncer.sync({ apiPeople, dbPeople, dbPersonBits })
     await this.bitSyncer.sync({ apiBits, dbBits, dropAllBits, removedBits })
 
-    // update settings
-    this.log.info('updating sync settings')
+    // update sources
+    this.log.info('updating sync sources')
     values.historyId = historyId
     values.lastSyncFilter = filter
     values.lastSyncDaysLimit = daysLimit
     values.lastSyncMax = max
-    await getRepository(SettingEntity).save(this.setting)
+    await getRepository(SourceEntity).save(this.source)
   }
 
   /**

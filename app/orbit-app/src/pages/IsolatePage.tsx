@@ -4,10 +4,10 @@ import { BitModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { AppPage } from './AppPage/AppPage'
-import { OrbitDocked } from './OrbitPage/orbitDocked/OrbitDocked'
+import { OrbitPaneManager } from './OrbitPage/OrbitPaneManager'
 
 const getItem = {
   githubItem: () =>
@@ -29,7 +29,7 @@ export class IsolatePeek extends React.Component {
   render() {
     getItem.githubSetting().then(item => {
       console.log('got', item)
-      Actions.setPeekApp(item, {
+      AppActions.setPeekApp(item, {
         top: window.innerHeight,
         left: window.innerHeight - 350,
         width: 0,
@@ -46,7 +46,7 @@ export class IsolateHome extends React.Component {
   }
 
   render() {
-    return <OrbitDocked />
+    return <OrbitPaneManager />
   }
 }
 

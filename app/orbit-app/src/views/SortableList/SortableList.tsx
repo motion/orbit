@@ -1,22 +1,21 @@
 import * as React from 'react'
 import { WindowScroller, List, CellMeasurerCache, CellMeasurer } from 'react-virtualized'
-import { SearchStore } from '../../stores/SearchStore'
 import { view, ensure, react, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitItemSingleton } from '../OrbitItemStore'
-import { SubPaneStore } from '../../pages/OrbitPage/SubPaneStore'
+import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
 import { SortableListItem } from './SortableListItem'
 import { FirstItems } from './FirstItems'
 import { ItemProps } from '../OrbitItemProps'
+import { App } from '@mcro/stores'
 
 type Props = {
   items?: any[]
   itemProps?: ItemProps<any>
-  searchStore?: SearchStore
   selectionStore?: SelectionStore
   subPaneStore?: SubPaneStore
 }
@@ -100,14 +99,14 @@ class SortableListStore {
   }
 }
 
-@attach('searchStore', 'selectionStore', 'subPaneStore')
+@attach('selectionStore', 'subPaneStore')
 @attach({
   store: SortableListStore,
 })
 @view
 export class SortableList extends React.Component<Props & { store?: SortableListStore }> {
   private rowRenderer = ({ index, parent, style }) => {
-    const { searchStore, store } = this.props
+    const { store } = this.props
     const model = store.items[index]
     return (
       <CellMeasurer
@@ -123,7 +122,7 @@ export class SortableList extends React.Component<Props & { store?: SortableList
             model={model}
             index={index}
             realIndex={index + store.offset}
-            query={searchStore.searchState.query}
+            query={App.state.query}
             {...this.props.itemProps}
           />
         </div>
@@ -132,7 +131,7 @@ export class SortableList extends React.Component<Props & { store?: SortableList
   }
 
   render() {
-    const { store, searchStore, itemProps } = this.props
+    const { store, itemProps } = this.props
     if (!store.items.length) {
       return (
         <View margin={[10, 0]}>
@@ -143,13 +142,13 @@ export class SortableList extends React.Component<Props & { store?: SortableList
     return (
       <ProvideHighlightsContextWithDefaults
         value={{
-          words: searchStore.searchState.query.split(' '),
+          words: App.state.query.split(' '),
           maxChars: 500,
           maxSurroundChars: 80,
         }}
       >
         {/* double render the first few items so we can measure height, but hide them */}
-        <FirstItems items={store.items} searchStore={searchStore} itemProps={itemProps} />
+        <FirstItems items={store.items} itemProps={itemProps} />
         {!!store.height && (
           <div
             style={{

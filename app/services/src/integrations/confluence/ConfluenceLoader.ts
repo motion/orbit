@@ -1,23 +1,28 @@
 import { Logger } from '@mcro/logger'
 import { sleep } from '@mcro/utils'
-import { ConfluenceSetting } from '@mcro/models'
+import { ConfluenceSource } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { ConfluenceQueries } from './ConfluenceQueries'
-import { ConfluenceComment, ConfluenceContent, ConfluenceGroup, ConfluenceUser } from './ConfluenceTypes'
+import {
+  ConfluenceComment,
+  ConfluenceContent,
+  ConfluenceGroup,
+  ConfluenceUser,
+} from './ConfluenceTypes'
 
 /**
  * Loads confluence data from its API.
  */
 export class ConfluenceLoader {
-  private setting: ConfluenceSetting
+  private source: ConfluenceSource
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(setting: ConfluenceSetting, log?: Logger) {
-    this.setting = setting
+  constructor(setting: ConfluenceSource, log?: Logger) {
+    this.source = setting
     this.log = log || new Logger('service:confluence:loader:' + setting.id)
-    this.loader = new ServiceLoader(this.setting, this.log, this.baseUrl(), this.requestHeaders())
+    this.loader = new ServiceLoader(this.source, this.log, this.baseUrl(), this.requestHeaders())
   }
 
   /**
@@ -66,10 +71,7 @@ export class ConfluenceLoader {
 
     // load recursively to get all content from all "pages"
     if (response.results.length < response.size) {
-      return [
-        ...response.results,
-        ...(await this.loadContents(type, start + limit, limit)),
-      ]
+      return [...response.results, ...(await this.loadContents(type, start + limit, limit))]
     }
 
     return response.results
@@ -91,10 +93,7 @@ export class ConfluenceLoader {
 
     const response = await this.loader.load(ConfluenceQueries.comments(contentId, start, limit))
     if (response.results.length < response.size) {
-      return [
-        ...response.results,
-        ...(await this.loadComments(contentId, start + limit, limit)),
-      ]
+      return [...response.results, ...(await this.loadComments(contentId, start + limit, limit))]
     }
 
     return response.results
@@ -133,10 +132,7 @@ export class ConfluenceLoader {
   private async loadGroups(start = 0, limit = 200): Promise<ConfluenceGroup[]> {
     const response = await this.loader.load(ConfluenceQueries.groups())
     if (response.results.length < response.size) {
-      return [
-        ...response.results,
-        ...(await this.loadGroups(start + limit, limit)),
-      ]
+      return [...response.results, ...(await this.loadGroups(start + limit, limit))]
     }
 
     return response.results
@@ -169,16 +165,15 @@ export class ConfluenceLoader {
    * Builds base url for the service loader queries.
    */
   private baseUrl(): string {
-    return this.setting.values.credentials.domain
+    return this.source.values.credentials.domain
   }
 
   /**
    * Builds request headers for the service loader queries.
    */
   private requestHeaders() {
-    const { username, password } = this.setting.values.credentials
+    const { username, password } = this.source.values.credentials
     const credentials = Buffer.from(`${username}:${password}`).toString('base64')
     return { Authorization: `Basic ${credentials}` }
   }
-
 }

@@ -1,23 +1,23 @@
 import * as React from 'react'
 import { StatusBar } from '../../../views/StatusBar'
-import { Actions } from '../../../actions/Actions'
+import { AppActions } from '../../../actions/AppActions'
 import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
 import { view } from '@mcro/black'
-import { OrbitIntegrationMainProps } from '../../types'
+import { OrbitSourceMainProps } from '../../types'
 
 const Cmd = view({
   opacity: 0.6,
 })
 
-export const AppStatusBar = ({ appStore, normalizedItem }: OrbitIntegrationMainProps<any>) => {
+export const AppStatusBar = ({ appStore, normalizedItem }: OrbitSourceMainProps<any>) => {
   const { location, locationLink, updatedAt } = normalizedItem
   return (
     <StatusBar>
       <StatusBar.Button
         onClick={e => {
           e.stopPropagation()
-          Actions.open(locationLink)
+          AppActions.open(locationLink)
         }}
       >
         {location}

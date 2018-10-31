@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { ConfluenceSetting } from '@mcro/models'
+import { ConfluenceSource } from '@mcro/models'
 import { ConfluenceLoader, ConfluenceUser } from '@mcro/services'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
@@ -19,27 +19,30 @@ export class ConfluenceSyncer {
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(setting: ConfluenceSetting, log?: Logger) {
-    this.log = log || new Logger('syncer:confluence:' + setting.id)
-    this.loader = new ConfluenceLoader(setting, this.log)
-    this.bitFactory = new ConfluenceBitFactory(setting)
-    this.personFactory = new ConfluencePersonFactory(setting)
-    this.personSyncer = new PersonSyncer(setting, this.log)
-    this.bitSyncer = new BitSyncer(setting, this.log)
-    this.syncerRepository = new SyncerRepository(setting)
+  constructor(source: ConfluenceSource, log?: Logger) {
+    this.log = log || new Logger('syncer:confluence:' + source.id)
+    this.loader = new ConfluenceLoader(source, this.log)
+    this.bitFactory = new ConfluenceBitFactory(source)
+    this.personFactory = new ConfluencePersonFactory(source)
+    this.personSyncer = new PersonSyncer(source, this.log)
+    this.bitSyncer = new BitSyncer(source, this.log)
+    this.syncerRepository = new SyncerRepository(source)
   }
 
   /**
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-
     // load database data
-    this.log.timer(`load people, person bits and bits from the database`)
+    this.log.timer('load people, person bits and bits from the database')
     const dbPeople = await this.syncerRepository.loadDatabasePeople()
     const dbPersonBits = await this.syncerRepository.loadDatabasePersonBits({ people: dbPeople })
     const dbBits = await this.syncerRepository.loadDatabaseBits()
-    this.log.timer(`load people, person bits and bits from the database`, { dbPeople, dbPersonBits, dbBits })
+    this.log.timer('load people, person bits and bits from the database', {
+      dbPeople,
+      dbPersonBits,
+      dbBits,
+    })
 
     // load users from confluence API
     this.log.info('loading confluence API users')
@@ -81,5 +84,4 @@ export class ConfluenceSyncer {
     const ignoredEmail = '@connect.atlassian.com'
     return email.substr(ignoredEmail.length * -1) !== ignoredEmail
   }
-
 }

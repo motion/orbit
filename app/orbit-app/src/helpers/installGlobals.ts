@@ -11,7 +11,7 @@ import * as dateFns from 'date-fns'
 import * as Repositories from '@mcro/model-bridge'
 import { LoggerSettings } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { stringify } from '@mcro/helpers'
 import * as Models from '@mcro/models'
 import { PopoverState } from '@mcro/ui'
@@ -52,7 +52,7 @@ window['dateFns'] = dateFns
 window['LoggerSettings'] = LoggerSettings
 window['toJS'] = toJS
 window['stringify'] = stringify
-window['Actions'] = Actions
+window['Actions'] = AppActions
 window['Mediator'] = Repositories.Mediator
 window['Models'] = Models
 window['sherlockjs'] = require('sherlockjs')

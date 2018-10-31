@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { HighlightText } from '../../../../views/HighlightText'
-import { Actions } from '../../../../actions/Actions'
+import { AppActions } from '../../../../actions/AppActions'
 import { Text } from '@mcro/ui'
 import { VerticalSpace, HorizontalSpace } from '../../../../views'
 import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
@@ -37,7 +37,7 @@ const MailBody = ({ children, ...props }) => (
 )
 
 const openMail = email => () => {
-  Actions.open(`mailto:${email}`)
+  AppActions.open(`mailto:${email}`)
 }
 
 export const ThreadMessage = ({ message }) => {

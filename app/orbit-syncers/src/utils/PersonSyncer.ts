@@ -1,7 +1,7 @@
 import { PersonBitEntity, PersonEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { PersonBitUtils } from '@mcro/model-utils'
-import { Person, PersonBit, Setting } from '@mcro/models'
+import { Person, PersonBit, Source } from '@mcro/models'
 import { uniqBy } from 'lodash'
 import { getManager } from 'typeorm'
 import { SyncerRepository } from './SyncerRepository'
@@ -23,7 +23,7 @@ export class PersonSyncer {
   private log: Logger
   private syncerRepository: SyncerRepository
 
-  constructor(setting: Setting, log: Logger) {
+  constructor(setting: Source, log: Logger) {
     this.log = log
     this.syncerRepository = new SyncerRepository(setting)
   }

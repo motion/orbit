@@ -2,19 +2,19 @@ import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SearchableTable, Text, View } from '@mcro/ui'
-import { OrbitIntegrationSettingProps } from '../../../types'
-import { GmailSetting } from '@mcro/models'
+import { OrbitSourceSettingProps } from '../../../types'
+import { GmailSource } from '@mcro/models'
 import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitIntegrationSettingProps<GmailSetting>
+type Props = OrbitSourceSettingProps<GmailSource>
 
 class GmailSettingStore {
   props: Props
   syncing = {}
   whitelist = new WhitelistManager({
-    setting: this.props.setting,
+    source: this.props.source,
     getAll: this.getAllFilterIds.bind(this),
   })
 
@@ -23,7 +23,7 @@ class GmailSettingStore {
   }
 
   private getAllFilterIds() {
-    return this.props.setting.values.foundEmails
+    return this.props.source.values.foundEmails
   }
 }
 
@@ -33,18 +33,18 @@ export class GmailSettings extends React.Component<Props & { store?: GmailSettin
   render() {
     const {
       store,
-      setting,
+      source,
       appConfig: {
         viewConfig: { initialState },
       },
     } = this.props
     return (
       <SimpleAppExplorer
-        setting={setting}
+        source={source}
         initialState={initialState}
         settingsPane={
           <>
-            <SettingManageRow setting={setting} whitelist={store.whitelist} />
+            <SettingManageRow source={source} whitelist={store.whitelist} />
             <View
               flex={1}
               opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
@@ -70,7 +70,7 @@ export class GmailSettings extends React.Component<Props & { store?: GmailSettin
                   },
                 }}
                 multiHighlight
-                rows={(setting.values.foundEmails || []).map((email, index) => {
+                rows={(source.values.foundEmails || []).map((email, index) => {
                   const isActive = store.whitelist.whilistStatusGetter(email)
                   return {
                     key: `${index}`,

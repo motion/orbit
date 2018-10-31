@@ -1,15 +1,15 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { Person, SlackSetting, SlackPersonData } from '@mcro/models'
+import { Person, SlackSource, SlackPersonData } from '@mcro/models'
 import { SlackUser, SlackTeam } from '@mcro/services'
 
 /**
  * Creates a Slack Person.
  */
 export class SlackPersonFactory {
-  private setting: SlackSetting
+  private source: SlackSource
 
-  constructor(setting: SlackSetting) {
-    this.setting = setting
+  constructor(source: SlackSource) {
+    this.source = source
   }
 
   /**
@@ -17,7 +17,7 @@ export class SlackPersonFactory {
    */
   create(user: SlackUser, team: SlackTeam): Person {
     return PersonUtils.create({
-      setting: this.setting,
+      source: this.source,
       integration: 'slack',
       integrationId: user.id,
       name: user.profile.real_name || user.name,

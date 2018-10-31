@@ -1,6 +1,6 @@
 import { react, view, attach } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
-import { Setting, SettingSaveCommand, WebsiteSetting, WebsiteSettingValues } from '@mcro/models'
+import { Source, SourceSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { InputRow, Table, VerticalSpace } from '../../../../views'
@@ -18,31 +18,31 @@ export interface WebsiteCrawledData {
 }
 
 type Props = {
-  setting?: WebsiteSetting
+  source?: WebsiteSource
 }
 
 class WebsiteSetupStore {
   props: Props
-  // setting: Setting
+  // source: Source
 
-  values: WebsiteSettingValues = {
+  values: WebsiteSourceValues = {
     url: '',
   }
 
-  setting = react(
-    () => this.props.setting,
-    async propSetting => {
-      // if setting was sent via component props then use it
-      if (propSetting) {
-        this.values = propSetting.values
-        return propSetting
+  source = react(
+    () => this.props.source,
+    async propSource => {
+      // if source was sent via component props then use it
+      if (propSource) {
+        this.values = propSource.values
+        return propSource
       }
-      // create a new empty setting
+      // create a new empty source
       return {
         category: 'integration',
         type: 'website',
         token: null,
-      } as Setting
+      } as Source
     },
   )
 }
@@ -57,12 +57,12 @@ export class WebsiteSetupPane extends React.Component<Props & { store?: WebsiteS
 
   addIntegration = async e => {
     e.preventDefault()
-    const { setting, values } = this.props.store
-    setting.values = { ...setting.values, ...values }
-    setting.name = values.url
-    console.log(`adding integration!`, setting)
-    const result = await command(SettingSaveCommand, {
-      setting,
+    const { source, values } = this.props.store
+    source.values = { ...source.values, ...values }
+    source.name = values.url
+    console.log(`adding integration!`, source)
+    const result = await command(SourceSaveCommand, {
+      source,
     })
 
     // update status on success of fail

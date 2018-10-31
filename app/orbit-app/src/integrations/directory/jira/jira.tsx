@@ -9,7 +9,7 @@ import { JiraItem } from './views/JiraItem'
 import { JiraSetup } from './views/JiraSetup'
 
 export const jira: GetOrbitIntegration<'jira'> = (setting?: Setting) => ({
-  source: 'bit',
+  modelType: 'bit',
   integration: 'jira',
   appName: 'Jira',
   defaultQuery: findManyType('jira'),

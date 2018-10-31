@@ -1,27 +1,27 @@
 import * as React from 'react'
 import { Row, View, Text, SegmentedRow } from '@mcro/ui'
 import { ManageSmartSync } from './ManageSmartSync'
-import { Setting, SettingForceSyncCommand, SettingRemoveCommand } from '@mcro/models'
+import { SourceForceSyncCommand, SourceRemoveCommand, Source } from '@mcro/models'
 import { command } from '@mcro/model-bridge'
 import { attach } from '@mcro/black'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
-import { AppInfoStore } from '../../../stores/AppInfoStore'
-import { Actions } from '../../../actions/Actions'
-import { SyncStatus } from '../../../pages/OrbitPage/orbitDocked/views/SyncStatus'
+import { AppInfoStore } from '../../../components/AppInfoStore'
+import { AppActions } from '../../../actions/AppActions'
+import { SyncStatus } from '../../../components/SyncStatus'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { TitleBarButton } from '../layout/TitleBarButton'
-import { getAppFromSetting } from '../../../stores/AppsStore'
+import { getAppFromSource } from '../../../stores/SourcesStore'
 
 @attach('appInfoStore')
 export class SettingManageRow extends React.Component<{
   appInfoStore?: AppInfoStore
-  setting: Setting
+  source: Source
   whitelist: WhitelistManager<any>
 }> {
   handleRefresh = async () => {
-    command(SettingForceSyncCommand, {
-      settingId: this.props.setting.id,
+    command(SourceForceSyncCommand, {
+      sourceId: this.props.source.id,
     })
   }
 
@@ -30,24 +30,24 @@ export class SettingManageRow extends React.Component<{
       showConfirmDialog({
         title: 'Remove integration?',
         message: `Are you sure you want to remove ${
-          getAppFromSetting(this.props.setting).display.name
+          getAppFromSource(this.props.source).display.name
         }?`,
       })
     ) {
-      command(SettingRemoveCommand, {
-        settingId: this.props.setting.id,
+      command(SourceRemoveCommand, {
+        sourceId: this.props.source.id,
       })
-      Actions.clearPeek()
+      AppActions.clearPeek()
     }
   }
 
   render() {
-    const { setting, appInfoStore, whitelist } = this.props
+    const { source, appInfoStore, whitelist } = this.props
     return (
       <Row padding={[6, 15]} alignItems="center" background="#eee">
         {!!whitelist ? <ManageSmartSync whitelist={whitelist} /> : <Text>Sync active.</Text>}
         <View flex={1} />
-        <SyncStatus settingId={setting.id}>
+        <SyncStatus sourceId={source.id}>
           {(syncJobs, removeJobs) => {
             return (
               <>

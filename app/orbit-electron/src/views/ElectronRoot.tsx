@@ -1,7 +1,6 @@
 import { App } from '@mcro/reactron'
 import { view, provide } from '@mcro/black'
 import * as React from 'react'
-import Tray from './Tray'
 import { MenuItems } from './MenuItems'
 import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -45,7 +44,6 @@ export class ElectronRoot extends React.Component {
         <MenuItems />
         <OrbitWindow />
         <AppWindows />
-        <Tray />
       </App>
     )
   }

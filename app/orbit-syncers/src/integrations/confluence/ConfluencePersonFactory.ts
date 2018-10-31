@@ -1,25 +1,30 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { ConfluencePersonData, ConfluenceSettingValues, Person, ConfluenceSetting } from '@mcro/models'
+import {
+  ConfluencePersonData,
+  ConfluenceSourceValues,
+  Person,
+  ConfluenceSource,
+} from '@mcro/models'
 import { ConfluenceUser } from '@mcro/services'
 
 /**
  * Creates a Confluence Person.
  */
 export class ConfluencePersonFactory {
-  private setting: ConfluenceSetting
+  private source: ConfluenceSource
 
-  constructor(setting: ConfluenceSetting) {
-    this.setting = setting
+  constructor(source: ConfluenceSource) {
+    this.source = source
   }
 
   /**
    * Creates person entity from a given Confluence user.
    */
   create(user: ConfluenceUser): Person {
-    const values = this.setting.values as ConfluenceSettingValues
+    const values = this.source.values as ConfluenceSourceValues
     return PersonUtils.create({
       integration: 'confluence',
-      setting: this.setting,
+      source: this.source,
       integrationId: user.accountId,
       name: user.displayName,
       email: user.details.personal.email,
@@ -28,5 +33,4 @@ export class ConfluencePersonFactory {
       data: {} as ConfluencePersonData,
     })
   }
-
 }

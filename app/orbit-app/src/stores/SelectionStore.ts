@@ -1,7 +1,7 @@
 import { react, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
-import { QueryStore } from './QueryStore'
-import { Actions } from '../actions/Actions'
+import { QueryStore } from './QueryStore/QueryStore'
+import { AppActions } from '../actions/AppActions'
 import { hoverSettler } from '../helpers'
 import { ResolvableModel } from '../integrations/types'
 
@@ -17,7 +17,7 @@ export enum Direction {
 
 export type MovesMap = {
   id: number
-  autoSelect?: boolean
+  shouldAutoSelect?: boolean
   moves?: Direction[]
 }
 
@@ -78,7 +78,7 @@ export class SelectionStore {
       const hasResults = this.movesMap && !!this.movesMap.length
       // select first item on search
       if (hasResults) {
-        ensure('results should auto select', this.movesMap[0].autoSelect)
+        ensure('results should auto select', this.movesMap[0].shouldAutoSelect)
         // dont be too too aggressive with the popup
         await sleep(200)
         console.log('selecting first result automatically', this.movesMap)
@@ -93,7 +93,7 @@ export class SelectionStore {
     () => this.activeIndex,
     () => {
       ensure('no active index', !this.hasActiveIndex)
-      Actions.clearPeek()
+      AppActions.clearPeek()
     },
     {
       deferFirstRun: true,
@@ -270,7 +270,7 @@ export class SelectionStore {
         const downMoves = groupIndex < numGroups ? [Direction.down, Direction.up] : [Direction.up]
         const nextMoves = ids.map((id, index) => ({
           id,
-          autoSelect: shouldAutoSelect,
+          shouldAutoSelect,
           moves: [
             index < ids.length - 1 ? Direction.right : null,
             index > 0 ? Direction.left : null,

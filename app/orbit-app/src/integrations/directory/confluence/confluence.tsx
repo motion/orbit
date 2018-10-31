@@ -9,7 +9,7 @@ import { ConfluenceItem } from './views/ConfluenceItem'
 import { ConfluenceSetup } from './views/ConfluenceSetup'
 
 export const confluence: GetOrbitIntegration<'confluence'> = (setting?: Setting) => ({
-  source: 'bit',
+  modelType: 'bit',
   integration: 'confluence',
   appName: 'Confluence',
   defaultQuery: findManyType('confluence'),

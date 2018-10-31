@@ -1,20 +1,20 @@
 import { react, view, attach } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import {
-  SettingSaveCommand,
-  AtlassianSettingValuesCredentials,
-  Setting,
-  AtlassianSetting,
+  SourceSaveCommand,
+  AtlassianSourceValuesCredentials,
+  AtlassianSource,
+  Source,
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { Actions } from '../../../actions/Actions'
+import { AppActions } from '../../../actions/AppActions'
 import * as Views from '../../../views'
 import { Message } from '../../../views/Message'
 
 type Props = {
   type: string
-  setting?: AtlassianSetting
+  source?: AtlassianSource
 }
 
 const Statuses = {
@@ -31,20 +31,20 @@ const buttonThemes = {
 
 class AtlassianSettingLoginStore {
   props: Props
-  // setting: Setting
+  // source: Setting
 
   status: string
   error: string
-  values: AtlassianSetting['values'] = {
+  values: AtlassianSource['values'] = {
     username: '',
     password: '',
     domain: '',
   }
 
-  setting = react(
-    () => this.props.setting,
+  source = react(
+    () => this.props.source,
     async propSetting => {
-      // if setting was sent via component props then use it
+      // if source was sent via component props then use it
       if (propSetting) {
         this.values = propSetting.values.credentials
         return propSetting
@@ -59,7 +59,7 @@ class AtlassianSettingLoginStore {
         category: 'integration',
         type: this.props.type,
         token: null,
-      } as Setting
+      } as Source
     },
   )
 }
@@ -76,29 +76,29 @@ export class AtlassianSettingLogin extends React.Component<
 
   addIntegration = async e => {
     e.preventDefault()
-    const { setting } = this.props.store
-    setting.values = { ...setting.values, credentials: this.props.store.values }
-    console.log(`adding integration!`, setting)
+    const { source } = this.props.store
+    source.values = { ...source.values, credentials: this.props.store.values }
+    console.log(`adding integration!`, source)
 
     // send command to the desktop
     this.props.store.status = Statuses.LOADING
-    const result = await command(SettingSaveCommand, {
-      setting,
+    const result = await command(SourceSaveCommand, {
+      source,
     })
 
     // update status on success of fail
     if (result.success) {
       this.props.store.status = Statuses.SUCCESS
       this.props.store.error = null
-      Actions.clearPeek()
+      AppActions.clearPeek()
     } else {
       this.props.store.status = Statuses.FAIL
       this.props.store.error = result.error
     }
   }
 
-  handleChange = (prop: keyof AtlassianSettingValuesCredentials) => (
-    val: AtlassianSettingValuesCredentials[typeof prop],
+  handleChange = (prop: keyof AtlassianSourceValuesCredentials) => (
+    val: AtlassianSourceValuesCredentials[typeof prop],
   ) => {
     this.props.store.values = {
       ...this.props.store.values,

@@ -384,44 +384,25 @@ export function createViewFactory(toCSS) {
       }, [])
 
       const element = props.tagName || targetElement
-      let finalProps
+      const isDOMElement = typeof element === 'string'
+      let finalProps = {} as any
 
-      if (typeof element === 'string') {
-        // if it's a DOM element, pass DOM attributes only
-        finalProps = {}
-        for (const key in props) {
-          if (validProp(key)) {
+      for (const key in props) {
+        if (ignoreAttrs && ignoreAttrs[key]) {
+          continue
+        }
+        if (isDOMElement) {
+          if (key === 'forwardRef' && isDOMElement) {
+            finalProps.ref = props[key]
+          } else if (validProp(key)) {
             finalProps[key] = props[key]
           }
+        } else {
+          finalProps[key] = props[key]
         }
-      } else {
-        // if it's passing down to a Component, pass anything
-        finalProps = props
       }
-
-      // className
       if (classNames) {
         finalProps.className = classNames.join(' ')
-      }
-
-      // forwardRef
-      if (props.forwardRef) {
-        if (typeof element === 'string') {
-          // dom ref
-          finalProps.ref = props.forwardRef
-        } else {
-          // probably another styled component so pass it down
-          finalProps.forwardRef = props.forwardRef
-        }
-      }
-
-      // ignoreAttrs
-      if (ignoreAttrs && typeof ignoreAttrs === 'object') {
-        for (const prop in props) {
-          if (ignoreAttrs[prop]) {
-            delete finalProps[prop]
-          }
-        }
       }
 
       return React.createElement(element, finalProps, props.children)

@@ -3,7 +3,7 @@ import { loadOne } from '@mcro/model-bridge'
 import { Bit, BitModel, PersonBit, PersonBitModel, Setting, SettingModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as React from 'react'
-import { Actions } from '../../actions/Actions'
+import { AppActions } from '../../actions/AppActions'
 import { APP_ID } from '../../constants'
 
 type AppStoreItemState = typeof App.peekState & {
@@ -185,11 +185,7 @@ export class AppStore {
         },
       })
     } else if (type === 'setting') {
-      selectedItem = await loadOne(SettingModel, {
-        args: {
-          where: { id },
-        },
-      })
+      selectedItem = await loadOne(SettingModel)
     }
     return selectedItem
   }
@@ -224,7 +220,7 @@ export class AppStore {
     if (this.isTorn) {
       return false
     }
-    Actions.tearPeek()
+    AppActions.tearPeek()
     await sleep(16)
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
@@ -282,14 +278,14 @@ export class AppStore {
     // reset drag offset while simultaneously setting official position
     // this *shouldnt* jitter, technically
     this.finishDrag = true
-    Actions.finishPeekDrag([...this.framePosition])
+    AppActions.finishPeekDrag([...this.framePosition])
   }
 
   handleClose = () => {
     if (this.isTorn) {
-      Actions.closeApp()
+      AppActions.closeApp()
     } else {
-      Actions.clearPeek()
+      AppActions.clearPeek()
     }
   }
 
@@ -305,13 +301,13 @@ export class AppStore {
     if (this.state.model.target === 'setting') {
       return
     }
-    Actions.openItem(this.state.model)
+    AppActions.openItem(this.state.model)
   }
 
   copyItem = () => {
     if (this.state.model.target === 'setting') {
       return
     }
-    Actions.copyLink(this.state.model)
+    AppActions.copyLink(this.state.model)
   }
 }

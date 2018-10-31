@@ -2,6 +2,9 @@ import { hashSum } from './hashSum'
 
 const valCache = new WeakMap()
 
+let id = 0
+const next = () => `*${id++ % Number.MAX_VALUE}`
+
 const hashVal = val => {
   // ignore react children
   if (val && val['_owner'] && val['$$typeof']) {
@@ -19,7 +22,7 @@ const hashVal = val => {
   }
   // functions and classes we should just use a key for the instance
   if (val.constructor) {
-    const key = Math.random()
+    const key = next()
     valCache.set(val, key)
     return key
   }
@@ -35,14 +38,10 @@ const hashVal = val => {
 }
 
 export const simplePropSum = props => {
-  const start = Date.now()
   let hash = ''
   for (const key in props) {
     const val = props[key]
-    hash += hashVal(val)
-  }
-  if (Date.now() - start > 8) {
-    debugger
+    hash += `${key}${hashVal(val)}`
   }
   return hash
 }

@@ -4,10 +4,10 @@ import { NormalizedItem } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
 import { ResolvableModel, OrbitItemProps } from '../integrations/types'
 import { SelectionStore } from '../stores/SelectionStore'
-import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
-import { SubPaneStore } from '../pages/OrbitPage/SubPaneStore'
-import { AppsStore } from '../stores/AppsStore'
+import { SubPaneStore } from '../components/SubPaneStore'
+import { SourcesStore } from '../stores/SourcesStore'
 import { CSSPropertySetStrict } from '../../../../packages/css/_/cssPropertySet'
+import { PaneManagerStore } from '../stores/PaneManagerStore'
 
 export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
@@ -20,7 +20,7 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     theme?: Partial<ThemeObject>
     listItem?: boolean
     hoverToSelect?: boolean
-    appsStore?: AppsStore
+    sourcesStore?: SourcesStore
     selectionStore?: SelectionStore
     paneManagerStore?: PaneManagerStore
     subPaneStore?: SubPaneStore

@@ -9,7 +9,7 @@ import { WebsiteItem } from './views/WebsiteItem'
 import { WebsiteSetup } from './views/WebsiteSetup'
 
 export const website: GetOrbitIntegration<'website'> = (setting?: Setting) => ({
-  source: 'bit',
+  modelType: 'bit',
   integration: 'website',
   appName: 'Website',
   defaultQuery: findManyType('website'),

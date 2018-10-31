@@ -1,49 +1,42 @@
 import { store, react, ensure } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
-import { Actions } from '../actions/Actions'
+import { AppActions } from '../actions/AppActions'
 import { showNotification } from '../helpers/electron/showNotification'
 import { PopoverState } from '@mcro/ui'
-import { PaneManagerStore } from '../pages/OrbitPage/PaneManagerStore'
+import { Actions, TrayActions } from '../actions/Actions'
 
 @store
 export class AppReactions {
-  // ew
-  paneManagerStore: PaneManagerStore
-  setPaneManagerStore = (store: PaneManagerStore) => {
-    this.paneManagerStore = store
-  }
+  listeners = []
 
   constructor() {
     this.setupReactions()
+
+    const off = Actions.listen('TrayToggleOrbit', () => {
+      App.setOrbitState({ docked: !App.state.orbitState.docked })
+    })
+    this.listeners.push(off)
   }
 
   dispose() {
-    this.subscriptions.dispose()
+    this.dispose()
+    for (const listener of this.listeners) {
+      listener()
+    }
   }
 
   async setupReactions() {
-    const dispose = App.onMessage(async (msg, value) => {
+    this.dispose = App.onMessage(async (msg, value) => {
       console.log('app message', msg, Date.now())
       switch (msg) {
-        case App.messages.TOGGLE_SHOWN:
-          App.setOrbitState({ docked: !App.orbitState.docked })
+        case App.messages.TRAY_EVENT:
+          Actions.dispatch(value as keyof TrayActions, Date.now())
           return
         case App.messages.HIDE:
           App.setOrbitState({ docked: false })
           return
         case App.messages.SHOW:
           App.setOrbitState({ docked: true })
-          return
-        case App.messages.HIDE_PEEK:
-          return Actions.clearPeek()
-        case App.messages.PIN:
-          App.setOrbitState({ pinned: true })
-          return
-        case App.messages.UNPIN:
-          App.setOrbitState({ pinned: false })
-          return
-        case App.messages.TOGGLE_PINNED:
-          App.setOrbitState({ pinned: !App.orbitState.pinned })
           return
         case App.messages.NOTIFICATION:
           const val = JSON.parse(msg)
@@ -53,12 +46,9 @@ export class AppReactions {
           })
           return
         case App.messages.CLOSE_APP:
-          Actions.closeApp(+value)
+          AppActions.closeApp(+value)
           return
       }
-    })
-    this.subscriptions.add({
-      dispose,
     })
   }
 
@@ -66,7 +56,7 @@ export class AppReactions {
     () => App.orbitState.docked,
     () => {
       ensure('is hidden', !App.orbitState.docked)
-      Actions.clearPeek()
+      AppActions.clearPeek()
     },
   )
 

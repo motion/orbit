@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { SlackSetting } from '@mcro/models'
+import { SlackSource } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { channels, team, users } from 'slack'
 import { ServiceLoadThrottlingOptions } from '../../options'
@@ -9,10 +9,10 @@ import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
  * Loads the data from the Slack API.
  */
 export class SlackLoader {
-  private setting: SlackSetting
+  private setting: SlackSource
   private log: Logger
 
-  constructor(setting: SlackSetting, log?: Logger) {
+  constructor(setting: SlackSource, log?: Logger) {
     this.setting = setting
     this.log = log || new Logger('service:slack:loader:' + setting.id)
   }
@@ -24,7 +24,7 @@ export class SlackLoader {
    */
   async loadTeam(): Promise<SlackTeam> {
     const options = { token: this.setting.token }
-    this.log.verbose(`request to team.info`, options)
+    this.log.verbose('request to team.info', options)
     const response = await team.info(options)
     return response.team
   }
@@ -121,5 +121,4 @@ export class SlackLoader {
 
     return response.messages
   }
-
 }

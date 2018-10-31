@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader'
 // if hmr breaks, try adding the thing thats having trouble here...
 // it seems to not like skipping this file for hmr
 import './router'
-import './stores/RootStore'
+import './RootStore'
 import './themes'
 import './constants'
 import '@mcro/gloss'

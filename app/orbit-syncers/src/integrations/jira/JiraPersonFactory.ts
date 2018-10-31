@@ -1,15 +1,15 @@
 import { PersonUtils } from '@mcro/model-utils'
-import { JiraPersonData, Person, JiraSetting } from '@mcro/models'
+import { JiraPersonData, Person, JiraSource } from '@mcro/models'
 import { JiraUser } from '@mcro/services'
 
 /**
  * Creates a Jira Person.
  */
 export class JiraPersonFactory {
-  private setting: JiraSetting
+  private source: JiraSource
 
-  constructor(setting: JiraSetting) {
-    this.setting = setting
+  constructor(source: JiraSource) {
+    this.source = source
   }
 
   /**
@@ -18,7 +18,7 @@ export class JiraPersonFactory {
   create(user: JiraUser): Person {
     return PersonUtils.create({
       integration: 'jira',
-      setting: this.setting,
+      source: this.source,
       integrationId: user.accountId,
       name: user.displayName,
       email: user.emailAddress,
@@ -27,5 +27,4 @@ export class JiraPersonFactory {
       raw: user,
     })
   }
-
 }

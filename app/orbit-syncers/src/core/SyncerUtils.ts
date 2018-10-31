@@ -5,14 +5,13 @@ const JSDOM = require('jsdom').JSDOM
  * Common utils for syncers.
  */
 export class SyncerUtils {
-
   /**
    * Strips HTML from the given HTML text content.
    */
   static stripHtml(value: string) {
     if (!value) return ''
 
-    const window = (new JSDOM('')).window
+    const window = new JSDOM('').window
     const DOMPurify = createDOMPurify(window)
     return DOMPurify.sanitize(value, { ALLOWED_TAGS: [] })
       .replace(/&nbsp;/gi, ' ')
@@ -26,9 +25,8 @@ export class SyncerUtils {
   static sanitizeHtml(value: string) {
     if (!value) return ''
 
-    const window = (new JSDOM('')).window
+    const window = new JSDOM('').window
     const DOMPurify = createDOMPurify(window)
     return DOMPurify.sanitize(value).trim()
   }
-
 }

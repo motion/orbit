@@ -36,8 +36,8 @@ export function startDesktop(): ChildProcess {
         return
       }
       if (error.indexOf('Error') === -1) {
-        console.log('\n\n\n got an error but may not be worth reporting \n\n\n')
-        console.log('error:', error)
+        console.log('\n\n\n got an error but may not be worth reporting:')
+        console.log('   error:', error, '\n\n\n')
         return
       }
       if (process.env.IS_DESKTOP) {

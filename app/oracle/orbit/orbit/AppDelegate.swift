@@ -124,28 +124,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   let trayButtonMaxX = [45, 73, 200]
   
-  @objc func handleTrayClick(sender: NSStatusItem) {
-    let event = NSApp.currentEvent!
-    if event.type == NSEvent.EventType.rightMouseUp {
-      // Right button click
-      print("right clcik")
-    } else {
-      let location = event.locationInWindow
-      print("clicked \(event.locationInWindow.x)")
-      if (Int(location.x) < trayButtonMaxX[0]) {
-        self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleMemory\" }")
-      }
-      else if (Int(location.x) < trayButtonMaxX[1]) {
-        self.emit("{ \"action\": \"appState\", \"value\": \"TrayPin\" }")
-      }
-      else {
-        self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleOrbit\" }")
-      }
+  func handleTrayClick(_ trayLocation: String) {
+    switch(trayLocation) {
+    case "Orbit":
+      self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleOrbit\" }")
+    case "Pin":
+      self.emit("{ \"action\": \"appState\", \"value\": \"TrayPin\" }")
+    case "Memory":
+      self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleMemory\" }")
+    default:
+      print("outside")
     }
   }
   
-  func handleTrayHover(mouseLocation: NSPoint, trayRect: NSRect, socketBridge: SocketBridge) {
-    self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(Int(trayRect.minX)), \(Int(trayRect.maxX))] } }")
+  var trayLoc = [0, 0]
+  
+  func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {
+    switch(trayLocation) {
+    case "Orbit":
+      socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverOrbit\" }")
+    case "Pin":
+      socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverPin\" }")
+    case "Memory":
+      socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverMemory\" }")
+    default:
+      socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverOut\" }")
+    }
+  }
+  
+  func isWithinTray(mouseLocation: NSPoint, trayRect: NSRect) -> String {
     let mouseX = mouseLocation.x
     let mouseY = mouseLocation.y
     let withinX = mouseX > trayRect.minX && mouseX < trayRect.maxX
@@ -153,59 +160,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     if (withinX && withinY) {
       let xOff = Int(trayRect.maxX - mouseX)
       if (xOff < trayButtonMaxX[0]) {
-        socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverOrbit\" }")
+        return "Orbit"
       }
       else if (xOff < trayButtonMaxX[1]) {
-        socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverPin\" }")
+        return "Pin"
       }
       else {
-        socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverMemory\" }")
+        return "Memory"
       }
-    } else {
-      socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverOut\" }")
     }
+    return "Off"
   }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
-    
-    if (shouldShowTray) {
-      statusItem.highlightMode = false
-      if let button = statusItem.button {
-        button.image = NSImage(named:NSImage.Name("tray"))
-        button.action = #selector(self.handleTrayClick(sender:))
-        
-        // setup hover events
-        let throttleHoverQueue = DispatchQueue.global(qos: .background)
-        let throttledHover =  throttle(delay: 0.1, queue: throttleHoverQueue, action: self.handleTrayHover)
-        let rectInWindow = button.convert(button.bounds, to: nil)
-        if let screenRect = button.window?.convertToScreen(rectInWindow) {
-          let trayRect = screenRect
-          button.window?.trackEvents(matching: NSEvent.EventTypeMask.mouseMoved, timeout: TimeInterval.infinity, mode: RunLoop.Mode.eventTracking, handler: { (event, b) in
-            if let mouseLocation = event?.locationInWindow {
-              throttledHover((mouseLocation, trayRect, socketBridge))
-            }
-          })
-        } else {
-          print("no button found!")
-        }
-      }
-    }
-
-//    print("spell")
-//    let words = "hello world hwo are you doing today in htis cool place."
-//    let checker = NSSpellChecker()
-//    let spellingRange = checker.checkSpelling(of: words, startingAt: 0)
-//    let guesses = checker.guesses(
-//      forWordRange: spellingRange,
-//      in: words,
-//      language: checker.language(),
-//      inSpellDocumentWithTag: 0
-//      )!
-//    print("step 2")
-//    let jsonGuesses = try JSONEncoder().encode(guesses)
-//    let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
-    
     print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     
     if #available(OSX 10.11, *) {
@@ -286,6 +254,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       blurryView.updateLayer()
       window.contentView?.addSubview(blurryView)
       window.makeKeyAndOrderFront(nil)
+    }
+
+    if shouldShowTray {
+      statusItem.highlightMode = false
+      if let button = statusItem.button {
+        button.image = NSImage(named:NSImage.Name("tray"))
+
+        // setup hover events
+        let throttleHoverQueue = DispatchQueue.global(qos: .background)
+        let throttledHover =  throttle(delay: 0.1, queue: throttleHoverQueue, action: self.handleTrayHover)
+        let rectInWindow = button.convert(button.bounds, to: nil)
+        if let trayRect = button.window?.convertToScreen(rectInWindow) {
+          // send tray location...
+          self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(Int(trayRect.minX)), \(Int(trayRect.maxX))] } }")
+          // track click and mousemove in tray
+          button.window?.trackEvents(matching: [.mouseMoved, .leftMouseUp], timeout: TimeInterval.infinity, mode: RunLoop.Mode.eventTracking, handler: { (event, b) in
+            let mouseLocation = event?.locationInWindow
+            let trayLocation = isWithinTray(mouseLocation: mouseLocation!, trayRect: trayRect)
+            let eventType = event?.type.rawValue
+            if eventType == 5 { // mousemove
+              throttledHover((trayLocation, socketBridge))
+            }
+            if eventType == 2 { // click
+              handleTrayClick(trayLocation)
+            }
+          })
+        } else {
+          print("no button found!")
+        }
+      }
     }
     
     print("finished running app window")

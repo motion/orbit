@@ -1,5 +1,4 @@
 import { IntegrationType } from './IntegrationType'
-import { AtlassianSourceValuesCredentials } from './source-values/AtlassianSourceValuesCredentials'
 import { ConfluenceSourceValues } from './source-values/ConfluenceSourceValues'
 import { DriveSourceValues } from './source-values/DriveSourceValues'
 import { GithubSourceValues } from './source-values/GithubSourceValues'

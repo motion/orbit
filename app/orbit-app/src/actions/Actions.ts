@@ -1,19 +1,16 @@
-import { store } from "@mcro/black";
-
-type ActionEvents = {
+export type TrayActions = {
   TrayToggleMemory: number
   TrayPin: number
   TrayToggleOrbit: number
 }
 
-@store
+type ActionEvents = TrayActions
+
 class ActionsStore {
-  history = []
   handlers = new Set()
   handlersToType = new WeakMap()
 
   dispatch<E extends keyof ActionEvents>(type: E, value: ActionEvents[E]) {
-    this.history.push({ type, value })
     for (const handler of [...this.handlers]) {
       if (this.handlersToType.get(handler) === type) {
         handler(value)
@@ -30,6 +27,7 @@ class ActionsStore {
   unlisten(fn) {
     if (this.handlers.has(fn)) {
       this.handlers.delete(fn)
+      this.handlersToType.delete(fn)
     }
   }
 }

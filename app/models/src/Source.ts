@@ -34,10 +34,6 @@ export type BaseSource = {
 
 export type GithubSource = BaseSource & { type?: 'github'; values?: GithubSourceValues }
 export type SlackSource = BaseSource & { type?: 'slack'; values?: SlackSourceValues }
-export type AtlassianSource = BaseSource & {
-  type: 'confluence' | 'jira'
-  values: AtlassianSourceValuesCredentials
-}
 export type DriveSource = BaseSource & { type?: 'drive'; values?: DriveSourceValues }
 export type GmailSource = BaseSource & { type?: 'gmail'; values?: GmailSourceValues }
 export type JiraSource = BaseSource & { type?: 'jira'; values?: JiraSourceValues }
@@ -45,6 +41,7 @@ export type ConfluenceSource = BaseSource & {
   type?: 'confluence'
   values?: ConfluenceSourceValues
 }
+export type AtlassianSource = JiraSource | ConfluenceSource
 export type WebsiteSource = BaseSource & { type?: 'website'; values?: WebsiteSourceValues }
 
 export type AllSources = {

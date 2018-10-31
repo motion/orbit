@@ -63,7 +63,7 @@ export class PaneManagerStore {
 
     on(
       this,
-      observeOne(SettingModel).subscribe(generalSetting => {
+      observeOne(SettingModel, generalSettingQuery).subscribe(generalSetting => {
         this.generalSetting = generalSetting
       }),
     )

@@ -4,7 +4,6 @@ import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
 import { ResizableBox } from '../../views/ResizableBox'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
-import { setAppState } from '../../actions/appActions/setAppState'
 import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
 import { AppStore } from '../../pages/AppPage/AppStore'
@@ -70,7 +69,7 @@ class AppFrameStore {
     () => this.size,
     async (size, { sleep }) => {
       await sleep(100)
-      setAppState({ size })
+      AppActions.setAppState({ size })
     },
   )
 }

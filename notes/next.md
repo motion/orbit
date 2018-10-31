@@ -46,8 +46,6 @@ umed:
 9. fixing google drive settings pane so it works and we can select folders using a searchbar
 10. search-based sync where we can index more stuff based on their searches by hitting the API for their search directly
 11. see if we can get website-crawler working using their chrome or just download puppeteer into a shared config directory we make
-12. refactor how we do multi-process so its much easier to split them up if we need, and help split out the topic modeling process (CosalManager right now)
-13. separate the process that handles the blurry window background because that one really cant afford to be interrupted, can even make the browser process directly connect to the switch websocket server for this
 
 questions:
 
@@ -55,29 +53,6 @@ questions:
 - also can't we unify the profile for "me" very easily?
 
   - if so, then on a team level as everyone adds themselves into orbit we can unify all profiles between them!
-
-- step 1 go over design
-- grouped search results:
-  - first group by recent-ness. last 2 weeks, 2 months, all.
-  - within each group
-    - do a search and get back results
-    - group those results by type (conversation, document mail)
-    - sort those items within those groups by most relevant using cosal as well as the groups themselves
-  - return a summary-like structure of this
-  - return a structure that represents this all nicely to display:
-
-```
-{
-  type: 'grouped',
-  summary: { conversation: 20, mail: 10, document: 2 },
-  results: {
-    { type: 'conversation', results: [] }.
-    { type: 'document', results: [] },
-    { type: 'mail', results: [] },
-    { type: 'task', results: [] },
-  }
-}
-```
 
 nate:
 

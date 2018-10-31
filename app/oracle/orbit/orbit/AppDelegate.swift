@@ -39,6 +39,26 @@ struct WordsReply: Codable {
   let id: Int
 }
 
+extension TimeInterval {
+  func hasPassed(since: TimeInterval) -> Bool {
+    return Date().timeIntervalSinceReferenceDate - self > since
+  }
+}
+
+func throttle<T>(delay: TimeInterval, queue: DispatchQueue = .main, action: @escaping ((T) -> Void)) -> (T) -> Void {
+  var currentWorkItem: DispatchWorkItem?
+  var lastFire: TimeInterval = 0
+  return { (p1: T) in
+    guard currentWorkItem == nil else { return }
+    currentWorkItem = DispatchWorkItem {
+      action(p1)
+      lastFire = Date().timeIntervalSinceReferenceDate
+      currentWorkItem = nil
+    }
+    delay.hasPassed(since: lastFire) ? queue.async(execute: currentWorkItem!) : queue.asyncAfter(deadline: .now() + delay, execute: currentWorkItem!)
+  }
+}
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   
@@ -56,7 +76,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var lastSent = ""
   private var supportsTransparency = false
   private var accessibilityPermission = false
-  
+
   let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
 
   lazy var window = NSWindow(
@@ -102,8 +122,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     return NSApplication.TerminateReply.terminateNow
   }
   
+  let trayButtonMaxX = [45, 73, 200]
   
-  @objc func doSomeAction(sender: NSStatusItem) {
+  @objc func handleTrayClick(sender: NSStatusItem) {
     let event = NSApp.currentEvent!
     if event.type == NSEvent.EventType.rightMouseUp {
       // Right button click
@@ -111,10 +132,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     } else {
       let location = event.locationInWindow
       print("clicked \(event.locationInWindow.x)")
-      if (location.x < 45) {
+      if (Int(location.x) < trayButtonMaxX[0]) {
         self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleMemory\" }")
       }
-      else if (location.x < 73) {
+      else if (Int(location.x) < trayButtonMaxX[1]) {
         self.emit("{ \"action\": \"appState\", \"value\": \"TrayPin\" }")
       }
       else {
@@ -122,18 +143,54 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
     }
   }
+  
+  func handleTrayHover(mouseLocation: NSPoint, trayRect: NSRect, socketBridge: SocketBridge) {
+    let mouseX = mouseLocation.x
+    let mouseY = mouseLocation.y
+    let withinX = mouseX > trayRect.minX && mouseX < trayRect.maxX
+    let withinY = mouseY > trayRect.minY && mouseY < trayRect.maxY
+    if (withinX && withinY) {
+      let xOff = Int(trayRect.maxX - mouseX)
+      if (xOff < trayButtonMaxX[0]) {
+        socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverOrbit\" }")
+      }
+      else if (xOff < trayButtonMaxX[1]) {
+        socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverPin\" }")
+      }
+      else {
+        socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverMemory\" }")
+      }
+    } else {
+      socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHoverOut\" }")
+    }
+  }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
+    socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    
     if (shouldShowTray) {
       statusItem.highlightMode = false
       if let button = statusItem.button {
-        print("SETTING THE BUTTON")
         button.image = NSImage(named:NSImage.Name("tray"))
-        button.action = #selector(self.doSomeAction(sender:))
+        button.action = #selector(self.handleTrayClick(sender:))
+        
+        // setup hover events
+        let throttleHoverQueue = DispatchQueue.global(qos: .background)
+        let throttledHover =  throttle(delay: 0.1, queue: throttleHoverQueue, action: self.handleTrayHover)
+        let rectInWindow = button.convert(button.bounds, to: nil)
+        if let screenRect = button.window?.convertToScreen(rectInWindow) {
+          let trayRect = screenRect
+          button.window?.trackEvents(matching: NSEvent.EventTypeMask.mouseMoved, timeout: TimeInterval.infinity, mode: RunLoop.Mode.eventTracking, handler: { (event, b) in
+            if let mouseLocation = event?.locationInWindow {
+              throttledHover((mouseLocation, trayRect, socketBridge))
+            }
+          })
+        } else {
+          print("no button found!")
+        }
       }
     }
 
-    
 //    print("spell")
 //    let words = "hello world hwo are you doing today in htis cool place."
 //    let checker = NSSpellChecker()
@@ -149,7 +206,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //    let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
     
     print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
-    socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
     
     if #available(OSX 10.11, *) {
       self.supportsTransparency = true

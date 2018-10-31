@@ -35,7 +35,6 @@ const Border = view({
   }
 })
 
-// @ts-ignore
 const ChromeFrame = view({
   position: 'absolute',
   top: -CHROME_PAD,

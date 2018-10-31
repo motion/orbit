@@ -76,6 +76,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var lastSent = ""
   private var supportsTransparency = false
   private var accessibilityPermission = false
+  private var trayLocation = "Out"
 
   let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
 
@@ -231,10 +232,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": \(nextTrayRect) } }")
           }
           // handle events
-          let trayLocation = self.getTrayLocation(mouseLocation: mouseLocation, trayRect: trayRect)
-          print("\(trayRect)")
-          // for some reason this is only accurate from mousemove... click it doesnt have right bounds
-          throttledHover((trayLocation, self.socketBridge))
+          self.trayLocation = self.getTrayLocation(mouseLocation: mouseLocation, trayRect: trayRect)
+          throttledHover((self.trayLocation, self.socketBridge))
         }
       }
     }
@@ -243,10 +242,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   @objc func handleTrayClick(_ sender: Any?) {
-    print("click tray")
-//    if trayLocation != "Out" {
-//      self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggle\(trayLocation)\" }")
-//    }
+    print("click tray \(self.trayLocation)")
+    if self.trayLocation != "Out" {
+      self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggle\(trayLocation)\" }")
+    }
   }
   
   func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {

@@ -1,19 +1,18 @@
 import { DriveApp } from './views/DriveApp'
 import { DriveSettings } from './views/DriveSettings'
-import { Setting } from '@mcro/models'
-// @ts-ignore
+import { Source } from '@mcro/models'
 import icon from '../../../../public/icons/drive.svg'
 import { GetOrbitIntegration, OrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { DriveItem } from './views/DriveItem'
 
-export const drive: GetOrbitIntegration<'drive'> = (setting?: Setting) => ({
+export const drive: GetOrbitIntegration<'drive'> = (source?: Source) => ({
   modelType: 'bit',
   integration: 'drive',
   appName: 'Drive',
   defaultQuery: findManyType('drive'),
   display: {
-    name: setting.name,
+    name: source.name,
     itemName: 'task',
     icon,
   },

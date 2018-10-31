@@ -1,9 +1,9 @@
-import { Setting } from '@mcro/models'
+import { Source } from '@mcro/models'
 import { GetOrbitIntegration } from '../../types'
 import { PersonApp } from './PersonApp'
 import { PersonItem } from './PersonItem'
 
-export const person: GetOrbitIntegration<'person'> = (_setting?: Setting) => ({
+export const person: GetOrbitIntegration<'person'> = (_source?: Source) => ({
   modelType: 'person-bit',
   appName: 'People',
   defaultQuery: {

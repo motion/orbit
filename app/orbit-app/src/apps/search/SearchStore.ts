@@ -143,7 +143,6 @@ export class SearchStore {
       if (!this.isActive) {
         await sleep(750)
         await idle()
-        console.log('done now lets do something')
       }
 
       let results = []

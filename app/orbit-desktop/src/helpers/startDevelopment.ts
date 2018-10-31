@@ -6,7 +6,7 @@ export function startDevelopment(appRoot) {
   require('./installGlobals')
 
   process.on('uncaughtException', err => {
-    console.log('uncaughtException', err)
+    console.warn('uncaughtException', err)
   })
   process.on('unhandledRejection', function(reason, promise) {
     if (reason) {
@@ -14,8 +14,6 @@ export function startDevelopment(appRoot) {
         console.log('sqlite busy!')
       }
     }
-    console.log('Desktop: Possibly Unhandled Rejection')
-    console.log(reason.message)
-    console.log(reason.stack)
+    console.warn('Desktop: Possibly Unhandled Rejection', reason)
   })
 }

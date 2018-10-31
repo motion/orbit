@@ -145,6 +145,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func handleTrayHover(mouseLocation: NSPoint, trayRect: NSRect, socketBridge: SocketBridge) {
+    self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(Int(trayRect.minX)), \(Int(trayRect.maxX))] } }")
     let mouseX = mouseLocation.x
     let mouseY = mouseLocation.y
     let withinX = mouseX > trayRect.minX && mouseX < trayRect.maxX

@@ -13,13 +13,14 @@ export function startDevelopment(appRoot) {
         process.kill(process.pid)
       }
     } catch (err) {
-      console.error('error killing', err)
+      console.log('error killing', err)
     }
   }
 
   process.on('exit', exitHandler)
   process.on('uncaughtException', err => {
-    console.error('uncaughtException', err)
+    console.warn('uncaughtException!!!!!!!')
+    console.log(err)
   })
   process.on('unhandledRejection', function(reason, promise) {
     if (reason) {
@@ -27,8 +28,7 @@ export function startDevelopment(appRoot) {
         console.log('sqlite busy!')
       }
     }
-    console.error('Desktop: Possibly Unhandled Rejection')
-    console.error(promise, reason)
-    console.error(reason.stack)
+    console.warn('Syncers: Possibly Unhandled Rejection!!!!!!!!', promise, reason)
+    console.log(reason.stack)
   })
 }

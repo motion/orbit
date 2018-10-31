@@ -9,7 +9,6 @@ const Config = getGlobalConfig()
 
 export function startSyncers(): ChildProcess {
   // enable remote debugging in dev
-  console.log('Config', Config)
   const root = Path.join(__dirname, 'main')
   let args = [root]
   if (!Config.isProd) {

@@ -3,7 +3,7 @@ import { promptForAuthProxy } from './promptForAuthProxy'
 import { memoize } from 'lodash'
 import { AppActions } from '../actions/AppActions'
 import { OrbitIntegration } from '../integrations/types'
-import { appToAppConfig } from '../stores/AppsStore'
+import { sourceToAppConfig } from '../stores/SourcesStore'
 
 const promptForProxy = async () => {
   if (await checkAuthProxy()) {
@@ -21,7 +21,7 @@ export const addAppClickHandler = memoize(
       // if this view wants to show a "setup" pane...
       AppActions.togglePeekApp(
         {
-          ...appToAppConfig(app),
+          ...sourceToAppConfig(app),
           type: 'setup',
         },
         currentTarget,

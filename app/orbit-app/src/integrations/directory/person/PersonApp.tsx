@@ -182,7 +182,7 @@ const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
   </RoundButton>
 )
 
-@attach('appsStore', 'queryStore')
+@attach('sourcesStore', 'queryStore')
 @attach({
   store: PeekPersonStore,
 })

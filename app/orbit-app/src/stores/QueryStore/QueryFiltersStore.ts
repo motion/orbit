@@ -1,5 +1,5 @@
 import { store, react, ensure } from '@mcro/black'
-import { AppsStore } from '../AppsStore'
+import { SourcesStore } from '../SourcesStore'
 import { memoize } from 'lodash'
 import { MarkType } from './types'
 import { NLPStore } from './NLPStore'
@@ -27,7 +27,7 @@ const suggestedDates = [
 @store
 export class QueryFilterStore {
   queryStore: QueryStore
-  appsStore: AppsStore
+  sourcesStore: SourcesStore
   nlpStore: NLPStore
   disabledFilters = {}
   exclusiveFilters = {}
@@ -43,8 +43,8 @@ export class QueryFilterStore {
     endDate: null,
   }
 
-  constructor({ queryStore, appsStore, nlpStore }) {
-    this.appsStore = appsStore
+  constructor({ queryStore, sourcesStore, nlpStore }) {
+    this.sourcesStore = sourcesStore
     this.nlpStore = nlpStore
     this.queryStore = queryStore
   }
@@ -127,7 +127,7 @@ export class QueryFilterStore {
   }
 
   get integrationFilters(): SearchFilter[] {
-    return this.appsStore.activeSources.map(app => ({
+    return this.sourcesStore.activeSources.map(app => ({
       type: app.source,
       integration: app.integration,
       name: app.appName,
@@ -185,7 +185,7 @@ export class QueryFilterStore {
       ensure('nlp', !!nlp)
       // reset integration inactive filters
       ensure('integrations', nlp.integrations && !!nlp.integrations.length)
-      this.exclusiveFilters = this.appsStore.activeSources.reduce((acc, app) => {
+      this.exclusiveFilters = this.sourcesStore.activeSources.reduce((acc, app) => {
         acc[app.integration] = nlp.integrations.some(x => x === app.integration)
         return acc
       }, {})

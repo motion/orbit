@@ -3,7 +3,7 @@ import { SubPane } from '../../../components/SubPane'
 import { view, compose, sleep, attach } from '@mcro/black'
 import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { addAppClickHandler } from '../../../helpers/addAppClickHandler'
-import { AppsStore } from '../../../stores/AppsStore'
+import { SourcesStore } from '../../../stores/SourcesStore'
 import { Title, VerticalSpace } from '../../../views'
 // import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../helpers/checkAuthProxy'
@@ -19,7 +19,7 @@ import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 
 type Props = {
   settingStore?: SettingStore
-  appsStore?: AppsStore
+  sourcesStore?: SourcesStore
   paneManagerStore?: PaneManagerStore
   store?: OnboardStore
 }
@@ -123,13 +123,13 @@ const filterApps = (app: OrbitIntegration<ItemType>) =>
   !!app.integration && app.integration !== 'website'
 
 const decorator = compose(
-  attach('settingStore', 'appsStore', 'paneManagerStore'),
+  attach('settingStore', 'sourcesStore', 'paneManagerStore'),
   attach({
     store: OnboardStore,
   }),
   view,
 )
-export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: Props) => {
+export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }: Props) => {
   if (paneManagerStore.activePane !== 'onboard') {
     return null
   }
@@ -144,7 +144,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, appsStore }: P
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const allAppsSorted = appsStore.allSources
+  const allAppsSorted = sourcesStore.allSources
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
   return (

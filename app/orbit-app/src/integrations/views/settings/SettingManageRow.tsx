@@ -11,7 +11,7 @@ import { AppActions } from '../../../actions/AppActions'
 import { SyncStatus } from '../../../components/SyncStatus'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { TitleBarButton } from '../layout/TitleBarButton'
-import { getAppFromSource } from '../../../stores/AppsStore'
+import { getAppFromSource } from '../../../stores/SourcesStore'
 
 @attach('appInfoStore')
 export class SettingManageRow extends React.Component<{

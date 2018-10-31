@@ -8,7 +8,7 @@ import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 import * as Views from '../../../views'
 import { Input } from '../../../views/Input'
 import { ShortcutCapture } from '../../../views/ShortcutCapture'
-import { AppsStore } from '../../../stores/AppsStore'
+import { SourcesStore } from '../../../stores/SourcesStore'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { generalSettingQuery } from '../../../helpers/queries'
 
@@ -49,7 +49,7 @@ const electronToNiceChars = (charString: string) => {
 type Props = {
   store?: OrbitSettingsStore
   paneManagerStore?: PaneManagerStore
-  appsStore?: AppsStore
+  sourcesStore?: SourcesStore
 }
 
 class OrbitSettingsStore {
@@ -102,7 +102,7 @@ const Section = view({
   padding: [0, 0, 20],
 })
 
-@attach('paneManagerStore', 'appsStore')
+@attach('paneManagerStore', 'sourcesStore')
 @attach({
   store: OrbitSettingsStore,
 })

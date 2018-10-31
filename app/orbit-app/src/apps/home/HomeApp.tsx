@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, react, ensure, attach } from '@mcro/black'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { SelectionStore, SelectionGroup } from '../../stores/SelectionStore'
-import { AppsStore } from '../../stores/AppsStore'
+import { SourcesStore } from '../../stores/SourcesStore'
 import { observeMany } from '@mcro/model-bridge'
 import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
@@ -21,7 +21,7 @@ const models = {
 type Props = {
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore
-  appsStore?: AppsStore
+  sourcesStore?: SourcesStore
   store?: HomeAppStore
 }
 
@@ -131,7 +131,7 @@ class HomeAppStore {
   )
 
   state = react(
-    () => [allIntegrations.person, ...this.props.appsStore.activeSources],
+    () => [allIntegrations.person, ...this.props.sourcesStore.activeSources],
     apps => {
       // dispose on re-run
       if (this.state) {
@@ -187,7 +187,7 @@ class HomeAppStore {
   }
 }
 
-@attach('paneManagerStore', 'selectionStore', 'appsStore')
+@attach('paneManagerStore', 'selectionStore', 'sourcesStore')
 @attach({
   store: HomeAppStore,
 })

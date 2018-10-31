@@ -1,12 +1,12 @@
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { AppsStore } from '../AppsStore'
+import { SourcesStore } from '../SourcesStore'
 import { QueryFilterStore } from './QueryFiltersStore'
 import { NLPStore } from './NLPStore'
 
 export class QueryStore {
   props: {
-    appsStore: AppsStore
+    sourcesStore: SourcesStore
   }
 
   query = App.state.query
@@ -15,7 +15,7 @@ export class QueryStore {
 
   queryFilters = new QueryFilterStore({
     queryStore: this,
-    appsStore: this.props.appsStore,
+    sourcesStore: this.props.sourcesStore,
     nlpStore: this.nlpStore,
   })
 

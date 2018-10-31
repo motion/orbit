@@ -2,7 +2,7 @@ import { attachTheme } from '@mcro/gloss'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { compose, view, attach } from '@mcro/black'
-import { AppsStore } from '../stores/AppsStore'
+import { SourcesStore } from '../stores/SourcesStore'
 
 const adjust = {
   icon: {
@@ -45,12 +45,12 @@ const adjust = {
 
 const decorator = compose(
   attachTheme,
-  attach('appsStore'),
+  attach('sourcesStore'),
   view,
 )
 export const OrbitIcon = decorator(
   ({
-    appsStore = null as AppsStore,
+    sourcesStore = null as SourcesStore,
     imageStyle = null,
     orbitIconStyle = null,
     size = 25,
@@ -66,7 +66,7 @@ export const OrbitIcon = decorator(
     }
     const icon = props.icon || props.name
     const extImg = icon && (icon[0] === '/' || icon.indexOf('http') === 0) ? icon : null
-    const allSourcesMap = appsStore.allSourcesMap
+    const allSourcesMap = sourcesStore.allSourcesMap
     let iconImg = extImg
     if (allSourcesMap[icon]) {
       const display = allSourcesMap[icon].display

@@ -2,7 +2,7 @@ import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, Bit, SearchPinnedResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { AppsStore } from '../../stores/AppsStore'
+import { SourcesStore } from '../../stores/SourcesStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionGroup, SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
@@ -18,7 +18,7 @@ export class SearchStore {
   props: {
     paneManagerStore: PaneManagerStore
     selectionStore: SelectionStore
-    appsStore: AppsStore
+    sourcesStore: SourcesStore
     queryStore: QueryStore
     settingStore: SettingStore
   }

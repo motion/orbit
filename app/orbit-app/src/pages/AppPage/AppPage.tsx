@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, provide, attach } from '@mcro/black'
-import { AppsStore } from '../../stores/AppsStore'
+import { SourcesStore } from '../../stores/SourcesStore'
 // import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
 import { AppStore } from './AppStore'
@@ -16,12 +16,12 @@ import { OrbitIntegration } from '../../integrations/types'
 import { allIntegrations } from '../../integrations'
 
 type Props = {
-  appsStore?: AppsStore
+  sourcesStore?: SourcesStore
   appStore?: AppStore
 }
 
 @provide({
-  appsStore: AppsStore,
+  sourcesStore: SourcesStore,
 })
 @provide({
   appStore: AppStore,
@@ -57,13 +57,13 @@ const HiddenControls = view({
   },
 })
 
-@attach('appsStore', 'appStore')
+@attach('sourcesStore', 'appStore')
 @view
 class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitIntegration<any>['views']) => {
-    const { appStore, appsStore } = this.props
+    const { appStore, sourcesStore } = this.props
     const { appConfig } = appStore.state
-    const app = appsStore.allSourcesMap[appConfig.integration]
+    const app = sourcesStore.allSourcesMap[appConfig.integration]
     if (!app) {
       return NullView
     }

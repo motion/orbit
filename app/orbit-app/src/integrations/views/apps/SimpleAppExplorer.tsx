@@ -7,7 +7,7 @@ import { AppConfig } from '@mcro/stores'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { ScrollableContent } from '../layout/ScrollableContent'
 import { HideablePane } from '../../../views/HideablePane'
-import { getAppFromSource } from '../../../stores/AppsStore'
+import { getAppFromSource } from '../../../stores/SourcesStore'
 import { AppHeader } from '../layout/AppHeader'
 
 type Props = {

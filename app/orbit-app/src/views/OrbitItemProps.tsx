@@ -5,7 +5,7 @@ import { ThemeObject } from '@mcro/gloss'
 import { ResolvableModel, OrbitItemProps } from '../integrations/types'
 import { SelectionStore } from '../stores/SelectionStore'
 import { SubPaneStore } from '../components/SubPaneStore'
-import { AppsStore } from '../stores/AppsStore'
+import { SourcesStore } from '../stores/SourcesStore'
 import { CSSPropertySetStrict } from '../../../../packages/css/_/cssPropertySet'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 
@@ -20,7 +20,7 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     theme?: Partial<ThemeObject>
     listItem?: boolean
     hoverToSelect?: boolean
-    appsStore?: AppsStore
+    sourcesStore?: SourcesStore
     selectionStore?: SelectionStore
     paneManagerStore?: PaneManagerStore
     subPaneStore?: SubPaneStore

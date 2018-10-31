@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { provide, react, view, attach } from '@mcro/black'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
-import { AppsStore } from '../../stores/AppsStore'
+import { SourcesStore } from '../../stores/SourcesStore'
 import { AppWrapper } from '../../views'
 import { HighlightsPage } from '../HighlightsPage/HighlightsPage'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
@@ -33,7 +33,7 @@ class OrbitPageStore {
 
 @provide({
   settingStore: SettingStore,
-  appsStore: AppsStore,
+  sourcesStore: SourcesStore,
   orbitWindowStore: OrbitWindowStore,
 })
 @provide({

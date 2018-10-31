@@ -6,7 +6,7 @@ import { BORDER_RADIUS } from '../../constants'
 import { SearchStore } from '../../apps/search/SearchStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
-import { AppsStore } from '../../stores/AppsStore'
+import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceNav, SpaceNavHeight } from './SpaceNav'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { SubPane } from '../../components/SubPane'
@@ -19,7 +19,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: OrbitWindowStore
-  appsStore?: AppsStore
+  sourcesStore?: SourcesStore
   orbitStore?: OrbitStore
 }
 
@@ -47,7 +47,7 @@ const Interactive = view({
   },
 })
 
-@attach('queryStore', 'orbitStore', 'appsStore', 'searchStore', 'selectionStore')
+@attach('queryStore', 'orbitStore', 'sourcesStore', 'searchStore', 'selectionStore')
 @provide({
   paneManagerStore: PaneManagerStore,
 })

@@ -4,7 +4,7 @@ import { Title, HorizontalScroll, VerticalSpace } from '../../../views'
 import { SubTitle } from '../../../views/SubTitle'
 import { View, Icon } from '@mcro/ui'
 import { Grid } from '../../../views/Grid'
-import { AppsStore } from '../../../stores/AppsStore'
+import { SourcesStore } from '../../../stores/SourcesStore'
 import { OrbitAppCard } from '../../../components/OrbitAppCard'
 import { ToggleApp } from './ToggleApp'
 import { OrbitOrb } from '../../../views/OrbitOrb'
@@ -36,16 +36,16 @@ const OrbitSpaceCard = ({ children, label, active = false, ...props }) => (
   </OrbitSpaceCardFrame>
 )
 
-@attach('paneManagerStore', 'appsStore')
+@attach('paneManagerStore', 'sourcesStore')
 @view
 export class OrbitSettingsTeam extends React.Component<{
-  appsStore?: AppsStore
+  sourcesStore?: SourcesStore
   paneManagerStore?: PaneManagerStore
 }> {
   isSubPaneSelected = () => this.props.paneManagerStore.subPane === 'apps'
 
   render() {
-    const { appsStore } = this.props
+    const { sourcesStore } = this.props
     return (
       <>
         <SubTitle>Spaces</SubTitle>
@@ -81,11 +81,11 @@ export class OrbitSettingsTeam extends React.Component<{
           gridAutoRows={80}
           margin={[5, -4]}
         >
-          {appsStore.activeSources.map((app, index) => (
+          {sourcesStore.activeSources.map((app, index) => (
             <OrbitAppCard
               key={index}
               app={app}
-              total={appsStore.activeSources.length}
+              total={sourcesStore.activeSources.length}
               inGrid
               activeCondition={this.isSubPaneSelected}
               pane="docked"

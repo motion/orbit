@@ -5,12 +5,12 @@ import { AppInfoStore, AppInfoProps } from './AppInfoStore'
 import { ItemProps } from '../views/OrbitItemProps'
 import { SyncStatus } from './SyncStatus'
 import { Text, Icon } from '@mcro/ui'
-import { Setting } from '@mcro/models'
+import { Source } from '@mcro/models'
 import { OrbitIntegration } from '../integrations/types'
-import { appToAppConfig } from '../stores/AppsStore'
+import { sourceToAppConfig } from '../stores/SourcesStore'
 import pluralize from 'pluralize'
 
-type Props = ItemProps<Setting> &
+type Props = ItemProps<Source> &
   AppInfoProps & {
     app?: OrbitIntegration<any>
     store: AppInfoStore
@@ -30,7 +30,7 @@ export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...pro
   return (
     <OrbitCard
       direct
-      model={app.setting}
+      model={app.source}
       title={app.appName}
       titleProps={{
         ellipse: true,
@@ -38,13 +38,13 @@ export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...pro
       icon={app.display.icon}
       appConfig={
         appConfig || {
-          ...appToAppConfig(app),
-          type: 'setting',
+          ...sourceToAppConfig(app),
+          type: 'source',
           viewConfig: {
             ...app.viewConfig,
             dimensions: [620, 620],
             initialState: {
-              active: 'settings',
+              active: 'sources',
             },
           },
         }
@@ -57,7 +57,7 @@ export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...pro
       }}
       {...props}
     >
-      <SyncStatus settingId={app.setting ? app.setting.id : null}>
+      <SyncStatus sourceId={app.source ? app.source.id : null}>
         {(syncJobs, removeJobs) => {
           return (
             <>

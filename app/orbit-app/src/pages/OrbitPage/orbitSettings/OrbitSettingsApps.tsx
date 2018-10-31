@@ -6,37 +6,37 @@ import { Grid } from '../../../views/Grid'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
 import { Unpad } from '../../../views/Unpad'
-import { AppsStore } from '../../../stores/AppsStore'
+import { SourcesStore } from '../../../stores/SourcesStore'
 import { OrbitAppCard } from '../../../components/OrbitAppCard'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 
 type Props = {
-  appsStore?: AppsStore
+  sourcesStore?: SourcesStore
   paneManagerStore?: PaneManagerStore
 }
 
-@attach('appsStore', 'paneManagerStore')
+@attach('sourcesStore', 'paneManagerStore')
 @view
 export class OrbitSettingsApps extends React.Component<Props> {
   isSubPaneSelected = () => this.props.paneManagerStore.subPane === 'apps'
 
   render() {
-    const { appsStore } = this.props
+    const { sourcesStore } = this.props
     return (
       <>
-        {!!appsStore.activeSources.length && (
+        {!!sourcesStore.activeSources.length && (
           <>
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
               gridAutoRows={80}
               margin={[5, -4]}
             >
-              {appsStore.activeSources.map((app, index) => {
+              {sourcesStore.activeSources.map((app, index) => {
                 return (
                   <OrbitAppCard
                     key={app.source.id}
                     index={index}
-                    total={appsStore.activeSources.length}
+                    total={sourcesStore.activeSources.length}
                     activeCondition={this.isSubPaneSelected}
                     isActive
                     app={app}
@@ -52,7 +52,7 @@ export class OrbitSettingsApps extends React.Component<Props> {
         )}
         <Views.SubTitle>Add app</Views.SubTitle>
         <Unpad>
-          {appsStore.allSources.map((app, index) => {
+          {sourcesStore.allSources.map((app, index) => {
             return (
               <SimpleItem
                 key={`${index}${app.integration}`}

@@ -24,10 +24,13 @@ export const getAppConfig = (model: ResolvableModel): AppConfig => {
     console.log('no app', type, allIntegrations)
     return null
   }
-  return appToAppConfig(app, model)
+  return sourceToAppConfig(app, model)
 }
 
-export const appToAppConfig = (app: OrbitIntegration<any>, model?: ResolvableModel): AppConfig => {
+export const sourceToAppConfig = (
+  app: OrbitIntegration<any>,
+  model?: ResolvableModel,
+): AppConfig => {
   if (!app) {
     throw new Error(`No app given: ${JSON.stringify(app)}`)
   }
@@ -42,7 +45,7 @@ export const appToAppConfig = (app: OrbitIntegration<any>, model?: ResolvableMod
   }
 }
 
-export class AppsStore {
+export class SourcesStore {
   appSources: Source[] = []
 
   activeSources = react(

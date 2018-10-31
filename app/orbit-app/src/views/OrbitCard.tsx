@@ -151,7 +151,7 @@ const Padding = view({
   flex: 1,
 })
 
-@attach('appsStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
+@attach('sourcesStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @attach({
   store: OrbitItemStore,
 })
@@ -195,7 +195,7 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
     // allow either custom subtitle or resolved one
     const subtitle = this.props.subtitle || item.subtitle
     const { isSelected } = store
-    const ItemView = this.props.appsStore.getView(
+    const ItemView = this.props.sourcesStore.getView(
       item.type === 'bit' ? item.integration : 'person',
       'item',
     )

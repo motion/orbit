@@ -216,7 +216,6 @@
 				CFBEEE18202D838D005F925A /* Frameworks */,
 				CFBEEE19202D838D005F925A /* Resources */,
 				CF0BCD70202E0A790012723C /* CopyFiles */,
-				AED62E5D21533732006BB1F9 /* Carthage copy */,
 				AE496FAB211BD8A5008319A0 /* ShellScript */,
 			);
 			buildRules = (
@@ -317,25 +316,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "touch ../../orbit-desktop/_/main.js\n";
-		};
-		AED62E5D21533732006BB1F9 /* Carthage copy */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/../swindler/Carthage/Build/Mac/PromiseKit.framework",
-			);
-			name = "Carthage copy";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -502,7 +482,7 @@
 		CFBEEE2A202D838D005F925A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Nathan Wienert (399WY8X9HY)";
 				CODE_SIGN_STYLE = Manual;
@@ -525,7 +505,7 @@
 		CFBEEE2B202D838D005F925A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Nathan Wienert (399WY8X9HY)";
 				CODE_SIGN_STYLE = Manual;

@@ -56,8 +56,6 @@
 		2FEEA2AC1C1E041200CD515E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2FEEA2C41C1E09A300CD515E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		2FEEA2E21C1E6E9200CD515E /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
-		AE9BDBC82188E3F900ACDDAF /* AXSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = AXSwift.framework.dSYM; path = ../orbit/Carthage/Build/Mac/AXSwift.framework.dSYM; sourceTree = "<group>"; };
-		AE9BDBC92188E40000ACDDAF /* PromiseKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PromiseKit.framework.dSYM; path = ../orbit/Carthage/Build/Mac/PromiseKit.framework.dSYM; sourceTree = "<group>"; };
 		AED62E502153339B006BB1F9 /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/Mac/PromiseKit.framework; sourceTree = "<group>"; };
 		AED62E512153339B006BB1F9 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,8 +85,6 @@
 		2F86CEBC1BD60117007E8C29 = {
 			isa = PBXGroup;
 			children = (
-				AE9BDBC92188E40000ACDDAF /* PromiseKit.framework.dSYM */,
-				AE9BDBC82188E3F900ACDDAF /* AXSwift.framework.dSYM */,
 				2F86CEC81BD60117007E8C29 /* Swindler */,
 				2F86CEC71BD60117007E8C29 /* Products */,
 				9E4447A2F5E7EB6E92464F87 /* Frameworks */,
@@ -163,7 +159,6 @@
 				2F86CEC31BD60117007E8C29 /* Headers */,
 				2F86CEC41BD60117007E8C29 /* Resources */,
 				AED62E5B215336DE006BB1F9 /* CopyFiles */,
-				AED62E5C215336F6006BB1F9 /* Carthage copy */,
 			);
 			buildRules = (
 			);
@@ -217,28 +212,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		AED62E5C215336F6006BB1F9 /* Carthage copy */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/Mac/PromiseKit.framework",
-			);
-			name = "Carthage copy";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2F86CEC11BD60117007E8C29 /* Sources */ = {

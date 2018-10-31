@@ -1,20 +1,19 @@
 import { WebsiteApp } from './views/WebsiteApp'
 import { WebsiteSettings } from './views/WebsiteSettings'
-import { Setting } from '@mcro/models'
-// @ts-ignore
+import { Source } from '@mcro/models'
 import icon from '../../../../public/icons/website.svg'
 import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { WebsiteItem } from './views/WebsiteItem'
 import { WebsiteSetup } from './views/WebsiteSetup'
 
-export const website: GetOrbitIntegration<'website'> = (setting?: Setting) => ({
+export const website: GetOrbitIntegration<'website'> = (source?: Source) => ({
   modelType: 'bit',
   integration: 'website',
   appName: 'Website',
   defaultQuery: findManyType('website'),
   display: {
-    name: setting.name,
+    name: source.name,
     itemName: 'task',
     icon,
   },

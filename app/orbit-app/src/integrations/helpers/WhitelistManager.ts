@@ -4,7 +4,7 @@ import { save } from '@mcro/model-bridge'
 import produce from 'immer'
 import { memoize } from 'lodash'
 
-type SettingWithWhiteList = GithubSource | SlackSource | GmailSource
+type SourceWithWhiteList = GithubSource | SlackSource | GmailSource
 
 type Options<T> = {
   source: T
@@ -12,12 +12,13 @@ type Options<T> = {
 }
 
 @store
-export class WhitelistManager<T extends SettingWithWhiteList> {
+export class WhitelistManager<T extends SourceWithWhiteList> {
   source: T = null
   values: T['values'] = null
   getAll: Options<T>['getAll']
 
   constructor({ source, getAll }: Options<T>) {
+    console.log('source', source)
     this.source = source
     this.getAll = getAll
     // copy it onto the store so we get instant mutations in views

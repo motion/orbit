@@ -87,10 +87,7 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
                     pane="docked"
                     subPane="apps"
                     total={sourcesStore.sources.length}
-                    inGrid
-                    // appConfig={settingToAppConfig(app)}
                     index={index}
-                    isActive
                   />
                 ))}
               </Grid>

@@ -79,7 +79,7 @@ export class OrbitItemStore {
   }
 
   open = () => {
-    if (!this.props.model || this.props.model.target === 'setting') {
+    if (!this.props.model || this.props.model.target === 'source') {
       return
     }
     AppActions.openItem(this.props.model)
@@ -95,7 +95,10 @@ export class OrbitItemStore {
   }
 
   get appConfig() {
-    return this.props.appConfig || this.props.model ? getAppConfig(this.props.model) : null
+    if (this.props.appConfig) {
+      return this.props.appConfig
+    }
+    return this.props.model ? getAppConfig(this.props.model) : null
   }
 
   get position() {

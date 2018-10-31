@@ -38,11 +38,7 @@ export class OrbitSettingsApps extends React.Component<Props> {
                     index={index}
                     total={sourcesStore.activeSources.length}
                     activeCondition={this.isSubPaneSelected}
-                    isActive
                     app={app}
-                    pane="docked"
-                    subPane="apps"
-                    inGrid
                   />
                 )
               })}

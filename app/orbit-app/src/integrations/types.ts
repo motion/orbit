@@ -86,7 +86,7 @@ export type OrbitIntegration<A extends ItemType> = {
   views: {
     main: GenericComponent<OrbitSourceMainProps<A>>
     item: GenericComponent<OrbitIntegrationProps<A>>
-    source?: GenericComponent<OrbitSourceSettingProps<Source>>
+    setting?: GenericComponent<OrbitSourceSettingProps<Source>>
     setup?: GenericComponent<any>
   }
 }

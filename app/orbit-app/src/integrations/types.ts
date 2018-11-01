@@ -2,7 +2,7 @@ import * as React from 'react'
 import { FindOptions } from 'typeorm'
 import { IntegrationType, Bit, PersonBit, Source, GenericBit } from '@mcro/models'
 import { AppConfig } from '@mcro/stores'
-import { AppStore } from '../pages/AppPage/AppStore'
+import { ViewStore } from '../pages/AppPage/ViewStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../components/AppInfoStore'
@@ -56,7 +56,7 @@ export type OrbitIntegrationProps<A extends ItemType> = OrbitItemProps<ModelFrom
 }
 
 export type OrbitSourceMainProps<A extends ItemType> = OrbitIntegrationProps<A> & {
-  appStore: AppStore
+  viewStore: ViewStore
   searchBar: SearchBarType
   searchTerm: string
 }
@@ -65,7 +65,7 @@ export type OrbitSourceSettingProps<T extends Source> = {
   appConfig: AppConfig
   appInfoStore: AppInfoStore
   source: T
-  appStore: AppStore
+  viewStore: ViewStore
 }
 
 type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>

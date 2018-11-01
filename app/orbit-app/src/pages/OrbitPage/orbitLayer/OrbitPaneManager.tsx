@@ -11,16 +11,17 @@ import { SpaceNav, SpaceNavHeight } from './SpaceNav'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { SubPane } from '../../../components/SubPane'
 import { OrbitStore } from '../../../stores/OrbitStore'
-// import notch from './notch.png'
-import { apps } from '../../../apps/apps'
 import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { App } from '../../../apps/App'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
-  appStore?: OrbitWindowStore
+  viewStore?: OrbitWindowStore
   sourcesStore?: SourcesStore
   orbitStore?: OrbitStore
+  queryStore?: QueryStore
 }
 
 // having this have -20 margin on sides
@@ -47,7 +48,7 @@ const Interactive = view({
   },
 })
 
-@attach('queryStore', 'orbitStore', 'sourcesStore', 'searchStore', 'selectionStore')
+@attach('orbitStore', 'sourcesStore', 'searchStore', 'selectionStore')
 @provide({
   paneManagerStore: PaneManagerStore,
 })
@@ -72,7 +73,6 @@ export class OrbitPaneManager extends React.Component<Props> {
             </Interactive>
             <OrbitOnboard name="onboard" />
             {this.props.orbitStore.activeSpace.panes.map(pane => {
-              const App = apps[pane.type]
               return (
                 <SubPane
                   name={pane.type}
@@ -82,7 +82,7 @@ export class OrbitPaneManager extends React.Component<Props> {
                   paddingRight={0}
                   {...pane.props}
                 >
-                  <App title={pane.title} />
+                  <App title={pane.title} type={pane.type} />
                 </SubPane>
               )
             })}

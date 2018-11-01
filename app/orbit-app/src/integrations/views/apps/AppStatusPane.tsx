@@ -11,10 +11,10 @@ type Props = {
   extraMessage?: React.ReactNode
 }
 
-class AppStore {}
+class ViewStore {}
 
 @attach({
-  store: AppStore,
+  store: ViewStore,
 })
 @view
 export class AppStatusPane extends React.Component<Props> {

@@ -1,5 +1,7 @@
+import { AppType } from '../apps/apps'
+
 export type Pane = {
-  type: 'home' | 'search' | 'people' | 'topics' | 'lists'
+  type: AppType
   title: string
   icon: string
   show?: boolean

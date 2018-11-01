@@ -1,34 +1,48 @@
 import * as React from 'react'
 import { view, attach, provide } from '@mcro/black'
 import { SearchStore } from './SearchStore'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
-import { SubPaneStore } from '../../components/SubPaneStore'
 import { StaticContainer } from '../../views/StaticContainer'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
 import { OrbitSearchNav } from './OrbitSearchNav'
+import { AppProps } from '../types'
 
-type Props = {
-  paneManagerStore?: PaneManagerStore
+type Props = AppProps & {
   searchStore?: SearchStore
-  selectionStore?: SelectionStore
-  subPaneStore?: SubPaneStore
-  name?: string
 }
 
-const OrbitSearchResultsFrame = view({
-  position: 'relative',
-  transition: 'all ease 100ms',
-  flex: 1,
+@attach('queryStore', 'paneManagerStore')
+@provide({
+  searchStore: SearchStore,
 })
+@view
+export class SearchApp extends React.Component<Props> {
+  render() {
+    const { searchStore } = this.props
+    return (
+      <>
+        <OrbitSearchNav />
+        <ItemResolverDecorationContext.Provider
+          value={{
+            item: null,
+            text: {
+              alpha: 0.6555,
+            },
+          }}
+        >
+          <SearchAppFrame searchStore={searchStore} />
+        </ItemResolverDecorationContext.Provider>
+      </>
+    )
+  }
+}
 
 // separate view to prevent a few renders...
-const OrbitSearchResultsContents = view(({ searchStore, selectionStore }: Props) => {
+const SearchAppFrame = view(({ searchStore }: Props) => {
   return (
     <>
-      <OrbitSearchQuickResults searchStore={searchStore} selectionStore={selectionStore} />
+      <OrbitSearchQuickResults />
       <OrbitSearchResultsFrame
         style={{
           opacity: searchStore.isChanging ? 0.7 : 1,
@@ -42,33 +56,8 @@ const OrbitSearchResultsContents = view(({ searchStore, selectionStore }: Props)
   )
 })
 
-@attach('queryStore', 'selectionStore', 'paneManagerStore')
-@provide({
-  searchStore: SearchStore,
+const OrbitSearchResultsFrame = view({
+  position: 'relative',
+  transition: 'all ease 100ms',
+  flex: 1,
 })
-@view
-export class SearchApp extends React.Component<Props> {
-  render() {
-    const { searchStore, selectionStore, subPaneStore, name } = this.props
-    return (
-      <>
-        <OrbitSearchNav />
-        <ItemResolverDecorationContext.Provider
-          value={{
-            item: null,
-            text: {
-              alpha: 0.6555,
-            },
-          }}
-        >
-          <OrbitSearchResultsContents
-            selectionStore={selectionStore}
-            searchStore={searchStore}
-            subPaneStore={subPaneStore}
-            name={name}
-          />
-        </ItemResolverDecorationContext.Provider>
-      </>
-    )
-  }
-}

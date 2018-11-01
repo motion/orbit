@@ -5,11 +5,11 @@ import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
 import { ThemeObject } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { AppStore } from './AppStore'
+import { ViewStore } from './ViewStore'
 
 type Props = {
   store?: AppArrowStore
-  appStore: AppStore
+  viewStore: ViewStore
   borderShadow: any
   theme: ThemeObject
 }
@@ -27,7 +27,7 @@ const peekOnRight = false
 class AppArrowStore {
   props: Props
 
-  hide = react(() => this.props.appStore.isTorn, _ => _)
+  hide = react(() => this.props.viewStore.isTorn, _ => _)
 
   arrowY = react(
     () => App.peekState,

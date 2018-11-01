@@ -1,20 +1,10 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
-import { SearchStore } from '../search/SearchStore'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { SettingStore } from '../../stores/SettingStore'
 import { View, Row, Text } from '@mcro/ui'
 import { Section } from '../../views/Section'
 import { Icon } from '../../views/Icon'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-
-type Props = {
-  paneManagerStore?: PaneManagerStore
-  searchStore?: SearchStore
-  selectionStore?: SelectionStore
-  settingStore?: SettingStore
-}
+import { AppProps } from '../types'
 
 const icons = {
   0: ['neutral', 'rgba(255,255,255,0.25)'],
@@ -23,7 +13,7 @@ const icons = {
 }
 
 class TopicsStore {
-  props: Props
+  props: AppProps
 
   get results() {
     const { setting } = this.props.settingStore
@@ -62,7 +52,7 @@ function TopicList({ results }) {
   store: TopicsStore,
 })
 @view
-export class TopicsApp extends React.Component<Props & { store?: TopicsStore }> {
+export class TopicsApp extends React.Component<AppProps & { store?: TopicsStore }> {
   render() {
     const { results } = this.props.store
     return (

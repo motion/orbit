@@ -5,10 +5,10 @@ import * as Constants from '../../../constants'
 import { CSSPropertySet } from '@mcro/gloss'
 import { Glint, Row, Text } from '@mcro/ui'
 import { Centered } from '../../../views/Centered'
-import { AppStore } from '../../../pages/AppPage/AppStore'
+import { ViewStore } from '../../../pages/AppPage/ViewStore'
 
 type Props = {
-  appStore?: AppStore
+  viewStore?: ViewStore
   theme?: any
   integration?: string
   before?: React.ReactNode
@@ -68,19 +68,19 @@ const TitleBarText = props => (
   </div>
 )
 
-@attach('appStore')
+@attach('viewStore')
 @view
 export class AppHeaderContent extends React.Component<Props> {
   render() {
-    const { appStore, before, after, children, ...props } = this.props
-    const { viewConfig } = appStore.state.appConfig
+    const { viewStore, before, after, children, ...props } = this.props
+    const { viewConfig } = viewStore.state.appConfig
     const hideTitleBar = viewConfig && viewConfig.showTitleBar === false
     return (
       <AppHeaderContain
         invisible={hideTitleBar}
         draggable
         focused
-        onDragStart={appStore.onDragStart}
+        onDragStart={viewStore.onDragStart}
         {...props}
       >
         <Glint borderRadius={7.5} opacity={0.65} top={0.5} />

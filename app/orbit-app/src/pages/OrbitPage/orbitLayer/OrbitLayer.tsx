@@ -8,7 +8,7 @@ import { OrbitChrome } from './OrbitChrome'
 import { OrbitPaneManager } from './OrbitPaneManager'
 
 @view
-export class OrbitLayer extends React.Component<{ store?: OrbitLayerStore }> {
+export class OrbitLayer extends React.Component {
   render() {
     const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (

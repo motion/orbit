@@ -12,7 +12,7 @@ import { Divider } from '../../../../views/Divider'
 
 type Props = OrbitSourceMainProps<'slack'>
 
-class SlackAppStore {
+class SlackViewStore {
   props: Props
 
   nextConvos = react(
@@ -93,10 +93,10 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
 }
 
 @attach({
-  store: SlackAppStore,
+  store: SlackViewStore,
 })
 @view
-export class SlackApp extends React.Component<Props & { store: SlackAppStore }> {
+export class SlackApp extends React.Component<Props & { store: SlackViewStore }> {
   render() {
     const { bit, store } = this.props
     return (

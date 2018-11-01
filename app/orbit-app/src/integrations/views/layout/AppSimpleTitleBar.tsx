@@ -2,22 +2,22 @@ import * as React from 'react'
 import { View, Text } from '@mcro/ui'
 import { NormalizedItem } from '../../../helpers/normalizeItem'
 import { compose, view, attach } from '@mcro/black'
-import { AppStore } from '../../../pages/AppPage/AppStore'
+import { ViewStore } from '../../../pages/AppPage/ViewStore'
 
 type Props = {
   normalizedItem: NormalizedItem
-  appStore?: AppStore
+  viewStore?: ViewStore
 }
 
 const decorate = compose(
-  attach('appStore'),
+  attach('viewStore'),
   view,
 )
-export const AppSimpleTitleBar = decorate(({ appStore, normalizedItem }: Props) => {
+export const AppSimpleTitleBar = decorate(({ viewStore, normalizedItem }: Props) => {
   return (
     <View
       draggable
-      onDragStart={appStore.onDragStart}
+      onDragStart={viewStore.onDragStart}
       position="absolute"
       top={0}
       left={30}

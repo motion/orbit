@@ -40,7 +40,7 @@ export function startDesktop(): ChildProcess {
         console.log('   error:', error, '\n\n\n')
         return
       }
-      if (process.env.IS_DESKTOP) {
+      if (process.env.SUB_PROCESS === 'desktop') {
         console.log('error is', error)
       } else {
         console.log('CHILD ERROR', error)

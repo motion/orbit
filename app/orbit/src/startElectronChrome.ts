@@ -9,23 +9,27 @@ export function startElectronChrome(): ChildProcess {
   const root = Path.join(__dirname, 'main')
   let args = [root]
   if (!Config.isProd) {
-    args = ['--inspect=9007', ...args]
+    args = ['--inspect=9004', '--remote-debugging-port=9005', ...args]
   }
   try {
     console.log('Starting Electron Chrome Process:', Config.paths.nodeBinary, args)
-    const child = spawn(Config.paths.nodeBinary, args, {
-      // detached: true,
-      env: {
-        // pass down process args...
-        ...process.env,
-        PROCESS_NAME: 'electron-chrome',
-        STACK_FILTER: 'orbit-electron-chrome',
-        SUB_RPOCESS: 'electron-chrome',
-        NODE_ENV: process.env.NODE_ENV,
-        ORBIT_CONFIG: JSON.stringify(Config),
-        PATH: process.env.PATH,
+    const child = spawn(
+      process.env.NODE_ENV === 'development' ? 'electron' : Config.paths.nodeBinary,
+      args,
+      {
+        // detached: true,
+        env: {
+          // pass down process args...
+          ...process.env,
+          PROCESS_NAME: 'electron-chrome',
+          STACK_FILTER: 'orbit-electron-chrome',
+          SUB_PROCESS: 'electron-chrome',
+          NODE_ENV: process.env.NODE_ENV,
+          ORBIT_CONFIG: JSON.stringify(Config),
+          PATH: process.env.PATH,
+        },
       },
-    })
+    )
 
     child.stdout.on('data', b => console.log('electron-chrome:', b.toString()))
     child.stderr.on('data', b => {

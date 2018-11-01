@@ -23,15 +23,14 @@ export async function main(): Promise<number | void> {
     // in any electron process...
     require('source-map-support/register')
     require('./helpers/installGlobals')
-    if (process.env.SUB_PROCESS) {
-      return
-    }
-
-    // only in main electron process...
-    require('./helpers/monitorResourceUsage')
-    require('./helpers/watchForAppRestarts').watchForAppRestarts()
     console.log('Waiting for dev ports')
     await Promise.all[(waitPort({ port: 3999 }), waitPort({ port: 3001 }))]
+
+    if (!process.env.SUB_PROCESS) {
+      // only in main electron process...
+      require('./helpers/monitorResourceUsage')
+      require('./helpers/watchForAppRestarts').watchForAppRestarts()
+    }
   }
 
   // why not make it a bit easier in prod mode too

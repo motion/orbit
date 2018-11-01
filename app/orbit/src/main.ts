@@ -15,7 +15,7 @@ Error.stackTraceLimit = Infinity
 export async function main() {
   console.log(`starting ${process.env.PROCESS_NAME}`)
 
-  // if were in desktop we get config through here
+  // in sub process get config this way...
   let config: GlobalConfig = process.env.ORBIT_CONFIG ? JSON.parse(process.env.ORBIT_CONFIG) : null
 
   // if not we're in the root electron process, lets set it up once...
@@ -23,12 +23,13 @@ export async function main() {
     config = await require('./getInitialConfig').getInitialConfig()
   }
 
-  // both processes now run this part to have their config setup
+  // all processes get config
   setGlobalConfig(config)
 
   // sub processes!
   const { SUB_PROCESS } = process.env
   if (SUB_PROCESS) {
+    console.log('starting sub process', SUB_PROCESS)
     if (!config) {
       throw new Error(`No config for ${SUB_PROCESS}!`)
     }

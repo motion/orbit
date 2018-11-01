@@ -37,6 +37,9 @@ export async function main(): Promise<number | void> {
   electronContextMenu()
   electronDebug()
 
+  // dont need to sync state with ourselves, only one Electron process
+  await Electron.start()
+
   if (process.env.SUB_PROCESS === 'electron-chrome') {
     render(
       <App onWillQuit={() => require('global').handleExit()} devTools={devTools}>
@@ -45,11 +48,6 @@ export async function main(): Promise<number | void> {
     )
     return
   }
-
-  // dont need to sync state with ourselves, only one Electron process
-  await Electron.start({
-    ignoreSelf: true,
-  })
 
   require('./helpers/updateChecker')
 

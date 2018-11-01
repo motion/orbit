@@ -34,7 +34,7 @@ export class ChromeWindow extends React.Component {
 
   render() {
     const { show, size } = this.state
-    console.log('render ChromeWindow with', size, '\n\n')
+    console.log('render ChromeWindow with', size, '\n\n', Electron.state.screenSize)
     return (
       <Window
         alwaysOnTop={[true, 'floating', 2]}
@@ -50,7 +50,7 @@ export class ChromeWindow extends React.Component {
         background="#00000000"
         webPreferences={WEB_PREFERENCES}
         position={[0, 0]}
-        size={size}
+        size={Electron.state.screenSize.slice()}
       />
     )
   }

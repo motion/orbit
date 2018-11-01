@@ -2,6 +2,7 @@ import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 import { ChildProcess } from 'child_process'
 import WebSocket from 'ws'
 import root from 'global'
+import waitPort from 'wait-port'
 
 root['WebSocket'] = WebSocket
 
@@ -67,21 +68,29 @@ export async function main() {
   process.on('SIGQUIT', handleExit)
 
   // start sub-processes...
+
   // desktop
   desktopProcess = require('./startDesktop').startDesktop()
+  // wait for desktop to start before starting other processes...
+  await waitPort({ port: config.ports.server })
+
   // electronChrome
   electronChromeProcess = require('./startElectronChrome').startElectronChrome()
+
   // syncers
   if (!process.env.DISABLE_SYNCERS) {
     syncersProcess = require('./startSyncers').startSyncers()
   }
 
+  // handle exits
   setupHandleExit([desktopProcess, syncersProcess, electronChromeProcess])
 
+  // electron
   if (process.env.IGNORE_ELECTRON !== 'true') {
     await require('./startElectron').startElectron()
-    console.log('Started Electron!')
   }
+
+  console.log('Started everything!')
 }
 
 // self starting

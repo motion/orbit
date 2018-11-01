@@ -73,7 +73,6 @@ class OrbitWindowStore {
     () => App.orbitState.docked,
     docked => {
       if (!docked) {
-        ensure('no apps open', App.appsState.length === 1)
         Menu.sendActionToFirstResponder('hide:')
       } else {
         this.orbitRef.show()

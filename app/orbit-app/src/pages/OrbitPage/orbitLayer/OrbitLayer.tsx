@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { react, view, attach } from '@mcro/black'
+import { view } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Col } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
@@ -7,35 +7,12 @@ import { BORDER_RADIUS } from '../../../constants'
 import { OrbitChrome } from './OrbitChrome'
 import { OrbitPaneManager } from './OrbitPaneManager'
 
-class OrbitLayerStore {
-  // when we open an app window we have to change our strategy for showing/hiding orbit
-  // with only one open we just use electron show/hide entire app, so return true
-  // otherwise we use in-app logic here
-  shouldShowOrbitDocked = react(
-    () => [App.appsState.length, App.orbitState.docked],
-    ([numApps, isDocked]) => {
-      if (numApps === 1) {
-        return true
-      } else {
-        return isDocked
-      }
-    },
-  )
-}
-
-@attach({
-  store: OrbitLayerStore,
-})
 @view
 export class OrbitLayer extends React.Component<{ store?: OrbitLayerStore }> {
   render() {
-    console.log('-------- ORBITLayer ------------')
     const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (
-      <OrbitDockedFrame
-        className={`theme-${theme}`}
-        visible={this.props.store.shouldShowOrbitDocked}
-      >
+      <OrbitDockedFrame className={`theme-${theme}`} visible>
         <OrbitChrome />
         <OrbitPaneManager />
       </OrbitDockedFrame>

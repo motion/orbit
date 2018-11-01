@@ -6,15 +6,18 @@ import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
 import { BrowserWindow } from 'electron'
-import { ElectronStore } from '../stores/ElectronStore'
+import global from 'global'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
 
+// set a global, bad i know
+const apps = new Set()
+global['apps'] = apps
+
 type Props = {
   id: number
   isPeek: boolean
-  electronStore: ElectronStore
 }
 
 class AppWindowStore {
@@ -24,7 +27,7 @@ class AppWindowStore {
   closed = false
 
   didMount() {
-    this.props.electronStore.apps.add(this)
+    apps.add(this)
     setTimeout(() => {
       this.position = [0, 0]
     })
@@ -94,15 +97,16 @@ class AppWindowStore {
   }
 
   private closeApp() {
-    if (this.closed) return
+    if (this.closed) {
+      return
+    }
     this.closed = true
     this.window.close()
-    this.props.electronStore.apps.delete(this)
+    apps.delete(this)
   }
 }
 
 const decorator = compose(
-  attach('electronStore'),
   attach({
     store: AppWindowStore,
   }),

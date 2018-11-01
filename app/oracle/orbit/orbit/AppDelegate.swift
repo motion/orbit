@@ -242,14 +242,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   @objc func handleTrayClick(_ sender: Any?) {
-    print("click tray \(self.trayLocation)")
     if self.trayLocation != "Out" {
       self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggle\(trayLocation)\" }")
     }
   }
   
+  var lastHoverEvent = ""
+  
   func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {
-    print("hover \(trayLocation)")
+    // avoid sending more than one out event
+    if (lastHoverEvent == "Out" && trayLocation == "Out") {
+      return
+    }
+    lastHoverEvent = trayLocation
     socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHover\(trayLocation)\" }")
   }
   

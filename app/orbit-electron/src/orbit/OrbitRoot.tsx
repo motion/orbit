@@ -4,14 +4,13 @@ import * as React from 'react'
 import { MenuItems } from './MenuItems'
 import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
-import { AppWindows } from './AppWindows'
 import { devTools } from '../helpers/devTools'
 
 @provide({
   electronStore: ElectronStore,
 })
 @view
-export class ElectronRoot extends React.Component {
+export class OrbitRoot extends React.Component {
   props: {
     electronStore?: ElectronStore
   }
@@ -30,7 +29,6 @@ export class ElectronRoot extends React.Component {
       return null
     }
     console.log('electron success, rendering...')
-
     return (
       <App
         onBeforeQuit={electronStore.handleBeforeQuit}
@@ -40,7 +38,6 @@ export class ElectronRoot extends React.Component {
       >
         <MenuItems />
         <OrbitWindow />
-        <AppWindows />
       </App>
     )
   }

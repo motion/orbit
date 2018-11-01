@@ -71,21 +71,23 @@ export async function main() {
 
   // desktop
   desktopProcess = require('./startDesktop').startDesktop()
+
   // wait for desktop to start before starting other processes...
   await waitPort({ port: config.ports.server })
-
-  // electronChrome
-  electronChromeProcess = require('./startElectronChrome').startElectronChrome()
+  await new Promise(res => setTimeout(res, 100))
 
   // syncers
   if (!process.env.DISABLE_SYNCERS) {
     syncersProcess = require('./startSyncers').startSyncers()
   }
 
+  // electronChrome
+  electronChromeProcess = require('./startElectronChrome').startElectronChrome()
+
   // handle exits
   setupHandleExit([desktopProcess, syncersProcess, electronChromeProcess])
 
-  // electron
+  // start main electron process inside this thread (no forking)
   if (process.env.IGNORE_ELECTRON !== 'true') {
     await require('./startElectron').startElectron()
   }

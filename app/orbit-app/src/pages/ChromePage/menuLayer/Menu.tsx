@@ -11,7 +11,7 @@ type Props = {
   offsetX?: number
 }
 
-class PinMenuStore {
+class MenuStore {
   props: Props
 
   get trayBounds() {
@@ -47,10 +47,10 @@ class PinMenuStore {
 }
 
 export function Menu(props: Props) {
-  const store = useStore(PinMenuStore, props)
+  const store = useStore(MenuStore, props)
   const open = store.showMenu
-  const width = props.width
   const left = store.menuCenter
+  const width = props.width
   return (
     <Popover
       open={open}

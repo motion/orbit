@@ -33,11 +33,22 @@ export interface SlackChannel {
 }
 
 /**
+ * Slack's message attachment.
+ */
+export type SlackAttachment = {
+  id: number
+  title: string
+  text: string
+  original_url: string
+}
+
+/**
  * Slack message.
  *
  * @see https://api.slack.com/methods/channels.history
  */
 export type SlackMessage = {
+  attachments: SlackAttachment[]
   type: string
   subtype: string
   user: string

@@ -6,6 +6,7 @@ export type IntegrationType =
   | 'jira'
   | 'confluence'
   | 'website'
+  | 'pinned'
 
 export type IntegrationTypeValues = {
   slack?: string
@@ -15,4 +16,5 @@ export type IntegrationTypeValues = {
   jira?: string
   confluence?: string
   website?: string
+  pinned?: string
 }

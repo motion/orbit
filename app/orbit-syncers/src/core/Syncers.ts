@@ -3,6 +3,7 @@ import { DriveSyncer } from '../integrations/drive/DriveSyncer'
 import { GithubSyncer } from '../integrations/github/GithubSyncer'
 import { GMailSyncer } from '../integrations/gmail/GMailSyncer'
 import { JiraSyncer } from '../integrations/jira/JiraSyncer'
+import { PinnedUrlsSyncer } from '../integrations/pinned/PinnedUrlsSyncer'
 import { WebsiteSyncer } from '../integrations/website/WebsiteSyncer'
 import { MailWhitelisterSyncer } from '../integrations/mail-whitelister/MailWhitelisterSyncer'
 import { SlackSyncer } from '../integrations/slack/SlackSyncer'
@@ -45,6 +46,10 @@ export const Syncers = [
   }),
   new Syncer({
     constructor: MailWhitelisterSyncer,
+    interval: TEN_MINUTES,
+  }),
+  new Syncer({
+    constructor: PinnedUrlsSyncer,
     interval: TEN_MINUTES,
   }),
   new Syncer({

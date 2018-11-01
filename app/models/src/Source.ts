@@ -1,4 +1,3 @@
-import { IntegrationType } from './IntegrationType'
 import { ConfluenceSourceValues } from './source-values/ConfluenceSourceValues'
 import { DriveSourceValues } from './source-values/DriveSourceValues'
 import { GithubSourceValues } from './source-values/GithubSourceValues'
@@ -61,5 +60,3 @@ export type Source =
   | ConfluenceSource
   | WebsiteSource
   | GithubSource
-
-export type SourceOf<A extends IntegrationType> = AllSources[A]

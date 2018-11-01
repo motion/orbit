@@ -1,4 +1,5 @@
 import { ConfluenceBitData } from './ConfluenceBitData'
+import { PinnedBitData } from './PinnedBitData'
 import { WebsiteBitData } from './WebsiteBitData'
 import { DriveBitData } from './DriveBitData'
 import { GithubBitData } from './GithubBitData'
@@ -19,6 +20,7 @@ export type BitData =
   | SlackBitData
   | DriveBitData
   | WebsiteBitData
+  | PinnedBitData
 
 export type AllBitData = {
   github: GithubBitData
@@ -28,6 +30,7 @@ export type AllBitData = {
   website: WebsiteBitData
   confluence: ConfluenceBitData
   jira: JiraBitData
+  pinned: PinnedBitData
 }
 
 export type GenericBit<A extends IntegrationType> = Bit & {

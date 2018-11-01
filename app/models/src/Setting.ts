@@ -13,5 +13,6 @@ export type Setting = {
     topTopics?: string[]
     recentSearches?: string[]
     pinnedBits?: string[]
+    pinnedUrls?: string[]
   }
 }

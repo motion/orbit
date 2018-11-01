@@ -24,7 +24,7 @@ export class ConfluenceSyncer {
     this.loader = new ConfluenceLoader(source, this.log)
     this.bitFactory = new ConfluenceBitFactory(source)
     this.personFactory = new ConfluencePersonFactory(source)
-    this.personSyncer = new PersonSyncer(source, this.log)
+    this.personSyncer = new PersonSyncer(this.log)
     this.bitSyncer = new BitSyncer(source, this.log)
     this.syncerRepository = new SyncerRepository(source)
   }

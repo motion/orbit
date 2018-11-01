@@ -1,17 +1,11 @@
 import { BitUtils } from '@mcro/model-utils'
-import { Bit, WebsiteBitData } from '@mcro/models'
-import { WebsiteSource } from '@mcro/models'
-import { WebsiteCrawledData } from './WebsiteCrawledData'
+import { Bit, PinnedBitData } from '@mcro/models'
+import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
 
 /**
- * Creates a website Bit.
+ * Creates a Bit for pinned url.
  */
-export class WebsiteBitFactory {
-  private source: WebsiteSource
-
-  constructor(source: WebsiteSource) {
-    this.source = source
-  }
+export class PinnedBitFactory {
 
   /**
    * Builds a bit from the given crawled data.
@@ -24,15 +18,14 @@ export class WebsiteBitFactory {
     // create or update a bit
     return BitUtils.create(
       {
-        integration: 'website',
-        source: this.source,
+        integration: 'pinned',
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,
         data: {
           title: crawledData.title,
           content: crawledData.content,
-        } as WebsiteBitData,
+        } as PinnedBitData,
         // location: {
         //   id: undefined,
         //   name: undefined,
@@ -44,7 +37,7 @@ export class WebsiteBitFactory {
         bitCreatedAt,
         bitUpdatedAt,
       },
-      this.source.id + '_' + crawledData.url,
+      'pinned_' + crawledData.url,
     )
   }
 }

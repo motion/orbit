@@ -37,7 +37,6 @@ export class SelectionStore {
     queryStore: QueryStore
   }
 
-  lastMove = { at: 0, direction: Direction.down }
   highlightIndex = -1
   selectEvent = ''
   leaveIndex = -1
@@ -71,23 +70,23 @@ export class SelectionStore {
     return this.activeIndex > -1
   }
 
-  setSelectedOnSearch = react(
-    () => this.movesMap && App.state.query && Math.random(),
-    async (_, { sleep }) => {
-      ensure('query', !!App.state.query)
-      const hasResults = this.movesMap && !!this.movesMap.length
-      // select first item on search
-      if (hasResults) {
-        ensure('results should auto select', this.movesMap[0].shouldAutoSelect)
-        // dont be too too aggressive with the popup
-        await sleep(200)
-        console.log('selecting first result automatically', this.movesMap)
-        this.activeIndex = 0
-      } else {
-        this.clearSelected()
-      }
-    },
-  )
+  // autoSelectFirstItemOnSearch = react(
+  //   () => this.movesMap && App.state.query && Math.random(),
+  //   async (_, { sleep }) => {
+  //     ensure('query', !!App.state.query)
+  //     const hasResults = this.movesMap && !!this.movesMap.length
+  //     // select first item on search
+  //     if (hasResults) {
+  //       ensure('results should auto select', this.movesMap[0].shouldAutoSelect)
+  //       // dont be too too aggressive with the popup
+  //       await sleep(200)
+  //       console.log('selecting first result automatically', this.movesMap)
+  //       this.activeIndex = 0
+  //     } else {
+  //       this.clearSelected()
+  //     }
+  //   },
+  // )
 
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,
@@ -167,7 +166,6 @@ export class SelectionStore {
       return
     }
     if (selectEvent) {
-      this.lastMove = { at: Date.now(), direction }
       this.setSelectEvent(selectEvent)
     }
     const activeIndex = this.getNextIndex(this.activeIndex, direction)

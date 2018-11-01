@@ -6,20 +6,24 @@ import { App, Desktop, Electron } from '@mcro/stores'
 import { getGlobalConfig } from '@mcro/config'
 import { stringify } from '@mcro/helpers'
 import * as Cosal from '@mcro/cosal'
+import { Root } from '../Root'
 
-root['require'] = require
-root['Path'] = require('path')
-root['_'] = require('lodash')
-root['Config'] = getGlobalConfig()
-root['Mobx'] = Mobx
-root['r2'] = r2
-root['App'] = App
-root['Desktop'] = Desktop
-root['Electron'] = Electron
-root['stringify'] = stringify
-root['toJS'] = Mobx.toJS
-root['Cosal'] = Cosal
+export function installGlobals(AppRoot: Root) {
+  root['restart'] = AppRoot.restart
+  root['require'] = require
+  root['Path'] = require('path')
+  root['_'] = require('lodash')
+  root['Config'] = getGlobalConfig()
+  root['Mobx'] = Mobx
+  root['r2'] = r2
+  root['App'] = App
+  root['Desktop'] = Desktop
+  root['Electron'] = Electron
+  root['stringify'] = stringify
+  root['toJS'] = Mobx.toJS
+  root['Cosal'] = Cosal
 
-for (const model of Entities) {
-  root[`${model.name}`] = model
+  for (const model of Entities) {
+    root[`${model.name}`] = model
+  }
 }

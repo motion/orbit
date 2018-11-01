@@ -3,7 +3,7 @@ import { view, attach, provide } from '@mcro/black'
 import { AppStore } from './AppStore'
 import { apps } from './apps'
 
-@attach('sourcesStore', 'queryStore', 'subPaneStore')
+@attach('paneManagerStore', 'selectionStore', 'sourcesStore', 'queryStore', 'subPaneStore')
 @provide({
   appStore: AppStore,
 })

@@ -1,14 +1,14 @@
 import { view, attach } from '@mcro/black'
 import * as React from 'react'
-import * as Views from '../../../views'
-import { addAppClickHandler } from '../../../helpers/addAppClickHandler'
-import { Grid } from '../../../views/Grid'
-import { SimpleItem } from '../../../views/SimpleItem'
+import * as Views from '../../../../views'
+import { addAppClickHandler } from '../../../../helpers/addAppClickHandler'
+import { Grid } from '../../../../views/Grid'
+import { SimpleItem } from '../../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
-import { Unpad } from '../../../views/Unpad'
-import { SourcesStore } from '../../../stores/SourcesStore'
-import { OrbitAppCard } from '../../../components/OrbitAppCard'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { Unpad } from '../../../../views/Unpad'
+import { SourcesStore } from '../../../../stores/SourcesStore'
+import { OrbitAppCard } from '../../../../components/OrbitAppCard'
+import { PaneManagerStore } from '../../../../stores/PaneManagerStore'
 
 type Props = {
   sourcesStore?: SourcesStore

@@ -5,7 +5,7 @@ import { Desktop } from '@mcro/stores'
 import { OCRWord } from './OcrWord'
 import { OCRLine } from './OcrLine'
 import * as UI from '@mcro/ui'
-import { wordKey } from '../../helpers'
+import { wordKey } from '../../../helpers'
 
 const Frame = view(UI.Col, {
   width: '100%',
@@ -125,7 +125,7 @@ class HighlightsStore {
   store: HighlightsStore,
 })
 @view
-export class HighlightsPage extends React.Component<{ store?: HighlightsStore }> {
+export class HighlightsLayer extends React.Component<{ store?: HighlightsStore }> {
   render() {
     const { store } = this.props
     return (

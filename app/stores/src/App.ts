@@ -67,6 +67,10 @@ class AppStore {
       inputFocused: false,
       shortcutInputFocused: false,
     },
+    trayState: {
+      trayEvent: '',
+      trayEventAt: 0,
+    },
     appsState: [defaultPeekState],
     authState: {
       openId: null,

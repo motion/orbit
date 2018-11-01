@@ -6,6 +6,8 @@ import { setConfig } from 'react-hot-loader'
 
 setConfig({
   logLevel: 'no-errors-please',
+  // @ts-ignore
+  pureSFC: true,
 })
 
 Error.stackTraceLimit = Infinity

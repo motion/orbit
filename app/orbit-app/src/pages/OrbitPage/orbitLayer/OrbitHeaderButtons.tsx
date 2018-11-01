@@ -4,8 +4,8 @@ import * as UI from '@mcro/ui'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
 import { View, ClearButton, Icon } from '@mcro/ui'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 
 const Section = view('section', {
   width: '100%',

@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-// react hooks
 declare module 'react' {
   function useState<T>(initialState: T | (() => T)): [T, (newState: T) => void]
   function useEffect(create: () => void | (() => void), inputs?: ReadonlyArray<unknown>): void
@@ -22,16 +21,4 @@ declare module 'react' {
   ): void
   const useMutationEffect: typeof useEffect
   const useLayoutEffect: typeof useEffect
-}
-
-declare const electronRequire: (a: string) => any
-
-declare module '*.svg' {
-  const content: any
-  export default content
-}
-
-declare module '*.png' {
-  const content: any
-  export default content
 }

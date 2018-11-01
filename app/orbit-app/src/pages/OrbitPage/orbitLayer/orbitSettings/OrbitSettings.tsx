@@ -1,12 +1,12 @@
 import { view, attach } from '@mcro/black'
 import * as React from 'react'
-import { SubPane } from '../../../components/SubPane'
+import { SubPane } from '../../../../components/SubPane'
 import { OrbitSettingsApps } from './OrbitSettingsApps'
 import { OrbitSettingsGeneral } from './OrbitSettingsGeneral'
 import { OrbitSettingsTeam } from './OrbitSettingsTeam'
 import { SegmentedRow, Button, Row } from '@mcro/ui'
-import { VerticalSpace } from '../../../views'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { VerticalSpace } from '../../../../views'
+import { PaneManagerStore } from '../../../../stores/PaneManagerStore'
 
 const Pane = view({
   height: 0,

@@ -12,8 +12,23 @@ export class AppReactions {
   constructor() {
     this.setupReactions()
 
-    const off = Actions.listen('TrayToggleOrbit', () => {
-      App.setOrbitState({ docked: !App.state.orbitState.docked })
+    const off = Actions.listenAll((key, value) => {
+      switch (key) {
+        case 'TrayToggleOrbit':
+          App.setOrbitState({ docked: !App.state.orbitState.docked })
+          break
+        case 'TrayHoverMemory':
+        case 'TrayHoverPin':
+        case 'TrayHoverOrbit':
+        case 'TrayHoverOut':
+          App.setState({
+            trayState: {
+              trayEvent: key,
+              trayEventAt: value,
+            },
+          })
+          break
+      }
     })
     this.listeners.push(off)
   }

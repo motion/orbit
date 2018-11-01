@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
-import { Title, HorizontalScroll, VerticalSpace } from '../../../views'
-import { SubTitle } from '../../../views/SubTitle'
+import { Title, HorizontalScroll, VerticalSpace } from '../../../../views'
+import { SubTitle } from '../../../../views/SubTitle'
 import { View, Icon } from '@mcro/ui'
-import { Grid } from '../../../views/Grid'
-import { SourcesStore } from '../../../stores/SourcesStore'
-import { OrbitAppCard } from '../../../components/OrbitAppCard'
+import { Grid } from '../../../../views/Grid'
+import { SourcesStore } from '../../../../stores/SourcesStore'
+import { OrbitAppCard } from '../../../../components/OrbitAppCard'
 import { ToggleApp } from './ToggleApp'
-import { OrbitOrb } from '../../../views/OrbitOrb'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { OrbitOrb } from '../../../../views/OrbitOrb'
+import { PaneManagerStore } from '../../../../stores/PaneManagerStore'
 
 const OrbitSpaceCardFrame = view({
   borderRadius: 6,

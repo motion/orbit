@@ -7,10 +7,10 @@ import { OrbitSwitch } from './OrbitSwitch'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SelectionStore } from '../../stores/SelectionStore'
-import { AppActions } from '../../actions/AppActions'
+import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { SelectionStore } from '../../../stores/SelectionStore'
+import { AppActions } from '../../../actions/AppActions'
 
 export type HeaderProps = {
   paneManagerStore?: PaneManagerStore

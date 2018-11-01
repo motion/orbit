@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { HL_PAD } from './helpers'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
 import { App } from '@mcro/stores'
-import { wordKey } from '../../helpers'
+import { wordKey } from '../../../helpers'
 
 const Word = view({
   fontFamily: 'helvetica',

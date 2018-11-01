@@ -4,7 +4,6 @@ import { uniqBy } from 'lodash'
 import { getGlobalConfig } from '@mcro/config'
 
 const Config = getGlobalConfig()
-
 const onPort = async cb => {
   await sleep(200)
   try {
@@ -16,7 +15,7 @@ const onPort = async cb => {
 }
 
 @store
-export class RootStore {
+export class DevStore {
   stores = null
   views = null
   errors = []

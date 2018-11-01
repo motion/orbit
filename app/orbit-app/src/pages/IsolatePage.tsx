@@ -7,7 +7,7 @@ import * as React from 'react'
 import { AppActions } from '../actions/AppActions'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { AppPage } from './AppPage/AppPage'
-import { OrbitPaneManager } from './OrbitPage/OrbitPaneManager'
+import { OrbitPaneManager } from './OrbitPage/orbitLayer/OrbitPaneManager'
 
 const getItem = {
   githubItem: () =>
@@ -20,8 +20,6 @@ const getItem = {
     type: 'setting',
     integration: 'drive',
   }),
-  // githubSetting: async () =>
-  //   loadOne(SettingModel, { args: { where: { type: 'github' } } }).then(settingToAppConfig),
 }
 
 @view

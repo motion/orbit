@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { LINE_Y_ADJ } from './helpers'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
-import { wordKey } from '../../helpers'
+import { wordKey } from '../../../helpers'
 
 const OcrLine = view({
   borderBottom: [2, '#EDD71E'],

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
-import { BORDER_RADIUS, CHROME_PAD } from '../../constants'
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
+import { BORDER_RADIUS, CHROME_PAD } from '../../../constants'
+import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
 import * as UI from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 
 type Props = {
   orbitWindowStore?: OrbitWindowStore

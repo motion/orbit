@@ -16,10 +16,6 @@ export class CosalManager {
     this.cosal = cosal
   }
 
-  get search() {
-    return this.cosal.search
-  }
-
   start = () => {
     this.scanSinceLast()
     this.scanTopics()
@@ -27,6 +23,12 @@ export class CosalManager {
 
   dispose() {
     clearInterval(this.scanTopicsInt)
+  }
+
+  search = async (query: string, { max = 10 }) => {
+    const res = await this.cosal.search(query, max)
+    const ids = res.map(x => x.id)
+    return await getRepository(BitEntity).find({ id: { $in: ids } })
   }
 
   private async getLastScan() {

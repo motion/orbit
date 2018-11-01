@@ -10,10 +10,13 @@ async function start() {
   console.log('starting dev browser...')
   await debugApps({
     sessions: [
+      // node processes
       { port: '9000' }, // desktop
       process.env.DEBUG_ELECTRON && { port: '9001' }, // electron
+      !process.env.DISABLE_SYNCERS && { port: '9003' }, // syncers
+
+      // remote processes
       { port: '9002' }, // electron remote
-      { port: '9003' }, // syncers
       process.env.DEBUG_ELECTRON && { port: '9004' }, // electron-chrome main
       { port: '9005' }, // electron-chrome remote
     ].filter(Boolean),

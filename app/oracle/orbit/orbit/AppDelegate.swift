@@ -215,7 +215,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // setup hover events
         let throttleHoverQueue = DispatchQueue.global(qos: .background)
-        let throttledHover =  throttle(delay: 0.1, queue: throttleHoverQueue, action: self.handleTrayHover)
+        let throttledHover =  throttle(delay: 0.03, queue: throttleHoverQueue, action: self.handleTrayHover)
         var lastTrayRect = [0, 0]
         let rectInWindow = button.convert(button.bounds, to: nil)
         let trayRect = (button.window?.convertToScreen(rectInWindow))!

@@ -1,5 +1,10 @@
 # Ora - your memory
 
+ListsApp is up next:
+
+- ListIndexApp - the list manager that shows in Orbit and in hover menu
+- ListApp - looking at a list, has sorting, search filtering and opening items
+
 ## first option: realtime
 
 hover over it to see whats contextually relevant in a dropdown

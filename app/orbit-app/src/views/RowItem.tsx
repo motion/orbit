@@ -24,6 +24,7 @@ export const RowItem = ({
   subtitle = null,
   selected = false,
   titleProps = null,
+  children = null,
   ...props
 }) => {
   return (
@@ -32,7 +33,7 @@ export const RowItem = ({
       <View width={10} />
       <Col flex={1}>
         <Text sizeLineHeight={0.8} size={1.15} fontWeight={600} {...titleProps}>
-          {title}
+          {title || children}
         </Text>
         {!!subtitle && (
           <Text sizeLineHeight={0.8} size={0.9} alpha={0.5}>

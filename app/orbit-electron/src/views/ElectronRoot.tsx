@@ -5,6 +5,7 @@ import { MenuItems } from './MenuItems'
 import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
 import { AppWindows } from './AppWindows'
+import { ChromeWindow } from './ChromeWindow'
 
 @provide({
   electronStore: ElectronStore,
@@ -43,6 +44,7 @@ export class ElectronRoot extends React.Component {
       >
         <MenuItems />
         <OrbitWindow />
+        <ChromeWindow />
         <AppWindows />
       </App>
     )

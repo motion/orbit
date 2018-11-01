@@ -9,7 +9,6 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { OrbitStore } from '../../stores/OrbitStore'
 import { OrbitLayer } from './orbitLayer/OrbitLayer'
-import { MenuLayer } from './menuLayer/MenuLayer'
 import { Theme } from '@mcro/ui'
 import { App } from '@mcro/stores'
 
@@ -35,7 +34,6 @@ export class OrbitPage extends React.Component {
       <Theme name={theme}>
         <AppWrapper>
           <HighlightsLayer />
-          <MenuLayer />
           <OrbitLayer />
         </AppWrapper>
       </Theme>

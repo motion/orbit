@@ -25,8 +25,10 @@ export const defaultPeekState: AppState = {
 }
 
 const DEFAULT_MENU_STATE = {
-  width: 0,
   left: 0,
+  width: 0,
+  height: 0,
+  open: false,
 }
 
 @store

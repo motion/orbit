@@ -40,7 +40,7 @@ export class ChromeWindow extends React.Component {
         alwaysOnTop={[true, 'floating', 2]}
         show={show}
         focus={false}
-        ignoreMouseEvents={!Electron.hoverState.peekHovered['menu']}
+        ignoreMouseEvents={!Electron.hoverState.menuHovered}
         focusable
         file={`${Config.urls.server}/chrome`}
         frame={false}

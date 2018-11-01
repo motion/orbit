@@ -18,24 +18,23 @@ class MenuStore {
     return Desktop.state.operatingSystem.trayBounds
   }
 
-  showMenu = react(
-    () => App.state.trayState,
-    state => state.trayEvent === `TrayHover${this.props.id}`,
-  )
+  open = react(() => App.state.trayState, state => state.trayEvent === `TrayHover${this.props.id}`)
 
   get menuCenter() {
     return (this.trayBounds[0] + this.trayBounds[1]) / 2 + (this.props.offsetX || 0)
   }
 
   setMenuBounds = react(
-    () => this.menuCenter,
-    center => {
+    () => [this.open, this.menuCenter],
+    ([open, center]) => {
       const width = this.props.width
       App.setState({
         trayState: {
           menuState: {
+            ...App.state.trayState.menuState,
             [this.props.id]: {
-              // TODO height
+              open,
+              height: 300,
               width,
               left: center - width / 2,
             },
@@ -48,7 +47,7 @@ class MenuStore {
 
 export function Menu(props: Props) {
   const store = useStore(MenuStore, props)
-  const open = store.showMenu
+  const open = store.open
   const left = store.menuCenter
   const width = props.width
   return (

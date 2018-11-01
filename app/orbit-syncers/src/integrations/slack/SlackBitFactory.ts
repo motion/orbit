@@ -1,7 +1,8 @@
 import { command } from '@mcro/model-bridge'
 import { BitUtils } from '@mcro/model-utils'
 import { Bit, CosalTopWordsCommand, Person, SlackBitData, SlackSource } from '@mcro/models'
-import { SlackChannel, SlackMessage } from '@mcro/services'
+import { SlackChannel, SlackMessage, SlackAttachment } from '@mcro/services'
+import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
 
 const Autolinker = require('autolinker')
 
@@ -16,9 +17,9 @@ export class SlackBitFactory {
   }
 
   /**
-   * Creates a new bit.
+   * Creates a new slack conversation bit.
    */
-  async create(channel: SlackChannel, messages: SlackMessage[], allPeople: Person[]): Promise<Bit> {
+  async createConversation(channel: SlackChannel, messages: SlackMessage[], allPeople: Person[]): Promise<Bit> {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
@@ -84,6 +85,50 @@ export class SlackBitFactory {
         desktopLink,
       },
       channel.id + '_' + firstMessage.ts,
+    )
+  }
+
+  /**
+   * Creates a new slack website bit.
+   */
+  createWebsite(
+    channel: SlackChannel,
+    message: SlackMessage,
+    attachment: SlackAttachment,
+    websiteData: WebsiteCrawledData,
+    allPeople: Person[]
+  ): Bit {
+    const messageTime = +message.ts.split('.')[0] * 1000
+    const mentionedPeople = this.findMessageMentionedPeople([message], allPeople)
+    const people = allPeople.filter(person => {
+      return (
+        message.user === person.integrationId ||
+        mentionedPeople.some(mentionedPerson => person.id === mentionedPerson.id)
+      )
+    })
+
+    return BitUtils.create(
+      {
+        sourceId: this.source.id,
+        integration: 'slack',
+        type: 'website',
+        title: attachment.title,
+        body: attachment.text,
+        data: websiteData,
+        // raw: { channel, messages },
+        bitCreatedAt: messageTime,
+        bitUpdatedAt: messageTime,
+        people,
+        location: {
+          id: channel.id,
+          name: channel.name,
+          webLink: `https://${this.source.values.team.domain}.slack.com/archives/${channel.id}`,
+          desktopLink: `slack://channel?id=${channel.id}&team=${this.source.values.team.id}`,
+        },
+        webLink: attachment.original_url,
+        desktopLink: undefined,
+      },
+      channel.id + '_' + message.ts + '_' + attachment.id,
     )
   }
 

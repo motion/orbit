@@ -1,4 +1,5 @@
 import { Bit, Source } from '@mcro/models'
+import { IntegrationType } from '@mcro/models/_'
 import { hash } from '@mcro/utils'
 
 /**
@@ -8,8 +9,17 @@ export class BitUtils {
   /**
    * Creates a bit id.
    */
-  static id(source: Source, data: string) {
-    return hash(`${source.type}-${source.id}-${data}`)
+  static id(integration: IntegrationType, sourceId: number|undefined, data: string): number
+  static id(source: Source, data: string): number
+  static id(integrationOrSource: Source|IntegrationType, sourceIdOrData: any, maybeData?: string): number {
+    if (typeof integrationOrSource === "object") { // Source
+      return hash(`${integrationOrSource.type}-${integrationOrSource.id}-${sourceIdOrData}`)
+    } else if (integrationOrSource && sourceIdOrData && maybeData) {
+      return hash(`${integrationOrSource}-${sourceIdOrData}-${maybeData}`)
+    } else if (integrationOrSource && !sourceIdOrData) {
+      return hash(`${integrationOrSource}-${maybeData}`)
+    }
+    return 0
   }
 
   /**
@@ -26,12 +36,13 @@ export class BitUtils {
   /**
    * Creates a new bit and sets given properties to it.
    */
-  static create(properties: Partial<Bit>, integrationId?: string | number) {
+  static create(properties: Partial<Bit>, integrationId?: any) {
     const bit: Bit = { target: 'bit', ...properties }
     bit.contentHash = this.contentHash(bit)
     if (!bit.sourceId && bit.source) bit.sourceId = bit.source.id
-    if (bit.integration && bit.sourceId && integrationId)
-      bit.id = hash(`${bit.integration}-${bit.sourceId}-${integrationId}`)
+    if (bit.integration && bit.sourceId && integrationId) {
+      bit.id = this.id(bit.integration, bit.sourceId, integrationId)
+    }
     return bit
   }
 

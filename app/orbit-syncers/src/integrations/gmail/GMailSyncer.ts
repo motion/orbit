@@ -33,7 +33,7 @@ export class GMailSyncer implements IntegrationSyncer {
     )
     this.bitFactory = new GMailBitFactory(source)
     this.personFactory = new GMailPersonFactory(source)
-    this.personSyncer = new PersonSyncer(source, this.log)
+    this.personSyncer = new PersonSyncer(this.log)
     this.bitSyncer = new BitSyncer(source, this.log)
     this.syncerRepository = new SyncerRepository(source)
   }

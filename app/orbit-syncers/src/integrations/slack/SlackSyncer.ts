@@ -7,6 +7,7 @@ import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
+import { WebsiteCrawler } from '../website/WebsiteCrawler'
 import { SlackBitFactory } from './SlackBitFactory'
 import { SlackPersonFactory } from './SlackPersonFactory'
 
@@ -22,6 +23,7 @@ export class SlackSyncer implements IntegrationSyncer {
   private personSyncer: PersonSyncer
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
+  private crawler: WebsiteCrawler
 
   constructor(source: SlackSource, log?: Logger) {
     this.source = source
@@ -29,9 +31,10 @@ export class SlackSyncer implements IntegrationSyncer {
     this.loader = new SlackLoader(this.source, this.log)
     this.bitFactory = new SlackBitFactory(this.source)
     this.personFactory = new SlackPersonFactory(this.source)
-    this.personSyncer = new PersonSyncer(source, this.log)
+    this.personSyncer = new PersonSyncer(this.log)
     this.bitSyncer = new BitSyncer(source, this.log)
     this.syncerRepository = new SyncerRepository(source)
+    this.crawler = new WebsiteCrawler(this.log)
   }
 
   /**
@@ -126,10 +129,9 @@ export class SlackSyncer implements IntegrationSyncer {
       // sync messages if we found them
       if (loadedMessages.length) {
         // left only messages we need - real user messages, no system or bot messages
-        const filteredMessages = loadedMessages.filter(
-          message =>
-            message.type === 'message' && !message.subtype && !message.bot_id && message.user,
-        )
+        const filteredMessages = loadedMessages.filter(message => {
+          return message.type === 'message' && !message.subtype && !message.bot_id && message.user
+        })
         this.log.info('filtered messages (no bots and others)', filteredMessages)
 
         // group messages into special "conversations" to avoid insertion of multiple bits for each message
@@ -137,16 +139,55 @@ export class SlackSyncer implements IntegrationSyncer {
         this.log.info(`created ${conversations.length} conversations`, conversations)
 
         // create bits from conversations
-        const savedConversations = await Promise.all(
-          conversations.map(messages => this.bitFactory.create(channel, messages, allDbPeople)),
+        const conversationBits = await Promise.all(
+          conversations.map(messages => this.bitFactory.createConversation(channel, messages, allDbPeople)),
         )
+        apiBits.push(...conversationBits)
 
-        apiBits.push(...savedConversations)
+        // create bits from links inside messages
+        const linkBits: Bit[] = []
+        for (let message of filteredMessages) {
+          if (!message.attachments || !message.attachments.length)
+            continue
+
+          for (let attachment of message.attachments) {
+            if (attachment.title && attachment.text && attachment.original_url) {
+
+              // we use try-catch block to prevent fails on link craw since if it fail for some reason
+              // we can afford to stop slack syncing process
+              try {
+
+                // open browser if it wasn't opened yet
+                if (this.crawler.isOpened() === false) {
+                  await this.crawler.start()
+                }
+
+                // crawl website
+                const [websiteData] = await this.crawler.run({
+                  url: attachment.original_url,
+                  deep: false
+                })
+
+                linkBits.push(this.bitFactory.createWebsite(channel, message, attachment, websiteData, allDbPeople))
+
+              } catch (error) {
+                this.log.warning(`failed to craw a slack link's website`, attachment, error)
+              }
+
+            }
+          }
+        }
+        apiBits.push(...linkBits)
 
         // update last message sync source
         // note: we need to use loaded messages, not filtered
         lastMessageSync[channel.id] = loadedMessages[0].ts
       }
+    }
+
+    // close browser if it was opened
+    if (this.crawler.isOpened()) {
+      await this.crawler.close()
     }
 
     // sync all the bits we have

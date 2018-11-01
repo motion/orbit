@@ -29,7 +29,10 @@ export class BitEntity extends BaseEntity implements Bit {
   @Column({ type: String })
   integration?: IntegrationType
 
-  @Column()
+  /**
+   * Source id can be null only for pinned urls.
+   */
+  @Column({ nullable: true })
   sourceId?: number
 
   @Column({ nullable: true })

@@ -25,7 +25,7 @@ export class JiraSyncer implements IntegrationSyncer {
     this.loader = new JiraLoader(setting, this.log)
     this.bitFactory = new JiraBitFactory(setting)
     this.personFactory = new JiraPersonFactory(setting)
-    this.personSyncer = new PersonSyncer(setting, this.log)
+    this.personSyncer = new PersonSyncer(this.log)
     this.bitSyncer = new BitSyncer(setting, this.log)
     this.syncerRepository = new SyncerRepository(setting)
   }

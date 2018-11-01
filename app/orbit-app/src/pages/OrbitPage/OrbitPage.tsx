@@ -9,6 +9,7 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { OrbitStore } from '../../stores/OrbitStore'
 import { OrbitLayer } from './orbitLayer/OrbitLayer'
+import { MenuLayer } from './menuLayer/MenuLayer';
 
 @provide({
   settingStore: SettingStore,
@@ -29,6 +30,7 @@ export class OrbitPage extends React.Component {
     return (
       <AppWrapper>
         <HighlightsLayer />
+        <MenuLayer />
         <OrbitLayer />
       </AppWrapper>
     )

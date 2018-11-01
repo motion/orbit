@@ -91,6 +91,7 @@ class DesktopStore {
       foundIntegrations: {},
     },
     operatingSystem: {
+      trayBounds: [0, 0],
       accessibilityPermission: false,
       macVersion: null,
       supportsTransparency: false,

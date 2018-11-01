@@ -4,6 +4,11 @@ import { action, autorun, observable } from 'mobx'
 const isEqualReact = (a, b) => a && b
 const difference = (a, b) => a && b
 
+let options = {
+  onMount: null,
+  onUnmount: null,
+}
+
 const getNonReactElementProps = nextProps => {
   let props = {}
   for (const key of Object.keys(nextProps)) {
@@ -90,7 +95,7 @@ export const useStore = <A>(Store: new () => A, props: Object): A => {
     })
   }
 
-  // we untrack after the first render
+  // untrack after the first render
   useEffect(() => {
     return () => {
       // @ts-ignore
@@ -100,6 +105,9 @@ export const useStore = <A>(Store: new () => A, props: Object): A => {
 
   // one effect to then run and watch the keys we track from the first one
   useEffect(() => {
+    if (options.onMount) {
+      options.onMount(store)
+    }
     if (!dispose.current) {
       // @ts-ignore
       dispose.current = autorun(() => {
@@ -109,8 +117,17 @@ export const useStore = <A>(Store: new () => A, props: Object): A => {
         update(Math.random())
       })
     }
-    return () => dispose.current()
+    return () => {
+      if (options.onUnmount) {
+        options.onUnmount(store)
+      }
+      dispose.current()
+    }
   }, [])
 
   return proxyStore.current
+}
+
+export const configureUseStore = (opts: typeof options) => {
+  options = opts
 }

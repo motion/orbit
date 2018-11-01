@@ -19,7 +19,10 @@ export class ScreenManager {
     this.isStarted = true
 
     this.oracle.onAppState(state => {
-      console.log('got app state', state)
+      if (state.trayBounds) {
+        Desktop.setState({ operatingSystem: { trayBounds: state.trayBounds } })
+        return
+      }
       switch (state) {
         // clicks
         case 'TrayToggleMemory':

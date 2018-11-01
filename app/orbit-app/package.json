@@ -27,6 +27,7 @@
     "@mcro/slackdown": "^2.2.1",
     "@mcro/stores": "^2.2.1",
     "@mcro/ui": "^2.2.1",
+    "@mcro/use-store": "^2.2.1",
     "react-date-range": "1.0.0-beta",
     "react-sortable-hoc": "0.8.3",
     "remark-emoji": "2.0.1",

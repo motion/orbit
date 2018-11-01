@@ -32,19 +32,19 @@ export class OrbitStore {
   getPanes = (): Pane[] => {
     return [
       {
-        type: 'home',
-        title: 'Home',
-        icon: 'house',
-        static: true,
-      },
-      {
         type: 'search',
-        title: 'Search',
+        title: 'Home',
         icon: 'singleNeutralSearch',
         static: true,
         props: {
           preventScroll: true,
         },
+      },
+      {
+        type: 'recent',
+        title: 'Recent',
+        icon: 'menu',
+        static: true,
       },
       {
         type: 'people',

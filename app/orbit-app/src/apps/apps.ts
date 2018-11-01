@@ -1,4 +1,4 @@
-import { HomeApp } from './home/HomeApp'
+import { RecentApp } from './recent/RecentApp'
 import { ListsApp } from './lists/ListsApp'
 import { TopicsApp } from './topics/TopicsApp'
 import { PeopleApp } from './people/PeopleApp'
@@ -12,11 +12,11 @@ type App = GenericComponent<AppProps>
 type AppsIndex = { [key in AppType]: App }
 
 export const apps: AppsIndex = {
-  home: HomeApp,
+  recent: RecentApp,
   search: SearchApp,
   people: PeopleApp,
   topics: TopicsApp,
   lists: ListsApp,
 }
 
-export type AppType = 'home' | 'search' | 'people' | 'topics' | 'lists'
+export type AppType = 'recent' | 'search' | 'people' | 'topics' | 'lists'

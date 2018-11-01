@@ -18,7 +18,7 @@ const models = {
 }
 
 type Props = AppProps & {
-  store?: HomeViewStore
+  store?: RecentAppStore
 }
 
 const lipSize = 20
@@ -67,7 +67,7 @@ class VirtualCarouselRow extends React.Component<{ items: SelectionGroup[] }> {
 
 const SortableCarouselRow = SortableContainer(VirtualCarouselRow, { withRef: true })
 
-class HomeViewStore {
+class RecentAppStore {
   props: Props
   streams: { [a: string]: { values: (Bit | PersonBit)[]; name: string } } = {}
 
@@ -180,10 +180,10 @@ class HomeViewStore {
 }
 
 @attach({
-  store: HomeViewStore,
+  store: RecentAppStore,
 })
 @view
-export class HomeApp extends React.Component<Props> {
+export class RecentApp extends React.Component<Props> {
   render() {
     const { store } = this.props
     const { results } = store

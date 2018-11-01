@@ -18,8 +18,12 @@ class ActionsStore {
 
   dispatch<E extends keyof ActionEvents>(type: E, value: ActionEvents[E]) {
     for (const handler of [...this.handlers]) {
-      if (this.handlersToType.get(handler) === type) {
+      const actionType = this.handlersToType.get(handler)
+      if (actionType === type) {
         handler(value)
+      }
+      if (actionType == ALL_KEY) {
+        handler(type, value)
       }
     }
   }

@@ -13,6 +13,7 @@ export class AppReactions {
     this.setupReactions()
 
     const off = Actions.listenAll((key, value) => {
+      console.log('Actions are listening to...', key, value)
       switch (key) {
         case 'TrayToggleOrbit':
           App.setOrbitState({ docked: !App.state.orbitState.docked })

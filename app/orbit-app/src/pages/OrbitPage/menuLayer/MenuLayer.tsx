@@ -14,7 +14,12 @@ class MenuStore {
   updateTray = react(
     () => App.state.trayState,
     ({ trayEvent }) => {
-      console.log('event!', trayEvent)
+      console.log('trayEvent', trayEvent)
+      if (trayEvent === 'TrayHoverPin') {
+        this.showPin = true
+      } else {
+        this.showPin = false
+      }
     },
   )
 }
@@ -24,7 +29,7 @@ export function MenuLayer(props) {
   return (
     <FullScreen>
       <View width={100} height={100} background="rgba(255,0,0,0.5)">
-        hello {store.showPin} {JSON.stringify(store.trayBounds)}
+        hello {store.showPin ? 'show' : 'no'} {JSON.stringify(store.trayBounds)}
       </View>
     </FullScreen>
   )

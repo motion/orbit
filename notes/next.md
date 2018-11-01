@@ -1,5 +1,20 @@
 # Ora - your memory
 
+```
+t = JSON.parse(require('fs').readFileSync('/Users/nw/projects/motion/orbit/app/orbit-desktop/src/titles.json', 'utf8'))
+a = await Promise.all(t.slice(0, 10).map(async term => {
+  const results = await Root.cosal.search(term, 10)
+  const bits = (await typeorm.getRepository(BitEntity).find({ id: { $in: results.map(x => x.id) } })).map(bit => (
+    bit.data.messages ? bit.data.messages.map(m => m.text).join('...') : bit.body
+  ))
+  return {
+   term,
+   distances: results.map(x => x.distance),
+   bits,
+  }
+}))
+```
+
 ListsApp is up next:
 
 - ListIndexApp - the list manager that shows in Orbit and in hover menu

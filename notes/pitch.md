@@ -1,5 +1,21 @@
 # Orbit
 
+Small apps for you.
+
+Orbit is an app platform for people who work on computers.
+
+We unify all your cloud knowledge into a searchable tray and provide you a dock.
+
+We include some really useful small apps to start:
+
+- Recent activity
+- Easy to manage lists
+- Trending topics
+
+And we're building a way to write custom apps and deploy them into your dock.
+
+---
+
 Orbit is much more heavily invested in "up front" than most any startup, even the newest ones it competes against. This is mostly technology, we can discuss the various pieces but basically:
 
 ## Technology

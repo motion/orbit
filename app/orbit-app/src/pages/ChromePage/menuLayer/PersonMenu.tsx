@@ -2,10 +2,10 @@ import * as React from 'react'
 import { useStore } from '@mcro/use-store'
 import { react } from '@mcro/black'
 import { Desktop, App } from '@mcro/stores'
-import { View } from '@mcro/ui'
 import { MenuItem } from './MenuItem'
 import { observeMany } from '@mcro/model-bridge'
 import { PersonBitModel, PersonBit } from '@mcro/models'
+import { Menu } from './Menu'
 
 class PersonMenuStore {
   people: PersonBit[] = []
@@ -31,25 +31,10 @@ class PersonMenuStore {
 
 export function PersonMenu(props) {
   const store = useStore(PersonMenuStore, props)
-  const width = 250
+  const width = 300
+  const dockOffset = 28
   return (
-    <View
-      width={width}
-      maxHeight={300}
-      overflowX="hidden"
-      overflowY="auto"
-      background="#fff"
-      borderBottomRadius={10}
-      boxShadow={[[0, 0, 60, [0, 0, 0, 0.5]]]}
-      position="absolute"
-      top={0}
-      left={store.menuCenter - width / 2}
-      opacity={store.showMenu ? 1 : 0}
-      transform={{
-        x: store.showMenu ? 0 : -10,
-      }}
-      transition="all ease 200ms"
-    >
+    <Menu open={store.showMenu} width={width} left={store.menuCenter + dockOffset}>
       {store.people.map(person => (
         <MenuItem key={person.email}>{person.name}</MenuItem>
       ))}
@@ -59,6 +44,6 @@ export function PersonMenu(props) {
       <MenuItem icon="🙀">Lorem Ipsum</MenuItem>
       <MenuItem icon="🥶">Lorem Ipsum</MenuItem>
       <MenuItem icon="🗣">Lorem Ipsum</MenuItem>
-    </View>
+    </Menu>
   )
 }

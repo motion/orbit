@@ -5,7 +5,7 @@ import { MenuItems } from './MenuItems'
 import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
 import { AppWindows } from './AppWindows'
-import { ChromeWindow } from './ChromeWindow'
+import { devTools } from '../helpers/devTools'
 
 @provide({
   electronStore: ElectronStore,
@@ -30,11 +30,7 @@ export class ElectronRoot extends React.Component {
       return null
     }
     console.log('electron success, rendering...')
-    let devTools = null
-    if (process.env.NODE_ENV === 'development') {
-      const tools = require('@mcro/reactron/devtools')
-      devTools = [tools.mobx, tools.react]
-    }
+
     return (
       <App
         onBeforeQuit={electronStore.handleBeforeQuit}
@@ -44,7 +40,6 @@ export class ElectronRoot extends React.Component {
       >
         <MenuItems />
         <OrbitWindow />
-        <ChromeWindow />
         <AppWindows />
       </App>
     )

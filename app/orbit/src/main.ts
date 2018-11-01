@@ -26,24 +26,23 @@ export async function main() {
   // both processes now run this part to have their config setup
   setGlobalConfig(config)
 
-  // IS IN DESKTOP
-  // go off and do its thing...
-  if (process.env.IS_DESKTOP) {
+  // sub processes!
+  const { SUB_PROCESS } = process.env
+  if (SUB_PROCESS) {
     if (!config) {
-      throw new Error('Desktop didn\'t receive config!')
+      throw new Error(`No config for ${SUB_PROCESS}!`)
     }
-    // lets run desktop now
-    require('@mcro/orbit-desktop').main()
-    // dont keep running
-    return
-  } else if (process.env.IS_SYNCERS) {
-    if (!config) {
-      throw new Error('Syncers didn\'t receive config!')
+    switch (SUB_PROCESS) {
+      case 'desktop':
+        require('@mcro/orbit-desktop').main()
+        return
+      case 'syncers':
+        require('@mcro/orbit-syncers').main()
+        return
+      case 'electron-chrome':
+        require('./startElectron').startElectron()
+        return
     }
-    // lets run syncers now
-    require('@mcro/orbit-syncers').main()
-    // dont keep running
-    return
   }
 
   // setup process error watching before doing most stuff
@@ -53,6 +52,7 @@ export async function main() {
 
   // IS IN ELECTRON...
 
+  let electronChromeProcess: ChildProcess
   let desktopProcess: ChildProcess
   let syncersProcess: ChildProcess
 
@@ -68,12 +68,14 @@ export async function main() {
   // start sub-processes...
   // desktop
   desktopProcess = require('./startDesktop').startDesktop()
+  // electronChrome
+  electronChromeProcess = require('./startElectronChrome').startElectronChrome()
   // syncers
   if (!process.env.DISABLE_SYNCERS) {
     syncersProcess = require('./startSyncers').startSyncers()
   }
 
-  setupHandleExit([desktopProcess, syncersProcess])
+  setupHandleExit([desktopProcess, syncersProcess, electronChromeProcess])
 
   if (process.env.IGNORE_ELECTRON !== 'true') {
     await require('./startElectron').startElectron()

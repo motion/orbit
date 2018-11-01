@@ -4,31 +4,30 @@ import * as Path from 'path'
 
 const Config = getGlobalConfig()
 
-export function startDesktop(): ChildProcess {
+export function startElectronChrome(): ChildProcess {
   // enable remote debugging in dev
   const root = Path.join(__dirname, 'main')
   let args = [root]
   if (!Config.isProd) {
-    args = ['--inspect=9000', ...args]
+    args = ['--inspect=9007', ...args]
   }
   try {
-    console.log('Starting Desktop:', Config.paths.nodeBinary, args)
+    console.log('Starting Electron Chrome Process:', Config.paths.nodeBinary, args)
     const child = spawn(Config.paths.nodeBinary, args, {
       // detached: true,
       env: {
         // pass down process args...
         ...process.env,
-        PROCESS_NAME: 'desktop',
-        STACK_FILTER: 'orbit-desktop',
-        ELECTRON_RUN_AS_NODE: 1,
-        SUB_PROCESS: 'desktop',
+        PROCESS_NAME: 'electron-chrome',
+        STACK_FILTER: 'orbit-electron-chrome',
+        SUB_RPOCESS: 'electron-chrome',
         NODE_ENV: process.env.NODE_ENV,
         ORBIT_CONFIG: JSON.stringify(Config),
         PATH: process.env.PATH,
       },
     })
 
-    child.stdout.on('data', b => console.log('desktop:', b.toString()))
+    child.stdout.on('data', b => console.log('electron-chrome:', b.toString()))
     child.stderr.on('data', b => {
       const error = b.toString()
       // for some reason node logs into error
@@ -40,7 +39,7 @@ export function startDesktop(): ChildProcess {
         console.log('   error:', error, '\n\n\n')
         return
       }
-      if (process.env.IS_DESKTOP) {
+      if (process.env.IS_ELECTRON_CHROME) {
         console.log('error is', error)
       } else {
         console.log('CHILD ERROR', error)

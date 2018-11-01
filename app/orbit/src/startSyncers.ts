@@ -21,7 +21,7 @@ export function startSyncers(): ChildProcess {
         PROCESS_NAME: 'syncers',
         STACK_FILTER: 'orbit-syncers',
         ELECTRON_RUN_AS_NODE: 1,
-        IS_SYNCERS: true,
+        SUB_PROCESS: 'syncers',
         NODE_ENV: process.env.NODE_ENV,
         ORBIT_CONFIG: JSON.stringify(Config),
         PATH: process.env.PATH,

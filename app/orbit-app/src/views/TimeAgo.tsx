@@ -85,7 +85,6 @@ export class TimeAgo extends Component<TimeAgoProps> {
   }
 
   render() {
-    return 1232
     return this.getParsedDate()
   }
 }

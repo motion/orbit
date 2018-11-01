@@ -21,7 +21,7 @@ export function startDesktop(): ChildProcess {
         PROCESS_NAME: 'desktop',
         STACK_FILTER: 'orbit-desktop',
         ELECTRON_RUN_AS_NODE: 1,
-        IS_DESKTOP: true,
+        SUB_PROCESS: 'desktop',
         NODE_ENV: process.env.NODE_ENV,
         ORBIT_CONFIG: JSON.stringify(Config),
         PATH: process.env.PATH,
@@ -36,11 +36,11 @@ export function startDesktop(): ChildProcess {
         return
       }
       if (error.indexOf('Error') === -1) {
-        console.log('\n\n\n got an error but may not be worth reporting \n\n\n')
-        console.log('error:', error)
+        console.log('\n\n\n got an error but may not be worth reporting:')
+        console.log('   error:', error, '\n\n\n')
         return
       }
-      if (process.env.IS_DESKTOP) {
+      if (process.env.SUB_PROCESS === 'desktop') {
         console.log('error is', error)
       } else {
         console.log('CHILD ERROR', error)

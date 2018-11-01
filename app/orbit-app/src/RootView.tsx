@@ -91,7 +91,6 @@ export class RootView extends React.Component {
         </UI.Col>
       )
     }
-    console.log('RootView.render')
     const CurrentPage = router.activeView || NotFound
     return (
       <UI.ThemeProvide themes={themes}>

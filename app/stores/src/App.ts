@@ -4,9 +4,6 @@ import { AppConfig } from './AppConfig'
 
 export let App = null as AppStore
 
-// @ts-ignore
-const isBrowser = typeof window !== 'undefined'
-
 type AppState = {
   id: number
   torn: boolean
@@ -27,7 +24,6 @@ export const defaultPeekState: AppState = {
   size: [0, 0],
 }
 
-// @ts-ignore
 @store
 class AppStore {
   // TODO proxySetters should auto-type this
@@ -70,6 +66,10 @@ class AppStore {
       size: [0, 0],
       inputFocused: false,
       shortcutInputFocused: false,
+    },
+    trayState: {
+      trayEvent: '',
+      trayEventAt: 0,
     },
     appsState: [defaultPeekState],
     authState: {

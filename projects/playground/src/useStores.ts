@@ -1,8 +1,8 @@
-// @ts-ignore
-import { isValidElement, useContext, useState, useEffect } from 'react'
+import { isValidElement, useState, useEffect, useRef } from 'react'
 import { action, autorun, observable } from 'mobx'
 const isEqualReact = (a, b) => a && b
 const difference = (a, b) => a && b
+import { store as storeDecorator } from '@mcro/black'
 
 const getNonReactElementProps = nextProps => {
   let props = {}
@@ -38,65 +38,76 @@ const updateProps = (props, nextProps) => {
 }
 
 const useStoreWithReactiveProps = (Store, props) => {
-  const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
-  const storeProps = observable(
-    {
-      props: getNonReactElementProps(props),
-    },
-    { props: observable.shallow },
-  )
-  const getProps = {
-    configurable: true,
-    get: () => storeProps,
-    set() {},
+  let store = useRef(null)
+  if (!store.current) {
+    const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
+    const storeProps = observable(
+      {
+        props: getNonReactElementProps(props),
+      },
+      { props: observable.shallow },
+    )
+    const getProps = {
+      configurable: true,
+      get: () => storeProps,
+      set() {},
+    }
+    const DecoratedStore = storeDecorator(Store)
+    Object.defineProperty(DecoratedStore.prototype, 'props', getProps)
+    const storeInstance = new DecoratedStore()
+    Object.defineProperty(storeInstance, 'props', getProps)
+    storeInstance.__updateProps = updatePropsAction
+    storeInstance.__props = storeProps
+    // @ts-ignore
+    store.current = storeInstance
   }
-  Object.defineProperty(Store.prototype, 'props', getProps)
-  const store = new Store()
-  Object.defineProperty(store, 'props', getProps)
   useEffect(() => {
-    updatePropsAction(storeProps, props)
+    store.current.__updateProps(store.current.__props, props)
   })
-  return store
+  return store.current
 }
 
-export const useStore = <A>(Store: new () => A, keys: Array<keyof A>, props: Object): A => {
+export const useStore = <A>(Store: new () => A, props: Object): A => {
   const store = useStoreWithReactiveProps(Store, props)
-  const setState = useState(0)[1]
-  useEffect(() =>
-    autorun(() => {
-      for (const key of keys) {
-        store[key]
-      }
-      setState(Math.random())
-    }),
-  )
-  return store
-}
+  const proxyStore = useRef(null)
+  const hasTrackedKeys = useRef(false)
+  const dispose = useRef(null)
+  const reactiveKeys = useRef({})
+  const update = useState(0)[1]
 
-export const useParentStore = <A>(Store: new () => A, keys: Array<keyof A>): A => {
-  const store = useContext(Store)
-  const setState = useState(0)[1]
-  useEffect(() =>
-    autorun(() => {
-      for (const key of keys) {
-        store[key]
-      }
-      setState(Math.random())
-    }),
-  )
-  return store
-}
+  if (!proxyStore.current) {
+    // @ts-ignore
+    proxyStore.current = new Proxy(store, {
+      get(obj, key) {
+        if (!hasTrackedKeys.current) {
+          reactiveKeys.current[key] = true
+        }
+        return obj[key]
+      },
+    })
+  }
 
-// useStore
-// useParentStore
+  // we untrack after the first render
+  useEffect(() => {
+    return () => {
+      // @ts-ignore
+      hasTrackedKeys.current = true
+    }
+  })
 
-class MyStore {
-  state = 0
-  otherState = 1
-}
+  // one effect to then run and watch the keys we track from the first one
+  useEffect(() => {
+    if (!dispose.current) {
+      // @ts-ignore
+      dispose.current = autorun(() => {
+        for (const key in reactiveKeys.current) {
+          store[key]
+        }
+        update(Math.random())
+      })
+    }
+    return () => dispose.current()
+  }, [])
 
-function MyView(props) {
-  const { state } = useParentStore(MyStore, ['state'])
-  const { otherState } = useStore(MyStore, ['otherState'], props)
-  return `${state}${otherState}`
+  return proxyStore.current
 }

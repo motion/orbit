@@ -3,7 +3,6 @@ import { store, deep } from '@mcro/black'
 
 export let Electron = null as ElectronStore
 
-// @ts-ignore
 @store
 class ElectronStore {
   hoverState: ElectronStore['state']['hoverState']
@@ -47,7 +46,7 @@ class ElectronStore {
     },
   })
 
-  start = async options => {
+  start = async (options?) => {
     await Bridge.start(this, this.state, options)
   }
 }

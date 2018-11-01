@@ -40,7 +40,7 @@ const Pane = view(UI.View, {
   top: 0,
   right: 0,
   left: 0,
-  transition: 'all ease 100ms',
+  transition: 'all ease 70ms',
   overflowX: 'hidden',
   overflowY: 'auto',
   borderBottomRadius: BORDER_RADIUS,

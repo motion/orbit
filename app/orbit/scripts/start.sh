@@ -11,6 +11,7 @@ if [[ "$FLAGS" =~ "--ignore-syncers" ]]; then
   echo "DISABLE SYNCERS"
   export DISABLE_SYNCERS="true"
 fi
+
 if [[ "$FLAGS" =~ "--ignore-electron" ]]; then
   echo "DISABLE ELECTRON"
   export IGNORE_ELECTRON="true"

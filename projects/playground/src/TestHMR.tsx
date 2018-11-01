@@ -1,13 +1,22 @@
 import * as React from 'react'
 import { TestHMRInner } from './TestHMRSub'
+import { useStore } from '@mcro/use-store'
 
-export class TestHMR extends React.Component {
-  render() {
-    return (
-      <>
-        hello22222 1232 123 123123 123 123 123123 123 123 123
-        <TestHMRInner />
-      </>
-    )
+class MyStore {
+  otherState = 1
+  onClick = () => {
+    this.otherState++
   }
+}
+
+export function TestHMR(props) {
+  const store = useStore(MyStore, props)
+  return (
+    <>
+      Hello world
+      <TestHMRInner />
+      {store.otherState}
+      <button onClick={store.onClick} />
+    </>
+  )
 }

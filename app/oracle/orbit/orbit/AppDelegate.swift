@@ -39,6 +39,26 @@ struct WordsReply: Codable {
   let id: Int
 }
 
+extension TimeInterval {
+  func hasPassed(since: TimeInterval) -> Bool {
+    return Date().timeIntervalSinceReferenceDate - self > since
+  }
+}
+
+func throttle<T>(delay: TimeInterval, queue: DispatchQueue = .main, action: @escaping ((T) -> Void)) -> (T) -> Void {
+  var currentWorkItem: DispatchWorkItem?
+  var lastFire: TimeInterval = 0
+  return { (p1: T) in
+    guard currentWorkItem == nil else { return }
+    currentWorkItem = DispatchWorkItem {
+      action(p1)
+      lastFire = Date().timeIntervalSinceReferenceDate
+      currentWorkItem = nil
+    }
+    delay.hasPassed(since: lastFire) ? queue.async(execute: currentWorkItem!) : queue.asyncAfter(deadline: .now() + delay, execute: currentWorkItem!)
+  }
+}
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   
@@ -56,7 +76,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var lastSent = ""
   private var supportsTransparency = false
   private var accessibilityPermission = false
-  
+  private var trayLocation = "Out"
+
   let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
 
   lazy var window = NSWindow(
@@ -102,54 +123,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     return NSApplication.TerminateReply.terminateNow
   }
   
-  
-  @objc func doSomeAction(sender: NSStatusItem) {
-    let event = NSApp.currentEvent!
-    if event.type == NSEvent.EventType.rightMouseUp {
-      // Right button click
-      print("right clcik")
-    } else {
-      let location = event.locationInWindow
-      print("clicked \(event.locationInWindow.x)")
-      if (location.x < 45) {
-        self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleMemory\" }")
-      }
-      else if (location.x < 73) {
-        self.emit("{ \"action\": \"appState\", \"value\": \"TrayPin\" }")
-      }
-      else {
-        self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggleOrbit\" }")
-      }
-    }
-  }
-
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    if (shouldShowTray) {
-      statusItem.highlightMode = false
-      if let button = statusItem.button {
-        print("SETTING THE BUTTON")
-        button.image = NSImage(named:NSImage.Name("tray"))
-        button.action = #selector(self.doSomeAction(sender:))
-      }
-    }
-
-    
-//    print("spell")
-//    let words = "hello world hwo are you doing today in htis cool place."
-//    let checker = NSSpellChecker()
-//    let spellingRange = checker.checkSpelling(of: words, startingAt: 0)
-//    let guesses = checker.guesses(
-//      forWordRange: spellingRange,
-//      in: words,
-//      language: checker.language(),
-//      inSpellDocumentWithTag: 0
-//      )!
-//    print("step 2")
-//    let jsonGuesses = try JSONEncoder().encode(guesses)
-//    let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
-    
-    print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     
     if #available(OSX 10.11, *) {
       self.supportsTransparency = true
@@ -230,10 +206,79 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       window.contentView?.addSubview(blurryView)
       window.makeKeyAndOrderFront(nil)
     }
+
+    if shouldShowTray {
+      statusItem.highlightMode = false
+      if let button = statusItem.button {
+        button.image = NSImage(named:NSImage.Name("tray"))
+        button.action = #selector(self.handleTrayClick(_:))
+
+        // setup hover events
+        let throttleHoverQueue = DispatchQueue.global(qos: .background)
+        let throttledHover =  throttle(delay: 0.03, queue: throttleHoverQueue, action: self.handleTrayHover)
+        var lastTrayRect = [0, 0]
+        let rectInWindow = button.convert(button.bounds, to: nil)
+        let trayRect = (button.window?.convertToScreen(rectInWindow))!
+        
+        NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
+          let height = (NSScreen.main?.frame.height)!
+          let invertedMouseLocation = (event.cgEvent?.location)!
+          let mouseLocation = NSPoint.init(x: invertedMouseLocation.x, y: height - invertedMouseLocation.y)
+          let nextTrayRect = [Int(trayRect.minX), Int(trayRect.maxX)]
+          // send tray location...
+          if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
+            lastTrayRect = nextTrayRect
+            print("sending new tray rect \(nextTrayRect)")
+            self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": \(nextTrayRect) } }")
+          }
+          // handle events
+          self.trayLocation = self.getTrayLocation(mouseLocation: mouseLocation, trayRect: trayRect)
+          throttledHover((self.trayLocation, self.socketBridge))
+        }
+      }
+    }
     
     print("finished running app window")
   }
   
+  @objc func handleTrayClick(_ sender: Any?) {
+    if self.trayLocation != "Out" {
+      self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggle\(trayLocation)\" }")
+    }
+  }
+  
+  var lastHoverEvent = ""
+  
+  func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {
+    // avoid sending more than one out event
+    if (lastHoverEvent == "Out" && trayLocation == "Out") {
+      return
+    }
+    lastHoverEvent = trayLocation
+    socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHover\(trayLocation)\" }")
+  }
+  
+  func getTrayLocation(mouseLocation: NSPoint, trayRect: NSRect) -> String {
+    let mouseX = mouseLocation.x
+    let mouseY = mouseLocation.y
+    let trayButtonMaxX = [45, 73, 200]
+    let withinX = mouseX > trayRect.minX && mouseX < trayRect.maxX
+    let withinY = mouseY > trayRect.minY && mouseY < trayRect.maxY
+    if (withinX && withinY) {
+      let xOff = Int(trayRect.maxX - mouseX)
+      if (xOff < trayButtonMaxX[0]) {
+        return "Orbit"
+      }
+      else if (xOff < trayButtonMaxX[1]) {
+        return "Pin"
+      }
+      else {
+        return "Memory"
+      }
+    }
+    return "Out"
+  }
+
   func showWindow() {
     window.alphaValue = 1
   }

@@ -120,7 +120,7 @@ export default class DebugApps {
   }
 
   getDevUrl = ({ port, id }): Promise<DevInfo[] | null> => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async resolve => {
       const infoUrl = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
       // timeout because it doesnt resolve if the app is down
       setTimeout(() => {
@@ -140,7 +140,8 @@ export default class DebugApps {
           .sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
         resolve(sortedAnswers)
       } catch (err) {
-        reject(err)
+        // console.log('error dev url for, process down?', port, id)
+        resolve(null)
       }
     })
   }

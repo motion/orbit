@@ -24,6 +24,11 @@ export const defaultPeekState: AppState = {
   size: [0, 0],
 }
 
+const DEFAULT_MENU_STATE = {
+  width: 0,
+  left: 0,
+}
+
 @store
 class AppStore {
   // TODO proxySetters should auto-type this
@@ -70,6 +75,11 @@ class AppStore {
     trayState: {
       trayEvent: '',
       trayEventAt: 0,
+      menuState: {
+        Pin: DEFAULT_MENU_STATE,
+        Orbit: DEFAULT_MENU_STATE,
+        Memory: DEFAULT_MENU_STATE,
+      },
     },
     appsState: [defaultPeekState],
     authState: {

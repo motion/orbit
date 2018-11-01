@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { provide } from '@mcro/black'
+import { provide, view } from '@mcro/black'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { AppWrapper } from '../../views'
@@ -9,7 +9,9 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { OrbitStore } from '../../stores/OrbitStore'
 import { OrbitLayer } from './orbitLayer/OrbitLayer'
-import { MenuLayer } from './menuLayer/MenuLayer';
+import { MenuLayer } from './menuLayer/MenuLayer'
+import { Theme } from '@mcro/ui'
+import { App } from '@mcro/stores'
 
 @provide({
   settingStore: SettingStore,
@@ -25,14 +27,18 @@ import { MenuLayer } from './menuLayer/MenuLayer';
 @provide({
   selectionStore: SelectionStore,
 })
+@view
 export class OrbitPage extends React.Component {
   render() {
+    const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (
-      <AppWrapper>
-        <HighlightsLayer />
-        <MenuLayer />
-        <OrbitLayer />
-      </AppWrapper>
+      <Theme name={theme}>
+        <AppWrapper>
+          <HighlightsLayer />
+          <MenuLayer />
+          <OrbitLayer />
+        </AppWrapper>
+      </Theme>
     )
   }
 }

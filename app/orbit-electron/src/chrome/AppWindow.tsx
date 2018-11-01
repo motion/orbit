@@ -30,7 +30,7 @@ class AppWindowStore {
     apps.add(this)
     setTimeout(() => {
       this.position = [0, 0]
-    })
+    }, 100)
   }
 
   willUnmount() {
@@ -129,8 +129,8 @@ export const AppWindow = decorator(({ id, store, isPeek }: Props & { store: AppW
       transparent
       background="#00000000"
       webPreferences={WEB_PREFERENCES}
-      position={store.position}
-      size={Electron.state.screenSize}
+      position={store.position.slice()}
+      size={Electron.state.screenSize.slice()}
       onFocus={store.handleFocus}
       onClose={store.handleClose}
     />

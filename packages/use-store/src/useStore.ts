@@ -1,8 +1,8 @@
+import { automagicClass } from '@mcro/automagical'
 import { isValidElement, useState, useEffect, useRef } from 'react'
 import { action, autorun, observable } from 'mobx'
 const isEqualReact = (a, b) => a && b
 const difference = (a, b) => a && b
-import { store as storeDecorator } from '@mcro/black'
 
 const getNonReactElementProps = nextProps => {
   let props = {}
@@ -52,10 +52,13 @@ const useStoreWithReactiveProps = (Store, props) => {
       get: () => storeProps,
       set() {},
     }
-    const DecoratedStore = storeDecorator(Store)
-    Object.defineProperty(DecoratedStore.prototype, 'props', getProps)
-    const storeInstance = new DecoratedStore()
+    Store.prototype.automagic = automagicClass
+    Object.defineProperty(Store.prototype, 'props', getProps)
+    const storeInstance = new Store()
     Object.defineProperty(storeInstance, 'props', getProps)
+    storeInstance.automagic({
+      isSubscribable: x => x && typeof x.subscribe === 'function',
+    })
     storeInstance.__updateProps = updatePropsAction
     storeInstance.__props = storeProps
     // @ts-ignore

@@ -13,6 +13,7 @@
     "@mcro/build": "^2.2.1",
     "@mcro/gloss": "^2.2.1",
     "@mcro/ui": "^2.2.1",
+    "@mcro/use-store": "^2.2.1",
     "react-hot-loader": "4.3.1",
     "react": "16.7.0-alpha.0",
     "react-dom": "16.7.0-alpha.0"

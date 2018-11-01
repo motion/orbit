@@ -23,6 +23,7 @@
     { "path": "../packages/router" },
     { "path": "../packages/slackdown" },
     { "path": "../packages/build" },
-    { "path": "../packages/cosal" }
+    { "path": "../packages/cosal" },
+    { "path": "../packages/use-store" }
   ]
 }

@@ -8,20 +8,11 @@ type Props = {
   index: number | 'Orbit'
   width: number
   children: React.ReactNode
-  offsetX?: number
 }
 
 class MenuStore {
   props: Props
   isHoveringMenu = false
-
-  // see TrayActions
-  idToIndex = {
-    person: 0,
-    topic: 1,
-    list: 2,
-    orbit: 'Orbit',
-  }
 
   get trayBounds() {
     return Desktop.state.operatingSystem.trayBounds
@@ -43,7 +34,10 @@ class MenuStore {
   )
 
   get menuCenter() {
-    return (this.trayBounds[0] + this.trayBounds[1]) / 2 + (this.props.offsetX || 0)
+    const index = this.props.index
+    const baseOffset = 17
+    const offset = +index == index ? (+index + 1) * 25 + baseOffset : 120
+    return this.trayBounds[0] + offset
   }
 
   setMenuBounds = react(

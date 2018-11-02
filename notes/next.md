@@ -190,13 +190,6 @@ search:
 
 - make keyboard and everything smooth and fast with no jitter
 
-# Project Results
-
-- fine tune the plain sql searches quite a bit
-- fix various bugs in filtering and searching
-- enable fts5 and integrate with filtering system
-- get cosal better integrated and design data set to test its capabilities
-
 # next / ideas
 
 - find by type (file / link is helpful)

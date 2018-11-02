@@ -75,7 +75,8 @@ export class OrbitPaneManager extends React.Component<Props> {
             {this.props.orbitStore.activeSpace.panes.map(pane => {
               return (
                 <SubPane
-                  name={pane.type}
+                  id={pane.id}
+                  type={pane.type}
                   key={pane.type}
                   before={<SpaceNavHeight />}
                   paddingLeft={0}

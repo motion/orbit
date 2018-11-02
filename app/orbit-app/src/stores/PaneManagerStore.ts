@@ -20,7 +20,7 @@ export class PaneManagerStore {
   }
 
   get panes(): Partial<Panes>[] {
-    return [...this.props.orbitStore.activeSpace.panes.map(p => p.type), 'settings']
+    return [...this.props.orbitStore.activeSpace.panes.map(p => p.id), 'settings']
   }
 
   keyablePanes = [0, 6]
@@ -45,12 +45,6 @@ export class PaneManagerStore {
           this.setActivePane(type)
           return
         }
-      }
-      if (firstChar && this.activePane === 'home') {
-        this.setActivePane('search')
-      }
-      if (!firstChar && this.activePane === 'search') {
-        this.setActivePane('home')
       }
     },
   )
@@ -165,7 +159,7 @@ export class PaneManagerStore {
       const active = this.panes[this.paneIndex]
       ensure('changed', active !== this.activePane)
       // let activePaneFast be a frame ahead
-      await sleep(32)
+      await sleep()
       return active
     },
   )

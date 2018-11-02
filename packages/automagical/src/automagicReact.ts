@@ -404,7 +404,9 @@ export function automagicReact(
       // only log after first run, we could have a way to log this still
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog && !delayValue) {
-          logGroup(`${name.full} ${id}`, result, changed, reactValArg, globalChanged)
+          if (changed.length) {
+            logGroup(`${name.full} ${id}`, result, changed, reactValArg, globalChanged)
+          }
         }
       }
     }

@@ -34,6 +34,7 @@ class ElectronStore {
     },
     hoverState: {
       orbitHovered: false,
+      menuHovered: false,
       peekHovered: {
         0: false,
       },

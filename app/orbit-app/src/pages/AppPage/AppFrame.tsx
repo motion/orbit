@@ -6,19 +6,19 @@ import { ResizableBox } from '../../views/ResizableBox'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
-import { AppStore } from '../../pages/AppPage/AppStore'
+import { ViewStore } from '../../pages/AppPage/ViewStore'
 import { AppFrameArrow } from './AppFrameArrow'
 
 type AppFrameProps = {
   store?: AppFrameStore
-  appStore: AppStore
+  viewStore: ViewStore
   children: any
   theme?: ThemeObject
 }
 
 const SHADOW_PAD = 85
 
-const transitions = (store: AppStore) => {
+const transitions = (store: ViewStore) => {
   if (store.isTorn) return 'transform linear 10ms'
   if (store.willHide) return 'transform ease 100ms'
   if (store.willStayShown) return 'transform ease 60ms'
@@ -47,7 +47,7 @@ class AppFrameStore {
   size: [number, number] = [0, 0]
 
   updateSizeFromAppState = react(
-    () => this.props.appStore.appState.size,
+    () => this.props.viewStore.appState.size,
     size => {
       ensure('size', !!size)
       this.size = size
@@ -60,7 +60,7 @@ class AppFrameStore {
   }
 
   tearOnFinishResize = debounce(() => {
-    if (this.props.appStore.isPeek) {
+    if (this.props.viewStore.isPeek) {
       AppActions.tearPeek()
     }
   }, 100)
@@ -83,14 +83,14 @@ const PeekFrameContainer = view(UI.View, {
 
 const decorator = compose(
   attachTheme,
-  attach('appStore'),
+  attach('viewStore'),
   attach({
     store: AppFrameStore,
   }),
   view,
 )
-export const AppFrame = decorator(({ appStore, store, children, theme }: AppFrameProps) => {
-  const { isShown, willShow, willHide, state, willStayShown, framePosition } = appStore
+export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFrameProps) => {
+  const { isShown, willShow, willHide, state, willStayShown, framePosition } = viewStore
   if (!state || !state.position || !state.position.length || !state.target) {
     return null
   }
@@ -100,7 +100,7 @@ export const AppFrame = decorator(({ appStore, store, children, theme }: AppFram
   const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
   const margin = padding.map(x => -x)
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
-  const transition = transitions(appStore)
+  const transition = transitions(viewStore)
   const size = store.size
   return (
     <ResizableBox
@@ -129,7 +129,7 @@ export const AppFrame = decorator(({ appStore, store, children, theme }: AppFram
         height={size[1]}
         pointerEvents={isShown ? 'auto' : 'none'}
       >
-        <AppFrameArrow appStore={appStore} borderShadow={borderShadow} />
+        <AppFrameArrow viewStore={viewStore} borderShadow={borderShadow} />
         <UI.Col flex={1} padding={padding} margin={margin}>
           <UI.Col position="relative" flex={1}>
             <AppFrameBorder boxShadow={[borderShadow]} />

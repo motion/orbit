@@ -35,7 +35,6 @@ export function getCovariance(
   for (const { weight, doc } of docs) {
     const dc = docToCovar(doc)
     if (!dc) {
-      console.log('No document covar')
       continue
     }
     matrix = matrix.add(dc.scale(weight))

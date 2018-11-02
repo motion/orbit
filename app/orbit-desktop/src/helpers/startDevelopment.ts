@@ -3,12 +3,12 @@ export function startDevelopment(appRoot) {
   console.log(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
   require('source-map-support/register')
-  require('./installGlobals')
+  require('./installGlobals').installGlobals(appRoot)
 
   process.on('uncaughtException', err => {
     console.warn('uncaughtException', err)
   })
-  process.on('unhandledRejection', function(reason, promise) {
+  process.on('unhandledRejection', function(reason) {
     if (reason) {
       if (reason.code === 'SQLITE_BUSY') {
         console.log('sqlite busy!')

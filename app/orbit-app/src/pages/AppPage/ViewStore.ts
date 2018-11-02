@@ -6,22 +6,22 @@ import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { APP_ID } from '../../constants'
 
-type AppStoreItemState = typeof App.peekState & {
+type ViewStoreItemState = typeof App.peekState & {
   model: PersonBit | Bit | Setting
 }
 
-export type AppStoreState = {
+export type ViewStoreState = {
   willShow: boolean
   willStayShown: boolean
   willHide: boolean
   isShown: boolean
-  curState: AppStoreItemState
-  lastState: AppStoreItemState
+  curState: ViewStoreItemState
+  lastState: ViewStoreItemState
   torn: boolean
   resolvedModel: boolean
 }
 
-export class AppStore {
+export class ViewStore {
   props: {
     fixed?: boolean
   }
@@ -70,12 +70,12 @@ export class AppStore {
       const isShown = !!appConfig && (torn || App.orbitState.docked)
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
-      const curState: AppStoreItemState = {
+      const curState: ViewStoreItemState = {
         torn,
         ...lastState,
         ...rest,
       }
-      let nextState: AppStoreState = {
+      let nextState: ViewStoreState = {
         resolvedModel: false,
         torn,
         lastState,
@@ -123,7 +123,7 @@ export class AppStore {
     },
   )
 
-  state: AppStoreItemState = react(
+  state: ViewStoreItemState = react(
     () => {
       const { lastState, curState, willHide } = this.internalState
       if (willHide) {

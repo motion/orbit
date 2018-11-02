@@ -9,31 +9,20 @@ let options = {
   onUnmount: null,
 }
 
-const getNonReactElementProps = nextProps => {
-  let props = {}
-  for (const key of Object.keys(nextProps)) {
-    if (isValidElement(nextProps[key])) {
-      continue
-    }
-    props[key] = nextProps[key]
-  }
-  return props
-}
-
 const updateProps = (props, nextProps) => {
-  const nextPropsFinal = getNonReactElementProps(nextProps)
+  const nextPropsKeys = Object.keys(nextProps).filter(x => isValidElement(nextProps[x]))
   const curPropKeys = Object.keys(props)
-  const nextPropsKeys = Object.keys(nextPropsFinal)
   // change granular so reactions are granular
   for (const prop of nextPropsKeys) {
     // this is the actual comparison
     const a = props[prop]
-    const b = nextPropsFinal[prop]
+    const b = nextProps[prop]
     const isSame = a === b
     const isSameReact = isValidElement(a) && isEqualReact(a, b)
     const hasChanged = !(isSame || isSameReact)
     if (hasChanged) {
-      props[prop] = nextPropsFinal[prop]
+      console.log('has changed prop', prop, nextProps[prop])
+      props[prop] = nextProps[prop]
     }
   }
   // remove
@@ -42,35 +31,39 @@ const updateProps = (props, nextProps) => {
   }
 }
 
+const setupStoreWithReactiveProps = (Store, props) => {
+  const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
+  const storeProps = observable(
+    {
+      props: props,
+    },
+    { props: observable.shallow },
+  )
+  const getProps = {
+    configurable: true,
+    get: () => storeProps.props,
+    set() {},
+  }
+  Store.prototype.automagic = automagicClass
+  Object.defineProperty(Store.prototype, 'props', getProps)
+  const storeInstance = new Store()
+  Object.defineProperty(storeInstance, 'props', getProps)
+  storeInstance.automagic({
+    isSubscribable: x => x && typeof x.subscribe === 'function',
+  })
+  storeInstance.__updateProps = updatePropsAction
+  return storeInstance
+}
+
 const useStoreWithReactiveProps = (Store, props) => {
   let store = useRef(null)
   if (!store.current) {
-    const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
-    const storeProps = observable(
-      {
-        props: getNonReactElementProps(props),
-      },
-      { props: observable.shallow },
-    )
-    const getProps = {
-      configurable: true,
-      get: () => storeProps,
-      set() {},
-    }
-    Store.prototype.automagic = automagicClass
-    Object.defineProperty(Store.prototype, 'props', getProps)
-    const storeInstance = new Store()
-    Object.defineProperty(storeInstance, 'props', getProps)
-    storeInstance.automagic({
-      isSubscribable: x => x && typeof x.subscribe === 'function',
-    })
-    storeInstance.__updateProps = updatePropsAction
-    storeInstance.__props = storeProps
     // @ts-ignore
-    store.current = storeInstance
+    store.current = setupStoreWithReactiveProps(Store, props)
   }
   useEffect(() => {
-    store.current.__updateProps(store.current.__props, props)
+    store.current.__updateProps(store.current.props, props)
+    return () => {}
   })
   return store.current
 }

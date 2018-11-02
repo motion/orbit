@@ -3,7 +3,7 @@ import { getCovariance, Covariance } from './getCovariance'
 import { toCosal, Pair } from './toCosal'
 import { uniqBy } from 'lodash'
 import { cosineDistance } from './cosineDistance'
-import { pathExists, readJSON, writeJSON } from 'fs-extra'
+import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { vectors } from './helpers'
 
 // exports
@@ -52,13 +52,24 @@ export class Cosal {
     if (!(await pathExists(database))) {
       await this.persist()
     } else {
-      const { records, covariance } = await readJSON(database)
-      if (covariance.hash && covariance.matrix) {
-        this.vectors = records
-        this.covariance = covariance
-      } else {
-        throw new Error('Invalid database')
+      try {
+        this.readDatabase()
+      } catch (err) {
+        console.log('Error reading database, removing and resetting...')
+        await remove(this.database)
+        await this.persist()
+        console.error(err)
       }
+    }
+  }
+
+  private async readDatabase() {
+    const { records, covariance } = await readJSON(this.database)
+    if (covariance.hash && covariance.matrix) {
+      this.vectors = records
+      this.covariance = covariance
+    } else {
+      throw new Error('Invalid database')
     }
   }
 
@@ -94,7 +105,7 @@ export class Cosal {
         throw new Error(`Already have a record id ${record.id}`)
       }
       if (!cosals[index]) {
-        console.log('no cosal found for index', index)
+        console.debug('no cosal found for index', index)
         continue
       }
       this.vectors[record.id] = cosals[index].vector

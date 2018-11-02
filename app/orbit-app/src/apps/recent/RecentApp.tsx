@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { view, react, ensure, attach } from '@mcro/black'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { SelectionStore, SelectionGroup } from '../../stores/SelectionStore'
-import { SourcesStore } from '../../stores/SourcesStore'
+import { SelectionGroup } from '../../stores/SelectionStore'
 import { observeMany } from '@mcro/model-bridge'
 import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
@@ -11,6 +9,7 @@ import { pullAll, difference } from 'lodash'
 import { PersonBitModel, BitModel, SourceModel, Bit, PersonBit } from '@mcro/models'
 import { allIntegrations } from '../../integrations'
 import { OrbitCarouselSection } from '../../components/OrbitCarouselSection'
+import { AppProps } from '../types'
 
 const models = {
   'person-bit': PersonBitModel,
@@ -18,11 +17,8 @@ const models = {
   app: SourceModel,
 }
 
-type Props = {
-  paneManagerStore?: PaneManagerStore
-  selectionStore?: SelectionStore
-  sourcesStore?: SourcesStore
-  store?: HomeAppStore
+type Props = AppProps & {
+  store?: RecentAppStore
 }
 
 const lipSize = 20
@@ -71,7 +67,7 @@ class VirtualCarouselRow extends React.Component<{ items: SelectionGroup[] }> {
 
 const SortableCarouselRow = SortableContainer(VirtualCarouselRow, { withRef: true })
 
-class HomeAppStore {
+class RecentAppStore {
   props: Props
   streams: { [a: string]: { values: (Bit | PersonBit)[]; name: string } } = {}
 
@@ -86,17 +82,13 @@ class HomeAppStore {
     this._sortOrder = val
   }
 
-  get isActive() {
-    return this.props.paneManagerStore.activePane === 'home'
-  }
-
   setSelectionHandler = react(
-    () => [this.isActive, this.results],
+    () => [this.props.appStore.isActive, this.results],
     async ([isActive], { sleep }) => {
       ensure('is active', !!isActive)
       // avoid doing it to much during rapid initial updates...
       await sleep(150)
-      this.props.selectionStore.setResults(this.results)
+      this.props.appStore.setResults(this.results)
     },
   )
 
@@ -187,12 +179,11 @@ class HomeAppStore {
   }
 }
 
-@attach('paneManagerStore', 'selectionStore', 'sourcesStore')
 @attach({
-  store: HomeAppStore,
+  store: RecentAppStore,
 })
 @view
-export class HomeApp extends React.Component<Props> {
+export class RecentApp extends React.Component<Props> {
   render() {
     const { store } = this.props
     const { results } = store

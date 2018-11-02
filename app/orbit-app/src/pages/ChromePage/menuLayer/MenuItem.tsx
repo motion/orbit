@@ -5,6 +5,9 @@ import { View, Row, Text } from '@mcro/ui'
 const MenuItemFrame = view(Row, {
   padding: [5, 8],
   alignItems: 'center',
+  '&:hover': {
+    background: [255, 255, 255, 0.2],
+  },
 })
 
 export function MenuItem(props) {

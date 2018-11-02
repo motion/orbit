@@ -1,5 +1,7 @@
+import { AppType } from '../apps/apps'
+
 export type Pane = {
-  type: 'home' | 'search' | 'people' | 'topics' | 'lists'
+  type: AppType
   title: string
   icon: string
   show?: boolean
@@ -30,19 +32,19 @@ export class OrbitStore {
   getPanes = (): Pane[] => {
     return [
       {
-        type: 'home',
-        title: 'Home',
-        icon: 'house',
-        static: true,
-      },
-      {
         type: 'search',
-        title: 'Search',
+        title: 'Home',
         icon: 'singleNeutralSearch',
         static: true,
         props: {
           preventScroll: true,
         },
+      },
+      {
+        type: 'recent',
+        title: 'Recent',
+        icon: 'menu',
+        static: true,
       },
       {
         type: 'people',

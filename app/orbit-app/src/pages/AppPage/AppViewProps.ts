@@ -1,5 +1,5 @@
 import { Bit, PersonBit, Setting } from '@mcro/models'
-import { AppStore } from './AppStore'
+import { ViewStore } from './ViewStore'
 import { AppConfig } from '@mcro/stores'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SelectionStore } from '../../stores/SelectionStore'
@@ -11,7 +11,7 @@ export type AppViewProps<T extends Model> = {
   model?: T
   selectionStore: SelectionStore
   sourcesStore: SourcesStore
-  peekStore: AppStore
+  peekStore: ViewStore
   appConfig: AppConfig
   children: React.ReactNode
 }

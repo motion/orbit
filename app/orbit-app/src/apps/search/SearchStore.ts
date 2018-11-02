@@ -2,33 +2,28 @@ import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, Bit, SearchPinnedResultModel } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { SourcesStore } from '../../stores/SourcesStore'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SelectionGroup, SelectionStore } from '../../stores/SelectionStore'
-import { SettingStore } from '../../stores/SettingStore'
+import { SelectionGroup } from '../../stores/SelectionStore'
 import { uniq } from 'lodash'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { MarkType } from '../../stores/QueryStore/types'
+import { AppProps } from '../types'
 
 const TYPE_DEBOUNCE = 200
 
 type SearchState = { results: Bit[]; finished?: boolean; query: string }
 
 export class SearchStore {
-  props: {
-    paneManagerStore: PaneManagerStore
-    selectionStore: SelectionStore
-    sourcesStore: SourcesStore
-    queryStore: QueryStore
-    settingStore: SettingStore
+  props: AppProps
+
+  get activeQuery() {
+    return this.props.appStore.activeQuery
+  }
+
+  get isActive() {
+    return this.props.appStore.isActive
   }
 
   get queryFilters() {
-    return this.props.queryStore.queryFilters
-  }
-
-  get nlpStore() {
-    return this.props.queryStore.nlpStore
+    return this.props.appStore.queryFilters
   }
 
   nextRows = { startIndex: 0, endIndex: 0 }
@@ -38,25 +33,13 @@ export class SearchStore {
     () => this.selectionResults && this.isActive && Math.random(),
     () => {
       ensure('is active', this.isActive)
-      this.props.selectionStore.setResults(this.selectionResults)
+      this.props.appStore.setResults(this.selectionResults)
     },
   )
 
   get selectedItem() {
-    return this.searchState.results[this.props.selectionStore.activeIndex]
+    return this.searchState.results[this.props.appStore.activeIndex]
   }
-
-  activeQuery = react(
-    () => [this.isActive, App.state.query],
-    ([active, query]) => {
-      ensure('active', active)
-      return query
-    },
-    {
-      defaultValue: App.state.query,
-      onlyUpdateIfChanged: true,
-    },
-  )
 
   updateSearchHistoryOnSearch = react(
     () => this.activeQuery,
@@ -76,12 +59,13 @@ export class SearchStore {
     },
   )
 
-  // aggregated results for selection store
   selectionResults = react(
     () => {
+      // react to these values
       this.activeQuery
       this.quickSearchState
       this.searchState
+      // always update on change
       return Math.random()
     },
     async (_, { when, setValue }) => {
@@ -117,10 +101,6 @@ export class SearchStore {
     return this.searchState.query !== this.activeQuery
   }
 
-  get isActive() {
-    return this.props.paneManagerStore.activePane === 'search'
-  }
-
   hasQuery = () => {
     return !!this.activeQuery
   }
@@ -152,7 +132,7 @@ export class SearchStore {
         // if no query, we dont need to debounce or wait for nlp
         if (query) {
           // wait for nlp to give us results
-          await when(() => this.nlpStore.nlp.query === query)
+          await when(() => this.props.appStore.nlp.query === query)
         }
       }
 

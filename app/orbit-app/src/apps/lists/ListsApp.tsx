@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { SortableList } from '../../views/SortableList/SortableList'
 import { view, attach } from '@mcro/black'
+import { AppProps } from '../types'
 
 class ListsStore {
   state = Math.random()
@@ -47,7 +48,7 @@ class ListsStore {
   store: ListsStore,
 })
 @view
-export class ListsApp extends React.Component<{ store?: ListsStore }> {
+export class ListsApp extends React.Component<AppProps & { store?: ListsStore }> {
   render() {
     console.log('----------------', this.props.store.state)
     return (

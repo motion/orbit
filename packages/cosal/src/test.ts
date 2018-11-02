@@ -14,7 +14,6 @@ async function logSearch(cosal, str) {
   console.time('search')
   const results = await cosal.search(str, 10)
   console.timeEnd('search')
-  console.log('raw ids', results.map(x => x.id))
   console.log(str, JSON.stringify(results.map(result => db[result.id].text).slice(0, 5), null, 2))
 }
 
@@ -29,14 +28,14 @@ function insert(amt = 99, offset = 0) {
 let cosal = new Cosal()
 
 async function main() {
-  await cosal.start()
   // incrementalScanTest()
   await scanAndPersistTest()
 }
 
 export async function scanAndPersistTest() {
   await remove('/tmp/cosal.json')
-  await cosal.setDatabase('/tmp/cosal.json')
+  cosal = new Cosal({ database: '/tmp/cosal.json' })
+  await cosal.start()
   await incrementalScanTest()
   await cosal.persist()
   console.log('\n\nPERSIST AND RE_RUN\n\n')
@@ -51,9 +50,21 @@ export async function scanAndPersistTest() {
 
   // scan even more docs...
   await incrementalScanTest(500)
+
+  // final tests
+
+  await logSearch(cosal, 'protect garden')
+
+  await logSearch(cosal, 'election mess')
+
+  await logSearch(cosal, 'travel problem')
+
+  await logSearch(cosal, 'work harder')
 }
 
 export async function incrementalScanTest(offset = 0) {
+  cosal = new Cosal({ database: '/tmp/cosal.json' })
+  await cosal.start()
   // lets do 10 inserts and search each time
   for (let i = 0; i < 5; i++) {
     const next = insert(100, offset)

@@ -1,51 +1,96 @@
 # Ora - your memory
 
-## first option: realtime
+## November
 
-hover over it to see whats contextually relevant in a dropdown
+### High level
+
+Menu:
+
+Topics - trending up/down
+Lists - pin website or any part of screen
+Orbit - see context just by hovering the O
+
+App:
+
+Opening app shows context (Home) which is the same as search by default. Basically we have two ways of showing all of Orbit, in the app window or in the menu.
+
+In the menu you can do quick actions: copy link, open directly, or open the app view. In Orbit you can browse more easily and see in-app views.
+
+We could bring back holding down Option to see context.
+
+We'll get pinning working through the website crawler but later allow it to either use just "whats on screen" or "entire website" if they so choose.
+
+We'll need accessbility permissions walkthrough.
+
+Improving search in general including grouped search will be a big part of this.
+
+Goal by end of the month is to cut a release and write a new blog post about it.
+
+General idea of the blog post will be:
+
+- Were making Orbit more useful.
+- It will be like your digital brain - organizing everything you care about and letting you explore it intuitively.
+- Later we can expand to teams but we want to get the personal experience right first.
+
+### Breaking it down
+
+We'll have four weeks in November to do this:
+
+- Generally finish getting apps to show next to menu items and finishing menus
+- Generally get the right way to persist data for these apps (lists mostly)
+- Create topics app that shows some interesting topics as they move
+- Create lists app that lets you pin, search, sort lists of things
+- Get pinning mechanic down with accessibility walkthrough and crawler
+- Prepare for OCR working by doing context:
+  - Have a fake way to trigger fake context content
+  - Make the search results "Home" show that when its active
+  - Make the menu item for orbit show that when opened
+  - Make holding Option show context
+- Productionize and test, fix various new bugs
+- Write blog post
+
+### Unknowns
+
+"People" seem to get lost in this. Sure they can be contextually relevant to what you're looking at so that is definitely useful then to show them. But perhaps sharing is another thing we can start to explore. Once you're in an Orbit it seems you could very easily share things then with people.
+
+Topic modeling may take more time or be pretty intense. The menu may take a while to productionize fully.
+
+"Me" could just be a section in search/home. So the other sections are more global but personal section is just filtered to your things. Perhaps concept of Me could also include your topics and interests over time.
+
+---
 
 ```
-   [ · | 📌 | ⭕️ ]
-     ˄
-[ Contextual item ]
-[ Contextual item2 ]
-[ Contextual item3 ]
+t = JSON.parse(require('fs').readFileSync('/Users/nw/projects/motion/orbit/app/orbit-desktop/src/titles.json', 'utf8'))
+a = await Promise.all(t.slice(0, 10).map(async term => {
+  const results = await Root.cosal.search(term, 10)
+  const bits = (await typeorm.getRepository(BitEntity).find({ id: { $in: results.map(x => x.id) } })).map(bit => (
+    bit.data.messages ? bit.data.messages.map(m => m.text).join('...') : bit.body
+  ))
+  return {
+   term,
+   distances: results.map(x => x.distance),
+   bits,
+  }
+}))
 ```
 
-## second option: lists
+ListsApp is up next:
 
-hover to pin to a list
-
-```
-   [ · | 📌 | ⭕️ ]
-         ˄
-     [ List 1 ]
-     [ List 2 ]
-     [ List 3 ]
-```
-
-## third option: orbit
-
-click to toggle your orbit search
-
-```
-   [ · | 📌 | ⭕️ ]
-              ˄
-```
+- ListIndexApp - the list manager that shows in Orbit and in hover menu
+- ListApp - looking at a list, has sorting, search filtering and opening items
 
 umed:
 
-1. grouped by time search (we should chat about this)
-2. testing search with various filters, fixing performance
-3. syncing a lot of data to test and fix performance
-4. fixing syncers to avoid overfilling hard drive
-5. splitting out locations into a new model so we can use them for various things
-6. create a unified profile for the person using orbit: we should get information on their gmail, slack, github and we can figure out their emails they use across them to link them together (more on this during call)
-7. creating a link-crawler that can be hooked into any syncer with an option (so if theres a link in slack we can crawl that link using the website-crawler and add it as a bit)
-8. improving the way we handle raw vs formatted data on bits so its more consistent
-9. fixing google drive settings pane so it works and we can select folders using a searchbar
-10. search-based sync where we can index more stuff based on their searches by hitting the API for their search directly
-11. see if we can get website-crawler working using their chrome or just download puppeteer into a shared config directory we make
+1. testing search with various filters, fixing performance
+2. syncing a lot of data to test and fix performance
+3. fixing syncers to avoid overfilling hard drive
+4. splitting out locations into a new model so we can use them for various things
+5. create a unified profile for the person using orbit: we should get information on their gmail, slack, github and we can figure out their emails they use across them to link them together (more on this during call)
+6. creating a link-crawler that can be hooked into any syncer with an option (so if theres a link in slack we can crawl that link using the website-crawler and add it as a bit)
+7. improving the way we handle raw vs formatted data on bits so its more consistent
+8. fixing google drive settings pane so it works and we can select folders using a searchbar
+9. search-based sync where we can index more stuff based on their searches by hitting the API for their search directly
+10. see if we can get website-crawler working using their chrome or just download puppeteer into a shared config directory we make
 
 questions:
 

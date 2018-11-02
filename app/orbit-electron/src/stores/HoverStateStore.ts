@@ -51,14 +51,37 @@ export class HoverStateStore {
 
   handleMousePosition = async (mousePos: Point) => {
     this.lastMousePos = mousePos
+
+    // orbit hovered
     const orbitHovered = App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
+
+    // app hovered
     let peekHovered = Electron.hoverState.peekHovered
     for (const [index, app] of App.appsState.entries()) {
       const isPeek = index === 0
       const hovered = isMouseOver(app, mousePos)
       peekHovered[app.id] = isPeek ? !!app.target && hovered : hovered
     }
-    Electron.setHoverState({ peekHovered, orbitHovered })
-    return
+
+    // menu hovered
+    const ms = App.state.trayState.menuState
+    const menuHovered = Object.keys(ms).reduce((a, b) => a || ms[b].open, false)
+
+    // Electron.hoverState.menuHovered
+    // const { menuState } = App.state.trayState
+    // for (const key in menuState) {
+    //   const menu = menuState[key]
+    //   menuHovered[key] =
+    //     menu.open &&
+    //     isMouseOver(
+    //       {
+    //         position: [menu.left, 0],
+    //         size: [menu.width, menu.height],
+    //       },
+    //       mousePos,
+    //     )
+    // }
+
+    Electron.setHoverState({ peekHovered, orbitHovered, menuHovered })
   }
 }

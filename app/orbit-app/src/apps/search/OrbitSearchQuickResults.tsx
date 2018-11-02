@@ -1,14 +1,12 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
 import { SearchStore } from './SearchStore'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { SelectableCarousel } from '../../components/SelectableCarousel'
 import { Banner } from '../../views/Banner'
 import { View } from '@mcro/ui'
 
 type Props = {
   searchStore?: SearchStore
-  selectionStore: SelectionStore
 }
 
 const cardProps = {
@@ -21,7 +19,7 @@ const cardProps = {
 }
 
 const decorate = compose(
-  attach('searchStore', 'selectionStore'),
+  attach('searchStore'),
   view,
 )
 export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {

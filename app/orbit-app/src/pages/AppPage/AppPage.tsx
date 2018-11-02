@@ -3,7 +3,7 @@ import { view, provide, attach } from '@mcro/black'
 import { SourcesStore } from '../../stores/SourcesStore'
 // import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
-import { AppStore } from './AppStore'
+import { ViewStore } from './ViewStore'
 import * as UI from '@mcro/ui'
 import { AppFrame } from './AppFrame'
 import { AppBitView } from './AppBitView'
@@ -17,14 +17,14 @@ import { allIntegrations } from '../../integrations'
 
 type Props = {
   sourcesStore?: SourcesStore
-  appStore?: AppStore
+  viewStore?: ViewStore
 }
 
 @provide({
   sourcesStore: SourcesStore,
 })
 @provide({
-  appStore: AppStore,
+  viewStore: ViewStore,
 })
 export class AppPage extends React.Component<Props> {
   render() {
@@ -57,12 +57,12 @@ const HiddenControls = view({
   },
 })
 
-@attach('sourcesStore', 'appStore')
+@attach('sourcesStore', 'viewStore')
 @view
 class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitIntegration<any>['views']) => {
-    const { appStore, sourcesStore } = this.props
-    const { appConfig } = appStore.state
+    const { viewStore, sourcesStore } = this.props
+    const { appConfig } = viewStore.state
     const app = sourcesStore.allSourcesMap[appConfig.integration]
     if (!app) {
       return NullView
@@ -72,37 +72,37 @@ class AppPageContent extends React.Component<Props> {
 
   viewsByType = {
     bit: () => {
-      const { appStore } = this.props
+      const { viewStore } = this.props
       const View = this.getView('main')
       return view(props => (
         <AppBitView>
-          <View bit={appStore.state.model} appStore={appStore} {...props} />
+          <View bit={viewStore.state.model} viewStore={viewStore} {...props} />
         </AppBitView>
       ))
     },
     'person-bit': () => {
-      const { appStore } = this.props
+      const { viewStore } = this.props
       return view(props => {
-        console.log('rendeirn g person-bit', appStore)
-        if (!appStore.state.model) {
+        console.log('rendeirn g person-bit', viewStore)
+        if (!viewStore.state.model) {
           return <div>nope</div>
         }
         const View = allIntegrations.person.views.main
-        return <View model={appStore.state.model} {...props} />
+        return <View model={viewStore.state.model} {...props} />
       })
     },
     source: () => {
-      const { appStore } = this.props
+      const { viewStore } = this.props
       const View = this.getView('setting')
       return view(props => {
         return (
           <AttachAppInfoStore>
             {appInfoStore => (
               <View
-                appConfig={appStore.state.appConfig}
+                appConfig={viewStore.state.appConfig}
                 appInfoStore={appInfoStore}
-                source={appStore.state.model}
-                appStore={appStore}
+                source={viewStore.state.model}
+                viewStore={viewStore}
                 {...props}
               />
             )}
@@ -120,11 +120,11 @@ class AppPageContent extends React.Component<Props> {
   }
 
   render() {
-    const { appStore } = this.props
-    if (!appStore.state) {
+    const { viewStore } = this.props
+    if (!viewStore.state) {
       return null
     }
-    const { model, appConfig } = appStore.state
+    const { model, appConfig } = viewStore.state
     console.log('appConfig.type', appConfig.type, 'App.state.query', App.state.query)
     const getView = this.viewsByType[appConfig.type]
     if (!getView) {
@@ -141,9 +141,9 @@ class AppPageContent extends React.Component<Props> {
       <>
         <HiddenControls>
           <WindowControls
-            onClose={appStore.handleClose}
-            onMax={appStore.isTorn ? appStore.handleMaximize : null}
-            onMin={appStore.isTorn ? appStore.handleMinimize : null}
+            onClose={viewStore.handleClose}
+            onMax={viewStore.isTorn ? viewStore.handleMaximize : null}
+            onMin={viewStore.isTorn ? viewStore.handleMinimize : null}
             itemProps={{
               size: 10,
             }}

@@ -1,5 +1,4 @@
 import { app, dialog } from 'electron'
-import waitPort from 'wait-port'
 import { log } from './log'
 import { getGlobalConfig } from '@mcro/config'
 import { handleExit } from './handleExit'
@@ -10,8 +9,6 @@ export async function startElectron() {
   // this works in prod
   app.on('before-quit', handleExit)
 
-  log.info('Waiting for desktop startup to continue...')
-  await waitPort({ port: Config.ports.server })
   log.info('Found desktop, continue...')
 
   // start electron...

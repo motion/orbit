@@ -13,12 +13,26 @@ type Props = {
 
 class MenuStore {
   props: Props
+  isHoveringMenu = false
 
   get trayBounds() {
     return Desktop.state.operatingSystem.trayBounds
   }
 
-  open = react(() => App.state.trayState, state => state.trayEvent === `TrayHover${this.props.id}`)
+  isHoveringTray = react(
+    () => App.state.trayState,
+    state => state.trayEvent === `TrayHover${this.props.id}`,
+    {
+      onlyUpdateIfChanged: true,
+    },
+  )
+
+  open = react(
+    () => [this.isHoveringTray, this.isHoveringMenu],
+    ([hoveringTray, hoveringMenu]) => {
+      return hoveringTray || hoveringMenu
+    },
+  )
 
   get menuCenter() {
     return (this.trayBounds[0] + this.trayBounds[1]) / 2 + (this.props.offsetX || 0)
@@ -43,6 +57,14 @@ class MenuStore {
       })
     },
   )
+
+  handleMouseEnter = () => {
+    this.isHoveringMenu = true
+  }
+
+  handleMouseLeave = () => {
+    this.isHoveringMenu = false
+  }
 }
 
 export function Menu(props: Props) {
@@ -62,6 +84,8 @@ export function Menu(props: Props) {
       maxHeight={300}
       elevation={6}
       theme="dark"
+      onMouseEnter={store.handleMouseEnter}
+      onMouseLeave={store.handleMouseLeave}
     >
       <Col overflowX="hidden" overflowY="auto" flex={1}>
         {props.children}

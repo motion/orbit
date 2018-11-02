@@ -114,21 +114,6 @@ nate:
       - take recent 3000 bits you've produced
       - sort most salient topics to those bits and product topic list
 
-design:
-
-- topic based exploration
-- memory and pinning/adding content
-
-topics:
-
-- use cosal to filter down large wikipedia title list
-- clean up list to be somewhat interesting topics
-- build a small repl with cosal to test
-- test:
-  - get topmost topics based on given corpus
-  - then take those topics find top X documents close to them
-  - show that as a list of lists and see if it looks interesting
-
 search:
 
 - dont underestimate how far you can get by just making search great
@@ -142,58 +127,10 @@ search:
 - /filtergroups
 - query to avoid loading `data` and `body`
 - quickresults: this can avoid a call alltogether
+
   - just do it in memory!
   - basically: load all recent bits + all people in memory
     - when you type it just filters them (webworker or desktop?)
-
-this week:
-
-- fix settings panes showing
-- it should pre-search the next pane, _after_ current one finishes... :/ (idle() callback)
-- fix space creation pane
-- mock onboard: add integrations => show available orbits to join
-- animatee the orbit while searching..
-
-goals:
-
-- want to have much better step by step plan, deliverables and review of progress
-- want to have high level goals for november, december, january
-- want to have detailed goals for november fully mapped out
-
-# October
-
-Nate:
-
-- Search
-  - condensed, grouped search with far better display of each item
-  - recent items by default in search (weighted much higher)
-- Spaces
-  - Switch spaces
-
-umed:
-
-- get crawler to use chromium in electron so we can release it
-
-- beginnings of building good search
-
-  - build up dataset
-
-    - join a bunch of slack rooms publicly available
-      - https://www.google.com/search?q=public+developer+slack+rooms&oq=public+developer+slack+rooms&aqs=chrome..69i57.3105j0j1&sourceid=chrome&ie=UTF-8
-    - add as many as you possible can
-    - also just add a TON of github repos actually...
-    - lets try and get some serious size, like 5GB of data or so
-    - you can then just export your settings config and send to me so i can use them too
-
-  - build up tests
-
-    - lets make a special search-test package
-    - gather test queries
-      - scroll through certain slack rooms / github repos and try and find unique examples of queries you'd expect to find things
-      - and then basically store the ID of the bit and the query you'd like to find it
-      - build up about 50 of these across all these different integrations
-    - create a test script
-      - the script can just give us a "score" which is just how "high up" those results return for each query.
 
 - fts search
 
@@ -235,12 +172,6 @@ umed:
       - and then we run over the old items and clean them
       - this can basically be "score" based, where we come up with a scoring function that takes in recentness, interestingness-to-me, and interestingness-to-everything-in-this-space
 
-make search actually good
-
-high level:
-
-focus on what we can make really a big improvement in day to day first:
-
 # Project Fluidity
 
 - auto open peeks, better peek display, better search results display
@@ -259,46 +190,11 @@ focus on what we can make really a big improvement in day to day first:
 
 - make keyboard and everything smooth and fast with no jitter
 
-# Project Results
-
-- fine tune the plain sql searches quite a bit
-- fix various bugs in filtering and searching
-- enable fts5 and integrate with filtering system
-- get cosal better integrated and design data set to test its capabilities
-
-# Project BugBusters
-
-- lots of sync stuff, space saving, smarter sync startegies, etc
-
-## in depth...
-
-- cosal
-  - play around more with cosal, figure out if we can do any interesting relevancy
-  - put some UX together with nice peek windows to do relevancy with things
-- look into better topic based search / high level search
-
-  - generate topics in desktop - show them in quickresults?
-
-- location as a model
-  - lets us query locations for sub-searches
-
-## profiles beta:
-
-- quick actions: talk in slack, send email
-- bigger, beautiful overview design
-
 # next / ideas
 
 - find by type (file / link is helpful)
-- search results date strategy:
-  - do separators based on time periods:
-  - do by day for first week within the current month
-  - do by month after that
 - Fix empty profiles from gmail contacts import
   - Toggle select all button in table view
-- fix highlight index click interaction
 - fix integration buttons styling and going inactive after click
 - cmd+z undo in search area (needs to work with toggles...)
-- hoverGlow needs fix for x/left just like top/y
-- @mcro/color: increaseContrast, decreaseContrast
 - hmr: doesn't store.unmount stores often

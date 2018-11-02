@@ -405,7 +405,6 @@ export function automagicReact(
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog && !delayValue) {
           if (changed.length) {
-            console.log('waht changed is', changed)
             logGroup(`${name.full} ${id}`, result, changed, reactValArg, globalChanged)
           }
         }

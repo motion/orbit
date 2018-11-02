@@ -62,7 +62,6 @@ const useStoreWithReactiveProps = (Store, props) => {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
   useEffect(() => {
-    console.log('updating props for store', props)
     store.current.__updateProps(store.current.props, props)
     return () => {}
   })

@@ -1,6 +1,7 @@
 import { AppType } from '../apps/apps'
 
 export type Pane = {
+  id: string
   type: AppType
   title: string
   icon: string
@@ -32,6 +33,7 @@ export class OrbitStore {
   getPanes = (): Pane[] => {
     return [
       {
+        id: 'home',
         type: 'search',
         title: 'Home',
         icon: 'singleNeutralSearch',
@@ -40,31 +42,34 @@ export class OrbitStore {
           preventScroll: true,
         },
       },
-      {
-        type: 'recent',
-        title: 'Recent',
-        icon: 'menu',
-        static: true,
-      },
-      {
-        type: 'people',
-        title: 'People',
-        icon: 'multipleNeutral2',
-        trigger: '@',
-        static: true,
-      },
       // {
-      //   type: 'topics',
-      //   title: 'Topics',
-      //   icon: 'singleNeutralChat',
-      //   trigger: '#',
+      //   type: 'recent',
+      //   title: 'Recent',
+      //   icon: 'menu',
       //   static: true,
       // },
       {
+        id: 'topics',
+        type: 'topics',
+        title: 'Topics',
+        icon: 'singleNeutralChat',
+        trigger: '#',
+        static: true,
+      },
+      {
+        id: 'lists',
         type: 'lists',
         title: 'Lists',
         icon: 'listBullets',
         trigger: '/',
+        static: true,
+      },
+      {
+        id: 'people',
+        type: 'people',
+        title: 'People',
+        icon: 'multipleNeutral2',
+        trigger: '@',
         static: true,
       },
       // {

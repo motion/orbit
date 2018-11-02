@@ -82,7 +82,7 @@ export class OrbitPaneManager extends React.Component<Props> {
                   paddingRight={0}
                   {...pane.props}
                 >
-                  <App title={pane.title} type={pane.type} />
+                  <App id={pane.id} title={pane.title} type={pane.type} />
                 </SubPane>
               )
             })}

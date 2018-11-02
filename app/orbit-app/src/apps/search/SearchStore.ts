@@ -1,13 +1,11 @@
 import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import { SearchResultModel, Bit, SearchPinnedResultModel } from '@mcro/models'
+import { SearchResultModel, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { SelectionGroup } from '../../stores/SelectionStore'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../types'
-
-const TYPE_DEBOUNCE = 200
 
 type SearchState = { results: Bit[]; finished?: boolean; query: string }
 

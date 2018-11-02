@@ -257,7 +257,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                     fontWeight={600}
                     onClick={store.handleClickLocation}
                   >
-                    <Text ellipse color={false}>
+                    <Text ellipse ignoreColor>
                       {location}
                     </Text>
                   </RoundButtonSmall>

@@ -82,10 +82,10 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
     <>
       {bits.map(bit => {
         return (
-          <>
+          <React.Fragment key={bit.id}>
             <ChatMessages key={bit.id} bit={bit as GenericBit<'slack'>} />
             <Divider />
-          </>
+          </React.Fragment>
         )
       })}
     </>

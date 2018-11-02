@@ -36,6 +36,7 @@ export type TextProps = CSSPropertySet &
     wordBreak?: string
     theme?: Object
     children: React.ReactNode | ChildrenHlFn
+    ignoreColor?: boolean
   }
 
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
@@ -52,8 +53,8 @@ const TextBlock = view(InlineBlock, {
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ theme, color, alpha, alphaHover }) => {
-  if (color === false) {
+}).theme(({ theme, ignoreColor, color, alpha, alphaHover }) => {
+  if (ignoreColor) {
     return {
       color: 'inherit',
     }
@@ -217,6 +218,7 @@ export class Text extends React.PureComponent<TextProps> {
       measure,
       highlight,
       renderAsHtml,
+      ignoreColor,
       ...props
     } = this.props
     const { doClamp, textHeight } = this.state
@@ -300,7 +302,7 @@ export class Text extends React.PureComponent<TextProps> {
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
         forwardRef={this.getRef}
-        color={color}
+        ignoreColor={ignoreColor}
         {...ellipse && {
           flex: 1,
           display: 'flex',

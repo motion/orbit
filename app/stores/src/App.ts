@@ -78,9 +78,10 @@ class ViewStore {
       trayEvent: '',
       trayEventAt: 0,
       menuState: {
-        Pin: DEFAULT_MENU_STATE,
+        0: DEFAULT_MENU_STATE,
+        1: DEFAULT_MENU_STATE,
+        2: DEFAULT_MENU_STATE,
         Orbit: DEFAULT_MENU_STATE,
-        Memory: DEFAULT_MENU_STATE,
       },
     },
     appsState: [defaultPeekState],

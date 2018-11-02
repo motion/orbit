@@ -5,7 +5,7 @@ import { observeMany } from '@mcro/model-bridge'
 import { PersonBitModel, PersonBit } from '@mcro/models'
 import { Menu } from './Menu'
 
-class PersonMenuStore {
+class MenuPersonStore {
   people: PersonBit[] = []
 
   people$ = observeMany(PersonBitModel, {
@@ -17,10 +17,10 @@ class PersonMenuStore {
   })
 }
 
-export function PersonMenu(props) {
-  const store = useStore(PersonMenuStore, props)
+export function MenuPerson(props) {
+  const store = useStore(MenuPersonStore, props)
   return (
-    <Menu id="person" width={300} offsetX={28}>
+    <Menu index={0} width={300} offsetX={28}>
       {store.people.map(person => (
         <MenuItem key={person.email}>{person.name}</MenuItem>
       ))}

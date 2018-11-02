@@ -1,10 +1,17 @@
 import * as React from 'react'
+import { useStore } from '@mcro/use-store'
 import { MenuItem } from './MenuItem'
 import { Menu } from './Menu'
 
-export function PinMenu() {
+class MenuTopicStore {
+  title = 'Topics'
+}
+
+export function MenuTopic(props) {
+  const store = useStore(MenuTopicStore, props)
   return (
-    <Menu id="list" width={300}>
+    <Menu index={1} width={300} offsetX={28}>
+      {store.title}
       <MenuItem icon="😓">Lorem Ipsum</MenuItem>
       <MenuItem icon="🤬">Lorem Ipsum</MenuItem>
       <MenuItem icon="👺">Lorem Ipsum</MenuItem>

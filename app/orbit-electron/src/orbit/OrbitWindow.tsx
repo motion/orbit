@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { view, react, ensure, sleep, attach, provide } from '@mcro/black'
+import { view, react, ensure, attach, provide } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
-import { getScreenSize } from '../helpers/getScreenSize'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow, screen, app } from 'electron'
+import { Menu, BrowserWindow, app } from 'electron'
 import root from 'global'
 
 const log = new Logger('electron')
@@ -116,34 +115,6 @@ class OrbitWindowStore {
 })
 @view
 export class OrbitWindow extends React.Component<Props> {
-  state = {
-    show: false,
-  }
-
-  componentDidMount() {
-    this.handleReadyToShow()
-
-    screen.on('display-metrics-changed', async (_event, _display) => {
-      log.info('got display metrics changed event')
-      // give it a second to adjust
-      await sleep(100)
-      this.setScreenSize()
-      this.props.electronStore.reset()
-    })
-  }
-
-  setScreenSize = () => {
-    const screenSize = getScreenSize()
-    Electron.setState({ screenSize })
-  }
-
-  handleReadyToShow = () => {
-    this.setScreenSize()
-    this.setState({
-      show: true,
-    })
-  }
-
   render() {
     const { store, electronStore } = this.props
     const url = Config.urls.server
@@ -157,7 +128,7 @@ export class OrbitWindow extends React.Component<Props> {
         focus={false}
         position={[0, 0]}
         size={Electron.state.screenSize.slice()}
-        show={electronStore.show ? this.state.show : false}
+        show={electronStore.show ? true : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}

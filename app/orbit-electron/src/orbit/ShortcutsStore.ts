@@ -5,7 +5,6 @@ import { Logger } from '@mcro/logger'
 
 const log = new Logger('shortcutsStore')
 
-// @ts-ignore
 @store
 export class ShortcutsStore {
   onShortcutCb = _ => _

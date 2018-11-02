@@ -4,10 +4,12 @@ import * as React from 'react'
 import { MenuItems } from './MenuItems'
 import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
+import { OrbitStore } from './OrbitStore'
 import { devTools } from '../helpers/devTools'
 
 @provide({
   electronStore: ElectronStore,
+  orbitStore: OrbitStore,
 })
 @view
 export class OrbitRoot extends React.Component {

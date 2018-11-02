@@ -28,7 +28,6 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
   return withinX && withinY
 }
 
-// @ts-ignore
 @store
 export class HoverStateStore {
   lastMousePos?: Point
@@ -66,21 +65,6 @@ export class HoverStateStore {
     // menu hovered
     const ms = App.state.trayState.menuState
     const menuHovered = Object.keys(ms).reduce((a, b) => a || ms[b].open, false)
-
-    // Electron.hoverState.menuHovered
-    // const { menuState } = App.state.trayState
-    // for (const key in menuState) {
-    //   const menu = menuState[key]
-    //   menuHovered[key] =
-    //     menu.open &&
-    //     isMouseOver(
-    //       {
-    //         position: [menu.left, 0],
-    //         size: [menu.width, menu.height],
-    //       },
-    //       mousePos,
-    //     )
-    // }
 
     Electron.setHoverState({ peekHovered, orbitHovered, menuHovered })
   }

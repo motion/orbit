@@ -3,7 +3,7 @@ import { App, Electron } from '@mcro/stores'
 import { QueryStore } from './QueryStore/QueryStore'
 import { AppActions } from '../actions/AppActions'
 import { hoverSettler } from '../helpers'
-import { ResolvableModel } from '../integrations/types'
+import { SelectionGroup } from '../apps/SelectionResults'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 const resultsKey = (x: SelectionGroup[]) => x.map(y => y.ids.join('')).join('')
@@ -19,16 +19,6 @@ export type MovesMap = {
   id: number
   shouldAutoSelect?: boolean
   moves?: Direction[]
-}
-
-export type SelectionGroup = {
-  name?: string
-  shouldAutoSelect?: boolean
-  ids: number[]
-  items?: ResolvableModel[] // optionally store full items...
-  type: 'row' | 'column'
-  startIndex?: number
-  [key: string]: any
 }
 
 // selection store
@@ -69,24 +59,6 @@ export class SelectionStore {
   get hasActiveIndex() {
     return this.activeIndex > -1
   }
-
-  // autoSelectFirstItemOnSearch = react(
-  //   () => this.movesMap && App.state.query && Math.random(),
-  //   async (_, { sleep }) => {
-  //     ensure('query', !!App.state.query)
-  //     const hasResults = this.movesMap && !!this.movesMap.length
-  //     // select first item on search
-  //     if (hasResults) {
-  //       ensure('results should auto select', this.movesMap[0].shouldAutoSelect)
-  //       // dont be too too aggressive with the popup
-  //       await sleep(200)
-  //       console.log('selecting first result automatically', this.movesMap)
-  //       this.activeIndex = 0
-  //     } else {
-  //       this.clearSelected()
-  //     }
-  //   },
-  // )
 
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,

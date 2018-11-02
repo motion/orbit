@@ -2,10 +2,9 @@ import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { SelectionGroup } from '../../stores/SelectionStore'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
-import { AppProps } from '../types'
+import { AppProps } from '../AppProps'
 
 type SearchState = { results: Bit[]; finished?: boolean; query: string }
 
@@ -26,14 +25,6 @@ export class SearchStore {
 
   nextRows = { startIndex: 0, endIndex: 0 }
   curFindOptions = null
-
-  setSelectionHandler = react(
-    () => this.selectionResults && this.isActive && Math.random(),
-    () => {
-      ensure('is active', this.isActive)
-      this.props.appStore.setResults(this.selectionResults)
-    },
-  )
 
   get selectedItem() {
     return this.searchState.results[this.props.appStore.activeIndex]
@@ -57,40 +48,16 @@ export class SearchStore {
     },
   )
 
-  selectionResults = react(
+  setSelection = react(
+    () => this.searchState && Math.random(),
     () => {
-      // react to these values
-      this.activeQuery
-      // this.quickSearchState
-      this.searchState
-      // always update on change
-      return Math.random()
-    },
-    async (_, { when }) => {
-      // dont update selection results until necessary
-      await when(() => this.isActive)
-      const { activeQuery, searchState } = this
-      // two stage so we do quick search faster
-      // await when(() => activeQuery === quickSearchState.query)
-      // let res = []
-      // if (quickSearchState.results.length) {
-      //   res = [
-      //     {
-      //       type: 'row',
-      //       // shouldAutoSelect: true,
-      //       ids: quickSearchState.results.map(x => x.id),
-      //     } as SelectionGroup,
-      //   ]
-      //   setValue(res)
-      // }
-      await when(() => activeQuery === searchState.query)
-      return [
+      this.props.setResults([
         {
           type: 'column',
           // shouldAutoSelect: true,
-          ids: searchState.results.map(x => x.id),
-        } as SelectionGroup,
-      ]
+          ids: this.searchState.results.map(x => x.id),
+        },
+      ])
     },
   )
 
@@ -220,18 +187,7 @@ export class SearchStore {
 
   get quickResultsOffset() {
     return 0
-    // return this.quickSearchState.results.length
   }
-
-  // searchResultsLength = react(
-  //   () => this.searchState.results.length + this.quickSearchState.results.length,
-  //   _ => _,
-  //   {
-  //     defaultValue: 0,
-  //   },
-  // )
-
-  // hasSearchResults = react(() => !!this.searchResultsLength, _ => _, { defaultValue: false })
 
   // todo
   remoteRowCount = 1000
@@ -239,18 +195,4 @@ export class SearchStore {
   loadMore = ({ startIndex, stopIndex }) => {
     this.nextRows = { startIndex, endIndex: stopIndex }
   }
-
-  // quickSearchState = react(
-  //   () => this.activeQuery,
-  //   async (query, { sleep }) => {
-  //     await sleep(TYPE_DEBOUNCE * 0.5)
-  //     return {
-  //       query,
-  //       results: await loadMany(SearchPinnedResultModel, { args: { query } }),
-  //     }
-  //   },
-  //   {
-  //     defaultValue: { query: App.state.query, results: [] },
-  //   },
-  // )
 }

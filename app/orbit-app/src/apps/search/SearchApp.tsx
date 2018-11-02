@@ -6,7 +6,7 @@ import { StaticContainer } from '../../views/StaticContainer'
 // import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
 import { OrbitSearchNav } from './OrbitSearchNav'
-import { AppProps } from '../types'
+import { AppProps } from '../AppProps'
 
 type Props = AppProps & {
   searchStore?: SearchStore

@@ -35,6 +35,7 @@ export class App extends React.Component<Props> {
         appStore={appStore}
         sourcesStore={sourcesStore}
         settingStore={settingStore}
+        setResults={appStore.setResults}
         {...this.props}
       />
     )

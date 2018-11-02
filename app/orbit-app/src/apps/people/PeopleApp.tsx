@@ -1,14 +1,11 @@
 import * as React from 'react'
-import { App } from '@mcro/stores'
-import { view, react, ensure, attach } from '@mcro/black'
+import { view, react, attach } from '@mcro/black'
 import { compose } from '@mcro/helpers'
 import { observeMany } from '@mcro/model-bridge'
 import { OrbitCard } from '../../views/OrbitCard'
 import { SmallVerticalSpace } from '../../views'
-import * as Helpers from '../../helpers'
 import { Grid } from '../../views/Grid'
 import { sortBy } from 'lodash'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { PersonBitModel, PersonBit } from '@mcro/models'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { NoResultsDialog } from '../../components/NoResultsDialog'
@@ -16,15 +13,13 @@ import { GridTitle } from '../../views/GridTitle'
 import { List } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { View } from '@mcro/ui'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { AppProps } from '../AppProps'
+import { fuzzyQueryFilter } from '../../helpers'
 
 const height = 56
 
-type Props = {
+type Props = AppProps & {
   store?: PeopleStore
-  paneManagerStore: PaneManagerStore
-  selectionStore: SelectionStore
-  name: string
 }
 
 type ResultSection = { title: string; results: PersonBit[]; height: number }
@@ -43,49 +38,28 @@ class PeopleStore {
   }
 
   get isActive() {
-    return this.props.paneManagerStore.activePane === 'people'
+    return this.props.appStore.isActive
   }
 
-  setSelectionHandler = react(
-    () => [this.isActive, this.results],
-    ([isActive]) => {
-      ensure('is active', isActive)
-      this.props.selectionStore.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
-    },
-  )
-
-  queryWhenActive = react(
-    () => App.state.query,
-    (query, { state }) => {
-      if (state.hasResolvedOnce) {
-        ensure('is active and resolved once', this.isActive)
-      }
-      return query
-    },
-    {
-      defaultValue: '',
-    },
-  )
-
   get peopleQuery() {
-    const query = this.queryWhenActive
+    const query = this.props.appStore.activeQuery
     const prefix = query[0] === '@'
     return query.slice(prefix ? 1 : 0)
   }
 
-  results: PersonBit[] = react(
-    () => [this.peopleQuery, this.allPeople],
-    ([query, people]) => {
-      if (!query) {
-        return people
-      }
-      console.time('filtering')
-      const filtered = Helpers.fuzzyQueryFilter(query, people, {
-        key: 'name',
-      })
-      console.timeEnd('filtering')
-      return filtered
+  setSelectionResults = react(
+    () => this.results && Math.random(),
+    () => {
+      this.props.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
     },
+  )
+
+  results: PersonBit[] = react(
+    () => this.peopleQuery && this.allPeople && Math.random(),
+    () =>
+      fuzzyQueryFilter(this.peopleQuery, this.allPeople, {
+        key: 'name',
+      }),
     { defaultValue: [] },
   )
 

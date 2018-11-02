@@ -4,7 +4,7 @@ import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/Hig
 import { View, Row, Text } from '@mcro/ui'
 import { Section } from '../../views/Section'
 import { Icon } from '../../views/Icon'
-import { AppProps } from '../types'
+import { AppProps } from '../AppProps'
 
 const icons = {
   0: ['neutral', 'rgba(255,255,255,0.25)'],

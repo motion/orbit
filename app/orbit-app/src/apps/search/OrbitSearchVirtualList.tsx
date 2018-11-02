@@ -20,6 +20,7 @@ import { OrbitItemSingleton } from '../../views/OrbitItemStore'
 import { Banner } from '../../views/Banner'
 import { SubPaneStore } from '../../components/SubPaneStore'
 import { renderHighlightedText } from '../../views/SortableList/renderHighlightedText'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
 type Props = {
   searchStore?: SearchStore
@@ -103,6 +104,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   private cache = new CellMeasurerCache({
     defaultHeight: 60,
     fixedWidth: true,
+    defaultWidth: ORBIT_WIDTH,
   })
 
   private resizeOnChange = reaction(
@@ -186,7 +188,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
         columnIndex={0}
         parent={parent}
         rowIndex={index}
-        width={this.cache}
       >
         <div style={style}>
           <ListItem

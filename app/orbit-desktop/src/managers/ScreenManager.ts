@@ -19,12 +19,12 @@ export class ScreenManager {
     this.isStarted = true
 
     this.oracle.onAppState(state => {
-      if (state.trayBounds) {
-        Desktop.setState({ operatingSystem: { trayBounds: state.trayBounds } })
-        return
-      }
       if (typeof state === 'string' && /^Tray/.test(state)) {
         Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
+        return
+      }
+      if (state.trayBounds) {
+        Desktop.setState({ operatingSystem: { trayBounds: state.trayBounds } })
         return
       }
     })

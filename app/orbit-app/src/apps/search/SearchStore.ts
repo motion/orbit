@@ -63,31 +63,30 @@ export class SearchStore {
     () => {
       // react to these values
       this.activeQuery
-      this.quickSearchState
+      // this.quickSearchState
       this.searchState
       // always update on change
       return Math.random()
     },
-    async (_, { when, setValue }) => {
+    async (_, { when }) => {
       // dont update selection results until necessary
       await when(() => this.isActive)
-      const { activeQuery, quickSearchState, searchState } = this
+      const { activeQuery, searchState } = this
       // two stage so we do quick search faster
-      await when(() => activeQuery === quickSearchState.query)
-      let res = []
-      if (quickSearchState.results.length) {
-        res = [
-          {
-            type: 'row',
-            // shouldAutoSelect: true,
-            ids: quickSearchState.results.map(x => x.id),
-          } as SelectionGroup,
-        ]
-        setValue(res)
-      }
+      // await when(() => activeQuery === quickSearchState.query)
+      // let res = []
+      // if (quickSearchState.results.length) {
+      //   res = [
+      //     {
+      //       type: 'row',
+      //       // shouldAutoSelect: true,
+      //       ids: quickSearchState.results.map(x => x.id),
+      //     } as SelectionGroup,
+      //   ]
+      //   setValue(res)
+      // }
       await when(() => activeQuery === searchState.query)
       return [
-        ...res,
         {
           type: 'column',
           // shouldAutoSelect: true,
@@ -117,7 +116,6 @@ export class SearchStore {
     ],
     async (_, { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
       const query = App.state.query
-      console.log('SEARCH STATE REACT', this.isActive, query)
 
       // if not on this pane, delay it a bit
       if (!this.isActive) {
@@ -222,15 +220,20 @@ export class SearchStore {
     },
   )
 
-  searchResultsLength = react(
-    () => this.searchState.results.length + this.quickSearchState.results.length,
-    _ => _,
-    {
-      defaultValue: 0,
-    },
-  )
+  get quickResultsOffset() {
+    return 0
+    // return this.quickSearchState.results.length
+  }
 
-  hasSearchResults = react(() => !!this.searchResultsLength, _ => _, { defaultValue: false })
+  // searchResultsLength = react(
+  //   () => this.searchState.results.length + this.quickSearchState.results.length,
+  //   _ => _,
+  //   {
+  //     defaultValue: 0,
+  //   },
+  // )
+
+  // hasSearchResults = react(() => !!this.searchResultsLength, _ => _, { defaultValue: false })
 
   // todo
   remoteRowCount = 1000
@@ -239,17 +242,17 @@ export class SearchStore {
     this.nextRows = { startIndex, endIndex: stopIndex }
   }
 
-  quickSearchState = react(
-    () => this.activeQuery,
-    async (query, { sleep }) => {
-      await sleep(TYPE_DEBOUNCE * 0.5)
-      return {
-        query,
-        results: await loadMany(SearchPinnedResultModel, { args: { query } }),
-      }
-    },
-    {
-      defaultValue: { query: App.state.query, results: [] },
-    },
-  )
+  // quickSearchState = react(
+  //   () => this.activeQuery,
+  //   async (query, { sleep }) => {
+  //     await sleep(TYPE_DEBOUNCE * 0.5)
+  //     return {
+  //       query,
+  //       results: await loadMany(SearchPinnedResultModel, { args: { query } }),
+  //     }
+  //   },
+  //   {
+  //     defaultValue: { query: App.state.query, results: [] },
+  //   },
+  // )
 }

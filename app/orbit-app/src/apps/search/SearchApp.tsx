@@ -42,7 +42,7 @@ export class SearchApp extends React.Component<Props> {
 const SearchAppFrame = view(({ searchStore }: Props) => {
   return (
     <>
-      <OrbitSearchQuickResults />
+      {/* <OrbitSearchQuickResults /> */}
       <OrbitSearchResultsFrame
         style={{
           opacity: searchStore.isChanging ? 0.7 : 1,

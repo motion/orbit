@@ -80,7 +80,7 @@ const FirstItems = view(({ items, searchStore }) => {
         <ListItem
           key={item.id}
           model={item}
-          index={index + searchStore.quickSearchState.results.length}
+          index={index + searchStore.quickResultsOffset}
           ignoreSelection
         />
       ))}
@@ -160,7 +160,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   }
 
   private get offset() {
-    return this.props.searchStore.quickSearchState.results.length
+    return this.props.searchStore.quickResultsOffset
   }
 
   private measure = debounce(() => {

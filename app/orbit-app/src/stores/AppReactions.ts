@@ -17,8 +17,9 @@ export class AppReactions {
         case 'TrayToggleOrbit':
           App.setOrbitState({ docked: !App.state.orbitState.docked })
           break
-        case 'TrayHoverMemory':
-        case 'TrayHoverPin':
+        case 'TrayHover0':
+        case 'TrayHover1':
+        case 'TrayHover2':
         case 'TrayHoverOrbit':
         case 'TrayHoverOut':
           App.setState({

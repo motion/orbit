@@ -1,9 +1,11 @@
 export type TrayActions = {
-  TrayToggleMemory: number
-  TrayTogglePin: number
+  TrayToggle0: number
+  TrayToggle1: number
+  TrayToggle2: number
   TrayToggleOrbit: number
-  TrayHoverMemory: number
-  TrayHoverPin: number
+  TrayHover0: number
+  TrayHover1: number
+  TrayHover2: number
   TrayHoverOrbit: number
   TrayHoverOut: number
 }

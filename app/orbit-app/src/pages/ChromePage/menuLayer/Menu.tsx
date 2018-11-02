@@ -5,7 +5,7 @@ import { react } from '@mcro/black'
 import { Desktop, App } from '@mcro/stores'
 
 type Props = {
-  id: 'Pin' | 'Orbit' | 'Memory'
+  id: 'person' | 'topic' | 'list' | 'orbit'
   width: number
   children: React.ReactNode
   offsetX?: number
@@ -15,13 +15,21 @@ class MenuStore {
   props: Props
   isHoveringMenu = false
 
+  // see TrayActions
+  idToIndex = {
+    person: 0,
+    topic: 1,
+    list: 2,
+    orbit: 'Orbit',
+  }
+
   get trayBounds() {
     return Desktop.state.operatingSystem.trayBounds
   }
 
   isHoveringTray = react(
     () => App.state.trayState,
-    state => state.trayEvent === `TrayHover${this.props.id}`,
+    state => state.trayEvent === `TrayHover${this.idToIndex[this.props.id]}`,
     {
       onlyUpdateIfChanged: true,
     },

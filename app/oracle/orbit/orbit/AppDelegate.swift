@@ -251,29 +251,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {
     // avoid sending more than one out event
-    if (lastHoverEvent == "Out" && trayLocation == "Out") {
+    if (lastHoverEvent == trayLocation) {
       return
     }
     lastHoverEvent = trayLocation
+    print("hover \(trayLocation)")
     socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHover\(trayLocation)\" }")
   }
   
   func getTrayLocation(mouseLocation: NSPoint, trayRect: NSRect) -> String {
     let mouseX = mouseLocation.x
     let mouseY = mouseLocation.y
-    let trayButtonMaxX = [45, 73, 200]
+    let trayButtonMaxX = [40, 65, 95, 125]
     let withinX = mouseX > trayRect.minX && mouseX < trayRect.maxX
     let withinY = mouseY > trayRect.minY && mouseY < trayRect.maxY
     if (withinX && withinY) {
       let xOff = Int(trayRect.maxX - mouseX)
+//      print("xoff \(xOff)")
       if (xOff < trayButtonMaxX[0]) {
         return "Orbit"
       }
       else if (xOff < trayButtonMaxX[1]) {
-        return "Pin"
+        return "2"
+      }
+      else if (xOff < trayButtonMaxX[2]) {
+        return "1"
       }
       else {
-        return "Memory"
+        return "0"
       }
     }
     return "Out"

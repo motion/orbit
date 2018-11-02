@@ -23,18 +23,9 @@ export class ScreenManager {
         Desktop.setState({ operatingSystem: { trayBounds: state.trayBounds } })
         return
       }
-      switch (state) {
-        // clicks
-        case 'TrayToggleMemory':
-        case 'TrayPin':
-        case 'TrayToggleOrbit':
-        // hovers
-        case 'TrayHoverOrbit':
-        case 'TrayHoverPin':
-        case 'TrayHoverMemory':
-        // mouseleave
-        case 'TrayHoverOut':
-          Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
+      if (typeof state === 'string' && /^Tray/.test(state)) {
+        Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
+        return
       }
     })
 

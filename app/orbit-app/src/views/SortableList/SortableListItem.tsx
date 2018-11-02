@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { OrbitListItem } from '../OrbitListItem'
 import { handleClickLocation } from '../../helpers/handleClickLocation'
-import { renderListItemChildren } from './renderListItemChildren'
 import { Bit } from '@mcro/models'
 import { SortableElement } from 'react-sortable-hoc'
+import { renderHighlightedText } from './renderHighlightedText'
 
 type ListItemProps = {
   model: Bit
@@ -33,14 +33,13 @@ export class ListItem extends React.PureComponent<ListItemProps> {
         onClickLocation={handleClickLocation}
         overflow="hidden"
         extraProps={{
-          minimal: true,
+          condensed: true,
           preventSelect: true,
         }}
+        renderText={renderHighlightedText}
         ignoreSelection={ignoreSelection}
         {...props}
-      >
-        {renderListItemChildren}
-      </OrbitListItem>
+      />
     )
   }
 }

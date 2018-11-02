@@ -145,9 +145,7 @@ export class AppTopicExplorer extends React.Component<Props & { store?: AppTopic
                 theme={{
                   backgroundHover: 'transparent',
                 }}
-              >
-                {({ content }) => content}
-              </OrbitListItem>
+              />
             ))}
           </View>
         </Col>

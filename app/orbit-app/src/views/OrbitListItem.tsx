@@ -127,15 +127,23 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     padding: [10, 11],
   }
 
-  getInner = (item: Partial<NormalizedItem>) => {
-    const { createdAt, icon, location, people, preview, subtitle, title, updatedAt } = item
+  getInner = (normalizedItem: Partial<NormalizedItem>) => {
+    const {
+      createdAt,
+      icon,
+      location,
+      people,
+      preview,
+      subtitle,
+      title,
+      updatedAt,
+    } = normalizedItem
     const {
       afterTitle,
       borderRadius,
       cardProps,
       children,
       disableShadow,
-      hide,
       hoverToSelect,
       iconProps,
       inactive,
@@ -150,17 +158,21 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       searchTerm,
       onClickLocation,
       model,
+      renderText,
       ...props
     } = this.props
     const { isSelected } = store
     let ItemView
     if (!this.props.direct) {
       ItemView = this.props.sourcesStore.getView(
-        item.type === 'bit' ? item.integration : 'person',
+        normalizedItem.type === 'bit' ? normalizedItem.integration : 'person',
         'item',
       )
     }
-    const childrenFunction = typeof this.props.children === 'function'
+    const hide = {
+      ...this.props.hide,
+      ...(ItemView && ItemView.itemProps.hide),
+    }
     const showChildren = !(hide && hide.body)
     const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
     const showDate = !!createdAt && !(hide && hide.date)
@@ -309,17 +321,17 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
               )}
             </Preview>
           )}
-          {showChildren && !childrenFunction && children}
-          {!!ItemView &&
-            childrenFunction &&
-            showChildren && (
+          {showChildren && !ItemView && children}
+          {showChildren &&
+            !!ItemView && (
               <ItemView
                 model={this.props.model}
                 bit={this.props.model}
                 searchTerm={this.props.searchTerm}
                 shownLimit={10}
-                renderChildren={childrenFunction}
+                renderText={renderText}
                 extraProps={this.props.extraProps}
+                normalizedItem={normalizedItem}
                 {...ItemView.itemProps}
               />
             )}

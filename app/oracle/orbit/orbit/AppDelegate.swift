@@ -220,6 +220,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let rectInWindow = button.convert(button.bounds, to: nil)
         let trayRect = (button.window?.convertToScreen(rectInWindow))!
         
+        Async.background(after: 2, {
+          self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": \(trayRect) } }")
+        })
+        
         NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
           let height = (NSScreen.main?.frame.height)!
           let invertedMouseLocation = (event.cgEvent?.location)!

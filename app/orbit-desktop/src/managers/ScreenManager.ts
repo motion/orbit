@@ -19,22 +19,13 @@ export class ScreenManager {
     this.isStarted = true
 
     this.oracle.onAppState(state => {
+      if (typeof state === 'string' && /^Tray/.test(state)) {
+        Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
+        return
+      }
       if (state.trayBounds) {
         Desktop.setState({ operatingSystem: { trayBounds: state.trayBounds } })
         return
-      }
-      switch (state) {
-        // clicks
-        case 'TrayToggleMemory':
-        case 'TrayPin':
-        case 'TrayToggleOrbit':
-        // hovers
-        case 'TrayHoverOrbit':
-        case 'TrayHoverPin':
-        case 'TrayHoverMemory':
-        // mouseleave
-        case 'TrayHoverOut':
-          Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
       }
     })
 

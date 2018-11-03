@@ -9,6 +9,8 @@ import { SourcesStore } from '../stores/SourcesStore'
 import { CSSPropertySetStrict } from '../../../../packages/css/_/cssPropertySet'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 
+export type ItemRenderText = ((text: string) => JSX.Element)
+
 export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
     // whether to avoid model resolving and just use props
@@ -43,9 +45,8 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     pane?: string
     subPane?: string
     model?: T
-    children?:
-      | ((normalizedItem: NormalizedItem, model?: T, index?: number) => JSX.Element)
-      | React.ReactNode
+    renderText?: ItemRenderText
+    children?: React.ReactNode
     onClick?: Function
     onSelect?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
     borderRadius?: number

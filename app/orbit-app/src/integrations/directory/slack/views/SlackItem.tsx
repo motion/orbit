@@ -16,16 +16,23 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
 }
 
 export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
-  const { bit, searchTerm, shownLimit, extraProps, hide } = props
+  const { bit, searchTerm, shownLimit, extraProps, renderText, hide } = props
   const { data, people } = bit
   if (!data || !data.messages) {
     console.log('no messages...', bit)
     return null
   }
   const messages = getMessages(data.messages, { searchTerm, shownLimit })
-  if (extraProps && extraProps.minimal) {
-    return <HighlightText>{messages.map(message => message.text).join(' ')}</HighlightText>
+
+  // one line view
+  if (extraProps && extraProps.oneLine) {
+    const text = messages.map(message => message.text).join(' ')
+    if (renderText) {
+      return renderText(text)
+    }
+    return <HighlightText>{text}</HighlightText>
   }
+
   return messages.map((message, index) => {
     for (let person of people || []) {
       message.text = message.text.replace(
@@ -41,6 +48,7 @@ export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
         previousMessage={data.messages[index - 1]}
         hide={hide}
         extraProps={extraProps}
+        renderText={renderText}
       />
     )
   })

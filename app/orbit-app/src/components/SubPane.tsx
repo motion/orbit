@@ -7,8 +7,11 @@ import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { BORDER_RADIUS } from '../constants'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
+import { AppType } from '../apps/apps'
 
 export type SubPaneProps = CSSPropertySet & {
+  id: string
+  type?: AppType
   preventScroll?: boolean
   store?: SubPaneStore
   style?: Object

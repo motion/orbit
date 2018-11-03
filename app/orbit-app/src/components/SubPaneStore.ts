@@ -27,7 +27,7 @@ export class SubPaneStore {
   }
 
   isLeft() {
-    const thisIndex = this.props.paneManagerStore.indexOfPane(this.props.name)
+    const thisIndex = this.props.paneManagerStore.indexOfPane(this.props.id)
     return thisIndex < this.props.paneManagerStore.paneIndex
   }
 
@@ -37,9 +37,9 @@ export class SubPaneStore {
 
   positionState = react(
     () => {
-      const { extraCondition, name, paneManagerStore } = this.props
+      const { extraCondition, id, paneManagerStore } = this.props
       const isActive =
-        name === paneManagerStore.activePane && (extraCondition ? extraCondition() : true)
+        id === paneManagerStore.activePane && (extraCondition ? extraCondition() : true)
       return {
         isActive,
         isLeft: this.isLeft(),

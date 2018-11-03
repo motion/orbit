@@ -263,12 +263,14 @@ export class PersonApp extends React.Component<
                     margin={0}
                     padding={15}
                     isExpanded
+                    extraProps={{
+                      condensed: true,
+                      oneLine: true,
+                    }}
                     theme={{
                       backgroundHover: 'transparent',
                     }}
-                  >
-                    {({ content }) => content}
-                  </OrbitListItem>
+                  />
                 )
               })}
             </Section>

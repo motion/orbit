@@ -6,6 +6,7 @@ import { ViewStore } from '../pages/AppPage/ViewStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../components/AppInfoStore'
+import { ItemRenderText } from '../views/OrbitItemProps'
 
 type AppTypeToModelType = {
   slack: Bit
@@ -16,6 +17,7 @@ type AppTypeToModelType = {
   website: Bit
   drive: Bit
   person: PersonBit
+  pinned: Bit
 }
 
 export type ItemType = IntegrationType | 'person'
@@ -27,6 +29,7 @@ export type OrbitItemProps<T extends ResolvableModel> = {
   isExpanded?: boolean
   shownLimit?: number
   searchTerm?: string
+  renderText?: ItemRenderText
   hide?: {
     people?: boolean
     title?: boolean
@@ -39,7 +42,8 @@ export type OrbitItemProps<T extends ResolvableModel> = {
   }
   extraProps?: {
     beforeTitle?: React.ReactNode
-    minimal?: boolean
+    oneLine?: boolean
+    condensed?: boolean
     preventSelect?: boolean
   }
 }

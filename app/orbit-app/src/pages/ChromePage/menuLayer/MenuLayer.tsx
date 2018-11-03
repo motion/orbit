@@ -1,14 +1,16 @@
 import * as React from 'react'
 import { FullScreen, Theme } from '@mcro/ui'
-import { PinMenu } from './PinMenu'
-import { PersonMenu } from './PersonMenu'
+import { MenuPerson } from './MenuPerson'
+import { MenuTopic } from './MenuTopic'
+import { MenuList } from './MenuList'
 
 export function MenuLayer() {
   return (
     <Theme name="dark">
       <FullScreen>
-        <PinMenu />
-        <PersonMenu />
+        <MenuPerson />
+        <MenuTopic />
+        <MenuList />
       </FullScreen>
     </Theme>
   )

@@ -48,7 +48,7 @@ const Interactive = view({
   },
 })
 
-@attach('orbitStore', 'sourcesStore', 'searchStore', 'selectionStore')
+@attach('orbitStore', 'queryStore', 'sourcesStore', 'searchStore', 'selectionStore')
 @provide({
   paneManagerStore: PaneManagerStore,
 })
@@ -75,14 +75,15 @@ export class OrbitPaneManager extends React.Component<Props> {
             {this.props.orbitStore.activeSpace.panes.map(pane => {
               return (
                 <SubPane
-                  name={pane.type}
+                  id={pane.id}
+                  type={pane.type}
                   key={pane.type}
                   before={<SpaceNavHeight />}
                   paddingLeft={0}
                   paddingRight={0}
                   {...pane.props}
                 >
-                  <App title={pane.title} type={pane.type} />
+                  <App id={pane.id} title={pane.title} type={pane.type} />
                 </SubPane>
               )
             })}

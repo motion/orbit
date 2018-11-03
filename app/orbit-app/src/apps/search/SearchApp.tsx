@@ -3,10 +3,10 @@ import { view, attach, provide } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
 import { StaticContainer } from '../../views/StaticContainer'
-import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
+// import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
 import { OrbitSearchNav } from './OrbitSearchNav'
-import { AppProps } from '../types'
+import { AppProps } from '../AppProps'
 
 type Props = AppProps & {
   searchStore?: SearchStore
@@ -42,7 +42,7 @@ export class SearchApp extends React.Component<Props> {
 const SearchAppFrame = view(({ searchStore }: Props) => {
   return (
     <>
-      <OrbitSearchQuickResults />
+      {/* <OrbitSearchQuickResults /> */}
       <OrbitSearchResultsFrame
         style={{
           opacity: searchStore.isChanging ? 0.7 : 1,

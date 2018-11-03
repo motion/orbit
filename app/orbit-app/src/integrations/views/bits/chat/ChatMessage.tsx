@@ -18,7 +18,7 @@ type SlackMessageProps = OrbitIntegrationProps<'slack'> & {
 const SlackMessageFrame = view(View, {
   padding: [0, 0],
   overflow: 'hidden',
-  minimal: {
+  condensed: {
     flexFlow: 'row',
     alignItems: 'center',
   },
@@ -34,7 +34,7 @@ export class ChatMessage extends React.Component<SlackMessageProps> {
   static contextType = ItemResolverDecorationContext
 
   render() {
-    const { bit, extraProps = {}, message, previousMessage, hide = {} } = this.props
+    const { bit, extraProps = {}, message, renderText, previousMessage, hide = {} } = this.props
     const decoration = this.context
     if (!message.text || !bit) {
       return null
@@ -47,24 +47,47 @@ export class ChatMessage extends React.Component<SlackMessageProps> {
       previousWithinOneMinute = message.time - previousMessage.time < 1000 * 60 // todo(nate) can you please check it?
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
+
+    let content
+    if (renderText) {
+      content = renderText(message.text)
+      console.log('returning content', content)
+    } else if (extraProps.condensed) {
+      content = (
+        <HighlightText ellipse {...decoration.text}>
+          {message.text}
+        </HighlightText>
+      )
+    } else {
+      content = (
+        <Text
+          selectable={!extraProps.preventSelect}
+          ellipse={extraProps.condensed ? true : null}
+          {...decoration.text}
+        >
+          <Markdown className="slack-markdown" source={message.text} />
+        </Text>
+      )
+    }
+
     return (
-      <SlackMessageFrame minimal={extraProps.minimal} {...decoration.item}>
+      <SlackMessageFrame condensed={extraProps.condensed} {...decoration.item}>
         {!hideHeader && (
           <Row
             alignItems="center"
             userSelect="none"
             cursor="default"
-            padding={[extraProps.minimal ? 0 : 3, 0]}
+            padding={[extraProps.condensed ? 0 : 3, 0]}
           >
             {extraProps.beforeTitle || null}
             {!!person && (
               <RoundButtonPerson
-                hideAvatar={extraProps.minimal}
+                hideAvatar={extraProps.condensed}
                 background="transparent"
                 person={person}
               />
             )}
-            {!extraProps.minimal && (
+            {!extraProps.condensed && (
               <>
                 <div style={{ width: 6 }} />
                 {!(hide && hide.itemDate) &&
@@ -77,21 +100,7 @@ export class ChatMessage extends React.Component<SlackMessageProps> {
             )}
           </Row>
         )}
-        <SlackMessageInner>
-          {extraProps.minimal ? (
-            <HighlightText ellipse {...decoration.text}>
-              {message.text}
-            </HighlightText>
-          ) : (
-            <Text
-              selectable={!extraProps.preventSelect}
-              ellipse={extraProps.minimal ? true : null}
-              {...decoration.text}
-            >
-              <Markdown className="slack-markdown" source={message.text} />
-            </Text>
-          )}
-        </SlackMessageInner>
+        <SlackMessageInner>{content}</SlackMessageInner>
       </SlackMessageFrame>
     )
   }

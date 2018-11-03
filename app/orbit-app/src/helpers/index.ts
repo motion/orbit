@@ -9,21 +9,20 @@ export const deepClone = obj => (obj ? JSON.parse(JSON.stringify(obj)) : obj)
 
 export const getSlackDate = (time: number) => new Date(time)
 
-export const fuzzyQueryFilter = (
-  query: string,
-  results: { title?: string; name?: string }[],
-  extraOpts?,
-) =>
-  !query
-    ? results
-    : fuzzySort
-        .go(query, results, {
-          keys: ['title', 'name'],
-          // threshold: -25,
-          limit: 8,
-          ...extraOpts,
-        })
-        .map(x => x.obj)
+export const fuzzyQueryFilter = <A extends Object[]>(query: string, results: A, extraOpts?): A => {
+  if (!query) {
+    return results
+  }
+  const res = fuzzySort
+    .go(query, results, {
+      keys: ['title', 'name'],
+      // threshold: -25,
+      limit: 8,
+      ...extraOpts,
+    })
+    .map(x => x.obj) as A
+  return res
+}
 
 export * from './hoverSettler'
 

@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { OrbitListItem } from '../OrbitListItem'
 import { handleClickLocation } from '../../helpers/handleClickLocation'
-import { renderListItemChildren } from './renderListItemChildren'
 import { Bit } from '@mcro/models'
 import { SortableElement } from 'react-sortable-hoc'
+import { renderHighlightedText } from './renderHighlightedText'
+import { ItemProps } from '../OrbitItemProps'
 
 type ListItemProps = {
   model: Bit
@@ -14,33 +15,31 @@ type ListItemProps = {
   width?: number
   realIndex: number
   ignoreSelection?: boolean
+  itemProps?: ItemProps<any>
 }
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
 export class ListItem extends React.PureComponent<ListItemProps> {
   render() {
-    const { model, realIndex, query, ignoreSelection, ...props } = this.props
+    const { model, realIndex, query, ignoreSelection, itemProps } = this.props
+    console.log('itemProps', itemProps)
     return (
       <OrbitListItem
-        // pane="docked-search"
-        // subPane="search"
         model={model}
         index={realIndex}
         subtitleSpaceBetween={spaceBetween}
-        isExpanded
         searchTerm={query}
         onClickLocation={handleClickLocation}
         overflow="hidden"
         extraProps={{
-          minimal: true,
+          condensed: true,
           preventSelect: true,
         }}
+        renderText={renderHighlightedText}
         ignoreSelection={ignoreSelection}
-        {...props}
-      >
-        {renderListItemChildren}
-      </OrbitListItem>
+        {...itemProps}
+      />
     )
   }
 }

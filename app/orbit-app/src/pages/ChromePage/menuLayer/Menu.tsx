@@ -5,10 +5,9 @@ import { react } from '@mcro/black'
 import { Desktop, App } from '@mcro/stores'
 
 type Props = {
-  id: 'Pin' | 'Orbit' | 'Memory'
+  index: number | 'Orbit'
   width: number
   children: React.ReactNode
-  offsetX?: number
 }
 
 class MenuStore {
@@ -21,7 +20,7 @@ class MenuStore {
 
   isHoveringTray = react(
     () => App.state.trayState,
-    state => state.trayEvent === `TrayHover${this.props.id}`,
+    state => state.trayEvent === `TrayHover${this.props.index}`,
     {
       onlyUpdateIfChanged: true,
     },
@@ -35,7 +34,10 @@ class MenuStore {
   )
 
   get menuCenter() {
-    return (this.trayBounds[0] + this.trayBounds[1]) / 2 + (this.props.offsetX || 0)
+    const index = this.props.index
+    const baseOffset = 17
+    const offset = +index == index ? (+index + 1) * 25 + baseOffset : 120
+    return this.trayBounds[0] + offset
   }
 
   setMenuBounds = react(
@@ -46,7 +48,7 @@ class MenuStore {
         trayState: {
           menuState: {
             ...App.state.trayState.menuState,
-            [this.props.id]: {
+            [this.props.index]: {
               open,
               height: 300,
               width,

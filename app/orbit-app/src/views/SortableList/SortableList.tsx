@@ -9,9 +9,9 @@ import { OrbitItemSingleton } from '../OrbitItemStore'
 import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
 import { SortableListItem } from './SortableListItem'
-import { FirstItems } from './FirstItems'
 import { ItemProps } from '../OrbitItemProps'
 import { App } from '@mcro/stores'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
 type Props = {
   items?: any[]
@@ -34,10 +34,9 @@ class SortableListStore {
   height = 0
   isSorting = false
   observing = false
-  // @ts-ignore
-  resizeObserver = new ResizeObserver(() => this.measure)
   cache = new CellMeasurerCache({
     defaultHeight: 60,
+    defaultWidth: ORBIT_WIDTH,
     fixedWidth: true,
   })
 
@@ -63,21 +62,6 @@ class SortableListStore {
     return this.props.subPaneStore.paneNode
   }
 
-  willUnmount() {
-    this.resizeObserver.disconnect()
-  }
-
-  observePaneSize = react(
-    () => this.props.subPaneStore.paneNode,
-    node => {
-      ensure('node', !!node)
-      ensure('!this.observing', !this.observing)
-      this.observing = true
-      this.resizeObserver.observe(node)
-      this.measure()
-    },
-  )
-
   get offset() {
     return 0
   }
@@ -86,16 +70,23 @@ class SortableListStore {
     return this.props.items || []
   }
 
-  private measure = () => {
-    console.log('measure', this.paneNode.clientHeight)
-    if (this.paneNode.clientHeight !== this.height) {
-      this.height = this.paneNode.clientHeight
+  measure = () => {
+    console.log('measure')
+    let height = 0
+    for (const [index] of this.items.entries()) {
+      if (index > 40) break
+      height += this.cache.rowHeight(index)
     }
+    console.log('setting height', height)
+    this.height = height
   }
 
   private resizeAll = () => {
     this.cache.clearAll()
-    if (this.listRef.current) [this.listRef.current.recomputeRowHeights()]
+    if (this.listRef.current) {
+      this.listRef.current.recomputeRowHeights()
+      this.measure()
+    }
   }
 }
 
@@ -123,7 +114,7 @@ export class SortableList extends React.Component<Props & { store?: SortableList
             index={index}
             realIndex={index + store.offset}
             query={App.state.query}
-            {...this.props.itemProps}
+            itemProps={this.props.itemProps}
           />
         </div>
       </CellMeasurer>
@@ -131,7 +122,7 @@ export class SortableList extends React.Component<Props & { store?: SortableList
   }
 
   render() {
-    const { store, itemProps } = this.props
+    const { store } = this.props
     if (!store.items.length) {
       return (
         <View margin={[10, 0]}>
@@ -147,36 +138,27 @@ export class SortableList extends React.Component<Props & { store?: SortableList
           maxSurroundChars: 80,
         }}
       >
-        {/* double render the first few items so we can measure height, but hide them */}
-        <FirstItems items={store.items} itemProps={itemProps} />
-        {!!store.height && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              zIndex: 1,
-            }}
-          >
-            <SortableListContainer
-              forwardRef={store.listRef}
-              items={store.items}
-              deferredMeasurementCache={store.cache}
-              height={store.height}
-              width={store.paneNode.clientWidth}
-              rowHeight={store.cache.rowHeight}
-              overscanRowCount={20}
-              rowCount={store.items.length}
-              estimatedRowSize={100}
-              rowRenderer={this.rowRenderer}
-              pressDelay={120}
-              pressThreshold={17}
-              lockAxis="y"
-            />
-          </div>
-        )}
+        <div
+          style={{
+            height: store.height,
+          }}
+        >
+          <SortableListContainer
+            forwardRef={store.listRef}
+            items={store.items}
+            deferredMeasurementCache={store.cache}
+            height={store.height}
+            width={store.paneNode.clientWidth}
+            rowHeight={store.cache.rowHeight}
+            overscanRowCount={20}
+            rowCount={store.items.length}
+            estimatedRowSize={100}
+            rowRenderer={this.rowRenderer}
+            pressDelay={120}
+            pressThreshold={17}
+            lockAxis="y"
+          />
+        </div>
       </ProvideHighlightsContextWithDefaults>
     )
   }

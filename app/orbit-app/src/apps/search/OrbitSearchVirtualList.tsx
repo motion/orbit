@@ -9,7 +9,6 @@ import {
 import { SearchStore } from './SearchStore'
 import { view, ensure, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
-import { HighlightText } from '../../views/HighlightText'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { handleClickLocation } from '../../helpers/handleClickLocation'
 import { Bit } from '@mcro/models'
@@ -20,31 +19,14 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitItemSingleton } from '../../views/OrbitItemStore'
 import { Banner } from '../../views/Banner'
 import { SubPaneStore } from '../../components/SubPaneStore'
+import { renderHighlightedText } from '../../views/SortableList/renderHighlightedText'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
 type Props = {
   searchStore?: SearchStore
   selectionStore?: SelectionStore
   subPaneStore?: SubPaneStore
 }
-
-const renderListItemChildren = ({ content = null }) => {
-  return (
-    <OrbitCardContent>
-      <HighlightText whiteSpace="normal" alpha={0.65} options={{ maxSurroundChars: 100 }}>
-        {collapseWhitespace(content)}
-      </HighlightText>
-    </OrbitCardContent>
-  )
-}
-
-const OrbitCardContent = view({
-  padding: [6, 0],
-  flex: 1,
-  overflow: 'hidden',
-  whiteSpace: 'pre',
-})
-
-const collapseWhitespace = str => (typeof str === 'string' ? str.replace(/\n[\s]*/g, ' ') : str)
 
 type ListItemProps = {
   model: Bit
@@ -74,14 +56,14 @@ class ListItem extends React.PureComponent<ListItemProps> {
         onClickLocation={handleClickLocation}
         maxHeight={200}
         overflow="hidden"
+        renderText={renderHighlightedText}
         extraProps={{
-          minimal: true,
+          oneLine: true,
+          condensed: true,
           preventSelect: true,
         }}
         ignoreSelection={ignoreSelection}
-      >
-        {renderListItemChildren}
-      </OrbitListItem>
+      />
     )
   }
 }
@@ -99,7 +81,7 @@ const FirstItems = view(({ items, searchStore }) => {
         <ListItem
           key={item.id}
           model={item}
-          index={index + searchStore.quickSearchState.results.length}
+          index={index + searchStore.quickResultsOffset}
           ignoreSelection
         />
       ))}
@@ -122,6 +104,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   private cache = new CellMeasurerCache({
     defaultHeight: 60,
     fixedWidth: true,
+    defaultWidth: ORBIT_WIDTH,
   })
 
   private resizeOnChange = reaction(
@@ -179,7 +162,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   }
 
   private get offset() {
-    return this.props.searchStore.quickSearchState.results.length
+    return this.props.searchStore.quickResultsOffset
   }
 
   private measure = debounce(() => {
@@ -205,7 +188,6 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
         columnIndex={0}
         parent={parent}
         rowIndex={index}
-        width={this.cache}
       >
         <div style={style}>
           <ListItem

@@ -9,7 +9,7 @@ import { pullAll, difference } from 'lodash'
 import { PersonBitModel, BitModel, SourceModel, Bit, PersonBit } from '@mcro/models'
 import { allIntegrations } from '../../integrations'
 import { OrbitCarouselSection } from '../../components/OrbitCarouselSection'
-import { AppProps } from '../types'
+import { AppProps } from '../AppProps'
 
 const models = {
   'person-bit': PersonBitModel,

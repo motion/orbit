@@ -4,6 +4,7 @@ import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
+import { SelectionGroup } from './SelectionResults'
 
 export class AppStore {
   props: {
@@ -15,9 +16,20 @@ export class AppStore {
     selectionStore: SelectionStore
   }
 
-  get setResults() {
-    return this.props.selectionStore.setResults
+  selectionResults = null
+
+  setResults = (results: SelectionGroup[]) => {
+    this.selectionResults = results
   }
+
+  // only update the selection store once this pane is active
+  setSelectionResultsOnActive = react(
+    () => this.selectionResults && Math.random(),
+    async (_, { when }) => {
+      await when(() => this.isActive)
+      this.props.selectionStore.setResults(this.selectionResults)
+    },
+  )
 
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.id

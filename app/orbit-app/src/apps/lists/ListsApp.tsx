@@ -1,11 +1,13 @@
 import * as React from 'react'
 import { SortableList } from '../../views/SortableList/SortableList'
-import { view, attach } from '@mcro/black'
-import { AppProps } from '../types'
+import { view, attach, react } from '@mcro/black'
+import { AppProps } from '../AppProps'
+import { fuzzyQueryFilter } from '../../helpers'
 
 class ListsStore {
+  props: AppProps
   state = Math.random()
-  lists = [
+  allLists = [
     {
       id: 0,
       index: 0,
@@ -42,6 +44,26 @@ class ListsStore {
       subtitle: '1 items',
     },
   ]
+
+  get activeQuery() {
+    return this.props.appStore.activeQuery
+  }
+
+  setSelectionResults = react(
+    () => this.results && Math.random(),
+    () => {
+      this.props.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
+    },
+  )
+
+  results = react(
+    () => this.activeQuery && this.allLists && Math.random(),
+    () =>
+      fuzzyQueryFilter(this.activeQuery, this.allLists, {
+        key: 'title',
+      }),
+    { defaultValue: [] },
+  )
 }
 
 @attach({
@@ -53,7 +75,7 @@ export class ListsApp extends React.Component<AppProps & { store?: ListsStore }>
     console.log('----------------', this.props.store.state)
     return (
       <>
-        <SortableList items={this.props.store.lists} itemProps={{ direct: true }} />
+        <SortableList items={this.props.store.results} itemProps={{ direct: true }} />
       </>
     )
   }

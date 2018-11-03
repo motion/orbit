@@ -32,52 +32,70 @@ const updateProps = (props, nextProps) => {
   }
 }
 
-const setupStoreWithReactiveProps = (Store, props) => {
-  const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
-  const storeProps = observable(
-    {
-      props: props,
-    },
-    { props: observable.shallow },
-  )
-  const getProps = {
-    configurable: true,
-    get: () => storeProps.props,
-    set() {},
+const setupStoreWithReactiveProps = (Store, props?) => {
+  if (props) {
+    const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
+    const storeProps = observable(
+      {
+        props: props,
+      },
+      { props: observable.shallow },
+    )
+    const getProps = {
+      configurable: true,
+      get: () => storeProps.props,
+      set() {},
+    }
+    Store.prototype.automagic = automagicClass
+    Object.defineProperty(Store.prototype, 'props', getProps)
+    const storeInstance = new Store()
+    Object.defineProperty(storeInstance, 'props', getProps)
+    storeInstance.automagic({
+      isSubscribable: x => x && typeof x.subscribe === 'function',
+    })
+    storeInstance.__updateProps = updatePropsAction
+    return storeInstance
+  } else {
+    const storeInstance = new Store()
+    storeInstance.automagic({
+      isSubscribable: x => x && typeof x.subscribe === 'function',
+    })
+    return storeInstance
   }
-  Store.prototype.automagic = automagicClass
-  Object.defineProperty(Store.prototype, 'props', getProps)
-  const storeInstance = new Store()
-  Object.defineProperty(storeInstance, 'props', getProps)
-  storeInstance.automagic({
-    isSubscribable: x => x && typeof x.subscribe === 'function',
-  })
-  storeInstance.__updateProps = updatePropsAction
-  return storeInstance
 }
 
-const useStoreWithReactiveProps = (Store, props) => {
+const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
   let store = useRef(null)
-  if (!store.current) {
+  if (!store.current || shouldHMR) {
     // @ts-ignore
     store.current = setupStoreWithReactiveProps(Store, props)
   }
   useEffect(() => {
-    store.current.__updateProps(store.current.props, props)
+    if (props) {
+      store.current.__updateProps(store.current.props, props)
+    }
     return () => {}
   })
   return store.current
 }
 
 export const useStore = <A>(Store: new () => A, props: Object): A => {
-  const store = useStoreWithReactiveProps(Store, props)
   const proxyStore = useRef(null)
+  const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
+  const shouldReloadStore =
+    isHMRCompat &&
+    proxyStore.current &&
+    proxyStore.current.constructor.toString() !== Store.toString()
+  const store = useStoreWithReactiveProps(Store, props, shouldReloadStore)
   const hasTrackedKeys = useRef(false)
   const dispose = useRef(null)
   const reactiveKeys = useRef({})
   const update = useState(0)[1]
 
-  if (!proxyStore.current) {
+  if (!proxyStore.current || shouldReloadStore) {
+    if (shouldReloadStore) {
+      console.log('HMRing store', Store.name)
+    }
     // @ts-ignore
     proxyStore.current = new Proxy(store, {
       get(obj, key) {

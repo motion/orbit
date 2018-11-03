@@ -11,3 +11,4 @@ export const sleep = ms => new Promise(res => setTimeout(res, ms))
 export { DecorPlugins, DecorCompiledDecorator } from '@mcro/decor'
 export * from '@mcro/automagical'
 export { Store } from './classes/Store'
+export { StoreContext } from '@mcro/decor-react'

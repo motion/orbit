@@ -4,7 +4,6 @@ import { view, ensure, react, attach } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitItemSingleton } from '../OrbitItemStore'
 import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
@@ -12,12 +11,13 @@ import { SortableListItem } from './SortableListItem'
 import { ItemProps } from '../OrbitItemProps'
 import { App } from '@mcro/stores'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { AppStore } from '../../apps/AppStore'
 
 type Props = {
   items?: any[]
   itemProps?: ItemProps<any>
   width?: number
-  selectionStore?: SelectionStore
+  appStore?: AppStore
   subPaneStore?: SubPaneStore
 }
 
@@ -50,7 +50,7 @@ class SortableListStore {
   )
 
   scrollToRow = react(
-    () => this.props.selectionStore.activeIndex - this.offset,
+    () => this.props.appStore.activeIndex - this.offset,
     index => {
       ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
       ensure('valid index', index > -1)
@@ -91,7 +91,7 @@ class SortableListStore {
   }
 }
 
-@attach('selectionStore', 'subPaneStore')
+@attach('appStore', 'subPaneStore')
 @attach({
   store: SortableListStore,
 })

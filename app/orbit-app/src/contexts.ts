@@ -1,3 +1,1 @@
-import { createContext } from 'react'
-
-export const StoreContext = createContext(null)
+export { StoreContext } from '@mcro/black'

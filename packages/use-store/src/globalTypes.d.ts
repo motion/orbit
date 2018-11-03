@@ -19,6 +19,4 @@ declare module 'react' {
     createInstance: () => T,
     inputs?: ReadonlyArray<unknown>,
   ): void
-  const useMutationEffect: typeof useEffect
-  const useLayoutEffect: typeof useEffect
 }

@@ -10,7 +10,7 @@ class MenuTopicStore {
 export function MenuTopic(props) {
   const store = useStore(MenuTopicStore, props)
   return (
-    <Menu index={1} width={300} offsetX={28}>
+    <Menu index={1} width={300}>
       {store.title}
       <MenuItem icon="😓">Lorem Ipsum</MenuItem>
       <MenuItem icon="🤬">Lorem Ipsum</MenuItem>

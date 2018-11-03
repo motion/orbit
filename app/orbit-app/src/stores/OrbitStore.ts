@@ -35,23 +35,25 @@ export class OrbitStore {
       {
         id: 'home',
         type: 'search',
-        title: 'Home',
+        title: 'Search',
         icon: 'singleNeutralSearch',
         static: true,
         props: {
           preventScroll: true,
         },
       },
-      // {
-      //   type: 'recent',
-      //   title: 'Recent',
-      //   icon: 'menu',
-      //   static: true,
-      // },
+      {
+        id: 'people',
+        type: 'people',
+        title: '@people',
+        icon: 'multipleNeutral2',
+        trigger: '@',
+        static: true,
+      },
       {
         id: 'topics',
         type: 'topics',
-        title: 'Topics',
+        title: '#topics',
         icon: 'singleNeutralChat',
         trigger: '#',
         static: true,
@@ -59,26 +61,11 @@ export class OrbitStore {
       {
         id: 'lists',
         type: 'lists',
-        title: 'Lists',
+        title: '/lists',
         icon: 'listBullets',
         trigger: '/',
         static: true,
       },
-      {
-        id: 'people',
-        type: 'people',
-        title: 'People',
-        icon: 'multipleNeutral2',
-        trigger: '@',
-        static: true,
-      },
-      // {
-      //   type: 'new',
-      //   title: 'New',
-      //   icon: 'cog',
-      //   show: false,
-      //   static: true,
-      // },
     ]
   }
 

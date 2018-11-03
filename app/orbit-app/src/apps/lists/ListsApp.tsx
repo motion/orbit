@@ -67,7 +67,7 @@ class ListsStore {
   )
 }
 
-export function ListsApp(props: AppProps & { width?: number }) {
+export function ListsApp(props: AppProps & { width: number }) {
   const store = useStore(ListsStore, props)
   return (
     <>

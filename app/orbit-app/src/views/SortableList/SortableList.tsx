@@ -122,6 +122,7 @@ export function SortableList(props: Props) {
       </View>
     )
   }
+
   return (
     <ProvideHighlightsContextWithDefaults
       value={{

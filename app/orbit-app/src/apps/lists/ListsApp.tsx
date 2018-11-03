@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { SortableList } from '../../views/SortableList/SortableList'
-import { view, attach, react } from '@mcro/black'
+import { react } from '@mcro/black'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
+import { useStore } from '@mcro/use-store'
 
 class ListsStore {
   props: AppProps
@@ -66,21 +67,11 @@ class ListsStore {
   )
 }
 
-@attach({
-  store: ListsStore,
-})
-@view
-export class ListsApp extends React.Component<AppProps & { store?: ListsStore; width?: number }> {
-  render() {
-    console.log('----------------', this.props.store.state)
-    return (
-      <>
-        <SortableList
-          items={this.props.store.results}
-          width={this.props.width}
-          itemProps={{ direct: true }}
-        />
-      </>
-    )
-  }
+export function ListsApp(props: AppProps & { width?: number }) {
+  const store = useStore(ListsStore, props)
+  return (
+    <>
+      <SortableList items={store.results} width={props.width} itemProps={{ direct: true }} />
+    </>
+  )
 }

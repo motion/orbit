@@ -11,10 +11,10 @@ import { AppStore } from '../../../apps/AppStore'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 
-export function MenuLayer(props) {
-  const settingStore = useStore(SettingStore, props)
-  const sourcesStore = useStore(SourcesStore, props)
-  const queryStore = useStore(QueryStore, props)
+export function MenuLayer() {
+  const settingStore = useStore(SettingStore)
+  const sourcesStore = useStore(SourcesStore)
+  const queryStore = useStore(QueryStore, { sourcesStore })
   const selectionStore = useStore(SelectionStore, { queryStore })
   const appProps = {
     settingStore,

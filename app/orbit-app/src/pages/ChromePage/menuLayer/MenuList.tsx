@@ -5,7 +5,6 @@ import { ListsApp } from '../../../apps/lists/ListsApp'
 import { Searchable } from '../../../components/Searchable'
 
 export function MenuList(props: AppProps) {
-  console.log('props', props)
   return (
     <Menu index={2} width={300}>
       <Searchable {...props}>

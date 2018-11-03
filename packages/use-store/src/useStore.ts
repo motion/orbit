@@ -1,8 +1,6 @@
 import { automagicClass } from '@mcro/automagical'
 import { isValidElement, useState, useEffect, useRef, createContext } from 'react'
 import { action, autorun, observable } from 'mobx'
-const isEqualReact = (a, b) => a && b
-const difference = (a, b) => a && b
 
 let options = {
   onMount: null,
@@ -10,25 +8,42 @@ let options = {
   context: createContext(null),
 }
 
+const isReactElement = x => {
+  if (!x) {
+    return false
+  }
+  if (isValidElement(x)) {
+    return true
+  }
+  if (Array.isArray(x)) {
+    return x.some(isValidElement)
+  }
+  return false
+}
+
+const propKeysWithoutElements = props => Object.keys(props).filter(x => !isReactElement(props[x]))
+
+// updateProps
+// granular set so reactions can be efficient
 const updateProps = (props, nextProps) => {
-  const nextPropsKeys = Object.keys(nextProps).filter(x => isValidElement(nextProps[x]))
-  const curPropKeys = Object.keys(props)
-  // change granular so reactions are granular
+  const nextPropsKeys = propKeysWithoutElements(nextProps)
+  const curPropKeys = propKeysWithoutElements(props)
+
+  // changes
   for (const prop of nextPropsKeys) {
-    // this is the actual comparison
     const a = props[prop]
     const b = nextProps[prop]
-    const isSame = a === b
-    const isSameReact = isValidElement(a) && isEqualReact(a, b)
-    const hasChanged = !(isSame || isSameReact)
-    if (hasChanged) {
+    if (a !== b) {
       console.log('has changed prop', prop, nextProps[prop])
       props[prop] = nextProps[prop]
     }
   }
-  // remove
-  for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-    props[extraProp] = undefined
+
+  // removes
+  for (const key of curPropKeys) {
+    if (typeof nextProps[key] === 'undefined') {
+      delete props[key]
+    }
   }
 }
 
@@ -79,7 +94,7 @@ const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
   return store.current
 }
 
-export const useStore = <A>(Store: new () => A, props: Object): A => {
+export const useStore = <A>(Store: new () => A, props?: Object): A => {
   const proxyStore = useRef(null)
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const shouldReloadStore =

@@ -20,7 +20,7 @@ class MenuPersonStore {
 export function MenuPerson(props) {
   const store = useStore(MenuPersonStore, props)
   return (
-    <Menu index={0} width={300} offsetX={28}>
+    <Menu index={0} width={300}>
       {store.people.map(person => (
         <MenuItem key={person.email}>{person.name}</MenuItem>
       ))}

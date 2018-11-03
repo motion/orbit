@@ -32,10 +32,10 @@ export class OracleBridge {
       await killPort(port)
       const server = new Server({ port })
       server.on('error', (...args) => {
-        console.log('server error', args)
+        console.error('server error', args)
       })
       server.on('open', function open() {
-        console.log('connected', port)
+        console.error('connected', port)
       })
       res(server)
     })
@@ -79,11 +79,11 @@ export class OracleBridge {
         if (err.message.indexOf('CLOSED')) {
           console.log('closed...')
         } else {
-          console.log('oracle.socketSend Err', err.stack)
+          console.error('oracle.socketSend Err', err.stack)
         }
       }
     } catch (err) {
-      console.log('screen error parsing socket message', err.message)
+      console.error('screen error parsing socket message', err.message)
     }
     // for now just simulate this async thing actually awaiting receive
     await new Promise(res => setTimeout(res))

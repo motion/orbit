@@ -1,16 +1,23 @@
 import * as React from 'react'
 import { MenuItem } from './MenuItem'
 import { Menu } from './Menu'
+import { AppProps } from '../../../apps/AppProps'
+import { ListsApp } from '../../../apps/lists/ListsApp'
+import { Searchable } from '../../../components/Searchable'
 
-export function MenuList() {
+export function MenuList(props: AppProps) {
+  console.log('props', props)
   return (
     <Menu index={2} width={300}>
-      <MenuItem icon="😓">Lorem Ipsum</MenuItem>
+      <Searchable {...props}>
+        <ListsApp {...props} />
+      </Searchable>
+      {/* <MenuItem icon="😓">Lorem Ipsum</MenuItem>
       <MenuItem icon="🤬">Lorem Ipsum</MenuItem>
       <MenuItem icon="👺">Lorem Ipsum</MenuItem>
       <MenuItem icon="🙀">Lorem Ipsum</MenuItem>
       <MenuItem icon="🥶">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🗣">Lorem Ipsum</MenuItem>
+      <MenuItem icon="🗣">Lorem Ipsum</MenuItem> */}
     </Menu>
   )
 }

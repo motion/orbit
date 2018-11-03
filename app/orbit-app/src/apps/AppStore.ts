@@ -58,4 +58,8 @@ export class AppStore {
   get activeIndex() {
     return this.props.selectionStore.activeIndex
   }
+
+  get queryStore() {
+    return this.props.queryStore
+  }
 }

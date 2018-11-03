@@ -16,6 +16,7 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 type Props = {
   items?: any[]
   itemProps?: ItemProps<any>
+  width?: number
   selectionStore?: SelectionStore
   subPaneStore?: SubPaneStore
 }
@@ -58,8 +59,8 @@ class SortableListStore {
     },
   )
 
-  get paneNode() {
-    return this.props.subPaneStore.paneNode
+  get width() {
+    return this.props.width || this.props.subPaneStore.paneNode.clientWidth
   }
 
   get offset() {
@@ -148,7 +149,7 @@ export class SortableList extends React.Component<Props & { store?: SortableList
             items={store.items}
             deferredMeasurementCache={store.cache}
             height={store.height}
-            width={store.paneNode.clientWidth}
+            width={store.width}
             rowHeight={store.cache.rowHeight}
             overscanRowCount={20}
             rowCount={store.items.length}

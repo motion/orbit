@@ -52,7 +52,7 @@ class ListsStore {
   setSelectionResults = react(
     () => this.results && Math.random(),
     () => {
-      this.props.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
+      this.props.appStore.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
     },
   )
 
@@ -70,12 +70,16 @@ class ListsStore {
   store: ListsStore,
 })
 @view
-export class ListsApp extends React.Component<AppProps & { store?: ListsStore }> {
+export class ListsApp extends React.Component<AppProps & { store?: ListsStore; width?: number }> {
   render() {
     console.log('----------------', this.props.store.state)
     return (
       <>
-        <SortableList items={this.props.store.results} itemProps={{ direct: true }} />
+        <SortableList
+          items={this.props.store.results}
+          width={this.props.width}
+          itemProps={{ direct: true }}
+        />
       </>
     )
   }

@@ -12,6 +12,7 @@ const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
 
 const DEFAULT_OPTIONS = {
+  context: StoreContext,
   onStoreUnmount: () => {},
   onStoreWillMount: () => {},
   onStoreDidMount: () => {},
@@ -37,7 +38,7 @@ export function storeProvidable(userOptions, Helpers) {
         throw new Error('Bad store provide, should be object')
       }
 
-      const context = opts.context || options.context
+      const shouldProvide = opts.context || options.context
       const storeDecorator = opts.storeDecorator || options.storeDecorator
       let Stores
 
@@ -70,7 +71,7 @@ export function storeProvidable(userOptions, Helpers) {
       // ️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️
 
       class StoreProvider extends React.PureComponent {
-        static contextType = StoreContext
+        static contextType = userOptions.context
 
         props: any | { __contextualStores?: Object }
         _props: any
@@ -223,7 +224,7 @@ export function storeProvidable(userOptions, Helpers) {
           clearTimeout(this.clearUnusedStores)
           const { __hmrPath, ...props } = this.props
           const children = <Klass {...props} {...this.stores} />
-          if (context) {
+          if (shouldProvide) {
             const childStores = this.childContextStores()
             return <StoreContext.Provider value={childStores}>{children}</StoreContext.Provider>
           }

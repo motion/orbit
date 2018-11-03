@@ -1,5 +1,5 @@
 import { automagicClass } from '@mcro/automagical'
-import { isValidElement, useState, useEffect, useRef } from 'react'
+import { isValidElement, useState, useEffect, useRef, createContext } from 'react'
 import { action, autorun, observable } from 'mobx'
 const isEqualReact = (a, b) => a && b
 const difference = (a, b) => a && b
@@ -7,6 +7,7 @@ const difference = (a, b) => a && b
 let options = {
   onMount: null,
   onUnmount: null,
+  context: createContext(null),
 }
 
 const updateProps = (props, nextProps) => {
@@ -122,5 +123,8 @@ export const useStore = <A>(Store: new () => A, props: Object): A => {
 }
 
 export const configureUseStore = (opts: typeof options) => {
-  options = opts
+  options = {
+    ...options,
+    ...opts,
+  }
 }

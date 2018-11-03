@@ -51,7 +51,7 @@ export class SearchStore {
   setSelection = react(
     () => this.searchState && Math.random(),
     () => {
-      this.props.setResults([
+      this.props.appStore.setResults([
         {
           type: 'column',
           // shouldAutoSelect: true,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Popover, Col } from '@mcro/ui'
+import { Popover, Col, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { react } from '@mcro/black'
 import { Desktop, App } from '@mcro/stores'
@@ -61,10 +61,12 @@ class MenuStore {
   )
 
   handleMouseEnter = () => {
+    log('hoverenter')
     this.isHoveringMenu = true
   }
 
   handleMouseLeave = () => {
+    log('hoverleave')
     this.isHoveringMenu = false
   }
 }
@@ -80,18 +82,26 @@ export function Menu(props: Props) {
       background
       width={width}
       towards="bottom"
+      delay={0}
       top={0}
       distance={8}
+      forgiveness={8}
       left={left}
       maxHeight={300}
       elevation={6}
       theme="dark"
-      onMouseEnter={store.handleMouseEnter}
-      onMouseLeave={store.handleMouseLeave}
     >
-      <Col overflowX="hidden" overflowY="auto" flex={1}>
-        {props.children}
-      </Col>
+      <View
+        onMouseEnter={store.handleMouseEnter}
+        onMouseLeave={store.handleMouseLeave}
+        padding={10}
+        margin={-10}
+        flex={1}
+      >
+        <Col overflowX="hidden" overflowY="auto" flex={1}>
+          {props.children}
+        </Col>
+      </View>
     </Popover>
   )
 }

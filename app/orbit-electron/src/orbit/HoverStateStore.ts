@@ -40,6 +40,18 @@ export class HoverStateStore {
     },
   )
 
+  unsetMenusHoveredOnHide = react(
+    () => {
+      const { menuState } = App.state.trayState
+      return Object.keys(menuState)
+        .map(k => menuState[k].open)
+        .join('')
+    },
+    () => {
+      this.handleMousePosition(this.lastMousePos)
+    },
+  )
+
   updateHoverStateOnResize = react(
     () => App.orbitState.size,
     () => {

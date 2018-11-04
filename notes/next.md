@@ -7,7 +7,7 @@
 Menu:
 
 Topics - trending up/down
-Lists - pin website or any part of screen
+Pins/Shortcuts.../History? - /somewhere => somewhere
 Orbit - see context just by hovering the O
 
 App:

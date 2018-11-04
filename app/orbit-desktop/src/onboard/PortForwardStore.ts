@@ -26,7 +26,6 @@ const checkAuthProxy = () => {
   })
 }
 
-// @ts-ignore
 @store
 export class PortForwardStore {
   isForwarded = false
@@ -34,16 +33,18 @@ export class PortForwardStore {
 
   forwardOnAccept = react(
     () => App.state.acceptsForwarding,
-    accepts => {
+    async accepts => {
       ensure('accepts', accepts)
-      ensure('not forwarded', !this.isForwarded)
-      log.info('Starting orbit proxy...')
-      clearInterval(this.successInt)
-      this.forwardPort()
+
+      if (!(await checkAuthProxy())) {
+        log.info('Starting orbit proxy...')
+        clearInterval(this.successInt)
+        this.setupDNSProxy()
+      }
     },
   )
 
-  forwardPort = async () => {
+  setupDNSProxy = async () => {
     const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
     log.info(`Running proxy script: ${pathToOrbitProxy}`)
 
@@ -62,7 +63,9 @@ export class PortForwardStore {
     console.log('Electron binary path:', Config.paths.nodeBinary)
     const cmd = await sudoer.spawn(
       Config.paths.nodeBinary,
-      `${pathToOrbitProxy} --port ${port} --host ${host}`.split(' '),
+      `${pathToOrbitProxy} --host ${host}:${port} --host go:${port} hi:${port} orbit:${port}`.split(
+        ' ',
+      ),
       {
         env: {
           ...process.env,

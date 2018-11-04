@@ -256,9 +256,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     lastHoverEvent = trayLocation
     print("hover \(trayLocation)")
-    if trayLocation == "Out" {
-      
-    }
     socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHover\(trayLocation)\" }")
   }
   

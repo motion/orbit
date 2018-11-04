@@ -5,10 +5,8 @@ import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { addAppClickHandler } from '../../../helpers/addAppClickHandler'
 import { SourcesStore } from '../../../stores/SourcesStore'
 import { Title, VerticalSpace } from '../../../views'
-// import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../helpers/promptForAuthProxy'
-// import { MessageDark } from '../../../views/Message'
 import { BlurryGuys } from './BlurryGuys'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { OrbitIntegration, ItemType } from '../../../integrations/types'
@@ -26,7 +24,6 @@ type Props = {
 
 const framePad = 30
 export const numFrames = 3
-// subtract padding from parent
 
 const Centered = view({
   margin: 'auto',
@@ -77,13 +74,8 @@ class OnboardStore {
     return isShowingSuccessMessage
   }
 
-  prevFrame = () => this.curFrame--
-  nextFrame = async () => {
-    this.pendingMove = true
-    // before incrementing, run some actions for:
-    // LEAVING curFrame page...
-
-    if (this.curFrame === 0) {
+  stateActions = {
+    0: async () => {
       await this.checkAlreadyProxied()
       console.log('already on?', this.accepted)
       if (this.accepted !== true) {
@@ -102,18 +94,25 @@ class OnboardStore {
           return
         }
       }
-    }
-
-    if (this.curFrame === 2) {
+    },
+    1: () => {},
+    2: async () => {
       this.props.paneManagerStore.setActivePane('home')
       this.props.paneManagerStore.forceOnboard = false
       // save setting
       await this.props.settingStore.update({
         hasOnboarded: true,
       })
-    }
+    },
+  }
 
-    // go to next frame
+  prevFrame = () => {
+    this.curFrame--
+  }
+
+  nextFrame = async () => {
+    this.pendingMove = true
+    await this.stateActions[this.curFrame]()
     this.curFrame++
     this.pendingMove = false
   }
@@ -148,7 +147,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
   return (
-    <SubPane name="onboard" paddingLeft={0} paddingRight={0}>
+    <SubPane id="onboard" paddingLeft={0} paddingRight={0}>
       <BlurryGuys />
       <Slider curFrame={store.curFrame}>
         <SliderPane>
@@ -219,7 +218,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
             </Centered>
           )}
         </SliderPane>
-        {/* <SliderPane>
+        <SliderPane>
           <Title size={1.4} fontWeight={500}>
             Insider: unlock with email.
           </Title>
@@ -230,7 +229,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
 
           <VerticalSpace />
           <VerticalSpace />
-        </SliderPane> */}
+        </SliderPane>
         <SliderPane>
           <Title>Set up a few apps</Title>
 

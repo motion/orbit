@@ -45,6 +45,7 @@ let runNext = false
 for (const arg of process.argv) {
   if (arg === '--host') {
     runNext = true
+    continue
   }
   if (runNext) {
     runNext = false

@@ -45,7 +45,7 @@ const AddButton = ({ disabled, ...props }) =>
     </Theme>
   )
 
-const buttonText = ['Start Secure Auth', 'Next', 'Done!']
+const buttonText = ['Start Local Proxy', 'Next', 'Done!']
 
 class OnboardStore {
   props: Props
@@ -162,21 +162,16 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
                 Welcome to Orbit
               </Text>
               <View height={30} />
-              <Text selectable textAlign="left" size={1.1} sizeLineHeight={1.025} alpha={0.9}>
-                Welcome to your personal OS. Orbit is your own tool to manage disparate information
-                in a beautiful, private, extensible way.
+              <Text selectable textAlign="left" size={1.2} sizeLineHeight={1.025} alpha={0.9}>
+                Orbit is your team knowledge manager.
                 <VerticalSpace />
-                Orbit runs 100% locally on your device and never exposes your keys or data to anyone
-                but you. To do that it needs to run a secure local server to handle sensitive
-                information on-device.
+                It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b>{' '}
+                within your company without exposing any of your team data to us. To do so it runs
+                privately each persons computer.
+                <VerticalSpace />
+                Orbit will set up a local proxy now to enable private sync and the access quick URLs
+                you can access in your browser.
               </Text>
-              <VerticalSpace />
-              <VerticalSpace />
-              <div className="markdown">
-                <a href="http://tryorbit.com/security">
-                  Learn about our security & privacy commitment.
-                </a>
-              </div>
               <VerticalSpace />
               <VerticalSpace />
               <VerticalSpace />
@@ -218,7 +213,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
             </Centered>
           )}
         </SliderPane>
-        <SliderPane>
+        {/* <SliderPane>
           <Title size={1.4} fontWeight={500}>
             Insider: unlock with email.
           </Title>
@@ -229,7 +224,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
 
           <VerticalSpace />
           <VerticalSpace />
-        </SliderPane>
+        </SliderPane> */}
         <SliderPane>
           <Title>Set up a few apps</Title>
 
@@ -278,12 +273,12 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
         </SliderPane>
       </Slider>
       <BottomControls disabled={store.disableButtons}>
+        <View width={10} flex={1} />
         {store.curFrame > 1 && (
           <Button chromeless onClick={store.prevFrame}>
             Back
           </Button>
         )}
-        <View width={10} />
         <Theme name="orbit">
           <Button
             disabled={store.pendingMove}

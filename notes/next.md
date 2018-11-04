@@ -13,6 +13,13 @@ Menu:
 Nate: build the intranet site / interfaces. Fix menubar versions/search in Orbit
 Umed: account signup, team setup, data sync, cloud server, search faster
 
+p2:
+
+- profiles with topics
+- topics app where you can pin terms and it suggests some
+- shortcuts app improvements
+- better intranet shortcuts hi/someone, go/somewhere, and [company]/xyz
+
 ---
 
 ```

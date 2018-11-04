@@ -63,7 +63,7 @@ export class PortForwardStore {
     console.log('Electron binary path:', Config.paths.nodeBinary)
     const cmd = await sudoer.spawn(
       Config.paths.nodeBinary,
-      `${pathToOrbitProxy} --host ${host}:${port} --host go:${port} hi:${port} orbit:${port}`.split(
+      `${pathToOrbitProxy} --host ${host}:${port} --host go:${port} --host hi:${port} --host orbit:${port}`.split(
         ' ',
       ),
       {

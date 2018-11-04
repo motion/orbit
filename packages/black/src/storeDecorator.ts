@@ -2,10 +2,12 @@ import decor from '@mcro/decor'
 import { subscribable, emittable } from '@mcro/decor-classes'
 import automagic from '@mcro/automagical'
 import { CompositeDisposable } from 'event-kit'
+import { StoreContext } from '@mcro/decor-react'
 
 export const storeDecorator: any = decor([emittable, subscribable, automagic])
 
 export const storeOptions = {
+  context: StoreContext,
   storeDecorator,
   onStoreMount(store, props) {
     // TODO make automagical idempotent

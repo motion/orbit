@@ -29,6 +29,7 @@ import { App } from '@mcro/stores'
 @view
 export class OrbitPage extends React.Component {
   render() {
+    console.log('this', this.props)
     const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (
       <Theme name={theme}>

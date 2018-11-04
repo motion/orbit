@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { WindowScroller, List, CellMeasurerCache, CellMeasurer } from 'react-virtualized'
-import { view, ensure, react, attach } from '@mcro/black'
+import { ensure, react, StoreContext } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
-import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitItemSingleton } from '../OrbitItemStore'
 import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
@@ -12,11 +10,14 @@ import { SortableListItem } from './SortableListItem'
 import { ItemProps } from '../OrbitItemProps'
 import { App } from '@mcro/stores'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { AppStore } from '../../apps/AppStore'
+import { useStore } from '@mcro/use-store'
 
 type Props = {
   items?: any[]
   itemProps?: ItemProps<any>
-  selectionStore?: SelectionStore
+  width: number
+  appStore?: AppStore
   subPaneStore?: SubPaneStore
 }
 
@@ -31,7 +32,7 @@ class SortableListStore {
   props: Props
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef = React.createRef<List>()
-  height = 0
+  height = 100
   isSorting = false
   observing = false
   cache = new CellMeasurerCache({
@@ -49,7 +50,7 @@ class SortableListStore {
   )
 
   scrollToRow = react(
-    () => this.props.selectionStore.activeIndex - this.offset,
+    () => this.props.appStore.activeIndex,
     index => {
       ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
       ensure('valid index', index > -1)
@@ -58,22 +59,10 @@ class SortableListStore {
     },
   )
 
-  get paneNode() {
-    return this.props.subPaneStore.paneNode
-  }
-
-  get offset() {
-    return 0
-  }
-
-  get items() {
-    return this.props.items || []
-  }
-
   measure = () => {
     console.log('measure')
     let height = 0
-    for (const [index] of this.items.entries()) {
+    for (const [index] of this.props.items.entries()) {
       if (index > 40) break
       height += this.cache.rowHeight(index)
     }
@@ -90,15 +79,16 @@ class SortableListStore {
   }
 }
 
-@attach('selectionStore', 'subPaneStore')
-@attach({
-  store: SortableListStore,
-})
-@view
-export class SortableList extends React.Component<Props & { store?: SortableListStore }> {
-  private rowRenderer = ({ index, parent, style }) => {
-    const { store } = this.props
-    const model = store.items[index]
+export function SortableList(props: Props) {
+  const context = React.useContext(StoreContext)
+  const store = useStore(SortableListStore, { ...props, appStore: context.appStore }, true)
+
+  // React.useEffect(() => {
+  //   setTimeout(() => store.measure())
+  // }, [])
+
+  const rowRenderer = ({ index, parent, style }) => {
+    const model = props.items[index]
     return (
       <CellMeasurer
         key={`${model.id}${index}`}
@@ -106,60 +96,51 @@ export class SortableList extends React.Component<Props & { store?: SortableList
         columnIndex={0}
         parent={parent}
         rowIndex={index}
-        width={store.cache}
       >
         <div style={style}>
           <SortableListItem
             model={model}
             index={index}
-            realIndex={index + store.offset}
+            realIndex={index}
             query={App.state.query}
-            itemProps={this.props.itemProps}
+            itemProps={props.itemProps}
           />
         </div>
       </CellMeasurer>
     )
   }
 
-  render() {
-    const { store } = this.props
-    if (!store.items.length) {
-      return (
-        <View margin={[10, 0]}>
-          <Banner>No results</Banner>
-        </View>
-      )
-    }
+  if (!props.items.length) {
     return (
-      <ProvideHighlightsContextWithDefaults
-        value={{
-          words: App.state.query.split(' '),
-          maxChars: 500,
-          maxSurroundChars: 80,
-        }}
-      >
-        <div
-          style={{
-            height: store.height,
-          }}
-        >
-          <SortableListContainer
-            forwardRef={store.listRef}
-            items={store.items}
-            deferredMeasurementCache={store.cache}
-            height={store.height}
-            width={store.paneNode.clientWidth}
-            rowHeight={store.cache.rowHeight}
-            overscanRowCount={20}
-            rowCount={store.items.length}
-            estimatedRowSize={100}
-            rowRenderer={this.rowRenderer}
-            pressDelay={120}
-            pressThreshold={17}
-            lockAxis="y"
-          />
-        </div>
-      </ProvideHighlightsContextWithDefaults>
+      <View margin={[10, 0]}>
+        <Banner>No results</Banner>
+      </View>
     )
   }
+
+  console.log('render sortable list...', props.width, props.items, store.height)
+
+  return (
+    <div
+      style={{
+        height: store.height,
+      }}
+    >
+      <SortableListContainer
+        forwardRef={store.listRef}
+        items={props.items}
+        deferredMeasurementCache={store.cache}
+        height={store.height}
+        width={props.width}
+        rowHeight={store.cache.rowHeight}
+        overscanRowCount={20}
+        rowCount={props.items.length}
+        estimatedRowSize={100}
+        rowRenderer={rowRenderer}
+        pressDelay={120}
+        pressThreshold={17}
+        lockAxis="y"
+      />
+    </div>
+  )
 }

@@ -9,5 +9,4 @@ export type AppProps = {
   appStore: AppStore
   sourcesStore: SourcesStore
   settingStore: SettingStore
-  setResults: AppStore['setResults']
 }

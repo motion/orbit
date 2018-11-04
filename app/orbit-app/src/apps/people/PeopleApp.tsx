@@ -50,7 +50,7 @@ class PeopleStore {
   setSelectionResults = react(
     () => this.results && Math.random(),
     () => {
-      this.props.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
+      this.props.appStore.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
     },
   )
 

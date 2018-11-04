@@ -8,6 +8,7 @@ let options = {
   context: createContext(null),
 }
 
+const idFn = () => {}
 const isReactElement = x => {
   if (!x) {
     return false
@@ -82,7 +83,6 @@ const setupStoreWithReactiveProps = (Store, props?) => {
 const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
   let store = useRef(null)
   if (!store.current || shouldHMR) {
-    // @ts-ignore
     store.current = setupStoreWithReactiveProps(Store, props)
   }
   useEffect(() => {
@@ -94,7 +94,7 @@ const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
   return store.current
 }
 
-export const useStore = <A>(Store: new () => A, props?: Object): A => {
+export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
   const proxyStore = useRef(null)
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const shouldReloadStore =
@@ -111,9 +111,11 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
     if (shouldReloadStore) {
       console.log('HMRing store', Store.name)
     }
-    // @ts-ignore
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
+        if (debug) {
+          console.log('getting key', key)
+        }
         if (!hasTrackedKeys.current) {
           reactiveKeys.current[key] = true
         }
@@ -125,10 +127,12 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
   // untrack after the first render
   useEffect(() => {
     return () => {
-      // @ts-ignore
+      if (debug) {
+        console.log('now stopping tracking')
+      }
       hasTrackedKeys.current = true
     }
-  })
+  }, [])
 
   // one effect to then run and watch the keys we track from the first one
   useEffect(() => {
@@ -136,13 +140,18 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
       options.onMount(store)
     }
     if (!dispose.current) {
-      // @ts-ignore
-      dispose.current = autorun(() => {
-        for (const key in reactiveKeys.current) {
-          store[key]
-        }
-        update(Math.random())
-      })
+      dispose.current = idFn
+      setTimeout(() => {
+        dispose.current = autorun(() => {
+          if (debug) {
+            console.log('reacting to keys', reactiveKeys.current)
+          }
+          for (const key in reactiveKeys.current) {
+            store[key]
+          }
+          update(Math.random())
+        })
+      }, 16)
     }
     return () => {
       if (options.onUnmount) {

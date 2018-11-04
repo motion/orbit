@@ -59,6 +59,12 @@ Topic modeling may take more time or be pretty intense. The menu may take a whil
 
 ---
 
+bundle it with bartender
+
+https://www.macbartender.com/
+
+---
+
 ```
 t = JSON.parse(require('fs').readFileSync('/Users/nw/projects/motion/orbit/app/orbit-desktop/src/titles.json', 'utf8'))
 a = await Promise.all(t.slice(0, 10).map(async term => {

@@ -3,7 +3,6 @@ import { WindowScroller, List, CellMeasurerCache, CellMeasurer } from 'react-vir
 import { ensure, react, StoreContext } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
-import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { OrbitItemSingleton } from '../OrbitItemStore'
 import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
@@ -33,7 +32,7 @@ class SortableListStore {
   props: Props
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef = React.createRef<List>()
-  height = 0
+  height = 100
   isSorting = false
   observing = false
   cache = new CellMeasurerCache({
@@ -51,7 +50,7 @@ class SortableListStore {
   )
 
   scrollToRow = react(
-    () => this.props.appStore.activeIndex - this.offset,
+    () => this.props.appStore.activeIndex,
     index => {
       ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
       ensure('valid index', index > -1)
@@ -60,18 +59,10 @@ class SortableListStore {
     },
   )
 
-  get offset() {
-    return 0
-  }
-
-  get items() {
-    return this.props.items || []
-  }
-
   measure = () => {
     console.log('measure')
     let height = 0
-    for (const [index] of this.items.entries()) {
+    for (const [index] of this.props.items.entries()) {
       if (index > 40) break
       height += this.cache.rowHeight(index)
     }
@@ -90,10 +81,14 @@ class SortableListStore {
 
 export function SortableList(props: Props) {
   const context = React.useContext(StoreContext)
-  const store = useStore(SortableListStore, { ...props, appStore: context.appStore })
+  const store = useStore(SortableListStore, { ...props, appStore: context.appStore }, true)
+
+  // React.useEffect(() => {
+  //   setTimeout(() => store.measure())
+  // }, [])
 
   const rowRenderer = ({ index, parent, style }) => {
-    const model = store.items[index]
+    const model = props.items[index]
     return (
       <CellMeasurer
         key={`${model.id}${index}`}
@@ -106,7 +101,7 @@ export function SortableList(props: Props) {
           <SortableListItem
             model={model}
             index={index}
-            realIndex={index + store.offset}
+            realIndex={index}
             query={App.state.query}
             itemProps={props.itemProps}
           />
@@ -115,7 +110,7 @@ export function SortableList(props: Props) {
     )
   }
 
-  if (!store.items.length) {
+  if (!props.items.length) {
     return (
       <View margin={[10, 0]}>
         <Banner>No results</Banner>
@@ -123,35 +118,29 @@ export function SortableList(props: Props) {
     )
   }
 
+  console.log('render sortable list...', props.width, props.items, store.height)
+
   return (
-    <ProvideHighlightsContextWithDefaults
-      value={{
-        words: App.state.query.split(' '),
-        maxChars: 500,
-        maxSurroundChars: 80,
+    <div
+      style={{
+        height: store.height,
       }}
     >
-      <div
-        style={{
-          height: store.height,
-        }}
-      >
-        <SortableListContainer
-          forwardRef={store.listRef}
-          items={store.items}
-          deferredMeasurementCache={store.cache}
-          height={store.height}
-          width={props.width}
-          rowHeight={store.cache.rowHeight}
-          overscanRowCount={20}
-          rowCount={store.items.length}
-          estimatedRowSize={100}
-          rowRenderer={rowRenderer}
-          pressDelay={120}
-          pressThreshold={17}
-          lockAxis="y"
-        />
-      </div>
-    </ProvideHighlightsContextWithDefaults>
+      <SortableListContainer
+        forwardRef={store.listRef}
+        items={props.items}
+        deferredMeasurementCache={store.cache}
+        height={store.height}
+        width={props.width}
+        rowHeight={store.cache.rowHeight}
+        overscanRowCount={20}
+        rowCount={props.items.length}
+        estimatedRowSize={100}
+        rowRenderer={rowRenderer}
+        pressDelay={120}
+        pressThreshold={17}
+        lockAxis="y"
+      />
+    </div>
   )
 }

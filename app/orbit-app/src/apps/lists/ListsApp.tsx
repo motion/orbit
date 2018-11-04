@@ -69,6 +69,7 @@ class ListsStore {
 
 export function ListsApp(props: AppProps & { width: number }) {
   const store = useStore(ListsStore, props)
+  console.log('rendering lists app', store.results)
   return (
     <>
       <SortableList items={store.results} width={props.width} itemProps={{ direct: true }} />

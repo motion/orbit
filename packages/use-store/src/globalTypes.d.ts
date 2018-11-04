@@ -13,7 +13,7 @@ declare module 'react' {
     inputs?: ReadonlyArray<unknown>,
   ): F
   function useMemo<T>(create: () => T, inputs?: ReadonlyArray<unknown>): T
-  function useRef<T extends unknown>(initialValue?: T): React.RefObject<T>
+  function useRef<T extends unknown>(initialValue?: T): { current: any }
   function useImperativeMethods<T>(
     ref: React.Ref<T>,
     createInstance: () => T,

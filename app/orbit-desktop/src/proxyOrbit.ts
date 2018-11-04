@@ -6,12 +6,12 @@ import forwardPort from 'http-port-forward'
 import killPort from 'kill-port'
 import exec from 'execa'
 
-async function forwardPort80() {
-  const res = await exec.shell(`echo "
-rdr pass inet proto tcp from any to any port 80 -> 127.0.0.1 port 3001
-" | sudo pfctl -ef -`)
-  console.log('forward80', res.code, res.failed, res.stdout.toString())
-}
+// async function forwardPort80() {
+//   const res = await exec.shell(`echo "
+// rdr pass inet proto tcp from any to any port 80 -> 127.0.0.1 port 3001
+// " | sudo pfctl -ef -`)
+//   console.log('forward80', res.code, res.failed, res.stdout.toString())
+// }
 
 function forwardDNS(host, port) {
   const hostile = promisifyAll(hostile_)
@@ -64,7 +64,6 @@ async function forwardAllDNS() {
 }
 
 async function main() {
-  await forwardPort80()
   await forwardAllDNS()
 }
 

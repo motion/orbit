@@ -2,7 +2,7 @@ import { setGlobalConfig, GlobalConfig } from '@mcro/config'
 import { ChildProcess } from 'child_process'
 import WebSocket from 'ws'
 import root from 'global'
-import waitPort from 'wait-port'
+import waitOn from 'wait-on'
 import { startChildProcess } from './helpers/startChildProcess'
 
 // this is the entry for every process
@@ -68,12 +68,9 @@ export async function main() {
   })
 
   // wait for desktop to start before starting other processes...
-  console.log('waiting for', config.ports.server)
-  await waitPort({ port: config.ports.server })
-  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!waiting for', config.ports.server)
+  const desktopServerUrl = `http://localhost:${config.ports.server}`
+  await waitOn({ resources: [desktopServerUrl] })
   await new Promise(res => setTimeout(res, 100))
-
-  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!waiting for', config.ports.server)
 
   // syncers
   if (!process.env.DISABLE_SYNCERS) {

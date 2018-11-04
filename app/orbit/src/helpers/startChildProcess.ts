@@ -36,7 +36,7 @@ export function startChildProcess({
 
   try {
     console.log(`Starting process ${name}:`, Config.paths.nodeBinary, args)
-    const child = spawn(Config.paths.nodeBinary, args, {
+    const child = spawn(isNode || Config.isProd ? Config.paths.nodeBinary : 'electron', args, {
       env: {
         ...process.env,
         PROCESS_NAME: name,
@@ -55,16 +55,12 @@ export function startChildProcess({
 
     child.stderr.on('data', b => {
       const error = b.toString()
-      // for some reason node logs into error
-      if (error.indexOf('Debugger ') === 0) {
-        return
-      }
       if (error.indexOf('Error') === -1) {
-        console.log('\n\n\n got an error but may not be worth reporting:')
-        console.log(`${name} error:`, error, '\n\n\n')
+        console.error('\n\n\n got an error but may not be worth reporting:')
+        console.error(`${name} error:`, error, '\n\n\n')
         return
       }
-      console.log(`${name} error:`, error)
+      console.error(`${name} error:`, error)
     })
 
     return child

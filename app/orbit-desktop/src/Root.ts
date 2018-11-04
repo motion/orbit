@@ -140,6 +140,8 @@ export class Root {
     this.screenManager = new ScreenManager({ oracle: this.oracle })
     this.appsManager = new AppsManager()
 
+    await this.server.start()
+
     // start oracle after passing into screenManager
     await this.oracle.start()
     // then start screenmanager after oracle.start
@@ -149,10 +151,7 @@ export class Root {
     // no need to await
     this.ocrManager.start()
 
-    // order doesnt matter
     this.cosalManager.start()
-    await this.server.start()
-
     // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {
       this.stores = stores

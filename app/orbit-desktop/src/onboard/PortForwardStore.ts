@@ -42,6 +42,9 @@ export class PortForwardStore {
         this.setupDNSProxy()
       }
     },
+    {
+      deferFirstRun: true,
+    },
   )
 
   setupDNSProxy = async () => {

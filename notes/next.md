@@ -11,7 +11,7 @@ Menu:
   - shortcuts/directory, topics, people
 
 Nate: build the intranet site / interfaces. Fix menubar versions/search in Orbit
-Umed: account signup, team setup, data sync, cloud server
+Umed: account signup, team setup, data sync, cloud server, search faster
 
 ---
 
@@ -29,46 +29,6 @@ a = await Promise.all(t.slice(0, 10).map(async term => {
   }
 }))
 ```
-
-ListsApp is up next:
-
-- ListIndexApp - the list manager that shows in Orbit and in hover menu
-- ListApp - looking at a list, has sorting, search filtering and opening items
-
-umed:
-
-1. testing search with various filters, fixing performance
-2. syncing a lot of data to test and fix performance
-3. fixing syncers to avoid overfilling hard drive
-4. splitting out locations into a new model so we can use them for various things
-5. create a unified profile for the person using orbit: we should get information on their gmail, slack, github and we can figure out their emails they use across them to link them together (more on this during call)
-6. creating a link-crawler that can be hooked into any syncer with an option (so if theres a link in slack we can crawl that link using the website-crawler and add it as a bit)
-7. improving the way we handle raw vs formatted data on bits so its more consistent
-8. fixing google drive settings pane so it works and we can select folders using a searchbar
-9. search-based sync where we can index more stuff based on their searches by hitting the API for their search directly
-10. see if we can get website-crawler working using their chrome or just download puppeteer into a shared config directory we make
-
-questions:
-
-- a query for bits made by "me"
-- also can't we unify the profile for "me" very easily?
-
-  - if so, then on a team level as everyone adds themselves into orbit we can unify all profiles between them!
-
-nate:
-
-- two ways to get interesting topics:
-  - topic modeling exploration:
-    - setup test script environment
-    - using cosal:
-      - scan documents using cosal
-      - if you find bi/tri-grams of salient words, store
-      - count times you see those bi/tri-grams
-      - do for whole corpus
-      - sort by most counted and use that for topics
-    - using pre-defined:
-      - take recent 3000 bits you've produced
-      - sort most salient topics to those bits and product topic list
 
 search:
 

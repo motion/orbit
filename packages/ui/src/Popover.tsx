@@ -328,7 +328,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   get showPopover() {
-    return this.state.showPopover
+    return this.props.open || this.state.showPopover
   }
 
   componentDidUpdate(_prevProps, prevState) {

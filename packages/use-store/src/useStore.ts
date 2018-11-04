@@ -94,7 +94,7 @@ const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
   return store.current
 }
 
-export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
+export const useStore = <A>(Store: new () => A, props?: Object): A => {
   const proxyStore = useRef(null)
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const shouldReloadStore =

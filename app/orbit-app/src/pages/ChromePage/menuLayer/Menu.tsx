@@ -28,7 +28,10 @@ class MenuStore {
 
   open = react(
     () => [this.isHoveringTray, this.isHoveringMenu],
-    ([hoveringTray, hoveringMenu]) => {
+    async ([hoveringTray, hoveringMenu], { sleep }) => {
+      if (this.open) {
+        await sleep(60)
+      }
       return hoveringTray || hoveringMenu
     },
   )

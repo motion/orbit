@@ -3,37 +3,33 @@ import { ChildProcess } from 'child_process'
 import WebSocket from 'ws'
 import root from 'global'
 import waitPort from 'wait-port'
+import { startChildProcess } from './helpers/startChildProcess'
+
+// this is the entry for every process
 
 root['WebSocket'] = WebSocket
-
 Error.stackTraceLimit = Infinity
 
-// this runs as the entry for both processes
-// first electron, then desktop
-// this lets us share config more easily
-// and also use the bundled electron binary as the entry point
-// which lets us pack things into an asar
 export async function main() {
   console.log(`starting ${process.env.PROCESS_NAME}`)
 
-  // in sub process get config this way...
-  let config: GlobalConfig = process.env.ORBIT_CONFIG ? JSON.parse(process.env.ORBIT_CONFIG) : null
-
-  // if not we're in the root electron process, lets set it up once...
-  if (!config) {
+  let config: GlobalConfig
+  if (process.env.ORBIT_CONFIG) {
+    config = JSON.parse(process.env.ORBIT_CONFIG)
+  } else {
     config = await require('./getInitialConfig').getInitialConfig()
   }
+  if (!config) {
+    throw new Error('Couldn\'t find config')
+  }
 
-  // all processes get config
+  // all processes config globally
   setGlobalConfig(config)
 
-  // sub processes!
+  // if we are in a forked sub-process, we go off and run them
   const { SUB_PROCESS } = process.env
   if (SUB_PROCESS) {
     console.log('starting sub process', SUB_PROCESS)
-    if (!config) {
-      throw new Error(`No config for ${SUB_PROCESS}!`)
-    }
     switch (SUB_PROCESS) {
       case 'desktop':
         require('@mcro/orbit-desktop').main()
@@ -47,17 +43,10 @@ export async function main() {
     }
   }
 
+  // this means we are the root process, so we run the forks
+
   // setup process error watching before doing most stuff
-  // this only runs in electron process
-  // desktop will report errors up to here
   require('./handleErrors').handleErrors()
-
-  // IS IN ELECTRON...
-
-  let electronChromeProcess: ChildProcess
-  let desktopProcess: ChildProcess
-  let syncersProcess: ChildProcess
-
   // exit handling
   const { handleExit, setupHandleExit } = require('./handleExit')
   // this works in dev
@@ -67,22 +56,40 @@ export async function main() {
   process.on('SIGTERM', handleExit)
   process.on('SIGQUIT', handleExit)
 
-  // start sub-processes...
+  let electronChromeProcess: ChildProcess
+  let desktopProcess: ChildProcess
+  let syncersProcess: ChildProcess
 
   // desktop
-  desktopProcess = require('./startDesktop').startDesktop()
+  desktopProcess = startChildProcess({
+    name: 'desktop',
+    inspectPort: 9000,
+    isNode: true,
+  })
 
   // wait for desktop to start before starting other processes...
+  console.log('waiting for', config.ports.server)
   await waitPort({ port: config.ports.server })
+  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!waiting for', config.ports.server)
   await new Promise(res => setTimeout(res, 100))
+
+  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!waiting for', config.ports.server)
 
   // syncers
   if (!process.env.DISABLE_SYNCERS) {
-    syncersProcess = require('./startSyncers').startSyncers()
+    syncersProcess = startChildProcess({
+      name: 'syncers',
+      inspectPort: 9003,
+      isNode: true,
+    })
   }
 
   // electronChrome
-  electronChromeProcess = require('./startElectronChrome').startElectronChrome()
+  electronChromeProcess = startChildProcess({
+    name: 'electron-chrome',
+    inspectPort: 9004,
+    inspectPortRemote: 9005,
+  })
 
   // handle exits
   setupHandleExit([desktopProcess, syncersProcess, electronChromeProcess])

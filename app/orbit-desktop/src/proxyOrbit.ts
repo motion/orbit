@@ -4,8 +4,16 @@ import hostile_ from 'hostile'
 import { promisifyAll } from 'sb-promisify'
 import forwardPort from 'http-port-forward'
 import killPort from 'kill-port'
+import exec from 'execa'
 
-function run(host, port) {
+async function forwardPort80() {
+  const res = await exec.shell(`echo "
+rdr pass inet proto tcp from any to any port 80 -> 127.0.0.1 port 3001
+" | sudo pfctl -ef -`)
+  console.log('forward80', res.code, res.failed, res.stdout.toString())
+}
+
+function forwardDNS(host, port) {
   const hostile = promisifyAll(hostile_)
 
   if (!host || !port) {
@@ -40,16 +48,24 @@ function run(host, port) {
   }
 }
 
-let runNext = false
-
-for (const arg of process.argv) {
-  if (arg === '--host') {
-    runNext = true
-    continue
-  }
-  if (runNext) {
-    runNext = false
-    const [host, port] = arg.split(':')
-    run(host, port)
+async function forwardAllDNS() {
+  let runNext = false
+  for (const arg of process.argv) {
+    if (arg === '--host') {
+      runNext = true
+      continue
+    }
+    if (runNext) {
+      runNext = false
+      const [host, port] = arg.split(':')
+      await forwardDNS(host, port)
+    }
   }
 }
+
+async function main() {
+  await forwardPort80()
+  await forwardAllDNS()
+}
+
+main()

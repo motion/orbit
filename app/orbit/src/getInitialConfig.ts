@@ -1,5 +1,5 @@
 import { app } from 'electron'
-import { findContiguousPorts } from './findContiguousPorts'
+import { findContiguousPorts } from './helpers/findContiguousPorts'
 import killPort from 'kill-port'
 import * as Path from 'path'
 import { GlobalConfig } from '@mcro/config'

@@ -23,7 +23,7 @@ export function startChildProcess({
 
   if (!Config.isProd) {
     if (inspectPort) {
-      args = [`--inspect=${inspectPort}`), ...args]
+      args = [`--inspect=${inspectPort}`, ...args]
     }
     if (inspectPortRemote) {
       args = [`--remote-debugging-port=${inspectPortRemote}`, ...args]

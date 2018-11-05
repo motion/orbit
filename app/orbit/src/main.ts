@@ -47,7 +47,7 @@ export async function main() {
     const { handleExit, setupHandleExit } = require('./helpers/handleExit')
 
     if (process.env.NODE_ENV === 'development') {
-      // in prod electron handles this
+      // in prod electron handles thishandleErrors
       process.on('exit', handleExit)
       process.on('SIGINT', handleExit)
       process.on('SIGSEGV', handleExit)

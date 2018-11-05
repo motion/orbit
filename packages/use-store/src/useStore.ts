@@ -145,10 +145,16 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
       }, 16)
     }
     return () => {
+      // emit unmount
       if (options.onUnmount) {
         options.onUnmount(store)
       }
+      // stop autorun()
       dispose.current()
+      // remove subscriptions
+      if (store.subscriptions) {
+        store.subscriptions.dispose()
+      }
     }
   }, [])
 

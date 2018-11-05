@@ -24,6 +24,7 @@ Tuesday:
 
 Wednesday:
 
+- Fix hovering on app windows
 - Grouped search design
 - Search performance
 - Keyboard nav in search moving window down
@@ -43,6 +44,30 @@ Friday:
 - Get profiles with topic modeling
 - Get topics app using real data for changing over time topics
 - Allow custom topics in topics app
+
+---
+
+Monday:
+
+- Walkthrough accessibility permissions
+- Person app send via slack/gmail
+- Hoversettler for menu peeks
+
+Tuesday:
+
+- Actual storage of data for each app
+- Lists app work
+
+Wednesday:
+
+- Topics app work
+
+Thursday:
+
+- App view improvements
+- Person app quick send actions
+
+---
 
 umed:
 

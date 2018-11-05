@@ -8,7 +8,6 @@ let options = {
   context: createContext(null),
 }
 
-const idFn = () => {}
 const isReactElement = x => {
   if (!x) {
     return false
@@ -102,9 +101,8 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
     proxyStore.current &&
     proxyStore.current.constructor.toString() !== Store.toString()
   const store = useStoreWithReactiveProps(Store, props, shouldReloadStore)
-  const hasTrackedKeys = useRef(false)
   const dispose = useRef(null)
-  const reactiveKeys = useRef({})
+  const reactiveKeys = useRef(observable({}))
   const update = useState(0)[1]
 
   if (!proxyStore.current || shouldReloadStore) {
@@ -113,7 +111,7 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
     }
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
-        if (!hasTrackedKeys.current) {
+        if (!reactiveKeys.current[key]) {
           reactiveKeys.current[key] = true
         }
         return obj[key]
@@ -121,28 +119,20 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
     })
   }
 
-  // untrack after the first render
-  useEffect(() => {
-    return () => {
-      hasTrackedKeys.current = true
-    }
-  }, [])
-
   // one effect to then run and watch the keys we track from the first one
   useEffect(() => {
     if (options.onMount) {
       options.onMount(store)
     }
     if (!dispose.current) {
-      dispose.current = idFn
-      setTimeout(() => {
-        dispose.current = autorun(() => {
-          for (const key in reactiveKeys.current) {
-            store[key]
-          }
-          update(Math.random())
-        })
-      }, 16)
+      dispose.current = autorun(() => {
+        // trigger reaction on keys
+        for (const key in reactiveKeys.current) {
+          store[key]
+        }
+        // update when we react
+        update(Math.random())
+      })
     }
     return () => {
       // emit unmount

@@ -16,7 +16,6 @@ import { useStore } from '@mcro/use-store'
 type Props = {
   items?: any[]
   itemProps?: ItemProps<any>
-  width: number
   appStore?: AppStore
   subPaneStore?: SubPaneStore
 }
@@ -32,6 +31,7 @@ class SortableListStore {
   props: Props
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef = React.createRef<List>()
+  rootRef = React.createRef<HTMLDivElement>()
   height = 100
   isSorting = false
   observing = false
@@ -81,11 +81,7 @@ class SortableListStore {
 
 export function SortableList(props: Props) {
   const context = React.useContext(StoreContext)
-  const store = useStore(SortableListStore, { ...props, appStore: context.appStore }, true)
-
-  // React.useEffect(() => {
-  //   setTimeout(() => store.measure())
-  // }, [])
+  const store = useStore(SortableListStore, { ...props, appStore: context.appStore })
 
   const rowRenderer = ({ index, parent, style }) => {
     const model = props.items[index]
@@ -118,10 +114,12 @@ export function SortableList(props: Props) {
     )
   }
 
-  console.log('render sortable list...', props.width, props.items, store.height)
+  const width = store.rootRef.current ? store.rootRef.current.clientWidth : 100
+  console.log('render sortable list...', width, store.height)
 
   return (
     <div
+      ref={store.rootRef}
       style={{
         height: store.height,
       }}
@@ -131,7 +129,7 @@ export function SortableList(props: Props) {
         items={props.items}
         deferredMeasurementCache={store.cache}
         height={store.height}
-        width={props.width}
+        width={width}
         rowHeight={store.cache.rowHeight}
         overscanRowCount={20}
         rowCount={props.items.length}

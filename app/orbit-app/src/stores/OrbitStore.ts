@@ -8,6 +8,7 @@ export type Pane = {
   show?: boolean
   trigger?: string
   static?: boolean
+  isHidden?: boolean
   props?: {
     preventScroll?: boolean
   }
@@ -49,6 +50,9 @@ export class OrbitStore {
         icon: 'multipleNeutral2',
         trigger: '@',
         static: true,
+        props: {
+          preventScroll: true,
+        },
       },
       {
         id: 'topics',
@@ -62,6 +66,14 @@ export class OrbitStore {
         id: 'lists',
         type: 'lists',
         title: 'Lists',
+        icon: 'listBullets',
+        trigger: '/',
+        static: true,
+      },
+      {
+        id: 'settings',
+        type: 'settings',
+        title: 'Settings',
         icon: 'listBullets',
         trigger: '/',
         static: true,

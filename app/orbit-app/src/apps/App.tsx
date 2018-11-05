@@ -32,6 +32,10 @@ export class App extends React.Component<Props> {
   render() {
     const { type, appStore, sourcesStore, settingStore, subPaneStore } = this.props
     const App = apps[type]
+    if (typeof App !== 'function') {
+      console.error('WAHT THE FUCK', type, App)
+      return null
+    }
     return (
       <App
         appStore={appStore}

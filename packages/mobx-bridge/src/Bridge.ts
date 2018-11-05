@@ -397,7 +397,7 @@ export class BridgeManager {
         }
         // then set it as a new object on the root (mobx wont trigger reactions as youd expect unless you do this.)
         // so App.setState({ a: { b:1 } }) triggers reaction in react(() => App.a)
-        stateObj[key] = { ...a }
+        stateObj[key] = JSON.parse(JSON.stringify(a))
         changed = changed || {}
         changed[key] = diff
       } else {

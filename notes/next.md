@@ -1,4 +1,11 @@
-- lists/topics/people
+umed:
+
+- Gmail syncer:
+  - Gmail should sync People more strictly:
+    - Only insert a person if _I_ sent them an email (not a reply but new email)
+    - But if a person exists already (via slack, jira, github, etc), still attach the email to that existing profile
+
+* lists/topics/people
 
 ---
 

@@ -1,5 +1,13 @@
 import { automagicClass } from '@mcro/automagical'
-import { isValidElement, useState, useEffect, useRef, createContext } from 'react'
+import {
+  isValidElement,
+  useState,
+  useEffect,
+  useRef,
+  createContext,
+  // @ts-ignore
+  useMutationEffect,
+} from 'react'
 import { action, autorun, observable } from 'mobx'
 
 let options = {
@@ -93,6 +101,12 @@ const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
   return store.current
 }
 
+const ignoreReactiveKeys = {
+  isMobXComputedValue: true,
+  __IS_DEEP: true,
+  IS_AUTO_RUN: true,
+}
+
 export const useStore = <A>(Store: new () => A, props?: Object): A => {
   const proxyStore = useRef(null)
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
@@ -103,6 +117,7 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
   const store = useStoreWithReactiveProps(Store, props, shouldReloadStore)
   const dispose = useRef(null)
   const reactiveKeys = useRef(observable({}))
+  let shouldTrackKeys = true
   const update = useState(0)[1]
 
   if (!proxyStore.current || shouldReloadStore) {
@@ -111,13 +126,21 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
     }
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
-        if (!reactiveKeys.current[key]) {
-          reactiveKeys.current[key] = true
+        if (shouldTrackKeys && typeof key === 'string') {
+          if (!ignoreReactiveKeys[key]) {
+            if (!reactiveKeys.current[key]) {
+              reactiveKeys.current[key] = true
+            }
+          }
         }
         return obj[key]
       },
     })
   }
+
+  useMutationEffect(() => {
+    shouldTrackKeys = false
+  })
 
   // one effect to then run and watch the keys we track from the first one
   useEffect(() => {

@@ -33,6 +33,7 @@ class SortableListStore {
   listRef = React.createRef<List>()
   rootRef = React.createRef<HTMLDivElement>()
   height = 100
+  width = 0
   isSorting = false
   observing = false
   cache = new CellMeasurerCache({
@@ -67,6 +68,7 @@ class SortableListStore {
       height += this.cache.rowHeight(index)
     }
     console.log('setting height', height)
+    this.width = this.rootRef.current ? this.rootRef.current.clientWidth : 0
     this.height = height
   }
 
@@ -114,9 +116,6 @@ export function SortableList(props: Props) {
     )
   }
 
-  const width = store.rootRef.current ? store.rootRef.current.clientWidth : 100
-  console.log('render sortable list...', width, store.height)
-
   return (
     <div
       ref={store.rootRef}
@@ -124,21 +123,23 @@ export function SortableList(props: Props) {
         height: store.height,
       }}
     >
-      <SortableListContainer
-        forwardRef={store.listRef}
-        items={props.items}
-        deferredMeasurementCache={store.cache}
-        height={store.height}
-        width={width}
-        rowHeight={store.cache.rowHeight}
-        overscanRowCount={20}
-        rowCount={props.items.length}
-        estimatedRowSize={100}
-        rowRenderer={rowRenderer}
-        pressDelay={120}
-        pressThreshold={17}
-        lockAxis="y"
-      />
+      {store.width && (
+        <SortableListContainer
+          forwardRef={store.listRef}
+          items={props.items}
+          deferredMeasurementCache={store.cache}
+          height={store.height}
+          width={store.width}
+          rowHeight={store.cache.rowHeight}
+          overscanRowCount={20}
+          rowCount={props.items.length}
+          estimatedRowSize={100}
+          rowRenderer={rowRenderer}
+          pressDelay={120}
+          pressThreshold={17}
+          lockAxis="y"
+        />
+      )}
     </div>
   )
 }

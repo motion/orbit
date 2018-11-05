@@ -35,7 +35,8 @@ const bothObjects = (a, b) =>
   (isPlainObject(a) || Mobx.isObservableObject(a)) &&
   (isPlainObject(b) || Mobx.isObservableObject(b))
 
-const diffDeep = (a: Object, b: Object, shouldMutateA = false) => {
+const diffDeep = (a: Object, b: Object, opts: { merge?: boolean; returnDiff?: boolean } = {}) => {
+  const { merge = false, returnDiff = true } = opts
   const diff = {}
   // calculate diff for smaller syncs, need to test perf
   for (const bKey in b) {
@@ -43,26 +44,24 @@ const diffDeep = (a: Object, b: Object, shouldMutateA = false) => {
     const bVal = b[bKey]
     // deep diff only objects
     if (bothObjects(aVal, bVal)) {
-      const subDiff = diffDeep(aVal, bVal, shouldMutateA)
-      if (subDiff) {
+      const subDiff = diffDeep(aVal, bVal, opts)
+      if (returnDiff && subDiff) {
         diff[bKey] = subDiff
       }
     } else {
       if (aVal !== bVal) {
         diff[bKey] = bVal
-        if (shouldMutateA) {
+        if (merge) {
           a[bKey] = bVal
         }
       }
     }
   }
-  if (!Object.keys(diff).length) {
+  if (!returnDiff || !Object.keys(diff).length) {
     return null
   }
   return diff
 }
-
-root['diffDeep'] = diffDeep
 
 type Disposer = () => void
 
@@ -157,8 +156,7 @@ export class BridgeManager {
       masterSource: 'Desktop',
       port: this.port,
       onState: (source, state, _uid) => {
-        const res = diffDeep(stores[source].state, state, true)
-        console.log('getting new state', state, res)
+        diffDeep(stores[source].state, state, { merge: true })
       },
       actions: {
         // stores that first connect send a call to get initial state
@@ -214,7 +212,7 @@ export class BridgeManager {
           throw new Error(`No state found for source (${source}) state (${state}) store(${store})`)
         }
         await immediate()
-        diffDeep(state, newState, true)
+        diffDeep(state, newState, { merge: true })
         // we have initial state :)
         if (source === this._source && !this.hasFetchedInitialState) {
           this.debounceSetHasFetched()
@@ -322,7 +320,6 @@ export class BridgeManager {
       }
     }
     if (!ignoreSend) {
-      console.log('send that shit', newState, changedState)
       this.sendChangedState(changedState)
     }
     return changedState
@@ -394,7 +391,7 @@ export class BridgeManager {
       const b = newState[key]
       if (bothObjects(a, b)) {
         // check if equal
-        const diff = diffDeep(a, b, true)
+        const diff = diffDeep(a, b, { merge: true, returnDiff: true })
         if (!diff) {
           continue
         }

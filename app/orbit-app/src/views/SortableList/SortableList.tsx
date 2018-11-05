@@ -31,7 +31,7 @@ class SortableListStore {
   props: Props
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef = React.createRef<List>()
-  rootRef = React.createRef<HTMLDivElement>()
+  rootRef: HTMLDivElement = null
   height = 100
   width = 0
   isSorting = false
@@ -60,6 +60,8 @@ class SortableListStore {
     },
   )
 
+  measureOnRoot = react(() => this.rootRef, () => this.measure())
+
   measure = () => {
     console.log('measure')
     let height = 0
@@ -68,8 +70,12 @@ class SortableListStore {
       height += this.cache.rowHeight(index)
     }
     console.log('setting height', height)
-    this.width = this.rootRef.current ? this.rootRef.current.clientWidth : 0
+    this.width = this.rootRef ? this.rootRef.clientWidth : 0
     this.height = height
+  }
+
+  setRootRef = ref => {
+    this.rootRef = ref
   }
 
   private resizeAll = () => {
@@ -118,12 +124,12 @@ export function SortableList(props: Props) {
 
   return (
     <div
-      ref={store.rootRef}
+      ref={store.setRootRef}
       style={{
         height: store.height,
       }}
     >
-      {store.width && (
+      {!!store.width && (
         <SortableListContainer
           forwardRef={store.listRef}
           items={props.items}
@@ -140,6 +146,7 @@ export function SortableList(props: Props) {
           lockAxis="y"
         />
       )}
+      {!store.width && <div>No width!</div>}
     </div>
   )
 }

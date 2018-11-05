@@ -8,7 +8,7 @@ import {
   // @ts-ignore
   useMutationEffect,
 } from 'react'
-import { action, autorun, observable } from 'mobx'
+import { action, autorun, observable, toJS } from 'mobx'
 
 let options = {
   onMount: null,
@@ -120,9 +120,15 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
   let shouldTrackKeys = true
   const update = useState(0)[1]
 
+  // setup store once
   if (!proxyStore.current || shouldReloadStore) {
     if (shouldReloadStore) {
       console.log('HMRing store', Store.name)
+    }
+    store.__useStore = {
+      get reactiveKeys() {
+        return toJS(reactiveKeys.current)
+      },
     }
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
@@ -140,6 +146,9 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
 
   useMutationEffect(() => {
     shouldTrackKeys = false
+    return () => {
+      shouldTrackKeys = true
+    }
   })
 
   // one effect to then run and watch the keys we track from the first one

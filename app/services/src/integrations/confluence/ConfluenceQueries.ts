@@ -29,6 +29,13 @@ export class ConfluenceQueries {
    * Content (pages and blogposts) query.
    */
   static contents(type: 'page' | 'blogpost', start: number, limit: number): ServiceLoaderLoadOptions<ConfluenceCollection<ConfluenceContent>> {
+
+    // scopes we use here:
+    // 1. childTypes.all - used to get information if content has comments
+    // 2. history.contributors.publishers - used to get people ids who edited content
+    // 3. space - used to get "location/directory" of the page
+    // 4. body.styled_view - used to get bit body / page content (with html styles included)
+
     return {
       path: '/wiki/rest/api/content',
       query: {

@@ -51,29 +51,55 @@ export class JiraLoader {
   /**
    * Loads jira issues from the jira api.
    */
-  async loadIssues(startAt: number = 0): Promise<JiraIssue[]> {
+  async loadIssues(
+    cursor: number,
+    loadedCount: number,
+    handler: (
+      issue: JiraIssue,
+      cursor?: number,
+      loadedCount?: number,
+      isLast?: boolean,
+    ) => Promise<boolean> | boolean,
+  ): Promise<void> {
     await sleep(ServiceLoadThrottlingOptions.jira.issues)
 
     const maxResults = 100
-    const response = await this.loader.load(JiraQueries.issues(startAt, maxResults))
+    const response = await this.loader.load(JiraQueries.issues(cursor, maxResults))
+    const hasNextPage = response.total > cursor + maxResults
 
-    // load content comments
-    for (let issue of response.issues) {
-      if (issue.fields.comment.total > 0) {
-        issue.comments = await this.loadComments(issue.id)
-      } else {
-        issue.comments = []
+    // traverse over loaded issues and call streaming function
+    for (let i = 0; i < response.issues.length; i++) {
+      const issue = response.issues[i]
+      try {
+
+        // load content comments
+        if (issue.fields.comment.total > 0) {
+          issue.comments = await this.loadComments(issue.id)
+        } else {
+          issue.comments = []
+        }
+
+        const isLast = i === response.issues.length - 1 && hasNextPage === false
+        const result = await handler(issue, cursor + maxResults, loadedCount + response.issues.length, isLast)
+
+        // if callback returned true we don't continue syncing
+        if (result === false) {
+          this.log.info('stopped issue syncing, no need to sync more', {
+            issue,
+            index: i,
+          })
+          return // return from the function, not from the loop!
+        }
+      } catch (error) {
+        this.log.warning('Error during issue handling ', issue, error)
       }
     }
 
     // since we can only load max 100 issues per request, we check if we have more issues to load
     // then execute recursive call to load next 100 issues. Do it until we reach the end (total)
-    if (response.total > startAt + maxResults) {
-      const nextPageIssues = await this.loadIssues(startAt + maxResults)
-      return [...response.issues, ...nextPageIssues]
+    if (hasNextPage) {
+      await this.loadIssues(cursor + maxResults, loadedCount + response.issues.length, handler)
     }
-
-    return response.issues
   }
 
   /**

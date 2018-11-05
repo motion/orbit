@@ -232,7 +232,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
             lastTrayRect = nextTrayRect
             print("sending new tray rect \(nextTrayRect)")
-            self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }")
+            self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(round(nextTrayRect[0])), \(round(nextTrayRect[1]))] } }")
           }
           // handle events
           self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)

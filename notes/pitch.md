@@ -1,18 +1,16 @@
 # Orbit
 
-Small apps for you.
+Your contextual work assistant. Really go far pitching it as extremely high end and advanced technology. We need branding x 10.
 
-Orbit is an app platform for people who work on computers.
+The big pitch it presents is this: nothing works directly for you, the person, to help you manage your digital life.
 
-We unify all your cloud knowledge into a searchable tray and provide you a dock.
+Orbit is a PIM that upgrades your entire operating system.
 
-We include some really useful small apps to start:
+The big fundamental change it presents is adding context to your OS, as well as a whole new way to build contextual fluid apps that dont get in your way and help you stay on top of your life.
 
-- Recent activity
-- Easy to manage lists
-- Trending topics
+The first three apps are People, Terms, and Memory.
 
-And we're building a way to write custom apps and deploy them into your dock.
+You can view contextually relevant people, terms and items from your memory.
 
 ---
 

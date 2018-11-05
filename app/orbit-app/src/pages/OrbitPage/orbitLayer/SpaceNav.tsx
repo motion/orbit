@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
-import { View, Text, Row, Button } from '@mcro/ui'
+import { View, Text, Row } from '@mcro/ui'
 import { OrbitStore } from '../../../stores/OrbitStore'
 import { Icon } from '../../../views/Icon'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'

@@ -79,6 +79,7 @@ export function Menu(props: Props) {
   const open = store.open
   const left = store.menuCenter
   const width = props.width
+  console.log('rendering menu', open, store.isHoveringMenu, store.isHoveringTray)
   return (
     <Popover
       open={open}

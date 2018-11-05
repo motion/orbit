@@ -45,7 +45,7 @@ export class OrbitStore {
       {
         id: 'people',
         type: 'people',
-        title: '@people',
+        title: 'People',
         icon: 'multipleNeutral2',
         trigger: '@',
         static: true,
@@ -53,7 +53,7 @@ export class OrbitStore {
       {
         id: 'topics',
         type: 'topics',
-        title: '#topics',
+        title: 'Topics',
         icon: 'singleNeutralChat',
         trigger: '#',
         static: true,
@@ -61,7 +61,7 @@ export class OrbitStore {
       {
         id: 'lists',
         type: 'lists',
-        title: '/lists',
+        title: 'Lists',
         icon: 'listBullets',
         trigger: '/',
         static: true,

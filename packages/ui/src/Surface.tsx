@@ -31,7 +31,6 @@ export type SurfaceProps = CSSPropertySet & {
   glowProps?: Object
   height?: number
   highlight?: boolean
-  hoverable?: boolean
   hovered?: boolean
   icon?: React.ReactNode
   iconAfter?: boolean
@@ -124,6 +123,7 @@ const SurfaceFrame = view(View, {
   fontFamily: 'inherit',
   position: 'relative',
 }).theme(props => {
+  // :hover, :focus, :active
   const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   const propStyles = propsToStyles(props)
   // circular
@@ -327,7 +327,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
             {icon && !stringIcon ? <div>{icon}</div> : null}
             {icon && stringIcon ? (
               <Icon
-                // @ts-ignore
                 order={icon && iconAfter ? 3 : 'auto'}
                 name={`${icon}`}
                 size={getIconSize(this.props)}

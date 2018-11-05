@@ -228,7 +228,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           
           self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
           
-          let nextTrayRect = [Int(trayRect.minX), Int(trayRect.maxX)]
+          let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
           // send tray location...
           if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
             lastTrayRect = nextTrayRect
@@ -384,7 +384,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     print("sending \(info)")
     self.emit(info)
     // send last tray bounds too
-    self.emit(self.lastTrayBoundsMessage)
+    if self.lastTrayBoundsMessage != "" {
+      self.emit(self.lastTrayBoundsMessage)
+    }
   }
   
   func promptForAccessibility() -> Bool {

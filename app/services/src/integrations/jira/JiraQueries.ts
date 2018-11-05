@@ -3,6 +3,11 @@ import { JiraCommentCollection, JiraIssueCollection, JiraUser } from './JiraType
 
 /**
  * Jira queries.
+ *
+ * https://tryorbit2.atlassian.net
+ * natewienert@gmail.com
+ * AtlOrbit123
+ *
  */
 export class JiraQueries {
 
@@ -41,6 +46,7 @@ export class JiraQueries {
     return {
       path: '/rest/api/2/search',
       query: {
+        jql: 'order by updated DESC',
         fields: '*all',
         maxResults,
         startAt,

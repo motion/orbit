@@ -39,42 +39,55 @@ export class ConfluenceLoader {
    * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-get
    */
   async loadContents(
-    type?: 'page' | 'blogpost',
-    start = 0,
-    limit = 25,
-  ): Promise<ConfluenceContent[]> {
+    type: 'page' | 'blogpost',
+    cursor: number,
+    loadedCount: number,
+    handler: (
+      content: ConfluenceContent,
+      cursor?: number,
+      loadedCount?: number,
+      isLast?: boolean,
+    ) => Promise<boolean> | boolean,
+  ): Promise<void> {
     await sleep(ServiceLoadThrottlingOptions.confluence.contents)
 
-    // without type specified we load everything
-    if (!type) {
-      const pages = await this.loadContents('page', start, limit)
-      const blogs = await this.loadContents('blogpost', start, limit)
-      return Promise.all([...pages, ...blogs])
-    }
+    const maxResults = 25
+    const response = await this.loader.load(ConfluenceQueries.contents(type, cursor, maxResults))
+    const hasNextPage = response.size > cursor + maxResults
 
-    // scopes we use here:
-    // 1. childTypes.all - used to get information if content has comments
-    // 2. history.contributors.publishers - used to get people ids who edited content
-    // 3. space - used to get "location/directory" of the page
-    // 4. body.styled_view - used to get bit body / page content (with html styles included)
+    // traverse over loaded issues and call streaming function
+    for (let i = 0; i < response.results.length; i++) {
+      const content = response.results[i]
+      try {
 
-    const response = await this.loader.load(ConfluenceQueries.contents(type, start, limit))
+        // load content comments
+        if (content.childTypes.comment.value === true) {
+          content.comments = await this.loadComments(content.id)
+        } else {
+          content.comments = []
+        }
 
-    // load content comments
-    for (let content of response.results) {
-      if (content.childTypes.comment.value === true) {
-        content.comments = await this.loadComments(content.id)
-      } else {
-        content.comments = []
+        const isLast = i === response.results.length - 1 && hasNextPage === false
+        const result = await handler(content, cursor + maxResults, loadedCount + response.results.length, isLast)
+
+        // if callback returned true we don't continue syncing
+        if (result === false) {
+          this.log.info('stopped issue syncing, no need to sync more', {
+            issue: content,
+            index: i,
+          })
+          return // return from the function, not from the loop!
+        }
+      } catch (error) {
+        this.log.warning('Error during issue handling ', content, error)
       }
     }
 
-    // load recursively to get all content from all "pages"
-    if (response.results.length < response.size) {
-      return [...response.results, ...(await this.loadContents(type, start + limit, limit))]
+    // since we can only load max 100 pages per request, we check if we have more pages to load
+    // then execute recursive call to load next 100 pages. Do it until we reach the end (total)
+    if (hasNextPage) {
+      await this.loadContents(type, cursor + maxResults, loadedCount + response.results.length, handler)
     }
-
-    return response.results
   }
 
   /**

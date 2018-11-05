@@ -77,6 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private var supportsTransparency = false
   private var accessibilityPermission = false
   private var trayLocation = "Out"
+  private var lastTrayBoundsMessage = ""
 
   let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
 
@@ -232,7 +233,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
             lastTrayRect = nextTrayRect
             print("sending new tray rect \(nextTrayRect)")
-            self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }")
+            self.lastTrayBoundsMessage = "{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }"
+            self.emit(self.lastTrayBoundsMessage)
           }
           // handle events
           self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
@@ -381,6 +383,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     """
     print("sending \(info)")
     self.emit(info)
+    // send last tray bounds too
+    self.emit(self.lastTrayBoundsMessage)
   }
   
   func promptForAccessibility() -> Bool {

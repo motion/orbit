@@ -1,3 +1,49 @@
+## next
+
+### nate
+
+Monday:
+
+- Mock ListsApp better (with pinning)
+- Mock design for search groups
+- Mock design for terminology app (topics, leading into highlights)
+- Mock design for people app
+- Mock design for Orbit context
+
+Tuesday:
+
+- Fix settings panes
+- Orbit contextual search app
+- Hold Option to show last opened app
+- Make list app input box nice
+- Menu input box auto focuses
+- Option plus start typing to insert/filter
+- Fix tray targets and interaction a bit more
+- Fix flickering/duplicate orbit toggling
+- Fix pane switching performance
+
+Wednesday:
+
+- Grouped search design
+- Search performance
+- Keyboard nav in search moving window down
+- Fix peek performance showing next to orbit window
+- Show app next to menu app
+
+Thursday:
+
+- Fix search filters and date filters
+- Fix NLP filtering and test it
+- Re-enable quickresults in search
+- Fix cosal invert bug
+- Topic modeling
+
+Friday:
+
+- Get profiles with topic modeling
+- Get topics app using real data for changing over time topics
+- Allow custom topics in topics app
+
 umed:
 
 - Gmail syncer:
@@ -6,8 +52,7 @@ umed:
     - Only insert a person if _I_ sent them an email (not a reply but new email)
     - But if a person exists already (via slack, jira, github, etc), still attach the email to that existing profile
 
-- Apps data storage:
-  -
+- ## Apps data storage:
 
 * lists/topics/people
 

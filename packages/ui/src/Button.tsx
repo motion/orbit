@@ -56,7 +56,6 @@ const ButtonInner = ({
       }}
       type={type}
       clickable
-      hoverable
       sizeFont
       sizePadding
       sizeRadius

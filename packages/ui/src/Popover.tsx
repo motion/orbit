@@ -305,7 +305,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       this.target = getTarget(target)
     } else {
       const child = findDOMNode(this) as HTMLDivElement
-      const target = child.querySelector('.popover-target')
+      const target = child.classList.contains('popover-target')
       if (target) {
         this.target = child
       }
@@ -905,6 +905,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const targetProps = {
       ref: this.targetRef,
       active: false,
+      className: `${target.props.className} popover-target`,
     }
     if (this.props.passActive) {
       targetProps.active = this.showPopover

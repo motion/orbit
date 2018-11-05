@@ -1,5 +1,5 @@
 import { react, ensure } from '@mcro/black'
-import { App, Electron } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { QueryStore } from './QueryStore/QueryStore'
 import { AppActions } from '../actions/AppActions'
 import { hoverSettler } from '../helpers'
@@ -101,12 +101,12 @@ export class SelectionStore {
   })
 
   clearSelectedOnLeave = react(
-    () => [this.leaveIndex, Electron.hoverState.peekHovered],
-    async ([leaveIndex, peekHovered], { sleep, when }) => {
-      if (!peekHovered) {
+    () => [this.leaveIndex, Desktop.hoverState.appHovered],
+    async ([leaveIndex, appHovered], { sleep, when }) => {
+      if (!appHovered) {
         await sleep(100)
       }
-      await when(() => !peekHovered)
+      await when(() => !appHovered)
       await sleep(100)
       ensure('has leave index', leaveIndex > -1)
       this.clearSelected()

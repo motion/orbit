@@ -1,11 +1,10 @@
-import { App, Electron } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { store, react, ensure } from '@mcro/black'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
+import { Oracle } from '@mcro/oracle'
+import { throttle } from 'lodash'
 
-type Point = {
-  x: number
-  y: number
-}
+type Point = [number, number]
 
 type BoundLike = {
   position: number[]
@@ -17,8 +16,8 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
   if (!bounds || !mousePosition) {
     return false
   }
-  const { x } = mousePosition
-  const y = mousePosition.y - MAC_TOPBAR_HEIGHT
+  const x = mousePosition[0]
+  const y = mousePosition[1] - MAC_TOPBAR_HEIGHT
   const { position, size } = bounds
   if (!position || !size) {
     return false
@@ -29,14 +28,18 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
 }
 
 @store
-export class HoverStateStore {
+export class MousePositionManager {
   lastMousePos?: Point
+
+  constructor({ oracle }: { oracle: Oracle }) {
+    oracle.onMousePosition(this.updateHoverState)
+  }
 
   unsetOrbitHoveredOnHide = react(
     () => App.orbitState.docked,
     docked => {
       ensure('hidden', !docked)
-      Electron.setHoverState({ orbitHovered: false })
+      Desktop.setState({ hoverState: { orbitHovered: false } })
     },
   )
 
@@ -48,7 +51,7 @@ export class HoverStateStore {
         .join('')
     },
     () => {
-      this.handleMousePosition(this.lastMousePos)
+      this.updateHoverState(this.lastMousePos)
     },
   )
 
@@ -56,28 +59,37 @@ export class HoverStateStore {
     () => App.orbitState.size,
     () => {
       ensure('last mouse pos', !!this.lastMousePos)
-      this.handleMousePosition(this.lastMousePos)
+      this.updateHoverState(this.lastMousePos)
     },
   )
 
-  handleMousePosition = async (mousePos: Point) => {
+  updateHoverState = throttle((mousePos: Point) => {
+    // avoid updates if no move
+    const { lastMousePos } = this
+    if (lastMousePos && lastMousePos[0] === mousePos[0] && lastMousePos[1] === mousePos[1]) {
+      return
+    }
+
+    // update last pos
     this.lastMousePos = mousePos
+
+    // update hover states...
 
     // orbit hovered
     const orbitHovered = App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
 
     // app hovered
-    let peekHovered = Electron.hoverState.peekHovered
+    let appHovered = Desktop.hoverState.appHovered
     for (const [index, app] of App.appsState.entries()) {
       const isPeek = index === 0
       const hovered = isMouseOver(app, mousePos)
-      peekHovered[app.id] = isPeek ? !!app.target && hovered : hovered
+      appHovered[app.id] = isPeek ? !!app.target && hovered : hovered
     }
 
     // menu hovered
     const ms = App.state.trayState.menuState
     const menuHovered = Object.keys(ms).reduce((a, b) => a || ms[b].open, false)
 
-    Electron.setHoverState({ peekHovered, orbitHovered, menuHovered })
-  }
+    Desktop.setState({ hoverState: { appHovered, orbitHovered, menuHovered } })
+  }, 35)
 }

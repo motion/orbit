@@ -28,6 +28,7 @@ export type AppFocusState = {
 class DesktopStore {
   // TODO have the store decorator auto-define these types
   // shortcuts
+  hoverState: DesktopStore['state']['hoverState']
   appState: DesktopStore['state']['appState']
   ocrState: DesktopStore['state']['ocrState']
   searchState: DesktopStore['state']['searchState']
@@ -62,6 +63,13 @@ class DesktopStore {
       title: '',
       offset: [0, 0],
       bounds: [0, 0],
+    },
+    hoverState: {
+      orbitHovered: false,
+      menuHovered: false,
+      appHovered: {
+        0: false,
+      },
     },
     ocrState: {
       salientWords: null as string[],

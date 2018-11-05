@@ -5,9 +5,6 @@ export let Electron = null as ElectronStore
 
 @store
 class ElectronStore {
-  hoverState: ElectronStore['state']['hoverState']
-  setHoverState: Function
-
   messages = {
     CLEAR: 'CLEAR',
     FOCUS: 'FOCUS',
@@ -31,13 +28,6 @@ class ElectronStore {
     updateState: {
       downloading: false,
       percent: 0,
-    },
-    hoverState: {
-      orbitHovered: false,
-      menuHovered: false,
-      peekHovered: {
-        0: false,
-      },
     },
     showDevTools: {
       app: false,

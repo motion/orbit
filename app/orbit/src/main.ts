@@ -69,7 +69,7 @@ export async function main() {
     // wait for desktop to start before starting other processes...
     const desktopServerUrl = `http://localhost:${config.ports.server}`
     await waitOn({ resources: [desktopServerUrl] })
-    await new Promise(res => setTimeout(res, 100))
+    await new Promise(res => setTimeout(res, 250))
 
     // syncers
     if (!DISABLE_SYNCERS) {

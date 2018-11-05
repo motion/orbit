@@ -1,16 +1,13 @@
 import { App, Electron } from '@mcro/stores'
-import { isEqual, store, on } from '@mcro/black'
-import { app, screen, clipboard } from 'electron'
+import { store } from '@mcro/black'
+import { app, clipboard } from 'electron'
 import { ShortcutsStore } from './ShortcutsStore'
-import { HoverStateStore } from './HoverStateStore'
 
 @store
 export class OrbitStore {
   shortcutStore = new ShortcutsStore()
-  hoverStateStore = new HoverStateStore()
 
   async didMount() {
-    this.followMousePosition()
     this.shortcutStore.onShortcut(this.onShortcut)
     Electron.onMessage(msg => {
       switch (msg) {
@@ -23,20 +20,6 @@ export class OrbitStore {
           return
       }
     })
-  }
-
-  followMousePosition = () => {
-    let lastPoint
-    on(
-      this,
-      setInterval(() => {
-        const nextPoint = screen.getCursorScreenPoint()
-        if (!isEqual(nextPoint, lastPoint)) {
-          lastPoint = nextPoint
-          this.hoverStateStore.handleMousePosition(nextPoint)
-        }
-      }, 40),
-    )
   }
 
   onShortcut = async shortcut => {

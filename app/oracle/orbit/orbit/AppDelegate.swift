@@ -222,8 +222,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
           let height = (NSScreen.main?.frame.height)!
-          let invertedMouseLocation = (event.cgEvent?.location)!
-          let mouseLocation = NSPoint.init(x: invertedMouseLocation.x, y: height - invertedMouseLocation.y)
+          let mouseLocation = (event.cgEvent?.location)!
+          let invMouseLocation = NSPoint.init(x: mouseLocation.x, y: height - mouseLocation.y)
+          
+          self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
+          
           let nextTrayRect = [Int(trayRect.minX), Int(trayRect.maxX)]
           // send tray location...
           if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
@@ -232,7 +235,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.emit("{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }")
           }
           // handle events
-          self.trayLocation = self.getTrayLocation(mouseLocation: mouseLocation, trayRect: trayRect)
+          self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
           throttledHover((self.trayLocation, self.socketBridge))
         }
       }

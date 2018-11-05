@@ -1,5 +1,5 @@
 import { store, react, ensure } from '@mcro/black'
-import { App, Electron } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
 import { showNotification } from '../helpers/electron/showNotification'
 import { PopoverState } from '@mcro/ui'
@@ -76,7 +76,7 @@ export class AppReactions {
   )
 
   clearPopoversOnMouseLeave = react(
-    () => Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered,
+    () => Desktop.hoverState.orbitHovered || Desktop.hoverState.appHovered,
     hovered => {
       ensure('not hovered', !hovered)
       PopoverState.closeAll()

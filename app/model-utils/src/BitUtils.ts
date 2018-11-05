@@ -1,5 +1,4 @@
-import { Bit, Source } from '@mcro/models'
-import { IntegrationType } from '@mcro/models/_'
+import { Bit, IntegrationType, Source } from '@mcro/models'
 import { hash } from '@mcro/utils'
 
 /**

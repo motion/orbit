@@ -98,6 +98,7 @@ export default class DebugApps {
 
   getSessions = async (): Promise<any> => {
     return flatten(await Promise.all(this.sessions.map(this.getDevUrl)))
+      .sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
   }
 
   lastRes = {}
@@ -125,7 +126,7 @@ export default class DebugApps {
       // timeout because it doesnt resolve if the app is down
       setTimeout(() => {
         resolve(null)
-      }, 1000)
+      }, 5000)
       try {
         const answers = await r2.get(infoUrl).json
         const sortedAnswers = answers
@@ -137,7 +138,7 @@ export default class DebugApps {
             return null
           })
           .filter(Boolean)
-          .sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
+
         resolve(sortedAnswers)
       } catch (err) {
         // console.log('error dev url for, process down?', port, id)

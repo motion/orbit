@@ -210,7 +210,7 @@ export class GithubLoader {
         // if callback returned true we don't continue syncing
         if (result === false) {
           this.log.info('stopped pull request syncing, no need to sync more', {
-            issue: pullRequests[i],
+            pullRequest: pullRequests[i],
             index: i,
           })
           return // return from the function, not from the loop!

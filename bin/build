@@ -10,6 +10,8 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     (bin/in store-hmr npm run build)
     (cd app && tsc --build $ARGS) &
     wait
+    (bin/in reactron npm run build) &
+    wait
     (bin/in ui npm run build) &
     (bin/in reactron npm run build) &
     wait

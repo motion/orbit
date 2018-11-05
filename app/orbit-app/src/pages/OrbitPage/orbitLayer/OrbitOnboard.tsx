@@ -5,10 +5,8 @@ import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { addAppClickHandler } from '../../../helpers/addAppClickHandler'
 import { SourcesStore } from '../../../stores/SourcesStore'
 import { Title, VerticalSpace } from '../../../views'
-// import { getGlobalConfig } from '@mcro/config'
 import { checkAuthProxy } from '../../../helpers/checkAuthProxy'
 import { promptForAuthProxy } from '../../../helpers/promptForAuthProxy'
-// import { MessageDark } from '../../../views/Message'
 import { BlurryGuys } from './BlurryGuys'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { OrbitIntegration, ItemType } from '../../../integrations/types'
@@ -26,7 +24,6 @@ type Props = {
 
 const framePad = 30
 export const numFrames = 3
-// subtract padding from parent
 
 const Centered = view({
   margin: 'auto',
@@ -48,7 +45,7 @@ const AddButton = ({ disabled, ...props }) =>
     </Theme>
   )
 
-const buttonText = ['Start Secure Auth', 'Next', 'Done!']
+const buttonText = ['Start Local Proxy', 'Next', 'Done!']
 
 class OnboardStore {
   props: Props
@@ -77,13 +74,8 @@ class OnboardStore {
     return isShowingSuccessMessage
   }
 
-  prevFrame = () => this.curFrame--
-  nextFrame = async () => {
-    this.pendingMove = true
-    // before incrementing, run some actions for:
-    // LEAVING curFrame page...
-
-    if (this.curFrame === 0) {
+  stateActions = {
+    0: async () => {
       await this.checkAlreadyProxied()
       console.log('already on?', this.accepted)
       if (this.accepted !== true) {
@@ -102,18 +94,25 @@ class OnboardStore {
           return
         }
       }
-    }
-
-    if (this.curFrame === 2) {
+    },
+    1: () => {},
+    2: async () => {
       this.props.paneManagerStore.setActivePane('home')
       this.props.paneManagerStore.forceOnboard = false
       // save setting
       await this.props.settingStore.update({
         hasOnboarded: true,
       })
-    }
+    },
+  }
 
-    // go to next frame
+  prevFrame = () => {
+    this.curFrame--
+  }
+
+  nextFrame = async () => {
+    this.pendingMove = true
+    await this.stateActions[this.curFrame]()
     this.curFrame++
     this.pendingMove = false
   }
@@ -148,7 +147,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
   return (
-    <SubPane name="onboard" paddingLeft={0} paddingRight={0}>
+    <SubPane id="onboard" paddingLeft={0} paddingRight={0}>
       <BlurryGuys />
       <Slider curFrame={store.curFrame}>
         <SliderPane>
@@ -163,21 +162,16 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
                 Welcome to Orbit
               </Text>
               <View height={30} />
-              <Text selectable textAlign="left" size={1.1} sizeLineHeight={1.025} alpha={0.9}>
-                Welcome to your personal OS. Orbit is your own tool to manage disparate information
-                in a beautiful, private, extensible way.
+              <Text selectable textAlign="left" size={1.2} sizeLineHeight={1.025} alpha={0.9}>
+                Orbit is your team knowledge manager.
                 <VerticalSpace />
-                Orbit runs 100% locally on your device and never exposes your keys or data to anyone
-                but you. To do that it needs to run a secure local server to handle sensitive
-                information on-device.
+                It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b>{' '}
+                within your company without exposing any of your team data to us. To do so it runs
+                privately each persons computer.
+                <VerticalSpace />
+                Orbit will set up a local proxy now to enable private sync and the access quick URLs
+                you can access in your browser.
               </Text>
-              <VerticalSpace />
-              <VerticalSpace />
-              <div className="markdown">
-                <a href="http://tryorbit.com/security">
-                  Learn about our security & privacy commitment.
-                </a>
-              </div>
               <VerticalSpace />
               <VerticalSpace />
               <VerticalSpace />
@@ -279,12 +273,12 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
         </SliderPane>
       </Slider>
       <BottomControls disabled={store.disableButtons}>
+        <View width={10} flex={1} />
         {store.curFrame > 1 && (
           <Button chromeless onClick={store.prevFrame}>
             Back
           </Button>
         )}
-        <View width={10} />
         <Theme name="orbit">
           <Button
             disabled={store.pendingMove}

@@ -6,62 +6,26 @@
 
 Menu:
 
-Topics - trending up/down
-Lists - pin website or any part of screen
-Orbit - see context just by hovering the O
+- http://fossa Home
+- Searchbar plus taps for three simple areas:
+  - shortcuts/directory, topics, people
 
-App:
+Nate: build the intranet site / interfaces. Fix menubar versions/search in Orbit
+Umed: account signup, team setup, data sync, cloud server, search faster
 
-Opening app shows context (Home) which is the same as search by default. Basically we have two ways of showing all of Orbit, in the app window or in the menu.
+- http://orbit
+  - shows your orbits
+  - this is automatic based on slack login
 
-In the menu you can do quick actions: copy link, open directly, or open the app view. In Orbit you can browse more easily and see in-app views.
+http://orbitname to see that orbit
+make it so you can choose name
 
-We could bring back holding down Option to see context.
+p2:
 
-We'll get pinning working through the website crawler but later allow it to either use just "whats on screen" or "entire website" if they so choose.
-
-We'll need accessbility permissions walkthrough.
-
-Improving search in general including grouped search will be a big part of this.
-
-Goal by end of the month is to cut a release and write a new blog post about it.
-
-General idea of the blog post will be:
-
-- Were making Orbit more useful.
-- It will be like your digital brain - organizing everything you care about and letting you explore it intuitively.
-- Later we can expand to teams but we want to get the personal experience right first.
-
-### Breaking it down
-
-We'll have four weeks in November to do this:
-
-- Generally finish getting apps to show next to menu items and finishing menus
-- Generally get the right way to persist data for these apps (lists mostly)
-- Create topics app that shows some interesting topics as they move
-- Create lists app that lets you pin, search, sort lists of things
-- Get pinning mechanic down with accessibility walkthrough and crawler
-- Prepare for OCR working by doing context:
-  - Have a fake way to trigger fake context content
-  - Make the search results "Home" show that when its active
-  - Make the menu item for orbit show that when opened
-  - Make holding Option show context
-- Productionize and test, fix various new bugs
-- Write blog post
-
-### Unknowns
-
-"People" seem to get lost in this. Sure they can be contextually relevant to what you're looking at so that is definitely useful then to show them. But perhaps sharing is another thing we can start to explore. Once you're in an Orbit it seems you could very easily share things then with people.
-
-Topic modeling may take more time or be pretty intense. The menu may take a while to productionize fully.
-
-"Me" could just be a section in search/home. So the other sections are more global but personal section is just filtered to your things. Perhaps concept of Me could also include your topics and interests over time.
-
----
-
-bundle it with bartender
-
-https://www.macbartender.com/
+- profiles with topics
+- topics app where you can pin terms and it suggests some
+- shortcuts app improvements
+- better intranet shortcuts hi/someone, go/somewhere, and [company]/xyz
 
 ---
 
@@ -79,46 +43,6 @@ a = await Promise.all(t.slice(0, 10).map(async term => {
   }
 }))
 ```
-
-ListsApp is up next:
-
-- ListIndexApp - the list manager that shows in Orbit and in hover menu
-- ListApp - looking at a list, has sorting, search filtering and opening items
-
-umed:
-
-1. testing search with various filters, fixing performance
-2. syncing a lot of data to test and fix performance
-3. fixing syncers to avoid overfilling hard drive
-4. splitting out locations into a new model so we can use them for various things
-5. create a unified profile for the person using orbit: we should get information on their gmail, slack, github and we can figure out their emails they use across them to link them together (more on this during call)
-6. creating a link-crawler that can be hooked into any syncer with an option (so if theres a link in slack we can crawl that link using the website-crawler and add it as a bit)
-7. improving the way we handle raw vs formatted data on bits so its more consistent
-8. fixing google drive settings pane so it works and we can select folders using a searchbar
-9. search-based sync where we can index more stuff based on their searches by hitting the API for their search directly
-10. see if we can get website-crawler working using their chrome or just download puppeteer into a shared config directory we make
-
-questions:
-
-- a query for bits made by "me"
-- also can't we unify the profile for "me" very easily?
-
-  - if so, then on a team level as everyone adds themselves into orbit we can unify all profiles between them!
-
-nate:
-
-- two ways to get interesting topics:
-  - topic modeling exploration:
-    - setup test script environment
-    - using cosal:
-      - scan documents using cosal
-      - if you find bi/tri-grams of salient words, store
-      - count times you see those bi/tri-grams
-      - do for whole corpus
-      - sort by most counted and use that for topics
-    - using pre-defined:
-      - take recent 3000 bits you've produced
-      - sort most salient topics to those bits and product topic list
 
 search:
 

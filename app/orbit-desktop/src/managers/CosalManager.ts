@@ -88,7 +88,7 @@ export class CosalManager {
   }
 
   getGlobalTopTopics = async () => {
-    console.warn('SCANNING ALL BITS MAY BE SUPER SLOW...')
+    console.log('SCANNING ALL BITS MAY BE SUPER SLOW...')
     const totalBits = await getRepository(BitEntity).count()
     if (!totalBits) {
       return []

@@ -35,7 +35,7 @@ const updateProps = (props, nextProps) => {
     const a = props[prop]
     const b = nextProps[prop]
     if (a !== b) {
-      console.log('has changed prop', prop, nextProps[prop])
+      // console.log('has changed prop', prop, nextProps[prop])
       props[prop] = nextProps[prop]
     }
   }
@@ -94,7 +94,7 @@ const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
   return store.current
 }
 
-export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
+export const useStore = <A>(Store: new () => A, props?: Object): A => {
   const proxyStore = useRef(null)
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const shouldReloadStore =
@@ -113,9 +113,6 @@ export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
     }
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
-        if (debug) {
-          console.log('getting key', key)
-        }
         if (!hasTrackedKeys.current) {
           reactiveKeys.current[key] = true
         }
@@ -127,9 +124,6 @@ export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
   // untrack after the first render
   useEffect(() => {
     return () => {
-      if (debug) {
-        console.log('now stopping tracking')
-      }
       hasTrackedKeys.current = true
     }
   }, [])
@@ -143,9 +137,6 @@ export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
       dispose.current = idFn
       setTimeout(() => {
         dispose.current = autorun(() => {
-          if (debug) {
-            console.log('reacting to keys', reactiveKeys.current)
-          }
           for (const key in reactiveKeys.current) {
             store[key]
           }

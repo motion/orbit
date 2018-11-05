@@ -14,7 +14,7 @@ export class ElectronStore {
   stores = null
   views = null
   clear = Date.now()
-  show = 2
+  show = 0
   apps = new Set()
 
   async didMount() {
@@ -24,6 +24,7 @@ export class ElectronStore {
       this.stores = stores
       this.views = views
     })
+    this.reset()
     this.setScreenSize()
     screen.on('display-metrics-changed', async (_event, _display) => {
       log.info('got display metrics changed event')
@@ -41,7 +42,7 @@ export class ElectronStore {
   async reset() {
     log.info('Resetting...')
     this.show = 0
-    await sleep(1)
+    await sleep(16)
     this.show = 2
   }
 

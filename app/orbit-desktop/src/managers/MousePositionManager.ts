@@ -35,35 +35,18 @@ export class MousePositionManager {
     oracle.onMousePosition(this.updateHoverState)
   }
 
-  unsetOrbitHoveredOnHide = react(
-    () => App.orbitState.docked,
-    docked => {
-      ensure('hidden', !docked)
-      Desktop.setState({ hoverState: { orbitHovered: false } })
-    },
-  )
-
-  unsetMenusHoveredOnHide = react(
+  updateHoverAttributes = react(
     () => {
       const { menuState } = App.state.trayState
-      return Object.keys(menuState)
+      const trayOpened = Object.keys(menuState)
         .map(k => menuState[k].open)
         .join('')
+      return [App.orbitState.docked, trayOpened, App.orbitState.size]
     },
-    () => {
-      this.updateHoverState(this.lastMousePos)
-    },
+    () => this.updateHoverState(),
   )
 
-  updateHoverStateOnResize = react(
-    () => App.orbitState.size,
-    () => {
-      ensure('last mouse pos', !!this.lastMousePos)
-      this.updateHoverState(this.lastMousePos)
-    },
-  )
-
-  updateHoverState = throttle((mousePos: Point) => {
+  updateHoverState = throttle((mousePos: Point = this.lastMousePos) => {
     // avoid updates if no move
     const { lastMousePos } = this
     if (lastMousePos && lastMousePos[0] === mousePos[0] && lastMousePos[1] === mousePos[1]) {
@@ -79,7 +62,7 @@ export class MousePositionManager {
     const orbitHovered = App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
 
     // app hovered
-    let appHovered = Desktop.hoverState.appHovered
+    let appHovered = { ...Desktop.hoverState.appHovered }
     for (const [index, app] of App.appsState.entries()) {
       const isPeek = index === 0
       const hovered = isMouseOver(app, mousePos)

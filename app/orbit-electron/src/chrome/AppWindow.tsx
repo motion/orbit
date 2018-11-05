@@ -113,14 +113,15 @@ const decorator = compose(
   view,
 )
 export const AppWindow = decorator(({ id, store, isPeek }: Props & { store: AppWindowStore }) => {
-  log.info(`Rendering app window ${id} at url ${store.url}`)
+  const ignoreMouseEvents = !Desktop.hoverState.appHovered[id]
+  log.info(`Rendering app window ${id} at url ${store.url} ignore mouse? ${ignoreMouseEvents}`)
   return (
     <Window
       alwaysOnTop={isPeek}
       show
       focus={false}
       ref={store.handleRef}
-      ignoreMouseEvents={!Desktop.hoverState.appHovered[id] || false}
+      ignoreMouseEvents={ignoreMouseEvents}
       focusable={isPeek}
       file={store.url}
       frame={false}

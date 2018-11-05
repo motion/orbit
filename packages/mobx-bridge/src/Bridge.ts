@@ -29,6 +29,40 @@ const root = isBrowser ? window : require('global')
 // only debounce on browser for fluidity, desktop should be immediate
 const runNow = x => (isBrowser ? setImmediate(x) : x())
 const immediate = () => new Promise(res => runNow(res))
+const bothObjects = (a, b) =>
+  a &&
+  b &&
+  (isPlainObject(a) || Mobx.isObservableObject(a)) &&
+  (isPlainObject(b) || Mobx.isObservableObject(b))
+
+const diffDeep = (a: Object, b: Object, shouldMutateA = false) => {
+  const diff = {}
+  // calculate diff for smaller syncs, need to test perf
+  for (const bKey in b) {
+    const aVal = a[bKey]
+    const bVal = b[bKey]
+    // deep diff only objects
+    if (bothObjects(aVal, bVal)) {
+      const subDiff = diffDeep(aVal, bVal, shouldMutateA)
+      if (subDiff) {
+        diff[bKey] = subDiff
+      }
+    } else {
+      if (aVal !== bVal) {
+        diff[bKey] = bVal
+        if (shouldMutateA) {
+          a[bKey] = bVal
+        }
+      }
+    }
+  }
+  if (!Object.keys(diff).length) {
+    return null
+  }
+  return diff
+}
+
+root['diffDeep'] = diffDeep
 
 type Disposer = () => void
 
@@ -123,10 +157,8 @@ export class BridgeManager {
       masterSource: 'Desktop',
       port: this.port,
       onState: (source, state, _uid) => {
-        // log.verbose(`onState ${_uid} ${JSON.stringify(state)}`)
-        this.deepMergeMutate(stores[source].state, state, {
-          ignoreKeyCheck: true,
-        })
+        const res = diffDeep(stores[source].state, state, true)
+        console.log('getting new state', state, res)
       },
       actions: {
         // stores that first connect send a call to get initial state
@@ -182,7 +214,7 @@ export class BridgeManager {
           throw new Error(`No state found for source (${source}) state (${state}) store(${store})`)
         }
         await immediate()
-        this.deepMergeMutate(state, newState, { ignoreKeyCheck: true })
+        diffDeep(state, newState, true)
         // we have initial state :)
         if (source === this._source && !this.hasFetchedInitialState) {
           this.debounceSetHasFetched()
@@ -283,13 +315,14 @@ export class BridgeManager {
       throw new Error(`Bad state passed to ${this._source}.setState: ${newState}`)
     }
     // update our own state immediately so its sync
-    const changedState = this.deepMergeMutate(this.state, newState)
+    const changedState = this.updateStateWithDiff(this.state, newState)
     if (process.env.NODE_ENV === 'development') {
       if (changedState) {
         log.verbose('setState', newState, 'changedState', changedState)
       }
     }
     if (!ignoreSend) {
+      console.log('send that shit', newState, changedState)
       this.sendChangedState(changedState)
     }
     return changedState
@@ -330,55 +363,44 @@ export class BridgeManager {
 
   // return keys of changed items
   @action
-  deepMergeMutate(
+  updateStateWithDiff(
     stateObj: Object,
     newState: Object,
     { ignoreKeyCheck = false, onlyKeys = null } = {}, // ignoreLog?: Boolean,
   ) {
     let changed = null
     for (const key in newState) {
-      if (!ignoreKeyCheck) {
-        const isValidKey = onlyKeys
-          ? onlyKeys.indexOf(key) > -1
-          : this._initialState[key] !== 'undefined'
-        if (!isValidKey) {
-          console.error(
-            `${this._source}.deepMergeMutate: tried to set a key not in initialState
-              - key: ${key}
-              - typeof initial state key: ${typeof this._initialState[key]}
-              - value:
-                ${stringifyObject(newState)}
-              - initial state:
-                ${stringifyObject(this._initialState)}`,
-          )
-          continue
+      if (process.env.NODE_ENV === 'development') {
+        if (!ignoreKeyCheck) {
+          const isValidKey = onlyKeys
+            ? onlyKeys.indexOf(key) > -1
+            : this._initialState[key] !== 'undefined'
+          if (!isValidKey) {
+            console.error(
+              `${this._source}.updateStateWithDiff: tried to set a key not in initialState
+                - key: ${key}
+                - typeof initial state key: ${typeof this._initialState[key]}
+                - value:
+                  ${stringifyObject(newState)}
+                - initial state:
+                  ${stringifyObject(this._initialState)}`,
+            )
+            continue
+          }
         }
       }
       // avoid on same object
-      const a = Mobx.toJS(stateObj[key])
-      const b = Mobx.toJS(newState[key])
-      const bothObjects = a && b && isPlainObject(a) && isPlainObject(b)
-      if (bothObjects) {
+      const a = stateObj[key]
+      const b = newState[key]
+      if (bothObjects(a, b)) {
         // check if equal
-        const diff = {}
-        let areEqual = true
-        // calculate diff for smaller syncs, need to test perf
-        for (const cKey in b) {
-          if (!isEqual(a[cKey], b[cKey])) {
-            diff[cKey] = b[cKey]
-            areEqual = false
-          }
-        }
-        if (areEqual) {
+        const diff = diffDeep(a, b, true)
+        if (!diff) {
           continue
         }
-        // Because mobx wont trigger reactions as youd expect unless you do this.
-        // Basically App.setState({ a: { b:1 } }) wont trigger a reaction in:
-        //   react(() => App.a), and you'd generally want that to happen.
-        stateObj[key] = {
-          ...a,
-          ...b,
-        }
+        // then set it as a new object on the root (mobx wont trigger reactions as youd expect unless you do this.)
+        // so App.setState({ a: { b:1 } }) triggers reaction in react(() => App.a)
+        stateObj[key] = { ...a }
         changed = changed || {}
         changed[key] = diff
       } else {

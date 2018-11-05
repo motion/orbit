@@ -144,6 +144,9 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
     })
   }
 
+  // this may "look" backward but because mutationEffect fires on finished render
+  // this is what we want: stop tracking on finished render
+  // start tracking again after that (presumable before next render, but not 100%)
   useMutationEffect(() => {
     shouldTrackKeys = false
     return () => {

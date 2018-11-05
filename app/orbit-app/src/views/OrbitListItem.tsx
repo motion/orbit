@@ -171,7 +171,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     }
     const hide = {
       ...this.props.hide,
-      ...(ItemView && ItemView.itemProps.hide),
+      ...(ItemView && ItemView.itemProps && ItemView.itemProps.hide),
     }
     const showChildren = !(hide && hide.body)
     const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)

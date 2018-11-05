@@ -42,9 +42,9 @@ export async function main() {
     // this means we are the root process, so we run the forks
 
     // setup process error watching before doing most stuff
-    require('./handleErrors').handleErrors()
+    require('./helpers/handleErrors').handleErrors()
     // exit handling
-    const { handleExit, setupHandleExit } = require('./handleExit')
+    const { handleExit, setupHandleExit } = require('./helpers/handleExit')
 
     if (process.env.NODE_ENV === 'development') {
       // in prod electron handles this

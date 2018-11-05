@@ -4,6 +4,7 @@ import { SelectionStore } from '../stores/SelectionStore'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionGroup } from './SelectionResults'
+import { SubPaneStore } from '../components/SubPaneStore'
 
 export class AppStore {
   props: {
@@ -12,6 +13,7 @@ export class AppStore {
     queryStore: QueryStore
     paneManagerStore?: PaneManagerStore
     selectionStore: SelectionStore
+    subPaneStore?: SubPaneStore
   }
 
   selectionResults = null
@@ -63,5 +65,9 @@ export class AppStore {
 
   get queryStore() {
     return this.props.queryStore
+  }
+
+  get paneNode() {
+    return this.props.subPaneStore.paneNode
   }
 }

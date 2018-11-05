@@ -1,31 +1,4 @@
-# Ora - your memory
-
-## November
-
-### High level
-
-Menu:
-
-- http://fossa Home
-- Searchbar plus taps for three simple areas:
-  - shortcuts/directory, topics, people
-
-Nate: build the intranet site / interfaces. Fix menubar versions/search in Orbit
-Umed: account signup, team setup, data sync, cloud server, search faster
-
-- http://orbit
-  - shows your orbits
-  - this is automatic based on slack login
-
-http://orbitname to see that orbit
-make it so you can choose name
-
-p2:
-
-- profiles with topics
-- topics app where you can pin terms and it suggests some
-- shortcuts app improvements
-- better intranet shortcuts hi/someone, go/somewhere, and [company]/xyz
+- lists/topics/people
 
 ---
 

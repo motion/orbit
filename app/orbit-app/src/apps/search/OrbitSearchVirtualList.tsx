@@ -15,17 +15,15 @@ import { Bit } from '@mcro/models'
 import { reaction, trace } from 'mobx'
 import { debounce } from 'lodash'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitItemSingleton } from '../../views/OrbitItemStore'
 import { Banner } from '../../views/Banner'
-import { SubPaneStore } from '../../components/SubPaneStore'
 import { renderHighlightedText } from '../../views/SortableList/renderHighlightedText'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { AppStore } from '../AppStore'
 
 type Props = {
-  searchStore?: SearchStore
-  selectionStore?: SelectionStore
-  subPaneStore?: SubPaneStore
+  searchStore: SearchStore
+  appStore?: AppStore
 }
 
 type ListItemProps = {
@@ -89,7 +87,7 @@ const FirstItems = view(({ items, searchStore }) => {
   )
 })
 
-@attach('searchStore', 'selectionStore', 'subPaneStore')
+@attach('appStore')
 @view
 export class OrbitSearchVirtualList extends React.Component<Props> {
   windowScrollerRef = React.createRef<WindowScroller>()
@@ -117,7 +115,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   )
 
   private scrollToRow = reaction(
-    () => this.props.selectionStore.activeIndex - this.offset,
+    () => this.props.appStore.activeIndex - this.offset,
     index => {
       try {
         ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
@@ -131,7 +129,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
   )
 
   get paneNode() {
-    return this.props.subPaneStore.paneNode
+    return this.props.appStore.paneNode
   }
 
   observing = false

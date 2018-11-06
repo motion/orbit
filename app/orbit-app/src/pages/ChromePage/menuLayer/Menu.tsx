@@ -26,10 +26,29 @@ class MenuStore {
     },
   )
 
+  get allMenusOpenState() {
+    const state = App.state.trayState.menuState
+    return Object.keys(state).map(key => state[key].open)
+  }
+
+  get isAnotherMenuOpen() {
+    return this.allMenusOpenState.some((isOpen, index) => index !== this.props.index && isOpen)
+  }
+
   open = react(
-    () => [this.isHoveringTray, this.isHoveringMenu],
-    async ([hoveringTray, hoveringMenu], { sleep }) => {
+    () => [this.isHoveringTray, this.isHoveringMenu, this.isAnotherMenuOpen],
+    async ([hoveringTray, hoveringMenu, anotherMenuOpen], { sleep, when }) => {
+      // close if another menu opens
+      if (anotherMenuOpen) {
+        return false
+      }
+      // if open now, delay just a bit before closing
       if (this.open) {
+        await sleep(60)
+      }
+      // if hovering the app window keep it open until not
+      if (!anotherMenuOpen && Desktop.hoverState.appHovered[0]) {
+        await when(() => !Desktop.hoverState.appHovered[0])
         await sleep(60)
       }
       return hoveringTray || hoveringMenu
@@ -63,12 +82,10 @@ class MenuStore {
   )
 
   handleMouseEnter = () => {
-    log('hoverenter')
     this.isHoveringMenu = true
   }
 
   handleMouseLeave = () => {
-    log('hoverleave')
     this.isHoveringMenu = false
   }
 }

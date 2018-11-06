@@ -11,15 +11,10 @@ Monday:
 
 Tuesday:
 
-- Fix settings panes
 - Orbit contextual search app
 - Hold Option to show last opened app
-- Make list app input box nice
 - Menu input box auto focuses
-- Option plus start typing to insert/filter
 - Fix tray targets and interaction a bit more
-- Fix flickering/duplicate orbit toggling
-- Fix pane switching performance
 
 Wednesday:
 

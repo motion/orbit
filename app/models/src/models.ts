@@ -6,6 +6,7 @@ import { Person } from './Person'
 import { PersonBit } from './PersonBit'
 import { Source } from './Source'
 import { Setting } from './Setting'
+import { Space } from './Space'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
@@ -23,6 +24,10 @@ export const PersonModel = new Model<Person, FindOptions<Person>, FindOptionsWhe
 
 export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptionsWhere<Setting>>(
   'Setting',
+)
+
+export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<Space>>(
+  'Space',
 )
 
 export const SourceModel = new Model<Source, FindOptions<Source>, FindOptionsWhere<Source>>(

@@ -3,7 +3,11 @@ import { view, ensure, attach } from '@mcro/black'
 import { Popover, View, Col, Row } from '@mcro/ui'
 import { reaction, trace } from 'mobx'
 import { App } from '@mcro/stores'
+import { findDOMNode } from 'react-dom'
+import { AppActions } from '../../../actions/AppActions'
+import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import * as Views from '../../../views'
 import { NavButton } from '../../../views/NavButton'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { CSSPropertySet, Theme } from '@mcro/gloss'
@@ -11,12 +15,12 @@ import { RowItem } from '../../../views/RowItem'
 import { FocusableShortcutHandler } from '../../../views/FocusableShortcutHandler'
 import { fuzzyQueryFilter } from '../../../helpers'
 import { Icon } from '../../../views/Icon'
-import { OrbitStore, Orbit } from '../../../stores/OrbitStore'
+import { SpaceStore } from '../../../stores/SpaceStore'
 import { OrbitOrb } from '../../../views/OrbitOrb'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
-  orbitStore?: OrbitStore
+  spaceStore?: SpaceStore
 } & React.HTMLProps<HTMLDivElement> &
   CSSPropertySet
 
@@ -34,30 +38,12 @@ class SpaceSwitchStore {
     }
   }
 
-  get searchableSpaces(): (Orbit & { props?: Object })[] {
-    return [
-      ...this.props.orbitStore.inactiveSpaces,
-      {
-        name: 'Create new space...',
-        color: ['#eee', '#eee'],
-        props: {
-          titleProps: {
-            fontWeight: 400,
-            size: 1,
-            alpha: 0.8,
-          },
-          after: <Icon name="addcircle" size={14} fill="#444" />,
-        },
-      },
-    ]
-  }
-
   get filteredSpaces() {
-    return fuzzyQueryFilter(this.query, this.searchableSpaces)
+    return fuzzyQueryFilter(this.query, this.props.spaceStore.inactiveSpaces)
   }
 
   get spaces() {
-    return this.props.orbitStore.orbits
+    return this.props.spaceStore.spaces
   }
 
   down = e => {
@@ -71,7 +57,7 @@ class SpaceSwitchStore {
   }
 }
 
-@attach('orbitStore', 'paneManagerStore')
+@attach('spaceStore', 'paneManagerStore')
 @attach({
   store: SpaceSwitchStore,
 })
@@ -106,12 +92,24 @@ export class OrbitSwitch extends React.Component<Props> {
     up: this.props.store.up,
   }
 
+  createNewSpace = () => {
+    AppActions.togglePeekApp(
+      {
+        type: 'newSpace',
+        title: 'New Space',
+        icon: 'orbit',
+      },
+      getTargetPosition(findDOMNode(this) as HTMLDivElement),
+    )
+  }
+
   render() {
-    const { paneManagerStore, orbitStore, store, ...props } = this.props
-    const { activeSpace } = orbitStore
+    const { paneManagerStore, spaceStore, store, ...props } = this.props
+    const { activeSpace } = spaceStore
     const { selectedIndex, filteredSpaces } = store
     const borderRadius = 8
     trace()
+
     return (
       <FocusableShortcutHandler
         focused={store.open}
@@ -156,13 +154,18 @@ export class OrbitSwitch extends React.Component<Props> {
               <View padding={5}>
                 <Row background="#eee">
                   <Icon name="search" size={12} />
+                  <Views.InputRow
+                    label="Search..."
+                    value={store.query}
+                    onChange={value => store.query = value}
+                  />
                   <View tagName="input" placeholder="Search..." />
                 </Row>
               </View>
             </Theme>
             <View overflowY="auto" maxHeight={300}>
-              <RowItem
-                orb={activeSpace.color}
+              { activeSpace ? <RowItem
+                orb={activeSpace.colors}
                 title={activeSpace.name}
                 subtitle="20 people"
                 after={
@@ -174,11 +177,12 @@ export class OrbitSwitch extends React.Component<Props> {
                   />
                 }
                 hover={false}
-              />
+              /> : <div>No spaces</div> }
               <View flex={1} margin={[2, 10]} background="#eee" height={1} />
               {filteredSpaces.map((space, index) => {
                 return (
                   <RowItem
+                    onClick={() => spaceStore.activeIndex = index}
                     key={space.name}
                     selected={selectedIndex === index + 1}
                     orb={space.color}
@@ -187,6 +191,15 @@ export class OrbitSwitch extends React.Component<Props> {
                   />
                 )
               })}
+              <RowItem
+                onClick={this.createNewSpace}
+                key='new-space'
+                title='Create new space...'
+                titleProps={{ fontWeight: 400, size: 1, alpha: 0.8 }}
+                after={
+                  <Icon name="addcircle" size={14} fill="#444" />
+                }
+              />
             </View>
           </Col>
         </Popover>

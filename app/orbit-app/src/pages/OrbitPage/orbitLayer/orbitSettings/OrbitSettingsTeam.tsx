@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
+import { SpaceStore } from '../../../../stores/SpaceStore'
 import { Title, HorizontalScroll, VerticalSpace } from '../../../../views'
 import { SubTitle } from '../../../../views/SubTitle'
 import { View, Icon } from '@mcro/ui'
 import { Grid } from '../../../../views/Grid'
-import { SourcesStore } from '../../../../stores/SourcesStore'
 import { OrbitAppCard } from '../../../../components/OrbitAppCard'
 import { ToggleApp } from './ToggleApp'
 import { OrbitOrb } from '../../../../views/OrbitOrb'
@@ -36,26 +36,24 @@ const OrbitSpaceCard = ({ children, label, active = false, ...props }) => (
   </OrbitSpaceCardFrame>
 )
 
-@attach('paneManagerStore', 'sourcesStore')
+@attach('paneManagerStore', 'spaceStore')
 @view
 export class OrbitSettingsTeam extends React.Component<{
-  sourcesStore?: SourcesStore
+  spaceStore?: SpaceStore
   paneManagerStore?: PaneManagerStore
 }> {
   isSubPaneSelected = () => this.props.paneManagerStore.subPane === 'apps'
 
   render() {
-    const { sourcesStore } = this.props
+    const { spaceStore } = this.props
     return (
       <>
         <SubTitle>Spaces</SubTitle>
         <HorizontalScroll height={84}>
           <ToggleApp
             appConfig={{
-              type: 'view',
-              id: 'confluence',
-              subType: 'NewOrbitPane',
-              title: 'New Orbit',
+              type: 'newSpace',
+              title: 'New Space',
               icon: 'orbit',
             }}
           >
@@ -65,37 +63,38 @@ export class OrbitSettingsTeam extends React.Component<{
               </View>
             </OrbitSpaceCard>
           </ToggleApp>
-          {[
-            { bg: '#333', color: '#fff', name: 'Me' },
-            { bg: '#222', color: '#985FC9', name: 'Orbit', active: true },
-          ].map(({ bg, color, name, active }, i) => (
-            <OrbitSpaceCard key={i} active={active} label={name}>
-              <OrbitOrb background={bg} color={color} />
+          {spaceStore.spaces.map((space, i) => (
+            <OrbitSpaceCard onClick={() => spaceStore.activeIndex = i} key={i} active={spaceStore.activeIndex === i} label={space.name}>
+              <OrbitOrb background={space.colors[0] || '#EEE'} color={space.colors[1] || '#333'} />
             </OrbitSpaceCard>
           ))}
         </HorizontalScroll>
         <VerticalSpace />
-        <Title>Orbit</Title>
-        <Grid
-          gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
-          gridAutoRows={80}
-          margin={[5, -4]}
-        >
-          {sourcesStore.activeSources.map((app, index) => (
-            <OrbitAppCard
-              key={index}
-              app={app}
-              total={sourcesStore.activeSources.length}
-              inGrid
-              activeCondition={this.isSubPaneSelected}
-              pane="docked"
-              subPane="apps"
-              index={index}
-              isActive
-            />
-          ))}
-        </Grid>
-        <VerticalSpace />
+        {spaceStore.activeSortedSpaces.map(space => (
+          <>
+            <Title>{space.name}</Title>
+            <Grid
+              gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
+              gridAutoRows={80}
+              margin={[5, -4]}
+            >
+              {spaceStore.spaceSources(space).map((app, index) => (
+                <OrbitAppCard
+                  key={index}
+                  app={app}
+                  total={spaceStore.spaceSources(space).length}
+                  inGrid
+                  activeCondition={this.isSubPaneSelected}
+                  pane="docked"
+                  subPane="apps"
+                  index={index}
+                  isActive
+                />
+              ))}
+            </Grid>
+            <VerticalSpace />
+          </>
+        ))}
       </>
     )
   }

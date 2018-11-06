@@ -7,7 +7,7 @@ import { HighlightsLayer } from './highlightsLayer/HighlightsLayer'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
-import { OrbitStore } from '../../stores/OrbitStore'
+import { SpaceStore } from '../../stores/SpaceStore'
 import { OrbitLayer } from './orbitLayer/OrbitLayer'
 import { Theme } from '@mcro/ui'
 import { App } from '@mcro/stores'
@@ -18,7 +18,7 @@ import { App } from '@mcro/stores'
   orbitWindowStore: OrbitWindowStore,
 })
 @provide({
-  orbitStore: OrbitStore,
+  spaceStore: SpaceStore,
 })
 @provide({
   queryStore: QueryStore,

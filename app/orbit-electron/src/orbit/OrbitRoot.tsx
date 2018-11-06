@@ -9,7 +9,7 @@ import { devTools } from '../helpers/devTools'
 
 @provide({
   electronStore: ElectronStore,
-  orbitStore: OrbitStore,
+  spaceStore: OrbitStore,
 })
 @view
 export class OrbitRoot extends React.Component {

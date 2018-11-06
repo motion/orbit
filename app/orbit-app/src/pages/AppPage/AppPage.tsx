@@ -3,6 +3,7 @@ import { view, provide, attach } from '@mcro/black'
 import { SourcesStore } from '../../stores/SourcesStore'
 // import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
+import { SpaceEditView } from '../SpaceEditView'
 import { ViewStore } from './ViewStore'
 import * as UI from '@mcro/ui'
 import { AppFrame } from './AppFrame'
@@ -116,6 +117,9 @@ class AppPageContent extends React.Component<Props> {
     setup: () => {
       const View = this.getView('setup')
       return () => <View />
+    },
+    newSpace: () => {
+      return () => <SpaceEditView />
     },
   }
 

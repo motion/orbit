@@ -8,6 +8,7 @@ import {
   PersonEntity,
   SettingEntity,
   SourceEntity,
+  SpaceEntity,
 } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -30,6 +31,7 @@ import {
   SearchPinnedResultModel,
   SearchByTopicModel,
   SourceModel,
+  SpaceModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -59,7 +61,7 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
-import { MousePositionManager } from './managers/MousePositionManager';
+import { MousePositionManager } from './managers/MousePositionManager'
 
 const log = new Logger('desktop')
 
@@ -215,6 +217,7 @@ export class Root {
         SearchLocationsModel,
         SearchPinnedResultModel,
         SearchByTopicModel,
+        SpaceModel,
       ],
       commands: [
         SourceSaveCommand,
@@ -235,6 +238,7 @@ export class Root {
           { entity: JobEntity, models: [JobModel] },
           { entity: PersonEntity, models: [PersonModel] },
           { entity: PersonBitEntity, models: [PersonBitModel] },
+          { entity: SpaceEntity, models: [SpaceModel] },
         ]),
         SourceRemoveResolver,
         SourceSaveResolver,

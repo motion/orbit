@@ -54,6 +54,7 @@ const createSource = async (type: IntegrationType, values: OauthValues) => {
   //   setting = new SourceEntity()
   // }
   const setting: Source = {
+    spaceId: 1, // todo: we need to receive space id instead of hard codding it
     target: 'source',
     category: 'integration',
     identifier: type + (await getRepository(SourceEntity).count()), // adding count temporary to prevent unique constraint error

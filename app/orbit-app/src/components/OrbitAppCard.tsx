@@ -27,6 +27,7 @@ export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...pro
   let countSubtitle = store.bitsCount >= 0 ? Number(store.bitsCount).toLocaleString() : '...'
   const commaIndex = countSubtitle.indexOf(',')
   countSubtitle = commaIndex > -1 ? `${countSubtitle.slice(0, commaIndex)}k` : countSubtitle
+  console.log("app", app)
   return (
     <OrbitCard
       direct

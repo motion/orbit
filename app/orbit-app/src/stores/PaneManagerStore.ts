@@ -5,7 +5,7 @@ import { observeOne } from '@mcro/model-bridge'
 import { SettingModel } from '@mcro/models'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
-import { OrbitStore } from './OrbitStore'
+import { AppPanes, SpaceStore } from './SpaceStore'
 import { QueryStore } from './QueryStore/QueryStore'
 import { AppActions } from '../actions/AppActions'
 import { generalSettingQuery } from '../helpers/queries'
@@ -15,12 +15,12 @@ type Panes = 'home' | 'settings' | 'onboard' | string
 export class PaneManagerStore {
   props: {
     selectionStore: SelectionStore
-    orbitStore?: OrbitStore
+    spaceStore?: SpaceStore
     queryStore?: QueryStore
   }
 
   get panes(): Partial<Panes>[] {
-    return [...this.props.orbitStore.activeSpace.panes.map(p => p.id), 'settings']
+    return [...AppPanes.map(p => p.id), 'settings']
   }
 
   keyablePanes = [0, 4]
@@ -40,7 +40,7 @@ export class PaneManagerStore {
   setActivePaneOnTrigger = react(
     () => this.props.queryStore.query[0],
     firstChar => {
-      for (const { type, trigger } of this.props.orbitStore.activeSpace.panes) {
+      for (const { type, trigger } of AppPanes) {
         if (trigger && trigger === firstChar) {
           this.setActivePane(type)
           return

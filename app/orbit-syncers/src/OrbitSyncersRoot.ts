@@ -5,8 +5,9 @@ import {
   JobEntity,
   PersonBitEntity,
   PersonEntity,
-  SourceEntity,
   SettingEntity,
+  SourceEntity,
+  SpaceEntity,
 } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -15,16 +16,17 @@ import {
   JobModel,
   PersonBitModel,
   PersonModel,
+  SettingModel,
   SourceForceSyncCommand,
   SourceModel,
-  SettingModel,
+  SpaceModel,
 } from '@mcro/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
-import { SourceForceSyncResolver } from './resolvers/SourceForceSyncResolver'
 import { Syncers } from './core/Syncers'
+import { SourceForceSyncResolver } from './resolvers/SourceForceSyncResolver'
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
@@ -91,7 +93,7 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [SettingModel, SourceModel, BitModel, JobModel, PersonModel, PersonBitModel],
+      models: [SettingModel, SourceModel, BitModel, JobModel, PersonModel, PersonBitModel, SpaceModel],
       commands: [SourceForceSyncCommand],
       transport: new WebSocketServerTransport({
         port: 40001, // todo: use config?
@@ -104,6 +106,7 @@ export class OrbitSyncersRoot {
           { entity: JobEntity, models: [JobModel] },
           { entity: PersonEntity, models: [PersonModel] },
           { entity: PersonBitEntity, models: [PersonBitModel] },
+          { entity: SpaceEntity, models: [SpaceModel] },
         ]),
         SourceForceSyncResolver,
       ],

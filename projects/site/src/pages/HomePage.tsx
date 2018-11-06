@@ -723,13 +723,13 @@ class OrbitStore {
 
 @attach('homeStore')
 @attach({
-  orbitStore: OrbitStore,
+  spaceStore: OrbitStore,
 })
 @view
 class Orbit extends React.Component {
   render() {
-    const { homeStore, orbitStore } = this.props
-    const { stopAt } = orbitStore
+    const { homeStore, spaceStore } = this.props
+    const { stopAt } = spaceStore
     const { lockedIndex, lastLockedIndex } = homeStore
     const restingIndex = lockedIndex === -1 ? lastLockedIndex : lockedIndex
     const restingPosition = [[100, 100], [window.innerWidth, 100], [200, 700]][restingIndex]

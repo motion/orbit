@@ -5,6 +5,7 @@ import { GmailSourceValues } from './source-values/GmailSourceValues'
 import { JiraSourceValues } from './source-values/JiraSourceValues'
 import { SlackSourceValues } from './source-values/SlackSourceValues'
 import { WebsiteSourceValues } from './source-values/WebsiteSourceValues'
+import { Space } from './Space'
 
 export type BaseSource = {
   /**
@@ -16,6 +17,16 @@ export type BaseSource = {
    * Unique setting id.
    */
   id?: number
+
+  /**
+   * Space where source is stored.
+   */
+  space?: Space
+
+  /**
+   * Id of the space where source is stored.
+   */
+  spaceId?: number
 
   /**
    * Setting name.
@@ -30,17 +41,17 @@ export type BaseSource = {
   updatedAt?: Date
 }
 
-export type GithubSource = BaseSource & { type?: 'github'; values?: GithubSourceValues }
-export type SlackSource = BaseSource & { type?: 'slack'; values?: SlackSourceValues }
-export type DriveSource = BaseSource & { type?: 'drive'; values?: DriveSourceValues }
-export type GmailSource = BaseSource & { type?: 'gmail'; values?: GmailSourceValues }
-export type JiraSource = BaseSource & { type?: 'jira'; values?: JiraSourceValues }
+export type GithubSource = BaseSource & { type?: 'github', values?: GithubSourceValues }
+export type SlackSource = BaseSource & { type?: 'slack', values?: SlackSourceValues }
+export type DriveSource = BaseSource & { type?: 'drive', values?: DriveSourceValues }
+export type GmailSource = BaseSource & { type?: 'gmail', values?: GmailSourceValues }
+export type JiraSource = BaseSource & { type?: 'jira', values?: JiraSourceValues }
 export type ConfluenceSource = BaseSource & {
   type?: 'confluence'
   values?: ConfluenceSourceValues
 }
 export type AtlassianSource = JiraSource | ConfluenceSource
-export type WebsiteSource = BaseSource & { type?: 'website'; values?: WebsiteSourceValues }
+export type WebsiteSource = BaseSource & { type?: 'website', values?: WebsiteSourceValues }
 
 export type AllSources = {
   github: GithubSource

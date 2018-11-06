@@ -155,7 +155,11 @@ export class SearchStore {
         if (!nextResults) {
           return false
         }
-        results = [...results, ...nextResults]
+        results = [
+          ...results,
+          { type: 'summary', title: 'Something', body: 'Lorem ipsum' },
+          ...nextResults,
+        ]
         setValue({
           results,
           query,

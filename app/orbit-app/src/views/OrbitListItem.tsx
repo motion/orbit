@@ -59,7 +59,6 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       subtitleSpaceBetween,
       searchTerm,
       onClickLocation,
-      model,
       renderText,
       separator,
       ...props
@@ -83,7 +82,6 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     const showTitle = !(hide && hide.title)
     const showPeople = !!(
       !(hide && hide.people) &&
-      (model.target === 'bit' && model.integration !== 'slack') &&
       people &&
       people.length &&
       people[0].data['profile']
@@ -100,21 +98,6 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
               />
             </UI.Text>
           )}
-          {/* <div style={{ width: 8 }} /> */}
-          {/* <RoundButtonSmall
-            icon="link"
-            size={1.1}
-            tooltip="Open"
-            opacity={0.5}
-            background="transparent"
-            onClick={e => {
-              console.log('opening', model)
-              e.preventDefault()
-              e.stopPropagation()
-              Actions.openItem(model)
-              Actions.closeOrbit()
-            }}
-          /> */}
         </Row>
       </AfterHeader>
     )
@@ -260,6 +243,9 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     const { store, model, direct } = this.props
     store.isSelected
     if (!model) {
+      if (direct) {
+        return this.getInner(this.props)
+      }
       return null
     }
     return this.getInner(direct ? model : normalizeItem(model))

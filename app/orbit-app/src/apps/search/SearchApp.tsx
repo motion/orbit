@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
 import { StaticContainer } from '../../views/StaticContainer'
-import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
+import { OrbitSearchResults } from './OrbitSearchResults'
 import { OrbitSearchNav } from './OrbitSearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
@@ -21,29 +21,20 @@ export function SearchApp(props: AppProps) {
           },
         }}
       >
-        <SearchAppFrame searchStore={searchStore} />
+        {/* <OrbitSearchQuickResults /> */}
+        <OrbitSearchResultsFrame
+          style={{
+            opacity: searchStore.isChanging ? 0.7 : 1,
+          }}
+        >
+          <StaticContainer>
+            <OrbitSearchResults searchStore={searchStore} appStore={props.appStore} offsetY={60} />
+          </StaticContainer>
+        </OrbitSearchResultsFrame>
       </ItemResolverDecorationContext.Provider>
     </>
   )
 }
-
-// separate view to prevent a few renders...
-const SearchAppFrame = view(({ searchStore }: AppProps & { searchStore: SearchStore }) => {
-  return (
-    <>
-      {/* <OrbitSearchQuickResults /> */}
-      <OrbitSearchResultsFrame
-        style={{
-          opacity: searchStore.isChanging ? 0.7 : 1,
-        }}
-      >
-        <StaticContainer>
-          <OrbitSearchVirtualList searchStore={searchStore} offsetY={60} />
-        </StaticContainer>
-      </OrbitSearchResultsFrame>
-    </>
-  )
-})
 
 const OrbitSearchResultsFrame = view({
   position: 'relative',

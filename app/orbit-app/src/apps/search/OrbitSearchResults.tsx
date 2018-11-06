@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { SearchStore } from './SearchStore'
-import { view, attach } from '@mcro/black'
+import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/OrbitListItem'
-import { handleClickLocation } from '../../helpers/handleClickLocation'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { AppStore } from '../AppStore'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
@@ -19,15 +18,22 @@ const spaceBetween = <div style={{ flex: 1 }} />
 
 class ListItem extends React.PureComponent<ListItemProps> {
   render() {
-    const { model, realIndex, query, ignoreSelection, ...props } = this.props
+    const { model, realIndex, query, ...props } = this.props
+    if (model.type === 'summary') {
+      const item = model as any
+      return (
+        <OrbitListItem direct index={realIndex}>
+          {item.title}
+          Hello word
+        </OrbitListItem>
+      )
+    }
     return (
       <OrbitListItem
         index={realIndex}
         model={model}
         subtitleSpaceBetween={spaceBetween}
-        isExpanded
         searchTerm={query}
-        onClickLocation={handleClickLocation}
         maxHeight={200}
         overflow="hidden"
         renderText={renderHighlightedText}
@@ -36,16 +42,14 @@ class ListItem extends React.PureComponent<ListItemProps> {
           condensed: true,
           preventSelect: true,
         }}
-        ignoreSelection={ignoreSelection}
         {...props}
       />
     )
   }
 }
 
-@attach('appStore')
 @view
-export class OrbitSearchVirtualList extends React.Component<Props> {
+export class OrbitSearchResults extends React.Component<Props> {
   static defaultProps = {
     offsetY: 0,
   }

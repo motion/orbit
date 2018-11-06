@@ -7,8 +7,6 @@ export function startElectron() {
   // this works in prod
   app.on('before-quit', handleExit)
 
-  log.info('Found desktop, continue...')
-
   if (app.isReady) {
     finishLaunchingElectron()
   } else {

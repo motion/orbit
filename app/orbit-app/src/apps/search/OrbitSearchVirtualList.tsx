@@ -65,7 +65,14 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
           maxSurroundChars: 80,
         }}
       >
-        <VirtualList items={this.props.searchStore.searchState.results} ItemView={ListItem} />
+        <VirtualList
+          infinite
+          items={searchStore.searchState.results}
+          ItemView={ListItem}
+          rowCount={searchStore.remoteRowCount}
+          loadMoreRows={searchStore.loadMore}
+          isRowLoaded={this.isRowLoaded}
+        />
       </ProvideHighlightsContextWithDefaults>
     )
   }

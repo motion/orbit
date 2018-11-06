@@ -43,13 +43,13 @@ class ChromePageStore {
   unFocusOnMenusClosed = react(
     () => getAnyMenuOpen(),
     async (anyMenuOpen, { sleep }) => {
-      // console.log('anyMenuOpen', anyMenuOpen)
-      // if (anyMenuOpen) {
-      //   setTrayFocused(true)
-      // } else {
-      //   await sleep(200)
-      //   setTrayFocused(false)
-      // }
+      console.log('anyMenuOpen', anyMenuOpen)
+      if (anyMenuOpen) {
+        setTrayFocused(true)
+      } else {
+        await sleep(200)
+        setTrayFocused(false)
+      }
     },
   )
 }

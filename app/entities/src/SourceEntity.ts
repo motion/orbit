@@ -1,11 +1,13 @@
+import { Space } from '@mcro/models/_'
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  Entity,
+  Entity, ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { SpaceEntity } from './SpaceEntity'
 
 @Entity()
 export class SourceEntity extends BaseEntity {
@@ -13,6 +15,12 @@ export class SourceEntity extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id?: number
+
+  @ManyToOne(() => SpaceEntity, space => space.sources)
+  space?: Space
+
+  @Column({ nullable: false })
+  spaceId?: number
 
   @Column({ nullable: true, unique: true })
   identifier?: string

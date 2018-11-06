@@ -10,7 +10,7 @@ import { SourcesStore } from '../../../stores/SourcesStore'
 import { SpaceNav, SpaceNavHeight } from './SpaceNav'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { SubPane } from '../../../components/SubPane'
-import { OrbitStore } from '../../../stores/OrbitStore'
+import { AppPanes, SpaceStore } from '../../../stores/SpaceStore'
 import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { App } from '../../../apps/App'
@@ -20,7 +20,7 @@ type Props = {
   searchStore?: SearchStore
   viewStore?: OrbitWindowStore
   sourcesStore?: SourcesStore
-  orbitStore?: OrbitStore
+  spaceStore?: SpaceStore
   queryStore?: QueryStore
 }
 
@@ -48,7 +48,7 @@ const Interactive = view({
   },
 })
 
-@attach('orbitStore', 'queryStore', 'sourcesStore', 'searchStore', 'selectionStore')
+@attach('spaceStore', 'queryStore', 'sourcesStore', 'searchStore', 'selectionStore')
 @provide({
   paneManagerStore: PaneManagerStore,
 })
@@ -72,7 +72,7 @@ export class OrbitPaneManager extends React.Component<Props> {
               <SpaceNav />
             </Interactive>
             <OrbitOnboard name="onboard" />
-            {this.props.orbitStore.activeSpace.panes.map(pane => {
+            {AppPanes.map(pane => {
               return (
                 <SubPane
                   id={pane.id}

@@ -1,25 +1,23 @@
+import { attach, view } from '@mcro/black'
+import { Row, Text, View } from '@mcro/ui'
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
-import { View, Text, Row } from '@mcro/ui'
-import { OrbitStore } from '../../../stores/OrbitStore'
-import { Icon } from '../../../views/Icon'
+import { AppPanes } from '../../../stores/SpaceStore'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { Icon } from '../../../views/Icon'
 
 type Props = {
-  orbitStore?: OrbitStore
   paneManagerStore?: PaneManagerStore
 }
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
-@attach('orbitStore', 'paneManagerStore')
+@attach('paneManagerStore')
 @view
 export class SpaceNav extends React.Component<Props> {
   render() {
-    const { orbitStore, paneManagerStore } = this.props
-    const { activeSpace } = orbitStore
-    const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), activeSpace.panes.length - 1)
-    const activeItem = activeSpace.panes[curIndex]
+    const { paneManagerStore } = this.props
+    const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), AppPanes.length - 1)
+    const activeItem = AppPanes[curIndex]
     return (
       <Row position="relative" zIndex={1000} padding={[2, 12]} alignItems="center">
         {/* 1px padding to center it for some reason... */}
@@ -27,7 +25,7 @@ export class SpaceNav extends React.Component<Props> {
           <Icon size={16} name={activeItem.icon} />
         </View>
         <Row>
-          {orbitStore.activeSpace.panes.map((pane, index) => {
+          {AppPanes.map((pane, index) => {
             const isActive = curIndex === index
             return (
               <Text

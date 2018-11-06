@@ -1,4 +1,6 @@
 import { store } from '@mcro/black'
+import { SpaceEntity } from '@mcro/entities/_'
+import { Space } from '@mcro/models/_'
 import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '@mcro/entities'
 import { getRepository } from 'typeorm'
@@ -46,6 +48,23 @@ export class GeneralSettingManager {
       })
       await getRepository(SettingEntity).save(settingEntity)
       setting = await getRepository(SettingEntity).findOne({ name: 'general' })
+    }
+    let spaces = await getRepository(SpaceEntity).find()
+    if (!spaces.length) {
+      await getRepository(SettingEntity).save([
+        {
+          name: 'Orbit',
+          colors: ['blue', 'green'],
+        },
+        {
+          name: 'Me',
+          colors: ['red', 'gray'],
+        },
+        {
+          name: 'Discussions',
+          colors: ['blue', 'red'],
+        },
+      ])
     }
     this.handleAutoLaunch(setting)
   }

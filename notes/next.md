@@ -4,7 +4,6 @@
 
 Tuesday:
 
-- Mock design for search groups
 - Mock design for terminology app (topics, leading into highlights)
 - Mock design for people app
 - Mock design for Orbit context

@@ -334,7 +334,7 @@ export class Oracle {
       RUN_OCR: `${this.options.ocr}`,
       RUN_APP_WINDOW: `${this.options.appWindow}`,
       SOCKET_PORT: `${this.socketPort}`,
-      SHOW_TRAY: `${this.options.showTray}`,
+      SHOW_TRAY: `${this.options.showTray && !process.env.IGNORE_ELECTRON}`,
       NODE_ENV: process.env.NODE_ENV,
       ...this.env,
     }

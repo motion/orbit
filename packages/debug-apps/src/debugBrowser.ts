@@ -98,6 +98,7 @@ export default class DebugApps {
 
   getSessions = async (): Promise<any> => {
     return flatten(await Promise.all(this.sessions.map(this.getDevUrl)))
+      .filter(Boolean)
       .sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
   }
 

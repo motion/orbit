@@ -118,11 +118,11 @@ export class OrbitWindow extends React.Component<Props> {
   render() {
     const { store, electronStore } = this.props
     const url = Config.urls.server
-    log.info(`render OrbitWindow ${url} hovered? ${Electron.hoverState.orbitHovered}`)
+    log.info(`render OrbitWindow ${url} hovered? ${Desktop.hoverState.orbitHovered}`)
     return (
       <Window
         alwaysOnTop={[store.alwaysOnTop, 'floating', 1]}
-        ignoreMouseEvents={!Electron.hoverState.orbitHovered}
+        ignoreMouseEvents={!Desktop.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}
         focus={false}

@@ -23,7 +23,7 @@ export class PaneManagerStore {
     return [...this.props.orbitStore.activeSpace.panes.map(p => p.id), 'settings']
   }
 
-  keyablePanes = [0, 6]
+  keyablePanes = [0, 4]
   paneIndex = 0
   forceOnboard = null
   hasOnboarded = true

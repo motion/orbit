@@ -1,31 +1,80 @@
-# Ora - your memory
+## next
 
-## November
+### nate
 
-### High level
+Monday:
 
-Menu:
+- Mock design for search groups
+- Mock design for terminology app (topics, leading into highlights)
+- Mock design for people app
+- Mock design for Orbit context
 
-- http://fossa Home
-- Searchbar plus taps for three simple areas:
-  - shortcuts/directory, topics, people
+Tuesday:
 
-Nate: build the intranet site / interfaces. Fix menubar versions/search in Orbit
-Umed: account signup, team setup, data sync, cloud server, search faster
+- Orbit contextual search app
+- Hold Option to show last opened app
+- Menu input box auto focuses
+- Fix tray targets and interaction a bit more
 
-- http://orbit
-  - shows your orbits
-  - this is automatic based on slack login
+Wednesday:
 
-http://orbitname to see that orbit
-make it so you can choose name
+- Fix hovering on app windows
+- Grouped search design
+- Search performance
+- Keyboard nav in search moving window down
+- Fix peek performance showing next to orbit window
+- Show app next to menu app
 
-p2:
+Thursday:
 
-- profiles with topics
-- topics app where you can pin terms and it suggests some
-- shortcuts app improvements
-- better intranet shortcuts hi/someone, go/somewhere, and [company]/xyz
+- Fix search filters and date filters
+- Fix NLP filtering and test it
+- Re-enable quickresults in search
+- Fix cosal invert bug
+- Topic modeling
+
+Friday:
+
+- Get profiles with topic modeling
+- Get topics app using real data for changing over time topics
+- Allow custom topics in topics app
+
+---
+
+Monday:
+
+- Walkthrough accessibility permissions
+  - Custom Notifications :) would allow a lot
+- Person app send via slack/gmail
+- Hoversettler for menu peeks
+
+Tuesday:
+
+- Actual storage of data for each app
+- Lists app work
+
+Wednesday:
+
+- Topics app work
+
+Thursday:
+
+- App view improvements
+- Person app quick send actions
+
+---
+
+umed:
+
+- Gmail syncer:
+
+  - Gmail should sync People more strictly:
+    - Only insert a person if _I_ sent them an email (not a reply but new email)
+    - But if a person exists already (via slack, jira, github, etc), still attach the email to that existing profile
+
+- ## Apps data storage:
+
+* lists/topics/people
 
 ---
 

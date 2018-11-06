@@ -59,6 +59,7 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { Server } from './Server'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
+import { MousePositionManager } from './managers/MousePositionManager';
 
 const log = new Logger('desktop')
 
@@ -80,6 +81,7 @@ export class Root {
   screenManager: ScreenManager
   generalSettingManager: GeneralSettingManager
   databaseManager: DatabaseManager
+  mousePositionManager: MousePositionManager
 
   start = async () => {
     log.info('Start Desktop Store..')
@@ -138,6 +140,7 @@ export class Root {
     this.ocrManager = new OCRManager({ cosal: this.cosal })
     this.cosalManager = new CosalManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ oracle: this.oracle })
+    this.mousePositionManager = new MousePositionManager({ oracle: this.oracle })
     this.appsManager = new AppsManager()
 
     await this.server.start()

@@ -75,17 +75,15 @@ class InputPlain extends React.PureComponent<InputProps> {
         width="100%"
         alignItems="center"
         flexFlow="row"
-        sizeFont
+        themeSelect="input"
+        sizeFont={1.2}
         sizePadding
         sizeHeight
         sizeLineHeight
-        sizeRadius
+        sizeRadius={0.75}
         noInnerElement
         glint={false}
         borderWidth={1}
-        // @ts-ignore
-        background={theme => theme.inputBackground || theme.background}
-        borderColor={theme => theme.inputBorderColor || theme.borderColor}
         {...{
           value,
           onChange,

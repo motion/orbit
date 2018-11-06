@@ -1,6 +1,14 @@
 import { automagicClass } from '@mcro/automagical'
-import { isValidElement, useState, useEffect, useRef, createContext } from 'react'
-import { action, autorun, observable } from 'mobx'
+import {
+  isValidElement,
+  useState,
+  useEffect,
+  useRef,
+  createContext,
+  // @ts-ignore
+  useMutationEffect,
+} from 'react'
+import { action, autorun, observable, toJS } from 'mobx'
 
 let options = {
   onMount: null,
@@ -8,7 +16,6 @@ let options = {
   context: createContext(null),
 }
 
-const idFn = () => {}
 const isReactElement = x => {
   if (!x) {
     return false
@@ -51,12 +58,7 @@ const updateProps = (props, nextProps) => {
 const setupStoreWithReactiveProps = (Store, props?) => {
   if (props) {
     const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
-    const storeProps = observable(
-      {
-        props: props,
-      },
-      { props: observable.shallow },
-    )
+    const storeProps = observable({ props }, { props: observable.shallow })
     const getProps = {
       configurable: true,
       get: () => storeProps.props,
@@ -80,18 +82,21 @@ const setupStoreWithReactiveProps = (Store, props?) => {
   }
 }
 
-const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
+const useStoreWithReactiveProps = (Store, props, shouldHMR = false) => {
   let store = useRef(null)
   if (!store.current || shouldHMR) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
-  useEffect(() => {
-    if (props) {
-      store.current.__updateProps(store.current.props, props)
-    }
-    return () => {}
-  })
+  if (props) {
+    store.current.__updateProps(store.current.props, props)
+  }
   return store.current
+}
+
+const ignoreReactiveKeys = {
+  isMobXComputedValue: true,
+  __IS_DEEP: true,
+  IS_AUTO_RUN: true,
 }
 
 export const useStore = <A>(Store: new () => A, props?: Object): A => {
@@ -102,31 +107,46 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
     proxyStore.current &&
     proxyStore.current.constructor.toString() !== Store.toString()
   const store = useStoreWithReactiveProps(Store, props, shouldReloadStore)
-  const hasTrackedKeys = useRef(false)
   const dispose = useRef(null)
-  const reactiveKeys = useRef({})
+  const reactiveKeys = useRef(observable({}))
+  let shouldTrackKeys = true
   const update = useState(0)[1]
 
+  // setup store once
   if (!proxyStore.current || shouldReloadStore) {
     if (shouldReloadStore) {
       console.log('HMRing store', Store.name)
     }
+    if (process.env.NODE_ENV === 'development') {
+      store.__useStore = {
+        get reactiveKeys() {
+          return toJS(reactiveKeys.current)
+        },
+      }
+    }
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
-        if (!hasTrackedKeys.current) {
-          reactiveKeys.current[key] = true
+        if (shouldTrackKeys && typeof key === 'string') {
+          if (!ignoreReactiveKeys[key]) {
+            if (!reactiveKeys.current[key]) {
+              reactiveKeys.current[key] = true
+            }
+          }
         }
         return obj[key]
       },
     })
   }
 
-  // untrack after the first render
-  useEffect(() => {
+  // this may "look" backward but because mutationEffect fires on finished render
+  // this is what we want: stop tracking on finished render
+  // start tracking again after that (presumable before next render, but not 100%)
+  useMutationEffect(() => {
+    shouldTrackKeys = false
     return () => {
-      hasTrackedKeys.current = true
+      shouldTrackKeys = true
     }
-  }, [])
+  })
 
   // one effect to then run and watch the keys we track from the first one
   useEffect(() => {
@@ -134,21 +154,26 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
       options.onMount(store)
     }
     if (!dispose.current) {
-      dispose.current = idFn
-      setTimeout(() => {
-        dispose.current = autorun(() => {
-          for (const key in reactiveKeys.current) {
-            store[key]
-          }
-          update(Math.random())
-        })
-      }, 16)
+      dispose.current = autorun(() => {
+        // trigger reaction on keys
+        for (const key in reactiveKeys.current) {
+          store[key]
+        }
+        // update when we react
+        update(Math.random())
+      })
     }
     return () => {
+      // emit unmount
       if (options.onUnmount) {
         options.onUnmount(store)
       }
+      // stop autorun()
       dispose.current()
+      // remove subscriptions
+      if (store.subscriptions) {
+        store.subscriptions.dispose()
+      }
     }
   }, [])
 

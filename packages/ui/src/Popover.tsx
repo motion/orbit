@@ -299,14 +299,18 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     if (open) {
       this.open()
     }
+
+    // allow multiple flexible ways to pass in targets
     if (typeof target === 'string') {
       this.target = getTarget(target)
     } else {
       const child = findDOMNode(this) as HTMLDivElement
-      if (!child.classList.contains('popover')) {
+      const target = child.classList.contains('popover-target')
+      if (target) {
         this.target = child
       }
     }
+
     if (this.target) {
       this.listenForClick()
       this.listenForHover()
@@ -901,6 +905,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const targetProps = {
       ref: this.targetRef,
       active: false,
+      className: `${target.props.className} popover-target`,
     }
     if (this.props.passActive) {
       targetProps.active = this.showPopover
@@ -987,7 +992,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
         isOpen={showPopover}
         isClosing={closing}
-        className="popover"
       >
         {!!overlay && (
           <Overlay
@@ -1043,6 +1047,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
             flex={1}
             ignoreSegment
             hover={false}
+            active={false}
             overflow="visible"
             boxShadow={getShadow(shadow, elevation)}
             noInnerElement

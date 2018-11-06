@@ -47,6 +47,7 @@ export class Oracle {
   onClearCB = idFn
   onSpaceMoveCB = idFn
   onAppStateCB = idFn
+  mousePositionCB = idFn
   binPath = null
   state = {
     isPaused: false,
@@ -264,6 +265,10 @@ export class Oracle {
     this.onAppStateCB = cb
   }
 
+  onMousePosition = cb => {
+    this.mousePositionCB = cb
+  }
+
   actions: { [key: string]: Function } = {
     changed: value => {
       setTimeout(() => this.onBoxChangedCB(value))
@@ -297,6 +302,7 @@ export class Oracle {
         this.spellCallbackCb(val)
       }
     },
+    mousePosition: val => this.mousePositionCB(val),
   }
 
   private async runOracleProcess() {
@@ -329,6 +335,7 @@ export class Oracle {
       RUN_APP_WINDOW: `${this.options.appWindow}`,
       SOCKET_PORT: `${this.socketPort}`,
       SHOW_TRAY: `${this.options.showTray}`,
+      NODE_ENV: process.env.NODE_ENV,
       ...this.env,
     }
     const stringEnv = JSON.stringify(env, null, 2)

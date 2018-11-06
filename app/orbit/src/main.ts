@@ -69,7 +69,6 @@ export async function main() {
     // wait for desktop to start before starting other processes...
     const desktopServerUrl = `http://localhost:${config.ports.server}`
     await waitOn({ resources: [desktopServerUrl] })
-    await new Promise(res => setTimeout(res, 100))
 
     // syncers
     if (!DISABLE_SYNCERS) {
@@ -90,9 +89,13 @@ export async function main() {
     // handle exits
     setupHandleExit([desktopProcess, syncersProcess, electronChromeProcess])
 
+    // sleep a second this is a shitty way to avoid bugs starting multiple electron instances at once
+    // see: https://github.com/electron/electron/issues/7246
+    await new Promise(res => setTimeout(res, 1000))
+
     // start main electron process inside this thread (no forking)
     if (IGNORE_ELECTRON !== 'true') {
-      await require('./startElectron').startElectron()
+      require('./startElectron').startElectron()
     }
 
     console.log('Started everything!')

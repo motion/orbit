@@ -56,7 +56,7 @@ class OrbitNavStore {
   }
 }
 
-@attach('searchStore', 'queryStore')
+@attach('queryStore')
 @attach({
   store: OrbitNavStore,
 })

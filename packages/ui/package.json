@@ -28,7 +28,8 @@
     "lodash": "^4.17.10",
     "react-virtualized-auto-sizer": "1.0.2",
     "react-debounce-render": "4.0.3",
-    "react-window": "1.1.2"
+    "react-window": "1.1.2",
+    "memoize-weak": "1.0.2"
   },
   "peerDependencies": {
     "electron": "*",

@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { SortableList } from '../../views/SortableList/SortableList'
 import { react } from '@mcro/black'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
+import { Icon } from '../../views/Icon'
+import { VirtualList } from '../../views/VirtualList/VirtualList'
 
 class ListsStore {
   props: AppProps
@@ -14,35 +15,36 @@ class ListsStore {
       index: 0,
       type: 'list',
       title: 'First List',
-      subtitle: '10 items',
+      afterTitle: <Icon name="pin" size={16} />,
+      // subtitle: '10 items',
     },
     {
       id: 1,
       index: 1,
       type: 'list',
       title: 'Next list',
-      subtitle: '3 items',
+      // subtitle: '3 items',
     },
     {
       id: 2,
       index: 2,
       type: 'list',
       title: 'Third list',
-      subtitle: '34 items',
+      // subtitle: '34 items',
     },
     {
       id: 3,
       index: 3,
       type: 'list',
       title: 'Items I Really Like',
-      subtitle: '100 items',
+      // subtitle: '100 items',
     },
     {
       id: 4,
       index: 4,
       type: 'list',
       title: 'Another Another List',
-      subtitle: '1 items',
+      // subtitle: '1 items',
     },
   ]
 
@@ -63,16 +65,16 @@ class ListsStore {
       fuzzyQueryFilter(this.activeQuery, this.allLists, {
         key: 'title',
       }),
-    { defaultValue: [] },
+    { defaultValue: this.allLists },
   )
 }
 
-export function ListsApp(props: AppProps & { width: number }) {
+export function ListsApp(props: AppProps) {
   const store = useStore(ListsStore, props)
   console.log('rendering lists app', store.results)
   return (
     <>
-      <SortableList items={store.results} width={props.width} itemProps={{ direct: true }} />
+      <VirtualList items={store.results} itemProps={{ direct: true }} />
     </>
   )
 }

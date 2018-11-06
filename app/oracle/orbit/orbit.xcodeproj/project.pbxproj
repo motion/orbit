@@ -18,6 +18,7 @@
 		AE6EC270214B416700834167 /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC265214B410200834167 /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
+		AEE9270621913158006CAA2C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9270521913158006CAA2C /* main.swift */; };
 		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
 		CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */; };
@@ -34,7 +35,7 @@
 		CF0BCD9F202E0E3E0012723C /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9E202E0E3E0012723C /* util.swift */; };
 		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
-		CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AppDelegate.swift */; };
+		CFBEEE1F202D838D005F925A /* AtomApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AtomApplication.swift */; };
 		CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE20202D838D005F925A /* Assets.xcassets */; };
 		CFEB7E9D208CE16B0001A9DC /* AXUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEB7E9C208CE16B0001A9DC /* AXUIWindow.swift */; };
 /* End PBXBuildFile section */
@@ -80,6 +81,7 @@
 		AE6EC266214B410200834167 /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
 		AE6EC267214B410200834167 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
+		AEE9270521913158006CAA2C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF0BCD68202E0A620012723C /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
 		CF0BCD82202E0E0F0012723C /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
@@ -97,7 +99,7 @@
 		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CFBEEE1E202D838D005F925A /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
+		CFBEEE1E202D838D005F925A /* AtomApplication.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AtomApplication.swift; sourceTree = "<group>"; tabWidth = 2; };
 		CFBEEE20202D838D005F925A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CFBEEE23202D838D005F925A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		CFBEEE25202D838D005F925A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -192,8 +194,9 @@
 		CFBEEE1D202D838D005F925A /* orbit */ = {
 			isa = PBXGroup;
 			children = (
+				AEE9270521913158006CAA2C /* main.swift */,
 				CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */,
-				CFBEEE1E202D838D005F925A /* AppDelegate.swift */,
+				CFBEEE1E202D838D005F925A /* AtomApplication.swift */,
 				CF0BCDB3202E188D0012723C /* Windo */,
 				CF0BCDA3202E0E770012723C /* Screen */,
 				CFBEEE20202D838D005F925A /* Assets.xcassets */,
@@ -325,7 +328,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */,
-				CFBEEE1F202D838D005F925A /* AppDelegate.swift in Sources */,
+				CFBEEE1F202D838D005F925A /* AtomApplication.swift in Sources */,
 				CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */,
 				CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */,
 				CF0BCD87202E0E170012723C /* UnionFind.swift in Sources */,
@@ -339,6 +342,7 @@
 				CF0BCD97202E0E330012723C /* ThresholdBelowFilter.swift in Sources */,
 				CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */,
 				CF0BCD9F202E0E3E0012723C /* util.swift in Sources */,
+				AEE9270621913158006CAA2C /* main.swift in Sources */,
 				CF0BCDB5202E189F0012723C /* Windo.swift in Sources */,
 				CFEB7E9D208CE16B0001A9DC /* AXUIWindow.swift in Sources */,
 				CF0BCD95202E0E310012723C /* ScreenFrame.swift in Sources */,
@@ -370,6 +374,7 @@
 		CFBEEE27202D838D005F925A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -430,6 +435,7 @@
 		CFBEEE28202D838D005F925A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

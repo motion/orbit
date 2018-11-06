@@ -1,0 +1,201 @@
+import * as React from 'react'
+import {
+  WindowScroller,
+  List,
+  CellMeasurerCache,
+  CellMeasurer,
+  InfiniteLoader,
+} from 'react-virtualized'
+import { ensure, react, StoreContext } from '@mcro/black'
+import { View } from '@mcro/ui'
+import { SortableContainer } from 'react-sortable-hoc'
+import { OrbitItemSingleton } from '../OrbitItemStore'
+import { SubPaneStore } from '../../components/SubPaneStore'
+import { Banner } from '../Banner'
+import { VirtualListItem } from './VirtualListItem'
+import { ItemProps } from '../OrbitItemProps'
+import { App } from '@mcro/stores'
+import { AppStore } from '../../apps/AppStore'
+import { useStore } from '@mcro/use-store'
+
+type Props = {
+  items: any[]
+  itemProps?: ItemProps<any>
+  appStore?: AppStore
+  subPaneStore?: SubPaneStore
+  ItemView?: any
+  infinite?: boolean
+  loadMoreRows?: Function
+  rowCount?: number
+  isRowLoaded?: Function
+}
+
+class InnerList extends React.Component<any> {
+  render() {
+    return <List {...this.props} ref={this.props.forwardRef} />
+  }
+}
+const SortableListContainer = SortableContainer(InnerList, { withRef: true })
+
+class SortableListStore {
+  props: Props
+  windowScrollerRef = React.createRef<WindowScroller>()
+  listRef: List = null
+  rootRef: HTMLDivElement = null
+  height = 100
+  width = 0
+  isSorting = false
+  observing = false
+  cache: CellMeasurerCache = null
+
+  resizeOnChange = react(
+    () => this.props.items && Math.random(),
+    () => {
+      ensure('this.listRef', !!this.listRef)
+      this.resizeAll()
+      this.measure()
+    },
+  )
+
+  scrollToRow = react(
+    () => this.props.appStore.activeIndex,
+    index => {
+      ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
+      ensure('valid index', index > -1)
+      ensure('has list', !!this.listRef)
+      this.listRef.scrollToRow(index)
+    },
+  )
+
+  measure = () => {
+    console.log('measure!!!!!!!!!!!!!!!!!!!!', { ...this.props }, this)
+    if (!this.rootRef) {
+      console.log('no ref yet...')
+      return
+    }
+    if (this.width === 0) {
+      const width = this.rootRef.clientWidth
+      this.cache = new CellMeasurerCache({
+        defaultHeight: 60,
+        defaultWidth: width,
+        fixedWidth: true,
+      })
+      this.width = width
+    }
+    let height = 0
+    for (const [index] of this.props.items.entries()) {
+      if (index > 40) break
+      height += this.cache.rowHeight(index)
+    }
+    this.height = height
+  }
+
+  setRootRef = ref => {
+    this.rootRef = ref
+    if (ref) {
+      this.measure()
+    }
+  }
+
+  private resizeAll = () => {
+    this.cache.clearAll()
+    if (this.listRef) {
+      this.listRef.recomputeRowHeights()
+      this.measure()
+    }
+  }
+}
+
+export function VirtualList(props: Props) {
+  const context = React.useContext(StoreContext)
+  const store = useStore(SortableListStore, { ...props, appStore: context.appStore })
+
+  const rowRenderer = ({ index, parent, style }) => {
+    const model = props.items[index]
+    const ItemView = props.ItemView || VirtualListItem
+    return (
+      <CellMeasurer
+        key={`${model.id}${index}`}
+        cache={store.cache}
+        columnIndex={0}
+        parent={parent}
+        rowIndex={index}
+      >
+        <div style={style}>
+          <ItemView
+            model={model}
+            index={index}
+            realIndex={index}
+            query={App.state.query}
+            itemProps={props.itemProps}
+          />
+        </div>
+      </CellMeasurer>
+    )
+  }
+
+  if (!props.items.length) {
+    return (
+      <View margin={[10, 0]}>
+        <Banner>No results</Banner>
+      </View>
+    )
+  }
+
+  const getList = (infiniteProps?) => {
+    let extraProps = {} as any
+    if (infiniteProps && infiniteProps.onRowsRendered) {
+      extraProps.onRowsRendered = infiniteProps.onRowsRendered
+    }
+    return (
+      <SortableListContainer
+        forwardRef={ref => {
+          if (ref) {
+            store.listRef = ref
+            if (infiniteProps && infiniteProps.registerChild) {
+              infiniteProps.registerChild(ref)
+            }
+          }
+        }}
+        items={props.items}
+        deferredMeasurementCache={store.cache}
+        height={store.height}
+        width={store.width}
+        rowHeight={store.cache.rowHeight}
+        overscanRowCount={20}
+        rowCount={props.items.length}
+        estimatedRowSize={100}
+        rowRenderer={rowRenderer}
+        pressDelay={120}
+        pressThreshold={17}
+        lockAxis="y"
+        {...extraProps}
+      />
+    )
+  }
+
+  return (
+    <div
+      ref={store.setRootRef}
+      style={{
+        height: store.height,
+      }}
+    >
+      {!!store.width && (
+        <>
+          {props.infinite && (
+            <InfiniteLoader
+              isRowLoaded={props.isRowLoaded}
+              loadMoreRows={props.loadMoreRows}
+              rowCount={props.rowCount}
+            >
+              {getList}
+            </InfiniteLoader>
+          )}
+          {!props.infinite && getList()}
+        </>
+      )}
+      {!store.width && <div>No width!</div>}
+    </div>
+  )
+}

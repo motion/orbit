@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron } from '@mcro/stores'
+import { Electron, Desktop } from '@mcro/stores'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
 
@@ -16,7 +16,7 @@ export class ChromeWindow extends React.Component {
         show={!!Electron.state.screenSize[0]}
         size={Electron.state.screenSize.slice()}
         focus={false}
-        ignoreMouseEvents={!Electron.hoverState.menuHovered}
+        ignoreMouseEvents={!Desktop.hoverState.menuHovered}
         focusable
         file={`${Config.urls.server}/chrome`}
         frame={false}

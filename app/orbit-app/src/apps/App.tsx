@@ -4,6 +4,7 @@ import { AppStore } from './AppStore'
 import { apps, AppType } from './apps'
 import { SourcesStore } from '../stores/SourcesStore'
 import { SettingStore } from '../stores/SettingStore'
+import { SubPaneStore } from '../components/SubPaneStore'
 
 type Props = {
   id: string
@@ -12,6 +13,7 @@ type Props = {
   appStore?: AppStore
   sourcesStore?: SourcesStore
   settingStore?: SettingStore
+  subPaneStore?: SubPaneStore
 }
 
 @attach(
@@ -28,14 +30,18 @@ type Props = {
 @view
 export class App extends React.Component<Props> {
   render() {
-    const { type, appStore, sourcesStore, settingStore } = this.props
+    const { type, appStore, sourcesStore, settingStore, subPaneStore } = this.props
     const App = apps[type]
+    if (typeof App !== 'function') {
+      console.error('WAHT THE FUCK', type, App)
+      return null
+    }
     return (
       <App
         appStore={appStore}
         sourcesStore={sourcesStore}
         settingStore={settingStore}
-        setResults={appStore.setResults}
+        subPaneStore={subPaneStore}
         {...this.props}
       />
     )

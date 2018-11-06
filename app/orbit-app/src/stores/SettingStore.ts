@@ -9,7 +9,7 @@ export class SettingStore {
   }
 
   get values() {
-    return this.setting.values as Setting['values']
+    return this.setting.values
   }
 
   private setting$ = observeOne(SettingModel, generalSettingQuery).subscribe(value => {

@@ -1,23 +1,27 @@
 import { app, dialog } from 'electron'
-import { log } from './helpers/log'
 import { getGlobalConfig } from '@mcro/config'
 import { handleExit } from './helpers/handleExit'
 
-export async function startElectron() {
-  const Config = getGlobalConfig()
-
+export function startElectron() {
   // this works in prod
   app.on('before-quit', handleExit)
 
-  log.info('Found desktop, continue...')
+  if (app.isReady) {
+    finishLaunchingElectron()
+  } else {
+    app.on('ready', finishLaunchingElectron)
+  }
+}
 
+const finishLaunchingElectron = () => {
+  const Config = getGlobalConfig()
   // start electron...
   const ElectronApp = require('@mcro/orbit-electron')
   ElectronApp.main()
 
   // focus app on start
   // because we hide dock icon we need to do this
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== 'development' && !process.env.SUB_PROCESS) {
     app.focus()
   }
 

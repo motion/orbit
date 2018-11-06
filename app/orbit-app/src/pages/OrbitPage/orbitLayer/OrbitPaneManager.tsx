@@ -87,7 +87,7 @@ export class OrbitPaneManager extends React.Component<Props> {
                 </SubPane>
               )
             })}
-            <OrbitSettings name="settings" />
+            <OrbitSettings />
           </div>
         </OrbitDockedInner>
       </MainShortcutHandler>

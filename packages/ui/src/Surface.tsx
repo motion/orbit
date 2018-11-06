@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { Color, CSSPropertySet, propsToThemeStyles, propsToStyles, alphaColor } from '@mcro/gloss'
+import {
+  Color,
+  CSSPropertySet,
+  propsToThemeStyles,
+  propsToStyles,
+  alphaColor,
+  ThemeObject,
+} from '@mcro/gloss'
 import { view } from '@mcro/black'
 import { attachTheme } from '@mcro/gloss'
 import { Icon } from './Icon'
@@ -9,6 +16,7 @@ import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
 import { UIContext } from './helpers/contexts'
 import { Tooltip } from './Tooltip'
+import { selectThemeSubset } from './helpers/selectThemeSubset'
 
 export type SurfaceProps = CSSPropertySet & {
   active?: boolean
@@ -31,7 +39,6 @@ export type SurfaceProps = CSSPropertySet & {
   glowProps?: Object
   height?: number
   highlight?: boolean
-  hoverable?: boolean
   hovered?: boolean
   icon?: React.ReactNode
   iconAfter?: boolean
@@ -46,7 +53,7 @@ export type SurfaceProps = CSSPropertySet & {
   spaced?: boolean
   stretch?: boolean
   tagName?: string
-  theme?: string
+  theme?: ThemeObject
   tooltip?: string
   tooltipProps?: Object
   uiContext?: { inSegment?: { first: boolean; last: boolean; index: number } }
@@ -63,7 +70,7 @@ export type SurfaceProps = CSSPropertySet & {
   activeStyle?: Object
   sizeLineHeight?: boolean | number
   type?: string
-  themeSelect?: Function
+  themeSelect?: ((theme: ThemeObject) => ThemeObject) | string
 }
 
 const getIconSize = props => {
@@ -124,6 +131,7 @@ const SurfaceFrame = view(View, {
   fontFamily: 'inherit',
   position: 'relative',
 }).theme(props => {
+  // :hover, :focus, :active
   const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   const propStyles = propsToStyles(props)
   // circular
@@ -225,7 +233,6 @@ const baseIconStyle = {
   justifyContent: 'center',
 }
 
-// @ts-ignore
 @attachTheme
 export class SurfaceInner extends React.Component<SurfaceProps> {
   static defaultProps = {
@@ -269,9 +276,20 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       ...props
     } = this.props
     const segmentedStyle = getSegmentRadius(this.props)
-    const selectedTheme = themeSelect ? themeSelect(theme) : theme
+
+    // allow selecting subsets of the theme object
+    let selectedTheme = theme
+    if (themeSelect) {
+      if (typeof themeSelect === 'string') {
+        selectedTheme = selectThemeSubset(themeSelect, theme)
+      } else {
+        selectedTheme = themeSelect(theme)
+      }
+    }
+
     const stringIcon = typeof icon === 'string'
-    // goes to both
+
+    // goes to BOTH the outer element and inner element
     const throughProps = {
       alignItems,
       justifyContent,
@@ -288,12 +306,14 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       ellipse: this.props.ellipse,
       overflow: this.props.overflow,
     } as Partial<SurfaceProps>
+
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height}px`
     }
     if (noInnerElement) {
       throughProps.tagName = tagName
     }
+
     return (
       <SurfaceFrame
         whiteSpace="pre"
@@ -327,7 +347,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
             {icon && !stringIcon ? <div>{icon}</div> : null}
             {icon && stringIcon ? (
               <Icon
-                // @ts-ignore
                 order={icon && iconAfter ? 3 : 'auto'}
                 name={`${icon}`}
                 size={getIconSize(this.props)}

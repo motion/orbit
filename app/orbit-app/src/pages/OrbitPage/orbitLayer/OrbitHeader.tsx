@@ -214,9 +214,11 @@ const OrbitFakeInput = view({
     pointerEvents: 'none',
   },
 }).theme(({ theme }) => ({
-  background: theme.inputBackground || theme.background.alpha(0.35),
+  background: theme.inputBackground
+    ? theme.inputBackground.alpha(0.35)
+    : theme.background.alpha(0.35),
   '&:active': {
-    background: theme.inputBackgroundActive || theme.background.alpha(0.6),
+    background: theme.background.alpha(0.6),
   },
 }))
 

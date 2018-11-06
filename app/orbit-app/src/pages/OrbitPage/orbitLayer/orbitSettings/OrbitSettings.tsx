@@ -26,7 +26,6 @@ const SettingButton = props => (
 @attach('paneManagerStore')
 @view
 export class OrbitSettings extends React.Component<{
-  name: string
   paneManagerStore?: PaneManagerStore
 }> {
   buttonProps = (store: PaneManagerStore, val: string) => {
@@ -37,11 +36,11 @@ export class OrbitSettings extends React.Component<{
   }
 
   render() {
-    const { name, paneManagerStore } = this.props
+    const { paneManagerStore } = this.props
     const isActive = paneManagerStore.activePane === 'settings'
     return (
       <SubPane
-        name={name}
+        id="settings"
         before={
           <Row
             flex={1}

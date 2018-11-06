@@ -2,15 +2,12 @@
 
 ### nate
 
-Monday:
+Tuesday:
 
 - Mock design for search groups
 - Mock design for terminology app (topics, leading into highlights)
 - Mock design for people app
 - Mock design for Orbit context
-
-Tuesday:
-
 - Orbit contextual search app
 - Hold Option to show last opened app
 - Menu input box auto focuses
@@ -18,12 +15,7 @@ Tuesday:
 
 Wednesday:
 
-- Fix hovering on app windows
-- Grouped search design
 - Search performance
-- Keyboard nav in search moving window down
-- Fix peek performance showing next to orbit window
-- Show app next to menu app
 
 Thursday:
 

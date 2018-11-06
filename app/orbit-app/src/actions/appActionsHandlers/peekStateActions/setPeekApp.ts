@@ -4,11 +4,12 @@ import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { PeekTarget } from './types'
 import { setAppState } from '../setAppState'
+import { memoize } from 'lodash'
 
 type PeekApp = {
   target: PeekTarget
   appConfig: AppConfig
-  parentBounds: Position
+  parentBounds?: Position
 }
 
 // using this ensures it clears old properties
@@ -27,12 +28,25 @@ const DEFAULT_APP_CONFIG_CONFIG: AppConfig['viewConfig']['initialState'] = {
   initialState: null,
 }
 
+const getParentBounds = () => {
+  const node = document.querySelector('.app-parent-bounds') as HTMLDivElement
+  if (!node) {
+    throw new Error('No node to find parent bounds!')
+  }
+  return {
+    top: node.offsetTop,
+    left: node.offsetLeft,
+    width: node.clientWidth,
+    height: node.clientHeight,
+  }
+}
+
 export function setPeekApp({ target, appConfig, parentBounds }: PeekApp) {
   invariant(appConfig, 'Must pass appConfig')
   setPeekState({
     target: target || App.peekState.target,
     appConfig,
-    parentBounds,
+    parentBounds: parentBounds || getParentBounds(),
   })
 }
 

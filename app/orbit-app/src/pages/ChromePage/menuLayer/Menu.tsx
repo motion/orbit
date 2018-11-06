@@ -101,7 +101,7 @@ export function Menu(props: Props) {
         margin={-10}
         flex={1}
       >
-        <Col overflowX="hidden" overflowY="auto" flex={1}>
+        <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
           {props.children}
         </Col>
       </View>

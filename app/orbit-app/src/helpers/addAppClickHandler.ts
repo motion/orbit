@@ -19,13 +19,13 @@ export const addAppClickHandler = memoize(
     console.log('add integration', currentTarget, app)
     if (app.views.setup) {
       // if this view wants to show a "setup" pane...
-      AppActions.togglePeekApp(
-        {
+      AppActions.togglePeekApp({
+        target: currentTarget,
+        appConfig: {
           ...sourceToAppConfig(app),
           type: 'setup',
         },
-        currentTarget,
-      )
+      })
     } else {
       // ...otherwise we open browser to oauth
       AppActions.clearPeek()

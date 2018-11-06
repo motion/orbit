@@ -67,7 +67,7 @@ export class ViewStore {
       const { appConfig, torn, ...rest } = appState
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
-      const isShown = !!appConfig && (torn || App.orbitState.docked)
+      const isShown = !!appConfig
       // first make target update quickly so it moves fast
       // while keeping the last model the same so it doesn't flicker
       const curState: ViewStoreItemState = {

@@ -7,6 +7,7 @@ import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../components/AppInfoStore'
 import { ItemRenderText } from '../views/OrbitItemProps'
+import { GenericComponent } from '../types'
 
 type AppTypeToModelType = {
   slack: Bit
@@ -71,8 +72,6 @@ export type OrbitSourceSettingProps<T extends Source> = {
   source: T
   viewStore: ViewStore
 }
-
-type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
 export type OrbitIntegration<A extends ItemType> = {
   source?: Source

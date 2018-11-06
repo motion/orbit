@@ -1,9 +1,11 @@
 import * as React from 'react'
-import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
+import { RECENT_HMR } from '../constants'
+import isEqual from 'react-fast-compare'
 
 export class StaticContainer extends React.Component {
-  shouldComponentUpdate(a, b, c) {
-    return onlyUpdateOnChanged.call(this, a, b, c)
+  shouldComponentUpdate(nextProps) {
+    const shouldUpdate = !isEqual(this.props.children, nextProps.children) || RECENT_HMR()
+    return shouldUpdate
   }
 
   render() {

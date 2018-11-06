@@ -27,11 +27,14 @@ export class IsolatePeek extends React.Component {
   render() {
     getItem.githubSetting().then(item => {
       console.log('got', item)
-      AppActions.setPeekApp(item, {
-        top: window.innerHeight,
-        left: window.innerHeight - 350,
-        width: 0,
-        height: 10,
+      AppActions.setPeekApp({
+        appConfig: item,
+        target: {
+          top: window.innerHeight,
+          left: window.innerHeight - 350,
+          width: 0,
+          height: 10,
+        }
       })
     })
     return <AppPage />

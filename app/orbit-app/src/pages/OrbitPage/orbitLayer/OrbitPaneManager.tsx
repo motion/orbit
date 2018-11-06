@@ -41,13 +41,6 @@ const OrbitDockedInner = view({
   },
 })
 
-const Interactive = view({
-  disabled: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-})
-
 @attach('spaceStore', 'queryStore', 'sourcesStore', 'searchStore', 'selectionStore')
 @provide({
   paneManagerStore: PaneManagerStore,
@@ -62,15 +55,13 @@ export class OrbitPaneManager extends React.Component<Props> {
   }
 
   render() {
-    const { paneManagerStore } = this.props
+    log(`------------ OrbitPaneManager......`)
     return (
       <MainShortcutHandler>
         <OrbitHeader borderRadius={BORDER_RADIUS} />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
-            <Interactive disabled={/^(settings|onboard)$/.test(paneManagerStore.activePane)}>
-              <SpaceNav />
-            </Interactive>
+            <SpaceNav />
             <OrbitOnboard name="onboard" />
             {AppPanes.map(pane => {
               return (

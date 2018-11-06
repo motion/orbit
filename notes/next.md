@@ -2,28 +2,18 @@
 
 ### nate
 
-Monday:
+Tuesday:
 
-- Mock design for search groups
 - Mock design for terminology app (topics, leading into highlights)
 - Mock design for people app
 - Mock design for Orbit context
-
-Tuesday:
-
 - Orbit contextual search app
 - Hold Option to show last opened app
-- Menu input box auto focuses
 - Fix tray targets and interaction a bit more
 
 Wednesday:
 
-- Fix hovering on app windows
-- Grouped search design
 - Search performance
-- Keyboard nav in search moving window down
-- Fix peek performance showing next to orbit window
-- Show app next to menu app
 
 Thursday:
 
@@ -38,6 +28,7 @@ Friday:
 - Get profiles with topic modeling
 - Get topics app using real data for changing over time topics
 - Allow custom topics in topics app
+- Cleanup SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
 ---
 

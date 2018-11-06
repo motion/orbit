@@ -15,108 +15,12 @@ import { Row, Text, View } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 
-const ListFrame = view(UI.View, {
-  margin: [0, -1],
-  position: 'relative',
-  transform: {
-    z: 0,
-  },
-}).theme(({ theme, borderRadius }) => {
-  return {
-    color: theme.color,
-    background: theme.listItemBackground || theme.background.alpha(0.5),
-    borderRadius: borderRadius || 3,
-  }
+const Separator = view({
+  background: [100, 100, 100, 0.2],
+  padding: [2, 12],
 })
 
-const Divider = view({
-  height: 1,
-  position: 'absolute',
-  bottom: 0,
-  left: 10,
-  right: 10,
-}).theme(({ theme }) => ({
-  background: theme.color.alpha(0.015),
-}))
-
-const ListItem = view({
-  overflow: 'hidden',
-  position: 'relative',
-  maxHeight: '100%',
-  flex: 1,
-  border: [1, 'transparent'],
-  transform: {
-    z: 0,
-  },
-  chromeless: {
-    border: [1, 'transparent'],
-    background: 'transparent',
-    padding: 8,
-  },
-}).theme(({ theme, isSelected, padding, chromeless }) => {
-  let style: CSSPropertySet = {}
-  if (chromeless) {
-    return style
-  }
-  // LIST ITEM
-  let listStyle
-  // selected...
-  if (isSelected) {
-    listStyle = {
-      background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
-      border: [1, theme.borderSelected.alpha(0.5)],
-    }
-  } else {
-    listStyle = {
-      '&:hover': {
-        background: theme.listItemBackgroundHover,
-      },
-    }
-  }
-  style = {
-    ...style,
-    ...listStyle,
-    padding,
-    '&:active': {
-      opacity: isSelected ? 1 : 0.8,
-    },
-  }
-  return style
-})
-
-const Title = view({
-  maxWidth: '100%',
-  flexFlow: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-})
-
-const Preview = view({
-  flex: 1,
-  zIndex: -1,
-})
-
-const ListItemSubtitle = view(UI.View, {
-  height: 20,
-  padding: [0, 0, 4],
-  flexFlow: 'row',
-  alignItems: 'center',
-})
-
-const AfterHeader = view({
-  alignItems: 'flex-end',
-})
-
-const TitleSpace = view({
-  width: 10,
-})
-
-const Bottom = view({
-  flexFlow: 'row',
-  alignItems: 'center',
-})
-
-@attach('sourcesStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
+@attach('sourcesStore', 'appStore')
 @attach({
   store: OrbitItemStore,
 })
@@ -147,7 +51,6 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       iconProps,
       inactive,
       onClick,
-      selectionStore,
       store,
       titleProps,
       subtitleProps,
@@ -156,8 +59,8 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       subtitleSpaceBetween,
       searchTerm,
       onClickLocation,
-      model,
       renderText,
+      separator,
       ...props
     } = this.props
     const { isSelected } = store
@@ -179,7 +82,6 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     const showTitle = !(hide && hide.title)
     const showPeople = !!(
       !(hide && hide.people) &&
-      (model.target === 'bit' && model.integration !== 'slack') &&
       people &&
       people.length &&
       people[0].data['profile']
@@ -196,30 +98,22 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
               />
             </UI.Text>
           )}
-          {/* <div style={{ width: 8 }} /> */}
-          {/* <RoundButtonSmall
-            icon="link"
-            size={1.1}
-            tooltip="Open"
-            opacity={0.5}
-            background="transparent"
-            onClick={e => {
-              console.log('opening', model)
-              e.preventDefault()
-              e.stopPropagation()
-              Actions.openItem(model)
-              Actions.closeOrbit()
-            }}
-          /> */}
         </Row>
       </AfterHeader>
     )
     return (
       <ListFrame
-        {...hoverToSelect && !inactive && store.hoverSettler.props}
+        {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         {...props}
       >
+        {!!separator && (
+          <Separator>
+            <Text size={0.9} fontWeight={500}>
+              {separator}
+            </Text>
+          </Separator>
+        )}
         <ListItem
           isSelected={isSelected}
           borderRadius={borderRadius}
@@ -349,6 +243,9 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     const { store, model, direct } = this.props
     store.isSelected
     if (!model) {
+      if (direct) {
+        return this.getInner(this.props)
+      }
       return null
     }
     return this.getInner(direct ? model : normalizeItem(model))
@@ -365,3 +262,104 @@ export class OrbitListItem extends React.Component<ItemProps<any>> {
     return <OrbitListInner {...this.props} />
   }
 }
+
+const ListFrame = view(UI.View, {
+  margin: [0, -1],
+  position: 'relative',
+  transform: {
+    z: 0,
+  },
+}).theme(({ theme, borderRadius }) => {
+  return {
+    color: theme.color,
+    background: theme.listItemBackground || theme.background.alpha(0.5),
+    borderRadius: borderRadius || 3,
+  }
+})
+
+const Divider = view({
+  height: 1,
+  position: 'absolute',
+  bottom: 0,
+  left: 10,
+  right: 10,
+}).theme(({ theme }) => ({
+  background: theme.color.alpha(0.015),
+}))
+
+const ListItem = view({
+  overflow: 'hidden',
+  position: 'relative',
+  maxHeight: '100%',
+  flex: 1,
+  border: [1, 'transparent'],
+  transform: {
+    z: 0,
+  },
+  chromeless: {
+    border: [1, 'transparent'],
+    background: 'transparent',
+    padding: 8,
+  },
+}).theme(({ theme, isSelected, padding, chromeless }) => {
+  let style: CSSPropertySet = {}
+  if (chromeless) {
+    return style
+  }
+  // LIST ITEM
+  let listStyle
+  // selected...
+  if (isSelected) {
+    listStyle = {
+      background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
+      border: [1, theme.borderSelected.alpha(0.5)],
+    }
+  } else {
+    listStyle = {
+      '&:hover': {
+        background: theme.listItemBackgroundHover,
+      },
+    }
+  }
+  style = {
+    ...style,
+    ...listStyle,
+    padding,
+    '&:active': {
+      opacity: isSelected ? 1 : 0.8,
+    },
+  }
+  return style
+})
+
+const Title = view({
+  maxWidth: '100%',
+  flexFlow: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+})
+
+const Preview = view({
+  flex: 1,
+  zIndex: -1,
+})
+
+const ListItemSubtitle = view(UI.View, {
+  height: 20,
+  padding: [0, 0, 4],
+  flexFlow: 'row',
+  alignItems: 'center',
+})
+
+const AfterHeader = view({
+  alignItems: 'flex-end',
+})
+
+const TitleSpace = view({
+  width: 10,
+})
+
+const Bottom = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+})

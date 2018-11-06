@@ -6,7 +6,7 @@ import { CSSPropertySet } from './cssPropertySet'
 export const cssNameMap = CAMEL_TO_SNAKE
 
 // exports
-export { CSSPropertySet } from './cssPropertySet'
+export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'
 export { Transform, Color, ThemeObject } from './types'
 export * from './helpers'
 

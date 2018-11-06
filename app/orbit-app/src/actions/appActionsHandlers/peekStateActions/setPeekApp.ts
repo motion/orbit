@@ -1,11 +1,14 @@
-import { App, AppConfig } from '@mcro/stores'
-import { peekPosition } from '../../../helpers/peekPosition'
+import { AppConfig } from '@mcro/stores'
+import { peekPosition, Position } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
-import { PeekTarget } from './types'
 import { setAppState } from '../setAppState'
 
-type PartialPeekState = { target: PeekTarget } & Partial<typeof App.peekState>
+type PeekApp = {
+  target: HTMLDivElement
+  appConfig: AppConfig
+  parentBounds?: Position
+}
 
 // using this ensures it clears old properties
 // because App.setState merges not replaces
@@ -23,15 +26,25 @@ const DEFAULT_APP_CONFIG_CONFIG: AppConfig['viewConfig']['initialState'] = {
   initialState: null,
 }
 
-export function setPeekApp(appConfig: AppConfig, target?: PeekTarget) {
+const getParentBounds = (target: HTMLDivElement) => {
+  const node = target.closest('.app-parent-bounds') as HTMLDivElement
+  if (!node) {
+    console.error('No node to find parent bounds!')
+    return null
+  }
+  return node.getBoundingClientRect()
+}
+
+export function setPeekApp({ target, appConfig, parentBounds }: PeekApp) {
   invariant(appConfig, 'Must pass appConfig')
   setPeekState({
-    target: target || App.peekState.target,
+    target,
     appConfig,
+    parentBounds: parentBounds || getParentBounds(target),
   })
 }
 
-function setPeekState({ target, appConfig }: PartialPeekState) {
+function setPeekState({ target, appConfig, parentBounds }: PeekApp) {
   const realTarget = getTargetPosition(target)
   setAppState({
     appConfig: {
@@ -43,6 +56,6 @@ function setPeekState({ target, appConfig }: PartialPeekState) {
       },
     },
     target: realTarget,
-    ...peekPosition(realTarget, appConfig),
+    ...peekPosition(realTarget, appConfig, parentBounds || realTarget),
   })
 }

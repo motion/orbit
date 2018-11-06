@@ -13,42 +13,28 @@ import exec from 'execa'
 //   console.log('forward80', res.code, res.failed, res.stdout.toString())
 // }
 
-function forwardDNS(host, port) {
+async function addHost(host, port) {
   const hostile = promisifyAll(hostile_)
 
   if (!host || !port) {
     console.log(`No host or port. host: ${host} port: ${port}`)
   } else {
-    async function proxyOrbit() {
-      console.log('Proxying', host, port, 'to orbit')
+    console.log('Proxying', host, port, 'to orbit')
 
-      // modify /etc/hosts
-      const lines = await hostile.get(true)
-      const exists = lines.map(line => line[1]).indexOf(host) > -1
-      if (!exists) {
-        console.log('setting up hosts')
-        hostile.set('127.0.0.1', host)
-      } else {
-        console.log('exists already', exists)
-      }
-
-      // attempt to kill port 80 just in case...
-      try {
-        await killPort(80)
-      } catch (err) {
-        console.log('err killing port', err.message)
-      }
-
-      // forward port
-      forwardPort(port, 80, { isPublicAccess: true })
+    // modify /etc/hosts
+    const lines = await hostile.get(true)
+    const exists = lines.map(line => line[1]).indexOf(host) > -1
+    if (!exists) {
+      console.log('setting up hosts')
+      hostile.set('127.0.0.1', host)
+    } else {
+      console.log('exists already', exists)
     }
-
-    // run
-    proxyOrbit()
   }
 }
 
-async function forwardAllDNS() {
+async function setHosts() {
+  let mainPort = 0
   let runNext = false
   for (const arg of process.argv) {
     if (arg === '--host') {
@@ -58,13 +44,27 @@ async function forwardAllDNS() {
     if (runNext) {
       runNext = false
       const [host, port] = arg.split(':')
-      await forwardDNS(host, port)
+      if (!mainPort) {
+        mainPort = +port
+      }
+      await addHost(host, port)
     }
   }
+  return mainPort
 }
 
 async function main() {
-  await forwardAllDNS()
+  const mainPort = await setHosts()
+
+  // attempt to kill port 80 just in case...
+  try {
+    await killPort(80)
+  } catch (err) {
+    console.log('err killing port', err.message)
+  }
+
+  // forward port
+  forwardPort(mainPort, 80, { isPublicAccess: true })
 }
 
 main()

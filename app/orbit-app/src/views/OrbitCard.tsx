@@ -228,7 +228,7 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
     )
     return (
       <CardWrap
-        {...hoverToSelect && !inactive && store.hoverSettler.props}
+        {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         {...props}
         {...isSelected && activeStyle}

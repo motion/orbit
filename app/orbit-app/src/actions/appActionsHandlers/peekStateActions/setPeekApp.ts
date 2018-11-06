@@ -1,11 +1,15 @@
-import { App, AppConfig } from '@mcro/stores'
-import { peekPosition } from '../../../helpers/peekPosition'
+import { App, AppConfig, AppState } from '@mcro/stores'
+import { peekPosition, Position } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { PeekTarget } from './types'
 import { setAppState } from '../setAppState'
 
-type PartialPeekState = { target: PeekTarget } & Partial<typeof App.peekState>
+type PartialPeekState = {
+  target: PeekTarget
+  appConfig: Partial<AppState>
+  parentBounds: Position
+}
 
 // using this ensures it clears old properties
 // because App.setState merges not replaces

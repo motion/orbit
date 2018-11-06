@@ -20,14 +20,17 @@ export class OrbitItemStore {
   clickAt = 0
   hoverSettler = null
 
-  willMount() {
-    if (this.props.hoverToSelect) {
+  setHoverSettler = react(
+    () => this.props.hoverToSelect,
+    hoverSelect => {
+      ensure('hoverSelect', hoverSelect)
+      ensure('!hoverSettler', !this.hoverSettler)
       this.hoverSettler = this.props.selectionStore.getHoverSettler()
       this.hoverSettler.setItem({
         index: this.props.index,
       })
-    }
-  }
+    },
+  )
 
   get didClick() {
     return Date.now() - this.clickAt < 50
@@ -115,6 +118,10 @@ export class OrbitItemStore {
     return getIndex ? getIndex(model) : index
   }
 
+  selectItem = () => {
+    AppActions.setPeekApp(this.appConfig, this.position)
+  }
+
   updateIsSelected = react(
     () => {
       const {
@@ -159,7 +166,7 @@ export class OrbitItemStore {
           ensure('appConfig`', !!this.appConfig)
           // fluidity
           await sleep()
-          AppActions.setPeekApp(this.appConfig, this.position)
+          this.selectItem()
         }
       }
     },

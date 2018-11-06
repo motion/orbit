@@ -74,7 +74,7 @@ export function ListsApp(props: AppProps) {
   console.log('rendering lists app', store.results)
   return (
     <>
-      <VirtualList items={store.results} itemProps={{ direct: true }} />
+      <VirtualList items={store.results} itemProps={{ direct: true, hoverToSelect: true }} />
     </>
   )
 }

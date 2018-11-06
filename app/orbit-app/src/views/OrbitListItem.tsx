@@ -216,7 +216,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     )
     return (
       <ListFrame
-        {...hoverToSelect && !inactive && store.hoverSettler.props}
+        {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         {...props}
       >

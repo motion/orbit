@@ -4,12 +4,13 @@ import { AppConfig } from './AppConfig'
 
 export let App = null as AppStore
 
-type AppState = {
+export type AppState = {
   id: number
   torn: boolean
   target?: { top: number; left: number; width: number; height: number }
   appConfig: AppConfig
   peekOnLeft: boolean
+  viewConfig?: any
   position: [number, number]
   size: [number, number]
 }

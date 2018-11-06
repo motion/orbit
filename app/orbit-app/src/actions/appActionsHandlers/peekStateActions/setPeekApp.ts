@@ -4,7 +4,6 @@ import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { PeekTarget } from './types'
 import { setAppState } from '../setAppState'
-import { memoize } from 'lodash'
 
 type PeekApp = {
   target: PeekTarget
@@ -33,12 +32,7 @@ const getParentBounds = () => {
   if (!node) {
     throw new Error('No node to find parent bounds!')
   }
-  return {
-    top: node.offsetTop,
-    left: node.offsetLeft,
-    width: node.clientWidth,
-    height: node.clientHeight,
-  }
+  return node.getBoundingClientRect()
 }
 
 export function setPeekApp({ target, appConfig, parentBounds }: PeekApp) {

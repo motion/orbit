@@ -15,107 +15,6 @@ import { Row, Text, View } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 
-const ListFrame = view(UI.View, {
-  margin: [0, -1],
-  position: 'relative',
-  transform: {
-    z: 0,
-  },
-}).theme(({ theme, borderRadius }) => {
-  return {
-    color: theme.color,
-    background: theme.listItemBackground || theme.background.alpha(0.5),
-    borderRadius: borderRadius || 3,
-  }
-})
-
-const Divider = view({
-  height: 1,
-  position: 'absolute',
-  bottom: 0,
-  left: 10,
-  right: 10,
-}).theme(({ theme }) => ({
-  background: theme.color.alpha(0.015),
-}))
-
-const ListItem = view({
-  overflow: 'hidden',
-  position: 'relative',
-  maxHeight: '100%',
-  flex: 1,
-  border: [1, 'transparent'],
-  transform: {
-    z: 0,
-  },
-  chromeless: {
-    border: [1, 'transparent'],
-    background: 'transparent',
-    padding: 8,
-  },
-}).theme(({ theme, isSelected, padding, chromeless }) => {
-  let style: CSSPropertySet = {}
-  if (chromeless) {
-    return style
-  }
-  // LIST ITEM
-  let listStyle
-  // selected...
-  if (isSelected) {
-    listStyle = {
-      background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
-      border: [1, theme.borderSelected.alpha(0.5)],
-    }
-  } else {
-    listStyle = {
-      '&:hover': {
-        background: theme.listItemBackgroundHover,
-      },
-    }
-  }
-  style = {
-    ...style,
-    ...listStyle,
-    padding,
-    '&:active': {
-      opacity: isSelected ? 1 : 0.8,
-    },
-  }
-  return style
-})
-
-const Title = view({
-  maxWidth: '100%',
-  flexFlow: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-})
-
-const Preview = view({
-  flex: 1,
-  zIndex: -1,
-})
-
-const ListItemSubtitle = view(UI.View, {
-  height: 20,
-  padding: [0, 0, 4],
-  flexFlow: 'row',
-  alignItems: 'center',
-})
-
-const AfterHeader = view({
-  alignItems: 'flex-end',
-})
-
-const TitleSpace = view({
-  width: 10,
-})
-
-const Bottom = view({
-  flexFlow: 'row',
-  alignItems: 'center',
-})
-
 @attach('sourcesStore', 'appStore')
 @attach({
   store: OrbitItemStore,
@@ -147,7 +46,6 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       iconProps,
       inactive,
       onClick,
-      selectionStore,
       store,
       titleProps,
       subtitleProps,
@@ -365,3 +263,104 @@ export class OrbitListItem extends React.Component<ItemProps<any>> {
     return <OrbitListInner {...this.props} />
   }
 }
+
+const ListFrame = view(UI.View, {
+  margin: [0, -1],
+  position: 'relative',
+  transform: {
+    z: 0,
+  },
+}).theme(({ theme, borderRadius }) => {
+  return {
+    color: theme.color,
+    background: theme.listItemBackground || theme.background.alpha(0.5),
+    borderRadius: borderRadius || 3,
+  }
+})
+
+const Divider = view({
+  height: 1,
+  position: 'absolute',
+  bottom: 0,
+  left: 10,
+  right: 10,
+}).theme(({ theme }) => ({
+  background: theme.color.alpha(0.015),
+}))
+
+const ListItem = view({
+  overflow: 'hidden',
+  position: 'relative',
+  maxHeight: '100%',
+  flex: 1,
+  border: [1, 'transparent'],
+  transform: {
+    z: 0,
+  },
+  chromeless: {
+    border: [1, 'transparent'],
+    background: 'transparent',
+    padding: 8,
+  },
+}).theme(({ theme, isSelected, padding, chromeless }) => {
+  let style: CSSPropertySet = {}
+  if (chromeless) {
+    return style
+  }
+  // LIST ITEM
+  let listStyle
+  // selected...
+  if (isSelected) {
+    listStyle = {
+      background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
+      border: [1, theme.borderSelected.alpha(0.5)],
+    }
+  } else {
+    listStyle = {
+      '&:hover': {
+        background: theme.listItemBackgroundHover,
+      },
+    }
+  }
+  style = {
+    ...style,
+    ...listStyle,
+    padding,
+    '&:active': {
+      opacity: isSelected ? 1 : 0.8,
+    },
+  }
+  return style
+})
+
+const Title = view({
+  maxWidth: '100%',
+  flexFlow: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+})
+
+const Preview = view({
+  flex: 1,
+  zIndex: -1,
+})
+
+const ListItemSubtitle = view(UI.View, {
+  height: 20,
+  padding: [0, 0, 4],
+  flexFlow: 'row',
+  alignItems: 'center',
+})
+
+const AfterHeader = view({
+  alignItems: 'flex-end',
+})
+
+const TitleSpace = view({
+  width: 10,
+})
+
+const Bottom = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+})

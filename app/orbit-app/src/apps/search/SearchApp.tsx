@@ -8,11 +8,7 @@ import { OrbitSearchNav } from './OrbitSearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 
-type Props = AppProps & {
-  searchStore?: SearchStore
-}
-
-export function SearchApp(props) {
+export function SearchApp(props: AppProps) {
   const searchStore = useStore(SearchStore, props)
   return (
     <>
@@ -32,7 +28,7 @@ export function SearchApp(props) {
 }
 
 // separate view to prevent a few renders...
-const SearchAppFrame = view(({ searchStore }: Props) => {
+const SearchAppFrame = view(({ searchStore }: AppProps & { searchStore: SearchStore }) => {
   return (
     <>
       {/* <OrbitSearchQuickResults /> */}

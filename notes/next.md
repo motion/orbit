@@ -10,7 +10,6 @@ Tuesday:
 - Mock design for Orbit context
 - Orbit contextual search app
 - Hold Option to show last opened app
-- Menu input box auto focuses
 - Fix tray targets and interaction a bit more
 
 Wednesday:

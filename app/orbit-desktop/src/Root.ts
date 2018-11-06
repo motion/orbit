@@ -125,6 +125,7 @@ export class Root {
 
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
+    await this.generalSettingManager.start()
 
     // setup oracle to pass into managers
     this.oracle = new Oracle({

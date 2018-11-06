@@ -11,7 +11,6 @@ import { Setting } from '@mcro/models'
 const Config = getGlobalConfig()
 const log = new Logger('GeneralSettingManager')
 
-// @ts-ignore
 @store
 export class GeneralSettingManager {
   autoLaunch: AutoLaunch
@@ -30,7 +29,6 @@ export class GeneralSettingManager {
       }
     }
     log.info('move me to migration plz')
-    this.start()
   }
 
   async start() {
@@ -51,7 +49,7 @@ export class GeneralSettingManager {
     }
     let spaces = await getRepository(SpaceEntity).find()
     if (!spaces.length) {
-      await getRepository(SettingEntity).save([
+      await getRepository(SpaceEntity).save([
         {
           name: 'Orbit',
           colors: ['blue', 'green'],

@@ -59,7 +59,6 @@ func throttle<T>(delay: TimeInterval, queue: DispatchQueue = .main, action: @esc
   }
 }
 
-
 class AppDelegate: NSObject, NSApplicationDelegate {
   
   let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"

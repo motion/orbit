@@ -4,10 +4,10 @@ import { view, attach } from '@mcro/black'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { handleClickLocation } from '../../helpers/handleClickLocation'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { renderHighlightedText } from '../../views/SortableList/renderHighlightedText'
 import { AppStore } from '../AppStore'
-import { SortableList } from '../../views/SortableList/SortableList'
-import { ListItemProps } from '../../views/SortableList/SortableListItem'
+import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
+import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
+import { VirtualList } from '../../views/VirtualList/VirtualList'
 
 type Props = {
   searchStore: SearchStore
@@ -65,7 +65,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
           maxSurroundChars: 80,
         }}
       >
-        <SortableList items={this.props.searchStore.searchState.results} ItemView={ListItem} />
+        <VirtualList items={this.props.searchStore.searchState.results} ItemView={ListItem} />
       </ProvideHighlightsContextWithDefaults>
     )
   }

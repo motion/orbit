@@ -6,7 +6,7 @@ import { SortableContainer } from 'react-sortable-hoc'
 import { OrbitItemSingleton } from '../OrbitItemStore'
 import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
-import { SortableListItem } from './SortableListItem'
+import { VirtualListItem } from './VirtualListItem'
 import { ItemProps } from '../OrbitItemProps'
 import { App } from '@mcro/stores'
 import { AppStore } from '../../apps/AppStore'
@@ -20,12 +20,12 @@ type Props = {
   ItemView?: any
 }
 
-class VirtualList extends React.Component<any> {
+class InnerList extends React.Component<any> {
   render() {
     return <List {...this.props} ref={this.props.forwardRef} />
   }
 }
-const SortableListContainer = SortableContainer(VirtualList, { withRef: true })
+const SortableListContainer = SortableContainer(InnerList, { withRef: true })
 
 class SortableListStore {
   props: Props
@@ -96,13 +96,13 @@ class SortableListStore {
   }
 }
 
-export function SortableList(props: Props) {
+export function VirtualList(props: Props) {
   const context = React.useContext(StoreContext)
   const store = useStore(SortableListStore, { ...props, appStore: context.appStore })
 
   const rowRenderer = ({ index, parent, style }) => {
     const model = props.items[index]
-    const ItemView = props.ItemView || SortableListItem
+    const ItemView = props.ItemView || VirtualListItem
     return (
       <CellMeasurer
         key={`${model.id}${index}`}

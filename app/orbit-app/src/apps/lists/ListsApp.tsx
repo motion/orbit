@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { SortableList } from '../../views/SortableList/SortableList'
 import { react } from '@mcro/black'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
 import { Icon } from '../../views/Icon'
+import { VirtualList } from '../../views/VirtualList/VirtualList'
 
 class ListsStore {
   props: AppProps
@@ -74,7 +74,7 @@ export function ListsApp(props: AppProps) {
   console.log('rendering lists app', store.results)
   return (
     <>
-      <SortableList items={store.results} itemProps={{ direct: true }} />
+      <VirtualList items={store.results} itemProps={{ direct: true }} />
     </>
   )
 }

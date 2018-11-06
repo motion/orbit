@@ -43,4 +43,4 @@ export class ListItem extends React.PureComponent<ListItemProps> {
   }
 }
 
-export const SortableListItem = SortableElement(ListItem)
+export const VirtualListItem = SortableElement(ListItem)

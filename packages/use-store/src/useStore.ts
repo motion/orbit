@@ -58,12 +58,7 @@ const updateProps = (props, nextProps) => {
 const setupStoreWithReactiveProps = (Store, props?) => {
   if (props) {
     const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
-    const storeProps = observable(
-      {
-        props: props,
-      },
-      { props: observable.shallow },
-    )
+    const storeProps = observable({ props }, { props: observable.shallow })
     const getProps = {
       configurable: true,
       get: () => storeProps.props,
@@ -92,12 +87,9 @@ const useStoreWithReactiveProps = (Store, props, shouldHMR = false) => {
   if (!store.current || shouldHMR) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
-  useEffect(() => {
-    if (props) {
-      store.current.__updateProps(store.current.props, props)
-    }
-    return () => {}
-  })
+  if (props) {
+    store.current.__updateProps(store.current.props, props)
+  }
   return store.current
 }
 

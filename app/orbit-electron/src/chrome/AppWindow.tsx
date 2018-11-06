@@ -118,7 +118,7 @@ export const AppWindow = decorator(({ id, store, isPeek }: Props & { store: AppW
   return (
     <Window
       alwaysOnTop={isPeek}
-      show
+      show={store.position[0] === 1 ? false : true}
       focus={false}
       ref={store.handleRef}
       ignoreMouseEvents={ignoreMouseEvents}

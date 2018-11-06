@@ -6,7 +6,7 @@ import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
 import { ItemProps } from '../OrbitItemProps'
 
-type ListItemProps = {
+export type ListItemProps = {
   model: Bit
   query?: string
   style?: Object

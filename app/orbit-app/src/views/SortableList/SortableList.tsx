@@ -9,15 +9,15 @@ import { Banner } from '../Banner'
 import { SortableListItem } from './SortableListItem'
 import { ItemProps } from '../OrbitItemProps'
 import { App } from '@mcro/stores'
-import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 
 type Props = {
-  items?: any[]
+  items: any[]
   itemProps?: ItemProps<any>
   appStore?: AppStore
   subPaneStore?: SubPaneStore
+  ItemView?: any
 }
 
 class VirtualList extends React.Component<any> {
@@ -36,17 +36,14 @@ class SortableListStore {
   width = 0
   isSorting = false
   observing = false
-  cache = new CellMeasurerCache({
-    defaultHeight: 60,
-    defaultWidth: ORBIT_WIDTH,
-    fixedWidth: true,
-  })
+  cache: CellMeasurerCache = null
 
   resizeOnChange = react(
     () => this.props.items && Math.random(),
     () => {
       ensure('this.listRef', !!this.listRef.current)
       this.resizeAll()
+      this.measure()
     },
   )
 
@@ -60,22 +57,34 @@ class SortableListStore {
     },
   )
 
-  measureOnRoot = react(() => this.rootRef, () => this.measure())
-
   measure = () => {
-    console.log('measure')
+    console.log('measure!!!!!!!!!!!!!!!!!!!!', { ...this.props }, this)
+    if (!this.rootRef) {
+      console.log('no ref yet...')
+      return
+    }
+    if (this.width === 0) {
+      const width = this.rootRef.clientWidth
+      this.cache = new CellMeasurerCache({
+        defaultHeight: 60,
+        defaultWidth: width,
+        fixedWidth: true,
+      })
+      this.width = width
+    }
     let height = 0
     for (const [index] of this.props.items.entries()) {
       if (index > 40) break
       height += this.cache.rowHeight(index)
     }
-    console.log('setting height', height)
-    this.width = this.rootRef ? this.rootRef.clientWidth : 0
     this.height = height
   }
 
   setRootRef = ref => {
     this.rootRef = ref
+    if (ref) {
+      this.measure()
+    }
   }
 
   private resizeAll = () => {
@@ -93,6 +102,7 @@ export function SortableList(props: Props) {
 
   const rowRenderer = ({ index, parent, style }) => {
     const model = props.items[index]
+    const ItemView = props.ItemView || SortableListItem
     return (
       <CellMeasurer
         key={`${model.id}${index}`}
@@ -102,7 +112,7 @@ export function SortableList(props: Props) {
         rowIndex={index}
       >
         <div style={style}>
-          <SortableListItem
+          <ItemView
             model={model}
             index={index}
             realIndex={index}
@@ -129,23 +139,24 @@ export function SortableList(props: Props) {
         height: store.height,
       }}
     >
-      {!!store.width && (
-        <SortableListContainer
-          forwardRef={store.listRef}
-          items={props.items}
-          deferredMeasurementCache={store.cache}
-          height={store.height}
-          width={store.width}
-          rowHeight={store.cache.rowHeight}
-          overscanRowCount={20}
-          rowCount={props.items.length}
-          estimatedRowSize={100}
-          rowRenderer={rowRenderer}
-          pressDelay={120}
-          pressThreshold={17}
-          lockAxis="y"
-        />
-      )}
+      {!!store.width &&
+        store.cache && (
+          <SortableListContainer
+            forwardRef={store.listRef}
+            items={props.items}
+            deferredMeasurementCache={store.cache}
+            height={store.height}
+            width={store.width}
+            rowHeight={store.cache.rowHeight}
+            overscanRowCount={20}
+            rowCount={props.items.length}
+            estimatedRowSize={100}
+            rowRenderer={rowRenderer}
+            pressDelay={120}
+            pressThreshold={17}
+            lockAxis="y"
+          />
+        )}
       {!store.width && <div>No width!</div>}
     </div>
   )

@@ -70,14 +70,6 @@ export class OrbitStore {
         trigger: '/',
         static: true,
       },
-      {
-        id: 'settings',
-        type: 'settings',
-        title: 'Settings',
-        icon: 'listBullets',
-        trigger: '/',
-        static: true,
-      },
     ]
   }
 

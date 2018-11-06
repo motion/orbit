@@ -70,4 +70,12 @@ export class AppStore {
   get paneNode() {
     return this.props.subPaneStore.paneNode
   }
+
+  get getHoverSettler() {
+    return this.props.selectionStore.getHoverSettler
+  }
+
+  get toggleSelected() {
+    return this.props.selectionStore.toggleSelected
+  }
 }

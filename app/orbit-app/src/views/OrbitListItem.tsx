@@ -116,7 +116,7 @@ const Bottom = view({
   alignItems: 'center',
 })
 
-@attach('sourcesStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
+@attach('sourcesStore', 'appStore')
 @attach({
   store: OrbitItemStore,
 })

@@ -25,7 +25,7 @@ export class OrbitItemStore {
     hoverSelect => {
       ensure('hoverSelect', hoverSelect)
       ensure('!hoverSettler', !this.hoverSettler)
-      this.hoverSettler = this.props.selectionStore.getHoverSettler()
+      this.hoverSettler = this.props.appStore.getHoverSettler()
       this.hoverSettler.setItem({
         index: this.props.index,
       })
@@ -61,7 +61,7 @@ export class OrbitItemStore {
       this.props.onSelect(this.realIndex, this.appConfig, e.target as HTMLDivElement)
       return
     }
-    this.props.selectionStore.toggleSelected(this.realIndex, 'click')
+    this.props.appStore.toggleSelected(this.realIndex, 'click')
   }
 
   lastClickLocation = Date.now()
@@ -119,7 +119,11 @@ export class OrbitItemStore {
   }
 
   selectItem = () => {
-    AppActions.setPeekApp(this.appConfig, this.position)
+    AppActions.setPeekApp({
+      appConfig: this.appConfig,
+      target: this.position,
+      parentBounds: this.props.appStore.parentBounds
+    })
   }
 
   updateIsSelected = react(
@@ -127,12 +131,11 @@ export class OrbitItemStore {
       const {
         activeCondition,
         ignoreSelection,
-        selectionStore,
-        subPaneStore,
+        appStore,
         isSelected,
       } = this.props
       if (typeof isSelected === 'undefined') {
-        if (!selectionStore) {
+        if (!appStore) {
           return false
         }
         if (ignoreSelection) {
@@ -141,7 +144,7 @@ export class OrbitItemStore {
         if (activeCondition && activeCondition() === false) {
           return false
         }
-        if (!subPaneStore || !subPaneStore.isActive) {
+        if (!appStore || !appStore.isActive) {
           return false
         }
       }
@@ -151,7 +154,7 @@ export class OrbitItemStore {
       if (typeof forceSelected === 'boolean') {
         next = forceSelected
       } else {
-        next = selectionStore.activeIndex === this.realIndex
+        next = appStore.activeIndex === this.realIndex
       }
       return next
     },

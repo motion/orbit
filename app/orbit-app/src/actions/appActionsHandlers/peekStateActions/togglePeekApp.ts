@@ -13,6 +13,6 @@ export function togglePeekApp(appConfig: AppConfig, target?: PeekTarget) {
   if (isEqual(App.peekState.appConfig, appConfig)) {
     AppActions.clearPeek()
   } else {
-    setPeekApp(appConfig, target)
+    setPeekApp({ appConfig, target })
   }
 }

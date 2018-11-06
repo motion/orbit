@@ -16,7 +16,7 @@ type WindowMap = {
   peekOnLeft: boolean
 }
 
-type Position = {
+export type Position = {
   top: number
   left: number
   width: number
@@ -55,11 +55,11 @@ const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
 let lastPeek = null
 let lastTarget = null
 
-export function peekPosition(target, appConfig?: AppConfig): WindowMap | null {
+export function peekPosition(target, appConfig: AppConfig, parentBounds: Position): WindowMap | null {
   if (!target) {
     return null
   }
-  const nextPosition = getPeekPositionFromTarget(target, lastPeek, appConfig)
+  const nextPosition = getPeekPositionFromTarget(target, lastPeek, appConfig, parentBounds)
   lastPeek = nextPosition
   lastTarget = target
   return nextPosition
@@ -109,20 +109,15 @@ function getLazyPosition(target: Position, peekHeight: number, lastPeek: WindowM
   return y
 }
 
-function getPeekPositionFromTarget(target, lastPeek, appConfig?: AppConfig): WindowMap | null {
+function getPeekPositionFromTarget(target, lastPeek, appConfig: AppConfig, parentBounds: Position): WindowMap | null {
   // dont reset position on same target re-opening
   if (isEqual(target, lastTarget)) {
     return lastPeek
   }
   const [screenW, screenH] = screenSize()
   let { orbitOnLeft } = App
-  let orbitWidth = App.orbitState.size[0]
-  if (App.orbitState.docked) {
-    orbitOnLeft = false
-    orbitWidth = Constants.ORBIT_WIDTH
-  }
   const leftSpace = target.left
-  const rightSpace = screenW - (target.left + orbitWidth)
+  const rightSpace = screenW - (target.left + parentBounds.width)
   // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
   let [pW, pH] = getPeekSize(screenSize(), appConfig)
@@ -145,7 +140,7 @@ function getPeekPositionFromTarget(target, lastPeek, appConfig?: AppConfig): Win
       x = 0
     }
   } else {
-    x = target.left + orbitWidth
+    x = target.left + parentBounds.width
     if (pW > rightSpace) {
       pW = rightSpace
     }
@@ -160,16 +155,6 @@ function getPeekPositionFromTarget(target, lastPeek, appConfig?: AppConfig): Win
   }
   if (!orbitOnLeft && peekOnLeft) {
     x += Constants.ARROW_PAD
-  }
-
-  // FOR NOW JUST FIX IT TO EDGE OR ORBIT
-  // UNTIL WE HAVE WINDOWS THAT FOLLOW OTHER STUFF
-  // THEN WE CAN HAVE THIS LINE ONLY APPLY TO PEEKWINDOW
-  // adjust for docked
-  if (App.orbitState.docked) {
-    // for now lets not allow things to overlap the docked frame
-    // comment this out if you want them to
-    x = App.orbitState.position[0] - pW
   }
 
   return {

@@ -1,13 +1,13 @@
-import { App, AppConfig, AppState } from '@mcro/stores'
+import { App, AppConfig } from '@mcro/stores'
 import { peekPosition, Position } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { PeekTarget } from './types'
 import { setAppState } from '../setAppState'
 
-type PartialPeekState = {
+type PeekApp = {
   target: PeekTarget
-  appConfig: Partial<AppState>
+  appConfig: AppConfig
   parentBounds: Position
 }
 
@@ -27,15 +27,16 @@ const DEFAULT_APP_CONFIG_CONFIG: AppConfig['viewConfig']['initialState'] = {
   initialState: null,
 }
 
-export function setPeekApp(appConfig: AppConfig, target?: PeekTarget) {
+export function setPeekApp({ target, appConfig, parentBounds }: PeekApp) {
   invariant(appConfig, 'Must pass appConfig')
   setPeekState({
     target: target || App.peekState.target,
     appConfig,
+    parentBounds,
   })
 }
 
-function setPeekState({ target, appConfig }: PartialPeekState) {
+function setPeekState({ target, appConfig, parentBounds }: PeekApp) {
   const realTarget = getTargetPosition(target)
   setAppState({
     appConfig: {
@@ -47,6 +48,6 @@ function setPeekState({ target, appConfig }: PartialPeekState) {
       },
     },
     target: realTarget,
-    ...peekPosition(realTarget, appConfig),
+    ...peekPosition(realTarget, appConfig, parentBounds),
   })
 }

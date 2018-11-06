@@ -3,11 +3,9 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
 import { ResolvableModel, OrbitItemProps } from '../integrations/types'
-import { SelectionStore } from '../stores/SelectionStore'
-import { SubPaneStore } from '../components/SubPaneStore'
 import { SourcesStore } from '../stores/SourcesStore'
-import { CSSPropertySetStrict } from '../../../../packages/css/_/cssPropertySet'
-import { PaneManagerStore } from '../stores/PaneManagerStore'
+import { AppStore } from '../apps/AppStore';
+import { CSSPropertySetStrict } from '@mcro/css'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 
@@ -23,9 +21,7 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     listItem?: boolean
     hoverToSelect?: boolean
     sourcesStore?: SourcesStore
-    selectionStore?: SelectionStore
-    paneManagerStore?: PaneManagerStore
-    subPaneStore?: SubPaneStore
+    appStore?: AppStore
     subtitle?: React.ReactNode
     date?: React.ReactNode
     icon?: React.ReactNode

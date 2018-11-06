@@ -76,11 +76,11 @@ class InputPlain extends React.PureComponent<InputProps> {
         alignItems="center"
         flexFlow="row"
         themeSelect="input"
-        sizeFont
+        sizeFont={1.2}
         sizePadding
         sizeHeight
         sizeLineHeight
-        sizeRadius
+        sizeRadius={0.75}
         noInnerElement
         glint={false}
         borderWidth={1}

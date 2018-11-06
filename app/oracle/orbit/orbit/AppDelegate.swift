@@ -268,8 +268,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let mouseX = mouseLocation.x
     let mouseY = mouseLocation.y
     let trayButtonMaxX = [40, 65, 95, 125]
-    let withinX = mouseX > trayRect.minX && mouseX < trayRect.maxX
-    let withinY = mouseY > trayRect.minY && mouseY < trayRect.maxY
+    let withinX = mouseX >= trayRect.minX && mouseX <= trayRect.maxX
+    let withinY = mouseY >= trayRect.minY && mouseY <= trayRect.maxY
     if (withinX && withinY) {
       let xOff = Int(trayRect.maxX - mouseX)
 //      print("xoff \(xOff)")

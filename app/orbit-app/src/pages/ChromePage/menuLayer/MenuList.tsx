@@ -8,7 +8,7 @@ export function MenuList(props: AppProps) {
   return (
     <Menu index={2} width={300}>
       <Searchable {...props}>
-        <ListsApp width={300} {...props} />
+        <ListsApp {...props} />
       </Searchable>
       {/* <MenuItem icon="😓">Lorem Ipsum</MenuItem>
       <MenuItem icon="🤬">Lorem Ipsum</MenuItem>

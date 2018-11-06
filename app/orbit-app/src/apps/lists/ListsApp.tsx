@@ -4,6 +4,7 @@ import { react } from '@mcro/black'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
+import { Icon } from '../../views/Icon'
 
 class ListsStore {
   props: AppProps
@@ -14,35 +15,36 @@ class ListsStore {
       index: 0,
       type: 'list',
       title: 'First List',
-      subtitle: '10 items',
+      afterTitle: <Icon name="pin" size={16} />,
+      // subtitle: '10 items',
     },
     {
       id: 1,
       index: 1,
       type: 'list',
       title: 'Next list',
-      subtitle: '3 items',
+      // subtitle: '3 items',
     },
     {
       id: 2,
       index: 2,
       type: 'list',
       title: 'Third list',
-      subtitle: '34 items',
+      // subtitle: '34 items',
     },
     {
       id: 3,
       index: 3,
       type: 'list',
       title: 'Items I Really Like',
-      subtitle: '100 items',
+      // subtitle: '100 items',
     },
     {
       id: 4,
       index: 4,
       type: 'list',
       title: 'Another Another List',
-      subtitle: '1 items',
+      // subtitle: '1 items',
     },
   ]
 
@@ -63,7 +65,7 @@ class ListsStore {
       fuzzyQueryFilter(this.activeQuery, this.allLists, {
         key: 'title',
       }),
-    { defaultValue: [] },
+    { defaultValue: this.allLists },
   )
 }
 

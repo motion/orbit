@@ -139,7 +139,6 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       updatedAt,
     } = normalizedItem
     const {
-      afterTitle,
       borderRadius,
       cardProps,
       children,
@@ -242,13 +241,12 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                 sizeLineHeight={0.85}
                 ellipse
                 fontWeight={700}
-                marginTop={-2}
                 {...titleProps}
               >
                 {title}
               </HighlightText>
               <TitleSpace />
-              {afterTitle}
+              {this.props.afterTitle || normalizedItem.afterTitle}
               {afterHeader}
             </Title>
           )}

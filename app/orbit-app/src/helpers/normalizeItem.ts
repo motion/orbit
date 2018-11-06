@@ -23,6 +23,7 @@ export type NormalizedItem = {
   subtitle?: React.ReactNode
   integration?: IntegrationType
   avatar?: string
+  afterTitle?: React.ReactNode
 }
 
 export type ItemResolverExtraProps = {

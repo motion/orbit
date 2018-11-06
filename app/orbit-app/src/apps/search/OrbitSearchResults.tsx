@@ -22,7 +22,7 @@ class ListItem extends React.PureComponent<ListItemProps> {
     const { model, realIndex, query, ...props } = this.props
     if (model.type === 'summary') {
       const item = model as any
-      return <GroupedSearchItem item={item} index={realIndex} {...props} />
+      return <GroupedSearchItem item={item} index={realIndex} query={query} {...props} />
     }
     return (
       <OrbitListItem

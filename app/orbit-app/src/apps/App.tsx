@@ -5,6 +5,7 @@ import { apps, AppType } from './apps'
 import { SourcesStore } from '../stores/SourcesStore'
 import { SettingStore } from '../stores/SettingStore'
 import { SubPaneStore } from '../components/SubPaneStore'
+import { trace } from 'mobx'
 
 type Props = {
   id: string
@@ -31,6 +32,8 @@ type Props = {
 export class App extends React.Component<Props> {
   render() {
     const { type, appStore, sourcesStore, settingStore, subPaneStore } = this.props
+    log(`render app`)
+    trace()
     const App = apps[type]
     if (typeof App !== 'function') {
       console.error('WAHT THE FUCK', type, App)

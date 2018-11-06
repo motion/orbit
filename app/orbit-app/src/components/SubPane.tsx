@@ -8,6 +8,7 @@ import { SelectionStore } from '../stores/SelectionStore'
 import { BORDER_RADIUS } from '../constants'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { AppType } from '../apps/apps'
+import { StaticContainer } from '../views/StaticContainer'
 
 export type SubPaneProps = CSSPropertySet & {
   id: string
@@ -101,7 +102,9 @@ export class SubPane extends React.Component<SubPaneProps> {
             preventScroll={preventScroll}
             {...props}
           >
-            <PaneContentInner>{children}</PaneContentInner>
+            <PaneContentInner>
+              <StaticContainer key={0}>{children}</StaticContainer>
+            </PaneContentInner>
           </Pane>
         </SubPaneInner>
         {after}

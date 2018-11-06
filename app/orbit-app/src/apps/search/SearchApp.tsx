@@ -2,14 +2,15 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
-import { StaticContainer } from '../../views/StaticContainer'
 import { OrbitSearchResults } from './OrbitSearchResults'
 import { OrbitSearchNav } from './OrbitSearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
+import { StaticContainer } from '../../views/StaticContainer'
 
 export function SearchApp(props: AppProps) {
-  const searchStore = useStore(SearchStore, props)
+  const searchStore = useStore(SearchStore, props, true)
+  log(`SEARCH--------`)
   return (
     <>
       <OrbitSearchNav />
@@ -28,13 +29,20 @@ export function SearchApp(props: AppProps) {
           }}
         >
           <StaticContainer>
-            <OrbitSearchResults searchStore={searchStore} appStore={props.appStore} offsetY={60} />
+            <SearchAppInner searchStore={searchStore} {...props} />
           </StaticContainer>
         </OrbitSearchResultsFrame>
       </ItemResolverDecorationContext.Provider>
     </>
   )
 }
+
+const SearchAppInner = React.memo((props: AppProps & { searchStore: SearchStore }) => {
+  log('--------------renderererererere-----------------')
+  return (
+    <OrbitSearchResults searchStore={props.searchStore} appStore={props.appStore} offsetY={60} />
+  )
+})
 
 const OrbitSearchResultsFrame = view({
   position: 'relative',

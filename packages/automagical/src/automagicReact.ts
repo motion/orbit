@@ -29,7 +29,7 @@ const logGroup = (name, result, changed, reactionArgs, globalChanged?) => {
   const hasChanges = hasGlobalChanges || hasLocalChanges
   // dont group if nothing much to report...
   if (!hasChanges) {
-    console.log(`${name}`, ...getReactionLog())
+    console.debug(`${name}`, 'no changes', ...getReactionLog())
     return
   }
   console.groupCollapsed(`${name}`)

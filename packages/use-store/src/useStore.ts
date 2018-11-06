@@ -5,10 +5,9 @@ import {
   useEffect,
   useRef,
   createContext,
-  // @ts-ignore
   useMutationEffect,
 } from 'react'
-import { action, autorun, observable, toJS } from 'mobx'
+import { action, autorun, observable, toJS, trace } from 'mobx'
 
 let options = {
   onMount: null,
@@ -33,7 +32,7 @@ const propKeysWithoutElements = props => Object.keys(props).filter(x => !isReact
 
 // updateProps
 // granular set so reactions can be efficient
-const updateProps = (props, nextProps) => {
+const updateProps = (props, nextProps, debug?) => {
   const nextPropsKeys = propKeysWithoutElements(nextProps)
   const curPropKeys = propKeysWithoutElements(props)
 
@@ -42,7 +41,9 @@ const updateProps = (props, nextProps) => {
     const a = props[prop]
     const b = nextProps[prop]
     if (a !== b) {
-      // console.log('has changed prop', prop, nextProps[prop])
+      if (debug) {
+        console.log('has changed prop', prop, nextProps[prop])
+      }
       props[prop] = nextProps[prop]
     }
   }
@@ -83,13 +84,13 @@ const setupStoreWithReactiveProps = (Store, props?) => {
   }
 }
 
-const useStoreWithReactiveProps = (Store, props, shouldHMR = false) => {
+const useStoreWithReactiveProps = (Store, props, shouldHMR = false, debug?) => {
   let store = useRef(null)
   if (!store.current || shouldHMR) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
   if (props) {
-    store.current.__updateProps(store.current.props, props)
+    store.current.__updateProps(store.current.props, props, debug)
   }
   return store.current
 }
@@ -100,14 +101,14 @@ const ignoreReactiveKeys = {
   IS_AUTO_RUN: true,
 }
 
-export const useStore = <A>(Store: new () => A, props?: Object): A => {
+export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
   const proxyStore = useRef(null)
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const shouldReloadStore =
     isHMRCompat &&
     proxyStore.current &&
     proxyStore.current.constructor.toString() !== Store.toString()
-  const store = useStoreWithReactiveProps(Store, props, shouldReloadStore)
+  const store = useStoreWithReactiveProps(Store, props, shouldReloadStore, debug)
   const dispose = useRef(null)
   const reactiveKeys = useRef(observable({}))
   let shouldTrackKeys = true
@@ -159,6 +160,9 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
         // trigger reaction on keys
         for (const key in reactiveKeys.current) {
           store[key]
+        }
+        if (debug) {
+          trace()
         }
         // update when we react
         update(Math.random())

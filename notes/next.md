@@ -30,6 +30,7 @@ Friday:
 - Get profiles with topic modeling
 - Get topics app using real data for changing over time topics
 - Allow custom topics in topics app
+- Cleanup SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
 ---
 

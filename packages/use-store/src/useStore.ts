@@ -74,6 +74,7 @@ const setupStoreWithReactiveProps = (Store, props?) => {
     storeInstance.__updateProps = updatePropsAction
     return storeInstance
   } else {
+    Store.prototype.automagic = automagicClass
     const storeInstance = new Store()
     storeInstance.automagic({
       isSubscribable: x => x && typeof x.subscribe === 'function',

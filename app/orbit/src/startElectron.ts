@@ -21,7 +21,7 @@ const finishLaunchingElectron = () => {
 
   // focus app on start
   // because we hide dock icon we need to do this
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== 'development' && !process.env.SUB_PROCESS) {
     app.focus()
   }
 

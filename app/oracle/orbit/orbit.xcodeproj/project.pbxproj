@@ -18,6 +18,7 @@
 		AE6EC270214B416700834167 /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC265214B410200834167 /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
+		AEE927022191261E006CAA2C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE927012191261E006CAA2C /* main.swift */; };
 		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
 		CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */; };
@@ -80,6 +81,7 @@
 		AE6EC266214B410200834167 /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
 		AE6EC267214B410200834167 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
+		AEE927012191261E006CAA2C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF0BCD68202E0A620012723C /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
 		CF0BCD82202E0E0F0012723C /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 		CFBEEE1D202D838D005F925A /* orbit */ = {
 			isa = PBXGroup;
 			children = (
+				AEE927012191261E006CAA2C /* main.swift */,
 				CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */,
 				CFBEEE1E202D838D005F925A /* AppDelegate.swift */,
 				CF0BCDB3202E188D0012723C /* Windo */,
@@ -339,6 +342,7 @@
 				CF0BCD97202E0E330012723C /* ThresholdBelowFilter.swift in Sources */,
 				CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */,
 				CF0BCD9F202E0E3E0012723C /* util.swift in Sources */,
+				AEE927022191261E006CAA2C /* main.swift in Sources */,
 				CF0BCDB5202E189F0012723C /* Windo.swift in Sources */,
 				CFEB7E9D208CE16B0001A9DC /* AXUIWindow.swift in Sources */,
 				CF0BCD95202E0E310012723C /* ScreenFrame.swift in Sources */,

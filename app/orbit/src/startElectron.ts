@@ -4,45 +4,50 @@ import { getGlobalConfig } from '@mcro/config'
 import { handleExit } from './helpers/handleExit'
 
 export function startElectron() {
-  const Config = getGlobalConfig()
-
   // this works in prod
   app.on('before-quit', handleExit)
 
   log.info('Found desktop, continue...')
 
-  app.on('ready', () => {
-    // start electron...
-    const ElectronApp = require('@mcro/orbit-electron')
-    ElectronApp.main()
+  if (app.isReady) {
+    finishLaunchingElectron()
+  } else {
+    app.on('ready', finishLaunchingElectron)
+  }
+}
 
-    // focus app on start
-    // because we hide dock icon we need to do this
-    if (process.env.NODE_ENV !== 'development') {
-      app.focus()
-    }
+const finishLaunchingElectron = () => {
+  const Config = getGlobalConfig()
+  // start electron...
+  const ElectronApp = require('@mcro/orbit-electron')
+  ElectronApp.main()
 
-    // PRODUCTION
-    if (Config.isProd) {
-      // move to app folder
-      if (!app.isInApplicationsFolder()) {
-        app.dock.bounce('informational')
-        const response = dialog.showMessageBox({
-          type: 'question',
-          title: 'Move to apps?',
-          message: 'Move Orbit to Applications folder?',
-          buttons: ['Ok', 'Cancel'],
-          defaultId: 0,
-          cancelId: 1,
-        })
-        if (response === 0) {
-          try {
-            app.moveToApplicationsFolder()
-          } catch (err) {
-            console.log('error moving to app folder', err)
-          }
+  // focus app on start
+  // because we hide dock icon we need to do this
+  if (process.env.NODE_ENV !== 'development') {
+    app.focus()
+  }
+
+  // PRODUCTION
+  if (Config.isProd) {
+    // move to app folder
+    if (!app.isInApplicationsFolder()) {
+      app.dock.bounce('informational')
+      const response = dialog.showMessageBox({
+        type: 'question',
+        title: 'Move to apps?',
+        message: 'Move Orbit to Applications folder?',
+        buttons: ['Ok', 'Cancel'],
+        defaultId: 0,
+        cancelId: 1,
+      })
+      if (response === 0) {
+        try {
+          app.moveToApplicationsFolder()
+        } catch (err) {
+          console.log('error moving to app folder', err)
         }
       }
     }
-  })
+  }
 }

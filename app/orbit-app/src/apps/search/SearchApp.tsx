@@ -42,7 +42,7 @@ const SearchAppFrame = view(({ searchStore }: Props) => {
         }}
       >
         <StaticContainer>
-          <OrbitSearchVirtualList searchStore={searchStore} />
+          <OrbitSearchVirtualList searchStore={searchStore} offsetY={60} />
         </StaticContainer>
       </OrbitSearchResultsFrame>
     </>

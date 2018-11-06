@@ -74,7 +74,11 @@ export function ListsApp(props: AppProps) {
   console.log('rendering lists app', store.results)
   return (
     <>
-      <VirtualList items={store.results} itemProps={{ direct: true, hoverToSelect: true }} />
+      <VirtualList
+        maxHeight={400}
+        items={store.results}
+        itemProps={{ direct: true, hoverToSelect: true }}
+      />
     </>
   )
 }

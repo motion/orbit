@@ -28,6 +28,7 @@ type Props = {
   loadMoreRows?: Function
   rowCount?: number
   isRowLoaded?: Function
+  maxHeight: number
 }
 
 class InnerList extends React.Component<any> {
@@ -68,11 +69,12 @@ class SortableListStore {
   )
 
   measure = () => {
-    console.log('measure!!!!!!!!!!!!!!!!!!!!', { ...this.props }, this)
     if (!this.rootRef) {
       console.log('no ref yet...')
       return
     }
+
+    // width
     if (this.width === 0) {
       const width = this.rootRef.clientWidth
       this.cache = new CellMeasurerCache({
@@ -82,12 +84,14 @@ class SortableListStore {
       })
       this.width = width
     }
+
+    // height
     let height = 0
     for (const [index] of this.props.items.entries()) {
       if (index > 40) break
       height += this.cache.rowHeight(index)
     }
-    this.height = height
+    this.height = Math.min(this.props.maxHeight, height)
   }
 
   setRootRef = ref => {

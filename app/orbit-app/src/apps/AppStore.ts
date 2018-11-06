@@ -78,4 +78,12 @@ export class AppStore {
   get toggleSelected() {
     return this.props.selectionStore.toggleSelected
   }
+
+  get maxHeight() {
+    const { subPaneStore } = this.props
+    if (subPaneStore) {
+      return subPaneStore.maxHeight - subPaneStore.aboveContentHeight
+    }
+    return window.innerHeight - 50
+  }
 }

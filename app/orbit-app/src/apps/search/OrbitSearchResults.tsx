@@ -7,6 +7,7 @@ import { AppStore } from '../AppStore'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
 import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
+import { GroupedSearchItem } from './GroupedSearchItem'
 
 type Props = {
   searchStore: SearchStore
@@ -21,12 +22,7 @@ class ListItem extends React.PureComponent<ListItemProps> {
     const { model, realIndex, query, ...props } = this.props
     if (model.type === 'summary') {
       const item = model as any
-      return (
-        <OrbitListItem direct index={realIndex}>
-          {item.title}
-          Hello word
-        </OrbitListItem>
-      )
+      return <GroupedSearchItem item={item} index={realIndex} {...props} />
     }
     return (
       <OrbitListItem

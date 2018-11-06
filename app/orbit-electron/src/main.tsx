@@ -11,8 +11,6 @@ import { ChromeRoot } from './chrome/ChromeRoot'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
-Error.stackTraceLimit = Infinity
-
 export async function main() {
   log.info(`Starting electron in env ${process.env.NODE_ENV}`)
 

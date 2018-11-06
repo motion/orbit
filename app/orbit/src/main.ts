@@ -92,7 +92,7 @@ export async function main() {
 
     // start main electron process inside this thread (no forking)
     if (IGNORE_ELECTRON !== 'true') {
-      await require('./startElectron').startElectron()
+      require('./startElectron').startElectron()
     }
 
     console.log('Started everything!')

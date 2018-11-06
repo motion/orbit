@@ -44,6 +44,7 @@ Friday:
 Monday:
 
 - Walkthrough accessibility permissions
+  - Custom Notifications :) would allow a lot
 - Person app send via slack/gmail
 - Hoversettler for menu peeks
 

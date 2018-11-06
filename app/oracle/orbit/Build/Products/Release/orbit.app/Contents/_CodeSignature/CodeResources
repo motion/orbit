@@ -14,7 +14,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		CAWXW2+KyPvCLcGihru0HvGzEUs=
+		QcU53ALJQfUfxsGxd3+bCkwfecs=
 		</data>
 		<key>Resources/Base.lproj/MainMenu.nib</key>
 		<data>
@@ -74,7 +74,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			bSALXND6u0K+3NmV4iRZQt2D4qE=
+			XNH6WPiwLPfntOWT2mIStkCIcUw=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.tylermandry.Swindler" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
@@ -276,11 +276,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			CAWXW2+KyPvCLcGihru0HvGzEUs=
+			QcU53ALJQfUfxsGxd3+bCkwfecs=
 			</data>
 			<key>hash2</key>
 			<data>
-			RIKch8xqKZZxBl2iisOH2kEgmD66jImYSBBL6JWyqtg=
+			++gtO2azjMPrGBJGOQ9KlTCxt9m4ZELl+R2GpD5HVtY=
 			</data>
 		</dict>
 		<key>Resources/Base.lproj/MainMenu.nib</key>

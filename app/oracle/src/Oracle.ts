@@ -335,6 +335,7 @@ export class Oracle {
       RUN_APP_WINDOW: `${this.options.appWindow}`,
       SOCKET_PORT: `${this.socketPort}`,
       SHOW_TRAY: `${this.options.showTray}`,
+      NODE_ENV: process.env.NODE_ENV,
       ...this.env,
     }
     const stringEnv = JSON.stringify(env, null, 2)

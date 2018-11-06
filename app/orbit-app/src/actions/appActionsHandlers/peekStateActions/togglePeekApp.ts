@@ -1,5 +1,4 @@
 import { App, AppConfig } from '@mcro/stores'
-import { PeekTarget } from './types'
 import { AppActions } from '../../AppActions'
 import { setPeekApp } from './setPeekApp'
 import { Logger } from '@mcro/logger'
@@ -13,7 +12,7 @@ export function togglePeekApp({
   target,
 }: {
   appConfig: AppConfig
-  target?: PeekTarget
+  target?: HTMLDivElement
 }) {
   log.info('togglePeekApp', appConfig)
   if (isEqual(App.peekState.appConfig, appConfig)) {

@@ -122,6 +122,7 @@ function getPeekPositionFromTarget(
   if (isEqual(target, lastTarget)) {
     return lastPeek
   }
+
   const [screenW, screenH] = screenSize()
   const leftSpace = parentBounds.left
   const rightSpace = screenW - (parentBounds.left + parentBounds.width)

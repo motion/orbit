@@ -104,15 +104,6 @@ export class OrbitItemStore {
     return this.props.model ? getAppConfig(this.props.model) : null
   }
 
-  get position() {
-    const position = getTargetPosition(this.cardWrapRef)
-    // list items are closer to edge, adjust...
-    if (this.props.listItem === true) {
-      position.left += 5
-    }
-    return position
-  }
-
   get realIndex() {
     const { model, getIndex, index } = this.props
     return getIndex ? getIndex(model) : index
@@ -121,19 +112,13 @@ export class OrbitItemStore {
   selectItem = () => {
     AppActions.setPeekApp({
       appConfig: this.appConfig,
-      target: this.position,
-      parentBounds: this.props.appStore.parentBounds
+      target: this.cardWrapRef,
     })
   }
 
   updateIsSelected = react(
     () => {
-      const {
-        activeCondition,
-        ignoreSelection,
-        appStore,
-        isSelected,
-      } = this.props
+      const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
       if (typeof isSelected === 'undefined') {
         if (!appStore) {
           return false

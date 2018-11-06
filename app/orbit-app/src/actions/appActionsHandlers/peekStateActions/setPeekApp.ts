@@ -1,12 +1,11 @@
-import { App, AppConfig } from '@mcro/stores'
+import { AppConfig } from '@mcro/stores'
 import { peekPosition, Position } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
-import { PeekTarget } from './types'
 import { setAppState } from '../setAppState'
 
 type PeekApp = {
-  target: PeekTarget
+  target: HTMLDivElement
   appConfig: AppConfig
   parentBounds?: Position
 }
@@ -27,10 +26,11 @@ const DEFAULT_APP_CONFIG_CONFIG: AppConfig['viewConfig']['initialState'] = {
   initialState: null,
 }
 
-const getParentBounds = () => {
-  const node = document.querySelector('.app-parent-bounds') as HTMLDivElement
+const getParentBounds = (target: HTMLDivElement) => {
+  const node = target.closest('.app-parent-bounds') as HTMLDivElement
   if (!node) {
-    throw new Error('No node to find parent bounds!')
+    console.error('No node to find parent bounds!')
+    return null
   }
   return node.getBoundingClientRect()
 }
@@ -38,9 +38,9 @@ const getParentBounds = () => {
 export function setPeekApp({ target, appConfig, parentBounds }: PeekApp) {
   invariant(appConfig, 'Must pass appConfig')
   setPeekState({
-    target: target || App.peekState.target,
+    target,
     appConfig,
-    parentBounds: parentBounds || getParentBounds(),
+    parentBounds: parentBounds || getParentBounds(target),
   })
 }
 
@@ -56,6 +56,6 @@ function setPeekState({ target, appConfig, parentBounds }: PeekApp) {
       },
     },
     target: realTarget,
-    ...peekPosition(realTarget, appConfig, parentBounds),
+    ...peekPosition(realTarget, appConfig, parentBounds || realTarget),
   })
 }

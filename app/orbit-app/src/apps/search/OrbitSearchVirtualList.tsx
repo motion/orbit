@@ -19,11 +19,9 @@ const spaceBetween = <div style={{ flex: 1 }} />
 
 class ListItem extends React.PureComponent<ListItemProps> {
   render() {
-    const { model, realIndex, query, ignoreSelection } = this.props
+    const { model, realIndex, query, ignoreSelection, ...props } = this.props
     return (
       <OrbitListItem
-        pane="docked-search"
-        subPane="search"
         index={realIndex}
         model={model}
         subtitleSpaceBetween={spaceBetween}
@@ -39,6 +37,7 @@ class ListItem extends React.PureComponent<ListItemProps> {
           preventSelect: true,
         }}
         ignoreSelection={ignoreSelection}
+        {...props}
       />
     )
   }
@@ -78,6 +77,7 @@ export class OrbitSearchVirtualList extends React.Component<Props> {
           rowCount={searchStore.remoteRowCount}
           loadMoreRows={searchStore.loadMore}
           isRowLoaded={this.isRowLoaded}
+          getItemProps={searchStore.getItemProps}
         />
       </ProvideHighlightsContextWithDefaults>
     )

@@ -15,6 +15,11 @@ import { Row, Text, View } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 
+const Separator = view({
+  background: [100, 100, 100, 0.2],
+  padding: [2, 12],
+})
+
 @attach('sourcesStore', 'appStore')
 @attach({
   store: OrbitItemStore,
@@ -56,6 +61,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       onClickLocation,
       model,
       renderText,
+      separator,
       ...props
     } = this.props
     const { isSelected } = store
@@ -118,6 +124,13 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
         forwardRef={store.setCardWrapRef}
         {...props}
       >
+        {!!separator && (
+          <Separator>
+            <Text size={0.9} fontWeight={500}>
+              {separator}
+            </Text>
+          </Separator>
+        )}
         <ListItem
           isSelected={isSelected}
           borderRadius={borderRadius}

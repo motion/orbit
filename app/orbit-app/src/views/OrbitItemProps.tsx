@@ -4,7 +4,7 @@ import { NormalizedItem } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
 import { ResolvableModel, OrbitItemProps } from '../integrations/types'
 import { SourcesStore } from '../stores/SourcesStore'
-import { AppStore } from '../apps/AppStore';
+import { AppStore } from '../apps/AppStore'
 import { CSSPropertySetStrict } from '@mcro/css'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
@@ -58,4 +58,5 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     subtitleSpaceBetween?: React.ReactNode
     searchTerm?: string
     onClickLocation?: (item: NormalizedItem, e?: Event) => any
+    separator?: React.ReactNode
   }

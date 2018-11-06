@@ -6,7 +6,6 @@ const defaultOptions = {
   weekday: 'short',
   month: 'short',
   day: 'numeric',
-  year: 'numeric',
 }
 
 export const DateFormat = ({
@@ -19,8 +18,8 @@ export const DateFormat = ({
     return <TimeAgo>{date}</TimeAgo>
   }
   let finalOptions = options || defaultOptions
-  if (differenceInCalendarYears(Date.now(), date) > 0) {
-    finalOptions.year = 'numeric'
+  if (differenceInCalendarYears(date, Date.now()) > 1) {
+    finalOptions.year = '2-digit'
   }
   return (
     <>

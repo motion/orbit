@@ -17,13 +17,17 @@ import { ItemProps } from '../OrbitItemProps'
 import { App } from '@mcro/stores'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
+import { GenericComponent } from '../../types'
+
+export type GetItemProps = (index: number) => ItemProps<any>
 
 type Props = {
   items: any[]
   itemProps?: ItemProps<any>
+  getItemProps?: GetItemProps
   appStore?: AppStore
   subPaneStore?: SubPaneStore
-  ItemView?: any
+  ItemView?: GenericComponent<ItemProps<any>>
   infinite?: boolean
   loadMoreRows?: Function
   rowCount?: number
@@ -132,6 +136,7 @@ export function VirtualList(props: Props) {
             realIndex={index}
             query={App.state.query}
             itemProps={props.itemProps}
+            {...props.getItemProps && props.getItemProps(index)}
           />
         </div>
       </CellMeasurer>

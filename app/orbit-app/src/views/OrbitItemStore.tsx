@@ -1,5 +1,4 @@
 import { react, ensure } from '@mcro/black'
-import { getTargetPosition } from '../helpers/getTargetPosition'
 import { ItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { AppActions } from '../actions/AppActions'

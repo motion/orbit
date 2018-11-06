@@ -5,6 +5,7 @@ import { App } from '@mcro/stores'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
+import { GetItemProps } from '../../views/VirtualList/VirtualList'
 
 type SearchState = { results: Bit[]; finished?: boolean; query: string }
 
@@ -28,6 +29,14 @@ export class SearchStore {
 
   get selectedItem() {
     return this.searchState.results[this.props.appStore.activeIndex]
+  }
+
+  getItemProps: GetItemProps = index => {
+    if (!index || index % 5 === 0) {
+      return {
+        separator: 'This Week',
+      }
+    }
   }
 
   updateSearchHistoryOnSearch = react(

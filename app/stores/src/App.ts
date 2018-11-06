@@ -109,13 +109,6 @@ class AppStore {
     return this.state.appsState.find(x => x.id === id)
   }
 
-  get orbitOnLeft() {
-    if (App.orbitState.docked) {
-      return true
-    }
-    return App.orbitState.orbitOnLeft
-  }
-
   get orbitArrowTowards() {
     return App.orbitState.orbitOnLeft ? 'right' : 'left'
   }

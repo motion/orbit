@@ -1,9 +1,7 @@
-import * as Constants from '@mcro/constants'
-import { App, AppConfig } from '@mcro/stores'
+import { AppConfig } from '@mcro/stores'
 import { isEqual } from 'lodash'
 
 const MIN_Y = 60
-const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const BOTTOM_PAD = 40
 const NUDGE_AMT = 40
@@ -55,7 +53,11 @@ const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
 let lastPeek = null
 let lastTarget = null
 
-export function peekPosition(target, appConfig: AppConfig, parentBounds: Position): WindowMap | null {
+export function peekPosition(
+  target,
+  appConfig: AppConfig,
+  parentBounds: Position,
+): WindowMap | null {
   if (!target) {
     return null
   }
@@ -109,32 +111,37 @@ function getLazyPosition(target: Position, peekHeight: number, lastPeek: WindowM
   return y
 }
 
-function getPeekPositionFromTarget(target, lastPeek, appConfig: AppConfig, parentBounds: Position): WindowMap | null {
+function getPeekPositionFromTarget(
+  target,
+  lastPeek,
+  appConfig: AppConfig,
+  parentBounds: Position,
+  appOnLeft?: boolean,
+): WindowMap | null {
   // dont reset position on same target re-opening
   if (isEqual(target, lastTarget)) {
     return lastPeek
   }
   const [screenW, screenH] = screenSize()
-  let { orbitOnLeft } = App
   const leftSpace = target.left
   const rightSpace = screenW - (target.left + parentBounds.width)
-  // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
   let [pW, pH] = getPeekSize(screenSize(), appConfig)
   let x
   let y = getLazyPosition(target, pH, lastPeek)
-  // prefer more strongly away from app if possible
-  if (peekOnLeft && !orbitOnLeft && rightSpace > pW + EDGE_PAD) {
-    peekOnLeft = false
+
+  // prefer away from app if possible
+  if (typeof appOnLeft === 'boolean') {
+    if (peekOnLeft && appOnLeft && rightSpace > pW + EDGE_PAD) {
+      peekOnLeft = false
+    }
+    if (!peekOnLeft && !appOnLeft && leftSpace > pW + EDGE_PAD) {
+      peekOnLeft = true
+    }
   }
-  if (!peekOnLeft && orbitOnLeft && leftSpace > pW + EDGE_PAD) {
-    peekOnLeft = true
-  }
+
   if (peekOnLeft) {
     x = target.left - pW
-    if (orbitOnLeft) {
-      x -= SHADOW_PAD
-    }
     if (pW > leftSpace) {
       pW = leftSpace
       x = 0
@@ -148,13 +155,6 @@ function getPeekPositionFromTarget(target, lastPeek, appConfig: AppConfig, paren
   // too tall
   if (pH + y + EDGE_PAD > screenH) {
     y = screenH - pH - EDGE_PAD
-  }
-  // adjust for when the peek is facing the arrow side of orbit
-  if (orbitOnLeft && !peekOnLeft) {
-    x -= Constants.ARROW_PAD
-  }
-  if (!orbitOnLeft && peekOnLeft) {
-    x += Constants.ARROW_PAD
   }
 
   return {

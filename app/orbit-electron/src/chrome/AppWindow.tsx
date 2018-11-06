@@ -79,8 +79,8 @@ class AppWindowStore {
 
   bringAppAboveOrbitWindow = () => {
     console.log('Move App above Orbit Window...')
-    // set it above the OrbitWindow
-    this.window.setAlwaysOnTop(true, 'floating', 2)
+    // set it above the OrbitWindow and ChromeWindow
+    this.window.setAlwaysOnTop(true, 'floating', 3)
     this.window.setVisibleOnAllWorkspaces(true)
     this.window.setFullScreenable(false)
   }

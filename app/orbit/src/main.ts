@@ -80,11 +80,13 @@ export async function main() {
     }
 
     // electronChrome
-    electronChromeProcess = startChildProcess({
-      name: 'electron-chrome',
-      inspectPort: 9004,
-      inspectPortRemote: 9005,
-    })
+    if (IGNORE_ELECTRON !== 'true') {
+      electronChromeProcess = startChildProcess({
+        name: 'electron-chrome',
+        inspectPort: 9004,
+        inspectPortRemote: 9005,
+      })
+    }
 
     // handle exits
     setupHandleExit([desktopProcess, syncersProcess, electronChromeProcess])

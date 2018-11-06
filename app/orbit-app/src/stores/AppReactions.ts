@@ -3,7 +3,6 @@ import { App, Desktop } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
 import { showNotification } from '../helpers/electron/showNotification'
 import { PopoverState } from '@mcro/ui'
-import { Actions, TrayActions } from '../actions/Actions'
 
 @store
 export class AppReactions {
@@ -11,27 +10,6 @@ export class AppReactions {
 
   constructor() {
     this.setupReactions()
-
-    const off = Actions.listenAll((key, value) => {
-      switch (key) {
-        case 'TrayToggleOrbit':
-          App.setOrbitState({ docked: !App.state.orbitState.docked })
-          break
-        case 'TrayHover0':
-        case 'TrayHover1':
-        case 'TrayHover2':
-        case 'TrayHoverOrbit':
-        case 'TrayHoverOut':
-          App.setState({
-            trayState: {
-              trayEvent: key,
-              trayEventAt: value,
-            },
-          })
-          break
-      }
-    })
-    this.listeners.push(off)
   }
 
   dispose() {
@@ -44,9 +22,6 @@ export class AppReactions {
   async setupReactions() {
     this.dispose = App.onMessage(async (msg, value) => {
       switch (msg) {
-        case App.messages.TRAY_EVENT:
-          Actions.dispatch(value as keyof TrayActions, Date.now())
-          return
         case App.messages.HIDE:
           App.setOrbitState({ docked: false })
           return

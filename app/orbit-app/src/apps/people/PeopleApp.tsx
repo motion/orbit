@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { view, react, attach } from '@mcro/black'
-import { compose } from '@mcro/helpers'
+import { react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { OrbitCard } from '../../views/OrbitCard'
 import { SmallVerticalSpace } from '../../views'
@@ -15,17 +14,14 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { View } from '@mcro/ui'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
+import { useStore } from '@mcro/use-store'
 
 const height = 56
-
-type Props = AppProps & {
-  store?: PeopleStore
-}
 
 type ResultSection = { title: string; results: PersonBit[]; height: number }
 
 class PeopleStore {
-  props: Props
+  props: AppProps
   allPeople = []
   private allPeople$ = observeMany(PersonBitModel, { args: { take: 100 } }).subscribe(people => {
     if (!people) return
@@ -169,14 +165,8 @@ const PersonSection = ({
 
 const lipHeight = 30
 
-const decorate = compose(
-  attach('selectionStore', 'paneManagerStore'),
-  attach({
-    store: PeopleStore,
-  }),
-  view,
-)
-export const PeopleApp = decorate(({ store }: Props) => {
+export function PeopleApp(props: AppProps) {
+  const store = useStore(PeopleStore, props)
   const { results, resultSections } = store
   const total = results.length
   if (!total) {
@@ -185,7 +175,6 @@ export const PeopleApp = decorate(({ store }: Props) => {
   return (
     <ProvideHighlightsContextWithDefaults value={{ words: store.peopleQuery.split(' ') }}>
       <List
-        // ref={instance => (this.List = instance)}
         rowHeight={({ index }) => resultSections[index].height}
         rowRenderer={({ index, key }) => {
           const section = resultSections[index]
@@ -204,4 +193,4 @@ export const PeopleApp = decorate(({ store }: Props) => {
       />
     </ProvideHighlightsContextWithDefaults>
   )
-})
+}

@@ -12,7 +12,7 @@ export class OrbitLayer extends React.Component {
   render() {
     const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (
-      <OrbitDockedFrame className={`theme-${theme}`} visible>
+      <OrbitDockedFrame className={`theme-${theme} app-parent-bounds`} visible>
         <OrbitChrome />
         <OrbitPaneManager />
       </OrbitDockedFrame>

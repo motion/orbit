@@ -109,7 +109,9 @@ export class HeaderStore {
     },
   )
 
-  disableSearch = react(() => this.props.paneManagerStore.activePane === 'settings', _ => _)
+  disableSearch = react(() => this.props.paneManagerStore.activePane === 'settings', _ => _, {
+    onlyUpdateIfChanged: true,
+  })
 
   onClickInput = () => {}
 

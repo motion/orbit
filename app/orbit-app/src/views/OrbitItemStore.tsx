@@ -1,5 +1,4 @@
 import { react, ensure } from '@mcro/black'
-import { getTargetPosition } from '../helpers/getTargetPosition'
 import { ItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { AppActions } from '../actions/AppActions'
@@ -20,14 +19,17 @@ export class OrbitItemStore {
   clickAt = 0
   hoverSettler = null
 
-  willMount() {
-    if (this.props.hoverToSelect) {
-      this.hoverSettler = this.props.selectionStore.getHoverSettler()
+  setHoverSettler = react(
+    () => this.props.hoverToSelect,
+    hoverSelect => {
+      ensure('hoverSelect', hoverSelect)
+      ensure('!hoverSettler', !this.hoverSettler)
+      this.hoverSettler = this.props.appStore.getHoverSettler()
       this.hoverSettler.setItem({
         index: this.props.index,
       })
-    }
-  }
+    },
+  )
 
   get didClick() {
     return Date.now() - this.clickAt < 50
@@ -58,7 +60,7 @@ export class OrbitItemStore {
       this.props.onSelect(this.realIndex, this.appConfig, e.target as HTMLDivElement)
       return
     }
-    this.props.selectionStore.toggleSelected(this.realIndex, 'click')
+    this.props.appStore.toggleSelected(this.realIndex, 'click')
   }
 
   lastClickLocation = Date.now()
@@ -101,31 +103,23 @@ export class OrbitItemStore {
     return this.props.model ? getAppConfig(this.props.model) : null
   }
 
-  get position() {
-    const position = getTargetPosition(this.cardWrapRef)
-    // list items are closer to edge, adjust...
-    if (this.props.listItem === true) {
-      position.left += 5
-    }
-    return position
-  }
-
   get realIndex() {
     const { model, getIndex, index } = this.props
     return getIndex ? getIndex(model) : index
   }
 
+  selectItem = () => {
+    AppActions.setPeekApp({
+      appConfig: this.appConfig,
+      target: this.cardWrapRef,
+    })
+  }
+
   updateIsSelected = react(
     () => {
-      const {
-        activeCondition,
-        ignoreSelection,
-        selectionStore,
-        subPaneStore,
-        isSelected,
-      } = this.props
+      const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
       if (typeof isSelected === 'undefined') {
-        if (!selectionStore) {
+        if (!appStore) {
           return false
         }
         if (ignoreSelection) {
@@ -134,7 +128,7 @@ export class OrbitItemStore {
         if (activeCondition && activeCondition() === false) {
           return false
         }
-        if (!subPaneStore || !subPaneStore.isActive) {
+        if (!appStore || !appStore.isActive) {
           return false
         }
       }
@@ -144,7 +138,7 @@ export class OrbitItemStore {
       if (typeof forceSelected === 'boolean') {
         next = forceSelected
       } else {
-        next = selectionStore.activeIndex === this.realIndex
+        next = appStore.activeIndex === this.realIndex
       }
       return next
     },
@@ -159,7 +153,7 @@ export class OrbitItemStore {
           ensure('appConfig`', !!this.appConfig)
           // fluidity
           await sleep()
-          AppActions.setPeekApp(this.appConfig, this.position)
+          this.selectItem()
         }
       }
     },

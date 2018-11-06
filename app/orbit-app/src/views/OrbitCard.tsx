@@ -16,142 +16,7 @@ import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 import { ResolvableModel } from '../integrations/types'
 import { Avatar } from './Avatar'
 
-const VerticalSpaceSmall = view({
-  height: 5,
-})
-
-const CardWrap = view(UI.View, {
-  position: 'relative',
-  flex: 1,
-  transform: {
-    z: 0,
-  },
-})
-
-const Card = view({
-  overflow: 'hidden',
-  position: 'relative',
-  maxHeight: '100%',
-  // this is for the shadow to not overflow...
-  margin: 2,
-  transform: {
-    z: 0,
-  },
-  chromeless: {
-    background: 'transparent',
-    '&:hover': {
-      background: [0, 0, 0, 0.025],
-    },
-  },
-}).theme(
-  ({
-    borderRadius,
-    inGrid,
-    theme,
-    isSelected,
-    background,
-    padding,
-    disableShadow,
-    chromeless,
-    color,
-  }) => {
-    let card: CSSPropertySet = {
-      flex: inGrid ? 1 : 'none',
-      color: color || theme.color,
-    }
-    const disabledShadow = disableShadow ? 'none' : null
-    const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
-    card = {
-      ...card,
-      padding,
-      borderRadius,
-      background: background || theme.cardBackground || theme.background.alpha(0.9),
-      ...theme.card,
-    }
-    if (isSelected === true) {
-      const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
-      const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
-      card = {
-        ...card,
-        boxShadow,
-        '&:hover': {
-          boxShadow,
-        },
-      }
-    } else {
-      const borderColor = theme.cardBorderColor || 'transparent'
-      const borderShadow = chromeless ? null : ['inset', 0, 0, 0, 1, borderColor]
-      const hoverBorderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColorHover || borderColor]
-      card = {
-        ...card,
-        boxShadow: disabledShadow || [cardShadow, borderShadow],
-        '&:hover': {
-          boxShadow: disabledShadow || [
-            cardShadow,
-            hoverBorderShadow,
-            chromeless ? null : theme.cardHoverGlow,
-          ],
-        },
-      }
-    }
-    card = {
-      ...card,
-      '&:active': {
-        opacity: 0.8,
-      },
-    }
-    if (chromeless) {
-      return {
-        ...card,
-        background: 'transparent',
-      }
-    }
-    return card
-  },
-)
-
-const Title = view({
-  maxWidth: '100%',
-  flexFlow: 'row',
-  justifyContent: 'space-between',
-  padding: [0, 0, 2],
-  padRight: {
-    paddingRight: 20,
-  },
-})
-
-const Preview = view({
-  flex: 1,
-  zIndex: -1,
-})
-
-const CardSubtitle = view(UI.View, {
-  height: 20,
-  padding: [0, 0, 2, 0],
-  flexFlow: 'row',
-  alignItems: 'center',
-  listItem: {
-    margin: [6, 0, 0],
-  },
-  padRight: {
-    paddingRight: 20,
-  },
-})
-
-const orbitIconProps = {
-  orbitIconStyle: {
-    marginRight: -2,
-  },
-}
-
-const Padding = view({
-  position: 'relative',
-  margin: 1,
-  overflow: 'hidden',
-  flex: 1,
-})
-
-@attach('sourcesStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
+@attach('sourcesStore', 'appStore')
 @attach({
   store: OrbitItemStore,
 })
@@ -176,7 +41,6 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
       inactive,
       inGrid,
       onClick,
-      selectionStore,
       store,
       titleProps,
       subtitleProps,
@@ -228,7 +92,7 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
     )
     return (
       <CardWrap
-        {...hoverToSelect && !inactive && store.hoverSettler.props}
+        {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         {...props}
         {...isSelected && activeStyle}
@@ -393,3 +257,138 @@ export class OrbitCard extends React.Component<ItemProps<ResolvableModel>> {
     // )
   }
 }
+
+const VerticalSpaceSmall = view({
+  height: 5,
+})
+
+const CardWrap = view(UI.View, {
+  position: 'relative',
+  flex: 1,
+  transform: {
+    z: 0,
+  },
+})
+
+const Card = view({
+  overflow: 'hidden',
+  position: 'relative',
+  maxHeight: '100%',
+  // this is for the shadow to not overflow...
+  margin: 2,
+  transform: {
+    z: 0,
+  },
+  chromeless: {
+    background: 'transparent',
+    '&:hover': {
+      background: [0, 0, 0, 0.025],
+    },
+  },
+}).theme(
+  ({
+    borderRadius,
+    inGrid,
+    theme,
+    isSelected,
+    background,
+    padding,
+    disableShadow,
+    chromeless,
+    color,
+  }) => {
+    let card: CSSPropertySet = {
+      flex: inGrid ? 1 : 'none',
+      color: color || theme.color,
+    }
+    const disabledShadow = disableShadow ? 'none' : null
+    const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
+    card = {
+      ...card,
+      padding,
+      borderRadius,
+      background: background || theme.cardBackground || theme.background.alpha(0.9),
+      ...theme.card,
+    }
+    if (isSelected === true) {
+      const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
+      const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
+      card = {
+        ...card,
+        boxShadow,
+        '&:hover': {
+          boxShadow,
+        },
+      }
+    } else {
+      const borderColor = theme.cardBorderColor || 'transparent'
+      const borderShadow = chromeless ? null : ['inset', 0, 0, 0, 1, borderColor]
+      const hoverBorderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColorHover || borderColor]
+      card = {
+        ...card,
+        boxShadow: disabledShadow || [cardShadow, borderShadow],
+        '&:hover': {
+          boxShadow: disabledShadow || [
+            cardShadow,
+            hoverBorderShadow,
+            chromeless ? null : theme.cardHoverGlow,
+          ],
+        },
+      }
+    }
+    card = {
+      ...card,
+      '&:active': {
+        opacity: 0.8,
+      },
+    }
+    if (chromeless) {
+      return {
+        ...card,
+        background: 'transparent',
+      }
+    }
+    return card
+  },
+)
+
+const Title = view({
+  maxWidth: '100%',
+  flexFlow: 'row',
+  justifyContent: 'space-between',
+  padding: [0, 0, 2],
+  padRight: {
+    paddingRight: 20,
+  },
+})
+
+const Preview = view({
+  flex: 1,
+  zIndex: -1,
+})
+
+const CardSubtitle = view(UI.View, {
+  height: 20,
+  padding: [0, 0, 2, 0],
+  flexFlow: 'row',
+  alignItems: 'center',
+  listItem: {
+    margin: [6, 0, 0],
+  },
+  padRight: {
+    paddingRight: 20,
+  },
+})
+
+const orbitIconProps = {
+  orbitIconStyle: {
+    marginRight: -2,
+  },
+}
+
+const Padding = view({
+  position: 'relative',
+  margin: 1,
+  overflow: 'hidden',
+  flex: 1,
+})

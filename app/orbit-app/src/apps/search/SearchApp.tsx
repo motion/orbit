@@ -2,18 +2,15 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
-import { StaticContainer } from '../../views/StaticContainer'
-import { OrbitSearchVirtualList } from './OrbitSearchVirtualList'
+import { OrbitSearchResults } from './OrbitSearchResults'
 import { OrbitSearchNav } from './OrbitSearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
+import { StaticContainer } from '../../views/StaticContainer'
 
-type Props = AppProps & {
-  searchStore?: SearchStore
-}
-
-export function SearchApp(props) {
-  const searchStore = useStore(SearchStore, props)
+export function SearchApp(props: AppProps) {
+  const searchStore = useStore(SearchStore, props, true)
+  log(`SEARCH--------`)
   return (
     <>
       <OrbitSearchNav />
@@ -25,27 +22,25 @@ export function SearchApp(props) {
           },
         }}
       >
-        <SearchAppFrame searchStore={searchStore} />
+        {/* <OrbitSearchQuickResults /> */}
+        <OrbitSearchResultsFrame
+          style={{
+            opacity: searchStore.isChanging ? 0.7 : 1,
+          }}
+        >
+          <StaticContainer>
+            <SearchAppInner searchStore={searchStore} {...props} />
+          </StaticContainer>
+        </OrbitSearchResultsFrame>
       </ItemResolverDecorationContext.Provider>
     </>
   )
 }
 
-// separate view to prevent a few renders...
-const SearchAppFrame = view(({ searchStore }: Props) => {
+const SearchAppInner = React.memo((props: AppProps & { searchStore: SearchStore }) => {
+  log('--------------renderererererere-----------------')
   return (
-    <>
-      {/* <OrbitSearchQuickResults /> */}
-      <OrbitSearchResultsFrame
-        style={{
-          opacity: searchStore.isChanging ? 0.7 : 1,
-        }}
-      >
-        <StaticContainer>
-          <OrbitSearchVirtualList searchStore={searchStore} />
-        </StaticContainer>
-      </OrbitSearchResultsFrame>
-    </>
+    <OrbitSearchResults searchStore={props.searchStore} appStore={props.appStore} offsetY={60} />
   )
 })
 

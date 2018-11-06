@@ -150,29 +150,37 @@ const findIconName = name => {
   return false
 }
 
-// @ts-ignore @types/react
-export const Icon = React.memo(({ name, fill = '#fff', size = 32, style = null, ...props }) => {
-  const iconName = findIconName(name)
-  if (!iconName) {
-    return null
-  }
-  const icon = icons[iconName]
-  return (
-    <SVG
-      fill={fill}
-      svg={icon}
-      width={`${size}`}
-      height={`${size}`}
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: 'flex',
-        width: size,
-        height: size,
-        ...style,
-      }}
-      cleanup={['fill', 'title', 'desc']}
-      {...props}
-    />
-  )
-})
+type IconProps = {
+  name: string
+  fill?: string
+  size?: number
+  style?: any
+}
+
+export const Icon = React.memo(
+  ({ name, fill = '#fff', size = 32, style = null, ...props }: IconProps) => {
+    const iconName = findIconName(name)
+    if (!iconName) {
+      return null
+    }
+    const icon = icons[iconName]
+    return (
+      <SVG
+        fill={fill}
+        svg={icon}
+        width={`${size}`}
+        height={`${size}`}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+          width: size,
+          height: size,
+          ...style,
+        }}
+        cleanup={['fill', 'title', 'desc']}
+        {...props}
+      />
+    )
+  },
+)

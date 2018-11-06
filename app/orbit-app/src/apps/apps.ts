@@ -4,8 +4,7 @@ import { TopicsApp } from './topics/TopicsApp'
 import { PeopleApp } from './people/PeopleApp'
 import { SearchApp } from './search/SearchApp'
 import { AppProps } from './AppProps'
-
-type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
+import { GenericComponent } from '../types'
 
 type App = GenericComponent<AppProps>
 

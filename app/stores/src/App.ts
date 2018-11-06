@@ -2,7 +2,7 @@ import { Bridge, proxySetters } from '@mcro/mobx-bridge'
 import { store, deep } from '@mcro/black'
 import { AppConfig } from './AppConfig'
 
-export let App = null as ViewStore
+export let App = null as AppStore
 
 type AppState = {
   id: number
@@ -32,12 +32,12 @@ const DEFAULT_MENU_STATE = {
 }
 
 @store
-class ViewStore {
+class AppStore {
   // TODO proxySetters should auto-type this
   // shortcuts
-  orbitState: ViewStore['state']['orbitState']
-  authState: ViewStore['state']['authState']
-  appsState: ViewStore['state']['appsState']
+  orbitState: AppStore['state']['orbitState']
+  authState: AppStore['state']['authState']
+  appsState: AppStore['state']['appsState']
   setOrbitState: Function
   setAppsState: Function
   setAuthState: Function
@@ -128,5 +128,5 @@ class ViewStore {
   }
 }
 
-App = proxySetters(new ViewStore())
+App = proxySetters(new AppStore())
 Bridge.stores[App.source] = App

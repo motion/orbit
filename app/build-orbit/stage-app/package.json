@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.345",
+  "version": "2.2.347",
   "dependencies": {
     "@mcro/orbit": "*"
   },

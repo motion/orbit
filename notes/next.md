@@ -4,7 +4,6 @@
 
 Monday:
 
-- Mock ListsApp better (with pinning)
 - Mock design for search groups
 - Mock design for terminology app (topics, leading into highlights)
 - Mock design for people app

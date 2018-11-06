@@ -87,7 +87,7 @@ const setupStoreWithReactiveProps = (Store, props?) => {
   }
 }
 
-const useStoreWithReactiveProps = (Store, props?, shouldHMR = false) => {
+const useStoreWithReactiveProps = (Store, props, shouldHMR = false) => {
   let store = useRef(null)
   if (!store.current || shouldHMR) {
     store.current = setupStoreWithReactiveProps(Store, props)
@@ -125,10 +125,12 @@ export const useStore = <A>(Store: new () => A, props?: Object): A => {
     if (shouldReloadStore) {
       console.log('HMRing store', Store.name)
     }
-    store.__useStore = {
-      get reactiveKeys() {
-        return toJS(reactiveKeys.current)
-      },
+    if (process.env.NODE_ENV === 'development') {
+      store.__useStore = {
+        get reactiveKeys() {
+          return toJS(reactiveKeys.current)
+        },
+      }
     }
     proxyStore.current = new Proxy(store, {
       get(obj, key) {

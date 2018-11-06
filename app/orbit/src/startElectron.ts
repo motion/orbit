@@ -1,5 +1,4 @@
 import { app, dialog } from 'electron'
-import { log } from './helpers/log'
 import { getGlobalConfig } from '@mcro/config'
 import { handleExit } from './helpers/handleExit'
 

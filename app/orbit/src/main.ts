@@ -88,19 +88,19 @@ export async function main() {
         inspectPort: 9004,
         inspectPortRemote: 9005,
       })
+      // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
+      // see: https://github.com/electron/electron/issues/7246
+      await new Promise(res => setTimeout(res, 500))
       electronMenusProcess = startChildProcess({
         name: 'electron-menus',
-        inspectPort: 9004,
-        inspectPortRemote: 9005,
+        inspectPort: 9006,
+        inspectPortRemote: 9007,
       })
+      await new Promise(res => setTimeout(res, 500))
     }
 
     // handle exits
     setupHandleExit([desktopProcess, syncersProcess, electronAppsProcess, electronMenusProcess])
-
-    // sleep a second this is a shitty way to avoid bugs starting multiple electron instances at once
-    // see: https://github.com/electron/electron/issues/7246
-    await new Promise(res => setTimeout(res, 1000))
 
     // start main electron process inside this thread (no forking)
     if (IGNORE_ELECTRON !== 'true') {

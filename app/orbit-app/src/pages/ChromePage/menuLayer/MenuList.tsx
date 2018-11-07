@@ -10,12 +10,6 @@ export function MenuList(props: AppProps) {
       <Searchable {...props}>
         <ListsApp {...props} />
       </Searchable>
-      {/* <MenuItem icon="😓">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🤬">Lorem Ipsum</MenuItem>
-      <MenuItem icon="👺">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🙀">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🥶">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🗣">Lorem Ipsum</MenuItem> */}
     </Menu>
   )
 }

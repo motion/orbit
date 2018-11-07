@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { View, Row, Text } from '@mcro/ui'
 import { Section } from '../../views/Section'
 import { Icon } from '../../views/Icon'
 import { AppProps } from '../AppProps'
+import { useStore } from '@mcro/use-store'
 
 const icons = {
   0: ['neutral', 'rgba(255,255,255,0.25)'],
@@ -34,7 +34,7 @@ function TopicList({ results }) {
   return (
     <>
       {results.map(res => (
-        <Row key={res.title} {...{ padding: [10, 14] }}>
+        <Row key={res.title} {...{ padding: [10, 14], width: '50%' }}>
           <View paddingRight={10} margin={['auto', 0]}>
             <Icon {...res.iconProps} />
           </View>
@@ -47,31 +47,18 @@ function TopicList({ results }) {
   )
 }
 
-@attach('settingStore', 'paneManagerStore', 'searchStore', 'selectionStore')
-@attach({
-  store: TopicsStore,
-})
-@view
-export class TopicsApp extends React.Component<AppProps & { store?: TopicsStore }> {
-  render() {
-    const { results } = this.props.store
-    return (
-      <ProvideHighlightsContextWithDefaults
-        value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}
-      >
-        <Row>
-          <View width="50%">
-            <Section padTitle title="Trending" type="search-list">
-              <TopicList results={results.slice(0, 10)} />
-            </Section>
-          </View>
-          <View width="50%" borderLeft={[1, [0, 0, 0, 0.1]]}>
-            <Section padTitle title="Me" type="search-list">
-              <TopicList results={results.slice(10, 20)} />
-            </Section>
-          </View>
-        </Row>
-      </ProvideHighlightsContextWithDefaults>
-    )
-  }
+export function TopicsApp(props: AppProps & { store?: TopicsStore }) {
+  const store = useStore(TopicsStore, props)
+  return (
+    <ProvideHighlightsContextWithDefaults
+      value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}
+    >
+      <Section padTitle title="Trending" type="search-list" flexFlow="row" flexWrap="wrap">
+        <TopicList results={store.results.slice(0, 10)} />
+      </Section>
+      <Section padTitle title="Me" type="search-list" flexFlow="row" flexWrap="wrap">
+        <TopicList results={store.results.slice(10, 20)} />
+      </Section>
+    </ProvideHighlightsContextWithDefaults>
+  )
 }

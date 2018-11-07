@@ -1,23 +1,15 @@
 import * as React from 'react'
-import { useStore } from '@mcro/use-store'
-import { MenuItem } from './MenuItem'
 import { Menu } from './Menu'
+import { AppProps } from '../../../apps/AppProps'
+import { Searchable } from '../../../components/Searchable'
+import { TopicsApp } from '../../../apps/topics/TopicsApp'
 
-class MenuTopicStore {
-  title = 'Topics'
-}
-
-export function MenuTopic(props) {
-  const store = useStore(MenuTopicStore, props)
+export function MenuTopic(props: AppProps) {
   return (
     <Menu index={1} width={300}>
-      {store.title}
-      <MenuItem icon="😓">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🤬">Lorem Ipsum</MenuItem>
-      <MenuItem icon="👺">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🙀">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🥶">Lorem Ipsum</MenuItem>
-      <MenuItem icon="🗣">Lorem Ipsum</MenuItem>
+      <Searchable {...props}>
+        <TopicsApp {...props} />
+      </Searchable>
     </Menu>
   )
 }

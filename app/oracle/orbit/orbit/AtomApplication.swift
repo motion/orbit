@@ -209,42 +209,58 @@ class AtomApplication: NSObject, NSApplicationDelegate {
 
     if shouldShowTray {
       statusItem.highlightMode = false
-      if let button = statusItem.button {
-        button.image = NSImage(named:NSImage.Name("tray"))
-        button.action = #selector(self.handleTrayClick(_:))
+      let button = statusItem.button!
+      button.image = NSImage(named:NSImage.Name("tray"))
+      button.action = #selector(self.handleTrayClick(_:))
 
-        // setup hover events
-        let throttleHoverQueue = DispatchQueue.global(qos: .background)
-        let throttledHover =  throttle(delay: 0.03, queue: throttleHoverQueue, action: self.handleTrayHover)
-        var lastTrayRect = [0, 0]
-        let rectInWindow = button.convert(button.bounds, to: nil)
-        let trayRect = (button.window?.convertToScreen(rectInWindow))!
+      // setup hover events
+      let throttleHoverQueue = DispatchQueue.global(qos: .background)
+      let throttledHover =  throttle(delay: 0.03, queue: throttleHoverQueue, action: self.handleTrayHover)
+      var lastTrayRect = [0, 0]
+      let rectInWindow = button.convert(button.bounds, to: nil)
+      let trayRect = (button.window?.convertToScreen(rectInWindow))!
+      
+      NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
+        let height = (NSScreen.main?.frame.height)!
+        let mouseLocation = (event.cgEvent?.location)!
+        let invMouseLocation = NSPoint.init(x: mouseLocation.x, y: height - mouseLocation.y)
         
-        NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
-          let height = (NSScreen.main?.frame.height)!
-          let mouseLocation = (event.cgEvent?.location)!
-          let invMouseLocation = NSPoint.init(x: mouseLocation.x, y: height - mouseLocation.y)
-          
-          self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
-          
-          let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
-          // send tray location...
-          if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
-            lastTrayRect = nextTrayRect
-            print("sending new tray rect \(nextTrayRect)")
-            self.lastTrayBoundsMessage = "{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }"
-            self.emit(self.lastTrayBoundsMessage)
-          }
-          // handle events
-          self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
-          throttledHover((self.trayLocation, self.socketBridge))
-        }
+        self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
         
-        NSEvent.addGlobalMonitorForEvents(matching: [.keyUp, .keyDown]) { (event) in
-          let characters = (event.characters)!
-          let type = event.type == NSEvent.EventType.keyDown ? "keyDown" : "keyUp"
-          self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(type)\", \"value\": \"\(characters)\" } }")
+        let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
+        // send tray location...
+        if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
+          lastTrayRect = nextTrayRect
+          print("sending new tray rect \(nextTrayRect)")
+          self.lastTrayBoundsMessage = "{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }"
+          self.emit(self.lastTrayBoundsMessage)
         }
+        // handle events
+        self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
+        // avoid sending more than one out event for Out
+        if (self.trayLocation == "Out" && self.lastHoverEvent == self.trayLocation) {
+          return
+        }
+        self.lastHoverEvent = self.trayLocation
+        if (self.trayLocation == "Out") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("tray"))
+        }
+        if (self.trayLocation == "0") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover0"))
+        }
+        if (self.trayLocation == "1") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover1"))
+        }
+        if (self.trayLocation == "2") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover2"))
+        }
+        throttledHover((self.trayLocation, self.socketBridge))
+      }
+      
+      NSEvent.addGlobalMonitorForEvents(matching: [.keyUp, .keyDown]) { (event) in
+        let characters = (event.characters)!
+        let type = event.type == NSEvent.EventType.keyDown ? "keyDown" : "keyUp"
+        self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(type)\", \"value\": \"\(characters)\" } }")
       }
     }
     
@@ -260,11 +276,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   var lastHoverEvent = ""
   
   func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {
-    // avoid sending more than one out event
-    if (lastHoverEvent == trayLocation) {
-      return
-    }
-    lastHoverEvent = trayLocation
     print("hover \(trayLocation)")
     socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHover\(trayLocation)\" }")
   }

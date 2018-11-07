@@ -132,7 +132,17 @@ class AppPageContent extends React.Component<Props> {
     console.log('appConfig.type', appConfig.type, 'App.state.query', App.state.query)
     const getView = this.viewsByType[appConfig.type]
     if (!getView) {
-      return <div>error getting view {JSON.stringify(appConfig)}</div>
+      return (
+        <div>
+          error getting view
+          <br />
+          <br />
+          Root.stores.ViewStore.state.appConfig: {JSON.stringify(appConfig)}
+          <br />
+          <br />
+          model: {JSON.stringify(model)}
+        </div>
+      )
     }
     if (appConfig.type === 'bit' && !model) {
       return null

@@ -5,7 +5,6 @@ import { AppActions } from '../actions/AppActions'
 import { ResolvableModel } from '../integrations/types'
 import { getAppConfig } from '../helpers/getAppConfig'
 import { AppConfig } from '@mcro/stores'
-import { DEFAULT_VIEW_CONFIG } from '../actions/appActionsHandlers/peekStateActions/setPeekApp'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -95,19 +94,21 @@ export class OrbitItemStore {
   }
 
   get appConfig(): AppConfig {
-    if (this.props.appConfig) {
-      return this.props.appConfig
+    const { model, appConfig, direct } = this.props
+    if (appConfig) {
+      return appConfig
     }
-    if (this.props.model && !this.props.direct) {
-      return getAppConfig(this.props.model)
+    if (model && !direct) {
+      return getAppConfig(model)
     }
+    const item = (model as unknown) as ItemProps<any>
     return {
-      id: this.props.id,
-      icon: '',
-      title: this.props.title,
-      type: this.props.type,
-      integration: '',
-      viewConfig: DEFAULT_VIEW_CONFIG,
+      id: item.id,
+      icon: item.icon || '',
+      title: item.title,
+      type: item.type,
+      integration: item.integration || '',
+      viewConfig: {},
     }
   }
 

@@ -8,7 +8,7 @@ import { TrayActions } from '../../../actions/Actions'
 type Props = {
   index: number | 'Orbit'
   width: number
-  children: React.ReactNode
+  children: JSX.Element | ((isOpen: boolean) => JSX.Element)
 }
 
 class MenuStore {
@@ -153,7 +153,7 @@ export function Menu(props: Props) {
         flex={1}
       >
         <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
-          {props.children}
+          {typeof props.children === 'function' ? props.children(open) : props.children}
         </Col>
       </View>
     </Popover>

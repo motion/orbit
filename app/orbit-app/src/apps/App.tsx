@@ -1,21 +1,9 @@
 import * as React from 'react'
 import { view, attach, provide } from '@mcro/black'
 import { AppStore } from './AppStore'
-import { apps, AppType } from './apps'
-import { SourcesStore } from '../stores/SourcesStore'
-import { SettingStore } from '../stores/SettingStore'
-import { SubPaneStore } from '../components/SubPaneStore'
+import { apps } from './apps'
 import { trace } from 'mobx'
-
-type Props = {
-  id: string
-  title: string
-  type: AppType
-  appStore?: AppStore
-  sourcesStore?: SourcesStore
-  settingStore?: SettingStore
-  subPaneStore?: SubPaneStore
-}
+import { AppProps } from './AppProps'
 
 @attach(
   'paneManagerStore',
@@ -29,9 +17,9 @@ type Props = {
   appStore: AppStore,
 })
 @view
-export class App extends React.Component<Props> {
+export class App extends React.Component<AppProps> {
   render() {
-    const { type, appStore, sourcesStore, settingStore, subPaneStore } = this.props
+    const { type, appStore, sourcesStore, settingStore, queryStore, subPaneStore } = this.props
     log(`render app`)
     trace()
     const App = apps[type]
@@ -45,6 +33,7 @@ export class App extends React.Component<Props> {
         sourcesStore={sourcesStore}
         settingStore={settingStore}
         subPaneStore={subPaneStore}
+        queryStore={queryStore}
         {...this.props}
       />
     )

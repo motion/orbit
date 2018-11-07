@@ -3,7 +3,9 @@ import { ItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { AppActions } from '../actions/AppActions'
 import { ResolvableModel } from '../integrations/types'
-import { getAppConfig } from '../stores/SourcesStore'
+import { getAppConfig } from '../helpers/getAppConfig'
+import { AppConfig } from '@mcro/stores'
+import { DEFAULT_VIEW_CONFIG } from '../actions/appActionsHandlers/peekStateActions/setPeekApp'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -56,10 +58,6 @@ export class OrbitItemStore {
     if (this.props.inactive) {
       return
     }
-    if (this.props.onSelect) {
-      this.props.onSelect(this.realIndex, this.appConfig, e.target as HTMLDivElement)
-      return
-    }
     this.props.appStore.toggleSelected(this.realIndex, 'click')
   }
 
@@ -96,11 +94,21 @@ export class OrbitItemStore {
     this.resolvedItem = item
   }
 
-  get appConfig() {
+  get appConfig(): AppConfig {
     if (this.props.appConfig) {
       return this.props.appConfig
     }
-    return this.props.model ? getAppConfig(this.props.model) : null
+    if (this.props.model && !this.props.direct) {
+      return getAppConfig(this.props.model)
+    }
+    return {
+      id: this.props.id,
+      icon: '',
+      title: this.props.title,
+      type: this.props.type,
+      integration: '',
+      viewConfig: DEFAULT_VIEW_CONFIG,
+    }
   }
 
   get realIndex() {
@@ -119,9 +127,6 @@ export class OrbitItemStore {
     () => {
       const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
       if (typeof isSelected === 'undefined') {
-        if (!appStore) {
-          return false
-        }
         if (ignoreSelection) {
           return false
         }

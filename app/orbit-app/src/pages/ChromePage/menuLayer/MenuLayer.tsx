@@ -27,9 +27,9 @@ export function MenuLayer() {
     <StoreContext.Provider value={{ ...appProps, appStore }}>
       <Theme name="dark">
         <FullScreen>
-          <MenuPerson title="People" type="people" appStore={appStore} {...appProps} />
-          <MenuTopic title="Topics" type="topics" appStore={appStore} {...appProps} />
-          <MenuList title="Lists" type="lists" appStore={appStore} {...appProps} />
+          <MenuPerson id="0" title="People" type="people" appStore={appStore} {...appProps} />
+          <MenuTopic id="1" title="Topics" type="topics" appStore={appStore} {...appProps} />
+          <MenuList id="2" title="Lists" type="lists" appStore={appStore} {...appProps} />
         </FullScreen>
       </Theme>
     </StoreContext.Provider>

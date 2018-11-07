@@ -10,7 +10,7 @@ Tuesday:
 
 Wednesday:
 
-- Search performance
+- Search performance / groups
 
 Thursday:
 

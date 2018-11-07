@@ -41,7 +41,7 @@ class ChromePageStore {
   }
 
   unFocusOnMenusClosed = react(
-    () => getAnyMenuOpen(),
+    () => getAnyMenuOpen() || !!App.showingPeek,
     async (anyMenuOpen, { sleep }) => {
       console.log('anyMenuOpen', anyMenuOpen)
       if (anyMenuOpen) {

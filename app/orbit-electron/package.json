@@ -14,6 +14,17 @@
     "runtime": "electron",
     "runtimeVersion": "2.0.2"
   },
+  "iohook": {
+    "targets": [
+      "electron-57"
+    ],
+    "platforms": [
+      "darwin"
+    ],
+    "arches": [
+      "x64"
+    ]
+  },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
     "@mcro/black": "^2.2.1",
@@ -28,6 +39,7 @@
     "@mcro/model-bridge": "^2.2.1",
     "typeorm": "^0.3.0-alpha.22",
     "babel-polyfill": "7.0.0-beta.3",
+    "iohook": "0.2.4",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.5.0",
     "electron-updater": "3.1.1",

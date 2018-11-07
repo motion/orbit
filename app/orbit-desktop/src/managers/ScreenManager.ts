@@ -18,8 +18,9 @@ export class ScreenManager {
   start = () => {
     this.isStarted = true
 
-    this.oracle.onAppState(state => {
-      if (typeof state === 'string' && /^Tray/.test(state)) {
+    this.oracle.onTrayState(state => {
+      console.log('on app state...', state)
+      if (typeof state === 'string') {
         Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
         return
       }

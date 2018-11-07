@@ -232,13 +232,13 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
           lastTrayRect = nextTrayRect
           print("sending new tray rect \(nextTrayRect)")
-          self.lastTrayBoundsMessage = "{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }"
+          self.lastTrayBoundsMessage = "{ \"action\": \"trayState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }"
           self.emit(self.lastTrayBoundsMessage)
         }
         // handle events
         self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
-        // avoid sending more than one out event for Out
-        if (self.trayLocation == "Out" && self.lastHoverEvent == self.trayLocation) {
+        // avoid sending more than one out event
+        if (self.lastHoverEvent == self.trayLocation) {
           return
         }
         self.lastHoverEvent = self.trayLocation
@@ -269,7 +269,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   
   @objc func handleTrayClick(_ sender: Any?) {
     if self.trayLocation != "Out" {
-      self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggle\(trayLocation)\" }")
+      self.emit("{ \"action\": \"trayState\", \"value\": \"TrayToggle\(trayLocation)\" }")
     }
   }
   
@@ -277,7 +277,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   
   func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {
     print("hover \(trayLocation)")
-    socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHover\(trayLocation)\" }")
+    socketBridge.send("{ \"action\": \"trayState\", \"value\": \"TrayHover\(trayLocation)\" }")
   }
   
   let indexToTrayKey = ["0", "1", "2"]

@@ -21,13 +21,7 @@ class MenuStore {
 
   isHoveringTray = react(
     () => [App.state.trayState.trayEvent, App.state.trayState.trayEventAt],
-    ([evt]) => {
-      const isHovering = evt === `TrayHover${this.props.index}`
-      return isHovering
-    },
-    {
-      onlyUpdateIfChanged: true,
-    },
+    ([evt]) => evt === `TrayHover${this.props.index}`,
   )
 
   get allMenusOpenState() {
@@ -42,6 +36,7 @@ class MenuStore {
   open = react(
     () => [this.isHoveringTray, this.isHoveringMenu, this.isAnotherMenuOpen],
     async ([hoveringTray, hoveringMenu, anotherMenuOpen], { sleep, when }) => {
+      console.log('hovering tray', this.props.index, hoveringTray)
       // close if another menu opens
       if (anotherMenuOpen) {
         return false
@@ -64,7 +59,7 @@ class MenuStore {
 
   get menuCenter() {
     const index = this.props.index
-    const baseOffset = 17
+    const baseOffset = 25
     const offset = +index == index ? (+index + 1) * 25 + baseOffset : 120
     return this.trayBounds[0] + offset
   }
@@ -110,6 +105,7 @@ export function Menu(props: Props) {
   const store = useStore(MenuStore, props)
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
+      console.log('keyyy', key)
       switch (key) {
         case 'TrayToggleOrbit':
           App.setOrbitState({ docked: !App.state.orbitState.docked })
@@ -118,8 +114,6 @@ export function Menu(props: Props) {
         case 'TrayHover1':
         case 'TrayHover2':
         case 'TrayHoverOrbit':
-          sendTrayEvent(key, Date.now())
-          break
         case 'TrayHoverOut':
           sendTrayEvent(key, Date.now())
           break

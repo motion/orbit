@@ -47,6 +47,7 @@ export class Oracle {
   onClearCB = idFn
   onSpaceMoveCB = idFn
   onAppStateCB = idFn
+  onTrayStateCB = idFn
   mousePositionCB = idFn
   onKeyboardCB = idFn
   binPath = null
@@ -266,6 +267,10 @@ export class Oracle {
     this.onAppStateCB = cb
   }
 
+  onTrayState = cb => {
+    this.onTrayStateCB = cb
+  }
+
   onMousePosition = cb => {
     this.mousePositionCB = cb
   }
@@ -295,6 +300,9 @@ export class Oracle {
     spaceMove: val => this.onSpaceMoveCB(val),
     appState: val => {
       this.onAppStateCB(val)
+    },
+    trayState: val => {
+      this.onTrayStateCB(val)
     },
     // down to swift process
     pause: this.pause,

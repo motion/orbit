@@ -20,8 +20,11 @@ class MenuStore {
   }
 
   isHoveringTray = react(
-    () => [App.state.trayState.trayEvent, App.state.trayState.trayEventAt],
-    ([evt]) => evt === `TrayHover${this.props.index}`,
+    () =>
+      App.state.trayState.trayEventAt &&
+      App.state.trayState.trayEvent === `TrayHover${this.props.index}`,
+    _ => _,
+    { onlyUpdateIfChanged: true },
   )
 
   get allMenusOpenState() {

@@ -2,14 +2,11 @@
 
 ### nate
 
-Tuesday:
+Wednesday:
 
 - Mock design for Orbit context
 - Hold Option to show last opened app
 - Fix tray targets
-
-Wednesday:
-
 - Search performance / groups
 
 Thursday:

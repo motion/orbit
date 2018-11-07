@@ -175,17 +175,19 @@ export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
       }
       // stop autorun()
       dispose.current()
-      // remove subscriptions
-      if (store.subscriptions) {
-        store.subscriptions.dispose()
-      }
     }
   }, [])
 
   return proxyStore.current
 }
 
-export const configureUseStore = (opts: typeof options) => {
+type UseStoreOptions = {
+  onMount: (store: any) => void
+  onUnmount: (store: any) => void
+  context?: React.Context<any>
+}
+
+export const configureUseStore = (opts: UseStoreOptions) => {
   options = {
     ...options,
     ...opts,

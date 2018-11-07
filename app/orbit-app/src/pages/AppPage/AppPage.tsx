@@ -113,7 +113,7 @@ class AppPageContent extends React.Component<Props> {
       })
     },
     app: () => {
-      return props => <div>app</div>
+      return () => <div>app</div>
     },
     setup: () => {
       const View = this.getView('setup')

@@ -11,10 +11,11 @@ import { AppBitView } from './AppBitView'
 import { App } from '@mcro/stores'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { WindowControls } from '../../views/WindowControls'
-import { AppSearchable } from '../../integrations/views/apps/AppSearchable'
+import { AppSearchable } from '../../sources/views/apps/AppSearchable'
 import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
-import { OrbitIntegration } from '../../integrations/types'
-import { allIntegrations } from '../../integrations'
+import { OrbitIntegration } from '../../sources/types'
+import { allIntegrations } from '../../sources'
+import { AppView } from '../../apps/AppView'
 
 type Props = {
   sourcesStore?: SourcesStore
@@ -121,6 +122,9 @@ class AppPageContent extends React.Component<Props> {
     newSpace: () => {
       return () => <SpaceEditView />
     },
+    lists: () => () => <AppView id="0" type="lists" view="main" title="" />,
+    people: () => () => <AppView id="0" type="people" view="main" title="" />,
+    topics: () => () => <AppView id="0" type="topics" view="main" title="" />,
   }
 
   render() {

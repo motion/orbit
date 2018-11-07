@@ -20,7 +20,7 @@ const height = 56
 
 type ResultSection = { title: string; results: PersonBit[]; height: number }
 
-class PeopleStore {
+class PeopleIndexStore {
   props: AppProps
   allPeople = []
   private allPeople$ = observeMany(PersonBitModel, { args: { take: 100 } }).subscribe(people => {
@@ -165,8 +165,8 @@ const PersonSection = ({
 
 const lipHeight = 30
 
-export function PeopleApp(props: AppProps) {
-  const store = useStore(PeopleStore, props)
+export function PeopleAppIndex(props: AppProps) {
+  const store = useStore(PeopleIndexStore, props)
   const { results, resultSections } = store
   const total = results.length
   if (!total) {

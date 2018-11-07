@@ -12,7 +12,7 @@ const icons = {
   2: ['downArrow', 'rgb(167, 34, 34)'],
 }
 
-class TopicsStore {
+class TopicsIndexStore {
   props: AppProps
 
   get results() {
@@ -47,8 +47,8 @@ function TopicList({ results }) {
   )
 }
 
-export function TopicsApp(props: AppProps & { store?: TopicsStore }) {
-  const store = useStore(TopicsStore, props)
+export function TopicsAppIndex(props: AppProps & { store?: TopicsIndexStore }) {
+  const store = useStore(TopicsIndexStore, props)
   return (
     <ProvideHighlightsContextWithDefaults
       value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}

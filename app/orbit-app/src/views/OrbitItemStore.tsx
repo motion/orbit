@@ -2,7 +2,7 @@ import { react, ensure } from '@mcro/black'
 import { ItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { AppActions } from '../actions/AppActions'
-import { ResolvableModel } from '../integrations/types'
+import { ResolvableModel } from '../sources/types'
 import { getAppConfig } from '../helpers/getAppConfig'
 import { AppConfig } from '@mcro/stores'
 

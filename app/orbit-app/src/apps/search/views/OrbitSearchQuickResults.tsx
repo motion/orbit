@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
-import { SearchStore } from './SearchStore'
-import { SelectableCarousel } from '../../components/SelectableCarousel'
+import { SearchStore } from '../SearchStore'
+import { SelectableCarousel } from '../../../components/SelectableCarousel'
 // import { Banner } from '../../views/Banner'
 import { View } from '@mcro/ui'
 

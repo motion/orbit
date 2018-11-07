@@ -17,12 +17,19 @@ import { AppProps } from './AppProps'
   appStore: AppStore,
 })
 @view
-export class App extends React.Component<AppProps> {
+export class AppView extends React.Component<AppProps> {
   render() {
-    const { type, appStore, sourcesStore, settingStore, queryStore, subPaneStore } = this.props
-    log(`render app`)
+    const {
+      view,
+      type,
+      appStore,
+      sourcesStore,
+      settingStore,
+      queryStore,
+      subPaneStore,
+    } = this.props
     trace()
-    const App = apps[type]
+    const App = apps[type][view]
     if (typeof App !== 'function') {
       console.error('WAHT THE FUCK', type, App)
       return null

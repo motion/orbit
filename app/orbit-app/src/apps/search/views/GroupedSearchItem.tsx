@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { OrbitListItem } from '../../views/OrbitListItem'
+import { OrbitListItem } from '../../../views/OrbitListItem'
 import { Row, Col, Text } from '@mcro/ui'
 import { view } from '@mcro/black'
-import { HighlightText } from '../../views/HighlightText'
+import { HighlightText } from '../../../views/HighlightText'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {
   return (

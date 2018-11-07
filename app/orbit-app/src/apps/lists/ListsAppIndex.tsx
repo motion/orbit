@@ -6,14 +6,14 @@ import { useStore } from '@mcro/use-store'
 import { Icon } from '../../views/Icon'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 
-class ListsStore {
+class ListsIndexStore {
   props: AppProps
   state = Math.random()
   allLists = [
     {
       id: 0,
       index: 0,
-      type: 'list',
+      type: 'lists',
       title: 'First List',
       afterTitle: <Icon name="pin" size={16} />,
       // subtitle: '10 items',
@@ -21,28 +21,28 @@ class ListsStore {
     {
       id: 1,
       index: 1,
-      type: 'list',
+      type: 'lists',
       title: 'Next list',
       // subtitle: '3 items',
     },
     {
       id: 2,
       index: 2,
-      type: 'list',
+      type: 'lists',
       title: 'Third list',
       // subtitle: '34 items',
     },
     {
       id: 3,
       index: 3,
-      type: 'list',
+      type: 'lists',
       title: 'Items I Really Like',
       // subtitle: '100 items',
     },
     {
       id: 4,
       index: 4,
-      type: 'list',
+      type: 'lists',
       title: 'Another Another List',
       // subtitle: '1 items',
     },
@@ -69,8 +69,8 @@ class ListsStore {
   )
 }
 
-export function ListsApp(props: AppProps) {
-  const store = useStore(ListsStore, props)
+export function ListsAppIndex(props: AppProps) {
+  const store = useStore(ListsIndexStore, props)
   console.log('rendering lists app', store.results)
   return (
     <>

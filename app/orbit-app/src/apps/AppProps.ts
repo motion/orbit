@@ -9,13 +9,14 @@ import { PaneManagerStore } from '../stores/PaneManagerStore'
 
 export type AppProps = {
   id: string
+  view: 'index' | 'main'
   title: string
   type: AppType
-  appStore: AppStore
-  sourcesStore: SourcesStore
-  settingStore: SettingStore
-  queryStore: QueryStore
-  selectionStore: SelectionStore
+  appStore?: AppStore
+  sourcesStore?: SourcesStore
+  settingStore?: SettingStore
+  queryStore?: QueryStore
+  selectionStore?: SelectionStore
   isActive?: boolean
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore

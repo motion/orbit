@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
 import { Row, Button } from '@mcro/ui'
-import { OrbitIcon } from '../../views/OrbitIcon'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { OrbitIcon } from '../../../views/OrbitIcon'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 
 type Props = {
   queryStore?: QueryStore

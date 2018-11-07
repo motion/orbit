@@ -1,5 +1,5 @@
-import { allIntegrations } from '../integrations'
-import { ResolvableModel } from '../integrations/types'
+import { allIntegrations } from '../sources'
+import { ResolvableModel } from '../sources/types'
 import { AppConfig } from '@mcro/stores'
 import { sourceToAppConfig } from '../stores/SourcesStore'
 

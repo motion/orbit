@@ -2,13 +2,13 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
-import { OrbitSearchResults } from './OrbitSearchResults'
-import { OrbitSearchNav } from './OrbitSearchNav'
+import { OrbitSearchResults } from './views/OrbitSearchResults'
+import { OrbitSearchNav } from './views/OrbitSearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { StaticContainer } from '../../views/StaticContainer'
 
-export function SearchApp(props: AppProps) {
+export function SearchAppIndex(props: AppProps) {
   const searchStore = useStore(SearchStore, props, true)
   log(`SEARCH--------`)
   return (

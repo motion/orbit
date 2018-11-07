@@ -5,9 +5,8 @@
 Tuesday:
 
 - Mock design for Orbit context
-- Orbit contextual search app
 - Hold Option to show last opened app
-- Fix tray targets and interaction a bit more
+- Fix tray targets
 
 Wednesday:
 

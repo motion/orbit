@@ -4,8 +4,6 @@
 
 Tuesday:
 
-- Mock design for terminology app (topics, leading into highlights)
-- Mock design for people app
 - Mock design for Orbit context
 - Orbit contextual search app
 - Hold Option to show last opened app

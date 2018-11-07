@@ -5,11 +5,17 @@ import { Theme } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { TrayActions } from '../../actions/Actions'
 import { useStore } from '@mcro/use-store'
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
+import { AppActions } from '../../actions/AppActions'
 
-const getAnyMenuOpen = () => {
+const getOpenMenuID = () => {
   const menuState = App.state.trayState.menuState
-  return Object.keys(menuState).reduce((a, key) => a || menuState[key].open, false)
+  for (const key in menuState) {
+    if (menuState[key].open) {
+      return menuState[key].id
+    }
+  }
+  return false
 }
 
 // will focus or return focus to previous app
@@ -40,16 +46,42 @@ class ChromePageStore {
     })
   }
 
-  unFocusOnMenusClosed = react(
-    () => getAnyMenuOpen() || !!App.showingPeek,
+  menuOpenID = react(getOpenMenuID, _ => _)
+  lastMenuOpenID = react(() => App.state.trayState.menuState, _ => _, { delayValue: true })
+
+  get changingMenu() {
+    return this.menuOpenID !== this.lastMenuOpenID
+  }
+
+  get anyMenuOpen() {
+    return this.menuOpenID !== false
+  }
+
+  closePeekOnChangeMenu = react(
+    () => this.changingMenu,
+    isChanging => {
+      ensure('isChanging', isChanging)
+      AppActions.clearPeek()
+    },
+  )
+
+  handleMenuFocus = react(
+    () => this.anyMenuOpen,
     async (anyMenuOpen, { sleep }) => {
-      console.log('anyMenuOpen', anyMenuOpen)
       if (anyMenuOpen) {
         setTrayFocused(true)
       } else {
         await sleep(200)
         setTrayFocused(false)
       }
+    },
+  )
+
+  handleAppViewFocus = react(
+    () => App.showingPeek,
+    showingPeek => {
+      ensure('showingPeek', showingPeek)
+      setTrayFocused(true)
     },
   )
 }

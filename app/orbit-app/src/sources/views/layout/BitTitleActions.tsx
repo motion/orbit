@@ -5,7 +5,11 @@ import { TitleBarButton } from './TitleBarButton'
 import { AppActions } from '../../../actions/AppActions'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 
-export const BitTitleActions = ({ normalizedItem }: { normalizedItem: NormalizedItem }) => {
+export const BitTitleActions = ({
+  normalizedItem,
+}: {
+  normalizedItem: Partial<NormalizedItem>
+}) => {
   return (
     <SegmentedRow>
       <TitleBarButton

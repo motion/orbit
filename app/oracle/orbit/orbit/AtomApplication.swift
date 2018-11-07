@@ -218,7 +218,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       let throttledHover =  throttle(delay: 0.03, queue: throttleHoverQueue, action: self.handleTrayHover)
       var lastTrayRect = [0, 0]
       let rectInWindow = button.convert(button.bounds, to: nil)
-      let trayRect = (button.window?.convertToScreen(rectInWindow))!
       
       NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
         let height = (NSScreen.main?.frame.height)!
@@ -227,6 +226,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         
         self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
         
+        let trayRect = button.window!.convertToScreen(rectInWindow)
         let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
         // send tray location...
         if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {

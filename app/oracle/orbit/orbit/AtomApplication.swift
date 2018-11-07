@@ -226,7 +226,9 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         
         self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
         
-        let trayRect = button.window!.convertToScreen(rectInWindow)
+        let ogTrayRect = button.window!.convertToScreen(rectInWindow)
+        // our tray image is a few px too short oops...
+        let trayRect = NSRect.init(x: ogTrayRect.minX, y: ogTrayRect.minY, width: ogTrayRect.width, height: ogTrayRect.height + 4)
         let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
         // send tray location...
         if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {

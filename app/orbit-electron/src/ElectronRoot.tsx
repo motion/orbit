@@ -1,20 +1,17 @@
 import { App } from '@mcro/reactron'
 import { view, provide } from '@mcro/black'
 import * as React from 'react'
-import { ElectronStore } from '../stores/ElectronStore'
-import { devTools } from '../helpers/devTools'
-import { ChromeWindow } from './ChromeWindow'
-import { AppWindows } from './AppWindows'
+import { ElectronStore } from './stores/ElectronStore'
+import { devTools } from './helpers/devTools'
 
 @provide({
   electronStore: ElectronStore,
 })
 @view
-export class ChromeRoot extends React.Component {
-  props: {
-    electronStore?: ElectronStore
-  }
-
+export class ElectronRoot extends React.Component<{
+  children: any
+  electronStore?: ElectronStore
+}> {
   componentDidCatch(error) {
     this.props.electronStore.error = error
     console.log('electron error', error)
@@ -36,8 +33,7 @@ export class ChromeRoot extends React.Component {
         ref={electronStore.handleAppRef}
         devTools={devTools}
       >
-        <ChromeWindow />
-        <AppWindows />
+        {this.props.children}
       </App>
     )
   }

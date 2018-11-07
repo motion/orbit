@@ -34,7 +34,8 @@ export async function main() {
       case 'syncers':
         require('@mcro/orbit-syncers').main()
         return
-      case 'electron-chrome':
+      case 'electron-menus':
+      case 'electron-apps':
         require('./startElectron').startElectron()
         return
     }
@@ -55,7 +56,8 @@ export async function main() {
       process.on('SIGQUIT', handleExit)
     }
 
-    let electronChromeProcess: ChildProcess
+    let electronMenusProcess: ChildProcess
+    let electronAppsProcess: ChildProcess
     let desktopProcess: ChildProcess
     let syncersProcess: ChildProcess
 
@@ -81,15 +83,20 @@ export async function main() {
 
     // electronChrome
     if (IGNORE_ELECTRON !== 'true') {
-      electronChromeProcess = startChildProcess({
-        name: 'electron-chrome',
+      electronAppsProcess = startChildProcess({
+        name: 'electron-apps',
+        inspectPort: 9004,
+        inspectPortRemote: 9005,
+      })
+      electronMenusProcess = startChildProcess({
+        name: 'electron-menus',
         inspectPort: 9004,
         inspectPortRemote: 9005,
       })
     }
 
     // handle exits
-    setupHandleExit([desktopProcess, syncersProcess, electronChromeProcess])
+    setupHandleExit([desktopProcess, syncersProcess, electronAppsProcess, electronMenusProcess])
 
     // sleep a second this is a shitty way to avoid bugs starting multiple electron instances at once
     // see: https://github.com/electron/electron/issues/7246

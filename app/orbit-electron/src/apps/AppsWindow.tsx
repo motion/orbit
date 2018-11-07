@@ -26,7 +26,7 @@ const decorator = compose(
   }),
   view,
 )
-export const AppWindows = decorator(({ store }: { store: AppWindowsStore }) => {
+export const AppsWindow = decorator(({ store }: { store: AppWindowsStore }) => {
   const appsState = store.appsStateDebounced
   if (!appsState) {
     return null

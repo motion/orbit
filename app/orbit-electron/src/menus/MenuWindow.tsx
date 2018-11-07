@@ -8,7 +8,7 @@ import { WEB_PREFERENCES } from '../constants'
 const Config = getGlobalConfig()
 
 @view
-export class ChromeWindow extends React.Component {
+export class MenuWindow extends React.Component {
   render() {
     return (
       <Window

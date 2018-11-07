@@ -15,8 +15,10 @@ async function start() {
 
     // remote processes
     { port: '9002' }, // electron remote
-    process.env.DEBUG_ELECTRON && { port: '9004' }, // electron-chrome main
-    { port: '9005' }, // electron-chrome remote
+    process.env.DEBUG_ELECTRON && { port: '9004' }, // electron-apps main
+    { port: '9005' }, // electron-apps remote
+    process.env.DEBUG_ELECTRON && { port: '9006' }, // electron-menus main
+    { port: '9007' }, // electron-menus remote
   ].filter(Boolean)
   console.log('starting REPL with sessions...', sessions)
   await debugApps({

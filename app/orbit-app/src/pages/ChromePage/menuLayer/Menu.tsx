@@ -3,6 +3,7 @@ import { Popover, Col, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { react } from '@mcro/black'
 import { Desktop, App } from '@mcro/stores'
+import { TrayActions } from '../../../actions/Actions'
 
 type Props = {
   index: number | 'Orbit'
@@ -20,7 +21,10 @@ class MenuStore {
 
   isHoveringTray = react(
     () => [App.state.trayState.trayEvent, App.state.trayState.trayEventAt],
-    ([evt]) => evt === `TrayHover${this.props.index}`,
+    ([evt]) => {
+      const isHovering = evt === `TrayHover${this.props.index}`
+      return isHovering
+    },
     {
       onlyUpdateIfChanged: true,
     },
@@ -42,9 +46,12 @@ class MenuStore {
       if (anotherMenuOpen) {
         return false
       }
-      // if open now, delay just a bit before closing
       if (this.open) {
+        // sleep before closing
         await sleep(60)
+      } else {
+        // sleep before opening
+        await sleep(100)
       }
       // if hovering the app window keep it open until not
       if (!anotherMenuOpen && Desktop.hoverState.appHovered[0]) {
@@ -90,8 +97,35 @@ class MenuStore {
   }
 }
 
+const sendTrayEvent = (key, value) => {
+  App.setState({
+    trayState: {
+      trayEvent: key,
+      trayEventAt: value,
+    },
+  })
+}
+
 export function Menu(props: Props) {
   const store = useStore(MenuStore, props)
+  React.useEffect(() => {
+    return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
+      switch (key) {
+        case 'TrayToggleOrbit':
+          App.setOrbitState({ docked: !App.state.orbitState.docked })
+          break
+        case 'TrayHover0':
+        case 'TrayHover1':
+        case 'TrayHover2':
+        case 'TrayHoverOrbit':
+          sendTrayEvent(key, Date.now())
+          break
+        case 'TrayHoverOut':
+          sendTrayEvent(key, Date.now())
+          break
+      }
+    })
+  }, [])
   const open = store.open
   const left = store.menuCenter
   const width = props.width

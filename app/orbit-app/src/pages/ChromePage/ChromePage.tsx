@@ -3,7 +3,6 @@ import { AppWrapper } from '../../views'
 import { MenuLayer } from './menuLayer/MenuLayer'
 import { Theme } from '@mcro/ui'
 import { App } from '@mcro/stores'
-import { TrayActions } from '../../actions/Actions'
 import { useStore } from '@mcro/use-store'
 import { react, ensure } from '@mcro/black'
 import { AppActions } from '../../actions/AppActions'
@@ -35,15 +34,6 @@ const setTrayFocused = (show = true) => {
 class ChromePageStore {
   get theme() {
     return App.state.darkTheme ? 'clearDark' : 'clearLight'
-  }
-
-  sendTrayEvent = (key, value) => {
-    App.setState({
-      trayState: {
-        trayEvent: key,
-        trayEventAt: value,
-      },
-    })
   }
 
   menuOpenID = react(getOpenMenuID, _ => _)
@@ -88,24 +78,6 @@ class ChromePageStore {
 
 export function ChromePage() {
   const store = useStore(ChromePageStore)
-  React.useEffect(() => {
-    return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
-      switch (key) {
-        case 'TrayToggleOrbit':
-          App.setOrbitState({ docked: !App.state.orbitState.docked })
-          break
-        case 'TrayHover0':
-        case 'TrayHover1':
-        case 'TrayHover2':
-        case 'TrayHoverOrbit':
-          store.sendTrayEvent(key, Date.now())
-          break
-        case 'TrayHoverOut':
-          store.sendTrayEvent(key, Date.now())
-          break
-      }
-    })
-  }, [])
 
   return (
     <Theme name={store.theme}>

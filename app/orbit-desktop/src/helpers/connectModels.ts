@@ -36,52 +36,53 @@ export default async function connectModels(models) {
   } catch (err1) {
     console.error(`error during connection create: `, err1)
 
-    // create connection without synchronizations and migrations running to execute raw SQL queries
-    const connection1 = await createConnection({ ...buildOptions(models), synchronize: false, migrationsRun: false })
-
-    // execute drop queries
-    await connection1.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`)
-    await connection1.query(`DROP TABLE IF EXISTS 'job_entity'`)
-    await connection1.query(`DROP TABLE IF EXISTS 'bit_entity'`)
-    await connection1.query(`DROP TABLE IF EXISTS 'person_entity'`)
-    await connection1.query(`DROP TABLE IF EXISTS 'person_bit_entity'`)
-    await connection1.query(`DROP TABLE IF EXISTS 'search_index_entity'`)
-
-    // reset source last sync settings, since we are going to start it from scratch
-    const sources: Source[] = await connection1.getRepository(SourceEntity).find()
-    for (let source of sources) {
-      if (source.type === 'confluence') {
-        source.values.blogLastSync = {}
-        source.values.pageLastSync = {}
-
-      } else if (source.type === 'github') {
-        source.values.lastSyncIssues = {}
-        source.values.lastSyncPullRequests = {}
-
-      } else if (source.type === 'drive') {
-        source.values.lastSync = {}
-
-      } else if (source.type === 'gmail') {
-        // source.values.lastSync = {} // todo: do after my another PR merge
-
-      } else if (source.type === 'jira') {
-        source.values.lastSync = {}
-
-      } else if (source.type === 'slack') {
-        source.values.lastMessageSync = {}
-        source.values.lastAttachmentSync = {}
-      }
-    }
-    await connection1.getRepository(SourceEntity).save(sources)
-
-    // close connection
-    await connection1.close()
-
-    // create create connection again
     // if its going to fail this time again we have no choice - we drop all sources and spaces as well
     // and user will have to add spaces, sources and settings from scratch again
     // at least this is better then non responsive application
     try {
+
+      // create connection without synchronizations and migrations running to execute raw SQL queries
+      const connection1 = await createConnection({ ...buildOptions(models), synchronize: false, migrationsRun: false })
+
+      // execute drop queries
+      await connection1.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`)
+      await connection1.query(`DROP TABLE IF EXISTS 'job_entity'`)
+      await connection1.query(`DROP TABLE IF EXISTS 'bit_entity'`)
+      await connection1.query(`DROP TABLE IF EXISTS 'person_entity'`)
+      await connection1.query(`DROP TABLE IF EXISTS 'person_bit_entity'`)
+      await connection1.query(`DROP TABLE IF EXISTS 'search_index_entity'`)
+
+      // reset source last sync settings, since we are going to start it from scratch
+      const sources: Source[] = await connection1.getRepository(SourceEntity).find()
+      for (let source of sources) {
+        if (source.type === 'confluence') {
+          source.values.blogLastSync = {}
+          source.values.pageLastSync = {}
+
+        } else if (source.type === 'github') {
+          source.values.lastSyncIssues = {}
+          source.values.lastSyncPullRequests = {}
+
+        } else if (source.type === 'drive') {
+          source.values.lastSync = {}
+
+        } else if (source.type === 'gmail') {
+          // source.values.lastSync = {} // todo: do after my another PR merge
+
+        } else if (source.type === 'jira') {
+          source.values.lastSync = {}
+
+        } else if (source.type === 'slack') {
+          source.values.lastMessageSync = {}
+          source.values.lastAttachmentSync = {}
+        }
+      }
+      await connection1.getRepository(SourceEntity).save(sources)
+
+      // close connection
+      await connection1.close()
+
+      // create create connection again
       return await createConnection(buildOptions(models))
 
     } catch (err2) {

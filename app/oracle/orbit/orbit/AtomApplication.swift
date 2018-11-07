@@ -243,7 +243,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         NSEvent.addGlobalMonitorForEvents(matching: [.keyUp, .keyDown]) { (event) in
           let characters = (event.characters)!
           let type = event.type == NSEvent.EventType.keyDown ? "keyDown" : "keyUp"
-          print("event event \(type)")
           self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(type)\", \"value\": \"\(characters)\" } }")
         }
       }

@@ -145,8 +145,8 @@ export class Root {
     this.ocrManager = new OCRManager({ cosal: this.cosal })
     this.cosalManager = new CosalManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ oracle: this.oracle })
-    this.mousePositionManager = new MousePositionManager()
-    this.keyboardManager = new KeyboardManager()
+    this.mousePositionManager = new MousePositionManager({ oracle: this.oracle })
+    this.keyboardManager = new KeyboardManager({ oracle: this.oracle })
     this.appsManager = new AppsManager()
 
     await this.server.start()

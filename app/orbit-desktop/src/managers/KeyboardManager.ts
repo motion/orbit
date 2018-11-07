@@ -1,6 +1,6 @@
 import { App, Desktop } from '@mcro/stores'
 import { store } from '@mcro/black'
-import iohook from 'iohook'
+import { Oracle } from '@mcro/oracle'
 
 const codes = {
   esc: 1,
@@ -20,25 +20,23 @@ export class KeyboardManager {
   pauseTm = null
   keysDown = new Set()
 
-  start = () => {
+  constructor({ oracle }: { oracle: Oracle }) {
     let clearLastKeys
-
-    // keydown
-    iohook.on('keydown', ({ keycode }) => {
-      this.keysDown.add(keycode)
-      this.onKey(keycode)
-    })
-
-    // keyup
-    iohook.on('keyup', ({ keycode }) => {
-      this.keysDown.delete(keycode)
-      clearTimeout(clearLastKeys)
-      this.clearDownKeysAfterPause()
-      // option off
-      switch (keycode) {
-        case codes.option:
-          this.clearOption()
-          break
+    oracle.onKeyboard(({ type, value }) => {
+      console.log('keyboad', type, value)
+      switch (type) {
+        case 'keyDown':
+          this.keysDown.add(value)
+          this.onKey(value)
+          return
+        case 'keyUp':
+          this.keysDown.delete(value)
+          clearTimeout(clearLastKeys)
+          this.clearDownKeysAfterPause()
+          if (value === codes.option) {
+            this.clearOption()
+          }
+          return
       }
     })
   }

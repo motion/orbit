@@ -48,6 +48,7 @@ export class Oracle {
   onSpaceMoveCB = idFn
   onAppStateCB = idFn
   mousePositionCB = idFn
+  onKeyboardCB = idFn
   binPath = null
   state = {
     isPaused: false,
@@ -269,6 +270,10 @@ export class Oracle {
     this.mousePositionCB = cb
   }
 
+  onKeyboard = cb => {
+    this.onKeyboardCB = cb
+  }
+
   actions: { [key: string]: Function } = {
     changed: value => {
       setTimeout(() => this.onBoxChangedCB(value))
@@ -303,6 +308,7 @@ export class Oracle {
       }
     },
     mousePosition: val => this.mousePositionCB(val),
+    keyboard: val => this.onKeyboardCB(val),
   }
 
   private async runOracleProcess() {

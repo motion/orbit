@@ -239,6 +239,13 @@ class AtomApplication: NSObject, NSApplicationDelegate {
           self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
           throttledHover((self.trayLocation, self.socketBridge))
         }
+        
+        NSEvent.addGlobalMonitorForEvents(matching: [.keyUp, .keyDown]) { (event) in
+          let characters = (event.characters)!
+          let type = event.type == NSEvent.EventType.keyDown ? "keyDown" : "keyUp"
+          print("event event \(type)")
+          self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(type)\", \"value\": \"\(characters)\" } }")
+        }
       }
     }
     

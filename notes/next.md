@@ -27,6 +27,8 @@ Friday:
 - Allow custom topics in topics app
 - Cleanup SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
+- https://github.com/bokuweb/re-resizable
+
 ---
 
 Monday:

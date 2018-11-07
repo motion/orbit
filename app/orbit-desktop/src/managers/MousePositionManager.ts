@@ -1,10 +1,10 @@
 import { App, Desktop } from '@mcro/stores'
-import { store, react, ensure } from '@mcro/black'
+import { store, react } from '@mcro/black'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
-import { Oracle } from '@mcro/oracle'
 import { throttle } from 'lodash'
+import iohook from 'iohook'
 
-type Point = [number, number]
+type Point = { x: number; y: number }
 
 type BoundLike = {
   position: number[]
@@ -16,8 +16,8 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
   if (!bounds || !mousePosition) {
     return false
   }
-  const x = mousePosition[0]
-  const y = mousePosition[1] - MAC_TOPBAR_HEIGHT
+  const x = mousePosition.x
+  const y = mousePosition.y - MAC_TOPBAR_HEIGHT
   const { position, size } = bounds
   if (!position || !size) {
     return false
@@ -31,8 +31,8 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
 export class MousePositionManager {
   lastMousePos?: Point
 
-  constructor({ oracle }: { oracle: Oracle }) {
-    oracle.onMousePosition(this.updateHoverState)
+  constructor() {
+    iohook.on('mousemove', throttle(this.updateHoverState, 32))
   }
 
   updateHoverAttributes = react(
@@ -46,10 +46,10 @@ export class MousePositionManager {
     () => this.updateHoverState(),
   )
 
-  updateHoverState = throttle((mousePos: Point = this.lastMousePos) => {
+  updateHoverState = throttle((mousePos = this.lastMousePos) => {
     // avoid updates if no move
     const { lastMousePos } = this
-    if (lastMousePos && lastMousePos[0] === mousePos[0] && lastMousePos[1] === mousePos[1]) {
+    if (lastMousePos && lastMousePos.x === mousePos.x && lastMousePos.y === mousePos.y) {
       return
     }
 

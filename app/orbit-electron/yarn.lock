@@ -1371,16 +1371,16 @@ invert-kv@^1.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
   integrity sha1-EEqOSqym09jNFXqO+L+rLXo//bY=
 
-iohook@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/iohook/-/iohook-0.2.0.tgz#7a60c776b0e277bd2eeadd09a0644e920e9b6a73"
-  integrity sha512-P6dqN69pSzDR0TTjgytE1yhTYGr0mRvpP2wf+WnfGd6dclxSxEoMYC8uCrOZW7T8JOzhr+RoNIJdJVhlB+edbw==
+iohook@0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/iohook/-/iohook-0.2.4.tgz#29450408c733f32c6c1a1e24744a6a19cb606687"
+  integrity sha512-IZ1TcSPidJTDv1/6YxFsaA31kl0fMLPCyw2ApdeI43IL/T9XGnBb/QGgG0RQKxEf7Y0oK9xP52g8dkQN63I8iQ==
   dependencies:
     "@types/node" "^7.0.62"
     bindings "^1.3.0"
     node-abi "^2.4.0"
     pump "^1.0.3"
-    segfault-handler "^1.0.0"
+    segfault-handler "^1.0.1"
     simple-get "^2.8.1"
     tar-fs "^1.16.2"
 
@@ -2677,7 +2677,7 @@ scheduler@^0.11.0-alpha.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-segfault-handler@^1.0.0:
+segfault-handler@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/segfault-handler/-/segfault-handler-1.0.1.tgz#9466d8f77d8826cfbdfa811124ece02983fd6ad2"
   integrity sha512-3koBV3F0IPxTYacnoL7WoFlaMndXsXj62tiVbbW9Kzp3K+F9Y6GWW5XmKSv7j+7nf2M+qjNzc4W1iZoa8vocjw==

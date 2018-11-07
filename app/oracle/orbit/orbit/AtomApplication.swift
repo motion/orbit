@@ -269,26 +269,26 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHover\(trayLocation)\" }")
   }
   
+  let indexToTrayKey = ["0", "1", "2"]
+  
   func getTrayLocation(mouseLocation: NSPoint, trayRect: NSRect) -> String {
     let mouseX = mouseLocation.x
     let mouseY = mouseLocation.y
-    let trayButtonMaxX = [40, 65, 95, 125]
+    let buttonWidth = 28
+    let trayOffsetBeginning = 27
+    let trayButtonMaxX = [0,1,2].map({ trayOffsetBeginning + ($0 + 1) * buttonWidth })
     let withinX = mouseX >= trayRect.minX && mouseX <= trayRect.maxX
     let withinY = mouseY >= trayRect.minY && mouseY <= trayRect.maxY
     if (withinX && withinY) {
-      let xOff = Int(trayRect.maxX - mouseX)
-//      print("xoff \(xOff)")
-      if (xOff < trayButtonMaxX[0]) {
-        return "Orbit"
+      let xOff = Int(trayRect.width) - Int(trayRect.maxX - mouseX)
+      if (xOff < trayOffsetBeginning) {
+        return "Out"
       }
-      else if (xOff < trayButtonMaxX[1]) {
-        return "2"
-      }
-      else if (xOff < trayButtonMaxX[2]) {
-        return "1"
-      }
-      else {
-        return "0"
+//      print("check it out \(xOff) \(trayButtonMaxX)")
+      for (index, maxX) in trayButtonMaxX.enumerated() {
+        if (xOff < maxX) {
+          return self.indexToTrayKey[index]
+        }
       }
     }
     return "Out"
@@ -330,11 +330,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       if theme == "light" {
         blurryView.material = NSVisualEffectView.Material.light
       }
-      if theme == "hud" {
-        if #available(OSX 10.14, *) {
-          blurryView.material = NSVisualEffectView.Material.hudWindow
-        }
-      }
       if theme == "medium" {
         blurryView.material = NSVisualEffectView.Material.mediumLight
       }
@@ -343,29 +338,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       }
       if theme == "appearanceBased" {
         blurryView.material = NSVisualEffectView.Material.appearanceBased
-      }
-      if #available(OSX 10.14, *) {
-        if theme == "contentBackground" {
-          blurryView.material = NSVisualEffectView.Material.contentBackground
-        }
-        if theme == "appearanceBased" {
-          blurryView.material = NSVisualEffectView.Material.appearanceBased
-        }
-        if theme == "sheet" {
-          blurryView.material = NSVisualEffectView.Material.sheet
-        }
-        if theme == "underPageBackground" {
-          blurryView.material = NSVisualEffectView.Material.underPageBackground
-        }
-        if theme == "toolTip" {
-          blurryView.material = NSVisualEffectView.Material.toolTip
-        }
-        if theme == "fullScreenUI" {
-          blurryView.material = NSVisualEffectView.Material.fullScreenUI
-        }
-        if theme == "sidebar" {
-          blurryView.material = NSVisualEffectView.Material.sidebar
-        }
       }
     } else {
       // Fallback on earlier versions
@@ -441,28 +413,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     }
     if action == "them" {
       self.theme(text[5..<text.count])
-      return
-    }
-    if action == "spel" {
-      do {
-        print("spell")
-        let input = try JSONDecoder().decode(Words.self, from: text[5..<text.count].data(using: .utf8)!)
-        let words = input.words
-        let checker = NSSpellChecker()
-        let spellingRange = checker.checkSpelling(of: words, startingAt: 0)
-        let guesses = checker.guesses(
-          forWordRange: spellingRange,
-          in: words,
-          language: checker.language(),
-          inSpellDocumentWithTag: 0
-        )!
-        print("step 2")
-        let jsonGuesses = try JSONEncoder().encode(guesses)
-        let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
-        self.emit("{ \"action\": \"spellCheck\", \"value\": { \"id\": \(input.id), \"guesses\": \(strJsonGuesses) } }")
-      } catch {
-        print("error encoding guesses \(error)")
-      }
       return
     }
     if action == "stat" {

@@ -2,7 +2,7 @@ import Foundation
 import SwiftWebSocket
 
 class SocketBridge {
-  var send: ((String)->Void) = { _ in print("not opened") }
+  var send: ((String)->Void) = { _ in }
   var onMessage: (String)->Void
   
   init(queue: AsyncGroup, onMessage: @escaping (String)->Void) {

@@ -16,6 +16,8 @@ import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
 import { OrbitIntegration } from '../../sources/types'
 import { allIntegrations } from '../../sources'
 import { AppView } from '../../apps/AppView'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 
 type Props = {
   sourcesStore?: SourcesStore
@@ -27,6 +29,12 @@ type Props = {
 })
 @provide({
   viewStore: ViewStore,
+})
+@provide({
+  queryStore: QueryStore,
+})
+@provide({
+  selectionStore: SelectionStore,
 })
 export class AppPage extends React.Component<Props> {
   render() {

@@ -42,7 +42,7 @@ class InnerList extends React.Component<any> {
 }
 const SortableListContainer = SortableContainer(InnerList, { withRef: true })
 
-class SortableListStore {
+class VirtualListStore {
   props: Props
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List = null
@@ -116,7 +116,8 @@ class SortableListStore {
 
 export function VirtualList(props: Props) {
   const context = React.useContext(StoreContext)
-  const store = useStore(SortableListStore, { ...props, appStore: context.appStore })
+  console.log('context', context)
+  const store = useStore(VirtualListStore, { ...props, appStore: context.appStore })
 
   const rowRenderer = ({ index, parent, style }) => {
     const model = props.items[index]

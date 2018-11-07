@@ -144,6 +144,7 @@ export function automagicReact(
       // subscribe to new one and use that instead of setting directly
       if (automagicOptions.isSubscribable(value)) {
         if (!obj.subscriptions) {
+          console.error('store', obj, obj.subscriptions)
           throw new Error(
             'Detected a subscribable but store doesn\'t have a .subscriptions CompositeDisposable',
           )
@@ -153,16 +154,14 @@ export function automagicReact(
           console.log('setting from subscirber...', value)
           current.set(value)
         })
-        if (obj.subscriptions) {
-          obj.subscriptions.add({
-            dispose: () => {
-              console.log('disposing subscriptions...')
-              if (subscriber) {
-                subscriber.unsubscribe()
-              }
-            },
-          })
-        }
+        obj.subscriptions.add({
+          dispose: () => {
+            console.log('disposing subscriptions...')
+            if (subscriber) {
+              subscriber.unsubscribe()
+            }
+          },
+        })
         return ['new subscriber', subscriber]
       }
     }

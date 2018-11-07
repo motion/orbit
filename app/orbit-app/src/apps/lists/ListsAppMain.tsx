@@ -5,17 +5,20 @@ import { BitModel } from '@mcro/models'
 import { react } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { AppSimpleTitleBar } from '../../sources/views/layout/AppSimpleTitleBar'
+import { VirtualList } from '../../views/VirtualList/VirtualList'
 
 class ListsMainStore {
   props: AppProps
 
   // lets fake this list data for now
-  list = react(() =>
-    observeMany(BitModel, {
-      args: {
-        take: 10,
-      },
-    }),
+  list = react(
+    () =>
+      (observeMany(BitModel, {
+        args: {
+          take: 10,
+        },
+      }) as unknown) as any[],
+    { defaultValue: [] },
   )
 }
 
@@ -24,13 +27,13 @@ export function ListsAppMain(props: AppProps) {
   return (
     <>
       <AppSimpleTitleBar normalizedItem={{ title: 'hi lists' }} />
-      hi
       <br />
       <br />
-      list: {JSON.stringify(store.list)}
-      <br />
-      <br />
-      props: {JSON.stringify(props)}
+      <VirtualList
+        maxHeight={window.innerHeight}
+        items={store.list.map(x => ({ title: x.title }))}
+        itemProps={{ direct: true }}
+      />
     </>
   )
 }

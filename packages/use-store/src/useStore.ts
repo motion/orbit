@@ -69,6 +69,9 @@ const setupStoreWithReactiveProps = (Store, props?) => {
     Object.defineProperty(Store.prototype, 'props', getProps)
     const storeInstance = new Store()
     Object.defineProperty(storeInstance, 'props', getProps)
+    if (options.onMount) {
+      options.onMount(storeInstance)
+    }
     storeInstance.automagic({
       isSubscribable: x => x && typeof x.subscribe === 'function',
     })
@@ -152,9 +155,6 @@ export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
 
   // one effect to then run and watch the keys we track from the first one
   useEffect(() => {
-    if (options.onMount) {
-      options.onMount(store)
-    }
     if (!dispose.current) {
       dispose.current = autorun(() => {
         // trigger reaction on keys

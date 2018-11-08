@@ -1,4 +1,4 @@
-import { ResolvableModel } from '../integrations/types'
+import { ResolvableModel } from '../sources/types'
 
 export type SelectionGroup = {
   name?: string

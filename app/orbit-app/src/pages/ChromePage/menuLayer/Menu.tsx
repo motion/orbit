@@ -1,13 +1,16 @@
 import * as React from 'react'
 import { Popover, Col, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { Desktop, App } from '@mcro/stores'
+import { TrayActions } from '../../../actions/Actions'
+import { MenusStore } from './MenuLayer'
 
 type Props = {
   index: number | 'Orbit'
   width: number
-  children: React.ReactNode
+  children: JSX.Element | ((isOpen: boolean) => JSX.Element)
+  menusStore: MenusStore
 }
 
 class MenuStore {
@@ -19,11 +22,11 @@ class MenuStore {
   }
 
   isHoveringTray = react(
-    () => [App.state.trayState.trayEvent, App.state.trayState.trayEventAt],
-    ([evt]) => evt === `TrayHover${this.props.index}`,
-    {
-      onlyUpdateIfChanged: true,
-    },
+    () =>
+      App.state.trayState.trayEventAt &&
+      App.state.trayState.trayEvent === `TrayHover${this.props.index}`,
+    _ => _,
+    { onlyUpdateIfChanged: true },
   )
 
   get allMenusOpenState() {
@@ -36,15 +39,34 @@ class MenuStore {
   }
 
   open = react(
-    () => [this.isHoveringTray, this.isHoveringMenu, this.isAnotherMenuOpen],
-    async ([hoveringTray, hoveringMenu, anotherMenuOpen], { sleep, when }) => {
+    () => [
+      this.props.menusStore.isHoldingOption &&
+        this.props.menusStore.lastMenuOpen === this.props.index,
+      this.isHoveringTray,
+      this.isHoveringMenu,
+      this.isAnotherMenuOpen,
+    ],
+    async (
+      [shouldShowOnHoldingOption, hoveringTray, hoveringMenu, anotherMenuOpen],
+      { sleep, when },
+    ) => {
+      console.log('hovering tray', this.props.index, hoveringTray)
+      // on holding option
+      if (shouldShowOnHoldingOption) {
+        // sleep a bit more to not be annoying
+        await sleep(250)
+        return true
+      }
       // close if another menu opens
       if (anotherMenuOpen) {
         return false
       }
-      // if open now, delay just a bit before closing
       if (this.open) {
+        // sleep before closing
         await sleep(60)
+      } else {
+        // sleep before opening
+        await sleep(100)
       }
       // if hovering the app window keep it open until not
       if (!anotherMenuOpen && Desktop.hoverState.appHovered[0]) {
@@ -55,9 +77,17 @@ class MenuStore {
     },
   )
 
+  updateMenusStoreLastOpen = react(
+    () => this.open,
+    () => {
+      ensure('this.open', this.open)
+      this.props.menusStore.setLastOpen(this.props.index)
+    },
+  )
+
   get menuCenter() {
     const index = this.props.index
-    const baseOffset = 17
+    const baseOffset = 25
     const offset = +index == index ? (+index + 1) * 25 + baseOffset : 120
     return this.trayBounds[0] + offset
   }
@@ -90,8 +120,34 @@ class MenuStore {
   }
 }
 
+const sendTrayEvent = (key, value) => {
+  App.setState({
+    trayState: {
+      trayEvent: key,
+      trayEventAt: value,
+    },
+  })
+}
+
 export function Menu(props: Props) {
   const store = useStore(MenuStore, props)
+  React.useEffect(() => {
+    return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
+      console.log('keyyy', key)
+      switch (key) {
+        case 'TrayToggleOrbit':
+          App.setOrbitState({ docked: !App.state.orbitState.docked })
+          break
+        case 'TrayHover0':
+        case 'TrayHover1':
+        case 'TrayHover2':
+        case 'TrayHoverOrbit':
+        case 'TrayHoverOut':
+          sendTrayEvent(key, Date.now())
+          break
+      }
+    })
+  }, [])
   const open = store.open
   const left = store.menuCenter
   const width = props.width
@@ -119,7 +175,7 @@ export function Menu(props: Props) {
         flex={1}
       >
         <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
-          {props.children}
+          {typeof props.children === 'function' ? props.children(open) : props.children}
         </Col>
       </View>
     </Popover>

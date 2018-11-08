@@ -1,20 +1,10 @@
-import { QueryStore } from '../stores/QueryStore/QueryStore'
-import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { SelectionStore } from '../stores/SelectionStore'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionGroup } from './SelectionResults'
-import { SubPaneStore } from '../components/SubPaneStore'
+import { AppProps } from './AppProps'
 
 export class AppStore {
-  props: {
-    id: string
-    title: string
-    queryStore: QueryStore
-    paneManagerStore?: PaneManagerStore
-    selectionStore: SelectionStore
-    subPaneStore?: SubPaneStore
-  }
+  props: AppProps
 
   selectionResults = null
 
@@ -32,11 +22,13 @@ export class AppStore {
   )
 
   get isActive() {
-    if (!this.props.paneManagerStore) {
-      return true
-    } else {
+    if (typeof this.props.isActive === 'boolean') {
+      return this.props.isActive
+    }
+    if (this.props.paneManagerStore) {
       return this.props.paneManagerStore.activePane === this.props.id
     }
+    return false
   }
 
   activeQuery = react(

@@ -47,7 +47,9 @@ export class Oracle {
   onClearCB = idFn
   onSpaceMoveCB = idFn
   onAppStateCB = idFn
+  onTrayStateCB = idFn
   mousePositionCB = idFn
+  onKeyboardCB = idFn
   binPath = null
   state = {
     isPaused: false,
@@ -265,8 +267,16 @@ export class Oracle {
     this.onAppStateCB = cb
   }
 
+  onTrayState = cb => {
+    this.onTrayStateCB = cb
+  }
+
   onMousePosition = cb => {
     this.mousePositionCB = cb
+  }
+
+  onKeyboard = cb => {
+    this.onKeyboardCB = cb
   }
 
   actions: { [key: string]: Function } = {
@@ -291,6 +301,9 @@ export class Oracle {
     appState: val => {
       this.onAppStateCB(val)
     },
+    trayState: val => {
+      this.onTrayStateCB(val)
+    },
     // down to swift process
     pause: this.pause,
     resume: this.resume,
@@ -303,6 +316,7 @@ export class Oracle {
       }
     },
     mousePosition: val => this.mousePositionCB(val),
+    keyboard: val => this.onKeyboardCB(val),
   }
 
   private async runOracleProcess() {

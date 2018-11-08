@@ -21,7 +21,7 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   integration: '',
 }
 
-const DEFAULT_APP_CONFIG_CONFIG: AppConfig['viewConfig']['initialState'] = {
+export const DEFAULT_VIEW_CONFIG: AppConfig['viewConfig']['initialState'] = {
   dimensions: null,
   initialState: null,
 }
@@ -46,12 +46,17 @@ export function setPeekApp({ target, appConfig, parentBounds }: PeekApp) {
 
 function setPeekState({ target, appConfig, parentBounds }: PeekApp) {
   const realTarget = getTargetPosition(target)
+
+  // TODO: we need a non-deep merge option for [Store].setState
+  // because this pattern is too awkward and brittle
+  // perhaps [Store].replaceState or [Store].setState(x, { replace: true })
+
   setAppState({
     appConfig: {
       ...DEFAULT_APP_CONFIG,
       ...appConfig,
       viewConfig: {
-        ...DEFAULT_APP_CONFIG_CONFIG,
+        ...DEFAULT_VIEW_CONFIG,
         ...appConfig.viewConfig,
       },
     },

@@ -103,6 +103,10 @@ class AppStore {
     return this.state.appsState[0]
   }
 
+  get showingPeek() {
+    return !!this.peekState.appConfig
+  }
+
   animationDuration = 90
 
   getAppState(id: number): AppState {

@@ -7,7 +7,7 @@ import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-ho
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { pullAll, difference } from 'lodash'
 import { PersonBitModel, BitModel, SourceModel, Bit, PersonBit } from '@mcro/models'
-import { allIntegrations } from '../../integrations'
+import { allIntegrations } from '../../sources'
 import { OrbitCarouselSection } from '../../components/OrbitCarouselSection'
 import { AppProps } from '../AppProps'
 

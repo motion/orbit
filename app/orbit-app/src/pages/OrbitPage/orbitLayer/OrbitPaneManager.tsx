@@ -13,7 +13,7 @@ import { SubPane } from '../../../components/SubPane'
 import { AppPanes, SpaceStore } from '../../../stores/SpaceStore'
 import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
-import { App } from '../../../apps/App'
+import { AppView } from '../../../apps/AppView'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -74,7 +74,7 @@ export class OrbitPaneManager extends React.Component<Props> {
                   paddingRight={0}
                   {...pane.props}
                 >
-                  <App id={pane.id} title={pane.title} type={pane.type} />
+                  <AppView view="index" id={pane.id} title={pane.title} type={pane.type} />
                 </SubPane>
               )
             })}

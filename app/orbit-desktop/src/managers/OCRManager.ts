@@ -9,7 +9,6 @@ import { oracleBinPath } from '../constants'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
 
-// const SpellChecker: any = {}
 const log = new Logger('OCRManager')
 const Config = getGlobalConfig()
 const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
@@ -24,9 +23,9 @@ const PREVENT_CLEAR = {
 }
 // prevent apps from triggering appState updates
 const PREVENT_APP_STATE = {
-  // iterm2: true,
-  // electron: true,
-  // VSCode: true,
+  iterm2: true,
+  electron: true,
+  VSCode: true,
   Chromium: true,
 }
 // prevent apps from OCR
@@ -40,7 +39,6 @@ const PREVENT_SCANNING = {
   ActivityMonitor: true,
 }
 
-// @ts-ignore
 @store
 export class OCRManager {
   cosal: Cosal
@@ -149,29 +147,6 @@ export class OCRManager {
     this.oracle.onWords(async wordBounds => {
       // [x, y, width, height, 'word']
       const words = wordBounds.map(x => x[4]) as string[]
-
-      // disable spellcheck for now
-      // console.time('spellcheck')
-      // const text = words.join(' ')
-      // console.log('incoming string', words)
-      // const correctionRanges = SpellChecker.checkSpelling(text)
-      // let start = 0
-      // for (const [index, word] of words.entries()) {
-      //   const correctionRange = correctionRanges.find(x => x.start === start)
-      //   if (correctionRange) {
-      //     const suggestions = SpellChecker.getCorrectionsForMisspelling(word) as string[]
-      //     if (suggestions.length) {
-      //       words[index] = suggestions[0]
-      //         // oftentimes joined words are properly recognized as such but correct with a - between.
-      //         // for example "tothe" will come back with corrections: ['to-the', 'to the']
-      //         // 98 times of 100 we want "to the" to be the answer, so lets just assume it
-      //         .replace('-', ' ')
-      //     }
-      //   }
-      //   start += word.length + 1 // extra 1 for space
-      // }
-      // console.timeEnd('spellcheck')
-      // console.log('spellchecked string', words.join(' '))
 
       const wordsString = words.join(' ')
       const salientWords = await this.cosal.getTopWords(wordsString, { max: 5 })
@@ -317,33 +292,6 @@ export class OCRManager {
       lines: null,
     })
   }, 32)
-
-  // iohook based mouse move
-  // mouseHookIds = []
-  // watchMouse = () => {
-  //   this.unWatchMouse()
-  //   this.mouseHookIds = [
-  //     iohook.on('mousemove', throttle(this.handleMousePosition, 32)),
-  //     iohook.on('mousedown', ({ button, x, y }) => {
-  //       if (button === 1) {
-  //         const TITLE_BAR_HEIGHT = 23
-  //         Desktop.setMouseState({
-  //           mouseDown: { x, y: y - TITLE_BAR_HEIGHT, at: Date.now() },
-  //         })
-  //       }
-  //     }),
-  //     iohook.on('mouseup', ({ button }) => {
-  //       if (button === 1) {
-  //         Desktop.setMouseState({ mouseDown: null })
-  //       }
-  //     }),
-  //   ]
-  // }
-
-  // unWatchMouse = () => {
-  //   this.mouseHookIds.map(id => iohook.unregisterShortcut(id))
-  //   this.mouseHookIds = []
-  // }
 
   async ocrCurrentApp() {
     if (!this.started) {

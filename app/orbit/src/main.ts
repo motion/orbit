@@ -34,7 +34,8 @@ export async function main() {
       case 'syncers':
         require('@mcro/orbit-syncers').main()
         return
-      case 'electron-chrome':
+      case 'electron-menus':
+      case 'electron-apps':
         require('./startElectron').startElectron()
         return
     }
@@ -55,7 +56,8 @@ export async function main() {
       process.on('SIGQUIT', handleExit)
     }
 
-    let electronChromeProcess: ChildProcess
+    let electronMenusProcess: ChildProcess
+    let electronAppsProcess: ChildProcess
     let desktopProcess: ChildProcess
     let syncersProcess: ChildProcess
 
@@ -81,19 +83,24 @@ export async function main() {
 
     // electronChrome
     if (IGNORE_ELECTRON !== 'true') {
-      electronChromeProcess = startChildProcess({
-        name: 'electron-chrome',
+      electronMenusProcess = startChildProcess({
+        name: 'electron-menus',
+        inspectPort: 9006,
+        inspectPortRemote: 9007,
+      })
+      await new Promise(res => setTimeout(res, 2000))
+      electronAppsProcess = startChildProcess({
+        name: 'electron-apps',
         inspectPort: 9004,
         inspectPortRemote: 9005,
       })
+      // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
+      // see: https://github.com/electron/electron/issues/7246
+      await new Promise(res => setTimeout(res, 2000))
     }
 
     // handle exits
-    setupHandleExit([desktopProcess, syncersProcess, electronChromeProcess])
-
-    // sleep a second this is a shitty way to avoid bugs starting multiple electron instances at once
-    // see: https://github.com/electron/electron/issues/7246
-    await new Promise(res => setTimeout(res, 1000))
+    setupHandleExit([desktopProcess, syncersProcess, electronAppsProcess, electronMenusProcess])
 
     // start main electron process inside this thread (no forking)
     if (IGNORE_ELECTRON !== 'true') {

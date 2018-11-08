@@ -1,8 +1,8 @@
 import { SourceModel, Source, IntegrationType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
-import { allIntegrations, getIntegrations } from '../integrations'
+import { allIntegrations, getIntegrations } from '../sources'
 import { react } from '@mcro/black'
-import { OrbitIntegration, ResolvableModel } from '../integrations/types'
+import { OrbitIntegration, ResolvableModel } from '../sources/types'
 import { keyBy } from 'lodash'
 import { AppConfig } from '@mcro/stores'
 
@@ -15,19 +15,6 @@ export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
     ...getIntegrations[source.type](source),
     source,
   }
-}
-
-export const getAppConfig = (model: ResolvableModel): AppConfig => {
-  if (model.target === 'source') {
-    throw new Error('Doesn\'t handle sources')
-  }
-  const type = model.target === 'bit' ? model.integration : 'person'
-  const app = allIntegrations[type]
-  if (!app) {
-    console.log('no app', type, allIntegrations)
-    return null
-  }
-  return sourceToAppConfig(app, model)
 }
 
 export const sourceToAppConfig = (

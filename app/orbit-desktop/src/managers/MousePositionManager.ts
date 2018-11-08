@@ -1,5 +1,5 @@
 import { App, Desktop } from '@mcro/stores'
-import { store, react, ensure } from '@mcro/black'
+import { store, react } from '@mcro/black'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
 import { Oracle } from '@mcro/oracle'
 import { throttle } from 'lodash'

@@ -1,0 +1,40 @@
+import { App } from '@mcro/reactron'
+import { view, provide } from '@mcro/black'
+import * as React from 'react'
+import { ElectronStore } from './stores/ElectronStore'
+import { devTools } from './helpers/devTools'
+
+@provide({
+  electronStore: ElectronStore,
+})
+@view
+export class ElectronRoot extends React.Component<{
+  children: any
+  electronStore?: ElectronStore
+}> {
+  componentDidCatch(error) {
+    this.props.electronStore.error = error
+    console.log('electron error', error)
+  }
+
+  render() {
+    const { electronStore } = this.props
+    if (electronStore.error) {
+      if (electronStore.error) {
+        console.log('error is', electronStore.error)
+      }
+      return null
+    }
+    console.log('electron success, rendering...')
+    return (
+      <App
+        onBeforeQuit={electronStore.handleBeforeQuit}
+        onWillQuit={electronStore.handleQuit}
+        ref={electronStore.handleAppRef}
+        devTools={devTools}
+      >
+        {this.props.children}
+      </App>
+    )
+  }
+}

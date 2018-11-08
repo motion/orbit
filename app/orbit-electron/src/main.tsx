@@ -7,7 +7,9 @@ import * as React from 'react'
 import { render } from '@mcro/reactron'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
-import { ChromeRoot } from './chrome/ChromeRoot'
+import { ElectronRoot } from './ElectronRoot'
+import { MenuWindow } from './menus/MenuWindow'
+import { AppsWindow } from './apps/AppsWindow'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
@@ -40,12 +42,23 @@ export async function main() {
   // START THE PROCESSES
   //
 
-  if (process.env.SUB_PROCESS === 'electron-chrome') {
-    // electron-chrome
-    render(<ChromeRoot />)
-  } else {
-    // electron
-    require('./helpers/updateChecker')
-    render(<OrbitRoot />)
+  switch (process.env.SUB_PROCESS) {
+    case 'electron-menus':
+      render(
+        <ElectronRoot>
+          <MenuWindow />
+        </ElectronRoot>,
+      )
+      return
+    case 'electron-apps':
+      render(
+        <ElectronRoot>
+          <AppsWindow />
+        </ElectronRoot>,
+      )
+      return
+    default:
+      require('./helpers/updateChecker')
+      render(<OrbitRoot />)
   }
 }

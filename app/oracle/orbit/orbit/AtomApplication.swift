@@ -65,6 +65,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let shouldShowTray = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
+  let testInXCode = ProcessInfo.processInfo.environment["TEST_IN_XCODE"] == "true"
   let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
   let queue = AsyncGroup()
@@ -72,11 +73,10 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   var windo: Windo!
   var screen: Screen!
   var curPosition = NSRect()
-  private var lastSent = ""
   private var supportsTransparency = false
-  private var accessibilityPermission = false
   private var trayLocation = "Out"
   private var lastTrayBoundsMessage = ""
+  private var isAccessible = false
 
   let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
 
@@ -124,22 +124,26 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   }
   
   func applicationDidFinishLaunching(_ aNotification: Notification) {
+    print("applicationDidFinishLaunching, OCR \(shouldRunOCR), PORT: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
+
+    // setup socket bridge before any action that needs it...
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
-    print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     
+    // do this before update accessibility which triggers transparency event
     if #available(OSX 10.11, *) {
       self.supportsTransparency = true
     }
+    
+    if (testInXCode) {
+      _ = self.updateAccessibility(true)
+    }
+    
+    // silent check if we are already accessible
+    _ = self.updateAccessibility(false)
 
     if shouldRunOCR {
       windo = Windo(emit: self.emit)
 
-      // testing trust:
-//      let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
-//      let options = [checkOptPrompt: true]
-//      let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
-//      print("trust \(accessEnabled)")
-     
       do {
         screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
       } catch let error as NSError {
@@ -209,36 +213,54 @@ class AtomApplication: NSObject, NSApplicationDelegate {
 
     if shouldShowTray {
       statusItem.highlightMode = false
-      if let button = statusItem.button {
-        button.image = NSImage(named:NSImage.Name("tray"))
-        button.action = #selector(self.handleTrayClick(_:))
+      let button = statusItem.button!
+      button.image = NSImage(named:NSImage.Name("tray"))
+      button.action = #selector(self.handleTrayClick(_:))
 
-        // setup hover events
-        let throttleHoverQueue = DispatchQueue.global(qos: .background)
-        let throttledHover =  throttle(delay: 0.03, queue: throttleHoverQueue, action: self.handleTrayHover)
-        var lastTrayRect = [0, 0]
-        let rectInWindow = button.convert(button.bounds, to: nil)
-        let trayRect = (button.window?.convertToScreen(rectInWindow))!
+      // setup hover events
+      let throttleHoverQueue = DispatchQueue.global(qos: .background)
+      let throttledHover =  throttle(delay: 0.03, queue: throttleHoverQueue, action: self.handleTrayHover)
+      var lastTrayRect = [0, 0]
+      let rectInWindow = button.convert(button.bounds, to: nil)
+      
+      NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
+        let height = (NSScreen.main?.frame.height)!
+        let mouseLocation = (event.cgEvent?.location)!
+        let invMouseLocation = NSPoint.init(x: mouseLocation.x, y: height - mouseLocation.y)
         
-        NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
-          let height = (NSScreen.main?.frame.height)!
-          let mouseLocation = (event.cgEvent?.location)!
-          let invMouseLocation = NSPoint.init(x: mouseLocation.x, y: height - mouseLocation.y)
-          
-          self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
-          
-          let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
-          // send tray location...
-          if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
-            lastTrayRect = nextTrayRect
-            print("sending new tray rect \(nextTrayRect)")
-            self.lastTrayBoundsMessage = "{ \"action\": \"appState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }"
-            self.emit(self.lastTrayBoundsMessage)
-          }
-          // handle events
-          self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
-          throttledHover((self.trayLocation, self.socketBridge))
+        self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
+        
+        let ogTrayRect = button.window!.convertToScreen(rectInWindow)
+        // our tray image is a few px too short oops...
+        let trayRect = NSRect.init(x: ogTrayRect.minX, y: ogTrayRect.minY - 2, width: ogTrayRect.width, height: ogTrayRect.height + 2)
+        let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
+        // send tray location...
+        if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
+          lastTrayRect = nextTrayRect
+          print("sending new tray rect \(nextTrayRect)")
+          self.lastTrayBoundsMessage = "{ \"action\": \"trayState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }"
+          self.emit(self.lastTrayBoundsMessage)
         }
+        // handle events
+        self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
+        // avoid sending more than one out event
+        if (self.lastHoverEvent == self.trayLocation) {
+          return
+        }
+        self.lastHoverEvent = self.trayLocation
+        if (self.trayLocation == "Out") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("tray"))
+        }
+        if (self.trayLocation == "0") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover0"))
+        }
+        if (self.trayLocation == "1") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover1"))
+        }
+        if (self.trayLocation == "2") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover2"))
+        }
+        throttledHover((self.trayLocation, self.socketBridge))
       }
     }
     
@@ -247,42 +269,43 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   
   @objc func handleTrayClick(_ sender: Any?) {
     if self.trayLocation != "Out" {
-      self.emit("{ \"action\": \"appState\", \"value\": \"TrayToggle\(trayLocation)\" }")
+      self.emit("{ \"action\": \"trayState\", \"value\": \"TrayToggle\(trayLocation)\" }")
     }
   }
   
   var lastHoverEvent = ""
   
   func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {
-    // avoid sending more than one out event
-    if (lastHoverEvent == trayLocation) {
-      return
-    }
-    lastHoverEvent = trayLocation
     print("hover \(trayLocation)")
-    socketBridge.send("{ \"action\": \"appState\", \"value\": \"TrayHover\(trayLocation)\" }")
+    socketBridge.send("{ \"action\": \"trayState\", \"value\": \"TrayHover\(trayLocation)\" }")
   }
+  
+  let indexToTrayKey = ["0", "1", "2"]
   
   func getTrayLocation(mouseLocation: NSPoint, trayRect: NSRect) -> String {
     let mouseX = mouseLocation.x
     let mouseY = mouseLocation.y
-    let trayButtonMaxX = [40, 65, 95, 125]
+    let buttonWidth = 28
+    let trayOffsetBeginning = 27
+    let trayButtonMaxX = [0,1,2].map({ trayOffsetBeginning + ($0 + 1) * buttonWidth })
     let withinX = mouseX >= trayRect.minX && mouseX <= trayRect.maxX
-    let withinY = mouseY >= trayRect.minY && mouseY <= trayRect.maxY
+    // if mouse is currently over the menu, we should extend the bounds down
+    // because by default we have a couple pixels between the tray item and the menu
+    // and so you'd trigger hide while going down to menu
+    // we want this gap because we don't want the initial hover-in bounds to be too low
+    // so when the previous/current location is already "in" we add a few px downwards to bounds
+    let yForgiveness = CGFloat(self.trayLocation != "Out" ? 4 : 0)
+    let withinY = mouseY >= trayRect.minY - yForgiveness && mouseY <= trayRect.maxY
     if (withinX && withinY) {
-      let xOff = Int(trayRect.maxX - mouseX)
-//      print("xoff \(xOff)")
-      if (xOff < trayButtonMaxX[0]) {
-        return "Orbit"
+      let xOff = Int(trayRect.width) - Int(trayRect.maxX - mouseX)
+      if (xOff < trayOffsetBeginning) {
+        return "Out"
       }
-      else if (xOff < trayButtonMaxX[1]) {
-        return "2"
-      }
-      else if (xOff < trayButtonMaxX[2]) {
-        return "1"
-      }
-      else {
-        return "0"
+//      print("check it out \(xOff) \(trayButtonMaxX)")
+      for (index, maxX) in trayButtonMaxX.enumerated() {
+        if (xOff < maxX) {
+          return self.indexToTrayKey[index]
+        }
       }
     }
     return "Out"
@@ -324,11 +347,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       if theme == "light" {
         blurryView.material = NSVisualEffectView.Material.light
       }
-      if theme == "hud" {
-        if #available(OSX 10.14, *) {
-          blurryView.material = NSVisualEffectView.Material.hudWindow
-        }
-      }
       if theme == "medium" {
         blurryView.material = NSVisualEffectView.Material.mediumLight
       }
@@ -337,29 +355,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       }
       if theme == "appearanceBased" {
         blurryView.material = NSVisualEffectView.Material.appearanceBased
-      }
-      if #available(OSX 10.14, *) {
-        if theme == "contentBackground" {
-          blurryView.material = NSVisualEffectView.Material.contentBackground
-        }
-        if theme == "appearanceBased" {
-          blurryView.material = NSVisualEffectView.Material.appearanceBased
-        }
-        if theme == "sheet" {
-          blurryView.material = NSVisualEffectView.Material.sheet
-        }
-        if theme == "underPageBackground" {
-          blurryView.material = NSVisualEffectView.Material.underPageBackground
-        }
-        if theme == "toolTip" {
-          blurryView.material = NSVisualEffectView.Material.toolTip
-        }
-        if theme == "fullScreenUI" {
-          blurryView.material = NSVisualEffectView.Material.fullScreenUI
-        }
-        if theme == "sidebar" {
-          blurryView.material = NSVisualEffectView.Material.sidebar
-        }
       }
     } else {
       // Fallback on earlier versions
@@ -376,7 +371,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       \"action\": \"info\",
       \"value\": {
         \"supportsTransparency\": \(self.supportsTransparency),
-        \"accessibilityPermission\": \(self.accessibilityPermission)
+        \"accessibilityPermission\": \(self.isAccessible)
       }
     }
     """
@@ -388,17 +383,46 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     }
   }
   
-  func promptForAccessibility() -> Bool {
-    var val = false
-    if UIElement.isProcessTrusted(withPrompt: true) {
-      val = true
-    } else {
-      val = false
+  func updateAccessibility(_ prompt: Bool) -> Bool {
+    let next = UIElement.isProcessTrusted(withPrompt: prompt)
+    if (next != self.isAccessible) {
+      self.isAccessible = next
+      self.onAccessible(next)
     }
-    print("setting accessiblity \(val)")
-    self.accessibilityPermission = val
     self.sendOSInfo()
-    return val
+    return next
+  }
+  
+  func sendKey(key: String, isDown: Bool) {
+    self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(isDown ? "keyDown" : "keyUp")\", \"value\": \"\(key)\" } }")
+  }
+
+  func onAccessible(_ hasAccess: Bool) {
+    if hasAccess {
+      print("is accessible! setting up one time events")
+      
+      var isOptionDown = false
+      NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { (event) in
+        switch event.modifierFlags.intersection(.deviceIndependentFlagsMask) {
+          case [.option]:
+            isOptionDown = true
+            self.sendKey(key: "option", isDown: isOptionDown)
+          default:
+            if (isOptionDown) {
+              isOptionDown = false
+              self.sendKey(key: "option", isDown: isOptionDown)
+            }
+        }
+      }
+      
+      // only want to know if option is *only* key down
+      NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { (event) in
+        if (isOptionDown) {
+          isOptionDown = false
+          self.sendKey(key: "option", isDown: isOptionDown)
+        }
+      }
+    }
   }
   
   func onMessage(_ text: String) {
@@ -435,28 +459,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     }
     if action == "them" {
       self.theme(text[5..<text.count])
-      return
-    }
-    if action == "spel" {
-      do {
-        print("spell")
-        let input = try JSONDecoder().decode(Words.self, from: text[5..<text.count].data(using: .utf8)!)
-        let words = input.words
-        let checker = NSSpellChecker()
-        let spellingRange = checker.checkSpelling(of: words, startingAt: 0)
-        let guesses = checker.guesses(
-          forWordRange: spellingRange,
-          in: words,
-          language: checker.language(),
-          inSpellDocumentWithTag: 0
-        )!
-        print("step 2")
-        let jsonGuesses = try JSONEncoder().encode(guesses)
-        let strJsonGuesses = String(data: jsonGuesses, encoding: String.Encoding.utf8)!
-        self.emit("{ \"action\": \"spellCheck\", \"value\": { \"id\": \(input.id), \"guesses\": \(strJsonGuesses) } }")
-      } catch {
-        print("error encoding guesses \(error)")
-      }
       return
     }
     if action == "stat" {
@@ -517,7 +519,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     }
     if action == "star" {
       print("start screen...")
-      if (self.promptForAccessibility()) {
+      if (self.updateAccessibility(true)) {
         screen.start()
       }
       return
@@ -532,12 +534,12 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     }
     // request accessibility
     if action == "reac" {
-      _ = self.promptForAccessibility()
+      _ = self.updateAccessibility(true)
       return
     }
     // start window watching
     if action == "staw" {
-      if self.promptForAccessibility() {
+      if self.updateAccessibility(true) {
         windo.start()
       }
       return

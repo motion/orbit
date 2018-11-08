@@ -41,6 +41,10 @@ const addStyles = (id, baseStyles, nextStyles) => {
   const propStyles = {}
   for (const key in nextStyles) {
     // dont overwrite as we go down
+    if (!baseStyles[id]) {
+      console.error('no baseStyles for id', id, baseStyles, 'nextStyles', nextStyles)
+      continue
+    }
     if (typeof baseStyles[id][key] !== 'undefined') {
       continue
     }

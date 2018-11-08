@@ -1,23 +1,24 @@
 import './installGlobals'
-// import * as Mobx from 'mobx'
-
 import { configureUseStore } from '@mcro/use-store'
 import { viewEmitter } from '@mcro/black'
+import { setConfig } from 'react-hot-loader'
+import { CompositeDisposable } from 'event-kit'
 
 configureUseStore({
   onMount: store => {
+    store.subscriptions = new CompositeDisposable()
     viewEmitter.emit('store.mount', { name: store.constructor.name, thing: store })
   },
   onUnmount: store => {
+    store.subscriptions.dispose()
     viewEmitter.emit('store.unmount', { name: store.constructor.name, thing: store })
   },
 })
 
 // just for now since its spitting out so many
-import { setConfig } from 'react-hot-loader'
-
 setConfig({
   logLevel: 'no-errors-please',
+  // fixes HMR for react hooks
   // @ts-ignore
   pureSFC: true,
 })

@@ -2,18 +2,10 @@
 
 ### nate
 
-Tuesday:
-
-- Mock design for terminology app (topics, leading into highlights)
-- Mock design for people app
-- Mock design for Orbit context
-- Orbit contextual search app
-- Hold Option to show last opened app
-- Fix tray targets and interaction a bit more
-
 Wednesday:
 
-- Search performance
+- Mock design for Orbit context
+- Search performance / groups
 
 Thursday:
 
@@ -29,6 +21,8 @@ Friday:
 - Get topics app using real data for changing over time topics
 - Allow custom topics in topics app
 - Cleanup SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
+
+- https://github.com/bokuweb/re-resizable
 
 ---
 

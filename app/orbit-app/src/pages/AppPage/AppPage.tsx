@@ -11,10 +11,13 @@ import { AppBitView } from './AppBitView'
 import { App } from '@mcro/stores'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { WindowControls } from '../../views/WindowControls'
-import { AppSearchable } from '../../integrations/views/apps/AppSearchable'
+import { AppSearchable } from '../../sources/views/apps/AppSearchable'
 import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
-import { OrbitIntegration } from '../../integrations/types'
-import { allIntegrations } from '../../integrations'
+import { OrbitIntegration } from '../../sources/types'
+import { allIntegrations } from '../../sources'
+import { AppView } from '../../apps/AppView'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 
 type Props = {
   sourcesStore?: SourcesStore
@@ -26,6 +29,12 @@ type Props = {
 })
 @provide({
   viewStore: ViewStore,
+})
+@provide({
+  queryStore: QueryStore,
+})
+@provide({
+  selectionStore: SelectionStore,
 })
 export class AppPage extends React.Component<Props> {
   render() {
@@ -112,7 +121,7 @@ class AppPageContent extends React.Component<Props> {
       })
     },
     app: () => {
-      return props => <div>app</div>
+      return () => <div>app</div>
     },
     setup: () => {
       const View = this.getView('setup')
@@ -121,6 +130,9 @@ class AppPageContent extends React.Component<Props> {
     newSpace: () => {
       return () => <SpaceEditView />
     },
+    lists: () => () => <AppView id="0" type="lists" view="main" title="" />,
+    people: () => () => <AppView id="0" type="people" view="main" title="" />,
+    topics: () => () => <AppView id="0" type="topics" view="main" title="" />,
   }
 
   render() {
@@ -132,7 +144,17 @@ class AppPageContent extends React.Component<Props> {
     console.log('appConfig.type', appConfig.type, 'App.state.query', App.state.query)
     const getView = this.viewsByType[appConfig.type]
     if (!getView) {
-      return <div>error getting view {JSON.stringify(appConfig)}</div>
+      return (
+        <div>
+          error getting view
+          <br />
+          <br />
+          Root.stores.ViewStore.state.appConfig: {JSON.stringify(appConfig)}
+          <br />
+          <br />
+          model: {JSON.stringify(model)}
+        </div>
+      )
     }
     if (appConfig.type === 'bit' && !model) {
       return null

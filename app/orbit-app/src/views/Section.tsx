@@ -1,22 +1,25 @@
 import * as React from 'react'
 import { SectionTitle } from './SectionTitle'
+import { View } from '@mcro/ui'
+import { CSSPropertySet } from '@mcro/gloss'
 
-type SectionProps = {
+type SectionProps = CSSPropertySet & {
   title: string
   type: 'search-list' | 'carousel'
   children: React.ReactNode
   padTitle?: boolean
+  titleProps?: Object
 }
 
-export const Section = ({ title, children, padTitle, ...props }: SectionProps) => {
+export const Section = ({ title, children, padTitle, titleProps, ...props }: SectionProps) => {
   return (
     <>
       {!!title && (
-        <SectionTitle padding={padTitle ? [0, 8] : 0} {...props}>
+        <SectionTitle padding={padTitle ? [0, 8] : 0} {...titleProps}>
           {title}
         </SectionTitle>
       )}
-      {children}
+      <View {...props}>{children}</View>
     </>
   )
 }

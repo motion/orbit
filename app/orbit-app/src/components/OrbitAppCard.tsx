@@ -6,7 +6,7 @@ import { ItemProps } from '../views/OrbitItemProps'
 import { SyncStatus } from './SyncStatus'
 import { Text, Icon } from '@mcro/ui'
 import { Source } from '@mcro/models'
-import { OrbitIntegration } from '../integrations/types'
+import { OrbitIntegration } from '../sources/types'
 import { sourceToAppConfig } from '../stores/SourcesStore'
 import pluralize from 'pluralize'
 
@@ -27,7 +27,7 @@ export const OrbitAppCard = decorator(({ store, app, appConfig, subtitle, ...pro
   let countSubtitle = store.bitsCount >= 0 ? Number(store.bitsCount).toLocaleString() : '...'
   const commaIndex = countSubtitle.indexOf(',')
   countSubtitle = commaIndex > -1 ? `${countSubtitle.slice(0, commaIndex)}k` : countSubtitle
-  console.log("app", app)
+  console.log('app', app)
   return (
     <OrbitCard
       direct

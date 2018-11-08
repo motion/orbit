@@ -101,7 +101,8 @@ export function automagicReact(
     name: name.simple,
     deep: false,
   })
-  let prev
+  let currentValueUnreactive // for dev mode comparing previous value without triggering reaction
+  let previousValue
   let stopReaction
   let disposed = false
   let subscriber: Subscription
@@ -116,49 +117,71 @@ export function automagicReact(
     return current.get()
   }
 
-  function update(newValue, log?) {
-    let value = newValue
+  function update(value, log?) {
+    let nextValue = value
+
+    // delayValue option
     if (delayValue) {
-      value = prev
-      prev = newValue
+      nextValue = previousValue
+      previousValue = value
+    } else if (process.env.NODE_ENV === 'development') {
+      // only care about previousValue for logging, and only log in development
+      previousValue = currentValueUnreactive
     }
+
     state.hasResolvedOnce = true
+
     // subscribable handling
     if (automagicOptions && automagicOptions.isSubscribable) {
       // for subscribable support
       // cancel previous whenever a new one comes in
-      const val = getCurrentValue()
+      const newSubscriber = value as SubscribableLike
       if (subscriber) {
-        console.log('canceling last...', val)
+        console.log('canceling last...', subscriber)
         subscriber.unsubscribe()
         subscriber = null
       }
       // subscribe to new one and use that instead of setting directly
-      if (automagicOptions.isSubscribable(newValue)) {
-        console.log('subscribing to new...', newValue)
-        const newSubscriber = newValue as SubscribableLike
+      if (automagicOptions.isSubscribable(value)) {
+        if (!obj.subscriptions) {
+          console.error('store', obj, obj.subscriptions)
+          throw new Error(
+            'Detected a subscribable but store doesn\'t have a .subscriptions CompositeDisposable',
+          )
+        }
+        console.log('subscribing to new...', value)
         subscriber = newSubscriber.subscribe(value => {
           console.log('setting from subscirber...', value)
           current.set(value)
         })
-        obj.subscriptions.add({ dispose: () => subscriber && subscriber.unsubscribe() })
+        obj.subscriptions.add({
+          dispose: () => {
+            console.log('disposing subscriptions...')
+            if (subscriber) {
+              subscriber.unsubscribe()
+            }
+          },
+        })
         return ['new subscriber', subscriber]
       }
     }
+
     // return diff in dev mode
     let changed
-    if (!IS_PROD) {
-      changed = diffLog(toJSDeep(getCurrentValue()), toJSDeep(value))
+
+    // dev mode logging helpers
+    if (process.env.NODE_ENV === 'development') {
+      currentValueUnreactive = nextValue
+      changed = diffLog(toJSDeep(previousValue), toJSDeep(nextValue))
       if (delayValue) {
         changed = [...changed, 'delayValue']
       }
-    }
-    if (!onlyUpdateIfChanged || (onlyUpdateIfChanged && value !== getCurrentValue())) {
-      if (log && !IS_PROD && !preventLog) {
+      if (log && !preventLog) {
         logGroup(name.full, val, changed, log.args)
       }
-      current.set(value)
     }
+
+    current.set(nextValue)
     return changed
   }
 
@@ -188,13 +211,13 @@ export function automagicReact(
           throw new Error(`Reaction requires second function. ${name.simple} got ${typeof val}`)
         }
         // reaction
-        stopReaction = Mobx.reaction(val[0], watcher(val[1]), mobxOptions)
+        stopReaction = Mobx.reaction(val[0], setupReactionFn(val[1]), mobxOptions)
       } else {
         if (typeof val !== 'function') {
           throw new Error(`Reaction requires function. ${name.simple} got ${typeof val}`)
         }
         //autorun
-        stopReaction = Mobx.autorun(watcher(val), mobxOptions)
+        stopReaction = Mobx.autorun(setupReactionFn(val), mobxOptions)
       }
     }, 0)
   }
@@ -314,8 +337,8 @@ export function automagicReact(
     idle,
   }
 
-  function watcher(reactionFn) {
-    return function __watcherCb(reactValArg) {
+  function setupReactionFn(reactionFn) {
+    return function reaction(reactValArg) {
       reset()
       id = id + 1
       reactionID = id

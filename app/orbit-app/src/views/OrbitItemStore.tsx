@@ -2,8 +2,9 @@ import { react, ensure } from '@mcro/black'
 import { ItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { AppActions } from '../actions/AppActions'
-import { ResolvableModel } from '../integrations/types'
-import { getAppConfig } from '../stores/SourcesStore'
+import { ResolvableModel } from '../sources/types'
+import { getAppConfig } from '../helpers/getAppConfig'
+import { AppConfig } from '@mcro/stores'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -56,10 +57,6 @@ export class OrbitItemStore {
     if (this.props.inactive) {
       return
     }
-    if (this.props.onSelect) {
-      this.props.onSelect(this.realIndex, this.appConfig, e.target as HTMLDivElement)
-      return
-    }
     this.props.appStore.toggleSelected(this.realIndex, 'click')
   }
 
@@ -96,11 +93,23 @@ export class OrbitItemStore {
     this.resolvedItem = item
   }
 
-  get appConfig() {
-    if (this.props.appConfig) {
-      return this.props.appConfig
+  get appConfig(): AppConfig {
+    const { model, appConfig, direct } = this.props
+    if (appConfig) {
+      return appConfig
     }
-    return this.props.model ? getAppConfig(this.props.model) : null
+    if (model && !direct) {
+      return getAppConfig(model)
+    }
+    const item = (model as unknown) as ItemProps<any>
+    return {
+      id: item.id,
+      icon: item.icon || '',
+      title: item.title,
+      type: item.type,
+      integration: item.integration || '',
+      viewConfig: {},
+    }
   }
 
   get realIndex() {
@@ -119,9 +128,6 @@ export class OrbitItemStore {
     () => {
       const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
       if (typeof isSelected === 'undefined') {
-        if (!appStore) {
-          return false
-        }
         if (ignoreSelection) {
           return false
         }

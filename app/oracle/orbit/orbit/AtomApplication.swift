@@ -403,7 +403,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       
       var isOptionDown = false
       NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { (event) in
-        print("event.modifierFlags \(event.modifierFlags)")
         switch event.modifierFlags.intersection(.deviceIndependentFlagsMask) {
           case [.option]:
             isOptionDown = true
@@ -413,6 +412,14 @@ class AtomApplication: NSObject, NSApplicationDelegate {
               isOptionDown = false
               self.sendKey(key: "option", isDown: isOptionDown)
             }
+        }
+      }
+      
+      // only want to know if option is *only* key down
+      NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { (event) in
+        if (isOptionDown) {
+          isOptionDown = false
+          self.sendKey(key: "option", isDown: isOptionDown)
         }
       }
     }

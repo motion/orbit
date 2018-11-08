@@ -89,8 +89,6 @@ class DesktopStore {
     keyboardState: {
       option: 0,
       optionUp: 1,
-      space: 0,
-      shiftUp: 0,
     },
     mouseState: {
       mouseDown: Date.now(),

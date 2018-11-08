@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Popover, Col, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { Desktop, App } from '@mcro/stores'
 import { TrayActions } from '../../../actions/Actions'
 
@@ -27,6 +27,16 @@ class MenuStore {
     { onlyUpdateIfChanged: true },
   )
 
+  wasHoveringTray = react(() => this.isHoveringTray, _ => _, { delayValue: true })
+
+  shouldShowOnHoldingOption = react(
+    () => Desktop.keyboardState.option > Desktop.keyboardState.optionUp,
+    isHoldingOption => {
+      ensure('isHoldingOption', isHoldingOption)
+      return this.wasHoveringTray
+    },
+  )
+
   get allMenusOpenState() {
     const state = App.state.trayState.menuState
     return Object.keys(state).map(key => state[key].open)
@@ -37,9 +47,23 @@ class MenuStore {
   }
 
   open = react(
-    () => [this.isHoveringTray, this.isHoveringMenu, this.isAnotherMenuOpen],
-    async ([hoveringTray, hoveringMenu, anotherMenuOpen], { sleep, when }) => {
+    () => [
+      this.shouldShowOnHoldingOption,
+      this.isHoveringTray,
+      this.isHoveringMenu,
+      this.isAnotherMenuOpen,
+    ],
+    async (
+      [shouldShowOnHoldingOption, hoveringTray, hoveringMenu, anotherMenuOpen],
+      { sleep, when },
+    ) => {
       console.log('hovering tray', this.props.index, hoveringTray)
+      // on holding option
+      if (shouldShowOnHoldingOption) {
+        // sleep a bit more to not be annoying
+        await sleep(250)
+        return true
+      }
       // close if another menu opens
       if (anotherMenuOpen) {
         return false

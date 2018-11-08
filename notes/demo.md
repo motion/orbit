@@ -1,19 +1,15 @@
-# Orbit
+# Orbit - Augmented OS
 
-AR-OS
+Our digital lives are in need of an upgrade. And the only way to do it is to break out of the box. Today, everything we do lives in two boxes:
 
-Our digital lives are in need of an upgrade. And the only way to do it is to break out of the box.
+- Your content lives in many boxes, in the hands of many SaaS companies
+- Your browser and OS keeps every app within their own box, never able to interact
 
-Today, everything we do lives in two boxes:
-
-- Your content lives in a box in the cloud in the hands of a SaaS company
-- Your browser and OS keeps every app in a box with no way out
-
-Orbit breaks both of those boxes at once, giving you a new feature: a personal platform for your digital life. We're calling it the Orbit Augmented OS.
+Orbit breaks both of those boxes at once, giving a Augmented OS platform for your digital life. We're calling it Orbit OS.
 
 To begin, we've built three beautiful apps that show the power of an augmented operating system. It took a lot of engineering and thinkign outside the box to achieve it. And we have some incredible next steps beyond these apps.
 
-We're introducing People, Topics, and Lists to your augmented OS.
+Today, we're introducing People, Topics, and Memory.
 
 ## People
 

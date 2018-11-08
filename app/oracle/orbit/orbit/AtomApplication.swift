@@ -289,8 +289,8 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     // and so you'd trigger hide while going down to menu
     // we want this gap because we don't want the initial hover-in bounds to be too low
     // so when the previous/current location is already "in" we add a few px downwards to bounds
-    let mouseYForgiven = mouseY + (self.trayLocation != "Out" ? 4 : 0)
-    let withinY = mouseYForgiven >= trayRect.minY && mouseYForgiven <= trayRect.maxY
+    let yForgiveness = CGFloat(self.trayLocation != "Out" ? 4 : 0)
+    let withinY = mouseY >= trayRect.minY - yForgiveness && mouseY <= trayRect.maxY
     if (withinX && withinY) {
       let xOff = Int(trayRect.width) - Int(trayRect.maxX - mouseX)
       if (xOff < trayOffsetBeginning) {

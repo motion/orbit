@@ -10,7 +10,7 @@ import { StoreContext } from '@mcro/black'
 
 export function MenuApp(props: MenuAppProps) {
   const stores = useContext(StoreContext)
-  const appStore = useStore(AppStore, stores)
+  const appStore = useStore(AppStore, { ...props, ...stores })
   return (
     <StoreContext.Provider value={{ ...stores, appStore }}>
       <Menu index={props.index} width={300} menusStore={props.menusStore}>

@@ -20,7 +20,7 @@ export class MenusStore {
   searchInput: { [key: number]: HTMLInputElement } = {}
   lastMenuOpen = 2
   menuOpenID = react(getOpenMenuID, _ => _)
-  lastMenuOpenID = react(() => App.state.trayState.menuState, _ => _, { delayValue: true })
+  lastMenuOpenID = react(() => this.menuOpenID, _ => _, { delayValue: true })
 
   setLastOpen = index => {
     this.lastMenuOpen = index
@@ -78,12 +78,14 @@ export class MenusStore {
   }
 
   focusSearchInputOnFocus = react(
-    () => this.areMenusFocused,
-    focused => {
+    () => [this.areMenusFocused, this.menuOpenID],
+    ([focused, id]) => {
       ensure('focused', focused)
-      const inputRef = this.searchInput[this.menuOpenID]
-      ensure('inputRef', !!inputRef)
-      inputRef.focus()
+      if (typeof id === 'number') {
+        const inputRef = this.searchInput[id]
+        ensure('inputRef', !!inputRef)
+        inputRef.focus()
+      }
     },
   )
 }
@@ -114,6 +116,7 @@ export function MenuLayer() {
               title={app}
               type={app}
               menusStore={menusStore}
+              isActive={menusStore.menuOpenID === index}
             />
           ))}
         </FullScreen>

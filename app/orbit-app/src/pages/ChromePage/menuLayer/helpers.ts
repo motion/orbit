@@ -4,7 +4,7 @@ export const getOpenMenuID = () => {
   const menuState = App.state.trayState.menuState
   for (const key in menuState) {
     if (menuState[key].open) {
-      return menuState[key].id
+      return +key
     }
   }
   return false

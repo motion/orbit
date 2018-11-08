@@ -96,7 +96,7 @@ export async function main() {
       })
       // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
       // see: https://github.com/electron/electron/issues/7246
-      await new Promise(res => setTimeout(res, 500))
+      await new Promise(res => setTimeout(res, 2000))
     }
 
     // handle exits

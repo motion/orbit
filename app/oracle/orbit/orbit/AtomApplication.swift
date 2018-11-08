@@ -65,6 +65,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let shouldShowTray = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
+  let testInXCode = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
   let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
   let queue = AsyncGroup()
@@ -131,6 +132,10 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     // do this before update accessibility which triggers transparency event
     if #available(OSX 10.11, *) {
       self.supportsTransparency = true
+    }
+    
+    if (testInXCode) {
+      _ = self.updateAccessibility(true)
     }
     
     // silent check if we are already accessible
@@ -387,14 +392,28 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     self.sendOSInfo()
     return next
   }
+  
+  func sendKey(key: String, isDown: Bool) {
+    self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(isDown ? "keyDown" : "keyUp")\", \"value\": \"\(key)\" } }")
+  }
 
   func onAccessible(_ hasAccess: Bool) {
     if hasAccess {
       print("is accessible! setting up one time events")
-      NSEvent.addGlobalMonitorForEvents(matching: [.keyUp, .keyDown]) { (event) in
-        let characters = (event.characters)!
-        let type = event.type == NSEvent.EventType.keyDown ? "keyDown" : "keyUp"
-        self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(type)\", \"value\": \"\(characters)\" } }")
+      
+      var isOptionDown = false
+      NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { (event) in
+        print("event.modifierFlags \(event.modifierFlags)")
+        switch event.modifierFlags.intersection(.deviceIndependentFlagsMask) {
+          case [.option]:
+            isOptionDown = true
+            self.sendKey(key: "option", isDown: isOptionDown)
+          default:
+            if (isOptionDown) {
+              isOptionDown = false
+              self.sendKey(key: "option", isDown: isOptionDown)
+            }
+        }
       }
     }
   }

@@ -36,13 +36,7 @@ export class MousePositionManager {
   }
 
   updateHoverAttributes = react(
-    () => {
-      const { menuState } = App.state.trayState
-      const trayOpened = Object.keys(menuState)
-        .map(k => menuState[k].open)
-        .join('')
-      return [App.orbitState.docked, trayOpened, App.orbitState.size]
-    },
+    () => [App.orbitState.docked, App.openMenu, App.orbitState.size],
     () => this.updateHoverState(),
   )
 
@@ -70,8 +64,7 @@ export class MousePositionManager {
     }
 
     // menu hovered
-    const ms = App.state.trayState.menuState
-    const menuHovered = Object.keys(ms).reduce((a, b) => a || ms[b].open, false)
+    const menuHovered = App.openMenu && isMouseOver(App.openMenu, mousePos)
 
     Desktop.setState({ hoverState: { appHovered, orbitHovered, menuHovered } })
   }, 35)

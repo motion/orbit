@@ -99,9 +99,9 @@ class MenuStore {
           menuState: {
             [this.props.index]: {
               open,
-              height: 300,
-              width,
-              left: center - width / 2,
+              position: [center - width / 2, 0],
+              // TODO: determine this dynamically
+              size: [this.props.width, 300],
             },
           },
         },

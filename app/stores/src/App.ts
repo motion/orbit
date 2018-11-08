@@ -121,6 +121,12 @@ class AppStore {
     return 'none for now'
   }
 
+  get openMenu() {
+    const { menuState } = App.state.trayState
+    const menusState = Object.keys(menuState).map(x => menuState[x])
+    return menusState.find(x => x.open)
+  }
+
   start = async (options?) => {
     await Bridge.start(this, this.state, options)
   }

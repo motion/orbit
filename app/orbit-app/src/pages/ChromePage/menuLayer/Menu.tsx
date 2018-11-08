@@ -40,8 +40,7 @@ class MenuStore {
 
   open = react(
     () => [
-      this.props.menusStore.isHoldingOption &&
-        this.props.menusStore.lastMenuOpen === this.props.index,
+      Desktop.isHoldingOption && this.props.menusStore.lastMenuOpen === this.props.index,
       this.isHoveringTray,
       this.isHoveringMenu,
       this.isAnotherMenuOpen,

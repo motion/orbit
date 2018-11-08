@@ -21,6 +21,7 @@ class ElectronStore {
   lastAction = null
 
   state = deep({
+    pinKey: { name: '', at: Date.now() },
     realTime: false,
     focusedAppId: 'app',
     screenSize: [0, 0],

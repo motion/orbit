@@ -157,6 +157,10 @@ class DesktopStore {
     return (Desktop.ocrState.words || []).filter((_, index) => !Desktop.ocrState.shouldClear[index])
   }
 
+  get isHoldingOption() {
+    return this.keyboardState.option > this.keyboardState.optionUp
+  }
+
   start = async options => {
     await Bridge.start(this, this.state, options)
   }

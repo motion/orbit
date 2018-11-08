@@ -2,7 +2,7 @@ import * as React from 'react'
 import { AppWrapper } from '../../views'
 import { MenuLayer } from './menuLayer/MenuLayer'
 import { Theme } from '@mcro/ui'
-import { App } from '@mcro/stores'
+import { App, Electron, Desktop } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { react, ensure } from '@mcro/black'
 import { AppActions } from '../../actions/AppActions'
@@ -57,13 +57,20 @@ class ChromePageStore {
 
   handleMenuFocus = react(
     () => this.anyMenuOpen,
-    async (anyMenuOpen, { sleep }) => {
+    async (anyMenuOpen, { sleep, whenChanged }) => {
       if (anyMenuOpen) {
+        if (Desktop.isHoldingOption) {
+          // wait for pin to focus the menu
+          await whenChanged(() => Electron.state.pinKey)
+        }
         setTrayFocused(true)
       } else {
         await sleep(200)
         setTrayFocused(false)
       }
+    },
+    {
+      deferFirstRun: true,
     },
   )
 

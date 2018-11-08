@@ -10,16 +10,9 @@ import { useStore } from '@mcro/use-store'
 import { AppStore } from '../../../apps/AppStore'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
-import { react } from '@mcro/black'
-import { Desktop } from '@mcro/stores'
 
 export class MenusStore {
   lastMenuOpen = 2
-
-  isHoldingOption = react(
-    () => Desktop.keyboardState.option > Desktop.keyboardState.optionUp,
-    _ => _,
-  )
 
   setLastOpen = index => {
     this.lastMenuOpen = index

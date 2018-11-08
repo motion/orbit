@@ -12,6 +12,7 @@ Thursday:
 
 Friday:
 
+- SelectionStore / keyboard interaction working for menu windows
 - Orbit search results context menu opens by default (not show last one)
 - Fix cosal invert bug
 - Get Topic modeling API in place with working topics for topics app
@@ -29,6 +30,7 @@ Sat/Sun:
 
 Monday:
 
+- Keyboard nav into the main-windows
 - Walkthrough accessibility permissions
   - Custom Notifications :) would allow a lot
 - Person app send via slack/gmail

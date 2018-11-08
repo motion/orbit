@@ -7,7 +7,7 @@ import { TrayActions } from '../../../actions/Actions'
 import { MenusStore } from './MenuLayer'
 
 type Props = {
-  index: number | 'Orbit'
+  id: number
   width: number
   children: JSX.Element | ((isOpen: boolean) => JSX.Element)
   menusStore: MenusStore
@@ -24,23 +24,18 @@ class MenuStore {
   isHoveringTray = react(
     () =>
       App.state.trayState.trayEventAt &&
-      App.state.trayState.trayEvent === `TrayHover${this.props.index}`,
+      App.state.trayState.trayEvent === `TrayHover${this.props.id}`,
     _ => _,
     { onlyUpdateIfChanged: true },
   )
 
-  get allMenusOpenState() {
-    const state = App.state.trayState.menuState
-    return Object.keys(state).map(key => state[key].open)
-  }
-
   get isAnotherMenuOpen() {
-    return this.allMenusOpenState.some((isOpen, index) => index !== this.props.index && isOpen)
+    return App.openMenu && App.openMenu.id !== this.props.id
   }
 
   open = react(
     () => [
-      Desktop.isHoldingOption && this.props.menusStore.lastMenuOpen === this.props.index,
+      Desktop.isHoldingOption && this.props.menusStore.lastMenuOpen === this.props.id,
       this.isHoveringTray,
       this.isHoveringMenu,
       this.isAnotherMenuOpen,
@@ -79,14 +74,14 @@ class MenuStore {
     () => this.open,
     () => {
       ensure('this.open', this.open)
-      this.props.menusStore.setLastOpen(this.props.index)
+      this.props.menusStore.setLastOpen(this.props.id)
     },
   )
 
   get menuCenter() {
-    const index = this.props.index
+    const id = this.props.id
     const baseOffset = 25
-    const offset = +index == index ? (+index + 1) * 25 + baseOffset : 120
+    const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120
     return this.trayBounds[0] + offset
   }
 
@@ -97,7 +92,7 @@ class MenuStore {
       App.setState({
         trayState: {
           menuState: {
-            [this.props.index]: {
+            [this.props.id]: {
               open,
               position: [center - width / 2, 0],
               // TODO: determine this dynamically
@@ -148,7 +143,7 @@ export function Menu(props: Props) {
   const open = store.open
   const left = store.menuCenter
   const width = props.width
-  console.log('rendering menu', props.index, { open, store })
+  console.log('rendering menu', props.id, { open, store })
   return (
     <Popover
       open={open}

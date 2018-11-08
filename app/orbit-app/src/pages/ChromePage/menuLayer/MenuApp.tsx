@@ -13,11 +13,11 @@ export function MenuApp(props: MenuAppProps) {
   const appStore = useStore(AppStore, { ...props, ...stores })
   return (
     <StoreContext.Provider value={{ ...stores, appStore }}>
-      <Menu index={props.index} width={300} menusStore={props.menusStore}>
+      <Menu id={props.id} width={300} menusStore={props.menusStore}>
         {isOpen => (
           <Searchable
             inputProps={{
-              forwardRef: props.menusStore.handleSearchInput(props.index),
+              forwardRef: props.menusStore.handleSearchInput(props.id),
               onChange: appStore.queryStore.onChangeQuery,
             }}
           >

@@ -14,7 +14,7 @@ import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
 import { AppType } from '../../../apps/apps'
 
-export type MenuAppProps = AppProps & { menusStore: MenusStore; index: number }
+export type MenuAppProps = AppProps & { menusStore: MenusStore; id: number }
 
 export class MenusStore {
   searchInput: { [key: number]: HTMLInputElement } = {}
@@ -110,9 +110,8 @@ export function MenuLayer() {
           {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
             <MenuApp
               key={app}
-              id={`${index}`}
+              id={index}
               view="index"
-              index={index}
               title={app}
               type={app}
               menusStore={menusStore}

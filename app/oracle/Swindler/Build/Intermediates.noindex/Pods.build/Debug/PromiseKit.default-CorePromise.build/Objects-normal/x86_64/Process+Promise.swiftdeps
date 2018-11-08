@@ -1,0 +1,597 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "ProcessPromise"
+provides-nominal:
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- "So6NSTaskC10PromiseKitE5ErrorV4CodeO"
+- "10PromiseKit07ProcessA0C"
+provides-member:
+- ["So6NSTaskC", ""]
+- ["So6NSTaskC10PromiseKitE5ErrorV", ""]
+- ["So6NSTaskC10PromiseKitE5ErrorV4CodeO", ""]
+- ["10PromiseKit07ProcessA0C", ""]
+- ["So6NSTaskC", "promise"]
+- ["So6NSTaskC", "Error"]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "&&"
+- !private "+"
+- "=="
+- !private "??"
+- !private "Array"
+- "AssignmentPrecedence"
+- "CastingPrecedence"
+- "CustomStringConvertible"
+- "Data"
+- "FloatLiteralType"
+- "Int"
+- "IntegerLiteralType"
+- !private "Pipe"
+- "Process"
+- "ProcessPromise"
+- "Promise"
+- "String"
+- "Swift"
+- !private "UnicodeScalarType"
+- "Void"
+- !private "waldo"
+- !private "zalgo"
+depends-member:
+- !private ["Sa", "joined"]
+- !private ["s13ArrayProtocolP", "joined"]
+- ["SK", "Encoding"]
+- !private ["SK", "init"]
+- !private ["SK", "init"]
+- !private ["SK", "joined"]
+- !private ["Sz", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- ["s7CVarArgP", "Encoding"]
+- !private ["s7CVarArgP", "Error"]
+- !private ["s7CVarArgP", "Int"]
+- !private ["s7CVarArgP", "Pipe"]
+- !private ["s7CVarArgP", "ProcessPromise"]
+- !private ["s7CVarArgP", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "arguments"]
+- !private ["s7CVarArgP", "async"]
+- !private ["s7CVarArgP", "fileHandleForReading"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "joined"]
+- !private ["s7CVarArgP", "launch"]
+- !private ["s7CVarArgP", "launchPath"]
+- !private ["s7CVarArgP", "readDataToEndOfFile"]
+- !private ["s7CVarArgP", "standardError"]
+- !private ["s7CVarArgP", "standardOutput"]
+- !private ["s7CVarArgP", "terminationReason"]
+- !private ["s7CVarArgP", "terminationStatus"]
+- !private ["s7CVarArgP", "waitUntilExit"]
+- !private ["s7CVarArgP", "waldo"]
+- ["So6NSTaskC10PromiseKitE5ErrorV4CodeO", "__derived_enum_equals"]
+- ["So6NSTaskC10PromiseKitE5ErrorV4CodeO", "deinit"]
+- ["So6NSTaskC10PromiseKitE5ErrorV4CodeO", "encoding"]
+- ["So6NSTaskC10PromiseKitE5ErrorV4CodeO", "execution"]
+- ["So6NSTaskC10PromiseKitE5ErrorV4CodeO", "hash"]
+- ["So6NSTaskC10PromiseKitE5ErrorV4CodeO", "hashValue"]
+- ["Sl", "Encoding"]
+- !private ["Sl", "init"]
+- !private ["Sl", "init"]
+- !private ["Sl", "joined"]
+- ["SL", "Encoding"]
+- !private ["SL", "init"]
+- !private ["SL", "init"]
+- ["s28CustomDebugStringConvertibleP", "Encoding"]
+- !private ["s28CustomDebugStringConvertibleP", "Error"]
+- !private ["s28CustomDebugStringConvertibleP", "Int"]
+- !private ["s28CustomDebugStringConvertibleP", "Pipe"]
+- !private ["s28CustomDebugStringConvertibleP", "ProcessPromise"]
+- !private ["s28CustomDebugStringConvertibleP", "arguments"]
+- !private ["s28CustomDebugStringConvertibleP", "async"]
+- !private ["s28CustomDebugStringConvertibleP", "fileHandleForReading"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "joined"]
+- !private ["s28CustomDebugStringConvertibleP", "launch"]
+- !private ["s28CustomDebugStringConvertibleP", "launchPath"]
+- !private ["s28CustomDebugStringConvertibleP", "readDataToEndOfFile"]
+- !private ["s28CustomDebugStringConvertibleP", "standardError"]
+- !private ["s28CustomDebugStringConvertibleP", "standardOutput"]
+- !private ["s28CustomDebugStringConvertibleP", "terminationReason"]
+- !private ["s28CustomDebugStringConvertibleP", "terminationStatus"]
+- !private ["s28CustomDebugStringConvertibleP", "waitUntilExit"]
+- !private ["s28CustomDebugStringConvertibleP", "waldo"]
+- ["s29CustomPlaygroundQuickLookableP", "Encoding"]
+- !private ["s29CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- ["s17CustomReflectableP", "Encoding"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "joined"]
+- !private ["s17CustomReflectableP", "standardError"]
+- !private ["s17CustomReflectableP", "standardOutput"]
+- ["s23CustomStringConvertibleP", "Encoding"]
+- !private ["s23CustomStringConvertibleP", "Error"]
+- !private ["s23CustomStringConvertibleP", "Int"]
+- !private ["s23CustomStringConvertibleP", "Pipe"]
+- !private ["s23CustomStringConvertibleP", "Process"]
+- !private ["s23CustomStringConvertibleP", "ProcessPromise"]
+- !private ["s23CustomStringConvertibleP", "String"]
+- ["s23CustomStringConvertibleP", ""]
+- ["s23CustomStringConvertibleP", "_code"]
+- ["s23CustomStringConvertibleP", "_domain"]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- ["s23CustomStringConvertibleP", "_getEmbeddedNSError"]
+- ["s23CustomStringConvertibleP", "_userInfo"]
+- !private ["s23CustomStringConvertibleP", "args"]
+- !private ["s23CustomStringConvertibleP", "arguments"]
+- !private ["s23CustomStringConvertibleP", "async"]
+- !private ["s23CustomStringConvertibleP", "cmd"]
+- !private ["s23CustomStringConvertibleP", "code"]
+- !private ["s23CustomStringConvertibleP", "decode"]
+- ["s23CustomStringConvertibleP", "description"]
+- !private ["s23CustomStringConvertibleP", "exitStatus"]
+- !private ["s23CustomStringConvertibleP", "fileHandleForReading"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "joined"]
+- !private ["s23CustomStringConvertibleP", "launch"]
+- !private ["s23CustomStringConvertibleP", "launchPath"]
+- !private ["s23CustomStringConvertibleP", "pending"]
+- !private ["s23CustomStringConvertibleP", "readDataToEndOfFile"]
+- !private ["s23CustomStringConvertibleP", "standardError"]
+- !private ["s23CustomStringConvertibleP", "standardOutput"]
+- !private ["s23CustomStringConvertibleP", "stderr"]
+- !private ["s23CustomStringConvertibleP", "stdout"]
+- !private ["s23CustomStringConvertibleP", "task"]
+- !private ["s23CustomStringConvertibleP", "terminationReason"]
+- !private ["s23CustomStringConvertibleP", "terminationStatus"]
+- !private ["s23CustomStringConvertibleP", "then"]
+- !private ["s23CustomStringConvertibleP", "waitUntilExit"]
+- !private ["s23CustomStringConvertibleP", "waldo"]
+- !private ["s23CustomStringConvertibleP", "zalgo"]
+- ["Se", "Encoding"]
+- !private ["Se", "_getBuiltinLogicValue"]
+- !private ["Se", "init"]
+- !private ["Se", "init"]
+- !private ["Se", "joined"]
+- !private ["Se", "standardError"]
+- !private ["Se", "standardOutput"]
+- !private ["So18OS_dispatch_objectC", "async"]
+- !private ["So17OS_dispatch_queueC", "async"]
+- ["SE", "Encoding"]
+- !private ["SE", "_getBuiltinLogicValue"]
+- !private ["SE", "init"]
+- !private ["SE", "init"]
+- !private ["SE", "joined"]
+- !private ["SE", "standardError"]
+- !private ["SE", "standardOutput"]
+- ["SQ", "Encoding"]
+- !private ["SQ", "Error"]
+- !private ["SQ", "Int"]
+- !private ["SQ", "Pipe"]
+- !private ["SQ", "ProcessPromise"]
+- ["SQ", ""]
+- !private ["SQ", "_getBuiltinLogicValue"]
+- !private ["SQ", "arguments"]
+- !private ["SQ", "async"]
+- ["SQ", "encoding"]
+- ["SQ", "execution"]
+- !private ["SQ", "exit"]
+- !private ["SQ", "fileHandleForReading"]
+- ["SQ", "hash"]
+- ["SQ", "hashValue"]
+- !private ["SQ", "init"]
+- !private ["SQ", "init"]
+- !private ["SQ", "joined"]
+- !private ["SQ", "launch"]
+- !private ["SQ", "launchPath"]
+- !private ["SQ", "readDataToEndOfFile"]
+- !private ["SQ", "standardError"]
+- !private ["SQ", "standardOutput"]
+- !private ["SQ", "terminationReason"]
+- !private ["SQ", "terminationStatus"]
+- !private ["SQ", "waitUntilExit"]
+- !private ["SQ", "waldo"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "Code"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "Data"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "Int"]
+- !private ["s5ErrorP", "Int"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "Process"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "ProcessPromise"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "String"]
+- ["s5ErrorP", ""]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "_code"]
+- ["s5ErrorP", "_code"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "_domain"]
+- ["s5ErrorP", "_domain"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "_getEmbeddedNSError"]
+- ["s5ErrorP", "_getEmbeddedNSError"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "_userInfo"]
+- ["s5ErrorP", "_userInfo"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "args"]
+- !private ["s5ErrorP", "args"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "cmd"]
+- !private ["s5ErrorP", "cmd"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "code"]
+- !private ["s5ErrorP", "code"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "deinit"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "description"]
+- ["s5ErrorP", "description"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "exitStatus"]
+- !private ["s5ErrorP", "exitStatus"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "init"]
+- !private ["s5ErrorP", "init"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "stderr"]
+- !private ["s5ErrorP", "stderr"]
+- ["So6NSTaskC10PromiseKitE5ErrorV", "stdout"]
+- !private ["s5ErrorP", "stdout"]
+- !private ["s25ExpressibleByArrayLiteralP", "joined"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
+- ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "Encoding"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s27ExpressibleByIntegerLiteralP", "init"]
+- !private ["s23ExpressibleByNilLiteralP", "standardError"]
+- !private ["s23ExpressibleByNilLiteralP", "standardOutput"]
+- ["s26ExpressibleByStringLiteralP", "Encoding"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- ["s33ExpressibleByUnicodeScalarLiteralP", "Encoding"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["So12NSFileHandleC", "readDataToEndOfFile"]
+- !private ["s17FixedWidthIntegerP", "init"]
+- ["SH", "Encoding"]
+- !private ["SH", "Error"]
+- !private ["SH", "Int"]
+- !private ["SH", "Pipe"]
+- !private ["SH", "ProcessPromise"]
+- ["SH", ""]
+- !private ["SH", "_getBuiltinLogicValue"]
+- !private ["SH", "arguments"]
+- !private ["SH", "async"]
+- ["SH", "encoding"]
+- ["SH", "execution"]
+- !private ["SH", "exit"]
+- !private ["SH", "fileHandleForReading"]
+- ["SH", "hash"]
+- ["SH", "hashValue"]
+- !private ["SH", "init"]
+- !private ["SH", "init"]
+- !private ["SH", "joined"]
+- !private ["SH", "launch"]
+- !private ["SH", "launchPath"]
+- !private ["SH", "readDataToEndOfFile"]
+- !private ["SH", "standardError"]
+- !private ["SH", "standardOutput"]
+- !private ["SH", "terminationReason"]
+- !private ["SH", "terminationStatus"]
+- !private ["SH", "waitUntilExit"]
+- !private ["SH", "waldo"]
+- !private ["s6HasherV", "combine"]
+- !private ["Si", "init"]
+- ["s25LosslessStringConvertibleP", "Encoding"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- ["s10MirrorPathP", "Encoding"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["SM", "joined"]
+- !private ["So8NSCodingP", "readDataToEndOfFile"]
+- ["So8NSObjectC", "CustomStringConvertible"]
+- ["So8NSObjectC", "Data"]
+- !private ["So8NSObjectC", "Error"]
+- ["So8NSObjectC", "Int"]
+- !private ["So8NSObjectC", "Pipe"]
+- ["So8NSObjectC", "Process"]
+- ["So8NSObjectC", "ProcessPromise"]
+- ["So8NSObjectC", "String"]
+- ["So8NSObjectC", "Swift"]
+- !private ["So8NSObjectC", "arguments"]
+- !private ["So8NSObjectC", "async"]
+- !private ["So8NSObjectC", "fileHandleForReading"]
+- !private ["So8NSObjectC", "init"]
+- !private ["So8NSObjectC", "launch"]
+- !private ["So8NSObjectC", "launchPath"]
+- ["So8NSObjectC", "promise"]
+- !private ["So8NSObjectC", "readDataToEndOfFile"]
+- !private ["So8NSObjectC", "standardError"]
+- !private ["So8NSObjectC", "standardOutput"]
+- !private ["So8NSObjectC", "terminationReason"]
+- !private ["So8NSObjectC", "terminationStatus"]
+- !private ["So8NSObjectC", "waitUntilExit"]
+- !private ["So8NSObjectC", "waldo"]
+- !private ["So8NSObjectP", "Error"]
+- !private ["So8NSObjectP", "Int"]
+- !private ["So8NSObjectP", "Pipe"]
+- !private ["So8NSObjectP", "ProcessPromise"]
+- !private ["So8NSObjectP", "arguments"]
+- !private ["So8NSObjectP", "async"]
+- !private ["So8NSObjectP", "fileHandleForReading"]
+- !private ["So8NSObjectP", "init"]
+- !private ["So8NSObjectP", "launch"]
+- !private ["So8NSObjectP", "launchPath"]
+- !private ["So8NSObjectP", "readDataToEndOfFile"]
+- !private ["So8NSObjectP", "standardError"]
+- !private ["So8NSObjectP", "standardOutput"]
+- !private ["So8NSObjectP", "terminationReason"]
+- !private ["So8NSObjectP", "terminationStatus"]
+- !private ["So8NSObjectP", "waitUntilExit"]
+- !private ["So8NSObjectP", "waldo"]
+- !private ["So14NSSecureCodingP", "readDataToEndOfFile"]
+- !private ["Sj", "init"]
+- !private ["So9OS_objectC", "async"]
+- !private ["Sq", "standardError"]
+- !private ["Sq", "standardOutput"]
+- !private ["So6NSPipeC", "fileHandleForReading"]
+- !private ["So6NSPipeC", "init"]
+- ["So6NSTaskC", "CustomStringConvertible"]
+- ["So6NSTaskC", "Data"]
+- ["So6NSTaskC", "Error"]
+- ["So6NSTaskC", "Int"]
+- !private ["So6NSTaskC", "Pipe"]
+- ["So6NSTaskC", "Process"]
+- ["So6NSTaskC", "ProcessPromise"]
+- ["So6NSTaskC", "String"]
+- ["So6NSTaskC", "Swift"]
+- !private ["So6NSTaskC", "arguments"]
+- !private ["So6NSTaskC", "launch"]
+- !private ["So6NSTaskC", "launchPath"]
+- ["So6NSTaskC", "promise"]
+- !private ["So6NSTaskC", "standardError"]
+- !private ["So6NSTaskC", "standardOutput"]
+- !private ["So6NSTaskC", "terminationReason"]
+- !private ["So6NSTaskC", "terminationStatus"]
+- !private ["So6NSTaskC", "waitUntilExit"]
+- !private ["So6NSTaskC", "waldo"]
+- ["10PromiseKit07ProcessA0C", "Data"]
+- !private ["10PromiseKit07ProcessA0C", "Pipe"]
+- ["10PromiseKit07ProcessA0C", "Process"]
+- ["10PromiseKit07ProcessA0C", "Promise"]
+- ["10PromiseKit07ProcessA0C", "String"]
+- ["10PromiseKit07ProcessA0C", "asStandardError"]
+- ["10PromiseKit07ProcessA0C", "asStandardOutput"]
+- ["10PromiseKit07ProcessA0C", "asStandardPair"]
+- !private ["10PromiseKit07ProcessA0C", "decode"]
+- ["10PromiseKit07ProcessA0C", "init"]
+- !private ["10PromiseKit07ProcessA0C", "pending"]
+- !private ["10PromiseKit07ProcessA0C", "stderr"]
+- !private ["10PromiseKit07ProcessA0C", "stdout"]
+- !private ["10PromiseKit07ProcessA0C", "task"]
+- !private ["10PromiseKit07ProcessA0C", "then"]
+- !private ["10PromiseKit07ProcessA0C", "zalgo"]
+- ["10PromiseKit0A0C", "Data"]
+- !private ["10PromiseKit0A0C", "Pipe"]
+- ["10PromiseKit0A0C", "Process"]
+- ["10PromiseKit0A0C", "Promise"]
+- ["10PromiseKit0A0C", "String"]
+- ["10PromiseKit0A0C", ""]
+- ["10PromiseKit0A0C", "asStandardError"]
+- ["10PromiseKit0A0C", "asStandardOutput"]
+- ["10PromiseKit0A0C", "asStandardPair"]
+- ["10PromiseKit0A0C", "decode"]
+- ["10PromiseKit0A0C", "init"]
+- !private ["10PromiseKit0A0C", "init"]
+- !private ["10PromiseKit0A0C", "pending"]
+- ["10PromiseKit0A0C", "stderr"]
+- ["10PromiseKit0A0C", "stdout"]
+- ["10PromiseKit0A0C", "task"]
+- !private ["10PromiseKit0A0C", "then"]
+- !private ["10PromiseKit0A0C", "zalgo"]
+- !private ["Sk", "joined"]
+- ["Sm", "Encoding"]
+- !private ["Sm", "init"]
+- !private ["Sm", "init"]
+- !private ["Sm", "joined"]
+- !private ["SY", "exit"]
+- ["ST", "Encoding"]
+- !private ["ST", "init"]
+- !private ["ST", "init"]
+- !private ["ST", "joined"]
+- !private ["SZ", "init"]
+- !private ["s13SignedNumericP", "init"]
+- !private ["Sx", "init"]
+- ["SS", "Encoding"]
+- !private ["SS", "init"]
+- !private ["SS", "init"]
+- ["Sy", "Encoding"]
+- !private ["Sy", "init"]
+- !private ["Sy", "init"]
+- !private ["So23NSTaskTerminationReasonV", "exit"]
+- ["s16TextOutputStreamP", "Encoding"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- ["s20TextOutputStreamableP", "Encoding"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s18_BitwiseOperationsP", "init"]
+- !private ["s24_DestructorSafeContainerP", "joined"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "Encoding"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s35_ExpressibleByBuiltinIntegerLiteralP", "init"]
+- ["s34_ExpressibleByBuiltinStringLiteralP", "Encoding"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "Encoding"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "Encoding"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- ["s33_ExpressibleByStringInterpolationP", "Encoding"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "joined"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "Error"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "Int"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "Pipe"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "ProcessPromise"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "arguments"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "async"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "fileHandleForReading"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "launch"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "launchPath"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "readDataToEndOfFile"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "standardError"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "standardOutput"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "terminationReason"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "terminationStatus"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "waitUntilExit"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "waldo"]
+- ["s21_ObjectiveCBridgeableP", "Encoding"]
+- !private ["s21_ObjectiveCBridgeableP", "_getBuiltinLogicValue"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "joined"]
+- !private ["s21_ObjectiveCBridgeableP", "standardError"]
+- !private ["s21_ObjectiveCBridgeableP", "standardOutput"]
+- ["s16_SwiftStringViewP", "Encoding"]
+- !private ["s16_SwiftStringViewP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- !private "Sa"
+- !private "s13ArrayProtocolP"
+- "SK"
+- !private "Sz"
+- !private "Sb"
+- "s7CVarArgP"
+- "So6NSTaskC10PromiseKitE5ErrorV4CodeO"
+- "Sl"
+- "SL"
+- "s28CustomDebugStringConvertibleP"
+- "s29CustomPlaygroundQuickLookableP"
+- "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- "Se"
+- !private "So18OS_dispatch_objectC"
+- !private "So17OS_dispatch_queueC"
+- "SE"
+- "SQ"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- !private "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- !private "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- !private "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- !private "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- !private "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- !private "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- !private "s5ErrorP"
+- "So6NSTaskC10PromiseKitE5ErrorV"
+- !private "s5ErrorP"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "s27ExpressibleByBooleanLiteralP"
+- "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s27ExpressibleByIntegerLiteralP"
+- !private "s23ExpressibleByNilLiteralP"
+- "s26ExpressibleByStringLiteralP"
+- "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "So12NSFileHandleC"
+- !private "s17FixedWidthIntegerP"
+- "SH"
+- !private "s6HasherV"
+- !private "Si"
+- "s25LosslessStringConvertibleP"
+- "s10MirrorPathP"
+- !private "SM"
+- !private "So8NSCodingP"
+- "So8NSObjectC"
+- !private "So8NSObjectP"
+- !private "So14NSSecureCodingP"
+- !private "Sj"
+- !private "So9OS_objectC"
+- !private "Sq"
+- !private "So6NSPipeC"
+- "So6NSTaskC"
+- "10PromiseKit07ProcessA0C"
+- "10PromiseKit0A0C"
+- !private "Sk"
+- "Sm"
+- !private "SY"
+- "ST"
+- !private "SZ"
+- !private "s13SignedNumericP"
+- !private "Sx"
+- "SS"
+- "Sy"
+- !private "So23NSTaskTerminationReasonV"
+- "s16TextOutputStreamP"
+- "s20TextOutputStreamableP"
+- !private "s18_BitwiseOperationsP"
+- !private "s24_DestructorSafeContainerP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s35_ExpressibleByBuiltinIntegerLiteralP"
+- "s34_ExpressibleByBuiltinStringLiteralP"
+- "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- "s33_ExpressibleByStringInterpolationP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "10Foundation27_KeyValueCodingAndObservingP"
+- "s21_ObjectiveCBridgeableP"
+- "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/Target Support Files/PromiseKit.default-CorePromise/PromiseKit.default-CorePromise-umbrella.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/fwd.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/QuartzCore/Sources/PMKQuartzCore.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSTask+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSURLSession+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSNotificationCenter+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/QuartzCore/Sources/CALayer+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/PMKFoundation.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/PromiseKit.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Intermediates.noindex/Pods.build/Debug/PromiseKit.default-CorePromise.build/unextended-module.modulemap"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/xpc/XPC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "13b7a0a90ed374df6cecea84cff85304"

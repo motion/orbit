@@ -18,8 +18,9 @@
 		AE6EC270214B416700834167 /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC265214B410200834167 /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
+		AED8CE422194F14B00EA74EA /* Swindler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; };
+		AED8CE432194F15A00EA74EA /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AEE9270621913158006CAA2C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9270521913158006CAA2C /* main.swift */; };
-		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
 		CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */; };
 		CF0BCD87202E0E170012723C /* UnionFind.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD86202E0E170012723C /* UnionFind.swift */; };
@@ -41,16 +42,30 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CF0BCD6C202E0A620012723C /* PBXContainerItemProxy */ = {
+		AED8CE3A2194F0B200EA74EA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CF0BCD68202E0A620012723C /* Swindler.xcodeproj */;
+			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2F86CEC61BD60117007E8C29;
 			remoteInfo = Swindler;
 		};
-		CF0BCD6E202E0A750012723C /* PBXContainerItemProxy */ = {
+		AED8CE3C2194F0B200EA74EA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CF0BCD68202E0A620012723C /* Swindler.xcodeproj */;
+			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2F86CED01BD60117007E8C29;
+			remoteInfo = SwindlerTests;
+		};
+		AED8CE3E2194F0B200EA74EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2F86CEE91BD6EC32007E8C29;
+			remoteInfo = SwindlerExample;
+		};
+		AED8CE402194F14100EA74EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 2F86CEC51BD60117007E8C29;
 			remoteInfo = Swindler;
@@ -64,10 +79,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				AED8CE432194F15A00EA74EA /* Swindler.framework in CopyFiles */,
 				AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */,
 				AE6EC270214B416700834167 /* PromiseKit.framework in CopyFiles */,
 				AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */,
-				CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,8 +96,8 @@
 		AE6EC266214B410200834167 /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
 		AE6EC267214B410200834167 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
+		AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../Swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
 		AEE9270521913158006CAA2C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		CF0BCD68202E0A620012723C /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
 		CF0BCD82202E0E0F0012723C /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
 		CF0BCD86202E0E170012723C /* UnionFind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnionFind.swift; sourceTree = "<group>"; };
@@ -112,6 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AED8CE422194F14B00EA74EA /* Swindler.framework in Frameworks */,
 				AE6EC26C214B410200834167 /* SwiftWebSocket.framework in Frameworks */,
 				AE6EC26D214B410200834167 /* AXSwift.framework in Frameworks */,
 				AE6EC26B214B410200834167 /* PromiseKit.framework in Frameworks */,
@@ -121,6 +137,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AED8CE352194F0B200EA74EA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AED8CE3B2194F0B200EA74EA /* Swindler.framework */,
+				AED8CE3D2194F0B200EA74EA /* SwindlerTests.xctest */,
+				AED8CE3F2194F0B200EA74EA /* SwindlerExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		CF0BCD61202E0A2E0012723C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -132,14 +158,6 @@
 				AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		CF0BCD69202E0A620012723C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				CF0BCD6D202E0A620012723C /* Swindler.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		CF0BCDA3202E0E770012723C /* Screen */ = {
@@ -174,7 +192,7 @@
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
-				CF0BCD68202E0A620012723C /* Swindler.xcodeproj */,
+				AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
 				CF0BCD61202E0A2E0012723C /* Frameworks */,
@@ -224,7 +242,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CF0BCD6F202E0A750012723C /* PBXTargetDependency */,
+				AED8CE412194F14100EA74EA /* PBXTargetDependency */,
 			);
 			name = orbit;
 			productName = orbit;
@@ -266,8 +284,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = CF0BCD69202E0A620012723C /* Products */;
-					ProjectRef = CF0BCD68202E0A620012723C /* Swindler.xcodeproj */;
+					ProductGroup = AED8CE352194F0B200EA74EA /* Products */;
+					ProjectRef = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -278,11 +296,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		CF0BCD6D202E0A620012723C /* Swindler.framework */ = {
+		AED8CE3B2194F0B200EA74EA /* Swindler.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = Swindler.framework;
-			remoteRef = CF0BCD6C202E0A620012723C /* PBXContainerItemProxy */;
+			remoteRef = AED8CE3A2194F0B200EA74EA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AED8CE3D2194F0B200EA74EA /* SwindlerTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SwindlerTests.xctest;
+			remoteRef = AED8CE3C2194F0B200EA74EA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AED8CE3F2194F0B200EA74EA /* SwindlerExample.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = SwindlerExample.app;
+			remoteRef = AED8CE3E2194F0B200EA74EA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -352,10 +384,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CF0BCD6F202E0A750012723C /* PBXTargetDependency */ = {
+		AED8CE412194F14100EA74EA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Swindler;
-			targetProxy = CF0BCD6E202E0A750012723C /* PBXContainerItemProxy */;
+			targetProxy = AED8CE402194F14100EA74EA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

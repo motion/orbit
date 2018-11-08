@@ -1,0 +1,13 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Intermediates.noindex/Pods.build/Debug/PromiseKit.default-CorePromise.build/unextended-module.modulemap",
+    }]
+  }]
+}

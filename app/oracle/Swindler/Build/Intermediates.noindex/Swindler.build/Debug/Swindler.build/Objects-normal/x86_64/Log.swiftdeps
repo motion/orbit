@@ -1,0 +1,372 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "log"
+- "StderrOutputStream"
+- "stderrStream"
+- "Log"
+provides-nominal:
+- "8Swindler18StderrOutputStreamV"
+- "8Swindler3LogV"
+- "8Swindler3LogV5LevelO"
+- "8Swindler3LogV5ColorO"
+provides-member:
+- ["8Swindler18StderrOutputStreamV", ""]
+- ["8Swindler3LogV", ""]
+- ["8Swindler3LogV5LevelO", ""]
+- ["8Swindler3LogV5ColorO", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- "=="
+- "AssignmentPrecedence"
+- !private "COLOR_ENABLED"
+- "FloatLiteralType"
+- "Int8"
+- "IntegerLiteralType"
+- "Log"
+- "ProcessInfo"
+- "StderrOutputStream"
+- "String"
+- "StringLiteralType"
+- "TextOutputStream"
+- "UnicodeScalarType"
+- !private "fputs"
+- "log"
+- !private "print"
+- !private "stderr"
+- "stderrStream"
+- !private "~="
+depends-member:
+- ["SK", "init"]
+- ["SK", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "_getBuiltinLogicValue"]
+- ["s7CVarArgP", "environment"]
+- ["s7CVarArgP", "init"]
+- ["s7CVarArgP", "init"]
+- ["s7CVarArgP", "subscript"]
+- ["Sl", "init"]
+- ["Sl", "init"]
+- ["Sl", "subscript"]
+- ["8Swindler3LogV5ColorO", "RawValue"]
+- ["8Swindler3LogV5ColorO", "_Default_RawValue"]
+- ["8Swindler3LogV5ColorO", "blue"]
+- ["8Swindler3LogV5ColorO", "cyan"]
+- ["8Swindler3LogV5ColorO", "deinit"]
+- ["8Swindler3LogV5ColorO", "gray"]
+- ["8Swindler3LogV5ColorO", "green"]
+- ["8Swindler3LogV5ColorO", "hash"]
+- ["8Swindler3LogV5ColorO", "hashValue"]
+- ["8Swindler3LogV5ColorO", "init"]
+- ["8Swindler3LogV5ColorO", "purple"]
+- ["8Swindler3LogV5ColorO", "rawValue"]
+- ["8Swindler3LogV5ColorO", "red"]
+- ["8Swindler3LogV5ColorO", "yellow"]
+- ["SL", "init"]
+- ["SL", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "blue"]
+- !private ["s28CustomDebugStringConvertibleP", "cyan"]
+- ["s28CustomDebugStringConvertibleP", "environment"]
+- ["s28CustomDebugStringConvertibleP", "init"]
+- ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "purple"]
+- !private ["s28CustomDebugStringConvertibleP", "red"]
+- ["s28CustomDebugStringConvertibleP", "subscript"]
+- !private ["s28CustomDebugStringConvertibleP", "yellow"]
+- !private ["s29CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- ["s29CustomPlaygroundQuickLookableP", "init"]
+- ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
+- !private ["s17CustomReflectableP", "blue"]
+- !private ["s17CustomReflectableP", "cyan"]
+- ["s17CustomReflectableP", "init"]
+- ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "purple"]
+- !private ["s17CustomReflectableP", "red"]
+- ["s17CustomReflectableP", "subscript"]
+- !private ["s17CustomReflectableP", "yellow"]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- ["s23CustomStringConvertibleP", "environment"]
+- ["s23CustomStringConvertibleP", "init"]
+- ["s23CustomStringConvertibleP", "init"]
+- ["s23CustomStringConvertibleP", "subscript"]
+- !private ["Se", "_getBuiltinLogicValue"]
+- !private ["Se", "blue"]
+- !private ["Se", "cyan"]
+- ["Se", "init"]
+- ["Se", "init"]
+- !private ["Se", "purple"]
+- !private ["Se", "red"]
+- ["Se", "subscript"]
+- !private ["Se", "yellow"]
+- ["SD", "subscript"]
+- !private ["SE", "_getBuiltinLogicValue"]
+- !private ["SE", "blue"]
+- !private ["SE", "cyan"]
+- ["SE", "init"]
+- ["SE", "init"]
+- !private ["SE", "purple"]
+- !private ["SE", "red"]
+- ["SE", "subscript"]
+- !private ["SE", "yellow"]
+- ["SQ", "RawValue"]
+- ["SQ", ""]
+- ["SQ", "_Default_RawValue"]
+- !private ["SQ", "_getBuiltinLogicValue"]
+- !private ["SQ", "blue"]
+- !private ["SQ", "cyan"]
+- !private ["SQ", "debug"]
+- ["SQ", "environment"]
+- !private ["SQ", "error"]
+- ["SQ", "hash"]
+- ["SQ", "hashValue"]
+- !private ["SQ", "info"]
+- ["SQ", "init"]
+- ["SQ", "init"]
+- !private ["SQ", "notice"]
+- !private ["SQ", "purple"]
+- ["SQ", "rawValue"]
+- !private ["SQ", "red"]
+- ["SQ", "subscript"]
+- !private ["SQ", "warn"]
+- !private ["SQ", "yellow"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
+- ["s30ExpressibleByDictionaryLiteralP", "subscript"]
+- ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s23ExpressibleByNilLiteralP", "blue"]
+- !private ["s23ExpressibleByNilLiteralP", "cyan"]
+- !private ["s23ExpressibleByNilLiteralP", "purple"]
+- !private ["s23ExpressibleByNilLiteralP", "red"]
+- !private ["s23ExpressibleByNilLiteralP", "yellow"]
+- ["s26ExpressibleByStringLiteralP", "init"]
+- ["s26ExpressibleByStringLiteralP", "init"]
+- ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- ["SH", "RawValue"]
+- ["SH", ""]
+- ["SH", "_Default_RawValue"]
+- !private ["SH", "_getBuiltinLogicValue"]
+- !private ["SH", "blue"]
+- !private ["SH", "cyan"]
+- !private ["SH", "debug"]
+- ["SH", "environment"]
+- !private ["SH", "error"]
+- ["SH", "hash"]
+- ["SH", "hashValue"]
+- !private ["SH", "info"]
+- ["SH", "init"]
+- ["SH", "init"]
+- !private ["SH", "notice"]
+- !private ["SH", "purple"]
+- ["SH", "rawValue"]
+- !private ["SH", "red"]
+- ["SH", "subscript"]
+- !private ["SH", "warn"]
+- !private ["SH", "yellow"]
+- !private ["s6HasherV", "combine"]
+- ["8Swindler3LogV5LevelO", "__derived_enum_equals"]
+- ["8Swindler3LogV5LevelO", "debug"]
+- ["8Swindler3LogV5LevelO", "deinit"]
+- ["8Swindler3LogV5LevelO", "error"]
+- ["8Swindler3LogV5LevelO", "hash"]
+- ["8Swindler3LogV5LevelO", "hashValue"]
+- ["8Swindler3LogV5LevelO", "info"]
+- ["8Swindler3LogV5LevelO", "notice"]
+- ["8Swindler3LogV5LevelO", "trace"]
+- ["8Swindler3LogV5LevelO", "warn"]
+- !private ["8Swindler3LogV", "COLOR_ENABLED"]
+- ["8Swindler3LogV", "Color"]
+- ["8Swindler3LogV", "Int8"]
+- ["8Swindler3LogV", "Level"]
+- ["8Swindler3LogV", "String"]
+- ["8Swindler3LogV", "debug"]
+- ["8Swindler3LogV", "error"]
+- ["8Swindler3LogV", "info"]
+- ["8Swindler3LogV", "init"]
+- !private ["8Swindler3LogV", "log"]
+- ["8Swindler3LogV", "notice"]
+- !private ["8Swindler3LogV", "print"]
+- !private ["8Swindler3LogV", "stderrStream"]
+- ["8Swindler3LogV", "trace"]
+- ["8Swindler3LogV", "warn"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- ["s25LosslessStringConvertibleP", "init"]
+- ["s25LosslessStringConvertibleP", "init"]
+- ["s10MirrorPathP", "init"]
+- ["s10MirrorPathP", "init"]
+- ["So8NSObjectC", "environment"]
+- ["So8NSObjectC", "init"]
+- ["So8NSObjectP", "environment"]
+- ["So8NSObjectP", "init"]
+- !private ["Sq", "blue"]
+- !private ["Sq", "cyan"]
+- !private ["Sq", "purple"]
+- !private ["Sq", "red"]
+- !private ["Sq", "yellow"]
+- ["So13NSProcessInfoC", "environment"]
+- ["So13NSProcessInfoC", "init"]
+- ["Sm", "init"]
+- ["Sm", "init"]
+- ["SY", "RawValue"]
+- ["SY", ""]
+- ["SY", "_Default_RawValue"]
+- !private ["SY", "blue"]
+- !private ["SY", "cyan"]
+- ["SY", "hash"]
+- ["SY", "hashValue"]
+- ["SY", "init"]
+- !private ["SY", "purple"]
+- ["SY", "rawValue"]
+- !private ["SY", "red"]
+- !private ["SY", "yellow"]
+- ["ST", "init"]
+- ["ST", "init"]
+- ["ST", "subscript"]
+- ["8Swindler18StderrOutputStreamV", "String"]
+- ["8Swindler18StderrOutputStreamV", "_lock"]
+- ["8Swindler18StderrOutputStreamV", "_unlock"]
+- ["8Swindler18StderrOutputStreamV", "deinit"]
+- !private ["8Swindler18StderrOutputStreamV", "fputs"]
+- ["8Swindler18StderrOutputStreamV", "init"]
+- !private ["8Swindler18StderrOutputStreamV", "stderr"]
+- ["8Swindler18StderrOutputStreamV", "write"]
+- ["SS", "init"]
+- ["SS", "init"]
+- ["Sy", "init"]
+- ["Sy", "init"]
+- ["s16TextOutputStreamP", ""]
+- ["s16TextOutputStreamP", "_lock"]
+- ["s16TextOutputStreamP", "_unlock"]
+- !private ["s16TextOutputStreamP", "fputs"]
+- ["s16TextOutputStreamP", "init"]
+- ["s16TextOutputStreamP", "init"]
+- !private ["s16TextOutputStreamP", "stderr"]
+- ["s16TextOutputStreamP", "write"]
+- ["s20TextOutputStreamableP", "init"]
+- ["s20TextOutputStreamableP", "init"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- ["s33_ExpressibleByStringInterpolationP", "init"]
+- ["s33_ExpressibleByStringInterpolationP", "init"]
+- ["s35_HasCustomAnyHashableRepresentationP", "subscript"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "environment"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "_getBuiltinLogicValue"]
+- !private ["s21_ObjectiveCBridgeableP", "blue"]
+- !private ["s21_ObjectiveCBridgeableP", "cyan"]
+- ["s21_ObjectiveCBridgeableP", "init"]
+- ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "purple"]
+- !private ["s21_ObjectiveCBridgeableP", "red"]
+- ["s21_ObjectiveCBridgeableP", "subscript"]
+- !private ["s21_ObjectiveCBridgeableP", "yellow"]
+- ["s16_SwiftStringViewP", "init"]
+- ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- "SK"
+- !private "Sb"
+- "s7CVarArgP"
+- "Sl"
+- "8Swindler3LogV5ColorO"
+- "SL"
+- "s28CustomDebugStringConvertibleP"
+- "s29CustomPlaygroundQuickLookableP"
+- "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- "Se"
+- "SD"
+- "SE"
+- "SQ"
+- !private "s27ExpressibleByBooleanLiteralP"
+- "s30ExpressibleByDictionaryLiteralP"
+- "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s23ExpressibleByNilLiteralP"
+- "s26ExpressibleByStringLiteralP"
+- "s33ExpressibleByUnicodeScalarLiteralP"
+- "SH"
+- !private "s6HasherV"
+- "8Swindler3LogV5LevelO"
+- "8Swindler3LogV"
+- "s25LosslessStringConvertibleP"
+- "s10MirrorPathP"
+- "So8NSObjectC"
+- "So8NSObjectP"
+- !private "Sq"
+- "So13NSProcessInfoC"
+- "Sm"
+- "SY"
+- "ST"
+- "8Swindler18StderrOutputStreamV"
+- "SS"
+- "Sy"
+- "s16TextOutputStreamP"
+- "s20TextOutputStreamableP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- "s34_ExpressibleByBuiltinStringLiteralP"
+- "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- "s33_ExpressibleByStringInterpolationP"
+- "s35_HasCustomAnyHashableRepresentationP"
+- "10Foundation27_KeyValueCodingAndObservingP"
+- "s21_ObjectiveCBridgeableP"
+- "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/AXSwift/AXSwift.framework/Modules/AXSwift.swiftmodule/x86_64.swiftmodule"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Modules/PromiseKit.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/PromiseKit.default-CorePromise-umbrella.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/AXSwift/AXSwift.framework/Headers/AXSwift-umbrella.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/fwd.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/PMKQuartzCore.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/NSTask+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/NSURLSession+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/NSNotificationCenter+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/CALayer+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/PMKFoundation.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Sources/Swindler.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/AXSwift/AXSwift.framework/Headers/AXSwift-Swift.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/PromiseKit-Swift.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/AXSwift/AXSwift.framework/Headers/AXSwift.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers/PromiseKit.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Intermediates.noindex/Swindler.build/Debug/Swindler.build/unextended-module.modulemap"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/AXSwift/AXSwift.framework/Modules/module.modulemap"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Modules/module.modulemap"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/xpc/XPC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "50869bc0918f0337954f2c11af2c8255"

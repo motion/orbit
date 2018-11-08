@@ -1,0 +1,542 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Encoding"
+- "URLDataPromise"
+provides-nominal:
+- "10PromiseKit8EncodingO"
+- "10PromiseKit07URLDataA0C"
+provides-member:
+- ["10PromiseKit8EncodingO", ""]
+- ["10PromiseKit07URLDataA0C", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "!"
+- !private "!="
+- !private "&&"
+- !private "..<"
+- !private "=="
+- !private "??"
+- !private "AssignmentPrecedence"
+- "Bool"
+- !private "CFString"
+- !private "CFStringConvertEncodingToNSStringEncoding"
+- !private "CFStringConvertIANACharSetNameToEncoding"
+- "CastingPrecedence"
+- "Data"
+- "Encoding"
+- "Error"
+- "FloatLiteralType"
+- "Foundation"
+- !private "HTTPURLResponse"
+- "IntegerLiteralType"
+- !private "JSONError"
+- "JSONSerialization"
+- "NSArray"
+- "NSDictionary"
+- !private "PMKURLError"
+- "Promise"
+- "String"
+- "URLDataPromise"
+- "URLRequest"
+- "URLResponse"
+- !private "UnicodeScalarType"
+- "Void"
+- !private "kCFStringEncodingInvalidId"
+- !private "waldo"
+- !private "zalgo"
+- !private "~="
+depends-member:
+- ["SK", "Encoding"]
+- !private ["SK", "b0rkedEmptyRailsResponse"]
+- !private ["SK", "count"]
+- !private ["SK", "init"]
+- !private ["SK", "init"]
+- !private ["SK", "withUnsafeBytes"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["s7CVarArgP", "CFStringConvertIANACharSetNameToEncoding"]
+- ["s7CVarArgP", "Encoding"]
+- ["s7CVarArgP", "ReadingOptions"]
+- !private ["s7CVarArgP", "String"]
+- !private ["s7CVarArgP", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "jsonObject"]
+- !private ["s7CVarArgP", "kCFStringEncodingInvalidId"]
+- !private ["s7CVarArgP", "statusCode"]
+- !private ["s7CVarArgP", "stringEncoding"]
+- !private ["s7CVarArgP", "subscript"]
+- !private ["s7CVarArgP", "textEncodingName"]
+- ["Sl", "Encoding"]
+- !private ["Sl", "b0rkedEmptyRailsResponse"]
+- !private ["Sl", "count"]
+- !private ["Sl", "init"]
+- !private ["Sl", "init"]
+- !private ["Sl", "withUnsafeBytes"]
+- ["SL", "Encoding"]
+- !private ["SL", "init"]
+- !private ["SL", "init"]
+- !private ["SL", "subscript"]
+- !private ["s28CustomDebugStringConvertibleP", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["s28CustomDebugStringConvertibleP", "CFStringConvertIANACharSetNameToEncoding"]
+- ["s28CustomDebugStringConvertibleP", "Encoding"]
+- ["s28CustomDebugStringConvertibleP", "ReadingOptions"]
+- !private ["s28CustomDebugStringConvertibleP", "String"]
+- !private ["s28CustomDebugStringConvertibleP", "b0rkedEmptyRailsResponse"]
+- !private ["s28CustomDebugStringConvertibleP", "count"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "jsonObject"]
+- !private ["s28CustomDebugStringConvertibleP", "kCFStringEncodingInvalidId"]
+- !private ["s28CustomDebugStringConvertibleP", "statusCode"]
+- !private ["s28CustomDebugStringConvertibleP", "stringEncoding"]
+- !private ["s28CustomDebugStringConvertibleP", "subscript"]
+- !private ["s28CustomDebugStringConvertibleP", "textEncodingName"]
+- !private ["s28CustomDebugStringConvertibleP", "withUnsafeBytes"]
+- ["s29CustomPlaygroundQuickLookableP", "Encoding"]
+- !private ["s29CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "subscript"]
+- ["s17CustomReflectableP", "Encoding"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
+- !private ["s17CustomReflectableP", "b0rkedEmptyRailsResponse"]
+- !private ["s17CustomReflectableP", "count"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "stringEncoding"]
+- !private ["s17CustomReflectableP", "subscript"]
+- !private ["s17CustomReflectableP", "withUnsafeBytes"]
+- !private ["s23CustomStringConvertibleP", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["s23CustomStringConvertibleP", "CFStringConvertIANACharSetNameToEncoding"]
+- ["s23CustomStringConvertibleP", "Encoding"]
+- !private ["s23CustomStringConvertibleP", "JSONError"]
+- !private ["s23CustomStringConvertibleP", "JSONSerialization"]
+- !private ["s23CustomStringConvertibleP", "NSArray"]
+- !private ["s23CustomStringConvertibleP", "NSDictionary"]
+- !private ["s23CustomStringConvertibleP", "PMKURLError"]
+- ["s23CustomStringConvertibleP", "ReadingOptions"]
+- !private ["s23CustomStringConvertibleP", "String"]
+- !private ["s23CustomStringConvertibleP", "URLDataPromise"]
+- !private ["s23CustomStringConvertibleP", "URLRequest"]
+- !private ["s23CustomStringConvertibleP", "URLResponse"]
+- ["s23CustomStringConvertibleP", ""]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s23CustomStringConvertibleP", "b0rkedEmptyRailsResponse"]
+- !private ["s23CustomStringConvertibleP", "badResponse"]
+- !private ["s23CustomStringConvertibleP", "count"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "jsonObject"]
+- !private ["s23CustomStringConvertibleP", "kCFStringEncodingInvalidId"]
+- !private ["s23CustomStringConvertibleP", "pending"]
+- !private ["s23CustomStringConvertibleP", "statusCode"]
+- !private ["s23CustomStringConvertibleP", "stringEncoding"]
+- !private ["s23CustomStringConvertibleP", "textEncodingName"]
+- !private ["s23CustomStringConvertibleP", "then"]
+- !private ["s23CustomStringConvertibleP", "utf8"]
+- !private ["s23CustomStringConvertibleP", "waldo"]
+- !private ["s23CustomStringConvertibleP", "withUnsafeBytes"]
+- !private ["s23CustomStringConvertibleP", "zalgo"]
+- ["10Foundation4DataV", "Bool"]
+- !private ["10Foundation4DataV", "b0rkedEmptyRailsResponse"]
+- !private ["10Foundation4DataV", "count"]
+- !private ["10Foundation4DataV", "withUnsafeBytes"]
+- ["Se", "Encoding"]
+- !private ["Se", "_getBuiltinLogicValue"]
+- !private ["Se", "b0rkedEmptyRailsResponse"]
+- !private ["Se", "count"]
+- !private ["Se", "init"]
+- !private ["Se", "init"]
+- !private ["Se", "stringEncoding"]
+- !private ["Se", "withUnsafeBytes"]
+- ["SE", "Encoding"]
+- !private ["SE", "_getBuiltinLogicValue"]
+- !private ["SE", "b0rkedEmptyRailsResponse"]
+- !private ["SE", "count"]
+- !private ["SE", "init"]
+- !private ["SE", "init"]
+- !private ["SE", "stringEncoding"]
+- !private ["SE", "withUnsafeBytes"]
+- ["10PromiseKit8EncodingO", "JSONSerialization"]
+- !private ["SS10FoundationE8EncodingV", "init"]
+- ["10PromiseKit8EncodingO", "json"]
+- !private ["SS10FoundationE8EncodingV", "utf8"]
+- !private ["SQ", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["SQ", "CFStringConvertIANACharSetNameToEncoding"]
+- ["SQ", "Encoding"]
+- ["SQ", "ReadingOptions"]
+- !private ["SQ", "String"]
+- !private ["SQ", "_getBuiltinLogicValue"]
+- !private ["SQ", "allowFragments"]
+- !private ["SQ", "b0rkedEmptyRailsResponse"]
+- !private ["SQ", "count"]
+- !private ["SQ", "init"]
+- !private ["SQ", "init"]
+- !private ["SQ", "jsonObject"]
+- !private ["SQ", "kCFStringEncodingInvalidId"]
+- !private ["SQ", "statusCode"]
+- !private ["SQ", "stringEncoding"]
+- !private ["SQ", "subscript"]
+- !private ["SQ", "textEncodingName"]
+- !private ["SQ", "utf8"]
+- !private ["SQ", "withUnsafeBytes"]
+- !private ["s5ErrorP", "badResponse"]
+- !private ["s5ErrorP", "stringEncoding"]
+- !private ["s5ErrorP", "unexpectedRootNode"]
+- !private ["s25ExpressibleByArrayLiteralP", "allowFragments"]
+- !private ["s25ExpressibleByArrayLiteralP", "init"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s30ExpressibleByDictionaryLiteralP", "init"]
+- ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "Encoding"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s23ExpressibleByNilLiteralP", "stringEncoding"]
+- ["s26ExpressibleByStringLiteralP", "Encoding"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- ["s33ExpressibleByUnicodeScalarLiteralP", "Encoding"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["So17NSHTTPURLResponseC", "statusCode"]
+- !private ["SH", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["SH", "CFStringConvertIANACharSetNameToEncoding"]
+- ["SH", "Encoding"]
+- ["SH", "ReadingOptions"]
+- !private ["SH", "String"]
+- !private ["SH", "_getBuiltinLogicValue"]
+- !private ["SH", "b0rkedEmptyRailsResponse"]
+- !private ["SH", "count"]
+- !private ["SH", "init"]
+- !private ["SH", "init"]
+- !private ["SH", "jsonObject"]
+- !private ["SH", "kCFStringEncodingInvalidId"]
+- !private ["SH", "statusCode"]
+- !private ["SH", "stringEncoding"]
+- !private ["SH", "subscript"]
+- !private ["SH", "textEncodingName"]
+- !private ["SH", "utf8"]
+- !private ["SH", "withUnsafeBytes"]
+- !private ["10PromiseKit9JSONErrorO", "deinit"]
+- !private ["10PromiseKit9JSONErrorO", "unexpectedRootNode"]
+- ["So19NSJSONSerializationC", "ReadingOptions"]
+- !private ["So19NSJSONSerializationC", "jsonObject"]
+- ["s25LosslessStringConvertibleP", "Encoding"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- ["s10MirrorPathP", "Encoding"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["SM", "b0rkedEmptyRailsResponse"]
+- !private ["SM", "count"]
+- !private ["SM", "withUnsafeBytes"]
+- !private ["So7NSArrayC", "init"]
+- !private ["So8NSCodingP", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["So8NSCodingP", "CFStringConvertIANACharSetNameToEncoding"]
+- !private ["So8NSCodingP", "String"]
+- !private ["So8NSCodingP", "init"]
+- !private ["So8NSCodingP", "kCFStringEncodingInvalidId"]
+- !private ["So8NSCodingP", "statusCode"]
+- !private ["So8NSCodingP", "stringEncoding"]
+- !private ["So8NSCodingP", "textEncodingName"]
+- !private ["So9NSCopyingP", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["So9NSCopyingP", "CFStringConvertIANACharSetNameToEncoding"]
+- !private ["So9NSCopyingP", "String"]
+- !private ["So9NSCopyingP", "init"]
+- !private ["So9NSCopyingP", "kCFStringEncodingInvalidId"]
+- !private ["So9NSCopyingP", "statusCode"]
+- !private ["So9NSCopyingP", "stringEncoding"]
+- !private ["So9NSCopyingP", "textEncodingName"]
+- !private ["So12NSDictionaryC", "init"]
+- !private ["So17NSFastEnumerationP", "init"]
+- !private ["So20NSFetchRequestResultP", "init"]
+- !private ["So16NSMutableCopyingP", "init"]
+- !private ["So8NSObjectC", "CFString"]
+- !private ["So8NSObjectC", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["So8NSObjectC", "CFStringConvertIANACharSetNameToEncoding"]
+- ["So8NSObjectC", "ReadingOptions"]
+- ["So8NSObjectC", "String"]
+- !private ["So8NSObjectC", "init"]
+- !private ["So8NSObjectC", "jsonObject"]
+- !private ["So8NSObjectC", "kCFStringEncodingInvalidId"]
+- !private ["So8NSObjectC", "statusCode"]
+- ["So8NSObjectC", "stringEncoding"]
+- !private ["So8NSObjectC", "textEncodingName"]
+- !private ["So8NSObjectP", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["So8NSObjectP", "CFStringConvertIANACharSetNameToEncoding"]
+- ["So8NSObjectP", "ReadingOptions"]
+- !private ["So8NSObjectP", "String"]
+- !private ["So8NSObjectP", "init"]
+- !private ["So8NSObjectP", "jsonObject"]
+- !private ["So8NSObjectP", "kCFStringEncodingInvalidId"]
+- !private ["So8NSObjectP", "statusCode"]
+- !private ["So8NSObjectP", "stringEncoding"]
+- !private ["So8NSObjectP", "textEncodingName"]
+- !private ["So14NSSecureCodingP", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["So14NSSecureCodingP", "CFStringConvertIANACharSetNameToEncoding"]
+- !private ["So14NSSecureCodingP", "String"]
+- !private ["So14NSSecureCodingP", "init"]
+- !private ["So14NSSecureCodingP", "kCFStringEncodingInvalidId"]
+- !private ["So14NSSecureCodingP", "statusCode"]
+- !private ["So14NSSecureCodingP", "stringEncoding"]
+- !private ["So14NSSecureCodingP", "textEncodingName"]
+- !private ["s9OptionSetP", "allowFragments"]
+- !private ["Sq", "stringEncoding"]
+- !private ["10PromiseKit11PMKURLErrorO", "badResponse"]
+- !private ["10PromiseKit11PMKURLErrorO", "deinit"]
+- !private ["10PromiseKit11PMKURLErrorO", "stringEncoding"]
+- ["10PromiseKit0A0C", "Data"]
+- ["10PromiseKit0A0C", "Encoding"]
+- ["10PromiseKit0A0C", "Error"]
+- ["10PromiseKit0A0C", "Foundation"]
+- !private ["10PromiseKit0A0C", "HTTPURLResponse"]
+- !private ["10PromiseKit0A0C", "JSONError"]
+- !private ["10PromiseKit0A0C", "JSONSerialization"]
+- ["10PromiseKit0A0C", "NSArray"]
+- ["10PromiseKit0A0C", "NSDictionary"]
+- !private ["10PromiseKit0A0C", "PMKURLError"]
+- ["10PromiseKit0A0C", "Promise"]
+- ["10PromiseKit0A0C", "String"]
+- ["10PromiseKit0A0C", "URLDataPromise"]
+- ["10PromiseKit0A0C", "URLRequest"]
+- ["10PromiseKit0A0C", "URLResponse"]
+- ["10PromiseKit0A0C", "Void"]
+- ["10PromiseKit0A0C", ""]
+- ["10PromiseKit0A0C", "asArray"]
+- ["10PromiseKit0A0C", "asDataAndResponse"]
+- ["10PromiseKit0A0C", "asDictionary"]
+- ["10PromiseKit0A0C", "asString"]
+- ["10PromiseKit0A0C", "go"]
+- ["10PromiseKit0A0C", "init"]
+- !private ["10PromiseKit0A0C", "init"]
+- !private ["10PromiseKit0A0C", "pending"]
+- !private ["10PromiseKit0A0C", "then"]
+- !private ["10PromiseKit0A0C", "waldo"]
+- !private ["10PromiseKit0A0C", "zalgo"]
+- !private ["Sk", "b0rkedEmptyRailsResponse"]
+- !private ["Sk", "count"]
+- !private ["Sk", "withUnsafeBytes"]
+- ["Sm", "Encoding"]
+- !private ["Sm", "b0rkedEmptyRailsResponse"]
+- !private ["Sm", "count"]
+- !private ["Sm", "init"]
+- !private ["Sm", "init"]
+- !private ["Sm", "withUnsafeBytes"]
+- !private ["SY", "allowFragments"]
+- !private ["SY", "init"]
+- !private ["SY", "utf8"]
+- !private ["So20NSJSONReadingOptionsV", "allowFragments"]
+- !private ["10Foundation20ReferenceConvertibleP", "b0rkedEmptyRailsResponse"]
+- !private ["10Foundation20ReferenceConvertibleP", "count"]
+- !private ["10Foundation20ReferenceConvertibleP", "withUnsafeBytes"]
+- ["ST", "Encoding"]
+- !private ["ST", "b0rkedEmptyRailsResponse"]
+- !private ["ST", "count"]
+- !private ["ST", "init"]
+- !private ["ST", "init"]
+- !private ["ST", "withUnsafeBytes"]
+- !private ["s10SetAlgebraP", "allowFragments"]
+- !private ["Sx", "subscript"]
+- ["SS", "Encoding"]
+- !private ["SS", "init"]
+- !private ["SS", "init"]
+- ["Sy", "Encoding"]
+- !private ["Sy", "init"]
+- !private ["Sy", "init"]
+- ["s16TextOutputStreamP", "Encoding"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- ["s20TextOutputStreamableP", "Encoding"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- ["10PromiseKit07URLDataA0C", "Data"]
+- ["10PromiseKit07URLDataA0C", "Encoding"]
+- ["10PromiseKit07URLDataA0C", "Error"]
+- ["10PromiseKit07URLDataA0C", "Foundation"]
+- !private ["10PromiseKit07URLDataA0C", "HTTPURLResponse"]
+- !private ["10PromiseKit07URLDataA0C", "JSONError"]
+- !private ["10PromiseKit07URLDataA0C", "JSONSerialization"]
+- ["10PromiseKit07URLDataA0C", "NSArray"]
+- ["10PromiseKit07URLDataA0C", "NSDictionary"]
+- !private ["10PromiseKit07URLDataA0C", "PMKURLError"]
+- ["10PromiseKit07URLDataA0C", "Promise"]
+- ["10PromiseKit07URLDataA0C", "String"]
+- ["10PromiseKit07URLDataA0C", "URLDataPromise"]
+- ["10PromiseKit07URLDataA0C", "URLRequest"]
+- ["10PromiseKit07URLDataA0C", "URLResponse"]
+- ["10PromiseKit07URLDataA0C", "Void"]
+- ["10PromiseKit07URLDataA0C", "asArray"]
+- ["10PromiseKit07URLDataA0C", "asDataAndResponse"]
+- ["10PromiseKit07URLDataA0C", "asDictionary"]
+- ["10PromiseKit07URLDataA0C", "asString"]
+- ["10PromiseKit07URLDataA0C", "go"]
+- ["10PromiseKit07URLDataA0C", "init"]
+- !private ["10PromiseKit07URLDataA0C", "pending"]
+- !private ["10PromiseKit07URLDataA0C", "then"]
+- !private ["10PromiseKit07URLDataA0C", "waldo"]
+- !private ["10PromiseKit07URLDataA0C", "zalgo"]
+- !private ["So13NSURLResponseC", "CFString"]
+- !private ["So13NSURLResponseC", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["So13NSURLResponseC", "CFStringConvertIANACharSetNameToEncoding"]
+- ["So13NSURLResponseC", "String"]
+- !private ["So13NSURLResponseC", "kCFStringEncodingInvalidId"]
+- !private ["So13NSURLResponseC", "statusCode"]
+- !private ["So13NSURLResponseC", "stringEncoding"]
+- !private ["So13NSURLResponseC", "textEncodingName"]
+- !private ["SP", "subscript"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "Encoding"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- ["s34_ExpressibleByBuiltinStringLiteralP", "Encoding"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "Encoding"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "Encoding"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- ["s33_ExpressibleByStringInterpolationP", "Encoding"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "CFStringConvertEncodingToNSStringEncoding"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "CFStringConvertIANACharSetNameToEncoding"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "ReadingOptions"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "String"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "jsonObject"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "kCFStringEncodingInvalidId"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "statusCode"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "stringEncoding"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "textEncodingName"]
+- ["s21_ObjectiveCBridgeableP", "Encoding"]
+- !private ["s21_ObjectiveCBridgeableP", "_getBuiltinLogicValue"]
+- !private ["s21_ObjectiveCBridgeableP", "b0rkedEmptyRailsResponse"]
+- !private ["s21_ObjectiveCBridgeableP", "count"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "stringEncoding"]
+- !private ["s21_ObjectiveCBridgeableP", "withUnsafeBytes"]
+- !private ["s8_PointerP", "subscript"]
+- ["s16_SwiftStringViewP", "Encoding"]
+- !private ["s16_SwiftStringViewP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- "SK"
+- !private "Sb"
+- "s7CVarArgP"
+- "Sl"
+- "SL"
+- "s28CustomDebugStringConvertibleP"
+- "s29CustomPlaygroundQuickLookableP"
+- "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- "10Foundation4DataV"
+- "Se"
+- "SE"
+- "10PromiseKit8EncodingO"
+- !private "SS10FoundationE8EncodingV"
+- "10PromiseKit8EncodingO"
+- !private "SS10FoundationE8EncodingV"
+- "SQ"
+- !private "s5ErrorP"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "s27ExpressibleByBooleanLiteralP"
+- !private "s30ExpressibleByDictionaryLiteralP"
+- "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s23ExpressibleByNilLiteralP"
+- "s26ExpressibleByStringLiteralP"
+- "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "So17NSHTTPURLResponseC"
+- "SH"
+- !private "10PromiseKit9JSONErrorO"
+- "So19NSJSONSerializationC"
+- "s25LosslessStringConvertibleP"
+- "s10MirrorPathP"
+- !private "SM"
+- !private "So7NSArrayC"
+- !private "So8NSCodingP"
+- !private "So9NSCopyingP"
+- !private "So12NSDictionaryC"
+- !private "So17NSFastEnumerationP"
+- !private "So20NSFetchRequestResultP"
+- !private "So16NSMutableCopyingP"
+- "So8NSObjectC"
+- "So8NSObjectP"
+- !private "So14NSSecureCodingP"
+- !private "s9OptionSetP"
+- !private "Sq"
+- !private "10PromiseKit11PMKURLErrorO"
+- "10PromiseKit0A0C"
+- !private "Sk"
+- "Sm"
+- !private "SY"
+- !private "So20NSJSONReadingOptionsV"
+- !private "10Foundation20ReferenceConvertibleP"
+- "ST"
+- !private "s10SetAlgebraP"
+- !private "Sx"
+- "SS"
+- "Sy"
+- "s16TextOutputStreamP"
+- "s20TextOutputStreamableP"
+- "10PromiseKit07URLDataA0C"
+- "So13NSURLResponseC"
+- !private "SP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- "s34_ExpressibleByBuiltinStringLiteralP"
+- "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- "s33_ExpressibleByStringInterpolationP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- "10Foundation27_KeyValueCodingAndObservingP"
+- "s21_ObjectiveCBridgeableP"
+- !private "s8_PointerP"
+- "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/Target Support Files/PromiseKit.default-CorePromise/PromiseKit.default-CorePromise-umbrella.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/fwd.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/QuartzCore/Sources/PMKQuartzCore.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSTask+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSURLSession+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSNotificationCenter+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/QuartzCore/Sources/CALayer+AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/PMKFoundation.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/PromiseKit.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Intermediates.noindex/Pods.build/Debug/PromiseKit.default-CorePromise.build/unextended-module.modulemap"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/xpc/XPC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "60227f156899e8cd180e97c2fe94942c"

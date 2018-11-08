@@ -1,0 +1,23 @@
+version: "Apple Swift version 4.2 (swiftlang-1000.0.29.2 clang-1000.10.39)"
+options: "0c6cc107e2eced21110f78278fe92678"
+build_time: [1541716123, 932396000]
+inputs:
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/after.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/afterlife.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/AnyPromise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/DispatchQueue+Promise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/Error.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/join.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSNotificationCenter+Promise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSObject+Promise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSURLSession+Promise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/Process+Promise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/Promise+AnyPromise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/Promise+Properties.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/Promise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/race.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/State.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/URLDataPromise.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/when.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/wrap.swift": [1541715755, 0]
+  "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/Zalgo.swift": [1541715755, 0]

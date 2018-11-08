@@ -1,0 +1,317 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Observer"
+provides-nominal:
+- "7AXSwift8ObserverC"
+provides-member:
+- ["7AXSwift8ObserverC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "!="
+- !private "=="
+- "AXNotification"
+- "AXObserver"
+- !private "AXObserverAddNotification"
+- !private "AXObserverCreate"
+- !private "AXObserverCreateWithInfoCallback"
+- !private "AXObserverGetRunLoopSource"
+- !private "AXObserverRemoveNotification"
+- "AXUIElement"
+- "AnyObject"
+- "Application"
+- "AssignmentPrecedence"
+- "CFDictionary"
+- !private "CFRunLoopAddSource"
+- !private "CFRunLoopMode"
+- !private "CFRunLoopRemoveSource"
+- "CFString"
+- "CastingPrecedence"
+- !private "FloatLiteralType"
+- !private "IntegerLiteralType"
+- !private "NSDictionary"
+- !private "NSLog"
+- "Observer"
+- !private "RunLoop"
+- "String"
+- !private "StringLiteralType"
+- "UIElement"
+- !private "Unmanaged"
+- "UnsafeMutableRawPointer"
+- "Void"
+- !private "assert"
+- !private "fatalError"
+- !private "internalCallback"
+- !private "internalInfoCallback"
+- "pid_t"
+- !private "||"
+depends-member:
+- !private ["So7AXErrorV", "deinit"]
+- !private ["So7AXErrorV", "notificationAlreadyRegistered"]
+- !private ["So7AXErrorV", "notificationNotRegistered"]
+- !private ["So7AXErrorV", "success"]
+- !private ["7AXSwift14AXNotificationO", "deinit"]
+- !private ["7AXSwift14AXNotificationO", "init"]
+- !private ["7AXSwift14AXNotificationO", "rawValue"]
+- !private ["7AXSwift11ApplicationC", "init"]
+- !private ["SK", "init"]
+- !private ["SK", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["So13CFRunLoopModea", "defaultMode"]
+- !private ["s7CVarArgP", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "current"]
+- !private ["s7CVarArgP", "getCFRunLoop"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "init"]
+- !private ["Sl", "init"]
+- !private ["Sl", "init"]
+- !private ["SL", "init"]
+- !private ["SL", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "current"]
+- !private ["s28CustomDebugStringConvertibleP", "getCFRunLoop"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s23CustomStringConvertibleP", "current"]
+- !private ["s23CustomStringConvertibleP", "element"]
+- !private ["s23CustomStringConvertibleP", "getCFRunLoop"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "notificationAlreadyRegistered"]
+- !private ["s23CustomStringConvertibleP", "notificationNotRegistered"]
+- !private ["s23CustomStringConvertibleP", "success"]
+- !private ["Se", "_getBuiltinLogicValue"]
+- !private ["Se", "init"]
+- !private ["Se", "init"]
+- !private ["SE", "_getBuiltinLogicValue"]
+- !private ["SE", "init"]
+- !private ["SE", "init"]
+- !private ["SQ", "_getBuiltinLogicValue"]
+- !private ["SQ", "current"]
+- !private ["SQ", "defaultMode"]
+- !private ["SQ", "element"]
+- !private ["SQ", "getCFRunLoop"]
+- !private ["SQ", "init"]
+- !private ["SQ", "init"]
+- !private ["SQ", "notificationAlreadyRegistered"]
+- !private ["SQ", "notificationNotRegistered"]
+- !private ["SQ", "rawValue"]
+- !private ["SQ", "success"]
+- !private ["s5ErrorP", "notificationAlreadyRegistered"]
+- !private ["s5ErrorP", "notificationNotRegistered"]
+- !private ["s5ErrorP", "success"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["SH", "_getBuiltinLogicValue"]
+- !private ["SH", "current"]
+- !private ["SH", "defaultMode"]
+- !private ["SH", "getCFRunLoop"]
+- !private ["SH", "init"]
+- !private ["SH", "init"]
+- !private ["SH", "notificationAlreadyRegistered"]
+- !private ["SH", "notificationNotRegistered"]
+- !private ["SH", "rawValue"]
+- !private ["SH", "success"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["So8NSObjectC", "current"]
+- !private ["So8NSObjectC", "getCFRunLoop"]
+- !private ["So8NSObjectP", "current"]
+- !private ["So8NSObjectP", "getCFRunLoop"]
+- ["7AXSwift8ObserverC", "AXNotification"]
+- ["7AXSwift8ObserverC", "AXObserver"]
+- !private ["7AXSwift8ObserverC", "AXObserverAddNotification"]
+- !private ["7AXSwift8ObserverC", "AXObserverCreate"]
+- !private ["7AXSwift8ObserverC", "AXObserverCreateWithInfoCallback"]
+- !private ["7AXSwift8ObserverC", "AXObserverGetRunLoopSource"]
+- !private ["7AXSwift8ObserverC", "AXObserverRemoveNotification"]
+- ["7AXSwift8ObserverC", "AnyObject"]
+- ["7AXSwift8ObserverC", "Application"]
+- !private ["7AXSwift8ObserverC", "CFRunLoopAddSource"]
+- !private ["7AXSwift8ObserverC", "CFRunLoopMode"]
+- !private ["7AXSwift8ObserverC", "CFRunLoopRemoveSource"]
+- !private ["7AXSwift8ObserverC", "CFString"]
+- ["7AXSwift8ObserverC", "Callback"]
+- ["7AXSwift8ObserverC", "CallbackWithInfo"]
+- ["7AXSwift8ObserverC", "Observer"]
+- !private ["7AXSwift8ObserverC", "RunLoop"]
+- ["7AXSwift8ObserverC", "String"]
+- ["7AXSwift8ObserverC", "UIElement"]
+- !private ["7AXSwift8ObserverC", "Unmanaged"]
+- !private ["7AXSwift8ObserverC", "UnsafeMutableRawPointer"]
+- ["7AXSwift8ObserverC", "Void"]
+- ["7AXSwift8ObserverC", "addNotification"]
+- ["7AXSwift8ObserverC", "application"]
+- !private ["7AXSwift8ObserverC", "application.storage"]
+- !private ["7AXSwift8ObserverC", "assert"]
+- ["7AXSwift8ObserverC", "axObserver"]
+- ["7AXSwift8ObserverC", "callback"]
+- ["7AXSwift8ObserverC", "callbackWithInfo"]
+- ["7AXSwift8ObserverC", "init"]
+- !private ["7AXSwift8ObserverC", "internalCallback"]
+- !private ["7AXSwift8ObserverC", "internalInfoCallback"]
+- ["7AXSwift8ObserverC", "pid"]
+- ["7AXSwift8ObserverC", "pid_t"]
+- ["7AXSwift8ObserverC", "removeNotification"]
+- ["7AXSwift8ObserverC", "start"]
+- ["7AXSwift8ObserverC", "stop"]
+- !private ["Sm", "init"]
+- !private ["Sm", "init"]
+- !private ["SY", "defaultMode"]
+- !private ["SY", "init"]
+- !private ["SY", "notificationAlreadyRegistered"]
+- !private ["SY", "notificationNotRegistered"]
+- !private ["SY", "rawValue"]
+- !private ["SY", "success"]
+- !private ["So9NSRunLoopC", "current"]
+- !private ["So9NSRunLoopC", "getCFRunLoop"]
+- !private ["ST", "init"]
+- !private ["ST", "init"]
+- !private ["s12StaticStringV", "init"]
+- !private ["s12StaticStringV", "init"]
+- !private ["Sx", "init"]
+- !private ["SS", "init"]
+- !private ["SS", "init"]
+- !private ["Sy", "init"]
+- !private ["Sy", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["7AXSwift9UIElementC", "element"]
+- !private ["7AXSwift9UIElementC", "init"]
+- !private ["s9UnmanagedV", "fromOpaque"]
+- !private ["s9UnmanagedV", "passUnretained"]
+- !private ["s9UnmanagedV", "takeUnretainedValue"]
+- !private ["s9UnmanagedV", "toOpaque"]
+- !private ["Sv", "init"]
+- !private ["10Foundation15_BridgedNSErrorP", "notificationAlreadyRegistered"]
+- !private ["10Foundation15_BridgedNSErrorP", "notificationNotRegistered"]
+- !private ["10Foundation15_BridgedNSErrorP", "success"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "defaultMode"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "current"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "getCFRunLoop"]
+- !private ["s21_ObjectiveCBridgeableP", "_getBuiltinLogicValue"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["10Foundation26_ObjectiveCBridgeableErrorP", "notificationAlreadyRegistered"]
+- !private ["10Foundation26_ObjectiveCBridgeableErrorP", "notificationNotRegistered"]
+- !private ["10Foundation26_ObjectiveCBridgeableErrorP", "success"]
+- !private ["s8_PointerP", "init"]
+- !private ["s20_SwiftNewtypeWrapperP", "defaultMode"]
+- !private ["s16_SwiftStringViewP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- !private "So7AXErrorV"
+- !private "7AXSwift14AXNotificationO"
+- !private "7AXSwift11ApplicationC"
+- !private "SK"
+- !private "Sb"
+- !private "So13CFRunLoopModea"
+- !private "s7CVarArgP"
+- !private "Sl"
+- !private "SL"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "Se"
+- !private "SE"
+- !private "SQ"
+- !private "s5ErrorP"
+- !private "s27ExpressibleByBooleanLiteralP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "SH"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "So8NSObjectC"
+- !private "So8NSObjectP"
+- "7AXSwift8ObserverC"
+- !private "Sm"
+- !private "SY"
+- !private "So9NSRunLoopC"
+- !private "ST"
+- !private "s12StaticStringV"
+- !private "Sx"
+- !private "SS"
+- !private "Sy"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "7AXSwift9UIElementC"
+- !private "s9UnmanagedV"
+- !private "Sv"
+- !private "10Foundation15_BridgedNSErrorP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s33_ExpressibleByStringInterpolationP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "10Foundation27_KeyValueCodingAndObservingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "10Foundation26_ObjectiveCBridgeableErrorP"
+- !private "s8_PointerP"
+- !private "s20_SwiftNewtypeWrapperP"
+- !private "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/Target Support Files/AXSwift/AXSwift-umbrella.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/AXSwift/Sources/AXSwift.h"
+- "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Intermediates.noindex/Pods.build/Debug/AXSwift.build/unextended-module.modulemap"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/xpc/XPC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "dd9366cdf6f32702496f9a9f3c332d39"

@@ -1,0 +1,137 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/AXSwift/AXSwift.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "AXSwift-Swift.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/AXSwift/AXSwift.framework/Versions/A/Headers/AXSwift-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "AXSwift-umbrella.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/Target Support Files/AXSwift/AXSwift-umbrella.h"
+        },
+        {
+          'type': 'file',
+          'name': "AXSwift.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/AXSwift/Sources/AXSwift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/AXSwift/AXSwift.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Intermediates.noindex/Pods.build/Debug/AXSwift.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/Pods_Swindler.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "Pods-Swindler-umbrella.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/Target Support Files/Pods-Swindler/Pods-Swindler-umbrella.h"
+        },
+        {
+          'type': 'file',
+          'name': "Pods_Swindler-Swift.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/Pods_Swindler.framework/Versions/A/Headers/Pods_Swindler-Swift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/Pods_Swindler.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Intermediates.noindex/Pods.build/Debug/Pods-Swindler.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "AnyPromise.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/AnyPromise.h"
+        },
+        {
+          'type': 'file',
+          'name': "CALayer+AnyPromise.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/QuartzCore/Sources/CALayer+AnyPromise.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSNotificationCenter+AnyPromise.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSNotificationCenter+AnyPromise.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSTask+AnyPromise.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSTask+AnyPromise.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSURLSession+AnyPromise.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/NSURLSession+AnyPromise.h"
+        },
+        {
+          'type': 'file',
+          'name': "PMKFoundation.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/Foundation/Sources/PMKFoundation.h"
+        },
+        {
+          'type': 'file',
+          'name': "PMKQuartzCore.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Extensions/QuartzCore/Sources/PMKQuartzCore.h"
+        },
+        {
+          'type': 'file',
+          'name': "PromiseKit-Swift.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Versions/A/Headers/PromiseKit-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "PromiseKit.default-CorePromise-umbrella.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/Target Support Files/PromiseKit.default-CorePromise/PromiseKit.default-CorePromise-umbrella.h"
+        },
+        {
+          'type': 'file',
+          'name': "PromiseKit.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/PromiseKit.h"
+        },
+        {
+          'type': 'file',
+          'name': "fwd.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Pods/PromiseKit/Sources/fwd.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Products/Debug/PromiseKit.default-CorePromise/PromiseKit.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/oracle/Swindler/Build/Intermediates.noindex/Pods.build/Debug/PromiseKit.default-CorePromise.build/module.modulemap"
+        }
+      ]
+    }
+  ]
+}

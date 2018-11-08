@@ -63,6 +63,7 @@ import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
 import { MousePositionManager } from './managers/MousePositionManager'
 import { KeyboardManager } from './managers/KeyboardManager'
+import { ContextManager } from './managers/ContextManager'
 
 const log = new Logger('desktop')
 
@@ -86,6 +87,7 @@ export class Root {
   databaseManager: DatabaseManager
   mousePositionManager: MousePositionManager
   keyboardManager: KeyboardManager
+  contextManager: ContextManager
 
   start = async () => {
     log.info('Start Desktop Store..')
@@ -148,6 +150,7 @@ export class Root {
     this.mousePositionManager = new MousePositionManager({ oracle: this.oracle })
     this.keyboardManager = new KeyboardManager({ oracle: this.oracle })
     this.appsManager = new AppsManager()
+    this.contextManager = new ContextManager({ oracle: this.oracle })
 
     await this.server.start()
 

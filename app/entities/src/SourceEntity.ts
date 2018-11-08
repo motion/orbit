@@ -1,9 +1,10 @@
-import { Space } from '@mcro/models/_'
+import { Space } from '@mcro/models'
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  Entity, ManyToOne,
+  Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'

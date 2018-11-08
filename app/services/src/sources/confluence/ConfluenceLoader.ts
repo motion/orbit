@@ -19,10 +19,10 @@ export class ConfluenceLoader {
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(setting: ConfluenceSource, log?: Logger) {
-    this.source = setting
-    this.log = log || new Logger('service:confluence:loader:' + setting.id)
-    this.loader = new ServiceLoader(this.source, this.log, this.baseUrl(), this.requestHeaders())
+  constructor(source: ConfluenceSource, log?: Logger) {
+    this.source = source
+    this.log = log || new Logger('service:confluence:loader:' + source.id)
+    this.loader = new ServiceLoader(this.source, this.log)
   }
 
   /**
@@ -174,19 +174,4 @@ export class ConfluenceLoader {
     return response.results
   }
 
-  /**
-   * Builds base url for the service loader queries.
-   */
-  private baseUrl(): string {
-    return this.source.values.credentials.domain
-  }
-
-  /**
-   * Builds request headers for the service loader queries.
-   */
-  private requestHeaders() {
-    const { username, password } = this.source.values.credentials
-    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
-    return { Authorization: `Basic ${credentials}` }
-  }
 }

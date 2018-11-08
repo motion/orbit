@@ -1,4 +1,3 @@
-import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { GmailSource } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
@@ -16,16 +15,10 @@ export class GMailLoader {
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(setting: GmailSource, log?: Logger, saveCallback?: ServiceLoaderSourceSaveCallback) {
-    this.source = setting
+  constructor(source: GmailSource, log?: Logger, saveCallback?: ServiceLoaderSourceSaveCallback) {
+    this.source = source
     this.log = log || new Logger('service:gmail:loader:' + this.source.id)
-    this.loader = new ServiceLoader(
-      this.source,
-      this.log,
-      this.baseUrl(),
-      this.requestHeaders(),
-      saveCallback,
-    )
+    this.loader = new ServiceLoader(this.source, this.log, saveCallback)
   }
 
   /**
@@ -200,7 +193,7 @@ export class GMailLoader {
   /**
    * Loads thread messages and pushes them into threads.
    */
-  private async loadMessages(threads: GMailThread[]): Promise<void> {
+  async loadMessages(threads: GMailThread[]): Promise<void> {
     await sleep(ServiceLoadThrottlingOptions.gmail.messages)
 
     this.log.verbose('loading thread messages', threads)
@@ -213,21 +206,4 @@ export class GMailLoader {
     this.log.verbose('thread messages are loaded', threads)
   }
 
-  /**
-   * Builds base url for the service loader queries.
-   */
-  private baseUrl(): string {
-    return 'https://www.googleapis.com/gmail/v1'
-  }
-
-  /**
-   * Builds request headers for the service loader queries.
-   */
-  private requestHeaders() {
-    return {
-      Authorization: `Bearer ${this.source.token}`,
-      'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
-      'Access-Control-Allow-Methods': 'GET',
-    }
-  }
 }

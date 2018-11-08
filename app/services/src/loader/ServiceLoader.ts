@@ -1,11 +1,11 @@
+import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { Source, DriveSource, GmailSource } from '@mcro/models'
+import { DriveSource, GmailSource, Source } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
 import {
   ServiceLoaderDownloadFileOptions,
-  ServiceLoaderKeyValue,
   ServiceLoaderLoadOptions,
   ServiceLoaderSourceSaveCallback,
 } from './ServiceLoaderTypes'
@@ -16,21 +16,15 @@ import {
 export class ServiceLoader {
   private source: Source
   private log: Logger
-  private baseUrl: string
-  private headers: ServiceLoaderKeyValue
   private saveCallback?: ServiceLoaderSourceSaveCallback
 
   constructor(
     source: Source,
     log: Logger,
-    baseUrl?: string,
-    headers?: ServiceLoaderKeyValue,
     saveCallback?: ServiceLoaderSourceSaveCallback,
   ) {
     this.source = source
     this.log = log
-    this.baseUrl = baseUrl || ''
-    this.headers = headers || {}
     this.saveCallback = saveCallback
   }
 
@@ -43,9 +37,9 @@ export class ServiceLoader {
   ): Promise<T> {
     // prepare data
     const qs = this.queryObjectToQueryString(options.query)
-    const url = `${this.baseUrl}${options.path}${qs}`
+    const url = `${this.buildBaseUrl()}${options.path}${qs}`
     const headers: any = {
-      ...this.headers,
+      ...this.buildHeaders(),
       ...(options.headers || {}),
     }
 
@@ -88,9 +82,9 @@ export class ServiceLoader {
   downloadFile(options: ServiceLoaderDownloadFileOptions): Promise<void> {
     // prepare data
     const qs = this.queryObjectToQueryString(options.query)
-    const url = `${this.baseUrl}${options.path}${qs}`
+    const url = `${this.buildBaseUrl()}${options.path}${qs}`
     const headers = {
-      ...this.headers,
+      ...this.buildHeaders(),
       ...(options.headers || {}),
     }
 
@@ -176,6 +170,54 @@ export class ServiceLoader {
     }
 
     return true
+  }
+
+  /**
+   * Builds base url to make request to.
+   */
+  private buildBaseUrl() {
+    if (this.source.type === 'jira' || this.source.type === 'confluence') {
+      return this.source.values.credentials.domain
+
+    } else if (this.source.type === 'drive') {
+      return 'https://content.googleapis.com/drive/v3'
+
+    } else if (this.source.type === 'github') {
+      return 'https://api.github.com/graphql'
+
+    } else if (this.source.type === 'gmail') {
+      return 'https://www.googleapis.com/gmail/v1'
+    }
+  }
+
+  /**
+   * Builds headers to be included in the main query.
+   */
+  private buildHeaders() {
+    if (this.source.type === 'jira' || this.source.type === 'confluence') {
+      const { username, password } = this.source.values.credentials
+      const credentials = Buffer.from(`${username}:${password}`).toString('base64')
+      return { Authorization: `Basic ${credentials}` }
+
+    } else if (this.source.type === 'drive') {
+      return {
+        Authorization: `Bearer ${this.source.token}`,
+        'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
+        'Access-Control-Allow-Methods': 'GET',
+      }
+
+    } else if (this.source.type === 'github') {
+      return {
+        Authorization: `Bearer ${this.source.token}`,
+      }
+
+    } else if (this.source.type === 'gmail') {
+      return {
+        Authorization: `Bearer ${this.source.token}`,
+        'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
+        'Access-Control-Allow-Methods': 'GET',
+      }
+    }
   }
 
   /**

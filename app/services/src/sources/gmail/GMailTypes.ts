@@ -13,7 +13,6 @@ export type GMailUserProfile = {
  */
 export type GMailThread = {
   id: string
-  snippet: string
   historyId: string
   messages: GMailMessage[]
 }

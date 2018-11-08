@@ -19,7 +19,8 @@ export class GMailMessageParser {
    */
   private htmlBody: string
 
-  constructor(private message: GMailMessage) {}
+  constructor(private message: GMailMessage) {
+  }
 
   /**
    * Gets the date from the Gmail message.

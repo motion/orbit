@@ -10,14 +10,14 @@ import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
  * Loads jira data from its API.
  */
 export class JiraLoader {
-  private setting: JiraSource
+  private source: JiraSource
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(setting: JiraSource, log?: Logger) {
-    this.setting = setting
-    this.log = log || new Logger('service:jira:loader:' + setting.id)
-    this.loader = new ServiceLoader(this.setting, this.log, this.baseUrl(), this.requestHeaders())
+  constructor(source: JiraSource, log?: Logger) {
+    this.source = source
+    this.log = log || new Logger('service:jira:loader:' + source.id)
+    this.loader = new ServiceLoader(this.source, this.log)
   }
 
   /**
@@ -124,19 +124,4 @@ export class JiraLoader {
     return response.comments
   }
 
-  /**
-   * Builds base url for the service loader queries.
-   */
-  private baseUrl(): string {
-    return this.setting.values.credentials.domain
-  }
-
-  /**
-   * Builds request headers for the service loader queries.
-   */
-  private requestHeaders() {
-    const { username, password } = this.setting.values.credentials
-    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
-    return { Authorization: `Basic ${credentials}` }
-  }
 }

@@ -1,6 +1,7 @@
 import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { PersonBitUtils } from '@mcro/model-utils'
+import { BitUtils } from '@mcro/model-utils'
 import { GmailBitDataParticipant, GmailSource } from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
 import { hash } from '@mcro/utils'
@@ -75,17 +76,24 @@ export class GMailSyncer implements IntegrationSyncer {
       // load threads for newly added / changed threads
       if (history.addedThreadIds.length) {
         this.log.timer('found added/changed messages in history', history.addedThreadIds)
-        await this.loader.loadThreads({
-          count: this.source.values.max,
-          queryFilter: queryFilter,
-          filteredIds: history.addedThreadIds,
-          pageToken: lastSync.lastCursor,
-          loadedCount: lastSync.lastCursorLoadedCount || 0,
-          handler: this.handleThread.bind(this)
-        })
-        this.log.timer('found added/changed messages in history')
+
+        // convert added thread ids into thread objects and load their messages
+        const addedThreads = await Promise.all(history.addedThreadIds.map(async threadId => {
+          return {
+            id: threadId,
+            historyId: history.historyId,
+          } as GMailThread
+        }))
+        await this.loader.loadMessages(addedThreads)
+
+        // sync threads
+        for (let thread of addedThreads) {
+          await this.syncThread(thread)
+        }
+
+        this.log.timer('found added or changed messages in history')
       } else {
-        this.log.info('no added / changed messages in history were found')
+        this.log.info('no added or changed messages in history were found')
       }
 
       // load bits for removed threads and remove them
@@ -93,7 +101,7 @@ export class GMailSyncer implements IntegrationSyncer {
         this.log.info('found actions in history for thread removals', history.removedThreadIds)
         const removedBits = await getRepository(BitEntity).find({
           sourceId: this.source.id,
-          id: In(history.removedThreadIds),
+          id: In(history.removedThreadIds.map(threadId => BitUtils.id(this.source, threadId))),
         })
         this.log.info('found bits to be removed, removing', removedBits)
         await getRepository(BitEntity).remove(removedBits) // todo: we also need to remove people
@@ -102,6 +110,7 @@ export class GMailSyncer implements IntegrationSyncer {
       }
 
       lastSync.historyId = history.historyId
+      await getRepository(SourceEntity).save(this.source)
 
     } else {
 
@@ -136,9 +145,8 @@ export class GMailSyncer implements IntegrationSyncer {
           await this.loader.loadThreads({
             count: this.source.values.max,
             queryFilter: whitelistFilter,
-            pageToken: lastSync.lastCursor,
-            loadedCount: lastSync.lastCursorLoadedCount || 0,
-            handler: this.handleThread.bind(this)
+            loadedCount: 0,
+            handler: this.syncThread.bind(this)
           })
         }
         this.log.timer('load threads from whitelisted people')
@@ -167,7 +175,39 @@ export class GMailSyncer implements IntegrationSyncer {
       await getRepository(SourceEntity).save(this.source, { listeners: false })
     }
 
-    // create a bit and its people
+    // sync a thread
+    await this.syncThread(thread)
+
+    // in the case if its the last thread we need to cleanup last cursor stuff and save last synced date
+    if (isLast) {
+      this.log.info(
+        'looks like its the last thread in this sync, removing last cursor and source last sync date',
+        lastSync,
+      )
+      lastSync.historyId = lastSync.lastCursorHistoryId
+      lastSync.lastCursor = undefined
+      lastSync.lastCursorHistoryId = undefined
+      lastSync.lastCursorLoadedCount = undefined
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
+      return true
+    }
+
+    // update last sync settings to make sure we continue from the last point in the case if application will stop
+    if (lastSync.lastCursor !== cursor) {
+      this.log.info('updating last cursor in settings', { cursor })
+      lastSync.lastCursor = cursor
+      lastSync.lastCursorLoadedCount = loadedCount
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
+    }
+
+    return true
+  }
+
+  /**
+   * Syncs a given thread.
+   */
+  private async syncThread(thread: GMailThread) {
+
     const participants = this.extractThreadParticipants(thread)
     const bit = this.bitFactory.create(thread)
     bit.people = participants.map(participant => this.personFactory.create(participant))
@@ -200,30 +240,6 @@ export class GMailSyncer implements IntegrationSyncer {
     await getRepository(PersonEntity).save(bit.people, { listeners: false })
     await getRepository(PersonBitEntity).save(personBits, { listeners: false })
     await getRepository(BitEntity).save(bit, { listeners: false })
-
-    // in the case if its the last thread we need to cleanup last cursor stuff and save last synced date
-    if (isLast) {
-      this.log.info(
-        'looks like its the last thread in this sync, removing last cursor and source last sync date',
-        lastSync,
-      )
-      lastSync.historyId = lastSync.lastCursorHistoryId
-      lastSync.lastCursor = undefined
-      lastSync.lastCursorHistoryId = undefined
-      lastSync.lastCursorLoadedCount = undefined
-      await getRepository(SourceEntity).save(this.source, { listeners: false })
-      return true
-    }
-
-    // update last sync settings to make sure we continue from the last point in the case if application will stop
-    if (lastSync.lastCursor !== cursor) {
-      this.log.info('updating last cursor in settings', { cursor })
-      lastSync.lastCursor = cursor
-      lastSync.lastCursorLoadedCount = loadedCount
-      await getRepository(SourceEntity).save(this.source, { listeners: false })
-    }
-
-    return true
   }
 
   /**

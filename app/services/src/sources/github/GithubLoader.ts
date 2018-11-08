@@ -39,16 +39,16 @@ export interface GithubLoaderIssueOrPullRequestStreamOptions {
  * Performs requests GitHub API.
  */
 export class GithubLoader {
-  private setting: GithubSource
+  private source: GithubSource
   private log: Logger
   private loader: ServiceLoader
   private totalCost: number = 0
   private remainingCost: number = 0
 
-  constructor(setting: GithubSource, log?: Logger) {
-    this.setting = setting
-    this.log = log || new Logger('service:github:loader:' + setting.id)
-    this.loader = new ServiceLoader(this.setting, this.log, this.baseUrl(), this.requestHeaders())
+  constructor(source: GithubSource, log?: Logger) {
+    this.source = source
+    this.log = log || new Logger('service:github:loader:' + source.id)
+    this.loader = new ServiceLoader(this.source, this.log)
   }
 
   /**
@@ -396,22 +396,6 @@ export class GithubLoader {
     }
 
     return issues
-  }
-
-  /**
-   * Builds base url for the service loader queries.
-   */
-  private baseUrl(): string {
-    return 'https://api.github.com/graphql'
-  }
-
-  /**
-   * Builds request headers for the service loader queries.
-   */
-  private requestHeaders() {
-    return {
-      Authorization: `Bearer ${this.setting.token}`,
-    }
   }
 
   /**

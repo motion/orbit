@@ -124,15 +124,18 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   }
   
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    // silent check if we are already accessible
-    self.updateAccessibility(false)
-    
+    print("applicationDidFinishLaunching, OCR \(shouldRunOCR), PORT: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
+
+    // setup socket bridge before any action that needs it...
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
-    print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     
+    // do this before update accessibility which triggers transparency event
     if #available(OSX 10.11, *) {
       self.supportsTransparency = true
     }
+    
+    // silent check if we are already accessible
+    _ = self.updateAccessibility(false)
 
     if shouldRunOCR {
       windo = Windo(emit: self.emit)

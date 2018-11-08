@@ -1,8 +1,5 @@
 import * as React from 'react'
 import { FullScreen, Theme } from '@mcro/ui'
-import { MenuPerson } from './MenuPerson'
-import { MenuTopic } from './MenuTopic'
-import { MenuList } from './MenuList'
 import { SettingStore } from '../../../stores/SettingStore'
 import { SourcesStore } from '../../../stores/SourcesStore'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
@@ -14,12 +11,13 @@ import { App, Electron, Desktop } from '@mcro/stores'
 import { react, ensure } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
-import { AppStore } from '../../../apps/AppStore'
+import { MenuApp } from './MenuApp'
+import { AppType } from '../../../apps/apps'
 
-export type MenuAppProps = AppProps & { menusStore: MenusStore }
+export type MenuAppProps = AppProps & { menusStore: MenusStore; index: number }
 
 export class MenusStore {
-  searchInput: HTMLInputElement = null
+  searchInput: { [key: number]: HTMLInputElement } = {}
   lastMenuOpen = 2
   menuOpenID = react(getOpenMenuID, _ => _)
   lastMenuOpenID = react(() => App.state.trayState.menuState, _ => _, { delayValue: true })
@@ -75,10 +73,19 @@ export class MenusStore {
     },
   )
 
-  handleSearchInput = (ref: HTMLInputElement) => {
-    console.log('got input ref', ref)
-    this.searchInput = ref
+  handleSearchInput = (index: number) => (ref: HTMLInputElement) => {
+    this.searchInput[index] = ref
   }
+
+  focusSearchInputOnFocus = react(
+    () => this.areMenusFocused,
+    focused => {
+      ensure('focused', focused)
+      const inputRef = this.searchInput[this.menuOpenID]
+      ensure('inputRef', !!inputRef)
+      inputRef.focus()
+    },
+  )
 }
 
 export function MenuLayer() {
@@ -94,35 +101,21 @@ export function MenuLayer() {
     selectionStore,
     menusStore,
   }
-  const appStore = useStore(AppStore, storeProps)
   return (
-    <StoreContext.Provider value={{ ...storeProps, appStore }}>
+    <StoreContext.Provider value={storeProps}>
       <Theme name="dark">
         <FullScreen>
-          <MenuPerson
-            id="0"
-            view="index"
-            title="People"
-            type="people"
-            {...storeProps}
-            appStore={appStore}
-          />
-          <MenuTopic
-            id="1"
-            view="index"
-            title="Topics"
-            type="topics"
-            {...storeProps}
-            appStore={appStore}
-          />
-          <MenuList
-            id="2"
-            view="index"
-            title="Lists"
-            type="lists"
-            {...storeProps}
-            appStore={appStore}
-          />
+          {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+            <MenuApp
+              key={app}
+              id={`${index}`}
+              view="index"
+              index={index}
+              title={app}
+              type={app}
+              menusStore={menusStore}
+            />
+          ))}
         </FullScreen>
       </Theme>
     </StoreContext.Provider>

@@ -5,13 +5,11 @@ import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
 
-// if you provide an appStore in props it will use that
-// otherwise it will create a new one and use the stores from context to instantiate
-
 export function AppView(
   props: Pick<AppProps, 'id' | 'view' | 'title' | 'type' | 'isActive'> & { appStore?: AppStore },
 ) {
   const stores = React.useContext(StoreContext)
+  // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
   const appStore = useStore(AppStore, stores, { conditionalUse: shouldProvideAppStore })
   const App = apps[props.type][props.view]

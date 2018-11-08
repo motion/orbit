@@ -1,11 +1,9 @@
 import * as React from 'react'
-import { AppProps } from '../apps/AppProps'
 import { Input, View } from '@mcro/ui'
 import { ProvideHighlightsContextWithDefaults } from '../helpers/contexts/HighlightsContext'
 import { App } from '@mcro/stores'
 
-export function Searchable(props: AppProps & { children: React.ReactNode }) {
-  // const { queryStore } = useContext(StoreContext)
+export function Searchable(props: { children: React.ReactNode; inputProps?: Object }) {
   return (
     <>
       <View padding={8}>
@@ -16,7 +14,7 @@ export function Searchable(props: AppProps & { children: React.ReactNode }) {
           active={false}
           sizeHeight={0.95}
           placeholder="Search..."
-          onChange={props.appStore.queryStore.onChangeQuery}
+          {...props.inputProps}
         />
       </View>
       <ProvideHighlightsContextWithDefaults

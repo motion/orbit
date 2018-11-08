@@ -1,15 +1,19 @@
 import * as React from 'react'
 import { Menu } from './Menu'
-import { AppProps } from '../../../apps/AppProps'
 import { Searchable } from '../../../components/Searchable'
 import { AppView } from '../../../apps/AppView'
-import { MenusStore } from './MenuLayer'
+import { MenuAppProps } from './MenuLayer'
 
-export function MenuList(props: AppProps & { menusStore: MenusStore }) {
+export function MenuList(props: MenuAppProps) {
   return (
     <Menu index={2} width={300} menusStore={props.menusStore}>
       {isOpen => (
-        <Searchable {...props}>
+        <Searchable
+          inputProps={{
+            forwardRef: props.menusStore.handleSearchInput,
+            onChange: props.appStore.queryStore.onChangeQuery,
+          }}
+        >
           <AppView view="index" isActive={isOpen} {...props} />
         </Searchable>
       )}

@@ -4,8 +4,7 @@ import { MenuItem } from './MenuItem'
 import { observeMany } from '@mcro/model-bridge'
 import { PersonBitModel, PersonBit } from '@mcro/models'
 import { Menu } from './Menu'
-import { MenusStore } from './MenuLayer'
-import { AppProps } from '../../../apps/AppProps'
+import { MenuAppProps } from './MenuLayer'
 
 class MenuPersonStore {
   people: PersonBit[] = []
@@ -19,7 +18,7 @@ class MenuPersonStore {
   })
 }
 
-export function MenuPerson(props: AppProps & { menusStore: MenusStore }) {
+export function MenuPerson(props: MenuAppProps) {
   const store = useStore(MenuPersonStore, props)
   return (
     <Menu index={0} width={300} menusStore={props.menusStore}>

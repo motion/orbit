@@ -1,11 +1,10 @@
 import * as React from 'react'
 import { Menu } from './Menu'
-import { AppProps } from '../../../apps/AppProps'
 import { Searchable } from '../../../components/Searchable'
 import { TopicsAppIndex } from '../../../apps/topics/TopicsAppIndex'
-import { MenusStore } from './MenuLayer'
+import { MenuAppProps } from './MenuLayer'
 
-export function MenuTopic(props: AppProps & { menusStore: MenusStore }) {
+export function MenuTopic(props: MenuAppProps) {
   return (
     <Menu index={1} width={300} menusStore={props.menusStore}>
       <Searchable {...props}>

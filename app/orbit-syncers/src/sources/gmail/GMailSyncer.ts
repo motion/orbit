@@ -44,9 +44,14 @@ export class GMailSyncer implements IntegrationSyncer {
 
     // setup some local variables we are gonna work with
     const queryFilter = this.source.values.filter || `newer_than:${this.source.values.daysLimit}d`
-    const lastSync = this.source.values.lastSync
-    let historyId = lastSync.historyId
-    let historyIdUpdatedInStream = false
+    let lastSync = this.source.values.lastSync
+
+    // update last sync configuration
+    this.log.info('updating sync sources')
+    lastSync.usedQueryFilter = queryFilter
+    lastSync.usedDaysLimit = this.source.values.daysLimit
+    lastSync.usedMax = this.source.values.max
+    await getRepository(SourceEntity).save(this.source)
 
     // if user configuration has changed (max number of messages, days limitation or query filter)
     // we drop all bits to make complete sync again
@@ -57,10 +62,7 @@ export class GMailSyncer implements IntegrationSyncer {
     ) {
       this.log.info('last syncronization configuration mismatch, dropping bits and start sync from scratch')
       await getRepository(BitEntity).delete({ sourceId: this.source.id }) // todo: drop people as well
-      lastSync.usedMax = undefined
-      lastSync.usedQueryFilter = undefined
-      lastSync.usedDaysLimit = undefined
-      historyId = undefined
+      this.source.values.lastSync = lastSync = {}
     }
 
     // we if we have last history id it means we already did a complete sync and now we are using
@@ -69,7 +71,6 @@ export class GMailSyncer implements IntegrationSyncer {
 
       // load history
       const history = await this.loader.loadHistory(lastSync.historyId)
-      historyId = history.historyId
 
       // load threads for newly added / changed threads
       if (history.addedThreadIds.length) {
@@ -100,6 +101,8 @@ export class GMailSyncer implements IntegrationSyncer {
         this.log.info('no removed messages in history were found')
       }
 
+      lastSync.historyId = history.historyId
+
     } else {
 
       // else this is a first time sync, load all threads
@@ -110,18 +113,7 @@ export class GMailSyncer implements IntegrationSyncer {
         queryFilter: queryFilter,
         pageToken: lastSync.lastCursor,
         loadedCount: lastSync.lastCursorLoadedCount || 0,
-        handler: (
-          thread: GMailThread,
-          cursor?: string,
-          loadedCount?: number,
-          isLast?: boolean
-        ) => {
-          if (historyIdUpdatedInStream === false) {
-            historyIdUpdatedInStream = true
-            historyId = thread.historyId
-          }
-          return this.handleThread(thread, cursor, loadedCount, isLast)
-        }
+        handler: this.handleThread.bind(this)
       })
       this.log.timer('sync all threads')
     }
@@ -154,14 +146,6 @@ export class GMailSyncer implements IntegrationSyncer {
         this.log.info('no enabled people in whitelist were found')
       }
     }
-
-    // update last sync configuration
-    this.log.info('updating sync sources')
-    lastSync.usedQueryFilter = queryFilter
-    lastSync.usedDaysLimit = this.source.values.daysLimit
-    lastSync.usedMax = this.source.values.max
-    lastSync.historyId = historyId
-    await getRepository(SourceEntity).save(this.source)
   }
 
   /**
@@ -174,35 +158,12 @@ export class GMailSyncer implements IntegrationSyncer {
     isLast?: boolean
   ) {
     const lastSync = this.source.values.lastSync
-    const updatedAt = new Date(parseInt(thread.messages[0].internalDate)).getTime()
 
-    // if we have synced stuff previously already, we need to prevent same threads syncing
-    // check if thread's updated date is newer than our last synced date
-    if (lastSync.lastSyncedDate && updatedAt <= lastSync.lastSyncedDate) {
-      this.log.info('reached last synced date, stop syncing...', {
-        thread,
-        updatedAt,
-        lastSync,
-      })
-
-      // if its actually older we don't need to sync this thread and all next ones (since they are sorted by updated date)
-      if (lastSync.lastCursorSyncedDate) {
-        // important check, because we can be in this block without loading by cursor
-        lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
-      }
-      lastSync.lastCursor = undefined
-      lastSync.lastCursorSyncedDate = undefined
-      lastSync.lastCursorLoadedCount = undefined
-      await getRepository(SourceEntity).save(this.source, { listeners: false })
-
-      return false // this tells from the callback to stop thread proceeding
-    }
-
-    // for the first ever synced thread we store its updated date, and once sync is done,
-    // next time we make sync again we don't want to sync threads less then this date
-    if (!lastSync.lastCursorSyncedDate) {
-      lastSync.lastCursorSyncedDate = updatedAt
-      this.log.info('looks like its the first syncing thread, set last synced date', lastSync)
+    // for the first ever synced thread we store its history id, and once sync is done,
+    // we use this history to id to load further newly added or removed messages
+    if (!lastSync.lastCursorHistoryId) {
+      lastSync.lastCursorHistoryId = thread.historyId
+      this.log.info('looks like its the first syncing thread, set history id', lastSync)
       await getRepository(SourceEntity).save(this.source, { listeners: false })
     }
 
@@ -246,9 +207,9 @@ export class GMailSyncer implements IntegrationSyncer {
         'looks like its the last thread in this sync, removing last cursor and source last sync date',
         lastSync,
       )
-      lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
+      lastSync.historyId = lastSync.lastCursorHistoryId
       lastSync.lastCursor = undefined
-      lastSync.lastCursorSyncedDate = undefined
+      lastSync.lastCursorHistoryId = undefined
       lastSync.lastCursorLoadedCount = undefined
       await getRepository(SourceEntity).save(this.source, { listeners: false })
       return true

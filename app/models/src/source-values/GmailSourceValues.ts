@@ -5,10 +5,10 @@
 export interface GmailSourceValuesLastSync {
 
   /**
-   * Updated date of the last synced thread.
-   * We don't need to query threads from the api older than this date for sync.
+   * History is an advanced cursor.
+   * Once history id is set gmail syncer will load only newly added and removed messages.
    */
-  lastSyncedDate?: number
+  historyId?: string
 
   /**
    * If last time sync wasn't finished, this value will have last cursor where sync stopped.
@@ -16,28 +16,17 @@ export interface GmailSourceValuesLastSync {
   lastCursor?: string
 
   /**
-   * Updated date of the last synced thread BEFORE sync finish completely.
-   *
-   * Since we need to save last synced date we cannot use local variable inside syncer until sync process finish
-   * because sync process can be stopped and next time start from another point where thread updated date will be different.
-   *
-   * We cannot use lastSyncedDate UNTIL we completely finish sync
-   * because if sync stop unfinished and number of total threads will change,
-   * it will make syncer to drop last cursor but it needs to have a previous value of lastSyncedDate
-   * which will become different already, thus invalid.
+   * History is an advanced cursor.
+   * During first synchronization it stores history id in there.
+   * Once synchronization is finished it saves this stored id into this.historyId
+   * to continue history-based synchronization next time.
    */
-  lastCursorSyncedDate?: number
+  lastCursorHistoryId?: string
 
   /**
    * Number of threads was loaded and synced from the last cursor.
    */
   lastCursorLoadedCount?: number
-
-  /**
-   * History is an advanced cursor.
-   * History id represents latest loaded cursor.
-   */
-  historyId?: string
 
   /**
    * Last executed filter value.

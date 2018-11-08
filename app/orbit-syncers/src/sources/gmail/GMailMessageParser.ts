@@ -52,9 +52,11 @@ export class GMailMessageParser {
       .forEach(header => {
         const type: 'from' | 'to' = header.name === 'From' ? 'from' : 'to'
         const emails = addrs.parseAddressList(header.value)
-        emails.forEach(email => {
-          participants.push({ name: email.name, email: email.address, type })
-        })
+        if (emails) {
+          emails.forEach(email => {
+            participants.push({ name: email.name, email: email.address, type })
+          })
+        }
       })
 
     return participants

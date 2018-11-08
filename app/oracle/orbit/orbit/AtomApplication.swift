@@ -228,7 +228,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         
         let ogTrayRect = button.window!.convertToScreen(rectInWindow)
         // our tray image is a few px too short oops...
-        let trayRect = NSRect.init(x: ogTrayRect.minX, y: ogTrayRect.minY - 3, width: ogTrayRect.width, height: ogTrayRect.height + 3)
+        let trayRect = NSRect.init(x: ogTrayRect.minX, y: ogTrayRect.minY - 2, width: ogTrayRect.width, height: ogTrayRect.height + 2)
         let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
         // send tray location...
         if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {

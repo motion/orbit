@@ -65,6 +65,13 @@ umed:
     - Only insert a person if _I_ sent them an email (not a reply but new email)
     - But if a person exists already (via slack, jira, github, etc), still attach the email to that existing profile
 
+- Space management
+
+  - Should be able to register a new Space under some sort of login (ours or via Slack/Google)?
+  - Should be able to name team, rename team, and choose/change the login integration
+  - Should have a cloud server on our side that syncs this
+  - Should sync the apps settings to the cloud server
+
 - Context
 
   - We need access to current app
@@ -177,8 +184,7 @@ search:
 # next / ideas
 
 - find by type (file / link is helpful)
-- Fix empty profiles from gmail contacts import
-  - Toggle select all button in table view
+- Toggle select all button in table view
 - fix integration buttons styling and going inactive after click
 - cmd+z undo in search area (needs to work with toggles...)
 - hmr: doesn't store.unmount stores often

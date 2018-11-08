@@ -6,7 +6,6 @@ Wednesday:
 
 - Mock design for Orbit context
 - Hold Option to show last opened app
-- Fix tray targets
 - Search performance / groups
 
 Thursday:

@@ -72,7 +72,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   var windo: Windo!
   var screen: Screen!
   var curPosition = NSRect()
-  private var lastSent = ""
   private var supportsTransparency = false
   private var trayLocation = "Out"
   private var lastTrayBoundsMessage = ""
@@ -285,7 +284,13 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     let trayOffsetBeginning = 27
     let trayButtonMaxX = [0,1,2].map({ trayOffsetBeginning + ($0 + 1) * buttonWidth })
     let withinX = mouseX >= trayRect.minX && mouseX <= trayRect.maxX
-    let withinY = mouseY >= trayRect.minY && mouseY <= trayRect.maxY
+    // if mouse is currently over the menu, we should extend the bounds down
+    // because by default we have a couple pixels between the tray item and the menu
+    // and so you'd trigger hide while going down to menu
+    // we want this gap because we don't want the initial hover-in bounds to be too low
+    // so when the previous/current location is already "in" we add a few px downwards to bounds
+    let mouseYForgiven = mouseY + (self.trayLocation != "Out" ? 4 : 0)
+    let withinY = mouseYForgiven >= trayRect.minY && mouseYForgiven <= trayRect.maxY
     if (withinX && withinY) {
       let xOff = Int(trayRect.width) - Int(trayRect.maxX - mouseX)
       if (xOff < trayOffsetBeginning) {

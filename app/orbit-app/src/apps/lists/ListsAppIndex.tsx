@@ -7,6 +7,7 @@ import { fuzzyQueryFilter } from '../../helpers'
 import { Icon } from '../../views/Icon'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { AppProps } from '../AppProps'
+import { ListEdit } from './ListEdit'
 
 class ListsIndexStore {
   props: AppProps
@@ -24,21 +25,22 @@ class ListsIndexStore {
   }
 
   private apps$ = observeMany(AppModel, { args: {} }).subscribe(apps => {
+    console.log('here is what Ive got', apps)
     this.apps = apps
   })
 
   get allLists() {
-    if (!this.listsApp || !this.listsApp.values || !this.listsApp.values.lists)
+    if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists)
       return []
 
-    return this.listsApp.values.lists.map((listItem, index) => {
+    return this.listsApp.data.lists.map((listItem, index) => {
       return {
         id: index,
         index,
         type: 'list',
         title: listItem.name,
         afterTitle: <Icon name="pin" size={16} />,
-        subtitle: (listItem.bitIds || []).length + ' items',
+        subtitle: (listItem.bits || []).length + ' items',
       }
     })
   }
@@ -70,6 +72,7 @@ export function ListsAppIndex(props: AppProps) {
   return (
     <>
       <VirtualList maxHeight={400} items={store.allLists} itemProps={{ direct: true }} />
+      <ListEdit />
     </>
   )
 }

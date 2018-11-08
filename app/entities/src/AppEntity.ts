@@ -22,6 +22,6 @@ export class AppEntity extends BaseEntity {
   type?: string
 
   @Column('simple-json', { default: '{}' })
-  values?: any
+  data?: any
 
 }

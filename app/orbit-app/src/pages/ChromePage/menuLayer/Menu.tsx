@@ -4,11 +4,13 @@ import { useStore } from '@mcro/use-store'
 import { react, ensure } from '@mcro/black'
 import { Desktop, App } from '@mcro/stores'
 import { TrayActions } from '../../../actions/Actions'
+import { MenusStore } from './MenuLayer'
 
 type Props = {
   index: number | 'Orbit'
   width: number
   children: JSX.Element | ((isOpen: boolean) => JSX.Element)
+  menusStore: MenusStore
 }
 
 class MenuStore {
@@ -27,16 +29,6 @@ class MenuStore {
     { onlyUpdateIfChanged: true },
   )
 
-  wasHoveringTray = react(() => this.isHoveringTray, _ => _, { delayValue: true })
-
-  shouldShowOnHoldingOption = react(
-    () => Desktop.keyboardState.option > Desktop.keyboardState.optionUp,
-    isHoldingOption => {
-      ensure('isHoldingOption', isHoldingOption)
-      return this.wasHoveringTray
-    },
-  )
-
   get allMenusOpenState() {
     const state = App.state.trayState.menuState
     return Object.keys(state).map(key => state[key].open)
@@ -48,7 +40,8 @@ class MenuStore {
 
   open = react(
     () => [
-      this.shouldShowOnHoldingOption,
+      this.props.menusStore.isHoldingOption &&
+        this.props.menusStore.lastMenuOpen === this.props.index,
       this.isHoveringTray,
       this.isHoveringMenu,
       this.isAnotherMenuOpen,
@@ -81,6 +74,14 @@ class MenuStore {
         await sleep(60)
       }
       return hoveringTray || hoveringMenu
+    },
+  )
+
+  updateMenusStoreLastOpen = react(
+    () => this.open,
+    () => {
+      ensure('this.open', this.open)
+      this.props.menusStore.setLastOpen(this.props.index)
     },
   )
 

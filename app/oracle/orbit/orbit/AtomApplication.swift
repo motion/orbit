@@ -65,7 +65,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let shouldShowTray = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
-  let testInXCode = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
+  let testInXCode = ProcessInfo.processInfo.environment["TEST_IN_XCODE"] == "true"
   let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
 
   let queue = AsyncGroup()

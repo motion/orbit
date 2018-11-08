@@ -51,6 +51,7 @@ declare module 'react' {
     keys?: any[],
   ): void
 }
+
 declare const electronRequire: (a: string) => any
 
 declare module '*.svg' {

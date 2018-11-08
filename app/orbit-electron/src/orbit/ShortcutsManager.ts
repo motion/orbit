@@ -36,6 +36,9 @@ export class ShortcutsManager {
         this.globalShortcut.registerShortcuts()
       }
     },
+    {
+      deferFirstRun: true,
+    },
   )
 
   peekShortcuts = new ShortcutsStore({
@@ -65,6 +68,9 @@ export class ShortcutsManager {
       } else {
         this.peekShortcuts.unregisterShortcuts()
       }
+    },
+    {
+      deferFirstRun: true,
     },
   )
 }

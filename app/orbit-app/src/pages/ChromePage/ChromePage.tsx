@@ -60,6 +60,7 @@ class ChromePageStore {
     async (anyMenuOpen, { sleep, whenChanged }) => {
       if (anyMenuOpen) {
         if (Desktop.isHoldingOption) {
+          window['electronRequire']('electron').remote.app.show()
           // wait for pin to focus the menu
           await whenChanged(() => Electron.state.pinKey)
         }

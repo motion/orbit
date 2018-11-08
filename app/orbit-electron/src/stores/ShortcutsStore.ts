@@ -21,7 +21,8 @@ export class ShortcutsStore {
       this.isRegistered = false
       const shortcuts = this.shortcuts
       for (const shortcutKey in shortcuts) {
-        const shortcut = shortcutKey
+        const shortcut = this.shortcuts[shortcutKey]
+        console.log('unregister', shortcut)
         globalShortcut.unregister(shortcut)
       }
     }

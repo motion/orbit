@@ -83,6 +83,12 @@ export async function main() {
 
     // electronChrome
     if (IGNORE_ELECTRON !== 'true') {
+      electronMenusProcess = startChildProcess({
+        name: 'electron-menus',
+        inspectPort: 9006,
+        inspectPortRemote: 9007,
+      })
+      await new Promise(res => setTimeout(res, 2000))
       electronAppsProcess = startChildProcess({
         name: 'electron-apps',
         inspectPort: 9004,
@@ -90,13 +96,7 @@ export async function main() {
       })
       // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
       // see: https://github.com/electron/electron/issues/7246
-      await new Promise(res => setTimeout(res, 1200))
-      electronMenusProcess = startChildProcess({
-        name: 'electron-menus',
-        inspectPort: 9006,
-        inspectPortRemote: 9007,
-      })
-      await new Promise(res => setTimeout(res, 1200))
+      await new Promise(res => setTimeout(res, 500))
     }
 
     // handle exits

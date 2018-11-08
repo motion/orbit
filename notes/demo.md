@@ -1,6 +1,8 @@
 # Orbit - Augmented OS
 
-Our digital lives are in need of an upgrade. And the only way to do it is to break out of the box. Today, everything we do lives in two boxes:
+Give your operating system the upgrade it deserves.
+
+Today, our computers live between two boxes:
 
 - Your content lives in many boxes, in the hands of many SaaS companies
 - Your browser and OS keeps every app within their own box, never able to interact

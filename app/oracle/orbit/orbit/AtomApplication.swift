@@ -74,9 +74,9 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   var curPosition = NSRect()
   private var lastSent = ""
   private var supportsTransparency = false
-  private var accessibilityPermission = false
   private var trayLocation = "Out"
   private var lastTrayBoundsMessage = ""
+  private var isAccessible = false
 
   let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
 
@@ -124,6 +124,9 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   }
   
   func applicationDidFinishLaunching(_ aNotification: Notification) {
+    // silent check if we are already accessible
+    self.updateAccessibility(false)
+    
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
     print("did finish launching, ocr: \(shouldRunOCR), port: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
     
@@ -134,12 +137,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     if shouldRunOCR {
       windo = Windo(emit: self.emit)
 
-      // testing trust:
-//      let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
-//      let options = [checkOptPrompt: true]
-//      let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)
-//      print("trust \(accessEnabled)")
-     
       do {
         screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
       } catch let error as NSError {
@@ -258,12 +255,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         }
         throttledHover((self.trayLocation, self.socketBridge))
       }
-      
-      NSEvent.addGlobalMonitorForEvents(matching: [.keyUp, .keyDown]) { (event) in
-        let characters = (event.characters)!
-        let type = event.type == NSEvent.EventType.keyDown ? "keyDown" : "keyUp"
-        self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(type)\", \"value\": \"\(characters)\" } }")
-      }
     }
     
     print("finished running app window")
@@ -367,7 +358,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       \"action\": \"info\",
       \"value\": {
         \"supportsTransparency\": \(self.supportsTransparency),
-        \"accessibilityPermission\": \(self.accessibilityPermission)
+        \"accessibilityPermission\": \(self.isAccessible)
       }
     }
     """
@@ -379,17 +370,25 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     }
   }
   
-  func promptForAccessibility() -> Bool {
-    var val = false
-    if UIElement.isProcessTrusted(withPrompt: true) {
-      val = true
-    } else {
-      val = false
+  func updateAccessibility(_ prompt: Bool) -> Bool {
+    let next = UIElement.isProcessTrusted(withPrompt: prompt)
+    if (next != self.isAccessible) {
+      self.isAccessible = next
+      self.onAccessible(next)
     }
-    print("setting accessiblity \(val)")
-    self.accessibilityPermission = val
     self.sendOSInfo()
-    return val
+    return next
+  }
+
+  func onAccessible(_ hasAccess: Bool) {
+    if hasAccess {
+      print("is accessible! setting up one time events")
+      NSEvent.addGlobalMonitorForEvents(matching: [.keyUp, .keyDown]) { (event) in
+        let characters = (event.characters)!
+        let type = event.type == NSEvent.EventType.keyDown ? "keyDown" : "keyUp"
+        self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(type)\", \"value\": \"\(characters)\" } }")
+      }
+    }
   }
   
   func onMessage(_ text: String) {
@@ -486,7 +485,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     }
     if action == "star" {
       print("start screen...")
-      if (self.promptForAccessibility()) {
+      if (self.updateAccessibility(true)) {
         screen.start()
       }
       return
@@ -501,12 +500,12 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     }
     // request accessibility
     if action == "reac" {
-      _ = self.promptForAccessibility()
+      _ = self.updateAccessibility(true)
       return
     }
     // start window watching
     if action == "staw" {
-      if self.promptForAccessibility() {
+      if self.updateAccessibility(true) {
         windo.start()
       }
       return

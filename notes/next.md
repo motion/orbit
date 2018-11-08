@@ -182,3 +182,21 @@ search:
 - fix integration buttons styling and going inactive after click
 - cmd+z undo in search area (needs to work with toggles...)
 - hmr: doesn't store.unmount stores often
+
+# ideas for apps
+
+- micro polls app:
+  - can create a poll
+  - shows in a dropdown
+  - anyone can quickly vote on it
+- question and answer app:
+  - can create a question
+  - anyone can post answers on it
+- database explorer app:
+  - can enter a local path for a database
+  - shows the database in a virtual table
+  - lets you write sql queries in the topbar
+  - lets you insert common sql queries in sidebar
+- announcements list:
+  - can automatically have it query for emails from "announcements@company.com"
+  - have it show a banner if new announcement

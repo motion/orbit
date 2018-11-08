@@ -19,10 +19,9 @@ export class ShortcutsStore {
   unregisterShortcuts = () => {
     if (this.isRegistered) {
       this.isRegistered = false
-      const shortcuts = this.shortcuts
-      for (const shortcutKey in shortcuts) {
+      console.log('unregister shortcuts', this.shortcuts)
+      for (const shortcutKey in this.shortcuts) {
         const shortcut = this.shortcuts[shortcutKey]
-        console.log('unregister', shortcut)
         globalShortcut.unregister(shortcut)
       }
     }
@@ -30,12 +29,11 @@ export class ShortcutsStore {
 
   registerShortcuts = () => {
     this.isRegistered = true
-    const shortcuts = this.shortcuts
-    for (const shortcutKey in shortcuts) {
-      const shortcut = shortcuts[shortcutKey]
-      log.info('register shortcut', shortcutKey, shortcut)
+    log.info('register shortcuts', this.shortcuts)
+    for (const name in this.shortcuts) {
+      const shortcut = this.shortcuts[name]
       globalShortcut.register(shortcut, () => {
-        this.onShortcutCb(shortcut, shortcutKey)
+        this.onShortcutCb(name, shortcut)
       })
     }
   }

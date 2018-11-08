@@ -52,6 +52,7 @@ export class ShortcutsManager {
       ),
     },
     onShortcut(name) {
+      console.log('got shortcut', name)
       if (name.indexOf('optionLetter') === 0) {
         Electron.setState({ pinKey: { name: name.replace('optionShortcut', ''), at: Date.now() } })
       }

@@ -8,18 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		AE54E0BA214B15A4000207B1 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE54E0B9214B15A4000207B1 /* Async.swift */; };
-		AE6EC269214B410200834167 /* PromiseKit.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AE6EC263214B410200834167 /* PromiseKit.framework.dSYM */; };
 		AE6EC26A214B410200834167 /* AXSwift.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AE6EC264214B410200834167 /* AXSwift.framework.dSYM */; };
-		AE6EC26B214B410200834167 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6EC265214B410200834167 /* PromiseKit.framework */; };
 		AE6EC26C214B410200834167 /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; };
 		AE6EC26D214B410200834167 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6EC267214B410200834167 /* AXSwift.framework */; };
 		AE6EC26E214B410200834167 /* SwiftWebSocket.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */; };
 		AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC267214B410200834167 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		AE6EC270214B416700834167 /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC265214B410200834167 /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
-		AED8CE422194F14B00EA74EA /* Swindler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; };
-		AED8CE432194F15A00EA74EA /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AED8CE802194F52100EA74EA /* Swindler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; };
+		AED8CE812194F53C00EA74EA /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AEE9270621913158006CAA2C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9270521913158006CAA2C /* main.swift */; };
 		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
 		CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */; };
@@ -63,7 +60,7 @@
 			remoteGlobalIDString = 2F86CEE91BD6EC32007E8C29;
 			remoteInfo = SwindlerExample;
 		};
-		AED8CE402194F14100EA74EA /* PBXContainerItemProxy */ = {
+		AED8CE7C2194F3B800EA74EA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
 			proxyType = 1;
@@ -79,9 +76,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AED8CE432194F15A00EA74EA /* Swindler.framework in CopyFiles */,
+				AED8CE812194F53C00EA74EA /* Swindler.framework in CopyFiles */,
 				AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */,
-				AE6EC270214B416700834167 /* PromiseKit.framework in CopyFiles */,
 				AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,13 +86,12 @@
 
 /* Begin PBXFileReference section */
 		AE54E0B9214B15A4000207B1 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
-		AE6EC263214B410200834167 /* PromiseKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PromiseKit.framework.dSYM; path = Carthage/Build/Mac/PromiseKit.framework.dSYM; sourceTree = "<group>"; };
 		AE6EC264214B410200834167 /* AXSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = AXSwift.framework.dSYM; path = Carthage/Build/Mac/AXSwift.framework.dSYM; sourceTree = "<group>"; };
-		AE6EC265214B410200834167 /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/Mac/PromiseKit.framework; sourceTree = "<group>"; };
 		AE6EC266214B410200834167 /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
 		AE6EC267214B410200834167 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
 		AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../Swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
+		AED8CE7E2194F3C200EA74EA /* Pods_Swindler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Swindler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEE9270521913158006CAA2C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF0BCD82202E0E0F0012723C /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
@@ -127,10 +122,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AED8CE422194F14B00EA74EA /* Swindler.framework in Frameworks */,
+				AED8CE802194F52100EA74EA /* Swindler.framework in Frameworks */,
 				AE6EC26C214B410200834167 /* SwiftWebSocket.framework in Frameworks */,
 				AE6EC26D214B410200834167 /* AXSwift.framework in Frameworks */,
-				AE6EC26B214B410200834167 /* PromiseKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,10 +144,9 @@
 		CF0BCD61202E0A2E0012723C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AED8CE7E2194F3C200EA74EA /* Pods_Swindler.framework */,
 				AE6EC267214B410200834167 /* AXSwift.framework */,
 				AE6EC264214B410200834167 /* AXSwift.framework.dSYM */,
-				AE6EC265214B410200834167 /* PromiseKit.framework */,
-				AE6EC263214B410200834167 /* PromiseKit.framework.dSYM */,
 				AE6EC266214B410200834167 /* SwiftWebSocket.framework */,
 				AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */,
 			);
@@ -242,7 +235,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				AED8CE412194F14100EA74EA /* PBXTargetDependency */,
+				AED8CE7D2194F3B800EA74EA /* PBXTargetDependency */,
 			);
 			name = orbit;
 			productName = orbit;
@@ -324,7 +317,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE6EC269214B410200834167 /* PromiseKit.framework.dSYM in Resources */,
 				AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */,
 				AE6EC26E214B410200834167 /* SwiftWebSocket.framework.dSYM in Resources */,
 				AE6EC26A214B410200834167 /* AXSwift.framework.dSYM in Resources */,
@@ -384,10 +376,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		AED8CE412194F14100EA74EA /* PBXTargetDependency */ = {
+		AED8CE7D2194F3B800EA74EA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Swindler;
-			targetProxy = AED8CE402194F14100EA74EA /* PBXContainerItemProxy */;
+			targetProxy = AED8CE7C2194F3B800EA74EA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

@@ -141,13 +141,6 @@
 			remoteGlobalIDString = 5E269AA9A7FBCB9BFD8EA487B43AE7F9;
 			remoteInfo = Nimble;
 		};
-		AED8CE712194F1C000EA74EA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AED8CE522194F1A000EA74EA /* Pods.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 3B8DD7EB5F224D27018D4C3FD859A23B;
-			remoteInfo = "Pods-Swindler";
-		};
 		AED8CE732194F1C000EA74EA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AED8CE522194F1A000EA74EA /* Pods.xcodeproj */;
@@ -168,6 +161,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F12E5604FCA0483A7176DAF8CDB39B02;
 			remoteInfo = Quick;
+		};
+		AED8CE8B2194F67000EA74EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AED8CE522194F1A000EA74EA /* Pods.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3B8DD7EB5F224D27018D4C3FD859A23B;
+			remoteInfo = "Pods-Swindler";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -415,8 +415,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				AED8CE8C2194F67000EA74EA /* PBXTargetDependency */,
 				AED8CE702194F1C000EA74EA /* PBXTargetDependency */,
-				AED8CE722194F1C000EA74EA /* PBXTargetDependency */,
 				AED8CE742194F1C000EA74EA /* PBXTargetDependency */,
 				AED8CE762194F1C000EA74EA /* PBXTargetDependency */,
 				AED8CE782194F1C000EA74EA /* PBXTargetDependency */,
@@ -792,11 +792,6 @@
 			name = Nimble;
 			targetProxy = AED8CE6F2194F1C000EA74EA /* PBXContainerItemProxy */;
 		};
-		AED8CE722194F1C000EA74EA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Pods-Swindler";
-			targetProxy = AED8CE712194F1C000EA74EA /* PBXContainerItemProxy */;
-		};
 		AED8CE742194F1C000EA74EA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "PromiseKit-CorePromise";
@@ -811,6 +806,11 @@
 			isa = PBXTargetDependency;
 			name = Quick;
 			targetProxy = AED8CE772194F1C000EA74EA /* PBXContainerItemProxy */;
+		};
+		AED8CE8C2194F67000EA74EA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-Swindler";
+			targetProxy = AED8CE8B2194F67000EA74EA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -915,6 +915,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VERSIONING_SYSTEM = "apple-generic";

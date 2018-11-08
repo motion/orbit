@@ -9,10 +9,10 @@ export class ToggleApp extends React.Component<{
   children: React.ReactElement<any>
 }> {
   handleClick = () => {
-    AppActions.togglePeekApp(
-      this.props.appConfig,
-      getTargetPosition(findDOMNode(this) as HTMLDivElement),
-    )
+    AppActions.togglePeekApp({
+      appConfig: this.props.appConfig,
+      target: findDOMNode(this) as HTMLDivElement,
+    })
   }
   render() {
     return React.cloneElement(this.props.children, {

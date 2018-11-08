@@ -1,5 +1,5 @@
+import { deep, store } from '@mcro/black'
 import { Bridge, proxySetters } from '@mcro/mobx-bridge'
-import { store, deep } from '@mcro/black'
 import { AppConfig } from './AppConfig'
 
 export let App = null as AppStore
@@ -34,6 +34,7 @@ const DEFAULT_MENU_STATE = {
 
 @store
 class AppStore {
+
   // TODO proxySetters should auto-type this
   // shortcuts
   orbitState: AppStore['state']['orbitState']

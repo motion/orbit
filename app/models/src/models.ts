@@ -1,5 +1,6 @@
 import { Model } from '@mcro/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
+import { App } from './App'
 import { Bit } from './Bit'
 import { Job } from './Job'
 import { Person } from './Person'
@@ -28,6 +29,10 @@ export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptions
 
 export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<Space>>(
   'Space',
+)
+
+export const AppModel = new Model<App, FindOptions<App>, FindOptionsWhere<App>>(
+  'App',
 )
 
 export const SourceModel = new Model<Source, FindOptions<Source>, FindOptionsWhere<Source>>(

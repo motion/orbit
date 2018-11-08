@@ -12,7 +12,7 @@ export function AppView(
   props: Pick<AppProps, 'id' | 'view' | 'title' | 'type' | 'isActive'> & { appStore?: AppStore },
 ) {
   const stores = React.useContext(StoreContext)
-  const shouldProvideAppStore = !stores.appStore
+  const shouldProvideAppStore = !stores.appStore && !props.appStore
   const appStore = useStore(AppStore, stores, { conditionalUse: shouldProvideAppStore })
   const App = apps[props.type][props.view]
   if (typeof App !== 'function') {
@@ -22,7 +22,7 @@ export function AppView(
   const appView = (
     <App
       {...props}
-      appStore={props.appStore || appStore}
+      appStore={props.appStore || stores.appStore || appStore}
       sourcesStore={stores.sourcesStore}
       settingStore={stores.settingStore}
       subPaneStore={stores.subPaneStore}

@@ -49,7 +49,6 @@ class MenuStore {
       [shouldShowOnHoldingOption, hoveringTray, hoveringMenu, anotherMenuOpen],
       { sleep, when },
     ) => {
-      console.log('hovering tray', this.props.index, hoveringTray)
       // on holding option
       if (shouldShowOnHoldingOption) {
         // sleep a bit more to not be annoying
@@ -132,7 +131,6 @@ export function Menu(props: Props) {
   const store = useStore(MenuStore, props)
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
-      console.log('keyyy', key)
       switch (key) {
         case 'TrayToggleOrbit':
           App.setOrbitState({ docked: !App.state.orbitState.docked })
@@ -150,7 +148,7 @@ export function Menu(props: Props) {
   const open = store.open
   const left = store.menuCenter
   const width = props.width
-  console.log('rendering menu', open, store.isHoveringMenu, store.isHoveringTray)
+  console.log('rendering menu', props.index, { open, store })
   return (
     <Popover
       open={open}

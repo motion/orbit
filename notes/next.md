@@ -2,25 +2,26 @@
 
 ### nate
 
-Wednesday:
-
-- Mock design for Orbit context
-- Search performance / groups
-
 Thursday:
 
-- Fix search filters and date filters
-- Fix NLP filtering and test it
-- Re-enable quickresults in search
-- Fix cosal invert bug
-- Topic modeling
+- Showing current app context when holding option / design for pin current app context to pin
+- Upgrade people app with "Send icon" for context + showing peek next to it + search bar
+- Fix menu delay open bug
+- Option hold should register shortcuts for option+left option+letter option+number to _then_ focus the app
+- Lists Main app view app - show sidebar in app with button + searchbar
 
 Friday:
 
+- Orbit search results context menu opens by default (not show last one)
+- Fix cosal invert bug
+- Get Topic modeling API in place with working topics for topics app
+
+Sat/Sun:
+
 - Get profiles with topic modeling
 - Get topics app using real data for changing over time topics
-- Allow custom topics in topics app
-- Cleanup SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
+- UI for custom topics in topics app
+- Rename SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
 - https://github.com/bokuweb/re-resizable
 
@@ -51,11 +52,28 @@ Thursday:
 
 umed:
 
-- Gmail syncer:
+- Search performance / groups
+- Fix search filters and date filters
+- Fix NLP filtering and test it
+- Re-enable quickresults in search
+
+- People:
 
   - Gmail should sync People more strictly:
     - Only insert a person if _I_ sent them an email (not a reply but new email)
     - But if a person exists already (via slack, jira, github, etc), still attach the email to that existing profile
+
+- Context
+
+  - We need access to current app
+
+- Lists App:
+
+  - Make sorting work in AppModel.data (should we call the model AppData or something so its more clear?)
+  - Make the top level Lists Bits and work with search
+  - We need a way to rename and add lists, basic interface there
+  - Fix sorting bugs (it goes clear for some reason)
+  - "Pin" button should
 
 - ## Apps data storage:
 

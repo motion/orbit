@@ -104,30 +104,39 @@ export class GMailLoader {
    * Loads threads from the gmail.
    * Count is the maximal number of threads to load.
    */
-  async loadThreads(
+  async loadThreads(options: {
     count: number,
     queryFilter?: string,
-    filteredIds: string[] = [],
+    filteredIds?: string[],
     pageToken?: string,
-  ): Promise<GMailThread[]> {
+    loadedCount?: number,
+    handler: (
+      thread: GMailThread,
+      cursor?: string,
+      loadedCount?: number,
+      isLast?: boolean,
+    ) => Promise<boolean> | boolean
+  }): Promise<void> {
+
     await sleep(ServiceLoadThrottlingOptions.gmail.threads)
+    let { count,  queryFilter, filteredIds, pageToken, loadedCount, handler } = options
 
     // load all threads first
-    this.log.verbose('loading threads', { count, queryFilter, filteredIds, pageToken })
+    this.log.info('loading threads', { count, queryFilter, filteredIds, pageToken })
     const query = GMailQueries.threads(count > 100 ? 100 : count, queryFilter, pageToken)
     const result = await this.loader.load(query)
-    this.log.verbose('threads loaded', result)
+    this.log.info(
+      `${result.threads.length} threads were loaded (${loadedCount + result.threads.length} of ${loadedCount + result.resultSizeEstimate} estimated)`, result)
 
-    if (!result) return []
+    if (!result)
+      return
     let threads = result.threads
-    if (!threads) return []
-
-    // load messages for those threads
-    await this.loadMessages(threads)
+    if (!threads)
+      return
 
     // if array of filtered thread ids were passed then we load threads until we find all threads by given ids
     // once we found all threads we stop loading threads
-    if (filteredIds.length) {
+    if (filteredIds) {
       // filter out threads and left only those matching given ids
       // if we find filtered thread we remove its id from the filter list
       threads = []
@@ -138,11 +147,25 @@ export class GMailLoader {
           filteredIds.splice(indexInFiltered, 1)
         }
       })
+    }
 
-      // this condition means we just found all requested threads, no need to load next page
-      if (filteredIds.length === 0) {
-        this.log.verbose('all requested threads were found')
-        return threads
+    // load messages for those threads
+    await this.loadMessages(threads)
+
+    // call handler function for each loaded thread
+    for (let i = 0; i < threads.length; i++) {
+      const thread = threads[i]
+      try {
+        const isLast = i === threads.length - 1 && !result.nextPageToken
+        const handleResult = await handler(threads[i], result.nextPageToken, loadedCount + threads.length, isLast)
+
+        // if callback returned true we don't continue syncing
+        if (handleResult === false) {
+          this.log.info('stopped threads syncing, no need to sync more', { thread, index: i })
+          return // return from the function, not from the loop!
+        }
+      } catch (error) {
+        this.log.warning('error during thread handling', thread, error)
       }
     }
 
@@ -151,36 +174,27 @@ export class GMailLoader {
     count -= result.threads.length // important to use result.threads here instead of mutated threads
     if (count < 1) {
       this.log.verbose('stopped loading, maximum number of threads were loaded', threads.length)
-      return threads
+      return
     }
-
-    // check if we reached email period limitation (e.g. 1 month)
-    // if (maxMonths > 0) {
-    //   const lastThread = threads[threads.length - 1]
-    //   const lastMessage = lastThread.messages[lastThread.messages.length - 1]
-    //   if (lastMessage.internalDate) {
-    //     const lastMessageTime = parseInt(lastMessage.internalDate)
-    //     const currentDate = new Date()
-    //     const monthsAgo = currentDate.setMonth(currentDate.getMonth() - 1)
-    //     if (lastMessageTime <= monthsAgo) {
-    //       this.log.verbose(`reached month limit`, { threads, lastThread, lastMessage, lastMessageTime, monthsAgo })
-    //       return threads
-    //     }
-    //   }
-    // }
 
     // load threads from the next page if available
     if (result.nextPageToken) {
-      const nextPageThreads = await this.loadThreads(
-        count,
-        queryFilter,
-        filteredIds,
-        result.nextPageToken,
-      )
-      return [...threads, ...nextPageThreads]
-    }
 
-    return threads
+      // this condition means we just found all requested threads, no need to load next page
+      if (filteredIds && filteredIds.length === 0) {
+        this.log.verbose('all requested threads were found')
+        return
+      }
+
+      await this.loadThreads({
+        count: count,
+        queryFilter: queryFilter,
+        filteredIds: filteredIds,
+        pageToken: result.nextPageToken,
+        loadedCount: loadedCount + threads.length,
+        handler
+      })
+    }
   }
 
   /**

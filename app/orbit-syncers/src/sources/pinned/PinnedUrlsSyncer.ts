@@ -50,17 +50,14 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
     const apiBits: Bit[] = []
     this.log.timer('crawl pinned urls')
     for (let url of setting.values.pinnedUrls) {
-      try {
-        const [crawledData] = await this.crawler.run({
-          url: url,
-          deep: false
-        })
-
-        apiBits.push(this.bitFactory.create(crawledData))
-
-      } catch (error) {
-        this.log.warning(`cannot crawl pinned url`, url)
-      }
+      await this.crawler.run({
+        url: url,
+        deep: false,
+        handler: async data => {
+          apiBits.push(this.bitFactory.create(data))
+          return true
+        }
+      })
     }
     this.log.timer('crawl pinned urls', apiBits)
 

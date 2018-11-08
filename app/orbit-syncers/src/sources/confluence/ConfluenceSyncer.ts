@@ -126,25 +126,25 @@ export class ConfluenceSyncer {
     // if we have synced stuff previously already, we need to prevent same content syncing
     // check if content's updated date is newer than our last synced date
     if (lastSyncInfo.lastSyncedDate && updatedAt <= lastSyncInfo.lastSyncedDate) {
-    this.log.verbose('reached last synced date, stop syncing...', { content, updatedAt, lastSync: lastSyncInfo })
+      this.log.info('reached last synced date, stop syncing...', { content, updatedAt, lastSync: lastSyncInfo })
 
-    // if its actually older we don't need to sync this content and all next ones (since they are sorted by updated date)
-    if (lastSyncInfo.lastCursorSyncedDate) {
-      // important check, because we can be in this block without loading by cursor
-      lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
-    }
-    lastSyncInfo.lastCursor = undefined
-    lastSyncInfo.lastCursorSyncedDate = undefined
-    await getRepository(SourceEntity).save(this.source)
+      // if its actually older we don't need to sync this content and all next ones (since they are sorted by updated date)
+      if (lastSyncInfo.lastCursorSyncedDate) {
+        // important check, because we can be in this block without loading by cursor
+        lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
+      }
+      lastSyncInfo.lastCursor = undefined
+      lastSyncInfo.lastCursorSyncedDate = undefined
+      await getRepository(SourceEntity).save(this.source)
 
-    return false // this tells from the callback to stop file proceeding
+      return false // this tells from the callback to stop file proceeding
     }
 
     // for the first ever synced content we store its updated date, and once sync is done,
     // next time we make sync again we don't want to sync content less then this date
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
-      this.log.verbose('looks like its the first syncing content, set last synced date', lastSyncInfo)
+      this.log.info('looks like its the first syncing content, set last synced date', lastSyncInfo)
       await getRepository(SourceEntity).save(this.source)
     }
 
@@ -154,7 +154,7 @@ export class ConfluenceSyncer {
 
     // in the case if its the last content we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
-      this.log.verbose(
+      this.log.info(
         'looks like its the last content in this sync, removing last cursor and source last sync date',
         lastSyncInfo,
       )
@@ -167,7 +167,7 @@ export class ConfluenceSyncer {
 
     // update last sync settings to make sure we continue from the last point in the case if application will stop
     if (lastSyncInfo.lastCursor !== cursor) {
-      this.log.verbose('updating last cursor in settings', { cursor })
+      this.log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
       await getRepository(SourceEntity).save(this.source)

@@ -68,16 +68,15 @@ export class GMailMessageParser {
     this.buildHtmlBody()
 
     if (this.textBody) {
-      return this.textBody
+      return this.removeAnnoyingCharacters(this.textBody)
+
     } else if (this.htmlBody) {
       const window = new JSDOM('').window
       const DOMPurify = createDOMPurify(window)
-      return DOMPurify.sanitize(this.htmlBody, { ALLOWED_TAGS: [] })
-        .replace(/&nbsp;/gi, ' ')
-        .replace(/•/gi, '')
-        .trim()
+      return this.removeAnnoyingCharacters(DOMPurify.sanitize(this.htmlBody, { ALLOWED_TAGS: [] }))
+
     } else {
-      return this.message.snippet
+      return this.removeAnnoyingCharacters(this.message.snippet)
     }
   }
 
@@ -101,6 +100,17 @@ export class GMailMessageParser {
     } else {
       return this.message.snippet
     }
+  }
+
+  /**
+   * Removes some annoying characters that we don't wanna see in the body.
+   */
+  private removeAnnoyingCharacters(str: string) {
+    return str
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/•/gi, '')
+      .replace(/\s/g,' ')
+      .trim()
   }
 
   /**

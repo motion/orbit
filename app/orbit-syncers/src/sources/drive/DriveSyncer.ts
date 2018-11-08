@@ -44,7 +44,7 @@ export class DriveSyncer implements IntegrationSyncer {
       // if we have synced stuff previously already, we need to prevent same files syncing
       // check if file's updated date is newer than our last synced date
       if (lastSync.lastSyncedDate && updatedAt <= lastSync.lastSyncedDate) {
-        this.log.verbose('reached last synced date, stop syncing...', { file, updatedAt, lastSync })
+        this.log.info('reached last synced date, stop syncing...', { file, updatedAt, lastSync })
 
         // if its actually older we don't need to sync this file and all next ones (since they are sorted by updated date)
         if (lastSync.lastCursorSyncedDate) {
@@ -62,7 +62,7 @@ export class DriveSyncer implements IntegrationSyncer {
       // next time we make sync again we don't want to sync files less then this date
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
-        this.log.verbose('looks like its the first syncing file, set last synced date', lastSync)
+        this.log.info('looks like its the first syncing file, set last synced date', lastSync)
         await getRepository(SourceEntity).save(this.source)
       }
 
@@ -100,7 +100,7 @@ export class DriveSyncer implements IntegrationSyncer {
 
       // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
       if (isLast) {
-        this.log.verbose(
+        this.log.info(
           'looks like its the last issue in this sync, removing last cursor and source last sync date',
           lastSync,
         )
@@ -113,7 +113,7 @@ export class DriveSyncer implements IntegrationSyncer {
 
       // update last sync settings to make sure we continue from the last point in the case if application will stop
       if (lastSync.lastCursor !== cursor) {
-        this.log.verbose('updating last cursor in settings', { cursor })
+        this.log.info('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
         await getRepository(SourceEntity).save(this.source)
       }

@@ -225,18 +225,4 @@ export class ViewStore {
   handleMinimize = () => {
     // todo
   }
-
-  openItem = () => {
-    if (this.state.model.target === 'setting') {
-      return
-    }
-    AppActions.openItem(this.state.model)
-  }
-
-  copyItem = () => {
-    if (this.state.model.target === 'setting') {
-      return
-    }
-    AppActions.copyLink(this.state.model)
-  }
 }

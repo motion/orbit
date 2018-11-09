@@ -49,6 +49,7 @@ Thursday:
 
 umed:
 
+- window resize with re-resizable needs work
 - Team account management and onboarding flow
 - Search performance / groups
 - Fix search filters and date filters

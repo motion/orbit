@@ -1,10 +1,13 @@
 import { react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, AppConfig } from '@mcro/stores'
 import { SelectionGroup } from './SelectionResults'
 import { AppProps } from './AppProps'
+import { ViewStore } from '../pages/AppPage/ViewStore'
 
 export class AppStore {
-  props: AppProps
+  props: AppProps & {
+    viewStore?: ViewStore
+  }
 
   selectionResults = null
 
@@ -29,6 +32,13 @@ export class AppStore {
       return this.props.paneManagerStore.activePane === this.props.id
     }
     return false
+  }
+
+  // describes the current state of the view
+  get appConfig(): AppConfig {
+    if (this.props.viewStore) {
+      return this.props.viewStore.state.appConfig
+    }
   }
 
   activeQuery = react(

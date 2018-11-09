@@ -1,14 +1,16 @@
 import { deep, store } from '@mcro/black'
 import { Bridge, proxySetters } from '@mcro/mobx-bridge'
+import { AppType } from '@mcro/models'
 import { AppConfig } from './AppConfig'
 
 export let App = null as AppStore
 
 export type AppState = {
   id: number
+  appConfig: AppConfig
+  appType: AppType
   torn: boolean
   target?: { top: number; left: number; width: number; height: number }
-  appConfig: AppConfig
   peekOnLeft: boolean
   viewConfig?: any
   position: [number, number]
@@ -20,6 +22,7 @@ export const defaultPeekState: AppState = {
   torn: false,
   target: null,
   appConfig: null,
+  appType: 'search',
   peekOnLeft: false,
   position: [0, 0],
   size: [0, 0],
@@ -41,7 +44,6 @@ const defaultMenuState = (index: number): MenuState => ({
 
 @store
 class AppStore {
-
   // TODO proxySetters should auto-type this
   // shortcuts
   orbitState: AppStore['state']['orbitState']

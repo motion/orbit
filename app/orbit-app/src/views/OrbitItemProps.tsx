@@ -6,11 +6,16 @@ import { ResolvableModel, OrbitItemProps } from '../sources/types'
 import { SourcesStore } from '../stores/SourcesStore'
 import { AppStore } from '../apps/AppStore'
 import { CSSPropertySetStrict } from '@mcro/css'
+import { AppType } from '@mcro/models'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 
 export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
+    // for setting the view
+    appType: AppType
+    appConfig?: AppConfig
+
     // whether to avoid model resolving and just use props
     activeStyle?: Object
     activeCondition?: () => boolean
@@ -25,7 +30,6 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     subtitle?: React.ReactNode
     date?: React.ReactNode
     icon?: React.ReactNode
-    appConfig?: AppConfig
     index?: number
     store?: OrbitItemStore
     isExpanded?: boolean

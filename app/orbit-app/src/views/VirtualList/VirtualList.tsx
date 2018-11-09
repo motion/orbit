@@ -19,7 +19,9 @@ import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 
-export type GetItemProps = (index: number) => ItemProps<any>
+export type ItemPropsMinimum = Pick<ItemProps<any>, 'appType' | 'appConfig'> &
+  Partial<ItemProps<any>>
+export type GetItemProps = (index: number) => ItemPropsMinimum
 
 type Props = {
   items: any[]

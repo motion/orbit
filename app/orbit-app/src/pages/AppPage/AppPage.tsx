@@ -14,7 +14,6 @@ import { WindowControls } from '../../views/WindowControls'
 import { AppSearchable } from '../../sources/views/apps/AppSearchable'
 import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
 import { OrbitIntegration } from '../../sources/types'
-import { allIntegrations } from '../../sources'
 import { AppView } from '../../apps/AppView'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
@@ -81,26 +80,6 @@ class AppPageContent extends React.Component<Props> {
   }
 
   viewsByType = {
-    bit: () => {
-      const { viewStore } = this.props
-      const View = this.getView('main')
-      return view(props => (
-        <AppBitView>
-          <View bit={viewStore.state.model} viewStore={viewStore} {...props} />
-        </AppBitView>
-      ))
-    },
-    'person-bit': () => {
-      const { viewStore } = this.props
-      return view(props => {
-        console.log('rendeirn g person-bit', viewStore)
-        if (!viewStore.state.model) {
-          return <div>nope</div>
-        }
-        const View = allIntegrations.person.views.main
-        return <View model={viewStore.state.model} {...props} />
-      })
-    },
     source: () => {
       const { viewStore } = this.props
       const View = this.getView('setting')
@@ -140,29 +119,11 @@ class AppPageContent extends React.Component<Props> {
     if (!viewStore.state) {
       return null
     }
-    const { model, appConfig } = viewStore.state
+    const { appConfig, appType } = viewStore.state
+    if (!appConfig || !appType) {
+      return <div>no appConfig or appType</div>
+    }
     console.log('appConfig.type', appConfig.type, 'App.state.query', App.state.query)
-    const getView = this.viewsByType[appConfig.type]
-    if (!getView) {
-      return (
-        <div>
-          error getting view
-          <br />
-          <br />
-          Root.stores.ViewStore.state.appConfig: {JSON.stringify(appConfig)}
-          <br />
-          <br />
-          model: {JSON.stringify(model)}
-        </div>
-      )
-    }
-    if (appConfig.type === 'bit' && !model) {
-      return null
-    }
-    const TypeView = getView() || NullView
-    // ideally this would be different:
-    // you'd have a AppSearchable + AppSearchable.Input, and you could use them lower down the tree
-    // but that requires some custom context and time we dont have just yet
     return (
       <>
         <HiddenControls>
@@ -175,7 +136,8 @@ class AppPageContent extends React.Component<Props> {
             }}
           />
         </HiddenControls>
-        <AppSearchable>
+        <AppView id={appConfig.id} view="main" title={appConfig.title} type={appType} isActive />
+        {/* <AppSearchable>
           {({ searchBar, searchTerm }) => (
             <TypeView
               normalizedItem={model ? normalizeItem(model) : null}
@@ -183,7 +145,7 @@ class AppPageContent extends React.Component<Props> {
               searchTerm={searchTerm}
             />
           )}
-        </AppSearchable>
+        </AppSearchable> */}
       </>
     )
   }

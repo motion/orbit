@@ -19,8 +19,6 @@ Sat/Sun:
 - UI for custom topics in topics app
 - Rename SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
-- https://github.com/bokuweb/re-resizable
-
 ---
 
 Monday:

@@ -27,6 +27,7 @@ export interface WebsiteCrawlerOptions {
 
   url: string
   deep: boolean
+  handler: (data: WebsiteCrawledData) => Promise<boolean>|boolean
 
 }
 
@@ -36,7 +37,6 @@ export interface WebsiteCrawlerOptions {
 export class WebsiteCrawler {
   private log: Logger
   private visitedLinks: string[] = []
-  private allData: WebsiteCrawledData[] = []
   private maxLinks = 100
   private browser: any
 
@@ -83,11 +83,10 @@ export class WebsiteCrawler {
   /**
    * Runs crawling process.
    */
-  async run(options: WebsiteCrawlerOptions): Promise<WebsiteCrawledData[]> {
+  async run(options: WebsiteCrawlerOptions): Promise<void> {
     const page = await this.browser.newPage()
     this.visitedLinks.push(options.url)
     await this.visit(page, options.url, options)
-    return this.allData
   }
 
   /**
@@ -120,29 +119,22 @@ export class WebsiteCrawler {
       }
     }
 
-    // exclude absolutely identical content
-    const sameData = this.allData.find(data => {
-      return (
-        data.title === result.title &&
-        data.content === result.content &&
-        data.textContent === result.textContent
-      )
-    })
-    if (sameData) {
-      this.log.info('found page with same content, skip it', { exist: sameData, new: result })
-      return
-    }
-
-    this.allData.push({
+    // create a final website data object and call handler function
+    const data: WebsiteCrawledData = {
       url,
       title: result.title,
       textContent: result.textContent,
       content: result.content,
-    })
-    this.log.verbose(
-      `crawled ${result.title} (${this.allData.length}/${this.visitedLinks.length})`,
-      result,
-    )
+    }
+    const handleResult = await options.handler(data)
+
+    // if callback returned true we don't continue syncing
+    if (handleResult === false) {
+      this.log.info('stopped issues syncing, no need to sync more', data)
+      return // return from the function, we don't need to crawl more links
+    }
+
+    this.log.verbose(`crawled ${result.title} ${this.visitedLinks.length}`, result)
 
     // if deep crawl is enabled - do it
     if (options.deep) {
@@ -159,7 +151,7 @@ export class WebsiteCrawler {
       if (!links.length) {
         this.log.verbose('no links found, trying to find it right from the html content')
         links = Array.from(
-          (getUrls(this.allData[this.allData.length - 1].content) as Set<string>).values(),
+          (getUrls(data.content) as Set<string>).values(),
         )
         this.log.verbose('found links from html content', links)
       }

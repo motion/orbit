@@ -1,5 +1,4 @@
 import { sleep } from '@mcro/utils'
-import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { DriveSource } from '@mcro/models'
 import * as path from 'path'
@@ -21,13 +20,7 @@ export class DriveLoader {
   constructor(source: DriveSource, log?: Logger, saveCallback?: ServiceLoaderSourceSaveCallback) {
     this.source = source
     this.log = log || new Logger('service:drive:loader:' + source.id)
-    this.loader = new ServiceLoader(
-      this.source,
-      this.log,
-      this.baseUrl(),
-      this.requestHeaders(),
-      saveCallback,
-    )
+    this.loader = new ServiceLoader(this.source, this.log, saveCallback)
   }
 
   /**
@@ -173,21 +166,4 @@ export class DriveLoader {
     this.log.verbose('thumbnail downloaded and saved as', destination)
   }
 
-  /**
-   * Builds base url for the service loader queries.
-   */
-  private baseUrl(): string {
-    return 'https://content.googleapis.com/drive/v3'
-  }
-
-  /**
-   * Builds request headers for the service loader queries.
-   */
-  private requestHeaders() {
-    return {
-      Authorization: `Bearer ${this.source.token}`,
-      'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
-      'Access-Control-Allow-Methods': 'GET',
-    }
-  }
 }

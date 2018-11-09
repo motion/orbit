@@ -19,7 +19,8 @@ export class GMailMessageParser {
    */
   private htmlBody: string
 
-  constructor(private message: GMailMessage) {}
+  constructor(private message: GMailMessage) {
+  }
 
   /**
    * Gets the date from the Gmail message.
@@ -52,9 +53,11 @@ export class GMailMessageParser {
       .forEach(header => {
         const type: 'from' | 'to' = header.name === 'From' ? 'from' : 'to'
         const emails = addrs.parseAddressList(header.value)
-        emails.forEach(email => {
-          participants.push({ name: email.name, email: email.address, type })
-        })
+        if (emails) {
+          emails.forEach(email => {
+            participants.push({ name: email.name, email: email.address, type })
+          })
+        }
       })
 
     return participants
@@ -68,16 +71,15 @@ export class GMailMessageParser {
     this.buildHtmlBody()
 
     if (this.textBody) {
-      return this.textBody
+      return this.removeAnnoyingCharacters(this.textBody)
+
     } else if (this.htmlBody) {
       const window = new JSDOM('').window
       const DOMPurify = createDOMPurify(window)
-      return DOMPurify.sanitize(this.htmlBody, { ALLOWED_TAGS: [] })
-        .replace(/&nbsp;/gi, ' ')
-        .replace(/•/gi, '')
-        .trim()
+      return this.removeAnnoyingCharacters(DOMPurify.sanitize(this.htmlBody, { ALLOWED_TAGS: [] }))
+
     } else {
-      return this.message.snippet
+      return this.removeAnnoyingCharacters(this.message.snippet)
     }
   }
 
@@ -101,6 +103,17 @@ export class GMailMessageParser {
     } else {
       return this.message.snippet
     }
+  }
+
+  /**
+   * Removes some annoying characters that we don't wanna see in the body.
+   */
+  private removeAnnoyingCharacters(str: string) {
+    return str
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/•/gi, '')
+      .replace(/\s/g,' ')
+      .trim()
   }
 
   /**

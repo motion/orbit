@@ -42,6 +42,7 @@ export class ConfluenceQueries {
         type,
         start,
         limit,
+        orderby: 'history.lastUpdated desc',
         expand:
           'childTypes.all,space,body.styled_view,history,history.lastUpdated,history.contributors,history.contributors.publishers',
       }

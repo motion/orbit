@@ -1,6 +1,5 @@
 import { observeMany } from '@mcro/model-bridge'
-import { Space, SpaceModel, Source } from '@mcro/models'
-import { SourceModel } from '@mcro/models'
+import { Source, SourceModel, Space, SpaceModel } from '@mcro/models'
 import { AppType } from '../apps/apps'
 import { getAppFromSource } from './SourcesStore'
 

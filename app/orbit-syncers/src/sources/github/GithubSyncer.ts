@@ -69,7 +69,7 @@ export class GithubSyncer implements IntegrationSyncer {
         repository.issues.nodes.length &&
         new Date(repository.issues.nodes[0].updatedAt).getTime() === lastSyncIssues.lastSyncedDate
       ) {
-        this.log.verbose(
+        this.log.info(
           `looks like nothing was changed in a ${
             repository.nameWithOwner
           } repository issues from our last sync, skipping`,
@@ -106,7 +106,7 @@ export class GithubSyncer implements IntegrationSyncer {
         new Date(repository.pullRequests.nodes[0].updatedAt).getTime() ===
           lastSyncPullRequests.lastSyncedDate
       ) {
-        this.log.verbose(
+        this.log.info(
           `looks like nothing was changed in a ${
             repository.nameWithOwner
           } repository PRs from our last sync, skipping`,
@@ -168,7 +168,7 @@ export class GithubSyncer implements IntegrationSyncer {
     // if we have synced stuff previously already, we need to prevent same issues syncing
     // check if issue's updated date is newer than our last synced date
     if (lastSyncInfo.lastSyncedDate && updatedAt <= lastSyncInfo.lastSyncedDate) {
-      this.log.verbose('reached last synced date, stop syncing...', {
+      this.log.info('reached last synced date, stop syncing...', {
         issueOrPullRequest,
         updatedAt,
         lastSyncInfo,
@@ -191,7 +191,7 @@ export class GithubSyncer implements IntegrationSyncer {
     // next time we make sync again we don't want to sync issues less then this date
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
-      this.log.verbose('looks like its the first syncing issue, set last synced date', lastSyncInfo)
+      this.log.info('looks like its the first syncing issue, set last synced date', lastSyncInfo)
       await getRepository(SourceEntity).save(this.source, { listeners: false })
     }
 
@@ -240,7 +240,7 @@ export class GithubSyncer implements IntegrationSyncer {
 
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (lastIssue) {
-      this.log.verbose(
+      this.log.info(
         'looks like its the last issue in this sync, removing last cursor and source last sync date',
         lastSyncInfo,
       )
@@ -254,7 +254,7 @@ export class GithubSyncer implements IntegrationSyncer {
 
     // update last sync settings to make sure we continue from the last point in the case if application will stop
     if (lastSyncInfo.lastCursor !== cursor) {
-      this.log.verbose('updating last cursor in settings', { cursor })
+      this.log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
       await getRepository(SourceEntity).save(this.source, { listeners: false })

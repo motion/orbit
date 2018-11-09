@@ -163,12 +163,14 @@ export class SlackSyncer implements IntegrationSyncer {
                 }
 
                 // crawl website
-                const [websiteData] = await this.crawler.run({
+                await this.crawler.run({
                   url: attachment.original_url,
-                  deep: false
+                  deep: false,
+                  handler: async data => {
+                    linkBits.push(this.bitFactory.createWebsite(channel, message, attachment, data, allDbPeople))
+                    return true
+                  }
                 })
-
-                linkBits.push(this.bitFactory.createWebsite(channel, message, attachment, websiteData, allDbPeople))
 
               } catch (error) {
                 this.log.warning(`failed to craw a slack link's website`, attachment, error)

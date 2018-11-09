@@ -1,13 +1,13 @@
-import { BitEntity, SourceEntity } from '@mcro/entities'
+import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { chunk } from 'lodash'
-import { Bit, GmailBitDataParticipant, GmailSourceValues, Person, GmailSource } from '@mcro/models'
+import { PersonBitUtils } from '@mcro/model-utils'
+import { BitUtils } from '@mcro/model-utils'
+import { GmailBitDataParticipant, GmailSource } from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
+import { hash } from '@mcro/utils'
+import { chunk } from 'lodash'
 import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
-import { BitSyncer } from '../../utils/BitSyncer'
-import { PersonSyncer } from '../../utils/PersonSyncer'
-import { SyncerRepository } from '../../utils/SyncerRepository'
 import { GMailBitFactory } from './GMailBitFactory'
 import { GMailMessageParser } from './GMailMessageParser'
 import { GMailPersonFactory } from './GMailPersonFactory'
@@ -21,9 +21,6 @@ export class GMailSyncer implements IntegrationSyncer {
   private loader: GMailLoader
   private bitFactory: GMailBitFactory
   private personFactory: GMailPersonFactory
-  private personSyncer: PersonSyncer
-  private bitSyncer: BitSyncer
-  private syncerRepository: SyncerRepository
 
   constructor(source: GmailSource, log?: Logger) {
     this.source = source
@@ -33,143 +30,216 @@ export class GMailSyncer implements IntegrationSyncer {
     )
     this.bitFactory = new GMailBitFactory(source)
     this.personFactory = new GMailPersonFactory(source)
-    this.personSyncer = new PersonSyncer(this.log)
-    this.bitSyncer = new BitSyncer(source, this.log)
-    this.syncerRepository = new SyncerRepository(source)
   }
 
   async run() {
-    this.log.info('sync sources', this.source.values)
+    this.log.info('sync gmail based on settings', this.source.values)
 
-    const values = this.source.values as GmailSourceValues
-    let dropAllBits = false
-    let { historyId, max, daysLimit, filter } = values
-    if (!max) max = 10000
-    if (!daysLimit) daysLimit = 30
-    filter = filter ? filter : `newer_than:${daysLimit}d`
+    // setup default source configuration values
+    if (!this.source.values.lastSync)
+      this.source.values.lastSync = {}
+    if (!this.source.values.max)
+      this.source.values.max = 10000
+    if (!this.source.values.daysLimit)
+      this.source.values.daysLimit = 330
 
-    // if max or filter has changed - we drop all bits and make complete sync again
+    // setup some local variables we are gonna work with
+    const queryFilter = this.source.values.filter || `newer_than:${this.source.values.daysLimit}d`
+    let lastSync = this.source.values.lastSync
+
+    // update last sync configuration
+    this.log.info('updating sync sources')
+    lastSync.usedQueryFilter = queryFilter
+    lastSync.usedDaysLimit = this.source.values.daysLimit
+    lastSync.usedMax = this.source.values.max
+    await getRepository(SourceEntity).save(this.source)
+
+    // if user configuration has changed (max number of messages, days limitation or query filter)
+    // we drop all bits to make complete sync again
     if (
-      (values.lastSyncMax !== undefined && max !== values.lastSyncMax) ||
-      (values.lastSyncFilter !== undefined && filter !== values.lastSyncFilter) ||
-      (values.lastSyncDaysLimit !== undefined && daysLimit !== values.lastSyncDaysLimit)
+      (lastSync.usedMax !== undefined && this.source.values.max !== lastSync.usedMax) ||
+      (lastSync.usedQueryFilter !== undefined && queryFilter !== lastSync.usedQueryFilter) ||
+      (lastSync.usedDaysLimit !== undefined && this.source.values.daysLimit !== lastSync.usedDaysLimit)
     ) {
-      this.log.info(
-        'last syncronization sources mismatch, need to drop all integration bits and start a clean history',
-      )
-      dropAllBits = true
-      historyId = null
+      this.log.info('last syncronization configuration mismatch, dropping bits and start sync from scratch')
+      await getRepository(BitEntity).delete({ sourceId: this.source.id }) // todo: drop people as well
+      this.source.values.lastSync = lastSync = {}
     }
 
-    let addedThreads: GMailThread[] = [],
-      removedBits: Bit[] = []
-    if (historyId) {
+    // we if we have last history id it means we already did a complete sync and now we are using
+    // gmail's history api to get email events information and sync based on this information
+    if (lastSync.historyId) {
+
       // load history
-      const history = await this.loader.loadHistory(historyId)
-      historyId = history.historyId
+      const history = await this.loader.loadHistory(lastSync.historyId)
 
       // load threads for newly added / changed threads
       if (history.addedThreadIds.length) {
-        this.log.timer(
-          'load all threads until we find following thread ids',
-          history.addedThreadIds,
-        )
-        addedThreads = await this.loader.loadThreads(max, filter, history.addedThreadIds)
-        this.log.timer('load all threads until we find following thread ids', addedThreads)
+        this.log.timer('found added/changed messages in history', history.addedThreadIds)
+
+        // convert added thread ids into thread objects and load their messages
+        const addedThreads = await Promise.all(history.addedThreadIds.map(async threadId => {
+          return {
+            id: threadId,
+            historyId: history.historyId,
+          } as GMailThread
+        }))
+        await this.loader.loadMessages(addedThreads)
+
+        // sync threads
+        for (let thread of addedThreads) {
+          await this.syncThread(thread)
+        }
+
+        this.log.timer('found added or changed messages in history')
       } else {
-        this.log.info('no added / changed messages in history were found')
+        this.log.info('no added or changed messages in history were found')
       }
 
-      // load bits for removed threads
+      // load bits for removed threads and remove them
       if (history.removedThreadIds.length) {
         this.log.info('found actions in history for thread removals', history.removedThreadIds)
-        removedBits = await getRepository(BitEntity).find({
+        const removedBits = await getRepository(BitEntity).find({
           sourceId: this.source.id,
-          id: In(history.removedThreadIds),
+          id: In(history.removedThreadIds.map(threadId => BitUtils.id(this.source, threadId))),
         })
-        this.log.info('found bits to be removed', removedBits)
+        this.log.info('found bits to be removed, removing', removedBits)
+        await getRepository(BitEntity).remove(removedBits) // todo: we also need to remove people
       } else {
         this.log.info('no removed messages in history were found')
       }
+
+      lastSync.historyId = history.historyId
+      await getRepository(SourceEntity).save(this.source)
+
     } else {
-      this.log.timer('load all threads', { max, daysLimit, filter })
-      addedThreads = await this.loader.loadThreads(max, filter)
-      historyId = addedThreads.length > 0 ? addedThreads[0].historyId : null
-      this.log.timer('load all threads', addedThreads)
+
+      // else this is a first time sync, load all threads
+      this.log.timer('sync all threads')
+
+      await this.loader.loadThreads({
+        count: this.source.values.max,
+        queryFilter: queryFilter,
+        pageToken: lastSync.lastCursor,
+        loadedCount: lastSync.lastCursorLoadedCount || 0,
+        handler: this.handleThread.bind(this)
+      })
+      this.log.timer('sync all threads')
     }
 
     // load emails for whitelisted people separately
-    if (values.whitelist) {
-      this.log.info('checking whitelist', values.whitelist)
-      const threadsFromWhiteList: GMailThread[] = []
-      const whitelistEmails = Object.keys(values.whitelist).filter(
-        email => values.whitelist[email] === true,
+    // we don't make this operation on a first sync because we can miss newly added emails
+    // this operation is relatively cheap, so for now we are okay with it
+    if (this.source.values.whitelist) {
+      this.log.info('checking whitelist', this.source.values.whitelist)
+      const whitelistEmails = Object.keys(this.source.values.whitelist).filter(
+        email => this.source.values.whitelist[email] === true,
       )
 
       if (whitelistEmails.length > 0) {
-        this.log.info('loading threads from whitelisted people', whitelistEmails)
+        this.log.timer('load threads from whitelisted people', whitelistEmails)
         // we split emails into chunks because gmail api can't handle huge queries
         const emailChunks = chunk(whitelistEmails, 100)
         for (let emails of emailChunks) {
           const whitelistFilter = emails.map(email => 'from:' + email).join(' OR ')
-          const threads = await this.loader.loadThreads(max, whitelistFilter)
-          const nonDuplicateThreads = threads.filter(thread => {
-            return addedThreads.some(addedThread => addedThread.id === thread.id)
+          await this.loader.loadThreads({
+            count: this.source.values.max,
+            queryFilter: whitelistFilter,
+            loadedCount: 0,
+            handler: this.syncThread.bind(this)
           })
-          threadsFromWhiteList.push(...nonDuplicateThreads)
-          addedThreads.push(...threadsFromWhiteList)
         }
-        this.log.info('whitelisted people threads loaded', threadsFromWhiteList)
+        this.log.timer('load threads from whitelisted people')
       } else {
         this.log.info('no enabled people in whitelist were found')
       }
     }
+  }
 
-    this.log.timer('create bits from new threads', addedThreads)
-    const apiBits: Bit[] = [],
-      apiPeople: Person[] = []
-    for (let thread of addedThreads) {
-      const participants = this.extractThreadParticipants(thread)
-      const bit = this.bitFactory.create(thread)
-      bit.people = participants.map(participant => this.personFactory.create(participant))
-      apiBits.push(bit)
-      apiPeople.push(...bit.people)
+  /**
+   * Handles a single thread.
+   */
+  private async handleThread(
+    thread: GMailThread,
+    cursor?: string,
+    loadedCount?: number,
+    isLast?: boolean
+  ) {
+    const lastSync = this.source.values.lastSync
+
+    // for the first ever synced thread we store its history id, and once sync is done,
+    // we use this history to id to load further newly added or removed messages
+    if (!lastSync.lastCursorHistoryId) {
+      lastSync.lastCursorHistoryId = thread.historyId
+      this.log.info('looks like its the first syncing thread, set history id', lastSync)
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
     }
-    this.log.timer('create bits from new threads', { apiBits, apiPeople })
 
-    const personIds = apiPeople.map(person => person.id)
-    const bitIds = apiBits.map(bit => bit.id)
+    // sync a thread
+    await this.syncThread(thread)
 
-    this.log.timer('load people, person bits and bits from the database', {
-      personIds,
-      bitIds,
-    })
-    const dbPeople = personIds.length
-      ? await this.syncerRepository.loadDatabasePeople({ ids: personIds })
-      : []
-    const dbPersonBits = apiPeople.length
-      ? await this.syncerRepository.loadDatabasePersonBits({ people: apiPeople })
-      : []
-    const dbBits = bitIds.length
-      ? await this.syncerRepository.loadDatabaseBits({ ids: bitIds })
-      : []
-    this.log.timer('load people, person bits and bits from the database', {
-      dbPeople,
-      dbPersonBits,
-      dbBits,
-    })
+    // in the case if its the last thread we need to cleanup last cursor stuff and save last synced date
+    if (isLast) {
+      this.log.info(
+        'looks like its the last thread in this sync, removing last cursor and source last sync date',
+        lastSync,
+      )
+      lastSync.historyId = lastSync.lastCursorHistoryId
+      lastSync.lastCursor = undefined
+      lastSync.lastCursorHistoryId = undefined
+      lastSync.lastCursorLoadedCount = undefined
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
+      return true
+    }
 
-    // sync people and bits
-    await this.personSyncer.sync({ apiPeople, dbPeople, dbPersonBits })
-    await this.bitSyncer.sync({ apiBits, dbBits, dropAllBits, removedBits })
+    // update last sync settings to make sure we continue from the last point in the case if application will stop
+    if (lastSync.lastCursor !== cursor) {
+      this.log.info('updating last cursor in settings', { cursor })
+      lastSync.lastCursor = cursor
+      lastSync.lastCursorLoadedCount = loadedCount
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
+    }
 
-    // update sources
-    this.log.info('updating sync sources')
-    values.historyId = historyId
-    values.lastSyncFilter = filter
-    values.lastSyncDaysLimit = daysLimit
-    values.lastSyncMax = max
-    await getRepository(SourceEntity).save(this.source)
+    return true
+  }
+
+  /**
+   * Syncs a given thread.
+   */
+  private async syncThread(thread: GMailThread) {
+
+    const participants = this.extractThreadParticipants(thread)
+    const bit = this.bitFactory.create(thread)
+    bit.people = participants.map(participant => this.personFactory.create(participant))
+
+    // for people without emails we create "virtual" email
+    for (let person of bit.people) {
+      if (!person.email) {
+        person.email = person.name + ' from ' + person.integration
+      }
+    }
+
+    // find person bit with email
+    const personBits = await Promise.all(
+      bit.people.map(async person => {
+        const dbPersonBit = await getRepository(PersonBitEntity).findOne(hash(person.email))
+        const newPersonBit = PersonBitUtils.createFromPerson(person)
+        const personBit = PersonBitUtils.merge(newPersonBit, dbPersonBit || {})
+
+        // push person to person bit's people
+        const hasPerson = personBit.people.some(existPerson => existPerson.id === person.id)
+        if (!hasPerson) {
+          personBit.people.push(person)
+        }
+
+        return personBit
+      }),
+    )
+
+    this.log.verbose('syncing', { thread, bit, people: bit.people, personBits })
+    await getRepository(PersonEntity).save(bit.people, { listeners: false })
+    await getRepository(PersonBitEntity).save(personBits, { listeners: false })
+    await getRepository(BitEntity).save(bit, { listeners: false })
   }
 
   /**

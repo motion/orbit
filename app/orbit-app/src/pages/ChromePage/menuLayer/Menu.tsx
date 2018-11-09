@@ -71,14 +71,14 @@ class MenuStore {
   openVisually = react(
     () => this.openQuick,
     async (open, { sleep }) => {
-      if (open) {
-        if (!this.isAnotherMenuOpen) {
+      if (!this.isAnotherMenuOpen) {
+        if (open) {
           // sleep before closing
           await sleep(50)
+        } else {
+          // sleep before opening
+          await sleep(100)
         }
-      } else {
-        // sleep before opening
-        await sleep(100)
       }
       return open
     },

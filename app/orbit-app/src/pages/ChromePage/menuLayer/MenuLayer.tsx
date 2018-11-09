@@ -8,7 +8,7 @@ import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { setTrayFocused } from './helpers'
 import { App } from '@mcro/stores'
-import { react, ensure } from '@mcro/black'
+import { react, ensure, attach, provide } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
@@ -67,8 +67,8 @@ export class MenusStore {
 
 export function MenuLayer() {
   const { sourcesStore, settingStore } = React.useContext(StoreContext)
-  const queryStore = useStore(QueryStore, { sourcesStore })
-  const selectionStore = useStore(SelectionStore, { queryStore })
+  const queryStore = useStore(QueryStore, { sourcesStore }, { debug: true })
+  const selectionStore = useStore(SelectionStore, { queryStore }, { debug: true })
   const menusStore = useStore(MenusStore, { debug: true })
   const storeProps = {
     settingStore,
@@ -77,19 +77,11 @@ export function MenuLayer() {
     selectionStore,
     menusStore,
   }
-  console.log('------render MenuLayer')
+  log('!!! render MenuLayer')
   return (
     <StoreContext.Provider value={storeProps}>
       {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
-        <MenuApp
-          key={app}
-          id={index}
-          view="index"
-          title={app}
-          type={app}
-          menusStore={menusStore}
-          isActive={menusStore.menuOpenID === index}
-        />
+        <MenuApp key={app} id={index} view="index" title={app} type={app} menusStore={menusStore} />
       ))}
     </StoreContext.Provider>
   )

@@ -14,12 +14,6 @@ type Props = {
   theme: ThemeObject
 }
 
-// const getBackground = (y, theme) => {
-//   if (y < 20) return theme.titleBar.background
-//   if (y < 40) return theme.titleBar.backgroundBottom
-//   return theme.background
-// }
-
 const maxTopOffset = 32
 const arrowSize = 14
 const peekOnRight = false

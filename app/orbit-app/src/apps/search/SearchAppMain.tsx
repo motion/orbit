@@ -8,6 +8,7 @@ import { react } from '@mcro/black'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { AppSearchable } from '../../sources/views/apps/AppSearchable'
 import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
+import { BitDecoration } from './mainViews/BitDecoration'
 
 class SearchAppStore {
   props: AppProps
@@ -58,14 +59,16 @@ export function SearchAppMain(props: AppProps) {
         const View = props.sourcesStore.getView(model.integration, 'main')
         const normalizedItem = normalizeItem(model)
         return (
-          <AppSearchable>
-            {({ searchBar }) => (
-              <>
-                <BitTitleBar normalizedItem={normalizedItem} searchBar={searchBar} />
-                <View bit={model} model={model} normalizedItem={normalizedItem} {...props} />
-              </>
-            )}
-          </AppSearchable>
+          <BitDecoration>
+            <AppSearchable>
+              {({ searchBar }) => (
+                <>
+                  <BitTitleBar normalizedItem={normalizedItem} searchBar={searchBar} />
+                  <View bit={model} model={model} normalizedItem={normalizedItem} {...props} />
+                </>
+              )}
+            </AppSearchable>
+          </BitDecoration>
         )
       }
     }

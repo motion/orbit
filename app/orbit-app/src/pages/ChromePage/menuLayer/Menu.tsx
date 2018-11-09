@@ -1,109 +1,109 @@
 import * as React from 'react'
 import { Popover, Col, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { react, ensure } from '@mcro/black'
-import { Desktop, App } from '@mcro/stores'
+import { react } from '@mcro/black'
+import { Desktop, App, Electron } from '@mcro/stores'
 import { TrayActions } from '../../../actions/Actions'
 import { MenusStore } from './MenuLayer'
+import { setTrayFocused } from './helpers'
 
 type Props = {
-  index: number | 'Orbit'
+  id: number
   width: number
-  children: JSX.Element | ((isOpen: boolean) => JSX.Element)
+  children: JSX.Element | ((isOpen: boolean, store: MenuStore) => JSX.Element)
   menusStore: MenusStore
 }
 
 class MenuStore {
   props: Props
-  isHoveringMenu = false
+  isHoveringDropdown = false
+  searchInput: HTMLInputElement = null
 
   get trayBounds() {
     return Desktop.state.operatingSystem.trayBounds
   }
 
-  isHoveringTray = react(
+  isHoveringIcon = react(
     () =>
       App.state.trayState.trayEventAt &&
-      App.state.trayState.trayEvent === `TrayHover${this.props.index}`,
+      App.state.trayState.trayEvent === `TrayHover${this.props.id}`,
     _ => _,
     { onlyUpdateIfChanged: true },
   )
 
-  get allMenusOpenState() {
-    const state = App.state.trayState.menuState
-    return Object.keys(state).map(key => state[key].open)
-  }
-
   get isAnotherMenuOpen() {
-    return this.allMenusOpenState.some((isOpen, index) => index !== this.props.index && isOpen)
+    return (App.openMenu && App.openMenu.id !== this.props.id) || false
   }
 
-  open = react(
+  get isPreviewingThisMenu() {
+    return (
+      Desktop.isHoldingOption &&
+      !this.isAnotherMenuOpen &&
+      this.props.menusStore.lastOpenMenu === this.props.id
+    )
+  }
+
+  openQuick = react(
     () => [
-      this.props.menusStore.isHoldingOption &&
-        this.props.menusStore.lastMenuOpen === this.props.index,
-      this.isHoveringTray,
-      this.isHoveringMenu,
+      this.isPreviewingThisMenu,
+      this.isHoveringIcon || this.isHoveringDropdown,
       this.isAnotherMenuOpen,
     ],
-    async (
-      [shouldShowOnHoldingOption, hoveringTray, hoveringMenu, anotherMenuOpen],
-      { sleep, when },
-    ) => {
-      console.log('hovering tray', this.props.index, hoveringTray)
+    async ([isPreviewingThisMenu, hoveringMenu, anotherMenuOpen], { sleep, when }) => {
       // on holding option
-      if (shouldShowOnHoldingOption) {
-        // sleep a bit more to not be annoying
-        await sleep(250)
+      if (isPreviewingThisMenu) {
+        await sleep(50)
         return true
       }
       // close if another menu opens
       if (anotherMenuOpen) {
         return false
       }
-      if (this.open) {
-        // sleep before closing
-        await sleep(60)
-      } else {
-        // sleep before opening
-        await sleep(100)
-      }
       // if hovering the app window keep it open until not
       if (!anotherMenuOpen && Desktop.hoverState.appHovered[0]) {
         await when(() => !Desktop.hoverState.appHovered[0])
         await sleep(60)
       }
-      return hoveringTray || hoveringMenu
+      return hoveringMenu
     },
   )
 
-  updateMenusStoreLastOpen = react(
-    () => this.open,
-    () => {
-      ensure('this.open', this.open)
-      this.props.menusStore.setLastOpen(this.props.index)
+  openVisually = react(
+    () => this.openQuick,
+    async (open, { sleep }) => {
+      if (!this.isAnotherMenuOpen) {
+        if (open) {
+          // sleep before closing
+          await sleep(50)
+        } else {
+          // sleep before opening
+          await sleep(100)
+        }
+      }
+      return open
     },
   )
 
   get menuCenter() {
-    const index = this.props.index
+    const id = this.props.id
     const baseOffset = 25
-    const offset = +index == index ? (+index + 1) * 25 + baseOffset : 120
+    const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120
     return this.trayBounds[0] + offset
   }
 
+  // uses faster open so we can react to things quickly
   setMenuBounds = react(
-    () => [this.open, this.menuCenter],
+    () => [this.openQuick, this.menuCenter],
     ([open, center]) => {
       const width = this.props.width
       App.setState({
         trayState: {
           menuState: {
-            [this.props.index]: {
+            [this.props.id]: {
               open,
-              height: 300,
-              width,
-              left: center - width / 2,
+              position: [center - width / 2, 0],
+              // TODO: determine this dynamically
+              size: [this.props.width, 300],
             },
           },
         },
@@ -111,12 +111,43 @@ class MenuStore {
     },
   )
 
+  handleSearchInput = (ref: HTMLInputElement) => {
+    this.searchInput = ref
+  }
+
+  menuFocus = react(
+    () => this.openVisually,
+    async (open, { sleep, whenChanged }) => {
+      if (!open) {
+        await sleep(100)
+        if (!this.isAnotherMenuOpen) {
+          setTrayFocused(false)
+        }
+        return false
+      }
+      if (Desktop.isHoldingOption) {
+        // wait for pin to focus the menu
+        await whenChanged(() => Electron.state.pinKey.at)
+        console.log('GOT A PIN KEY', Electron.state.pinKey.name)
+      }
+      setTrayFocused(true)
+      await sleep()
+      if (this.searchInput) {
+        this.searchInput.focus()
+      }
+      return true
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
+
   handleMouseEnter = () => {
-    this.isHoveringMenu = true
+    this.isHoveringDropdown = true
   }
 
   handleMouseLeave = () => {
-    this.isHoveringMenu = false
+    this.isHoveringDropdown = false
   }
 }
 
@@ -130,10 +161,9 @@ const sendTrayEvent = (key, value) => {
 }
 
 export function Menu(props: Props) {
-  const store = useStore(MenuStore, props)
+  const store = useStore(MenuStore, props, { debug: true })
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
-      console.log('keyyy', key)
       switch (key) {
         case 'TrayToggleOrbit':
           App.setOrbitState({ docked: !App.state.orbitState.docked })
@@ -148,10 +178,9 @@ export function Menu(props: Props) {
       }
     })
   }, [])
-  const open = store.open
+  const open = store.openVisually
   const left = store.menuCenter
   const width = props.width
-  console.log('rendering menu', open, store.isHoveringMenu, store.isHoveringTray)
   return (
     <Popover
       open={open}
@@ -175,7 +204,7 @@ export function Menu(props: Props) {
         flex={1}
       >
         <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
-          {typeof props.children === 'function' ? props.children(open) : props.children}
+          {typeof props.children === 'function' ? props.children(open, store) : props.children}
         </Col>
       </View>
     </Popover>

@@ -88,6 +88,7 @@ export class SpaceStore {
 
   willUnmount() {
     this.spaces$.unsubscribe()
+    this.sources$.unsubscribe()
   }
 
   private spaces$ = observeMany(SpaceModel, { args: {} }).subscribe(spaces => {

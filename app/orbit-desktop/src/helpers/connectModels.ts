@@ -98,8 +98,9 @@ export default async function connectModels(models) {
       await connection2.query(`DROP TABLE IF EXISTS 'person_entity'`)
       await connection2.query(`DROP TABLE IF EXISTS 'person_bit_entity'`)
       await connection2.query(`DROP TABLE IF EXISTS 'search_index_entity'`)
+      await connection2.query(`DROP TABLE IF EXISTS 'setting_entity'`)
       await connection2.query(`DROP TABLE IF EXISTS 'source_entity'`)
-      await connection2.query(`DROP TABLE IF EXISTS 'source_entity'`)
+      await connection2.query(`DROP TABLE IF EXISTS 'app_entity'`)
       await connection2.query(`DROP TABLE IF EXISTS 'setting_entity'`)
 
       // close connection

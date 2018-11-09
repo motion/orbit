@@ -10,10 +10,11 @@ import {
   SourceEntity,
   SpaceEntity,
 } from '@mcro/entities'
+import { AppEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
-  SourceSaveCommand,
+  AppModel,
   BitModel,
   CosalTopWordsCommand,
   GithubRepositoryModel,
@@ -21,16 +22,17 @@ import {
   JobModel,
   PersonBitModel,
   PersonModel,
-  SearchLocationsModel,
-  SearchResultModel,
   SalientWordsModel,
+  SearchByTopicModel,
+  SearchLocationsModel,
+  SearchPinnedResultModel,
+  SearchResultModel,
   SettingModel,
-  SourceRemoveCommand,
   SlackChannelModel,
   SlackSourceBlacklistCommand,
-  SearchPinnedResultModel,
-  SearchByTopicModel,
   SourceModel,
+  SourceRemoveCommand,
+  SourceSaveCommand,
   SpaceModel,
 } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
@@ -47,22 +49,23 @@ import { AppsManager } from './managers/appsManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
+import { MousePositionManager } from './managers/MousePositionManager'
 import { OCRManager } from './managers/OCRManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { Onboard } from './onboard/Onboard'
-import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
-import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
-import { getSearchResolver } from './resolvers/SearchResultResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
-import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
-import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
-import { Server } from './Server'
+import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
+import { getSearchResolver } from './resolvers/SearchResultResolver'
 import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
-import { MousePositionManager } from './managers/MousePositionManager'
+import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
+import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
+import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
+import { Server } from './Server'
 import { KeyboardManager } from './managers/KeyboardManager'
+import { ContextManager } from './managers/ContextManager'
 
 const log = new Logger('desktop')
 
@@ -86,6 +89,7 @@ export class Root {
   databaseManager: DatabaseManager
   mousePositionManager: MousePositionManager
   keyboardManager: KeyboardManager
+  contextManager: ContextManager
 
   start = async () => {
     log.info('Start Desktop Store..')
@@ -148,6 +152,7 @@ export class Root {
     this.mousePositionManager = new MousePositionManager({ oracle: this.oracle })
     this.keyboardManager = new KeyboardManager({ oracle: this.oracle })
     this.appsManager = new AppsManager()
+    this.contextManager = new ContextManager({ oracle: this.oracle })
 
     await this.server.start()
 
@@ -208,6 +213,7 @@ export class Root {
   private registerMediatorServer() {
     this.mediatorServer = new MediatorServer({
       models: [
+        AppModel,
         SourceModel,
         SettingModel,
         BitModel,
@@ -236,6 +242,7 @@ export class Root {
       resolvers: [
         // @ts-ignore
         ...typeormResolvers(getConnection(), [
+          { entity: AppEntity, models: [AppModel] },
           { entity: SourceEntity, models: [SourceModel] },
           { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },

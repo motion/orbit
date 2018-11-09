@@ -62,7 +62,9 @@ export type SearchQuery = {
   skip?: number
   sourceId?: number
   group?: SearchResultGroup
-  skipBits?: boolean
+  maxBitsCount?: number
+  spaceId?: number
+  ids?: number[]
 }
 
 export const SearchResultModel = new Model<SearchResult, SearchQuery>('SearchResult')

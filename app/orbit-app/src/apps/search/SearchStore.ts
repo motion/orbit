@@ -170,6 +170,7 @@ export class SearchStore {
 
       const { startDate, endDate } = dateState
       const baseFindOptions = {
+        spaceId: 1, // todo: how do we can space id from store here?
         query: activeQuery,
         searchBy,
         sortBy,
@@ -180,11 +181,11 @@ export class SearchStore {
         locationFilters,
       }
 
-      const updateNextResults = async ({ skipBits, group, startIndex, endIndex }) => {
+      const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
         const searchOpts = {
           ...baseFindOptions,
           group,
-          skipBits,
+          maxBitsCount,
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
@@ -207,11 +208,10 @@ export class SearchStore {
       }
 
       // do initial search
-      // await updateNextResults({ skipBits: true, group: 'accurate', startIndex: 0, endIndex: take })
-      await updateNextResults({ skipBits: false, group: 'last-day', startIndex: 0, endIndex: take })
-      await updateNextResults({ skipBits: false, group: 'last-week', startIndex: 0, endIndex: take })
-      await updateNextResults({ skipBits: false, group: 'last-month', startIndex: 0, endIndex: take })
-      await updateNextResults({ skipBits: false, group: 'overall', startIndex: 0, endIndex: take })
+      await updateNextResults({ maxBitsCount: 5, group: 'last-day', startIndex: 0, endIndex: take })
+      await updateNextResults({ maxBitsCount: 5, group: 'last-week', startIndex: 0, endIndex: take })
+      await updateNextResults({ maxBitsCount: 5, group: 'last-month', startIndex: 0, endIndex: take })
+      await updateNextResults({ maxBitsCount: 5, group: 'overall', startIndex: 0, endIndex: take })
 
       // wait for active before loading more than one page of results
       /* if (!this.isActive) {

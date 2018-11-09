@@ -7,6 +7,7 @@ const log = new Logger('getSearchQuery')
 export const getSearchQuery = (args: SearchQuery) => {
   log.info('args', args)
   const {
+    ids,
     query,
     sortBy,
     take,
@@ -16,6 +17,7 @@ export const getSearchQuery = (args: SearchQuery) => {
     integrationFilters,
     peopleFilters,
     locationFilters,
+    spaceId,
     sourceId,
   } = args
 
@@ -42,12 +44,19 @@ export const getSearchQuery = (args: SearchQuery) => {
   }
 
   const andConditions: FindOptionsWhere<Bit> = {}
-  if (startDate) {
+  if (ids) {
+    andConditions.id = { $in: ids }
+  }
+  if (startDate && endDate) {
+    andConditions.bitCreatedAt = {
+      $between: [new Date(startDate).getTime(), new Date(endDate).getTime()]
+    }
+
+  } else if (startDate) {
     andConditions.bitCreatedAt = {
       $moreThan: new Date(startDate).getTime()
     }
-  }
-  if (endDate) {
+  } else if (endDate) {
     andConditions.bitCreatedAt = {
       $lessThan: new Date(endDate).getTime()
     }
@@ -55,21 +64,18 @@ export const getSearchQuery = (args: SearchQuery) => {
   if (integrationFilters && integrationFilters.length) {
     andConditions.integration = { $in: integrationFilters }
   }
-  if (sourceId) {
-    andConditions.sourceId = sourceId
+  if (sourceId || spaceId) {
+    andConditions.source = {
+      id: sourceId ? sourceId : undefined,
+      spaceId: spaceId ? spaceId : undefined,
+    }
   }
 
-  if (query.length) {
-    const likeString = `%${query.replace(/\s+/g, '%')}%`
-    ;(findOptions.where as FindOptionsWhereCondition<Bit>[]).push({
-      ...andConditions,
-      title: { $like: likeString },
-    })
-    ;(findOptions.where as FindOptionsWhereCondition<Bit>[]).push({
-      ...andConditions,
-      body: { $like: likeString },
-    })
+  if (query && query.length) {
+    andConditions.title = { $like: `%${query.replace(/\s+/g, '%')}%` }
   }
+
+  (findOptions.where as FindOptionsWhereCondition<Bit>[]).push(andConditions)
 
   // SORT
   if (sortBy) {

@@ -66,11 +66,19 @@ async function cosalSearch(args: SearchArgs, includeFilters = false): Promise<[B
 
   const ids = await searchCosalIds(args, includeFilters)
   if (ids.length) {
-    const condition: FindOptionsWhere<BitEntity> = { id: { $in: ids } }
-    if (args.sourceId) {
-      condition.sourceId = args.sourceId
-    }
-    return await getRepository(BitEntity).findAndCount(condition)
+    const searchQuery = getSearchQuery({
+      sortBy: args.sortBy,
+      startDate: args.startDate,
+      endDate: args.endDate,
+      integrationFilters: args.integrationFilters,
+      peopleFilters: args.peopleFilters,
+      locationFilters: args.locationFilters,
+      sourceId: args.sourceId,
+      spaceId: args.spaceId,
+      ids
+    })
+    console.log('searchQuery (cosal)', searchQuery)
+    return await getRepository(BitEntity).findAndCount(searchQuery)
   } else {
     return [[], 0]
   }
@@ -94,6 +102,7 @@ async function likeSearch(args: SearchArgs): Promise<[BitEntity[], number]> {
     peopleFilters: args.peopleFilters,
     locationFilters: args.locationFilters,
     sourceId: args.sourceId,
+    spaceId: args.spaceId,
   })
   console.log('searchQuery', searchQuery)
   return await getRepository(BitEntity).findAndCount(searchQuery)
@@ -174,7 +183,7 @@ const buildSearchResultText = (keyword: string, texts: string[]) => {
 export const getSearchResolver = (cosal: Cosal) => {
   return resolveMany(SearchResultModel, async args => {
     const log = new Logger('search') // we need a separate logger because requests can be parallel and timer won't work correctly
-    const sources = await getRepository(SourceEntity).find()
+    const sources = await getRepository(SourceEntity).find({ spaceId: args.spaceId }) // todo: we probably need to get in count space id
     let searchResults: SearchResult[] = []
 
     const today = new Date()
@@ -223,6 +232,8 @@ export const getSearchResolver = (cosal: Cosal) => {
         if (!integrationBits.length)
           continue
 
+        const bits = args.maxBitsCount ? integrationBits.slice(0, args.maxBitsCount) : integrationBits
+
         if (source.type === "slack") {
           const title = buildSearchResultTitle(integrationBits.map(bit => '#' + bit.location.name))
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
@@ -232,7 +243,7 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Conversation in ' + title,
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits: args.skipBits ? [] : integrationBits
+            bits
           })
 
         } else if (source.type === "gmail") {
@@ -243,7 +254,7 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Emails in ' + source.name,
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits: args.skipBits ? [] : integrationBits
+            bits
           })
 
         } else if (source.type === "drive") {
@@ -259,7 +270,7 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: title ? 'Files in ' + title : source.name + ' files',
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits: args.skipBits ? [] : integrationBits
+            bits
           })
 
         } else if (source.type === "github") {
@@ -270,7 +281,7 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Issues and pull requests',
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits: args.skipBits ? [] : integrationBits
+            bits
           })
 
         } else if (source.type === "jira") {
@@ -281,7 +292,7 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Jira tickets',
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits: args.skipBits ? [] : integrationBits
+            bits
           })
 
         } else if (source.type === "confluence") {
@@ -292,7 +303,7 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Confluence pages',
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits: args.skipBits ? [] : integrationBits
+            bits
           })
 
         } else if (source.type === "website") {
@@ -303,7 +314,7 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Pages from ' + source.name,
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits: args.skipBits ? [] : integrationBits
+            bits
           })
 
         }

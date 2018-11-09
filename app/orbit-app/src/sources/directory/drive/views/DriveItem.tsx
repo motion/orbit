@@ -1,10 +1,7 @@
 import * as React from 'react'
 import { OrbitIntegrationProps } from '../../../types'
-import { Markdown } from '../../../../views/Markdown'
+import { MarkdownDocument } from '../../../views/bits/document/MarkdownDocument'
 
-export class DriveItem extends React.Component<OrbitIntegrationProps<'drive'>> {
-  render() {
-    const { bit } = this.props
-    return <Markdown source={bit.body} />
-  }
+export function DriveItem(props: OrbitIntegrationProps<'drive'>) {
+  return <MarkdownDocument {...props} />
 }

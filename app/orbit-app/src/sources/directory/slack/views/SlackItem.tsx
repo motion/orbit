@@ -25,14 +25,13 @@ export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
   const messages = getMessages(data.messages, { searchTerm, shownLimit })
 
   // one line view
+  const text = messages.map(message => message.text).join(' ')
+  if (renderText) {
+    return renderText(text)
+  }
   if (extraProps && extraProps.oneLine) {
-    const text = messages.map(message => message.text).join(' ')
-    if (renderText) {
-      return renderText(text)
-    }
     return <HighlightText>{text}</HighlightText>
   }
-
   return messages.map((message, index) => {
     for (let person of people || []) {
       message.text = message.text.replace(

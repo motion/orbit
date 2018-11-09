@@ -11,7 +11,11 @@ export function AppView(
   const stores = React.useContext(StoreContext)
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
-  const appStore = useStore(AppStore, stores, { conditionalUse: shouldProvideAppStore })
+  const appStore = useStore(
+    AppStore,
+    { ...props, ...stores },
+    { conditionalUse: shouldProvideAppStore },
+  )
   const App = apps[props.type][props.view]
   if (typeof App !== 'function') {
     console.error('WAHT THE FUCK', props.type, App)

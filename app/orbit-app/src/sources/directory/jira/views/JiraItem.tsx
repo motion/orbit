@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { OrbitIntegrationProps } from '../../../types'
-import { Markdown } from '../../../../views/Markdown'
+import { MarkdownDocument } from '../../../views/bits/document/MarkdownDocument'
 
-export class JiraItem extends React.Component<OrbitIntegrationProps<'jira'>> {
-  render() {
-    return <Markdown source={this.props.bit.body} />
-  }
+export function JiraItem(props: OrbitIntegrationProps<'jira'>) {
+  return <MarkdownDocument {...props} />
 }

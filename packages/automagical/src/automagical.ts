@@ -12,6 +12,9 @@ export { cancel } from './cancel'
 export { Reaction, ReactionRejectionError, ReactionTimeoutError } from './constants'
 export * from './types'
 
+// this lets you "always" react to any values you give as arguments without bugs
+export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number
+
 const log = new Logger('automagical')
 
 // TODO: fix deep() wrapper doesnt trigger reactions when mutating objects

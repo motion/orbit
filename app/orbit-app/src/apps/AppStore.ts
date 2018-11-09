@@ -1,4 +1,4 @@
-import { react, ensure } from '@mcro/black'
+import { react, ensure, always } from '@mcro/black'
 import { App, AppConfig } from '@mcro/stores'
 import { SelectionGroup } from './SelectionResults'
 import { AppProps } from './AppProps'
@@ -18,7 +18,7 @@ export class AppStore {
 
   // only update the selection store once this pane is active
   setSelectionResultsOnActive = react(
-    () => this.selectionResults && Math.random(),
+    () => always(this.selectionResults),
     async (_, { when }) => {
       await when(() => this.isActive)
       this.props.selectionStore.setResults(this.selectionResults)

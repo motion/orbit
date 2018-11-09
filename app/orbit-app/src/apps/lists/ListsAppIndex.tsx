@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { react, always } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { App, AppModel, ListsApp } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
@@ -63,25 +63,26 @@ class ListsIndexStore {
   )
 
   results = react(
-    () => this.activeQuery && this.allLists && Math.random(),
-    () =>
-      fuzzyQueryFilter(this.activeQuery, this.allLists, {
+    () => always(this.activeQuery, this.allLists),
+    () => {
+      return fuzzyQueryFilter(this.activeQuery, this.allLists, {
         key: 'title',
-      }),
+      })
+    },
     { defaultValue: this.allLists },
   )
 }
 
 export function ListsAppIndex(props: AppProps) {
-  const store = useStore(ListsIndexStore, props)
-  console.log('render lists index', store, store.results, Root.stores.ListsIndexStore)
+  const { results } = useStore(ListsIndexStore, props)
+  console.log('render lists index', results, Root.stores.ListsIndexStore)
   return (
     <>
       <VirtualList
         maxHeight={400}
-        items={store.results}
+        items={results}
         itemProps={{ direct: true, appType: 'lists' }}
-        getItemProps={index => ({ appConfig: store.results[index] })}
+        getItemProps={index => ({ appConfig: results[index] })}
       />
       <ListEdit />
     </>

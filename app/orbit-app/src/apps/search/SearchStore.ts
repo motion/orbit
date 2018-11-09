@@ -1,4 +1,4 @@
-import { ensure, react } from '@mcro/black'
+import { ensure, react, always } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -71,7 +71,7 @@ export class SearchStore {
   )
 
   setSelection = react(
-    () => this.searchState && Math.random(),
+    () => always(this.searchState),
     () => {
       this.props.appStore.setResults([
         {

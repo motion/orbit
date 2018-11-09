@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { react } from '@mcro/black'
+import { react, always } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { OrbitCard } from '../../views/OrbitCard'
 import { SmallVerticalSpace } from '../../views'
@@ -45,18 +45,19 @@ class PeopleIndexStore {
   }
 
   setSelectionResults = react(
-    () => this.results && Math.random(),
+    () => always(this.results),
     () => {
       this.props.appStore.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
     },
   )
 
   results: PersonBit[] = react(
-    () => this.peopleQuery && this.allPeople && Math.random(),
-    () =>
-      fuzzyQueryFilter(this.peopleQuery, this.allPeople, {
+    () => always(this.peopleQuery, this.allPeople),
+    () => {
+      return fuzzyQueryFilter(this.peopleQuery, this.allPeople, {
         key: 'name',
-      }),
+      })
+    },
     { defaultValue: [] },
   )
 
@@ -165,14 +166,13 @@ const PersonSection = ({
 const lipHeight = 30
 
 export function PeopleAppIndex(props: AppProps) {
-  const store = useStore(PeopleIndexStore, props)
-  const { results, resultSections } = store
+  const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props)
   const total = results.length
   if (!total) {
     return <NoResultsDialog subName="the directory" />
   }
   return (
-    <ProvideHighlightsContextWithDefaults value={{ words: store.peopleQuery.split(' ') }}>
+    <ProvideHighlightsContextWithDefaults value={{ words: peopleQuery.split(' ') }}>
       <List
         rowHeight={({ index }) => resultSections[index].height}
         rowRenderer={({ index, key }) => {
@@ -182,7 +182,7 @@ export function PeopleAppIndex(props: AppProps) {
               key={`${key}${section.title}`}
               title={section.title}
               people={section.results}
-              getIndex={store.getIndex}
+              getIndex={getIndex}
             />
           )
         }}

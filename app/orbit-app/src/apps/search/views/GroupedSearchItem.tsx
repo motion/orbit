@@ -8,7 +8,7 @@ export const GroupedSearchItem = ({ item, query, ...props }) => {
   return (
     <OrbitListItem direct {...props}>
       <Row>
-        <Circle>12</Circle>
+        <Circle>{ item.count }</Circle>
         <Col>
           <Text size={1.2} fontWeight={500} padding={[0, 0, 4]}>
             {item.title}

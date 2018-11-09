@@ -60,7 +60,7 @@ export class OrbitSearchResults extends React.Component<Props> {
 
   render() {
     const { searchStore, appStore, offsetY } = this.props
-    log(`render OrbitSearchVirtualList (${this.items.length})`)
+
     return (
       <ProvideHighlightsContextWithDefaults
         value={{
@@ -72,7 +72,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         <VirtualList
           infinite
           maxHeight={appStore.maxHeight - offsetY}
-          items={searchStore.searchState.results}
+          items={searchStore.resultsForVirtualList}
           ItemView={ListItem}
           rowCount={searchStore.remoteRowCount}
           loadMoreRows={searchStore.loadMore}

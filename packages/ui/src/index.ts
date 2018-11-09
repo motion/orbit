@@ -1,7 +1,6 @@
 // helpers
 export { default as color } from '@mcro/color'
 export { ThemeProvide, Theme, ThemeContext } from '@mcro/gloss'
-export { HighlightOptions } from './helpers/highlightText'
 
 export * from './helpers/forwardRef'
 export * from './helpers/passProps'

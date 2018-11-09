@@ -24,6 +24,15 @@ export interface GithubRepository {
   url: string
   pushedAt: string
   issues: {
+    nodes: {
+      updatedAt: string
+    }[]
+    totalCount: number
+  }
+  pullRequests: {
+    nodes: {
+      updatedAt: string
+    }[]
     totalCount: number
   }
 }

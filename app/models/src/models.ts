@@ -5,9 +5,11 @@ import { Bit } from './Bit'
 import { Job } from './Job'
 import { Person } from './Person'
 import { PersonBit } from './PersonBit'
+import { SearchResult, SearchResultGroup } from './Search'
 import { Source } from './Source'
 import { Setting } from './Setting'
 import { Space } from './Space'
+import { IntegrationType } from './IntegrationType'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
@@ -53,14 +55,17 @@ export type SearchQuery = {
   searchBy?: 'Topic' | 'Bit'
   startDate?: Date
   endDate?: Date
-  integrationFilters?: string[]
+  integrationFilters?: IntegrationType[]
   peopleFilters?: string[]
   locationFilters?: string[]
   take: number
   skip?: number
+  sourceId?: number
+  group?: SearchResultGroup
+  skipBits?: boolean
 }
 
-export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
+export const SearchResultModel = new Model<SearchResult, SearchQuery>('SearchResult')
 
 export type GroupResult = {
   title: string

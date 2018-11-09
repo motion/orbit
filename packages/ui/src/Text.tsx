@@ -3,7 +3,7 @@ import { view, on } from '@mcro/black'
 import keycode from 'keycode'
 import { InlineBlock } from './blocks/InlineBlock'
 import { Inline } from './blocks/Inline'
-import { highlightText, HighlightOptions } from './helpers/highlightText'
+import { highlightText, HighlightOptions } from '@mcro/helpers'
 import { propsToTextSize } from './helpers/propsToTextSize'
 import { alphaColor, CSSPropertySet } from '@mcro/gloss'
 

@@ -130,7 +130,7 @@ class AppPageContent extends React.Component<Props> {
     newSpace: () => {
       return () => <SpaceEditView />
     },
-    lists: () => () => <AppView id="0" type="lists" view="main" title="" />,
+    list: () => () => <AppView id="0" type="lists" view="main" title="" />,
     people: () => () => <AppView id="0" type="people" view="main" title="" />,
     topics: () => () => <AppView id="0" type="topics" view="main" title="" />,
   }

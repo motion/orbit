@@ -137,19 +137,6 @@ export class ViewStore {
     },
   )
 
-  // autoSizeAfterRender = react(
-  //   () =>
-  //     this.appState.appConfig &&
-  //     this.appState.appConfig.viewConfig &&
-  //     this.appState.appConfig.viewConfig.contentSize &&
-  //     this.internalState.resolvedModel &&
-  //     (this.state.model['id'] || this.state.model['email']),
-  //   id => {
-  //     ensure('is ready', !!id)
-  //     console.log('should auto size')
-  //   },
-  // )
-
   isShown = react(() => this.internalState.isShown, _ => _)
   willHide = react(() => this.internalState.willHide, _ => _)
   isTorn = react(() => this.internalState.torn, _ => _)

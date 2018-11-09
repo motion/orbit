@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, compose, react, ensure, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
-import Resizable, { ResizableDirection, ResizeCallback } from 're-resizable'
+import Resizable, { ResizeCallback } from 're-resizable'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
@@ -11,7 +11,7 @@ import { AppFrameArrow } from './AppFrameArrow'
 
 type AppFrameProps = {
   store?: AppFrameStore
-  viewStore: AppPageStore
+  appPageStore: AppPageStore
   children: any
   theme?: ThemeObject
 }
@@ -49,7 +49,7 @@ class AppFrameStore {
   sizeD: [number, number] = [0, 0]
   posD: [number, number] = [0, 0]
   syncWithAppState = react(
-    () => [this.props.viewStore.appState.size, this.props.viewStore.appState.position],
+    () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
     ([size, position]) => {
       ensure('size', !!size)
       this.sizeD = size
@@ -76,7 +76,7 @@ class AppFrameStore {
   }
 
   tearOnFinishResize = debounce(() => {
-    if (this.props.viewStore.isPeek) {
+    if (this.props.appPageStore.isPeek) {
       AppActions.tearPeek()
     }
   }, 100)
@@ -99,14 +99,14 @@ const PeekFrameContainer = view(UI.View, {
 
 const decorator = compose(
   attachTheme,
-  attach('viewStore'),
+  attach('appPageStore'),
   attach({
     store: AppFrameStore,
   }),
   view,
 )
-export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFrameProps) => {
-  const { isShown, willShow, willHide, state, willStayShown, framePosition } = viewStore
+export const AppFrame = decorator(({ appPageStore, store, children, theme }: AppFrameProps) => {
+  const { isShown, willShow, willHide, state, willStayShown, framePosition } = appPageStore
   if (!state || !state.position || !state.position.length || !state.target) {
     return null
   }
@@ -116,7 +116,7 @@ export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFra
   const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
   const margin = padding.map(x => -x)
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
-  const transition = transitions(viewStore)
+  const transition = transitions(appPageStore)
   const size = store.sizeD
   return (
     <Resizable
@@ -147,7 +147,7 @@ export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFra
         height={size[1]}
         pointerEvents={isShown ? 'auto' : 'none'}
       >
-        <AppFrameArrow viewStore={viewStore} borderShadow={borderShadow} />
+        <AppFrameArrow appPageStore={appPageStore} borderShadow={borderShadow} />
         <UI.Col flex={1} padding={padding} margin={margin}>
           <UI.Col position="relative" flex={1}>
             <AppFrameBorder boxShadow={[borderShadow]} />

@@ -9,7 +9,7 @@ import { AppPageStore } from './AppPageStore'
 
 type Props = {
   store?: AppArrowStore
-  viewStore: AppPageStore
+  appPageStore: AppPageStore
   borderShadow: any
   theme: ThemeObject
 }
@@ -21,7 +21,7 @@ const peekOnRight = false
 class AppArrowStore {
   props: Props
 
-  hide = react(() => this.props.viewStore.isTorn, _ => _)
+  hide = react(() => this.props.appPageStore.isTorn, _ => _)
 
   arrowY = react(
     () => App.peekState,

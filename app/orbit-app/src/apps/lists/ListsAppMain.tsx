@@ -26,7 +26,7 @@ export function ListsAppMain(props: AppProps) {
   const store = useStore(ListsMainStore, props)
   return (
     <>
-      <AppSimpleTitleBar normalizedItem={{ title: 'hi lists' }} />
+      <AppSimpleTitleBar title="hi lists" />
       <br />
       <br />
       <VirtualList

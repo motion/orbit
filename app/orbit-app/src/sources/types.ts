@@ -61,7 +61,7 @@ export type OrbitIntegrationProps<A extends ItemType> = OrbitItemProps<ModelFrom
 }
 
 export type OrbitSourceMainProps<A extends ItemType> = OrbitIntegrationProps<A> & {
-  viewStore: AppPageStore
+  appPageStore: AppPageStore
   searchBar: SearchBarType
   searchTerm: string
 }
@@ -70,7 +70,7 @@ export type OrbitSourceSettingProps<T extends Source> = {
   appConfig: AppConfig
   appInfoStore: AppInfoStore
   source: T
-  viewStore: AppPageStore
+  appPageStore: AppPageStore
 }
 
 export type OrbitIntegration<A extends ItemType> = {

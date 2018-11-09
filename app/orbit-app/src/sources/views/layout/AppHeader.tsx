@@ -8,7 +8,7 @@ import { Centered } from '../../../views/Centered'
 import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 
 type Props = {
-  viewStore?: AppPageStore
+  appPageStore?: AppPageStore
   theme?: any
   integration?: string
   before?: React.ReactNode
@@ -68,19 +68,19 @@ const TitleBarText = props => (
   </div>
 )
 
-@attach('viewStore')
+@attach('appPageStore')
 @view
 export class AppHeaderContent extends React.Component<Props> {
   render() {
-    const { viewStore, before, after, children, ...props } = this.props
-    const { viewConfig } = viewStore.state.appConfig
+    const { appPageStore, before, after, children, ...props } = this.props
+    const { viewConfig } = appPageStore.state.appConfig
     const hideTitleBar = viewConfig && viewConfig.showTitleBar === false
     return (
       <AppHeaderContain
         invisible={hideTitleBar}
         draggable
         focused
-        onDragStart={viewStore.onDragStart}
+        onDragStart={appPageStore.onDragStart}
         {...props}
       >
         <Glint borderRadius={7.5} opacity={0.65} top={0.5} />

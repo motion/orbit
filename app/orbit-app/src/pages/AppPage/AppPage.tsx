@@ -15,14 +15,14 @@ import { SelectionStore } from '../../stores/SelectionStore'
 
 type Props = {
   sourcesStore?: SourcesStore
-  viewStore?: AppPageStore
+  appPageStore?: AppPageStore
 }
 
 @provide({
   sourcesStore: SourcesStore,
 })
 @provide({
-  viewStore: AppPageStore,
+  appPageStore: AppPageStore,
 })
 @provide({
   queryStore: QueryStore,
@@ -61,12 +61,12 @@ const HiddenControls = view({
   },
 })
 
-@attach('sourcesStore', 'viewStore')
+@attach('sourcesStore', 'appPageStore')
 @view
 class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitIntegration<any>['views']) => {
-    const { viewStore, sourcesStore } = this.props
-    const { appConfig } = viewStore.state
+    const { appPageStore, sourcesStore } = this.props
+    const { appConfig } = appPageStore.state
     const app = sourcesStore.allSourcesMap[appConfig.integration]
     if (!app) {
       return NullView
@@ -75,11 +75,11 @@ class AppPageContent extends React.Component<Props> {
   }
 
   render() {
-    const { viewStore } = this.props
-    if (!viewStore.state) {
+    const { appPageStore } = this.props
+    if (!appPageStore.state) {
       return <div>no state</div>
     }
-    const { appConfig, appType } = viewStore.state
+    const { appConfig, appType } = appPageStore.state
     if (!appConfig || !appType) {
       return <div>no appConfig or appType</div>
     }
@@ -88,9 +88,9 @@ class AppPageContent extends React.Component<Props> {
       <>
         <HiddenControls>
           <WindowControls
-            onClose={viewStore.handleClose}
-            onMax={viewStore.isTorn ? viewStore.handleMaximize : null}
-            onMin={viewStore.isTorn ? viewStore.handleMinimize : null}
+            onClose={appPageStore.handleClose}
+            onMax={appPageStore.isTorn ? appPageStore.handleMaximize : null}
+            onMin={appPageStore.isTorn ? appPageStore.handleMinimize : null}
             itemProps={{
               size: 10,
             }}

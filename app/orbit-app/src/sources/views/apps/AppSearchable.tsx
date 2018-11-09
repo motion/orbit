@@ -12,17 +12,18 @@ type SearchChildProps = {
 }
 
 type Props = {
-  viewStore?: AppPageStore
+  // TODO: should just be appStore
+  appPageStore?: AppPageStore
   selectionStore?: SelectionStore
   children?: (a: SearchChildProps) => React.ReactNode
 }
 
-@attach('selectionStore', 'viewStore')
+@attach('selectionStore', 'appPageStore')
 @view
 export class AppSearchable extends React.Component<Props> {
   render() {
-    const { selectionStore, viewStore, children } = this.props
-    const { appConfig } = viewStore.state
+    const { selectionStore, appPageStore, children } = this.props
+    const { appConfig } = appPageStore.state
     return (
       <Searchable
         key={appConfig.id}

@@ -95,7 +95,7 @@ export class SearchAppInner extends React.PureComponent<
 class ListItem extends React.PureComponent<ListItemProps> {
   render() {
     const { model, realIndex, query, ...props } = this.props
-    if (model.type === 'summary') {
+    if (model.subType === 'group') {
       const item = model as any
       return <GroupedSearchItem item={item} index={realIndex} query={query} {...props} />
     }

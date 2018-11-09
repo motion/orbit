@@ -7,7 +7,7 @@ import { AppType } from '@mcro/models'
 
 export class AppStore {
   props: AppProps & {
-    viewStore?: AppPageStore
+    appPageStore?: AppPageStore
   }
 
   selectionResults = null
@@ -36,15 +36,15 @@ export class AppStore {
   }
 
   get appConfig(): AppConfig {
-    if (this.props.viewStore) {
-      return this.props.viewStore.state.appConfig
+    if (this.props.appPageStore) {
+      return this.props.appPageStore.state.appConfig
     }
     return null
   }
 
   get appType(): AppType {
-    if (this.props.viewStore) {
-      return this.props.viewStore.state.appType
+    if (this.props.appPageStore) {
+      return this.props.appPageStore.state.appType
     }
     return null
   }

@@ -170,7 +170,7 @@ export class SearchStore {
         }
         results = [
           ...results,
-          { type: 'summary', title: 'Something', body: 'Lorem ipsum' },
+          { type: 'search', subType: 'group', title: 'Something', body: 'Lorem ipsum' },
           ...nextResults,
         ]
         setValue({

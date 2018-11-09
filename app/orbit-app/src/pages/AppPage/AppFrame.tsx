@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, compose, react, ensure, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
-import { ResizableBox } from '../../views/ResizableBox'
+import Resizable from 're-resizable'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
@@ -54,8 +54,8 @@ class AppFrameStore {
     },
   )
 
-  handleResize = (_, { size }) => {
-    this.size = [size.width, size.height]
+  handleResize = (_e, _d, _r, { width, height }) => {
+    this.size = [this.size[0] + width, this.size[1] + height]
     this.tearOnFinishResize()
   }
 
@@ -103,12 +103,14 @@ export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFra
   const transition = transitions(viewStore)
   const size = store.size
   return (
-    <ResizableBox
-      width={size[0]}
-      height={size[1]}
-      minConstraints={[100, 100]}
-      maxConstraints={[window.innerWidth, window.innerHeight]}
+    <Resizable
+      size={{ width: size[0], height: size[1] }}
+      minWidth={100}
+      minHeight={100}
+      maxWidth={window.innerWidth}
+      maxHeight={window.innerHeight}
       onResize={store.handleResize}
+      className="resizable"
       style={{
         zIndex: 2,
         // keep size/positionX linked to be fast...
@@ -143,6 +145,6 @@ export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFra
           </UI.Col>
         </UI.Col>
       </PeekFrameContainer>
-    </ResizableBox>
+    </Resizable>
   )
 })

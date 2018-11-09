@@ -66,10 +66,9 @@ export class MenusStore {
 }
 
 export function MenuLayer() {
-  const settingStore = useStore(SettingStore, { debug: true })
-  const sourcesStore = useStore(SourcesStore, { debug: true })
-  const queryStore = useStore(QueryStore, { sourcesStore }, { debug: true })
-  const selectionStore = useStore(SelectionStore, { queryStore }, { debug: true })
+  const { sourcesStore, settingStore } = React.useContext(StoreContext)
+  const queryStore = useStore(QueryStore, { sourcesStore })
+  const selectionStore = useStore(SelectionStore, { queryStore })
   const menusStore = useStore(MenusStore, { debug: true })
   const storeProps = {
     settingStore,
@@ -81,21 +80,17 @@ export function MenuLayer() {
   console.log('------render MenuLayer')
   return (
     <StoreContext.Provider value={storeProps}>
-      <Theme name="dark">
-        <FullScreen>
-          {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
-            <MenuApp
-              key={app}
-              id={index}
-              view="index"
-              title={app}
-              type={app}
-              menusStore={menusStore}
-              isActive={menusStore.menuOpenID === index}
-            />
-          ))}
-        </FullScreen>
-      </Theme>
+      {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+        <MenuApp
+          key={app}
+          id={index}
+          view="index"
+          title={app}
+          type={app}
+          menusStore={menusStore}
+          isActive={menusStore.menuOpenID === index}
+        />
+      ))}
     </StoreContext.Provider>
   )
 }

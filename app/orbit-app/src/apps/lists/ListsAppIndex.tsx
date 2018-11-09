@@ -30,8 +30,7 @@ class ListsIndexStore {
   })
 
   get allLists() {
-    if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists)
-      return []
+    if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists) return []
 
     return this.listsApp.data.lists.map((listItem, index) => {
       return {
@@ -70,7 +69,7 @@ export function ListsAppIndex(props: AppProps) {
   const store = useStore(ListsIndexStore, props)
   return (
     <>
-      <VirtualList maxHeight={400} items={store.allLists} itemProps={{ direct: true }} />
+      <VirtualList maxHeight={400} items={store.results} itemProps={{ direct: true }} />
       <ListEdit />
     </>
   )

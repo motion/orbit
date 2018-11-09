@@ -35,7 +35,7 @@ class MenuStore {
     return (App.openMenu && App.openMenu.id !== this.props.id) || false
   }
 
-  get isPreviewingThisMenu() {
+  get isOptionPreview() {
     return (
       Desktop.isHoldingOption &&
       !this.isAnotherMenuOpen &&
@@ -45,13 +45,13 @@ class MenuStore {
 
   openQuick = react(
     () => [
-      this.isPreviewingThisMenu,
+      this.isOptionPreview,
       this.isHoveringIcon || this.isHoveringDropdown,
       this.isAnotherMenuOpen,
     ],
-    async ([isPreviewingThisMenu, hoveringMenu, anotherMenuOpen], { sleep, when }) => {
+    async ([isOptionPreview, hoveringMenu, anotherMenuOpen], { sleep, when }) => {
       // on holding option
-      if (isPreviewingThisMenu) {
+      if (isOptionPreview) {
         await sleep(50)
         return true
       }
@@ -147,6 +147,7 @@ class MenuStore {
   }
 
   handleMouseLeave = () => {
+    console.log('MOUSE LEAVE')
     this.isHoveringDropdown = false
   }
 }
@@ -189,20 +190,17 @@ export function Menu(props: Props) {
       towards="bottom"
       delay={0}
       top={0}
-      distance={8}
-      forgiveness={8}
+      distance={0}
+      forgiveness={0}
+      edgePadding={0}
       left={left}
       maxHeight={300}
+      borderTopRadius={0}
       elevation={6}
       theme="dark"
+      noArrow
     >
-      <View
-        onMouseEnter={store.handleMouseEnter}
-        onMouseLeave={store.handleMouseLeave}
-        padding={10}
-        margin={-10}
-        flex={1}
-      >
+      <View onMouseEnter={store.handleMouseEnter} onMouseLeave={store.handleMouseLeave} flex={1}>
         <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
           {typeof props.children === 'function' ? props.children(open, store) : props.children}
         </Col>

@@ -4,6 +4,7 @@ import { loadOne } from '@mcro/model-bridge'
 import { SourceModel } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import { react } from '@mcro/black'
+import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
 
 class SourceAppStore {
   props: AppProps
@@ -29,5 +30,8 @@ export function SourceAppMain(props: AppProps) {
     return null
   }
   const View = props.sourcesStore.getView(model.type, 'source')
-  return <View />
+
+  return (
+    <AttachAppInfoStore>{appInfoStore => <View appInfoStore={appInfoStore} />}</AttachAppInfoStore>
+  )
 }

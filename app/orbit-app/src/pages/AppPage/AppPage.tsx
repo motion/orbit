@@ -3,13 +3,11 @@ import { view, provide, attach } from '@mcro/black'
 import { SourcesStore } from '../../stores/SourcesStore'
 // import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
-import { SpaceEditView } from '../SpaceEditView'
 import { AppPageStore } from './AppPageStore'
 import * as UI from '@mcro/ui'
 import { AppFrame } from './AppFrame'
 import { App } from '@mcro/stores'
 import { WindowControls } from '../../views/WindowControls'
-import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
 import { OrbitIntegration } from '../../sources/types'
 import { AppView } from '../../apps/AppView'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
@@ -74,41 +72,6 @@ class AppPageContent extends React.Component<Props> {
       return NullView
     }
     return app.views[viewType]
-  }
-
-  viewsByType = {
-    source: () => {
-      const { viewStore } = this.props
-      const View = this.getView('setting')
-      return view(props => {
-        return (
-          <AttachAppInfoStore>
-            {appInfoStore => (
-              <View
-                appConfig={viewStore.state.appConfig}
-                appInfoStore={appInfoStore}
-                source={viewStore.state.model}
-                viewStore={viewStore}
-                {...props}
-              />
-            )}
-          </AttachAppInfoStore>
-        )
-      })
-    },
-    app: () => {
-      return () => <div>app</div>
-    },
-    setup: () => {
-      const View = this.getView('setup')
-      return () => <View />
-    },
-    newSpace: () => {
-      return () => <SpaceEditView />
-    },
-    list: () => () => <AppView id="0" type="lists" view="main" title="" />,
-    people: () => () => <AppView id="0" type="people" view="main" title="" />,
-    topics: () => () => <AppView id="0" type="topics" view="main" title="" />,
   }
 
   render() {

@@ -77,7 +77,12 @@ export function ListsAppIndex(props: AppProps) {
   console.log('render lists index', store, store.results, Root.stores.ListsIndexStore)
   return (
     <>
-      <VirtualList maxHeight={400} items={store.results} itemProps={{ direct: true }} />
+      <VirtualList
+        maxHeight={400}
+        items={store.results}
+        itemProps={{ direct: true, appType: 'lists' }}
+        getItemProps={index => ({ appConfig: store.results[index] })}
+      />
       <ListEdit />
     </>
   )

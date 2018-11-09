@@ -137,6 +137,7 @@ export class OrbitItemStore {
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected && !preventAutoSelect) {
+        console.log('selecting this thing...', this.props.appType, this.props.appConfig)
         if (onSelect) {
           onSelect(this.realIndex, this.props.appConfig)
         } else {

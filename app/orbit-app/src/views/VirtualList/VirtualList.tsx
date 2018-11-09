@@ -139,8 +139,10 @@ export function VirtualList(props: Props) {
             index={index}
             realIndex={index}
             query={App.state.query}
-            itemProps={props.itemProps}
-            {...props.getItemProps && props.getItemProps(index)}
+            itemProps={{
+              ...props.itemProps,
+              ...(props.getItemProps && props.getItemProps(index)),
+            }}
           />
         </div>
       </CellMeasurer>

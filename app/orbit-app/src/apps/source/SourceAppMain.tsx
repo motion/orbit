@@ -1,8 +1,13 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { loadOne } from '@mcro/model-bridge'
-import { SourceModel } from '@mcro/models'
+import { BitModel } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
+import { BitDecoration } from '../search/mainViews/BitDecoration'
+import { AppSearchable } from '../../sources/views/apps/AppSearchable'
+import { normalizeItem } from '../../helpers/normalizeItem'
+import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
+import { react } from '@mcro/black'
 
 class SourceAppStore {
   props: AppProps
@@ -11,20 +16,34 @@ class SourceAppStore {
     return this.props.appStore.appConfig
   }
 
-  getModel = async id => {
-    return await loadOne(SourceModel, {
-      args: {
-        where: { id },
-      },
-    })
-  }
+  model = react(
+    () => this.appConfig,
+    ({ id }) =>
+      loadOne(BitModel, {
+        args: {
+          where: { id },
+        },
+      }),
+  )
 }
 
 export function SourceAppMain(props: AppProps) {
-  const store = useStore(SourceAppStore, props)
+  const { model } = useStore(SourceAppStore, props)
+  if (!model) {
+    return null
+  }
+  const View = props.sourcesStore.getView(model.integration, 'main')
+  const normalizedItem = normalizeItem(model)
   return (
-    <>
-      hi {JSON.stringify(props)} {JSON.stringify(store.appConfig)}
-    </>
+    <BitDecoration>
+      <AppSearchable>
+        {({ searchBar }) => (
+          <>
+            <BitTitleBar normalizedItem={normalizedItem} searchBar={searchBar} />
+            <View bit={model} model={model} normalizedItem={normalizedItem} {...props} />
+          </>
+        )}
+      </AppSearchable>
+    </BitDecoration>
   )
 }

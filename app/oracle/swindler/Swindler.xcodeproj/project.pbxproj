@@ -38,6 +38,7 @@
 		2FEEA29C1C1D36B000CD515E /* Swindler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F86CEC61BD60117007E8C29 /* Swindler.framework */; };
 		2FEEA2E31C1E6E9200CD515E /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FEEA2E21C1E6E9200CD515E /* Log.swift */; };
 		4F4A2E05CB31F3CE3328F6BC /* Pods_SwindlerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B68136E50FFFCC78248BC5 /* Pods_SwindlerExample.framework */; };
+		AED8CE9D2195097800EA74EA /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CE6A2194F1A000EA74EA /* PromiseKit.framework */; };
 		DD99E7B69560D1D9228B1AA3 /* Pods_SwindlerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 825D31E13E13B95145A2E63C /* Pods_SwindlerTests.framework */; };
 		FA5D0430B9586036007FBD5F /* Pods_Swindler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03AAC28AB45DE089F6C7600F /* Pods_Swindler.framework */; };
 /* End PBXBuildFile section */
@@ -226,6 +227,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AED8CE9D2195097800EA74EA /* PromiseKit.framework in Frameworks */,
 				FA5D0430B9586036007FBD5F /* Pods_Swindler.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

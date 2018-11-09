@@ -10,13 +10,14 @@
 		AE54E0BA214B15A4000207B1 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE54E0B9214B15A4000207B1 /* Async.swift */; };
 		AE6EC26A214B410200834167 /* AXSwift.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AE6EC264214B410200834167 /* AXSwift.framework.dSYM */; };
 		AE6EC26C214B410200834167 /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; };
-		AE6EC26D214B410200834167 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6EC267214B410200834167 /* AXSwift.framework */; };
 		AE6EC26E214B410200834167 /* SwiftWebSocket.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */; };
 		AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC267214B410200834167 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
 		AED8CE802194F52100EA74EA /* Swindler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; };
 		AED8CE812194F53C00EA74EA /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AED8CEA221950A8000EA74EA /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CEA121950A8000EA74EA /* PromiseKit.framework */; };
+		AED8CEA321950A8000EA74EA /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AED8CEA121950A8000EA74EA /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AEE9270621913158006CAA2C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9270521913158006CAA2C /* main.swift */; };
 		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
 		CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */; };
@@ -79,6 +80,7 @@
 				AED8CE812194F53C00EA74EA /* Swindler.framework in CopyFiles */,
 				AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */,
 				AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */,
+				AED8CEA321950A8000EA74EA /* PromiseKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +94,8 @@
 		AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
 		AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../Swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
 		AED8CE7E2194F3C200EA74EA /* Pods_Swindler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Swindler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AED8CE9E21950A1C00EA74EA /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = "Build/Products/Release/PromiseKit-CorePromise/PromiseKit.framework"; sourceTree = "<group>"; };
+		AED8CEA121950A8000EA74EA /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = orbit/PromiseKit.framework; sourceTree = "<group>"; };
 		AEE9270521913158006CAA2C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF0BCD82202E0E0F0012723C /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
@@ -122,9 +126,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AED8CEA221950A8000EA74EA /* PromiseKit.framework in Frameworks */,
 				AED8CE802194F52100EA74EA /* Swindler.framework in Frameworks */,
 				AE6EC26C214B410200834167 /* SwiftWebSocket.framework in Frameworks */,
-				AE6EC26D214B410200834167 /* AXSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +189,8 @@
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
+				AED8CE9E21950A1C00EA74EA /* PromiseKit.framework */,
+				AED8CEA121950A8000EA74EA /* PromiseKit.framework */,
 				AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
@@ -521,6 +527,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"$(PROJECT_DIR)/Build/Products/Release/PromiseKit-CorePromise",
+					"$(PROJECT_DIR)/orbit",
 				);
 				INFOPLIST_FILE = orbit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
@@ -544,6 +552,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"$(PROJECT_DIR)/Build/Products/Release/PromiseKit-CorePromise",
+					"$(PROJECT_DIR)/orbit",
 				);
 				INFOPLIST_FILE = orbit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";

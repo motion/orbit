@@ -319,7 +319,6 @@ export class Searchable extends React.PureComponent<Props, State> {
       searchTerm: this.state.searchTerm,
       searchBar: (
         <SearchInput
-          key={10000}
           placeholder={placeholder}
           actions={actions}
           searchBarProps={searchBarProps}

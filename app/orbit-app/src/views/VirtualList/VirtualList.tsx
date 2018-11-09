@@ -116,7 +116,6 @@ class VirtualListStore {
 
 export function VirtualList(props: Props) {
   const context = React.useContext(StoreContext)
-  console.log('context', context)
   const store = useStore(VirtualListStore, { ...props, appStore: context.appStore })
 
   const rowRenderer = ({ index, parent, style }) => {

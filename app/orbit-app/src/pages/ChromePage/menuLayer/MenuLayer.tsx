@@ -6,8 +6,8 @@ import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { useStore } from '@mcro/use-store'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
-import { getOpenMenuID, setTrayFocused } from './helpers'
-import { App, Electron, Desktop } from '@mcro/stores'
+import { setTrayFocused } from './helpers'
+import { App } from '@mcro/stores'
 import { react, ensure } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
@@ -17,51 +17,42 @@ import { AppType } from '../../../apps/apps'
 export type MenuAppProps = AppProps & { menusStore: MenusStore; id: number }
 
 export class MenusStore {
-  searchInput: { [key: number]: HTMLInputElement } = {}
-  lastMenuOpen = 2
-  menuOpenID = react(getOpenMenuID, _ => _)
-  lastMenuOpenID = react(() => this.menuOpenID, _ => _, { delayValue: true })
-
-  setLastOpen = index => {
-    this.lastMenuOpen = index
+  get menuOpenID() {
+    if (!App.openMenu) {
+      return false
+    }
+    return App.openMenu.id
   }
 
-  get changingMenu() {
-    return this.menuOpenID !== this.lastMenuOpenID
-  }
+  lastOpenMenu = react(
+    () => this.menuOpenID,
+    (val, { state }) => {
+      if (!state.hasResolvedOnce) {
+        // for now just hardcoding to start at #2 app
+        return 2
+      }
+      ensure('is number', typeof val === 'number')
+      return val
+    },
+  )
 
   get anyMenuOpen() {
     return this.menuOpenID !== false
   }
 
   closePeekOnChangeMenu = react(
-    () => this.changingMenu,
+    () => typeof this.menuOpenID === 'number',
     isChanging => {
       ensure('isChanging', isChanging)
       AppActions.clearPeek()
     },
   )
 
-  areMenusFocused = react(
+  showMenusBeforeOpen = react(
     () => this.anyMenuOpen,
-    async (anyMenuOpen, { sleep, whenChanged }) => {
-      if (anyMenuOpen) {
-        if (Desktop.isHoldingOption) {
-          window['electronRequire']('electron').remote.app.show()
-          // wait for pin to focus the menu
-          await whenChanged(() => Electron.state.pinKey.at)
-          console.log('GOT A PIN KEY', Electron.state.pinKey.name)
-        }
-        setTrayFocused(true)
-        return true
-      } else {
-        await sleep(200)
-        setTrayFocused(false)
-        return false
-      }
-    },
-    {
-      deferFirstRun: true,
+    open => {
+      ensure('open', open)
+      window['electronRequire']('electron').remote.app.show()
     },
   )
 
@@ -72,30 +63,14 @@ export class MenusStore {
       setTrayFocused(true)
     },
   )
-
-  handleSearchInput = (index: number) => (ref: HTMLInputElement) => {
-    this.searchInput[index] = ref
-  }
-
-  focusSearchInputOnFocus = react(
-    () => [this.areMenusFocused, this.menuOpenID],
-    ([focused, id]) => {
-      ensure('focused', focused)
-      if (typeof id === 'number') {
-        const inputRef = this.searchInput[id]
-        ensure('inputRef', !!inputRef)
-        inputRef.focus()
-      }
-    },
-  )
 }
 
 export function MenuLayer() {
-  const settingStore = useStore(SettingStore)
-  const sourcesStore = useStore(SourcesStore)
-  const queryStore = useStore(QueryStore, { sourcesStore })
-  const selectionStore = useStore(SelectionStore, { queryStore })
-  const menusStore = useStore(MenusStore)
+  const settingStore = useStore(SettingStore, { debug: true })
+  const sourcesStore = useStore(SourcesStore, { debug: true })
+  const queryStore = useStore(QueryStore, { sourcesStore }, { debug: true })
+  const selectionStore = useStore(SelectionStore, { queryStore }, { debug: true })
+  const menusStore = useStore(MenusStore, { debug: true })
   const storeProps = {
     settingStore,
     sourcesStore,
@@ -103,6 +78,7 @@ export function MenuLayer() {
     selectionStore,
     menusStore,
   }
+  console.log('------render MenuLayer')
   return (
     <StoreContext.Provider value={storeProps}>
       <Theme name="dark">

@@ -52,6 +52,13 @@ const updateProps = (props, nextProps, options?: UseStoreOptions) => {
     const a = props[prop]
     const b = nextProps[prop]
     if (a !== b) {
+      // this is a bit risky and weird but i cant think of a case it would ever have broken
+      // if you use functions as render callbacks and then *change* them during renders this would break
+      if (typeof a === 'function' && typeof b === 'function') {
+        if (a.toString() === b.toString()) {
+          continue
+        }
+      }
       if (options && options.debug) {
         console.log('has changed prop', prop, nextProps[prop])
       }

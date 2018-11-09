@@ -13,6 +13,7 @@ class ChromePageStore {
 
 export function ChromePage() {
   const store = useStore(ChromePageStore)
+  console.log('nreder chore asdasda.......')
   return (
     <Theme name={store.theme}>
       <AppWrapper>

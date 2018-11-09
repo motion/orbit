@@ -13,7 +13,7 @@ const OrbitIndicatorContainer = view(UI.View, {
   top: 0,
   position: 'absolute',
   background: '#E9B73A',
-  transition: `opacity ease-in 70ms ${App.animationDuration}`,
+  transition: `opacity ease-in 70ms 100`,
 })
 
 export const OrbitIndicator = view(({ orbitOnLeft }) => {
@@ -27,7 +27,7 @@ export const OrbitIndicator = view(({ orbitOnLeft }) => {
         border,
         borderRight: orbitOnLeft ? 0 : border,
         borderLeft: !orbitOnLeft ? 0 : border,
-        opacity: App.isShowingOrbit ? 0 : 1,
+        opacity: App.orbitState.docked ? 0 : 1,
         right: orbitOnLeft ? SHADOW_PAD : 'auto',
         left: !orbitOnLeft ? SHADOW_PAD : 'auto',
         borderLeftRadius: orbitOnLeft ? 20 : 0,

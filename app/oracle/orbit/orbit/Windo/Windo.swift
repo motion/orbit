@@ -29,22 +29,6 @@ final class Windo {
   init(emit: @escaping (String)->Void) {
     self.emit = emit
   }
-
-  @objc func checkAccessibility() {
-    print("Checking accessibility...")
-    if AXSwift.checkIsProcessTrusted(prompt: false) {
-      self.emit("{ \"action\": \"accessible\", \"value\": false }")
-    } else {
-      self.emit("{ \"action\": \"accessible\", \"value\": false }")
-    }
-  }
-
-  @objc func requestAccessibility() {
-    print("Requesting accessibility...")
-    AXSwift.checkIsProcessTrusted(prompt: true)
-    print("done checking... send info")
-    self.checkAccessibility()
-  }
   
   func stop() {
     self.started = false

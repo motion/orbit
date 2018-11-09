@@ -123,6 +123,13 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     return NSApplication.TerminateReply.terminateNow
   }
   
+  private func startWatchingWindows() {
+    if (self.windo == nil) {
+      windo = Windo(emit: self.emit)
+    }
+    windo.start()
+  }
+  
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     print("applicationDidFinishLaunching, OCR \(shouldRunOCR), PORT: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
 
@@ -136,14 +143,16 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     
     if (testInXCode) {
       _ = self.updateAccessibility(true)
+      Async.background(after: 1, {
+        self.startWatchingWindows()
+      })
     }
     
     // silent check if we are already accessible
     _ = self.updateAccessibility(false)
 
     if shouldRunOCR {
-      windo = Windo(emit: self.emit)
-
+      startWatchingWindows()
       do {
         screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
       } catch let error as NSError {
@@ -540,7 +549,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     // start window watching
     if action == "staw" {
       if self.updateAccessibility(true) {
-        windo.start()
+        startWatchingWindows()
       }
       return
     }

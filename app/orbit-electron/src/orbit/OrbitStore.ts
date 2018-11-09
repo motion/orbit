@@ -1,14 +1,13 @@
-import { App, Electron } from '@mcro/stores'
+import { Electron } from '@mcro/stores'
 import { store } from '@mcro/black'
 import { app, clipboard } from 'electron'
-import { ShortcutsStore } from './ShortcutsStore'
+import { ShortcutsManager } from './ShortcutsManager'
 
 @store
 export class OrbitStore {
-  shortcutStore = new ShortcutsStore()
+  shortcutManager = new ShortcutsManager()
 
   async didMount() {
-    this.shortcutStore.onShortcut(this.onShortcut)
     Electron.onMessage(msg => {
       switch (msg) {
         case Electron.messages.COPY:
@@ -20,19 +19,6 @@ export class OrbitStore {
           return
       }
     })
-  }
-
-  onShortcut = async shortcut => {
-    console.log('shortcut', shortcut)
-    if (shortcut === 'Option+Space') {
-      this.toggleDocked()
-      return
-    }
-  }
-
-  toggleDocked = async () => {
-    const shown = App.orbitState.docked
-    Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
   }
 
   restart() {

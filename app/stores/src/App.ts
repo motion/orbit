@@ -25,12 +25,19 @@ export const defaultPeekState: AppState = {
   size: [0, 0],
 }
 
-const DEFAULT_MENU_STATE = {
-  left: 0,
-  width: 0,
-  height: 0,
-  open: false,
+export type MenuState = {
+  id: number
+  open: boolean
+  position: [number, number]
+  size: [number, number]
 }
+
+const defaultMenuState = (index: number): MenuState => ({
+  id: index,
+  open: false,
+  position: [0, 0],
+  size: [0, 0],
+})
 
 @store
 class AppStore {
@@ -79,10 +86,10 @@ class AppStore {
       trayEvent: '',
       trayEventAt: 0,
       menuState: {
-        0: DEFAULT_MENU_STATE,
-        1: DEFAULT_MENU_STATE,
-        2: DEFAULT_MENU_STATE,
-        Orbit: DEFAULT_MENU_STATE,
+        0: defaultMenuState(0),
+        1: defaultMenuState(1),
+        2: defaultMenuState(2),
+        3: defaultMenuState(3),
       },
     },
     appsState: [defaultPeekState],
@@ -107,18 +114,14 @@ class AppStore {
     return !!this.peekState.appConfig
   }
 
-  animationDuration = 90
-
   getAppState(id: number): AppState {
     return this.state.appsState.find(x => x.id === id)
   }
 
-  get orbitArrowTowards() {
-    return App.orbitState.orbitOnLeft ? 'right' : 'left'
-  }
-
-  get hoveredWordName() {
-    return 'none for now'
+  get openMenu(): MenuState {
+    const { menuState } = App.state.trayState
+    const menusState = Object.keys(menuState).map(x => menuState[x])
+    return menusState.find(x => x.open)
   }
 
   start = async (options?) => {

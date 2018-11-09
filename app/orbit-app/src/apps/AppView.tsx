@@ -5,24 +5,38 @@ import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
 
-export function AppView(
-  props: Pick<AppProps, 'id' | 'view' | 'title' | 'type' | 'isActive'> & { appStore?: AppStore },
-) {
+type Props = Pick<AppProps, 'id' | 'view' | 'title' | 'type' | 'isActive'> & { appStore?: AppStore }
+
+// to prevent excessive renders
+class AppViewInner extends React.Component<AppProps & { AppView: any }> {
+  shouldComponentUpdate() {
+    return false
+  }
+
+  render() {
+    const { AppView, ...props } = this.props
+    return <AppView {...props} />
+  }
+}
+
+export function AppView(props: Props) {
   const stores = React.useContext(StoreContext)
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
   const appStore = useStore(
     AppStore,
     { ...props, ...stores },
-    { conditionalUse: shouldProvideAppStore },
+    { conditionalUse: shouldProvideAppStore, debug: true },
   )
-  const App = apps[props.type][props.view]
-  if (typeof App !== 'function') {
-    console.error('WAHT THE FUCK', props.type, App)
+  console.log('rendering app', props.id, props.type, props.view)
+  const AppView = apps[props.type][props.view]
+  if (typeof AppView !== 'function') {
+    console.error('WAHT THE FUCK', props.type, AppView)
     return null
   }
   const appView = (
-    <App
+    <AppViewInner
+      AppView={AppView}
       {...props}
       appStore={props.appStore || stores.appStore || appStore}
       sourcesStore={stores.sourcesStore}

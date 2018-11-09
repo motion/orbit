@@ -1,11 +1,12 @@
-import { ensure, react } from '@mcro/black'
+import { ensure, react, always } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
-import { GetItemProps } from '../../views/VirtualList/VirtualList'
+import { ItemPropsMinimum } from '../../views/VirtualList/VirtualList'
+import { getAppConfig } from '../../helpers/getAppConfig'
 
 type SearchState = { results: Bit[]; finished?: boolean; query: string }
 
@@ -31,12 +32,24 @@ export class SearchStore {
     return this.searchState.results[this.props.appStore.activeIndex]
   }
 
-  getItemProps: GetItemProps = index => {
+  getAppConfig(index) {
+    const model = this.searchState.results[index]
+    if (model.target) {
+      return getAppConfig(model)
+    }
+    return {}
+  }
+
+  getItemProps = index => {
     if (!index || index % 5 === 0) {
       return {
         separator: 'This Week',
       }
     }
+    return {
+      appConfig: this.getAppConfig(index),
+      appType: 'search',
+    } as ItemPropsMinimum
   }
 
   updateSearchHistoryOnSearch = react(
@@ -58,7 +71,7 @@ export class SearchStore {
   )
 
   setSelection = react(
-    () => this.searchState && Math.random(),
+    () => always(this.searchState),
     () => {
       this.props.appStore.setResults([
         {
@@ -157,7 +170,7 @@ export class SearchStore {
         }
         results = [
           ...results,
-          { type: 'summary', title: 'Something', body: 'Lorem ipsum' },
+          { type: 'search', subType: 'group', title: 'Something', body: 'Lorem ipsum' },
           ...nextResults,
         ]
         setValue({

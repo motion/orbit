@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { ViewStore } from '../../../pages/AppPage/ViewStore'
+import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 
 const PeekContentChrome = view(UI.Col, {
   flex: 1,
@@ -20,10 +20,10 @@ const ContentInner = view(UI.Col, {
   wordBreak: 'break-word',
 })
 
-@attach('viewStore')
+@attach('appPageStore')
 export class ScrollableContent extends React.Component<{
   scrollTo?: string
-  viewStore?: ViewStore
+  appPageStore?: AppPageStore
 }> {
   componentDidMount() {
     this.updateScroll()
@@ -35,19 +35,19 @@ export class ScrollableContent extends React.Component<{
   }
 
   updateScroll() {
-    const { viewStore, scrollTo } = this.props
+    const { appPageStore, scrollTo } = this.props
     if (scrollTo) {
-      const node = viewStore.contentFrame.current
+      const node = appPageStore.contentFrame.current
       const div = node.querySelector(scrollTo) as HTMLDivElement
       node.scrollTop = div.offsetTop
     }
   }
 
   render() {
-    const { children, viewStore } = this.props
+    const { children, appPageStore } = this.props
     return (
       <PeekContentChrome>
-        <ContentInner forwardRef={viewStore.contentFrame}>{children}</ContentInner>
+        <ContentInner forwardRef={appPageStore.contentFrame}>{children}</ContentInner>
       </PeekContentChrome>
     )
   }

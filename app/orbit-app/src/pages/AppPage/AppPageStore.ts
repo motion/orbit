@@ -1,27 +1,25 @@
-import { cancel, ensure, on, react, sleep } from '@mcro/black'
-import { loadOne } from '@mcro/model-bridge'
-import { Bit, BitModel, PersonBit, PersonBitModel, Setting, SourceModel } from '@mcro/models'
-import { App } from '@mcro/stores'
+import { ensure, on, react, sleep } from '@mcro/black'
+import { Bit, PersonBit, Setting } from '@mcro/models'
+import { App, AppState } from '@mcro/stores'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { APP_ID } from '../../constants'
 
-type ViewStoreItemState = typeof App.peekState & {
+type AppPageItemState = AppState & {
   model: PersonBit | Bit | Setting
 }
 
-export type ViewStoreState = {
+export type AppPageState = {
   willShow: boolean
   willStayShown: boolean
   willHide: boolean
   isShown: boolean
-  curState: ViewStoreItemState
-  lastState: ViewStoreItemState
+  curState: AppPageItemState
+  lastState: AppPageItemState
   torn: boolean
-  resolvedModel: boolean
 }
 
-export class ViewStore {
+export class AppPageStore {
   props: {
     fixed?: boolean
   }
@@ -63,56 +61,23 @@ export class ViewStore {
 
   internalState = react(
     () => this.appState,
-    async (appState, { getValue, setValue, sleep }) => {
-      const { appConfig, torn, ...rest } = appState
+    async (appState, { getValue }) => {
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
-      const isShown = !!appConfig
-      // first make target update quickly so it moves fast
-      // while keeping the last model the same so it doesn't flicker
-      const curState: ViewStoreItemState = {
-        torn,
-        ...lastState,
-        ...rest,
-      }
-      let nextState: ViewStoreState = {
-        resolvedModel: false,
-        torn,
+      const isShown = !!appState.appConfig
+      return {
+        torn: appState.torn,
         lastState,
-        curState,
+        curState: appState,
         isShown,
         willHide: !!lastState && !isShown,
         willShow: !!isShown && !wasShown,
         willStayShown: !!isShown && !!wasShown,
-      }
-      // avoid showing until loaded if showing for first time
-      if (!nextState.willShow) {
-        setValue(nextState)
-      }
-      // dont update model if already shown and has model
-      if (torn && curState.model) {
-        throw cancel
-      }
-      if (isShown) {
-        // wait and fetch in parallel
-        await sleep()
-        const model = await this.getModel()
-        return {
-          resolvedModel: true,
-          ...nextState,
-          // now update to new model
-          curState: {
-            ...curState,
-            appConfig,
-            model,
-          },
-        }
-      }
+      } as AppPageState
     },
     {
       onlyUpdateIfChanged: true,
       defaultValue: {
-        resolvedModel: false,
         torn: false,
         lastState: null,
         curState: null,
@@ -123,7 +88,7 @@ export class ViewStore {
     },
   )
 
-  state: ViewStoreItemState = react(
+  state: AppPageItemState = react(
     () => {
       const { lastState, curState, willHide } = this.internalState
       if (willHide) {
@@ -136,19 +101,6 @@ export class ViewStore {
       onlyUpdateIfChanged: true,
     },
   )
-
-  // autoSizeAfterRender = react(
-  //   () =>
-  //     this.appState.appConfig &&
-  //     this.appState.appConfig.viewConfig &&
-  //     this.appState.appConfig.viewConfig.contentSize &&
-  //     this.internalState.resolvedModel &&
-  //     (this.state.model['id'] || this.state.model['email']),
-  //   id => {
-  //     ensure('is ready', !!id)
-  //     console.log('should auto size')
-  //   },
-  // )
 
   isShown = react(() => this.internalState.isShown, _ => _)
   willHide = react(() => this.internalState.willHide, _ => _)
@@ -166,33 +118,6 @@ export class ViewStore {
       return false
     },
   )
-
-  getModel = async () => {
-    const { id, type } = this.appState.appConfig
-    let selectedItem = null
-    if (type === 'person' || type === 'person-bit') {
-      selectedItem = await loadOne(PersonBitModel, {
-        args: {
-          where: { id },
-          relations: ['people'],
-        },
-      })
-    } else if (type === 'bit') {
-      selectedItem = await loadOne(BitModel, {
-        args: {
-          where: { id },
-          relations: ['people'],
-        },
-      })
-    } else if (type === 'source') {
-      selectedItem = await loadOne(SourceModel, {
-        args: {
-          where: { id },
-        },
-      })
-    }
-    return selectedItem
-  }
 
   get hasHistory() {
     return this.history.length > 1
@@ -299,19 +224,5 @@ export class ViewStore {
 
   handleMinimize = () => {
     // todo
-  }
-
-  openItem = () => {
-    if (this.state.model.target === 'setting') {
-      return
-    }
-    AppActions.openItem(this.state.model)
-  }
-
-  copyItem = () => {
-    if (this.state.model.target === 'setting') {
-      return
-    }
-    AppActions.copyLink(this.state.model)
   }
 }

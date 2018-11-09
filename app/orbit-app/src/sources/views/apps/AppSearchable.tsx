@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Searchable, SearchBarType } from '@mcro/ui'
 import { view, attach } from '@mcro/black'
-import { ViewStore } from '../../../pages/AppPage/ViewStore'
+import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 import { App } from '@mcro/stores'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../../../stores/SelectionStore'
@@ -12,17 +12,18 @@ type SearchChildProps = {
 }
 
 type Props = {
-  viewStore?: ViewStore
+  // TODO: should just be appStore
+  appPageStore?: AppPageStore
   selectionStore?: SelectionStore
   children?: (a: SearchChildProps) => React.ReactNode
 }
 
-@attach('selectionStore', 'viewStore')
+@attach('selectionStore', 'appPageStore')
 @view
 export class AppSearchable extends React.Component<Props> {
   render() {
-    const { selectionStore, viewStore, children } = this.props
-    const { appConfig } = viewStore.state
+    const { selectionStore, appPageStore, children } = this.props
+    const { appConfig } = appPageStore.state
     return (
       <Searchable
         key={appConfig.id}

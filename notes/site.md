@@ -1,34 +1,53 @@
-# (Home) Orbit - The Decentralized OS
-
-potential lead-lines:
-
-- Search everything
-
-name of it:
-
-- The Decentralized OS
-- Decentralized Operating Layer
-- Personal OS
-
-Orbit is a smart operating layer above Mac, Windows, and Linux. It unifies your cloud knowledge and gives you amazing search. But that's just the beginning.
-
-# Take control
-
-You not only don't control your information at all, but you also have almost no control over how you experience and manage it.
-
-Orbit gives both of them back to you.
-
-## Your Data
-
-Orbit syncs data 100% privately to your device, we never even have access your keys. For once your Slack, Jira, Confluence, Gmail, Drive, and many other integrations can live privately, instantly, and easily accessible right on your desktop.
-
-## Your Apps
-
-But that's just where it starts. Orbit is an entire app platform that gives you, the end user, control. Our biggest feature is putting the individual in charge. Now you can extend, manage, script, and visualize information with complete control, without ever risking a bit of your data.
+# Site
 
 ---
 
-# (Apps)
+Section 1: Header
+
+# (Home) Orbit - The Decentralized OS
+
+- A Home for Teams
+- Apps for Teams
+
+It's time we got a new deal on how we operate. Orbit unifies your cloud knowledge privately on your computer, while giving your team a home.
+
+We've built four amazing apps to start. Search, People, Topics, and Lists. They let you unify team knowledge and stay in sync with ease. Reduce notification noise, find information with ease, and curate your team knowledge with a beautiful, easy to use and smart new operating system.
+
+---
+
+Section 2: Apps
+
+# Unified knowledge
+
+We've built four amazing apps to start, but that's just the beginning. Orbit is designed from the ground up to be a new type of operating system. Every app is built using the same primitives, meaning they are fast, consistent, and work together across your unified team data.
+
+## Search
+
+- Instant, smart, private unified search
+
+## People
+
+- Aggregated profiles with expert topics for each person
+
+## Topics
+
+- See what's trending, curate a vocabulary for your team.
+
+## Lists
+
+- Organize your team information with lightweight lists.
+
+---
+
+Section 3: Vision
+
+We operate more and more in silos.
+
+---
+
+# Apps
+
+We've built
 
 Advantages:
 

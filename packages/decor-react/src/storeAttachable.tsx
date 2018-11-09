@@ -22,7 +22,7 @@ export function storeAttachable(options): ContextAttacher {
                 stores[name] = allStores[name]
               }
             } else {
-              // or use string @attach('viewStore')
+              // or use string @attach('somestore')
               for (const name of options.stores) {
                 stores[name] = allStores[name]
               }

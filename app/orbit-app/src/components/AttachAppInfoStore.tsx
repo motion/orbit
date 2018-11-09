@@ -2,7 +2,7 @@ import * as React from 'react'
 import { AppInfoStore } from './AppInfoStore'
 import { attach, provide } from '@mcro/black'
 
-@attach('viewStore', 'sourcesStore')
+@attach('sourcesStore')
 @provide({
   appInfoStore: AppInfoStore,
 })

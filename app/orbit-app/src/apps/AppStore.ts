@@ -1,10 +1,14 @@
-import { react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { react, ensure, always } from '@mcro/black'
+import { App, AppConfig } from '@mcro/stores'
 import { SelectionGroup } from './SelectionResults'
 import { AppProps } from './AppProps'
+import { AppPageStore } from '../pages/AppPage/AppPageStore'
+import { AppType } from '@mcro/models'
 
 export class AppStore {
-  props: AppProps
+  props: AppProps & {
+    appPageStore?: AppPageStore
+  }
 
   selectionResults = null
 
@@ -14,7 +18,7 @@ export class AppStore {
 
   // only update the selection store once this pane is active
   setSelectionResultsOnActive = react(
-    () => this.selectionResults && Math.random(),
+    () => always(this.selectionResults),
     async (_, { when }) => {
       await when(() => this.isActive)
       this.props.selectionStore.setResults(this.selectionResults)
@@ -29,6 +33,20 @@ export class AppStore {
       return this.props.paneManagerStore.activePane === this.props.id
     }
     return false
+  }
+
+  get appConfig(): AppConfig {
+    if (this.props.appPageStore) {
+      return this.props.appPageStore.state.appConfig
+    }
+    return null
+  }
+
+  get appType(): AppType {
+    if (this.props.appPageStore) {
+      return this.props.appPageStore.state.appType
+    }
+    return null
   }
 
   activeQuery = react(

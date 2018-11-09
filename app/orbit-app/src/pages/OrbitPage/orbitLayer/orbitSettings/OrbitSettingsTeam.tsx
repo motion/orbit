@@ -52,6 +52,7 @@ export class OrbitSettingsTeam extends React.Component<{
         <HorizontalScroll height={84}>
           <ToggleApp
             appConfig={{
+              id: '100',
               type: 'newSpace',
               title: 'New Space',
               icon: 'orbit',
@@ -64,14 +65,19 @@ export class OrbitSettingsTeam extends React.Component<{
             </OrbitSpaceCard>
           </ToggleApp>
           {spaceStore.spaces.map((space, i) => (
-            <OrbitSpaceCard onClick={() => spaceStore.activeIndex = i} key={i} active={spaceStore.activeIndex === i} label={space.name}>
+            <OrbitSpaceCard
+              onClick={() => (spaceStore.activeIndex = i)}
+              key={i}
+              active={spaceStore.activeIndex === i}
+              label={space.name}
+            >
               <OrbitOrb background={space.colors[0] || '#EEE'} color={space.colors[1] || '#333'} />
             </OrbitSpaceCard>
           ))}
         </HorizontalScroll>
         <VerticalSpace />
         {spaceStore.activeSortedSpaces.map(space => (
-          <>
+          <React.Fragment key={space.id}>
             <Title>{space.name}</Title>
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
@@ -93,7 +99,7 @@ export class OrbitSettingsTeam extends React.Component<{
               ))}
             </Grid>
             <VerticalSpace />
-          </>
+          </React.Fragment>
         ))}
       </>
     )

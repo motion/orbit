@@ -121,7 +121,8 @@ class MenuStore {
       if (!open) {
         await sleep(100)
         if (!this.isAnotherMenuOpen) {
-          setTrayFocused(false)
+          console.log('SHOULD HIDE MENU APP LAYER')
+          // setTrayFocused(false)
         }
         return false
       }
@@ -182,6 +183,7 @@ export function Menu(props: Props) {
   const open = store.openVisually
   const left = store.menuCenter
   const width = props.width
+  log(`Menu`)
   return (
     <Popover
       open={open}

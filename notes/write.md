@@ -254,3 +254,13 @@ Or monetizing monetizing.
 - Why it makes you antifragile:
   - Small thoughts bring in fresh content without "needing to be a big idea"
   - Showoff is similarly an unencumbered way to measure what people care about and keep them happy
+
+---
+
+# A New Deal on for Operating Systems
+
+- WebOS
+- Silos
+- App building
+- data needs to be separate from apps
+- app building is impossible and requires heavy infrastructure

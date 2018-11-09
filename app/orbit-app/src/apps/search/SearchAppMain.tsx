@@ -6,6 +6,8 @@ import { useStore } from '@mcro/use-store'
 import { AppConfig } from '@mcro/stores'
 import { react } from '@mcro/black'
 import { normalizeItem } from '../../helpers/normalizeItem'
+import { AppSearchable } from '../../sources/views/apps/AppSearchable'
+import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
 
 class SearchAppStore {
   props: AppProps
@@ -54,7 +56,17 @@ export function SearchAppMain(props: AppProps) {
       }
       if (model.target === 'bit') {
         const View = props.sourcesStore.getView(model.integration, 'main')
-        return <View bit={model} model={model} normalizedItem={normalizeItem(model)} {...props} />
+        const normalizedItem = normalizeItem(model)
+        return (
+          <AppSearchable>
+            {({ searchBar }) => (
+              <>
+                <BitTitleBar normalizedItem={normalizedItem} searchBar={searchBar} />
+                <View bit={model} model={model} normalizedItem={normalizedItem} {...props} />
+              </>
+            )}
+          </AppSearchable>
+        )
       }
     }
     return <div>not found single: model {JSON.stringify(model)}</div>

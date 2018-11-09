@@ -137,15 +137,6 @@ class AppPageContent extends React.Component<Props> {
           />
         </HiddenControls>
         <AppView id={appConfig.id} view="main" title={appConfig.title} type={appType} isActive />
-        {/* <AppSearchable>
-          {({ searchBar, searchTerm }) => (
-            <TypeView
-              normalizedItem={model ? normalizeItem(model) : null}
-              searchBar={searchBar}
-              searchTerm={searchTerm}
-            />
-          )}
-        </AppSearchable> */}
       </>
     )
   }

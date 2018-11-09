@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { Row } from '@mcro/ui'
-import { OrbitSourceMainProps } from '../../types'
 import { BitTitleActions } from './BitTitleActions'
 import { AppSimpleTitleBar } from './AppSimpleTitleBar'
 import { TitleBarSpace } from './TitleBarSpace'
+import { NormalizedItem } from '../../../helpers/normalizeItem'
 
-export class BitTitleBar extends React.Component<OrbitSourceMainProps<any>> {
+export class BitTitleBar extends React.Component<{
+  searchBar: any
+  normalizedItem: NormalizedItem
+}> {
   render() {
     const { searchBar, normalizedItem } = this.props
     return (

@@ -5,21 +5,21 @@ import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { APP_ID } from '../../constants'
 
-type ViewStoreItemState = AppState & {
+type AppPageItemState = AppState & {
   model: PersonBit | Bit | Setting
 }
 
-export type ViewStoreState = {
+export type AppPageState = {
   willShow: boolean
   willStayShown: boolean
   willHide: boolean
   isShown: boolean
-  curState: ViewStoreItemState
-  lastState: ViewStoreItemState
+  curState: AppPageItemState
+  lastState: AppPageItemState
   torn: boolean
 }
 
-export class ViewStore {
+export class AppPageStore {
   props: {
     fixed?: boolean
   }
@@ -73,7 +73,7 @@ export class ViewStore {
         willHide: !!lastState && !isShown,
         willShow: !!isShown && !wasShown,
         willStayShown: !!isShown && !!wasShown,
-      } as ViewStoreState
+      } as AppPageState
     },
     {
       onlyUpdateIfChanged: true,
@@ -88,7 +88,7 @@ export class ViewStore {
     },
   )
 
-  state: ViewStoreItemState = react(
+  state: AppPageItemState = react(
     () => {
       const { lastState, curState, willHide } = this.internalState
       if (willHide) {

@@ -5,11 +5,11 @@ import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
 import { ThemeObject } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { ViewStore } from './ViewStore'
+import { AppPageStore } from './AppPageStore'
 
 type Props = {
   store?: AppArrowStore
-  viewStore: ViewStore
+  viewStore: AppPageStore
   borderShadow: any
   theme: ThemeObject
 }

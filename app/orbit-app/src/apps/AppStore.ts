@@ -2,11 +2,12 @@ import { react, ensure } from '@mcro/black'
 import { App, AppConfig } from '@mcro/stores'
 import { SelectionGroup } from './SelectionResults'
 import { AppProps } from './AppProps'
-import { ViewStore } from '../pages/AppPage/ViewStore'
+import { AppPageStore } from '../pages/AppPage/AppPageStore'
+import { AppType } from '@mcro/models'
 
 export class AppStore {
   props: AppProps & {
-    viewStore?: ViewStore
+    viewStore?: AppPageStore
   }
 
   selectionResults = null
@@ -34,11 +35,18 @@ export class AppStore {
     return false
   }
 
-  // describes the current state of the view
   get appConfig(): AppConfig {
     if (this.props.viewStore) {
       return this.props.viewStore.state.appConfig
     }
+    return null
+  }
+
+  get appType(): AppType {
+    if (this.props.viewStore) {
+      return this.props.viewStore.state.appType
+    }
+    return null
   }
 
   activeQuery = react(

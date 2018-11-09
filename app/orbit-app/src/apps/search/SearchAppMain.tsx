@@ -9,14 +9,18 @@ class SearchAppStore {
   get appConfig() {
     return this.props.appStore.appConfig
   }
+
+  get appType() {
+    return this.props.appStore.appType
+  }
 }
 
 export function SearchAppMain(props: AppProps) {
-  const { appConfig } = useStore(SearchAppStore, props)
+  const { appConfig, appType } = useStore(SearchAppStore, props)
 
   // show a single item
-  if (appConfig.type === 'bit' || appConfig.type === 'person') {
-    return <AppView view="main" id={appConfig.id} title={appConfig.title} type="source" />
+  if (appType === 'bit' || appType === 'people') {
+    return <AppView view="main" id={appConfig.id} title={appConfig.title} type={appType} />
   }
 
   // show a search

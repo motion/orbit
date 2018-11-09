@@ -4,7 +4,7 @@ import { SourcesStore } from '../../stores/SourcesStore'
 // import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
 import { SpaceEditView } from '../SpaceEditView'
-import { ViewStore } from './ViewStore'
+import { AppPageStore } from './AppPageStore'
 import * as UI from '@mcro/ui'
 import { AppFrame } from './AppFrame'
 import { App } from '@mcro/stores'
@@ -17,14 +17,14 @@ import { SelectionStore } from '../../stores/SelectionStore'
 
 type Props = {
   sourcesStore?: SourcesStore
-  viewStore?: ViewStore
+  viewStore?: AppPageStore
 }
 
 @provide({
   sourcesStore: SourcesStore,
 })
 @provide({
-  viewStore: ViewStore,
+  viewStore: AppPageStore,
 })
 @provide({
   queryStore: QueryStore,

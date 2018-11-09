@@ -6,19 +6,19 @@ import Resizable, { ResizableDirection, ResizeCallback } from 're-resizable'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
-import { ViewStore } from '../../pages/AppPage/ViewStore'
+import { AppPageStore } from './AppPageStore'
 import { AppFrameArrow } from './AppFrameArrow'
 
 type AppFrameProps = {
   store?: AppFrameStore
-  viewStore: ViewStore
+  viewStore: AppPageStore
   children: any
   theme?: ThemeObject
 }
 
 const SHADOW_PAD = 85
 
-const transitions = (store: ViewStore) => {
+const transitions = (store: AppPageStore) => {
   if (store.isTorn) return 'transform linear 10ms'
   if (store.willHide) return 'transform ease 100ms'
   if (store.willStayShown) return 'transform ease 60ms'

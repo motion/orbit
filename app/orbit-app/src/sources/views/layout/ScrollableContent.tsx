@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { ViewStore } from '../../../pages/AppPage/ViewStore'
+import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 
 const PeekContentChrome = view(UI.Col, {
   flex: 1,
@@ -23,7 +23,7 @@ const ContentInner = view(UI.Col, {
 @attach('viewStore')
 export class ScrollableContent extends React.Component<{
   scrollTo?: string
-  viewStore?: ViewStore
+  viewStore?: AppPageStore
 }> {
   componentDidMount() {
     this.updateScroll()

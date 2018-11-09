@@ -2,11 +2,11 @@ import * as React from 'react'
 import { View, Text } from '@mcro/ui'
 import { NormalizedItem } from '../../../helpers/normalizeItem'
 import { compose, view, attach } from '@mcro/black'
-import { ViewStore } from '../../../pages/AppPage/ViewStore'
+import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 
 type Props = {
   normalizedItem: NormalizedItem
-  viewStore?: ViewStore
+  viewStore?: AppPageStore
 }
 
 const decorate = compose(

@@ -1,12 +1,8 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { loadOne } from '@mcro/model-bridge'
-import { BitModel } from '@mcro/models'
+import { SourceModel } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import { BitDecoration } from '../search/mainViews/BitDecoration'
-import { AppSearchable } from '../../sources/views/apps/AppSearchable'
-import { normalizeItem } from '../../helpers/normalizeItem'
-import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
 import { react } from '@mcro/black'
 
 class SourceAppStore {
@@ -19,7 +15,7 @@ class SourceAppStore {
   model = react(
     () => this.appConfig,
     ({ id }) =>
-      loadOne(BitModel, {
+      loadOne(SourceModel, {
         args: {
           where: { id },
         },
@@ -32,18 +28,6 @@ export function SourceAppMain(props: AppProps) {
   if (!model) {
     return null
   }
-  const View = props.sourcesStore.getView(model.integration, 'main')
-  const normalizedItem = normalizeItem(model)
-  return (
-    <BitDecoration>
-      <AppSearchable>
-        {({ searchBar }) => (
-          <>
-            <BitTitleBar normalizedItem={normalizedItem} searchBar={searchBar} />
-            <View bit={model} model={model} normalizedItem={normalizedItem} {...props} />
-          </>
-        )}
-      </AppSearchable>
-    </BitDecoration>
-  )
+  const View = props.sourcesStore.getView(model.type, 'source')
+  return <View />
 }

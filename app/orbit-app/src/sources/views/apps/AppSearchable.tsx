@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Searchable, SearchBarType } from '@mcro/ui'
 import { view, attach } from '@mcro/black'
-import { ViewStore } from '../../../pages/AppPage/ViewStore'
+import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 import { App } from '@mcro/stores'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../../../stores/SelectionStore'
@@ -12,7 +12,7 @@ type SearchChildProps = {
 }
 
 type Props = {
-  viewStore?: ViewStore
+  viewStore?: AppPageStore
   selectionStore?: SelectionStore
   children?: (a: SearchChildProps) => React.ReactNode
 }

@@ -6,6 +6,7 @@ import { topics } from './topics'
 import { people } from './people/people'
 import { search } from './search'
 import { source } from './source'
+import { bit } from './bit'
 
 type App = {
   index: GenericComponent<AppProps>
@@ -20,4 +21,5 @@ export const apps: AppsIndex = {
   topics,
   lists,
   source,
+  bit,
 }

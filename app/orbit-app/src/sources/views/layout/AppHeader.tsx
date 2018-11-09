@@ -5,10 +5,10 @@ import * as Constants from '../../../constants'
 import { CSSPropertySet } from '@mcro/gloss'
 import { Glint, Row, Text } from '@mcro/ui'
 import { Centered } from '../../../views/Centered'
-import { ViewStore } from '../../../pages/AppPage/ViewStore'
+import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 
 type Props = {
-  viewStore?: ViewStore
+  viewStore?: AppPageStore
   theme?: any
   integration?: string
   before?: React.ReactNode

@@ -68,7 +68,6 @@ class ListsIndexStore {
 
 export function ListsAppIndex(props: AppProps) {
   const store = useStore(ListsIndexStore, props)
-  console.log('rendering lists app', store.allLists)
   return (
     <>
       <VirtualList maxHeight={400} items={store.allLists} itemProps={{ direct: true }} />

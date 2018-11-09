@@ -9,7 +9,18 @@ import {
 } from 'react'
 import { action, autorun, observable, toJS, trace } from 'mobx'
 
-let options = {
+type UseGlobalStoreOptions = {
+  onMount: (store: any) => void
+  onUnmount: (store: any) => void
+  context?: React.Context<any>
+}
+
+type UseStoreOptions = {
+  debug?: boolean
+  conditionalUse?: boolean
+}
+
+let globalOptions = {
   onMount: null,
   onUnmount: null,
   context: createContext(null),
@@ -32,7 +43,7 @@ const propKeysWithoutElements = props => Object.keys(props).filter(x => !isReact
 
 // updateProps
 // granular set so reactions can be efficient
-const updateProps = (props, nextProps, debug?) => {
+const updateProps = (props, nextProps, options?: UseStoreOptions) => {
   const nextPropsKeys = propKeysWithoutElements(nextProps)
   const curPropKeys = propKeysWithoutElements(props)
 
@@ -41,7 +52,14 @@ const updateProps = (props, nextProps, debug?) => {
     const a = props[prop]
     const b = nextProps[prop]
     if (a !== b) {
-      if (debug) {
+      // this is a bit risky and weird but i cant think of a case it would ever have broken
+      // if you use functions as render callbacks and then *change* them during renders this would break
+      if (typeof a === 'function' && typeof b === 'function') {
+        if (a.toString() === b.toString()) {
+          continue
+        }
+      }
+      if (options && options.debug) {
         console.log('has changed prop', prop, nextProps[prop])
       }
       props[prop] = nextProps[prop]
@@ -69,8 +87,8 @@ const setupStoreWithReactiveProps = (Store, props?) => {
     Object.defineProperty(Store.prototype, 'props', getProps)
     const storeInstance = new Store()
     Object.defineProperty(storeInstance, 'props', getProps)
-    if (options.onMount) {
-      options.onMount(storeInstance)
+    if (globalOptions.onMount) {
+      globalOptions.onMount(storeInstance)
     }
     storeInstance.automagic({
       isSubscribable: x => x && typeof x.subscribe === 'function',
@@ -87,13 +105,13 @@ const setupStoreWithReactiveProps = (Store, props?) => {
   }
 }
 
-const useStoreWithReactiveProps = (Store, props, shouldHMR = false, debug?) => {
+const useStoreWithReactiveProps = (Store, props, shouldHMR = false, options?: UseStoreOptions) => {
   let store = useRef(null)
   if (!store.current || shouldHMR) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
   if (props) {
-    store.current.__updateProps(store.current.props, props, debug)
+    store.current.__updateProps(store.current.props, props, options)
   }
   return store.current
 }
@@ -104,14 +122,17 @@ const ignoreReactiveKeys = {
   IS_AUTO_RUN: true,
 }
 
-export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
+export const useStore = <A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A => {
+  if (options && options.conditionalUse === false) {
+    return null
+  }
   const proxyStore = useRef(null)
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const shouldReloadStore =
     isHMRCompat &&
     proxyStore.current &&
     proxyStore.current.constructor.toString() !== Store.toString()
-  const store = useStoreWithReactiveProps(Store, props, shouldReloadStore, debug)
+  const store = useStoreWithReactiveProps(Store, props, shouldReloadStore, options)
   const dispose = useRef(null)
   const reactiveKeys = useRef(observable({}))
   let shouldTrackKeys = true
@@ -161,7 +182,7 @@ export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
         for (const key in reactiveKeys.current) {
           store[key]
         }
-        if (debug) {
+        if (options && options.debug) {
           trace()
         }
         // update when we react
@@ -170,8 +191,8 @@ export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
     }
     return () => {
       // emit unmount
-      if (options.onUnmount) {
-        options.onUnmount(store)
+      if (globalOptions.onUnmount) {
+        globalOptions.onUnmount(store)
       }
       // stop autorun()
       dispose.current()
@@ -181,15 +202,10 @@ export const useStore = <A>(Store: new () => A, props?: Object, debug?): A => {
   return proxyStore.current
 }
 
-type UseStoreOptions = {
-  onMount: (store: any) => void
-  onUnmount: (store: any) => void
-  context?: React.Context<any>
-}
-
-export const configureUseStore = (opts: UseStoreOptions) => {
-  options = {
-    ...options,
+// TODO make safer by freezing after one set
+export const configureUseStore = (opts: UseGlobalStoreOptions) => {
+  globalOptions = {
+    ...globalOptions,
     ...opts,
   }
 }

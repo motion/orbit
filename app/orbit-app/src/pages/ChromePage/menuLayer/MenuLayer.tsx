@@ -1,69 +1,99 @@
 import * as React from 'react'
 import { FullScreen, Theme } from '@mcro/ui'
-import { MenuPerson } from './MenuPerson'
-import { MenuTopic } from './MenuTopic'
-import { MenuList } from './MenuList'
 import { SettingStore } from '../../../stores/SettingStore'
 import { SourcesStore } from '../../../stores/SourcesStore'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { useStore } from '@mcro/use-store'
-import { AppStore } from '../../../apps/AppStore'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
-import { react } from '@mcro/black'
-import { Desktop } from '@mcro/stores'
+import { setTrayFocused } from './helpers'
+import { App } from '@mcro/stores'
+import { react, ensure } from '@mcro/black'
+import { AppActions } from '../../../actions/AppActions'
+import { AppProps } from '../../../apps/AppProps'
+import { MenuApp } from './MenuApp'
+import { AppType } from '../../../apps/apps'
+
+export type MenuAppProps = AppProps & { menusStore: MenusStore; id: number }
 
 export class MenusStore {
-  lastMenuOpen = 2
+  get menuOpenID() {
+    if (!App.openMenu) {
+      return false
+    }
+    return App.openMenu.id
+  }
 
-  isHoldingOption = react(
-    () => Desktop.keyboardState.option > Desktop.keyboardState.optionUp,
-    _ => _,
+  lastOpenMenu = react(
+    () => this.menuOpenID,
+    (val, { state }) => {
+      if (!state.hasResolvedOnce) {
+        // for now just hardcoding to start at #2 app
+        return 2
+      }
+      ensure('is number', typeof val === 'number')
+      return val
+    },
   )
 
-  setLastOpen = index => {
-    this.lastMenuOpen = index
+  get anyMenuOpen() {
+    return this.menuOpenID !== false
   }
+
+  closePeekOnChangeMenu = react(
+    () => typeof this.menuOpenID === 'number',
+    isChanging => {
+      ensure('isChanging', isChanging)
+      AppActions.clearPeek()
+    },
+  )
+
+  showMenusBeforeOpen = react(
+    () => this.anyMenuOpen,
+    open => {
+      ensure('open', open)
+      window['electronRequire']('electron').remote.app.show()
+    },
+  )
+
+  handleAppViewFocus = react(
+    () => App.showingPeek,
+    showingPeek => {
+      ensure('showingPeek', showingPeek)
+      setTrayFocused(true)
+    },
+  )
 }
 
 export function MenuLayer() {
-  const settingStore = useStore(SettingStore)
-  const sourcesStore = useStore(SourcesStore)
-  const queryStore = useStore(QueryStore, { sourcesStore })
-  const selectionStore = useStore(SelectionStore, { queryStore })
-  const appProps = {
+  const settingStore = useStore(SettingStore, { debug: true })
+  const sourcesStore = useStore(SourcesStore, { debug: true })
+  const queryStore = useStore(QueryStore, { sourcesStore }, { debug: true })
+  const selectionStore = useStore(SelectionStore, { queryStore }, { debug: true })
+  const menusStore = useStore(MenusStore, { debug: true })
+  const storeProps = {
     settingStore,
     sourcesStore,
     queryStore,
     selectionStore,
-  }
-  const appStore = useStore(AppStore, appProps)
-  const menusStore = useStore(MenusStore)
-  const menuProps = {
-    appStore,
     menusStore,
   }
+  console.log('------render MenuLayer')
   return (
-    <StoreContext.Provider value={{ ...appProps, appStore }}>
+    <StoreContext.Provider value={storeProps}>
       <Theme name="dark">
         <FullScreen>
-          <MenuPerson
-            id="0"
-            view="index"
-            title="People"
-            type="people"
-            {...appProps}
-            {...menuProps}
-          />
-          <MenuTopic
-            id="1"
-            view="index"
-            title="Topics"
-            type="topics"
-            {...appProps}
-            {...menuProps}
-          />
-          <MenuList id="2" view="index" title="Lists" type="lists" {...appProps} {...menuProps} />
+          {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+            <MenuApp
+              key={app}
+              id={index}
+              view="index"
+              title={app}
+              type={app}
+              menusStore={menusStore}
+              isActive={menusStore.menuOpenID === index}
+            />
+          ))}
         </FullScreen>
       </Theme>
     </StoreContext.Provider>

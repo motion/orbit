@@ -2,25 +2,27 @@
 
 ### nate
 
-Wednesday:
-
-- Mock design for Orbit context
-- Search performance / groups
-
 Thursday:
 
-- Fix search filters and date filters
-- Fix NLP filtering and test it
-- Re-enable quickresults in search
-- Fix cosal invert bug
-- Topic modeling
+- Showing current app context when holding option / design for pin current app context to pin
+- Upgrade people app with "Send icon" for context + showing peek next to it + search bar
+- Fix menu delay open bug
+- Option hold should register shortcuts for option+left option+letter option+number to _then_ focus the app
+- Lists Main app view app - show sidebar in app with button + searchbar
 
 Friday:
 
+- SelectionStore / keyboard interaction working for menu windows
+- Orbit search results context menu opens by default (not show last one)
+- Fix cosal invert bug
+- Get Topic modeling API in place with working topics for topics app
+
+Sat/Sun:
+
 - Get profiles with topic modeling
 - Get topics app using real data for changing over time topics
-- Allow custom topics in topics app
-- Cleanup SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
+- UI for custom topics in topics app
+- Rename SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
 - https://github.com/bokuweb/re-resizable
 
@@ -28,6 +30,7 @@ Friday:
 
 Monday:
 
+- Keyboard nav into the main-windows
 - Walkthrough accessibility permissions
   - Custom Notifications :) would allow a lot
 - Person app send via slack/gmail
@@ -51,11 +54,35 @@ Thursday:
 
 umed:
 
-- Gmail syncer:
+- Search performance / groups
+- Fix search filters and date filters
+- Fix NLP filtering and test it
+- Re-enable quickresults in search
+
+- People:
 
   - Gmail should sync People more strictly:
     - Only insert a person if _I_ sent them an email (not a reply but new email)
     - But if a person exists already (via slack, jira, github, etc), still attach the email to that existing profile
+
+- Space management
+
+  - Should be able to register a new Space under some sort of login (ours or via Slack/Google)?
+  - Should be able to name team, rename team, and choose/change the login integration
+  - Should have a cloud server on our side that syncs this
+  - Should sync the apps settings to the cloud server
+
+- Context
+
+  - We need access to current app
+
+- Lists App:
+
+  - Make sorting work in AppModel.data (should we call the model AppData or something so its more clear?)
+  - Make the top level Lists Bits and work with search
+  - We need a way to rename and add lists, basic interface there
+  - Fix sorting bugs (it goes clear for some reason)
+  - "Pin" button should
 
 - ## Apps data storage:
 
@@ -157,8 +184,25 @@ search:
 # next / ideas
 
 - find by type (file / link is helpful)
-- Fix empty profiles from gmail contacts import
-  - Toggle select all button in table view
+- Toggle select all button in table view
 - fix integration buttons styling and going inactive after click
 - cmd+z undo in search area (needs to work with toggles...)
 - hmr: doesn't store.unmount stores often
+
+# ideas for apps
+
+- micro polls app:
+  - can create a poll
+  - shows in a dropdown
+  - anyone can quickly vote on it
+- question and answer app:
+  - can create a question
+  - anyone can post answers on it
+- database explorer app:
+  - can enter a local path for a database
+  - shows the database in a virtual table
+  - lets you write sql queries in the topbar
+  - lets you insert common sql queries in sidebar
+- announcements list:
+  - can automatically have it query for emails from "announcements@company.com"
+  - have it show a banner if new announcement

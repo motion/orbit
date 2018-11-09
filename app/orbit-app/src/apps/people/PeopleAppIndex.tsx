@@ -70,7 +70,6 @@ class PeopleIndexStore {
   getIndex = res => this.emailToIndex[res.email]
 
   get resultSections(): ResultSection[] {
-    console.time('People.resultSections')
     const isFiltering = !!this.peopleQuery.length
     const total = this.results.length
     const perRow = 3
@@ -118,7 +117,6 @@ class PeopleIndexStore {
         lastPersonLetter = letter
       }
     }
-    console.timeEnd('People.resultSections')
     return sections
   }
 }

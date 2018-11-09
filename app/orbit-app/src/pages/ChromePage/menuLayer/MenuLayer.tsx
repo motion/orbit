@@ -1,18 +1,15 @@
 import * as React from 'react'
-import { FullScreen, Theme } from '@mcro/ui'
-import { SettingStore } from '../../../stores/SettingStore'
-import { SourcesStore } from '../../../stores/SourcesStore'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { useStore } from '@mcro/use-store'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { setTrayFocused } from './helpers'
 import { App } from '@mcro/stores'
-import { react, ensure, attach, provide } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
-import { AppType } from '../../../apps/apps'
+import { AppType } from '@mcro/models'
 
 export type MenuAppProps = AppProps & { menusStore: MenusStore; id: number }
 

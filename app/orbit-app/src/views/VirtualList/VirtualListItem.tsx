@@ -6,7 +6,7 @@ import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
 import { ItemProps } from '../OrbitItemProps'
 
-export type ListItemProps = {
+export type ListItemProps = Partial<ItemProps<any>> & {
   model: Bit
   query?: string
   style?: Object
@@ -15,14 +15,13 @@ export type ListItemProps = {
   width?: number
   realIndex: number
   ignoreSelection?: boolean
-  itemProps?: ItemProps<any>
 }
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
 export class ListItem extends React.PureComponent<ListItemProps> {
   render() {
-    const { model, realIndex, query, ignoreSelection, itemProps } = this.props
+    const { model, realIndex, query, ignoreSelection, ...itemProps } = this.props
     console.log('render list item...', itemProps)
     return (
       <OrbitListItem

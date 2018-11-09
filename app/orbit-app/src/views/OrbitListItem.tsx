@@ -122,117 +122,123 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
           padding={padding}
           {...cardProps}
         >
-          {showTitle && (
-            <Title style={titleFlex && { flex: titleFlex }}>
-              {showIcon && (
-                <>
-                  <OrbitIcon icon={icon} size={14} {...iconProps} />
-                  <TitleSpace />
-                </>
-              )}
-              <HighlightText
-                fontSize={15}
-                sizeLineHeight={0.85}
-                ellipse
-                fontWeight={700}
-                {...titleProps}
-              >
-                {title}
-              </HighlightText>
-              <TitleSpace />
-              {this.props.afterTitle || normalizedItem.afterTitle}
-              {afterHeader}
-            </Title>
-          )}
-          {showSubtitle && (
-            <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
-              {showIcon &&
-                !showTitle && (
-                  <>
-                    <OrbitIcon icon={icon} size={14} {...iconProps} />
-                    <TitleSpace />
-                  </>
-                )}
-              {!!location && (
-                <>
-                  <RoundButtonSmall
-                    margin={-3}
-                    maxWidth={120}
-                    fontWeight={600}
-                    onClick={store.handleClickLocation}
+          <div style={{ flexDirection: 'row' }}>
+            <div style={{ flex: 1 }}>
+              {showTitle && (
+                <Title style={titleFlex && { flex: titleFlex }}>
+                  {showIcon && (
+                    <>
+                      <OrbitIcon icon={icon} size={14} {...iconProps} />
+                      <TitleSpace />
+                    </>
+                  )}
+                  <HighlightText
+                    fontSize={15}
+                    sizeLineHeight={0.85}
+                    ellipse
+                    fontWeight={700}
+                    {...titleProps}
                   >
-                    <Text ellipse ignoreColor>
-                      {location}
-                    </Text>
-                  </RoundButtonSmall>
+                    {title}
+                  </HighlightText>
                   <TitleSpace />
-                </>
+                  {this.props.afterTitle || normalizedItem.afterTitle}
+                  {afterHeader}
+                </Title>
               )}
-              {!!subtitle &&
-                (typeof subtitle === 'string' ? (
-                  <UI.Text alpha={0.55} ellipse {...subtitleProps}>
-                    {subtitle}
-                  </UI.Text>
-                ) : (
-                  subtitle
-                ))}
-              {!subtitle && (
-                <>
-                  <div style={{ flex: 1 }} />
-                  <PeopleRow people={people} />
-                </>
+              {showSubtitle && (
+                <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
+                  {showIcon &&
+                    !showTitle && (
+                      <>
+                        <OrbitIcon icon={icon} size={14} {...iconProps} />
+                        <TitleSpace />
+                      </>
+                    )}
+                  {!!location && (
+                    <>
+                      <RoundButtonSmall
+                        margin={-3}
+                        maxWidth={120}
+                        fontWeight={600}
+                        onClick={store.handleClickLocation}
+                      >
+                        <Text ellipse ignoreColor>
+                          {location}
+                        </Text>
+                      </RoundButtonSmall>
+                      <TitleSpace />
+                    </>
+                  )}
+                  {!!subtitle &&
+                    (typeof subtitle === 'string' ? (
+                      <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                        {subtitle}
+                      </UI.Text>
+                    ) : (
+                      subtitle
+                    ))}
+                  {!subtitle && (
+                    <>
+                      <div style={{ flex: 1 }} />
+                      <PeopleRow people={people} />
+                    </>
+                  )}
+                  {hide &&
+                    hide.title && (
+                      <>
+                        <HorizontalSpace />
+                        {afterHeader}
+                      </>
+                    )}
+                </ListItemSubtitle>
               )}
-              {hide &&
-                hide.title && (
-                  <>
-                    <HorizontalSpace />
+              {!showSubtitle &&
+                (hide && hide.title) && (
+                  <View
+                    position="absolute"
+                    right={Array.isArray(padding) ? padding[0] : padding}
+                    top={Array.isArray(padding) ? padding[1] : padding}
+                  >
                     {afterHeader}
-                  </>
+                  </View>
                 )}
-            </ListItemSubtitle>
-          )}
-          {!showSubtitle &&
-            (hide && hide.title) && (
-              <View
-                position="absolute"
-                right={Array.isArray(padding) ? padding[0] : padding}
-                top={Array.isArray(padding) ? padding[1] : padding}
-              >
-                {afterHeader}
-              </View>
-            )}
-          {/* vertical space only if needed */}
-          {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
-          {showPreview && (
-            <Preview>
-              {typeof preview !== 'string' && preview}
-              {typeof preview === 'string' && (
-                <HighlightText alpha={0.65} size={1.1} sizeLineHeight={0.9} ellipse={5}>
-                  {preview}
-                </HighlightText>
+              {/* vertical space only if needed */}
+              {showSubtitle &&
+                (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
+              {showPreview && (
+                <Preview>
+                  {typeof preview !== 'string' && preview}
+                  {typeof preview === 'string' && (
+                    <HighlightText alpha={0.65} size={1.1} sizeLineHeight={0.9} ellipse={5}>
+                      {preview}
+                    </HighlightText>
+                  )}
+                </Preview>
               )}
-            </Preview>
-          )}
-          {showChildren && !ItemView && children}
-          {showChildren &&
-            !!ItemView && (
-              <ItemView
-                model={this.props.model}
-                bit={this.props.model}
-                searchTerm={this.props.searchTerm}
-                shownLimit={10}
-                renderText={renderText}
-                extraProps={this.props.extraProps}
-                normalizedItem={normalizedItem}
-                {...ItemView.itemProps}
-              />
-            )}
-          {showPeople &&
-            !showSubtitle && (
-              <Bottom>
-                <PeopleRow people={people} />
-              </Bottom>
-            )}
+              {showChildren && !ItemView && children}
+              {showChildren &&
+                !!ItemView && (
+                  <ItemView
+                    model={this.props.model}
+                    bit={this.props.model}
+                    searchTerm={this.props.searchTerm}
+                    shownLimit={10}
+                    renderText={renderText}
+                    extraProps={this.props.extraProps}
+                    normalizedItem={normalizedItem}
+                    {...ItemView.itemProps}
+                  />
+                )}
+              {showPeople &&
+                !showSubtitle && (
+                  <Bottom>
+                    <PeopleRow people={people} />
+                  </Bottom>
+                )}
+            </div>
+            {this.props.after || normalizedItem.after}
+          </div>
         </ListItem>
         <Divider />
       </ListFrame>

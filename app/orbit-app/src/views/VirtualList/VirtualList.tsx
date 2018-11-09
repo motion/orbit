@@ -74,10 +74,8 @@ class VirtualListStore {
 
   measure = () => {
     if (!this.rootRef) {
-      console.log('no ref yet...')
       return
     }
-
     // width
     if (this.width === 0) {
       const width = this.rootRef.clientWidth
@@ -113,6 +111,10 @@ class VirtualListStore {
     }
   }
 }
+
+const isRightClick = e =>
+  (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
+  (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 export function VirtualList(props: Props) {
   const context = React.useContext(StoreContext)
@@ -178,6 +180,7 @@ export function VirtualList(props: Props) {
         pressDelay={120}
         pressThreshold={17}
         lockAxis="y"
+        shouldCancelStart={isRightClick}
         {...extraProps}
       />
     )

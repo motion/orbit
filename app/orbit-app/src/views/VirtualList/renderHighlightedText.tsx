@@ -3,7 +3,7 @@ import { HighlightText } from '../HighlightText'
 import { view } from '@mcro/black'
 
 const OrbitCardContent = view({
-  padding: [6, 0],
+  padding: [2, 0],
   flex: 1,
   overflow: 'hidden',
   whiteSpace: 'pre',

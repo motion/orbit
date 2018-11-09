@@ -8,6 +8,7 @@ import { Icon } from '../../views/Icon'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { AppProps } from '../AppProps'
 import { ListEdit } from './ListEdit'
+import { View, Button } from '@mcro/ui'
 
 class ListsIndexStore {
   props: AppProps
@@ -25,20 +26,26 @@ class ListsIndexStore {
   }
 
   private apps$ = observeMany(AppModel, { args: {} }).subscribe(apps => {
-    console.log('here is what Ive got', apps)
     this.apps = apps
   })
 
   get allLists() {
-    if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists) return []
-
+    if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists) {
+      return []
+    }
     return this.listsApp.data.lists.map((listItem, index) => {
       return {
         id: index,
         index,
         type: 'list',
         title: listItem.name,
-        afterTitle: <Icon name="pin" size={16} />,
+        after: (
+          <View margin="auto" padding={[0, 6]}>
+            <Button circular>
+              <Icon name="pin" size={14} />
+            </Button>
+          </View>
+        ),
         subtitle: (listItem.bits || []).length + ' items',
       }
     })
@@ -67,6 +74,7 @@ class ListsIndexStore {
 
 export function ListsAppIndex(props: AppProps) {
   const store = useStore(ListsIndexStore, props)
+  console.log('render lists index', store, store.results, Root.stores.ListsIndexStore)
   return (
     <>
       <VirtualList maxHeight={400} items={store.results} itemProps={{ direct: true }} />

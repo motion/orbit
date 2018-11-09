@@ -31,6 +31,7 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     isExpanded?: boolean
     style?: any
     afterTitle?: React.ReactNode
+    after?: React.ReactNode
     titleProps?: Object
     inactive?: boolean
     iconProps?: Object

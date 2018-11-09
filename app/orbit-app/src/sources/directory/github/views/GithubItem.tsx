@@ -10,7 +10,7 @@ export class GithubItem extends React.Component<OrbitIntegrationProps<'github'>>
     }
     return (
       <>
-        <Task body={bit.body} comments={bit.data.comments} />
+        <Task {...this.props} body={bit.body} comments={bit.data.comments} />
       </>
     )
   }

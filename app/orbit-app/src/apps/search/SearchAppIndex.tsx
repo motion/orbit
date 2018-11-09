@@ -9,7 +9,7 @@ import { useStore } from '@mcro/use-store'
 import { StaticContainer } from '../../views/StaticContainer'
 
 export function SearchAppIndex(props: AppProps) {
-  const searchStore = useStore(SearchStore, props, true)
+  const searchStore = useStore(SearchStore, props)
   log(`SEARCH--------`)
   return (
     <>

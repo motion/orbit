@@ -76,7 +76,7 @@ export class SourcesStore {
     defaultValue: {},
   })
 
-  getView = (type: IntegrationType | 'person', viewType: 'main' | 'source' | 'item') => {
+  getView = (type: IntegrationType, viewType: 'main' | 'source' | 'item') => {
     if (!this.allSourcesMap[type]) {
       return () => 'none'
     }

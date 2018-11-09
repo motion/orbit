@@ -122,8 +122,8 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
           padding={padding}
           {...cardProps}
         >
-          <div style={{ flexDirection: 'row' }}>
-            <div style={{ flex: 1 }}>
+          <div style={{ flexDirection: 'row', width: '100%' }}>
+            <div style={{ flex: 1, maxWidth: '100%' }}>
               {showTitle && (
                 <Title style={titleFlex && { flex: titleFlex }}>
                   {showIcon && (

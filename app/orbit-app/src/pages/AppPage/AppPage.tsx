@@ -114,7 +114,7 @@ class AppPageContent extends React.Component<Props> {
   render() {
     const { viewStore } = this.props
     if (!viewStore.state) {
-      return null
+      return <div>no state</div>
     }
     const { appConfig, appType } = viewStore.state
     if (!appConfig || !appType) {

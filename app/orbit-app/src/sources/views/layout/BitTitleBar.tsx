@@ -14,7 +14,7 @@ export class BitTitleBar extends React.Component<{
     return (
       <>
         <AppSimpleTitleBar normalizedItem={normalizedItem} />
-        <Row alignItems="center" height={38} margin={[5, 0, 0]}>
+        <Row alignItems="center" height={38} margin={[25, 15, 0]}>
           {searchBar}
           <TitleBarSpace />
           <BitTitleActions normalizedItem={normalizedItem} />

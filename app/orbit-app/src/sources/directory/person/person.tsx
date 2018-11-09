@@ -1,6 +1,6 @@
+import * as React from 'react'
 import { Source } from '@mcro/models'
 import { GetOrbitIntegration } from '../../types'
-import { PersonApp } from './PersonApp'
 import { PersonItem } from './PersonItem'
 
 export const person: GetOrbitIntegration<'person'> = (_source?: Source) => ({
@@ -23,7 +23,7 @@ export const person: GetOrbitIntegration<'person'> = (_source?: Source) => ({
     itemName: 'person',
   },
   views: {
-    main: PersonApp,
+    main: () => <div>none</div>,
     item: PersonItem,
   },
 })

@@ -34,7 +34,10 @@ export class SearchStore {
 
   getAppConfig(index) {
     const model = this.searchState.results[index]
-    return getAppConfig(model)
+    if (model.target) {
+      return getAppConfig(model)
+    }
+    return {}
   }
 
   getItemProps = index => {

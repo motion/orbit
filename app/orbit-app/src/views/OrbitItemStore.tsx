@@ -99,11 +99,13 @@ export class OrbitItemStore {
   }
 
   selectItem = () => {
-    AppActions.setPeekApp({
+    const item = {
       appType: this.props.appType,
       appConfig: this.props.appConfig,
       target: this.cardWrapRef,
-    })
+    }
+    console.log('selecting item', item)
+    AppActions.setPeekApp(item)
   }
 
   updateIsSelected = react(

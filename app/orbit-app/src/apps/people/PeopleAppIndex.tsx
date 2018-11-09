@@ -15,6 +15,7 @@ import { View } from '@mcro/ui'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
+import { getAppConfig } from '../../helpers/getAppConfig'
 
 const height = 56
 
@@ -124,8 +125,8 @@ class PeopleIndexStore {
 const DirectoryPersonCard = props => (
   <OrbitCard
     inGrid
-    pane="docked"
-    subPane="directory"
+    appType="people"
+    appConfig={getAppConfig(props.model)}
     titleProps={{
       ellipse: true,
     }}

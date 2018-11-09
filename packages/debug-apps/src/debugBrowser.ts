@@ -77,7 +77,7 @@ export default class DebugApps {
 
   renderLoop = async () => {
     while (this.shouldRun) {
-      await sleep(500)
+      await sleep(5000)
       try {
         const sessions = await this.getSessions()
         await this.ensureEnoughTabs(sessions)
@@ -97,9 +97,10 @@ export default class DebugApps {
   }
 
   getSessions = async (): Promise<any> => {
-    return flatten(await Promise.all(this.sessions.map(this.getDevUrl)))
+    const sessions = flatten(await Promise.all(this.sessions.map(this.getDevUrl)))
       .filter(Boolean)
-      .sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
+    console.log("sessions", sessions)
+    return sessions.sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
   }
 
   lastRes = {}

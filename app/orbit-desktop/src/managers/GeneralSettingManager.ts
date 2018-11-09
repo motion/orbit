@@ -1,12 +1,10 @@
 import { store } from '@mcro/black'
-import { SpaceEntity } from '@mcro/entities/_'
-import { Space } from '@mcro/models/_'
-import AutoLaunch from 'auto-launch'
-import { SettingEntity } from '@mcro/entities'
-import { getRepository } from 'typeorm'
-import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
+import { SettingEntity, SpaceEntity } from '@mcro/entities'
+import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
+import AutoLaunch from 'auto-launch'
+import { getRepository } from 'typeorm'
 
 const Config = getGlobalConfig()
 const log = new Logger('GeneralSettingManager')

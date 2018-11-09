@@ -1,52 +1,49 @@
-import * as React from 'react'
 import { react } from '@mcro/black'
-import { AppProps } from '../AppProps'
-import { fuzzyQueryFilter } from '../../helpers'
+import { observeMany } from '@mcro/model-bridge'
+import { App, AppModel, ListsApp } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
+import * as React from 'react'
+import { fuzzyQueryFilter } from '../../helpers'
 import { Icon } from '../../views/Icon'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
+import { AppProps } from '../AppProps'
+import { ListEdit } from './ListEdit'
 
 class ListsIndexStore {
   props: AppProps
   state = Math.random()
-  allLists = [
-    {
-      id: 0,
-      index: 0,
-      type: 'lists',
-      title: 'First List',
-      afterTitle: <Icon name="pin" size={16} />,
-      // subtitle: '10 items',
-    },
-    {
-      id: 1,
-      index: 1,
-      type: 'lists',
-      title: 'Next list',
-      // subtitle: '3 items',
-    },
-    {
-      id: 2,
-      index: 2,
-      type: 'lists',
-      title: 'Third list',
-      // subtitle: '34 items',
-    },
-    {
-      id: 3,
-      index: 3,
-      type: 'lists',
-      title: 'Items I Really Like',
-      // subtitle: '100 items',
-    },
-    {
-      id: 4,
-      index: 4,
-      type: 'lists',
-      title: 'Another Another List',
-      // subtitle: '1 items',
-    },
-  ]
+
+  // todo: this probably should be in some AppStore but there are multiple AppStores already
+  apps: App[] = []
+
+  get listsApp(): ListsApp {
+    return this.apps.find(app => app.type === 'lists')
+  }
+
+  willUnmount() {
+    this.apps$.unsubscribe()
+  }
+
+  private apps$ = observeMany(AppModel, { args: {} }).subscribe(apps => {
+    console.log('here is what Ive got', apps)
+    this.apps = apps
+  })
+
+  get allLists() {
+    if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists)
+      return []
+
+    return this.listsApp.data.lists.map((listItem, index) => {
+      return {
+        id: index,
+        index,
+        type: 'list',
+        title: listItem.name,
+        afterTitle: <Icon name="pin" size={16} />,
+        subtitle: (listItem.bits || []).length + ' items',
+      }
+    })
+  }
 
   get activeQuery() {
     return this.props.appStore.activeQuery
@@ -73,7 +70,8 @@ export function ListsAppIndex(props: AppProps) {
   const store = useStore(ListsIndexStore, props)
   return (
     <>
-      <VirtualList maxHeight={400} items={store.results} itemProps={{ direct: true }} />
+      <VirtualList maxHeight={400} items={store.allLists} itemProps={{ direct: true }} />
+      <ListEdit />
     </>
   )
 }

@@ -1,5 +1,6 @@
 import { getGlobalConfig } from '@mcro/config'
 import {
+  AppEntity,
   BitEntity,
   Entities,
   JobEntity,
@@ -12,6 +13,7 @@ import {
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
+  AppModel,
   BitModel,
   JobModel,
   PersonBitModel,
@@ -93,13 +95,23 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [SettingModel, SourceModel, BitModel, JobModel, PersonModel, PersonBitModel, SpaceModel],
+      models: [
+        AppModel,
+        SettingModel,
+        SourceModel,
+        BitModel,
+        JobModel,
+        PersonModel,
+        PersonBitModel,
+        SpaceModel
+      ],
       commands: [SourceForceSyncCommand],
       transport: new WebSocketServerTransport({
         port: 40001, // todo: use config?
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [
+          { entity: AppEntity, models: [AppModel] },
           { entity: SettingEntity, models: [SettingModel] },
           { entity: SourceEntity, models: [SourceModel] },
           { entity: BitEntity, models: [BitModel] },

@@ -93,14 +93,14 @@ export class OrbitSwitch extends React.Component<Props> {
   }
 
   createNewSpace = () => {
-    AppActions.togglePeekApp(
-      {
+    AppActions.togglePeekApp({
+      appConfig: {
         type: 'newSpace',
         title: 'New Space',
         icon: 'orbit',
       },
-      getTargetPosition(findDOMNode(this) as HTMLDivElement),
-    )
+      target: findDOMNode(this) as HTMLDivElement,
+    })
   }
 
   render() {

@@ -1,6 +1,6 @@
 import { observeMany } from '@mcro/model-bridge'
 import { Space, SpaceModel, Source } from '@mcro/models'
-import { SourceModel } from '@mcro/models/_'
+import { SourceModel } from '@mcro/models'
 import { AppType } from '../apps/apps'
 import { getAppFromSource } from './SourcesStore'
 
@@ -89,6 +89,7 @@ export class SpaceStore {
 
   willUnmount() {
     this.spaces$.unsubscribe()
+    this.sources$.unsubscribe()
   }
 
   private spaces$ = observeMany(SpaceModel, { args: {} }).subscribe(spaces => {

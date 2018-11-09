@@ -1,5 +1,5 @@
+import { AppType } from '@mcro/models'
 import { AppStore } from './AppStore'
-import { AppType } from './apps'
 import { SourcesStore } from '../stores/SourcesStore'
 import { SettingStore } from '../stores/SettingStore'
 import { SubPaneStore } from '../components/SubPaneStore'

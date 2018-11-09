@@ -1,4 +1,4 @@
-import { Space } from '@mcro/models/_'
+import { Space } from '@mcro/models'
 import {
   BaseEntity,
   Column,

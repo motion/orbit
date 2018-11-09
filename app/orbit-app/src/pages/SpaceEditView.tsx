@@ -1,6 +1,6 @@
 import { attach, react, view } from '@mcro/black'
 import { save } from '@mcro/model-bridge'
-import { Space, SpaceModel } from '@mcro/models'
+import { AppModel, ListsApp, Space, SpaceModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../actions/AppActions'
@@ -47,10 +47,30 @@ export class SpaceEditView extends React.Component<
   save = async e => {
     e.preventDefault()
     const { space } = this.props.store
-    await save(SpaceModel, {
+
+    // create a space
+    const savedSpace = await save(SpaceModel, {
       ...space,
       ...this.props.store.values
     })
+
+    console.log("saved space:", savedSpace)
+
+    // create a list app for the created space
+    const listsApp: ListsApp = {
+      name: "Lists",
+      type: "lists",
+      spaceId: savedSpace.id,
+      data: {
+        lists: [
+          { name: "list #1", order: 0, pinned: false },
+          { name: "list #2", order: 0, pinned: false },
+          { name: "list #3", order: 0, pinned: false }
+        ]
+      }
+    }
+    await save(AppModel, listsApp)
+
     this.props.store.values = { name: '', colors: [] }
     AppActions.clearPeek()
   }

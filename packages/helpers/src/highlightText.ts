@@ -18,6 +18,7 @@ export type HighlightOptions = {
   maxSurroundChars?: number
   style?: string
   separator?: string
+  noSpans?: boolean
 }
 
 const isHighlightWord = (str, words) => {
@@ -119,7 +120,7 @@ export function highlightText(options: HighlightOptions): string {
     if (len > maxChars) {
       continue
     }
-    if (words.indexOf(part) === 0) {
+    if (words.indexOf(part.toLowerCase()) === 0 && options.noSpans !== true) {
       final.push(`<span style="${style}">${part}</span>`)
     } else {
       final.push(part)

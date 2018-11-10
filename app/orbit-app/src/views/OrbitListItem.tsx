@@ -14,11 +14,7 @@ import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
-
-const Separator = view({
-  background: [100, 100, 100, 0.2],
-  padding: [2, 12],
-})
+import { Separator } from './Separator'
 
 @attach('sourcesStore', 'appStore')
 @attach({
@@ -66,10 +62,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     const { isSelected } = store
     let ItemView
     if (!this.props.direct) {
-      ItemView = this.props.sourcesStore.getView(
-        normalizedItem.type === 'bit' ? normalizedItem.integration : 'person',
-        'item',
-      )
+      ItemView = this.props.sourcesStore.getView(normalizedItem.integration, 'item')
     }
     const hide = {
       ...this.props.hide,

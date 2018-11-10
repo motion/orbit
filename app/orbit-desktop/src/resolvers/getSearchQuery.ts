@@ -1,4 +1,4 @@
-import { FindOptions } from 'typeorm'
+import { FindOptions, FindOptionsWhere, FindOptionsWhereCondition } from 'typeorm'
 import { Bit, SearchQuery } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 
@@ -7,6 +7,7 @@ const log = new Logger('getSearchQuery')
 export const getSearchQuery = (args: SearchQuery) => {
   log.info('args', args)
   const {
+    ids,
     query,
     sortBy,
     take,
@@ -16,15 +17,11 @@ export const getSearchQuery = (args: SearchQuery) => {
     integrationFilters,
     peopleFilters,
     locationFilters,
+    spaceId,
+    sourceId,
   } = args
+
   const findOptions: FindOptions<Bit> = {
-    where: [],
-    relations: {
-      people: true,
-      author: true,
-    },
-    take,
-    skip,
     // select: {
     //   id: true,
     //   title: true,
@@ -37,32 +34,48 @@ export const getSearchQuery = (args: SearchQuery) => {
     //   people: true,
     //   location: { id: true, name: true, desktopLink: true, webLink: true },
     // },
+    where: [],
+    relations: {
+      people: true,
+      author: true,
+    },
+    take,
+    skip,
   }
 
-  const andConditions: any = {}
-  if (startDate) {
-    andConditions.bitCreatedAt = { $moreThan: new Date(startDate).getTime() }
+  const andConditions: FindOptionsWhere<Bit> = {}
+  if (ids) {
+    andConditions.id = { $in: ids }
   }
-  if (endDate) {
-    andConditions.bitCreatedAt = { $lessThan: new Date(endDate).getTime() }
+  if (startDate && endDate) {
+    andConditions.bitCreatedAt = {
+      $between: [new Date(startDate).getTime(), new Date(endDate).getTime()]
+    }
+
+  } else if (startDate) {
+    andConditions.bitCreatedAt = {
+      $moreThan: new Date(startDate).getTime()
+    }
+  } else if (endDate) {
+    andConditions.bitCreatedAt = {
+      $lessThan: new Date(endDate).getTime()
+    }
   }
   if (integrationFilters && integrationFilters.length) {
     andConditions.integration = { $in: integrationFilters }
   }
-
-  if (query.length) {
-    const likeString = `%${query.replace(/\s+/g, '%')}%`
-    // @ts-ignore
-    findOptions.where.push({
-      ...andConditions,
-      title: { $like: likeString },
-    })
-    // @ts-ignore
-    findOptions.where.push({
-      ...andConditions,
-      body: { $like: likeString },
-    })
+  if (sourceId || spaceId) {
+    andConditions.source = {
+      id: sourceId ? sourceId : undefined,
+      spaceId: spaceId ? spaceId : undefined,
+    }
   }
+
+  if (query && query.length) {
+    andConditions.title = { $like: `%${query.replace(/\s+/g, '%')}%` }
+  }
+
+  (findOptions.where as FindOptionsWhereCondition<Bit>[]).push(andConditions)
 
   // SORT
   if (sortBy) {
@@ -86,8 +99,7 @@ export const getSearchQuery = (args: SearchQuery) => {
   if (peopleFilters && peopleFilters.length) {
     // essentially, find at least one person
     for (const name of peopleFilters) {
-      // @ts-ignore
-      findOptions.where.push({
+      (findOptions.where as FindOptionsWhereCondition<Bit>[]).push({
         ...andConditions,
         people: {
           name: { $like: `%${name}%` },
@@ -98,8 +110,7 @@ export const getSearchQuery = (args: SearchQuery) => {
 
   if (locationFilters && locationFilters.length) {
     for (const location of locationFilters) {
-      // @ts-ignore
-      findOptions.where.push({
+      (findOptions.where as FindOptionsWhereCondition<Bit>[]).push({
         ...andConditions,
         location: {
           name: location,
@@ -108,8 +119,7 @@ export const getSearchQuery = (args: SearchQuery) => {
     }
   }
 
-  // @ts-ignore
-  if (!findOptions.where.length) {
+  if (!(findOptions.where as FindOptionsWhereCondition<Bit>[]).length) {
     if (Object.keys(andConditions).length) {
       findOptions.where = andConditions
     } else {

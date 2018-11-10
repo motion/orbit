@@ -16,13 +16,18 @@ export class GMailBitFactory {
   /**
    * Creates a new bit from a given GMail thread.
    */
-  create(thread: GMailThread): Bit {
+  create(thread: GMailThread): Bit|undefined {
     const body = thread.messages
       .map(message => {
         const parser = new GMailMessageParser(message)
         return parser.getTextBody()
       })
       .join('\r\n\r\n')
+
+    // in the case if body is not defined (e.g. message without content)
+    // we return undefined - to skip bit creation, we don't need bits with empty body
+    if (!body)
+      return undefined
 
     const messages = thread.messages.map(message => {
       const parser = new GMailMessageParser(message)
@@ -43,7 +48,7 @@ export class GMailBitFactory {
       {
         integration: 'gmail',
         type: 'mail',
-        title: `${firstMessageParser.getTitle()}`,
+        title: firstMessageParser.getTitle(),
         body,
         data: {
           messages,

@@ -1,14 +1,14 @@
 import { ensure, react, always } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import { SearchResultModel, Bit } from '@mcro/models'
+import { SearchResultModel, SearchResult } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
-import { ItemPropsMinimum } from '../../views/VirtualList/VirtualList'
-import { getAppConfig } from '../../helpers/getAppConfig'
+import { GetItemProps } from '../../views/VirtualList/VirtualList'
+// import { getAppConfig } from '../../helpers/getAppConfig'
 
-type SearchState = { results: Bit[]; finished?: boolean; query: string }
+type SearchState = { results: SearchResult[]; finished?: boolean; query: string }
 
 export class SearchStore {
   props: AppProps
@@ -32,24 +32,56 @@ export class SearchStore {
     return this.searchState.results[this.props.appStore.activeIndex]
   }
 
-  getAppConfig(index) {
-    const model = this.searchState.results[index]
-    if (model.target) {
-      return getAppConfig(model)
-    }
-    return {}
-  }
-
-  getItemProps = index => {
-    if (!index || index % 5 === 0) {
-      return {
-        separator: 'This Week',
+  /**
+   * Virtual list has its own format of data representation, so convert our data to that format here.
+   * Ideally we need to use our format in there, but if it is generic component we can use transformation as well.
+   */
+  get resultsForVirtualList() {
+    // convert our search results into something this components expects
+    const items: any[] = []
+    for (let result of this.searchState.results) {
+      if (result.bits.length) {
+        items.push({
+          type: 'summary',
+          title: result.title,
+          body: result.text,
+          group: result.group,
+          count: result.bitsTotalCount,
+        })
+        items.push(...result.bits)
       }
     }
-    return {
-      appConfig: this.getAppConfig(index),
-      appType: 'search',
-    } as ItemPropsMinimum
+
+    return items
+  }
+
+  getItemProps: GetItemProps = index => {
+    const results = this.resultsForVirtualList
+    if (
+      results[index].group &&
+      (index === 0 || results[index].group !== results[index - 1].group)
+    ) {
+      let separator: string
+      if (results[index].group === 'last-day') {
+        separator = 'Last Day'
+      } else if (results[index].group === 'last-week') {
+        separator = 'Last Week'
+      } else if (results[index].group === 'last-month') {
+        separator = 'Last Month'
+      } else {
+        separator = 'All Period'
+      }
+      return { separator }
+    }
+    return {}
+    // const model = this.searchState.results[index]
+    // if (model.target) {
+    //   return getAppConfig(model)
+    // }
+    // return {
+    //   appConfig: getAppConfig(index),
+    //   appType: 'search',
+    // } as ItemPropsMinimum
   }
 
   updateSearchHistoryOnSearch = react(
@@ -73,11 +105,15 @@ export class SearchStore {
   setSelection = react(
     () => always(this.searchState),
     () => {
+      const searchBits = this.searchState.results.reduce(
+        (bits, result) => [...bits, ...result.bits],
+        [],
+      )
       this.props.appStore.setResults([
         {
           type: 'column',
           // shouldAutoSelect: true,
-          ids: this.searchState.results.map(x => x.id),
+          ids: searchBits.map(x => x.id),
         },
       ])
     },
@@ -101,7 +137,7 @@ export class SearchStore {
       this.queryFilters.sortBy,
       this.queryFilters.dateState,
     ],
-    async (_, { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
+    async (_, { when, setValue, idle, sleep }): Promise<SearchState> => {
       const query = App.state.query
 
       // if not on this pane, delay it a bit
@@ -110,7 +146,7 @@ export class SearchStore {
         await idle()
       }
 
-      let results = []
+      let results: SearchResult[] = []
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query
       if (isChangingQuery) {
@@ -148,6 +184,7 @@ export class SearchStore {
 
       const { startDate, endDate } = dateState
       const baseFindOptions = {
+        spaceId: 1, // todo: how do we can space id from store here?
         query: activeQuery,
         searchBy,
         sortBy,
@@ -158,21 +195,21 @@ export class SearchStore {
         locationFilters,
       }
 
-      const updateNextResults = async ({ startIndex, endIndex }) => {
+      const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
         const searchOpts = {
           ...baseFindOptions,
+          group,
+          maxBitsCount,
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
+        console.log('searchOpts', searchOpts)
+        console.log('nextResults', nextResults)
         if (!nextResults) {
           return false
         }
-        results = [
-          ...results,
-          { type: 'search', subType: 'group', title: 'Something', body: 'Lorem ipsum' },
-          ...nextResults,
-        ]
+        results = [...results, ...nextResults]
         setValue({
           results,
           query,
@@ -182,10 +219,23 @@ export class SearchStore {
       }
 
       // do initial search
-      await updateNextResults({ startIndex: 0, endIndex: take })
+      await updateNextResults({ maxBitsCount: 5, group: 'last-day', startIndex: 0, endIndex: take })
+      await updateNextResults({
+        maxBitsCount: 5,
+        group: 'last-week',
+        startIndex: 0,
+        endIndex: take,
+      })
+      await updateNextResults({
+        maxBitsCount: 5,
+        group: 'last-month',
+        startIndex: 0,
+        endIndex: take,
+      })
+      await updateNextResults({ maxBitsCount: 5, group: 'overall', startIndex: 0, endIndex: take })
 
       // wait for active before loading more than one page of results
-      if (!this.isActive) {
+      /* if (!this.isActive) {
         await when(() => this.isActive)
       }
 
@@ -198,7 +248,8 @@ export class SearchStore {
         if (!updated) {
           break
         }
-      }
+      } */
+
       // finished
       return {
         query,
@@ -216,6 +267,7 @@ export class SearchStore {
   }
 
   // todo
+  // I don't think someone is going to scroll more than 1000 items? Or even 100...
   remoteRowCount = 1000
 
   loadMore = ({ startIndex, stopIndex }) => {

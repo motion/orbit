@@ -5,7 +5,6 @@ import { CSSPropertySet } from '@mcro/gloss'
 
 type SectionProps = CSSPropertySet & {
   title: string
-  type: 'search-list' | 'carousel'
   children: React.ReactNode
   padTitle?: boolean
   titleProps?: Object

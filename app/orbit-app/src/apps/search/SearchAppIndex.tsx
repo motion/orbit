@@ -95,12 +95,14 @@ export class SearchAppInner extends React.PureComponent<
 class ListItem extends React.PureComponent<ListItemProps> {
   render() {
     const { model, realIndex, query, ...props } = this.props
-    if (model.subType === 'group') {
+    console.log('item is', model)
+    if (model.group) {
       const item = model as any
       return <GroupedSearchItem item={item} index={realIndex} query={query} {...props} />
     }
     return (
       <OrbitListItem
+        appType="search"
         index={realIndex}
         model={model}
         subtitleSpaceBetween={spaceBetween}

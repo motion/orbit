@@ -210,6 +210,11 @@ export class GMailSyncer implements IntegrationSyncer {
 
     const participants = this.extractThreadParticipants(thread)
     const bit = this.bitFactory.create(thread)
+
+    // if email doesn't have body messages we don't need to sync it
+    if (!bit)
+      return
+
     bit.people = participants.map(participant => this.personFactory.create(participant))
 
     // for people without emails we create "virtual" email

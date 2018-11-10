@@ -270,7 +270,7 @@ export class GithubSyncer implements IntegrationSyncer {
   private async loadApiRepositories() {
     // load repositories from the API first
     this.log.timer('load API repositories')
-    let repositories = [] // await this.loader.loadUserRepositories()
+    let repositories = await this.loader.loadUserRepositories()
     this.log.timer('load API repositories', repositories)
 
     // get whitelist, if its not defined just return all loaded repositories
@@ -284,10 +284,10 @@ export class GithubSyncer implements IntegrationSyncer {
     }
 
     // if it was defined return filtered repositories
-    values.externalRepositories = [
-      /*'motion/orbit', */ 'mobxjs/mobx-state-tree',
-      'Microsoft/TypeScript',
-    ]
+    // values.externalRepositories = [
+    //   /*'motion/orbit', */ 'mobxjs/mobx-state-tree',
+    //   'Microsoft/TypeScript',
+    // ]
     if (values.externalRepositories && values.externalRepositories.length > 0) {
       this.log.info(
         'externalRepositories are found, adding them as well',

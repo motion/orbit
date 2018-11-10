@@ -1,17 +1,12 @@
 ## next
 
-### nate
+small apps for teams
 
-Thursday:
+### nate
 
 - Showing current app context when holding option / design for pin current app context to pin
 - Upgrade people app with "Send icon" for context + showing peek next to it + search bar
-- Fix menu delay open bug
-- Option hold should register shortcuts for option+left option+letter option+number to _then_ focus the app
 - Lists Main app view app - show sidebar in app with button + searchbar
-
-Friday:
-
 - SelectionStore / keyboard interaction working for menu windows
 - Orbit search results context menu opens by default (not show last one)
 - Fix cosal invert bug
@@ -23,8 +18,6 @@ Sat/Sun:
 - Get topics app using real data for changing over time topics
 - UI for custom topics in topics app
 - Rename SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
-
-- https://github.com/bokuweb/re-resizable
 
 ---
 
@@ -54,6 +47,8 @@ Thursday:
 
 umed:
 
+- window resize with re-resizable needs work
+- Team account management and onboarding flow
 - Search performance / groups
 - Fix search filters and date filters
 - Fix NLP filtering and test it

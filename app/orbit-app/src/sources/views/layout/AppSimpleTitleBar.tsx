@@ -1,23 +1,16 @@
 import * as React from 'react'
 import { View, Text } from '@mcro/ui'
-import { NormalizedItem } from '../../../helpers/normalizeItem'
-import { compose, view, attach } from '@mcro/black'
-import { ViewStore } from '../../../pages/AppPage/ViewStore'
 
 type Props = {
-  normalizedItem: NormalizedItem
-  viewStore?: ViewStore
+  title: string
+  onDragStart?: Function
 }
 
-const decorate = compose(
-  attach('viewStore'),
-  view,
-)
-export const AppSimpleTitleBar = decorate(({ viewStore, normalizedItem }: Props) => {
+export const AppSimpleTitleBar = ({ onDragStart, title }: Props) => {
   return (
     <View
       draggable
-      onDragStart={viewStore.onDragStart}
+      onDragStart={onDragStart}
       position="absolute"
       top={0}
       left={30}
@@ -33,8 +26,8 @@ export const AppSimpleTitleBar = decorate(({ viewStore, normalizedItem }: Props)
         fontWeight={600}
         alignItems="center"
       >
-        {normalizedItem.title}
+        {title}
       </Text>
     </View>
   )
-})
+}

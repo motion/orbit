@@ -22,9 +22,9 @@ export async function start() {
 
   // render app
   ReactDOM.render(
-    // <ConcurrentMode>
+    // <React.ConcurrentMode>
     <RootView />,
-    // </ConcurrentMode>
+    // </React.ConcurrentMode>,
     document.querySelector('#app'),
   )
 }

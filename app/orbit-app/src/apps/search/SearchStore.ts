@@ -1,4 +1,4 @@
-import { ensure, react } from '@mcro/black'
+import { ensure, react, always } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, SearchResult } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -6,6 +6,7 @@ import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
 import { GetItemProps } from '../../views/VirtualList/VirtualList'
+// import { getAppConfig } from '../../helpers/getAppConfig'
 
 type SearchState = { results: SearchResult[]; finished?: boolean; query: string }
 
@@ -36,7 +37,6 @@ export class SearchStore {
    * Ideally we need to use our format in there, but if it is generic component we can use transformation as well.
    */
   get resultsForVirtualList() {
-
     // convert our search results into something this components expects
     const items: any[] = []
     for (let result of this.searchState.results) {
@@ -46,7 +46,7 @@ export class SearchStore {
           title: result.title,
           body: result.text,
           group: result.group,
-          count: result.bitsTotalCount
+          count: result.bitsTotalCount,
         })
         items.push(...result.bits)
       }
@@ -57,7 +57,10 @@ export class SearchStore {
 
   getItemProps: GetItemProps = index => {
     const results = this.resultsForVirtualList
-    if (results[index].group && (index === 0 || results[index].group !== results[index - 1].group)) {
+    if (
+      results[index].group &&
+      (index === 0 || results[index].group !== results[index - 1].group)
+    ) {
       let separator: string
       if (results[index].group === 'last-day') {
         separator = 'Last Day'
@@ -68,9 +71,17 @@ export class SearchStore {
       } else {
         separator = 'All Period'
       }
-
       return { separator }
     }
+    return {}
+    // const model = this.searchState.results[index]
+    // if (model.target) {
+    //   return getAppConfig(model)
+    // }
+    // return {
+    //   appConfig: getAppConfig(index),
+    //   appType: 'search',
+    // } as ItemPropsMinimum
   }
 
   updateSearchHistoryOnSearch = react(
@@ -92,9 +103,12 @@ export class SearchStore {
   )
 
   setSelection = react(
-    () => this.searchState && Math.random(),
+    () => always(this.searchState),
     () => {
-      const searchBits = this.searchState.results.reduce((bits, result) => [...bits, ...result.bits], [])
+      const searchBits = this.searchState.results.reduce(
+        (bits, result) => [...bits, ...result.bits],
+        [],
+      )
       this.props.appStore.setResults([
         {
           type: 'column',
@@ -123,7 +137,7 @@ export class SearchStore {
       this.queryFilters.sortBy,
       this.queryFilters.dateState,
     ],
-    async (_, { whenChanged, when, setValue, idle, sleep }): Promise<SearchState> => {
+    async (_, { when, setValue, idle, sleep }): Promise<SearchState> => {
       const query = App.state.query
 
       // if not on this pane, delay it a bit
@@ -190,15 +204,12 @@ export class SearchStore {
           take: Math.max(0, endIndex - startIndex),
         }
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
-        console.log("searchOpts", searchOpts)
-        console.log("nextResults", nextResults)
+        console.log('searchOpts', searchOpts)
+        console.log('nextResults', nextResults)
         if (!nextResults) {
           return false
         }
-        results = [
-          ...results,
-          ...nextResults,
-        ]
+        results = [...results, ...nextResults]
         setValue({
           results,
           query,
@@ -209,8 +220,18 @@ export class SearchStore {
 
       // do initial search
       await updateNextResults({ maxBitsCount: 5, group: 'last-day', startIndex: 0, endIndex: take })
-      await updateNextResults({ maxBitsCount: 5, group: 'last-week', startIndex: 0, endIndex: take })
-      await updateNextResults({ maxBitsCount: 5, group: 'last-month', startIndex: 0, endIndex: take })
+      await updateNextResults({
+        maxBitsCount: 5,
+        group: 'last-week',
+        startIndex: 0,
+        endIndex: take,
+      })
+      await updateNextResults({
+        maxBitsCount: 5,
+        group: 'last-month',
+        startIndex: 0,
+        endIndex: take,
+      })
       await updateNextResults({ maxBitsCount: 5, group: 'overall', startIndex: 0, endIndex: take })
 
       // wait for active before loading more than one page of results

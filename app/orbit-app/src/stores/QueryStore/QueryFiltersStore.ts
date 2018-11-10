@@ -1,4 +1,4 @@
-import { store, react, ensure } from '@mcro/black'
+import { store, react, ensure, always } from '@mcro/black'
 import { SourcesStore } from '../SourcesStore'
 import { memoize } from 'lodash'
 import { MarkType } from './types'
@@ -179,7 +179,7 @@ export class QueryFilterStore {
   )
 
   resetIntegrationFiltersOnNLPChange = react(
-    () => this.nlpStore.nlp && Math.random(),
+    () => always(this.nlpStore.nlp),
     () => {
       const nlp = this.nlpStore.nlp
       ensure('nlp', !!nlp)

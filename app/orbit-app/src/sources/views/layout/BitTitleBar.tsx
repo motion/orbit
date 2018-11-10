@@ -1,17 +1,24 @@
 import * as React from 'react'
 import { Row } from '@mcro/ui'
-import { OrbitSourceMainProps } from '../../types'
 import { BitTitleActions } from './BitTitleActions'
 import { AppSimpleTitleBar } from './AppSimpleTitleBar'
 import { TitleBarSpace } from './TitleBarSpace'
+import { NormalizedItem } from '../../../helpers/normalizeItem'
+import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
+import { attach } from '@mcro/black'
 
-export class BitTitleBar extends React.Component<OrbitSourceMainProps<any>> {
+@attach('appPageStore')
+export class BitTitleBar extends React.Component<{
+  searchBar: any
+  normalizedItem: NormalizedItem
+  appPageStore?: AppPageStore
+}> {
   render() {
-    const { searchBar, normalizedItem } = this.props
+    const { appPageStore, searchBar, normalizedItem } = this.props
     return (
       <>
-        <AppSimpleTitleBar normalizedItem={normalizedItem} />
-        <Row alignItems="center" height={38} margin={[5, 0, 0]}>
+        <AppSimpleTitleBar onDragStart={appPageStore.onDragStart} title={normalizedItem.title} />
+        <Row alignItems="center" height={38} margin={[25, 15, 0]}>
           {searchBar}
           <TitleBarSpace />
           <BitTitleActions normalizedItem={normalizedItem} />

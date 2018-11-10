@@ -3,18 +3,14 @@ import { Title } from '../../../../views'
 import { OrbitIntegrationProps } from '../../../types'
 import { HighlightText } from '../../../../views/HighlightText'
 
-export const Document = ({
-  title,
-  body,
-  renderText,
-}: OrbitIntegrationProps<any> & { title: string; body: string }) => {
+export const Document = ({ bit, renderText }: OrbitIntegrationProps<any>) => {
   if (renderText) {
-    return renderText(body)
+    return renderText(bit.body)
   }
   return (
     <>
-      <Title>{title}</Title>
-      <HighlightText>{body}</HighlightText>
+      <Title>{bit.title}</Title>
+      <HighlightText>{bit.body}</HighlightText>
     </>
   )
 }

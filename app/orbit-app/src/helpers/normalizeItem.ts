@@ -24,6 +24,7 @@ export type NormalizedItem = {
   integration?: IntegrationType
   avatar?: string
   afterTitle?: React.ReactNode
+  after?: React.ReactNode
 }
 
 export type ItemResolverExtraProps = {

@@ -50,6 +50,8 @@ declare module 'react' {
     f: () => ImperativeMethods,
     keys?: any[],
   ): void
+
+  const ConcurrentMode: any
 }
 
 declare const electronRequire: (a: string) => any

@@ -10,6 +10,7 @@ import electronDebug from 'electron-debug'
 import { ElectronRoot } from './ElectronRoot'
 import { MenuWindow } from './menus/MenuWindow'
 import { AppsWindow } from './apps/AppsWindow'
+import { app } from 'electron'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
@@ -18,6 +19,8 @@ export async function main() {
 
   // handle our own separate process in development
   if (process.env.NODE_ENV === 'development') {
+    // hide dock icon in dev mode (its hidden by default in prod)
+    app.dock.hide()
     // in any electron process...
     require('source-map-support/register')
     require('./helpers/installGlobals')

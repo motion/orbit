@@ -17,7 +17,7 @@ class TopicsIndexStore {
 
   get results() {
     const { setting } = this.props.settingStore
-    const topics = setting.values.topTopics || []
+    const topics = [...new Set(setting.values.topTopics || [])]
     return topics.map((topic, i) => ({
       title: topic,
       content: 'hello world',

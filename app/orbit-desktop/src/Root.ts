@@ -165,7 +165,12 @@ export class Root {
     // no need to await
     this.ocrManager.start()
 
-    this.cosalManager.start()
+    // let other processes start before CPU load
+    setTimeout(() => {
+      this.cosalManager.scanSinceLast()
+      this.cosalManager.scanTopics()
+    }, 1000 * 6)
+
     // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {
       this.stores = stores

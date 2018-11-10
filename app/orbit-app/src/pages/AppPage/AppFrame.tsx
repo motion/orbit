@@ -2,23 +2,23 @@ import * as React from 'react'
 import { view, compose, react, ensure, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
-import { ResizableBox } from '../../views/ResizableBox'
+import Resizable, { ResizeCallback } from 're-resizable'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
-import { ViewStore } from '../../pages/AppPage/ViewStore'
+import { AppPageStore } from './AppPageStore'
 import { AppFrameArrow } from './AppFrameArrow'
 
 type AppFrameProps = {
   store?: AppFrameStore
-  viewStore: ViewStore
+  appPageStore: AppPageStore
   children: any
   theme?: ThemeObject
 }
 
 const SHADOW_PAD = 85
 
-const transitions = (store: ViewStore) => {
+const transitions = (store: AppPageStore) => {
   if (store.isTorn) return 'transform linear 10ms'
   if (store.willHide) return 'transform ease 100ms'
   if (store.willStayShown) return 'transform ease 60ms'
@@ -44,32 +44,48 @@ const AppMainContent = view(UI.View, {
 
 class AppFrameStore {
   props: AppFrameProps
-  size: [number, number] = [0, 0]
 
-  updateSizeFromAppState = react(
-    () => this.props.viewStore.appState.size,
-    size => {
+  // frame position and size
+  sizeD: [number, number] = [0, 0]
+  posD: [number, number] = [0, 0]
+  syncWithAppState = react(
+    () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
+    ([size, position]) => {
       ensure('size', !!size)
-      this.size = size
+      this.sizeD = size
+      this.posD = position
     },
   )
 
-  handleResize = (_, { size }) => {
-    this.size = [size.width, size.height]
+  handleResize: ResizeCallback = (_e, direction, _r, { width, height }) => {
+    switch (direction) {
+      case 'right':
+      case 'bottom':
+      case 'bottomRight':
+        this.sizeD = [this.sizeD[0] + width, this.sizeD[1] + height]
+        break
+      case 'top':
+      case 'left':
+      case 'topLeft':
+        this.posD = [this.posD[0] - width, this.posD[1] - height]
+        this.sizeD = [this.sizeD[0] + width, this.sizeD[1] + height]
+        break
+    }
+
     this.tearOnFinishResize()
   }
 
   tearOnFinishResize = debounce(() => {
-    if (this.props.viewStore.isPeek) {
+    if (this.props.appPageStore.isPeek) {
       AppActions.tearPeek()
     }
   }, 100)
 
   deferredSetAppState = react(
-    () => this.size,
-    async (size, { sleep }) => {
+    () => [this.sizeD, this.posD],
+    async ([size, position], { sleep }) => {
       await sleep(100)
-      AppActions.setAppState({ size })
+      AppActions.setAppState({ size, position })
     },
   )
 }
@@ -83,14 +99,14 @@ const PeekFrameContainer = view(UI.View, {
 
 const decorator = compose(
   attachTheme,
-  attach('viewStore'),
+  attach('appPageStore'),
   attach({
     store: AppFrameStore,
   }),
   view,
 )
-export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFrameProps) => {
-  const { isShown, willShow, willHide, state, willStayShown, framePosition } = viewStore
+export const AppFrame = decorator(({ appPageStore, store, children, theme }: AppFrameProps) => {
+  const { isShown, willShow, willHide, state, willStayShown, framePosition } = appPageStore
   if (!state || !state.position || !state.position.length || !state.target) {
     return null
   }
@@ -100,15 +116,17 @@ export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFra
   const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
   const margin = padding.map(x => -x)
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
-  const transition = transitions(viewStore)
-  const size = store.size
+  const transition = transitions(appPageStore)
+  const size = store.sizeD
   return (
-    <ResizableBox
-      width={size[0]}
-      height={size[1]}
-      minConstraints={[100, 100]}
-      maxConstraints={[window.innerWidth, window.innerHeight]}
+    <Resizable
+      size={{ width: size[0], height: size[1] }}
+      minWidth={100}
+      minHeight={100}
+      maxWidth={window.innerWidth}
+      maxHeight={window.innerHeight}
       onResize={store.handleResize}
+      className="resizable"
       style={{
         zIndex: 2,
         // keep size/positionX linked to be fast...
@@ -129,7 +147,7 @@ export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFra
         height={size[1]}
         pointerEvents={isShown ? 'auto' : 'none'}
       >
-        <AppFrameArrow viewStore={viewStore} borderShadow={borderShadow} />
+        <AppFrameArrow appPageStore={appPageStore} borderShadow={borderShadow} />
         <UI.Col flex={1} padding={padding} margin={margin}>
           <UI.Col position="relative" flex={1}>
             <AppFrameBorder boxShadow={[borderShadow]} />
@@ -143,6 +161,6 @@ export const AppFrame = decorator(({ viewStore, store, children, theme }: AppFra
           </UI.Col>
         </UI.Col>
       </PeekFrameContainer>
-    </ResizableBox>
+    </Resizable>
   )
 })

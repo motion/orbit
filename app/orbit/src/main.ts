@@ -36,7 +36,7 @@ export async function main() {
         return
       case 'electron-menus':
       case 'electron-apps':
-        require('./startElectron').startElectron()
+        require('./startElectron').startElectron({ mainProcess: false })
         return
     }
   } else {
@@ -104,7 +104,7 @@ export async function main() {
 
     // start main electron process inside this thread (no forking)
     if (IGNORE_ELECTRON !== 'true') {
-      require('./startElectron').startElectron()
+      require('./startElectron').startElectron({ mainProcess: true })
     }
 
     console.log('Started everything!')

@@ -30,9 +30,11 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
 @store
 export class MousePositionManager {
   lastMousePos?: Point
+  onMouseMove = null
 
-  constructor({ oracle }: { oracle: Oracle }) {
+  constructor({ oracle, onMouseMove }: { oracle: Oracle; onMouseMove?: Function }) {
     oracle.onMousePosition(this.updateHoverState)
+    this.onMouseMove = onMouseMove
   }
 
   updateHoverAttributes = react(
@@ -41,6 +43,10 @@ export class MousePositionManager {
   )
 
   updateHoverState = throttle((mousePos: Point = this.lastMousePos) => {
+    if (this.onMouseMove) {
+      this.onMouseMove()
+    }
+
     // avoid updates if no move
     const { lastMousePos } = this
     if (lastMousePos && lastMousePos[0] === mousePos[0] && lastMousePos[1] === mousePos[1]) {

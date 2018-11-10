@@ -1,4 +1,4 @@
-import { automagicClass, react } from '@mcro/automagical'
+import { automagicClass } from '@mcro/automagical'
 import {
   isValidElement,
   useState,
@@ -120,6 +120,7 @@ const ignoreReactiveKeys = {
   isMobXComputedValue: true,
   __IS_DEEP: true,
   IS_AUTO_RUN: true,
+  $$typeof: true,
 }
 
 export const useStore = <A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A => {
@@ -127,23 +128,22 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
     return null
   }
   const proxyStore = useRef(null)
+  const hasSetupStore = !!proxyStore.current
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const shouldReloadStore =
-    isHMRCompat &&
-    proxyStore.current &&
-    proxyStore.current.constructor.toString() !== Store.toString()
+    isHMRCompat && hasSetupStore && proxyStore.current.constructor.toString() !== Store.toString()
   const store = useStoreWithReactiveProps(Store, props, shouldReloadStore, options)
   const dispose = useRef(null)
   const reactiveKeys = useRef({
     lastKeys: [],
     keys: [],
-    shouldTrack: false,
+    shouldTrack: true,
     update: observable.box(0),
   })
   const triggerUpdate = useState(0)[1]
 
   // setup store once
-  if (!proxyStore.current || shouldReloadStore) {
+  if (!hasSetupStore || shouldReloadStore) {
     if (shouldReloadStore) {
       console.log('HMRing store', Store.name)
     }
@@ -157,9 +157,13 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
         const { keys, shouldTrack } = reactiveKeys.current
-        if (shouldTrack && typeof key === 'string') {
-          if (!ignoreReactiveKeys[key]) {
+        if (!ignoreReactiveKeys[key]) {
+          if (shouldTrack && typeof key === 'string') {
+            console.log('get key from store', shouldTrack, key, ignoreReactiveKeys[key])
             if (!keys[key]) {
+              if (process.env.NODE_ENV === 'development' && options && options.debug) {
+                console.log(`new reactive key: ${Store.name}.${key}`)
+              }
               keys[key] = true
             }
           }
@@ -169,7 +173,7 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
     })
   }
 
-  // this may "look" backward but because mutationEffect fires on finished render
+  // this may "look" backward but because useEffect fires on finished render
   // this is what we want: stop tracking on finished render
   // start tracking again after that (presumable before next render, but not 100%)
   useMutationEffect(() => {
@@ -182,9 +186,11 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
         break
       }
     }
+    reactiveKeys.current = rk
     return () => {
       rk.lastKeys = rk.keys
       rk.shouldTrack = true
+      reactiveKeys.current = rk
     }
   })
 

@@ -154,6 +154,9 @@ export class MenuStore {
               // TODO: determine this dynamically
               size: [300, 300],
             },
+            [+this.lastOpenMenu]: {
+              open: false,
+            },
           },
         },
       })

@@ -6,6 +6,7 @@ import { MenuAppProps } from './MenuLayer'
 import { useStore } from '@mcro/use-store'
 import { AppStore } from '../../../apps/AppStore'
 import { StoreContext, react, ensure } from '@mcro/black'
+import { SubPane } from '../../../components/SubPane'
 
 class MenuAppStore {
   props: MenuAppProps
@@ -42,7 +43,15 @@ export const MenuApp = React.memo((props: MenuAppProps) => {
           onChange: appStore.queryStore.onChangeQuery,
         }}
       >
-        <AppView view="index" isActive={isActive} {...props} />
+        <SubPane
+          id={props.id}
+          type={props.type}
+          paddingLeft={0}
+          paddingRight={0}
+          onHeightChange={props.menuStore.setHeight}
+        >
+          <AppView view="index" isActive={isActive} {...props} />
+        </SubPane>
       </Searchable>
     </StoreContext.Provider>
   )

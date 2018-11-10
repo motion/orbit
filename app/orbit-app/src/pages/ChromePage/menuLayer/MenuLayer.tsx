@@ -12,8 +12,11 @@ import { MenuApp } from './MenuApp'
 import { AppType } from '@mcro/models'
 import { Popover, View, Col } from '@mcro/ui'
 import { TrayActions } from '../../../actions/Actions'
+import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
+
+const panes = ['people', 'topics', 'lists']
 
 const sendTrayEvent = (key, value) => {
   App.setState({
@@ -25,6 +28,10 @@ const sendTrayEvent = (key, value) => {
 }
 
 export class MenuStore {
+  props: {
+    paneManagerStore: PaneManagerStore
+  }
+
   isHoveringDropdown = false
 
   get menuOpenID() {
@@ -34,7 +41,22 @@ export class MenuStore {
     return App.openMenu.id
   }
 
-  lastOpenMenu = react(
+  setActivePane = react(
+    () => {
+      if (typeof this.hoverID === 'number') {
+        return this.hoverID
+      }
+      return this.lastOpenMenuID
+    },
+    id => {
+      if (typeof id === 'number') {
+        const pane = panes[id]
+        this.props.paneManagerStore.setActivePane(pane)
+      }
+    },
+  )
+
+  lastOpenMenuID = react(
     () => this.menuOpenID,
     (val, { state }) => {
       if (!state.hasResolvedOnce) {
@@ -74,7 +96,7 @@ export class MenuStore {
     },
   )
 
-  get hoverId() {
+  get hoverID() {
     const { trayState } = App.state
     always(trayState.trayEventAt)
     const id = trayState.trayEvent.replace('TrayHover', '')
@@ -131,7 +153,7 @@ export class MenuStore {
   )
 
   get menuCenter() {
-    const id = typeof this.hoverId === 'number' ? this.hoverId : this.lastOpenMenu
+    const id = typeof this.hoverID === 'number' ? this.hoverID : this.lastOpenMenuID
     const trayBounds = Desktop.state.operatingSystem.trayBounds
     const baseOffset = 25
     const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120
@@ -140,9 +162,9 @@ export class MenuStore {
 
   // uses faster open so we can react to things quickly
   setMenuBounds = react(
-    () => [this.hoverId, this.openQuick, this.menuCenter],
+    () => [this.hoverID, this.openQuick, this.menuCenter],
     ([menuID, open, menuCenter]) => {
-      ensure('valid id', typeof this.hoverId === 'number')
+      ensure('valid id', typeof this.hoverID === 'number')
       const id = +menuID
       const width = 300
       App.setState({
@@ -154,7 +176,7 @@ export class MenuStore {
               // TODO: determine this dynamically
               size: [300, 300],
             },
-            [+this.lastOpenMenu]: {
+            [+this.lastOpenMenuID]: {
               open: false,
             },
           },
@@ -185,6 +207,21 @@ export class MenuStore {
     },
   )
 
+  setHeight = (height: number) => {
+    if (this.lastOpenMenuID === false) {
+      return
+    }
+    App.setState({
+      trayState: {
+        menuState: {
+          [this.lastOpenMenuID]: {
+            size: [300, height],
+          },
+        },
+      },
+    })
+  }
+
   handleMouseEnter = () => {
     this.isHoveringDropdown = true
   }
@@ -197,15 +234,17 @@ export class MenuStore {
 
 export function MenuLayer() {
   const { sourcesStore, settingStore } = React.useContext(StoreContext)
-  const queryStore = useStore(QueryStore, { sourcesStore }, { debug: true })
-  const selectionStore = useStore(SelectionStore, { queryStore }, { debug: true })
-  const menuStore = useStore(MenuStore, { debug: true })
+  const queryStore = useStore(QueryStore, { sourcesStore })
+  const selectionStore = useStore(SelectionStore, { queryStore })
+  const paneManagerStore = useStore(PaneManagerStore, { panes, selectionStore })
+  const menuStore = useStore(MenuStore, { paneManagerStore })
   const storeProps = {
     settingStore,
     sourcesStore,
     queryStore,
     selectionStore,
     menuStore,
+    paneManagerStore,
   }
   const width = 300
   React.useEffect(() => {
@@ -252,7 +291,7 @@ export function MenuLayer() {
           <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
             {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
               <MenuApp
-                id="0"
+                id={app}
                 key={app}
                 menuId={index}
                 view="index"

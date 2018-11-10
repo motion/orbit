@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { view, attach, provide } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { BORDER_RADIUS } from '../constants'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { AppType } from '../apps/apps'
 import { StaticContainer } from '../views/StaticContainer'
+import { AppType } from '@mcro/models'
+import { CSSPropertySetStrict } from '@mcro/css'
 
-export type SubPaneProps = CSSPropertySet & {
+export type SubPaneProps = CSSPropertySetStrict & {
   id: string
   type?: AppType
   preventScroll?: boolean
@@ -25,6 +25,50 @@ export type SubPaneProps = CSSPropertySet & {
   orbitWindowStore?: OrbitWindowStore
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore
+  onHeightChange?: (height: number) => void
+}
+
+@attach('paneManagerStore', 'orbitWindowStore', 'selectionStore')
+@provide({
+  subPaneStore: SubPaneStore,
+})
+@view
+export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: SubPaneStore }> {
+  render() {
+    const {
+      children,
+      subPaneStore,
+      style,
+      after,
+      fadeBottom,
+      name,
+      before,
+      preventScroll,
+      ...props
+    } = this.props
+    const { isActive, isLeft } = subPaneStore.positionState
+    return (
+      <SubPaneFrame isActive={isActive} name={name}>
+        {before}
+        <SubPaneInner forwardRef={subPaneStore.subPaneInner}>
+          <Pane
+            isActive={isActive}
+            isLeft={isLeft}
+            style={style}
+            height={subPaneStore.contentHeightLimited}
+            forwardRef={subPaneStore.paneRef}
+            preventScroll={preventScroll}
+            {...props}
+          >
+            <PaneContentInner>
+              <StaticContainer key={0}>{children}</StaticContainer>
+            </PaneContentInner>
+          </Pane>
+        </SubPaneInner>
+        {after}
+      </SubPaneFrame>
+    )
+  }
 }
 
 // we cant animate out as of yet because we are changing the height
@@ -68,47 +112,3 @@ const SubPaneInner = view(UI.View, {
 const PaneContentInner = view({
   position: 'relative',
 })
-
-@attach('paneManagerStore', 'orbitWindowStore', 'selectionStore')
-@provide({
-  subPaneStore: SubPaneStore,
-})
-@view
-export class SubPane extends React.Component<SubPaneProps> {
-  render() {
-    const {
-      children,
-      subPaneStore,
-      style,
-      after,
-      fadeBottom,
-      name,
-      before,
-      containerStyle,
-      preventScroll,
-      ...props
-    } = this.props
-    const { isActive, isLeft } = subPaneStore.positionState
-    return (
-      <SubPaneFrame isActive={isActive} name={name}>
-        {before}
-        <SubPaneInner forwardRef={subPaneStore.subPaneInner} {...containerStyle}>
-          <Pane
-            isActive={isActive}
-            isLeft={isLeft}
-            style={style}
-            height={subPaneStore.contentHeightLimited}
-            forwardRef={subPaneStore.paneRef}
-            preventScroll={preventScroll}
-            {...props}
-          >
-            <PaneContentInner>
-              <StaticContainer key={0}>{children}</StaticContainer>
-            </PaneContentInner>
-          </Pane>
-        </SubPaneInner>
-        {after}
-      </SubPaneFrame>
-    )
-  }
-}

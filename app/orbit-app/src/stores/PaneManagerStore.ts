@@ -5,22 +5,17 @@ import { observeOne } from '@mcro/model-bridge'
 import { SettingModel } from '@mcro/models'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
-import { AppPanes, SpaceStore } from './SpaceStore'
-import { QueryStore } from './QueryStore/QueryStore'
 import { AppActions } from '../actions/AppActions'
 import { generalSettingQuery } from '../helpers/queries'
 
-type Panes = 'home' | 'settings' | 'onboard' | string
-
 export class PaneManagerStore {
   props: {
-    selectionStore: SelectionStore
-    spaceStore?: SpaceStore
-    queryStore?: QueryStore
+    selectionStore?: SelectionStore
+    panes: string[]
   }
 
-  get panes(): Partial<Panes>[] {
-    return [...AppPanes.map(p => p.id), 'settings']
+  get panes() {
+    return this.props.panes
   }
 
   keyablePanes = [0, 4]
@@ -36,18 +31,6 @@ export class PaneManagerStore {
   generalSetting$ = observeOne(SettingModel, generalSettingQuery).subscribe(({ values }) => {
     this.hasOnboarded = values.hasOnboarded
   })
-
-  setActivePaneOnTrigger = react(
-    () => this.props.queryStore.query[0],
-    firstChar => {
-      for (const { type, trigger } of AppPanes) {
-        if (trigger && trigger === firstChar) {
-          this.setActivePane(type)
-          return
-        }
-      }
-    },
-  )
 
   disposeToggleSettings: any
   disposeShowApps: any
@@ -125,8 +108,10 @@ export class PaneManagerStore {
       return
     }
     if (index !== this.paneIndex) {
-      // clear selection results on change pane
-      this.props.selectionStore.setResults(null)
+      if (this.props.selectionStore) {
+        // clear selection results on change pane
+        this.props.selectionStore.setResults(null)
+      }
       this.paneIndex = index
     }
   }
@@ -150,7 +135,7 @@ export class PaneManagerStore {
     this.forceOnboard = val
   }
 
-  activePane: Panes = react(
+  activePane = react(
     () => [this.panes, this.paneIndex, this.shouldOnboard],
     async (_, { sleep }) => {
       if (this.shouldOnboard) {

@@ -17,7 +17,7 @@ export type AppProps = {
   settingStore?: SettingStore
   queryStore?: QueryStore
   selectionStore?: SelectionStore
-  isActive?: boolean
+  isActive?: boolean | (() => boolean)
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore
 }

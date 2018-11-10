@@ -28,7 +28,6 @@ export function AppView(props: Props) {
     { ...props, ...stores },
     { conditionalUse: shouldProvideAppStore, debug: true },
   )
-  console.log('rendering app', props.id, props.type, props.view)
   const AppView = apps[props.type][props.view]
   if (typeof AppView !== 'function') {
     console.error('WAHT THE FUCK', props.type, AppView)

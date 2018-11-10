@@ -59,7 +59,7 @@ const updateProps = (props, nextProps, options?: UseStoreOptions) => {
           continue
         }
       }
-      if (options && options.debug) {
+      if (process.env.NODE_ENV === 'development' && options && options.debug) {
         console.log('has changed prop', prop, nextProps[prop])
       }
       props[prop] = nextProps[prop]
@@ -120,6 +120,7 @@ const ignoreReactiveKeys = {
   isMobXComputedValue: true,
   __IS_DEEP: true,
   IS_AUTO_RUN: true,
+  $$typeof: true,
 }
 
 export const useStore = <A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A => {
@@ -127,19 +128,22 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
     return null
   }
   const proxyStore = useRef(null)
+  const hasSetupStore = !!proxyStore.current
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const shouldReloadStore =
-    isHMRCompat &&
-    proxyStore.current &&
-    proxyStore.current.constructor.toString() !== Store.toString()
+    isHMRCompat && hasSetupStore && proxyStore.current.constructor.toString() !== Store.toString()
   const store = useStoreWithReactiveProps(Store, props, shouldReloadStore, options)
   const dispose = useRef(null)
-  const reactiveKeys = useRef(observable({}))
-  let shouldTrackKeys = true
-  const update = useState(0)[1]
+  const reactiveKeys = useRef({
+    lastKeys: [],
+    keys: [],
+    shouldTrack: true,
+    update: observable.box(0),
+  })
+  const triggerUpdate = useState(0)[1]
 
   // setup store once
-  if (!proxyStore.current || shouldReloadStore) {
+  if (!hasSetupStore || shouldReloadStore) {
     if (shouldReloadStore) {
       console.log('HMRing store', Store.name)
     }
@@ -152,10 +156,15 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
     }
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
-        if (shouldTrackKeys && typeof key === 'string') {
-          if (!ignoreReactiveKeys[key]) {
-            if (!reactiveKeys.current[key]) {
-              reactiveKeys.current[key] = true
+        const { keys, shouldTrack } = reactiveKeys.current
+        if (!ignoreReactiveKeys[key]) {
+          if (shouldTrack && typeof key === 'string') {
+            console.log('get key from store', shouldTrack, key, ignoreReactiveKeys[key])
+            if (!keys[key]) {
+              if (process.env.NODE_ENV === 'development' && options && options.debug) {
+                console.log(`new reactive key: ${Store.name}.${key}`)
+              }
+              keys[key] = true
             }
           }
         }
@@ -164,13 +173,24 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
     })
   }
 
-  // this may "look" backward but because mutationEffect fires on finished render
+  // this may "look" backward but because useEffect fires on finished render
   // this is what we want: stop tracking on finished render
   // start tracking again after that (presumable before next render, but not 100%)
   useMutationEffect(() => {
-    shouldTrackKeys = false
+    const rk = reactiveKeys.current
+    rk.shouldTrack = false
+    // trigger update if keys changed
+    for (const [index, key] of rk.lastKeys.entries()) {
+      if (key !== rk.keys[index]) {
+        rk.update.set(Math.random())
+        break
+      }
+    }
+    reactiveKeys.current = rk
     return () => {
-      shouldTrackKeys = true
+      rk.lastKeys = rk.keys
+      rk.shouldTrack = true
+      reactiveKeys.current = rk
     }
   })
 
@@ -178,17 +198,25 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
   useEffect(() => {
     if (!dispose.current) {
       dispose.current = autorun(() => {
+        const { keys, update } = reactiveKeys.current
+
+        // listen for key changes
+        update.get()
+
         // trigger reaction on keys
-        for (const key in reactiveKeys.current) {
+        for (const key in keys) {
           store[key]
         }
-        if (options && options.debug) {
+
+        if (process.env.NODE_ENV === 'development' && options && options.debug) {
           trace()
         }
+
         // update when we react
-        update(Math.random())
+        triggerUpdate(Math.random())
       })
     }
+
     return () => {
       // emit unmount
       if (globalOptions.onUnmount) {

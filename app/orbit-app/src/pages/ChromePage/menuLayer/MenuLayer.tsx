@@ -4,16 +4,37 @@ import { useStore } from '@mcro/use-store'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { setTrayFocused } from './helpers'
-import { App } from '@mcro/stores'
-import { react, ensure } from '@mcro/black'
+import { App, Desktop, Electron } from '@mcro/stores'
+import { react, ensure, always } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
 import { AppType } from '@mcro/models'
+import { Popover, View, Col } from '@mcro/ui'
+import { TrayActions } from '../../../actions/Actions'
+import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 
-export type MenuAppProps = AppProps & { menusStore: MenusStore; id: number }
+export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
-export class MenusStore {
+const panes = ['people', 'topics', 'lists']
+
+const sendTrayEvent = (key, value) => {
+  App.setState({
+    trayState: {
+      trayEvent: key,
+      trayEventAt: value,
+    },
+  })
+}
+
+export class MenuStore {
+  props: {
+    paneManagerStore: PaneManagerStore
+  }
+
+  height = 300
+  isHoveringDropdown = false
+
   get menuOpenID() {
     if (!App.openMenu) {
       return false
@@ -21,7 +42,22 @@ export class MenusStore {
     return App.openMenu.id
   }
 
-  lastOpenMenu = react(
+  setActivePane = react(
+    () => {
+      if (typeof this.hoverID === 'number') {
+        return this.hoverID
+      }
+      return this.lastOpenMenuID
+    },
+    id => {
+      if (typeof id === 'number') {
+        const pane = panes[id]
+        this.props.paneManagerStore.setActivePane(pane)
+      }
+    },
+  )
+
+  lastOpenMenuID = react(
     () => this.menuOpenID,
     (val, { state }) => {
       if (!state.hasResolvedOnce) {
@@ -60,26 +96,235 @@ export class MenusStore {
       setTrayFocused(true)
     },
   )
+
+  get hoverID() {
+    const { trayState } = App.state
+    always(trayState.trayEventAt)
+    const id = trayState.trayEvent.replace('TrayHover', '')
+    if (id === 'Out') {
+      return false
+    }
+    return +id
+  }
+
+  isHoveringIcon = react(
+    () => {
+      const { trayState } = App.state
+      always(trayState.trayEventAt)
+      return (
+        trayState.trayEvent !== 'TrayHoverOut' && trayState.trayEvent.indexOf(`TrayHover`) === 0
+      )
+    },
+    _ => _,
+  )
+
+  get holdingOption() {
+    return Desktop.keyboardState.isHoldingOption
+  }
+
+  openQuick = react(
+    () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown],
+    async ([holdingOption, hoveringMenu], { sleep, when }) => {
+      if (holdingOption) {
+        return true
+      }
+      // if hovering the app window keep it open until not
+      if (Desktop.hoverState.appHovered[0]) {
+        await when(() => !Desktop.hoverState.appHovered[0])
+        await sleep(60)
+      }
+      return hoveringMenu
+    },
+  )
+
+  // this is to allow electon to "show" app before animations occur
+  // and likewise to allow popover to animate hidden before hiding again
+  openVisually = react(
+    () => this.openQuick,
+    async (open, { sleep }) => {
+      if (open) {
+        // sleep before closing
+        await sleep(50)
+      } else {
+        // sleep before opening
+        await sleep(100)
+      }
+      return open
+    },
+  )
+
+  get menuCenter() {
+    const id = typeof this.hoverID === 'number' ? this.hoverID : this.lastOpenMenuID
+    const trayBounds = Desktop.state.operatingSystem.trayBounds
+    const baseOffset = 25
+    const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120
+    return trayBounds[0] + offset
+  }
+
+  // uses faster open so we can react to things quickly
+  setMenuBounds = react(
+    () => [this.hoverID, this.openQuick, this.menuCenter],
+    ([menuID, open, menuCenter]) => {
+      ensure('valid id', typeof this.hoverID === 'number')
+      const id = +menuID
+      const width = 300
+      App.setState({
+        trayState: {
+          menuState: {
+            [id]: {
+              open,
+              position: [menuCenter - width / 2, 0],
+              // TODO: determine this dynamically
+              size: [300, 300],
+            },
+            [+this.lastOpenMenuID]: {
+              open: false,
+            },
+          },
+        },
+      })
+    },
+  )
+
+  focusedMenu = react(
+    () => this.openVisually,
+    async (open, { sleep, whenChanged }) => {
+      if (!open) {
+        await sleep(100)
+        setTrayFocused(false)
+        return false
+      }
+      if (Desktop.keyboardState.isHoldingOption) {
+        // wait for pin to focus the menu
+        await whenChanged(() => Electron.state.pinKey.at)
+        console.log('GOT A PIN KEY', Electron.state.pinKey.name)
+      }
+      setTrayFocused(true)
+      await sleep()
+      return this.menuOpenID
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
+
+  setHeight = (height: number) => {
+    this.height = height
+
+    if (this.lastOpenMenuID === false) {
+      return
+    }
+    App.setState({
+      trayState: {
+        menuState: {
+          [this.lastOpenMenuID]: {
+            size: [300, height],
+          },
+        },
+      },
+    })
+  }
+
+  handleMouseEnter = () => {
+    this.isHoveringDropdown = true
+  }
+
+  handleMouseLeave = () => {
+    console.log('MOUSE LEAVE')
+    this.isHoveringDropdown = false
+  }
 }
 
 export function MenuLayer() {
   const { sourcesStore, settingStore } = React.useContext(StoreContext)
-  const queryStore = useStore(QueryStore, { sourcesStore }, { debug: true })
-  const selectionStore = useStore(SelectionStore, { queryStore }, { debug: true })
-  const menusStore = useStore(MenusStore, { debug: true })
+  const queryStore = useStore(QueryStore, { sourcesStore })
+  const selectionStore = useStore(SelectionStore, { queryStore })
+  const paneManagerStore = useStore(PaneManagerStore, { panes, selectionStore })
+  const menuStore = useStore(MenuStore, { paneManagerStore })
   const storeProps = {
     settingStore,
     sourcesStore,
     queryStore,
     selectionStore,
-    menusStore,
+    menuStore,
+    paneManagerStore,
   }
+  const width = 300
+  React.useEffect(() => {
+    return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
+      switch (key) {
+        case 'TrayToggleOrbit':
+          App.setOrbitState({ docked: !App.state.orbitState.docked })
+          break
+        case 'TrayHover0':
+        case 'TrayHover1':
+        case 'TrayHover2':
+        case 'TrayHoverOrbit':
+        case 'TrayHoverOut':
+          sendTrayEvent(key, Date.now())
+          break
+      }
+    })
+  }, [])
   log('!!! render MenuLayer')
+  const transition = 'opacity ease-in 60ms, transform ease 200ms'
+  const pad = 6
   return (
     <StoreContext.Provider value={storeProps}>
-      {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
-        <MenuApp key={app} id={index} view="index" title={app} type={app} menusStore={menusStore} />
-      ))}
+      <div
+        style={{
+          width: width - pad * 2,
+          margin: pad,
+          height: window.innerHeight,
+          transform: `translateX(${menuStore.menuCenter - width / 2}px)`,
+          transition,
+          position: 'absolute',
+          zIndex: 100000,
+          pointerEvents: 'auto',
+          overflow: 'hidden',
+          borderRadius: 6,
+        }}
+      >
+        <View
+          padding={10}
+          margin={-10}
+          onMouseEnter={menuStore.handleMouseEnter}
+          onMouseLeave={menuStore.handleMouseLeave}
+          flex={1}
+        >
+          <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
+            {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+              <MenuApp
+                id={app}
+                key={app}
+                menuId={index}
+                view="index"
+                title={app}
+                type={app}
+                menuStore={menuStore}
+              />
+            ))}
+          </Col>
+        </View>
+      </div>
+      <Popover
+        open={menuStore.openVisually}
+        transition={transition}
+        background
+        width={width}
+        towards="bottom"
+        delay={0}
+        top={0}
+        distance={6}
+        forgiveness={10}
+        edgePadding={0}
+        left={menuStore.menuCenter}
+        maxHeight={window.innerHeight}
+        elevation={6}
+        theme="dark"
+      >
+        <div style={{ height: menuStore.height }} />
+      </Popover>
     </StoreContext.Provider>
   )
 }

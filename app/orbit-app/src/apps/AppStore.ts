@@ -26,11 +26,15 @@ export class AppStore {
   )
 
   get isActive() {
-    if (typeof this.props.isActive === 'boolean') {
-      return this.props.isActive
+    const { id, isActive, paneManagerStore } = this.props
+    if (typeof isActive === 'boolean') {
+      return isActive
     }
-    if (this.props.paneManagerStore) {
-      return this.props.paneManagerStore.activePane === this.props.id
+    if (typeof isActive === 'function') {
+      return isActive()
+    }
+    if (paneManagerStore) {
+      return paneManagerStore.activePane === id
     }
     return false
   }

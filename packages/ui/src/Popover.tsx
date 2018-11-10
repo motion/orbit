@@ -117,13 +117,13 @@ const PopoverContainer = view({
     pointerEvents: 'none !important',
   },
   isOpen: {
-    zIndex: Number.MAX_SAFE_INTEGER,
+    zIndex: 5000,
     '& > *': {
       pointerEvents: 'all !important',
     },
   },
   isClosing: {
-    zIndex: Number.MAX_SAFE_INTEGER - 1,
+    zIndex: 5000 - 1,
   },
   isMeasuring: {
     opacity: 0,
@@ -970,10 +970,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       top: _top,
       towards,
       width,
+      transition,
       ...props
     } = this.props
     const {
-      bottom,
       top,
       left,
       arrowTop,
@@ -1013,9 +1013,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           animation={openAnimation}
           style={{
             ...style,
-            top: top || 'auto',
-            bottom: bottom || 'auto',
-            left,
+            transform: `translateX(${left}px) translateY(${top}px)`,
+            transition,
             width,
             // because things that extend downwards wont always fill all the way
             // so arrow will be floating, so lets make it always expand fully down

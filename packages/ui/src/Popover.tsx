@@ -973,7 +973,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       ...props
     } = this.props
     const {
-      bottom,
       top,
       left,
       arrowTop,
@@ -1013,9 +1012,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           animation={openAnimation}
           style={{
             ...style,
-            top: top || 'auto',
-            bottom: bottom || 'auto',
-            left,
+            transform: `translateX(${left}px) translateY(${top}px)`,
+            transition: 'all ease 100ms',
             width,
             // because things that extend downwards wont always fill all the way
             // so arrow will be floating, so lets make it always expand fully down

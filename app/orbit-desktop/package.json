@@ -52,7 +52,7 @@
     "node-osascript": "~2.0.0",
     "opn": "^5.2.0",
     "ps-tree": "1.1.0",
-    "reconnecting-websocket": "4.0.0-rc5",
+    "reconnecting-websocket": "4.1.10",
     "sb-promisify": "^2.0.2",
     "slack": "^11.0.1",
     "source-map-support": "^0.4.16",

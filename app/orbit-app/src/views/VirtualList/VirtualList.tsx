@@ -107,7 +107,7 @@ class VirtualListStore {
       if (this.width === 0) {
         const width = this.rootRef.clientWidth
         this.cache = new CellMeasurerCache({
-          defaultHeight: 60,
+          // defaultHeight: 60,
           defaultWidth: width,
           fixedWidth: true,
           keyMapper: this.keyMapper,

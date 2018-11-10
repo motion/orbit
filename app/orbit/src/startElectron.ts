@@ -7,7 +7,9 @@ export function startElectron() {
   app.on('before-quit', handleExit)
 
   if (app.isReady) {
-    finishLaunchingElectron()
+    setTimeout(() => {
+      finishLaunchingElectron()
+    })
   } else {
     app.on('ready', finishLaunchingElectron)
   }

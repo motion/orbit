@@ -93,35 +93,19 @@ export class OrbitItemStore {
     this.resolvedItem = item
   }
 
-  get appConfig(): AppConfig {
-    const { model, appConfig, direct } = this.props
-    if (appConfig) {
-      return appConfig
-    }
-    if (model && !direct) {
-      return getAppConfig(model)
-    }
-    const item = (model as unknown) as ItemProps<any>
-    return {
-      id: item.id,
-      icon: item.icon || '',
-      title: item.title,
-      type: item.type,
-      integration: item.integration || '',
-      viewConfig: {},
-    }
-  }
-
   get realIndex() {
     const { model, getIndex, index } = this.props
     return getIndex ? getIndex(model) : index
   }
 
   selectItem = () => {
-    AppActions.setPeekApp({
-      appConfig: this.appConfig,
+    const item = {
+      appType: this.props.appType,
+      appConfig: this.props.appConfig,
       target: this.cardWrapRef,
-    })
+    }
+    console.log('selecting item', item)
+    AppActions.setPeekApp(item)
   }
 
   updateIsSelected = react(
@@ -153,10 +137,11 @@ export class OrbitItemStore {
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected && !preventAutoSelect) {
+        console.log('selecting this thing...', this.props.appType, this.props.appConfig)
         if (onSelect) {
-          onSelect(this.realIndex, this.appConfig)
+          onSelect(this.realIndex, this.props.appConfig)
         } else {
-          ensure('appConfig`', !!this.appConfig)
+          ensure('appConfig`', !!this.props.appConfig)
           // fluidity
           await sleep()
           this.selectItem()

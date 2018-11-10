@@ -131,7 +131,7 @@ export const SearchInput = attachTheme(
         />
         {filters.map((filter, i) => (
           <FilterToken
-            key={`${filter.key}:${filter.type}`}
+            key={`${filter.key}:${filter.type}${i}`}
             index={i}
             filter={filter}
             focused={i === focusedToken}

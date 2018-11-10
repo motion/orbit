@@ -3,7 +3,6 @@ import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
-import { BitTitleBar } from '../../../views/layout/BitTitleBar'
 import { view, ensure, react, attach } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { BitModel, GenericBit, Bit } from '@mcro/models'
@@ -101,7 +100,6 @@ export class SlackApp extends React.Component<Props & { store: SlackViewStore }>
     const { bit, store } = this.props
     return (
       <Surface flexFlow="column" hover={false} noInnerElement padding={[16, 12]} flex={1}>
-        <BitTitleBar {...this.props} />
         <ScrollableContent key={store.prevConvos.length} scrollTo="#start">
           <View padding={[16, 0]}>
             <ConvoGroup bits={store.prevConvos.reverse()} />

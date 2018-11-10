@@ -5,20 +5,14 @@ import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
 import { ThemeObject } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { ViewStore } from './ViewStore'
+import { AppPageStore } from './AppPageStore'
 
 type Props = {
   store?: AppArrowStore
-  viewStore: ViewStore
+  appPageStore: AppPageStore
   borderShadow: any
   theme: ThemeObject
 }
-
-// const getBackground = (y, theme) => {
-//   if (y < 20) return theme.titleBar.background
-//   if (y < 40) return theme.titleBar.backgroundBottom
-//   return theme.background
-// }
 
 const maxTopOffset = 32
 const arrowSize = 14
@@ -27,7 +21,7 @@ const peekOnRight = false
 class AppArrowStore {
   props: Props
 
-  hide = react(() => this.props.viewStore.isTorn, _ => _)
+  hide = react(() => this.props.appPageStore.isTorn, _ => _)
 
   arrowY = react(
     () => App.peekState,

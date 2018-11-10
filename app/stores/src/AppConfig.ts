@@ -1,6 +1,6 @@
 export type AppConfig = {
   id: string
-  icon: string
+  icon?: string
   iconLight?: string
   title: string
   type: string

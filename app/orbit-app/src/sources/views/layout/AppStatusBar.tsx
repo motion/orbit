@@ -10,7 +10,7 @@ const Cmd = view({
   opacity: 0.6,
 })
 
-export const AppStatusBar = ({ viewStore, normalizedItem }: OrbitSourceMainProps<any>) => {
+export const AppStatusBar = ({ normalizedItem, model }: OrbitSourceMainProps<any>) => {
   const { location, locationLink, updatedAt } = normalizedItem
   return (
     <StatusBar>
@@ -30,11 +30,11 @@ export const AppStatusBar = ({ viewStore, normalizedItem }: OrbitSourceMainProps
       )}
       <View flex={1} />
       <StatusBar.Section>
-        <StatusBar.Button onClick={viewStore.copyItem}>
+        <StatusBar.Button onClick={() => AppActions.copyItem(model)}>
           Copy Link <Cmd>⌘+C</Cmd>
         </StatusBar.Button>
         <View width={5} />
-        <StatusBar.Button onClick={viewStore.openItem}>
+        <StatusBar.Button onClick={() => AppActions.openItem(model)}>
           Open <Cmd>Enter</Cmd>
         </StatusBar.Button>
       </StatusBar.Section>

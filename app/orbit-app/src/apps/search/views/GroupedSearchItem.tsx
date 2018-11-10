@@ -6,7 +6,12 @@ import { HighlightText } from '../../../views/HighlightText'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {
   return (
-    <OrbitListItem direct {...props}>
+    <OrbitListItem
+      direct
+      {...props}
+      appConfig={{ id: `${Math.random()}`, type: 'search', subType: 'group', title: item.title }}
+      appType="search"
+    >
       <Row>
         <Circle>{ item.count }</Circle>
         <Col>

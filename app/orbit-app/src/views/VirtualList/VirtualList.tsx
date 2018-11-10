@@ -19,7 +19,9 @@ import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 
-export type GetItemProps = (index: number) => ItemProps<any>
+export type ItemPropsMinimum = Pick<ItemProps<any>, 'appType' | 'appConfig'> &
+  Partial<ItemProps<any>>
+export type GetItemProps = (index: number) => ItemPropsMinimum
 
 type Props = {
   items: any[]
@@ -74,10 +76,8 @@ class VirtualListStore {
 
   measure = () => {
     if (!this.rootRef) {
-      console.log('no ref yet...')
       return
     }
-
     // width
     if (this.width === 0) {
       const width = this.rootRef.clientWidth
@@ -114,6 +114,10 @@ class VirtualListStore {
   }
 }
 
+const isRightClick = e =>
+  (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
+  (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
+
 export function VirtualList(props: Props) {
   const context = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore: context.appStore })
@@ -135,7 +139,7 @@ export function VirtualList(props: Props) {
             index={index}
             realIndex={index}
             query={App.state.query}
-            itemProps={props.itemProps}
+            {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
           />
         </div>
@@ -178,6 +182,7 @@ export function VirtualList(props: Props) {
         pressDelay={120}
         pressThreshold={17}
         lockAxis="y"
+        shouldCancelStart={isRightClick}
         {...extraProps}
       />
     )

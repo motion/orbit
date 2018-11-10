@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
+import { ItemResolverDecorationContext } from '../../../helpers/contexts/ItemResolverDecorationContext'
 
-export class AppBitView extends React.Component {
+export class BitDecoration extends React.Component {
   render() {
     return (
       <ItemResolverDecorationContext.Provider

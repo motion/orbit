@@ -4,11 +4,7 @@ import { SearchAppData } from './app-data/SearchAppData'
 import { TopicsAppData } from './app-data/TopicsAppData'
 import { Space } from './Space'
 
-export type AppType =
-  | 'search'
-  | 'people'
-  | 'topics'
-  | 'lists'
+export type AppType = 'search' | 'people' | 'topics' | 'lists' | 'source' | 'bit'
 
 export type BaseApp = {
   id?: number
@@ -18,13 +14,9 @@ export type BaseApp = {
   type?: AppType
 }
 
-export type SearchApp = BaseApp & { type: 'search', data: SearchAppData }
-export type PeopleApp = BaseApp & { type: 'people', data: PeopleAppData }
-export type TopicsApp = BaseApp & { type: 'topics', data: TopicsAppData }
-export type ListsApp = BaseApp & { type: 'lists', data: ListsAppData }
+export type SearchApp = BaseApp & { type: 'search'; data: SearchAppData }
+export type PeopleApp = BaseApp & { type: 'people'; data: PeopleAppData }
+export type TopicsApp = BaseApp & { type: 'topics'; data: TopicsAppData }
+export type ListsApp = BaseApp & { type: 'lists'; data: ListsAppData }
 
-export type App =
-  | SearchApp
-  | PeopleApp
-  | TopicsApp
-  | ListsApp
+export type App = SearchApp | PeopleApp | TopicsApp | ListsApp

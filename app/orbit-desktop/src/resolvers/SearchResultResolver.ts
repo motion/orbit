@@ -60,13 +60,19 @@ async function searchCosalIds(args: SearchArgs, includeFilters = false): Promise
   return (await args.cosal.search(query, Math.max(300, args.take))).map(x => x.id)
 }
 
-async function cosalSearch(args: SearchArgs, includeFilters = false): Promise<[BitEntity[], number]> {
-  if (!args.cosal)
-    return [[], 0]
+async function cosalSearch(
+  args: SearchArgs,
+  includeFilters = false,
+): Promise<[BitEntity[], number]> {
+  if (!args.cosal) return [[], 0]
 
   const ids = await searchCosalIds(args, includeFilters)
   if (ids.length) {
     const searchQuery = getSearchQuery({
+      // TODO: umed added these to fix type errors...
+      take: 10,
+      query: args.query,
+
       sortBy: args.sortBy,
       startDate: args.startDate,
       endDate: args.endDate,
@@ -75,7 +81,7 @@ async function cosalSearch(args: SearchArgs, includeFilters = false): Promise<[B
       locationFilters: args.locationFilters,
       sourceId: args.sourceId,
       spaceId: args.spaceId,
-      ids
+      ids,
     })
     console.log('searchQuery (cosal)', searchQuery)
     return await getRepository(BitEntity).findAndCount(searchQuery)
@@ -133,10 +139,10 @@ const doSearch = searchCache(async (args: SearchArgs) => {
     return await doTopicSearch(args)
   }
 
-  const [
-    [likeResults, likeResultsCount],
-    [cosalResults, cosalResultsCount]
-  ] = await Promise.all([likeSearch(args), cosalSearch(args)])
+  const [[likeResults, likeResultsCount], [cosalResults, cosalResultsCount]] = await Promise.all([
+    likeSearch(args),
+    cosalSearch(args),
+  ])
   console.log('likeResults', likeResults)
   console.log('cosalResults', cosalResults)
 
@@ -167,17 +173,19 @@ const buildSearchResultTitle = (titles: string[]) => {
 }
 
 const buildSearchResultText = (keyword: string, texts: string[]) => {
-  return _.uniq(texts.map(text => {
-    text = text.replace(/\n/g, ' ').trim()
-    return highlightText({
-      text,
-      words: [keyword],
-      trimWhitespace: true,
-      noSpans: true,
-      maxChars: 20,
-      maxSurroundChars: 10,
-    })
-  })).join(', ')
+  return _.uniq(
+    texts.map(text => {
+      text = text.replace(/\n/g, ' ').trim()
+      return highlightText({
+        text,
+        words: [keyword],
+        trimWhitespace: true,
+        noSpans: true,
+        maxChars: 20,
+        maxSurroundChars: 10,
+      })
+    }),
+  ).join(', ')
 }
 
 export const getSearchResolver = (cosal: Cosal) => {
@@ -200,23 +208,19 @@ export const getSearchResolver = (cosal: Cosal) => {
 
     let startDate, endDate
 
-    log.timer(`search`, args)
+    log.timer('search', args)
     if (args.group === 'accurate') {
       const [bits, bitsTotalCount] = await doSearch({ ...args }) // skip cosal to make search results accurate
       searchResults = [{ group: args.group, bitsTotalCount, bits }]
-
     } else {
       if (args.group === 'last-day') {
         startDate = dayAgo
-
       } else if (args.group === 'last-week') {
         startDate = weekAgo
         endDate = dayAgo
-
       } else if (args.group === 'last-month') {
         startDate = monthAgo
         endDate = weekAgo
-
       } else if (args.group === 'overall') {
         endDate = monthAndDayAgo
       }
@@ -227,14 +231,15 @@ export const getSearchResolver = (cosal: Cosal) => {
           cosal,
           startDate,
           endDate,
-          sourceId: source.id
+          sourceId: source.id,
         })
-        if (!integrationBits.length)
-          continue
+        if (!integrationBits.length) continue
 
-        const bits = args.maxBitsCount ? integrationBits.slice(0, args.maxBitsCount) : integrationBits
+        const bits = args.maxBitsCount
+          ? integrationBits.slice(0, args.maxBitsCount)
+          : integrationBits
 
-        if (source.type === "slack") {
+        if (source.type === 'slack') {
           const title = buildSearchResultTitle(integrationBits.map(bit => '#' + bit.location.name))
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
@@ -243,10 +248,9 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Conversation in ' + title,
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits
+            bits,
           })
-
-        } else if (source.type === "gmail") {
+        } else if (source.type === 'gmail') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
             group: args.group,
@@ -254,14 +258,11 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Emails in ' + source.name,
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits
+            bits,
           })
-
-        } else if (source.type === "drive") {
+        } else if (source.type === 'drive') {
           const title = buildSearchResultTitle(
-            integrationBits
-              .filter(bit => !!bit.location.name)
-              .map(bit => bit.location.name)
+            integrationBits.filter(bit => !!bit.location.name).map(bit => bit.location.name),
           )
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
@@ -270,10 +271,9 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: title ? 'Files in ' + title : source.name + ' files',
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits
+            bits,
           })
-
-        } else if (source.type === "github") {
+        } else if (source.type === 'github') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
             group: args.group,
@@ -281,10 +281,9 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Issues and pull requests',
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits
+            bits,
           })
-
-        } else if (source.type === "jira") {
+        } else if (source.type === 'jira') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
             group: args.group,
@@ -292,10 +291,9 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Jira tickets',
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits
+            bits,
           })
-
-        } else if (source.type === "confluence") {
+        } else if (source.type === 'confluence') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
             group: args.group,
@@ -303,10 +301,9 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Confluence pages',
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits
+            bits,
           })
-
-        } else if (source.type === "website") {
+        } else if (source.type === 'website') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
             group: args.group,
@@ -314,14 +311,13 @@ export const getSearchResolver = (cosal: Cosal) => {
             title: 'Pages from ' + source.name,
             text: text,
             bitsTotalCount: integrationBitsCount,
-            bits
+            bits,
           })
-
         }
       }
     }
 
-    log.timer(`search`, searchResults)
+    log.timer('search', searchResults)
     return searchResults
   })
 }

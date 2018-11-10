@@ -4,7 +4,6 @@ import { OrbitSettings } from './orbitSettings/OrbitSettings'
 import { OrbitHeader } from './OrbitHeader'
 import { BORDER_RADIUS } from '../../../constants'
 import { SearchStore } from '../../../apps/search/SearchStore'
-import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
 import { OrbitOnboard } from './OrbitOnboard'
 import { SourcesStore } from '../../../stores/SourcesStore'
 import { SpaceNav, SpaceNavHeight } from './SpaceNav'
@@ -18,7 +17,6 @@ import { AppView } from '../../../apps/AppView'
 type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
-  viewStore?: OrbitWindowStore
   sourcesStore?: SourcesStore
   spaceStore?: SpaceStore
   queryStore?: QueryStore

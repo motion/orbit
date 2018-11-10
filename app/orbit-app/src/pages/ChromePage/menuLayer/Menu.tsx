@@ -121,8 +121,11 @@ class MenuStore {
       if (!open) {
         await sleep(100)
         if (!this.isAnotherMenuOpen) {
-          console.log('SHOULD HIDE MENU APP LAYER')
-          // setTrayFocused(false)
+          if (process.env.NODE_ENV === 'development') {
+            console.log('SHOULD HIDE MENU APP LAYER')
+          } else {
+            setTrayFocused(false)
+          }
         }
         return false
       }

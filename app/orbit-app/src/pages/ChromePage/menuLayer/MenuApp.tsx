@@ -29,10 +29,11 @@ class MenuAppStore {
   )
 }
 
-export function MenuApp(props: MenuAppProps) {
-  const store = useStore(MenuAppStore, props)
+export const MenuApp = React.memo((props: MenuAppProps) => {
+  const store = useStore(MenuAppStore, props, { debug: true })
   const stores = useContext(StoreContext)
-  const appStore = useStore(AppStore, { ...props, ...stores })
+  const appStore = useStore(AppStore, { ...props, ...stores }, { debug: true })
+  const isActive = () => props.menuStore.menuOpenID === props.menuId
   return (
     <StoreContext.Provider value={{ ...stores, appStore }}>
       <Searchable
@@ -41,8 +42,8 @@ export function MenuApp(props: MenuAppProps) {
           onChange: appStore.queryStore.onChangeQuery,
         }}
       >
-        <AppView view="index" isActive={props.menuStore.menuOpenID === props.menuId} {...props} />
+        <AppView view="index" isActive={isActive} {...props} />
       </Searchable>
     </StoreContext.Provider>
   )
-}
+})

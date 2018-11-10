@@ -131,7 +131,7 @@ export class MenuStore {
   )
 
   get menuCenter() {
-    const id = this.lastOpenMenu
+    const id = typeof this.hoverId === 'number' ? this.hoverId : this.lastOpenMenu
     const trayBounds = Desktop.state.operatingSystem.trayBounds
     const baseOffset = 25
     const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120

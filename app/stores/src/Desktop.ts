@@ -87,8 +87,7 @@ class DesktopStore {
       pluginResults: [],
     },
     keyboardState: {
-      option: 0,
-      optionUp: 1,
+      isHoldingOption: false,
     },
     mouseState: {
       mouseDown: Date.now(),
@@ -155,10 +154,6 @@ class DesktopStore {
       return Desktop.ocrState.words || []
     }
     return (Desktop.ocrState.words || []).filter((_, index) => !Desktop.ocrState.shouldClear[index])
-  }
-
-  get isHoldingOption() {
-    return this.keyboardState.option > this.keyboardState.optionUp
   }
 
   start = async options => {

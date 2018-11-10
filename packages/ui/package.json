@@ -24,17 +24,17 @@
     "keycode": "^2.1.9",
     "prop-types": "^15.6.0",
     "raf-throttle": "2.0.3",
-    "react-fast-compare": "2.0.2",
+    "react-fast-compare": "2.0.4",
     "react-tilt": "^0.1.4",
     "lodash": "^4.17.10",
     "react-virtualized-auto-sizer": "1.0.2",
     "react-debounce-render": "4.0.3",
-    "react-window": "1.1.2",
+    "react-window": "1.2.4",
     "memoize-weak": "1.0.2"
   },
   "peerDependencies": {
     "electron": "*",
-    "mobx": "^5.5.2",
+    "mobx": "5.6.0",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },

@@ -120,18 +120,19 @@ export class Root {
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
 
+    this.registerMediatorServer()
+
+    this.generalSettingManager = new GeneralSettingManager()
+    await this.generalSettingManager.start()
+
+    // start server a bit early so other apps can start
+    await this.server.start()
+
+    this.onboard = new Onboard()
     this.cosal = new Cosal({
       database: COSAL_DB,
     })
     await this.cosal.start()
-
-    this['x'] = getSearchByTopicResolver(this.cosal)
-
-    this.registerMediatorServer()
-
-    this.onboard = new Onboard()
-    this.generalSettingManager = new GeneralSettingManager()
-    await this.generalSettingManager.start()
 
     // setup oracle to pass into managers
     this.oracle = new Oracle({
@@ -149,12 +150,13 @@ export class Root {
     this.ocrManager = new OCRManager({ cosal: this.cosal })
     this.cosalManager = new CosalManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ oracle: this.oracle })
-    this.mousePositionManager = new MousePositionManager({ oracle: this.oracle })
     this.keyboardManager = new KeyboardManager({ oracle: this.oracle })
+    this.mousePositionManager = new MousePositionManager({
+      oracle: this.oracle,
+      onMouseMove: this.keyboardManager.onMouseMove,
+    })
     this.appsManager = new AppsManager()
     this.contextManager = new ContextManager({ oracle: this.oracle })
-
-    await this.server.start()
 
     // start oracle after passing into screenManager
     await this.oracle.start()

@@ -194,7 +194,6 @@ export const getSearchResolver = (cosal: Cosal) => {
     const sources = await getRepository(SourceEntity).find({ spaceId: args.spaceId }) // todo: we probably need to get in count space id
     let searchResults: SearchResult[] = []
 
-    const today = new Date()
     const dayAgo = new Date()
     dayAgo.setDate(dayAgo.getDate() - 1)
     const weekAgo = new Date()
@@ -211,7 +210,7 @@ export const getSearchResolver = (cosal: Cosal) => {
     log.timer('search', args)
     if (args.group === 'accurate') {
       const [bits, bitsTotalCount] = await doSearch({ ...args }) // skip cosal to make search results accurate
-      searchResults = [{ group: args.group, bitsTotalCount, bits }]
+      searchResults = [{ id: Math.random(), group: args.group, bitsTotalCount, bits }]
     } else {
       if (args.group === 'last-day') {
         startDate = dayAgo
@@ -243,6 +242,7 @@ export const getSearchResolver = (cosal: Cosal) => {
           const title = buildSearchResultTitle(integrationBits.map(bit => '#' + bit.location.name))
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
+            id: Math.random(),
             group: args.group,
             source,
             title: 'Conversation in ' + title,
@@ -253,6 +253,7 @@ export const getSearchResolver = (cosal: Cosal) => {
         } else if (source.type === 'gmail') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
+            id: Math.random(),
             group: args.group,
             source,
             title: 'Emails in ' + source.name,
@@ -266,6 +267,7 @@ export const getSearchResolver = (cosal: Cosal) => {
           )
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
+            id: Math.random(),
             group: args.group,
             source,
             title: title ? 'Files in ' + title : source.name + ' files',
@@ -276,6 +278,7 @@ export const getSearchResolver = (cosal: Cosal) => {
         } else if (source.type === 'github') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
+            id: Math.random(),
             group: args.group,
             source,
             title: 'Issues and pull requests',
@@ -286,6 +289,7 @@ export const getSearchResolver = (cosal: Cosal) => {
         } else if (source.type === 'jira') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
+            id: Math.random(),
             group: args.group,
             source,
             title: 'Jira tickets',
@@ -296,6 +300,7 @@ export const getSearchResolver = (cosal: Cosal) => {
         } else if (source.type === 'confluence') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
+            id: Math.random(),
             group: args.group,
             source,
             title: 'Confluence pages',
@@ -306,6 +311,7 @@ export const getSearchResolver = (cosal: Cosal) => {
         } else if (source.type === 'website') {
           const text = buildSearchResultText(args.query, integrationBits.map(bit => bit.body))
           searchResults.push({
+            id: Math.random(),
             group: args.group,
             source,
             title: 'Pages from ' + source.name,

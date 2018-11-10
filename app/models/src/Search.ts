@@ -1,9 +1,10 @@
 import { Bit } from './Bit'
 import { Source } from './Source'
 
-export type SearchResultGroup = 'accurate'|'last-day'|'last-week'|'last-month'|'overall'
+export type SearchResultGroup = 'accurate' | 'last-day' | 'last-week' | 'last-month' | 'overall'
 
 export interface SearchResult {
+  id: number
 
   /**
    * Search group.
@@ -37,5 +38,4 @@ export interface SearchResult {
    * Bits that match given search condition.
    */
   bits: Bit[]
-
 }

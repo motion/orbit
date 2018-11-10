@@ -459,10 +459,10 @@ pseudomap@^1.0.2:
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
   integrity sha1-8FKijacOYYkX7wqKw0wa5aaChrM=
 
-reconnecting-websocket@4.0.0-rc5:
-  version "4.0.0-rc5"
-  resolved "https://registry.yarnpkg.com/reconnecting-websocket/-/reconnecting-websocket-4.0.0-rc5.tgz#d6b5eb1d3c263ffa70fa4d4c3bf95bebe373ea5b"
-  integrity sha512-ew+Twq9j66vhRtW9mT0xIgkLCQsDpslAideVYuB1JjW4U9wm27XZfA786K6pCKcUFkDWmktL+uI92ITLdn2eOQ==
+reconnecting-websocket@4.1.10:
+  version "4.1.10"
+  resolved "https://registry.yarnpkg.com/reconnecting-websocket/-/reconnecting-websocket-4.1.10.tgz#15485b5c5266ab6dd99187e23e8da207d24c4270"
+  integrity sha512-x6vgqa8q9KRuJyFkOvBKH1TfyTmN5OWQUf1MIsblfOSY29VE+iI9cKqmIuPvg9TO/hUBxdmUIVutDkcdbqFwZg==
 
 reflect-metadata@^0.1.12:
   version "0.1.12"

@@ -75,7 +75,6 @@ class ListsIndexStore {
 
 export function ListsAppIndex(props: AppProps) {
   const { results } = useStore(ListsIndexStore, props)
-  console.log('render lists index', results, Root.stores.ListsIndexStore)
   return (
     <>
       <VirtualList

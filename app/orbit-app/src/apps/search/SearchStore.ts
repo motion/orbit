@@ -32,31 +32,8 @@ export class SearchStore {
     return this.searchState.results[this.props.appStore.activeIndex]
   }
 
-  /**
-   * Virtual list has its own format of data representation, so convert our data to that format here.
-   * Ideally we need to use our format in there, but if it is generic component we can use transformation as well.
-   */
-  get resultsForVirtualList() {
-    // convert our search results into something this components expects
-    const items: any[] = []
-    for (let result of this.searchState.results) {
-      if (result.bits.length) {
-        items.push({
-          type: 'summary',
-          title: result.title,
-          body: result.text,
-          group: result.group,
-          count: result.bitsTotalCount,
-        })
-        items.push(...result.bits)
-      }
-    }
-
-    return items
-  }
-
   getItemProps: GetItemProps = index => {
-    const results = this.resultsForVirtualList
+    const results = this.searchState.results
     if (
       results[index].group &&
       (index === 0 || results[index].group !== results[index - 1].group)

@@ -78,29 +78,42 @@ class VirtualListStore {
     if (!this.rootRef) {
       return
     }
-    // width
-    if (this.width === 0) {
-      const width = this.rootRef.clientWidth
-      this.cache = new CellMeasurerCache({
-        defaultHeight: 60,
-        defaultWidth: width,
-        fixedWidth: true,
-      })
-      this.width = width
+    if (this.listRef) {
+      this.listRef.recomputeRowHeights()
     }
-
     // height
     let height = 0
-    for (const [index] of this.props.items.entries()) {
-      if (index > 40) break
-      height += this.cache.rowHeight(index)
+    for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
+      height += this.cache.rowHeight(i)
     }
     this.height = Math.min(this.props.maxHeight, height)
+  }
+
+  keyMapper = rowIndex => {
+    if (typeof rowIndex === 'undefined') {
+      return 0
+    }
+    const id = this.props.items[rowIndex].id
+    if (typeof id === 'undefined') {
+      throw new Error('No valid id found for mapping results')
+    }
+    return id
   }
 
   setRootRef = ref => {
     this.rootRef = ref
     if (ref) {
+      // width
+      if (this.width === 0) {
+        const width = this.rootRef.clientWidth
+        this.cache = new CellMeasurerCache({
+          // defaultHeight: 60,
+          defaultWidth: width,
+          fixedWidth: true,
+          keyMapper: this.keyMapper,
+        })
+        this.width = width
+      }
       this.measure()
     }
   }
@@ -108,7 +121,6 @@ class VirtualListStore {
   private resizeAll = () => {
     this.cache.clearAll()
     if (this.listRef) {
-      this.listRef.recomputeRowHeights()
       this.measure()
     }
   }
@@ -187,6 +199,8 @@ export function VirtualList(props: Props) {
       />
     )
   }
+
+  console.log('store.width', store.width, 'store.cache', store.cache)
 
   return (
     <div

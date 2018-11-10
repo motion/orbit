@@ -43,28 +43,30 @@ export class ShortcutsManager {
 
   peekShortcuts = new ShortcutsStore({
     shortcuts: {
+      optionAndDown: 'Option+Down',
+      optionAndLeft: 'Option+Left',
+      optionAndRight: 'Option+Right',
+      optionAndUp: 'Option+Up',
       ...peekTriggers.split('').reduce(
         (acc, letter) => ({
           ...acc,
-          [`optionLetter${letter}`]: `Option+${letter}`,
+          [`optionAnd${letter}`]: `Option+${letter}`,
         }),
         {},
       ),
     },
     onShortcut(name) {
       console.log('got shortcut', name)
-      if (name.indexOf('optionLetter') === 0) {
-        Electron.setState({ pinKey: { name: name.replace('optionShortcut', ''), at: Date.now() } })
+      if (name.indexOf('optionAnd') === 0) {
+        Electron.setState({ pinKey: { name: name.replace('optionAnd', ''), at: Date.now() } })
       }
     },
   })
 
   enablePeekShortcutsWhenHoldingOption = react(
-    () => Desktop.isHoldingOption,
-    async (optionDown, { sleep }) => {
+    () => Desktop.keyboardState.isHoldingOption,
+    async optionDown => {
       if (optionDown) {
-        // debounce before registering
-        await sleep(200)
         this.peekShortcuts.registerShortcuts()
       } else {
         this.peekShortcuts.unregisterShortcuts()

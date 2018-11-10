@@ -2,18 +2,22 @@ import { app, dialog } from 'electron'
 import { getGlobalConfig } from '@mcro/config'
 import { handleExit } from './helpers/handleExit'
 
-export function startElectron() {
-  // this works in prod
-  app.on('before-quit', handleExit)
+export function startElectron({ mainProcess }) {
+  if (mainProcess) {
+    // this works in prod
+    app.on('before-quit', handleExit)
 
-  if (app.isReady) {
-    finishLaunchingElectron()
+    if (app.isReady) {
+      finishLaunchingElectron({ mainProcess })
+    } else {
+      app.on('ready', finishLaunchingElectron)
+    }
   } else {
-    app.on('ready', finishLaunchingElectron)
+    finishLaunchingElectron({ mainProcess })
   }
 }
 
-const finishLaunchingElectron = () => {
+const finishLaunchingElectron = ({ mainProcess }) => {
   const Config = getGlobalConfig()
   // start electron...
   const ElectronApp = require('@mcro/orbit-electron')
@@ -26,7 +30,7 @@ const finishLaunchingElectron = () => {
   }
 
   // PRODUCTION
-  if (Config.isProd) {
+  if (mainProcess && Config.isProd) {
     // move to app folder
     if (!app.isInApplicationsFolder()) {
       app.dock.bounce('informational')

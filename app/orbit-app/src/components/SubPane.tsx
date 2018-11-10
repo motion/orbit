@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view, attach, provide } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { SubPaneStore } from './SubPaneStore'
-import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { BORDER_RADIUS } from '../constants'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
@@ -22,10 +21,9 @@ export type SubPaneProps = CSSPropertySetStrict & {
   name?: string
   onScrollNearBottom?: Function
   extraCondition?: () => boolean
-  orbitWindowStore?: OrbitWindowStore
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore
-  onHeightChange?: (height: number) => void
+  onChangeHeight?: (height: number) => void
 }
 
 @attach('paneManagerStore', 'orbitWindowStore', 'selectionStore')

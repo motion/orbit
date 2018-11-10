@@ -90,13 +90,12 @@ export class SubPaneStore {
     onlyUpdateIfChanged: true,
   })
 
-  onHeightChange = react(
+  onChangeHeight = react(
     () => [this.fullHeight, this.positionState.isActive],
     async ([height, isActive]) => {
       ensure('is active', isActive)
-      ensure('new value', height !== this.props.orbitWindowStore.contentHeight)
-      ensure('onHeightChange', !!this.props.onHeightChange)
-      this.props.onHeightChange(height)
+      ensure('onChangeHeight', !!this.props.onChangeHeight)
+      this.props.onChangeHeight(height)
     },
   )
 

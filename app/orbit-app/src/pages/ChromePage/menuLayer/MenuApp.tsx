@@ -48,7 +48,7 @@ export const MenuApp = React.memo((props: MenuAppProps) => {
           type={props.type}
           paddingLeft={0}
           paddingRight={0}
-          onHeightChange={props.menuStore.setHeight}
+          onChangeHeight={props.menuStore.setHeight}
         >
           <AppView view="index" isActive={isActive} {...props} />
         </SubPane>

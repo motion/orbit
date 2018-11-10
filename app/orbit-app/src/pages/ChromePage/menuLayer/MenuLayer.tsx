@@ -32,6 +32,7 @@ export class MenuStore {
     paneManagerStore: PaneManagerStore
   }
 
+  height = 300
   isHoveringDropdown = false
 
   get menuOpenID() {
@@ -208,6 +209,8 @@ export class MenuStore {
   )
 
   setHeight = (height: number) => {
+    this.height = height
+
     if (this.lastOpenMenuID === false) {
       return
     }
@@ -264,22 +267,23 @@ export function MenuLayer() {
     })
   }, [])
   log('!!! render MenuLayer')
+  const transition = 'opacity ease-in 60ms, transform ease 200ms'
+  const pad = 6
   return (
     <StoreContext.Provider value={storeProps}>
-      <Popover
-        open={menuStore.openVisually}
-        background
-        width={width}
-        towards="bottom"
-        delay={0}
-        top={0}
-        distance={6}
-        forgiveness={10}
-        edgePadding={0}
-        left={menuStore.menuCenter}
-        maxHeight={300}
-        elevation={6}
-        theme="dark"
+      <div
+        style={{
+          width: width - pad * 2,
+          margin: pad,
+          height: window.innerHeight,
+          transform: `translateX(${menuStore.menuCenter - width / 2}px)`,
+          transition,
+          position: 'absolute',
+          zIndex: 100000,
+          pointerEvents: 'auto',
+          overflow: 'hidden',
+          borderRadius: 6,
+        }}
       >
         <View
           padding={10}
@@ -302,6 +306,24 @@ export function MenuLayer() {
             ))}
           </Col>
         </View>
+      </div>
+      <Popover
+        open={menuStore.openVisually}
+        transition={transition}
+        background
+        width={width}
+        towards="bottom"
+        delay={0}
+        top={0}
+        distance={6}
+        forgiveness={10}
+        edgePadding={0}
+        left={menuStore.menuCenter}
+        maxHeight={window.innerHeight}
+        elevation={6}
+        theme="dark"
+      >
+        <div style={{ height: menuStore.height }} />
       </Popover>
     </StoreContext.Provider>
   )

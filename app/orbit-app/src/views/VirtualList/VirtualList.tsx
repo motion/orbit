@@ -29,7 +29,7 @@ type Props = {
   getItemProps?: GetItemProps
   appStore?: AppStore
   subPaneStore?: SubPaneStore
-  ItemView?: GenericComponent<ItemProps<any>>
+  ItemView?: GenericComponent<any>
   infinite?: boolean
   loadMoreRows?: Function
   rowCount?: number

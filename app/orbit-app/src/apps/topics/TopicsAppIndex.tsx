@@ -5,6 +5,7 @@ import { Section } from '../../views/Section'
 import { Icon } from '../../views/Icon'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
+import { Separator } from '../../views/Separator'
 
 const icons = {
   0: ['neutral', 'rgba(255,255,255,0.25)'],
@@ -53,12 +54,14 @@ export function TopicsAppIndex(props: AppProps & { store?: TopicsIndexStore }) {
     <ProvideHighlightsContextWithDefaults
       value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}
     >
-      <Section padTitle title="Trending" type="search-list" flexFlow="row" flexWrap="wrap">
+      <Separator>Trending</Separator>
+      <View flexFlow="row" flexWrap="wrap">
         <TopicList results={store.results.slice(0, 10)} />
-      </Section>
-      <Section padTitle title="Me" type="search-list" flexFlow="row" flexWrap="wrap">
+      </View>
+      <Separator>Me</Separator>
+      <View flexFlow="row" flexWrap="wrap">
         <TopicList results={store.results.slice(10, 20)} />
-      </Section>
+      </View>
     </ProvideHighlightsContextWithDefaults>
   )
 }

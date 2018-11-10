@@ -37,7 +37,7 @@ class MenuStore {
 
   get isOptionPreview() {
     return (
-      Desktop.isHoldingOption &&
+      Desktop.keyboardState.isHoldingOption &&
       !this.isAnotherMenuOpen &&
       this.props.menusStore.lastOpenMenu === this.props.id
     )
@@ -126,7 +126,7 @@ class MenuStore {
         }
         return false
       }
-      if (Desktop.isHoldingOption) {
+      if (Desktop.keyboardState.isHoldingOption) {
         // wait for pin to focus the menu
         await whenChanged(() => Electron.state.pinKey.at)
         console.log('GOT A PIN KEY', Electron.state.pinKey.name)

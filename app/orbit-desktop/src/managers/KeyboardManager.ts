@@ -1,23 +1,39 @@
-import { Desktop } from '@mcro/stores'
-import { store } from '@mcro/black'
+import { Desktop, App } from '@mcro/stores'
+import { store, react } from '@mcro/black'
 import { Oracle } from '@mcro/oracle'
+
+const OPTION_PEEK_DELAY = 200
 
 @store
 export class KeyboardManager {
   pauseTm = null
-  keysDown = new Set()
 
   constructor({ oracle }: { oracle: Oracle }) {
-    oracle.onKeyboard(({ type, value }) => {
-      console.log('keyboad', type, value)
-      switch (type) {
-        case 'keyDown':
-          Desktop.setKeyboardState({ option: Date.now() })
-          return
-        case 'keyUp':
-          Desktop.setKeyboardState({ optionUp: Date.now() })
-          return
-      }
-    })
+    // for now only sends option key event out
+    oracle.onKeyboard(this.onOptionKey)
   }
+
+  downTm = null
+
+  onOptionKey = ({ type }) => {
+    clearTimeout(this.downTm)
+    switch (type) {
+      case 'keyDown':
+        this.downTm = setTimeout(() => {
+          Desktop.setKeyboardState({ isHoldingOption: true })
+        }, OPTION_PEEK_DELAY)
+        return
+      case 'keyUp':
+        Desktop.setKeyboardState({ isHoldingOption: false })
+        return
+    }
+  }
+
+  clearOnDocked = react(
+    () => App.orbitState.docked,
+    () => {
+      clearTimeout(this.downTm)
+      Desktop.setKeyboardState({ isHoldingOption: false })
+    },
+  )
 }

@@ -18,11 +18,11 @@ export class PaneManagerStore {
     return this.props.panes
   }
 
+  subPane = ''
   keyablePanes = [0, 4]
   paneIndex = 0
-  forceOnboard = null
+  forcePane = null
   hasOnboarded = true
-  subPane = 'team'
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
     onlyUpdateIfChanged: true,
@@ -82,17 +82,6 @@ export class PaneManagerStore {
     }
   }
 
-  setTrayTitleOnPaneChange = react(
-    () => this.activePane === 'onboard',
-    onboard => {
-      if (onboard) {
-        AppActions.setContextMessage('Welcome to Orbit...')
-      } else {
-        AppActions.setContextMessage('Orbit')
-      }
-    },
-  )
-
   setActivePane = name => {
     const nextIndex = this.panes.findIndex(val => val === name)
     this.setPaneIndex(nextIndex)
@@ -124,22 +113,15 @@ export class PaneManagerStore {
     return this.panes[this.paneIndex]
   }
 
-  get shouldOnboard() {
-    if (typeof this.forceOnboard === 'boolean') {
-      return this.forceOnboard
-    }
-    return !this.hasOnboarded
-  }
-
-  setForceOnboard = val => {
-    this.forceOnboard = val
+  setForcePane = val => {
+    this.forcePane = val
   }
 
   activePane = react(
-    () => [this.panes, this.paneIndex, this.shouldOnboard],
-    async (_, { sleep }) => {
-      if (this.shouldOnboard) {
-        return 'onboard'
+    () => [this.forcePane, this.panes, this.paneIndex],
+    async ([forcePane], { sleep }) => {
+      if (forcePane) {
+        return forcePane
       }
       const active = this.panes[this.paneIndex]
       ensure('changed', active !== this.activePane)
@@ -162,12 +144,9 @@ export class PaneManagerStore {
     },
   )
 
-  subPaneSetter = memoize(val => () => {
-    this.subPane = val
-  })
+  subPaneSetter = memoize(val => this.setSubPane(val))
 
-  goToTeamSettings = () => {
-    this.setActivePane('settings')
-    this.subPane = 'team'
+  setSubPane = val => {
+    this.subPane = val
   }
 }

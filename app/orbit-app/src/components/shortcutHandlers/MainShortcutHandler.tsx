@@ -5,7 +5,7 @@ import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
 import { SelectionStore, Direction } from '../../stores/SelectionStore'
-import { PaneManagerStore } from '../../stores/PaneManagerStore';
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -38,8 +38,7 @@ export const MainShortcutHandler = decorate(
   ({ selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {
       if (
-        (selectionStore.activeIndex === -1 ||
-          (selectionStore.activeIndex === 0 && paneManagerStore.activePane === 'search')) &&
+        selectionStore.activeIndex === -1 &&
         (direction === Direction.left || direction === Direction.right)
       ) {
         paneManagerStore.move(direction)

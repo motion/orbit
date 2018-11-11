@@ -51,7 +51,7 @@ const OrbitSearchResultsFrame = view({
 })
 
 @view
-export class SearchAppInner extends React.PureComponent<
+export class SearchAppInner extends React.Component<
   AppProps & { searchStore: SearchStore; offsetY: number }
 > {
   static defaultProps = {

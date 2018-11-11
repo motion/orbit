@@ -62,7 +62,7 @@ const updateProps = (props, nextProps, options?: UseStoreOptions) => {
         }
       }
       if (!isEqual(a, b)) {
-        if (true || (process.env.NODE_ENV === 'development' && options && options.debug)) {
+        if (process.env.NODE_ENV === 'development' && options && options.debug) {
           console.log('has changed prop', prop, nextProps[prop])
         }
         props[prop] = nextProps[prop]
@@ -117,7 +117,6 @@ const useStoreWithReactiveProps = (Store, props, shouldHMR = false, options?: Us
   }
   // only update props after first run
   if (props && !shouldSetupStore) {
-    console.log('update props', Store.name, props)
     store.current.__updateProps(store.current.props, props, options)
   }
   return store.current
@@ -189,7 +188,6 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
     // trigger update if keys changed
     for (const [index, key] of rk.lastKeys.entries()) {
       if (key !== rk.keys[index]) {
-        console.log('set new key', key)
         rk.update.set(Math.random())
         break
       }
@@ -222,8 +220,6 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
 
         // update when we react, ignore first run
         if (rk.hasRunOnce) {
-          trace()
-          console.log('trigger update')
           triggerUpdate(Math.random())
         }
 

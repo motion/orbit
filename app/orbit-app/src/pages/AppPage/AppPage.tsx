@@ -96,14 +96,7 @@ class AppPageContent extends React.Component<Props> {
             }}
           />
         </HiddenControls>
-        <AppView
-          key={appConfig.id}
-          id={appConfig.id}
-          view="main"
-          title={appConfig.title}
-          type={appType}
-          isActive
-        />
+        <AppView id={appConfig.id} view="main" title={appConfig.title} type={appType} isActive />
       </>
     )
   }

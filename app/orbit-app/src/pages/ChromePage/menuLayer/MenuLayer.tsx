@@ -235,7 +235,7 @@ export class MenuStore {
   }
 }
 
-export function MenuLayer() {
+export const MenuLayer = React.memo(() => {
   const { sourcesStore, settingStore } = React.useContext(StoreContext)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const selectionStore = useStore(SelectionStore, { queryStore })
@@ -327,4 +327,4 @@ export function MenuLayer() {
       </Popover>
     </StoreContext.Provider>
   )
-}
+})

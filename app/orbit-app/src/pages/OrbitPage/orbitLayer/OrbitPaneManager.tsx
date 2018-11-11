@@ -64,33 +64,43 @@ class OrbitPaneManagerStore {
 export function OrbitPaneManager() {
   const { queryStore, paneManagerStore, orbitWindowStore } = React.useContext(StoreContext)
   useStore(OrbitPaneManagerStore, { queryStore, paneManagerStore })
-  log(`------------ OrbitPaneManager......`)
-  return (
-    <MainShortcutHandler>
-      <OrbitHeader borderRadius={BORDER_RADIUS} />
-      <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
-        <div style={{ position: 'relative', flex: 1 }}>
-          <SpaceNav />
-          <OrbitOnboard name="onboard" />
-          {AppPanes.map(pane => {
-            return (
-              <SubPane
-                id={pane.id}
-                type={pane.type}
-                key={pane.type}
-                before={<SpaceNavHeight />}
-                paddingLeft={0}
-                paddingRight={0}
-                onChangeHeight={orbitWindowStore.setContentHeight}
-                {...pane.props}
-              >
-                <AppView view="index" id={pane.id} title={pane.title} type={pane.type} />
-              </SubPane>
-            )
-          })}
-          <OrbitSettings />
-        </div>
-      </OrbitDockedInner>
-    </MainShortcutHandler>
-  )
+  return <OrbitPaneManagerStoreInner orbitWindowStore={orbitWindowStore} />
+}
+
+class OrbitPaneManagerStoreInner extends React.Component<any> {
+  shouldComponentUpdate() {
+    return false
+  }
+
+  render() {
+    log(`------------ OrbitPaneManagerInner......`)
+    return (
+      <MainShortcutHandler>
+        <OrbitHeader borderRadius={BORDER_RADIUS} />
+        <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
+          <div style={{ position: 'relative', flex: 1 }}>
+            <SpaceNav />
+            <OrbitOnboard name="onboard" />
+            {AppPanes.map(pane => {
+              return (
+                <SubPane
+                  id={pane.id}
+                  type={pane.type}
+                  key={pane.type}
+                  before={<SpaceNavHeight />}
+                  paddingLeft={0}
+                  paddingRight={0}
+                  onChangeHeight={this.props.orbitWindowStore.setContentHeight}
+                  {...pane.props}
+                >
+                  <AppView view="index" id={pane.id} title={pane.title} type={pane.type} />
+                </SubPane>
+              )
+            })}
+            <OrbitSettings />
+          </div>
+        </OrbitDockedInner>
+      </MainShortcutHandler>
+    )
+  }
 }

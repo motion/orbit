@@ -12,12 +12,12 @@ import { GroupedSearchItem } from './views/GroupedSearchItem'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
+import { trace } from 'mobx'
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
 export function SearchAppIndex(props: AppProps) {
   const searchStore = useStore(SearchStore, props)
-  log(`SEARCH--------`)
   return (
     <>
       <OrbitSearchNav />
@@ -35,9 +35,7 @@ export function SearchAppIndex(props: AppProps) {
             opacity: searchStore.isChanging ? 0.7 : 1,
           }}
         >
-          <StaticContainer>
-            <SearchAppInner searchStore={searchStore} offsetY={60} {...props} />
-          </StaticContainer>
+          <SearchAppInner searchStore={searchStore} offsetY={60} {...props} />
         </OrbitSearchResultsFrame>
       </ItemResolverDecorationContext.Provider>
     </>
@@ -68,7 +66,8 @@ export class SearchAppInner extends React.Component<
 
   render() {
     const { searchStore, appStore, offsetY } = this.props
-    log(`render OrbitSearchVirtualList (${this.items.length})`)
+    log(`render SEARCHAPPINNER (${this.items.length})`)
+    trace()
     return (
       <ProvideHighlightsContextWithDefaults
         value={{

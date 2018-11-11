@@ -73,7 +73,7 @@ class ListsIndexStore {
   )
 }
 
-export function ListsAppIndex(props: AppProps) {
+export const ListsAppIndex = React.memo((props: AppProps) => {
   const { results } = useStore(ListsIndexStore, props)
   return (
     <>
@@ -86,4 +86,4 @@ export function ListsAppIndex(props: AppProps) {
       <ListEdit />
     </>
   )
-}
+})

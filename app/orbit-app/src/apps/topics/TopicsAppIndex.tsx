@@ -48,7 +48,7 @@ function TopicList({ results }) {
   )
 }
 
-export function TopicsAppIndex(props: AppProps & { store?: TopicsIndexStore }) {
+export const TopicsAppIndex = React.memo((props: AppProps & { store?: TopicsIndexStore }) => {
   const store = useStore(TopicsIndexStore, props)
   return (
     <ProvideHighlightsContextWithDefaults
@@ -64,4 +64,4 @@ export function TopicsAppIndex(props: AppProps & { store?: TopicsIndexStore }) {
       </View>
     </ProvideHighlightsContextWithDefaults>
   )
-}
+})

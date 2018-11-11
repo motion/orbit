@@ -7,7 +7,6 @@ import { useStore } from '@mcro/use-store'
 import { StoreContext } from '@mcro/black'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
-import { AppTray } from './appTray/AppTray'
 
 class ChromePageStore {
   get theme() {
@@ -25,7 +24,7 @@ export function ChromePage() {
       <Theme name={store.theme}>
         <AppWrapper>
           <FullScreen>
-            <AppTray />
+            {/* <AppTray /> */}
             <MenuLayer />
           </FullScreen>
         </AppWrapper>

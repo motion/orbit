@@ -57,7 +57,6 @@ const updateProps = (props, nextProps, options?: UseStoreOptions) => {
       // if you use functions as render callbacks and then *change* them during renders this would break
       if (typeof a === 'function' && typeof b === 'function') {
         if (a.toString() === b.toString()) {
-          console.log('skip update on similar function', a, b)
           continue
         }
       }

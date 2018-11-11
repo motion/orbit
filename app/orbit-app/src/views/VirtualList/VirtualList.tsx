@@ -200,8 +200,6 @@ export function VirtualList(props: Props) {
     )
   }
 
-  console.log('store.width', store.width, 'store.cache', store.cache)
-
   return (
     <div
       ref={store.setRootRef}

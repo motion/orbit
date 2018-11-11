@@ -6,6 +6,7 @@ import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
 import { GetItemProps } from '../../views/VirtualList/VirtualList'
+import { trace } from 'mobx'
 // import { getAppConfig } from '../../helpers/getAppConfig'
 
 type SearchState = { results: SearchResult[]; finished?: boolean; query: string }
@@ -114,9 +115,7 @@ export class SearchStore {
       this.queryFilters.sortBy,
       this.queryFilters.dateState,
     ],
-    async (_, { when, setValue, idle, sleep }): Promise<SearchState> => {
-      const query = App.state.query
-
+    async ([query], { when, setValue, idle, sleep }): Promise<SearchState> => {
       // if not on this pane, delay it a bit
       if (!this.isActive) {
         await sleep(750)
@@ -181,8 +180,6 @@ export class SearchStore {
           take: Math.max(0, endIndex - startIndex),
         }
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
-        console.log('searchOpts', searchOpts)
-        console.log('nextResults', nextResults)
         if (!nextResults) {
           return false
         }

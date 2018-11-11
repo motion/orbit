@@ -13,9 +13,9 @@ import { App } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { StoreContext } from '@mcro/black'
+import { StaticContainer } from '../../views/StaticContainer'
 
-export function OrbitPage() {
-  const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
+export const OrbitPage = React.memo(() => {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const orbitWindowStore = useStore(OrbitWindowStore)
@@ -36,13 +36,29 @@ export function OrbitPage() {
     paneManagerStore,
   }
   return (
-    <StoreContext.Provider value={stores}>
+    <StaticContainer>
+      <StoreContext.Provider value={stores}>
+        <OrbitPageInner />
+      </StoreContext.Provider>
+    </StaticContainer>
+  )
+})
+
+class OrbitPageInner extends React.Component {
+  shouldComponentUpdate() {
+    return false
+  }
+
+  render() {
+    log('RENDER ORBIT PAGE INNER')
+    const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
+    return (
       <Theme name={theme}>
         <AppWrapper>
           <HighlightsLayer />
           <OrbitLayer />
         </AppWrapper>
       </Theme>
-    </StoreContext.Provider>
-  )
+    )
+  }
 }

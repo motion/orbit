@@ -4,16 +4,13 @@ small apps for teams
 
 ### nate
 
-- Showing current app context when holding option / design for pin current app context to pin
+- design for pin current app context to pin
 - Upgrade people app with "Send icon" for context + showing peek next to it + search bar
 - Lists Main app view app - show sidebar in app with button + searchbar
 - SelectionStore / keyboard interaction working for menu windows
 - Orbit search results context menu opens by default (not show last one)
 - Fix cosal invert bug
 - Get Topic modeling API in place with working topics for topics app
-
-Sat/Sun:
-
 - Get profiles with topic modeling
 - Get topics app using real data for changing over time topics
 - UI for custom topics in topics app

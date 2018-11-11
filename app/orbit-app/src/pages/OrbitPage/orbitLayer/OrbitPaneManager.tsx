@@ -62,7 +62,7 @@ class OrbitPaneManagerStore {
 }
 
 export function OrbitPaneManager() {
-  const { queryStore, paneManagerStore } = React.useContext(StoreContext)
+  const { queryStore, paneManagerStore, orbitWindowStore } = React.useContext(StoreContext)
   useStore(OrbitPaneManagerStore, { queryStore, paneManagerStore })
   log(`------------ OrbitPaneManager......`)
   return (
@@ -81,6 +81,7 @@ export function OrbitPaneManager() {
                 before={<SpaceNavHeight />}
                 paddingLeft={0}
                 paddingRight={0}
+                onChangeHeight={orbitWindowStore.setContentHeight}
                 {...pane.props}
               >
                 <AppView view="index" id={pane.id} title={pane.title} type={pane.type} />

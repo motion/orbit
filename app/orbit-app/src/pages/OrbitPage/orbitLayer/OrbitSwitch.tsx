@@ -103,6 +103,11 @@ export class OrbitSwitch extends React.Component<Props> {
     })
   }
 
+  goToTeamSettings = () => {
+    this.props.paneManagerStore.setActivePane('settings')
+    this.props.paneManagerStore.setSubPane('team')
+  }
+
   render() {
     const { paneManagerStore, spaceStore, store, ...props } = this.props
     const { activeSpace } = spaceStore
@@ -157,32 +162,36 @@ export class OrbitSwitch extends React.Component<Props> {
                   <Views.InputRow
                     label="Search..."
                     value={store.query}
-                    onChange={value => store.query = value}
+                    onChange={value => (store.query = value)}
                   />
                   <View tagName="input" placeholder="Search..." />
                 </Row>
               </View>
             </Theme>
             <View overflowY="auto" maxHeight={300}>
-              { activeSpace ? <RowItem
-                orb={activeSpace.colors}
-                title={activeSpace.name}
-                subtitle="20 people"
-                after={
-                  <OrbitIcon
-                    onClick={paneManagerStore.goToTeamSettings}
-                    name="gear"
-                    size={14}
-                    opacity={0.5}
-                  />
-                }
-                hover={false}
-              /> : <div>No spaces</div> }
+              {activeSpace ? (
+                <RowItem
+                  orb={activeSpace.colors}
+                  title={activeSpace.name}
+                  subtitle="20 people"
+                  after={
+                    <OrbitIcon
+                      onClick={this.goToTeamSettings}
+                      name="gear"
+                      size={14}
+                      opacity={0.5}
+                    />
+                  }
+                  hover={false}
+                />
+              ) : (
+                <div>No spaces</div>
+              )}
               <View flex={1} margin={[2, 10]} background="#eee" height={1} />
               {filteredSpaces.map((space, index) => {
                 return (
                   <RowItem
-                    onClick={() => spaceStore.activeIndex = index}
+                    onClick={() => (spaceStore.activeIndex = index)}
                     key={space.name}
                     selected={selectedIndex === index + 1}
                     orb={space.color}
@@ -193,12 +202,10 @@ export class OrbitSwitch extends React.Component<Props> {
               })}
               <RowItem
                 onClick={this.createNewSpace}
-                key='new-space'
-                title='Create new space...'
+                key="new-space"
+                title="Create new space..."
                 titleProps={{ fontWeight: 400, size: 1, alpha: 0.8 }}
-                after={
-                  <Icon name="addcircle" size={14} fill="#444" />
-                }
+                after={<Icon name="addcircle" size={14} fill="#444" />}
               />
             </View>
           </Col>

@@ -8,6 +8,7 @@ import {
   useMutationEffect,
 } from 'react'
 import { action, autorun, observable, toJS, trace } from 'mobx'
+import isEqual from 'react-fast-compare'
 
 type UseGlobalStoreOptions = {
   onMount: (store: any) => void
@@ -56,13 +57,16 @@ const updateProps = (props, nextProps, options?: UseStoreOptions) => {
       // if you use functions as render callbacks and then *change* them during renders this would break
       if (typeof a === 'function' && typeof b === 'function') {
         if (a.toString() === b.toString()) {
+          console.log('skip update on similar function', a, b)
           continue
         }
       }
-      if (process.env.NODE_ENV === 'development' && options && options.debug) {
-        console.log('has changed prop', prop, nextProps[prop])
+      if (!isEqual(a, b)) {
+        if (process.env.NODE_ENV === 'development' && options && options.debug) {
+          console.log('has changed prop', prop, nextProps[prop])
+        }
+        props[prop] = nextProps[prop]
       }
-      props[prop] = nextProps[prop]
     }
   }
 
@@ -107,10 +111,12 @@ const setupStoreWithReactiveProps = (Store, props?) => {
 
 const useStoreWithReactiveProps = (Store, props, shouldHMR = false, options?: UseStoreOptions) => {
   let store = useRef(null)
-  if (!store.current || shouldHMR) {
+  const shouldSetupStore = !store.current || shouldHMR
+  if (shouldSetupStore) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
-  if (props) {
+  // only update props after first run
+  if (props && !shouldSetupStore) {
     store.current.__updateProps(store.current.props, props, options)
   }
   return store.current
@@ -135,6 +141,7 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
   const store = useStoreWithReactiveProps(Store, props, shouldReloadStore, options)
   const dispose = useRef(null)
   const reactiveKeys = useRef({
+    hasRunOnce: false,
     lastKeys: [],
     keys: [],
     shouldTrack: true,
@@ -159,7 +166,6 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
         const { keys, shouldTrack } = reactiveKeys.current
         if (!ignoreReactiveKeys[key]) {
           if (shouldTrack && typeof key === 'string') {
-            console.log('get key from store', shouldTrack, key, ignoreReactiveKeys[key])
             if (!keys[key]) {
               if (process.env.NODE_ENV === 'development' && options && options.debug) {
                 console.log(`new reactive key: ${Store.name}.${key}`)
@@ -198,13 +204,13 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
   useEffect(() => {
     if (!dispose.current) {
       dispose.current = autorun(() => {
-        const { keys, update } = reactiveKeys.current
+        const rk = reactiveKeys.current
 
         // listen for key changes
-        update.get()
+        rk.update.get()
 
         // trigger reaction on keys
-        for (const key in keys) {
+        for (const key in rk.keys) {
           store[key]
         }
 
@@ -212,8 +218,12 @@ export const useStore = <A>(Store: new () => A, props?: Object, options?: UseSto
           trace()
         }
 
-        // update when we react
-        triggerUpdate(Math.random())
+        // update when we react, ignore first run
+        if (rk.hasRunOnce) {
+          triggerUpdate(Math.random())
+        }
+
+        rk.hasRunOnce = true
       })
     }
 

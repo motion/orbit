@@ -12,6 +12,7 @@ import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainSh
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { AppView } from '../../../apps/AppView'
 import { useStore } from '@mcro/use-store'
+import { AppActions } from '../../../actions/AppActions'
 
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
@@ -47,14 +48,21 @@ class OrbitPaneManagerStore {
       }
     },
   )
+
+  setTrayTitleOnPaneChange = react(
+    () => this.props.paneManagerStore.activePane === 'onboard',
+    onboard => {
+      if (onboard) {
+        AppActions.setContextMessage('Welcome to Orbit...')
+      } else {
+        AppActions.setContextMessage('Orbit')
+      }
+    },
+  )
 }
 
 export function OrbitPaneManager() {
-  const { queryStore, selectionStore } = React.useContext(StoreContext)
-  const paneManagerStore = useStore(PaneManagerStore, {
-    selectionStore,
-    panes: [...AppPanes.map(p => p.id), 'settings'],
-  })
+  const { queryStore, paneManagerStore, orbitWindowStore } = React.useContext(StoreContext)
   useStore(OrbitPaneManagerStore, { queryStore, paneManagerStore })
   log(`------------ OrbitPaneManager......`)
   return (
@@ -73,6 +81,7 @@ export function OrbitPaneManager() {
                 before={<SpaceNavHeight />}
                 paddingLeft={0}
                 paddingRight={0}
+                onChangeHeight={orbitWindowStore.setContentHeight}
                 {...pane.props}
               >
                 <AppView view="index" id={pane.id} title={pane.title} type={pane.type} />

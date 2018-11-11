@@ -13,6 +13,7 @@ import { AppType } from '@mcro/models'
 import { Popover, View, Col } from '@mcro/ui'
 import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { Searchable } from '../../../components/Searchable'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
@@ -222,6 +223,23 @@ export class MenuStore {
     console.log('MOUSE LEAVE')
     this.isHoveringDropdown = false
   }
+
+  searchInput: HTMLInputElement = null
+
+  handleSearchInput = (ref: HTMLInputElement) => {
+    this.searchInput = ref
+  }
+
+  focusInputOnOpen = react(
+    () => this.focusedMenu,
+    async () => {
+      ensure('this.searchInput', !!this.searchInput)
+      this.searchInput.focus()
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
 }
 
 export const MenuLayer = React.memo(() => {
@@ -275,17 +293,24 @@ export const MenuLayer = React.memo(() => {
           flex={1}
         >
           <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
-            {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
-              <MenuApp
-                id={app}
-                key={app}
-                menuId={index}
-                view="index"
-                title={app}
-                type={app}
-                menuStore={menuStore}
-              />
-            ))}
+            <Searchable
+              inputProps={{
+                forwardRef: menuStore.handleSearchInput,
+                onChange: queryStore.onChangeQuery,
+              }}
+            >
+              {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+                <MenuApp
+                  id={app}
+                  key={app}
+                  menuId={index}
+                  view="index"
+                  title={app}
+                  type={app}
+                  menuStore={menuStore}
+                />
+              ))}
+            </Searchable>
           </Col>
         </View>
       </MenuChrome>

@@ -4,7 +4,6 @@ import { NormalizedItem } from '../helpers/normalizeItem'
 import { AppActions } from '../actions/AppActions'
 import { ResolvableModel } from '../sources/types'
 import { getAppConfig } from '../helpers/getAppConfig'
-import { AppConfig } from '@mcro/stores'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -98,10 +97,18 @@ export class OrbitItemStore {
     return getIndex ? getIndex(model) : index
   }
 
+  get appConfig() {
+    console.log('okok', this.props, this.props.appConfig)
+    if (this.props.appConfig) {
+      return this.props.appConfig
+    }
+    return this.props.model ? getAppConfig(this.props.model) : null
+  }
+
   selectItem = () => {
     const item = {
       appType: this.props.appType,
-      appConfig: this.props.appConfig,
+      appConfig: this.appConfig,
       target: this.cardWrapRef,
     }
     console.log('selecting item', item)
@@ -137,11 +144,11 @@ export class OrbitItemStore {
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected && !preventAutoSelect) {
-        console.log('selecting this thing...', this.props.appType, this.props.appConfig)
+        console.log('selecting this thing...', this.props.appType, this.appConfig)
+        ensure('appConfig`', !!this.appConfig)
         if (onSelect) {
-          onSelect(this.realIndex, this.props.appConfig)
+          onSelect(this.realIndex, this.appConfig)
         } else {
-          ensure('appConfig`', !!this.props.appConfig)
           // fluidity
           await sleep()
           this.selectItem()

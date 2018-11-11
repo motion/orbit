@@ -5,6 +5,7 @@ import { view } from '@mcro/black'
 import { HighlightText } from '../../../views/HighlightText'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {
+  console.log('got item', item, props)
   return (
     <OrbitListItem
       direct

@@ -5,7 +5,6 @@ import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolv
 import { OrbitSearchNav } from './views/OrbitSearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
-import { StaticContainer } from '../../views/StaticContainer'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { GroupedSearchItem } from './views/GroupedSearchItem'

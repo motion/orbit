@@ -306,9 +306,9 @@ export const MenuLayer = React.memo(() => {
           distance={6}
           forgiveness={10}
           edgePadding={0}
+          elevation={20}
           left={menuStore.menuCenter}
           maxHeight={window.innerHeight}
-          elevation={6}
           theme="dark"
         >
           <div style={{ height: menuStore.height }} />

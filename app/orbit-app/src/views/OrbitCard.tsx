@@ -235,26 +235,15 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
   }
 }
 
-// wrap the outside so we can do much faster shallow renders when need be
+// never let it update, this saves so much time we can just change key to change item
+
 export class OrbitCard extends React.Component<ItemProps<ResolvableModel>> {
-  shouldComponentUpdate(a, b, c) {
-    return onlyUpdateOnChanged.call(this, a, b, c)
+  shouldComponentUpdate() {
+    return false
   }
 
   render() {
     return <OrbitCardInner {...this.props} />
-    // return (
-    //   <UI.ThemeContext.Consumer>
-    //     {obj => {
-    //       const themeName = obj.activeThemeName === 'clearLight' ? 'clearDark' : obj.activeThemeName
-    //       return (
-    //         <UI.Theme name={themeName}>
-
-    //         </UI.Theme>
-    //       )
-    //     }}
-    //   </UI.ThemeContext.Consumer>
-    // )
   }
 }
 

@@ -68,7 +68,8 @@ const ButtonInner = ({
   )
 }
 
-export const Button = (props: ButtonProps) => {
+// @ts-ignore
+export const Button = React.memo((props: ButtonProps) => {
   if (props.acceptsHovered) {
     return (
       <UIContext.Consumer>
@@ -83,4 +84,4 @@ export const Button = (props: ButtonProps) => {
     )
   }
   return <ButtonInner {...props} />
-}
+})

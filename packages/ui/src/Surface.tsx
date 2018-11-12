@@ -379,8 +379,9 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
   }
 }
 
-export const Surface = props => (
+// @ts-ignore
+export const Surface = React.memo(props => (
   <UIContext.Consumer>
     {uiContext => <SurfaceInner uiContext={uiContext} {...props} />}
   </UIContext.Consumer>
-)
+))

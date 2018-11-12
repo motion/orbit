@@ -5,7 +5,7 @@ import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { setTrayFocused } from './helpers'
 import { App, Desktop, Electron } from '@mcro/stores'
-import { react, ensure, always } from '@mcro/black'
+import { react, ensure, always, view } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
@@ -13,6 +13,7 @@ import { AppType } from '@mcro/models'
 import { Popover, View, Col } from '@mcro/ui'
 import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { Searchable } from '../../../components/Searchable'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
@@ -69,10 +70,6 @@ export class MenuStore {
     },
   )
 
-  get anyMenuOpen() {
-    return this.menuOpenID !== false
-  }
-
   closePeekOnChangeMenu = react(
     () => typeof this.menuOpenID === 'number',
     isChanging => {
@@ -82,20 +79,20 @@ export class MenuStore {
   )
 
   showMenusBeforeOpen = react(
-    () => this.anyMenuOpen,
+    () => this.openQuick,
     open => {
       ensure('open', open)
       window['electronRequire']('electron').remote.app.show()
     },
   )
 
-  handleAppViewFocus = react(
-    () => App.showingPeek,
-    showingPeek => {
-      ensure('showingPeek', showingPeek)
-      setTrayFocused(true)
-    },
-  )
+  // handleAppViewFocus = react(
+  //   () => App.showingPeek,
+  //   showingPeek => {
+  //     ensure('showingPeek', showingPeek)
+  //     setTrayFocused(true)
+  //   },
+  // )
 
   get hoverID() {
     const { trayState } = App.state
@@ -107,16 +104,9 @@ export class MenuStore {
     return +id
   }
 
-  isHoveringIcon = react(
-    () => {
-      const { trayState } = App.state
-      always(trayState.trayEventAt)
-      return (
-        trayState.trayEvent !== 'TrayHoverOut' && trayState.trayEvent.indexOf(`TrayHover`) === 0
-      )
-    },
-    _ => _,
-  )
+  get isHoveringIcon() {
+    return typeof this.hoverID === 'number'
+  }
 
   get holdingOption() {
     return Desktop.keyboardState.isHoldingOption
@@ -190,7 +180,7 @@ export class MenuStore {
     () => this.openVisually,
     async (open, { sleep, whenChanged }) => {
       if (!open) {
-        await sleep(100)
+        await sleep(150)
         setTrayFocused(false)
         return false
       }
@@ -233,6 +223,23 @@ export class MenuStore {
     console.log('MOUSE LEAVE')
     this.isHoveringDropdown = false
   }
+
+  searchInput: HTMLInputElement = null
+
+  handleSearchInput = (ref: HTMLInputElement) => {
+    this.searchInput = ref
+  }
+
+  focusInputOnOpen = react(
+    () => this.focusedMenu,
+    async () => {
+      ensure('this.searchInput', !!this.searchInput)
+      this.searchInput.focus()
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
 }
 
 export const MenuLayer = React.memo(() => {
@@ -271,19 +278,12 @@ export const MenuLayer = React.memo(() => {
   const pad = 6
   return (
     <StoreContext.Provider value={storeProps}>
-      <div
-        style={{
-          width: width - pad * 2,
-          margin: pad,
-          height: window.innerHeight,
-          transform: `translateX(${menuStore.menuCenter - width / 2}px)`,
-          transition,
-          position: 'absolute',
-          zIndex: 100000,
-          pointerEvents: 'auto',
-          overflow: 'hidden',
-          borderRadius: 6,
-        }}
+      <MenuChrome
+        width={width - pad * 2}
+        margin={pad}
+        transform={{ x: menuStore.menuCenter - width / 2 }}
+        transition={transition}
+        opacity={menuStore.openQuick ? 1 : 0}
       >
         <View
           padding={10}
@@ -293,22 +293,29 @@ export const MenuLayer = React.memo(() => {
           flex={1}
         >
           <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
-            {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
-              <MenuApp
-                id={app}
-                key={app}
-                menuId={index}
-                view="index"
-                title={app}
-                type={app}
-                menuStore={menuStore}
-              />
-            ))}
+            <Searchable
+              inputProps={{
+                forwardRef: menuStore.handleSearchInput,
+                onChange: queryStore.onChangeQuery,
+              }}
+            >
+              {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+                <MenuApp
+                  id={app}
+                  key={app}
+                  menuId={index}
+                  view="index"
+                  title={app}
+                  type={app}
+                  menuStore={menuStore}
+                />
+              ))}
+            </Searchable>
           </Col>
         </View>
-      </div>
+      </MenuChrome>
       <Popover
-        open={menuStore.openVisually}
+        open={menuStore.openQuick}
         transition={transition}
         background
         width={width}
@@ -327,4 +334,13 @@ export const MenuLayer = React.memo(() => {
       </Popover>
     </StoreContext.Provider>
   )
+})
+
+const MenuChrome = view(View, {
+  height: window.innerHeight,
+  position: 'absolute',
+  zIndex: 100000,
+  pointerEvents: 'auto',
+  overflow: 'hidden',
+  borderRadius: 6,
 })

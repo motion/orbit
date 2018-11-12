@@ -3,7 +3,7 @@ import { AppProps } from '../AppProps'
 import { loadOne, observeMany } from '@mcro/model-bridge'
 import { PersonBitModel, BitModel, SlackPersonData } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import { react, view } from '@mcro/black'
+import { react, view, ensure } from '@mcro/black'
 import { RoundButton } from '../../views'
 import { OrbitIcon } from '../../views/OrbitIcon'
 import { PEEK_BORDER_RADIUS } from '../../constants'
@@ -31,13 +31,15 @@ class PeopleAppStore {
   )
 
   recentBits = react(
-    () =>
-      observeMany(BitModel, {
+    () => this.person,
+    person => {
+      ensure('person', !!person)
+      return observeMany(BitModel, {
         args: {
           where: {
             people: {
               personBit: {
-                email: this.person.email,
+                email: person.email,
               },
             },
           },
@@ -46,7 +48,8 @@ class PeopleAppStore {
           },
           take: 15,
         },
-      }),
+      })
+    },
     {
       defaultValue: [],
     },

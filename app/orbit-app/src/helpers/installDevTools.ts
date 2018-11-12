@@ -10,6 +10,10 @@ configureUseStore({
     viewEmitter.emit('store.mount', { name: store.constructor.name, thing: store })
   },
   onUnmount: store => {
+    if (!store.subscriptions) {
+      console.log('no subscriptions!', store)
+      debugger
+    }
     store.subscriptions.dispose()
     viewEmitter.emit('store.unmount', { name: store.constructor.name, thing: store })
   },

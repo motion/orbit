@@ -93,25 +93,11 @@ export class SearchAppInner extends React.Component<
 }
 
 class ListItem extends React.PureComponent<ListItemProps> {
-
-  onGroupClick = (item) => () => {
-    console.log('group clicked', item)
-
-    togglePeekApp({
-      target: findDOMNode(this) as HTMLDivElement,
-      appType: 'search',
-      appConfig: {
-        title: 'Search results',
-        icon: 'orbit',
-      }
-    })
-  }
-
   render() {
     const { model, realIndex, query, ...props } = this.props
     if (model.group) {
       const item = model as any
-      return <GroupedSearchItem onClick={this.onGroupClick(item)} item={item} index={realIndex} query={query} {...props} />
+      return <GroupedSearchItem item={item} index={realIndex} query={query} {...props} />
     }
     return (
       <OrbitListItem

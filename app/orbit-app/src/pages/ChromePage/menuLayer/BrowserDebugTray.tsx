@@ -10,8 +10,15 @@ export const BrowserDebugTray = ({ children }) => {
     return children
   }
   return (
-    <FullScreen pointerEvents="auto">
-      <Row justifyContent="center" alignItems="center" width="100%" height={28} background="#eee">
+    <FullScreen>
+      <Row
+        pointerEvents="auto"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        height={28}
+        background="#eee"
+      >
         <Target id={0} />
         <Target id={1} />
         <Target id={2} />

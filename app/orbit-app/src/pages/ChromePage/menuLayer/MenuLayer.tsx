@@ -10,7 +10,7 @@ import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
 import { AppType } from '@mcro/models'
-import { Popover, View, Col } from '@mcro/ui'
+import { Popover, View } from '@mcro/ui'
 import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { Searchable } from '../../../components/Searchable'
@@ -20,6 +20,8 @@ import { IS_ELECTRON } from '../../../constants'
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
 const panes = ['people', 'topics', 'lists']
+const transition = 'opacity ease-in 60ms, transform ease 180ms'
+export const menuPad = 6
 
 const sendTrayEvent = (key, value) => {
   App.setState({
@@ -119,7 +121,6 @@ export class MenuStore {
   openQuick = react(
     () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown],
     async ([holdingOption, hoveringMenu], { sleep, when }) => {
-      console.log('ok ok ok', hoveringMenu)
       if (holdingOption) {
         return true
       }
@@ -226,7 +227,6 @@ export class MenuStore {
   }
 
   handleMouseLeave = () => {
-    console.log('MOUSE LEAVE')
     this.isHoveringDropdown = false
   }
 
@@ -262,6 +262,23 @@ export const MenuLayer = React.memo(() => {
     menuStore,
     paneManagerStore,
   }
+
+  React.useEffect(() => {
+    // watch for mouse enter and leave
+    const onMove = e => {
+      const hoverOut = e.target === document.documentElement
+      if (hoverOut) {
+        menuStore.handleMouseLeave()
+      } else {
+        menuStore.handleMouseEnter()
+      }
+    }
+    document.addEventListener('mousemove', onMove)
+    return () => {
+      document.removeEventListener('mousemove', onMove)
+    }
+  }, [])
+
   const width = 300
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
@@ -269,6 +286,20 @@ export const MenuLayer = React.memo(() => {
       switch (key) {
         case 'TrayToggleOrbit':
           App.setOrbitState({ docked: !App.state.orbitState.docked })
+          break
+        case 'TrayToggle0':
+        case 'TrayToggle1':
+        case 'TrayToggle2':
+          const index = +key.replace('TrayToggle', '')
+          App.setState({
+            trayState: {
+              menuState: {
+                [index]: {
+                  pinned: !App.state.trayState.menuState[index],
+                },
+              },
+            },
+          })
           break
         case 'TrayHover0':
         case 'TrayHover1':
@@ -280,15 +311,13 @@ export const MenuLayer = React.memo(() => {
       }
     })
   }, [])
-  const transition = 'opacity ease-in 60ms, transform ease 180ms'
-  const pad = 6
   log(`MenuLayer left ${menuStore.menuCenter}`)
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={storeProps}>
         <MenuChrome
-          width={width - pad * 2}
-          margin={pad}
+          width={width - menuPad * 2}
+          margin={menuPad}
           transform={{ x: menuStore.menuCenter - width / 2 }}
           transition={transition}
           opacity={menuStore.openQuick ? 1 : 0}
@@ -311,7 +340,11 @@ export const MenuLayer = React.memo(() => {
           maxHeight={window.innerHeight}
           theme="dark"
         >
-          <div style={{ height: menuStore.height }} />
+          <div
+            style={{
+              height: menuStore.height,
+            }}
+          />
         </Popover>
       </StoreContext.Provider>
     </BrowserDebugTray>
@@ -323,40 +356,31 @@ const MenuChrome = view(View, {
   position: 'absolute',
   zIndex: 100000,
   pointerEvents: 'auto',
-  overflow: 'hidden',
   borderRadius: 6,
 })
 
 const MenuChromeContent = React.memo(
   ({ menuStore, queryStore }: { menuStore: MenuStore; queryStore: QueryStore }) => {
     return (
-      <View
-        padding={10}
-        margin={-10}
-        onMouseEnter={menuStore.handleMouseEnter}
-        onMouseLeave={menuStore.handleMouseLeave}
-        flex={1}
-      >
-        <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
-          <Searchable
-            inputProps={{
-              forwardRef: menuStore.handleSearchInput,
-              onChange: queryStore.onChangeQuery,
-            }}
-          >
-            {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
-              <MenuApp
-                id={app}
-                key={app}
-                menuId={index}
-                viewType="index"
-                title={app}
-                type={app}
-                menuStore={menuStore}
-              />
-            ))}
-          </Searchable>
-        </Col>
+      <View className="app-parent-bounds">
+        <Searchable
+          inputProps={{
+            forwardRef: menuStore.handleSearchInput,
+            onChange: queryStore.onChangeQuery,
+          }}
+        >
+          {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+            <MenuApp
+              id={app}
+              key={app}
+              menuId={index}
+              viewType="index"
+              title={app}
+              type={app}
+              menuStore={menuStore}
+            />
+          ))}
+        </Searchable>
       </View>
     )
   },

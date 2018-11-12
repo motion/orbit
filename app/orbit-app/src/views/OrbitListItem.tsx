@@ -50,7 +50,6 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       titleProps,
       subtitleProps,
       padding,
-      titleFlex,
       subtitleSpaceBetween,
       searchTerm,
       onClickLocation,
@@ -118,12 +117,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
           <div style={{ flexDirection: 'row', width: '100%' }}>
             <ListItemMainContent oneLine={extraProps && extraProps.oneLine}>
               {showTitle && (
-                <Title
-                  style={{
-                    flex: typeof titleFlex === 'number' ? titleFlex : 'none',
-                    width: '100%',
-                  }}
-                >
+                <Title>
                   {showIcon && (
                     <>
                       <OrbitIcon icon={icon} size={14} marginTop={2} {...iconProps} />
@@ -338,7 +332,7 @@ const ListItem = view({
 })
 
 const Title = view({
-  maxWidth: '100%',
+  width: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
   alignItems: 'flex-start',

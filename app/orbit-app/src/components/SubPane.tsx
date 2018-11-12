@@ -24,6 +24,7 @@ export type SubPaneProps = CSSPropertySetStrict & {
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore
   onChangeHeight?: (height: number) => void
+  offsetY?: number
 }
 
 @attach('paneManagerStore', 'orbitWindowStore', 'selectionStore')
@@ -42,12 +43,14 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
       name,
       before,
       preventScroll,
+      offsetY,
       ...props
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
     return (
       <SubPaneFrame isActive={isActive} name={name}>
         {before}
+        {!!offsetY && <div style={{ height: offsetY }} />}
         <SubPaneInner forwardRef={subPaneStore.subPaneInner}>
           <Pane
             isActive={isActive}

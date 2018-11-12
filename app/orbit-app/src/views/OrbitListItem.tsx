@@ -134,7 +134,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                   >
                     {title}
                   </HighlightText>
-                  <TitleSpace />
+                  <TitleSpace shouldFlex />
                   {this.props.afterTitle || normalizedItem.afterTitle}
                   {afterHeader}
                 </Title>
@@ -359,7 +359,10 @@ const AfterHeader = view({
 })
 
 const TitleSpace = view({
-  width: 8,
+  minWidth: 8,
+  shouldFlex: {
+    flex: 1,
+  },
 })
 
 const Bottom = view({

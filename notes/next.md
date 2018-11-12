@@ -4,17 +4,46 @@ small apps for teams
 
 ### nate
 
-- design for pin current app context to pin
-- Upgrade people app with "Send icon" for context + showing peek next to it + search bar
-- Lists Main app view app - show sidebar in app with button + searchbar
-- SelectionStore / keyboard interaction working for menu windows
-- Orbit search results context menu opens by default (not show last one)
-- Fix cosal invert bug
-- Get Topic modeling API in place with working topics for topics app
-- Get profiles with topic modeling
-- Get topics app using real data for changing over time topics
-- UI for custom topics in topics app
-- Rename SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
+monday:
+
+- menu apps many fixes
+
+  - esc to clear
+  - fix animation in and out
+  - fix height issues
+  - fix focusing on search
+  - fix delays on open
+  - fix keyboard selection move
+  - add auto select on search first item
+  - fix option hold slow animate in
+  - fix pin key typing into search box
+  - fix clear app window on clear peek
+  - peek left/right arrow keys on option hold
+
+tuesday:
+
+- apps have sidebars inside them
+
+  - create new titlebar / icon with button to toggle sidebar
+  - restructure apps to have sidebar from their Main view
+  - get sidebar in and working, resizing
+  - fix some tear away bugs
+
+wednesday:
+
+-
+
+* design for pin current app context to pin
+* Upgrade people app with "Send icon" for context + showing peek next to it + search bar
+* Lists Main app view app - show sidebar in app with button + searchbar
+* SelectionStore / keyboard interaction working for menu windows
+* Orbit search results context menu opens by default (not show last one)
+* Fix cosal invert bug
+* Get Topic modeling API in place with working topics for topics app
+* Get profiles with topic modeling
+* Get topics app using real data for changing over time topics
+* UI for custom topics in topics app
+* Rename SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
 ---
 

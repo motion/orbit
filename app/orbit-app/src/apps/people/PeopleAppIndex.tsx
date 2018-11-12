@@ -15,7 +15,6 @@ import { View } from '@mcro/ui'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
-import { getAppConfig } from '../../helpers/getAppConfig'
 
 const height = 56
 
@@ -127,7 +126,6 @@ const DirectoryPersonCard = props => (
   <OrbitCard
     inGrid
     appType="people"
-    appConfig={getAppConfig(props.model)}
     titleProps={{
       ellipse: true,
     }}
@@ -165,7 +163,7 @@ const PersonSection = ({
 
 const lipHeight = 30
 
-export function PeopleAppIndex(props: AppProps) {
+export const PeopleAppIndex = React.memo((props: AppProps) => {
   const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props)
   const total = results.length
   if (!total) {
@@ -192,4 +190,4 @@ export function PeopleAppIndex(props: AppProps) {
       />
     </ProvideHighlightsContextWithDefaults>
   )
-}
+})

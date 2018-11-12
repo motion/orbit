@@ -14,6 +14,8 @@ import { Popover, View, Col } from '@mcro/ui'
 import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { Searchable } from '../../../components/Searchable'
+import { BrowserDebugTray } from './BrowserDebugTray'
+import { IS_ELECTRON } from '../../../constants'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
@@ -82,7 +84,9 @@ export class MenuStore {
     () => this.openQuick,
     open => {
       ensure('open', open)
-      window['electronRequire']('electron').remote.app.show()
+      if (IS_ELECTRON) {
+        window['electronRequire']('electron').remote.app.show()
+      }
     },
   )
 
@@ -115,6 +119,7 @@ export class MenuStore {
   openQuick = react(
     () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown],
     async ([holdingOption, hoveringMenu], { sleep, when }) => {
+      console.log('ok ok ok', hoveringMenu)
       if (holdingOption) {
         return true
       }
@@ -148,7 +153,8 @@ export class MenuStore {
     const trayBounds = Desktop.state.operatingSystem.trayBounds
     const baseOffset = 25
     const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120
-    return trayBounds[0] + offset
+    const bounds = trayBounds[0] + offset
+    return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
   }
 
   // uses faster open so we can react to things quickly
@@ -259,6 +265,7 @@ export const MenuLayer = React.memo(() => {
   const width = 300
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
+      console.log('got event', key)
       switch (key) {
         case 'TrayToggleOrbit':
           App.setOrbitState({ docked: !App.state.orbitState.docked })
@@ -273,66 +280,41 @@ export const MenuLayer = React.memo(() => {
       }
     })
   }, [])
-  log('!!! render MenuLayer')
-  const transition = 'opacity ease-in 60ms, transform ease 200ms'
+  const transition = 'opacity ease-in 60ms, transform ease 180ms'
   const pad = 6
+  log(`MenuLayer left ${menuStore.menuCenter}`)
   return (
-    <StoreContext.Provider value={storeProps}>
-      <MenuChrome
-        width={width - pad * 2}
-        margin={pad}
-        transform={{ x: menuStore.menuCenter - width / 2 }}
-        transition={transition}
-        opacity={menuStore.openQuick ? 1 : 0}
-      >
-        <View
-          padding={10}
-          margin={-10}
-          onMouseEnter={menuStore.handleMouseEnter}
-          onMouseLeave={menuStore.handleMouseLeave}
-          flex={1}
+    <BrowserDebugTray>
+      <StoreContext.Provider value={storeProps}>
+        <MenuChrome
+          width={width - pad * 2}
+          margin={pad}
+          transform={{ x: menuStore.menuCenter - width / 2 }}
+          transition={transition}
+          opacity={menuStore.openQuick ? 1 : 0}
         >
-          <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
-            <Searchable
-              inputProps={{
-                forwardRef: menuStore.handleSearchInput,
-                onChange: queryStore.onChangeQuery,
-              }}
-            >
-              {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
-                <MenuApp
-                  id={app}
-                  key={app}
-                  menuId={index}
-                  view="index"
-                  title={app}
-                  type={app}
-                  menuStore={menuStore}
-                />
-              ))}
-            </Searchable>
-          </Col>
-        </View>
-      </MenuChrome>
-      <Popover
-        open={menuStore.openQuick}
-        transition={transition}
-        background
-        width={width}
-        towards="bottom"
-        delay={0}
-        top={0}
-        distance={6}
-        forgiveness={10}
-        edgePadding={0}
-        left={menuStore.menuCenter}
-        maxHeight={window.innerHeight}
-        elevation={6}
-        theme="dark"
-      >
-        <div style={{ height: menuStore.height }} />
-      </Popover>
-    </StoreContext.Provider>
+          <MenuChromeContent queryStore={queryStore} menuStore={menuStore} />
+        </MenuChrome>
+        <Popover
+          open={menuStore.openQuick}
+          transition={transition}
+          background
+          width={width}
+          towards="bottom"
+          delay={0}
+          top={IS_ELECTRON ? 0 : 28}
+          distance={6}
+          forgiveness={10}
+          edgePadding={0}
+          left={menuStore.menuCenter}
+          maxHeight={window.innerHeight}
+          elevation={6}
+          theme="dark"
+        >
+          <div style={{ height: menuStore.height }} />
+        </Popover>
+      </StoreContext.Provider>
+    </BrowserDebugTray>
   )
 })
 
@@ -344,3 +326,38 @@ const MenuChrome = view(View, {
   overflow: 'hidden',
   borderRadius: 6,
 })
+
+const MenuChromeContent = React.memo(
+  ({ menuStore, queryStore }: { menuStore: MenuStore; queryStore: QueryStore }) => {
+    return (
+      <View
+        padding={10}
+        margin={-10}
+        onMouseEnter={menuStore.handleMouseEnter}
+        onMouseLeave={menuStore.handleMouseLeave}
+        flex={1}
+      >
+        <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
+          <Searchable
+            inputProps={{
+              forwardRef: menuStore.handleSearchInput,
+              onChange: queryStore.onChangeQuery,
+            }}
+          >
+            {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+              <MenuApp
+                id={app}
+                key={app}
+                menuId={index}
+                view="index"
+                title={app}
+                type={app}
+                menuStore={menuStore}
+              />
+            ))}
+          </Searchable>
+        </Col>
+      </View>
+    )
+  },
+)

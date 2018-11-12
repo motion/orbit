@@ -17,7 +17,7 @@ export const AppView = React.memo((props: Props) => {
     { conditionalUse: shouldProvideAppStore, debug: true },
   )
   const AppView = apps[props.type][props.view]
-  if (typeof AppView !== 'function') {
+  if (!AppView) {
     console.error('WAHT THE FUCK', props.type, AppView)
     return null
   }

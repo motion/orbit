@@ -93,7 +93,7 @@ class OrbitPaneManagerStoreInner extends React.Component<any> {
                   onChangeHeight={this.props.orbitWindowStore.setContentHeight}
                   {...pane.props}
                 >
-                  <AppView view="index" id={pane.id} title={pane.title} type={pane.type} />
+                  <AppView viewType="index" id={pane.id} title={pane.title} type={pane.type} />
                 </SubPane>
               )
             })}

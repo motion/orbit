@@ -1,5 +1,5 @@
 import { store } from '@mcro/black'
-import { sleep, debugState } from '@mcro/black'
+import { sleep } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import { getGlobalConfig } from '@mcro/config'
 
@@ -22,10 +22,6 @@ export class DevStore {
 
   constructor() {
     this.catchErrors()
-    debugState(({ stores, views }) => {
-      this.stores = stores
-      this.views = views
-    })
   }
 
   async restart() {

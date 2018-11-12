@@ -20,7 +20,7 @@ export function SearchAppMain(props: AppProps) {
   if (appConfig.type === 'bit' || appConfig.type === 'person') {
     return (
       <AppView
-        view="main"
+        viewType="main"
         id={appConfig.id}
         title={appConfig.title}
         type={appConfig.type === 'bit' ? 'bit' : 'people'}

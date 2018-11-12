@@ -9,7 +9,7 @@ export type AppState = {
   id: number
   appConfig: AppConfig
   appType: AppType
-  viewType?: 'main' | 'source' | 'item' | 'setup'
+  viewType?: 'index' | 'main' | 'setup'
   torn: boolean
   target?: { top: number; left: number; width: number; height: number }
   peekOnLeft: boolean

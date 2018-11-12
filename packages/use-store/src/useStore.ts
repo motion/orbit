@@ -78,7 +78,12 @@ const updateProps = (props, nextProps, options?: UseStoreOptions) => {
 }
 
 const setupStoreWithReactiveProps = (Store, props?) => {
-  if (props) {
+  Store.prototype.automagic = automagicClass
+  let storeInstance
+  if (!props) {
+    storeInstance = new Store()
+  } else {
+    // add props to the store and manage them
     const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
     const storeProps = observable({ props }, { props: observable.shallow })
     const getProps = {
@@ -86,26 +91,18 @@ const setupStoreWithReactiveProps = (Store, props?) => {
       get: () => storeProps.props,
       set() {},
     }
-    Store.prototype.automagic = automagicClass
     Object.defineProperty(Store.prototype, 'props', getProps)
-    const storeInstance = new Store()
+    storeInstance = new Store()
     Object.defineProperty(storeInstance, 'props', getProps)
-    if (globalOptions.onMount) {
-      globalOptions.onMount(storeInstance)
-    }
-    storeInstance.automagic({
-      isSubscribable: x => x && typeof x.subscribe === 'function',
-    })
     storeInstance.__updateProps = updatePropsAction
-    return storeInstance
-  } else {
-    Store.prototype.automagic = automagicClass
-    const storeInstance = new Store()
-    storeInstance.automagic({
-      isSubscribable: x => x && typeof x.subscribe === 'function',
-    })
-    return storeInstance
   }
+  if (globalOptions.onMount) {
+    globalOptions.onMount(storeInstance)
+  }
+  storeInstance.automagic({
+    isSubscribable: x => x && typeof x.subscribe === 'function',
+  })
+  return storeInstance
 }
 
 const useStoreWithReactiveProps = (Store, props, shouldHMR = false, options?: UseStoreOptions) => {

@@ -37,6 +37,7 @@ const decorate = compose(attach('selectionStore', 'paneManagerStore'))
 export const MainShortcutHandler = decorate(
   ({ selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {
+      console.log('move pane or selection', direction)
       if (
         selectionStore.activeIndex === -1 &&
         (direction === Direction.left || direction === Direction.right)

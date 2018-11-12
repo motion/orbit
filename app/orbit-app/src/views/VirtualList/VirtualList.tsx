@@ -133,6 +133,7 @@ const isRightClick = e =>
 export function VirtualList(props: Props) {
   const context = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore: context.appStore })
+  const { cache, width, height } = store
 
   const rowRenderer = ({ index, parent, style }) => {
     const model = props.items[index]
@@ -140,7 +141,7 @@ export function VirtualList(props: Props) {
     return (
       <CellMeasurer
         key={`${model.id}${index}`}
-        cache={store.cache}
+        cache={cache}
         columnIndex={0}
         parent={parent}
         rowIndex={index}
@@ -183,10 +184,10 @@ export function VirtualList(props: Props) {
           }
         }}
         items={props.items}
-        deferredMeasurementCache={store.cache}
-        height={store.height}
-        width={store.width}
-        rowHeight={store.cache.rowHeight}
+        deferredMeasurementCache={cache}
+        height={height}
+        width={width}
+        rowHeight={cache.rowHeight}
         overscanRowCount={20}
         rowCount={props.items.length}
         estimatedRowSize={100}
@@ -204,10 +205,10 @@ export function VirtualList(props: Props) {
     <div
       ref={store.setRootRef}
       style={{
-        height: store.height,
+        height: height,
       }}
     >
-      {!!store.width && (
+      {!!width && (
         <>
           {props.infinite && (
             <InfiniteLoader
@@ -221,7 +222,7 @@ export function VirtualList(props: Props) {
           {!props.infinite && getList()}
         </>
       )}
-      {!store.width && <div>No width!</div>}
+      {!width && <div>No width!</div>}
     </div>
   )
 }

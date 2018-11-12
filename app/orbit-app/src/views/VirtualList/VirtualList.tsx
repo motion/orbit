@@ -86,7 +86,7 @@ class VirtualListStore {
     for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
       height += this.cache.rowHeight(i)
     }
-    this.height = Math.min(this.props.maxHeight, height)
+    this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
   }
 
   keyMapper = rowIndex => {

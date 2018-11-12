@@ -144,7 +144,7 @@ export class PaneManagerStore {
     },
   )
 
-  subPaneSetter = memoize(val => this.setSubPane(val))
+  subPaneSetter = memoize(val => () => this.setSubPane(val))
 
   setSubPane = val => {
     this.subPane = val

@@ -17,7 +17,6 @@ export class GithubBitFactory {
    * Creates a new bit from a given Github issue.
    */
   createFromIssue(issue: GithubIssue | GithubPullRequest, comments: GithubComment[]): Bit {
-    console.log('got comments', comments)
     const id = hash(`github-${this.source.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()

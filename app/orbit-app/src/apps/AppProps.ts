@@ -1,4 +1,5 @@
 import { AppType } from '@mcro/models'
+import { IntegrationType } from '@mcro/models'
 import { AppStore } from './AppStore'
 import { SourcesStore } from '../stores/SourcesStore'
 import { SettingStore } from '../stores/SettingStore'
@@ -12,6 +13,8 @@ export type AppProps = {
   view: 'index' | 'main'
   title: string
   type: AppType
+  viewType?: 'main' | 'source' | 'item' | 'setup'
+  sourceType?: IntegrationType
   appStore?: AppStore
   sourcesStore?: SourcesStore
   settingStore?: SettingStore

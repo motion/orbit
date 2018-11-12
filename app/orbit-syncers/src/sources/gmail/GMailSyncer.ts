@@ -52,7 +52,7 @@ export class GMailSyncer implements IntegrationSyncer {
     lastSync.usedQueryFilter = queryFilter
     lastSync.usedDaysLimit = this.source.values.daysLimit
     lastSync.usedMax = this.source.values.max
-    await getRepository(SourceEntity).save(this.source)
+    await getRepository(SourceEntity).save(this.source, { listeners: false })
 
     // if user configuration has changed (max number of messages, days limitation or query filter)
     // we drop all bits to make complete sync again
@@ -110,7 +110,7 @@ export class GMailSyncer implements IntegrationSyncer {
       }
 
       lastSync.historyId = history.historyId
-      await getRepository(SourceEntity).save(this.source)
+      await getRepository(SourceEntity).save(this.source, { listeners: false })
 
     } else {
 

@@ -65,3 +65,6 @@ declare module '*.png' {
   const content: any
   export default content
 }
+
+// Nate's secret function for global logging
+declare function log(...args: any[])

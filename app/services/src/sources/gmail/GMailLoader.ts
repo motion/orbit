@@ -118,6 +118,11 @@ export class GMailLoader {
     this.log.info('loading threads', { count, queryFilter, filteredIds, pageToken })
     const query = GMailQueries.threads(count > 100 ? 100 : count, queryFilter, pageToken)
     const result = await this.loader.load(query)
+
+    // if query doesn't return any email result.threads will be undefined
+    if (!result.resultSizeEstimate)
+      return
+
     this.log.info(
       `${result.threads.length} threads were loaded (${loadedCount + result.threads.length} of ${loadedCount + result.resultSizeEstimate} estimated)`, result)
 

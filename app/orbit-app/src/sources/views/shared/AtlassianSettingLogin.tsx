@@ -9,6 +9,7 @@ import {
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../actions/AppActions'
+import { SpaceStore } from '../../../stores/SpaceStore'
 import * as Views from '../../../views'
 import { Message } from '../../../views/Message'
 
@@ -66,10 +67,11 @@ class AtlassianSettingLoginStore {
 
 @attach({
   store: AtlassianSettingLoginStore,
+  spaceStore: SpaceStore,
 })
 @view
 export class AtlassianSettingLogin extends React.Component<
-  Props & { store?: AtlassianSettingLoginStore }
+  Props & { store?: AtlassianSettingLoginStore, spaceStore?: SpaceStore }
 > {
   // if (!values.username || !values.password || !values.domain)
   // if (values.domain.indexOf('http') !== 0)
@@ -78,6 +80,9 @@ export class AtlassianSettingLogin extends React.Component<
     e.preventDefault()
     const { source } = this.props.store
     source.values = { ...source.values, credentials: this.props.store.values }
+    if (!source.spaceId) {
+      source.spaceId = this.props.spaceStore.activeSpace.id
+    }
     console.log(`adding integration!`, source)
 
     // send command to the desktop

@@ -6,10 +6,12 @@ import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
 import { GetItemProps } from '../../views/VirtualList/VirtualList'
-import { trace } from 'mobx'
-// import { getAppConfig } from '../../helpers/getAppConfig'
 
-type SearchState = { results: SearchResult[]; finished?: boolean; query: string }
+type SearchState = {
+  results: SearchResult[];
+  finished?: boolean;
+  query: string
+}
 
 export class SearchStore {
   props: AppProps
@@ -33,11 +35,38 @@ export class SearchStore {
     return this.searchState.results[this.props.appStore.activeIndex]
   }
 
+  /**
+   * Virtual list has its own format of data representation, so convert our data to that format here.
+   * Ideally we need to use our format in there, but if it is generic component we can use transformation as well.
+   */
+  get resultsForVirtualList() {
+    // convert our search results into something this components expects
+    const items: any[] = []
+    for (let result of this.searchState.results) {
+      if (result.bits.length) {
+        items.push({
+          id: result.id,
+          title: result.title,
+          text: result.text,
+          group: result.group,
+          count: result.bitsTotalCount,
+        })
+        items.push(...result.bits)
+      }
+    }
+
+    return items
+  }
+
   getItemProps: GetItemProps = index => {
-    const results = this.searchState.results
+    const results = this.resultsForVirtualList
+    const lastGroup = results
+      .slice(0, index -1)
+      .filter(result => !!result.group)
+
     if (
       results[index].group &&
-      (index === 0 || results[index].group !== results[index - 1].group)
+      (index === 0 || (lastGroup.length > 0 && lastGroup[lastGroup.length - 1].group !== results[index].group))
     ) {
       let separator: string
       if (results[index].group === 'last-day') {
@@ -193,7 +222,12 @@ export class SearchStore {
       }
 
       // do initial search
-      await updateNextResults({ maxBitsCount: 5, group: 'last-day', startIndex: 0, endIndex: take })
+      await updateNextResults({
+        maxBitsCount: 5,
+        group: 'last-day',
+        startIndex: 0,
+        endIndex: take
+      })
       await updateNextResults({
         maxBitsCount: 5,
         group: 'last-week',
@@ -206,7 +240,12 @@ export class SearchStore {
         startIndex: 0,
         endIndex: take,
       })
-      await updateNextResults({ maxBitsCount: 5, group: 'overall', startIndex: 0, endIndex: take })
+      await updateNextResults({
+        maxBitsCount: 5,
+        group: 'overall',
+        startIndex: 0,
+        endIndex: take,
+      })
 
       // wait for active before loading more than one page of results
       /* if (!this.isActive) {

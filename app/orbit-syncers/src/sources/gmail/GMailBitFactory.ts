@@ -43,12 +43,28 @@ export class GMailBitFactory {
     const lastMessage = thread.messages[thread.messages.length - 1]
     const firstMessageParser = new GMailMessageParser(firstMessage)
     const lastMessageParser = new GMailMessageParser(lastMessage)
+    let title = firstMessageParser.getTitle()
+
+    // if there is no title it can be a hangouts conversation, check if it is and generate a title
+    if (!title && firstMessage.labelIds.indexOf("CHAT") !== -1) {
+      const participantNames: string[] = []
+      for (let message of messages) {
+        for (let participant of message.participants) {
+          participantNames.push(participant.name ? participant.name : participant.email)
+        }
+      }
+      title = 'Chat with ' + participantNames.join(", ")
+    }
+
+    // if we still have no title then skip this email
+    if (!title)
+      return undefined
 
     return BitUtils.create(
       {
         integration: 'gmail',
         type: 'mail',
-        title: firstMessageParser.getTitle(),
+        title,
         body,
         data: {
           messages,

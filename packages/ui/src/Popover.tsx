@@ -159,7 +159,6 @@ const PopoverWrap = view({
   pointerEvents: 'none',
   zIndex: -1,
 }).theme(p => {
-  console.log('render styles with', p.willReposition)
   return {
     width: p.width,
     height: p.height,
@@ -467,7 +466,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       if (keepOpenOnClickTarget && clickedTarget) {
         return
       }
-      console.log(e, this)
       // closeOnClickPopover
       if (closeOnClick && clickedTarget) {
         this.forceClose()
@@ -1007,7 +1005,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       nextPosition,
     } = this.state
     const { showPopover } = this
-    console.log('render popover', showPopover, this.state)
     const backgroundProp = background === true ? null : { background: `${background}` }
     const popoverContent = (
       <PopoverContainer

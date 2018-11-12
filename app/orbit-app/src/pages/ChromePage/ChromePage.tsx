@@ -16,9 +16,9 @@ class ChromePageStore {
 }
 
 export function ChromePage() {
-  const store = useStore(ChromePageStore, { debug: true })
-  const settingStore = useStore(SettingStore, { debug: true })
-  const sourcesStore = useStore(SourcesStore, { debug: true })
+  const store = useStore(ChromePageStore)
+  const settingStore = useStore(SettingStore)
+  const sourcesStore = useStore(SourcesStore)
   log(`ChromePage????`)
   return (
     <StoreContext.Provider value={{ settingStore, sourcesStore }}>

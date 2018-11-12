@@ -118,7 +118,12 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
           <div style={{ flexDirection: 'row', width: '100%' }}>
             <ListItemMainContent oneLine={extraProps && extraProps.oneLine}>
               {showTitle && (
-                <Title style={titleFlex && { flex: titleFlex }}>
+                <Title
+                  style={{
+                    flex: typeof titleFlex === 'number' ? titleFlex : 'none',
+                    width: '100%',
+                  }}
+                >
                   {showIcon && (
                     <>
                       <OrbitIcon icon={icon} size={14} marginTop={2} {...iconProps} />

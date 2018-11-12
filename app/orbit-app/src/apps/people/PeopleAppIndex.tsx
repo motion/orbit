@@ -15,6 +15,7 @@ import { View } from '@mcro/ui'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
+import { IS_MENU } from '../../constants'
 
 const height = 56
 
@@ -185,7 +186,7 @@ export const PeopleAppIndex = React.memo((props: AppProps) => {
           )
         }}
         rowCount={resultSections.length}
-        width={ORBIT_WIDTH}
+        width={IS_MENU ? 287 : ORBIT_WIDTH}
         height={resultSections.reduce((a, b) => a + b.height, 0) + lipHeight}
       />
     </ProvideHighlightsContextWithDefaults>

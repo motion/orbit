@@ -121,6 +121,7 @@ export class MenuStore {
   openQuick = react(
     () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown],
     async ([holdingOption, hoveringMenu], { sleep, when }) => {
+      console.log('hoveringMenu', hoveringMenu)
       if (holdingOption) {
         return true
       }
@@ -227,6 +228,7 @@ export class MenuStore {
   }
 
   handleMouseLeave = () => {
+    log('leave')
     this.isHoveringDropdown = false
   }
 
@@ -318,7 +320,7 @@ export const MenuLayer = React.memo(() => {
         <MenuChrome
           width={width - menuPad * 2}
           margin={menuPad}
-          transform={{ x: menuStore.menuCenter - width / 2 }}
+          transform={{ x: menuStore.menuCenter - width / 2, y: menuStore.openQuick ? 0 : -5 }}
           transition={transition}
           opacity={menuStore.openQuick ? 1 : 0}
         >

@@ -26,7 +26,7 @@ export class SubPaneStore {
     return this.paneNode.firstChild as HTMLDivElement
   }
 
-  isLeft() {
+  get isLeft() {
     const thisIndex = this.props.paneManagerStore.indexOfPane(this.props.id)
     return thisIndex < this.props.paneManagerStore.paneIndex
   }
@@ -42,15 +42,18 @@ export class SubPaneStore {
         id === paneManagerStore.activePane && (extraCondition ? extraCondition() : true)
       return {
         isActive,
-        isLeft: this.isLeft(),
+        isLeft: this.isLeft,
       }
     },
-    _ => _,
+    async (val, { sleep }) => {
+      await sleep()
+      return val
+    },
     {
       onlyUpdateIfChanged: true,
       defaultValue: {
         isActive: false,
-        isLeft: this.isLeft(),
+        isLeft: this.isLeft,
       },
     },
   )

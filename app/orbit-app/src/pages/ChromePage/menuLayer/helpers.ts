@@ -1,10 +1,12 @@
+import { IS_ELECTRON } from '../../../constants'
+
 // will focus or return focus to previous app
 export const setTrayFocused = (show = true) => {
-  const req = window['electronRequire']
-  if (!req) {
+  if (!IS_ELECTRON) {
     console.log('not in electron')
     return
   }
+  const req = window['electronRequire']
   if (show) {
     req('electron').remote.app.focus()
   } else {

@@ -7,7 +7,6 @@ import { useStore } from '@mcro/use-store'
 import { StoreContext } from '@mcro/black'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
-import { AppTray } from './appTray/AppTray'
 
 class ChromePageStore {
   get theme() {
@@ -16,16 +15,16 @@ class ChromePageStore {
 }
 
 export function ChromePage() {
-  const store = useStore(ChromePageStore, { debug: true })
-  const settingStore = useStore(SettingStore, { debug: true })
-  const sourcesStore = useStore(SourcesStore, { debug: true })
+  const store = useStore(ChromePageStore)
+  const settingStore = useStore(SettingStore)
+  const sourcesStore = useStore(SourcesStore)
   log(`ChromePage????`)
   return (
     <StoreContext.Provider value={{ settingStore, sourcesStore }}>
       <Theme name={store.theme}>
         <AppWrapper>
           <FullScreen>
-            <AppTray />
+            {/* <AppTray /> */}
             <MenuLayer />
           </FullScreen>
         </AppWrapper>

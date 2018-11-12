@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { observeMany } from '@mcro/model-bridge'
-import { BitModel } from '@mcro/models'
+import { BitModel, Bit } from '@mcro/models'
 import { react } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { AppSimpleTitleBar } from '../../sources/views/layout/AppSimpleTitleBar'
@@ -29,11 +29,7 @@ export function ListsAppMain(props: AppProps) {
       <AppSimpleTitleBar title="hi lists" />
       <br />
       <br />
-      <VirtualList
-        maxHeight={window.innerHeight}
-        items={store.list.map(x => ({ title: x.title }))}
-        itemProps={{ direct: true }}
-      />
+      <VirtualList maxHeight={window.innerHeight} items={store.list as Bit[]} />
     </>
   )
 }

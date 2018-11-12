@@ -95,6 +95,7 @@ class VirtualListStore {
     }
     const id = this.props.items[rowIndex].id
     if (typeof id === 'undefined') {
+      console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
       throw new Error('No valid id found for mapping results')
     }
     return id

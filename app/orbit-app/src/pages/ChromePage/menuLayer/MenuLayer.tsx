@@ -297,7 +297,7 @@ export const MenuLayer = React.memo(() => {
       console.log('got event', key)
       switch (key) {
         case 'TrayToggleOrbit':
-          App.setOrbitState({ docked: !App.state.orbitState.docked })
+          AppActions.setOrbitDocked(!App.state.orbitState.docked)
           break
         case 'TrayToggle0':
         case 'TrayToggle1':

@@ -40,16 +40,6 @@ export class AppReactions {
           AppActions.closeApp(+value)
           return
       }
-
-      // this.disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
-      //   this.setActivePane('settings')
-      //   App.setOrbitState({ docked: true })
-      // })
-
-      // this.disposeShowApps = App.onMessage(App.messages.SHOW_APPS, () => {
-      //   this.setActivePane('apps')
-      //   App.setOrbitState({ docked: true })
-      // })
     })
   }
 

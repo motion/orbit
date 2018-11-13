@@ -78,7 +78,7 @@ export const MainShortcutHandler = decorate(
         }
         // then orbit itself
         if (App.state.orbitState.docked) {
-          return AppActions.closeOrbit()
+          return AppActions.setOrbitDocked(false)
         }
       },
       up: movePaneOrSelection(Direction.up),

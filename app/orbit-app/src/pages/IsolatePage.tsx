@@ -34,7 +34,7 @@ export class IsolatePeek extends React.Component {
           left: window.innerHeight - 350,
           width: 0,
           height: 10,
-        }
+        },
       })
     })
     return <AppPage />
@@ -43,7 +43,7 @@ export class IsolatePeek extends React.Component {
 
 export class IsolateHome extends React.Component {
   componentDidUpdate() {
-    App.setOrbitState({ docked: true })
+    AppActions.setOrbitDocked(true)
   }
 
   render() {

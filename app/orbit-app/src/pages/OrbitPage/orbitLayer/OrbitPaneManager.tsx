@@ -13,6 +13,7 @@ import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { AppView } from '../../../apps/AppView'
 import { useStore } from '@mcro/use-store'
 import { AppActions } from '../../../actions/AppActions'
+import { App } from '@mcro/stores'
 
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
@@ -63,7 +64,23 @@ class OrbitPaneManagerStore {
 
 export function OrbitPaneManager() {
   const { queryStore, paneManagerStore, orbitWindowStore } = React.useContext(StoreContext)
+
   useStore(OrbitPaneManagerStore, { queryStore, paneManagerStore })
+
+  React.useEffect(() => {
+    return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+      AppActions.setOrbitDocked(true)
+      paneManagerStore.setActivePane('settings')
+    })
+  }, [])
+
+  React.useEffect(() => {
+    return App.onMessage(App.messages.SHOW_APPS, () => {
+      AppActions.setOrbitDocked(true)
+      paneManagerStore.setActivePane('settings')
+    })
+  }, [])
+
   return <OrbitPaneManagerStoreInner orbitWindowStore={orbitWindowStore} />
 }
 

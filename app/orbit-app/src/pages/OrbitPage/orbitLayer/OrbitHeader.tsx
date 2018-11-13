@@ -131,7 +131,7 @@ export class HeaderStore {
   goHome = () => {
     const activePane = this.props.paneManagerStore.activePane
     if (activePane === 'home' || activePane === 'search') {
-      AppActions.closeOrbit()
+      AppActions.setOrbitDocked(false)
     } else {
       this.props.paneManagerStore.setActivePane('home')
     }

@@ -78,7 +78,6 @@ const SubPaneFrame = view(UI.FullScreen, {
   opacity: 0,
   isActive: {
     opacity: 1,
-    pointerEvents: 'inherit',
   },
 })
 
@@ -95,6 +94,9 @@ const Pane = view(UI.View, {
   margin: [0, 0, 0],
   preventScroll: {
     overflowY: 'hidden',
+  },
+  isActive: {
+    pointerEvents: 'auto',
   },
 }).theme(({ isLeft, isActive }) => ({
   opacity: isActive ? 1 : 0,

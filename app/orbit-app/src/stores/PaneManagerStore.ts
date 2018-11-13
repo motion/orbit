@@ -18,7 +18,7 @@ export class PaneManagerStore {
     return this.props.panes
   }
 
-  keyablePanes = [0, 4]
+  keyablePanes = [0, 3]
   paneIndex = 0
   forcePane = null
   hasOnboarded = true

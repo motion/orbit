@@ -129,7 +129,8 @@ function decorateMethodWithAutomagic(
     }
   }
   if (descriptor && (!!descriptor.get || !!descriptor.set)) {
-    return Mobx.computed
+    // testing keepAlive to see if it feels any different performance
+    return Mobx.computed({ keepAlive: true })
   }
   if (target.__automagical.deep && target.__automagical.deep[method]) {
     return Mobx.observable.deep

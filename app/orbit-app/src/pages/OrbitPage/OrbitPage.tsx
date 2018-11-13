@@ -12,7 +12,7 @@ import { Theme } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { StoreContext } from '@mcro/black'
+import { StoreContext, view } from '@mcro/black'
 import { StaticContainer } from '../../views/StaticContainer'
 import { AppActions } from '../../actions/AppActions'
 
@@ -50,13 +50,9 @@ export const OrbitPage = React.memo(() => {
   )
 })
 
+@view
 class OrbitPageInner extends React.Component {
-  shouldComponentUpdate() {
-    return false
-  }
-
   render() {
-    log('RENDER ORBIT PAGE INNER')
     const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
     return (
       <Theme name={theme}>

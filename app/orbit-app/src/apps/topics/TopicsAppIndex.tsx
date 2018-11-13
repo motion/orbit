@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { View, Row, Text } from '@mcro/ui'
-import { Section } from '../../views/Section'
 import { Icon } from '../../views/Icon'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { Separator } from '../../views/Separator'
+import { TopicEdit } from './TopicEdit'
 
 const icons = {
   0: ['neutral', 'rgba(255,255,255,0.25)'],
@@ -54,14 +54,25 @@ export const TopicsAppIndex = React.memo((props: AppProps & { store?: TopicsInde
     <ProvideHighlightsContextWithDefaults
       value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}
     >
-      <Separator>Trending</Separator>
-      <View flexFlow="row" flexWrap="wrap">
-        <TopicList results={store.results.slice(0, 10)} />
-      </View>
-      <Separator>Me</Separator>
-      <View flexFlow="row" flexWrap="wrap">
-        <TopicList results={store.results.slice(10, 20)} />
-      </View>
+      {!!store.results.length && (
+        <>
+          <Separator>Trending</Separator>
+          <View flexFlow="row" flexWrap="wrap">
+            <TopicList results={store.results.slice(0, 10)} />
+          </View>
+        </>
+      )}
+
+      {!!store.results.length && (
+        <>
+          <Separator>Me</Separator>
+          <View flexFlow="row" flexWrap="wrap">
+            <TopicList results={store.results.slice(10, 20)} />
+          </View>
+        </>
+      )}
+
+      <TopicEdit />
     </ProvideHighlightsContextWithDefaults>
   )
 })

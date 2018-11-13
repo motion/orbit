@@ -4,20 +4,15 @@ small apps for teams
 
 ### nate
 
-monday:
-
-- menu apps many fixes
-
-  - esc to clear
-  - fix focusing on search
-  - fix keyboard selection move
-  - add auto select on search first item
-  - fix option hold slow animate in
-  - fix pin key typing into search box
-  - fix clear app window on clear peek
-  - peek left/right arrow keys on option hold
-
 tuesday:
+
+- esc to clear
+- fix focusing on search
+- fix keyboard selection move
+- add auto select on search first item
+- fix option hold slow animate in
+- fix pin key typing into search box
+- fix clear app window on clear peek
 
 - apps have sidebars inside them
 
@@ -27,8 +22,6 @@ tuesday:
   - fix some tear away bugs
 
 wednesday:
-
--
 
 - design for pin current app context to pin
 - Upgrade people app with "Send icon" for context + showing peek next to it + search bar

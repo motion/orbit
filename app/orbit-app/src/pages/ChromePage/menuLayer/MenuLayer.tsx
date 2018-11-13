@@ -79,6 +79,14 @@ export class MenuStore {
     return `${+id}` === id ? +id : false
   }
 
+  setActiveMenuClosedOnClose = react(
+    () => this.isOpenVisually,
+    isOpen => {
+      ensure('not open', !isOpen)
+      this.activeMenuID = false
+    },
+  )
+
   setActiveMenuFromHover = react(
     () => this.hoveringID,
     id => {
@@ -136,7 +144,7 @@ export class MenuStore {
         App.setState({
           trayState: {
             menuState: {
-              [this.lastActiveMenuID]: false,
+              [this.lastActiveMenuID]: { open: false },
             },
           },
         })
@@ -260,10 +268,6 @@ export class MenuStore {
 
   setHeight = (height: number) => {
     this.height = height
-
-    if (this.activeOrLastActiveMenuID === false) {
-      return
-    }
     App.setState({
       trayState: {
         menuState: {
@@ -290,10 +294,12 @@ export class MenuStore {
   }
 
   focusInputOnOpen = react(
-    () => this.isFocused,
-    async () => {
+    () => this.shouldFocus,
+    async (shouldFocus, { sleep }) => {
       ensure('this.searchInput', !!this.searchInput)
-      ensure('this.isFocused', this.isFocused)
+      ensure('shouldFocus', shouldFocus)
+      await sleep()
+      console.log('focusing...')
       this.searchInput.focus()
     },
     {
@@ -414,7 +420,7 @@ const MenuChrome = view(View, {
   height: window.innerHeight,
   position: 'absolute',
   zIndex: 100000,
-  pointerEvents: 'auto',
+  pointerEvents: 'none',
   borderRadius: 6,
 })
 

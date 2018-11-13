@@ -167,7 +167,9 @@ const PersonSection = ({
 }
 
 export const PeopleAppIndex = memo((props: AppProps) => {
-  const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props)
+  const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props, {
+    debug: true,
+  })
   const total = results.length
   if (!total) {
     return <NoResultsDialog subName="the directory" />
@@ -176,7 +178,7 @@ export const PeopleAppIndex = memo((props: AppProps) => {
     props.appStore.maxHeight,
     resultSections.reduce((a, b) => a + b.height, 0),
   )
-  console.log('render people app index', height)
+  console.log('render people app index', props, height)
   return (
     <ProvideHighlightsContextWithDefaults value={{ words: peopleQuery.split(' ') }}>
       <div style={{ height }}>

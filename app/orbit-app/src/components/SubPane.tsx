@@ -108,6 +108,7 @@ const Pane = view(UI.View, {
 const SubPaneInner = view(UI.View, {
   position: 'relative',
   flex: 1,
+  pointerEvents: 'none',
 })
 
 const PaneContentInner = view({

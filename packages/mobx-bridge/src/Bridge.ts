@@ -27,7 +27,8 @@ const isBrowser = typeof window !== 'undefined'
 const root = isBrowser ? window : require('global')
 
 // only debounce on browser for fluidity, desktop should be immediate
-const nextCycleCb = x => (isBrowser ? setTimeout(x, 0) : x())
+const nextCycleCb = x => (isBrowser ? setImmediate(x) : x())
+const nextCycle = () => new Promise(nextCycleCb)
 const bothObjects = (a, b) =>
   a &&
   b &&
@@ -209,7 +210,7 @@ export class BridgeManager {
           throw new Error(`No state found for source (${source}) state (${state}) store(${store})`)
         }
         // apply incoming state
-        console.log('apply incoming state', newState)
+        await nextCycle()
         diffDeep(state, newState, { merge: true })
         // we have initial state :)
         if (source === this._source && !this.hasFetchedInitialState) {
@@ -325,26 +326,23 @@ export class BridgeManager {
   queuedState = []
 
   private scheduleSendState() {
-    setTimeout(() => {
+    setImmediate(() => {
       const data = this.queuedState
       this.queuedState = []
       this.sendQueuedState(data)
-    }, 0)
+    })
   }
 
   sendQueuedState = queue => {
     const message = { state: queue[0], source: this._source }
     // multiple state messages could have come in so lets merge it
     if (queue.length > 1) {
-      console.log('were sending a grouped patch lets see if it looks cool', queue)
       // apply the rest of the queued state to make one data object to send
       for (let i = 0; i < queue.length; i++) {
         diffDeep(message.state, queue[i], { merge: true })
       }
-      console.log('now it is', message.state)
     }
     try {
-      console.log('SEND MESSAGE', JSON.stringify(message))
       this._socket.send(JSON.stringify(message))
     } catch (err) {
       console.log('error sending!', err.message)

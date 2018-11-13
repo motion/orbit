@@ -88,7 +88,6 @@ export class SocketManager {
     // listen for incoming
     socket.on('message', str => {
       // message
-      console.log('socket manager', str)
       const { action, state, source, message, to } = JSON.parse(str)
       if (to) {
         if (to === this.masterSource) {

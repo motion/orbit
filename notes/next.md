@@ -69,7 +69,11 @@ Thursday:
 
 umed:
 
-- search performance and grouping fixes
+- umbrella: Search
+  - fix measurement bugs in search results list
+  - search performance
+  - hide empty sections if there are no groups
+  - make "all period" never group -- just fills in just all most accurate items that _are not_ already shown above
 - people syncers: if slack is added, use that as source of truth and only add other people "on top"
   - add an option to set "source of truth" setting in settings panes
 - github view: fix not showing comments content

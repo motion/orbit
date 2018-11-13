@@ -42,7 +42,9 @@ export class ConfluenceQueries {
         type,
         start,
         limit,
-        orderby: 'history.lastUpdated desc',
+        orderby: 'history.createdDate desc',
+        // todo: it should be history.lastUpdated.when, but for some reason it didn't work
+        // @see https://community.atlassian.com/t5/Answers-Developer-Questions/API-of-Recently-updated-pages-on-Confluence/qaq-p/494205#U938751
         expand:
           'childTypes.all,space,body.styled_view,history,history.lastUpdated,history.contributors,history.contributors.publishers',
       }

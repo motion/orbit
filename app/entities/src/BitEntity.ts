@@ -1,4 +1,5 @@
 import { Bit, BitData, IntegrationType, Person, Source } from '@mcro/models'
+import { BitContentType } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -47,7 +48,7 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @Index()
   @Column()
-  type?: string
+  type?: BitContentType
 
   @Column({ nullable: true })
   webLink?: string

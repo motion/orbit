@@ -3,6 +3,7 @@ import { IntegrationType } from './IntegrationType'
 import { Location } from './Location'
 import { Person } from './Person'
 import { Source } from './Source'
+import { BitContentType } from './BitContentType'
 
 export interface Bit {
   /**
@@ -60,7 +61,7 @@ export interface Bit {
   /**
    * Content type, for example "conversation", "message", "email", etc.
    */
-  type?: string
+  type?: BitContentType
 
   /**
    * Time when bit was created on its origin.

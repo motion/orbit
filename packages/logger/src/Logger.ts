@@ -233,6 +233,7 @@ export class Logger {
           ...messages,
         )
         defaultLog(this.namespace, delta, ...messages)
+        this.timers.splice(this.timers.indexOf(existTimer), 1)
       } else {
         consoleLog(
           `%c${this.namespace}%cstarted`,

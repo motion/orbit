@@ -2,6 +2,7 @@ import { Model } from '@mcro/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
 import { App } from './App'
 import { Bit } from './Bit'
+import { BitContentType } from './BitContentType'
 import { Job } from './Job'
 import { Person } from './Person'
 import { PersonBit } from './PersonBit'
@@ -65,6 +66,7 @@ export type SearchQuery = {
   maxBitsCount?: number
   spaceId?: number
   ids?: number[]
+  contentType?: BitContentType
 }
 
 export const SearchResultModel = new Model<SearchResult, SearchQuery>('SearchResult')

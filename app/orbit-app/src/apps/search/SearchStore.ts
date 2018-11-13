@@ -41,34 +41,40 @@ export class SearchStore {
    */
   get resultsForVirtualList() {
     // convert our search results into something this components expects
-    const items: any[] = []
+    const items: { [group: string]: [any[], any[]] } = {}
     for (let result of this.searchState.results) {
       if (result.bits.length) {
-        items.push({
+        if (!items[result.group])
+          items[result.group] = [[], []]
+
+        items[result.group][0].push(...result.bits.map(bit => {
+          return { ...bit, group: result.group }
+        }))
+        items[result.group][1].push({
+          target: 'search-group',
           id: result.id,
           title: result.title,
           text: result.text,
           group: result.group,
           count: result.bitsTotalCount,
         })
-        items.push(...result.bits)
       }
     }
 
-    return items
+    return Object.keys(items).reduce((all, group) => {
+      const [bits, subGroups] = items[group]
+      all.push(...bits)
+      all.push(...subGroups)
+      return all
+    }, []);
   }
 
   getItemProps: GetItemProps = index => {
     const results = this.resultsForVirtualList
-    const lastGroup = results.slice(0, index - 1).filter(result => !!result.group)
 
-    if (
-      results[index].group &&
-      (index === 0 ||
-        (lastGroup.length > 0 && lastGroup[lastGroup.length - 1].group !== results[index].group))
-    ) {
+    if (index === 0 || results[index].group !== results[index -1].group) {
       let separator: string
-      if (results[index].group === 'last-day') {
+      if (results[index].group === 'last-day' || !results[index].group) {
         separator = 'Last Day'
       } else if (results[index].group === 'last-week') {
         separator = 'Last Week'
@@ -207,7 +213,10 @@ export class SearchStore {
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
+        // const id = Math.random()
+        // console.time(`load results ` + id)
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
+        // console.timeEnd(`load results ` + id)
         if (!nextResults) {
           return false
         }
@@ -222,25 +231,25 @@ export class SearchStore {
 
       // do initial search
       await updateNextResults({
-        maxBitsCount: 5,
+        maxBitsCount: 2,
         group: 'last-day',
         startIndex: 0,
         endIndex: take,
       })
       await updateNextResults({
-        maxBitsCount: 5,
+        maxBitsCount: 2,
         group: 'last-week',
         startIndex: 0,
         endIndex: take,
       })
       await updateNextResults({
-        maxBitsCount: 5,
+        maxBitsCount: 2,
         group: 'last-month',
         startIndex: 0,
         endIndex: take,
       })
       await updateNextResults({
-        maxBitsCount: 5,
+        maxBitsCount: 2,
         group: 'overall',
         startIndex: 0,
         endIndex: take,

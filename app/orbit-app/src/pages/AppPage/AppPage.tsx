@@ -83,7 +83,6 @@ class AppPageContent extends React.Component<Props> {
     if (!appConfig || !appType) {
       return <div>no appConfig or appType</div>
     }
-    console.log('appConfig.type', appConfig.type, 'App.state.query', App.state.query)
     return (
       <>
         <HiddenControls>
@@ -96,7 +95,13 @@ class AppPageContent extends React.Component<Props> {
             }}
           />
         </HiddenControls>
-        <AppView id={appConfig.id} view="main" title={appConfig.title} type={appType} viewType={appConfig.viewType} sourceType={appConfig.integration} isActive />
+        <AppView
+          id={appConfig.id}
+          viewType={appConfig.viewType || 'main'}
+          title={appConfig.title}
+          type={appType}
+          isActive
+        />
       </>
     )
   }

@@ -39,6 +39,11 @@ const arrToDict = obj => {
 
 const addStyles = (id, baseStyles, nextStyles) => {
   const propStyles = {}
+  if (!baseStyles) {
+    console.trace('no basestyles???')
+    console.log(id, baseStyles, nextStyles)
+    debugger
+  }
   for (const key in nextStyles) {
     // dont overwrite as we go down
     if (!baseStyles[id]) {
@@ -270,7 +275,7 @@ export function createViewFactory(toCSS) {
         }
       }
       const themeFn = getTheme()
-      const hasDynamicStyles = theme || hasPropStyles
+      const hasDynamicStyles = themeFn || hasPropStyles
       // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
       // if (!hasDynamicStyles && myStyles === state.lastStyles) {
       //   return null

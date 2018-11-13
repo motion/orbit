@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { Searchable, SearchBarType } from '@mcro/ui'
 import { view, attach } from '@mcro/black'
-import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
-import { App } from '@mcro/stores'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../../../stores/SelectionStore'
+import { AppStore } from '../../../apps/AppStore'
 
 type SearchChildProps = {
   searchBar: SearchBarType
@@ -12,8 +11,7 @@ type SearchChildProps = {
 }
 
 type Props = {
-  // TODO: should just be appStore
-  appPageStore?: AppPageStore
+  appStore: AppStore
   selectionStore?: SelectionStore
   children?: (a: SearchChildProps) => React.ReactNode
 }
@@ -22,12 +20,10 @@ type Props = {
 @view
 export class AppSearchable extends React.Component<Props> {
   render() {
-    const { selectionStore, appPageStore, children } = this.props
-    const { appConfig } = appPageStore.state
+    const { selectionStore, appStore, children } = this.props
     return (
       <Searchable
-        key={appConfig.id}
-        defaultValue={App.state.query}
+        defaultValue={appStore.props.queryStore.queryDebounced}
         // focusOnMount
         // onEnter={peekStore.goToNextHighlight}
         onChange={() => selectionStore.setHighlightIndex(0)}

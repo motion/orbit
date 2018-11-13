@@ -13,6 +13,8 @@ import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { AppView } from '../../../apps/AppView'
 import { useStore } from '@mcro/use-store'
 import { AppActions } from '../../../actions/AppActions'
+import { App } from '@mcro/stores'
+import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
 
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
@@ -63,11 +65,30 @@ class OrbitPaneManagerStore {
 
 export function OrbitPaneManager() {
   const { queryStore, paneManagerStore, orbitWindowStore } = React.useContext(StoreContext)
+
   useStore(OrbitPaneManagerStore, { queryStore, paneManagerStore })
-  return <OrbitPaneManagerStoreInner orbitWindowStore={orbitWindowStore} />
+
+  React.useEffect(() => {
+    return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+      AppActions.setOrbitDocked(true)
+      paneManagerStore.setActivePane('settings')
+    })
+  }, [])
+
+  React.useEffect(() => {
+    return App.onMessage(App.messages.SHOW_APPS, () => {
+      AppActions.setOrbitDocked(true)
+      paneManagerStore.setActivePane('settings')
+    })
+  }, [])
+
+  return <OrbitPaneManagerStoreInner orbitWindowStore={orbitWindowStore} queryStore={queryStore} />
 }
 
-class OrbitPaneManagerStoreInner extends React.Component<any> {
+class OrbitPaneManagerStoreInner extends React.Component<{
+  orbitWindowStore: OrbitWindowStore
+  queryStore: QueryStore
+}> {
   shouldComponentUpdate() {
     return false
   }
@@ -75,8 +96,8 @@ class OrbitPaneManagerStoreInner extends React.Component<any> {
   render() {
     log(`------------ OrbitPaneManagerInner......`)
     return (
-      <MainShortcutHandler>
-        <OrbitHeader borderRadius={BORDER_RADIUS} />
+      <MainShortcutHandler queryStore={this.props.queryStore}>
+        <OrbitHeader queryStore={this.props.queryStore} borderRadius={BORDER_RADIUS} />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <SpaceNav />
@@ -93,7 +114,7 @@ class OrbitPaneManagerStoreInner extends React.Component<any> {
                   onChangeHeight={this.props.orbitWindowStore.setContentHeight}
                   {...pane.props}
                 >
-                  <AppView view="index" id={pane.id} title={pane.title} type={pane.type} />
+                  <AppView viewType="index" id={pane.id} title={pane.title} type={pane.type} />
                 </SubPane>
               )
             })}

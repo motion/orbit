@@ -54,13 +54,13 @@ export class AppStore {
   }
 
   activeQuery = react(
-    () => [this.isActive, App.state.query],
+    () => [this.isActive, this.props.queryStore.queryDebounced],
     ([active, query]) => {
       ensure('active', active)
       return query
     },
     {
-      defaultValue: App.state.query,
+      defaultValue: this.props.queryStore.queryDebounced,
       onlyUpdateIfChanged: true,
     },
   )

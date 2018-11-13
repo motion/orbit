@@ -95,6 +95,7 @@ class VirtualListStore {
     }
     const id = this.props.items[rowIndex].id
     if (typeof id === 'undefined') {
+      console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
       throw new Error('No valid id found for mapping results')
     }
     return id
@@ -131,8 +132,9 @@ const isRightClick = e =>
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 export function VirtualList(props: Props) {
-  const context = React.useContext(StoreContext)
-  const store = useStore(VirtualListStore, { ...props, appStore: context.appStore })
+  const { queryStore, appStore } = React.useContext(StoreContext)
+  const store = useStore(VirtualListStore, { ...props, appStore })
+  const { cache, width, height } = store
 
   const rowRenderer = ({ index, parent, style }) => {
     const model = props.items[index]
@@ -140,7 +142,7 @@ export function VirtualList(props: Props) {
     return (
       <CellMeasurer
         key={`${model.id}${index}`}
-        cache={store.cache}
+        cache={cache}
         columnIndex={0}
         parent={parent}
         rowIndex={index}
@@ -150,7 +152,7 @@ export function VirtualList(props: Props) {
             model={model}
             index={index}
             realIndex={index}
-            query={App.state.query}
+            query={queryStore.queryDebounced}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
           />
@@ -183,10 +185,10 @@ export function VirtualList(props: Props) {
           }
         }}
         items={props.items}
-        deferredMeasurementCache={store.cache}
-        height={store.height}
-        width={store.width}
-        rowHeight={store.cache.rowHeight}
+        deferredMeasurementCache={cache}
+        height={height}
+        width={width}
+        rowHeight={cache.rowHeight}
         overscanRowCount={20}
         rowCount={props.items.length}
         estimatedRowSize={100}
@@ -204,10 +206,10 @@ export function VirtualList(props: Props) {
     <div
       ref={store.setRootRef}
       style={{
-        height: store.height,
+        height: height,
       }}
     >
-      {!!store.width && (
+      {!!width && (
         <>
           {props.infinite && (
             <InfiniteLoader
@@ -221,7 +223,7 @@ export function VirtualList(props: Props) {
           {!props.infinite && getList()}
         </>
       )}
-      {!store.width && <div>No width!</div>}
+      {!width && <div>No width!</div>}
     </div>
   )
 }

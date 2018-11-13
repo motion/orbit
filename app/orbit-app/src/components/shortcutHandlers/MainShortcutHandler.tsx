@@ -6,10 +6,12 @@ import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
 import { SelectionStore, Direction } from '../../stores/SelectionStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
   selectionStore: SelectionStore
+  queryStore: QueryStore
   children?: React.ReactNode
 }
 
@@ -35,8 +37,9 @@ const rootShortcuts = {
 
 const decorate = compose(attach('selectionStore', 'paneManagerStore'))
 export const MainShortcutHandler = decorate(
-  ({ selectionStore, paneManagerStore, children }: Props) => {
+  ({ queryStore, selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {
+      console.log('move pane or selection', direction)
       if (
         selectionStore.activeIndex === -1 &&
         (direction === Direction.left || direction === Direction.right)
@@ -72,12 +75,12 @@ export const MainShortcutHandler = decorate(
           return AppActions.clearPeek()
         }
         // then orbit query
-        if (App.state.query) {
-          return AppActions.clearSearch()
+        if (queryStore) {
+          return queryStore.setQuery('')
         }
         // then orbit itself
         if (App.state.orbitState.docked) {
-          return AppActions.closeOrbit()
+          return AppActions.setOrbitDocked(false)
         }
       },
       up: movePaneOrSelection(Direction.up),

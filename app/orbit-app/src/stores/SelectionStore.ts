@@ -135,6 +135,7 @@ export class SelectionStore {
 
   move = (direction: Direction, selectEvent?: 'key') => {
     if (!this.movesMap) {
+      console.log('no SelectionStore.movesMap')
       return
     }
     if (selectEvent) {

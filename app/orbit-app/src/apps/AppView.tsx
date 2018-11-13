@@ -5,7 +5,9 @@ import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
 
-type Props = Pick<AppProps, 'id' | 'view' | 'title' | 'type' | 'isActive'> & { appStore?: AppStore }
+type Props = Pick<AppProps, 'id' | 'viewType' | 'title' | 'type' | 'isActive'> & {
+  appStore?: AppStore
+}
 
 export const AppView = React.memo((props: Props) => {
   const stores = React.useContext(StoreContext)
@@ -14,9 +16,9 @@ export const AppView = React.memo((props: Props) => {
   const appStore = useStore(
     AppStore,
     { ...props, ...stores },
-    { conditionalUse: shouldProvideAppStore, debug: true },
+    { conditionalUse: shouldProvideAppStore },
   )
-  const AppView = apps[props.type][props.view]
+  const AppView = apps[props.type][props.viewType]
   if (!AppView) {
     console.error('WAHT THE FUCK', props.type, AppView)
     return null

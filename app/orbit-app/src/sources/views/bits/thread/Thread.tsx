@@ -1,7 +1,7 @@
 import { GmailBitData } from '@mcro/models'
 import * as React from 'react'
 import { ThreadMessage } from './ThreadMessage'
-import { HighlightText } from '../../../../views/HighlightText'
+import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { OrbitIntegrationProps } from '../../../types'
 
 export const Thread = ({ bit, renderText, extraProps }: OrbitIntegrationProps<any>) => {
@@ -16,7 +16,7 @@ export const Thread = ({ bit, renderText, extraProps }: OrbitIntegrationProps<an
     return renderText(bit.body)
   }
   if (extraProps && extraProps.oneLine) {
-    return <HighlightText>{bit.body}</HighlightText>
+    return <HighlightTextItem>{bit.body.slice(0, 200)}</HighlightTextItem>
   }
   return (
     <div>

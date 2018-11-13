@@ -21,6 +21,7 @@ export class AppReactions {
 
   async setupReactions() {
     this.dispose = App.onMessage(async (msg, value) => {
+      console.log('got a message', msg, value)
       switch (msg) {
         case App.messages.HIDE:
           App.setOrbitState({ docked: false })

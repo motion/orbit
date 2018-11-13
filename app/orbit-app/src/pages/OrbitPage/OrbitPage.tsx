@@ -18,9 +18,9 @@ import { StaticContainer } from '../../views/StaticContainer'
 export const OrbitPage = React.memo(() => {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
-  const orbitWindowStore = useStore(OrbitWindowStore)
   const spaceStore = useStore(SpaceStore)
   const queryStore = useStore(QueryStore, { sourcesStore })
+  const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const selectionStore = useStore(SelectionStore, { queryStore })
   const paneManagerStore = useStore(PaneManagerStore, {
     selectionStore,

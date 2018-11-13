@@ -58,8 +58,8 @@ export class RootView extends React.Component {
   render() {
     if (this.state.error) {
       return (
-        <UI.Col
-          {...{
+        <div
+          style={{
             position: 'absolute',
             top: 0,
             left: 0,
@@ -68,27 +68,26 @@ export class RootView extends React.Component {
             zIndex: Number.MAX_SAFE_INTEGER,
           }}
         >
-          <UI.Col
-            {...{
+          <div
+            style={{
               position: 'absolute',
               bottom: 0,
               right: 0,
               width: '40%',
               height: '30%',
-              background: [255, 255, 255, 0.95],
+              background: 'rgba(0,0,0,0.9)',
               padding: 10,
-              lineHeight: '1.25rem',
-              color: '#000',
+              color: '#fff',
               fontWeight: 500,
-              overflowY: 'scroll',
+              overflow: 'auto',
             }}
           >
             <h2>Orbit Error: {this.state.error.message}</h2>
-            <UI.Block tagName="pre" fontSize={15} marginTop={10} lineHeight={15}>
+            <pre style={{ fontSize: 15, lineHeight: '15px', wordWrap: 'break-word' }}>
               {this.state.error.stack}
-            </UI.Block>
-          </UI.Col>
-        </UI.Col>
+            </pre>
+          </div>
+        </div>
       )
     }
     const CurrentPage = router.activeView || NotFound

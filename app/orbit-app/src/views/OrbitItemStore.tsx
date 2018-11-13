@@ -44,7 +44,7 @@ export class OrbitItemStore {
         return
       }
       this.open()
-      AppActions.closeOrbit()
+      AppActions.setOrbitDocked(false)
       e.stopPropagation()
     }
     this.clickAt = Date.now()

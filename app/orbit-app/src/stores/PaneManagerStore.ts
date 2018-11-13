@@ -32,9 +32,6 @@ export class PaneManagerStore {
     this.hasOnboarded = values.hasOnboarded
   })
 
-  disposeToggleSettings: any
-  disposeShowApps: any
-
   didMount() {
     on(this, autoTrack(this, ['hasOnboarded', 'paneIndex']))
 
@@ -44,22 +41,10 @@ export class PaneManagerStore {
         this.generalSetting = generalSetting
       }),
     )
-
-    this.disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
-      this.setActivePane('settings')
-      App.setOrbitState({ docked: true })
-    })
-
-    this.disposeShowApps = App.onMessage(App.messages.SHOW_APPS, () => {
-      this.setActivePane('apps')
-      App.setOrbitState({ docked: true })
-    })
   }
 
   willUnmount() {
     this.generalSetting$.unsubscribe()
-    this.disposeToggleSettings()
-    this.disposeShowApps()
   }
 
   move = (direction: Direction) => {

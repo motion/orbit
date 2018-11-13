@@ -17,6 +17,9 @@ const ArrowContain = view({
 })
 
 type DebouncedFn = Cancelable & (() => void)
+type PopoverDirection = 'top' | 'bottom' | 'left' | 'right' | 'auto'
+type PositionStateX = { arrowLeft: number; left: number }
+type PositionStateY = { arrowTop: number; top: number; maxHeight: number }
 
 const openPopovers = new Set()
 
@@ -69,7 +72,7 @@ export type PopoverProps = CSSPropertySet & {
   closeOnEsc?: boolean
   // which direction it shows towards
   // default determine direction automatically
-  towards?: 'auto' | 'left' | 'right' | 'bottom' | 'top'
+  towards?: PopoverDirection
   // popover can aim to be centered or left aligned on the target
   alignPopover?: 'left' | 'center'
   padding?: number[] | number
@@ -149,28 +152,32 @@ const Overlay = view({
   background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
 }))
 
+// transform: `translateX(${left}px) translateY(${top}px)`,
+
 const PopoverWrap = view({
   position: 'absolute',
   pointerEvents: 'none',
   zIndex: -1,
-  opacity: 0,
-  transition: 'opacity ease-in 60ms, transform ease-out 100ms',
-  transform: {
-    y: -5,
-  },
-  isOpen: {
-    opacity: 1,
-    pointerEvents: 'auto',
+}).theme(p => {
+  return {
+    width: p.width,
+    height: p.height,
+    maxHeight: p.maxHeight,
+    transition: p.willReposition
+      ? 'none'
+      : p.transition || 'opacity ease-in 60ms, transform ease-out 100ms',
+    opacity: p.isOpen && !p.willReposition ? 1 : 0,
+    pointerEvents: p.isOpen ? 'auto' : 'none',
     transform: {
-      y: 0,
+      x: p.left,
+      y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,
     },
-  },
-}).theme(({ showForgiveness, forgiveness, distance, animation }) => ({
-  padding: calcForgiveness(forgiveness, distance),
-  margin: -calcForgiveness(forgiveness, distance),
-  background: showForgiveness ? [250, 250, 0, 0.2] : 'auto',
-  animation,
-}))
+    padding: calcForgiveness(p.forgiveness, p.distance),
+    margin: -calcForgiveness(p.forgiveness, p.distance),
+    background: p.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
+    animation: p.animation,
+  }
+})
 
 const INVERSE = {
   top: 'bottom',
@@ -180,13 +187,14 @@ const INVERSE = {
 }
 
 const DEFAULT_SHADOW = '0 0px 2px rgba(0,0,0,0.15)'
-const ELEVATION_SHADOW = x => [0, x * 2, x * 4, [0, 0, 0, 0.1 * ((x + 0.5) / 3)]]
+const smoother = (base, amt) => (Math.log(Math.max(1, base)) + 1) * amt
+const elevatedShadow = x => [0, smoother(x, 6), smoother(x, 18), [0, 0, 0, 0.15 * smoother(x, 1)]]
 
 const getShadow = (shadow, elevation) => {
   let base = shadow === true ? [DEFAULT_SHADOW] : shadow || []
   if (!Array.isArray(base)) base = [base]
   if (elevation) {
-    base.push(ELEVATION_SHADOW(elevation))
+    base.push(elevatedShadow(elevation))
   }
   return base
 }
@@ -198,18 +206,18 @@ const initialState = {
   menuHovered: 0,
   top: 0,
   left: 0,
-  bottom: 0,
   arrowTop: 0,
   arrowLeft: 0,
   arrowInnerTop: 0,
   isPinnedOpen: 0,
   isOpen: false,
-  direction: null,
+  direction: null as PopoverDirection,
   delay: 16,
   props: {} as PopoverProps,
-  setPosition: false,
+  shouldSetPosition: true,
   closing: false,
   maxHeight: null,
+  nextPosition: null,
 }
 
 type State = typeof initialState
@@ -272,12 +280,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     let nextState: Partial<Popover['state']> = {}
     if (!isEqual(omit(props, ['children']), omit(state.props, ['children']))) {
       nextState = {
-        setPosition: true,
+        shouldSetPosition: true,
         props,
       }
     }
     if (state.setPosition) {
-      nextState.setPosition = false
+      nextState.shouldSetPosition = false
     }
     const nextShow = showPopover(props, state)
     if (nextShow !== state.showPopover) {
@@ -336,6 +344,13 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   componentDidUpdate(_prevProps, prevState) {
+    if (this.state.nextPosition) {
+      this.setState({
+        nextPosition: null,
+        ...this.state.nextPosition,
+      })
+      return
+    }
     if (this.props.onChangeVisibility) {
       if (prevState.showPopover !== this.state.showPopover) {
         this.props.onChangeVisibility(this.state.showPopover)
@@ -347,10 +362,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     } else {
       PopoverState.openPopovers.delete(this)
     }
-    if (this.state.setPosition) {
+    if (this.state.shouldSetPosition) {
       this.setPosition()
       this.setOpenOrClosed(this.props)
-      this.setState({ setPosition: false })
+      this.setState({ shouldSetPosition: false })
     }
     if (this.props.onDidOpen) {
       if (this.showPopover) {
@@ -386,12 +401,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   open = () => {
-    this.setPosition(() => {
-      this.setState({ isOpen: true }, () => {
-        if (this.curProps.onOpen) {
-          this.curProps.onOpen()
-        }
-      })
+    this.setState({ isOpen: true }, () => {
+      if (this.curProps.onOpen) {
+        this.curProps.onOpen()
+      }
     })
   }
 
@@ -454,7 +467,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       if (keepOpenOnClickTarget && clickedTarget) {
         return
       }
-      console.log(e, this)
       // closeOnClickPopover
       if (closeOnClick && clickedTarget) {
         this.forceClose()
@@ -518,12 +530,21 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  setPosition(callback?) {
-    if (!this.popoverRef) {
+  isSettingPosition = false
+
+  setPosition() {
+    if (!this.popoverRef || this.unmounted) {
       return
     }
-    if (!this.unmounted) {
-      this.setState(this.positionState, callback)
+    if (this.state.nextPosition) {
+      console.log('already setting position for this update...')
+      return
+    }
+    const nextPositionState = this.positionState
+    if (nextPositionState.left !== this.state.left || nextPositionState.top !== this.state.top) {
+      this.setState({ nextPosition: nextPositionState })
+    } else {
+      this.setState(nextPositionState)
     }
   }
 
@@ -581,19 +602,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         'this.props:',
         this.props,
       )
-      return {}
+      return null
     }
     if (this.targetBounds === false) {
-      return {}
+      return null
     }
     return {
-      ...this.x,
-      ...this.y,
+      ...this.positionStateX,
+      ...this.positionStateY,
       direction: this.direction,
     }
   }
 
-  get direction() {
+  get direction(): PopoverDirection {
     const { forgiveness, popoverSize, targetBounds } = this
     const { towards } = this.curProps
     if (!targetBounds || towards !== 'auto') {
@@ -614,11 +635,11 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     )
   }
 
-  get x() {
+  get positionStateX(): PositionStateX {
     const { direction, popoverSize, targetBounds, forgiveness } = this
     const { alignPopover } = this.props
     if (!targetBounds) {
-      return 0
+      return null
     }
     const VERTICAL = direction === 'top' || direction === 'bottom'
     const { adjust, distance, arrowSize } = this.curProps
@@ -686,9 +707,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     return { arrowLeft, left }
   }
 
-  get y() {
+  get positionStateY(): PositionStateY {
     if (!this.targetBounds) {
-      return 0
+      return null
     }
     const { forgiveness, direction, popoverSize, targetBounds } = this
     const VERTICAL = direction === 'top' || direction === 'bottom'
@@ -868,7 +889,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
     if (isHovered) {
       if (openOnHover) {
-        this.setPosition(setter)
+        setter()
       }
       if (onMouseEnter) {
         onMouseEnter()
@@ -982,14 +1003,14 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       closing,
       maxHeight,
       direction,
+      nextPosition,
     } = this.state
     const { showPopover } = this
-    // console.log('render popover', showPopover, this.state)
     const backgroundProp = background === true ? null : { background: `${background}` }
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}
-        isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
+        isMeasuring={this.state.shouldSetPosition || (top === 0 && left === 0)}
         isOpen={showPopover}
         isClosing={closing}
       >
@@ -1005,23 +1026,23 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         <PopoverWrap
           key={1}
           {...popoverProps}
-          isOpen={!closing && !!showPopover}
+          isOpen={!nextPosition && !closing && !!showPopover}
           forwardRef={this.setPopoverRef}
           distance={distance}
           forgiveness={forgiveness}
           showForgiveness={showForgiveness}
           animation={openAnimation}
-          style={{
-            ...style,
-            transform: `translateX(${left}px) translateY(${top}px)`,
-            transition,
-            width,
-            // because things that extend downwards wont always fill all the way
-            // so arrow will be floating, so lets make it always expand fully down
-            // when the popover arrow is at bottom
-            height: direction === 'top' ? height || maxHeight : height,
-            maxHeight,
-          }}
+          transition={transition}
+          width={width}
+          // because things that extend downwards wont always fill all the way
+          // so arrow will be floating, so lets make it always expand fully down
+          // when the popover arrow is at bottom
+          height={direction === 'top' ? height || maxHeight : height}
+          maxHeight={maxHeight}
+          left={left}
+          top={top}
+          style={style}
+          willReposition={!!nextPosition}
         >
           {!noArrow && (
             <ArrowContain

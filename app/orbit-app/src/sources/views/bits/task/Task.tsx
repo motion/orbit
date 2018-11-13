@@ -2,15 +2,24 @@ import * as React from 'react'
 import { Markdown } from '../../../../views/Markdown'
 import { TaskComment, TaskCommentLike } from './TaskComment'
 import { OrbitIntegrationProps } from '../../../types'
+import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 
 export type TaskLike = {
   body: string
   comments: TaskCommentLike[]
 }
 
-export const Task = ({ body, comments, renderText }: OrbitIntegrationProps<any> & TaskLike) => {
+export const Task = ({
+  body,
+  comments,
+  renderText,
+  extraProps,
+}: OrbitIntegrationProps<any> & TaskLike) => {
   if (renderText) {
     return renderText(body)
+  }
+  if (extraProps && extraProps.oneLine) {
+    return <HighlightTextItem>{body.slice(0, 200)}</HighlightTextItem>
   }
   return (
     <>

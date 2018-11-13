@@ -1,5 +1,5 @@
 import { App } from '@mcro/stores'
 
-export const closeOrbit = () => {
-  App.setOrbitState({ docked: false })
+export const setOrbitDocked = (docked: boolean) => {
+  App.setOrbitState({ docked })
 }

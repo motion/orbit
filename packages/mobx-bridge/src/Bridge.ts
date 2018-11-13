@@ -27,8 +27,8 @@ const isBrowser = typeof window !== 'undefined'
 const root = isBrowser ? window : require('global')
 
 // only debounce on browser for fluidity, desktop should be immediate
-const runNow = x => (isBrowser ? setImmediate(x) : x())
-const immediate = () => new Promise(res => runNow(res))
+const nextCycleCb = x => (isBrowser ? setImmediate(x) : x())
+const nextCycle = () => new Promise(nextCycleCb)
 const bothObjects = (a, b) =>
   a &&
   b &&
@@ -36,7 +36,7 @@ const bothObjects = (a, b) =>
   (isPlainObject(b) || Mobx.isObservableObject(b))
 
 const diffDeep = (a: Object, b: Object, opts: { merge?: boolean; returnDiff?: boolean } = {}) => {
-  const { merge = false, returnDiff = true } = opts
+  const { merge, returnDiff } = opts
   const diff = {}
   // calculate diff for smaller syncs, need to test perf
   for (const bKey in b) {
@@ -49,7 +49,7 @@ const diffDeep = (a: Object, b: Object, opts: { merge?: boolean; returnDiff?: bo
         diff[bKey] = subDiff
       }
     } else {
-      if (aVal !== bVal) {
+      if (!isEqual(aVal, bVal)) {
         diff[bKey] = bVal
         if (merge) {
           a[bKey] = bVal
@@ -88,8 +88,6 @@ export class BridgeManager {
   _awaitingSocket = []
   _store = null
   _options: Options
-  queuedState = []
-  _queuedState = false
   _wsOpen = false
   _source = ''
   _initialState = {}
@@ -211,7 +209,8 @@ export class BridgeManager {
         if (!state) {
           throw new Error(`No state found for source (${source}) state (${state}) store(${store})`)
         }
-        await immediate()
+        // apply incoming state
+        await nextCycle()
         diffDeep(state, newState, { merge: true })
         // we have initial state :)
         if (source === this._source && !this.hasFetchedInitialState) {
@@ -232,15 +231,7 @@ export class BridgeManager {
         this._awaitingSocket = []
       }
       // send state that hasnt been synced yet
-      if (this._queuedState) {
-        console.log('opened, sending queued state', this.state)
-        try {
-          this._socket.send(JSON.stringify({ state: this.state, source: this._source }))
-        } catch (err) {
-          console.log('error sending initial state', err.message, err.stack)
-        }
-        this._queuedState = false
-      }
+      this.scheduleSendState()
       this.getCurrentState()
     }
     this._socket.onclose = () => {
@@ -301,16 +292,10 @@ export class BridgeManager {
     if (!this.started) {
       throw new Error('Not started, can only call setState on the app that starts it.')
     }
-    if (!this._store) {
-      console.warn('waht is this', this, this._source, this._store)
-      throw new Error(
-        `Called ${this._source}.setState before calling ${
-          this._source
-        }.start with state ${JSON.stringify(newState, null, 2)}`,
-      )
-    }
-    if (!newState || typeof newState !== 'object') {
-      throw new Error(`Bad state passed to ${this._source}.setState: ${newState}`)
+    if (process.env.NODE_ENV === 'development') {
+      if (!newState || typeof newState !== 'object') {
+        throw new Error(`Bad state passed to ${this._source}.setState: ${newState}`)
+      }
     }
     // update our own state immediately so its sync
     const changedState = this.updateStateWithDiff(this.state, newState)
@@ -319,43 +304,50 @@ export class BridgeManager {
         log.verbose('setState', newState, 'changedState', changedState)
       }
     }
-    if (!ignoreSend) {
+    if (!ignoreSend && changedState) {
       this.sendChangedState(changedState)
     }
     return changedState
   }
 
   private sendChangedState(changedState: Object) {
-    if (changedState) {
-      // log.info(`sendChangedState: ${JSON.stringify(changedState)}`)
-      if (this._options.master) {
-        this.socketManager.sendAll(this._source, changedState)
-      } else {
-        if (!this._wsOpen) {
-          console.log('queueing', changedState)
-          this._queuedState = true
-          return changedState
-        }
-        const alreadyQueued = !!this.queuedState.length
-        this.queuedState.push({ state: changedState, source: this._source })
-        // its already queued to send
-        if (!alreadyQueued) {
-          runNow(this.sendQueuedState)
-        }
-      }
+    if (this._options.master) {
+      this.socketManager.sendAll(this._source, changedState)
+      return
+    }
+    // log.info(`sendChangedState: ${JSON.stringify(changedState)}`)
+    const hasQueued = !!this.queuedState.length
+    this.queuedState.push(changedState)
+    if (!hasQueued) {
+      this.scheduleSendState()
     }
   }
 
-  sendQueuedState = () => {
-    for (const data of this.queuedState) {
-      try {
-        this._socket.send(JSON.stringify(data))
-      } catch (err) {
-        console.log('error sending!', err.message)
-        console.log('data is', data)
+  queuedState = []
+
+  private scheduleSendState() {
+    setImmediate(() => {
+      const data = this.queuedState
+      this.queuedState = []
+      this.sendQueuedState(data)
+    })
+  }
+
+  sendQueuedState = queue => {
+    const message = { state: queue[0], source: this._source }
+    // multiple state messages could have come in so lets merge it
+    if (queue.length > 1) {
+      // apply the rest of the queued state to make one data object to send
+      for (let i = 0; i < queue.length; i++) {
+        diffDeep(message.state, queue[i], { merge: true })
       }
     }
-    this.queuedState = []
+    try {
+      this._socket.send(JSON.stringify(message))
+    } catch (err) {
+      console.log('error sending!', err.message)
+      console.log('message is', message)
+    }
   }
 
   // return keys of changed items
@@ -410,8 +402,11 @@ export class BridgeManager {
         changed[key] = b
       }
     }
-    if (root.__trackStateChanges && root.__trackStateChanges.isActive) {
-      root.__trackStateChanges.changed = changed
+    // dev mode tracking state mutations, hacky
+    if (process.env.NODE_ENV === 'development') {
+      if (root.__trackStateChanges && root.__trackStateChanges.isActive) {
+        root.__trackStateChanges.changed = changed
+      }
     }
     return changed
   }
@@ -450,7 +445,7 @@ export class BridgeManager {
       // this prevents blockages on sending
       // this would happen when sockets are on desktop side
       // and then any Store.setState call will hang...
-      runNow(() => {
+      nextCycleCb(() => {
         if (process.env.NODE_ENV === 'development') {
           log.trace.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
         }

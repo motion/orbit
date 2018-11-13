@@ -33,7 +33,7 @@ export class ContextManager {
       if (event === 'ScrollEvent') {
         return
       }
-      console.log('got window change', event, value)
+      console.debug('got window change', event, value)
       // console.log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = toJS(Desktop.appState)
       let appState: any = {}
@@ -61,7 +61,6 @@ export class ContextManager {
         return
       }
       const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
-      console.log('setting app state!', appState)
       Desktop.setState({ appState, focusedOnOrbit })
     })
   }

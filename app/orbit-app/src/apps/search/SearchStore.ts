@@ -8,8 +8,8 @@ import { AppProps } from '../AppProps'
 import { GetItemProps } from '../../views/VirtualList/VirtualList'
 
 type SearchState = {
-  results: SearchResult[];
-  finished?: boolean;
+  results: SearchResult[]
+  finished?: boolean
   query: string
 }
 
@@ -60,13 +60,12 @@ export class SearchStore {
 
   getItemProps: GetItemProps = index => {
     const results = this.resultsForVirtualList
-    const lastGroup = results
-      .slice(0, index -1)
-      .filter(result => !!result.group)
+    const lastGroup = results.slice(0, index - 1).filter(result => !!result.group)
 
     if (
       results[index].group &&
-      (index === 0 || (lastGroup.length > 0 && lastGroup[lastGroup.length - 1].group !== results[index].group))
+      (index === 0 ||
+        (lastGroup.length > 0 && lastGroup[lastGroup.length - 1].group !== results[index].group))
     ) {
       let separator: string
       if (results[index].group === 'last-day') {
@@ -138,7 +137,7 @@ export class SearchStore {
 
   searchState = react(
     () => [
-      App.state.query,
+      this.props.appStore.activeQuery,
       this.queryFilters.activeFilters,
       this.queryFilters.exclusiveFilters,
       this.queryFilters.sortBy,
@@ -226,7 +225,7 @@ export class SearchStore {
         maxBitsCount: 5,
         group: 'last-day',
         startIndex: 0,
-        endIndex: take
+        endIndex: take,
       })
       await updateNextResults({
         maxBitsCount: 5,

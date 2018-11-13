@@ -10,7 +10,7 @@ import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
 import { AppType } from '@mcro/models'
-import { Popover, View, Col } from '@mcro/ui'
+import { Popover, View } from '@mcro/ui'
 import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { Searchable } from '../../../components/Searchable'
@@ -20,6 +20,9 @@ import { IS_ELECTRON } from '../../../constants'
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
 const panes = ['people', 'topics', 'lists']
+const maxTransition = 180
+const transition = `opacity ease-in 60ms, transform ease ${maxTransition}ms`
+export const menuPad = 6
 
 const sendTrayEvent = (key, value) => {
   App.setState({
@@ -81,7 +84,7 @@ export class MenuStore {
   )
 
   showMenusBeforeOpen = react(
-    () => this.openQuick,
+    () => this.isOpenFast,
     open => {
       ensure('open', open)
       if (IS_ELECTRON) {
@@ -116,35 +119,63 @@ export class MenuStore {
     return Desktop.keyboardState.isHoldingOption
   }
 
-  openQuick = react(
+  // resolve the actual open state quickly so isOpenFocus/isOpenVisually
+  // can derive off the truth state that is the most quick
+  isOpenFast = react(
     () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown],
     async ([holdingOption, hoveringMenu], { sleep, when }) => {
-      console.log('ok ok ok', hoveringMenu)
       if (holdingOption) {
         return true
       }
       // if hovering the app window keep it open until not
       if (Desktop.hoverState.appHovered[0]) {
         await when(() => !Desktop.hoverState.appHovered[0])
+        // this prevents it from closing the moment you leave, gives mouse some buffer
         await sleep(60)
       }
       return hoveringMenu
     },
   )
 
-  // this is to allow electon to "show" app before animations occur
-  // and likewise to allow popover to animate hidden before hiding again
-  openVisually = react(
-    () => this.openQuick,
+  // the actual show/hide in the interface
+  isOpenVisually = react(
+    () => this.isOpenFast,
     async (open, { sleep }) => {
-      if (open) {
-        // sleep before closing
-        await sleep(50)
-      } else {
-        // sleep before opening
-        await sleep(100)
-      }
+      // wait for "show" just a little before animation, but hide instantly to run before "hide"
+      await sleep(open ? 100 : 0)
+      console.log('ANIMTE NOW')
       return open
+    },
+  )
+
+  shouldFocus = react(
+    () => this.isOpenFast,
+    async (open, { sleep }) => {
+      // focus instantly on open, but wait for full close before defocus
+      await sleep(open ? 0 : maxTransition * 1.2)
+      console.log('FOCUS NOW')
+      return open
+    },
+  )
+
+  isFocused = react(
+    () => this.shouldFocus,
+    async (shouldFocus, { whenChanged, sleep }) => {
+      if (!shouldFocus) {
+        setTrayFocused(false)
+        return false
+      }
+      if (Desktop.keyboardState.isHoldingOption) {
+        // wait for pin to focus the menu
+        await whenChanged(() => Electron.state.pinKey.at)
+        console.log('GOT A PIN KEY', Electron.state.pinKey.name)
+      }
+      setTrayFocused(true)
+      await sleep(32)
+      return true
+    },
+    {
+      deferFirstRun: true,
     },
   )
 
@@ -159,11 +190,12 @@ export class MenuStore {
 
   // uses faster open so we can react to things quickly
   setMenuBounds = react(
-    () => [this.hoverID, this.openQuick, this.menuCenter],
+    () => [this.hoverID, this.isOpenFast, this.menuCenter],
     ([menuID, open, menuCenter]) => {
       ensure('valid id', typeof this.hoverID === 'number')
       const id = +menuID
       const width = 300
+      log(`set open ${id} ${open}`)
       App.setState({
         trayState: {
           menuState: {
@@ -179,28 +211,6 @@ export class MenuStore {
           },
         },
       })
-    },
-  )
-
-  focusedMenu = react(
-    () => this.openVisually,
-    async (open, { sleep, whenChanged }) => {
-      if (!open) {
-        await sleep(150)
-        setTrayFocused(false)
-        return false
-      }
-      if (Desktop.keyboardState.isHoldingOption) {
-        // wait for pin to focus the menu
-        await whenChanged(() => Electron.state.pinKey.at)
-        console.log('GOT A PIN KEY', Electron.state.pinKey.name)
-      }
-      setTrayFocused(true)
-      await sleep()
-      return this.menuOpenID
-    },
-    {
-      deferFirstRun: true,
     },
   )
 
@@ -222,11 +232,12 @@ export class MenuStore {
   }
 
   handleMouseEnter = () => {
+    log('enter')
     this.isHoveringDropdown = true
   }
 
   handleMouseLeave = () => {
-    console.log('MOUSE LEAVE')
+    log('leave')
     this.isHoveringDropdown = false
   }
 
@@ -237,9 +248,10 @@ export class MenuStore {
   }
 
   focusInputOnOpen = react(
-    () => this.focusedMenu,
+    () => this.isFocused,
     async () => {
       ensure('this.searchInput', !!this.searchInput)
+      ensure('this.isFocused', this.isFocused)
       this.searchInput.focus()
     },
     {
@@ -262,13 +274,44 @@ export const MenuLayer = React.memo(() => {
     menuStore,
     paneManagerStore,
   }
+
+  React.useEffect(() => {
+    // watch for mouse enter and leave
+    const onMove = e => {
+      const hoverOut = e.target === document.documentElement
+      if (hoverOut) {
+        menuStore.handleMouseLeave()
+      } else {
+        menuStore.handleMouseEnter()
+      }
+    }
+    document.addEventListener('mousemove', onMove)
+    return () => {
+      document.removeEventListener('mousemove', onMove)
+    }
+  }, [])
+
   const width = 300
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
       console.log('got event', key)
       switch (key) {
         case 'TrayToggleOrbit':
-          App.setOrbitState({ docked: !App.state.orbitState.docked })
+          AppActions.setOrbitDocked(!App.state.orbitState.docked)
+          break
+        case 'TrayToggle0':
+        case 'TrayToggle1':
+        case 'TrayToggle2':
+          const index = +key.replace('TrayToggle', '')
+          App.setState({
+            trayState: {
+              menuState: {
+                [index]: {
+                  pinned: !App.state.trayState.menuState[index],
+                },
+              },
+            },
+          })
           break
         case 'TrayHover0':
         case 'TrayHover1':
@@ -280,23 +323,21 @@ export const MenuLayer = React.memo(() => {
       }
     })
   }, [])
-  const transition = 'opacity ease-in 60ms, transform ease 180ms'
-  const pad = 6
   log(`MenuLayer left ${menuStore.menuCenter}`)
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={storeProps}>
         <MenuChrome
-          width={width - pad * 2}
-          margin={pad}
-          transform={{ x: menuStore.menuCenter - width / 2 }}
+          width={width - menuPad * 2}
+          margin={menuPad}
+          transform={{ x: menuStore.menuCenter - width / 2, y: menuStore.isOpenVisually ? 0 : -5 }}
           transition={transition}
-          opacity={menuStore.openQuick ? 1 : 0}
+          opacity={menuStore.isOpenVisually ? 1 : 0}
         >
           <MenuChromeContent queryStore={queryStore} menuStore={menuStore} />
         </MenuChrome>
         <Popover
-          open={menuStore.openQuick}
+          open={menuStore.isOpenVisually}
           transition={transition}
           background
           width={width}
@@ -306,12 +347,16 @@ export const MenuLayer = React.memo(() => {
           distance={6}
           forgiveness={10}
           edgePadding={0}
+          elevation={20}
           left={menuStore.menuCenter}
           maxHeight={window.innerHeight}
-          elevation={6}
           theme="dark"
         >
-          <div style={{ height: menuStore.height }} />
+          <div
+            style={{
+              height: menuStore.height,
+            }}
+          />
         </Popover>
       </StoreContext.Provider>
     </BrowserDebugTray>
@@ -323,40 +368,32 @@ const MenuChrome = view(View, {
   position: 'absolute',
   zIndex: 100000,
   pointerEvents: 'auto',
-  overflow: 'hidden',
   borderRadius: 6,
 })
 
 const MenuChromeContent = React.memo(
   ({ menuStore, queryStore }: { menuStore: MenuStore; queryStore: QueryStore }) => {
     return (
-      <View
-        padding={10}
-        margin={-10}
-        onMouseEnter={menuStore.handleMouseEnter}
-        onMouseLeave={menuStore.handleMouseLeave}
-        flex={1}
-      >
-        <Col overflowX="hidden" overflowY="auto" flex={1} className="app-parent-bounds">
-          <Searchable
-            inputProps={{
-              forwardRef: menuStore.handleSearchInput,
-              onChange: queryStore.onChangeQuery,
-            }}
-          >
-            {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
-              <MenuApp
-                id={app}
-                key={app}
-                menuId={index}
-                view="index"
-                title={app}
-                type={app}
-                menuStore={menuStore}
-              />
-            ))}
-          </Searchable>
-        </Col>
+      <View className="app-parent-bounds">
+        <Searchable
+          queryStore={queryStore}
+          inputProps={{
+            forwardRef: menuStore.handleSearchInput,
+            onChange: queryStore.onChangeQuery,
+          }}
+        >
+          {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+            <MenuApp
+              id={app}
+              key={app}
+              menuId={index}
+              viewType="index"
+              title={app}
+              type={app}
+              menuStore={menuStore}
+            />
+          ))}
+        </Searchable>
       </View>
     )
   },

@@ -1,39 +1,20 @@
 import * as React from 'react'
 import { Row, FullScreen, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { react, ensure } from '@mcro/black'
+import { react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { IS_ELECTRON } from '../../../constants'
 
-export const BrowserDebugTray = ({ children }) => {
-  if (IS_ELECTRON) {
-    return children
-  }
-  return (
-    <FullScreen pointerEvents="auto">
-      <Row justifyContent="center" alignItems="center" width="100%" height={28} background="#eee">
-        <Target id={0} />
-        <Target id={1} />
-        <Target id={2} />
-      </Row>
-      <View position="relative" flex={1}>
-        {children}
-      </View>
-    </FullScreen>
-  )
-}
-
-class TargetStore {
+class DebugTrayStore {
   props: { id: number }
-  target = null
+  target = { id: null, at: null }
 
   setupHover = react(
-    () => this.target,
-    target => {
-      ensure('target', !!target)
+    () => this.target.id,
+    current => {
       App.setState({
         trayState: {
-          trayEvent: `TrayHover${this.props.id}`,
+          trayEvent: `TrayHover${current}`,
           trayHoverAt: Date.now(),
         },
       })
@@ -42,13 +23,49 @@ class TargetStore {
       deferFirstRun: true,
     },
   )
+
+  targetSetter = id => () => {
+    console.log('id', id)
+    this.target = {
+      id,
+      at: Date.now(),
+    }
+  }
+
+  onLeave = this.targetSetter('Out')
 }
 
-const Target = ({ id }) => {
-  const store = useStore(TargetStore, { id })
+export const BrowserDebugTray = ({ children }) => {
+  const store = useStore(DebugTrayStore)
+  if (IS_ELECTRON) {
+    return children
+  }
+  return (
+    <FullScreen>
+      <Row justifyContent="center" alignItems="center" width="100%" background="#eee">
+        <View
+          onMouseLeave={store.onLeave}
+          flexFlow="row"
+          height={28}
+          alignItems="center"
+          pointerEvents="auto"
+        >
+          <Target id={0} store={store} />
+          <Target id={1} store={store} />
+          <Target id={2} store={store} />
+        </View>
+      </Row>
+      <View position="relative" flex={1}>
+        {children}
+      </View>
+    </FullScreen>
+  )
+}
+
+const Target = ({ id, store }) => {
   return (
     <View
-      onMouseEnter={() => (store.target = Date.now())}
+      onMouseEnter={store.targetSetter(id)}
       width={16}
       height={16}
       margin={[0, 5]}

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { SlackBitDataMessage } from '@mcro/models'
 import { OrbitIntegrationProps } from '../../../types'
 import { ChatMessage } from '../../../views/bits/chat/ChatMessage'
-import { HighlightText } from '../../../../views/HighlightText'
+import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)
@@ -30,7 +30,7 @@ export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
     return renderText(text)
   }
   if (extraProps && extraProps.oneLine) {
-    return <HighlightText>{text}</HighlightText>
+    return <HighlightTextItem>{text.slice(0, 200)}</HighlightTextItem>
   }
   return messages.map((message, index) => {
     for (let person of people || []) {

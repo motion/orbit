@@ -13,7 +13,6 @@ import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
 import { HorizontalSpace } from '.'
-import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 import { Separator } from './Separator'
 
 @attach('sourcesStore', 'appStore')
@@ -51,12 +50,12 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       titleProps,
       subtitleProps,
       padding,
-      titleFlex,
       subtitleSpaceBetween,
       searchTerm,
       onClickLocation,
       renderText,
       separator,
+      extraProps,
       ...props
     } = this.props
     const { isSelected } = store
@@ -116,12 +115,12 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>
-            <div style={{ flex: 1, maxWidth: '100%' }}>
+            <ListItemMainContent oneLine={extraProps && extraProps.oneLine}>
               {showTitle && (
-                <Title style={titleFlex && { flex: titleFlex }}>
+                <Title>
                   {showIcon && (
                     <>
-                      <OrbitIcon icon={icon} size={14} {...iconProps} />
+                      <OrbitIcon icon={icon} size={14} marginTop={2} {...iconProps} />
                       <TitleSpace />
                     </>
                   )}
@@ -134,7 +133,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                   >
                     {title}
                   </HighlightText>
-                  <TitleSpace />
+                  <TitleSpace shouldFlex />
                   {this.props.afterTitle || normalizedItem.afterTitle}
                   {afterHeader}
                 </Title>
@@ -229,7 +228,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                     <PeopleRow people={people} />
                   </Bottom>
                 )}
-            </div>
+            </ListItemMainContent>
             {this.props.after || normalizedItem.after}
           </div>
         </ListItem>
@@ -251,10 +250,11 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
   }
 }
 
-// wrap the outside so we can do much faster shallow renders when need be
+// never let it update, this saves so much time we can just change key to change item
+
 export class OrbitListItem extends React.Component<ItemProps<any>> {
-  shouldComponentUpdate(a, b, c) {
-    return onlyUpdateOnChanged.call(this, a, b, c)
+  shouldComponentUpdate() {
+    return false
   }
 
   render() {
@@ -332,7 +332,7 @@ const ListItem = view({
 })
 
 const Title = view({
-  maxWidth: '100%',
+  width: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
@@ -352,13 +352,29 @@ const ListItemSubtitle = view(UI.View, {
 
 const AfterHeader = view({
   alignItems: 'flex-end',
+  // why? for some reason this is really hard to align the text with the title,
+  // check the visual date in list items to see if this helps align it in the row
+  marginBottom: -4,
 })
 
 const TitleSpace = view({
-  width: 10,
+  minWidth: 8,
+  shouldFlex: {
+    flex: 1,
+  },
 })
 
 const Bottom = view({
   flexFlow: 'row',
   alignItems: 'center',
+})
+
+const ListItemMainContent = view({
+  flex: 1,
+  maxWidth: '100%',
+  oneLine: {
+    flexFlow: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
 })

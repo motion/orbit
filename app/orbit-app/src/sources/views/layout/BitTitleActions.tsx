@@ -15,7 +15,7 @@ export const BitTitleActions = ({
       <TitleBarButton
         onClick={() => {
           AppActions.open(normalizedItem.locationLink)
-          AppActions.closeOrbit()
+          AppActions.setOrbitDocked(false)
         }}
         icon={<OrbitIcon icon={normalizedItem.icon} size={16} />}
         tooltip={normalizedItem.location}
@@ -23,7 +23,7 @@ export const BitTitleActions = ({
       <TitleBarButton
         onClick={() => {
           AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)
-          AppActions.closeOrbit()
+          AppActions.setOrbitDocked(false)
         }}
         tooltip="Open"
       >

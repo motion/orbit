@@ -6,7 +6,7 @@ export type AppConfig = {
   type: string
   integration?: string
   subType?: string
-  viewType?: 'main' | 'source' | 'item' | 'setup'
+  viewType?: 'main' | 'index' | 'setup'
   // allow various things to be passed as config
   // to help configure the peek window
   viewConfig?: {

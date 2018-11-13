@@ -10,10 +10,9 @@ import { PaneManagerStore } from '../stores/PaneManagerStore'
 
 export type AppProps = {
   id: string
-  view: 'index' | 'main'
+  viewType: 'index' | 'main' | 'setup'
   title: string
   type: AppType
-  viewType?: 'main' | 'source' | 'item' | 'setup'
   sourceType?: IntegrationType
   appStore?: AppStore
   sourcesStore?: SourcesStore

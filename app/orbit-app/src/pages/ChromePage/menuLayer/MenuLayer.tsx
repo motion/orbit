@@ -16,6 +16,7 @@ import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { Searchable } from '../../../components/Searchable'
 import { BrowserDebugTray } from './BrowserDebugTray'
 import { IS_ELECTRON } from '../../../constants'
+import { throttle } from 'lodash'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
@@ -287,6 +288,14 @@ export class MenuStore {
     this.isHoveringDropdown = false
   }
 
+  leaveMouseOnLeaveBounds = react(
+    () => Desktop.hoverState.menuHovered,
+    menuHovered => {
+      ensure('not hovered', !menuHovered)
+      this.handleMouseLeave()
+    },
+  )
+
   searchInput: HTMLInputElement = null
 
   handleSearchInput = (ref: HTMLInputElement) => {
@@ -330,14 +339,14 @@ export const MenuLayer = React.memo(() => {
 
   React.useEffect(() => {
     // watch for mouse enter and leave
-    const onMove = e => {
+    const onMove = throttle(e => {
       const hoverOut = e.target === document.documentElement
       if (hoverOut) {
         menuStore.handleMouseLeave()
       } else {
         menuStore.handleMouseEnter()
       }
-    }
+    }, 32)
     document.addEventListener('mousemove', onMove)
     return () => {
       document.removeEventListener('mousemove', onMove)

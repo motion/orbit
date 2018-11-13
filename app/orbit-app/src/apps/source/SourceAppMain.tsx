@@ -15,12 +15,14 @@ class SourceAppStore {
 
   model = react(
     () => this.appConfig,
-    ({ id }) =>
-      loadOne(SourceModel, {
+    ({ id }) => {
+      console.log('loading model', id)
+      return loadOne(SourceModel, {
         args: {
           where: { id },
         },
-      }),
+      })
+    },
   )
 }
 

@@ -15,7 +15,7 @@
     "@mcro/ui": "^2.2.1",
     "@mcro/use-store": "^2.2.1",
     "react-hot-loader": "4.3.12",
-    "react": "16.7.0-alpha.0",
-    "react-dom": "16.7.0-alpha.0"
+    "react": "16.7.0-alpha.2",
+    "react-dom": "16.7.0-alpha.2"
   }
 }

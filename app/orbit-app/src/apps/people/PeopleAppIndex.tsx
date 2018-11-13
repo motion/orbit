@@ -166,36 +166,39 @@ const PersonSection = ({
   )
 }
 
-const lipHeight = 30
-
 export const PeopleAppIndex = memo((props: AppProps) => {
   const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props)
   const total = results.length
   if (!total) {
     return <NoResultsDialog subName="the directory" />
   }
+  const height = Math.min(
+    props.appStore.maxHeight,
+    resultSections.reduce((a, b) => a + b.height, 0),
+  )
+  console.log('render people app index', height)
   return (
     <ProvideHighlightsContextWithDefaults value={{ words: peopleQuery.split(' ') }}>
-      <List
-        rowHeight={({ index }) => resultSections[index].height}
-        rowRenderer={({ index, key }) => {
-          const section = resultSections[index]
-          return (
-            <PersonSection
-              key={`${key}${section.title}`}
-              title={section.title}
-              people={section.results}
-              getIndex={getIndex}
-            />
-          )
-        }}
-        rowCount={resultSections.length}
-        width={IS_MENU ? 287 : ORBIT_WIDTH}
-        height={Math.min(
-          props.appStore.maxHeight,
-          resultSections.reduce((a, b) => a + b.height, 0) + lipHeight,
-        )}
-      />
+      <div style={{ height }}>
+        <List
+          rowHeight={({ index }) => resultSections[index].height}
+          rowRenderer={({ index, key }) => {
+            const section = resultSections[index]
+            console.log('rendering a row...', index)
+            return (
+              <PersonSection
+                key={`${key}${section.title}`}
+                title={section.title}
+                people={section.results}
+                getIndex={getIndex}
+              />
+            )
+          }}
+          rowCount={resultSections.length}
+          width={IS_MENU ? 287 : ORBIT_WIDTH}
+          height={height}
+        />
+      </div>
     </ProvideHighlightsContextWithDefaults>
   )
 })

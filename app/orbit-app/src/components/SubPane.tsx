@@ -54,7 +54,7 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
             isActive={isActive}
             isLeft={isLeft}
             style={style}
-            height={subPaneStore.contentHeightLimited}
+            height={subPaneStore.contentHeight}
             forwardRef={subPaneStore.paneRef}
             preventScroll={preventScroll}
             {...props}

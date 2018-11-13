@@ -25,6 +25,7 @@ export type MovesMap = {
 export class SelectionStore {
   props: {
     queryStore: QueryStore
+    onClearSelection: Function
   }
 
   highlightIndex = -1
@@ -76,6 +77,14 @@ export class SelectionStore {
     target => {
       ensure('no target and active index', !target && this.hasActiveIndex)
       this.clearSelected()
+    },
+  )
+
+  handleOnClearSelection = react(
+    () => this.activeIndex === -1,
+    shouldClear => {
+      ensure('shouldClear', shouldClear)
+      this.props.onClearSelection()
     },
   )
 

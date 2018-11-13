@@ -40,7 +40,7 @@ class OrbitPaneManagerStore {
   }
 
   setActivePaneOnTrigger = react(
-    () => this.props.queryStore.query[0],
+    () => this.props.queryStore.queryInstant[0],
     firstChar => {
       for (const { type, trigger } of AppPanes) {
         if (trigger && trigger === firstChar) {

@@ -47,13 +47,13 @@ export class NLPStore {
   }
 
   nlp = react(
-    // fastest (sync) link to search
-    () => this.queryStore.query,
+    () => this.queryStore.queryInstant,
     async (query, { sleep }) => {
       if (!query) {
         return DEFAULT_NLP
       }
-      await sleep(80)
+      // debounce a bit less than query
+      await sleep(100)
       return {
         ...(await parseSearchQuery(query)),
         query,

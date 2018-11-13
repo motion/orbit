@@ -6,6 +6,9 @@ small apps for teams
 
 tuesday:
 
+- fix popover show on initial mount
+- fix initil startup orbit showing no bg
+- fix selection store getting into bad state / not moving
 - esc to clear
 - fix focusing on search
 - fix keyboard selection move
@@ -20,6 +23,9 @@ tuesday:
   - restructure apps to have sidebar from their Main view
   - get sidebar in and working, resizing
   - fix some tear away bugs
+
+- contextual search app
+  - only shows individual items
 
 wednesday:
 
@@ -63,6 +69,11 @@ Thursday:
 
 umed:
 
+- search performance and grouping fixes
+- people syncers: if slack is added, use that as source of truth and only add other people "on top"
+  - add an option to set "source of truth" setting in settings panes
+- github view: fix not showing comments content
+- github view: fix can't select text with mouse
 - window resize with re-resizable needs work
 - Team account management and onboarding flow
 - Search performance / groups

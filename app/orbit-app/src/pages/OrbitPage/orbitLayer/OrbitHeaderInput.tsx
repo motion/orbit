@@ -39,7 +39,7 @@ export class OrbitHeaderInput extends React.Component<Props> {
           border="none"
           display="block"
           background="transparent"
-          value={queryStore.query}
+          value={queryStore.queryInstant}
           highlight={headerStore.highlightWords}
           color={theme.color}
           onChange={queryStore.onChangeQuery}

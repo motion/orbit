@@ -1,6 +1,6 @@
 import './installGlobals'
 import { debugState } from '@mcro/black'
-import { setConfig, cold } from 'react-hot-loader'
+import { setConfig } from 'react-hot-loader'
 
 debugState(({ stores, views }) => {
   const Root = window['Root']

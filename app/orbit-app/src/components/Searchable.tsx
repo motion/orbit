@@ -21,7 +21,7 @@ export const Searchable = memo(
         </View>
         <ProvideHighlightsContextWithDefaults
           value={{
-            words: props.queryStore.queryDebounced.split(' '),
+            words: props.queryStore.query.split(' '),
             maxChars: 500,
             maxSurroundChars: 80,
           }}

@@ -16,7 +16,7 @@ export const AppView = React.memo((props: Props) => {
   const appStore = useStore(
     AppStore,
     { ...props, ...stores },
-    { conditionalUse: shouldProvideAppStore, debug: true },
+    { conditionalUse: shouldProvideAppStore },
   )
   const AppView = apps[props.type][props.viewType]
   if (!AppView) {

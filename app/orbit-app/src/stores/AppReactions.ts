@@ -21,6 +21,7 @@ export class AppReactions {
 
   async setupReactions() {
     this.dispose = App.onMessage(async (msg, value) => {
+      console.log('got a message', msg, value)
       switch (msg) {
         case App.messages.HIDE:
           App.setOrbitState({ docked: false })
@@ -39,6 +40,16 @@ export class AppReactions {
           AppActions.closeApp(+value)
           return
       }
+
+      // this.disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+      //   this.setActivePane('settings')
+      //   App.setOrbitState({ docked: true })
+      // })
+
+      // this.disposeShowApps = App.onMessage(App.messages.SHOW_APPS, () => {
+      //   this.setActivePane('apps')
+      //   App.setOrbitState({ docked: true })
+      // })
     })
   }
 

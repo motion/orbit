@@ -23,13 +23,6 @@ export class OrbitWindowStore {
 
   appReactionsStore = new AppReactions()
 
-  async willMount() {
-    // show orbit on startup
-    App.setOrbitState({
-      docked: true,
-    })
-  }
-
   willUnmount() {
     this.appReactionsStore.dispose()
   }

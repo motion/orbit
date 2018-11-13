@@ -18,7 +18,6 @@ export type SubPaneProps = CSSPropertySetStrict & {
   after?: React.ReactNode
   before?: React.ReactNode
   fadeBottom?: boolean
-  name?: string
   onScrollNearBottom?: Function
   extraCondition?: () => boolean
   paneManagerStore?: PaneManagerStore
@@ -40,7 +39,6 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
       style,
       after,
       fadeBottom,
-      name,
       before,
       preventScroll,
       offsetY,
@@ -48,7 +46,7 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
     return (
-      <SubPaneFrame isActive={isActive} name={name}>
+      <SubPaneFrame isActive={isActive}>
         {typeof before === 'function' ? before(isActive) : before}
         {!!offsetY && <div style={{ height: offsetY }} />}
         <SubPaneInner forwardRef={subPaneStore.subPaneInner}>

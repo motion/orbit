@@ -119,7 +119,7 @@ export class SearchStore {
         {
           type: 'column',
           // shouldAutoSelect: true,
-          ids: searchBits.map(x => x.id),
+          indices: searchBits.map((_, index) => index),
         },
       ])
     },

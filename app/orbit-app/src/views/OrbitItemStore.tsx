@@ -56,7 +56,7 @@ export class OrbitItemStore {
     if (this.props.inactive) {
       return
     }
-    this.props.appStore.toggleSelected(this.realIndex, 'click')
+    this.props.appStore.toggleSelected(this.index, 'click')
   }
 
   lastClickLocation = Date.now()
@@ -92,7 +92,7 @@ export class OrbitItemStore {
     this.resolvedItem = item
   }
 
-  get realIndex() {
+  get index() {
     const { model, getIndex, index } = this.props
     return getIndex ? getIndex(model) : index
   }
@@ -129,13 +129,12 @@ export class OrbitItemStore {
           return false
         }
       }
-      const forceSelected =
-        typeof isSelected === 'function' ? isSelected(this.realIndex) : isSelected
+      const forceSelected = typeof isSelected === 'function' ? isSelected(this.index) : isSelected
       let next
       if (typeof forceSelected === 'boolean') {
         next = forceSelected
       } else {
-        next = appStore.activeIndex === this.realIndex
+        next = appStore.activeIndex === this.index
       }
       return next
     },
@@ -147,7 +146,7 @@ export class OrbitItemStore {
         console.log('selecting this thing...', this.props.appType, this.appConfig)
         ensure('appConfig`', !!this.appConfig)
         if (onSelect) {
-          onSelect(this.realIndex, this.appConfig)
+          onSelect(this.index, this.appConfig)
         } else {
           // fluidity
           await sleep()

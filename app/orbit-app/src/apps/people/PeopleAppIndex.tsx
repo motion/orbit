@@ -48,7 +48,9 @@ class PeopleIndexStore {
   setSelectionResults = react(
     () => always(this.results),
     () => {
-      this.props.appStore.setResults([{ type: 'column', ids: this.results.map(x => x.id) }])
+      this.props.appStore.setResults([
+        { type: 'column', indices: this.results.map((_, index) => index) },
+      ])
     },
   )
 

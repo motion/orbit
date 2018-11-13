@@ -8,24 +8,44 @@ import { Unpad } from '../../views/Unpad'
 import { SimpleItem } from '../../views/SimpleItem'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { Button } from '@mcro/ui'
+import { react, always } from '@mcro/black'
+import { useStore } from '@mcro/use-store'
+
+class SourceIndexStore {
+  props: AppProps
+
+  get results() {
+    return this.props.sourcesStore.activeSources
+  }
+
+  setSelectionResults = react(
+    () => always(this.results),
+    () => {
+      this.props.appStore.setResults([
+        { type: 'column', indices: this.results.map((_, index) => index) },
+      ])
+    },
+  )
+}
 
 export const SourceAppIndex = React.memo((props: AppProps) => {
   const { sourcesStore, isActive } = props
+  const store = useStore(SourceIndexStore, props)
   return (
     <>
-      {!!sourcesStore.activeSources.length && (
+      {!!store.results.length && (
         <>
           <Grid
             gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
             gridAutoRows={80}
             margin={[5, -4]}
           >
-            {sourcesStore.activeSources.map((app, index) => {
+            {store.results.map((app, index) => {
               return (
                 <OrbitAppCard
                   key={app.source.id}
                   index={index}
-                  total={sourcesStore.activeSources.length}
+                  total={store.results.length}
                   activeCondition={() => isActive}
                   app={app}
                 />

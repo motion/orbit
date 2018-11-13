@@ -391,6 +391,11 @@ const MenuChromeContent = React.memo(
               title={app}
               type={app}
               menuStore={menuStore}
+              itemProps={{
+                hide: {
+                  subtitle: true,
+                },
+              }}
             />
           ))}
         </Searchable>

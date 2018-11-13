@@ -97,7 +97,7 @@ const SettingsNavBar = view(({ settingsStore, isActive }) => {
     >
       <SegmentedRow pointerEvents={isActive ? 'auto' : 'none'}>
         <SettingButton {...buttonProps(settingsStore, 'apps')}>Sources</SettingButton>
-        <SettingButton {...buttonProps(settingsStore, 'team')}>Spaces</SettingButton>
+        {/* <SettingButton {...buttonProps(settingsStore, 'team')}>Spaces</SettingButton> */}
         <SettingButton {...buttonProps(settingsStore, 'general')}>Settings</SettingButton>
       </SegmentedRow>
     </Row>

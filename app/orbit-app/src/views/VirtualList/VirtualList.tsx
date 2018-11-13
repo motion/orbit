@@ -18,6 +18,7 @@ import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { debounce } from 'lodash'
+import { cold } from 'react-hot-loader'
 
 export type ItemPropsMinimum = Pick<ItemProps<any>, 'appType' | 'appConfig'> &
   Partial<ItemProps<any>>
@@ -131,7 +132,7 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-export function VirtualList(props: Props) {
+export const VirtualList = cold((props: Props) => {
   const { queryStore, appStore } = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore })
   const { cache, width, height } = store
@@ -226,4 +227,4 @@ export function VirtualList(props: Props) {
       {!width && <div>No width!</div>}
     </div>
   )
-}
+})

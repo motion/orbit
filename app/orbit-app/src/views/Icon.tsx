@@ -1,6 +1,7 @@
 import * as React from 'react'
 import fuzzy from 'fuzzysort'
 import { SVG } from './SVG'
+import { memo } from '../helpers/memo'
 
 const icons = {
   add: require('!raw-loader!../../public/streamline/add.svg'),
@@ -157,7 +158,7 @@ type IconProps = {
   style?: any
 }
 
-export const Icon = React.memo(
+export const Icon = memo(
   ({ name, fill = '#fff', size = 32, style = null, ...props }: IconProps) => {
     const iconName = findIconName(name)
     if (!iconName) {

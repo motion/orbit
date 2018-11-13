@@ -15,7 +15,7 @@
     "@mcro/gloss": "^2.2.1",
     "@mcro/gloss-displaynames": "^2.2.1",
     "@babel/plugin-transform-react-inline-elements": "7.0.0",
-    "react-hot-loader": "4.3.12"
+    "react-hot-loader": "4.4.0"
   },
   "license": "MIT"
 }

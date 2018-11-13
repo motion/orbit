@@ -16,6 +16,7 @@ import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
 import { IS_MENU } from '../../constants'
+import { memo } from '../../helpers/memo'
 
 const height = 56
 
@@ -167,7 +168,7 @@ const PersonSection = ({
 
 const lipHeight = 30
 
-export const PeopleAppIndex = React.memo((props: AppProps) => {
+export const PeopleAppIndex = memo((props: AppProps) => {
   const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props)
   const total = results.length
   if (!total) {

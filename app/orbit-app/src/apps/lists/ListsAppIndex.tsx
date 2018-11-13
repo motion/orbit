@@ -9,6 +9,7 @@ import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { AppProps } from '../AppProps'
 import { ListEdit } from './ListEdit'
 import { View, Button } from '@mcro/ui'
+import { memo } from '../../helpers/memo'
 
 class ListsIndexStore {
   props: AppProps
@@ -75,7 +76,7 @@ class ListsIndexStore {
   )
 }
 
-export const ListsAppIndex = React.memo((props: AppProps) => {
+export const ListsAppIndex = memo((props: AppProps) => {
   const { results } = useStore(ListsIndexStore, props)
   return (
     <>

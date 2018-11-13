@@ -15,8 +15,9 @@ import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { StoreContext, view } from '@mcro/black'
 import { StaticContainer } from '../../views/StaticContainer'
 import { AppActions } from '../../actions/AppActions'
+import { memo } from '../../helpers/memo'
 
-export const OrbitPage = React.memo(() => {
+export const OrbitPage = memo(() => {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)

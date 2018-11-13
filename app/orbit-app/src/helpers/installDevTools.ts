@@ -1,6 +1,6 @@
 import './installGlobals'
 import { debugState } from '@mcro/black'
-import { setConfig } from 'react-hot-loader'
+import { setConfig, cold } from 'react-hot-loader'
 
 debugState(({ stores, views }) => {
   const Root = window['Root']
@@ -31,6 +31,17 @@ setConfig({
   // fixes HMR for react hooks
   // @ts-ignore
   pureSFC: true,
+  onComponentRegister: typeRaw => {
+    const type = String(typeRaw)
+    console.log('type', type)
+    const shouldCold =
+      type.indexOf('useState') > 0 ||
+      type.indexOf('useEffect') > 0 ||
+      type.indexOf('useRef') > 0 ||
+      type.indexOf('useStore') > 0 ||
+      type.indexOf('useContext') > 0
+    return shouldCold && cold(type)
+  },
 })
 
 Error.stackTraceLimit = Infinity

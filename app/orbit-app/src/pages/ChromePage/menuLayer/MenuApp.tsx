@@ -6,8 +6,9 @@ import { useStore } from '@mcro/use-store'
 import { AppStore } from '../../../apps/AppStore'
 import { StoreContext } from '@mcro/black'
 import { SubPane } from '../../../components/SubPane'
+import { memo } from '../../../helpers/memo'
 
-export const MenuApp = React.memo((props: MenuAppProps) => {
+export const MenuApp = memo((props: MenuAppProps) => {
   const stores = useContext(StoreContext)
   const appStore = useStore(AppStore, { ...props, ...stores })
   const isActive = () => props.menuStore.menuOpenID === props.menuId

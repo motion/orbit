@@ -6,6 +6,7 @@ import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { Separator } from '../../views/Separator'
 import { TopicEdit } from './TopicEdit'
+import { memo } from '../../helpers/memo'
 
 const icons = {
   0: ['neutral', 'rgba(255,255,255,0.25)'],
@@ -48,7 +49,7 @@ function TopicList({ results }) {
   )
 }
 
-export const TopicsAppIndex = React.memo((props: AppProps & { store?: TopicsIndexStore }) => {
+export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore }) => {
   const store = useStore(TopicsIndexStore, props)
   return (
     <ProvideHighlightsContextWithDefaults

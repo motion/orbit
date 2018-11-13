@@ -41,14 +41,17 @@ export class MenuStore {
 
   height = 300
   isHoveringDropdown = false
-  // source of truth!
+  isPinnedOpen = false
+
+  // see how this interacts with isOpenVisually
   activeMenuID = App.openMenu ? App.openMenu.id : false
 
+  // source of truth!
   // resolve the actual open state quickly so isOpenFocus/isOpenVisually
   // can derive off the truth state that is the most quick
   isOpenFast = react(
-    () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown],
-    async ([holdingOption, hoveringMenu], { sleep, when }) => {
+    () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown || this.isPinnedOpen],
+    async ([holdingOption, showMenu], { sleep, when }) => {
       if (holdingOption) {
         return true
       }
@@ -58,7 +61,7 @@ export class MenuStore {
         // this prevents it from closing the moment you leave, gives mouse some buffer
         await sleep(60)
       }
-      return hoveringMenu
+      return showMenu
     },
   )
 
@@ -170,6 +173,26 @@ export class MenuStore {
           },
         },
       })
+    },
+  )
+
+  setPinnedFromPinKey = react(
+    () => always(Electron.state.pinKey.at),
+    () => {
+      this.isPinnedOpen = true
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
+
+  setUnpinndeFromEscKey = react(
+    () => Desktop.keyboardState.escapeDown,
+    () => {
+      this.isPinnedOpen = false
+    },
+    {
+      deferFirstRun: true,
     },
   )
 
@@ -364,16 +387,8 @@ export const MenuLayer = React.memo(() => {
         case 'TrayToggle0':
         case 'TrayToggle1':
         case 'TrayToggle2':
-          const index = +key.replace('TrayToggle', '')
-          App.setState({
-            trayState: {
-              menuState: {
-                [index]: {
-                  pinned: !App.state.trayState.menuState[index],
-                },
-              },
-            },
-          })
+          this.activeMenuID = +key.replace('TrayToggle', '')
+          this.isPinnedOpen = !this.isPinnedOpen
           break
         case 'TrayHover0':
         case 'TrayHover1':

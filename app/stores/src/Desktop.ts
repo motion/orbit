@@ -88,6 +88,7 @@ class DesktopStore {
     },
     keyboardState: {
       isHoldingOption: false,
+      escapeDown: Date.now(),
     },
     mouseState: {
       mouseDown: Date.now(),

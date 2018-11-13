@@ -426,6 +426,9 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       
       // only want to know if option is *only* key down
       NSEvent.addGlobalMonitorForEvents(matching: [.keyDown, .keyUp]) { (event) in
+        if (event.keyCode == 53 && event.type == NSEvent.EventType.keyDown) {
+          self.sendKey(key: "esc", isDown: true)
+        }
         if (isOptionDown) {
           isOptionDown = false
           self.sendKey(key: "option", isDown: isOptionDown)

@@ -1,11 +1,7 @@
 import { FindOptions, FindOptionsWhere, FindOptionsWhereCondition } from 'typeorm'
 import { Bit, SearchQuery } from '@mcro/models'
-import { Logger } from '@mcro/logger'
-
-const log = new Logger('getSearchQuery')
 
 export const getSearchQuery = (args: SearchQuery) => {
-  log.info('args', args)
   const {
     ids,
     query,
@@ -19,6 +15,7 @@ export const getSearchQuery = (args: SearchQuery) => {
     locationFilters,
     spaceId,
     sourceId,
+    contentType,
   } = args
 
   const findOptions: FindOptions<Bit> = {
@@ -46,6 +43,9 @@ export const getSearchQuery = (args: SearchQuery) => {
   const andConditions: FindOptionsWhere<Bit> = {}
   if (ids) {
     andConditions.id = { $in: ids }
+  }
+  if (contentType) {
+    andConditions.type = contentType
   }
   if (startDate && endDate) {
     andConditions.bitCreatedAt = {

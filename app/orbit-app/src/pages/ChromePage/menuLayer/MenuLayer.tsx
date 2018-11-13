@@ -101,14 +101,11 @@ export class MenuStore {
   //   },
   // )
 
-  get hoverID() {
+  get hoverID(): number | false {
     const { trayState } = App.state
     always(trayState.trayEventAt)
     const id = trayState.trayEvent.replace('TrayHover', '')
-    if (id === 'Out') {
-      return false
-    }
-    return +id
+    return `${+id}` === id ? +id : false
   }
 
   get isHoveringIcon() {

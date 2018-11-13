@@ -27,9 +27,18 @@ class SourceAppStore {
 export function SourceAppMain(props: AppProps) {
   const { model } = useStore(SourceAppStore, props)
   const type = model ? model.type : props.sourceType
-  const View = props.sourcesStore.getView(type, 'setup')
-
+  const View = props.sourcesStore.getView(type, 'setting')
+  if (!View) {
+    return <div>nonno {type}</div>
+  }
+  if (!model) {
+    return null
+  }
   return (
-    <AttachAppInfoStore>{appInfoStore => <View appInfoStore={appInfoStore} />}</AttachAppInfoStore>
+    <AttachAppInfoStore>
+      {appInfoStore => (
+        <View appInfoStore={appInfoStore} source={model} appConfig={props.appStore.appConfig} />
+      )}
+    </AttachAppInfoStore>
   )
 }

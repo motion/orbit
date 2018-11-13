@@ -82,6 +82,7 @@ export class SelectionStore {
     () => this.activeIndex === -1,
     shouldClear => {
       ensure('shouldClear', shouldClear)
+      ensure('this.props.onClearSelection', !!this.props.onClearSelection)
       this.props.onClearSelection()
     },
   )

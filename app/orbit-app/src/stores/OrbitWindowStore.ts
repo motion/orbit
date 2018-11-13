@@ -1,9 +1,30 @@
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppReactions } from './AppReactions'
+import { QueryStore } from './QueryStore/QueryStore'
 
 export class OrbitWindowStore {
+  props: {
+    queryStore: QueryStore
+  }
+
+  updateAppQuery = react(
+    () => this.props.queryStore.queryDebounced,
+    query => {
+      App.setState({ query })
+    },
+  )
+
+  externalChangeAppQuery = react(
+    () => App.state.query,
+    query => {
+      ensure('is diff', this.props.queryStore.query !== query)
+      console.log('external query update')
+      this.props.queryStore.setQuery(query)
+    },
+  )
+
   contentHeight = 0
   inputFocused = false
 

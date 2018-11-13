@@ -36,7 +36,7 @@ export function BitAppMain(props: AppProps) {
   const normalizedItem = normalizeItem(model)
   return (
     <BitDecoration>
-      <AppSearchable>
+      <AppSearchable appStore={props.appStore}>
         {({ searchBar }) => (
           <>
             <BitTitleBar normalizedItem={normalizedItem} searchBar={searchBar} />

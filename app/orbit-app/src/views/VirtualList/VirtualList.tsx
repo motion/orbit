@@ -132,8 +132,8 @@ const isRightClick = e =>
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 export function VirtualList(props: Props) {
-  const context = React.useContext(StoreContext)
-  const store = useStore(VirtualListStore, { ...props, appStore: context.appStore })
+  const { queryStore, appStore } = React.useContext(StoreContext)
+  const store = useStore(VirtualListStore, { ...props, appStore })
   const { cache, width, height } = store
 
   const rowRenderer = ({ index, parent, style }) => {
@@ -152,7 +152,7 @@ export function VirtualList(props: Props) {
             model={model}
             index={index}
             realIndex={index}
-            query={App.state.query}
+            query={queryStore.queryDebounced}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
           />

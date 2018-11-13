@@ -1,5 +1,4 @@
-import { react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { react } from '@mcro/black'
 import { SourcesStore } from '../SourcesStore'
 import { QueryFilterStore } from './QueryFiltersStore'
 import { NLPStore } from './NLPStore'
@@ -9,9 +8,23 @@ export class QueryStore {
     sourcesStore: SourcesStore
   }
 
-  query = App.state.query
+  query = ''
 
-  nlpStore = new NLPStore()
+  queryDebounced = react(
+    () => this.query,
+    async (query, { sleep }) => {
+      await sleep(50)
+      // debounce super short queries more because they are less often + in hot path
+      if (query.length <= 2) {
+        await sleep(50)
+      }
+      return query
+    },
+  )
+
+  nlpStore = new NLPStore({
+    queryStore: this,
+  })
 
   queryFilters = new QueryFilterStore({
     queryStore: this,
@@ -23,28 +36,6 @@ export class QueryStore {
     this.nlpStore['subscriptions'].dispose()
     this.queryFilters['subscriptions'].dispose()
   }
-
-  updateAppQuery = react(
-    () => this.query,
-    async (query, { sleep }) => {
-      // debounce a bit for fast typer
-      await sleep(40)
-      // debounce even more on one letter queries, because who searcht that anyway
-      if (App.state.query.length === 0 && query.length === 1) {
-        await sleep(50)
-      }
-      App.setState({ query })
-    },
-  )
-
-  externalChangeAppQuery = react(
-    () => App.state.query,
-    query => {
-      ensure('is diff', query !== this.query)
-      console.log('external query update')
-      this.query = query
-    },
-  )
 
   hasQuery = react(() => !!this.query.length, _ => _)
 

@@ -376,6 +376,7 @@ const MenuChromeContent = React.memo(
     return (
       <View className="app-parent-bounds">
         <Searchable
+          queryStore={queryStore}
           inputProps={{
             forwardRef: menuStore.handleSearchInput,
             onChange: queryStore.onChangeQuery,

@@ -1,7 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { findDOMNode } from 'react-dom'
-import { togglePeekApp } from '../../actions/appActionsHandlers/peekStateActions'
 import { SearchStore } from './SearchStore'
 import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
 import { OrbitSearchNav } from './views/OrbitSearchNav'

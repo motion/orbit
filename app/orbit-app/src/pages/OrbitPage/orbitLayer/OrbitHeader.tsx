@@ -78,7 +78,7 @@ export class HeaderStore {
   )
 
   focusInputOnClearQuery = react(
-    () => App.state.query,
+    () => this.props.queryStore.hasQuery,
     query => {
       ensure('no query', !query)
       this.focus()

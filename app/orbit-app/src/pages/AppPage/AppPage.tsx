@@ -83,7 +83,6 @@ class AppPageContent extends React.Component<Props> {
     if (!appConfig || !appType) {
       return <div>no appConfig or appType</div>
     }
-    console.log('appConfig.type', appConfig.type, 'App.state.query', App.state.query)
     return (
       <>
         <HiddenControls>

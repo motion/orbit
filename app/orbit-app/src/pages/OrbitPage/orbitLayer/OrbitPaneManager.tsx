@@ -14,6 +14,7 @@ import { AppView } from '../../../apps/AppView'
 import { useStore } from '@mcro/use-store'
 import { AppActions } from '../../../actions/AppActions'
 import { App } from '@mcro/stores'
+import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
 
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
@@ -81,10 +82,13 @@ export function OrbitPaneManager() {
     })
   }, [])
 
-  return <OrbitPaneManagerStoreInner orbitWindowStore={orbitWindowStore} />
+  return <OrbitPaneManagerStoreInner orbitWindowStore={orbitWindowStore} queryStore={queryStore} />
 }
 
-class OrbitPaneManagerStoreInner extends React.Component<any> {
+class OrbitPaneManagerStoreInner extends React.Component<{
+  orbitWindowStore: OrbitWindowStore
+  queryStore: QueryStore
+}> {
   shouldComponentUpdate() {
     return false
   }
@@ -92,8 +96,8 @@ class OrbitPaneManagerStoreInner extends React.Component<any> {
   render() {
     log(`------------ OrbitPaneManagerInner......`)
     return (
-      <MainShortcutHandler>
-        <OrbitHeader borderRadius={BORDER_RADIUS} />
+      <MainShortcutHandler queryStore={this.props.queryStore}>
+        <OrbitHeader queryStore={this.props.queryStore} borderRadius={BORDER_RADIUS} />
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <SpaceNav />

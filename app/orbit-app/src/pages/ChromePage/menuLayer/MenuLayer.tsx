@@ -266,8 +266,12 @@ export class MenuStore {
           await whenChanged(() => Electron.state.pinKey.at)
           const { name } = Electron.state.pinKey
           // dont break on left/right
-          if (name !== 'left' && name !== 'right') {
+          if (name !== 'left' && name !== 'right' && name !== 'down') {
             pinnedKey = name
+            this.isPinnedOpen = true
+            if (this.searchInput.value === '') {
+              this.searchInput.value = name
+            }
           }
         }
         console.log('GOT A PIN KEY', pinnedKey)

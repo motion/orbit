@@ -8,7 +8,6 @@ tuesday:
 
 - fix popover show on initial mount
 - fix selection store getting into bad state / not moving
-- esc to clear
 - fix focusing on search
 - fix keyboard selection move
 - add auto select on search first item

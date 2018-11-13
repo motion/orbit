@@ -32,6 +32,7 @@ export type PinKeyType =
   | 'z'
   | 'left'
   | 'right'
+  | 'down'
 
 @store
 class ElectronStore {

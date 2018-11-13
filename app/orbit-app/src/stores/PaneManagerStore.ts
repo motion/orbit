@@ -73,11 +73,18 @@ export class PaneManagerStore {
 
   activePaneSetter = memoize(index => () => this.setPaneIndex(index))
 
-  setPaneIndex = index => {
+  hasPaneIndex = index => {
     if (index > this.panes.length - 1) {
-      return
+      return false
     }
     if (index < 0) {
+      return false
+    }
+    return true
+  }
+
+  setPaneIndex = index => {
+    if (!this.hasPaneIndex(index)) {
       return
     }
     if (index !== this.paneIndex) {

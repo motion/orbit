@@ -125,7 +125,7 @@ class AppStore {
   get openMenu(): MenuState {
     const { menuState } = App.state.trayState
     const menusState = Object.keys(menuState).map(x => menuState[x])
-    return menusState.find(x => x.open)
+    return menusState.find(x => x.open) || null
   }
 
   start = async (options?) => {

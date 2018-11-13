@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { useStore } from '@mcro/use-store'
-import { SelectionStore } from '../../../stores/SelectionStore'
+import { SelectionStore, Direction } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { setTrayFocused } from './helpers'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -40,81 +40,8 @@ export class MenuStore {
 
   height = 300
   isHoveringDropdown = false
-
-  get menuOpenID() {
-    if (!App.openMenu) {
-      return false
-    }
-    return App.openMenu.id
-  }
-
-  setActivePane = react(
-    () => {
-      if (typeof this.hoverID === 'number') {
-        return this.hoverID
-      }
-      return this.lastOpenMenuID
-    },
-    id => {
-      if (typeof id === 'number') {
-        const pane = panes[id]
-        this.props.paneManagerStore.setActivePane(pane)
-      }
-    },
-  )
-
-  lastOpenMenuID = react(
-    () => this.menuOpenID,
-    (val, { state }) => {
-      if (!state.hasResolvedOnce) {
-        // for now just hardcoding to start at #2 app
-        return 2
-      }
-      ensure('is number', typeof val === 'number')
-      return val
-    },
-  )
-
-  closePeekOnChangeMenu = react(
-    () => typeof this.menuOpenID === 'number',
-    isChanging => {
-      ensure('isChanging', isChanging)
-      AppActions.clearPeek()
-    },
-  )
-
-  showMenusBeforeOpen = react(
-    () => this.isOpenFast,
-    open => {
-      ensure('open', open)
-      if (IS_ELECTRON) {
-        window['electronRequire']('electron').remote.app.show()
-      }
-    },
-  )
-
-  // handleAppViewFocus = react(
-  //   () => App.showingPeek,
-  //   showingPeek => {
-  //     ensure('showingPeek', showingPeek)
-  //     setTrayFocused(true)
-  //   },
-  // )
-
-  get hoverID(): number | false {
-    const { trayState } = App.state
-    always(trayState.trayEventAt)
-    const id = trayState.trayEvent.replace('TrayHover', '')
-    return `${+id}` === id ? +id : false
-  }
-
-  get isHoveringIcon() {
-    return typeof this.hoverID === 'number'
-  }
-
-  get holdingOption() {
-    return Desktop.keyboardState.isHoldingOption
-  }
+  // source of truth!
+  activeMenuID = App.openMenu ? App.openMenu.id : false
 
   // resolve the actual open state quickly so isOpenFocus/isOpenVisually
   // can derive off the truth state that is the most quick
@@ -145,6 +72,144 @@ export class MenuStore {
     },
   )
 
+  get hoveringID() {
+    const { trayState } = App.state
+    always(trayState.trayEventAt)
+    const id = trayState.trayEvent.replace('TrayHover', '')
+    return `${+id}` === id ? +id : false
+  }
+
+  setActiveMenuFromHover = react(
+    () => this.hoveringID,
+    id => {
+      ensure('number', typeof this.hoveringID === 'number')
+      this.activeMenuID = +id
+    },
+  )
+
+  setActiveMenuFromPaneChange = react(
+    () => this.props.paneManagerStore.paneIndex,
+    index => {
+      ensure('changed', index !== this.activeMenuID)
+      this.activeMenuID = index
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
+
+  activeOrLastActiveMenuID = react(
+    () => this.activeMenuID,
+    (val, { state }) => {
+      if (!state.hasResolvedOnce) {
+        // for now just hardcoding to start at #2 app
+        return 2
+      }
+      ensure('is number', typeof val === 'number')
+      return +val
+    },
+  )
+
+  lastActiveMenuID = react(() => this.activeMenuID, id => +id, {
+    delayValue: true,
+    defaultValue: -1,
+  })
+
+  setAppMenuOpen = react(
+    () => this.activeMenuID,
+    activeMenuID => {
+      if (typeof activeMenuID === 'number') {
+        // this is used for electron to understand when to enable pointer events
+        App.setState({
+          trayState: {
+            menuState: {
+              [+activeMenuID]: {
+                open: true,
+              },
+              [this.lastActiveMenuID]: {
+                open: false,
+              },
+            },
+          },
+        })
+      } else {
+        App.setState({
+          trayState: {
+            menuState: {
+              [this.lastActiveMenuID]: false,
+            },
+          },
+        })
+      }
+    },
+  )
+
+  setAppMenuBounds = react(
+    () => this.menuCenter,
+    menuCenter => {
+      ensure('this.activeMenuID is number', typeof this.activeMenuID === 'number')
+      const width = 300
+      App.setState({
+        trayState: {
+          menuState: {
+            [+this.activeMenuID]: {
+              open: true,
+              position: [menuCenter - width / 2, 0],
+              // TODO: get height from the height we calculate
+              size: [width, 300],
+            },
+          },
+        },
+      })
+    },
+  )
+
+  setActiveMenuFromPinMove = react(
+    () => always(Electron.state.pinKey.at),
+    () => {
+      const direction = Direction[Electron.state.pinKey.name]
+      if (direction) {
+        this.props.paneManagerStore.move(direction)
+      }
+    },
+  )
+
+  setActivePane = react(
+    () => this.activeOrLastActiveMenuID,
+    id => {
+      if (typeof id === 'number') {
+        const pane = panes[id]
+        this.props.paneManagerStore.setActivePane(pane)
+      }
+    },
+  )
+
+  closePeekOnChangeMenu = react(
+    () => typeof this.activeMenuID === 'number',
+    isChanging => {
+      ensure('isChanging', isChanging)
+      AppActions.clearPeek()
+    },
+  )
+
+  showMenusBeforeOpen = react(
+    () => this.isOpenFast,
+    open => {
+      ensure('open', open)
+      if (IS_ELECTRON) {
+        window['electronRequire']('electron').remote.app.show()
+      }
+    },
+  )
+
+  get isHoveringIcon() {
+    return typeof this.hoveringID === 'number'
+  }
+
+  get holdingOption() {
+    return Desktop.keyboardState.isHoldingOption
+  }
+
   shouldFocus = react(
     () => this.isOpenFast,
     async (open, { sleep }) => {
@@ -163,9 +228,17 @@ export class MenuStore {
         return false
       }
       if (Desktop.keyboardState.isHoldingOption) {
-        // wait for pin to focus the menu
-        await whenChanged(() => Electron.state.pinKey.at)
-        console.log('GOT A PIN KEY', Electron.state.pinKey.name)
+        // wait for a certain key to break
+        let pinnedKey
+        while (!pinnedKey) {
+          await whenChanged(() => Electron.state.pinKey.at)
+          const { name } = Electron.state.pinKey
+          // dont break on left/right
+          if (name !== 'left' && name !== 'right') {
+            pinnedKey = name
+          }
+        }
+        console.log('GOT A PIN KEY', pinnedKey)
       }
       setTrayFocused(true)
       await sleep(32)
@@ -177,7 +250,7 @@ export class MenuStore {
   )
 
   get menuCenter() {
-    const id = typeof this.hoverID === 'number' ? this.hoverID : this.lastOpenMenuID
+    const id = typeof this.hoveringID === 'number' ? this.hoveringID : this.activeOrLastActiveMenuID
     const trayBounds = Desktop.state.operatingSystem.trayBounds
     const baseOffset = 25
     const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120
@@ -185,42 +258,16 @@ export class MenuStore {
     return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
   }
 
-  // uses faster open so we can react to things quickly
-  setMenuBounds = react(
-    () => [this.hoverID, this.isOpenFast, this.menuCenter],
-    ([menuID, open, menuCenter]) => {
-      ensure('valid id', typeof this.hoverID === 'number')
-      const id = +menuID
-      const width = 300
-      log(`set open ${id} ${open}`)
-      App.setState({
-        trayState: {
-          menuState: {
-            [id]: {
-              open,
-              position: [menuCenter - width / 2, 0],
-              // TODO: determine this dynamically
-              size: [300, 300],
-            },
-            [+this.lastOpenMenuID]: {
-              open: false,
-            },
-          },
-        },
-      })
-    },
-  )
-
   setHeight = (height: number) => {
     this.height = height
 
-    if (this.lastOpenMenuID === false) {
+    if (this.activeOrLastActiveMenuID === false) {
       return
     }
     App.setState({
       trayState: {
         menuState: {
-          [this.lastOpenMenuID]: {
+          [this.activeOrLastActiveMenuID]: {
             size: [300, height],
           },
         },

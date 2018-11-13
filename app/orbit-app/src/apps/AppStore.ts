@@ -96,7 +96,7 @@ export class AppStore {
   get maxHeight() {
     const { subPaneStore } = this.props
     if (subPaneStore) {
-      return subPaneStore.maxHeight - subPaneStore.aboveContentHeight
+      return subPaneStore.maxHeight
     }
     return window.innerHeight - 50
   }

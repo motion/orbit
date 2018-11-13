@@ -59,7 +59,7 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
             preventScroll={preventScroll}
             {...props}
           >
-            <PaneContentInner>
+            <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>
               <StaticContainer key={0}>{children}</StaticContainer>
             </PaneContentInner>
           </Pane>

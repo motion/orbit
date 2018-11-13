@@ -77,7 +77,7 @@ export class SubPaneStore {
   }
 
   get maxHeight() {
-    return window.innerHeight - 50
+    return window.innerHeight - this.aboveContentHeight
   }
 
   get fullHeight() {

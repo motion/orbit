@@ -191,7 +191,10 @@ export const PeopleAppIndex = memo((props: AppProps) => {
         }}
         rowCount={resultSections.length}
         width={IS_MENU ? 287 : ORBIT_WIDTH}
-        height={resultSections.reduce((a, b) => a + b.height, 0) + lipHeight}
+        height={Math.min(
+          props.appStore.maxHeight,
+          resultSections.reduce((a, b) => a + b.height, 0) + lipHeight,
+        )}
       />
     </ProvideHighlightsContextWithDefaults>
   )

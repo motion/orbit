@@ -31,17 +31,17 @@ setConfig({
   // fixes HMR for react hooks
   // @ts-ignore
   pureSFC: true,
-  onComponentRegister: typeRaw => {
-    const type = String(typeRaw)
-    console.log('type', type)
-    const shouldCold =
-      type.indexOf('useState') > 0 ||
-      type.indexOf('useEffect') > 0 ||
-      type.indexOf('useRef') > 0 ||
-      type.indexOf('useStore') > 0 ||
-      type.indexOf('useContext') > 0
-    return shouldCold && cold(type)
-  },
+  // onComponentRegister: typeRaw => {
+  //   const type = String(typeRaw)
+  //   console.log('type', type)
+  //   const shouldCold =
+  //     type.indexOf('useState') > 0 ||
+  //     type.indexOf('useEffect') > 0 ||
+  //     type.indexOf('useRef') > 0 ||
+  //     type.indexOf('useStore') > 0 ||
+  //     type.indexOf('useContext') > 0
+  //   return shouldCold && cold(type)
+  // },
 })
 
 Error.stackTraceLimit = Infinity

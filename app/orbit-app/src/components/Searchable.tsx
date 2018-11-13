@@ -2,8 +2,9 @@ import * as React from 'react'
 import { Input, View } from '@mcro/ui'
 import { ProvideHighlightsContextWithDefaults } from '../helpers/contexts/HighlightsContext'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
+import { memo } from '../helpers/memo'
 
-export const Searchable = React.memo(
+export const Searchable = memo(
   (props: { queryStore: QueryStore; children: React.ReactNode; inputProps?: Object }) => {
     return (
       <>

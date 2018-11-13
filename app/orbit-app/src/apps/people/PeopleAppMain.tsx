@@ -11,6 +11,7 @@ import { SubTitle } from '../../views/SubTitle'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
+import { memo } from '../../helpers/memo'
 
 class PeopleAppStore {
   props: AppProps
@@ -60,7 +61,7 @@ class PeopleAppStore {
 
 const PersonHeader = view()
 
-export const PeopleAppMain = React.memo((props: AppProps) => {
+export const PeopleAppMain = memo((props: AppProps) => {
   const { appPageStore } = React.useContext(StoreContext)
   const { person, interestedIn, recentBits } = useStore(PeopleAppStore, props)
   console.log('rendering person app...')

@@ -125,7 +125,7 @@ const ignoreReactiveKeys = {
   $$typeof: true,
 }
 
-export const useStore = <A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A => {
+export function useStore<A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A {
   if (options && options.conditionalUse === false) {
     return null
   }

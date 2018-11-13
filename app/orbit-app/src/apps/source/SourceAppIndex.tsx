@@ -10,6 +10,7 @@ import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { Button } from '@mcro/ui'
 import { react, always } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
+import { memo } from '../../helpers/memo'
 
 class SourceIndexStore {
   props: AppProps
@@ -28,7 +29,7 @@ class SourceIndexStore {
   )
 }
 
-export const SourceAppIndex = React.memo((props: AppProps) => {
+export const SourceAppIndex = memo((props: AppProps) => {
   const { sourcesStore, isActive } = props
   const store = useStore(SourceIndexStore, props)
   return (

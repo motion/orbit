@@ -374,7 +374,7 @@ const MenuChrome = view(View, {
 const MenuChromeContent = React.memo(
   ({ menuStore, queryStore }: { menuStore: MenuStore; queryStore: QueryStore }) => {
     return (
-      <View className="app-parent-bounds">
+      <View className="app-parent-bounds" pointerEvents="auto">
         <Searchable
           queryStore={queryStore}
           inputProps={{

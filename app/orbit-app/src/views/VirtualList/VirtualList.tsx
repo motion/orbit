@@ -6,7 +6,7 @@ import {
   CellMeasurer,
   InfiniteLoader,
 } from 'react-virtualized'
-import { ensure, react, StoreContext } from '@mcro/black'
+import { ensure, react, StoreContext, always } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
 import { OrbitItemSingleton } from '../OrbitItemStore'
@@ -14,10 +14,11 @@ import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
 import { VirtualListItem } from './VirtualListItem'
 import { ItemProps } from '../OrbitItemProps'
-import { App } from '@mcro/stores'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
+import { debounce } from 'lodash'
+import { cold } from 'react-hot-loader'
 
 export type ItemPropsMinimum = Pick<ItemProps<any>, 'appType' | 'appConfig'> &
   Partial<ItemProps<any>>
@@ -56,13 +57,16 @@ class VirtualListStore {
   cache: CellMeasurerCache = null
 
   resizeOnChange = react(
-    () => this.props.items && Math.random(),
+    () => always(this.props.items),
     () => {
       ensure('this.listRef', !!this.listRef)
+      this.listRef.recomputeRowHeights()
       this.resizeAll()
       this.measure()
     },
   )
+
+  measureOnRef = react(() => this.rootRef, () => this.measure())
 
   scrollToRow = react(
     () => this.props.appStore.activeIndex,
@@ -74,12 +78,9 @@ class VirtualListStore {
     },
   )
 
-  measure = () => {
+  measure = debounce(() => {
     if (!this.rootRef) {
       return
-    }
-    if (this.listRef) {
-      this.listRef.recomputeRowHeights()
     }
     // height
     let height = 0
@@ -87,7 +88,7 @@ class VirtualListStore {
       height += this.cache.rowHeight(i)
     }
     this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
-  }
+  }, 32)
 
   keyMapper = rowIndex => {
     if (typeof rowIndex === 'undefined') {
@@ -131,7 +132,7 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-export function VirtualList(props: Props) {
+export const VirtualList = cold((props: Props) => {
   const { queryStore, appStore } = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore })
   const { cache, width, height } = store
@@ -206,7 +207,7 @@ export function VirtualList(props: Props) {
     <div
       ref={store.setRootRef}
       style={{
-        height: height,
+        height,
       }}
     >
       {!!width && (
@@ -226,4 +227,4 @@ export function VirtualList(props: Props) {
       {!width && <div>No width!</div>}
     </div>
   )
-}
+})

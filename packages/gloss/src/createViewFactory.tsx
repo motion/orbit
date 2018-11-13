@@ -7,6 +7,10 @@ import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import validProp from './helpers/validProp'
 import { simplePropSum } from './helpers/simplePropSum'
+import { cold } from 'react-hot-loader'
+
+// @ts-ignore
+const memo = View => React.memo(cold(View))
 
 export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
@@ -355,7 +359,7 @@ export function createViewFactory(toCSS) {
     }
 
     // @ts-ignore react hooks
-    ThemedView = React.memo((props: SimpleViewProps) => {
+    ThemedView = memo((props: SimpleViewProps) => {
       // @ts-ignore
       const propKey = React.useRef(null)
       // @ts-ignore react hooks

@@ -75,16 +75,15 @@ export class RootView extends React.Component {
               right: 0,
               width: '40%',
               height: '30%',
-              background: 'rgba(0,0,0,0.95)',
+              background: 'rgba(0,0,0,0.9)',
               padding: 10,
-              lineHeight: '1.25rem',
-              color: '#000',
+              color: '#fff',
               fontWeight: 500,
               overflow: 'auto',
             }}
           >
             <h2>Orbit Error: {this.state.error.message}</h2>
-            <pre style={{ fontSize: 15, lineHeight: 15, whiteSpace: 'nowrap' }}>
+            <pre style={{ fontSize: 15, lineHeight: '15px', wordWrap: 'break-word' }}>
               {this.state.error.stack}
             </pre>
           </div>

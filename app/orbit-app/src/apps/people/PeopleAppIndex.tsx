@@ -23,6 +23,7 @@ type ResultSection = { title: string; results: PersonBit[]; height: number }
 
 class PeopleIndexStore {
   props: AppProps
+
   allPeople = []
   private allPeople$ = observeMany(PersonBitModel, { args: { take: 100 } }).subscribe(people => {
     if (!people) return

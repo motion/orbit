@@ -20,6 +20,9 @@ export class QueryStore {
       }
       return query
     },
+    {
+      defaultValue: '',
+    },
   )
 
   nlpStore = new NLPStore({

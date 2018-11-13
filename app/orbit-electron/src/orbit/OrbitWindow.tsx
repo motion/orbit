@@ -77,9 +77,6 @@ class OrbitWindowStore {
         this.orbitRef.show()
       }
     },
-    {
-      deferFirstRun: true,
-    },
   )
 
   showOnNewSpace() {

@@ -91,8 +91,6 @@ export class OrbitSettingsTeam extends React.Component<{
                   total={spaceStore.spaceSources(space).length}
                   inGrid
                   activeCondition={this.isSubPaneSelected}
-                  pane="docked"
-                  subPane="apps"
                   index={index}
                   isActive
                 />

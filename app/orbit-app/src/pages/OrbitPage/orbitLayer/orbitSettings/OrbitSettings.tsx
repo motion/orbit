@@ -1,13 +1,13 @@
 import { view, attach } from '@mcro/black'
 import * as React from 'react'
 import { SubPane } from '../../../../components/SubPane'
-import { OrbitSettingsApps } from './OrbitSettingsApps'
 import { OrbitSettingsGeneral } from './OrbitSettingsGeneral'
 import { OrbitSettingsTeam } from './OrbitSettingsTeam'
 import { SegmentedRow, Button, Row } from '@mcro/ui'
 import { VerticalSpace } from '../../../../views'
 import { memoize } from 'lodash'
 import { SubPaneStore } from '../../../../components/SubPaneStore'
+import { AppView } from '../../../../apps/AppView'
 
 const Pane = view({
   height: 0,
@@ -47,7 +47,6 @@ const buttonProps = (store: SettingsStore, val: string) => {
   }
 }
 
-@attach('paneManagerStore')
 @attach({
   settingsStore: SettingsStore,
 })
@@ -65,7 +64,13 @@ export class OrbitSettings extends React.Component<Props> {
         <VerticalSpace />
 
         <Pane isShown={settingsStore.subPane === 'apps'}>
-          <OrbitSettingsApps settingsStore={settingsStore} />
+          <AppView
+            viewType="index"
+            id="source"
+            title="Sources"
+            type="source"
+            isActive={settingsStore.subPane === 'apps'}
+          />
         </Pane>
         <Pane isShown={settingsStore.subPane === 'team'}>
           <OrbitSettingsTeam settingsStore={settingsStore} />

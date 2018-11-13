@@ -11,7 +11,6 @@ tuesday:
 - fix focusing on search
 - fix keyboard selection move
 - add auto select on search first item
-- fix pin key typing into search box
 - fix clear app window on clear peek
 
 - apps have sidebars inside them

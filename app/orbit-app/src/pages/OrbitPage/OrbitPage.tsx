@@ -14,6 +14,7 @@ import { useStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { StoreContext } from '@mcro/black'
 import { StaticContainer } from '../../views/StaticContainer'
+import { AppActions } from '../../actions/AppActions'
 
 export const OrbitPage = React.memo(() => {
   const settingStore = useStore(SettingStore)
@@ -21,7 +22,12 @@ export const OrbitPage = React.memo(() => {
   const spaceStore = useStore(SpaceStore)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
-  const selectionStore = useStore(SelectionStore, { queryStore })
+  const selectionStore = useStore(SelectionStore, {
+    queryStore,
+    onClearSelection: () => {
+      AppActions.clearPeek()
+    },
+  })
   const paneManagerStore = useStore(PaneManagerStore, {
     selectionStore,
     panes: [...AppPanes.map(p => p.id), 'settings'],

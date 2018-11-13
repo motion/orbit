@@ -1,5 +1,5 @@
 import { react, ensure, always } from '@mcro/black'
-import { App, AppConfig } from '@mcro/stores'
+import { AppConfig } from '@mcro/stores'
 import { SelectionGroup } from './SelectionResults'
 import { AppProps } from './AppProps'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'

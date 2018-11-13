@@ -1,8 +1,6 @@
 import { view, react, attach } from '@mcro/black'
 import * as React from 'react'
 import { Source } from '@mcro/models'
-import { AppTopicExplorer } from './AppTopicExplorer'
-import { SegmentedRow, View } from '@mcro/ui'
 import { AppConfig } from '@mcro/stores'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { ScrollableContent } from '../layout/ScrollableContent'
@@ -15,14 +13,6 @@ type Props = {
   source: Source
   settingsPane: React.ReactNode
   initialState: AppConfig['viewConfig']['initialState']
-}
-
-const AppRelationsExplorer = () => {
-  return (
-    <View flex={1} alignItems="center" justifyContent="center">
-      Under Construction [hardhat.gif]
-    </View>
-  )
 }
 
 export class AppViewStore {
@@ -77,30 +67,8 @@ export class SimpleAppExplorer extends React.Component<Props> {
               active={appViewStore.active === 'sources'}
             />
           }
-        >
-          <SegmentedRow>
-            <TitleBarButton
-              onClick={appViewStore.setter('topics')}
-              active={appViewStore.active === 'topics'}
-            >
-              Topic Explorer
-            </TitleBarButton>
-            <TitleBarButton
-              onClick={appViewStore.setter('related')}
-              active={appViewStore.active === 'related'}
-            >
-              Relations Explorer
-            </TitleBarButton>
-          </SegmentedRow>
-        </AppHeader>
-
+        />
         <ScrollableContent>
-          <HideablePane invisible={appViewStore.active !== 'topics'}>
-            <AppTopicExplorer source={source} />
-          </HideablePane>
-          <HideablePane invisible={appViewStore.active !== 'related'}>
-            <AppRelationsExplorer />
-          </HideablePane>
           <HideablePane invisible={appViewStore.active !== 'sources'}>{settingsPane}</HideablePane>
         </ScrollableContent>
       </>

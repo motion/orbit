@@ -85,7 +85,6 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
                     key={app.integration}
                     model={app}
                     pane="docked"
-                    subPane="apps"
                     total={sourcesStore.sources.length}
                     index={index}
                   />

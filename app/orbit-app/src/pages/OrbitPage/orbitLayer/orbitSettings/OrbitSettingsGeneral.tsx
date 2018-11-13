@@ -9,7 +9,6 @@ import * as Views from '../../../../views'
 import { Input } from '../../../../views/Input'
 import { ShortcutCapture } from '../../../../views/ShortcutCapture'
 import { SourcesStore } from '../../../../stores/SourcesStore'
-import { PaneManagerStore } from '../../../../stores/PaneManagerStore'
 import { generalSettingQuery } from '../../../../helpers/queries'
 
 const eventCharsToNiceChars = {
@@ -48,7 +47,6 @@ const electronToNiceChars = (charString: string) => {
 
 type Props = {
   store?: OrbitSettingsStore
-  paneManagerStore?: PaneManagerStore
   sourcesStore?: SourcesStore
 }
 
@@ -102,7 +100,7 @@ const Section = view({
   padding: [0, 0, 20],
 })
 
-@attach('paneManagerStore', 'sourcesStore')
+@attach('sourcesStore')
 @attach({
   store: OrbitSettingsStore,
 })

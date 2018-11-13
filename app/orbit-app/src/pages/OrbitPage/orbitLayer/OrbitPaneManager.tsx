@@ -85,16 +85,11 @@ export function OrbitPaneManager() {
   return <OrbitPaneManagerStoreInner orbitWindowStore={orbitWindowStore} queryStore={queryStore} />
 }
 
-class OrbitPaneManagerStoreInner extends React.Component<{
+class OrbitPaneManagerStoreInner extends React.PureComponent<{
   orbitWindowStore: OrbitWindowStore
   queryStore: QueryStore
 }> {
-  shouldComponentUpdate() {
-    return false
-  }
-
   render() {
-    log(`------------ OrbitPaneManagerInner......`)
     return (
       <MainShortcutHandler queryStore={this.props.queryStore}>
         <OrbitHeader queryStore={this.props.queryStore} borderRadius={BORDER_RADIUS} />
@@ -118,7 +113,7 @@ class OrbitPaneManagerStoreInner extends React.Component<{
                 </SubPane>
               )
             })}
-            <OrbitSettings />
+            <OrbitSettings onChangeHeight={this.props.orbitWindowStore.setContentHeight} />
           </div>
         </OrbitDockedInner>
       </MainShortcutHandler>

@@ -101,14 +101,11 @@ export class MenuStore {
   //   },
   // )
 
-  get hoverID() {
+  get hoverID(): number | false {
     const { trayState } = App.state
     always(trayState.trayEventAt)
     const id = trayState.trayEvent.replace('TrayHover', '')
-    if (id === 'Out') {
-      return false
-    }
-    return +id
+    return `${+id}` === id ? +id : false
   }
 
   get isHoveringIcon() {
@@ -232,12 +229,10 @@ export class MenuStore {
   }
 
   handleMouseEnter = () => {
-    log('enter')
     this.isHoveringDropdown = true
   }
 
   handleMouseLeave = () => {
-    log('leave')
     this.isHoveringDropdown = false
   }
 
@@ -263,7 +258,12 @@ export class MenuStore {
 export const MenuLayer = React.memo(() => {
   const { sourcesStore, settingStore } = React.useContext(StoreContext)
   const queryStore = useStore(QueryStore, { sourcesStore })
-  const selectionStore = useStore(SelectionStore, { queryStore })
+  const selectionStore = useStore(SelectionStore, {
+    queryStore,
+    onClearSelection: () => {
+      AppActions.clearPeek()
+    },
+  })
   const paneManagerStore = useStore(PaneManagerStore, { panes, selectionStore })
   const menuStore = useStore(MenuStore, { paneManagerStore })
   const storeProps = {

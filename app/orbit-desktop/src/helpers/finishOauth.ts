@@ -1,4 +1,3 @@
-import { getGlobalConfig } from '@mcro/config'
 import { SourceEntity } from '@mcro/entities'
 import {
   DriveSource,
@@ -11,9 +10,6 @@ import {
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { App, Desktop } from '@mcro/stores'
 import { getRepository } from 'typeorm'
-import { closeChromeTabWithUrlStarting } from '../helpers/injections'
-
-const Config = getGlobalConfig()
 
 type OauthValues = {
   token: string
@@ -24,7 +20,7 @@ type OauthValues = {
 
 export const finishOauth = (type: IntegrationType, values: OauthValues) => {
   // close window
-  closeChromeTabWithUrlStarting(`${Config.urls.server}/auth/${type}`)
+  // closeChromeTabWithUrlStarting(`${Config.urls.server}/auth/${type}`)
   // create setting
   createSource(type, values)
   // show Orbit again

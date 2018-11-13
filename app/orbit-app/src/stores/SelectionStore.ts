@@ -6,7 +6,6 @@ import { hoverSettler } from '../helpers'
 import { SelectionGroup } from '../apps/SelectionResults'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
-const resultsKey = (x: SelectionGroup[]) => x.map(y => y.ids.join('')).join('')
 
 export enum Direction {
   left = 'left',
@@ -16,7 +15,7 @@ export enum Direction {
 }
 
 export type MovesMap = {
-  id: number
+  index: number
   shouldAutoSelect?: boolean
   moves?: Direction[]
 }
@@ -25,6 +24,7 @@ export type MovesMap = {
 export class SelectionStore {
   props: {
     queryStore: QueryStore
+    onClearSelection: Function
   }
 
   highlightIndex = -1
@@ -33,7 +33,6 @@ export class SelectionStore {
   lastSelectAt = 0
   _activeIndex = -1
   movesMap: MovesMap[] | null = null
-  private lastResultsKey = ''
   clearOff: any
 
   didMount() {
@@ -76,6 +75,15 @@ export class SelectionStore {
     target => {
       ensure('no target and active index', !target && this.hasActiveIndex)
       this.clearSelected()
+    },
+  )
+
+  handleOnClearSelection = react(
+    () => this.activeIndex === -1,
+    shouldClear => {
+      ensure('shouldClear', shouldClear)
+      ensure('this.props.onClearSelection', !!this.props.onClearSelection)
+      this.props.onClearSelection()
     },
   )
 
@@ -219,31 +227,23 @@ export class SelectionStore {
   setResults = (resultGroups: SelectionGroup[]) => {
     // no results
     if (!resultGroups) {
-      this.lastResultsKey = ''
       this.movesMap = null
       return
     }
-
-    // not updated
-    const nextKey = resultsKey(resultGroups)
-    if (nextKey === this.lastResultsKey) {
-      return
-    }
-    this.lastResultsKey = nextKey
 
     // is updated
     let results: MovesMap[] = []
     // calculate moves
     const numGroups = resultGroups.length
     for (const [groupIndex, selectionResult] of resultGroups.entries()) {
-      const { ids, type, shouldAutoSelect } = selectionResult
+      const { indices, type, shouldAutoSelect } = selectionResult
       if (type === 'row') {
         const downMoves = groupIndex < numGroups ? [Direction.down, Direction.up] : [Direction.up]
-        const nextMoves = ids.map((id, index) => ({
-          id,
+        const nextMoves = indices.map(index => ({
+          index,
           shouldAutoSelect,
           moves: [
-            index < ids.length - 1 ? Direction.right : null,
+            index < indices.length - 1 ? Direction.right : null,
             index > 0 ? Direction.left : null,
             ...downMoves,
           ].filter(Boolean),
@@ -252,9 +252,9 @@ export class SelectionStore {
       }
       if (type === 'column') {
         const hasPrevResults = !!results.length
-        const nextMoves = ids.map((id, index) => {
+        const nextMoves = indices.map((id, index) => {
           const moves = []
-          if (index < ids.length - 1) {
+          if (index < indices.length - 1) {
             moves.push(Direction.down)
           }
           if (hasPrevResults || index > 0) {
@@ -268,11 +268,11 @@ export class SelectionStore {
     this.movesMap = results
   }
 
-  getIndexForItem = id => {
+  getIndexForItem = index => {
     if (!this.movesMap) {
       throw new Error('Calling index before')
     }
-    return this.movesMap.findIndex(x => x.id === id)
+    return this.movesMap.findIndex(x => x.index === index)
   }
 
   setHighlightIndex = index => {

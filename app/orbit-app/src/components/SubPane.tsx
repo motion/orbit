@@ -49,7 +49,7 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
     const { isActive, isLeft } = subPaneStore.positionState
     return (
       <SubPaneFrame isActive={isActive} name={name}>
-        {before}
+        {typeof before === 'function' ? before(isActive) : before}
         {!!offsetY && <div style={{ height: offsetY }} />}
         <SubPaneInner forwardRef={subPaneStore.subPaneInner}>
           <Pane

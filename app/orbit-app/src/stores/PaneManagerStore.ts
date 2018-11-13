@@ -18,7 +18,6 @@ export class PaneManagerStore {
     return this.props.panes
   }
 
-  subPane = ''
   keyablePanes = [0, 4]
   paneIndex = 0
   forcePane = null
@@ -128,10 +127,4 @@ export class PaneManagerStore {
       AppActions.clearPeek()
     },
   )
-
-  subPaneSetter = memoize(val => () => this.setSubPane(val))
-
-  setSubPane = val => {
-    this.subPane = val
-  }
 }

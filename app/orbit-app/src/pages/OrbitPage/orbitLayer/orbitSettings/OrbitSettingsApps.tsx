@@ -8,17 +8,17 @@ import { Button } from '@mcro/ui'
 import { Unpad } from '../../../../views/Unpad'
 import { SourcesStore } from '../../../../stores/SourcesStore'
 import { OrbitAppCard } from '../../../../components/OrbitAppCard'
-import { PaneManagerStore } from '../../../../stores/PaneManagerStore'
+import { SettingsStore } from './OrbitSettings'
 
 type Props = {
   sourcesStore?: SourcesStore
-  paneManagerStore?: PaneManagerStore
+  settingsStore?: SettingsStore
 }
 
-@attach('sourcesStore', 'paneManagerStore')
+@attach('sourcesStore')
 @view
 export class OrbitSettingsApps extends React.Component<Props> {
-  isSubPaneSelected = () => this.props.paneManagerStore.subPane === 'apps'
+  isSubPaneSelected = () => this.props.settingsStore.subPane === 'apps'
 
   render() {
     const { sourcesStore } = this.props

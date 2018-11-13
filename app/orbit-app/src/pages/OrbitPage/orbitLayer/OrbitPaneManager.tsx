@@ -113,7 +113,7 @@ class OrbitPaneManagerStoreInner extends React.PureComponent<{
                 </SubPane>
               )
             })}
-            <OrbitSettings />
+            <OrbitSettings onChangeHeight={this.props.orbitWindowStore.setContentHeight} />
           </div>
         </OrbitDockedInner>
       </MainShortcutHandler>

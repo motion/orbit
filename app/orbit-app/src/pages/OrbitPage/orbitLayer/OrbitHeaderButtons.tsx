@@ -54,9 +54,11 @@ const exploreButton = {
 const Interactive = view({
   flexFlow: 'row',
   alignItems: 'center',
-  disabled: {
-    opacity: 0,
-    pointerEvents: 'none',
+  opacity: 0,
+  pointerEvents: 'none',
+  enabled: {
+    opacity: 1,
+    pointerEvents: 'inherit',
   },
 })
 
@@ -73,17 +75,17 @@ export class OrbitHeaderButtons extends React.Component<Props> {
   }
 
   render() {
-    const { paneManagerStore } = this.props
+    const { paneManagerStore, queryStore } = this.props
     const onSettings = paneManagerStore.activePane === 'settings'
     return (
       <>
         <Section invisible={paneManagerStore.activePane === 'onboard'}>
-          <Interactive disabled={!/^(search|settings)$/.test(paneManagerStore.activePane)}>
+          <Interactive enabled={paneManagerStore.activePane === 'settings' || queryStore.hasQuery}>
             <ClearButton
               onClick={
-                paneManagerStore.activePane === 'search'
-                  ? this.clearSearch
-                  : paneManagerStore.setActivePaneToPrevious
+                paneManagerStore.activePane === 'settings'
+                  ? paneManagerStore.setActivePaneToPrevious
+                  : this.clearSearch
               }
             >
               <Icon name="arrow-min-left" size={8} opacity={0.8} margin="auto" />

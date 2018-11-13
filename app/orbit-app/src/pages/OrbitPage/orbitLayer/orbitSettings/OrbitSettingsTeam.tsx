@@ -8,7 +8,7 @@ import { Grid } from '../../../../views/Grid'
 import { OrbitAppCard } from '../../../../components/OrbitAppCard'
 import { ToggleApp } from './ToggleApp'
 import { OrbitOrb } from '../../../../views/OrbitOrb'
-import { PaneManagerStore } from '../../../../stores/PaneManagerStore'
+import { SettingsStore } from './OrbitSettings'
 
 const OrbitSpaceCardFrame = view({
   borderRadius: 6,
@@ -36,13 +36,13 @@ const OrbitSpaceCard = ({ children, label, active = false, ...props }) => (
   </OrbitSpaceCardFrame>
 )
 
-@attach('paneManagerStore', 'spaceStore')
+@attach('spaceStore')
 @view
 export class OrbitSettingsTeam extends React.Component<{
   spaceStore?: SpaceStore
-  paneManagerStore?: PaneManagerStore
+  settingsStore: SettingsStore
 }> {
-  isSubPaneSelected = () => this.props.paneManagerStore.subPane === 'apps'
+  isSubPaneSelected = () => this.props.settingsStore.subPane === 'apps'
 
   render() {
     const { spaceStore } = this.props

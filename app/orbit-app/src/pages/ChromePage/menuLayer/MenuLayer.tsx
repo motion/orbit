@@ -42,6 +42,19 @@ export class MenuStore {
   height = 300
   isHoveringDropdown = false
   isPinnedOpen = false
+  hoveringID = -1
+
+  togglePinnedOpen() {
+    this.setPinnedOpen(!this.isPinnedOpen)
+  }
+
+  setPinnedOpen(val) {
+    this.isPinnedOpen = val
+    // when you unpin, clear the hover state too
+    if (!this.isPinnedOpen) {
+      this.hoveringID = -1
+    }
+  }
 
   // see how this interacts with isOpenVisually
   activeMenuID = App.openMenu ? App.openMenu.id : false
@@ -76,12 +89,17 @@ export class MenuStore {
     },
   )
 
-  get hoveringID() {
-    const { trayState } = App.state
-    always(trayState.trayEventAt)
-    const id = trayState.trayEvent.replace('TrayHover', '')
-    return `${+id}` === id ? +id : false
-  }
+  setHoveringIDFromEvent = react(
+    () => {
+      const { trayState } = App.state
+      always(trayState.trayEventAt)
+      const id = trayState.trayEvent.replace('TrayHover', '')
+      return `${+id}` === id ? +id : -1
+    },
+    val => {
+      this.hoveringID = val
+    },
+  )
 
   setActiveMenuClosedOnClose = react(
     () => this.isOpenVisually,
@@ -94,7 +112,7 @@ export class MenuStore {
   setActiveMenuFromHover = react(
     () => this.hoveringID,
     id => {
-      ensure('number', typeof this.hoveringID === 'number')
+      ensure('valid', this.hoveringID > -1)
       this.activeMenuID = +id
     },
   )
@@ -235,7 +253,7 @@ export class MenuStore {
   )
 
   get isHoveringIcon() {
-    return typeof this.hoveringID === 'number'
+    return this.hoveringID > -1
   }
 
   get holdingOption() {
@@ -286,7 +304,7 @@ export class MenuStore {
   )
 
   get menuCenter() {
-    const id = typeof this.hoveringID === 'number' ? this.hoveringID : this.activeOrLastActiveMenuID
+    const id = this.activeOrLastActiveMenuID
     const trayBounds = Desktop.state.operatingSystem.trayBounds
     const baseOffset = 25
     const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120
@@ -391,8 +409,8 @@ export const MenuLayer = React.memo(() => {
         case 'TrayToggle0':
         case 'TrayToggle1':
         case 'TrayToggle2':
-          this.activeMenuID = +key.replace('TrayToggle', '')
-          this.isPinnedOpen = !this.isPinnedOpen
+          menuStore.activeMenuID = +key.replace('TrayToggle', '')
+          menuStore.togglePinnedOpen()
           break
         case 'TrayHover0':
         case 'TrayHover1':

@@ -13,6 +13,13 @@ enum InterfaceStyle : String {
   }
 }
 
+struct TrayItem {
+  var index: Int
+  var id: String
+  var width: Int
+  var spaceBefore: Int
+}
+
 // super hack: node doesnt see the stdout for who knows what reason
 // so we re-route everything to stderr with a ! in front
 // cringe alert
@@ -269,6 +276,9 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         if (self.trayLocation == "2") {
           self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover2"))
         }
+        if (self.trayLocation == "3") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover3"))
+        }
         throttledHover((self.trayLocation, self.socketBridge))
       }
     }
@@ -289,14 +299,22 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     socketBridge.send("{ \"action\": \"trayState\", \"value\": \"TrayHover\(trayLocation)\" }")
   }
   
-  let indexToTrayKey = ["0", "1", "2"]
+  // [id, width, spaceBefore]
+  let trayItems: [TrayItem] = [
+    TrayItem(index: 0, id: "3", width: 28, spaceBefore: 0),
+    TrayItem(index: 1, id: "2", width: 28, spaceBefore: 0),
+    TrayItem(index: 2, id: "1", width: 28, spaceBefore: 0),
+    TrayItem(index: 3, id: "0", width: 28, spaceBefore: 10),
+//    ["3", 28, 0], ["2", 28, 0], ["1", 28, 0], ["0", 28, 10]
+  ]
   
   func getTrayLocation(mouseLocation: NSPoint, trayRect: NSRect) -> String {
     let mouseX = mouseLocation.x
     let mouseY = mouseLocation.y
-    let buttonWidth = 28
     let trayOffsetBeginning = 27
-    let trayButtonMaxX = [0,1,2].map({ trayOffsetBeginning + ($0 + 1) * buttonWidth })
+    let trayButtonMaxX = self.trayItems.map({ (ti: TrayItem) -> Int in
+      return trayOffsetBeginning + (ti.width * (ti.index + 1)) + ti.spaceBefore
+    })
     let withinX = mouseX >= trayRect.minX && mouseX <= trayRect.maxX
     // if mouse is currently over the menu, we should extend the bounds down
     // because by default we have a couple pixels between the tray item and the menu
@@ -312,8 +330,9 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       }
 //      print("check it out \(xOff) \(trayButtonMaxX)")
       for (index, maxX) in trayButtonMaxX.enumerated() {
+        print("\(trayButtonMaxX) \(xOff) \(maxX)")
         if (xOff < maxX) {
-          return self.indexToTrayKey[index]
+          return self.trayItems[index].id
         }
       }
     }

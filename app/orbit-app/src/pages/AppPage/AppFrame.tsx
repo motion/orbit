@@ -8,6 +8,7 @@ import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
 import { AppPageStore } from './AppPageStore'
 import { AppFrameArrow } from './AppFrameArrow'
+import { App } from '@mcro/stores'
 
 type AppFrameProps = {
   store?: AppFrameStore
@@ -46,8 +47,8 @@ class AppFrameStore {
   props: AppFrameProps
 
   // frame position and size
-  sizeD: [number, number] = [0, 0]
-  posD: [number, number] = [0, 0]
+  sizeD = App.getAppState(Constants.APP_ID).size
+  posD = App.getAppState(Constants.APP_ID).position
 
   syncWithAppState = react(
     () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
@@ -126,9 +127,10 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
   const transition = transitions(appPageStore)
   const size = store.sizeD
+  console.log('render app frame', { width: size[0], height: size[1] })
   return (
     <Resizable
-      size={{ width: size[0], height: size[1] }}
+      defaultSize={{ width: size[0], height: size[1] }}
       minWidth={100}
       minHeight={100}
       maxWidth={window.innerWidth}

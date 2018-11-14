@@ -186,7 +186,6 @@ export class BridgeManager {
       }
       try {
         const msg = JSON.parse(data)
-        console.log('got msg', msg)
 
         if (!msg || typeof msg !== 'object') {
           throw new Error('Non-object received')

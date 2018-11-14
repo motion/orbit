@@ -11,7 +11,6 @@ import { GroupedSearchItem } from './views/GroupedSearchItem'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
-import { trace } from 'mobx'
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
@@ -66,7 +65,6 @@ export class SearchAppInner extends React.Component<
 
   render() {
     const { searchStore, appStore, offsetY } = this.props
-    trace()
     return (
       <ProvideHighlightsContextWithDefaults
         value={{

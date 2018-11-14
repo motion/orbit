@@ -9,14 +9,9 @@ tuesday:
 - fix selection store getting into bad state / not moving
 - fix keyboard selection move
 - add auto select on search first item
-- fix clear app window on clear peek
-
-- apps have sidebars inside them
-
-  - create new titlebar / icon with button to toggle sidebar
-  - restructure apps to have sidebar from their Main view
-  - get sidebar in and working, resizing
-  - fix some tear away bugs
+- create new titlebar / icon with button to toggle sidebar
+- get sidebar in and working, resizing
+- fix some tear away bugs
 
 - contextual search app
   - only shows individual items

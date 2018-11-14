@@ -54,12 +54,12 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
             isActive={isActive}
             isLeft={isLeft}
             style={style}
-            height={subPaneStore.contentHeightLimited}
+            height={subPaneStore.contentHeight}
             forwardRef={subPaneStore.paneRef}
             preventScroll={preventScroll}
             {...props}
           >
-            <PaneContentInner>
+            <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>
               <StaticContainer key={0}>{children}</StaticContainer>
             </PaneContentInner>
           </Pane>
@@ -78,7 +78,6 @@ const SubPaneFrame = view(UI.FullScreen, {
   opacity: 0,
   isActive: {
     opacity: 1,
-    pointerEvents: 'inherit',
   },
 })
 
@@ -96,6 +95,9 @@ const Pane = view(UI.View, {
   preventScroll: {
     overflowY: 'hidden',
   },
+  isActive: {
+    pointerEvents: 'auto',
+  },
 }).theme(({ isLeft, isActive }) => ({
   opacity: isActive ? 1 : 0,
   transform: {
@@ -106,6 +108,7 @@ const Pane = view(UI.View, {
 const SubPaneInner = view(UI.View, {
   position: 'relative',
   flex: 1,
+  pointerEvents: 'none',
 })
 
 const PaneContentInner = view({

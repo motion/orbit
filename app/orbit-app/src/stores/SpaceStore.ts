@@ -54,6 +54,9 @@ export const AppPanes: Pane[] = [
     icon: 'listBullets',
     trigger: '/',
     static: true,
+    props: {
+      preventScroll: true,
+    },
   },
 ]
 
@@ -75,9 +78,7 @@ export class SpaceStore {
   }
 
   spaceSources(space: Space) {
-    return this.sources
-      .filter(source => source.spaceId === space.id)
-      .map(getAppFromSource) // todo: this is temporary to make things working, Nate should change that
+    return this.sources.filter(source => source.spaceId === space.id).map(getAppFromSource) // todo: this is temporary to make things working, Nate should change that
   }
 
   activeSources() {
@@ -98,5 +99,4 @@ export class SpaceStore {
   private sources$ = observeMany(SourceModel, { args: {} }).subscribe(sources => {
     this.sources = sources
   })
-
 }

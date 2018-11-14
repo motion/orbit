@@ -17,19 +17,24 @@ export class KeyboardManager {
   isOptionDown = false
   mouseActive = Date.now()
 
-  onOptionKey = ({ type }) => {
+  onOptionKey = ({ type, value }) => {
     clearTimeout(this.downTm)
-    switch (type) {
-      case 'keyDown':
-        this.isOptionDown = true
-        this.downTm = setTimeout(() => {
-          Desktop.setKeyboardState({ isHoldingOption: true })
-        }, OPTION_PEEK_DELAY)
-        return
-      case 'keyUp':
-        Desktop.setKeyboardState({ isHoldingOption: false })
-        this.isOptionDown = false
-        return
+    if (value === 'esc') {
+      Desktop.setKeyboardState({ escapeDown: Date.now() })
+    }
+    if (value === 'option') {
+      switch (type) {
+        case 'keyDown':
+          this.isOptionDown = true
+          this.downTm = setTimeout(() => {
+            Desktop.setKeyboardState({ isHoldingOption: true })
+          }, OPTION_PEEK_DELAY)
+          return
+        case 'keyUp':
+          Desktop.setKeyboardState({ isHoldingOption: false })
+          this.isOptionDown = false
+          return
+      }
     }
   }
 

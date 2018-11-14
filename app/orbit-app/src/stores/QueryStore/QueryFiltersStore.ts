@@ -193,7 +193,7 @@ export class QueryFilterStore {
   )
 
   resetFiltersOnSearchClear = react(
-    () => !!this.queryStore.query,
+    () => this.queryStore.hasQuery,
     hasQuery => {
       ensure('no query', !hasQuery)
       this.resetAllFilters()
@@ -214,7 +214,7 @@ export class QueryFilterStore {
   toggleFilterActive = (name: string) => {
     // if adding a suggested filter, add it dont disable
     if (!this.hasActiveFilter(name)) {
-      this.queryStore.setQuery(`${this.queryStore.query} ${name}`.trim())
+      this.queryStore.setQuery(`${this.queryStore.queryInstant} ${name}`.trim())
       return
     }
     const key = name.toLowerCase()

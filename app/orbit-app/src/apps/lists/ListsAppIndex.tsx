@@ -42,8 +42,8 @@ class ListsIndexStore {
         title: listItem.name,
         after: (
           <View margin="auto" padding={[0, 6]}>
-            <Button circular>
-              <Icon name="pin" size={14} />
+            <Button circular size={0.9}>
+              <Icon name="pin" size={12} />
             </Button>
           </View>
         ),
@@ -83,7 +83,12 @@ export const ListsAppIndex = memo((props: AppProps) => {
       <VirtualList
         maxHeight={400}
         items={results}
-        itemProps={{ direct: true, appType: 'lists' }}
+        itemProps={{
+          direct: true,
+          appType: 'lists',
+          titleProps: { fontSize: 18, fontWeight: 300 },
+          ...props.itemProps,
+        }}
         getItemProps={index => ({ appConfig: results[index] })}
       />
       <ListEdit />

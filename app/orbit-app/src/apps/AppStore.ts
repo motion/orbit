@@ -54,13 +54,13 @@ export class AppStore {
   }
 
   activeQuery = react(
-    () => [this.isActive, this.props.queryStore.queryDebounced],
+    () => [this.isActive, this.props.queryStore.query],
     ([active, query]) => {
       ensure('active', active)
       return query
     },
     {
-      defaultValue: this.props.queryStore.queryDebounced,
+      defaultValue: this.props.queryStore.query,
       onlyUpdateIfChanged: true,
     },
   )
@@ -96,7 +96,7 @@ export class AppStore {
   get maxHeight() {
     const { subPaneStore } = this.props
     if (subPaneStore) {
-      return subPaneStore.maxHeight - subPaneStore.aboveContentHeight
+      return subPaneStore.maxHeight
     }
     return window.innerHeight - 50
   }

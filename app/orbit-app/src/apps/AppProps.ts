@@ -7,6 +7,7 @@ import { SubPaneStore } from '../components/SubPaneStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
+import { ItemProps } from '../views/OrbitItemProps'
 
 export type AppProps = {
   id: string
@@ -22,4 +23,5 @@ export type AppProps = {
   isActive?: boolean | (() => boolean)
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore
+  itemProps?: Partial<ItemProps<any>>
 }

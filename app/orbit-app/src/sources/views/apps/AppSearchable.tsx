@@ -23,7 +23,7 @@ export class AppSearchable extends React.Component<Props> {
     const { selectionStore, appStore, children } = this.props
     return (
       <Searchable
-        defaultValue={appStore.props.queryStore.queryDebounced}
+        defaultValue={appStore.props.queryStore.query}
         // focusOnMount
         // onEnter={peekStore.goToNextHighlight}
         onChange={() => selectionStore.setHighlightIndex(0)}

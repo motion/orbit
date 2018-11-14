@@ -8,10 +8,10 @@ export class QueryStore {
     sourcesStore: SourcesStore
   }
 
-  query = ''
+  queryInstant = ''
 
-  queryDebounced = react(
-    () => this.query,
+  query = react(
+    () => this.queryInstant,
     async (query, { sleep }) => {
       await sleep(50)
       // debounce super short queries more because they are less often + in hot path
@@ -40,18 +40,18 @@ export class QueryStore {
     this.queryFilters['subscriptions'].dispose()
   }
 
-  hasQuery = react(() => !!this.query.length, _ => _)
+  hasQuery = react(() => !!this.queryInstant.length, _ => _)
 
   clearQuery = () => {
-    this.query = ''
+    this.queryInstant = ''
     this.queryFilters.resetAllFilters()
   }
 
   setQuery = value => {
-    this.query = value
+    this.queryInstant = value
   }
 
   onChangeQuery = e => {
-    this.query = e.target.value
+    this.queryInstant = e.target.value
   }
 }

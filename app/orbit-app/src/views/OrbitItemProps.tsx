@@ -13,7 +13,7 @@ export type ItemRenderText = ((text: string) => JSX.Element)
 export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
     // for setting the view
-    appType: AppType
+    appType?: AppType
     appConfig?: AppConfig
 
     // whether to avoid model resolving and just use props

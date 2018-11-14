@@ -77,21 +77,19 @@ export class SubPaneStore {
   }
 
   get maxHeight() {
-    return window.innerHeight - 50
+    const bottomLip = 30
+    const edgePad = 10 * 2
+    return window.innerHeight - this.aboveContentHeight - edgePad - bottomLip
   }
 
   get fullHeight() {
     const fullHeight = this.contentHeight + this.aboveContentHeight
     const minHeight = 90
     // never go all the way to bottom, cap min and max
-    return Math.max(minHeight, Math.min(this.maxHeight, fullHeight))
+    return Math.max(minHeight, fullHeight)
   }
 
   lastHeight = react(() => this.fullHeight, _ => _, { delayValue: true })
-
-  contentHeightLimited = react(() => this.fullHeight - this.aboveContentHeight, _ => _, {
-    onlyUpdateIfChanged: true,
-  })
 
   onChangeHeight = react(
     () => [this.fullHeight, this.positionState.isActive],

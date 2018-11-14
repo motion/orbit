@@ -6,12 +6,11 @@ small apps for teams
 
 tuesday:
 
-- esc to clear
+- fix popover show on initial mount
+- fix selection store getting into bad state / not moving
 - fix focusing on search
 - fix keyboard selection move
 - add auto select on search first item
-- fix option hold slow animate in
-- fix pin key typing into search box
 - fix clear app window on clear peek
 
 - apps have sidebars inside them
@@ -20,6 +19,9 @@ tuesday:
   - restructure apps to have sidebar from their Main view
   - get sidebar in and working, resizing
   - fix some tear away bugs
+
+- contextual search app
+  - only shows individual items
 
 wednesday:
 
@@ -63,6 +65,16 @@ Thursday:
 
 umed:
 
+- umbrella: Search
+  - fix measurement bugs in search results list
+  - search performance
+  - hide empty sections if there are no groups
+  - make "all period" never group -- just fills in just all most accurate items that _are not_ already shown above
+  - the highlighting of NLP terms broke somewhere, check SearchInput and HighlightedTextArea and see where its breaking
+- people syncers: if slack is added, use that as source of truth and only add other people "on top"
+  - add an option to set "source of truth" setting in settings panes
+- github view: fix not showing comments content
+- github view: fix can't select text with mouse
 - window resize with re-resizable needs work
 - Team account management and onboarding flow
 - Search performance / groups

@@ -10,7 +10,7 @@ export class OrbitWindowStore {
   }
 
   updateAppQuery = react(
-    () => this.props.queryStore.queryDebounced,
+    () => this.props.queryStore.query,
     query => {
       App.setState({ query })
     },
@@ -19,7 +19,7 @@ export class OrbitWindowStore {
   externalChangeAppQuery = react(
     () => App.state.query,
     query => {
-      ensure('is diff', this.props.queryStore.query !== query)
+      ensure('is diff', this.props.queryStore.queryInstant !== query)
       console.log('external query update')
       this.props.queryStore.setQuery(query)
     },

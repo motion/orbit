@@ -77,9 +77,6 @@ class OrbitWindowStore {
         this.orbitRef.show()
       }
     },
-    {
-      deferFirstRun: true,
-    },
   )
 
   showOnNewSpace() {
@@ -128,7 +125,7 @@ export class OrbitWindow extends React.Component<Props> {
         focus={false}
         position={[0, 0]}
         size={Electron.state.screenSize.slice()}
-        show={electronStore.show ? true : false}
+        show={electronStore.show ? App.orbitState.docked : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}

@@ -55,10 +55,11 @@ export class ShortcutsManager {
         {},
       ),
     },
-    onShortcut(name) {
-      console.log('got shortcut', name)
-      if (name.indexOf('optionAnd') === 0) {
-        Electron.setState({ pinKey: { name: name.replace('optionAnd', ''), at: Date.now() } })
+    onShortcut(shortcut) {
+      console.log('got shortcut', shortcut)
+      if (shortcut.indexOf('optionAnd') === 0) {
+        const name = shortcut.replace('optionAnd', '').toLowerCase()
+        Electron.setState({ pinKey: { name, at: Date.now() } })
       }
     },
   })

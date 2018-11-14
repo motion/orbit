@@ -43,12 +43,18 @@ const AppMainContent = view(UI.View, {
   opacity: 1,
 })
 
+const initialAppState = App.getAppState(Constants.APP_ID)
+
+if (!initialAppState) {
+  console.error('okok', initialAppState, App.appsState)
+}
+
 class AppFrameStore {
   props: AppFrameProps
 
   // frame position and size
-  sizeD = App.getAppState(Constants.APP_ID).size
-  posD = App.getAppState(Constants.APP_ID).position
+  sizeD = initialAppState.size
+  posD = initialAppState.position
 
   syncWithAppState = react(
     () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],

@@ -184,7 +184,6 @@ export const PeopleAppIndex = memo((props: AppProps) => {
           rowHeight={({ index }) => resultSections[index].height}
           rowRenderer={({ index, key }) => {
             const section = resultSections[index]
-            console.log('rendering a row...', index)
             return (
               <PersonSection
                 key={`${key}${section.title}`}

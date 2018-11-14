@@ -92,11 +92,13 @@ export class BridgeManager {
   _source = ''
   _initialState = {}
   _socket = null
-  private hasFetchedInitialState = false
+  private afterInitialState: Promise<void> = null
+  private finishInitialState: Function = null
   // to be set once they are imported
   stores = {}
   messageListeners = new Set()
   lastMessage: LastMessage = null
+  receivedInitialState: Object = null
 
   get state() {
     return this._store.state
@@ -107,6 +109,12 @@ export class BridgeManager {
     if (!store) {
       throw new Error('No source given for starting screen store')
     }
+
+    // create a promise we can resolve later
+    this.afterInitialState = new Promise(res => {
+      this.finishInitialState = res
+    })
+
     this.port = getGlobalConfig().ports.bridge
     // ensure only start once
     if (this.started) {
@@ -136,14 +144,12 @@ export class BridgeManager {
     }
     // wait for initial state
     if (!this._options.master) {
-      try {
-        await Mobx.when(() => this.hasFetchedInitialState, { timeout: 3000 })
-        if (!this.hasFetchedInitialState) {
-          throw new Error('Timed out fetching initial state!')
-        }
-      } catch {
-        this.hasFetchedInitialState = true
-      }
+      console.log('waiting for initial state')
+      let failTm = setTimeout(() => {
+        console.error('get initial state timeout!')
+      }, 10000)
+      await this.afterInitialState
+      clearTimeout(failTm)
     }
   }
 
@@ -193,10 +199,18 @@ export class BridgeManager {
 
         // receive the current state once we connect to master
         if (msg.initialState) {
-          for (const name in msg.initialState) {
-            diffDeep(this.stores[name].state, msg.initialState[name], { merge: true })
-          }
-          this.hasFetchedInitialState = true
+          Mobx.transaction(() => {
+            const state = msg.initialState
+            // merge each key of state to keep the "deepness"
+            // this.stores.App.state[key] = initialState.App[key]
+            for (const name in state) {
+              for (const key in state[name]) {
+                this.stores[name].state[key] = state[name][key]
+              }
+            }
+          })
+          this.receivedInitialState = msg.initialState
+          this.finishInitialState()
           return
         }
 

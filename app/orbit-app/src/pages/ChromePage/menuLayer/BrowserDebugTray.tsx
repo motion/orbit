@@ -1,35 +1,20 @@
 import * as React from 'react'
 import { Row, FullScreen, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { IS_ELECTRON } from '../../../constants'
 
 class DebugTrayStore {
   props: { id: number }
-  target = { id: null, at: null }
-
-  setupHover = react(
-    () => this.target.id,
-    current => {
-      App.setState({
-        trayState: {
-          trayEvent: `TrayHover${current}`,
-          trayHoverAt: Date.now(),
-        },
-      })
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
 
   targetSetter = id => () => {
     console.log('id', id)
-    this.target = {
-      id,
-      at: Date.now(),
-    }
+    App.setState({
+      trayState: {
+        trayEvent: `TrayHover${id}`,
+        trayHoverAt: Date.now(),
+      },
+    })
   }
 
   onLeave = this.targetSetter('Out')
@@ -50,9 +35,10 @@ export const BrowserDebugTray = ({ children }) => {
           alignItems="center"
           pointerEvents="auto"
         >
-          <Target id={0} store={store} />
-          <Target id={1} store={store} />
+          <Target id={3} store={store} />
           <Target id={2} store={store} />
+          <Target id={1} store={store} />
+          <Target id={0} store={store} />
         </View>
       </Row>
       <View position="relative" flex={1}>

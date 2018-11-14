@@ -22,7 +22,7 @@ const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
 const maxTransition = 180
-const transition = `opacity ease-in 60ms, transform ease ${maxTransition}ms`
+const transition = `none`
 export const menuPad = 6
 
 const sendTrayEvent = (key, value) => {
@@ -57,7 +57,7 @@ export class MenuStore {
   isOpenFast = react(
     () => [
       this.holdingOption,
-      this.isHoveringIcon || this.isHoveringDropdown || this.isPinnedOpen || this.isHoveringPeek,
+      this.isHoveringTray || this.isHoveringDropdown || this.isPinnedOpen || this.isHoveringPeek,
     ],
     async ([holdingOption, showMenu], { sleep }) => {
       if (holdingOption) {
@@ -135,13 +135,13 @@ export class MenuStore {
 
   activeOrLastActiveMenuID = react(
     () => this.activeMenuID,
-    (val, { state }) => {
-      if (!state.hasResolvedOnce) {
-        // for now just hardcoding to start at #2 app
-        return 2
-      }
+    val => {
       ensure('is number', typeof val === 'number')
       return +val
+    },
+    {
+      defaultValue: 0,
+      deferFirstRun: true,
     },
   )
 
@@ -272,7 +272,7 @@ export class MenuStore {
     },
   )
 
-  get isHoveringIcon() {
+  get isHoveringTray() {
     return this.hoveringID > -1
   }
 
@@ -450,13 +450,14 @@ export const MenuLayer = React.memo(() => {
     })
   }, [])
   log(`MenuLayer left ${menuStore.menuCenter}`)
+  const left = menuStore.menuCenter - width / 2
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={storeProps}>
         <MenuChrome
           width={width - menuPad * 2}
           margin={menuPad}
-          transform={{ x: menuStore.menuCenter - width / 2, y: menuStore.isOpenVisually ? 0 : -5 }}
+          transform={{ x: left, y: menuStore.isOpenVisually ? 0 : -5 }}
           transition={transition}
           opacity={menuStore.isOpenVisually ? 1 : 0}
         >
@@ -467,23 +468,17 @@ export const MenuLayer = React.memo(() => {
           transition={transition}
           background
           width={width}
+          height={menuStore.height}
           towards="bottom"
           delay={0}
           top={IS_ELECTRON ? 0 : 28}
+          left={left}
           distance={6}
-          forgiveness={10}
+          forgiveness={0}
           edgePadding={0}
           elevation={20}
-          left={menuStore.menuCenter}
-          maxHeight={window.innerHeight}
           theme="dark"
-        >
-          <div
-            style={{
-              height: menuStore.height,
-            }}
-          />
-        </Popover>
+        />
       </StoreContext.Provider>
     </BrowserDebugTray>
   )

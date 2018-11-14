@@ -379,7 +379,13 @@ export const MenuLayer = React.memo(() => {
       AppActions.clearPeek()
     },
   })
-  const paneManagerStore = useStore(PaneManagerStore, { panes: menuApps, selectionStore })
+  const paneManagerStore = useStore(PaneManagerStore, {
+    panes: menuApps,
+    selectionStore,
+    onClearSelection: () => {
+      AppActions.clearPeek()
+    },
+  })
   const menuStore = useStore(MenuStore, { paneManagerStore })
   const storeProps = {
     settingStore,

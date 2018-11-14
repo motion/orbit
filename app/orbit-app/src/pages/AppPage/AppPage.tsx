@@ -12,10 +12,12 @@ import { AppView } from '../../apps/AppView'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { Sidebar, Row, Text, Col } from '@mcro/ui'
+import { Searchable } from '../../components/Searchable'
 
 type Props = {
   sourcesStore?: SourcesStore
   appPageStore?: AppPageStore
+  queryStore?: QueryStore
 }
 
 @provide({
@@ -57,7 +59,7 @@ const TitleBar = view({
   borderBottom: [1, theme.borderColor.alpha(0.5)],
 }))
 
-@attach('sourcesStore', 'appPageStore')
+@attach('queryStore', 'sourcesStore', 'appPageStore')
 @view
 class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitIntegration<any>['views']) => {
@@ -71,7 +73,7 @@ class AppPageContent extends React.Component<Props> {
   }
 
   render() {
-    const { appPageStore } = this.props
+    const { appPageStore, queryStore } = this.props
     if (!appPageStore.state) {
       return <div>no state</div>
     }
@@ -104,13 +106,15 @@ class AppPageContent extends React.Component<Props> {
         <Row flex={1}>
           {appPageStore.isTorn && (
             <Sidebar width={200}>
-              <AppView
-                id={appConfig.id}
-                viewType="index"
-                title={appConfig.title}
-                type={appType}
-                isActive
-              />
+              <Searchable queryStore={queryStore}>
+                <AppView
+                  id={appConfig.id}
+                  viewType="index"
+                  title={appConfig.title}
+                  type={appType}
+                  isActive
+                />
+              </Searchable>
             </Sidebar>
           )}
           <Col flex={1}>

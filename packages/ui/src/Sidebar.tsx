@@ -104,6 +104,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
     if (!props.userChange && (state.width !== props.width || state.height !== props.height)) {
       return { width: props.width, height: props.height }
     }
+    return null
   }
 
   onResize = (width: number, height: number) => {

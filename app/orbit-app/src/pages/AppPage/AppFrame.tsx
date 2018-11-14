@@ -48,16 +48,19 @@ class AppFrameStore {
   // frame position and size
   sizeD: [number, number] = [0, 0]
   posD: [number, number] = [0, 0]
+
   syncWithAppState = react(
     () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
     ([size, position]) => {
       ensure('size', !!size)
+      ensure('not torn', !this.props.appPageStore.isTorn)
       this.sizeD = size
       this.posD = position
     },
   )
 
   handleResize: ResizeCallback = (_e, direction, _r, { width, height }) => {
+    console.log('resizing', direction, width, height)
     switch (direction) {
       case 'right':
       case 'bottom':
@@ -85,7 +88,12 @@ class AppFrameStore {
     () => [this.sizeD, this.posD],
     async ([size, position], { sleep }) => {
       await sleep(100)
+      ensure('hasSize', size[0] !== 0 && size[1] !== 0)
+      console.log('deferred set app state', size, position)
       AppActions.setAppState({ size, position })
+    },
+    {
+      deferFirstRun: true,
     },
   )
 }
@@ -125,7 +133,7 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
       minHeight={100}
       maxWidth={window.innerWidth}
       maxHeight={window.innerHeight}
-      onResize={store.handleResize}
+      onResizeStop={store.handleResize}
       className="resizable"
       style={{
         zIndex: 2,

@@ -204,11 +204,13 @@ export class MenuStore {
     },
   )
 
+  // reset everything on esc so it always closes
   setUnpinnedFromEscKey = react(
     () => Desktop.keyboardState.escapeDown,
     () => {
       this.isPinnedOpen = false
       this.isHoveringDropdown = false
+      this.hoveringID = -1
     },
     {
       deferFirstRun: true,

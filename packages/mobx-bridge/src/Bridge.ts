@@ -1,5 +1,5 @@
 import { action } from 'mobx'
-import { isPlainObject, debounce, isEqual } from 'lodash'
+import { isPlainObject, isEqual } from 'lodash'
 import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
@@ -137,7 +137,7 @@ export class BridgeManager {
     // wait for initial state
     if (!this._options.master) {
       try {
-        await Mobx.when(() => this.hasFetchedInitialState, { timeout: 1000 })
+        await Mobx.when(() => this.hasFetchedInitialState, { timeout: 3000 })
         if (!this.hasFetchedInitialState) {
           throw new Error('Timed out fetching initial state!')
         }
@@ -150,19 +150,22 @@ export class BridgeManager {
   private async setupMaster() {
     const stores = this._options.stores
     log.verbose(`Starting socket manager on ${this.port}`)
+
     this.socketManager = new SocketManager({
       masterSource: 'Desktop',
       port: this.port,
-      onState: (source, state, _uid) => {
+      onState: (source, state) => {
         diffDeep(stores[source].state, state, { merge: true })
       },
       actions: {
         // stores that first connect send a call to get initial state
         // this is where its received by other apps
-        getState: ({ /* source,  */ socket }) => {
-          for (const name of Object.keys(stores)) {
-            this.socketManager.sendState(socket, stores[name].state, name)
+        getInitialState: ({ socket }) => {
+          const initialState = {}
+          for (const name in stores) {
+            initialState[name] = stores[name].state
           }
+          this.socketManager.sendInitialState(socket, initialState)
         },
         // message coming to Desktop
         onMessage: this.handleMessage,
@@ -172,7 +175,6 @@ export class BridgeManager {
   }
 
   setupClientSocket = () => {
-    // socket setup
     this._socket.onmessage = async ({ data }) => {
       if (!data) {
         console.log('No data received over socket')
@@ -183,39 +185,55 @@ export class BridgeManager {
         return
       }
       try {
-        const messageObj = JSON.parse(data)
-        if (!messageObj || typeof messageObj !== 'object') {
+        const msg = JSON.parse(data)
+        console.log('got msg', msg)
+
+        if (!msg || typeof msg !== 'object') {
           throw new Error('Non-object received')
         }
-        const { source, state: newState } = messageObj
-        if (this._options.ignoreSelf && source === this._source) {
+
+        // receive the current state once we connect to master
+        if (msg.initialState) {
+          for (const name in msg.initialState) {
+            diffDeep(this.stores[name].state, msg.initialState[name], { merge: true })
+          }
+          this.hasFetchedInitialState = true
           return
         }
-        if (!newState) {
+
+        // otherwise we are receiving a single state update
+
+        // ignore self if we want that
+        if (this._options.ignoreSelf && msg.source === this._source) {
+          return
+        }
+
+        if (!msg.state) {
           throw new Error(`No state received from message: ${data}`)
         }
-        if (!source) {
+        if (!msg.source) {
           throw new Error(`No source store
-            source: ${source}
+            source: ${msg.source}
             data: ${data}
           `)
         }
-        if (!this.stores[source]) {
-          console.warn('Store not imported: this.stores:', this.stores, `source: ${source}`)
+        if (!this.stores[msg.source]) {
+          console.warn('Store not imported: this.stores:', this.stores, `source: ${msg.source}`)
           return
         }
-        const store = this.stores[source]
-        const { state } = store
-        if (!state) {
-          throw new Error(`No state found for source (${source}) state (${state}) store(${store})`)
+
+        const store = this.stores[msg.source]
+        if (!store.state) {
+          throw new Error(
+            `No state found for source (${msg.source}) state (${store.state}) store(${store})`,
+          )
         }
-        // apply incoming state
+
+        // this greatly speeds up client apps
         await nextCycle()
-        diffDeep(state, newState, { merge: true })
-        // we have initial state :)
-        if (source === this._source && !this.hasFetchedInitialState) {
-          this.debounceSetHasFetched()
-        }
+
+        // apply incoming state
+        diffDeep(store.state, msg.state, { merge: true })
       } catch (err) {
         console.error(
           `${err.message}:\n${err.stack}\n
@@ -224,6 +242,7 @@ export class BridgeManager {
         )
       }
     }
+
     this._socket.onopen = () => {
       this._wsOpen = true
       if (this._awaitingSocket.length) {
@@ -232,8 +251,9 @@ export class BridgeManager {
       }
       // send state that hasnt been synced yet
       this.scheduleSendState()
-      this.getCurrentState()
+      this.getInitialState()
     }
+
     this._socket.onclose = () => {
       this._wsOpen = false
       // reconnecting websocket reconnect fix: https://github.com/pladaria/reconnecting-websocket/issues/60
@@ -241,6 +261,7 @@ export class BridgeManager {
         this._socket._connect()
       }
     }
+
     this._socket.onerror = err => {
       if (err.preventDefault) {
         err.preventDefault()
@@ -257,13 +278,9 @@ export class BridgeManager {
     }
   }
 
-  debounceSetHasFetched = debounce(() => {
-    this.hasFetchedInitialState = true
-  }, 16)
-
-  getCurrentState = () => {
+  getInitialState = () => {
     // get initial state
-    this._socket.send(JSON.stringify({ action: 'getState', source: this._source }))
+    this._socket.send(JSON.stringify({ action: 'getInitialState', source: this._source }))
   }
 
   handleMessage = data => {

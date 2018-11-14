@@ -44,6 +44,10 @@ export class AppPageStore {
   appState = react(
     () => App.appsState.find(x => x.id === this.id),
     async (appState, { sleep, state }) => {
+      if (!appState) {
+        console.log('weird no app state...', appState, this.id, JSON.stringify(App.appsState))
+        return {} as AppState
+      }
       if (!appState.torn && state.hasResolvedOnce) {
         await sleep(60)
       }

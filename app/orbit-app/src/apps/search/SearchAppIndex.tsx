@@ -17,9 +17,10 @@ const spaceBetween = <div style={{ flex: 1 }} />
 
 export function SearchAppIndex(props: AppProps) {
   const searchStore = useStore(SearchStore, props)
+  const shouldHideNav = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (
     <>
-      <OrbitSearchNav />
+      {!shouldHideNav && <OrbitSearchNav />}
       <ItemResolverDecorationContext.Provider
         value={{
           item: null,
@@ -65,7 +66,6 @@ export class SearchAppInner extends React.Component<
 
   render() {
     const { searchStore, appStore, offsetY } = this.props
-    log(`render SEARCHAPPINNER (${this.items.length})`)
     trace()
     return (
       <ProvideHighlightsContextWithDefaults
@@ -93,7 +93,7 @@ export class SearchAppInner extends React.Component<
 class ListItem extends React.PureComponent<ListItemProps> {
   render() {
     const { model, realIndex, query, ...props } = this.props
-    if (model.target === "search-group") {
+    if (model.target === 'search-group') {
       const item = model as any
       return <GroupedSearchItem item={item} index={realIndex} query={query} {...props} />
     }

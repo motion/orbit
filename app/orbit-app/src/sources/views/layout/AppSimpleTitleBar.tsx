@@ -1,24 +1,25 @@
 import * as React from 'react'
-import { View, Text } from '@mcro/ui'
-import { StoreContext } from '@mcro/black'
+import { Text } from '@mcro/ui'
+import { StoreContext, view } from '@mcro/black'
 
 type Props = {
   title: string
 }
 
+const TitleBar = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  padding: [3, 0],
+  margin: [0, 30],
+  alignItems: 'center',
+})
+
 export const AppSimpleTitleBar = ({ title }: Props) => {
   const { appPageStore } = React.useContext(StoreContext)
   return (
-    <View
-      draggable
-      onDragStart={appPageStore.onDragStart}
-      position="absolute"
-      top={0}
-      left={30}
-      right={30}
-      paddingTop={3}
-      alignItems="center"
-    >
+    <TitleBar draggable onDragStart={appPageStore.onDragStart}>
       <Text
         ellipse
         maxWidth="100%"
@@ -29,6 +30,6 @@ export const AppSimpleTitleBar = ({ title }: Props) => {
       >
         {title}
       </Text>
-    </View>
+    </TitleBar>
   )
 }

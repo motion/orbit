@@ -2,11 +2,11 @@ export type TrayActions = {
   TrayToggle0: number
   TrayToggle1: number
   TrayToggle2: number
-  TrayToggleOrbit: number
+  TrayToggle3: number
   TrayHover0: number
   TrayHover1: number
   TrayHover2: number
-  TrayHoverOrbit: number
+  TrayHover3: number
   TrayHoverOut: number
 }
 

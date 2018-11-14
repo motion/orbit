@@ -304,10 +304,14 @@ export class MenuStore {
   )
 
   get menuCenter() {
-    const id = this.activeOrLastActiveMenuID
+    const maxItems = 3
+    let id = this.activeOrLastActiveMenuID
+    id = id === -1 ? 0 : id
     const trayBounds = Desktop.state.operatingSystem.trayBounds
-    const baseOffset = 25
-    const offset = +id == id ? (+id + 1) * 25 + baseOffset : 120
+    const leftSpacing = 47
+    const xOffset = maxItems - id
+    const extraSpace = 4
+    const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
     const bounds = trayBounds[0] + offset
     return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
   }
@@ -403,19 +407,19 @@ export const MenuLayer = React.memo(() => {
     return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
       console.log('got event', key)
       switch (key) {
-        case 'TrayToggleOrbit':
+        case 'TrayToggle0':
           AppActions.setOrbitDocked(!App.state.orbitState.docked)
           break
-        case 'TrayToggle0':
         case 'TrayToggle1':
         case 'TrayToggle2':
+        case 'TrayToggle3':
           menuStore.activeMenuID = +key.replace('TrayToggle', '')
           menuStore.togglePinnedOpen()
           break
         case 'TrayHover0':
         case 'TrayHover1':
         case 'TrayHover2':
-        case 'TrayHoverOrbit':
+        case 'TrayHover3':
         case 'TrayHoverOut':
           sendTrayEvent(key, Date.now())
           break
@@ -472,6 +476,8 @@ const MenuChrome = view(View, {
 
 const MenuChromeContent = React.memo(
   ({ menuStore, queryStore }: { menuStore: MenuStore; queryStore: QueryStore }) => {
+    const menuApps = ['people', 'topics', 'lists', 'search'] as AppType[]
+
     return (
       <View className="app-parent-bounds" pointerEvents="auto">
         <Searchable
@@ -481,11 +487,11 @@ const MenuChromeContent = React.memo(
             onChange: queryStore.onChangeQuery,
           }}
         >
-          {(['people', 'topics', 'lists'] as AppType[]).map((app, index) => (
+          {menuApps.map((app, index) => (
             <MenuApp
               id={app}
               key={app}
-              menuId={index}
+              menuId={menuApps.length - index - 1}
               viewType="index"
               title={app}
               type={app}

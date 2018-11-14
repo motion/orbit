@@ -239,9 +239,9 @@ export class MenuStore {
   )
 
   closePeekOnChangeMenu = react(
-    () => typeof this.activeMenuID === 'number',
-    isChanging => {
-      ensure('isChanging', isChanging)
+    () => this.activeMenuID === -1,
+    isClosed => {
+      ensure('isClosed', isClosed)
       AppActions.clearPeek()
     },
   )
@@ -382,9 +382,6 @@ export const MenuLayer = React.memo(() => {
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,
     selectionStore,
-    onClearSelection: () => {
-      AppActions.clearPeek()
-    },
   })
   const menuStore = useStore(MenuStore, { paneManagerStore })
   const storeProps = {

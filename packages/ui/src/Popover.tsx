@@ -109,6 +109,7 @@ export type PopoverProps = CSSPropertySet & {
 }
 
 const PopoverContainer = view({
+  opacity: 0,
   position: 'absolute',
   top: 0,
   left: 0,
@@ -118,6 +119,9 @@ const PopoverContainer = view({
   pointerEvents: 'none',
   '& > *': {
     pointerEvents: 'none !important',
+  },
+  isPositioned: {
+    opacity: 1,
   },
   isOpen: {
     zIndex: 5000,
@@ -159,6 +163,7 @@ const PopoverWrap = view({
   pointerEvents: 'none',
   zIndex: -1,
 }).theme(p => {
+  console.log('render popover wrap opacity', p.isOpen && !p.willReposition ? 1 : 0, p)
   return {
     width: p.width,
     height: p.height,
@@ -1009,11 +1014,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const backgroundProp = background === true ? null : { background: `${background}` }
     const isMeasuring = this.state.shouldSetPosition || (top === 0 && left === 0)
     const isOpen = !isMeasuring && showPopover
-    console.log('isOpen', isOpen, 'showPopover', showPopover)
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}
-        isMeasuring={isMeasuring}
+        isPositioned={!isMeasuring}
         isOpen={isOpen}
         isClosing={closing}
       >
@@ -1030,6 +1034,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           key={1}
           {...popoverProps}
           isOpen={!nextPosition && !closing && !!isOpen}
+          willReposition={!!nextPosition}
           forwardRef={this.setPopoverRef}
           distance={distance}
           forgiveness={forgiveness}
@@ -1045,7 +1050,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           left={left}
           top={top}
           style={style}
-          willReposition={!!nextPosition}
         >
           {!noArrow && (
             <ArrowContain
@@ -1088,7 +1092,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
         <Portal>
-          <span className="popover-portal">
+          <span className="popover-portal" style={{ opacity: isOpen ? 1 : 0 }}>
             {theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent}
           </span>
         </Portal>

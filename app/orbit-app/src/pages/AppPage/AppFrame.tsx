@@ -45,10 +45,6 @@ const AppMainContent = view(UI.View, {
 
 const initialAppState = App.getAppState(Constants.APP_ID)
 
-if (!initialAppState) {
-  console.error('okok', initialAppState, App.appsState)
-}
-
 class AppFrameStore {
   props: AppFrameProps
 

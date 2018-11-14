@@ -6,9 +6,7 @@ small apps for teams
 
 tuesday:
 
-- fix popover show on initial mount
 - fix selection store getting into bad state / not moving
-- fix focusing on search
 - fix keyboard selection move
 - add auto select on search first item
 - fix clear app window on clear peek

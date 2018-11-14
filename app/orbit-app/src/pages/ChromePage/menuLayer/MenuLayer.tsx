@@ -204,10 +204,11 @@ export class MenuStore {
     },
   )
 
-  setUnpinndeFromEscKey = react(
+  setUnpinnedFromEscKey = react(
     () => Desktop.keyboardState.escapeDown,
     () => {
       this.isPinnedOpen = false
+      this.isHoveringDropdown = false
     },
     {
       deferFirstRun: true,
@@ -217,7 +218,10 @@ export class MenuStore {
   setActiveMenuFromPinMove = react(
     () => always(Electron.state.pinKey.at),
     () => {
-      const direction = Direction[Electron.state.pinKey.name]
+      const towards = Electron.state.pinKey.name
+      const inverse = towards === 'left' ? 'right' : 'left'
+      console.log('inverse it', inverse)
+      const direction = Direction[inverse]
       if (direction) {
         this.props.paneManagerStore.move(direction)
       }

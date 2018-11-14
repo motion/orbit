@@ -208,6 +208,7 @@ export const VirtualList = cold((props: Props) => {
       ref={store.setRootRef}
       style={{
         height,
+        flex: 1,
       }}
     >
       {!!width && (

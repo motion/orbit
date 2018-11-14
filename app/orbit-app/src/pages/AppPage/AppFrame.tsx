@@ -8,6 +8,7 @@ import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
 import { AppPageStore } from './AppPageStore'
 import { AppFrameArrow } from './AppFrameArrow'
+import { App } from '@mcro/stores'
 
 type AppFrameProps = {
   store?: AppFrameStore
@@ -42,22 +43,27 @@ const AppMainContent = view(UI.View, {
   opacity: 1,
 })
 
+const initialAppState = App.getAppState(Constants.APP_ID)
+
 class AppFrameStore {
   props: AppFrameProps
 
   // frame position and size
-  sizeD: [number, number] = [0, 0]
-  posD: [number, number] = [0, 0]
+  sizeD = initialAppState.size
+  posD = initialAppState.position
+
   syncWithAppState = react(
     () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
     ([size, position]) => {
       ensure('size', !!size)
+      ensure('not torn', !this.props.appPageStore.isTorn)
       this.sizeD = size
       this.posD = position
     },
   )
 
   handleResize: ResizeCallback = (_e, direction, _r, { width, height }) => {
+    console.log('resizing', direction, width, height)
     switch (direction) {
       case 'right':
       case 'bottom':
@@ -85,7 +91,12 @@ class AppFrameStore {
     () => [this.sizeD, this.posD],
     async ([size, position], { sleep }) => {
       await sleep(100)
+      ensure('hasSize', size[0] !== 0 && size[1] !== 0)
+      console.log('deferred set app state', size, position)
       AppActions.setAppState({ size, position })
+    },
+    {
+      deferFirstRun: true,
     },
   )
 }
@@ -118,14 +129,15 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
   const transition = transitions(appPageStore)
   const size = store.sizeD
+  console.log('render app frame', { width: size[0], height: size[1] })
   return (
     <Resizable
-      size={{ width: size[0], height: size[1] }}
+      defaultSize={{ width: size[0], height: size[1] }}
       minWidth={100}
       minHeight={100}
       maxWidth={window.innerWidth}
       maxHeight={window.innerHeight}
-      onResize={store.handleResize}
+      onResizeStop={store.handleResize}
       className="resizable"
       style={{
         zIndex: 2,

@@ -6,7 +6,7 @@ const log = new Logger('scrn')
 export class SocketManager {
   activeSockets = []
   onState: Function
-  actions: { getState?: Function; onMessage: Function }
+  actions: { getInitialState?: Function; onMessage: Function }
   port: number
   wss: Server
   masterSource: string
@@ -32,6 +32,14 @@ export class SocketManager {
 
   get hasListeners() {
     return !!this.activeSockets.length
+  }
+
+  sendInitialState = (socket, initialState: Object) => {
+    try {
+      socket.send(JSON.stringify({ initialState }))
+    } catch (err) {
+      log.info('error with scoket', err.message, err.stack)
+    }
   }
 
   sendState = (socket, state: Object, source) => {
@@ -99,13 +107,13 @@ export class SocketManager {
       }
       if (state) {
         // console.log('should send', source || '---nostate:(', state)
-        this.onState(source, state, uid)
+        this.onState(source, state)
         this.sendAll(source, state, { skipUID: uid })
       }
       // initial message
-      if (action === 'getState') {
+      if (action === 'getInitialState') {
         this.identities[uid] = source
-        log.verbose('got a getState action, identities', this.identities)
+        log.verbose('got a getInitialState action, identities', this.identities)
       }
       if (this.actions[action]) {
         this.actions[action]({ source, socket })

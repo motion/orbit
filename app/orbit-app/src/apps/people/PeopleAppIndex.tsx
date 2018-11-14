@@ -167,9 +167,7 @@ const PersonSection = ({
 }
 
 export const PeopleAppIndex = memo((props: AppProps) => {
-  const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props, {
-    debug: true,
-  })
+  const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props)
   const total = results.length
   if (!total) {
     return <NoResultsDialog subName="the directory" />
@@ -186,7 +184,6 @@ export const PeopleAppIndex = memo((props: AppProps) => {
           rowHeight={({ index }) => resultSections[index].height}
           rowRenderer={({ index, key }) => {
             const section = resultSections[index]
-            console.log('rendering a row...', index)
             return (
               <PersonSection
                 key={`${key}${section.title}`}

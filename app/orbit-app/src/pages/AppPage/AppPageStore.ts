@@ -24,10 +24,6 @@ export class AppPageStore {
     fixed?: boolean
   }
 
-  get id() {
-    return APP_ID
-  }
-
   dragOffset?: [number, number] = null
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
@@ -42,8 +38,12 @@ export class AppPageStore {
 
   // appConfig given the id
   appState = react(
-    () => App.appsState.find(x => x.id === this.id),
+    () => App.getAppState(APP_ID),
     async (appState, { sleep, state }) => {
+      if (!appState) {
+        console.log('weird no app state...', appState, APP_ID, JSON.stringify(App.appsState))
+        return {} as AppState
+      }
       if (!appState.torn && state.hasResolvedOnce) {
         await sleep(60)
       }
@@ -54,7 +54,7 @@ export class AppPageStore {
       return appState
     },
     {
-      defaultValue: {},
+      defaultValue: App.getAppState(APP_ID),
       onlyUpdateIfChanged: true,
     },
   )
@@ -190,11 +190,12 @@ export class AppPageStore {
   // this is triggered after Actions.finishPeekDrag
   // where we can reset the dragOffset in the same frame
   finishDrag = false
+
   resetDragOffsetOnFinishDrag = react(
-    () => App.getAppState(this.id).position,
+    () => App.getAppState(APP_ID).position,
     () => {
       ensure('finished drag', this.finishDrag)
-      console.log('finish drag?', this.dragOffset, App.appsState[this.id].position)
+      console.log('finish drag?', this.dragOffset, App.appsState[APP_ID].position)
       this.dragOffset = [0, 0]
       this.finishDrag = false
     },

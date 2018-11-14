@@ -4,7 +4,6 @@ import { observeMany } from '@mcro/model-bridge'
 import { BitModel, Bit } from '@mcro/models'
 import { react } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
-import { AppSimpleTitleBar } from '../../sources/views/layout/AppSimpleTitleBar'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 
 class ListsMainStore {
@@ -26,10 +25,16 @@ export function ListsAppMain(props: AppProps) {
   const store = useStore(ListsMainStore, props)
   return (
     <>
-      <AppSimpleTitleBar title="hi lists" />
-      <br />
-      <br />
-      <VirtualList maxHeight={window.innerHeight} items={store.list as Bit[]} />
+      <VirtualList
+        maxHeight={props.appStore.maxHeight}
+        items={store.list as Bit[]}
+        itemProps={{
+          hide: {
+            body: true,
+            subtitle: true,
+          },
+        }}
+      />
     </>
   )
 }

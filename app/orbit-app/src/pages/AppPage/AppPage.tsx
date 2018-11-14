@@ -6,16 +6,18 @@ import { AppWrapper } from '../../views'
 import { AppPageStore } from './AppPageStore'
 import * as UI from '@mcro/ui'
 import { AppFrame } from './AppFrame'
-import { App } from '@mcro/stores'
 import { WindowControls } from '../../views/WindowControls'
 import { OrbitIntegration } from '../../sources/types'
 import { AppView } from '../../apps/AppView'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
+import { Sidebar, Row, Text, Col } from '@mcro/ui'
+import { Searchable } from '../../components/Searchable'
 
 type Props = {
   sourcesStore?: SourcesStore
   appPageStore?: AppPageStore
+  queryStore?: QueryStore
 }
 
 @provide({
@@ -47,21 +49,17 @@ export class AppPage extends React.Component<Props> {
 }
 
 const NullView = () => <div>null</div>
-const HiddenControls = view({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  opacity: 0,
-  padding: [6, 4, 6],
-  zIndex: 1000,
-  pointerEvents: 'none',
-  '&:hover': {
-    opacity: 1,
-  },
-})
 
-@attach('sourcesStore', 'appPageStore')
+const TitleBar = view({
+  height: 28,
+  alignItems: 'center',
+  flexFlow: 'row',
+  padding: [0, 8],
+}).theme(({ theme }) => ({
+  borderBottom: [1, theme.borderColor.alpha(0.5)],
+}))
+
+@attach('queryStore', 'sourcesStore', 'appPageStore')
 @view
 class AppPageContent extends React.Component<Props> {
   getView = (viewType: keyof OrbitIntegration<any>['views']) => {
@@ -75,7 +73,7 @@ class AppPageContent extends React.Component<Props> {
   }
 
   render() {
-    const { appPageStore } = this.props
+    const { appPageStore, queryStore } = this.props
     if (!appPageStore.state) {
       return <div>no state</div>
     }
@@ -85,7 +83,7 @@ class AppPageContent extends React.Component<Props> {
     }
     return (
       <>
-        <HiddenControls>
+        <TitleBar draggable onDragStart={appPageStore.onDragStart}>
           <WindowControls
             onClose={appPageStore.handleClose}
             onMax={appPageStore.isTorn ? appPageStore.handleMaximize : null}
@@ -94,14 +92,41 @@ class AppPageContent extends React.Component<Props> {
               size: 10,
             }}
           />
-        </HiddenControls>
-        <AppView
-          id={appConfig.id}
-          viewType={appConfig.viewType || 'main'}
-          title={appConfig.title}
-          type={appType}
-          isActive
-        />
+          <Text
+            ellipse
+            maxWidth="100%"
+            selectable={false}
+            size={0.85}
+            fontWeight={600}
+            alignItems="center"
+          >
+            {appConfig.title}
+          </Text>
+        </TitleBar>
+        <Row flex={1}>
+          {appPageStore.isTorn && (
+            <Sidebar width={200}>
+              <Searchable queryStore={queryStore}>
+                <AppView
+                  id={appConfig.id}
+                  viewType="index"
+                  title={appConfig.title}
+                  type={appType}
+                  isActive
+                />
+              </Searchable>
+            </Sidebar>
+          )}
+          <Col flex={1}>
+            <AppView
+              id={appConfig.id}
+              viewType={appConfig.viewType || 'main'}
+              title={appConfig.title}
+              type={appType}
+              isActive
+            />
+          </Col>
+        </Row>
       </>
     )
   }

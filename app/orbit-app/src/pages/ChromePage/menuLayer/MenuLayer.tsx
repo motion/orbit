@@ -204,10 +204,13 @@ export class MenuStore {
     },
   )
 
-  setUnpinndeFromEscKey = react(
+  // reset everything on esc so it always closes
+  setUnpinnedFromEscKey = react(
     () => Desktop.keyboardState.escapeDown,
     () => {
       this.isPinnedOpen = false
+      this.isHoveringDropdown = false
+      this.hoveringID = -1
     },
     {
       deferFirstRun: true,
@@ -217,7 +220,10 @@ export class MenuStore {
   setActiveMenuFromPinMove = react(
     () => always(Electron.state.pinKey.at),
     () => {
-      const direction = Direction[Electron.state.pinKey.name]
+      const towards = Electron.state.pinKey.name
+      const inverse = towards === 'left' ? 'right' : 'left'
+      console.log('inverse it', inverse)
+      const direction = Direction[inverse]
       if (direction) {
         this.props.paneManagerStore.move(direction)
       }
@@ -235,9 +241,9 @@ export class MenuStore {
   )
 
   closePeekOnChangeMenu = react(
-    () => typeof this.activeMenuID === 'number',
-    isChanging => {
-      ensure('isChanging', isChanging)
+    () => this.activeMenuID === -1,
+    isClosed => {
+      ensure('isClosed', isClosed)
       AppActions.clearPeek()
     },
   )
@@ -375,7 +381,10 @@ export const MenuLayer = React.memo(() => {
       AppActions.clearPeek()
     },
   })
-  const paneManagerStore = useStore(PaneManagerStore, { panes: menuApps, selectionStore })
+  const paneManagerStore = useStore(PaneManagerStore, {
+    panes: menuApps,
+    selectionStore,
+  })
   const menuStore = useStore(MenuStore, { paneManagerStore })
   const storeProps = {
     settingStore,

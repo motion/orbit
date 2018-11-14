@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ControlButton } from './ControlButton'
-import { View } from '@mcro/ui'
+import { View, Row } from '@mcro/ui'
 
 export const WindowControls = ({
   spaceBetween = 4,
@@ -13,7 +13,7 @@ export const WindowControls = ({
   itemProps = null,
 }) => {
   return (
-    <>
+    <Row alignItems="center">
       {!!onClose && (
         <ControlButton
           icon="x"
@@ -47,6 +47,6 @@ export const WindowControls = ({
           />
         </>
       )}
-    </>
+    </Row>
   )
 }

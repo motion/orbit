@@ -3,7 +3,6 @@ import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../AppView'
 import { SearchAppIndex } from './SearchAppIndex'
-import { AppSimpleTitleBar } from '../../sources/views/layout/AppSimpleTitleBar'
 
 class SearchAppStore {
   props: AppProps
@@ -32,7 +31,6 @@ export function SearchAppMain(props: AppProps) {
 
   return (
     <>
-      <AppSimpleTitleBar title="hi search" />
       <SearchAppIndex {...props} />
     </>
   )

@@ -1007,18 +1007,21 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     } = this.state
     const { showPopover } = this
     const backgroundProp = background === true ? null : { background: `${background}` }
+    const isMeasuring = this.state.shouldSetPosition || (top === 0 && left === 0)
+    const isOpen = !isMeasuring && showPopover
+    console.log('isOpen', isOpen, 'showPopover', showPopover)
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}
-        isMeasuring={this.state.shouldSetPosition || (top === 0 && left === 0)}
-        isOpen={showPopover}
+        isMeasuring={isMeasuring}
+        isOpen={isOpen}
         isClosing={closing}
       >
         {!!overlay && (
           <Overlay
             key={0}
             forwardRef={this.overlayRef}
-            isShown={showPopover && !closing}
+            isShown={isOpen && !closing}
             onClick={e => this.handleOverlayClick(e)}
             overlay={overlay}
           />
@@ -1026,7 +1029,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         <PopoverWrap
           key={1}
           {...popoverProps}
-          isOpen={!nextPosition && !closing && !!showPopover}
+          isOpen={!nextPosition && !closing && !!isOpen}
           forwardRef={this.setPopoverRef}
           distance={distance}
           forgiveness={forgiveness}

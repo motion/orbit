@@ -12,7 +12,7 @@ export class BitTitleBar extends React.Component<{
     const { searchBar, normalizedItem } = this.props
     return (
       <>
-        <Row alignItems="center" height={38} margin={[25, 15, 0]}>
+        <Row alignItems="center" height={38} margin={[8, 15]}>
           {searchBar}
           <TitleBarSpace />
           <BitTitleActions normalizedItem={normalizedItem} />

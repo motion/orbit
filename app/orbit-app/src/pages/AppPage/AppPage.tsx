@@ -11,7 +11,7 @@ import { OrbitIntegration } from '../../sources/types'
 import { AppView } from '../../apps/AppView'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
-import { Sidebar, Row, Text } from '@mcro/ui'
+import { Sidebar, Row, Text, Col } from '@mcro/ui'
 
 type Props = {
   sourcesStore?: SourcesStore
@@ -113,13 +113,15 @@ class AppPageContent extends React.Component<Props> {
               />
             </Sidebar>
           )}
-          <AppView
-            id={appConfig.id}
-            viewType={appConfig.viewType || 'main'}
-            title={appConfig.title}
-            type={appType}
-            isActive
-          />
+          <Col flex={1}>
+            <AppView
+              id={appConfig.id}
+              viewType={appConfig.viewType || 'main'}
+              title={appConfig.title}
+              type={appType}
+              isActive
+            />
+          </Col>
         </Row>
       </>
     )

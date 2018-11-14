@@ -44,35 +44,28 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringID = -1
 
-  togglePinnedOpen() {
-    this.setPinnedOpen(!this.isPinnedOpen)
-  }
-
-  setPinnedOpen(val) {
-    this.isPinnedOpen = val
-    // when you unpin, clear the hover state too
-    if (!this.isPinnedOpen) {
-      this.hoveringID = -1
-    }
-  }
-
   // see how this interacts with isOpenVisually
   activeMenuID = App.openMenu ? App.openMenu.id : false
+
+  get isHoveringPeek() {
+    return Desktop.hoverState.appHovered[0]
+  }
 
   // source of truth!
   // resolve the actual open state quickly so isOpenFocus/isOpenVisually
   // can derive off the truth state that is the most quick
   isOpenFast = react(
-    () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown || this.isPinnedOpen],
-    async ([holdingOption, showMenu], { sleep, when }) => {
+    () => [
+      this.holdingOption,
+      this.isHoveringIcon || this.isHoveringDropdown || this.isPinnedOpen || this.isHoveringPeek,
+    ],
+    async ([holdingOption, showMenu], { sleep }) => {
       if (holdingOption) {
         return true
       }
-      // if hovering the app window keep it open until not
-      if (Desktop.hoverState.appHovered[0]) {
-        await when(() => !Desktop.hoverState.appHovered[0])
+      if (!showMenu) {
         // this prevents it from closing the moment you leave, gives mouse some buffer
-        await sleep(60)
+        await sleep(120)
       }
       return showMenu
     },
@@ -88,6 +81,18 @@ export class MenuStore {
       return open
     },
   )
+
+  togglePinnedOpen() {
+    this.setPinnedOpen(!this.isPinnedOpen)
+  }
+
+  setPinnedOpen(val) {
+    this.isPinnedOpen = val
+    // when you unpin, clear the hover state too
+    if (!this.isPinnedOpen) {
+      this.hoveringID = -1
+    }
+  }
 
   setHoveringIDFromEvent = react(
     () => {
@@ -105,7 +110,7 @@ export class MenuStore {
     () => this.isOpenVisually,
     isOpen => {
       ensure('not open', !isOpen)
-      this.activeMenuID = false
+      this.activeMenuID = -1
     },
   )
 
@@ -204,18 +209,27 @@ export class MenuStore {
     },
   )
 
-  // reset everything on esc so it always closes
-  setUnpinnedFromEscKey = react(
-    () => Desktop.keyboardState.escapeDown,
-    () => {
-      this.isPinnedOpen = false
-      this.isHoveringDropdown = false
-      this.hoveringID = -1
+  closeMenuOnEsc = react(() => Desktop.keyboardState.escapeDown, this.closeMenu, {
+    deferFirstRun: true,
+  })
+
+  closeMenuOnPeekClose = react(
+    () => App.isShowingPeek,
+    async (shown, { when }) => {
+      ensure('not shown', !shown)
+      await when(() => !this.isHoveringDropdown)
+      this.closeMenu()
     },
     {
       deferFirstRun: true,
     },
   )
+
+  closeMenu() {
+    this.isPinnedOpen = false
+    this.isHoveringDropdown = false
+    this.hoveringID = -1
+  }
 
   setActiveMenuFromPinMove = react(
     () => always(Electron.state.pinKey.at),

@@ -18,9 +18,9 @@ import { BrowserDebugTray } from './BrowserDebugTray'
 import { IS_ELECTRON } from '../../../constants'
 import { throttle } from 'lodash'
 
+const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
-const panes = ['people', 'topics', 'lists']
 const maxTransition = 180
 const transition = `opacity ease-in 60ms, transform ease ${maxTransition}ms`
 export const menuPad = 6
@@ -228,7 +228,7 @@ export class MenuStore {
     () => this.activeOrLastActiveMenuID,
     id => {
       if (typeof id === 'number') {
-        const pane = panes[id]
+        const pane = menuApps[id]
         this.props.paneManagerStore.setActivePane(pane)
       }
     },
@@ -375,7 +375,7 @@ export const MenuLayer = React.memo(() => {
       AppActions.clearPeek()
     },
   })
-  const paneManagerStore = useStore(PaneManagerStore, { panes, selectionStore })
+  const paneManagerStore = useStore(PaneManagerStore, { panes: menuApps, selectionStore })
   const menuStore = useStore(MenuStore, { paneManagerStore })
   const storeProps = {
     settingStore,
@@ -476,8 +476,6 @@ const MenuChrome = view(View, {
 
 const MenuChromeContent = React.memo(
   ({ menuStore, queryStore }: { menuStore: MenuStore; queryStore: QueryStore }) => {
-    const menuApps = ['people', 'topics', 'lists', 'search'] as AppType[]
-
     return (
       <View className="app-parent-bounds" pointerEvents="auto">
         <Searchable
@@ -491,7 +489,7 @@ const MenuChromeContent = React.memo(
             <MenuApp
               id={app}
               key={app}
-              menuId={menuApps.length - index - 1}
+              menuId={index}
               viewType="index"
               title={app}
               type={app}

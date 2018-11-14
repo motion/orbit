@@ -78,7 +78,9 @@ export class Root {
   server = new Server()
   stores = null
   mediatorServer: MediatorServer
-  cosal: Cosal
+  cosal = new Cosal({
+    database: COSAL_DB,
+  })
 
   // managers
   cosalManager: CosalManager
@@ -129,9 +131,6 @@ export class Root {
     await this.server.start()
 
     this.onboard = new Onboard()
-    this.cosal = new Cosal({
-      database: COSAL_DB,
-    })
     await this.cosal.start()
 
     // setup oracle to pass into managers

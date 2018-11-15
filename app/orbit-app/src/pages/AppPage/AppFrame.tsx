@@ -147,7 +147,6 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
   const transition = transitions(appPageStore)
   const size = store.sizeD
-  console.log('render app frame', store.framePosition, { width: size[0], height: size[1] })
   return (
     <Resizable
       defaultSize={{ width: size[0], height: size[1] }}

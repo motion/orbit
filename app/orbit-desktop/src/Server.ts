@@ -28,6 +28,9 @@ export class Server {
     this.app = app
 
     app.use(this.cors())
+    // fixes bug with 304 errors sometimes
+    // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
+    app.disable('etag')
 
     // ROUTES
     this.app.use(bodyParser.json({ limit: '2048mb' }))

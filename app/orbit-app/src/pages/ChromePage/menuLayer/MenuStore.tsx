@@ -21,15 +21,18 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringID = -1
 
-  // see how this interacts with isOpenVisually
+  // see how this interacts with isOpen
   activeMenuID = App.openMenu ? App.openMenu.id : false
 
-  get isHoveringPeek() {
+  get isHoveringMenuPeek() {
+    if (this.activeMenuID === -1) {
+      return false
+    }
     return Desktop.hoverState.appHovered[0]
   }
 
   // source of truth!
-  // resolve the actual open state quickly so isOpenFocus/isOpenVisually
+  // resolve the actual open state quickly so isOpen
   // can derive off the truth state that is the most quick
   isOpenFast = react(
     () =>
@@ -37,8 +40,11 @@ export class MenuStore {
       this.isHoveringTray ||
       this.isHoveringDropdown ||
       this.isPinnedOpen ||
-      this.isHoveringPeek,
-    _ => _,
+      this.isHoveringMenuPeek,
+    async (val, { sleep }) => {
+      await sleep()
+      return val
+    },
   )
 
   // the actual show/hide in the interface
@@ -47,6 +53,16 @@ export class MenuStore {
     async (open, { sleep }) => {
       await sleep(maxTransition)
       return open
+    },
+  )
+
+  resetActiveMenuIDOnClose = react(
+    () => this.isOpenOutsideAnimation,
+    async (open, { sleep }) => {
+      ensure('not open', !open)
+      log('now reset it to -1')
+      await sleep()
+      this.activeMenuID = -1
     },
   )
 
@@ -101,8 +117,8 @@ export class MenuStore {
   activeOrLastActiveMenuID = react(
     () => this.activeMenuID,
     val => {
-      ensure('is number', typeof val === 'number')
-      return +val
+      ensure('is active', val !== -1)
+      return val
     },
     {
       defaultValue: 0,

@@ -346,7 +346,6 @@ const PopoverWrap = view({
   pointerEvents: 'none',
   zIndex: -1,
 }).theme(p => {
-  console.log('render popover wrap opacity', p.isOpen && !p.willReposition ? 1 : 0, p)
   return {
     width: p.width,
     height: p.height,
@@ -471,7 +470,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         props,
       }
     } else if (state.shouldSetPosition) {
-      console.log('123123', state.popoverBounds)
       nextState = {
         ...nextState,
         shouldSetPosition: false,
@@ -501,11 +499,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 
     this.listenForResize()
 
-    const isManuallyPositioned = getIsManuallyPositioned(this.props)
-    if (!isManuallyPositioned) {
-      this.setPosition()
-    }
-
     if (openOnClick || closeOnClick || closeOnClickAway) {
       this.listenForClickAway()
     }
@@ -525,6 +518,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
 
     if (this.target) {
+      this.setPosition()
       this.listenForClick()
       this.listenForHover()
       on(this, this.target, 'click', this.handleTargetClick)
@@ -575,16 +569,18 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   setPosition() {
-    const isManuallyPositioned = getIsManuallyPositioned(this.props)
-    if (this.popoverRef) {
-      const popoverBounds = isManuallyPositioned ? null : this.popoverRef.getBoundingClientRect()
-      console.log('NOW', popoverBounds)
-      this.setState({
-        shouldSetPosition: true,
-        targetBounds: this.targetRef.current,
-        popoverBounds,
-      })
+    if (getIsManuallyPositioned(this.props)) {
+      throw new Error('Should never call setPosition when manually positioned')
     }
+    if (!this.popoverRef || !this.target) {
+      console.error('missing popvoer ref or target', this)
+      return
+    }
+    this.setState({
+      shouldSetPosition: true,
+      targetBounds: this.target.getBoundingClientRect(),
+      popoverBounds: this.popoverRef.getBoundingClientRect(),
+    })
   }
 
   listenForResize() {

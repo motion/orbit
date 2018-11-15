@@ -17,6 +17,7 @@ import { Searchable } from '../../../components/Searchable'
 import { BrowserDebugTray } from './BrowserDebugTray'
 import { IS_ELECTRON } from '../../../constants'
 import { throttle } from 'lodash'
+import { StaticContainer } from '../../../views/StaticContainer'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
@@ -433,7 +434,7 @@ export const MenuLayer = React.memo(() => {
 
   const left = menuStore.menuCenter - width / 2
   const showMenu = menuStore.isOpenVisually
-  log(`MenuLayer left ${menuStore.menuCenter} ${left}`)
+  log(`MenuLayer ${showMenu} ${menuStore.menuCenter} ${left}`)
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={storeProps}>
@@ -444,7 +445,9 @@ export const MenuLayer = React.memo(() => {
           transition={transition}
           opacity={showMenu ? 1 : 0}
         >
-          <MenuChromeContent queryStore={queryStore} menuStore={menuStore} />
+          <StaticContainer>
+            <MenuChromeContent queryStore={queryStore} menuStore={menuStore} />
+          </StaticContainer>
         </MenuChrome>
         <Popover
           open={showMenu}
@@ -490,17 +493,17 @@ const MenuChromeContent = React.memo(
           {menuApps.map((app, index) => (
             <MenuApp
               id={app}
-              key={app}
+              key={index}
               menuId={index}
               viewType="index"
               title={app}
               type={app}
               menuStore={menuStore}
-              itemProps={{
-                hide: {
-                  subtitle: true,
-                },
-              }}
+              // itemProps={{
+              //   hide: {
+              //     subtitle: true,
+              //   },
+              // }}
             />
           ))}
         </Searchable>

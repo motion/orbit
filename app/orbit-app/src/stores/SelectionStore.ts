@@ -122,6 +122,7 @@ export class SelectionStore {
   )
 
   toggleSelected = (index, eventType?: string) => {
+    console.log('toggle selected', index)
     if (eventType) {
       this.setSelectEvent(eventType)
     }

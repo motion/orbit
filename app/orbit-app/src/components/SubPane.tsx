@@ -1,14 +1,11 @@
 import * as React from 'react'
-import { view, attach, provide } from '@mcro/black'
+import { view, StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { SubPaneStore } from './SubPaneStore'
-import { SelectionStore } from '../stores/SelectionStore'
 import { BORDER_RADIUS } from '../constants'
-import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { StaticContainer } from '../views/StaticContainer'
 import { AppType } from '@mcro/models'
 import { CSSPropertySetStrict } from '@mcro/css'
-import { trace } from 'mobx'
+import { useStore } from '@mcro/use-store'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: string
@@ -21,62 +18,44 @@ export type SubPaneProps = CSSPropertySetStrict & {
   fadeBottom?: boolean
   onScrollNearBottom?: Function
   extraCondition?: () => boolean
-  paneManagerStore?: PaneManagerStore
-  selectionStore?: SelectionStore
   onChangeHeight?: (height: number) => void
   offsetY?: number
 }
 
-@attach('paneManagerStore', 'orbitWindowStore', 'selectionStore')
-@provide({
-  subPaneStore: SubPaneStore,
-})
-@view
-export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: SubPaneStore }> {
-  static defaultProps = {
-    transition: 'all ease 70ms',
-  }
+type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
-  render() {
-    const {
-      children,
-      subPaneStore,
-      style,
-      after,
-      fadeBottom,
-      before,
-      preventScroll,
-      offsetY,
-      transition,
-      ...props
-    } = this.props
-    const { isActive, isLeft } = subPaneStore.positionState
-    trace()
-    return (
-      <SubPaneFrame isActive={isActive}>
-        {typeof before === 'function' ? before(isActive) : before}
-        {!!offsetY && <div style={{ height: offsetY, pointerEvents: 'none' }} />}
-        <SubPaneInner forwardRef={subPaneStore.subPaneInner}>
-          <Pane
-            isActive={isActive}
-            isLeft={isLeft}
-            style={style}
-            height={subPaneStore.contentHeight}
-            forwardRef={subPaneStore.paneRef}
-            preventScroll={preventScroll}
-            transition={transition}
-            {...props}
-          >
-            <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>
-              <StaticContainer key={0}>{children}</StaticContainer>
-            </PaneContentInner>
-          </Pane>
-        </SubPaneInner>
-        {after}
-      </SubPaneFrame>
-    )
-  }
-}
+export const SubPane = React.memo((props: Props) => {
+  const { paneManagerStore, selectionStore } = React.useContext(StoreContext)
+  const subPaneStore = useStore(
+    SubPaneStore,
+    { paneManagerStore, selectionStore, ...props },
+    { debug: true },
+  )
+  const { isActive, isLeft } = subPaneStore.positionState
+  return (
+    <SubPaneFrame isActive={isActive}>
+      {typeof props.before === 'function' ? props.before(isActive) : props.before}
+      {!!props.offsetY && <div style={{ height: props.offsetY, pointerEvents: 'none' }} />}
+      <SubPaneInner forwardRef={subPaneStore.innerPaneRef}>
+        <Pane
+          isActive={isActive}
+          isLeft={isLeft}
+          style={props.style}
+          height={subPaneStore.contentHeight}
+          forwardRef={subPaneStore.paneRef}
+          preventScroll={props.preventScroll}
+          transition={props.transition}
+          {...props}
+        >
+          <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>
+            {props.children}
+          </PaneContentInner>
+        </Pane>
+      </SubPaneInner>
+      {props.after}
+    </SubPaneFrame>
+  )
+})
 
 // we cant animate out as of yet because we are changing the height
 // so it would show overflowing content as the main pane got smaller

@@ -54,6 +54,7 @@ export class OrbitItemStore {
       return
     }
     if (this.props.inactive) {
+      console.log('inactive, ignore click')
       return
     }
     this.props.appStore.toggleSelected(this.index, 'click')

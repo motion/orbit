@@ -1,17 +1,23 @@
-import * as React from 'react'
 import { on, react, ensure } from '@mcro/black'
 import { throttle } from 'lodash'
 import { SubPaneProps } from './SubPane'
 import { App } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
+import { PaneManagerStore } from '../stores/PaneManagerStore'
+import { SelectionStore } from '../stores/SelectionStore'
+import { createRef } from 'react'
 
 export class SubPaneStore {
-  props: SubPaneProps
+  props: SubPaneProps & {
+    paneManagerStore: PaneManagerStore
+    selectionStore: SelectionStore
+  }
+
+  innerPaneRef = createRef<HTMLDivElement>()
+  paneRef = createRef<HTMLDivElement>()
 
   aboveContentHeight = 0
   contentHeight = 0
-  subPaneInner = React.createRef<HTMLDivElement>()
-  paneRef = React.createRef<HTMLDivElement>()
   isAtBottom = false
   childMutationObserver = null
 
@@ -58,23 +64,27 @@ export class SubPaneStore {
     },
   )
 
-  didMount() {
-    on(this, this.paneNode, 'scroll', throttle(this.onPaneScroll, 16 * 3))
-    this.addObserver(this.paneNode, this.handlePaneChange)
+  didGetPaneNode = react(
+    () => !!this.paneNode,
+    hasNode => {
+      ensure('hasNode', hasNode)
+      on(this, this.paneNode, 'scroll', throttle(this.onPaneScroll, 16 * 3))
+      this.addObserver(this.paneNode, this.handlePaneChange)
 
-    // watch resizes
-    // @ts-ignore
-    const resizeObserver = new ResizeObserver(this.handlePaneChange)
-    resizeObserver.observe(this.paneNode)
-    resizeObserver.observe(this.paneInnerNode)
-    // @ts-ignore
-    this.subscriptions.add({
-      dispose: () => resizeObserver.disconnect(),
-    })
+      // watch resizes
+      // @ts-ignore
+      const resizeObserver = new ResizeObserver(this.handlePaneChange)
+      resizeObserver.observe(this.paneNode)
+      resizeObserver.observe(this.paneInnerNode)
+      // @ts-ignore
+      this.subscriptions.add({
+        dispose: () => resizeObserver.disconnect(),
+      })
 
-    this.handlePaneChange()
-    this.updateHeight()
-  }
+      this.handlePaneChange()
+      this.updateHeight()
+    },
+  )
 
   get maxHeight() {
     const bottomLip = 30
@@ -120,7 +130,7 @@ export class SubPaneStore {
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
     // get top from here because its not affected by scroll
-    const { top } = this.subPaneInner.current.getBoundingClientRect()
+    const { top } = this.innerPaneRef.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {
       this.aboveContentHeight = Math.max(0, top)
       this.contentHeight = height

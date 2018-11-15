@@ -14,11 +14,10 @@ class ChromePageStore {
   }
 }
 
-export function ChromePage() {
+export const ChromePage = React.memo(() => {
   const store = useStore(ChromePageStore)
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
-  log(`ChromePage????`)
   return (
     <StoreContext.Provider value={{ settingStore, sourcesStore }}>
       <Theme name={store.theme}>
@@ -31,4 +30,4 @@ export function ChromePage() {
       </Theme>
     </StoreContext.Provider>
   )
-}
+})

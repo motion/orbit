@@ -39,7 +39,9 @@ export async function main() {
   electronDebug()
 
   // start Electron state store
-  await Electron.start()
+  await Electron.start({
+    waitForInitialState: false,
+  })
 
   //
   // START THE PROCESSES

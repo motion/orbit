@@ -22,6 +22,7 @@ export const MenuApp = memo((props: MenuAppProps) => {
         paddingRight={0}
         offsetY={beforeHeight}
         onChangeHeight={props.menuStore.setHeight}
+        transition="none"
       >
         <AppView viewType="index" isActive={isActive.current} {...props} />
       </SubPane>

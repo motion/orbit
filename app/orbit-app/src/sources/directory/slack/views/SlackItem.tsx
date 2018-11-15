@@ -19,7 +19,6 @@ export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
   const { bit, searchTerm, shownLimit, extraProps, renderText, hide } = props
   const { data, people } = bit
   if (!data || !data.messages) {
-    console.log('no messages...', bit)
     return null
   }
   const messages = getMessages(data.messages, { searchTerm, shownLimit })

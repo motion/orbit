@@ -127,24 +127,6 @@ export class AppPageStore {
     this.dragOffset = null
   }
 
-  get framePosition() {
-    const { willShow, willStayShown, willHide, state } = this
-    if (!state || !state.position) {
-      return [0, 0]
-    }
-    // determine x adjustments
-    const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
-    const position = state.position
-    let x = position[0]
-    let y = position[1] + animationAdjust
-    if (this.dragOffset) {
-      const [xOff, yOff] = this.dragOffset
-      x += xOff
-      y += yOff
-    }
-    return [x, y]
-  }
-
   tearPeek = async () => {
     if (this.isTorn) {
       return false

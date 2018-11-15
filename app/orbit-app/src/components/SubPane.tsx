@@ -32,6 +32,10 @@ export type SubPaneProps = CSSPropertySetStrict & {
 })
 @view
 export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: SubPaneStore }> {
+  static defaultProps = {
+    transition: 'all ease 70ms',
+  }
+
   render() {
     const {
       children,
@@ -42,6 +46,7 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
       before,
       preventScroll,
       offsetY,
+      transition,
       ...props
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
@@ -57,6 +62,7 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
             height={subPaneStore.contentHeight}
             forwardRef={subPaneStore.paneRef}
             preventScroll={preventScroll}
+            transition={transition}
             {...props}
           >
             <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>
@@ -86,7 +92,6 @@ const Pane = view(UI.View, {
   top: 0,
   right: 0,
   left: 0,
-  transition: 'all ease 70ms',
   overflowX: 'hidden',
   overflowY: 'auto',
   borderBottomRadius: BORDER_RADIUS,

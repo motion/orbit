@@ -22,7 +22,7 @@ const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
 const maxTransition = 180
-const transition = `opacity ease-in 60ms, transform ease ${maxTransition}ms`
+const transition = `opacity ease 100ms, transform ease 150ms`
 export const menuPad = 6
 
 const sendTrayEvent = (key, value) => {
@@ -44,35 +44,28 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringID = -1
 
-  togglePinnedOpen() {
-    this.setPinnedOpen(!this.isPinnedOpen)
-  }
-
-  setPinnedOpen(val) {
-    this.isPinnedOpen = val
-    // when you unpin, clear the hover state too
-    if (!this.isPinnedOpen) {
-      this.hoveringID = -1
-    }
-  }
-
   // see how this interacts with isOpenVisually
   activeMenuID = App.openMenu ? App.openMenu.id : false
+
+  get isHoveringPeek() {
+    return Desktop.hoverState.appHovered[0]
+  }
 
   // source of truth!
   // resolve the actual open state quickly so isOpenFocus/isOpenVisually
   // can derive off the truth state that is the most quick
   isOpenFast = react(
-    () => [this.holdingOption, this.isHoveringIcon || this.isHoveringDropdown || this.isPinnedOpen],
-    async ([holdingOption, showMenu], { sleep, when }) => {
+    () => [
+      this.holdingOption,
+      this.isHoveringTray || this.isHoveringDropdown || this.isPinnedOpen || this.isHoveringPeek,
+    ],
+    async ([holdingOption, showMenu], { sleep }) => {
       if (holdingOption) {
         return true
       }
-      // if hovering the app window keep it open until not
-      if (Desktop.hoverState.appHovered[0]) {
-        await when(() => !Desktop.hoverState.appHovered[0])
+      if (!showMenu) {
         // this prevents it from closing the moment you leave, gives mouse some buffer
-        await sleep(60)
+        await sleep(120)
       }
       return showMenu
     },
@@ -88,6 +81,18 @@ export class MenuStore {
       return open
     },
   )
+
+  togglePinnedOpen() {
+    this.setPinnedOpen(!this.isPinnedOpen)
+  }
+
+  setPinnedOpen(val) {
+    this.isPinnedOpen = val
+    // when you unpin, clear the hover state too
+    if (!this.isPinnedOpen) {
+      this.hoveringID = -1
+    }
+  }
 
   setHoveringIDFromEvent = react(
     () => {
@@ -105,7 +110,7 @@ export class MenuStore {
     () => this.isOpenVisually,
     isOpen => {
       ensure('not open', !isOpen)
-      this.activeMenuID = false
+      this.activeMenuID = -1
     },
   )
 
@@ -130,13 +135,13 @@ export class MenuStore {
 
   activeOrLastActiveMenuID = react(
     () => this.activeMenuID,
-    (val, { state }) => {
-      if (!state.hasResolvedOnce) {
-        // for now just hardcoding to start at #2 app
-        return 2
-      }
+    val => {
       ensure('is number', typeof val === 'number')
       return +val
+    },
+    {
+      defaultValue: 0,
+      deferFirstRun: true,
     },
   )
 
@@ -204,18 +209,27 @@ export class MenuStore {
     },
   )
 
-  // reset everything on esc so it always closes
-  setUnpinnedFromEscKey = react(
-    () => Desktop.keyboardState.escapeDown,
-    () => {
-      this.isPinnedOpen = false
-      this.isHoveringDropdown = false
-      this.hoveringID = -1
+  closeMenuOnEsc = react(() => Desktop.keyboardState.escapeDown, this.closeMenu, {
+    deferFirstRun: true,
+  })
+
+  closeMenuOnPeekClose = react(
+    () => App.isShowingPeek,
+    async (shown, { when }) => {
+      ensure('not shown', !shown)
+      await when(() => !this.isHoveringDropdown)
+      this.closeMenu()
     },
     {
       deferFirstRun: true,
     },
   )
+
+  closeMenu() {
+    this.isPinnedOpen = false
+    this.isHoveringDropdown = false
+    this.hoveringID = -1
+  }
 
   setActiveMenuFromPinMove = react(
     () => always(Electron.state.pinKey.at),
@@ -258,7 +272,7 @@ export class MenuStore {
     },
   )
 
-  get isHoveringIcon() {
+  get isHoveringTray() {
     return this.hoveringID > -1
   }
 
@@ -435,41 +449,37 @@ export const MenuLayer = React.memo(() => {
       }
     })
   }, [])
-  log(`MenuLayer left ${menuStore.menuCenter}`)
+  const left = menuStore.menuCenter - width / 2
+  const showMenu = menuStore.isOpenVisually
+  log(`MenuLayer left ${menuStore.menuCenter} ${left}`)
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={storeProps}>
         <MenuChrome
           width={width - menuPad * 2}
           margin={menuPad}
-          transform={{ x: menuStore.menuCenter - width / 2, y: menuStore.isOpenVisually ? 0 : -5 }}
+          transform={{ x: left - 1, y: showMenu ? 0 : -5 }}
           transition={transition}
-          opacity={menuStore.isOpenVisually ? 1 : 0}
+          opacity={showMenu ? 1 : 0}
         >
           <MenuChromeContent queryStore={queryStore} menuStore={menuStore} />
         </MenuChrome>
         <Popover
-          open={menuStore.isOpenVisually}
+          open={showMenu}
           transition={transition}
           background
           width={width}
+          height={menuStore.height + 11 /* arrow size, for now */}
           towards="bottom"
           delay={0}
           top={IS_ELECTRON ? 0 : 28}
+          left={left + 5}
           distance={6}
           forgiveness={10}
           edgePadding={0}
           elevation={20}
-          left={menuStore.menuCenter}
-          maxHeight={window.innerHeight}
           theme="dark"
-        >
-          <div
-            style={{
-              height: menuStore.height,
-            }}
-          />
-        </Popover>
+        />
       </StoreContext.Provider>
     </BrowserDebugTray>
   )

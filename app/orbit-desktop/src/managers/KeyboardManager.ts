@@ -2,7 +2,7 @@ import { Desktop, App } from '@mcro/stores'
 import { store, react, ensure } from '@mcro/black'
 import { Oracle } from '@mcro/oracle'
 
-const OPTION_PEEK_DELAY = 200
+const OPTION_PEEK_DELAY = 300
 
 @store
 export class KeyboardManager {

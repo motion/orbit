@@ -13,6 +13,28 @@ import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { Sidebar, Row, Text, Col } from '@mcro/ui'
 import { Searchable } from '../../components/Searchable'
+import { IS_ELECTRON } from '../../constants'
+import { AppActions } from '../../actions/AppActions'
+import { AppConfig } from '@mcro/stores'
+import { loadOne } from '@mcro/model-bridge'
+import { BitModel } from '@mcro/models'
+
+if (!IS_ELECTRON) {
+  const test = async () => {
+    const lastBit = await loadOne(BitModel, { args: {} })
+    AppActions.setPeekApp({
+      parentBounds: {},
+      target: {},
+      appType: 'bit',
+      appConfig: {
+        id: `${lastBit.id}`,
+        title: lastBit.title,
+        type: 'bit',
+      } as AppConfig,
+    })
+  }
+  test()
+}
 
 type Props = {
   sourcesStore?: SourcesStore

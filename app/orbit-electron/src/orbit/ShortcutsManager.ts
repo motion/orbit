@@ -66,8 +66,9 @@ export class ShortcutsManager {
 
   enablePeekShortcutsWhenHoldingOption = react(
     () => Desktop.keyboardState.isHoldingOption,
-    async optionDown => {
+    async (optionDown, { sleep }) => {
       if (optionDown) {
+        await sleep(500)
         this.peekShortcuts.registerShortcuts()
       } else {
         this.peekShortcuts.unregisterShortcuts()

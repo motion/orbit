@@ -108,6 +108,7 @@ export class SubPaneStore {
   }
 
   handlePaneChange = () => {
+    console.log('handle pane change')
     this.updateHeight()
     this.onPaneNearEdges()
   }

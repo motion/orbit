@@ -52,10 +52,10 @@ const getForgiveness = (props: PopoverProps) => {
   return props.forgiveness > props.distance ? props.distance : props.forgiveness
 }
 
-const getPopoverSize = ({ width, height }: PopoverProps, derivedForgiveness) => {
+const getPopoverSize = ({ width, height }: PopoverProps, forgiveness: number) => {
   return {
-    height: height - derivedForgiveness * 2,
-    width: width - derivedForgiveness * 2,
+    height: height - forgiveness * 2,
+    width: width - forgiveness * 2,
   }
 }
 
@@ -151,10 +151,11 @@ const positionStateX = (
 ): PositionStateX => {
   const { alignPopover, adjust, distance, arrowSize } = props
   const popoverHalfWidth = popoverSize.width / 2
-  const arrowCenter = window.innerWidth - popoverHalfWidth
   const targetCenter = targetBounds
     ? targetBounds.left + targetBounds.width / 2
-    : popoverHalfWidth + popoverSize.left + forgiveness
+    : popoverHalfWidth + popoverSize.left
+  const arrowPastThisAdjustsRight = window.innerWidth - popoverHalfWidth
+  const shouldAdjustRight = targetCenter > arrowPastThisAdjustsRight
 
   let popoverCenter = targetCenter
   let left = 0
@@ -179,10 +180,16 @@ const positionStateX = (
         // ON LEFT SIDE
         const edgeAdjustment = left
         arrowLeft = -popoverHalfWidth + targetCenter - edgeAdjustment
-      } else if (targetCenter > arrowCenter) {
+      } else if (shouldAdjustRight) {
         // ON RIGHT SIDE
         const edgeAdjustment = window.innerWidth - (left + popoverSize.width)
-        arrowLeft = targetCenter - arrowCenter + edgeAdjustment
+        arrowLeft = targetCenter - arrowPastThisAdjustsRight + edgeAdjustment
+      }
+
+      // this is a stupid hack
+      // what it should be is we should have an prop for parentBounds
+      if (shouldAdjustRight || adjust[0]) {
+        left += forgiveness
       }
 
       // arrowLeft bounds
@@ -195,6 +202,7 @@ const positionStateX = (
       if (distance > forgiveness) {
         arrowLeft = arrowLeft / 2
       }
+
       break
     case 'left':
       arrowLeft = popoverHalfWidth

@@ -13,7 +13,7 @@ export const OrbitItemSingleton = {
 export class OrbitItemStore {
   props: ItemProps<ResolvableModel>
 
-  resolvedItem: NormalizedItem = null
+  resolvedItem: NormalizedItem | null = null
   isSelected = false
   cardWrapRef = null
   clickAt = 0

@@ -25,8 +25,14 @@ export type SubPaneProps = CSSPropertySetStrict & {
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
 export const SubPane = React.memo((props: Props) => {
+  const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
   const { paneManagerStore, selectionStore } = React.useContext(StoreContext)
-  const subPaneStore = useStore(SubPaneStore, { paneManagerStore, selectionStore, ...props })
+  const subPaneStore = useStore(SubPaneStore, {
+    paneManagerStore,
+    selectionStore,
+    ...props,
+    transition,
+  })
   const { isActive, isLeft } = subPaneStore.positionState
   return (
     <SubPaneFrame isActive={isActive}>
@@ -40,7 +46,7 @@ export const SubPane = React.memo((props: Props) => {
           height={subPaneStore.contentHeight}
           forwardRef={subPaneStore.paneRef}
           preventScroll={props.preventScroll}
-          transition={props.transition}
+          transition={transition}
           {...props}
         >
           <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>

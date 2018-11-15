@@ -41,18 +41,9 @@ const getPositionState = (props: PopoverProps, popoverBounds: Bounds, targetBoun
   const forgiveness = getForgiveness(props)
   const popoverSize = getPopoverSize(popoverBounds, forgiveness)
   const direction = getDirection(props, popoverSize, targetBounds)
-  const positionProps = { direction, popoverSize, forgiveness }
-  const isManuallyPositioned = getIsManuallyPositioned(props)
-  if (isManuallyPositioned) {
-    console.log(props.left, props.top, {
-      ...positionStateX(props, popoverBounds, positionProps, targetBounds),
-      ...positionStateY(props, popoverBounds, positionProps, targetBounds),
-      direction,
-    })
-  }
   return {
-    ...positionStateX(props, popoverBounds, positionProps, targetBounds),
-    ...positionStateY(props, popoverBounds, positionProps, targetBounds),
+    ...positionStateX(props, popoverBounds, direction, forgiveness, targetBounds),
+    ...positionStateY(props, popoverBounds, direction, forgiveness, targetBounds),
     direction,
   }
 }
@@ -84,7 +75,8 @@ const getEdgePadding = (props: PopoverProps, currentPosition, windowSize, popove
 const positionStateY = (
   props: PopoverProps,
   popoverSize: Bounds,
-  { direction, forgiveness },
+  direction: PopoverDirection,
+  forgiveness: number,
   targetBounds?: Bounds,
 ): PositionStateY => {
   const { distance, adjust, noArrow, arrowSize } = props
@@ -142,7 +134,8 @@ const positionStateY = (
 const positionStateX = (
   props: PopoverProps,
   popoverSize: Bounds,
-  { direction, forgiveness },
+  direction: PopoverDirection,
+  forgiveness: number,
   targetBounds?: Bounds,
 ): PositionStateX => {
   const { alignPopover, adjust, distance, arrowSize } = props
@@ -152,10 +145,10 @@ const positionStateX = (
   const arrowCenter = window.innerWidth - popoverHalfWidth
   const targetCenter = targetBounds
     ? targetBounds.left + targetBounds.width / 2
-    : popoverHalfWidth + popoverSize.left
+    : popoverHalfWidth + popoverSize.left + forgiveness
 
   let popoverAimForCenter = targetCenter
-  let left
+  let left = 0
   let arrowLeft = 0 // defaults to 0
 
   if (alignPopover === 'left') {
@@ -171,7 +164,6 @@ const positionStateX = (
       window.innerWidth,
       popoverSize.width,
     )
-    console.log('LEFTLEFT', left)
     // arrow
     if (targetCenter < popoverHalfWidth) {
       // ON LEFT SIDE

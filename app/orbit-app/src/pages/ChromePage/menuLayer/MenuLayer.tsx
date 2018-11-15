@@ -22,7 +22,7 @@ const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
 const maxTransition = 180
-const transition = `none`
+const transition = `opacity ease 100ms, transform ease 150ms`
 export const menuPad = 6
 
 const sendTrayEvent = (key, value) => {
@@ -451,30 +451,31 @@ export const MenuLayer = React.memo(() => {
   }, [])
   log(`MenuLayer left ${menuStore.menuCenter}`)
   const left = menuStore.menuCenter - width / 2
+  const showMenu = menuStore.isOpenVisually
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={storeProps}>
         <MenuChrome
           width={width - menuPad * 2}
           margin={menuPad}
-          transform={{ x: left, y: menuStore.isOpenVisually ? 0 : -5 }}
+          transform={{ x: left, y: showMenu ? 0 : -5 }}
           transition={transition}
-          opacity={menuStore.isOpenVisually ? 1 : 0}
+          opacity={showMenu ? 1 : 0}
         >
           <MenuChromeContent queryStore={queryStore} menuStore={menuStore} />
         </MenuChrome>
         <Popover
-          open={menuStore.isOpenVisually}
+          open={showMenu}
           transition={transition}
           background
           width={width}
-          height={menuStore.height}
+          height={menuStore.height + 11 /* arrow size, for now */}
           towards="bottom"
           delay={0}
           top={IS_ELECTRON ? 0 : 28}
           left={left}
           distance={6}
-          forgiveness={0}
+          forgiveness={10}
           edgePadding={0}
           elevation={20}
           theme="dark"

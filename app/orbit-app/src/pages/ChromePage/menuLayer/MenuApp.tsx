@@ -6,26 +6,37 @@ import { useStore } from '@mcro/use-store'
 import { AppStore } from '../../../apps/AppStore'
 import { StoreContext } from '@mcro/black'
 import { SubPane } from '../../../components/SubPane'
-import { memo } from '../../../helpers/memo'
 
-export const MenuApp = memo((props: MenuAppProps) => {
+export const MenuApp = React.memo((props: MenuAppProps) => {
   const stores = useContext(StoreContext)
-  const appStore = useStore(AppStore, { ...props, ...stores })
-  const isActive = React.useRef(() => props.menuStore.activeMenuID === props.menuId)
-  const beforeHeight = 40
+  const isActiveRef = React.useRef(() => props.menuStore.activeOrLastActiveMenuID === props.menuId)
+  const isActive = isActiveRef.current
+  const appStore = useStore(AppStore, {
+    ...props,
+    ...stores,
+    isActive,
+  })
   return (
     <StoreContext.Provider value={{ ...stores, appStore }}>
-      <SubPane
-        id={props.id}
-        type={props.type}
-        paddingLeft={0}
-        paddingRight={0}
-        offsetY={beforeHeight}
-        onChangeHeight={props.menuStore.setHeight}
-        transition="none"
-      >
-        <AppView viewType="index" isActive={isActive.current} {...props} />
-      </SubPane>
+      <MenuAppInner {...props} />
     </StoreContext.Provider>
+  )
+})
+
+export const MenuAppInner = React.memo((props: MenuAppProps) => {
+  console.log('render menuapp INNER WHY THE FUCK IS THIS RENDERING', props)
+  const beforeHeight = 40
+  return (
+    <SubPane
+      id={props.id}
+      type={props.type}
+      paddingLeft={0}
+      paddingRight={0}
+      offsetY={beforeHeight}
+      onChangeHeight={props.menuStore.setHeight}
+      transition="none"
+    >
+      <AppView viewType="index" {...props} />
+    </SubPane>
   )
 })

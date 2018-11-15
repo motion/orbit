@@ -54,6 +54,7 @@ export class OrbitItemStore {
       return
     }
     if (this.props.inactive) {
+      console.log('inactive, ignore click')
       return
     }
     this.props.appStore.toggleSelected(this.index, 'click')
@@ -65,7 +66,7 @@ export class OrbitItemStore {
     this.lastClickLocation = Date.now()
   }
 
-  searchLocation = () => {
+  searchLocation() {
     const { onClickLocation } = this.props
     if (typeof onClickLocation === 'string') {
       return AppActions.open(onClickLocation)
@@ -115,34 +116,36 @@ export class OrbitItemStore {
     AppActions.setPeekApp(item)
   }
 
+  shouldSelect = () => {
+    const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
+    if (typeof isSelected === 'undefined') {
+      if (ignoreSelection) {
+        return false
+      }
+      if (activeCondition && activeCondition() === false) {
+        return false
+      }
+      if (!appStore || !appStore.isActive) {
+        return false
+      }
+    }
+    const forceSelected = typeof isSelected === 'function' ? isSelected(this.index) : isSelected
+    let next
+    if (typeof forceSelected === 'boolean') {
+      next = forceSelected
+    } else {
+      next = appStore.activeIndex === this.index
+    }
+    return next
+  }
+
   updateIsSelected = react(
-    () => {
-      const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
-      if (typeof isSelected === 'undefined') {
-        if (ignoreSelection) {
-          return false
-        }
-        if (activeCondition && activeCondition() === false) {
-          return false
-        }
-        if (!appStore || !appStore.isActive) {
-          return false
-        }
-      }
-      const forceSelected = typeof isSelected === 'function' ? isSelected(this.index) : isSelected
-      let next
-      if (typeof forceSelected === 'boolean') {
-        next = forceSelected
-      } else {
-        next = appStore.activeIndex === this.index
-      }
-      return next
-    },
+    this.shouldSelect,
     async (isSelected, { sleep }) => {
-      const { onSelect, preventAutoSelect } = this.props
+      const { onSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
-      if (isSelected && !preventAutoSelect) {
+      if (isSelected) {
         console.log('selecting this thing...', this.props.appType, this.appConfig)
         ensure('appConfig`', !!this.appConfig)
         if (onSelect) {

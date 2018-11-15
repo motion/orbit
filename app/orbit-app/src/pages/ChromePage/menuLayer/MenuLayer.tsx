@@ -449,16 +449,16 @@ export const MenuLayer = React.memo(() => {
       }
     })
   }, [])
-  log(`MenuLayer left ${menuStore.menuCenter}`)
   const left = menuStore.menuCenter - width / 2
   const showMenu = menuStore.isOpenVisually
+  log(`MenuLayer left ${menuStore.menuCenter} ${left}`)
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={storeProps}>
         <MenuChrome
           width={width - menuPad * 2}
           margin={menuPad}
-          transform={{ x: left, y: showMenu ? 0 : -5 }}
+          transform={{ x: left - 1, y: showMenu ? 0 : -5 }}
           transition={transition}
           opacity={showMenu ? 1 : 0}
         >
@@ -473,7 +473,7 @@ export const MenuLayer = React.memo(() => {
           towards="bottom"
           delay={0}
           top={IS_ELECTRON ? 0 : 28}
-          left={left}
+          left={left + 5}
           distance={6}
           forgiveness={10}
           edgePadding={0}

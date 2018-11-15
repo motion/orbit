@@ -70,9 +70,10 @@ type LastMessage = {
   at: number
 }
 
-type Options = {
-  master?: Boolean
-  ignoreSelf?: Boolean
+export type BridgeOptions = {
+  master?: boolean
+  ignoreSelf?: boolean
+  waitForInitialState?: boolean
   stores?: Object
   actions?: {
     [key: string]: Function
@@ -82,30 +83,30 @@ type Options = {
 // we want non-granular updates on state changes
 export class BridgeManager {
   port: number
-  store: any
   socketManager: SocketManager
   started = false
-  _awaitingSocket = []
-  _store = null
-  _options: Options
-  _wsOpen = false
-  _source = ''
-  _initialState = {}
-  _socket = null
-  private afterInitialState: Promise<void> = null
-  private finishInitialState: Function = null
   // to be set once they are imported
   stores = {}
   messageListeners = new Set()
   lastMessage: LastMessage = null
   receivedInitialState: Object = null
 
+  private awaitingSocket = []
+  private store = null
+  private options: BridgeOptions
+  private isSocketOpen = false
+  private source = ''
+  private initialState = {}
+  private socket = null
+  private afterInitialState: Promise<void> = null
+  private finishInitialState: Function = null
+
   get state() {
-    return this._store.state
+    return this.store.state
   }
 
   // note: you have to call start to make it explicitly connect
-  start = async (store, initialState, options: Options = {}) => {
+  start = async (store, initialState, options: BridgeOptions = {}) => {
     if (!store) {
       throw new Error('No source given for starting screen store')
     }
@@ -120,21 +121,21 @@ export class BridgeManager {
     if (this.started) {
       throw new Error('Already started this store...')
     }
-    this._source = store.source
-    this._store = store
-    this._options = options
+    this.source = store.source
+    this.store = store
+    this.options = options
     this.started = true
     if (options.master) {
       await this.setupMaster()
     } else {
       log.info(`Connecting socket to ${this.port}`)
-      this._socket = new ReconnectingWebSocket(`ws://localhost:${this.port}`, [], {
+      this.socket = new ReconnectingWebSocket(`ws://localhost:${this.port}`, [], {
         WebSocket,
       })
       this.setupClientSocket()
     }
     // set initial state synchronously before
-    this._initialState = JSON.parse(JSON.stringify(initialState))
+    this.initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {
       this.setState(initialState, true)
     }
@@ -143,7 +144,7 @@ export class BridgeManager {
       window.addEventListener('beforeunload', this.dispose)
     }
     // wait for initial state
-    if (!this._options.master) {
+    if (!this.options.master && !this.options.waitForInitialState) {
       console.log('waiting for initial state')
       let failTm = setTimeout(() => {
         console.error('get initial state timeout!')
@@ -154,7 +155,7 @@ export class BridgeManager {
   }
 
   private async setupMaster() {
-    const stores = this._options.stores
+    const stores = this.options.stores
     log.verbose(`Starting socket manager on ${this.port}`)
 
     this.socketManager = new SocketManager({
@@ -181,7 +182,7 @@ export class BridgeManager {
   }
 
   setupClientSocket = () => {
-    this._socket.onmessage = async ({ data }) => {
+    this.socket.onmessage = async ({ data }) => {
       if (!data) {
         console.log('No data received over socket')
         return
@@ -217,7 +218,7 @@ export class BridgeManager {
         // otherwise we are receiving a single state update
 
         // ignore self if we want that
-        if (this._options.ignoreSelf && msg.source === this._source) {
+        if (this.options.ignoreSelf && msg.source === this.source) {
           return
         }
 
@@ -256,26 +257,26 @@ export class BridgeManager {
       }
     }
 
-    this._socket.onopen = () => {
-      this._wsOpen = true
-      if (this._awaitingSocket.length) {
-        this._awaitingSocket.map(x => x())
-        this._awaitingSocket = []
+    this.socket.onopen = () => {
+      this.isSocketOpen = true
+      if (this.awaitingSocket.length) {
+        this.awaitingSocket.map(x => x())
+        this.awaitingSocket = []
       }
       // send state that hasnt been synced yet
       this.scheduleSendState()
       this.getInitialState()
     }
 
-    this._socket.onclose = () => {
-      this._wsOpen = false
+    this.socket.onclose = () => {
+      this.isSocketOpen = false
       // reconnecting websocket reconnect fix: https://github.com/pladaria/reconnecting-websocket/issues/60
-      if (this._socket._shouldReconnect) {
-        this._socket._connect()
+      if (this.socket._shouldReconnect) {
+        this.socket._connect()
       }
     }
 
-    this._socket.onerror = err => {
+    this.socket.onerror = err => {
       if (err.preventDefault) {
         err.preventDefault()
         err.stopPropagation()
@@ -283,7 +284,7 @@ export class BridgeManager {
       if (err.code === 'ETIMEDOUT') {
         return
       }
-      if (this._socket.readyState == 1) {
+      if (this.socket.readyState == 1) {
         console.log('swift ws error', err)
       } else {
         console.log('socket err', err.message, err.stack)
@@ -293,14 +294,14 @@ export class BridgeManager {
 
   getInitialState = () => {
     // get initial state
-    this._socket.send(JSON.stringify({ action: 'getInitialState', source: this._source }))
+    this.socket.send(JSON.stringify({ action: 'getInitialState', source: this.source }))
   }
 
   handleMessage = data => {
     const getMessage = str => str.split(MESSAGE_SPLIT_VAL)
     const [message, value] = getMessage(data)
     // orbit so we can time between other things in the app...
-    log.timer('orbit', `${this._source}.message`, `${message}`, value)
+    log.timer('orbit', `${this.source}.message`, `${message}`, value)
     for (const { type, listener } of this.messageListeners) {
       if (!type) {
         listener(message, value)
@@ -312,7 +313,7 @@ export class BridgeManager {
 
   onOpenSocket = () => {
     return new Promise(res => {
-      this._awaitingSocket.push(res)
+      this.awaitingSocket.push(res)
     })
   }
 
@@ -324,7 +325,7 @@ export class BridgeManager {
     }
     if (process.env.NODE_ENV === 'development') {
       if (!newState || typeof newState !== 'object') {
-        throw new Error(`Bad state passed to ${this._source}.setState: ${newState}`)
+        throw new Error(`Bad state passed to ${this.source}.setState: ${newState}`)
       }
     }
     // update our own state immediately so its sync
@@ -341,8 +342,8 @@ export class BridgeManager {
   }
 
   private sendChangedState(changedState: Object) {
-    if (this._options.master) {
-      this.socketManager.sendAll(this._source, changedState)
+    if (this.options.master) {
+      this.socketManager.sendAll(this.source, changedState)
       return
     }
     // log.info(`sendChangedState: ${JSON.stringify(changedState)}`)
@@ -364,7 +365,7 @@ export class BridgeManager {
   }
 
   sendQueuedState = queue => {
-    const message = { state: queue[0], source: this._source }
+    const message = { state: queue[0], source: this.source }
     // multiple state messages could have come in so lets merge it
     if (queue.length > 1) {
       // apply the rest of the queued state to make one data object to send
@@ -373,7 +374,7 @@ export class BridgeManager {
       }
     }
     try {
-      this._socket.send(JSON.stringify(message))
+      this.socket.send(JSON.stringify(message))
     } catch (err) {
       console.log('error sending!', err.message)
       console.log('message is', message)
@@ -393,16 +394,16 @@ export class BridgeManager {
         if (!ignoreKeyCheck) {
           const isValidKey = onlyKeys
             ? onlyKeys.indexOf(key) > -1
-            : this._initialState[key] !== 'undefined'
+            : this.initialState[key] !== 'undefined'
           if (!isValidKey) {
             console.error(
-              `${this._source}.updateStateWithDiff: tried to set a key not in initialState
+              `${this.source}.updateStateWithDiff: tried to set a key not in initialState
                 - key: ${key}
-                - typeof initial state key: ${typeof this._initialState[key]}
+                - typeof initial state key: ${typeof this.initialState[key]}
                 - value:
                   ${stringifyObject(newState)}
                 - initial state:
-                  ${stringifyObject(this._initialState)}`,
+                  ${stringifyObject(this.initialState)}`,
             )
             continue
           }
@@ -464,10 +465,10 @@ export class BridgeManager {
       throw new Error(`Bad store.source, store: ${Store}`)
     }
     const message = value ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}` : ogMessage
-    if (this._options.master) {
+    if (this.options.master) {
       this.socketManager.sendMessage(Store.source, message)
     } else {
-      if (!this._wsOpen) {
+      if (!this.isSocketOpen) {
         log.info('\n\n\nWaiting for open socket....\n\n\n')
         await this.onOpenSocket()
         log.info('\n\nSocket opened!\n\n\n')
@@ -480,16 +481,16 @@ export class BridgeManager {
           log.trace.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
         }
         this.lastMessage = { message, at: Date.now() }
-        this._socket.send(JSON.stringify({ message, to: Store.source }))
+        this.socket.send(JSON.stringify({ message, to: Store.source }))
       })
     }
   }
 
   dispose = () => {
-    if (this._options.master) {
+    if (this.options.master) {
       this.socketManager.dispose()
     } else {
-      this._socket.close()
+      this.socket.close()
     }
   }
 }

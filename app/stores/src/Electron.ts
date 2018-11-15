@@ -1,4 +1,4 @@
-import { Bridge, proxySetters } from '@mcro/mobx-bridge'
+import { Bridge, proxySetters, BridgeOptions } from '@mcro/mobx-bridge'
 import { store, deep } from '@mcro/black'
 
 export let Electron = null as ElectronStore
@@ -69,7 +69,7 @@ class ElectronStore {
     },
   })
 
-  start = async (options?) => {
+  start = async (options?: BridgeOptions) => {
     await Bridge.start(this, this.state, options)
   }
 }

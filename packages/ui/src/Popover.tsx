@@ -218,8 +218,6 @@ const positionStateX = (
   left += adjust[0]
   arrowLeft -= adjust[0]
 
-  console.log('left', targetCenter, left)
-
   // adjust arrow for alignment
   if (alignPopover === 'left') {
     // move it back to the left the amount we move popover right
@@ -983,7 +981,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const isMeasuring = this.state.shouldSetPosition || (top === 0 && left === 0)
     const isOpen = !isMeasuring && showPopover
 
-    console.log('ok', isOpen, left)
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}

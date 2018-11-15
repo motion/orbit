@@ -1,5 +1,5 @@
 import { deep, store } from '@mcro/black'
-import { Bridge, proxySetters } from '@mcro/mobx-bridge'
+import { Bridge, proxySetters, BridgeOptions } from '@mcro/mobx-bridge'
 import { AppType } from '@mcro/models'
 import { AppConfig } from './AppConfig'
 
@@ -128,7 +128,7 @@ class AppStore {
     return menusState.find(x => x.open) || null
   }
 
-  start = async (options?) => {
+  start = async (options?: BridgeOptions) => {
     await Bridge.start(this, this.state, options)
   }
 }

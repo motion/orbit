@@ -52,6 +52,24 @@ class AppFrameStore {
   sizeD = initialAppState.size
   posD = initialAppState.position
 
+  get framePosition() {
+    const { willShow, willStayShown, willHide, state, dragOffset } = this.props.appPageStore
+    if (!state || !state.position) {
+      return [0, 0]
+    }
+    // determine x adjustments
+    const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
+    const position = state.position
+    let x = position[0]
+    let y = position[1] + animationAdjust
+    if (dragOffset) {
+      const [xOff, yOff] = dragOffset
+      x += xOff
+      y += yOff
+    }
+    return [x, y]
+  }
+
   syncWithAppState = react(
     () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
     ([size, position]) => {
@@ -117,7 +135,7 @@ const decorator = compose(
   view,
 )
 export const AppFrame = decorator(({ appPageStore, store, children, theme }: AppFrameProps) => {
-  const { isShown, willShow, willHide, state, willStayShown, framePosition } = appPageStore
+  const { isShown, willShow, willHide, state, willStayShown } = appPageStore
   if (!state || !state.position || !state.position.length || !state.target) {
     return null
   }
@@ -129,7 +147,7 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
   const transition = transitions(appPageStore)
   const size = store.sizeD
-  console.log('render app frame', { width: size[0], height: size[1] })
+  console.log('render app frame', store.framePosition, { width: size[0], height: size[1] })
   return (
     <Resizable
       defaultSize={{ width: size[0], height: size[1] }}
@@ -147,9 +165,9 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
         // dont put this in transform so it doesnt animate
         // it needs to move quickly because the frame itself resizes
         // and so it has to update the width + left at same time
-        left: framePosition[0],
+        left: store.framePosition[0],
         // ...but have the positionY animate nicely
-        transform: `translateX(0px) translateY(${framePosition[1]}px)`,
+        transform: `translateX(0px) translateY(${store.framePosition[1]}px)`,
         transition,
         opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
       }}

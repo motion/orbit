@@ -15,6 +15,7 @@ import { BrowserDebugTray } from './BrowserDebugTray'
 import { IS_ELECTRON } from '../../../constants'
 import { throttle } from 'lodash'
 import { MenuStore, menuApps } from './MenuStore'
+import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 export const maxTransition = 150
@@ -75,31 +76,33 @@ export const MenuLayer = React.memo(() => {
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={allStores}>
-        <MenuChrome
-          width={width - menuPad * 2}
-          margin={menuPad}
-          transform={{ x: left - 1, y: showMenu ? 0 : -5 }}
-          transition={transition}
-          opacity={showMenu ? 1 : 0}
-        >
-          <MenuLayerContent queryStore={queryStore} menuStore={menuStore} />
-        </MenuChrome>
-        <Popover
-          open={showMenu}
-          transition={transition}
-          background
-          width={width}
-          height={menuStore.height + 11 /* arrow size, for now */}
-          towards="bottom"
-          delay={0}
-          top={IS_ELECTRON ? 0 : 28}
-          left={left + 5}
-          distance={6}
-          forgiveness={10}
-          edgePadding={0}
-          elevation={20}
-          theme="dark"
-        />
+        <MainShortcutHandler>
+          <MenuChrome
+            width={width - menuPad * 2}
+            margin={menuPad}
+            transform={{ x: left - 1, y: showMenu ? 0 : -5 }}
+            transition={transition}
+            opacity={showMenu ? 1 : 0}
+          >
+            <MenuLayerContent queryStore={queryStore} menuStore={menuStore} />
+          </MenuChrome>
+          <Popover
+            open={showMenu}
+            transition={transition}
+            background
+            width={width}
+            height={menuStore.height + 11 /* arrow size, for now */}
+            towards="bottom"
+            delay={0}
+            top={IS_ELECTRON ? 0 : 28}
+            left={left + 5}
+            distance={6}
+            forgiveness={10}
+            edgePadding={0}
+            elevation={20}
+            theme="dark"
+          />
+        </MainShortcutHandler>
       </StoreContext.Provider>
     </BrowserDebugTray>
   )

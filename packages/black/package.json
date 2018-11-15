@@ -16,7 +16,6 @@
     "@mcro/helpers": "^2.2.1",
     "event-kit": "^2.5.0",
     "global": "^4.3.0",
-    "mobx-logger": "^0.7.0",
     "prop-types": "^15.6.0"
   },
   "peerDependencies": {

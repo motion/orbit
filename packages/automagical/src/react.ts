@@ -31,6 +31,7 @@ function tsWatch(options) {
 type UnwrapObservable<A> = A extends Observable<infer U> ? U : A
 
 type ReactVal =
+  | undefined
   | null
   | number
   | string

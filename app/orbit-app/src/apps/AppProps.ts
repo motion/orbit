@@ -15,10 +15,10 @@ export type AppProps = {
   title: string
   type: AppType
   sourceType?: IntegrationType
-  appStore?: AppStore
-  sourcesStore?: SourcesStore
-  settingStore?: SettingStore
-  queryStore?: QueryStore
+  appStore: AppStore
+  sourcesStore: SourcesStore
+  settingStore: SettingStore
+  queryStore: QueryStore
   selectionStore?: SelectionStore
   isActive?: boolean | (() => boolean)
   subPaneStore?: SubPaneStore

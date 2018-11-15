@@ -1,5 +1,5 @@
 import { on, react, ensure } from '@mcro/black'
-import { throttle } from 'lodash'
+import { throttle, debounce } from 'lodash'
 import { SubPaneProps } from './SubPane'
 import { App } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
@@ -106,7 +106,9 @@ export class SubPaneStore {
     async ([height, isActive]) => {
       ensure('is active', isActive)
       ensure('onChangeHeight', !!this.props.onChangeHeight)
-      this.props.onChangeHeight(height)
+      if (this.props.onChangeHeight) {
+        this.props.onChangeHeight(height)
+      }
     },
   )
 
@@ -117,11 +119,10 @@ export class SubPaneStore {
     return () => observer.disconnect()
   }
 
-  handlePaneChange = () => {
-    console.log('handle pane change')
+  handlePaneChange = debounce(() => {
     this.updateHeight()
     this.onPaneNearEdges()
-  }
+  }, 16)
 
   updateHeight = async () => {
     if (!this.paneInnerNode) {

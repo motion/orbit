@@ -1,15 +1,32 @@
 import './installGlobals'
 import { debugState } from '@mcro/black'
 import { setConfig } from 'react-hot-loader'
-import { enableLogging } from 'mobx-logger'
+import { enableLogging } from '@mcro/mobx-logger'
 
-window['l'] = false
+window['enableLog'] = false
 
 enableLogging({
-  predicate: () => window['l'],
-  action: false,
+  predicate: ({ name }) => {
+    if (!window['enableLog']) {
+      return false
+    }
+    if (!name) {
+      return false
+    }
+    if (name.indexOf('.render()') >= 0) {
+      return false
+    }
+    if (name.indexOf('__updateProps') >= 0) {
+      return false
+    }
+    if (name.indexOf('updateIsSelected') >= 0) {
+      return false
+    }
+    return true
+  },
+  action: true,
   reaction: true,
-  transaction: false,
+  transaction: true,
   compute: true,
 })
 

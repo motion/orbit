@@ -24,6 +24,7 @@
     { "path": "../packages/slackdown" },
     { "path": "../packages/build" },
     { "path": "../packages/cosal" },
-    { "path": "../packages/use-store" }
+    { "path": "../packages/use-store" },
+    { "path": "../packages/mobx-logger" }
   ]
 }

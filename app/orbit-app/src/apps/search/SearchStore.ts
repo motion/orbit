@@ -1,7 +1,6 @@
 import { ensure, react, always } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchResultModel, SearchResult } from '@mcro/models'
-import { App } from '@mcro/stores'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
@@ -44,12 +43,13 @@ export class SearchStore {
     const items: { [group: string]: [any[], any[]] } = {}
     for (let result of this.searchState.results) {
       if (result.bits.length) {
-        if (!items[result.group])
-          items[result.group] = [[], []]
+        if (!items[result.group]) items[result.group] = [[], []]
 
-        items[result.group][0].push(...result.bits.map(bit => {
-          return { ...bit, group: result.group }
-        }))
+        items[result.group][0].push(
+          ...result.bits.map(bit => {
+            return { ...bit, group: result.group }
+          }),
+        )
         items[result.group][1].push({
           target: 'search-group',
           id: result.id,
@@ -66,13 +66,13 @@ export class SearchStore {
       all.push(...bits)
       all.push(...subGroups)
       return all
-    }, []);
+    }, [])
   }
 
   getItemProps: GetItemProps = index => {
     const results = this.resultsForVirtualList
 
-    if (index === 0 || results[index].group !== results[index -1].group) {
+    if (index === 0 || results[index].group !== results[index - 1].group) {
       let separator: string
       if (results[index].group === 'last-day' || !results[index].group) {
         separator = 'Last Day'
@@ -103,6 +103,9 @@ export class SearchStore {
       await sleep(2000)
       const { settingStore } = this.props
       // init
+      if (!settingStore.values) {
+        return
+      }
       if (!settingStore.values.recentSearches) {
         settingStore.update({ recentSearches: [query] })
         return

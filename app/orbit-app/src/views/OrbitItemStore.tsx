@@ -13,7 +13,7 @@ export const OrbitItemSingleton = {
 export class OrbitItemStore {
   props: ItemProps<ResolvableModel>
 
-  resolvedItem: NormalizedItem = null
+  resolvedItem: NormalizedItem | null = null
   isSelected = false
   cardWrapRef = null
   clickAt = 0
@@ -22,7 +22,7 @@ export class OrbitItemStore {
   setHoverSettler = react(
     () => this.props.hoverToSelect,
     hoverSelect => {
-      ensure('hoverSelect', hoverSelect)
+      ensure('hoverSelect', !!hoverSelect)
       ensure('!hoverSettler', !this.hoverSettler)
       this.hoverSettler = this.props.appStore.getHoverSettler()
       this.hoverSettler.setItem({
@@ -134,7 +134,7 @@ export class OrbitItemStore {
     if (typeof forceSelected === 'boolean') {
       next = forceSelected
     } else {
-      next = appStore.activeIndex === this.index
+      next = appStore && appStore.activeIndex === this.index
     }
     return next
   }

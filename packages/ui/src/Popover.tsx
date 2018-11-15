@@ -21,15 +21,15 @@ type PositionStateX = { arrowLeft: number; left: number }
 type PositionStateY = { arrowTop: number; top: number; maxHeight: number }
 type Bounds = { top: number; left: number; width: number; height: number }
 
-const openPopovers = new Set()
+const OpenPopovers = new Set()
 
 export const PopoverState = {
-  openPopovers,
+  openPopovers: OpenPopovers,
   closeLast: () => {
-    last([...openPopovers]).forceClose()
+    last([...OpenPopovers]).forceClose()
   },
   closeAll: () => {
-    ;[...openPopovers].map(x => x.forceClose())
+    ;[...OpenPopovers].map(x => x.forceClose())
   },
 }
 
@@ -40,7 +40,7 @@ const getIsManuallyPositioned = ({ top, left }: { top?: number; left?: number })
 const getPositionState = (props: PopoverProps, popoverBounds: Bounds, targetBounds?: Bounds) => {
   const forgiveness = getForgiveness(props)
   const popoverSize = getPopoverSize(popoverBounds, forgiveness)
-  const direction = getDirection(props, popoverSize, targetBounds)
+  const direction = getDirection(props, popoverSize, forgiveness, targetBounds)
   return {
     ...positionStateX(props, popoverBounds, direction, forgiveness, targetBounds),
     ...positionStateY(props, popoverBounds, direction, forgiveness, targetBounds),
@@ -48,14 +48,25 @@ const getPositionState = (props: PopoverProps, popoverBounds: Bounds, targetBoun
   }
 }
 
+const getForgiveness = (props: PopoverProps) => {
+  return props.forgiveness > props.distance ? props.distance : props.forgiveness
+}
+
+const getPopoverSize = ({ width, height }: PopoverProps, derivedForgiveness) => {
+  return {
+    height: height - derivedForgiveness * 2,
+    width: width - derivedForgiveness * 2,
+  }
+}
+
 const getDirection = (
   props: PopoverProps,
   popoverSize,
+  forgiveness: number,
   targetBounds?: Bounds,
 ): PopoverDirection => {
-  const { forgiveness, towards } = props
-  if (!targetBounds || towards !== 'auto') {
-    return towards
+  if (!targetBounds || props.towards !== 'auto') {
+    return props.towards
   }
   const popoverY = popoverSize.height + forgiveness
   const targetY = targetBounds.top + targetBounds.height
@@ -139,64 +150,67 @@ const positionStateX = (
   targetBounds?: Bounds,
 ): PositionStateX => {
   const { alignPopover, adjust, distance, arrowSize } = props
-  const isVertical = direction === 'top' || direction === 'bottom'
-  // measurements
   const popoverHalfWidth = popoverSize.width / 2
   const arrowCenter = window.innerWidth - popoverHalfWidth
   const targetCenter = targetBounds
     ? targetBounds.left + targetBounds.width / 2
     : popoverHalfWidth + popoverSize.left + forgiveness
 
-  let popoverAimForCenter = targetCenter
+  let popoverCenter = targetCenter
   let left = 0
-  let arrowLeft = 0 // defaults to 0
+  let arrowLeft = 0
 
   if (alignPopover === 'left') {
-    popoverAimForCenter = targetBounds ? targetBounds.left : 0
+    popoverCenter = targetBounds ? targetBounds.left : popoverSize.left
   }
 
-  // auto for now will just be top/bottom
-  // in future it needs to measure target and then determine
-  if (isVertical) {
-    left = getEdgePadding(
-      props,
-      popoverAimForCenter - popoverHalfWidth,
-      window.innerWidth,
-      popoverSize.width,
-    )
-    // arrow
-    if (targetCenter < popoverHalfWidth) {
-      // ON LEFT SIDE
-      const edgeAdjustment = left
-      arrowLeft = -popoverHalfWidth + targetCenter - edgeAdjustment
-    } else if (targetCenter > arrowCenter) {
-      // ON RIGHT SIDE
-      const edgeAdjustment = window.innerWidth - (left + popoverSize.width)
-      arrowLeft = targetCenter - arrowCenter + edgeAdjustment
-    }
-    // arrowLeft bounds
-    const max = Math.max(0, popoverHalfWidth - arrowSize * 0.75)
-    const min = -popoverHalfWidth + arrowSize * 0.5 + distance
-    arrowLeft = Math.max(min, Math.min(max, arrowLeft))
-    arrowLeft = -(arrowSize / 2) + arrowLeft
-    // adjust arrows off in this case
-    // TODO: this isnt quite right
-    if (distance > forgiveness) {
-      arrowLeft = arrowLeft / 2
-    }
-  } else {
-    // HORIZONTAL
-    if (direction === 'left') {
+  switch (direction) {
+    case 'top':
+    case 'bottom':
+      left = getEdgePadding(
+        props,
+        popoverCenter - popoverHalfWidth,
+        window.innerWidth,
+        popoverSize.width,
+      )
+
+      // arrow
+      if (targetCenter < popoverHalfWidth) {
+        // ON LEFT SIDE
+        const edgeAdjustment = left
+        arrowLeft = -popoverHalfWidth + targetCenter - edgeAdjustment
+      } else if (targetCenter > arrowCenter) {
+        // ON RIGHT SIDE
+        const edgeAdjustment = window.innerWidth - (left + popoverSize.width)
+        arrowLeft = targetCenter - arrowCenter + edgeAdjustment
+      }
+
+      // arrowLeft bounds
+      const max = Math.max(0, popoverHalfWidth - arrowSize * 0.75)
+      const min = -popoverHalfWidth + arrowSize * 0.5 + distance
+      arrowLeft = Math.max(min, Math.min(max, arrowLeft))
+      arrowLeft = -(arrowSize / 2) + arrowLeft
+      // adjust arrows off in this case
+      // TODO: this isnt quite right
+      if (distance > forgiveness) {
+        arrowLeft = arrowLeft / 2
+      }
+      break
+    case 'left':
       arrowLeft = popoverHalfWidth
       left = (targetBounds ? targetBounds.left : 0) - popoverSize.width - distance
-    } else {
+      break
+    case 'right':
       left = (targetBounds ? targetBounds.left + targetBounds.width : 0) + distance
       arrowLeft = -popoverHalfWidth - arrowSize
-    }
+      break
   }
+
   // adjustments
   left += adjust[0]
   arrowLeft -= adjust[0]
+
+  console.log('left', targetCenter, left)
 
   // adjust arrow for alignment
   if (alignPopover === 'left') {
@@ -205,17 +219,6 @@ const positionStateX = (
   }
 
   return { arrowLeft, left }
-}
-
-const getForgiveness = (props: PopoverProps) => {
-  return calcForgiveness(props.forgiveness, props.distance)
-}
-
-const getPopoverSize = ({ width, height }: PopoverProps, derivedForgiveness) => {
-  return {
-    height: height - derivedForgiveness * 2,
-    width: width - derivedForgiveness * 2,
-  }
 }
 
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
@@ -346,6 +349,7 @@ const PopoverWrap = view({
   pointerEvents: 'none',
   zIndex: -1,
 }).theme(p => {
+  const forgiveness = getForgiveness(p)
   return {
     width: p.width,
     height: p.height,
@@ -359,8 +363,8 @@ const PopoverWrap = view({
       x: p.left,
       y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,
     },
-    padding: calcForgiveness(p.forgiveness, p.distance),
-    margin: -calcForgiveness(p.forgiveness, p.distance),
+    padding: forgiveness,
+    margin: -forgiveness,
     background: p.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
     animation: p.animation,
   }
@@ -385,7 +389,6 @@ const getShadow = (shadow, elevation) => {
   }
   return base
 }
-const calcForgiveness = (forgiveness, distance) => (forgiveness > distance ? distance : forgiveness)
 
 const initialState = {
   showPopover: false,
@@ -972,6 +975,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const isMeasuring = this.state.shouldSetPosition || (top === 0 && left === 0)
     const isOpen = !isMeasuring && showPopover
 
+    console.log('ok', isOpen, left)
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}

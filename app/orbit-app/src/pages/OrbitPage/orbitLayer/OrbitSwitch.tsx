@@ -5,7 +5,6 @@ import { reaction, trace } from 'mobx'
 import { App } from '@mcro/stores'
 import { findDOMNode } from 'react-dom'
 import { AppActions } from '../../../actions/AppActions'
-import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import * as Views from '../../../views'
 import { NavButton } from '../../../views/NavButton'
@@ -105,7 +104,6 @@ export class OrbitSwitch extends React.Component<Props> {
 
   goToTeamSettings = () => {
     this.props.paneManagerStore.setActivePane('settings')
-    this.props.paneManagerStore.setSubPane('team')
   }
 
   render() {

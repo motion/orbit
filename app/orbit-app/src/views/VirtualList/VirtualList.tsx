@@ -17,7 +17,7 @@ import { ItemProps } from '../OrbitItemProps'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
-import { debounce, throttle } from 'lodash'
+import { throttle } from 'lodash'
 
 export type ItemPropsMinimum = Pick<ItemProps<any>, 'appType' | 'appConfig'> &
   Partial<ItemProps<any>>
@@ -93,18 +93,6 @@ class VirtualListStore {
     this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
   }, 32)
 
-  keyMapper = rowIndex => {
-    if (typeof rowIndex === 'undefined') {
-      return 0
-    }
-    const id = this.props.items[rowIndex].id
-    if (typeof id === 'undefined') {
-      console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
-      throw new Error('No valid id found for mapping results')
-    }
-    return id
-  }
-
   setRootRef = ref => {
     this.rootRef = ref
     if (ref) {
@@ -115,7 +103,17 @@ class VirtualListStore {
           defaultHeight: 60,
           defaultWidth: width,
           fixedWidth: true,
-          keyMapper: this.keyMapper,
+          keyMapper: rowIndex => {
+            if (typeof rowIndex === 'undefined') {
+              return 0
+            }
+            const id = this.props.items[rowIndex].id
+            if (typeof id === 'undefined') {
+              console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
+              throw new Error('No valid id found for mapping results')
+            }
+            return id
+          },
         })
         this.width = width
       }

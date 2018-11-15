@@ -9,12 +9,7 @@ class DebugTrayStore {
 
   targetSetter = id => () => {
     console.log('id', id)
-    App.setState({
-      trayState: {
-        trayEvent: `TrayHover${id}`,
-        trayHoverAt: Date.now(),
-      },
-    })
+    App.sendMessage(App, App.messages.TRAY_EVENT, `TrayHover${id}`)
   }
 
   onLeave = this.targetSetter('Out')

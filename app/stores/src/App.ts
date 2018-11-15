@@ -87,8 +87,6 @@ class AppStore {
       shortcutInputFocused: false,
     },
     trayState: {
-      trayEvent: '',
-      trayEventAt: 0,
       menuState: {
         0: defaultMenuState(0),
         1: defaultMenuState(1),

@@ -62,20 +62,20 @@ export const whatsNew = (a, b) => {
 }
 
 // simple diff output for dev mode
-export const diffLog = (a, b) => {
+export const diffLog = (a, b): string => {
   if (a === b || Mobx.comparer.structural(a, b)) {
-    return []
+    return null
   }
   if (!b || typeof b !== 'object' || Array.isArray(b)) {
-    return ['\n =>', niceLogObj(b)]
+    return niceLogObj(b)
   }
   // object
   const diff = whatsNew(a, b)
   if (Object.keys(diff).length) {
     // log the diff as json if its short enough, easier to see
-    return ['\ndiff:\n', niceLogObj(diff)]
+    return niceLogObj(diff)
   }
-  return []
+  return null
 }
 
 export const toJSDeep = obj => {

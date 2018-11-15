@@ -10,9 +10,13 @@ import { memo } from '../../../helpers/memo'
 
 export const MenuApp = memo((props: MenuAppProps) => {
   const stores = useContext(StoreContext)
-  const appStore = useStore(AppStore, { ...props, ...stores })
-  const isActive = React.useRef(() => props.menuStore.activeMenuID === props.menuId)
+  const appStore = useStore(AppStore, {
+    ...props,
+    ...stores,
+    isActive: () => props.menuStore.lastActiveMenuID === props.menuId,
+  })
   const beforeHeight = 40
+  console.log('render menuapp', props)
   return (
     <StoreContext.Provider value={{ ...stores, appStore }}>
       <SubPane
@@ -24,7 +28,7 @@ export const MenuApp = memo((props: MenuAppProps) => {
         onChangeHeight={props.menuStore.setHeight}
         transition="none"
       >
-        <AppView viewType="index" isActive={isActive.current} {...props} />
+        <AppView viewType="index" {...props} />
       </SubPane>
     </StoreContext.Provider>
   )

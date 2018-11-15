@@ -8,6 +8,7 @@ import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { StaticContainer } from '../views/StaticContainer'
 import { AppType } from '@mcro/models'
 import { CSSPropertySetStrict } from '@mcro/css'
+import { trace } from 'mobx'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: string
@@ -50,6 +51,7 @@ export class SubPane extends React.Component<SubPaneProps & { subPaneStore?: Sub
       ...props
     } = this.props
     const { isActive, isLeft } = subPaneStore.positionState
+    trace()
     return (
       <SubPaneFrame isActive={isActive}>
         {typeof before === 'function' ? before(isActive) : before}

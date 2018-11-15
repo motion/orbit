@@ -22,25 +22,26 @@ type SubscribableLike = { subscribe: (a: any) => Subscription }
 // hacky for now
 Root.__trackStateChanges = {}
 
-const logGroup = (name, result, changed, reactionArgs, globalChanged?) => {
-  const getReactionLog = () => (reactionArgs ? ['react(() =>', toJSDeep(reactionArgs), ')'] : [])
+const logGroup = (name: string, result, changed: string, reactionArgs, globalChanged?) => {
   const hasGlobalChanges = globalChanged && !!Object.keys(globalChanged).length
-  const hasLocalChanges = !!changed.length
-  const hasChanges = hasGlobalChanges || hasLocalChanges
-  // dont group if nothing much to report...
-  if (!hasChanges) {
-    console.debug(`${name}`, 'no changes', ...getReactionLog())
-    return
+  const hasChanges = !!changed
+  if (hasChanges || hasGlobalChanges) {
+    if (hasChanges) {
+      const dotdot = changed.length > 90 ? '...' : ''
+      console.groupCollapsed(`${name} ${changed.slice(0, 90)}${dotdot}`)
+    } else {
+      console.groupCollapsed(`${name} (no change)`)
+    }
+    console.log('  reaction args:', toJSDeep(reactionArgs))
+    console.log('         return: ', changed)
+    if (hasGlobalChanges) {
+      console.log('  global changed:', ...logRes(result))
+      console.log('  store changed', globalChanged)
+    }
+    console.groupEnd()
+  } else {
+    console.debug(`${name} no change, reaction args:`, toJSDeep(reactionArgs))
   }
-  console.groupCollapsed(`${name}`)
-  if (hasLocalChanges) {
-    console.log(...getReactionLog(), ...(changed || []))
-  }
-  if (hasGlobalChanges) {
-    console.log('  global changed:', ...logRes(result))
-    console.log('  store changed', globalChanged)
-  }
-  console.groupEnd()
 }
 
 // watches values in an autorun, and resolves their results
@@ -158,19 +159,19 @@ export function automagicReact(
             }
           },
         })
-        return ['new subscriber', subscriber]
+        return 'new subscriber'
       }
     }
 
     // return diff in dev mode
-    let changed
+    let changed: string
 
     // dev mode logging helpers
     if (process.env.NODE_ENV === 'development') {
       currentValueUnreactive = nextValue
       changed = diffLog(toJSDeep(previousValue), toJSDeep(nextValue))
       if (delayValue) {
-        changed = [...changed, 'delayValue']
+        changed = `(delayValue) => ${changed}`
       }
       if (log && !preventLog) {
         logGroup(name.full, val, changed, log.args)
@@ -423,8 +424,8 @@ export function automagicReact(
       // only log after first run, we could have a way to log this still
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog && !delayValue) {
-          if (changed.length) {
-            logGroup(`${name.full} ${id}`, result, changed, reactValArg, globalChanged)
+          if (changed) {
+            logGroup(`${name.full} ${id}`, result, `${changed}`, reactValArg, globalChanged)
           }
         }
       }

@@ -7,7 +7,7 @@ import {
   createContext,
   useMutationEffect,
 } from 'react'
-import { action, autorun, observable, toJS, trace } from 'mobx'
+import { autorun, observable, toJS, trace, transaction } from 'mobx'
 import isEqual from 'react-fast-compare'
 
 type UseGlobalStoreOptions = {
@@ -49,32 +49,34 @@ const updateProps = (props, nextProps, options?: UseStoreOptions) => {
   const curPropKeys = propKeysWithoutElements(props)
 
   // changes
-  for (const prop of nextPropsKeys) {
-    const a = props[prop]
-    const b = nextProps[prop]
-    if (a !== b) {
-      // this is a bit risky and weird but i cant think of a case it would ever have broken
-      // if you use functions as render callbacks and then *change* them during renders this would break
-      if (typeof a === 'function' && typeof b === 'function') {
-        if (a.toString() === b.toString()) {
-          continue
+  transaction(() => {
+    for (const prop of nextPropsKeys) {
+      const a = props[prop]
+      const b = nextProps[prop]
+      if (a !== b) {
+        // this is a bit risky and weird but i cant think of a case it would ever have broken
+        // if you use functions as render callbacks and then *change* them during renders this would break
+        if (typeof a === 'function' && typeof b === 'function') {
+          if (a.toString() === b.toString()) {
+            continue
+          }
         }
-      }
-      if (!isEqual(a, b)) {
-        if (process.env.NODE_ENV === 'development' && options && options.debug) {
-          console.log('has changed prop', prop, nextProps[prop])
+        if (!isEqual(a, b)) {
+          if (process.env.NODE_ENV === 'development' && options && options.debug) {
+            console.log('has changed prop', prop, nextProps[prop])
+          }
+          props[prop] = nextProps[prop]
         }
-        props[prop] = nextProps[prop]
       }
     }
-  }
 
-  // removes
-  for (const key of curPropKeys) {
-    if (typeof nextProps[key] === 'undefined') {
-      delete props[key]
+    // removes
+    for (const key of curPropKeys) {
+      if (typeof nextProps[key] === 'undefined') {
+        delete props[key]
+      }
     }
-  }
+  })
 }
 
 const setupStoreWithReactiveProps = (Store, props?) => {
@@ -84,7 +86,6 @@ const setupStoreWithReactiveProps = (Store, props?) => {
     storeInstance = new Store()
   } else {
     // add props to the store and manage them
-    const updatePropsAction = action(`${Store.name}.updateProps`, updateProps)
     const storeProps = observable({ props }, { props: observable.shallow })
     const getProps = {
       configurable: true,
@@ -94,7 +95,7 @@ const setupStoreWithReactiveProps = (Store, props?) => {
     Object.defineProperty(Store.prototype, 'props', getProps)
     storeInstance = new Store()
     Object.defineProperty(storeInstance, 'props', getProps)
-    storeInstance.__updateProps = updatePropsAction
+    storeInstance.__updateProps = updateProps
   }
   if (globalOptions.onMount) {
     globalOptions.onMount(storeInstance)

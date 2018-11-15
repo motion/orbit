@@ -18,21 +18,12 @@ import { BrowserDebugTray } from './BrowserDebugTray'
 import { IS_ELECTRON } from '../../../constants'
 import { throttle } from 'lodash'
 
-const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 
-const maxTransition = 180
-const transition = `opacity ease 100ms, transform ease 150ms`
+const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
+const maxTransition = 150
+const transition = `opacity ease 100ms, transform ease ${180}ms`
 export const menuPad = 6
-
-const sendTrayEvent = (key, value) => {
-  App.setState({
-    trayState: {
-      trayEvent: key,
-      trayEventAt: value,
-    },
-  })
-}
 
 export class MenuStore {
   props: {
@@ -94,31 +85,37 @@ export class MenuStore {
     }
   }
 
-  setHoveringIDFromEvent = react(
-    () => {
-      const { trayState } = App.state
-      always(trayState.trayEventAt)
-      const id = trayState.trayEvent.replace('TrayHover', '')
-      return `${+id}` === id ? +id : -1
-    },
-    val => {
-      this.hoveringID = val
-    },
-  )
+  handleTrayEvent = async (key: keyof TrayActions) => {
+    console.log('got event', key)
+    switch (key) {
+      case 'TrayToggle0':
+        AppActions.setOrbitDocked(!App.state.orbitState.docked)
+        break
+      case 'TrayToggle1':
+      case 'TrayToggle2':
+      case 'TrayToggle3':
+        this.activeMenuID = +key.replace('TrayToggle', '')
+        this.togglePinnedOpen()
+        break
+      case 'TrayHover0':
+      case 'TrayHover1':
+      case 'TrayHover2':
+      case 'TrayHover3':
+        const id = +key.replace('TrayHover', '')
+        this.hoveringID = id
+        this.activeMenuID = id
+        break
+      case 'TrayHoverOut':
+        this.hoveringID = -1
+        break
+    }
+  }
 
   setActiveMenuClosedOnClose = react(
     () => this.isOpenVisually,
     isOpen => {
       ensure('not open', !isOpen)
       this.activeMenuID = -1
-    },
-  )
-
-  setActiveMenuFromHover = react(
-    () => this.hoveringID,
-    id => {
-      ensure('valid', this.hoveringID > -1)
-      this.activeMenuID = +id
     },
   )
 
@@ -153,7 +150,15 @@ export class MenuStore {
   setAppMenuOpen = react(
     () => this.activeMenuID,
     activeMenuID => {
-      if (typeof activeMenuID === 'number') {
+      if (activeMenuID !== -1) {
+        App.setState({
+          trayState: {
+            menuState: {
+              [this.lastActiveMenuID]: { open: false },
+            },
+          },
+        })
+      } else {
         // this is used for electron to understand when to enable pointer events
         App.setState({
           trayState: {
@@ -164,14 +169,6 @@ export class MenuStore {
               [this.lastActiveMenuID]: {
                 open: false,
               },
-            },
-          },
-        })
-      } else {
-        App.setState({
-          trayState: {
-            menuState: {
-              [this.lastActiveMenuID]: { open: false },
             },
           },
         })
@@ -414,9 +411,13 @@ export const MenuLayer = React.memo(() => {
     const onMove = throttle(e => {
       const hoverOut = e.target === document.documentElement
       if (hoverOut) {
-        menuStore.handleMouseLeave()
+        if (menuStore.isHoveringDropdown) {
+          menuStore.handleMouseLeave()
+        }
       } else {
-        menuStore.handleMouseEnter()
+        if (!menuStore.isHoveringDropdown) {
+          menuStore.handleMouseEnter()
+        }
       }
     }, 32)
     document.addEventListener('mousemove', onMove)
@@ -427,28 +428,9 @@ export const MenuLayer = React.memo(() => {
 
   const width = 300
   React.useEffect(() => {
-    return App.onMessage(App.messages.TRAY_EVENT, async (key: keyof TrayActions) => {
-      console.log('got event', key)
-      switch (key) {
-        case 'TrayToggle0':
-          AppActions.setOrbitDocked(!App.state.orbitState.docked)
-          break
-        case 'TrayToggle1':
-        case 'TrayToggle2':
-        case 'TrayToggle3':
-          menuStore.activeMenuID = +key.replace('TrayToggle', '')
-          menuStore.togglePinnedOpen()
-          break
-        case 'TrayHover0':
-        case 'TrayHover1':
-        case 'TrayHover2':
-        case 'TrayHover3':
-        case 'TrayHoverOut':
-          sendTrayEvent(key, Date.now())
-          break
-      }
-    })
+    return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
   }, [])
+
   const left = menuStore.menuCenter - width / 2
   const showMenu = menuStore.isOpenVisually
   log(`MenuLayer left ${menuStore.menuCenter} ${left}`)
@@ -495,6 +477,7 @@ const MenuChrome = view(View, {
 
 const MenuChromeContent = React.memo(
   ({ menuStore, queryStore }: { menuStore: MenuStore; queryStore: QueryStore }) => {
+    console.log('MenuChromeContent rendering.........')
     return (
       <View className="app-parent-bounds" pointerEvents="auto">
         <Searchable

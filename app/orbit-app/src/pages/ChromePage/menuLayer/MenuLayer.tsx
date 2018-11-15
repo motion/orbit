@@ -23,7 +23,7 @@ const transition = `opacity ease 100ms, transform ease ${180}ms`
 export const menuPad = 6
 
 export const MenuLayer = React.memo(() => {
-  const { sourcesStore, settingStore } = React.useContext(StoreContext)
+  const stores = React.useContext(StoreContext)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const selectionStore = useStore(SelectionStore, {
     queryStore,
@@ -36,9 +36,8 @@ export const MenuLayer = React.memo(() => {
     selectionStore,
   })
   const menuStore = useStore(MenuStore, { paneManagerStore })
-  const storeProps = {
-    settingStore,
-    sourcesStore,
+  const allStores = {
+    ...stores,
     queryStore,
     selectionStore,
     menuStore,
@@ -75,7 +74,7 @@ export const MenuLayer = React.memo(() => {
 
   return (
     <BrowserDebugTray>
-      <StoreContext.Provider value={storeProps}>
+      <StoreContext.Provider value={allStores}>
         <MenuChrome
           width={width - menuPad * 2}
           margin={menuPad}

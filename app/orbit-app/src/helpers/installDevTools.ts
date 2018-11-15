@@ -1,7 +1,7 @@
 import './installGlobals'
 import { debugState } from '@mcro/black'
 import { setConfig } from 'react-hot-loader'
-import { enableLogging } from 'mobx-logger'
+import { enableLogging } from '@mcro/mobx-logger'
 
 window['l'] = false
 

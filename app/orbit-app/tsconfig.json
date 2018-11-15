@@ -9,6 +9,7 @@
   "references": [
     { "path": "../model-bridge" },
     { "path": "../../packages/config" },
+    { "path": "../../packages/mobxLogger" },
     { "path": "../../packages/mediator" }
   ]
 }

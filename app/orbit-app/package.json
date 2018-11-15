@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0",
     "@mcro/black": "^2.2.1",
+    "@mcro/mobx-logger": "^2.2.1",
     "@mcro/config": "2.2.1",
     "@mcro/color": "^2.2.1",
     "@mcro/constants": "^2.2.1",
@@ -63,8 +64,7 @@
     "react-draggable": "3.0.5",
     "react": "16.7.0-alpha.2",
     "react-dom": "16.7.0-alpha.2",
-    "re-resizable": "4.9.3",
-    "mobx-logger": "0.7.1"
+    "re-resizable": "4.9.3"
   },
   "devDependencies": {
     "@babel/core": "7.1.0",

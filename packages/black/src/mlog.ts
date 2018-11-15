@@ -1,6 +1,5 @@
 import root from 'global'
 import * as Mobx from 'mobx'
-import { enableLogging } from 'mobx-logger'
 
 let runners = (root.__mlogRunners = root.__mlogRunners || [])
 
@@ -47,20 +46,4 @@ export const mlog = <MLog>function mlog(fn) {
 mlog.clear = () => {
   runners.forEach(r => r())
   runners = []
-}
-
-let logMobx = false
-enableLogging({
-  predicate: () => logMobx,
-  action: true,
-  reaction: true,
-  transaction: true,
-  compute: true,
-})
-
-mlog.enable = () => {
-  logMobx = true
-}
-mlog.disable = () => {
-  logMobx = false
 }

@@ -135,11 +135,12 @@ export class SelectionStore {
       }
       this.clearSelected()
     } else {
-      if (typeof index === 'number') {
+      if (typeof index !== 'number') {
+        console.error('index is not a number')
+      } else {
         this.activeIndex = index
       }
     }
-    return false
   }
 
   move = (direction: Direction, selectEvent?: 'key') => {

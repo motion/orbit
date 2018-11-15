@@ -66,7 +66,7 @@ export class OrbitItemStore {
     this.lastClickLocation = Date.now()
   }
 
-  searchLocation = () => {
+  searchLocation() {
     const { onClickLocation } = this.props
     if (typeof onClickLocation === 'string') {
       return AppActions.open(onClickLocation)
@@ -116,29 +116,31 @@ export class OrbitItemStore {
     AppActions.setPeekApp(item)
   }
 
+  shouldSelect() {
+    const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
+    if (typeof isSelected === 'undefined') {
+      if (ignoreSelection) {
+        return false
+      }
+      if (activeCondition && activeCondition() === false) {
+        return false
+      }
+      if (!appStore || !appStore.isActive) {
+        return false
+      }
+    }
+    const forceSelected = typeof isSelected === 'function' ? isSelected(this.index) : isSelected
+    let next
+    if (typeof forceSelected === 'boolean') {
+      next = forceSelected
+    } else {
+      next = appStore.activeIndex === this.index
+    }
+    return next
+  }
+
   updateIsSelected = react(
-    () => {
-      const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
-      if (typeof isSelected === 'undefined') {
-        if (ignoreSelection) {
-          return false
-        }
-        if (activeCondition && activeCondition() === false) {
-          return false
-        }
-        if (!appStore || !appStore.isActive) {
-          return false
-        }
-      }
-      const forceSelected = typeof isSelected === 'function' ? isSelected(this.index) : isSelected
-      let next
-      if (typeof forceSelected === 'boolean') {
-        next = forceSelected
-      } else {
-        next = appStore.activeIndex === this.index
-      }
-      return next
-    },
+    this.shouldSelect,
     async (isSelected, { sleep }) => {
       const { onSelect, preventAutoSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)

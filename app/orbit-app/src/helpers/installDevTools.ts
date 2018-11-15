@@ -8,7 +8,7 @@ window['disableLogging'] = true
 // dont log until first render done
 setTimeout(() => {
   window['disableLogging'] = false
-}, 500)
+}, 1000)
 
 enableLogging({
   predicate: ({ name }) => {

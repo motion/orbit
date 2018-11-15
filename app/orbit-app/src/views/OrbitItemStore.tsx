@@ -22,7 +22,7 @@ export class OrbitItemStore {
   setHoverSettler = react(
     () => this.props.hoverToSelect,
     hoverSelect => {
-      ensure('hoverSelect', hoverSelect)
+      ensure('hoverSelect', !!hoverSelect)
       ensure('!hoverSettler', !this.hoverSettler)
       this.hoverSettler = this.props.appStore.getHoverSettler()
       this.hoverSettler.setItem({

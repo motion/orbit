@@ -6,11 +6,9 @@ small apps for teams
 
 tuesday:
 
-- fix selection store getting into bad state / not moving
-- fix keyboard selection move
 - add auto select on search first item
 - create new titlebar / icon with button to toggle sidebar
-- get sidebar in and working, resizing
+- get sidebar resizing
 - fix some tear away bugs
 
 - contextual search app

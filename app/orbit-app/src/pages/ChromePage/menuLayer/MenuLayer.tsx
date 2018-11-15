@@ -24,7 +24,7 @@ export const menuPad = 6
 
 export const MenuLayer = React.memo(() => {
   const stores = React.useContext(StoreContext)
-  const queryStore = useStore(QueryStore, { sourcesStore })
+  const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const selectionStore = useStore(SelectionStore, {
     queryStore,
     onClearSelection: () => {

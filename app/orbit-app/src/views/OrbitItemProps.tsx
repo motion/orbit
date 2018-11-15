@@ -55,7 +55,6 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     isSelected?: boolean | Function
     cardProps?: Object
     disableShadow?: boolean
-    preventAutoSelect?: boolean
     padding?: number | number[]
     titleFlex?: number
     subtitleProps?: Object

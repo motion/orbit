@@ -24,7 +24,6 @@ export class ListItem extends React.PureComponent<ListItemProps> {
   render() {
     const { model, realIndex, query, ignoreSelection, ...itemProps } = this.props
     const normalizedItem = normalizeItem(model)
-    console.log('passing in model', model, normalizedItem)
     return (
       <OrbitListItem
         direct

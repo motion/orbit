@@ -24,6 +24,9 @@ enableLogging({
     if (name.indexOf('__updateProps') >= 0) {
       return false
     }
+    if (name.indexOf('updateIsSelected') >= 0) {
+      return false
+    }
     return true
   },
   action: true,

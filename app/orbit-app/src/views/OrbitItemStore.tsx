@@ -134,7 +134,7 @@ export class OrbitItemStore {
     if (typeof forceSelected === 'boolean') {
       next = forceSelected
     } else {
-      next = appStore.activeIndex === this.index
+      next = appStore && appStore.activeIndex === this.index
     }
     return next
   }

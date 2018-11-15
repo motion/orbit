@@ -2,8 +2,6 @@ import * as Mobx from 'mobx'
 import { Reaction } from './constants'
 import { automagicReact } from './automagicReact'
 import { MagicalObject } from './types'
-import { Root } from './helpers'
-import { Logger } from '@mcro/logger'
 
 // export @react decorator
 export { react } from './react'
@@ -14,8 +12,6 @@ export * from './types'
 
 // this lets you "always" react to any values you give as arguments without bugs
 export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number
-
-const log = new Logger('automagical')
 
 // TODO: fix deep() wrapper doesnt trigger reactions when mutating objects
 // so basically this.reactiveObj.x = 1, wont trigger react(() => this.reactiveObj)
@@ -148,17 +144,6 @@ function decorateMethodWithAutomagic(
     return
   }
   if (isFunction(value)) {
-    const NAME = `${target.constructor.name}.${method}`
-    // autobind
-    const targetMethod = target[method].bind(target)
-    // wrap for logging helpers
-    target[method] = (...args) => {
-      if (Root.__shouldLog && Root.__shouldLog[NAME]) {
-        log.info(NAME, ...args)
-      }
-      return targetMethod(...args)
-    }
-    // actionize
     return Mobx.action
   }
   if (Mobx.isObservable(target[method])) {

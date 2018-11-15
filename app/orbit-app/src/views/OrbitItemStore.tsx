@@ -116,7 +116,7 @@ export class OrbitItemStore {
     AppActions.setPeekApp(item)
   }
 
-  shouldSelect() {
+  shouldSelect = () => {
     const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
     if (typeof isSelected === 'undefined') {
       if (ignoreSelection) {
@@ -142,10 +142,10 @@ export class OrbitItemStore {
   updateIsSelected = react(
     this.shouldSelect,
     async (isSelected, { sleep }) => {
-      const { onSelect, preventAutoSelect } = this.props
+      const { onSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
-      if (isSelected && !preventAutoSelect) {
+      if (isSelected) {
         console.log('selecting this thing...', this.props.appType, this.appConfig)
         ensure('appConfig`', !!this.appConfig)
         if (onSelect) {

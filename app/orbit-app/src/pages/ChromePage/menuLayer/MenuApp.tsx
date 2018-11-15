@@ -14,7 +14,7 @@ export const MenuApp = React.memo((props: MenuAppProps) => {
     {
       ...props,
       ...stores,
-      isActive: () => props.menuStore.lastActiveMenuID === props.menuId,
+      isActive: () => props.menuStore.activeOrLastActiveMenuID === props.menuId,
     },
     {
       debug: true,

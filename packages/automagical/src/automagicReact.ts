@@ -118,7 +118,7 @@ export function automagicReact(
     return current.get()
   }
 
-  function update(value, log?) {
+  function update(value) {
     let nextValue = value
 
     // delayValue option
@@ -172,9 +172,6 @@ export function automagicReact(
       changed = diffLog(toJSDeep(previousValue), toJSDeep(nextValue))
       if (delayValue) {
         changed = `(delayValue) => ${changed}`
-      }
-      if (log && !preventLog) {
-        logGroup(name.full, val, changed, log.args)
       }
     }
 
@@ -348,19 +345,24 @@ export function automagicReact(
       // async update helpers
       const updateAsyncValue = val => {
         const isValid = curID === reactionID
+        let changed
         if (isValid) {
-          if (process.env.NODE_ENV === 'development') {
-            // more verbose logging in dev
-            update(val, {
-              name: `${name.simple} ${reactionID} ${isValid ? '✅' : '🚫'} ..${Date.now() -
-                start}ms`,
-              args: reactValArg,
-            })
-          } else {
-            update(val)
-          }
+          // more verbose logging in dev
+          changed = update(val)
         } else {
           throw SHARED_REJECTION_ERROR
+        }
+        if (process.env.NODE_ENV === 'development') {
+          // async updates log with an indicator of their delay time and if they cancelled
+          if (log && !preventLog) {
+            const delayLog = `..${Date.now() - start}ms`
+            logGroup(
+              `${isValid ? '✅' : '🚫'} ${name.full}`,
+              val,
+              `${delayLog} ${changed}`,
+              reactValArg,
+            )
+          }
         }
       }
       reactionHelpers.setValue = updateAsyncValue

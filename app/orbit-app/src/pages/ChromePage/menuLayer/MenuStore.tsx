@@ -32,29 +32,20 @@ export class MenuStore {
   // resolve the actual open state quickly so isOpenFocus/isOpenVisually
   // can derive off the truth state that is the most quick
   isOpenFast = react(
-    () => [
-      this.holdingOption,
-      this.isHoveringTray || this.isHoveringDropdown || this.isPinnedOpen || this.isHoveringPeek,
-    ],
-    async ([holdingOption, showMenu], { sleep }) => {
-      if (holdingOption) {
-        return true
-      }
-      if (!showMenu) {
-        // this prevents it from closing the moment you leave, gives mouse some buffer
-        await sleep(120)
-      }
-      return showMenu
-    },
+    () =>
+      this.holdingOption ||
+      this.isHoveringTray ||
+      this.isHoveringDropdown ||
+      this.isPinnedOpen ||
+      this.isHoveringPeek,
+    _ => _,
   )
 
   // the actual show/hide in the interface
-  isOpenVisually = react(
+  isOpenOutsideAnimation = react(
     () => this.isOpenFast,
     async (open, { sleep }) => {
-      // wait for "show" just a little before animation, but hide instantly to run before "hide"
-      await sleep(open ? 100 : 0)
-      console.log('ANIMTE NOW')
+      await sleep(maxTransition)
       return open
     },
   )
@@ -96,14 +87,6 @@ export class MenuStore {
         break
     }
   }
-
-  setActiveMenuClosedOnClose = react(
-    () => this.isOpenVisually,
-    isOpen => {
-      ensure('not open', !isOpen)
-      this.activeMenuID = -1
-    },
-  )
 
   setActiveMenuFromPaneChange = react(
     () => this.props.paneManagerStore.paneIndex,
@@ -263,20 +246,12 @@ export class MenuStore {
     return Desktop.keyboardState.isHoldingOption
   }
 
-  shouldFocus = react(
-    () => this.isOpenFast,
-    async (open, { sleep }) => {
-      // focus instantly on open, but wait for full close before defocus
-      await sleep(open ? 0 : maxTransition * 1.2)
-      console.log('FOCUS NOW')
-      return open
-    },
-  )
-
   isFocused = react(
-    () => this.shouldFocus,
+    () => this.isOpenOutsideAnimation,
     async (shouldFocus, { whenChanged, sleep }) => {
       if (!shouldFocus) {
+        // for some reason this happens before animation finishes and requires a significant buffer, why?
+        await sleep(150)
         setTrayFocused(false)
         return false
       }
@@ -318,6 +293,7 @@ export class MenuStore {
     const bounds = trayBounds[0] + offset
     return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
   }
+
   setHeight = (height: number) => {
     this.height = height
     App.setState({

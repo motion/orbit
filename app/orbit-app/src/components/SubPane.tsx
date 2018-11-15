@@ -26,11 +26,7 @@ type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
 export const SubPane = React.memo((props: Props) => {
   const { paneManagerStore, selectionStore } = React.useContext(StoreContext)
-  const subPaneStore = useStore(
-    SubPaneStore,
-    { paneManagerStore, selectionStore, ...props },
-    { debug: true },
-  )
+  const subPaneStore = useStore(SubPaneStore, { paneManagerStore, selectionStore, ...props })
   const { isActive, isLeft } = subPaneStore.positionState
   return (
     <SubPaneFrame isActive={isActive}>

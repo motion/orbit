@@ -71,7 +71,7 @@ export const MenuLayer = React.memo(() => {
   }, [])
 
   const left = menuStore.menuCenter - width / 2
-  const showMenu = menuStore.isOpenVisually
+  const showMenu = menuStore.isOpenOutsideAnimation
 
   log(`MenuLayer ${showMenu} ${menuStore.menuCenter} ${left}`)
 

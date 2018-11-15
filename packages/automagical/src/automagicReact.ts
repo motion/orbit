@@ -399,7 +399,7 @@ export function automagicReact(
           .then(val => {
             if (curID !== reactionID) {
               if (!IS_PROD && !preventLog) {
-                log.info(`${name.simple} 🚫`)
+                log.verbose(`${name.simple} 🚫`)
               }
               // cancelled before finishing
               return

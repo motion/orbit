@@ -63,7 +63,6 @@ export class MenuStore {
   }
 
   handleTrayEvent = async (key: keyof TrayActions) => {
-    console.log('got event', key)
     switch (key) {
       case 'TrayToggle0':
         AppActions.setOrbitDocked(!App.state.orbitState.docked)

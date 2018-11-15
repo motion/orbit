@@ -145,7 +145,6 @@ export class BridgeManager {
     }
     // wait for initial state
     if (!this.options.master && !this.options.waitForInitialState) {
-      console.log('waiting for initial state')
       let failTm = setTimeout(() => {
         console.error('get initial state timeout!')
       }, 10000)
@@ -259,21 +258,20 @@ export class BridgeManager {
 
     this.socket.onopen = () => {
       this.isSocketOpen = true
+
+      this.getInitialState()
+
       if (this.awaitingSocket.length) {
         this.awaitingSocket.map(x => x())
         this.awaitingSocket = []
       }
+
       // send state that hasnt been synced yet
       this.scheduleSendState()
-      this.getInitialState()
     }
 
     this.socket.onclose = () => {
       this.isSocketOpen = false
-      // reconnecting websocket reconnect fix: https://github.com/pladaria/reconnecting-websocket/issues/60
-      if (this.socket._shouldReconnect) {
-        this.socket._connect()
-      }
     }
 
     this.socket.onerror = err => {
@@ -282,6 +280,7 @@ export class BridgeManager {
         err.stopPropagation()
       }
       if (err.code === 'ETIMEDOUT') {
+        console.log('socket timeout')
         return
       }
       if (this.socket.readyState == 1) {

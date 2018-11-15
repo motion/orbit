@@ -17,8 +17,7 @@ import { ItemProps } from '../OrbitItemProps'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
-import { debounce } from 'lodash'
-import { cold } from 'react-hot-loader'
+import { debounce, throttle } from 'lodash'
 
 export type ItemPropsMinimum = Pick<ItemProps<any>, 'appType' | 'appConfig'> &
   Partial<ItemProps<any>>
@@ -56,6 +55,10 @@ class VirtualListStore {
   observing = false
   cache: CellMeasurerCache = null
 
+  get items() {
+    return this.props.items
+  }
+
   resizeOnChange = react(
     () => always(this.props.items),
     () => {
@@ -78,7 +81,7 @@ class VirtualListStore {
     },
   )
 
-  measure = debounce(() => {
+  measure = throttle(() => {
     if (!this.rootRef) {
       return
     }
@@ -109,7 +112,7 @@ class VirtualListStore {
       if (this.width === 0) {
         const width = this.rootRef.clientWidth
         this.cache = new CellMeasurerCache({
-          // defaultHeight: 60,
+          defaultHeight: 60,
           defaultWidth: width,
           fixedWidth: true,
           keyMapper: this.keyMapper,
@@ -132,13 +135,13 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-export const VirtualList = cold((props: Props) => {
-  const { queryStore, appStore } = React.useContext(StoreContext)
+export const VirtualList = (props: Props) => {
+  const { appStore } = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore })
-  const { cache, width, height } = store
+  const { cache, width, height, items } = store
 
   const rowRenderer = ({ index, parent, style }) => {
-    const model = props.items[index]
+    const model = items[index]
     const ItemView = props.ItemView || VirtualListItem
     return (
       <CellMeasurer
@@ -153,7 +156,6 @@ export const VirtualList = cold((props: Props) => {
             model={model}
             index={index}
             realIndex={index}
-            query={queryStore.queryDebounced}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
           />
@@ -162,7 +164,7 @@ export const VirtualList = cold((props: Props) => {
     )
   }
 
-  if (!props.items.length) {
+  if (!items.length) {
     return (
       <View margin={[10, 0]}>
         <Banner>No results</Banner>
@@ -185,13 +187,13 @@ export const VirtualList = cold((props: Props) => {
             }
           }
         }}
-        items={props.items}
+        items={items}
         deferredMeasurementCache={cache}
         height={height}
         width={width}
         rowHeight={cache.rowHeight}
         overscanRowCount={20}
-        rowCount={props.items.length}
+        rowCount={items.length}
         estimatedRowSize={100}
         rowRenderer={rowRenderer}
         pressDelay={120}
@@ -228,4 +230,4 @@ export const VirtualList = cold((props: Props) => {
       {!width && <div>No width!</div>}
     </div>
   )
-})
+}

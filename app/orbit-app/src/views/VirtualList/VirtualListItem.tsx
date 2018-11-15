@@ -5,6 +5,7 @@ import { Bit } from '@mcro/models'
 import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
 import { ItemProps } from '../OrbitItemProps'
+import { normalizeItem } from '../../helpers/normalizeItem'
 
 export type ListItemProps = Partial<ItemProps<any>> & {
   model: Bit
@@ -22,9 +23,11 @@ const spaceBetween = <div style={{ flex: 1 }} />
 export class ListItem extends React.PureComponent<ListItemProps> {
   render() {
     const { model, realIndex, query, ignoreSelection, ...itemProps } = this.props
+    const normalizedItem = normalizeItem(model)
+    console.log('passing in model', model, normalizedItem)
     return (
       <OrbitListItem
-        model={model}
+        direct
         index={realIndex}
         subtitleSpaceBetween={spaceBetween}
         searchTerm={query}
@@ -37,6 +40,7 @@ export class ListItem extends React.PureComponent<ListItemProps> {
         renderText={renderHighlightedText}
         ignoreSelection={ignoreSelection}
         {...itemProps}
+        {...normalizedItem}
       />
     )
   }

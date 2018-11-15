@@ -26,17 +26,13 @@ wednesday:
 - Get profiles with topic modeling
 - Get topics app using real data for changing over time topics
 - UI for custom topics in topics app
-- Rename SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
 ---
 
 Monday:
 
 - Keyboard nav into the main-windows
-- Walkthrough accessibility permissions
-  - Custom Notifications :) would allow a lot
 - Person app send via slack/gmail
-- Hoversettler for menu peeks
 
 Tuesday:
 

@@ -9,6 +9,10 @@ import { VirtualList } from '../../views/VirtualList/VirtualList'
 class ListsMainStore {
   props: AppProps
 
+  get maxHeight() {
+    return this.props.appStore.maxHeight
+  }
+
   // lets fake this list data for now
   list = react(
     () =>
@@ -21,12 +25,12 @@ class ListsMainStore {
   )
 }
 
-export function ListsAppMain(props: AppProps) {
+export const ListsAppMain = React.memo((props: AppProps) => {
   const store = useStore(ListsMainStore, props)
   return (
     <>
       <VirtualList
-        maxHeight={props.appStore.maxHeight}
+        maxHeight={store.maxHeight}
         items={store.list as Bit[]}
         itemProps={{
           hide: {
@@ -37,4 +41,4 @@ export function ListsAppMain(props: AppProps) {
       />
     </>
   )
-}
+})

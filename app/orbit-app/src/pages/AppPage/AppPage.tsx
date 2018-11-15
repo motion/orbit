@@ -1,40 +1,19 @@
 import * as React from 'react'
 import { view, provide, attach } from '@mcro/black'
 import { SourcesStore } from '../../stores/SourcesStore'
-// import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { AppWrapper } from '../../views'
 import { AppPageStore } from './AppPageStore'
 import * as UI from '@mcro/ui'
 import { AppFrame } from './AppFrame'
 import { WindowControls } from '../../views/WindowControls'
-import { OrbitIntegration } from '../../sources/types'
 import { AppView } from '../../apps/AppView'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { Sidebar, Row, Text, Col } from '@mcro/ui'
 import { Searchable } from '../../components/Searchable'
-import { IS_ELECTRON } from '../../constants'
-import { AppActions } from '../../actions/AppActions'
-import { AppConfig } from '@mcro/stores'
-import { loadOne } from '@mcro/model-bridge'
-import { BitModel } from '@mcro/models'
+import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 
-if (!IS_ELECTRON) {
-  const test = async () => {
-    const lastBit = await loadOne(BitModel, { args: {} })
-    AppActions.setPeekApp({
-      parentBounds: {},
-      target: {},
-      appType: 'bit',
-      appConfig: {
-        id: `${lastBit.id}`,
-        title: lastBit.title,
-        type: 'bit',
-      } as AppConfig,
-    })
-  }
-  test()
-}
+// see main.ts for setup for testing this in browser
 
 type Props = {
   sourcesStore?: SourcesStore
@@ -57,20 +36,18 @@ type Props = {
 export class AppPage extends React.Component<Props> {
   render() {
     return (
-      // <MainShortcutHandler>
-      <AppWrapper>
-        <UI.Theme name="light">
-          <AppFrame>
-            <AppPageContent />
-          </AppFrame>
-        </UI.Theme>
-      </AppWrapper>
-      // </MainShortcutHandler>
+      <MainShortcutHandler>
+        <AppWrapper>
+          <UI.Theme name="light">
+            <AppFrame>
+              <AppPageContent />
+            </AppFrame>
+          </UI.Theme>
+        </AppWrapper>
+      </MainShortcutHandler>
     )
   }
 }
-
-const NullView = () => <div>null</div>
 
 const TitleBar = view({
   height: 28,
@@ -84,16 +61,6 @@ const TitleBar = view({
 @attach('queryStore', 'sourcesStore', 'appPageStore')
 @view
 class AppPageContent extends React.Component<Props> {
-  getView = (viewType: keyof OrbitIntegration<any>['views']) => {
-    const { appPageStore, sourcesStore } = this.props
-    const { appConfig } = appPageStore.state
-    const app = sourcesStore.allSourcesMap[appConfig.integration]
-    if (!app) {
-      return NullView
-    }
-    return app.views[viewType]
-  }
-
   render() {
     const { appPageStore, queryStore } = this.props
     if (!appPageStore.state) {

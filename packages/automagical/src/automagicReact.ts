@@ -137,7 +137,6 @@ export function automagicReact(
       // cancel previous whenever a new one comes in
       const newSubscriber = value as SubscribableLike
       if (subscriber) {
-        console.log('canceling last...', subscriber)
         subscriber.unsubscribe()
         subscriber = null
       }
@@ -149,14 +148,11 @@ export function automagicReact(
             'Detected a subscribable but store doesn\'t have a .subscriptions CompositeDisposable',
           )
         }
-        console.log('subscribing to new...', value)
         subscriber = newSubscriber.subscribe(value => {
-          console.log('setting from subscirber...', value)
           current.set(value)
         })
         obj.subscriptions.add({
           dispose: () => {
-            console.log('disposing subscriptions...')
             if (subscriber) {
               subscriber.unsubscribe()
             }

@@ -133,7 +133,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                   >
                     {title}
                   </HighlightText>
-                  <TitleSpace shouldFlex />
+                  <TitleSpace shouldFlex={extraProps && extraProps.oneLine} />
                   {this.props.afterTitle || normalizedItem.afterTitle}
                   {afterHeader}
                 </Title>
@@ -240,11 +240,8 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
   render() {
     const { store, model, direct } = this.props
     store.isSelected
-    if (!model) {
-      if (direct) {
-        return this.getInner(this.props)
-      }
-      return null
+    if (direct) {
+      return this.getInner(this.props)
     }
     return this.getInner(direct ? model : normalizeItem(model))
   }
@@ -263,7 +260,6 @@ export class OrbitListItem extends React.Component<ItemProps<any>> {
 }
 
 const ListFrame = view(UI.View, {
-  margin: [0, -1],
   position: 'relative',
   transform: {
     z: 0,
@@ -283,7 +279,7 @@ const Divider = view({
   left: 10,
   right: 10,
 }).theme(({ theme }) => ({
-  background: theme.color.alpha(0.015),
+  background: theme.color.alpha(0.017),
 }))
 
 const ListItem = view({
@@ -292,6 +288,8 @@ const ListItem = view({
   maxHeight: '100%',
   flex: 1,
   border: [1, 'transparent'],
+  borderLeft: 'none',
+  borderRight: 'none',
   transform: {
     z: 0,
   },
@@ -311,7 +309,7 @@ const ListItem = view({
   if (isSelected) {
     listStyle = {
       background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
-      border: [1, theme.borderSelected.alpha(0.5)],
+      borderColor: theme.borderSelected.alpha(0.5),
     }
   } else {
     listStyle = {

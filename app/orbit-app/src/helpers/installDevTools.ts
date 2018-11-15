@@ -3,16 +3,11 @@ import { debugState } from '@mcro/black'
 import { setConfig } from 'react-hot-loader'
 import { enableLogging } from '@mcro/mobx-logger'
 
-window['disableLogging'] = true
-
-// dont log until first render done
-setTimeout(() => {
-  window['disableLogging'] = false
-}, 1000)
+window['enableLog'] = false
 
 enableLogging({
   predicate: ({ name }) => {
-    if (window['disableLogging']) {
+    if (!window['enableLog']) {
       return false
     }
     if (!name) {

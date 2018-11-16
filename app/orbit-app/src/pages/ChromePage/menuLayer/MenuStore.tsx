@@ -8,6 +8,7 @@ import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { IS_ELECTRON } from '../../../constants'
 import { maxTransition } from './MenuLayer'
 import { AppType } from '@mcro/models'
+import { memoize } from 'lodash'
 
 export const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 
@@ -16,13 +17,17 @@ export class MenuStore {
     paneManagerStore: PaneManagerStore
   }
 
-  height = 300
+  menuWidth = 300
   isHoveringDropdown = false
   isPinnedOpen = false
   hoveringID = -1
 
   // see how this interacts with isOpen
-  activeMenuID = App.openMenu ? App.openMenu.id : false
+  activeMenuID = App.openMenu ? App.openMenu.id : -1
+
+  get menuHeight() {
+    return App.state.trayState.menuState[this.activeOrLastActiveMenuID].size[1]
+  }
 
   get isHoveringMenuPeek() {
     if (this.activeMenuID === -1) {
@@ -134,7 +139,7 @@ export class MenuStore {
   setAppMenuOpen = react(
     () => this.activeMenuID,
     activeMenuID => {
-      if (activeMenuID !== -1) {
+      if (activeMenuID === -1) {
         App.setState({
           trayState: {
             menuState: {
@@ -163,22 +168,32 @@ export class MenuStore {
   setAppMenuBounds = react(
     () => this.menuCenter,
     menuCenter => {
-      ensure('this.activeMenuID is number', typeof this.activeMenuID === 'number')
-      const width = 300
+      ensure('valid menu', this.activeMenuID !== -1)
+      const id = +this.activeMenuID
       App.setState({
         trayState: {
           menuState: {
-            [+this.activeMenuID]: {
+            [id]: {
               open: true,
-              position: [menuCenter - width / 2, 0],
-              // TODO: get height from the height we calculate
-              size: [width, 300],
+              position: [menuCenter - this.menuWidth / 2, 0],
             },
           },
         },
       })
     },
   )
+
+  menuHeightSetter = memoize((menuId: number) => (height: number) => {
+    App.setState({
+      trayState: {
+        menuState: {
+          [menuId]: {
+            size: [this.menuWidth, height],
+          },
+        },
+      },
+    })
+  })
 
   setPinnedFromPinKey = react(
     () => always(Electron.state.pinKey.at),
@@ -307,19 +322,6 @@ export class MenuStore {
     const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
     const bounds = trayBounds[0] + offset
     return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
-  }
-
-  setHeight = (height: number) => {
-    this.height = height
-    App.setState({
-      trayState: {
-        menuState: {
-          [this.activeOrLastActiveMenuID]: {
-            size: [300, height],
-          },
-        },
-      },
-    })
   }
 
   handleMouseEnter = () => {

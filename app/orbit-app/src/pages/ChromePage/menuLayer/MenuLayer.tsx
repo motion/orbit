@@ -84,27 +84,25 @@ export const MenuLayer = React.memo(() => {
 
 const MenuChrome = React.memo(
   ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
-    const { menuCenter, height, isOpenOutsideAnimation } = useInstantiatedStore(menuStore)
-    const width = 300
-    const left = menuCenter - width / 2
-    const showMenu = isOpenOutsideAnimation
+    const { menuCenter, menuWidth, menuHeight, isOpenFast } = useInstantiatedStore(menuStore)
+    const left = menuCenter - menuWidth / 2
     return (
       <>
         <MenuChromeFrame
-          width={width - menuPad * 2}
+          width={menuWidth - menuPad * 2}
           margin={menuPad}
-          transform={{ x: left - 1, y: showMenu ? 0 : -5 }}
+          transform={{ x: left - 1, y: isOpenFast ? 0 : -5 }}
           transition={transition}
-          opacity={showMenu ? 1 : 0}
+          opacity={isOpenFast ? 1 : 0}
         >
           {children}
         </MenuChromeFrame>
         <Popover
-          open={showMenu}
+          open={isOpenFast}
           transition={transition}
           background
-          width={width}
-          height={height + 11 /* arrow size, for now */}
+          width={menuWidth}
+          height={menuHeight + 11 /* arrow size, for now */}
           towards="bottom"
           delay={0}
           top={IS_ELECTRON ? 0 : 28}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
-import { useStore } from '@mcro/use-store'
+import { useStore, useInstantiatedStore } from '@mcro/use-store'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { App } from '@mcro/stores'
@@ -15,6 +15,7 @@ import { BrowserDebugTray } from './BrowserDebugTray'
 import { IS_ELECTRON } from '../../../constants'
 import { throttle } from 'lodash'
 import { MenuStore, menuApps } from './MenuStore'
+import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 export const maxTransition = 150
@@ -23,8 +24,8 @@ const transition = `opacity ease 100ms, transform ease ${180}ms`
 export const menuPad = 6
 
 export const MenuLayer = React.memo(() => {
-  const { sourcesStore, settingStore } = React.useContext(StoreContext)
-  const queryStore = useStore(QueryStore, { sourcesStore })
+  const stores = React.useContext(StoreContext)
+  const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const selectionStore = useStore(SelectionStore, {
     queryStore,
     onClearSelection: () => {
@@ -35,10 +36,9 @@ export const MenuLayer = React.memo(() => {
     panes: menuApps,
     selectionStore,
   })
-  const menuStore = useStore(MenuStore, { paneManagerStore })
-  const storeProps = {
-    settingStore,
-    sourcesStore,
+  const menuStore = useStore(MenuStore, { paneManagerStore, queryStore })
+  const allStores = {
+    ...stores,
     queryStore,
     selectionStore,
     menuStore,
@@ -65,32 +65,44 @@ export const MenuLayer = React.memo(() => {
     }
   }, [])
 
-  const width = 300
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
   }, [])
 
-  const left = menuStore.menuCenter - width / 2
-  const showMenu = menuStore.isOpenOutsideAnimation
-
   return (
     <BrowserDebugTray>
-      <StoreContext.Provider value={storeProps}>
-        <MenuChrome
-          width={width - menuPad * 2}
+      <StoreContext.Provider value={allStores}>
+        <MainShortcutHandler>
+          <MenuChrome menuStore={menuStore}>
+            <MenuLayerContent queryStore={queryStore} menuStore={menuStore} />
+          </MenuChrome>
+        </MainShortcutHandler>
+      </StoreContext.Provider>
+    </BrowserDebugTray>
+  )
+})
+
+const MenuChrome = React.memo(
+  ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
+    const { menuCenter, menuWidth, menuHeight, isOpenFast } = useInstantiatedStore(menuStore)
+    const left = menuCenter - menuWidth / 2
+    return (
+      <>
+        <MenuChromeFrame
+          width={menuWidth - menuPad * 2}
           margin={menuPad}
-          transform={{ x: left - 1, y: showMenu ? 0 : -5 }}
+          transform={{ x: left - 1, y: isOpenFast ? 0 : -5 }}
           transition={transition}
-          opacity={showMenu ? 1 : 0}
+          opacity={isOpenFast ? 1 : 0}
         >
-          <MenuLayerContent queryStore={queryStore} menuStore={menuStore} />
-        </MenuChrome>
+          {children}
+        </MenuChromeFrame>
         <Popover
-          open={showMenu}
+          open={isOpenFast}
           transition={transition}
           background
-          width={width}
-          height={menuStore.height + 11 /* arrow size, for now */}
+          width={menuWidth}
+          height={menuHeight + 11 /* arrow size, for now */}
           towards="bottom"
           delay={0}
           top={IS_ELECTRON ? 0 : 28}
@@ -101,12 +113,12 @@ export const MenuLayer = React.memo(() => {
           elevation={20}
           theme="dark"
         />
-      </StoreContext.Provider>
-    </BrowserDebugTray>
-  )
-})
+      </>
+    )
+  },
+)
 
-const MenuChrome = view(View, {
+const MenuChromeFrame = view(View, {
   height: window.innerHeight,
   position: 'absolute',
   zIndex: 100000,

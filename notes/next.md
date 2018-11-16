@@ -6,11 +6,9 @@ small apps for teams
 
 tuesday:
 
-- fix selection store getting into bad state / not moving
-- fix keyboard selection move
 - add auto select on search first item
 - create new titlebar / icon with button to toggle sidebar
-- get sidebar in and working, resizing
+- get sidebar resizing
 - fix some tear away bugs
 
 - contextual search app
@@ -28,17 +26,13 @@ wednesday:
 - Get profiles with topic modeling
 - Get topics app using real data for changing over time topics
 - UI for custom topics in topics app
-- Rename SourcesStore.activeSources and OrbitIntegration<> => OrbitSource types
 
 ---
 
 Monday:
 
 - Keyboard nav into the main-windows
-- Walkthrough accessibility permissions
-  - Custom Notifications :) would allow a lot
 - Person app send via slack/gmail
-- Hoversettler for menu peeks
 
 Tuesday:
 

@@ -21,6 +21,13 @@ type UseStoreOptions = {
   conditionalUse?: boolean
 }
 
+const ignoreReactiveKeys = {
+  isMobXComputedValue: true,
+  __IS_DEEP: true,
+  IS_AUTO_RUN: true,
+  $$typeof: true,
+}
+
 let globalOptions = {
   onMount: null,
   onUnmount: null,
@@ -107,35 +114,37 @@ const setupStoreWithReactiveProps = (Store, props?) => {
 }
 
 const useStoreWithReactiveProps = (Store, props, shouldHMR = false, options?: UseStoreOptions) => {
-  let store = useRef(null)
-  const shouldSetupStore = !store.current || shouldHMR
-  if (shouldSetupStore) {
+  // only setup props if we need to
+  let store = useRef(Store.constructor ? null : Store)
+  const shouldSetup = !store.current || shouldHMR
+  if (shouldSetup) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
   // only update props after first run
-  if (props && !shouldSetupStore) {
+  if (props && !shouldSetup) {
     store.current.__updateProps(store.current.props, props, options)
   }
   return store.current
 }
 
-const ignoreReactiveKeys = {
-  isMobXComputedValue: true,
-  __IS_DEEP: true,
-  IS_AUTO_RUN: true,
-  $$typeof: true,
-}
-
-export function useStore<A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A {
+export function useInstantiatedStore<A>(
+  plainStore: A,
+  options?: UseStoreOptions,
+  props?: Object,
+  shouldSetup?: boolean,
+): A {
   if (options && options.conditionalUse === false) {
     return null
   }
   const proxyStore = useRef(null)
-  const hasSetupStore = !!proxyStore.current
+  const hasSetupStore = !proxyStore.current
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
-  const shouldReloadStore =
-    isHMRCompat && hasSetupStore && proxyStore.current.constructor.toString() !== Store.toString()
-  const store = useStoreWithReactiveProps(Store, props, shouldReloadStore, options)
+  const constructor = proxyStore.current && proxyStore.current.constructor
+  const hasChangedSource = constructor && constructor.toString() !== plainStore.toString()
+  const shouldHMRStore = isHMRCompat && hasSetupStore && hasChangedSource
+  const store = shouldSetup
+    ? useStoreWithReactiveProps(plainStore, props, shouldHMRStore, options)
+    : plainStore
   const dispose = useRef(null)
   const reactiveKeys = useRef({
     hasRunOnce: false,
@@ -147,9 +156,9 @@ export function useStore<A>(Store: new () => A, props?: Object, options?: UseSto
   const triggerUpdate = useState(0)[1]
 
   // setup store once
-  if (!hasSetupStore || shouldReloadStore) {
-    if (shouldReloadStore) {
-      console.log('HMRing store', Store.name)
+  if (!proxyStore.current || shouldHMRStore) {
+    if (shouldHMRStore) {
+      console.log('HMRing store', plainStore)
     }
     if (process.env.NODE_ENV === 'development') {
       store.__useStore = {
@@ -165,7 +174,7 @@ export function useStore<A>(Store: new () => A, props?: Object, options?: UseSto
           if (shouldTrack && typeof key === 'string') {
             if (!keys[key]) {
               if (process.env.NODE_ENV === 'development' && options && options.debug) {
-                console.log(`new reactive key: ${Store.name}.${key}`)
+                console.log(`new reactive key: ${plainStore['name']}.${key}`)
               }
               keys[key] = true
             }
@@ -235,6 +244,13 @@ export function useStore<A>(Store: new () => A, props?: Object, options?: UseSto
   }, [])
 
   return proxyStore.current
+}
+
+// this lets you react to observable properties of a store within a render
+// if the store isn't instantiated yet, we instantiate it and attach any props to it
+// if the store is instantiated, we just listen for keys to react to
+export function useStore<A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A {
+  return useInstantiatedStore(Store as any, options, props, true)
 }
 
 // TODO make safer by freezing after one set

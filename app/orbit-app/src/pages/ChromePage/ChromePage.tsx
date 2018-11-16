@@ -7,6 +7,7 @@ import { useStore } from '@mcro/use-store'
 import { StoreContext } from '@mcro/black'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
+import { SpaceStore } from '../../stores/SpaceStore'
 
 class ChromePageStore {
   get theme() {
@@ -18,8 +19,9 @@ export const ChromePage = React.memo(() => {
   const store = useStore(ChromePageStore)
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
+  const spaceStore = useStore(SpaceStore)
   return (
-    <StoreContext.Provider value={{ settingStore, sourcesStore }}>
+    <StoreContext.Provider value={{ settingStore, sourcesStore, spaceStore }}>
       <Theme name={store.theme}>
         <AppWrapper>
           <FullScreen>

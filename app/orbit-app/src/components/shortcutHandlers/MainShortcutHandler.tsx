@@ -35,7 +35,7 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-const decorate = compose(attach('selectionStore', 'paneManagerStore'))
+const decorate = compose(attach('queryStore', 'selectionStore', 'paneManagerStore'))
 export const MainShortcutHandler = decorate(
   ({ queryStore, selectionStore, paneManagerStore, children }: Props) => {
     const movePaneOrSelection = direction => () => {
@@ -44,7 +44,9 @@ export const MainShortcutHandler = decorate(
         selectionStore.activeIndex === -1 &&
         (direction === Direction.left || direction === Direction.right)
       ) {
-        paneManagerStore.move(direction)
+        if (paneManagerStore) {
+          paneManagerStore.move(direction)
+        }
       } else {
         selectionStore.move(direction)
       }

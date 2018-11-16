@@ -8,6 +8,7 @@ import { IS_ELECTRON } from './constants'
 import { AppActions } from './actions/AppActions'
 import { AppConfig } from '@mcro/stores'
 import { BitModel } from '@mcro/models'
+import { sleep } from './helpers'
 
 // because for some reason we are picking up electron process.env stuff...
 // we want this for web-app because stack traces dont have filenames properly
@@ -37,7 +38,18 @@ configureUseStore({
 
 async function main() {
   // set config before app starts...
-  const config = await fetch('/config').then(res => res.json())
+  // sometimes express can return a partial response for some reason, so lets retry
+  let config
+  while (!config) {
+    try {
+      config = await fetch('/config').then(res => res.json())
+    } catch (err) {
+      console.log('error getting config, trying again', err)
+    }
+    if (!config) {
+      await sleep(500)
+    }
+  }
   console.log('app:', window.location.href, config)
   setGlobalConfig(config)
 

@@ -978,8 +978,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const isMeasuring = this.state.shouldSetPosition || (top === 0 && left === 0)
     const isOpen = !isMeasuring && showPopover
 
-    console.log('this state', this.state)
-
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}

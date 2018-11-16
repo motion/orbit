@@ -130,9 +130,11 @@ const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
     glintColor: [255, 255, 255, 0.2],
-    inputBackground: [100, 100, 100, 0.7],
+    inputBackground: [100, 100, 100, 0.5],
     inputBorderColor: 'transparent',
-    inputBackgroundActive: [20, 20, 20, 0.2],
+    inputBackgroundHover: [110, 110, 110, 0.5],
+    inputBackgroundActive: [90, 90, 90, 0.5],
+    inputBackgroundFocus: [90, 90, 90, 0.5],
     listItemBackground: 'transparent',
     listItemBackgroundSelected: [60, 60, 60, 0.2],
     listItemBackgroundHover: [20, 20, 20, 0.3],

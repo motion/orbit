@@ -127,6 +127,11 @@ const MenuChromeFrame = view(View, {
 })
 
 const itemProps = {
+  extraProps: {
+    oneLine: false,
+    condensed: true,
+    preventSelect: true,
+  },
   hide: {
     subtitle: true,
   },

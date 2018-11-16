@@ -83,6 +83,7 @@ export class AppsManager {
   // set focus state from fake window
   handleAppState = id => (action: string) => {
     let nextState
+    console.log('handleAppState', id, action)
     switch (action) {
       case 'focus':
         nextState = {

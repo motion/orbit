@@ -133,7 +133,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                   >
                     {title}
                   </HighlightText>
-                  <TitleSpace shouldFlex={extraProps && extraProps.oneLine} />
+                  <TitleSpace />
                   {this.props.afterTitle || normalizedItem.afterTitle}
                   {afterHeader}
                 </Title>

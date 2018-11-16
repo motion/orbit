@@ -13,7 +13,7 @@ export type SearchableProps = {
 export const Searchable = memo((props: SearchableProps) => {
   return (
     <>
-      <View padding={8}>
+      <View padding={6} paddingBottom={10}>
         <Input
           hover={false}
           select={false}

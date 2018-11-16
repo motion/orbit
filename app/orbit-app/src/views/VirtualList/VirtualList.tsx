@@ -192,9 +192,8 @@ export const VirtualList = (props: Props) => {
         rowHeight={cache.rowHeight}
         overscanRowCount={20}
         rowCount={items.length}
-        estimatedRowSize={100}
+        estimatedRowSize={70}
         rowRenderer={rowRenderer}
-        pressDelay={120}
         pressThreshold={17}
         lockAxis="y"
         shouldCancelStart={isRightClick}

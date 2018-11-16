@@ -123,7 +123,7 @@ const MenuChromeFrame = view(View, {
   position: 'absolute',
   zIndex: 100000,
   pointerEvents: 'none',
-  borderRadius: 6,
+  borderRadius: 12,
 })
 
 const itemProps = {

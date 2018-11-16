@@ -36,7 +36,7 @@ export const MenuLayer = React.memo(() => {
     panes: menuApps,
     selectionStore,
   })
-  const menuStore = useStore(MenuStore, { paneManagerStore })
+  const menuStore = useStore(MenuStore, { paneManagerStore, queryStore })
   const allStores = {
     ...stores,
     queryStore,

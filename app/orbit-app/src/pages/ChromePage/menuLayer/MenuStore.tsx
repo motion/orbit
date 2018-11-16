@@ -9,12 +9,14 @@ import { IS_ELECTRON } from '../../../constants'
 import { maxTransition } from './MenuLayer'
 import { AppType } from '@mcro/models'
 import { memoize } from 'lodash'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 
 export const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 
 export class MenuStore {
   props: {
     paneManagerStore: PaneManagerStore
+    queryStore: QueryStore
   }
 
   menuWidth = 300
@@ -65,7 +67,6 @@ export class MenuStore {
     () => this.isOpenOutsideAnimation,
     async (open, { sleep }) => {
       ensure('not open', !open)
-      log('now reset it to -1')
       await sleep()
       this.activeMenuID = -1
     },
@@ -213,6 +214,7 @@ export class MenuStore {
     () => App.isShowingPeek,
     async (shown, { when }) => {
       ensure('not shown', !shown)
+      ensure('not typing something', !this.props.queryStore.hasQuery)
       await when(() => !this.isHoveringDropdown)
       this.closeMenu()
     },

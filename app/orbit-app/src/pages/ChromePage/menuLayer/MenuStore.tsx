@@ -349,10 +349,10 @@ export class MenuStore {
   }
 
   focusInputOnOpen = react(
-    () => this.shouldFocus,
-    async (shouldFocus, { sleep }) => {
+    () => this.isFocused,
+    async (isFocused, { sleep }) => {
       ensure('this.searchInput', !!this.searchInput)
-      ensure('shouldFocus', shouldFocus)
+      ensure('isFocused', isFocused)
       await sleep()
       console.log('focusing...')
       this.searchInput.focus()

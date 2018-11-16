@@ -14,11 +14,11 @@ export const GroupedSearchItem = ({ item, query, ...props }) => {
     >
       <Row flex={1}>
         <Circle>{item.count}</Circle>
-        <Col>
-          <Text size={1.1} fontWeight={500} padding={[0, 0, 4]}>
+        <Col flex={1} overflow="hidden">
+          <Text ellipse size={1.1} fontWeight={500} padding={[0, 0, 4]}>
             {item.title}
           </Text>
-          <HighlightText whiteSpace="normal" ellipse alpha={0.5}>
+          <HighlightText whiteSpace="normal" ellipse flex={1} alpha={0.5}>
             {item.text}
           </HighlightText>
         </Col>

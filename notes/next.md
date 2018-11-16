@@ -1,5 +1,7 @@
 ## getting to real value
 
+aim for remote teams
+
 Have to frame each app in terms of real value:
 
 1. Vocabulary

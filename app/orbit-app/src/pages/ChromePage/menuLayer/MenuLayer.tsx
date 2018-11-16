@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
-import { useStore } from '@mcro/use-store'
+import { useStore, useInstantiatedStore } from '@mcro/use-store'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { App } from '@mcro/stores'
@@ -65,50 +65,62 @@ export const MenuLayer = React.memo(() => {
     }
   }, [])
 
-  const width = 300
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
   }, [])
-
-  const left = menuStore.menuCenter - width / 2
-  const showMenu = menuStore.isOpenOutsideAnimation
 
   return (
     <BrowserDebugTray>
       <StoreContext.Provider value={allStores}>
         <MainShortcutHandler>
-          <MenuChrome
-            width={width - menuPad * 2}
-            margin={menuPad}
-            transform={{ x: left - 1, y: showMenu ? 0 : -5 }}
-            transition={transition}
-            opacity={showMenu ? 1 : 0}
-          >
+          <MenuChrome menuStore={menuStore}>
             <MenuLayerContent queryStore={queryStore} menuStore={menuStore} />
           </MenuChrome>
-          <Popover
-            open={showMenu}
-            transition={transition}
-            background
-            width={width}
-            height={menuStore.height + 11 /* arrow size, for now */}
-            towards="bottom"
-            delay={0}
-            top={IS_ELECTRON ? 0 : 28}
-            left={left + 5}
-            distance={6}
-            forgiveness={10}
-            edgePadding={0}
-            elevation={20}
-            theme="dark"
-          />
         </MainShortcutHandler>
       </StoreContext.Provider>
     </BrowserDebugTray>
   )
 })
 
-const MenuChrome = view(View, {
+const MenuChrome = React.memo(
+  ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
+    const { menuCenter, height, isOpenOutsideAnimation } = useInstantiatedStore(menuStore)
+    const width = 300
+    const left = menuCenter - width / 2
+    const showMenu = isOpenOutsideAnimation
+    return (
+      <>
+        <MenuChromeFrame
+          width={width - menuPad * 2}
+          margin={menuPad}
+          transform={{ x: left - 1, y: showMenu ? 0 : -5 }}
+          transition={transition}
+          opacity={showMenu ? 1 : 0}
+        >
+          {children}
+        </MenuChromeFrame>
+        <Popover
+          open={showMenu}
+          transition={transition}
+          background
+          width={width}
+          height={height + 11 /* arrow size, for now */}
+          towards="bottom"
+          delay={0}
+          top={IS_ELECTRON ? 0 : 28}
+          left={left + 5}
+          distance={6}
+          forgiveness={10}
+          edgePadding={0}
+          elevation={20}
+          theme="dark"
+        />
+      </>
+    )
+  },
+)
+
+const MenuChromeFrame = view(View, {
   height: window.innerHeight,
   position: 'absolute',
   zIndex: 100000,

@@ -50,10 +50,10 @@ export const ListEdit = React.memo(() => {
         value={store.name}
         onChange={store.handleNameChange}
         flex={1}
-        placeholder="Create new list..."
+        placeholder="Create..."
       />
       <div style={{ width: 10 }} />
-      <Button type="submit">Create</Button>
+      <Button icon="boldadd" type="submit" />
     </Row>
   )
 })

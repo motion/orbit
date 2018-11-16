@@ -370,6 +370,7 @@ const Bottom = view({
 const ListItemMainContent = view({
   flex: 1,
   maxWidth: '100%',
+  margin: ['auto', 0],
   oneLine: {
     flexFlow: 'row',
     flexWrap: 'wrap',

@@ -1,3 +1,23 @@
+## getting to real value
+
+Have to frame each app in terms of real value:
+
+1. Vocabulary
+
+- Topics are actually less valuable than vocabulary.
+- Can do topic modeling for part of it this is framing.
+- Allowing real control over input and managing terms in important.
+
+1. Directory (Experts)
+
+- Topic modeling has to be front and center, even in index app
+
+4. Knowledgebase
+
+- Not lists but curated information
+
+5. Search
+
 ## next
 
 small apps for teams

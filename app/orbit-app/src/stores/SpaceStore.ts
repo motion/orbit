@@ -41,7 +41,7 @@ export const AppPanes: Pane[] = [
   {
     id: 'topics',
     type: 'topics',
-    title: 'Topics',
+    title: 'Terms',
     icon: 'singleNeutralChat',
     trigger: '#',
     static: true,

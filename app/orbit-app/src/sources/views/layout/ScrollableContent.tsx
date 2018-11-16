@@ -36,7 +36,7 @@ export class ScrollableContent extends React.Component<{
 
   updateScroll() {
     const { appPageStore, scrollTo } = this.props
-    if (scrollTo) {
+    if (scrollTo && appPageStore) {
       const node = appPageStore.contentFrame.current
       const div = node.querySelector(scrollTo) as HTMLDivElement
       node.scrollTop = div.offsetTop

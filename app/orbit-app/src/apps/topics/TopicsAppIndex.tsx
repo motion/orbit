@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { View, Row, Text } from '@mcro/ui'
 import { Icon } from '../../views/Icon'
 import { AppProps } from '../AppProps'
@@ -7,6 +6,7 @@ import { useStore } from '@mcro/use-store'
 import { Separator } from '../../views/Separator'
 import { TopicEdit } from './TopicEdit'
 import { memo } from '../../helpers/memo'
+import { view } from '@mcro/black'
 
 const icons = {
   0: ['neutral', 'rgba(255,255,255,0.25)'],
@@ -49,31 +49,45 @@ function TopicList({ results }) {
   )
 }
 
+const ScrollableContent = view({
+  flex: 1,
+  overflowY: 'auto',
+})
+
 export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore }) => {
   const store = useStore(TopicsIndexStore, props)
   return (
-    <ProvideHighlightsContextWithDefaults
-      value={{ words: ['app'], maxChars: 500, maxSurroundChars: 80 }}
-    >
-      {!!store.results.length && (
-        <>
-          <Separator>Trending</Separator>
-          <View flexFlow="row" flexWrap="wrap">
-            <TopicList results={store.results.slice(0, 10)} />
-          </View>
-        </>
-      )}
+    <>
+      <ScrollableContent>
+        {!!store.results.length && (
+          <>
+            <Separator>Trending</Separator>
+            <View flexFlow="row" flexWrap="wrap">
+              <TopicList results={store.results.slice(0, 8)} />
+            </View>
+          </>
+        )}
 
-      {!!store.results.length && (
-        <>
-          <Separator>Me</Separator>
-          <View flexFlow="row" flexWrap="wrap">
-            <TopicList results={store.results.slice(10, 20)} />
-          </View>
-        </>
-      )}
+        {!!store.results.length && (
+          <>
+            <Separator>Me</Separator>
+            <View flexFlow="row" flexWrap="wrap">
+              <TopicList results={store.results.slice(8, 16)} />
+            </View>
+          </>
+        )}
+
+        {!!store.results.length && (
+          <>
+            <Separator>All</Separator>
+            <View flexFlow="row" flexWrap="wrap">
+              <TopicList results={store.results.slice(17)} />
+            </View>
+          </>
+        )}
+      </ScrollableContent>
 
       <TopicEdit />
-    </ProvideHighlightsContextWithDefaults>
+    </>
   )
 })

@@ -194,7 +194,7 @@ export const VirtualList = (props: Props) => {
         rowCount={items.length}
         estimatedRowSize={70}
         rowRenderer={rowRenderer}
-        pressThreshold={17}
+        distance={10}
         lockAxis="y"
         helperClass="sortableHelper"
         shouldCancelStart={isRightClick}

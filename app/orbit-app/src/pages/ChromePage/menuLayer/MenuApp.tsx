@@ -24,7 +24,6 @@ export const MenuApp = React.memo((props: MenuAppProps) => {
 })
 
 export const MenuAppInner = React.memo((props: MenuAppProps) => {
-  console.log('render menuapp INNER WHY THE FUCK IS THIS RENDERING', props)
   const beforeHeight = 40
   return (
     <SubPane

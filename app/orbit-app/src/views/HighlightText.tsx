@@ -30,7 +30,6 @@ export const HighlightText = ({ options, children, ...props }: Props) => {
             tagName="div"
             className="paragraph"
             display="block"
-            selectable
             {...extraProps}
             highlight={highlight}
             {...props}

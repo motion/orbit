@@ -78,7 +78,7 @@ export class SourcesStore {
 
   getView = (type: IntegrationType, viewType: 'main' | 'source' | 'item' | 'setup' | 'setting') => {
     if (!this.allSourcesMap[type]) {
-      return () => 'none'
+      return () => `no source view found of type ${type}`
     }
     return this.allSourcesMap[type].views[viewType]
   }

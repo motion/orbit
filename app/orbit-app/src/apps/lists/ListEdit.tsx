@@ -41,7 +41,6 @@ class ListEditStore {
 
 export const ListEdit = React.memo(() => {
   const { spaceStore } = React.useContext(StoreContext)
-  console.log('spaceStore', spaceStore)
   const store = useStore(ListEditStore, { spaceStore })
 
   return (

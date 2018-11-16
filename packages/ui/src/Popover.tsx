@@ -1056,7 +1056,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
         <Portal>
-          <span className="popover-portal" style={{ opacity: hasFinishedFirstMeasure ? 1 : 0 }}>
+          <span
+            className="popover-portal"
+            // prevents popovers from flickering on mount, which for some reason happens
+            // i think due to portals having weird behavior, but perhaps bad logic
+            style={{ opacity: hasFinishedFirstMeasure && !isMeasuring ? 1 : 0 }}
+          >
             {theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent}
           </span>
         </Portal>

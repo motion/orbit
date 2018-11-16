@@ -81,6 +81,8 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
     )
     const showPreview = !!preview && !children && !(hide && hide.body)
     const oneLine = extraProps && extraProps.oneLine
+    const showPreviewInSubtitle = !showTitle && oneLine
+
     const afterHeader = (
       <AfterHeader>
         <Row>
@@ -185,6 +187,9 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                       <TitleSpace />
                     </>
                   )}
+                  {showPreviewInSubtitle ? (
+                    <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
+                  ) : null}
                   {!!subtitle &&
                     (typeof subtitle === 'string' ? (
                       <UI.Text alpha={0.55} ellipse {...subtitleProps}>
@@ -195,13 +200,13 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                     ))}
                   {!subtitle && (
                     <>
-                      <div style={{ flex: 1 }} />
+                      <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
+                      <HorizontalSpace />
                       <PeopleRow people={people} />
                     </>
                   )}
                   {!showTitle && (
                     <>
-                      {oneLine ? renderedChildren : null}
                       <HorizontalSpace />
                       {afterHeader}
                     </>
@@ -209,7 +214,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                 </ListItemSubtitle>
               )}
               {!showSubtitle &&
-                (hide && hide.title) && (
+                !showTitle && (
                   <View
                     position="absolute"
                     right={Array.isArray(padding) ? padding[0] : padding}
@@ -231,7 +236,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                   )}
                 </Preview>
               )}
-              {!showTitle && oneLine ? null : renderedChildren}
+              {showPreviewInSubtitle ? null : renderedChildren}
               {showPeople &&
                 !showSubtitle && (
                   <Bottom>
@@ -356,10 +361,12 @@ const Preview = view({
 })
 
 const ListItemSubtitle = view(UI.View, {
-  height: 20,
+  minHeight: 20,
   padding: [0, 0, 4],
   flexFlow: 'row',
   alignItems: 'center',
+  flex: 1,
+  overflow: 'hidden',
 })
 
 const AfterHeader = view({

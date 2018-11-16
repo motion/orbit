@@ -413,9 +413,9 @@ const initialState = {
   shouldSetPosition: false,
   closing: false,
   maxHeight: null,
-  nextPosition: null,
   targetBounds: null,
   popoverBounds: null,
+  hasFinishedFirstMeasure: false,
 }
 
 type State = typeof initialState
@@ -543,21 +543,18 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  componentWillUnmount() {
-    this.unmounted = true
-  }
-
   get showPopover() {
     return this.props.open || this.state.showPopover
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    if (this.state.nextPosition) {
-      this.setState({
-        nextPosition: null,
-        ...this.state.nextPosition,
-      })
-      return
+    if (this.state.top !== 0 && this.state.hasFinishedFirstMeasure === false) {
+      const tm = setTimeout(() => {
+        this.setState({
+          hasFinishedFirstMeasure: true,
+        })
+      }, 200)
+      on(this, tm)
     }
     if (this.props.onChangeVisibility) {
       if (prevState.showPopover !== this.state.showPopover) {
@@ -974,12 +971,14 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       closing,
       maxHeight,
       direction,
-      nextPosition,
+      hasFinishedFirstMeasure,
     } = this.state
     const { showPopover } = this
     const backgroundProp = background === true ? null : { background: `${background}` }
     const isMeasuring = this.state.shouldSetPosition || (top === 0 && left === 0)
     const isOpen = !isMeasuring && showPopover
+
+    console.log('this state', this.state)
 
     const popoverContent = (
       <PopoverContainer
@@ -1000,14 +999,14 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         <PopoverWrap
           key={1}
           {...popoverProps}
-          isOpen={!nextPosition && !closing && !!isOpen}
-          willReposition={!!nextPosition}
+          isOpen={!closing && !!isOpen}
+          willReposition={isMeasuring}
           forwardRef={this.setPopoverRef}
           distance={distance}
           forgiveness={forgiveness}
           showForgiveness={showForgiveness}
           animation={openAnimation}
-          transition={transition}
+          transition={isMeasuring ? 'none' : transition}
           width={width}
           // because things that extend downwards wont always fill all the way
           // so arrow will be floating, so lets make it always expand fully down
@@ -1059,7 +1058,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
         <Portal>
-          <span className="popover-portal" style={{ opacity: isOpen ? 1 : 0 }}>
+          <span className="popover-portal" style={{ opacity: hasFinishedFirstMeasure ? 1 : 0 }}>
             {theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent}
           </span>
         </Portal>

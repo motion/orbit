@@ -4,7 +4,6 @@
   "version": "2.2.1",
   "scripts": {
     "start": "mcro-build --port 3003",
-    "start-pundle": "../../node_modules/.bin/pundle --dev.port 3003 --dev.singlepage --dev.static ./public::/",
     "build-app": "NODE_ENV=production mcro-build --prod --report"
   },
   "dependencies": {
@@ -18,6 +17,7 @@
     "react-hot-loader": "4.3.12",
     "react": "16.7.0-alpha.2",
     "react-dom": "16.7.0-alpha.2",
-    "express": "*"
+    "express": "*",
+    "cors": "2.8.5"
   }
 }

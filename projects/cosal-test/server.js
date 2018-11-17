@@ -10,6 +10,7 @@ app.use(cors())
 
 app.get('/weights', async (req, res) => {
   const words = await cosal.getWordWeights(req.query.query)
+  console.log('words', words)
   res.send(JSON.stringify(words))
 })
 

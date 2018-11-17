@@ -5,6 +5,7 @@ import { uniqBy } from 'lodash'
 import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { vectors } from './helpers'
+import { Matrix } from '@mcro/vectorious'
 
 // exports
 export { getCovariance } from './getCovariance'
@@ -68,7 +69,7 @@ export class Cosal {
       const { records, covariance } = await readJSON(this.database)
       if (covariance.hash && covariance.matrix) {
         this.vectors = records
-        this.covariance = covariance
+        this.covariance = new Matrix(covariance).inverse().toArray()
       } else {
         throw new Error('Invalid database')
       }
@@ -77,7 +78,7 @@ export class Cosal {
 
   private loadPrecomputedDatabase() {
     this.covariance = {
-      matrix: corpusCovarPrecomputed,
+      matrix: new Matrix(corpusCovarPrecomputed).inverse().toArray(),
       hash: '0',
     }
   }
@@ -154,7 +155,7 @@ export class Cosal {
 
   getWordWeights = async (
     text: string,
-    { max = 10, sortByWeight, uniqueWords }: CosalWordOpts = {},
+    { max = Infinity, sortByWeight, uniqueWords }: CosalWordOpts = {},
   ): Promise<Pair[] | null> => {
     this.ensureStarted()
 
@@ -164,7 +165,7 @@ export class Cosal {
     }
     let pairs = cosal.pairs
     let fmax = max
-    if (max) {
+    if (max !== Infinity) {
       if (pairs.length > max) {
         let res = pairs
 

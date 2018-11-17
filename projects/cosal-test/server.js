@@ -3,12 +3,14 @@ let { Cosal } = require('@mcro/cosal')
 let cors = require('cors')
 
 const cosal = new Cosal()
-const elonDB = require('./elonout')
 
 async function start() {
   await cosal.start()
 
-  const items = elonDB.map((text, id) => ({ id, text }))
+  const items = [...require('./elonout'), ...require('./app_data/text2k')].map((text, id) => ({
+    id,
+    text,
+  }))
   await cosal.scan(items)
 
   const app = express()
@@ -28,6 +30,11 @@ async function start() {
       text: items[id].text,
     }))
     res.send(JSON.stringify(resultsText))
+  })
+
+  app.get('/topics', async (req, res) => {
+    const results = await cosal.topics(req.query.query)
+    res.send(JSON.stringify(results))
   })
 
   app.listen(4444)

@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { react, compose, view, attach } from '@mcro/black'
 
+type Props = { query?: string }
+
 class SaliencyStore {
+  props: Props
+
   texts = {
     jfk: `We choose to go to the moon. We choose to go to the moon in this decade and do the other things, not because they are easy, but because they are hard, because that goal will serve to organize and measure the best of our energies and skills, because that challenge is one that we are willing to accept, one we are unwilling to postpone, and one which we intend to win, and the others, too.
   It is for these reasons that I regard the decision last year to shift our efforts in space from low to high gear as among the most important decisions that will be made during my incumbency in the office of the Presidency.`,
@@ -15,9 +19,9 @@ class SaliencyStore {
 
   saliency = react(
     async () => {
-      return await fetch(`http://localhost:4444/weights?query=${this.query}`).then(res =>
-        res.json(),
-      )
+      return await fetch(
+        `http://localhost:4444/weights?query=${this.props.query || this.query}`,
+      ).then(res => res.json())
     },
     {
       defaultValue: [],
@@ -31,24 +35,27 @@ const decorate = compose(
   }),
   view,
 )
-export const Saliency = decorate(({ store }) => {
+export const Saliency = decorate(({ query, store }: Props & { store: SaliencyStore }) => {
   return (
-    <div style={{ padding: 50 }}>
-      <div style={{ flexFlow: 'row' }}>
-        {Object.keys(store.texts).map(name => (
-          <div
-            key={name}
-            onClick={() => (store.query = store.texts[name])}
-            style={{ marginRight: 10 }}
-          >
-            {name}
-          </div>
-        ))}
-      </div>
+    <div style={{ padding: 10 }}>
+      {typeof query === 'undefined' && (
+        <div style={{ flexFlow: 'row' }}>
+          {Object.keys(store.texts).map(name => (
+            <div
+              key={name}
+              onClick={() => (store.query = store.texts[name])}
+              style={{ marginRight: 10 }}
+            >
+              {name}
+            </div>
+          ))}
+        </div>
+      )}
       <div
         style={{
           flexFlow: 'row',
           padding: 20,
+          paddingBottom: 0,
           flexWrap: 'wrap',
           lineHeight: '3rem',
           fontSize: 18,

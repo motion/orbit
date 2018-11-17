@@ -6,6 +6,7 @@ import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { vectors } from './helpers'
 import { Matrix } from '@mcro/vectorious'
+import { join } from 'path'
 
 // exports
 export { getCovariance } from './getCovariance'
@@ -25,7 +26,11 @@ type Result = {
   distance: number
 }
 
-type CosalWordOpts = { max?: number; sortByWeight?: boolean; uniqueWords?: boolean }
+type CosalWordOpts = {
+  max?: number
+  sortByWeight?: boolean
+  uniqueWords?: boolean
+}
 
 export class Cosal {
   allVectors = vectors
@@ -78,7 +83,7 @@ export class Cosal {
 
   private loadPrecomputedDatabase() {
     this.covariance = {
-      matrix: new Matrix(corpusCovarPrecomputed).inverse().toArray(),
+      matrix: corpusCovarPrecomputed, //new Matrix(corpusCovarPrecomputed).inverse().toArray(),
       hash: '0',
     }
   }
@@ -89,7 +94,7 @@ export class Cosal {
     }
   }
 
-  // incremental scan can add more and more documents
+  // incremental scan can add more documents
   scan = async (newRecords: Record[]) => {
     this.ensureStarted()
 
@@ -122,12 +127,19 @@ export class Cosal {
   // TODO better data structure?
   search = async (query: string, max = 10): Promise<Result[]> => {
     this.ensureStarted()
+    return this.searchWithCovariance(query, this.covariance, this.vectors, { max })
+  }
 
-    const cosal = await toCosal(query, this.covariance)
+  private async searchWithCovariance(
+    query: string,
+    covariance: Covariance,
+    vectors: VectorDB,
+    { max = 10 },
+  ) {
+    const cosal = await toCosal(query, covariance)
     let results: Result[] = []
-
-    for (const id in this.vectors) {
-      const vector = this.vectors[id]
+    for (const id in vectors) {
+      const vector = vectors[id]
       if (!vector) {
         continue
       }
@@ -143,7 +155,6 @@ export class Cosal {
         results.splice(insertIndex, len > max ? 1 : 0, result)
       }
     }
-
     return results
   }
 
@@ -151,6 +162,34 @@ export class Cosal {
     if (this.database) {
       await writeJSON(this.database, { covariance: this.covariance, records: this.vectors })
     }
+  }
+
+  topicsList: string[] = null
+  topicCovariance: Covariance = null
+  topicVectors: VectorDB = {}
+
+  topics = async (query: string, { max = 10 } = {}) => {
+    if (!this.topicsList) {
+      const path = join(__dirname, '../topics.json')
+      this.topicsList = await readJSON(path)
+      this.topicCovariance = getCovariance(
+        this.covariance.matrix,
+        this.topicsList.map(doc => ({ doc, weight: 1 })),
+      )
+      const cosals = await Promise.all(
+        this.topicsList.map(text => toCosal(text, this.topicCovariance)),
+      )
+      for (const [index, record] of cosals.entries()) {
+        this.topicVectors[index] = record.vector
+      }
+    }
+    const results = await this.searchWithCovariance(
+      query,
+      this.topicCovariance,
+      this.topicVectors,
+      { max },
+    )
+    return results.map(res => ({ ...res, topic: this.topicsList[res.id] }))
   }
 
   getWordWeights = async (

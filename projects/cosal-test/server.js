@@ -37,6 +37,13 @@ async function start() {
     res.send(JSON.stringify(results))
   })
 
+  const blob = items.map(x => x.text).join(' ')
+
+  app.get('/topWords', async (req, res) => {
+    const results = await cosal.getTopWords(blob, { max: 50, sortByWeight: true })
+    res.send(JSON.stringify(results))
+  })
+
   app.listen(4444)
 }
 

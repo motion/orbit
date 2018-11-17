@@ -19,7 +19,7 @@ class SearchStore {
   )
 
   topics = react(
-    () => this.results[0].text,
+    () => this.results.map(x => x.text).join(' '),
     async query => {
       const res = await fetch(`http://localhost:4444/topics?query=${query}`).then(res => res.json())
       ensure('isArray', Array.isArray(res))
@@ -29,6 +29,10 @@ class SearchStore {
       defaultValue: [],
     },
   )
+
+  topWords = react(() => fetch(`http://localhost:4444/topWords`).then(res => res.json()), {
+    defaultValue: [],
+  })
 }
 
 const decorate = compose(
@@ -41,15 +45,17 @@ export const Search = decorate(({ store }) => {
   window['store'] = store
   return (
     <div style={{ padding: 50 }}>
-      <input
-        style={{ width: 500, fontSize: 20 }}
-        onChange={e => (store.query = e.target.value)}
-        value={store.query}
-      />
-      <Saliency query={store.query} />
+      <div style={{ flexFlow: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        <input
+          style={{ width: 500, fontSize: 20 }}
+          onChange={e => (store.query = e.target.value)}
+          value={store.query}
+        />
+        <Saliency query={store.query} />
+      </div>
 
-      <div style={{ flexFlow: 'row' }}>
-        <div style={{ width: '50%' }}>
+      <div style={{ flexFlow: 'row', flex: 1 }}>
+        <div style={{ flex: 2 }}>
           <div
             style={{
               padding: 20,
@@ -58,6 +64,7 @@ export const Search = decorate(({ store }) => {
               fontSize: 18,
             }}
           >
+            <h4>Search results</h4>
             {store.results.map((result, index) => (
               <div key={index} style={{ marginBottom: 10 }}>
                 <span style={{ fontSize: 10 }}>{result.distance}</span>
@@ -67,19 +74,38 @@ export const Search = decorate(({ store }) => {
           </div>
         </div>
 
-        <div style={{ width: '50%' }}>
+        <div style={{ flex: 1 }}>
           <div
             style={{
-              padding: 20,
+              padding: 10,
               flexWrap: 'wrap',
               lineHeight: '1.5rem',
               fontSize: 18,
             }}
           >
+            <h4>Top topics for results</h4>
             {store.topics.map((result, index) => (
               <div key={index} style={{ marginBottom: 10 }}>
                 <span style={{ fontSize: 10 }}>{result.distance}</span>
                 <p>{result.topic}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <div
+            style={{
+              padding: 10,
+              flexWrap: 'wrap',
+              lineHeight: '1.5rem',
+              fontSize: 18,
+            }}
+          >
+            <h4>Top words across corpus</h4>
+            {store.topWords.map((word, index) => (
+              <div key={index} style={{ marginBottom: 10 }}>
+                <p>{word}</p>
               </div>
             ))}
           </div>

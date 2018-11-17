@@ -9,7 +9,7 @@ export const CosalDebug = () => {
       <Half>
         <Saliency />
       </Half>
-      <Half style={{ flex: 2 }}>
+      <Half style={{ flex: 4 }}>
         <Search />
       </Half>
     </div>

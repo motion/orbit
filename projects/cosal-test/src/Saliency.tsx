@@ -54,8 +54,7 @@ export const Saliency = decorate(({ query, store }: Props & { store: SaliencySto
       <div
         style={{
           flexFlow: 'row',
-          padding: 20,
-          paddingBottom: 0,
+          padding: 10,
           flexWrap: 'wrap',
           lineHeight: '3rem',
           fontSize: 18,

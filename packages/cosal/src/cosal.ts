@@ -137,6 +137,10 @@ export class Cosal {
     { max = 10 },
   ) {
     const cosal = await toCosal(query, covariance)
+    if (!cosal) {
+      console.log('no cosal?')
+      return []
+    }
     let results: Result[] = []
     for (const id in vectors) {
       const vector = vectors[id]

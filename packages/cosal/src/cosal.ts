@@ -64,12 +64,14 @@ export class Cosal {
   }
 
   private async readDatabase() {
-    const { records, covariance } = await readJSON(this.database)
-    if (covariance.hash && covariance.matrix) {
-      this.vectors = records
-      this.covariance = covariance
-    } else {
-      throw new Error('Invalid database')
+    if (this.database) {
+      const { records, covariance } = await readJSON(this.database)
+      if (covariance.hash && covariance.matrix) {
+        this.vectors = records
+        this.covariance = covariance
+      } else {
+        throw new Error('Invalid database')
+      }
     }
   }
 
@@ -119,6 +121,7 @@ export class Cosal {
   // TODO better data structure?
   search = async (query: string, max = 10): Promise<Result[]> => {
     this.ensureStarted()
+
     const cosal = await toCosal(query, this.covariance)
     let results: Result[] = []
 
@@ -153,6 +156,8 @@ export class Cosal {
     text: string,
     { max = 10, sortByWeight, uniqueWords }: CosalWordOpts = {},
   ): Promise<Pair[] | null> => {
+    this.ensureStarted()
+
     const cosal = await toCosal(text, this.covariance)
     if (!cosal) {
       return null
@@ -186,6 +191,8 @@ export class Cosal {
   }
 
   getTopWords = async (text: string, { max = 10, sortByWeight }: CosalWordOpts = {}) => {
+    this.ensureStarted()
+
     const words = await this.getWordWeights(text, { max, sortByWeight, uniqueWords: true })
     if (!words) {
       return []

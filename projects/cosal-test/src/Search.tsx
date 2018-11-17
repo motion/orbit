@@ -5,6 +5,10 @@ import { Saliency } from './Saliency'
 class SearchStore {
   query = 'visit another planet'
 
+  querySetter = val => () => {
+    this.query = val
+  }
+
   results = react(
     async () => {
       const res = await fetch(`http://localhost:4444/search?query=${this.query}`).then(res =>
@@ -85,7 +89,11 @@ export const Search = decorate(({ store }) => {
           >
             <h4>Top topics for results</h4>
             {store.topics.map((result, index) => (
-              <div key={index} style={{ marginBottom: 10 }}>
+              <div
+                key={index}
+                style={{ marginBottom: 10 }}
+                onClick={store.querySetter(result.topic)}
+              >
                 <span style={{ fontSize: 10 }}>{result.distance}</span>
                 <p>{result.topic}</p>
               </div>
@@ -104,7 +112,7 @@ export const Search = decorate(({ store }) => {
           >
             <h4>Top words across corpus</h4>
             {store.topWords.map((word, index) => (
-              <div key={index} style={{ marginBottom: 10 }}>
+              <div key={index} style={{ marginBottom: 10 }} onClick={store.querySetter(word)}>
                 <p>{word}</p>
               </div>
             ))}

@@ -1,5 +1,10 @@
 # Umed
 
+- Switch to reducing data downloaded
+
+  - No storing raw HTML - parse things through readability if we can
+    - fall back to just plain text, GMAIL may even have this as an API
+
 - Instead of using the cloud auth server it looks like we _can_ do https locally:
   - see: https://github.com/FiloSottile/mkcert
   - we already ask for sudo permission and do that during onboarding it can just go there

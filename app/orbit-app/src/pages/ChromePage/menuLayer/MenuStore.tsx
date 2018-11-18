@@ -46,6 +46,21 @@ export class MenuStore {
     return Desktop.keyboardState.isHoldingOption
   }
 
+  openState = react(
+    () => this.isOpenFast,
+    async (open, { sleep, setValue }) => {
+      if (this.isRepositioning) {
+        setValue({
+          open: false,
+          repositioning: true,
+        })
+        await sleep(100)
+      }
+      return { open, repositioning: false }
+    },
+    { defaultValue: { open: false, repositioning: false } },
+  )
+
   // source of truth!
   // resolve the actual open state quickly so isOpen
   // can derive off the truth state that is the most quick
@@ -58,10 +73,6 @@ export class MenuStore {
       this.isHoveringMenuPeek,
     _ => _,
   )
-
-  wasOpen = react(() => this.isOpenFast, _ => _, {
-    delayValue: true,
-  })
 
   // the actual show/hide in the interface
   isOpenOutsideAnimation = react(
@@ -88,7 +99,8 @@ export class MenuStore {
   )
 
   get isRepositioning() {
-    if (this.wasOpen) {
+    // if its "staying open"
+    if (this.lastActiveMenuID !== -1) {
       return false
     }
     return this.lastMenuCenter !== this.menuCenter

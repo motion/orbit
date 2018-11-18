@@ -445,7 +445,7 @@ export function automagicReact(
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog) {
           if (changed) {
-            logGroup(`  ${name.full} ${id}`, result, `${changed}`, reactValArg, globalChanged)
+            logGroup(`   ${name.full} ${id}`, result, `${changed}`, reactValArg, globalChanged)
           }
         }
       }

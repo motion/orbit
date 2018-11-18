@@ -70,17 +70,13 @@ export class Cosal {
   started = false
   fallbackVector = null
 
-  constructor({
-    database,
-    vectors = getDefaultVectors(),
-    fallbackVector,
-    slang = defaultSlang,
-  }: CosalOptions = {}) {
+  constructor({ database, vectors, fallbackVector, slang = defaultSlang }: CosalOptions = {}) {
     this.database = database
 
     if (!vectors) {
-      this.initialVectors = vectors
-      this.fallbackVector = vectors.hello
+      const initialVectors = getDefaultVectors()
+      this.initialVectors = initialVectors
+      this.fallbackVector = initialVectors.hello
       this.covariance = {
         // for some reason it sometimes is inversed, this would "fix" it but need to debug *why* it inverses
         // new Matrix(corpusCovarPrecomputed).inverse().toArray(),

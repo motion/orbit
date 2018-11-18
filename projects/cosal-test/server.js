@@ -3,8 +3,12 @@ let { Cosal } = require('@mcro/cosal')
 let cors = require('cors')
 let Path = require('path')
 
+const vectors = JSON.parse(
+  require('fs').readFileSync(Path.join(__dirname, 'app_data/fil9.vec.json')),
+)
 const cosal = new Cosal({
-  vectors: JSON.parse(require('fs').readFileSync(Path.join(__dirname, 'app_data/fil9.vec.json'))),
+  vectors,
+  fallbackVector: vectors.the,
 })
 
 async function start() {

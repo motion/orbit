@@ -13,10 +13,10 @@ export type Covariance = {
   matrix: Matrix
 }
 
-function docToCovar(doc: string, vectors: VectorDB): Matrix {
+function docToCovar(doc: string, vectors: VectorDB, fallbackVector): Matrix {
   const val = toWords(doc.toLowerCase())
     .filter(word => vectors[word])
-    .map(word => getWordVector(word, vectors))
+    .map(word => getWordVector(word, vectors, fallbackVector))
   if (val.length === 0) {
     return false
   }
@@ -32,10 +32,11 @@ export function getCovariance(
   docs: WeightedDocument[] = [],
   corpusWeight = 1,
   vectors: VectorDB,
+  fallbackVector,
 ): Covariance | null {
   let matrix = new Matrix(existingCovariance).scale(corpusWeight)
   for (const { weight, doc } of docs) {
-    const dc = docToCovar(doc, vectors)
+    const dc = docToCovar(doc, vectors, fallbackVector)
     if (!dc) {
       continue
     }

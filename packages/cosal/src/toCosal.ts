@@ -42,6 +42,7 @@ export async function toCosal(
   text: string,
   inverseCovar: Covariance,
   vectors: VectorDB,
+  fallbackVector,
 ): Promise<CosalDocument | null> {
   const words = toWords(text)
 
@@ -49,7 +50,7 @@ export async function toCosal(
     return null
   }
 
-  const wordVectors = words.map(word => getWordVector(word, vectors))
+  const wordVectors = words.map(word => getWordVector(word, vectors, fallbackVector))
 
   let distances = words.map((word, i) => getDistance(word, wordVectors[i], inverseCovar))
   if (distances.length > 1) {

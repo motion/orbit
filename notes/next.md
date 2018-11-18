@@ -1,4 +1,30 @@
+# Umed
+
+- Switch to reducing data downloaded
+
+  - No storing raw HTML - parse things through readability if we can
+    - fall back to just plain text, GMAIL may even have this as an API
+
+- Instead of using the cloud auth server it looks like we _can_ do https locally:
+  - see: https://github.com/FiloSottile/mkcert
+  - we already ask for sudo permission and do that during onboarding it can just go there
+  - that all happens here:
+    - OnboardManager when it sees permission:
+      - calls PortForwardStore.setupDNSProxy
+      - that runs a sudo node process on the file "proxyOrbit.js"
+  - see: proxyOrbit.ts
+    - we need to change it to also install/run mkcert and add orbitauth.com with https
+    - firefox support would be good using mkcert instructions
+
+# high level
+
+- interaction and peek
+- vocabulary main
+-
+
 ## getting to real value
+
+aim for remote teams
 
 Have to frame each app in terms of real value:
 

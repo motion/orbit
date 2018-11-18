@@ -10,7 +10,7 @@ import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plu
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 // import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
-// import PrepackPlugin from 'prepack-webpack-plugin'
+import PrepackPlugin from 'prepack-webpack-plugin'
 
 const cwd = process.cwd()
 const readPackage = (key: string) => {
@@ -58,7 +58,7 @@ const optimizeSplit = {
 
 const optimization = {
   prod: {
-    // ...optimizeSplit,
+    ...optimizeSplit,
     minimizer: [
       new UglifyJsPlugin({
         uglifyOptions: {
@@ -85,7 +85,12 @@ const config = {
   target,
   mode,
   entry,
-  optimization: optimization[isProd ? 'prod' : 'dev'],
+  optimization: process.env.NO_OPTIMIZE
+    ? {
+        ...optimizeSplit,
+        minimize: false,
+      }
+    : optimization[isProd ? 'prod' : 'dev'],
   output: {
     path: outputPath,
     pathinfo: !isProd,
@@ -178,25 +183,38 @@ const config = {
   plugins: [
     // new ProfilingPlugin(),
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
+
     new DuplicatePackageCheckerPlugin(),
+
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
     }),
+
     new webpack.IgnorePlugin(/electron-log/),
+
     // adds cache based on source of files
     // new HardSourceWebpackPlugin(),
+
     new webpack.NamedModulesPlugin(),
+
     new HtmlWebpackPlugin({
       favicon: 'public/favicon.png',
       template: 'index.html',
     }),
+
     process.argv.indexOf('--report') > 0 &&
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
       }),
 
-    // isProd && new PrepackPlugin(),
+    isProd &&
+      new PrepackPlugin({
+        reactEnabled: true,
+        compatibility: 'node-react',
+        // avoid worker modules
+        test: /^(?!.*worker\.[tj]sx?)$/i,
+      }),
   ].filter(Boolean),
 }
 

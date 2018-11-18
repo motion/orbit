@@ -79,9 +79,14 @@ export const diffLog = (a, b): string => {
 }
 
 export const toJSDeep = obj => {
-  const next = Mobx.toJS(obj)
-  if (Array.isArray(next)) {
-    return next.map(toJSDeep)
+  try {
+    const next = Mobx.toJS(obj)
+    if (Array.isArray(next)) {
+      return next.map(toJSDeep)
+    }
+    return next
+  } catch (err) {
+    console.warn(err)
+    return obj
   }
-  return next
 }

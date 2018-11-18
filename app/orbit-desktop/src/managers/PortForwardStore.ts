@@ -8,7 +8,7 @@ import Sudoer from '@mcro/electron-sudo'
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
 
-const checkAuthProxy = () => {
+export const checkAuthProxy = () => {
   return new Promise(res => {
     const testUrl = `${Config.urls.authProxy}/hello`
     const tm = setTimeout(() => res(false), 500)
@@ -28,24 +28,7 @@ const checkAuthProxy = () => {
 
 @store
 export class PortForwardStore {
-  isForwarded = false
   successInt = null
-
-  forwardOnAccept = react(
-    () => App.state.acceptsForwarding,
-    async accepts => {
-      ensure('accepts', accepts)
-
-      if (!(await checkAuthProxy())) {
-        log.info('Starting orbit proxy...')
-        clearInterval(this.successInt)
-        this.setupDNSProxy()
-      }
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
 
   setupDNSProxy = async () => {
     const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')

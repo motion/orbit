@@ -23,7 +23,7 @@ export const person: GetOrbitIntegration<'person'> = (_source?: Source) => ({
     itemName: 'person',
   },
   views: {
-    main: () => <div>none</div>,
+    main: () => <div>no people!</div>,
     item: PersonItem,
   },
 })

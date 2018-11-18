@@ -160,7 +160,7 @@ export class OrbitHeader extends React.Component<
       <OrbitHeaderContainer
         headerBg={headerBg}
         borderRadius={borderRadius}
-        opacity={paneManagerStore.shouldOnboard ? 0 : 1}
+        opacity={paneManagerStore.activePane === 'onboard' ? 0 : 1}
       >
         <OrbitFakeInput>
           <Title>

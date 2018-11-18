@@ -52,7 +52,7 @@ import { GeneralSettingManager } from './managers/GeneralSettingManager'
 import { MousePositionManager } from './managers/MousePositionManager'
 import { OCRManager } from './managers/OCRManager'
 import { ScreenManager } from './managers/ScreenManager'
-import { Onboard } from './onboard/Onboard'
+import { OnboardManager } from './managers/OnboardManager'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
@@ -73,7 +73,7 @@ export class Root {
   config = getGlobalConfig()
   oracle: Oracle
   isReconnecting = false
-  onboard: Onboard
+  onboard: OnboardManager
   disposed = false
   server = new Server()
   stores = null
@@ -130,7 +130,7 @@ export class Root {
     // start server a bit early so other apps can start
     await this.server.start()
 
-    this.onboard = new Onboard()
+    this.onboard = new OnboardManager()
     await this.cosal.start()
 
     // setup oracle to pass into managers

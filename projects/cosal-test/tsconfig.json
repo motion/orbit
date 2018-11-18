@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "outDir": "_",
+    "baseUrl": "./src"
+  },
+  "exclude": ["_", "node_modules", "tmp", "dist"]
+}

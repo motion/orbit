@@ -3,9 +3,10 @@ import sqlite from 'sqlite'
 import Fs from 'fs-extra'
 import Path from 'path'
 import Os from 'os'
-import { Desktop } from '@mcro/stores'
+import { Desktop, App } from '@mcro/stores'
 import { getRepository } from 'typeorm'
-import { PortForwardStore } from './PortForwardStore'
+import { PortForwardStore, checkAuthProxy } from './PortForwardStore'
+import { react, ensure } from '@mcro/black'
 
 const chromeDbPaths = [
   Path.join(
@@ -28,7 +29,7 @@ const integrationPatterns = [
   { name: 'drive', patterns: ['%docs.google.com%'] },
 ]
 
-export class Onboard {
+export class OnboardManager {
   generalSetting: SettingEntity
   history = []
   foundIntegrations = null
@@ -44,6 +45,19 @@ export class Onboard {
       await this.scanHistory()
     }
   }
+
+  forwardOnAccept = react(
+    () => App.state.acceptsForwarding,
+    async accepts => {
+      ensure('accepts', accepts)
+      if (!(await checkAuthProxy())) {
+        this.portForwardStore.setupDNSProxy()
+      }
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
 
   async scanHistory() {
     const chromeFolder = chromeDbPaths.find(x => Fs.existsSync(x))

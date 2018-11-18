@@ -15,14 +15,13 @@ module.exports = function(_, givenOpts) {
         regenerator: false,
       }),
       plug('@mcro/gloss-displaynames'),
-      // plug('@babel/plugin-proposal-export-default-from'),
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,
       }),
       plug('@babel/plugin-proposal-class-properties', {
         loose: true,
       }),
-      plug('@babel/plugin-transform-react-inline-elements'),
+      // plug('@babel/plugin-transform-react-inline-elements'),
     ],
     presets: opts.presets || [
       plug('@babel/preset-react'),

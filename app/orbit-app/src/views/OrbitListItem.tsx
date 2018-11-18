@@ -56,6 +56,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       renderText,
       separator,
       extraProps,
+      isExpanded,
       ...props
     } = this.props
     const { isSelected } = store
@@ -79,6 +80,9 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       people[0].data['profile']
     )
     const showPreview = !!preview && !children && !(hide && hide.body)
+    const oneLine = extraProps && extraProps.oneLine
+    const showPreviewInSubtitle = !showTitle && oneLine
+
     const afterHeader = (
       <AfterHeader>
         <Row>
@@ -93,8 +97,29 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
         </Row>
       </AfterHeader>
     )
+
+    let renderedChildren = null
+    if (showChildren) {
+      renderedChildren = children
+      if (ItemView) {
+        renderedChildren = (
+          <ItemView
+            model={this.props.model}
+            bit={this.props.model}
+            searchTerm={this.props.searchTerm}
+            shownLimit={10}
+            renderText={renderText}
+            extraProps={this.props.extraProps}
+            normalizedItem={normalizedItem}
+            {...ItemView.itemProps}
+          />
+        )
+      }
+    }
+
     return (
       <ListFrame
+        isExpanded={isExpanded}
         {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         {...props}
@@ -115,7 +140,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>
-            <ListItemMainContent oneLine={extraProps && extraProps.oneLine}>
+            <ListItemMainContent oneLine={oneLine}>
               {showTitle && (
                 <Title>
                   {showIcon && (
@@ -162,6 +187,9 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                       <TitleSpace />
                     </>
                   )}
+                  {showPreviewInSubtitle ? (
+                    <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
+                  ) : null}
                   {!!subtitle &&
                     (typeof subtitle === 'string' ? (
                       <UI.Text alpha={0.55} ellipse {...subtitleProps}>
@@ -172,21 +200,21 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                     ))}
                   {!subtitle && (
                     <>
-                      <div style={{ flex: 1 }} />
+                      <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
+                      <HorizontalSpace />
                       <PeopleRow people={people} />
                     </>
                   )}
-                  {hide &&
-                    hide.title && (
-                      <>
-                        <HorizontalSpace />
-                        {afterHeader}
-                      </>
-                    )}
+                  {!showTitle && (
+                    <>
+                      <HorizontalSpace />
+                      {afterHeader}
+                    </>
+                  )}
                 </ListItemSubtitle>
               )}
               {!showSubtitle &&
-                (hide && hide.title) && (
+                !showTitle && (
                   <View
                     position="absolute"
                     right={Array.isArray(padding) ? padding[0] : padding}
@@ -208,20 +236,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
                   )}
                 </Preview>
               )}
-              {showChildren && !ItemView && children}
-              {showChildren &&
-                !!ItemView && (
-                  <ItemView
-                    model={this.props.model}
-                    bit={this.props.model}
-                    searchTerm={this.props.searchTerm}
-                    shownLimit={10}
-                    renderText={renderText}
-                    extraProps={this.props.extraProps}
-                    normalizedItem={normalizedItem}
-                    {...ItemView.itemProps}
-                  />
-                )}
+              {showPreviewInSubtitle ? null : renderedChildren}
               {showPeople &&
                 !showSubtitle && (
                   <Bottom>
@@ -261,6 +276,10 @@ export class OrbitListItem extends React.Component<ItemProps<any>> {
 
 const ListFrame = view(UI.View, {
   position: 'relative',
+  userSelect: 'none',
+  isExpanded: {
+    userSelect: 'auto',
+  },
   transform: {
     z: 0,
   },
@@ -342,10 +361,12 @@ const Preview = view({
 })
 
 const ListItemSubtitle = view(UI.View, {
-  height: 20,
+  minHeight: 20,
   padding: [0, 0, 4],
   flexFlow: 'row',
   alignItems: 'center',
+  flex: 1,
+  overflow: 'hidden',
 })
 
 const AfterHeader = view({

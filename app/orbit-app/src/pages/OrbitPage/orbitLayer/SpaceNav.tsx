@@ -20,7 +20,7 @@ export class SpaceNav extends React.Component<Props> {
     const activeItem = AppPanes[curIndex]
     return (
       <Interactive disabled={/^(settings|onboard)$/.test(paneManagerStore.activePane)}>
-        <Row position="relative" zIndex={1000} padding={[2, 12]} alignItems="center">
+        <Row position="relative" zIndex={1000} padding={[3, 12]} alignItems="center">
           {/* 1px padding to center it for some reason... */}
           <View padding={[0, 10, 1, 4]}>
             <Icon size={16} name={activeItem.icon} />
@@ -38,8 +38,9 @@ export class SpaceNav extends React.Component<Props> {
                   marginRight={4}
                   padding={[4, 8]}
                   onClick={paneManagerStore.activePaneSetter(index)}
+                  transition="all ease 100ms"
                   transform={{
-                    scale: isActive ? 1.1 : 1,
+                    scale: isActive ? 1.15 : 1,
                     y: isActive ? -0.5 : 0,
                   }}
                 >

@@ -1,6 +1,5 @@
 import { observeMany } from '@mcro/model-bridge'
-import { Source, SourceModel, Space, SpaceModel } from '@mcro/models'
-import { AppType } from '../apps/apps'
+import { Source, SourceModel, Space, SpaceModel, AppType } from '@mcro/models'
 import { getAppFromSource } from './SourcesStore'
 
 export type Pane = {
@@ -42,7 +41,7 @@ export const AppPanes: Pane[] = [
   {
     id: 'topics',
     type: 'topics',
-    title: 'Topics',
+    title: 'Terms',
     icon: 'singleNeutralChat',
     trigger: '#',
     static: true,

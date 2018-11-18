@@ -24,7 +24,6 @@ export const MenuApp = React.memo((props: MenuAppProps) => {
 })
 
 export const MenuAppInner = React.memo((props: MenuAppProps) => {
-  console.log('render menuapp INNER WHY THE FUCK IS THIS RENDERING', props)
   const beforeHeight = 40
   return (
     <SubPane
@@ -34,7 +33,7 @@ export const MenuAppInner = React.memo((props: MenuAppProps) => {
       paddingRight={0}
       offsetY={beforeHeight}
       onChangeHeight={props.menuStore.menuHeightSetter(props.menuId)}
-      transition="none"
+      transition="opacity ease 100ms"
     >
       <AppView viewType="index" {...props} />
     </SubPane>

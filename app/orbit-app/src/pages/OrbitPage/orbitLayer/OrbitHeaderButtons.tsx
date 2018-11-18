@@ -36,7 +36,7 @@ const exploreButton = {
   borderWidth: 0,
   borderColor: 'transparent',
   background: 'transparent',
-  opacity: 0.25,
+  opacity: 0.2,
   iconProps: {
     size: 12,
   },
@@ -93,8 +93,9 @@ export class OrbitHeaderButtons extends React.Component<Props> {
           </Interactive>
           <UI.Button
             icon={
+              // 'gear'
               <View
-                border={[1, '#999']}
+                border={[2, '#ccc']}
                 background={onSettings ? '#999' : 'transparent'}
                 opacity={1}
                 width={12}
@@ -103,7 +104,10 @@ export class OrbitHeaderButtons extends React.Component<Props> {
               />
             }
             tooltip="Settings"
-            active={paneManagerStore.activePaneFast === 'settings'}
+            tooltipProps={{
+              delay: 0,
+            }}
+            active={onSettings}
             onClick={this.paneSetter('settings')}
             {...exploreButton}
           />

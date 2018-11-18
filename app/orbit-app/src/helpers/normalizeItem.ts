@@ -79,7 +79,7 @@ export const normalizeItem = (model: ResolvableModel): NormalizedItem => {
     throw new Error('Called normalize without a model')
   }
   if (!normalizers[model.target]) {
-    console.log('error with model', model)
+    console.debug('no normalizer for model', model)
     return model as any
   }
   return normalizers[model.target](model)

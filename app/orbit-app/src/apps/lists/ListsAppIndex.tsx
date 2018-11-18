@@ -78,6 +78,7 @@ class ListsIndexStore {
 
 export const ListsAppIndex = memo((props: AppProps) => {
   const { results } = useStore(ListsIndexStore, props)
+  const isSmall = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (
     <>
       <VirtualList
@@ -86,7 +87,7 @@ export const ListsAppIndex = memo((props: AppProps) => {
         itemProps={{
           direct: true,
           appType: 'lists',
-          titleProps: { fontSize: 18, fontWeight: 300 },
+          titleProps: { fontSize: isSmall ? 18 : 20, fontWeight: 300 },
           ...props.itemProps,
         }}
         getItemProps={index => ({ appConfig: results[index] })}

@@ -360,7 +360,7 @@ export function automagicReact(
               `${isValid ? '✅' : '🚫'} ${name.full}`,
               val,
               `${delayLog} ${changed}`,
-              reactValArg,
+              isReaction ? reactValArg : null,
             )
           }
         }

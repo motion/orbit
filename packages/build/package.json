@@ -32,7 +32,9 @@
     "url-loader": "^1.0.1",
     "webpack-bundle-analyzer": "^2.13.1",
     "workerize-loader": "1.0.4",
-    "schedule": "0.4.0"
+    "schedule": "0.4.0",
+    "prepack-webpack-plugin": "1.1.2",
+    "prepack": "0.2.54"
   },
   "peerDependencies": {
     "webpack": "*",

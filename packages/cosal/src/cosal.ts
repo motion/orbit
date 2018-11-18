@@ -5,6 +5,8 @@ import { uniqBy } from 'lodash'
 import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { vectors } from './helpers'
+import { Matrix } from '@mcro/vectorious'
+import { join } from 'path'
 
 // exports
 export { getCovariance } from './getCovariance'
@@ -24,7 +26,11 @@ type Result = {
   distance: number
 }
 
-type CosalWordOpts = { max?: number; sortByWeight?: boolean; uniqueWords?: boolean }
+type CosalWordOpts = {
+  max?: number
+  sortByWeight?: boolean
+  uniqueWords?: boolean
+}
 
 export class Cosal {
   allVectors = vectors
@@ -64,18 +70,20 @@ export class Cosal {
   }
 
   private async readDatabase() {
-    const { records, covariance } = await readJSON(this.database)
-    if (covariance.hash && covariance.matrix) {
-      this.vectors = records
-      this.covariance = covariance
-    } else {
-      throw new Error('Invalid database')
+    if (this.database) {
+      const { records, covariance } = await readJSON(this.database)
+      if (covariance.hash && covariance.matrix) {
+        this.vectors = records
+        this.covariance = new Matrix(covariance).inverse().toArray()
+      } else {
+        throw new Error('Invalid database')
+      }
     }
   }
 
   private loadPrecomputedDatabase() {
     this.covariance = {
-      matrix: corpusCovarPrecomputed,
+      matrix: corpusCovarPrecomputed, //new Matrix(corpusCovarPrecomputed).inverse().toArray(),
       hash: '0',
     }
   }
@@ -86,7 +94,7 @@ export class Cosal {
     }
   }
 
-  // incremental scan can add more and more documents
+  // incremental scan can add more documents
   scan = async (newRecords: Record[]) => {
     this.ensureStarted()
 
@@ -119,11 +127,23 @@ export class Cosal {
   // TODO better data structure?
   search = async (query: string, max = 10): Promise<Result[]> => {
     this.ensureStarted()
-    const cosal = await toCosal(query, this.covariance)
-    let results: Result[] = []
+    return this.searchWithCovariance(query, this.covariance, this.vectors, { max })
+  }
 
-    for (const id in this.vectors) {
-      const vector = this.vectors[id]
+  private async searchWithCovariance(
+    query: string,
+    covariance: Covariance,
+    vectors: VectorDB,
+    { max = 10 },
+  ) {
+    const cosal = await toCosal(query, covariance)
+    if (!cosal) {
+      console.log('no cosal?')
+      return []
+    }
+    let results: Result[] = []
+    for (const id in vectors) {
+      const vector = vectors[id]
       if (!vector) {
         continue
       }
@@ -139,7 +159,6 @@ export class Cosal {
         results.splice(insertIndex, len > max ? 1 : 0, result)
       }
     }
-
     return results
   }
 
@@ -149,17 +168,47 @@ export class Cosal {
     }
   }
 
+  topicsList: string[] = null
+  topicCovariance: Covariance = null
+  topicVectors: VectorDB = {}
+
+  topics = async (query: string, { max = 10 } = {}) => {
+    if (!this.topicsList) {
+      const path = join(__dirname, '../topics.json')
+      this.topicsList = await readJSON(path)
+      this.topicCovariance = getCovariance(
+        this.covariance.matrix,
+        this.topicsList.map(doc => ({ doc, weight: 1 })),
+      )
+      const cosals = await Promise.all(
+        this.topicsList.map(text => toCosal(text, this.topicCovariance)),
+      )
+      for (const [index, record] of cosals.entries()) {
+        this.topicVectors[index] = record.vector
+      }
+    }
+    const results = await this.searchWithCovariance(
+      query,
+      this.topicCovariance,
+      this.topicVectors,
+      { max },
+    )
+    return results.map(res => ({ ...res, topic: this.topicsList[res.id] }))
+  }
+
   getWordWeights = async (
     text: string,
-    { max = 10, sortByWeight, uniqueWords }: CosalWordOpts = {},
+    { max = Infinity, sortByWeight, uniqueWords }: CosalWordOpts = {},
   ): Promise<Pair[] | null> => {
+    this.ensureStarted()
+
     const cosal = await toCosal(text, this.covariance)
     if (!cosal) {
       return null
     }
     let pairs = cosal.pairs
     let fmax = max
-    if (max) {
+    if (max !== Infinity) {
       if (pairs.length > max) {
         let res = pairs
 
@@ -186,6 +235,8 @@ export class Cosal {
   }
 
   getTopWords = async (text: string, { max = 10, sortByWeight }: CosalWordOpts = {}) => {
+    this.ensureStarted()
+
     const words = await this.getWordWeights(text, { max, sortByWeight, uniqueWords: true })
     if (!words) {
       return []

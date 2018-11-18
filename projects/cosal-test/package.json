@@ -1,0 +1,23 @@
+{
+  "name": "@mcro/cosal-test",
+  "private": true,
+  "version": "2.2.1",
+  "scripts": {
+    "start": "mcro-build --port 3003",
+    "build-app": "NODE_ENV=production mcro-build --prod --report"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0",
+    "@mcro/black": "^2.2.1",
+    "@mcro/build": "^2.2.1",
+    "@mcro/gloss": "^2.2.1",
+    "@mcro/ui": "^2.2.1",
+    "@mcro/use-store": "^2.2.1",
+    "@mcro/cosal": "*",
+    "react-hot-loader": "4.3.12",
+    "react": "16.7.0-alpha.2",
+    "react-dom": "16.7.0-alpha.2",
+    "express": "*",
+    "cors": "2.8.5"
+  }
+}

@@ -7,7 +7,7 @@ import { themes } from './themes'
 import { throttle } from 'lodash'
 import { router } from './router'
 
-export class RootView extends React.Component {
+class RootViewPrePrepack extends React.Component {
   state = {
     error: null,
   }
@@ -112,3 +112,12 @@ if (process.env.NODE_ENV === 'development') {
     }
   }
 }
+
+// prepack
+// @ts-ignore
+if (global.__optimizeReactComponentTree) {
+  // @ts-ignore
+  __optimizeReactComponentTree(RootView)
+}
+
+export const RootView = RootViewPrePrepack

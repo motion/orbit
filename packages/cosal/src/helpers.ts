@@ -13,11 +13,7 @@ export const defaultSlang = {
 
 export const getWordVector = memoize(
   (word: string, vectors, fallbackVector): number[] => {
-    word = word
-      .replace('.', '')
-      .replace(';', '')
-      .replace(',', '')
-      .toLowerCase()
+    word = word.toLowerCase()
     const randomVector = fallbackVector.map(() => random(-0.15, 0.15))
     const vector = word === 'constructor' ? randomVector : vectors[word] || randomVector
     return vector

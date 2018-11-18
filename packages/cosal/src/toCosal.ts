@@ -32,6 +32,11 @@ const getDistance = (string, vector, inverseCovar: Covariance): number => {
   if (distanceCache[key]) {
     return distanceCache[key]
   }
+  if (vector.length !== inverseCovar.matrix[0].length) {
+    throw new Error(
+      `We got a weird on ${string} ${vector.length} !== ${inverseCovar.matrix[0].length}`,
+    )
+  }
   distanceCache[key] = distance(vector, inverseCovar)
   return distanceCache[key]
 }

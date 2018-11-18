@@ -38,21 +38,30 @@ export class MenuStore {
     return Desktop.hoverState.appHovered[0]
   }
 
+  get isHoveringTray() {
+    return this.hoveringID > -1
+  }
+
+  get isHoldingOption() {
+    return Desktop.keyboardState.isHoldingOption
+  }
+
   // source of truth!
   // resolve the actual open state quickly so isOpen
   // can derive off the truth state that is the most quick
   isOpenFast = react(
     () =>
-      this.holdingOption ||
+      this.isHoldingOption ||
       this.isHoveringTray ||
       this.isHoveringDropdown ||
       this.isPinnedOpen ||
       this.isHoveringMenuPeek,
-    async (val, { sleep }) => {
-      await sleep()
-      return val
-    },
+    _ => _,
   )
+
+  wasOpen = react(() => this.isOpenFast, _ => _, {
+    delayValue: true,
+  })
 
   // the actual show/hide in the interface
   isOpenOutsideAnimation = react(
@@ -62,6 +71,38 @@ export class MenuStore {
       return open
     },
   )
+
+  menuCenter = react(
+    () => this.activeOrLastActiveMenuID,
+    activeID => {
+      const id = activeID === -1 ? 0 : activeID
+      const maxItems = 3
+      const trayBounds = Desktop.state.operatingSystem.trayBounds
+      const leftSpacing = 47
+      const xOffset = maxItems - id
+      const extraSpace = 4
+      const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
+      const bounds = trayBounds[0] + offset
+      return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
+    },
+  )
+
+  get isRepositioning() {
+    if (this.wasOpen) {
+      return false
+    }
+    return this.lastMenuCenter !== this.menuCenter
+  }
+
+  lastMenuCenter = react(() => [this.menuCenter, this.isRepositioning], ([center]) => center, {
+    delayValue: true,
+  })
+
+  shouldFinishReposition = 0
+
+  onDidRender() {
+    this.shouldFinishReposition = Date.now()
+  }
 
   resetActiveMenuIDOnClose = react(
     () => this.isOpenOutsideAnimation,
@@ -100,8 +141,8 @@ export class MenuStore {
       case 'TrayHover2':
       case 'TrayHover3':
         const id = +key.replace('TrayHover', '')
-        this.hoveringID = id
         this.activeMenuID = id
+        this.hoveringID = id
         break
       case 'TrayHoverOut':
         this.hoveringID = -1
@@ -132,7 +173,7 @@ export class MenuStore {
     },
   )
 
-  lastActiveMenuID = react(() => this.activeMenuID, id => +id, {
+  lastActiveMenuID = react(() => this.activeMenuID, _ => _, {
     delayValue: true,
     defaultValue: -1,
   })
@@ -270,14 +311,6 @@ export class MenuStore {
     },
   )
 
-  get isHoveringTray() {
-    return this.hoveringID > -1
-  }
-
-  get holdingOption() {
-    return Desktop.keyboardState.isHoldingOption
-  }
-
   isFocused = react(
     () => this.isOpenOutsideAnimation,
     async (shouldFocus, { whenChanged, sleep }) => {
@@ -287,7 +320,7 @@ export class MenuStore {
         setTrayFocused(false)
         return false
       }
-      if (Desktop.keyboardState.isHoldingOption) {
+      if (this.isHoldingOption) {
         // wait for a certain key to break
         let pinnedKey
         while (!pinnedKey) {
@@ -312,19 +345,6 @@ export class MenuStore {
       deferFirstRun: true,
     },
   )
-
-  get menuCenter() {
-    const maxItems = 3
-    let id = this.activeOrLastActiveMenuID
-    id = id === -1 ? 0 : id
-    const trayBounds = Desktop.state.operatingSystem.trayBounds
-    const leftSpacing = 47
-    const xOffset = maxItems - id
-    const extraSpace = 4
-    const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
-    const bounds = trayBounds[0] + offset
-    return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
-  }
 
   handleMouseEnter = () => {
     this.isHoveringDropdown = true
@@ -354,7 +374,6 @@ export class MenuStore {
       ensure('this.searchInput', !!this.searchInput)
       ensure('isFocused', isFocused)
       await sleep()
-      console.log('focusing...')
       this.searchInput.focus()
     },
     {

@@ -4,7 +4,6 @@ import { SearchResultModel, SearchResult } from '@mcro/models'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
-import { GetItemProps } from '../../views/VirtualList/VirtualList'
 
 type SearchState = {
   results: SearchResult[]
@@ -67,33 +66,6 @@ export class SearchStore {
       all.push(...subGroups)
       return all
     }, [])
-  }
-
-  getItemProps: GetItemProps = index => {
-    const results = this.resultsForVirtualList
-
-    if (index === 0 || results[index].group !== results[index - 1].group) {
-      let separator: string
-      if (results[index].group === 'last-day' || !results[index].group) {
-        separator = 'Last Day'
-      } else if (results[index].group === 'last-week') {
-        separator = 'Last Week'
-      } else if (results[index].group === 'last-month') {
-        separator = 'Last Month'
-      } else {
-        separator = 'All Period'
-      }
-      return { separator }
-    }
-    return {}
-    // const model = this.searchState.results[index]
-    // if (model.target) {
-    //   return getAppConfig(model)
-    // }
-    // return {
-    //   appConfig: getAppConfig(index),
-    //   appType: 'search',
-    // } as ItemPropsMinimum
   }
 
   updateSearchHistoryOnSearch = react(

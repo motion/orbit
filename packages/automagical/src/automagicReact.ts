@@ -44,6 +44,16 @@ const logGroup = (name: string, result, changed: string, reactionArgs, globalCha
   }
 }
 
+let lastStoreLogName = ''
+
+const whiteSpaceOfLen = (number: number) => {
+  let str = ''
+  for (let i = 0; i < number; i++) {
+    str += ' '
+  }
+  return str
+}
+
 // watches values in an autorun, and resolves their results
 export function automagicReact(
   obj: MagicalObject,
@@ -87,13 +97,21 @@ export function automagicReact(
           const val = props[prop]
           if (typeof val === 'string' || typeof val === 'number') {
             res += `${prop}: ${val}`
+            break
           }
         }
         if (res.length) {
           return `${storeName}(${res}).${methodName}`
         }
       }
-      return `${storeName}.${methodName}`
+      const name = `${storeName}.${methodName}`
+      // fancy log that doesn't show the name if multiple logs in a row
+      if (storeName === lastStoreLogName) {
+        return `${whiteSpaceOfLen(storeName.length)}.${methodName}`
+      } else {
+        lastStoreLogName = storeName
+        return name
+      }
     },
   }
 
@@ -382,7 +400,7 @@ export function automagicReact(
         // got a nice cancel!
         if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
           if (!IS_PROD) {
-            log.verbose(`${name.simple} [${curID}] cancelled: ${err.message}`)
+            log.verbose(`  ${name.simple} [${curID}] cancelled: ${err.message}`)
           }
           return
         }
@@ -425,9 +443,9 @@ export function automagicReact(
 
       // only log after first run, we could have a way to log this still
       if (reactionID > 1) {
-        if (!IS_PROD && !preventLog && !delayValue) {
+        if (!IS_PROD && !preventLog) {
           if (changed) {
-            logGroup(`${name.full} ${id}`, result, `${changed}`, reactValArg, globalChanged)
+            logGroup(`  ${name.full} ${id}`, result, `${changed}`, reactValArg, globalChanged)
           }
         }
       }

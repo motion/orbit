@@ -84,7 +84,23 @@ export const MenuLayer = React.memo(() => {
 
 const MenuChrome = React.memo(
   ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
-    const { menuCenter, menuWidth, menuHeight, isOpenFast } = useInstantiatedStore(menuStore)
+    const { isRepositioning, menuCenter, menuWidth, menuHeight, isOpenFast } = useInstantiatedStore(
+      menuStore,
+    )
+
+    React.useEffect(() => {
+      menuStore.onDidRender()
+    })
+
+    console.log(
+      'render with transition isRepositioning',
+      isRepositioning,
+      'isOpen',
+      isOpenFast,
+      'menuCenter',
+      menuCenter,
+    )
+
     const left = menuCenter - menuWidth / 2
     return (
       <>
@@ -92,14 +108,14 @@ const MenuChrome = React.memo(
           width={menuWidth - menuPad * 2}
           margin={menuPad}
           transform={{ x: left - 1, y: isOpenFast ? 0 : -5 }}
-          transition={transition}
+          transition={isRepositioning ? 'none' : transition}
           opacity={isOpenFast ? 1 : 0}
         >
           {children}
         </MenuChromeFrame>
         <Popover
           open={isOpenFast}
-          transition={transition}
+          transition={isRepositioning ? 'none' : transition}
           background
           width={menuWidth}
           height={menuHeight + 11 /* arrow size, for now */}

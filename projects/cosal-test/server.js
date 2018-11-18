@@ -1,8 +1,11 @@
 let express = require('express')
 let { Cosal } = require('@mcro/cosal')
 let cors = require('cors')
+let Path = require('path')
 
-const cosal = new Cosal()
+const cosal = new Cosal({
+  vectors: JSON.parse(require('fs').readFileSync(Path.join(__dirname, 'app_data/fil9.vec.json'))),
+})
 
 async function start() {
   await cosal.start()

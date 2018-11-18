@@ -14,7 +14,7 @@ export const CosalDebug = () => {
       </Half>
     </div>
   )
-})
+}
 
 const Half = view({
   flex: 1,

@@ -43,6 +43,13 @@ bytes@3.0.0:
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"
   integrity sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=
 
+compute-covariance@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/compute-covariance/-/compute-covariance-1.0.1.tgz#ea04d9eb813801dcdaebacdf8882ec3f09a21305"
+  integrity sha1-6gTZ64E4Adza66zfiILsPwmiEwU=
+  dependencies:
+    validate.io-object "^1.0.0"
+
 content-disposition@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/content-disposition/-/content-disposition-0.5.2.tgz#0cf68bb9ddf5f2be7961c3a85178cb85dba78cb4"
@@ -467,6 +474,18 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
+
+validate.io-array@^1.0.1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/validate.io-array/-/validate.io-array-1.0.6.tgz#5b5a2cafd8f8b85abb2f886ba153f2d93a27774d"
+  integrity sha1-W1osr9j4uFq7L4hroVPy2Tond00=
+
+validate.io-object@^1.0.0:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/validate.io-object/-/validate.io-object-1.0.4.tgz#dca01eceee390e110dbc2af843c81f7bf33a41ab"
+  integrity sha1-3KAezu45DhENvCr4Q8gfe/M6Qas=
+  dependencies:
+    validate.io-array "^1.0.1"
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"

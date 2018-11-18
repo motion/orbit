@@ -1,11 +1,7 @@
 import { Vector } from '@mcro/vectorious'
 import { memoize, random, sortBy, reverse } from 'lodash'
-import { readFileSync } from 'fs'
-import { join } from 'path'
 
-export const vectors = JSON.parse(readFileSync(join(__dirname, '..', 'vecs.json'), 'utf-8'))
-
-const slang = {
+export const defaultSlang = {
   dont: 'don\'t',
   yea: 'yes',
   ya: 'yes',
@@ -16,12 +12,8 @@ const slang = {
   shes: 'she\'s',
 }
 
-Object.keys(slang).forEach(word => {
-  vectors[word] = vectors[slang[word]]
-})
-
 export const getWordVector = memoize(
-  (word: string): number[] => {
+  (word: string, vectors): number[] => {
     word = word
       .replace('.', '')
       .replace(';', '')
@@ -38,20 +30,20 @@ const cosineSimilarity = ($v1, $v2) => {
   return dot / ($v1.magnitude() * $v2.magnitude())
 }
 
-export const nearestWords = vec => {
+export const nearestWords = (vec, vectors) => {
   const $vec = new Vector(vec)
   const distances = Object.keys(vectors).map(word => {
-    const $wordVec = new Vector(getWordVector(word))
+    const $wordVec = new Vector(getWordVector(word, vectors))
     const distance = cosineSimilarity($vec, $wordVec)
     return { word, distance }
   })
   return reverse(sortBy(distances, 'distance')).slice(0, 4)
 }
 
-export const docVec = pairs => {
+export const docVec = (pairs, vectors) => {
   let $vec = new Vector(vectors.hello.map(() => 0))
   pairs.forEach(({ string, weight }) => {
-    const $wordVec = new Vector(getWordVector(string.toLowerCase()))
+    const $wordVec = new Vector(getWordVector(string.toLowerCase(), vectors))
     $vec = $vec.add($wordVec.scale(weight * weight))
   })
   return $vec

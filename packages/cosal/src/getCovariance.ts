@@ -1,6 +1,7 @@
 import computeCovariance from 'compute-covariance'
-import { toWords, getWordVector, vectors } from './helpers'
+import { toWords, getWordVector } from './helpers'
 import { Matrix } from '@mcro/vectorious'
+import { VectorDB } from './cosal'
 
 export type WeightedDocument = {
   doc: string
@@ -12,10 +13,10 @@ export type Covariance = {
   matrix: Matrix
 }
 
-function docToCovar(doc: string): Matrix {
+function docToCovar(doc: string, vectors: VectorDB): Matrix {
   const val = toWords(doc.toLowerCase())
     .filter(word => vectors[word])
-    .map(getWordVector)
+    .map(word => getWordVector(word, vectors))
   if (val.length === 0) {
     return false
   }
@@ -30,10 +31,11 @@ export function getCovariance(
   existingCovariance: number[][],
   docs: WeightedDocument[] = [],
   corpusWeight = 1,
+  vectors: VectorDB,
 ): Covariance | null {
   let matrix = new Matrix(existingCovariance).scale(corpusWeight)
   for (const { weight, doc } of docs) {
-    const dc = docToCovar(doc)
+    const dc = docToCovar(doc, vectors)
     if (!dc) {
       continue
     }

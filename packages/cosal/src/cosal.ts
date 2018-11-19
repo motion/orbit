@@ -91,9 +91,10 @@ export class Cosal {
       }
       this.initialVectors = vectors
       this.fallbackVector = fallbackVector
+      const initialCovariance = getVectorDBCovariance(vectors)
       this.covariance = {
+        matrix: initialCovariance,
         hash: '0',
-        matrix: getVectorDBCovariance(vectors),
       }
     }
 
@@ -201,7 +202,7 @@ export class Cosal {
   ) {
     const cosal = await toCosal(query, covariance, this.initialVectors, this.fallbackVector)
     if (!cosal) {
-      console.log('no cosal?')
+      console.log('no cosal?', query)
       return []
     }
     let results: Result[] = []
@@ -252,6 +253,10 @@ export class Cosal {
         ),
       )
       for (const [index, record] of cosals.entries()) {
+        if (!record) {
+          console.log('no record', this.topicsList[index])
+          continue
+        }
         this.topicVectors[index] = record.vector
       }
     }

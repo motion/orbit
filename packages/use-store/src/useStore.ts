@@ -21,7 +21,7 @@ type UseStoreOptions = {
   conditionalUse?: boolean
 }
 
-const ignoreReactiveKeys = {
+const ignorestate = {
   isMobXComputedValue: true,
   __IS_DEEP: true,
   IS_AUTO_RUN: true,
@@ -146,7 +146,7 @@ export function useInstantiatedStore<A>(
     ? useStoreWithReactiveProps(plainStore, props, shouldHMRStore, options)
     : plainStore
   const dispose = useRef(null)
-  const reactiveKeys = useRef({
+  const state = useRef({
     hasRunOnce: false,
     lastKeys: [],
     keys: [],
@@ -162,15 +162,15 @@ export function useInstantiatedStore<A>(
     }
     if (process.env.NODE_ENV === 'development') {
       store.__useStore = {
-        get reactiveKeys() {
-          return toJS(reactiveKeys.current)
+        get state() {
+          return toJS(state.current)
         },
       }
     }
     proxyStore.current = new Proxy(store, {
       get(obj, key) {
-        const { keys, shouldTrack } = reactiveKeys.current
-        if (!ignoreReactiveKeys[key]) {
+        const { keys, shouldTrack } = state.current
+        if (!ignorestate[key]) {
           if (shouldTrack && typeof key === 'string') {
             if (!keys[key]) {
               if (process.env.NODE_ENV === 'development' && options && options.debug) {
@@ -189,7 +189,7 @@ export function useInstantiatedStore<A>(
   // this is what we want: stop tracking on finished render
   // start tracking again after that (presumable before next render, but not 100%)
   useMutationEffect(() => {
-    const rk = reactiveKeys.current
+    const rk = state.current
     rk.shouldTrack = false
     // trigger update if keys changed
     for (const [index, key] of rk.lastKeys.entries()) {
@@ -198,11 +198,11 @@ export function useInstantiatedStore<A>(
         break
       }
     }
-    reactiveKeys.current = rk
+    state.current = rk
     return () => {
       rk.lastKeys = rk.keys
       rk.shouldTrack = true
-      reactiveKeys.current = rk
+      state.current = rk
     }
   })
 
@@ -210,7 +210,7 @@ export function useInstantiatedStore<A>(
   useEffect(() => {
     if (!dispose.current) {
       dispose.current = autorun(() => {
-        const rk = reactiveKeys.current
+        const rk = state.current
 
         // listen for key changes
         rk.update.get()

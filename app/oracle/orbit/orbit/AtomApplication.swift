@@ -330,7 +330,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       }
 //      print("check it out \(xOff) \(trayButtonMaxX)")
       for (index, maxX) in trayButtonMaxX.enumerated() {
-        print("\(trayButtonMaxX) \(xOff) \(maxX)")
         if (xOff < maxX) {
           return self.trayItems[index].id
         }

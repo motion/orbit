@@ -4,11 +4,11 @@ let cors = require('cors')
 let Path = require('path')
 
 const vectors = JSON.parse(
-  require('fs').readFileSync(Path.join(__dirname, 'app_data/fil9.vec.json')),
+  require('fs').readFileSync(Path.join(__dirname, 'app_data/enwiki9.vec.json')),
 )
 const cosal = new Cosal({
   vectors,
-  fallbackVector: vectors.the,
+  fallbackVector: vectors.hello,
 })
 
 async function start() {

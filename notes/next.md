@@ -4,28 +4,35 @@ Topic modeling
 
 Cosal and topic modeling is a dependency for search, profiles, and topics. So it needs to come first.
 
-Ensuring we can release next beta somewhat soon:
+- improve vectors
+- add more topics
+- test and iterate on finding topics
+- finding unique terminology in company
+- Fix cosal invert bug
+- need some work on frontend after
+  - managing topics
+  - topicsmain app
+  - profiles with topic modeling
+
+Ensuring we can release next beta somewhat soon and also have good demo:
 
 - Improving and fixing all the bit views
 - Making grouped search main view work
+- Fix all selection issues
+- design for pin current app context to pin
 
-* add auto select on search first item
-* create new titlebar / icon with button to toggle sidebar
-* get sidebar resizing
-* fix some tear away bugs
-* contextual search app
-  - only shows individual items
-* design for pin current app context to pin
-* Upgrade people app with "Send icon" for context + showing peek next to it + search bar
-* sidebar in app with button + searchbar
-* Orbit search results context menu opens by default (not show last one)
-* Fix cosal invert bug
-* Get profiles with topic modeling
-* Get topics app using real data for changing over time topics
-* UI for custom topics in topics app
-* Person app send via slack/gmail
-* Actual storage of data for each app
-* Lists app work
+Apps:
+
+- get sidebar resizing
+- fix tear away bugs
+- fix app focusing bugs
+- create new titlebar / icon with button to toggle sidebar
+
+Tray:
+
+- add auto select on search first item
+- Orbit search results context menu opens by default (not show last one)
+- contextual search app only shows individual items
 
 ---
 
@@ -94,6 +101,8 @@ umed:
   - Create a server and database system that is good for handling signups
 
 ---
+
+unsorted:
 
 - "smart sync"
 

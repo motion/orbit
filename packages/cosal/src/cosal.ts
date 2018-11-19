@@ -1,5 +1,4 @@
-import corpusCovarPrecomputed from './corpusCovar'
-import { getCovariance, Covariance } from './getCovariance'
+import { getIncrementalCovariance, Covariance } from './getIncrementalCovariance'
 import { toCosal, Pair } from './toCosal'
 import { uniqBy } from 'lodash'
 import { cosineDistance } from './cosineDistance'
@@ -8,10 +7,10 @@ import { Matrix } from '@mcro/vectorious'
 import { join } from 'path'
 import { getDefaultVectors } from './getDefaultVectors'
 import { defaultSlang } from './helpers'
-import computeCovariance from 'compute-covariance'
+import { getCovariance } from './getCovariance'
 
 // exports
-export { getCovariance } from './getCovariance'
+export { getIncrementalCovariance } from './getIncrementalCovariance'
 export { toCosal } from './toCosal'
 
 type Record = {
@@ -34,27 +33,6 @@ type CosalWordOpts = {
   uniqueWords?: boolean
 }
 
-const getVectorDBCovariance = (vectors: VectorDB) => {
-  const words = Object.keys(vectors)
-  const size = words.length
-  const rowLen = vectors[words[0]].length
-  if (!Array.isArray(vectors[words[0]])) {
-    console.log('bad line', words[0], vectors[words[0]])
-    throw new Error('Vectors must be array of numbers')
-  }
-  const sampleSpacing = Math.floor(size / rowLen)
-  let sample = []
-  for (const [index, word] of words.entries()) {
-    if (index % sampleSpacing === 0) {
-      sample.push(vectors[word])
-      if (sample.length === rowLen) {
-        break
-      }
-    }
-  }
-  return computeCovariance(...sample)
-}
-
 type CosalOptions = {
   database?: string
   vectors?: VectorDB
@@ -73,29 +51,18 @@ export class Cosal {
   constructor({ database, vectors, fallbackVector, slang = defaultSlang }: CosalOptions = {}) {
     this.database = database
 
-    if (!vectors) {
-      const initialVectors = getDefaultVectors()
-      this.initialVectors = initialVectors
-      this.fallbackVector = initialVectors.hello
-      this.covariance = {
-        // for some reason it sometimes is inversed, this would "fix" it but need to debug *why* it inverses
-        // new Matrix(corpusCovarPrecomputed).inverse().toArray(),
-        matrix: corpusCovarPrecomputed,
-        hash: '0',
-      }
-    } else {
-      if (!fallbackVector) {
-        throw new Error(
-          'Need to set fallbackVector for custom set, consider something common like "hello"',
-        )
-      }
-      this.initialVectors = vectors
-      this.fallbackVector = fallbackVector
-      const initialCovariance = getVectorDBCovariance(vectors)
-      this.covariance = {
-        matrix: initialCovariance,
-        hash: '0',
-      }
+    this.initialVectors = vectors || getDefaultVectors()
+    this.fallbackVector = fallbackVector || this.initialVectors.hello
+
+    if (!this.fallbackVector) {
+      throw new Error(
+        'Need to set fallbackVector for custom set, consider something common like "hello"',
+      )
+    }
+
+    this.covariance = {
+      matrix: getCovariance(this.initialVectors),
+      hash: '0',
     }
 
     // map words to existing vectors, "don't => dont"
@@ -157,7 +124,7 @@ export class Cosal {
     this.ensureStarted()
 
     // this is incremental, passing in previous matrix
-    this.covariance = getCovariance(
+    this.covariance = getIncrementalCovariance(
       this.covariance.matrix,
       newRecords.map(record => ({ doc: record.text, weight: 1 })),
       1,
@@ -240,7 +207,7 @@ export class Cosal {
     if (!this.topicsList) {
       const path = join(__dirname, '../topics.json')
       this.topicsList = await readJSON(path)
-      this.topicCovariance = getCovariance(
+      this.topicCovariance = getIncrementalCovariance(
         this.covariance.matrix,
         this.topicsList.map(doc => ({ doc, weight: 1 })),
         1,

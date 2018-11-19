@@ -2,10 +2,10 @@ import harmonicMean from './harmonicMean'
 import { range, sum } from 'lodash'
 import { toWords, sigmoid, getWordVector } from './helpers'
 import { Matrix, Vector } from '@mcro/vectorious'
-import { Covariance } from './getCovariance'
+import { Covariance } from './getIncrementalCovariance'
 import { VectorDB } from './cosal'
 
-export { getCovariance } from './getCovariance'
+export { getIncrementalCovariance } from './getIncrementalCovariance'
 
 export type Pair = {
   string: string

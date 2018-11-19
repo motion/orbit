@@ -8,7 +8,7 @@ const vectors = JSON.parse(
 )
 const cosal = new Cosal({
   vectors,
-  fallbackVector: vectors.hello,
+  // fallbackVector: vectors.hello,
 })
 
 async function start() {
@@ -52,6 +52,7 @@ async function start() {
   })
 
   app.listen(4444)
+  console.log('listening')
 }
 
 start()

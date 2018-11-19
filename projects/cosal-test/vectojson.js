@@ -10,7 +10,7 @@ for (const line of vecs.split('\n').slice(1)) {
   if (!/^[a-zA-Z0-9]+$/.test(word)) {
     continue
   }
-  out[word] = vector
+  out[word.toLowerCase()] = vector
     .trim()
     .split(' ')
     .map(x => +x)

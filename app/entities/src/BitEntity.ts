@@ -1,5 +1,4 @@
-import { Bit, BitData, IntegrationType, Person, Source } from '@mcro/models'
-import { BitContentType } from '@mcro/models'
+import { Bit, BitContentType, BitData, IntegrationType, Person, Source, Space } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -15,8 +14,10 @@ import {
 import { LocationEntity } from './LocationEntity'
 import { PersonEntity } from './PersonEntity'
 import { SourceEntity } from './SourceEntity'
+import { SpaceEntity } from './SpaceEntity'
 
 @Entity()
+@Index("bitAggregatedSearchIndex", { synchronize: false })
 export class BitEntity extends BaseEntity implements Bit {
   target: 'bit' = 'bit'
 
@@ -35,6 +36,13 @@ export class BitEntity extends BaseEntity implements Bit {
    */
   @Column({ nullable: true })
   sourceId?: number
+
+  /**
+   * Space id to which this bit is attached.
+   * Same as source.spaceId, duplicated here for performance reasons.
+   */
+  @Column({ nullable: true })
+  spaceId?: number
 
   @Column({ nullable: true })
   authorId?: number
@@ -58,9 +66,6 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @Column({ type: 'simple-json', default: '{}' })
   data?: BitData
-
-  @Column({ type: 'simple-json', default: '{}' })
-  raw?: any
 
   @Column(() => LocationEntity)
   location?: LocationEntity
@@ -88,4 +93,8 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @ManyToOne(() => SourceEntity)
   source?: Source
+
+  @ManyToOne(() => SpaceEntity)
+  space?: Space
+
 }

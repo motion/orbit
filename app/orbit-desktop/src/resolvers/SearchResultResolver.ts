@@ -7,8 +7,8 @@ import { BitContentTypes } from '@mcro/models'
 import * as _ from 'lodash'
 import { uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
-import { getSearchQuery } from './getSearchQuery'
 import { highlightText } from '@mcro/helpers'
+import { SearchQueryExecutor } from '../utils/SearchQueryExecutor'
 
 const log = new Logger('search')
 
@@ -64,56 +64,31 @@ async function searchCosalIds(args: SearchArgs, includeFilters = false): Promise
 async function cosalSearch(
   args: SearchArgs,
   includeFilters = false,
-): Promise<[BitEntity[], number]> {
+): Promise<[Bit[], number]> {
   if (!args.cosal) return [[], 0]
 
   const ids = await searchCosalIds(args, includeFilters)
-  if (ids.length) {
-    const searchQuery = getSearchQuery({
-      // TODO: umed added these to fix type errors...
-      take: 10,
-      query: args.query,
-      sortBy: args.sortBy,
-      startDate: args.startDate,
-      endDate: args.endDate,
-      integrationFilters: args.integrationFilters,
-      peopleFilters: args.peopleFilters,
-      locationFilters: args.locationFilters,
-      sourceId: args.sourceId,
-      spaceId: args.spaceId,
-      contentType: args.contentType,
-      ids,
-    })
-    // console.log('searchQuery (cosal)', searchQuery)
-    return await getRepository(BitEntity).findAndCount(searchQuery)
-  } else {
+  if (!ids.length)
     return [[], 0]
-  }
+
+  return new SearchQueryExecutor({
+    ...args,
+    take: 10,
+    query: undefined,
+    ids
+  }).execute()
 }
 
-async function likeSearch(args: SearchArgs): Promise<[BitEntity[], number]> {
+async function likeSearch(args: SearchArgs): Promise<[Bit[], number]> {
   if (args.searchBy === 'Topic') {
     return [[], 0]
   }
 
-  const searchQuery = getSearchQuery({
-    query: args.query,
-    sortBy: args.sortBy,
-    // just get a lot of results for now and we slice them on sending back to UI
-    // we'll need to implement some logic here later to grab more if the args.take > 100
+  return new SearchQueryExecutor({
+    ...args,
     take: 10,
     skip: 0,
-    startDate: args.startDate,
-    endDate: args.endDate,
-    integrationFilters: args.integrationFilters,
-    peopleFilters: args.peopleFilters,
-    locationFilters: args.locationFilters,
-    sourceId: args.sourceId,
-    spaceId: args.spaceId,
-    contentType: args.contentType,
-  })
-  // console.log('searchQuery', searchQuery)
-  return await getRepository(BitEntity).findAndCount(searchQuery)
+  }).execute()
 }
 
 // we'll get a lot of cosal results
@@ -193,7 +168,7 @@ const buildSearchResultText = (keyword: string, texts: string[]) => {
 
 export const getSearchResolver = (cosal: Cosal) => {
   return resolveMany(SearchResultModel, async args => {
-    const log = new Logger('search (' + args.query + ', ' + args.group +')') // we need a separate logger because requests can be parallel and timer won't work correctly
+    const log = new Logger('search (' + (args.query ? args.query + ', ' : '') + args.group +')') // we need a separate logger because requests can be parallel and timer won't work correctly
     const sources = await getRepository(SourceEntity).find({ spaceId: args.spaceId }) // todo: we probably need to get in count space id
     let searchResults: SearchResult[] = []
 
@@ -224,6 +199,7 @@ export const getSearchResolver = (cosal: Cosal) => {
     }
 
     for (let contentType of BitContentTypes) {
+      log.timer(`doSearch`, contentType)
       const [bits, bitsTotalCount] = await doSearch(log, {
         ...args,
         cosal,
@@ -231,7 +207,8 @@ export const getSearchResolver = (cosal: Cosal) => {
         endDate,
         contentType,
       })
-      if (!bits.length) continue
+      log.timer(`doSearch`)
+      if (!bits || !bits.length) continue
 
       const bitSourceIds = _.uniq(bits.map(bit => bit.sourceId))
       const bitSources = sources.filter(source => bitSourceIds.indexOf(source.id) !== -1)

@@ -44,9 +44,6 @@ export class PersonEntity extends BaseEntity implements Person {
   @Column({ type: 'simple-json', default: '{}' })
   data?: PersonData
 
-  @Column({ type: 'simple-json', default: '{}' })
-  raw?: any
-
   @Column({ nullable: true })
   webLink?: string
 

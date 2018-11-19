@@ -13,8 +13,8 @@ export const checkAuthProxy = () => {
           res(true)
         }
       })
-      .catch(() => {
-        console.log('proxy not active')
+      .catch(err => {
+        console.log('proxy not active', err)
         res(false)
       })
   })

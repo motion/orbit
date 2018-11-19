@@ -20,11 +20,11 @@ export class DriveBitFactory {
       {
         integration: 'drive',
         source: this.source,
+        spaceId: this.source.spaceId,
         type: 'document',
         title: file.file.name,
         body: file.content || 'empty',
         data: {} as DriveBitData,
-        raw: file,
         webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
         location: file.parent
           ? {

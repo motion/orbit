@@ -66,12 +66,12 @@ export class SlackBitFactory {
     return BitUtils.create(
       {
         sourceId: this.source.id,
+        spaceId: this.source.spaceId,
         integration: 'slack',
         type: 'conversation',
         title,
         body,
         data,
-        // raw: { channel, messages },
         bitCreatedAt,
         bitUpdatedAt,
         people,
@@ -110,12 +110,12 @@ export class SlackBitFactory {
     return BitUtils.create(
       {
         sourceId: this.source.id,
+        spaceId: this.source.spaceId,
         integration: 'slack',
         type: 'website',
         title: attachment.title,
         body: attachment.text,
         data: websiteData,
-        // raw: { channel, messages },
         bitCreatedAt: messageTime,
         bitUpdatedAt: messageTime,
         people,

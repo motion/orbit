@@ -69,11 +69,11 @@ export class GMailBitFactory {
         data: {
           messages,
         } as GmailBitData,
-        // raw: thread,
         bitCreatedAt: firstMessageParser.getDate(),
         bitUpdatedAt: lastMessageParser.getDate(),
         webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
         sourceId: this.source.id,
+        spaceId: this.source.spaceId,
       },
       thread.id,
     )

@@ -54,12 +54,12 @@ export class ConfluenceBitFactory {
       {
         integration: 'confluence',
         source: this.source,
+        spaceId: this.source.spaceId,
         type: 'document',
         title: content.title,
         author,
         body,
         data: { content: cleanHtml } as ConfluenceBitData,
-        raw: content,
         location: {
           id: content.space.id,
           name: content.space.name,

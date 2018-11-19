@@ -24,12 +24,10 @@ export class DatabaseManager {
     // bugfix: sql errors happened here if i didnt wait... @nate
     await sleep(100)
 
-    const table = await getConnection().query(
-      'SELECT name FROM sqlite_master WHERE type="table" AND name="search_index"',
-    )
-    if (table.length === 0) {
-      await this.createSearchIndices()
-    }
+    await this.createSearchIndices()
+
+    // create some custom indices
+    await this.createIndices()
 
     // watch for reset all data command
     const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
@@ -53,7 +51,19 @@ export class DatabaseManager {
     this.searchIndexListener()
   }
 
+  private async createIndices() {
+    await getConnection().query(`CREATE INDEX IF NOT EXISTS "bitAggregatedSearchIndex" ON "bit_entity" ("type", "bitCreatedAt" DESC, "spaceId");`)
+  }
+
   private async createSearchIndices() {
+
+    // check if search index table does not exist yet
+    const table = await getConnection().query(
+      'SELECT name FROM sqlite_master WHERE type="table" AND name="search_index"',
+    )
+    if (table.length)
+      return
+
     // await queryRunner.query('DROP TABLE search_index')
     // await queryRunner.query('DROP TRIGGER after_bit_insert')
     // await queryRunner.query('DROP TRIGGER after_bit_update')

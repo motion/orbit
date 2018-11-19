@@ -45,7 +45,8 @@ export class JiraBitFactory {
     return BitUtils.create(
       {
         integration: 'jira',
-        source: this.source,
+        sourceId: this.source.id,
+        spaceId: this.source.spaceId,
         type: 'document',
         title: issue.fields.summary,
         body,
@@ -53,7 +54,6 @@ export class JiraBitFactory {
         data: {
           content: cleanHtml,
         } as JiraBitData,
-        raw: issue,
         location: {
           id: issue.fields.project.id,
           name: issue.fields.project.name,

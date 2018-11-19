@@ -4,6 +4,7 @@ import { Location } from './Location'
 import { Person } from './Person'
 import { Source } from './Source'
 import { BitContentType } from './BitContentType'
+import { Space } from './Space'
 
 export interface Bit {
   /**
@@ -26,6 +27,11 @@ export interface Bit {
    * Source id.
    */
   sourceId?: number
+
+  /**
+   * Space id.
+   */
+  spaceId?: number
 
   /**
    * Original bit content author id.
@@ -94,21 +100,19 @@ export interface Bit {
   people?: Person[]
 
   /**
-   * Source has multiple bits it owns.
    * Source is a Bit's owner.
    */
   source?: Source
 
   /**
+   * Space is owner of this bit's source.
+   */
+  space?: Space
+
+  /**
    * Additional bit data.
    */
   data?: BitData
-
-  /**
-   * Raw JSON data.
-   * Used to debugging purpose current, don't use this property, use "data" property instead.
-   */
-  raw?: any
 
   /**
    * Used for filtering: slack room, github repo, google doc folder, etc

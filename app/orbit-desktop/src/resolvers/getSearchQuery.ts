@@ -1,7 +1,7 @@
 import { FindOptions, FindOptionsWhere, FindOptionsWhereCondition } from 'typeorm'
 import { Bit, SearchQuery } from '@mcro/models'
 
-export const getSearchQuery = (args: SearchQuery) => {
+export const getSearchQuery = (args: SearchQuery): FindOptions<Bit> => {
   const {
     ids,
     query,
@@ -41,9 +41,13 @@ export const getSearchQuery = (args: SearchQuery) => {
   }
 
   const andConditions: FindOptionsWhere<Bit> = {}
-  if (ids) {
+  if (query && query.length) {
+    // todo: haven't checked it yet
+    andConditions.id = { $raw: `IN (SELECT "rowid" FROM "search_index" WHERE "search_index" MATCH '${query}')` }
+  } else if (ids) {
     andConditions.id = { $in: ids }
   }
+
   if (contentType) {
     andConditions.type = contentType
   }
@@ -64,15 +68,11 @@ export const getSearchQuery = (args: SearchQuery) => {
   if (integrationFilters && integrationFilters.length) {
     andConditions.integration = { $in: integrationFilters }
   }
-  if (sourceId || spaceId) {
-    andConditions.source = {
-      id: sourceId ? sourceId : undefined,
-      spaceId: spaceId ? spaceId : undefined,
-    }
+  if (sourceId) {
+    andConditions.sourceId = sourceId
   }
-
-  if (query && query.length) {
-    andConditions.title = { $like: `%${query.replace(/\s+/g, '%')}%` }
+  if (spaceId) {
+    andConditions.spaceId = spaceId
   }
 
   (findOptions.where as FindOptionsWhereCondition<Bit>[]).push(andConditions)

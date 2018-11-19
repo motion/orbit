@@ -49,6 +49,8 @@ And then basically app-store app-building, which has a big hill to climb that we
 
 - Having the right topic/ocr API structure
 - Showing them in context
+- Augmented
+- Integrated easy dev experience
 
 ---
 

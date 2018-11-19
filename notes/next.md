@@ -34,6 +34,22 @@ Tray:
 - Orbit search results context menu opens by default (not show last one)
 - contextual search app only shows individual items
 
+Demo:
+
+Demo will have huge returns on fanciness, as well as launch. Even if we sacrifice certain features working perfectly, having it feel "new" is more important than it delivering massive value day one. Not that it shouldn't, it should deliver value and the topics/vocab/people app especially should focus on making this apparent. But beyond that, excitement mostly comes from people believing this is "the next cool thing" and that activation threshold is very high. But, once activated, it has massive returns, and a positive feedback loop. We're close to hitting it: between custom contextual apps with app windows, tear away into app windows, and topic modeling for peoples profiles and company vocab, i think we're nearly there. OCR of course would wow, and augmented computing. But for all of this to really be believable it requires it to all be stable enough that we can not only "record a demo video" of it all but actually release it into peoples hands.
+
+Contextual stuff is high on this list:
+
+- Showing current app in a context popover
+- Letting you pin context into lists
+- Letting you send context to people
+- Searching your recently viewed items
+
+And then basically app-store app-building, which has a big hill to climb that we're about 1/4 of the way (needs to be about 1/2 for "beta"):
+
+- Having the right topic/ocr API structure
+- Showing them in context
+
 ---
 
 umed:

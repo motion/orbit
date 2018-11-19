@@ -1,13 +1,6 @@
-Orbit aka Clippy X
+# November
 
-Your Personal Work Assistant
-
-# Step 1, Personal
-
-Search + People + Lists
-
-Lists:
-
-can be curated or just a search
-
-/filter
+- Finish menus / interaction
+- Get app working again: bit views, search views
+- Grouped search speed and tweaks for usability
+-

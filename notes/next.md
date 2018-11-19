@@ -1,11 +1,78 @@
-# Umed
+nate:
 
-- Switch to reducing data downloaded
+Topic modeling
 
-  - No storing raw HTML - parse things through readability if we can
-    - fall back to just plain text, GMAIL may even have this as an API
+Cosal and topic modeling is a dependency for search, profiles, and topics. So it needs to come first.
+
+Ensuring we can release next beta somewhat soon:
+
+- Improving and fixing all the bit views
+- Making grouped search main view work
+
+* add auto select on search first item
+* create new titlebar / icon with button to toggle sidebar
+* get sidebar resizing
+* fix some tear away bugs
+* contextual search app
+  - only shows individual items
+* design for pin current app context to pin
+* Upgrade people app with "Send icon" for context + showing peek next to it + search bar
+* sidebar in app with button + searchbar
+* Orbit search results context menu opens by default (not show last one)
+* Fix cosal invert bug
+* Get profiles with topic modeling
+* Get topics app using real data for changing over time topics
+* UI for custom topics in topics app
+* Person app send via slack/gmail
+* Actual storage of data for each app
+* Lists app work
+
+---
+
+umed:
+
+- Search
+
+  - we need to just do the simplest things to get things working:
+    - should understand first how much overhead fts adds
+    - grouped search using raw sql is probably best for now
+    - get that working fast first just using simple querying
+    - get the filters and nlp based filters working
+      - search for a name "umed", search for a type "gm"
+    - we should sync less data: no html parsing stuff just do readabiltiy on html or get text straight from api
+      - we can show readability from gmail messages for now, we aren't trying to be a full mail client just a quick way to peek at things
+    - we should aim for having endpoints where we could then "fetch" the html easily in the frontend
+      - goal is to get it done quick, simply
+    - goal is to have grouped search feeling very fast as soon as possible...
+
+- people syncers: if slack is added, use that as source of truth and only add other people "on top"
+
+  - no need for people from every integration, but do need to figure out if its the "same person from slack"
+  - add an option to set "source of truth" setting in settings panes
+
+- small things to do:
+
+  - make search items drag/drop their links: https://electronjs.org/docs/tutorial/native-file-drag-drop
+  - github view: fix not showing comments content
+  - github view: fix can't select text with mouse
+  - drag and drop items from menu: https://electronjs.org/docs/tutorial/native-file-drag-drop
+
+- Lists app:
+
+  - we should persist lists to Bits so they are searchable
+  - from there you can refactor to support making re-ordering work
+  - we need "edit names", that can be a button next to Pin button and if you hit it it happens in the ListEdit view to start (simplest way to start)
+  - Delete item button
+  - Inside ListMain when in App
+    - it will need a sidebar: should show Search sidebar in this case
+      - may need some fixes there
+    - after you search it needs a way to "add to list"
+    - Remove button for list items in there
 
 - Instead of using the cloud auth server it looks like we _can_ do https locally:
+
+  - Goal is to use mkcert and see if we can then do oauth fully locally
+  - And then if so transition the stack over to that and delete the old oauth server stuff
   - see: https://github.com/FiloSottile/mkcert
   - we already ask for sudo permission and do that during onboarding it can just go there
   - that all happens here:
@@ -16,182 +83,17 @@
     - we need to change it to also install/run mkcert and add orbitauth.com with https
     - firefox support would be good using mkcert instructions
 
-# high level
+- Frontend
 
-- interaction and peek
-- vocabulary main
--
+  - AppPage/AppFrame window resize with re-resizable needs a lot work to work well
+  - goal is to be able to resize app windows
+  - there are some bugs in app windows with focus, may require you to check there
 
-## getting to real value
-
-aim for remote teams
-
-Have to frame each app in terms of real value:
-
-1. Vocabulary
-
-- Topics are actually less valuable than vocabulary.
-- Can do topic modeling for part of it this is framing.
-- Allowing real control over input and managing terms in important.
-
-1. Directory (Experts)
-
-- Topic modeling has to be front and center, even in index app
-
-4. Knowledgebase
-
-- Not lists but curated information
-
-5. Search
-
-## next
-
-small apps for teams
-
-### nate
-
-tuesday:
-
-- add auto select on search first item
-- create new titlebar / icon with button to toggle sidebar
-- get sidebar resizing
-- fix some tear away bugs
-
-- contextual search app
-  - only shows individual items
-
-wednesday:
-
-- design for pin current app context to pin
-- Upgrade people app with "Send icon" for context + showing peek next to it + search bar
-- Lists Main app view app - show sidebar in app with button + searchbar
-- SelectionStore / keyboard interaction working for menu windows
-- Orbit search results context menu opens by default (not show last one)
-- Fix cosal invert bug
-- Get Topic modeling API in place with working topics for topics app
-- Get profiles with topic modeling
-- Get topics app using real data for changing over time topics
-- UI for custom topics in topics app
-
----
-
-Monday:
-
-- Keyboard nav into the main-windows
-- Person app send via slack/gmail
-
-Tuesday:
-
-- Actual storage of data for each app
-- Lists app work
-
-Wednesday:
-
-- Topics app work
-
-Thursday:
-
-- App view improvements
-- Person app quick send actions
-
----
-
-umed:
-
-- umbrella: Search
-  - fix measurement bugs in search results list
-  - search performance
-  - hide empty sections if there are no groups
-  - make "all period" never group -- just fills in just all most accurate items that _are not_ already shown above
-  - the highlighting of NLP terms broke somewhere, check SearchInput and HighlightedTextArea and see where its breaking
-- people syncers: if slack is added, use that as source of truth and only add other people "on top"
-  - add an option to set "source of truth" setting in settings panes
-- github view: fix not showing comments content
-- github view: fix can't select text with mouse
-- window resize with re-resizable needs work
 - Team account management and onboarding flow
-- Search performance / groups
-- Fix search filters and date filters
-- Fix NLP filtering and test it
-- Re-enable quickresults in search
 
-- People:
-
-  - Gmail should sync People more strictly:
-    - Only insert a person if _I_ sent them an email (not a reply but new email)
-    - But if a person exists already (via slack, jira, github, etc), still attach the email to that existing profile
-
-- Space management
-
-  - Should be able to register a new Space under some sort of login (ours or via Slack/Google)?
-  - Should be able to name team, rename team, and choose/change the login integration
-  - Should have a cloud server on our side that syncs this
-  - Should sync the apps settings to the cloud server
-
-- Context
-
-  - We need access to current app
-
-- Lists App:
-
-  - Make sorting work in AppModel.data (should we call the model AppData or something so its more clear?)
-  - Make the top level Lists Bits and work with search
-  - We need a way to rename and add lists, basic interface there
-  - Fix sorting bugs (it goes clear for some reason)
-  - "Pin" button should
-
-- ## Apps data storage:
-
-* lists/topics/people
+  - Create a server and database system that is good for handling signups
 
 ---
-
-```
-t = JSON.parse(require('fs').readFileSync('/Users/nw/projects/motion/orbit/app/orbit-desktop/src/titles.json', 'utf8'))
-a = await Promise.all(t.slice(0, 10).map(async term => {
-  const results = await Root.cosal.search(term, 10)
-  const bits = (await typeorm.getRepository(BitEntity).find({ id: { $in: results.map(x => x.id) } })).map(bit => (
-    bit.data.messages ? bit.data.messages.map(m => m.text).join('...') : bit.body
-  ))
-  return {
-   term,
-   distances: results.map(x => x.distance),
-   bits,
-  }
-}))
-```
-
-search:
-
-- dont underestimate how far you can get by just making search great
-  - search images
-  - search links
-  - better previews/results
-  - bigger peek better clearer display
-  - clearer shortcuts
-  - pin to list
-- #searchbytopic
-- /filtergroups
-- query to avoid loading `data` and `body`
-- quickresults: this can avoid a call alltogether
-
-  - just do it in memory!
-  - basically: load all recent bits + all people in memory
-    - when you type it just filters them (webworker or desktop?)
-
-- fts search
-
-  - basically just use a few queries and get fts working, then integrate with SearchResultsCommand
-
-- rss syncer also can it be super easy to add?
-
-  - maybe orbit can detect links
-  - or you can paste into the searchbar to subscribe
-
-- folder syncer:
-
-  - can we pull it off without insane complexity?
-  - smart sync could handle this
 
 - "smart sync"
 
@@ -219,34 +121,10 @@ search:
       - and then we run over the old items and clean them
       - this can basically be "score" based, where we come up with a scoring function that takes in recentness, interestingness-to-me, and interestingness-to-everything-in-this-space
 
-# Project Fluidity
-
-- auto open peeks, better peek display, better search results display
-
-  - GROUP together conversations in search results by much bigger amounts
-    - and then in peek windows you can see them all together
-    - join together ALL slack conversations that match your query in the results window into infinite scroll!!!!!
-      - that way you can search one thing, see slack, hit results
-      - also would let you group together slack things much more easily
-  - GOAL: be able to try a couple things and find recent stuff almost always
-  - more condensed gmail style view for conversations in search results
-  - profiles
-    - link people together better across integrations
-    - rethink them and design using topics and higher level summaries
-    - integrate them better into search results
-
-- make keyboard and everything smooth and fast with no jitter
-
-# next / ideas
-
-- find by type (file / link is helpful)
-- Toggle select all button in table view
-- fix integration buttons styling and going inactive after click
-- cmd+z undo in search area (needs to work with toggles...)
-- hmr: doesn't store.unmount stores often
-
 # ideas for apps
 
+- daily digest
+  - summarized recent activity using your topics
 - micro polls app:
   - can create a poll
   - shows in a dropdown

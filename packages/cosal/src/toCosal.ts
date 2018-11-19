@@ -3,6 +3,7 @@ import { range, sum } from 'lodash'
 import { toWords, sigmoid, getWordVector } from './helpers'
 import { Matrix, Vector } from '@mcro/vectorious'
 import { Covariance } from './getCovariance'
+import { VectorDB } from './cosal'
 
 export { getCovariance } from './getCovariance'
 
@@ -31,6 +32,11 @@ const getDistance = (string, vector, inverseCovar: Covariance): number => {
   if (distanceCache[key]) {
     return distanceCache[key]
   }
+  if (vector.length !== inverseCovar.matrix[0].length) {
+    throw new Error(
+      `We got a weird on ${string} ${vector.length} !== ${inverseCovar.matrix[0].length}`,
+    )
+  }
   distanceCache[key] = distance(vector, inverseCovar)
   return distanceCache[key]
 }
@@ -40,6 +46,8 @@ const getDistance = (string, vector, inverseCovar: Covariance): number => {
 export async function toCosal(
   text: string,
   inverseCovar: Covariance,
+  vectors: VectorDB,
+  fallbackVector,
 ): Promise<CosalDocument | null> {
   const words = toWords(text)
 
@@ -47,7 +55,7 @@ export async function toCosal(
     return null
   }
 
-  const wordVectors = words.map(getWordVector)
+  const wordVectors = words.map(word => getWordVector(word, vectors, fallbackVector))
 
   let distances = words.map((word, i) => getDistance(word, wordVectors[i], inverseCovar))
   if (distances.length > 1) {

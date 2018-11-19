@@ -63,6 +63,24 @@ export class SearchAppInner extends React.Component<
     return find.index < this.props.searchStore.searchState.results.length
   }
 
+  getItemProps = index => {
+    const results = this.props.searchStore.resultsForVirtualList
+    if (index === 0 || results[index].group !== results[index - 1].group) {
+      let separator: string
+      if (results[index].group === 'last-day' || !results[index].group) {
+        separator = 'Last Day'
+      } else if (results[index].group === 'last-week') {
+        separator = 'Last Week'
+      } else if (results[index].group === 'last-month') {
+        separator = 'Last Month'
+      } else {
+        separator = 'All Period'
+      }
+      return { separator }
+    }
+    return {}
+  }
+
   render() {
     const { searchStore, appStore, offsetY } = this.props
     return (
@@ -81,7 +99,7 @@ export class SearchAppInner extends React.Component<
           rowCount={searchStore.remoteRowCount}
           loadMoreRows={searchStore.loadMore}
           isRowLoaded={this.isRowLoaded}
-          getItemProps={searchStore.getItemProps}
+          getItemProps={this.getItemProps}
         />
       </ProvideHighlightsContextWithDefaults>
     )

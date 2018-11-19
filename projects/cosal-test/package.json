@@ -18,6 +18,7 @@
     "react": "16.7.0-alpha.2",
     "react-dom": "16.7.0-alpha.2",
     "express": "*",
-    "cors": "2.8.5"
+    "cors": "2.8.5",
+    "compute-covariance": "1.0.1"
   }
 }

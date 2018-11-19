@@ -756,10 +756,10 @@ electron@*:
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
 
-electron@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.1.tgz#4e98c19da83180a0240069eaf6a4bed0edd92602"
-  integrity sha512-k99P2p0St5XL/fO/yPAC5kpYghA5neFzAI+I83jI/V2WQzoMR5uW+39PLDcDa15LwxX07OTrZDSXIKEWfmTVbg==
+electron@3.0.9:
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.9.tgz#79bd25dfd5496918a00d579e702fb83082f1a036"
+  integrity sha512-OoSoeUWo9PzbArgrwS1yTfTRSlpXmIgrFGWUuUZCjKAk4DGR70elHDNeRnnBJ9NTwXXZVifChcfx73Ah3GnlVQ==
   dependencies:
     "@types/node" "^8.0.24"
     electron-download "^4.1.0"

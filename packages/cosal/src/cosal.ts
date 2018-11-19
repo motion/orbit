@@ -4,9 +4,11 @@ import { toCosal, Pair } from './toCosal'
 import { uniqBy } from 'lodash'
 import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
-import { vectors } from './helpers'
 import { Matrix } from '@mcro/vectorious'
 import { join } from 'path'
+import { getDefaultVectors } from './getDefaultVectors'
+import { defaultSlang } from './helpers'
+import computeCovariance from 'compute-covariance'
 
 // exports
 export { getCovariance } from './getCovariance'
@@ -17,7 +19,7 @@ type Record = {
   text: string
 }
 
-type VectorDB = {
+export type VectorDB = {
   [key: string]: number[]
 }
 
@@ -32,29 +34,88 @@ type CosalWordOpts = {
   uniqueWords?: boolean
 }
 
+const getVectorDBCovariance = (vectors: VectorDB) => {
+  const words = Object.keys(vectors)
+  const size = words.length
+  const rowLen = vectors[words[0]].length
+  if (!Array.isArray(vectors[words[0]])) {
+    console.log('bad line', words[0], vectors[words[0]])
+    throw new Error('Vectors must be array of numbers')
+  }
+  const sampleSpacing = Math.floor(size / rowLen)
+  let sample = []
+  for (const [index, word] of words.entries()) {
+    if (index % sampleSpacing === 0) {
+      sample.push(vectors[word])
+      if (sample.length === rowLen) {
+        break
+      }
+    }
+  }
+  return computeCovariance(...sample)
+}
+
+type CosalOptions = {
+  database?: string
+  vectors?: VectorDB
+  slang?: { [key: string]: string }
+  fallbackVector?: string
+}
+
 export class Cosal {
-  allVectors = vectors
-  vectors: VectorDB = {}
+  initialVectors: VectorDB = null
+  scannedVectors: VectorDB = {}
   covariance: Covariance = null
   database: string
   started = false
+  fallbackVector = null
 
-  constructor({ database }: { database?: string } = {}) {
+  constructor({ database, vectors, fallbackVector, slang = defaultSlang }: CosalOptions = {}) {
     this.database = database
+
+    if (!vectors) {
+      const initialVectors = getDefaultVectors()
+      this.initialVectors = initialVectors
+      this.fallbackVector = initialVectors.hello
+      this.covariance = {
+        // for some reason it sometimes is inversed, this would "fix" it but need to debug *why* it inverses
+        // new Matrix(corpusCovarPrecomputed).inverse().toArray(),
+        matrix: corpusCovarPrecomputed,
+        hash: '0',
+      }
+    } else {
+      if (!fallbackVector) {
+        throw new Error(
+          'Need to set fallbackVector for custom set, consider something common like "hello"',
+        )
+      }
+      this.initialVectors = vectors
+      this.fallbackVector = fallbackVector
+      this.covariance = {
+        hash: '0',
+        matrix: getVectorDBCovariance(vectors),
+      }
+    }
+
+    // map words to existing vectors, "don't => dont"
+    if (slang) {
+      for (const original in slang) {
+        if (this.initialVectors[original]) {
+          this.initialVectors[slang[original]] = this.initialVectors[original]
+        }
+      }
+    }
   }
 
   async start() {
     if (this.database) {
       await this.setDatabase(this.database)
-    } else {
-      this.loadPrecomputedDatabase()
     }
     this.started = true
   }
 
   async setDatabase(database: string) {
     this.database = database
-    this.loadPrecomputedDatabase()
     if (!(await pathExists(database))) {
       await this.persist()
     } else {
@@ -73,18 +134,14 @@ export class Cosal {
     if (this.database) {
       const { records, covariance } = await readJSON(this.database)
       if (covariance.hash && covariance.matrix) {
-        this.vectors = records
-        this.covariance = new Matrix(covariance).inverse().toArray()
+        this.scannedVectors = records
+        this.covariance = {
+          hash: '0',
+          matrix: new Matrix(covariance.matrix).inverse().toArray(),
+        }
       } else {
         throw new Error('Invalid database')
       }
-    }
-  }
-
-  private loadPrecomputedDatabase() {
-    this.covariance = {
-      matrix: corpusCovarPrecomputed, //new Matrix(corpusCovarPrecomputed).inverse().toArray(),
-      hash: '0',
     }
   }
 
@@ -102,21 +159,27 @@ export class Cosal {
     this.covariance = getCovariance(
       this.covariance.matrix,
       newRecords.map(record => ({ doc: record.text, weight: 1 })),
+      1,
+      this.initialVectors,
+      this.fallbackVector,
     )
 
     // update vectors
     const cosals = await Promise.all(
-      newRecords.map(record => toCosal(record.text, this.covariance)),
+      newRecords.map(record =>
+        toCosal(record.text, this.covariance, this.initialVectors, this.fallbackVector),
+      ),
     )
+
     for (const [index, record] of newRecords.entries()) {
-      if (this.vectors[record.id]) {
+      if (this.scannedVectors[record.id]) {
         throw new Error(`Already have a record id ${record.id}`)
       }
       if (!cosals[index]) {
         console.debug('no cosal found for index', index)
         continue
       }
-      this.vectors[record.id] = cosals[index].vector
+      this.scannedVectors[record.id] = cosals[index].vector
     }
 
     // persist after scan
@@ -127,7 +190,7 @@ export class Cosal {
   // TODO better data structure?
   search = async (query: string, max = 10): Promise<Result[]> => {
     this.ensureStarted()
-    return this.searchWithCovariance(query, this.covariance, this.vectors, { max })
+    return this.searchWithCovariance(query, this.covariance, this.scannedVectors, { max })
   }
 
   private async searchWithCovariance(
@@ -136,7 +199,7 @@ export class Cosal {
     vectors: VectorDB,
     { max = 10 },
   ) {
-    const cosal = await toCosal(query, covariance)
+    const cosal = await toCosal(query, covariance, this.initialVectors, this.fallbackVector)
     if (!cosal) {
       console.log('no cosal?')
       return []
@@ -164,7 +227,7 @@ export class Cosal {
 
   async persist() {
     if (this.database) {
-      await writeJSON(this.database, { covariance: this.covariance, records: this.vectors })
+      await writeJSON(this.database, { covariance: this.covariance, records: this.scannedVectors })
     }
   }
 
@@ -179,9 +242,14 @@ export class Cosal {
       this.topicCovariance = getCovariance(
         this.covariance.matrix,
         this.topicsList.map(doc => ({ doc, weight: 1 })),
+        1,
+        this.initialVectors,
+        this.fallbackVector,
       )
       const cosals = await Promise.all(
-        this.topicsList.map(text => toCosal(text, this.topicCovariance)),
+        this.topicsList.map(text =>
+          toCosal(text, this.topicCovariance, this.initialVectors, this.fallbackVector),
+        ),
       )
       for (const [index, record] of cosals.entries()) {
         this.topicVectors[index] = record.vector
@@ -202,10 +270,12 @@ export class Cosal {
   ): Promise<Pair[] | null> => {
     this.ensureStarted()
 
-    const cosal = await toCosal(text, this.covariance)
+    const cosal = await toCosal(text, this.covariance, this.initialVectors, this.fallbackVector)
+
     if (!cosal) {
       return null
     }
+
     let pairs = cosal.pairs
     let fmax = max
     if (max !== Infinity) {

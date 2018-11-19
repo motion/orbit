@@ -1,7 +1,6 @@
 import * as Mobx from 'mobx'
 import { Logger } from '@mcro/logger'
 import { MagicalObject, ReactionOptions } from './types'
-import prettyStringify from 'json-stringify-pretty-compact'
 
 const PREFIX = '=>'
 
@@ -40,7 +39,7 @@ export function getReactionOptions(userOptions?: ReactionOptions) {
 
 export const niceLogObj = obj => {
   try {
-    return prettyStringify(obj)
+    return JSON.stringify(obj)
   } catch {
     return obj
   }

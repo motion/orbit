@@ -133,16 +133,6 @@ export class OrbitWindow extends React.Component<Props> {
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#00000000"
-        webPreferences={{
-          nativeWindowOpen: true,
-          experimentalFeatures: true,
-          transparentVisuals: true,
-          allowRunningInsecureContent: false,
-          webSecurity: false,
-          // plugins: true,
-          // scrollBounce: true,
-          // offscreen: true,
-        }}
       />
     )
   }

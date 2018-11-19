@@ -9,7 +9,7 @@ export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any
     <>
       <CheckBox onChange={whitelist.toggleActive} checked={whitelist.isWhitelisting} />
       <HorizontalSpace />
-      <Text>Smart sync all</Text>
+      <Text>Smart sync recent items</Text>
     </>
   )
 }

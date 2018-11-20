@@ -154,6 +154,29 @@ export class Cosal {
     await this.persist()
   }
 
+  // takes a vector, returns a list of ids
+  searchWithAnnoy = async (vector: number[]) => {
+    return await new Promise<number[]>(res => {
+      exec(
+        `python ${Path.join(__dirname, '..', 'annoy.py')}`,
+        {
+          env: {
+            DB_FILE: this.database,
+            VECTOR: JSON.stringify(vector),
+          },
+        },
+        (err, data) => {
+          if (err || !data) {
+            console.log('cosal search error', err ? `${err.message} ${err.stack}` : 'no data')
+            res([])
+            return
+          }
+          res(JSON.parse(data))
+        },
+      )
+    })
+  }
+
   // goes through all vectors and sorts by smallest distance up to max
   // TODO better data structure?
   search = async (query: string, max = 10): Promise<Result[]> => {
@@ -164,7 +187,7 @@ export class Cosal {
   private async searchWithCovariance(
     query: string,
     covariance: Covariance,
-    vectors: VectorDB,
+    vectorDB: VectorDB,
     { max = 10 },
   ) {
     const cosal = await toCosal(query, covariance, this.initialVectors, this.fallbackVector)
@@ -173,18 +196,18 @@ export class Cosal {
       return []
     }
 
-    console.log(!![vectors, max])
+    console.log(!![vectorDB, max])
 
-    await new Promise(res => {
-      exec(`python ${Path.join(__dirname, '..', 'annoy.py')}`, (err, data) => {
-        console.log('err', err, data)
-        res([])
-      })
-    })
+    const ids = await this.searchWithAnnoy(cosal.vector)
 
+    console.log('ids', ids)
+
+    return ids.map(id => ({ id, distance: 0 }))
+
+    // to do in pure JS:
     // let results: Result[] = []
-    // for (const id in vectors) {
-    //   const vector = vectors[id]
+    // for (const id in vectorDB) {
+    //   const vector = vectorDB[id]
     //   if (!vector) {
     //     continue
     //   }

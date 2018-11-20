@@ -7,6 +7,7 @@ const vectors = JSON.parse(
   require('fs').readFileSync(Path.join(__dirname, 'app_data/enwiki9.vec.json')),
 )
 const cosal = new Cosal({
+  database: Path.join(__dirname, 'app_data', 'cosaldb.json'),
   vectors,
   // fallbackVector: vectors.hello,
 })
@@ -15,7 +16,7 @@ const items = [
   // if you want to load some more stuff, just throw it here
   // module.exports = string[]
   // ...require('./app_data/myBits'),
-  // ...require('./data/elonout'),
+  ...require('./data/elonout'),
   // ...require('./data/text2k'),
 ].map((text, id) => ({
   id,
@@ -43,6 +44,7 @@ async function start() {
 
   app.get('/search', async (req, res) => {
     const results = await cosal.search(req.query.query)
+    console.log('results', results)
     const resultsText = results.map(({ id, distance }) => ({
       id,
       distance,

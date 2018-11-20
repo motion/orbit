@@ -5,7 +5,8 @@
   "dependencies": {
     "compute-covariance": "^1.0.1",
     "@mcro/vectorious": "*",
-    "fs-extra": "7.0.0"
+    "fs-extra": "7.0.0",
+    "map-parallel": "0.0.3"
   },
   "scripts": {
     "build": "tsc || true",

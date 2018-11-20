@@ -19,14 +19,9 @@ export type BaseSource = {
   id?: number
 
   /**
-   * Space where source is stored.
+   * Spaces where source is stored.
    */
-  space?: Space
-
-  /**
-   * Id of the space where source is stored.
-   */
-  spaceId?: number
+  spaces?: Space[]
 
   /**
    * Setting name.

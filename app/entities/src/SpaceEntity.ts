@@ -1,5 +1,5 @@
 import { Space, Source } from '@mcro/models'
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { SourceEntity } from './SourceEntity'
 import { AppEntity } from './AppEntity'
 
@@ -15,7 +15,7 @@ export class SpaceEntity implements Space {
   @Column({ type: 'simple-json' })
   colors: string[]
 
-  @OneToMany(() => SourceEntity, source => source.space)
+  @ManyToMany(() => SourceEntity, source => source.spaces)
   sources: Source[]
 
   @OneToMany(() => AppEntity, app => app.space)

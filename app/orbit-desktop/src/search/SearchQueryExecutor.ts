@@ -8,36 +8,44 @@ import { SqliteDriver } from 'typeorm/driver/sqlite/SqliteDriver'
  * Executes search query.
  */
 export class SearchQueryExecutor {
-  private args: SearchQuery
   private log: Logger
 
-  constructor(args: SearchQuery) {
-    this.args = args
-    this.log = new Logger('search-query-executor')
+  constructor(log: Logger) {
+    this.log = log
   }
 
   /**
    * Executes search query and returns found bits and number of overall bits matched given query.
    */
-  async execute(): Promise<[Bit[], number]> {
-    this.log.timer(`query`)
-    this.log.timer(`loading bits`)
-    const [bitsQuery, bitsParameters] = this.buildDbQuery(false)
-    const bits = this.rawBitsToBits(await this.runDbQuery(bitsQuery, bitsParameters))
-    this.log.timer(`loading bits`, { bitsQuery, bitsParameters, bits })
-    this.log.timer(`loading count`)
-    const [countQuery, countParameters] = this.buildDbQuery(true)
+  async execute(args: SearchQuery): Promise<[Bit[], number]> {
+    this.log.vtimer(`query`)
+
+    // load bits count first
+    this.log.vtimer(`loading count`)
+    const [countQuery, countParameters] = this.buildDbQuery(args, true)
     const countResult = await this.runDbQuery(countQuery, countParameters)
-    this.log.timer(`loading count`, { countQuery, countParameters, countResult })
-    this.log.timer(`query`)
-    return [bits, countResult[0]['cnt']]
+    const bitsCount = countResult[0]['cnt']
+    this.log.vtimer(`loading count`, { countQuery, countParameters, countResult })
+
+    // load bits (we load in the case if count isn't zero since its pointless to load otherwise)
+    let bits: Bit[] = []
+    if (bitsCount > 0) {
+      this.log.vtimer(`loading bits`)
+      const [bitsQuery, bitsParameters] = this.buildDbQuery(args, false)
+      bits = this.rawBitsToBits(await this.runDbQuery(bitsQuery, bitsParameters))
+      this.log.vtimer(`loading bits`, { bitsQuery, bitsParameters, bits })
+    } else {
+      this.log.verbose(`skip loading bits since count is zero`)
+    }
+    this.log.vtimer(`query`)
+    return [bits, bitsCount]
   }
 
   /**
    * Builds database query based on the search query args.
    * If count is set to true then count will be returned in the results.
    */
-  private buildDbQuery(count: boolean): [string, any[]] {
+  private buildDbQuery(args: SearchQuery, count: boolean): [string, any[]] {
     const joins: string[] = []
     const conditions: string[] = []
     const conditionParameters: any[] = []
@@ -47,41 +55,40 @@ export class SearchQueryExecutor {
     sql += count ? `COUNT(*) as cnt` : `"bit".*`
     sql += ` FROM "bit_entity" "bit" `
 
-    if (this.args.query && this.args.query.length) {
-      conditions.push(`"bit"."id" IN (SELECT "rowid" FROM "search_index" WHERE "search_index" MATCH '${this.args.query}')`)
+    if (args.query && args.query.length) {
+      conditions.push(`"bit"."id" IN (SELECT "rowid" FROM "search_index" WHERE "search_index" MATCH '${args.query}' ORDER BY rank)`)
       // conditionParameters.push(`%${query.replace(/\s+/g, '%')}%`)
-    } else if (this.args.ids) {
-      conditions.push(`"bit"."id" IN (${this.args.ids.join(', ')})`)
+    } else if (args.ids) {
+      conditions.push(`"bit"."id" IN (${args.ids.join(', ')})`)
     }
 
-    if (this.args.contentType) {
+    if (args.contentType) {
       conditions.push(`"bit"."type" = ?`)
-      conditionParameters.push(this.args.contentType)
+      conditionParameters.push(args.contentType)
     }
-    if (this.args.startDate && this.args.endDate) {
+    if (args.startDate && args.endDate) {
       conditions.push(`"bit"."bitCreatedAt" BETWEEN ? AND ?`)
-      conditionParameters.push(new Date(this.args.startDate).getTime())
-      conditionParameters.push(new Date(this.args.endDate).getTime())
+      conditionParameters.push(new Date(args.startDate).getTime())
+      conditionParameters.push(new Date(args.endDate).getTime())
 
-    } else if (this.args.startDate) {
+    } else if (args.startDate) {
       conditions.push(`"bit"."bitCreatedAt" > ?`)
-      conditionParameters.push(new Date(this.args.startDate).getTime())
+      conditionParameters.push(new Date(args.startDate).getTime())
 
-    } else if (this.args.endDate) {
+    } else if (args.endDate) {
       conditions.push(`"bit"."bitCreatedAt" < ?`)
-      conditionParameters.push(new Date(this.args.endDate).getTime())
+      conditionParameters.push(new Date(args.endDate).getTime())
     }
-    if (this.args.integrationFilters && this.args.integrationFilters.length) {
-      conditions.push(`"bit"."integration" IN (${this.args.integrationFilters.map(() => '?')}`)
-      conditionParameters.push(...this.args.integrationFilters)
+    if (args.integrationFilters && args.integrationFilters.length) {
+      conditions.push(`"bit"."integration" IN (${args.integrationFilters.map(() => '?')}`)
+      conditionParameters.push(...args.integrationFilters)
     }
-    if (this.args.sourceId) {
+    if (args.sourceId) {
       conditions.push(`"bit"."sourceId" = ?`)
-      conditionParameters.push(this.args.sourceId)
-    }
-    if (this.args.spaceId) {
-      conditions.push(`"bit"."spaceId" = ?`)
-      conditionParameters.push(this.args.spaceId)
+      conditionParameters.push(args.sourceId)
+
+    } else if (args.sourceIds) {
+      conditions.push(`"bit"."sourceId" IN (${args.sourceIds.join(', ')})`)
     }
 
     // if (peopleFilters && peopleFilters.length) {
@@ -104,8 +111,8 @@ export class SearchQueryExecutor {
     //   }
     // }
 
-    if (this.args.locationFilters && this.args.locationFilters.length) {
-      conditions.push('(' + this.args.locationFilters.map(location => {
+    if (args.locationFilters && args.locationFilters.length) {
+      conditions.push('(' + args.locationFilters.map(location => {
         conditionParameters.push(location)
         return `"bit"."locationName" = ?`
       }).join(' OR ') + ')')
@@ -120,12 +127,12 @@ export class SearchQueryExecutor {
     }
     sql += ` ORDER BY "bit"."bitCreatedAt" DESC`
 
-    if (this.args.skip && count === false) {
-      sql += ` OFFSET ${this.args.skip}`
+    if (args.skip && count === false) {
+      sql += ` OFFSET ${args.skip}`
     }
 
-    if (this.args.take && count === false) {
-      sql += ` LIMIT ${this.args.take}`
+    if (args.take && count === false) {
+      sql += ` LIMIT ${args.take}`
     }
 
     return [sql, [...joinParameters, ...conditionParameters]]

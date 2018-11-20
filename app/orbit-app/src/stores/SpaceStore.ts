@@ -77,12 +77,18 @@ export class SpaceStore {
   }
 
   spaceSources(space: Space) {
-    return this.sources.filter(source => source.spaceId === space.id).map(getAppFromSource) // todo: this is temporary to make things working, Nate should change that
+    return this.sources
+      .filter(source => {
+        return source.spaces.find(sourceSpace => sourceSpace.id === space.id)
+      })
+      .map(getAppFromSource) // todo: this is temporary to make things working, Nate should change that
   }
 
   activeSources() {
     return this.sources
-      .filter(source => source.spaceId === this.activeSpace.id)
+      .filter(source => {
+        return source.spaces.find(sourceSpace => sourceSpace.id === this.activeSpace.id)
+      })
       .map(getAppFromSource) // todo: this is temporary to make things working, Nate should change that
   }
 
@@ -95,7 +101,11 @@ export class SpaceStore {
     this.spaces = spaces
   })
 
-  private sources$ = observeMany(SourceModel, { args: {} }).subscribe(sources => {
+  private sources$ = observeMany(SourceModel, {
+    args: {
+      relations: ["spaces"]
+    }
+  }).subscribe(sources => {
     this.sources = sources
   })
 }

@@ -17,7 +17,10 @@ import { SourceEntity } from './SourceEntity'
 import { SpaceEntity } from './SpaceEntity'
 
 @Entity()
-@Index("bitAggregatedSearchIndex", { synchronize: false })
+@Index("searchIndex1", { synchronize: false })
+@Index("searchIndex2", { synchronize: false })
+@Index("searchIndex3", { synchronize: false })
+@Index("searchIndex4", { synchronize: false })
 export class BitEntity extends BaseEntity implements Bit {
   target: 'bit' = 'bit'
 
@@ -36,13 +39,6 @@ export class BitEntity extends BaseEntity implements Bit {
    */
   @Column({ nullable: true })
   sourceId?: number
-
-  /**
-   * Space id to which this bit is attached.
-   * Same as source.spaceId, duplicated here for performance reasons.
-   */
-  @Column({ nullable: true })
-  spaceId?: number
 
   @Column({ nullable: true })
   authorId?: number

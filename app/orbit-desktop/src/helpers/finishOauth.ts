@@ -1,4 +1,5 @@
 import { SourceEntity } from '@mcro/entities'
+import { SpaceEntity } from '@mcro/entities/_'
 import {
   DriveSource,
   GmailSource,
@@ -50,7 +51,7 @@ const createSource = async (type: IntegrationType, values: OauthValues) => {
   //   setting = new SourceEntity()
   // }
   const setting: Source = {
-    spaceId: 1, // todo: we need to receive space id instead of hard codding it
+    spaces: [await getRepository(SpaceEntity).findOne(1)], // todo: we need to receive space id instead of hard codding it
     target: 'source',
     category: 'integration',
     identifier: type + (await getRepository(SourceEntity).count()), // adding count temporary to prevent unique constraint error

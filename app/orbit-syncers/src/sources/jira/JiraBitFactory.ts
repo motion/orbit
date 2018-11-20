@@ -46,7 +46,6 @@ export class JiraBitFactory {
       {
         integration: 'jira',
         sourceId: this.source.id,
-        spaceId: this.source.spaceId,
         type: 'document',
         title: issue.fields.summary,
         body,

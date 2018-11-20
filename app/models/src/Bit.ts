@@ -4,7 +4,6 @@ import { Location } from './Location'
 import { Person } from './Person'
 import { Source } from './Source'
 import { BitContentType } from './BitContentType'
-import { Space } from './Space'
 
 export interface Bit {
   /**
@@ -27,11 +26,6 @@ export interface Bit {
    * Source id.
    */
   sourceId?: number
-
-  /**
-   * Space id.
-   */
-  spaceId?: number
 
   /**
    * Original bit content author id.
@@ -103,11 +97,6 @@ export interface Bit {
    * Source is a Bit's owner.
    */
   source?: Source
-
-  /**
-   * Space is owner of this bit's source.
-   */
-  space?: Space
 
   /**
    * Additional bit data.

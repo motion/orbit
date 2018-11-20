@@ -56,7 +56,6 @@ export class GithubBitFactory {
     return BitUtils.create({
       id,
       sourceId: this.source.id,
-      spaceId: this.source.spaceId,
       integration: 'github',
       type: 'task',
       title: issue.title,

@@ -77,7 +77,7 @@ export class OracleBridge {
         this.socket.send(strData)
       } catch (err) {
         if (err.message.indexOf('CLOSED')) {
-          console.log('closed...')
+          // console.log('closed...')
         } else {
           console.error('oracle.socketSend Err', err.stack)
         }

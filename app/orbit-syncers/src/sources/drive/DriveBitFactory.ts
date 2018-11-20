@@ -19,8 +19,7 @@ export class DriveBitFactory {
     return BitUtils.create(
       {
         integration: 'drive',
-        source: this.source,
-        spaceId: this.source.spaceId,
+        sourceId: this.source.id,
         type: 'document',
         title: file.file.name,
         body: file.content || 'empty',

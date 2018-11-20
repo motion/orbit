@@ -53,8 +53,7 @@ export class ConfluenceBitFactory {
     return BitUtils.create(
       {
         integration: 'confluence',
-        source: this.source,
-        spaceId: this.source.spaceId,
+        sourceId: this.source.id,
         type: 'document',
         title: content.title,
         author,

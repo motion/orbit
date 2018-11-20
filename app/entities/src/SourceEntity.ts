@@ -3,8 +3,8 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  Entity,
-  ManyToOne,
+  Entity, JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
@@ -17,11 +17,9 @@ export class SourceEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number
 
-  @ManyToOne(() => SpaceEntity, space => space.sources)
-  space?: Space
-
-  @Column({ nullable: false })
-  spaceId?: number
+  @ManyToMany(() => SpaceEntity, space => space.sources)
+  @JoinTable()
+  spaces?: Space[]
 
   @Column({ nullable: true, unique: true })
   identifier?: string

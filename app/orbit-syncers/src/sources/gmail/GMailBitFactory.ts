@@ -63,6 +63,7 @@ export class GMailBitFactory {
     return BitUtils.create(
       {
         integration: 'gmail',
+        sourceId: this.source.id,
         type: 'mail',
         title,
         body,
@@ -72,8 +73,6 @@ export class GMailBitFactory {
         bitCreatedAt: firstMessageParser.getDate(),
         bitUpdatedAt: lastMessageParser.getDate(),
         webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
-        sourceId: this.source.id,
-        spaceId: this.source.spaceId,
       },
       thread.id,
     )

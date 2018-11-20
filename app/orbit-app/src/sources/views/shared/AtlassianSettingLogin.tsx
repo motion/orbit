@@ -80,8 +80,9 @@ export class AtlassianSettingLogin extends React.Component<
     e.preventDefault()
     const { source } = this.props.store
     source.values = { ...source.values, credentials: this.props.store.values }
-    if (!source.spaceId) {
-      source.spaceId = this.props.spaceStore.activeSpace.id
+    if (!source.spaces) source.spaces = []
+    if (!source.spaces.find(space => space.id === this.props.spaceStore.activeSpace.id)) {
+      source.spaces.push(this.props.spaceStore.activeSpace)
     }
     console.log(`adding integration!`, source)
 

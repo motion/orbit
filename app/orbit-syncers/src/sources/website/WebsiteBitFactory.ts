@@ -26,7 +26,6 @@ export class WebsiteBitFactory {
       {
         integration: 'website',
         sourceId: this.source.id,
-        spaceId: this.source.spaceId,
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,

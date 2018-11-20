@@ -1,12 +1,13 @@
 import { getIncrementalCovariance, Covariance } from './getIncrementalCovariance'
 import { toCosal, Pair } from './toCosal'
-import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { Matrix } from '@mcro/vectorious'
 import { join } from 'path'
 import { getDefaultVectors } from './getDefaultVectors'
 import { defaultSlang } from './helpers'
 import { getCovariance } from './getCovariance'
+import { exec } from 'child_process'
+import Path from 'path'
 
 // exports
 export { getIncrementalCovariance } from './getIncrementalCovariance'
@@ -171,25 +172,35 @@ export class Cosal {
       console.log('no cosal?', query)
       return []
     }
-    let results: Result[] = []
-    for (const id in vectors) {
-      const vector = vectors[id]
-      if (!vector) {
-        continue
-      }
-      const distance = cosineDistance(cosal.vector, vector)
-      const result = { id: +id, distance }
-      if (!results.length) {
-        results.push(result)
-        continue
-      }
-      const len = results.length
-      if (distance < results[len - 1].distance) {
-        const insertIndex = results.findIndex(x => distance < x.distance)
-        results.splice(insertIndex, len > max ? 1 : 0, result)
-      }
-    }
-    return results
+
+    console.log(!![vectors, max])
+
+    await new Promise(res => {
+      exec(`python ${Path.join(__dirname, '..', 'annoy.py')}`, (err, data) => {
+        console.log('err', err, data)
+        res([])
+      })
+    })
+
+    // let results: Result[] = []
+    // for (const id in vectors) {
+    //   const vector = vectors[id]
+    //   if (!vector) {
+    //     continue
+    //   }
+    //   const distance = cosineDistance(cosal.vector, vector)
+    //   const result = { id: +id, distance }
+    //   if (!results.length) {
+    //     results.push(result)
+    //     continue
+    //   }
+    //   const len = results.length
+    //   if (distance < results[len - 1].distance) {
+    //     const insertIndex = results.findIndex(x => distance < x.distance)
+    //     results.splice(insertIndex, len > max ? 1 : 0, result)
+    //   }
+    // }
+    // return results
   }
 
   async persist() {

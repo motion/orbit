@@ -14,7 +14,11 @@ const cosal = new Cosal({
 async function start() {
   await cosal.start()
 
-  const items = [...require('./elonout'), ...require('./app_data/text2k')].map((text, id) => ({
+  const items = [
+    ...require('./app_data/nateBits'),
+    ...require('./elonout'),
+    ...require('./app_data/text2k'),
+  ].map((text, id) => ({
     id,
     text,
   }))

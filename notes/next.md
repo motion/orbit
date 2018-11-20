@@ -4,7 +4,6 @@ Topic modeling
 
 Cosal and topic modeling is a dependency for search, profiles, and topics. So it needs to come first.
 
-- improve vectors
 - add more topics
 - test and iterate on finding topics
 - finding unique terminology in company

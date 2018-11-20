@@ -2,10 +2,10 @@ import harmonicMean from './harmonicMean'
 import { range, sum } from 'lodash'
 import { toWords, sigmoid, getWordVector } from './helpers'
 import { Matrix, Vector } from '@mcro/vectorious'
-import { Covariance } from './getCovariance'
+import { Covariance } from './getIncrementalCovariance'
 import { VectorDB } from './cosal'
 
-export { getCovariance } from './getCovariance'
+export { getIncrementalCovariance } from './getIncrementalCovariance'
 
 export type Pair = {
   string: string
@@ -27,7 +27,7 @@ const distance = (vector, inverseCovar: Covariance) => {
   return Math.sqrt(val1.multiply(matrix.transpose()).toArray()[0])
 }
 
-const getDistance = (string, vector, inverseCovar: Covariance): number => {
+const getDistance = (string: string, vector: number[], inverseCovar: Covariance): number => {
   const key = `${string}-${inverseCovar.hash}`
   if (distanceCache[key]) {
     return distanceCache[key]
@@ -55,9 +55,9 @@ export async function toCosal(
     return null
   }
 
-  const wordVectors = words.map(word => getWordVector(word, vectors, fallbackVector))
+  const wordVectors = words.map(word => getWordVector(word.normalized, vectors, fallbackVector))
 
-  let distances = words.map((word, i) => getDistance(word, wordVectors[i], inverseCovar))
+  let distances = words.map((word, i) => getDistance(word.normalized, wordVectors[i], inverseCovar))
   if (distances.length > 1) {
     const maxDistance = Math.max.apply(null, distances)
     distances = distances.map(d => (d > 0 ? d : maxDistance))
@@ -70,10 +70,11 @@ export async function toCosal(
   let vector = new Vector(zeros)
   let pairs: Pair[] = []
 
-  for (const [index, wordVector] of wordVectors.entries()) {
+  for (const [index, { word }] of words.entries()) {
+    const wordVector = wordVectors[index]
     const weight = distances[index]
     vector = vector.add(new Vector(wordVector).scale(weight))
-    pairs.push({ string: words[index], weight: +distances[index] })
+    pairs.push({ string: word, weight: +distances[index] })
   }
 
   const scaledVector = vector.scale(1 / sum(distances)).toArray()

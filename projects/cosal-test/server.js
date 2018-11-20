@@ -4,21 +4,30 @@ let cors = require('cors')
 let Path = require('path')
 
 const vectors = JSON.parse(
-  require('fs').readFileSync(Path.join(__dirname, 'app_data/fil9.vec.json')),
+  require('fs').readFileSync(Path.join(__dirname, 'app_data/enwiki9.vec.json')),
 )
 const cosal = new Cosal({
   vectors,
-  fallbackVector: vectors.the,
+  // fallbackVector: vectors.hello,
 })
 
 async function start() {
   await cosal.start()
 
-  const items = [...require('./elonout'), ...require('./app_data/text2k')].map((text, id) => ({
+  const items = [
+    // if you want to load some more stuff, just throw it here
+    // module.exports = string[]
+    // ...require('./app_data/myBits'),
+    ...require('./data/elonout'),
+    ...require('./data/text2k'),
+  ].map((text, id) => ({
     id,
     text,
   }))
+
+  console.log('scanning...', items.length)
   await cosal.scan(items)
+  console.log('scanned')
 
   const app = express()
   app.use(cors())
@@ -52,6 +61,7 @@ async function start() {
   })
 
   app.listen(4444)
+  console.log('listening')
 }
 
 start()

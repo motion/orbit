@@ -1,49 +1,22 @@
 import computeCovariance from 'compute-covariance'
-import { toWords, getWordVector } from './helpers'
-import { Matrix } from '@mcro/vectorious'
 import { VectorDB } from './cosal'
 
-export type WeightedDocument = {
-  doc: string
-  weight: number
-}
-
-export type Covariance = {
-  hash: string
-  matrix: Matrix
-}
-
-function docToCovar(doc: string, vectors: VectorDB, fallbackVector): Matrix {
-  const val = toWords(doc.toLowerCase())
-    .filter(word => vectors[word])
-    .map(word => getWordVector(word, vectors, fallbackVector))
-  if (val.length === 0) {
-    return false
+export const getCovariance = (vectors: VectorDB) => {
+  const words = Object.keys(vectors)
+  const rowLen = vectors[words[0]].length
+  if (!Array.isArray(vectors[words[0]])) {
+    console.log('bad line', words[0], vectors[words[0]])
+    throw new Error('Vectors must be array of numbers')
   }
-  const matrix = new Matrix(val)
-  const covar = computeCovariance(matrix.transpose().toArray())
-  return new Matrix(covar)
-}
 
-let index = 0
-
-export function getCovariance(
-  existingCovariance: number[][],
-  docs: WeightedDocument[] = [],
-  corpusWeight = 1,
-  vectors: VectorDB,
-  fallbackVector,
-): Covariance | null {
-  let matrix = new Matrix(existingCovariance).scale(corpusWeight)
-  for (const { weight, doc } of docs) {
-    const dc = docToCovar(doc, vectors, fallbackVector)
-    if (!dc) {
-      continue
+  let matrix = []
+  for (let r = 0; r < rowLen; r++) {
+    matrix[r] = []
+    for (const [i, word] of words.entries()) {
+      matrix[r][i] = vectors[word][r]
     }
-    matrix = matrix.add(dc.scale(weight))
   }
-  return {
-    hash: `index${index++ % Number.MAX_SAFE_INTEGER}`,
-    matrix: matrix.inverse().toArray(),
-  }
+
+  const res = computeCovariance(...matrix /* , { bias: true } */)
+  return res
 }

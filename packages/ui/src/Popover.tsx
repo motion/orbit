@@ -10,6 +10,80 @@ import { Theme } from '@mcro/gloss'
 import { getTarget } from './helpers/getTarget'
 import { MergeUIContext } from './helpers/contexts'
 
+export type PopoverProps = CSSPropertySet & {
+  // if you set a group, it acts as an ID that makes sure only ONE popover
+  // within that ID is ever open
+  group?: string
+  theme?: string
+  // can pass function to get isOpen passed in
+  children?: React.ReactNode | PopoverChildrenFn
+  // element or function that returns element, or querySelector to element
+  target?: React.ReactNode | (() => React.ReactNode) | string
+  open?: boolean
+  // the amount of space around popover you can move mouse
+  // before it triggers it to close
+  forgiveness?: number
+  // show a background over content
+  overlay?: boolean
+  left?: number
+  top?: number
+  // the distance the popover is from the target
+  // so it displays nicely spaced away
+  distance?: number
+  // open when target is clicked
+  openOnClick?: boolean
+  // open automatically when target is hovered
+  openOnHover?: boolean
+  // delay until openOnHover
+  delay?: number
+  // prevent popover itself from catching pointer events
+  noHoverOnChildren?: boolean
+  // size of shown arrow
+  arrowSize?: number
+  // close when you click outside it
+  closeOnClickAway?: boolean
+  // close when you click inside it
+  closeOnClick?: boolean
+  closeOnEsc?: boolean
+  // which direction it shows towards
+  // default determine direction automatically
+  towards?: PopoverDirection
+  // popover can aim to be centered or left aligned on the target
+  alignPopover?: 'left' | 'center'
+  padding?: number[] | number
+  onMouseEnter?: Function
+  onMouseLeave?: Function
+  onClose?: Function
+  openAnimation?: string
+  closeAnimation?: string
+  // lets you adjust position after target is positioned
+  adjust?: number[]
+  // hide arrow
+  noArrow?: boolean
+  // DEBUG: helps you see forgiveness zone
+  showForgiveness?: boolean
+  // padding from edge of window
+  edgePadding?: number
+  // pretty much what it says, for use with closeOnClick
+  keepOpenOnClickTarget?: boolean
+  // callback after close
+  onDidClose?: Function
+  // callback after open
+  onDidOpen?: Function
+  onOpen?: Function
+  height?: number
+  width?: number
+  background?: true | Color
+  passActive?: boolean
+  popoverProps?: Object
+  shadow?: boolean | string
+  style?: Object
+  elevation?: number
+  ignoreSegment?: boolean
+  onChangeVisibility?: (visibility: boolean) => any
+  noPortal?: boolean
+}
+
 const ArrowContain = view({
   position: 'absolute',
   left: '50%',
@@ -228,79 +302,6 @@ const positionStateX = (
 }
 
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
-
-export type PopoverProps = CSSPropertySet & {
-  // if you set a group, it acts as an ID that makes sure only ONE popover
-  // within that ID is ever open
-  group?: string
-  theme?: string
-  // can pass function to get isOpen passed in
-  children?: React.ReactNode | PopoverChildrenFn
-  // element or function that returns element, or querySelector to element
-  target?: React.ReactNode | (() => React.ReactNode) | string
-  open?: boolean
-  // the amount of space around popover you can move mouse
-  // before it triggers it to close
-  forgiveness?: number
-  // show a background over content
-  overlay?: boolean
-  left?: number
-  top?: number
-  // the distance the popover is from the target
-  // so it displays nicely spaced away
-  distance?: number
-  // open when target is clicked
-  openOnClick?: boolean
-  // open automatically when target is hovered
-  openOnHover?: boolean
-  // delay until openOnHover
-  delay?: number
-  // prevent popover itself from catching pointer events
-  noHoverOnChildren?: boolean
-  // size of shown arrow
-  arrowSize?: number
-  // close when you click outside it
-  closeOnClickAway?: boolean
-  // close when you click inside it
-  closeOnClick?: boolean
-  closeOnEsc?: boolean
-  // which direction it shows towards
-  // default determine direction automatically
-  towards?: PopoverDirection
-  // popover can aim to be centered or left aligned on the target
-  alignPopover?: 'left' | 'center'
-  padding?: number[] | number
-  onMouseEnter?: Function
-  onMouseLeave?: Function
-  onClose?: Function
-  openAnimation?: string
-  closeAnimation?: string
-  // lets you adjust position after target is positioned
-  adjust?: number[]
-  // hide arrow
-  noArrow?: boolean
-  // DEBUG: helps you see forgiveness zone
-  showForgiveness?: boolean
-  // padding from edge of window
-  edgePadding?: number
-  // pretty much what it says, for use with closeOnClick
-  keepOpenOnClickTarget?: boolean
-  // callback after close
-  onDidClose?: Function
-  // callback after open
-  onDidOpen?: Function
-  onOpen?: Function
-  height?: number
-  width?: number
-  background?: true | Color
-  passActive?: boolean
-  popoverProps?: Object
-  shadow?: boolean | string
-  style?: Object
-  elevation?: number
-  ignoreSegment?: boolean
-  onChangeVisibility?: (visibility: boolean) => any
-}
 
 const PopoverContainer = view({
   opacity: 0,
@@ -960,6 +961,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       towards,
       width,
       transition,
+      noPortal,
       ...props
     } = this.props
     const {
@@ -1052,6 +1054,13 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         </PopoverWrap>
       </PopoverContainer>
     )
+
+    const popoverInner = theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent
+
+    if (noPortal) {
+      return popoverInner
+    }
+
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
@@ -1062,7 +1071,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
             // i think due to portals having weird behavior, but perhaps bad logic
             style={{ opacity: hasFinishedFirstMeasure && !isMeasuring ? 1 : 0 }}
           >
-            {theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent}
+            {popoverInner}
           </span>
         </Portal>
       </>

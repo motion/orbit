@@ -96,6 +96,9 @@ export class MenuStore {
       const bounds = trayBounds[0] + offset
       return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
     },
+    {
+      defaultValue: 0,
+    },
   )
 
   get isRepositioning() {

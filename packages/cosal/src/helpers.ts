@@ -1,4 +1,4 @@
-import { memoize, random } from 'lodash'
+import { random } from 'lodash'
 
 export const defaultSlang = {
   dont: 'don\'t',
@@ -11,25 +11,19 @@ export const defaultSlang = {
   shes: 'she\'s',
 }
 
-export const getWordVector = memoize(
-  (word: string, vectors, fallbackVector): number[] => {
-    word = word.toLowerCase()
-    const randomVector = fallbackVector.map(() => random(-0.15, 0.15))
-    const vector = word === 'constructor' ? randomVector : vectors[word] || randomVector
-    return vector
-  },
-)
+export const getWordVector = (word: string, vectors, fallbackVector): number[] => {
+  return vectors[word.toLowerCase()] || fallbackVector.map(() => random(-0.15, 0.15))
+}
 
-export function toWords(s: string): string[] {
-  return s
-    .replace(/&amp;/g, '')
-    .replace(/’/g, '\'')
-    .replace(/(?:https?|ftp):\/\/[\n\S]+/g, '')
-    .replace(/<.*>/g, '')
-    .replace(/[^'.,;őa-z0-9]/gi, ' ')
-    .replace(/.,;$/g, ' ')
-    .split(' ')
-    .filter(w => w.trim().length > 0)
+export function toWords(s: string): { word: string; normalized: string }[] {
+  const final = []
+  for (const word of s.split(' ')) {
+    const normalized = word.replace(/[^a-zA-Z0-9- ]+/gi, '').toLowerCase()
+    if (normalized.length) {
+      final.push({ word, normalized })
+    }
+  }
+  return final
 }
 
 export function sigmoid(x) {

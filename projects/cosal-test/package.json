@@ -19,6 +19,8 @@
     "react-dom": "16.7.0-alpha.2",
     "express": "*",
     "cors": "2.8.5",
-    "compute-covariance": "1.0.1"
+    "compute-covariance": "1.0.1",
+    "json-stream-stringify": "2.0.1",
+    "big-json": "2.0.2"
   }
 }

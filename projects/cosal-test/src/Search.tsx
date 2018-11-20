@@ -3,7 +3,7 @@ import { react, compose, view, attach, ensure } from '@mcro/black'
 import { Saliency } from './Saliency'
 
 class SearchStore {
-  query = 'visit another planet'
+  query = 'blast off'
 
   querySetter = val => () => {
     this.query = val

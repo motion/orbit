@@ -15,14 +15,19 @@ async function start() {
   await cosal.start()
 
   const items = [
-    ...require('./app_data/nateBits'),
-    ...require('./elonout'),
-    ...require('./app_data/text2k'),
+    // if you want to load some more stuff, just throw it here
+    // module.exports = string[]
+    // ...require('./app_data/myBits'),
+    ...require('./data/elonout'),
+    ...require('./data/text2k'),
   ].map((text, id) => ({
     id,
     text,
   }))
+
+  console.log('scanning...', items.length)
   await cosal.scan(items)
+  console.log('scanned')
 
   const app = express()
   app.use(cors())

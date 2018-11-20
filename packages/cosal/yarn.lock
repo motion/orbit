@@ -37,6 +37,18 @@ map-parallel@0.0.3:
   dependencies:
     tiny-worker "^2.0.3"
 
+ml-distance-euclidean@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ml-distance-euclidean/-/ml-distance-euclidean-1.0.0.tgz#08447c2233641a2b2a9b4c29e5f792d28f1d5b95"
+  integrity sha1-CER8IjNkGisqm0wp5feS0o8dW5U=
+
+ml-knn@2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/ml-knn/-/ml-knn-2.1.3.tgz#12b9d5c8877d98078d635d64d1acc8ad974f442b"
+  integrity sha512-0uLgoMtrm8AvT1T7gfxK4vBZwRbVOfIrj5pv+q4Yltpr6oiCpVB6DIKomZ5vlJwjQsq6pkHUF+qHXcUCuk/QWQ==
+  dependencies:
+    ml-distance-euclidean "^1.0.0"
+
 tiny-worker@^2.0.3:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/tiny-worker/-/tiny-worker-2.1.2.tgz#6feb363b87885582fdc6d91b37fe00dd612b84f2"

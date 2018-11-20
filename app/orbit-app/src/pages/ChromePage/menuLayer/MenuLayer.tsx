@@ -16,6 +16,7 @@ import { IS_ELECTRON } from '../../../constants'
 import { throttle } from 'lodash'
 import { MenuStore, menuApps } from './MenuStore'
 import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
+import { useSpring, animated, interpolate } from 'react-spring'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 export const maxTransition = 150
@@ -82,6 +83,13 @@ export const MenuLayer = React.memo(() => {
   )
 })
 
+const config = {
+  mass: 0.8,
+  tension: 280,
+  friction: 22,
+  velocity: 20,
+}
+
 const MenuChrome = React.memo(
   ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
     const { menuCenter, menuWidth, menuHeight, openState } = useInstantiatedStore(menuStore)
@@ -90,48 +98,62 @@ const MenuChrome = React.memo(
       menuStore.onDidRender()
     })
 
-    console.log('render with transition isRepositioning', openState, 'menuCenter', menuCenter)
-
     const left = menuCenter - menuWidth / 2
+    const { open, repositioning } = openState
+    const [{ x, y, opacity }] = useSpring({
+      x: left,
+      y: open ? 0 : -5,
+      opacity: open ? 1 : 0,
+      config,
+    })
+    const [{ xp }] = useSpring({ xp: left + 5, config })
+    const getTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
+
     return (
       <>
-        <MenuChromeFrame
-          width={menuWidth - menuPad * 2}
-          margin={menuPad}
-          transform={{ x: left - 1, y: openState.open ? 0 : -5 }}
-          transition={openState.repositioning ? 'none' : transition}
-          opacity={openState.open ? 1 : 0}
+        <animated.div
+          style={{
+            height: window.innerHeight,
+            position: 'absolute',
+            zIndex: 100000,
+            pointerEvents: 'none',
+            borderRadius: 12,
+            transform: repositioning ? getTransform(x, y) : interpolate([x, y], getTransform),
+            opacity: opacity,
+            width: menuWidth - menuPad * 2,
+            margin: menuPad,
+          }}
         >
           {children}
-        </MenuChromeFrame>
-        <Popover
-          open={openState.open}
-          transition={openState.repositioning ? 'none' : transition}
-          background
-          width={menuWidth}
-          height={menuHeight + 11 /* arrow size, for now */}
-          towards="bottom"
-          delay={0}
-          top={IS_ELECTRON ? 0 : 28}
-          left={left + 5}
-          distance={6}
-          forgiveness={10}
-          edgePadding={0}
-          elevation={20}
-          theme="dark"
-        />
+        </animated.div>
+        <animated.div
+          style={{
+            position: 'absolute',
+            transform: interpolate([xp], x => `translate3d(${x}px,0px,0)`),
+          }}
+        >
+          <Popover
+            noPortal
+            open={open}
+            transition={repositioning ? 'none' : transition}
+            background
+            width={menuWidth}
+            height={menuHeight + 11 /* arrow size, for now */}
+            towards="bottom"
+            delay={0}
+            top={IS_ELECTRON ? 0 : 28}
+            left={0}
+            distance={6}
+            forgiveness={10}
+            edgePadding={0}
+            elevation={20}
+            theme="dark"
+          />
+        </animated.div>
       </>
     )
   },
 )
-
-const MenuChromeFrame = view(View, {
-  height: window.innerHeight,
-  position: 'absolute',
-  zIndex: 100000,
-  pointerEvents: 'none',
-  borderRadius: 12,
-})
 
 const itemProps = {
   extraProps: {

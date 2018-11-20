@@ -11,57 +11,60 @@ const cosal = new Cosal({
   // fallbackVector: vectors.hello,
 })
 
+const items = [
+  // if you want to load some more stuff, just throw it here
+  // module.exports = string[]
+  // ...require('./app_data/myBits'),
+  ...require('./data/elonout'),
+  ...require('./data/text2k'),
+
+  // if you want to test about 100k
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+  // ...require('./data/elonout'),
+  // ...require('./data/text2k'),
+].map((text, id) => ({
+  id,
+  text,
+}))
+
+global.cosal = cosal
+global.items = items
+
 async function start() {
   await cosal.start()
-
-  const items = [
-    // if you want to load some more stuff, just throw it here
-    // module.exports = string[]
-    // ...require('./app_data/myBits'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-
-    // if you want to test about 100k
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-    ...require('./data/elonout'),
-    ...require('./data/text2k'),
-  ].map((text, id) => ({
-    id,
-    text,
-  }))
 
   console.log('scanning...', items.length)
   await cosal.scan(items)

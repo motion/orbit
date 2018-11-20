@@ -1,6 +1,5 @@
 import { getIncrementalCovariance, Covariance } from './getIncrementalCovariance'
 import { toCosal, Pair } from './toCosal'
-import { uniqBy } from 'lodash'
 import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { Matrix } from '@mcro/vectorious'
@@ -242,7 +241,9 @@ export class Cosal {
   ): Promise<Pair[] | null> => {
     this.ensureStarted()
 
-    const cosal = await toCosal(text, this.covariance, this.initialVectors, this.fallbackVector)
+    const cosal = await toCosal(text, this.covariance, this.initialVectors, this.fallbackVector, {
+      uniqueWords,
+    })
 
     if (!cosal) {
       return null
@@ -254,11 +255,6 @@ export class Cosal {
     if (max !== Infinity) {
       if (pairs.length > max) {
         let res = pairs
-
-        // uniqueWords
-        if (uniqueWords) {
-          res = uniqBy(pairs, x => x.string.toLowerCase())
-        }
 
         // sortByWeight
         if (sortByWeight) {
@@ -278,18 +274,13 @@ export class Cosal {
     return pairs
   }
 
-  getTopWords = async (text: string, { max = 10, sortByWeight }: CosalWordOpts = {}) => {
+  getTopWords = async (text: string, { max = 10, sortByWeight = true }: CosalWordOpts = {}) => {
     this.ensureStarted()
 
     const words = await this.getWordWeights(text, { max, sortByWeight, uniqueWords: true })
     if (!words) {
       return []
     }
-    return (
-      words
-        // filter numbers
-        .filter(word => word.string != `${+word.string}`)
-        .map(x => x.string.replace(/\s\s*/g, ' ').trim())
-    )
+    return words.map(x => x.string.replace(/\s\s*/g, ' ').trim())
   }
 }

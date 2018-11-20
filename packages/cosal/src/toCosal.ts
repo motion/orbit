@@ -4,6 +4,7 @@ import { toWords, sigmoid, getWordVector } from './helpers'
 import { Matrix, Vector } from '@mcro/vectorious'
 import { Covariance } from './getIncrementalCovariance'
 import { VectorDB } from './cosal'
+import { uniqBy } from 'lodash'
 
 export { getIncrementalCovariance } from './getIncrementalCovariance'
 
@@ -48,14 +49,20 @@ export async function toCosal(
   inverseCovar: Covariance,
   vectors: VectorDB,
   fallbackVector,
+  options?: { uniqueWords?: boolean },
 ): Promise<CosalDocument | null> {
-  const words = toWords(text)
+  let words = toWords(text)
 
   if (words.length === 0) {
     return null
   }
 
-  const wordVectors = words.map(word => getWordVector(word.normalized, vectors, fallbackVector))
+  // unique on the "normalized" word
+  if (options && options.uniqueWords) {
+    words = uniqBy(words, x => x.normalized)
+  }
+
+  let wordVectors = words.map(word => getWordVector(word.normalized, vectors, fallbackVector))
 
   let distances = words.map((word, i) => getDistance(word.normalized, wordVectors[i], inverseCovar))
   if (distances.length > 1) {

@@ -68,6 +68,7 @@ function publish-packages() {
       --ignore "@mcro/babel-preset-motion" \
       --ignore "@mcro/gloss-displaynames" \
       --ignore "@mcro/blog" \
+      --ignore "@mcro/cosal-test" \
       -- npm publish --force --registry http://localhost:4343)
   # then publish main app with all packages
   (cd ../orbit && npm publish --registry http://localhost:4343 --force)

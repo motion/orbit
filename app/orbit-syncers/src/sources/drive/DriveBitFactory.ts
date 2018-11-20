@@ -19,12 +19,11 @@ export class DriveBitFactory {
     return BitUtils.create(
       {
         integration: 'drive',
-        source: this.source,
+        sourceId: this.source.id,
         type: 'document',
         title: file.file.name,
         body: file.content || 'empty',
         data: {} as DriveBitData,
-        raw: file,
         webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
         location: file.parent
           ? {

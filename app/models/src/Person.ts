@@ -21,7 +21,6 @@ export interface Person {
   source?: Source
   sourceId?: number
   data?: PersonData
-  raw?: any
   personBit?: PersonBit
   webLink?: string
   desktopLink?: string

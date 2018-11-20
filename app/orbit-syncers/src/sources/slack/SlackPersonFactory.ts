@@ -22,7 +22,6 @@ export class SlackPersonFactory {
       integrationId: user.id,
       name: user.profile.real_name || user.name,
       data: { tz: user.tz, team: user.team_id } as SlackPersonData,
-      raw: user,
       webLink: `https://${team.domain}.slack.com/messages/${user.id}`,
       desktopLink: `slack://user?team=${team.id}&id=${user.id}`,
       email: user.profile.email,

@@ -24,7 +24,6 @@ export class GMailPersonFactory {
       desktopLink: 'mailto:' + participant.email,
       email: participant.email,
       data: {} as GmailPersonData,
-      raw: participant,
     })
   }
 }

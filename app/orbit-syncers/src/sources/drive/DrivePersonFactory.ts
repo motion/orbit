@@ -24,7 +24,6 @@ export class DrivePersonFactory {
       email: user.emailAddress,
       photo: user.photoLink,
       data: {} as DrivePersonData,
-      raw: user,
     })
   }
 }

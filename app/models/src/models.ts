@@ -62,6 +62,7 @@ export type SearchQuery = {
   take: number
   skip?: number
   sourceId?: number
+  sourceIds?: number[]
   group?: SearchResultGroup
   maxBitsCount?: number
   spaceId?: number

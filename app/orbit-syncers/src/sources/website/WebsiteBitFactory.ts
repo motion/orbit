@@ -25,7 +25,7 @@ export class WebsiteBitFactory {
     return BitUtils.create(
       {
         integration: 'website',
-        source: this.source,
+        sourceId: this.source.id,
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,

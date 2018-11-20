@@ -24,7 +24,6 @@ export class JiraPersonFactory {
       email: user.emailAddress,
       photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),
       data: {} as JiraPersonData,
-      raw: user,
     })
   }
 }

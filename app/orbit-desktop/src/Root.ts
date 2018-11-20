@@ -2,6 +2,7 @@ import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
 import {
+  AppEntity,
   BitEntity,
   JobEntity,
   PersonBitEntity,
@@ -10,9 +11,9 @@ import {
   SourceEntity,
   SpaceEntity,
 } from '@mcro/entities'
-import { AppEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
+import { resolveMany } from '@mcro/mediator/_'
 import {
   AppModel,
   BitModel,
@@ -46,26 +47,26 @@ import { getConnection } from 'typeorm'
 import { COSAL_DB, oracleOptions } from './constants'
 import { writeOrbitConfig } from './helpers'
 import { AppsManager } from './managers/appsManager'
+import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
+import { KeyboardManager } from './managers/KeyboardManager'
 import { MousePositionManager } from './managers/MousePositionManager'
 import { OCRManager } from './managers/OCRManager'
-import { ScreenManager } from './managers/ScreenManager'
 import { OnboardManager } from './managers/OnboardManager'
+import { ScreenManager } from './managers/ScreenManager'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
-import { getSearchResolver } from './resolvers/SearchResultResolver'
+import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { Server } from './Server'
-import { KeyboardManager } from './managers/KeyboardManager'
-import { ContextManager } from './managers/ContextManager'
 
 const log = new Logger('desktop')
 
@@ -263,7 +264,9 @@ export class Root {
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
         getSearchByTopicResolver(this.cosal),
-        getSearchResolver(this.cosal),
+        resolveMany(SearchResultModel, async args => {
+          return new SearchResultResolver(this.cosal, args).resolve()
+        }),
         getSalientWordsResolver(this.cosal),
         SearchLocationsResolver,
         SearchPinnedResolver,

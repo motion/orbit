@@ -69,7 +69,6 @@ export class GithubPersonFactory {
       webLink: `https://github.com/${githubPerson.login}`,
       email: githubPerson.email,
       photo: githubPerson.avatarUrl,
-      // raw: githubPerson,
       data,
     })
   }
@@ -90,7 +89,6 @@ export class GithubPersonFactory {
       webLink: undefined,
       email: commit.email,
       photo: commit.avatarUrl,
-      // raw: commit,
       data,
     })
   }

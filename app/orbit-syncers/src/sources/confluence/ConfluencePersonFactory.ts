@@ -29,7 +29,6 @@ export class ConfluencePersonFactory {
       name: user.displayName,
       email: user.details.personal.email,
       photo: values.credentials.domain + user.profilePicture.path.replace('s=48', 's=512'),
-      raw: user,
       data: {} as ConfluencePersonData,
     })
   }

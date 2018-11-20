@@ -68,7 +68,6 @@ export class GithubBitFactory {
         desktopLink: '',
       },
       data,
-      raw: issue,
       bitCreatedAt: createdAt,
       bitUpdatedAt: updatedAt,
     })

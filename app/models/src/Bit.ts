@@ -94,7 +94,6 @@ export interface Bit {
   people?: Person[]
 
   /**
-   * Source has multiple bits it owns.
    * Source is a Bit's owner.
    */
   source?: Source
@@ -103,12 +102,6 @@ export interface Bit {
    * Additional bit data.
    */
   data?: BitData
-
-  /**
-   * Raw JSON data.
-   * Used to debugging purpose current, don't use this property, use "data" property instead.
-   */
-  raw?: any
 
   /**
    * Used for filtering: slack room, github repo, google doc folder, etc

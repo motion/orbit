@@ -61,7 +61,7 @@ export class Cosal {
     }
 
     this.covariance = {
-      matrix: getCovariance(this.initialVectors),
+      matrix: new Matrix(getCovariance(this.initialVectors)).inverse().toArray(), //getCovariance(this.initialVectors),
       hash: '0',
     }
 
@@ -250,6 +250,7 @@ export class Cosal {
 
     let pairs = cosal.pairs
     let fmax = max
+
     if (max !== Infinity) {
       if (pairs.length > max) {
         let res = pairs
@@ -273,6 +274,7 @@ export class Cosal {
         return res.filter(x => x.weight >= limitWeight).slice(0, fmax)
       }
     }
+
     return pairs
   }
 

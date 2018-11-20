@@ -7,10 +7,10 @@ let vecs = fs.readFileSync(`./app_data/${file}`, 'utf8')
 let out = {}
 for (const line of vecs.split('\n').slice(1)) {
   let [word, vector] = [line.slice(0, line.indexOf(' ')), line.slice(line.indexOf(' ') + 1)]
-  if (!/^[a-zA-Z0-9]+$/.test(word)) {
+  if (!/^[a-z0-9]+$/.test(word)) {
     continue
   }
-  out[word.toLowerCase()] = vector
+  out[word] = vector
     .trim()
     .split(' ')
     .map(x => +x)

@@ -14,9 +14,7 @@ export type Covariance = {
 }
 
 function docToCovar(doc: string, vectors: VectorDB, fallbackVector): Matrix {
-  const val = toWords(doc.toLowerCase())
-    .filter(word => vectors[word])
-    .map(word => getWordVector(word, vectors, fallbackVector))
+  const val = toWords(doc).map(res => getWordVector(res.normalized, vectors, fallbackVector))
   if (val.length === 0) {
     return false
   }

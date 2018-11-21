@@ -7,7 +7,6 @@ Cosal and topic modeling is a dependency for search, profiles, and topics. So it
 - add more topics
 - test and iterate on finding topics
 - finding unique terminology in company
-- Fix cosal invert bug
 - need some work on frontend after
   - managing topics
   - topicsmain app

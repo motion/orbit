@@ -1,12 +1,13 @@
 import { getIncrementalCovariance, Covariance } from './getIncrementalCovariance'
 import { toCosal, Pair } from './toCosal'
-import { cosineDistance } from './cosineDistance'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { Matrix } from '@mcro/vectorious'
 import { join } from 'path'
 import { getDefaultVectors } from './getDefaultVectors'
 import { defaultSlang } from './helpers'
 import { getCovariance } from './getCovariance'
+import { exec } from 'child_process'
+import Path from 'path'
 
 // exports
 export { getIncrementalCovariance } from './getIncrementalCovariance'
@@ -60,7 +61,8 @@ export class Cosal {
     }
 
     this.covariance = {
-      matrix: new Matrix(getCovariance(this.initialVectors)).inverse().toArray(), //getCovariance(this.initialVectors),
+      matrix: getCovariance(this.initialVectors),
+      // matrix: new Matrix(getCovariance(this.initialVectors)).inverse().toArray(),
       hash: '0',
     }
 
@@ -153,17 +155,56 @@ export class Cosal {
     await this.persist()
   }
 
+  // takes a vector, returns a list of ids
+  searchWithAnnoy = async (vector: number[]) => {
+    const dbfile = '/tmp/db.json'
+    await remove(dbfile)
+    const keys = Object.keys(this.scannedVectors)
+    console.log('len', keys.length)
+    await writeJSON(dbfile, keys.map(id => this.scannedVectors[id]))
+
+    console.log('dbfile', dbfile)
+
+    return await new Promise<Result[]>(res => {
+      exec(
+        `python ${Path.join(__dirname, '..', 'annoy.py')}`,
+        {
+          env: {
+            DB_FILE: dbfile,
+            VECTOR: JSON.stringify(vector),
+          },
+        },
+        (err, data) => {
+          if (err || !data) {
+            console.log('cosal search error', err ? `${err.message} ${err.stack}` : 'no data')
+            res([])
+            return
+          }
+          const out = JSON.parse(data)
+          const result = []
+          for (let i = 0; i < out[0].length; i++) {
+            result.push({
+              id: out[0][i],
+              distance: out[1][i],
+            })
+          }
+          res(result)
+        },
+      )
+    })
+  }
+
   // goes through all vectors and sorts by smallest distance up to max
   // TODO better data structure?
-  search = async (query: string, max = 10): Promise<Result[]> => {
+  search = async (query: string, max = 10) => {
     this.ensureStarted()
-    return this.searchWithCovariance(query, this.covariance, this.scannedVectors, { max })
+    return await this.searchWithCovariance(query, this.covariance, this.scannedVectors, { max })
   }
 
   private async searchWithCovariance(
     query: string,
     covariance: Covariance,
-    vectors: VectorDB,
+    vectorDB: VectorDB,
     { max = 10 },
   ) {
     const cosal = await toCosal(query, covariance, this.initialVectors, this.fallbackVector)
@@ -171,25 +212,12 @@ export class Cosal {
       console.log('no cosal?', query)
       return []
     }
-    let results: Result[] = []
-    for (const id in vectors) {
-      const vector = vectors[id]
-      if (!vector) {
-        continue
-      }
-      const distance = cosineDistance(cosal.vector, vector)
-      const result = { id: +id, distance }
-      if (!results.length) {
-        results.push(result)
-        continue
-      }
-      const len = results.length
-      if (distance < results[len - 1].distance) {
-        const insertIndex = results.findIndex(x => distance < x.distance)
-        results.splice(insertIndex, len > max ? 1 : 0, result)
-      }
-    }
-    return results
+
+    console.log(!![vectorDB, max])
+
+    return await this.searchWithAnnoy(cosal.vector)
+
+    // return results
   }
 
   async persist() {

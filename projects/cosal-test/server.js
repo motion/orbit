@@ -6,7 +6,18 @@ let Path = require('path')
 const vectors = JSON.parse(
   require('fs').readFileSync(Path.join(__dirname, 'app_data/enwiki9.vec.json')),
 )
+
+const database = Path.join(__dirname, 'app_data', 'cosaldb.json')
+
+console.log('db', database)
+try {
+  require('fs').unlinkSync(database)
+} catch {
+  // none
+}
+
 const cosal = new Cosal({
+  database,
   vectors,
   // fallbackVector: vectors.hello,
 })
@@ -16,44 +27,6 @@ const items = [
   // module.exports = string[]
   // ...require('./app_data/myBits'),
   ...require('./data/elonout'),
-  ...require('./data/text2k'),
-
-  // if you want to test about 100k
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
-  // ...require('./data/text2k'),
-  // ...require('./data/elonout'),
   // ...require('./data/text2k'),
 ].map((text, id) => ({
   id,
@@ -81,6 +54,7 @@ async function start() {
 
   app.get('/search', async (req, res) => {
     const results = await cosal.search(req.query.query)
+    console.log('results', results)
     const resultsText = results.map(({ id, distance }) => ({
       id,
       distance,

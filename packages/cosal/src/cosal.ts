@@ -1,8 +1,6 @@
 import { getIncrementalCovariance, Covariance } from './getIncrementalCovariance'
 import { toCosal, Pair } from './toCosal'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
-import { Matrix } from '@mcro/vectorious'
-import { join } from 'path'
 import { getDefaultVectors } from './getDefaultVectors'
 import { defaultSlang } from './helpers'
 import { getCovariance } from './getCovariance'
@@ -40,19 +38,34 @@ type CosalOptions = {
   fallbackVector?: string
 }
 
+const initialState = {
+  records: {
+    covariance: null as Covariance,
+    indexToId: [],
+    indexToVector: [],
+  },
+  topics: {
+    covariance: null as Covariance,
+    indexToId: [],
+    indexToVector: [],
+  },
+}
+
+type DBType = keyof typeof initialState
+
 export class Cosal {
-  initialVectors: VectorDB = null
-  scannedVectors: VectorDB = {}
-  covariance: Covariance = null
-  database: string
+  databasePath: string
   started = false
   fallbackVector = null
+  seedVectors = {} as VectorDB
+
+  // this is what persists to disk and mutates over time
+  state = initialState
 
   constructor({ database, vectors, fallbackVector, slang = defaultSlang }: CosalOptions = {}) {
-    this.database = database
-
-    this.initialVectors = vectors || getDefaultVectors()
-    this.fallbackVector = fallbackVector || this.initialVectors.hello
+    this.databasePath = database
+    this.seedVectors = vectors || getDefaultVectors()
+    this.fallbackVector = fallbackVector || this.seedVectors.hello
 
     if (!this.fallbackVector) {
       throw new Error(
@@ -60,31 +73,31 @@ export class Cosal {
       )
     }
 
-    this.covariance = {
-      matrix: getCovariance(this.initialVectors),
-      // matrix: new Matrix(getCovariance(this.initialVectors)).inverse().toArray(),
+    this.state.records.covariance = {
+      matrix: getCovariance(this.seedVectors),
       hash: '0',
     }
 
     // map words to existing vectors, "don't => dont"
     if (slang) {
       for (const original in slang) {
-        if (this.initialVectors[original]) {
-          this.initialVectors[slang[original]] = this.initialVectors[original]
+        if (this.seedVectors[original]) {
+          this.seedVectors[slang[original]] = this.seedVectors[original]
         }
       }
     }
   }
 
   async start() {
-    if (this.database) {
-      await this.setDatabase(this.database)
+    if (this.databasePath) {
+      await this.setDatabase(this.databasePath)
     }
     this.started = true
   }
 
   async setDatabase(database: string) {
-    this.database = database
+    this.databasePath = database
+
     if (!(await pathExists(database))) {
       await this.persist()
     } else {
@@ -92,7 +105,7 @@ export class Cosal {
         this.readDatabase()
       } catch (err) {
         console.log('Error reading database, removing and resetting...')
-        await remove(this.database)
+        await remove(this.databasePath)
         await this.persist()
         console.error(err)
       }
@@ -100,14 +113,10 @@ export class Cosal {
   }
 
   private async readDatabase() {
-    if (this.database) {
-      const { records, covariance } = await readJSON(this.database)
-      if (covariance.hash && covariance.matrix) {
-        this.scannedVectors = records
-        this.covariance = {
-          hash: '0',
-          matrix: new Matrix(covariance.matrix).inverse().toArray(),
-        }
+    if (this.databasePath) {
+      const state = await readJSON(this.databasePath)
+      if (state && state.records && state.records.covariance) {
+        this.state = state
       } else {
         throw new Error('Invalid database')
       }
@@ -120,35 +129,45 @@ export class Cosal {
     }
   }
 
+  private getVectorForId(db: DBType, id: number) {
+    const index = this.state[db].indexToId[id]
+    return this.state[db].indexToVector[index]
+  }
+
+  private addRecord(db: DBType, id: number, vector: number[]) {
+    this.state[db].indexToId.push(id)
+    this.state[db].indexToVector.push(vector)
+  }
+
   // incremental scan can add more documents
-  scan = async (newRecords: Record[]) => {
+  scan = async (newRecords: Record[], db: DBType = 'records') => {
     this.ensureStarted()
 
     // this is incremental, passing in previous matrix
-    this.covariance = getIncrementalCovariance(
-      this.covariance.matrix,
+    this.state[db].covariance = getIncrementalCovariance(
+      this.state[db].covariance.matrix,
       newRecords.map(record => ({ doc: record.text, weight: 1 })),
       1,
-      this.initialVectors,
+      this.seedVectors,
       this.fallbackVector,
     )
 
     // update vectors
     const cosals = await Promise.all(
       newRecords.map(record =>
-        toCosal(record.text, this.covariance, this.initialVectors, this.fallbackVector),
+        toCosal(record.text, this.state[db].covariance, this.seedVectors, this.fallbackVector),
       ),
     )
 
     for (const [index, record] of newRecords.entries()) {
-      if (this.scannedVectors[record.id]) {
+      if (this.getVectorForId(db, record.id)) {
         throw new Error(`Already have a record id ${record.id}`)
       }
       if (!cosals[index]) {
         console.debug('no cosal found for index', index)
         continue
       }
-      this.scannedVectors[record.id] = cosals[index].vector
+      this.addRecord(db, record.id, cosals[index].vector)
     }
 
     // persist after scan
@@ -156,22 +175,16 @@ export class Cosal {
   }
 
   // takes a vector, returns a list of ids
-  searchWithAnnoy = async (vector: number[]) => {
-    const dbfile = '/tmp/db.json'
-    await remove(dbfile)
-    const keys = Object.keys(this.scannedVectors)
-    console.log('len', keys.length)
-    await writeJSON(dbfile, keys.map(id => this.scannedVectors[id]))
-
-    console.log('dbfile', dbfile)
-
+  searchWithAnnoy = async (db: DBType, vector: number[], { max }) => {
     return await new Promise<Result[]>(res => {
       exec(
         `python ${Path.join(__dirname, '..', 'annoy.py')}`,
         {
           env: {
-            DB_FILE: dbfile,
+            DB_NAME: db,
+            DB_FILE: this.databasePath,
             VECTOR: JSON.stringify(vector),
+            COUNT: max,
           },
         },
         (err, data) => {
@@ -198,69 +211,57 @@ export class Cosal {
   // TODO better data structure?
   search = async (query: string, max = 10) => {
     this.ensureStarted()
-    return await this.searchWithCovariance(query, this.covariance, this.scannedVectors, { max })
+    return await this.searchWithCovariance('records', query, {
+      max,
+    })
   }
 
-  private async searchWithCovariance(
-    query: string,
-    covariance: Covariance,
-    vectorDB: VectorDB,
-    { max = 10 },
-  ) {
-    const cosal = await toCosal(query, covariance, this.initialVectors, this.fallbackVector)
+  private async searchWithCovariance(db: DBType, query: string, { max = 10 }) {
+    const cosal = await toCosal(
+      query,
+      this.state[db].covariance,
+      this.seedVectors,
+      this.fallbackVector,
+    )
     if (!cosal) {
       console.log('no cosal?', query)
       return []
     }
-
-    console.log(!![vectorDB, max])
-
-    return await this.searchWithAnnoy(cosal.vector)
-
-    // return results
+    return await this.searchWithAnnoy(db, cosal.vector, { max })
   }
 
   async persist() {
-    if (this.database) {
-      await writeJSON(this.database, { covariance: this.covariance, records: this.scannedVectors })
+    if (this.databasePath) {
+      await writeJSON(this.databasePath, this.state)
     }
   }
 
-  topicsList: string[] = null
-  topicCovariance: Covariance = null
-  topicVectors: VectorDB = {}
-
   topics = async (query: string, { max = 10 } = {}) => {
-    if (!this.topicsList) {
-      const path = join(__dirname, '../topics.json')
-      this.topicsList = await readJSON(path)
-      this.topicCovariance = getIncrementalCovariance(
-        this.covariance.matrix,
-        this.topicsList.map(doc => ({ doc, weight: 1 })),
-        1,
-        this.initialVectors,
-        this.fallbackVector,
-      )
-      const cosals = await Promise.all(
-        this.topicsList.map(text =>
-          toCosal(text, this.topicCovariance, this.initialVectors, this.fallbackVector),
-        ),
-      )
-      for (const [index, record] of cosals.entries()) {
-        if (!record) {
-          console.log('no record', this.topicsList[index])
-          continue
-        }
-        this.topicVectors[index] = record.vector
-      }
-    }
-    const results = await this.searchWithCovariance(
-      query,
-      this.topicCovariance,
-      this.topicVectors,
-      { max },
-    )
-    return results.map(res => ({ ...res, topic: this.topicsList[res.id] }))
+    // if (!this.topicsList) {
+    //   const path = join(__dirname, '../topics.json')
+    //   this.topicsList = await readJSON(path)
+    //   this.topicCovariance = getIncrementalCovariance(
+    //     this.covariance.matrix,
+    //     this.topicsList.map(doc => ({ doc, weight: 1 })),
+    //     1,
+    //     this.seedVectors,
+    //     this.fallbackVector,
+    //   )
+    //   const cosals = await Promise.all(
+    //     this.topicsList.map(text =>
+    //       toCosal(text, this.topicCovariance, this.seedVectors, this.fallbackVector),
+    //     ),
+    //   )
+    //   for (const [index, record] of cosals.entries()) {
+    //     if (!record) {
+    //       console.log('no record', this.topicsList[index])
+    //       continue
+    //     }
+    //     this.topicVectors[index] = record.vector
+    //   }
+    // }
+    const results = await this.searchWithCovariance('topics', query, { max })
+    return results.map(res => ({ ...res, topic: this.state.topics.indexToId[res.id] }))
   }
 
   getWordWeights = async (
@@ -269,9 +270,15 @@ export class Cosal {
   ): Promise<Pair[] | null> => {
     this.ensureStarted()
 
-    const cosal = await toCosal(text, this.covariance, this.initialVectors, this.fallbackVector, {
-      uniqueWords,
-    })
+    const cosal = await toCosal(
+      text,
+      this.state.records.covariance,
+      this.seedVectors,
+      this.fallbackVector,
+      {
+        uniqueWords,
+      },
+    )
 
     if (!cosal) {
       return null

@@ -4,8 +4,7 @@ import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { getDefaultVectors } from './getDefaultVectors'
 import { defaultSlang } from './helpers'
 import { getCovariance } from './getCovariance'
-import { exec } from 'child_process'
-import Path from 'path'
+import { annoySearch, annoyScan } from './annoy'
 
 // exports
 export { getIncrementalCovariance } from './getIncrementalCovariance'
@@ -20,7 +19,7 @@ export type VectorDB = {
   [key: string]: number[]
 }
 
-type Result = {
+export type Result = {
   id: number
   distance: number
 }
@@ -176,34 +175,11 @@ export class Cosal {
 
   // takes a vector, returns a list of ids
   searchWithAnnoy = async (db: DBType, vector: number[], { max }) => {
-    return await new Promise<Result[]>(res => {
-      exec(
-        `python ${Path.join(__dirname, '..', 'annoy.py')}`,
-        {
-          env: {
-            DB_NAME: db,
-            DB_FILE: this.databasePath,
-            VECTOR: JSON.stringify(vector),
-            COUNT: max,
-          },
-        },
-        (err, data) => {
-          if (err || !data) {
-            console.log('cosal search error', err ? `${err.message} ${err.stack}` : 'no data')
-            res([])
-            return
-          }
-          const out = JSON.parse(data)
-          const result = []
-          for (let i = 0; i < out[0].length; i++) {
-            result.push({
-              id: out[0][i],
-              distance: out[1][i],
-            })
-          }
-          res(result)
-        },
-      )
+    return await annoySearch({
+      path: this.databasePath,
+      db,
+      vector,
+      max,
     })
   }
 
@@ -224,7 +200,7 @@ export class Cosal {
       this.fallbackVector,
     )
     if (!cosal) {
-      console.log('no cosal?', query)
+      console.log('no vectors for query', query)
       return []
     }
     return await this.searchWithAnnoy(db, cosal.vector, { max })
@@ -233,6 +209,7 @@ export class Cosal {
   async persist() {
     if (this.databasePath) {
       await writeJSON(this.databasePath, this.state)
+      await annoyScan({ db: 'records', path: this.databasePath })
     }
   }
 

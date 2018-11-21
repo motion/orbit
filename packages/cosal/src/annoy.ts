@@ -24,7 +24,7 @@ export async function annoyScan({ db, path }) {
     SCAN: 'true',
     DB_FILE: path,
     DB_NAME: db,
-    ANNOY_FILE: Path.join(path, '..', 'annoy.ann'),
+    ANNOY_FILE: Path.join(path, '..', `${db}_annoy.ann`),
   })
 }
 
@@ -33,7 +33,7 @@ export async function annoySearch({ path, db, vector, max }) {
     SEARCH: 'true',
     DB_NAME: db,
     DB_FILE: path,
-    ANNOY_FILE: Path.join(path, '..', 'annoy.ann'),
+    ANNOY_FILE: Path.join(path, '..', `${db}_annoy.ann`),
     VECTOR: JSON.stringify(vector),
     COUNT: max,
   })
@@ -56,7 +56,7 @@ export async function annoyRelated({ path, db, index, max }) {
     RELATED: 'true',
     DB_NAME: db,
     DB_FILE: path,
-    ANNOY_FILE: Path.join(path, '..', 'annoy.ann'),
+    ANNOY_FILE: Path.join(path, '..', `${db}_annoy.ann`),
     INDEX: index,
     COUNT: max,
   })

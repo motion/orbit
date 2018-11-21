@@ -43,7 +43,6 @@ async function start() {
 
   console.log('scanning...', items.length)
   await cosal.scan(items)
-  console.log('scanned')
 
   const app = express()
   app.use(cors())

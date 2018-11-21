@@ -2,7 +2,8 @@ from annoy import AnnoyIndex
 import json
 import os
 
-annoy_file = os.environ['DB_FILE']
+annoy_file = os.environ['ANNOY_FILE']
+db_name = os.environ['DB_NAME']
 
 
 def annoy():
@@ -11,7 +12,7 @@ def annoy():
 
     if os.environ.get('SCAN', False):
         db = json.loads(open(os.environ['DB_FILE']).read())
-        rows = db[os.environ['DB_NAME']]['indexToVector']
+        rows = db[db_name]['indexToVector']
 
         for i in range(len(rows)):
             v = rows[i]

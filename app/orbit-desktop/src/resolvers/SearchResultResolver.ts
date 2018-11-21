@@ -4,6 +4,7 @@ import { highlightText } from '@mcro/helpers'
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
 import { Bit, BitContentTypes, SearchQuery, SearchResult, SearchResultModel, Source } from '@mcro/models'
+import { BitContentType } from '@mcro/models'
 import { uniqBy, uniq } from 'lodash'
 import { getRepository } from 'typeorm'
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
@@ -42,7 +43,7 @@ export class SearchResultResolver {
 
     for (let contentType of BitContentTypes) {
       this.log.timer(`loading ` + contentType)
-      const [bits, bitsTotalCount] = await this.search()
+      const [bits, bitsTotalCount] = await this.search(contentType)
       if (bits.length) {
 
         const bitSourceIds = uniq(bits.map(bit => bit.sourceId))
@@ -79,7 +80,7 @@ export class SearchResultResolver {
           searchResults.push({
             id: Math.random(),
             group: this.args.group,
-            title: 'Files in ' + title ? title : bitSourceNames,
+            title: 'Documents in ' + (title ? title : bitSourceNames),
             contentType,
             text,
             bitsTotalCount,
@@ -133,12 +134,15 @@ export class SearchResultResolver {
   /**
    * Performs an actual database search.
    */
-  private async search(): Promise<[Bit[], number]> {
+  private async search(contentType: BitContentType): Promise<[Bit[], number]> {
     const sourceIds = this.sources.map(source => source.id)
 
     // search database using FTS5 search first
     const [ftsBits, ftsBitsCount] = await this.queryExecutor.execute({
       ...this.args,
+      contentType,
+      startDate: this.startDate,
+      endDate: this.endDate,
       sourceIds,
       take: 10,
       skip: 0,
@@ -147,6 +151,9 @@ export class SearchResultResolver {
     // now search database with found cosal bit ids
     const [cosalBits, cosalBitsCount] = await this.queryExecutor.execute({
       ...this.args,
+      contentType,
+      startDate: this.startDate,
+      endDate: this.endDate,
       query: undefined,
       ids: this.cosalBitIds,
       sourceIds,

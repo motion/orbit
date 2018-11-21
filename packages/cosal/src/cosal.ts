@@ -61,7 +61,8 @@ export class Cosal {
     }
 
     this.covariance = {
-      matrix: new Matrix(getCovariance(this.initialVectors)).inverse().toArray(), //getCovariance(this.initialVectors),
+      matrix: getCovariance(this.initialVectors),
+      // matrix: new Matrix(getCovariance(this.initialVectors)).inverse().toArray(),
       hash: '0',
     }
 

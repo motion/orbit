@@ -6,8 +6,13 @@ let Path = require('path')
 const vectors = JSON.parse(
   require('fs').readFileSync(Path.join(__dirname, 'app_data/enwiki9.vec.json')),
 )
+
+const database = Path.join(__dirname, 'app_data', 'cosaldb.json')
+
+require('fs').unlinkSync(database)
+
 const cosal = new Cosal({
-  database: Path.join(__dirname, 'app_data', 'cosaldb.json'),
+  database,
   vectors,
   // fallbackVector: vectors.hello,
 })

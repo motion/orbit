@@ -33,6 +33,7 @@ const l2norm = (list: number[]) => {
 }
 
 const cosineSimilarity = (a, b) => {
+  console.log('dot', dot(a, b), 'l2s', l2norm(a), l2norm(b))
   return dot(a, b) / (l2norm(a) * l2norm(b))
 }
 

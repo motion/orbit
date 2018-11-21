@@ -9,7 +9,12 @@ const vectors = JSON.parse(
 
 const database = Path.join(__dirname, 'app_data', 'cosaldb.json')
 
-require('fs').unlinkSync(database)
+console.log('db', database)
+try {
+  require('fs').unlinkSync(database)
+} catch {
+  // none
+}
 
 const cosal = new Cosal({
   database,

@@ -157,12 +157,20 @@ export class Cosal {
 
   // takes a vector, returns a list of ids
   searchWithAnnoy = async (vector: number[]) => {
-    return await new Promise<number[]>(res => {
+    const dbfile = '/tmp/db.json'
+    await remove(dbfile)
+    const keys = Object.keys(this.scannedVectors)
+    console.log('len', keys.length)
+    await writeJSON(dbfile, keys.map(id => this.scannedVectors[id]))
+
+    console.log('dbfile', dbfile)
+
+    return await new Promise<Result[]>(res => {
       exec(
         `python ${Path.join(__dirname, '..', 'annoy.py')}`,
         {
           env: {
-            DB_FILE: this.database,
+            DB_FILE: dbfile,
             VECTOR: JSON.stringify(vector),
           },
         },
@@ -172,7 +180,15 @@ export class Cosal {
             res([])
             return
           }
-          res(JSON.parse(data))
+          const out = JSON.parse(data)
+          const result = []
+          for (let i = 0; i < out[0].length; i++) {
+            result.push({
+              id: out[0][i],
+              distance: out[1][i],
+            })
+          }
+          res(result)
         },
       )
     })
@@ -180,9 +196,9 @@ export class Cosal {
 
   // goes through all vectors and sorts by smallest distance up to max
   // TODO better data structure?
-  search = async (query: string, max = 10): Promise<Result[]> => {
+  search = async (query: string, max = 10) => {
     this.ensureStarted()
-    return this.searchWithCovariance(query, this.covariance, this.scannedVectors, { max })
+    return await this.searchWithCovariance(query, this.covariance, this.scannedVectors, { max })
   }
 
   private async searchWithCovariance(
@@ -199,31 +215,8 @@ export class Cosal {
 
     console.log(!![vectorDB, max])
 
-    const ids = await this.searchWithAnnoy(cosal.vector)
+    return await this.searchWithAnnoy(cosal.vector)
 
-    console.log('ids', ids)
-
-    return ids.map(id => ({ id, distance: 0 }))
-
-    // to do in pure JS:
-    // let results: Result[] = []
-    // for (const id in vectorDB) {
-    //   const vector = vectorDB[id]
-    //   if (!vector) {
-    //     continue
-    //   }
-    //   const distance = cosineDistance(cosal.vector, vector)
-    //   const result = { id: +id, distance }
-    //   if (!results.length) {
-    //     results.push(result)
-    //     continue
-    //   }
-    //   const len = results.length
-    //   if (distance < results[len - 1].distance) {
-    //     const insertIndex = results.findIndex(x => distance < x.distance)
-    //     results.splice(insertIndex, len > max ? 1 : 0, result)
-    //   }
-    // }
     // return results
   }
 

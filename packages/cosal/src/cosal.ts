@@ -237,8 +237,9 @@ export class Cosal {
     //     this.topicVectors[index] = record.vector
     //   }
     // }
-    const results = await this.searchWithCovariance('topics', query, { max })
-    return results.map(res => ({ ...res, topic: this.state.topics.indexToId[res.id] }))
+    // const results = await this.searchWithCovariance('topics', query, { max })
+    // return results.map(res => ({ ...res, topic: this.state.topics.indexToId[res.id] }))
+    return [query, `${max}`]
   }
 
   getWordWeights = async (

@@ -3,6 +3,8 @@ let { Cosal } = require('@mcro/cosal')
 let cors = require('cors')
 let Path = require('path')
 
+Error.stackTraceLimit = Infinity
+
 const vectors = JSON.parse(
   require('fs').readFileSync(Path.join(__dirname, 'app_data/enwiki9.vec.json')),
 )
@@ -26,8 +28,8 @@ const items = [
   // if you want to load some more stuff, just throw it here
   // module.exports = string[]
   // ...require('./app_data/myBits'),
-  ...require('./data/elonout'),
   // ...require('./data/text2k'),
+  ...require('./data/elonout'),
 ].map((text, id) => ({
   id,
   text,
@@ -41,7 +43,6 @@ async function start() {
 
   console.log('scanning...', items.length)
   await cosal.scan(items)
-  console.log('scanned')
 
   const app = express()
   app.use(cors())

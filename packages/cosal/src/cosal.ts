@@ -4,8 +4,8 @@ import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { getDefaultVectors } from './getDefaultVectors'
 import { defaultSlang } from './helpers'
 import { getCovariance } from './getCovariance'
-import { exec } from 'child_process'
-import Path from 'path'
+import { annoySearch, annoyScan } from './annoy'
+import { join } from 'path'
 
 // exports
 export { getIncrementalCovariance } from './getIncrementalCovariance'
@@ -20,7 +20,7 @@ export type VectorDB = {
   [key: string]: number[]
 }
 
-type Result = {
+export type Result = {
   id: number
   distance: number
 }
@@ -73,10 +73,10 @@ export class Cosal {
       )
     }
 
-    this.state.records.covariance = {
+    this.setInitialCovariance({
       matrix: getCovariance(this.seedVectors),
       hash: '0',
-    }
+    })
 
     // map words to existing vectors, "don't => dont"
     if (slang) {
@@ -102,13 +102,19 @@ export class Cosal {
       await this.persist()
     } else {
       try {
-        this.readDatabase()
+        await this.readDatabase()
       } catch (err) {
         console.log('Error reading database, removing and resetting...')
         await remove(this.databasePath)
         await this.persist()
         console.error(err)
       }
+    }
+  }
+
+  private setInitialCovariance(covariance: Covariance) {
+    for (const db in this.state) {
+      this.state[db].covariance = covariance
     }
   }
 
@@ -176,34 +182,11 @@ export class Cosal {
 
   // takes a vector, returns a list of ids
   searchWithAnnoy = async (db: DBType, vector: number[], { max }) => {
-    return await new Promise<Result[]>(res => {
-      exec(
-        `python ${Path.join(__dirname, '..', 'annoy.py')}`,
-        {
-          env: {
-            DB_NAME: db,
-            DB_FILE: this.databasePath,
-            VECTOR: JSON.stringify(vector),
-            COUNT: max,
-          },
-        },
-        (err, data) => {
-          if (err || !data) {
-            console.log('cosal search error', err ? `${err.message} ${err.stack}` : 'no data')
-            res([])
-            return
-          }
-          const out = JSON.parse(data)
-          const result = []
-          for (let i = 0; i < out[0].length; i++) {
-            result.push({
-              id: out[0][i],
-              distance: out[1][i],
-            })
-          }
-          res(result)
-        },
-      )
+    return await annoySearch({
+      path: this.databasePath,
+      db,
+      vector,
+      max,
     })
   }
 
@@ -224,7 +207,7 @@ export class Cosal {
       this.fallbackVector,
     )
     if (!cosal) {
-      console.log('no cosal?', query)
+      console.log('no vectors for query', query)
       return []
     }
     return await this.searchWithAnnoy(db, cosal.vector, { max })
@@ -233,35 +216,20 @@ export class Cosal {
   async persist() {
     if (this.databasePath) {
       await writeJSON(this.databasePath, this.state)
+      await annoyScan({ db: 'records', path: this.databasePath })
     }
   }
 
+  topicsList = null
+
   topics = async (query: string, { max = 10 } = {}) => {
-    // if (!this.topicsList) {
-    //   const path = join(__dirname, '../topics.json')
-    //   this.topicsList = await readJSON(path)
-    //   this.topicCovariance = getIncrementalCovariance(
-    //     this.covariance.matrix,
-    //     this.topicsList.map(doc => ({ doc, weight: 1 })),
-    //     1,
-    //     this.seedVectors,
-    //     this.fallbackVector,
-    //   )
-    //   const cosals = await Promise.all(
-    //     this.topicsList.map(text =>
-    //       toCosal(text, this.topicCovariance, this.seedVectors, this.fallbackVector),
-    //     ),
-    //   )
-    //   for (const [index, record] of cosals.entries()) {
-    //     if (!record) {
-    //       console.log('no record', this.topicsList[index])
-    //       continue
-    //     }
-    //     this.topicVectors[index] = record.vector
-    //   }
-    // }
-    const results = await this.searchWithCovariance('topics', query, { max })
-    return results.map(res => ({ ...res, topic: this.state.topics.indexToId[res.id] }))
+    if (!this.topicsList) {
+      this.topicsList = await readJSON(join(__dirname, '../topics2.json'))
+      await this.scan(this.topicsList.slice(0, 100).map((text, id) => ({ text, id })), 'topics')
+      await annoyScan({ db: 'topics', path: this.databasePath })
+    }
+    const res = await this.searchWithCovariance('topics', query, { max })
+    return res.map(res => ({ ...res, topic: this.topicsList[res.id] }))
   }
 
   getWordWeights = async (

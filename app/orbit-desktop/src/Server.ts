@@ -1,5 +1,4 @@
 import 'isomorphic-fetch'
-import morgan from 'morgan'
 import express from 'express'
 import proxy from 'http-proxy-middleware'
 import bodyParser from 'body-parser'
@@ -20,10 +19,6 @@ export class Server {
   constructor() {
     const app = express()
     app.set('port', Config.ports.server)
-
-    if (process.env.NODE_ENV !== 'development') {
-      app.use(morgan('dev'))
-    }
 
     this.app = app
 

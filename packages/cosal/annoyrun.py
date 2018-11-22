@@ -4,13 +4,15 @@ import os
 
 annoy_file = os.environ['ANNOY_FILE']
 db_name = os.environ['DB_NAME']
+do_scan = os.environ.get('SCAN', False)
 
 
 def annoy():
     f = 100  # Length of item vector that will be indexed
     t = AnnoyIndex(f)
 
-    if os.environ.get('SCAN', False):
+    # either forcing a scan or no annoy file so lets scan
+    if do_scan or os.path.isfile(annoy_file) == False:
         db = json.loads(open(os.environ['DB_FILE']).read())
         rows = db[db_name]['indexToVector']
 

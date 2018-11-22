@@ -102,7 +102,7 @@ export class Cosal {
       await this.persist()
     } else {
       try {
-        this.readDatabase()
+        await this.readDatabase()
       } catch (err) {
         console.log('Error reading database, removing and resetting...')
         await remove(this.databasePath)

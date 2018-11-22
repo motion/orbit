@@ -115,6 +115,9 @@ umed:
 - Team account management and onboarding flow
 
   - Create a server and database system that is good for handling signups
+  - We need frontend for signup/login/email flows
+  - Create space
+  - Sync just configuration data from Space
 
 ---
 

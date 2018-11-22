@@ -1,7 +1,6 @@
 export * from './peekStateActions'
 export * from './closeOrbit'
 export * from './open'
-export * from './openAuth'
 export * from './setContextMessage'
 export * from './setHighlightIndex'
 export * from './clearSearch'

@@ -60,7 +60,6 @@ class AppStore {
     SHOW: 'SHOW',
     HIDE: 'HIDE',
     CLEAR_SELECTED: 'CLEAR_SELECTED',
-    FORWARD_STATUS: 'FORWARD_STATUS',
     NOTIFICATION: 'NOTIFICATION',
     CLOSE_APP: 'CLOSE_APP',
     PROXY_FN_RESPONSE: 'PROXY_FN_RESPONSE',
@@ -103,7 +102,6 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: '',
-    acceptsForwarding: false,
     lastTear: 0,
     showSpaceSwitcher: 0,
   })

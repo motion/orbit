@@ -13,7 +13,7 @@ import {
 } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
-import { resolveMany } from '@mcro/mediator/_'
+import { resolveCommand, resolveMany } from '@mcro/mediator/_'
 import {
   AppModel,
   BitModel,
@@ -36,6 +36,7 @@ import {
   SourceSaveCommand,
   SpaceModel,
 } from '@mcro/models'
+import { AuthorizeIntegrationCommand } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
 import root from 'global'
@@ -51,6 +52,7 @@ import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
+import { HttpsAuthServer } from './managers/HttpsAuthServer'
 import { KeyboardManager } from './managers/KeyboardManager'
 import { MousePositionManager } from './managers/MousePositionManager'
 import { OCRManager } from './managers/OCRManager'
@@ -74,6 +76,7 @@ export class Root {
   config = getGlobalConfig()
   oracle: Oracle
   isReconnecting = false
+  httpsAuthServer: HttpsAuthServer
   onboard: OnboardManager
   disposed = false
   server = new Server()
@@ -117,6 +120,7 @@ export class Root {
       open(url)
     })
 
+
     // FIRST THING
     // databaserunner runs your migrations which everything can be impacted by...
     // leave it as high up here as possible
@@ -130,6 +134,8 @@ export class Root {
 
     // start server a bit early so other apps can start
     await this.server.start()
+
+    this.httpsAuthServer = new HttpsAuthServer()
 
     this.onboard = new OnboardManager()
     await this.cosal.start()
@@ -197,6 +203,9 @@ export class Root {
       await this.appsManager.dispose()
     }
     await this.ocrManager.dispose()
+    if (this.httpsAuthServer.isRunning()) {
+      await this.httpsAuthServer.stop()
+    }
     this.disposed = true
     return true
   }
@@ -242,6 +251,7 @@ export class Root {
         GithubSourceBlacklistCommand,
         SlackSourceBlacklistCommand,
         CosalTopWordsCommand,
+        AuthorizeIntegrationCommand,
       ],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.dbBridge,
@@ -270,6 +280,10 @@ export class Root {
         getSalientWordsResolver(this.cosal),
         SearchLocationsResolver,
         SearchPinnedResolver,
+        resolveCommand(AuthorizeIntegrationCommand, async () => {
+          await this.httpsAuthServer.start()
+          return true
+        })
       ],
     })
     this.mediatorServer.bootstrap()

@@ -30,7 +30,6 @@ export async function getInitialConfig() {
     nodeBinary = app.getPath('exe')
   }
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
-  const serverHost = 'localhost'
   const userData = app.getPath('userData')
   config = {
     isProd,
@@ -45,9 +44,9 @@ export async function getInitialConfig() {
     },
     urls: {
       auth: 'https://orbitauth.com',
-      authProxy: 'http://private.tryorbit.com',
-      server: `http://${serverHost}:${ports[0]}`,
-      serverHost,
+      authHost: 'orbitauth.com',
+      server: `http://localhost:${ports[0]}`,
+      serverHost: 'localhost',
     },
     version: process.env.ORBIT_VERSION,
     ports: {
@@ -59,8 +58,10 @@ export async function getInitialConfig() {
       mediator: ports[5],
       ocrBridge: ports[6],
       apps: ports.slice(7),
+      auth: 4444
     },
   }
 
   return config
 }
+

@@ -47,7 +47,7 @@ export default class MacOSPlatform implements Platform {
           return await openCertificateInFirefox(this.FIREFOX_BIN_PATH, certificatePath);
         }
       }
-      let certutilPath = path.join(await run('brew --prefix nss').toString().trim(), 'bin', 'certutil');
+      let certutilPath = path.join((await run('brew --prefix nss')).toString().trim(), 'bin', 'certutil');
       await closeFirefox();
       await addCertificateToNSSCertDB(this.FIREFOX_NSS_DIR, certificatePath, certutilPath);
     } else {
@@ -58,7 +58,19 @@ export default class MacOSPlatform implements Platform {
   async addDomainToHostFileIfMissing(domain: string) {
     let hostsFileContents = read(this.HOST_FILE_PATH, 'utf8');
     if (!hostsFileContents.includes(domain)) {
-      await run(`echo '127.0.0.1  ${ domain }' | sudo tee -a "${ this.HOST_FILE_PATH }" > /dev/null`, { sudo: true });
+      await run(`echo '127.0.0.1  ${ domain }' | tee -a "${ this.HOST_FILE_PATH }" > /dev/null`, { sudo: true });
+      try {
+        await run(`echo '
+rdr pass inet proto tcp from any to any port 80 -> orbitauth.com port 4444
+rdr pass inet proto tcp from any to any port 443 -> orbitauth.com port 4444
+' | pfctl -ef -`, { sudo: true });
+      } catch (err) {
+        // when pf is enabled and we pass -e flag it gives an error,
+        // however it adds records properly
+        // we can't remove -e flag because if pf is disabled we'll have errors too
+        // todo: figure out a proper solution for this problem
+        console.warn(`ignored error: `, err)
+      }
     }
   }
 

@@ -9,12 +9,9 @@ import { SubPane } from '../../../components/SubPane'
 
 export const MenuApp = React.memo((props: MenuAppProps) => {
   const stores = useContext(StoreContext)
-  const isActiveRef = React.useRef(() => props.menuStore.activeOrLastActiveMenuID === props.menuId)
-  const isActive = isActiveRef.current
   const appStore = useStore(AppStore, {
     ...props,
     ...stores,
-    isActive,
   })
   return (
     <StoreContext.Provider value={{ ...stores, appStore }}>

@@ -4,7 +4,7 @@ import { isEqual } from 'lodash'
 const MIN_Y = 60
 const EDGE_PAD = 20
 const BOTTOM_PAD = 40
-const NUDGE_AMT = 40
+const NUDGE_AMT = 0
 
 const screenSize = () => [window.innerWidth, window.innerHeight]
 

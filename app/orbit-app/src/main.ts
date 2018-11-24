@@ -66,8 +66,8 @@ async function main() {
         if (TEST_APP === 'bit') {
           const lastBit = await require('@mcro/model-bridge').loadOne(BitModel, { args: {} })
           AppActions.setPeekApp({
-            parentBounds: {},
-            target: {},
+            position: [0, 0],
+            size: [400, 400],
             appType: 'bit',
             appConfig: {
               id: `${lastBit.id}`,
@@ -78,8 +78,8 @@ async function main() {
         }
         if (TEST_APP === 'lists') {
           AppActions.setPeekApp({
-            parentBounds: {},
-            target: {},
+            position: [0, 0],
+            size: [400, 400],
             appType: 'lists',
             appConfig: {
               id: '0',

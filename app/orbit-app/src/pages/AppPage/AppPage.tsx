@@ -4,7 +4,7 @@ import { SourcesStore } from '../../stores/SourcesStore'
 import { AppWrapper } from '../../views'
 import { AppPageStore } from './AppPageStore'
 import * as UI from '@mcro/ui'
-import { AppFrame } from './AppFrame'
+import { AppFrame, AppFrameStore } from './AppFrame'
 import { WindowControls } from '../../views/WindowControls'
 import { AppView } from '../../apps/AppView'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
@@ -58,11 +58,11 @@ const TitleBar = view({
   borderBottom: [1, theme.borderColor.alpha(0.5)],
 }))
 
-@attach('queryStore', 'sourcesStore', 'appPageStore')
+@attach('queryStore', 'sourcesStore', 'appPageStore', 'appFrameStore')
 @view
-class AppPageContent extends React.Component<Props> {
+class AppPageContent extends React.Component<Props & { appFrameStore?: AppFrameStore }> {
   render() {
-    const { appPageStore, queryStore } = this.props
+    const { appFrameStore, appPageStore, queryStore } = this.props
     if (!appPageStore.state) {
       return <div>no state</div>
     }
@@ -72,7 +72,7 @@ class AppPageContent extends React.Component<Props> {
     }
     return (
       <>
-        <TitleBar draggable onDragStart={appPageStore.onDragStart}>
+        <TitleBar draggable onDragStart={appFrameStore.onDragStart}>
           <WindowControls
             onClose={appPageStore.handleClose}
             onMax={appPageStore.isTorn ? appPageStore.handleMaximize : null}

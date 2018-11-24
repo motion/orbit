@@ -10,6 +10,8 @@ type PeekApp = {
   appConfig: AppConfig
   appType: AppType
   parentBounds?: Position
+  position?: [number, number]
+  size?: [number, number]
 }
 
 // using this ensures it clears old properties
@@ -37,24 +39,26 @@ const getParentBounds = (target: HTMLDivElement) => {
   return node.getBoundingClientRect()
 }
 
-export function setPeekApp({ target, appType, appConfig, parentBounds }: PeekApp) {
+export function setPeekApp({ target, appType, appConfig, parentBounds, position, size }: PeekApp) {
   invariant(appConfig, 'Must pass appConfig')
   setPeekState({
     target,
     appType,
     appConfig,
-    parentBounds: parentBounds || getParentBounds(target),
+    parentBounds: parentBounds || target ? getParentBounds(target) : null,
+    position,
+    size,
   })
 }
 
-function setPeekState({ target, appConfig, appType, parentBounds }: PeekApp) {
+function setPeekState({ target, appConfig, appType, parentBounds, position, size }: PeekApp) {
   const realTarget = getTargetPosition(target)
 
   // TODO: we need a non-deep merge option for [Store].setState
   // because this pattern is too awkward and brittle
   // perhaps [Store].replaceState or [Store].setState(x, { replace: true })
 
-  setAppState({
+  const appState = {
     appType,
     appConfig: {
       ...DEFAULT_APP_CONFIG,
@@ -65,6 +69,12 @@ function setPeekState({ target, appConfig, appType, parentBounds }: PeekApp) {
       },
     },
     target: realTarget,
-    ...peekPosition(realTarget, appConfig, parentBounds || realTarget),
-  })
+    position,
+    size,
+    ...(!position && !size
+      ? peekPosition(realTarget, appConfig, parentBounds || realTarget)
+      : null),
+  }
+
+  setAppState(appState)
 }

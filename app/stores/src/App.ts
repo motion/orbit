@@ -117,7 +117,9 @@ class AppStore {
   }
 
   getAppState(id: number): AppState {
-    return this.state.appsState.find(x => x.id === id)
+    return {
+      ...this.state.appsState.find(x => x.id === id),
+    }
   }
 
   get openMenu(): MenuState {

@@ -54,7 +54,7 @@ export class MenuStore {
           open: false,
           repositioning: true,
         })
-        await sleep(100)
+        await sleep(200)
       }
       return { open, repositioning: false }
     },

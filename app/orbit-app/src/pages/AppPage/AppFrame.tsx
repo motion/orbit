@@ -16,7 +16,7 @@ type AppFrameProps = {
   theme?: ThemeObject
 }
 
-const SHADOW_PAD = 85
+const SHADOW_PAD = 70
 
 const transitions = (store: AppPageStore) => {
   if (store.isTorn) return 'transform linear 10ms'
@@ -234,7 +234,7 @@ export const AppFrame = decorator(
     const onRight = state && !state.peekOnLeft
     const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
     const margin = padding.map(x => -x)
-    const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
+    const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.25]]]
     const transition = transitions(appPageStore)
     return (
       <Resizable

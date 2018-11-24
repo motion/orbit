@@ -106,12 +106,6 @@ umed:
     - we need to change it to also install/run mkcert and add orbitauth.com with https
     - firefox support would be good using mkcert instructions
 
-- Frontend
-
-  - AppPage/AppFrame window resize with re-resizable needs a lot work to work well
-  - goal is to be able to resize app windows
-  - there are some bugs in app windows with focus, may require you to check there
-
 - Team account management and onboarding flow
 
   - Create a server and database system that is good for handling signups

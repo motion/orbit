@@ -43,13 +43,20 @@ const AppMainContent = view(UI.View, {
   opacity: 1,
 })
 
+const arrToObj = size => {
+  return {
+    width: size[0],
+    height: size[1],
+  }
+}
+
 const initialAppState = App.getAppState(Constants.APP_ID)
 
 class AppFrameStore {
   props: AppFrameProps
 
   // frame position and size
-  sizeD = initialAppState.size
+  size = arrToObj(initialAppState.size)
   posD = initialAppState.position
 
   get framePosition() {
@@ -70,13 +77,26 @@ class AppFrameStore {
     return [x, y]
   }
 
-  syncWithAppState = react(
+  syncFromAppState = react(
     () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
     ([size, position]) => {
       ensure('size', !!size)
       ensure('not torn', !this.props.appPageStore.isTorn)
-      this.sizeD = size
+      this.size = arrToObj(size)
       this.posD = position
+    },
+  )
+
+  syncToAppState = react(
+    () => [this.size, this.posD],
+    async ([size, position], { sleep }) => {
+      await sleep(100)
+      ensure('hasSize', size.width !== 0 && size.height !== 0)
+      console.log('deferred set app state', size, position)
+      AppActions.setAppState({ size: [size.width, size.height], position })
+    },
+    {
+      deferFirstRun: true,
     },
   )
 
@@ -86,13 +106,15 @@ class AppFrameStore {
       case 'right':
       case 'bottom':
       case 'bottomRight':
-        this.sizeD = [this.sizeD[0] + width, this.sizeD[1] + height]
+        this.size.width += width
+        this.size.height += height
         break
       case 'top':
       case 'left':
       case 'topLeft':
         this.posD = [this.posD[0] - width, this.posD[1] - height]
-        this.sizeD = [this.sizeD[0] + width, this.sizeD[1] + height]
+        this.size.width += width
+        this.size.height += height
         break
     }
 
@@ -105,18 +127,6 @@ class AppFrameStore {
     }
   }, 100)
 
-  deferredSetAppState = react(
-    () => [this.sizeD, this.posD],
-    async ([size, position], { sleep }) => {
-      await sleep(100)
-      ensure('hasSize', size[0] !== 0 && size[1] !== 0)
-      console.log('deferred set app state', size, position)
-      AppActions.setAppState({ size, position })
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
 }
 
 const PeekFrameContainer = view(UI.View, {
@@ -146,10 +156,9 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
   const margin = padding.map(x => -x)
   const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.35]]]
   const transition = transitions(appPageStore)
-  const size = store.sizeD
   return (
     <Resizable
-      defaultSize={{ width: size[0], height: size[1] }}
+      size={store.size}
       minWidth={100}
       minHeight={100}
       maxWidth={window.innerWidth}
@@ -159,8 +168,7 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
       style={{
         zIndex: 2,
         // keep size/positionX linked to be fast...
-        width: size[0],
-        height: size[1],
+        // ...store.size,
         // dont put this in transform so it doesnt animate
         // it needs to move quickly because the frame itself resizes
         // and so it has to update the width + left at same time
@@ -172,8 +180,8 @@ export const AppFrame = decorator(({ appPageStore, store, children, theme }: App
       }}
     >
       <PeekFrameContainer
-        width={size[0]}
-        height={size[1]}
+        width={store.size.width}
+        height={store.size.height}
         pointerEvents={isShown ? 'auto' : 'none'}
       >
         <AppFrameArrow appPageStore={appPageStore} borderShadow={borderShadow} />

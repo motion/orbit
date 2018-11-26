@@ -29,3 +29,11 @@ export const CosalTopWordsCommand = new Command<string[], { text: string; max?: 
 export const AuthorizeIntegrationCommand = new Command<boolean, void>(
   'authorize-integration-command',
 )
+
+export const SetupCertificateCommand = new Command<boolean, void>(
+  'SetupCertificateCommand',
+)
+
+export const HasCertificateCommand = new Command<boolean, void>(
+  'HasCertificateCommand',
+)

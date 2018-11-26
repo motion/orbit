@@ -73,8 +73,10 @@ export async function main() {
     })
 
     // wait for server...
+    // console.log('waiting for desktop')
     const desktopServerUrl = `http://localhost:${config.ports.server}`
     await waitOn({ resources: [desktopServerUrl] })
+    // console.log('desktop is here')
 
     if (IGNORE_ELECTRON !== 'true') {
       // start main electron process inside this thread (no forking)

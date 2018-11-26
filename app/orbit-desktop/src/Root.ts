@@ -13,7 +13,7 @@ import {
 } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
-import { resolveMany } from '@mcro/mediator/_'
+import { resolveCommand, resolveMany } from '@mcro/mediator'
 import {
   AppModel,
   BitModel,
@@ -36,8 +36,10 @@ import {
   SourceSaveCommand,
   SpaceModel,
 } from '@mcro/models'
+import { AuthorizeIntegrationCommand } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
+import { writeJSON } from 'fs-extra'
 import root from 'global'
 import macosVersion from 'macos-version'
 import open from 'opn'
@@ -45,12 +47,12 @@ import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { getConnection } from 'typeorm'
 import { COSAL_DB, oracleOptions } from './constants'
-import { writeOrbitConfig } from './helpers'
 import { AppsManager } from './managers/appsManager'
 import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
+import { HttpsAuthServer } from './auth-server/HttpsAuthServer'
 import { KeyboardManager } from './managers/KeyboardManager'
 import { MousePositionManager } from './managers/MousePositionManager'
 import { OCRManager } from './managers/OCRManager'
@@ -74,9 +76,10 @@ export class Root {
   config = getGlobalConfig()
   oracle: Oracle
   isReconnecting = false
+  httpsAuthServer: HttpsAuthServer
   onboard: OnboardManager
   disposed = false
-  server = new Server()
+  server: Server
   stores = null
   mediatorServer: MediatorServer
   cosal = new Cosal({
@@ -117,6 +120,7 @@ export class Root {
       open(url)
     })
 
+
     // FIRST THING
     // databaserunner runs your migrations which everything can be impacted by...
     // leave it as high up here as possible
@@ -129,7 +133,10 @@ export class Root {
     await this.generalSettingManager.start()
 
     // start server a bit early so other apps can start
+    this.server = new Server()
     await this.server.start()
+
+    this.httpsAuthServer = new HttpsAuthServer()
 
     this.onboard = new OnboardManager()
     await this.cosal.start()
@@ -191,12 +198,15 @@ export class Root {
       return
     }
     console.log('writing orbit config...')
-    await writeOrbitConfig()
+    await writeJSON(this.config.paths.orbitConfig, this.config)
     Desktop.dispose()
     if (this.appsManager) {
       await this.appsManager.dispose()
     }
     await this.ocrManager.dispose()
+    if (this.httpsAuthServer.isRunning()) {
+      await this.httpsAuthServer.stop()
+    }
     this.disposed = true
     return true
   }
@@ -242,9 +252,10 @@ export class Root {
         GithubSourceBlacklistCommand,
         SlackSourceBlacklistCommand,
         CosalTopWordsCommand,
+        AuthorizeIntegrationCommand,
       ],
       transport: new WebSocketServerTransport({
-        port: getGlobalConfig().ports.dbBridge,
+        port: this.config.ports.dbBridge,
       }),
       resolvers: [
         // @ts-ignore
@@ -270,6 +281,10 @@ export class Root {
         getSalientWordsResolver(this.cosal),
         SearchLocationsResolver,
         SearchPinnedResolver,
+        resolveCommand(AuthorizeIntegrationCommand, async () => {
+          await this.httpsAuthServer.start()
+          return true
+        })
       ],
     })
     this.mediatorServer.bootstrap()

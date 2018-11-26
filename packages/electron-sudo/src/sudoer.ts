@@ -139,8 +139,8 @@ class SudoerDarwin extends SudoerUnix {
     return spreaded
   }
 
-  async exec(command, options = EXEC_OPTIONS) {
-    return new Promise(async (resolve, reject) => {
+  async exec(command, options = EXEC_OPTIONS): Promise<{ stdout: string, stderr: string }> {
+    return new Promise<{ stdout: string, stderr: string }>(async (resolve, reject) => {
       const commandEscaped = command.replace(/"/g, '\\\\\\"')
       const toExec = this.getCommand(commandEscaped)
       try {
@@ -365,11 +365,11 @@ class SudoerWin32 extends Sudoer {
     })
   }
 
-  async exec(command, options = EXEC_OPTIONS) {
+  async exec(command, options = EXEC_OPTIONS): Promise<Buffer> {
     let self = this,
       files,
       output
-    return new Promise(async (resolve, reject) => {
+    return new Promise<Buffer>(async (resolve, reject) => {
       try {
         await this.prepare()
         files = await self.writeBatch(command, [], options)

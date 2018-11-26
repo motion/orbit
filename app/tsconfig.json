@@ -7,7 +7,6 @@
     { "path": "./orbit-repl" },
     { "path": "./orbit" },
     // projects necessary for orbit
-    { "path": "../projects/oauth-server" },
     // references from orbit-app since we want to have that one empty
     // { "path": "./models" },
     // { "path": "./services" },

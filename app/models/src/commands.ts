@@ -25,3 +25,7 @@ export const SlackSourceBlacklistCommand = new Command<
 export const CosalTopWordsCommand = new Command<string[], { text: string; max?: number }>(
   'cosal-top-words-command',
 )
+
+export const AuthorizeIntegrationCommand = new Command<boolean, void>(
+  'authorize-integration-command',
+)

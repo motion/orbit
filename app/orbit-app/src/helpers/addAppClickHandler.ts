@@ -1,18 +1,11 @@
-import { checkAuthProxy } from './checkAuthProxy'
-import { promptForAuthProxy } from './promptForAuthProxy'
+import { command } from '@mcro/model-bridge'
+import { AuthorizeIntegrationCommand } from '@mcro/models'
 import { memoize } from 'lodash'
 import { AppActions } from '../actions/AppActions'
+import { open } from '../actions/appActionsHandlers'
 import { OrbitIntegration } from '../sources/types'
 import { sourceToAppConfig } from '../stores/SourcesStore'
-
-const promptForProxy = async () => {
-  if (await checkAuthProxy()) {
-    return true
-  } else {
-    const { accepted } = await promptForAuthProxy()
-    return accepted
-  }
-}
+import { getGlobalConfig } from '@mcro/config'
 
 export const addAppClickHandler = memoize(
   (app: OrbitIntegration<any>) => async ({ currentTarget }) => {
@@ -30,13 +23,9 @@ export const addAppClickHandler = memoize(
     } else {
       // ...otherwise we open browser to oauth
       AppActions.clearPeek()
-      if (await promptForProxy()) {
-        AppActions.openAuth(app.integration)
-        return true
-      } else {
-        console.log('failed proxy prompt... show something')
-        return false
-      }
+      await command(AuthorizeIntegrationCommand)
+      open(`${getGlobalConfig().urls.auth}/auth/${app.integration}`)
+
     }
   },
 )

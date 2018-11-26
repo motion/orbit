@@ -13,7 +13,7 @@ export type GlobalConfig = {
   }
   urls: {
     auth: string
-    authProxy: string
+    authHost: string
     server: string
     serverHost: string
   }
@@ -26,6 +26,7 @@ export type GlobalConfig = {
     oracleBridge: number
     ocrBridge: number
     mediator: number
+    auth: number
     // this is hacky af, but for now its ok
     apps: number[]
   }

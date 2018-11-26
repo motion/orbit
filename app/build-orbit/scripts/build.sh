@@ -64,7 +64,6 @@ function publish-packages() {
       --ignore "@mcro/orbit" \
       --ignore "@mcro/playground" \
       --ignore "@mcro/site" \
-      --ignore "@mcro/oauth-server" \
       --ignore "@mcro/babel-preset-motion" \
       --ignore "@mcro/gloss-displaynames" \
       --ignore "@mcro/blog" \

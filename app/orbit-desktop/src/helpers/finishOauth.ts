@@ -1,13 +1,5 @@
-import { SourceEntity } from '@mcro/entities'
-import { SpaceEntity } from '@mcro/entities/_'
-import {
-  DriveSource,
-  GmailSource,
-  IntegrationType,
-  Source,
-  SlackSource,
-  SlackSourceValues,
-} from '@mcro/models'
+import { SourceEntity, SpaceEntity } from '@mcro/entities'
+import { DriveSource, GmailSource, IntegrationType, SlackSource, SlackSourceValues, Source } from '@mcro/models'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { App, Desktop } from '@mcro/stores'
 import { getRepository } from 'typeorm'

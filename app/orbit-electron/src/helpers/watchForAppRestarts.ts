@@ -11,7 +11,7 @@ export function watchForAppRestarts() {
       shouldRestart = true
     }
     if (shouldRestart && webRunning) {
-      const touchFile = require('path').join(__dirname, '..', '_', 'index.js')
+      const touchFile = require('path').join(__dirname, '..', '..', '_', 'index.js')
       console.log('restarting after parcel cycle...', touchFile)
       touch(touchFile)
       clearInterval(int)

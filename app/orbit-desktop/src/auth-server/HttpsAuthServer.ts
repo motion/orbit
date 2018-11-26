@@ -1,18 +1,34 @@
+import { ensure, react, store } from '@mcro/black'
+import { getGlobalConfig } from '@mcro/config'
+import { certificateFor } from '@mcro/devcert'
+import { Logger } from '@mcro/logger'
+import { App, Desktop } from '@mcro/stores'
+import * as https from 'https'
+import express from 'express'
+import { Server } from 'https'
+import * as Path from "path"
+import { finishOauth } from '../helpers/finishOauth'
 import OAuth from './oauth'
 import OAuthStrategies from './oauthStrategies'
 import morgan from 'morgan'
-import express from 'express'
+import request from 'request'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import Passport from 'passport'
+import killPort from 'kill-port'
 import { OauthValues } from './oauthTypes'
-import request from 'request'
+import proxy from 'http-proxy-middleware'
 
-const log = console.log.bind(console)
+const Config = getGlobalConfig()
 
-export class Server {
+/**
+ * Runs https server that responses to oauth returned by integrations.
+ */
+export class HttpsAuthServer {
+  private server: Server
+  private log: Logger
+
   cache = {}
-  login = null
   app: express.Application
 
   oauth = new OAuth({
@@ -29,15 +45,68 @@ export class Server {
   })
 
   constructor() {
-    const app = express()
-    app.set('port', 443)
-    app.use(morgan('dev'))
+    this.log = new Logger('https-server')
+  }
 
-    this.app = app
+  /**
+   * Checks if server is running.
+   */
+  isRunning(): boolean {
+    return !!this.server
+  }
 
-    app.use(this.cors())
+  /**
+   * Starts HTTPS auth server.
+   */
+  async start(): Promise<void> {
 
-    // ROUTES
+    // if server is already running, ignore
+    if (this.server) return
+
+    // todo: extract those options into configuration
+
+    this.log.verbose('creating certificate')
+    const ssl = await certificateFor(Config.urls.authHost)
+
+    this.log.verbose('creating auth https server')
+    this.setupExpressApp()
+    this.server = await new Promise<Server>(async (ok, fail) => {
+
+      // kill old processes
+      this.log.verbose(`Killing old server on ${Config.ports.auth}...`)
+      await killPort(Config.ports.auth)
+
+      const server = https.createServer(ssl, this.app).listen(Config.ports.auth, err => {
+        if (err) return fail(err)
+        ok(server)
+      })
+    })
+    this.log.verbose('auth https server was created')
+  }
+
+  /**
+   * Stops running HTTPS auth server.
+   */
+  async stop(): Promise<void> {
+    if (!this.server)
+      return
+
+    this.log.verbose('stopping auth https server')
+    await new Promise((ok, fail) => {
+      this.server.close(err => err ? fail(err) : ok())
+    })
+    this.log.verbose('auth https server was stopped')
+  }
+
+  private setupExpressApp() {
+    this.app = express()
+    if (process.env.NODE_ENV !== 'development') {
+      this.app.use(morgan('dev'))
+    }
+    this.app.use(this.cors())
+    // fixes bug with 304 errors sometimes
+    // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
+    this.app.disable('etag')
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.app.get('/hello', (_, res) => res.send('hello world'))
@@ -62,15 +131,17 @@ export class Server {
     })
 
     this.setupPassportRoutes()
-  }
 
-  async start() {
-    this.app.listen(443, () => {
-      console.log('Oauth server listening', 443)
+    this.app.use('/assets', express.static(Path.join(Config.paths.desktopRoot, 'assets')))
+    this.app.get('/config', (_, res) => {
+      const config = getGlobalConfig()
+      this.log.verbose(`Send config ${JSON.stringify(config, null, 2)}`)
+      res.json(config)
     })
+
   }
 
-  cors() {
+  private cors() {
     const HEADER_ALLOWED =
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
     return (req, res, next) => {
@@ -82,7 +153,7 @@ export class Server {
     }
   }
 
-  setupPassportRoutes() {
+  private setupPassportRoutes() {
     this.app.use(
       '/auth', // TODO change secret
       session({ secret: 'orbit', resave: false, saveUninitialized: true }),
@@ -93,21 +164,21 @@ export class Server {
     this.setupAuthReplyRoutes()
   }
 
-  setupAuthRefreshRoutes() {
+  private setupAuthRefreshRoutes() {
     this.app.use('/auth/refreshToken/:service', async (req, res) => {
-      log.info('refresh for', req.params.service)
+      this.log.info('refresh for', req.params.service)
       try {
         const refreshToken = await this.oauth.refreshToken(req.params.service)
         res.json({ refreshToken })
       } catch (error) {
-        log.info('error', error)
+        this.log.info('error', error)
         res.status(500)
         res.json({ error })
       }
     })
   }
 
-  setupAuthReplyRoutes() {
+  private setupAuthReplyRoutes() {
     for (const name in OAuthStrategies) {
       const path = `/auth/${name}`
       const strategy = OAuthStrategies[name]
@@ -126,7 +197,7 @@ export class Server {
   <head>
     <title>...</title>
     <script>
-      window.location = "http://private.tryorbit.com/authCallback/${name}?value=${value}&secret=${secret}&clientId=${clientId}"
+      window.location = "${Config.urls.server}/authCallback/${name}?value=${value}&secret=${secret}&clientId=${clientId}"
     </script>
   </head>
   <body>
@@ -138,4 +209,6 @@ export class Server {
       )
     }
   }
+
+
 }

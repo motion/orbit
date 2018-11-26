@@ -63,9 +63,9 @@ class OnboardStore {
   }
 
   // async checkAlreadyProxied() {
-    // if (await checkAuthProxy()) {
-    //   this.accepted = true
-    // }
+  // if (await checkAuthProxy()) {
+  //   this.accepted = true
+  // }
   // }
 
   get disableButtons() {
@@ -78,7 +78,7 @@ class OnboardStore {
       // await this.checkAlreadyProxied()
       console.log('already on?', this.accepted)
       if (this.accepted !== true) {
-        const [ accepted, message ] = [true, ''] // await promptForAuthProxy()
+        const [accepted, message] = [true, ''] // await promptForAuthProxy()
         console.log('got from prompt', accepted, message)
         this.accepted = accepted
         this.acceptedMessage = message
@@ -97,7 +97,6 @@ class OnboardStore {
     1: () => {},
     2: async () => {
       this.props.paneManagerStore.setActivePane('home')
-      this.props.paneManagerStore.forceOnboard = false
       // save setting
       await this.props.settingStore.update({
         hasOnboarded: true,
@@ -146,7 +145,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
   return (
-    <SubPane id="onboard" paddingLeft={0} paddingRight={0}>
+    <>
       <BlurryGuys />
       <Slider curFrame={store.curFrame}>
         <SliderPane>
@@ -290,6 +289,6 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
           </Button>
         </Theme>
       </BottomControls>
-    </SubPane>
+    </>
   )
 })

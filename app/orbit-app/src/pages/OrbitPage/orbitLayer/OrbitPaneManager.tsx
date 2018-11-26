@@ -15,6 +15,9 @@ import { useStore } from '@mcro/use-store'
 import { AppActions } from '../../../actions/AppActions'
 import { App } from '@mcro/stores'
 import { OrbitWindowStore } from '../../../stores/OrbitWindowStore'
+import { observeOne } from '@mcro/model-bridge'
+import { SettingModel, Setting } from '@mcro/models'
+import { generalSettingQuery } from '../../../helpers/queries'
 
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
@@ -38,6 +41,21 @@ class OrbitPaneManagerStore {
     paneManagerStore: PaneManagerStore
     queryStore: QueryStore
   }
+
+  generalSetting = react(() => observeOne(SettingModel, generalSettingQuery)) as Setting
+
+  get hasOnboarded() {
+    return (this.generalSetting && this.generalSetting.values.hasOnboarded) || false
+  }
+
+  setOnboardingPane = react(
+    () => [this.generalSetting, this.hasOnboarded],
+    ([setting, onboarded]) => {
+      if (setting && !onboarded) {
+        this.props.paneManagerStore.setActivePane('onboard')
+      }
+    },
+  )
 
   setActivePaneOnTrigger = react(
     () => this.props.queryStore.queryInstant[0],
@@ -96,7 +114,17 @@ class OrbitPaneManagerStoreInner extends React.PureComponent<{
         <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <SpaceNav />
-            <OrbitOnboard name="onboard" />
+
+            <SubPane
+              id="onboard"
+              preventScroll
+              paddingLeft={0}
+              paddingRight={0}
+              onChangeHeight={this.props.orbitWindowStore.setContentHeight}
+            >
+              <OrbitOnboard name="onboard" />
+            </SubPane>
+
             {AppPanes.map(pane => {
               return (
                 <SubPane
@@ -113,6 +141,7 @@ class OrbitPaneManagerStoreInner extends React.PureComponent<{
                 </SubPane>
               )
             })}
+
             <OrbitSettings onChangeHeight={this.props.orbitWindowStore.setContentHeight} />
           </div>
         </OrbitDockedInner>

@@ -31,7 +31,7 @@ export const OrbitPage = memo(() => {
   })
   const paneManagerStore = useStore(PaneManagerStore, {
     selectionStore,
-    panes: [...AppPanes.map(p => p.id), 'settings'],
+    panes: [...AppPanes.map(p => p.id), 'settings', 'onboard'],
   })
   const stores = {
     settingStore,

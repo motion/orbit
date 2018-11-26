@@ -46,7 +46,7 @@ const SuggestionBar = view(UI.Row, {
     x: 6,
   },
   visible: {
-    pointerEvents: 'auto',
+    pointerEvents: 'inherit',
     opacity: 0.8,
     transform: {
       x: 0,

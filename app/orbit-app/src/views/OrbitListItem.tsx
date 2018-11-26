@@ -20,7 +20,7 @@ import { Separator } from './Separator'
   store: OrbitItemStore,
 })
 @view
-export class OrbitListInner extends React.Component<ItemProps<any>> {
+class OrbitListInner extends React.Component<ItemProps<any>> {
   static defaultProps = {
     // offsets -1px on sides for the negative margin we usually use to hide side border
     padding: [10, 11],
@@ -57,6 +57,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
       separator,
       extraProps,
       isExpanded,
+      before,
       ...props
     } = this.props
     const { isSelected } = store
@@ -140,6 +141,7 @@ export class OrbitListInner extends React.Component<ItemProps<any>> {
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>
+            {before}
             <ListItemMainContent oneLine={oneLine}>
               {showTitle && (
                 <Title>

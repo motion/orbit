@@ -19,6 +19,7 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     // whether to avoid model resolving and just use props
     activeStyle?: Object
     activeCondition?: () => boolean
+    before?: React.ReactNode
     direct?: boolean
     ignoreSelection?: boolean
     chromeless?: boolean

@@ -59,10 +59,10 @@ export class TopicEdit extends React.Component<{
           value={this.props.store.name}
           onChange={this.handleNameChange}
           flex={1}
-          placeholder="Add topic..."
+          placeholder="New term..."
         />
         <div style={{ width: 10 }} />
-        <Button type="submit">Add</Button>
+        <Button type="submit" icon="add" />
       </Row>
     )
   }

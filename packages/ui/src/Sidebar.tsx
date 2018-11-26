@@ -20,15 +20,18 @@ const SidebarContainer = view(Col, {
   height: '100%',
   overflowX: 'hidden',
   overflowY: 'auto',
-}).theme(props => ({
-  backgroundColor: props.backgroundColor || props.theme.sidebarBackground || '#E8E7E7',
-  borderLeft: props.position === 'right' ? `1px solid ${props.theme.borderColor}` : 'none',
-  borderTop: props.position === 'bottom' ? `1px solid ${props.theme.borderColor}` : 'none',
-  borderRight: props.position === 'left' ? `1px solid ${props.theme.borderColor}` : 'none',
-  borderBottom: props.position === 'top' ? `1px solid ${props.theme.borderColor}` : 'none',
-  textOverflow: props.overflow ? 'ellipsis' : 'auto',
-  whiteSpace: props.overflow ? 'nowrap' : 'normal',
-}))
+}).theme(props => {
+  const borderColor = props.theme.sidebarBorderColor || props.theme.borderColor
+  return {
+    backgroundColor: props.backgroundColor || props.theme.sidebarBackground || '#f2f2f2',
+    borderLeft: props.position === 'right' ? `1px solid ${borderColor}` : 'none',
+    borderTop: props.position === 'bottom' ? `1px solid ${borderColor}` : 'none',
+    borderRight: props.position === 'left' ? `1px solid ${borderColor}` : 'none',
+    borderBottom: props.position === 'top' ? `1px solid ${borderColor}` : 'none',
+    textOverflow: props.overflow ? 'ellipsis' : 'auto',
+    whiteSpace: props.overflow ? 'nowrap' : 'normal',
+  }
+})
 
 type SidebarProps = {
   /**

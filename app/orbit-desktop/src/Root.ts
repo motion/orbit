@@ -1,7 +1,7 @@
 import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
-import { hasCertificateFor } from '@mcro/devcert'
+import { hasCertificateFor, certificateFor } from '@mcro/devcert'
 import {
   AppEntity,
   BitEntity,
@@ -36,8 +36,16 @@ import {
   SourceRemoveCommand,
   SourceSaveCommand,
   SpaceModel,
+  TrendingTopicsModel,
+  TrendingTermsModel,
+  PeopleNearTopicModel,
+  BitsNearTopicModel,
 } from '@mcro/models'
-import { AuthorizeIntegrationCommand, SetupCertificateCommand, HasCertificateCommand } from '@mcro/models'
+import {
+  AuthorizeIntegrationCommand,
+  SetupCertificateCommand,
+  HasCertificateCommand,
+} from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { writeJSON } from 'fs-extra'
@@ -70,9 +78,8 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { Server } from './Server'
-import { certificateFor } from '../../../packages/devcert/_'
-
-const log = new Logger('desktop')
+import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
+import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
 
 export class Root {
   config = getGlobalConfig()
@@ -100,8 +107,6 @@ export class Root {
   contextManager: ContextManager
 
   start = async () => {
-    log.info('Start Desktop Store..')
-
     await Desktop.start({
       ignoreSelf: true,
       master: true,
@@ -121,7 +126,6 @@ export class Root {
       console.log('opening', url)
       open(url)
     })
-
 
     // FIRST THING
     // databaserunner runs your migrations which everything can be impacted by...
@@ -151,6 +155,9 @@ export class Root {
     })
 
     this.oracle.onError(err => {
+      if (err.indexOf('Could not watch application') >= 0) {
+        return
+      }
       console.log('Oracle error', err)
     })
 
@@ -178,7 +185,7 @@ export class Root {
 
     // let other processes start before CPU load
     setTimeout(() => {
-      this.cosalManager.scanSinceLast()
+      this.cosalManager.updateSearchIndexWithNewBits()
       this.cosalManager.scanTopics()
     }, 1000 * 6)
 
@@ -247,6 +254,10 @@ export class Root {
         SearchPinnedResultModel,
         SearchByTopicModel,
         SpaceModel,
+        TrendingTopicsModel,
+        TrendingTermsModel,
+        PeopleNearTopicModel,
+        BitsNearTopicModel,
       ],
       commands: [
         SourceSaveCommand,
@@ -279,6 +290,8 @@ export class Root {
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
         getSearchByTopicResolver(this.cosal),
+        getBitNearTopicsResolver(this.cosal),
+        getPeopleNearTopicsResolver(this.cosal),
         resolveMany(SearchResultModel, async args => {
           return new SearchResultResolver(this.cosal, args).resolve()
         }),

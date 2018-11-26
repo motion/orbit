@@ -352,10 +352,7 @@ export class Oracle {
       NODE_ENV: process.env.NODE_ENV,
       ...this.env,
     }
-    const stringEnv = JSON.stringify(env, null, 2)
-    log.info(
-      `Start Oracle on port ${this.socketPort} ${bin} at path ${binDir} with env:\n${stringEnv}`,
-    )
+    log.info(`Start Oracle on port ${this.socketPort} ${bin} at path ${binDir}`)
     try {
       this.process = spawn(Path.join(binDir, bin), [], {
         env,
@@ -364,10 +361,10 @@ export class Oracle {
         if (!data) return
         const str = data.toString()
         // weird ass workaround for stdout not being captured
-        const isLikelyError = str[0] === ' '
+        const canIgnoreErr = str[0] === ' ' || str.indexOf('Could not watch application') >= 0
         const out = str.trim()
         const isPurposefulLog = out[0] === '!'
-        if (isPurposefulLog || isLikelyError) {
+        if (isPurposefulLog || canIgnoreErr) {
           // log.verbose('swift >>>', this.name, out.slice(1))
           return
         }

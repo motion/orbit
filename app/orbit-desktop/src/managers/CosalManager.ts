@@ -16,11 +16,6 @@ export class CosalManager {
     this.cosal = cosal
   }
 
-  start = () => {
-    this.scanSinceLast()
-    this.scanTopics()
-  }
-
   dispose() {
     clearInterval(this.scanTopicsInt)
   }
@@ -40,7 +35,7 @@ export class CosalManager {
     return setting.values.cosalIndexUpdatedTo
   }
 
-  scanSinceLast = async () => {
+  updateSearchIndexWithNewBits = async () => {
     const lastScanAt = await this.getLastScan()
     const bitsSinceLastScan = await getRepository(BitEntity).find({
       where: { bitUpdatedAt: { $moreThan: lastScanAt } },
@@ -79,6 +74,7 @@ export class CosalManager {
   }
 
   doScanTopics = async () => {
+    console.log('Scanning topics')
     console.time('doScanTopics')
     const topTopics = await this.getGlobalTopTopics()
     const setting = await getGeneralSetting()

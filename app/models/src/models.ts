@@ -91,4 +91,11 @@ export const SearchByTopicModel = new Model<Bit, { query: string; count: number 
 
 export type TrendingItem = { name: string; direction: 'up' | 'neutral' | 'down' }
 export const TrendingTopicsModel = new Model<TrendingItem, void>('trending-topics')
-export const TrendingItemTermsModel = new Model<TrendingItem, void>('trending-terms')
+export const TrendingTermsModel = new Model<TrendingItem, void>('trending-terms')
+
+export const PeopleNearTopicModel = new Model<PersonBit, { topic: string; count: number }>(
+  'people-near-topic',
+)
+export const BitsNearTopicModel = new Model<Bit, { topic: string; count: number }>(
+  'bits-near-topic',
+)

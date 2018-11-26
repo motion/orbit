@@ -8,17 +8,7 @@ import { VerticalSpace } from '../../../../views'
 import { memoize } from 'lodash'
 import { SubPaneStore } from '../../../../components/SubPaneStore'
 import { AppView } from '../../../../apps/AppView'
-
-const Pane = view({
-  height: 0,
-  opacity: 0,
-  pointerEvents: 'none',
-  isShown: {
-    height: 'auto',
-    opacity: 1,
-    pointerEvents: 'inherit',
-  },
-})
+import { Pane } from '../../../../views/Pane'
 
 const SettingButton = props => (
   <Button width={90} sizeIcon={1.1} sizeRadius={2} elementProps={{ width: 'auto' }} {...props} />

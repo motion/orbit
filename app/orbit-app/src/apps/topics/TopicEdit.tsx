@@ -17,6 +17,7 @@ class TopicEditStore {
 })
 @view
 export class TopicEdit extends React.Component<{
+  type: 'term' | 'topic'
   store?: TopicEditStore
   spaceStore?: SpaceStore
 }> {
@@ -59,7 +60,7 @@ export class TopicEdit extends React.Component<{
           value={this.props.store.name}
           onChange={this.handleNameChange}
           flex={1}
-          placeholder="New term..."
+          placeholder={`New ${this.props.type}...`}
         />
         <div style={{ width: 10 }} />
         <Button type="submit" icon="add" />

@@ -9,6 +9,8 @@ import { memo } from '../../helpers/memo'
 import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { VerticalSpace } from '../../views'
+import { memoize } from 'lodash'
+import { Pane } from '../../views/Pane'
 
 const icons = {
   0: ['neutral', 'rgba(180,180,180,0.75)'],
@@ -77,38 +79,55 @@ const ScrollableContent = view({
 
 const BorderedButton = props => <Button background="transparent" {...props} />
 
+const buttonProps = (store: TopicsIndexStore, type: string) => {
+  return {
+    onClick: () => store.setActiveTab(type),
+    active: store.activeTab === type,
+  }
+}
+
 export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore }) => {
   const store = useStore(TopicsIndexStore, props)
   return (
     <>
       <ScrollableContent>
-        {!!store.results.length && (
-          <>
-            <Separator>Topics</Separator>
-            <TopicList results={store.results.slice(0, 8)} />
-          </>
-        )}
+        <Pane isShown={store.activeTab === 'trend'}>
+          {!!store.results.length && (
+            <>
+              <Separator>Topics</Separator>
+              <TopicList results={store.results.slice(0, 8)} />
+            </>
+          )}
+          <VerticalSpace />
+          {!!store.results.length && (
+            <>
+              <Separator>Terms</Separator>
+              <TopicList results={store.results.slice(0, 8)} />
+            </>
+          )}
+        </Pane>
 
-        <VerticalSpace />
+        <Pane isShown={store.activeTab === 'topics'}>
+          <TopicList results={store.results} />
+        </Pane>
 
-        {!!store.results.length && (
-          <>
-            <Separator>Terms</Separator>
-            <TopicList results={store.results.slice(0, 8)} />
-          </>
-        )}
+        <Pane isShown={store.activeTab === 'terms'}>
+          <TopicList results={store.results} />
+        </Pane>
       </ScrollableContent>
 
-      {store.activeTab !== 'trend' && <TopicEdit />}
+      {store.activeTab !== 'trend' && (
+        <TopicEdit type={store.activeTab === 'topics' ? 'topic' : 'term'} />
+      )}
 
       <SegmentedRow
         itemProps={{ width: '33.3%', size: 0.9, sizeHeight: 0.9 }}
         padding={[0, 6]}
         margin={[0, 0, 10]}
       >
-        <BorderedButton active>Trend</BorderedButton>
-        <BorderedButton>Topics</BorderedButton>
-        <BorderedButton>Terms</BorderedButton>
+        <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
+        <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
+        <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
       </SegmentedRow>
     </>
   )

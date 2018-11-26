@@ -9,9 +9,13 @@ const log = new Logger('BitNearTopicResolver')
 
 export const getBitNearTopicsResolver = (cosal: Cosal) => {
   return resolveMany(BitsNearTopicModel, async ({ topic, count }) => {
-    const ids = await cosal.search(topic, count)
+    const ids = (await cosal.search(topic, count)).map(x => x.id)
     const results = await getRepository(BitEntity).findByIds(ids)
-    log.info(`Sending ${results.length} topics back`)
+    log.info(
+      `(topic ${topic} count ${count}) => ${ids.length} cosal results, ${
+        results.length
+      } bit results`,
+    )
     return results
   })
 }

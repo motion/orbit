@@ -7,7 +7,7 @@ import { getRepository } from 'typeorm'
 
 const log = new Logger('BitNearTopicResolver')
 
-export const getBitNearTopicsResolver = (cosal: Cosal) => {
+export const getPeopleNearTopicsResolver = (cosal: Cosal) => {
   return resolveMany(PeopleNearTopicModel, async ({ topic, count }) => {
     const ids = await cosal.search(topic, count)
     const results = await getRepository(PersonBitEntity).findByIds(ids)

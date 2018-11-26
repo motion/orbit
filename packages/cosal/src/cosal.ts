@@ -182,12 +182,17 @@ export class Cosal {
 
   // takes a vector, returns a list of ids
   searchWithAnnoy = async (db: DBType, vector: number[], { max }) => {
-    return await annoySearch({
+    const resultsByIndex = await annoySearch({
       path: this.databasePath,
       db,
       vector,
       max,
     })
+    // map back to ids
+    return resultsByIndex.map(({ distance, id }) => ({
+      id: this.state[db].indexToId[id],
+      distance,
+    }))
   }
 
   // goes through all vectors and sorts by smallest distance up to max

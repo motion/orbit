@@ -1,12 +1,9 @@
 import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SelectionStore, Direction } from './SelectionStore'
-import { observeOne } from '@mcro/model-bridge'
-import { SettingModel } from '@mcro/models'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
 import { AppActions } from '../actions/AppActions'
-import { generalSettingQuery } from '../helpers/queries'
 
 export class PaneManagerStore {
   props: {
@@ -20,30 +17,13 @@ export class PaneManagerStore {
 
   keyablePanes = [0, 3]
   paneIndex = 0
-  forcePane = null
-  hasOnboarded = true
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
     onlyUpdateIfChanged: true,
   })
-  generalSetting = null
-  generalSetting$ = observeOne(SettingModel, generalSettingQuery).subscribe(({ values }) => {
-    this.hasOnboarded = values.hasOnboarded
-  })
 
   didMount() {
-    on(this, autoTrack(this, ['hasOnboarded', 'paneIndex']))
-
-    on(
-      this,
-      observeOne(SettingModel, generalSettingQuery).subscribe(generalSetting => {
-        this.generalSetting = generalSetting
-      }),
-    )
-  }
-
-  willUnmount() {
-    this.generalSetting$.unsubscribe()
+    on(this, autoTrack(this, ['paneIndex']))
   }
 
   move = (direction: Direction) => {
@@ -104,16 +84,9 @@ export class PaneManagerStore {
     return this.panes[this.paneIndex]
   }
 
-  setForcePane = val => {
-    this.forcePane = val
-  }
-
   activePane = react(
-    () => [this.forcePane, this.panes, this.paneIndex],
-    async ([forcePane], { sleep }) => {
-      if (forcePane) {
-        return forcePane
-      }
+    () => [this.panes, this.paneIndex],
+    async (_, { sleep }) => {
       const active = this.panes[this.paneIndex]
       ensure('changed', active !== this.activePane)
       // let activePaneFast be a frame ahead

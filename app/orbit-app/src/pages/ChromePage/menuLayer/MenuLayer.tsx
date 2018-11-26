@@ -83,12 +83,16 @@ export const MenuLayer = React.memo(() => {
   )
 })
 
-const config = {
+const springyConfig = {
   mass: 0.8,
   tension: 280,
   friction: 22,
   velocity: 20,
 }
+const noAnimationConfig = { duration: 1 }
+
+const getContentTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
+const getChromeTransform = (x, y) => `translate3d(${x + 5}px,${y}px,0)`
 
 const MenuChrome = React.memo(
   ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
@@ -100,14 +104,13 @@ const MenuChrome = React.memo(
 
     const left = menuCenter - menuWidth / 2
     const { open, repositioning } = openState
+    const config = repositioning ? noAnimationConfig : springyConfig
     const [{ x, y, opacity }] = useSpring({
       x: left,
       y: open ? 0 : -5,
       opacity: open ? 1 : 0,
       config,
     })
-    const [{ xp }] = useSpring({ xp: left + 5, config })
-    const getTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
 
     return (
       <>
@@ -118,7 +121,7 @@ const MenuChrome = React.memo(
             zIndex: 100000,
             pointerEvents: 'none',
             borderRadius: 12,
-            transform: repositioning ? getTransform(x, y) : interpolate([x, y], getTransform),
+            transform: interpolate([x, y], getContentTransform),
             opacity: opacity,
             width: menuWidth - menuPad * 2,
             margin: menuPad,
@@ -129,13 +132,13 @@ const MenuChrome = React.memo(
         <animated.div
           style={{
             position: 'absolute',
-            transform: interpolate([xp], x => `translate3d(${x}px,0px,0)`),
+            transform: interpolate([x, y], getChromeTransform),
+            opacity: opacity,
           }}
         >
           <Popover
             noPortal
-            open={open}
-            transition={repositioning ? 'none' : transition}
+            open
             background
             width={menuWidth}
             height={menuHeight + 11 /* arrow size, for now */}

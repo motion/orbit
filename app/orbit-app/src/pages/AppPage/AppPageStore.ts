@@ -1,4 +1,4 @@
-import { ensure, on, react, sleep } from '@mcro/black'
+import { ensure, react, sleep } from '@mcro/black'
 import { Bit, PersonBit, Setting } from '@mcro/models'
 import { App, AppState } from '@mcro/stores'
 import * as React from 'react'
@@ -24,13 +24,8 @@ export class AppPageStore {
     fixed?: boolean
   }
 
-  dragOffset?: [number, number] = null
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
-
-  willUnmount() {
-    this.clearDragHandlers()
-  }
 
   isPeek = react(() => !this.appState.torn, _ => _, {
     onlyUpdateIfChanged: true,
@@ -41,16 +36,17 @@ export class AppPageStore {
     () => App.getAppState(APP_ID),
     async (appState, { sleep, state }) => {
       if (!appState) {
-        console.log('weird no app state...', appState, APP_ID, JSON.stringify(App.appsState))
+        console.log('weird no app state...', appState)
         return {} as AppState
       }
       if (!appState.torn && state.hasResolvedOnce) {
-        await sleep(60)
+        await sleep(20)
       }
       if (this.isTorn) {
         // cancel on no app state so we dont cause bugs on close
         ensure('state', !!appState)
       }
+      console.log('returning', stringify(appState), stringify(App.getAppState(APP_ID)))
       return appState
     },
     {
@@ -123,10 +119,6 @@ export class AppPageStore {
     return this.history.length > 1
   }
 
-  clearTorn = () => {
-    this.dragOffset = null
-  }
-
   tearPeek = async () => {
     if (this.isTorn) {
       return false
@@ -134,63 +126,6 @@ export class AppPageStore {
     AppActions.tearPeek()
     await sleep(16)
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
-  }
-
-  offMove = null
-  offUp = null
-  initMouseDown = null
-
-  onDragStart = e => {
-    console.log('drag titlebar...')
-    e.preventDefault()
-    this.tearPeek()
-    this.clearDragHandlers()
-    this.initMouseDown = {
-      x: e.clientX,
-      y: e.clientY,
-    }
-    this.offMove = on(this, window, 'mousemove', this.handleDragMove)
-    this.offUp = on(this, window, 'mouseup', this.handleDragEnd)
-  }
-
-  clearDragHandlers = () => {
-    if (this.offMove) {
-      this.offMove()
-      this.offMove = null
-    }
-    if (this.offUp) {
-      this.offUp()
-      this.offUp = null
-    }
-  }
-
-  handleDragMove = e => {
-    const { x, y } = this.initMouseDown
-    this.dragOffset = [e.clientX - x, e.clientY - y]
-  }
-
-  // this is triggered after Actions.finishPeekDrag
-  // where we can reset the dragOffset in the same frame
-  finishDrag = false
-
-  resetDragOffsetOnFinishDrag = react(
-    () => App.getAppState(APP_ID).position,
-    () => {
-      ensure('finished drag', this.finishDrag)
-      console.log('finish drag?', this.dragOffset, App.appsState[APP_ID].position)
-      this.dragOffset = [0, 0]
-      this.finishDrag = false
-    },
-  )
-
-  handleDragEnd = () => {
-    this.clearDragHandlers()
-
-    // now that it's pinned, update position
-    // reset drag offset while simultaneously setting official position
-    // this *shouldnt* jitter, technically
-    this.finishDrag = true
-    AppActions.finishPeekDrag([...this.framePosition])
   }
 
   handleClose = () => {

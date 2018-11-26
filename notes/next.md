@@ -28,13 +28,43 @@ Apps:
 
 Tray:
 
+- movement and pinning logic for typing, option+type
+- option to turn off option+peek
 - add auto select on search first item
 - Orbit search results context menu opens by default (not show last one)
 - contextual search app only shows individual items
 
-Demo:
+---
 
-Demo will have huge returns on fanciness, as well as launch. Even if we sacrifice certain features working perfectly, having it feel "new" is more important than it delivering massive value day one. Not that it shouldn't, it should deliver value and the topics/vocab/people app especially should focus on making this apparent. But beyond that, excitement mostly comes from people believing this is "the next cool thing" and that activation threshold is very high. But, once activated, it has massive returns, and a positive feedback loop. We're close to hitting it: between custom contextual apps with app windows, tear away into app windows, and topic modeling for peoples profiles and company vocab, i think we're nearly there. OCR of course would wow, and augmented computing. But for all of this to really be believable it requires it to all be stable enough that we can not only "record a demo video" of it all but actually release it into peoples hands.
+apps v2
+
+search:
+
+- making contextual search work with OCR
+- fixing contextual search display
+- fixing integration filters in ui
+- drag/drop support of items (easy using electron drag drop api)
+- grouped search app main view
+
+people:
+
+- flat cards
+- integrate topics into profiles
+- able to search people by topics and have them show
+- quick results could just show people for now
+- fix profiles list view of bits
+
+lists:
+
+topics:
+
+---
+
+Spaces
+
+- disable for next beta, think through doing it for beta after that
+
+---
 
 Contextual stuff is high on this list:
 
@@ -106,15 +136,12 @@ umed:
     - we need to change it to also install/run mkcert and add orbitauth.com with https
     - firefox support would be good using mkcert instructions
 
-- Frontend
-
-  - AppPage/AppFrame window resize with re-resizable needs a lot work to work well
-  - goal is to be able to resize app windows
-  - there are some bugs in app windows with focus, may require you to check there
-
 - Team account management and onboarding flow
 
   - Create a server and database system that is good for handling signups
+  - We need frontend for signup/login/email flows
+  - Create space
+  - Sync just configuration data from Space
 
 ---
 

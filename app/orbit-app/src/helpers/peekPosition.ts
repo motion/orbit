@@ -4,11 +4,11 @@ import { isEqual } from 'lodash'
 const MIN_Y = 60
 const EDGE_PAD = 20
 const BOTTOM_PAD = 40
-const NUDGE_AMT = 40
+const NUDGE_AMT = 0
 
 const screenSize = () => [window.innerWidth, window.innerHeight]
 
-type WindowMap = {
+type AppPosition = {
   position: [number, number]
   size: [number, number]
   peekOnLeft: boolean
@@ -57,8 +57,9 @@ export function peekPosition(
   target,
   appConfig: AppConfig,
   parentBounds: Position,
-): WindowMap | null {
+): AppPosition | null {
   if (!target) {
+    console.warn('no target..')
     return null
   }
   const nextPosition = getPeekPositionFromTarget(target, lastPeek, appConfig, parentBounds)
@@ -72,21 +73,21 @@ export function peekPosition(
 // but we don't want to stay alllll the way in place because it looks better to move a little
 // so we'll nudge it down just a little.
 
-function getLazyPosition(target: Position, peekHeight: number, lastPeek: WindowMap): number {
+function getLazyPosition(target: Position, peekHeight: number, lastPeek: AppPosition): number {
   if (!lastPeek || !lastTarget) {
     return target.top
   }
-  let y = target.top
+  let y = target.top || 0
   const peekLastY = lastPeek.position[1]
   // adjacent (in grid next to each other)
-  if (target.top === lastTarget.top) {
+  if (y === lastTarget.top) {
     return peekLastY
   }
-  if (target.top > lastTarget.top) {
+  if (y > lastTarget.top) {
     // moving DOWN
-    if (target.top > peekLastY + peekHeight) {
+    if (y > peekLastY + peekHeight) {
       // target is BELOW peek, do minimum possible (+ edge pad)
-      y = target.top - peekHeight + BOTTOM_PAD
+      y = y - peekHeight + BOTTOM_PAD
     } else {
       // target is WITHIN peek, do a small nudge
       y = peekLastY + NUDGE_AMT
@@ -96,9 +97,9 @@ function getLazyPosition(target: Position, peekHeight: number, lastPeek: WindowM
     // y = Math.max()
   } else {
     // moving UP
-    if (target.top < peekLastY) {
+    if (y < peekLastY) {
       // target is ABOVE peek
-      y = target.top
+      y = y
     } else {
       // target is WITHIN peek, small nudge
       y = peekLastY - NUDGE_AMT
@@ -108,7 +109,7 @@ function getLazyPosition(target: Position, peekHeight: number, lastPeek: WindowM
   y = Math.max(MIN_Y, y)
   // and not too far down
   y = Math.min(y, target.top - 10)
-  return y
+  return y || 0
 }
 
 function getPeekPositionFromTarget(
@@ -117,7 +118,7 @@ function getPeekPositionFromTarget(
   appConfig: AppConfig,
   parentBounds: Position,
   appOnLeft?: boolean,
-): WindowMap | null {
+): AppPosition | null {
   // dont reset position on same target re-opening
   if (isEqual(target, lastTarget)) {
     return lastPeek
@@ -128,7 +129,7 @@ function getPeekPositionFromTarget(
   const rightSpace = screenW - (parentBounds.left + parentBounds.width)
   let peekOnLeft = leftSpace > rightSpace
   let [pW, pH] = getPeekSize(screenSize(), appConfig)
-  let x
+  let x = 0
   let y = getLazyPosition(target, pH, lastPeek)
 
   // prefer away from app if possible

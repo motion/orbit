@@ -90,7 +90,17 @@ export const ListsAppIndex = memo((props: AppProps) => {
           titleProps: { fontSize: isSmall ? 18 : 20, fontWeight: 300 },
           ...props.itemProps,
         }}
-        getItemProps={index => ({ appConfig: results[index] })}
+        getItemProps={index => {
+          const result = results[index]
+          return {
+            appConfig: {
+              id: `${result.id}`,
+              title: result.title,
+              type: result.type,
+              index: result.index,
+            },
+          }
+        }}
       />
       <ListEdit />
     </>

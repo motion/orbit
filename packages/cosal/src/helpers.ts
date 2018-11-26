@@ -15,10 +15,12 @@ export const getWordVector = (word: string, vectors, fallbackVector): number[] =
   return vectors[word.toLowerCase()] || fallbackVector.map(() => random(-0.15, 0.15))
 }
 
+export const normalizeWord = word => word.replace(/[^a-zA-Z0-9- ]+/gi, '').toLowerCase()
+
 export function toWords(s: string): { word: string; normalized: string }[] {
   const final = []
   for (const word of s.split(' ')) {
-    const normalized = word.replace(/[^a-zA-Z0-9- ]+/gi, '').toLowerCase()
+    const normalized = normalizeWord(word)
     if (normalized.length) {
       final.push({ word, normalized })
     }

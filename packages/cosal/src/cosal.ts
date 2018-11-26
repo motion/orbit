@@ -2,7 +2,7 @@ import { getIncrementalCovariance, Covariance } from './getIncrementalCovariance
 import { toCosal, Pair } from './toCosal'
 import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
 import { getDefaultVectors } from './getDefaultVectors'
-import { defaultSlang } from './helpers'
+import { defaultSlang, normalizeWord } from './helpers'
 import { getCovariance } from './getCovariance'
 import { annoySearch, annoyScan } from './annoy'
 import { join } from 'path'
@@ -285,5 +285,38 @@ export class Cosal {
       return []
     }
     return words.map(x => x.string.replace(/\s\s*/g, ' ').trim())
+  }
+
+  getCommonUniqueTerms = async (text: string, { max = 10 }) => {
+    const terms = text
+      .split(' ')
+      .map(normalizeWord)
+      .filter(word => !!word && !this.seedVectors[word])
+    const termCounts = {}
+    let uniqueTerms = []
+    let lowerBound = 1
+
+    const sortByMostCounted = () => {
+      uniqueTerms.sort((a, b) => (termCounts[a] > termCounts[b] ? -1 : 1))
+    }
+
+    for (const term of terms) {
+      termCounts[term] = (termCounts[term] || 0) + 1
+      if (uniqueTerms.indexOf(term) > -1) {
+        continue
+      }
+      if (termCounts[term] > lowerBound) {
+        uniqueTerms.push(term)
+      }
+      if (uniqueTerms.length > max) {
+        sortByMostCounted()
+        uniqueTerms = uniqueTerms.slice(0, max - 1)
+        lowerBound++
+      }
+    }
+
+    sortByMostCounted()
+
+    return uniqueTerms.map(word => ({ word, count: termCounts[word] }))
   }
 }

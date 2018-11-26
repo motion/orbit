@@ -51,10 +51,7 @@ export class SubPaneStore {
         isLeft: this.isLeft,
       }
     },
-    async (val, { sleep }) => {
-      await sleep()
-      return val
-    },
+    _ => _,
     {
       onlyUpdateIfChanged: true,
       defaultValue: {

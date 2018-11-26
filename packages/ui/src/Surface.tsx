@@ -148,6 +148,14 @@ const SurfaceFrame = view(View, {
   const hoverIconStyle = {
     color: props.iconHoverColor || themeStyles.colorHover,
   }
+  const hoverStyle = props.active
+    ? null
+    : {
+        ...themeStyles['&:hover'],
+        ...propStyles['&:hover'],
+        // @ts-ignore
+        ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
+      }
   let surfaceStyles = {
     padding: props.padding,
     margin: props.margin,
@@ -174,12 +182,7 @@ const SurfaceFrame = view(View, {
     ...(props.chromeless && chromelessStyle),
     ...props.segmentedStyle,
     ...circularStyles,
-    '&:hover': {
-      ...themeStyles['&:hover'],
-      ...propStyles['&:hover'],
-      // @ts-ignore
-      ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
-    },
+    '&:hover': hoverStyle,
   }
   return alphaColor(surfaceStyles, { alpha: props.alpha, alphaHover: props.alphaHover })
 })

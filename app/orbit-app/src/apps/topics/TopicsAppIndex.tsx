@@ -120,19 +120,23 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
         </Pane>
       </ScrollableContent>
 
-      {store.activeTab !== 'trend' && (
-        <TopicEdit type={store.activeTab === 'topics' ? 'topic' : 'term'} />
-      )}
-
-      <SegmentedRow
-        itemProps={{ width: '33.3%', size: 0.9, sizeHeight: 0.9 }}
-        padding={[0, 6]}
-        margin={[10, 0]}
-      >
-        <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
-        <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
-        <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
-      </SegmentedRow>
+      <SidebarBottom>
+        {store.activeTab !== 'trend' && (
+          <>
+            <TopicEdit type={store.activeTab === 'topics' ? 'topic' : 'term'} />
+            <VerticalSpace small />
+          </>
+        )}
+        <SegmentedRow itemProps={{ width: '33.3%', size: 0.9, sizeHeight: 0.9 }}>
+          <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
+          <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
+          <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
+        </SegmentedRow>
+      </SidebarBottom>
     </>
   )
+})
+
+const SidebarBottom = view({
+  padding: 6,
 })

@@ -14,7 +14,7 @@ import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
 import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
-import { UIContext } from './helpers/contexts'
+import { UIContext, UIContextType } from './helpers/contexts'
 import { Tooltip } from './Tooltip'
 import { selectThemeSubset } from './helpers/selectThemeSubset'
 
@@ -56,7 +56,7 @@ export type SurfaceProps = CSSPropertySet & {
   theme?: ThemeObject
   tooltip?: string
   tooltipProps?: Object
-  uiContext?: { inSegment?: { first: boolean; last: boolean; index: number } }
+  uiContext?: UIContextType
   width?: number | string
   alpha?: number
   alphaHover?: number
@@ -379,7 +379,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
   }
 }
 
-// @ts-ignore
 export const Surface = React.memo(props => (
   <UIContext.Consumer>
     {uiContext => <SurfaceInner uiContext={uiContext} {...props} />}

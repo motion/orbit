@@ -98,6 +98,14 @@ export class AppFrameStore {
     return [x, y]
   }
 
+  showSidebarOnTear = react(
+    () => this.props.appPageStore.isTorn,
+    torn => {
+      ensure('torn', torn)
+      this.showSidebar = true
+    },
+  )
+
   syncFromAppState = react(
     () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
     ([size, position]) => {

@@ -46,7 +46,6 @@ export class AppPageStore {
         // cancel on no app state so we dont cause bugs on close
         ensure('state', !!appState)
       }
-      console.log('returning', stringify(appState), stringify(App.getAppState(APP_ID)))
       return appState
     },
     {

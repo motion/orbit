@@ -10,7 +10,7 @@ export const IS_ELECTRON = !window['notInElectron']
 
 export const BORDER_RADIUS = 15
 export const CHROME_PAD = 1
-export const PEEK_BORDER_RADIUS = 9
+export const PEEK_BORDER_RADIUS = 10
 
 export const SHADOW_PAD = 15
 export const ORBIT_COLOR = UI.color('#714842')

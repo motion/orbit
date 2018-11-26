@@ -127,7 +127,7 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
       <SegmentedRow
         itemProps={{ width: '33.3%', size: 0.9, sizeHeight: 0.9 }}
         padding={[0, 6]}
-        margin={[0, 0, 10]}
+        margin={[10, 0]}
       >
         <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
         <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>

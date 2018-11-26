@@ -88,6 +88,18 @@ async function main() {
             } as AppConfig,
           })
         }
+        if (TEST_APP === 'topics') {
+          AppActions.setPeekApp({
+            position: [0, 0],
+            size: [500, 500],
+            appType: 'topics',
+            appConfig: {
+              id: '1',
+              title: 'Topics',
+              type: 'topics',
+            } as AppConfig,
+          })
+        }
       }
       test()
     }

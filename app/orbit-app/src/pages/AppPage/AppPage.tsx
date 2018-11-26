@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, provide, attach } from '@mcro/black'
 import { SourcesStore } from '../../stores/SourcesStore'
-import { AppWrapper } from '../../views'
+import { AppWrapper, HorizontalSpace } from '../../views'
 import { AppPageStore } from './AppPageStore'
 import * as UI from '@mcro/ui'
 import { AppFrame, AppFrameStore } from './AppFrame'
@@ -12,6 +12,10 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { Sidebar, Row, Text, Col } from '@mcro/ui'
 import { Searchable } from '../../components/Searchable'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
+import { SettingStore } from '../../stores/SettingStore'
+import { SpaceStore } from '../../stores/SpaceStore'
+import { Icon } from '../../views/Icon'
+import { Centered } from '../../views/Centered'
 
 // see main.ts for setup for testing this in browser
 
@@ -23,6 +27,8 @@ type Props = {
 
 @provide({
   sourcesStore: SourcesStore,
+  settingStore: SettingStore,
+  spaceStore: SpaceStore,
 })
 @provide({
   appPageStore: AppPageStore,
@@ -50,10 +56,11 @@ export class AppPage extends React.Component<Props> {
 }
 
 const TitleBar = view({
-  height: 28,
+  height: 32,
   alignItems: 'center',
   flexFlow: 'row',
   padding: [0, 8],
+  position: 'relative',
 }).theme(({ theme }) => ({
   borderBottom: [1, theme.borderColor.alpha(0.5)],
 }))
@@ -81,20 +88,35 @@ class AppPageContent extends React.Component<Props & { appFrameStore?: AppFrameS
               size: 10,
             }}
           />
-          <Text
-            ellipse
-            maxWidth="100%"
-            selectable={false}
-            size={0.85}
-            fontWeight={600}
-            alignItems="center"
-          >
-            {appConfig.title}
-          </Text>
+          <HorizontalSpace />
+          <Icon
+            onClick={appFrameStore.toggleSidebar}
+            name="sidebar"
+            fill={appFrameStore.showSidebar ? '#3FB2FF' : '#666'}
+            size={16}
+            style={{ opacity: appFrameStore.showSidebar ? 1 : 0.5 }}
+          />
+          <Centered>
+            <Text
+              ellipse
+              maxWidth="100%"
+              selectable={false}
+              size={0.95}
+              fontWeight={500}
+              alignItems="center"
+            >
+              {appConfig.title}
+            </Text>
+          </Centered>
         </TitleBar>
         <Row flex={1}>
           {appPageStore.isTorn && (
-            <Sidebar width={200}>
+            <Sidebar
+              width={appFrameStore.showSidebar ? appFrameStore.sidebarWidth : 0}
+              onResize={appFrameStore.setSidebarWidth}
+              maxWidth={appFrameStore.size.width * 0.5}
+              minWidth={200}
+            >
               <Searchable queryStore={queryStore}>
                 <AppView
                   id={appConfig.id}

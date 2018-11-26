@@ -9,12 +9,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
-import {
-  getDistanceTo,
-  maybeSnapLeft,
-  maybeSnapTop,
-  SNAP_SIZE,
-} from './helpers/snap'
+import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
 
 const invariant = require('invariant')
 
@@ -65,7 +60,7 @@ type InteractiveProps = {
   onCanResize?: (sides?: ResizingSides) => void
   onResizeStart?: () => void
   onResizeEnd?: () => void
-  onResize?: (width: number, height: number) => void
+  onResize?: (width: number, height?: number, desiredWidth?: number, desiredHeight?: number) => void
   resizing?: boolean
   resizable?: boolean | ResizingSides
   innerRef?: (elem: HTMLElement) => void
@@ -90,10 +85,7 @@ const InteractiveContainer = view({
   willChange: 'transform, height, width, z-index',
 })
 
-export class Interactive extends React.Component<
-  InteractiveProps,
-  InteractiveState
-> {
+export class Interactive extends React.Component<InteractiveProps, InteractiveState> {
   static defaultProps = {
     minHeight: 0,
     minLeft: 0,
@@ -330,7 +322,6 @@ export class Interactive extends React.Component<
   }
 
   resize(width: number, height: number) {
-    console.log('resize me', width, height, this.props)
     if (width === this.props.width && height === this.props.height) {
       // noop
       return
@@ -339,16 +330,16 @@ export class Interactive extends React.Component<
     if (!onResize) {
       return
     }
-    width = Math.max(this.props.minWidth, width)
-    height = Math.max(this.props.minHeight, height)
+    let fwidth = Math.max(this.props.minWidth, width)
+    let fheight = Math.max(this.props.minHeight, height)
     const { maxHeight, maxWidth } = this.props
     if (maxWidth != null) {
-      width = Math.min(maxWidth, width)
+      fwidth = Math.min(maxWidth, fwidth)
     }
     if (maxHeight != null) {
-      height = Math.min(maxHeight, height)
+      fheight = Math.min(maxHeight, fheight)
     }
-    onResize(width, height)
+    onResize(fwidth, fheight, width, height)
   }
 
   move(top: number, left: number, event: MouseEvent) {
@@ -365,11 +356,7 @@ export class Interactive extends React.Component<
   }
 
   calculateResize(event: MouseEvent) {
-    const {
-      resizingInitialCursor,
-      resizingInitialRect,
-      resizingSides,
-    } = this.state
+    const { resizingInitialCursor, resizingInitialRect, resizingSides } = this.state
     invariant(resizingInitialRect, 'TODO')
     invariant(resizingInitialCursor, 'TODO')
     invariant(resizingSides, 'TODO')
@@ -473,10 +460,7 @@ export class Interactive extends React.Component<
     if (!canResize) {
       return
     }
-    const {
-      left: offsetLeft,
-      top: offsetTop,
-    } = this.ref.getBoundingClientRect()
+    const { left: offsetLeft, top: offsetTop } = this.ref.getBoundingClientRect()
     const { height, width } = this.getRect()
     const x = event.clientX - offsetLeft
     const y = event.clientY - offsetTop
@@ -514,10 +498,7 @@ export class Interactive extends React.Component<
       newCursor = 'ew-resize'
     }
     // if resizing vertically and one side can't be resized then use different cursor
-    if (
-      movingHorizontal &&
-      (canResize.left !== true || canResize.right !== true)
-    ) {
+    if (movingHorizontal && (canResize.left !== true || canResize.right !== true)) {
       newCursor = 'col-resize'
     }
     // top

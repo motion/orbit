@@ -69,7 +69,7 @@ type SidebarProps = {
   /**
    * Callback when the sidebar size ahs changed.
    */
-  onResize?: (width: number, height: number) => void
+  onResize?: (width: number, height?: number, desiredWidth?: number) => void
   /**
    * Contents of the sidebar.
    */
@@ -107,10 +107,10 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
     return null
   }
 
-  onResize = (width: number, height: number) => {
+  onResize = (width: number, height: number, desiredWidth: number) => {
     const { onResize } = this.props
     if (onResize) {
-      onResize(width, height)
+      onResize(width, height, desiredWidth)
     } else {
       this.setState({ userChange: true, width, height })
     }

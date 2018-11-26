@@ -4,6 +4,7 @@ import { SVG } from './SVG'
 import { memo } from '../helpers/memo'
 
 const icons = {
+  sidebar: require('!raw-loader!../../public/streamline/sidebar.svg'),
   add: require('!raw-loader!../../public/streamline/add.svg'),
   addCircle: require('!raw-loader!../../public/streamline/add-circle.svg'),
   alertCircle: require('!raw-loader!../../public/streamline/alert-circle.svg'),
@@ -151,7 +152,7 @@ const findIconName = name => {
   return false
 }
 
-type IconProps = {
+type IconProps = React.HTMLProps<SVGElement> & {
   name: string
   fill?: string
   size?: number

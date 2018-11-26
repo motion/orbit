@@ -11,13 +11,13 @@ class TopicsMainStore {
   props: AppProps
 
   results = react(
-    async () => {
+    () => this.props.appStore.appConfig.title,
+    async topic => {
       const res = await loadMany(BitsNearTopicModel, {
-        args: { topic: this.props.appStore.appConfig.title, count: 10 },
+        args: { topic, count: 10 },
       })
       return res
     },
-    _ => _,
     {
       defaultValue: [],
     },

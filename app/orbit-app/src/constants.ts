@@ -2,6 +2,8 @@ export * from '@mcro/constants'
 
 import * as UI from '@mcro/ui'
 
+export const MENU_WIDTH = 320
+
 export const IS_MENU = window.location.pathname === '/chrome'
 export const IS_APP = window.location.pathname === '/app'
 export const APP_ID = IS_APP ? +window.location.search.match(/id=([0-9]+)/)[1] : null

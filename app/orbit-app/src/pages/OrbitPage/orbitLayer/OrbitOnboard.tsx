@@ -13,6 +13,7 @@ import { BottomControls } from '../../../views/BottomControls'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { Slider, SliderPane } from '../../../views/Slider'
 import { BlurryGuys } from './BlurryGuys'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
 type Props = {
   settingStore?: SettingStore
@@ -136,10 +137,11 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
   const allAppsSorted = sourcesStore.allSources
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
+
   return (
     <>
       <BlurryGuys />
-      <Slider curFrame={store.curFrame}>
+      <Slider curFrame={store.curFrame} framePad={30} frameWidth={ORBIT_WIDTH} verticalPad={50}>
         <SliderPane>
           {store.accepted === null && (
             <Centered>

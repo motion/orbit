@@ -30,10 +30,6 @@ export const AuthorizeIntegrationCommand = new Command<boolean, void>(
   'authorize-integration-command',
 )
 
-export const SetupCertificateCommand = new Command<boolean, void>(
-  'SetupCertificateCommand',
-)
+export const SetupCertificateCommand = new Command<boolean, void>('SetupCertificateCommand')
 
-export const HasCertificateCommand = new Command<boolean, void>(
-  'HasCertificateCommand',
-)
+export const HasCertificateCommand = new Command<boolean, void>('HasCertificateCommand')

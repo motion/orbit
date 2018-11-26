@@ -24,7 +24,10 @@ export class ElectronStore {
       this.stores = stores
       this.views = views
     })
+
+    this.setScreenSize()
     this.reset()
+
     screen.on('display-metrics-changed', async (_event, _display) => {
       log.info('got display metrics changed event')
       // give it a bit to adjust
@@ -32,8 +35,6 @@ export class ElectronStore {
       this.setScreenSize()
       this.reset()
     })
-    await sleep(100)
-    this.setScreenSize()
   }
 
   private setScreenSize = () => {

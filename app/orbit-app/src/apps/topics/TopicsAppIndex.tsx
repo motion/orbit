@@ -9,7 +9,8 @@ import { memo } from '../../helpers/memo'
 import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { VerticalSpace } from '../../views'
-import { Pane } from '../../views/Pane'
+import { SliderPane, Slider } from '../../views/Slider'
+import { MENU_WIDTH } from '../../constants'
 
 const icons = {
   0: ['neutral', 'rgba(180,180,180,0.75)'],
@@ -20,6 +21,7 @@ const icons = {
 class TopicsIndexStore {
   props: AppProps
   activeTab = 'trend'
+  tabs = ['trend', 'topics', 'terms']
 
   setActiveTab = name => {
     this.activeTab = name
@@ -95,13 +97,17 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
   const store = useStore(TopicsIndexStore, props)
   return (
     <>
-      <ScrollableContent>
-        <Pane isShown={store.activeTab === 'trend'}>
+      <Slider
+        fixHeightToTallest
+        curFrame={store.tabs.indexOf(store.activeTab)}
+        frameWidth={MENU_WIDTH}
+      >
+        <SliderPane isShown={store.activeTab === 'trend'}>
           {!!store.results.length && (
-            <>
+            <ScrollableContent>
               <Separator>Topics</Separator>
               <TopicList results={store.results.slice(0, 8)} />
-            </>
+            </ScrollableContent>
           )}
           <VerticalSpace />
           {!!store.results.length && (
@@ -110,16 +116,16 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
               <TopicList results={store.results.slice(0, 8)} />
             </>
           )}
-        </Pane>
+        </SliderPane>
 
-        <Pane isShown={store.activeTab === 'topics'}>
+        <SliderPane isShown={store.activeTab === 'topics'}>
           <TopicList results={store.results} />
-        </Pane>
+        </SliderPane>
 
-        <Pane isShown={store.activeTab === 'terms'}>
+        <SliderPane isShown={store.activeTab === 'terms'}>
           <TopicList results={store.results} />
-        </Pane>
-      </ScrollableContent>
+        </SliderPane>
+      </Slider>
 
       <SidebarBottom>
         {store.activeTab !== 'trend' && (

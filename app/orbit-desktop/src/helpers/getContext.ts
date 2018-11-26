@@ -1,8 +1,10 @@
-import runAppleScript from './runAppleScript'
+import * as applescript from 'node-osascript'
+import promisify from 'sb-promisify'
 import escapeAppleScriptString from 'escape-string-applescript'
 import getContextInjection from './getContextInjection'
 
 const CONTEXT_JS = `(${getContextInjection.toString()})()`
+const runAppleScript = promisify(applescript.execute)
 
 export async function getChromeContext() {
   return parseContextRes(

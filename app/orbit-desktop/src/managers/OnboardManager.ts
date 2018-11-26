@@ -1,12 +1,11 @@
+import { ensure, react } from '@mcro/black'
 import { SettingEntity } from '@mcro/entities'
-import sqlite from 'sqlite'
+import { App, Desktop } from '@mcro/stores'
 import Fs from 'fs-extra'
-import Path from 'path'
 import Os from 'os'
-import { Desktop, App } from '@mcro/stores'
+import Path from 'path'
+import sqlite from 'sqlite'
 import { getRepository } from 'typeorm'
-import { PortForwardStore, checkAuthProxy } from './PortForwardStore'
-import { react, ensure } from '@mcro/black'
 
 const chromeDbPaths = [
   Path.join(
@@ -33,7 +32,6 @@ export class OnboardManager {
   generalSetting: SettingEntity
   history = []
   foundIntegrations = null
-  portForwardStore = new PortForwardStore()
 
   constructor() {
     this.start()
@@ -45,19 +43,6 @@ export class OnboardManager {
       await this.scanHistory()
     }
   }
-
-  forwardOnAccept = react(
-    () => App.state.acceptsForwarding,
-    async accepts => {
-      ensure('accepts', accepts)
-      if (!(await checkAuthProxy())) {
-        this.portForwardStore.setupDNSProxy()
-      }
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
 
   async scanHistory() {
     const chromeFolder = chromeDbPaths.find(x => Fs.existsSync(x))

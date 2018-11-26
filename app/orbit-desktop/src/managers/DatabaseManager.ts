@@ -1,13 +1,12 @@
-import { Bit } from '@mcro/models/_'
 import { getConnection } from 'typeorm'
 import { DATABASE_PATH, COSAL_DB } from '../constants'
 import { Logger } from '@mcro/logger'
 import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
-import { sleep } from '../helpers'
 import connectModels from '../helpers/connectModels'
 import { Entities } from '@mcro/entities'
+import { sleep } from '@mcro/helpers'
 
 const log = new Logger('database')
 

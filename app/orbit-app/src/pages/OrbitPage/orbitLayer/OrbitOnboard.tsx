@@ -5,8 +5,6 @@ import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { addAppClickHandler } from '../../../helpers/addAppClickHandler'
 import { SourcesStore } from '../../../stores/SourcesStore'
 import { Title, VerticalSpace } from '../../../views'
-import { checkAuthProxy } from '../../../helpers/checkAuthProxy'
-import { promptForAuthProxy } from '../../../helpers/promptForAuthProxy'
 import { BlurryGuys } from './BlurryGuys'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { OrbitIntegration, ItemType } from '../../../sources/types'
@@ -57,17 +55,18 @@ class OnboardStore {
 
   async didMount() {
     console.log('mounting OrbitOnboard')
-    await this.checkAlreadyProxied()
+    // todo: do we need to run https auth server here? looks so
+    // await this.checkAlreadyProxied()
     if (this.accepted && this.curFrame === 0) {
       this.nextFrame()
     }
   }
 
-  async checkAlreadyProxied() {
-    if (await checkAuthProxy()) {
-      this.accepted = true
-    }
-  }
+  // async checkAlreadyProxied() {
+    // if (await checkAuthProxy()) {
+    //   this.accepted = true
+    // }
+  // }
 
   get disableButtons() {
     const isShowingSuccessMessage = this.accepted && this.curFrame === 0
@@ -76,10 +75,10 @@ class OnboardStore {
 
   stateActions = {
     0: async () => {
-      await this.checkAlreadyProxied()
+      // await this.checkAlreadyProxied()
       console.log('already on?', this.accepted)
       if (this.accepted !== true) {
-        const { accepted, message } = await promptForAuthProxy()
+        const [ accepted, message ] = [true, ''] // await promptForAuthProxy()
         console.log('got from prompt', accepted, message)
         this.accepted = accepted
         this.acceptedMessage = message

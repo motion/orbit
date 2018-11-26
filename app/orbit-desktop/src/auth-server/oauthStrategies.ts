@@ -1,13 +1,16 @@
 import { Strategy as GithubStrategy } from 'passport-github'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import SlackStrategy from './passportSlack'
+import { getGlobalConfig } from '@mcro/config'
+
+const Config = getGlobalConfig()
 
 export default {
   slack: {
     strategy: SlackStrategy,
     config: {
       credentials: {
-        callbackURL: 'https://orbitauth.com/auth/slack/callback',
+        callbackURL: Config.urls.auth + '/auth/slack/callback',
         clientID: '19222037265.219986189088',
         clientSecret: '281011e25d0c473136b4caa5807ada6d',
       },
@@ -30,7 +33,7 @@ export default {
     strategy: GithubStrategy,
     config: {
       credentials: {
-        callbackURL: 'https://orbitauth.com/auth/github/callback',
+        callbackURL: Config.urls.auth + '/auth/github/callback',
         clientID: 'de95d6d639ef4a013166',
         clientSecret: 'aa259c9b4ea25c22b288761e03e7f19f43b0cca6',
         scope: ['user:email', 'notifications', 'repo', 'read:org'],
@@ -41,7 +44,7 @@ export default {
     strategy: GoogleStrategy,
     config: {
       credentials: {
-        callbackURL: 'https://orbitauth.com/auth/gmail/callback',
+        callbackURL: Config.urls.auth + '/auth/gmail/callback',
         clientID:
           '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com',
         clientSecret: 'LLXP2Vq36socQtgXy_XQqLOW',
@@ -57,7 +60,7 @@ export default {
     strategy: GoogleStrategy,
     config: {
       credentials: {
-        callbackURL: 'https://orbitauth.com/auth/drive/callback',
+        callbackURL: Config.urls.auth + '/auth/drive/callback',
         clientID:
           '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com',
         clientSecret: 'LLXP2Vq36socQtgXy_XQqLOW',

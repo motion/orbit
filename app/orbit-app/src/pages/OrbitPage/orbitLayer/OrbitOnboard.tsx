@@ -98,7 +98,6 @@ class OnboardStore {
     1: () => {},
     2: async () => {
       this.props.paneManagerStore.setActivePane('home')
-      this.props.paneManagerStore.forceOnboard = false
       // save setting
       await this.props.settingStore.update({
         hasOnboarded: true,

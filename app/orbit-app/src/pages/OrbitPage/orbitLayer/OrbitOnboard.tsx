@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { SubPane } from '../../../components/SubPane'
 import { view, compose, sleep, attach } from '@mcro/black'
 import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { addAppClickHandler } from '../../../helpers/addAppClickHandler'

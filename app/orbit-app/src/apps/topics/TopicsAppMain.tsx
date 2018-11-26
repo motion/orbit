@@ -6,6 +6,8 @@ import { useStore } from '@mcro/use-store'
 import { react } from '@mcro/black'
 import { BitsNearTopicModel } from '@mcro/models'
 import { loadMany } from '@mcro/model-bridge'
+import { OrbitListItem } from '../../views/OrbitListItem'
+import { ScrollableContent } from '../../sources/views/layout/ScrollableContent'
 
 class TopicsMainStore {
   props: AppProps
@@ -28,12 +30,22 @@ export const TopicsAppMain = React.memo((props: AppProps) => {
   const store = useStore(TopicsMainStore, props)
 
   return (
-    <View padding={10}>
+    <View padding={10} flex={1}>
       <Title>{props.title}</Title>
-      hi topics app {props.id} {props.type}
-      {store.results.map(result => (
-        <div key={result.id}>{result.title}</div>
-      ))}
+      <ScrollableContent>
+        {store.results.map(bit => (
+          <OrbitListItem
+            key={bit.id}
+            appType="bit"
+            model={bit}
+            margin={0}
+            padding={15}
+            theme={{
+              backgroundHover: 'transparent',
+            }}
+          />
+        ))}
+      </ScrollableContent>
     </View>
   )
 })

@@ -15,7 +15,6 @@ import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShort
 import { SettingStore } from '../../stores/SettingStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { Icon } from '../../views/Icon'
-import { Centered } from '../../views/Centered'
 
 // see main.ts for setup for testing this in browser
 
@@ -65,6 +64,18 @@ const TitleBar = view({
   borderBottom: [1, theme.borderColor.alpha(0.5)],
 }))
 
+const CenteredTitle = view({
+  position: 'absolute',
+  top: 0,
+  left: 70,
+  right: 70,
+  bottom: 0,
+  overflow: 'hidden',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+})
+
 @attach('queryStore', 'sourcesStore', 'appPageStore', 'appFrameStore')
 @view
 class AppPageContent extends React.Component<Props & { appFrameStore?: AppFrameStore }> {
@@ -96,7 +107,7 @@ class AppPageContent extends React.Component<Props & { appFrameStore?: AppFrameS
             size={16}
             style={{ opacity: appFrameStore.showSidebar ? 1 : 0.5 }}
           />
-          <Centered>
+          <CenteredTitle>
             <Text
               ellipse
               maxWidth="100%"
@@ -107,7 +118,7 @@ class AppPageContent extends React.Component<Props & { appFrameStore?: AppFrameS
             >
               {appConfig.title}
             </Text>
-          </Centered>
+          </CenteredTitle>
         </TitleBar>
         <Row flex={1}>
           <Sidebar

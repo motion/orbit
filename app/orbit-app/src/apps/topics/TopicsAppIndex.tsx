@@ -9,7 +9,6 @@ import { memo } from '../../helpers/memo'
 import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { VerticalSpace } from '../../views'
-import { memoize } from 'lodash'
 import { Pane } from '../../views/Pane'
 
 const icons = {
@@ -41,6 +40,8 @@ class TopicsIndexStore {
   }
 }
 
+const activeStyle = { opacity: 1 }
+
 function TopicList({ results }) {
   return (
     <>
@@ -49,7 +50,10 @@ function TopicList({ results }) {
           key={res.title}
           direct
           appType="topics"
-          padding={[5, 11]}
+          padding={[4, 11]}
+          opacity={0.85}
+          {...{ '&:hover': activeStyle }}
+          activeStyle={activeStyle}
           appConfig={{
             id: res.title,
             title: res.title,
@@ -57,7 +61,7 @@ function TopicList({ results }) {
           }}
         >
           <Row overflow="hidden">
-            <View paddingRight={10} margin={['auto', 0]}>
+            <View paddingRight={8} margin={['auto', 0]}>
               <Icon {...res.iconProps} />
             </View>
             <View flex={1} overflow="hidden">

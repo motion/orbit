@@ -110,13 +110,13 @@ class AppPageContent extends React.Component<Props & { appFrameStore?: AppFrameS
           </Centered>
         </TitleBar>
         <Row flex={1}>
-          {appPageStore.isTorn && (
-            <Sidebar
-              width={appFrameStore.showSidebar ? appFrameStore.sidebarWidth : 0}
-              onResize={appFrameStore.setSidebarWidth}
-              maxWidth={appFrameStore.size.width * 0.5}
-              minWidth={200}
-            >
+          <Sidebar
+            width={appFrameStore.showSidebar ? appFrameStore.sidebarWidth : 0}
+            onResize={appFrameStore.setSidebarWidth}
+            maxWidth={appFrameStore.size.width * 0.5}
+            minWidth={200}
+          >
+            {appPageStore.isTorn && (
               <Searchable queryStore={queryStore}>
                 <AppView
                   id={appConfig.id}
@@ -126,8 +126,8 @@ class AppPageContent extends React.Component<Props & { appFrameStore?: AppFrameS
                   isActive
                 />
               </Searchable>
-            </Sidebar>
-          )}
+            )}
+          </Sidebar>
           <Col flex={1}>
             <AppView
               id={appConfig.id}

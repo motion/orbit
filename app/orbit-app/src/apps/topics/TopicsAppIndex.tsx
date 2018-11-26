@@ -45,7 +45,7 @@ const activeStyle = { opacity: 1 }
 function TopicList({ results }) {
   return (
     <>
-      {results.map(res => (
+      {results.map((res, index) => (
         <OrbitListItem
           key={res.title}
           direct
@@ -54,8 +54,9 @@ function TopicList({ results }) {
           opacity={0.85}
           {...{ '&:hover': activeStyle }}
           activeStyle={activeStyle}
+          index={index}
           appConfig={{
-            id: res.title,
+            id: index,
             title: res.title,
             type: 'topics',
           }}

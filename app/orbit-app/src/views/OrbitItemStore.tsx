@@ -99,7 +99,6 @@ export class OrbitItemStore {
   }
 
   get appConfig() {
-    console.log('okok', this.props, this.props.appConfig)
     if (this.props.appConfig) {
       return this.props.appConfig
     }

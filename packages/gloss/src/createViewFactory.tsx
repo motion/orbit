@@ -9,7 +9,6 @@ import validProp from './helpers/validProp'
 import { simplePropSum } from './helpers/simplePropSum'
 import { cold } from 'react-hot-loader'
 
-// @ts-ignore
 const memo = View => React.memo(cold(View))
 
 export type RawRules = CSSPropertySet & {
@@ -29,9 +28,9 @@ export type SimpleView = React.SFC<SimpleViewProps> & {
 // so they override &:hover and &:hover
 // TODO: make sure &:active:hover is below below
 // TODO: and make sure &:focus:hover is below below
-const pseudoSort = a => (a[0] === '@' || a.indexOf('&:active') === 0 ? 1 : -1)
+const pseudoSort = (a: string) => (a[0] === '@' || a.indexOf('&:active') === 0 ? 1 : -1)
 
-const arrToDict = obj => {
+const arrToDict = (obj: Object) => {
   if (Array.isArray(obj)) {
     return obj.reduce((acc, cur) => {
       acc[cur] = true
@@ -41,7 +40,7 @@ const arrToDict = obj => {
   return obj
 }
 
-const addStyles = (id, baseStyles, nextStyles) => {
+const addStyles = (id: string, baseStyles: Object, nextStyles: Object) => {
   const propStyles = {}
   if (!baseStyles) {
     console.trace('no basestyles???')
@@ -86,7 +85,7 @@ const addStyles = (id, baseStyles, nextStyles) => {
 }
 
 // gets childrens styles and merges them into a big object
-const getAllStyles = (baseId, target, rawStyles) => {
+const getAllStyles = (baseId: string, target: any, rawStyles: Object) => {
   const styles = {
     [baseId]: {},
   }
@@ -164,7 +163,7 @@ function compileTheme(ogView) {
   return result
 }
 
-export function createViewFactory(toCSS) {
+export function createViewFactory(toCSS: Function) {
   const tracker = new Map()
   const rulesToClass = new WeakMap()
   const sheet = new StyleSheet(process.env.NODE_ENV !== 'development')
@@ -358,13 +357,9 @@ export function createViewFactory(toCSS) {
       return generateClassnames(classNames, props, tag, theme)
     }
 
-    // @ts-ignore react hooks
     ThemedView = memo((props: SimpleViewProps) => {
-      // @ts-ignore
       const propKey = React.useRef(null)
-      // @ts-ignore react hooks
       const [classNames, setClassNames] = React.useState(null)
-      // @ts-ignore react hooks
       const { allThemes, activeThemeName } = React.useContext(ThemeContext)
 
       // update styles
@@ -385,7 +380,6 @@ export function createViewFactory(toCSS) {
         }
       }
 
-      // @ts-ignore
       React.useEffect(() => {
         return () => {
           if (classNames) {

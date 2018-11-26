@@ -1,6 +1,7 @@
 import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
+import { hasCertificateFor } from '@mcro/devcert'
 import {
   AppEntity,
   BitEntity,
@@ -36,7 +37,7 @@ import {
   SourceSaveCommand,
   SpaceModel,
 } from '@mcro/models'
-import { AuthorizeIntegrationCommand } from '@mcro/models'
+import { AuthorizeIntegrationCommand, SetupCertificateCommand, HasCertificateCommand } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { writeJSON } from 'fs-extra'
@@ -69,6 +70,7 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { Server } from './Server'
+import { certificateFor } from '../../../packages/devcert/_'
 
 const log = new Logger('desktop')
 
@@ -253,6 +255,8 @@ export class Root {
         SlackSourceBlacklistCommand,
         CosalTopWordsCommand,
         AuthorizeIntegrationCommand,
+        SetupCertificateCommand,
+        HasCertificateCommand,
       ],
       transport: new WebSocketServerTransport({
         port: this.config.ports.dbBridge,
@@ -284,7 +288,14 @@ export class Root {
         resolveCommand(AuthorizeIntegrationCommand, async () => {
           await this.httpsAuthServer.start()
           return true
-        })
+        }),
+        resolveCommand(SetupCertificateCommand, async () => {
+          await certificateFor(this.config.urls.authHost)
+          return true
+        }),
+        resolveCommand(HasCertificateCommand, () => {
+          return hasCertificateFor(this.config.urls.authHost)
+        }),
       ],
     })
     this.mediatorServer.bootstrap()

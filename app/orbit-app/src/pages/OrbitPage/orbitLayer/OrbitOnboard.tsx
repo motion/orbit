@@ -1,16 +1,18 @@
+import { attach, compose, view } from '@mcro/black'
+import { command } from '@mcro/model-bridge'
+import { HasCertificateCommand, SetupCertificateCommand } from '@mcro/models'
+import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import * as React from 'react'
-import { view, compose, sleep, attach } from '@mcro/black'
-import { Text, Button, Theme, View, Icon } from '@mcro/ui'
 import { addAppClickHandler } from '../../../helpers/addAppClickHandler'
+import { ItemType, OrbitIntegration } from '../../../sources/types'
+import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { SettingStore } from '../../../stores/SettingStore'
 import { SourcesStore } from '../../../stores/SourcesStore'
 import { Title, VerticalSpace } from '../../../views'
-import { BlurryGuys } from './BlurryGuys'
-import { SimpleItem } from '../../../views/SimpleItem'
-import { OrbitIntegration, ItemType } from '../../../sources/types'
-import { SettingStore } from '../../../stores/SettingStore'
-import { SliderPane, Slider } from '../../../views/Slider'
 import { BottomControls } from '../../../views/BottomControls'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { SimpleItem } from '../../../views/SimpleItem'
+import { Slider, SliderPane } from '../../../views/Slider'
+import { BlurryGuys } from './BlurryGuys'
 
 type Props = {
   settingStore?: SettingStore
@@ -53,9 +55,10 @@ class OnboardStore {
   pendingMove = false
 
   async didMount() {
-    console.log('mounting OrbitOnboard')
-    // todo: do we need to run https auth server here? looks so
-    // await this.checkAlreadyProxied()
+    const accepted = await command(HasCertificateCommand)
+    if (accepted) {
+      this.accepted = true
+    }
     if (this.accepted && this.curFrame === 0) {
       this.nextFrame()
     }
@@ -74,22 +77,12 @@ class OnboardStore {
 
   stateActions = {
     0: async () => {
-      // await this.checkAlreadyProxied()
-      console.log('already on?', this.accepted)
       if (this.accepted !== true) {
-        const [accepted, message] = [true, ''] // await promptForAuthProxy()
-        console.log('got from prompt', accepted, message)
-        this.accepted = accepted
-        this.acceptedMessage = message
-        if (accepted) {
-          // show message for a sec
-          await sleep(1500)
-          if (this.curFrame !== 0) {
-            return
-          }
-        } else {
-          console.log('not accepting, not advancing frame...')
-          return
+        try {
+          await command(SetupCertificateCommand)
+          this.accepted = true
+        } catch (err) {
+          this.acceptedMessage = err
         }
       }
     },

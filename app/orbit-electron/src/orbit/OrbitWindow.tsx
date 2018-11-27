@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, ensure, attach, provide } from '@mcro/black'
+import { view, react, ensure, provide } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -112,7 +112,7 @@ class OrbitWindowStore {
 @view
 export class OrbitWindow extends React.Component<Props> {
   state = {
-    show: false
+    show: false,
   }
 
   render() {

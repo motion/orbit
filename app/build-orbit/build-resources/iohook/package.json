@@ -11,7 +11,7 @@
     "iohook": "0.2.4"
   },
   "cmake-js": {
-    "runtime": "electron": "3.0.10",
+    "runtime": "electron",
     "runtimeVersion": "2.0.2"
   },
   "iohook": {

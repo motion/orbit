@@ -20,8 +20,6 @@ import { useSpring, animated, interpolate } from 'react-spring'
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 export const maxTransition = 150
 
-export const menuPad = 6
-
 export const MenuLayer = React.memo(() => {
   const stores = React.useContext(StoreContext)
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
@@ -69,7 +67,7 @@ export const MenuLayer = React.memo(() => {
   }, [])
 
   return (
-    <BrowserDebugTray>
+    <BrowserDebugTray menuStore={menuStore}>
       <StoreContext.Provider value={allStores}>
         <MainShortcutHandler>
           <MenuChrome menuStore={menuStore}>
@@ -90,7 +88,7 @@ const springyConfig = {
 const noAnimationConfig = { duration: 1 }
 
 const getContentTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
-const getChromeTransform = (x, y) => `translate3d(${x + 5}px,${y}px,0)`
+const getChromeTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
 
 const MenuChrome = React.memo(
   ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
@@ -100,6 +98,7 @@ const MenuChrome = React.memo(
       menuStore.onDidRender()
     })
 
+    const pad = menuStore.menuPad
     const left = menuCenter - MENU_WIDTH / 2
     const { open, repositioning } = openState
     const config = repositioning ? noAnimationConfig : springyConfig
@@ -119,10 +118,10 @@ const MenuChrome = React.memo(
             zIndex: 100000,
             pointerEvents: 'none',
             borderRadius: 12,
+            top: pad,
             transform: interpolate([x, y], getContentTransform),
             opacity: opacity,
-            width: MENU_WIDTH - menuPad * 2,
-            margin: menuPad,
+            width: MENU_WIDTH,
           }}
         >
           {children}
@@ -138,14 +137,14 @@ const MenuChrome = React.memo(
             noPortal
             open
             background
-            width={MENU_WIDTH}
+            width={MENU_WIDTH + pad * 2}
             height={menuHeight + 11 /* arrow size, for now */}
             towards="bottom"
             delay={0}
-            top={IS_ELECTRON ? 0 : 28}
+            top={0}
             left={0}
-            distance={6}
-            forgiveness={10}
+            distance={pad}
+            forgiveness={pad}
             edgePadding={0}
             elevation={20}
             theme="dark"

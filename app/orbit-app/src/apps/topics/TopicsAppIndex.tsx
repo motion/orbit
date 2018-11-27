@@ -101,8 +101,9 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
         fixHeightToTallest
         curFrame={store.tabs.indexOf(store.activeTab)}
         frameWidth={MENU_WIDTH}
+        transition="none"
       >
-        <SliderPane isShown={store.activeTab === 'trend'}>
+        <SliderPane>
           {!!store.results.length && (
             <ScrollableContent>
               <Separator>Topics</Separator>
@@ -118,22 +119,26 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
           )}
         </SliderPane>
 
-        <SliderPane isShown={store.activeTab === 'topics'}>
-          <TopicList results={store.results} />
+        <SliderPane>
+          <ScrollableContent>
+            <TopicList results={store.results} />
+          </ScrollableContent>
+          <SidebarBottom>
+            <TopicEdit type="topic" />
+          </SidebarBottom>
         </SliderPane>
 
-        <SliderPane isShown={store.activeTab === 'terms'}>
-          <TopicList results={store.results} />
+        <SliderPane>
+          <ScrollableContent>
+            <TopicList results={store.results} />
+          </ScrollableContent>
+          <SidebarBottom>
+            <TopicEdit type="term" />
+          </SidebarBottom>
         </SliderPane>
       </Slider>
 
       <SidebarBottom>
-        {store.activeTab !== 'trend' && (
-          <>
-            <TopicEdit type={store.activeTab === 'topics' ? 'topic' : 'term'} />
-            <VerticalSpace small />
-          </>
-        )}
         <SegmentedRow itemProps={{ width: '33.3%', size: 0.9, sizeHeight: 0.9 }}>
           <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
           <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>

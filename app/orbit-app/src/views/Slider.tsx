@@ -10,6 +10,7 @@ type SliderProps = {
   framePad?: number
   verticalPad?: number
   fixHeightToTallest?: boolean
+  transition?: string
 }
 
 const SliderPaneContainer = view(View, {
@@ -19,13 +20,11 @@ const SliderPaneContainer = view(View, {
 
 const SliderContainer = view(View, {
   flexFlow: 'row',
-  transition: 'transform ease 200ms, opacity ease 200ms',
   alignItems: 'flex-start',
   overflow: 'hidden',
 }).theme(({ frameWidth, curFrame, numFrames }) => ({
   width: frameWidth * numFrames,
   '& > div': {
-    transition: 'all ease-in 500ms',
     opacity: 0,
   },
   [`& > div:nth-child(${curFrame + 1})`]: {
@@ -79,6 +78,7 @@ export const Slider = decorate(
     frameWidth,
     framePad = 0,
     verticalPad = 0,
+    transition = 'transform ease 200ms, opacity ease 200ms',
     ...props
   }: SliderProps & { store?: SliderStore }) => {
     return (
@@ -87,14 +87,13 @@ export const Slider = decorate(
         curFrame={curFrame}
         numFrames={React.Children.count(children)}
         frameWidth={frameWidth}
+        transition={transition}
         {...props}
       >
         {React.Children.map(children, (child, index) =>
           React.cloneElement(child as React.ReactElement<any>, {
-            forwardRef: store.setRef(index),
-            frameWidth,
-            framePad,
-            verticalPad,
+            store,
+            index,
           }),
         )}
       </SliderContainer>
@@ -104,15 +103,18 @@ export const Slider = decorate(
 
 export const SliderPane = ({
   children,
-  verticalPad = 0,
-  frameWidth = 0,
-  framePad = 0,
+  index,
+  store,
   ...props
-}) => {
+}: { store?: SliderStore; index?: number; children?: React.ReactNode } & React.HTMLProps<
+  HTMLDivElement
+>) => {
   return (
     <SliderPaneContainer
-      width={frameWidth}
-      padding={[verticalPad, framePad, verticalPad]}
+      width={store.props.frameWidth}
+      height={store.props.fixHeightToTallest && store.height ? store.height : 'auto'}
+      forwardRef={store.setRef(index)}
+      padding={[store.props.verticalPad, store.props.framePad, store.props.verticalPad]}
       {...props}
     >
       {children}

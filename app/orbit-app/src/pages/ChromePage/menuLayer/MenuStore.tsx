@@ -19,6 +19,8 @@ export class MenuStore {
     queryStore: QueryStore
   }
 
+  menuPad = 6
+  aboveHeight = 40
   isHoveringDropdown = false
   isPinnedOpen = false
   hoveringID = -1
@@ -127,7 +129,8 @@ export class MenuStore {
     },
   )
 
-  togglePinnedOpen() {
+  togglePinnedOpen(id: number) {
+    this.activeMenuID = id
     this.setPinnedOpen(!this.isPinnedOpen)
   }
 
@@ -147,8 +150,7 @@ export class MenuStore {
       case 'TrayToggle1':
       case 'TrayToggle2':
       case 'TrayToggle3':
-        this.activeMenuID = +key.replace('TrayToggle', '')
-        this.togglePinnedOpen()
+        this.togglePinnedOpen(+key.replace('TrayToggle', ''))
         break
       case 'TrayHover0':
       case 'TrayHover1':
@@ -244,7 +246,7 @@ export class MenuStore {
       trayState: {
         menuState: {
           [menuId]: {
-            size: [MENU_WIDTH, height],
+            size: [MENU_WIDTH, height - this.aboveHeight + this.menuPad * 2],
           },
         },
       },

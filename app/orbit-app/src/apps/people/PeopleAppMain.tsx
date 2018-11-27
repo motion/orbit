@@ -1,7 +1,14 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { loadOne, observeMany } from '@mcro/model-bridge'
-import { PersonBitModel, BitModel, SlackPersonData } from '@mcro/models'
+import { loadOne, observeMany, loadMany } from '@mcro/model-bridge'
+import {
+  PersonBitModel,
+  BitModel,
+  SlackPersonData,
+  CosalTopicsModel,
+  Bit,
+  SlackBitData,
+} from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import { react, view, ensure, StoreContext } from '@mcro/black'
 import { RoundButton } from '../../views'
@@ -12,6 +19,18 @@ import { OrbitListItem } from '../../views/OrbitListItem'
 import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { memo } from '../../helpers/memo'
+
+const getBitTexts = (bits: Bit[]) => {
+  return bits
+    .map(x => {
+      if (x.integration === 'slack') {
+        const data = x.data as SlackBitData
+        return data.messages.map(m => m.text).join(' ')
+      }
+      return `${x.title} ${x.body}`
+    })
+    .join(' ')
+}
 
 class PeopleAppStore {
   props: AppProps
@@ -47,7 +66,7 @@ class PeopleAppStore {
           order: {
             bitUpdatedAt: 'DESC',
           },
-          take: 15,
+          take: 40,
         },
       })
     },
@@ -56,14 +75,28 @@ class PeopleAppStore {
     },
   )
 
-  interestedIn = []
+  topics = react(
+    () => this.recentBits,
+    async bits => {
+      ensure('bits', !!bits.length)
+      return await loadMany(CosalTopicsModel, {
+        args: {
+          query: getBitTexts(bits),
+          count: 10,
+        },
+      })
+    },
+    {
+      defaultValue: [],
+    },
+  )
 }
 
 const PersonHeader = view()
 
 export const PeopleAppMain = memo((props: AppProps) => {
   const { appPageStore } = React.useContext(StoreContext)
-  const { person, interestedIn, recentBits } = useStore(PeopleAppStore, props)
+  const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   console.log('rendering person app...')
   if (!person) {
     console.log('no person?', person)
@@ -116,9 +149,9 @@ export const PeopleAppMain = memo((props: AppProps) => {
       <Content>
         <ContentInner>
           <Section>
-            <StrongSubTitle>Recent unique topics</StrongSubTitle>
-            <Row flexFlow="row" flexWrap="wrap" padding={[10, 15, 0]}>
-              {interestedIn.map((item, index) => (
+            <StrongSubTitle>Recent Topics</StrongSubTitle>
+            <Row flex={1} flexFlow="row" flexWrap="wrap" padding={[10, 15, 0]}>
+              {topics.map((item, index) => (
                 <Button sizeHeight={0.9} margin={[0, 6, 6]} sizeRadius={2} key={index}>
                   {item}
                 </Button>

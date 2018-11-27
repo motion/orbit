@@ -139,7 +139,7 @@ class AppPageContent extends React.Component<Props & { appFrameStore?: AppFrameS
               </Searchable>
             )}
           </Sidebar>
-          <Col flex={1}>
+          <Col flex={1} overflow="hidden">
             <AppView
               id={appConfig.id}
               viewType={appConfig.viewType || 'main'}

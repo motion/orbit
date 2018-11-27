@@ -87,6 +87,10 @@ export const SearchLocationsModel = new Model<string, { query: SearchQuery; coun
 
 export const SearchByTopicModel = new Model<Bit, { query: string; count: number }>('SearchByTopic')
 
+export const CosalTopicsModel = new Model<string, { query: string; count: number }>(
+  'cosal-topics-model',
+)
+
 // Language app
 
 export type TrendingItem = { name: string; direction: 'up' | 'neutral' | 'down' }

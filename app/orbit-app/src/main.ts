@@ -7,7 +7,7 @@ import { CompositeDisposable } from 'event-kit'
 import { IS_ELECTRON } from './constants'
 import { AppActions } from './actions/AppActions'
 import { AppConfig } from '@mcro/stores'
-import { BitModel } from '@mcro/models'
+import { BitModel, PersonBitModel } from '@mcro/models'
 import { sleep } from './helpers'
 
 // because for some reason we are picking up electron process.env stuff...
@@ -97,6 +97,21 @@ async function main() {
               id: '1',
               title: 'Topics',
               type: 'topics',
+            } as AppConfig,
+          })
+        }
+        if (TEST_APP === 'people') {
+          const lastPerson = await require('@mcro/model-bridge').loadOne(PersonBitModel, {
+            args: {},
+          })
+          AppActions.setPeekApp({
+            position: [0, 0],
+            size: [500, 500],
+            appType: 'people',
+            appConfig: {
+              id: `${lastPerson.id}`,
+              title: lastPerson.title,
+              type: 'people',
             } as AppConfig,
           })
         }

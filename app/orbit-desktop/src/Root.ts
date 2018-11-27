@@ -40,6 +40,7 @@ import {
   TrendingTermsModel,
   PeopleNearTopicModel,
   BitsNearTopicModel,
+  CosalTopicsModel,
 } from '@mcro/models'
 import {
   AuthorizeIntegrationCommand,
@@ -258,6 +259,7 @@ export class Root {
         TrendingTermsModel,
         PeopleNearTopicModel,
         BitsNearTopicModel,
+        CosalTopicsModel,
       ],
       commands: [
         SourceSaveCommand,

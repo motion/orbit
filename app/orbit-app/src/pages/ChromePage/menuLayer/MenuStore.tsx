@@ -371,7 +371,9 @@ export class MenuStore {
   )
 
   handleMouseEnter = () => {
-    this.isHoveringDropdown = true
+    if (this.isOpenFast) {
+      this.isHoveringDropdown = true
+    }
   }
 
   handleMouseLeave = () => {

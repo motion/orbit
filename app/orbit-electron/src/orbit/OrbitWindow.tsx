@@ -121,7 +121,7 @@ export class OrbitWindow extends React.Component<Props> {
     log.info(`render OrbitWindow ${url} hovered? ${Desktop.hoverState.orbitHovered}`)
     return (
       <Window
-        show={this.state.show}
+        show={this.state.show ? App.orbitState.docked : false}
         onReadyToShow={() => this.setState({ show: true })}
         alwaysOnTop={[store.alwaysOnTop, 'floating', 1]}
         ignoreMouseEvents={!Desktop.hoverState.orbitHovered}
@@ -135,7 +135,10 @@ export class OrbitWindow extends React.Component<Props> {
         onFocus={store.handleElectronFocus}
         showDevTools={Electron.state.showDevTools.app}
         transparent
-        background="#00000000"
+        background="#ffffff00"
+        webPreferences={{
+          experimentalFeatures: true,
+        }}
       />
     )
   }

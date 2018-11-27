@@ -6,10 +6,10 @@ import { AppActions } from '../../../actions/AppActions'
 import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
-import { maxTransition } from './MenuLayer'
 import { AppType } from '@mcro/models'
-import { memoize } from 'lodash'
+import { memoize, debounce } from 'lodash'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { createRef } from 'react'
 
 export const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 
@@ -19,11 +19,13 @@ export class MenuStore {
     queryStore: QueryStore
   }
 
+  menuRef = createRef<any>()
   menuPad = 6
   aboveHeight = 40
   isHoveringDropdown = false
   isPinnedOpen = false
   hoveringID = -1
+  didRenderState = { at: Date.now(), open: false }
 
   // see how this interacts with isOpen
   activeMenuID = App.openMenu ? App.openMenu.id : -1
@@ -78,8 +80,16 @@ export class MenuStore {
   // the actual show/hide in the interface
   isOpenOutsideAnimation = react(
     () => this.isOpenFast,
-    async (open, { sleep }) => {
-      await sleep(maxTransition)
+    async (open, { whenChanged, effect }) => {
+      await whenChanged(() => this.didRenderState)
+      await effect(done => {
+        // we wait for mutations to finish (animation)
+        // debounce will wait for X ms before it considers animation complete
+        const finish = debounce(done, 40)
+        const m = new MutationObserver(finish)
+        m.observe(this.menuRef.current, { attributes: true })
+        return () => m.disconnect()
+      })
       return open
     },
   )
@@ -114,10 +124,8 @@ export class MenuStore {
     delayValue: true,
   })
 
-  shouldFinishReposition = 0
-
-  onDidRender() {
-    this.shouldFinishReposition = Date.now()
+  onDidRender(open: boolean) {
+    this.didRenderState = { at: Date.now(), open }
   }
 
   resetActiveMenuIDOnClose = react(
@@ -327,12 +335,12 @@ export class MenuStore {
     },
   )
 
+  isMenuFullyHidden = false
+
   isFocused = react(
     () => this.isOpenOutsideAnimation,
     async (shouldFocus, { whenChanged, sleep }) => {
       if (!shouldFocus) {
-        // for some reason this happens before animation finishes and requires a significant buffer, why?
-        await sleep(150)
         setTrayFocused(false)
         return false
       }

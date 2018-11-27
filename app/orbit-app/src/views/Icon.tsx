@@ -4,7 +4,9 @@ import { SVG } from './SVG'
 import { memo } from '../helpers/memo'
 
 const icons = {
+  orbitalSmall: require('!raw-loader!../../public/orbital-small.svg'),
   sidebar: require('!raw-loader!../../public/streamline/sidebar.svg'),
+
   add: require('!raw-loader!../../public/streamline/add.svg'),
   addCircle: require('!raw-loader!../../public/streamline/add-circle.svg'),
   alertCircle: require('!raw-loader!../../public/streamline/alert-circle.svg'),
@@ -159,30 +161,28 @@ type IconProps = React.HTMLProps<SVGElement> & {
   style?: any
 }
 
-export const Icon = memo(
-  ({ name, fill = '#fff', size = 32, style = null, ...props }: IconProps) => {
-    const iconName = findIconName(name)
-    if (!iconName) {
-      return null
-    }
-    const icon = icons[iconName]
-    return (
-      <SVG
-        fill={fill}
-        svg={icon}
-        width={`${size}`}
-        height={`${size}`}
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          display: 'flex',
-          width: size,
-          height: size,
-          ...style,
-        }}
-        cleanup={['fill', 'title', 'desc']}
-        {...props}
-      />
-    )
-  },
-)
+export const Icon = memo(({ name, fill, size = 32, style = null, ...props }: IconProps) => {
+  const iconName = findIconName(name)
+  if (!iconName) {
+    return null
+  }
+  const icon = icons[iconName]
+  return (
+    <SVG
+      {...(fill ? { fill } : null)}
+      svg={icon}
+      width={`${size}`}
+      height={`${size}`}
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        width: size,
+        height: size,
+        ...style,
+      }}
+      cleanup={['fill', 'title', 'desc']}
+      {...props}
+    />
+  )
+})

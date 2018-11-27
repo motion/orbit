@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { Input, View } from '@mcro/ui'
+import { Input, Button, Row } from '@mcro/ui'
 import { ProvideHighlightsContextWithDefaults } from '../helpers/contexts/HighlightsContext'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { memo } from '../helpers/memo'
+import { Icon } from '../views/Icon'
 
 export type SearchableProps = {
   queryStore: QueryStore
@@ -13,8 +14,9 @@ export type SearchableProps = {
 export const Searchable = memo((props: SearchableProps) => {
   return (
     <>
-      <View padding={6} paddingBottom={10}>
+      <Row padding={6} paddingBottom={10}>
         <Input
+          flex={1}
           hover={false}
           select={false}
           focus={false}
@@ -23,7 +25,8 @@ export const Searchable = memo((props: SearchableProps) => {
           placeholder="Search..."
           {...props.inputProps}
         />
-      </View>
+        <ContextButton marginLeft={6} />
+      </Row>
       <ProvideHighlightsContextWithDefaults
         value={{
           words: props.queryStore.query.split(' '),
@@ -36,3 +39,16 @@ export const Searchable = memo((props: SearchableProps) => {
     </>
   )
 })
+
+const ContextButton = props => {
+  return (
+    <Button
+      sizePadding={0.4}
+      tooltip="Test context tooltip"
+      tooltipProps={{ towards: 'right' }}
+      {...props}
+    >
+      <Icon name="orbitalSmall" size={24} />
+    </Button>
+  )
+}

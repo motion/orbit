@@ -17,6 +17,7 @@ import { propsToTextSize } from './helpers/propsToTextSize'
 import { UIContext, UIContextType } from './helpers/contexts'
 import { Tooltip } from './Tooltip'
 import { selectThemeSubset } from './helpers/selectThemeSubset'
+import { PopoverProps } from './Popover'
 
 export type SurfaceProps = CSSPropertySet & {
   active?: boolean
@@ -55,7 +56,7 @@ export type SurfaceProps = CSSPropertySet & {
   tagName?: string
   theme?: ThemeObject
   tooltip?: string
-  tooltipProps?: Object
+  tooltipProps?: PopoverProps
   uiContext?: UIContextType
   width?: number | string
   alpha?: number

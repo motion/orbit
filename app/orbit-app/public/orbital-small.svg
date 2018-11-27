@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="33px" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>orbital-small</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="-11.4193931%" y1="95.1564631%" x2="99.7702573%" y2="42.4892232%" id="linearGradient-1">
+            <stop stop-color="#61554C" offset="0%"></stop>
+            <stop stop-color="#0092FF" offset="37.2289541%"></stop>
+            <stop stop-color="#0792FB" offset="37.7271549%"></stop>
+            <stop stop-color="#408CDC" offset="41.6792006%"></stop>
+            <stop stop-color="#C68092" offset="51.3249177%"></stop>
+            <stop stop-color="#E07E84" offset="52.817128%"></stop>
+            <stop stop-color="#E66789" offset="65.3796516%"></stop>
+            <stop stop-color="#0013FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="36.4298552%" y1="73.7301872%" x2="38.0372277%" y2="22.7171639%" id="linearGradient-2">
+            <stop stop-color="#FFFFFF" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#FFFFD4" stop-opacity="0.5" offset="16.7300693%"></stop>
+            <stop stop-color="#FFFFCC" stop-opacity="0.5" offset="20.1533478%"></stop>
+            <stop stop-color="#FFFFC5" stop-opacity="0.5" offset="22.9260094%"></stop>
+            <stop stop-color="#FFFF00" stop-opacity="0.418534873" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="126.705713%" y1="31.7409309%" x2="86.2815976%" y2="51.2660481%" id="linearGradient-3">
+            <stop stop-color="#FF0000" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="67.5196312%" y1="53.8696437%" x2="31.3337421%" y2="28.9626799%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.00682383522" offset="9.57096609%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="69.6783923%" y1="97.7993196%" x2="39.6689951%" y2="73.8075674%" id="linearGradient-5">
+            <stop stop-color="#0C677F" stop-opacity="0.0766813859" offset="0%"></stop>
+            <stop stop-color="#0B8292" stop-opacity="0.175965288" offset="24.5007895%"></stop>
+            <stop stop-color="#07C5C0" stop-opacity="0.415369448" offset="83.5797622%"></stop>
+            <stop stop-color="#00FDFF" stop-opacity="0.47729846" offset="100%"></stop>
+            <stop stop-color="#00FFA2" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="78.3065272%" y1="-5.11788763%" x2="41.5627152%" y2="56.8697095%" id="linearGradient-6">
+            <stop stop-color="#FF738D" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="100%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="90.1869069%" x2="66.3187385%" y2="54.5623481%" id="linearGradient-7">
+            <stop stop-color="#FBC3FF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="100%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <path d="M16.5566814,32.5897051 C7.7201254,32.5897051 0.5566814,25.4262611 0.5566814,16.5897051 C0.5566814,7.75314912 7.7201254,0.589705115 16.5566814,0.589705115 C25.3932374,0.589705115 32.5566814,7.75314912 32.5566814,16.5897051 C32.5566814,25.4262611 25.3932374,32.5897051 16.5566814,32.5897051 Z M16.5566814,30.6940888 C24.3463174,30.6940888 30.6610651,24.3793411 30.6610651,16.5897051 C30.6610651,8.8000691 24.3463174,2.48532143 16.5566814,2.48532143 C8.76704539,2.48532143 2.45229772,8.8000691 2.45229772,16.5897051 C2.45229772,24.3793411 8.76704539,30.6940888 16.5566814,30.6940888 Z" id="path-8"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="orbital-small">
+            <use fill="url(#linearGradient-1)" xlink:href="#path-8"></use>
+            <use fill="url(#linearGradient-2)" xlink:href="#path-8"></use>
+            <use fill="url(#linearGradient-3)" xlink:href="#path-8"></use>
+            <use fill="url(#linearGradient-4)" xlink:href="#path-8"></use>
+            <use fill-opacity="0.299999982" fill="url(#linearGradient-5)" xlink:href="#path-8"></use>
+            <use fill="url(#linearGradient-6)" xlink:href="#path-8"></use>
+            <use fill="url(#linearGradient-7)" xlink:href="#path-8"></use>
+        </g>
+    </g>
+</svg>

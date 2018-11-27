@@ -15,7 +15,7 @@ import { View } from '@mcro/ui'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
-import { IS_MENU } from '../../constants'
+import { IS_MENU, MENU_WIDTH } from '../../constants'
 import { memo } from '../../helpers/memo'
 
 const height = 56
@@ -194,7 +194,7 @@ export const PeopleAppIndex = memo((props: AppProps) => {
             )
           }}
           rowCount={resultSections.length}
-          width={IS_MENU ? 287 : ORBIT_WIDTH}
+          width={IS_MENU ? MENU_WIDTH : ORBIT_WIDTH}
           height={height}
         />
       </div>

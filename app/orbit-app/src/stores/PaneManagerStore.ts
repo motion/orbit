@@ -17,6 +17,9 @@ export class PaneManagerStore {
 
   keyablePanes = [0, 3]
   paneIndex = 0
+
+  activePane = react(() => this.panes[this.paneIndex], _ => _)
+
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
     onlyUpdateIfChanged: true,
@@ -79,21 +82,6 @@ export class PaneManagerStore {
   indexOfPane = name => {
     return this.panes.indexOf(name)
   }
-
-  get activePaneFast() {
-    return this.panes[this.paneIndex]
-  }
-
-  activePane = react(
-    () => [this.panes, this.paneIndex],
-    async (_, { sleep }) => {
-      const active = this.panes[this.paneIndex]
-      ensure('changed', active !== this.activePane)
-      // let activePaneFast be a frame ahead
-      await sleep()
-      return active
-    },
-  )
 
   setActivePaneToPrevious = () => {
     this.setActivePane(this.lastActivePane)

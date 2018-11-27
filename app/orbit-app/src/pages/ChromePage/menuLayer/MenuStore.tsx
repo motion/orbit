@@ -85,7 +85,7 @@ export class MenuStore {
       await effect(done => {
         // we wait for mutations to finish (animation)
         // debounce will wait for X ms before it considers animation complete
-        const finish = debounce(done, 40)
+        const finish = debounce(done, 20)
         const m = new MutationObserver(finish)
         m.observe(this.menuRef.current, { attributes: true })
         return () => m.disconnect()

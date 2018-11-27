@@ -74,7 +74,8 @@ const macModernTheme = Theme.colorize({
   highlightBackgroundActive: '#85afee', // active tokens
   frameBorderColor: '#aaa',
 
-  sidebarBackground: '#E8E7E7',
+  sidebarBackground: '#f2f2f2',
+  sidebarBorderColor: '#ddd',
 
   // sub-themes go into their own objects so they can be narrowed into
   titleBar: {
@@ -147,9 +148,9 @@ const dark = {
     color: '#fff',
     borderColor: [1, 1, 1, 0.25],
   }),
-  // buttonBackground: [40, 40, 40, 0.2],
-  // buttonBackgroundActive: [20, 20, 20, 0.2],
-  // buttonBackgroundHover: [50, 50, 50, 0.2],
+  buttonBackground: [60, 60, 60, 0.8],
+  buttonBackgroundActive: [80, 80, 80, 0.8],
+  buttonBackgroundHover: [70, 70, 70, 0.8],
   colorActive: '#fff',
 }
 

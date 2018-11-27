@@ -4,7 +4,6 @@ import { useStore, useInstantiatedStore } from '@mcro/use-store'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { App } from '@mcro/stores'
-import { view } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
@@ -12,7 +11,7 @@ import { Popover, View } from '@mcro/ui'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { Searchable } from '../../../components/Searchable'
 import { BrowserDebugTray } from './BrowserDebugTray'
-import { IS_ELECTRON } from '../../../constants'
+import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { throttle } from 'lodash'
 import { MenuStore, menuApps } from './MenuStore'
 import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
@@ -20,9 +19,6 @@ import { useSpring, animated, interpolate } from 'react-spring'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
 export const maxTransition = 150
-
-const transition = `opacity ease 100ms, transform ease ${180}ms`
-export const menuPad = 6
 
 export const MenuLayer = React.memo(() => {
   const stores = React.useContext(StoreContext)
@@ -71,7 +67,7 @@ export const MenuLayer = React.memo(() => {
   }, [])
 
   return (
-    <BrowserDebugTray>
+    <BrowserDebugTray menuStore={menuStore}>
       <StoreContext.Provider value={allStores}>
         <MainShortcutHandler>
           <MenuChrome menuStore={menuStore}>
@@ -92,17 +88,18 @@ const springyConfig = {
 const noAnimationConfig = { duration: 1 }
 
 const getContentTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
-const getChromeTransform = (x, y) => `translate3d(${x + 5}px,${y}px,0)`
+const getChromeTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
 
 const MenuChrome = React.memo(
   ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
-    const { menuCenter, menuWidth, menuHeight, openState } = useInstantiatedStore(menuStore)
+    const { menuCenter, menuHeight, openState } = useInstantiatedStore(menuStore)
 
     React.useEffect(() => {
       menuStore.onDidRender()
     })
 
-    const left = menuCenter - menuWidth / 2
+    const pad = menuStore.menuPad
+    const left = menuCenter - MENU_WIDTH / 2
     const { open, repositioning } = openState
     const config = repositioning ? noAnimationConfig : springyConfig
     const [{ x, y, opacity }] = useSpring({
@@ -121,10 +118,10 @@ const MenuChrome = React.memo(
             zIndex: 100000,
             pointerEvents: 'none',
             borderRadius: 12,
+            top: pad,
             transform: interpolate([x, y], getContentTransform),
             opacity: opacity,
-            width: menuWidth - menuPad * 2,
-            margin: menuPad,
+            width: MENU_WIDTH,
           }}
         >
           {children}
@@ -140,14 +137,14 @@ const MenuChrome = React.memo(
             noPortal
             open
             background
-            width={menuWidth}
+            width={MENU_WIDTH + pad * 2}
             height={menuHeight + 11 /* arrow size, for now */}
             towards="bottom"
             delay={0}
-            top={IS_ELECTRON ? 0 : 28}
+            top={0}
             left={0}
-            distance={6}
-            forgiveness={10}
+            distance={pad}
+            forgiveness={pad}
             edgePadding={0}
             elevation={20}
             theme="dark"

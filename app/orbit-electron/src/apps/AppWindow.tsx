@@ -112,7 +112,7 @@ const decorator = compose(
   }),
   view,
 )
-export const AppWindow = decorator(({ id, store, isPeek }: Props & { store: AppWindowStore }) => {
+export const AppWindow = decorator(({ id, store, isPeek }: Props & { store?: AppWindowStore }) => {
   const ignoreMouseEvents = !Desktop.hoverState.appHovered[id]
   log.info(`Rendering app window ${id} at url ${store.url} ignore mouse? ${ignoreMouseEvents}`)
   return (

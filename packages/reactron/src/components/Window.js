@@ -61,6 +61,7 @@ export class Window extends BaseComponent {
         }
       },
       show: propVal => {
+        console.log('calling show')
         if (propVal) {
           // ensure it happens after positioning
           setTimeout(() => {

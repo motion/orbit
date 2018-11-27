@@ -2,6 +2,8 @@ export * from '@mcro/constants'
 
 import * as UI from '@mcro/ui'
 
+export const MENU_WIDTH = 300
+
 export const IS_MENU = window.location.pathname === '/chrome'
 export const IS_APP = window.location.pathname === '/app'
 export const APP_ID = IS_APP ? +window.location.search.match(/id=([0-9]+)/)[1] : null
@@ -10,7 +12,7 @@ export const IS_ELECTRON = !window['notInElectron']
 
 export const BORDER_RADIUS = 15
 export const CHROME_PAD = 1
-export const PEEK_BORDER_RADIUS = 7
+export const PEEK_BORDER_RADIUS = 10
 
 export const SHADOW_PAD = 15
 export const ORBIT_COLOR = UI.color('#714842')

@@ -72,7 +72,7 @@ class InputPlain extends React.PureComponent<InputProps> {
     }
     return (
       <SizedSurface
-        width="100%"
+        maxWidth="100%"
         alignItems="center"
         flexFlow="row"
         themeSelect="input"

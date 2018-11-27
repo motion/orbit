@@ -5,7 +5,7 @@ import { react, ensure, always } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
 import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
-import { IS_ELECTRON } from '../../../constants'
+import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { maxTransition } from './MenuLayer'
 import { AppType } from '@mcro/models'
 import { memoize } from 'lodash'
@@ -19,7 +19,8 @@ export class MenuStore {
     queryStore: QueryStore
   }
 
-  menuWidth = 300
+  menuPad = 6
+  aboveHeight = 40
   isHoveringDropdown = false
   isPinnedOpen = false
   hoveringID = -1
@@ -128,7 +129,8 @@ export class MenuStore {
     },
   )
 
-  togglePinnedOpen() {
+  togglePinnedOpen(id: number) {
+    this.activeMenuID = id
     this.setPinnedOpen(!this.isPinnedOpen)
   }
 
@@ -148,8 +150,7 @@ export class MenuStore {
       case 'TrayToggle1':
       case 'TrayToggle2':
       case 'TrayToggle3':
-        this.activeMenuID = +key.replace('TrayToggle', '')
-        this.togglePinnedOpen()
+        this.togglePinnedOpen(+key.replace('TrayToggle', ''))
         break
       case 'TrayHover0':
       case 'TrayHover1':
@@ -232,7 +233,7 @@ export class MenuStore {
           menuState: {
             [id]: {
               open: true,
-              position: [menuCenter - this.menuWidth / 2, 0],
+              position: [menuCenter - MENU_WIDTH / 2, 0],
             },
           },
         },
@@ -245,7 +246,7 @@ export class MenuStore {
       trayState: {
         menuState: {
           [menuId]: {
-            size: [this.menuWidth, height],
+            size: [MENU_WIDTH, height],
           },
         },
       },

@@ -21,14 +21,13 @@ export const MenuApp = React.memo((props: MenuAppProps) => {
 })
 
 export const MenuAppInner = React.memo((props: MenuAppProps) => {
-  const beforeHeight = 40
   return (
     <SubPane
       id={props.id}
       type={props.type}
       paddingLeft={0}
       paddingRight={0}
-      offsetY={beforeHeight}
+      offsetY={props.menuStore.aboveHeight}
       onChangeHeight={props.menuStore.menuHeightSetter(props.menuId)}
       transition="opacity ease 100ms"
     >

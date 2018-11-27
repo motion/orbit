@@ -10,8 +10,8 @@ import { QueryStore } from '../../stores/QueryStore/QueryStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
-  selectionStore: SelectionStore
-  queryStore: QueryStore
+  selectionStore?: SelectionStore
+  queryStore?: QueryStore
   children?: React.ReactNode
 }
 

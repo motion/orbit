@@ -14,9 +14,10 @@ import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
 import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
-import { UIContext } from './helpers/contexts'
+import { UIContext, UIContextType } from './helpers/contexts'
 import { Tooltip } from './Tooltip'
 import { selectThemeSubset } from './helpers/selectThemeSubset'
+import { PopoverProps } from './Popover'
 
 export type SurfaceProps = CSSPropertySet & {
   active?: boolean
@@ -55,8 +56,8 @@ export type SurfaceProps = CSSPropertySet & {
   tagName?: string
   theme?: ThemeObject
   tooltip?: string
-  tooltipProps?: Object
-  uiContext?: { inSegment?: { first: boolean; last: boolean; index: number } }
+  tooltipProps?: PopoverProps
+  uiContext?: UIContextType
   width?: number | string
   alpha?: number
   alphaHover?: number
@@ -148,6 +149,14 @@ const SurfaceFrame = view(View, {
   const hoverIconStyle = {
     color: props.iconHoverColor || themeStyles.colorHover,
   }
+  const hoverStyle = props.active
+    ? null
+    : {
+        ...themeStyles['&:hover'],
+        ...propStyles['&:hover'],
+        // @ts-ignore
+        ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
+      }
   let surfaceStyles = {
     padding: props.padding,
     margin: props.margin,
@@ -174,12 +183,7 @@ const SurfaceFrame = view(View, {
     ...(props.chromeless && chromelessStyle),
     ...props.segmentedStyle,
     ...circularStyles,
-    '&:hover': {
-      ...themeStyles['&:hover'],
-      ...propStyles['&:hover'],
-      // @ts-ignore
-      ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
-    },
+    '&:hover': hoverStyle,
   }
   return alphaColor(surfaceStyles, { alpha: props.alpha, alphaHover: props.alphaHover })
 })
@@ -379,7 +383,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
   }
 }
 
-// @ts-ignore
 export const Surface = React.memo(props => (
   <UIContext.Consumer>
     {uiContext => <SurfaceInner uiContext={uiContext} {...props} />}

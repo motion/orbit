@@ -15,7 +15,7 @@ class DebugTrayStore {
   onLeave = this.targetSetter('Out')
 }
 
-export const BrowserDebugTray = ({ children }) => {
+export const BrowserDebugTray = ({ children, menuStore }) => {
   const store = useStore(DebugTrayStore)
   if (IS_ELECTRON) {
     return children
@@ -30,10 +30,10 @@ export const BrowserDebugTray = ({ children }) => {
           alignItems="center"
           pointerEvents="auto"
         >
-          <Target id={3} store={store} />
-          <Target id={2} store={store} />
-          <Target id={1} store={store} />
-          <Target id={0} store={store} />
+          <Target id={3} store={store} menuStore={menuStore} />
+          <Target id={2} store={store} menuStore={menuStore} />
+          <Target id={1} store={store} menuStore={menuStore} />
+          <Target id={0} store={store} menuStore={menuStore} />
         </View>
       </Row>
       <View position="relative" flex={1}>
@@ -43,10 +43,14 @@ export const BrowserDebugTray = ({ children }) => {
   )
 }
 
-const Target = ({ id, store }) => {
+const Target = ({ id, store, menuStore }) => {
   return (
     <View
       onMouseEnter={store.targetSetter(id)}
+      onClick={() => {
+        console.log('pin', id)
+        menuStore.togglePinnedOpen(id)
+      }}
       width={16}
       height={16}
       margin={[0, 5]}

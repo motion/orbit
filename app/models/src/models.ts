@@ -30,13 +30,9 @@ export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptions
   'Setting',
 )
 
-export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<Space>>(
-  'Space',
-)
+export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<Space>>('Space')
 
-export const AppModel = new Model<App, FindOptions<App>, FindOptionsWhere<App>>(
-  'App',
-)
+export const AppModel = new Model<App, FindOptions<App>, FindOptionsWhere<App>>('App')
 
 export const SourceModel = new Model<Source, FindOptions<Source>, FindOptionsWhere<Source>>(
   'Source',
@@ -90,3 +86,20 @@ export const SearchLocationsModel = new Model<string, { query: SearchQuery; coun
 )
 
 export const SearchByTopicModel = new Model<Bit, { query: string; count: number }>('SearchByTopic')
+
+export const CosalTopicsModel = new Model<string, { query: string; count: number }>(
+  'cosal-topics-model',
+)
+
+// Language app
+
+export type TrendingItem = { name: string; direction: 'up' | 'neutral' | 'down' }
+export const TrendingTopicsModel = new Model<TrendingItem, void>('trending-topics')
+export const TrendingTermsModel = new Model<TrendingItem, void>('trending-terms')
+
+export const PeopleNearTopicModel = new Model<PersonBit, { topic: string; count: number }>(
+  'people-near-topic',
+)
+export const BitsNearTopicModel = new Model<Bit, { topic: string; count: number }>(
+  'bits-near-topic',
+)

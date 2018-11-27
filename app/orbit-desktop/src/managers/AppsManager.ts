@@ -29,7 +29,7 @@ export class AppsManager {
     async (apps, { sleep }) => {
       // debounce to prevent lots of processing
       await sleep(50)
-      log.info('Running app state', apps)
+      log.info('apps state', apps)
       // handle deletes
       let current = [...this.processes]
       for (const { id } of current) {

@@ -1,7 +1,14 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { loadOne, observeMany } from '@mcro/model-bridge'
-import { PersonBitModel, BitModel, SlackPersonData } from '@mcro/models'
+import { loadOne, observeMany, loadMany } from '@mcro/model-bridge'
+import {
+  PersonBitModel,
+  BitModel,
+  SlackPersonData,
+  CosalTopicsModel,
+  Bit,
+  SlackBitData,
+} from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import { react, view, ensure, StoreContext } from '@mcro/black'
 import { RoundButton } from '../../views'
@@ -12,6 +19,18 @@ import { OrbitListItem } from '../../views/OrbitListItem'
 import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { memo } from '../../helpers/memo'
+
+const getBitTexts = (bits: Bit[]) => {
+  return bits
+    .map(x => {
+      if (x.integration === 'slack') {
+        const data = x.data as SlackBitData
+        return data.messages.map(m => m.text).join(' ')
+      }
+      return `${x.title} ${x.body}`
+    })
+    .join(' ')
+}
 
 class PeopleAppStore {
   props: AppProps
@@ -25,7 +44,7 @@ class PeopleAppStore {
     ({ id }) =>
       loadOne(PersonBitModel, {
         args: {
-          where: { id },
+          where: { id: +id },
           relations: ['people'],
         },
       }),
@@ -47,7 +66,7 @@ class PeopleAppStore {
           order: {
             bitUpdatedAt: 'DESC',
           },
-          take: 15,
+          take: 40,
         },
       })
     },
@@ -56,14 +75,30 @@ class PeopleAppStore {
     },
   )
 
-  interestedIn = []
+  topics = react(
+    () => this.recentBits,
+    async bits => {
+      ensure('bits', !!bits.length)
+      const query = getBitTexts(bits)
+      console.log('get topics with query...', query)
+      return await loadMany(CosalTopicsModel, {
+        args: {
+          query,
+          count: 10,
+        },
+      })
+    },
+    {
+      defaultValue: [],
+    },
+  )
 }
 
 const PersonHeader = view()
 
 export const PeopleAppMain = memo((props: AppProps) => {
   const { appPageStore } = React.useContext(StoreContext)
-  const { person, interestedIn, recentBits } = useStore(PeopleAppStore, props)
+  const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   console.log('rendering person app...')
   if (!person) {
     console.log('no person?', person)
@@ -116,10 +151,16 @@ export const PeopleAppMain = memo((props: AppProps) => {
       <Content>
         <ContentInner>
           <Section>
-            <StrongSubTitle>Recent unique topics</StrongSubTitle>
-            <Row flexFlow="row" flexWrap="wrap" padding={[10, 15, 0]}>
-              {interestedIn.map((item, index) => (
-                <Button sizeHeight={0.9} margin={[0, 6, 6]} sizeRadius={2} key={index}>
+            <StrongSubTitle>Recent Topics</StrongSubTitle>
+            <Row flexFlow="row" flexWrap="wrap" padding={[5, 0, 0]}>
+              {topics.map((item, index) => (
+                <Button
+                  sizeHeight={0.9}
+                  margin={[0, 6, 6, 0]}
+                  alpha={0.8}
+                  sizeRadius={2}
+                  key={index}
+                >
                   {item}
                 </Button>
               ))}
@@ -128,24 +169,26 @@ export const PeopleAppMain = memo((props: AppProps) => {
 
           <Section>
             <StrongSubTitle>Recently</StrongSubTitle>
-            {recentBits.map(bit => {
-              return (
-                <OrbitListItem
-                  key={bit.id}
-                  appType="bit"
-                  model={bit}
-                  margin={0}
-                  padding={15}
-                  extraProps={{
-                    condensed: true,
-                    oneLine: true,
-                  }}
-                  theme={{
-                    backgroundHover: 'transparent',
-                  }}
-                />
-              )
-            })}
+
+            <Unpad>
+              {recentBits.map(bit => {
+                return (
+                  <OrbitListItem
+                    key={bit.id}
+                    appType="bit"
+                    model={bit}
+                    margin={0}
+                    padding={15}
+                    extraProps={{
+                      condensed: true,
+                    }}
+                    theme={{
+                      backgroundHover: 'transparent',
+                    }}
+                  />
+                )
+              })}
+            </Unpad>
           </Section>
         </ContentInner>
       </Content>
@@ -156,9 +199,7 @@ export const PeopleAppMain = memo((props: AppProps) => {
 const mapW = 700
 const mapH = 200
 
-const StrongSubTitle = props => (
-  <SubTitle padding={[0, 10]} fontWeight={200} fontSize={18} alpha={0.8} {...props} />
-)
+const StrongSubTitle = props => <SubTitle fontWeight={200} fontSize={18} alpha={0.8} {...props} />
 
 const Frame = view({
   width: '100%',
@@ -175,8 +216,12 @@ const Content = view({
   zIndex: 100,
 })
 
+const Unpad = view({
+  margin: [0, -15],
+})
+
 const ContentInner = view({
-  // padding: [0, 15],
+  padding: [0, 15],
 })
 
 const CardContent = view({

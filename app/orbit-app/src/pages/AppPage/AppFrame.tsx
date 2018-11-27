@@ -63,6 +63,8 @@ export class AppFrameStore {
   offUp = null
   initMouseDown = null
   frameMove?: [number, number] = null
+  sidebarWidth = 200
+  showSidebar = false
 
   willUnmount() {
     this.clearDragHandlers()
@@ -95,6 +97,14 @@ export class AppFrameStore {
     }
     return [x, y]
   }
+
+  showSidebarOnTear = react(
+    () => this.props.appPageStore.isTorn,
+    torn => {
+      ensure('torn', torn)
+      this.showSidebar = true
+    },
+  )
 
   syncFromAppState = react(
     () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
@@ -204,6 +214,22 @@ export class AppFrameStore {
       this.finishDrag = false
     },
   )
+
+  setSidebarWidth = (width, _height, desiredWidth) => {
+    // the desiredWidth lets you collapse/uncollapse using dragging
+    if (desiredWidth < 100) {
+      this.showSidebar = false
+    } else {
+      if (desiredWidth > 130 && !this.showSidebar) {
+        this.showSidebar = true
+      }
+      this.sidebarWidth = width
+    }
+  }
+
+  toggleSidebar = () => {
+    this.showSidebar = !this.showSidebar
+  }
 }
 
 const PeekFrameContainer = view(UI.View, {

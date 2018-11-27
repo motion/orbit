@@ -3,17 +3,21 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.367",
+  "version": "2.2.369",
   "dependencies": {
     "@mcro/orbit": "*"
   },
   "devDependencies": {
-    "electron": "3.0.9"
+    "electron": "3.0.10"
   },
   "build": {
     "appId": "com.o.orbit",
     "productName": "Orbit",
-    "asar": true,
+    "asar": {
+      "asarUnpack": [
+        "**/*.py"
+      ]
+    },
     "npmRebuild": false,
     "mac": {
       "target": "zip",

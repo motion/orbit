@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, ensure, attach, provide } from '@mcro/black'
+import { view, react, ensure, provide } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -106,18 +106,23 @@ class OrbitWindowStore {
   }
 }
 
-@attach('electronStore')
 @provide({
   store: OrbitWindowStore,
 })
 @view
 export class OrbitWindow extends React.Component<Props> {
+  state = {
+    show: false,
+  }
+
   render() {
-    const { store, electronStore } = this.props
+    const { store } = this.props
     const url = Config.urls.server
     log.info(`render OrbitWindow ${url} hovered? ${Desktop.hoverState.orbitHovered}`)
     return (
       <Window
+        show={this.state.show}
+        onReadyToShow={() => this.setState({ show: true })}
         alwaysOnTop={[store.alwaysOnTop, 'floating', 1]}
         ignoreMouseEvents={!Desktop.hoverState.orbitHovered}
         ref={store.handleRef}
@@ -125,8 +130,6 @@ export class OrbitWindow extends React.Component<Props> {
         focus={false}
         position={[0, 0]}
         size={Electron.state.screenSize.slice()}
-        show={electronStore.show ? App.orbitState.docked : false}
-        opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
         onFocus={store.handleElectronFocus}

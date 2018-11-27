@@ -6,10 +6,14 @@ type UISegment = {
   index?: number
 }
 
-export const UIContext = React.createContext({
+const uiContextDefault = {
   inSegment: null as UISegment | null,
   hovered: null as boolean | null,
-})
+}
+
+export type UIContextType = typeof uiContextDefault
+
+export const UIContext = React.createContext(uiContextDefault)
 
 export const MergeUIContext = ({ value, children }) => (
   <UIContext.Consumer>

@@ -9,11 +9,16 @@ const Config = getGlobalConfig()
 
 @view
 export class MenuWindow extends React.Component {
+  state = {
+    show: false
+  }
+
   render() {
     return (
       <Window
         alwaysOnTop={[true, 'floating', 2]}
-        show={!!Electron.state.screenSize[0]}
+        show={this.state.show}
+        onReadyToShow={() => this.setState({ show: true })}
         size={Electron.state.screenSize.slice()}
         focus={false}
         ignoreMouseEvents={!Desktop.hoverState.menuHovered}

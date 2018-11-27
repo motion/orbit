@@ -20,6 +20,7 @@ values.yaml
 kubeconfig
 .cache-loader
 .toc
+*.pyc
 
 common/temp/**
 

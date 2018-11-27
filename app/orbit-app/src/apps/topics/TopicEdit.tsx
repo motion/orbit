@@ -17,6 +17,7 @@ class TopicEditStore {
 })
 @view
 export class TopicEdit extends React.Component<{
+  type: 'term' | 'topic'
   store?: TopicEditStore
   spaceStore?: SpaceStore
 }> {
@@ -54,15 +55,15 @@ export class TopicEdit extends React.Component<{
 
   render() {
     return (
-      <Row tagName="form" onSubmit={this.save} padding={10} alignItems="center">
+      <Row tagName="form" onSubmit={this.save} alignItems="center">
         <Input
           value={this.props.store.name}
           onChange={this.handleNameChange}
           flex={1}
-          placeholder="Add topic..."
+          placeholder={`New ${this.props.type}...`}
         />
         <div style={{ width: 10 }} />
-        <Button type="submit">Add</Button>
+        <Button type="submit" icon="add" />
       </Row>
     )
   }

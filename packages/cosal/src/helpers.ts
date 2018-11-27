@@ -12,6 +12,9 @@ export const defaultSlang = {
 }
 
 export const getWordVector = (word: string, vectors, fallbackVector): number[] => {
+  if (word === 'constructor') {
+    return fallbackVector.map(() => random(-0.15, 0.15))
+  }
   return vectors[word.toLowerCase()] || fallbackVector.map(() => random(-0.15, 0.15))
 }
 

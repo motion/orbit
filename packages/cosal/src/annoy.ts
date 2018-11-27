@@ -1,11 +1,14 @@
 import { exec } from 'child_process'
 import Path from 'path'
 import { Result } from './cosal'
+import electronUtil from 'electron-util/node'
+
+const annoyPath = electronUtil.fixPathForAsarUnpack(Path.join(__dirname, '..', 'annoy.py'))
 
 const execAnnoy = env => {
   return new Promise<any>((res, rej) => {
     exec(
-      `python ${Path.join(__dirname, '..', 'annoy.py')}`,
+      `python ${annoyPath}`,
       {
         env,
       },

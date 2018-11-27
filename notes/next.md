@@ -6,10 +6,8 @@ Cosal and topic modeling is a dependency for search, profiles, and topics. So it
 
 - add more topics
 - test and iterate on finding topics
-- finding unique terminology in company
 - need some work on frontend after
   - managing topics
-  - topicsmain app
   - profiles with topic modeling
 
 Ensuring we can release next beta somewhat soon and also have good demo:
@@ -17,14 +15,11 @@ Ensuring we can release next beta somewhat soon and also have good demo:
 - Improving and fixing all the bit views
 - Making grouped search main view work
 - Fix all selection issues
-- design for pin current app context to pin
 
 Apps:
 
-- get sidebar resizing
 - fix tear away bugs
 - fix app focusing bugs
-- create new titlebar / icon with button to toggle sidebar
 
 Tray:
 

@@ -45,7 +45,7 @@ class TopicsIndexStore {
 
 const activeStyle = { opacity: 1 }
 
-function TopicList({ results }) {
+function TopicList({ results, offset = 0 }) {
   return (
     <>
       {results.map((res, index) => (
@@ -57,9 +57,9 @@ function TopicList({ results }) {
           opacity={0.85}
           {...{ '&:hover': activeStyle }}
           activeStyle={activeStyle}
-          index={index}
+          index={index + offset}
           appConfig={{
-            id: index,
+            id: res.id,
             title: res.title,
             type: 'topics',
           }}
@@ -123,7 +123,7 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
           {!!store.results.length && (
             <>
               <Separator>Terms</Separator>
-              <TopicList results={store.results.slice(0, 8)} />
+              <TopicList results={store.results.slice(0, 8)} offset={8} />
             </>
           )}
         </SliderPane>

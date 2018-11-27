@@ -22,7 +22,7 @@ export class MenuStore {
   menuRef = createRef<any>()
   menuPad = 6
   aboveHeight = 40
-  isHoveringDropdown = false
+  isHoveringMenu = false
   isPinnedOpen = false
   hoveringID = -1
   didRenderState = { at: Date.now(), open: false }
@@ -41,9 +41,11 @@ export class MenuStore {
     return Desktop.hoverState.appHovered[0]
   }
 
-  get isHoveringTray() {
-    return this.hoveringID > -1
-  }
+  // debounce just a little to avoid isHoveringTray being false
+  // before isHoveringMenu is true on mouse enter
+  isHoveringTray = react(() => this.hoveringID > -1, _ => _, {
+    delay: 60,
+  })
 
   get isHoldingOption() {
     return Desktop.keyboardState.isHoldingOption
@@ -68,12 +70,7 @@ export class MenuStore {
   // resolve the actual open state quickly so isOpen
   // can derive off the truth state that is the most quick
   isOpenFast = react(
-    () =>
-      this.isHoldingOption ||
-      this.isHoveringTray ||
-      this.isHoveringDropdown ||
-      this.isPinnedOpen ||
-      this.isHoveringMenuPeek,
+    () => this.isHoldingOption || this.isHoveringTray || this.isHoveringMenu || this.isPinnedOpen,
     _ => _,
   )
 
@@ -142,7 +139,7 @@ export class MenuStore {
     this.setPinnedOpen(!this.isPinnedOpen)
   }
 
-  setPinnedOpen(val) {
+  setPinnedOpen(val: boolean) {
     this.isPinnedOpen = val
     // when you unpin, clear the hover state too
     if (!this.isPinnedOpen) {
@@ -280,7 +277,7 @@ export class MenuStore {
     async (shown, { when }) => {
       ensure('not shown', !shown)
       ensure('not typing something', !this.props.queryStore.hasQuery)
-      await when(() => !this.isHoveringDropdown)
+      await when(() => !this.isHoveringMenu)
       this.closeMenu()
     },
     {
@@ -290,7 +287,7 @@ export class MenuStore {
 
   closeMenu() {
     this.isPinnedOpen = false
-    this.isHoveringDropdown = false
+    this.isHoveringMenu = false
     this.hoveringID = -1
   }
 
@@ -370,14 +367,37 @@ export class MenuStore {
     },
   )
 
+  mouseEvent: 'enter' | 'leave' | null = null
+
+  handleMouseEvent = react(
+    () => this.mouseEvent,
+    async (event, { sleep, when }) => {
+      if (event === 'enter') {
+        if (this.isOpenFast) {
+          this.isHoveringMenu = true
+        }
+      }
+      if (event === 'leave') {
+        // give user some buffer to accidentally go outside bounds
+        await sleep(50)
+        // when the mouse enters into a peek window, we keep it alive
+        await when(() => !this.isHoveringMenuPeek)
+        // give user some buffer syncing state between hovering peek
+        await sleep(50)
+        this.isHoveringMenu = false
+      }
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
+
   handleMouseEnter = () => {
-    if (this.isOpenFast) {
-      this.isHoveringDropdown = true
-    }
+    this.mouseEvent = 'enter'
   }
 
   handleMouseLeave = () => {
-    this.isHoveringDropdown = false
+    this.mouseEvent = 'leave'
   }
 
   leaveMouseOnLeaveBounds = react(

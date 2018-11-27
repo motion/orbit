@@ -23,7 +23,7 @@ export class SpaceNav extends React.Component<Props> {
         <Row position="relative" zIndex={1000} padding={[3, 12]} alignItems="center">
           {/* 1px padding to center it for some reason... */}
           <View padding={[0, 10, 1, 4]}>
-            <Icon size={16} name={activeItem.icon} />
+            <Icon size={16} fill="#fff" name={activeItem.icon} />
           </View>
           <Row>
             {AppPanes.map((pane, index) => {

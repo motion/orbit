@@ -246,7 +246,7 @@ export class MenuStore {
       trayState: {
         menuState: {
           [menuId]: {
-            size: [MENU_WIDTH, height - this.aboveHeight + this.menuPad * 2],
+            size: [MENU_WIDTH, height],
           },
         },
       },

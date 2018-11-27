@@ -2,7 +2,7 @@ export * from '@mcro/constants'
 
 import * as UI from '@mcro/ui'
 
-export const MENU_WIDTH = 320
+export const MENU_WIDTH = 300
 
 export const IS_MENU = window.location.pathname === '/chrome'
 export const IS_APP = window.location.pathname === '/app'

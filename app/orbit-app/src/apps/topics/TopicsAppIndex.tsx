@@ -10,7 +10,8 @@ import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { VerticalSpace } from '../../views'
 import { SliderPane, Slider } from '../../views/Slider'
-import { MENU_WIDTH } from '../../constants'
+import { MENU_WIDTH, IS_MENU } from '../../constants'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
 const icons = {
   0: ['neutral', 'rgba(180,180,180,0.75)'],
@@ -100,7 +101,7 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
       <Slider
         fixHeightToTallest
         curFrame={store.tabs.indexOf(store.activeTab)}
-        frameWidth={MENU_WIDTH}
+        frameWidth={IS_MENU ? MENU_WIDTH : ORBIT_WIDTH}
         transition="none"
       >
         <SliderPane>

@@ -148,9 +148,9 @@ const dark = {
     color: '#fff',
     borderColor: [1, 1, 1, 0.25],
   }),
-  // buttonBackground: [40, 40, 40, 0.2],
-  // buttonBackgroundActive: [20, 20, 20, 0.2],
-  // buttonBackgroundHover: [50, 50, 50, 0.2],
+  buttonBackground: [60, 60, 60, 0.8],
+  buttonBackgroundActive: [80, 80, 80, 0.8],
+  buttonBackgroundHover: [70, 70, 70, 0.8],
   colorActive: '#fff',
 }
 

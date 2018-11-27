@@ -10,7 +10,7 @@ import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { VerticalSpace } from '../../views'
 import { SliderPane, Slider } from '../../views/Slider'
-import { MENU_WIDTH, IS_MENU } from '../../constants'
+import { MENU_WIDTH, IS_MENU, IS_MINIMAL } from '../../constants'
 import { ORBIT_WIDTH } from '@mcro/constants'
 
 const icons = {
@@ -94,10 +94,18 @@ const buttonProps = (store: TopicsIndexStore, type: string) => {
   }
 }
 
+const size = IS_MINIMAL ? 0.9 : 1
+
 export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore }) => {
   const store = useStore(TopicsIndexStore, props)
   return (
     <>
+      <SegmentedRow margin={[0, 8, 8]} itemProps={{ width: '33.3%', size: size, sizeHeight: size }}>
+        <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
+        <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
+        <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
+      </SegmentedRow>
+
       <Slider
         fixHeightToTallest
         curFrame={store.tabs.indexOf(store.activeTab)}
@@ -138,18 +146,10 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
           </SidebarBottom>
         </SliderPane>
       </Slider>
-
-      <SidebarBottom>
-        <SegmentedRow itemProps={{ width: '33.3%', size: 0.9, sizeHeight: 0.9 }}>
-          <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
-          <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
-          <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
-        </SegmentedRow>
-      </SidebarBottom>
     </>
   )
 })
 
 const SidebarBottom = view({
-  padding: 6,
+  padding: [12, IS_MINIMAL ? 6 : 12],
 })

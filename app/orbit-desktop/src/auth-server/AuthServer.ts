@@ -13,6 +13,7 @@ import { OauthValues } from './oauthTypes'
 import { finishAuth } from './finishAuth'
 import { IntegrationType } from '@mcro/models'
 import { Desktop, App } from '@mcro/stores'
+import killPort from 'kill-port'
 
 const Config = getGlobalConfig()
 const log = new Logger('auth-server')
@@ -44,11 +45,12 @@ export class AuthServer {
     return !!this.server
   }
 
-  start() {
+  async start() {
+    await killPort(Config.ports.auth)
     log.verbose('creating auth https server')
     this.setupExpressApp()
     this.app.listen(Config.ports.auth, () => {
-      log.info('AuthServer listening', Config.ports.server)
+      log.info('AuthServer listening', Config.ports.auth)
     })
   }
 

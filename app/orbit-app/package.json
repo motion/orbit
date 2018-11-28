@@ -74,7 +74,7 @@
     "@pundle/preset-default": "3.0.0-beta11"
   },
   "peerDependencies": {
-    "electron": "3.0.10",
+    "electron": "3.0.2",
     "mobx": "5.6.0"
   },
   "publishConfig": {

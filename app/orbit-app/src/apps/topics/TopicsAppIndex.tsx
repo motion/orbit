@@ -45,7 +45,7 @@ class TopicsIndexStore {
 
 const activeStyle = { opacity: 1 }
 
-function TopicList({ results, offset = 0 }) {
+function TopicList({ results, offset = 0, ...props }) {
   return (
     <>
       {results.map((res, index) => (
@@ -53,7 +53,7 @@ function TopicList({ results, offset = 0 }) {
           key={res.title}
           direct
           appType="topics"
-          padding={[4, 11]}
+          padding={[IS_MINIMAL ? 5 : 7, 11]}
           opacity={0.85}
           {...{ '&:hover': activeStyle }}
           activeStyle={activeStyle}
@@ -63,13 +63,14 @@ function TopicList({ results, offset = 0 }) {
             title: res.title,
             type: 'topics',
           }}
+          {...props}
         >
           <Row overflow="hidden">
             <View paddingRight={8} margin={['auto', 0]}>
               <Icon {...res.iconProps} />
             </View>
             <View flex={1} overflow="hidden">
-              <Text ellipse size={1.1}>
+              <Text ellipse size={1.2}>
                 {res.title}
               </Text>
             </View>
@@ -113,19 +114,23 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
         transition="none"
       >
         <SliderPane>
-          {!!store.results.length && (
-            <ScrollableContent>
-              <Separator>Topics</Separator>
-              <TopicList results={store.results.slice(0, 8)} />
-            </ScrollableContent>
-          )}
-          <VerticalSpace />
-          {!!store.results.length && (
-            <>
-              <Separator>Terms</Separator>
-              <TopicList results={store.results.slice(0, 8)} offset={8} />
-            </>
-          )}
+          <ScrollableContent>
+            {!!store.results.length && (
+              <>
+                <Separator>Terms</Separator>
+                <Row flexWrap="wrap">
+                  <TopicList results={store.results} offset={8} width="50%" />
+                </Row>
+              </>
+            )}
+            <VerticalSpace />
+            {!!store.results.length && (
+              <>
+                <Separator>Topics</Separator>
+                <TopicList results={store.results} />
+              </>
+            )}
+          </ScrollableContent>
         </SliderPane>
 
         <SliderPane>

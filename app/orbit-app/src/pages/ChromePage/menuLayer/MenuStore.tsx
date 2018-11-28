@@ -150,7 +150,13 @@ export class MenuStore {
   handleTrayEvent = async (key: keyof TrayActions) => {
     switch (key) {
       case 'TrayToggle0':
+        // special case: switch us over to the main orbit app
+        // sync query over to search
+        App.setState({ query: this.props.queryStore.query })
+        // then open the main window to show it there instead
         AppActions.setOrbitDocked(!App.state.orbitState.docked)
+        // and close this menu
+        this.closeMenu()
         break
       case 'TrayToggle1':
       case 'TrayToggle2':

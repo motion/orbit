@@ -136,9 +136,6 @@ export class OrbitWindow extends React.Component<Props> {
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#ffffff00"
-        webPreferences={{
-          experimentalFeatures: true,
-        }}
       />
     )
   }

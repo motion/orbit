@@ -46,11 +46,11 @@ export const MenuLayer = React.memo(() => {
     const onMove = throttle(e => {
       const hoverOut = e.target === document.documentElement
       if (hoverOut) {
-        if (menuStore.isHoveringDropdown) {
+        if (menuStore.isHoveringMenu) {
           menuStore.handleMouseLeave()
         }
       } else {
-        if (!menuStore.isHoveringDropdown) {
+        if (!menuStore.isHoveringMenu) {
           menuStore.handleMouseEnter()
         }
       }
@@ -117,7 +117,7 @@ const MenuChrome = React.memo(
             borderRadius: 12,
             top: pad,
             transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
-            opacity: opacity,
+            opacity,
             width: MENU_WIDTH,
           }}
         >
@@ -127,7 +127,7 @@ const MenuChrome = React.memo(
           style={{
             position: 'absolute',
             transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
-            opacity: opacity,
+            opacity,
           }}
         >
           <Popover

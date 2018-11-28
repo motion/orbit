@@ -142,7 +142,7 @@ export class Root {
     await this.webServer.start()
 
     this.authServer = new AuthServer()
-    this.authServer.start()
+    await this.authServer.start()
 
     this.onboardManager = new OnboardManager()
 

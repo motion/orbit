@@ -2,7 +2,7 @@ import { attach, compose, view, sleep } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import * as React from 'react'
-import { addAppClickHandler } from '../../../helpers/addAppClickHandler'
+import { addSourceClickHandler } from '../../../helpers/addSourceClickHandler'
 import { ItemType, OrbitIntegration } from '../../../sources/types'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { SettingStore } from '../../../stores/SettingStore'
@@ -13,7 +13,7 @@ import { SimpleItem } from '../../../views/SimpleItem'
 import { Slider, SliderPane } from '../../../views/Slider'
 import { BlurryGuys } from './BlurryGuys'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { SetupProxyCommand } from '@mcro/models'
+import { SetupProxyCommand, CheckProxyCommand } from '@mcro/models'
 
 type Props = {
   settingStore?: SettingStore
@@ -56,7 +56,7 @@ class OnboardStore {
   pendingMove = false
 
   async didMount() {
-    this.accepted = await command(SetupProxyCommand)
+    this.accepted = await command(CheckProxyCommand)
     if (this.accepted && this.curFrame === 0) {
       this.nextFrame()
     }
@@ -225,7 +225,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
                   title={item.appName}
                   icon={item.integration}
                   inactive={item.isActive}
-                  onClick={item.isActive ? null : addAppClickHandler(item)}
+                  onClick={item.isActive ? null : addSourceClickHandler(item)}
                   after={
                     <AddButton size={0.9} disabled={item.isActive}>
                       {item.isActive ? <Icon size={16} name="check" color="green" /> : 'Add'}

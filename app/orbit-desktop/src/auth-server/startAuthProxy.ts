@@ -3,33 +3,38 @@ import * as Path from 'path'
 import { getGlobalConfig } from '@mcro/config'
 import Sudoer from '@mcro/electron-sudo'
 import { checkAuthProxy } from './checkAuthProxy'
+import { existsSync } from 'fs'
 
-const log = new Logger('desktop')
+const log = new Logger('startAuthProxy')
 const Config = getGlobalConfig()
 
 export function startAuthProxy() {
-  const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
-  const port = Config.ports.server
+  const authProxyScript = Path.join(__dirname, 'authProxyProcess.js')
+  if (!existsSync(authProxyScript)) {
+    throw new Error('Proxy script not valid path')
+  }
   const host = Config.urls.authHost
+  const port = Config.ports.auth
   const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
-  const args = `${pathToOrbitProxy} --host ${host}:${port} --host go:${port} --host hi:${port} --host orbit:${port}`.split(
-    ' ',
-  )
+  const command = `${authProxyScript} --proxyUrl=${host}:${port}`
   const env = {
     ...process.env,
     ELECTRON_RUN_AS_NODE: 1,
   }
 
-  log.info(`Running proxy script: ${pathToOrbitProxy}`)
+  log.info(`Running proxy script: ${authProxyScript}`)
 
   // run proxy server in secure sub-process
   sudoer
-    .spawn(Config.paths.nodeBinary, args, {
+    .spawn(Config.paths.nodeBinary, command.split(' '), {
       env,
     })
     .then(proc => {
       proc.stdout.on('data', x => log.info(`OrbitProxy: ${x}`))
       proc.stderr.on('data', x => log.info(`OrbitProxyErr: ${x}`))
+    })
+    .catch(err => {
+      console.log('error spawning', err)
     })
 
   return new Promise<boolean>(resolve => {

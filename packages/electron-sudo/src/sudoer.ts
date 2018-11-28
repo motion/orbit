@@ -123,9 +123,7 @@ class SudoerDarwin extends SudoerUnix {
   }
 
   isValidName(name) {
-    return (
-      /^[a-z0-9 ]+$/i.test(name) && name.trim().length > 0 && name.length < 70
-    )
+    return /^[a-z0-9 ]+$/i.test(name) && name.trim().length > 0 && name.length < 70
   }
 
   joinEnv(options) {
@@ -139,8 +137,8 @@ class SudoerDarwin extends SudoerUnix {
     return spreaded
   }
 
-  async exec(command, options = EXEC_OPTIONS): Promise<{ stdout: string, stderr: string }> {
-    return new Promise<{ stdout: string, stderr: string }>(async (resolve, reject) => {
+  async exec(command, options = EXEC_OPTIONS): Promise<{ stdout: string; stderr: string }> {
+    return new Promise<{ stdout: string; stderr: string }>(async (resolve, reject) => {
       const commandEscaped = command.replace(/"/g, '\\\\\\"')
       const toExec = this.getCommand(commandEscaped)
       try {
@@ -165,9 +163,7 @@ class SudoerDarwin extends SudoerUnix {
       const commandWithArgsEscaped = commandWithArgs.replace(/"/g, '\\\\\\"')
       const toSpawn = this.getCommand(commandWithArgsEscaped)
       cp = spawn(toSpawn, [], options)
-      cp.on('error', async err => {
-        reject(err)
-      })
+      cp.on('error', reject)
       this.cp = cp
       resolve(cp)
     })
@@ -255,9 +251,7 @@ class SudoerLinux extends SudoerUnix {
       if (/gksudo/i.test(self.binary)) {
         sudoArgs.push('--preserve-env')
         sudoArgs.push('--sudo-mode')
-        sudoArgs.push(
-          `--description="${self.escapeDoubleQuotes(self.options.name)}"`,
-        )
+        sudoArgs.push(`--description="${self.escapeDoubleQuotes(self.options.name)}"`)
         sudoArgs.push('--sudo-mode')
       } else if (/pkexec/i.test(self.binary)) {
         sudoArgs.push('--disable-internal-agent')
@@ -285,9 +279,7 @@ class SudoerWin32 extends Sudoer {
   }
 
   async writeBatch(command, args, options) {
-    let tmpDir = (await exec('echo %temp%')).stdout
-        .toString()
-        .replace(/\r\n$/, ''),
+    let tmpDir = (await exec('echo %temp%')).stdout.toString().replace(/\r\n$/, ''),
       tmpBatchFile = `${tmpDir}\\batch-${Math.random()}.bat`,
       tmpOutputFile = `${tmpDir}\\output-${Math.random()}`,
       env = this.joinEnv(options),
@@ -313,26 +305,22 @@ class SudoerWin32 extends Sudoer {
       output = await readFile(cp.files.output)
     // If we have process then emit watched and stored data to stdout
     cp.stdout.emit('data', output)
-    let watcher = watchFile(
-      cp.files.output,
-      { persistent: true, interval: 1 },
-      () => {
-        let stream = createReadStream(cp.files.output, {
-            // @ts-ignore
-            start: watcher.last,
-          }),
-          size = 0
-        stream.on('data', data => {
-          size += data.length
-          if (cp) {
-            cp.stdout.emit('data', data)
-          }
-        })
-        stream.on('close', () => {
-          cp.last += size
-        })
-      },
-    )
+    let watcher = watchFile(cp.files.output, { persistent: true, interval: 1 }, () => {
+      let stream = createReadStream(cp.files.output, {
+          // @ts-ignore
+          start: watcher.last,
+        }),
+        size = 0
+      stream.on('data', data => {
+        size += data.length
+        if (cp) {
+          cp.stdout.emit('data', data)
+        }
+      })
+      stream.on('close', () => {
+        cp.last += size
+      })
+    })
     cp.last = output.length
     cp.on('exit', () => {
       self.clean(cp)
@@ -373,9 +361,7 @@ class SudoerWin32 extends Sudoer {
       try {
         await this.prepare()
         files = await self.writeBatch(command, [], options)
-        command = `${self.encloseDoubleQuotes(self.binary)} -wait ${
-          files.batch
-        }`
+        command = `${self.encloseDoubleQuotes(self.binary)} -wait ${files.batch}`
         // No need to wait exec output because output is redirected to temporary file
         await exec(command, options)
         // Read entire output from redirected file on process exit

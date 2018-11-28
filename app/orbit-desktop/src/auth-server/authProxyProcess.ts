@@ -8,7 +8,8 @@ console.log('starting https proxy server')
 
 async function main() {
   const getArg = prefix => process.argv[process.argv.indexOf(prefix)].replace(prefix, '')
-  const [host, port] = getArg('--url=').split(':')
+  const [host, port] = getArg('--proxyUrl=').split(':')
+  console.log('proxy run on', host, port)
 
   try {
     console.log('starting getting')

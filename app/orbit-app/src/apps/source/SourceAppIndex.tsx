@@ -6,7 +6,7 @@ import { VerticalSpace } from '../../views'
 import { SubTitle } from '../../views/SubTitle'
 import { Unpad } from '../../views/Unpad'
 import { SimpleItem } from '../../views/SimpleItem'
-import { addAppClickHandler } from '../../helpers/addAppClickHandler'
+import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { Button } from '@mcro/ui'
 import { react, always } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
@@ -62,7 +62,7 @@ export const SourceAppIndex = memo((props: AppProps) => {
           return (
             <SimpleItem
               key={`${index}${app.integration}`}
-              onClick={addAppClickHandler(app)}
+              onClick={addSourceClickHandler(app)}
               title={app.appName}
               icon={app.integration}
               after={<Button size={0.9}>Add</Button>}

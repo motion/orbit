@@ -6,7 +6,6 @@ export async function checkAuthProxy() {
       return true
     }
   } catch (err) {
-    console.debug('error fetching proxy url', err)
     return false
   }
 }

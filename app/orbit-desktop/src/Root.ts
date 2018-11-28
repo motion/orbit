@@ -40,6 +40,7 @@ import {
   PeopleNearTopicModel,
   BitsNearTopicModel,
   CosalTopicsModel,
+  CheckProxyCommand,
 } from '@mcro/models'
 import { SetupProxyCommand } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
@@ -298,6 +299,7 @@ export class Root {
         getSalientWordsResolver(this.cosal),
         SearchLocationsResolver,
         SearchPinnedResolver,
+        resolveCommand(CheckProxyCommand, checkAuthProxy),
         resolveCommand(SetupProxyCommand, async () => {
           if (await checkAuthProxy()) {
             return true

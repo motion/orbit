@@ -26,6 +26,5 @@ export const CosalTopWordsCommand = new Command<string[], { text: string; max?: 
   'cosal-top-words-command',
 )
 
-export const SetupProxyCommand = new Command<boolean, void>(
-  'SetupProxyCommand',
-)
+export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')
+export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')

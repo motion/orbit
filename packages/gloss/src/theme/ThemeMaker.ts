@@ -5,7 +5,7 @@ import { ThemeObject } from '@mcro/css'
 type ColorObject = { [a: string]: Color }
 
 // TODO: change themes to just use `base:{}` not put stuff in global?
-type SimpleStyleObject = {
+export type SimpleStyleObject = {
   [a: string]: Color | ColorObject
   hover?: ColorObject
   active?: ColorObject

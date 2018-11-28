@@ -1,27 +1,22 @@
 import { SourceEntity, SpaceEntity } from '@mcro/entities'
-import { DriveSource, GmailSource, IntegrationType, SlackSource, SlackSourceValues, Source } from '@mcro/models'
+import {
+  DriveSource,
+  GmailSource,
+  IntegrationType,
+  SlackSource,
+  SlackSourceValues,
+  Source,
+} from '@mcro/models'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
-import { App, Desktop } from '@mcro/stores'
 import { getRepository } from 'typeorm'
+import { OauthValues } from './oauthTypes'
 
-type OauthValues = {
-  token: string
-  info: any
-  error?: string
-  refreshToken?: string
-}
-
-export const finishOauth = (type: IntegrationType, values: OauthValues) => {
-  // close window
-  // closeChromeTabWithUrlStarting(`${Config.urls.server}/auth/${type}`)
-  // create setting
+export const finishAuth = (type: IntegrationType, values: OauthValues) => {
   createSource(type, values)
-  // show Orbit again
-  Desktop.sendMessage(App, App.messages.SHOW_APPS, type)
 }
 
 const createSource = async (type: IntegrationType, values: OauthValues) => {
-  console.log('OAUTH VALUES', values)
+  console.log('createSource', values)
   if (!values.token) {
     throw new Error(`No token returned ${JSON.stringify(values)}`)
   }
@@ -31,17 +26,6 @@ const createSource = async (type: IntegrationType, values: OauthValues) => {
     type = 'drive'
   }
 
-  // todo: have a resolver for identifiers based on integration
-  // const oauthid = (values.info && values.info.id) || 'none'
-  // const identifier = `${oauthid}-${type}`
-  // let setting
-  // // update if its the same identifier from the oauth
-  // if (identifier) {
-  //   setting = await getRepository(SourceEntity).findOne({ identifier })
-  // }
-  // if (!setting) {
-  //   setting = new SourceEntity()
-  // }
   const setting: Source = {
     spaces: [await getRepository(SpaceEntity).findOne(1)], // todo: we need to receive space id instead of hard codding it
     target: 'source',

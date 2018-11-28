@@ -26,10 +26,6 @@ export const CosalTopWordsCommand = new Command<string[], { text: string; max?: 
   'cosal-top-words-command',
 )
 
-export const AuthorizeIntegrationCommand = new Command<boolean, void>(
-  'authorize-integration-command',
+export const SetupProxyCommand = new Command<boolean, void>(
+  'SetupProxyCommand',
 )
-
-export const SetupCertificateCommand = new Command<boolean, void>('SetupCertificateCommand')
-
-export const HasCertificateCommand = new Command<boolean, void>('HasCertificateCommand')

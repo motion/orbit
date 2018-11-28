@@ -1,6 +1,5 @@
-import { attach, compose, view } from '@mcro/black'
+import { attach, compose, view, sleep } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
-import { HasCertificateCommand, SetupCertificateCommand } from '@mcro/models'
 import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import * as React from 'react'
 import { addAppClickHandler } from '../../../helpers/addAppClickHandler'
@@ -14,6 +13,7 @@ import { SimpleItem } from '../../../views/SimpleItem'
 import { Slider, SliderPane } from '../../../views/Slider'
 import { BlurryGuys } from './BlurryGuys'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { SetupProxyCommand } from '@mcro/models'
 
 type Props = {
   settingStore?: SettingStore
@@ -56,20 +56,11 @@ class OnboardStore {
   pendingMove = false
 
   async didMount() {
-    const accepted = await command(HasCertificateCommand)
-    if (accepted) {
-      this.accepted = true
-    }
+    this.accepted = await command(SetupProxyCommand)
     if (this.accepted && this.curFrame === 0) {
       this.nextFrame()
     }
   }
-
-  // async checkAlreadyProxied() {
-  // if (await checkAuthProxy()) {
-  //   this.accepted = true
-  // }
-  // }
 
   get disableButtons() {
     const isShowingSuccessMessage = this.accepted && this.curFrame === 0
@@ -80,10 +71,14 @@ class OnboardStore {
     0: async () => {
       if (this.accepted !== true) {
         try {
-          await command(SetupCertificateCommand)
-          this.accepted = true
+          this.accepted = await command(SetupProxyCommand)
         } catch (err) {
           this.acceptedMessage = err
+        }
+        if (this.accepted) {
+          // show message for a sec
+          this.acceptedMessage = 'Successfully setup proxy'
+          await sleep(1500)
         }
       }
     },

@@ -1,7 +1,6 @@
 import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
-import { hasCertificateFor, certificateFor } from '@mcro/devcert'
 import {
   AppEntity,
   BitEntity,
@@ -42,11 +41,7 @@ import {
   BitsNearTopicModel,
   CosalTopicsModel,
 } from '@mcro/models'
-import {
-  AuthorizeIntegrationCommand,
-  SetupCertificateCommand,
-  HasCertificateCommand,
-} from '@mcro/models'
+import { SetupProxyCommand } from '@mcro/models'
 import { Oracle } from '@mcro/oracle'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { writeJSON } from 'fs-extra'
@@ -62,7 +57,7 @@ import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
-import { HttpsAuthServer } from './auth-server/HttpsAuthServer'
+import { AuthServer } from './auth-server/AuthServer'
 import { KeyboardManager } from './managers/KeyboardManager'
 import { MousePositionManager } from './managers/MousePositionManager'
 import { OCRManager } from './managers/OCRManager'
@@ -78,18 +73,20 @@ import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
-import { Server } from './Server'
+import { WebServer } from './WebServer'
 import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
 import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
+import { checkAuthProxy } from './auth-server/checkAuthProxy'
+import { startAuthProxy } from './auth-server/startAuthProxy'
 
 export class Root {
   config = getGlobalConfig()
   oracle: Oracle
   isReconnecting = false
-  httpsAuthServer: HttpsAuthServer
-  onboard: OnboardManager
+  AuthServer: AuthServer
+  onboardManager: OnboardManager
   disposed = false
-  server: Server
+  webServer: WebServer
   stores = null
   mediatorServer: MediatorServer
   cosal = new Cosal({
@@ -140,15 +137,17 @@ export class Root {
     await this.generalSettingManager.start()
 
     // start server a bit early so other apps can start
-    this.server = new Server()
-    await this.server.start()
+    this.webServer = new WebServer()
+    await this.webServer.start()
 
-    this.httpsAuthServer = new HttpsAuthServer()
+    this.AuthServer = new AuthServer()
 
-    this.onboard = new OnboardManager()
+    this.onboardManager = new OnboardManager()
+
+    // start cosal before we pass into managers...
     await this.cosal.start()
 
-    // setup oracle to pass into managers
+    // setup oracle before we pass into managers...
     this.oracle = new Oracle({
       ...oracleOptions,
       appWindow: true,
@@ -184,7 +183,8 @@ export class Root {
     // no need to await
     this.ocrManager.start()
 
-    // let other processes start before CPU load
+    // scanning cosal is high cpu load, we need better solution for high cpu on this process
+    // until then lets just wait a bit
     setTimeout(() => {
       this.cosalManager.updateSearchIndexWithNewBits()
       this.cosalManager.scanTopics()
@@ -214,8 +214,8 @@ export class Root {
       await this.appsManager.dispose()
     }
     await this.ocrManager.dispose()
-    if (this.httpsAuthServer.isRunning()) {
-      await this.httpsAuthServer.stop()
+    if (this.AuthServer.isRunning()) {
+      await this.AuthServer.stop()
     }
     this.disposed = true
     return true
@@ -267,9 +267,7 @@ export class Root {
         GithubSourceBlacklistCommand,
         SlackSourceBlacklistCommand,
         CosalTopWordsCommand,
-        AuthorizeIntegrationCommand,
-        SetupCertificateCommand,
-        HasCertificateCommand,
+        SetupProxyCommand,
       ],
       transport: new WebSocketServerTransport({
         port: this.config.ports.dbBridge,
@@ -300,16 +298,12 @@ export class Root {
         getSalientWordsResolver(this.cosal),
         SearchLocationsResolver,
         SearchPinnedResolver,
-        resolveCommand(AuthorizeIntegrationCommand, async () => {
-          await this.httpsAuthServer.start()
-          return true
-        }),
-        resolveCommand(SetupCertificateCommand, async () => {
-          await certificateFor(this.config.urls.authHost)
-          return true
-        }),
-        resolveCommand(HasCertificateCommand, () => {
-          return hasCertificateFor(this.config.urls.authHost)
+        resolveCommand(SetupProxyCommand, async () => {
+          if (await checkAuthProxy()) {
+            return true
+          } else {
+            return await startAuthProxy()
+          }
         }),
       ],
     })

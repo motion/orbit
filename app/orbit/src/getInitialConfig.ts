@@ -6,7 +6,9 @@ import { GlobalConfig } from '@mcro/config'
 
 export async function getInitialConfig() {
   const isProd = process.env.NODE_ENV !== 'development'
-  const ports = await findContiguousPorts(12, isProd ? 3333 : 3001)
+
+  // find a bunch of ports for us to use
+  const ports = await findContiguousPorts(14, isProd ? 3333 : 3001)
   let config: GlobalConfig
 
   if (!ports) {
@@ -57,11 +59,11 @@ export async function getInitialConfig() {
       oracleBridge: ports[4],
       mediator: ports[5],
       ocrBridge: ports[6],
-      apps: ports.slice(7),
-      auth: 4444
+      auth: ports[7],
+      // ...rest of ports for apps
+      apps: ports.slice(8),
     },
   }
 
   return config
 }
-

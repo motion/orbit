@@ -1,18 +1,26 @@
 import * as React from 'react'
 import { ThemeContext } from './ThemeContext'
-import { ThemeMaker } from './ThemeMaker'
+import { ThemeMaker, SimpleStyleObject } from './ThemeMaker'
 
 const MakeTheme = new ThemeMaker()
 const makeName = () => `theme-${Math.random}`.slice(0, 15)
 const baseThemeName = makeName()
 const themeCache = {}
 
+type ThemeProps = {
+  theme?: string | SimpleStyleObject
+  name?: string
+  select?: Function
+  children: React.ReactNode
+}
+
 // takes gloss themes and adds a "generate from base object/color"
 
 // TODO: this just re-mounts everything below it on every render (when used with an object)?....
 // TODO: the uniqeThemeName stuff is super wierd maybe not necessary
 
-export const Theme = ({ theme, name, select, children }) => {
+// @ts-ignore
+export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) => {
   if (name) {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
   }
@@ -57,7 +65,7 @@ export const Theme = ({ theme, name, select, children }) => {
       }}
     </ThemeContext.Consumer>
   )
-}
+})
 
 export const ChangeThemeByName = ({ name, children }) => {
   if (!name) {
@@ -67,11 +75,7 @@ export const ChangeThemeByName = ({ name, children }) => {
     <ThemeContext.Consumer>
       {({ allThemes }) => {
         if (!allThemes || !allThemes[name]) {
-          throw new Error(
-            `No theme in context: ${name}. Themes are: ${Object.keys(
-              allThemes,
-            )}`,
-          )
+          throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
         }
         const activeTheme = allThemes[name]
         return (

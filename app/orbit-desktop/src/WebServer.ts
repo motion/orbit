@@ -29,8 +29,6 @@ export class WebServer {
     // ROUTES
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
-
-    this.setupOauthCallback()
     this.app.get('/hello', (_, res) => res.send('hello world'))
 
     // assets

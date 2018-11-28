@@ -6,7 +6,6 @@ import * as Path from 'path'
 import OAuth from './oauth'
 import OAuthStrategies from './oauthStrategies'
 import morgan from 'morgan'
-import request from 'request'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import Passport from 'passport'
@@ -86,24 +85,24 @@ export class AuthServer {
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.app.get('/hello', (_, res) => res.send('hello world'))
 
-    // redirect latest app version to simple download link
-    this.app.get('/download', async (_, res) => {
-      let filename
-      try {
-        const latest = await fetch('http://get.tryorbit.com/updates/latest-mac.yml').then(x =>
-          x.text(),
-        )
-        filename = latest.match(/(Orbit-.*-mac.zip)/g)[0]
-      } catch (err) {
-        console.log(err)
-      }
-      if (filename) {
-        res.setHeader('content-disposition', 'attachment; filename=Orbit.zip')
-        request(`http://get.tryorbit.com/updates/${filename}`).pipe(res)
-      } else {
-        res.status(500)
-      }
-    })
+    // // redirect latest app version to simple download link
+    // this.app.get('/download', async (_, res) => {
+    //   let filename
+    //   try {
+    //     const latest = await fetch('http://get.tryorbit.com/updates/latest-mac.yml').then(x =>
+    //       x.text(),
+    //     )
+    //     filename = latest.match(/(Orbit-.*-mac.zip)/g)[0]
+    //   } catch (err) {
+    //     console.log(err)
+    //   }
+    //   if (filename) {
+    //     res.setHeader('content-disposition', 'attachment; filename=Orbit.zip')
+    //     request(`http://get.tryorbit.com/updates/${filename}`).pipe(res)
+    //   } else {
+    //     res.status(500)
+    //   }
+    // })
 
     this.setupPassportRoutes()
 

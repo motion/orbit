@@ -1,14 +1,13 @@
 import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
-import { App } from '@mcro/stores'
 import { SelectionStore, Direction } from './SelectionStore'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
-import { AppActions } from '../actions/AppActions'
 
 export class PaneManagerStore {
   props: {
     selectionStore?: SelectionStore
     panes: string[]
+    onPaneChange: Function
   }
 
   get panes() {
@@ -94,12 +93,12 @@ export class PaneManagerStore {
     this.setActivePane(this.lastActivePane)
   }
 
-  clearPeekOnActivePaneChange = react(
+  handleOnPaneChange = react(
     () => this.activePane,
     pane => {
-      ensure('pane', !!pane)
-      ensure('target', !!App.peekState.target)
-      AppActions.clearPeek()
+      if (this.props.onPaneChange) {
+        this.props.onPaneChange(pane)
+      }
     },
   )
 }

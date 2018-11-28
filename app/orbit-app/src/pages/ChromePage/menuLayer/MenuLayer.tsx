@@ -31,6 +31,9 @@ export const MenuLayer = React.memo(() => {
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,
     selectionStore,
+    onPaneChange: () => {
+      AppActions.clearPeek()
+    },
   })
   const menuStore = useStore(MenuStore, { paneManagerStore, queryStore })
   const allStores = {

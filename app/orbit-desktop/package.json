@@ -21,6 +21,7 @@
     "passport-google-oauth20": "1.0.0",
     "body-parser": "^1.16.1",
     "morgan": "1.9.0",
+    "http-proxy": "1.17.0",
     "@babel/runtime": "^7.0.0",
     "@mcro/black": "^2.2.1",
     "@mcro/config": "2.2.1",

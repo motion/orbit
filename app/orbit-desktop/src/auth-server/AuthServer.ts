@@ -40,28 +40,18 @@ export class AuthServer {
     },
   })
 
-  /**
-   * Checks if server is running.
-   */
   isRunning(): boolean {
     return !!this.server
   }
 
-  /**
-   * Starts HTTPS auth server.
-   */
-  async start(): Promise<void> {
+  start() {
     log.verbose('creating auth https server')
-
     this.setupExpressApp()
     this.app.listen(Config.ports.auth, () => {
       log.info('AuthServer listening', Config.ports.server)
     })
   }
 
-  /**
-   * Stops running HTTPS auth server.
-   */
   async stop(): Promise<void> {
     if (!this.server) return
 

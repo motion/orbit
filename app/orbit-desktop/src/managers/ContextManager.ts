@@ -33,7 +33,7 @@ export class ContextManager {
       if (event === 'ScrollEvent') {
         return
       }
-      console.debug('got window change', event, value)
+      // console.debug('got window change', event, value)
       // console.log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = toJS(Desktop.appState)
       let appState: any = {}

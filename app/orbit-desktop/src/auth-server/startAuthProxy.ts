@@ -16,7 +16,7 @@ export function startAuthProxy() {
   const host = Config.urls.authHost
   const port = Config.ports.auth
   const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
-  const command = `${authProxyScript} --proxyUrl=${host}:${port}`
+  const command = `${authProxyScript} --authUrl=${host}:${port} --proxyPort=${Config.ports.auth}`
   const env = {
     ...process.env,
     ELECTRON_RUN_AS_NODE: 1,
@@ -24,20 +24,21 @@ export function startAuthProxy() {
 
   log.info(`Running proxy script: ${authProxyScript}`)
 
-  // run proxy server in secure sub-process
-  sudoer
-    .spawn(Config.paths.nodeBinary, command.split(' '), {
-      env,
-    })
-    .then(proc => {
-      proc.stdout.on('data', x => log.info(`OrbitProxy: ${x}`))
-      proc.stderr.on('data', x => log.info(`OrbitProxyErr: ${x}`))
-    })
-    .catch(err => {
-      console.log('error spawning', err)
-    })
-
   return new Promise<boolean>(resolve => {
+    // run proxy server in secure sub-process
+    sudoer
+      .spawn(Config.paths.nodeBinary, command.split(' '), {
+        env,
+      })
+      .then(proc => {
+        proc.stdout.on('data', x => log.info(`OrbitProxy: ${x}`))
+        proc.stderr.on('data', x => log.info(`OrbitProxyErr: ${x}`))
+      })
+      .catch(err => {
+        log.error('error spawning', err)
+        resolve(false)
+      })
+
     let failTimeout
     let checkInterval
 

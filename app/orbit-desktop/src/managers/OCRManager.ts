@@ -1,17 +1,16 @@
 import { Oracle } from '@mcro/oracle'
-import { debounce, last } from 'lodash'
-import { store, isEqual, react, on } from '@mcro/black'
-import { Desktop, Electron } from '@mcro/stores'
+import { debounce } from 'lodash'
+import { store, react, on } from '@mcro/black'
+import { Desktop } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import macosVersion from 'macos-version'
-import { toJS } from 'mobx'
 import { oracleBinPath } from '../constants'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
 
 const log = new Logger('OCRManager')
 const Config = getGlobalConfig()
-const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
+// const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
 const APP_ID = -1
 
 // prevent apps from clearing highlights
@@ -168,73 +167,73 @@ export class OCRManager {
     })
 
     // window movements
-    this.oracle.onWindowChange((event, value) => {
-      // pause if no permission
-      if (this.pauseIfNoPermission()) {
-        return
-      }
-      if (event === 'ScrollEvent') {
-        // always clear if not paused, you can pause it to prevent clear if you want
-        if (!Desktop.ocrState.paused) {
-          this.setScreenChanged()
-        }
-        this.ocrCurrentApp()
-        return
-      }
-      console.log('got window change', event, value)
-      // console.log(`got event ${event} ${JSON.stringify(value)}`)
-      const lastState = toJS(Desktop.appState)
-      let appState: any = {}
-      let id = this.curAppID
-      const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
-      switch (event) {
-        case 'FrontmostWindowChangedEvent':
-          id = value.id
-          appState = {
-            id,
-            name: id ? last(id.split('.')) : value.title,
-            title: value.title,
-            offset: value.position,
-            bounds: value.size,
-          }
-          // update these now so we can use to track
-          this.curAppID = id
-          this.curAppName = appState.name
-          break
-        case 'WindowPosChangedEvent':
-          appState.bounds = value.size
-          appState.offset = value.position
-      }
-      // no change
-      if (isEqual(appState, lastState)) {
-        log.info('Same app state, ignoring scan')
-        return
-      }
-      const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
-      Desktop.setState({ focusedOnOrbit })
-      // when were moving into focus prevent app, store its appName, pause then return
-      if (PREVENT_APP_STATE[this.curAppName]) {
-        log.info('Prevent app state', this.curAppName)
-        this.oracle.pause()
-        return
-      }
-      if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[appState.name]) {
-        const { appState } = Desktop.state
-        if (
-          !isEqual(appState.bounds, appState.bounds) ||
-          !isEqual(appState.offset, appState.offset)
-        ) {
-          console.log('ocr clearing...')
-          // immediate clear for moving
-          Desktop.sendMessage(Electron, Electron.messages.CLEAR)
-        }
-      }
-      if (!Desktop.ocrState.paused) {
-        this.oracle.resume()
-      }
-      console.log('setting app state!', appState)
-      Desktop.setState({ appState })
-    })
+    // this.oracle.onWindowChange((event, value) => {
+    //   // pause if no permission
+    //   if (this.pauseIfNoPermission()) {
+    //     return
+    //   }
+    //   if (event === 'ScrollEvent') {
+    //     // always clear if not paused, you can pause it to prevent clear if you want
+    //     if (!Desktop.ocrState.paused) {
+    //       this.setScreenChanged()
+    //     }
+    //     this.ocrCurrentApp()
+    //     return
+    //   }
+    //   console.log('got window change', event, value)
+    //   // console.log(`got event ${event} ${JSON.stringify(value)}`)
+    //   const lastState = toJS(Desktop.appState)
+    //   let appState: any = {}
+    //   let id = this.curAppID
+    //   const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
+    //   switch (event) {
+    //     case 'FrontmostWindowChangedEvent':
+    //       id = value.id
+    //       appState = {
+    //         id,
+    //         name: id ? last(id.split('.')) : value.title,
+    //         title: value.title,
+    //         offset: value.position,
+    //         bounds: value.size,
+    //       }
+    //       // update these now so we can use to track
+    //       this.curAppID = id
+    //       this.curAppName = appState.name
+    //       break
+    //     case 'WindowPosChangedEvent':
+    //       appState.bounds = value.size
+    //       appState.offset = value.position
+    //   }
+    //   // no change
+    //   if (isEqual(appState, lastState)) {
+    //     log.info('Same app state, ignoring scan')
+    //     return
+    //   }
+    //   const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
+    //   Desktop.setState({ focusedOnOrbit })
+    //   // when were moving into focus prevent app, store its appName, pause then return
+    //   if (PREVENT_APP_STATE[this.curAppName]) {
+    //     log.info('Prevent app state', this.curAppName)
+    //     this.oracle.pause()
+    //     return
+    //   }
+    //   if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[appState.name]) {
+    //     const { appState } = Desktop.state
+    //     if (
+    //       !isEqual(appState.bounds, appState.bounds) ||
+    //       !isEqual(appState.offset, appState.offset)
+    //     ) {
+    //       console.log('ocr clearing...')
+    //       // immediate clear for moving
+    //       Desktop.sendMessage(Electron, Electron.messages.CLEAR)
+    //     }
+    //   }
+    //   if (!Desktop.ocrState.paused) {
+    //     this.oracle.resume()
+    //   }
+    //   console.log('setting app state!', appState)
+    //   Desktop.setState({ appState })
+    // })
 
     // OCR work clear
     this.oracle.onBoxChanged(count => {

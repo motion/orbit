@@ -84,7 +84,7 @@ export class Root {
   config = getGlobalConfig()
   oracle: Oracle
   isReconnecting = false
-  AuthServer: AuthServer
+  authServer: AuthServer
   onboardManager: OnboardManager
   disposed = false
   webServer: WebServer
@@ -141,7 +141,8 @@ export class Root {
     this.webServer = new WebServer()
     await this.webServer.start()
 
-    this.AuthServer = new AuthServer()
+    this.authServer = new AuthServer()
+    this.authServer.start()
 
     this.onboardManager = new OnboardManager()
 
@@ -215,8 +216,8 @@ export class Root {
       await this.appsManager.dispose()
     }
     await this.ocrManager.dispose()
-    if (this.AuthServer.isRunning()) {
-      await this.AuthServer.stop()
+    if (this.authServer.isRunning()) {
+      await this.authServer.stop()
     }
     this.disposed = true
     return true

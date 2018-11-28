@@ -177,9 +177,11 @@ export const PeopleAppIndex = memo((props: AppProps) => {
     resultSections.reduce((a, b) => a + b.height, 0),
   )
   console.log('render people app index', props, height)
+  const unpad = 3
+  const width = (IS_MENU ? MENU_WIDTH : ORBIT_WIDTH) + unpad * 2
   return (
     <ProvideHighlightsContextWithDefaults value={{ words: peopleQuery.split(' ') }}>
-      <div style={{ height }}>
+      <div style={{ height, marginLeft: -unpad, marginRight: -unpad }}>
         <List
           rowHeight={({ index }) => resultSections[index].height}
           rowRenderer={({ index, key }) => {
@@ -194,7 +196,7 @@ export const PeopleAppIndex = memo((props: AppProps) => {
             )
           }}
           rowCount={resultSections.length}
-          width={IS_MENU ? MENU_WIDTH : ORBIT_WIDTH}
+          width={width}
           height={height}
         />
       </div>

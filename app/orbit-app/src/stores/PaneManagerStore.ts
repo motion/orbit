@@ -1,14 +1,13 @@
 import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
-import { App } from '@mcro/stores'
 import { SelectionStore, Direction } from './SelectionStore'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
-import { AppActions } from '../actions/AppActions'
 
 export class PaneManagerStore {
   props: {
     selectionStore?: SelectionStore
     panes: string[]
+    onPaneChange: Function
   }
 
   get panes() {
@@ -17,6 +16,16 @@ export class PaneManagerStore {
 
   keyablePanes = [0, 3]
   paneIndex = 0
+
+  activePane = react(
+    () => this.panes[this.paneIndex],
+    async (val, { sleep }) => {
+      // keyboard nav people may hold it down to move fast, this makes it more smooth
+      await sleep(50)
+      return val
+    },
+  )
+
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
     onlyUpdateIfChanged: true,
@@ -80,31 +89,16 @@ export class PaneManagerStore {
     return this.panes.indexOf(name)
   }
 
-  get activePaneFast() {
-    return this.panes[this.paneIndex]
-  }
-
-  activePane = react(
-    () => [this.panes, this.paneIndex],
-    async (_, { sleep }) => {
-      const active = this.panes[this.paneIndex]
-      ensure('changed', active !== this.activePane)
-      // let activePaneFast be a frame ahead
-      await sleep()
-      return active
-    },
-  )
-
   setActivePaneToPrevious = () => {
     this.setActivePane(this.lastActivePane)
   }
 
-  clearPeekOnActivePaneChange = react(
+  handleOnPaneChange = react(
     () => this.activePane,
     pane => {
-      ensure('pane', !!pane)
-      ensure('target', !!App.peekState.target)
-      AppActions.clearPeek()
+      if (this.props.onPaneChange) {
+        this.props.onPaneChange(pane)
+      }
     },
   )
 }

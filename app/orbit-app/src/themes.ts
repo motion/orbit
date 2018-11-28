@@ -138,7 +138,7 @@ const dark = {
     inputBackgroundFocus: [90, 90, 90, 0.5],
     listItemBackground: 'transparent',
     listItemBackgroundSelected: [60, 60, 60, 0.2],
-    listItemBackgroundHover: [20, 20, 20, 0.25],
+    listItemBackgroundHover: [20, 20, 20, 0.13],
     cardBackground: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
@@ -149,7 +149,7 @@ const dark = {
     borderColor: [1, 1, 1, 0.25],
   }),
   buttonBackground: [60, 60, 60, 0.8],
-  buttonBackgroundActive: [80, 80, 80, 0.8],
+  buttonBackgroundActive: [45, 45, 45, 0.8],
   buttonBackgroundHover: [70, 70, 70, 0.8],
   colorActive: '#fff',
 }

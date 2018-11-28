@@ -6,10 +6,10 @@ import { AppActions } from '../../../actions/AppActions'
 import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
-import { maxTransition } from './MenuLayer'
 import { AppType } from '@mcro/models'
-import { memoize } from 'lodash'
+import { memoize, debounce } from 'lodash'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { createRef } from 'react'
 
 export const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
 
@@ -19,11 +19,13 @@ export class MenuStore {
     queryStore: QueryStore
   }
 
+  menuRef = createRef<any>()
   menuPad = 6
   aboveHeight = 40
-  isHoveringDropdown = false
+  isHoveringMenu = false
   isPinnedOpen = false
   hoveringID = -1
+  didRenderState = { at: Date.now(), open: false }
 
   // see how this interacts with isOpen
   activeMenuID = App.openMenu ? App.openMenu.id : -1
@@ -39,9 +41,11 @@ export class MenuStore {
     return Desktop.hoverState.appHovered[0]
   }
 
-  get isHoveringTray() {
-    return this.hoveringID > -1
-  }
+  // debounce just a little to avoid isHoveringTray being false
+  // before isHoveringMenu is true on mouse enter
+  isHoveringTray = react(() => this.hoveringID > -1, _ => _, {
+    delay: 60,
+  })
 
   get isHoldingOption() {
     return Desktop.keyboardState.isHoldingOption
@@ -66,20 +70,23 @@ export class MenuStore {
   // resolve the actual open state quickly so isOpen
   // can derive off the truth state that is the most quick
   isOpenFast = react(
-    () =>
-      this.isHoldingOption ||
-      this.isHoveringTray ||
-      this.isHoveringDropdown ||
-      this.isPinnedOpen ||
-      this.isHoveringMenuPeek,
+    () => this.isHoldingOption || this.isHoveringTray || this.isHoveringMenu || this.isPinnedOpen,
     _ => _,
   )
 
   // the actual show/hide in the interface
   isOpenOutsideAnimation = react(
     () => this.isOpenFast,
-    async (open, { sleep }) => {
-      await sleep(maxTransition)
+    async (open, { whenChanged, effect }) => {
+      await whenChanged(() => this.didRenderState)
+      await effect(done => {
+        // we wait for mutations to finish (animation)
+        // debounce will wait for X ms before it considers animation complete
+        const finish = debounce(done, 20)
+        const m = new MutationObserver(finish)
+        m.observe(this.menuRef.current, { attributes: true })
+        return () => m.disconnect()
+      })
       return open
     },
   )
@@ -114,10 +121,8 @@ export class MenuStore {
     delayValue: true,
   })
 
-  shouldFinishReposition = 0
-
-  onDidRender() {
-    this.shouldFinishReposition = Date.now()
+  onDidRender(open: boolean) {
+    this.didRenderState = { at: Date.now(), open }
   }
 
   resetActiveMenuIDOnClose = react(
@@ -134,7 +139,7 @@ export class MenuStore {
     this.setPinnedOpen(!this.isPinnedOpen)
   }
 
-  setPinnedOpen(val) {
+  setPinnedOpen(val: boolean) {
     this.isPinnedOpen = val
     // when you unpin, clear the hover state too
     if (!this.isPinnedOpen) {
@@ -145,7 +150,13 @@ export class MenuStore {
   handleTrayEvent = async (key: keyof TrayActions) => {
     switch (key) {
       case 'TrayToggle0':
+        // special case: switch us over to the main orbit app
+        // sync query over to search
+        App.setState({ query: this.props.queryStore.query })
+        // then open the main window to show it there instead
         AppActions.setOrbitDocked(!App.state.orbitState.docked)
+        // and close this menu
+        this.closeMenu()
         break
       case 'TrayToggle1':
       case 'TrayToggle2':
@@ -272,7 +283,7 @@ export class MenuStore {
     async (shown, { when }) => {
       ensure('not shown', !shown)
       ensure('not typing something', !this.props.queryStore.hasQuery)
-      await when(() => !this.isHoveringDropdown)
+      await when(() => !this.isHoveringMenu)
       this.closeMenu()
     },
     {
@@ -282,7 +293,7 @@ export class MenuStore {
 
   closeMenu() {
     this.isPinnedOpen = false
-    this.isHoveringDropdown = false
+    this.isHoveringMenu = false
     this.hoveringID = -1
   }
 
@@ -327,12 +338,12 @@ export class MenuStore {
     },
   )
 
+  isMenuFullyHidden = false
+
   isFocused = react(
     () => this.isOpenOutsideAnimation,
     async (shouldFocus, { whenChanged, sleep }) => {
       if (!shouldFocus) {
-        // for some reason this happens before animation finishes and requires a significant buffer, why?
-        await sleep(150)
         setTrayFocused(false)
         return false
       }
@@ -362,12 +373,37 @@ export class MenuStore {
     },
   )
 
+  mouseEvent: 'enter' | 'leave' | null = null
+
+  handleMouseEvent = react(
+    () => this.mouseEvent,
+    async (event, { sleep, when }) => {
+      if (event === 'enter') {
+        if (this.isOpenFast) {
+          this.isHoveringMenu = true
+        }
+      }
+      if (event === 'leave') {
+        // give user some buffer to accidentally go outside bounds
+        await sleep(50)
+        // when the mouse enters into a peek window, we keep it alive
+        await when(() => !this.isHoveringMenuPeek)
+        // give user some buffer syncing state between hovering peek
+        await sleep(50)
+        this.isHoveringMenu = false
+      }
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
+
   handleMouseEnter = () => {
-    this.isHoveringDropdown = true
+    this.mouseEvent = 'enter'
   }
 
   handleMouseLeave = () => {
-    this.isHoveringDropdown = false
+    this.mouseEvent = 'leave'
   }
 
   leaveMouseOnLeaveBounds = react(

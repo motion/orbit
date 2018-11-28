@@ -6,6 +6,7 @@ import { AppType } from '@mcro/models'
 import * as React from 'react'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { Input, Button, Row } from '@mcro/ui'
+import { IS_MINIMAL } from '../../constants'
 
 class TopicEditStore {
   name: string = ''
@@ -63,7 +64,9 @@ export class TopicEdit extends React.Component<{
           placeholder={`New ${this.props.type}...`}
         />
         <div style={{ width: 10 }} />
-        <Button type="submit" icon="add" />
+        <Button type="submit" icon="add">
+          {IS_MINIMAL ? '' : 'Add'}
+        </Button>
       </Row>
     )
   }

@@ -2,6 +2,7 @@ import * as React from 'react'
 import fuzzy from 'fuzzysort'
 import { SVG } from './SVG'
 import { memo } from '../helpers/memo'
+import { ThemeContext } from '@mcro/ui'
 
 const icons = {
   orbitalSmall: require('!raw-loader!../../public/orbital-small.svg'),
@@ -162,6 +163,7 @@ type IconProps = React.HTMLProps<SVGElement> & {
 }
 
 export const Icon = memo(({ name, fill, size = 32, style = null, ...props }: IconProps) => {
+  const { activeTheme } = React.useContext(ThemeContext)
   const iconName = findIconName(name)
   if (!iconName) {
     return null
@@ -169,7 +171,7 @@ export const Icon = memo(({ name, fill, size = 32, style = null, ...props }: Ico
   const icon = icons[iconName]
   return (
     <SVG
-      {...(fill ? { fill } : null)}
+      fill={fill || activeTheme.color}
       svg={icon}
       width={`${size}`}
       height={`${size}`}

@@ -8,6 +8,11 @@ export const IS_MENU = window.location.pathname === '/chrome'
 export const IS_APP = window.location.pathname === '/app'
 export const APP_ID = IS_APP ? +window.location.search.match(/id=([0-9]+)/)[1] : null
 
+// menu and app sidebars are generally narrower
+// this gives us a flag to show more narrow things
+// mostly in the index apps
+export const IS_MINIMAL = IS_MENU || IS_APP
+
 export const IS_ELECTRON = !window['notInElectron']
 
 export const BORDER_RADIUS = 15

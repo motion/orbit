@@ -111,7 +111,7 @@ class AppStore {
   }
 
   get isShowingPeek() {
-    return !!this.peekState.appConfig
+    return this.peekState && !!this.peekState.appConfig
   }
 
   getAppState(id: number): AppState {

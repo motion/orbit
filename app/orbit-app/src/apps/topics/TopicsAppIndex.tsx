@@ -10,7 +10,7 @@ import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { VerticalSpace } from '../../views'
 import { SliderPane, Slider } from '../../views/Slider'
-import { MENU_WIDTH, IS_MENU } from '../../constants'
+import { MENU_WIDTH, IS_MENU, IS_MINIMAL } from '../../constants'
 import { ORBIT_WIDTH } from '@mcro/constants'
 
 const icons = {
@@ -45,7 +45,7 @@ class TopicsIndexStore {
 
 const activeStyle = { opacity: 1 }
 
-function TopicList({ results }) {
+function TopicList({ results, offset = 0, ...props }) {
   return (
     <>
       {results.map((res, index) => (
@@ -53,23 +53,24 @@ function TopicList({ results }) {
           key={res.title}
           direct
           appType="topics"
-          padding={[4, 11]}
+          padding={[IS_MINIMAL ? 5 : 7, 11]}
           opacity={0.85}
           {...{ '&:hover': activeStyle }}
           activeStyle={activeStyle}
-          index={index}
+          index={index + offset}
           appConfig={{
-            id: index,
+            id: res.id,
             title: res.title,
             type: 'topics',
           }}
+          {...props}
         >
           <Row overflow="hidden">
             <View paddingRight={8} margin={['auto', 0]}>
               <Icon {...res.iconProps} />
             </View>
             <View flex={1} overflow="hidden">
-              <Text ellipse size={1.1}>
+              <Text ellipse size={1.2}>
                 {res.title}
               </Text>
             </View>
@@ -94,10 +95,18 @@ const buttonProps = (store: TopicsIndexStore, type: string) => {
   }
 }
 
+const size = IS_MINIMAL ? 0.9 : 1
+
 export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore }) => {
   const store = useStore(TopicsIndexStore, props)
   return (
     <>
+      <SegmentedRow margin={[0, 8, 8]} itemProps={{ width: '33.3%', size: size, sizeHeight: size }}>
+        <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
+        <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
+        <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
+      </SegmentedRow>
+
       <Slider
         fixHeightToTallest
         curFrame={store.tabs.indexOf(store.activeTab)}
@@ -105,19 +114,23 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
         transition="none"
       >
         <SliderPane>
-          {!!store.results.length && (
-            <ScrollableContent>
-              <Separator>Topics</Separator>
-              <TopicList results={store.results.slice(0, 8)} />
-            </ScrollableContent>
-          )}
-          <VerticalSpace />
-          {!!store.results.length && (
-            <>
-              <Separator>Terms</Separator>
-              <TopicList results={store.results.slice(0, 8)} />
-            </>
-          )}
+          <ScrollableContent>
+            {!!store.results.length && (
+              <>
+                <Separator>Terms</Separator>
+                <Row flexWrap="wrap">
+                  <TopicList results={store.results} offset={8} width="50%" />
+                </Row>
+              </>
+            )}
+            <VerticalSpace />
+            {!!store.results.length && (
+              <>
+                <Separator>Topics</Separator>
+                <TopicList results={store.results} />
+              </>
+            )}
+          </ScrollableContent>
         </SliderPane>
 
         <SliderPane>
@@ -138,18 +151,10 @@ export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore
           </SidebarBottom>
         </SliderPane>
       </Slider>
-
-      <SidebarBottom>
-        <SegmentedRow itemProps={{ width: '33.3%', size: 0.9, sizeHeight: 0.9 }}>
-          <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
-          <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
-          <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
-        </SegmentedRow>
-      </SidebarBottom>
     </>
   )
 })
 
 const SidebarBottom = view({
-  padding: 6,
+  padding: [12, IS_MINIMAL ? 6 : 12],
 })

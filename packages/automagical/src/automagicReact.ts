@@ -1,5 +1,5 @@
 import * as Mobx from 'mobx'
-import { ReactionHelpers, MagicalObject } from './types'
+import { ReactionHelpers, MagicalObject, EffectCallback } from './types'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
 import {
   getReactionOptions,
@@ -248,6 +248,26 @@ export function automagicReact(
     preventLog = true
   }
 
+  const onCancel = cb => {
+    rejections.push(cb)
+  }
+
+  const effect = (effectFn: EffectCallback) => {
+    return new Promise((resolve, reject) => {
+      let cancellation
+      const finish = (success: boolean) => () => {
+        cancellation()
+        if (success) {
+          resolve()
+        } else {
+          reject(SHARED_REJECTION_ERROR)
+        }
+      }
+      cancellation = effectFn(finish(true), finish(false))
+      rejections.push(finish(false))
+    })
+  }
+
   const sleep = (ms: number): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!reactionID) {
@@ -347,6 +367,8 @@ export function automagicReact(
     whenChanged,
     state,
     idle,
+    onCancel,
+    effect,
   }
 
   function setupReactionFn(reactionFn) {

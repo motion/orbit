@@ -1,3 +1,7 @@
+// how to have a more flexible Function?
+// this often complains when used as callbacks from eventListener or mutationobserver
+export type EffectCallback = ((resolve: any, reject: any) => Function | void)
+
 export type ReactionHelpers = {
   preventLogging: Function
   setValue: (a: any) => void
@@ -6,6 +10,8 @@ export type ReactionHelpers = {
   when: (condition: () => boolean, ms?: number) => Promise<void>
   whenChanged: <A>(condition: () => A, dontCompare?: boolean) => Promise<A>
   idle: () => Promise<void>
+  onCancel: (cb: Function) => void
+  effect: (cb: EffectCallback) => void
   state: {
     hasResolvedOnce: boolean
     iteration?: number

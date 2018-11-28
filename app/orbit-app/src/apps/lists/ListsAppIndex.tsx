@@ -43,7 +43,7 @@ class ListsIndexStore {
         after: (
           <View margin="auto" padding={[0, 6]}>
             <Button circular size={0.9}>
-              <Icon name="pin" size={12} />
+              <Icon name="pin" size={12} color="#fff" />
             </Button>
           </View>
         ),

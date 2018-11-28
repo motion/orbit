@@ -11,14 +11,13 @@ import { Popover, View } from '@mcro/ui'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { Searchable } from '../../../components/Searchable'
 import { BrowserDebugTray } from './BrowserDebugTray'
-import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
+import { MENU_WIDTH } from '../../../constants'
 import { throttle } from 'lodash'
 import { MenuStore, menuApps } from './MenuStore'
 import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
 import { useSpring, animated, interpolate } from 'react-spring'
 
 export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
-export const maxTransition = 150
 
 export const MenuLayer = React.memo(() => {
   const stores = React.useContext(StoreContext)
@@ -32,6 +31,9 @@ export const MenuLayer = React.memo(() => {
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,
     selectionStore,
+    onPaneChange: () => {
+      AppActions.clearPeek()
+    },
   })
   const menuStore = useStore(MenuStore, { paneManagerStore, queryStore })
   const allStores = {
@@ -47,11 +49,11 @@ export const MenuLayer = React.memo(() => {
     const onMove = throttle(e => {
       const hoverOut = e.target === document.documentElement
       if (hoverOut) {
-        if (menuStore.isHoveringDropdown) {
+        if (menuStore.isHoveringMenu) {
           menuStore.handleMouseLeave()
         }
       } else {
-        if (!menuStore.isHoveringDropdown) {
+        if (!menuStore.isHoveringMenu) {
           menuStore.handleMouseEnter()
         }
       }
@@ -87,15 +89,12 @@ const springyConfig = {
 }
 const noAnimationConfig = { duration: 1 }
 
-const getContentTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
-const getChromeTransform = (x, y) => `translate3d(${x}px,${y}px,0)`
-
 const MenuChrome = React.memo(
   ({ menuStore, children }: { menuStore: MenuStore; children: any }) => {
     const { menuCenter, menuHeight, openState } = useInstantiatedStore(menuStore)
 
     React.useEffect(() => {
-      menuStore.onDidRender()
+      menuStore.onDidRender(open)
     })
 
     const pad = menuStore.menuPad
@@ -112,6 +111,7 @@ const MenuChrome = React.memo(
     return (
       <>
         <animated.div
+          ref={menuStore.menuRef}
           style={{
             height: window.innerHeight,
             position: 'absolute',
@@ -119,8 +119,8 @@ const MenuChrome = React.memo(
             pointerEvents: 'none',
             borderRadius: 12,
             top: pad,
-            transform: interpolate([x, y], getContentTransform),
-            opacity: opacity,
+            transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
+            opacity,
             width: MENU_WIDTH,
           }}
         >
@@ -129,8 +129,8 @@ const MenuChrome = React.memo(
         <animated.div
           style={{
             position: 'absolute',
-            transform: interpolate([x, y], getChromeTransform),
-            opacity: opacity,
+            transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
+            opacity,
           }}
         >
           <Popover

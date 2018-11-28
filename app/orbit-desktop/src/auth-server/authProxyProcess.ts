@@ -13,7 +13,7 @@ async function main() {
     return arg.replace(prefix, '')
   }
   const [host, port] = getArg('--authUrl=').split(':')
-  const proxyPort = getArg('--proxyPort=')
+  const proxyPort = getArg('--proxyTo=')
 
   // kill an existing/stuck server on that port
   try {

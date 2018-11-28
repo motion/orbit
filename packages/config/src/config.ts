@@ -27,7 +27,7 @@ export type GlobalConfig = {
     ocrBridge: number
     mediator: number
     auth: number
-    // this is hacky af, but for now its ok
+    authProxy: number
     apps: number[]
   }
 }

@@ -469,12 +469,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       }
     }
 
-    on(
-      this,
-      setTimeout(() => {
-        this.setState({ finishedMount: true })
-      }, 500),
-    )
+    console.log('popvoer', this)
+
+    // fix flickering on initial mount of popovers...
+    if (getIsManuallyPositioned(this.props)) {
+      this.setState({ finishedMount: true })
+    } else {
+      on(
+        this,
+        setTimeout(() => {
+          this.setState({ finishedMount: true })
+        }, 500),
+      )
+    }
   }
 
   get showPopover() {
@@ -901,9 +908,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     } = this.state
     const { showPopover } = this
     const backgroundProp = background === true ? null : { background: `${background}` }
-    const isMeasuring =
-      this.state.shouldSetPosition || !this.state.popoverBounds || !this.state.finishedMount
-
+    const isMeasuring = this.state.shouldSetPosition || !this.state.finishedMount
     const isOpen = !isMeasuring && showPopover
 
     const popoverContent = (

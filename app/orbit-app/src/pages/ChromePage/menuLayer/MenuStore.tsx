@@ -168,12 +168,27 @@ export class MenuStore {
       case 'TrayHover2':
       case 'TrayHover3':
         const id = +key.replace('TrayHover', '')
-        this.activeMenuID = id
-        this.hoveringID = id
+        this.updateTrayHover(id)
         break
       case 'TrayHoverOut':
-        this.hoveringID = -1
+        this.updateTrayHover(-1)
         break
+    }
+  }
+
+  private updateHoverTm = null
+
+  updateTrayHover = (id: number) => {
+    clearTimeout(this.updateHoverTm)
+    const update = () => {
+      this.activeMenuID = id
+      this.hoveringID = id
+    }
+    if (id === -1) {
+      update()
+    } else {
+      // some debounce
+      setTimeout(update, 80)
     }
   }
 

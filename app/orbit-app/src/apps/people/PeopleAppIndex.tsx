@@ -81,6 +81,7 @@ class PeopleIndexStore {
     const perRow = 3
     const height = 60
     const separatorHeight = 25
+    const bottomLipPad = 16
     const sectionHeight = num => Math.ceil(num / perRow) * height + separatorHeight
     let sections: ResultSection[] = []
     // not that many, show just one section
@@ -89,7 +90,7 @@ class PeopleIndexStore {
         {
           title: isFiltering ? this.peopleQuery : 'All',
           results: this.results,
-          height: sectionHeight(total),
+          height: sectionHeight(total) + bottomLipPad,
         },
       ]
     } else {
@@ -113,7 +114,7 @@ class PeopleIndexStore {
             {
               title: lastPersonLetter.toUpperCase(),
               results: nextPeople,
-              height: sectionHeight(nextPeople.length),
+              height: sectionHeight(nextPeople.length) + (isLastSection ? bottomLipPad : 0),
             },
           ]
           nextPeople = [person]
@@ -148,13 +149,15 @@ const PersonSection = ({
   people,
   title,
   getIndex,
+  height,
 }: {
   people: PersonBit[]
   title: string
   getIndex: any
+  height: number
 }) => {
   return (
-    <View padding={[0, 10]}>
+    <View padding={[0, 10]} height={height}>
       <GridTitle>{title}</GridTitle>
       <Grid columnWidth={120} gridAutoRows={height} gridGap={6}>
         {people.map(person => (
@@ -176,7 +179,6 @@ export const PeopleAppIndex = memo((props: AppProps) => {
     props.appStore.maxHeight,
     resultSections.reduce((a, b) => a + b.height, 0),
   )
-  console.log('render people app index', props, height)
   const unpad = 3
   const width = (IS_MENU ? MENU_WIDTH : ORBIT_WIDTH) + unpad * 2
   return (
@@ -192,6 +194,7 @@ export const PeopleAppIndex = memo((props: AppProps) => {
                 title={section.title}
                 people={section.results}
                 getIndex={getIndex}
+                height={resultSections[index].height}
               />
             )
           }}

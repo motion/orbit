@@ -174,8 +174,8 @@ const positionStateY = (
     : popoverSize.height / 2
   const targetTopReal = targetBounds ? targetBounds.top - window.scrollY : popoverSize.top
 
-  let arrowTop
-  let maxHeight
+  let arrowTop = 0
+  let maxHeight = window.innerHeight
   let top = 0
 
   const arrowAdjust = distance
@@ -213,7 +213,7 @@ const positionStateY = (
     }
   }
 
-  return { arrowTop, top, maxHeight }
+  return { arrowTop: Math.round(arrowTop), top: Math.round(top), maxHeight }
 }
 
 const positionStateX = (
@@ -298,84 +298,10 @@ const positionStateX = (
     arrowLeft += targetCenter - targetBounds.left
   }
 
-  return { arrowLeft, left }
+  return { arrowLeft: Math.round(arrowLeft), left: Math.round(left) }
 }
 
 export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
-
-const PopoverContainer = view({
-  opacity: 0,
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 101,
-  pointerEvents: 'none',
-  '& > *': {
-    pointerEvents: 'none !important',
-  },
-  isPositioned: {
-    opacity: 1,
-  },
-  isOpen: {
-    zIndex: 5000,
-    '& > *': {
-      pointerEvents: 'all !important',
-    },
-  },
-  isClosing: {
-    zIndex: 5000 - 1,
-  },
-  isMeasuring: {
-    opacity: 0,
-  },
-})
-
-const Overlay = view({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  background: 'transparent',
-  pointerEvents: 'none',
-  opacity: 0,
-  transition: 'all ease-in 100ms',
-  zIndex: -2,
-  isShown: {
-    opacity: 1,
-    pointerEvents: 'all',
-  },
-}).theme(({ overlay }) => ({
-  background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
-}))
-
-const PopoverWrap = view({
-  position: 'absolute',
-  pointerEvents: 'none',
-  zIndex: -1,
-}).theme(p => {
-  const forgiveness = getForgiveness(p)
-  return {
-    width: p.width,
-    height: p.height,
-    maxHeight: p.maxHeight,
-    transition: p.willReposition
-      ? 'none'
-      : p.transition || 'opacity ease-in 60ms, transform ease-out 100ms',
-    opacity: p.isOpen && !p.willReposition ? 1 : 0,
-    pointerEvents: p.isOpen ? 'auto' : 'none',
-    transform: {
-      x: p.left,
-      y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,
-    },
-    padding: forgiveness,
-    margin: -forgiveness,
-    background: p.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
-    animation: p.animation,
-  }
-})
 
 const INVERSE = {
   top: 'bottom',
@@ -416,7 +342,7 @@ const initialState = {
   maxHeight: null,
   targetBounds: null,
   popoverBounds: null,
-  hasFinishedFirstMeasure: false,
+  finishedMount: false,
 }
 
 type State = typeof initialState
@@ -542,6 +468,13 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         })
       }
     }
+
+    on(
+      this,
+      setTimeout(() => {
+        this.setState({ finishedMount: true })
+      }, 500),
+    )
   }
 
   get showPopover() {
@@ -549,14 +482,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    if (this.state.top !== 0 && this.state.hasFinishedFirstMeasure === false) {
-      const tm = setTimeout(() => {
-        this.setState({
-          hasFinishedFirstMeasure: true,
-        })
-      }, 200)
-      on(this, tm)
-    }
     if (this.props.onChangeVisibility) {
       if (prevState.showPopover !== this.state.showPopover) {
         this.props.onChangeVisibility(this.state.showPopover)
@@ -871,7 +796,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     return isHovered
   }
 
-  isNodeHovered = node => {
+  isNodeHovered = (node: HTMLDivElement) => {
     const childSelector = `${node.tagName.toLowerCase()}.${node.className
       .trim()
       .replace(/\s+/g, '.')}:hover`
@@ -973,11 +898,13 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       closing,
       maxHeight,
       direction,
-      hasFinishedFirstMeasure,
     } = this.state
     const { showPopover } = this
     const backgroundProp = background === true ? null : { background: `${background}` }
-    const isMeasuring = this.state.shouldSetPosition || (top === 0 && left === 0)
+    const isMeasuring =
+      this.state.shouldSetPosition || !this.state.popoverBounds || !this.state.finishedMount
+    console.log('popover', top, left, isMeasuring)
+
     const isOpen = !isMeasuring && showPopover
 
     const popoverContent = (
@@ -1065,12 +992,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
         <Portal>
-          <span
-            className="popover-portal"
-            // prevents popovers from flickering on mount, which for some reason happens
-            // i think due to portals having weird behavior, but perhaps bad logic
-            style={{ opacity: hasFinishedFirstMeasure && !isMeasuring ? 1 : 0 }}
-          >
+          <span className="popover-portal" style={{ opacity: isMeasuring ? 0 : 1 }}>
             {popoverInner}
           </span>
         </Portal>
@@ -1078,3 +1000,77 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     )
   }
 }
+
+const PopoverContainer = view({
+  opacity: 0,
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 101,
+  pointerEvents: 'none',
+  '& > *': {
+    pointerEvents: 'none !important',
+  },
+  isPositioned: {
+    opacity: 1,
+  },
+  isOpen: {
+    zIndex: 5000,
+    '& > *': {
+      pointerEvents: 'all !important',
+    },
+  },
+  isClosing: {
+    zIndex: 5000 - 1,
+  },
+  isMeasuring: {
+    opacity: 0,
+  },
+})
+
+const Overlay = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: 'transparent',
+  pointerEvents: 'none',
+  opacity: 0,
+  transition: 'all ease-in 100ms',
+  zIndex: -2,
+  isShown: {
+    opacity: 1,
+    pointerEvents: 'all',
+  },
+}).theme(({ overlay }) => ({
+  background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
+}))
+
+const PopoverWrap = view({
+  position: 'absolute',
+  pointerEvents: 'none',
+  zIndex: -1,
+}).theme(p => {
+  const forgiveness = getForgiveness(p)
+  return {
+    width: p.width,
+    height: p.height,
+    maxHeight: p.maxHeight,
+    transition: p.willReposition
+      ? 'none'
+      : p.transition || 'opacity ease-in 60ms, transform ease-out 100ms',
+    opacity: p.isOpen && !p.willReposition ? 1 : 0,
+    pointerEvents: p.isOpen ? 'auto' : 'none',
+    transform: {
+      x: p.left,
+      y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,
+    },
+    padding: forgiveness,
+    margin: -forgiveness,
+    background: p.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
+    animation: p.animation,
+  }
+})

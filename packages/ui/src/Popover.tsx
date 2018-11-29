@@ -818,7 +818,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 
   controlledTarget = target => {
     const targetProps = {
-      ref: this.targetRef,
+      forwardRef: this.targetRef,
       active: false,
       className: `${target.props.className} popover-target`,
     }
@@ -903,7 +903,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const backgroundProp = background === true ? null : { background: `${background}` }
     const isMeasuring =
       this.state.shouldSetPosition || !this.state.popoverBounds || !this.state.finishedMount
-    console.log('popover', top, left, isMeasuring)
 
     const isOpen = !isMeasuring && showPopover
 

@@ -59,7 +59,9 @@ async function main() {
     // test page for loading in browser to isolate
     if (!IS_ELECTRON) {
       const test = async () => {
-        const TEST_APP = window.location.search.match(/app=([a-z]+)/)[1]
+        const TEST_APP = window.location.search
+          ? window.location.search.match(/app=([a-z]+)/)[1]
+          : null
 
         console.log('TEST_APP', TEST_APP)
 

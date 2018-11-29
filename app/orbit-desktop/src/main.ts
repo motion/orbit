@@ -1,3 +1,4 @@
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 import 'isomorphic-fetch'
 import { cleanupChildren } from './helpers/cleanupChildren'
 import { once } from 'lodash'

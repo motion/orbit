@@ -41,7 +41,7 @@ export const AppPanes: Pane[] = [
   {
     id: 'topics',
     type: 'topics',
-    title: 'Terms',
+    title: 'Vocabulary',
     icon: 'singleNeutralChat',
     trigger: '#',
     static: true,
@@ -103,8 +103,8 @@ export class SpaceStore {
 
   private sources$ = observeMany(SourceModel, {
     args: {
-      relations: ["spaces"]
-    }
+      relations: ['spaces'],
+    },
   }).subscribe(sources => {
     this.sources = sources
   })

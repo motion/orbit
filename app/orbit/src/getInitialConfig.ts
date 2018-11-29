@@ -33,6 +33,19 @@ export async function getInitialConfig() {
   }
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const userData = app.getPath('userData')
+  const [
+    server,
+    bridge,
+    swift,
+    dbBridge,
+    oracleBridge,
+    mediator,
+    ocrBridge,
+    auth,
+    authProxy,
+    ...apps
+  ] = ports
+
   config = {
     isProd,
     paths: {
@@ -52,16 +65,16 @@ export async function getInitialConfig() {
     },
     version: process.env.ORBIT_VERSION,
     ports: {
-      server: ports[0],
-      bridge: ports[1],
-      swift: ports[2],
-      dbBridge: ports[3],
-      oracleBridge: ports[4],
-      mediator: ports[5],
-      ocrBridge: ports[6],
-      auth: ports[7],
-      // ...rest of ports for apps
-      apps: ports.slice(8),
+      server,
+      bridge,
+      swift,
+      dbBridge,
+      oracleBridge,
+      mediator,
+      ocrBridge,
+      auth,
+      authProxy,
+      apps,
     },
   }
 

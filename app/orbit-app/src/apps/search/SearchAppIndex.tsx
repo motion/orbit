@@ -124,7 +124,6 @@ class ListItem extends React.PureComponent<ListItemProps> {
         overflow="hidden"
         renderText={renderHighlightedText}
         extraProps={{
-          oneLine: true,
           condensed: true,
           preventSelect: true,
         }}

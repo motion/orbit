@@ -1,9 +1,7 @@
 import { Cosal } from '@mcro/cosal'
-import { BitEntity, SourceEntity } from '@mcro/entities'
-import { highlightText } from '@mcro/helpers'
+import { SourceEntity } from '@mcro/entities'
 import { Logger } from '@mcro/logger'
-import { resolveMany } from '@mcro/mediator'
-import { Bit, BitContentTypes, SearchQuery, SearchResult, SearchResultModel, Source } from '@mcro/models'
+import { Bit, BitContentTypes, SearchQuery, SearchResult, Source } from '@mcro/models'
 import { BitContentType } from '@mcro/models'
 import { uniqBy, uniq } from 'lodash'
 import { getRepository } from 'typeorm'
@@ -14,7 +12,6 @@ import { SearchResultUtils } from '../search/SearchResultUtils'
  * Resolves search requests.
  */
 export class SearchResultResolver {
-
   private log: Logger
   private cosal: Cosal
   private args: SearchQuery
@@ -27,7 +24,7 @@ export class SearchResultResolver {
   constructor(cosal: Cosal, args: SearchQuery) {
     this.args = args
     this.cosal = cosal
-    this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + args.group +')')
+    this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + args.group + ')')
     this.queryExecutor = new SearchQueryExecutor(this.log)
     this.buildDatePeriod()
   }
@@ -42,24 +39,30 @@ export class SearchResultResolver {
     const searchResults: SearchResult[] = []
 
     for (let contentType of BitContentTypes) {
-      this.log.timer(`loading ` + contentType)
+      this.log.timer('loading ' + contentType)
       const [bits, bitsTotalCount] = await this.search(contentType)
       if (bits.length) {
-
         const bitSourceIds = uniq(bits.map(bit => bit.sourceId))
         const bitSources = this.sources.filter(source => bitSourceIds.indexOf(source.id) !== -1)
         const bitSourceNames = bitSources.map(source => source.name).join(', ')
-        const bitLocationNames = bits.filter(bit => !!bit.location.name).map(bit => bit.location.name)
+        const bitLocationNames = bits
+          .filter(bit => !!bit.location.name)
+          .map(bit => bit.location.name)
         const bitSourceTypeNames = bitSources.map(source => source.type) // todo: beatify type name
-        const text = SearchResultUtils.buildSearchResultText(this.args.query, bits.map(bit => bit.body))
+        const text = SearchResultUtils.buildSearchResultText(
+          this.args.query,
+          bits.map(bit => bit.body),
+        )
         const firstBits = this.args.maxBitsCount ? bits.slice(0, this.args.maxBitsCount) : bits
 
         if (contentType === 'conversation') {
-          const title = SearchResultUtils.buildSearchResultTitle(bitLocationNames.map(name => '#' + name))
+          const title = SearchResultUtils.buildSearchResultTitle(
+            bitLocationNames.map(name => '#' + name),
+          )
           searchResults.push({
             id: Math.random(),
             group: this.args.group,
-            title: 'Conversation in ' + title,
+            title: 'Conversations in ' + title,
             contentType,
             text,
             bitsTotalCount,
@@ -108,7 +111,7 @@ export class SearchResultResolver {
           })
         }
       }
-      this.log.timer(`loading ` + contentType)
+      this.log.timer('loading ' + contentType)
     }
 
     this.log.timer('search', searchResults)
@@ -124,10 +127,10 @@ export class SearchResultResolver {
     if (!query) {
       return []
     }
-    this.log.timer(`search in cosal`, query)
+    this.log.timer('search in cosal', query)
     const results = await this.cosal.search(query, Math.max(300, this.args.take))
     const ids = results.map(x => x.id)
-    this.log.timer(`search in cosal`, { results, ids })
+    this.log.timer('search in cosal', { results, ids })
     return ids
   }
 
@@ -194,18 +197,14 @@ export class SearchResultResolver {
 
     if (this.args.group === 'last-day') {
       this.startDate = dayAgo
-
     } else if (this.args.group === 'last-week') {
       this.startDate = weekAgo
       this.endDate = dayAgo
-
     } else if (this.args.group === 'last-month') {
       this.startDate = monthAgo
       this.endDate = weekAgo
-
     } else if (this.args.group === 'overall') {
       this.endDate = monthAndDayAgo
     }
   }
-
 }

@@ -171,7 +171,7 @@ export const Icon = memo(({ name, fill, size = 32, style = null, ...props }: Ico
   const icon = icons[iconName]
   return (
     <SVG
-      fill={fill || activeTheme.color}
+      fill={fill || activeTheme.color.toString()}
       svg={icon}
       width={`${size}`}
       height={`${size}`}

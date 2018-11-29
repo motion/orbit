@@ -14,15 +14,15 @@ export function startAuthProxy() {
     throw new Error('Proxy script not valid path')
   }
   const host = Config.urls.authHost
-  const port = Config.ports.auth
+  const port = Config.ports.authProxy
   const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
-  const command = `${authProxyScript} --authUrl=${host}:${port} --proxyPort=${Config.ports.auth}`
+  const command = `${authProxyScript} --authUrl=${host}:${port} --proxyTo=${Config.ports.auth}`
   const env = {
     ...process.env,
     ELECTRON_RUN_AS_NODE: 1,
   }
 
-  log.info(`Running proxy script: ${authProxyScript}`)
+  log.info(`Running proxy script: ${command}`)
 
   return new Promise<boolean>(resolve => {
     // run proxy server in secure sub-process

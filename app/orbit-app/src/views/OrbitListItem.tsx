@@ -210,6 +210,8 @@ class OrbitListInner extends React.Component<ItemProps<any>> {
                   {!showTitle && (
                     <>
                       <HorizontalSpace />
+                      <PeopleRow people={people} />
+                      <HorizontalSpace />
                       {afterHeader}
                     </>
                   )}

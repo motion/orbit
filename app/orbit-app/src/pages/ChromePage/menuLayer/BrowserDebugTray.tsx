@@ -15,7 +15,7 @@ class DebugTrayStore {
   onLeave = this.targetSetter('Out')
 }
 
-export const BrowserDebugTray = ({ children, menuStore }) => {
+export const BrowserDebugTray = React.memo(({ children, menuStore }) => {
   const store = useStore(DebugTrayStore)
   if (IS_ELECTRON) {
     return children
@@ -41,7 +41,7 @@ export const BrowserDebugTray = ({ children, menuStore }) => {
       </View>
     </FullScreen>
   )
-}
+})
 
 const Target = ({ id, store, menuStore }) => {
   return (

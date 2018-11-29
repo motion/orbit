@@ -1,7 +1,5 @@
 # Orbit
 
-Your contextual work assistant. Really go far pitching it as extremely high end and advanced technology. We need branding x 10.
-
 The big pitch it presents is this: nothing works directly for you, the person, to help you manage your digital life.
 
 Orbit is a PIM that upgrades your entire operating system.

@@ -41,55 +41,47 @@ export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) 
     nextTheme = MakeTheme.fromStyles(theme)
     uniqThemeName = makeName()
   }
+  const contextTheme = React.useContext(ThemeContext)
+  if (select) {
+    nextTheme = select(contextTheme.activeTheme)
+    uniqThemeName = makeName()
+  }
   return (
-    <ThemeContext.Consumer>
-      {theme => {
-        if (select) {
-          nextTheme = select(theme.activeTheme)
-          uniqThemeName = makeName()
-        }
-        return (
-          <ThemeContext.Provider
-            value={{
-              allThemes: {
-                ...theme.allThemes,
-                [uniqThemeName]: nextTheme,
-              },
-              activeThemeName: uniqThemeName,
-              activeTheme: nextTheme,
-            }}
-          >
-            {children}
-          </ThemeContext.Provider>
-        )
+    <ThemeContext.Provider
+      value={{
+        allThemes: {
+          ...contextTheme.allThemes,
+          [uniqThemeName]: nextTheme,
+        },
+        activeThemeName: uniqThemeName,
+        activeTheme: nextTheme,
       }}
-    </ThemeContext.Consumer>
+    >
+      {children}
+    </ThemeContext.Provider>
   )
 })
 
-export const ChangeThemeByName = ({ name, children }) => {
-  if (!name) {
-    throw new Error('No name provided to theme')
-  }
-  return (
-    <ThemeContext.Consumer>
-      {({ allThemes }) => {
-        if (!allThemes || !allThemes[name]) {
-          throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
-        }
-        const activeTheme = allThemes[name]
-        return (
-          <ThemeContext.Provider
-            value={{
-              allThemes,
-              activeTheme,
-              activeThemeName: name,
-            }}
-          >
-            {children}
-          </ThemeContext.Provider>
-        )
-      }}
-    </ThemeContext.Consumer>
-  )
-}
+export const ChangeThemeByName = React.memo(
+  ({ name, children }: { name: string; children: any }) => {
+    if (!name) {
+      throw new Error('No name provided to theme')
+    }
+    const { allThemes } = React.useContext(ThemeContext)
+    if (!allThemes || !allThemes[name]) {
+      throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
+    }
+    const activeTheme = allThemes[name]
+    return (
+      <ThemeContext.Provider
+        value={{
+          allThemes,
+          activeTheme,
+          activeThemeName: name,
+        }}
+      >
+        {children}
+      </ThemeContext.Provider>
+    )
+  },
+)

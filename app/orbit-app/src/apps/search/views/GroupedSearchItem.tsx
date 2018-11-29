@@ -9,15 +9,15 @@ export const GroupedSearchItem = ({ item, query, ...props }) => {
   return (
     <OrbitListItem
       direct
-      padding={[8, 11]}
+      padding={[9, 11]}
       {...props}
       appConfig={{ id: `${Math.random()}`, type: 'search', subType: 'group', title: item.title }}
       appType="search"
     >
       <Row flex={1}>
-        <Circle style={{ fontSize: num.length > 3 ? 15 : 20 }}>{num}</Circle>
+        <Circle style={{ fontSize: num.length > 2 ? 15 : 18 }}>{num}</Circle>
         <Col flex={1} overflow="hidden">
-          <Text ellipse size={1.1} fontWeight={500} padding={[0, 0, 2]}>
+          <Text ellipse size={1.1} fontWeight={500} padding={[0, 0, 1]}>
             {item.title}
           </Text>
           <HighlightText whiteSpace="normal" ellipse flex={1} alpha={0.5}>

@@ -114,6 +114,10 @@ class AppStore {
     return this.peekState && !!this.peekState.appConfig
   }
 
+  get isShowingMenu() {
+    return typeof this.openMenu === 'number'
+  }
+
   getAppState(id: number): AppState {
     return {
       ...this.state.appsState.find(x => x.id === id),

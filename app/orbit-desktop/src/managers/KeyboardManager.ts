@@ -48,8 +48,10 @@ export class KeyboardManager {
 
   onMouseMove = () => {
     // this is if you want it to cancel if mouse ever moves
-    this.resetHoldingOption()
-    this.isOptionDown = false
+    if (!App.isShowingMenu) {
+      this.resetHoldingOption()
+      this.isOptionDown = false
+    }
 
     // this is if you want it to open after mouse settles
     // if (this.isOptionDown) {

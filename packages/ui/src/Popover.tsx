@@ -796,7 +796,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     return isHovered
   }
 
-  isNodeHovered = (node: HTMLDivElement) => {
+  isNodeHovered = (node: HTMLElement) => {
     const childSelector = `${node.tagName.toLowerCase()}.${node.className
       .trim()
       .replace(/\s+/g, '.')}:hover`

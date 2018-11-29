@@ -47,12 +47,17 @@ export class KeyboardManager {
   )
 
   onMouseMove = () => {
-    if (this.isOptionDown) {
-      this.mouseActive = Date.now()
-    }
-    if (!Desktop.keyboardState.isHoldingOption) {
-      this.resetHoldingOption()
-    }
+    // this is if you want it to cancel if mouse ever moves
+    this.resetHoldingOption()
+    this.isOptionDown = false
+
+    // this is if you want it to open after mouse settles
+    // if (this.isOptionDown) {
+    //   this.mouseActive = Date.now()
+    // }
+    // if (!Desktop.keyboardState.isHoldingOption) {
+    //   this.resetHoldingOption()
+    // }
   }
 
   // if you hold option down and move your mouse before it opens we count that as a clear

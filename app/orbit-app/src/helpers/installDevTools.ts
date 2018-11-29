@@ -59,6 +59,8 @@ setConfig({
   // fixes HMR for react hooks
   // @ts-ignore
   pureSFC: true,
+  ignoreSFC: true,
+  pureRender: true,
   // onComponentRegister: typeRaw => {
   //   const type = String(typeRaw)
   //   console.log('type', type)

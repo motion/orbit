@@ -136,7 +136,7 @@ const config = {
       },
       {
         test: /\.[jt]sx?$/,
-        use: ['thread-loader', 'babel-loader'],
+        use: ['thread-loader', 'babel-loader', 'react-hot-loader/webpack'],
         exclude: /node_modules/,
       },
       {

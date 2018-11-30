@@ -29,8 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Start recording screen
 //        ScreenRecorder.shared.start()
-        
-//        ScreenRecorder.shared.watchBounds(CGRect(x: 0, y: 160, width: 1800, height: 3000))
+//        ScreenRecorder.shared.watchBounds(CGRect(x: 0, y: 0, width: 1400, height: 1600))
         
     }
     

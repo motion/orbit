@@ -1,4 +1,4 @@
-const { Oracle } = require('../_/oracle')
+const { Screen } = require('../_/Screen')
 const Fs = require('fs')
 const Path = require('path')
 const execa = require('execa')
@@ -46,22 +46,22 @@ const settings = {
 }
 
 async function test() {
-  const oracle = new Oracle({ debugBuild: debug, ocr: true })
-  await oracle.start()
+  const screen = new Screen({ debugBuild: debug, ocr: true })
+  await screen.start()
 
   if (scroll) {
-    // oracle.onScroll(x => console.log(x))
+    // screen.onScroll(x => console.log(x))
     return // just have it wait
   }
 
-  oracle.watchBounds(settings)
+  screen.watchBounds(settings)
 
   process.on('SIGINT', async () => {
-    await oracle.stop()
+    await screen.stop()
     process.exit(0)
   })
 
-  oracle.onWords(async data => {
+  screen.onWords(async data => {
     console.log('first 100', data.length, data.slice(0, 100))
     console.log('\nto do it full speed: npm run test-fast')
     console.log('\nto see output:')
@@ -69,12 +69,12 @@ async function test() {
 
     if (debug) {
       console.log('now stop')
-      await oracle.stop()
+      await screen.stop()
       process.exit(0)
     }
   })
 
-  oracle.onWindowChange((name, value) => {
+  screen.onWindowChange((name, value) => {
     console.log('window change', name, value)
   })
 }

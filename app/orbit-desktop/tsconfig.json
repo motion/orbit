@@ -14,7 +14,7 @@
     { "path": "../model-bridge" },
     { "path": "../services" },
     { "path": "../stores" },
-    { "path": "../oracle" },
+    { "path": "../screen" },
     { "path": "../entities" },
     { "path": "../../packages/cosal" },
     { "path": "../../packages/utils" },

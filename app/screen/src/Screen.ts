@@ -3,13 +3,13 @@ import { spawn, ChildProcess } from 'child_process'
 import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { Logger } from '@mcro/logger'
-import { OracleBridge, SocketSender } from './OracleBridge'
+import { ScreenBridge, SocketSender } from './ScreenBridge'
 import { mkdir } from 'fs'
 import { promisify } from 'util'
 // import { remove } from 'fs-extra'
 
 // const linkify = promisify(link)
-const log = new Logger('oracle')
+const log = new Logger('screen')
 const idFn = _ => _
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
@@ -18,7 +18,7 @@ const appPath = bundle =>
 const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
 
-export class Oracle {
+export class Screen {
   onClose?: Function
   name?: string
   env: { [key: string]: string } | null
@@ -29,7 +29,7 @@ export class Oracle {
     showTray: false,
   }
   process: ChildProcess
-  oracleBridge: OracleBridge
+  screenBridge: ScreenBridge
   socketSend: SocketSender
   debugBuild = false
   settings = null
@@ -93,25 +93,25 @@ export class Oracle {
         log.info('Couldnt make temp dir for screens')
       }
     }
-    this.oracleBridge = new OracleBridge({
+    this.screenBridge = new ScreenBridge({
       port: this.socketPort,
       getActions: () => this.actions,
       setState: this.setState,
       getState: () => this.state,
     })
-    await this.oracleBridge.start(({ socketSend }) => {
+    await this.screenBridge.start(({ socketSend }) => {
       this.socketSend = socketSend
     })
-    await this.runOracleProcess()
-    await this.oracleBridge.onConnected()
-    log.verbose('started oracle')
+    await this.runScreenProcess()
+    await this.screenBridge.onConnected()
+    log.verbose('started screen')
   }
 
   stop = async () => {
     if (!this.process) {
       return
     }
-    log.info('STOPPING oracle')
+    log.info('STOPPING screen')
     this.process.stdout.removeAllListeners()
     this.process.stderr.removeAllListeners()
     // kill process
@@ -124,7 +124,7 @@ export class Oracle {
   }
 
   restart = async () => {
-    log.info('RESTARTING oracle')
+    log.info('RESTARTING screen')
     await this.stop()
     await this.start()
   }
@@ -319,14 +319,14 @@ export class Oracle {
     keyboard: val => this.onKeyboardCB(val),
   }
 
-  private async runOracleProcess() {
+  private async runScreenProcess() {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }
     let bin = 'orbit'
     let binDir
     if (this.binPath) {
-      bin = 'oracle'
+      bin = 'screen'
       binDir = Path.join(this.binPath, '..')
     } else {
       binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
@@ -352,7 +352,7 @@ export class Oracle {
       NODE_ENV: process.env.NODE_ENV,
       ...this.env,
     }
-    log.info(`Start Oracle on port ${this.socketPort} ${bin} at path ${binDir}`)
+    log.info(`Start Screen on port ${this.socketPort} ${bin} at path ${binDir}`)
     try {
       this.process = spawn(Path.join(binDir, bin), [], {
         env,
@@ -368,14 +368,14 @@ export class Oracle {
           // log.verbose('swift >>>', this.name, out.slice(1))
           return
         }
-        console.log('screen stderr:', str)
+        console.log('Screen stderr:', str)
         this.onErrorCB(str)
       }
 
       this.process.stdout.on('data', handleOut)
       this.process.stderr.on('data', handleOut)
       this.process.on('exit', val => {
-        log.info('ORACLE PROCESS STOPPING', this.socketPort, val)
+        log.info('Screen PROCESS STOPPING', this.socketPort, val)
         if (this.onClose) {
           this.onClose()
         }

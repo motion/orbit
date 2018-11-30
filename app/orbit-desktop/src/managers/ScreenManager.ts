@@ -1,24 +1,24 @@
-import { Oracle } from '@mcro/oracle'
+import { Screen } from '@mcro/screen'
 import { store, react, on, ensure } from '@mcro/black'
 import { Desktop, Electron, App } from '@mcro/stores'
 
-// handles the oracle blur window as well as any information relating to the current
+// handles the screen blur window as well as any information relating to the current
 // OS screen state like spaces.
 
 @store
 export class ScreenManager {
   clearTimeout?: Function
   isStarted = false
-  oracle: Oracle
+  screen: Screen
 
-  constructor({ oracle }: { oracle: Oracle }) {
-    this.oracle = oracle
+  constructor({ screen }: { screen: Screen }) {
+    this.screen = screen
   }
 
   start = () => {
     this.isStarted = true
 
-    this.oracle.onTrayState(state => {
+    this.screen.onTrayState(state => {
       console.log('on app state...', state)
       if (typeof state === 'string') {
         Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
@@ -32,18 +32,18 @@ export class ScreenManager {
 
     // space move
     let mvtm
-    this.oracle.onSpaceMove(() => {
+    this.screen.onSpaceMove(() => {
       console.log('got space move...')
       Desktop.setState({ movedToNewSpace: Date.now() })
       clearTimeout(mvtm)
       mvtm = setTimeout(() => {
-        this.oracle.socketSend('mvsp')
+        this.screen.socketSend('mvsp')
       }, 220)
     })
 
     // poll for now for space moves...
     const listener = setInterval(() => {
-      this.oracle.socketSend('space')
+      this.screen.socketSend('space')
     }, 400)
     on(this, listener)
   }
@@ -57,7 +57,7 @@ export class ScreenManager {
     async (theme, { when }) => {
       ensure('shouldShowBackgroundWindow', this.shouldShowBackgroundWindow)
       await when(() => this.isStarted)
-      this.oracle.themeWindow(theme)
+      this.screen.themeWindow(theme)
     },
   )
 
@@ -66,9 +66,9 @@ export class ScreenManager {
     async (visible, { when }) => {
       await when(() => this.isStarted)
       if (visible && this.shouldShowBackgroundWindow) {
-        this.oracle.showWindow()
+        this.screen.showWindow()
       } else {
-        this.oracle.hideWindow()
+        this.screen.hideWindow()
       }
     },
   )
@@ -94,7 +94,7 @@ export class ScreenManager {
 
   private positionOrbit(position = this.getPosition()) {
     if (this.shouldShowBackgroundWindow) {
-      this.oracle.positionWindow(position)
+      this.screen.positionWindow(position)
     }
   }
 

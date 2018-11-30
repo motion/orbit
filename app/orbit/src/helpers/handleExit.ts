@@ -21,7 +21,7 @@ export const handleExit = once(async () => {
       }
     }
     console.log('for now brute force killing..')
-    exec('pkill -9 oracle')
+    exec('pkill -9 screen')
     console.log('bye!')
   } catch (err) {
     console.log('error exiting', err)

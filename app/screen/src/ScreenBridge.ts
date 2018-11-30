@@ -14,7 +14,7 @@ type BridgeHandlers = {
   socketSend: SocketSender
 }
 
-export class OracleBridge {
+export class ScreenBridge {
   props: Props
   server: Server
   port: number
@@ -79,7 +79,7 @@ export class OracleBridge {
         if (err.message.indexOf('CLOSED')) {
           // console.log('closed...')
         } else {
-          console.error('oracle.socketSend Err', err.stack)
+          console.error('screen.socketSend Err', err.stack)
         }
       }
     } catch (err) {

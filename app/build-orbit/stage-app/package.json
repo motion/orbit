@@ -36,7 +36,7 @@
       "!**/sqlite3/deps/sqlite-autoconf-*.tar.gz",
       "!**/figlet/fonts/**/*",
       "!**/node_modules/electron/**/*",
-      "!**/*oracle/orbit/Build/Products/Release**/*",
+      "!**/*screen/orbit/Build/Products/Release**/*",
       "!**/*.chromium.html",
       "!**/*demo.gif",
       "!**/*.test.js",
@@ -48,18 +48,18 @@
     ],
     "extraResources": [
       {
-        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Resources",
+        "from": "../../screen/orbit/Build/Products/Release/orbit.app/Contents/Resources",
         "to": ".",
         "filter": "**/*"
       },
       {
-        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/Frameworks",
+        "from": "../../screen/orbit/Build/Products/Release/orbit.app/Contents/Frameworks",
         "to": "../Frameworks",
         "filter": "**/*"
       },
       {
-        "from": "../../oracle/orbit/Build/Products/Release/orbit.app/Contents/MacOS/orbit",
-        "to": "../MacOS/oracle",
+        "from": "../../screen/orbit/Build/Products/Release/orbit.app/Contents/MacOS/orbit",
+        "to": "../MacOS/screen",
         "filter": "**/*"
       }
     ],

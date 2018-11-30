@@ -118,7 +118,17 @@ export class OrbitWindow extends React.Component<Props> {
   render() {
     const { store } = this.props
     const url = Config.urls.server
+    const screenSize = Electron.state.screenSize.slice()
+
     log.info(`render OrbitWindow ${url} hovered? ${Desktop.hoverState.orbitHovered}`)
+
+    if (!screenSize || !screenSize[0]) {
+      return null
+    }
+
+    const size = [screenSize[0] / 2, screenSize[1] / 2]
+    const position = [size[0] / 2, size[1] / 2]
+
     return (
       <Window
         show={this.state.show ? App.orbitState.docked : false}
@@ -128,14 +138,15 @@ export class OrbitWindow extends React.Component<Props> {
         ref={store.handleRef}
         file={url}
         focus={false}
-        position={[0, 0]}
-        size={Electron.state.screenSize.slice()}
+        position={position}
+        size={size}
         frame={false}
         hasShadow={false}
         onFocus={store.handleElectronFocus}
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#ffffff00"
+        vibrancy="light"
       />
     )
   }

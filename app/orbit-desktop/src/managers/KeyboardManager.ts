@@ -1,6 +1,6 @@
 import { Desktop, App } from '@mcro/stores'
 import { store, react, ensure } from '@mcro/black'
-import { Oracle } from '@mcro/oracle'
+import { Screen } from '@mcro/screen'
 
 const OPTION_PEEK_DELAY = 300
 
@@ -8,9 +8,9 @@ const OPTION_PEEK_DELAY = 300
 export class KeyboardManager {
   pauseTm = null
 
-  constructor({ oracle }: { oracle: Oracle }) {
+  constructor({ screen }: { screen: Screen }) {
     // for now only sends option key event out
-    oracle.onKeyboard(this.onOptionKey)
+    screen.onKeyboard(this.onOptionKey)
   }
 
   downTm = null

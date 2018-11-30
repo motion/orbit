@@ -1,7 +1,7 @@
 import { App, Desktop } from '@mcro/stores'
 import { store, react } from '@mcro/black'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
-import { Oracle } from '@mcro/oracle'
+import { Screen } from '@mcro/screen'
 import { throttle } from 'lodash'
 
 type Point = [number, number]
@@ -32,8 +32,8 @@ export class MousePositionManager {
   lastMousePos?: Point
   onMouseMove = null
 
-  constructor({ oracle, onMouseMove }: { oracle: Oracle; onMouseMove?: Function }) {
-    oracle.onMousePosition(this.updateHoverState)
+  constructor({ screen, onMouseMove }: { screen: Screen; onMouseMove?: Function }) {
+    screen.onMousePosition(this.updateHoverState)
     this.onMouseMove = onMouseMove
   }
 

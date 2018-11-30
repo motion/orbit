@@ -1,17 +1,11 @@
 {
-  "name": "@mcro/oracle",
+  "name": "@mcro/screen",
   "version": "2.2.2",
-  "main": "./_/Oracle.js",
+  "main": "./_/Screen.js",
   "scripts": {
     "build": "./build.sh --if-empty && npx tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
-    "build-app": "./build.sh",
-    "train": "cd ./pyocr/src && python3 train.py",
-    "generate": "node ./_/generate",
-    "test": "DEBUG_IMAGES=true node ./test/test --debug",
-    "test-fast": "node ./test/test",
-    "test-scroll": "node ./test/test --scroll",
-    "edit": "open ./orbit/orbit.xcodeproj"
+    "build-app": "./build.sh"
   },
   "dependencies": {
     "@mcro/black": "^2.2.1",
@@ -28,9 +22,6 @@
   },
   "devDependencies": {
     "execa": "^0.8.0"
-  },
-  "peerDependencies": {
-    "mobx": "*"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

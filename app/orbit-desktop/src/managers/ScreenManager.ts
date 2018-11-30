@@ -1,6 +1,6 @@
 import { Screen } from '@mcro/screen'
-import { store, react, on, ensure } from '@mcro/black'
-import { Desktop, Electron, App } from '@mcro/stores'
+import { store, on } from '@mcro/black'
+import { Desktop, App } from '@mcro/stores'
 
 // handles the screen blur window as well as any information relating to the current
 // OS screen state like spaces.
@@ -31,7 +31,7 @@ export class ScreenManager {
     })
 
     // space move
-    let mvtm
+    let mvtm = null
     this.screen.onSpaceMove(() => {
       console.log('got space move...')
       Desktop.setState({ movedToNewSpace: Date.now() })
@@ -46,68 +46,5 @@ export class ScreenManager {
       this.screen.socketSend('space')
     }, 400)
     on(this, listener)
-  }
-
-  get shouldShowBackgroundWindow() {
-    return process.env.IGNORE_ELECTRON !== 'true'
-  }
-
-  updateTheme = react(
-    () => (App.state.darkTheme ? 'ultra' : 'light'),
-    async (theme, { when }) => {
-      ensure('shouldShowBackgroundWindow', this.shouldShowBackgroundWindow)
-      await when(() => this.isStarted)
-      this.screen.themeWindow(theme)
-    },
-  )
-
-  updateWindowVisibility = react(
-    () => App.orbitState.docked,
-    async (visible, { when }) => {
-      await when(() => this.isStarted)
-      if (visible && this.shouldShowBackgroundWindow) {
-        this.screen.showWindow()
-      } else {
-        this.screen.hideWindow()
-      }
-    },
-  )
-
-  updateWindowPositionOnOrbitChange = react(
-    () => this.getPosition(),
-    async (position, { when }) => {
-      await when(() => this.isStarted)
-      this.positionOrbit(position)
-    },
-  )
-
-  updateWindowPositionOnScreenRezie = react(
-    () => Electron.state.screenSize,
-    async (_, { sleep }) => {
-      await sleep(100)
-      this.positionOrbit()
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
-
-  private positionOrbit(position = this.getPosition()) {
-    if (this.shouldShowBackgroundWindow) {
-      this.screen.positionWindow(position)
-    }
-  }
-
-  private getPosition() {
-    const { position, size } = App.orbitState
-    const [x, y] = position
-    const [width, height] = size
-    return {
-      x: Math.round(x),
-      // mac topbar 23
-      y: Math.round(y + 23),
-      width: Math.round(width),
-      height: Math.round(height - 10),
-    }
   }
 }

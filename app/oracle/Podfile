@@ -1,0 +1,8 @@
+# Uncomment the next line to define a global platform for your project
+platform :osx, '10.10'
+
+target 'Oracle' do
+  use_frameworks!
+pod 'Swindler', :git => 'https://github.com/tmandry/Swindler.git'
+pod 'Swifter', '>= 1.4.5'
+end

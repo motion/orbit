@@ -28,9 +28,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //        WindowManager.shared.startObservingEvents()
         
         // Start recording screen
-        ScreenRecorder.shared.start()
+//        ScreenRecorder.shared.start()
         
-        ScreenRecorder.shared.watchBounds(CGRect(x: 0, y: 160, width: 1800, height: 3000))
+//        ScreenRecorder.shared.watchBounds(CGRect(x: 0, y: 160, width: 1800, height: 3000))
         
     }
     

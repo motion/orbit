@@ -1,4 +1,4 @@
-import { PersonUtils } from '@mcro/model-utils'
+import { PersonUtils } from '@mcro/models'
 import { JiraPersonData, Person, JiraSource } from '@mcro/models'
 import { JiraUser } from '@mcro/services'
 

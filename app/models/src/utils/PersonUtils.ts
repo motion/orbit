@@ -1,5 +1,5 @@
-import { Person } from '@mcro/models'
 import { hash } from '@mcro/utils'
+import { Person } from '../interfaces/Person'
 
 /**
  * Common Person utility functions.

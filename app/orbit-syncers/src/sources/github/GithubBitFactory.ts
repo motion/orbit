@@ -1,4 +1,4 @@
-import { BitUtils } from '@mcro/model-utils'
+import { BitUtils } from '@mcro/models'
 import { Bit, GithubBitData, GithubSource } from '@mcro/models'
 import { GithubIssue, GithubComment, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'

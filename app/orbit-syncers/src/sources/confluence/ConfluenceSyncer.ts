@@ -1,4 +1,4 @@
-import { BitEntity, SourceEntity } from '@mcro/entities'
+import { BitEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { ConfluenceLastSyncInfo, ConfluenceSource, Person } from '@mcro/models'
 import { ConfluenceContent, ConfluenceLoader, ConfluenceUser } from '@mcro/services'

@@ -10,12 +10,10 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
-    { "path": "../model-utils" },
     { "path": "../model-bridge" },
     { "path": "../services" },
     { "path": "../stores" },
     { "path": "../screen" },
-    { "path": "../entities" },
     { "path": "../../packages/cosal" },
     { "path": "../../packages/utils" },
     { "path": "../../packages/black" },

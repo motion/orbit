@@ -1,4 +1,4 @@
-import { SourceEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/models'
 import { Source } from '@mcro/models'
 import { ConnectionOptions, createConnection } from 'typeorm'
 import { DATABASE_PATH } from '../constants'

@@ -1,6 +1,6 @@
 import { store } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
-import { SettingEntity, SpaceEntity } from '@mcro/entities'
+import { SettingEntity, SpaceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
 import AutoLaunch from 'auto-launch'

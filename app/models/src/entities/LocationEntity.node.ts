@@ -1,5 +1,5 @@
-import { Location } from '@mcro/models'
 import { Column } from 'typeorm'
+import { Location } from '../interfaces/Location'
 
 export class LocationEntity implements Location {
   @Column({ nullable: true })

@@ -1,6 +1,9 @@
-import { Job, JobStatus, JobType, Source } from '@mcro/models'
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { SourceEntity } from './SourceEntity'
+import { SourceEntity } from './SourceEntity.node'
+import { Job } from '../interfaces/Job'
+import { JobType } from '../interfaces/JobType'
+import { JobStatus } from '../interfaces/JobStatus'
+import { Source } from '../interfaces/Source'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {

@@ -1,6 +1,6 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/entities'
+import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { PersonBitUtils } from '@mcro/model-utils'
+import { PersonBitUtils } from '@mcro/models'
 import { DriveSource } from '@mcro/models'
 import { DriveLoader } from '@mcro/services'
 import { hash } from '@mcro/utils'

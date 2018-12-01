@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { Setting } from '@mcro/models'
+import { Setting } from '../interfaces/Setting'
 
 @Entity()
 export class SettingEntity extends BaseEntity {

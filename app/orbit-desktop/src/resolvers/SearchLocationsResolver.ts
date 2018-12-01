@@ -1,6 +1,6 @@
 import { resolveMany } from '@mcro/mediator'
 import { SearchLocationsModel } from '@mcro/models'
-import { BitEntity } from '@mcro/entities'
+import { BitEntity } from '@mcro/models'
 
 // TODO: DISTINCT() query
 

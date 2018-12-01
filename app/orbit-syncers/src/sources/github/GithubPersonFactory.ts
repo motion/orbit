@@ -1,4 +1,4 @@
-import { PersonUtils } from '@mcro/model-utils'
+import { PersonUtils } from '@mcro/models'
 import { GithubPersonData, Person, GithubSource } from '@mcro/models'
 import { GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'

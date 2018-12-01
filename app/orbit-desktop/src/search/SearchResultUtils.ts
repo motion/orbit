@@ -1,4 +1,4 @@
-import { BitEntity } from '@mcro/entities'
+import { BitEntity } from '@mcro/models'
 import { highlightText } from '@mcro/helpers'
 import { Logger } from '@mcro/logger'
 import { Bit, SearchQuery } from '@mcro/models'

@@ -9,7 +9,7 @@ import {
   SettingEntity,
   SourceEntity,
   SpaceEntity,
-} from '@mcro/entities'
+} from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {

@@ -1,6 +1,8 @@
-import { IntegrationTypeValues, Person, PersonBit } from '@mcro/models'
 import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
-import { PersonEntity } from './PersonEntity'
+import { PersonEntity } from './PersonEntity.node'
+import { IntegrationTypeValues } from '../interfaces/IntegrationType'
+import { Person } from '../interfaces/Person'
+import { PersonBit } from '../interfaces/PersonBit'
 
 @Entity()
 export class PersonBitEntity extends BaseEntity implements PersonBit {

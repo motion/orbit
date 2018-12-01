@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { SettingEntity } from '@mcro/entities'
+import { SettingEntity } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import Fs from 'fs-extra'
 import Os from 'os'

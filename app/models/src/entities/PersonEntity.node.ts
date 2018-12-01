@@ -1,4 +1,3 @@
-import { Bit, IntegrationType, Person, PersonBit, PersonData, Source } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -9,9 +8,15 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { BitEntity } from './BitEntity'
-import { PersonBitEntity } from './PersonBitEntity'
-import { SourceEntity } from './SourceEntity'
+import { BitEntity } from './BitEntity.node'
+import { PersonBitEntity } from './PersonBitEntity.node'
+import { SourceEntity } from './SourceEntity.node'
+import { IntegrationType } from '../interfaces/IntegrationType'
+import { PersonData } from '../person-data/PersonData'
+import { Source } from '../interfaces/Source'
+import { PersonBit } from '../interfaces/PersonBit'
+import { Bit } from '../interfaces/Bit'
+import { Person } from '../interfaces/Person'
 
 @Entity()
 export class PersonEntity extends BaseEntity implements Person {

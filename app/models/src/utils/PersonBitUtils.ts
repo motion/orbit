@@ -1,17 +1,15 @@
-import { Person } from '@mcro/models'
-import { PersonBit } from '@mcro/models'
 import { hash } from '@mcro/utils'
+import { Person } from '../interfaces/Person'
+import { PersonBit } from '../interfaces/PersonBit'
 
 /**
  * Common PersonBit utility functions.
  */
 export class PersonBitUtils {
-
   /**
    * Creates a new person bit from a given person.
    */
   static createFromPerson(person: Person): PersonBit {
-
     const personBit: PersonBit = {
       target: 'person-bit',
       id: hash(person.email),
@@ -26,21 +24,21 @@ export class PersonBitUtils {
     if (!personBit.people) personBit.people = []
 
     // add new properties
-    if (person.name)
-      personBit.allNames[person.integration] = person.name
-    if (person.photo)
-      personBit.allPhotos[person.integration] = person.photo
+    if (person.name) personBit.allNames[person.integration] = person.name
+    if (person.photo) personBit.allPhotos[person.integration] = person.photo
 
     // if we have default photo and name value
     // that is not defined in all names and all photos
     // it means this default photo/name value is obsolete
     // and we need to update it
-    const isNameValid = Object.keys(personBit.allNames)
-      .map(key => personBit.allNames[key])
-      .indexOf(person.name) !== -1
-    const isPhotoValid = Object.keys(personBit.allPhotos)
-      .map(key => personBit.allPhotos[key])
-      .indexOf(person.photo) !== -1
+    const isNameValid =
+      Object.keys(personBit.allNames)
+        .map(key => personBit.allNames[key])
+        .indexOf(person.name) !== -1
+    const isPhotoValid =
+      Object.keys(personBit.allPhotos)
+        .map(key => personBit.allPhotos[key])
+        .indexOf(person.photo) !== -1
 
     if (!isNameValid && personBit.allNames[person.integration])
       person.name = personBit.allNames[person.integration]
@@ -75,7 +73,6 @@ export class PersonBitUtils {
    * Merges given person bits.
    */
   static merge(personBit1: Partial<PersonBit>, personBit2: Partial<PersonBit>): PersonBit {
-
     const personBit: PersonBit = {
       target: 'person-bit',
       ...personBit1,
@@ -95,12 +92,8 @@ export class PersonBitUtils {
       }
     }
     if (!personBit.people) {
-      personBit.people = [
-        ...(personBit1.people || []),
-        ...(personBit2.people || []),
-      ]
+      personBit.people = [...(personBit1.people || []), ...(personBit2.people || [])]
     }
     return personBit
   }
-
 }

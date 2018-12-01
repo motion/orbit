@@ -1,4 +1,4 @@
-import { SourceEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Bit, SlackSource, SlackSourceValues } from '@mcro/models'
 import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'

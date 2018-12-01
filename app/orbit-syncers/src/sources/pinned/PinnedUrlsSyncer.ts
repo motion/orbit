@@ -1,5 +1,5 @@
-import { SettingEntity } from '@mcro/entities'
-import { BitEntity } from '@mcro/entities'
+import { SettingEntity } from '@mcro/models'
+import { BitEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Bit } from '@mcro/models'
 import { getRepository } from 'typeorm'

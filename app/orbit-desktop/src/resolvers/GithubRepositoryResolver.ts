@@ -4,7 +4,7 @@ import { GithubRepositoryModel } from '@mcro/models'
 import { GithubSource } from '@mcro/models'
 import { GithubLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
-import { SourceEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/models'
 
 const log = new Logger('resolver:github-repositories')
 

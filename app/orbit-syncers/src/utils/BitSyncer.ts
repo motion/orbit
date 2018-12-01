@@ -1,4 +1,4 @@
-import { BitEntity, PersonEntity } from '@mcro/entities'
+import { BitEntity, PersonEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Bit, GithubSource, Source } from '@mcro/models'
 import { GithubIssue, GithubPullRequest } from '@mcro/services'

@@ -228,7 +228,7 @@ await Promise.all(Object.keys(Syncers).map(syncer => Syncers[syncer].start()))
 ### TypeORM Entities
 
 In dev mode we set up models to be globals so you can use them easily in REPL as well.
-You can use any entity from `app/orbit-desktop/src/entities` and use it in the REPL following way:
+You can use any entity from `@mcro/models` and use it in the REPL following way:
 
 ```js
 await typeorm.getRepository(BitEntity).find()

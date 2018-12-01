@@ -1,4 +1,4 @@
-import { PersonUtils } from '@mcro/model-utils'
+import { PersonUtils } from '@mcro/models'
 import { Person, SlackSource, SlackPersonData } from '@mcro/models'
 import { SlackUser, SlackTeam } from '@mcro/services'
 

@@ -1,4 +1,4 @@
-import { PersonUtils } from '@mcro/model-utils'
+import { PersonUtils } from '@mcro/models'
 import { DrivePersonData, Person, DriveSource } from '@mcro/models'
 import { DriveUser } from '@mcro/services'
 

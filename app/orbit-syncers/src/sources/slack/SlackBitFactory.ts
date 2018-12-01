@@ -1,5 +1,5 @@
 import { command } from '@mcro/model-bridge'
-import { BitUtils } from '@mcro/model-utils'
+import { BitUtils } from '@mcro/models'
 import { Bit, CosalTopWordsCommand, Person, SlackBitData, SlackSource } from '@mcro/models'
 import { SlackChannel, SlackMessage, SlackAttachment } from '@mcro/services'
 import { WebsiteCrawledData } from '../website/WebsiteCrawledData'

@@ -1,4 +1,4 @@
-import { BitEntity } from '@mcro/entities'
+import { BitEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Bit, SearchQuery } from '@mcro/models'
 import { getConnection } from 'typeorm'

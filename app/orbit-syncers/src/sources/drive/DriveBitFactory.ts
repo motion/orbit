@@ -1,4 +1,4 @@
-import { BitUtils } from '@mcro/model-utils'
+import { BitUtils } from '@mcro/models'
 import { Bit, DriveBitData, DriveSource } from '@mcro/models'
 import { DriveLoadedFile } from '@mcro/services'
 

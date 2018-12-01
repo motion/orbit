@@ -2,7 +2,7 @@ import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { SettingOnboardFinishCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SettingEntity } from '@mcro/entities'
+import { SettingEntity } from '@mcro/models'
 
 const log = new Logger('command:setting-onboard-finish')
 

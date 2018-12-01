@@ -5,7 +5,7 @@ import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
 import connectModels from '../helpers/connectModels'
-import { Entities } from '@mcro/entities'
+import { Entities } from '@mcro/models'
 import { sleep } from '@mcro/helpers'
 
 const log = new Logger('database')
@@ -52,20 +52,26 @@ export class DatabaseManager {
   }
 
   private async createIndices() {
-    await getConnection().query(`CREATE INDEX IF NOT EXISTS "searchIndex1" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId");`)
-    await getConnection().query(`CREATE INDEX IF NOT EXISTS "searchIndex2" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "integration");`)
-    await getConnection().query(`CREATE INDEX IF NOT EXISTS "searchIndex3" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "locationName");`)
-    await getConnection().query(`CREATE INDEX IF NOT EXISTS "searchIndex4" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "integration", "locationName");`)
+    await getConnection().query(
+      'CREATE INDEX IF NOT EXISTS "searchIndex1" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId");',
+    )
+    await getConnection().query(
+      'CREATE INDEX IF NOT EXISTS "searchIndex2" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "integration");',
+    )
+    await getConnection().query(
+      'CREATE INDEX IF NOT EXISTS "searchIndex3" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "locationName");',
+    )
+    await getConnection().query(
+      'CREATE INDEX IF NOT EXISTS "searchIndex4" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "integration", "locationName");',
+    )
   }
 
   private async createSearchIndices() {
-
     // check if search index table does not exist yet
     const table = await getConnection().query(
       'SELECT name FROM sqlite_master WHERE type="table" AND name="search_index"',
     )
-    if (table.length)
-      return
+    if (table.length) return
 
     // await queryRunner.query('DROP TABLE search_index')
     // await queryRunner.query('DROP TRIGGER after_bit_insert')

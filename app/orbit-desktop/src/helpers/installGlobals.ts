@@ -1,6 +1,6 @@
 import root from 'global'
 import * as Mobx from 'mobx'
-import { Entities } from '@mcro/entities'
+import { Entities } from '@mcro/models'
 import r2 from '@mcro/r2'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { getGlobalConfig } from '@mcro/config'

@@ -1,5 +1,7 @@
-import { Bit, IntegrationType, Source } from '@mcro/models'
 import { hash } from '@mcro/utils'
+import { IntegrationType } from '../interfaces/IntegrationType'
+import { Source } from '../interfaces/Source'
+import { Bit } from '../interfaces/Bit'
 
 /**
  * Common Bit utility functions.
@@ -8,10 +10,15 @@ export class BitUtils {
   /**
    * Creates a bit id.
    */
-  static id(integration: IntegrationType, sourceId: number|undefined, data: string): number
+  static id(integration: IntegrationType, sourceId: number | undefined, data: string): number
   static id(source: Source, data: string): number
-  static id(integrationOrSource: Source|IntegrationType, sourceIdOrData: any, maybeData?: string): number {
-    if (typeof integrationOrSource === "object") { // Source
+  static id(
+    integrationOrSource: Source | IntegrationType,
+    sourceIdOrData: any,
+    maybeData?: string,
+  ): number {
+    if (typeof integrationOrSource === 'object') {
+      // Source
       return hash(`${integrationOrSource.type}-${integrationOrSource.id}-${sourceIdOrData}`)
     } else if (integrationOrSource && sourceIdOrData && maybeData) {
       return hash(`${integrationOrSource}-${sourceIdOrData}-${maybeData}`)

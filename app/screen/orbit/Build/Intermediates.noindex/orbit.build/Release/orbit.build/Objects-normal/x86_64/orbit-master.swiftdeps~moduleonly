@@ -1,6 +1,6 @@
 version: "Apple Swift version 4.2 (swiftlang-1000.0.29.2 clang-1000.10.39)"
 options: "f6c7d411e469455adfda6bd5f1d2faa7"
-build_time: [1543625670, 599173000]
+build_time: [1543625900, 920370000]
 inputs:
   "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/SocketBridge.swift": [9223372036, 854775807]
   "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/AtomApplication.swift": [9223372036, 854775807]

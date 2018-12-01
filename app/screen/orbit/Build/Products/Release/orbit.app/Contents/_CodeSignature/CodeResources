@@ -14,7 +14,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		lkt6bmWfspH8HI844KnF5XFvZBc=
+		R278GxUEpiwKw3ZjphO8NnBgreQ=
 		</data>
 		<key>Resources/Base.lproj/MainMenu.nib</key>
 		<data>
@@ -62,24 +62,6 @@
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.oncast.SwiftWebSocket" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
 		</dict>
-		<key>Frameworks/Swindler.framework</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			2wQgshQeVhzciOYRdzldwMEtAt8=
-			</data>
-			<key>requirement</key>
-			<string>anchor apple generic and identifier "com.tylermandry.Swindler" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
-		</dict>
-		<key>Frameworks/libswiftAVFoundation.dylib</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			sQg1YWrO4MVkpve44nV9Rl9V1qA=
-			</data>
-			<key>requirement</key>
-			<string>identifier "com.apple.dt.runtime.swiftAVFoundation" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY"</string>
-		</dict>
 		<key>Frameworks/libswiftAppKit.dylib</key>
 		<dict>
 			<key>cdhash</key>
@@ -97,15 +79,6 @@
 			</data>
 			<key>requirement</key>
 			<string>identifier "com.apple.dt.runtime.swiftCore" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY"</string>
-		</dict>
-		<key>Frameworks/libswiftCoreAudio.dylib</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			131e78+MRsYR5Zz3nblR0LDk/UM=
-			</data>
-			<key>requirement</key>
-			<string>identifier "com.apple.dt.runtime.swiftCoreAudio" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY"</string>
 		</dict>
 		<key>Frameworks/libswiftCoreData.dylib</key>
 		<dict>
@@ -142,15 +115,6 @@
 			</data>
 			<key>requirement</key>
 			<string>identifier "com.apple.dt.runtime.swiftCoreImage" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY"</string>
-		</dict>
-		<key>Frameworks/libswiftCoreMedia.dylib</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			KbtWu9HHMv+VAIlWaNqR6jILzRM=
-			</data>
-			<key>requirement</key>
-			<string>identifier "com.apple.dt.runtime.swiftCoreMedia" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY"</string>
 		</dict>
 		<key>Frameworks/libswiftDarwin.dylib</key>
 		<dict>
@@ -233,15 +197,6 @@
 			<key>requirement</key>
 			<string>identifier "com.apple.dt.runtime.swiftos" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY"</string>
 		</dict>
-		<key>Frameworks/libswiftsimd.dylib</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			ojPyXnBFp4G//Bu0FjU5qLcvE4s=
-			</data>
-			<key>requirement</key>
-			<string>identifier "com.apple.dt.runtime.swiftsimd" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY"</string>
-		</dict>
 		<key>Resources/AXSwift.framework.dSYM/Contents/Info.plist</key>
 		<dict>
 			<key>hash</key>
@@ -268,11 +223,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			lkt6bmWfspH8HI844KnF5XFvZBc=
+			R278GxUEpiwKw3ZjphO8NnBgreQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			cnLFcJ/QMvZRSTQoGuY6w6EQzbvgF8xahRdth8UifNo=
+			mAu+amoLQmKxN4x1nPAUPJQLaa+oqWL0KVJDbiTm7QE=
 			</data>
 		</dict>
 		<key>Resources/Base.lproj/MainMenu.nib</key>

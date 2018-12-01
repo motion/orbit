@@ -189,7 +189,8 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       window.makeKeyAndOrderFront(nil)
     }
 
-    if shouldShowTray {
+    if shouldShowTray || testInXCode {
+      print("setting up tray...")
       statusItem.highlightMode = false
       let button = statusItem.button!
       button.image = NSImage(named:NSImage.Name("tray"))

@@ -1,0 +1,11 @@
+version: "Apple Swift version 4.2 (swiftlang-1000.0.29.2 clang-1000.10.39)"
+options: "0b50de47758fbd5b61589ce5a8e6f9e1"
+build_time: [1543625265, 268049000]
+inputs:
+  "/Users/nw/projects/motion/orbit/app/screen/Swindler/AXSwift/Sources/SystemWideElement.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/app/screen/Swindler/AXSwift/Sources/UIElement.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/app/screen/Swindler/AXSwift/Sources/Error.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/app/screen/Swindler/AXSwift/Sources/Observer.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/app/screen/Swindler/AXSwift/Sources/AXSwift.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/app/screen/Swindler/AXSwift/Sources/Application.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/app/screen/Swindler/AXSwift/Sources/Constants.swift": [9223372036, 854775807]

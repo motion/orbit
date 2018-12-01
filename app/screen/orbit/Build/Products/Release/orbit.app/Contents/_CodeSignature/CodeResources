@@ -10,11 +10,11 @@
 		</data>
 		<key>Resources/AXSwift.framework.dSYM/Contents/Resources/DWARF/AXSwift</key>
 		<data>
-		xHQEp0WRLgsixFVt2qL0F8HdDKM=
+		B5u2x9hYbj3Rv0JK2Xv6oXN+vHM=
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		XjQ7Jy34aDbPq/A2fBnSfWGChxU=
+		lkt6bmWfspH8HI844KnF5XFvZBc=
 		</data>
 		<key>Resources/Base.lproj/MainMenu.nib</key>
 		<data>
@@ -26,7 +26,7 @@
 		</data>
 		<key>Resources/SwiftWebSocket.framework.dSYM/Contents/Resources/DWARF/SwiftWebSocket</key>
 		<data>
-		Ck/Ptb72PRxKiPVifdjecRTJAi4=
+		hjkYjUoba03sBoFrFs9ga2zTmmU=
 		</data>
 		<key>Resources/libswiftRemoteMirror.dylib</key>
 		<data>
@@ -39,7 +39,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			GyZBIlwUBCbjK0cKAVAVHq0R5F0=
+			D5Y/G4jCWZ+B7WjFrRlzita1BMQ=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.tylermandry.AXSwift" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
@@ -57,7 +57,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			7GbNaPqnA6n4u4oqf0x5199cINU=
+			zScuLA0mmG/e+fQaYc6qv6BjjzE=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.oncast.SwiftWebSocket" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
@@ -66,7 +66,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			wH1oIbyAkrLb6WBkX/yuc1JkhcI=
+			2wQgshQeVhzciOYRdzldwMEtAt8=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.tylermandry.Swindler" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "399WY8X9HY")</string>
@@ -257,22 +257,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			xHQEp0WRLgsixFVt2qL0F8HdDKM=
+			B5u2x9hYbj3Rv0JK2Xv6oXN+vHM=
 			</data>
 			<key>hash2</key>
 			<data>
-			7LBuwgBO2VUnt8FT+9cPDtHQ1UqKfzg9pLxMVwenqTI=
+			pbyZRfMZVxfMvtI6qj7k4Xconq0Z+V/0tt/AqoJSYOU=
 			</data>
 		</dict>
 		<key>Resources/Assets.car</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			XjQ7Jy34aDbPq/A2fBnSfWGChxU=
+			lkt6bmWfspH8HI844KnF5XFvZBc=
 			</data>
 			<key>hash2</key>
 			<data>
-			uFcNrLXjmxrHjs3hT1U29/UmOh2oN99pA4pzYXwwxig=
+			cnLFcJ/QMvZRSTQoGuY6w6EQzbvgF8xahRdth8UifNo=
 			</data>
 		</dict>
 		<key>Resources/Base.lproj/MainMenu.nib</key>
@@ -301,11 +301,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Ck/Ptb72PRxKiPVifdjecRTJAi4=
+			hjkYjUoba03sBoFrFs9ga2zTmmU=
 			</data>
 			<key>hash2</key>
 			<data>
-			TatF5pVyIvDFrRUT81hAK14e+fRhYpVJnz+dWN1h4xQ=
+			wky1YvUOx4ydQj6s1ENWRnwCqD7fXRjaQH9L7egXcyQ=
 			</data>
 		</dict>
 		<key>Resources/libswiftRemoteMirror.dylib</key>

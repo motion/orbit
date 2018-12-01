@@ -1,0 +1,13 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/nw/projects/motion/orbit/app/screen/orbit/Build/Products/Release/AXSwift.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/nw/projects/motion/orbit/app/screen/orbit/Build/Intermediates.noindex/AXSwift.build/Release/AXSwift.build/unextended-module.modulemap",
+    }]
+  }]
+}

@@ -5,6 +5,20 @@ import Cocoa
 import PromiseKit
 import Darwin
 
+extension String {
+  subscript (bounds: CountableClosedRange<Int>) -> String {
+    let start = index(startIndex, offsetBy: bounds.lowerBound)
+    let end = index(startIndex, offsetBy: bounds.upperBound)
+    return String(self[start...end])
+  }
+  
+  subscript (bounds: CountableRange<Int>) -> String {
+    let start = index(startIndex, offsetBy: bounds.lowerBound)
+    let end = index(startIndex, offsetBy: bounds.upperBound)
+    return String(self[start..<end])
+  }
+}
+
 enum InterfaceStyle : String {
   case Dark, Light
   init() {
@@ -77,8 +91,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
 
   let queue = AsyncGroup()
   var socketBridge: SocketBridge!
-  var windo: Windo!
-  var screen: Screen!
   var curPosition = NSRect()
   private var supportsTransparency = false
   private var trayLocation = "Out"
@@ -130,13 +142,6 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     return NSApplication.TerminateReply.terminateNow
   }
   
-  private func startWatchingWindows() {
-    if (self.windo == nil) {
-      windo = Windo(emit: self.emit)
-    }
-    windo.start()
-  }
-  
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     print("applicationDidFinishLaunching, OCR \(shouldRunOCR), PORT: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
 
@@ -147,52 +152,9 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     if #available(OSX 10.11, *) {
       self.supportsTransparency = true
     }
-    
-    if (testInXCode) {
-      _ = self.updateAccessibility(true)
-      Async.background(after: 1, {
-        self.startWatchingWindows()
-      })
-    }
-    
+
     // silent check if we are already accessible
     _ = self.updateAccessibility(false)
-
-    if shouldRunOCR {
-      startWatchingWindows()
-      do {
-        screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
-      } catch let error as NSError {
-        print("Error \(error.domain)")
-        print(Thread.callStackSymbols)
-      }
-      screen.onStart = {
-        print("screen started")
-      }
-      screen.onFinish = {
-        exit(0)
-      }
-      screen.onError = {
-        print(Thread.callStackSymbols)
-        printErr($0)
-        exit(1)
-      }
-      if shouldRunTest {
-        print("running in test mode...")
-        screen.watchBounds(
-          fps: 10,
-          boxes: [
-            Box(id: 1, x: 0, y: 23, width: 850, height: 1200, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true, ocr: true)
-          ],
-          showCursor: true,
-          videoCodec: "mp4",
-          sampleSpacing: 10,
-          sensitivity: 2,
-          debug: true
-        )
-        screen.start()
-      }
-    }
     
     if shouldRunAppWindow {
       window.level = .floating // .floating to be on top
@@ -519,74 +481,15 @@ class AtomApplication: NSObject, NSApplicationDelegate {
       self.emit("{ \"action\": \"info\", \"value\": { \"appId\": \"\(id)\" } }")
       return
     }
-    if action == "paus" {
-      print("pausing screen...")
-      screen.pause()
-      return
-    }
-    if action == "resu" {
-      print("resuming screen...")
-      screen.resume()
-      return
-    }
-    if action == "watc" {
-      do {
-        print("watching \(text[5..<text.count])")
-        let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
-        screen.watchBounds(
-          fps: options.fps,
-          boxes: options.boxes,
-          showCursor: options.showCursor,
-          videoCodec: options.videoCodec,
-          sampleSpacing: options.sampleSpacing,
-          sensitivity: options.sensitivity,
-          debug: options.debug
-        )
-      } catch {
-        print("Error parsing arguments \(text)")
-      }
-      return
-    }
-    if action == "star" {
-      print("start screen...")
-      if (self.updateAccessibility(true)) {
-        screen.start()
-      }
-      return
-    }
-    if action == "clea" {
-      screen.clear()
-      return
-    }
-    if action == "defo" {
-      windo.defocus()
-      return
-    }
     // request accessibility
     if action == "reac" {
       _ = self.updateAccessibility(true)
-      return
-    }
-    // start window watching
-    if action == "staw" {
-      if self.updateAccessibility(true) {
-        startWatchingWindows()
-      }
-      return
-    }
-    // stop window watching
-    if action == "stow" {
-      windo.stop()
       return
     }
     print("received unknown message: \(text)")
   }
 
   func applicationWillTerminate(_ aNotification: Notification) {
-    print("telling recorder to stop...")
-    if shouldRunOCR {
-      screen.stop()
-    }
     print("recorder stopped, exiting...")
   }
 }

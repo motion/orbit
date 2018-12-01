@@ -14,61 +14,13 @@
 		AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC267214B410200834167 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
-		AED8CE802194F52100EA74EA /* Swindler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; };
-		AED8CE812194F53C00EA74EA /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AED8CE3B2194F0B200EA74EA /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AED8CEA221950A8000EA74EA /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CEA121950A8000EA74EA /* PromiseKit.framework */; };
 		AED8CEA321950A8000EA74EA /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AED8CEA121950A8000EA74EA /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AEE9270621913158006CAA2C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9270521913158006CAA2C /* main.swift */; };
-		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
-		CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */; };
-		CF0BCD87202E0E170012723C /* UnionFind.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD86202E0E170012723C /* UnionFind.swift */; };
-		CF0BCD89202E0E1B0012723C /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD88202E0E1B0012723C /* Filters.swift */; };
-		CF0BCD8B202E0E1F0012723C /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD8A202E0E1F0012723C /* Images.swift */; };
-		CF0BCD8D202E0E230012723C /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD8C202E0E230012723C /* Structs.swift */; };
-		CF0BCD8F202E0E260012723C /* Moves.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD8E202E0E260012723C /* Moves.swift */; };
-		CF0BCD93202E0E2D0012723C /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD92202E0E2D0012723C /* Screen.swift */; };
-		CF0BCD95202E0E310012723C /* ScreenFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD94202E0E310012723C /* ScreenFrame.swift */; };
-		CF0BCD97202E0E330012723C /* ThresholdBelowFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD96202E0E330012723C /* ThresholdBelowFilter.swift */; };
-		CF0BCD99202E0E360012723C /* ThresholdFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD98202E0E360012723C /* ThresholdFilter.swift */; };
-		CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9C202E0E3C0012723C /* Extensions.swift */; };
-		CF0BCD9F202E0E3E0012723C /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9E202E0E3E0012723C /* util.swift */; };
-		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
 		CFBEEE1F202D838D005F925A /* AtomApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AtomApplication.swift */; };
 		CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE20202D838D005F925A /* Assets.xcassets */; };
-		CFEB7E9D208CE16B0001A9DC /* AXUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEB7E9C208CE16B0001A9DC /* AXUIWindow.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		AED8CE3A2194F0B200EA74EA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2F86CEC61BD60117007E8C29;
-			remoteInfo = Swindler;
-		};
-		AED8CE3C2194F0B200EA74EA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2F86CED01BD60117007E8C29;
-			remoteInfo = SwindlerTests;
-		};
-		AED8CE3E2194F0B200EA74EA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2F86CEE91BD6EC32007E8C29;
-			remoteInfo = SwindlerExample;
-		};
-		AED8CE7C2194F3B800EA74EA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2F86CEC51BD60117007E8C29;
-			remoteInfo = Swindler;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		CF0BCD70202E0A790012723C /* CopyFiles */ = {
@@ -77,7 +29,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AED8CE812194F53C00EA74EA /* Swindler.framework in CopyFiles */,
 				AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */,
 				AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */,
 				AED8CEA321950A8000EA74EA /* PromiseKit.framework in CopyFiles */,
@@ -92,25 +43,9 @@
 		AE6EC266214B410200834167 /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
 		AE6EC267214B410200834167 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
-		AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Swindler.xcodeproj; path = ../Swindler/Swindler.xcodeproj; sourceTree = "<group>"; };
 		AED8CE7E2194F3C200EA74EA /* Pods_Swindler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Swindler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AED8CE9E21950A1C00EA74EA /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = "Build/Products/Release/PromiseKit-CorePromise/PromiseKit.framework"; sourceTree = "<group>"; };
 		AED8CEA121950A8000EA74EA /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = orbit/PromiseKit.framework; sourceTree = "<group>"; };
 		AEE9270521913158006CAA2C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		CF0BCD82202E0E0F0012723C /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
-		CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedComponentsSwiftOCR.swift; sourceTree = "<group>"; };
-		CF0BCD86202E0E170012723C /* UnionFind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnionFind.swift; sourceTree = "<group>"; };
-		CF0BCD88202E0E1B0012723C /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
-		CF0BCD8A202E0E1F0012723C /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
-		CF0BCD8C202E0E230012723C /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
-		CF0BCD8E202E0E260012723C /* Moves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moves.swift; sourceTree = "<group>"; };
-		CF0BCD92202E0E2D0012723C /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
-		CF0BCD94202E0E310012723C /* ScreenFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenFrame.swift; sourceTree = "<group>"; };
-		CF0BCD96202E0E330012723C /* ThresholdBelowFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdBelowFilter.swift; sourceTree = "<group>"; };
-		CF0BCD98202E0E360012723C /* ThresholdFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThresholdFilter.swift; sourceTree = "<group>"; };
-		CF0BCD9C202E0E3C0012723C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		CF0BCD9E202E0E3E0012723C /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
-		CF0BCDB4202E189F0012723C /* Windo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Windo.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFBEEE1E202D838D005F925A /* AtomApplication.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AtomApplication.swift; sourceTree = "<group>"; tabWidth = 2; };
@@ -118,7 +53,6 @@
 		CFBEEE23202D838D005F925A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		CFBEEE25202D838D005F925A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFBEEE26202D838D005F925A /* orbit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = orbit.entitlements; sourceTree = "<group>"; };
-		CFEB7E9C208CE16B0001A9DC /* AXUIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXUIWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,7 +61,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AED8CEA221950A8000EA74EA /* PromiseKit.framework in Frameworks */,
-				AED8CE802194F52100EA74EA /* Swindler.framework in Frameworks */,
 				AE6EC26C214B410200834167 /* SwiftWebSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -135,16 +68,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AED8CE352194F0B200EA74EA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				AED8CE3B2194F0B200EA74EA /* Swindler.framework */,
-				AED8CE3D2194F0B200EA74EA /* SwindlerTests.xctest */,
-				AED8CE3F2194F0B200EA74EA /* SwindlerExample.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		CF0BCD61202E0A2E0012723C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -157,41 +80,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CF0BCDA3202E0E770012723C /* Screen */ = {
-			isa = PBXGroup;
-			children = (
-				CF0BCD92202E0E2D0012723C /* Screen.swift */,
-				CF0BCD94202E0E310012723C /* ScreenFrame.swift */,
-				CF0BCD82202E0E0F0012723C /* Characters.swift */,
-				CF0BCD88202E0E1B0012723C /* Filters.swift */,
-				CF0BCD9E202E0E3E0012723C /* util.swift */,
-				CF0BCD9C202E0E3C0012723C /* Extensions.swift */,
-				CF0BCD98202E0E360012723C /* ThresholdFilter.swift */,
-				CF0BCD96202E0E330012723C /* ThresholdBelowFilter.swift */,
-				CF0BCD8E202E0E260012723C /* Moves.swift */,
-				CF0BCD8C202E0E230012723C /* Structs.swift */,
-				CF0BCD8A202E0E1F0012723C /* Images.swift */,
-				CF0BCD86202E0E170012723C /* UnionFind.swift */,
-				CF0BCD84202E0E140012723C /* ConnectedComponentsSwiftOCR.swift */,
-			);
-			path = Screen;
-			sourceTree = "<group>";
-		};
-		CF0BCDB3202E188D0012723C /* Windo */ = {
-			isa = PBXGroup;
-			children = (
-				CF0BCDB4202E189F0012723C /* Windo.swift */,
-				CFEB7E9C208CE16B0001A9DC /* AXUIWindow.swift */,
-			);
-			path = Windo;
-			sourceTree = "<group>";
-		};
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
-				AED8CE9E21950A1C00EA74EA /* PromiseKit.framework */,
 				AED8CEA121950A8000EA74EA /* PromiseKit.framework */,
-				AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
 				CF0BCD61202E0A2E0012723C /* Frameworks */,
@@ -214,8 +106,6 @@
 				AEE9270521913158006CAA2C /* main.swift */,
 				CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */,
 				CFBEEE1E202D838D005F925A /* AtomApplication.swift */,
-				CF0BCDB3202E188D0012723C /* Windo */,
-				CF0BCDA3202E0E770012723C /* Screen */,
 				CFBEEE20202D838D005F925A /* Assets.xcassets */,
 				CFBEEE22202D838D005F925A /* MainMenu.xib */,
 				CFBEEE25202D838D005F925A /* Info.plist */,
@@ -241,7 +131,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				AED8CE7D2194F3B800EA74EA /* PBXTargetDependency */,
 			);
 			name = orbit;
 			productName = orbit;
@@ -281,42 +170,12 @@
 			mainGroup = CFBEEE12202D838D005F925A;
 			productRefGroup = CFBEEE1C202D838D005F925A /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = AED8CE352194F0B200EA74EA /* Products */;
-					ProjectRef = AED8CE342194F0B200EA74EA /* Swindler.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				CFBEEE1A202D838D005F925A /* orbit */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		AED8CE3B2194F0B200EA74EA /* Swindler.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Swindler.framework;
-			remoteRef = AED8CE3A2194F0B200EA74EA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		AED8CE3D2194F0B200EA74EA /* SwindlerTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = SwindlerTests.xctest;
-			remoteRef = AED8CE3C2194F0B200EA74EA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		AED8CE3F2194F0B200EA74EA /* SwindlerExample.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = SwindlerExample.app;
-			remoteRef = AED8CE3E2194F0B200EA74EA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CFBEEE19202D838D005F925A /* Resources */ = {
@@ -359,35 +218,12 @@
 			files = (
 				CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */,
 				CFBEEE1F202D838D005F925A /* AtomApplication.swift in Sources */,
-				CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */,
-				CF0BCD85202E0E140012723C /* ConnectedComponentsSwiftOCR.swift in Sources */,
-				CF0BCD87202E0E170012723C /* UnionFind.swift in Sources */,
-				CF0BCD89202E0E1B0012723C /* Filters.swift in Sources */,
-				CF0BCD8B202E0E1F0012723C /* Images.swift in Sources */,
 				AE54E0BA214B15A4000207B1 /* Async.swift in Sources */,
-				CF0BCD8D202E0E230012723C /* Structs.swift in Sources */,
-				CF0BCD8F202E0E260012723C /* Moves.swift in Sources */,
-				CF0BCD93202E0E2D0012723C /* Screen.swift in Sources */,
-				CF0BCD99202E0E360012723C /* ThresholdFilter.swift in Sources */,
-				CF0BCD97202E0E330012723C /* ThresholdBelowFilter.swift in Sources */,
-				CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */,
-				CF0BCD9F202E0E3E0012723C /* util.swift in Sources */,
 				AEE9270621913158006CAA2C /* main.swift in Sources */,
-				CF0BCDB5202E189F0012723C /* Windo.swift in Sources */,
-				CFEB7E9D208CE16B0001A9DC /* AXUIWindow.swift in Sources */,
-				CF0BCD95202E0E310012723C /* ScreenFrame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		AED8CE7D2194F3B800EA74EA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Swindler;
-			targetProxy = AED8CE7C2194F3B800EA74EA /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CFBEEE22202D838D005F925A /* MainMenu.xib */ = {

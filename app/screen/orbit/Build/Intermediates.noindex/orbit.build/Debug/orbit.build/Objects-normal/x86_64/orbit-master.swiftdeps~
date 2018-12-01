@@ -1,0 +1,21 @@
+version: "Apple Swift version 4.2 (swiftlang-1000.0.29.2 clang-1000.10.39)"
+options: "c9aa364316cf77c7f006a5e87415a4fa"
+build_time: [1543625534, 776709000]
+inputs:
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/SocketBridge.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/AtomApplication.swift": !dirty [1543625492, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/Characters.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/ConnectedComponentsSwiftOCR.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/UnionFind.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/Filters.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/Images.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Async.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/Structs.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/Moves.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/Screen.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/ThresholdFilter.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/ThresholdBelowFilter.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/Extensions.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/util.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/main.swift": !dirty [1543543398, 0]
+  "/Users/nw/projects/motion/orbit/app/screen/orbit/orbit/Screen/ScreenFrame.swift": !dirty [1543543398, 0]

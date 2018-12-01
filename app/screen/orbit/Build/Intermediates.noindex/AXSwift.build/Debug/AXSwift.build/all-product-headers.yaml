@@ -1,0 +1,39 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/screen/orbit/Build/Products/Debug/AXSwift.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "AXSwift-Swift.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/screen/orbit/Build/Products/Debug/AXSwift.framework/Versions/A/Headers/AXSwift-Swift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/screen/orbit/Build/Products/Debug/AXSwift.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/screen/orbit/Build/Intermediates.noindex/AXSwift.build/Debug/AXSwift.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/app/screen/orbit/Build/Products/Debug/AXSwift.framework/PrivateHeaders",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "AXSwift.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/app/screen/Swindler/AXSwift/Sources/AXSwift.h"
+        }
+      ]
+    }
+  ]
+}

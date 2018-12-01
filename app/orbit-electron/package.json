@@ -45,8 +45,8 @@
     "fs-extra": "7.0.0"
   },
   "peerDependencies": {
-    "electron": "3.0.2",
-    "mobx": "5.6.0"
+    "electron": "*",
+    "mobx": "*"
   },
   "devDependencies": {
     "@types/electron": "1.6.10",

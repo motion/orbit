@@ -103,7 +103,7 @@ export class OrbitSyncersRoot {
         JobModel,
         PersonModel,
         PersonBitModel,
-        SpaceModel
+        SpaceModel,
       ],
       commands: [SourceForceSyncCommand],
       transport: new WebSocketServerTransport({

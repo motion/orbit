@@ -19,39 +19,36 @@ const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
 
 export class Screen {
-  onClose?: Function
-  name?: string
-  env: { [key: string]: string } | null
-  socketPort: number
-  options = {
+  //public
+  socketSend: SocketSender
+
+  private onClose?: Function
+  private name?: string
+  private env: { [key: string]: string } | null
+  private socketPort: number
+  private options = {
     ocr: false,
     appWindow: false,
     showTray: false,
   }
-  process: ChildProcess
-  screenBridge: ScreenBridge
-  socketSend: SocketSender
-  debugBuild = false
-  settings = null
-  changedIds = null
-  restoredIds = null
-  awaitingSocket = []
-  listeners = []
-  onWindowChangeCB: (a: string, b: any) => any = idFn
-  onInfoCB = idFn
-  onLinesCB = idFn
-  onWordsCB = idFn
-  onBoxChangedCB = idFn
-  onRestoredCB = idFn
-  onErrorCB = idFn
-  onClearCB = idFn
-  onSpaceMoveCB = idFn
-  onAppStateCB = idFn
-  onTrayStateCB = idFn
-  mousePositionCB = idFn
-  onKeyboardCB = idFn
-  binPath = null
-  state = {
+  private process: ChildProcess
+  private screenBridge: ScreenBridge
+  private debugBuild = false
+  private onWindowChangeCB: (a: string, b: any) => any = idFn
+  private onInfoCB = idFn
+  private onLinesCB = idFn
+  private onWordsCB = idFn
+  private onBoxChangedCB = idFn
+  private onRestoredCB = idFn
+  private onErrorCB = idFn
+  private onClearCB = idFn
+  private onSpaceMoveCB = idFn
+  private onAppStateCB = idFn
+  private onTrayStateCB = idFn
+  private mousePositionCB = idFn
+  private onKeyboardCB = idFn
+  private binPath = null
+  private state = {
     isPaused: false,
   }
 
@@ -129,52 +126,6 @@ export class Screen {
     await this.start()
   }
 
-  watchBounds = async ({
-    fps = 25,
-    showCursor = true,
-    displayId = 'main',
-    // how far between pixels to check
-    sampleSpacing = 10,
-    // how many pixels have to detect diff before triggering onClear
-    sensitivity = 2,
-    boxes = [],
-    debug = false,
-  } = {}) => {
-    const settings = {
-      debug,
-      fps,
-      showCursor,
-      displayId,
-      sampleSpacing,
-      sensitivity,
-      boxes: boxes.map(box => ({
-        initialScreenshot: false,
-        findContent: false,
-        ocr: false,
-        screenDir: null,
-        ...box,
-      })),
-    }
-    this.settings = settings
-    await this.socketSend('watch', settings)
-  }
-
-  hideWindow = async () => {
-    await this.socketSend('hide')
-  }
-
-  showWindow = async () => {
-    await this.socketSend('show')
-  }
-
-  themeWindow = async (theme: string) => {
-    await this.socketSend(`them ${theme}`)
-  }
-
-  positionWindow = async (position: { x: number; y: number; width: number; height: number }) => {
-    await this.socketSend(`posi ${JSON.stringify(position)}`)
-  }
-
   pause = async () => {
     await this.setState({ isPaused: true })
     await this.socketSend('pause')
@@ -205,22 +156,6 @@ export class Screen {
 
   async stopWatchingWindows() {
     await this.socketSend('stow')
-  }
-
-  spellCallbackCb = null
-
-  spellcheck(words: string) {
-    return new Promise(res => {
-      const callId = Math.round(Math.random() * 100000000000)
-      this.spellCallbackCb = ({ id, guesses }) => {
-        console.log('id', id, guesses)
-        if (id === callId) {
-          res(guesses)
-        }
-      }
-      const spellObj = { words, id: callId }
-      this.socketSend(`spell ${JSON.stringify(spellObj)}`)
-    })
   }
 
   getInfo = async () => {
@@ -283,14 +218,8 @@ export class Screen {
     changed: value => {
       setTimeout(() => this.onBoxChangedCB(value))
     },
-    changedIds: value => {
-      this.changedIds = value
-    },
     restored: value => {
       setTimeout(() => this.onRestoredCB(value))
-    },
-    restoredIds: value => {
-      this.restoredIds = value
     },
     // up to listeners of this class
     clear: val => this.onClearCB(val),
@@ -310,11 +239,6 @@ export class Screen {
     start: this.start,
     defocus: this.defocus,
     windowEvent: ({ type, ...values }) => this.onWindowChangeCB(type, values),
-    spellCheck: val => {
-      if (this.spellCallbackCb) {
-        this.spellCallbackCb(val)
-      }
-    },
     mousePosition: val => this.mousePositionCB(val),
     keyboard: val => this.onKeyboardCB(val),
   }

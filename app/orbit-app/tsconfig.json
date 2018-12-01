@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "_",
-    "typeRoots": ["./src/main.d.ts"]
+    "typeRoots": ["./src/globalTypes.d.ts"]
   },
   "include": ["src/**/*"],
   "references": [

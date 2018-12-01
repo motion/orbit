@@ -1,14 +1,10 @@
-import { BitEntity } from '@mcro/models'
 import { highlightText } from '@mcro/helpers'
-import { Logger } from '@mcro/logger'
-import { Bit, SearchQuery } from '@mcro/models'
 import * as _ from 'lodash'
 
 /**
  * SearchResult utility functions.
  */
 export class SearchResultUtils {
-
   /**
    * Builds a search result title from a given bits titles.
    */
@@ -39,5 +35,4 @@ export class SearchResultUtils {
       }),
     ).join(', ')
   }
-
 }

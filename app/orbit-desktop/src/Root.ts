@@ -79,31 +79,34 @@ import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
 import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
 import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
+import { Oracle } from '@mcro/oracle'
+import { OracleManager } from './managers/OracleManager'
 
 export class Root {
-  config = getGlobalConfig()
-  screen: Screen
-  isReconnecting = false
-  authServer: AuthServer
-  onboardManager: OnboardManager
-  disposed = false
-  webServer: WebServer
+  // public
   stores = null
-  mediatorServer: MediatorServer
-  cosal = new Cosal({
+
+  private config = getGlobalConfig()
+  private screen: Screen
+  private oracle: Oracle
+  private authServer: AuthServer
+  private onboardManager: OnboardManager
+  private disposed = false
+  private webServer: WebServer
+  private mediatorServer: MediatorServer
+  private cosal = new Cosal({
     database: COSAL_DB,
   })
 
   // managers
-  cosalManager: CosalManager
-  ocrManager: OCRManager
-  appsManager: AppsManager
-  screenManager: ScreenManager
-  generalSettingManager: GeneralSettingManager
-  databaseManager: DatabaseManager
-  mousePositionManager: MousePositionManager
-  keyboardManager: KeyboardManager
-  contextManager: ContextManager
+  private oracleManager: OracleManager
+  private cosalManager: CosalManager
+  private ocrManager: OCRManager
+  private appsManager: AppsManager
+  private screenManager: ScreenManager
+  private generalSettingManager: GeneralSettingManager
+  private databaseManager: DatabaseManager
+  private keyboardManager: KeyboardManager
 
   start = async () => {
     await Desktop.start({
@@ -145,6 +148,7 @@ export class Root {
     await this.authServer.start()
 
     this.onboardManager = new OnboardManager()
+    await this.onboardManager.start()
 
     // start cosal before we pass into managers...
     await this.cosal.start()
@@ -154,6 +158,7 @@ export class Root {
       ...screenOptions,
       showTray: true,
     })
+    this.oracle = new Oracle()
 
     this.screen.onError(err => {
       if (err.indexOf('Could not watch application') >= 0) {
@@ -164,16 +169,20 @@ export class Root {
 
     // start managers...
 
+    this.oracleManager = new OracleManager({ oracle: this.oracle })
+    await this.oracleManager.start()
+
     this.ocrManager = new OCRManager({ cosal: this.cosal })
     this.cosalManager = new CosalManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ screen: this.screen })
     this.keyboardManager = new KeyboardManager({ screen: this.screen })
-    this.mousePositionManager = new MousePositionManager({
+    this.appsManager = new AppsManager()
+
+    new ContextManager({ screen: this.screen })
+    new MousePositionManager({
       screen: this.screen,
       onMouseMove: this.keyboardManager.onMouseMove,
     })
-    this.appsManager = new AppsManager()
-    this.contextManager = new ContextManager({ screen: this.screen })
 
     // start screen after passing into screenManager
     await this.screen.start()

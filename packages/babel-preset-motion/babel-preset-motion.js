@@ -24,7 +24,9 @@ module.exports = function(_, givenOpts) {
       // plug('@babel/plugin-transform-react-inline-elements'),
     ],
     presets: opts.presets || [
-      plug('@babel/preset-react'),
+      plug('@babel/preset-react', {
+        pragmaFrag: 'React.Fragment',
+      }),
       plug('@babel/preset-env', {
         loose: true,
         targets: {

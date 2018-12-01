@@ -17,19 +17,6 @@
           return {}
         }
       }
-
-      // catch ERR_CACHE_READ_FAILURE and retry
-      // see: https://github.com/electron/electron/issues/7246
-      window.onerror = err => {
-        console.log('got an err', err)
-        if (err && err.message && err.message.indexOf('ERR_CACHE_READ_FAILURE')) {
-          setTimeout(() => {
-            console.log('reloading window after cache read failure')
-            debugger
-            window.location = window.location
-          }, 500)
-        }
-      }
     </script>
     <!-- chunk-import format:css -->
   </head>

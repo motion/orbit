@@ -30,6 +30,7 @@ app/screen/train
 app/screen/orbit/orbit.xcodeproj/project.xcworkspace
 app/screen/orbit/orbit.xcodeproj/xcuserdata
 app/screen/orbit/Carthage
+app/screen/orbit/Index
 app/screen/orbit/Build
 app/screen/orbit/orbit.xcodeproj
 # for now keep build orbit.app, its about 14mb

@@ -1,18 +1,12 @@
-//
-//  main.swift
-//  Oracle
-//
-//  Created by Collin Hundley on 9/28/18.
-//  Copyright © 2018 Orbit. All rights reserved.
-//
-
 import Cocoa
 
+let myApp: NSApplication = NSApplication.shared
+let myDelegate: AtomApplication = AtomApplication()
 
-/* MAIN ORACLE ENTRY POINT */
+myApp.delegate = myDelegate
 
-// Initialize and run application
-let appDelegate = AppDelegate()
-let application = NSApplication.shared
-application.delegate = appDelegate
-application.run()
+let mainBundle: Bundle = Bundle.main
+let mainNibFileBaseName: String = mainBundle.infoDictionary!["NSMainNibFile"] as! String
+mainBundle.loadNibNamed(mainNibFileBaseName, owner: myApp, topLevelObjects: nil)
+
+myApp.run()

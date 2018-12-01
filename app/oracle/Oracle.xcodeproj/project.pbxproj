@@ -11,12 +11,13 @@
 		AE37809521B221CF00201F66 /* TrayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809421B221CF00201F66 /* TrayManager.swift */; };
 		AE37809721B222D100201F66 /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809621B222D100201F66 /* util.swift */; };
 		AE37809921B224BC00201F66 /* MouseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809821B224BC00201F66 /* MouseManager.swift */; };
+		AEBCFBCC21B230220004EBA2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEBCFBCA21B230220004EBA2 /* MainMenu.xib */; };
 		F0318FE321AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE221AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift */; };
 		F0318FE621AF7AB5009F5A70 /* OCRModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE521AF7AB5009F5A70 /* OCRModel.mlmodel */; };
 		F0318FEA21AF7D6E009F5A70 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE921AF7D6E009F5A70 /* Line.swift */; };
 		F0318FED21AFB2ED009F5A70 /* CharacterCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FEC21AFB2ED009F5A70 /* CharacterCache.swift */; };
 		F0ABA07421B081C3009AEE34 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0ABA07321B081C3009AEE34 /* Log.swift */; };
-		F0D9F564215EFD8A009F11D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D9F563215EFD8A009F11D5 /* AppDelegate.swift */; };
+		F0D9F564215EFD8A009F11D5 /* AtomApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D9F563215EFD8A009F11D5 /* AtomApplication.swift */; };
 		F0D9F566215EFD8B009F11D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0D9F565215EFD8B009F11D5 /* Assets.xcassets */; };
 		F0D9F572215EFDB1009F11D5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D9F571215EFDB1009F11D5 /* main.swift */; };
 		F0FDFA9F2162CBBE0064C0C5 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FDFA9E2162CBBE0064C0C5 /* WindowManager.swift */; };
@@ -43,6 +44,7 @@
 		AE37809421B221CF00201F66 /* TrayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayManager.swift; sourceTree = "<group>"; };
 		AE37809621B222D100201F66 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		AE37809821B224BC00201F66 /* MouseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseManager.swift; sourceTree = "<group>"; };
+		AEBCFBCB21B230220004EBA2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../../screen/orbit/orbit/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		B04D3652E57A2DD7D42DF815 /* Pods_Oracle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Oracle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0318FE221AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Utils.swift"; sourceTree = "<group>"; };
 		F0318FE521AF7AB5009F5A70 /* OCRModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = OCRModel.mlmodel; sourceTree = "<group>"; };
@@ -50,7 +52,7 @@
 		F0318FEC21AFB2ED009F5A70 /* CharacterCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCache.swift; sourceTree = "<group>"; };
 		F0ABA07321B081C3009AEE34 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		F0D9F560215EFD8A009F11D5 /* Oracle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oracle.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0D9F563215EFD8A009F11D5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F0D9F563215EFD8A009F11D5 /* AtomApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomApplication.swift; sourceTree = "<group>"; };
 		F0D9F565215EFD8B009F11D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F0D9F56A215EFD8B009F11D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0D9F56B215EFD8B009F11D5 /* Oracle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Oracle.entitlements; sourceTree = "<group>"; };
@@ -123,7 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				F0D9F571215EFDB1009F11D5 /* main.swift */,
-				F0D9F563215EFD8A009F11D5 /* AppDelegate.swift */,
+				F0D9F563215EFD8A009F11D5 /* AtomApplication.swift */,
 				F0FEBFCE21A50FA500F20C57 /* Socket.swift */,
 				F0FDFA9E2162CBBE0064C0C5 /* WindowManager.swift */,
 				F0FDFC89216BEE090064C0C5 /* ScreenRecorder.swift */,
@@ -133,6 +135,7 @@
 				AE37809621B222D100201F66 /* util.swift */,
 				F0318FEB21AFAA0E009F5A70 /* OCR */,
 				F0FDFA992162CA350064C0C5 /* Extensions */,
+				AEBCFBCA21B230220004EBA2 /* MainMenu.xib */,
 				F0D9F565215EFD8B009F11D5 /* Assets.xcassets */,
 				F0D9F56A215EFD8B009F11D5 /* Info.plist */,
 				F0D9F56B215EFD8B009F11D5 /* Oracle.entitlements */,
@@ -216,6 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0D9F566215EFD8B009F11D5 /* Assets.xcassets in Resources */,
+				AEBCFBCC21B230220004EBA2 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,11 +296,22 @@
 				F0318FE621AF7AB5009F5A70 /* OCRModel.mlmodel in Sources */,
 				F0318FEA21AF7D6E009F5A70 /* Line.swift in Sources */,
 				F0D9F572215EFDB1009F11D5 /* main.swift in Sources */,
-				F0D9F564215EFD8A009F11D5 /* AppDelegate.swift in Sources */,
+				F0D9F564215EFD8A009F11D5 /* AtomApplication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		AEBCFBCA21B230220004EBA2 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AEBCFBCB21B230220004EBA2 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F0D9F56C215EFD8B009F11D5 /* Debug */ = {

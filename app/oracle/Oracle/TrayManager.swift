@@ -35,11 +35,6 @@ class TrayManager {
         TrayItem(index: 2, id: "1", width: 28, spaceBefore: 0),
         TrayItem(index: 3, id: "0", width: 28, spaceBefore: 10),
     ]
-
-    private init() {
-        // init stuff
-        self.setupTray()
-    }
     
     func setupTray() {
         statusItem.highlightMode = false

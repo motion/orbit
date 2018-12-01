@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AtomApplication: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
 
@@ -23,6 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             Log.error(error.localizedDescription)
         }
         
+        TrayManager.shared.setupTray()
         
         // Start observing window changes
 //        WindowManager.shared.startObservingEvents()

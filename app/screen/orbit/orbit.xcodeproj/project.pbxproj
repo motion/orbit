@@ -8,14 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AE54E0BA214B15A4000207B1 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE54E0B9214B15A4000207B1 /* Async.swift */; };
-		AE6EC26A214B410200834167 /* AXSwift.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AE6EC264214B410200834167 /* AXSwift.framework.dSYM */; };
-		AE6EC26C214B410200834167 /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; };
-		AE6EC26E214B410200834167 /* SwiftWebSocket.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */; };
-		AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC267214B410200834167 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE6EC266214B410200834167 /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
-		AED8CEA221950A8000EA74EA /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8CEA121950A8000EA74EA /* PromiseKit.framework */; };
-		AED8CEA321950A8000EA74EA /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AED8CEA121950A8000EA74EA /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AEE9270621913158006CAA2C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9270521913158006CAA2C /* main.swift */; };
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
 		CFBEEE1F202D838D005F925A /* AtomApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AtomApplication.swift */; };
@@ -29,9 +22,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AE6EC26F214B416700834167 /* AXSwift.framework in CopyFiles */,
-				AE6EC271214B416700834167 /* SwiftWebSocket.framework in CopyFiles */,
-				AED8CEA321950A8000EA74EA /* PromiseKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,12 +29,6 @@
 
 /* Begin PBXFileReference section */
 		AE54E0B9214B15A4000207B1 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
-		AE6EC264214B410200834167 /* AXSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = AXSwift.framework.dSYM; path = Carthage/Build/Mac/AXSwift.framework.dSYM; sourceTree = "<group>"; };
-		AE6EC266214B410200834167 /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/Mac/SwiftWebSocket.framework; sourceTree = "<group>"; };
-		AE6EC267214B410200834167 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
-		AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftWebSocket.framework.dSYM; path = Carthage/Build/Mac/SwiftWebSocket.framework.dSYM; sourceTree = "<group>"; };
-		AED8CE7E2194F3C200EA74EA /* Pods_Swindler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Swindler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AED8CEA121950A8000EA74EA /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = orbit/PromiseKit.framework; sourceTree = "<group>"; };
 		AEE9270521913158006CAA2C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,8 +44,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AED8CEA221950A8000EA74EA /* PromiseKit.framework in Frameworks */,
-				AE6EC26C214B410200834167 /* SwiftWebSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,11 +53,6 @@
 		CF0BCD61202E0A2E0012723C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AED8CE7E2194F3C200EA74EA /* Pods_Swindler.framework */,
-				AE6EC267214B410200834167 /* AXSwift.framework */,
-				AE6EC264214B410200834167 /* AXSwift.framework.dSYM */,
-				AE6EC266214B410200834167 /* SwiftWebSocket.framework */,
-				AE6EC268214B410200834167 /* SwiftWebSocket.framework.dSYM */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -83,7 +60,6 @@
 		CFBEEE12202D838D005F925A = {
 			isa = PBXGroup;
 			children = (
-				AED8CEA121950A8000EA74EA /* PromiseKit.framework */,
 				CFBEEE1D202D838D005F925A /* orbit */,
 				CFBEEE1C202D838D005F925A /* Products */,
 				CF0BCD61202E0A2E0012723C /* Frameworks */,
@@ -183,8 +159,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */,
-				AE6EC26E214B410200834167 /* SwiftWebSocket.framework.dSYM in Resources */,
-				AE6EC26A214B410200834167 /* AXSwift.framework.dSYM in Resources */,
 				CFBEEE21202D838D005F925A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -362,8 +336,6 @@
 				DEVELOPMENT_TEAM = 399WY8X9HY;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-					"$(PROJECT_DIR)/Build/Products/Release/PromiseKit-CorePromise",
 					"$(PROJECT_DIR)/orbit",
 				);
 				INFOPLIST_FILE = orbit/Info.plist;
@@ -387,8 +359,6 @@
 				DEVELOPMENT_TEAM = 399WY8X9HY;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-					"$(PROJECT_DIR)/Build/Products/Release/PromiseKit-CorePromise",
 					"$(PROJECT_DIR)/orbit",
 				);
 				INFOPLIST_FILE = orbit/Info.plist;

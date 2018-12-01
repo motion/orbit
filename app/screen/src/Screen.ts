@@ -361,10 +361,8 @@ export class Screen {
         if (!data) return
         const str = data.toString()
         // weird ass workaround for stdout not being captured
-        const canIgnoreErr = str[0] === ' ' || str.indexOf('Could not watch application') >= 0
-        const out = str.trim()
-        const isPurposefulLog = out[0] === '!'
-        if (isPurposefulLog || canIgnoreErr) {
+        const canIgnoreErr = str.indexOf('Could not watch application') >= 0
+        if (canIgnoreErr) {
           // log.verbose('swift >>>', this.name, out.slice(1))
           return
         }

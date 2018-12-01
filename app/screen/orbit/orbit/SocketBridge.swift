@@ -1,5 +1,4 @@
 import Foundation
-import SwiftWebSocket
 
 class SocketBridge {
   var send: ((String)->Void) = { _ in }
@@ -14,6 +13,7 @@ class SocketBridge {
       return
     }
 
+    print("connecting to socket on \(port)")
     let ws = WebSocket("ws://localhost:\(port)/")
 
     self.send = { (msg) in

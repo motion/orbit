@@ -1,8 +1,4 @@
-import AXSwift
-import class AXSwift.Application
-import class AXSwift.Observer
 import Cocoa
-import PromiseKit
 import Darwin
 
 extension String {
@@ -373,13 +369,14 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   }
   
   func updateAccessibility(_ prompt: Bool) -> Bool {
-    let next = UIElement.isProcessTrusted(withPrompt: prompt)
-    if (next != self.isAccessible) {
-      self.isAccessible = next
-      self.onAccessible(next)
+    let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String : prompt]
+    let isTrusted = AXIsProcessTrustedWithOptions(options)
+    if (isTrusted != self.isAccessible) {
+      self.isAccessible = isTrusted
+      self.onAccessible(isTrusted)
     }
     self.sendOSInfo()
-    return next
+    return isTrusted
   }
   
   func sendKey(key: String, isDown: Bool) {

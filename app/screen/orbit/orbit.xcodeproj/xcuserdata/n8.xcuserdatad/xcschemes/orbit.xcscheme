@@ -63,6 +63,11 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "SOCKET_PORT"
+            value = "4999"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "TEST_IN_XCODE"
             value = "true"
             isEnabled = "YES">

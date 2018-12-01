@@ -193,6 +193,9 @@ const config = {
 
     new webpack.IgnorePlugin(/electron-log/),
 
+    // ignore typeorm
+    new webpack.IgnorePlugin(/^typeorm$/),
+
     // adds cache based on source of files
     // new HardSourceWebpackPlugin(),
 

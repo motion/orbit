@@ -23,7 +23,6 @@ const log = new Logger('auth-server')
  */
 export class AuthServer {
   private server: Server
-  private log: Logger
 
   cache = {}
   app: express.Application

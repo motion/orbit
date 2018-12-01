@@ -1,6 +1,6 @@
 import { Screen } from '@mcro/screen'
-import { store, react, on, ensure } from '@mcro/black'
-import { Desktop, Electron, App } from '@mcro/stores'
+import { store, react, ensure } from '@mcro/black'
+import { Desktop } from '@mcro/stores'
 import { toJS } from 'mobx'
 import { getGlobalConfig } from '@mcro/config'
 import { last, isEqual } from 'lodash'

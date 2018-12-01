@@ -11,5 +11,5 @@ export class Migration1538632159817 implements MigrationInterface {
     }
   }
 
-  public async down(queryRunner: QueryRunner): Promise<any> {}
+  public async down(/* queryRunner: QueryRunner */): Promise<any> {}
 }

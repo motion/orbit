@@ -1,4 +1,3 @@
-import { BitEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Bit, SearchQuery } from '@mcro/models'
 import { getConnection } from 'typeorm'
@@ -18,26 +17,26 @@ export class SearchQueryExecutor {
    * Executes search query and returns found bits and number of overall bits matched given query.
    */
   async execute(args: SearchQuery): Promise<[Bit[], number]> {
-    this.log.vtimer(`query`)
+    this.log.vtimer('query')
 
     // load bits count first
-    this.log.vtimer(`loading count`)
+    this.log.vtimer('loading count')
     const [countQuery, countParameters] = this.buildDbQuery(args, true)
     const countResult = await this.runDbQuery(countQuery, countParameters)
     const bitsCount = countResult[0]['cnt']
-    this.log.vtimer(`loading count`, { countQuery, countParameters, countResult })
+    this.log.vtimer('loading count', { countQuery, countParameters, countResult })
 
     // load bits (we load in the case if count isn't zero since its pointless to load otherwise)
     let bits: Bit[] = []
     if (bitsCount > 0) {
-      this.log.vtimer(`loading bits`)
+      this.log.vtimer('loading bits')
       const [bitsQuery, bitsParameters] = this.buildDbQuery(args, false)
       bits = this.rawBitsToBits(await this.runDbQuery(bitsQuery, bitsParameters))
-      this.log.vtimer(`loading bits`, { bitsQuery, bitsParameters, bits })
+      this.log.vtimer('loading bits', { bitsQuery, bitsParameters, bits })
     } else {
-      this.log.verbose(`skip loading bits since count is zero`)
+      this.log.verbose('skip loading bits since count is zero')
     }
-    this.log.vtimer(`query`)
+    this.log.vtimer('query')
     return [bits, bitsCount]
   }
 
@@ -51,32 +50,34 @@ export class SearchQueryExecutor {
     const conditionParameters: any[] = []
     const joinParameters: any[] = []
 
-    let sql = `SELECT `;
-    sql += count ? `COUNT(*) as cnt` : `"bit".*`
-    sql += ` FROM "bit_entity" "bit" `
+    let sql = 'SELECT '
+    sql += count ? 'COUNT(*) as cnt' : '"bit".*'
+    sql += ' FROM "bit_entity" "bit" '
 
     if (args.query && args.query.length) {
-      conditions.push(`"bit"."id" IN (SELECT "rowid" FROM "search_index" WHERE "search_index" MATCH '${args.query}' ORDER BY rank)`)
+      conditions.push(
+        `"bit"."id" IN (SELECT "rowid" FROM "search_index" WHERE "search_index" MATCH '${
+          args.query
+        }' ORDER BY rank)`,
+      )
       // conditionParameters.push(`%${query.replace(/\s+/g, '%')}%`)
     } else if (args.ids) {
       conditions.push(`"bit"."id" IN (${args.ids.join(', ')})`)
     }
 
     if (args.contentType) {
-      conditions.push(`"bit"."type" = ?`)
+      conditions.push('"bit"."type" = ?')
       conditionParameters.push(args.contentType)
     }
     if (args.startDate && args.endDate) {
-      conditions.push(`"bit"."bitCreatedAt" BETWEEN ? AND ?`)
+      conditions.push('"bit"."bitCreatedAt" BETWEEN ? AND ?')
       conditionParameters.push(new Date(args.startDate).getTime())
       conditionParameters.push(new Date(args.endDate).getTime())
-
     } else if (args.startDate) {
-      conditions.push(`"bit"."bitCreatedAt" > ?`)
+      conditions.push('"bit"."bitCreatedAt" > ?')
       conditionParameters.push(new Date(args.startDate).getTime())
-
     } else if (args.endDate) {
-      conditions.push(`"bit"."bitCreatedAt" < ?`)
+      conditions.push('"bit"."bitCreatedAt" < ?')
       conditionParameters.push(new Date(args.endDate).getTime())
     }
     if (args.integrationFilters && args.integrationFilters.length) {
@@ -84,9 +85,8 @@ export class SearchQueryExecutor {
       conditionParameters.push(...args.integrationFilters)
     }
     if (args.sourceId) {
-      conditions.push(`"bit"."sourceId" = ?`)
+      conditions.push('"bit"."sourceId" = ?')
       conditionParameters.push(args.sourceId)
-
     } else if (args.sourceIds) {
       conditions.push(`"bit"."sourceId" IN (${args.sourceIds.join(', ')})`)
     }
@@ -112,10 +112,16 @@ export class SearchQueryExecutor {
     // }
 
     if (args.locationFilters && args.locationFilters.length) {
-      conditions.push('(' + args.locationFilters.map(location => {
-        conditionParameters.push(location)
-        return `"bit"."locationName" = ?`
-      }).join(' OR ') + ')')
+      conditions.push(
+        '(' +
+          args.locationFilters
+            .map(location => {
+              conditionParameters.push(location)
+              return '"bit"."locationName" = ?'
+            })
+            .join(' OR ') +
+          ')',
+      )
     }
 
     if (joins.length) {
@@ -123,9 +129,9 @@ export class SearchQueryExecutor {
     }
 
     if (conditions.length) {
-      sql += ` WHERE ` + conditions.join(' AND ')
+      sql += ' WHERE ' + conditions.join(' AND ')
     }
-    sql += ` ORDER BY "bit"."bitCreatedAt" DESC`
+    sql += ' ORDER BY "bit"."bitCreatedAt" DESC'
 
     if (args.skip && count === false) {
       sql += ` OFFSET ${args.skip}`
@@ -144,40 +150,46 @@ export class SearchQueryExecutor {
    */
   private runDbQuery(query: string, parameters: any[]): Promise<any[]> {
     return new Promise<any[]>((ok, fail) => {
-      (getConnection().driver as SqliteDriver).databaseConnection.all(query, parameters, (err, results) => {
-        if (err) return fail(err)
-        ok(results);
-      });
+      ;(getConnection().driver as SqliteDriver).databaseConnection.all(
+        query,
+        parameters,
+        (err, results) => {
+          if (err) return fail(err)
+          ok(results)
+        },
+      )
     })
   }
 
   /**
    * Converts raw data returned by the database to real bits we are using in the app.
    */
-  private rawBitsToBits(rawBits: {
-    authorId: number,
-    bitCreatedAt: number,
-    bitUpdatedAt: number,
-    body: string,
-    contentHash: number,
-    createdAt: string,
-    data: string,
-    desktopLink: string,
-    id: number,
-    integration: string,
-    locationDesktoplink: string,
-    locationId: string,
-    locationName: string,
-    locationWeblink: string,
-    sourceId: number,
-    title: string,
-    type: string,
-    updatedAt: string,
-    webLink: string,
-  }[]): Bit[] {
+  private rawBitsToBits(
+    rawBits: {
+      authorId: number
+      bitCreatedAt: number
+      bitUpdatedAt: number
+      body: string
+      contentHash: number
+      createdAt: string
+      data: string
+      desktopLink: string
+      id: number
+      integration: string
+      locationDesktoplink: string
+      locationId: string
+      locationName: string
+      locationWeblink: string
+      sourceId: number
+      title: string
+      type: string
+      updatedAt: string
+      webLink: string
+    }[],
+  ): Bit[] {
     return rawBits.map(rawBit => {
       return {
-        target: "bit",
+        target: 'bit',
         authorId: rawBit.authorId,
         bitCreatedAt: rawBit.bitCreatedAt,
         bitUpdatedAt: rawBit.bitCreatedAt,
@@ -202,5 +214,4 @@ export class SearchQueryExecutor {
       } as Bit
     })
   }
-
 }

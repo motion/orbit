@@ -117,13 +117,6 @@ export class OCRManager {
     return false
   }
 
-  startOCROnActive = react(
-    () => Desktop.ocrState.paused,
-    async (paused, { when }) => {
-      await when(() => this.started)
-    },
-  )
-
   rescanOnNewAppState = react(
     () => Desktop.state.appState,
     () => {
@@ -258,14 +251,6 @@ export class OCRManager {
         }
       }
     })
-
-    // OCR word restore
-    this.screen.onRestored(count => {
-      log.info('restore', count)
-      Desktop.setOcrState({
-        restoreWords: this.screen.restoredIds,
-      })
-    })
   }
 
   async restartScreen() {
@@ -350,6 +335,6 @@ export class OCRManager {
     this.isWatching = name
     this.watchSettings = { name, settings }
     await this.screen.pause()
-    this.screen.watchBounds(settings)
+    // this.screen.watchBounds(settings)
   }
 }

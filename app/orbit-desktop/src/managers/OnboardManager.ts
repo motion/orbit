@@ -1,6 +1,5 @@
-import { ensure, react } from '@mcro/black'
 import { SettingEntity } from '@mcro/models'
-import { App, Desktop } from '@mcro/stores'
+import { Desktop } from '@mcro/stores'
 import Fs from 'fs-extra'
 import Os from 'os'
 import Path from 'path'
@@ -32,10 +31,6 @@ export class OnboardManager {
   generalSetting: SettingEntity
   history = []
   foundIntegrations = null
-
-  constructor() {
-    this.start()
-  }
 
   async start() {
     this.generalSetting = await getRepository(SettingEntity).findOne({ name: 'general' })

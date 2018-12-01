@@ -16,6 +16,7 @@ import { PersonData } from '../person-data/PersonData'
 import { Source } from '../interfaces/Source'
 import { PersonBit } from '../interfaces/PersonBit'
 import { Bit } from '../interfaces/Bit'
+import { Person } from '../interfaces/Person'
 
 @Entity()
 export class PersonEntity extends BaseEntity implements Person {

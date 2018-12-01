@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typ
 import { PersonEntity } from './PersonEntity'
 import { IntegrationTypeValues } from '../interfaces/IntegrationType'
 import { Person } from '../interfaces/Person'
+import { PersonBit } from '../interfaces/PersonBit'
 
 @Entity()
 export class PersonBitEntity extends BaseEntity implements PersonBit {

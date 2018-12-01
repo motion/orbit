@@ -1,7 +1,7 @@
-import { Oracle } from '@mcro/oracle'
+import { Screen } from '@mcro/screen'
 import { store, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { oracleOptions } from '../constants'
+import { screenOptions } from '../constants'
 import { Logger } from '@mcro/logger'
 import { join } from 'path'
 import { getGlobalConfig } from '@mcro/config'
@@ -11,7 +11,7 @@ const Config = getGlobalConfig()
 
 type FakeProcess = {
   id: number
-  oracle: Oracle
+  screen: Screen
 }
 
 // @ts-ignore
@@ -20,7 +20,7 @@ export class AppsManager {
   processes: FakeProcess[] = []
 
   async dispose() {
-    await Promise.all(this.processes.map(x => x.oracle.stop()))
+    await Promise.all(this.processes.map(x => x.screen.stop()))
   }
 
   // launch app icons and events to listen for focus
@@ -51,12 +51,12 @@ export class AppsManager {
         if (shouldAdd) {
           const icon = join(Config.paths.desktopRoot, 'assets', 'icon.png')
           log.info(`create process -- ${id} with icon ${icon}`)
-          const oracle = await this.spawnOracle(id, icon)
+          const screen = await this.spawnScreen(id, icon)
           this.processes = [
             ...this.processes,
             {
               id,
-              oracle,
+              screen,
             },
           ]
         }
@@ -64,10 +64,10 @@ export class AppsManager {
     },
   )
 
-  async spawnOracle(id: number, iconPath: string) {
-    const oracle = new Oracle({
+  async spawnScreen(id: number, iconPath: string) {
+    const screen = new Screen({
       // name,
-      ...oracleOptions,
+      ...screenOptions,
       socketPort: Config.ports.apps[id],
       env: {
         RUN_APP_WINDOW: true,
@@ -75,9 +75,9 @@ export class AppsManager {
         PREVENT_FOCUSING: true,
       },
     })
-    await oracle.start()
-    oracle.onAppState(this.handleAppState(id))
-    return oracle
+    await screen.start()
+    screen.onAppState(this.handleAppState(id))
+    return screen
   }
 
   // set focus state from fake window
@@ -120,7 +120,7 @@ export class AppsManager {
 
   async removeProcess(id: number) {
     const index = this.processes.findIndex(x => x.id === id)
-    await this.processes[index].oracle.stop()
+    await this.processes[index].screen.stop()
     this.processes.splice(index, 1)
     log.verbose('removeProcess', id)
   }

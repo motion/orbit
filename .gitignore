@@ -26,19 +26,16 @@ common/temp/**
 
 app/build-orbit/stage-app/package-lock.json
 
-app/oracle-old/train
-app/oracle-old/swindler/Swindler.xcodeproj/xcuserdata
-app/oracle-old/orbit/orbit.xcodeproj/project.xcworkspace
-app/oracle-old/orbit/orbit.xcodeproj/xcuserdata
-app/oracle-old/orbit/Carthage
-app/oracle-old/orbit/Build
-app/oracle-old/swindler/Carthage
-app/oracle-old/swindler/Build
-app/oracle-old/orbit/orbit.xcodeproj
-app/oracle-old/swindler/Swindler.xcodeproj
+app/screen/train
+app/screen/orbit/orbit.xcodeproj/project.xcworkspace
+app/screen/orbit/orbit.xcodeproj/xcuserdata
+app/screen/orbit/Carthage
+app/screen/orbit/Index
+app/screen/orbit/Build
+app/screen/orbit/orbit.xcodeproj
 # for now keep build orbit.app, its about 14mb
-!app/oracle-old/orbit/Build/Products/Release/orbit.app
-!app/oracle-old/orbit/Build/Products/Release/orbit.app/*
+!app/screen/orbit/Build/Products/Release/orbit.app
+!app/screen/orbit/Build/Products/Release/orbit.app/*
 
 app/oracle/Build
 app/oracle/Index

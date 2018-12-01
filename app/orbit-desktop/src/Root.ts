@@ -43,7 +43,7 @@ import {
   CheckProxyCommand,
 } from '@mcro/models'
 import { SetupProxyCommand } from '@mcro/models'
-import { Oracle } from '@mcro/oracle'
+import { Screen } from '@mcro/screen'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { writeJSON } from 'fs-extra'
 import root from 'global'
@@ -52,7 +52,7 @@ import open from 'opn'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { getConnection } from 'typeorm'
-import { COSAL_DB, oracleOptions } from './constants'
+import { COSAL_DB, screenOptions } from './constants'
 import { AppsManager } from './managers/appsManager'
 import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
@@ -82,7 +82,7 @@ import { startAuthProxy } from './auth-server/startAuthProxy'
 
 export class Root {
   config = getGlobalConfig()
-  oracle: Oracle
+  screen: Screen
   isReconnecting = false
   authServer: AuthServer
   onboardManager: OnboardManager
@@ -149,39 +149,38 @@ export class Root {
     // start cosal before we pass into managers...
     await this.cosal.start()
 
-    // setup oracle before we pass into managers...
-    this.oracle = new Oracle({
-      ...oracleOptions,
-      appWindow: true,
+    // setup screen before we pass into managers...
+    this.screen = new Screen({
+      ...screenOptions,
       showTray: true,
     })
 
-    this.oracle.onError(err => {
+    this.screen.onError(err => {
       if (err.indexOf('Could not watch application') >= 0) {
         return
       }
-      console.log('Oracle error', err)
+      console.log('Screen error', err)
     })
 
     // start managers...
 
     this.ocrManager = new OCRManager({ cosal: this.cosal })
     this.cosalManager = new CosalManager({ cosal: this.cosal })
-    this.screenManager = new ScreenManager({ oracle: this.oracle })
-    this.keyboardManager = new KeyboardManager({ oracle: this.oracle })
+    this.screenManager = new ScreenManager({ screen: this.screen })
+    this.keyboardManager = new KeyboardManager({ screen: this.screen })
     this.mousePositionManager = new MousePositionManager({
-      oracle: this.oracle,
+      screen: this.screen,
       onMouseMove: this.keyboardManager.onMouseMove,
     })
     this.appsManager = new AppsManager()
-    this.contextManager = new ContextManager({ oracle: this.oracle })
+    this.contextManager = new ContextManager({ screen: this.screen })
 
-    // start oracle after passing into screenManager
-    await this.oracle.start()
-    // then start screenmanager after oracle.start
+    // start screen after passing into screenManager
+    await this.screen.start()
+    // then start screenmanager after screen.start
     // no need to await
     this.screenManager.start()
-    // start oracle related managers once its started
+    // start screen related managers once its started
     // no need to await
     this.ocrManager.start()
 

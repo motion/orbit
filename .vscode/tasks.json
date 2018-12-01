@@ -28,20 +28,6 @@
         "panel": "new"
       },
       "problemMatcher": []
-    },
-    {
-      "label": "Build Oracle",
-      "type": "shell",
-      "command": "npm run build-app",
-      "group": "build",
-      "options": {
-        "cwd": "${workspaceFolder}/apps/oracle"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      },
-      "problemMatcher": []
     }
   ]
 }

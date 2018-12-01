@@ -22,6 +22,22 @@ class OrbitWindowStore {
   disposeShow = null
   alwaysOnTop = true
 
+  size = [0, 0]
+  position = [0, 0]
+
+  updateSize = react(
+    () => Electron.state.screenSize,
+    screenSize => {
+      this.size = [screenSize[0] / 2, screenSize[1] / 2].map(x => Math.round(x))
+      this.position = [this.size[0] / 2, this.size[1] / 2].map(x => Math.round(x))
+    },
+  )
+
+  setSize = (size, other) => {
+    console.log('got a resize', other, size)
+    // this.size = size
+  }
+
   didMount() {
     // temp bugfix
     root['OrbitWindowStore'] = this
@@ -118,24 +134,29 @@ export class OrbitWindow extends React.Component<Props> {
   render() {
     const { store } = this.props
     const url = Config.urls.server
-    log.info(`render OrbitWindow ${url} hovered? ${Desktop.hoverState.orbitHovered}`)
+
+    log.info(`render OrbitWindow ${url} hovered? ${Desktop.hoverState.orbitHovered} ${store.size}`)
+
+    if (!store.size || !store.size[0]) {
+      return null
+    }
+
     return (
       <Window
         show={this.state.show ? App.orbitState.docked : false}
         onReadyToShow={() => this.setState({ show: true })}
         alwaysOnTop={[store.alwaysOnTop, 'floating', 1]}
-        ignoreMouseEvents={!Desktop.hoverState.orbitHovered}
         ref={store.handleRef}
         file={url}
         focus={false}
-        position={[0, 0]}
-        size={Electron.state.screenSize.slice()}
-        frame={false}
-        hasShadow={false}
+        position={store.position.slice()}
+        size={store.size.slice()}
+        onResize={store.setSize}
         onFocus={store.handleElectronFocus}
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#ffffff00"
+        vibrancy="light"
       />
     )
   }

@@ -80,6 +80,14 @@ class Socket {
     
     /// Outbound messages we can send to clients.
     enum OutboundMessage {
+        // Mouse notifications
+        case mouseMoved(x: Int, y: Int)
+        
+        // Tray notifications
+        case trayHovered(id: String)
+        case trayClicked(id: String)
+        case trayBounds(top: Int, left: Int, width: Int, height: Int)
+        
         // Window notifications
         /// Frontmost window was changed.
         case windowChanged(title: String, size: CGSize, position: CGPoint)
@@ -101,6 +109,39 @@ class Socket {
             var message: [String : Any]
             
             switch self {
+            case .mouseMoved(let x, let y):
+                message = [
+                    "action" : "mouseMoved",
+                    "value" : [
+                        "position" : [x, y]
+                    ]
+                ]
+                
+            case .trayHovered(let id):
+                message = [
+                    "action" : "trayHovered",
+                    "value" : [
+                        "id" : id,
+                    ]
+                ]
+                
+            case .trayClicked(let id):
+                message = [
+                    "action" : "trayClicked",
+                    "value" : [
+                        "id" : id,
+                    ]
+                ]
+
+            case .trayBounds(let top, let left, let width, let height):
+                message = [
+                    "action" : "trayBounds",
+                    "value" : [
+                        "size": [width, height],
+                        "position": [left, top]
+                    ]
+                ]
+                
             case .windowChanged(let title, let size, let position):
                 message = [
                     "action" : "windowEvent",

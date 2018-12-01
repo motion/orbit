@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		33BB57D4F0DD603B4EE8A210 /* Pods_Oracle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B04D3652E57A2DD7D42DF815 /* Pods_Oracle.framework */; };
+		AE37809521B221CF00201F66 /* TrayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809421B221CF00201F66 /* TrayManager.swift */; };
+		AE37809721B222D100201F66 /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809621B222D100201F66 /* util.swift */; };
+		AE37809921B224BC00201F66 /* MouseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809821B224BC00201F66 /* MouseManager.swift */; };
 		F0318FE321AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE221AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift */; };
 		F0318FE621AF7AB5009F5A70 /* OCRModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE521AF7AB5009F5A70 /* OCRModel.mlmodel */; };
 		F0318FEA21AF7D6E009F5A70 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE921AF7D6E009F5A70 /* Line.swift */; };
@@ -37,6 +40,9 @@
 /* Begin PBXFileReference section */
 		3750FB5FBC50638F2A7DB41B /* Pods-Oracle.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Oracle.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Oracle/Pods-Oracle.debug.xcconfig"; sourceTree = "<group>"; };
 		4D4FB47D30EDDCC8747212A6 /* Pods-Oracle.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Oracle.release.xcconfig"; path = "Pods/Target Support Files/Pods-Oracle/Pods-Oracle.release.xcconfig"; sourceTree = "<group>"; };
+		AE37809421B221CF00201F66 /* TrayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayManager.swift; sourceTree = "<group>"; };
+		AE37809621B222D100201F66 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
+		AE37809821B224BC00201F66 /* MouseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseManager.swift; sourceTree = "<group>"; };
 		B04D3652E57A2DD7D42DF815 /* Pods_Oracle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Oracle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0318FE221AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Utils.swift"; sourceTree = "<group>"; };
 		F0318FE521AF7AB5009F5A70 /* OCRModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = OCRModel.mlmodel; sourceTree = "<group>"; };
@@ -121,7 +127,10 @@
 				F0FEBFCE21A50FA500F20C57 /* Socket.swift */,
 				F0FDFA9E2162CBBE0064C0C5 /* WindowManager.swift */,
 				F0FDFC89216BEE090064C0C5 /* ScreenRecorder.swift */,
+				AE37809821B224BC00201F66 /* MouseManager.swift */,
+				AE37809421B221CF00201F66 /* TrayManager.swift */,
 				F0ABA07321B081C3009AEE34 /* Log.swift */,
+				AE37809621B222D100201F66 /* util.swift */,
 				F0318FEB21AFAA0E009F5A70 /* OCR */,
 				F0FDFA992162CA350064C0C5 /* Extensions */,
 				F0D9F565215EFD8B009F11D5 /* Assets.xcassets */,
@@ -273,6 +282,9 @@
 				F0318FE321AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift in Sources */,
 				F0FDFA9F2162CBBE0064C0C5 /* WindowManager.swift in Sources */,
 				F0ABA07421B081C3009AEE34 /* Log.swift in Sources */,
+				AE37809921B224BC00201F66 /* MouseManager.swift in Sources */,
+				AE37809521B221CF00201F66 /* TrayManager.swift in Sources */,
+				AE37809721B222D100201F66 /* util.swift in Sources */,
 				F0318FED21AFB2ED009F5A70 /* CharacterCache.swift in Sources */,
 				F0FEBFCF21A50FA500F20C57 /* Socket.swift in Sources */,
 				F0FDFC8C216BF03F0064C0C5 /* OCRManager.swift in Sources */,

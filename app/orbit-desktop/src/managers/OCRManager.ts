@@ -1,10 +1,10 @@
-import { Oracle } from '@mcro/oracle'
+import { Screen } from '@mcro/screen'
 import { debounce } from 'lodash'
 import { store, react, on } from '@mcro/black'
 import { Desktop } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import macosVersion from 'macos-version'
-import { oracleBinPath } from '../constants'
+import { screenBinPath } from '../constants'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
 
@@ -48,8 +48,8 @@ export class OCRManager {
   curAppName = ''
   watchSettings = { name: '', settings: {} }
   started = false
-  oracle = new Oracle({
-    binPath: oracleBinPath,
+  screen = new Screen({
+    binPath: screenBinPath,
     socketPort: Config.ports.ocrBridge,
     // disable for now
     // ocr: true,
@@ -63,13 +63,13 @@ export class OCRManager {
   }
 
   start = async () => {
-    // for now just enable until re enable oracle
+    // for now just enable until re enable screen
     if (macosVersion.is('<10.11')) {
-      console.log('older mac, avoiding oracle')
+      console.log('older mac, avoiding screen')
       return false
     }
-    await this.oracle.start()
-    this.setupOracleListeners()
+    await this.screen.start()
+    this.setupScreenListeners()
     this.started = true
 
     // listen for start toggle
@@ -78,30 +78,30 @@ export class OCRManager {
     })
 
     // poll for now for updated transparency setting...
-    const listener2 = setInterval(this.oracle.getInfo, 1000 * 5)
-    this.oracle.getInfo()
+    const listener2 = setInterval(this.screen.getInfo, 1000 * 5)
+    this.screen.getInfo()
     on(this, listener2)
 
     return true
   }
 
   async dispose() {
-    await this.oracle.stop()
+    await this.screen.stop()
   }
 
   async toggleOCR() {
     if (Desktop.ocrState.paused) {
       // TODO almost but not working yet
-      await this.oracle.requestAccessibility()
+      await this.screen.requestAccessibility()
       if (Desktop.state.operatingSystem.accessibilityPermission) {
-        this.oracle.startWatchingWindows()
+        this.screen.startWatchingWindows()
         Desktop.setOcrState({ paused: false })
       } else {
         console.log('No permisisons to read screen... need to show message')
       }
     } else {
-      this.oracle.stopWatchingWindows()
-      this.oracle.pause()
+      this.screen.stopWatchingWindows()
+      this.screen.pause()
       Desktop.setOcrState({ paused: true })
     }
   }
@@ -131,9 +131,9 @@ export class OCRManager {
     },
   )
 
-  setupOracleListeners() {
+  setupScreenListeners() {
     // operating info
-    this.oracle.onInfo(info => {
+    this.screen.onInfo(info => {
       Desktop.setState({
         operatingSystem: {
           accessibilityPermission: info.accessibilityPermission,
@@ -143,7 +143,7 @@ export class OCRManager {
     })
 
     // OCR words
-    this.oracle.onWords(async wordBounds => {
+    this.screen.onWords(async wordBounds => {
       // [x, y, width, height, 'word']
       const words = wordBounds.map(x => x[4]) as string[]
 
@@ -160,14 +160,14 @@ export class OCRManager {
     })
 
     // OCR lines
-    this.oracle.onLines(lines => {
+    this.screen.onLines(lines => {
       Desktop.setOcrState({
         lines,
       })
     })
 
     // window movements
-    // this.oracle.onWindowChange((event, value) => {
+    // this.screen.onWindowChange((event, value) => {
     //   // pause if no permission
     //   if (this.pauseIfNoPermission()) {
     //     return
@@ -214,7 +214,7 @@ export class OCRManager {
     //   // when were moving into focus prevent app, store its appName, pause then return
     //   if (PREVENT_APP_STATE[this.curAppName]) {
     //     log.info('Prevent app state', this.curAppName)
-    //     this.oracle.pause()
+    //     this.screen.pause()
     //     return
     //   }
     //   if (!wasFocusedOnOrbit && !PREVENT_CLEAR[this.curAppName] && !PREVENT_CLEAR[appState.name]) {
@@ -229,16 +229,16 @@ export class OCRManager {
     //     }
     //   }
     //   if (!Desktop.ocrState.paused) {
-    //     this.oracle.resume()
+    //     this.screen.resume()
     //   }
     //   console.log('setting app state!', appState)
     //   Desktop.setState({ appState })
     // })
 
     // OCR work clear
-    this.oracle.onBoxChanged(count => {
+    this.screen.onBoxChanged(count => {
       if (!Desktop.ocrState.words) {
-        log.info('RESET oracle boxChanged (App)')
+        log.info('RESET screen boxChanged (App)')
         this.setScreenChanged()
         if (this.isWatching === 'OCR') {
           log.info('reset is watching ocr to set back to app')
@@ -248,11 +248,11 @@ export class OCRManager {
         // for not many clears, try it
         if (count < 20) {
           // Desktop.setState({
-          //   clearWord: this.oracle.changedIds,
+          //   clearWord: this.screen.changedIds,
           // })
         } else {
           // else just clear it all
-          log.info('RESET oracle boxChanged (NOTTTTTTT App)')
+          log.info('RESET screen boxChanged (NOTTTTTTT App)')
           this.setScreenChanged()
           this.ocrCurrentApp()
         }
@@ -260,10 +260,10 @@ export class OCRManager {
     })
 
     // OCR word restore
-    this.oracle.onRestored(count => {
+    this.screen.onRestored(count => {
       log.info('restore', count)
       Desktop.setOcrState({
-        restoreWords: this.oracle.restoredIds,
+        restoreWords: this.screen.restoredIds,
       })
     })
   }
@@ -271,9 +271,9 @@ export class OCRManager {
   async restartScreen() {
     log.info('restartScreen')
     this.setScreenChanged()
-    await this.oracle.stop()
+    await this.screen.stop()
     this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
-    await this.oracle.start()
+    await this.screen.start()
   }
 
   setScreenChanged = () => {
@@ -336,7 +336,7 @@ export class OCRManager {
       return
     }
     log.info('ocrCurrentApp.resume', name)
-    await this.oracle.resume()
+    await this.screen.resume()
     this.clearOCRTm = setTimeout(async () => {
       if (!this.hasResolvedOCR) {
         log.info('seems like ocr has stopped working, restarting...')
@@ -349,7 +349,7 @@ export class OCRManager {
     console.log('watchBounds', name, settings)
     this.isWatching = name
     this.watchSettings = { name, settings }
-    await this.oracle.pause()
-    this.oracle.watchBounds(settings)
+    await this.screen.pause()
+    this.screen.watchBounds(settings)
   }
 }

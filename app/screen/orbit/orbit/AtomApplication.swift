@@ -1,0 +1,492 @@
+import Cocoa
+import Darwin
+
+extension String {
+  subscript (bounds: CountableClosedRange<Int>) -> String {
+    let start = index(startIndex, offsetBy: bounds.lowerBound)
+    let end = index(startIndex, offsetBy: bounds.upperBound)
+    return String(self[start...end])
+  }
+  
+  subscript (bounds: CountableRange<Int>) -> String {
+    let start = index(startIndex, offsetBy: bounds.lowerBound)
+    let end = index(startIndex, offsetBy: bounds.upperBound)
+    return String(self[start..<end])
+  }
+}
+
+enum InterfaceStyle : String {
+  case Dark, Light
+  init() {
+    let type = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
+    self = InterfaceStyle(rawValue: type)!
+  }
+}
+
+struct TrayItem {
+  var index: Int
+  var id: String
+  var width: Int
+  var spaceBefore: Int
+}
+
+// super hack: node doesnt see the stdout for who knows what reason
+// so we re-route everything to stderr with a ! in front
+// cringe alert
+
+func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+  //  Swift.print(items[0], separator:separator, terminator: terminator)
+  fputs("!\(items.map { "\($0)" }.joined(separator: separator))\(terminator)", __stderrp)
+}
+
+struct Position: Decodable {
+  let x: Int
+  let y: Int
+  let width: Int
+  let height: Int
+}
+
+struct Words: Decodable {
+  let words: String
+  let id: Int
+}
+
+struct WordsReply: Codable {
+  let words: String
+  let id: Int
+}
+
+extension TimeInterval {
+  func hasPassed(since: TimeInterval) -> Bool {
+    return Date().timeIntervalSinceReferenceDate - self > since
+  }
+}
+
+func throttle<T>(delay: TimeInterval, queue: DispatchQueue = .main, action: @escaping ((T) -> Void)) -> (T) -> Void {
+  var currentWorkItem: DispatchWorkItem?
+  var lastFire: TimeInterval = 0
+  return { (p1: T) in
+    guard currentWorkItem == nil else { return }
+    currentWorkItem = DispatchWorkItem {
+      action(p1)
+      lastFire = Date().timeIntervalSinceReferenceDate
+      currentWorkItem = nil
+    }
+    delay.hasPassed(since: lastFire) ? queue.async(execute: currentWorkItem!) : queue.asyncAfter(deadline: .now() + delay, execute: currentWorkItem!)
+  }
+}
+
+class AtomApplication: NSObject, NSApplicationDelegate {
+  
+  let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
+  let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
+  let shouldShowTray = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
+  let testInXCode = ProcessInfo.processInfo.environment["TEST_IN_XCODE"] == "true"
+  let isVirtualApp = ProcessInfo.processInfo.environment["PREVENT_FOCUSING"] == "true"
+
+  let queue = AsyncGroup()
+  var socketBridge: SocketBridge!
+  var curPosition = NSRect()
+  private var supportsTransparency = false
+  private var trayLocation = "Out"
+  private var lastTrayBoundsMessage = ""
+  private var isAccessible = false
+
+  let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
+
+  lazy var window = NSWindow(
+    contentRect: NSMakeRect(1413, 0, 500, 900),
+    styleMask: [],
+    backing: .buffered,
+    defer: false,
+    screen: nil
+  )
+  var blurryView = NSVisualEffectView(frame: NSMakeRect(0, 0, 500, 900))
+
+  private func emit(_ msg: String) {
+    self.socketBridge.send(msg)
+  }
+  
+  private func _maskImage(cornerRadius: CGFloat) -> NSImage {
+    let edgeLength = 2.0 * cornerRadius + 1.0
+    let maskImage = NSImage(size: NSSize(width: edgeLength, height: edgeLength), flipped: false) { rect in
+      let bezierPath = NSBezierPath(roundedRect: rect, xRadius: cornerRadius, yRadius: cornerRadius)
+      NSColor.black.set()
+      bezierPath.fill()
+      return true
+    }
+    maskImage.capInsets = NSEdgeInsets(top: cornerRadius, left: cornerRadius, bottom: cornerRadius, right: cornerRadius)
+    maskImage.resizingMode = .stretch
+    return maskImage
+  }
+  
+  func applicationWillBecomeActive(_ notification: Notification) {
+    self.emit("{ \"action\": \"appState\", \"value\": \"focus\" }")
+    if isVirtualApp {
+      // hide it immediately, we never want to "really" focus this window we just move to Orbit
+      NSApp.hide(nil)
+    }
+  }
+  
+  func applicationWillResignActive(_ notification: Notification) {
+    self.emit("{ \"action\": \"appState\", \"value\": \"blur\" }")
+  }
+  
+  func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+    self.emit("{ \"action\": \"appState\", \"value\": \"exit\" }")
+    return NSApplication.TerminateReply.terminateNow
+  }
+  
+  func applicationDidFinishLaunching(_ aNotification: Notification) {
+    print("applicationDidFinishLaunching PORT: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
+
+    // setup socket bridge before any action that needs it...
+    socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    
+    // do this before update accessibility which triggers transparency event
+    if #available(OSX 10.11, *) {
+      self.supportsTransparency = true
+    }
+
+    // silent check if we are already accessible
+    _ = self.updateAccessibility(false)
+    
+    if shouldRunAppWindow {
+      window.level = .floating // .floating to be on top
+      window.backgroundColor = NSColor.clear
+      window.alphaValue = 0
+      window.isOpaque = false
+      window.titlebarAppearsTransparent = true
+      window.titleVisibility = .hidden
+      window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
+      window.isMovableByWindowBackground = false
+      window.collectionBehavior = .managed
+      window.ignoresMouseEvents = true
+
+      // allow showing icon in sub-apps
+      if ProcessInfo.processInfo.environment["SHOW_ICON"] != nil {
+        NSApp.setActivationPolicy(NSApplication.ActivationPolicy.regular)
+        self.setIcon(ProcessInfo.processInfo.environment["SHOW_ICON"]!)
+      }
+
+      blurryView.maskImage = _maskImage(cornerRadius: 16.0)
+      blurryView.layer?.masksToBounds = true
+      blurryView.wantsLayer = true
+      blurryView.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
+      if #available(OSX 10.11, *) {
+        blurryView.material = NSVisualEffectView.Material.dark
+      } else {
+        // Fallback on earlier versions
+      }
+      blurryView.state = NSVisualEffectView.State.active
+      blurryView.updateLayer()
+      window.contentView?.addSubview(blurryView)
+      window.makeKeyAndOrderFront(nil)
+    }
+
+    if shouldShowTray || testInXCode {
+      print("setting up tray...")
+      statusItem.highlightMode = false
+      let button = statusItem.button!
+      button.image = NSImage(named:NSImage.Name("tray"))
+      button.action = #selector(self.handleTrayClick(_:))
+
+      // setup hover events
+      let throttleHoverQueue = DispatchQueue.global(qos: .background)
+      let throttledHover =  throttle(delay: 0.03, queue: throttleHoverQueue, action: self.handleTrayHover)
+      var lastTrayRect = [0, 0]
+      let rectInWindow = button.convert(button.bounds, to: nil)
+      
+      NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { (event) in
+        let height = (NSScreen.main?.frame.height)!
+        let mouseLocation = (event.cgEvent?.location)!
+        let invMouseLocation = NSPoint.init(x: mouseLocation.x, y: height - mouseLocation.y)
+        
+        self.emit("{ \"action\": \"mousePosition\", \"value\": [\(round(mouseLocation.x)), \(round(mouseLocation.y))] }")
+        
+        let ogTrayRect = button.window!.convertToScreen(rectInWindow)
+        // our tray image is a few px too short oops...
+        let trayRect = NSRect.init(x: ogTrayRect.minX, y: ogTrayRect.minY - 2, width: ogTrayRect.width, height: ogTrayRect.height + 2)
+        let nextTrayRect = [Int(round(trayRect.minX)), Int(round(trayRect.maxX))]
+        // send tray location...
+        if (nextTrayRect[0] != lastTrayRect[0] || nextTrayRect[1] != lastTrayRect[1]) {
+          lastTrayRect = nextTrayRect
+          print("sending new tray rect \(nextTrayRect)")
+          self.lastTrayBoundsMessage = "{ \"action\": \"trayState\", \"value\": { \"trayBounds\": [\(nextTrayRect[0]), \(nextTrayRect[1])] } }"
+          self.emit(self.lastTrayBoundsMessage)
+        }
+        // handle events
+        self.trayLocation = self.getTrayLocation(mouseLocation: invMouseLocation, trayRect: trayRect)
+        // avoid sending more than one out event
+        if (self.lastHoverEvent == self.trayLocation) {
+          return
+        }
+        self.lastHoverEvent = self.trayLocation
+        if (self.trayLocation == "Out") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("tray"))
+        }
+        if (self.trayLocation == "0") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover0"))
+        }
+        if (self.trayLocation == "1") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover1"))
+        }
+        if (self.trayLocation == "2") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover2"))
+        }
+        if (self.trayLocation == "3") {
+          self.statusItem.button!.image = NSImage(named:NSImage.Name("trayHover3"))
+        }
+        throttledHover((self.trayLocation, self.socketBridge))
+      }
+    }
+    
+    print("finished running app window")
+  }
+  
+  @objc func handleTrayClick(_ sender: Any?) {
+    if self.trayLocation != "Out" {
+      self.emit("{ \"action\": \"trayState\", \"value\": \"TrayToggle\(trayLocation)\" }")
+    }
+  }
+  
+  var lastHoverEvent = ""
+  
+  func handleTrayHover(trayLocation: String, socketBridge: SocketBridge) {
+    print("hover \(trayLocation)")
+    socketBridge.send("{ \"action\": \"trayState\", \"value\": \"TrayHover\(trayLocation)\" }")
+  }
+  
+  // [id, width, spaceBefore]
+  let trayItems: [TrayItem] = [
+    TrayItem(index: 0, id: "3", width: 28, spaceBefore: 0),
+    TrayItem(index: 1, id: "2", width: 28, spaceBefore: 0),
+    TrayItem(index: 2, id: "1", width: 28, spaceBefore: 0),
+    TrayItem(index: 3, id: "0", width: 28, spaceBefore: 10),
+//    ["3", 28, 0], ["2", 28, 0], ["1", 28, 0], ["0", 28, 10]
+  ]
+  
+  func getTrayLocation(mouseLocation: NSPoint, trayRect: NSRect) -> String {
+    let mouseX = mouseLocation.x
+    let mouseY = mouseLocation.y
+    let trayOffsetBeginning = 27
+    let trayButtonMaxX = self.trayItems.map({ (ti: TrayItem) -> Int in
+      return trayOffsetBeginning + (ti.width * (ti.index + 1)) + ti.spaceBefore
+    })
+    let withinX = mouseX >= trayRect.minX && mouseX <= trayRect.maxX
+    // if mouse is currently over the menu, we should extend the bounds down
+    // because by default we have a couple pixels between the tray item and the menu
+    // and so you'd trigger hide while going down to menu
+    // we want this gap because we don't want the initial hover-in bounds to be too low
+    // so when the previous/current location is already "in" we add a few px downwards to bounds
+    let yForgiveness = CGFloat(self.trayLocation != "Out" ? 4 : 0)
+    let withinY = mouseY >= trayRect.minY - yForgiveness && mouseY <= trayRect.maxY
+    if (withinX && withinY) {
+      let xOff = Int(trayRect.width) - Int(trayRect.maxX - mouseX)
+      if (xOff < trayOffsetBeginning) {
+        return "Out"
+      }
+//      print("check it out \(xOff) \(trayButtonMaxX)")
+      for (index, maxX) in trayButtonMaxX.enumerated() {
+        if (xOff < maxX) {
+          return self.trayItems[index].id
+        }
+      }
+    }
+    return "Out"
+  }
+
+  func showWindow() {
+    window.alphaValue = 1
+  }
+  
+  func hideWindow() {
+    window.alphaValue = 0
+  }
+  
+  func position(_ position: Position) {
+    let screen = NSScreen.main!
+    let rect = screen.frame
+    let height = rect.size.height
+    let x = CGFloat(position.x)
+    let y = CGFloat(position.y)
+    let w = CGFloat(position.width)
+    let h = CGFloat(position.height)
+    let nextRect = NSMakeRect(x, height - h - y, w, h)
+    self.window.setFrame(nextRect, display: true, animate: false)
+    self.blurryView.setFrameSize(NSMakeSize(w, h))
+  }
+  
+  func theme(_ themeOpt: String) {
+    var theme = themeOpt
+    if theme == "auto" {
+      theme = InterfaceStyle() == InterfaceStyle.Dark ? "ultra" : "light"
+    }
+    if #available(OSX 10.11, *) {
+      if theme == "ultra" {
+        blurryView.material = NSVisualEffectView.Material.ultraDark
+      }
+      if theme == "dark" {
+        blurryView.material = NSVisualEffectView.Material.dark
+      }
+      if theme == "light" {
+        blurryView.material = NSVisualEffectView.Material.light
+      }
+      if theme == "medium" {
+        blurryView.material = NSVisualEffectView.Material.mediumLight
+      }
+      if theme == "popover" {
+        blurryView.material = NSVisualEffectView.Material.popover
+      }
+      if theme == "appearanceBased" {
+        blurryView.material = NSVisualEffectView.Material.appearanceBased
+      }
+    } else {
+      // Fallback on earlier versions
+    }
+  }
+  
+  func setIcon(_ path: String) {
+    NSApp.applicationIconImage = NSImage.init(contentsOfFile: path)
+  }
+  
+  func sendOSInfo() {
+    let info = """
+    {
+      \"action\": \"info\",
+      \"value\": {
+        \"supportsTransparency\": \(self.supportsTransparency),
+        \"accessibilityPermission\": \(self.isAccessible)
+      }
+    }
+    """
+    print("sending \(info)")
+    self.emit(info)
+    // send last tray bounds too
+    if self.lastTrayBoundsMessage != "" {
+      self.emit(self.lastTrayBoundsMessage)
+    }
+  }
+  
+  func updateAccessibility(_ prompt: Bool) -> Bool {
+    let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String : prompt]
+    let isTrusted = AXIsProcessTrustedWithOptions(options)
+    if (isTrusted != self.isAccessible) {
+      self.isAccessible = isTrusted
+      self.onAccessible(isTrusted)
+    }
+    self.sendOSInfo()
+    return isTrusted
+  }
+  
+  func sendKey(key: String, isDown: Bool) {
+    self.emit("{ \"action\": \"keyboard\", \"value\": { \"type\": \"\(isDown ? "keyDown" : "keyUp")\", \"value\": \"\(key)\" } }")
+  }
+
+  func onAccessible(_ hasAccess: Bool) {
+    if hasAccess {
+      print("is accessible! setting up one time events")
+      
+      var isOptionDown = false
+      NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { (event) in
+        switch event.modifierFlags.intersection(.deviceIndependentFlagsMask) {
+          case [.option]:
+            isOptionDown = true
+            self.sendKey(key: "option", isDown: isOptionDown)
+          default:
+            if (isOptionDown) {
+              isOptionDown = false
+              self.sendKey(key: "option", isDown: isOptionDown)
+            }
+        }
+      }
+      
+      // only want to know if option is *only* key down
+      NSEvent.addGlobalMonitorForEvents(matching: [.keyDown, .keyUp]) { (event) in
+        if (event.keyCode == 53 && event.type == NSEvent.EventType.keyDown) {
+          self.sendKey(key: "esc", isDown: true)
+        }
+        if (isOptionDown) {
+          isOptionDown = false
+          self.sendKey(key: "option", isDown: isOptionDown)
+        }
+      }
+    }
+  }
+  
+  func onMessage(_ text: String) {
+    // dont print things that poll...
+    if text != "space" && text != "osin" {
+      print("Swift.onMessage \(text)")
+    }
+    if text.count < 4 {
+      print("weird text")
+      return
+    }
+    let action = text[0...3]
+    if action == "show" {
+      self.showWindow()
+      return
+    }
+    if action == "hide" {
+      self.hideWindow()
+      return
+    }
+    if action == "posi" {
+      do {
+        let position = try JSONDecoder().decode(Position.self, from: text[5..<text.count].data(using: .utf8)!)
+        window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
+        self.position(position)
+      } catch {
+        print("Error parsing arguments \(text)")
+      }
+      return
+    }
+    if action == "icon" {
+      self.setIcon(text[5..<text.count])
+      return
+    }
+    if action == "them" {
+      self.theme(text[5..<text.count])
+      return
+    }
+    if action == "stat" {
+      // coming from us, ignore
+      return
+    }
+    // on start
+    if action == "osin" {
+      self.sendOSInfo()
+      return
+    }
+    if action == "spac" {
+      if !self.window.isOnActiveSpace {
+        print("moving to active space...")
+        self.emit("{ \"action\": \"spaceMove\", \"value\": true }")
+      }
+      return
+    }
+    if action == "mvsp" {
+      self.window.collectionBehavior = .canJoinAllSpaces
+      NSApp.activate(ignoringOtherApps: true)
+      self.window.collectionBehavior = .managed
+      return
+    }
+    if action == "appi" {
+      let app = NSWorkspace.shared.frontmostApplication!
+      let id = app.localizedName!
+      self.emit("{ \"action\": \"info\", \"value\": { \"appId\": \"\(id)\" } }")
+      return
+    }
+    // request accessibility
+    if action == "reac" {
+      _ = self.updateAccessibility(true)
+      return
+    }
+    print("received unknown message: \(text)")
+  }
+
+  func applicationWillTerminate(_ aNotification: Notification) {
+    print("recorder stopped, exiting...")
+  }
+}

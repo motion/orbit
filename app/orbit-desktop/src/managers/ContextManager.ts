@@ -1,4 +1,4 @@
-import { Oracle } from '@mcro/oracle'
+import { Screen } from '@mcro/screen'
 import { store, react, on, ensure } from '@mcro/black'
 import { Desktop, Electron, App } from '@mcro/stores'
 import { toJS } from 'mobx'
@@ -12,11 +12,11 @@ const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
 
 @store
 export class ContextManager {
-  oracle: Oracle
+  screen: Screen
   curAppID = ''
 
-  constructor({ oracle }: { oracle: Oracle }) {
-    this.oracle = oracle
+  constructor({ screen }: { screen: Screen }) {
+    this.screen = screen
     this.watchContext()
   }
 
@@ -24,12 +24,12 @@ export class ContextManager {
     () => Desktop.state.operatingSystem.accessibilityPermission,
     isAccessible => {
       ensure('isAccessible', isAccessible)
-      this.oracle.startWatchingWindows()
+      this.screen.startWatchingWindows()
     },
   )
 
   watchContext() {
-    this.oracle.onWindowChange((event, value) => {
+    this.screen.onWindowChange((event, value) => {
       if (event === 'ScrollEvent') {
         return
       }

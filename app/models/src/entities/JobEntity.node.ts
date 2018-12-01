@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { SourceEntity } from './SourceEntity'
+import { SourceEntity } from './SourceEntity.node'
 import { Job } from '../interfaces/Job'
 import { JobType } from '../interfaces/JobType'
 import { JobStatus } from '../interfaces/JobStatus'

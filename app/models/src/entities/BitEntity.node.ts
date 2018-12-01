@@ -10,10 +10,10 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { LocationEntity } from './LocationEntity'
-import { PersonEntity } from './PersonEntity'
-import { SourceEntity } from './SourceEntity'
-import { SpaceEntity } from './SpaceEntity'
+import { LocationEntity } from './LocationEntity.node'
+import { PersonEntity } from './PersonEntity.node'
+import { SourceEntity } from './SourceEntity.node'
+import { SpaceEntity } from './SpaceEntity.node'
 import { Bit } from '../interfaces/Bit'
 import { IntegrationType } from '../interfaces/IntegrationType'
 import { BitContentType } from '../interfaces/BitContentType'

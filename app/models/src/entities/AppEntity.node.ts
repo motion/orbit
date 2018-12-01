@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { SpaceEntity } from './SpaceEntity'
+import { SpaceEntity } from './SpaceEntity.node'
 import { Space } from '../interfaces/Space'
 
 @Entity()

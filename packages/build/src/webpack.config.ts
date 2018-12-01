@@ -135,6 +135,10 @@ const config = {
         exclude: /node_modules/,
       },
       {
+        test: /\.node.[jt]sx?/,
+        use: 'ignore-loader',
+      },
+      {
         test: /\.[jt]sx?$/,
         use: ['thread-loader', 'babel-loader', 'react-hot-loader/webpack'],
         exclude: /node_modules/,
@@ -192,9 +196,6 @@ const config = {
     }),
 
     new webpack.IgnorePlugin(/electron-log/),
-
-    // ignore typeorm
-    new webpack.IgnorePlugin(/^typeorm$/),
 
     // adds cache based on source of files
     // new HardSourceWebpackPlugin(),

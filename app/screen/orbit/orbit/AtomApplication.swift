@@ -82,7 +82,6 @@ func throttle<T>(delay: TimeInterval, queue: DispatchQueue = .main, action: @esc
 
 class AtomApplication: NSObject, NSApplicationDelegate {
   
-  let shouldRunOCR = ProcessInfo.processInfo.environment["RUN_OCR"] == "true"
   let shouldRunAppWindow = ProcessInfo.processInfo.environment["RUN_APP_WINDOW"] == "true"
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let shouldShowTray = ProcessInfo.processInfo.environment["SHOW_TRAY"] == "true"
@@ -143,7 +142,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
   }
   
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    print("applicationDidFinishLaunching, OCR \(shouldRunOCR), PORT: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
+    print("applicationDidFinishLaunching PORT: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
 
     // setup socket bridge before any action that needs it...
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)

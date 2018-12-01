@@ -1,5 +1,5 @@
 import { IntegrationType } from './IntegrationType'
-import { PersonData } from './person-data/PersonData'
+import { PersonData } from '../person-data/PersonData'
 import { PersonBit } from './PersonBit'
 import { Source } from './Source'
 

@@ -1,7 +1,7 @@
 import { resolveMany } from '@mcro/mediator'
 import { SearchPinnedResultModel } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { PersonBitEntity, BitEntity } from '@mcro/entities'
+import { PersonBitEntity, BitEntity } from '@mcro/models'
 import { uniqBy, zip, flatten } from 'lodash'
 import fuzzySort from 'fuzzysort'
 

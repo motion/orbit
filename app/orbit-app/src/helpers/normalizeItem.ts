@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Person, Bit, PersonBit, IntegrationType } from '@mcro/models'
-import { Setting } from '@mcro/models'
+import { Setting, Person, Bit, PersonBit, IntegrationType } from '@mcro/models'
 import { last } from 'lodash'
 
 export type NormalizedItem = {

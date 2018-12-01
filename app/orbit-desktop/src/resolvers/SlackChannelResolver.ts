@@ -1,4 +1,4 @@
-import { SourceEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
 import { SlackChannelModel, SlackSource } from '@mcro/models'

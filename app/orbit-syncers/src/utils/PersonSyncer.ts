@@ -1,6 +1,6 @@
-import { PersonBitEntity, PersonEntity } from '@mcro/entities'
+import { PersonBitEntity, PersonEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { PersonBitUtils } from '@mcro/model-utils'
+import { PersonBitUtils } from '@mcro/models'
 import { Person, PersonBit } from '@mcro/models'
 import { uniqBy } from 'lodash'
 import { getManager } from 'typeorm'
@@ -30,7 +30,7 @@ export class PersonSyncer {
    * Returns saved (inserted and updated) people.
    */
   async sync(options: PersonSyncerOptions): Promise<Person[]> {
-    this.log.info(`syncing people and person bits`, options)
+    this.log.info('syncing people and person bits', options)
     let { apiPeople, dbPeople, dbPersonBits } = options
 
     // filter out people, left only unique people
@@ -45,7 +45,7 @@ export class PersonSyncer {
     }
 
     // calculate people that we need to update in the database
-    this.log.timer(`calculating people change set`)
+    this.log.timer('calculating people change set')
     const insertedPeople = apiPeople.filter(apiPerson => {
       return !dbPeople.some(dbPerson => dbPerson.id === apiPerson.id)
     })
@@ -57,13 +57,17 @@ export class PersonSyncer {
       return !apiPeople.some(apiPerson => apiPerson.id === dbPerson.id)
     })
     const savedPeople = [...updatedPeople, ...insertedPeople]
-    this.log.timer(`calculating people change set`, { insertedPeople, updatedPeople, removedPeople })
+    this.log.timer('calculating people change set', {
+      insertedPeople,
+      updatedPeople,
+      removedPeople,
+    })
 
     // calculate people bits that we need to update in the database
-    this.log.timer(`calculating person bits change set`)
-    const insertedPersonBits = [], updatedPersonBits = []
+    this.log.timer('calculating person bits change set')
+    const insertedPersonBits = [],
+      updatedPersonBits = []
     for (let person of savedPeople) {
-
       // create a person bit from synced person, load database person bit and merge them
       const id = hash(person.email)
       const dbPersonBit = dbPersonBits.find(personBit => personBit.id === id)
@@ -100,20 +104,22 @@ export class PersonSyncer {
 
     // todo: update person bit's "hasGmail", "hasSlack", etc. flags too.
 
-    this.log.timer(`calculating person bits change set`, {
+    this.log.timer('calculating person bits change set', {
       insertedPersonBits,
       updatedPersonBits,
       removedPersonBits,
     })
 
     // perform database operations on synced bits
-    if (!insertedPeople.length &&
-        !updatedPeople.length &&
-        !removedPeople.length &&
-        !insertedPersonBits.length &&
-        !updatedPersonBits.length &&
-        !removedPersonBits.length) {
-      this.log.info(`no changes were detected, people and person bits were not synced`)
+    if (
+      !insertedPeople.length &&
+      !updatedPeople.length &&
+      !removedPeople.length &&
+      !insertedPersonBits.length &&
+      !updatedPersonBits.length &&
+      !removedPersonBits.length
+    ) {
+      this.log.info('no changes were detected, people and person bits were not synced')
       return
     }
 
@@ -128,7 +134,7 @@ export class PersonSyncer {
     //   return
     // }
 
-    this.log.timer(`save people and person bits in the database`)
+    this.log.timer('save people and person bits in the database')
     try {
       await getManager().transaction(async manager => {
         await manager.save(PersonEntity, insertedPeople, { chunk: 100 })
@@ -143,7 +149,6 @@ export class PersonSyncer {
         // if (await this.syncerRepository.isSettingRemoved())
         //   throw 'setting removed'
       })
-
     } catch (error) {
       // if (error === 'setting removed') {
       //   this.log.warning(`found a setting in a process of removal, skip syncing`)
@@ -151,7 +156,6 @@ export class PersonSyncer {
       // }
       throw error
     }
-    this.log.timer(`save people and person bits in the database`)
+    this.log.timer('save people and person bits in the database')
   }
-
 }

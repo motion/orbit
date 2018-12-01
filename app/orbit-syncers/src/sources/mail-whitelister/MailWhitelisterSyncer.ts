@@ -1,4 +1,4 @@
-import { PersonBitEntity, SourceEntity } from '@mcro/entities'
+import { PersonBitEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { GmailSourceValues } from '@mcro/models'
 import { getRepository } from 'typeorm'

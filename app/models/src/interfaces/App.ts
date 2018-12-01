@@ -1,7 +1,7 @@
-import { ListsAppData } from './app-data/ListsAppData'
-import { PeopleAppData } from './app-data/PeopleAppData'
-import { SearchAppData } from './app-data/SearchAppData'
-import { TopicsAppData } from './app-data/TopicsAppData'
+import { ListsAppData } from '../app-data/ListsAppData'
+import { PeopleAppData } from '../app-data/PeopleAppData'
+import { SearchAppData } from '../app-data/SearchAppData'
+import { TopicsAppData } from '../app-data/TopicsAppData'
 import { Space } from './Space'
 
 export type AppType = 'search' | 'people' | 'topics' | 'lists' | 'source' | 'bit'

@@ -1,11 +1,11 @@
-import { Space, Source } from '@mcro/models'
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { SourceEntity } from './SourceEntity'
 import { AppEntity } from './AppEntity'
+import { Space } from '../interfaces/Space'
+import { Source } from '../interfaces/Source'
 
 @Entity()
 export class SpaceEntity implements Space {
-
   @PrimaryGeneratedColumn()
   id: number
 
@@ -20,5 +20,4 @@ export class SpaceEntity implements Space {
 
   @OneToMany(() => AppEntity, app => app.space)
   apps: Source[]
-
 }

@@ -1,4 +1,4 @@
-import { SourceEntity, SpaceEntity } from '@mcro/entities'
+import { SourceEntity, SpaceEntity } from '@mcro/models'
 import {
   DriveSource,
   GmailSource,

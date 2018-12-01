@@ -1,4 +1,4 @@
-import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/models'
 import { Bit, Person, PersonBit, Source } from '@mcro/models'
 import { hash } from '@mcro/utils'
 import { getRepository, In, MoreThan } from 'typeorm'

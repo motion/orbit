@@ -1,4 +1,4 @@
-import { BitEntity } from '@mcro/entities'
+import { BitEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { WebsiteSource } from '@mcro/models'
 import { getRepository } from 'typeorm'

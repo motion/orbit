@@ -1,4 +1,3 @@
-import { Bit, IntegrationType, Person, PersonBit, PersonData, Source } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -12,6 +11,11 @@ import {
 import { BitEntity } from './BitEntity'
 import { PersonBitEntity } from './PersonBitEntity'
 import { SourceEntity } from './SourceEntity'
+import { IntegrationType } from '../interfaces/IntegrationType'
+import { PersonData } from '../person-data/PersonData'
+import { Source } from '../interfaces/Source'
+import { PersonBit } from '../interfaces/PersonBit'
+import { Bit } from '../interfaces/Bit'
 
 @Entity()
 export class PersonEntity extends BaseEntity implements Person {

@@ -1,4 +1,4 @@
-import { BitUtils } from '@mcro/model-utils'
+import { BitUtils } from '@mcro/models'
 import { Bit, PinnedBitData } from '@mcro/models'
 import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
 

@@ -1,4 +1,4 @@
-import { BitUtils } from '@mcro/model-utils'
+import { BitUtils } from '@mcro/models'
 import { Bit, JiraBitData, JiraSourceValues, Person, JiraSource } from '@mcro/models'
 import { JiraIssue } from '@mcro/services'
 import { SyncerUtils } from '../../core/SyncerUtils'

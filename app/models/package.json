@@ -10,6 +10,7 @@
   "dependencies": {
     "@mcro/mediator": "^2.2.1",
     "@mcro/config": "2.2.1",
+    "@mcro/utils": "*",
     "reconnecting-websocket": "4.1.10",
     "zen-observable": "^0.8.10",
     "global": "^4.3.2",

@@ -1,4 +1,4 @@
-import { JobEntity, SourceEntity } from '@mcro/entities'
+import { JobEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Subscription } from '@mcro/mediator'
 import { observeMany } from '@mcro/model-bridge'

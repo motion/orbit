@@ -1,4 +1,4 @@
-import { BitData } from './bit-data/BitData'
+import { BitData } from '../bit-data/BitData'
 import { IntegrationType } from './IntegrationType'
 import { Location } from './Location'
 import { Person } from './Person'

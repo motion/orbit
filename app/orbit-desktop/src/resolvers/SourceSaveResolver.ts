@@ -1,4 +1,4 @@
-import { SourceEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { ConfluenceSource, JiraSource, SourceSaveCommand, WebsiteSource } from '@mcro/models'

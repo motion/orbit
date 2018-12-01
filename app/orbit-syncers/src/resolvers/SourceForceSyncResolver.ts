@@ -2,7 +2,7 @@ import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { SourceForceSyncCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SourceEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/models'
 import { Syncers } from '../core/Syncers'
 import { Syncer } from '../core/Syncer'
 

@@ -1,4 +1,4 @@
-import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/entities'
+import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { Job, SourceRemoveCommand } from '@mcro/models'

@@ -1,4 +1,4 @@
-import { BitUtils } from '@mcro/model-utils'
+import { BitUtils } from '@mcro/models'
 import { Bit, GmailBitData, GmailSource } from '@mcro/models'
 import { GMailThread } from '@mcro/services'
 import { GMailMessageParser } from './GMailMessageParser'

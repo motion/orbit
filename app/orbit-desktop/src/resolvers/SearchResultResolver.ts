@@ -1,5 +1,5 @@
 import { Cosal } from '@mcro/cosal'
-import { SourceEntity } from '@mcro/entities'
+import { SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Bit, BitContentTypes, SearchQuery, SearchResult, Source } from '@mcro/models'
 import { BitContentType } from '@mcro/models'

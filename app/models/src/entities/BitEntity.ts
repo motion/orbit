@@ -1,4 +1,3 @@
-import { Bit, BitContentType, BitData, IntegrationType, Person, Source, Space } from '@mcro/models'
 import {
   BaseEntity,
   Column,
@@ -15,12 +14,19 @@ import { LocationEntity } from './LocationEntity'
 import { PersonEntity } from './PersonEntity'
 import { SourceEntity } from './SourceEntity'
 import { SpaceEntity } from './SpaceEntity'
+import { Bit } from '../interfaces/Bit'
+import { IntegrationType } from '../interfaces/IntegrationType'
+import { BitContentType } from '../interfaces/BitContentType'
+import { BitData } from '../bit-data/BitData'
+import { Person } from '../interfaces/Person'
+import { Source } from '../interfaces/Source'
+import { Space } from '../interfaces/Space'
 
 @Entity()
-@Index("searchIndex1", { synchronize: false })
-@Index("searchIndex2", { synchronize: false })
-@Index("searchIndex3", { synchronize: false })
-@Index("searchIndex4", { synchronize: false })
+@Index('searchIndex1', { synchronize: false })
+@Index('searchIndex2', { synchronize: false })
+@Index('searchIndex3', { synchronize: false })
+@Index('searchIndex4', { synchronize: false })
 export class BitEntity extends BaseEntity implements Bit {
   target: 'bit' = 'bit'
 
@@ -92,5 +98,4 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @ManyToOne(() => SpaceEntity)
   space?: Space
-
 }

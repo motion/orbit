@@ -1,4 +1,4 @@
-import { BitEntity, SourceEntity } from '@mcro/entities'
+import { BitEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { JiraSource } from '@mcro/models'
 import { JiraLoader, JiraUser } from '@mcro/services'

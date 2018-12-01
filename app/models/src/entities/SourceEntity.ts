@@ -1,14 +1,15 @@
-import { Space } from '@mcro/models'
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  Entity, JoinTable,
+  Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { SpaceEntity } from './SpaceEntity'
+import { Space } from '../interfaces/Space'
 
 @Entity()
 export class SourceEntity extends BaseEntity {

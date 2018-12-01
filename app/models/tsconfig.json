@@ -6,5 +6,9 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../../packages/mediator" }]
+  "references": [
+    { "path": "../../packages/mediator" },
+    { "path": "../../packages/utils" },
+    { "path": "../../packages/config" }
+  ]
 }

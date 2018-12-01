@@ -1,4 +1,4 @@
-import { BitEntity, SettingEntity } from '@mcro/entities'
+import { BitEntity, SettingEntity } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { Cosal } from '@mcro/cosal'

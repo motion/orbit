@@ -6,8 +6,8 @@ import { GithubBitData } from './GithubBitData'
 import { GmailBitData } from './GmailBitData'
 import { JiraBitData } from './JiraBitData'
 import { SlackBitData } from './SlackBitData'
-import { IntegrationType } from '../IntegrationType'
-import { Bit } from '../Bit'
+import { IntegrationType } from '../interfaces/IntegrationType'
+import { Bit } from '../interfaces/Bit'
 
 /**
  * What Bit.data property can be.

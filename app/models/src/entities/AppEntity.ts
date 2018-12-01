@@ -1,6 +1,6 @@
-import { Space } from '@mcro/models'
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { SpaceEntity } from './SpaceEntity'
+import { Space } from '../interfaces/Space'
 
 @Entity()
 export class AppEntity extends BaseEntity {
@@ -23,5 +23,4 @@ export class AppEntity extends BaseEntity {
 
   @Column('simple-json', { default: '{}' })
   data?: any
-
 }

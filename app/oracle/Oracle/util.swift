@@ -6,6 +6,8 @@
 //  Copyright © 2018 Orbit. All rights reserved.
 //
 
+import Cocoa
+
 extension TimeInterval {
     func hasPassed(since: TimeInterval) -> Bool {
         return Date().timeIntervalSinceReferenceDate - self > since

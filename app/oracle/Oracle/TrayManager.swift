@@ -96,7 +96,7 @@ class TrayManager {
                 break
             }
 
-            throttledHover((self.trayLocation, self.socketBridge))
+            throttledHover((self.trayLocation))
         }
     
     }

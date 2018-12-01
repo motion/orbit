@@ -152,7 +152,6 @@ export class Root {
     // setup screen before we pass into managers...
     this.screen = new Screen({
       ...screenOptions,
-      appWindow: true,
       showTray: true,
     })
 

@@ -41,6 +41,7 @@ app/oracle/Build
 app/oracle/Index
 app/oracle/orbit.xcodeproj/project.xcworkspace
 app/oracle/orbit.xcodeproj/xcuserdata
+app/oracle/Oracle.xcworkspace/xcuserdata/
 
 app/orbit-app/build
 app/uploads

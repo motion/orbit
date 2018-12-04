@@ -17,7 +17,14 @@ class CharacterCache {
     static let shared = CharacterCache()
     
     /// Cache storage.
-    fileprivate var cache = [[Int] : String]()
+    /// Here we also store the time the item was added, so we can perform garbage collection when needed.
+    /// Key: Character outline
+    /// Value: (Classification, time added)
+    fileprivate var cache = [[Int] : (String, DispatchTime)]()
+    /// When the cache reaches this size, we remove old entries until it reaches `cacheMinSize`.
+    fileprivate let cacheMaxSize = 4000
+    /// When we thin the cache, we reduce it down to this size.
+    fileprivate let cacheMinSize = 2000
     
     /// Container for move directions to follow while tracing outlines.
     let moves = Moves()
@@ -212,7 +219,7 @@ extension CharacterCache {
         // Synchronize access to cache on main queue
         var result: String?
         DispatchQueue.main.sync {
-            result = cache[outline]
+            result = cache[outline]?.0
         }
         return result
     }
@@ -222,7 +229,24 @@ extension CharacterCache {
     func addToCache(outline: [Int], character: String) {
         // Synchronize access to cache on main queue
         DispatchQueue.main.sync {
-            cache[outline] = character
+            let time = DispatchTime.now()
+            cache[outline] = (character, time)
+        }
+        
+        // Check cache size and thin if needed
+        // We do this asynchronously so we don't block other operations
+        DispatchQueue.main.async {
+            // We only care once the cache reaches the max size
+            if self.cache.count >= self.cacheMaxSize {
+                // Max size reached; sort all cache elements by time added
+                let times = self.cache.map({$0.value.1}).sorted()
+                // Safety
+                guard times.count >= self.cacheMinSize else { return }
+                // Determine cutoff time
+                let cutoff = times[self.cacheMinSize - 1]
+                // Filter all cache results older than cutoff time
+                self.cache = self.cache.filter({$0.value.1 < cutoff})
+            }
         }
     }
     
@@ -426,7 +450,7 @@ extension CharacterCache {
             }
         }
         
-        // Note: We only return these bounds because they're used for finding hangerss
+        // Note: We only return these bounds because they're used for finding hangers
         let bounds = CGRect(x: minX, y: minY, width: width, height: height)
         return (outline, bounds)
     }

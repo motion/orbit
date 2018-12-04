@@ -11,7 +11,6 @@ import { useStore, useInstantiatedStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { StoreContext, view } from '@mcro/black'
 import { AppActions } from '../../actions/AppActions'
-import { memo } from '../../helpers/memo'
 import { OrbitOnboard } from './OrbitOnboard'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { OrbitHeader } from './OrbitHeader'
@@ -22,9 +21,9 @@ import { SpaceNav } from './SpaceNav'
 import { OrbitPaneManager } from './OrbitPaneManager'
 import { AppView } from '../../apps/AppView'
 
-export const OrbitPage = memo(() => {
+export const OrbitPage = React.memo(() => {
   const { darkTheme } = useInstantiatedStore(App).state
-  const theme = darkTheme ? 'clearDark' : 'clearLight'
+  const theme = darkTheme ? 'dark' : 'light'
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
@@ -60,17 +59,17 @@ export const OrbitPage = memo(() => {
             <OrbitHeader queryStore={queryStore} borderRadius={BORDER_RADIUS} />
             <SpaceNav />
 
-            <Row flex={1} overflow="hidden">
+            <OrbitPageChrome>
               <OrbitIndexView>
                 <OrbitPaneManager />
               </OrbitIndexView>
               <OrbitMainView>
                 <AppView type="bit" viewType="main" id="0" isActive title="ok" />
+                <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
               </OrbitMainView>
-            </Row>
+            </OrbitPageChrome>
 
             <OrbitOnboard />
-            <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
           </AppWrapper>
         </Theme>
       </StoreContext.Provider>
@@ -80,8 +79,19 @@ export const OrbitPage = memo(() => {
 
 const OrbitIndexView = view({
   width: 300,
-})
+}).theme(({ theme }) => ({
+  borderRight: [1, theme.borderColor.alpha(0.5)],
+}))
 
 const OrbitMainView = view({
   flex: 1,
+  position: 'relative',
 })
+
+const OrbitPageChrome = view({
+  flexFlow: 'row',
+  flex: 1,
+  overflow: 'hidden',
+}).theme(({ theme }) => ({
+  background: theme.background,
+}))

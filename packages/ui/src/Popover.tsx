@@ -469,8 +469,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       }
     }
 
-    console.log('popvoer', this)
-
     // fix flickering on initial mount of popovers...
     if (getIsManuallyPositioned(this.props)) {
       this.setState({ finishedMount: true })

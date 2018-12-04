@@ -84,9 +84,7 @@ export class SubPaneStore {
   )
 
   get maxHeight() {
-    const bottomLip = 30
-    const edgePad = 10 * 2
-    return window.innerHeight - this.aboveContentHeight - edgePad - bottomLip
+    return window.innerHeight - this.aboveContentHeight
   }
 
   get fullHeight() {

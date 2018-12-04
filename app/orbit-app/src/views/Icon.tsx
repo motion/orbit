@@ -5,6 +5,10 @@ import { memo } from '../helpers/memo'
 import { ThemeContext } from '@mcro/ui'
 
 const icons = {
+  orbitSearch: require('!raw-loader!../../public/icons/icon-search.svg'),
+  orbitTopics: require('!raw-loader!../../public/icons/icon-topics.svg'),
+  orbitPeople: require('!raw-loader!../../public/icons/icon-people.svg'),
+
   orbitalSmall: require('!raw-loader!../../public/orbital-small.svg'),
   sidebar: require('!raw-loader!../../public/streamline/sidebar.svg'),
 

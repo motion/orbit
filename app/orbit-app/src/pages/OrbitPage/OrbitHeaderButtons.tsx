@@ -92,17 +92,7 @@ export class OrbitHeaderButtons extends React.Component<Props> {
             </ClearButton>
           </Interactive>
           <UI.Button
-            icon={
-              // 'gear'
-              <View
-                border={[2, '#ccc']}
-                background={onSettings ? '#999' : 'transparent'}
-                opacity={1}
-                width={12}
-                height={12}
-                borderRadius={100}
-              />
-            }
+            icon="gear"
             tooltip="Settings"
             tooltipProps={{
               delay: 0,

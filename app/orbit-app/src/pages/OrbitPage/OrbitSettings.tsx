@@ -45,14 +45,9 @@ export class OrbitSettings extends React.Component<Props> {
   render() {
     const { settingsStore, onChangeHeight } = this.props
     return (
-      <SubPane
-        id="settings"
-        preventScroll
-        before={isActive => <SettingsNavBar isActive={isActive} settingsStore={settingsStore} />}
-        onChangeHeight={onChangeHeight}
-      >
+      <SubPane id="settings" preventScroll onChangeHeight={onChangeHeight}>
+        <SettingsNavBar isActive settingsStore={settingsStore} />
         <VerticalSpace />
-
         <Pane isShown={settingsStore.subPane === 'apps'}>
           <AppView
             viewType="index"
@@ -75,16 +70,7 @@ export class OrbitSettings extends React.Component<Props> {
 
 const SettingsNavBar = view(({ settingsStore, isActive }) => {
   return (
-    <Row
-      flex={1}
-      height={35}
-      position="absolute"
-      top={-47}
-      left={150}
-      right={150}
-      alignItems="center"
-      justifyContent="center"
-    >
+    <Row flex={1} alignItems="center" justifyContent="center">
       <SegmentedRow pointerEvents={isActive ? 'auto' : 'none'}>
         <SettingButton {...buttonProps(settingsStore, 'apps')}>Sources</SettingButton>
         {/* <SettingButton {...buttonProps(settingsStore, 'team')}>Spaces</SettingButton> */}

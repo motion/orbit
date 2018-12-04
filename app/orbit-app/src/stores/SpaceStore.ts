@@ -46,17 +46,17 @@ export const AppPanes: Pane[] = [
     trigger: '#',
     static: true,
   },
-  {
-    id: 'lists',
-    type: 'lists',
-    title: 'Lists',
-    icon: 'listBullets',
-    trigger: '/',
-    static: true,
-    props: {
-      preventScroll: true,
-    },
-  },
+  // {
+  //   id: 'lists',
+  //   type: 'lists',
+  //   title: 'Lists',
+  //   icon: 'listBullets',
+  //   trigger: '/',
+  //   static: true,
+  //   props: {
+  //     preventScroll: true,
+  //   },
+  // },
 ]
 
 export class SpaceStore {

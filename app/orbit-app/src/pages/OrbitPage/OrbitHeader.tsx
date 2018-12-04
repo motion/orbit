@@ -215,14 +215,7 @@ const OrbitFakeInput = view({
     opacity: 0.5,
     pointerEvents: 'none',
   },
-}).theme(({ theme }) => ({
-  background: theme.inputBackground
-    ? theme.inputBackground.alpha(0.35)
-    : theme.background.alpha(0.35),
-  '&:active': {
-    background: theme.background.alpha(0.6),
-  },
-}))
+})
 
 const OrbitCloseControl = view({
   width: 8,

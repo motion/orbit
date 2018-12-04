@@ -2,22 +2,27 @@ import * as React from 'react'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { AppWrapper } from '../../views'
-import { HighlightsLayer } from './highlightsLayer/HighlightsLayer'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SpaceStore, AppPanes } from '../../stores/SpaceStore'
-import { OrbitLayer } from './orbitLayer/OrbitLayer'
 import { Theme } from '@mcro/ui'
-import { App } from '@mcro/stores'
-import { useStore } from '@mcro/use-store'
+import { useStore, useInstantiatedStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { StoreContext, view } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { StaticContainer } from '../../views/StaticContainer'
 import { AppActions } from '../../actions/AppActions'
 import { memo } from '../../helpers/memo'
+import { OrbitOnboard } from './OrbitOnboard'
+import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
+import { OrbitHeader } from './OrbitHeader'
+import { App } from '@mcro/stores'
+import { BORDER_RADIUS } from '../../constants'
+import { OrbitSettings } from './OrbitSettings'
 
 export const OrbitPage = memo(() => {
+  const { darkTheme } = useInstantiatedStore(App).state
+  const theme = darkTheme ? 'clearDark' : 'clearLight'
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
@@ -46,25 +51,18 @@ export const OrbitPage = memo(() => {
     paneManagerStore,
   }
   return (
-    <StaticContainer>
-      <StoreContext.Provider value={stores}>
-        <OrbitPageInner />
-      </StoreContext.Provider>
-    </StaticContainer>
+    <MainShortcutHandler queryStore={queryStore}>
+      <StaticContainer>
+        <StoreContext.Provider value={stores}>
+          <Theme name={theme}>
+            <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+              <OrbitHeader queryStore={queryStore} borderRadius={BORDER_RADIUS} />
+              <OrbitOnboard />
+              <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
+            </AppWrapper>
+          </Theme>
+        </StoreContext.Provider>
+      </StaticContainer>
+    </MainShortcutHandler>
   )
 })
-
-@view
-class OrbitPageInner extends React.Component {
-  render() {
-    const theme = App.state.darkTheme ? 'clearDark' : 'clearLight'
-    return (
-      <Theme name={theme}>
-        <AppWrapper>
-          <HighlightsLayer />
-          <OrbitLayer />
-        </AppWrapper>
-      </Theme>
-    )
-  }
-}

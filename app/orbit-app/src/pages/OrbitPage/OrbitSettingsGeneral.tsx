@@ -4,12 +4,12 @@ import { SettingModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme } from '@mcro/ui'
 import * as React from 'react'
-import { showConfirmDialog } from '../../../../helpers/electron/showConfirmDialog'
-import * as Views from '../../../../views'
-import { Input } from '../../../../views/Input'
-import { ShortcutCapture } from '../../../../views/ShortcutCapture'
-import { SourcesStore } from '../../../../stores/SourcesStore'
-import { generalSettingQuery } from '../../../../helpers/queries'
+import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
+import * as Views from '../../views'
+import { Input } from '../../views/Input'
+import { ShortcutCapture } from '../../views/ShortcutCapture'
+import { SourcesStore } from '../../stores/SourcesStore'
+import { generalSettingQuery } from '../../helpers/queries'
 
 const eventCharsToNiceChars = {
   alt: '⌥',

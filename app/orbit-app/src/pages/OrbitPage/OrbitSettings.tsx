@@ -1,14 +1,14 @@
 import { view, attach } from '@mcro/black'
 import * as React from 'react'
-import { SubPane } from '../../../../components/SubPane'
+import { SubPane } from '../../components/SubPane'
 import { OrbitSettingsGeneral } from './OrbitSettingsGeneral'
 import { OrbitSettingsTeam } from './OrbitSettingsTeam'
 import { SegmentedRow, Button, Row } from '@mcro/ui'
-import { VerticalSpace } from '../../../../views'
+import { VerticalSpace } from '../../views'
 import { memoize } from 'lodash'
-import { SubPaneStore } from '../../../../components/SubPaneStore'
-import { AppView } from '../../../../apps/AppView'
-import { Pane } from '../../../../views/Pane'
+import { SubPaneStore } from '../../components/SubPaneStore'
+import { AppView } from '../../apps/AppView'
+import { Pane } from '../../views/Pane'
 
 const SettingButton = props => (
   <Button width={90} sizeIcon={1.1} sizeRadius={2} elementProps={{ width: 'auto' }} {...props} />

@@ -7,7 +7,7 @@ import * as React from 'react'
 import { AppActions } from '../actions/AppActions'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { AppPage } from './AppPage/AppPage'
-import { OrbitPaneManager } from './OrbitPage/orbitLayer/OrbitPaneManager'
+import { OrbitPaneManager } from './OrbitPage/OrbitPaneManager'
 
 const getItem = {
   githubItem: () =>

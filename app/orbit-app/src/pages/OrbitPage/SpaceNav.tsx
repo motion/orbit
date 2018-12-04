@@ -1,9 +1,9 @@
 import { attach, view } from '@mcro/black'
 import { Row, Text, View } from '@mcro/ui'
 import * as React from 'react'
-import { AppPanes } from '../../../stores/SpaceStore'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
-import { Icon } from '../../../views/Icon'
+import { AppPanes } from '../../stores/SpaceStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { Icon } from '../../views/Icon'
 
 type Props = {
   paneManagerStore?: PaneManagerStore

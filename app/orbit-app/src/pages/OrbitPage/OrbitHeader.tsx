@@ -3,7 +3,6 @@ import { view, attach } from '@mcro/black'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { View } from '@mcro/ui'
-import { OrbitSwitch } from './OrbitSwitch'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
@@ -11,6 +10,7 @@ import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { AppActions } from '../../actions/AppActions'
+import { WindowCloseButton } from '../../views/WindowControls'
 
 export type HeaderProps = {
   paneManagerStore?: PaneManagerStore
@@ -165,9 +165,8 @@ export class OrbitHeader extends React.Component<
         <OrbitFakeInput>
           <Title>
             <OrbitClose onClick={AppActions.closeOrbit}>
-              <OrbitCloseControl />
+              <WindowCloseButton size={8} />
             </OrbitClose>
-            <OrbitSwitch />
             <Disable when={headerStore.disableSearch}>
               <OrbitHeaderInput headerStore={headerStore} theme={theme} />
             </Disable>
@@ -186,7 +185,7 @@ const OrbitHeaderContainer = view(View, {
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  padding: [9, 7, 7, 7],
+  padding: [7, 14],
   transition: 'all ease-in 300ms',
   zIndex: 4,
 })
@@ -204,7 +203,7 @@ const Title = view({
 })
 
 const OrbitFakeInput = view({
-  height: 43,
+  height: 34,
   flex: 1,
   flexFlow: 'row',
   alignItems: 'stretch',
@@ -217,19 +216,15 @@ const OrbitFakeInput = view({
   },
 })
 
-const OrbitCloseControl = view({
-  width: 8,
-  height: 8,
-  borderRadius: 50,
-  boxSizing: 'content-box',
-  zIndex: 10000,
-})
-
 const OrbitClose = view({
   position: 'absolute',
-  top: 3,
-  left: 3,
-  padding: 6,
+  top: 0,
+  left: 0,
+  padding: 4,
+  opacity: 0.1,
+  '&:hover': {
+    opacity: 1,
+  },
 }).theme(({ theme }) => {
   const isDark = theme.background.isDark()
   return {

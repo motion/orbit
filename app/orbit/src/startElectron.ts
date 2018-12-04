@@ -17,17 +17,15 @@ export function startElectron({ mainProcess }) {
   }
 }
 
-const finishLaunchingElectron = ({ mainProcess }) => {
+const finishLaunchingElectron = async ({ mainProcess }) => {
+  // electron white bg fix attempt:
+  // https://github.com/electron/electron/issues/2170#issuecomment-372108061
+  await new Promise(res => setTimeout(res, 100))
+
   const Config = getGlobalConfig()
   // start electron...
   const ElectronApp = require('@mcro/orbit-electron')
   ElectronApp.main()
-
-  // focus app on start
-  // because we hide dock icon we need to do this
-  if (process.env.NODE_ENV !== 'development' && !process.env.SUB_PROCESS) {
-    app.focus()
-  }
 
   // PRODUCTION
   if (mainProcess && Config.isProd) {

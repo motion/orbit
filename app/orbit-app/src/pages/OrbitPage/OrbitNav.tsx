@@ -23,7 +23,7 @@ export class OrbitNav extends React.Component<Props> {
         {AppPanes.map((pane, index) => {
           const isActive = curIndex === index
           return (
-            <NavButton key={pane.id}>
+            <NavButton key={pane.id} isActive={isActive}>
               <Icon name={`${pane.icon}`} size={16} />
               <Text
                 marginLeft={10}
@@ -56,8 +56,9 @@ const NavButton = view({
   flexFlow: 'row',
   alignItems: 'center',
   padding: [6, 14],
-}).theme(({ theme }) => ({
   '&:hover': {
-    background: theme.backgroundHover,
+    background: [0, 0, 0, 0.05],
   },
+}).theme(({ theme, isActive }) => ({
+  background: isActive ? theme.background : 'transparent',
 }))

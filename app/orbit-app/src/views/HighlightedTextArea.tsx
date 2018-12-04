@@ -17,7 +17,7 @@ const Block = view(UI.Block, {
   left: 0,
   right: 0,
   bottom: 0,
-  padding: [10, 3],
+  padding: 0,
   whiteSpace: 'pre',
 }).theme(({ theme }) => ({
   '&::selection': {
@@ -134,19 +134,17 @@ export class HighlightedTextArea extends React.Component<Props> {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
+
+    // javascript sucks looks at this conditional...
     if (payload) {
-      switch (payload.constructor.name) {
-        case 'Object':
-          highlightMarks = this.handleObjectHighlight(highlightMarks, payload)
-          break
-        case 'Array':
-          highlightMarks = this.handleArrayHighlight(highlightMarks, payload)
-          break
-        case 'RegExp':
-          highlightMarks = this.handleRegexHighlight(highlightMarks, payload)
-          break
-        default:
-          throw 'Unrecognized payload type!'
+      if (Array.isArray(payload)) {
+        highlightMarks = this.handleArrayHighlight(highlightMarks, payload)
+      } else if (payload instanceof RegExp) {
+        highlightMarks = this.handleRegexHighlight(highlightMarks, payload)
+      } else if (typeof payload === 'object') {
+        highlightMarks = this.handleObjectHighlight(highlightMarks, payload)
+      } else {
+        throw 'Unrecognized payload type!'
       }
     }
     // this keeps scrolling aligned when input ends with a newline
@@ -162,7 +160,7 @@ export class HighlightedTextArea extends React.Component<Props> {
   render() {
     const { onChange, highlight, value, forwardRef, ...props } = this.props
     return (
-      <TextAreaOuter height="100%">
+      <TextAreaOuter height={props.lineHeight || '100%'}>
         <Block
           {...props}
           forwardRef={this.highlights}

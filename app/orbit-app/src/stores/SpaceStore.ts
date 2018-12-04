@@ -19,10 +19,15 @@ export type Pane = {
 export const AppPanes: Pane[] = [
   {
     id: 'home',
+    type: 'home',
+    icon: 'orbit',
+    title: 'Home',
+  },
+  {
+    id: 'search',
     type: 'search',
     title: 'Search',
-    icon: 'singleNeutralSearch',
-    static: true,
+    icon: 'orbitsearch',
     props: {
       preventScroll: true,
     },
@@ -31,9 +36,8 @@ export const AppPanes: Pane[] = [
     id: 'people',
     type: 'people',
     title: 'People',
-    icon: 'multipleNeutral2',
+    icon: 'orbitpeople',
     trigger: '@',
-    static: true,
     props: {
       preventScroll: true,
     },
@@ -41,22 +45,10 @@ export const AppPanes: Pane[] = [
   {
     id: 'topics',
     type: 'topics',
+    icon: 'orbittopics',
     title: 'Vocabulary',
-    icon: 'singleNeutralChat',
     trigger: '#',
-    static: true,
   },
-  // {
-  //   id: 'lists',
-  //   type: 'lists',
-  //   title: 'Lists',
-  //   icon: 'listBullets',
-  //   trigger: '/',
-  //   static: true,
-  //   props: {
-  //     preventScroll: true,
-  //   },
-  // },
 ]
 
 export class SpaceStore {

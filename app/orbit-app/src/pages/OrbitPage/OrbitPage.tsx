@@ -6,7 +6,7 @@ import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SpaceStore, AppPanes } from '../../stores/SpaceStore'
-import { Theme, Row } from '@mcro/ui'
+import { Theme } from '@mcro/ui'
 import { useStore, useInstantiatedStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { StoreContext, view } from '@mcro/black'
@@ -17,7 +17,7 @@ import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
 import { BORDER_RADIUS } from '../../constants'
 import { OrbitSettings } from './OrbitSettings'
-import { SpaceNav } from './SpaceNav'
+import { OrbitNav } from './OrbitNav'
 import { OrbitPaneManager } from './OrbitPaneManager'
 import { AppView } from '../../apps/AppView'
 
@@ -57,14 +57,14 @@ export const OrbitPage = React.memo(() => {
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
             <OrbitHeader queryStore={queryStore} borderRadius={BORDER_RADIUS} />
-            <SpaceNav />
+            <OrbitNav />
 
             <OrbitPageChrome>
               <OrbitIndexView>
                 <OrbitPaneManager />
               </OrbitIndexView>
               <OrbitMainView>
-                <AppView type="bit" viewType="main" id="0" isActive title="ok" />
+                {/* <AppView type="bit" viewType="main" id="0" isActive title="ok" /> */}
                 <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
               </OrbitMainView>
             </OrbitPageChrome>

@@ -13,18 +13,18 @@ export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'no
 
 @attach('paneManagerStore')
 @view
-export class SpaceNav extends React.Component<Props> {
+export class OrbitNav extends React.Component<Props> {
   render() {
     const { paneManagerStore } = this.props
     const curIndex = Math.min(Math.max(0, paneManagerStore.paneIndex), AppPanes.length - 1)
     // const activeItem = AppPanes[curIndex]
     return (
-      <OrbitNav>
+      <OrbitNavChrome>
         {AppPanes.map((pane, index) => {
           const isActive = curIndex === index
           return (
             <NavButton key={pane.id}>
-              <Icon name={`orbit${pane.type}`} size={16} />
+              <Icon name={`${pane.icon}`} size={16} />
               <Text
                 marginLeft={10}
                 fontWeight={200}
@@ -38,12 +38,12 @@ export class SpaceNav extends React.Component<Props> {
           )
         })}
         <View flex={1} minWidth={10} />
-      </OrbitNav>
+      </OrbitNavChrome>
     )
   }
 }
 
-const OrbitNav = view({
+const OrbitNavChrome = view({
   flexFlow: 'row',
   position: 'relative',
   zIndex: 1000,

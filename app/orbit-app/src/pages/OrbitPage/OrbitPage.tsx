@@ -6,10 +6,10 @@ import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SpaceStore, AppPanes } from '../../stores/SpaceStore'
-import { Theme } from '@mcro/ui'
+import { Theme, Row } from '@mcro/ui'
 import { useStore, useInstantiatedStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { StoreContext } from '@mcro/black'
+import { StoreContext, view } from '@mcro/black'
 import { StaticContainer } from '../../views/StaticContainer'
 import { AppActions } from '../../actions/AppActions'
 import { memo } from '../../helpers/memo'
@@ -21,6 +21,7 @@ import { BORDER_RADIUS } from '../../constants'
 import { OrbitSettings } from './OrbitSettings'
 import { SpaceNav } from './SpaceNav'
 import { OrbitPaneManager } from './OrbitPaneManager'
+import { AppView } from '../../apps/AppView'
 
 export const OrbitPage = memo(() => {
   const { darkTheme } = useInstantiatedStore(App).state
@@ -60,7 +61,16 @@ export const OrbitPage = memo(() => {
             <AppWrapper className={`theme-${theme} app-parent-bounds`}>
               <OrbitHeader queryStore={queryStore} borderRadius={BORDER_RADIUS} />
               <SpaceNav />
-              <OrbitPaneManager />
+
+              <Row flex={1} overflow="hidden">
+                <OrbitIndexView>
+                  <OrbitPaneManager />
+                </OrbitIndexView>
+                <OrbitMainView>
+                  <AppView type="bit" viewType="main" id="0" isActive title="ok" />
+                </OrbitMainView>
+              </Row>
+
               <OrbitOnboard />
               <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
             </AppWrapper>
@@ -69,4 +79,12 @@ export const OrbitPage = memo(() => {
       </StaticContainer>
     </MainShortcutHandler>
   )
+})
+
+const OrbitIndexView = view({
+  width: 300,
+})
+
+const OrbitMainView = view({
+  flex: 1,
 })

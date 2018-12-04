@@ -2,8 +2,10 @@ NEXT
 
 - restructure app for one window
 - move quickly towards a working All/People/Terms pane in one window
+- home should show a column of each of them
+- clicking the currently active pane should toggle it open/closed
 - get a lot of interaction working
-- sources/settings panes with onboarding
+- big settings pane cleanup, restructure
 - fix search up a lot
 - fix people and have it add in topics/terms into their data object
 - make the terms app actually work and mockup some adding/editing

@@ -18,7 +18,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         
         // Start websocket server
         do {
-            try Socket.start()
+            try Socket.connect()
         } catch {
             Log.error(error.localizedDescription)
         }

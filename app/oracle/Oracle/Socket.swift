@@ -7,19 +7,14 @@
 //
 
 import Foundation
-import Swifter
+import Starscream
 
 
 //
-// IMPORTANT NOTES:
+// NOTES:
 //
-// 1) This class uses only static properties/methods.
+// 1) This class uses exposes static properties/methods.
 //    The reason is purely cosmetic: `Socket.send(...)` instead of `Socket.shared.send(...)`
-//
-// 2) The Websocket library we're using (Swifter) is pretty crappy.
-//    Since there's no apparent way to send server -> client data on demand,
-//    we work around the issue by keeping a reference to `WebSocketSession` the first
-//    time any client connects to the socket. This seems to work ok so far.
 //
 
 
@@ -201,11 +196,10 @@ class Socket {
     }
 
     
-    /// Main websocket server.
-    fileprivate static let server = HttpServer()
+    fileprivate static let shared = Socket()
     
-    /// Stored websocket session (hack to get around library limitations).
-    fileprivate static var wsSession: WebSocketSession?
+    /// Main websocket server.
+    fileprivate var socket: WebSocket!
     
     /// Prevent other instances from being created.
     private init() {}
@@ -217,42 +211,36 @@ class Socket {
 
 extension Socket {
     
-    /// Starts the websocket server.
-    static func start() throws {
+    /// Connects the app to the websocket server.
+    static func connect() throws {
         // Read socket port from environment variable
-        var port: UInt16 = 8080
-        if let portStr = ProcessInfo.processInfo.environment["SOCKET_PORT"], let portInt = UInt16(portStr) {
+        var port: Int = 8080
+        if let portStr = ProcessInfo.processInfo.environment["SOCKET_PORT"], let portInt = Int(portStr) {
             port = portInt
         } else {
             Log.error("WARNING: Environment variable not found for websocket port. Defaulting to 8080.")
         }
         
-        // Add websocket endpoint
-        Socket.server["/oracle"] = websocket(text: Socket.incomingString, binary: Socket.incomingData, connected: Socket.clientConnected)
-        
-        // Start server
-        try server.start(port)
-        
-        Log.info("Websocket server started on port \(port).")
+        // Connect to websocket server
+        Socket.shared.socket = WebSocket(url: URL(string: "ws://localhost:\(port)")!)
+        Socket.shared.socket.delegate = Socket.shared
+        Socket.shared.socket.connect()
     }
     
     
-    /// Sends a raw string to any connected websocket client.
+    /// Sends a raw string to the websocket server.
     static func send(_ str: String) {
-        wsSession?.writeText(str)
+        Socket.shared.socket.write(string: str)
     }
     
     
-    /// Sends the given messsage to any connected websocket client.
+    /// Sends the given messsage to the websocket server.
     static func send(_ message: OutboundMessage) {
-        Log.debug("Sending websocket message...")
         do {
             // Serialize message to JSON format
             let json = try message.json()
-            // Convert to [UInt8] (because this library is stupid...)
-            let bytes = Array(json)
             // Broadcast data
-            wsSession?.writeBinary(bytes)
+            Socket.shared.socket.write(data: json)
         } catch {
             Log.error("Error serializing websocket message to JSON: \(error)")
         }
@@ -263,44 +251,22 @@ extension Socket {
 
 // MARK: Incoming
 
-fileprivate extension Socket {
+extension Socket: WebSocketDelegate {
     
-    /// Called when a new client connects to the websocket.
-    static func clientConnected(session: WebSocketSession) {
-        Log.info("Websocket client connected")
-        // NOTE: This is where we store the socket session locally
-        Socket.wsSession = session
+    /// Called when the websocket client successfully connects to the server.
+    func websocketDidConnect(socket: WebSocketClient) {
+        Log.info("Connected to websocket server.")
     }
     
     
-    /// Called when an incoming message is received from a client.
-    static func incomingString(session: WebSocketSession, str: String) {
-        // Convert string back to raw data
-        // (We only care about the data, but some Websocket clients might send JSON as a string)
-        guard let data = str.data(using: .utf8) else { return }
-        
-        // Deserialize JSON
-        guard let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String : Any] else {
-            Log.error("Malformed JSON string received by websocket: \(str)")
-            return
-        }
-        
-        // Decode message object
-        guard let message = InboundMessage(json: json) else {
-            Log.error("Unsupported message type received by websocket: \(json)")
-            return
-        }
-        
-        // Handle message
-        handleIncomingMessage(message)
+    /// Called when the websocket client disconnects to the server.
+    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        Log.info("Disconnected from websocket server.")
     }
     
     
-    /// Called when an incoming message (as raw data) is received from a client.
-    static func incomingData(session: WebSocketSession, bytes: [UInt8]) {
-        // Convert to native Data format
-        let data = Data(bytes)
-        
+    /// Called when the websocket client receives data from the server.
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         // Deserialize JSON
         guard let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String : Any] else {
             Log.error("Malformed JSON data received by websocket.")
@@ -318,8 +284,31 @@ fileprivate extension Socket {
     }
     
     
+    /// Called when the websocket client receives text from the server.
+    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        // Convert string back to raw data
+        // (We only care about the data, but some Websocket clients might send JSON as a string)
+        guard let data = text.data(using: .utf8) else { return }
+        
+        // Deserialize JSON
+        guard let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String : Any] else {
+            Log.error("Malformed JSON string received by websocket: \(text)")
+            return
+        }
+        
+        // Decode message object
+        guard let message = InboundMessage(json: json) else {
+            Log.error("Unsupported message type received by websocket: \(json)")
+            return
+        }
+        
+        // Handle message
+        handleIncomingMessage(message)
+    }
+    
+    
     /// Handles an incoming message from a client.
-    private static func handleIncomingMessage(_ message: InboundMessage) {
+    private func handleIncomingMessage(_ message: InboundMessage) {
         switch message {
         case .startRecording:
             DispatchQueue.main.async {

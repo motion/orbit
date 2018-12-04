@@ -28,8 +28,9 @@ class OrbitWindowStore {
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
-      this.size = [screenSize[0] / 2, screenSize[1] / 2].map(x => Math.round(x))
-      this.position = [this.size[0] / 2, this.size[1] / 2].map(x => Math.round(x))
+      const scl = 0.65
+      this.size = [screenSize[0] * scl, screenSize[1] * scl].map(x => Math.round(x))
+      this.position = [this.size[0] / 2, 0].map(x => Math.round(x))
     },
   )
 
@@ -155,8 +156,9 @@ export class OrbitWindow extends React.Component<Props> {
         onFocus={store.handleElectronFocus}
         showDevTools={Electron.state.showDevTools.app}
         transparent
-        background="#ffffff00"
+        background="#00000000"
         vibrancy="light"
+        hasShadow
       />
     )
   }

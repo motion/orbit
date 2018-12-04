@@ -30,7 +30,7 @@ export class Window extends BaseComponent {
       transparent: !!props.transparent,
       webPreferences: props.webPreferences,
       blinkFeatures: props.blinkFeatures,
-      hasShadow: !!props.hasShadow,
+      hasShadow: typeof props.hasShadow === 'undefined' ? true : !!props.hasShadow,
       backgroundColor: props.backgroundColor,
       alwaysOnTop: !!props.alwaysOnTop,
       frame: !!props.frame,

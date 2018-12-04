@@ -19,6 +19,8 @@ import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
 import { BORDER_RADIUS } from '../../constants'
 import { OrbitSettings } from './OrbitSettings'
+import { SpaceNav } from './SpaceNav'
+import { OrbitPaneManager } from './OrbitPaneManager'
 
 export const OrbitPage = memo(() => {
   const { darkTheme } = useInstantiatedStore(App).state
@@ -57,6 +59,8 @@ export const OrbitPage = memo(() => {
           <Theme name={theme}>
             <AppWrapper className={`theme-${theme} app-parent-bounds`}>
               <OrbitHeader queryStore={queryStore} borderRadius={BORDER_RADIUS} />
+              <SpaceNav />
+              <OrbitPaneManager />
               <OrbitOnboard />
               <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
             </AppWrapper>

@@ -17,7 +17,6 @@ export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'no
 export class OrbitNav extends React.Component<Props> {
   render() {
     const { paneManagerStore } = this.props
-    const onSettings = paneManagerStore.activePane === 'settings'
     return (
       <OrbitNavChrome>
         {AppPanes.map((pane, index) => {

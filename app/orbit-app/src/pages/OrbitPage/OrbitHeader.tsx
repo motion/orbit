@@ -133,18 +133,19 @@ export class OrbitHeader extends React.Component<
         headerBg={headerBg}
         borderRadius={borderRadius}
         opacity={paneManagerStore.activePane === 'onboard' ? 0 : 1}
+        className="draggable"
       >
-        <OrbitFakeInput>
-          <Title>
-            <OrbitClose onClick={AppActions.closeOrbit}>
-              <WindowCloseButton size={8} />
-            </OrbitClose>
+        <OrbitClose onClick={AppActions.closeOrbit}>
+          <WindowCloseButton size={8} />
+        </OrbitClose>
+        <OrbitInputContain>
+          <OrbitFakeInput>
             <OrbitHeaderInput headerStore={headerStore} theme={theme} />
-          </Title>
-          <After>
-            <OrbitHeaderButtons />
-          </After>
-        </OrbitFakeInput>
+          </OrbitFakeInput>
+        </OrbitInputContain>
+        <After>
+          <OrbitHeaderButtons />
+        </After>
       </OrbitHeaderContainer>
     )
   }
@@ -165,25 +166,20 @@ const After = view({
   flexFlow: 'row',
 })
 
-const Title = view({
-  flexFlow: 'row',
+const OrbitInputContain = view({
+  height: 34,
   flex: 1,
-  justifyContent: 'stretch',
-  alignItems: 'stretch',
+  alignItems: 'center',
+  justifyContent: 'center',
 })
 
 const OrbitFakeInput = view({
-  height: 34,
-  flex: 1,
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  transition: 'background ease-in 200ms 200ms',
-  borderRadius: 10,
-  inactive: {
-    opacity: 0.5,
-    pointerEvents: 'none',
-  },
+  maxWidth: 900,
+  width: '80%',
+  minWidth: 400,
 })
 
 const OrbitClose = view({

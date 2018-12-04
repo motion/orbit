@@ -21,6 +21,7 @@ class OrbitWindowStore {
   orbitRef: BrowserWindow = null
   disposeShow = null
   alwaysOnTop = true
+  hasMoved = false
 
   size = [0, 0]
   position = [0, 0]
@@ -37,6 +38,12 @@ class OrbitWindowStore {
   setSize = (size, other) => {
     console.log('got a resize', other, size)
     // this.size = size
+  }
+
+  setPosition = position => {
+    this.hasMoved = true
+    console.log('got a move', position)
+    this.position = position
   }
 
   didMount() {
@@ -126,12 +133,13 @@ export class OrbitWindow extends React.Component<Props> {
         show={show}
         focus
         onReadyToShow={() => this.setState({ show: true })}
-        alwaysOnTop={[store.alwaysOnTop, 'floating', 1]}
+        alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
         ref={store.handleRef}
         file={url}
         position={store.position.slice()}
         size={store.size.slice()}
         onResize={store.setSize}
+        onMove={store.setPosition}
         onFocus={store.handleElectronFocus}
         showDevTools={Electron.state.showDevTools.app}
         transparent

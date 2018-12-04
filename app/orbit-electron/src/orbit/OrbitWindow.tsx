@@ -30,7 +30,7 @@ class OrbitWindowStore {
     screenSize => {
       const scl = 0.65
       this.size = [screenSize[0] * scl, screenSize[1] * scl].map(x => Math.round(x))
-      this.position = [this.size[0] / 2, 0].map(x => Math.round(x))
+      this.position = [this.size[0] / 4, 0].map(x => Math.round(x))
     },
   )
 

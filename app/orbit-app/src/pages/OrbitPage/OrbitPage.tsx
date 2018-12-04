@@ -16,10 +16,8 @@ import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShort
 import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
 import { BORDER_RADIUS } from '../../constants'
-import { OrbitSettings } from './OrbitSettings'
 import { OrbitNav } from './OrbitNav'
-import { OrbitPaneManager } from './OrbitPaneManager'
-import { AppView } from '../../apps/AppView'
+import { OrbitMainContent } from './OrbitMainContent'
 
 export const OrbitPage = React.memo(() => {
   const { darkTheme } = useInstantiatedStore(App).state
@@ -60,13 +58,7 @@ export const OrbitPage = React.memo(() => {
             <OrbitNav />
 
             <OrbitPageChrome>
-              <OrbitIndexView>
-                <OrbitPaneManager />
-              </OrbitIndexView>
-              <OrbitMainView>
-                {/* <AppView type="bit" viewType="main" id="0" isActive title="ok" /> */}
-                <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
-              </OrbitMainView>
+              <OrbitMainContent />
             </OrbitPageChrome>
 
             <OrbitOnboard />
@@ -75,17 +67,6 @@ export const OrbitPage = React.memo(() => {
       </StoreContext.Provider>
     </MainShortcutHandler>
   )
-})
-
-const OrbitIndexView = view({
-  width: 300,
-}).theme(({ theme }) => ({
-  borderRight: [1, theme.borderColor.alpha(0.5)],
-}))
-
-const OrbitMainView = view({
-  flex: 1,
-  position: 'relative',
 })
 
 const OrbitPageChrome = view({

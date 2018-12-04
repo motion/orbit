@@ -47,7 +47,9 @@ export class ScrollableContent extends React.Component<{
     const { children, appPageStore } = this.props
     return (
       <PeekContentChrome>
-        <ContentInner forwardRef={appPageStore.contentFrame}>{children}</ContentInner>
+        <ContentInner forwardRef={appPageStore && appPageStore.contentFrame}>
+          {children}
+        </ContentInner>
       </PeekContentChrome>
     )
   }

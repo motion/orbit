@@ -56,9 +56,9 @@ const NavButton = view({
   flexFlow: 'row',
   alignItems: 'center',
   padding: [6, 14],
-  '&:hover': {
-    background: [0, 0, 0, 0.05],
-  },
 }).theme(({ theme, isActive }) => ({
   background: isActive ? theme.background : 'transparent',
+  '&:hover': {
+    background: isActive ? theme.background : [0, 0, 0, 0.05],
+  },
 }))

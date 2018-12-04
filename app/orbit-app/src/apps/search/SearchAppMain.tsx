@@ -15,6 +15,10 @@ class SearchAppStore {
 export function SearchAppMain(props: AppProps) {
   const { appConfig } = useStore(SearchAppStore, props)
 
+  if (!appConfig) {
+    return null
+  }
+
   // show a single item
   if (appConfig.type === 'bit' || appConfig.type === 'person') {
     return (

@@ -10,7 +10,6 @@ import { Theme, Row } from '@mcro/ui'
 import { useStore, useInstantiatedStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { StoreContext, view } from '@mcro/black'
-import { StaticContainer } from '../../views/StaticContainer'
 import { AppActions } from '../../actions/AppActions'
 import { memo } from '../../helpers/memo'
 import { OrbitOnboard } from './OrbitOnboard'
@@ -55,28 +54,26 @@ export const OrbitPage = memo(() => {
   }
   return (
     <MainShortcutHandler queryStore={queryStore}>
-      <StaticContainer>
-        <StoreContext.Provider value={stores}>
-          <Theme name={theme}>
-            <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-              <OrbitHeader queryStore={queryStore} borderRadius={BORDER_RADIUS} />
-              <SpaceNav />
+      <StoreContext.Provider value={stores}>
+        <Theme name={theme}>
+          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+            <OrbitHeader queryStore={queryStore} borderRadius={BORDER_RADIUS} />
+            <SpaceNav />
 
-              <Row flex={1} overflow="hidden">
-                <OrbitIndexView>
-                  <OrbitPaneManager />
-                </OrbitIndexView>
-                <OrbitMainView>
-                  <AppView type="bit" viewType="main" id="0" isActive title="ok" />
-                </OrbitMainView>
-              </Row>
+            <Row flex={1} overflow="hidden">
+              <OrbitIndexView>
+                <OrbitPaneManager />
+              </OrbitIndexView>
+              <OrbitMainView>
+                <AppView type="bit" viewType="main" id="0" isActive title="ok" />
+              </OrbitMainView>
+            </Row>
 
-              <OrbitOnboard />
-              <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
-            </AppWrapper>
-          </Theme>
-        </StoreContext.Provider>
-      </StaticContainer>
+            <OrbitOnboard />
+            <OrbitSettings onChangeHeight={orbitWindowStore.setContentHeight} />
+          </AppWrapper>
+        </Theme>
+      </StoreContext.Provider>
     </MainShortcutHandler>
   )
 })

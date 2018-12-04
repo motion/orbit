@@ -1,5 +1,5 @@
-import { Desktop, Electron } from '@mcro/stores'
-import { store, debugState, react, ensure, sleep } from '@mcro/black'
+import { Electron } from '@mcro/stores'
+import { store, debugState, sleep } from '@mcro/black'
 import root from 'global'
 import { Logger } from '@mcro/logger'
 import { getScreenSize } from '../helpers/getScreenSize'
@@ -47,16 +47,6 @@ export class ElectronStore {
     await sleep(16)
     this.show = 2
   }
-
-  closeOnAppClose = react(
-    () => Desktop.orbitFocusState,
-    state => {
-      ensure('exited', state.exited)
-      if (state.exited) {
-        process.exit(0)
-      }
-    },
-  )
 
   restart() {
     if (process.env.NODE_ENV === 'development') {

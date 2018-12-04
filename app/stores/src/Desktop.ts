@@ -1,6 +1,5 @@
 import { Bridge, proxySetters, BridgeOptions } from '@mcro/mobx-bridge'
 import { store, deep } from '@mcro/black'
-import { App } from './App'
 
 // store export
 export let Desktop = null as DesktopStore
@@ -108,24 +107,6 @@ class DesktopStore {
     lastAppChange: Date.now(),
     movedToNewSpace: 0,
   })
-
-  // takes into account the apps state and finds the app
-  // that properly represents Orbit app itself
-  // which changes as you tear Peek apps away (see AppsManager or Nate's brain)
-  defaultFocus = { focused: false, exited: false }
-  get orbitFocusState() {
-    const { appFocusState } = Desktop.state
-    if (!appFocusState) {
-      console.log('orbitFocusState, either no peekApp or no appFocusState')
-      return this.defaultFocus
-    }
-    const focusState = Desktop.state.appFocusState[App.peekState.id]
-    if (!focusState) {
-      console.log('strange, no focus state for orbit, maybe off a frame')
-      return this.defaultFocus
-    }
-    return focusState
-  }
 
   get linesBoundingBox() {
     const { lines } = Desktop.ocrState

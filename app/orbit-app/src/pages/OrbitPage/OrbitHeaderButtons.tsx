@@ -76,7 +76,6 @@ export class OrbitHeaderButtons extends React.Component<Props> {
 
   render() {
     const { paneManagerStore, queryStore } = this.props
-    const onSettings = paneManagerStore.activePane === 'settings'
     return (
       <>
         <Section invisible={paneManagerStore.activePane === 'onboard'}>
@@ -91,16 +90,6 @@ export class OrbitHeaderButtons extends React.Component<Props> {
               <Icon name="arrow-min-left" size={8} opacity={0.8} margin="auto" />
             </ClearButton>
           </Interactive>
-          <UI.Button
-            icon="gear"
-            tooltip="Settings"
-            tooltipProps={{
-              delay: 0,
-            }}
-            active={onSettings}
-            onClick={this.paneSetter('settings')}
-            {...exploreButton}
-          />
         </Section>
       </>
     )

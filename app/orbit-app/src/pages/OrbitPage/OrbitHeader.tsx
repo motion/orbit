@@ -71,7 +71,6 @@ export class HeaderStore {
     () => !!App.peekState.target,
     async (hasTarget, { sleep }) => {
       ensure('no target', !hasTarget)
-      this.focus()
       await sleep(16)
       this.focus()
     },
@@ -87,33 +86,6 @@ export class HeaderStore {
       log: false,
     },
   )
-
-  blurQueryOnSettingsPane = react(
-    () => this.props.paneManagerStore.activePane === 'settings',
-    isSettings => {
-      ensure('isSettings', isSettings)
-      ensure('ref', !!this.inputRef.current)
-      this.inputRef.current.blur()
-    },
-  )
-
-  updateInputOnPaneChange = react(
-    () => /home|explore/.test(this.props.paneManagerStore.activePane),
-    isSearchablePane => {
-      ensure('isSearchablePane', isSearchablePane)
-      this.props.queryStore.clearQuery()
-      this.focus()
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
-
-  disableSearch = react(() => this.props.paneManagerStore.activePane === 'settings', _ => _, {
-    onlyUpdateIfChanged: true,
-  })
-
-  onClickInput = () => {}
 
   onHoverIcon = () => {
     this.iconHovered = true
@@ -167,9 +139,7 @@ export class OrbitHeader extends React.Component<
             <OrbitClose onClick={AppActions.closeOrbit}>
               <WindowCloseButton size={8} />
             </OrbitClose>
-            <Disable when={headerStore.disableSearch}>
-              <OrbitHeaderInput headerStore={headerStore} theme={theme} />
-            </Disable>
+            <OrbitHeaderInput headerStore={headerStore} theme={theme} />
           </Title>
           <After>
             <OrbitHeaderButtons />

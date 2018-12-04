@@ -5,15 +5,16 @@ import fuzzy from 'fuzzy'
 import { View } from './blocks/View'
 import { Color, CSSPropertySet } from '@mcro/gloss'
 
-export type IconProps = CSSPropertySet & {
-  size: number
-  color?: Color
-  type?: 'mini' | 'outline'
-  opacity?: number
-  tooltip?: string
-  tooltipProps?: Object
-  name: string
-}
+export type IconProps = React.HTMLProps<HTMLDivElement> &
+  CSSPropertySet & {
+    size: number
+    color?: Color
+    type?: 'mini' | 'outline'
+    opacity?: number
+    tooltip?: string
+    tooltipProps?: Object
+    name: string
+  }
 
 const widthPadding = x => {
   if (typeof x === 'number') {

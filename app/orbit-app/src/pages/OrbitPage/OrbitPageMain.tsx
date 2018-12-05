@@ -76,7 +76,10 @@ export const OrbitPageMain = React.memo(() => {
 const OrbitIndexView = view({
   width: 300,
   isHidden: {
-    display: 'none',
+    position: 'absolute',
+    pointerEvents: 'none',
+    visibility: 'hidden',
+    zIndex: -1,
   },
 }).theme(({ theme }) => ({
   borderRight: [1, theme.borderColor.alpha(0.5)],

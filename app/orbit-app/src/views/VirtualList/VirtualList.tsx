@@ -85,11 +85,12 @@ class VirtualListStore {
     if (this.rootRef || !ref) {
       return
     }
+
     this.rootRef = ref
 
     // measure on resize
     // @ts-ignore
-    const observer = new ResizeObserver(debounce(this.measure, 32))
+    const observer = new ResizeObserver(this.measure)
     observer.observe(this.rootRef)
 
     this.measure()
@@ -99,9 +100,8 @@ class VirtualListStore {
 
   private measure() {
     if (!this.rootRef || this.rootRef.clientWidth === 0) {
-      console.log('measure on next frame')
       clearTimeout(this.measureTm)
-      this.measureTm = setTimeout(this.measure, 10)
+      this.measureTm = setTimeout(this.measure)
       return
     }
 

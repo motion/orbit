@@ -15,7 +15,6 @@ import { OrbitOnboard } from './OrbitOnboard'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
-import { BORDER_RADIUS } from '../../constants'
 import { OrbitNav } from './OrbitNav'
 import { OrbitPageMain } from './OrbitPageMain'
 
@@ -52,11 +51,11 @@ export const OrbitPage = React.memo(() => {
     paneManagerStore,
   }
   return (
-    <MainShortcutHandler queryStore={queryStore}>
-      <StoreContext.Provider value={stores}>
+    <StoreContext.Provider value={stores}>
+      <MainShortcutHandler queryStore={queryStore}>
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <OrbitHeader queryStore={queryStore} borderRadius={BORDER_RADIUS} />
+            <OrbitHeader queryStore={queryStore} />
             <OrbitNav />
 
             <OrbitPageChrome>
@@ -66,8 +65,8 @@ export const OrbitPage = React.memo(() => {
             <OrbitOnboard />
           </AppWrapper>
         </Theme>
-      </StoreContext.Provider>
-    </MainShortcutHandler>
+      </MainShortcutHandler>
+    </StoreContext.Provider>
   )
 })
 

@@ -106,7 +106,10 @@ const config = {
       'Access-Control-Allow-Origin': '*',
     },
   },
-  devtool: isProd ? 'source-map' : 'cheap-source-map',
+  // for a faster dev mode you can do:
+  //   cheap-source-map (no line numbers...)
+  //   cheap-module-eval-source-map (line numbers, slower initial load...)
+  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

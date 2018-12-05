@@ -120,18 +120,16 @@ export class OrbitHeader extends React.Component<
   HeaderProps & {
     headerStore?: HeaderStore
     after?: React.ReactNode
-    borderRadius?: number
     theme?: ThemeObject
     showPin?: boolean
   }
 > {
   render() {
-    const { headerStore, paneManagerStore, theme, borderRadius } = this.props
+    const { headerStore, paneManagerStore, theme } = this.props
     const headerBg = theme.background
     return (
       <OrbitHeaderContainer
         headerBg={headerBg}
-        borderRadius={borderRadius}
         opacity={paneManagerStore.activePane === 'onboard' ? 0 : 1}
         className="draggable"
       >
@@ -201,12 +199,4 @@ const OrbitClose = view({
       background: isDark ? '#fff' : '#000',
     },
   }
-})
-
-const Disable = view({
-  flex: 'inherit',
-  when: {
-    opacity: 0.5,
-    pointerEvents: 'none',
-  },
 })

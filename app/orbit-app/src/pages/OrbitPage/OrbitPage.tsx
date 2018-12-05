@@ -17,7 +17,7 @@ import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
 import { BORDER_RADIUS } from '../../constants'
 import { OrbitNav } from './OrbitNav'
-import { OrbitMainContent } from './OrbitMainContent'
+import { OrbitPageMain } from './OrbitPageMain'
 
 export const OrbitPage = React.memo(() => {
   const { darkTheme } = useInstantiatedStore(App).state
@@ -58,7 +58,7 @@ export const OrbitPage = React.memo(() => {
             <OrbitNav />
 
             <OrbitPageChrome>
-              <OrbitMainContent />
+              <OrbitPageMain />
             </OrbitPageChrome>
 
             <OrbitOnboard />

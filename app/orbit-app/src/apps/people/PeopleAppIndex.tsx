@@ -1,26 +1,17 @@
 import * as React from 'react'
 import { react, always } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
-import { OrbitCard } from '../../views/OrbitCard'
-import { SmallVerticalSpace } from '../../views'
-import { Grid } from '../../views/Grid'
 import { sortBy } from 'lodash'
 import { PersonBitModel, PersonBit } from '@mcro/models'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { NoResultsDialog } from '../../components/NoResultsDialog'
-import { GridTitle } from '../../views/GridTitle'
-import { List } from 'react-virtualized'
-import { ORBIT_WIDTH } from '@mcro/constants'
-import { View } from '@mcro/ui'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
-import { IS_MENU, MENU_WIDTH } from '../../constants'
 import { memo } from '../../helpers/memo'
-
-const height = 56
-
-type ResultSection = { title: string; results: PersonBit[]; height: number }
+import { VirtualList } from '../../views/VirtualList/VirtualList'
+import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
+import { OrbitListItem } from '../../views/OrbitListItem'
 
 class PeopleIndexStore {
   props: AppProps
@@ -75,134 +66,69 @@ class PeopleIndexStore {
 
   getIndex = res => this.emailToIndex[res.email]
 
-  get resultSections(): ResultSection[] {
-    const isFiltering = !!this.peopleQuery.length
+  // TODO THIS COULD BE SUPER SIMPLE INDEX MAP
+  // and then we just use List.getItemProps (index)
+  get resultsWithSections(): PersonBit[] {
     const total = this.results.length
-    const perRow = 3
-    const height = 60
-    const separatorHeight = 25
-    const bottomLipPad = 16
-    const sectionHeight = num => Math.ceil(num / perRow) * height + separatorHeight
-    let sections: ResultSection[] = []
-    // not that many, show just one section
-    if (isFiltering || total < 10) {
-      sections = [
-        {
-          title: isFiltering ? this.peopleQuery : 'All',
-          results: this.results,
-          height: sectionHeight(total) + bottomLipPad,
-        },
-      ]
-    } else {
-      // create sections by letter
-      let nextPeople = []
-      let lastPersonLetter
-      for (const [index, person] of this.results.entries()) {
-        let letter = person.name[0].toLowerCase()
-        // is number
-        if (+person.name[0] === +person.name[0]) {
-          letter = '0-9'
-        }
-        const isNewSection = lastPersonLetter && letter !== lastPersonLetter
-        const isLastSection = index === total - 1
-        if ((isNewSection || isLastSection) && nextPeople.length) {
-          if (!lastPersonLetter) {
-            lastPersonLetter = letter
-          }
-          sections = [
-            ...sections,
-            {
-              title: lastPersonLetter.toUpperCase(),
-              results: nextPeople,
-              height: sectionHeight(nextPeople.length) + (isLastSection ? bottomLipPad : 0),
-            },
-          ]
-          nextPeople = [person]
-        } else {
-          nextPeople.push(person)
-        }
-        lastPersonLetter = letter
+
+    if (total < 10) {
+      return this.results
+    }
+
+    let resultsSectioned = []
+    let lastLetter = ''
+
+    for (const person of this.results) {
+      let letter = person.name[0].toLowerCase()
+      // is number
+      if (+person.name[0] === +person.name[0]) {
+        letter = '0-9'
+      }
+      const isNewSection = letter !== lastLetter
+      lastLetter = letter
+      if (isNewSection) {
+        resultsSectioned.push({ ...person, separator: letter.toUpperCase() })
+      } else {
+        resultsSectioned.push(person)
       }
     }
-    return sections
+
+    return resultsSectioned
   }
 }
 
-const DirectoryPersonCard = props => (
-  <OrbitCard
-    inGrid
-    appType="people"
-    titleProps={{
-      ellipse: true,
-    }}
-    hide={{
-      icon: true,
-    }}
-    style={{
-      height,
-    }}
-    {...props}
-  />
-)
-
-const PersonSection = ({
-  people,
-  title,
-  getIndex,
-  height,
-}: {
-  people: PersonBit[]
-  title: string
-  getIndex: any
-  height: number
-}) => {
-  return (
-    <View padding={[0, 10]} height={height}>
-      <GridTitle>{title}</GridTitle>
-      <Grid columnWidth={120} gridAutoRows={height} gridGap={6}>
-        {people.map(person => (
-          <DirectoryPersonCard key={person.email} getIndex={getIndex} model={person} />
-        ))}
-      </Grid>
-      <SmallVerticalSpace />
-    </View>
-  )
-}
-
 export const PeopleAppIndex = memo((props: AppProps) => {
-  const { results, resultSections, peopleQuery, getIndex } = useStore(PeopleIndexStore, props)
+  const { results, resultsWithSections, peopleQuery } = useStore(PeopleIndexStore, props)
   const total = results.length
   if (!total) {
     return <NoResultsDialog subName="the directory" />
   }
-  const height = Math.min(
-    props.appStore.maxHeight,
-    resultSections.reduce((a, b) => a + b.height, 0),
-  )
-  const unpad = 3
-  const width = (IS_MENU ? MENU_WIDTH : ORBIT_WIDTH) + unpad * 2
   return (
     <ProvideHighlightsContextWithDefaults value={{ words: peopleQuery.split(' ') }}>
-      <div style={{ height, marginLeft: -unpad, marginRight: -unpad }}>
-        <List
-          rowHeight={({ index }) => resultSections[index].height}
-          rowRenderer={({ index, key }) => {
-            const section = resultSections[index]
-            return (
-              <PersonSection
-                key={`${key}${section.title}`}
-                title={section.title}
-                people={section.results}
-                getIndex={getIndex}
-                height={resultSections[index].height}
-              />
-            )
-          }}
-          rowCount={resultSections.length}
-          width={width}
-          height={height}
-        />
-      </div>
+      <VirtualList
+        infinite
+        ItemView={ListItem}
+        itemProps={props.itemProps}
+        maxHeight={props.appStore.maxHeight}
+        items={resultsWithSections}
+        rowCount={resultsWithSections.length}
+      />
     </ProvideHighlightsContextWithDefaults>
   )
 })
+
+class ListItem extends React.PureComponent<ListItemProps> {
+  render() {
+    const { model, realIndex, query, ...props } = this.props
+    return (
+      <OrbitListItem
+        appType="people"
+        index={realIndex}
+        model={model}
+        searchTerm={query}
+        overflow="hidden"
+        {...props}
+      />
+    )
+  }
+}

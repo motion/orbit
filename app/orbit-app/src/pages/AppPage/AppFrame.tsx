@@ -11,7 +11,7 @@ import { AppFrameArrow } from './AppFrameArrow'
 import { App } from '@mcro/stores'
 
 type AppFrameProps = {
-  appPageStore: AppPageStore
+  appPageStore?: AppPageStore
   children: any
   theme?: ThemeObject
 }

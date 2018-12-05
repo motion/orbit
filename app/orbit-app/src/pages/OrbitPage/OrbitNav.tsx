@@ -50,9 +50,7 @@ const OrbitNavChrome = view({
   position: 'relative',
   zIndex: 1000,
   alignItems: 'center',
-}).theme(({ theme }) => ({
-  borderBottom: [1, theme.borderColor.alpha(0.5)],
-}))
+})
 
 const NavButtonChrome = view({
   flexFlow: 'row',

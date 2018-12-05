@@ -68,14 +68,12 @@ const ButtonInner = ({
   )
 }
 
-export const Button = React.memo(
-  React.forwardRef((props: ButtonProps, ref) => {
-    const uiContext = React.useContext(UIContext)
+export const Button = React.forwardRef((props: ButtonProps, ref) => {
+  const uiContext = React.useContext(UIContext)
 
-    if (props.acceptsHovered && typeof uiContext.hovered === 'boolean') {
-      return <ButtonInner hover={uiContext.hovered} forwardRef={ref} {...props} />
-    }
+  if (props.acceptsHovered && typeof uiContext.hovered === 'boolean') {
+    return <ButtonInner hover={uiContext.hovered} forwardRef={ref} {...props} />
+  }
 
-    return <ButtonInner forwardRef={ref} {...props} />
-  }),
-)
+  return <ButtonInner forwardRef={ref} {...props} />
+})

@@ -120,7 +120,10 @@ const config = {
       '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
       'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
       react: Path.resolve(cwd, 'node_modules', 'react'),
-      'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
+      'react-dom': isProd
+        ? Path.resolve(cwd, 'node_modules', 'react-dom')
+        : // react hmr
+          Path.resolve(__dirname, '..', 'node_modules', '@hot-loader/react-dom'),
       'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
     },
   },
@@ -134,6 +137,7 @@ const config = {
         use: ['workerize-loader'],
         exclude: /node_modules/,
       },
+      // ignore .node.js modules
       {
         test: /\.node.[jt]sx?/,
         use: 'ignore-loader',
@@ -158,10 +162,6 @@ const config = {
           },
         ],
       },
-      // {
-      //   test: /\.svg$/,
-      //   use: 'svg-inline-loader',
-      // },
       {
         test: /\.(gif|png|jpe?g|svg)$/,
         use: [
@@ -185,10 +185,7 @@ const config = {
     ],
   },
   plugins: [
-    // new ProfilingPlugin(),
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
-
-    new DuplicatePackageCheckerPlugin(),
 
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
@@ -196,11 +193,6 @@ const config = {
     }),
 
     new webpack.IgnorePlugin(/electron-log/),
-
-    // adds cache based on source of files
-    // new HardSourceWebpackPlugin(),
-
-    new webpack.NamedModulesPlugin(),
 
     new HtmlWebpackPlugin({
       favicon: 'public/favicon.png',
@@ -211,6 +203,10 @@ const config = {
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
       }),
+
+    !isProd && new webpack.NamedModulesPlugin(),
+
+    isProd && new DuplicatePackageCheckerPlugin(),
 
     isProd &&
       new PrepackPlugin({

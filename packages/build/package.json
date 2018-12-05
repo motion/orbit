@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/core": "7.1.0",
+    "@hot-loader/react-dom": "16.7.0-alpha.2.1",
     "babel-loader": "8.0.2",
     "cache-loader": "1.2.2",
     "css-loader": "^0.28.11",

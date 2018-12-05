@@ -8,7 +8,7 @@ import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import { DateFormat } from './DateFormat'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import { ItemProps } from './OrbitItemProps'
+import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
@@ -20,7 +20,7 @@ import { Separator } from './Separator'
   store: OrbitItemStore,
 })
 @view
-class OrbitListInner extends React.Component<ItemProps<any>> {
+class OrbitListInner extends React.Component<OrbitItemProps<any>> {
   static defaultProps = {
     // offsets -1px on sides for the negative margin we usually use to hide side border
     padding: [10, 11],
@@ -268,7 +268,7 @@ class OrbitListInner extends React.Component<ItemProps<any>> {
 
 // never let it update, this saves so much time we can just change key to change item
 
-export class OrbitListItem extends React.Component<ItemProps<any>> {
+export class OrbitListItem extends React.Component<OrbitItemProps<any>> {
   shouldComponentUpdate() {
     return false
   }

@@ -13,19 +13,19 @@ import { OrbitItemSingleton } from '../OrbitItemStore'
 import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
 import { VirtualListItem } from './VirtualListItem'
-import { ItemProps } from '../OrbitItemProps'
+import { OrbitItemProps } from '../OrbitItemProps'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
-import { throttle } from 'lodash'
+import { throttle, debounce } from 'lodash'
 
-export type ItemPropsMinimum = Pick<ItemProps<any>, 'appType' | 'appConfig'> &
-  Partial<ItemProps<any>>
+export type ItemPropsMinimum = Pick<OrbitItemProps<any>, 'appType' | 'appConfig'> &
+  Partial<OrbitItemProps<any>>
 export type GetItemProps = (index: number) => ItemPropsMinimum
 
 type Props = {
   items: any[]
-  itemProps?: ItemProps<any>
+  itemProps?: OrbitItemProps<any>
   getItemProps?: GetItemProps
   appStore?: AppStore
   subPaneStore?: SubPaneStore
@@ -98,10 +98,15 @@ class VirtualListStore {
     if (ref) {
       // width
       if (this.width === 0) {
-        const width = this.rootRef.clientWidth
+        this.measureWidth()
+
+        // TODO dispose on unmount
+        const observer = new MutationObserver(debounce(this.measureWidth, 32))
+        observer.observe(this.rootRef)
+
         this.cache = new CellMeasurerCache({
           defaultHeight: 60,
-          defaultWidth: width,
+          defaultWidth: this.width,
           fixedWidth: true,
           keyMapper: rowIndex => {
             if (typeof rowIndex === 'undefined') {
@@ -115,10 +120,14 @@ class VirtualListStore {
             return id
           },
         })
-        this.width = width
       }
       this.measure()
     }
+  }
+
+  private measureWidth() {
+    this.width = this.rootRef.clientWidth
+    console.log('measure width', this.width)
   }
 
   private resizeAll = () => {

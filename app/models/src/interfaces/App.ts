@@ -6,6 +6,27 @@ import { Space } from './Space'
 
 export type AppType = 'home' | 'search' | 'people' | 'topics' | 'lists' | 'source' | 'bit'
 
+export type AppConfig = {
+  id: string
+  icon?: string
+  iconLight?: string
+  title: string
+  type: AppType
+  integration?: string
+  subType?: string
+  viewType?: 'main' | 'index' | 'setup'
+  // allow various things to be passed as config
+  // to help configure the peek window
+  viewConfig?: {
+    showTitleBar?: boolean
+    viewPane?: string
+    dimensions?: [number, number]
+    // for auto measuring peek size
+    contentSize?: number
+    initialState?: { [key: string]: any }
+  }
+}
+
 export type BaseApp = {
   id?: number
   name?: string

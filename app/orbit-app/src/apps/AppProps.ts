@@ -1,4 +1,4 @@
-import { AppType } from '@mcro/models'
+import { AppType, AppConfig } from '@mcro/models'
 import { IntegrationType } from '@mcro/models'
 import { AppStore } from './AppStore'
 import { SourcesStore } from '../stores/SourcesStore'
@@ -7,7 +7,7 @@ import { SubPaneStore } from '../components/SubPaneStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { ItemProps } from '../views/OrbitItemProps'
+import { OrbitItemProps } from '../views/OrbitItemProps'
 
 export type AppProps = {
   id: string
@@ -23,5 +23,7 @@ export type AppProps = {
   isActive?: boolean | (() => boolean)
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore
-  itemProps?: Partial<ItemProps<any>>
+  itemProps?: Partial<OrbitItemProps<any>>
+  onSelectItem?: OrbitItemProps<any>['onSelect']
+  appConfig?: AppConfig
 }

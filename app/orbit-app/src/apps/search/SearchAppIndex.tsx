@@ -82,7 +82,7 @@ export class SearchAppInner extends React.Component<
   }
 
   render() {
-    const { searchStore, appStore, offsetY } = this.props
+    const { searchStore, appStore, offsetY, itemProps } = this.props
     return (
       <ProvideHighlightsContextWithDefaults
         value={{
@@ -93,9 +93,10 @@ export class SearchAppInner extends React.Component<
       >
         <VirtualList
           infinite
+          ItemView={ListItem}
+          itemProps={itemProps}
           maxHeight={appStore.maxHeight - offsetY}
           items={searchStore.resultsForVirtualList}
-          ItemView={ListItem}
           rowCount={searchStore.remoteRowCount}
           loadMoreRows={searchStore.loadMore}
           isRowLoaded={this.isRowLoaded}

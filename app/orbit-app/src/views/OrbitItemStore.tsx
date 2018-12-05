@@ -1,5 +1,5 @@
 import { react, ensure } from '@mcro/black'
-import { ItemProps } from './OrbitItemProps'
+import { OrbitItemProps } from './OrbitItemProps'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { AppActions } from '../actions/AppActions'
 import { ResolvableModel } from '../sources/types'
@@ -11,7 +11,7 @@ export const OrbitItemSingleton = {
 }
 
 export class OrbitItemStore {
-  props: ItemProps<ResolvableModel>
+  props: OrbitItemProps<ResolvableModel>
 
   resolvedItem: NormalizedItem | null = null
   isSelected = false
@@ -148,7 +148,7 @@ export class OrbitItemStore {
         console.log('selecting this thing...', this.props.appType, this.appConfig)
         ensure('appConfig`', !!this.appConfig)
         if (onSelect) {
-          onSelect(this.index, this.appConfig)
+          onSelect(this.index, this.appConfig, this.cardWrapRef)
         } else {
           // fluidity
           await sleep()

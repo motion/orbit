@@ -9,10 +9,10 @@ import { AppView } from '../../apps/AppView'
 import { useStore } from '@mcro/use-store'
 import { AppActions } from '../../actions/AppActions'
 import { App } from '@mcro/stores'
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { observeOne } from '@mcro/model-bridge'
 import { SettingModel, Setting } from '@mcro/models'
 import { generalSettingQuery } from '../../helpers/queries'
+import { OrbitItemProps } from '../../views/OrbitItemProps';
 
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
@@ -76,7 +76,7 @@ class OrbitPaneManagerStore {
   )
 }
 
-export function OrbitPaneManager() {
+export const OrbitPaneManager = React.memo(({ onSelectItem }: { onSelectItem: OrbitItemProps<any>['onSelect'] }) => {
   const { queryStore, paneManagerStore, orbitWindowStore } = React.useContext(StoreContext)
 
   useStore(OrbitPaneManagerStore, { queryStore, paneManagerStore })
@@ -95,34 +95,25 @@ export function OrbitPaneManager() {
     })
   }, [])
 
-  return <OrbitPaneManagerStoreInner orbitWindowStore={orbitWindowStore} queryStore={queryStore} />
-}
-
-class OrbitPaneManagerStoreInner extends React.PureComponent<{
-  orbitWindowStore: OrbitWindowStore
-  queryStore: QueryStore
-}> {
-  render() {
-    return (
-      <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
-        <div style={{ position: 'relative', flex: 1 }}>
-          {AppPanes.map(pane => {
-            return (
-              <SubPane
-                id={pane.id}
-                type={pane.type}
-                key={pane.type}
-                paddingLeft={0}
-                paddingRight={0}
-                onChangeHeight={this.props.orbitWindowStore.setContentHeight}
-                {...pane.props}
-              >
-                <AppView viewType="index" id={pane.id} title={pane.title} type={pane.type} />
-              </SubPane>
-            )
-          })}
-        </div>
-      </OrbitDockedInner>
-    )
-  }
-}
+  return (
+    <OrbitDockedInner id="above-content" style={{ height: window.innerHeight }}>
+      <div style={{ position: 'relative', flex: 1 }}>
+        {AppPanes.map(pane => {
+          return (
+            <SubPane
+              id={pane.id}
+              type={pane.type}
+              key={pane.type}
+              paddingLeft={0}
+              paddingRight={0}
+              onChangeHeight={orbitWindowStore.setContentHeight}
+              {...pane.props}
+            >
+              <AppView viewType="index" id={pane.id} title={pane.title} type={pane.type} itemProps={{ onSelect: onSelectItem }} />
+            </SubPane>
+          )
+        })}
+      </div>
+    </OrbitDockedInner>
+  )
+})

@@ -1,5 +1,5 @@
-import { AppType } from '@mcro/models'
-import { App, AppConfig } from '@mcro/stores'
+import { AppType, AppConfig } from '@mcro/models'
+import { App } from '@mcro/stores'
 import { AppActions } from '../../AppActions'
 import { setPeekApp } from './setPeekApp'
 import { Logger } from '@mcro/logger'

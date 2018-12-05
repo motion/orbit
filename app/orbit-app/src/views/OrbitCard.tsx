@@ -7,12 +7,11 @@ import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import { DateFormat } from './DateFormat'
-import { ItemProps } from './OrbitItemProps'
+import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
 import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
-import { onlyUpdateOnChanged } from '../helpers/onlyUpdateOnChanged'
 import { ResolvableModel } from '../sources/types'
 import { Avatar } from './Avatar'
 
@@ -21,7 +20,7 @@ import { Avatar } from './Avatar'
   store: OrbitItemStore,
 })
 @view
-export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> {
+export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableModel>> {
   static defaultProps = {
     borderRadius: 7,
     padding: 8,
@@ -135,8 +134,9 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
                     </UI.Text>
                   </CardSubtitle>
                 )}
-                {!hasFourRows &&
-                  hasDate && <CardSubtitle padRight={!hasTitle}>{dateContent}</CardSubtitle>}
+                {!hasFourRows && hasDate && (
+                  <CardSubtitle padRight={!hasTitle}>{dateContent}</CardSubtitle>
+                )}
                 {hasMeta && (
                   <CardSubtitle padRight={!hasTitle}>
                     {!!location && (
@@ -145,13 +145,12 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
                       </RoundButtonSmall>
                     )}
                     {subtitleSpaceBetween}
-                    {hasFourRows &&
-                      hasDate && (
-                        <>
-                          {!!location && <div style={{ width: 5 }} />}
-                          {dateContent}
-                        </>
-                      )}
+                    {hasFourRows && hasDate && (
+                      <>
+                        {!!location && <div style={{ width: 5 }} />}
+                        {dateContent}
+                      </>
+                    )}
                     {hasPreview && <VerticalSpaceSmall />}
                   </CardSubtitle>
                 )}
@@ -167,16 +166,15 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
                 )}
                 {!!avatar && <Avatar src={avatar} />}
                 {hasChildren && children}
-                {!hasChildren &&
-                  showChildren && (
-                    <ItemView
-                      model={this.props.model}
-                      bit={this.props.model}
-                      searchTerm={this.props.searchTerm}
-                      shownLimit={10}
-                      extraProps={this.props.extraProps}
-                    />
-                  )}
+                {!hasChildren && showChildren && (
+                  <ItemView
+                    model={this.props.model}
+                    bit={this.props.model}
+                    searchTerm={this.props.searchTerm}
+                    shownLimit={10}
+                    extraProps={this.props.extraProps}
+                  />
+                )}
                 {hasPeople && (
                   <Row>
                     <PeopleRow people={people} />
@@ -185,18 +183,17 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
                   </Row>
                 )}
 
-                {!!icon &&
-                  !(hide && hide.icon) && (
-                    <OrbitIcon
-                      icon={icon}
-                      size={14}
-                      {...orbitIconProps}
-                      position="absolute"
-                      top={topPad}
-                      right={sidePad}
-                      {...iconProps}
-                    />
-                  )}
+                {!!icon && !(hide && hide.icon) && (
+                  <OrbitIcon
+                    icon={icon}
+                    size={14}
+                    {...orbitIconProps}
+                    position="absolute"
+                    top={topPad}
+                    right={sidePad}
+                    {...iconProps}
+                  />
+                )}
               </Padding>
             </>
           )}
@@ -237,7 +234,7 @@ export class OrbitCardInner extends React.Component<ItemProps<ResolvableModel>> 
 
 // never let it update, this saves so much time we can just change key to change item
 
-export class OrbitCard extends React.Component<ItemProps<ResolvableModel>> {
+export class OrbitCard extends React.Component<OrbitItemProps<ResolvableModel>> {
   shouldComponentUpdate() {
     return false
   }

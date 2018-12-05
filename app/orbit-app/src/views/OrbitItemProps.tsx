@@ -2,7 +2,7 @@ import { AppConfig } from '@mcro/stores'
 import { OrbitItemStore } from './OrbitItemStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
-import { ResolvableModel, OrbitItemProps } from '../sources/types'
+import { ResolvableModel, GenericItemProps } from '../sources/types'
 import { SourcesStore } from '../stores/SourcesStore'
 import { AppStore } from '../apps/AppStore'
 import { CSSPropertySetStrict } from '@mcro/css'
@@ -10,7 +10,7 @@ import { AppType } from '@mcro/models'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 
-export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
+export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
     // for setting the view
     appType?: AppType
@@ -40,8 +40,8 @@ export type ItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     titleProps?: Object
     inactive?: boolean
     iconProps?: Object
-    hide?: OrbitItemProps<any>['hide']
-    extraProps?: Partial<OrbitItemProps<any>['extraProps']>
+    hide?: GenericItemProps<any>['hide']
+    extraProps?: Partial<GenericItemProps<any>['extraProps']>
     className?: string
     inGrid?: boolean
     pane?: string

@@ -1,9 +1,8 @@
-import { AppConfig } from '@mcro/stores'
 import { peekPosition, Position } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { setAppState } from '../setAppState'
-import { AppType } from '@mcro/models'
+import { AppType, AppConfig } from '@mcro/models'
 
 type PeekApp = {
   target: HTMLDivElement
@@ -18,7 +17,7 @@ type PeekApp = {
 // because App.setState merges not replaces
 const DEFAULT_APP_CONFIG: AppConfig = {
   id: '',
-  type: '',
+  type: 'home',
   title: '',
   icon: '',
   subType: '',

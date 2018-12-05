@@ -4,10 +4,10 @@ import { handleClickLocation } from '../../helpers/handleClickLocation'
 import { Bit } from '@mcro/models'
 import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
-import { ItemProps } from '../OrbitItemProps'
+import { OrbitItemProps } from '../OrbitItemProps'
 import { normalizeItem } from '../../helpers/normalizeItem'
 
-export type ListItemProps = Partial<ItemProps<any>> & {
+export type ListItemProps = Partial<OrbitItemProps<any>> & {
   model: Bit
   query?: string
   style?: Object

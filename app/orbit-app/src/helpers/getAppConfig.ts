@@ -4,7 +4,6 @@ import { AppConfig } from '@mcro/stores'
 import { sourceToAppConfig } from '../stores/SourcesStore'
 
 export const getAppConfig = (model: ResolvableModel): AppConfig => {
-  console.log('get app config', model)
   let type
   switch (model.target) {
     case 'bit':

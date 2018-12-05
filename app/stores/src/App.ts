@@ -1,7 +1,6 @@
 import { deep, store } from '@mcro/black'
 import { Bridge, proxySetters, BridgeOptions } from '@mcro/mobx-bridge'
-import { AppType } from '@mcro/models'
-import { AppConfig } from './AppConfig'
+import { AppType, AppConfig } from '@mcro/models'
 
 export let App = null as AppStore
 

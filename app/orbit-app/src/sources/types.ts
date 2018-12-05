@@ -25,7 +25,7 @@ export type ItemType = IntegrationType | 'person'
 
 type ModelFromType<A extends ItemType> = AppTypeToModelType[A]
 
-export type OrbitItemProps<T extends ResolvableModel> = {
+export type GenericItemProps<T extends ResolvableModel> = {
   model?: T
   isExpanded?: boolean
   shownLimit?: number
@@ -50,12 +50,12 @@ export type OrbitItemProps<T extends ResolvableModel> = {
 }
 
 // for all apps, including non-bit apps
-export type OrbitGenericSourceProps<A extends ItemType> = OrbitItemProps<ModelFromType<A>>
+export type OrbitGenericSourceProps<A extends ItemType> = GenericItemProps<ModelFromType<A>>
 
 // for just "bit" apps
 // much more common / external facing
 // so give it the nicer name
-export type OrbitIntegrationProps<A extends ItemType> = OrbitItemProps<ModelFromType<A>> & {
+export type OrbitIntegrationProps<A extends ItemType> = GenericItemProps<ModelFromType<A>> & {
   bit: GenericBit<any>
   normalizedItem: Partial<NormalizedItem>
 }

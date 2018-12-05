@@ -6,7 +6,7 @@ import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
 import { memo } from '../helpers/memo'
 
-type Props = Pick<AppProps, 'id' | 'viewType' | 'title' | 'type' | 'isActive'> & {
+type Props = Pick<AppProps, 'id' | 'viewType' | 'title' | 'type' | 'isActive' | 'itemProps'> & {
   appStore?: AppStore
 }
 

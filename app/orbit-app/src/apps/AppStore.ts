@@ -1,9 +1,8 @@
 import { react, ensure, always } from '@mcro/black'
-import { AppConfig } from '@mcro/stores'
 import { SelectionGroup } from './SelectionResults'
 import { AppProps } from './AppProps'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
-import { AppType } from '@mcro/models'
+import { AppType, AppConfig } from '@mcro/models'
 
 export class AppStore {
   props: AppProps & {
@@ -43,7 +42,7 @@ export class AppStore {
     if (this.props.appPageStore) {
       return this.props.appPageStore.state.appConfig
     }
-    return null
+    return this.props.appConfig
   }
 
   get appType(): AppType {

@@ -102,24 +102,7 @@ class VirtualListStore {
 
         // TODO dispose on unmount
         const observer = new MutationObserver(debounce(this.measureWidth, 32))
-        observer.observe(this.rootRef)
-
-        this.cache = new CellMeasurerCache({
-          defaultHeight: 60,
-          defaultWidth: this.width,
-          fixedWidth: true,
-          keyMapper: rowIndex => {
-            if (typeof rowIndex === 'undefined') {
-              return 0
-            }
-            const id = this.props.items[rowIndex].id
-            if (typeof id === 'undefined') {
-              console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
-              throw new Error('No valid id found for mapping results')
-            }
-            return id
-          },
-        })
+        observer.observe(this.rootRef, { attributes: true })
       }
       this.measure()
     }
@@ -128,6 +111,25 @@ class VirtualListStore {
   private measureWidth() {
     this.width = this.rootRef.clientWidth
     console.log('measure width', this.width)
+
+    if (this.width && !this.cache) {
+      this.cache = new CellMeasurerCache({
+        defaultHeight: 60,
+        defaultWidth: this.width,
+        fixedWidth: true,
+        keyMapper: rowIndex => {
+          if (typeof rowIndex === 'undefined') {
+            return 0
+          }
+          const id = this.props.items[rowIndex].id
+          if (typeof id === 'undefined') {
+            console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
+            throw new Error('No valid id found for mapping results')
+          }
+          return id
+        },
+      })
+    }
   }
 
   private resizeAll = () => {

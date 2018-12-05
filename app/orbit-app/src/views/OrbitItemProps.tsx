@@ -1,4 +1,3 @@
-import { AppConfig } from '@mcro/stores'
 import { OrbitItemStore } from './OrbitItemStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
@@ -6,7 +5,7 @@ import { ResolvableModel, GenericItemProps } from '../sources/types'
 import { SourcesStore } from '../stores/SourcesStore'
 import { AppStore } from '../apps/AppStore'
 import { CSSPropertySetStrict } from '@mcro/css'
-import { AppType } from '@mcro/models'
+import { AppType, AppConfig } from '@mcro/models'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 

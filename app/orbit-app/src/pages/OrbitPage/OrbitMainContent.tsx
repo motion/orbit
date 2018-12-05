@@ -4,8 +4,8 @@ import { OrbitPaneManager } from './OrbitPaneManager'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { OrbitItemProps } from '../../views/OrbitItemProps'
-import { AppConfig } from '@mcro/stores';
-import { PaneManagerStore } from '../../stores/PaneManagerStore';
+import { AppConfig, AppType } from '@mcro/models'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
 
 class OrbitStore {
   props: { paneManagerStore: PaneManagerStore }
@@ -17,17 +17,17 @@ class OrbitStore {
   activeItem: AppConfig = {
     id: '0',
     title: '',
-    type: ''
+    type: 'home',
   }
 
   updateTypeOnPaneChange = react(
-    () => this.props.paneManagerStore.activePane,
+    () => this.props.paneManagerStore.activePane as AppType,
     type => {
       this.activeItem = {
         ...this.activeItem,
-        type
+        type,
       }
-    }
+    },
   )
 
   handleSelectItem: OrbitItemProps<any>['onSelect'] = (index, config) => {
@@ -53,7 +53,10 @@ export const OrbitMainContent = React.memo(() => {
           key={store.activeItem.id}
           isActive
           viewType="main"
-          {...store.activeItem}
+          id={store.activeItem.id}
+          title={store.activeItem.title}
+          type={store.activeItem.type}
+          appConfig={store.activeItem}
         />
       </OrbitMainView>
     </>

@@ -81,36 +81,25 @@ class VirtualListStore {
     },
   )
 
-  measure = throttle(() => {
-    if (!this.rootRef || !this.cache) {
-      return
-    }
-    // height
-    let height = 0
-    for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
-      height += this.cache.rowHeight(i)
-    }
-    this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
-  }, 32)
-
   setRootRef = ref => {
+    console.log('got ref', ref)
     this.rootRef = ref
-    if (ref) {
-      // width
-      if (this.width === 0) {
-        this.measureWidth()
+    this.measure()
 
-        // TODO dispose on unmount
-        const observer = new MutationObserver(debounce(this.measureWidth, 32))
-        observer.observe(this.rootRef, { attributes: true })
-      }
-      this.measure()
+    if (ref && this.width === 0) {
+      // TODO dispose on unmount
+      // @ts-ignore
+      const observer = new ResizeObserver(debounce(this.measure, 32))
+      observer.observe(this.rootRef)
     }
   }
 
-  private measureWidth() {
+  private measure() {
+    if (!this.rootRef) {
+      return
+    }
+
     this.width = this.rootRef.clientWidth
-    console.log('measure width', this.width)
 
     if (this.width && !this.cache) {
       this.cache = new CellMeasurerCache({
@@ -129,6 +118,15 @@ class VirtualListStore {
           return id
         },
       })
+    }
+
+    if (this.cache) {
+      // height
+      let height = 0
+      for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
+        height += this.cache.rowHeight(i)
+      }
+      this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
     }
   }
 
@@ -219,7 +217,7 @@ export const VirtualList = (props: Props) => {
       ref={store.setRootRef}
       style={{
         height,
-        flex: 1,
+        width: '100%',
       }}
     >
       {!!width && (

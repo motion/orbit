@@ -92,7 +92,6 @@ export class SearchAppInner extends React.Component<
         }}
       >
         <VirtualList
-          infinite
           ItemView={ListItem}
           itemProps={itemProps}
           maxHeight={appStore.maxHeight - offsetY}

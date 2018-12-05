@@ -106,7 +106,6 @@ export const PeopleAppIndex = memo((props: AppProps) => {
   return (
     <ProvideHighlightsContextWithDefaults value={{ words: peopleQuery.split(' ') }}>
       <VirtualList
-        infinite
         ItemView={ListItem}
         itemProps={props.itemProps}
         maxHeight={props.appStore.maxHeight}

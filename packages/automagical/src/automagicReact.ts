@@ -27,8 +27,15 @@ let logBatchTm = null
 const logBatchFlush = () => {
   const groups = [...logBatch]
   if (groups.length > 1) {
-    const groupTitles = groups.map(x => x[0].replace('✅', '').trim())
-    console.groupCollapsed(`${groups.length} reactions: ${groupTitles.join(', ')}`)
+    const groupTitles = groups.map(x =>
+      x[0]
+        // collapse extra whitespace in repeating items
+        .replace(/✅ [\s]+/, '✅ ')
+        // remove the extra info inside () for cleaner lines
+        .replace(/(\([^\)]+\))/g, '')
+        .trim(),
+    )
+    console.groupCollapsed(`  REACTIONS (${groups.length}): ${groupTitles.join(' ᠅ ')}`)
     for (const [, logger] of logBatch) {
       logger()
     }
@@ -493,7 +500,7 @@ export function automagicReact(
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog) {
           if (changed) {
-            logGroup(`   ${name.full} ${id}`, result, `${changed}`, reactValArg, globalChanged)
+            logGroup(name.full, result, `${changed}`, reactValArg, globalChanged)
           }
         }
       }

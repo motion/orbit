@@ -106,9 +106,7 @@ const config = {
       'Access-Control-Allow-Origin': '*',
     },
   },
-  // inline source map allows chrome remote debugger to access it
-  // see: https://stackoverflow.com/questions/27671390/why-inline-source-maps
-  devtool: isProd ? 'cheap-source-map' : 'cheap-eval-source-map',
+  devtool: isProd ? 'source-map' : 'cheap-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

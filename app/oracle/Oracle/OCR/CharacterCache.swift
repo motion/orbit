@@ -268,12 +268,12 @@ extension CharacterCache {
     ///   - findHangers: If `true`, the outliner will also search for hangers above the character.
     ///   - percentDownLine: The percent this character's bounds begins down its containing line.
     /// - Returns: An array of integers representing this character's unique outline.
-    func traceOutline(baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int, numRows: Int, charBounds: CGRect, lineHeight: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool, percentDownLine: Float) -> (outline: [Int], bounds: CGRect)? {
+    func traceOutline(baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int, numRows: Int, charBounds: CGRect, shouldInvert: Bool, lineHeight: Int, maxMoves: Int, initialMove: [Int], findHangers: Bool, percentDownLine: Float) -> (outline: [Int], bounds: CGRect)? {
         let buffer = baseAddress.assumingMemoryBound(to: UInt8.self)
-        let isBlackIfUnder: UInt8 = 150
+        let isBlackIfUnder: UInt8 = 128
         
         // Find starting point (left-most black pixel in image)
-        guard let (startX, startY) = findStartingPoint(baseAddress: baseAddress, bytesPerRow: bytesPerRow, numRows: numRows, bounds: charBounds) else {
+        guard let (startX, startY) = findStartingPoint(baseAddress: baseAddress, bytesPerRow: bytesPerRow, numRows: numRows, bounds: charBounds, inverted: shouldInvert) else {
             return nil
         }
         
@@ -323,7 +323,12 @@ extension CharacterCache {
                     break
                 }
                 // not black
-                if buffer[next] >= isBlackIfUnder { continue }
+                if shouldInvert {
+                    if buffer[next] < isBlackIfUnder { continue }
+                } else {
+                    if buffer[next] >= isBlackIfUnder { continue }
+                }
+                
                 // already visited
                 if visited[next] != nil { continue }
                 // ensure backwards x pixels are also black
@@ -331,7 +336,11 @@ extension CharacterCache {
                 for x in backwardsRange {
                     let nextAttempt = fwdMoves[(index + x) % fwdMoves.count]
                     let nextPixel = curPos + nextAttempt[0] + nextAttempt[1] * bytesPerRow
-                    if buffer[nextPixel] >= isBlackIfUnder { continue }
+                    if shouldInvert {
+                        if buffer[nextPixel] < isBlackIfUnder { continue }
+                    } else {
+                        if buffer[nextPixel] >= isBlackIfUnder { continue }
+                    }
                 }
                 // prevent underlines from being found by tracking right moves
                 if attempt[0] == moves.px && attempt[1] == 0 {
@@ -391,12 +400,13 @@ extension CharacterCache {
             if maxUpPx > 2 {
                 // go up
                 for y in 1...maxUpPx {
-                    if buffer[(minY - y) * bytesPerRow + centerX] < isBlackIfUnder {
+                    if (shouldInvert && buffer[(minY - y) * bytesPerRow + centerX] > isBlackIfUnder) || (!shouldInvert && buffer[(minY - y) * bytesPerRow + centerX] < isBlackIfUnder) {
                         let subBounds = CGRect(x: centerX, y: minY - y, width: Int(charBounds.width), height: Int(charBounds.height))
                         if let (subOutline, subBounds) = traceOutline(baseAddress: baseAddress,
                                                                       bytesPerRow: bytesPerRow,
                                                                       numRows: numRows,
                                                                       charBounds: subBounds,
+                                                                      shouldInvert: shouldInvert,
                                                                       lineHeight: lineHeight,
                                                                       maxMoves: lineHeight * 10,
                                                                       initialMove: [0, -moves.px],
@@ -426,12 +436,13 @@ extension CharacterCache {
                 for y in 1...maxDownPx {
                     let bufferIdx = (maxY + y) * bytesPerRow + centerX
                     guard bufferIdx < numRows * bytesPerRow else  { continue }
-                    if buffer[(maxY + y) * bytesPerRow + centerX] < isBlackIfUnder {
+                    if (shouldInvert && buffer[(maxY + y) * bytesPerRow + centerX] > isBlackIfUnder) || (!shouldInvert && buffer[(maxY + y) * bytesPerRow + centerX] < isBlackIfUnder) {
                         let subBounds = CGRect(x: centerX, y: maxY + y, width: Int(charBounds.width), height: Int(charBounds.height))
                         if let (subOutline, subBounds) = traceOutline(baseAddress: baseAddress,
                                                                       bytesPerRow: bytesPerRow,
                                                                       numRows: numRows,
                                                                       charBounds: subBounds,
+                                                                      shouldInvert: shouldInvert,
                                                                       lineHeight: lineHeight,
                                                                       maxMoves: lineHeight * 10,
                                                                       initialMove: [0, -moves.px],
@@ -457,12 +468,12 @@ extension CharacterCache {
     
     
     /// Finds the coordinate of the left-most black pixel within the given bounds.
-    func findStartingPoint(baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int, numRows: Int, bounds: CGRect) -> (x: Int, y: Int)? {
+    func findStartingPoint(baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int, numRows: Int, bounds: CGRect, inverted: Bool) -> (x: Int, y: Int)? {
         let buffer = baseAddress.assumingMemoryBound(to: UInt8.self)
         let bufferStartIdx = Int(bounds.minY) * bytesPerRow + Int(bounds.minX)
         
-        // Any pixel under this value is considered black
-        let blackThreshold = 150
+        // Any pixel under this value (or over, if inverted) is considered black
+        let blackThreshold = 128
         
         // Find position of left-most black pixel
         var startX, startY: Int?
@@ -472,7 +483,10 @@ extension CharacterCache {
                 guard bufferIdx < numRows * bytesPerRow else {
                     return nil
                 }
-                if buffer[bufferIdx] < blackThreshold {
+                if inverted && buffer[bufferIdx] > blackThreshold {
+                    startX = col + Int(bounds.minX)
+                    startY = row + Int(bounds.minY)
+                } else if !inverted && buffer[bufferIdx] < blackThreshold {
                     startX = col + Int(bounds.minX)
                     startY = row + Int(bounds.minY)
                 }
@@ -484,26 +498,6 @@ extension CharacterCache {
         }
         
         return (x, y)
-    }
-    
-    
-    func charactersMatch(a: [UInt8], b: [UInt8], size: Int) -> Bool {
-        var difference = 0
-        for idx in 0..<size {
-            difference += abs(Int(a[idx]) - Int(b[idx]))
-        }
-        let perc = Double(difference) / Double(size)
-        return perc < 10
-    }
-    
-    
-    func difference(a: [UInt8], b: [UInt8]) -> Double {
-        var difference = 0
-        for idx in 0..<a.count {
-            difference += abs(Int(a[idx]) - Int(b[idx]))
-        }
-        let perc = Double(difference) / Double(a.count)
-        return perc
     }
     
 }

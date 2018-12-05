@@ -92,7 +92,7 @@ extension OCRManager {
         CVPixelBufferLockBaseAddress(croppedBuffer, .readOnly)
         
         // Apply filters to improve OCR performance
-        let filteredBuffer = croppedBuffer.filterForOCR()
+        let filteredBuffer = croppedBuffer.filteredForOCR()
         
         // Unlock cropped buffer base address (no longer needed)
         CVPixelBufferUnlockBaseAddress(croppedBuffer, .readOnly)
@@ -126,50 +126,57 @@ extension OCRManager {
                     }
                     
                     
+                    // Determine whether this character should be inverted or not
+                    // (Invert if light text on dark background)
+                    let shouldInvert = filteredBuffer.shouldInvert(bounds: character.lineHeightBounds(with: line.bounds))
+                    
+                    
                     // Attempt to trace character outline
                     let percentDownLine = Float(character.bounds.minY - line.bounds.minY) / Float(line.bounds.height)
                     if let (outline, _) = CharacterCache.shared.traceOutline(baseAddress: filteredBaseAddress,
                                                                              bytesPerRow: filteredBytesPerRow,
                                                                              numRows: filteredHeight,
                                                                              charBounds: character.bounds,
+                                                                             shouldInvert: shouldInvert,
                                                                              lineHeight: Int(line.bounds.height),
                                                                              maxMoves: Int(line.bounds.height * 10),
                                                                              initialMove: [0, CharacterCache.shared.moves.px],
                                                                              findHangers: true,
                                                                              percentDownLine: percentDownLine) {
-                        
+
                         // Check if this char has already been cached
                         if let cachedChar = CharacterCache.shared.cachedCharacter(matching: outline) {
                             // Match! Use this classification
                             character.classification = cachedChar
                         } else {
                             // No matching outline in the cache; perform OCR
-                            
+
                             // Crop pixel buffer down to this character's bounds
                             let charBox = character.lineHeightBounds(with: line.bounds)
                             guard let charBuffer = CVPixelBuffer.cropGrayscale(to: charBox,
                                                                                size: CGSize(width: 28, height: 28),
                                                                                baseAddress: filteredBaseAddress,
-                                                                               bytesPerRow: filteredBytesPerRow) else {
+                                                                               bytesPerRow: filteredBytesPerRow,
+                                                                               inverted: shouldInvert) else {
                                                                                 continue
                             }
-                            
+
                             // Lock new buffer's base address
                             CVPixelBufferLockBaseAddress(charBuffer, .readOnly)
-                            
+
                             // Classify image
-                            let classification = self.classifyImage(charBuffer) ?? ""
-                            
+                            let classification = self.classifyImage(charBuffer, isInverted: shouldInvert) ?? ""
+
                             // Store classification
                             character.classification = classification
-                            
+
                             // Add outline to cache
                             CharacterCache.shared.addToCache(outline: outline, character: classification)
-                            
+
                             // Unlock char buffer base address
                             CVPixelBufferUnlockBaseAddress(charBuffer, .readOnly)
                         }
-                        
+
                     } else {
                         // Failed to trace character outline; perform OCR
                         
@@ -178,7 +185,8 @@ extension OCRManager {
                         guard let charBuffer = CVPixelBuffer.cropGrayscale(to: charBox,
                                                                            size: CGSize(width: 28, height: 28),
                                                                            baseAddress: filteredBaseAddress,
-                                                                           bytesPerRow: filteredBytesPerRow) else {
+                                                                           bytesPerRow: filteredBytesPerRow,
+                                                                           inverted: shouldInvert) else {
                                                                             continue
                         }
                         
@@ -186,7 +194,7 @@ extension OCRManager {
                         CVPixelBufferLockBaseAddress(charBuffer, .readOnly)
                         
                         // Classify image
-                        let classification = self.classifyImage(charBuffer) ?? ""
+                        let classification = self.classifyImage(charBuffer, isInverted: shouldInvert) ?? ""
                         
                         // Store classification
                         character.classification = classification
@@ -206,6 +214,10 @@ extension OCRManager {
             
             // DEBUG: print result
             for line in lines {
+//                for character in line.characters {
+//                    print(character.classification!, separator: "", terminator: "")
+//                }
+//                print()
                 print(line.words().map({$0.string}).joined(separator: " "))
             }
             
@@ -319,8 +331,10 @@ fileprivate extension OCRManager {
     ///
     /// - Parameters:
     ///   - pixelBuffer: A grayscale pixel buffer containing a single character.
+    ///   - isInverted: If `true`, the pixel values will be inverted prior to sending to the neural net.
+    ///                   This should be used for light text on dark backgrounds.
     /// - Returns: The best classification result from the neural net.
-    func classifyImage(_ pixelBuffer: CVPixelBuffer) -> String? {
+    func classifyImage(_ pixelBuffer: CVPixelBuffer, isInverted: Bool) -> String? {
         // Extract raw pixel data from buffer
         let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer)!.assumingMemoryBound(to: UInt8.self)
         
@@ -329,8 +343,13 @@ fileprivate extension OCRManager {
         for row in 0..<28 {
             for col in 0..<28 {
                 let index = row * 28 + col
-                // Invert and normalize pixels to range [0, 1] where 1 is black
-                let pixel: Float = 1.0 - (Float(pixelData[index]) / 255.0)
+                // Normalize pixels to range [0, 1] where 1 is black
+                let pixel: Float
+                if isInverted { // `isInverted` means light text on dark background, so we DON'T invert again here
+                    pixel = Float(pixelData[index]) / 255.0
+                } else { // Dark text on light background, so we DO invert here
+                    pixel = 1.0 - (Float(pixelData[index]) / 255.0)
+                }
                 input[
                     [NSNumber(integerLiteral: 0),
                      NSNumber(value: row),

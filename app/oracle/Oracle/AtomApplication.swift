@@ -30,7 +30,7 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         
         // Start recording screen
 //        ScreenRecorder.shared.start()
-//        ScreenRecorder.shared.watchBounds(CGRect(x: 0, y: 0, width: 1400, height: 1600))
+//        ScreenRecorder.shared.watchBounds(CGRect(x: 0, y: 200, width: 2440, height: 1000))
         
     }
     

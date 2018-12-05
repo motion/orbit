@@ -77,8 +77,9 @@ extension CVPixelBuffer {
     ///   - size: Optionally, a size to scale the output to.
     ///   - baseAddress: The pixel buffer's base address.
     ///   - bytesPerRow: The number of bytes per row.
+    ///   - inverted: `true` if the image is inverted (light text on dark background).
     /// - Returns: A newly-created pixel buffer. Bytes are copied, so the original buffer may safely be released.
-    static func cropGrayscale(to rect: CGRect, size: CGSize? = nil, baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int) -> CVPixelBuffer? {
+    static func cropGrayscale(to rect: CGRect, size: CGSize? = nil, baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int, inverted: Bool) -> CVPixelBuffer? {
         // For convenience
         let outWidth = Int(size?.width ?? rect.width)
         let outHeight = Int(size?.height ?? rect.height)
@@ -109,8 +110,13 @@ extension CVPixelBuffer {
      
         // Allocate memory for output buffer
         let outImg = malloc(outWidth * outHeight)
-        // Fill with ones (white)
-        memset(outImg, 0xff, outWidth * outHeight)
+        if inverted {
+            // Fill with ones (white)
+            memset(outImg, 0xff, outWidth * outHeight)
+        } else {
+            // Fill with zeros (black)
+            memset(outImg, 0x00, outWidth * outHeight)
+        }
         
         // Create vImage output buffer
         let outStartX = (outWidth - rectNewWidth) / 2
@@ -150,7 +156,7 @@ extension CVPixelBuffer {
     
     /// Applies color and contrast filters to the receiver to improve OCR performance.
     /// NOTE: This returns a new CVPixelBuffer, so the original buffer smay be safely released.
-    func filterForOCR() -> CVPixelBuffer {
+    func filteredForOCR() -> CVPixelBuffer {
         // Convert buffer to CIImage
         let outputImage = CIImage(cvPixelBuffer: self)
         
@@ -171,6 +177,55 @@ extension CVPixelBuffer {
         context.render(filteredImage, to: outputBuffer!)
         
         return outputBuffer!
+    }
+    
+    
+    /// Inverts the colors of the pixel buffer, if needed.
+    /// This method attempts to determine whether the the character contained within the buffer
+    /// is light text on a dark background, or dark text on a light background.
+    /// If the text is light on a dark background, the colors are inverted in-place.
+    ///
+    /// Requirements for this method to work correctly:
+    /// 1. The buffer's base address must be locked WITHOUT the `readOnly` flag (bytes may be modified).
+    /// 2. The buffer must be non-planar, 8-bit grayscale.
+    /// 3. The buffer should only contain a single character.
+    func invertIfNeeded() {
+        // Get buffer data
+        let pixelData = CVPixelBufferGetBaseAddress(self)!.assumingMemoryBound(to: UInt8.self)
+        let bytesPerRow = CVPixelBufferGetBytesPerRow(self)
+        let width = CVPixelBufferGetWidth(self)
+        let height = CVPixelBufferGetHeight(self)
+        
+        // Extract pixels from each corner of the image
+        let topLeft = pixelData[0]
+        let topRight = pixelData[width]
+        let bottomLeft = pixelData[height * bytesPerRow]
+        let bottomRight = pixelData[height * bytesPerRow + width]
+    }
+    
+    
+    /// Determines whether the contents of a region of the pixel buffer should be inverted.
+    /// This method attempts to determine whether the the character contained within the bounds
+    /// is light text on a dark background, or dark text on a light background.
+    func shouldInvert(bounds: CGRect) -> Bool {
+        // Get buffer data
+        let pixelData = CVPixelBufferGetBaseAddress(self)!.assumingMemoryBound(to: UInt8.self)
+        let bytesPerRow = CVPixelBufferGetBytesPerRow(self)
+        
+        // Extract pixels from each corner of the bounds
+        let topLeft = pixelData[Int(bounds.minY) * bytesPerRow + Int(bounds.minX)]
+        let topRight = pixelData[Int(bounds.minY) * bytesPerRow + Int(bounds.maxX)]
+        let bottomLeft = pixelData[Int(bounds.maxY) * bytesPerRow + Int(bounds.minX)]
+        let bottomRight = pixelData[Int(bounds.maxY) * bytesPerRow + Int(bounds.maxX)]
+        
+        // If 3 or more corner pixels are dark, assume the background is dark
+        var darkCount = 0
+        if topLeft <= 128 { darkCount += 1}
+        if topRight <= 128 { darkCount += 1}
+        if bottomLeft <= 128 { darkCount += 1}
+        if bottomRight <= 128 { darkCount += 1}
+        
+        return darkCount >= 3
     }
     
 }

@@ -222,7 +222,7 @@ extension Socket {
         }
         
         // Connect to websocket server
-        Socket.shared.socket = WebSocket(url: URL(string: "ws://localhost:\(port)")!)
+        Socket.shared.socket = WebSocket(url: URL(string: "ws://localhost:\(port)/oracle")!)
         Socket.shared.socket.delegate = Socket.shared
         Socket.shared.socket.connect()
     }

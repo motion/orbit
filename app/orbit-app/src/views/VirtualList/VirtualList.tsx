@@ -82,25 +82,32 @@ class VirtualListStore {
   )
 
   setRootRef = ref => {
-    this.rootRef = ref
-    this.measure()
-
-    if (ref && this.width === 0) {
-      // TODO dispose on unmount
-      // @ts-ignore
-      const observer = new ResizeObserver(debounce(this.measure, 32))
-      observer.observe(this.rootRef)
+    if (this.rootRef || !ref) {
+      return
     }
+    this.rootRef = ref
+
+    // measure on resize
+    // @ts-ignore
+    const observer = new ResizeObserver(debounce(this.measure, 32))
+    observer.observe(this.rootRef)
+
+    this.measure()
   }
 
+  measureTm = null
+
   private measure() {
-    if (!this.rootRef) {
+    if (!this.rootRef || this.rootRef.clientWidth === 0) {
+      console.log('measure on next frame')
+      clearTimeout(this.measureTm)
+      this.measureTm = setTimeout(this.measure, 10)
       return
     }
 
     this.width = this.rootRef.clientWidth
 
-    if (this.width && !this.cache) {
+    if (!this.cache) {
       this.cache = new CellMeasurerCache({
         defaultHeight: 60,
         defaultWidth: this.width,
@@ -119,8 +126,8 @@ class VirtualListStore {
       })
     }
 
-    if (this.cache) {
-      // height
+    // height
+    if (this.props.maxHeight) {
       let height = 0
       for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
         height += this.cache.rowHeight(i)
@@ -146,6 +153,14 @@ export const VirtualList = (props: Props) => {
   const store = useStore(VirtualListStore, { ...props, appStore })
   const { cache, width, height, items } = store
 
+  if (!items.length) {
+    return (
+      <View margin={[10, 0]}>
+        <Banner>No results</Banner>
+      </View>
+    )
+  }
+
   const rowRenderer = ({ index, parent, style }) => {
     const model = items[index]
     const ItemView = props.ItemView || VirtualListItem
@@ -167,14 +182,6 @@ export const VirtualList = (props: Props) => {
           />
         </div>
       </CellMeasurer>
-    )
-  }
-
-  if (!items.length) {
-    return (
-      <View margin={[10, 0]}>
-        <Banner>No results</Banner>
-      </View>
     )
   }
 
@@ -219,7 +226,7 @@ export const VirtualList = (props: Props) => {
         width: '100%',
       }}
     >
-      {!!width && (
+      {!!width && !!cache && (
         <>
           {props.infinite && (
             <InfiniteLoader

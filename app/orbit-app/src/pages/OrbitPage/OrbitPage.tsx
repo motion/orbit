@@ -37,7 +37,9 @@ export const OrbitPage = React.memo(() => {
     selectionStore,
     panes: [...AppPanes.map(p => p.id), 'settings', 'onboard'],
     onPaneChange: () => {
-      AppActions.clearPeek()
+      if (App.peekState.target) {
+        AppActions.clearPeek()
+      }
     },
   })
   const stores = {

@@ -17,7 +17,6 @@ import { OrbitItemProps } from '../OrbitItemProps'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
-import { throttle, debounce } from 'lodash'
 
 export type ItemPropsMinimum = Pick<OrbitItemProps<any>, 'appType' | 'appConfig'> &
   Partial<OrbitItemProps<any>>
@@ -60,16 +59,14 @@ class VirtualListStore {
   }
 
   resizeOnChange = react(
-    () => always(this.props.items),
+    () => always(this.props.items, this.cache),
     () => {
       ensure('this.listRef', !!this.listRef)
       this.listRef.recomputeRowHeights()
-      this.resizeAll()
-      this.measure()
+      // this.resizeAll()
+      this.measureHeight()
     },
   )
-
-  measureOnRef = react(() => this.rootRef, () => this.measure())
 
   scrollToRow = react(
     () => this.props.appStore.activeIndex,
@@ -98,6 +95,23 @@ class VirtualListStore {
 
   measureTm = null
 
+  private measureHeight() {
+    if (!this.cache) {
+      return
+    }
+    // height
+    if (this.props.maxHeight) {
+      let height = 0
+      for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
+        height += this.cache.rowHeight(i)
+      }
+      if (height === 0) {
+        return
+      }
+      this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
+    }
+  }
+
   private measure() {
     if (!this.rootRef || this.rootRef.clientWidth === 0) {
       clearTimeout(this.measureTm)
@@ -124,15 +138,6 @@ class VirtualListStore {
           return id
         },
       })
-    }
-
-    // height
-    if (this.props.maxHeight) {
-      let height = 0
-      for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
-        height += this.cache.rowHeight(i)
-      }
-      this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
     }
   }
 

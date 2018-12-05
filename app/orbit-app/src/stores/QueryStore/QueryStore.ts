@@ -13,6 +13,9 @@ export class QueryStore {
   query = react(
     () => this.queryInstant,
     async (query, { sleep }) => {
+      if (query === '') {
+        return query
+      }
       await sleep(50)
       // debounce super short queries more because they are less often + in hot path
       if (query.length <= 2) {

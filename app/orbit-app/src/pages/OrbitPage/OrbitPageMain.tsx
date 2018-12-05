@@ -41,7 +41,6 @@ class OrbitStore {
 export const OrbitPageMain = React.memo(() => {
   const { paneManagerStore } = React.useContext(StoreContext)
   const store = useStore(OrbitStore, { paneManagerStore })
-  console.log('render with activeItem', store.activeItem)
   if (!store.activePane) {
     return null
   }

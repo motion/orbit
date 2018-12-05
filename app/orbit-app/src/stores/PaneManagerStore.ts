@@ -100,5 +100,8 @@ export class PaneManagerStore {
         this.props.onPaneChange(pane)
       }
     },
+    {
+      deferFirstRun: true,
+    },
   )
 }

@@ -63,59 +63,60 @@ async function main() {
           ? window.location.search.match(/app=([a-z]+)/)[1]
           : null
 
-        console.log('TEST_APP', TEST_APP)
-
-        if (TEST_APP === 'bit') {
-          const lastBit = await require('@mcro/model-bridge').loadOne(BitModel, { args: {} })
-          AppActions.setPeekApp({
-            position: [0, 0],
-            size: [400, 400],
-            appType: 'bit',
-            appConfig: {
-              id: `${lastBit.id}`,
-              title: lastBit.title,
-              type: 'bit',
-            } as AppConfig,
-          })
-        }
-        if (TEST_APP === 'lists') {
-          AppActions.setPeekApp({
-            position: [0, 0],
-            size: [400, 400],
-            appType: 'lists',
-            appConfig: {
-              id: '0',
-              title: 'Lists',
-              type: 'lists',
-            } as AppConfig,
-          })
-        }
-        if (TEST_APP === 'topics') {
-          AppActions.setPeekApp({
-            position: [0, 0],
-            size: [500, 500],
-            appType: 'topics',
-            appConfig: {
-              id: '1',
-              title: 'Topics',
-              type: 'topics',
-            } as AppConfig,
-          })
-        }
-        if (TEST_APP === 'people') {
-          const lastPerson = await require('@mcro/model-bridge').loadOne(PersonBitModel, {
-            args: {},
-          })
-          AppActions.setPeekApp({
-            position: [0, 0],
-            size: [500, 500],
-            appType: 'people',
-            appConfig: {
-              id: `${lastPerson.id}`,
-              title: lastPerson.title,
-              type: 'people',
-            } as AppConfig,
-          })
+        if (TEST_APP) {
+          console.log('TEST_APP', TEST_APP)
+          if (TEST_APP === 'bit') {
+            const lastBit = await require('@mcro/model-bridge').loadOne(BitModel, { args: {} })
+            AppActions.setPeekApp({
+              position: [0, 0],
+              size: [400, 400],
+              appType: 'bit',
+              appConfig: {
+                id: `${lastBit.id}`,
+                title: lastBit.title,
+                type: 'bit',
+              } as AppConfig,
+            })
+          }
+          if (TEST_APP === 'lists') {
+            AppActions.setPeekApp({
+              position: [0, 0],
+              size: [400, 400],
+              appType: 'lists',
+              appConfig: {
+                id: '0',
+                title: 'Lists',
+                type: 'lists',
+              } as AppConfig,
+            })
+          }
+          if (TEST_APP === 'topics') {
+            AppActions.setPeekApp({
+              position: [0, 0],
+              size: [500, 500],
+              appType: 'topics',
+              appConfig: {
+                id: '1',
+                title: 'Topics',
+                type: 'topics',
+              } as AppConfig,
+            })
+          }
+          if (TEST_APP === 'people') {
+            const lastPerson = await require('@mcro/model-bridge').loadOne(PersonBitModel, {
+              args: {},
+            })
+            AppActions.setPeekApp({
+              position: [0, 0],
+              size: [500, 500],
+              appType: 'people',
+              appConfig: {
+                id: `${lastPerson.id}`,
+                title: lastPerson.title,
+                type: 'people',
+              } as AppConfig,
+            })
+          }
         }
       }
       test()

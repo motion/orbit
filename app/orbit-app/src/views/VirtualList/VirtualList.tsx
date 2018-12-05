@@ -82,7 +82,6 @@ class VirtualListStore {
   )
 
   setRootRef = ref => {
-    console.log('got ref', ref)
     this.rootRef = ref
     this.measure()
 

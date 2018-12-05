@@ -49,6 +49,9 @@ export class AppReactions {
       ensure('is hidden', !App.orbitState.docked)
       AppActions.clearPeek()
     },
+    {
+      deferFirstRun: true,
+    },
   )
 
   clearPopoversOnMouseLeave = react(

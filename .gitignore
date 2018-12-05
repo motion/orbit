@@ -43,6 +43,8 @@ app/oracle/orbit.xcodeproj/project.xcworkspace
 app/oracle/orbit.xcodeproj/xcuserdata
 app/oracle/Oracle.xcworkspace/xcuserdata/
 app/oracle-training/CharacterGenerator/Output/*
+app/oracle-training/OCR\ Model/*.h5
+app/oracle-training/OCR\ Model/*.mlmodel
 
 app/orbit-app/build
 app/uploads

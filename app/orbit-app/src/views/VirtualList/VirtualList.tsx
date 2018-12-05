@@ -82,7 +82,7 @@ class VirtualListStore {
   )
 
   measure = throttle(() => {
-    if (!this.rootRef) {
+    if (!this.rootRef || !this.cache) {
       return
     }
     // height

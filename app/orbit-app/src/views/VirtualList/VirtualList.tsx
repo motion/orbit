@@ -63,8 +63,7 @@ class VirtualListStore {
     () => {
       ensure('this.listRef', !!this.listRef)
       this.listRef.recomputeRowHeights()
-      // this.resizeAll()
-      this.measureHeight()
+      this.resizeAll()
     },
   )
 
@@ -87,11 +86,16 @@ class VirtualListStore {
 
     // measure on resize
     // @ts-ignore
-    const observer = new ResizeObserver(this.measure)
+    const observer = new ResizeObserver(() => {
+      this.measure()
+      this.measureHeight()
+    })
     observer.observe(this.rootRef)
 
     this.measure()
   }
+
+  doMeasureHeight = react(() => always(this.cache), this.measureHeight)
 
   measureTm = null
 
@@ -108,7 +112,7 @@ class VirtualListStore {
       if (height === 0) {
         return
       }
-      this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
+      this.height = Math.min(this.props.maxHeight, height)
     }
   }
 

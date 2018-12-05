@@ -22,6 +22,10 @@ export const AppView = memo((props: Props) => {
     { ...props, ...stores },
     { conditionalUse: shouldProvideAppStore },
   )
+  if (!apps[props.type]) {
+    console.error('NO APP OF TYPE', props.type, props)
+    return null
+  }
   const AppView = apps[props.type][props.viewType]
   if (!AppView) {
     console.error('WAHT THE FUCK', props.type, AppView)

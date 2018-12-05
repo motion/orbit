@@ -180,30 +180,6 @@ extension CVPixelBuffer {
     }
     
     
-    /// Inverts the colors of the pixel buffer, if needed.
-    /// This method attempts to determine whether the the character contained within the buffer
-    /// is light text on a dark background, or dark text on a light background.
-    /// If the text is light on a dark background, the colors are inverted in-place.
-    ///
-    /// Requirements for this method to work correctly:
-    /// 1. The buffer's base address must be locked WITHOUT the `readOnly` flag (bytes may be modified).
-    /// 2. The buffer must be non-planar, 8-bit grayscale.
-    /// 3. The buffer should only contain a single character.
-    func invertIfNeeded() {
-        // Get buffer data
-        let pixelData = CVPixelBufferGetBaseAddress(self)!.assumingMemoryBound(to: UInt8.self)
-        let bytesPerRow = CVPixelBufferGetBytesPerRow(self)
-        let width = CVPixelBufferGetWidth(self)
-        let height = CVPixelBufferGetHeight(self)
-        
-        // Extract pixels from each corner of the image
-        let topLeft = pixelData[0]
-        let topRight = pixelData[width]
-        let bottomLeft = pixelData[height * bytesPerRow]
-        let bottomRight = pixelData[height * bytesPerRow + width]
-    }
-    
-    
     /// Determines whether the contents of a region of the pixel buffer should be inverted.
     /// This method attempts to determine whether the the character contained within the bounds
     /// is light text on a dark background, or dark text on a light background.

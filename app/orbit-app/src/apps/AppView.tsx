@@ -4,7 +4,6 @@ import { AppStore } from './AppStore'
 import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
-import { memo } from '../helpers/memo'
 
 type Props = Pick<AppProps, 'id' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'> & {
   title?: string
@@ -12,7 +11,7 @@ type Props = Pick<AppProps, 'id' | 'viewType' | 'type' | 'isActive' | 'itemProps
   onAppStore?: Function
 }
 
-export const AppView = memo((props: Props) => {
+export const AppView = React.memo((props: Props) => {
   const stores = React.useContext(StoreContext)
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore

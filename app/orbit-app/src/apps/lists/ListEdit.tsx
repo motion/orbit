@@ -5,6 +5,7 @@ import { Input, Button, Row } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { StoreContext } from '@mcro/black'
 import { SpaceStore } from '../../stores/SpaceStore'
+import { observer } from 'mobx-react-lite'
 
 class ListEditStore {
   props: { spaceStore: SpaceStore }
@@ -39,7 +40,7 @@ class ListEditStore {
   }
 }
 
-export const ListEdit = React.memo(() => {
+export const ListEdit = observer(() => {
   const { spaceStore } = React.useContext(StoreContext)
   const store = useStore(ListEditStore, { spaceStore })
 

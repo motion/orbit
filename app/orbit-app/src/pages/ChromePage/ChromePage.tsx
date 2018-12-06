@@ -8,6 +8,7 @@ import { StoreContext } from '@mcro/black'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
+import { observer } from 'mobx-react-lite'
 
 class ChromePageStore {
   get theme() {
@@ -15,7 +16,7 @@ class ChromePageStore {
   }
 }
 
-export const ChromePage = React.memo(() => {
+export const ChromePage = observer(() => {
   const store = useStore(ChromePageStore)
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)

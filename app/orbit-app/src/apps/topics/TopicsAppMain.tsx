@@ -8,6 +8,7 @@ import { BitsNearTopicModel } from '@mcro/models'
 import { loadMany } from '@mcro/model-bridge'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { ScrollableContent } from '../../sources/views/layout/ScrollableContent'
+import { observer } from 'mobx-react-lite'
 
 class TopicsMainStore {
   props: AppProps
@@ -26,7 +27,7 @@ class TopicsMainStore {
   )
 }
 
-export const TopicsAppMain = React.memo((props: AppProps) => {
+export const TopicsAppMain = observer((props: AppProps) => {
   const store = useStore(TopicsMainStore, props)
 
   return (

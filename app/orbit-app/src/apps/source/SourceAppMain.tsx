@@ -5,6 +5,7 @@ import { SourceModel } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import { react } from '@mcro/black'
 import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
+import { observer } from 'mobx-react-lite'
 
 class SourceAppStore {
   props: AppProps
@@ -26,7 +27,7 @@ class SourceAppStore {
   )
 }
 
-export function SourceAppMain(props: AppProps) {
+export const SourceAppMain = observer((props: AppProps) => {
   const { model } = useStore(SourceAppStore, props)
   const type = model ? model.type : props.sourceType
   const View = props.sourcesStore.getView(type, 'setting')
@@ -43,4 +44,4 @@ export function SourceAppMain(props: AppProps) {
       )}
     </AttachAppInfoStore>
   )
-}
+})

@@ -9,7 +9,7 @@ import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { AppProps } from '../AppProps'
 import { ListEdit } from './ListEdit'
 import { View, Button } from '@mcro/ui'
-import { memo } from '../../helpers/memo'
+import { observer } from 'mobx-react-lite'
 
 class ListsIndexStore {
   props: AppProps
@@ -76,7 +76,7 @@ class ListsIndexStore {
   )
 }
 
-export const ListsAppIndex = memo((props: AppProps) => {
+export const ListsAppIndex = observer((props: AppProps) => {
   const { results } = useStore(ListsIndexStore, props)
   const isSmall = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (

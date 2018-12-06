@@ -8,6 +8,7 @@ import { AppSearchable } from '../../sources/views/apps/AppSearchable'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
 import { react } from '@mcro/black'
+import { observer } from 'mobx-react-lite'
 
 class BitAppStore {
   props: AppProps
@@ -27,7 +28,7 @@ class BitAppStore {
   )
 }
 
-export function BitAppMain(props: AppProps) {
+export const BitAppMain = observer((props: AppProps) => {
   const { model } = useStore(BitAppStore, props)
   if (!model) {
     return null
@@ -46,4 +47,4 @@ export function BitAppMain(props: AppProps) {
       </AppSearchable>
     </BitDecoration>
   )
-}
+})

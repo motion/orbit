@@ -121,7 +121,7 @@ export class OrbitItemStore {
       if (ignoreSelection) {
         return false
       }
-      if (activeCondition && activeCondition() === false) {
+      if (typeof activeCondition === 'function' && activeCondition() === false) {
         return false
       }
       if (!appStore || !appStore.isActive) {

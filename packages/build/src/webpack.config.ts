@@ -107,9 +107,10 @@ const config = {
     },
   },
   // for a faster dev mode you can do:
+  //   eval-source-map (slower start up but has line numbers)
   //   cheap-source-map (no line numbers...)
-  //   cheap-module-eval-source-map (line numbers, slower initial load...)
-  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
+  //   cheap-module-eval-source-map (no line numbers...)
+  devtool: isProd ? 'source-map' : 'eval-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

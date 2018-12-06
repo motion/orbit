@@ -18,7 +18,7 @@ import { SubTitle } from '../../views/SubTitle'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
-import { memo } from '../../helpers/memo'
+import { observer } from 'mobx-react-lite'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
@@ -96,7 +96,7 @@ class PeopleAppStore {
 
 const PersonHeader = view()
 
-export const PeopleAppMain = memo((props: AppProps) => {
+export const PeopleAppMain = observer((props: AppProps) => {
   const { appPageStore } = React.useContext(StoreContext)
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   console.log('rendering person app...')

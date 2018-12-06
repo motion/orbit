@@ -12,10 +12,11 @@ import { OrbitListItem } from '../../views/OrbitListItem'
 import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
 import { Toolbar } from '../../components/Toolbar'
+import { observer } from 'mobx-react-lite'
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
-export const SearchAppIndex = React.memo((props: AppProps) => {
+export const SearchAppIndex = observer((props: AppProps) => {
   const searchStore = useStore(SearchStore, props)
   const shouldHideNav = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (

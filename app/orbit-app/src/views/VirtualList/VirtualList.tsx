@@ -17,6 +17,7 @@ import { OrbitItemProps } from '../OrbitItemProps'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
+import { observer } from 'mobx-react-lite'
 
 export type ItemPropsMinimum = Pick<OrbitItemProps<any>, 'appType' | 'appConfig'> &
   Partial<OrbitItemProps<any>>
@@ -157,7 +158,7 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-export const VirtualList = (props: Props) => {
+export const VirtualList = observer((props: Props) => {
   const { appStore } = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore })
   const { cache, width, height, items } = store
@@ -252,4 +253,4 @@ export const VirtualList = (props: Props) => {
       {!width && <div>No width!</div>}
     </div>
   )
-}
+})

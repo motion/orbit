@@ -6,8 +6,9 @@ import { useStore } from '@mcro/use-store'
 import { AppStore } from '../../../apps/AppStore'
 import { StoreContext } from '@mcro/black'
 import { SubPane } from '../../../components/SubPane'
+import { observer } from 'mobx-react-lite'
 
-export const MenuApp = React.memo((props: MenuAppProps) => {
+export const MenuApp = observer((props: MenuAppProps) => {
   const stores = useContext(StoreContext)
   const appStore = useStore(AppStore, {
     ...props,

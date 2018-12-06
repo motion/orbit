@@ -14,6 +14,7 @@ import { SubPane } from '../../components/SubPane'
 import { App } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
 import { AppStore } from '../../apps/AppStore'
+import { observer } from 'mobx-react-lite'
 
 class OrbitStore {
   props: { paneManagerStore: PaneManagerStore }
@@ -50,7 +51,7 @@ class OrbitStore {
   }
 }
 
-export const OrbitPageContent = React.memo(() => {
+export const OrbitPageContent = observer(() => {
   const { paneManagerStore } = React.useContext(StoreContext)
   const store = useStore(OrbitStore, { paneManagerStore })
   const hasItem = !!store.activeItem.id

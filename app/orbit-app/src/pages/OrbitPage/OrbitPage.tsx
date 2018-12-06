@@ -17,8 +17,9 @@ import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
 import { OrbitNav } from './OrbitNav'
 import { OrbitPageContent } from './OrbitPageContent'
+import { observer } from 'mobx-react-lite'
 
-export const OrbitPage = React.memo(() => {
+export const OrbitPage = observer(() => {
   const { darkTheme } = useInstantiatedStore(App).state
   const theme = darkTheme ? 'dark' : 'light'
   const settingStore = useStore(SettingStore)
@@ -50,6 +51,9 @@ export const OrbitPage = React.memo(() => {
     selectionStore,
     paneManagerStore,
   }
+
+  console.log('what')
+
   return (
     <StoreContext.Provider value={stores}>
       <MainShortcutHandler queryStore={queryStore}>

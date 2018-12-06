@@ -10,7 +10,7 @@ import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { Button } from '@mcro/ui'
 import { react, always } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
-import { memo } from '../../helpers/memo'
+import { observer } from 'mobx-react-lite'
 
 class SourceIndexStore {
   props: AppProps
@@ -29,7 +29,7 @@ class SourceIndexStore {
   )
 }
 
-export const SourceAppIndex = memo((props: AppProps) => {
+export const SourceAppIndex = observer((props: AppProps) => {
   const { sourcesStore, isActive } = props
   const store = useStore(SourceIndexStore, props)
   return (
@@ -47,7 +47,8 @@ export const SourceAppIndex = memo((props: AppProps) => {
                   key={app.source.id}
                   index={index}
                   total={store.results.length}
-                  activeCondition={() => isActive}
+                  // TODO
+                  activeCondition={isActive}
                   app={app}
                 />
               )

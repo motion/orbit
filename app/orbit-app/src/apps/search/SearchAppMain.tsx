@@ -21,14 +21,9 @@ export const SearchAppMain = observer((props: AppProps) => {
   }
 
   // show a single item
-  if (appConfig.type === 'bit' || appConfig.type === 'person') {
+  if (appConfig.type === 'bit' || appConfig.type === 'people') {
     return (
-      <AppView
-        viewType="main"
-        id={appConfig.id}
-        title={appConfig.title}
-        type={appConfig.type === 'bit' ? 'bit' : 'people'}
-      />
+      <AppView viewType="main" id={appConfig.id} title={appConfig.title} type={appConfig.type} />
     )
   }
 

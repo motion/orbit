@@ -2,21 +2,18 @@ import './calendar.css' // theme css file
 import * as React from 'react'
 import { Row, View, Popover } from '@mcro/ui'
 import { NavButton } from '../../../views/NavButton'
-import { view, react, ensure, attach } from '@mcro/black'
+import { react, ensure, StoreContext, view } from '@mcro/black'
 import { OrbitSuggestionBar } from './OrbitSuggestionBar'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { DateRangePicker } from 'react-date-range'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { hoverSettler } from '../../../helpers'
 import { OrbitFilters } from './OrbitFilters'
-
-type Props = {
-  queryStore?: QueryStore
-  store?: OrbitNavStore
-}
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 class OrbitNavStore {
-  props: Props
+  props: { queryStore: QueryStore }
 
   filtersWidth = 0
   hoveredFilters = false
@@ -56,94 +53,59 @@ class OrbitNavStore {
   }
 }
 
-@attach('queryStore')
-@attach({
-  store: OrbitNavStore,
-})
-@view
-export class OrbitSearchNav extends React.Component<Props> {
-  navButtonBg = theme => (this.props.store.hoverSettle.isStuck() ? theme.background : 'transparent')
-  setStuck = () => this.props.store.hoverSettle.setStuck(true)
+export const OrbitSearchNav = observer(() => {
+  const { queryStore } = React.useContext(StoreContext)
+  const store = useStore(OrbitNavStore, { queryStore })
+  const { queryFilters } = queryStore
 
-  render() {
-    const { queryStore, store } = this.props
-    const { onClick, ...hoverProps } = store.hoverSettle.props
-    const { queryFilters } = queryStore
-    const stickFilters = store.hoverSettle.isStuck()
-    return (
-      <Row position="relative" alignItems="center" padding={[0, 6, 12]}>
-        <Row position="relative" zIndex={1}>
-          <Popover
-            delay={100}
-            openOnClick
-            openOnHover
-            closeOnClickAway
-            group="filters"
-            target={<NavButton icon="calendar" opacity={queryFilters.hasDateFilter ? 1 : 0.5} />}
-            alignPopover="left"
-            adjust={[220, 0]}
-            background
-            borderRadius={6}
-            elevation={4}
-            theme="light"
-          >
-            <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
-              <DateRangePicker
-                onChange={queryFilters.onChangeDate}
-                ranges={[queryFilters.dateState]}
-              />
-            </View>
-          </Popover>
-          <NavButton
-            onClick={queryFilters.toggleSortBy}
-            icon={queryFilters.sortBy === 'Recent' ? 'sort' : 'trend'}
-            tooltip={queryFilters.sortBy}
-            opacity={0.5}
-          />
-          <NavButton
-            icon="funnel41"
-            // otherwise it wasnt picking up styles...
-            key={`${stickFilters}`}
-            background={this.navButtonBg}
-            opacity={stickFilters || !!queryFilters.hasIntegrationFilters ? 1 : 0.5}
-            onClick={store.handleToggleFilters}
-            {...hoverProps}
-          />
-        </Row>
-
-        {/* overflow contain row */}
-        <Row position="absolute" left={110} right={0} overflow="hidden">
-          <Row
-            width={`calc(100% + ${store.filtersWidth}px)`}
-            marginRight={-store.filtersWidth}
-            transition="transform ease 120ms, opacity ease 180ms 180ms"
-            transform={{
-              x: store.showFilters ? 0 : -store.filtersWidth,
-            }}
-          >
-            <View width={store.filtersWidth} />
-            <OrbitFilters
-              opacity={store.showFilters ? 1 : 0}
-              forwardRef={store.setFilterRef}
-              onClick={this.setStuck}
-              position="absolute"
-              top={0}
-              left={0}
-              {...hoverProps}
+  return (
+    <Row alignItems="center" flex={1}>
+      <Row position="relative" zIndex={1} padding={[0, 100, 0, 0]}>
+        <Popover
+          delay={100}
+          openOnClick
+          openOnHover
+          closeOnClickAway
+          group="filters"
+          target={<NavButton icon="calendar" opacity={queryFilters.hasDateFilter ? 1 : 0.5} />}
+          alignPopover="left"
+          adjust={[220, 0]}
+          background
+          borderRadius={6}
+          elevation={4}
+          theme="light"
+        >
+          <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
+            <DateRangePicker
+              onChange={queryFilters.onChangeDate}
+              ranges={[queryFilters.dateState]}
             />
-            <OrbitSuggestionBar />
-          </Row>
-        </Row>
-
-        <View flex={1} />
-
-        {/* <NavButton
-            onClick={queryFilters.toggleSortBy}
-            icon={queryFilters.sortBy === 'Recent' ? 'list' : 'grid'}
-            tooltip={queryFilters.sortBy}
-            opacity={0.5}
-          /> */}
+          </View>
+        </Popover>
+        <NavButton
+          onClick={queryFilters.toggleSortBy}
+          icon={queryFilters.sortBy === 'Recent' ? 'sort' : 'trend'}
+          tooltip={queryFilters.sortBy}
+          opacity={0.5}
+        >
+          {queryFilters.sortBy}
+        </NavButton>
       </Row>
-    )
-  }
-}
+
+      <ScrollableRow flex={10}>
+        <OrbitSuggestionBar />
+      </ScrollableRow>
+
+      <ScrollableRow maxWidth="33%">
+        <OrbitFilters forwardRef={store.setFilterRef} />
+      </ScrollableRow>
+    </Row>
+  )
+})
+
+const ScrollableRow = view(View, {
+  flexFlow: 'row',
+  overflowX: 'auto',
+  alignItems: 'center',
+  padding: [0, 20],
+})

@@ -67,7 +67,6 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
   const showPreviewInSubtitle = !showTitle && oneLine
   const renderedChildren = showChildren && children
   const { activeThemeName } = React.useContext(UI.ThemeContext)
-  console.log('activeThemeName', activeThemeName)
 
   const afterHeader = (
     <AfterHeader>

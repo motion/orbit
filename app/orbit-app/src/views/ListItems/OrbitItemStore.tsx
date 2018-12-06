@@ -110,7 +110,6 @@ export class OrbitItemStore {
       appConfig: this.appConfig,
       target: this.cardWrapRef,
     }
-    console.log('selecting item', item)
     AppActions.setPeekApp(item)
   }
 

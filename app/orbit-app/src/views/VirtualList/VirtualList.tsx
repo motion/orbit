@@ -19,8 +19,7 @@ import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
 
-export type ItemPropsMinimum = OrbitItemProps<any>['appConfig'] & Partial<OrbitItemProps<any>>
-export type GetItemProps = (index: number) => ItemPropsMinimum
+export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>>
 
 type Props = {
   items: any[]
@@ -62,8 +61,11 @@ class VirtualListStore {
     () => always(this.props.items, this.cache),
     () => {
       ensure('this.listRef', !!this.listRef)
-      this.listRef.recomputeRowHeights()
+      // this.listRef.recomputeRowHeights()
       this.resizeAll()
+    },
+    {
+      deferFirstRun: true,
     },
   )
 

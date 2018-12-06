@@ -1,18 +1,18 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { SearchStore } from './SearchStore'
-import { ItemResolverDecorationContext } from '../../helpers/contexts/ItemResolverDecorationContext'
 import { OrbitSearchNav } from './views/OrbitSearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { VirtualList } from '../../views/VirtualList/VirtualList'
+import { VirtualList, GetItemProps } from '../../views/VirtualList/VirtualList'
 import { GroupedSearchItem } from './views/GroupedSearchItem'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
 import { Toolbar } from '../../components/Toolbar'
 import { observer } from 'mobx-react-lite'
+import { normalizeItem } from '../../helpers/normalizeItem'
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
@@ -26,22 +26,13 @@ export const SearchAppIndex = observer((props: AppProps) => {
           <OrbitSearchNav />
         </Toolbar>
       )}
-      <ItemResolverDecorationContext.Provider
-        value={{
-          item: null,
-          text: {
-            alpha: 0.6555,
-          },
+      <OrbitSearchResultsFrame
+        style={{
+          opacity: searchStore.isChanging ? 0.7 : 1,
         }}
       >
-        <OrbitSearchResultsFrame
-          style={{
-            opacity: searchStore.isChanging ? 0.7 : 1,
-          }}
-        >
-          <SearchAppInner searchStore={searchStore} offsetY={60} {...props} />
-        </OrbitSearchResultsFrame>
-      </ItemResolverDecorationContext.Provider>
+        <SearchAppInner searchStore={searchStore} offsetY={60} {...props} />
+      </OrbitSearchResultsFrame>
     </>
   )
 })
@@ -68,10 +59,11 @@ export class SearchAppInner extends React.Component<
     return find.index < this.props.searchStore.searchState.results.length
   }
 
-  getItemProps = index => {
+  getItemProps: GetItemProps = index => {
     const results = this.props.searchStore.resultsForVirtualList
+    const model = results[index]
+    let separator: string
     if (index === 0 || results[index].group !== results[index - 1].group) {
-      let separator: string
       if (results[index].group === 'last-day' || !results[index].group) {
         separator = 'Last Day'
       } else if (results[index].group === 'last-week') {
@@ -81,9 +73,20 @@ export class SearchAppInner extends React.Component<
       } else {
         separator = 'All Period'
       }
-      return { separator }
     }
-    return {}
+    const normalized = normalizeItem(model)
+    return {
+      separator,
+      title: normalized.title,
+      location: normalized.location,
+      webLink: normalized.webLink,
+      desktopLink: normalized.desktopLink,
+      updatedAt: normalized.updatedAt,
+      integration: normalized.integration,
+      icon: normalized.icon,
+      people: normalized.people,
+      preview: normalized.preview,
+    }
   }
 
   render() {

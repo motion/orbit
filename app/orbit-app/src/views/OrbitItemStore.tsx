@@ -144,7 +144,7 @@ export class OrbitItemStore {
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected) {
-        console.log('selecting this thing...', this.appConfig)
+        console.debug('updateIsSelected', this.appConfig)
         ensure('appConfig`', !!this.appConfig)
         if (onSelect) {
           onSelect(this.index, this.appConfig, this.cardWrapRef)

@@ -37,8 +37,7 @@ class OrbitStore {
     },
   )
 
-  handleSelectItem: OrbitItemProps<any>['onSelect'] = (index, config) => {
-    console.log('select item at', index)
+  handleSelectItem: OrbitItemProps<any>['onSelect'] = (_index, config) => {
     this.activeItem = config
   }
 

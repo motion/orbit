@@ -62,7 +62,7 @@ const suggestionTheme = theme => ({
 const SuggestionButton = props => (
   <UI.Button
     glint={false}
-    size={1}
+    size={1.1}
     sizeRadius={0}
     sizeHeight={0.8}
     sizePadding={0.3}

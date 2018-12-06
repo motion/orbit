@@ -4,6 +4,8 @@ import { BitContentType } from './BitContentType'
 export type SearchResultGroup = 'accurate' | 'last-day' | 'last-week' | 'last-month' | 'overall'
 
 export interface SearchResult {
+  target: 'search-group'
+
   id: number
 
   /**

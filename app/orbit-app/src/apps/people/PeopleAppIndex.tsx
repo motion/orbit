@@ -12,6 +12,7 @@ import { memo } from '../../helpers/memo'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
+import { SearchResultsList } from '../../views/Lists/SearchResultsList'
 
 class PeopleIndexStore {
   props: AppProps
@@ -98,35 +99,18 @@ class PeopleIndexStore {
 }
 
 export const PeopleAppIndex = memo((props: AppProps) => {
-  const { results, resultsWithSections, peopleQuery } = useStore(PeopleIndexStore, props)
-  const total = results.length
+  const store = useStore(PeopleIndexStore, props)
+  const total = store.results.length
   if (!total) {
     return <NoResultsDialog subName="the directory" />
   }
   return (
-    <ProvideHighlightsContextWithDefaults value={{ words: peopleQuery.split(' ') }}>
-      <VirtualList
-        ItemView={ListItem}
-        itemProps={props.itemProps}
-        maxHeight={props.appStore.maxHeight}
-        items={resultsWithSections}
-        rowCount={resultsWithSections.length}
-      />
-    </ProvideHighlightsContextWithDefaults>
+    <SearchResultsList
+      query={store.peopleQuery}
+      itemProps={props.itemProps}
+      maxHeight={props.appStore.maxHeight}
+      results={store.results}
+      rowCount={total}
+    />
   )
 })
-
-class ListItem extends React.PureComponent<ListItemProps> {
-  render() {
-    const { model, realIndex, query, ...props } = this.props
-    return (
-      <OrbitListItem
-        index={realIndex}
-        model={model}
-        searchTerm={query}
-        overflow="hidden"
-        {...props}
-      />
-    )
-  }
-}

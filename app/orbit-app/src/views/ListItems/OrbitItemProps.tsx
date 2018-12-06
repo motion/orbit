@@ -1,5 +1,5 @@
 import { OrbitItemStore } from './OrbitItemStore'
-import { NormalizedItem } from '../../helpers/normalizeItem'
+import { NormalItem } from '../../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
 import { ResolvableModel, GenericItemProps } from '../../sources/types'
 import { SourcesStore } from '../../stores/SourcesStore'
@@ -10,7 +10,7 @@ import { AppConfig } from '@mcro/models'
 export type ItemRenderText = ((text: string) => JSX.Element)
 
 export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
-  Partial<NormalizedItem> & {
+  Partial<NormalItem> & {
     // for setting the view
     appConfig?: AppConfig
 
@@ -58,6 +58,6 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     getIndex?: (id: T) => number
     subtitleSpaceBetween?: React.ReactNode
     searchTerm?: string
-    onClickLocation?: (item: NormalizedItem, e?: Event) => any
+    onClickLocation?: (item: NormalItem, e?: Event) => any
     separator?: React.ReactNode
   }

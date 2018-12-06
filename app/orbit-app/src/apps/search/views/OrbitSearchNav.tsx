@@ -1,6 +1,6 @@
 import './calendar.css' // theme css file
 import * as React from 'react'
-import { Row, View, Popover } from '@mcro/ui'
+import { Row, View, Popover, Icon } from '@mcro/ui'
 import { NavButton } from '../../../views/NavButton'
 import { react, ensure, StoreContext, view } from '@mcro/black'
 import { OrbitSuggestionBar } from './OrbitSuggestionBar'
@@ -82,12 +82,7 @@ export const OrbitSearchNav = observer(() => {
             />
           </View>
         </Popover>
-        <NavButton
-          onClick={queryFilters.toggleSortBy}
-          icon={queryFilters.sortBy === 'Recent' ? 'sort' : 'trend'}
-          tooltip={queryFilters.sortBy}
-          opacity={0.5}
-        >
+        <NavButton onClick={queryFilters.toggleSortBy} tooltip={queryFilters.sortBy} opacity={0.5}>
           {queryFilters.sortBy}
         </NavButton>
       </Row>
@@ -97,6 +92,7 @@ export const OrbitSearchNav = observer(() => {
       </ScrollableRow>
 
       <ScrollableRow maxWidth="33%">
+        <Icon name="funnel" size={16} />
         <OrbitFilters forwardRef={store.setFilterRef} />
       </ScrollableRow>
     </>

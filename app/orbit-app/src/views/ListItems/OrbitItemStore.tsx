@@ -1,6 +1,6 @@
 import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
-import { NormalizedItem } from '../../helpers/normalizeItem'
+import { NormalItem } from '../../helpers/normalizeItem'
 import { AppActions } from '../../actions/AppActions'
 import { ResolvableModel } from '../../sources/types'
 import { getAppConfig } from '../../helpers/getAppConfig'
@@ -13,7 +13,7 @@ export const OrbitItemSingleton = {
 export class OrbitItemStore {
   props: OrbitItemProps<ResolvableModel>
 
-  resolvedItem: NormalizedItem | null = null
+  resolvedItem: NormalItem | null = null
   isSelected = false
   cardWrapRef = null
   clickAt = 0
@@ -89,7 +89,7 @@ export class OrbitItemStore {
     this.cardWrapRef = cardWrapRef
   }
 
-  setResolvedItem = (item: NormalizedItem) => {
+  setResolvedItem = (item: NormalItem) => {
     this.resolvedItem = item
   }
 

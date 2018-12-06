@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { normalizeItem, NormalizedItem } from '../helpers/normalizeItem'
+import { normalizeItem, NormalItem } from '../helpers/normalizeItem'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
@@ -26,8 +26,8 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
     padding: 8,
   }
 
-  getInner = (item: Partial<NormalizedItem>) => {
-    const { avatar, icon, location, people, preview, title, updatedAt } = item
+  getInner = (item: Partial<NormalItem>) => {
+    const { icon, location, people, preview, title, updatedAt } = item
     const {
       afterTitle,
       borderRadius,
@@ -37,7 +37,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
       hide,
       hoverToSelect,
       iconProps,
-      inactive,
       inGrid,
       onClick,
       store,

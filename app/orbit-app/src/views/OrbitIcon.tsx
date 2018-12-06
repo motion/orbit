@@ -57,7 +57,7 @@ export const OrbitIcon = decorator(
     color = 'black',
     preventAdjust = false,
     className = '',
-    theme,
+    theme = null,
     ...props
   }) => {
     const sizeProps = {

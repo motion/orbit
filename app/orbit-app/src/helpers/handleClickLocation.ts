@@ -1,7 +1,7 @@
-import { NormalizedItem } from './normalizeItem'
+import { NormalItem } from './normalizeItem'
 import { AppActions } from '../actions/AppActions'
 
-export function handleClickLocation(item: NormalizedItem, e?: Event) {
+export function handleClickLocation(item: NormalItem, e?: Event) {
   if (e) {
     e.preventDefault()
     e.stopPropagation()

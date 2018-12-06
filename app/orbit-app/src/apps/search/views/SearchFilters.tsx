@@ -18,7 +18,7 @@ const decorate = compose(
   attach('queryStore'),
   view,
 )
-export const OrbitFilters = decorate(({ queryStore, ...props }: Props) => {
+export const SearchFilters = decorate(({ queryStore, ...props }: Props) => {
   const { queryFilters } = queryStore
   if (!queryFilters.integrationFilters.length) {
     return null

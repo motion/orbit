@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SearchStore } from './SearchStore'
-import { OrbitSearchNav } from './views/OrbitSearchNav'
+import { SearchNav } from './views/SearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { Toolbar } from '../../components/Toolbar'
@@ -38,7 +38,7 @@ export const SearchAppIndex = observer((props: AppProps) => {
     <MergeContext Context={StoreContext} value={{ searchStore }}>
       {!shouldHideNav && (
         <Toolbar>
-          <OrbitSearchNav />
+          <SearchNav />
         </Toolbar>
       )}
       <View position="relative" flex={1} opacity={searchStore.isChanging ? 0.7 : 1}>

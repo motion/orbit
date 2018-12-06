@@ -51,8 +51,6 @@ export const OrbitPage = observer(() => {
     paneManagerStore,
   }
 
-  console.log('what')
-
   return (
     <StoreContext.Provider value={stores}>
       <MainShortcutHandler queryStore={queryStore}>

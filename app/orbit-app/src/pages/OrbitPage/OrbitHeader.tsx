@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
-import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { view, StoreContext } from '@mcro/black'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { View } from '@mcro/ui'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
@@ -11,12 +10,8 @@ import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { AppActions } from '../../actions/AppActions'
 import { WindowCloseButton } from '../../views/WindowControls'
-
-export type HeaderProps = {
-  paneManagerStore?: PaneManagerStore
-  queryStore?: QueryStore
-  selectionStore?: SelectionStore
-}
+import { observer } from 'mobx-react-lite'
+import { useStore } from '@mcro/use-store'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -26,7 +21,11 @@ const selectTextarea = el => {
 }
 
 export class HeaderStore {
-  props: HeaderProps
+  props: {
+    paneManagerStore?: PaneManagerStore
+    queryStore?: QueryStore
+    selectionStore?: SelectionStore
+  }
 
   inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false
@@ -110,48 +109,30 @@ export class HeaderStore {
   }
 }
 
-@attachTheme
-@attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
-@attach({
-  headerStore: HeaderStore,
-})
-@view
-export class OrbitHeader extends React.Component<
-  HeaderProps & {
-    headerStore?: HeaderStore
-    after?: React.ReactNode
-    theme?: ThemeObject
-    showPin?: boolean
-  }
-> {
-  render() {
-    const { headerStore, paneManagerStore, theme } = this.props
-    return (
-      <OrbitHeaderContainer
-        opacity={paneManagerStore.activePane === 'onboard' ? 0 : 1}
-        className="draggable"
-      >
-        <OrbitClose onClick={AppActions.closeOrbit}>
-          <WindowCloseButton size={8} />
-        </OrbitClose>
-        <OrbitInputContain>
-          <OrbitFakeInput>
-            <OrbitHeaderInput headerStore={headerStore} theme={theme} />
-          </OrbitFakeInput>
-        </OrbitInputContain>
+export const OrbitHeader = observer(() => {
+  const stores = React.useContext(StoreContext)
+  const headerStore = useStore(HeaderStore, stores)
+  return (
+    <OrbitHeaderContainer
+      opacity={stores.paneManagerStore.activePane === 'onboard' ? 0 : 1}
+      className="draggable"
+    >
+      <OrbitClose onClick={AppActions.closeOrbit}>
+        <WindowCloseButton size={8} />
+      </OrbitClose>
+      <OrbitInputContain>
+        <OrbitHeaderInput headerStore={headerStore} />
         <After>
           <OrbitHeaderButtons />
         </After>
-      </OrbitHeaderContainer>
-    )
-  }
-}
+      </OrbitInputContain>
+    </OrbitHeaderContainer>
+  )
+})
 
 const OrbitHeaderContainer = view(View, {
   position: 'relative',
   flexFlow: 'row',
-  alignItems: 'stretch',
-  justifyContent: 'stretch',
   padding: [7, 14],
   transition: 'all ease-in 300ms',
   zIndex: 4,
@@ -164,15 +145,10 @@ const After = view({
 
 const OrbitInputContain = view({
   height: 34,
-  flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
-})
-
-const OrbitFakeInput = view({
+  margin: 'auto',
   flexFlow: 'row',
-  alignItems: 'stretch',
-  justifyContent: 'stretch',
   maxWidth: 900,
   width: '80%',
   minWidth: 400,

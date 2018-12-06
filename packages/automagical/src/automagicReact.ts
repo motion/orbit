@@ -27,15 +27,17 @@ let logBatchTm = null
 const logBatchFlush = () => {
   const groups = [...logBatch]
   if (groups.length > 1) {
-    const groupTitles = groups.map(x =>
-      x[0]
-        // collapse extra whitespace in repeating items
-        .replace(/✅ [\s]+/, '✅ ')
-        // remove the extra info inside () for cleaner lines
-        .replace(/(\([^\)]+\))/g, '')
-        .trim(),
-    )
-    console.groupCollapsed(`  REACTIONS (${groups.length}): ${groupTitles.join(' ᠅ ')}`)
+    const groupTitles = groups
+      .map(x =>
+        x[0]
+          // collapse extra whitespace in repeating items
+          .replace(/✅[\s]+/, '')
+          .trim()
+          // remove the extra info
+          .replace(/\..*$/, ''),
+      )
+      .filter(Boolean)
+    console.groupCollapsed(`  (${groups.length}): ${groupTitles.join(', ')}`)
     for (const [, logger] of logBatch) {
       logger()
     }

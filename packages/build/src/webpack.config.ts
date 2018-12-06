@@ -108,7 +108,7 @@ const config = {
   //   eval-source-map (seems to not even parse...)
   //   cheap-source-map (no line numbers...)
   //   cheap-module-eval-source-map (no line numbers...)
-  devtool: isProd ? 'source-map' : 'source-map',
+  devtool: isProd ? 'source-map' : 'eval-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

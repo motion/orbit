@@ -1,9 +1,6 @@
 if (process.env.PUNDLE) {
   module.exports = {
-    presets: [
-      ['@mcro/babel-preset-motion' /* , { disable: ['react-hot-loader/babel'] } */],
-      ['@babel/preset-env', { targets: { node: '7.0' } }],
-    ],
+    presets: [['@mcro/babel-preset-motion'], ['@babel/preset-env', { targets: { node: '7.0' } }]],
   }
 } else {
   module.exports = {

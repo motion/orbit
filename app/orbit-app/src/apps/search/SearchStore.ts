@@ -37,7 +37,7 @@ export class SearchStore {
    * Virtual list has its own format of data representation, so convert our data to that format here.
    * Ideally we need to use our format in there, but if it is generic component we can use transformation as well.
    */
-  get resultsForVirtualList() {
+  get resultsForVirtualList(): SearchResult[] {
     // convert our search results into something this components expects
     const items: { [group: string]: [any[], any[]] } = {}
     for (let result of this.searchState.results) {

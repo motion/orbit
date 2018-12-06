@@ -10,7 +10,6 @@ import { ensure, react, StoreContext, always } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
 import { OrbitItemSingleton } from '../ListItems/OrbitItemStore'
-import { SubPaneStore } from '../../components/SubPaneStore'
 import { Banner } from '../Banner'
 import { VirtualListItem } from './VirtualListItem'
 import { OrbitItemProps } from '../ListItems/OrbitItemProps'
@@ -21,12 +20,11 @@ import { observer } from 'mobx-react-lite'
 
 export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>>
 
-type Props = {
+export type VirtualListProps = {
   items: any[]
   itemProps?: OrbitItemProps<any>
   getItemProps?: GetItemProps
   appStore?: AppStore
-  subPaneStore?: SubPaneStore
   ItemView?: GenericComponent<any>
   infinite?: boolean
   loadMoreRows?: Function
@@ -43,7 +41,7 @@ class InnerList extends React.Component<any> {
 const SortableListContainer = SortableContainer(InnerList, { withRef: true })
 
 class VirtualListStore {
-  props: Props
+  props: VirtualListProps
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List = null
   rootRef: HTMLDivElement = null
@@ -157,7 +155,7 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-export const VirtualList = observer((props: Props) => {
+export const VirtualList = observer((props: VirtualListProps) => {
   const { appStore } = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore })
   const { cache, width, height, items } = store

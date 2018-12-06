@@ -16,17 +16,6 @@ import { Separator } from '../Separator'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 
-// @attach('sourcesStore', 'appStore')
-// @attach({
-//   store: OrbitItemStore,
-// })
-
-// padding: [10, 11]
-
-// if (!props.direct) {
-//   ItemView = props.sourcesStore.getView(integration, 'item')
-// }
-
 export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
   const stores = React.useContext(StoreContext)
   const store = useStore(OrbitItemStore, { ...props, ...stores })
@@ -59,13 +48,10 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
     extraProps,
     isExpanded,
     before,
+    hide,
     ...restProps
   } = props
   const { isSelected } = store
-  const hide = {
-    ...props.hide,
-    // ...(ItemView && ItemView.itemProps && ItemView.itemProps.hide),
-  }
   const showChildren = !(hide && hide.body)
   const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
   const showDate = !!createdAt && !(hide && hide.date)
@@ -117,7 +103,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding}
+          padding={padding || 10}
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>

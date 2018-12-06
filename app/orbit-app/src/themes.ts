@@ -111,7 +111,7 @@ const light = {
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
     listItemBackground: [255, 255, 255, 0],
-    listItemBackgroundSelected: [255, 255, 255, 0.06],
+    listItemBackgroundSelected: orbitColor,
     listItemBackgroundHover: [100, 100, 100, 0.04],
     inputBorderColor: '#eee',
     inputBackground: '#eee',
@@ -181,7 +181,7 @@ const semiDark = {
 }
 
 export const themes = {
-  orbit: {
+  selected: {
     _equalityKey: 'orbit',
     ...Theme.fromStyles({
       background: orbitColor,

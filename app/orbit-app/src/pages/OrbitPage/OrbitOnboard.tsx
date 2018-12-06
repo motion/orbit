@@ -266,7 +266,7 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
             Back
           </Button>
         )}
-        <Theme name="orbit">
+        <Theme name="selected">
           <Button
             disabled={store.pendingMove}
             opacity={store.pendingMove ? 0.5 : 1}

@@ -35,7 +35,6 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
     disableShadow,
     hoverToSelect,
     iconProps,
-    inactive,
     onClick,
     titleProps,
     subtitleProps,
@@ -67,6 +66,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
   const oneLine = extraProps && extraProps.oneLine
   const showPreviewInSubtitle = !showTitle && oneLine
   const renderedChildren = showChildren && children
+  const { activeThemeName } = React.useContext(UI.ThemeContext)
 
   const afterHeader = (
     <AfterHeader>
@@ -84,17 +84,19 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
   )
 
   return (
-    <>
+    <UI.Theme name={isSelected ? 'selected' : null}>
       {!!separator && (
-        <Separator>
-          <Text size={0.9} fontWeight={500}>
-            {separator}
-          </Text>
-        </Separator>
+        <UI.Theme name={activeThemeName}>
+          <Separator>
+            <Text size={0.9} fontWeight={500}>
+              {separator}
+            </Text>
+          </Separator>
+        </UI.Theme>
       )}
       <ListFrame
         isExpanded={isExpanded}
-        {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
+        {...hoverToSelect && store.hoverSettler && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         {...restProps}
       >
@@ -217,7 +219,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
         </ListItem>
         <Divider />
       </ListFrame>
-    </>
+    </UI.Theme>
   )
 })
 
@@ -234,7 +236,7 @@ const ListFrame = view(UI.View, {
   return {
     color: theme.color,
     background: theme.listItemBackground || theme.background.alpha(0.5),
-    borderRadius: borderRadius || 3,
+    borderRadius: borderRadius || 0,
   }
 })
 
@@ -253,14 +255,10 @@ const ListItem = view({
   position: 'relative',
   maxHeight: '100%',
   flex: 1,
-  border: [1, 'transparent'],
-  borderLeft: 'none',
-  borderRight: 'none',
   transform: {
     z: 0,
   },
   chromeless: {
-    border: [1, 'transparent'],
     background: 'transparent',
     padding: 8,
   },
@@ -275,7 +273,6 @@ const ListItem = view({
   if (isSelected) {
     listStyle = {
       background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
-      borderColor: theme.borderSelected.alpha(0.5),
     }
   } else {
     listStyle = {

@@ -156,7 +156,7 @@ export class OrbitSettingsGeneral extends React.Component<Props> {
             </Views.FormRow>
 
             <Views.FormRow label="Account">
-              <Theme name="orbit">
+              <Theme name="selected">
                 <Button onClick={this.handleClearAllData}>Clear all data</Button>
               </Theme>
             </Views.FormRow>

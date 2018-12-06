@@ -18,7 +18,6 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     activeStyle?: Object
     activeCondition?: () => boolean
     before?: React.ReactNode
-    direct?: boolean
     ignoreSelection?: boolean
     chromeless?: boolean
     theme?: Partial<ThemeObject>
@@ -36,7 +35,6 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     afterTitle?: React.ReactNode
     after?: React.ReactNode
     titleProps?: Object
-    inactive?: boolean
     iconProps?: Object
     hide?: GenericItemProps<any>['hide']
     extraProps?: Partial<GenericItemProps<any>['extraProps']>

@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { OrbitListItem } from '../OrbitListItem'
+import { OrbitListItem } from '../ListItems/OrbitListItem'
 import { handleClickLocation } from '../../helpers/handleClickLocation'
 import { Bit } from '@mcro/models'
 import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
-import { OrbitItemProps } from '../OrbitItemProps'
+import { OrbitItemProps } from '../ListItems/OrbitItemProps'
 import { normalizeItem } from '../../helpers/normalizeItem'
 
 export type ListItemProps = Partial<OrbitItemProps<any>> & {

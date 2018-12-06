@@ -1,14 +1,13 @@
 import * as React from 'react'
-import { OrbitListItem } from '../../../views/OrbitListItem'
+import { OrbitListItem } from './OrbitListItem'
 import { Row, Col, Text } from '@mcro/ui'
 import { view } from '@mcro/black'
-import { HighlightText } from '../../../views/HighlightText'
+import { HighlightText } from '../HighlightText'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {
   const num = abbreviateNumber(item.count)
   return (
     <OrbitListItem
-      direct
       padding={[9, 11]}
       {...props}
       appConfig={{ id: `${Math.random()}`, type: 'search', subType: 'group', title: item.title }}

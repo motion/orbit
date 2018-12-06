@@ -1,9 +1,9 @@
 import { OrbitItemStore } from './OrbitItemStore'
-import { NormalizedItem } from '../helpers/normalizeItem'
+import { NormalizedItem } from '../../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
-import { ResolvableModel, GenericItemProps } from '../sources/types'
-import { SourcesStore } from '../stores/SourcesStore'
-import { AppStore } from '../apps/AppStore'
+import { ResolvableModel, GenericItemProps } from '../../sources/types'
+import { SourcesStore } from '../../stores/SourcesStore'
+import { AppStore } from '../../apps/AppStore'
 import { CSSPropertySetStrict } from '@mcro/css'
 import { AppConfig } from '@mcro/models'
 

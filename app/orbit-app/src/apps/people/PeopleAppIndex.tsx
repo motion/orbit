@@ -11,7 +11,7 @@ import { useStore } from '@mcro/use-store'
 import { memo } from '../../helpers/memo'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
-import { OrbitListItem } from '../../views/OrbitListItem'
+import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 
 class PeopleIndexStore {
   props: AppProps

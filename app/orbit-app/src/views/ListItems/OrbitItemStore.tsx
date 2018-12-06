@@ -1,9 +1,9 @@
 import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
-import { NormalizedItem } from '../helpers/normalizeItem'
-import { AppActions } from '../actions/AppActions'
-import { ResolvableModel } from '../sources/types'
-import { getAppConfig } from '../helpers/getAppConfig'
+import { NormalizedItem } from '../../helpers/normalizeItem'
+import { AppActions } from '../../actions/AppActions'
+import { ResolvableModel } from '../../sources/types'
+import { getAppConfig } from '../../helpers/getAppConfig'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {

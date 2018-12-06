@@ -6,7 +6,7 @@ import { useStore } from '@mcro/use-store'
 import { react } from '@mcro/black'
 import { BitsNearTopicModel } from '@mcro/models'
 import { loadMany } from '@mcro/model-bridge'
-import { OrbitListItem } from '../../views/OrbitListItem'
+import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { ScrollableContent } from '../../sources/views/layout/ScrollableContent'
 import { observer } from 'mobx-react-lite'
 

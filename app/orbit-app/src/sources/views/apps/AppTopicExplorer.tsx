@@ -13,7 +13,7 @@ import produce from 'immer'
 import { memoize } from 'lodash'
 import { RoundButtonBordered } from '../../../views/RoundButtonBordered'
 import { SimpleItem } from '../../../views/SimpleItem'
-import { OrbitListItem } from '../../../views/OrbitListItem'
+import { OrbitListItem } from '../../../views/ListItems/OrbitListItem'
 
 type Props = { source: Source }
 

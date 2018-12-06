@@ -6,7 +6,7 @@ import {
   Masonry,
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitItemProps } from './OrbitItemProps'
+import { OrbitItemProps } from './ListItems/OrbitItemProps'
 import { OrbitCard } from './OrbitCard'
 
 const middleSpace = 3

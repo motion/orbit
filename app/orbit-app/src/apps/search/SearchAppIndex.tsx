@@ -6,15 +6,13 @@ import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { VirtualList, GetItemProps } from '../../views/VirtualList/VirtualList'
-import { GroupedSearchItem } from './views/GroupedSearchItem'
-import { OrbitListItem } from '../../views/OrbitListItem'
+import { GroupedSearchItem } from '../../views/ListItems/GroupedSearchItem'
 import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
 import { Toolbar } from '../../components/Toolbar'
 import { observer } from 'mobx-react-lite'
 import { normalizeItem } from '../../helpers/normalizeItem'
-
-const spaceBetween = <div style={{ flex: 1 }} />
+import { ListItemBit } from '../../views/ListItems/ListItemBit'
 
 export const SearchAppIndex = observer((props: AppProps) => {
   const searchStore = useStore(SearchStore, props)
@@ -61,9 +59,8 @@ export class SearchAppInner extends React.Component<
 
   getItemProps: GetItemProps = index => {
     const results = this.props.searchStore.resultsForVirtualList
-    const model = results[index]
-    let separator: string
     if (index === 0 || results[index].group !== results[index - 1].group) {
+      let separator: string
       if (results[index].group === 'last-day' || !results[index].group) {
         separator = 'Last Day'
       } else if (results[index].group === 'last-week') {
@@ -73,20 +70,9 @@ export class SearchAppInner extends React.Component<
       } else {
         separator = 'All Period'
       }
+      return { separator }
     }
-    const normalized = normalizeItem(model)
-    return {
-      separator,
-      title: normalized.title,
-      location: normalized.location,
-      webLink: normalized.webLink,
-      desktopLink: normalized.desktopLink,
-      updatedAt: normalized.updatedAt,
-      integration: normalized.integration,
-      icon: normalized.icon,
-      people: normalized.people,
-      preview: normalized.preview,
-    }
+    return {}
   }
 
   render() {
@@ -121,19 +107,6 @@ class ListItem extends React.PureComponent<ListItemProps> {
       const item = model as any
       return <GroupedSearchItem item={item} index={realIndex} query={query} {...props} />
     }
-    return (
-      <OrbitListItem
-        index={realIndex}
-        model={model}
-        subtitleSpaceBetween={spaceBetween}
-        searchTerm={query}
-        renderText={renderHighlightedText}
-        extraProps={{
-          condensed: true,
-          preventSelect: true,
-        }}
-        {...props}
-      />
-    )
+    return <ListItemBit {...this.props} />
   }
 }

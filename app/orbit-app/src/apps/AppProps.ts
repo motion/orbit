@@ -7,7 +7,7 @@ import { SubPaneStore } from '../components/SubPaneStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { OrbitItemProps } from '../views/OrbitItemProps'
+import { OrbitItemProps } from '../views/ListItems/OrbitItemProps'
 
 export type AppProps = {
   id: string

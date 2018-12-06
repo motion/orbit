@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { OrbitListItem } from './OrbitListItem'
-import { OrbitCard } from './OrbitCard'
+import { OrbitCard } from '../OrbitCard'
 import { OrbitItemProps } from './OrbitItemProps'
 
 // returns either a card or listItem based on a certain prop

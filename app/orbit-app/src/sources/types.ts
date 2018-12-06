@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { FindOptions } from 'typeorm'
 import { IntegrationType, Bit, PersonBit, Source, GenericBit } from '@mcro/models'
-import { AppConfig } from '@mcro/stores'
+import { AppConfig } from '@mcro/models'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { NormalizedItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../components/AppInfoStore'
-import { ItemRenderText } from '../views/OrbitItemProps'
+import { ItemRenderText } from '../views/ListItems/OrbitItemProps'
 import { GenericComponent } from '../types'
 
 type AppTypeToModelType = {

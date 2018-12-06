@@ -7,7 +7,7 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SpaceStore, AppPanes } from '../../stores/SpaceStore'
 import { Theme } from '@mcro/ui'
-import { useStore, useInstantiatedStore } from '@mcro/use-store'
+import { useStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { StoreContext, view } from '@mcro/black'
 import { AppActions } from '../../actions/AppActions'
@@ -20,8 +20,7 @@ import { OrbitPageContent } from './OrbitPageContent'
 import { observer } from 'mobx-react-lite'
 
 export const OrbitPage = observer(() => {
-  const { darkTheme } = useInstantiatedStore(App).state
-  const theme = darkTheme ? 'dark' : 'light'
+  const theme = App.state.darkTheme ? 'dark' : 'light'
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)

@@ -51,7 +51,7 @@
     "mobx-react-devtools": "6.0.3",
     "pluralize": "^7.0.0",
     "react-fast-compare": "2.0.4",
-    "react-hot-loader": "4.5.1",
+    "@mcro/react-hot-loader": "4.5.1",
     "react-spring": "6.1.8",
     "react-virtualized": "9.21.0",
     "reconnecting-websocket": "4.1.10",

@@ -181,6 +181,21 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@mcro/react-hot-loader@4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@mcro/react-hot-loader/-/react-hot-loader-4.5.1.tgz#713e5765d91a5dfb322dbfcd2cb384d321abe765"
+  integrity sha512-w0WgcwBTFaHaQT7ttKoZqj7KudAQvaIRtwlAD7GjrG0jGOxGCFqJD7LbSoocm0f3Khb7xHGesb95WeFCf/+CNg==
+  dependencies:
+    fast-levenshtein "^2.0.6"
+    global "^4.3.0"
+    hoist-non-react-statics "^2.5.0"
+    loader-utils "^1.1.0"
+    lodash.merge "^4.6.1"
+    prop-types "^15.6.1"
+    react-lifecycles-compat "^3.0.4"
+    shallowequal "^1.0.2"
+    source-map "^0.7.3"
+
 "@pundle/api@^3.0.0-beta11":
   version "3.0.0-beta11"
   resolved "https://registry.yarnpkg.com/@pundle/api/-/api-3.0.0-beta11.tgz#08a58178bf3ea528746b473ee110257d42f0d1da"
@@ -4907,21 +4922,6 @@ react-fast-compare@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
-
-react-hot-loader@4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.5.1.tgz#4a9cf136542b1db4f948ac74b31fa16a411ceebb"
-  integrity sha512-aqw8F0ZTCakfTXTj1n3F9vXfEKWWHEpQ3Mq9YmYvrNdHvey5RfkSGv7rz4r9TXjqVLt2mpItqydJQdhboZ/acQ==
-  dependencies:
-    fast-levenshtein "^2.0.6"
-    global "^4.3.0"
-    hoist-non-react-statics "^2.5.0"
-    loader-utils "^1.1.0"
-    lodash.merge "^4.6.1"
-    prop-types "^15.6.1"
-    react-lifecycles-compat "^3.0.4"
-    shallowequal "^1.0.2"
-    source-map "^0.7.3"
 
 react-hotkeys@1.0.6:
   version "1.0.6"

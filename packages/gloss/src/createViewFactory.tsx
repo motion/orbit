@@ -7,7 +7,7 @@ import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import validProp from './helpers/validProp'
 import { simplePropSum } from './helpers/simplePropSum'
-import { cold } from 'react-hot-loader'
+import { cold } from '@mcro/react-hot-loader'
 
 const memo = View => React.memo(cold(View))
 

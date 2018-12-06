@@ -1,4 +1,4 @@
-import { setConfig } from 'react-hot-loader'
+import { setConfig } from '@mcro/react-hot-loader'
 
 setConfig({ logLevel: 'debug', pureSFC: true })
 

@@ -124,7 +124,7 @@ const config = {
         ? Path.resolve(cwd, 'node_modules', 'react-dom')
         : // react hmr
           Path.resolve(__dirname, '..', 'node_modules', '@hot-loader/react-dom'),
-      'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
+      '@mcro/react-hot-loader': Path.resolve(cwd, 'node_modules', '@mcro/react-hot-loader'),
     },
   },
   resolveLoader: {
@@ -144,7 +144,7 @@ const config = {
       },
       {
         test: /\.[jt]sx?$/,
-        use: ['thread-loader', 'babel-loader', 'react-hot-loader/webpack'],
+        use: ['thread-loader', 'babel-loader', '@mcro/react-hot-loader/webpack'],
         exclude: /node_modules/,
       },
       {

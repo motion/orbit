@@ -9,6 +9,7 @@ export class AppStore {
     appPageStore?: AppPageStore
   }
 
+  toolbar = null
   selectionResults = null
 
   setResults = (results: SelectionGroup[]) => {
@@ -98,5 +99,9 @@ export class AppStore {
       return subPaneStore.maxHeight
     }
     return window.innerHeight - 50
+  }
+
+  setToolbar = toolbar => {
+    this.toolbar = toolbar
   }
 }

@@ -16,7 +16,7 @@ import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShort
 import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
 import { OrbitNav } from './OrbitNav'
-import { OrbitPageMain } from './OrbitPageMain'
+import { OrbitPageContent } from './OrbitPageContent'
 
 export const OrbitPage = React.memo(() => {
   const { darkTheme } = useInstantiatedStore(App).state
@@ -55,14 +55,16 @@ export const OrbitPage = React.memo(() => {
       <MainShortcutHandler queryStore={queryStore}>
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <OrbitHeader queryStore={queryStore} />
-            <OrbitNav />
+            <Chrome>
+              <OrbitHeader queryStore={queryStore} />
+              <OrbitNav />
 
-            <OrbitPageChrome>
-              <OrbitPageMain />
-            </OrbitPageChrome>
+              <InnerChrome>
+                <OrbitPageContent />
+              </InnerChrome>
 
-            <OrbitOnboard />
+              <OrbitOnboard />
+            </Chrome>
           </AppWrapper>
         </Theme>
       </MainShortcutHandler>
@@ -70,7 +72,13 @@ export const OrbitPage = React.memo(() => {
   )
 })
 
-const OrbitPageChrome = view({
+const Chrome = view({
+  flex: 1,
+}).theme(props => ({
+  background: props.theme.background.alpha(0.25),
+}))
+
+const InnerChrome = view({
   flexFlow: 'row',
   flex: 1,
   overflow: 'hidden',

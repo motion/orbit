@@ -126,10 +126,8 @@ export class OrbitHeader extends React.Component<
 > {
   render() {
     const { headerStore, paneManagerStore, theme } = this.props
-    const headerBg = theme.background
     return (
       <OrbitHeaderContainer
-        headerBg={headerBg}
         opacity={paneManagerStore.activePane === 'onboard' ? 0 : 1}
         className="draggable"
       >

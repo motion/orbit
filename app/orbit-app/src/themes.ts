@@ -112,7 +112,7 @@ const light = {
   ...Theme.fromStyles({
     listItemBackground: [255, 255, 255, 0],
     listItemBackgroundSelected: [255, 255, 255, 0.06],
-    listItemBackgroundHover: [255, 255, 255, 0.04],
+    listItemBackgroundHover: [200, 200, 200, 0.04],
     inputBorderColor: '#eee',
     inputBackground: '#eee',
     inputBackgroundActive: [0, 0, 0, 0.1],

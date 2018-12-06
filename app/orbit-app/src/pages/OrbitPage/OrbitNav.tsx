@@ -66,7 +66,7 @@ const NavButtonChrome = view({
 const NavButton = ({ children, label, isActive, ...props }) => (
   <NavButtonChrome isActive={isActive} {...props}>
     {children}
-    <Text marginLeft={10} fontWeight={300} size={1.05} alpha={isActive ? 1 : 0.75}>
+    <Text marginLeft={10} fontWeight={400} size={1} alpha={isActive ? 1 : 0.75}>
       {label}
     </Text>
   </NavButtonChrome>

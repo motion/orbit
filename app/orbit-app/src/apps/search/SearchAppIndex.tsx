@@ -11,15 +11,20 @@ import { GroupedSearchItem } from './views/GroupedSearchItem'
 import { OrbitListItem } from '../../views/OrbitListItem'
 import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
 import { ListItemProps } from '../../views/VirtualList/VirtualListItem'
+import { Toolbar } from '../../components/Toolbar'
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
-export function SearchAppIndex(props: AppProps) {
+export const SearchAppIndex = React.memo((props: AppProps) => {
   const searchStore = useStore(SearchStore, props)
   const shouldHideNav = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (
     <>
-      {!shouldHideNav && <OrbitSearchNav />}
+      {!shouldHideNav && (
+        <Toolbar>
+          <OrbitSearchNav />
+        </Toolbar>
+      )}
       <ItemResolverDecorationContext.Provider
         value={{
           item: null,
@@ -28,7 +33,6 @@ export function SearchAppIndex(props: AppProps) {
           },
         }}
       >
-        {/* <OrbitSearchQuickResults /> */}
         <OrbitSearchResultsFrame
           style={{
             opacity: searchStore.isChanging ? 0.7 : 1,
@@ -39,7 +43,7 @@ export function SearchAppIndex(props: AppProps) {
       </ItemResolverDecorationContext.Provider>
     </>
   )
-}
+})
 
 const OrbitSearchResultsFrame = view({
   position: 'relative',

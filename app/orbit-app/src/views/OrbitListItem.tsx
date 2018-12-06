@@ -337,7 +337,7 @@ const ListItem = view({
   } else {
     listStyle = {
       '&:hover': {
-        background: theme.listItemBackgroundHover,
+        background: theme.listItemBackgroundHover || theme.backgroundHover,
       },
     }
   }

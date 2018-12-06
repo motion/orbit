@@ -6,8 +6,7 @@ import { viewEmitter } from '@mcro/black'
 import { CompositeDisposable } from 'event-kit'
 import { IS_ELECTRON } from './constants'
 import { AppActions } from './actions/AppActions'
-import { AppConfig } from '@mcro/stores'
-import { BitModel, PersonBitModel } from '@mcro/models'
+import { BitModel, PersonBitModel, AppConfig } from '@mcro/models'
 import { sleep } from './helpers'
 
 // because for some reason we are picking up electron process.env stuff...

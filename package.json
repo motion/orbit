@@ -34,10 +34,7 @@
     "mobx": "5.6.0",
     "prettier": "1.15.3",
     "sb-promisify": "^2.0.2",
-    "typescript": "3.1.6",
-    "webpack": "4.26.1",
-    "webpack-dev-server": "3.1.10",
-    "webpack-cli": "3.1.2"
+    "typescript": "3.1.6"
   },
   "scripts": {
     "watch": "source .env && build --watch",

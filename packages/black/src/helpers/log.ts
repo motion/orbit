@@ -148,6 +148,7 @@ function wrapLogger(wrapFn, parent, name) {
       this.state &&
       Object.keys(this.state).reduce(
         (acc, key, i) =>
+          // @ts-ignore
           ` | ${key.slice(0, 9).padEnd(10)}: ${`${this.state[key]}`.slice(0, 9).padEnd(10)}${
             i % 3 === 0 ? '\n' : ''
           }${acc}`,

@@ -1,10 +1,8 @@
-// @ts-ignore
 import webpack from 'webpack'
 import * as Path from 'path'
 import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-// import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
@@ -107,10 +105,10 @@ const config = {
     },
   },
   // for a faster dev mode you can do:
-  //   eval-source-map (slower start up but has line numbers)
+  //   eval-source-map (seems to not even parse...)
   //   cheap-source-map (no line numbers...)
   //   cheap-module-eval-source-map (no line numbers...)
-  devtool: isProd ? 'source-map' : 'eval-source-map',
+  devtool: isProd ? 'source-map' : 'source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

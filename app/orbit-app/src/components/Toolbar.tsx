@@ -1,11 +1,18 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { StoreContext } from '@mcro/black'
 
 export const Toolbar = props => {
   const stores = useContext(StoreContext)
+
+  useEffect(() => {
+    if (stores.appStore) {
+      stores.appStore.setToolbar(props.children)
+    }
+  }, [])
+
   if (stores.appStore) {
-    stores.appStore.setToolbar(props.children)
     return null
+  } else {
+    return props.children
   }
-  return props.children
 }

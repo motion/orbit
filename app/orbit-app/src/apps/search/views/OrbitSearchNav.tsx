@@ -59,7 +59,7 @@ export const OrbitSearchNav = observer(() => {
   const { queryFilters } = queryStore
 
   return (
-    <Row alignItems="center" flex={1}>
+    <Row alignItems="center">
       <Row position="relative" zIndex={1} padding={[0, 100, 0, 0]}>
         <Popover
           delay={100}

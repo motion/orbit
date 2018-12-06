@@ -52,7 +52,6 @@ function TopicList({ results, offset = 0, ...props }) {
         <OrbitListItem
           key={res.title}
           direct
-          appType="topics"
           padding={[IS_MINIMAL ? 5 : 7, 11]}
           opacity={0.85}
           {...{ '&:hover': activeStyle }}

@@ -9,21 +9,6 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@mcro/react-hot-loader@4.5.1":
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/@mcro/react-hot-loader/-/react-hot-loader-4.5.1.tgz#713e5765d91a5dfb322dbfcd2cb384d321abe765"
-  integrity sha512-w0WgcwBTFaHaQT7ttKoZqj7KudAQvaIRtwlAD7GjrG0jGOxGCFqJD7LbSoocm0f3Khb7xHGesb95WeFCf/+CNg==
-  dependencies:
-    fast-levenshtein "^2.0.6"
-    global "^4.3.0"
-    hoist-non-react-statics "^2.5.0"
-    loader-utils "^1.1.0"
-    lodash.merge "^4.6.1"
-    prop-types "^15.6.1"
-    react-lifecycles-compat "^3.0.4"
-    shallowequal "^1.0.2"
-    source-map "^0.7.3"
-
 big.js@^3.1.3:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
@@ -122,6 +107,21 @@ react-dom@16.7.0-alpha.2:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.12.0-alpha.2"
+
+react-hot-loader@4.5.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.5.2.tgz#5a91984196fb72801a52c62bfad0eb2322d7bcd3"
+  integrity sha512-R/mYorMt2YC9IkF/bpJqiYezrz5z1F7F+W1XIaiGezeuonQWIRpNycZRobkYHJNz66QKq6eBWeUYV6/AMmfaLw==
+  dependencies:
+    fast-levenshtein "^2.0.6"
+    global "^4.3.0"
+    hoist-non-react-statics "^2.5.0"
+    loader-utils "^1.1.0"
+    lodash.merge "^4.6.1"
+    prop-types "^15.6.1"
+    react-lifecycles-compat "^3.0.4"
+    shallowequal "^1.0.2"
+    source-map "^0.7.3"
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"

@@ -107,7 +107,6 @@ export class OrbitItemStore {
 
   selectItem = () => {
     const item = {
-      appType: this.props.appType,
       appConfig: this.appConfig,
       target: this.cardWrapRef,
     }
@@ -145,7 +144,7 @@ export class OrbitItemStore {
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected) {
-        console.log('selecting this thing...', this.props.appType, this.appConfig)
+        console.log('selecting this thing...', this.appConfig)
         ensure('appConfig`', !!this.appConfig)
         if (onSelect) {
           onSelect(this.index, this.appConfig, this.cardWrapRef)

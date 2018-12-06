@@ -120,13 +120,10 @@ class ListItem extends React.PureComponent<ListItemProps> {
     }
     return (
       <OrbitListItem
-        appType="search"
         index={realIndex}
         model={model}
         subtitleSpaceBetween={spaceBetween}
         searchTerm={query}
-        maxHeight={200}
-        overflow="hidden"
         renderText={renderHighlightedText}
         extraProps={{
           condensed: true,

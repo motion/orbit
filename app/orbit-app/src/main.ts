@@ -1,4 +1,4 @@
-import '@mcro/react-hot-loader' // must be imported before react
+import 'react-hot-loader' // must be imported before react
 import { setGlobalConfig } from '@mcro/config'
 import { App } from '@mcro/stores'
 import { configureUseStore } from '@mcro/use-store'
@@ -69,7 +69,6 @@ async function main() {
             AppActions.setPeekApp({
               position: [0, 0],
               size: [400, 400],
-              appType: 'bit',
               appConfig: {
                 id: `${lastBit.id}`,
                 title: lastBit.title,
@@ -81,7 +80,6 @@ async function main() {
             AppActions.setPeekApp({
               position: [0, 0],
               size: [400, 400],
-              appType: 'lists',
               appConfig: {
                 id: '0',
                 title: 'Lists',
@@ -93,7 +91,6 @@ async function main() {
             AppActions.setPeekApp({
               position: [0, 0],
               size: [500, 500],
-              appType: 'topics',
               appConfig: {
                 id: '1',
                 title: 'Topics',
@@ -108,7 +105,6 @@ async function main() {
             AppActions.setPeekApp({
               position: [0, 0],
               size: [500, 500],
-              appType: 'people',
               appConfig: {
                 id: `${lastPerson.id}`,
                 title: lastPerson.title,

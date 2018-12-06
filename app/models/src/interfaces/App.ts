@@ -7,11 +7,11 @@ import { Space } from './Space'
 export type AppType = 'home' | 'search' | 'people' | 'topics' | 'lists' | 'source' | 'bit'
 
 export type AppConfig = {
+  type: AppType
   id: string
   icon?: string
   iconLight?: string
   title: string
-  type: AppType
   integration?: string
   subType?: string
   viewType?: 'main' | 'index' | 'setup'

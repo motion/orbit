@@ -2,12 +2,11 @@ import { peekPosition, Position } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { setAppState } from '../setAppState'
-import { AppType, AppConfig } from '@mcro/models'
+import { AppConfig } from '@mcro/models'
 
 type PeekApp = {
   target: HTMLDivElement
   appConfig: AppConfig
-  appType: AppType
   parentBounds?: Position
   position?: [number, number]
   size?: [number, number]
@@ -38,11 +37,10 @@ const getParentBounds = (target: HTMLDivElement) => {
   return node.getBoundingClientRect()
 }
 
-export function setPeekApp({ target, appType, appConfig, parentBounds, position, size }: PeekApp) {
+export function setPeekApp({ target, appConfig, parentBounds, position, size }: PeekApp) {
   invariant(appConfig, 'Must pass appConfig')
   setPeekState({
     target,
-    appType,
     appConfig,
     parentBounds: parentBounds || target ? getParentBounds(target) : null,
     position,
@@ -50,7 +48,7 @@ export function setPeekApp({ target, appType, appConfig, parentBounds, position,
   })
 }
 
-function setPeekState({ target, appConfig, appType, parentBounds, position, size }: PeekApp) {
+function setPeekState({ target, appConfig, parentBounds, position, size }: PeekApp) {
   const realTarget = getTargetPosition(target)
 
   // TODO: we need a non-deep merge option for [Store].setState
@@ -58,7 +56,6 @@ function setPeekState({ target, appConfig, appType, parentBounds, position, size
   // perhaps [Store].replaceState or [Store].setState(x, { replace: true })
 
   const appState = {
-    appType,
     appConfig: {
       ...DEFAULT_APP_CONFIG,
       ...appConfig,

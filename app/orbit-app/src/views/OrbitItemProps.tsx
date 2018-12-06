@@ -5,14 +5,13 @@ import { ResolvableModel, GenericItemProps } from '../sources/types'
 import { SourcesStore } from '../stores/SourcesStore'
 import { AppStore } from '../apps/AppStore'
 import { CSSPropertySetStrict } from '@mcro/css'
-import { AppType, AppConfig } from '@mcro/models'
+import { AppConfig } from '@mcro/models'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 
 export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
   Partial<NormalizedItem> & {
     // for setting the view
-    appType?: AppType
     appConfig?: AppConfig
 
     // whether to avoid model resolving and just use props

@@ -36,7 +36,7 @@ export const OrbitAppCard = decorator(({ store, app, subtitle, ...props }: Props
         ellipse: true,
       }}
       icon={app.display.icon}
-      appType="source"
+      // appType="source"
       appConfig={{
         ...sourceToAppConfig(app),
         type: 'source',

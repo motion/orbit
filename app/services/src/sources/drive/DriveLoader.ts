@@ -1,7 +1,7 @@
 import { sleep } from '@mcro/utils'
 import { Logger } from '@mcro/logger'
 import { DriveSource } from '@mcro/models'
-import * as path from 'path'
+// import * as path from 'path'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoaderSourceSaveCallback } from '../../loader/ServiceLoaderTypes'
 import { ServiceLoadThrottlingOptions } from '../../options'
@@ -165,5 +165,4 @@ export class DriveLoader {
   //   })
   //   this.log.verbose('thumbnail downloaded and saved as', destination)
   // }
-
 }

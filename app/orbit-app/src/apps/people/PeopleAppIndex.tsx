@@ -121,7 +121,6 @@ class ListItem extends React.PureComponent<ListItemProps> {
     const { model, realIndex, query, ...props } = this.props
     return (
       <OrbitListItem
-        appType="people"
         index={realIndex}
         model={model}
         searchTerm={query}

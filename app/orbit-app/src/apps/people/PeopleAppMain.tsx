@@ -175,7 +175,6 @@ export const PeopleAppMain = observer((props: AppProps) => {
                 return (
                   <OrbitListItem
                     key={bit.id}
-                    appType="bit"
                     model={bit}
                     margin={0}
                     padding={15}

@@ -12,7 +12,6 @@ export const GroupedSearchItem = ({ item, query, ...props }) => {
       padding={[9, 11]}
       {...props}
       appConfig={{ id: `${Math.random()}`, type: 'search', subType: 'group', title: item.title }}
-      appType="search"
     >
       <Row flex={1}>
         <Circle style={{ fontSize: num.length > 2 ? 15 : 18 }}>{num}</Circle>

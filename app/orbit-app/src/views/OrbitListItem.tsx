@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
+import { view, StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { normalizeItem, NormalizedItem } from '../helpers/normalizeItem'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
@@ -14,269 +13,227 @@ import { HighlightText } from './HighlightText'
 import { Row, Text, View } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { Separator } from './Separator'
+import { observer } from 'mobx-react-lite'
+import { useStore } from '@mcro/use-store'
 
-@attach('sourcesStore', 'appStore')
-@attach({
-  store: OrbitItemStore,
-})
-@view
-class OrbitListInner extends React.Component<OrbitItemProps<any>> {
-  static defaultProps = {
-    // offsets -1px on sides for the negative margin we usually use to hide side border
-    padding: [10, 11],
+// @attach('sourcesStore', 'appStore')
+// @attach({
+//   store: OrbitItemStore,
+// })
+
+// padding: [10, 11]
+
+// if (!props.direct) {
+//   ItemView = props.sourcesStore.getView(integration, 'item')
+// }
+
+export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
+  const stores = React.useContext(StoreContext)
+  const store = useStore(OrbitItemStore, { ...props, ...stores })
+  const {
+    createdAt,
+    icon,
+    location,
+    people,
+    preview,
+    subtitle,
+    title,
+    integration,
+    updatedAt,
+    borderRadius,
+    cardProps,
+    children,
+    disableShadow,
+    hoverToSelect,
+    iconProps,
+    inactive,
+    onClick,
+    titleProps,
+    subtitleProps,
+    padding,
+    subtitleSpaceBetween,
+    searchTerm,
+    onClickLocation,
+    renderText,
+    separator,
+    extraProps,
+    isExpanded,
+    before,
+    ...restProps
+  } = props
+  const { isSelected } = store
+  const hide = {
+    ...props.hide,
+    // ...(ItemView && ItemView.itemProps && ItemView.itemProps.hide),
   }
+  const showChildren = !(hide && hide.body)
+  const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
+  const showDate = !!createdAt && !(hide && hide.date)
+  const showIcon = !!icon && !(hide && hide.icon)
+  const showTitle = !(hide && hide.title)
+  const showPeople = !!(
+    !(hide && hide.people) &&
+    people &&
+    people.length &&
+    people[0].data['profile']
+  )
+  const showPreview = !!preview && !children && !(hide && hide.body)
+  const oneLine = extraProps && extraProps.oneLine
+  const showPreviewInSubtitle = !showTitle && oneLine
+  const renderedChildren = showChildren && children
 
-  getInner = (normalizedItem: Partial<NormalizedItem>) => {
-    const {
-      createdAt,
-      icon,
-      location,
-      people,
-      preview,
-      subtitle,
-      title,
-      updatedAt,
-    } = normalizedItem
-    const {
-      borderRadius,
-      cardProps,
-      children,
-      disableShadow,
-      hoverToSelect,
-      iconProps,
-      inactive,
-      onClick,
-      store,
-      titleProps,
-      subtitleProps,
-      padding,
-      subtitleSpaceBetween,
-      searchTerm,
-      onClickLocation,
-      renderText,
-      separator,
-      extraProps,
-      isExpanded,
-      before,
-      ...props
-    } = this.props
-    const { isSelected } = store
-    let ItemView
-    if (!this.props.direct) {
-      ItemView = this.props.sourcesStore.getView(normalizedItem.integration, 'item')
-    }
-    const hide = {
-      ...this.props.hide,
-      ...(ItemView && ItemView.itemProps && ItemView.itemProps.hide),
-    }
-    const showChildren = !(hide && hide.body)
-    const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
-    const showDate = !!createdAt && !(hide && hide.date)
-    const showIcon = !!icon && !(hide && hide.icon)
-    const showTitle = !(hide && hide.title)
-    const showPeople = !!(
-      !(hide && hide.people) &&
-      people &&
-      people.length &&
-      people[0].data['profile']
-    )
-    const showPreview = !!preview && !children && !(hide && hide.body)
-    const oneLine = extraProps && extraProps.oneLine
-    const showPreviewInSubtitle = !showTitle && oneLine
-
-    const afterHeader = (
-      <AfterHeader>
-        <Row>
-          {showDate && (
-            <UI.Text alpha={0.6} size={0.9} fontWeight={600}>
-              <DateFormat
-                date={new Date(updatedAt)}
-                nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
-              />
-            </UI.Text>
-          )}
-        </Row>
-      </AfterHeader>
-    )
-
-    let renderedChildren = null
-    if (showChildren) {
-      renderedChildren = children
-      if (ItemView) {
-        renderedChildren = (
-          <ItemView
-            model={this.props.model}
-            bit={this.props.model}
-            searchTerm={this.props.searchTerm}
-            shownLimit={10}
-            renderText={renderText}
-            extraProps={this.props.extraProps}
-            normalizedItem={normalizedItem}
-            {...ItemView.itemProps}
-          />
-        )
-      }
-    }
-
-    return (
-      <>
-        {!!separator && (
-          <Separator>
-            <Text size={0.9} fontWeight={500}>
-              {separator}
-            </Text>
-          </Separator>
+  const afterHeader = (
+    <AfterHeader>
+      <Row>
+        {showDate && (
+          <UI.Text alpha={0.6} size={0.9} fontWeight={600}>
+            <DateFormat
+              date={new Date(updatedAt)}
+              nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
+            />
+          </UI.Text>
         )}
-        <ListFrame
-          isExpanded={isExpanded}
-          {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
-          forwardRef={store.setCardWrapRef}
-          {...props}
+      </Row>
+    </AfterHeader>
+  )
+
+  return (
+    <>
+      {!!separator && (
+        <Separator>
+          <Text size={0.9} fontWeight={500}>
+            {separator}
+          </Text>
+        </Separator>
+      )}
+      <ListFrame
+        isExpanded={isExpanded}
+        {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
+        forwardRef={store.setCardWrapRef}
+        {...restProps}
+      >
+        <ListItem
+          isSelected={isSelected}
+          borderRadius={borderRadius}
+          onClick={store.handleClick}
+          disableShadow={disableShadow}
+          padding={padding}
+          {...cardProps}
         >
-          <ListItem
-            isSelected={isSelected}
-            borderRadius={borderRadius}
-            onClick={store.handleClick}
-            disableShadow={disableShadow}
-            padding={padding}
-            {...cardProps}
-          >
-            <div style={{ flexDirection: 'row', width: '100%' }}>
-              {before}
-              <ListItemMainContent oneLine={oneLine}>
-                {showTitle && (
-                  <Title>
-                    {showIcon && (
-                      <>
-                        <OrbitIcon icon={icon} size={14} marginTop={2} {...iconProps} />
-                        <TitleSpace />
-                      </>
-                    )}
-                    <HighlightText
-                      fontSize={15}
-                      sizeLineHeight={0.85}
-                      ellipse
-                      fontWeight={700}
-                      {...titleProps}
-                    >
-                      {title}
-                    </HighlightText>
-                    <TitleSpace />
-                    {this.props.afterTitle || normalizedItem.afterTitle}
-                    {afterHeader}
-                  </Title>
-                )}
-                {showSubtitle && (
-                  <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
-                    {showIcon && !showTitle && (
-                      <>
-                        <OrbitIcon icon={icon} size={14} {...iconProps} />
-                        <TitleSpace />
-                      </>
-                    )}
-                    {!!location && (
-                      <>
-                        <RoundButtonSmall
-                          margin={-3}
-                          maxWidth={120}
-                          fontWeight={600}
-                          onClick={store.handleClickLocation}
-                        >
-                          <Text ellipse ignoreColor>
-                            {location}
-                          </Text>
-                        </RoundButtonSmall>
-                        <TitleSpace />
-                      </>
-                    )}
-                    {showPreviewInSubtitle ? (
-                      <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
-                    ) : null}
-                    {!!subtitle &&
-                      (typeof subtitle === 'string' ? (
-                        <UI.Text alpha={0.55} ellipse {...subtitleProps}>
-                          {subtitle}
-                        </UI.Text>
-                      ) : (
-                        subtitle
-                      ))}
-                    {!subtitle && (
-                      <>
-                        <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                        <HorizontalSpace />
-                        <PeopleRow people={people} />
-                      </>
-                    )}
-                    {!showTitle && (
-                      <>
-                        <HorizontalSpace />
-                        <PeopleRow people={people} />
-                        <HorizontalSpace />
-                        {afterHeader}
-                      </>
-                    )}
-                  </ListItemSubtitle>
-                )}
-                {!showSubtitle && !showTitle && (
-                  <View
-                    position="absolute"
-                    right={Array.isArray(padding) ? padding[0] : padding}
-                    top={Array.isArray(padding) ? padding[1] : padding}
+          <div style={{ flexDirection: 'row', width: '100%' }}>
+            {before}
+            <ListItemMainContent oneLine={oneLine}>
+              {showTitle && (
+                <Title>
+                  {showIcon && (
+                    <>
+                      <OrbitIcon icon={icon} size={14} marginTop={2} {...iconProps} />
+                      <TitleSpace />
+                    </>
+                  )}
+                  <HighlightText
+                    fontSize={15}
+                    sizeLineHeight={0.85}
+                    ellipse
+                    fontWeight={700}
+                    {...titleProps}
                   >
-                    {afterHeader}
-                  </View>
-                )}
-                {/* vertical space only if needed */}
-                {showSubtitle && (!!children || !!preview) && (
-                  <div style={{ flex: 1, maxHeight: 4 }} />
-                )}
-                {showPreview && (
-                  <Preview>
-                    {typeof preview !== 'string' && preview}
-                    {typeof preview === 'string' && (
-                      <HighlightText alpha={0.65} size={1.1} sizeLineHeight={0.9} ellipse={5}>
-                        {preview}
-                      </HighlightText>
-                    )}
-                  </Preview>
-                )}
-                {showPreviewInSubtitle ? null : renderedChildren}
-                {showPeople && !showSubtitle && (
-                  <Bottom>
-                    <PeopleRow people={people} />
-                  </Bottom>
-                )}
-              </ListItemMainContent>
-              {this.props.after || normalizedItem.after}
-            </div>
-          </ListItem>
-          <Divider />
-        </ListFrame>
-      </>
-    )
-  }
-
-  render() {
-    const { store, model, direct } = this.props
-    store.isSelected
-    if (direct) {
-      return this.getInner(this.props)
-    }
-    return this.getInner(direct ? model : normalizeItem(model))
-  }
-}
-
-// never let it update, this saves so much time we can just change key to change item
-
-export class OrbitListItem extends React.Component<OrbitItemProps<any>> {
-  shouldComponentUpdate() {
-    return false
-  }
-
-  render() {
-    return <OrbitListInner {...this.props} />
-  }
-}
+                    {title}
+                  </HighlightText>
+                  <TitleSpace />
+                  {props.afterTitle}
+                  {afterHeader}
+                </Title>
+              )}
+              {showSubtitle && (
+                <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
+                  {showIcon && !showTitle && (
+                    <>
+                      <OrbitIcon icon={icon} size={14} {...iconProps} />
+                      <TitleSpace />
+                    </>
+                  )}
+                  {!!location && (
+                    <>
+                      <RoundButtonSmall
+                        margin={-3}
+                        maxWidth={120}
+                        fontWeight={600}
+                        onClick={store.handleClickLocation}
+                      >
+                        <Text ellipse ignoreColor>
+                          {location}
+                        </Text>
+                      </RoundButtonSmall>
+                      <TitleSpace />
+                    </>
+                  )}
+                  {showPreviewInSubtitle ? (
+                    <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
+                  ) : null}
+                  {!!subtitle &&
+                    (typeof subtitle === 'string' ? (
+                      <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                        {subtitle}
+                      </UI.Text>
+                    ) : (
+                      subtitle
+                    ))}
+                  {!subtitle && (
+                    <>
+                      <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
+                      <HorizontalSpace />
+                      <PeopleRow people={people} />
+                    </>
+                  )}
+                  {!showTitle && (
+                    <>
+                      <HorizontalSpace />
+                      <PeopleRow people={people} />
+                      <HorizontalSpace />
+                      {afterHeader}
+                    </>
+                  )}
+                </ListItemSubtitle>
+              )}
+              {!showSubtitle && !showTitle && (
+                <View
+                  position="absolute"
+                  right={Array.isArray(padding) ? padding[0] : padding}
+                  top={Array.isArray(padding) ? padding[1] : padding}
+                >
+                  {afterHeader}
+                </View>
+              )}
+              {/* vertical space only if needed */}
+              {showSubtitle && (!!children || !!preview) && (
+                <div style={{ flex: 1, maxHeight: 4 }} />
+              )}
+              {showPreview && (
+                <Preview>
+                  {typeof preview !== 'string' && preview}
+                  {typeof preview === 'string' && (
+                    <HighlightText alpha={0.65} size={1.1} sizeLineHeight={0.9} ellipse={5}>
+                      {preview}
+                    </HighlightText>
+                  )}
+                </Preview>
+              )}
+              {showPreviewInSubtitle ? null : renderedChildren}
+              {showPeople && !showSubtitle && (
+                <Bottom>
+                  <PeopleRow people={people} />
+                </Bottom>
+              )}
+            </ListItemMainContent>
+            {props.after}
+          </div>
+        </ListItem>
+        <Divider />
+      </ListFrame>
+    </>
+  )
+})
 
 const ListFrame = view(UI.View, {
   position: 'relative',

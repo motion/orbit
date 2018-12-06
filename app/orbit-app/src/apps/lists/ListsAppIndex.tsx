@@ -86,7 +86,6 @@ export const ListsAppIndex = observer((props: AppProps) => {
         items={results}
         itemProps={{
           direct: true,
-          appType: 'lists',
           titleProps: { fontSize: isSmall ? 18 : 20, fontWeight: 300 },
           ...props.itemProps,
         }}
@@ -96,7 +95,7 @@ export const ListsAppIndex = observer((props: AppProps) => {
             appConfig: {
               id: `${result.id}`,
               title: result.title,
-              type: result.type,
+              type: 'lists',
               index: result.index,
             },
           }

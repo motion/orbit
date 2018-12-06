@@ -4,7 +4,7 @@ import { Text } from '@mcro/ui'
 export const Separator = view(Text, {
   padding: [2, 12],
 }).theme(props => ({
-  background: props.theme.background.alpha(0.2),
+  background: props.theme.borderColor.alpha(0.2),
 }))
 
 Separator.defaultProps = {

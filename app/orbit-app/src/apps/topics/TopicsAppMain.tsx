@@ -37,7 +37,6 @@ export const TopicsAppMain = observer((props: AppProps) => {
         {store.results.map(bit => (
           <OrbitListItem
             key={bit.id}
-            appType="bit"
             model={bit}
             margin={0}
             padding={15}

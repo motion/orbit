@@ -19,8 +19,7 @@ import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
 
-export type ItemPropsMinimum = Pick<OrbitItemProps<any>, 'appType' | 'appConfig'> &
-  Partial<OrbitItemProps<any>>
+export type ItemPropsMinimum = OrbitItemProps<any>['appConfig'] & Partial<OrbitItemProps<any>>
 export type GetItemProps = (index: number) => ItemPropsMinimum
 
 type Props = {
@@ -148,9 +147,7 @@ class VirtualListStore {
 
   private resizeAll = () => {
     this.cache.clearAll()
-    if (this.listRef) {
-      this.measure()
-    }
+    this.measureHeight()
   }
 }
 

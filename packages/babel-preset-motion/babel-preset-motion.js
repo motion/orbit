@@ -11,7 +11,7 @@ module.exports = function(_, givenOpts) {
   const isDev = process.env.NODE_ENV !== 'production'
   const config = {
     plugins: [
-      isDev && plug('@mcro/react-hot-loader/babel'),
+      isDev && plug('react-hot-loader/babel'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
       }),

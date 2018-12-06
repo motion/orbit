@@ -1,15 +1,13 @@
 import * as React from 'react'
 import { view, StoreContext, react } from '@mcro/black'
-import { OrbitIndexPaneManager } from './OrbitIndexPaneManager'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { OrbitItemProps } from '../../views/OrbitItemProps'
 import { AppConfig, AppType } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { View, Col } from '@mcro/ui'
+import { View, Col, Row } from '@mcro/ui'
 import { Title } from '../../views'
 import { AppPanes } from '../../stores/SpaceStore'
-import { OrbitApp } from './OrbitApp'
 import { SubPane } from '../../components/SubPane'
 import { App } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
@@ -85,38 +83,40 @@ export const OrbitPageContent = observer(() => {
   return (
     <Col flex={1}>
       {!!activeAppStore ? activeAppStore.toolbar : null}
-      <OrbitIndexView isHidden={store.activePane === 'home'}>
-        {AppPanes.map(app => (
-          <SubPane id={app.id} type={app.type} key={app.type} paddingLeft={0} paddingRight={0}>
+      <Row flex={1}>
+        <OrbitIndexView isHidden={store.activePane === 'home'}>
+          {AppPanes.map(app => (
+            <SubPane id={app.id} type={app.type} key={app.type} paddingLeft={0} paddingRight={0}>
+              <AppView
+                viewType="index"
+                id={app.id}
+                type={app.type}
+                itemProps={{ onSelect: store.handleSelectItem }}
+                onAppStore={store.setAppStore(app.id)}
+              />
+            </SubPane>
+          ))}
+        </OrbitIndexView>
+        <OrbitMainView>
+          {hasItem && (
             <AppView
-              viewType="index"
-              id={app.id}
-              type={app.type}
-              itemProps={{ onSelect: store.handleSelectItem }}
-              onAppStore={store.setAppStore(app.id)}
+              key={store.activeItem.id}
+              isActive
+              viewType="main"
+              id={store.activeItem.id}
+              title={store.activeItem.title}
+              type={store.activeItem.type}
+              appConfig={store.activeItem}
             />
-          </SubPane>
-        ))}
-      </OrbitIndexView>
-      <OrbitMainView>
-        {hasItem && (
-          <AppView
-            key={store.activeItem.id}
-            isActive
-            viewType="main"
-            id={store.activeItem.id}
-            title={store.activeItem.title}
-            type={store.activeItem.type}
-            appConfig={store.activeItem}
-          />
-        )}
-        {/* TODO could show a help pane custom to each app */}
-        {!hasItem && (
-          <View flex={1} alignItems="center" justifyContent="center">
-            <Title>No result selected</Title>
-          </View>
-        )}
-      </OrbitMainView>
+          )}
+          {/* TODO could show a help pane custom to each app */}
+          {!hasItem && (
+            <View flex={1} alignItems="center" justifyContent="center">
+              <Title>No result selected</Title>
+            </View>
+          )}
+        </OrbitMainView>
+      </Row>
     </Col>
   )
 })

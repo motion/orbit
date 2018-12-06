@@ -17,12 +17,12 @@ export type Pane = {
 }
 
 export const AppPanes: Pane[] = [
-  {
-    id: 'home',
-    type: 'home',
-    icon: 'orbit',
-    title: 'Home',
-  },
+  // {
+  //   id: 'home',
+  //   type: 'home',
+  //   icon: 'orbit',
+  //   title: 'Home',
+  // },
   {
     id: 'search',
     type: 'search',

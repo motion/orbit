@@ -3,11 +3,11 @@ import { AppProps } from '../AppProps'
 import { loadOne } from '@mcro/model-bridge'
 import { SourceModel } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
 import { observer } from 'mobx-react-lite'
 
-class SourceAppStore {
+class SourcesAppStore {
   props: AppProps
 
   get appConfig() {
@@ -16,19 +16,20 @@ class SourceAppStore {
 
   model = react(
     () => this.appConfig,
-    ({ id }) => {
-      console.log('loading model', id)
+    appConfig => {
+      ensure('appConfig', !!appConfig)
+      console.log('loading model', appConfig.id)
       return loadOne(SourceModel, {
         args: {
-          where: { id },
+          where: { id: +appConfig.id },
         },
       })
     },
   )
 }
 
-export const SourceAppMain = observer((props: AppProps) => {
-  const { model } = useStore(SourceAppStore, props)
+export const SourcesAppMain = observer((props: AppProps) => {
+  const { model } = useStore(SourcesAppStore, props)
   const type = model ? model.type : props.sourceType
   const View = props.sourcesStore.getView(type, 'setting')
   if (!View) {

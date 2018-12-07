@@ -10,9 +10,8 @@ export type AppType =
   | 'people'
   | 'topics'
   | 'lists'
-  | 'source'
-  | 'bit'
   | 'sources'
+  | 'bit'
   | 'settings'
 
 export type AppConfig = {

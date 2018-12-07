@@ -10,6 +10,7 @@ import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { generalSettingQuery } from '../../helpers/queries'
+import { AppProps } from '../AppProps'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -46,11 +47,11 @@ const electronToNiceChars = (charString: string) => {
 }
 
 type Props = {
-  store?: OrbitSettingsStore
+  store?: SettingAppStore
   sourcesStore?: SourcesStore
 }
 
-class OrbitSettingsStore {
+class SettingAppStore {
   props: Props
 
   generalSetting = null
@@ -102,10 +103,10 @@ const Section = view({
 
 @attach('sourcesStore')
 @attach({
-  store: OrbitSettingsStore,
+  store: SettingAppStore,
 })
 @view
-export class OrbitSettingsGeneral extends React.Component<Props> {
+export class SettingsAppMain extends React.Component<AppProps & { store: SettingAppStore }> {
   handleClearAllData = () => {
     if (
       showConfirmDialog({

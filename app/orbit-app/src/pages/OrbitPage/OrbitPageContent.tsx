@@ -68,7 +68,7 @@ export const OrbitPageContent = observer(() => {
 
   const activeAppStore = store.appStores[store.activePane]
 
-  const allPanes = [
+  const allPanes: AppConfig[] = [
     ...AppPanes,
     {
       id: 'sources',

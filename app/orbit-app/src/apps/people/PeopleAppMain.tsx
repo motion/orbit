@@ -41,13 +41,15 @@ class PeopleAppStore {
 
   person = react(
     () => this.appConfig,
-    ({ id }) =>
-      loadOne(PersonBitModel, {
+    appConfig => {
+      ensure('appConfig', !!appConfig)
+      return loadOne(PersonBitModel, {
         args: {
-          where: { id: +id },
+          where: { id: +appConfig.id },
           relations: ['people'],
         },
-      }),
+      })
+    },
   )
 
   recentBits = react(

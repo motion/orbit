@@ -12,7 +12,7 @@ import { react, always } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 
-class SourceIndexStore {
+class SourcesIndexStore {
   props: AppProps
 
   get results() {
@@ -29,9 +29,9 @@ class SourceIndexStore {
   )
 }
 
-export const SourceAppIndex = observer((props: AppProps) => {
+export const SourcesAppIndex = observer((props: AppProps) => {
   const { sourcesStore, isActive } = props
-  const store = useStore(SourceIndexStore, props)
+  const store = useStore(SourcesIndexStore, props)
   return (
     <>
       {!!store.results.length && (

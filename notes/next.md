@@ -11,30 +11,10 @@ NEXT
 - remove search from contextual apps showing by default and make it show context
 - onboarding for sources
 - onboarding for account creation
+- improving and fixing all the bit views
+- grouped search main view work
 - adding in all sorts of fundamental help -- links to thinks, etc
-
-nate:
-
-Topic modeling
-
-Cosal and topic modeling is a dependency for search, profiles, and topics. So it needs to come first.
-
-- add more topics
-- test and iterate on finding topics
-- need some work on frontend after
-  - managing topics
-  - profiles with topic modeling
-
-Ensuring we can release next beta somewhat soon and also have good demo:
-
-- Improving and fixing all the bit views
-- Making grouped search main view work
-- Fix all selection issues
-
-Apps:
-
-- fix tear away bugs
-- fix app focusing bugs
+- https://libp2p.io/
 
 Tray:
 
@@ -56,24 +36,6 @@ search:
 - drag/drop support of items (easy using electron drag drop api)
 - grouped search app main view
 
-people:
-
-- flat cards
-- integrate topics into profiles
-- able to search people by topics and have them show
-- quick results could just show people for now
-- fix profiles list view of bits
-
-lists:
-
-topics:
-
----
-
-Spaces
-
-- disable for next beta, think through doing it for beta after that
-
 ---
 
 Contextual stuff is high on this list:
@@ -83,16 +45,10 @@ Contextual stuff is high on this list:
 - Letting you send context to people
 - Searching your recently viewed items
 
-And then basically app-store app-building, which has a big hill to climb that we're about 1/4 of the way (needs to be about 1/2 for "beta"):
-
 - Having the right topic/ocr API structure
 - Showing them in context
 - Augmented
 - Integrated easy dev experience
-
----
-
-umed:
 
 - people syncers: if slack is added, use that as source of truth and only add other people "on top"
 

@@ -4,7 +4,16 @@ import { SearchAppData } from '../app-data/SearchAppData'
 import { TopicsAppData } from '../app-data/TopicsAppData'
 import { Space } from './Space'
 
-export type AppType = 'home' | 'search' | 'people' | 'topics' | 'lists' | 'source' | 'bit'
+export type AppType =
+  | 'home'
+  | 'search'
+  | 'people'
+  | 'topics'
+  | 'lists'
+  | 'source'
+  | 'bit'
+  | 'sources'
+  | 'settings'
 
 export type AppConfig = {
   type: AppType

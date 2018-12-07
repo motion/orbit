@@ -68,12 +68,28 @@ export const OrbitPageContent = observer(() => {
 
   const activeAppStore = store.appStores[store.activePane]
 
+  const allPanes = [
+    ...AppPanes,
+    {
+      id: 'sources',
+      type: 'sources',
+      title: 'Sources',
+      icon: 'box',
+    },
+    {
+      id: 'settings',
+      type: 'settings',
+      title: 'Settings',
+      icon: 'gear',
+    },
+  ]
+
   return (
     <Col flex={1}>
       {!!activeAppStore ? activeAppStore.toolbar : null}
       <Row flex={1}>
         <OrbitIndexView isHidden={store.activePane === 'home'}>
-          {AppPanes.map(app => (
+          {allPanes.map(app => (
             <SubPane key={app.type} id={app.id} type={app.type}>
               <AppView
                 viewType="index"
@@ -86,7 +102,7 @@ export const OrbitPageContent = observer(() => {
           ))}
         </OrbitIndexView>
         <OrbitMainView>
-          {AppPanes.map(app => (
+          {allPanes.map(app => (
             <SubPane key={app.type} id={app.id} type={app.type}>
               <AppView
                 isActive

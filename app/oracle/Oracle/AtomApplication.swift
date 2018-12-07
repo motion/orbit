@@ -9,6 +9,41 @@
 import Cocoa
 
 
+/*
+    -------- DEBUGGING/TESTING FLAGS --------
+ 
+    shouldLogDebug: If true, debug and performance messages will be logged to the console.
+ 
+    shouldSaveDebugImages: If true, various images will be saved to the `Test-Output` directory.
+                           This has a significant performance impact, so all performance logs
+                           can be disregarded while this flag is enabled.
+ 
+    shouldUseCache: If true, the OCR cache will be used as intended.
+                    If false, the cache will be disabled.
+                    This is sometimes useful for debugging purposes.
+
+*/
+
+
+/// Set this to `true` to log debug/performance messages.
+/// Not recommended for production builds.
+let shouldLogDebug = true
+
+/// Set this to `true` to save character boxes and other debug images
+/// to the test output directory.
+/// Disable for production builds.
+let shouldSaveDebugImages = true
+
+/// This should normally be set to `true`.
+/// If `false`, the OCR cache will not be used.
+let shouldUseCache = false
+
+
+/*
+    -----------------------------------------
+*/
+
+
 class AtomApplication: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
@@ -23,15 +58,12 @@ class AtomApplication: NSObject, NSApplicationDelegate {
             Log.error(error.localizedDescription)
         }
         
+        // Setup tray
         TrayManager.shared.setupTray()
         
-        // Start observing window changes
-//        WindowManager.shared.startObservingEvents()
-        
-        // Start recording screen
-//        ScreenRecorder.shared.start()
-//        ScreenRecorder.shared.watchBounds(CGRect(x: 0, y: 200, width: 2440, height: 1000))
-        
+        // Testing
+        OCRTester.shared.testScreenshots()
+//            OCRTester.shared.watchBounds(CGRect(x: 0, y: 100, width: 1000, height: 2000))
     }
     
 

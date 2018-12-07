@@ -29,6 +29,9 @@ class OCRManager {
     /// IMPORTANT: Flags may be READ from any queue, but must only be SET from the main queue.
     fileprivate var frameExitFlags = [OCRExitFlag]()
     
+    /// Counter for debugging purposes.
+    fileprivate var classificationCount = 0
+    
     private init() {}
     
 }
@@ -111,6 +114,7 @@ extension OCRManager {
             /* ----- IMPORTANT: ENTERING BACKGROUND QUEUE HERE ----- */
             
             // Iterate through every character box in each line
+            var charCounter = 0 // For debugging
             for line in lines {
                 for character in line.characters {
                     
@@ -131,9 +135,22 @@ extension OCRManager {
                     let shouldInvert = filteredBuffer.shouldInvert(bounds: character.lineHeightBounds(with: line.bounds))
                     
                     
+                    // Output character box here, if debug image flag is `true`
+                    if shouldSaveDebugImages && charCounter < 250 { // Prevent app from saving thousands of images
+                        let charBox = character.lineHeightBounds(with: line.bounds)
+                        let charBuffer = CVPixelBuffer.cropGrayscale(to: charBox,
+                                                                     size: CGSize(width: 28, height: 28),
+                                                                     baseAddress: filteredBaseAddress,
+                                                                     bytesPerRow: filteredBytesPerRow,
+                                                                     inverted: shouldInvert)!
+                        OCRTester.shared.save(charBuffer, as: "char-\(charCounter)")
+                        charCounter += 1
+                    }
+                    
+                    
                     // Attempt to trace character outline
                     let percentDownLine = Float(character.bounds.minY - line.bounds.minY) / Float(line.bounds.height)
-                    if let (outline, _) = CharacterCache.shared.traceOutline(baseAddress: filteredBaseAddress,
+                    if shouldUseCache, let (outline, _) = CharacterCache.shared.traceOutline(baseAddress: filteredBaseAddress,
                                                                              bytesPerRow: filteredBytesPerRow,
                                                                              numRows: filteredHeight,
                                                                              charBounds: character.bounds,
@@ -178,7 +195,7 @@ extension OCRManager {
                         }
 
                     } else {
-                        // Failed to trace character outline; perform OCR
+                        // Failed to trace character outline (or cache disabled); perform OCR
                         
                         // Crop pixel buffer down to this character's bounds
                         let charBox = character.lineHeightBounds(with: line.bounds)
@@ -212,13 +229,10 @@ extension OCRManager {
             let allWords = lines.map({$0.words()}).reduce([], +)
             Socket.send(.wordsFound(words: allWords))
             
-            // DEBUG: print result
-            for line in lines {
-//                for character in line.characters {
-//                    print(character.classification!, separator: "", terminator: "")
-//                }
-//                print()
-                print(line.words().map({$0.string}).joined(separator: " "))
+            // Debug - print result
+            if shouldLogDebug {
+                let output = lines.map({$0.words().map({$0.string}).joined(separator: " ")}).joined(separator: "\n")
+                Log.debug("\n\nOCR OUTPUT:\n\n\(output)\n\n")
             }
             
             // Remove exit flag from array
@@ -335,14 +349,21 @@ fileprivate extension OCRManager {
     ///                   This should be used for light text on dark backgrounds.
     /// - Returns: The best classification result from the neural net.
     func classifyImage(_ pixelBuffer: CVPixelBuffer, isInverted: Bool) -> String? {
+        // Debug
+        if shouldSaveDebugImages && classificationCount < 250 { // Avoid saving thousands of images to disk
+            OCRTester.shared.save(pixelBuffer, as: "classification-\(classificationCount)")
+            classificationCount += 1
+        }
+        
         // Extract raw pixel data from buffer
         let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer)!.assumingMemoryBound(to: UInt8.self)
+        let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
         
         // Create CoreML-compatible input from pixel data
         let input = try! MLMultiArray(shape: [1, 28, 28], dataType: .float32)
         for row in 0..<28 {
             for col in 0..<28 {
-                let index = row * 28 + col
+                let index = row * bytesPerRow + col
                 // Normalize pixels to range [0, 1] where 1 is black
                 let pixel: Float
                 if isInverted { // `isInverted` means light text on dark background, so we DON'T invert again here

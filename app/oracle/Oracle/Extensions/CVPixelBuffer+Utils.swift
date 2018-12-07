@@ -111,11 +111,11 @@ extension CVPixelBuffer {
         // Allocate memory for output buffer
         let outImg = malloc(outWidth * outHeight)
         if inverted {
-            // Fill with ones (white)
-            memset(outImg, 0xff, outWidth * outHeight)
-        } else {
             // Fill with zeros (black)
             memset(outImg, 0x00, outWidth * outHeight)
+        } else {
+            // Fill with ones (white)
+            memset(outImg, 0xff, outWidth * outHeight)
         }
         
         // Create vImage output buffer

@@ -17,7 +17,9 @@ class Log {
     private init() {}
     
     static func debug(_ str: String) {
-        os_log("%@", type: OSLogType.debug, str)
+        if shouldLogDebug {
+            os_log("%@", type: OSLogType.debug, str)
+        }
     }
     
     static func info(_ str: String) {

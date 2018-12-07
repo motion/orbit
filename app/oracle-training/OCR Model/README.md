@@ -4,7 +4,11 @@ This directory contains the Keras training scripts used for the Oracle OCR model
 
 ### Running
 
-`python3 train.py`
+```swift
+python3 train.py
+```
+
+This script will train the neural network using the data found at `data/training-data.txt`. The trained model will be saved as `OCRModel.mlmodel` in this directory.
 
 ### Files:
  - constants.py: Constants used during ML model training process.

@@ -318,6 +318,7 @@ extension CharacterCache {
             
             for (index, attempt) in fwdMoves.enumerated() {
                 let next = curPos + attempt[0] + attempt[1] * bytesPerRow
+                guard next < bytesPerRow * numRows else { continue }
                 if curTry > 10 && x == startX && y == startY { // found end!
                     foundEnd = true
                     break
@@ -336,6 +337,7 @@ extension CharacterCache {
                 for x in backwardsRange {
                     let nextAttempt = fwdMoves[(index + x) % fwdMoves.count]
                     let nextPixel = curPos + nextAttempt[0] + nextAttempt[1] * bytesPerRow
+                    guard nextPixel < bytesPerRow * numRows else { continue }
                     if shouldInvert {
                         if buffer[nextPixel] < isBlackIfUnder { continue }
                     } else {

@@ -1,12 +1,9 @@
 import Cocoa
 
-let myApp: NSApplication = NSApplication.shared
-let myDelegate: AtomApplication = AtomApplication()
+let appDelegate = AtomApplication()
+NSApplication.shared.delegate = appDelegate
 
-myApp.delegate = myDelegate
+let mainNibFileBaseName = Bundle.main.infoDictionary!["NSMainNibFile"] as! String
+Bundle.main.loadNibNamed(mainNibFileBaseName, owner: NSApplication.shared, topLevelObjects: nil)
 
-let mainBundle: Bundle = Bundle.main
-let mainNibFileBaseName: String = mainBundle.infoDictionary!["NSMainNibFile"] as! String
-mainBundle.loadNibNamed(mainNibFileBaseName, owner: myApp, topLevelObjects: nil)
-
-myApp.run()
+NSApplication.shared.run()

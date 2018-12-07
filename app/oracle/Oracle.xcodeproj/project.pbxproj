@@ -11,11 +11,12 @@
 		AE37809521B221CF00201F66 /* TrayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809421B221CF00201F66 /* TrayManager.swift */; };
 		AE37809721B222D100201F66 /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809621B222D100201F66 /* util.swift */; };
 		AE37809921B224BC00201F66 /* MouseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE37809821B224BC00201F66 /* MouseManager.swift */; };
-		AEBCFBCC21B230220004EBA2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEBCFBCA21B230220004EBA2 /* MainMenu.xib */; };
 		F0318FE321AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE221AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift */; };
 		F0318FE621AF7AB5009F5A70 /* OCRModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE521AF7AB5009F5A70 /* OCRModel.mlmodel */; };
 		F0318FEA21AF7D6E009F5A70 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE921AF7D6E009F5A70 /* Line.swift */; };
 		F0318FED21AFB2ED009F5A70 /* CharacterCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FEC21AFB2ED009F5A70 /* CharacterCache.swift */; };
+		F07730E021B9AC95003BE061 /* OCRTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07730DF21B9AC95003BE061 /* OCRTester.swift */; };
+		F07730E421B9BE21003BE061 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F07730E121B9BD8D003BE061 /* MainMenu.xib */; };
 		F0ABA07421B081C3009AEE34 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0ABA07321B081C3009AEE34 /* Log.swift */; };
 		F0D9F564215EFD8A009F11D5 /* AtomApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D9F563215EFD8A009F11D5 /* AtomApplication.swift */; };
 		F0D9F566215EFD8B009F11D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0D9F565215EFD8B009F11D5 /* Assets.xcassets */; };
@@ -44,12 +45,15 @@
 		AE37809421B221CF00201F66 /* TrayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayManager.swift; sourceTree = "<group>"; };
 		AE37809621B222D100201F66 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		AE37809821B224BC00201F66 /* MouseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseManager.swift; sourceTree = "<group>"; };
-		AEBCFBCB21B230220004EBA2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../../screen/orbit/orbit/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		B04D3652E57A2DD7D42DF815 /* Pods_Oracle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Oracle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0318FE221AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Utils.swift"; sourceTree = "<group>"; };
 		F0318FE521AF7AB5009F5A70 /* OCRModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = OCRModel.mlmodel; sourceTree = "<group>"; };
 		F0318FE921AF7D6E009F5A70 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		F0318FEC21AFB2ED009F5A70 /* CharacterCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCache.swift; sourceTree = "<group>"; };
+		F07730DF21B9AC95003BE061 /* OCRTester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OCRTester.swift; sourceTree = "<group>"; };
+		F07730E221B9BD8D003BE061 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F07730EC21B9C037003BE061 /* OracleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OracleTests.swift; sourceTree = "<group>"; };
+		F07730EE21B9C037003BE061 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0ABA07321B081C3009AEE34 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		F0D9F560215EFD8A009F11D5 /* Oracle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oracle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D9F563215EFD8A009F11D5 /* AtomApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomApplication.swift; sourceTree = "<group>"; };
@@ -103,10 +107,28 @@
 			path = OCR;
 			sourceTree = "<group>";
 		};
+		F077308121B9A9C9003BE061 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				F07730DF21B9AC95003BE061 /* OCRTester.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		F07730EB21B9C037003BE061 /* OracleTests */ = {
+			isa = PBXGroup;
+			children = (
+				F07730EC21B9C037003BE061 /* OracleTests.swift */,
+				F07730EE21B9C037003BE061 /* Info.plist */,
+			);
+			path = OracleTests;
+			sourceTree = "<group>";
+		};
 		F0D9F557215EFD8A009F11D5 = {
 			isa = PBXGroup;
 			children = (
 				F0D9F562215EFD8A009F11D5 /* Oracle */,
+				F07730EB21B9C037003BE061 /* OracleTests */,
 				F0D9F561215EFD8A009F11D5 /* Products */,
 				A13ACC9DF337F093E6EEDF84 /* Pods */,
 				187E173B3A6A44D79CB3AEF0 /* Frameworks */,
@@ -135,8 +157,9 @@
 				AE37809621B222D100201F66 /* util.swift */,
 				F0318FEB21AFAA0E009F5A70 /* OCR */,
 				F0FDFA992162CA350064C0C5 /* Extensions */,
-				AEBCFBCA21B230220004EBA2 /* MainMenu.xib */,
+				F077308121B9A9C9003BE061 /* Tests */,
 				F0D9F565215EFD8B009F11D5 /* Assets.xcassets */,
+				F07730E121B9BD8D003BE061 /* MainMenu.xib */,
 				F0D9F56A215EFD8B009F11D5 /* Info.plist */,
 				F0D9F56B215EFD8B009F11D5 /* Oracle.entitlements */,
 			);
@@ -180,7 +203,7 @@
 		F0D9F558215EFD8A009F11D5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1000;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = Orbit;
 				TargetAttributes = {
@@ -218,8 +241,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F07730E421B9BE21003BE061 /* MainMenu.xib in Resources */,
 				F0D9F566215EFD8B009F11D5 /* Assets.xcassets in Resources */,
-				AEBCFBCC21B230220004EBA2 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +308,7 @@
 			files = (
 				F0318FE321AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift in Sources */,
 				F0FDFA9F2162CBBE0064C0C5 /* WindowManager.swift in Sources */,
+				F07730E021B9AC95003BE061 /* OCRTester.swift in Sources */,
 				F0ABA07421B081C3009AEE34 /* Log.swift in Sources */,
 				AE37809921B224BC00201F66 /* MouseManager.swift in Sources */,
 				AE37809521B221CF00201F66 /* TrayManager.swift in Sources */,
@@ -303,10 +327,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		AEBCFBCA21B230220004EBA2 /* MainMenu.xib */ = {
+		F07730E121B9BD8D003BE061 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AEBCFBCB21B230220004EBA2 /* Base */,
+				F07730E221B9BD8D003BE061 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";

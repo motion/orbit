@@ -45,7 +45,7 @@ export const SearchNav = observer(() => {
       </ScrollableRow>
 
       <ScrollableRow maxWidth="33%">
-        <Icon name="funnel" size={16} />
+        <Icon name="funnel" size={14} opacity={0.65} color="#999" marginRight={10} />
         <SearchFilters />
       </ScrollableRow>
     </>

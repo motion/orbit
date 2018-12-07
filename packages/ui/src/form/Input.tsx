@@ -23,7 +23,6 @@ class InputPlain extends React.PureComponent<InputProps> {
     size: 1,
     type: 'input',
     tagName: 'input',
-    elementProps: {},
     forwardRef: React.createRef<HTMLInputElement>(),
   }
 

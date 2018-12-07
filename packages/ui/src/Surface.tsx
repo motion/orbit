@@ -305,15 +305,16 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
       iconPad: this.props.iconPad,
       inline: this.props.inline,
       icon: this.props.icon,
-      lineHeight: this.props.lineHeight,
       fontWeight: this.props.fontWeight,
       ellipse: this.props.ellipse,
       overflow: this.props.overflow,
     } as Partial<SurfaceProps>
 
+    let lineHeight = this.props.lineHeight
     if (sizeLineHeight) {
-      throughProps.lineHeight = `${height}px`
+      lineHeight = `${height}px`
     }
+
     if (noInnerElement) {
       throughProps.tagName = tagName
     }
@@ -323,6 +324,7 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
         whiteSpace="pre"
         padding={padding}
         margin={margin}
+        lineHeight={lineHeight}
         {...throughProps}
         {...props}
         forwardRef={forwardRef}

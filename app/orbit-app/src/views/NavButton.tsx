@@ -9,7 +9,6 @@ export const NavButton = props => (
     glint={false}
     sizeRadius={3}
     sizeIcon={1.3}
-    sizeHeight={1}
     {...props}
   />
 )

@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { view, compose, attach } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { Row, Button } from '@mcro/ui'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { observer } from 'mobx-react-lite'
 
 type Props = {
   queryStore?: QueryStore
@@ -14,11 +15,8 @@ export const FilterButton = props => (
   <Button circular chromeless size={0.9} sizePadding={0.8} {...props} />
 )
 
-const decorate = compose(
-  attach('queryStore'),
-  view,
-)
-export const SearchFilters = decorate(({ queryStore, ...props }: Props) => {
+export const SearchFilters = observer((props: Props) => {
+  const { queryStore } = React.useContext(StoreContext)
   const { queryFilters } = queryStore
   if (!queryFilters.integrationFilters.length) {
     return null

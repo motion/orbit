@@ -81,8 +81,6 @@ type Props = {
   queryStore?: QueryStore
 }
 
-const opacityScale = [1, 0.9, 0.8, 0.7, 0.5]
-
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
@@ -97,7 +95,7 @@ export const OrbitSuggestionBar = decorator(({ queryStore }: Props) => {
   filterStore.disabledFilters
   return (
     <SuggestionBar visible>
-      <HorizontalScroll height={25}>
+      <HorizontalScroll height={24}>
         {!!dateFilter && !hasTextualDateFilter && (
           <SuggestionButton
             onClick={filterStore.clearDate}
@@ -107,17 +105,15 @@ export const OrbitSuggestionBar = decorator(({ queryStore }: Props) => {
             {dateFilter}
           </SuggestionButton>
         )}
-        {filterStore.allFilters.map((filter, index) => (
+        {filterStore.allFilters.map(filter => (
           <SuggestionButton
             key={`${filter.text}${filter.active}`}
             onClick={() => filterStore.toggleFilterActive(filter.text)}
-            opacity={opacityScale[index] || 0.333}
             borderBottom={[2, getBorderColor(filter)]}
           >
             {filter.text}
           </SuggestionButton>
         ))}
-        <UI.View width={50} />
       </HorizontalScroll>
     </SuggestionBar>
   )

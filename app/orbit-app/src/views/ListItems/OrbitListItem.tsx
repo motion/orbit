@@ -155,12 +155,11 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                       <RoundButtonSmall
                         margin={-3}
                         maxWidth={120}
-                        fontWeight={600}
+                        fontWeight={400}
+                        fontSize={13}
                         onClick={store.handleClickLocation}
                       >
-                        <Text ellipse ignoreColor>
-                          {location}
-                        </Text>
+                        {location}
                       </RoundButtonSmall>
                       <TitleSpace />
                     </>
@@ -170,7 +169,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                   ) : null}
                   {!!subtitle &&
                     (typeof subtitle === 'string' ? (
-                      <UI.Text alpha={0.55} ellipse {...subtitleProps}>
+                      <UI.Text alpha={0.75} ellipse {...subtitleProps}>
                         {subtitle}
                       </UI.Text>
                     ) : (
@@ -208,7 +207,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                 <Preview>
                   {typeof preview !== 'string' && preview}
                   {typeof preview === 'string' && (
-                    <HighlightText alpha={0.65} size={1.1} sizeLineHeight={0.9} ellipse={5}>
+                    <HighlightText alpha={0.8} size={1.1} sizeLineHeight={0.9} ellipse={5}>
                       {preview}
                     </HighlightText>
                   )}

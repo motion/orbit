@@ -15,7 +15,7 @@ export const addSourceClickHandler = memoize(
       AppActions.togglePeekApp({
         target: currentTarget,
         appConfig: {
-          ...sourceToAppConfig(app),
+          ...sourceToAppConfig(app, { target: 'source' }),
           viewType: 'setup',
         },
       })

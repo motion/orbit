@@ -7,7 +7,7 @@ import { people } from './people/people'
 import { search } from './search'
 import { bit } from './bit'
 import { home } from './home'
-import { sources } from './sources'
+import { source } from './source'
 import { settings } from './settings'
 
 type App = {
@@ -22,7 +22,7 @@ export const apps: AppsIndex = {
   people,
   topics,
   lists,
-  sources,
+  source,
   settings,
   bit,
   home,

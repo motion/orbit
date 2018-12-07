@@ -7,8 +7,8 @@ import { NoResultsDialog } from '../../components/NoResultsDialog'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStore } from '@mcro/use-store'
-import { memo } from '../../helpers/memo'
 import { SearchResultsList } from '../../views/Lists/SearchResultsList'
+import { observer } from 'mobx-react-lite'
 
 class PeopleIndexStore {
   props: AppProps
@@ -94,9 +94,9 @@ class PeopleIndexStore {
   }
 }
 
-export const PeopleAppIndex = memo((props: AppProps) => {
+export const PeopleAppIndex = observer((props: AppProps) => {
   const store = useStore(PeopleIndexStore, props)
-  const total = store.results.length
+  const total = store.resultsWithSections.length
   if (!total) {
     return <NoResultsDialog subName="the directory" />
   }
@@ -105,7 +105,7 @@ export const PeopleAppIndex = memo((props: AppProps) => {
       query={store.peopleQuery}
       itemProps={props.itemProps}
       maxHeight={props.appStore.maxHeight}
-      results={store.results}
+      results={store.resultsWithSections}
       rowCount={total}
     />
   )

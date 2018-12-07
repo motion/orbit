@@ -25,7 +25,7 @@ export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) 
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
   }
   // pass through if no theme
-  if (!select && !theme) {
+  if (!select && !(theme || name)) {
     return children
   }
   let nextTheme

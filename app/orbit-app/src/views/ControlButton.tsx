@@ -49,7 +49,7 @@ const Img = view('img', {
   cursor: 'default',
 })
 
-export const ControlButton = ({ icon, forgiveness = 3, size, ...props }) => {
+export const ControlButton = ({ icon, forgiveness = 3, size = 10, ...props }) => {
   return (
     <ControlButtonForgiveness forgiveness={forgiveness} size={size}>
       <ControlButtonChrome width={size} height={size} {...props}>

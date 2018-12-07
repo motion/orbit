@@ -9,26 +9,22 @@ import {
 import { ensure, react, StoreContext, always } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
-import { OrbitItemSingleton } from '../OrbitItemStore'
-import { SubPaneStore } from '../../components/SubPaneStore'
+import { OrbitItemSingleton } from '../ListItems/OrbitItemStore'
 import { Banner } from '../Banner'
 import { VirtualListItem } from './VirtualListItem'
-import { ItemProps } from '../OrbitItemProps'
+import { OrbitItemProps } from '../ListItems/OrbitItemProps'
 import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
-import { throttle } from 'lodash'
+import { observer } from 'mobx-react-lite'
 
-export type ItemPropsMinimum = Pick<ItemProps<any>, 'appType' | 'appConfig'> &
-  Partial<ItemProps<any>>
-export type GetItemProps = (index: number) => ItemPropsMinimum
+export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>>
 
-type Props = {
+export type VirtualListProps = {
   items: any[]
-  itemProps?: ItemProps<any>
+  itemProps?: OrbitItemProps<any>
   getItemProps?: GetItemProps
   appStore?: AppStore
-  subPaneStore?: SubPaneStore
   ItemView?: GenericComponent<any>
   infinite?: boolean
   loadMoreRows?: Function
@@ -45,7 +41,7 @@ class InnerList extends React.Component<any> {
 const SortableListContainer = SortableContainer(InnerList, { withRef: true })
 
 class VirtualListStore {
-  props: Props
+  props: VirtualListProps
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List = null
   rootRef: HTMLDivElement = null
@@ -60,16 +56,16 @@ class VirtualListStore {
   }
 
   resizeOnChange = react(
-    () => always(this.props.items),
+    () => always(this.props.items, this.cache),
     () => {
       ensure('this.listRef', !!this.listRef)
-      this.listRef.recomputeRowHeights()
+      // this.listRef.recomputeRowHeights()
       this.resizeAll()
-      this.measure()
+    },
+    {
+      deferFirstRun: true,
     },
   )
-
-  measureOnRef = react(() => this.rootRef, () => this.measure())
 
   scrollToRow = react(
     () => this.props.appStore.activeIndex,
@@ -81,51 +77,77 @@ class VirtualListStore {
     },
   )
 
-  measure = throttle(() => {
-    if (!this.rootRef) {
+  setRootRef = ref => {
+    if (this.rootRef || !ref) {
+      return
+    }
+
+    this.rootRef = ref
+
+    // measure on resize
+    // @ts-ignore
+    const observer = new ResizeObserver(() => {
+      this.measure()
+      this.measureHeight()
+    })
+    observer.observe(this.rootRef)
+
+    this.measure()
+  }
+
+  doMeasureHeight = react(() => always(this.cache), this.measureHeight)
+
+  measureTm = null
+
+  private measureHeight() {
+    if (!this.cache) {
       return
     }
     // height
-    let height = 0
-    for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
-      height += this.cache.rowHeight(i)
-    }
-    this.height = Math.min(this.props.maxHeight, height) // todo: make 1000 for temporary fix
-  }, 32)
-
-  setRootRef = ref => {
-    this.rootRef = ref
-    if (ref) {
-      // width
-      if (this.width === 0) {
-        const width = this.rootRef.clientWidth
-        this.cache = new CellMeasurerCache({
-          defaultHeight: 60,
-          defaultWidth: width,
-          fixedWidth: true,
-          keyMapper: rowIndex => {
-            if (typeof rowIndex === 'undefined') {
-              return 0
-            }
-            const id = this.props.items[rowIndex].id
-            if (typeof id === 'undefined') {
-              console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
-              throw new Error('No valid id found for mapping results')
-            }
-            return id
-          },
-        })
-        this.width = width
+    if (this.props.maxHeight) {
+      let height = 0
+      for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
+        height += this.cache.rowHeight(i)
       }
-      this.measure()
+      if (height === 0) {
+        return
+      }
+      this.height = Math.min(this.props.maxHeight, height)
+    }
+  }
+
+  private measure() {
+    if (!this.rootRef || this.rootRef.clientWidth === 0) {
+      clearTimeout(this.measureTm)
+      this.measureTm = setTimeout(this.measure)
+      return
+    }
+
+    this.width = this.rootRef.clientWidth
+
+    if (!this.cache) {
+      this.cache = new CellMeasurerCache({
+        defaultHeight: 60,
+        defaultWidth: this.width,
+        fixedWidth: true,
+        keyMapper: rowIndex => {
+          if (typeof rowIndex === 'undefined') {
+            return 0
+          }
+          const id = this.props.items[rowIndex].id
+          if (typeof id === 'undefined') {
+            console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
+            throw new Error('No valid id found for mapping results')
+          }
+          return id
+        },
+      })
     }
   }
 
   private resizeAll = () => {
     this.cache.clearAll()
-    if (this.listRef) {
-      this.measure()
-    }
+    this.measureHeight()
   }
 }
 
@@ -133,10 +155,18 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-export const VirtualList = (props: Props) => {
+export const VirtualList = observer((props: VirtualListProps) => {
   const { appStore } = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore })
   const { cache, width, height, items } = store
+
+  if (!items.length) {
+    return (
+      <View margin={[10, 0]}>
+        <Banner>No results</Banner>
+      </View>
+    )
+  }
 
   const rowRenderer = ({ index, parent, style }) => {
     const model = items[index]
@@ -159,14 +189,6 @@ export const VirtualList = (props: Props) => {
           />
         </div>
       </CellMeasurer>
-    )
-  }
-
-  if (!items.length) {
-    return (
-      <View margin={[10, 0]}>
-        <Banner>No results</Banner>
-      </View>
     )
   }
 
@@ -208,10 +230,10 @@ export const VirtualList = (props: Props) => {
       ref={store.setRootRef}
       style={{
         height,
-        flex: 1,
+        width: '100%',
       }}
     >
-      {!!width && (
+      {!!width && !!cache && (
         <>
           {props.infinite && (
             <InfiniteLoader
@@ -228,4 +250,4 @@ export const VirtualList = (props: Props) => {
       {!width && <div>No width!</div>}
     </div>
   )
-}
+})

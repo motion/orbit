@@ -60,6 +60,7 @@ export class SearchResultResolver {
             bitLocationNames.map(name => '#' + name),
           )
           searchResults.push({
+            target: 'search-group',
             id: Math.random(),
             group: this.args.group,
             title: 'Conversations in ' + title,
@@ -70,6 +71,7 @@ export class SearchResultResolver {
           })
         } else if (contentType === 'mail') {
           searchResults.push({
+            target: 'search-group',
             id: Math.random(),
             group: this.args.group,
             title: 'Emails in ' + bitSourceNames,
@@ -81,6 +83,7 @@ export class SearchResultResolver {
         } else if (contentType === 'document') {
           const title = SearchResultUtils.buildSearchResultTitle(bitLocationNames)
           searchResults.push({
+            target: 'search-group',
             id: Math.random(),
             group: this.args.group,
             title: 'Documents in ' + (title ? title : bitSourceNames),
@@ -91,6 +94,7 @@ export class SearchResultResolver {
           })
         } else if (contentType === 'task') {
           searchResults.push({
+            target: 'search-group',
             id: Math.random(),
             group: this.args.group,
             title: 'Tasks from ' + bitSourceTypeNames,
@@ -101,6 +105,7 @@ export class SearchResultResolver {
           })
         } else if (contentType === 'website') {
           searchResults.push({
+            target: 'search-group',
             id: Math.random(),
             group: this.args.group,
             title: 'Pages from ' + bitSourceNames,

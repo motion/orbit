@@ -1,25 +1,20 @@
-nate:
+NEXT
 
-Topic modeling
-
-Cosal and topic modeling is a dependency for search, profiles, and topics. So it needs to come first.
-
-- add more topics
-- test and iterate on finding topics
-- need some work on frontend after
-  - managing topics
-  - profiles with topic modeling
-
-Ensuring we can release next beta somewhat soon and also have good demo:
-
-- Improving and fixing all the bit views
-- Making grouped search main view work
-- Fix all selection issues
-
-Apps:
-
-- fix tear away bugs
-- fix app focusing bugs
+- move quickly towards a working All/People/Terms pane in one window
+- home should show a column of each of them
+- clicking the currently active pane should toggle it open/closed
+- get a lot of interaction working
+- big settings pane cleanup, restructure
+- fix search up a lot
+- fix people and have it add in topics/terms into their data object
+- make the terms app actually work and mockup some adding/editing
+- remove search from contextual apps showing by default and make it show context
+- onboarding for sources
+- onboarding for account creation
+- improving and fixing all the bit views
+- grouped search main view work
+- adding in all sorts of fundamental help -- links to thinks, etc
+- https://libp2p.io/
 
 Tray:
 
@@ -41,24 +36,6 @@ search:
 - drag/drop support of items (easy using electron drag drop api)
 - grouped search app main view
 
-people:
-
-- flat cards
-- integrate topics into profiles
-- able to search people by topics and have them show
-- quick results could just show people for now
-- fix profiles list view of bits
-
-lists:
-
-topics:
-
----
-
-Spaces
-
-- disable for next beta, think through doing it for beta after that
-
 ---
 
 Contextual stuff is high on this list:
@@ -68,30 +45,10 @@ Contextual stuff is high on this list:
 - Letting you send context to people
 - Searching your recently viewed items
 
-And then basically app-store app-building, which has a big hill to climb that we're about 1/4 of the way (needs to be about 1/2 for "beta"):
-
 - Having the right topic/ocr API structure
 - Showing them in context
 - Augmented
 - Integrated easy dev experience
-
----
-
-umed:
-
-- Search
-
-  - we need to just do the simplest things to get things working:
-    - should understand first how much overhead fts adds
-    - grouped search using raw sql is probably best for now
-    - get that working fast first just using simple querying
-    - get the filters and nlp based filters working
-      - search for a name "umed", search for a type "gm"
-    - we should sync less data: no html parsing stuff just do readabiltiy on html or get text straight from api
-      - we can show readability from gmail messages for now, we aren't trying to be a full mail client just a quick way to peek at things
-    - we should aim for having endpoints where we could then "fetch" the html easily in the frontend
-      - goal is to get it done quick, simply
-    - goal is to have grouped search feeling very fast as soon as possible...
 
 - people syncers: if slack is added, use that as source of truth and only add other people "on top"
 
@@ -105,32 +62,6 @@ umed:
   - github view: fix can't select text with mouse
   - drag and drop items from menu: https://electronjs.org/docs/tutorial/native-file-drag-drop
 
-- Lists app:
-
-  - we should persist lists to Bits so they are searchable
-  - from there you can refactor to support making re-ordering work
-  - we need "edit names", that can be a button next to Pin button and if you hit it it happens in the ListEdit view to start (simplest way to start)
-  - Delete item button
-  - Inside ListMain when in App
-    - it will need a sidebar: should show Search sidebar in this case
-      - may need some fixes there
-    - after you search it needs a way to "add to list"
-    - Remove button for list items in there
-
-- Instead of using the cloud auth server it looks like we _can_ do https locally:
-
-  - Goal is to use mkcert and see if we can then do oauth fully locally
-  - And then if so transition the stack over to that and delete the old oauth server stuff
-  - see: https://github.com/FiloSottile/mkcert
-  - we already ask for sudo permission and do that during onboarding it can just go there
-  - that all happens here:
-    - OnboardManager when it sees permission:
-      - calls PortForwardStore.setupDNSProxy
-      - that runs a sudo node process on the file "proxyOrbit.js"
-  - see: proxyOrbit.ts
-    - we need to change it to also install/run mkcert and add orbitauth.com with https
-    - firefox support would be good using mkcert instructions
-
 - Team account management and onboarding flow
 
   - Create a server and database system that is good for handling signups
@@ -138,11 +69,7 @@ umed:
   - Create space
   - Sync just configuration data from Space
 
----
-
-unsorted:
-
-- "smart sync"
+* "smart sync"
 
   - part 1, "index as you search":
     - we sync as much as we can, but avoid filling hard drive too much (for all syncers)
@@ -187,3 +114,8 @@ unsorted:
 - announcements list:
   - can automatically have it query for emails from "announcements@company.com"
   - have it show a banner if new announcement
+
+# App API
+
+import { Button } from 'orbit/ui'
+import { Language } from 'orbit/engines'

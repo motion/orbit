@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, compose, attach } from '@mcro/black'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { HorizontalScroll } from '../../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
@@ -63,7 +62,7 @@ const suggestionTheme = theme => ({
 const SuggestionButton = props => (
   <UI.Button
     glint={false}
-    size={1}
+    size={1.1}
     sizeRadius={0}
     sizeHeight={0.8}
     sizePadding={0.3}
@@ -80,16 +79,13 @@ const SuggestionButton = props => (
 
 type Props = {
   queryStore?: QueryStore
-  paneManagerStore: PaneManagerStore
 }
-
-const opacityScale = [1, 0.9, 0.8, 0.7, 0.5]
 
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
 const decorator = compose(
-  attach('queryStore', 'paneManagerStore'),
+  attach('queryStore'),
   view,
 )
 export const OrbitSuggestionBar = decorator(({ queryStore }: Props) => {
@@ -99,28 +95,25 @@ export const OrbitSuggestionBar = decorator(({ queryStore }: Props) => {
   filterStore.disabledFilters
   return (
     <SuggestionBar visible>
-      <HorizontalScroll height={25}>
-        {!!dateFilter &&
-          !hasTextualDateFilter && (
-            <SuggestionButton
-              onClick={filterStore.clearDate}
-              opacity={1}
-              borderBottom={[2, activeThemes.date.borderColor]}
-            >
-              {dateFilter}
-            </SuggestionButton>
-          )}
-        {filterStore.allFilters.map((filter, index) => (
+      <HorizontalScroll height={24}>
+        {!!dateFilter && !hasTextualDateFilter && (
+          <SuggestionButton
+            onClick={filterStore.clearDate}
+            opacity={1}
+            borderBottom={[2, activeThemes.date.borderColor]}
+          >
+            {dateFilter}
+          </SuggestionButton>
+        )}
+        {filterStore.allFilters.map(filter => (
           <SuggestionButton
             key={`${filter.text}${filter.active}`}
             onClick={() => filterStore.toggleFilterActive(filter.text)}
-            opacity={opacityScale[index] || 0.333}
             borderBottom={[2, getBorderColor(filter)]}
           >
             {filter.text}
           </SuggestionButton>
         ))}
-        <UI.View width={50} />
       </HorizontalScroll>
     </SuggestionBar>
   )

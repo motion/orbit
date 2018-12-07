@@ -1,14 +1,12 @@
 import { deep, store } from '@mcro/black'
 import { Bridge, proxySetters, BridgeOptions } from '@mcro/mobx-bridge'
-import { AppType } from '@mcro/models'
-import { AppConfig } from './AppConfig'
+import { AppConfig } from '@mcro/models'
 
 export let App = null as AppStore
 
 export type AppState = {
   id: number
   appConfig: AppConfig
-  appType: AppType
   viewType?: 'index' | 'main' | 'setup'
   torn: boolean
   target?: { top: number; left: number; width: number; height: number }
@@ -23,7 +21,6 @@ export const defaultPeekState: AppState = {
   torn: false,
   target: null,
   appConfig: null,
-  appType: 'search',
   peekOnLeft: false,
   position: [0, 0],
   size: [0, 0],
@@ -75,7 +72,7 @@ class AppStore {
   state = deep({
     query: '',
     screenSize: [0, 0],
-    darkTheme: true,
+    darkTheme: false,
     orbitState: {
       pinned: false,
       docked: false,

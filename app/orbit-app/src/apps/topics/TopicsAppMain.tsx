@@ -3,22 +3,28 @@ import { AppProps } from '../AppProps'
 import { Title } from '../../views'
 import { View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { BitsNearTopicModel } from '@mcro/models'
 import { loadMany } from '@mcro/model-bridge'
-import { OrbitListItem } from '../../views/OrbitListItem'
+import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { ScrollableContent } from '../../sources/views/layout/ScrollableContent'
+import { observer } from 'mobx-react-lite'
 
 class TopicsMainStore {
   props: AppProps
 
+  get appConfig() {
+    return this.props.appStore.appConfig
+  }
+
   results = react(
-    () => this.props.appStore.appConfig.title,
-    async topic => {
+    () => this.appConfig,
+    async appConfig => {
+      ensure('appConfig', !!appConfig)
       const res = await loadMany(BitsNearTopicModel, {
-        args: { topic, count: 10 },
+        args: { topic: appConfig.title, count: 10 },
       })
-      return res
+      return res || []
     },
     {
       defaultValue: [],
@@ -26,7 +32,7 @@ class TopicsMainStore {
   )
 }
 
-export const TopicsAppMain = React.memo((props: AppProps) => {
+export const TopicsAppMain = observer((props: AppProps) => {
   const store = useStore(TopicsMainStore, props)
 
   return (
@@ -36,7 +42,6 @@ export const TopicsAppMain = React.memo((props: AppProps) => {
         {store.results.map(bit => (
           <OrbitListItem
             key={bit.id}
-            appType="bit"
             model={bit}
             margin={0}
             padding={15}

@@ -1,7 +1,7 @@
 import { sleep } from '@mcro/utils'
 import { Logger } from '@mcro/logger'
 import { DriveSource } from '@mcro/models'
-import * as path from 'path'
+// import * as path from 'path'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoaderSourceSaveCallback } from '../../loader/ServiceLoaderTypes'
 import { ServiceLoadThrottlingOptions } from '../../options'
@@ -51,7 +51,7 @@ export class DriveLoader {
       if (file.parents && file.parents.length)
         parent = files.find(otherFile => otherFile.id === file.parents[0])
 
-      const thumbnailFilePath = await this.downloadThumbnail(file)
+      // const thumbnailFilePath = await this.downloadThumbnail(file)
       const content = await this.loadFileContent(file)
       const comments = await this.loadComments(file)
       const revisions = await this.loadRevisions(file)
@@ -68,7 +68,7 @@ export class DriveLoader {
 
       const driveFile: DriveLoadedFile = {
         file,
-        thumbnailFilePath,
+        thumbnailFilePath: '',
         content,
         comments,
         revisions,
@@ -150,20 +150,19 @@ export class DriveLoader {
   /**
    * Downloads file thumbnail.
    */
-  private async downloadThumbnail(file: DriveFile): Promise<string> {
-    if (!file.thumbnailLink) return ''
+  // private async downloadThumbnail(file: DriveFile): Promise<string> {
+  //   if (!file.thumbnailLink) return ''
 
-    await sleep(ServiceLoadThrottlingOptions.drive.thumbnailDownload)
+  //   await sleep(ServiceLoadThrottlingOptions.drive.thumbnailDownload)
 
-    this.log.verbose('downloading file thumbnail for', file)
-    const destination = path.normalize(
-      __dirname + '/../../../../uploads/' + file.id + '.' + file.fileExtension,
-    )
-    await this.loader.downloadFile({
-      path: file.thumbnailLink,
-      destination,
-    })
-    this.log.verbose('thumbnail downloaded and saved as', destination)
-  }
-
+  //   this.log.verbose('downloading file thumbnail for', file)
+  //   const destination = path.normalize(
+  //     __dirname + '/../../../../uploads/' + file.id + '.' + file.fileExtension,
+  //   )
+  //   await this.loader.downloadFile({
+  //     path: file.thumbnailLink,
+  //     destination,
+  //   })
+  //   this.log.verbose('thumbnail downloaded and saved as', destination)
+  // }
 }

@@ -5,7 +5,7 @@ import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow, app } from 'electron'
+import { Menu, BrowserWindow } from 'electron'
 import root from 'global'
 
 const log = new Logger('electron')
@@ -21,6 +21,7 @@ class OrbitWindowStore {
   orbitRef: BrowserWindow = null
   disposeShow = null
   alwaysOnTop = true
+  hasMoved = false
 
   size = [0, 0]
   position = [0, 0]
@@ -28,14 +29,21 @@ class OrbitWindowStore {
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
-      this.size = [screenSize[0] / 2, screenSize[1] / 2].map(x => Math.round(x))
-      this.position = [this.size[0] / 2, this.size[1] / 2].map(x => Math.round(x))
+      const scl = 0.65
+      this.size = [screenSize[0] * scl, screenSize[1] * scl].map(x => Math.round(x))
+      this.position = [this.size[0] / 4, 0].map(x => Math.round(x))
     },
   )
 
   setSize = (size, other) => {
     console.log('got a resize', other, size)
     // this.size = size
+  }
+
+  setPosition = position => {
+    this.hasMoved = true
+    console.log('got a move', position)
+    this.position = position
   }
 
   didMount() {
@@ -63,34 +71,11 @@ class OrbitWindowStore {
     },
   )
 
-  handleOrbitShouldFocus = react(
-    () => Desktop.orbitFocusState.focused,
-    async (focused, { sleep }) => {
-      console.log('\n\n\n\n LETS FOCUS ORBIT \n\n\n\n\n')
-      if (focused) {
-        this.handleFocus()
-        await sleep()
-        this.orbitRef.show()
-        this.orbitRef.focus()
-        // bring dev tools to front in dev mode
-        if (process.env.NODE_ENV === 'development') {
-          setTimeout(() => {
-            app.show()
-          }, 16)
-        }
-      } else {
-        // nothing for now on blur
-      }
-    },
-  )
-
   handleOrbitDocked = react(
     () => App.orbitState.docked,
     docked => {
       if (!docked) {
         Menu.sendActionToFirstResponder('hide:')
-      } else {
-        this.orbitRef.show()
       }
     },
   )
@@ -141,22 +126,26 @@ export class OrbitWindow extends React.Component<Props> {
       return null
     }
 
+    const show = this.state.show ? App.orbitState.docked : false
+
     return (
       <Window
-        show={this.state.show ? App.orbitState.docked : false}
+        show={show}
+        focus
         onReadyToShow={() => this.setState({ show: true })}
-        alwaysOnTop={[store.alwaysOnTop, 'floating', 1]}
+        alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
         ref={store.handleRef}
         file={url}
-        focus={false}
         position={store.position.slice()}
         size={store.size.slice()}
         onResize={store.setSize}
+        onMove={store.setPosition}
         onFocus={store.handleElectronFocus}
         showDevTools={Electron.state.showDevTools.app}
         transparent
-        background="#ffffff00"
+        background="#00000000"
         vibrancy="light"
+        hasShadow
       />
     )
   }

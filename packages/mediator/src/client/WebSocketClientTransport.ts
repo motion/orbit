@@ -27,7 +27,14 @@ export class WebSocketClientTransport implements ClientTransport {
     websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     websocket.onerror = ({ error }) => {
       if (`${error}`.indexOf('ECONNREFUSED')) {
-        log.info(`Connection refused ${name}...`)
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(
+            'Mediator socket failure. In development mode disable reconnections, so we dont get neverending errors in console.',
+          )
+          websocket.close()
+        } else {
+          log.info(`Connection refused ${name}...`)
+        }
       } else {
         log.error(`Error ${name} ${error}`)
       }

@@ -1,10 +1,9 @@
-import { SourceModel, Source, IntegrationType } from '@mcro/models'
+import { SourceModel, Source, IntegrationType, AppConfig } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 import { allIntegrations, getIntegrations } from '../sources'
 import { react } from '@mcro/black'
 import { OrbitIntegration, ResolvableModel } from '../sources/types'
 import { keyBy } from 'lodash'
-import { AppConfig } from '@mcro/stores'
 
 type GenericApp = OrbitIntegration<any> & {
   isActive: boolean
@@ -29,7 +28,7 @@ export const sourceToAppConfig = (
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,
-    type: app.modelType,
+    type: model.target === 'bit' ? 'bit' : 'people',
     integration: app.integration,
     viewConfig: app.viewConfig,
   }

@@ -2,6 +2,8 @@ import * as React from 'react'
 import { ControlButton } from './ControlButton'
 import { View, Row } from '@mcro/ui'
 
+export const WindowCloseButton = props => <ControlButton icon="x" background="#FF6159" {...props} />
+
 export const WindowControls = ({
   spaceBetween = 4,
   onClose = null,
@@ -14,15 +16,7 @@ export const WindowControls = ({
 }) => {
   return (
     <Row alignItems="center">
-      {!!onClose && (
-        <ControlButton
-          icon="x"
-          onClick={onClose}
-          background="#FF6159"
-          {...itemProps}
-          {...closeProps}
-        />
-      )}
+      {!!onClose && <WindowCloseButton onClick={onClose} {...itemProps} {...closeProps} />}
       {!!onMax && (
         <>
           <View width={spaceBetween} />

@@ -153,4 +153,5 @@ export const AppWrapper = view(UI.Col, {
   height: '100%',
   userSelect: 'none',
   position: 'relative',
+  pointerEvents: 'auto',
 })

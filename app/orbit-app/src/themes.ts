@@ -6,7 +6,7 @@ const tanBg = color('rgb(255,255,245)')
 const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
 const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
 
-const orbitColor = color('#3d91ff')
+const orbitColor = color('#1A71E3')
 const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
 const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
@@ -111,8 +111,8 @@ const light = {
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
     listItemBackground: [255, 255, 255, 0],
-    listItemBackgroundSelected: [255, 255, 255, 0.06],
-    listItemBackgroundHover: [255, 255, 255, 0.04],
+    listItemBackgroundSelected: orbitColor,
+    listItemBackgroundHover: [100, 100, 100, 0.04],
     inputBorderColor: '#eee',
     inputBackground: '#eee',
     inputBackgroundActive: [0, 0, 0, 0.1],
@@ -181,7 +181,7 @@ const semiDark = {
 }
 
 export const themes = {
-  orbit: {
+  selected: {
     _equalityKey: 'orbit',
     ...Theme.fromStyles({
       background: orbitColor,

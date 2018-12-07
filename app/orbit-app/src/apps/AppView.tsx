@@ -4,13 +4,14 @@ import { AppStore } from './AppStore'
 import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
-import { memo } from '../helpers/memo'
 
-type Props = Pick<AppProps, 'id' | 'viewType' | 'title' | 'type' | 'isActive'> & {
+type Props = Pick<AppProps, 'id' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'> & {
+  title?: string
   appStore?: AppStore
+  onAppStore?: Function
 }
 
-export const AppView = memo((props: Props) => {
+export const AppView = React.memo((props: Props) => {
   const stores = React.useContext(StoreContext)
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
@@ -19,6 +20,13 @@ export const AppView = memo((props: Props) => {
     { ...props, ...stores },
     { conditionalUse: shouldProvideAppStore },
   )
+  if (props.onAppStore) {
+    props.onAppStore(appStore)
+  }
+  if (!apps[props.type]) {
+    console.error('NO APP OF TYPE', props.type, props)
+    return null
+  }
   const AppView = apps[props.type][props.viewType]
   if (!AppView) {
     console.error('WAHT THE FUCK', props.type, AppView)

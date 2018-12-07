@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { Setting, Person, Bit, PersonBit, IntegrationType } from '@mcro/models'
+import { Person, Bit, PersonBit, IntegrationType, Source } from '@mcro/models'
 import { last } from 'lodash'
+import { ResolvableModel } from '../sources/types'
 
-export type NormalizedItem = {
+export type NormalItem = {
   id: string
   type: 'person' | 'bit' | 'source'
   subType?: string
@@ -21,7 +22,7 @@ export type NormalizedItem = {
   searchTerm?: string
   subtitle?: React.ReactNode
   integration?: IntegrationType
-  avatar?: string
+  image?: string
   afterTitle?: React.ReactNode
   after?: React.ReactNode
 }
@@ -32,10 +33,8 @@ export type ItemResolverExtraProps = {
   preventSelect?: boolean
 }
 
-type ResolvableModel = Bit | Person | PersonBit | Setting
-
 const normalizers = {
-  bit: (bit: Bit): NormalizedItem => {
+  bit: (bit: Bit): NormalItem => {
     return {
       type: 'bit',
       id: `${bit.id}`,
@@ -53,27 +52,27 @@ const normalizers = {
       updatedAt: new Date(bit.bitUpdatedAt),
     }
   },
-  source: (model): NormalizedItem => ({
+  source: (source: Source): NormalItem => ({
     type: 'source',
-    id: `${model.id}`,
-    title: model.type,
-    icon: model.type,
+    id: `${source.id}`,
+    title: source.type,
+    icon: source.type,
   }),
-  'person-bit': (person: PersonBit): NormalizedItem => {
+  'person-bit': (person: PersonBit): NormalItem => {
     return {
       type: 'person',
       id: person.email,
       title: person.name,
       icon: 'person',
       subtitle: person.email,
-      avatar: last(person.allPhotos as any) || person.photo,
+      image: last(person.allPhotos as any) || person.photo,
       // createdAt: person.createdAt,
       // updatedAt: person.updatedAt,
     }
   },
 }
 
-export const normalizeItem = (model: ResolvableModel): NormalizedItem => {
+export const normalizeItem = (model: ResolvableModel): NormalItem => {
   if (!model) {
     throw new Error('Called normalize without a model')
   }
@@ -81,5 +80,8 @@ export const normalizeItem = (model: ResolvableModel): NormalizedItem => {
     console.debug('no normalizer for model', model)
     return model as any
   }
-  return normalizers[model.target](model)
+  const normalizer = normalizers[model.target]
+  // TODO
+  // @ts-ignore
+  return normalizer(model)
 }

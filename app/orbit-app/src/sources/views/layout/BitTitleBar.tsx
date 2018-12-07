@@ -2,11 +2,11 @@ import * as React from 'react'
 import { Row } from '@mcro/ui'
 import { BitTitleActions } from './BitTitleActions'
 import { TitleBarSpace } from './TitleBarSpace'
-import { NormalizedItem } from '../../../helpers/normalizeItem'
+import { NormalItem } from '../../../helpers/normalizeItem'
 
 export class BitTitleBar extends React.Component<{
   searchBar: any
-  normalizedItem: NormalizedItem
+  normalizedItem: NormalItem
 }> {
   render() {
     const { searchBar, normalizedItem } = this.props

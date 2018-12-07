@@ -11,7 +11,7 @@ class MyStore {
   }
 }
 
-export function TestHMR(props) {
+export const TestHMR = observer(props => {
   const store = useStore(MyStore, props)
   if (!store.firstState) {
     setTimeout(() => {
@@ -30,4 +30,4 @@ export function TestHMR(props) {
       <button onClick={store.onClick} />
     </>
   )
-}
+})

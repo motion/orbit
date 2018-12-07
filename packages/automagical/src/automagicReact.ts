@@ -22,26 +22,61 @@ type SubscribableLike = { subscribe: (a: any) => Subscription }
 // hacky for now
 Root.__trackStateChanges = {}
 
-const logGroup = (name: string, result, changed: string, reactionArgs, globalChanged?) => {
-  const hasGlobalChanges = globalChanged && !!Object.keys(globalChanged).length
-  const hasChanges = !!changed
-  if (hasChanges || hasGlobalChanges) {
-    if (hasChanges) {
-      const dotdot = changed.length > 90 ? '...' : ''
-      console.groupCollapsed(`${name} ${changed.slice(0, 90)}${dotdot}`)
-    } else {
-      console.groupCollapsed(`${name} (no change)`)
-    }
-    console.log('  reaction args:', toJSDeep(reactionArgs))
-    console.log('         return: ', changed)
-    if (hasGlobalChanges) {
-      console.log('  global changed:', ...logRes(result))
-      console.log('  store changed', globalChanged)
+let logBatch = new Set<[string, Function]>()
+let logBatchTm = null
+const logBatchFlush = () => {
+  const groups = [...logBatch]
+  if (groups.length > 1) {
+    const groupTitles = groups
+      .map(x =>
+        x[0]
+          // collapse extra whitespace in repeating items
+          .replace(/✅[\s]+/, '')
+          .trim()
+          // remove the extra info
+          .replace(/\..*$/, ''),
+      )
+      .filter(Boolean)
+    console.groupCollapsed(`  (${groups.length}): ${groupTitles.join(', ')}`)
+    for (const [, logger] of logBatch) {
+      logger()
     }
     console.groupEnd()
-  } else {
-    console.debug(`${name} no change, reaction args:`, toJSDeep(reactionArgs))
   }
+  if (groups.length === 1) {
+    // just log the one directly
+    groups[0][1]()
+  }
+  logBatch = new Set()
+}
+
+const logGroup = (name: string, result, changed: string, reactionArgs, globalChanged?) => {
+  const groupLog = () => {
+    const hasGlobalChanges = globalChanged && !!Object.keys(globalChanged).length
+    const hasChanges = !!changed
+    if (hasChanges || hasGlobalChanges) {
+      if (hasChanges) {
+        const dotdot = changed.length > 90 ? '...' : ''
+        console.groupCollapsed(`${name} ${changed.slice(0, 90)}${dotdot}`)
+      } else {
+        console.groupCollapsed(`${name} (no change)`)
+      }
+      console.log('  reaction args:', toJSDeep(reactionArgs))
+      console.log('         return: ', changed)
+      if (hasGlobalChanges) {
+        console.log('  global changed:', ...logRes(result))
+        console.log('  store changed', globalChanged)
+      }
+      console.groupEnd()
+    } else {
+      console.debug(`${name} no change, reaction args:`, toJSDeep(reactionArgs))
+    }
+  }
+
+  // only logs every tick
+  logBatch.add([name, groupLog])
+  clearTimeout(logBatchTm)
+  logBatchTm = setTimeout(logBatchFlush)
 }
 
 let lastStoreLogName = ''
@@ -467,7 +502,7 @@ export function automagicReact(
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog) {
           if (changed) {
-            logGroup(`   ${name.full} ${id}`, result, `${changed}`, reactValArg, globalChanged)
+            logGroup(name.full, result, `${changed}`, reactValArg, globalChanged)
           }
         }
       }

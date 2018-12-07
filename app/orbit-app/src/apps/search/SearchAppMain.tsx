@@ -3,6 +3,7 @@ import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../AppView'
 import { SearchAppIndex } from './SearchAppIndex'
+import { observer } from 'mobx-react-lite'
 
 class SearchAppStore {
   props: AppProps
@@ -12,18 +13,17 @@ class SearchAppStore {
   }
 }
 
-export function SearchAppMain(props: AppProps) {
+export const SearchAppMain = observer((props: AppProps) => {
   const { appConfig } = useStore(SearchAppStore, props)
 
+  if (!appConfig) {
+    return null
+  }
+
   // show a single item
-  if (appConfig.type === 'bit' || appConfig.type === 'person') {
+  if (appConfig.type === 'bit' || appConfig.type === 'people') {
     return (
-      <AppView
-        viewType="main"
-        id={appConfig.id}
-        title={appConfig.title}
-        type={appConfig.type === 'bit' ? 'bit' : 'people'}
-      />
+      <AppView viewType="main" id={appConfig.id} title={appConfig.title} type={appConfig.type} />
     )
   }
 
@@ -34,4 +34,4 @@ export function SearchAppMain(props: AppProps) {
       <SearchAppIndex {...props} />
     </>
   )
-}
+})

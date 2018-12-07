@@ -2,10 +2,10 @@ import * as React from 'react'
 import { view, StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { SubPaneStore } from './SubPaneStore'
-import { BORDER_RADIUS } from '../constants'
 import { AppType } from '@mcro/models'
 import { CSSPropertySetStrict } from '@mcro/css'
 import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: string
@@ -24,7 +24,7 @@ export type SubPaneProps = CSSPropertySetStrict & {
 
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
-export const SubPane = React.memo((props: Props) => {
+export const SubPane = observer((props: Props) => {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
   const { paneManagerStore, selectionStore } = React.useContext(StoreContext)
   const subPaneStore = useStore(SubPaneStore, {
@@ -77,9 +77,6 @@ const Pane = view(UI.View, {
   left: 0,
   overflowX: 'hidden',
   overflowY: 'auto',
-  borderBottomRadius: BORDER_RADIUS,
-  padding: [0, 12],
-  margin: [0, 0, 0],
   preventScroll: {
     overflowY: 'hidden',
   },

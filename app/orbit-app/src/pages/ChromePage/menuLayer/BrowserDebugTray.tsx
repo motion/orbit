@@ -3,6 +3,7 @@ import { Row, FullScreen, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { App } from '@mcro/stores'
 import { IS_ELECTRON } from '../../../constants'
+import { observer } from 'mobx-react-lite'
 
 class DebugTrayStore {
   props: { id: number }
@@ -15,7 +16,7 @@ class DebugTrayStore {
   onLeave = this.targetSetter('Out')
 }
 
-export const BrowserDebugTray = React.memo(({ children, menuStore }) => {
+export const BrowserDebugTray = observer(({ children, menuStore }) => {
   const store = useStore(DebugTrayStore)
   if (IS_ELECTRON) {
     return children

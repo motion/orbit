@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { Theme } from '@mcro/gloss'
 import { Popover, PopoverProps } from './Popover'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
 type TooltipProps = Partial<PopoverProps> & {
   themeName?: string
+  label: React.ReactNode | string
 }
 
 const defaultOnClick = e => {
@@ -13,8 +13,18 @@ const defaultOnClick = e => {
   console.log('no click on tooltip')
 }
 
-export const Tooltip = ({ themeName, onClick = defaultOnClick, ...props }: TooltipProps) => (
-  <Theme name="tooltip">
+export const Tooltip = ({
+  themeName = 'tooltip',
+  onClick = defaultOnClick,
+  disabled = false,
+  label,
+  children,
+  ...props
+}: TooltipProps) => {
+  if (disabled) {
+    return children as any
+  }
+  return (
     <Popover
       background
       openOnHover
@@ -29,7 +39,11 @@ export const Tooltip = ({ themeName, onClick = defaultOnClick, ...props }: Toolt
       popoverProps={POPOVER_PROPS}
       ignoreSegment
       onClick={onClick}
+      theme={themeName}
+      target={children}
       {...props}
-    />
-  </Theme>
-)
+    >
+      {label}
+    </Popover>
+  )
+}

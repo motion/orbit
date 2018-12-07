@@ -1,10 +1,8 @@
-// @ts-ignore
 import webpack from 'webpack'
 import * as Path from 'path'
 import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-// import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
@@ -106,9 +104,11 @@ const config = {
       'Access-Control-Allow-Origin': '*',
     },
   },
-  // inline source map allows chrome remote debugger to access it
-  // see: https://stackoverflow.com/questions/27671390/why-inline-source-maps
-  devtool: isProd ? 'cheap-source-map' : 'cheap-eval-source-map',
+  // for a faster dev mode you can do:
+  //   eval-source-map (seems to not even parse...)
+  //   cheap-source-map (no line numbers...)
+  //   cheap-module-eval-source-map (no line numbers...)
+  devtool: isProd ? 'source-map' : 'eval-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
@@ -120,7 +120,10 @@ const config = {
       '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
       'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
       react: Path.resolve(cwd, 'node_modules', 'react'),
-      'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
+      'react-dom': isProd
+        ? Path.resolve(cwd, 'node_modules', 'react-dom')
+        : // react hmr
+          Path.resolve(__dirname, '..', 'node_modules', '@hot-loader/react-dom'),
       'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
     },
   },
@@ -134,6 +137,7 @@ const config = {
         use: ['workerize-loader'],
         exclude: /node_modules/,
       },
+      // ignore .node.js modules
       {
         test: /\.node.[jt]sx?/,
         use: 'ignore-loader',
@@ -158,10 +162,6 @@ const config = {
           },
         ],
       },
-      // {
-      //   test: /\.svg$/,
-      //   use: 'svg-inline-loader',
-      // },
       {
         test: /\.(gif|png|jpe?g|svg)$/,
         use: [
@@ -185,10 +185,7 @@ const config = {
     ],
   },
   plugins: [
-    // new ProfilingPlugin(),
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
-
-    new DuplicatePackageCheckerPlugin(),
 
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
@@ -196,11 +193,6 @@ const config = {
     }),
 
     new webpack.IgnorePlugin(/electron-log/),
-
-    // adds cache based on source of files
-    // new HardSourceWebpackPlugin(),
-
-    new webpack.NamedModulesPlugin(),
 
     new HtmlWebpackPlugin({
       favicon: 'public/favicon.png',
@@ -211,6 +203,10 @@ const config = {
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
       }),
+
+    !isProd && new webpack.NamedModulesPlugin(),
+
+    isProd && new DuplicatePackageCheckerPlugin(),
 
     isProd &&
       new PrepackPlugin({

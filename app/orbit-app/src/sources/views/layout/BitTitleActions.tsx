@@ -1,15 +1,11 @@
 import * as React from 'react'
-import { NormalizedItem } from '../../../helpers/normalizeItem'
+import { NormalItem } from '../../../helpers/normalizeItem'
 import { SegmentedRow } from '@mcro/ui'
 import { TitleBarButton } from './TitleBarButton'
 import { AppActions } from '../../../actions/AppActions'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 
-export const BitTitleActions = ({
-  normalizedItem,
-}: {
-  normalizedItem: Partial<NormalizedItem>
-}) => {
+export const BitTitleActions = ({ normalizedItem }: { normalizedItem: Partial<NormalItem> }) => {
   return (
     <SegmentedRow>
       <TitleBarButton

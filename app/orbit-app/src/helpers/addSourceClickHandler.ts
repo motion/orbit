@@ -14,7 +14,6 @@ export const addSourceClickHandler = memoize(
       // if this view wants to show a "setup" pane...
       AppActions.togglePeekApp({
         target: currentTarget,
-        appType: 'source',
         appConfig: {
           ...sourceToAppConfig(app),
           viewType: 'setup',

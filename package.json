@@ -6,8 +6,8 @@
     "react-dom": "16.7.0-alpha.2"
   },
   "resolutions": {
-    "@types/react": "16.7.7",
-    "@types/react-dom": "16.0.10"
+    "@types/react": "16.7.13",
+    "@types/react-dom": "16.0.11"
   },
   "devDependencies": {
     "@babel/runtime": "^7.0.0",
@@ -15,8 +15,8 @@
     "@babel/core": "7.1.0",
     "@mcro/babel-preset-motion": "2.2.2",
     "@types/lodash": "4.14.115",
-    "@types/react": "16.7.7",
-    "@types/react-dom": "16.0.10",
+    "@types/react": "16.7.13",
+    "@types/react-dom": "16.0.11",
     "@types/event-kit": "2.4.0",
     "@types/reconnectingwebsocket": "1.0.1",
     "@types/ws": "5.1.2",
@@ -34,10 +34,7 @@
     "mobx": "5.6.0",
     "prettier": "1.15.3",
     "sb-promisify": "^2.0.2",
-    "typescript": "3.1.6",
-    "webpack": "4.26.1",
-    "webpack-dev-server": "3.1.10",
-    "webpack-cli": "3.1.2"
+    "typescript": "3.1.6"
   },
   "scripts": {
     "watch": "source .env && build --watch",

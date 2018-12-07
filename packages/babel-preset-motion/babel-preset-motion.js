@@ -8,9 +8,10 @@ module.exports = function(_, givenOpts) {
     const plugin = require.resolve(name)
     return opts ? [plugin, opts] : plugin
   }
+  const isDev = process.env.NODE_ENV !== 'production'
   const config = {
     plugins: [
-      plug('react-hot-loader/babel'),
+      isDev && plug('react-hot-loader/babel'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
       }),
@@ -21,7 +22,6 @@ module.exports = function(_, givenOpts) {
       plug('@babel/plugin-proposal-class-properties', {
         loose: true,
       }),
-      // plug('@babel/plugin-transform-react-inline-elements'),
     ],
     presets: opts.presets || [
       plug('@babel/preset-react', {
@@ -36,8 +36,8 @@ module.exports = function(_, givenOpts) {
       plug('@babel/preset-typescript'),
     ],
   }
-  config.plugins = config.plugins.filter(x => !!x)
-  config.presets = config.presets.filter(x => !!x)
+  config.plugins = config.plugins.filter(Boolean)
+  config.presets = config.presets.filter(Boolean)
   // console.log('babel config', config)
   return config
 }

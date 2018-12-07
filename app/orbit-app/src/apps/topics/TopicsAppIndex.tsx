@@ -5,13 +5,13 @@ import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { Separator } from '../../views/Separator'
 import { TopicEdit } from './TopicEdit'
-import { memo } from '../../helpers/memo'
 import { view } from '@mcro/black'
-import { OrbitListItem } from '../../views/OrbitListItem'
+import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { VerticalSpace } from '../../views'
 import { SliderPane, Slider } from '../../views/Slider'
 import { MENU_WIDTH, IS_MENU, IS_MINIMAL } from '../../constants'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { observer } from 'mobx-react-lite'
 
 const icons = {
   0: ['neutral', 'rgba(180,180,180,0.75)'],
@@ -52,7 +52,6 @@ function TopicList({ results, offset = 0, ...props }) {
         <OrbitListItem
           key={res.title}
           direct
-          appType="topics"
           padding={[IS_MINIMAL ? 5 : 7, 11]}
           opacity={0.85}
           {...{ '&:hover': activeStyle }}
@@ -97,7 +96,7 @@ const buttonProps = (store: TopicsIndexStore, type: string) => {
 
 const size = IS_MINIMAL ? 0.9 : 1
 
-export const TopicsAppIndex = memo((props: AppProps & { store?: TopicsIndexStore }) => {
+export const TopicsAppIndex = observer((props: AppProps & { store?: TopicsIndexStore }) => {
   const store = useStore(TopicsIndexStore, props)
   return (
     <>

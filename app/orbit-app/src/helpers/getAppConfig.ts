@@ -1,11 +1,10 @@
 import { allIntegrations } from '../sources'
 import { ResolvableModel } from '../sources/types'
-import { AppConfig } from '@mcro/stores'
 import { sourceToAppConfig } from '../stores/SourcesStore'
+import { AppConfig } from '@mcro/models'
 
 export const getAppConfig = (model: ResolvableModel): AppConfig => {
-  console.log('get app config', model)
-  let type
+  let type: string = ''
   switch (model.target) {
     case 'bit':
       type = model.integration

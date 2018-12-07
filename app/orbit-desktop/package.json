@@ -32,7 +32,6 @@
     "@mcro/logger": "^2.2.1",
     "@mcro/mediator": "^2.2.1",
     "@mcro/models": "^2.2.1",
-    "@mcro/models": "^2.2.1",
     "@mcro/model-bridge": "^2.2.1",
     "@mcro/screen": "^2.2.1",
     "@mcro/orbit-app": "^2.2.1",

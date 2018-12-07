@@ -6,7 +6,6 @@ class TrackSingleton {
 
   constructor() {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('avoid tracking in development mode')
       return
     }
 

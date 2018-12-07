@@ -3822,6 +3822,11 @@ mobx-react-devtools@6.0.3:
   resolved "https://registry.yarnpkg.com/mobx-react-devtools/-/mobx-react-devtools-6.0.3.tgz#4d536c8cdd77d9f4b81f5e8415d7bedccc6a2a99"
   integrity sha512-PY+lG6XeWaC0DFnDaVC7ImrHJQu7XVXNy4z4fmqHzWc3p+fJisKmaZNwgToO2vJGBghz98Mx2yXUBLw1Ba2mPQ==
 
+mobx-react-lite@0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-0.3.4.tgz#9b086c98c536a0b4a4f14fe373d80cb8d00de0fd"
+  integrity sha512-8rW3Bk0HLp8rFqtJh5jM63PH5TVXsfNh1EE0zahmhjov1A1QqW1TbtP0GvdtUaDV3WTnCM3hThxsVP8FI5vG0w==
+
 mobx-react@5.3.6:
   version "5.3.6"
   resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-5.3.6.tgz#0bead0173aed7d12ace4981b53c28db4d61de9ef"
@@ -4903,10 +4908,10 @@ react-fast-compare@2.0.4:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-hot-loader@4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.5.1.tgz#4a9cf136542b1db4f948ac74b31fa16a411ceebb"
-  integrity sha512-aqw8F0ZTCakfTXTj1n3F9vXfEKWWHEpQ3Mq9YmYvrNdHvey5RfkSGv7rz4r9TXjqVLt2mpItqydJQdhboZ/acQ==
+react-hot-loader@4.5.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.5.2.tgz#5a91984196fb72801a52c62bfad0eb2322d7bcd3"
+  integrity sha512-R/mYorMt2YC9IkF/bpJqiYezrz5z1F7F+W1XIaiGezeuonQWIRpNycZRobkYHJNz66QKq6eBWeUYV6/AMmfaLw==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"

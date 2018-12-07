@@ -9,7 +9,7 @@ const root = Path.join(__dirname, '..')
 const argsIndex = process.argv.findIndex(x => /mcro-build$/.test(x))
 const extraArgs = argsIndex >= 0 ? process.argv.slice(argsIndex + 1) : []
 
-const cmd = 'webpack-dev-server'
+const cmd = `${root}/node_modules/.bin/webpack-dev-server`
 let args = ['--config', configPath, ...extraArgs]
 
 if (process.env.NODE_ENV !== 'production') {

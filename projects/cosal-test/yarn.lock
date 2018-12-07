@@ -470,10 +470,10 @@ react-dom@16.7.0-alpha.2:
     prop-types "^15.6.2"
     scheduler "^0.12.0-alpha.2"
 
-react-hot-loader@4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.5.1.tgz#4a9cf136542b1db4f948ac74b31fa16a411ceebb"
-  integrity sha512-aqw8F0ZTCakfTXTj1n3F9vXfEKWWHEpQ3Mq9YmYvrNdHvey5RfkSGv7rz4r9TXjqVLt2mpItqydJQdhboZ/acQ==
+react-hot-loader@4.5.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.5.2.tgz#5a91984196fb72801a52c62bfad0eb2322d7bcd3"
+  integrity sha512-R/mYorMt2YC9IkF/bpJqiYezrz5z1F7F+W1XIaiGezeuonQWIRpNycZRobkYHJNz66QKq6eBWeUYV6/AMmfaLw==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"

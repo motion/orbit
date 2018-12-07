@@ -1,13 +1,6 @@
 import { automagicClass } from '@mcro/automagical'
-import {
-  isValidElement,
-  useState,
-  useEffect,
-  useRef,
-  createContext,
-  useMutationEffect,
-} from 'react'
-import { autorun, observable, toJS, trace, transaction } from 'mobx'
+import { isValidElement, useRef, createContext } from 'react'
+import { observable, transaction } from 'mobx'
 import isEqual from 'react-fast-compare'
 
 type UseGlobalStoreOptions = {
@@ -21,20 +14,13 @@ type UseStoreOptions = {
   conditionalUse?: boolean
 }
 
-const ignorestate = {
-  isMobXComputedValue: true,
-  __IS_DEEP: true,
-  IS_AUTO_RUN: true,
-  $$typeof: true,
-}
-
 let globalOptions = {
   onMount: null,
   onUnmount: null,
   context: createContext(null),
 }
 
-const isReactElement = x => {
+const isReactElement = (x: any) => {
   if (!x) {
     return false
   }
@@ -47,11 +33,12 @@ const isReactElement = x => {
   return false
 }
 
-const propKeysWithoutElements = props => Object.keys(props).filter(x => !isReactElement(props[x]))
+const propKeysWithoutElements = (props: Object) =>
+  Object.keys(props).filter(x => !isReactElement(props[x]))
 
 // updateProps
 // granular set so reactions can be efficient
-const updateProps = (props, nextProps, options?: UseStoreOptions) => {
+const updateProps = (props: Object, nextProps: Object, options?: UseStoreOptions) => {
   const nextPropsKeys = propKeysWithoutElements(nextProps)
   const curPropKeys = propKeysWithoutElements(props)
 
@@ -86,9 +73,11 @@ const updateProps = (props, nextProps, options?: UseStoreOptions) => {
   })
 }
 
-const setupStoreWithReactiveProps = (Store, props?) => {
+const setupStoreWithReactiveProps = <A>(Store: new () => A, props?: Object) => {
   Store.prototype.automagic = automagicClass
-  let storeInstance
+
+  let storeInstance: A
+
   if (!props) {
     storeInstance = new Store()
   } else {
@@ -102,18 +91,27 @@ const setupStoreWithReactiveProps = (Store, props?) => {
     Object.defineProperty(Store.prototype, 'props', getProps)
     storeInstance = new Store()
     Object.defineProperty(storeInstance, 'props', getProps)
-    storeInstance.__updateProps = updateProps
+    storeInstance['__updateProps'] = updateProps
   }
+
   if (globalOptions.onMount) {
     globalOptions.onMount(storeInstance)
   }
+
+  // @ts-ignore
   storeInstance.automagic({
     isSubscribable: x => x && typeof x.subscribe === 'function',
   })
+
   return storeInstance
 }
 
-const useStoreWithReactiveProps = (Store, props, shouldHMR = false, options?: UseStoreOptions) => {
+const useStoreWithReactiveProps = (
+  Store: any,
+  props: Object,
+  shouldHMR = false,
+  options?: UseStoreOptions,
+) => {
   // only setup props if we need to
   let store = useRef(Store.constructor ? null : Store)
   const shouldSetup = !store.current || shouldHMR
@@ -127,12 +125,7 @@ const useStoreWithReactiveProps = (Store, props, shouldHMR = false, options?: Us
   return store.current
 }
 
-export function useInstantiatedStore<A>(
-  plainStore: A,
-  options?: UseStoreOptions,
-  props?: Object,
-  shouldSetup?: boolean,
-): A {
+export function useStore<A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A {
   if (options && options.conditionalUse === false) {
     return null
   }
@@ -140,117 +133,18 @@ export function useInstantiatedStore<A>(
   const hasSetupStore = !proxyStore.current
   const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
   const constructor = proxyStore.current && proxyStore.current.constructor
-  const hasChangedSource = constructor && constructor.toString() !== plainStore.toString()
+  const hasChangedSource = constructor && constructor.toString() !== Store.toString()
   const shouldHMRStore = isHMRCompat && hasSetupStore && hasChangedSource
-  const store = shouldSetup
-    ? useStoreWithReactiveProps(plainStore, props, shouldHMRStore, options)
-    : plainStore
-  const dispose = useRef(null)
-  const state = useRef({
-    hasRunOnce: false,
-    lastKeys: [],
-    keys: [],
-    shouldTrack: true,
-    update: observable.box(0),
-  })
-  const triggerUpdate = useState(0)[1]
-
+  const store = useStoreWithReactiveProps(Store, props, shouldHMRStore, options)
   // setup store once
   if (!proxyStore.current || shouldHMRStore) {
     if (shouldHMRStore) {
-      console.log('HMRing store', plainStore)
+      console.log('HMRing store', Store)
     }
-    if (process.env.NODE_ENV === 'development') {
-      store.__useStore = {
-        get state() {
-          return toJS(state.current)
-        },
-      }
-    }
-    proxyStore.current = new Proxy(store, {
-      get(obj, key) {
-        const { keys, shouldTrack } = state.current
-        if (!ignorestate[key]) {
-          if (shouldTrack && typeof key === 'string') {
-            if (!keys[key]) {
-              if (process.env.NODE_ENV === 'development' && options && options.debug) {
-                console.log(`new reactive key: ${plainStore['name']}.${key}`)
-              }
-              keys[key] = true
-            }
-          }
-        }
-        return obj[key]
-      },
-    })
+    proxyStore.current = store
   }
 
-  // this may "look" backward but because useEffect fires on finished render
-  // this is what we want: stop tracking on finished render
-  // start tracking again after that (presumable before next render, but not 100%)
-  useMutationEffect(() => {
-    const rk = state.current
-    rk.shouldTrack = false
-    // trigger update if keys changed
-    for (const [index, key] of rk.lastKeys.entries()) {
-      if (key !== rk.keys[index]) {
-        rk.update.set(Math.random())
-        break
-      }
-    }
-    state.current = rk
-    return () => {
-      rk.lastKeys = rk.keys
-      rk.shouldTrack = true
-      state.current = rk
-    }
-  })
-
-  // one effect to then run and watch the keys we track from the first one
-  useEffect(() => {
-    if (!dispose.current) {
-      dispose.current = autorun(() => {
-        const rk = state.current
-
-        // listen for key changes
-        rk.update.get()
-
-        // trigger reaction on keys
-        for (const key in rk.keys) {
-          store[key]
-        }
-
-        if (process.env.NODE_ENV === 'development' && options && options.debug) {
-          trace()
-        }
-
-        // update when we react, ignore first run
-        if (rk.hasRunOnce) {
-          triggerUpdate(Math.random())
-        }
-
-        rk.hasRunOnce = true
-      })
-    }
-
-    return () => {
-      // emit unmount
-      if (globalOptions.onUnmount) {
-        globalOptions.onUnmount(store)
-      }
-      // stop autorun()
-      dispose.current()
-    }
-  }, [])
-
   return proxyStore.current
-}
-
-// this lets you react to observable properties of a store within a render
-// if the store isn't instantiated yet, we instantiate it and attach any props to it
-// if the store is instantiated, we just listen for keys to react to
-export function useStore<A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A {
-  return useInstantiatedStore(Store as any, options, props, true)
 }
 
 // TODO make safer by freezing after one set

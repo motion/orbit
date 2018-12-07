@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { FindOptions } from 'typeorm'
-import { IntegrationType, Bit, PersonBit, Source, GenericBit } from '@mcro/models'
-import { AppConfig } from '@mcro/stores'
+import { IntegrationType, Bit, PersonBit, Source, GenericBit, SearchResult } from '@mcro/models'
+import { AppConfig } from '@mcro/models'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
-import { NormalizedItem } from '../helpers/normalizeItem'
+import { NormalItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../components/AppInfoStore'
-import { ItemRenderText } from '../views/OrbitItemProps'
+import { ItemRenderText } from '../views/ListItems/OrbitItemProps'
 import { GenericComponent } from '../types'
 
 type AppTypeToModelType = {
@@ -25,7 +25,7 @@ export type ItemType = IntegrationType | 'person'
 
 type ModelFromType<A extends ItemType> = AppTypeToModelType[A]
 
-export type OrbitItemProps<T extends ResolvableModel> = {
+export type GenericItemProps<T extends ResolvableModel> = {
   model?: T
   isExpanded?: boolean
   shownLimit?: number
@@ -50,14 +50,14 @@ export type OrbitItemProps<T extends ResolvableModel> = {
 }
 
 // for all apps, including non-bit apps
-export type OrbitGenericSourceProps<A extends ItemType> = OrbitItemProps<ModelFromType<A>>
+export type OrbitGenericSourceProps<A extends ItemType> = GenericItemProps<ModelFromType<A>>
 
 // for just "bit" apps
 // much more common / external facing
 // so give it the nicer name
-export type OrbitIntegrationProps<A extends ItemType> = OrbitItemProps<ModelFromType<A>> & {
+export type OrbitIntegrationProps<A extends ItemType> = GenericItemProps<ModelFromType<A>> & {
   bit: GenericBit<any>
-  normalizedItem: Partial<NormalizedItem>
+  normalizedItem: Partial<NormalItem>
 }
 
 export type OrbitSourceMainProps<A extends ItemType> = OrbitIntegrationProps<A> & {
@@ -100,4 +100,4 @@ export type GetOrbitIntegration<A extends ItemType> = (source: Source) => OrbitI
 
 export type GetOrbitIntegrations = { [key in ItemType]: GetOrbitIntegration<ItemType> }
 
-export type ResolvableModel = Bit | PersonBit | Source
+export type ResolvableModel = Bit | PersonBit | Source | SearchResult

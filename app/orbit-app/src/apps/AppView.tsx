@@ -20,9 +20,13 @@ export const AppView = React.memo((props: Props) => {
     { ...props, ...stores },
     { conditionalUse: shouldProvideAppStore },
   )
-  if (props.onAppStore) {
-    props.onAppStore(appStore)
-  }
+
+  React.useEffect(() => {
+    if (props.onAppStore) {
+      props.onAppStore(appStore)
+    }
+  }, [])
+
   if (!apps[props.type]) {
     console.error('NO APP OF TYPE', props.type, props)
     return null

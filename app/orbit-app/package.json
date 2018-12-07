@@ -11,7 +11,7 @@
     "test-electron": "electron ./scripts/test-electron.js"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "7.2.0",
     "@mcro/black": "^2.2.1",
     "@mcro/mobx-logger": "^2.2.1",
     "@mcro/config": "2.2.1",
@@ -51,7 +51,7 @@
     "mobx-react-devtools": "6.0.3",
     "pluralize": "^7.0.0",
     "react-fast-compare": "2.0.4",
-    "react-hot-loader": "4.5.2",
+    "@mcro/react-hot-loader": "4.5.3",
     "react-spring": "6.1.8",
     "react-virtualized": "9.21.0",
     "reconnecting-websocket": "4.1.10",
@@ -69,12 +69,9 @@
     "re-resizable": "4.9.3"
   },
   "devDependencies": {
-    "fuse-box": "3.6.0",
-    "@babel/core": "7.1.0",
+    "@babel/core": "7.2.0",
     "@mcro/build": "^2.2.1",
-    "@types/webpack-env": "1.13.6",
-    "@pundle/cli": "3.0.0-beta11",
-    "@pundle/preset-default": "3.0.0-beta11"
+    "@types/webpack-env": "1.13.6"
   },
   "peerDependencies": {
     "electron": "*",

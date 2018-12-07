@@ -24,6 +24,7 @@
     "http-proxy": "1.17.0",
     "abortcontroller-polyfill": "1.1.9",
     "@babel/runtime": "^7.0.0",
+    "@mcro/oracle": "^2.2.1",
     "@mcro/black": "^2.2.1",
     "@mcro/config": "2.2.1",
     "@mcro/constants": "^2.2.1",

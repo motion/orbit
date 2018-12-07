@@ -47,7 +47,6 @@ export class Oracle {
     }
     let binDir
     if (this.binPath) {
-      bin = 'screen'
       binDir = Path.join(this.binPath, '..')
     } else {
       binDir = RELEASE_PATH

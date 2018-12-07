@@ -14,7 +14,7 @@
           "@mcro/babel-preset-motion",
           {
             "disable": [
-              "react-hot-loader/babel",
+              "@mcro/react-hot-loader/babel",
               "@babel/plugin-transform-react-inline-elements"
             ]
           }

@@ -1,4 +1,4 @@
-export * from './appActionsHandlers/peekStateActions'
+export * from './peekStateActions'
 export * from './closeOrbit'
 export * from './open'
 export * from './setContextMessage'

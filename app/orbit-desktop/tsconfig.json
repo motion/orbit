@@ -12,6 +12,7 @@
     { "path": "../services" },
     { "path": "../stores" },
     { "path": "../screen" },
+    { "path": "../oracle" },
     { "path": "../../packages/cosal" },
     { "path": "../../packages/utils" },
     { "path": "../../packages/black" },

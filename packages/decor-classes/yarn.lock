@@ -5,3 +5,4 @@
 event-kit@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/event-kit/-/event-kit-2.5.0.tgz#2f72b11e2b5f533cc1c950387040624a4a025fe8"
+  integrity sha512-tUDxeNC9JzN2Tw/f8mLtksY34v1hHmaR7lV7X4p04XSjaeUhFMfzjF6Nwov9e0EKGEx63BaKcgXKxjpQaPo0wg==

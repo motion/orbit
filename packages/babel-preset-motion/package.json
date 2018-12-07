@@ -3,19 +3,19 @@
   "main": "babel-preset-motion.js",
   "version": "2.2.2",
   "dependencies": {
-    "@babel/core": "7.1.0",
-    "@babel/plugin-proposal-class-properties": "7.1.0",
-    "@babel/plugin-proposal-decorators": "7.1.0",
-    "@babel/plugin-syntax-jsx": "7.0.0",
-    "@babel/plugin-syntax-typescript": "7.0.0",
-    "@babel/plugin-transform-runtime": "7.1.0",
-    "@babel/preset-env": "7.1.0",
+    "@babel/core": "7.2.0",
+    "@babel/plugin-proposal-class-properties": "7.2.1",
+    "@babel/plugin-proposal-decorators": "7.2.0",
+    "@babel/plugin-syntax-jsx": "7.2.0",
+    "@babel/plugin-syntax-typescript": "7.2.0",
+    "@babel/plugin-transform-runtime": "7.2.0",
+    "@babel/preset-env": "7.2.0",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
     "@mcro/gloss": "^2.2.1",
     "@mcro/gloss-displaynames": "^2.2.1",
     "@babel/plugin-transform-react-inline-elements": "7.0.0",
-    "react-hot-loader": "4.5.2"
+    "@mcro/react-hot-loader": "4.5.3"
   },
   "license": "MIT"
 }

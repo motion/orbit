@@ -38,7 +38,7 @@ export const sourceToAppConfig = (
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,
-    type: modelTargetToAppType(model),
+    type: model ? modelTargetToAppType(model) : 'source',
     integration: app.integration,
     viewConfig: app.viewConfig,
   }

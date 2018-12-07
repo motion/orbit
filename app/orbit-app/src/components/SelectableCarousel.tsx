@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react, cancel, ensure, attach } from '@mcro/black'
-import { Carousel, CarouselProps } from './Carousel'
+import { Carousel, CarouselProps } from '../views/Carousel'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { SelectionStore } from '../stores/SelectionStore'
 

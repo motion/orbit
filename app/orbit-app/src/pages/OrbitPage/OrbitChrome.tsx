@@ -1,15 +1,9 @@
 import * as React from 'react'
-import { view, compose, attach } from '@mcro/black'
+import { view, StoreContext } from '@mcro/black'
 import { BORDER_RADIUS, CHROME_PAD } from '../../constants'
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import * as UI from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-
-type Props = {
-  orbitWindowStore?: OrbitWindowStore
-  queryStore?: QueryStore
-}
+import { observer } from 'mobx-react-lite'
 
 const extraShadow = -20
 const SHADOW_PAD = 100 + extraShadow
@@ -141,11 +135,8 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
 
 // this view has two halves so it can animate smoothly without causing layout reflows
 
-const decorate = compose(
-  attach('orbitWindowStore', 'queryStore'),
-  view,
-)
-export const OrbitChrome = decorate(({ orbitWindowStore, queryStore }: Props) => {
+export const OrbitChrome = observer(() => {
+  const { orbitWindowStore, queryStore } = React.useContext(StoreContext)
   return (
     <>
       <BlockTop height={60} overflow={SHADOW_PAD}>

@@ -1,5 +1,5 @@
 import { App } from '@mcro/stores'
-import { APP_ID } from '../../constants'
+import { APP_ID } from '../constants'
 
 export const closeApp = (id = APP_ID) => {
   if (id === null) {

@@ -1,6 +1,6 @@
 import { App, Desktop, Electron } from '@mcro/stores'
 import { Bit, PersonBit } from '@mcro/models'
-import { AppActions } from '../AppActions'
+import { AppActions } from './AppActions'
 
 export async function open(url) {
   App.sendMessage(Desktop, Desktop.messages.OPEN, url)

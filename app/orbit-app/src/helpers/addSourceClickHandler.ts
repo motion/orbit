@@ -1,7 +1,7 @@
 import { command } from '@mcro/model-bridge'
 import { memoize } from 'lodash'
 import { AppActions } from '../actions/AppActions'
-import { open } from '../actions/appActionsHandlers'
+import { open } from '../actions'
 import { OrbitIntegration } from '../sources/types'
 import { sourceToAppConfig } from '../stores/SourcesStore'
 import { getGlobalConfig } from '@mcro/config'

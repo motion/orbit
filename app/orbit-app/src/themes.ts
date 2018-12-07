@@ -6,7 +6,7 @@ const tanBg = color('rgb(255,255,245)')
 const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
 const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
 
-const orbitColor = color('#3d91ff')
+const orbitColor = color('#1A71E3')
 const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
 const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 

@@ -36,7 +36,7 @@ class SyncStatusStore {
 }
 
 export const SyncStatus = (props: Props) => {
-  const store = useStore(SyncStatusStore)
+  const store = useStore(SyncStatusStore, props)
   const syncJobs = store.activeJobs.filter(job => job.type === 'INTEGRATION_SYNC')
   const removeJobs = store.activeJobs.filter(job => job.type === 'INTEGRATION_REMOVE')
   return props.children(syncJobs, removeJobs)

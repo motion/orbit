@@ -83,6 +83,13 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
     </AfterHeader>
   )
 
+  const peopleNode = !!people && (
+    <>
+      <HorizontalSpace />
+      <PeopleRow people={people} />
+    </>
+  )
+
   return (
     <UI.Theme name={isSelected ? 'selected' : null}>
       <>
@@ -172,14 +179,12 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                   {!subtitle && (
                     <>
                       <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                      <HorizontalSpace />
-                      <PeopleRow people={people} />
+                      {peopleNode}
                     </>
                   )}
                   {!showTitle && (
                     <>
-                      <HorizontalSpace />
-                      <PeopleRow people={people} />
+                      {!!subtitle && peopleNode}
                       <HorizontalSpace />
                       {afterHeader}
                     </>

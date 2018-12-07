@@ -4,6 +4,7 @@ import { ListItemProps } from '../VirtualList/VirtualListItem'
 import { normalizeItem, NormalItem } from '../../helpers/normalizeItem'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
 import { StoreContext } from '@mcro/black'
+import { ListItemPerson } from './ListItemPerson'
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
@@ -22,7 +23,10 @@ export const getNormalPropsForListItem = (normalized: NormalItem) => ({
 export const ListItemNormalize = (props: ListItemProps) => {
   const { sourcesStore } = React.useContext(StoreContext)
   const normalized = normalizeItem(props.model)
-  const ItemView = sourcesStore.getView(normalized.integration, 'item')
+  const ItemView =
+    props.model.target === 'bit'
+      ? sourcesStore.getView(normalized.integration, 'item')
+      : ListItemPerson
   return (
     <OrbitListItem
       index={props.realIndex}

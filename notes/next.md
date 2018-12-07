@@ -1,6 +1,5 @@
 NEXT
 
-- restructure app for one window
 - move quickly towards a working All/People/Terms pane in one window
 - home should show a column of each of them
 - clicking the currently active pane should toggle it open/closed

@@ -57,7 +57,7 @@ export const OrbitPage = observer(() => {
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
             <Chrome>
-              <OrbitHeader queryStore={queryStore} />
+              <OrbitHeader />
               <OrbitNav />
 
               <InnerChrome>

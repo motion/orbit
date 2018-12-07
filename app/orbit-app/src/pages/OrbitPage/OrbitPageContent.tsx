@@ -5,8 +5,7 @@ import { AppView } from '../../apps/AppView'
 import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
 import { AppConfig, AppType } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { View, Col, Row } from '@mcro/ui'
-import { Title } from '../../views'
+import { Col, Row } from '@mcro/ui'
 import { AppPanes } from '../../stores/SpaceStore'
 import { SubPane } from '../../components/SubPane'
 import { App } from '@mcro/stores'
@@ -21,24 +20,15 @@ class OrbitStore {
     return this.props.paneManagerStore.activePane
   }
 
-  activeItem: AppConfig = {
-    id: '',
-    title: '',
-    type: 'home',
+  activeConfig: { [key: AppType]: AppConfig } = {
+    search: {},
   }
 
-  updateTypeOnPaneChange = react(
-    () => this.props.paneManagerStore.activePane as AppType,
-    type => {
-      this.activeItem = {
-        ...this.activeItem,
-        type,
-      }
-    },
-  )
-
   handleSelectItem: OrbitItemProps<any>['onSelect'] = (_index, config) => {
-    this.activeItem = config
+    this.activeConfig = {
+      ...this.activeConfig,
+      [config.type]: config,
+    }
   }
 
   appStores: { [key: string]: AppStore } = {}
@@ -51,7 +41,6 @@ class OrbitStore {
 export const OrbitPageContent = observer(() => {
   const { paneManagerStore } = React.useContext(StoreContext)
   const store = useStore(OrbitStore, { paneManagerStore })
-  const hasItem = !!store.activeItem.id
 
   if (!store.activePane) {
     return null
@@ -85,7 +74,7 @@ export const OrbitPageContent = observer(() => {
       <Row flex={1}>
         <OrbitIndexView isHidden={store.activePane === 'home'}>
           {AppPanes.map(app => (
-            <SubPane id={app.id} type={app.type} key={app.type} paddingLeft={0} paddingRight={0}>
+            <SubPane key={app.type} id={app.id} type={app.type}>
               <AppView
                 viewType="index"
                 id={app.id}
@@ -97,23 +86,17 @@ export const OrbitPageContent = observer(() => {
           ))}
         </OrbitIndexView>
         <OrbitMainView>
-          {hasItem && (
-            <AppView
-              key={store.activeItem.id}
-              isActive
-              viewType="main"
-              id={store.activeItem.id}
-              title={store.activeItem.title}
-              type={store.activeItem.type}
-              appConfig={store.activeItem}
-            />
-          )}
-          {/* TODO could show a help pane custom to each app */}
-          {!hasItem && (
-            <View flex={1} alignItems="center" justifyContent="center">
-              <Title>No result selected</Title>
-            </View>
-          )}
+          {AppPanes.map(app => (
+            <SubPane key={app.type} id={app.id} type={app.type}>
+              <AppView
+                isActive
+                viewType="main"
+                id={app.id}
+                type={app.type}
+                appConfig={store.activeConfig[app.type]}
+              />
+            </SubPane>
+          ))}
         </OrbitMainView>
       </Row>
     </Col>

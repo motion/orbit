@@ -19,7 +19,7 @@ class TopicsMainStore {
       const res = await loadMany(BitsNearTopicModel, {
         args: { topic, count: 10 },
       })
-      return res
+      return res || []
     },
     {
       defaultValue: [],

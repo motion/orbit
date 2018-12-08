@@ -52,8 +52,6 @@
 		F0318FEC21AFB2ED009F5A70 /* CharacterCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCache.swift; sourceTree = "<group>"; };
 		F07730DF21B9AC95003BE061 /* OCRTester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OCRTester.swift; sourceTree = "<group>"; };
 		F07730E221B9BD8D003BE061 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		F07730EC21B9C037003BE061 /* OracleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OracleTests.swift; sourceTree = "<group>"; };
-		F07730EE21B9C037003BE061 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0ABA07321B081C3009AEE34 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		F0D9F560215EFD8A009F11D5 /* Oracle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oracle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D9F563215EFD8A009F11D5 /* AtomApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomApplication.swift; sourceTree = "<group>"; };
@@ -115,20 +113,10 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		F07730EB21B9C037003BE061 /* OracleTests */ = {
-			isa = PBXGroup;
-			children = (
-				F07730EC21B9C037003BE061 /* OracleTests.swift */,
-				F07730EE21B9C037003BE061 /* Info.plist */,
-			);
-			path = OracleTests;
-			sourceTree = "<group>";
-		};
 		F0D9F557215EFD8A009F11D5 = {
 			isa = PBXGroup;
 			children = (
 				F0D9F562215EFD8A009F11D5 /* Oracle */,
-				F07730EB21B9C037003BE061 /* OracleTests */,
 				F0D9F561215EFD8A009F11D5 /* Products */,
 				A13ACC9DF337F093E6EEDF84 /* Pods */,
 				187E173B3A6A44D79CB3AEF0 /* Frameworks */,

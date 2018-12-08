@@ -43,7 +43,7 @@ class OCRTester {
     static let shared = OCRTester()
     
     /// Filenames for all test images (without file extension).
-    private let imageNames: [String] = [
+    fileprivate let imageNames: [String] = [
         "article-1",
         "article-2-small",
         "article-2-large",
@@ -123,60 +123,26 @@ extension OCRTester {
         let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(buffer, 0)
         var rect = CGRect(origin: .zero, size: image.size)
         let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil)! // To get true pixel size (not just points)
+        
+        // Completion handler - save image output w/ overlay (only if image output flag is enabled)
+        let completion: (([Line]) -> Void)? = shouldSaveDebugImages ? { [unowned self] (lines) in
+            DispatchQueue.main.async {
+                let output = self.drawLines(lines, on: cgImage)
+                self.save(output, as: self.imageNames[2])
+            }
+        } : nil
+        
+        // Perform OCR
         OCRManager.shared.performOCR(on: baseAddress,
                                      bytesPerRow: bytesPerRow,
-                                     bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
+                                     bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height),
+                                     completion: completion)
     }
     
 }
 
 
-// MARK: Utilities
-
-fileprivate extension OCRTester {
-    
-    func createBuffer(from image: NSImage) -> CVPixelBuffer {
-        var rect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
-        let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil)!
-        let ciImage = CIImage(cgImage: cgImage)
-        let context = CIContext()
-        var pixelBuffer: CVPixelBuffer?
-        let pixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
-        _ = CVPixelBufferCreate(nil,
-                                cgImage.width,
-                                cgImage.height,
-                                pixelFormat,
-                                nil,
-                                &pixelBuffer)
-        context.render(ciImage, to: pixelBuffer!)
-        return pixelBuffer!
-    }
-    
-    
-    func createImage(from pixelBuffer: CVPixelBuffer, size: CGSize) -> CGImage {
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let context = CIContext()
-        return context.createCGImage(ciImage, from: CGRect(x: 0, y: 0, width: size.width, height: size.height))!
-    }
-    
-    
-    func resize(_ image: CGImage, targetSize: CGSize) -> CGImage {
-        let rect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
-        let context = CGContext(data: nil,
-                                width: Int(targetSize.width),
-                                height: Int(targetSize.height),
-                                bitsPerComponent: image.bitsPerComponent,
-                                bytesPerRow: image.bytesPerRow,
-                                space: image.colorSpace!,
-                                bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)!
-        context.draw(image, in: rect)
-        return context.makeImage()!
-    }
-    
-}
-
-
-// MARK: Saving
+// MARK: Saving (also public)
 
 extension OCRTester {
     
@@ -230,6 +196,90 @@ extension OCRTester {
         let bitmap = NSBitmapImageRep(cgImage: cgImage)
         let png = bitmap.representation(using: .png, properties: [:])!
         try! png.write(to: url)
+    }
+    
+}
+
+
+// MARK: Utilities
+
+fileprivate extension OCRTester {
+    
+    func createBuffer(from image: NSImage) -> CVPixelBuffer {
+        var rect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+        let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil)!
+        let ciImage = CIImage(cgImage: cgImage)
+        let context = CIContext()
+        var pixelBuffer: CVPixelBuffer?
+        let pixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+        _ = CVPixelBufferCreate(nil,
+                                cgImage.width,
+                                cgImage.height,
+                                pixelFormat,
+                                nil,
+                                &pixelBuffer)
+        context.render(ciImage, to: pixelBuffer!)
+        return pixelBuffer!
+    }
+    
+    
+    func createImage(from pixelBuffer: CVPixelBuffer, size: CGSize) -> CGImage {
+        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+        let context = CIContext()
+        return context.createCGImage(ciImage, from: CGRect(x: 0, y: 0, width: size.width, height: size.height))!
+    }
+    
+    
+    func resize(_ image: CGImage, targetSize: CGSize) -> CGImage {
+        let rect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
+        let context = CGContext(data: nil,
+                                width: Int(targetSize.width),
+                                height: Int(targetSize.height),
+                                bitsPerComponent: image.bitsPerComponent,
+                                bytesPerRow: image.bytesPerRow,
+                                space: image.colorSpace!,
+                                bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)!
+        context.draw(image, in: rect)
+        return context.makeImage()!
+    }
+    
+    
+    func drawLines(_ lines: [Line], on image: CGImage) -> CGImage {
+        // Create CGContext
+        let context = CGContext(data: nil,
+                                width: image.width,
+                                height: image.height,
+                                bitsPerComponent: 8,
+                                bytesPerRow: image.width * 4,
+                                space: CGColorSpaceCreateDeviceRGB(),
+                                bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)!
+        
+        // Draw original image in background
+        context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+        
+        // Create an NSGraphicsContext with our CGContext
+        // We need this to draw the attributed strings
+        NSGraphicsContext.current = NSGraphicsContext(cgContext: context, flipped: false)
+        
+        // Draw each character individually
+        for line in lines {
+            for char in line.characters {
+                guard let classification = char.classification else { continue }
+                let charBounds = char.lineHeightBounds(with: line.bounds)
+                let attrString = NSMutableAttributedString(string: classification, attributes: [
+                    NSAttributedString.Key.foregroundColor : NSColor(red: 1, green: 0, blue: 0, alpha: 0.8),
+                    NSAttributedString.Key.font : NSFont.systemFont(ofSize: charBounds.height)
+                    ])
+                
+                // Draw character in context
+                let origin = NSPoint(x: charBounds.minX,
+                                     y: CGFloat(image.height) - charBounds.maxY)
+                attrString.draw(at: origin)
+            }
+        }
+        
+        // Extract image from CGContext
+        return context.makeImage()!
     }
     
 }

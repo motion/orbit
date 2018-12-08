@@ -73,7 +73,7 @@ extension OCRManager {
     ///   - baseAddress: The raw screen buffer's base address. Buffer must be in YUV format (kCVPixelFormatType_420YpCbCr8BiPlanarFullRange).
     ///   - bytesPerRow: The screen buffer's number of bytes per row.
     ///   - bounds: The bounds of interest, in **PIXEL** coordinates (not points). This will usually be the bounds of a single application window.
-    func performOCR(on baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int, bounds: CGRect) {
+    func performOCR(on baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int, bounds: CGRect, completion: ((_ lines: [Line]) -> Void)? = nil) {
         // Create exit flag for this frame
         let thisFrameExitFlag = OCRExitFlag()
         
@@ -136,7 +136,7 @@ extension OCRManager {
                     
                     
                     // Output character box here, if debug image flag is `true`
-                    if shouldSaveDebugImages && charCounter < 250 { // Prevent app from saving thousands of images
+                    if shouldSaveDebugImages && charCounter < 50 { // Prevent app from saving thousands of images
                         let charBox = character.lineHeightBounds(with: line.bounds)
                         let charBuffer = CVPixelBuffer.cropGrayscale(to: charBox,
                                                                      size: CGSize(width: 28, height: 28),
@@ -222,9 +222,6 @@ extension OCRManager {
                 }
             }
             
-            // Unlock filtered buffer base address
-            CVPixelBufferUnlockBaseAddress(filteredBuffer, .readOnly)
-            
             // Broadcast results to websocket
             let allWords = lines.map({$0.words()}).reduce([], +)
             Socket.send(.wordsFound(words: allWords))
@@ -234,6 +231,12 @@ extension OCRManager {
                 let output = lines.map({$0.words().map({$0.string}).joined(separator: " ")}).joined(separator: "\n")
                 Log.debug("\n\nOCR OUTPUT:\n\n\(output)\n\n")
             }
+            
+            // Call completion handler (if any - usually used for debugging)
+            completion?(lines)
+            
+            // Unlock filtered buffer base address
+            CVPixelBufferUnlockBaseAddress(filteredBuffer, .readOnly)
             
             // Remove exit flag from array
             DispatchQueue.main.async {
@@ -350,7 +353,7 @@ fileprivate extension OCRManager {
     /// - Returns: The best classification result from the neural net.
     func classifyImage(_ pixelBuffer: CVPixelBuffer, isInverted: Bool) -> String? {
         // Debug
-        if shouldSaveDebugImages && classificationCount < 250 { // Avoid saving thousands of images to disk
+        if shouldSaveDebugImages && classificationCount < 50 { // Avoid saving thousands of images to disk
             OCRTester.shared.save(pixelBuffer, as: "classification-\(classificationCount)")
             classificationCount += 1
         }
@@ -400,7 +403,7 @@ fileprivate extension OCRManager {
         let char = supportedChars[maxIndex]
         
         // Return lowercased version of the classification
-        return String(char).lowercased()
+        return String(char) //.lowercased()
     }
     
 }

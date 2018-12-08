@@ -155,7 +155,7 @@ extension CVPixelBuffer {
     
     
     /// Applies color and contrast filters to the receiver to improve OCR performance.
-    /// NOTE: This returns a new CVPixelBuffer, so the original buffer smay be safely released.
+    /// NOTE: This returns a new CVPixelBuffer, so the original buffer may be safely released.
     func filteredForOCR() -> CVPixelBuffer {
         // Convert buffer to CIImage
         let outputImage = CIImage(cvPixelBuffer: self)
@@ -163,6 +163,32 @@ extension CVPixelBuffer {
         // Setup filter
         let filter = CIFilter(name: "CIColorControls")!
         filter.setValue(8.0, forKey: "inputContrast")
+        filter.setValue(outputImage, forKey: kCIInputImageKey)
+        
+        // Apply filter
+        let filteredImage = filter.value(forKey: kCIOutputImageKey) as! CIImage
+        
+        // Create new CVPixelBuffer from filtered image
+        let context = CIContext()
+        var outputBuffer: CVPixelBuffer?
+        let pixelFormat = kCVPixelFormatType_OneComponent8
+        _ = CVPixelBufferCreate(nil, Int(filteredImage.extent.width), Int(filteredImage.extent.height),
+                                pixelFormat, nil, &outputBuffer)
+        context.render(filteredImage, to: outputBuffer!)
+        
+        return outputBuffer!
+    }
+    
+    
+    /// Inverts the colors of the receiver.
+    /// NOTE: This returns a new CVPixelBuffer, so the original buffer may be safely released.
+    func inverted() -> CVPixelBuffer {
+        // Convert buffer to CIImage
+        let outputImage = CIImage(cvPixelBuffer: self)
+        
+        // Setup filter
+        let filter = CIFilter(name: "CIColorInvert")!
+        filter.setDefaults()
         filter.setValue(outputImage, forKey: kCIInputImageKey)
         
         // Apply filter

@@ -353,8 +353,9 @@ fileprivate extension OCRManager {
     /// - Returns: The best classification result from the neural net.
     func classifyImage(_ pixelBuffer: CVPixelBuffer, isInverted: Bool) -> String? {
         // Debug
-        if shouldSaveDebugImages && classificationCount < 50 { // Avoid saving thousands of images to disk
-            OCRTester.shared.save(pixelBuffer, as: "classification-\(classificationCount)")
+        if shouldSaveDebugImages && classificationCount < 100 { // Avoid saving thousands of images to disk
+            let outputBuffer = isInverted ? pixelBuffer.inverted() : pixelBuffer
+            OCRTester.shared.save(outputBuffer, as: "classification-\(classificationCount)")
             classificationCount += 1
         }
         

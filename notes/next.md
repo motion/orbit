@@ -1,3 +1,14 @@
+high level to launch:
+
+- make 3 apps work nicely
+- make settings/sources/onboards work nicely
+- wide variety of polish on ux / interaction
+- fix/change tray so its useful/fun
+- improving relevancy and topics
+- a server for signup, syncing data between people
+- building the website
+- take a good look at what it would take to allow custom apps
+
 NEXT
 
 - move quickly towards a working All/People/Terms pane in one window

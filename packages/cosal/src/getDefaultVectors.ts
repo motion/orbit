@@ -1,6 +1,6 @@
-import { readFileSync } from 'fs'
 import { join } from 'path'
+import { readJSON } from 'fs-extra'
 
-export function getDefaultVectors() {
-  return JSON.parse(readFileSync(join(__dirname, '..', 'vecs.json'), 'utf-8'))
+export async function getDefaultVectors() {
+  return await readJSON(join(__dirname, '..', 'vecs.data.json'))
 }

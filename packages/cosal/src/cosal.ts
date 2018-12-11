@@ -58,14 +58,21 @@ export class Cosal {
   started = false
   fallbackVector = null
   seedVectors = {} as VectorDB
+  slang = null
 
   // this is what persists to disk and mutates over time
   state = initialState
 
   constructor({ database, vectors, fallbackVector, slang = defaultSlang }: CosalOptions = {}) {
     this.databasePath = database
-    this.seedVectors = vectors || getDefaultVectors()
-    this.fallbackVector = fallbackVector || this.seedVectors.hello
+    this.seedVectors = vectors
+    this.fallbackVector = fallbackVector
+    this.slang = slang
+  }
+
+  async start() {
+    this.seedVectors = this.seedVectors || (await getDefaultVectors())
+    this.fallbackVector = this.fallbackVector || this.seedVectors.hello
 
     if (!this.fallbackVector) {
       throw new Error(
@@ -79,19 +86,19 @@ export class Cosal {
     })
 
     // map words to existing vectors, "don't => dont"
-    if (slang) {
-      for (const original in slang) {
-        if (this.seedVectors[original]) {
-          this.seedVectors[slang[original]] = this.seedVectors[original]
+    if (this.slang) {
+      for (const ogWord in this.slang) {
+        if (this.seedVectors[ogWord]) {
+          this.seedVectors[this.slang[ogWord]] = this.seedVectors[ogWord]
         }
       }
     }
-  }
 
-  async start() {
+    // load database...
     if (this.databasePath) {
       await this.setDatabase(this.databasePath)
     }
+
     this.started = true
   }
 

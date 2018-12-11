@@ -1,6 +1,6 @@
-import { resolveCommand, resolveMany } from '@mcro/mediator'
+import { resolveMany } from '@mcro/mediator'
 import {
-  CosalTopWordsCommand,
+  CosalTopWordsModel,
   CosalTopicsModel,
   CosalSaliencyModel,
   SearchByTopicModel,
@@ -27,7 +27,7 @@ export const getCosalResolvers = (cosal: Cosal) => {
     return cosalRes.map(res => ({ word: res.string, uniqueness: res.weight }))
   })
 
-  const cosalTopWords = resolveCommand(CosalTopWordsCommand, async ({ text, max }) => {
+  const cosalTopWords = resolveMany(CosalTopWordsModel, async ({ text, max }) => {
     return await cosal.getTopWords(text, { max })
   })
 

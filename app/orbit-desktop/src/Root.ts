@@ -18,7 +18,7 @@ import { resolveCommand, resolveMany } from '@mcro/mediator'
 import {
   AppModel,
   BitModel,
-  CosalTopWordsCommand,
+  CosalTopWordsModel,
   GithubRepositoryModel,
   GithubSourceBlacklistCommand,
   JobModel,
@@ -268,13 +268,13 @@ export class Root {
         BitsNearTopicModel,
         CosalTopicsModel,
         CosalSaliencyModel,
+        CosalTopWordsModel,
       ],
       commands: [
         SourceSaveCommand,
         SourceRemoveCommand,
         GithubSourceBlacklistCommand,
         SlackSourceBlacklistCommand,
-        CosalTopWordsCommand,
         SetupProxyCommand,
       ],
       transport: new WebSocketServerTransport({

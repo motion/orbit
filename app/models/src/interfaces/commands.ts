@@ -22,9 +22,5 @@ export const SlackSourceBlacklistCommand = new Command<
   { sourceId: number; channel: string; blacklisted: boolean }
 >('slack-setting-blacklist')
 
-export const CosalTopWordsCommand = new Command<string[], { text: string; max?: number }>(
-  'cosal-top-words-command',
-)
-
 export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')
 export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')

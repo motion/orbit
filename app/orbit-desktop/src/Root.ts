@@ -71,7 +71,6 @@ import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
-import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
@@ -182,17 +181,21 @@ export class Root {
       onMouseMove: this.keyboardManager.onMouseMove,
     })
 
-    // start screen after passing into screenManager
-    await this.screen.start()
-    // then start screenmanager after screen.start
-    // no need to await
-    this.screenManager.start()
-    // start screen related managers once its started
-    // no need to await
-    this.ocrManager.start()
-
     // depends on cosal
     this.registerMediatorServer()
+
+    try {
+      // start screen after passing into screenManager
+      await this.screen.start()
+      // then start screenmanager after screen.start
+      // no need to await
+      this.screenManager.start()
+      // start screen related managers once its started
+      // no need to await
+      this.ocrManager.start()
+    } catch (err) {
+      console.error('Error starting a manager', err)
+    }
 
     // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {
@@ -293,7 +296,6 @@ export class Root {
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
-        getSearchByTopicResolver(this.cosal),
         getBitNearTopicsResolver(this.cosal),
         getPeopleNearTopicsResolver(this.cosal),
         resolveMany(SearchResultModel, async args => {

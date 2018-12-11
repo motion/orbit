@@ -1,8 +1,27 @@
 import { resolveCommand, resolveMany } from '@mcro/mediator'
-import { CosalTopWordsCommand, CosalTopicsModel, CosalSaliencyModel } from '@mcro/models'
+import {
+  CosalTopWordsCommand,
+  CosalTopicsModel,
+  CosalSaliencyModel,
+  SearchByTopicModel,
+  BitEntity,
+} from '@mcro/models'
 import { Cosal } from '@mcro/cosal'
+import { Logger } from '@mcro/logger'
+import { getRepository } from 'typeorm'
+
+const log = new Logger('CosalResolver')
 
 export const getCosalResolvers = (cosal: Cosal) => {
+  const cosalSearch = resolveMany(SearchByTopicModel, async ({ query, count }) => {
+    console.time('cosal')
+    const ids = await cosal.search(query, count)
+    console.timeEnd('cosal')
+    const bits = await getRepository(BitEntity).findByIds(ids.map(x => x.id))
+    log.info(`got ${bits.length} topic search results`)
+    return bits
+  })
+
   const cosalSaliency = resolveMany(CosalSaliencyModel, async ({ words }) => {
     const cosalRes = await cosal.getWordWeights(words)
     return cosalRes.map(res => ({ word: res.string, uniqueness: res.weight }))
@@ -17,5 +36,5 @@ export const getCosalResolvers = (cosal: Cosal) => {
     return result
   })
 
-  return [cosalSaliency, cosalTopWords, cosalTopics]
+  return [cosalSearch, cosalSaliency, cosalTopWords, cosalTopics]
 }

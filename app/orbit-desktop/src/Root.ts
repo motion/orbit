@@ -46,7 +46,7 @@ import {
 import { SetupProxyCommand } from '@mcro/models'
 import { Screen } from '@mcro/screen'
 import { App, Desktop, Electron } from '@mcro/stores'
-import { writeJSON, removeSync } from 'fs-extra'
+import { writeJSON } from 'fs-extra'
 import root from 'global'
 import macosVersion from 'macos-version'
 import open from 'opn'
@@ -56,7 +56,7 @@ import { getConnection } from 'typeorm'
 import { COSAL_DB, screenOptions } from './constants'
 import { AppsManager } from './managers/appsManager'
 import { ContextManager } from './managers/ContextManager'
-// import { CosalManager } from './managers/CosalManager'
+import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
 import { AuthServer } from './auth-server/AuthServer'
@@ -83,11 +83,6 @@ import { startAuthProxy } from './auth-server/startAuthProxy'
 import { Oracle } from '@mcro/oracle'
 import { OracleManager } from './managers/OracleManager'
 
-if (process.env.NODE_ENV === 'development') {
-  console.log('REMOVING OLD COSAL_DB in development mode', COSAL_DB)
-  removeSync(COSAL_DB)
-}
-
 export class Root {
   // public
   stores = null
@@ -100,13 +95,11 @@ export class Root {
   private disposed = false
   private webServer: WebServer
   private mediatorServer: MediatorServer
-  private cosal = new Cosal({
-    database: COSAL_DB,
-  })
+  private cosal: Cosal
 
   // managers
   private oracleManager: OracleManager
-  // // private cosalManager: CosalManager
+  private cosalManager: CosalManager
   private ocrManager: OCRManager
   private appsManager: AppsManager
   private screenManager: ScreenManager
@@ -156,8 +149,10 @@ export class Root {
     this.onboardManager = new OnboardManager()
     await this.onboardManager.start()
 
-    // start cosal before we pass into managers...
-    await this.cosal.start()
+    // cosal is a dependency of many things
+    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+    await this.cosalManager.start()
+    this.cosal = this.cosalManager.cosal
 
     // setup screen before we pass into managers...
     this.screen = new Screen({
@@ -179,7 +174,6 @@ export class Root {
     await this.oracleManager.start()
 
     this.ocrManager = new OCRManager({ cosal: this.cosal })
-    // this.cosalManager = new CosalManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ screen: this.screen })
     this.keyboardManager = new KeyboardManager({ screen: this.screen })
     this.appsManager = new AppsManager()
@@ -198,13 +192,6 @@ export class Root {
     // start screen related managers once its started
     // no need to await
     this.ocrManager.start()
-
-    // scanning cosal is high cpu load, we need better solution for high cpu on this process
-    // until then lets just wait a bit
-    // setTimeout(() => {
-    //   this.cosalManager.updateSearchIndexWithNewBits()
-    //   this.cosalManager.scanTopics()
-    // }, 1000 * 6)
 
     // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {

@@ -13,9 +13,13 @@ class SearchStore {
     this.query = val
   }
 
-  results = react(() => this.query, query => loadMany(SearchByTopicModel, { args: { query } }), {
-    defaultValue: [],
-  })
+  results = react(
+    () => this.query,
+    query => loadMany(SearchByTopicModel, { args: { query, count: 10 } }),
+    {
+      defaultValue: [],
+    },
+  )
 
   topics = react(
     () => this.results.map(x => `${x.title}${x.body}`).join(' '),

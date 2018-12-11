@@ -7,7 +7,7 @@ import { loadMany, command } from '@mcro/model-bridge'
 import { SearchByTopicModel, CosalTopWordsCommand, CosalTopicsModel } from '@mcro/models'
 
 class SearchStore {
-  query = 'blast off'
+  query = 'blast me off'
 
   querySetter = val => () => {
     this.query = val
@@ -32,7 +32,6 @@ class SearchStore {
 
 export const CosalSearch = observer(() => {
   const store = useStore(SearchStore)
-  window['store'] = store
   return (
     <div style={{ padding: 50 }}>
       <div style={{ flexFlow: 'row', alignItems: 'center', justifyContent: 'center' }}>

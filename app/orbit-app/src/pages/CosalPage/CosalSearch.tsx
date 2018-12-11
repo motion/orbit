@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { CosalSaliency } from './CosalSaliency'
 import { loadMany, command } from '@mcro/model-bridge'
-import { SearchByTopicModel, CosalTopWordsCommand, CosalTopicsModel } from '@mcro/models'
+import { SearchByTopicModel, CosalTopWordsCommand, CosalTopicsModel, BitUtils } from '@mcro/models'
 
 class SearchStore {
   query = 'blast me off'
@@ -60,8 +60,7 @@ export const CosalSearch = observer(() => {
             <h4>Search results</h4>
             {store.results.map((result, index) => (
               <div key={index} style={{ marginBottom: 10 }}>
-                <span style={{ fontSize: 10 }}>{result.distance}</span>
-                <p>{result.text}</p>
+                <p>{BitUtils.getSearchableText(result)}</p>
               </div>
             ))}
           </div>
@@ -78,13 +77,8 @@ export const CosalSearch = observer(() => {
           >
             <h4>Top topics for results</h4>
             {store.topics.map((result, index) => (
-              <div
-                key={index}
-                style={{ marginBottom: 10 }}
-                onClick={store.querySetter(result.topic)}
-              >
-                <span style={{ fontSize: 10 }}>{result.distance}</span>
-                <p>{result.topic}</p>
+              <div key={index} style={{ marginBottom: 10 }} onClick={store.querySetter(result)}>
+                <p>{result}</p>
               </div>
             ))}
           </div>

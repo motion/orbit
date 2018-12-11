@@ -9,6 +9,7 @@ import * as Cosal from '@mcro/cosal'
 import { Root } from '../Root'
 
 export function installGlobals(AppRoot: Root) {
+  root['Root'] = AppRoot
   root['restart'] = AppRoot.restart
   root['require'] = require
   root['Path'] = require('path')

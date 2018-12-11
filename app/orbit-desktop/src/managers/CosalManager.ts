@@ -1,4 +1,4 @@
-import { BitEntity, SettingEntity, Setting } from '@mcro/models'
+import { BitEntity, SettingEntity, Setting, Bit, BitUtils } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { Cosal } from '@mcro/cosal'
@@ -10,6 +10,13 @@ import { sleep } from '@mcro/utils'
 const log = new Logger('CosalManager')
 
 const getGeneralSetting = () => getRepository(SettingEntity).findOne({ name: 'general' })
+
+const getBitForScan = (bit: Bit) => {
+  return {
+    id: bit.id,
+    text: BitUtils.getSearchableText(bit),
+  }
+}
 
 export class CosalManager {
   cosal: Cosal
@@ -88,10 +95,10 @@ export class CosalManager {
     for (const chunk of chunks) {
       log.verbose(`Scanning ${chunk.length} bits...`)
       await this.cosal.scan(
-        chunk.map(bit => ({
-          id: bit.id,
-          text: bit.body,
-        })),
+        chunk
+          .map(getBitForScan)
+          // ensure has some text
+          .filter(bit => !!bit.text)
       )
 
       // update scanned up to so it can resume if interrupted
@@ -141,7 +148,7 @@ export class CosalManager {
     let allTopics: string[][] = []
     for (let i = 0; i < numScans; i++) {
       const bits = await getRepository(BitEntity).find({ take: maxPerGroup, skip: maxPerGroup * i })
-      const bodies = bits.map(bit => `${bit.title} ${bit.body}`).join(' ')
+      const bodies = bits.map(BitUtils.getSearchableText).join(' ')
       const topics = await this.cosal.getTopWords(bodies, { max: 10, sortByWeight: true })
       // dont flatten
       allTopics = [...allTopics, topics]

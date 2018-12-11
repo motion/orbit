@@ -32,6 +32,7 @@ class OCRManager {
     /// Counter for debugging purposes.
     fileprivate var classificationCount = 0
     
+    
     private init() {}
     
 }
@@ -74,6 +75,16 @@ extension OCRManager {
     ///   - bytesPerRow: The screen buffer's number of bytes per row.
     ///   - bounds: The bounds of interest, in **PIXEL** coordinates (not points). This will usually be the bounds of a single application window.
     func performOCR(on baseAddress: UnsafeMutableRawPointer, bytesPerRow: Int, bounds: CGRect, completion: ((_ lines: [Line]) -> Void)? = nil) {
+        // Record start time (for performance logging)
+        let ocrStartTime = DispatchTime.now()
+        
+        // Various counters for debugging/performance monitoring
+        var totalCacheTime: UInt64 = 0
+        var totalMLTime: UInt64 = 0
+        var totalCropTime: UInt64 = 0
+        var totalCharsCached = 0
+        var totalCharsML = 0
+        
         // Create exit flag for this frame
         let thisFrameExitFlag = OCRExitFlag()
         
@@ -97,6 +108,13 @@ extension OCRManager {
         // Apply filters to improve OCR performance
         let filteredBuffer = croppedBuffer.filteredForOCR()
         
+        // Debug - log crop+filter time
+        let cropFilterEndTime = DispatchTime.now()
+        if shouldLogDebug {
+            let cropFilterTime = (cropFilterEndTime.uptimeNanoseconds - ocrStartTime.uptimeNanoseconds) / 1_000_000
+            Log.debug("FRAME CROPPING/FILTERING TIME: \(cropFilterTime)ms")
+        }
+        
         // Unlock cropped buffer base address (no longer needed)
         CVPixelBufferUnlockBaseAddress(croppedBuffer, .readOnly)
         
@@ -113,6 +131,14 @@ extension OCRManager {
             
             /* ----- IMPORTANT: ENTERING BACKGROUND QUEUE HERE ----- */
             
+            
+            // Performance - log character extraction time
+            let textDetectionEndTime = DispatchTime.now()
+            if shouldLogDebug {
+                let elapsed = (textDetectionEndTime.uptimeNanoseconds - cropFilterEndTime.uptimeNanoseconds) / 1_000_000
+                Log.debug("TEXT DETECTION TIME: \(elapsed)ms")
+            }
+            
             // Iterate through every character box in each line
             var charCounter = 0 // For debugging
             for line in lines {
@@ -124,8 +150,17 @@ extension OCRManager {
                     if thisFrameExitFlag.shouldCancel {
                         // Remove this flag from the array and exit
                         DispatchQueue.main.async {
+                            // Important: triple equals (===) here to check *instance* equality
                             self.frameExitFlags.removeAll(where: {$0 === thisFrameExitFlag})
                         }
+                        
+                        // Debug - log exit time
+                        if shouldLogDebug {
+                            let elapsed = (DispatchTime.now().uptimeNanoseconds - ocrStartTime.uptimeNanoseconds) / 1_000_000
+                            Log.debug("Frame cancelled")
+                            Log.debug("TOTAL FRAME TIME (cancelled): \(elapsed)ms")
+                        }
+                        
                         return
                     }
                     
@@ -149,6 +184,7 @@ extension OCRManager {
                     
                     
                     // Attempt to trace character outline
+                    let cacheStartTime = DispatchTime.now()
                     let percentDownLine = Float(character.bounds.minY - line.bounds.minY) / Float(line.bounds.height)
                     if shouldUseCache, let (outline, _) = CharacterCache.shared.traceOutline(baseAddress: filteredBaseAddress,
                                                                              bytesPerRow: filteredBytesPerRow,
@@ -160,11 +196,21 @@ extension OCRManager {
                                                                              initialMove: [0, CharacterCache.shared.moves.px],
                                                                              findHangers: true,
                                                                              percentDownLine: percentDownLine) {
+                        
+                        // Debug
+                        let cacheEndTime = DispatchTime.now()
+                        if shouldLogDebug {
+                            totalCacheTime += cacheEndTime.uptimeNanoseconds - cacheStartTime.uptimeNanoseconds
+                        }
 
                         // Check if this char has already been cached
                         if let cachedChar = CharacterCache.shared.cachedCharacter(matching: outline) {
                             // Match! Use this classification
                             character.classification = cachedChar
+                            
+                            // Debug - cache count
+                            totalCharsCached += 1
+                            
                         } else {
                             // No matching outline in the cache; perform OCR
 
@@ -177,6 +223,13 @@ extension OCRManager {
                                                                                inverted: shouldInvert) else {
                                                                                 continue
                             }
+                            
+                            // Debug
+                            let cropEndTime = DispatchTime.now()
+                            if shouldLogDebug {
+                                let elapsed = cropEndTime.uptimeNanoseconds - cacheEndTime.uptimeNanoseconds
+                                totalCropTime += elapsed
+                            }
 
                             // Lock new buffer's base address
                             CVPixelBufferLockBaseAddress(charBuffer, .readOnly)
@@ -186,6 +239,14 @@ extension OCRManager {
 
                             // Store classification
                             character.classification = classification
+                            
+                            // Debug - ML count
+                            totalCharsML += 1
+                            
+                            // Debug - ML time
+                            if shouldLogDebug {
+                                totalMLTime += DispatchTime.now().uptimeNanoseconds - cropEndTime.uptimeNanoseconds
+                            }
 
                             // Add outline to cache
                             CharacterCache.shared.addToCache(outline: outline, character: classification)
@@ -197,6 +258,13 @@ extension OCRManager {
                     } else {
                         // Failed to trace character outline (or cache disabled); perform OCR
                         
+                        // Debug
+                        let cacheEndTime = DispatchTime.now()
+                        if shouldLogDebug {
+                            let elapsed = cacheEndTime.uptimeNanoseconds - cacheStartTime.uptimeNanoseconds
+                            totalCacheTime += elapsed
+                        }
+                        
                         // Crop pixel buffer down to this character's bounds
                         let charBox = character.lineHeightBounds(with: line.bounds)
                         guard let charBuffer = CVPixelBuffer.cropGrayscale(to: charBox,
@@ -205,6 +273,13 @@ extension OCRManager {
                                                                            bytesPerRow: filteredBytesPerRow,
                                                                            inverted: shouldInvert) else {
                                                                             continue
+                        }
+                        
+                        // Debug
+                        let cropEndTime = DispatchTime.now()
+                        if shouldLogDebug {
+                            let elapsed = cropEndTime.uptimeNanoseconds - cacheEndTime.uptimeNanoseconds
+                            totalCropTime += elapsed
                         }
                         
                         // Lock new buffer's base address
@@ -216,21 +291,47 @@ extension OCRManager {
                         // Store classification
                         character.classification = classification
                         
+                        // Debug - ML count
+                        totalCharsML += 1
+                        
+                        // Debug - ML time
+                        if shouldLogDebug {
+                            totalMLTime += DispatchTime.now().uptimeNanoseconds - cropEndTime.uptimeNanoseconds
+                        }
+                        
                         // Unlock char buffer base address
                         CVPixelBufferUnlockBaseAddress(charBuffer, .readOnly)
                     }
                 }
             }
             
-            // Broadcast results to websocket
-            let allWords = lines.map({$0.words()}).reduce([], +)
-            Socket.send(.wordsFound(words: allWords))
-            
-            // Debug - print result
+            // Debug
             if shouldLogDebug {
+                // Log cache time
+                Log.debug("CHARACTERS READ FROM CACHE: \(totalCharsCached)")
+                Log.debug("TOTAL CACHE TIME: \(totalCacheTime / 1_000_000)ms")
+                
+                // Log ML time
+                Log.debug("CHARACTERS CLASSIFIED W/ ML: \(totalCharsML)")
+                Log.debug("TOTAL ML TIME: \(totalMLTime / 1_000_000)ms")
+                
+                // Log cropping time
+                Log.debug("TOTAL CROPPING TIME (character level): \(totalCropTime / 1_000_000)ms")
+                
+                // Log total time
+                let totalTime = (DispatchTime.now().uptimeNanoseconds - ocrStartTime.uptimeNanoseconds) / 1_000_000
+                Log.debug("TOTAL FRAME TIME: \(totalTime)ms")
+            }
+            
+            // Debug - log OCR output
+            if shouldLogOCR {
                 let output = lines.map({$0.words().map({$0.string}).joined(separator: " ")}).joined(separator: "\n")
                 Log.debug("\n\nOCR OUTPUT:\n\n\(output)\n\n")
             }
+            
+            // Broadcast results to websocket
+            let allWords = lines.map({$0.words()}).reduce([], +)
+            Socket.send(.wordsFound(words: allWords))
             
             // Call completion handler (if any - usually used for debugging)
             completion?(lines)

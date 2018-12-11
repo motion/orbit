@@ -49,6 +49,8 @@ class OCRTester {
         "article-2-large",
         "article-3-small",
         "article-3-large",
+        "article-4-small",
+        "article-4-large",
         "code",
         "email-1-small",
         "email-1-large",
@@ -116,7 +118,7 @@ extension OCRTester {
     func testScreenshots() {
         
         // Just testing this screenshot right now...
-        let image = testImages[2]
+        let image = testImages[1]
         let buffer = createBuffer(from: image)
         CVPixelBufferLockBaseAddress(buffer, .readOnly)
         let baseAddress = CVPixelBufferGetBaseAddressOfPlane(buffer, 0)!
@@ -128,15 +130,25 @@ extension OCRTester {
         let completion: (([Line]) -> Void)? = shouldSaveDebugImages ? { [unowned self] (lines) in
             DispatchQueue.main.async {
                 let output = self.drawLines(lines, on: cgImage)
-                self.save(output, as: self.imageNames[2])
+                self.save(output, as: self.imageNames[1])
             }
         } : nil
         
         // Perform OCR
+        Log.debug("\n\n--------------- \(imageNames[1]) (\(cgImage.width)x\(cgImage.height)) - 1ST PASS ---------------\n\n")
         OCRManager.shared.performOCR(on: baseAddress,
                                      bytesPerRow: bytesPerRow,
-                                     bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height),
-                                     completion: completion)
+                                     bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)) { [unowned self] (lines) in
+                                        
+            Log.debug("\n\n--------------- \(self.imageNames[1]) (\(cgImage.width)x\(cgImage.height)) - 2ND PASS ---------------\n\n")
+            DispatchQueue.main.async {
+                // Run again
+                OCRManager.shared.performOCR(on: baseAddress,
+                                             bytesPerRow: bytesPerRow,
+                                             bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height),
+                                             completion: completion)
+            }
+        }
     }
     
 }

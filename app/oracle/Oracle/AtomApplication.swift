@@ -14,6 +14,8 @@ import Cocoa
  
     shouldLogDebug: If true, debug and performance messages will be logged to the console.
  
+    shouldLogOCR: If true, the final OCR output for each frame will be logged to the console.
+ 
     shouldSaveDebugImages: If true, various images will be saved to the `Test-Output` directory.
                            This has a significant performance impact, so all performance logs
                            can be disregarded while this flag is enabled.
@@ -29,14 +31,18 @@ import Cocoa
 /// Not recommended for production builds.
 let shouldLogDebug = true
 
+/// Set this to `true` to log the final OCR output for each frame.
+/// Disable for production builds.
+let shouldLogOCR = false
+
 /// Set this to `true` to save character boxes and other debug images
 /// to the test output directory.
 /// Disable for production builds.
-let shouldSaveDebugImages = true
+let shouldSaveDebugImages = false
 
 /// This should normally be set to `true`.
 /// If `false`, the OCR cache will not be used.
-let shouldUseCache = false
+let shouldUseCache = true
 
 
 /*

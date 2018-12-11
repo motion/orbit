@@ -215,6 +215,7 @@ extension CharacterCache {
     
     /// Checks if the cache contains the given character outline,
     /// returning the character if so.
+    /// Must NOT be called from the main queue!
     func cachedCharacter(matching outline: [Int]) -> String? {
         // Synchronize access to cache on main queue
         var result: String?
@@ -226,6 +227,7 @@ extension CharacterCache {
     
     
     /// Adds a new outline+character combo to the cache.
+    /// Must NOT be called from the main queue!
     func addToCache(outline: [Int], character: String) {
         // Synchronize access to cache on main queue
         DispatchQueue.main.sync {
@@ -247,6 +249,15 @@ extension CharacterCache {
                 // Filter all cache results older than cutoff time
                 self.cache = self.cache.filter({$0.value.1 < cutoff})
             }
+        }
+    }
+    
+    
+    /// Clears the entire contents of the cache.
+    func flush() {
+        // Syncrhonize access to cache on main queue
+        DispatchQueue.main.async {
+            self.cache.removeAll()
         }
     }
     

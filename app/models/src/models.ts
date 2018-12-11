@@ -92,6 +92,10 @@ export type SalientWord = {
   uniqueness: number
 }
 
+export const CosalTopWordsModel = new Model<string, { text: string; max?: number }>(
+  'cosal-top-words-model',
+)
+
 export const CosalSaliencyModel = new Model<SalientWord, { words: string }>('cosal-saliency-model')
 
 export const CosalTopicsModel = new Model<string, { query: string; count: number }>(

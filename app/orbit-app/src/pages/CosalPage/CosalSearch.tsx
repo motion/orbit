@@ -3,8 +3,8 @@ import { react } from '@mcro/black'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { CosalSaliency } from './CosalSaliency'
-import { loadMany, command } from '@mcro/model-bridge'
-import { SearchByTopicModel, CosalTopWordsCommand, CosalTopicsModel } from '@mcro/models'
+import { loadMany } from '@mcro/model-bridge'
+import { SearchByTopicModel, CosalTopWordsModel, CosalTopicsModel, BitUtils } from '@mcro/models'
 
 class SearchStore {
   query = 'blast me off'
@@ -13,9 +13,13 @@ class SearchStore {
     this.query = val
   }
 
-  results = react(() => this.query, query => loadMany(SearchByTopicModel, { args: { query } }), {
-    defaultValue: [],
-  })
+  results = react(
+    () => this.query,
+    query => loadMany(SearchByTopicModel, { args: { query, count: 10 } }),
+    {
+      defaultValue: [],
+    },
+  )
 
   topics = react(
     () => this.results.map(x => `${x.title}${x.body}`).join(' '),
@@ -25,7 +29,7 @@ class SearchStore {
     },
   )
 
-  topWords = react(() => this.query, text => command(CosalTopWordsCommand, { text }), {
+  topWords = react(() => this.query, text => loadMany(CosalTopWordsModel, { args: { text } }), {
     defaultValue: [],
   })
 }
@@ -56,8 +60,7 @@ export const CosalSearch = observer(() => {
             <h4>Search results</h4>
             {store.results.map((result, index) => (
               <div key={index} style={{ marginBottom: 10 }}>
-                <span style={{ fontSize: 10 }}>{result.distance}</span>
-                <p>{result.text}</p>
+                <p>{BitUtils.getSearchableText(result)}</p>
               </div>
             ))}
           </div>
@@ -74,13 +77,8 @@ export const CosalSearch = observer(() => {
           >
             <h4>Top topics for results</h4>
             {store.topics.map((result, index) => (
-              <div
-                key={index}
-                style={{ marginBottom: 10 }}
-                onClick={store.querySetter(result.topic)}
-              >
-                <span style={{ fontSize: 10 }}>{result.distance}</span>
-                <p>{result.topic}</p>
+              <div key={index} style={{ marginBottom: 10 }} onClick={store.querySetter(result)}>
+                <p>{result}</p>
               </div>
             ))}
           </div>

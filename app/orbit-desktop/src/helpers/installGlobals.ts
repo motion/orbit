@@ -14,6 +14,7 @@ export function installGlobals(AppRoot: Root) {
   root['require'] = require
   root['Path'] = require('path')
   root['_'] = require('lodash')
+  root['typeorm'] = require('typeorm')
   root['Config'] = getGlobalConfig()
   root['Mobx'] = Mobx
   root['r2'] = r2

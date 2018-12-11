@@ -143,13 +143,21 @@ export class Cosal {
   }
 
   private getVectorForId(db: DBType, id: number) {
-    const index = this.state[db].indexToId[id]
-    return this.state[db].indexToVector[index]
+    return this.state[db].indexToVector[this.getIndexForId(db, id)]
+  }
+
+  private getIndexForId(db: DBType, id: number) {
+    return this.state[db].indexToId.findIndex(x => x === id)
   }
 
   private addRecord(db: DBType, id: number, vector: number[]) {
     this.state[db].indexToId.push(id)
     this.state[db].indexToVector.push(vector)
+  }
+
+  private updateRecord(db: DBType, id: number, vector: number[]) {
+    const index = this.getIndexForId(db, id)
+    this.state[db].indexToVector[index] = vector
   }
 
   // incremental scan can add more documents
@@ -174,10 +182,18 @@ export class Cosal {
 
     for (const [index, record] of newRecords.entries()) {
       if (this.getVectorForId(db, record.id)) {
-        throw new Error(`Already have a record id ${record.id}`)
+        console.debug(`Already have a record id ${record.id}`)
+        this.updateRecord(db, record.id, cosals[index].vector)
+        continue
       }
       if (!cosals[index]) {
-        console.debug('no cosal found for index', index)
+        const record = newRecords[index]
+        const len = record.text.length
+        console.debug(
+          'no cosal found for id',
+          record.id,
+          `${record.text.slice(0, 40) + (len > 40 ? '...' : '')}`,
+        )
         continue
       }
       this.addRecord(db, record.id, cosals[index].vector)

@@ -94,15 +94,15 @@ export const MainShortcutHandler = decorate(
     if (paneManagerStore) {
       handlers = {
         ...handlers,
-        1: paneManagerStore.activePaneSetter(1 - 1),
-        2: paneManagerStore.activePaneSetter(2 - 1),
-        3: paneManagerStore.activePaneSetter(3 - 1),
-        4: paneManagerStore.activePaneSetter(4 - 1),
-        5: paneManagerStore.activePaneSetter(5 - 1),
-        6: paneManagerStore.activePaneSetter(6 - 1),
-        7: paneManagerStore.activePaneSetter(7 - 1),
-        8: paneManagerStore.activePaneSetter(8 - 1),
-        9: paneManagerStore.activePaneSetter(9 - 1),
+        1: paneManagerStore.activePaneIndexSetter(1 - 1),
+        2: paneManagerStore.activePaneIndexSetter(2 - 1),
+        3: paneManagerStore.activePaneIndexSetter(3 - 1),
+        4: paneManagerStore.activePaneIndexSetter(4 - 1),
+        5: paneManagerStore.activePaneIndexSetter(5 - 1),
+        6: paneManagerStore.activePaneIndexSetter(6 - 1),
+        7: paneManagerStore.activePaneIndexSetter(7 - 1),
+        8: paneManagerStore.activePaneIndexSetter(8 - 1),
+        9: paneManagerStore.activePaneIndexSetter(9 - 1),
       }
     }
 

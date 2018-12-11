@@ -6,6 +6,6 @@
     "@babel/runtime": "7.2.0",
     "react": "16.7.0-alpha.2",
     "react-dom": "16.7.0-alpha.2",
-    "@mcro/react-hot-loader": "4.5.3"
+    "@mcro/react-hot-loader": "4.5.4"
   }
 }

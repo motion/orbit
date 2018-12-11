@@ -92,13 +92,13 @@ export class CosalManager {
 
     // scan just a few at a time
     const chunks = chunk(bitsSinceLastScan, 50)
-    for (const chunk of chunks) {
-      log.verbose(`Scanning ${chunk.length} bits...`)
+    for (const [index, chunk] of chunks.entries()) {
+      log.verbose(`Scanning ${chunk.length * (index + 1)}/${bitsSinceLastScan.length}...`)
       await this.cosal.scan(
         chunk
           .map(getBitForScan)
           // ensure has some text
-          .filter(bit => !!bit.text)
+          .filter(bit => !!bit.text),
       )
 
       // update scanned up to so it can resume if interrupted

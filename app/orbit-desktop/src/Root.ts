@@ -134,7 +134,10 @@ export class Root {
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
 
-    this.registerMediatorServer()
+    // cosal is a dependency of many things
+    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+    await this.cosalManager.start()
+    this.cosal = this.cosalManager.cosal
 
     this.generalSettingManager = new GeneralSettingManager()
     await this.generalSettingManager.start()
@@ -148,11 +151,6 @@ export class Root {
 
     this.onboardManager = new OnboardManager()
     await this.onboardManager.start()
-
-    // cosal is a dependency of many things
-    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
-    await this.cosalManager.start()
-    this.cosal = this.cosalManager.cosal
 
     // setup screen before we pass into managers...
     this.screen = new Screen({
@@ -192,6 +190,9 @@ export class Root {
     // start screen related managers once its started
     // no need to await
     this.ocrManager.start()
+
+    // depends on cosal
+    this.registerMediatorServer()
 
     // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {

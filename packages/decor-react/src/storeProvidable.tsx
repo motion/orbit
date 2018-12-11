@@ -67,7 +67,7 @@ export function storeProvidable(userOptions, Helpers) {
 
       // return HoC
       // ️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️
-      // dont use class properties on this, react-hot-loader seems to reset it up even if cold()
+      // dont use class properties on this, @mcro/react-hot-loader seems to reset it up even if cold()
       // ️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️️️⚠️
 
       class StoreProvider extends React.PureComponent {

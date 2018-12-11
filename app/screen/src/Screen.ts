@@ -23,7 +23,6 @@ export class Screen {
   socketSend: SocketSender
 
   private onClose?: Function
-  private name?: string
   private env: { [key: string]: string } | null
   private socketPort: number
   private options = {
@@ -58,7 +57,6 @@ export class Screen {
   }
 
   constructor({
-    name = null,
     debugBuild = false,
     socketPort = 40512,
     binPath = null,
@@ -68,7 +66,6 @@ export class Screen {
     appWindow = false,
     onClose = null,
   } = {}) {
-    this.name = name
     this.env = env
     this.socketPort = socketPort
     this.binPath = binPath
@@ -250,23 +247,9 @@ export class Screen {
     let bin = 'orbit'
     let binDir
     if (this.binPath) {
-      bin = 'screen'
       binDir = Path.join(this.binPath, '..')
     } else {
       binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
-    }
-    if (this.name) {
-      // this may cause issues with signing, disable...
-      // create a named binary link to change the name...
-      // log.verbose(`linking! ${this.name}`)
-      // const linkBin = Path.join(binDir, this.name)
-      // try {
-      //   await remove(linkBin)
-      //   await linkify(Path.join(binDir, bin), linkBin)
-      // } catch (err) {
-      //   log.verbose('Got potentially inconsequential link err', err)
-      //
-      // bin = this.name
     }
     const env = {
       RUN_OCR: `${this.options.ocr}`,

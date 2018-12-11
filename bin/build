@@ -8,6 +8,7 @@ if [ "$(realpath .)" = "$ROOT" ]; then
   if [ "$1" = "" ]; then
     ARGS=${@:1}
     bin/in store-hmr npm run build
+    bin/in black npm run build
     (bin/in ui npm run build) &
     (bin/in reactron npm run build) &
     wait

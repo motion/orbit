@@ -87,6 +87,13 @@ export const SearchLocationsModel = new Model<string, { query: SearchQuery; coun
 
 export const SearchByTopicModel = new Model<Bit, { query: string; count: number }>('SearchByTopic')
 
+export type SalientWord = {
+  word: string
+  uniqueness: number
+}
+
+export const CosalSaliencyModel = new Model<SalientWord, { words: string }>('cosal-saliency-model')
+
 export const CosalTopicsModel = new Model<string, { query: string; count: number }>(
   'cosal-topics-model',
 )

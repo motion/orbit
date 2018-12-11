@@ -9,8 +9,8 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@babel/core": "7.1.0",
-    "@hot-loader/react-dom": "16.7.0-alpha.2.1",
+    "@babel/core": "7.2.0",
+    "@hot-loader/react-dom": "16.7.0-alpha.2.2",
     "babel-loader": "8.0.4",
     "cache-loader": "1.2.5",
     "css-loader": "^0.28.11",
@@ -30,7 +30,7 @@
     "ignore-loader": "0.1.2",
     "tsconfig-paths-webpack-plugin": "3.2.0",
     "uglifyjs-webpack-plugin": "2.0.1",
-    "react-hot-loader": "4.5.2",
+    "@mcro/react-hot-loader": "4.5.4",
     "url-loader": "^1.0.1",
     "webpack-bundle-analyzer": "^2.13.1",
     "workerize-loader": "1.0.4",

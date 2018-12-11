@@ -7,20 +7,21 @@ import { PopoverState } from '@mcro/ui'
 @store
 export class AppReactions {
   listeners = []
+  disposeListener = null
 
   constructor() {
     this.setupReactions()
   }
 
   dispose() {
-    this.dispose()
+    this.disposeListener()
     for (const listener of this.listeners) {
       listener()
     }
   }
 
   async setupReactions() {
-    this.dispose = App.onMessage(async (msg, value) => {
+    this.disposeListener = App.onMessage(async (msg, value) => {
       console.log('got a message', msg, value)
       switch (msg) {
         case App.messages.HIDE:

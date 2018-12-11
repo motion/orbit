@@ -27,8 +27,8 @@ const cosal = new Cosal({
 const items = [
   // if you want to load some more stuff, just throw it here
   // module.exports = string[]
-  // ...require('./app_data/myBits'),
-  // ...require('./data/text2k'),
+  ...require('./app_data/myBits'),
+  ...require('./data/text2k'),
   ...require('./data/elonout'),
 ].map((text, id) => ({
   id,

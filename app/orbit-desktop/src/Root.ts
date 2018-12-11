@@ -10,6 +10,7 @@ import {
   SettingEntity,
   SourceEntity,
   SpaceEntity,
+  CosalSaliencyModel,
 } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -270,6 +271,7 @@ export class Root {
         PeopleNearTopicModel,
         BitsNearTopicModel,
         CosalTopicsModel,
+        CosalSaliencyModel,
       ],
       commands: [
         SourceSaveCommand,
@@ -283,7 +285,6 @@ export class Root {
         port: this.config.ports.dbBridge,
       }),
       resolvers: [
-        // @ts-ignore
         ...typeormResolvers(getConnection(), [
           { entity: AppEntity, models: [AppModel] },
           { entity: SourceEntity, models: [SourceModel] },

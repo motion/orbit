@@ -130,8 +130,8 @@ export function useStore<A>(Store: new () => A, props?: Object, options?: UseSto
     return null
   }
   const proxyStore = useRef(null)
-  const hasSetupStore = !proxyStore.current
-  const isHMRCompat = process.env.NODE_ENV === 'development' && module['hot']
+  const hasSetupStore = !!proxyStore.current
+  const isHMRCompat = process.env.NODE_ENV === 'development' && !!module['hot']
   const constructor = proxyStore.current && proxyStore.current.constructor
   const hasChangedSource = constructor && constructor.toString() !== Store.toString()
   const shouldHMRStore = isHMRCompat && hasSetupStore && hasChangedSource

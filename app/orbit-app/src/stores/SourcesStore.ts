@@ -1,4 +1,4 @@
-import { SourceModel, Source, IntegrationType, AppConfig } from '@mcro/models'
+import { SourceModel, Source, IntegrationType, AppConfig, AppType } from '@mcro/models'
 import { observeMany } from '@mcro/model-bridge'
 import { allIntegrations, getIntegrations } from '../sources'
 import { react } from '@mcro/black'
@@ -16,6 +16,16 @@ export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
   }
 }
 
+const modelTargetToAppType = (model: ResolvableModel): AppType => {
+  if (model.target === 'person-bit') {
+    return 'people'
+  }
+  if (model.target === 'search-group') {
+    return 'search'
+  }
+  return model.target
+}
+
 export const sourceToAppConfig = (
   app: OrbitIntegration<any>,
   model?: ResolvableModel,
@@ -28,7 +38,7 @@ export const sourceToAppConfig = (
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,
-    type: model.target === 'bit' ? 'bit' : 'people',
+    type: model ? modelTargetToAppType(model) : 'source',
     integration: app.integration,
     viewConfig: app.viewConfig,
   }

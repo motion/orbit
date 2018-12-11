@@ -2,12 +2,27 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0.tgz#adeb78fedfc855aa05bc041640f3f6f98e85424c"
-  integrity sha512-7hGhzlcmg01CvH1EHdSPVXYX1aJ8KCEyz6I9xYIi/asDtzBPMyMhVibhM/K6g/5qnKBwjZtp10bNZIEFTRW1MA==
+"@babel/runtime@7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.2.0.tgz#b03e42eeddf5898e00646e4c840fa07ba8dcad7f"
+  integrity sha512-oouEibCbHMVdZSDlJBO6bZmID/zA/G/Qx3H1d3rSNPTD+L8UNKvCat7aKWSJ74zYbm5zWGh0GQN0hKj8zYFTCg==
   dependencies:
     regenerator-runtime "^0.12.0"
+
+"@mcro/react-hot-loader@4.5.4":
+  version "4.5.4"
+  resolved "https://registry.yarnpkg.com/@mcro/react-hot-loader/-/react-hot-loader-4.5.4.tgz#2441a61c48faf5f4c0aa3b5bc616d197dedb5e8b"
+  integrity sha512-eMGNomFLo74CRjfyp4oUrWFRiRVhnK+VHnPqu3BBT+vTlXtQgUwfApw+wvY69zJfLNXUM42FhGWjCPZieRU7rg==
+  dependencies:
+    fast-levenshtein "^2.0.6"
+    global "^4.3.0"
+    hoist-non-react-statics "^2.5.0"
+    loader-utils "^1.1.0"
+    lodash.merge "^4.6.1"
+    prop-types "^15.6.1"
+    react-lifecycles-compat "^3.0.4"
+    shallowequal "^1.0.2"
+    source-map "^0.7.3"
 
 JSONStream@^1.3.1:
   version "1.3.5"
@@ -469,21 +484,6 @@ react-dom@16.7.0-alpha.2:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.12.0-alpha.2"
-
-react-hot-loader@4.5.2:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.5.2.tgz#5a91984196fb72801a52c62bfad0eb2322d7bcd3"
-  integrity sha512-R/mYorMt2YC9IkF/bpJqiYezrz5z1F7F+W1XIaiGezeuonQWIRpNycZRobkYHJNz66QKq6eBWeUYV6/AMmfaLw==
-  dependencies:
-    fast-levenshtein "^2.0.6"
-    global "^4.3.0"
-    hoist-non-react-statics "^2.5.0"
-    loader-utils "^1.1.0"
-    lodash.merge "^4.6.1"
-    prop-types "^15.6.1"
-    react-lifecycles-compat "^3.0.4"
-    shallowequal "^1.0.2"
-    source-map "^0.7.3"
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"

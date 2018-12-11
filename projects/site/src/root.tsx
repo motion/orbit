@@ -4,7 +4,7 @@ import Router from './router'
 import { NotFoundPage } from './pages/NotFoundPage'
 import * as UI from '@mcro/ui'
 import * as Constants from './constants'
-import { hot } from 'react-hot-loader'
+import { hot } from '@mcro/react-hot-loader'
 import { scrollTo } from './helpers'
 
 @view

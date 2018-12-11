@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observeMany } from '@mcro/model-bridge'
 import { JobModel, Job } from '@mcro/models'
-import { attach } from '@mcro/black'
+import { useStore } from '@mcro/use-store'
 
 type Props = {
   sourceId: number
@@ -35,14 +35,9 @@ class SyncStatusStore {
   }
 }
 
-@attach({
-  store: SyncStatusStore,
-})
-export class SyncStatus extends React.Component<{ store?: SyncStatusStore } & Props> {
-  render() {
-    const { store, children } = this.props
-    const syncJobs = store.activeJobs.filter(job => job.type === 'INTEGRATION_SYNC')
-    const removeJobs = store.activeJobs.filter(job => job.type === 'INTEGRATION_REMOVE')
-    return children(syncJobs, removeJobs)
-  }
+export const SyncStatus = (props: Props) => {
+  const store = useStore(SyncStatusStore, props)
+  const syncJobs = store.activeJobs.filter(job => job.type === 'INTEGRATION_SYNC')
+  const removeJobs = store.activeJobs.filter(job => job.type === 'INTEGRATION_REMOVE')
+  return props.children(syncJobs, removeJobs)
 }

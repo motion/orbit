@@ -20,7 +20,7 @@ class OrbitStore {
     return this.props.paneManagerStore.activePane
   }
 
-  activeConfig: { [key: AppType]: AppConfig } = {
+  activeConfig: { [key: string]: Partial<AppConfig> } = {
     search: {},
   }
 
@@ -33,8 +33,11 @@ class OrbitStore {
 
   appStores: { [key: string]: AppStore } = {}
 
-  setAppStore = id => store => {
-    this.appStores[id] = store
+  setAppStore = (id: string) => (store: AppStore) => {
+    this.appStores = {
+      ...this.appStores,
+      [id]: store,
+    }
   }
 }
 
@@ -71,8 +74,8 @@ export const OrbitPageContent = observer(() => {
   const allPanes: AppConfig[] = [
     ...AppPanes,
     {
-      id: 'sources',
-      type: 'sources',
+      id: 'source',
+      type: 'source',
       title: 'Sources',
       icon: 'box',
     },

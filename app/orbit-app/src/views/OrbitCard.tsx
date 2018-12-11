@@ -163,7 +163,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
                     )}
                   </Preview>
                 )}
-                {!!avatar && <Avatar src={avatar} />}
                 {hasChildren && children}
                 {!hasChildren && showChildren && (
                   <ItemView

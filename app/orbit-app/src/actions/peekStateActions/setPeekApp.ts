@@ -1,5 +1,5 @@
-import { peekPosition, Position } from '../../../helpers/peekPosition'
-import { getTargetPosition } from '../../../helpers/getTargetPosition'
+import { peekPosition, Position } from '../../helpers/peekPosition'
+import { getTargetPosition } from '../../helpers/getTargetPosition'
 import invariant from 'invariant'
 import { setAppState } from '../setAppState'
 import { AppConfig } from '@mcro/models'

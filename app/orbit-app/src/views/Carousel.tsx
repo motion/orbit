@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { HorizontalScrollRow, HorizontalScrollRowProps } from '../views/HorizontalScrollRow'
+import { HorizontalScrollRow, HorizontalScrollRowProps } from './HorizontalScrollRow'
 import scroll from 'scroll'
-import { OrbitCard } from '../views/OrbitCard'
-import { OrbitItemProps } from '../views/ListItems/OrbitItemProps'
+import { OrbitCard } from './OrbitCard'
+import { OrbitItemProps } from './ListItems/OrbitItemProps'
 
 export type CarouselProps = HorizontalScrollRowProps & {
   CardView?: (props: OrbitItemProps<any>) => JSX.Element

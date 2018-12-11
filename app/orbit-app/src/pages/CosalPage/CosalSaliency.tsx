@@ -59,7 +59,7 @@ export const CosalSaliency = observer((props: Props) => {
         {store.saliency.map(({ word, uniqueness }, index) => (
           <Word key={index}>
             <Bar>
-              <Pct style={{ height: `${uniqueness * 100}%`, opacity: 1 - uniqueness }} />
+              <Pct style={{ height: `${uniqueness * 100}%`, opacity: uniqueness }} />
             </Bar>
             {word}
           </Word>

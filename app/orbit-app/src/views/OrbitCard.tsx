@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
+import { view, StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { normalizeItem, NormalItem } from '../helpers/normalizeItem'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
@@ -13,56 +12,46 @@ import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
 import { ResolvableModel } from '../sources/types'
-import { Avatar } from './Avatar'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
-@attach('sourcesStore', 'appStore')
-@attach({
-  store: OrbitItemStore,
-})
-@view
-export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableModel>> {
-  static defaultProps = {
-    borderRadius: 7,
-    padding: 8,
-  }
-
-  getInner = (item: Partial<NormalItem>) => {
-    const { icon, location, people, preview, title, updatedAt } = item
-    const {
-      afterTitle,
-      borderRadius,
-      cardProps,
-      children,
-      disableShadow,
-      hide,
-      hoverToSelect,
-      iconProps,
-      inGrid,
-      onClick,
-      store,
-      titleProps,
-      subtitleProps,
-      padding,
-      titleFlex,
-      subtitleSpaceBetween,
-      searchTerm,
-      // ignore so it doesnt add tooltip to div
-      title: _ignoreTitle,
-      onClickLocation,
-      chromeless,
-      activeStyle,
-      ...props
-    } = this.props
-
+export const OrbitCard = observer(
+  ({
+    borderRadius = 7,
+    padding = 8,
+    icon,
+    location,
+    people,
+    preview,
+    title,
+    updatedAt,
+    afterTitle,
+    cardProps,
+    children,
+    disableShadow,
+    hide,
+    hoverToSelect,
+    iconProps,
+    inGrid,
+    onClick,
+    titleProps,
+    subtitleProps,
+    titleFlex,
+    subtitleSpaceBetween,
+    searchTerm,
+    // ignore so it doesnt add tooltip to div
+    title: _ignoreTitle,
+    onClickLocation,
+    chromeless,
+    activeStyle,
+    subtitle,
+    ...props
+  }: OrbitItemProps<ResolvableModel>) => {
+    const stores = React.useContext(StoreContext)
+    const store = useStore(OrbitItemStore, { ...props, ...stores })
     // allow either custom subtitle or resolved one
-    const subtitle = this.props.subtitle || item.subtitle
     const { isSelected } = store
-    const ItemView = this.props.sourcesStore.getView(
-      item.type === 'bit' ? item.integration : 'person',
-      'item',
-    )
-    const hasChildren = typeof this.props.children !== 'undefined'
-    const showChildren = !this.props.direct && !(hide && hide.body)
+    const showChildren = typeof children !== 'undefined' && !(hide && hide.body)
     const hasTitle = !!title && !(hide && hide.title)
     const hasMeta = !!location && !(hide && hide.meta)
     const hasPreview = !!preview && !children && !(hide && hide.body)
@@ -71,16 +60,16 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
     const hasPeople = !!people && !!people.length
     const hasFourRows =
       ((hasSubtitle || hasMeta) && hasPeople) ||
-      ((hasSubtitle || hasPeople) && titleProps && titleProps.ellipse !== true)
-    let topPad = 10
-    let sidePad = 10
-    if (props.padding) {
-      if (Array.isArray(props.padding)) {
-        topPad = props.padding[0]
-        sidePad = props.padding[1]
+      ((hasSubtitle || hasPeople) && titleProps && titleProps['ellipse'] !== true)
+    let topPad = 10 as any
+    let sidePad = 10 as any
+    if (padding) {
+      if (Array.isArray(padding)) {
+        topPad = padding[0]
+        sidePad = padding[1]
       } else {
-        topPad = props.padding
-        sidePad = props.padding
+        topPad = padding
+        sidePad = padding
       }
     }
     const dateContent = hasDate && (
@@ -90,7 +79,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
     )
     return (
       <CardWrap
-        {...hoverToSelect && !inactive && store.hoverSettler && store.hoverSettler.props}
+        {...hoverToSelect && store.hoverSettler && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         {...props}
         {...isSelected && activeStyle}
@@ -163,16 +152,16 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
                     )}
                   </Preview>
                 )}
-                {hasChildren && children}
-                {!hasChildren && showChildren && (
-                  <ItemView
-                    model={this.props.model}
-                    bit={this.props.model}
-                    searchTerm={this.props.searchTerm}
-                    shownLimit={10}
-                    extraProps={this.props.extraProps}
-                  />
-                )}
+                {showChildren && children}
+                {/* {!hasChildren && showChildren && (
+                <ItemView
+                  model={props.model}
+                  bit={props.model}
+                  searchTerm={searchTerm}
+                  shownLimit={10}
+                  extraProps={props.extraProps}
+                />
+              )} */}
                 {hasPeople && (
                   <Row>
                     <PeopleRow people={people} />
@@ -198,49 +187,24 @@ export class OrbitCardInner extends React.Component<OrbitItemProps<ResolvableMod
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         {/* {!disableShadow && (
-          <UI.HoverGlow
-            behind
-            color="#000"
-            resist={80}
-            scale={0.99}
-            offsetTop={isSelected ? 6 : 4}
-            full
-            blur={8}
-            inverse
-            opacity={isSelected ? 0.08 : 0.04}
-            borderRadius={20}
-            duration={100}
-          />
-        )} */}
+        <UI.HoverGlow
+          behind
+          color="#000"
+          resist={80}
+          scale={0.99}
+          offsetTop={isSelected ? 6 : 4}
+          full
+          blur={8}
+          inverse
+          opacity={isSelected ? 0.08 : 0.04}
+          borderRadius={20}
+          duration={100}
+        />
+      )} */}
       </CardWrap>
     )
-  }
-
-  render() {
-    const { store, model, direct } = this.props
-    // lets react to this, keep this here to ensure we do
-    store.isSelected
-    if (direct) {
-      return this.getInner(this.props)
-    }
-    if (!model) {
-      return null
-    }
-    return this.getInner(normalizeItem(model))
-  }
-}
-
-// never let it update, this saves so much time we can just change key to change item
-
-export class OrbitCard extends React.Component<OrbitItemProps<ResolvableModel>> {
-  shouldComponentUpdate() {
-    return false
-  }
-
-  render() {
-    return <OrbitCardInner {...this.props} />
-  }
-}
+  },
+)
 
 const VerticalSpaceSmall = view({
   height: 5,

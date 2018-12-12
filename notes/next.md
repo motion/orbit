@@ -9,7 +9,7 @@ high level to launch:
 - building the website
 - take a good look at what it would take to allow custom apps
 
-NEXT
+low level next:
 
 - move quickly towards a working All/People/Terms pane in one window
 - home should show a column of each of them
@@ -26,6 +26,11 @@ NEXT
 - grouped search main view work
 - adding in all sorts of fundamental help -- links to thinks, etc
 - https://libp2p.io/
+
+dev-tool level:
+
+- make stores automatically get all stores from context somehow or able to DI them
+  - if we do a DI system we can DI props + DI observable props configurably
 
 Tray:
 

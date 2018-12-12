@@ -18,7 +18,7 @@ import { resolveCommand, resolveMany } from '@mcro/mediator'
 import {
   AppModel,
   BitModel,
-  CosalTopWordsCommand,
+  CosalTopWordsModel,
   GithubRepositoryModel,
   GithubSourceBlacklistCommand,
   JobModel,
@@ -46,7 +46,7 @@ import {
 import { SetupProxyCommand } from '@mcro/models'
 import { Screen } from '@mcro/screen'
 import { App, Desktop, Electron } from '@mcro/stores'
-import { writeJSON, removeSync } from 'fs-extra'
+import { writeJSON } from 'fs-extra'
 import root from 'global'
 import macosVersion from 'macos-version'
 import open from 'opn'
@@ -56,7 +56,7 @@ import { getConnection } from 'typeorm'
 import { COSAL_DB, screenOptions } from './constants'
 import { AppsManager } from './managers/appsManager'
 import { ContextManager } from './managers/ContextManager'
-// import { CosalManager } from './managers/CosalManager'
+import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
 import { AuthServer } from './auth-server/AuthServer'
@@ -71,7 +71,6 @@ import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
-import { getSearchByTopicResolver } from './resolvers/SearcyByTopicResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
@@ -82,11 +81,6 @@ import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
 import { Oracle } from '@mcro/oracle'
 import { OracleManager } from './managers/OracleManager'
-
-if (process.env.NODE_ENV === 'development') {
-  console.log('REMOVING OLD COSAL_DB in development mode', COSAL_DB)
-  removeSync(COSAL_DB)
-}
 
 export class Root {
   // public
@@ -100,13 +94,11 @@ export class Root {
   private disposed = false
   private webServer: WebServer
   private mediatorServer: MediatorServer
-  private cosal = new Cosal({
-    database: COSAL_DB,
-  })
+  private cosal: Cosal
 
   // managers
   private oracleManager: OracleManager
-  // // private cosalManager: CosalManager
+  private cosalManager: CosalManager
   private ocrManager: OCRManager
   private appsManager: AppsManager
   private screenManager: ScreenManager
@@ -141,7 +133,10 @@ export class Root {
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
 
-    this.registerMediatorServer()
+    // cosal is a dependency of many things
+    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+    await this.cosalManager.start()
+    this.cosal = this.cosalManager.cosal
 
     this.generalSettingManager = new GeneralSettingManager()
     await this.generalSettingManager.start()
@@ -155,9 +150,6 @@ export class Root {
 
     this.onboardManager = new OnboardManager()
     await this.onboardManager.start()
-
-    // start cosal before we pass into managers...
-    await this.cosal.start()
 
     // setup screen before we pass into managers...
     this.screen = new Screen({
@@ -179,7 +171,6 @@ export class Root {
     await this.oracleManager.start()
 
     this.ocrManager = new OCRManager({ cosal: this.cosal })
-    // this.cosalManager = new CosalManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ screen: this.screen })
     this.keyboardManager = new KeyboardManager({ screen: this.screen })
     this.appsManager = new AppsManager()
@@ -190,21 +181,21 @@ export class Root {
       onMouseMove: this.keyboardManager.onMouseMove,
     })
 
-    // start screen after passing into screenManager
-    await this.screen.start()
-    // then start screenmanager after screen.start
-    // no need to await
-    this.screenManager.start()
-    // start screen related managers once its started
-    // no need to await
-    this.ocrManager.start()
+    // depends on cosal
+    this.registerMediatorServer()
 
-    // scanning cosal is high cpu load, we need better solution for high cpu on this process
-    // until then lets just wait a bit
-    // setTimeout(() => {
-    //   this.cosalManager.updateSearchIndexWithNewBits()
-    //   this.cosalManager.scanTopics()
-    // }, 1000 * 6)
+    try {
+      // start screen after passing into screenManager
+      await this.screen.start()
+      // then start screenmanager after screen.start
+      // no need to await
+      this.screenManager.start()
+      // start screen related managers once its started
+      // no need to await
+      this.ocrManager.start()
+    } catch (err) {
+      console.error('Error starting a manager', err)
+    }
 
     // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {
@@ -277,13 +268,13 @@ export class Root {
         BitsNearTopicModel,
         CosalTopicsModel,
         CosalSaliencyModel,
+        CosalTopWordsModel,
       ],
       commands: [
         SourceSaveCommand,
         SourceRemoveCommand,
         GithubSourceBlacklistCommand,
         SlackSourceBlacklistCommand,
-        CosalTopWordsCommand,
         SetupProxyCommand,
       ],
       transport: new WebSocketServerTransport({
@@ -305,7 +296,6 @@ export class Root {
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
-        getSearchByTopicResolver(this.cosal),
         getBitNearTopicsResolver(this.cosal),
         getPeopleNearTopicsResolver(this.cosal),
         resolveMany(SearchResultModel, async args => {

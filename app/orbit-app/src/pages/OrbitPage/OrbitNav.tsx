@@ -12,14 +12,14 @@ export const OrbitNav = observer(() => {
   const { paneManagerStore } = React.useContext(StoreContext)
   return (
     <OrbitNavChrome>
-      {AppPanes.map((pane, index) => {
+      {AppPanes.map(pane => {
         const isActive = paneManagerStore.activePane === pane.id
         return (
           <NavButton
             key={pane.id}
             isActive={isActive}
             label={pane.title}
-            onClick={paneManagerStore.activePaneSetter(index)}
+            onClick={paneManagerStore.activePaneSetter(pane.id)}
           >
             <Icon name={`${pane.icon}`} size={16} />
           </NavButton>
@@ -27,8 +27,8 @@ export const OrbitNav = observer(() => {
       })}
       <View flex={1} minWidth={10} />
       <NavButton
-        isActive={paneManagerStore.activePane === 'settings'}
-        onClick={paneManagerStore.activePaneSetter('settings')}
+        isActive={paneManagerStore.activePane === 'sources'}
+        onClick={paneManagerStore.activePaneSetter('sources')}
         tooltip="Sources"
       >
         <UI.Icon name="app" size={14} opacity={0.5} />

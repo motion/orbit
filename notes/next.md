@@ -97,23 +97,27 @@ Contextual stuff is high on this list:
 
 # ideas for apps
 
-- daily digest
-  - summarized recent activity using your topics
-- micro polls app:
+- questions and answers (stackoverflow):
+  - can create a question
+  - anyone can post answers on it
+- polls:
   - can create a poll
   - shows in a dropdown
   - anyone can quickly vote on it
-- question and answer app:
-  - can create a question
-  - anyone can post answers on it
-- database explorer app:
+- announcements
+  - can automatically have it query for emails from "announcements@company.com"
+  - have it show a banner if new announcement
+- company newspaper
+  - fancier announcements
+  - using some ML for title generation
+  - using some ML for trending topic modeling
+- daily digest
+  - summarized recent activity using your topics
+- generic database explorer app
   - can enter a local path for a database
   - shows the database in a virtual table
   - lets you write sql queries in the topbar
   - lets you insert common sql queries in sidebar
-- announcements list:
-  - can automatically have it query for emails from "announcements@company.com"
-  - have it show a banner if new announcement
 
 # App API
 

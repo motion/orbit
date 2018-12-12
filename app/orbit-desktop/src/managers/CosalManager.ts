@@ -1,23 +1,56 @@
-import { BitEntity, SettingEntity } from '@mcro/models'
+import { BitEntity, SettingEntity, Setting, Bit, BitUtils } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { Cosal } from '@mcro/cosal'
-import { chunk, zip, flatten } from 'lodash'
+import { chunk, zip, flatten, last } from 'lodash'
+import { remove } from 'fs-extra'
+import { COSAL_DB } from '../constants'
+import { sleep } from '@mcro/utils'
 
 const log = new Logger('CosalManager')
 
 const getGeneralSetting = () => getRepository(SettingEntity).findOne({ name: 'general' })
 
+const getBitForScan = (bit: Bit) => {
+  return {
+    id: bit.id,
+    text: BitUtils.getSearchableText(bit),
+  }
+}
+
 export class CosalManager {
   cosal: Cosal
   scanTopicsInt: any
+  dbPath: string
 
-  constructor({ cosal }: { cosal: Cosal }) {
-    this.cosal = cosal
+  constructor({ dbPath }: { dbPath: string }) {
+    this.dbPath = dbPath
+  }
+
+  async start() {
+    this.cosal = new Cosal({
+      database: this.dbPath,
+    })
+    await this.cosal.start()
+    // sleep a bit, this is a heavy-ish operation and we can do it after things startup
+    // TODO make this a bit better so its controlled above
+    await sleep(2000)
+    this.updateSearchIndexWithNewBits()
+    this.scanTopics()
   }
 
   dispose() {
     clearInterval(this.scanTopicsInt)
+  }
+
+  // clear all data and restart cosal
+  async reset() {
+    this.dispose()
+    await remove(COSAL_DB)
+    await this.updateSetting({
+      cosalIndexUpdatedTo: 0,
+    })
+    await this.start()
   }
 
   search = async (query: string, { max = 10 }) => {
@@ -26,19 +59,30 @@ export class CosalManager {
     return await getRepository(BitEntity).find({ id: { $in: ids } })
   }
 
-  private async getLastScan() {
+  private async ensureDefaultSetting() {
     const setting = await getGeneralSetting()
-    if (typeof setting.values.cosalIndexUpdatedTo === 'undefined') {
-      setting.values.cosalIndexUpdatedTo = 0
-      await getRepository(SettingEntity).save(setting)
+    if (typeof setting.values.cosalIndexUpdatedTo === 'number') {
+      return
     }
-    return setting.values.cosalIndexUpdatedTo
+    await this.updateSetting({
+      cosalIndexUpdatedTo: 0,
+    })
+  }
+
+  private async getLastScan() {
+    this.ensureDefaultSetting()
+    return (await getGeneralSetting()).values.cosalIndexUpdatedTo
   }
 
   updateSearchIndexWithNewBits = async () => {
     const lastScanAt = await this.getLastScan()
     const bitsSinceLastScan = await getRepository(BitEntity).find({
-      where: { bitUpdatedAt: { $moreThan: lastScanAt } },
+      where: {
+        bitUpdatedAt: { $moreThan: lastScanAt },
+      },
+      order: {
+        bitUpdatedAt: 'ASC',
+      },
     })
     log.info('bitsSinceLastScan', bitsSinceLastScan.length)
 
@@ -47,24 +91,34 @@ export class CosalManager {
     }
 
     // scan just a few at a time
-    const chunks = chunk(bitsSinceLastScan, 100)
-    for (const chunk of chunks) {
-      log.verbose(`Scanning ${chunk.length} bits...`)
+    const chunks = chunk(bitsSinceLastScan, 50)
+    for (const [index, chunk] of chunks.entries()) {
+      log.verbose(`Scanning ${chunk.length * (index + 1)}/${bitsSinceLastScan.length}...`)
       await this.cosal.scan(
-        chunk.map(bit => ({
-          id: bit.id,
-          text: bit.body,
-        })),
+        chunk
+          .map(getBitForScan)
+          // ensure has some text
+          .filter(bit => !!bit.text),
       )
+
+      // update scanned up to so it can resume if interrupted
+      await this.updateSetting({
+        cosalIndexUpdatedTo: last(chunk).bitUpdatedAt,
+      })
+
+      // avoid burning too much cpu
+      await sleep(250)
     }
 
-    this.saveLastScanAt()
     log.info('Done scanning new bits')
   }
 
-  saveLastScanAt = async () => {
+  private async updateSetting(values: Setting['values']) {
     const setting = await getGeneralSetting()
-    setting.values.cosalIndexUpdatedTo = Date.now()
+    setting.values = {
+      ...setting.values,
+      ...values,
+    }
     await getRepository(SettingEntity).save(setting)
   }
 
@@ -94,7 +148,7 @@ export class CosalManager {
     let allTopics: string[][] = []
     for (let i = 0; i < numScans; i++) {
       const bits = await getRepository(BitEntity).find({ take: maxPerGroup, skip: maxPerGroup * i })
-      const bodies = bits.map(bit => `${bit.title} ${bit.body}`).join(' ')
+      const bodies = bits.map(BitUtils.getSearchableText).join(' ')
       const topics = await this.cosal.getTopWords(bodies, { max: 10, sortByWeight: true })
       // dont flatten
       allTopics = [...allTopics, topics]

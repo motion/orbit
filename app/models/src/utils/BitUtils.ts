@@ -2,6 +2,7 @@ import { hash } from '@mcro/utils'
 import { IntegrationType } from '../interfaces/IntegrationType'
 import { Source } from '../interfaces/Source'
 import { Bit } from '../interfaces/Bit'
+import { SlackBitData } from '../bit-data/SlackBitData'
 
 /**
  * Common Bit utility functions.
@@ -73,5 +74,18 @@ export class BitUtils {
         bit.authorId,
       ].filter(item => item !== null && item !== undefined),
     )
+  }
+
+  // TODO could return title/body separately when improving search
+  static getSearchableText(bit: Bit): string {
+    if (bit.type === 'conversation') {
+      // TODO make a generic conversation bit data type
+      const data = bit.data as SlackBitData
+      return data.messages
+        .map(x => `${x.user} ${x.text}`)
+        .join(' ')
+        .trim()
+    }
+    return `${bit.title} ${bit.body}`.trim()
   }
 }

@@ -1,6 +1,6 @@
-import { command } from '@mcro/model-bridge'
+import { loadMany } from '@mcro/model-bridge'
 import { BitUtils } from '@mcro/models'
-import { Bit, CosalTopWordsCommand, Person, SlackBitData, SlackSource } from '@mcro/models'
+import { Bit, CosalTopWordsModel, Person, SlackBitData, SlackSource } from '@mcro/models'
 import { SlackChannel, SlackMessage, SlackAttachment } from '@mcro/services'
 import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
 
@@ -19,7 +19,11 @@ export class SlackBitFactory {
   /**
    * Creates a new slack conversation bit.
    */
-  async createConversation(channel: SlackChannel, messages: SlackMessage[], allPeople: Person[]): Promise<Bit> {
+  async createConversation(
+    channel: SlackChannel,
+    messages: SlackMessage[],
+    allPeople: Person[],
+  ): Promise<Bit> {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
@@ -56,12 +60,13 @@ export class SlackBitFactory {
     const flatBody = data.messages.map(x => x.text).join(' ')
     // gets the most interesting 10 for title
 
-    const title = (await command(CosalTopWordsCommand, { text: flatBody, max: 10 }))
-      // remove weird chars from title
-      .map(x => x.replace(/[^a-zA-Z0-9.-]/g, ''))
-      .join(' ')
+    const title = (await loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 6 } })).join(
+      ' ',
+    )
     // and more for body
-    const body = (await command(CosalTopWordsCommand, { text: flatBody, max: 50 })).join(' ')
+    const body = (await loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 25 } })).join(
+      ' ',
+    )
 
     return BitUtils.create(
       {
@@ -95,7 +100,7 @@ export class SlackBitFactory {
     message: SlackMessage,
     attachment: SlackAttachment,
     websiteData: WebsiteCrawledData,
-    allPeople: Person[]
+    allPeople: Person[],
   ): Bit {
     const messageTime = +message.ts.split('.')[0] * 1000
     const mentionedPeople = this.findMessageMentionedPeople([message], allPeople)

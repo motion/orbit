@@ -9,6 +9,7 @@ export class AppStore<Type extends AppType> {
     appPageStore?: AppPageStore
   }
 
+  statusbar = null
   toolbar = null
   selectionResults = null
 
@@ -103,5 +104,9 @@ export class AppStore<Type extends AppType> {
 
   setToolbar = toolbar => {
     this.toolbar = toolbar
+  }
+
+  setStatusBar = statusbar => {
+    this.statusbar = statusbar
   }
 }

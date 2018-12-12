@@ -120,6 +120,7 @@ export const OrbitPageContent = observer(() => {
           ))}
         </OrbitMainView>
       </Row>
+      {!!activeAppStore ? activeAppStore.statusbar : null}
     </Col>
   )
 })

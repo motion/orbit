@@ -8,7 +8,7 @@ import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
 import { observer } from 'mobx-react-lite'
 
 class SourcesMain {
-  props: AppProps
+  props: AppProps<any>
 
   get appConfig() {
     return this.props.appStore.appConfig
@@ -28,7 +28,7 @@ class SourcesMain {
   )
 }
 
-export const SourcesAppMain = observer((props: AppProps) => {
+export const SourcesAppMain = observer((props: AppProps<any>) => {
   const { model } = useStore(SourcesMain, props)
   const type = model ? model.type : props.sourceType
   const View = props.sourcesStore.getView(type, 'setting')

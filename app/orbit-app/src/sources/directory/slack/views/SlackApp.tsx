@@ -12,6 +12,7 @@ import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import { Pane } from '../../../../views/Pane'
 import { Title } from '../../../../views'
+import { StatusBar } from '../../../../components/StatusBar'
 
 type Props = OrbitSourceMainProps<'slack'>
 
@@ -135,7 +136,9 @@ export const SlackApp = observer((props: Props) => {
         related items
       </Pane>
 
-      <AppStatusBar {...props} />
+      <StatusBar>
+        <AppStatusBar {...props} />
+      </StatusBar>
     </View>
   )
 })

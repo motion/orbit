@@ -1,6 +1,6 @@
 import { Model } from '@mcro/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
-import { App } from './interfaces/App'
+import { App } from './interfaces/AppTypes'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'

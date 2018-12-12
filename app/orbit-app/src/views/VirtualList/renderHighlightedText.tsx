@@ -14,7 +14,7 @@ const collapseWhitespace = str => str.replace(/\n[\s]*/g, ' ')
 export const renderHighlightedText = (text: string) => {
   return (
     <HighlightTextFrame>
-      <HighlightText ellipse whiteSpace="normal" alpha={0.65} options={{ maxSurroundChars: 100 }}>
+      <HighlightText ellipse whiteSpace="normal" options={{ maxSurroundChars: 100 }}>
         {collapseWhitespace(text)}
       </HighlightText>
     </HighlightTextFrame>

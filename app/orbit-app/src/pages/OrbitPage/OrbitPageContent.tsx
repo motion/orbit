@@ -76,8 +76,8 @@ export const OrbitPageContent = observer(() => {
   const allPanes: AppConfig[] = [
     ...AppPanes,
     {
-      id: 'source',
-      type: 'source',
+      id: 'sources',
+      type: 'sources',
       title: 'Sources',
       icon: 'box',
     },

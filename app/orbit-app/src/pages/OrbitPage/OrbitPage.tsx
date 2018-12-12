@@ -34,7 +34,7 @@ export const OrbitPage = observer(() => {
   })
   const paneManagerStore = useStore(PaneManagerStore, {
     selectionStore,
-    panes: [...AppPanes.map(p => p.id), 'settings', 'onboard'],
+    panes: [...AppPanes.map(p => p.id), 'settings', 'sources', 'onboard'],
     onPaneChange: () => {
       if (App.peekState.target) {
         AppActions.clearPeek()

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view, compose, attach } from '@mcro/black'
-import { OrbitCard } from '../views/OrbitCard'
 import { AppInfoStore, AppInfoProps } from './AppInfoStore'
 import { OrbitItemProps } from '../views/ListItems/OrbitItemProps'
 import { SyncStatus } from './SyncStatus'
@@ -9,6 +8,7 @@ import { Source } from '@mcro/models'
 import { OrbitIntegration } from '../sources/types'
 import { sourceToAppConfig } from '../stores/SourcesStore'
 import pluralize from 'pluralize'
+import { OrbitListItem } from '../views/ListItems/OrbitListItem'
 
 type Props = OrbitItemProps<Source> &
   AppInfoProps & {
@@ -23,14 +23,12 @@ const decorator = compose(
   view,
 )
 
-export const OrbitAppCard = decorator(({ store, app, subtitle, ...props }: Props) => {
+export const OrbitAppItem = decorator(({ store, app, subtitle, ...props }: Props) => {
   let countSubtitle = store.bitsCount >= 0 ? Number(store.bitsCount).toLocaleString() : '...'
   const commaIndex = countSubtitle.indexOf(',')
   countSubtitle = commaIndex > -1 ? `${countSubtitle.slice(0, commaIndex)}k` : countSubtitle
   return (
-    <OrbitCard
-      direct
-      model={app.source}
+    <OrbitListItem
       title={app.appName}
       titleProps={{
         ellipse: true,
@@ -39,7 +37,6 @@ export const OrbitAppCard = decorator(({ store, app, subtitle, ...props }: Props
       // appType="source"
       appConfig={{
         ...sourceToAppConfig(app),
-        type: 'source',
         viewConfig: {
           ...app.viewConfig,
           dimensions: [620, 620],
@@ -75,6 +72,6 @@ export const OrbitAppCard = decorator(({ store, app, subtitle, ...props }: Props
           )
         }}
       </SyncStatus>
-    </OrbitCard>
+    </OrbitListItem>
   )
 })

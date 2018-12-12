@@ -7,7 +7,7 @@ import { Grid } from '../../views/Grid'
 import { Message } from '../../views/Message'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { OrbitOrb } from '../../views/OrbitOrb'
-import { OrbitAppCard } from '../../components/OrbitAppCard'
+import { OrbitAppItem } from '../../components/OrbitAppItem'
 
 type Props = {
   type: string
@@ -81,7 +81,7 @@ export class NewOrbitPane extends React.Component<Props & { store?: CreateSpaceS
                 margin={[5, -4]}
               >
                 {sourcesStore.sources.map((app, index) => (
-                  <OrbitAppCard
+                  <OrbitAppItem
                     key={app.integration}
                     model={app}
                     pane="docked"

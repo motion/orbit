@@ -12,8 +12,9 @@ high level to launch:
 low level next:
 
 - move quickly towards a working All/People/Terms pane in one window
-- home should show a column of each of them
+- improve the creation panes generally
 - clicking the currently active pane should toggle it open/closed
+- get dark theme working
 - get a lot of interaction working
 - big settings pane cleanup, restructure
 - fix search up a lot

@@ -196,12 +196,6 @@ extension OCRManager {
                                                                              initialMove: [0, CharacterCache.shared.moves.px],
                                                                              findHangers: true,
                                                                              percentDownLine: percentDownLine) {
-                        
-                        // Debug
-                        let cacheEndTime = DispatchTime.now()
-                        if shouldLogDebug {
-                            totalCacheTime += cacheEndTime.uptimeNanoseconds - cacheStartTime.uptimeNanoseconds
-                        }
 
                         // Check if this char has already been cached
                         if let cachedChar = CharacterCache.shared.cachedCharacter(matching: outline) {
@@ -211,8 +205,20 @@ extension OCRManager {
                             // Debug - cache count
                             totalCharsCached += 1
                             
+                            // Debug - cache time
+                            let cacheEndTime = DispatchTime.now()
+                            if shouldLogDebug {
+                                totalCacheTime += cacheEndTime.uptimeNanoseconds - cacheStartTime.uptimeNanoseconds
+                            }
+                            
                         } else {
                             // No matching outline in the cache; perform OCR
+                            
+                            // Debug - cache time
+                            let cacheEndTime = DispatchTime.now()
+                            if shouldLogDebug {
+                                totalCacheTime += cacheEndTime.uptimeNanoseconds - cacheStartTime.uptimeNanoseconds
+                            }
 
                             // Crop pixel buffer down to this character's bounds
                             let charBox = character.lineHeightBounds(with: line.bounds)
@@ -321,6 +327,11 @@ extension OCRManager {
                 // Log total time
                 let totalTime = (DispatchTime.now().uptimeNanoseconds - ocrStartTime.uptimeNanoseconds) / 1_000_000
                 Log.debug("TOTAL FRAME TIME: \(totalTime)ms")
+                
+                // Log total characters
+                let words = lines.map({$0.words()}).reduce([], +).count
+                let chars = lines.map({$0.characters}).reduce([], +).count
+                Log.debug("\(lines.count) lines, \(words) words, \(chars) characters found")
             }
             
             // Debug - log OCR output

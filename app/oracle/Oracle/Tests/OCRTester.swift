@@ -116,38 +116,10 @@ extension OCRTester {
     
     /// Runs a series of OCR tests using screenshots containing a variety of content.
     func testScreenshots() {
-        
-        // Just testing this screenshot right now...
-        let image = testImages[1]
-        let buffer = createBuffer(from: image)
-        CVPixelBufferLockBaseAddress(buffer, .readOnly)
-        let baseAddress = CVPixelBufferGetBaseAddressOfPlane(buffer, 0)!
-        let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(buffer, 0)
-        var rect = CGRect(origin: .zero, size: image.size)
-        let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil)! // To get true pixel size (not just points)
-        
-        // Completion handler - save image output w/ overlay (only if image output flag is enabled)
-        let completion: (([Line]) -> Void)? = shouldSaveDebugImages ? { [unowned self] (lines) in
-            DispatchQueue.main.async {
-                let output = self.drawLines(lines, on: cgImage)
-                self.save(output, as: self.imageNames[1])
-            }
-        } : nil
-        
-        // Perform OCR
-        Log.debug("\n\n--------------- \(imageNames[1]) (\(cgImage.width)x\(cgImage.height)) - 1ST PASS ---------------\n\n")
-        OCRManager.shared.performOCR(on: baseAddress,
-                                     bytesPerRow: bytesPerRow,
-                                     bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)) { [unowned self] (lines) in
-                                        
-            Log.debug("\n\n--------------- \(self.imageNames[1]) (\(cgImage.width)x\(cgImage.height)) - 2ND PASS ---------------\n\n")
-            DispatchQueue.main.async {
-                // Run again
-                OCRManager.shared.performOCR(on: baseAddress,
-                                             bytesPerRow: bytesPerRow,
-                                             bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height),
-                                             completion: completion)
-            }
+        // Test all screenshots recursively
+        testScreenshot(0, of: testImages.count) {
+            // Done
+            Log.info("\n\n--------------- TESTING COMPLETED ---------------\n\n")
         }
     }
     
@@ -208,6 +180,78 @@ extension OCRTester {
         let bitmap = NSBitmapImageRep(cgImage: cgImage)
         let png = bitmap.representation(using: .png, properties: [:])!
         try! png.write(to: url)
+    }
+    
+}
+
+
+// MARK: Testing
+
+fileprivate extension OCRTester {
+    
+    
+    /// Tests the screenshot at the provided index,
+    /// and then continues recursively until all screenshots have been tested.
+    ///
+    /// This method tests each screenshot twice: once "cold" to simulate performance without prior cache,
+    /// and once "hot" to simulate performance after the frame has been cached.
+    ///
+    /// - Parameters:
+    ///   - index: The index of the screenshot to test, in the `testImages` array.
+    ///   - total: The total number of screenshots to test (less than or equal to `testImages.count`).
+    ///   - completion: Completion handler to be called after ALL testing has completed (all screenshots).
+    func testScreenshot(_ index: Int, of total: Int, completion: @escaping () -> Void) {
+        // Exit recursion when we've reached the last index
+        if index == total {
+            completion()
+            return
+        }
+        
+        // Convert screenshot image to pixel buffer
+        let image = testImages[index]
+        let buffer = createBuffer(from: image)
+        CVPixelBufferLockBaseAddress(buffer, .readOnly)
+        let baseAddress = CVPixelBufferGetBaseAddressOfPlane(buffer, 0)!
+        let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(buffer, 0)
+        var rect = CGRect(origin: .zero, size: image.size)
+        let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil)! // To get true pixel size (not just points)
+        
+        // Completion handler - called after 2nd pass has completed
+        let screenshotCompletion: (([Line]) -> Void)? = { [unowned self] (lines) in
+            DispatchQueue.main.async {
+                // Unlock pixel buffer base address
+                CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
+                
+                // Flush character cache
+                CharacterCache.shared.flush()
+                
+                // Save image output w/ overlay (only if image output flag is enabled)
+                if shouldSaveDebugImages {
+                    let output = self.drawLines(lines, on: cgImage)
+                    self.save(output, as: self.imageNames[index])
+                }
+                
+                // Continue to next screenshot
+                self.testScreenshot(index + 1, of: total, completion: completion)
+            }
+        }
+        
+        // Perform 1st "cold" OCR pass
+        Log.debug("\n\n--------------- \(imageNames[index]) (\(cgImage.width)x\(cgImage.height)) - 1ST PASS ---------------\n\n")
+        OCRManager.shared.performOCR(on: baseAddress,
+                                     bytesPerRow: bytesPerRow,
+                                     bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)) { [unowned self] (lines) in
+                                     
+            // Perform 2nd "warm" OCR pass
+            Log.debug("\n\n--------------- \(self.imageNames[index]) (\(cgImage.width)x\(cgImage.height)) - 2ND PASS ---------------\n\n")
+            DispatchQueue.main.async {
+                // Run again
+                OCRManager.shared.performOCR(on: baseAddress,
+                                             bytesPerRow: bytesPerRow,
+                                             bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height),
+                                             completion: screenshotCompletion)
+            }
+        }
     }
     
 }

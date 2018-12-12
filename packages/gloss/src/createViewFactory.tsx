@@ -392,13 +392,19 @@ export function createViewFactory(toCSS: Function) {
       let finalProps = {} as any
 
       for (const key in props) {
+        if (key === 'forwardRef') {
+          if (isDOMElement) {
+            finalProps.ref = props[key]
+          } else {
+            finalProps[key] = props[key]
+          }
+          continue
+        }
         if (ignoreAttrs && ignoreAttrs[key]) {
           continue
         }
         if (isDOMElement) {
-          if (key === 'forwardRef' && isDOMElement) {
-            finalProps.ref = props[key]
-          } else if (validProp(key)) {
+          if (validProp(key)) {
             finalProps[key] = props[key]
           }
         } else {

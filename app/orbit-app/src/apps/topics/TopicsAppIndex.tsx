@@ -51,9 +51,7 @@ function TopicList({ results, offset = 0, ...props }) {
       {results.map((res, index) => (
         <OrbitListItem
           key={res.title}
-          direct
           padding={[IS_MINIMAL ? 5 : 7, 11]}
-          opacity={0.85}
           {...{ '&:hover': activeStyle }}
           activeStyle={activeStyle}
           index={index + offset}
@@ -85,8 +83,6 @@ const ScrollableContent = view({
   overflowY: 'auto',
 })
 
-const BorderedButton = props => <Button background="transparent" {...props} />
-
 const buttonProps = (store: TopicsIndexStore, type: string) => {
   return {
     onClick: () => store.setActiveTab(type),
@@ -94,35 +90,30 @@ const buttonProps = (store: TopicsIndexStore, type: string) => {
   }
 }
 
-const size = IS_MINIMAL ? 0.9 : 1
+const size = IS_MINIMAL ? 0.9 : 0.95
 
 export const TopicsAppIndex = observer((props: AppProps & { store?: TopicsIndexStore }) => {
   const store = useStore(TopicsIndexStore, props)
   return (
     <>
-      <SegmentedRow margin={[0, 8, 8]} itemProps={{ width: '33.3%', size: size, sizeHeight: size }}>
-        <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
-        <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
-        <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
+      <SegmentedRow
+        margin={8}
+        itemProps={{ background: 'transparent', width: '33.3%', size, sizeHeight: size }}
+      >
+        <Button {...buttonProps(store, 'trend')}>Trend</Button>
+        <Button {...buttonProps(store, 'topics')}>Topics</Button>
+        <Button {...buttonProps(store, 'terms')}>Terms</Button>
       </SegmentedRow>
 
-      <Slider
-        fixHeightToTallest
-        curFrame={store.tabs.indexOf(store.activeTab)}
-        frameWidth={IS_MENU ? MENU_WIDTH : ORBIT_WIDTH}
-        transition="none"
-      >
+      <Slider fixHeightToTallest curFrame={store.tabs.indexOf(store.activeTab)} transition="none">
         <SliderPane>
           <ScrollableContent>
             {!!store.results.length && (
               <>
                 <Separator>Terms</Separator>
-                <Row flexWrap="wrap">
-                  <TopicList results={store.results} offset={8} width="50%" />
-                </Row>
+                <TopicList results={store.results} />
               </>
             )}
-            <VerticalSpace />
             {!!store.results.length && (
               <>
                 <Separator>Topics</Separator>

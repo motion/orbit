@@ -1,13 +1,17 @@
 import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
-import { Surface, View } from '@mcro/ui'
+import { View, SegmentedRow, Button } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
-import { view, ensure, react, attach } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { BitModel, GenericBit, Bit } from '@mcro/models'
 import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
 import { Divider } from '../../../../views/Divider'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
+import { Pane } from '../../../../views/Pane'
+import { Title } from '../../../../views'
 
 type Props = OrbitSourceMainProps<'slack'>
 
@@ -91,28 +95,47 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   )
 }
 
-@attach({
-  store: SlackViewStore,
-})
-@view
-export class SlackApp extends React.Component<Props & { store: SlackViewStore }> {
-  render() {
-    const { bit, store } = this.props
-    return (
-      <Surface flexFlow="column" hover={false} noInnerElement padding={[16, 12]} flex={1}>
+export const SlackApp = observer((props: Props) => {
+  const [activePane, setActivePane] = React.useState(0)
+  const store = useStore(SlackViewStore, props)
+  return (
+    <View flex={1}>
+      <SegmentedRow
+        spaced
+        active={activePane}
+        onChange={setActivePane}
+        itemProps={{ chromeless: true, fontWeight: 600 }}
+      >
+        <Button>Conversation</Button>
+        <Button>Previously</Button>
+        <Button>Afterwards</Button>
+        <Button>Related</Button>
+      </SegmentedRow>
+
+      <Pane isShown={activePane === 0}>
         <ScrollableContent key={store.prevConvos.length} scrollTo="#start">
-          <View padding={[16, 0]}>
-            <ConvoGroup bits={store.prevConvos.reverse()} />
-            <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
-              {!!bit && <ChatMessages bit={bit} />}
-            </div>
-            <ConvoGroup bits={store.nextConvos} />
-            {/* ensure we have room to scroll down */}
-            <View height={Math.max(0, 6 - Math.min(4, store.nextConvos.length)) * 80} />
-          </View>
+          <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
+            {!!props.bit && <ChatMessages bit={props.bit} />}
+          </div>
         </ScrollableContent>
-        <AppStatusBar {...this.props} />
-      </Surface>
-    )
-  }
-}
+      </Pane>
+
+      <Pane isShown={activePane === 1}>
+        <Title>Previously</Title>
+        <ConvoGroup bits={store.prevConvos.reverse()} />
+      </Pane>
+
+      <Pane isShown={activePane === 2}>
+        <Title>Afterwards</Title>
+        <ConvoGroup bits={store.nextConvos} />
+      </Pane>
+
+      <Pane isShown={activePane === 3}>
+        <Title>Related</Title>
+        related items
+      </Pane>
+
+      <AppStatusBar {...props} />
+    </View>
+  )
+})

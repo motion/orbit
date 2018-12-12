@@ -18,31 +18,31 @@ type SegmentedRowProps = CSSPropertySet & {
   spaced?: boolean
 }
 
-export class SegmentedRow extends React.Component<SegmentedRowProps> {
-  state = {
-    active: null,
-  }
+export const SegmentedRow = (props: SegmentedRowProps) => {
+  const { children: children_, stretch, itemProps: itemProps_, spaced, ...rest } = props
+  const [active, setActive] = React.useState(props.defaultActive)
 
-  select = active => {
-    this.setState({ active })
-    if (this.props.sync) {
-      this.props.sync.set(active)
+  React.useEffect(() => {
+    if (props.active !== active) {
+      setActive(props.active)
+    }
+  })
+
+  const select = (active: number) => {
+    setActive(active)
+    if (props.sync) {
+      props.sync.set(active)
+    }
+    if (props.onChange) {
+      props.onChange(active)
     }
   }
 
-  get active() {
-    const hasState = this.state.active !== null
-    if (this.props.sync) {
-      return this.props.sync.get()
-    }
-    return hasState ? this.state.active : this.props.defaultActive
-  }
-
-  getContext = (index, length) =>
-    this.props.spaced
+  const getContext = (index: number, length: number) =>
+    props.spaced
       ? {}
       : {
-          ...this.props.uiContext,
+          ...props.uiContext,
           inSegment: {
             first: index === 0,
             last: index === length - 1,
@@ -50,41 +50,39 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
           },
         }
 
-  render() {
-    const { children: children_, stretch, itemProps: itemProps_, spaced, ...props } = this.props
-    let itemProps = itemProps_ as any
-    let children = children_
-    if (spaced) {
-      itemProps = itemProps || {}
-      itemProps.marginLeft = typeof spaced === 'number' ? spaced : 5
-    }
-    if (stretch) {
-      itemProps = itemProps || {}
-      itemProps.flex = 1
-    }
-    const realChildren = children && React.Children.map(children, _ => _).filter(Boolean)
-    if (realChildren.length > 1) {
-      children = realChildren
-        .map((child, index) => {
-          if (!child) {
-            return false
-          }
-          const finalChild =
-            typeof child === 'string' || typeof child === 'number' ? <span>{child}</span> : child
-
-          return (
-            <MergeUIContext key={index} value={this.getContext(index, realChildren.length)}>
-              {itemProps
-                ? React.cloneElement(finalChild, {
-                    ...itemProps,
-                    ...finalChild.props,
-                  }) /* merge child props so they can override */
-                : finalChild}
-            </MergeUIContext>
-          )
-        })
-        .filter(Boolean)
-    }
-    return <Row {...props}>{children}</Row>
+  let itemProps = itemProps_ as any
+  let children = children_
+  if (spaced) {
+    itemProps = itemProps || {}
+    itemProps.marginLeft = typeof spaced === 'number' ? spaced : 5
   }
+  if (stretch) {
+    itemProps = itemProps || {}
+    itemProps.flex = 1
+  }
+  const realChildren = children && React.Children.map(children, _ => _).filter(Boolean)
+  if (realChildren.length > 1) {
+    children = realChildren
+      .map((child, index) => {
+        if (!child) {
+          return false
+        }
+        const finalChild =
+          typeof child === 'string' || typeof child === 'number' ? <span>{child}</span> : child
+
+        return (
+          <MergeUIContext key={index} value={getContext(index, realChildren.length)}>
+            {itemProps
+              ? React.cloneElement(finalChild, {
+                  ...itemProps,
+                  ...finalChild.props,
+                  onClick: finalChild.props.onClick || (() => select(index)),
+                }) /* merge child props so they can override */
+              : finalChild}
+          </MergeUIContext>
+        )
+      })
+      .filter(Boolean)
+  }
+  return <Row {...rest}>{children}</Row>
 }

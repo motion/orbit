@@ -10,7 +10,7 @@ export type AppType =
   | 'people'
   | 'topics'
   | 'lists'
-  | 'source'
+  | 'sources'
   | 'bit'
   | 'settings'
 

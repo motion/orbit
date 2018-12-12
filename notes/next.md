@@ -1,4 +1,15 @@
-NEXT
+high level to launch:
+
+- make 3 apps work nicely
+- make settings/sources/onboards work nicely
+- wide variety of polish on ux / interaction
+- fix/change tray so its useful/fun
+- improving relevancy and topics
+- a server for signup, syncing data between people
+- building the website
+- take a good look at what it would take to allow custom apps
+
+low level next:
 
 - move quickly towards a working All/People/Terms pane in one window
 - home should show a column of each of them
@@ -15,6 +26,11 @@ NEXT
 - grouped search main view work
 - adding in all sorts of fundamental help -- links to thinks, etc
 - https://libp2p.io/
+
+dev-tool level:
+
+- make stores automatically get all stores from context somehow or able to DI them
+  - if we do a DI system we can DI props + DI observable props configurably
 
 Tray:
 

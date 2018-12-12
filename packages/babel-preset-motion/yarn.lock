@@ -781,10 +781,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@mcro/react-hot-loader@4.5.4":
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/@mcro/react-hot-loader/-/react-hot-loader-4.5.4.tgz#2441a61c48faf5f4c0aa3b5bc616d197dedb5e8b"
-  integrity sha512-eMGNomFLo74CRjfyp4oUrWFRiRVhnK+VHnPqu3BBT+vTlXtQgUwfApw+wvY69zJfLNXUM42FhGWjCPZieRU7rg==
+"@mcro/react-hot-loader@4.5.5":
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/@mcro/react-hot-loader/-/react-hot-loader-4.5.5.tgz#a2a35b84d752666b9f36bfb6f4db1ad8a6559363"
+  integrity sha512-I3qu9nsUzjTgQ/RfGA0O8ZLDar3BuGUAWela62bHrTXiElzKUCY+Jv2jMos+etbObR7UigZOL55JGMjLd+S9mw==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"

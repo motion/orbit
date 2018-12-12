@@ -7,7 +7,7 @@ import { react, ensure } from '@mcro/black'
 import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
 import { observer } from 'mobx-react-lite'
 
-class SourceAppStore {
+class SourcesMain {
   props: AppProps
 
   get appConfig() {
@@ -28,8 +28,8 @@ class SourceAppStore {
   )
 }
 
-export const SourceAppMain = observer((props: AppProps) => {
-  const { model } = useStore(SourceAppStore, props)
+export const SourcesAppMain = observer((props: AppProps) => {
+  const { model } = useStore(SourcesMain, props)
   const type = model ? model.type : props.sourceType
   const View = props.sourcesStore.getView(type, 'setting')
   if (!View) {

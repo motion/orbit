@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { view, StoreContext, react } from '@mcro/black'
+import { view, StoreContext } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
-import { AppConfig, AppType } from '@mcro/models'
+import { AppConfig } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { Col, Row } from '@mcro/ui'
 import { AppPanes } from '../../stores/SpaceStore'
@@ -25,9 +25,11 @@ class OrbitStore {
   }
 
   handleSelectItem: OrbitItemProps<any>['onSelect'] = (_index, config) => {
+    const type = config.type === 'bit' ? 'search' : config.type
+    console.log('select22', config, this)
     this.activeConfig = {
       ...this.activeConfig,
-      [config.type]: config,
+      [type]: config,
     }
   }
 
@@ -74,8 +76,8 @@ export const OrbitPageContent = observer(() => {
   const allPanes: AppConfig[] = [
     ...AppPanes,
     {
-      id: 'source',
-      type: 'source',
+      id: 'sources',
+      type: 'sources',
       title: 'Sources',
       icon: 'box',
     },

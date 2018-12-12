@@ -64,17 +64,18 @@ const IconInner = view(View, {
   }
 })
 
-export class Icon extends React.Component<IconProps> {
-  static defaultProps = {
-    size: 16,
-    type: 'mini',
-    margin: 0,
-  }
-
-  uniq = `icon-${Math.round(Math.random() * 1000000)}`
-
-  render() {
-    const { tooltip, tooltipProps, name, type, children, color, ...props } = this.props
+export const Icon = React.memo(
+  ({
+    tooltip,
+    tooltipProps,
+    name,
+    type = 'mini',
+    children,
+    color,
+    size = 16,
+    margin = 0,
+    ...props
+  }: IconProps) => {
     if (!name) {
       return null
     }
@@ -102,5 +103,5 @@ export class Icon extends React.Component<IconProps> {
         </div>
       </IconInner>
     )
-  }
-}
+  },
+)

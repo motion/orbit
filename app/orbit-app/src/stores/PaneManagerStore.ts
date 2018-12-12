@@ -57,6 +57,9 @@ export class PaneManagerStore {
 
   setActivePane = name => {
     const nextIndex = this.panes.findIndex(val => val === name)
+    if (nextIndex === -1) {
+      throw new Error(`no pane found! this.props.panes: ${this.panes}`)
+    }
     this.setPaneIndex(nextIndex)
   }
 
@@ -64,7 +67,7 @@ export class PaneManagerStore {
 
   activePaneIndexSetter = memoize((index: number) => () => this.setPaneIndex(index))
 
-  hasPaneIndex = index => {
+  hasPaneIndex = (index: number) => {
     if (index > this.panes.length - 1) {
       return false
     }
@@ -74,7 +77,7 @@ export class PaneManagerStore {
     return true
   }
 
-  setPaneIndex = index => {
+  setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
       return
     }
@@ -87,7 +90,7 @@ export class PaneManagerStore {
     }
   }
 
-  indexOfPane = name => {
+  indexOfPane = (name: string) => {
     return this.panes.indexOf(name)
   }
 

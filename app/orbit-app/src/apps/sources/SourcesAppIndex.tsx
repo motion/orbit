@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { Grid } from '../../views/Grid'
 import { VerticalSpace } from '../../views'
 import { SubTitle } from '../../views/SubTitle'
-import { Unpad } from '../../views/Unpad'
 import { SimpleItem } from '../../views/SimpleItem'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { Button } from '@mcro/ui'
@@ -13,7 +11,7 @@ import { observer } from 'mobx-react-lite'
 import { OrbitAppItem } from '../../components/OrbitAppItem'
 
 class SourcesIndex {
-  props: AppProps
+  props: AppProps<'sources'>
 
   get results() {
     return this.props.sourcesStore.activeSources
@@ -29,7 +27,7 @@ class SourcesIndex {
   )
 }
 
-export const SourcesAppIndex = observer((props: AppProps) => {
+export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
   const { sourcesStore, isActive } = props
   const store = useStore(SourcesIndex, props)
   return (

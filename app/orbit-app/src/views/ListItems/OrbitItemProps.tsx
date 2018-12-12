@@ -24,7 +24,7 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     listItem?: boolean
     hoverToSelect?: boolean
     sourcesStore?: SourcesStore
-    appStore?: AppStore
+    appStore?: AppStore<any>
     subtitle?: React.ReactNode
     date?: React.ReactNode
     icon?: React.ReactNode

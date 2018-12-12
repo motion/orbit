@@ -43,6 +43,17 @@ export type BaseApp = {
   type?: AppType
 }
 
+export type AppData = {
+  search: SearchAppData
+  people: PeopleAppData
+  topics: TopicsAppData
+  lists: null
+  home: null
+  sources: null
+  bit: null
+  settings: null
+}
+
 export type SearchApp = BaseApp & { type: 'search'; data: SearchAppData }
 export type PeopleApp = BaseApp & { type: 'people'; data: PeopleAppData }
 export type TopicsApp = BaseApp & { type: 'topics'; data: TopicsAppData }

@@ -24,7 +24,7 @@ export type VirtualListProps = {
   items: any[]
   itemProps?: OrbitItemProps<any>
   getItemProps?: GetItemProps
-  appStore?: AppStore
+  appStore?: AppStore<any>
   ItemView?: GenericComponent<any>
   infinite?: boolean
   loadMoreRows?: Function

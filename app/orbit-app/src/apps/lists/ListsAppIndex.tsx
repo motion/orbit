@@ -12,7 +12,7 @@ import { View, Button } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 
 class ListsIndexStore {
-  props: AppProps
+  props: AppProps<'lists'>
   state = Math.random()
 
   // todo: this probably should be in some AppStore but there are multiple AppStores already
@@ -76,7 +76,7 @@ class ListsIndexStore {
   )
 }
 
-export const ListsAppIndex = observer((props: AppProps) => {
+export const ListsAppIndex = observer((props: AppProps<'lists'>) => {
   const { results } = useStore(ListsIndexStore, props)
   const isSmall = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (

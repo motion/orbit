@@ -11,7 +11,7 @@ import { MergeContext } from '../../views/MergeContext'
 import { StoreContext } from '@mcro/black'
 import { GetItemProps } from '../../views/VirtualList/VirtualList'
 
-export const SearchAppIndex = observer((props: AppProps) => {
+export const SearchAppIndex = observer((props: AppProps<'search'>) => {
   const searchStore = useStore(SearchStore, props)
   const shouldHideNav = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   const results = searchStore.resultsForVirtualList

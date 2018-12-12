@@ -1,4 +1,4 @@
-import { AppType, AppConfig } from '@mcro/models'
+import { AppType, AppConfig, AppData } from '@mcro/models'
 import { IntegrationType } from '@mcro/models'
 import { AppStore } from './AppStore'
 import { SourcesStore } from '../stores/SourcesStore'
@@ -9,13 +9,15 @@ import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { OrbitItemProps } from '../views/ListItems/OrbitItemProps'
 
-export type AppProps = {
+export type AppProps<Type extends AppType> = {
   id: string
   viewType: 'index' | 'main' | 'setup'
   title: string
-  type: AppType
+  type: Type
+  data: AppData[Type]
+  updateData: (values: Partial<AppData[Type]>) => void
   sourceType?: IntegrationType
-  appStore: AppStore
+  appStore: AppStore<Type>
   sourcesStore: SourcesStore
   settingStore: SettingStore
   queryStore: QueryStore

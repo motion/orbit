@@ -11,7 +11,7 @@ type ThemeProps = {
   theme?: string | SimpleStyleObject
   name?: string
   select?: Function
-  children: React.ReactNode
+  children: React.ReactElement<any>
 }
 
 // takes gloss themes and adds a "generate from base object/color"
@@ -19,7 +19,6 @@ type ThemeProps = {
 // TODO: this just re-mounts everything below it on every render (when used with an object)?....
 // TODO: the uniqeThemeName stuff is super wierd maybe not necessary
 
-// @ts-ignore
 export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) => {
   if (name) {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>

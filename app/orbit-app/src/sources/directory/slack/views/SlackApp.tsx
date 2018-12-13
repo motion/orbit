@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
-import { SegmentedRow, Button, Theme, Row, ThemeContext } from '@mcro/ui'
+import { SegmentedRow, Button, Theme, Row, ThemeContext, color } from '@mcro/ui'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { useObserveMany } from '@mcro/model-bridge'
 import { BitModel, GenericBit, Bit } from '@mcro/models'
@@ -76,7 +76,8 @@ export const SlackApp = React.memo((props: Props) => {
     <>
       <Theme
         theme={{
-          color: allThemes.selected.background,
+          color: color(activeTheme.color).alpha(0.5),
+          colorActive: allThemes.selected.background,
           backgroundHover: activeTheme.backgroundHover,
           borderColor: 'transparent',
         }}
@@ -86,7 +87,7 @@ export const SlackApp = React.memo((props: Props) => {
             spaced={0}
             active={activePane}
             onChange={setActivePane}
-            itemProps={{ chromeless: true, fontWeight: 600, size: 0.9, sizeFont: 1 }}
+            itemProps={{ chromeless: true, fontWeight: 600, sizeFont: 1.1, size: 0.9 }}
           >
             <Button>Conversation</Button>
             <Button>Previously</Button>

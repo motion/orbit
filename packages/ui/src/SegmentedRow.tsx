@@ -78,6 +78,7 @@ export const SegmentedRow = (props: SegmentedRowProps) => {
                   ...itemProps,
                   ...finalChild.props,
                   onClick: finalChild.props.onClick || (() => select(index)),
+                  active: active === index,
                 }) /* merge child props so they can override */
               : finalChild}
           </MergeUIContext>

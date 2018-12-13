@@ -204,13 +204,6 @@ fileprivate extension OCRTester {
         // Exit recursion when we've reached the last index
         if index == total {
             completion()
-            
-            let totalMLTime = OCRManager.shared.totalMLTimeAllSets / 1_000_000
-            let avgMLTime = Double(totalMLTime) / Double(testImages.count)
-            let avgCharTime = OCRManager.shared.mlTimePerChar / Double(testImages.count)
-            print("\n\nAVERAGE ML TIME: \(avgMLTime)")
-            print("AVERAGE TIME PER CHAR: \(avgCharTime)")
-            
             return
         }
         

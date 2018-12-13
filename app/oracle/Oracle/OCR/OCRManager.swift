@@ -32,9 +32,6 @@ class OCRManager {
     /// Counter for debugging purposes.
     fileprivate var classificationCount = 0
     
-    var totalMLTimeAllSets: UInt64 = 0
-    var mlTimePerChar: Double = 0
-    
     
     private init() {
         
@@ -135,9 +132,6 @@ extension OCRManager {
         extractTextBoxes(from: filteredBuffer) { [unowned self] (lines) in
             
             /* ----- IMPORTANT: ENTERING BACKGROUND QUEUE HERE ----- */
-            
-            
-            var charsToOCR = [CVPixelBuffer]()
             
             
             // Performance - log character extraction time
@@ -250,8 +244,6 @@ extension OCRManager {
 
                             // Classify image
                             let classification = self.classifyImage(charBuffer, isInverted: shouldInvert) ?? ""
-//                            let classification = "a"
-//                            charsToOCR.append(charBuffer)
 
                             // Store classification
                             character.classification = classification
@@ -303,8 +295,6 @@ extension OCRManager {
                         
                         // Classify image
                         let classification = self.classifyImage(charBuffer, isInverted: shouldInvert) ?? ""
-//                        let classification = "a"
-//                        charsToOCR.append(charBuffer)
                         
                         // Store classification
                         character.classification = classification
@@ -323,19 +313,6 @@ extension OCRManager {
                 }
             }
             
-//            let mlStart = DispatchTime.now()
-//            print("\n\nPerforming OCR on \(charsToOCR.count) chars...")
-//            let classifications = self.classifyImages(charsToOCR, isInverted: false)
-//            let mlElapsed = (DispatchTime.now().uptimeNanoseconds - mlStart.uptimeNanoseconds) / 1_000_000
-//            print("Batch OCR time: \(mlElapsed)")
-//            let avgML = Double(mlElapsed) / Double(charsToOCR.count)
-//            print("Average per char: \(avgML)")
-////            print(classifications)
-//            for buffer in charsToOCR {
-//                CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
-//            }
-            
-            
             // Debugging stuff
             if shouldLogDebug {
                 // Log cache time
@@ -345,8 +322,6 @@ extension OCRManager {
                 // Log ML time
                 Log.debug("CHARACTERS CLASSIFIED W/ ML: \(totalCharsML)")
                 Log.debug("TOTAL ML TIME: \(totalMLTime / 1_000_000)ms")
-                self.totalMLTimeAllSets += totalMLTime
-                self.mlTimePerChar += Double(totalMLTime / 1_000_000) / Double(totalCharsML)
                 
                 // Log cropping time
                 Log.debug("TOTAL CROPPING TIME (character level): \(totalCropTime / 1_000_000)ms")

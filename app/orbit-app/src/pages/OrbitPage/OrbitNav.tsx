@@ -73,7 +73,7 @@ const NavButton = ({ children, tooltip = null, label = null, isActive, ...props 
     <NavButtonChrome isActive={isActive} {...props}>
       {children}
       {!!label && (
-        <Text marginLeft={10} fontWeight={400} size={1} alpha={isActive ? 1 : 0.75}>
+        <Text marginLeft={10} fontWeight={400} size={1} alpha={isActive ? 1 : 0.85}>
           {label}
         </Text>
       )}

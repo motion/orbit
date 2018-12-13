@@ -62,6 +62,7 @@ export class AppStore<Type extends AppType> {
     },
     {
       defaultValue: this.props.queryStore.query,
+      deferFirstRun: true,
       onlyUpdateIfChanged: true,
     },
   )

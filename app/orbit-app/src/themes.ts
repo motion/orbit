@@ -105,7 +105,6 @@ const macModernTheme = Theme.colorize({
 })
 
 const light = {
-  _equalityKey: 'light',
   ...macModernTheme,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
@@ -125,7 +124,6 @@ const light = {
 }
 
 const dark = {
-  _equalityKey: 'dark',
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   ...macModernTheme,
@@ -142,10 +140,10 @@ const dark = {
     cardBackground: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
-    background: [35, 35, 35, 0.98],
+    background: [35, 35, 35],
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
-    color: '#fff',
+    color: [250, 250, 250],
     borderColor: [1, 1, 1, 0.25],
   }),
   buttonBackground: [60, 60, 60, 0.8],
@@ -155,7 +153,6 @@ const dark = {
 }
 
 const clearLight = {
-  _equalityKey: 'clearlight',
   ...light,
   ...Theme.fromStyles({
     color: '#fff',
@@ -164,7 +161,6 @@ const clearLight = {
 }
 
 const clearDark = {
-  _equalityKey: 'clearDark',
   ...dark,
   ...Theme.colorize({
     background: [19, 19, 19, 0.05],
@@ -174,7 +170,6 @@ const clearDark = {
 }
 
 const semiDark = {
-  _equalityKey: 'semi-dark',
   ...dark,
   background: 'linear-gradient(rgba(45,45,45,0.15), rgba(30,30,30,0.15))',
   backgroundHover: 'linear-gradient(rgba(45,45,45,0.1), rgba(30,30,30,0.1))',
@@ -182,7 +177,6 @@ const semiDark = {
 
 export const themes = {
   selected: {
-    _equalityKey: 'orbit',
     ...Theme.fromStyles({
       background: orbitColor,
       color: '#fff',
@@ -190,7 +184,6 @@ export const themes = {
     }),
   },
   tooltip: {
-    _equalityKey: 'tooltip',
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
   },
@@ -200,7 +193,6 @@ export const themes = {
   clearLight,
   'semi-dark': semiDark,
   tan: {
-    _equalityKey: 'tan',
     ...macModernTheme,
     ...Theme.fromStyles({
       background: tanBg,

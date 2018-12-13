@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite'
 export type SubPaneProps = CSSPropertySetStrict & {
   id: string
   type?: AppType
+  fullHeight?: boolean
   preventScroll?: boolean
   store?: SubPaneStore
   style?: Object
@@ -43,10 +44,11 @@ export const SubPane = observer((props: Props) => {
           isActive={isActive}
           isLeft={isLeft}
           style={props.style}
-          height={subPaneStore.contentHeight}
+          height={props.fullHeight ? 'auto' : subPaneStore.contentHeight}
           forwardRef={subPaneStore.paneRef}
           preventScroll={props.preventScroll}
           transition={transition}
+          {...props.fullHeight && { bottom: 0 }}
           {...props}
         >
           <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>
@@ -98,4 +100,5 @@ const SubPaneInner = view(UI.View, {
 
 const PaneContentInner = view({
   position: 'relative',
+  flex: 1,
 })

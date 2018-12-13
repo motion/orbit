@@ -2,7 +2,7 @@ import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { View, SegmentedRow, Button, Theme } from '@mcro/ui'
-import { AppStatusBar } from '../../../views/layout/AppStatusBar'
+import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { BitModel, GenericBit, Bit } from '@mcro/models'
@@ -12,7 +12,6 @@ import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import { Pane } from '../../../../views/Pane'
 import { Title } from '../../../../views'
-import { StatusBar } from '../../../../components/StatusBar'
 
 type Props = OrbitSourceMainProps<'slack'>
 
@@ -138,9 +137,7 @@ export const SlackApp = observer((props: Props) => {
         related items
       </Pane>
 
-      <StatusBar>
-        <AppStatusBar {...props} />
-      </StatusBar>
+      <BitStatusBar {...props} />
     </View>
   )
 })

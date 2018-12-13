@@ -2,7 +2,7 @@ import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
-import { AppStatusBar } from '../../../views/layout/AppStatusBar'
+import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { Document } from '../../../views/bits/document/Document'
 
 export class JiraApp extends React.Component<OrbitSourceMainProps<'jira'>> {
@@ -15,7 +15,7 @@ export class JiraApp extends React.Component<OrbitSourceMainProps<'jira'>> {
             <Document {...this.props}>{bit.body}</Document>
           </View>
         </ScrollableContent>
-        <AppStatusBar {...this.props} />
+        <BitStatusBar {...this.props} />
       </Surface>
     )
   }

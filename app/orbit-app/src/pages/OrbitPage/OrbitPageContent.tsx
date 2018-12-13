@@ -96,7 +96,7 @@ export const OrbitPageContent = observer(() => {
       <Row flex={1}>
         <OrbitIndexView isHidden={store.activePane === 'home'}>
           {allPanes.map(app => (
-            <SubPane key={app.type} id={app.id} type={app.type}>
+            <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
               <SelectionManager>
                 <AppView
                   viewType="index"
@@ -111,7 +111,7 @@ export const OrbitPageContent = observer(() => {
         </OrbitIndexView>
         <OrbitMainView>
           {allPanes.map(app => (
-            <SubPane key={app.type} id={app.id} type={app.type}>
+            <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
               <AppView
                 isActive
                 viewType="main"

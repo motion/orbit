@@ -65,6 +65,7 @@ export class SubPaneStore {
     () => !!this.paneNode,
     hasNode => {
       ensure('hasNode', hasNode)
+      ensure('not fullHeight', !this.props.fullHeight)
       on(this, this.paneNode, 'scroll', throttle(this.onPaneScroll, 16 * 3))
       this.addObserver(this.paneNode, this.handlePaneChange)
 

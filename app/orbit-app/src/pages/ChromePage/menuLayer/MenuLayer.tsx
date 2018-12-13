@@ -15,10 +15,11 @@ import { MENU_WIDTH } from '../../../constants'
 import { throttle } from 'lodash'
 import { MenuStore, menuApps } from './MenuStore'
 import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
-import { useSpring, animated, interpolate } from 'react-spring'
+import { animated, interpolate } from 'react-spring'
+import { useSpring } from 'react-spring/hooks'
 import { observer } from 'mobx-react-lite'
 
-export type MenuAppProps = AppProps & { menuStore: MenuStore; menuId: number }
+export type MenuAppProps = AppProps<any> & { menuStore: MenuStore; menuId: number }
 
 export const MenuLayer = observer(() => {
   const stores = React.useContext(StoreContext)

@@ -226,7 +226,7 @@ export function createViewFactory(toCSS: Function) {
       targetConfig = target.getConfig()
     }
     // shorthand: view({ ... })
-    if (typeof target === 'object' && !isSimpleView) {
+    if (typeof target === 'object' && !b && !isSimpleView) {
       target = 'div'
       rawStyles = a
     }
@@ -354,6 +354,10 @@ export function createViewFactory(toCSS: Function) {
       return generateClassnames(classNames, props, tag, theme)
     }
 
+    //
+    // the actual view!
+    //
+
     ThemedView = React.memo((props: SimpleViewProps) => {
       const propKey = React.useRef(null)
       const [classNames, setClassNames] = React.useState(null)
@@ -411,9 +415,16 @@ export function createViewFactory(toCSS: Function) {
           finalProps[key] = props[key]
         }
       }
+
       if (classNames) {
         finalProps.className = classNames.join(' ')
       }
+
+      // if (process.env.NODE_ENV === 'development') {
+      //   if (props.debug) {
+      //     debugger
+      //   }
+      // }
 
       return React.createElement(element, finalProps, props.children)
     })

@@ -4,12 +4,86 @@ import { Row } from '../blocks/Row'
 import { TableInput } from '../table/TableInput'
 import { colors } from '../helpers/colors'
 import { View } from '../blocks/View'
-import { Icon } from '../Icon'
 import { ClearButton } from '../buttons/ClearButton'
 import { Filter } from '../table/types'
-import { attachTheme, ThemeObject, CSSPropertySet } from '@mcro/gloss'
+import { ThemeObject, CSSPropertySet, ThemeContext } from '@mcro/gloss'
 import { FilterToken } from '../table/FilterToken'
 import color from '@mcro/color'
+import { Icon } from '../Icon'
+
+export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
+  CSSPropertySet & {
+    before?: React.ReactNode
+    searchBarProps?: Object
+    after?: React.ReactNode
+    actions?: React.ReactNode
+    filters?: Filter[]
+    onClickClear?: Function
+    focusedToken?: number
+    filterProps?: Object
+    theme?: ThemeObject
+    visible?: boolean
+  }
+
+export const SearchInput = ({
+  width = '100%',
+  before = null,
+  placeholder = null,
+  searchBarProps = null,
+  after = null,
+  actions = null,
+  filters = [],
+  onClickClear = null,
+  focusedToken = null,
+  filterProps = null,
+  value = null,
+  flex = null,
+  padding = 5,
+  visible,
+  ...props
+}: SearchInputProps) => {
+  const { activeTheme } = React.useContext(ThemeContext)
+  return (
+    <SearchBar
+      position="relative"
+      zIndex="1"
+      key="searchbar"
+      flex={flex}
+      padding={padding}
+      {...searchBarProps}
+    >
+      {before}
+      <SearchBox width={width} tabIndex={-1}>
+        <SearchIcon
+          name="ui-1_zoom"
+          color={activeTheme.color ? color(activeTheme.color).alpha(0.5) : '#555'}
+        />
+        {filters.map((filter, i) => (
+          <FilterToken
+            key={`${filter.key}:${filter.type}${i}`}
+            index={i}
+            filter={filter}
+            focused={i === focusedToken}
+            {...filterProps}
+          />
+        ))}
+        <SearchInnerInput placeholder={placeholder} {...props} />
+        <SearchClearButton
+          onClick={onClickClear}
+          visible={typeof visible === 'boolean' ? visible : value && !!value.length}
+          opacity={1}
+          position="relative"
+          zIndex={2}
+          // weirdly this fixes a strange overlap bug
+          flex={1}
+          marginLeft={5}
+        />
+      </SearchBox>
+      {after}
+      {actions != null ? <Actions>{actions}</Actions> : null}
+    </SearchBar>
+  )
+}
 
 const SearchClearButton = view(ClearButton, {
   position: 'absolute',
@@ -80,78 +154,3 @@ export const SearchBox = view(View, {
   background: theme.background,
   border: [1, theme.borderColor.alpha(0.5)],
 }))
-
-export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
-  CSSPropertySet & {
-    before?: React.ReactNode
-    searchBarProps?: Object
-    after?: React.ReactNode
-    actions?: React.ReactNode
-    filters?: Filter[]
-    onClickClear?: Function
-    focusedToken?: number
-    filterProps?: Object
-    theme?: ThemeObject
-    visible?: boolean
-  }
-
-export const SearchInput = attachTheme(
-  ({
-    width = '100%',
-    before = null,
-    placeholder = null,
-    searchBarProps = null,
-    after = null,
-    actions = null,
-    filters = [],
-    onClickClear = null,
-    focusedToken = null,
-    filterProps = null,
-    theme = null,
-    value = null,
-    flex = null,
-    padding = 5,
-    visible,
-    ...props
-  }: SearchInputProps) => (
-    <SearchBar
-      position="relative"
-      zIndex="1"
-      key="searchbar"
-      flex={flex}
-      padding={padding}
-      {...searchBarProps}
-    >
-      {before}
-      <SearchBox width={width} tabIndex={-1}>
-        <SearchIcon
-          name="ui-1_zoom"
-          color={theme.color ? color(theme.color).alpha(0.5) : '#555'}
-          size={16}
-        />
-        {filters.map((filter, i) => (
-          <FilterToken
-            key={`${filter.key}:${filter.type}${i}`}
-            index={i}
-            filter={filter}
-            focused={i === focusedToken}
-            {...filterProps}
-          />
-        ))}
-        <SearchInnerInput placeholder={placeholder} {...props} />
-        <SearchClearButton
-          onClick={onClickClear}
-          visible={typeof visible === 'boolean' ? visible : value && !!value.length}
-          opacity={1}
-          position="relative"
-          zIndex={2}
-          // weirdly this fixes a strange overlap bug
-          flex={1}
-          marginLeft={5}
-        />
-      </SearchBox>
-      {after}
-      {actions != null ? <Actions>{actions}</Actions> : null}
-    </SearchBar>
-  ),
-)

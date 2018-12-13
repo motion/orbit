@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
-import { View, SegmentedRow, Button, Theme } from '@mcro/ui'
+import { View, SegmentedRow, Button, Theme, Row } from '@mcro/ui'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
@@ -99,19 +99,21 @@ export const SlackApp = observer((props: Props) => {
   const [activePane, setActivePane] = React.useState(0)
   const store = useStore(SlackViewStore, props)
   return (
-    <View flex={1}>
+    <>
       <Theme theme={{ color: 'blue' }}>
-        <SegmentedRow
-          spaced={0}
-          active={activePane}
-          onChange={setActivePane}
-          itemProps={{ chromeless: true, fontWeight: 600, size: 0.95 }}
-        >
-          <Button>Conversation</Button>
-          <Button>Previously</Button>
-          <Button>Afterwards</Button>
-          <Button>Related</Button>
-        </SegmentedRow>
+        <Row alignItems="center" justifyContent="center" width="100%">
+          <SegmentedRow
+            spaced={0}
+            active={activePane}
+            onChange={setActivePane}
+            itemProps={{ chromeless: true, fontWeight: 600, size: 0.95 }}
+          >
+            <Button>Conversation</Button>
+            <Button>Previously</Button>
+            <Button>Afterwards</Button>
+            <Button>Related</Button>
+          </SegmentedRow>
+        </Row>
       </Theme>
 
       <Pane isShown={activePane === 0}>
@@ -122,22 +124,24 @@ export const SlackApp = observer((props: Props) => {
         </ScrollableContent>
       </Pane>
 
-      <Pane isShown={activePane === 1}>
-        <Title>Previously</Title>
-        <ConvoGroup bits={store.prevConvos.reverse()} />
-      </Pane>
+      <ScrollableContent>
+        <Pane isShown={activePane === 1}>
+          <Title>Previously</Title>
+          <ConvoGroup bits={store.prevConvos.reverse()} />
+        </Pane>
 
-      <Pane isShown={activePane === 2}>
-        <Title>Afterwards</Title>
-        <ConvoGroup bits={store.nextConvos} />
-      </Pane>
+        <Pane isShown={activePane === 2}>
+          <Title>Afterwards</Title>
+          <ConvoGroup bits={store.nextConvos} />
+        </Pane>
 
-      <Pane isShown={activePane === 3}>
-        <Title>Related</Title>
-        related items
-      </Pane>
+        <Pane isShown={activePane === 3}>
+          <Title>Related</Title>
+          related items
+        </Pane>
+      </ScrollableContent>
 
       <BitStatusBar {...props} />
-    </View>
+    </>
   )
 })

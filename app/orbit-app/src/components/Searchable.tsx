@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Input, Button, Row } from '@mcro/ui'
 import { ProvideHighlightsContextWithDefaults } from '../helpers/contexts/HighlightsContext'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
-import { memo } from '../helpers/memo'
 import { Icon } from '../views/Icon'
 
 export type SearchableProps = {
@@ -11,7 +10,7 @@ export type SearchableProps = {
   inputProps?: Object
 }
 
-export const Searchable = memo((props: SearchableProps) => {
+export const Searchable = React.memo((props: SearchableProps) => {
   return (
     <>
       <Row padding={6} paddingBottom={10}>

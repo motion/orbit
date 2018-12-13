@@ -111,7 +111,7 @@ export const OrbitPageContent = observer(() => {
         </OrbitIndexView>
         <OrbitMainView>
           {allPanes.map(app => (
-            <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
+            <SubPane key={app.type} id={app.id} type={app.type} fullHeight preventScroll>
               <AppView
                 isActive
                 viewType="main"

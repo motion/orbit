@@ -27,10 +27,8 @@ export class AppSearchable extends React.Component<Props> {
         // focusOnMount
         // onEnter={peekStore.goToNextHighlight}
         onChange={() => selectionStore.setHighlightIndex(0)}
-        width={150}
         searchBarProps={{
-          flex: 1,
-          // 1px more for inset shadow
+          minWidth: 120,
           padding: [3, 0],
         }}
       >

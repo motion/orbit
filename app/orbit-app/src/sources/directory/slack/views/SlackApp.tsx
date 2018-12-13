@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
-import { View, SegmentedRow, Button, Theme, Row } from '@mcro/ui'
+import { View, SegmentedRow, Button, Theme, Row, ThemeContext } from '@mcro/ui'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
@@ -98,15 +98,22 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
 export const SlackApp = observer((props: Props) => {
   const [activePane, setActivePane] = React.useState(0)
   const store = useStore(SlackViewStore, props)
+  const { activeTheme, allThemes } = React.useContext(ThemeContext)
   return (
     <>
-      <Theme theme={{ color: 'blue' }}>
-        <Row alignItems="center" justifyContent="center" width="100%">
+      <Theme
+        theme={{
+          color: allThemes.selected.background,
+          backgroundHover: activeTheme.backgroundHover,
+          borderColor: 'transparent',
+        }}
+      >
+        <Row alignItems="center" justifyContent="center" width="100%" margin={[0, 0, 8]}>
           <SegmentedRow
             spaced={0}
             active={activePane}
             onChange={setActivePane}
-            itemProps={{ chromeless: true, fontWeight: 600, size: 0.95 }}
+            itemProps={{ chromeless: true, fontWeight: 600, size: 0.9, sizeFont: 1 }}
           >
             <Button>Conversation</Button>
             <Button>Previously</Button>

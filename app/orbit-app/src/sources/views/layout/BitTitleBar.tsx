@@ -15,18 +15,19 @@ export class BitTitleBar extends React.Component<{
     return (
       <>
         <Row alignItems="center" height={38} margin={[8, 15]}>
-          <View flex={1} />
           {searchBar}
+          <View flex={1} />
           <TitleBarSpace />
-          <SegmentedRow>
+          <SegmentedRow spaced>
             <TitleBarButton
               onClick={() => {
                 AppActions.open(normalizedItem.locationLink)
                 AppActions.setOrbitDocked(false)
               }}
-              icon={<OrbitIcon icon={normalizedItem.icon} size={16} />}
-              tooltip={normalizedItem.location}
-            />
+              icon={<OrbitIcon icon={normalizedItem.icon} size={14} />}
+            >
+              {normalizedItem.location}
+            </TitleBarButton>
             <TitleBarButton
               onClick={() => {
                 AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)

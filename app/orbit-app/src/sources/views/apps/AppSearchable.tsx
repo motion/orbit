@@ -24,6 +24,7 @@ export class AppSearchable extends React.Component<Props> {
     return (
       <Searchable
         defaultValue={appStore.props.queryStore.query}
+        placeholder="Filter..."
         // focusOnMount
         // onEnter={peekStore.goToNextHighlight}
         onChange={() => selectionStore.setHighlightIndex(0)}

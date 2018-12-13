@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ThemeObject } from '@mcro/css'
 
 const themeContext = {
-  allThemes: {},
+  allThemes: {} as { [key: string]: ThemeObject },
   activeThemeName: null as string,
   activeTheme: null as ThemeObject,
 }

@@ -6,83 +6,82 @@ import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 import { Color, CSSPropertySet } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
-import { Theme, propsToStyles } from '@mcro/gloss'
+import { Theme } from '@mcro/gloss'
 import { getTarget } from './helpers/getTarget'
 import { MergeUIContext } from './helpers/contexts'
 
-export type PopoverProps = CSSPropertySet &
-  React.HTMLProps<'div'> & {
-    // if you set a group, it acts as an ID that makes sure only ONE popover
-    // within that ID is ever open
-    group?: string
-    theme?: string
-    // can pass function to get isOpen passed in
-    children?: React.ReactNode | PopoverChildrenFn
-    // element or function that returns element, or querySelector to element
-    target?: React.ReactNode | (() => React.ReactNode) | string
-    open?: boolean
-    // the amount of space around popover you can move mouse
-    // before it triggers it to close
-    forgiveness?: number
-    // show a background over content
-    overlay?: boolean
-    left?: number
-    top?: number
-    // the distance the popover is from the target
-    // so it displays nicely spaced away
-    distance?: number
-    // open when target is clicked
-    openOnClick?: boolean
-    // open automatically when target is hovered
-    openOnHover?: boolean
-    // delay until openOnHover
-    delay?: number
-    // prevent popover itself from catching pointer events
-    noHoverOnChildren?: boolean
-    // size of shown arrow
-    arrowSize?: number
-    // close when you click outside it
-    closeOnClickAway?: boolean
-    // close when you click inside it
-    closeOnClick?: boolean
-    closeOnEsc?: boolean
-    // which direction it shows towards
-    // default determine direction automatically
-    towards?: PopoverDirection
-    // popover can aim to be centered or left aligned on the target
-    alignPopover?: 'left' | 'center'
-    padding?: number[] | number
-    onMouseEnter?: Function
-    onMouseLeave?: Function
-    onClose?: Function
-    openAnimation?: string
-    closeAnimation?: string
-    // lets you adjust position after target is positioned
-    adjust?: number[]
-    // hide arrow
-    noArrow?: boolean
-    // DEBUG: helps you see forgiveness zone
-    showForgiveness?: boolean
-    // padding from edge of window
-    edgePadding?: number
-    // pretty much what it says, for use with closeOnClick
-    keepOpenOnClickTarget?: boolean
-    // callback after close
-    onDidClose?: Function
-    // callback after open
-    onDidOpen?: Function
-    onOpen?: Function
-    height?: number
-    width?: number
-    background?: true | Color
-    passActive?: boolean
-    popoverProps?: Object
-    style?: Object
-    elevation?: number
-    ignoreSegment?: boolean
-    onChangeVisibility?: (visibility: boolean) => any
-    noPortal?: boolean
-  }
+export type PopoverProps = CSSPropertySet & {
+  // if you set a group, it acts as an ID that makes sure only ONE popover
+  // within that ID is ever open
+  group?: string
+  theme?: string
+  // can pass function to get isOpen passed in
+  children?: React.ReactNode | PopoverChildrenFn
+  // element or function that returns element, or querySelector to element
+  target?: React.ReactNode | (() => React.ReactNode) | string
+  open?: boolean
+  // the amount of space around popover you can move mouse
+  // before it triggers it to close
+  forgiveness?: number
+  // show a background over content
+  overlay?: boolean
+  left?: number
+  top?: number
+  // the distance the popover is from the target
+  // so it displays nicely spaced away
+  distance?: number
+  // open when target is clicked
+  openOnClick?: boolean
+  // open automatically when target is hovered
+  openOnHover?: boolean
+  // delay until openOnHover
+  delay?: number
+  // prevent popover itself from catching pointer events
+  noHoverOnChildren?: boolean
+  // size of shown arrow
+  arrowSize?: number
+  // close when you click outside it
+  closeOnClickAway?: boolean
+  // close when you click inside it
+  closeOnClick?: boolean
+  closeOnEsc?: boolean
+  // which direction it shows towards
+  // default determine direction automatically
+  towards?: PopoverDirection
+  // popover can aim to be centered or left aligned on the target
+  alignPopover?: 'left' | 'center'
+  padding?: number[] | number
+  onMouseEnter?: Function
+  onMouseLeave?: Function
+  onClose?: Function
+  openAnimation?: string
+  closeAnimation?: string
+  // lets you adjust position after target is positioned
+  adjust?: number[]
+  // hide arrow
+  noArrow?: boolean
+  // DEBUG: helps you see forgiveness zone
+  showForgiveness?: boolean
+  // padding from edge of window
+  edgePadding?: number
+  // pretty much what it says, for use with closeOnClick
+  keepOpenOnClickTarget?: boolean
+  // callback after close
+  onDidClose?: Function
+  // callback after open
+  onDidOpen?: Function
+  onOpen?: Function
+  height?: number
+  width?: number
+  background?: true | Color
+  passActive?: boolean
+  popoverProps?: Object
+  style?: Object
+  elevation?: number
+  ignoreSegment?: boolean
+  onChangeVisibility?: (visibility: boolean) => any
+  noPortal?: boolean
+}
 
 const ArrowContain = view({
   position: 'absolute',
@@ -284,19 +283,20 @@ const INVERSE = {
   right: 'left',
 }
 
-const smoother = (base: number, amt: number) => (Math.log(Math.max(1, base)) + 1) * amt
+const round = (x: number) => Math.round(x * 3) / 3
+const smoother = (base: number, amt: number) => round((Math.log(Math.max(1, base)) + 1) * amt)
 const elevatedShadow = (x: number) => [
   0,
   smoother(x, 6),
   smoother(x, 18),
-  [0, 0, 0, 0.15 * smoother(x, 1)],
+  [0, 0, 0, round(0.15 * smoother(x, 1))],
 ]
 
 const getShadow = (elevation: PopoverProps['elevation']) => {
   if (!elevation) {
     return null
   }
-  return elevatedShadow(elevation) as any
+  return [elevatedShadow(elevation) as any]
 }
 
 const initialState = {
@@ -346,8 +346,6 @@ const showPopover = (props: PopoverProps, state: State) => {
 export class Popover extends React.PureComponent<PopoverProps, State> {
   static acceptsHovered = 'open'
   static defaultProps = {
-    open: true,
-    showForgiveness: true,
     edgePadding: 5,
     distance: 14,
     arrowSize: 14,

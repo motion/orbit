@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { OrbitListItem } from './OrbitListItem'
 import { ListItemProps } from '../VirtualList/VirtualListItem'
-import { normalizeItem, NormalItem } from '../../helpers/normalizeItem'
+import { normalizeItem } from '../../helpers/normalizeItem'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
 import { StoreContext } from '@mcro/black'
 import { ListItemPerson } from './ListItemPerson'
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
-export const getNormalPropsForListItem = (normalized: NormalItem) => ({
+export const getNormalPropsForListItem = (normalized: any) => ({
   title: normalized.title,
   location: normalized.location,
   webLink: normalized.webLink,
@@ -18,6 +18,9 @@ export const getNormalPropsForListItem = (normalized: NormalItem) => ({
   icon: normalized.icon,
   people: normalized.people,
   preview: normalized.preview,
+  children: normalized.children,
+  before: normalized.before,
+  after: normalized.after,
 })
 
 export const ListItemNormalize = (props: ListItemProps) => {

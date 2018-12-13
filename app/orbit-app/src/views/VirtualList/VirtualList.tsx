@@ -30,7 +30,7 @@ export type VirtualListProps = {
   loadMoreRows?: Function
   rowCount?: number
   isRowLoaded?: Function
-  maxHeight: number
+  maxHeight?: number
 }
 
 class InnerList extends React.Component<any> {
@@ -104,16 +104,14 @@ class VirtualListStore {
       return
     }
     // height
-    if (this.props.maxHeight) {
-      let height = 0
-      for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
-        height += this.cache.rowHeight(i)
-      }
-      if (height === 0) {
-        return
-      }
-      this.height = Math.min(this.props.maxHeight, height)
+    let height = 0
+    for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
+      height += this.cache.rowHeight(i)
     }
+    if (height === 0) {
+      return
+    }
+    this.height = Math.min(this.props.maxHeight || Infinity, height)
   }
 
   private measure() {
@@ -155,6 +153,17 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
+const getSeparatorProps = (items: any[], index: number) => {
+  const model = items[index]
+  if (!model.group) {
+    return null
+  }
+  if (index === 0 || model.group !== items[index - 1].group) {
+    return { separator: model.group }
+  }
+  return null
+}
+
 export const VirtualList = observer((props: VirtualListProps) => {
   const { appStore } = React.useContext(StoreContext)
   const store = useStore(VirtualListStore, { ...props, appStore })
@@ -184,6 +193,7 @@ export const VirtualList = observer((props: VirtualListProps) => {
             model={model}
             index={index}
             realIndex={index}
+            {...getSeparatorProps(items, index)}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
           />

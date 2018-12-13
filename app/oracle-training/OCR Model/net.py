@@ -14,7 +14,7 @@ model = Sequential()
 # 2D convolution
 model.add(Conv2D(
     32,
-    kernel_size=3, # 5
+    kernel_size=3,
     input_shape=(28, 28, 1),
     activation='relu'
     ))
@@ -30,23 +30,7 @@ model.add(MaxPooling2D(
 # 2D convolution
 model.add(Conv2D(
     64,
-    kernel_size=3, # 5
-    input_shape=(28, 28, 1),
-    activation='relu'
-    ))
-
-# Batch normalization
-model.add(BatchNormalization())
-
-# 2D max pooling
-model.add(MaxPooling2D(
-    pool_size=2
-    ))
-
-# 2D convolution
-model.add(Conv2D(
-    64,
-    kernel_size=3, # 5
+    kernel_size=3,
     input_shape=(28, 28, 1),
     activation='relu'
     ))

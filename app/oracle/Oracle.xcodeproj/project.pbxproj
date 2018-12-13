@@ -14,9 +14,9 @@
 		F0318FE321AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE221AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift */; };
 		F0318FEA21AF7D6E009F5A70 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FE921AF7D6E009F5A70 /* Line.swift */; };
 		F0318FED21AFB2ED009F5A70 /* CharacterCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0318FEC21AFB2ED009F5A70 /* CharacterCache.swift */; };
+		F03CE97421C326B0001F6367 /* OCRModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F03CE97321C326B0001F6367 /* OCRModel.mlmodel */; };
 		F07730E021B9AC95003BE061 /* OCRTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07730DF21B9AC95003BE061 /* OCRTester.swift */; };
 		F07730E421B9BE21003BE061 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F07730E121B9BD8D003BE061 /* MainMenu.xib */; };
-		F0AAF1FB21C0932C0058CA78 /* OCRModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F0AAF1FA21C0932C0058CA78 /* OCRModel.mlmodel */; };
 		F0ABA07421B081C3009AEE34 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0ABA07321B081C3009AEE34 /* Log.swift */; };
 		F0D9F564215EFD8A009F11D5 /* AtomApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D9F563215EFD8A009F11D5 /* AtomApplication.swift */; };
 		F0D9F566215EFD8B009F11D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0D9F565215EFD8B009F11D5 /* Assets.xcassets */; };
@@ -49,9 +49,9 @@
 		F0318FE221AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Utils.swift"; sourceTree = "<group>"; };
 		F0318FE921AF7D6E009F5A70 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		F0318FEC21AFB2ED009F5A70 /* CharacterCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCache.swift; sourceTree = "<group>"; };
+		F03CE97321C326B0001F6367 /* OCRModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = OCRModel.mlmodel; sourceTree = "<group>"; };
 		F07730DF21B9AC95003BE061 /* OCRTester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OCRTester.swift; sourceTree = "<group>"; };
 		F07730E221B9BD8D003BE061 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		F0AAF1FA21C0932C0058CA78 /* OCRModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = OCRModel.mlmodel; sourceTree = "<group>"; };
 		F0ABA07321B081C3009AEE34 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		F0D9F560215EFD8A009F11D5 /* Oracle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oracle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D9F563215EFD8A009F11D5 /* AtomApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomApplication.swift; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 				F0FDFC8B216BF03F0064C0C5 /* OCRManager.swift */,
 				F0318FE921AF7D6E009F5A70 /* Line.swift */,
 				F0318FEC21AFB2ED009F5A70 /* CharacterCache.swift */,
-				F0AAF1FA21C0932C0058CA78 /* OCRModel.mlmodel */,
+				F03CE97321C326B0001F6367 /* OCRModel.mlmodel */,
 			);
 			path = OCR;
 			sourceTree = "<group>";
@@ -296,7 +296,7 @@
 			files = (
 				F0318FE321AC7AA0009F5A70 /* CVPixelBuffer+Utils.swift in Sources */,
 				F0FDFA9F2162CBBE0064C0C5 /* WindowManager.swift in Sources */,
-				F0AAF1FB21C0932C0058CA78 /* OCRModel.mlmodel in Sources */,
+				F03CE97421C326B0001F6367 /* OCRModel.mlmodel in Sources */,
 				F07730E021B9AC95003BE061 /* OCRTester.swift in Sources */,
 				F0ABA07421B081C3009AEE34 /* Log.swift in Sources */,
 				AE37809921B224BC00201F66 /* MouseManager.swift in Sources */,

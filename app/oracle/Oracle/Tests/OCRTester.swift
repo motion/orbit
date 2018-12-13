@@ -204,6 +204,13 @@ fileprivate extension OCRTester {
         // Exit recursion when we've reached the last index
         if index == total {
             completion()
+            
+            let totalMLTime = OCRManager.shared.totalMLTimeAllSets / 1_000_000
+            let avgMLTime = Double(totalMLTime) / Double(testImages.count)
+            let avgCharTime = OCRManager.shared.mlTimePerChar / Double(testImages.count)
+            print("\n\nAVERAGE ML TIME: \(avgMLTime)")
+            print("AVERAGE TIME PER CHAR: \(avgCharTime)")
+            
             return
         }
         
@@ -237,20 +244,30 @@ fileprivate extension OCRTester {
         }
         
         // Perform 1st "cold" OCR pass
-        Log.debug("\n\n--------------- \(imageNames[index]) (\(cgImage.width)x\(cgImage.height)) - 1ST PASS ---------------\n\n")
-        OCRManager.shared.performOCR(on: baseAddress,
-                                     bytesPerRow: bytesPerRow,
-                                     bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)) { [unowned self] (lines) in
-                                     
-            // Perform 2nd "warm" OCR pass
-            Log.debug("\n\n--------------- \(self.imageNames[index]) (\(cgImage.width)x\(cgImage.height)) - 2ND PASS ---------------\n\n")
-            DispatchQueue.main.async {
-                // Run again
-                OCRManager.shared.performOCR(on: baseAddress,
-                                             bytesPerRow: bytesPerRow,
-                                             bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height),
-                                             completion: screenshotCompletion)
-            }
+//        Log.debug("\n\n--------------- \(imageNames[index]) (\(cgImage.width)x\(cgImage.height)) - 1ST PASS ---------------\n\n")
+//        OCRManager.shared.performOCR(on: baseAddress,
+//                                     bytesPerRow: bytesPerRow,
+//                                     bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)) { [unowned self] (lines) in
+//
+//            // Perform 2nd "warm" OCR pass
+//            Log.debug("\n\n--------------- \(self.imageNames[index]) (\(cgImage.width)x\(cgImage.height)) - 2ND PASS ---------------\n\n")
+//            DispatchQueue.main.async {
+//                // Run again
+//                OCRManager.shared.performOCR(on: baseAddress,
+//                                             bytesPerRow: bytesPerRow,
+//                                             bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height),
+//                                             completion: screenshotCompletion)
+//            }
+//        }
+        
+        // Test
+        Log.debug("\n\n--------------- \(self.imageNames[index]) (\(cgImage.width)x\(cgImage.height)) ---------------\n\n")
+        DispatchQueue.main.async {
+            // Run again
+            OCRManager.shared.performOCR(on: baseAddress,
+                                         bytesPerRow: bytesPerRow,
+                                         bounds: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height),
+                                         completion: screenshotCompletion)
         }
     }
     

@@ -32,7 +32,7 @@ for image_index, image in enumerate(training_images):
     pixels = [float(x) for x in image_data[1].split(' ')]
     for row in range(28):
         for col in range(28):
-            x_train[image_index, row, col, 0] = pixels[row * 28 + col]
+            x_train[image_index, row, col, 0] = 1.0 - pixels[row * 28 + col]
 
 
 # Train
@@ -55,6 +55,8 @@ print("Converting Keras model to CoreML format...")
 coreml_model = coremltools.converters.keras.convert(
     dir_path + '/ocr_model.h5',
     input_names='image',
+    image_input_names='image',
+    image_scale=1/255.0,
     output_names='classification'
 )
 
@@ -64,23 +66,23 @@ coreml_model.save(dir_path + '/OCRModel.mlmodel')
 
 # Switch Double input/outputs to Float32
 
-def update_multiarray_to_float32(feature):  
-    if feature.type.HasField('multiArrayType'):  
-        import coremltools.proto.FeatureTypes_pb2 as _ft  
-        feature.type.multiArrayType.dataType = _ft.ArrayFeatureType.FLOAT32  
+# def update_multiarray_to_float32(feature):  
+#     if feature.type.HasField('multiArrayType'):  
+#         import coremltools.proto.FeatureTypes_pb2 as _ft  
+#         feature.type.multiArrayType.dataType = _ft.ArrayFeatureType.FLOAT32  
 
-input_model_path = dir_path + '/OCRModel.mlmodel'
-output_model_path = dir_path + '/OCRModel.mlmodel'
+# input_model_path = dir_path + '/OCRModel.mlmodel'
+# output_model_path = dir_path + '/OCRModel.mlmodel'
 
-spec = coremltools.utils.load_spec(input_model_path)  
+# spec = coremltools.utils.load_spec(input_model_path)  
 
-for input_feature in spec.description.input:  
-    update_multiarray_to_float32(input_feature)  
+# for input_feature in spec.description.input:  
+#     update_multiarray_to_float32(input_feature)  
 
-for output_feature in spec.description.output:  
-    update_multiarray_to_float32(output_feature)  
+# for output_feature in spec.description.output:  
+#     update_multiarray_to_float32(output_feature)  
 
-coremltools.utils.save_spec(spec, output_model_path) 
+# coremltools.utils.save_spec(spec, output_model_path) 
 
 
 print("Done")

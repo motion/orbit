@@ -32,8 +32,13 @@ class OCRManager {
     /// Counter for debugging purposes.
     fileprivate var classificationCount = 0
     
+    var totalMLTimeAllSets: UInt64 = 0
+    var mlTimePerChar: Double = 0
     
-    private init() {}
+    
+    private init() {
+        
+    }
     
 }
 
@@ -130,6 +135,9 @@ extension OCRManager {
         extractTextBoxes(from: filteredBuffer) { [unowned self] (lines) in
             
             /* ----- IMPORTANT: ENTERING BACKGROUND QUEUE HERE ----- */
+            
+            
+            var charsToOCR = [CVPixelBuffer]()
             
             
             // Performance - log character extraction time
@@ -242,10 +250,12 @@ extension OCRManager {
 
                             // Classify image
                             let classification = self.classifyImage(charBuffer, isInverted: shouldInvert) ?? ""
+//                            let classification = "a"
+//                            charsToOCR.append(charBuffer)
 
                             // Store classification
                             character.classification = classification
-                            
+
                             // Debug - ML count
                             totalCharsML += 1
                             
@@ -293,6 +303,8 @@ extension OCRManager {
                         
                         // Classify image
                         let classification = self.classifyImage(charBuffer, isInverted: shouldInvert) ?? ""
+//                        let classification = "a"
+//                        charsToOCR.append(charBuffer)
                         
                         // Store classification
                         character.classification = classification
@@ -311,7 +323,20 @@ extension OCRManager {
                 }
             }
             
-            // Debug
+//            let mlStart = DispatchTime.now()
+//            print("\n\nPerforming OCR on \(charsToOCR.count) chars...")
+//            let classifications = self.classifyImages(charsToOCR, isInverted: false)
+//            let mlElapsed = (DispatchTime.now().uptimeNanoseconds - mlStart.uptimeNanoseconds) / 1_000_000
+//            print("Batch OCR time: \(mlElapsed)")
+//            let avgML = Double(mlElapsed) / Double(charsToOCR.count)
+//            print("Average per char: \(avgML)")
+////            print(classifications)
+//            for buffer in charsToOCR {
+//                CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
+//            }
+            
+            
+            // Debugging stuff
             if shouldLogDebug {
                 // Log cache time
                 Log.debug("CHARACTERS READ FROM CACHE: \(totalCharsCached)")
@@ -320,6 +345,8 @@ extension OCRManager {
                 // Log ML time
                 Log.debug("CHARACTERS CLASSIFIED W/ ML: \(totalCharsML)")
                 Log.debug("TOTAL ML TIME: \(totalMLTime / 1_000_000)ms")
+                self.totalMLTimeAllSets += totalMLTime
+                self.mlTimePerChar += Double(totalMLTime / 1_000_000) / Double(totalCharsML)
                 
                 // Log cropping time
                 Log.debug("TOTAL CROPPING TIME (character level): \(totalCropTime / 1_000_000)ms")
@@ -471,37 +498,23 @@ fileprivate extension OCRManager {
             classificationCount += 1
         }
         
-        // Extract raw pixel data from buffer
-        let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer)!.assumingMemoryBound(to: UInt8.self)
-        let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-        
-        // Create CoreML-compatible input from pixel data
-        let input = try! MLMultiArray(shape: [1, 28, 28], dataType: .float32)
-        for row in 0..<28 {
-            for col in 0..<28 {
-                let index = row * bytesPerRow + col
-                // Normalize pixels to range [0, 1] where 1 is black
-                let pixel: Float
-                if isInverted { // `isInverted` means light text on dark background, so we DON'T invert again here
-                    pixel = Float(pixelData[index]) / 255.0
-                } else { // Dark text on light background, so we DO invert here
-                    pixel = 1.0 - (Float(pixelData[index]) / 255.0)
-                }
-                input[
-                    [NSNumber(integerLiteral: 0),
-                     NSNumber(value: row),
-                     NSNumber(value: col)]
-                    ] = NSNumber(value: pixel)
-            }
-        }
-        
         // Classify image
-        guard let prediction = (try? ocrModel.prediction(image: input))?.classification else {
-            return nil
+        var prediction: MLMultiArray?
+        if isInverted {
+            // Invert pixel buffer if requested
+            let invertedBuffer = pixelBuffer.inverted()
+            CVPixelBufferLockBaseAddress(invertedBuffer, .readOnly)
+            prediction = (try? ocrModel.prediction(image: invertedBuffer))?.classification
+            CVPixelBufferUnlockBaseAddress(invertedBuffer, .readOnly)
+        } else {
+            prediction = (try? ocrModel.prediction(image: pixelBuffer))?.classification
         }
+        
+        // Make sure we got a result (shouldn't really be possible for this to be nil)
+        guard prediction != nil else { return nil }
         
         // Determine index of maximum probability from output
-        let ptr = UnsafeBufferPointer(start: prediction.dataPointer.assumingMemoryBound(to: Float.self), count: supportedChars.count)
+        let ptr = UnsafeBufferPointer(start: prediction!.dataPointer.assumingMemoryBound(to: Double.self), count: supportedChars.count)
         let array = Array(ptr)
         
         guard let maxValue = array.max() else {
@@ -516,7 +529,7 @@ fileprivate extension OCRManager {
         let char = supportedChars[maxIndex]
         
         // Return lowercased version of the classification
-        return String(char) //.lowercased()
+        return String(char).lowercased()
     }
     
 }

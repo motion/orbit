@@ -41,95 +41,6 @@ export type TabsProps = {
   after?: Array<any>
 }
 
-const TabContainer = view(View, {
-  height: 'auto',
-})
-
-const TabList = view(Row, {
-  flex: 1,
-}).theme(({ theme }) => ({
-  boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
-}))
-
-const TabScrollContainer = view({
-  width: '100%',
-  overflow: 'hidden',
-  height: 25,
-})
-
-const HideScrollBar = view({
-  flexFlow: 'row',
-  overflowX: 'auto',
-  overflowY: 'hidden',
-  width: '100%',
-  height: '100%',
-  // scrollbar height
-  paddingBottom: 16,
-  boxSizing: 'content-box',
-})
-
-const TabListItem = view(Row, {
-  fontSize: 11,
-  fontWeight: 500,
-  lineHeight: 22,
-  overflow: 'hidden',
-  padding: [1, 10],
-  position: 'relative',
-  justifyContent: 'center',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  userSelect: 'none',
-}).theme(({ theme, active, width }) => {
-  const background = active
-    ? theme.tabBackgroundActive || theme.background
-    : theme.tabBackground || theme.background
-  return {
-    width,
-    flex: typeof width === 'number' ? 'none' : 1,
-    color: active ? theme.colorActive : theme.colorBlur,
-    background,
-    '&:hover': {
-      background: active ? background : theme.tabBackgroundHover,
-      transition: active ? 'none' : 'all ease-out 500ms',
-    },
-  }
-})
-
-const TabListAddItem = view(TabListItem, {
-  borderRight: 'none',
-  flex: 0,
-  flexGrow: 0,
-  fontWeight: 'bold',
-})
-
-const CloseButton = view({
-  color: '#000',
-  float: 'right',
-  fontSize: 10,
-  fontWeight: 'bold',
-  textAlign: 'center',
-  marginLeft: 6,
-  marginTop: 6,
-  width: 16,
-  height: 16,
-  lineHeight: '16px',
-  borderRadius: '50%',
-  '&:hover': {
-    background: colors.cherry,
-    color: '#fff',
-  },
-})
-
-const OrderableContainer = view({
-  display: 'inline-block',
-})
-
-const TabContent = view({
-  height: 'auto',
-  overflow: 'auto',
-  width: '100%',
-})
-
 function TabsInner(props: TabsProps) {
   const { onActive } = props
   const active = props.active == null ? props.defaultActive : props.active
@@ -260,3 +171,92 @@ export function Tabs(props) {
     </Theme>
   )
 }
+
+const TabContainer = view(View, {
+  height: 'auto',
+})
+
+const TabList = view(Row, {
+  flex: 1,
+}).theme(({ theme }) => ({
+  boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
+}))
+
+const TabScrollContainer = view({
+  width: '100%',
+  overflow: 'hidden',
+  height: 25,
+})
+
+const HideScrollBar = view({
+  flexFlow: 'row',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  width: '100%',
+  height: '100%',
+  // scrollbar height
+  paddingBottom: 16,
+  boxSizing: 'content-box',
+})
+
+const TabListItem = view(Row, {
+  fontSize: 11,
+  fontWeight: 500,
+  lineHeight: 22,
+  overflow: 'hidden',
+  padding: [1, 10],
+  position: 'relative',
+  justifyContent: 'center',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  userSelect: 'none',
+}).theme(({ theme, active, width }) => {
+  const background = active
+    ? theme.tabBackgroundActive || theme.background
+    : theme.tabBackground || theme.background
+  return {
+    width,
+    flex: typeof width === 'number' ? 'none' : 1,
+    color: active ? theme.colorActive : theme.colorBlur,
+    background,
+    '&:hover': {
+      background: active ? background : theme.tabBackgroundHover,
+      transition: active ? 'none' : 'all ease-out 500ms',
+    },
+  }
+})
+
+const TabListAddItem = view(TabListItem, {
+  borderRight: 'none',
+  flex: 0,
+  flexGrow: 0,
+  fontWeight: 'bold',
+})
+
+const CloseButton = view({
+  color: '#000',
+  float: 'right',
+  fontSize: 10,
+  fontWeight: 'bold',
+  textAlign: 'center',
+  marginLeft: 6,
+  marginTop: 6,
+  width: 16,
+  height: 16,
+  lineHeight: '16px',
+  borderRadius: '50%',
+  '&:hover': {
+    background: colors.cherry,
+    color: '#fff',
+  },
+})
+
+const OrderableContainer = view({
+  display: 'inline-block',
+})
+
+const TabContent = view({
+  height: 'auto',
+  overflow: 'auto',
+  width: '100%',
+})

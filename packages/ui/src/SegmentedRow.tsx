@@ -15,7 +15,7 @@ type SegmentedRowProps = CSSPropertySet & {
   color?: Color
   uiContext?: Object
   itemProps?: Object
-  spaced?: boolean
+  spaced?: boolean | number
 }
 
 export const SegmentedRow = (props: SegmentedRowProps) => {
@@ -38,8 +38,8 @@ export const SegmentedRow = (props: SegmentedRowProps) => {
     }
   }
 
-  const getContext = (index: number, length: number) =>
-    props.spaced
+  const getContext = (index: number, length: number) => {
+    return typeof props.spaced !== 'undefined'
       ? {}
       : {
           ...props.uiContext,
@@ -49,6 +49,7 @@ export const SegmentedRow = (props: SegmentedRowProps) => {
             index,
           },
         }
+  }
 
   let itemProps = itemProps_ as any
   let children = children_

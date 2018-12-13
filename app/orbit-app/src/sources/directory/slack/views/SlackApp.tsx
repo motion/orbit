@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
-import { View, SegmentedRow, Button } from '@mcro/ui'
+import { View, SegmentedRow, Button, Theme } from '@mcro/ui'
 import { AppStatusBar } from '../../../views/layout/AppStatusBar'
 import { ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
@@ -101,17 +101,19 @@ export const SlackApp = observer((props: Props) => {
   const store = useStore(SlackViewStore, props)
   return (
     <View flex={1}>
-      <SegmentedRow
-        spaced
-        active={activePane}
-        onChange={setActivePane}
-        itemProps={{ chromeless: true, fontWeight: 600 }}
-      >
-        <Button>Conversation</Button>
-        <Button>Previously</Button>
-        <Button>Afterwards</Button>
-        <Button>Related</Button>
-      </SegmentedRow>
+      <Theme theme={{ color: 'blue' }}>
+        <SegmentedRow
+          spaced={0}
+          active={activePane}
+          onChange={setActivePane}
+          itemProps={{ chromeless: true, fontWeight: 600, size: 0.95 }}
+        >
+          <Button>Conversation</Button>
+          <Button>Previously</Button>
+          <Button>Afterwards</Button>
+          <Button>Related</Button>
+        </SegmentedRow>
+      </Theme>
 
       <Pane isShown={activePane === 0}>
         <ScrollableContent key={store.prevConvos.length} scrollTo="#start">

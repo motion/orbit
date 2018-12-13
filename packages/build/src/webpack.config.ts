@@ -120,11 +120,8 @@ const config = {
       '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
       'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
       react: Path.resolve(cwd, 'node_modules', 'react'),
-      'react-dom': isProd
-        ? Path.resolve(cwd, 'node_modules', 'react-dom')
-        : // react hmr
-          Path.resolve(__dirname, '..', 'node_modules', '@hot-loader/react-dom'),
-      '@mcro/react-hot-loader': Path.resolve(cwd, 'node_modules', '@mcro/react-hot-loader'),
+      'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
+      'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
     },
   },
   resolveLoader: {
@@ -144,7 +141,7 @@ const config = {
       },
       {
         test: /\.[jt]sx?$/,
-        use: ['thread-loader', 'babel-loader', '@mcro/react-hot-loader/webpack'],
+        use: ['thread-loader', 'babel-loader', 'react-hot-loader/webpack'],
         exclude: /node_modules/,
       },
       {

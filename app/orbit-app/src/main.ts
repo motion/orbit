@@ -1,4 +1,4 @@
-import '@mcro/react-hot-loader' // must be imported before react
+import 'react-hot-loader' // must be imported before react
 import { setGlobalConfig } from '@mcro/config'
 import { App } from '@mcro/stores'
 import { configureUseStore } from '@mcro/use-store'

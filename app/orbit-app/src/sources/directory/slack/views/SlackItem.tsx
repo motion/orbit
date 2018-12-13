@@ -31,6 +31,7 @@ export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
   if (extraProps && extraProps.oneLine) {
     return <HighlightTextItem>{text.slice(0, 200)}</HighlightTextItem>
   }
+
   return messages.map((message, index) => {
     for (let person of people || []) {
       message.text = message.text.replace(

@@ -3,7 +3,7 @@ import { view, StoreContext } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
-import { AppConfig } from '@mcro/models'
+import { AppConfig, AppType } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { Col, Row } from '@mcro/ui'
 import { AppPanes } from '../../stores/SpaceStore'
@@ -12,6 +12,7 @@ import { App } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
 import { AppStore } from '../../apps/AppStore'
 import { observer } from 'mobx-react-lite'
+import { SelectionManager } from '../../components/SelectionManager'
 
 class OrbitStore {
   props: { paneManagerStore: PaneManagerStore }
@@ -33,9 +34,9 @@ class OrbitStore {
     }
   }
 
-  appStores: { [key: string]: AppStore } = {}
+  appStores: { [key: string]: AppStore<any> } = {}
 
-  setAppStore = (id: string) => (store: AppStore) => {
+  setAppStore = <T extends AppType>(id: T) => (store: AppStore<T>) => {
     this.appStores = {
       ...this.appStores,
       [id]: store,
@@ -96,13 +97,15 @@ export const OrbitPageContent = observer(() => {
         <OrbitIndexView isHidden={store.activePane === 'home'}>
           {allPanes.map(app => (
             <SubPane key={app.type} id={app.id} type={app.type}>
-              <AppView
-                viewType="index"
-                id={app.id}
-                type={app.type}
-                itemProps={{ onSelect: store.handleSelectItem }}
-                onAppStore={store.setAppStore(app.id)}
-              />
+              <SelectionManager>
+                <AppView
+                  viewType="index"
+                  id={app.id}
+                  type={app.type}
+                  itemProps={{ onSelect: store.handleSelectItem }}
+                  onAppStore={store.setAppStore(app.type)}
+                />
+              </SelectionManager>
             </SubPane>
           ))}
         </OrbitIndexView>

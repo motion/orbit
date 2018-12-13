@@ -31,9 +31,11 @@ export const MenuLayer = observer(() => {
     },
   })
   const paneManagerStore = useStore(PaneManagerStore, {
+    disabled: selectionStore.activeIndex !== -1,
     panes: menuApps,
-    selectionStore,
     onPaneChange: () => {
+      // clear selection results on change pane
+      selectionStore.setResults(null)
       AppActions.clearPeek()
     },
   })

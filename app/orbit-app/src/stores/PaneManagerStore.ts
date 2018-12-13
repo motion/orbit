@@ -1,11 +1,11 @@
 import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
-import { SelectionStore, Direction } from './SelectionStore'
+import { Direction } from './SelectionStore'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
 
 export class PaneManagerStore {
   props: {
-    selectionStore?: SelectionStore
+    disabled?: boolean
     panes: string[]
     onPaneChange: Function
   }
@@ -36,19 +36,21 @@ export class PaneManagerStore {
   }
 
   move = (direction: Direction) => {
+    if (this.props.disabled) {
+      return
+    }
     try {
-      if (this.props.selectionStore.activeIndex === -1) {
-        if (direction === Direction.right) {
-          ensure('within keyable range', this.paneIndex < this.keyablePanes[1])
-          this.setPaneIndex(this.paneIndex + 1)
-        }
-        if (direction === Direction.left) {
-          ensure('within keyable range', this.paneIndex > this.keyablePanes[0])
-          this.setPaneIndex(this.paneIndex - 1)
-        }
+      if (direction === Direction.right) {
+        ensure('within keyable range', this.paneIndex < this.keyablePanes[1])
+        this.setPaneIndex(this.paneIndex + 1)
+      }
+      if (direction === Direction.left) {
+        ensure('within keyable range', this.paneIndex > this.keyablePanes[0])
+        this.setPaneIndex(this.paneIndex - 1)
       }
     } catch (e) {
       if (e instanceof ReactionRejectionError) {
+        console.debug('Not in keyable range')
         return
       }
       throw e
@@ -82,10 +84,6 @@ export class PaneManagerStore {
       return
     }
     if (index !== this.paneIndex) {
-      if (this.props.selectionStore) {
-        // clear selection results on change pane
-        this.props.selectionStore.setResults(null)
-      }
       this.paneIndex = index
     }
   }

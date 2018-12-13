@@ -16,6 +16,7 @@ type Props = Pick<
 
 export const AppView = React.memo((props: Props) => {
   const stores = React.useContext(StoreContext)
+  console.log('stores', stores)
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
   const appStore = useStore(

@@ -21,6 +21,7 @@ export class AppStore<Type extends AppType> {
   setSelectionResultsOnActive = react(
     () => always(this.selectionResults),
     async (_, { when }) => {
+      ensure('this.props.selectionStore', !!this.props.selectionStore)
       await when(() => this.isActive)
       this.props.selectionStore.setResults(this.selectionResults)
     },
@@ -75,6 +76,9 @@ export class AppStore<Type extends AppType> {
   }
 
   get activeIndex() {
+    if (!this.props.selectionStore) {
+      return -1
+    }
     return this.props.selectionStore.activeIndex
   }
 

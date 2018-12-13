@@ -1,7 +1,6 @@
 import * as React from 'react'
 import fuzzy from 'fuzzysort'
 import { SVG } from './SVG'
-import { memo } from '../helpers/memo'
 import { ThemeContext } from '@mcro/ui'
 
 const icons = {
@@ -167,7 +166,7 @@ type IconProps = React.HTMLProps<SVGElement> & {
   style?: any
 }
 
-export const Icon = memo(({ name, fill, size = 32, style = null, ...props }: IconProps) => {
+export const Icon = React.memo(({ name, fill, size = 32, style = null, ...props }: IconProps) => {
   const { activeTheme } = React.useContext(ThemeContext)
   const iconName = findIconName(name)
   if (!iconName) {

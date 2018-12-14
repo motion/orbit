@@ -1,3 +1,30 @@
+big projects
+
+- new site:
+  - from scratch navigation, react-spring, nicer responsive, make it good step by step
+- app data storage:
+  - generic way to have apps store and manage data, better views for editing
+- app separation into own package:
+  - allows for custom apps
+  - helps with serverless style functions you can create to insert and manage data easily (terms app)
+- memory:
+  - initial app with the prompt to allow for accessibility
+  - getting OCR integrated and begin having it auto scan and store in memory
+- search:
+  - get it searching all types of bits, finish grouping or remove, fix keynav
+  - potentially move PersonBit into just a regular bit with type: 'person'
+- dark theme
+- tray:
+  - potentially make the tray not show all the apps and just show search
+    - and then make it also have a contextual action dropdown that integrates with Context
+- terms:
+  - fix topics, add a lot more and have them show in profiles
+  - once app data is in place have it so it scans every so often and updates trending terms
+- highlights:
+  - once terms are in place
+  - focus on high performance highlights of people/terms
+  - then upgrade and fix up the floating apps
+
 high level to launch:
 
 - make 3 apps work nicely

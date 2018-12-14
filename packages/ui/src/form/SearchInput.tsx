@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Row } from '../blocks/Row'
 import { TableInput } from '../table/TableInput'
 import { colors } from '../helpers/colors'
 import { View } from '../blocks/View'
 import { ClearButton } from '../buttons/ClearButton'
 import { Filter } from '../table/types'
-import { ThemeObject, CSSPropertySet, ThemeContext } from '@mcro/gloss'
+import { ThemeObject, CSSPropertySet, ThemeContext, gloss } from '@mcro/gloss'
 import { FilterToken } from '../table/FilterToken'
 import { color } from '@mcro/color'
 import { Icon } from '../Icon'
@@ -85,7 +84,7 @@ export const SearchInput = ({
   )
 }
 
-const SearchClearButton = view(ClearButton, {
+const SearchClearButton = gloss(ClearButton, {
   position: 'absolute',
   right: 6,
   top: '50%',
@@ -98,12 +97,12 @@ const SearchClearButton = view(ClearButton, {
   },
 })
 
-const Actions = view(Row, {
+const Actions = gloss(Row, {
   marginLeft: 8,
   flexShrink: 0,
 })
 
-export const SearchInnerInput = view(TableInput, {
+export const SearchInnerInput = gloss(TableInput, {
   fontWeight: 400,
   fontSize: 14,
   padding: 0,
@@ -127,19 +126,19 @@ export const SearchInnerInput = view(TableInput, {
   },
 }))
 
-export const SearchIcon = view(Icon, {
+export const SearchIcon = gloss(Icon, {
   margin: [0, 6, 0],
   minWidth: 16,
 })
 
-const SearchBar = view(Row, {
+const SearchBar = gloss(Row, {
   height: '100%',
   maxHeight: 40,
   padding: 5,
   alignItems: 'center',
 })
 
-export const SearchBox = view(View, {
+export const SearchBox = gloss(View, {
   position: 'relative',
   flexFlow: 'row',
   borderRadius: '999em',

@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
-import { attachTheme } from '@mcro/gloss'
+import { attachTheme, gloss } from '@mcro/gloss'
 import { Button } from './Button'
 import { Row } from './blocks/Row'
 import { MergeUIContext } from './helpers/contexts'
@@ -24,13 +23,12 @@ type SegmentedRowProps = {
   theme?: Object
 }
 
-const Label = view({
+const Label = gloss({
   margin: ['auto', 5],
   opacity: 0.8,
   fontSize: 11,
 })
 
-// @ts-ignore
 @attachTheme
 export class SegmentedRow extends React.Component<SegmentedRowProps> {
   state = {

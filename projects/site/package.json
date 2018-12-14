@@ -9,6 +9,7 @@
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",
     "query-string": "6.2.0",
+    "@mcro/gloss": "*",
     "@mcro/ui": "*",
     "@mcro/color": "2.2.1",
     "@mcro/use-store": "*",

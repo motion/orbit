@@ -50,7 +50,7 @@ export type backgroundPositionY = string
 export type backgroundRepeat = repeatStyle
 export type backgroundSize = bgSize
 export type blockSize = width
-type borderSyntax = Array<number | string>
+type borderSyntax = (number | string | Color)[]
 export type border = borderWidth | brStyle | Color | borderSyntax
 export type borderBlockEnd = borderWidth | borderStyle | Color
 export type borderBlockEndColor = Color
@@ -514,7 +514,7 @@ export type textEmphasisPosition = string
 export type textEmphasisStyle = 'none' | string
 export type textIndent = string | 'hanging' | 'each-line'
 export type textOrientation = 'mixed' | 'upright' | 'sideways'
-export type textOverflow = 'clip' | 'ellipsis'
+export type textOverflow = 'clip' | 'ellipsis' | 'auto'
 export type textRendering = 'auto' | 'optimizeSpeed' | 'optimizeLegibility' | 'geometricPrecision'
 type textShadowSyntax = {
   x?: number
@@ -767,7 +767,7 @@ export type paint = 'none' | 'currentColor' | Color | string
 export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
-type CSSPropertyVal<A> = A
+type CSSPropertyVal<A> = A | 'inherit' | 'initial'
 // for functional values
 // | ((theme: ThemeObject) => A)
 // | ((theme: ThemeObject, props: Object) => A)
@@ -1149,7 +1149,7 @@ export type CSSPropertySetStrict = OriginalCSSPropertySetStrict & {
   borderTopRadius?: number
 }
 
-export type CSSPropertySet = {
-  // because we have '& > .something'
+// because we can have `'& > .something': {}` and custom sub-styles like `isActive: {}`
+export type CSSPropertySet = CSSPropertySetStrict & {
   [key: string]: CSSPropertySetStrict | any
-} & CSSPropertySetStrict
+}

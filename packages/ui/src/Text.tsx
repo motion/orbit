@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { view, on } from '@mcro/black'
+import { on } from '@mcro/helpers'
 import keycode from 'keycode'
 import { InlineBlock } from './blocks/InlineBlock'
 import { Inline } from './blocks/Inline'
 import { highlightText, HighlightOptions } from '@mcro/helpers'
 import { propsToTextSize } from './helpers/propsToTextSize'
-import { alphaColor, CSSPropertySet } from '@mcro/gloss'
+import { alphaColor, CSSPropertySet, gloss } from '@mcro/gloss'
 
 type ChildrenHlFn = ((Highlights) => JSX.Element | null)
 
@@ -41,7 +41,7 @@ export type TextProps = CSSPropertySet &
 
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
-const TextBlock = view(InlineBlock, {
+const TextBlock = gloss(InlineBlock, {
   userSelect: 'none',
   wordBreak: 'break-word',
   position: 'relative',
@@ -70,7 +70,7 @@ const TextBlock = view(InlineBlock, {
   )
 })
 
-const TextEllipse = view(Inline, {
+const TextEllipse = gloss(Inline, {
   margin: ['auto', 0],
   maxWidth: '100%',
 }).theme(({ ellipse, doClamp, maxHeight }) => ({

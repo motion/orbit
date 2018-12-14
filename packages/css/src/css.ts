@@ -1,4 +1,4 @@
-import { px } from './helpers'
+import { px, processArray, processObject } from './helpers'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import {
   psuedoKeys,
@@ -8,11 +8,12 @@ import {
   COLOR_KEYS,
   SHORTHANDS,
 } from './constants'
+import { toColor } from './toColor'
 
 // exports
 export { configureCSS } from './config'
-export { snakeToCamel, camelToSnake, hash } from './helpers'
-export { psuedoKeys } from './constants'
+export { snakeToCamel, camelToSnake } from './helpers'
+export { validCSSAttr, psuedoKeys } from './constants'
 export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'
 export { Transform, Color, ThemeObject } from './types'
 export * from './helpers'

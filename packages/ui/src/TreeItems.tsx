@@ -5,7 +5,6 @@
  * @format
  */
 
-import { view } from '@mcro/black'
 import { TreeItemID, TreeItem, TreeItemSearchResultSet } from './Tree'
 import { Icon } from './Icon'
 // import { ContextMenu } from './ContextMenu'
@@ -16,6 +15,7 @@ import { Image } from './Image'
 import { colors } from './helpers/colors'
 import { Text } from './Text'
 import { FixedList } from './FixedList'
+import { gloss } from '@mcro/gloss'
 // import isEqual from 'react-fast-compare'
 
 const ROW_HEIGHT = 23
@@ -31,7 +31,7 @@ const backgroundColor = props => {
 }
 
 // .extends(ContextMenu)
-const TreeItemsRowContainer = view({
+const TreeItemsRowContainer = gloss({
   flexFlow: 'row',
   alignItems: 'center',
   flexShrink: 0,
@@ -54,7 +54,7 @@ const TreeItemsRowContainer = view({
   }
 })
 
-const TreeItemsRowDecoration = view(Row, {
+const TreeItemsRowDecoration = gloss(Row, {
   flexShrink: 0,
   justifyContent: 'flex-end',
   alignItems: 'center',
@@ -64,7 +64,7 @@ const TreeItemsRowDecoration = view(Row, {
   top: -1,
 })
 
-const TreeItemsLine = view({
+const TreeItemsLine = gloss({
   backgroundColor: colors.light20,
   position: 'absolute',
   right: 3,
@@ -76,13 +76,13 @@ const TreeItemsLine = view({
   height: childrenCount * ROW_HEIGHT - 4,
 }))
 
-const DecorationImage = view(Image, {
+const DecorationImage = gloss(Image, {
   height: 12,
   marginRight: 5,
   width: 12,
 })
 
-const NoShrinkText = view(Text, {
+const NoShrinkText = gloss(Text, {
   flexShrink: 0,
   flexWrap: 'nowrap',
   overflow: 'hidden',
@@ -90,21 +90,21 @@ const NoShrinkText = view(Text, {
   fontWeight: 400,
 })
 
-const TreeItemsRowAttributeContainer = view(NoShrinkText, {
+const TreeItemsRowAttributeContainer = gloss(NoShrinkText, {
   color: colors.dark80,
   fontWeight: 300,
   marginLeft: 5,
 })
 
-const TreeItemsRowAttributeKey = view({
+const TreeItemsRowAttributeKey = gloss({
   color: colors.tomato,
 })
 
-const TreeItemsRowAttributeValue = view({
+const TreeItemsRowAttributeValue = gloss({
   color: colors.slateDark3,
 })
 
-const HighlightedText = view({
+const HighlightedText = gloss({
   backgroundColor: '#ffff33',
 }).theme(({ selected }) => ({
   color: selected ? `${colors.grapeDark3} !important` : 'auto',
@@ -329,14 +329,14 @@ class TreeItemsRow extends React.PureComponent<TreeItemsRowProps, TreeItemsRowSt
   }
 }
 
-const TreeItemsContainer = view(Col, {
+const TreeItemsContainer = gloss(Col, {
   backgroundColor: colors.white,
   minHeight: '100%',
   minWidth: '100%',
   overflow: 'auto',
 })
 
-const TreeItemsBox = view(Col, {
+const TreeItemsBox = gloss(Col, {
   alignItems: 'flex-start',
   flex: 1,
   overflow: 'auto',

@@ -556,6 +556,11 @@ min-document@^2.19.0:
   dependencies:
     dom-walk "^0.1.0"
 
+mobx-react-lite@0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-0.3.4.tgz#9b086c98c536a0b4a4f14fe373d80cb8d00de0fd"
+  integrity sha512-8rW3Bk0HLp8rFqtJh5jM63PH5TVXsfNh1EE0zahmhjov1A1QqW1TbtP0GvdtUaDV3WTnCM3hThxsVP8FI5vG0w==
+
 mobx@5.6.0:
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.6.0.tgz#e381c357e0ed7685a99a896455ecc66ff5ab84ee"

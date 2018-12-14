@@ -1,6 +1,5 @@
-import { view } from '@mcro/black'
 import { Color } from '@mcro/css'
-import { ThemeObject } from '@mcro/gloss'
+import { gloss } from '@mcro/gloss'
 
 const isUndef = x => typeof x === 'undefined'
 
@@ -15,10 +14,9 @@ type Props = {
   bottom?: number
   y?: number
   opacity?: number
-  theme?: ThemeObject
 }
 
-export const Glint = view({
+export const Glint = gloss<Props>({
   pointerEvents: 'none',
   position: 'absolute',
   left: 0,
@@ -36,7 +34,7 @@ export const Glint = view({
     size = 1,
     y = 0.5,
     theme,
-  }: Props) => {
+  }) => {
     const radiusStyle = {
       ...(borderRadius && {
         borderRadius,

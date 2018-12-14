@@ -1,6 +1,6 @@
-import { view } from '@mcro/black'
 import { View } from './View'
+import { gloss } from '@mcro/gloss'
 
-export const Block = view(View, {
+export const Block = gloss(View, {
   display: 'block',
 })

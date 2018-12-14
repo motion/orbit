@@ -7,19 +7,277 @@ import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import { validProp } from './helpers/validProp'
 import { simplePropSum } from './helpers/simplePropSum'
-import { Config } from './config'
+import { css } from '@mcro/css'
 
-export type RawRules = CSSPropertySet & {
-  [key: string]: CSSPropertySet
-}
 export type BaseRules = {
   [key: string]: string | number
 }
 
-type SimpleViewProps = React.HTMLProps<any> & CSSPropertySet & { theme?: ThemeObject }
+type GlossViewProps<Props> = Props &
+  React.HTMLProps<any> & {
+    className?: string
+    tagName?: string
+    children?: React.ReactElement<any>
+    theme?: ThemeObject
+  }
 
-export type SimpleView = React.SFC<SimpleViewProps> & {
-  theme: ((a: SimpleViewProps & { theme: ThemeObject }) => CSSPropertySet)
+type GlossThemeFn<Props> = ((
+  props: GlossViewProps<Props> & { theme: ThemeObject },
+) => CSSPropertySet)
+
+type GlossCompiledView<Props> = React.SFC<GlossViewProps<Props>> & {
+  ignoreAttrs?: Object
+  defaultProps?: Partial<Props>
+}
+
+export type GlossView<Props> = GlossCompiledView<GlossViewProps<Props>> & {
+  theme: ((cb: GlossThemeFn<Props>) => GlossCompiledView<GlossViewProps<Props>>)
+}
+
+export function glossView<Props = GlossViewProps<any>>(
+  a?: CSSPropertySet | any,
+  b?: CSSPropertySet,
+): GlossView<Props> {
+  let target = a || 'div'
+  let rawStyles = b
+  let targetConfig
+  let ignoreAttrs: Object
+
+  // update ignore attributes
+  setTimeout(() => {
+    const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
+    const attrArr = ThemedView.ignoreAttrs || targetAttrs
+    ignoreAttrs = arrToDict(attrArr)
+  })
+
+  const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  if (isSimpleView) {
+    targetConfig = target.getConfig()
+  }
+  // shorthand: view({ ... })
+  if (typeof target === 'object' && !b && !isSimpleView) {
+    target = 'div'
+    rawStyles = a
+  }
+  const targetElement = isSimpleView ? targetConfig.targetElement : target
+  const id = `${viewId()}`
+  const { styles, propStyles } = getAllStyles(id, target, rawStyles)
+  const hasPropStyles = !!Object.keys(propStyles).length
+  let displayName = 'GlossView'
+  let cachedTheme
+  let ThemedView
+
+  function getTheme() {
+    if (typeof cachedTheme !== 'undefined') {
+      return cachedTheme
+    }
+    const result = compileTheme(ThemedView)
+    cachedTheme = result
+    return result
+  }
+
+  function generateClassnames(
+    classNames: string[] | null,
+    props: CSSPropertySet,
+    tagName: string,
+    theme: ThemeObject,
+  ) {
+    // if this is a secondary render then check if the props are essentially equivalent
+    let extraClassNames = null
+    let myStyles = { ...styles }
+    // if passed any classes from another styled component, ignore that class and merge in their
+    // resolved styles
+    if (props.className) {
+      const propClassNames = `${props.className}`.trim().split(/[\s]+/g)
+      for (const className of propClassNames) {
+        const classInfo = tracker.get(className)
+        if (classInfo) {
+          const { namespace, style } = classInfo
+          myStyles = {
+            ...myStyles,
+            [namespace]: style,
+          }
+        } else {
+          extraClassNames = extraClassNames || []
+          extraClassNames.push(className)
+        }
+      }
+    }
+    const themeFn = getTheme()
+    const hasDynamicStyles = themeFn || hasPropStyles
+    // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
+    // if (!hasDynamicStyles && myStyles === state.lastStyles) {
+    //   return null
+    // }
+    let dynamicStyles
+    if (hasDynamicStyles) {
+      dynamicStyles = { [id]: {} }
+    }
+    if (hasPropStyles) {
+      for (const key in propStyles) {
+        if (props[key] !== true) {
+          continue
+        }
+        for (const styleKey in propStyles[key]) {
+          const dynKey = styleKey === 'base' ? id : styleKey
+          dynamicStyles[dynKey] = {
+            ...dynamicStyles[dynKey],
+            ...propStyles[key][styleKey],
+          }
+        }
+      }
+    }
+    if (themeFn) {
+      addStyles(id, dynamicStyles, themeFn({ ...props, theme }))
+    }
+    if (hasDynamicStyles) {
+      // create new object to prevent buggy mutations
+      myStyles = { ...myStyles }
+      for (const key in dynamicStyles) {
+        myStyles[key] = myStyles[key] || {}
+        myStyles[key] = {
+          ...myStyles[key],
+          ...dynamicStyles[key],
+        }
+      }
+    }
+    let nextClassNames
+    // sort so we properly order pseudo keys
+    const keys = Object.keys(myStyles)
+    const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
+
+    // add rules
+    for (const namespace of sortedStyleKeys) {
+      const className = addRules(displayName, myStyles[namespace], namespace, tagName)
+      nextClassNames = nextClassNames || []
+      nextClassNames.push(className)
+      // if this is the first mount render or we didn't previously have this class then add it as new
+      if (classNames == null || !classNames.includes(className)) {
+        gc.registerClassUse(className)
+      }
+    }
+    // check what classNames have been removed if this is a secondary render
+    if (classNames !== null) {
+      for (const className of classNames) {
+        // if this previous class isn't in the current classes then deregister it
+        if (!nextClassNames || !nextClassNames.includes(className)) {
+          gc.deregisterClassUse(className)
+        }
+      }
+    }
+    if (!extraClassNames) {
+      return nextClassNames
+    }
+    if (!nextClassNames) {
+      return extraClassNames
+    }
+    return [...nextClassNames, ...extraClassNames]
+  }
+
+  function getClassNamesFromProps(
+    classNames: string[],
+    props: GlossViewProps<Props>,
+    theme: ThemeObject,
+  ) {
+    const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
+    return generateClassnames(classNames, props as any, tag, theme)
+  }
+
+  //
+  // the actual view!
+  //
+
+  ThemedView = React.memo((props: GlossViewProps<Props>) => {
+    const propKey = React.useRef(null)
+    const [classNames, setClassNames] = React.useState(null)
+    const { allThemes, activeThemeName } = React.useContext(ThemeContext)
+
+    // update styles
+    const nextKey = simplePropSum(props)
+    if (propKey.current !== nextKey) {
+      propKey.current = nextKey
+      let theme = allThemes[activeThemeName]
+      // merge themes option
+      if (typeof props.theme === 'object') {
+        theme = {
+          ...theme,
+          ...props.theme,
+        }
+      }
+      const nextClassNames = getClassNamesFromProps(classNames, props, theme)
+      if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
+        setClassNames(nextClassNames)
+      }
+    }
+
+    React.useEffect(() => {
+      return () => {
+        if (classNames) {
+          for (const name of classNames) {
+            gc.deregisterClassUse(name)
+          }
+        }
+      }
+    }, [])
+
+    const element = props.tagName || targetElement
+    const isDOMElement = typeof element === 'string'
+    let finalProps = {} as any
+
+    for (const key in props) {
+      if (key === 'forwardRef') {
+        if (isDOMElement) {
+          finalProps.ref = props[key]
+        } else {
+          finalProps[key] = props[key]
+        }
+        continue
+      }
+      if (ignoreAttrs && ignoreAttrs[key]) {
+        continue
+      }
+      if (isDOMElement) {
+        if (validProp(key)) {
+          finalProps[key] = props[key]
+        }
+      } else {
+        finalProps[key] = props[key]
+      }
+    }
+
+    if (classNames) {
+      finalProps.className = classNames.join(' ')
+    }
+
+    return React.createElement(element, finalProps, props.children)
+  })
+
+  ThemedView.themeFn = null
+  ThemedView.displayName = 'SimpleView'
+  ThemedView.ignoreAttrs = null
+  ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+  ThemedView.withConfig = config => {
+    if (config.displayName) {
+      displayName = config.displayName
+      ThemedView.displayName = displayName
+    }
+    return ThemedView
+  }
+  ThemedView.theme = themeFn => {
+    ThemedView.themeFn = themeFn
+    return ThemedView
+  }
+  ThemedView.getConfig = () => ({
+    id,
+    displayName,
+    targetElement,
+    ignoreAttrs,
+    styles: { ...styles },
+    propStyles: { ...propStyles },
+    child: isSimpleView ? target : null,
+  })
+
+  return ThemedView
 }
 
 // ensures &:active psuedo selectors are always placed below
@@ -169,22 +427,22 @@ const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 let idCounter = 1
 const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
-function addRules(displayName: string, rules: BaseRules, namespace, tagName: string) {
+function addRules(displayName: string, rules: BaseRules, namespace: string, tagName: string) {
   // if these rules have been cached to a className then retrieve it
   const cachedClass = rulesToClass.get(rules)
   if (cachedClass) {
     return cachedClass
   }
   const declarations = []
-  const style = Config.toCSS(rules)
+  const style = css(rules)
   // generate css declarations based on the style object
   for (const key in style) {
     const val = style[key]
     declarations.push(`  ${key}: ${val};`)
   }
-  const css = declarations.join('\n')
+  const cssString = declarations.join('\n')
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  const className = displayName + '__' + hash(namespace + css)
+  const className = displayName + '__' + hash(namespace + cssString)
   // for media queries
   // this is the first time we've found this className
   if (!tracker.has(className)) {
@@ -199,260 +457,11 @@ function addRules(displayName: string, rules: BaseRules, namespace, tagName: str
       style,
     })
     if (namespace[0] === '@') {
-      sheet.insert(namespace, `${namespace} {\n${selector} {\n${css}\n}\n}`)
+      sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
     } else {
-      sheet.insert(className, `${selector} {\n${css}\n}`)
+      sheet.insert(className, `${selector} {\n${cssString}\n}`)
     }
     rulesToClass.set(rules, className)
   }
   return className
-}
-
-export function view(a: any, b: RawRules): SimpleView {
-  let target = a || 'div'
-  let rawStyles = b
-  let targetConfig
-  let ignoreAttrs
-
-  // update ignore attributes
-  setTimeout(() => {
-    const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
-    const attrArr = ThemedView.ignoreAttrs || targetAttrs
-    ignoreAttrs = arrToDict(attrArr)
-  })
-
-  const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  if (isSimpleView) {
-    targetConfig = target.getConfig()
-  }
-  // shorthand: view({ ... })
-  if (typeof target === 'object' && !b && !isSimpleView) {
-    target = 'div'
-    rawStyles = a
-  }
-  const targetElement = isSimpleView ? targetConfig.targetElement : target
-  const id = `${viewId()}`
-  const { styles, propStyles } = getAllStyles(id, target, rawStyles)
-  const hasPropStyles = !!Object.keys(propStyles).length
-  let displayName = 'GlossView'
-  let cachedTheme
-  let ThemedView
-
-  function getTheme() {
-    if (typeof cachedTheme !== 'undefined') {
-      return cachedTheme
-    }
-    const result = compileTheme(ThemedView)
-    cachedTheme = result
-    return result
-  }
-
-  function generateClassnames(
-    classNames: string[] | null,
-    props: CSSPropertySet,
-    tagName: string,
-    theme: ThemeObject,
-  ) {
-    // if this is a secondary render then check if the props are essentially equivalent
-    let extraClassNames = null
-    let myStyles = { ...styles }
-    // if passed any classes from another styled component, ignore that class and merge in their
-    // resolved styles
-    if (props.className) {
-      const propClassNames = props.className.trim().split(/[\s]+/g)
-      for (const className of propClassNames) {
-        const classInfo = tracker.get(className)
-        if (classInfo) {
-          const { namespace, style } = classInfo
-          myStyles = {
-            ...myStyles,
-            [namespace]: style,
-          }
-        } else {
-          extraClassNames = extraClassNames || []
-          extraClassNames.push(className)
-        }
-      }
-    }
-    const themeFn = getTheme()
-    const hasDynamicStyles = themeFn || hasPropStyles
-    // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
-    // if (!hasDynamicStyles && myStyles === state.lastStyles) {
-    //   return null
-    // }
-    let dynamicStyles
-    if (hasDynamicStyles) {
-      dynamicStyles = { [id]: {} }
-    }
-    if (hasPropStyles) {
-      for (const key in propStyles) {
-        if (props[key] !== true) {
-          continue
-        }
-        for (const styleKey in propStyles[key]) {
-          const dynKey = styleKey === 'base' ? id : styleKey
-          dynamicStyles[dynKey] = {
-            ...dynamicStyles[dynKey],
-            ...propStyles[key][styleKey],
-          }
-        }
-      }
-    }
-    if (themeFn) {
-      addStyles(id, dynamicStyles, themeFn({ ...props, theme }))
-    }
-    if (hasDynamicStyles) {
-      // create new object to prevent buggy mutations
-      myStyles = { ...myStyles }
-      for (const key in dynamicStyles) {
-        myStyles[key] = myStyles[key] || {}
-        myStyles[key] = {
-          ...myStyles[key],
-          ...dynamicStyles[key],
-        }
-      }
-    }
-    let nextClassNames
-    // sort so we properly order pseudo keys
-    const keys = Object.keys(myStyles)
-    const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
-
-    // add rules
-    for (const namespace of sortedStyleKeys) {
-      const className = addRules(displayName, myStyles[namespace], namespace, tagName)
-      nextClassNames = nextClassNames || []
-      nextClassNames.push(className)
-      // if this is the first mount render or we didn't previously have this class then add it as new
-      if (classNames == null || !classNames.includes(className)) {
-        gc.registerClassUse(className)
-      }
-    }
-    // check what classNames have been removed if this is a secondary render
-    if (classNames !== null) {
-      for (const className of classNames) {
-        // if this previous class isn't in the current classes then deregister it
-        if (!nextClassNames || !nextClassNames.includes(className)) {
-          gc.deregisterClassUse(className)
-        }
-      }
-    }
-    if (!extraClassNames) {
-      return nextClassNames
-    }
-    if (!nextClassNames) {
-      return extraClassNames
-    }
-    return [...nextClassNames, ...extraClassNames]
-  }
-
-  function getClassNamesFromProps(
-    classNames: string[],
-    props: SimpleViewProps,
-    theme: ThemeObject,
-  ) {
-    const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-    return generateClassnames(classNames, props, tag, theme)
-  }
-
-  //
-  // the actual view!
-  //
-
-  ThemedView = React.memo((props: SimpleViewProps) => {
-    const propKey = React.useRef(null)
-    const [classNames, setClassNames] = React.useState(null)
-    const { allThemes, activeThemeName } = React.useContext(ThemeContext)
-
-    // update styles
-    const nextKey = simplePropSum(props)
-    if (propKey.current !== nextKey) {
-      propKey.current = nextKey
-      let theme = allThemes[activeThemeName]
-      // merge themes option
-      if (typeof props.theme === 'object') {
-        theme = {
-          ...theme,
-          ...props.theme,
-        }
-      }
-      const nextClassNames = getClassNamesFromProps(classNames, props, theme)
-      if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
-        setClassNames(nextClassNames)
-      }
-    }
-
-    React.useEffect(() => {
-      return () => {
-        if (classNames) {
-          for (const name of classNames) {
-            gc.deregisterClassUse(name)
-          }
-        }
-      }
-    }, [])
-
-    const element = props.tagName || targetElement
-    const isDOMElement = typeof element === 'string'
-    let finalProps = {} as any
-
-    for (const key in props) {
-      if (key === 'forwardRef') {
-        if (isDOMElement) {
-          finalProps.ref = props[key]
-        } else {
-          finalProps[key] = props[key]
-        }
-        continue
-      }
-      if (ignoreAttrs && ignoreAttrs[key]) {
-        continue
-      }
-      if (isDOMElement) {
-        if (validProp(key)) {
-          finalProps[key] = props[key]
-        }
-      } else {
-        finalProps[key] = props[key]
-      }
-    }
-
-    if (classNames) {
-      finalProps.className = classNames.join(' ')
-    }
-
-    // if (process.env.NODE_ENV === 'development') {
-    //   if (props.debug) {
-    //     debugger
-    //   }
-    // }
-
-    return React.createElement(element, finalProps, props.children)
-  })
-
-  ThemedView.themeFn = null
-  ThemedView.displayName = 'SimpleView'
-  ThemedView.ignoreAttrs = null
-  ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
-  ThemedView.withConfig = config => {
-    if (config.displayName) {
-      displayName = config.displayName
-      ThemedView.displayName = displayName
-    }
-    return ThemedView
-  }
-  ThemedView.theme = themeFn => {
-    ThemedView.themeFn = themeFn
-    return ThemedView
-  }
-  ThemedView.getConfig = () => ({
-    id,
-    displayName,
-    targetElement,
-    ignoreAttrs,
-    styles: { ...styles },
-    propStyles: { ...propStyles },
-    child: isSimpleView ? target : null,
-  })
-
-  return ThemedView
 }

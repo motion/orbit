@@ -1,9 +1,8 @@
-import { view } from '@mcro/black'
 import * as React from 'react'
 import { iconNames } from './iconNames'
 import fuzzy from 'fuzzy'
 import { View } from './blocks/View'
-import { Color, CSSPropertySet } from '@mcro/gloss'
+import { Color, CSSPropertySet, gloss } from '@mcro/gloss'
 
 export type IconProps = React.HTMLProps<HTMLDivElement> &
   CSSPropertySet & {
@@ -88,7 +87,7 @@ export const Icon = React.memo(
   },
 )
 
-const IconInner = view(View, {
+const IconInner = gloss(View, {
   userSelect: 'none',
   alignItems: 'center',
   justifyContent: 'center',

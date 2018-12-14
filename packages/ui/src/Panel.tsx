@@ -7,15 +7,14 @@
 
 import * as React from 'react'
 import { Icon } from './Icon'
-import { view } from '@mcro/black'
-import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { attachTheme, ThemeObject, gloss } from '@mcro/gloss'
 import { Row } from './blocks/Row'
 import { View } from './blocks/View'
 import { Text } from './Text'
 
 const BORDER = '1px solid #dddfe2'
 
-const Chevron = view(Icon, {
+const Chevron = gloss(Icon, {
   marginRight: 4,
   marginLeft: -2,
   marginBottom: 1,
@@ -69,14 +68,14 @@ type State = {
   collapsed: boolean
 }
 
-const PanelContainer = view({
+const PanelContainer = gloss({
   flex: 1,
 }).theme(props => ({
   padding: props.floating ? 10 : 0,
   borderBottom: props.collapsed ? 'none' : BORDER,
 }))
 
-const PanelHeader = view(Row, {}).theme(props => ({
+const PanelHeader = gloss(Row).theme(props => ({
   backgroundColor: '#f6f7f9',
   border: props.floating ? BORDER : 'none',
   borderBottom: BORDER,
@@ -92,7 +91,7 @@ const PanelHeader = view(Row, {}).theme(props => ({
   },
 }))
 
-const PanelBody = view({}).theme(props => ({
+const PanelBody = gloss({}).theme(props => ({
   backgroundColor: '#fff',
   border: props.floating ? BORDER : 'none',
   borderBottomLeftRadius: 2,

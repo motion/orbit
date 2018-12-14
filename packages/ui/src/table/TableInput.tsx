@@ -1,6 +1,6 @@
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const TableInput = view('input', {
+export const TableInput = gloss('input', {
   borderRadius: 4,
   font: 'inherit',
   fontSize: 16,

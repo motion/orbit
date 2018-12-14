@@ -15,8 +15,8 @@ import {
   TableOnAddFilter,
 } from './types'
 import { Row } from '../blocks/Row.js'
-import { view } from '@mcro/black'
 import FilterRow from './FilterRow.js'
+import { gloss } from '@mcro/gloss'
 
 const backgroundColor = props => {
   if (props.highlighted) {
@@ -36,7 +36,7 @@ const backgroundColor = props => {
   }
 }
 
-const TableBodyRowContainer = view(Row, {
+const TableBodyRowContainer = gloss(Row, {
   overflow: 'hidden',
   width: '100%',
   userSelect: 'none',
@@ -59,7 +59,7 @@ const TableBodyRowContainer = view(Row, {
   },
 }))
 
-const TableBodyColumnContainer = view({
+const TableBodyColumnContainer = gloss({
   overflow: 'hidden',
   padding: [0, 8],
   userSelect: 'none',

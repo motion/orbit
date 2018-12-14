@@ -6,13 +6,12 @@
  */
 
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { View } from './blocks/View'
 import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'
-import { Theme } from '@mcro/gloss'
+import { Theme, gloss } from '@mcro/gloss'
 
 export type TabsProps = {
   // Callback for when the active tab has changed.
@@ -172,23 +171,23 @@ export function Tabs(props) {
   )
 }
 
-const TabContainer = view(View, {
+const TabContainer = gloss(View, {
   height: 'auto',
 })
 
-const TabList = view(Row, {
+const TabList = gloss(Row, {
   flex: 1,
 }).theme(({ theme }) => ({
   boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
 }))
 
-const TabScrollContainer = view({
+const TabScrollContainer = gloss({
   width: '100%',
   overflow: 'hidden',
   height: 25,
 })
 
-const HideScrollBar = view({
+const HideScrollBar = gloss({
   flexFlow: 'row',
   overflowX: 'auto',
   overflowY: 'hidden',
@@ -199,7 +198,7 @@ const HideScrollBar = view({
   boxSizing: 'content-box',
 })
 
-const TabListItem = view(Row, {
+const TabListItem = gloss(Row, {
   fontSize: 11,
   fontWeight: 500,
   lineHeight: 22,
@@ -226,14 +225,14 @@ const TabListItem = view(Row, {
   }
 })
 
-const TabListAddItem = view(TabListItem, {
+const TabListAddItem = gloss(TabListItem, {
   borderRight: 'none',
   flex: 0,
   flexGrow: 0,
   fontWeight: 'bold',
 })
 
-const CloseButton = view({
+const CloseButton = gloss({
   color: '#000',
   float: 'right',
   fontSize: 10,
@@ -251,11 +250,11 @@ const CloseButton = view({
   },
 })
 
-const OrderableContainer = view({
+const OrderableContainer = gloss({
   display: 'inline-block',
 })
 
-const TabContent = view({
+const TabContent = gloss({
   height: 'auto',
   overflow: 'auto',
   width: '100%',

@@ -6,10 +6,10 @@
  */
 
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
+import { gloss } from '@mcro/gloss'
 
 const invariant = require('invariant')
 
@@ -81,7 +81,7 @@ type InteractiveState = {
   resizingInitialCursor: CursorState | void
 }
 
-const InteractiveContainer = view({
+const InteractiveContainer = gloss({
   willChange: 'transform, height, width, z-index',
 })
 

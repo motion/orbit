@@ -20,13 +20,13 @@ import * as React from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import debounceRender from 'react-debounce-render'
-import { debounce } from 'lodash'
+import { debounce, isEqual } from 'lodash'
 import { DEFAULT_ROW_HEIGHT } from './types'
-import { view, isEqual } from '@mcro/black'
 import { TableRow } from './TableRow'
 import { TableHead } from './TableHead'
 import ContextMenu from '../ContextMenu'
 import { getSortedRows } from './getSortedRows'
+import { gloss } from '@mcro/gloss'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
@@ -156,7 +156,7 @@ type ManagedTableState = {
   prevProps: Partial<ManagedTableProps> | {}
 }
 
-const Container = view({
+const Container = gloss({
   flex: 1,
 })
 

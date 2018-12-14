@@ -1,9 +1,7 @@
-import css from './css'
-
-const styler = css()
+import { css } from './css'
 
 console.log(
-  styler({
+  css({
     color: 'red',
     alpha: 0.5,
     background: [0, 0, 0, 0.5],

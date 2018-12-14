@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
-import { attachTheme, CSSPropertySet } from '@mcro/gloss'
+import { gloss, attachTheme, CSSPropertySet } from '@mcro/gloss'
 import { Col } from './blocks/Col'
 import { Color, ThemeObject } from '@mcro/gloss'
 
@@ -16,12 +15,12 @@ type Props = CSSPropertySet & {
 }
 
 // why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
-const ArrowOuter = view(Col, {
+const ArrowOuter = gloss(Col, {
   position: 'relative',
   overflow: 'hidden',
 })
 
-const ArrowInner = view(Col, {
+const ArrowInner = gloss(Col, {
   position: 'absolute',
   left: 0,
   borderRadius: 1,

@@ -1,6 +1,6 @@
 import { Text } from '../Text'
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const Label = view(Text, {
+export const Label = gloss(Text, {
   padding: 5,
 })

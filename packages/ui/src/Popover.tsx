@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { view, on } from '@mcro/black'
+import { on } from '@mcro/helpers'
 import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle, Cancelable, last, pick, isEqual } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 import { Color, CSSPropertySet } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
-import { Theme } from '@mcro/gloss'
+import { Theme, gloss } from '@mcro/gloss'
 import { getTarget } from './helpers/getTarget'
 import { MergeUIContext } from './helpers/contexts'
 
@@ -83,7 +83,7 @@ export type PopoverProps = CSSPropertySet & {
   noPortal?: boolean
 }
 
-const ArrowContain = view({
+const ArrowContain = gloss({
   position: 'absolute',
   left: '50%',
 })
@@ -1002,7 +1002,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 }
 
-const PopoverContainer = view({
+const PopoverContainer = gloss({
   opacity: 0,
   position: 'absolute',
   top: 0,
@@ -1031,7 +1031,7 @@ const PopoverContainer = view({
   },
 })
 
-const Overlay = view({
+const Overlay = gloss({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -1050,7 +1050,7 @@ const Overlay = view({
   background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
 }))
 
-const PopoverWrap = view({
+const PopoverWrap = gloss({
   position: 'absolute',
   pointerEvents: 'none',
   zIndex: -1,
@@ -1075,7 +1075,7 @@ const PopoverWrap = view({
   }
 })
 
-const PopoverInner = view({
+const PopoverInner = gloss({
   flex: 1,
   position: 'relative',
 })

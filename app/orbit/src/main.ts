@@ -87,19 +87,21 @@ export async function main() {
 
       await new Promise(res => setTimeout(res, 1000))
 
-      setupProcess({
-        name: 'electron-menus',
-        inspectPort: 9006,
-        inspectPortRemote: 9007,
-      })
+      if (!process.env.IGNORE_MENU) {
+        setupProcess({
+          name: 'electron-menus',
+          inspectPort: 9006,
+          inspectPortRemote: 9007,
+        })
 
-      await new Promise(res => setTimeout(res, 1000))
+        await new Promise(res => setTimeout(res, 1000))
 
-      setupProcess({
-        name: 'electron-apps',
-        inspectPort: 9004,
-        inspectPortRemote: 9005,
-      })
+        setupProcess({
+          name: 'electron-apps',
+          inspectPort: 9004,
+          inspectPortRemote: 9005,
+        })
+      }
     }
 
     // syncers

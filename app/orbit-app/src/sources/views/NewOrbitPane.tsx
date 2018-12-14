@@ -7,7 +7,6 @@ import { Grid } from '../../views/Grid'
 import { Message } from '../../views/Message'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { OrbitOrb } from '../../views/OrbitOrb'
-import { OrbitAppItem } from '../../components/OrbitAppItem'
 
 type Props = {
   type: string

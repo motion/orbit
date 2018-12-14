@@ -17,6 +17,11 @@ if [[ "$FLAGS" =~ "--ignore-electron" ]]; then
   export IGNORE_ELECTRON="true"
 fi
 
+if [[ "$FLAGS" =~ "--ignore-menu" ]]; then
+  echo "DISABLE MENU"
+  export IGNORE_MENU="true"
+fi
+
 #
 # START repl debugger
 #

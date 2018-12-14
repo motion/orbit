@@ -1,4 +1,4 @@
-export type Options = {
+export type ViewOptions = {
   dontTheme?: boolean
   glossProp?: string
   tagName?: string

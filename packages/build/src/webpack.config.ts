@@ -110,7 +110,7 @@ const config = {
   //   cheap-module-eval-source-map (no line numbers...)
   devtool: isProd ? 'source-map' : 'eval-source-map',
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias: {

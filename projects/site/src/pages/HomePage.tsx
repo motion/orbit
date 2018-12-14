@@ -1,7 +1,8 @@
 import * as React from 'react'
+import { Grid } from '@mcro/ui'
 
 export const HomePage = () => {
-  return <div>home</div>
+  return <Grid />
 }
 
 HomePage.path = ''

@@ -6,7 +6,7 @@ import { themes } from './etc/themes'
 
 function render() {
   const RootNode = document.querySelector('#app')
-  const SiteRoot = require('./SiteRootHMR')
+  const SiteRoot = require('./SiteRootHMR').default
   ReactDOM.render(
     <ThemeProvide themes={themes}>
       <Theme name="light">

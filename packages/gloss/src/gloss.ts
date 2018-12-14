@@ -1,10 +1,22 @@
-import css from '@mcro/css'
-import { Options } from './types'
-import { createViewFactory } from './createViewFactory'
 import { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
-import { Color } from '@mcro/css'
 
-export { SimpleView } from './createViewFactory'
+// main exports
+
+export { view } from './view'
+export { configureView } from './config'
+
+// helper exports
+export { color } from '@mcro/color'
+export {
+  css,
+  configureCSS,
+  ThemeObject,
+  CSSPropertySet,
+  psuedoKeys,
+  validCSSAttr,
+  Color,
+} from '@mcro/css'
+export { SimpleView } from './view'
 export { GLOSS_IGNORE_COMPONENT_SYMBOL } from './symbols'
 export { alphaColor } from './helpers/alphaColor'
 export { propsToStyles } from './helpers/propsToStyles'
@@ -14,12 +26,6 @@ export { ThemeMaker } from './theme/ThemeMaker'
 export { ThemeProvide } from './theme/ThemeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
-export { ThemeObject, CSSPropertySet, cssNameMap, psuedoKeys, validCSSAttr, Color } from '@mcro/css'
-
-// bugfixing a typescript bug... remove if this compiles without this
-export type Color2 = Color
-
-export const { color } = require('@mcro/color').default
 
 export const colorToString = obj => {
   const { model, color, valpha } = obj
@@ -52,19 +58,4 @@ export const isGlossArguments = (a, b) => {
     return true
   }
   return isGlossFirstArg(a)
-}
-
-const DEFAULT_OPTS = {
-  glossProp: 'css',
-  isColor: color => color && !!color.rgb,
-  toColor: colorToString,
-}
-
-export default function createGloss(options: Options = DEFAULT_OPTS) {
-  const createStyles = css(options)
-  const createView = createViewFactory(createStyles)
-  return {
-    createStyles,
-    createView,
-  }
 }

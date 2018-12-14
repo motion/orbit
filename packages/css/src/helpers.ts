@@ -1,6 +1,9 @@
 import { ColorObject, Color, CSSArray } from './types'
 import colorNames from './colorNames'
 import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
+import { BORDER_KEY, COMMA_JOINED, TRANSFORM_KEYS_MAP } from './constants'
+
+export const px = (x: number | string) => (typeof x === 'number' ? `${x}px` : x)
 
 export function hash(thing: string | Object) {
   let str = thing
@@ -112,10 +115,7 @@ export function isColorLikeObject(object: ColorObject) {
 
 export function isColorLikeLibrary(val: any, options?: any): boolean {
   return (
-    (options &&
-      options.isColor &&
-      typeof val === 'object' &&
-      options.isColor(val)) ||
+    (options && options.isColor && typeof val === 'object' && options.isColor(val)) ||
     (typeof val.toCSS === 'function' ||
       typeof val.css === 'function' ||
       typeof val.rgb === 'function' ||
@@ -164,9 +164,7 @@ const arr3to4 = arr => [...arr, arr[1]]
 const arr2to4 = arr => [...arr, arr[0], arr[1]]
 const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]]
 
-export function expandCSSArray(
-  given: number | Array<number | string>,
-): CSSArray {
+export function expandCSSArray(given: number | Array<number | string>): CSSArray {
   if (typeof given === 'number') {
     return [given, given, given, given]
   }
@@ -183,4 +181,115 @@ export function expandCSSArray(
     }
   }
   throw new Error('Invalid type given')
+}
+
+// style transform creator
+const isColor = (color: any) => isColorLike(color, Config.options)
+const toColor = (color: Color) => colorToString(color, Config.options)
+
+const objectToCSS = {
+  textShadow: ({ x, y, blur, color }) => `${px(x)} ${px(y)} ${px(blur)} ${toColor(color)}`,
+  boxShadow: v =>
+    v.inset || v.x || v.y || v.blur || v.spread || v.color
+      ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(v.spread)} ${toColor(
+          v.color,
+        )}`
+      : toColor(v),
+  background: v =>
+    isColor(v)
+      ? toColor(v)
+      : `${toColor(v.color)} ${v.image || ''} ${(v.position ? v.position.join(' ') : v.position) ||
+          ''} ${v.repeat || ''}`,
+}
+
+function processArrayItem(key: string, val: any, level: number = 0) {
+  // recurse
+  if (isColor(val)) {
+    return toColor(val)
+  }
+  if (Array.isArray(val)) {
+    return processArray(key, val, level + 1)
+  }
+  return typeof val === 'number' ? `${val}px` : val
+}
+
+function processArray(key: string, value: Array<number | string>, level: number = 0): string {
+  if (key === 'background') {
+    if (isColor(value)) {
+      return toColor(value)
+    }
+  }
+  // solid default option for borders
+  if (BORDER_KEY[key] && value.length === 2) {
+    value.push('solid')
+  }
+  return value
+    .map(val => processArrayItem(key, val))
+    .join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
+}
+
+function objectValue(key: string, value: any) {
+  if (objectToCSS[key]) {
+    return objectToCSS[key](value)
+  }
+  if (
+    key === 'scale' ||
+    key === 'scaleX' ||
+    key === 'scaleY' ||
+    key === 'grayscale' ||
+    key === 'brightness'
+  ) {
+    return value
+  }
+  if (typeof value === 'number') {
+    return `${value}px`
+  }
+  return value
+}
+
+const arrayOrObject = (arr, obj) => val => (Array.isArray(val) ? arr(val) : obj(val))
+
+const GRADIENT = {
+  linearGradient: (key, object) =>
+    `linear-gradient(${arrayOrObject(
+      all => processArray(key, all),
+      ({ deg, from, to }) => `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`,
+    )(object)})`,
+  radialGradient: processArray,
+}
+
+export function processObject(key: string, object: any): string {
+  if (
+    key === 'background' ||
+    key === 'color' ||
+    key === 'borderColor' ||
+    key === 'backgroundColor'
+  ) {
+    if (object.linearGradient) {
+      return GRADIENT.linearGradient(key, object.linearGradient)
+    }
+    if (object.radialGradient) {
+      return GRADIENT.radialGradient(key, object.radialGradient)
+    }
+    if (isColor(object)) {
+      return toColor(object)
+    }
+  }
+  // if (key === 'border') {
+  //   return ``
+  // }
+  const toReturn = []
+  for (const subKey in object) {
+    if (!object.hasOwnProperty(subKey)) {
+      continue
+    }
+    let value = object[subKey]
+    if (Array.isArray(value)) {
+      value = processArray(key, value)
+    } else {
+      value = objectValue(subKey, value)
+    }
+    toReturn.push(`${TRANSFORM_KEYS_MAP[subKey] || subKey}(${value})`)
+  }
+  return toReturn.join(' ')
 }

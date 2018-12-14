@@ -1,5 +1,5 @@
 // helpers
-export { default as color } from '@mcro/color'
+export { color } from '@mcro/color'
 export { ThemeProvide, Theme, ThemeContext } from '@mcro/gloss'
 
 export * from './helpers/forwardRef'

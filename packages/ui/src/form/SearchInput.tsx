@@ -8,7 +8,7 @@ import { ClearButton } from '../buttons/ClearButton'
 import { Filter } from '../table/types'
 import { ThemeObject, CSSPropertySet, ThemeContext } from '@mcro/gloss'
 import { FilterToken } from '../table/FilterToken'
-import color from '@mcro/color'
+import { color } from '@mcro/color'
 import { Icon } from '../Icon'
 
 export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &

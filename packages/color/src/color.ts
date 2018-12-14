@@ -1,9 +1,8 @@
 import { colorString, toHex, toRgbPercent } from './colorString'
 import { colorConvert } from './colorConvert'
 
-var _slice = [].slice
-
-var skippedModels = [
+const slice = [].slice
+const skippedModels = [
   // to be honest, I don't really feel like keyword belongs in color convert, but eh.
   'keyword',
   // gray conflicts with some method names, and has its own method defined.
@@ -15,7 +14,7 @@ var skippedModels = [
 var hashedModelKeys = {}
 Object.keys(colorConvert).forEach(function(model) {
   hashedModelKeys[
-    _slice
+    slice
       .call(colorConvert[model].labels)
       .sort()
       .join('')
@@ -65,7 +64,7 @@ export class Color {
     } else if (obj.length) {
       this.model = model || 'rgb'
       channels = colorConvert[this.model].channels
-      var newArr = _slice.call(obj, 0, channels)
+      var newArr = slice.call(obj, 0, channels)
       this.color = zeroArray(newArr, channels)
       this.valpha = typeof obj[channels] === 'number' ? obj[channels] : 1
     } else if (typeof obj === 'number') {
@@ -379,7 +378,7 @@ Object.keys(colorConvert).forEach(function(model) {
   // 'static' construction methods
   Color[model] = function(color) {
     if (typeof color === 'number') {
-      color = zeroArray(_slice.call(arguments), channels)
+      color = zeroArray(slice.call(arguments), channels)
     }
     return new Color(color, model)
   }
@@ -438,6 +437,6 @@ function zeroArray(arr, length) {
   return arr
 }
 
-export default function color(obj, model?) {
+export function color(obj, model?) {
   return new Color(obj, model)
 }

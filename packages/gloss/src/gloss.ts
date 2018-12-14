@@ -19,7 +19,7 @@ export { ThemeObject, CSSPropertySet, cssNameMap, psuedoKeys, validCSSAttr, Colo
 // bugfixing a typescript bug... remove if this compiles without this
 export type Color2 = Color
 
-export const color = require('@mcro/color').default
+export const { color } = require('@mcro/color').default
 
 export const colorToString = obj => {
   const { model, color, valpha } = obj

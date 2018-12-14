@@ -1,3 +1,37 @@
+strategically step by step:
+
+- website (~2-3 weeks):
+  - on vacation / ending of december: build out the new site to utmost quality
+- WITH website:
+  - use it to recruit a developer
+    - heavily target people who have built big electron apps:
+      - VSCode, Atom, Airtable, Slack
+  - reply to gwern:
+    - send him the website + a few cool demo videos and a little explanation
+- demo (~4 weeks):
+  - generally polish apps and current bugs + maybe dark theme
+  - fix tray and get it working a bit better
+  - initial steps for Memory app pane showing recent items
+- WITH demo AND website:
+  - continue to recruit
+  - follow up with Ted, Andy
+  - post to facebook looking for co-founder
+- beta (~4 weeks):
+  - getting terms app working properly
+  - involves quite a bit of polish to syncers, various fine detail
+  - building to production
+  - some better memory features most likely
+- WITH beta:
+  - write a new blog post to announce updates and send to mailing list
+  - send to facebook
+- launch (~4-12 weeks):
+  - quite a bit of cleaning, refactoring and polish, and fleshing out things
+  - finishing search, topics, people, upgrades
+  - do the big app split out so we can figure out a variety of things around there
+  - cloud server for registration and inviting team
+  - viral / inviting based features
+  - get some of the highlighting features working
+
 big projects
 
 - new site:

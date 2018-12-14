@@ -5,7 +5,7 @@ const valCache = new WeakMap()
 let id = 0
 const next = () => `*${id++ % Number.MAX_VALUE}`
 
-const hashVal = val => {
+const hashVal = (val: any) => {
   // ignore react children
   if (val && val['_owner'] && val['$$typeof']) {
     return ''
@@ -37,7 +37,7 @@ const hashVal = val => {
   return res
 }
 
-export const simplePropSum = props => {
+export const simplePropSum = (props: Object) => {
   let hash = ''
   for (const key in props) {
     const val = props[key]

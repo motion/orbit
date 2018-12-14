@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 
-export function BitAppIndex(props: AppProps) {
-  return (
-    <>hi {props.id}</>
-  )
+export function BitAppIndex(props: AppProps<'bit'>) {
+  return <>hi {props.id}</>
 }

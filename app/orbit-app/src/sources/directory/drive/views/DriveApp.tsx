@@ -2,7 +2,7 @@ import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
 import { ScrollableContent } from '../../../views/layout/ScrollableContent'
 import { Surface, View } from '@mcro/ui'
-import { AppStatusBar } from '../../../views/layout/AppStatusBar'
+import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { Markdown } from '../../../../views/Markdown'
 
 export class DriveApp extends React.Component<OrbitSourceMainProps<'drive'>> {
@@ -15,7 +15,7 @@ export class DriveApp extends React.Component<OrbitSourceMainProps<'drive'>> {
             <Markdown source={bit.body} />
           </View>
         </ScrollableContent>
-        <AppStatusBar {...this.props} />
+        <BitStatusBar {...this.props} />
       </Surface>
     )
   }

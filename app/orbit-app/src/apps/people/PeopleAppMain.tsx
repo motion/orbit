@@ -33,7 +33,7 @@ const getBitTexts = (bits: Bit[]) => {
 }
 
 class PeopleAppStore {
-  props: AppProps
+  props: AppProps<'people'>
 
   get appConfig() {
     return this.props.appStore.appConfig
@@ -98,7 +98,7 @@ class PeopleAppStore {
 
 const PersonHeader = view()
 
-export const PeopleAppMain = observer((props: AppProps) => {
+export const PeopleAppMain = observer((props: AppProps<'people'>) => {
   const { appPageStore } = React.useContext(StoreContext)
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   console.log('rendering person app...')

@@ -48,3 +48,5 @@ export const loadManyAndCount: MediatorClient['loadManyAndCount'] = Mediator.loa
 export const loadOne: MediatorClient['loadOne'] = Mediator.loadOne.bind(Mediator)
 export const save: MediatorClient['save'] = Mediator.save.bind(Mediator)
 export const remove: MediatorClient['remove'] = Mediator.remove.bind(Mediator)
+
+export { useObserveMany } from './useModel'

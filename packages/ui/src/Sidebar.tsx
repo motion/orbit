@@ -8,15 +8,15 @@
 import { Interactive } from './Interactive'
 import { Col } from './blocks/Col'
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-const SidebarInteractiveContainer = view(Interactive, {
+const SidebarInteractiveContainer = gloss(Interactive, {
   flex: 'none',
 })
 
 type SidebarPosition = 'left' | 'top' | 'right' | 'bottom'
 
-const SidebarContainer = view(Col, {
+const SidebarContainer = gloss(Col, {
   height: '100%',
   overflowX: 'hidden',
   overflowY: 'auto',

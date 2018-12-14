@@ -11,8 +11,8 @@ import { sources } from './sources'
 import { settings } from './settings'
 
 type App = {
-  index?: GenericComponent<AppProps>
-  main: GenericComponent<AppProps>
+  index?: GenericComponent<AppProps<any>>
+  main: GenericComponent<AppProps<any>>
 }
 
 type AppsIndex = { [key in AppType]: App }

@@ -1,8 +1,8 @@
 import React from 'react'
-import { view } from '@mcro/black'
 import { Portal } from './helpers/portal'
+import { gloss } from '@mcro/gloss'
 
-const ModalBackground = view({
+const ModalBackground = gloss({
   position: 'absolute',
   left: 0,
   right: 0,
@@ -15,7 +15,7 @@ const ModalBackground = view({
   backdropFilter: 'blur(5px)',
 })
 
-const ModalContent = view({
+const ModalContent = gloss({
   background: '#f7f9fa',
   boxShadow: '0 0 0 1px rgba(0,0,0,0.1), 0 2px 20px rgba(0,0,0,0.2)',
   borderRadius: 5,

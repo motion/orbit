@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { view, on } from '@mcro/black'
+import { on } from '@mcro/helpers'
 import throttle from 'raf-throttle'
 import { debounce } from 'lodash'
 import { Color } from '@mcro/css'
+import { gloss } from '@mcro/gloss'
 
 type ChildArgs = {
   translateX: number
@@ -64,7 +65,7 @@ function getScrollParent(element) {
   return document.body
 }
 
-const Overlay = view({
+const Overlay = gloss({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -73,7 +74,7 @@ const Overlay = view({
   userSelect: 'none',
 })
 
-const Glow = view({
+const Glow = gloss({
   opacity: 1,
   pointerEvents: 'none',
   position: 'absolute',

@@ -2,24 +2,31 @@
   "name": "@mcro/site",
   "version": "2.2.1",
   "private": true,
+  "scripts": {
+    "start": "mcro-build --entry ./src/index --port 5000"
+  },
   "dependencies": {
+    "@react-navigation/core": "3.0.2",
+    "@react-navigation/web": "1.0.0-alpha.7",
+    "query-string": "6.2.0",
+    "@mcro/gloss": "*",
+    "@mcro/ui": "*",
+    "@mcro/color": "2.2.1",
+    "@mcro/use-store": "*",
     "@babel/runtime": "7.2.0",
-    "@researchgate/react-intersection-observer": "0.7.3",
-    "intersection-observer": "^0.5.0",
     "jsonp": "^0.2.1",
     "lodash": "4.17.10",
     "mobx": "5.6.0",
-    "@mcro/react-hot-loader": "4.5.5",
+    "react-hot-loader": "4.6.0",
     "react-media": "^1.8.0",
-    "react-spring": "5.9.0",
+    "react-spring": "7.1.1",
     "react-svg-inline": "^2.1.0",
     "remark": "9.0.0",
     "remark-react": "4.0.3",
     "sanitize-html": "^1.18.2",
     "warpjs": "1.0.8",
-    "zenscroll": "^4.0.2"
-  },
-  "peerDependencies": {
+    "zenscroll": "^4.0.2",
+    "mobx-react-lite": "0.3.4",
     "react": "16.7.0-alpha.2",
     "react-dom": "16.7.0-alpha.2"
   }

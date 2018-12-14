@@ -106,7 +106,9 @@ const Section = view({
   store: SettingAppStore,
 })
 @view
-export class SettingsAppMain extends React.Component<AppProps & { store: SettingAppStore }> {
+export class SettingsAppMain extends React.Component<
+  AppProps<'settings'> & { store: SettingAppStore }
+> {
   handleClearAllData = () => {
     if (
       showConfirmDialog({

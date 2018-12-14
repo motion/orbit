@@ -3,21 +3,23 @@ import { storeProvidable, storeAttachable, emitsMount } from '@mcro/decor-react'
 import { subscribable } from '@mcro/decor-classes'
 import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
-import createGloss, {
-  SimpleView,
+import {
+  gloss,
+  GlossView,
   GLOSS_IGNORE_COMPONENT_SYMBOL,
   CSSPropertySet,
   isGlossArguments,
 } from '@mcro/gloss'
 import { DecorCompiledDecorator } from '@mcro/decor'
 
-type SimpleViewDecorator<
-  A extends string | Function | CSSPropertySet,
-  B extends CSSPropertySet
-> = ((
+type GlossViewDecorator<A extends string | Function | CSSPropertySet, B extends CSSPropertySet> = ((
   a?: A,
   b?: B,
-) => A extends string | CSSPropertySet ? SimpleView : B extends CSSPropertySet ? SimpleView : any)
+) => A extends string | CSSPropertySet
+  ? GlossView<any>
+  : B extends CSSPropertySet
+  ? GlossView<any>
+  : any)
 
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
@@ -26,13 +28,12 @@ const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   emitsMount,
 ]
 const blackDecorator: DecorCompiledDecorator<any> = decor(decorations({ mobx: true, ui: true }))
-const { createView } = createGloss()
 
 // @view
-export const view = <SimpleViewDecorator<any, any>>function view(a?, b?) {
+export const view = <GlossViewDecorator<any, any>>function view(a?, b?) {
   // simple views: view(), view({}), view('div', {}), view(OtherView, {})
   if (isGlossArguments(a, b)) {
-    return createView(a, b)
+    return gloss(a, b)
   }
   const View = a as Function
   // class views

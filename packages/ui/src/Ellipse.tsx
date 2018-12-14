@@ -1,6 +1,6 @@
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const Ellipse = view({
+export const Ellipse = gloss({
   display: 'block',
   width: '100%',
   overflow: 'hidden',

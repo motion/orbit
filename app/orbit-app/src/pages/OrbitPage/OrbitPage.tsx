@@ -3,7 +3,7 @@ import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { AppWrapper } from '../../views'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SelectionStore } from '../../stores/SelectionStore'
+// import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SpaceStore, AppPanes } from '../../stores/SpaceStore'
 import { Theme } from '@mcro/ui'
@@ -26,14 +26,7 @@ export const OrbitPage = observer(() => {
   const spaceStore = useStore(SpaceStore)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
-  const selectionStore = useStore(SelectionStore, {
-    queryStore,
-    onClearSelection: () => {
-      AppActions.clearPeek()
-    },
-  })
   const paneManagerStore = useStore(PaneManagerStore, {
-    selectionStore,
     panes: [...AppPanes.map(p => p.id), 'settings', 'sources', 'onboard'],
     onPaneChange: () => {
       if (App.peekState.target) {
@@ -47,7 +40,6 @@ export const OrbitPage = observer(() => {
     orbitWindowStore,
     spaceStore,
     queryStore,
-    selectionStore,
     paneManagerStore,
   }
 

@@ -5,7 +5,7 @@
         [
           "@mcro/babel-preset-motion",
           {
-            "disable": ["@mcro/gloss/transform", "@mcro/react-hot-loader/babel"]
+            "disable": ["@mcro/gloss/transform", "react-hot-loader/babel"]
           }
         ]
       ]

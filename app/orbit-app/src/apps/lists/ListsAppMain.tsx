@@ -7,7 +7,7 @@ import { useStore } from '@mcro/use-store'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 
 class ListsMainStore {
-  props: AppProps
+  props: AppProps<'lists'>
 
   get maxHeight() {
     return this.props.appStore.maxHeight
@@ -25,7 +25,7 @@ class ListsMainStore {
   )
 }
 
-export const ListsAppMain = React.memo((props: AppProps) => {
+export const ListsAppMain = React.memo((props: AppProps<'lists'>) => {
   const store = useStore(ListsMainStore, props)
   return (
     <>

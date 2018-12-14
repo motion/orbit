@@ -1,7 +1,7 @@
-import { view } from '@mcro/black'
 import { View } from './View'
+import { gloss } from '@mcro/gloss'
 
-export const Row = view(View, {
+export const Row = gloss(View, {
   display: 'flex',
   flexFlow: 'row',
 })

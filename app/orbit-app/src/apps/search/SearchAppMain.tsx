@@ -6,14 +6,14 @@ import { SearchAppIndex } from './SearchAppIndex'
 import { observer } from 'mobx-react-lite'
 
 class SearchAppStore {
-  props: AppProps
+  props: AppProps<'search'>
 
   get appConfig() {
     return this.props.appStore.appConfig
   }
 }
 
-export const SearchAppMain = observer((props: AppProps) => {
+export const SearchAppMain = observer((props: AppProps<'search'>) => {
   const { appConfig } = useStore(SearchAppStore, props)
 
   if (!appConfig) {

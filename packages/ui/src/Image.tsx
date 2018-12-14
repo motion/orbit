@@ -1,7 +1,7 @@
-import { view } from '@mcro/black'
 import { View } from './blocks/View'
+import { gloss } from '@mcro/gloss'
 
-export const Image = view(View, {
+export const Image = gloss(View, {
   display: 'block',
 })
 

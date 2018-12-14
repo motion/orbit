@@ -55,19 +55,25 @@ const NavButtonChrome = view({
   flexFlow: 'row',
   alignItems: 'center',
   padding: [6, 14],
-}).theme(({ theme, isActive }) => ({
-  background: isActive ? theme.background : 'transparent',
-  '&:hover': {
-    background: isActive ? theme.background : [0, 0, 0, 0.05],
-  },
-}))
+}).theme(({ theme, isActive }) => {
+  const background = isActive
+    ? theme.tabBackgroundActive || theme.background
+    : theme.tabBackground || theme.background
+  return {
+    background: isActive ? background : 'transparent',
+    '&:hover': {
+      background: isActive ? background : [0, 0, 0, 0.05],
+      transition: isActive ? 'none' : 'all ease-out 500ms',
+    },
+  }
+})
 
 const NavButton = ({ children, tooltip = null, label = null, isActive, ...props }) => (
   <Tooltip label={tooltip} disabled={!tooltip}>
     <NavButtonChrome isActive={isActive} {...props}>
       {children}
       {!!label && (
-        <Text marginLeft={10} fontWeight={400} size={1} alpha={isActive ? 1 : 0.75}>
+        <Text marginLeft={10} fontWeight={400} size={1} alpha={isActive ? 1 : 0.85}>
           {label}
         </Text>
       )}

@@ -1,4 +1,4 @@
-import colorize from '@mcro/color'
+import { color } from '@mcro/color'
 import { Color } from '@mcro/css'
 import { ThemeObject } from '@mcro/css'
 
@@ -66,7 +66,7 @@ export class ThemeMaker {
         res[key] = this.colorize(val)
       } else {
         try {
-          res[key] = colorize(val)
+          res[key] = color(val)
         } catch {
           res[key] = val
         }
@@ -75,7 +75,7 @@ export class ThemeMaker {
     return res
   }
 
-  fromColor = (bgName): ThemeObject => {
+  fromColor = (bgName: string): ThemeObject => {
     if (typeof bgName !== 'string') {
       return null
     }
@@ -84,7 +84,7 @@ export class ThemeMaker {
     }
     let background
     try {
-      background = colorize(bgName)
+      background = color(bgName)
     } catch (e) {
       if (e.message.indexOf('parse color from string') > -1) {
         return null
@@ -96,26 +96,24 @@ export class ThemeMaker {
 
   // generate some properly contrasted colors based on base colors
   // insert theme into psuedo styles for Blur Active and ActiveHighlight
-  fromStyles = (styleObject: SimpleStyleObject): ThemeObject => {
-    if (!styleObject.background && !styleObject.color) {
+  fromStyles = (s: SimpleStyleObject): ThemeObject => {
+    if (!s.background && !s.color) {
       throw new Error('Themes require at least background or color')
     }
-    const key = JSON.stringify(styleObject)
+    const key = JSON.stringify(s)
     if (this.cache[key]) {
       return this.cache[key]
     }
-    const { background, color, borderColor, ...rest } = styleObject
-    const backgroundColored = background ? colorize(background) : opposite(colorize(color))
+    const backgroundColored = s.background ? color(s.background) : opposite(color(s.color))
     // some handy basic styles
     const base = this.colorize({
       background: backgroundColored,
-      color: color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmt)),
-      borderColor: borderColor || increaseContrast(backgroundColored, smallAmt),
+      color: s.color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmt)),
+      borderColor: s.borderColor || increaseContrast(backgroundColored, smallAmt),
     })
     // flattened
     const res = {
       ...this.colorize({
-        ...base,
         colorHover: increaseContrast(base.color, smallAmt),
         backgroundHover: increaseContrast(base.background, smallAmt),
         borderColorHover: increaseContrast(base.borderColor, smallAmt),
@@ -128,7 +126,9 @@ export class ThemeMaker {
         backgroundFocus: decreaseContrast(base.background, largeAmt),
         borderColorFocus: decreaseContrast(base.borderColor, largeAmt),
         // ensure rest is last so they can override anything
-        ...rest,
+        ...s,
+        // except for base which is already using the right order
+        ...base,
       }),
     }
     this.cache[key] = res

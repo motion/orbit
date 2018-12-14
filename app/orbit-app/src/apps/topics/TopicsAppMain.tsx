@@ -11,7 +11,7 @@ import { ScrollableContent } from '../../sources/views/layout/ScrollableContent'
 import { observer } from 'mobx-react-lite'
 
 class TopicsMainStore {
-  props: AppProps
+  props: AppProps<'topics'>
 
   get appConfig() {
     return this.props.appStore.appConfig
@@ -32,7 +32,7 @@ class TopicsMainStore {
   )
 }
 
-export const TopicsAppMain = observer((props: AppProps) => {
+export const TopicsAppMain = observer((props: AppProps<'topics'>) => {
   const store = useStore(TopicsMainStore, props)
 
   return (

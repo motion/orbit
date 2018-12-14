@@ -1,68 +1,51 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { Grid } from '../../views/Grid'
-import { VerticalSpace } from '../../views'
-import { SubTitle } from '../../views/SubTitle'
-import { Unpad } from '../../views/Unpad'
-import { SimpleItem } from '../../views/SimpleItem'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { Button } from '@mcro/ui'
-import { react, always } from '@mcro/black'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
-import { OrbitAppItem } from '../../components/OrbitAppItem'
+import { OrbitAppInfo } from '../../components/OrbitAppInfo'
+import { observer, useComputed } from 'mobx-react-lite'
+import { VirtualList } from '../../views/VirtualList/VirtualList'
+import { sourceToAppConfig } from '../../stores/SourcesStore'
 
-class SourcesIndex {
-  props: AppProps
-
-  get results() {
-    return this.props.sourcesStore.activeSources
-  }
-
-  setSelectionResults = react(
-    () => always(this.results),
-    () => {
-      this.props.appStore.setResults([
-        { type: 'column', indices: this.results.map((_, index) => index) },
-      ])
-    },
-  )
-}
-
-export const SourcesAppIndex = observer((props: AppProps) => {
+export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
   const { sourcesStore, isActive } = props
-  const store = useStore(SourcesIndex, props)
+
+  const results = useComputed(() => {
+    const { activeSources, allSources } = sourcesStore
+    return [
+      ...activeSources.map(app => ({
+        id: app.source.id,
+        title: app.appName,
+        subtitle: app.display.name,
+        icon: app.integration,
+        total: activeSources.length,
+        appConfig: sourceToAppConfig(app),
+        children: <OrbitAppInfo app={app} />,
+        group: 'Sources',
+      })),
+      ...allSources.map((app, index) => ({
+        id: `${app.integration}${index}`,
+        title: app.appName,
+        icon: app.integration,
+        onClick: addSourceClickHandler(app),
+        after: <Button size={0.9}>Add</Button>,
+        group: 'Add source',
+      })),
+    ]
+  })
+
+  React.useEffect(
+    () => {
+      if (isActive) {
+        props.appStore.setResults([{ type: 'column', indices: results.map((_, index) => index) }])
+      }
+    },
+    [results, isActive],
+  )
+
   return (
     <>
-      {!!store.results.length && (
-        <>
-          {store.results.map((app, index) => {
-            return (
-              <OrbitAppItem
-                key={app.source.id}
-                index={index}
-                total={store.results.length}
-                // TODO
-                activeCondition={isActive}
-                app={app}
-              />
-            )
-          })}
-          <VerticalSpace />
-        </>
-      )}
-      <SubTitle>Add app</SubTitle>
-      {sourcesStore.allSources.map((app, index) => {
-        return (
-          <SimpleItem
-            key={`${index}${app.integration}`}
-            onClick={addSourceClickHandler(app)}
-            title={app.appName}
-            icon={app.integration}
-            after={<Button size={0.9}>Add</Button>}
-          />
-        )
-      })}
+      <VirtualList items={results} />
     </>
   )
 })

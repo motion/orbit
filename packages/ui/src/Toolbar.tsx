@@ -5,12 +5,12 @@
  * @format
  */
 
-import { view } from '@mcro/black'
 import { colors } from './helpers/colors'
 import { Row } from './blocks/Row'
 import { Col } from './blocks/Col'
+import { gloss } from '@mcro/gloss'
 
-export const Spacer = view(Col, {
+export const Spacer = gloss(Col, {
   flexGrow: 1,
 })
 
@@ -25,7 +25,7 @@ export const Spacer = view(Col, {
 //   compact?: boolean
 // }>
 
-export const Toolbar = view(Row, {
+export const Toolbar = gloss(Row, {
   flexShrink: 0,
   lineHeight: '32px',
   alignItems: 'center',

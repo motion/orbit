@@ -6,17 +6,17 @@
  */
 
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Filter } from './types'
 import { PureComponent } from 'react'
 import { Text } from '../Text'
 import { findDOMNode } from 'react-dom'
 import { colors } from '../helpers/colors'
+import { gloss } from '@mcro/gloss'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 
-const Token = view(Text, {
+const Token = gloss(Text, {
   display: 'inline-flex',
   alignItems: 'center',
   borderRadius: 4,
@@ -36,7 +36,7 @@ const Token = view(Text, {
   color: focused ? 'white' : 'inherit',
 }))
 
-const Key = view(Text, {
+const Key = gloss(Text, {
   position: 'relative',
   fontWeight: 500,
   paddingRight: 12,
@@ -58,7 +58,7 @@ const Key = view(Text, {
   },
 }))
 
-const Value = view(Text, {
+const Value = gloss(Text, {
   whiteSpace: 'nowrap',
   maxWidth: 160,
   overflow: 'hidden',
@@ -67,7 +67,7 @@ const Value = view(Text, {
   paddingLeft: 3,
 })
 
-const Chevron = view(
+const Chevron = gloss(
   {
     border: 0,
     paddingLeft: 3,

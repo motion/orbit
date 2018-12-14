@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { observable } from 'mobx'
 import { SizedSurface } from '../SizedSurface'
+import { gloss } from '@mcro/gloss'
 
-const HiddenInput = view({
+const HiddenInput = gloss({
   position: 'absolute',
   opacity: 0.0001,
   transform: {
@@ -19,18 +19,20 @@ type Props = {
   sync?: any
 }
 
-@view
 export class Checkbox extends React.Component<Props> {
-  @observable isChecked = this.props.defaultValue || false
+  state = {
+    isChecked: this.props.defaultValue || false,
+  }
 
+  @observable
   onChange = e => {
-    this.isChecked = e.target.checked
-    return this.isChecked
+    this.setState({ isChecked: e.target.checked })
+    return this.state.isChecked
   }
 
   render() {
     const { onChange, sync, ...props } = this.props
-    const { isChecked } = this
+    const { isChecked } = this.state
     return (
       <SizedSurface
         margin={[0, 3]}

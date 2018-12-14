@@ -1,4 +1,5 @@
 export type TopicsAppData = {
   trending: { name: string }[]
-  watching: { name: string }[]
+  terms: { name: string }[]
+  topics: { name: string }[]
 }

@@ -1,12 +1,11 @@
-import toColor from '@mcro/color'
+import { color } from '@mcro/color'
 
 // mutate styles to have alpha if defined in props
 
 export function alphaColor(styles, { alpha, alphaHover }) {
-  const { color } = styles
-  if (color) {
-    if (color !== 'inherit') {
-      const clr = toColor(color)
+  if (styles.color) {
+    if (styles.color !== 'inherit') {
+      const clr = color(styles.color)
       if (typeof alpha === 'number') {
         styles.color = `${clr.alpha(alpha)}`
       }

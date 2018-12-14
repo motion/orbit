@@ -10,7 +10,7 @@ import { RowRenderer, OnScroll, KeyMapper } from './types'
 import { PureComponent, Component } from 'react'
 import { ResizeSensor } from './helpers/ResizeSensor'
 import { findDOMNode } from 'react-dom'
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss';
 
 type RowMeasureProps = {
   id: string
@@ -28,7 +28,7 @@ class RowMeasure extends PureComponent<RowMeasureProps> {
   }
 }
 
-const DynamicListContainer = view({
+const DynamicListContainer = gloss({
   flex: 1,
   position: 'relative',
   overflow: 'auto',

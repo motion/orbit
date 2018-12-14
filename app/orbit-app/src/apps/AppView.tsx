@@ -5,9 +5,12 @@ import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
 
-type Props = Pick<AppProps, 'id' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'> & {
+type Props = Pick<
+  AppProps<any>,
+  'id' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'
+> & {
   title?: string
-  appStore?: AppStore
+  appStore?: AppStore<any>
   onAppStore?: Function
 }
 

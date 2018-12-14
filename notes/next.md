@@ -1,3 +1,66 @@
+strategically step by step:
+
+- website (~2-3 weeks):
+  - on vacation / ending of december: build out the new site to utmost quality
+- WITH website:
+  - use it to recruit a developer
+    - heavily target people who have built big electron apps:
+      - VSCode, Atom, Airtable, Slack
+  - reply to gwern:
+    - send him the website + a few cool demo videos and a little explanation
+- demo (~4 weeks):
+  - generally polish apps and current bugs + maybe dark theme
+  - fix tray and get it working a bit better
+  - initial steps for Memory app pane showing recent items
+- WITH demo AND website:
+  - continue to recruit
+  - follow up with Ted, Andy
+  - post to facebook looking for co-founder
+- beta (~4 weeks):
+  - getting terms app working properly
+  - involves quite a bit of polish to syncers, various fine detail
+  - building to production
+  - some better memory features most likely
+- WITH beta:
+  - write a new blog post to announce updates and send to mailing list
+  - send to facebook
+- launch (~4-12 weeks):
+  - quite a bit of cleaning, refactoring and polish, and fleshing out things
+  - finishing search, topics, people, upgrades
+  - do the big app split out so we can figure out a variety of things around there
+  - cloud server for registration and inviting team
+  - viral / inviting based features
+  - get some of the highlighting features working
+
+big projects
+
+- new site:
+  - from scratch navigation, react-spring, nicer responsive, make it good step by step
+- app data storage:
+  - generic way to have apps store and manage data, better views for editing
+- app separation into own package:
+  - allows for custom apps
+  - helps with serverless style functions you can create to insert and manage data easily (terms app)
+- memory:
+  - initial app with the prompt to allow for accessibility
+  - getting OCR integrated and begin having it auto scan and store in memory
+- search:
+  - get it searching all types of bits, finish grouping or remove, fix keynav
+  - potentially move PersonBit into just a regular bit with type: 'person'
+- dark theme
+- tray:
+  - potentially make the tray not show all the apps and just show search
+    - and then make it also have a contextual action dropdown that integrates with Context
+- terms:
+  - fix topics, add a lot more and have them show in profiles
+  - once app data is in place have it so it scans every so often and updates trending terms
+- highlights:
+  - once terms are in place
+  - focus on high performance highlights of people/terms
+  - then upgrade and fix up the floating apps
+- app store:
+  - once clouds in place and apps are in place start on store
+
 high level to launch:
 
 - make 3 apps work nicely
@@ -12,8 +75,9 @@ high level to launch:
 low level next:
 
 - move quickly towards a working All/People/Terms pane in one window
-- home should show a column of each of them
+- improve the creation panes generally
 - clicking the currently active pane should toggle it open/closed
+- get dark theme working
 - get a lot of interaction working
 - big settings pane cleanup, restructure
 - fix search up a lot

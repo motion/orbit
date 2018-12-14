@@ -1,9 +1,8 @@
-import { view } from '@mcro/black'
 import * as React from 'react'
 import { iconNames } from './iconNames'
 import fuzzy from 'fuzzy'
 import { View } from './blocks/View'
-import { Color, CSSPropertySet } from '@mcro/gloss'
+import { Color, CSSPropertySet, gloss } from '@mcro/gloss'
 
 export type IconProps = React.HTMLProps<HTMLDivElement> &
   CSSPropertySet & {
@@ -37,7 +36,7 @@ const heightPadding = x => {
 }
 
 const cache = {}
-const findMatch = name => {
+const findMatch = (name: string) => {
   if (cache[name]) return cache[name]
   if (iconNames[name]) return iconNames[name]
   const matches = fuzzy.filter(name, iconNames)
@@ -45,24 +44,6 @@ const findMatch = name => {
   cache[name] = match
   return match
 }
-
-const IconInner = view(View, {
-  userSelect: 'none',
-  alignItems: 'center',
-  justifyContent: 'center',
-  // transform: { scale: 0.25 },
-  // transformOrigin: 'center left',
-}).theme(({ padding, width: propWidth, height: propHeight, size, theme, color }) => {
-  const width = (propWidth || size) + widthPadding(padding)
-  const height = (propHeight || size) + heightPadding(padding)
-  return {
-    color: color || theme.iconColor || theme.color,
-    width,
-    height,
-    fontSize: size, // * 4,
-    lineHeight: `${size / 12}rem`, // scale where 1 when 14
-  }
-})
 
 export const Icon = React.memo(
   ({
@@ -105,3 +86,19 @@ export const Icon = React.memo(
     )
   },
 )
+
+const IconInner = gloss(View, {
+  userSelect: 'none',
+  alignItems: 'center',
+  justifyContent: 'center',
+}).theme(({ padding, width: pWidth, height: pHeight, size, theme, color }) => {
+  const width = (pWidth || size) + widthPadding(padding)
+  const height = (pHeight || size) + heightPadding(padding)
+  return {
+    color: color || theme.iconColor || theme.color,
+    width,
+    height,
+    fontSize: size, // * 4,
+    lineHeight: `${size / 12}rem`, // scale where 1 when 14
+  }
+})

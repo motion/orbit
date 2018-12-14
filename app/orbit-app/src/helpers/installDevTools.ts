@@ -1,6 +1,6 @@
 import './installGlobals'
 import { debugState } from '@mcro/black'
-import { setConfig } from '@mcro/react-hot-loader'
+import { setConfig } from 'react-hot-loader'
 import { enableLogging } from '@mcro/mobx-logger'
 
 window['enableLog'] = false
@@ -56,10 +56,7 @@ debugState(({ stores, views }) => {
 // just for now since its spitting out so many
 setConfig({
   logLevel: 'no-errors-please',
-  // fixes HMR for react hooks
-  // @ts-ignore
   pureSFC: true,
-  ignoreSFC: !!require('react-dom').setHotElementComparator,
   pureRender: true,
 })
 

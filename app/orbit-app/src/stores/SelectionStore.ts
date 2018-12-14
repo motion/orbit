@@ -1,9 +1,9 @@
 import { react, ensure } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { QueryStore } from './QueryStore/QueryStore'
 import { AppActions } from '../actions/AppActions'
-import { hoverSettler } from '../helpers'
 import { SelectionGroup } from '../apps/SelectionResults'
+import { SelectionManagerProps } from '../components/SelectionManager'
+import { hoverSettler } from '../helpers/hoverSettler'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 
@@ -20,12 +20,8 @@ export type MovesMap = {
   moves?: Direction[]
 }
 
-// selection store
 export class SelectionStore {
-  props: {
-    queryStore: QueryStore
-    onClearSelection: Function
-  }
+  props: SelectionManagerProps
 
   highlightIndex = -1
   selectEvent = ''

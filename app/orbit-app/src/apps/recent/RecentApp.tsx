@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view, react, ensure, attach } from '@mcro/black'
-import { SelectionGroup } from '../../stores/SelectionStore'
 import { observeMany } from '@mcro/model-bridge'
 import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
@@ -10,6 +9,7 @@ import { PersonBitModel, BitModel, SourceModel, Bit, PersonBit } from '@mcro/mod
 import { allIntegrations } from '../../sources'
 import { OrbitCarouselSection } from '../../components/OrbitCarouselSection'
 import { AppProps } from '../AppProps'
+import { SelectionGroup } from '../SelectionResults'
 
 const models = {
   'person-bit': PersonBitModel,
@@ -17,7 +17,7 @@ const models = {
   app: SourceModel,
 }
 
-type Props = AppProps & {
+type Props = AppProps<'home'> & {
   store?: RecentAppStore
 }
 

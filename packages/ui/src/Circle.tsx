@@ -1,6 +1,6 @@
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const Circle = view({
+export const Circle = gloss<{ size: number; background: any }>({
   position: 'relative',
   borderRadius: 1000,
   lineHeight: '1rem',
@@ -10,11 +10,11 @@ export const Circle = view({
   fontWeight: 400,
   cursor: 'pointer',
   userSelect: 'none',
-}).theme(({ size, background }) => ({
+}).theme(p => ({
   circle: {
-    width: size,
-    height: size,
-    background,
-    borderRadius: size,
+    width: p.size,
+    height: p.size,
+    background: p.background,
+    borderRadius: p.size,
   },
 }))

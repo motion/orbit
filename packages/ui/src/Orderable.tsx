@@ -5,9 +5,10 @@
  * @format
  */
 
-import { view, isEqual } from '@mcro/black'
 import { Rect } from './helpers/geometry'
 import * as React from 'react'
+import { gloss } from '@mcro/gloss'
+import { isEqual } from 'lodash'
 
 export type OrderableOrder = Array<string>
 
@@ -36,11 +37,11 @@ type TabSizes = {
   [key: string]: Rect
 }
 
-const OrderableContainer = view({
+const OrderableContainer = gloss({
   position: 'relative',
 })
 
-const OrderableItemContainer = view({}).theme(({ orientation }) => ({
+const OrderableItemContainer = gloss({}).theme(({ orientation }) => ({
   display: orientation === 'vertical' ? 'block' : 'inline-block',
 }))
 

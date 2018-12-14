@@ -1,4 +1,4 @@
-import Router from '@mcro/router'
+import { Router } from '@mcro/router'
 import { HomePage } from './pages/HomePage'
 // import { FeaturesPage } from './pages/FeaturesPage'
 // import { UseCasesPage } from './pages/UseCasesPage'

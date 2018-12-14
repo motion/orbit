@@ -6,8 +6,8 @@ import {
   propsToStyles,
   alphaColor,
   ThemeObject,
+  gloss,
 } from '@mcro/gloss'
-import { view } from '@mcro/black'
 import { attachTheme } from '@mcro/gloss'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
@@ -127,111 +127,6 @@ const getSegmentRadius = props => {
   return segmentedStyle
 }
 
-// fontFamily: inherit on both fixes elements
-const SurfaceFrame = view(View, {
-  fontFamily: 'inherit',
-  position: 'relative',
-}).theme(props => {
-  // :hover, :focus, :active
-  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
-  const propStyles = propsToStyles(props)
-  // circular
-  const circularStyles = props.circular && {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
-    width: props.height,
-  }
-  // icon
-  const iconStyle = {
-    ...baseIconStyle,
-  }
-  const hoverIconStyle = {
-    color: props.iconHoverColor || themeStyles.colorHover,
-  }
-  const hoverStyle = props.active
-    ? null
-    : {
-        ...themeStyles['&:hover'],
-        ...propStyles['&:hover'],
-        // @ts-ignore
-        ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
-      }
-  let surfaceStyles = {
-    padding: props.padding,
-    margin: props.margin,
-    fontWeight: props.fontWeight,
-    color: props.color || props.theme.color,
-    ...(props.inline && inlineStyle),
-    overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
-    justifyContent: props.justify || props.justifyContent,
-    alignSelf: props.alignSelf,
-    borderStyle: props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
-    '& > div > .icon': iconStyle,
-    '&:hover > div > .icon': hoverIconStyle,
-    ...(props.dimmed && dimmedStyle),
-    ...(props.dim && dimStyle),
-    ...props.userStyle,
-    // note: base theme styles go *above* propsToStyles...
-    ...(!props.chromeless && themeStyles),
-    ...propStyles,
-    // ...whereas theme styles passed in as ovverrides go in here
-    ...themeStylesFromProps,
-    ...(!props.chromeless &&
-      props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
-    ...propsToTextSize(props),
-    ...(props.chromeless && chromelessStyle),
-    ...props.segmentedStyle,
-    ...circularStyles,
-    '&:hover': hoverStyle,
-  }
-  return alphaColor(surfaceStyles, { alpha: props.alpha, alphaHover: props.alphaHover })
-})
-
-const Element = view({
-  // needed to reset for <button /> at least
-  fontSize: 'inherit',
-  padding: 0,
-  flexFlow: 'row',
-  fontFamily: 'inherit',
-  border: 'none',
-  background: 'transparent',
-  height: '100%',
-  lineHeight: 'inherit',
-  color: 'inherit',
-  noInnerElement: {
-    display: 'none',
-  },
-}).theme(props => {
-  const iconSize = getIconSize(props)
-  const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
-  // element styles
-  const elementStyle = {
-    marginLeft: 0,
-    marginRight: 0,
-  }
-  // spacing between icon
-  const hasIconBefore = !!props.icon && !props.iconAfter
-  const hasIconAfter = !!props.icon && props.iconAfter
-  if (hasIconBefore) {
-    elementStyle.marginLeft = props.iconPad
-  }
-  if (hasIconAfter) {
-    elementStyle.marginRight = props.iconPad
-  }
-  return {
-    overflow: 'hidden',
-    ...props,
-    ...(props.inline && inlineStyle),
-    ...(props.ellipse && {
-      textOverflow: 'ellipse',
-      whiteSpace: 'nowrap',
-    }),
-    width: props.width || `calc(100% ${iconNegativePad})`,
-    ...elementStyle,
-  }
-})
-
 const baseIconStyle = {
   pointerEvents: 'none',
   justifyContent: 'center',
@@ -341,7 +236,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
                 key={0}
                 size={size}
                 opacity={0.2}
-                debug={this.props.debug}
                 borderLeftRadius={
                   segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
                 }
@@ -390,3 +284,108 @@ export const Surface = React.memo(props => (
     {uiContext => <SurfaceInner uiContext={uiContext} {...props} />}
   </UIContext.Consumer>
 ))
+
+// fontFamily: inherit on both fixes elements
+const SurfaceFrame = gloss(View, {
+  fontFamily: 'inherit',
+  position: 'relative',
+}).theme(props => {
+  // :hover, :focus, :active
+  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
+  const propStyles = propsToStyles(props)
+  // circular
+  const circularStyles = props.circular && {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    width: props.height,
+  }
+  // icon
+  const iconStyle = {
+    ...baseIconStyle,
+  }
+  const hoverIconStyle = {
+    color: props.iconHoverColor || themeStyles.colorHover,
+  }
+  const hoverStyle = props.active
+    ? null
+    : {
+        ...themeStyles['&:hover'],
+        ...propStyles['&:hover'],
+        // @ts-ignore
+        ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
+      }
+  let surfaceStyles = {
+    padding: props.padding,
+    margin: props.margin,
+    fontWeight: props.fontWeight,
+    color: props.color || props.theme.color,
+    ...(props.inline && inlineStyle),
+    overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
+    justifyContent: props.justify || props.justifyContent,
+    alignSelf: props.alignSelf,
+    borderStyle: props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
+    '& > div > .icon': iconStyle,
+    '&:hover > div > .icon': hoverIconStyle,
+    ...(props.dimmed && dimmedStyle),
+    ...(props.dim && dimStyle),
+    ...props.userStyle,
+    // note: base theme styles go *above* propsToStyles...
+    ...(!props.chromeless && themeStyles),
+    ...propStyles,
+    // ...whereas theme styles passed in as ovverrides go in here
+    ...themeStylesFromProps,
+    ...(!props.chromeless &&
+      props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
+    ...propsToTextSize(props),
+    ...(props.chromeless && chromelessStyle),
+    ...props.segmentedStyle,
+    ...circularStyles,
+    '&:hover': hoverStyle,
+  }
+  return alphaColor(surfaceStyles, { alpha: props.alpha, alphaHover: props.alphaHover })
+})
+
+const Element = gloss({
+  // needed to reset for <button /> at least
+  fontSize: 'inherit',
+  padding: 0,
+  flexFlow: 'row',
+  fontFamily: 'inherit',
+  border: 'none',
+  background: 'transparent',
+  height: '100%',
+  lineHeight: 'inherit',
+  color: 'inherit',
+  noInnerElement: {
+    display: 'none',
+  },
+}).theme(props => {
+  const iconSize = getIconSize(props)
+  const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
+  // element styles
+  const elementStyle = {
+    marginLeft: 0,
+    marginRight: 0,
+  }
+  // spacing between icon
+  const hasIconBefore = !!props.icon && !props.iconAfter
+  const hasIconAfter = !!props.icon && props.iconAfter
+  if (hasIconBefore) {
+    elementStyle.marginLeft = props.iconPad
+  }
+  if (hasIconAfter) {
+    elementStyle.marginRight = props.iconPad
+  }
+  return {
+    overflow: 'hidden',
+    ...props,
+    ...(props.inline && inlineStyle),
+    ...(props.ellipse && {
+      textOverflow: 'ellipse',
+      whiteSpace: 'nowrap',
+    }),
+    width: props.width || `calc(100% ${iconNegativePad})`,
+    ...elementStyle,
+  }
+})

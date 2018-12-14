@@ -5,7 +5,6 @@
  * @format
  */
 
-// import { view } from '@mcro/black'
 import { Filter } from './types'
 import { PureComponent } from 'react'
 // import ContextMenu from '../ContextMenu'

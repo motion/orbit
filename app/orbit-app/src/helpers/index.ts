@@ -24,8 +24,6 @@ export const fuzzyQueryFilter = <A extends Object[]>(query: string, results: A, 
   return res
 }
 
-export * from './hoverSettler'
-
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export const getHeader = (message, key) => message.participants.find(x => x.type === key)

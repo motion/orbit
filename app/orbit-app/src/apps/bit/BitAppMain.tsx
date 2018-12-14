@@ -11,7 +11,7 @@ import { react } from '@mcro/black'
 import { observer } from 'mobx-react-lite'
 
 class BitAppStore {
-  props: AppProps
+  props: AppProps<'bit'>
 
   get appConfig() {
     return this.props.appStore.appConfig
@@ -28,7 +28,7 @@ class BitAppStore {
   )
 }
 
-export const BitAppMain = observer((props: AppProps) => {
+export const BitAppMain = observer((props: AppProps<'bit'>) => {
   const { model } = useStore(BitAppStore, props)
   if (!model) {
     return null

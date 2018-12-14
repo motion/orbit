@@ -1,3 +1,8 @@
+export type CSSOptions = {
+  toColor: (a: any) => string
+  isColor: (a: any) => boolean
+}
+
 export type NoS = number | string
 
 export type CSSArray = Array<NoS>

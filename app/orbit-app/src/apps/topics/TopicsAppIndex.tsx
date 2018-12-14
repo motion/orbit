@@ -7,10 +7,8 @@ import { Separator } from '../../views/Separator'
 import { TopicEdit } from './TopicEdit'
 import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
-import { VerticalSpace } from '../../views'
 import { SliderPane, Slider } from '../../views/Slider'
-import { MENU_WIDTH, IS_MENU, IS_MINIMAL } from '../../constants'
-import { ORBIT_WIDTH } from '@mcro/constants'
+import { IS_MINIMAL } from '../../constants'
 import { observer } from 'mobx-react-lite'
 
 const icons = {
@@ -20,7 +18,7 @@ const icons = {
 }
 
 class TopicsIndexStore {
-  props: AppProps
+  props: AppProps<'topics'>
   activeTab = 'trend'
   tabs = ['trend', 'topics', 'terms']
 
@@ -51,9 +49,7 @@ function TopicList({ results, offset = 0, ...props }) {
       {results.map((res, index) => (
         <OrbitListItem
           key={res.title}
-          direct
           padding={[IS_MINIMAL ? 5 : 7, 11]}
-          opacity={0.85}
           {...{ '&:hover': activeStyle }}
           activeStyle={activeStyle}
           index={index + offset}
@@ -85,8 +81,6 @@ const ScrollableContent = view({
   overflowY: 'auto',
 })
 
-const BorderedButton = props => <Button background="transparent" {...props} />
-
 const buttonProps = (store: TopicsIndexStore, type: string) => {
   return {
     onClick: () => store.setActiveTab(type),
@@ -94,65 +88,62 @@ const buttonProps = (store: TopicsIndexStore, type: string) => {
   }
 }
 
-const size = IS_MINIMAL ? 0.9 : 1
+const size = IS_MINIMAL ? 0.9 : 0.95
 
-export const TopicsAppIndex = observer((props: AppProps & { store?: TopicsIndexStore }) => {
-  const store = useStore(TopicsIndexStore, props)
-  return (
-    <>
-      <SegmentedRow margin={[0, 8, 8]} itemProps={{ width: '33.3%', size: size, sizeHeight: size }}>
-        <BorderedButton {...buttonProps(store, 'trend')}>Trend</BorderedButton>
-        <BorderedButton {...buttonProps(store, 'topics')}>Topics</BorderedButton>
-        <BorderedButton {...buttonProps(store, 'terms')}>Terms</BorderedButton>
-      </SegmentedRow>
+export const TopicsAppIndex = observer(
+  (props: AppProps<'topics'> & { store?: TopicsIndexStore }) => {
+    const store = useStore(TopicsIndexStore, props)
+    return (
+      <>
+        <SegmentedRow
+          margin={8}
+          itemProps={{ background: 'transparent', width: '33.3%', size, sizeHeight: size }}
+        >
+          <Button {...buttonProps(store, 'trend')}>Trend</Button>
+          <Button {...buttonProps(store, 'topics')}>Topics</Button>
+          <Button {...buttonProps(store, 'terms')}>Terms</Button>
+        </SegmentedRow>
 
-      <Slider
-        fixHeightToTallest
-        curFrame={store.tabs.indexOf(store.activeTab)}
-        frameWidth={IS_MENU ? MENU_WIDTH : ORBIT_WIDTH}
-        transition="none"
-      >
-        <SliderPane>
-          <ScrollableContent>
-            {!!store.results.length && (
-              <>
-                <Separator>Terms</Separator>
-                <Row flexWrap="wrap">
-                  <TopicList results={store.results} offset={8} width="50%" />
-                </Row>
-              </>
-            )}
-            <VerticalSpace />
-            {!!store.results.length && (
-              <>
-                <Separator>Topics</Separator>
-                <TopicList results={store.results} />
-              </>
-            )}
-          </ScrollableContent>
-        </SliderPane>
+        <Slider fixHeightToTallest curFrame={store.tabs.indexOf(store.activeTab)} transition="none">
+          <SliderPane>
+            <ScrollableContent>
+              {!!store.results.length && (
+                <>
+                  <Separator>Terms</Separator>
+                  <TopicList results={store.results} />
+                </>
+              )}
+              {!!store.results.length && (
+                <>
+                  <Separator>Topics</Separator>
+                  <TopicList results={store.results} />
+                </>
+              )}
+            </ScrollableContent>
+          </SliderPane>
 
-        <SliderPane>
-          <ScrollableContent>
-            <TopicList results={store.results} />
-          </ScrollableContent>
-          <SidebarBottom>
-            <TopicEdit type="topic" />
-          </SidebarBottom>
-        </SliderPane>
+          <SliderPane>
+            <ScrollableContent>
+              <TopicList results={store.results} />
+            </ScrollableContent>
+            <SidebarBottom>
+              <TopicEdit type="topic" />
+            </SidebarBottom>
+          </SliderPane>
 
-        <SliderPane>
-          <ScrollableContent>
-            <TopicList results={store.results} />
-          </ScrollableContent>
-          <SidebarBottom>
-            <TopicEdit type="term" />
-          </SidebarBottom>
-        </SliderPane>
-      </Slider>
-    </>
-  )
-})
+          <SliderPane>
+            <ScrollableContent>
+              <TopicList results={store.results} />
+            </ScrollableContent>
+            <SidebarBottom>
+              <TopicEdit type="term" />
+            </SidebarBottom>
+          </SliderPane>
+        </Slider>
+      </>
+    )
+  },
+)
 
 const SidebarBottom = view({
   padding: [12, IS_MINIMAL ? 6 : 12],

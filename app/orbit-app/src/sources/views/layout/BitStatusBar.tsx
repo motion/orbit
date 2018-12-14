@@ -10,7 +10,7 @@ const Cmd = view({
   opacity: 0.6,
 })
 
-export const AppStatusBar = ({ normalizedItem, model }: OrbitSourceMainProps<any>) => {
+export const BitStatusBar = ({ normalizedItem, model }: OrbitSourceMainProps<any>) => {
   const { location, locationLink, updatedAt } = normalizedItem
   return (
     <StatusBar>

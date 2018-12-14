@@ -24,7 +24,7 @@ export async function start() {
 start()
 
 if (process.env.NODE_ENV !== 'production') {
-  if (typeof module.hot !== 'undefined') {
-    module.hot.accept(start)
+  if (typeof module['hot'] !== 'undefined') {
+    module['hot'].accept(start)
   }
 }

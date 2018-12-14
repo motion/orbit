@@ -4,8 +4,8 @@ import { AppProps } from './AppProps'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { AppType, AppConfig } from '@mcro/models'
 
-export class AppStore {
-  props: AppProps & {
+export class AppStore<Type extends AppType> {
+  props: AppProps<Type> & {
     appPageStore?: AppPageStore
   }
 
@@ -20,6 +20,7 @@ export class AppStore {
   setSelectionResultsOnActive = react(
     () => always(this.selectionResults),
     async (_, { when }) => {
+      ensure('this.props.selectionStore', !!this.props.selectionStore)
       await when(() => this.isActive)
       this.props.selectionStore.setResults(this.selectionResults)
     },
@@ -48,7 +49,7 @@ export class AppStore {
 
   get appType(): AppType {
     if (this.props.appPageStore) {
-      return this.props.appPageStore.state.appType
+      return this.props.appPageStore.state.appConfig.type
     }
     return null
   }
@@ -61,6 +62,7 @@ export class AppStore {
     },
     {
       defaultValue: this.props.queryStore.query,
+      deferFirstRun: true,
       onlyUpdateIfChanged: true,
     },
   )
@@ -74,6 +76,9 @@ export class AppStore {
   }
 
   get activeIndex() {
+    if (!this.props.selectionStore) {
+      return -1
+    }
     return this.props.selectionStore.activeIndex
   }
 

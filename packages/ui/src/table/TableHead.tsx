@@ -5,7 +5,6 @@
  * @format
  */
 
-import { view } from '@mcro/black'
 import * as React from 'react'
 import {
   TableColumnOrder,
@@ -22,15 +21,16 @@ import { colors } from '../helpers/colors'
 import { Row } from '../blocks/Row'
 import ContextMenu from '../ContextMenu'
 import invariant from 'invariant'
+import { gloss } from '@mcro/gloss'
 
-const TableHeaderArrow = view({
+const TableHeaderArrow = gloss({
   display: 'block',
   float: 'right',
   fontSize: '75%',
   opacity: 0.6,
 })
 
-const TableHeadColumnText = view({
+const TableHeadColumnText = gloss({
   display: 'inline-block',
   flex: 1,
   overflow: 'hidden',
@@ -38,7 +38,7 @@ const TableHeadColumnText = view({
   whiteSpace: 'nowrap',
 })
 
-const TableHeaderColumnInteractive = view(Interactive, {
+const TableHeaderColumnInteractive = gloss(Interactive, {
   display: 'inline-block',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -46,12 +46,12 @@ const TableHeaderColumnInteractive = view(Interactive, {
   width: '100%',
 })
 
-const TableHeaderColumnContainer = view({
+const TableHeaderColumnContainer = gloss({
   flexFlow: 'row',
   padding: '0 8px',
 })
 
-const TableHeadContainer = view(Row, {
+const TableHeadContainer = gloss(Row, {
   borderBottom: `1px solid ${colors.sectionHeaderBorder}`,
   color: colors.light50,
   flexShrink: 0,
@@ -64,7 +64,7 @@ const TableHeadContainer = view(Row, {
   zIndex: 2,
 })
 
-const TableHeadColumnContainer = view({
+const TableHeadColumnContainer = gloss({
   flexFlow: 'row',
   justifyContent: 'space-between',
   position: 'relative',

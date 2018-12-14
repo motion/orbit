@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
-import * as UI from '@mcro/ui'
 import { ThemeObject } from '@mcro/gloss'
 import { memoize } from 'lodash'
-import { View, ClearButton, Icon } from '@mcro/ui'
+import { ClearButton, Icon } from '@mcro/ui'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 
@@ -28,29 +27,6 @@ type Props = {
   theme?: ThemeObject
 }
 
-const exploreButton = {
-  size: 1.3,
-  width: 32,
-  circular: true,
-  glint: false,
-  borderWidth: 0,
-  borderColor: 'transparent',
-  background: 'transparent',
-  opacity: 0.2,
-  iconProps: {
-    size: 12,
-  },
-  hoverStyle: {
-    opacity: 0.6,
-    background: 'transparent',
-  },
-  activeStyle: {
-    opacity: 1,
-    fontWeight: 701,
-    background: 'transparent',
-  },
-}
-
 const Interactive = view({
   flexFlow: 'row',
   alignItems: 'center',
@@ -71,7 +47,6 @@ export class OrbitHeaderButtons extends React.Component<Props> {
 
   clearSearch = () => {
     this.props.queryStore.clearQuery()
-    this.props.paneManagerStore.setActivePane('home')
   }
 
   render() {

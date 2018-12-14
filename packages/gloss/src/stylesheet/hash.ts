@@ -5,7 +5,7 @@
  * @format
  */
 
-export default function hash(str: string): string {
+export function hash(str: string): string {
   const m = 0x5bd1e995
   const r = 24
   let h = str.length

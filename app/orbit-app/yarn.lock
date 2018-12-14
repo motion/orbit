@@ -91,17 +91,10 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.2.0.tgz#02d01dbc330b6cbf36b76ac93c50752c69027065"
   integrity sha512-M74+GvK4hn1eejD9lZ7967qAwvqTZayQa3g10ag4s9uewgR7TKjeaT0YMyoq+gVfKYABiWZ4MQD701/t5e1Jhg==
 
-"@babel/runtime@7.2.0":
+"@babel/runtime@7.2.0", "@babel/runtime@^7.0.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.2.0.tgz#b03e42eeddf5898e00646e4c840fa07ba8dcad7f"
   integrity sha512-oouEibCbHMVdZSDlJBO6bZmID/zA/G/Qx3H1d3rSNPTD+L8UNKvCat7aKWSJ74zYbm5zWGh0GQN0hKj8zYFTCg==
-  dependencies:
-    regenerator-runtime "^0.12.0"
-
-"@babel/runtime@^7.1.2":
-  version "7.1.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.1.5.tgz#4170907641cf1f61508f563ece3725150cc6fe39"
-  integrity sha512-xKnPpXG/pvK1B90JkwwxSGii90rQGKtzcMt2gI5G6+M0REXaq6rOHsGC2ay6/d0Uje7zzvSzjEzfR3ENhFlrfA==
   dependencies:
     regenerator-runtime "^0.12.0"
 
@@ -155,21 +148,6 @@
     esutils "^2.0.2"
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
-
-"@mcro/react-hot-loader@4.5.5":
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/@mcro/react-hot-loader/-/react-hot-loader-4.5.5.tgz#a2a35b84d752666b9f36bfb6f4db1ad8a6559363"
-  integrity sha512-I3qu9nsUzjTgQ/RfGA0O8ZLDar3BuGUAWela62bHrTXiElzKUCY+Jv2jMos+etbObR7UigZOL55JGMjLd+S9mw==
-  dependencies:
-    fast-levenshtein "^2.0.6"
-    global "^4.3.0"
-    hoist-non-react-statics "^2.5.0"
-    loader-utils "^1.1.0"
-    lodash.merge "^4.6.1"
-    prop-types "^15.6.1"
-    react-lifecycles-compat "^3.0.4"
-    shallowequal "^1.0.2"
-    source-map "^0.7.3"
 
 "@types/node@*":
   version "10.5.7"
@@ -1492,6 +1470,21 @@ react-fast-compare@2.0.4:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
+react-hot-loader@4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.6.0.tgz#7a556efea51a3c79e8bffdb094fbe17883a79432"
+  integrity sha512-ytmtbJB0RlTUqa9HnpVsoZiZ6iRsTzu+O2WovKT++f+tDYOTNZYa7OesVAE+R90e/1w/OJO4G/tw4rNSMYCjFw==
+  dependencies:
+    fast-levenshtein "^2.0.6"
+    global "^4.3.0"
+    hoist-non-react-statics "^2.5.0"
+    loader-utils "^1.1.0"
+    lodash.merge "^4.6.1"
+    prop-types "^15.6.1"
+    react-lifecycles-compat "^3.0.4"
+    shallowequal "^1.0.2"
+    source-map "^0.7.3"
+
 react-hotkeys@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-1.0.6.tgz#471901a428c015304d3998bdfcc2920ad4fc295c"
@@ -1541,12 +1534,12 @@ react-sortable-hoc@0.8.3:
     invariant "^2.2.1"
     prop-types "^15.5.7"
 
-react-spring@6.1.8:
-  version "6.1.8"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-6.1.8.tgz#ce20f0fb07722f977510ea865801df3fdc37d819"
-  integrity sha512-dnyMyRYI9SBt/kEhGb/BHn+in8x4emZ6otukdhokCZAo4N6pcw2tyIQpcoXN8+BvZzaGZyErB4SVfWtlhOoPEw==
+react-spring@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-7.1.0.tgz#2ec87137d3a74f82e498fd3ce90b389421415c93"
+  integrity sha512-ziwB6WsFNjf/KqTBVFNYFRAkoW/zruAW7GmbH+dhhS+QXQGyvtd5I7DUAA/mBlI1qv+zAYOHUXVTDb+xdLT3eg==
   dependencies:
-    "@babel/runtime" "^7.1.2"
+    "@babel/runtime" "^7.0.0"
 
 react-svg-inline@2.1.1:
   version "2.1.1"

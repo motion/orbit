@@ -1,6 +1,6 @@
-import { view } from '@mcro/black'
 import { View } from './View'
+import { gloss } from '@mcro/gloss'
 
-export const Inline = view(View, {
+export const Inline = gloss(View, {
   display: 'inline',
 })

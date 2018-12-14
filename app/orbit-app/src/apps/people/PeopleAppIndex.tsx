@@ -11,7 +11,7 @@ import { SearchResultsList } from '../../views/Lists/SearchResultsList'
 import { observer } from 'mobx-react-lite'
 
 class PeopleIndexStore {
-  props: AppProps
+  props: AppProps<'people'>
 
   allPeople = []
   private allPeople$ = observeMany(PersonBitModel, { args: { take: 100 } }).subscribe(people => {
@@ -94,7 +94,7 @@ class PeopleIndexStore {
   }
 }
 
-export const PeopleAppIndex = observer((props: AppProps) => {
+export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
   const store = useStore(PeopleIndexStore, props)
   const total = store.resultsWithSections.length
   if (!total) {

@@ -1,7 +1,5 @@
 export * from '@mcro/constants'
 
-import * as UI from '@mcro/ui'
-
 export const MENU_WIDTH = 300
 
 export const IS_MENU = window.location.pathname === '/chrome'
@@ -20,7 +18,6 @@ export const CHROME_PAD = 1
 export const PEEK_BORDER_RADIUS = 10
 
 export const SHADOW_PAD = 15
-export const ORBIT_COLOR = UI.color('#714842')
 
 const protocol = `${window.location.protocol}//`
 export const API_HOST = `${window.location.host}`

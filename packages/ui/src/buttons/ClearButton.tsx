@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { View } from '../blocks/View'
 import { Icon } from '../Icon'
+import { gloss } from '@mcro/gloss'
 
-const ClearClickableArea = view(View, {
+const ClearClickableArea = gloss(View, {
   padding: 5,
   '&:hover > *': {
     backgroundColor: 'rgba(0,0,0,0.45)',
@@ -11,7 +11,7 @@ const ClearClickableArea = view(View, {
   },
 })
 
-const ClearFrame = view(View, {
+const ClearFrame = gloss(View, {
   fontSize: 14,
   lineHeight: 13,
   fontWeight: 600,

@@ -1,9 +1,3 @@
-import React from 'react'
-import { view } from '@mcro/black'
+import * as React from 'react'
 
-@view
-export class NotFoundPage extends React.Component {
-  render() {
-    return <div>404</div>
-  }
-}
+export const NotFoundPage = () => <div>404</div>

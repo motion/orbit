@@ -6,5 +6,5 @@ const isCustomAttribute = RegExp.prototype.test.bind(
   new RegExp(`^(x|data|aria)-[${ATTRIBUTE_NAME_CHAR}]*$`),
 )
 
-export default (name: string) =>
+export const validProp = (name: string) =>
   ATTRIBUTE_REGEX.test(name) || isCustomAttribute(name.toLowerCase())

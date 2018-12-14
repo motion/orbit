@@ -58,6 +58,8 @@ big projects
   - once terms are in place
   - focus on high performance highlights of people/terms
   - then upgrade and fix up the floating apps
+- app store:
+  - once clouds in place and apps are in place start on store
 
 high level to launch:
 

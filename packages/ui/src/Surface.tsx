@@ -236,7 +236,6 @@ export class SurfaceInner extends React.Component<SurfaceProps> {
                 key={0}
                 size={size}
                 opacity={0.2}
-                debug={this.props.debug}
                 borderLeftRadius={
                   segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
                 }

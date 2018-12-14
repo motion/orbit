@@ -4,8 +4,8 @@ import { gloss } from '@mcro/gloss'
 const isUndef = x => typeof x === 'undefined'
 
 type Props = {
-  color: Color
-  size: number
+  color?: Color
+  size?: number
   borderRadius?: number
   borderLeftRadius?: number
   borderRightRadius?: number

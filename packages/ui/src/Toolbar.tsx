@@ -10,7 +10,7 @@ import { Row } from './blocks/Row'
 import { Col } from './blocks/Col'
 import { gloss } from '@mcro/gloss'
 
-export const Spacer = view(Col, {
+export const Spacer = gloss(Col, {
   flexGrow: 1,
 })
 

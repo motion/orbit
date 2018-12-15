@@ -11,6 +11,7 @@
     "@mcro/ui": "*",
     "@mcro/color": "2.2.1",
     "@mcro/use-store": "*",
+    "@mcro/wait-for-fonts": "*",
     "@kennethormandy/react-fittext": "0.5.1",
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",

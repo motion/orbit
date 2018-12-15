@@ -1,0 +1,15 @@
+{
+  "name": "@mcro/wait-for-fonts",
+  "main": "_/index.js",
+  "version": "2.2.1",
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4343"
+  }
+}

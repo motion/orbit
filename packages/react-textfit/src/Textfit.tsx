@@ -21,7 +21,7 @@ function assertElementFitsHeight(el, height) {
 
 function noop() {}
 
-export default class TextFit extends React.Component<{
+export type TextFitProps = {
   children: React.ReactNode
   text: string
   min: number
@@ -33,7 +33,9 @@ export default class TextFit extends React.Component<{
   autoResize: boolean
   resizable: boolean
   style?: Object
-}> {
+}
+
+export default class TextFit extends React.Component<TextFitProps> {
   static defaultProps = {
     min: 1,
     max: 100,
@@ -246,7 +248,9 @@ export default class TextFit extends React.Component<{
       err => {
         // err will be true, if another process was triggered
         if (err || shouldCancelProcess()) return
-        this.setState({ ready: true }, () => onReady(mid))
+        if (!this.state.ready) {
+          this.setState({ ready: true }, () => onReady(mid))
+        }
       },
     )
   }

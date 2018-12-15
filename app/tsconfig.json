@@ -25,6 +25,7 @@
     { "path": "../packages/cosal" },
     { "path": "../packages/use-store" },
     { "path": "../packages/mobx-logger" },
-    { "path": "../packages/react-textfit" }
+    { "path": "../packages/react-textfit" },
+    { "path": "../packages/wait-for-fonts" }
   ]
 }

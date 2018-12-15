@@ -23,5 +23,9 @@ function getSiteNavigator() {
 export const SiteRoot = hot(module)(() => {
   const SiteNavigator = getSiteNavigator()
   const SiteBrowser = createBrowserApp(SiteNavigator)
-  return <SiteBrowser />
+  return (
+    <div style={{ pointerEvents: 'auto' }}>
+      <SiteBrowser />
+    </div>
+  )
 })

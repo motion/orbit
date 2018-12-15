@@ -6,8 +6,8 @@ import { hash } from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import { validProp } from './helpers/validProp'
-import { simplePropSum } from './helpers/simplePropSum'
 import { css } from '@mcro/css'
+import { proxyGet } from './helpers/proxyGet'
 
 export type BaseRules = {
   [key: string]: string | number
@@ -188,27 +188,20 @@ export function glossView<Props = GlossViewProps<any>>(
   //
 
   ThemedView = React.memo((props: GlossViewProps<Props>) => {
-    const propKey = React.useRef(null)
     const [classNames, setClassNames] = React.useState(null)
-    const { allThemes, activeThemeName } = React.useContext(ThemeContext)
+    const { activeTheme } = React.useContext(ThemeContext)
 
     // update styles
-    const nextKey = simplePropSum(props)
-    if (propKey.current !== nextKey) {
-      propKey.current = nextKey
-      let theme = allThemes[activeThemeName]
-      // merge themes option
-      if (typeof props.theme === 'object') {
-        theme = {
-          ...theme,
-          ...props.theme,
-        }
-      }
-      const nextClassNames = getClassNamesFromProps(classNames, props, theme)
+    React.useEffect(() => {
+      const nextClassNames = getClassNamesFromProps(
+        classNames,
+        props,
+        props.theme ? proxyGet(props.theme, activeTheme) : activeTheme,
+      )
       if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
         setClassNames(nextClassNames)
       }
-    }
+    })
 
     React.useEffect(() => {
       return () => {
@@ -222,8 +215,9 @@ export function glossView<Props = GlossViewProps<any>>(
 
     const element = props.tagName || targetElement
     const isDOMElement = typeof element === 'string'
-    let finalProps = {} as any
 
+    // TODO this could probably be a proxy? but forwardRef?
+    let finalProps = {} as any
     for (const key in props) {
       if (key === 'forwardRef') {
         if (isDOMElement) {

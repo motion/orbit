@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Grid, FullScreen, View, Theme, Row } from '@mcro/ui'
+import { FullScreen, View, Theme, Row } from '@mcro/ui'
 import { Parallax, ParallaxLayer } from 'react-spring/addons'
 import { ViewPortText } from '../views/ViewPortText'
 import { TitleText } from '../views/TitleText'

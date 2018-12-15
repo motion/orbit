@@ -1,12 +1,13 @@
+import 'react-hot-loader' // must be imported before react
 import './../public/styles/siteBase.css'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeProvide, Theme } from '@mcro/ui'
 import { themes } from './etc/themes'
 
-function render() {
+export function render() {
   const RootNode = document.querySelector('#app')
-  const SiteRoot = require('./SiteRootHMR').default
+  const { SiteRoot } = require('./SiteRoot')
   ReactDOM.render(
     <ThemeProvide themes={themes}>
       <Theme name="light">

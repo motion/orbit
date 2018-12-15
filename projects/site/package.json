@@ -6,8 +6,10 @@
     "start": "mcro-build --entry ./src/index --port 5000"
   },
   "dependencies": {
+    "@kennethormandy/react-fittext": "0.5.1",
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",
+    "react-textfit": "1.1.0",
     "query-string": "6.2.0",
     "@mcro/gloss": "*",
     "@mcro/ui": "*",

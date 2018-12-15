@@ -39,59 +39,6 @@ export type TextProps = CSSPropertySet &
     ignoreColor?: boolean
   }
 
-const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
-
-const TextBlock = gloss(InlineBlock, {
-  userSelect: 'none',
-  wordBreak: 'break-word',
-  position: 'relative',
-  maxWidth: '100%',
-  selectable: {
-    userSelect: 'text',
-    cursor: 'inherit',
-  },
-  oneLineEllipse: {
-    overflow: 'hidden',
-  },
-}).theme(({ theme, ignoreColor, color, alpha, alphaHover }) => {
-  if (ignoreColor) {
-    return {
-      color: 'inherit',
-    }
-  }
-  return alphaColor(
-    {
-      color: color || theme.color,
-    },
-    {
-      alpha,
-      alphaHover,
-    },
-  )
-})
-
-const TextEllipse = gloss(Inline, {
-  margin: ['auto', 0],
-  maxWidth: '100%',
-}).theme(({ ellipse, doClamp, maxHeight }) => ({
-  ...(ellipse > 1 && {
-    WebkitLineClamp: ellipse,
-    maxHeight,
-    width: doClamp ? '100%' : '100.001%',
-    opacity: doClamp ? 1 : 0,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-  }),
-  ...((ellipse === 1 || ellipse === true) && {
-    display: 'block',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-  }),
-}))
-
 export type Highlights = {
   highlights: string[]
 }
@@ -314,3 +261,56 @@ export class Text extends React.PureComponent<TextProps> {
     )
   }
 }
+
+const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
+
+const TextBlock = gloss(InlineBlock, {
+  userSelect: 'none',
+  wordBreak: 'break-word',
+  position: 'relative',
+  maxWidth: '100%',
+  selectable: {
+    userSelect: 'text',
+    cursor: 'inherit',
+  },
+  oneLineEllipse: {
+    overflow: 'hidden',
+  },
+}).theme(({ theme, ignoreColor, color, alpha, alphaHover }) => {
+  if (ignoreColor) {
+    return {
+      color: 'inherit',
+    }
+  }
+  return alphaColor(
+    {
+      color: color || theme.color,
+    },
+    {
+      alpha,
+      alphaHover,
+    },
+  )
+})
+
+const TextEllipse = gloss(Inline, {
+  margin: ['auto', 0],
+  maxWidth: '100%',
+}).theme(({ ellipse, doClamp, maxHeight }) => ({
+  ...(ellipse > 1 && {
+    WebkitLineClamp: ellipse,
+    maxHeight,
+    width: doClamp ? '100%' : '100.001%',
+    opacity: doClamp ? 1 : 0,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+  }),
+  ...((ellipse === 1 || ellipse === true) && {
+    display: 'block',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+  }),
+}))

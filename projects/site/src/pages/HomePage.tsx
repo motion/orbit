@@ -5,6 +5,12 @@ import { ViewPortText } from '../views/ViewPortText'
 import { TitleText } from '../views/TitleText'
 import { FadeDown } from '../views/FadeDown'
 import { useWaitForFonts } from '@mcro/wait-for-fonts'
+import { Paragraph } from '../views/Paragraph'
+
+// next:
+// make a thing that does multiline text sizing
+// where the longest line is fit, and then the rest just use that font size
+// for the sub-paragraph
 
 export const HomePage = () => {
   const [measured, setMeasured] = React.useState(false)
@@ -22,7 +28,7 @@ export const HomePage = () => {
             <Row height="80%" width="80%" margin="auto" alignItems="center">
               <View width="100%">
                 <FadeDown disable={!measured}>
-                  <TitleText fontWeight={800}>
+                  <TitleText>
                     <ViewPortText
                       onReady={() => {
                         if (!measured) {
@@ -35,6 +41,14 @@ export const HomePage = () => {
                       Apps for teamwork
                     </ViewPortText>
                   </TitleText>
+
+                  <Paragraph debug size={1.65} sizeLineHeight={1.2} textAlign="center" alpha={0.7}>
+                    Orbit is a home for team knowledge.
+                    <br />
+                    Unified search, team vocabulary, and who is good at what.
+                    <br />
+                    It's a smart new way to manage your knowledge.
+                  </Paragraph>
                 </FadeDown>
               </View>
             </Row>

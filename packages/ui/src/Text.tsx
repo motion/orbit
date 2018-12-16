@@ -250,6 +250,7 @@ export class Text extends React.PureComponent<TextProps> {
         onKeyDown={this.handleKeydown}
         forwardRef={this.getRef}
         ignoreColor={ignoreColor}
+        color={color}
         {...ellipse && {
           flex: 1,
           display: 'flex',

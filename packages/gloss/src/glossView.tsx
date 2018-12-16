@@ -128,10 +128,11 @@ export function glossView<Props = GlossViewProps<any>>(
       }
     }
     if (themeFn) {
-      addStyles(id, dynamicStyles, themeFn({ ...props, theme }))
+      addStyles(id, dynamicStyles, themeFn(proxyGet(props, { theme })))
     }
     if (hasDynamicStyles) {
       // create new object to prevent buggy mutations
+      // TODO this shouldnt be necessary...
       myStyles = { ...myStyles }
       for (const key in dynamicStyles) {
         myStyles[key] = myStyles[key] || {}
@@ -193,13 +194,10 @@ export function glossView<Props = GlossViewProps<any>>(
 
     // update styles
     React.useEffect(() => {
-      const nextClassNames = getClassNamesFromProps(
-        classNames,
-        props,
-        props.theme ? proxyGet(props.theme, activeTheme) : activeTheme,
-      )
-      if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
-        setClassNames(nextClassNames)
+      const curTheme = props.theme ? proxyGet(props.theme, activeTheme) : activeTheme
+      const next = getClassNamesFromProps(classNames, props, curTheme)
+      if (!next || !classNames || next.join('') !== classNames.join('')) {
+        setClassNames(next)
       }
     })
 
@@ -213,7 +211,9 @@ export function glossView<Props = GlossViewProps<any>>(
       }
     }, [])
 
-    const element = props.tagName || targetElement
+    // if this is a plain view we can use tagName, otherwise just pass it down
+    const element =
+      typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
     const isDOMElement = typeof element === 'string'
 
     // TODO this could probably be a proxy? but forwardRef?

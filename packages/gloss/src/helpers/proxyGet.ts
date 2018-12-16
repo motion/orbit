@@ -1,12 +1,16 @@
 export function proxyGet<A extends Object>(main: A, ...alternates: A[]): A {
   return new Proxy(main, {
     get(target, key) {
-      if (typeof target[key] !== 'undefined') {
-        return target[key]
+      console.log('get', target, key)
+      const val = Reflect.get(target, key)
+      if (typeof val !== 'undefined') {
+        return val
       }
       for (const alt of alternates) {
-        if (typeof alt[key] !== 'undefined') {
-          return alt[key]
+        const altVal = Reflect.get(alt, key)
+        console.log('returning', alt, altVal)
+        if (typeof altVal !== 'undefined') {
+          return altVal
         }
       }
     },

@@ -274,6 +274,8 @@ export default class TextFit extends React.Component<TextFitProps> {
     const finalStyle = {
       ...style,
       fontSize,
+      height: fontSize,
+      lineHeight: `${fontSize}px`,
     }
 
     const wrapperStyle = {

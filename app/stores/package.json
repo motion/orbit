@@ -1,6 +1,7 @@
 {
   "name": "@mcro/stores",
   "version": "2.2.1",
+  "private:": true,
   "main": "_/index.js",
   "scripts": {
     "build": "tsc || true",

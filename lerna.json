@@ -4,9 +4,6 @@
   "packages": ["app/*", "packages/*", "projects/*"],
   "version": "2.2.1",
   "command": {
-    "publish": {
-      "scope": ["@mcro/babel-preset-motion"]
-    },
     "bootstrap": {
       "registry": "https://registry.npmjs.org"
     }

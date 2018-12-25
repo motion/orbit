@@ -1,6 +1,7 @@
 {
   "name": "@mcro/orbit-app",
   "version": "2.2.1",
+  "private:": true,
   "main": "./index.js",
   "scripts": {
     "start": "./scripts/start.sh",

@@ -1,7 +1,7 @@
 {
   "name": "@mcro/orbit-app",
   "version": "2.2.1",
-  "private:": true,
+  "private": true,
   "main": "./index.js",
   "scripts": {
     "start": "./scripts/start.sh",
@@ -77,5 +77,8 @@
   "peerDependencies": {
     "electron": "*",
     "mobx": "*"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4343"
   }
 }

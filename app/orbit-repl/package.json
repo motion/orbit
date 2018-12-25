@@ -1,7 +1,7 @@
 {
   "name": "@mcro/orbit-repl",
   "version": "2.2.1",
-  "private:": true,
+  "private": true,
   "bin": {
     "orbit-repl": "./dev.js"
   },

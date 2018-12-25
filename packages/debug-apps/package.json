@@ -1,7 +1,7 @@
 {
   "name": "@mcro/debug-apps",
   "main": "_/index.js",
-  "private:": true,
+  "private": true,
   "version": "2.2.1",
   "bin": {
     "debug-apps": "./_/index.js"

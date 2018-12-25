@@ -1,7 +1,7 @@
 {
   "name": "@mcro/config",
   "main": "_/config.js",
-  "private:": true,
+  "private": true,
   "version": "2.2.1",
   "publishConfig": {
     "registry": "http://localhost:4343"

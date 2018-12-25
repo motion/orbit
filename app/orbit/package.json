@@ -3,6 +3,7 @@
   "main": "_/main.js",
   "productName": "Orbit",
   "version": "2.2.9",
+  "private": true,
   "scripts": {
     "start": "./scripts/start.sh",
     "start-no-watch": "./scripts/start.sh --disable-watch",

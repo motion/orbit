@@ -1,6 +1,6 @@
 {
   "name": "@mcro/site",
-  "version": "2.3.6",
+  "version": "2.3.7",
   "private": true,
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5000"
@@ -8,12 +8,12 @@
   "dependencies": {
     "@babel/runtime": "7.2.0",
     "@kennethormandy/react-fittext": "0.5.1",
-    "@mcro/color": "^2.3.6",
-    "@mcro/gloss": "^2.3.6",
-    "@mcro/react-textfit": "^2.3.6",
-    "@mcro/ui": "^2.3.6",
-    "@mcro/use-store": "^2.3.6",
-    "@mcro/wait-for-fonts": "^2.3.6",
+    "@mcro/color": "^2.3.7",
+    "@mcro/gloss": "^2.3.7",
+    "@mcro/react-textfit": "^2.3.7",
+    "@mcro/ui": "^2.3.7",
+    "@mcro/use-store": "^2.3.7",
+    "@mcro/wait-for-fonts": "^2.3.7",
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",
     "jsonp": "^0.2.1",

@@ -2,7 +2,7 @@
   "name": "@mcro/mobx-logger",
   "main": "_/mobxLogger.js",
   "sideEffects": false,
-  "version": "2.3.6",
+  "version": "2.3.7",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

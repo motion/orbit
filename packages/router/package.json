@@ -1,6 +1,6 @@
 {
   "name": "@mcro/router",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "main": "_/Router.js",
   "sideEffects": false,
   "author": "Motion (http://motion.io)",

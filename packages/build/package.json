@@ -1,6 +1,6 @@
 {
   "name": "@mcro/build",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "bin": {
     "mcro-build": "./mcro-build"
   },
@@ -17,28 +17,28 @@
     "execa": "0.10.0",
     "file-loader": "2.0.0",
     "html-webpack-plugin": "3.2.0",
+    "ignore-loader": "0.1.2",
     "image-webpack-loader": "4.4.0",
     "lodash": "^4.17.10",
     "ncp": "^2.0.0",
     "null-loader": "0.1.1",
+    "prepack": "0.2.54",
+    "prepack-webpack-plugin": "1.1.2",
     "raw-loader": "0.5.1",
     "react-dev-utils": "6.0.5",
+    "react-hot-loader": "4.6.3",
+    "schedule": "0.4.0",
     "style-loader": "0.23.1",
     "svg-inline-loader": "^0.8.0",
     "thread-loader": "1.2.0",
-    "ignore-loader": "0.1.2",
     "tsconfig-paths-webpack-plugin": "3.2.0",
     "uglifyjs-webpack-plugin": "2.0.1",
-    "react-hot-loader": "4.6.3",
     "url-loader": "^1.0.1",
-    "webpack-bundle-analyzer": "^2.13.1",
-    "workerize-loader": "1.0.4",
-    "schedule": "0.4.0",
-    "prepack-webpack-plugin": "1.1.2",
-    "prepack": "0.2.54",
     "webpack": "4.27.1",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "3.1.2",
     "webpack-dev-server": "3.1.10",
-    "webpack-cli": "3.1.2"
+    "workerize-loader": "1.0.4"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

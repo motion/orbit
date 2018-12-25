@@ -1,6 +1,6 @@
 {
   "name": "@mcro/services",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "main": "_/index.js",
   "private": true,
   "scripts": {
@@ -8,10 +8,10 @@
     "watch": "tsc --build --watch --preserveWatchOutput --verbose"
   },
   "dependencies": {
-    "@mcro/config": "2.2.1",
-    "@mcro/logger": "^2.2.1",
-    "@mcro/models": "^2.2.1",
-    "@mcro/utils": "^2.2.1",
+    "@mcro/config": "^2.3.0",
+    "@mcro/logger": "^2.3.0",
+    "@mcro/models": "^2.3.0",
+    "@mcro/utils": "^2.3.0",
     "slack": "^11.0.0"
   },
   "peerDependencies": {

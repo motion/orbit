@@ -1,6 +1,6 @@
 {
   "name": "@mcro/stores",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "private": true,
   "main": "_/index.js",
   "scripts": {
@@ -8,14 +8,14 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/black": "^2.2.1",
-    "@mcro/constants": "^2.2.1",
-    "@mcro/mobx-bridge": "^2.2.1",
-    "@mcro/models": "^2.2.1",
-    "@mcro/config": "2.2.1",
+    "@mcro/black": "^2.3.0",
+    "@mcro/config": "^2.3.0",
+    "@mcro/constants": "^2.3.0",
+    "@mcro/mobx-bridge": "^2.3.0",
+    "@mcro/models": "^2.3.0",
     "global": "^4.3.2",
-    "lodash": "4.17.10",
-    "keen-tracking": "4.0.6"
+    "keen-tracking": "4.0.6",
+    "lodash": "4.17.10"
   },
   "peerDependencies": {
     "mobx": "*"

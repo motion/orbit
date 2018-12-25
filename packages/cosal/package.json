@@ -1,14 +1,14 @@
 {
   "name": "@mcro/cosal",
-  "version": "1.0.0",
+  "version": "2.3.0",
   "main": "_/cosal.js",
   "dependencies": {
+    "@mcro/vectorious": "^2.3.0",
     "compute-covariance": "^1.0.1",
-    "@mcro/vectorious": "*",
+    "electron-util": "0.9.0",
     "fs-extra": "7.0.0",
     "map-parallel": "0.0.3",
-    "ml-knn": "2.1.3",
-    "electron-util": "0.9.0"
+    "ml-knn": "2.1.3"
   },
   "scripts": {
     "build": "tsc || true",

@@ -1,6 +1,6 @@
 {
   "name": "@mcro/models",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "main": "_/index.js",
   "module": "_/index.js",
   "private": true,
@@ -9,17 +9,17 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/mediator": "^2.2.1",
-    "@mcro/config": "2.2.1",
-    "@mcro/utils": "*",
-    "reconnecting-websocket": "4.1.10",
-    "zen-observable": "^0.8.10",
+    "@mcro/config": "^2.3.0",
+    "@mcro/mediator": "^2.3.0",
+    "@mcro/utils": "^2.3.0",
     "global": "^4.3.2",
     "lodash": "4.17.10",
     "octokat": "0.10.0",
+    "reconnecting-websocket": "4.1.10",
     "reflect-metadata": "^0.1.12",
     "slack": "^11.0.0",
-    "typeorm": "^0.3.0-alpha.22"
+    "typeorm": "^0.3.0-alpha.22",
+    "zen-observable": "^0.8.10"
   },
   "devDependencies": {
     "@types/zen-observable": "0.8.0"

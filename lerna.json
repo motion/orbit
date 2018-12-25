@@ -6,7 +6,7 @@
     "packages/*",
     "projects/*"
   ],
-  "version": "2.3.0",
+  "version": "2.3.1",
   "command": {
     "bootstrap": {
       "registry": "https://registry.npmjs.org"

@@ -45,7 +45,7 @@
     "build-app": "cd app/build-orbit && npm run build-app",
     "build-app-resume": "cd app/build-orbit && npm run build-app-resume",
     "publish-app": "cd app/build-orbit && npm run publish",
-    "publish-packages": "lerna publish --registry=https://registry.npmjs.org",
+    "publish-packages": "bin/publish",
     "test-built-app": "cd app/build-orbit && npm run test-built-app"
   }
 }

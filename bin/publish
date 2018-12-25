@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# start verdaccio
+kill $(lsof -t -i:4343) || true
+(cd app/build-orbit && npx verdaccio -c ./scripts/verdaccio/publish-config.yaml --listen 4343 &)
+while ! nc -z localhost 4343; do sleep 0.1; done
+
+npx lerna publish
+
+# end verdaccio
+kill $(lsof -t -i:4343) || true
+

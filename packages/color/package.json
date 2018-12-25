@@ -1,6 +1,6 @@
 {
   "name": "@mcro/color",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "main": "_/color.js",
   "sideEffects": false,
   "author": "Motion",

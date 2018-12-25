@@ -1,6 +1,6 @@
 {
   "name": "@mcro/gloss-displaynames",
-  "version": "2.3.4",
+  "version": "2.3.6",
   "main": "_/index.js",
   "sideEffects": false,
   "scripts": {

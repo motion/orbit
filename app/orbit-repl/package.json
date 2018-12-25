@@ -1,6 +1,6 @@
 {
   "name": "@mcro/orbit-repl",
-  "version": "2.3.4",
+  "version": "2.3.6",
   "private": true,
   "bin": {
     "orbit-repl": "./dev.js"
@@ -11,7 +11,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "devDependencies": {
-    "@mcro/debug-apps": "^2.3.4",
+    "@mcro/debug-apps": "^2.3.6",
     "execa": "^0.9.0"
   },
   "publishConfig": {

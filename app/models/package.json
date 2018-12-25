@@ -1,6 +1,6 @@
 {
   "name": "@mcro/models",
-  "version": "2.3.4",
+  "version": "2.3.6",
   "main": "_/index.js",
   "module": "_/index.js",
   "private": true,
@@ -9,9 +9,9 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/config": "^2.3.1",
-    "@mcro/mediator": "^2.3.4",
-    "@mcro/utils": "^2.3.4",
+    "@mcro/config": "^2.3.6",
+    "@mcro/mediator": "^2.3.6",
+    "@mcro/utils": "^2.3.6",
     "global": "^4.3.2",
     "lodash": "4.17.10",
     "octokat": "0.10.0",

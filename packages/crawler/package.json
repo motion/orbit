@@ -1,6 +1,6 @@
 {
   "name": "@mcro/crawler",
-  "version": "2.3.4",
+  "version": "2.3.6",
   "main": "_/index.js",
   "sideEffects": false,
   "module": "src/index.js",
@@ -9,7 +9,7 @@
     "start-prod": "NODE_ENV=production node lib/index.js"
   },
   "dependencies": {
-    "@mcro/logger": "^2.3.4",
+    "@mcro/logger": "^2.3.6",
     "babel-polyfill": "7.0.0-beta.3",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "4.17.10",

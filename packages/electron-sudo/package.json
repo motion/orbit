@@ -1,6 +1,6 @@
 {
   "name": "@mcro/electron-sudo",
-  "version": "2.3.4",
+  "version": "2.3.6",
   "description": "Electron subprocess with administrative privileges, prompting the user with an OS dialog if necessary.",
   "main": "_/index.js",
   "sideEffects": false,

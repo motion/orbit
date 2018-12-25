@@ -3,13 +3,13 @@
   "main": "_/index.js",
   "sideEffects": false,
   "types": "./index.d.ts",
-  "version": "2.3.4",
+  "version": "2.3.6",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/helpers": "^2.3.4",
+    "@mcro/helpers": "^2.3.6",
     "autobind-decorator": "^2.1.0",
     "batch-processor": "^1.0.0",
     "event-kit": "^2.5.0",

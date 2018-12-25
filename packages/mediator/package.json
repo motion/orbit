@@ -1,6 +1,6 @@
 {
   "name": "@mcro/mediator",
-  "version": "2.3.4",
+  "version": "2.3.6",
   "author": "Motion",
   "main": "_/index.js",
   "sideEffects": false,
@@ -12,7 +12,7 @@
     "registry": "http://localhost:4343"
   },
   "dependencies": {
-    "@mcro/logger": "^2.3.4",
+    "@mcro/logger": "^2.3.6",
     "@types/zen-observable": "0.8.0",
     "typeorm": "^0.3.0-alpha.22",
     "ws": "6.0.0",

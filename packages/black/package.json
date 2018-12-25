@@ -2,18 +2,18 @@
   "name": "@mcro/black",
   "main": "_/main.js",
   "sideEffects": false,
-  "version": "2.3.4",
+  "version": "2.3.6",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/automagical": "^2.3.4",
-    "@mcro/decor": "^2.3.4",
-    "@mcro/decor-classes": "^2.3.4",
-    "@mcro/decor-mobx": "^2.3.4",
-    "@mcro/decor-react": "^2.3.4",
-    "@mcro/helpers": "^2.3.4",
+    "@mcro/automagical": "^2.3.6",
+    "@mcro/decor": "^2.3.6",
+    "@mcro/decor-classes": "^2.3.6",
+    "@mcro/decor-mobx": "^2.3.6",
+    "@mcro/decor-react": "^2.3.6",
+    "@mcro/helpers": "^2.3.6",
     "event-kit": "^2.5.0",
     "global": "^4.3.0",
     "prop-types": "^15.6.0"

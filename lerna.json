@@ -1,13 +1,12 @@
 {
   "lerna": "3.8.0",
   "npmClient": "yarn",
-  "packages": [
-    "app/*",
-    "packages/*",
-    "projects/*"
-  ],
+  "packages": ["app/*", "packages/*", "projects/*"],
   "version": "2.3.1",
   "command": {
+    "publish": {
+      "registry": "https://registry.npmjs.org"
+    },
     "bootstrap": {
       "registry": "https://registry.npmjs.org"
     }

@@ -2,15 +2,15 @@
   "name": "@mcro/decor-react",
   "main": "_/decor-react.js",
   "sideEffects": false,
-  "version": "2.3.3",
+  "version": "2.3.4",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/decor": "^2.3.3",
-    "@mcro/helpers": "^2.3.3",
-    "@mcro/store-hmr": "^2.3.3",
+    "@mcro/decor": "^2.3.4",
+    "@mcro/helpers": "^2.3.4",
+    "@mcro/store-hmr": "^2.3.4",
     "batch-processor": "^1.0.0",
     "event-kit": "^2.5.0",
     "global": "^4.3.2",

@@ -1,6 +1,6 @@
 {
   "name": "@mcro/services",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "main": "_/index.js",
   "private": true,
   "scripts": {
@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@mcro/config": "^2.3.1",
-    "@mcro/logger": "^2.3.3",
-    "@mcro/models": "^2.3.3",
-    "@mcro/utils": "^2.3.3",
+    "@mcro/logger": "^2.3.4",
+    "@mcro/models": "^2.3.4",
+    "@mcro/utils": "^2.3.4",
     "slack": "^11.0.0"
   },
   "peerDependencies": {

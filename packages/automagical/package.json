@@ -2,13 +2,13 @@
   "name": "@mcro/automagical",
   "main": "_/automagical.js",
   "sideEffects": false,
-  "version": "2.3.3",
+  "version": "2.3.4",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/logger": "^2.3.3",
+    "@mcro/logger": "^2.3.4",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
     "zen-observable": "^0.8.10"

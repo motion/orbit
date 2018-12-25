@@ -149,6 +149,13 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@mcro/keyword-extract@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@mcro/keyword-extract/-/keyword-extract-2.3.0.tgz#4829564a90865aa3eb707dce204b425495e6efce"
+  integrity sha512-v5s6vycSJsVKFFpITxziJmwY0wMdvjvK2GOJVP15VwNhQJXu2dbNptz24/uAQ6ZXshwHS68DizRRERWZLBFZxw==
+  dependencies:
+    lodash "4.17.10"
+
 "@types/node@*":
   version "10.5.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.7.tgz#960d9feb3ade2233bcc9843c918d740b4f78a7cf"

@@ -7,5 +7,5 @@
     "build": "tsc || true",
     "watch": "tsc --watch  --preserveWatchOutput || true"
   },
-  "gitHead": "cc768503a5f807ce8fc49c376799f81d58281209"
+  "gitHead": "cd7289f353fa25d9aea2c301ef7c3aeb96677674"
 }

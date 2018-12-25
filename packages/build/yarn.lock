@@ -269,6 +269,11 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@hot-loader/react-dom@16.7.0-alpha.2":
+  version "16.7.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@hot-loader/react-dom/-/react-dom-16.7.0-alpha.2.tgz#7e183cb1b75ee616a9b0c576151b609b61256950"
+  integrity sha512-VUrIH2NTKkCChIQPmhtUM3jspGt78RDphnUpVQhWS+Ewq4/neC/4uBGlDw6CUek9Oo/2oQW5swVIo3vsxIA9aw==
+
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"

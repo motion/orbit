@@ -77,64 +77,6 @@ export type SurfaceProps = CSSPropertySet & {
   themeSelect?: ((theme: ThemeObject) => ThemeObject) | string
 }
 
-const getIconSize = (props: SurfaceProps) => {
-  return (
-    props.iconSize ||
-    Math.round((props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1))
-  )
-}
-
-const inlineStyle = {
-  display: 'inline',
-}
-
-const dimmedStyle = {
-  opacity: 0.2,
-  // pointerEvents: 'none',
-}
-
-const dimStyle = {
-  opacity: 0.5,
-  '&:hover': {
-    opacity: 1,
-  },
-}
-
-const chromelessStyle = {
-  borderColor: 'transparent',
-  background: 'transparent',
-}
-
-const getSegmentRadius = (props, uiContext) => {
-  // support being inside a segmented list
-  let segmentedStyle: any
-  if (!props.ignoreSegment) {
-    if (uiContext && uiContext.inSegment) {
-      const { inSegment } = uiContext
-      segmentedStyle = {
-        borderRightRadius: props.borderRadius,
-        borderLeftRadius: props.borderRadius,
-      }
-      if (inSegment.first) {
-        segmentedStyle.borderRightRadius = 0
-        segmentedStyle.borderRightWidth = 0
-      } else if (inSegment.last) {
-        segmentedStyle.borderLeftRadius = 0
-      } else {
-        segmentedStyle.borderRightRadius = 0
-        segmentedStyle.borderRightWidth = 0
-        segmentedStyle.borderLeftRadius = 0
-      }
-    }
-  }
-  return segmentedStyle
-}
-
-const baseIconStyle = {
-  pointerEvents: 'none',
-  justifyContent: 'center',
-}
-
 export const Surface = React.memo((props: SurfaceProps) => {
   const uiContext = React.useContext(UIContext)
   const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
@@ -167,15 +109,10 @@ export const Surface = React.memo((props: SurfaceProps) => {
     tooltip,
     tooltipProps,
     height,
-    color,
     sizeLineHeight,
     noInnerElement,
     tagName,
-    forwardRef,
     themeSelect,
-    style,
-    padding,
-    margin,
     className,
     alignItems,
     justifyContent,
@@ -198,13 +135,13 @@ export const Surface = React.memo((props: SurfaceProps) => {
 
   // goes to BOTH the outer element and inner element
   const throughProps = {
+    height,
     iconPad,
     alignItems,
     justifyContent,
     theme: selectedTheme,
     sizeIcon: props.sizeIcon,
     iconSize: props.iconSize,
-    height: props.height,
     iconAfter: props.iconAfter,
     inline: props.inline,
     icon: props.icon,
@@ -225,26 +162,21 @@ export const Surface = React.memo((props: SurfaceProps) => {
   return (
     <SurfaceFrame
       whiteSpace="pre"
-      padding={padding}
-      margin={margin}
       lineHeight={lineHeight}
       {...throughProps}
       {...rest}
-      forwardRef={forwardRef}
-      userStyle={style}
       className={`${tooltipState.id} ${className || ''}`}
       segmentedStyle={segmentedStyle}
     >
-      {noInnerElement ? (
-        children
-      ) : (
+      {noInnerElement && children}
+      {!noInnerElement && (
         <>
           {!!tooltip && tooltipState.show && (
             <Tooltip label={tooltip} {...tooltipProps}>
               {`.${tooltipState.id}`}
             </Tooltip>
           )}
-          {glint && !props.chromeless ? (
+          {glint && !props.chromeless && (
             <Glint
               key={0}
               size={size}
@@ -256,17 +188,17 @@ export const Surface = React.memo((props: SurfaceProps) => {
                 segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
               }
             />
-          ) : null}
-          {icon && !stringIcon ? <div>{icon}</div> : null}
-          {icon && stringIcon ? (
+          )}
+          {icon && !stringIcon && <div>{icon}</div>}
+          {icon && stringIcon && (
             <Icon
               order={icon && iconAfter ? 3 : 'auto'}
               name={`${icon}`}
               size={getIconSize(props)}
               {...iconProps}
             />
-          ) : null}
-          {glow && !dimmed && !disabled ? (
+          )}
+          {glow && !dimmed && !disabled && (
             <HoverGlow
               full
               scale={1.1}
@@ -274,7 +206,7 @@ export const Surface = React.memo((props: SurfaceProps) => {
               borderRadius={+props.borderRadius}
               {...glowProps}
             />
-          ) : null}
+          )}
           {!!children && (
             <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
               {children}
@@ -302,9 +234,6 @@ const SurfaceFrame = gloss(View, {
     width: props.height,
   }
   // icon
-  const iconStyle = {
-    ...baseIconStyle,
-  }
   const hoverIconStyle = {
     color: props.iconHoverColor || themeStyles.colorHover,
   }
@@ -315,35 +244,47 @@ const SurfaceFrame = gloss(View, {
         ...propStyles['&:hover'],
         ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
       }
-  let surfaceStyles = {
-    padding: props.padding,
-    margin: props.margin,
-    fontWeight: props.fontWeight,
-    color: props.color || theme.color,
-    ...(props.inline && inlineStyle),
-    overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
-    justifyContent: props.justify || props.justifyContent,
-    alignSelf: props.alignSelf,
-    borderStyle: props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
-    '& > div > .icon': iconStyle,
-    '&:hover > div > .icon': hoverIconStyle,
-    ...(props.dimmed && dimmedStyle),
-    ...(props.dim && dimStyle),
-    ...props.userStyle,
-    // note: base theme styles go *above* propsToStyles...
-    ...(!props.chromeless && themeStyles),
-    ...propStyles,
-    // ...whereas theme styles passed in as ovverrides go in here
-    ...themeStylesFromProps,
-    ...(!props.chromeless &&
-      props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
-    ...propsToTextSize(props),
-    ...(props.chromeless && chromelessStyle),
-    ...props.segmentedStyle,
-    ...circularStyles,
-    '&:hover': hoverStyle,
-  }
-  return alphaColor(surfaceStyles, { alpha: props.alpha, alphaHover: props.alphaHover })
+  return alphaColor(
+    {
+      padding: props.padding,
+      margin: props.margin,
+      fontWeight: props.fontWeight,
+      color: props.color || theme.color,
+      ...(props.inline && {
+        display: 'inline',
+      }),
+      overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
+      justifyContent: props.justify || props.justifyContent,
+      alignSelf: props.alignSelf,
+      borderStyle:
+        props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
+      '& > div > .icon': {
+        pointerEvents: 'none',
+        justifyContent: 'center',
+      },
+      '&:hover > div > .icon': hoverIconStyle,
+      ...(props.dimmed && {
+        opacity: 0.2,
+      }),
+      ...props.style,
+      // note: base theme styles go *above* propsToStyles...
+      ...(!props.chromeless && themeStyles),
+      ...propStyles,
+      // ...whereas theme styles passed in as ovverrides go in here
+      ...themeStylesFromProps,
+      ...(!props.chromeless &&
+        props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
+      ...propsToTextSize(props),
+      ...(props.chromeless && {
+        borderColor: 'transparent',
+        background: 'transparent',
+      }),
+      ...props.segmentedStyle,
+      ...circularStyles,
+      '&:hover': hoverStyle,
+    },
+    { alpha: props.alpha, alphaHover: props.alphaHover },
+  )
 })
 
 const Element = gloss({
@@ -380,7 +321,9 @@ const Element = gloss({
   return {
     overflow: 'hidden',
     ...props,
-    ...(props.inline && inlineStyle),
+    ...(props.inline && {
+      display: 'inline',
+    }),
     ...(props.ellipse && {
       textOverflow: 'ellipse',
       whiteSpace: 'nowrap',
@@ -389,3 +332,35 @@ const Element = gloss({
     ...elementStyle,
   }
 })
+
+const getIconSize = (props: SurfaceProps) => {
+  return (
+    props.iconSize ||
+    Math.round((props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1))
+  )
+}
+
+const getSegmentRadius = (props, uiContext) => {
+  // support being inside a segmented list
+  let segmentedStyle: any
+  if (!props.ignoreSegment) {
+    if (uiContext && uiContext.inSegment) {
+      const { inSegment } = uiContext
+      segmentedStyle = {
+        borderRightRadius: props.borderRadius,
+        borderLeftRadius: props.borderRadius,
+      }
+      if (inSegment.first) {
+        segmentedStyle.borderRightRadius = 0
+        segmentedStyle.borderRightWidth = 0
+      } else if (inSegment.last) {
+        segmentedStyle.borderLeftRadius = 0
+      } else {
+        segmentedStyle.borderRightRadius = 0
+        segmentedStyle.borderRightWidth = 0
+        segmentedStyle.borderLeftRadius = 0
+      }
+    }
+  }
+  return segmentedStyle
+}

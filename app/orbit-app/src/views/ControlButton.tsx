@@ -33,7 +33,7 @@ const ControlButtonChrome = view(UI.Col, {
   alignItems: 'center',
   justifyContent: 'center',
   pointerEvents: 'auto',
-}).theme(({ theme, borderWidth, ...props }) => {
+}).theme(({ borderWidth, ...props }, theme) => {
   const background = props.background || theme.background.darken(0.2).desaturate(0.2)
   const borderColor = props.borderColor || UI.color(background).darken(0.1)
   return {

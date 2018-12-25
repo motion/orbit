@@ -17,7 +17,7 @@ export const TableInput = gloss('input', {
     borderColor: '#ccc',
     cursor: 'not-allowed',
   },
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   border: [1, theme.borderColor],
 }))
 

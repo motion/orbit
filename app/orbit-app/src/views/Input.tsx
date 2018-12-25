@@ -9,7 +9,7 @@ export const Input = view(View, {
   width: '100%',
   alignItems: 'center',
   padding: [8, 12],
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   color: theme.color,
   background: theme.background.alpha(0.5),
   border: [1, theme.borderColor.desaturate(0.1)],

@@ -11,7 +11,7 @@ export type ColorObject = { r: NoS; g: NoS; b: NoS; a?: NoS }
 
 export type NiceColor = string | CSSArray | ColorObject
 
-export type ToCSSAble = { toCSS: Function } | { css: Function }
+export type ToCSSAble = { toCSS: Function } | { css: Function } | { alpha: Function } | any
 
 export type Color = ToCSSAble | NiceColor
 

@@ -137,7 +137,7 @@ const OrbitIndexView = view({
     visibility: 'hidden',
     zIndex: -1,
   },
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   borderRight: [1, theme.borderColor.alpha(0.5)],
 }))
 

@@ -55,7 +55,7 @@ const NavButtonChrome = view({
   flexFlow: 'row',
   alignItems: 'center',
   padding: [6, 14],
-}).theme(({ theme, isActive }) => {
+}).theme(({ isActive }, theme) => {
   const background = isActive
     ? theme.tabBackgroundActive || theme.background
     : theme.tabBackground || theme.background

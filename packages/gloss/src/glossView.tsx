@@ -7,7 +7,6 @@ import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import { validProp } from './helpers/validProp'
 import { css } from '@mcro/css'
-import { proxyGet } from './helpers/proxyGet'
 
 export type BaseRules = {
   [key: string]: string | number
@@ -21,9 +20,7 @@ type GlossViewProps<Props> = Props &
     theme?: ThemeObject
   }
 
-type GlossThemeFn<Props> = ((
-  props: GlossViewProps<Props> & { theme: ThemeObject },
-) => CSSPropertySet)
+type GlossThemeFn<Props> = ((props: GlossViewProps<Props>, theme: ThemeObject) => CSSPropertySet)
 
 type GlossCompiledView<Props> = React.SFC<GlossViewProps<Props>> & {
   ignoreAttrs?: Object
@@ -64,14 +61,14 @@ export function glossView<Props = GlossViewProps<any>>(
   const { styles, propStyles } = getAllStyles(id, target, rawStyles)
   const hasPropStyles = !!Object.keys(propStyles).length
   let displayName = 'GlossView'
-  let cachedTheme
+  let cachedTheme = null
   let ThemedView
 
-  function getTheme() {
-    if (typeof cachedTheme !== 'undefined') {
+  function getTheme(theme: ThemeObject) {
+    if (cachedTheme !== null) {
       return cachedTheme
     }
-    const result = compileTheme(ThemedView)
+    const result = compileTheme(ThemedView, theme)
     cachedTheme = result
     return result
   }
@@ -103,7 +100,7 @@ export function glossView<Props = GlossViewProps<any>>(
         }
       }
     }
-    const themeFn = getTheme()
+    const themeFn = getTheme(theme)
     const hasDynamicStyles = themeFn || hasPropStyles
     // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
     // if (!hasDynamicStyles && myStyles === state.lastStyles) {
@@ -128,7 +125,7 @@ export function glossView<Props = GlossViewProps<any>>(
       }
     }
     if (themeFn) {
-      addStyles(id, dynamicStyles, themeFn(proxyGet(props, { theme })))
+      addStyles(id, dynamicStyles, themeFn(props, theme))
     }
     if (hasDynamicStyles) {
       // create new object to prevent buggy mutations
@@ -142,7 +139,7 @@ export function glossView<Props = GlossViewProps<any>>(
         }
       }
     }
-    let nextClassNames
+    let nextClassNames: string[]
     // sort so we properly order pseudo keys
     const keys = Object.keys(myStyles)
     const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
@@ -157,6 +154,7 @@ export function glossView<Props = GlossViewProps<any>>(
         gc.registerClassUse(className)
       }
     }
+
     // check what classNames have been removed if this is a secondary render
     if (classNames !== null) {
       for (const className of classNames) {
@@ -175,15 +173,6 @@ export function glossView<Props = GlossViewProps<any>>(
     return [...nextClassNames, ...extraClassNames]
   }
 
-  function getClassNamesFromProps(
-    classNames: string[],
-    props: GlossViewProps<Props>,
-    theme: ThemeObject,
-  ) {
-    const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-    return generateClassnames(classNames, props as any, tag, theme)
-  }
-
   //
   // the actual view!
   //
@@ -193,9 +182,11 @@ export function glossView<Props = GlossViewProps<any>>(
     const { activeTheme } = React.useContext(ThemeContext)
 
     // update styles
-    React.useEffect(() => {
-      const curTheme = props.theme ? proxyGet(props.theme, activeTheme) : activeTheme
-      const next = getClassNamesFromProps(classNames, props, curTheme)
+    React.useLayoutEffect(() => {
+      const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
+      // merge theme if they pass an object theme in
+      const theme = props.theme ? { ...activeTheme, ...props.theme } : activeTheme
+      const next = generateClassnames(classNames, props, tag, theme)
       if (!next || !classNames || next.join('') !== classNames.join('')) {
         setClassNames(next)
       }
@@ -384,7 +375,7 @@ function getSelector(className: string, namespace: string, tagName: string = '')
   return '.' + className
 }
 
-function compileTheme(ogView) {
+function compileTheme(ogView: any, theme: ThemeObject) {
   let view = ogView
   let themes = []
   // collect the themes going up the tree
@@ -398,12 +389,12 @@ function compileTheme(ogView) {
   if (!themes.length) {
     result = null
   } else {
-    result = props => {
+    result = (props: Object) => {
       let styles = {}
       // from most important to least
-      for (const theme of themes) {
+      for (const themeFn of themes) {
         styles = {
-          ...theme(props),
+          ...themeFn(props, theme),
           ...styles,
         }
       }

@@ -289,10 +289,10 @@ export const Surface = React.memo(props => (
 const SurfaceFrame = gloss(View, {
   fontFamily: 'inherit',
   position: 'relative',
-}).theme(props => {
+}).theme((props, theme) => {
   // :hover, :focus, :active
-  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
-  const propStyles = propsToStyles(props)
+  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, theme, true)
+  const propStyles = propsToStyles(props, theme)
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -319,7 +319,7 @@ const SurfaceFrame = gloss(View, {
     padding: props.padding,
     margin: props.margin,
     fontWeight: props.fontWeight,
-    color: props.color || props.theme.color,
+    color: props.color || theme.color,
     ...(props.inline && inlineStyle),
     overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
     justifyContent: props.justify || props.justifyContent,

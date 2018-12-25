@@ -1,14 +1,14 @@
 import memoize from 'memoize-weak'
 import { ThemeObject } from '@mcro/css'
 
-export const selectThemeSubset = memoize((prefix: string, o: ThemeObject) => {
+export const selectThemeSubset = memoize((prefix: string, theme: ThemeObject) => {
   const len = prefix.length
-  const o1 = { ...o }
-  for (const key in o) {
+  const o1 = { ...theme }
+  for (const key in theme) {
     if (key.indexOf(prefix) === 0) {
       const newKey = key.slice(len)
       const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
-      o1[newKeyCamelCase] = o[key]
+      o1[newKeyCamelCase] = theme[key]
     }
   }
   return o1

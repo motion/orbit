@@ -177,7 +177,7 @@ const TabContainer = gloss(View, {
 
 const TabList = gloss(Row, {
   flex: 1,
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
 }))
 
@@ -209,7 +209,7 @@ const TabListItem = gloss(Row, {
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   userSelect: 'none',
-}).theme(({ theme, active, width }) => {
+}).theme(({ active, width }, theme) => {
   const background = active
     ? theme.tabBackgroundActive || theme.background
     : theme.tabBackground || theme.background

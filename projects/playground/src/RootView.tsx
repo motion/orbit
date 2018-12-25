@@ -151,7 +151,7 @@ if (process.env.NODE_ENV === 'development') {
 //       background: 'green',
 //     },
 //   },
-// }).theme(({ theme, big }) => ({
+// }).theme(({ big }, theme) => ({
 //   fontStyle: 'italic',
 //   fontWeight: big ? 'bold' : 'light',
 //   color: big ? 'pink' : theme.color,

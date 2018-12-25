@@ -4,7 +4,7 @@ import { RoundButtonSmall } from './RoundButtonSmall'
 import { Row } from '@mcro/ui'
 import { view } from '@mcro/black'
 
-const SectionRow = view(Row, {}).theme(({ theme }) => ({
+const SectionRow = view(Row, {}).theme((_, theme) => ({
   background: theme.background,
 }))
 

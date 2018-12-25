@@ -277,7 +277,7 @@ const TextBlock = gloss(InlineBlock, {
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ theme, ignoreColor, color, alpha, alphaHover }) => {
+}).theme(({ ignoreColor, color, alpha, alphaHover }, theme) => {
   if (ignoreColor) {
     return {
       color: 'inherit',

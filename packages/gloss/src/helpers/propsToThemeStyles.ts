@@ -44,8 +44,11 @@ type ThemeStyles = {
   themeStylesFromProps?: Partial<ThemeObject>
 }
 
-export const propsToThemeStyles = (props, mapPropStylesToPseudos?: boolean): ThemeStyles => {
-  const theme = props.theme
+export const propsToThemeStyles = (
+  props: any,
+  theme: ThemeObject,
+  mapPropStylesToPseudos?: boolean,
+): ThemeStyles => {
   let styles = {
     color: theme.color,
     background: theme.background,

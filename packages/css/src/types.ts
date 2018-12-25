@@ -24,7 +24,7 @@ export type Transform = {
 export type ThemeObject = {
   background: Color
   color: Color
-  borderColor: Color
+  borderColor?: Color
   backgroundBlur?: Color
   colorBlur?: Color
   borderColorBlur?: Color

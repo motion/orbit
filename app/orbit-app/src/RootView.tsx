@@ -106,7 +106,6 @@ if (process.env.NODE_ENV === 'development') {
         if (status === 'prepare') {
           // for gloss to update styles
           window['__lastHMR'] = Date.now()
-          viewEmitter.emit('will-hmr')
         }
       })
     }

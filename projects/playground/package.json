@@ -2,10 +2,16 @@
   "name": "@mcro/playground",
   "private": true,
   "version": "2.2.1",
+  "scripts": {
+    "start": "mcro-build --entry ./src/index --port 5001"
+  },
   "dependencies": {
     "@babel/runtime": "7.2.0",
+    "@mcro/use-store": "*",
+    "@mcro/ui": "*",
+    "mobx-react-lite": "0.3.4",
     "react": "16.7.0-alpha.2",
     "react-dom": "16.7.0-alpha.2",
-    "react-hot-loader": "4.6.0"
+    "react-hot-loader": "4.6.3"
   }
 }

@@ -11,7 +11,7 @@ type ThemeProps = {
   theme?: string | SimpleStyleObject
   name?: string
   select?: Function
-  children: React.ReactElement<any>
+  children: any
 }
 
 // takes gloss themes and adds a "generate from base object/color"

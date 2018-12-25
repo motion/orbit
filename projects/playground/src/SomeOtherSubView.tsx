@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose, attach } from '@mcro/black'
+import { useStore } from '@mcro/use-store'
 
 class TestStore2 {
   state = 'wut2'
@@ -11,17 +11,12 @@ class TestStore2 {
   }
 }
 
-const subDecorator = compose(
-  attach({
-    store: TestStore2,
-  }),
-  view,
-)
-export const SomeOtherSubView = subDecorator(({ store, id }) => {
+export const SomeOtherSubView = ({ id }) => {
+  const store = useStore(TestStore2)
   return (
     <div>
       123 123
       {id}: {store.state}
     </div>
   )
-})
+}

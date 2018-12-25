@@ -82,7 +82,7 @@ export const viewEmitter = {
       },
     }
   },
-  emit: (action, val) => {
+  emit: (action, val?) => {
     blackDecorator.emit(action, val)
     providable.emit(action, val)
   },

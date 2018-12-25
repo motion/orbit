@@ -49,6 +49,9 @@ export const propsToThemeStyles = (
   theme: ThemeObject,
   mapPropStylesToPseudos?: boolean,
 ): ThemeStyles => {
+  if (!theme) {
+    throw new Error('No theme passed to propsToThemeStyles')
+  }
   let styles = {
     color: props.color || theme.color,
     background: props.background || theme.background,

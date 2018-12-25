@@ -9,18 +9,6 @@ auth:
   htpasswd:
     file: ./htpasswd
 
-packages:
-  '@*/*':
-    # scoped packages
-    access: $all
-    publish: $all
-    proxy: npmjs
-
-  '**':
-    access: $all
-    publish: $authenticated
-    proxy: npmjs
-
 logs:
   - { type: stdout, format: pretty, level: warn }
 

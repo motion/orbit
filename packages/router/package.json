@@ -3,6 +3,7 @@
   "version": "2.3.0",
   "main": "_/Router.js",
   "sideEffects": false,
+  "sideEffects": false,
   "author": "Motion (http://motion.io)",
   "license": "MIT",
   "scripts": {
@@ -19,5 +20,6 @@
   },
   "publishConfig": {
     "registry": "http://localhost:4343"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

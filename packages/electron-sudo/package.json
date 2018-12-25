@@ -3,6 +3,7 @@
   "version": "2.3.0",
   "description": "Electron subprocess with administrative privileges, prompting the user with an OS dialog if necessary.",
   "main": "_/index.js",
+  "sideEffects": false,
   "author": "Aleksandr Komlev",
   "license": "MIT",
   "scripts": {
@@ -11,5 +12,6 @@
     "lint": "node_modules/eslint/bin/eslint.js -c .eslintrc ./src",
     "test-win32": "npm run build-win32 && node node_modules\\mocha\\bin\\mocha --compilers js:babel-core/register tests",
     "test": "npm run build && node_modules/mocha/bin/mocha --compilers js:babel-core/register ./tests"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

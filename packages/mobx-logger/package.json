@@ -1,6 +1,7 @@
 {
   "name": "@mcro/mobx-logger",
   "main": "_/mobxLogger.js",
+  "sideEffects": false,
   "version": "2.3.0",
   "scripts": {
     "build": "tsc || true",
@@ -11,5 +12,6 @@
   },
   "peerDependencies": {
     "mobx": "*"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

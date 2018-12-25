@@ -1,12 +1,12 @@
 {
   "name": "@mcro/automagical",
   "main": "_/automagical.js",
+  "sideEffects": false,
   "version": "2.3.0",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
-  "dependencies": {
     "@mcro/logger": "^2.3.0",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
@@ -20,5 +20,6 @@
   },
   "publishConfig": {
     "registry": "http://localhost:4343"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

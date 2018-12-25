@@ -1,9 +1,11 @@
 {
   "name": "@mcro/constants",
   "main": "./_/constants.js",
+  "sideEffects": false,
   "version": "2.3.0",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch  --preserveWatchOutput || true"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

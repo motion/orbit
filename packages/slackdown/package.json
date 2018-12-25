@@ -3,10 +3,12 @@
   "version": "2.3.0",
   "description": "",
   "main": "_/slackdown.js",
+  "sideEffects": false,
   "author": "Motion (http://motion.io)",
   "license": "MIT",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

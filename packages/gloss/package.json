@@ -3,6 +3,7 @@
   "version": "2.3.0",
   "description": "Higher order component for nicer component styles",
   "main": "_/gloss.js",
+  "sideEffects": false,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
@@ -24,5 +25,6 @@
   },
   "publishConfig": {
     "registry": "http://localhost:4343"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

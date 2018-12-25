@@ -3,9 +3,11 @@
   "version": "2.3.0",
   "description": "vectorious with no blas dep",
   "main": "vectorious.js",
+  "sideEffects": false,
   "scripts": {
     "build": "",
     "watch": ""
   },
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

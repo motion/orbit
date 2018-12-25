@@ -3,6 +3,7 @@
   "version": "2.3.0",
   "description": "",
   "main": "_/useStore.js",
+  "sideEffects": false,
   "author": "Nate Wienert",
   "license": "MIT",
   "scripts": {
@@ -15,5 +16,6 @@
   },
   "peerDependencies": {
     "react": "^16.7.0-alpha.0"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

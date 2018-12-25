@@ -1,6 +1,7 @@
 {
   "name": "@mcro/decor-classes",
   "main": "_/decor-classes.js",
+  "sideEffects": false,
   "types": "./decor-classes.d.ts",
   "sideEffects": false,
   "version": "2.3.0",
@@ -14,5 +15,6 @@
   },
   "publishConfig": {
     "registry": "http://localhost:4343"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

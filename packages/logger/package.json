@@ -3,6 +3,7 @@
   "version": "2.3.0",
   "author": "Motion",
   "main": "_/index.js",
+  "sideEffects": false,
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch --preserveWatchOutput"
@@ -12,5 +13,6 @@
   },
   "dependencies": {
     "electron-log": "2.2.17"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

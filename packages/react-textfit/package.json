@@ -3,6 +3,7 @@
   "version": "2.3.0",
   "description": "React component to fit headlines and paragraphs into any element",
   "main": "_/Textfit.js",
+  "sideEffects": false,
   "license": "MIT",
   "peerDependencies": {
     "react": "^15.0.0 || ^16.0.0",
@@ -12,5 +13,6 @@
     "lodash": "4.17.10",
     "process": "^0.11.9",
     "resize-observer-polyfill": "^1.5.0"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

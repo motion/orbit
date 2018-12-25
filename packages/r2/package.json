@@ -1,6 +1,7 @@
 {
   "name": "@mcro/r2",
   "main": "_/r2.js",
+  "sideEffects": false,
   "version": "2.3.0",
   "scripts": {
     "build": "tsc || true",
@@ -13,5 +14,6 @@
   },
   "publishConfig": {
     "registry": "http://localhost:4343"
-  }
+  },
+  "gitHead": "53008045c631e54577f42e7e9e48c30f5f41466a"
 }

@@ -1,6 +1,7 @@
 {
   "name": "@mcro/debug-apps",
   "main": "_/index.js",
+  "sideEffects": false,
   "private": true,
   "version": "2.3.0",
   "bin": {

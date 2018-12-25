@@ -7,8 +7,8 @@ import {
   alphaColor,
   ThemeObject,
   gloss,
+  ThemeContext,
 } from '@mcro/gloss'
-import { attachTheme } from '@mcro/gloss'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
@@ -18,6 +18,9 @@ import { UIContext, UIContextType } from './helpers/contexts'
 import { Tooltip } from './Tooltip'
 import { selectThemeSubset } from './helpers/selectThemeSubset'
 import { PopoverProps } from './Popover'
+
+// an element for creating surfaces that look like buttons
+// they basically can control a prefix/postfix icon, and a few other bells
 
 export type SurfaceProps = CSSPropertySet & {
   active?: boolean
@@ -74,7 +77,7 @@ export type SurfaceProps = CSSPropertySet & {
   themeSelect?: ((theme: ThemeObject) => ThemeObject) | string
 }
 
-const getIconSize = props => {
+const getIconSize = (props: SurfaceProps) => {
   return (
     props.iconSize ||
     Math.round((props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1))
@@ -102,12 +105,12 @@ const chromelessStyle = {
   background: 'transparent',
 }
 
-const getSegmentRadius = props => {
+const getSegmentRadius = (props, uiContext) => {
   // support being inside a segmented list
   let segmentedStyle: any
   if (!props.ignoreSegment) {
-    if (props.uiContext && props.uiContext.inSegment) {
-      const { inSegment } = props.uiContext
+    if (uiContext && uiContext.inSegment) {
+      const { inSegment } = uiContext
       segmentedStyle = {
         borderRightRadius: props.borderRadius,
         borderLeftRadius: props.borderRadius,
@@ -132,158 +135,156 @@ const baseIconStyle = {
   justifyContent: 'center',
 }
 
-@attachTheme
-export class SurfaceInner extends React.Component<SurfaceProps> {
-  static defaultProps = {
-    iconPad: 8,
-    size: 1,
+export const Surface = React.memo((props: SurfaceProps) => {
+  const uiContext = React.useContext(UIContext)
+  const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
+  const theme = React.useContext(ThemeContext).activeTheme
+
+  React.useEffect(() => {
+    const id = `Surface-${Math.round(Math.random() * 100000000)}`
+    setTooltipState({ id, show: false })
+    let tm = setTimeout(() => {
+      setTooltipState({ id, show: true })
+    })
+    return () => clearTimeout(tm)
+  }, [])
+
+  const {
+    size = 1,
+    iconPad = 8,
+    glint,
+    badge,
+    badgeProps,
+    icon,
+    iconAfter,
+    iconProps,
+    glow,
+    dimmed,
+    disabled,
+    glowProps,
+    children,
+    elementProps,
+    tooltip,
+    tooltipProps,
+    height,
+    color,
+    sizeLineHeight,
+    noInnerElement,
+    tagName,
+    forwardRef,
+    themeSelect,
+    style,
+    padding,
+    margin,
+    className,
+    alignItems,
+    justifyContent,
+    ...rest
+  } = props
+
+  const segmentedStyle = getSegmentRadius(props, uiContext)
+
+  // allow selecting subsets of the theme object
+  let selectedTheme = theme
+  if (themeSelect) {
+    if (typeof themeSelect === 'string') {
+      selectedTheme = selectThemeSubset(themeSelect, theme)
+    } else {
+      selectedTheme = themeSelect(theme)
+    }
   }
 
-  uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
+  const stringIcon = typeof icon === 'string'
 
-  render() {
-    const {
-      glint,
-      badge,
-      badgeProps,
-      icon,
-      iconAfter,
-      iconProps,
-      glow,
-      dimmed,
-      disabled,
-      glowProps,
-      children,
-      elementProps,
-      tooltip,
-      tooltipProps,
-      height,
-      color,
-      theme,
-      size,
-      sizeLineHeight,
-      noInnerElement,
-      tagName,
-      forwardRef,
-      themeSelect,
-      style,
-      padding,
-      margin,
-      className,
-      alignItems,
-      justifyContent,
-      ...props
-    } = this.props
-    const segmentedStyle = getSegmentRadius(this.props)
+  // goes to BOTH the outer element and inner element
+  const throughProps = {
+    iconPad,
+    alignItems,
+    justifyContent,
+    theme: selectedTheme,
+    sizeIcon: props.sizeIcon,
+    iconSize: props.iconSize,
+    height: props.height,
+    iconAfter: props.iconAfter,
+    inline: props.inline,
+    icon: props.icon,
+    fontWeight: props.fontWeight,
+    ellipse: props.ellipse,
+    overflow: props.overflow,
+  } as Partial<SurfaceProps>
 
-    // allow selecting subsets of the theme object
-    let selectedTheme = theme
-    if (themeSelect) {
-      if (typeof themeSelect === 'string') {
-        selectedTheme = selectThemeSubset(themeSelect, theme)
-      } else {
-        selectedTheme = themeSelect(theme)
-      }
-    }
-
-    const stringIcon = typeof icon === 'string'
-
-    // goes to BOTH the outer element and inner element
-    const throughProps = {
-      alignItems,
-      justifyContent,
-      theme: selectedTheme,
-      sizeIcon: this.props.sizeIcon,
-      iconSize: this.props.iconSize,
-      height: this.props.height,
-      iconAfter: this.props.iconAfter,
-      iconPad: this.props.iconPad,
-      inline: this.props.inline,
-      icon: this.props.icon,
-      fontWeight: this.props.fontWeight,
-      ellipse: this.props.ellipse,
-      overflow: this.props.overflow,
-    } as Partial<SurfaceProps>
-
-    let lineHeight = this.props.lineHeight
-    if (sizeLineHeight) {
-      lineHeight = `${height}px`
-    }
-
-    if (noInnerElement) {
-      throughProps.tagName = tagName
-    }
-
-    return (
-      <SurfaceFrame
-        whiteSpace="pre"
-        padding={padding}
-        margin={margin}
-        lineHeight={lineHeight}
-        {...throughProps}
-        {...props}
-        forwardRef={forwardRef}
-        userStyle={style}
-        className={`${this.uniq} ${className || ''}`}
-        segmentedStyle={segmentedStyle}
-      >
-        {noInnerElement ? (
-          children
-        ) : (
-          <>
-            {glint && !props.chromeless ? (
-              <Glint
-                key={0}
-                size={size}
-                opacity={0.2}
-                borderLeftRadius={
-                  segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
-                }
-                borderRightRadius={
-                  segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
-                }
-              />
-            ) : null}
-            {icon && !stringIcon ? <div>{icon}</div> : null}
-            {icon && stringIcon ? (
-              <Icon
-                order={icon && iconAfter ? 3 : 'auto'}
-                name={`${icon}`}
-                size={getIconSize(this.props)}
-                {...iconProps}
-              />
-            ) : null}
-            {glow && !dimmed && !disabled ? (
-              <HoverGlow
-                full
-                scale={1.1}
-                opacity={0.35}
-                borderRadius={+props.borderRadius}
-                {...glowProps}
-              />
-            ) : null}
-            {!!children && (
-              <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
-                {children}
-              </Element>
-            )}
-            {!!tooltip && (
-              <Tooltip key={this.uniq} label={tooltip} {...tooltipProps}>
-                {`.${this.uniq}`}
-              </Tooltip>
-            )}
-          </>
-        )}
-      </SurfaceFrame>
-    )
+  let lineHeight = props.lineHeight
+  if (sizeLineHeight) {
+    lineHeight = `${height}px`
   }
-}
 
-export const Surface = React.memo(props => (
-  <UIContext.Consumer>
-    {uiContext => <SurfaceInner uiContext={uiContext} {...props} />}
-  </UIContext.Consumer>
-))
+  if (noInnerElement) {
+    throughProps.tagName = tagName
+  }
+
+  return (
+    <SurfaceFrame
+      whiteSpace="pre"
+      padding={padding}
+      margin={margin}
+      lineHeight={lineHeight}
+      {...throughProps}
+      {...rest}
+      forwardRef={forwardRef}
+      userStyle={style}
+      className={`${tooltipState.id} ${className || ''}`}
+      segmentedStyle={segmentedStyle}
+    >
+      {noInnerElement ? (
+        children
+      ) : (
+        <>
+          {!!tooltip && tooltipState.show && (
+            <Tooltip label={tooltip} {...tooltipProps}>
+              {`.${tooltipState.id}`}
+            </Tooltip>
+          )}
+          {glint && !props.chromeless ? (
+            <Glint
+              key={0}
+              size={size}
+              opacity={0.2}
+              borderLeftRadius={
+                segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
+              }
+              borderRightRadius={
+                segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
+              }
+            />
+          ) : null}
+          {icon && !stringIcon ? <div>{icon}</div> : null}
+          {icon && stringIcon ? (
+            <Icon
+              order={icon && iconAfter ? 3 : 'auto'}
+              name={`${icon}`}
+              size={getIconSize(props)}
+              {...iconProps}
+            />
+          ) : null}
+          {glow && !dimmed && !disabled ? (
+            <HoverGlow
+              full
+              scale={1.1}
+              opacity={0.35}
+              borderRadius={+props.borderRadius}
+              {...glowProps}
+            />
+          ) : null}
+          {!!children && (
+            <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
+              {children}
+            </Element>
+          )}
+        </>
+      )}
+    </SurfaceFrame>
+  )
+})
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss(View, {
@@ -312,7 +313,6 @@ const SurfaceFrame = gloss(View, {
     : {
         ...themeStyles['&:hover'],
         ...propStyles['&:hover'],
-        // @ts-ignore
         ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
       }
   let surfaceStyles = {

@@ -1,10 +1,11 @@
-import { view, StoreContext } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { Text, View, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { AppPanes } from '../../stores/SpaceStore'
 import { Icon } from '../../views/Icon'
 import * as UI from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
+import { gloss } from '@mcro/gloss'
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
@@ -44,14 +45,14 @@ export const OrbitNav = observer(() => {
   )
 })
 
-const OrbitNavChrome = view({
+const OrbitNavChrome = gloss({
   flexFlow: 'row',
   position: 'relative',
   zIndex: 1000,
   alignItems: 'flex-end',
 })
 
-const NavButtonChrome = view({
+const NavButtonChrome = gloss({
   flexFlow: 'row',
   alignItems: 'center',
   padding: [6, 14],
@@ -69,14 +70,14 @@ const NavButtonChrome = view({
 })
 
 const NavButton = ({ children, tooltip = null, label = null, isActive, ...props }) => (
-  <Tooltip label={tooltip} disabled={!tooltip}>
-    <NavButtonChrome isActive={isActive} {...props}>
-      {children}
-      {!!label && (
-        <Text marginLeft={10} fontWeight={400} size={1} alpha={isActive ? 1 : 0.85}>
-          {label}
-        </Text>
-      )}
-    </NavButtonChrome>
-  </Tooltip>
+  // <Tooltip label={tooltip} disabled={!tooltip}>
+  <NavButtonChrome isActive={isActive} {...props}>
+    {children}
+    {!!label && (
+      <Text marginLeft={10} fontWeight={400} size={1} alpha={isActive ? 1 : 0.85}>
+        {label}
+      </Text>
+    )}
+  </NavButtonChrome>
+  // </Tooltip>
 )

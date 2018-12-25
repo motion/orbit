@@ -83,11 +83,6 @@ export type PopoverProps = CSSPropertySet & {
   noPortal?: boolean
 }
 
-const ArrowContain = gloss({
-  position: 'absolute',
-  left: '50%',
-})
-
 type DebouncedFn = Cancelable & (() => void)
 type PopoverDirection = 'top' | 'bottom' | 'left' | 'right' | 'auto'
 type PositionStateX = { arrowLeft: number; left: number }
@@ -358,12 +353,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   target = null
-  // TODO: weird unmount/mounted
-  unmounted = false
-  mounted = false
   targetRef = React.createRef<HTMLDivElement>()
   popoverRef = null
-
   state = initialState
 
   static getDerivedStateFromProps(props, state) {
@@ -491,7 +482,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  setPosition() {
+  setPosition = throttle(() => {
     if (getIsManuallyPositioned(this.props)) {
       throw new Error('Should never call setPosition when manually positioned')
     }
@@ -513,7 +504,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         shouldSetPosition: true,
       })
     }
-  }
+  }, 64)
 
   listenForResize() {
     if (!getIsManuallyPositioned(this.props)) {
@@ -983,10 +974,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       </PopoverContainer>
     )
 
-    const popoverInner = theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent
+    const popoverChildren = <Theme name={theme}>{popoverContent}</Theme>
 
     if (noPortal) {
-      return popoverInner
+      return popoverChildren
     }
 
     return (
@@ -994,7 +985,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         {React.isValidElement(target) && this.controlledTarget(target)}
         <Portal>
           <span className="popover-portal" style={{ opacity: isMeasuring ? 0 : 1 }}>
-            {popoverInner}
+            {popoverChildren}
           </span>
         </Portal>
       </>
@@ -1078,4 +1069,9 @@ const PopoverWrap = gloss({
 const PopoverInner = gloss({
   flex: 1,
   position: 'relative',
+})
+
+const ArrowContain = gloss({
+  position: 'absolute',
+  left: '50%',
 })

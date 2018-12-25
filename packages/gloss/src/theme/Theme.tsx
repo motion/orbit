@@ -20,7 +20,7 @@ type ThemeProps = {
 // TODO: the uniqeThemeName stuff is super wierd maybe not necessary
 
 export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) => {
-  if (name) {
+  if (typeof name !== 'undefined') {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
   }
   // pass through if no theme
@@ -29,22 +29,30 @@ export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) 
   }
   let nextTheme
   let uniqThemeName = baseThemeName
+
+  // make theme right here...
   if (typeof theme === 'string') {
-    // cache themes, we can't have that many right...
+    // theme from color string
     if (!themeCache[theme]) {
+      // cache themes, we can't have that many right...
       themeCache[theme] = MakeTheme.fromColor(theme)
       uniqThemeName = theme
     }
     nextTheme = themeCache[theme]
   } else if (!!theme) {
+    // theme from object
     nextTheme = MakeTheme.fromStyles(theme)
     uniqThemeName = makeName()
   }
+
   const contextTheme = React.useContext(ThemeContext)
+
+  // function to select a sub-theme object
   if (select) {
     nextTheme = select(contextTheme.activeTheme)
     uniqThemeName = makeName()
   }
+
   return (
     <ThemeContext.Provider
       value={{
@@ -64,18 +72,17 @@ export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) 
 export const ChangeThemeByName = React.memo(
   ({ name, children }: { name: string; children: any }) => {
     if (!name) {
-      throw new Error('No name provided to theme')
+      return children
     }
     const { allThemes } = React.useContext(ThemeContext)
     if (!allThemes || !allThemes[name]) {
       throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
     }
-    const activeTheme = allThemes[name]
     return (
       <ThemeContext.Provider
         value={{
           allThemes,
-          activeTheme,
+          activeTheme: allThemes[name],
           activeThemeName: name,
         }}
       >

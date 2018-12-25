@@ -50,9 +50,9 @@ export const propsToThemeStyles = (
   mapPropStylesToPseudos?: boolean,
 ): ThemeStyles => {
   let styles = {
-    color: theme.color,
-    background: theme.background,
-    borderColor: theme.borderColor,
+    color: props.color || theme.color,
+    background: props.background || theme.background,
+    borderColor: props.borderColor || theme.borderColor,
   }
   // if we set styles from props we should propogate those styles
   // down to be sure we don't "undo" them inside pseudo styles
@@ -103,6 +103,9 @@ export const propsToThemeStyles = (
       }
     }
   }
+  // if (props.debug) {
+  //   debugger
+  // }
   return {
     themeStyles: styles as ThemeObjectWithPseudo,
     themeStylesFromProps: stylesFromProps,

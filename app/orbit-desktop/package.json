@@ -1,6 +1,6 @@
 {
   "name": "@mcro/orbit-desktop",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "main": "./_/main.js",
   "private": true,
   "scripts": {
@@ -21,7 +21,7 @@
     "@mcro/model-bridge": "^2.3.4",
     "@mcro/models": "^2.3.4",
     "@mcro/oracle": "^2.3.4",
-    "@mcro/orbit-app": "^2.3.4",
+    "@mcro/orbit-app": "^2.3.5",
     "@mcro/r2": "^2.3.4",
     "@mcro/screen": "^2.3.4",
     "@mcro/services": "^2.3.4",

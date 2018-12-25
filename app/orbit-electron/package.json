@@ -4,7 +4,7 @@
   "productName": "Orbit",
   "description": "Description",
   "author": "Orbit",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "main": "_/main.js",
   "scripts": {
     "build": "tsc || true",
@@ -23,7 +23,7 @@
     "@mcro/logger": "^2.3.4",
     "@mcro/model-bridge": "^2.3.4",
     "@mcro/models": "^2.3.4",
-    "@mcro/orbit-desktop": "^2.3.4",
+    "@mcro/orbit-desktop": "^2.3.5",
     "@mcro/r2": "^2.3.4",
     "@mcro/reactron": "^2.3.4",
     "@mcro/stores": "^2.3.4",

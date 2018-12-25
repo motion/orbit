@@ -6,7 +6,7 @@
     "packages/*",
     "projects/*"
   ],
-  "version": "2.3.4",
+  "version": "2.3.5",
   "command": {
     "publish": {
       "registry": "https://registry.npmjs.org"

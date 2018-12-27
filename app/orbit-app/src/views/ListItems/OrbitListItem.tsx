@@ -312,7 +312,7 @@ const Preview = view({
 
 const ListItemSubtitle = view(UI.View, {
   minHeight: 20,
-  padding: [0, 0, 4],
+  margin: [0, 0, 4],
   flexFlow: 'row',
   alignItems: 'center',
   flex: 1,

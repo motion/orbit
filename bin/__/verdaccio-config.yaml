@@ -6,13 +6,11 @@ uplinks:
     url: https://registry.npmjs.org/
 
 packages:
-  '**':
+  '@mcro/*':
+    #scoped packages
     access: $all
+    publish: $all
     proxy: npmjs
-
-auth:
-  htpasswd:
-    file: ./htpasswd
 
 logs:
   - { type: stdout, format: pretty, level: warn }

@@ -5,6 +5,11 @@ uplinks:
   npmjs:
     url: https://registry.npmjs.org/
 
+packages:
+  '**':
+    access: $all
+    proxy: npmjs
+
 auth:
   htpasswd:
     file: ./htpasswd

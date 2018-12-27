@@ -10,5 +10,5 @@
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "7.0.0-beta.55"
   },
-  "gitHead": "49997d6f221ea3668164370fef517176a4d46b2f"
+  "gitHead": "cbcb7df13ee8cc7b7dde6d7f3ef8cb3c8897fa18"
 }

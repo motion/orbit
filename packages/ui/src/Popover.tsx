@@ -208,6 +208,7 @@ const positionStateX = (
 ): PositionStateX => {
   const { arrowSize } = props
   const popoverHalfWidth = popoverSize.width / 2
+  const popoverMaxX = popoverSize.width + popoverSize.left
   const targetCenter = targetBounds
     ? targetBounds.left + targetBounds.width / 2
     : popoverHalfWidth + popoverSize.left
@@ -226,7 +227,6 @@ const positionStateX = (
     case 'top':
     case 'bottom':
       const naturalLeft = popoverCenter - popoverHalfWidth
-      console.log(props.children, popoverSize.width, naturalLeft)
       left = getEdgePadding(props, naturalLeft, window.innerWidth, popoverSize.width)
 
       // arrow
@@ -241,10 +241,10 @@ const positionStateX = (
       }
 
       // arrowLeft bounds
-      const max = Math.max(0, popoverHalfWidth - arrowSize * 0.75)
-      const min = -popoverHalfWidth + arrowSize * 0.5 + props.distance
+      const max = Math.max(0, popoverMaxX - arrowSize)
+      const min = popoverSize.left + arrowSize
+      arrowLeft -= arrowSize / 2
       arrowLeft = Math.max(min, Math.min(max, arrowLeft))
-      arrowLeft = -(arrowSize / 2) + arrowLeft
       break
     case 'left':
       arrowLeft = popoverHalfWidth

@@ -7,7 +7,7 @@ export const TestUI = () => {
   return (
     <ThemeProvide themes={themes}>
       <Theme name="light">
-        <Button size={2} tooltip="hi" tooltipProps={{ open: true }}>
+        <Button size={2} tooltip="hi hello" tooltipProps={{ open: true }}>
           test
         </Button>
       </Theme>

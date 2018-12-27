@@ -1,6 +1,6 @@
 {
   "name": "@mcro/old-site",
-  "version": "2.3.8",
+  "version": "2.3.9",
   "private": true,
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 3999"

@@ -1,6 +1,6 @@
 {
   "name": "@mcro/utils",
-  "version": "2.3.8",
+  "version": "2.3.9",
   "author": "Motion",
   "main": "_/index.js",
   "sideEffects": false,

@@ -1,19 +1,19 @@
 {
   "name": "@mcro/cosal-test",
   "private": true,
-  "version": "2.3.8",
+  "version": "2.3.9",
   "scripts": {
     "start": "mcro-build --port 3003",
     "build-app": "NODE_ENV=production mcro-build --prod --report"
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",
-    "@mcro/black": "^2.3.8",
-    "@mcro/build": "^2.3.8",
-    "@mcro/cosal": "^2.3.8",
-    "@mcro/gloss": "^2.3.8",
-    "@mcro/ui": "^2.3.8",
-    "@mcro/use-store": "^2.3.8",
+    "@mcro/black": "^2.3.9",
+    "@mcro/build": "^2.3.9",
+    "@mcro/cosal": "^2.3.9",
+    "@mcro/gloss": "^2.3.9",
+    "@mcro/ui": "^2.3.9",
+    "@mcro/use-store": "^2.3.9",
     "big-json": "2.0.2",
     "compute-covariance": "1.0.1",
     "cors": "2.8.5",

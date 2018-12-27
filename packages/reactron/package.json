@@ -1,6 +1,6 @@
 {
   "name": "@mcro/reactron",
-  "version": "2.3.8",
+  "version": "2.3.9",
   "description": "React renderer for Electron apps",
   "main": "_/index.js",
   "sideEffects": false,
@@ -16,7 +16,7 @@
     "react-dom": "16.7.0-alpha.2"
   },
   "dependencies": {
-    "@mcro/logger": "^2.3.8",
+    "@mcro/logger": "^2.3.9",
     "fbjs": "0.8.16",
     "lodash.isequal": "^4.5.0",
     "react-reconciler": "0.11.0"

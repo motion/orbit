@@ -35,8 +35,5 @@
   "devDependencies": {
     "@types/puppeteer": "^1.9.0",
     "source-map-support": "^0.4.16"
-  },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
   }
 }

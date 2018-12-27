@@ -54,8 +54,5 @@
     "nodemon": "1.18.3",
     "tcp-port-used": "0.1.2",
     "touch": "^3.1.0"
-  },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
   }
 }

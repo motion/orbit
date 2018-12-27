@@ -16,8 +16,5 @@
   },
   "peerDependencies": {
     "mobx": "*"
-  },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
   }
 }

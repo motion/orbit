@@ -21,8 +21,5 @@
   },
   "devDependencies": {
     "execa": "^0.8.0"
-  },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
   }
 }

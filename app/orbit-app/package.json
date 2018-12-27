@@ -77,8 +77,5 @@
   "peerDependencies": {
     "electron": "*",
     "mobx": "*"
-  },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
   }
 }

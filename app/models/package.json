@@ -27,8 +27,5 @@
   "peerDependencies": {
     "mobx": "*",
     "typeorm": "*"
-  },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
   }
 }

@@ -9,18 +9,11 @@ import { IS_MINIMAL } from '../../constants'
 
 class TopicEditStore {
   name: string = ''
-}
 
-@attach('spaceStore')
-@attach({
-  store: TopicEditStore,
-})
-@view
-export class TopicEdit extends React.Component<{
-  type: 'term' | 'topic'
-  store?: TopicEditStore
-  spaceStore?: SpaceStore
-}> {
+  handleNameChange = e => {
+    this.name = e.target.value
+  }
+
   save = async e => {
     e.preventDefault()
 
@@ -48,17 +41,26 @@ export class TopicEdit extends React.Component<{
     await save(AppModel, topicsApp)
     console.log('saved topics app', topicsApp)
 
-    this.props.store.name = ''
+    this.name = ''
   }
+}
 
-  handleNameChange = e => (this.props.store.name = e.target.value)
-
+@attach('spaceStore')
+@attach({
+  store: TopicEditStore,
+})
+@view
+export class TopicEdit extends React.Component<{
+  type: 'term' | 'topic'
+  store?: TopicEditStore
+  spaceStore?: SpaceStore
+}> {
   render() {
     return (
-      <Row tagName="form" onSubmit={this.save} alignItems="center">
+      <Row tagName="form" onSubmit={this.props.store.save} alignItems="center">
         <Input
           value={this.props.store.name}
-          onChange={this.handleNameChange}
+          onChange={this.props.store.handleNameChange}
           flex={1}
           placeholder={`New ${this.props.type}...`}
         />

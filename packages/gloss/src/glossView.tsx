@@ -233,9 +233,6 @@ export function glossView<Props = GlossViewProps<any>>(
       const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
       // merge theme if they pass an object theme in
       const theme = props.theme ? { ...activeTheme, ...props.theme } : activeTheme
-      if (props['debug']) {
-        console.log('theme2', activeTheme, props.theme, theme)
-      }
       const next = generateClassnames(classNames, props, tag, theme)
       if (!next || !classNames || next.join('') !== classNames.join('')) {
         setClassNames(next)

@@ -147,63 +147,70 @@ export const Surface = React.memo((props: SurfaceProps) => {
     throughProps.tagName = tagName
   }
 
+  const surfaceProps = {
+    whiteSpace: 'pre',
+    segmentedStyle,
+    lineHeight,
+    ...throughProps,
+    ...rest,
+    className: `${tooltipState.id} ${className || ''}`,
+  }
+
+  // because we can't define children at all on tags like input
+  // we conditionally set children here to avoid having children: undefined
+  if (noInnerElement) {
+    if (children) {
+      surfaceProps.children = children
+    }
+  } else {
+    surfaceProps.children = (
+      <>
+        {!!tooltip && tooltipState.show && (
+          <Tooltip label={tooltip} {...tooltipProps}>
+            {`.${tooltipState.id}`}
+          </Tooltip>
+        )}
+        {glint && !props.chromeless && (
+          <Glint
+            key={0}
+            size={size}
+            opacity={0.2}
+            borderLeftRadius={segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius}
+            borderRightRadius={
+              segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
+            }
+          />
+        )}
+        {icon && !stringIcon && <div>{icon}</div>}
+        {icon && stringIcon && (
+          <Icon
+            order={icon && iconAfter ? 3 : 'auto'}
+            name={`${icon}`}
+            size={getIconSize(props)}
+            {...iconProps}
+          />
+        )}
+        {glow && !dimmed && !disabled && (
+          <HoverGlow
+            full
+            scale={1.1}
+            opacity={0.35}
+            borderRadius={+props.borderRadius}
+            {...glowProps}
+          />
+        )}
+        {!!children && (
+          <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
+            {children}
+          </Element>
+        )}
+      </>
+    )
+  }
+
   return (
     <Theme select={themeSelect}>
-      <SurfaceFrame
-        whiteSpace="pre"
-        lineHeight={lineHeight}
-        {...throughProps}
-        {...rest}
-        className={`${tooltipState.id} ${className || ''}`}
-        segmentedStyle={segmentedStyle}
-      >
-        {noInnerElement && children}
-        {!noInnerElement && (
-          <>
-            {!!tooltip && tooltipState.show && (
-              <Tooltip label={tooltip} {...tooltipProps}>
-                {`.${tooltipState.id}`}
-              </Tooltip>
-            )}
-            {glint && !props.chromeless && (
-              <Glint
-                key={0}
-                size={size}
-                opacity={0.2}
-                borderLeftRadius={
-                  segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
-                }
-                borderRightRadius={
-                  segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
-                }
-              />
-            )}
-            {icon && !stringIcon && <div>{icon}</div>}
-            {icon && stringIcon && (
-              <Icon
-                order={icon && iconAfter ? 3 : 'auto'}
-                name={`${icon}`}
-                size={getIconSize(props)}
-                {...iconProps}
-              />
-            )}
-            {glow && !dimmed && !disabled && (
-              <HoverGlow
-                full
-                scale={1.1}
-                opacity={0.35}
-                borderRadius={+props.borderRadius}
-                {...glowProps}
-              />
-            )}
-            {!!children && (
-              <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
-                {children}
-              </Element>
-            )}
-          </>
-        )}
-      </SurfaceFrame>
+      <SurfaceFrame {...surfaceProps} />
     </Theme>
   )
 })

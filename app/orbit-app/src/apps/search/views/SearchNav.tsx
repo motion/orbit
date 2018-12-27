@@ -35,12 +35,7 @@ export const SearchNav = observer(() => {
             />
           </View>
         </Popover>
-        <NavButton
-          debug
-          onClick={queryFilters.toggleSortBy}
-          tooltip={queryFilters.sortBy}
-          opacity={0.5}
-        >
+        <NavButton onClick={queryFilters.toggleSortBy} tooltip={queryFilters.sortBy} opacity={0.5}>
           {queryFilters.sortBy}
         </NavButton>
       </Row>

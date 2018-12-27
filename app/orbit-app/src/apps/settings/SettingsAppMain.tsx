@@ -80,8 +80,10 @@ class SettingAppStore {
   }
 
   changeTheme = val => {
-    this.generalChange('darkTheme')(val)
-    App.setState({ darkTheme: val })
+    if (val !== App.state.darkTheme) {
+      this.generalChange('darkTheme')(val)
+      App.setState({ darkTheme: val })
+    }
   }
 
   shortcutChange = val => {

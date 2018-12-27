@@ -8,9 +8,6 @@
     "build": "tsc",
     "watch": "tsc --watch --preserveWatchOutput"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  },
   "dependencies": {
     "string-hash": "^1.1.3"
   },

@@ -7,9 +7,6 @@
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  },
   "dependencies": {
     "@mcro/black": "^2.3.9",
     "@mcro/config": "^2.3.9",

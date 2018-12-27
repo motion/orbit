@@ -37,8 +37,5 @@
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  },
   "gitHead": "fa3a5db35d89e9f7016a1fa4273f008c41b55a0f"
 }

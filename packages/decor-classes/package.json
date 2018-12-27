@@ -12,8 +12,5 @@
     "@mcro/decor": "^2.3.9",
     "event-kit": "^2.5.0"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  },
   "gitHead": "fa3a5db35d89e9f7016a1fa4273f008c41b55a0f"
 }

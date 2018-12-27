@@ -3,13 +3,4 @@
 . $(dirname $0)/__/common
 cd $ROOT
 
-# start verdaccio
-kill $(lsof -t -i:4343) || true
-npx verdaccio -c ./bin/__/verdaccio-config.yaml --listen 4343 &
-while ! nc -z localhost 4343; do sleep 0.1; done
-
 npx lerna publish --force-publish
-
-# end verdaccio
-kill $(lsof -t -i:4343) || true
-

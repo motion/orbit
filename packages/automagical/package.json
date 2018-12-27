@@ -19,8 +19,5 @@
   "peerDependencies": {
     "mobx": "5.6.0"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  },
   "gitHead": "fa3a5db35d89e9f7016a1fa4273f008c41b55a0f"
 }

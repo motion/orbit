@@ -8,9 +8,6 @@
     "build": "tsc",
     "watch": "tsc --watch --preserveWatchOutput"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  },
   "dependencies": {
     "@mcro/logger": "^2.3.9",
     "@types/zen-observable": "0.8.0",

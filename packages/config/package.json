@@ -3,8 +3,5 @@
   "main": "_/config.js",
   "sideEffects": false,
   "private": true,
-  "version": "2.3.9",
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  }
+  "version": "2.3.9"
 }

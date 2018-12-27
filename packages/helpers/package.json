@@ -1,6 +1,6 @@
 {
   "name": "@mcro/helpers",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "description": "",
   "main": "_/index.js",
   "sideEffects": false,
@@ -12,7 +12,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/automagical": "^2.3.7",
+    "@mcro/automagical": "^2.3.8",
     "disposable-event": "^1.0.3",
     "event-kit": "^2.5.0",
     "global": "^4.3.2",

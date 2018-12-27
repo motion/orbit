@@ -1,6 +1,6 @@
 {
   "name": "@mcro/vectorious",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "description": "vectorious with no blas dep",
   "main": "vectorious.js",
   "sideEffects": false,

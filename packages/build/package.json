@@ -1,6 +1,6 @@
 {
   "name": "@mcro/build",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "bin": {
     "mcro-build": "./mcro-build"
   },

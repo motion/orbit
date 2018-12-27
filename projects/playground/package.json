@@ -1,14 +1,14 @@
 {
   "name": "@mcro/playground",
   "private": true,
-  "version": "2.3.7",
+  "version": "2.3.8",
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5001"
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",
-    "@mcro/ui": "^2.3.7",
-    "@mcro/use-store": "^2.3.7",
+    "@mcro/ui": "^2.3.8",
+    "@mcro/use-store": "^2.3.8",
     "mobx-react-lite": "0.3.4",
     "react": "16.7.0-alpha.2",
     "react-dom": "16.7.0-alpha.2",

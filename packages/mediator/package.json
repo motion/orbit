@@ -1,6 +1,6 @@
 {
   "name": "@mcro/mediator",
-  "version": "2.3.9",
+  "version": "2.3.10",
   "author": "Motion",
   "main": "_/index.js",
   "sideEffects": false,
@@ -9,7 +9,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/logger": "^2.3.9",
+    "@mcro/logger": "^2.3.10",
     "@types/zen-observable": "0.8.0",
     "typeorm": "^0.3.0-alpha.22",
     "ws": "6.0.0",

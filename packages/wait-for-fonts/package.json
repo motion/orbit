@@ -2,7 +2,7 @@
   "name": "@mcro/wait-for-fonts",
   "main": "_/index.js",
   "sideEffects": false,
-  "version": "2.3.9",
+  "version": "2.3.10",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

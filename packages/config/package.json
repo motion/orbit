@@ -3,5 +3,5 @@
   "main": "_/config.js",
   "sideEffects": false,
   "private": true,
-  "version": "2.3.9"
+  "version": "2.3.10"
 }

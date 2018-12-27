@@ -3,13 +3,13 @@
   "main": "_/decor-classes.js",
   "sideEffects": false,
   "types": "./decor-classes.d.ts",
-  "version": "2.3.9",
+  "version": "2.3.10",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/decor": "^2.3.9",
+    "@mcro/decor": "^2.3.10",
     "event-kit": "^2.5.0"
   },
   "gitHead": "fa3a5db35d89e9f7016a1fa4273f008c41b55a0f"

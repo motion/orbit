@@ -1,5 +1,6 @@
 {
   "name": "@mcro/model-bridge",
+  "private": true,
   "version": "2.3.10",
   "main": "_/index.js",
   "scripts": {

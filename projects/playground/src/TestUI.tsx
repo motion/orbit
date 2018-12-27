@@ -8,7 +8,7 @@ export const TestUI = () => {
     <ThemeProvide themes={themes}>
       <Theme name="light">
         <Button size={2} tooltip="hi" tooltipProps={{ open: true }}>
-          test 123
+          test
         </Button>
       </Theme>
     </ThemeProvide>

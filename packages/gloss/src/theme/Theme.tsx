@@ -1,16 +1,20 @@
 import * as React from 'react'
 import { ThemeContext } from './ThemeContext'
 import { ThemeMaker, SimpleStyleObject } from './ThemeMaker'
+import { selectThemeSubset } from '../helpers/selectThemeSubset'
+import { ThemeObject } from '@mcro/css'
 
 const MakeTheme = new ThemeMaker()
 const makeName = () => `theme-${Math.random}`.slice(0, 15)
 const baseThemeName = makeName()
 const themeCache = {}
 
+export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string
+
 type ThemeProps = {
   theme?: string | SimpleStyleObject
   name?: string
-  select?: Function
+  select?: ThemeSelect
   children: any
 }
 
@@ -23,14 +27,17 @@ export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) 
   if (typeof name !== 'undefined') {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
   }
+
   // pass through if no theme
   if (!select && !(theme || name)) {
     return children
   }
+
+  // get next theme
   let nextTheme
   let uniqThemeName = baseThemeName
 
-  // make theme right here...
+  // make theme right here from a color string...
   if (typeof theme === 'string') {
     // theme from color string
     if (!themeCache[theme]) {
@@ -49,7 +56,11 @@ export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) 
 
   // function to select a sub-theme object
   if (select) {
-    nextTheme = select(contextTheme.activeTheme)
+    if (typeof select === 'string') {
+      nextTheme = selectThemeSubset(select, contextTheme.activeTheme)
+    } else {
+      nextTheme = select(contextTheme.activeTheme)
+    }
     uniqThemeName = makeName()
   }
 

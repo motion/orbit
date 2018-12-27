@@ -31,6 +31,53 @@ export type GlossView<Props> = GlossCompiledView<GlossViewProps<Props>> & {
   theme: ((cb: GlossThemeFn<Props>) => GlossCompiledView<GlossViewProps<Props>>)
 }
 
+const tracker = new Map()
+const rulesToClass = new WeakMap()
+const sheet = new StyleSheet(process.env.NODE_ENV !== 'development')
+const gc = new GarbageCollector(sheet, tracker, rulesToClass)
+
+let idCounter = 1
+const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
+
+function addRules(displayName: string, rules: BaseRules, namespace: string, tagName: string) {
+  // if these rules have been cached to a className then retrieve it
+  const cachedClass = rulesToClass.get(rules)
+  if (cachedClass) {
+    return cachedClass
+  }
+  const declarations = []
+  const style = css(rules)
+  // generate css declarations based on the style object
+  for (const key in style) {
+    const val = style[key]
+    declarations.push(`  ${key}: ${val};`)
+  }
+  const cssString = declarations.join('\n')
+  // build the class name with the display name of the styled component and a unique id based on the css and namespace
+  const className = displayName + '__' + hash(namespace + cssString)
+  // for media queries
+  // this is the first time we've found this className
+  if (!tracker.has(className)) {
+    // build up the correct selector, explode on commas to allow multiple selectors
+    const selector = getSelector(className, namespace, tagName)
+    // insert the new style text
+    tracker.set(className, {
+      displayName,
+      namespace,
+      rules,
+      selector,
+      style,
+    })
+    if (namespace[0] === '@') {
+      sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
+    } else {
+      sheet.insert(className, `${selector} {\n${cssString}\n}`)
+    }
+    rulesToClass.set(rules, className)
+  }
+  return className
+}
+
 export function glossView<Props = GlossViewProps<any>>(
   a?: CSSPropertySet | any,
   b?: CSSPropertySet,
@@ -61,15 +108,15 @@ export function glossView<Props = GlossViewProps<any>>(
   const { styles, propStyles } = getAllStyles(id, target, rawStyles)
   const hasPropStyles = !!Object.keys(propStyles).length
   let displayName = 'GlossView'
-  let cachedTheme = null
+  let cachedThemeFn = null
   let ThemedView
 
-  function getTheme(theme: ThemeObject) {
-    if (cachedTheme !== null) {
-      return cachedTheme
+  function getTheme() {
+    if (cachedThemeFn !== null) {
+      return cachedThemeFn
     }
-    const result = compileTheme(ThemedView, theme)
-    cachedTheme = result
+    const result = compileTheme(ThemedView)
+    cachedThemeFn = result
     return result
   }
 
@@ -100,9 +147,9 @@ export function glossView<Props = GlossViewProps<any>>(
         }
       }
     }
-    const themeFn = getTheme(theme)
+    const themeFn = getTheme()
     const hasDynamicStyles = themeFn || hasPropStyles
-    // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
+    // if we had the exact same rules as last time and they weren't dynamic then we could bail out here
     // if (!hasDynamicStyles && myStyles === state.lastStyles) {
     //   return null
     // }
@@ -186,6 +233,9 @@ export function glossView<Props = GlossViewProps<any>>(
       const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
       // merge theme if they pass an object theme in
       const theme = props.theme ? { ...activeTheme, ...props.theme } : activeTheme
+      if (props['debug']) {
+        console.log('theme2', activeTheme, props.theme, theme)
+      }
       const next = generateClassnames(classNames, props, tag, theme)
       if (!next || !classNames || next.join('') !== classNames.join('')) {
         setClassNames(next)
@@ -375,7 +425,8 @@ function getSelector(className: string, namespace: string, tagName: string = '')
   return '.' + className
 }
 
-function compileTheme(ogView: any, theme: ThemeObject) {
+// compiled theme from ancestors
+function compileTheme(ogView: any) {
   let view = ogView
   let themes = []
   // collect the themes going up the tree
@@ -389,7 +440,7 @@ function compileTheme(ogView: any, theme: ThemeObject) {
   if (!themes.length) {
     result = null
   } else {
-    result = (props: Object) => {
+    result = (props: Object, theme: ThemeObject) => {
       let styles = {}
       // from most important to least
       for (const themeFn of themes) {
@@ -402,51 +453,4 @@ function compileTheme(ogView: any, theme: ThemeObject) {
     }
   }
   return result
-}
-
-const tracker = new Map()
-const rulesToClass = new WeakMap()
-const sheet = new StyleSheet(process.env.NODE_ENV !== 'development')
-const gc = new GarbageCollector(sheet, tracker, rulesToClass)
-
-let idCounter = 1
-const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
-
-function addRules(displayName: string, rules: BaseRules, namespace: string, tagName: string) {
-  // if these rules have been cached to a className then retrieve it
-  const cachedClass = rulesToClass.get(rules)
-  if (cachedClass) {
-    return cachedClass
-  }
-  const declarations = []
-  const style = css(rules)
-  // generate css declarations based on the style object
-  for (const key in style) {
-    const val = style[key]
-    declarations.push(`  ${key}: ${val};`)
-  }
-  const cssString = declarations.join('\n')
-  // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  const className = displayName + '__' + hash(namespace + cssString)
-  // for media queries
-  // this is the first time we've found this className
-  if (!tracker.has(className)) {
-    // build up the correct selector, explode on commas to allow multiple selectors
-    const selector = getSelector(className, namespace, tagName)
-    // insert the new style text
-    tracker.set(className, {
-      displayName,
-      namespace,
-      rules,
-      selector,
-      style,
-    })
-    if (namespace[0] === '@') {
-      sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
-    } else {
-      sheet.insert(className, `${selector} {\n${cssString}\n}`)
-    }
-    rulesToClass.set(rules, className)
-  }
-  return className
 }

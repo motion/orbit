@@ -7,7 +7,8 @@ import {
   alphaColor,
   ThemeObject,
   gloss,
-  ThemeContext,
+  ThemeSelect,
+  Theme,
 } from '@mcro/gloss'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
@@ -16,7 +17,6 @@ import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
 import { UIContext, UIContextType } from './helpers/contexts'
 import { Tooltip } from './Tooltip'
-import { selectThemeSubset } from './helpers/selectThemeSubset'
 import { PopoverProps } from './Popover'
 
 // an element for creating surfaces that look like buttons
@@ -74,13 +74,12 @@ export type SurfaceProps = CSSPropertySet & {
   activeStyle?: Object
   sizeLineHeight?: boolean | number
   type?: string
-  themeSelect?: ((theme: ThemeObject) => ThemeObject) | string
+  themeSelect?: ThemeSelect
 }
 
 export const Surface = React.memo((props: SurfaceProps) => {
   const uiContext = React.useContext(UIContext)
   const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
-  const theme = React.useContext(ThemeContext).activeTheme
 
   React.useEffect(() => {
     const id = `Surface-${Math.round(Math.random() * 100000000)}`
@@ -121,16 +120,6 @@ export const Surface = React.memo((props: SurfaceProps) => {
 
   const segmentedStyle = getSegmentRadius(props, uiContext)
 
-  // allow selecting subsets of the theme object
-  let selectedTheme = theme
-  if (themeSelect) {
-    if (typeof themeSelect === 'string') {
-      selectedTheme = selectThemeSubset(themeSelect, theme)
-    } else {
-      selectedTheme = themeSelect(theme)
-    }
-  }
-
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element
@@ -139,7 +128,6 @@ export const Surface = React.memo((props: SurfaceProps) => {
     iconPad,
     alignItems,
     justifyContent,
-    theme: selectedTheme,
     sizeIcon: props.sizeIcon,
     iconSize: props.iconSize,
     iconAfter: props.iconAfter,
@@ -160,61 +148,63 @@ export const Surface = React.memo((props: SurfaceProps) => {
   }
 
   return (
-    <SurfaceFrame
-      whiteSpace="pre"
-      lineHeight={lineHeight}
-      {...throughProps}
-      {...rest}
-      className={`${tooltipState.id} ${className || ''}`}
-      segmentedStyle={segmentedStyle}
-    >
-      {noInnerElement && children}
-      {!noInnerElement && (
-        <>
-          {!!tooltip && tooltipState.show && (
-            <Tooltip label={tooltip} {...tooltipProps}>
-              {`.${tooltipState.id}`}
-            </Tooltip>
-          )}
-          {glint && !props.chromeless && (
-            <Glint
-              key={0}
-              size={size}
-              opacity={0.2}
-              borderLeftRadius={
-                segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
-              }
-              borderRightRadius={
-                segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
-              }
-            />
-          )}
-          {icon && !stringIcon && <div>{icon}</div>}
-          {icon && stringIcon && (
-            <Icon
-              order={icon && iconAfter ? 3 : 'auto'}
-              name={`${icon}`}
-              size={getIconSize(props)}
-              {...iconProps}
-            />
-          )}
-          {glow && !dimmed && !disabled && (
-            <HoverGlow
-              full
-              scale={1.1}
-              opacity={0.35}
-              borderRadius={+props.borderRadius}
-              {...glowProps}
-            />
-          )}
-          {!!children && (
-            <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
-              {children}
-            </Element>
-          )}
-        </>
-      )}
-    </SurfaceFrame>
+    <Theme select={themeSelect}>
+      <SurfaceFrame
+        whiteSpace="pre"
+        lineHeight={lineHeight}
+        {...throughProps}
+        {...rest}
+        className={`${tooltipState.id} ${className || ''}`}
+        segmentedStyle={segmentedStyle}
+      >
+        {noInnerElement && children}
+        {!noInnerElement && (
+          <>
+            {!!tooltip && tooltipState.show && (
+              <Tooltip label={tooltip} {...tooltipProps}>
+                {`.${tooltipState.id}`}
+              </Tooltip>
+            )}
+            {glint && !props.chromeless && (
+              <Glint
+                key={0}
+                size={size}
+                opacity={0.2}
+                borderLeftRadius={
+                  segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius
+                }
+                borderRightRadius={
+                  segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius
+                }
+              />
+            )}
+            {icon && !stringIcon && <div>{icon}</div>}
+            {icon && stringIcon && (
+              <Icon
+                order={icon && iconAfter ? 3 : 'auto'}
+                name={`${icon}`}
+                size={getIconSize(props)}
+                {...iconProps}
+              />
+            )}
+            {glow && !dimmed && !disabled && (
+              <HoverGlow
+                full
+                scale={1.1}
+                opacity={0.35}
+                borderRadius={+props.borderRadius}
+                {...glowProps}
+              />
+            )}
+            {!!children && (
+              <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
+                {children}
+              </Element>
+            )}
+          </>
+        )}
+      </SurfaceFrame>
+    </Theme>
   )
 })
 

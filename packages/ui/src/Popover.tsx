@@ -878,7 +878,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       width,
       transition,
       noPortal,
-      ...props
+      ...restProps
     } = this.props
     const {
       top,
@@ -891,7 +891,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       direction,
     } = this.state
     const { showPopover } = this
-    const backgroundProp = background === true ? null : { background: `${background}` }
+    const backgroundProp =
+      !background || background === true ? null : { background: `${background}` }
     const isMeasuring = this.state.shouldSetPosition || !this.state.finishedMount
     const isOpen = !isMeasuring && showPopover
 
@@ -962,7 +963,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
               overflow="visible"
               boxShadow={getShadow(elevation)}
               noInnerElement
-              {...props}
+              {...restProps}
               {...backgroundProp}
             >
               {typeof children === 'function'

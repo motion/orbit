@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { on } from '@mcro/helpers'
 import { Portal } from './helpers/portal'
-import { isNumber, debounce, throttle, Cancelable, last, pick, isEqual } from 'lodash'
+import { isNumber, debounce, Cancelable, last, pick, isEqual } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 import { Color, CSSPropertySet } from '@mcro/css'
@@ -116,13 +116,13 @@ const getPositionState = (props: PopoverProps, popoverBounds: Bounds, targetBoun
 
 const getDirection = (
   props: PopoverProps,
-  popoverSize: Bounds,
+  popoverBounds: Bounds,
   targetBounds?: Bounds,
 ): PopoverDirection => {
   if (!targetBounds || props.towards !== 'auto') {
     return props.towards
   }
-  const popoverY = popoverSize.height + props.forgiveness
+  const popoverY = popoverBounds.height + props.forgiveness
   const targetY = targetBounds.top + targetBounds.height
   const towardsTop = targetY + popoverY > window.innerHeight
   return towardsTop ? 'top' : 'bottom'
@@ -132,11 +132,11 @@ const getEdgePadding = (
   props: PopoverProps,
   currentPosition: number,
   windowSize: number,
-  popoverSize: number,
+  popoverBounds: number,
 ) => {
   return Math.min(
     // upper limit
-    windowSize - props.edgePadding - popoverSize,
+    windowSize - props.edgePadding - popoverBounds,
     // lower limit
     Math.max(props.edgePadding, currentPosition),
   )
@@ -144,7 +144,7 @@ const getEdgePadding = (
 
 const positionStateY = (
   props: PopoverProps,
-  popoverSize: Bounds,
+  popoverBounds: Bounds,
   direction: PopoverDirection,
   targetBounds?: Bounds,
 ): PositionStateY => {
@@ -155,8 +155,8 @@ const positionStateY = (
   const arrowHeight = noArrow ? 0 : arrowSize * 0.75
   const targetCenter = targetBounds
     ? targetBounds.top + targetBounds.height / 2
-    : popoverSize.height / 2
-  const targetTopReal = targetBounds ? targetBounds.top - window.scrollY : popoverSize.top
+    : popoverBounds.height / 2
+  const targetTopReal = targetBounds ? targetBounds.top - window.scrollY : popoverBounds.top
 
   let arrowTop = 0
   let maxHeight = window.innerHeight
@@ -168,20 +168,20 @@ const positionStateY = (
   if (VERTICAL) {
     // determine arrow location
     if (direction === 'top') {
-      arrowTop = popoverSize.height + arrowAdjust
-      top = targetTopReal - popoverSize.height - distance
+      arrowTop = popoverBounds.height + arrowAdjust
+      top = targetTopReal - popoverBounds.height - distance
     } else {
       arrowTop = -arrowSize
       top = targetTopReal + (targetBounds ? targetBounds.height : 0) + distance
     }
 
     // final top
-    top = getEdgePadding(props, top, window.innerHeight, popoverSize.height)
+    top = getEdgePadding(props, top, window.innerHeight, popoverBounds.height)
   } else {
     // left or right
-    const yCenter = targetCenter - popoverSize.height / 2
+    const yCenter = targetCenter - popoverBounds.height / 2
     top = yCenter
-    arrowTop = popoverSize.height / 2 - arrowHeight / 2 + props.distance
+    arrowTop = popoverBounds.height / 2 - arrowHeight / 2 + props.distance
   }
 
   // adjustments
@@ -202,53 +202,47 @@ const positionStateY = (
 
 const positionStateX = (
   props: PopoverProps,
-  popoverSize: Bounds,
+  popoverBounds: Bounds,
   direction: PopoverDirection,
   targetBounds?: Bounds,
 ): PositionStateX => {
   const { arrowSize } = props
-  const popoverHalfWidth = popoverSize.width / 2
-  const popoverMaxX = popoverSize.width + popoverSize.left
   const targetCenter = targetBounds
     ? targetBounds.left + targetBounds.width / 2
-    : popoverHalfWidth + popoverSize.left
-  const arrowPastThisAdjustsRight = window.innerWidth - popoverHalfWidth
-  const shouldAdjustRight = targetCenter + popoverHalfWidth > window.innerWidth
+    : popoverBounds.width / 2 + popoverBounds.left
 
-  let popoverCenter = targetCenter
+  const popoverHalfWidth = popoverBounds.width / 2
   let left = 0
   let arrowLeft = 0
 
-  if (props.alignPopover === 'left') {
-    popoverCenter = targetBounds ? targetBounds.left : popoverSize.left
-  }
+  // if (props.alignPopover === 'left') {
+  //   popoverCenter = targetBounds ? targetBounds.left : popoverBounds.left
+  // }
 
   switch (direction) {
     case 'top':
     case 'bottom':
-      const naturalLeft = popoverCenter - popoverHalfWidth
-      left = getEdgePadding(props, naturalLeft, window.innerWidth, popoverSize.width)
+      const naturalLeft = targetCenter - popoverHalfWidth
+      left = getEdgePadding(props, naturalLeft, window.innerWidth, popoverBounds.width)
+      const popoverCenter = left + popoverHalfWidth
 
-      // arrow
-      if (targetCenter < popoverHalfWidth) {
-        // ON LEFT SIDE
-        arrowLeft = -popoverHalfWidth + targetCenter - left
-      } else if (shouldAdjustRight) {
-        // ON RIGHT SIDE
-        const edgeAdjustment = window.innerWidth - (left + popoverSize.width)
-        arrowLeft =
-          targetCenter - (shouldAdjustRight ? arrowPastThisAdjustsRight : 0) + edgeAdjustment
+      // when near edges, adjust for the misaligned centers
+      if (targetCenter !== popoverCenter) {
+        arrowLeft = targetCenter - popoverCenter
       }
 
-      // arrowLeft bounds
-      const max = Math.max(0, popoverMaxX - arrowSize)
-      const min = popoverSize.left + arrowSize
+      // center width of arrow
       arrowLeft -= arrowSize / 2
-      arrowLeft = Math.max(min, Math.min(max, arrowLeft))
+
+      // arrowLeft bounds
+      // const popoverMaxX = popoverBounds.width + popoverBounds.left
+      // const max = Math.max(arrowSize + props.edgePadding, popoverMaxX - arrowSize)
+      // const min = popoverBounds.left + arrowSize
+      // arrowLeft = Math.max(min, Math.min(max, arrowLeft))
+
       break
     case 'left':
-      arrowLeft = popoverHalfWidth
-      left = (targetBounds ? targetBounds.left : 0) - popoverSize.width - props.distance
+      left = (targetBounds ? targetBounds.left : 0) - popoverBounds.width - props.distance
       break
     case 'right':
       left = (targetBounds ? targetBounds.left + targetBounds.width : 0) + props.distance
@@ -397,16 +391,16 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     if (ref) {
       this.popoverRef = ref
       this.resizeObserver.observe(ref)
+      this.mutationObserver.observe(ref, { attributes: true })
     }
   }
 
   // @ts-ignore
   resizeObserver = new ResizeObserver(() => this.setPosition())
+  mutationObserver = new MutationObserver(() => this.setPosition())
 
   componentDidMount() {
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
-
-    this.listenForResize()
 
     if (openOnClick || closeOnClick || closeOnClickAway) {
       this.listenForClickAway()
@@ -426,6 +420,17 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       }
     }
 
+    const isManuallyPositioned = getIsManuallyPositioned(this.props)
+
+    if (isManuallyPositioned && !this.target) {
+      throw new Error('Not manually positioned and no target found.')
+    }
+
+    if (isManuallyPositioned) {
+      // fix flickering on initial mount of popovers...
+      this.setState({ finishedMount: true })
+    }
+
     if (this.target) {
       this.setPosition()
       this.listenForClick()
@@ -440,12 +445,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           }
         })
       }
-    }
 
-    // fix flickering on initial mount of popovers...
-    if (getIsManuallyPositioned(this.props)) {
-      this.setState({ finishedMount: true })
-    } else {
+      // handling flickers poorly, TODO investigate why portals cause it to never hide on initial mount
       on(
         this,
         setTimeout(() => {
@@ -456,6 +457,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   componentWillUnmount() {
+    this.mutationObserver.disconnect()
     this.resizeObserver.disconnect()
   }
 
@@ -482,43 +484,32 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  setPosition = throttle(() => {
-    if (getIsManuallyPositioned(this.props)) {
-      throw new Error('Should never call setPosition when manually positioned')
-    }
+  setPosition = debounce(() => {
     if (!this.popoverRef || !this.target) {
-      console.error('missing popvoer ref or target', this)
-      return
+      throw new Error('missing popvoer ref or target')
     }
+    // get popover first child which is the inner div that doesn't deal with forgiveness padding
+    const popoverBounds = this.popoverRef.children[0].getBoundingClientRect()
     const nextState = {
-      targetBounds: this.target.getBoundingClientRect(),
-      popoverBounds: this.popoverRef.getBoundingClientRect(),
+      targetBounds: JSON.parse(JSON.stringify(this.target.getBoundingClientRect())),
+      popoverBounds: {
+        left: popoverBounds.left,
+        width: popoverBounds.width,
+        height: popoverBounds.height,
+      },
     }
-    // adjust for forgiveness which messs up the bounds
-    nextState.popoverBounds.width -= this.props.forgiveness * 2
-    nextState.popoverBounds.height -= this.props.forgiveness * 2
     // if changed, update
-    if (!isEqual(nextState, pick(this.state, Object.keys(nextState)))) {
+    const prevState = pick(this.state, Object.keys(nextState))
+    if (!isEqual(nextState, prevState)) {
+      if (this.props['debug']) {
+        console.log('got em', nextState)
+      }
       this.setState({
         ...nextState,
         shouldSetPosition: true,
       })
     }
-  }, 64)
-
-  listenForResize() {
-    if (!getIsManuallyPositioned(this.props)) {
-      const updatePosition = throttle(() => this.setPosition(), 32)
-      const updatePositionInactive = debounce(() => this.setPosition(), 300)
-      on(this, window, 'resize', () => {
-        if (this.showPopover) {
-          updatePosition()
-        } else {
-          updatePositionInactive()
-        }
-      })
-    }
-  }
+  }, 32)
 
   forceClose = async () => {
     this.stopListeningUntilNextMouseEnter()

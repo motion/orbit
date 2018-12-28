@@ -402,6 +402,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   componentDidMount() {
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
 
+    this.resizeObserver.observe(document.documentElement)
+
     if (openOnClick || closeOnClick || closeOnClickAway) {
       this.listenForClickAway()
     }
@@ -501,15 +503,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     // if changed, update
     const prevState = pick(this.state, Object.keys(nextState))
     if (!isEqual(nextState, prevState)) {
-      if (this.props['debug']) {
-        console.log('got em', nextState)
-      }
       this.setState({
         ...nextState,
         shouldSetPosition: true,
       })
     }
-  }, 32)
+  }, 64)
 
   forceClose = async () => {
     this.stopListeningUntilNextMouseEnter()

@@ -4,6 +4,7 @@ import { view, compose, attach } from '@mcro/black'
 import { HorizontalScroll } from '../../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { ButtonProps } from '@mcro/ui'
 
 const dateBg = UI.color('#ffb049')
 
@@ -53,7 +54,7 @@ const SuggestionBar = view(UI.Row, {
   },
 })
 
-const SuggestionButton = props => (
+const SuggestionButton = (props: ButtonProps) => (
   <UI.Button
     glint={false}
     size={1.2}

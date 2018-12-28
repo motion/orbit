@@ -157,6 +157,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                         maxWidth={120}
                         fontWeight={400}
                         fontSize={13}
+                        alpha={0.8}
                         onClick={store.handleClickLocation}
                       >
                         {location}

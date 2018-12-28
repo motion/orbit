@@ -17,10 +17,6 @@ type SearchResultsListProps = Partial<VirtualListProps> & {
 export const SearchResultsList = ({ results, offsetY = 0, ...props }: SearchResultsListProps) => {
   const { appStore } = React.useContext(StoreContext)
 
-  const isRowLoaded = find => {
-    return find.index < results.length
-  }
-
   return (
     <ProvideHighlightsContextWithDefaults
       value={{
@@ -33,7 +29,7 @@ export const SearchResultsList = ({ results, offsetY = 0, ...props }: SearchResu
         ItemView={SearchResultListItem}
         maxHeight={appStore.maxHeight - offsetY}
         items={results}
-        isRowLoaded={isRowLoaded}
+        isRowLoaded={find => find.index < results.length}
         {...props}
       />
     </ProvideHighlightsContextWithDefaults>

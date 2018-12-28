@@ -56,7 +56,7 @@
     "react-hot-loader": "4.6.3",
     "react-hotkeys": "1.0.6",
     "react-markdown": "3.6.0",
-    "react-sortable-hoc": "0.8.3",
+    "react-sortable-hoc": "0.8.4",
     "react-spring": "7.1.0",
     "react-svg-inline": "2.1.1",
     "react-virtualized": "9.21.0",

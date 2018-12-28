@@ -102,6 +102,10 @@ export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
   }
   return (
     <SearchResultsList
+      getRef={(a, b) => {
+        console.log('got', a, b)
+        window.x = a
+      }}
       query={store.peopleQuery}
       itemProps={props.itemProps}
       maxHeight={props.appStore.maxHeight}

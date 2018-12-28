@@ -6,14 +6,12 @@ import {
   CellMeasurer,
   InfiniteLoader,
 } from 'react-virtualized'
-import { ensure, react, StoreContext, always } from '@mcro/black'
+import { ensure, react, always } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
-import { OrbitItemSingleton } from '../ListItems/OrbitItemStore'
 import { Banner } from '../Banner'
 import { VirtualListItem } from './VirtualListItem'
 import { OrbitItemProps } from '../ListItems/OrbitItemProps'
-import { AppStore } from '../../apps/AppStore'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
@@ -21,24 +19,26 @@ import { observer } from 'mobx-react-lite'
 export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>>
 
 export type VirtualListProps = {
+  getRef?: (a: VirtualListStore, b: any) => any
   items: any[]
   itemProps?: OrbitItemProps<any>
   getItemProps?: GetItemProps
-  appStore?: AppStore<any>
   ItemView?: GenericComponent<any>
   infinite?: boolean
   loadMoreRows?: Function
   rowCount?: number
   isRowLoaded?: Function
   maxHeight?: number
+  estimatedRowHeight?: number
 }
 
-class InnerList extends React.Component<any> {
+class SortableList extends React.Component<any> {
   render() {
     return <List {...this.props} ref={this.props.forwardRef} />
   }
 }
-const SortableListContainer = SortableContainer(InnerList, { withRef: true })
+
+const SortableListContainer = SortableContainer(SortableList, { withRef: true })
 
 class VirtualListStore {
   props: VirtualListProps
@@ -67,17 +67,17 @@ class VirtualListStore {
     },
   )
 
-  scrollToRow = react(
-    () => this.props.appStore.activeIndex,
-    index => {
-      ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
-      ensure('valid index', index > -1)
-      ensure('has list', !!this.listRef)
-      this.listRef.scrollToRow(index)
-    },
-  )
+  // scrollToRow = react(
+  //   () => this.props.getActiveIndex,
+  //   index => {
+  //     ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
+  //     ensure('valid index', index > -1)
+  //     ensure('has list', !!this.listRef)
+  //     this.listRef.scrollToRow(index)
+  //   },
+  // )
 
-  setRootRef = ref => {
+  setRootRef = (ref: HTMLDivElement) => {
     if (this.rootRef || !ref) {
       return
     }
@@ -99,7 +99,7 @@ class VirtualListStore {
 
   measureTm = null
 
-  private measureHeight() {
+  measureHeight() {
     if (!this.cache) {
       return
     }
@@ -114,7 +114,7 @@ class VirtualListStore {
     this.height = Math.min(this.props.maxHeight || Infinity, height)
   }
 
-  private measure() {
+  measure() {
     if (!this.rootRef || this.rootRef.clientWidth === 0) {
       clearTimeout(this.measureTm)
       this.measureTm = setTimeout(this.measure)
@@ -125,25 +125,25 @@ class VirtualListStore {
 
     if (!this.cache) {
       this.cache = new CellMeasurerCache({
-        defaultHeight: 60,
+        defaultHeight: this.props.estimatedRowHeight,
         defaultWidth: this.width,
         fixedWidth: true,
-        keyMapper: rowIndex => {
-          if (typeof rowIndex === 'undefined') {
-            return 0
-          }
-          const id = this.props.items[rowIndex].id
-          if (typeof id === 'undefined') {
-            console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
-            throw new Error('No valid id found for mapping results')
-          }
-          return id
-        },
+        // keyMapper: rowIndex => {
+        //   if (typeof rowIndex === 'undefined') {
+        //     return 0
+        //   }
+        //   const id = this.props.items[rowIndex].id
+        //   if (typeof id === 'undefined') {
+        //     console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
+        //     throw new Error('No valid id found for mapping results')
+        //   }
+        //   return id
+        // },
       })
     }
   }
 
-  private resizeAll = () => {
+  resizeAll = () => {
     this.cache.clearAll()
     this.measureHeight()
   }
@@ -164,10 +164,29 @@ const getSeparatorProps = (items: any[], index: number) => {
   return null
 }
 
-export const VirtualList = observer((props: VirtualListProps) => {
-  const { appStore } = React.useContext(StoreContext)
-  const store = useStore(VirtualListStore, { ...props, appStore })
+function useDefaultProps<A>(a: A, b: Partial<A>): A {
+  return { ...b, ...a }
+}
+
+export const VirtualList = observer((rawProps: VirtualListProps) => {
+  const props = useDefaultProps(rawProps, { estimatedRowHeight: 60 })
+  const store = useStore(VirtualListStore, props)
   const { cache, width, height, items } = store
+
+  React.useEffect(() => {
+    if (!store.listRef) {
+      return
+    }
+
+    let tm = setTimeout(() => {
+      store.resizeAll()
+      store.listRef.forceUpdateGrid()
+    })
+
+    return () => {
+      clearTimeout(tm)
+    }
+  })
 
   if (!items.length) {
     return (
@@ -177,17 +196,11 @@ export const VirtualList = observer((props: VirtualListProps) => {
     )
   }
 
-  const rowRenderer = ({ index, parent, style }) => {
+  const rowRenderer = ({ key, index, parent, style }) => {
     const model = items[index]
     const ItemView = props.ItemView || VirtualListItem
     return (
-      <CellMeasurer
-        key={`${model.id}${index}`}
-        cache={cache}
-        columnIndex={0}
-        parent={parent}
-        rowIndex={index}
-      >
+      <CellMeasurer key={key} cache={cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
           <ItemView
             model={model}
@@ -211,6 +224,9 @@ export const VirtualList = observer((props: VirtualListProps) => {
       <SortableListContainer
         forwardRef={ref => {
           if (ref) {
+            if (props.getRef) {
+              props.getRef(store, ref)
+            }
             store.listRef = ref
             if (infiniteProps && infiniteProps.registerChild) {
               infiniteProps.registerChild(ref)
@@ -224,7 +240,7 @@ export const VirtualList = observer((props: VirtualListProps) => {
         rowHeight={cache.rowHeight}
         overscanRowCount={20}
         rowCount={items.length}
-        estimatedRowSize={70}
+        estimatedRowSize={props.estimatedRowHeight}
         rowRenderer={rowRenderer}
         distance={10}
         lockAxis="y"

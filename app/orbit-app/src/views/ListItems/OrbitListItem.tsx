@@ -157,6 +157,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                         maxWidth={120}
                         fontWeight={400}
                         fontSize={13}
+                        alpha={0.8}
                         onClick={store.handleClickLocation}
                       >
                         {location}
@@ -238,7 +239,7 @@ const ListFrame = view(UI.View, {
   transform: {
     z: 0,
   },
-}).theme(({ theme, borderRadius }) => {
+}).theme(({ borderRadius }, theme) => {
   return {
     color: theme.color,
     background: theme.listItemBackground || theme.background.alpha(0.5),
@@ -252,7 +253,7 @@ const Divider = view({
   bottom: 0,
   left: 10,
   right: 10,
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   background: theme.color.alpha(0.017),
 }))
 
@@ -268,7 +269,7 @@ const ListItem = view({
     background: 'transparent',
     padding: 8,
   },
-}).theme(({ theme, isSelected, padding, chromeless }) => {
+}).theme(({ isSelected, padding, chromeless }, theme) => {
   let style: CSSPropertySet = {}
   if (chromeless) {
     return style
@@ -312,7 +313,7 @@ const Preview = view({
 
 const ListItemSubtitle = view(UI.View, {
   minHeight: 20,
-  padding: [0, 0, 4],
+  margin: [0, 0, 4],
   flexFlow: 'row',
   alignItems: 'center',
   flex: 1,

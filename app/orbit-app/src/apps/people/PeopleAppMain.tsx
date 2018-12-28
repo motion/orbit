@@ -269,7 +269,7 @@ const FadeMapRight = view({
   left: 0,
   right: 0,
   zIndex: 2,
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   background: `linear-gradient(to right, transparent, ${theme.background})`,
 }))
 

@@ -1,11 +1,15 @@
 {
-  "lerna": "3.4.0",
+  "lerna": "3.8.0",
   "npmClient": "yarn",
-  "packages": ["app/*", "packages/*", "projects/*"],
-  "version": "2.2.1",
+  "packages": [
+    "app/*",
+    "packages/*",
+    "projects/*"
+  ],
+  "version": "2.3.10",
   "command": {
     "publish": {
-      "registry": "http://localhost:4343"
+      "registry": "https://registry.npmjs.org"
     },
     "bootstrap": {
       "registry": "https://registry.npmjs.org"

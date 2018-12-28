@@ -19,7 +19,7 @@ const Block = view(UI.Block, {
   bottom: 0,
   padding: 0,
   whiteSpace: 'pre',
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   '&::selection': {
     color: theme.color.lighten(0.1),
     background: theme.background.darken(0.1),

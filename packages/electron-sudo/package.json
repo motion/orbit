@@ -1,8 +1,9 @@
 {
   "name": "@mcro/electron-sudo",
-  "version": "4.0.12",
+  "version": "2.3.10",
   "description": "Electron subprocess with administrative privileges, prompting the user with an OS dialog if necessary.",
   "main": "_/index.js",
+  "sideEffects": false,
   "author": "Aleksandr Komlev",
   "license": "MIT",
   "scripts": {
@@ -11,5 +12,6 @@
     "lint": "node_modules/eslint/bin/eslint.js -c .eslintrc ./src",
     "test-win32": "npm run build-win32 && node node_modules\\mocha\\bin\\mocha --compilers js:babel-core/register tests",
     "test": "npm run build && node_modules/mocha/bin/mocha --compilers js:babel-core/register ./tests"
-  }
+  },
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

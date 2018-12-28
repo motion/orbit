@@ -1,8 +1,9 @@
 {
   "name": "@mcro/reactron",
-  "version": "2.2.1",
+  "version": "2.3.10",
   "description": "React renderer for Electron apps",
   "main": "_/index.js",
+  "sideEffects": false,
   "license": "MIT",
   "scripts": {
     "build": "tsc || true",
@@ -15,7 +16,7 @@
     "react-dom": "16.7.0-alpha.2"
   },
   "dependencies": {
-    "@mcro/logger": "^2.2.1",
+    "@mcro/logger": "^2.3.10",
     "fbjs": "0.8.16",
     "lodash.isequal": "^4.5.0",
     "react-reconciler": "0.11.0"
@@ -23,7 +24,5 @@
   "devDependencies": {
     "electron-devtools-installer": "^2.2.4"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  }
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

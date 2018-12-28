@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { view, compose, attach } from '@mcro/black'
 import { SomeOtherSubView } from './SomeOtherSubView'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 class TestStore {
   x = [0]
@@ -11,18 +12,13 @@ class TestStore {
   }
 }
 
-const decorator = compose(
-  attach({
-    store: TestStore,
-  }),
-  view,
-)
-export const TestHMRInner = decorator(({ store }) => {
+export const TestHMRInner = observer(() => {
+  const store = useStore(TestStore)
   return (
     <div>
       hi123 123 123 123
       <h2>{store.y}</h2>
-      <SomeOtherSubView />
+      <SomeOtherSubView id={0} />
       {store.x.map((_, index) => (
         <SomeOtherSubView key={`${index}`} id={index} />
       ))}

@@ -22,11 +22,11 @@ ensure-dep "tsc" -- npm i -g typescript
 # ensure-dep "pyenv" -- ./apps/oracle/build.sh
 # internal tools
 if [ ! -f "./packages/gloss/_/gloss.js" ]; then
-  bin/build-builder-modules
+  bin/__/build-builder-modules
 fi
 # link second
 if [ ! -L "./node_modules/@mcro/gloss" ]; then
-  bin/link-root-modules
+  bin/__/link-root-modules
 fi
 echo "installing root"
 yarn install

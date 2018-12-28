@@ -94,7 +94,7 @@ export const Slant = ({
 
 const SectionFrame = view({
   position: 'relative',
-}).theme(({ withBackground, theme }) => ({
+}).theme(({ withBackground }, theme) => ({
   background: withBackground ? theme.background : 'transparent',
 }))
 

@@ -1,14 +1,13 @@
 {
   "name": "@mcro/color",
-  "version": "2.2.1",
+  "version": "2.3.10",
   "main": "_/color.js",
+  "sideEffects": false,
   "author": "Motion",
   "license": "MIT",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  }
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

@@ -1,18 +1,16 @@
 {
   "name": "@mcro/mobx-bridge",
   "main": "_/Bridge.js",
-  "version": "2.2.1",
+  "sideEffects": false,
+  "version": "2.3.10",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  },
   "dependencies": {
-    "@mcro/config": "2.2.1",
-    "@mcro/black": "^2.2.1",
-    "@mcro/logger": "^2.2.1",
+    "@mcro/black": "^2.3.10",
+    "@mcro/config": "^2.3.10",
+    "@mcro/logger": "^2.3.10",
     "html5-websocket": "^2.0.2",
     "kill-port": "1.3.1",
     "lodash": "4.17.10",
@@ -23,5 +21,6 @@
   },
   "peerDependencies": {
     "mobx": "*"
-  }
+  },
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

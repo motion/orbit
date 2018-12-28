@@ -60,7 +60,7 @@ const TitleBar = view({
   flexFlow: 'row',
   padding: [0, 8],
   position: 'relative',
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   borderBottom: [1, theme.borderColor.alpha(0.5)],
 }))
 

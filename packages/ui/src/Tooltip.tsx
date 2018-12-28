@@ -21,7 +21,7 @@ export const Tooltip = ({
   children,
   ...props
 }: TooltipProps) => {
-  if (disabled) {
+  if (disabled || !label) {
     return children as any
   }
   return (

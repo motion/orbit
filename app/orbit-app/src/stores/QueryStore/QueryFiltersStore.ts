@@ -128,10 +128,10 @@ export class QueryFilterStore {
 
   get integrationFilters(): SearchFilter[] {
     return this.sourcesStore.activeSources.map(app => ({
-      type: app.source,
+      type: 'source',
       integration: app.integration,
       name: app.appName,
-      active: this.hasExclusiveFilters ? this.exclusiveFilters[app.source] : false,
+      active: this.hasExclusiveFilters ? this.exclusiveFilters[app.integration] : false,
     }))
   }
 

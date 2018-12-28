@@ -11,7 +11,7 @@ export const BarInner = view({
   flex: 1,
   height: 1,
   borderRadius: 100,
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   background: theme.borderColor.alpha(0.35),
 }))
 

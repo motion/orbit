@@ -7,7 +7,7 @@ import { OrbitOrb } from './OrbitOrb'
 const RowItemFrame = view(Row, {
   padding: [4, 8],
   alignItems: 'center',
-}).theme(({ theme, selected }) => ({
+}).theme(({ selected }, theme) => ({
   background: selected ? theme.backgroundHover : 'transparent',
   '&:hover': {
     background: theme.backgroundHover,

@@ -6,7 +6,6 @@ import { hash } from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import { validProp } from './helpers/validProp'
-import { simplePropSum } from './helpers/simplePropSum'
 import { css } from '@mcro/css'
 
 export type BaseRules = {
@@ -21,9 +20,7 @@ type GlossViewProps<Props> = Props &
     theme?: ThemeObject
   }
 
-type GlossThemeFn<Props> = ((
-  props: GlossViewProps<Props> & { theme: ThemeObject },
-) => CSSPropertySet)
+type GlossThemeFn<Props> = ((props: GlossViewProps<Props>, theme: ThemeObject) => CSSPropertySet)
 
 type GlossCompiledView<Props> = React.SFC<GlossViewProps<Props>> & {
   ignoreAttrs?: Object
@@ -32,6 +29,53 @@ type GlossCompiledView<Props> = React.SFC<GlossViewProps<Props>> & {
 
 export type GlossView<Props> = GlossCompiledView<GlossViewProps<Props>> & {
   theme: ((cb: GlossThemeFn<Props>) => GlossCompiledView<GlossViewProps<Props>>)
+}
+
+const tracker = new Map()
+const rulesToClass = new WeakMap()
+const sheet = new StyleSheet(process.env.NODE_ENV !== 'development')
+const gc = new GarbageCollector(sheet, tracker, rulesToClass)
+
+let idCounter = 1
+const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
+
+function addRules(displayName: string, rules: BaseRules, namespace: string, tagName: string) {
+  // if these rules have been cached to a className then retrieve it
+  const cachedClass = rulesToClass.get(rules)
+  if (cachedClass) {
+    return cachedClass
+  }
+  const declarations = []
+  const style = css(rules)
+  // generate css declarations based on the style object
+  for (const key in style) {
+    const val = style[key]
+    declarations.push(`  ${key}: ${val};`)
+  }
+  const cssString = declarations.join('\n')
+  // build the class name with the display name of the styled component and a unique id based on the css and namespace
+  const className = displayName + '__' + hash(namespace + cssString)
+  // for media queries
+  // this is the first time we've found this className
+  if (!tracker.has(className)) {
+    // build up the correct selector, explode on commas to allow multiple selectors
+    const selector = getSelector(className, namespace, tagName)
+    // insert the new style text
+    tracker.set(className, {
+      displayName,
+      namespace,
+      rules,
+      selector,
+      style,
+    })
+    if (namespace[0] === '@') {
+      sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
+    } else {
+      sheet.insert(className, `${selector} {\n${cssString}\n}`)
+    }
+    rulesToClass.set(rules, className)
+  }
+  return className
 }
 
 export function glossView<Props = GlossViewProps<any>>(
@@ -64,15 +108,15 @@ export function glossView<Props = GlossViewProps<any>>(
   const { styles, propStyles } = getAllStyles(id, target, rawStyles)
   const hasPropStyles = !!Object.keys(propStyles).length
   let displayName = 'GlossView'
-  let cachedTheme
+  let cachedThemeFn = null
   let ThemedView
 
   function getTheme() {
-    if (typeof cachedTheme !== 'undefined') {
-      return cachedTheme
+    if (cachedThemeFn !== null) {
+      return cachedThemeFn
     }
     const result = compileTheme(ThemedView)
-    cachedTheme = result
+    cachedThemeFn = result
     return result
   }
 
@@ -105,7 +149,7 @@ export function glossView<Props = GlossViewProps<any>>(
     }
     const themeFn = getTheme()
     const hasDynamicStyles = themeFn || hasPropStyles
-    // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
+    // if we had the exact same rules as last time and they weren't dynamic then we could bail out here
     // if (!hasDynamicStyles && myStyles === state.lastStyles) {
     //   return null
     // }
@@ -128,10 +172,11 @@ export function glossView<Props = GlossViewProps<any>>(
       }
     }
     if (themeFn) {
-      addStyles(id, dynamicStyles, themeFn({ ...props, theme }))
+      addStyles(id, dynamicStyles, themeFn(props, theme))
     }
     if (hasDynamicStyles) {
       // create new object to prevent buggy mutations
+      // TODO this shouldnt be necessary...
       myStyles = { ...myStyles }
       for (const key in dynamicStyles) {
         myStyles[key] = myStyles[key] || {}
@@ -141,7 +186,7 @@ export function glossView<Props = GlossViewProps<any>>(
         }
       }
     }
-    let nextClassNames
+    let nextClassNames: string[]
     // sort so we properly order pseudo keys
     const keys = Object.keys(myStyles)
     const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
@@ -156,6 +201,7 @@ export function glossView<Props = GlossViewProps<any>>(
         gc.registerClassUse(className)
       }
     }
+
     // check what classNames have been removed if this is a secondary render
     if (classNames !== null) {
       for (const className of classNames) {
@@ -174,41 +220,24 @@ export function glossView<Props = GlossViewProps<any>>(
     return [...nextClassNames, ...extraClassNames]
   }
 
-  function getClassNamesFromProps(
-    classNames: string[],
-    props: GlossViewProps<Props>,
-    theme: ThemeObject,
-  ) {
-    const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-    return generateClassnames(classNames, props as any, tag, theme)
-  }
-
   //
   // the actual view!
   //
 
   ThemedView = React.memo((props: GlossViewProps<Props>) => {
-    const propKey = React.useRef(null)
     const [classNames, setClassNames] = React.useState(null)
-    const { allThemes, activeThemeName } = React.useContext(ThemeContext)
+    const { activeTheme } = React.useContext(ThemeContext)
 
     // update styles
-    const nextKey = simplePropSum(props)
-    if (propKey.current !== nextKey) {
-      propKey.current = nextKey
-      let theme = allThemes[activeThemeName]
-      // merge themes option
-      if (typeof props.theme === 'object') {
-        theme = {
-          ...theme,
-          ...props.theme,
-        }
+    React.useLayoutEffect(() => {
+      const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
+      // merge theme if they pass an object theme in
+      const theme = props.theme ? { ...activeTheme, ...props.theme } : activeTheme
+      const next = generateClassnames(classNames, props, tag, theme)
+      if (!next || !classNames || next.join('') !== classNames.join('')) {
+        setClassNames(next)
       }
-      const nextClassNames = getClassNamesFromProps(classNames, props, theme)
-      if (!nextClassNames || !classNames || nextClassNames.join('') !== classNames.join('')) {
-        setClassNames(nextClassNames)
-      }
-    }
+    })
 
     React.useEffect(() => {
       return () => {
@@ -220,10 +249,13 @@ export function glossView<Props = GlossViewProps<any>>(
       }
     }, [])
 
-    const element = props.tagName || targetElement
+    // if this is a plain view we can use tagName, otherwise just pass it down
+    const element =
+      typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
     const isDOMElement = typeof element === 'string'
-    let finalProps = {} as any
 
+    // TODO this could probably be a proxy? but forwardRef?
+    let finalProps = {} as any
     for (const key in props) {
       if (key === 'forwardRef') {
         if (isDOMElement) {
@@ -390,7 +422,8 @@ function getSelector(className: string, namespace: string, tagName: string = '')
   return '.' + className
 }
 
-function compileTheme(ogView) {
+// compiled theme from ancestors
+function compileTheme(ogView: any) {
   let view = ogView
   let themes = []
   // collect the themes going up the tree
@@ -404,12 +437,12 @@ function compileTheme(ogView) {
   if (!themes.length) {
     result = null
   } else {
-    result = props => {
+    result = (props: Object, theme: ThemeObject) => {
       let styles = {}
       // from most important to least
-      for (const theme of themes) {
+      for (const themeFn of themes) {
         styles = {
-          ...theme(props),
+          ...themeFn(props, theme),
           ...styles,
         }
       }
@@ -417,51 +450,4 @@ function compileTheme(ogView) {
     }
   }
   return result
-}
-
-const tracker = new Map()
-const rulesToClass = new WeakMap()
-const sheet = new StyleSheet(process.env.NODE_ENV !== 'development')
-const gc = new GarbageCollector(sheet, tracker, rulesToClass)
-
-let idCounter = 1
-const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
-
-function addRules(displayName: string, rules: BaseRules, namespace: string, tagName: string) {
-  // if these rules have been cached to a className then retrieve it
-  const cachedClass = rulesToClass.get(rules)
-  if (cachedClass) {
-    return cachedClass
-  }
-  const declarations = []
-  const style = css(rules)
-  // generate css declarations based on the style object
-  for (const key in style) {
-    const val = style[key]
-    declarations.push(`  ${key}: ${val};`)
-  }
-  const cssString = declarations.join('\n')
-  // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  const className = displayName + '__' + hash(namespace + cssString)
-  // for media queries
-  // this is the first time we've found this className
-  if (!tracker.has(className)) {
-    // build up the correct selector, explode on commas to allow multiple selectors
-    const selector = getSelector(className, namespace, tagName)
-    // insert the new style text
-    tracker.set(className, {
-      displayName,
-      namespace,
-      rules,
-      selector,
-      style,
-    })
-    if (namespace[0] === '@') {
-      sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
-    } else {
-      sheet.insert(className, `${selector} {\n${cssString}\n}`)
-    }
-    rulesToClass.set(rules, className)
-  }
-  return className
 }

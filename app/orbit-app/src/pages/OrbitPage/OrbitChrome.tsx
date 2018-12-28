@@ -17,7 +17,7 @@ const Border = view({
   zIndex: Number.MAX_SAFE_INTEGER,
   pointerEvents: 'none',
   borderRadius: BORDER_RADIUS + 1,
-}).theme(({ theme }) => {
+}).theme((_, theme) => {
   // const borderColor = theme.background.lighten(0.4)
   // const borderShadow = [0, 0, 0, 0.5, borderColor]
   // const lightBg = theme.background.lighten(1)
@@ -49,7 +49,7 @@ const Background = view({
   zIndex: -1,
   borderRadius: BORDER_RADIUS,
   transition: 'all ease 500ms',
-}).theme(({ theme, isTransparent, moreOpaque }) => {
+}).theme(({ isTransparent, moreOpaque }, theme) => {
   const isDark = theme.background.isDark()
   const darkBg = isTransparent
     ? moreOpaque

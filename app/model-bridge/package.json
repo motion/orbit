@@ -1,23 +1,22 @@
 {
   "name": "@mcro/model-bridge",
-  "version": "2.2.1",
+  "private": true,
+  "version": "2.3.10",
   "main": "_/index.js",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/mediator": "^2.2.1",
-    "@mcro/config": "2.2.1",
-    "@mcro/models": "^2.2.1",
-    "@mcro/utils": "^2.2.1",
+    "@mcro/config": "^2.3.10",
+    "@mcro/mediator": "^2.3.10",
+    "@mcro/models": "^2.3.10",
+    "@mcro/utils": "^2.3.10",
     "reconnecting-websocket": "4.1.10",
     "typeorm": "^0.3.0-alpha.22"
   },
   "peerDependencies": {
     "react": "*"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  }
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

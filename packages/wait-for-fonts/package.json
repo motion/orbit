@@ -1,0 +1,14 @@
+{
+  "name": "@mcro/wait-for-fonts",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "version": "2.3.10",
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0"
+  },
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
+}

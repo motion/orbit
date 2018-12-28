@@ -1,42 +1,39 @@
 {
   "name": "@mcro/orbit-syncers",
-  "version": "2.2.1",
+  "version": "2.3.10",
   "main": "./_/main.js",
+  "private": true,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "build-app": "NODE_ENV=production mcro-build --build --target node"
   },
   "dependencies": {
-    "readability": "^0.1.0",
-    "puppeteer": "^1.9.0",
-    "@mcro/config": "2.2.1",
-    "@mcro/models": "^2.2.1",
-    "@mcro/logger": "^2.2.1",
-    "@mcro/mediator": "^2.2.1",
-    "@mcro/models": "^2.2.1",
-    "@mcro/model-bridge": "^2.2.1",
-    "@mcro/services": "^2.2.1",
-    "@mcro/utils": "^2.2.1",
+    "@mcro/config": "^2.3.10",
+    "@mcro/logger": "^2.3.10",
+    "@mcro/mediator": "^2.3.10",
+    "@mcro/model-bridge": "^2.3.10",
+    "@mcro/models": "^2.3.10",
+    "@mcro/services": "^2.3.10",
+    "@mcro/utils": "^2.3.10",
     "autolinker": "^1.7.1",
     "dompurify": "^1.0.7",
     "email-addresses": "^3.0.1",
+    "get-urls": "^8.0.0",
     "global": "^4.3.2",
     "isomorphic-fetch": "^2.2.1",
     "jsdom": "^11.12.0",
     "lodash": "4.17.10",
+    "puppeteer": "^1.9.0",
+    "readability": "^0.1.0",
     "slack": "^11.0.1",
     "sqlite": "3.0.0",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",
-    "urijs": "^1.19.0",
-    "get-urls": "^8.0.0"
+    "urijs": "^1.19.0"
   },
   "devDependencies": {
     "@types/puppeteer": "^1.9.0",
     "source-map-support": "^0.4.16"
-  },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
   }
 }

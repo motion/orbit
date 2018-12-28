@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { TestHMRInner } from './TestHMRSub'
 import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 class MyStore {
   firstState = 0

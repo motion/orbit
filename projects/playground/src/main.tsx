@@ -5,7 +5,8 @@ import './RootViewHMR'
 import { debugState } from '@mcro/black'
 
 debugState(({ stores }) => {
-  window['x'] = stores
+  window['stores'] = stores
+  console.log('stores', stores)
 })
 
 const React = require('react')

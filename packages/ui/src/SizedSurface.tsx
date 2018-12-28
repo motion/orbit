@@ -16,7 +16,7 @@ export type SizedSurfaceProps = SurfaceProps & {
   inline?: boolean
 }
 
-const num = x => (x === true ? 1 : x)
+const num = (x: number | boolean) => (x === true ? 1 : +x)
 
 export const SizedSurface = (props: SizedSurfaceProps) => {
   const {

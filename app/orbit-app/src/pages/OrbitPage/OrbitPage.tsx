@@ -67,14 +67,14 @@ export const OrbitPage = observer(() => {
 
 const Chrome = view({
   flex: 1,
-}).theme(props => ({
-  background: props.theme.background.alpha(0.25),
+}).theme((_, theme) => ({
+  background: theme.background.alpha(0.25),
 }))
 
 const InnerChrome = view({
   flexFlow: 'row',
   flex: 1,
   overflow: 'hidden',
-}).theme(({ theme }) => ({
+}).theme((_, theme) => ({
   background: theme.background,
 }))

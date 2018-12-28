@@ -7,20 +7,24 @@ import { themes } from './themes'
 import { throttle } from 'lodash'
 import { router } from './router'
 
-class RootViewPrePrepack extends React.Component {
+export class RootView extends React.Component {
+  mounted = false
   state = {
     error: null,
   }
 
   handleWindowResize = throttle(() => {
-    if (!App.setState) return
+    if (!App.setState) {
+      return
+    }
     const screenSize = [window.innerWidth, window.innerHeight]
     if (!isEqual(App.state.screenSize, screenSize)) {
       App.setState({ screenSize })
     }
-  }, 20)
+  }, 16 * 4)
 
   componentDidMount() {
+    this.mounted = true
     window['RootView'] = this
     window.addEventListener('resize', this.handleWindowResize)
 
@@ -44,7 +48,10 @@ class RootViewPrePrepack extends React.Component {
   }
 
   componentDidCatch(error) {
-    this.setState({ error })
+    console.log('RootView did catch', error)
+    if (this.mounted) {
+      this.setState({ error })
+    }
   }
 
   componentWillUnmount() {
@@ -106,18 +113,8 @@ if (process.env.NODE_ENV === 'development') {
         if (status === 'prepare') {
           // for gloss to update styles
           window['__lastHMR'] = Date.now()
-          viewEmitter.emit('will-hmr')
         }
       })
     }
   }
 }
-
-// prepack
-// @ts-ignore
-if (global.__optimizeReactComponentTree) {
-  // @ts-ignore
-  __optimizeReactComponentTree(RootView)
-}
-
-export const RootView = RootViewPrePrepack

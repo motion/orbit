@@ -390,7 +390,7 @@ export const A = view(UI.Inline, {
   fontWeight: 600,
   padding: [3, 2],
   borderBottom: [2, 'transparent'],
-}).theme(({ theme, active, ...props }) => {
+}).theme(({ active, ...props }, theme) => {
   const bg = theme.background.darken(0.1).desaturate(0.1)
   const color = UI.color(props.color || theme.color)
   const activeStyle = active && {

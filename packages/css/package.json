@@ -1,8 +1,9 @@
 {
   "name": "@mcro/css",
-  "version": "2.2.1",
+  "version": "2.3.10",
   "description": "",
   "main": "_/css.js",
+  "sideEffects": false,
   "author": "Motion",
   "license": "MIT",
   "scripts": {
@@ -10,7 +11,5 @@
     "watch": "tsc --watch --preserveWatchOutput",
     "test": "node ./_/test.js"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  }
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

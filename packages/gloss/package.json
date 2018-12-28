@@ -1,8 +1,9 @@
 {
   "name": "@mcro/gloss",
-  "version": "2.2.1",
+  "version": "2.3.10",
   "description": "Higher order component for nicer component styles",
   "main": "_/gloss.js",
+  "sideEffects": false,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
@@ -15,14 +16,12 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
-    "@mcro/color": "^2.2.1",
-    "@mcro/css": "^2.2.1"
+    "@mcro/color": "^2.3.10",
+    "@mcro/css": "^2.3.10"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4343"
-  }
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

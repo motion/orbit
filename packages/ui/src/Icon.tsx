@@ -72,7 +72,7 @@ export const Icon = React.memo(
     const iconName = findMatch(name)
     content = content || children
     return (
-      <IconInner color={color} {...props}>
+      <IconInner color={color} size={size} {...props}>
         <div
           className={`icon nc-icon-${type} ${iconName}`}
           style={{
@@ -91,7 +91,7 @@ const IconInner = gloss(View, {
   userSelect: 'none',
   alignItems: 'center',
   justifyContent: 'center',
-}).theme(({ padding, width: pWidth, height: pHeight, size, theme, color }) => {
+}).theme(({ padding, width: pWidth, height: pHeight, size, color }, theme) => {
   const width = (pWidth || size) + widthPadding(padding)
   const height = (pHeight || size) + heightPadding(padding)
   return {

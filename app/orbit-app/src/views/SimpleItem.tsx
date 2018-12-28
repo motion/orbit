@@ -20,7 +20,7 @@ const Item = view({
   '&:active': {
     opacity: 0.8,
   },
-}).theme(({ theme, active }) => ({
+}).theme(({ active }, theme) => ({
   background: (active && theme.highlightBackground) || 'transparent',
   color: (active && theme.highlightColor) || theme.color,
   '&:hover': {

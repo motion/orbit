@@ -1,8 +1,9 @@
 {
   "name": "@mcro/use-store",
-  "version": "2.2.1",
+  "version": "2.3.10",
   "description": "",
   "main": "_/useStore.js",
+  "sideEffects": false,
   "author": "Nate Wienert",
   "license": "MIT",
   "scripts": {
@@ -10,10 +11,11 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/automagical": "^2.2.0",
+    "@mcro/automagical": "^2.3.10",
     "react-fast-compare": "2.0.4"
   },
   "peerDependencies": {
     "react": "^16.7.0-alpha.0"
-  }
+  },
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

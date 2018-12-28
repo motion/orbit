@@ -163,7 +163,7 @@ const OrbitClose = view({
   '&:hover': {
     opacity: 1,
   },
-}).theme(({ theme }) => {
+}).theme((_, theme) => {
   const isDark = theme.background.isDark()
   return {
     '& > div': {

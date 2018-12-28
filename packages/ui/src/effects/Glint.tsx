@@ -24,17 +24,19 @@ export const Glint = gloss<Props>({
   height: 10,
   zIndex: 10000,
 }).theme(
-  ({
-    bottom,
-    borderLeftRadius,
-    borderRadius = 0,
-    borderRightRadius,
-    opacity = 0.5,
-    color = '#fff',
-    size = 1,
-    y = 0.5,
+  (
+    {
+      bottom,
+      borderLeftRadius,
+      borderRadius = 0,
+      borderRightRadius,
+      opacity = 0.5,
+      color = '#fff',
+      size = 1,
+      y = 0.5,
+    },
     theme,
-  }) => {
+  ) => {
     const radiusStyle = {
       ...(borderRadius && {
         borderRadius,

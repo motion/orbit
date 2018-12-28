@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. $(dirname $0)/__/common
+cd $ROOT
+
+npx lerna publish --force-publish

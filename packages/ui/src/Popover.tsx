@@ -83,11 +83,6 @@ export type PopoverProps = CSSPropertySet & {
   noPortal?: boolean
 }
 
-const ArrowContain = gloss({
-  position: 'absolute',
-  left: '50%',
-})
-
 type DebouncedFn = Cancelable & (() => void)
 type PopoverDirection = 'top' | 'bottom' | 'left' | 'right' | 'auto'
 type PositionStateX = { arrowLeft: number; left: number }
@@ -213,6 +208,7 @@ const positionStateX = (
 ): PositionStateX => {
   const { arrowSize } = props
   const popoverHalfWidth = popoverSize.width / 2
+  const popoverMaxX = popoverSize.width + popoverSize.left
   const targetCenter = targetBounds
     ? targetBounds.left + targetBounds.width / 2
     : popoverHalfWidth + popoverSize.left
@@ -231,7 +227,6 @@ const positionStateX = (
     case 'top':
     case 'bottom':
       const naturalLeft = popoverCenter - popoverHalfWidth
-      console.log(props.children, popoverSize.width, naturalLeft)
       left = getEdgePadding(props, naturalLeft, window.innerWidth, popoverSize.width)
 
       // arrow
@@ -246,10 +241,10 @@ const positionStateX = (
       }
 
       // arrowLeft bounds
-      const max = Math.max(0, popoverHalfWidth - arrowSize * 0.75)
-      const min = -popoverHalfWidth + arrowSize * 0.5 + props.distance
+      const max = Math.max(0, popoverMaxX - arrowSize)
+      const min = popoverSize.left + arrowSize
+      arrowLeft -= arrowSize / 2
       arrowLeft = Math.max(min, Math.min(max, arrowLeft))
-      arrowLeft = -(arrowSize / 2) + arrowLeft
       break
     case 'left':
       arrowLeft = popoverHalfWidth
@@ -358,12 +353,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   target = null
-  // TODO: weird unmount/mounted
-  unmounted = false
-  mounted = false
   targetRef = React.createRef<HTMLDivElement>()
   popoverRef = null
-
   state = initialState
 
   static getDerivedStateFromProps(props, state) {
@@ -491,7 +482,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  setPosition() {
+  setPosition = throttle(() => {
     if (getIsManuallyPositioned(this.props)) {
       throw new Error('Should never call setPosition when manually positioned')
     }
@@ -513,7 +504,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         shouldSetPosition: true,
       })
     }
-  }
+  }, 64)
 
   listenForResize() {
     if (!getIsManuallyPositioned(this.props)) {
@@ -887,7 +878,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       width,
       transition,
       noPortal,
-      ...props
+      ...restProps
     } = this.props
     const {
       top,
@@ -900,7 +891,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       direction,
     } = this.state
     const { showPopover } = this
-    const backgroundProp = background === true ? null : { background: `${background}` }
+    const backgroundProp =
+      !background || background === true ? null : { background: `${background}` }
     const isMeasuring = this.state.shouldSetPosition || !this.state.finishedMount
     const isOpen = !isMeasuring && showPopover
 
@@ -971,7 +963,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
               overflow="visible"
               boxShadow={getShadow(elevation)}
               noInnerElement
-              {...props}
+              {...restProps}
               {...backgroundProp}
             >
               {typeof children === 'function'
@@ -983,10 +975,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       </PopoverContainer>
     )
 
-    const popoverInner = theme ? <Theme name={theme}>{popoverContent}</Theme> : popoverContent
+    const popoverChildren = <Theme name={theme}>{popoverContent}</Theme>
 
     if (noPortal) {
-      return popoverInner
+      return popoverChildren
     }
 
     return (
@@ -994,7 +986,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         {React.isValidElement(target) && this.controlledTarget(target)}
         <Portal>
           <span className="popover-portal" style={{ opacity: isMeasuring ? 0 : 1 }}>
-            {popoverInner}
+            {popoverChildren}
           </span>
         </Portal>
       </>
@@ -1078,4 +1070,9 @@ const PopoverWrap = gloss({
 const PopoverInner = gloss({
   flex: 1,
   position: 'relative',
+})
+
+const ArrowContain = gloss({
+  position: 'absolute',
+  left: '50%',
 })

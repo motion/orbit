@@ -1,15 +1,14 @@
-import { validCSSAttr, CSSPropertySet } from '@mcro/css'
+import { validCSSAttr, CSSPropertySet, ThemeObject } from '@mcro/css'
 import { alphaColor } from './alphaColor'
 
 export const styleVal = (val, theme) => (typeof val === 'function' ? val(theme) : val)
 
 // resolves props into styles for valid css
 
-export const propsToStyles = props => {
+export const propsToStyles = (props: any, theme: ThemeObject) => {
   const styles: CSSPropertySet = {
     ...props.style,
   }
-  const theme = props.theme
   // loop over props turning into styles
   for (const key in props) {
     // &:hover, etc

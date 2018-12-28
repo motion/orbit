@@ -1,7 +1,8 @@
 {
   "name": "@mcro/gloss-displaynames",
-  "version": "2.2.1",
+  "version": "2.3.10",
   "main": "_/index.js",
+  "sideEffects": false,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
@@ -9,5 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "babel-plugin-macros": "^2.1.0"
-  }
+  },
+  "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

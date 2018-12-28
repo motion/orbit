@@ -105,10 +105,10 @@ const config = {
     },
   },
   // for a faster dev mode you can do:
-  //   eval-source-map (seems to not even parse...)
+  //   eval-source-map (causes errors to not show stack trace in react development...)
   //   cheap-source-map (no line numbers...)
   //   cheap-module-eval-source-map (no line numbers...)
-  devtool: isProd ? 'source-map' : 'eval-source-map',
+  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

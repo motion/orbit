@@ -44,12 +44,18 @@ type ThemeStyles = {
   themeStylesFromProps?: Partial<ThemeObject>
 }
 
-export const propsToThemeStyles = (props, mapPropStylesToPseudos?: boolean): ThemeStyles => {
-  const theme = props.theme
+export const propsToThemeStyles = (
+  props: any,
+  theme: ThemeObject,
+  mapPropStylesToPseudos?: boolean,
+): ThemeStyles => {
+  if (!theme) {
+    throw new Error('No theme passed to propsToThemeStyles')
+  }
   let styles = {
-    color: theme.color,
-    background: theme.background,
-    borderColor: theme.borderColor,
+    color: props.color || theme.color,
+    background: props.background || theme.background,
+    borderColor: props.borderColor || theme.borderColor,
   }
   // if we set styles from props we should propogate those styles
   // down to be sure we don't "undo" them inside pseudo styles
@@ -100,6 +106,9 @@ export const propsToThemeStyles = (props, mapPropStylesToPseudos?: boolean): The
       }
     }
   }
+  // if (props.debug) {
+  //   debugger
+  // }
   return {
     themeStyles: styles as ThemeObjectWithPseudo,
     themeStylesFromProps: stylesFromProps,

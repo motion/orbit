@@ -21,7 +21,7 @@ export const SearchNav = observer(() => {
           openOnHover
           closeOnClickAway
           group="filters"
-          target={<NavButton icon="calendar" opacity={queryFilters.hasDateFilter ? 1 : 0.5} />}
+          target={<NavButton icon="calendar" />}
           alignPopover="left"
           background
           borderRadius={6}
@@ -35,7 +35,7 @@ export const SearchNav = observer(() => {
             />
           </View>
         </Popover>
-        <NavButton onClick={queryFilters.toggleSortBy} tooltip={queryFilters.sortBy} opacity={0.5}>
+        <NavButton onClick={queryFilters.toggleSortBy} tooltip={queryFilters.sortBy}>
           {queryFilters.sortBy}
         </NavButton>
       </Row>
@@ -45,7 +45,7 @@ export const SearchNav = observer(() => {
       </ScrollableRow>
 
       <ScrollableRow maxWidth="33%">
-        <Icon name="funnel" size={14} opacity={0.65} color="#999" marginRight={10} />
+        <Icon name="funnel" size={10} opacity={0.65} color="#999" marginRight={10} />
         <SearchFilters />
       </ScrollableRow>
     </>

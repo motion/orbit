@@ -1,3 +1,29 @@
+get to value....
+
+- just cleanup the app a lot so its generally working
+- lots of small interaction and polish and low level fixes will setup for a good year
+- simplify search so its non-grouped and features sort of work
+- consider a better organizer feature - lists or collections or whatever
+  - it basically can be the "home/search" app as searching inside it will be what you use to pin to various areas
+  - journal-like essentially
+  - can put people into lists if this works well
+  - folders could be an option as it would then really work as bookmarks
+  - people can be a search app filtered to people?
+- vocabulary can then just be a collection app?
+  - probably not necessary, but worth thinking about
+- begin through design of creating new apps
+  - filtered search
+  - manual list
+  - eventually custom app
+- upgrade the menus for new design
+  - action menu
+  - contextual search
+  - contextual people
+- finally, augmented stuff
+  - get it so its inserting from memory
+  - filter by memory in search
+  - get filters in search nicer
+
 strategically step by step:
 
 - website (~2-3 weeks):

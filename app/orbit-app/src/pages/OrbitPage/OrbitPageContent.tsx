@@ -92,7 +92,7 @@ export const OrbitPageContent = observer(() => {
 
   return (
     <Col flex={1}>
-      {!!activeAppStore ? activeAppStore.toolbar : null}
+      {!!activeAppStore ? <ToolbarChrome>{activeAppStore.toolbar}</ToolbarChrome> : null}
       <Row flex={1}>
         <OrbitIndexView isHidden={store.activePane === 'home'}>
           {allPanes.map(app => (
@@ -127,6 +127,10 @@ export const OrbitPageContent = observer(() => {
     </Col>
   )
 })
+
+const ToolbarChrome = view({}).theme((_, theme) => ({
+  borderBottom: [1, theme.borderColor.alpha(0.25)],
+}))
 
 const OrbitIndexView = view({
   width: 300,

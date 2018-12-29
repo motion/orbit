@@ -34,6 +34,8 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
     ]
   })
 
+  console.log('results', results)
+
   React.useEffect(
     () => {
       if (isActive) {

@@ -22,7 +22,6 @@ export const SearchNav = observer(() => {
           closeOnClickAway
           group="filters"
           target={<NavButton icon="calendar" />}
-          alignPopover="left"
           background
           borderRadius={6}
           elevation={4}
@@ -35,7 +34,7 @@ export const SearchNav = observer(() => {
             />
           </View>
         </Popover>
-        <NavButton onClick={queryFilters.toggleSortBy} tooltip={queryFilters.sortBy}>
+        <NavButton onClick={queryFilters.toggleSortBy} tooltip="Sort by">
           {queryFilters.sortBy}
         </NavButton>
       </Row>

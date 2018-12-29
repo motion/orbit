@@ -1,3 +1,5 @@
+// TODO can we collapse this down to main
+
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import * as React from 'react'
@@ -15,10 +17,10 @@ export async function start() {
   }
 
   // re-require for hmr to capture new value
-  const { RootView } = require('./RootViewHMR')
+  const { OrbitRoot } = require('./OrbitRoot')
 
   // render app
-  ReactDOM.render(<RootView />, document.querySelector('#app'))
+  ReactDOM.render(<OrbitRoot />, document.querySelector('#app'))
 }
 
 start()

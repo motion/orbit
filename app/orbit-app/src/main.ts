@@ -52,6 +52,10 @@ async function main() {
   console.log('app:', window.location.href, config)
   setGlobalConfig(config)
 
+  // prevent scroll bounce
+  document.body.style.overflow = 'hidden'
+  document.documentElement.style.overflow = 'hidden'
+
   await App.start()
 
   if (process.env.NODE_ENV === 'development') {

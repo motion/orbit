@@ -21,6 +21,18 @@ thinking through the lense of apps:
   - you can set up multiple lists as you want
   - easy for companies to start organizing various things they want, perhaps, needs thought
 
+ideas:
+
+- contextual actions are really powerful
+- being able to clip your current context to a specific app is really big
+  - imagine clipping the current screen, or selecting some text, or current website to somewhere
+    - you can put it in a list
+    - or imagine an RSS reading app, can put it into your feeds...
+    - or with people app, send it to someone
+- this really gets into the centralizing force aspect:
+  - because it can be the "in-between" from data/apps to your current context, it has vast power
+    - save it for later, reading, organizing all can work through this
+
 get to value....
 
 - just cleanup the app a lot so its generally working

@@ -118,12 +118,15 @@ export class Root {
         Desktop,
       },
     })
+
     // set some initial state on desktop
     Desktop.setState({
       operatingSystem: {
         macVersion: macosVersion(),
       },
     })
+
+    // TODO move to command
     Desktop.onMessage(Desktop.messages.OPEN, url => {
       console.log('opening', url)
       open(url)
@@ -140,6 +143,7 @@ export class Root {
     await this.cosalManager.start()
     this.cosal = this.cosalManager.cosal
 
+    // database dependent things can start here
     this.generalSettingManager = new GeneralSettingManager()
     await this.generalSettingManager.start()
 

@@ -1,5 +1,5 @@
 import { AppEntity, App } from '@mcro/models'
-import { getRepository } from '@mcro/mediator/node_modules/typeorm'
+import { getRepository } from 'typeorm'
 
 export class AppsManager {
   apps: AppEntity[] = null

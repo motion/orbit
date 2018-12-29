@@ -1,3 +1,26 @@
+thinking through the lense of apps:
+
+- can do it now without being "custom" just "customizable"
+- can click to add a tab
+  - give it name/icon
+  - sort the tabs perhaps
+  - choose settings for it during creation, every app can have a setting pane it defines
+- i think the big helpful app is a sort of organizer
+  - basically bookmarks + simple notes perhaps
+  - it would have a search that integrates with it so you can search and then drag into the organizer
+    - maybe search comes in once you type
+    - alternatively:
+      - search is the main app, but you can hit "actions" within any item
+        - actions shows actions for any app that defines them
+        - so you can say "pin to..." and then that pops up a modal
+- now we can basically think of the apps as:
+  - home = organizer with some defaults selected
+  - people = search with a preset data source: People
+  - vocabulary = list with a preset data source: Topics, Terms
+- this gives you a ton of control out of the gate and gets to usability
+  - you can set up multiple lists as you want
+  - easy for companies to start organizing various things they want, perhaps, needs thought
+
 get to value....
 
 - just cleanup the app a lot so its generally working

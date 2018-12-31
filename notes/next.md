@@ -1,3 +1,28 @@
+next steps:
+
+- need to recruit one decent developer in SF
+  - do some more app work just to get it looking nice
+  - fake mockup for adding new apps quickly and linking in data source etc
+  - put together a small screencast video
+  - compose email with simple but powerful pitch for app dev
+  - send it to everyone in SF on github
+- continue towards value
+
+what does orbit do for apps:
+
+- content > app, content first
+  - all apps sync their files or important bits into a common format
+  - that lets you have:
+    - an organizer/journal that works over any app
+- offline first
+  - sync and running all happens locally by default, only team level configuration is synced
+  - means you can use it personally without worry of encroachment
+  - means you can build and deploy apps without infrastructure (torrent based app store, can have p2p based data sync apis)
+- instant-on
+  - open, search, and open apps as though they are instant-on, leveraging JS asynchronicity and designed for it
+- easy reactive querying
+- ui kit built similar to Marzipan/iOS, lists and views that filter and drill in
+
 thinking through the lense of apps:
 
 - can do it now without being "custom" just "customizable"

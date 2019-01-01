@@ -18,10 +18,9 @@ what does orbit do for apps:
   - sync and running all happens locally by default, only team level configuration is synced
   - means you can use it personally without worry of encroachment
   - means you can build and deploy apps without infrastructure (torrent based app store, can have p2p based data sync apis)
-- instant-on
-  - open, search, and open apps as though they are instant-on, leveraging JS asynchronicity and designed for it
-- easy reactive querying
-- ui kit built similar to Marzipan/iOS, lists and views that filter and drill in
+- easiest deploy story ever
+  - especially if you need a simple database to access local or private contnt
+- nice app featurs: instant-on, keyboard nav, ui kit, reactive querying
 
 thinking through the lense of apps:
 

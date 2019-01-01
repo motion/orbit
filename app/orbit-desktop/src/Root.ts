@@ -82,6 +82,7 @@ import { startAuthProxy } from './auth-server/startAuthProxy'
 import { Oracle } from '@mcro/oracle'
 import { OracleManager } from './managers/OracleManager'
 import { AppsManager } from './managers/AppsManager'
+import { TopicsManager } from './managers/TopicsManager'
 
 export class Root {
   // public
@@ -107,6 +108,7 @@ export class Root {
   private generalSettingManager: GeneralSettingManager
   private databaseManager: DatabaseManager
   private keyboardManager: KeyboardManager
+  private topicsManager: TopicsManager
 
   start = async () => {
     await Desktop.start({
@@ -142,6 +144,10 @@ export class Root {
     this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
     await this.cosalManager.start()
     this.cosal = this.cosalManager.cosal
+
+    // cosal dependent things
+    this.topicsManager = new TopicsManager({ cosal: this.cosal })
+    await this.topicsManager.start()
 
     // database dependent things can start here
     this.generalSettingManager = new GeneralSettingManager()

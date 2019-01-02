@@ -5,7 +5,8 @@
   "main": "./_/Oracle.js",
   "scripts": {
     "build": "./build.sh --if-empty && npx tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "watch": "tsc --watch --preserveWatchOutput",
+    "postinstall": "pod install"
   },
   "dependencies": {
     "@mcro/logger": "^2.3.10",

@@ -12,6 +12,6 @@ export class OracleManager {
 
   start = () => {
     this.isStarted = true
-    console.log('ok', this.isStarted, !!this.oracle)
+    console.log('start oracle manager', this.isStarted, !!this.oracle)
   }
 }

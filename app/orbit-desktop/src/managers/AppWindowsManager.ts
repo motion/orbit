@@ -75,7 +75,8 @@ export class AppWindowsManager {
       },
     })
     await screen.start()
-    screen.onAppState(this.handleAppState(id))
+    console.log('TODO\n\n re-enable app state handling')
+    // screen.onAppState(this.handleAppState(id))
     return screen
   }
 

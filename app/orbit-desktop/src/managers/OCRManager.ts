@@ -1,6 +1,6 @@
 import { Screen } from '@mcro/screen'
 import { debounce } from 'lodash'
-import { store, react, on } from '@mcro/black'
+import { store, on } from '@mcro/black'
 import { Desktop } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import macosVersion from 'macos-version'
@@ -11,7 +11,7 @@ import { Cosal } from '@mcro/cosal'
 const log = new Logger('OCRManager')
 const Config = getGlobalConfig()
 // const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
-const APP_ID = -1
+// const APP_ID = -1
 
 // prevent apps from clearing highlights
 const PREVENT_CLEAR = {
@@ -21,22 +21,22 @@ const PREVENT_CLEAR = {
   VSCode: true,
 }
 // prevent apps from triggering appState updates
-const PREVENT_APP_STATE = {
-  iterm2: true,
-  electron: true,
-  VSCode: true,
-  Chromium: true,
-}
-// prevent apps from OCR
-const PREVENT_SCANNING = {
-  iterm2: true,
-  VSCode: true,
-  Xcode: true,
-  finder: true,
-  electron: true,
-  Chromium: true,
-  ActivityMonitor: true,
-}
+// const PREVENT_APP_STATE = {
+//   iterm2: true,
+//   electron: true,
+//   VSCode: true,
+//   Chromium: true,
+// }
+// // prevent apps from OCR
+// const PREVENT_SCANNING = {
+//   iterm2: true,
+//   VSCode: true,
+//   Xcode: true,
+//   finder: true,
+//   electron: true,
+//   Chromium: true,
+//   ActivityMonitor: true,
+// }
 
 @store
 export class OCRManager {
@@ -92,7 +92,7 @@ export class OCRManager {
   async toggleOCR() {
     if (Desktop.ocrState.paused) {
       // TODO almost but not working yet
-      await this.screen.requestAccessibility()
+      // await this.screen.requestAccessibility()
       if (Desktop.state.operatingSystem.accessibilityPermission) {
         this.screen.startWatchingWindows()
         Desktop.setOcrState({ paused: false })
@@ -101,7 +101,7 @@ export class OCRManager {
       }
     } else {
       this.screen.stopWatchingWindows()
-      this.screen.pause()
+      // this.screen.pause()
       Desktop.setOcrState({ paused: true })
     }
   }
@@ -117,12 +117,12 @@ export class OCRManager {
     return false
   }
 
-  rescanOnNewAppState = react(
-    () => Desktop.state.appState,
-    () => {
-      this.ocrCurrentApp()
-    },
-  )
+  // rescanOnNewAppState = react(
+  //   () => Desktop.state.appState,
+  //   () => {
+  //     this.ocrCurrentApp()
+  //   },
+  // )
 
   setupScreenListeners() {
     // operating info
@@ -136,28 +136,28 @@ export class OCRManager {
     })
 
     // OCR words
-    this.screen.onWords(async wordBounds => {
-      // [x, y, width, height, 'word']
-      const words = wordBounds.map(x => x[4]) as string[]
+    // this.screen.onWords(async wordBounds => {
+    //   // [x, y, width, height, 'word']
+    //   const words = wordBounds.map(x => x[4]) as string[]
 
-      const wordsString = words.join(' ')
-      const salientWords = await this.cosal.getTopWords(wordsString, { max: 5 })
+    //   const wordsString = words.join(' ')
+    //   const salientWords = await this.cosal.getTopWords(wordsString, { max: 5 })
 
-      this.hasResolvedOCR = true
-      Desktop.setOcrState({
-        salientWords,
-        wordsString,
-        words: wordBounds,
-        updatedAt: Date.now(),
-      })
-    })
+    //   this.hasResolvedOCR = true
+    //   Desktop.setOcrState({
+    //     salientWords,
+    //     wordsString,
+    //     words: wordBounds,
+    //     updatedAt: Date.now(),
+    //   })
+    // })
 
     // OCR lines
-    this.screen.onLines(lines => {
-      Desktop.setOcrState({
-        lines,
-      })
-    })
+    // this.screen.onLines(lines => {
+    //   Desktop.setOcrState({
+    //     lines,
+    //   })
+    // })
 
     // window movements
     // this.screen.onWindowChange((event, value) => {
@@ -229,36 +229,36 @@ export class OCRManager {
     // })
 
     // OCR work clear
-    this.screen.onBoxChanged(count => {
-      if (!Desktop.ocrState.words) {
-        log.info('RESET screen boxChanged (App)')
-        this.setScreenChanged()
-        if (this.isWatching === 'OCR') {
-          log.info('reset is watching ocr to set back to app')
-          this.ocrCurrentApp()
-        }
-      } else {
-        // for not many clears, try it
-        if (count < 20) {
-          // Desktop.setState({
-          //   clearWord: this.screen.changedIds,
-          // })
-        } else {
-          // else just clear it all
-          log.info('RESET screen boxChanged (NOTTTTTTT App)')
-          this.setScreenChanged()
-          this.ocrCurrentApp()
-        }
-      }
-    })
+    // this.screen.onBoxChanged(count => {
+    //   if (!Desktop.ocrState.words) {
+    //     log.info('RESET screen boxChanged (App)')
+    //     this.setScreenChanged()
+    //     if (this.isWatching === 'OCR') {
+    //       log.info('reset is watching ocr to set back to app')
+    //       this.ocrCurrentApp()
+    //     }
+    //   } else {
+    //     // for not many clears, try it
+    //     if (count < 20) {
+    //       // Desktop.setState({
+    //       //   clearWord: this.screen.changedIds,
+    //       // })
+    //     } else {
+    //       // else just clear it all
+    //       log.info('RESET screen boxChanged (NOTTTTTTT App)')
+    //       this.setScreenChanged()
+    //       this.ocrCurrentApp()
+    //     }
+    //   }
+    // })
   }
 
   async restartScreen() {
     log.info('restartScreen')
     this.setScreenChanged()
-    await this.screen.stop()
-    this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
-    await this.screen.start()
+    // await this.screen.stop()
+    // this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
+    // await this.screen.start()
   }
 
   setScreenChanged = () => {
@@ -277,64 +277,64 @@ export class OCRManager {
     })
   }, 32)
 
-  async ocrCurrentApp() {
-    if (!this.started) {
-      return
-    }
-    clearTimeout(this.clearOCRTm)
-    if (!Desktop.appState.id || Desktop.ocrState.paused) {
-      return
-    }
-    const { name, offset, bounds } = Desktop.appState
-    if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
-      log.info('Prevent scanning app', name)
-      return
-    }
-    if (!offset || !bounds) {
-      log.info('No offset or no bounds')
-      return
-    }
-    console.log('scanning new app')
-    this.setScreenChanged()
-    // we are watching the whole app for words
-    await this.watchBounds('App', {
-      fps: 10,
-      sampleSpacing: 100,
-      sensitivity: 1,
-      showCursor: false,
-      boxes: [
-        {
-          id: APP_ID,
-          x: offset[0],
-          y: offset[1],
-          width: bounds[0],
-          height: bounds[1],
-          // screenDir: Constants.TMP_DIR,
-          initialScreenshot: true,
-          findContent: true,
-          ocr: true,
-        },
-      ],
-    })
-    this.hasResolvedOCR = false
-    if (Desktop.ocrState.paused) {
-      return
-    }
-    log.info('ocrCurrentApp.resume', name)
-    await this.screen.resume()
-    this.clearOCRTm = setTimeout(async () => {
-      if (!this.hasResolvedOCR) {
-        log.info('seems like ocr has stopped working, restarting...')
-        this.restartScreen()
-      }
-    }, 15000)
-  }
+  // async ocrCurrentApp() {
+  //   if (!this.started) {
+  //     return
+  //   }
+  //   clearTimeout(this.clearOCRTm)
+  //   if (!Desktop.appState.id || Desktop.ocrState.paused) {
+  //     return
+  //   }
+  //   const { name, offset, bounds } = Desktop.appState
+  //   if (PREVENT_SCANNING[name] || PREVENT_APP_STATE[name]) {
+  //     log.info('Prevent scanning app', name)
+  //     return
+  //   }
+  //   if (!offset || !bounds) {
+  //     log.info('No offset or no bounds')
+  //     return
+  //   }
+  //   console.log('scanning new app')
+  //   this.setScreenChanged()
+  //   // we are watching the whole app for words
+  //   await this.watchBounds('App', {
+  //     fps: 10,
+  //     sampleSpacing: 100,
+  //     sensitivity: 1,
+  //     showCursor: false,
+  //     boxes: [
+  //       {
+  //         id: APP_ID,
+  //         x: offset[0],
+  //         y: offset[1],
+  //         width: bounds[0],
+  //         height: bounds[1],
+  //         // screenDir: Constants.TMP_DIR,
+  //         initialScreenshot: true,
+  //         findContent: true,
+  //         ocr: true,
+  //       },
+  //     ],
+  //   })
+  //   this.hasResolvedOCR = false
+  //   if (Desktop.ocrState.paused) {
+  //     return
+  //   }
+  //   log.info('ocrCurrentApp.resume', name)
+  //   await this.screen.resume()
+  //   this.clearOCRTm = setTimeout(async () => {
+  //     if (!this.hasResolvedOCR) {
+  //       log.info('seems like ocr has stopped working, restarting...')
+  //       this.restartScreen()
+  //     }
+  //   }, 15000)
+  // }
 
-  watchBounds = async (name, settings) => {
-    console.log('watchBounds', name, settings)
-    this.isWatching = name
-    this.watchSettings = { name, settings }
-    await this.screen.pause()
-    // this.screen.watchBounds(settings)
-  }
+  // watchBounds = async (name, settings) => {
+  //   console.log('watchBounds', name, settings)
+  //   this.isWatching = name
+  //   this.watchSettings = { name, settings }
+  //   await this.screen.pause()
+  //   // this.screen.watchBounds(settings)
+  // }
 }

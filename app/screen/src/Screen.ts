@@ -34,10 +34,7 @@ export class Screen {
   private onInfoCB = idFn
   private onErrorCB = idFn
   private onSpaceMoveCB = idFn
-  private onAppStateCB = idFn
   private onTrayStateCB = idFn
-  private mousePositionCB = idFn
-  private onKeyboardCB = idFn
   private binPath = null
   private state = {
     isPaused: false,
@@ -151,16 +148,11 @@ export class Screen {
     // up to listeners of this class
     info: val => this.onInfoCB(val),
     spaceMove: val => this.onSpaceMoveCB(val),
-    appState: val => {
-      this.onAppStateCB(val)
-    },
     trayState: val => {
       this.onTrayStateCB(val)
     },
     // down to swift process
     defocus: this.defocus,
-    mousePosition: val => this.mousePositionCB(val),
-    keyboard: val => this.onKeyboardCB(val),
   }
 
   private async runScreenProcess() {

@@ -9,7 +9,7 @@ import { ResolvableModel } from '../../sources/types'
 import { getNormalPropsForListItem } from '../ListItems/ListItemNormalize'
 
 export type ListItemProps = Partial<OrbitItemProps<ResolvableModel>> & {
-  model: ResolvableModel
+  item: any
   query?: string
   style?: Object
   cache?: any
@@ -23,8 +23,8 @@ const spaceBetween = <div style={{ flex: 1 }} />
 
 export class ListItem extends React.PureComponent<ListItemProps> {
   render() {
-    const { model, realIndex, query, ignoreSelection, ...itemProps } = this.props
-    const normalizedItem = normalizeItem(model)
+    const { item, realIndex, query, ignoreSelection, ...itemProps } = this.props
+    const normalizedItem = normalizeItem(item)
     return (
       <OrbitListItem
         index={realIndex}
@@ -33,6 +33,7 @@ export class ListItem extends React.PureComponent<ListItemProps> {
         onClickLocation={handleClickLocation}
         renderText={renderHighlightedText}
         ignoreSelection={ignoreSelection}
+        appConfig={item.appConfig}
         {...itemProps}
         {...getNormalPropsForListItem(normalizedItem)}
       />

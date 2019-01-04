@@ -197,13 +197,13 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
   }
 
   const rowRenderer = ({ key, index, parent, style }) => {
-    const model = items[index]
+    const item = items[index]
     const ItemView = props.ItemView || VirtualListItem
     return (
       <CellMeasurer key={key} cache={cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
           <ItemView
-            model={model}
+            item={item}
             index={index}
             realIndex={index}
             {...getSeparatorProps(items, index)}

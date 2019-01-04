@@ -9,10 +9,8 @@ import { sourceToAppConfig } from '../../stores/SourcesStore'
 import { useResults } from '../../hooks/useResults'
 
 export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
-  const { sourcesStore, isActive } = props
-
   const results = useComputed(() => {
-    const { activeSources, allSources } = sourcesStore
+    const { activeSources, allSources } = props.sourcesStore
     return [
       ...activeSources.map(app => ({
         id: app.source.id,
@@ -35,8 +33,9 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
     ]
   })
 
-  console.log('results', results)
-  useResults(results, !!isActive)
+  useResults(results)
+
+  console.log('SourcesAppIndex', props, results)
 
   return (
     <>

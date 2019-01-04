@@ -14,15 +14,12 @@ import { useResults } from '../../hooks/useResults'
 export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
   // people and query
   const people = useObserveMany(PersonBitModel, { take: 10000 })
-  console.log('props.appStore', props.appStore.activeQuery)
   const [activeQuery, setActiveQuery] = React.useState('')
 
   useComputed(
     () => {
       if (props.isActive) {
-        setActiveQuery(
-          removePrefixIfExists(props.isActive ? props.appStore.activeQuery : activeQuery, '@'),
-        )
+        setActiveQuery(removePrefixIfExists(props.appStore.activeQuery, '@'))
       }
     },
     [props.isActive],
@@ -35,7 +32,7 @@ export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
   const sortedPeople = sortBy(filteredPeople.filter(x => !!x.name), x => x.name.toLowerCase())
   const results = groupByFirstLetter(sortedPeople)
 
-  useResults(results, !!props.isActive)
+  useResults(results)
 
   if (!results.length) {
     return <NoResultsDialog subName="the directory" />

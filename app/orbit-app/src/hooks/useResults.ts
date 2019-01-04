@@ -1,8 +1,9 @@
 import { useContext, useEffect } from 'react'
 import { StoreContext } from '@mcro/black'
 
-export function useResults(results: any[], isActive: boolean) {
+export function useResults(results: any[], isActiveOverride?: boolean) {
   const { appStore } = useContext(StoreContext)
+  const isActive = typeof isActiveOverride === 'boolean' ? isActiveOverride : appStore.isActive
 
   useEffect(
     () => {

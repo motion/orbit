@@ -1,48 +1,33 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { loadOne } from '@mcro/model-bridge'
 import { SourceModel } from '@mcro/models'
-import { useStore } from '@mcro/use-store'
-import { react, ensure } from '@mcro/black'
 import { AttachAppInfoStore } from '../../components/AttachAppInfoStore'
-import { observer } from 'mobx-react-lite'
+import { useObserveOne } from '@mcro/model-bridge/_/useModel'
 
-class SourcesMain {
-  props: AppProps<any>
-
-  get appConfig() {
-    return this.props.appStore.appConfig
+export const SourcesAppMain = (props: AppProps<any>) => {
+  if (!props.appConfig) {
+    return <div>no item selected</div>
   }
 
-  model = react(
-    () => this.appConfig,
-    appConfig => {
-      ensure('appConfig', !!appConfig)
-      console.log('loading model', appConfig.id)
-      return loadOne(SourceModel, {
-        args: {
-          where: { id: +appConfig.id },
-        },
-      })
-    },
-  )
-}
+  const source = useObserveOne(SourceModel, {
+    where: { id: +props.appConfig.id },
+  })
 
-export const SourcesAppMain = observer((props: AppProps<any>) => {
-  const { model } = useStore(SourcesMain, props)
-  const type = model ? model.type : props.sourceType
+  const type = source ? source.type : props.sourceType
   const View = props.sourcesStore.getView(type, 'setting')
+
   if (!View) {
-    return <div>nonno {type}</div>
+    return <div>no view {type}</div>
   }
-  if (!model) {
-    return null
+  if (!source) {
+    return <div> no source model</div>
   }
+
   return (
     <AttachAppInfoStore>
       {appInfoStore => (
-        <View appInfoStore={appInfoStore} source={model} appConfig={props.appStore.appConfig} />
+        <View appInfoStore={appInfoStore} source={source} appConfig={props.appStore.appConfig} />
       )}
     </AttachAppInfoStore>
   )
-})
+}

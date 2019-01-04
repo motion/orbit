@@ -8,12 +8,16 @@ import { getGlobalConfig } from '@mcro/config'
 import { SetupProxyCommand } from '@mcro/models'
 
 export const addSourceClickHandler = memoize(
-  (app: OrbitIntegration<any>) => async ({ currentTarget }) => {
-    console.log('add integration', currentTarget, app)
+  (app: OrbitIntegration<any>) => async (e: MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+
+    console.log('add integration', e.currentTarget, app)
+
     if (app.views.setup) {
       // if this view wants to show a "setup" pane...
       AppActions.togglePeekApp({
-        target: currentTarget,
+        target: e.currentTarget,
         appConfig: {
           ...sourceToAppConfig(app, { target: 'source' }),
           viewType: 'setup',

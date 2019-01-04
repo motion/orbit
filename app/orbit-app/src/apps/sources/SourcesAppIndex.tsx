@@ -6,6 +6,7 @@ import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 import { observer, useComputed } from 'mobx-react-lite'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
+import { useResults } from '../../hooks/useResults'
 
 export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
   const { sourcesStore, isActive } = props
@@ -35,19 +36,11 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
   })
 
   console.log('results', results)
-
-  React.useEffect(
-    () => {
-      if (isActive) {
-        props.appStore.setResults([{ type: 'column', indices: results.map((_, index) => index) }])
-      }
-    },
-    [results, isActive],
-  )
+  useResults(results, !!isActive)
 
   return (
     <>
-      <VirtualList items={results} />
+      <VirtualList items={results} itemProps={props.itemProps} />
     </>
   )
 })

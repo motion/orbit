@@ -21,8 +21,8 @@ class OrbitStore {
     return this.props.paneManagerStore.activePane
   }
 
-  activeConfig: { [key: string]: Partial<AppConfig> } = {
-    search: {},
+  activeConfig: { [key: string]: AppConfig } = {
+    search: { id: '', type: 'search', title: '' },
   }
 
   handleSelectItem: OrbitItemProps<any>['onSelect'] = (_index, config) => {
@@ -123,7 +123,6 @@ export const OrbitPageContent = observer(() => {
           ))}
         </OrbitMainView>
       </Row>
-      {!!activeAppStore ? activeAppStore.statusbar : null}
     </Col>
   )
 })

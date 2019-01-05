@@ -1,13 +1,15 @@
+import '../public/styles/base.css'
+import '../public/styles/nucleo.css'
 import 'react-hot-loader' // must be imported before react
-import { setGlobalConfig } from '@mcro/config'
+import { setGlobalConfig, getGlobalConfig } from '@mcro/config'
 import { App } from '@mcro/stores'
 import { configureUseStore } from '@mcro/use-store'
 import { viewEmitter } from '@mcro/black'
 import { CompositeDisposable } from 'event-kit'
-import { IS_ELECTRON } from './constants'
-import { AppActions } from './actions/AppActions'
-import { BitModel, PersonBitModel, AppConfig } from '@mcro/models'
 import { sleep } from './helpers'
+import { setupTestApp } from './helpers/setupTestApp'
+import * as React from 'react'
+import ReactDOM from 'react-dom'
 
 // because for some reason we are picking up electron process.env stuff...
 // we want this for web-app because stack traces dont have filenames properly
@@ -24,10 +26,6 @@ configureUseStore({
     }
   },
   onUnmount: store => {
-    if (!store.subscriptions) {
-      console.log('no subscriptions!', store)
-      debugger
-    }
     store.subscriptions.dispose()
     if (process.env.NODE_ENV === 'development') {
       viewEmitter.emit('store.unmount', { name: store.constructor.name, thing: store })
@@ -35,9 +33,8 @@ configureUseStore({
   },
 })
 
-async function main() {
+async function fetchInitialConfig() {
   // set config before app starts...
-  // sometimes express can return a partial response for some reason, so lets retry
   let config
   while (!config) {
     try {
@@ -45,86 +42,62 @@ async function main() {
     } catch (err) {
       console.log('error getting config, trying again', err)
     }
+    // sometimes express can return a partial response for some reason, so lets retry
     if (!config) {
       await sleep(500)
     }
   }
-  console.log('app:', window.location.href, config)
   setGlobalConfig(config)
+}
+
+// setup for app
+async function main() {
+  if (getGlobalConfig()) {
+    // we've already started, ignore
+    return
+  }
+
+  await fetchInitialConfig()
 
   // prevent scroll bounce
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
 
+  console.log('start app...')
   await App.start()
 
   if (process.env.NODE_ENV === 'development') {
-    // test page for loading in browser to isolate
-    if (!IS_ELECTRON) {
-      const test = async () => {
-        const TEST_APP = window.location.search
-          ? window.location.search.match(/app=([a-z]+)/)[1]
-          : null
-
-        if (TEST_APP) {
-          console.log('TEST_APP', TEST_APP)
-          if (TEST_APP === 'bit') {
-            const lastBit = await require('@mcro/model-bridge').loadOne(BitModel, { args: {} })
-            AppActions.setPeekApp({
-              position: [0, 0],
-              size: [400, 400],
-              appConfig: {
-                id: `${lastBit.id}`,
-                title: lastBit.title,
-                type: 'bit',
-              } as AppConfig,
-            })
-          }
-          if (TEST_APP === 'lists') {
-            AppActions.setPeekApp({
-              position: [0, 0],
-              size: [400, 400],
-              appConfig: {
-                id: '0',
-                title: 'Lists',
-                type: 'lists',
-              } as AppConfig,
-            })
-          }
-          if (TEST_APP === 'topics') {
-            AppActions.setPeekApp({
-              position: [0, 0],
-              size: [500, 500],
-              appConfig: {
-                id: '1',
-                title: 'Topics',
-                type: 'topics',
-              } as AppConfig,
-            })
-          }
-          if (TEST_APP === 'people') {
-            const lastPerson = await require('@mcro/model-bridge').loadOne(PersonBitModel, {
-              args: {},
-            })
-            AppActions.setPeekApp({
-              position: [0, 0],
-              size: [500, 500],
-              appConfig: {
-                id: `${lastPerson.id}`,
-                title: lastPerson.title,
-                type: 'people',
-              } as AppConfig,
-            })
-          }
-        }
-      }
-      test()
-    }
+    setupTestApp()
   }
-  // setup config in test mode...
 
   // now run app..
-  require('./start')
+  startApp()
+}
+
+// render app
+async function startApp() {
+  // start development store in dev mode, avoid HMR re-runs
+  if (process.env.NODE_ENV === 'development') {
+    if (!window['Root']) {
+      console.timeEnd('splash')
+      const { DevStore } = require('./stores/DevStore')
+      const devStore = new DevStore()
+      window['Root'] = devStore
+    }
+  }
+
+  // re-require for hmr to capture new value
+  const { OrbitRoot } = require('./OrbitRoot')
+
+  // render app
+  ReactDOM.render(React.createElement(OrbitRoot), document.querySelector('#app'))
+}
+
+// hot reloading
+if (process.env.NODE_ENV === 'development') {
+  if (typeof module['hot'] !== 'undefined') {
+    module['hot'].accept(startApp)
+  }
 }
 
 main()

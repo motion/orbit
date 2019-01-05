@@ -8,7 +8,7 @@ export class SocketManager {
   onState: Function
   actions: { getInitialState?: Function; onMessage: Function }
   port: number
-  wss: Server
+  server: Server
   masterSource: string
 
   constructor({ port, actions, onState, masterSource }) {
@@ -19,13 +19,12 @@ export class SocketManager {
   }
 
   async start() {
-    // await fastKill(this.port)
-    this.wss = new Server({ port: this.port })
+    this.server = new Server({ port: this.port })
     this.setupSocket()
   }
 
   dispose() {
-    this.wss.clients.forEach(ws => {
+    this.server.clients.forEach(ws => {
       ws.terminate()
     })
   }
@@ -119,10 +118,12 @@ export class SocketManager {
         this.actions[action]({ source, socket })
       }
     })
+
     // handle events
     socket.on('close', () => {
       this.removeSocket(uid)
     })
+
     socket.on('error', err => {
       // ignore ECONNRESET throw anything else
       if (err.code !== 'ECONNRESET') {
@@ -134,25 +135,19 @@ export class SocketManager {
 
   setupSocket() {
     let id = 0
-    // log connections
-    let lastCount = 0
-    setInterval(() => {
-      const count = this.activeSockets.length
-      if (lastCount !== count) {
-        log.verbose(count, 'connections')
-      }
-      lastCount = count
-    }, 5000)
-    this.wss.on('connection', socket => {
-      let uid = id++
+    this.server.on('connection', socket => {
+      let uid = ++id
+      console.log('Got socket connection', uid)
       // add to active sockets
       this.activeSockets.push({ uid, socket })
       this.decorateSocket(uid, socket)
     })
-    this.wss.on('close', () => {
+
+    this.server.on('close', () => {
       log.info('WE SHOULD HANDLE THIS CLOSE', ...arguments)
     })
-    this.wss.on('error', (...args) => {
+
+    this.server.on('error', (...args) => {
       log.info('wss error', args)
     })
   }

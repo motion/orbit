@@ -36,7 +36,7 @@ export const AppView = React.memo((props: Props) => {
   }
   const AppView = apps[props.type][props.viewType]
   if (!AppView) {
-    console.error('WAHT THE FUCK', props.type, AppView)
+    console.error('WAHT THE FUCK', props.type, props.viewType, AppView)
     return null
   }
   const appView = (

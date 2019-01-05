@@ -10,6 +10,7 @@ export type Setting = {
     realtimeSearch?: boolean
     openShortcut?: string
     cosalIndexUpdatedTo?: number
+    topicsIndexUpdatedTo?: number
     topTopics?: string[]
     recentSearches?: string[]
     pinnedBits?: string[]

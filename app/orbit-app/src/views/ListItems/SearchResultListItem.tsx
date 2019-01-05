@@ -4,10 +4,9 @@ import { ListItemProps } from '../VirtualList/VirtualListItem'
 import { ListItemNormalize } from './ListItemNormalize'
 
 export const SearchResultListItem = React.memo((props: ListItemProps) => {
-  switch (props.model.target) {
+  switch (props.item.target) {
     case 'search-group':
-      const { model, realIndex, query, ...rest } = props
-      const item = model as any
+      const { item, realIndex, query, ...rest } = props
       return <GroupedSearchItem item={item} index={realIndex} query={query} {...rest} />
     case 'bit':
     case 'person-bit':

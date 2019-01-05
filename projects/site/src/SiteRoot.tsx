@@ -20,9 +20,13 @@ function getSiteNavigator() {
   )
 }
 
-export const SiteRoot = hot(module)(() => {
+if (!window['SiteBrowser']) {
   const SiteNavigator = getSiteNavigator()
-  const SiteBrowser = createBrowserApp(SiteNavigator)
+  window['SiteBrowser'] = createBrowserApp(SiteNavigator)
+}
+
+export const SiteRoot = hot(module)(() => {
+  const SiteBrowser = window['SiteBrowser']
   return (
     <div style={{ pointerEvents: 'auto' }}>
       <SiteBrowser />

@@ -38,7 +38,7 @@ type Props = {
 @provide({
   selectionStore: SelectionStore,
 })
-export class AppPage extends React.Component<Props> {
+export default class AppPage extends React.Component<Props> {
   render() {
     return (
       <MainShortcutHandler>

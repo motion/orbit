@@ -54,7 +54,7 @@ import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { getConnection } from 'typeorm'
 import { COSAL_DB, screenOptions } from './constants'
-import { AppsManager } from './managers/appsManager'
+import { AppWindowsManager } from './managers/AppWindowsManager'
 import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
@@ -81,6 +81,8 @@ import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
 import { Oracle } from '@mcro/oracle'
 import { OracleManager } from './managers/OracleManager'
+import { AppsManager } from './managers/AppsManager'
+import { TopicsManager } from './managers/TopicsManager'
 
 export class Root {
   // public
@@ -100,11 +102,13 @@ export class Root {
   private oracleManager: OracleManager
   private cosalManager: CosalManager
   private ocrManager: OCRManager
+  private appWindowsManager: AppWindowsManager
   private appsManager: AppsManager
   private screenManager: ScreenManager
   private generalSettingManager: GeneralSettingManager
   private databaseManager: DatabaseManager
   private keyboardManager: KeyboardManager
+  private topicsManager: TopicsManager
 
   start = async () => {
     await Desktop.start({
@@ -116,12 +120,15 @@ export class Root {
         Desktop,
       },
     })
+
     // set some initial state on desktop
     Desktop.setState({
       operatingSystem: {
         macVersion: macosVersion(),
       },
     })
+
+    // TODO move to command
     Desktop.onMessage(Desktop.messages.OPEN, url => {
       console.log('opening', url)
       open(url)
@@ -138,8 +145,16 @@ export class Root {
     await this.cosalManager.start()
     this.cosal = this.cosalManager.cosal
 
+    // cosal dependent things
+    this.topicsManager = new TopicsManager({ cosal: this.cosal })
+    await this.topicsManager.start()
+
+    // database dependent things can start here
     this.generalSettingManager = new GeneralSettingManager()
     await this.generalSettingManager.start()
+
+    this.appsManager = new AppsManager()
+    await this.appsManager.start()
 
     // start server a bit early so other apps can start
     this.webServer = new WebServer()
@@ -173,7 +188,7 @@ export class Root {
     this.ocrManager = new OCRManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ screen: this.screen })
     this.keyboardManager = new KeyboardManager({ screen: this.screen })
-    this.appsManager = new AppsManager()
+    this.appWindowsManager = new AppWindowsManager()
 
     new ContextManager({ screen: this.screen })
     new MousePositionManager({
@@ -217,8 +232,8 @@ export class Root {
     console.log('writing orbit config...')
     await writeJSON(this.config.paths.orbitConfig, this.config)
     Desktop.dispose()
-    if (this.appsManager) {
-      await this.appsManager.dispose()
+    if (this.appWindowsManager) {
+      await this.appWindowsManager.dispose()
     }
     await this.ocrManager.dispose()
     if (this.authServer.isRunning()) {

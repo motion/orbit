@@ -129,7 +129,7 @@ export class BridgeManager {
       await this.setupMaster()
     } else {
       log.verbose(`Connecting socket to ${this.port}`)
-      this.socket = new ReconnectingWebSocket(`ws://localhost:${this.port}`, [], {
+      this.socket = new ReconnectingWebSocket(`ws://127.0.0.1:${this.port}`, [], {
         WebSocket,
       })
       this.setupClientSocket()
@@ -199,6 +199,7 @@ export class BridgeManager {
 
         // receive the current state once we connect to master
         if (msg.initialState) {
+          log.verbose('got initial state', msg.initialState)
           Mobx.transaction(() => {
             const state = msg.initialState
             // merge each key of state to keep the "deepness"
@@ -293,6 +294,7 @@ export class BridgeManager {
 
   getInitialState = () => {
     // get initial state
+    log.verbose('socket opened, requesting initial state...')
     this.socket.send(JSON.stringify({ action: 'getInitialState', source: this.source }))
   }
 

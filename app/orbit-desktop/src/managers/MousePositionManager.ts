@@ -33,7 +33,8 @@ export class MousePositionManager {
   onMouseMove = null
 
   constructor({ screen, onMouseMove }: { screen: Screen; onMouseMove?: Function }) {
-    screen.onMousePosition(this.updateHoverState)
+    console.log('should handle mouse position', screen)
+    // screen.onMousePosition(this.updateHoverState)
     this.onMouseMove = onMouseMove
   }
 

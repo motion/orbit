@@ -13,7 +13,7 @@ if (process.env.SUB_PROCESS === 'syncers' || !process.env.SUB_PROCESS) {
       name,
       new ReconnectingWebSocket(
         // todo: rename dbBridge to desktopMediator or something since its not only does work with db
-        `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
+        `ws://127.0.0.1:${getGlobalConfig().ports.dbBridge}`,
         [],
         { WebSocket },
       ),
@@ -25,7 +25,7 @@ if (process.env.SUB_PROCESS === 'desktop' || !process.env.SUB_PROCESS) {
     new WebSocketClientTransport(
       name,
       new ReconnectingWebSocket(
-        'ws://localhost:40001', // todo: someone would like to extract it into config
+        'ws://127.0.0.1:40001', // todo: someone would like to extract it into config
         [],
         { WebSocket },
       ),

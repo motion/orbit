@@ -1,3 +1,88 @@
+next steps:
+
+- need to recruit one decent developer in SF
+  - do some more app work just to get it looking nice
+  - fake mockup for adding new apps quickly and linking in data source etc
+  - put together a small screencast video
+  - compose email with simple but powerful pitch for app dev
+  - send it to everyone in SF on github
+- continue towards value
+
+what does orbit do for apps:
+
+- content > app, content first
+  - all apps sync their files or important bits into a common format
+  - that lets you have:
+    - an organizer/journal that works over any app
+- offline first
+  - sync and running all happens locally by default, only team level configuration is synced
+  - means you can use it personally without worry of encroachment
+  - means you can build and deploy apps without infrastructure (torrent based app store, can have p2p based data sync apis)
+- easiest deploy story ever
+  - especially if you need a simple database to access local or private contnt
+- nice app featurs: instant-on, keyboard nav, ui kit, reactive querying
+
+thinking through the lense of apps:
+
+- can do it now without being "custom" just "customizable"
+- can click to add a tab
+  - give it name/icon
+  - sort the tabs perhaps
+  - choose settings for it during creation, every app can have a setting pane it defines
+- i think the big helpful app is a sort of organizer
+  - basically bookmarks + simple notes perhaps
+  - it would have a search that integrates with it so you can search and then drag into the organizer
+    - maybe search comes in once you type
+    - alternatively:
+      - search is the main app, but you can hit "actions" within any item
+        - actions shows actions for any app that defines them
+        - so you can say "pin to..." and then that pops up a modal
+- now we can basically think of the apps as:
+  - home = organizer with some defaults selected
+  - people = search with a preset data source: People
+  - vocabulary = list with a preset data source: Topics, Terms
+- this gives you a ton of control out of the gate and gets to usability
+  - you can set up multiple lists as you want
+  - easy for companies to start organizing various things they want, perhaps, needs thought
+
+ideas:
+
+- contextual actions are really powerful
+- being able to clip your current context to a specific app is really big
+  - imagine clipping the current screen, or selecting some text, or current website to somewhere
+    - you can put it in a list
+    - or imagine an RSS reading app, can put it into your feeds...
+    - or with people app, send it to someone
+- this really gets into the centralizing force aspect:
+  - because it can be the "in-between" from data/apps to your current context, it has vast power
+    - save it for later, reading, organizing all can work through this
+
+get to value....
+
+- just cleanup the app a lot so its generally working
+- lots of small interaction and polish and low level fixes will setup for a good year
+- simplify search so its non-grouped and features sort of work
+- consider a better organizer feature - lists or collections or whatever
+  - it basically can be the "home/search" app as searching inside it will be what you use to pin to various areas
+  - journal-like essentially
+  - can put people into lists if this works well
+  - folders could be an option as it would then really work as bookmarks
+  - people can be a search app filtered to people?
+- vocabulary can then just be a collection app?
+  - probably not necessary, but worth thinking about
+- begin through design of creating new apps
+  - filtered search
+  - manual list
+  - eventually custom app
+- upgrade the menus for new design
+  - action menu
+  - contextual search
+  - contextual people
+- finally, augmented stuff
+  - get it so its inserting from memory
+  - filter by memory in search
+  - get filters in search nicer
+
 strategically step by step:
 
 - website (~2-3 weeks):

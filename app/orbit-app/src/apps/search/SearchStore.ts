@@ -12,7 +12,7 @@ type SearchState = {
 }
 
 export class SearchStore {
-  props: AppProps
+  props: AppProps<'search'>
 
   get activeQuery() {
     return this.props.appStore.activeQuery

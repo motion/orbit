@@ -1,7 +1,7 @@
 import { OrbitItemStore } from './OrbitItemStore'
 import { NormalItem } from '../../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
-import { ResolvableModel, GenericItemProps } from '../../sources/types'
+import { GenericItemProps } from '../../sources/types'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { AppStore } from '../../apps/AppStore'
 import { CSSPropertySetStrict } from '@mcro/css'
@@ -9,7 +9,7 @@ import { AppConfig } from '@mcro/models'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 
-export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
+export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
   Partial<NormalItem> & {
     // for setting the view
     appConfig?: AppConfig
@@ -42,7 +42,7 @@ export type OrbitItemProps<T extends ResolvableModel> = CSSPropertySetStrict &
     inGrid?: boolean
     pane?: string
     subPane?: string
-    model?: T
+    item?: T
     renderText?: ItemRenderText
     children?: React.ReactNode
     onClick?: Function

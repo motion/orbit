@@ -5,14 +5,14 @@ import { Text } from '@mcro/ui'
 
 // TODO basically just use a regular OrbitListItem and make it support this
 
-export const ListItemPerson = ({ model }: { model: PersonBit }) => {
+export const ListItemPerson = ({ item }: { item: PersonBit }) => {
   return (
     <>
-      {!!model.photo && <Avatar src={model.photo} />}
+      {!!item.photo && <Avatar src={item.photo} />}
       {/* TODO: email is less important than their top topics */}
       {/* But we could have small icons for email/slack */}
       <Text alpha={0.8} ellipse>
-        {model.email}
+        {item.email}
       </Text>
     </>
   )

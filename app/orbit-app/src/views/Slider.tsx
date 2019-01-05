@@ -30,7 +30,6 @@ export const Slider = React.memo((props: SliderProps) => {
 
   useResizeObserver(frameRef, node => {
     if (node.parentNode && node.parentNode.clientWidth !== width) {
-      console.log('node.parentNode.clientWidth', node.parentNode.clientWidth)
       setWidth(node.parentNode.clientWidth)
     }
   })

@@ -10,7 +10,8 @@ export class KeyboardManager {
 
   constructor({ screen }: { screen: Screen }) {
     // for now only sends option key event out
-    screen.onKeyboard(this.onOptionKey)
+    console.log('should handle keyboard', screen)
+    // screen.onKeyboard(this.onOptionKey)
   }
 
   downTm = null

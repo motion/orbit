@@ -82,7 +82,6 @@ class PeopleAppStore {
     async bits => {
       ensure('bits', !!bits.length)
       const query = getBitTexts(bits)
-      console.log('get topics with query...', query)
       return await loadMany(CosalTopicsModel, {
         args: {
           query,
@@ -101,10 +100,8 @@ const PersonHeader = view()
 export const PeopleAppMain = observer((props: AppProps<'people'>) => {
   const { appPageStore } = React.useContext(StoreContext)
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
-  console.log('rendering person app...')
   if (!person) {
-    console.log('no person?', person)
-    return null
+    return <div>No one selected</div>
   }
   return (
     <Frame>

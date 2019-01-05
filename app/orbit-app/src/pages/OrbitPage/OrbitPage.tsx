@@ -19,7 +19,7 @@ import { OrbitNav } from './OrbitNav'
 import { OrbitPageContent } from './OrbitPageContent'
 import { observer } from 'mobx-react-lite'
 
-export const OrbitPage = observer(() => {
+export default observer(() => {
   const theme = App.state.darkTheme ? 'dark' : 'light'
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)

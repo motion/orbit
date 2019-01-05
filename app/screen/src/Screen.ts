@@ -6,9 +6,7 @@ import { Logger } from '@mcro/logger'
 import { ScreenBridge, SocketSender } from './ScreenBridge'
 import { mkdir } from 'fs'
 import { promisify } from 'util'
-// import { remove } from 'fs-extra'
 
-// const linkify = promisify(link)
 const log = new Logger('screen')
 const idFn = _ => _
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -33,19 +31,10 @@ export class Screen {
   private process: ChildProcess
   private screenBridge: ScreenBridge
   private debugBuild = false
-  private onWindowChangeCB: (a: string, b: any) => any = idFn
   private onInfoCB = idFn
-  private onLinesCB = idFn
-  private onWordsCB = idFn
-  private onBoxChangedCB = idFn
-  private onRestoredCB = idFn
   private onErrorCB = idFn
-  private onClearCB = idFn
   private onSpaceMoveCB = idFn
-  private onAppStateCB = idFn
   private onTrayStateCB = idFn
-  private mousePositionCB = idFn
-  private onKeyboardCB = idFn
   private binPath = null
   private state = {
     isPaused: false,
@@ -123,28 +112,8 @@ export class Screen {
     await this.start()
   }
 
-  pause = async () => {
-    await this.setState({ isPaused: true })
-    await this.socketSend('pause')
-  }
-
-  resume = async () => {
-    await this.setState({ isPaused: false })
-    await this.socketSend('start')
-  }
-
-  clear = async () => {
-    await this.socketSend('clear')
-  }
-
   defocus = async () => {
     await this.socketSend('defoc')
-  }
-
-  async requestAccessibility() {
-    await this.socketSend('reac')
-    // TODO come up with system to reply with state
-    await sleep(30)
   }
 
   async startWatchingWindows() {
@@ -163,81 +132,27 @@ export class Screen {
     this.onInfoCB = cb
   }
 
-  onClear = cb => {
-    this.onClearCB = cb
-  }
-
   onSpaceMove = cb => {
     this.onSpaceMoveCB = cb
-  }
-
-  onBoxChanged = cb => {
-    this.onBoxChangedCB = cb
-  }
-
-  onRestored = cb => {
-    this.onRestoredCB = cb
-  }
-
-  onWords = cb => {
-    this.onWordsCB = cb
-  }
-
-  onLines = cb => {
-    this.onLinesCB = cb
-  }
-
-  onWindowChange = cb => {
-    this.onWindowChangeCB = cb
   }
 
   onError = cb => {
     this.onErrorCB = cb
   }
 
-  onAppState = cb => {
-    this.onAppStateCB = cb
-  }
-
   onTrayState = cb => {
     this.onTrayStateCB = cb
   }
 
-  onMousePosition = cb => {
-    this.mousePositionCB = cb
-  }
-
-  onKeyboard = cb => {
-    this.onKeyboardCB = cb
-  }
-
   actions: { [key: string]: Function } = {
-    changed: value => {
-      setTimeout(() => this.onBoxChangedCB(value))
-    },
-    restored: value => {
-      setTimeout(() => this.onRestoredCB(value))
-    },
     // up to listeners of this class
-    clear: val => this.onClearCB(val),
-    words: val => this.onWordsCB(val),
-    lines: val => this.onLinesCB(val),
     info: val => this.onInfoCB(val),
     spaceMove: val => this.onSpaceMoveCB(val),
-    appState: val => {
-      this.onAppStateCB(val)
-    },
     trayState: val => {
       this.onTrayStateCB(val)
     },
     // down to swift process
-    pause: this.pause,
-    resume: this.resume,
-    start: this.start,
     defocus: this.defocus,
-    windowEvent: ({ type, ...values }) => this.onWindowChangeCB(type, values),
-    mousePosition: val => this.mousePositionCB(val),
-    keyboard: val => this.onKeyboardCB(val),
   }
 
   private async runScreenProcess() {

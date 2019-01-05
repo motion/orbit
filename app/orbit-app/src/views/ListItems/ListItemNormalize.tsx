@@ -25,9 +25,9 @@ export const getNormalPropsForListItem = (normalized: any) => ({
 
 export const ListItemNormalize = (props: ListItemProps) => {
   const { sourcesStore } = React.useContext(StoreContext)
-  const normalized = normalizeItem(props.model)
+  const normalized = normalizeItem(props.item)
   const ItemView =
-    props.model.target === 'bit'
+    props.item.target === 'bit'
       ? sourcesStore.getView(normalized.integration, 'item')
       : ListItemPerson
   return (
@@ -40,8 +40,8 @@ export const ListItemNormalize = (props: ListItemProps) => {
       {...props}
     >
       <ItemView
-        model={props.model}
-        bit={props.model}
+        item={props.item}
+        bit={props.item}
         shownLimit={10}
         renderText={renderHighlightedText}
         extraProps={{

@@ -1,4 +1,4 @@
-import { BitEntity, SettingEntity, Setting, Bit, BitUtils } from '@mcro/models'
+import { BitEntity, SettingEntity, Bit, BitUtils } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Logger } from '@mcro/logger'
 import { Cosal } from '@mcro/cosal'
@@ -6,10 +6,9 @@ import { chunk, zip, flatten, last } from 'lodash'
 import { remove } from 'fs-extra'
 import { COSAL_DB } from '../constants'
 import { sleep } from '@mcro/utils'
+import { getSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
 
 const log = new Logger('CosalManager')
-
-const getGeneralSetting = () => getRepository(SettingEntity).findOne({ name: 'general' })
 
 const getBitForScan = (bit: Bit) => {
   return {
@@ -28,6 +27,7 @@ export class CosalManager {
   }
 
   async start() {
+    await this.ensureDefaultSetting()
     this.cosal = new Cosal({
       database: this.dbPath,
     })
@@ -47,7 +47,7 @@ export class CosalManager {
   async reset() {
     this.dispose()
     await remove(COSAL_DB)
-    await this.updateSetting({
+    await updateSetting({
       cosalIndexUpdatedTo: 0,
     })
     await this.start()
@@ -60,22 +60,21 @@ export class CosalManager {
   }
 
   private async ensureDefaultSetting() {
-    const setting = await getGeneralSetting()
-    if (typeof setting.values.cosalIndexUpdatedTo === 'number') {
+    if (typeof (await this.getLastScan()) === 'number') {
       return
     }
-    await this.updateSetting({
+    await updateSetting({
       cosalIndexUpdatedTo: 0,
     })
   }
 
   private async getLastScan() {
-    this.ensureDefaultSetting()
-    return (await getGeneralSetting()).values.cosalIndexUpdatedTo
+    return getSettingValue('cosalIndexUpdatedTo')
   }
 
   updateSearchIndexWithNewBits = async () => {
     const lastScanAt = await this.getLastScan()
+
     const bitsSinceLastScan = await getRepository(BitEntity).find({
       where: {
         bitUpdatedAt: { $moreThan: lastScanAt },
@@ -102,7 +101,7 @@ export class CosalManager {
       )
 
       // update scanned up to so it can resume if interrupted
-      await this.updateSetting({
+      await updateSetting({
         cosalIndexUpdatedTo: last(chunk).bitUpdatedAt,
       })
 
@@ -111,15 +110,6 @@ export class CosalManager {
     }
 
     log.info('Done scanning new bits')
-  }
-
-  private async updateSetting(values: Setting['values']) {
-    const setting = await getGeneralSetting()
-    setting.values = {
-      ...setting.values,
-      ...values,
-    }
-    await getRepository(SettingEntity).save(setting)
   }
 
   scanTopics = () => {
@@ -131,7 +121,7 @@ export class CosalManager {
     console.log('Scanning topics')
     console.time('doScanTopics')
     const topTopics = await this.getGlobalTopTopics()
-    const setting = await getGeneralSetting()
+    const setting = await getSetting()
     setting.values.topTopics = topTopics
     await getRepository(SettingEntity).save(setting)
     console.timeEnd('doScanTopics')

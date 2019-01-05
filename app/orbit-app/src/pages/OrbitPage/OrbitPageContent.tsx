@@ -21,13 +21,12 @@ class OrbitStore {
     return this.props.paneManagerStore.activePane
   }
 
-  activeConfig: { [key: string]: Partial<AppConfig> } = {
-    search: {},
+  activeConfig: { [key: string]: AppConfig } = {
+    search: { id: '', type: 'search', title: '' },
   }
 
   handleSelectItem: OrbitItemProps<any>['onSelect'] = (_index, config) => {
     const type = config.type === 'bit' ? 'search' : config.type
-    console.log('select22', config, this)
     this.activeConfig = {
       ...this.activeConfig,
       [type]: config,
@@ -92,7 +91,9 @@ export const OrbitPageContent = observer(() => {
 
   return (
     <Col flex={1}>
-      {!!activeAppStore ? activeAppStore.toolbar : null}
+      {!!activeAppStore && !!activeAppStore.toolbar ? (
+        <ToolbarChrome>{activeAppStore.toolbar}</ToolbarChrome>
+      ) : null}
       <Row flex={1}>
         <OrbitIndexView isHidden={store.activePane === 'home'}>
           {allPanes.map(app => (
@@ -123,10 +124,13 @@ export const OrbitPageContent = observer(() => {
           ))}
         </OrbitMainView>
       </Row>
-      {!!activeAppStore ? activeAppStore.statusbar : null}
     </Col>
   )
 })
+
+const ToolbarChrome = view({}).theme((_, theme) => ({
+  borderBottom: [1, theme.borderColor.alpha(0.25)],
+}))
 
 const OrbitIndexView = view({
   width: 300,

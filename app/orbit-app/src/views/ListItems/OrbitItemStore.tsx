@@ -2,7 +2,6 @@ import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
 import { NormalItem } from '../../helpers/normalizeItem'
 import { AppActions } from '../../actions/AppActions'
-import { ResolvableModel } from '../../sources/types'
 import { getAppConfig } from '../../helpers/getAppConfig'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
@@ -11,7 +10,7 @@ export const OrbitItemSingleton = {
 }
 
 export class OrbitItemStore {
-  props: OrbitItemProps<ResolvableModel>
+  props: OrbitItemProps<any>
 
   resolvedItem: NormalItem | null = null
   isSelected = false
@@ -78,10 +77,10 @@ export class OrbitItemStore {
   }
 
   open = () => {
-    if (!this.props.model || this.props.model.target === 'source') {
+    if (!this.props.item || this.props.item.target === 'source') {
       return
     }
-    AppActions.openItem(this.props.model)
+    AppActions.openItem(this.props.item)
   }
 
   setCardWrapRef = cardWrapRef => {
@@ -94,15 +93,15 @@ export class OrbitItemStore {
   }
 
   get index() {
-    const { model, getIndex, index } = this.props
-    return getIndex ? getIndex(model) : index
+    const { item, getIndex, index } = this.props
+    return getIndex ? getIndex(item) : index
   }
 
   get appConfig() {
     if (this.props.appConfig) {
       return this.props.appConfig
     }
-    return this.props.model ? getAppConfig(this.props.model) : null
+    return this.props.item ? getAppConfig(this.props.item) : null
   }
 
   selectItem = () => {
@@ -143,7 +142,7 @@ export class OrbitItemStore {
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected) {
-        console.debug('updateIsSelected', this.appConfig)
+        console.log('updateIsSelected', this.props, this.appConfig)
         ensure('appConfig`', !!this.appConfig)
         if (onSelect) {
           onSelect(this.index, this.appConfig, this.cardWrapRef)

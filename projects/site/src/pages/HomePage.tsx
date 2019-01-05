@@ -6,13 +6,14 @@ import { TitleText } from '../views/TitleText'
 import { FadeDown } from '../views/FadeDown'
 import { useWaitForFonts } from '@mcro/wait-for-fonts'
 import { Paragraph } from '../views/Paragraph'
+import { observer } from 'mobx-react-lite'
 
 // next:
 // make a thing that does multiline text sizing
 // where the longest line is fit, and then the rest just use that font size
 // for the sub-paragraph
 
-export const HomePage = () => {
+export const HomePage = observer(() => {
   const [measured, setMeasured] = React.useState(false)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
 
@@ -57,7 +58,7 @@ export const HomePage = () => {
       </ParallaxLayer>
     </Parallax>
   )
-}
+})
 
 HomePage.path = ''
 HomePage.navigationOptions = {

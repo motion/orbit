@@ -109,17 +109,15 @@ const setupStoreWithReactiveProps = <A>(Store: new () => A, props?: Object) => {
 const useStoreWithReactiveProps = (
   Store: any,
   props: Object,
-  shouldHMR = false,
+  hasChangedSource = false,
   options?: UseStoreOptions,
 ) => {
-  // only setup props if we need to
-  let store = useRef(Store.constructor ? null : Store)
-  const shouldSetup = !store.current || shouldHMR
-  if (shouldSetup) {
+  let store = useRef(null)
+  if (!store.current || hasChangedSource) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
-  // only update props after first run
-  if (props && !shouldSetup) {
+  // update props after first run
+  if (props && !!store.current) {
     store.current.__updateProps(store.current.props, props, options)
   }
   return store.current
@@ -129,28 +127,26 @@ export function useStore<A>(Store: new () => A, props?: Object, options?: UseSto
   if (options && options.conditionalUse === false) {
     return null
   }
+
   const proxyStore = useRef(null)
-  const hasSetupStore = !!proxyStore.current
-  const isHMRCompat = process.env.NODE_ENV === 'development' && !!module['hot']
-  const constructor = proxyStore.current && proxyStore.current.constructor
-  const hasChangedSource = constructor && constructor.toString() !== Store.toString()
-  const shouldHMRStore = isHMRCompat && hasSetupStore && hasChangedSource
-  const store = useStoreWithReactiveProps(Store, props, shouldHMRStore, options)
-  // setup store once
-  if (!proxyStore.current || shouldHMRStore) {
-    if (shouldHMRStore) {
-      console.log('HMRing store', Store)
-    }
+  const hasChangedSource = !proxyStore.current ? false : !isSourceEqual(proxyStore.current, Store)
+  const store = useStoreWithReactiveProps(Store, props, hasChangedSource, options)
+
+  // setup store once or if changed
+  if (!proxyStore.current || hasChangedSource) {
     proxyStore.current = store
   }
 
   return proxyStore.current
 }
 
-// TODO make safer by freezing after one set
 export const configureUseStore = (opts: UseGlobalStoreOptions) => {
-  globalOptions = {
+  globalOptions = Object.freeze({
     ...globalOptions,
     ...opts,
-  }
+  })
+}
+
+function isSourceEqual(oldStore: any, newStore: new () => any) {
+  return oldStore.constructor.toString() === newStore.toString()
 }

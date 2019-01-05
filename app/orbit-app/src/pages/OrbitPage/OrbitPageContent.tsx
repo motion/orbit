@@ -91,7 +91,9 @@ export const OrbitPageContent = observer(() => {
 
   return (
     <Col flex={1}>
-      {!!activeAppStore ? <ToolbarChrome>{activeAppStore.toolbar}</ToolbarChrome> : null}
+      {!!activeAppStore && !!activeAppStore.toolbar ? (
+        <ToolbarChrome>{activeAppStore.toolbar}</ToolbarChrome>
+      ) : null}
       <Row flex={1}>
         <OrbitIndexView isHidden={store.activePane === 'home'}>
           {allPanes.map(app => (

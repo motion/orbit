@@ -26,6 +26,9 @@ export const OrbitNav = observer(() => {
           </NavButton>
         )
       })}
+      <NavButton tooltip="Create app">
+        <UI.Icon name="simpleadd" size={12} opacity={0.35} />
+      </NavButton>
       <View flex={1} minWidth={10} />
       <NavButton
         isActive={paneManagerStore.activePane === 'sources'}
@@ -52,10 +55,13 @@ const OrbitNavChrome = gloss({
   alignItems: 'flex-end',
 })
 
+const buttonSidePad = 12
+
 const NavButtonChrome = gloss({
   flexFlow: 'row',
   alignItems: 'center',
-  padding: [6, 14],
+  padding: [5, buttonSidePad],
+  height: 32,
 }).theme(({ isActive }, theme) => {
   const background = isActive
     ? theme.tabBackgroundActive || theme.background
@@ -69,12 +75,17 @@ const NavButtonChrome = gloss({
   }
 })
 
-const NavButton = ({ children, tooltip = null, label = null, isActive, ...props }) => (
+const NavButton = ({ children, tooltip = null, label = null, isActive = false, ...props }) => (
   <Tooltip label={tooltip}>
     <NavButtonChrome isActive={isActive} {...props}>
       {children}
       {!!label && (
-        <Text marginLeft={10} fontWeight={400} size={1} alpha={isActive ? 1 : 0.85}>
+        <Text
+          marginLeft={buttonSidePad * 0.75}
+          fontWeight={400}
+          size={0.95}
+          alpha={isActive ? 1 : 0.85}
+        >
           {label}
         </Text>
       )}

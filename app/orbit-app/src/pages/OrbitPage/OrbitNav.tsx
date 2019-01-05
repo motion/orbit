@@ -12,41 +12,49 @@ export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'no
 export const OrbitNav = observer(() => {
   const { paneManagerStore } = React.useContext(StoreContext)
   return (
-    <OrbitNavChrome className="draggable">
-      {AppPanes.map(pane => {
-        const isActive = paneManagerStore.activePane === pane.id
-        return (
-          <NavButton
-            key={pane.id}
-            isActive={isActive}
-            label={pane.title}
-            stretch
-            onClick={paneManagerStore.activePaneSetter(pane.id)}
-          >
-            <Icon name={`${pane.icon}`} size={16} />
-          </NavButton>
-        )
-      })}
-      <NavButton tooltip="Create app">
-        <UI.Icon name="simpleadd" size={12} opacity={0.35} />
-      </NavButton>
-      <View flex={1} minWidth={10} />
-      <NavButton
-        isActive={paneManagerStore.activePane === 'sources'}
-        onClick={paneManagerStore.activePaneSetter('sources')}
-        tooltip="Sources"
-      >
-        <UI.Icon name="app" size={14} opacity={0.5} />
-      </NavButton>
-      <NavButton
-        isActive={paneManagerStore.activePane === 'settings'}
-        onClick={paneManagerStore.activePaneSetter('settings')}
-        tooltip="Settings"
-      >
-        <UI.Icon name="gear" size={14} opacity={0.5} />
-      </NavButton>
-    </OrbitNavChrome>
+    <OrbitNavClip>
+      <OrbitNavChrome className="draggable">
+        {AppPanes.map(pane => {
+          const isActive = paneManagerStore.activePane === pane.id
+          return (
+            <NavButton
+              key={pane.id}
+              isActive={isActive}
+              label={pane.title}
+              stretch
+              onClick={paneManagerStore.activePaneSetter(pane.id)}
+            >
+              <Icon name={`${pane.icon}`} size={16} />
+            </NavButton>
+          )
+        })}
+        <NavButton tooltip="Create app">
+          <UI.Icon name="simpleadd" size={12} opacity={0.35} />
+        </NavButton>
+        <View flex={1} minWidth={10} />
+        <NavButton
+          isActive={paneManagerStore.activePane === 'sources'}
+          onClick={paneManagerStore.activePaneSetter('sources')}
+          tooltip="Sources"
+        >
+          <UI.Icon name="app" size={14} opacity={0.5} />
+        </NavButton>
+        <NavButton
+          isActive={paneManagerStore.activePane === 'settings'}
+          onClick={paneManagerStore.activePaneSetter('settings')}
+          tooltip="Settings"
+        >
+          <UI.Icon name="gear" size={14} opacity={0.5} />
+        </NavButton>
+      </OrbitNavChrome>
+    </OrbitNavClip>
   )
+})
+
+const OrbitNavClip = gloss({
+  overflow: 'hidden',
+  paddingTop: 20,
+  marginTop: -20,
 })
 
 const OrbitNavChrome = gloss({
@@ -54,9 +62,7 @@ const OrbitNavChrome = gloss({
   position: 'relative',
   zIndex: 1000,
   alignItems: 'flex-end',
-  overflow: 'hidden',
-  paddingTop: 20,
-  marginTop: -20,
+  // background: '#00000099',
 })
 
 const buttonSidePad = 12
@@ -76,6 +82,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean }>({
     flex: stretch ? 1 : 'none',
     minWidth: stretch ? 90 : 0,
     background: isActive ? background : 'transparent',
+    // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: 'none',
     boxShadow: isActive ? [[0, 0, 20, [0, 0, 0, 0.05]]] : null,
@@ -92,12 +99,7 @@ const NavButton = ({ children, tooltip = null, label = null, isActive = false, .
     <NavButtonChrome isActive={isActive} {...props}>
       {children}
       {!!label && (
-        <Text
-          size={0.95}
-          marginLeft={buttonSidePad * 0.75}
-          fontWeight={500}
-          alpha={isActive ? 1 : 0.85}
-        >
+        <Text size={0.95} marginLeft={buttonSidePad * 0.75} fontWeight={500}>
           {label}
         </Text>
       )}

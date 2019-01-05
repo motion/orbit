@@ -69,7 +69,7 @@ export default observer(() => {
 const Chrome = gloss({
   flex: 1,
 }).theme((_, theme) => ({
-  background: theme.background.alpha(0.25),
+  background: theme.background.alpha(0.45),
 }))
 
 const InnerChrome = gloss({

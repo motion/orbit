@@ -4,7 +4,7 @@ import { gloss } from '@mcro/gloss'
 export const Separator = gloss(Text, {
   padding: [2, 12],
 }).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.2),
+  background: theme.background.alpha(0.2),
 }))
 
 Separator.defaultProps = {

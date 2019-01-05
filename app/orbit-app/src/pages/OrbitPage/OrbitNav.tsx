@@ -12,7 +12,7 @@ export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'no
 export const OrbitNav = observer(() => {
   const { paneManagerStore } = React.useContext(StoreContext)
   return (
-    <OrbitNavChrome>
+    <OrbitNavChrome className="draggable">
       {AppPanes.map(pane => {
         const isActive = paneManagerStore.activePane === pane.id
         return (
@@ -20,6 +20,7 @@ export const OrbitNav = observer(() => {
             key={pane.id}
             isActive={isActive}
             label={pane.title}
+            stretch
             onClick={paneManagerStore.activePaneSetter(pane.id)}
           >
             <Icon name={`${pane.icon}`} size={16} />
@@ -53,21 +54,32 @@ const OrbitNavChrome = gloss({
   position: 'relative',
   zIndex: 1000,
   alignItems: 'flex-end',
+  overflow: 'hidden',
+  paddingTop: 20,
+  marginTop: -20,
 })
 
 const buttonSidePad = 12
 
-const NavButtonChrome = gloss({
+const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean }>({
   flexFlow: 'row',
   alignItems: 'center',
+  justifyContent: 'center',
   padding: [5, buttonSidePad],
-  height: 32,
-}).theme(({ isActive }, theme) => {
+  height: 30,
+  maxWidth: 180,
+}).theme(({ isActive, stretch }, theme) => {
   const background = isActive
     ? theme.tabBackgroundActive || theme.background
     : theme.tabBackground || theme.background
   return {
+    flex: stretch ? 1 : 'none',
+    minWidth: stretch ? 90 : 0,
     background: isActive ? background : 'transparent',
+    // border: [1, isActive ? theme.borderColor : 'transparent'],
+    // borderBottom: 'none',
+    boxShadow: isActive ? [[0, 0, 20, [0, 0, 0, 0.05]]] : null,
+    borderTopRadius: 3,
     '&:hover': {
       background: isActive ? background : [0, 0, 0, 0.05],
       transition: isActive ? 'none' : 'all ease-out 500ms',
@@ -81,9 +93,9 @@ const NavButton = ({ children, tooltip = null, label = null, isActive = false, .
       {children}
       {!!label && (
         <Text
-          marginLeft={buttonSidePad * 0.75}
-          fontWeight={400}
           size={0.95}
+          marginLeft={buttonSidePad * 0.75}
+          fontWeight={500}
           alpha={isActive ? 1 : 0.85}
         >
           {label}

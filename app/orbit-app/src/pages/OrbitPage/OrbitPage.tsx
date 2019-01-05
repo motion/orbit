@@ -76,6 +76,6 @@ const InnerChrome = gloss({
   flexFlow: 'row',
   flex: 1,
   overflow: 'hidden',
-}).theme((_, theme) => ({
-  background: theme.background,
+}).theme(() => ({
+  boxShadow: [[0, 0, 20, [0, 0, 0, 0.05]]],
 }))

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StoreContext } from '@mcro/black'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
-import { View } from '@mcro/ui'
+import { View, Row, Icon } from '@mcro/ui'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
@@ -121,12 +121,16 @@ export const OrbitHeader = observer(() => {
       <OrbitClose onClick={AppActions.closeOrbit}>
         <WindowCloseButton size={8} />
       </OrbitClose>
-      <OrbitInputContain>
-        <OrbitHeaderInput headerStore={headerStore} />
-        <After>
-          <OrbitHeaderButtons />
-        </After>
-      </OrbitInputContain>
+      <Row flex={1} alignItems="center">
+        <Row flex={1} />
+        <Icon name="arrowminleft" opacity={0.25} />
+        <OrbitInputContain>
+          <OrbitHeaderInput headerStore={headerStore} />
+          <After>
+            <OrbitHeaderButtons />
+          </After>
+        </OrbitInputContain>
+      </Row>
     </OrbitHeaderContainer>
   )
 })
@@ -134,7 +138,7 @@ export const OrbitHeader = observer(() => {
 const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   flexFlow: 'row',
-  padding: [7, 14],
+  padding: [6, 10],
   transition: 'all ease-in 300ms',
   zIndex: 4,
 })
@@ -146,12 +150,13 @@ const After = gloss({
 
 const OrbitInputContain = gloss({
   height: 34,
+  padding: [0, 20],
   alignItems: 'center',
   justifyContent: 'center',
   margin: 'auto',
   flexFlow: 'row',
-  maxWidth: 900,
-  width: '80%',
+  maxWidth: 980,
+  width: '85%',
   minWidth: 400,
 })
 

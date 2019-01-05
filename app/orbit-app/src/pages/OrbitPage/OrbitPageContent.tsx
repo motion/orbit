@@ -131,6 +131,7 @@ export const OrbitPageContent = observer(() => {
 
 const ToolbarChrome = gloss({}).theme((_, theme) => ({
   borderBottom: [1, theme.borderColor.alpha(0.25)],
+  background: theme.background,
 }))
 
 const OrbitIndexView = gloss({
@@ -144,9 +145,12 @@ const OrbitIndexView = gloss({
   },
 }).theme((_, theme) => ({
   borderRight: [1, theme.borderColor.alpha(0.5)],
+  background: theme.background.alpha(0.5),
 }))
 
 const OrbitMainView = gloss({
   flex: 1,
   position: 'relative',
-})
+}).theme((_, theme) => ({
+  background: theme.background,
+}))

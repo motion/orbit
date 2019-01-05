@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { CosalSaliency } from './CosalSaliency'
 import { CosalSearch } from './CosalSearch'
 
-export const CosalPage = React.memo(() => {
+export default function CosalPage() {
   return (
     <div
       style={{
@@ -22,7 +22,7 @@ export const CosalPage = React.memo(() => {
       </Half>
     </div>
   )
-})
+}
 
 const Half = view({
   flex: 1,

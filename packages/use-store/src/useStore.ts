@@ -112,14 +112,12 @@ const useStoreWithReactiveProps = (
   hasChangedSource = false,
   options?: UseStoreOptions,
 ) => {
-  // only setup props if we need to
-  let store = useRef(Store.constructor ? null : Store)
-  const shouldSetup = !store.current
-  if (shouldSetup || hasChangedSource) {
+  let store = useRef(null)
+  if (!store.current || hasChangedSource) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
-  // only update props after first run
-  if (props && !shouldSetup) {
+  // update props after first run
+  if (props && !!store.current) {
     store.current.__updateProps(store.current.props, props, options)
   }
   return store.current
@@ -129,10 +127,9 @@ export function useStore<A>(Store: new () => A, props?: Object, options?: UseSto
   if (options && options.conditionalUse === false) {
     return null
   }
+
   const proxyStore = useRef(null)
-  const hasChangedSource = proxyStore.current
-    ? proxyStore.current.constructor.toString() !== Store.toString()
-    : false
+  const hasChangedSource = !proxyStore.current ? false : !isSourceEqual(proxyStore.current, Store)
   const store = useStoreWithReactiveProps(Store, props, hasChangedSource, options)
 
   // setup store once or if changed
@@ -148,4 +145,8 @@ export const configureUseStore = (opts: UseGlobalStoreOptions) => {
     ...globalOptions,
     ...opts,
   })
+}
+
+function isSourceEqual(oldStore: any, newStore: new () => any) {
+  return oldStore.constructor.toString() === newStore.toString()
 }

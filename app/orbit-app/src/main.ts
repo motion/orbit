@@ -50,12 +50,18 @@ async function fetchInitialConfig() {
   setGlobalConfig(config)
 }
 
+function setupDevStore() {
+  const { DevStore } = require('./stores/DevStore')
+  const devStore = new DevStore()
+  window['Root'] = devStore
+}
+
 // setup for app
 async function main() {
-  if (getGlobalConfig()) {
-    // we've already started, ignore
-    return
-  }
+  // we've already started, ignore
+  if (getGlobalConfig()) return
+
+  console.timeEnd('splash')
 
   await fetchInitialConfig()
 
@@ -63,11 +69,11 @@ async function main() {
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
 
-  console.log('start app...')
   await App.start()
 
   if (process.env.NODE_ENV === 'development') {
     setupTestApp()
+    setupDevStore()
   }
 
   // now run app..
@@ -76,20 +82,8 @@ async function main() {
 
 // render app
 async function startApp() {
-  // start development store in dev mode, avoid HMR re-runs
-  if (process.env.NODE_ENV === 'development') {
-    if (!window['Root']) {
-      console.timeEnd('splash')
-      const { DevStore } = require('./stores/DevStore')
-      const devStore = new DevStore()
-      window['Root'] = devStore
-    }
-  }
-
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
-
-  // render app
   ReactDOM.render(React.createElement(OrbitRoot), document.querySelector('#app'))
 }
 

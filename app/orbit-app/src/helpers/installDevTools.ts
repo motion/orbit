@@ -55,9 +55,9 @@ debugState(({ stores, views }) => {
 
 // just for now since its spitting out so many
 setConfig({
-  logLevel: 'no-errors-please',
-  pureSFC: true,
-  pureRender: true,
+  // logLevel: 'no-errors-please',
+  // pureSFC: true,
+  // pureRender: true,
 })
 
 Error.stackTraceLimit = Infinity

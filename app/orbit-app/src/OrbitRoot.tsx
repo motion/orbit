@@ -11,10 +11,15 @@ import { throttle, isEqual } from 'lodash'
 import { App, Desktop } from '@mcro/stores'
 
 // pages
-import { OrbitPage } from './pages/OrbitPage/OrbitPage'
-import { AppPage } from './pages/AppPage/AppPage'
-import { ChromePage } from './pages/ChromePage/ChromePage'
-import { CosalPage } from './pages/CosalPage/CosalPage'
+
+function AsyncPage({ page, fallback = <div>Loading...</div>, ...props }) {
+  const Page = React.lazy(page)
+  return (
+    <React.Suspense fallback={fallback}>
+      <Page {...props} />
+    </React.Suspense>
+  )
+}
 
 function getOrbitNavigator() {
   const Orbit = ({ descriptors, navigation }) => {
@@ -26,10 +31,12 @@ function getOrbitNavigator() {
   return createNavigator(
     Orbit,
     SwitchRouter({
-      Home: OrbitPage,
-      App: AppPage,
-      Chrome: ChromePage,
-      Cosal: CosalPage,
+      Home: props => <AsyncPage page={() => import('./pages/OrbitPage/OrbitPage')} {...props} />,
+      App: props => <AsyncPage page={() => import('./pages/AppPage/AppPage')} {...props} />,
+      Chrome: props => (
+        <AsyncPage page={() => import('./pages/ChromePage/ChromePage')} {...props} />
+      ),
+      Cosal: props => <AsyncPage page={() => import('./pages/CosalPage/CosalPage')} {...props} />,
     }),
     {},
   )

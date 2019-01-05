@@ -16,7 +16,7 @@ class ChromePageStore {
   }
 }
 
-export const ChromePage = observer(() => {
+export default observer(() => {
   const store = useStore(ChromePageStore)
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)

@@ -12,6 +12,7 @@ module.exports = function(_, givenOpts) {
   const config = {
     plugins: [
       isDev && plug('react-hot-loader/babel'),
+      plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
       }),

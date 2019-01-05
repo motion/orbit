@@ -109,13 +109,13 @@ const setupStoreWithReactiveProps = <A>(Store: new () => A, props?: Object) => {
 const useStoreWithReactiveProps = (
   Store: any,
   props: Object,
-  shouldHMR = false,
+  hasChangedSource = false,
   options?: UseStoreOptions,
 ) => {
   // only setup props if we need to
   let store = useRef(Store.constructor ? null : Store)
-  const shouldSetup = !store.current || shouldHMR
-  if (shouldSetup) {
+  const shouldSetup = !store.current
+  if (shouldSetup || hasChangedSource) {
     store.current = setupStoreWithReactiveProps(Store, props)
   }
   // only update props after first run
@@ -130,27 +130,22 @@ export function useStore<A>(Store: new () => A, props?: Object, options?: UseSto
     return null
   }
   const proxyStore = useRef(null)
-  const hasSetupStore = !!proxyStore.current
-  const isHMRCompat = process.env.NODE_ENV === 'development' && !!module['hot']
-  const constructor = proxyStore.current && proxyStore.current.constructor
-  const hasChangedSource = constructor && constructor.toString() !== Store.toString()
-  const shouldHMRStore = isHMRCompat && hasSetupStore && hasChangedSource
-  const store = useStoreWithReactiveProps(Store, props, shouldHMRStore, options)
-  // setup store once
-  if (!proxyStore.current || shouldHMRStore) {
-    if (shouldHMRStore) {
-      console.log('HMRing store', Store)
-    }
+  const hasChangedSource = proxyStore.current
+    ? proxyStore.current.constructor.toString() !== Store.toString()
+    : false
+  const store = useStoreWithReactiveProps(Store, props, hasChangedSource, options)
+
+  // setup store once or if changed
+  if (!proxyStore.current || hasChangedSource) {
     proxyStore.current = store
   }
 
   return proxyStore.current
 }
 
-// TODO make safer by freezing after one set
 export const configureUseStore = (opts: UseGlobalStoreOptions) => {
-  globalOptions = {
+  globalOptions = Object.freeze({
     ...globalOptions,
     ...opts,
-  }
+  })
 }

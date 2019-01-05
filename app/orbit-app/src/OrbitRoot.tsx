@@ -10,14 +10,6 @@ import { themes } from './themes'
 import { throttle, isEqual } from 'lodash'
 import { App, Desktop } from '@mcro/stores'
 
-// TODO if still needed here....
-// if hmr breaks, try adding the thing thats having trouble here...
-// it seems to not like skipping this file for hmr
-import './stores/DevStore'
-import './themes'
-import './constants'
-import '@mcro/gloss'
-
 // pages
 import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 import { AppPage } from './pages/AppPage/AppPage'
@@ -90,16 +82,3 @@ export const OrbitRoot = hot(module)(() => {
     </div>
   )
 })
-
-if (process.env.NODE_ENV === 'development') {
-  if (module.hot && module.hot.addStatusHandler) {
-    if (module.hot.status() === 'idle') {
-      module.hot.addStatusHandler(status => {
-        if (status === 'prepare') {
-          // for gloss to update styles
-          window['__lastHMR'] = Date.now()
-        }
-      })
-    }
-  }
-}

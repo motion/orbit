@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { HL_PAD } from './helpers'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
 import { App } from '@mcro/stores'
-import { wordKey } from '../../../helpers'
+import { gloss } from '@mcro/gloss'
 
-const Word = view({
+const Word = gloss({
   fontFamily: 'helvetica',
   position: 'absolute',
   padding: HL_PAD,
@@ -21,7 +20,7 @@ const Word = view({
   },
 })
 
-const WordInner = view({
+const WordInner = gloss({
   opacity: 0.5,
   top: -14,
   left: -4,
@@ -29,9 +28,9 @@ const WordInner = view({
   whiteSpace: 'pre',
 })
 
-export const OCRWord = view(({ item, store: { hoveredWord } }) => {
+export const OCRWord = gloss(({ item, store: { hoveredWord } }) => {
   const [x, y, width, height, word /* index */, , color] = item
-  const key = wordKey(item)
+  const key = `wordKey(item)`
   const highlighted = App.state.highlightWords[word]
   return (
     <Word

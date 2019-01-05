@@ -5,11 +5,11 @@ import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { Separator } from '../../views/Separator'
 import { TopicEdit } from './TopicEdit'
-import { view } from '@mcro/black'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { SliderPane, Slider } from '../../views/Slider'
 import { IS_MINIMAL } from '../../constants'
 import { observer } from 'mobx-react-lite'
+import { gloss } from '@mcro/gloss'
 
 const icons = {
   0: ['neutral', 'rgba(180,180,180,0.75)'],
@@ -76,7 +76,7 @@ function TopicList({ results, offset = 0, ...props }) {
   )
 }
 
-const ScrollableContent = view({
+const ScrollableContent = gloss({
   flex: 1,
   overflowY: 'auto',
 })
@@ -145,6 +145,6 @@ export const TopicsAppIndex = observer(
   },
 )
 
-const SidebarBottom = view({
+const SidebarBottom = gloss({
   padding: [12, IS_MINIMAL ? 6 : 12],
 })

@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { react, view } from '@mcro/black'
+import { react } from '@mcro/black'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { loadMany } from '@mcro/model-bridge'
 import { CosalSaliencyModel } from '@mcro/models'
+import { gloss } from '@mcro/gloss'
 
 type Props = { query?: string }
 
@@ -69,13 +70,13 @@ export const CosalSaliency = observer((props: Props) => {
   )
 })
 
-const Word = view({
+const Word = gloss({
   flexFlow: 'row',
   alignItems: 'center',
   marginRight: 14,
 })
 
-const Bar = view({
+const Bar = gloss({
   width: 6,
   border: [1, '#ccc'],
   background: '#fff',
@@ -85,7 +86,7 @@ const Bar = view({
   marginRight: 4,
 })
 
-const Pct = view({
+const Pct = gloss({
   width: '100%',
   background: 'blue',
   display: 'inline-block',

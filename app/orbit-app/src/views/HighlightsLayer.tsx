@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 type Props = {
   term: string
@@ -20,7 +20,7 @@ type State = {
   term: string
 }
 
-const Highlight = view(UI.View, {
+const Highlight = gloss(UI.View, {
   position: 'absolute',
   background: 'yellow',
   borderRadius: 4,
@@ -94,8 +94,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
     if (!range) {
       throw new Error('No range')
     }
-    const hasTerm = (text = '', term = '') =>
-      text.toLowerCase().indexOf(term) >= 0
+    const hasTerm = (text = '', term = '') => text.toLowerCase().indexOf(term) >= 0
     for (const node of searchableNodes) {
       if (!hasTerm(node.textContent, term)) {
         continue
@@ -103,13 +102,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
       // not a text node, keep going...
       if (node.nodeType !== Node.TEXT_NODE) {
         if (node.childNodes) {
-          this.getHighlights(
-            highlights,
-            Array.from(node.childNodes),
-            term,
-            range,
-            frameBounds,
-          )
+          this.getHighlights(highlights, Array.from(node.childNodes), term, range, frameBounds)
         }
         continue
       }
@@ -132,11 +125,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
     const { highlights } = this.state
     return (
       <UI.View position="relative">
-        <UI.FullScreen
-          forwardRef={this.frameRef}
-          pointerEvents="none"
-          zIndex={-1}
-        >
+        <UI.FullScreen forwardRef={this.frameRef} pointerEvents="none" zIndex={-1}>
           {highlights.map(({ x, y, width, height }, index) => {
             return (
               <Highlight

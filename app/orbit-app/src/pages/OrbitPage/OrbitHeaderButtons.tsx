@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { view, attach } from '@mcro/black'
-import { ThemeObject } from '@mcro/gloss'
+import { ThemeObject, gloss } from '@mcro/gloss'
 import { memoize } from 'lodash'
 import { ClearButton, Icon } from '@mcro/ui'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 
-const Section = view('section', {
+const Section = gloss('section', {
   width: '100%',
   flexFlow: 'row',
   padding: [0, 6],
@@ -27,7 +27,7 @@ type Props = {
   theme?: ThemeObject
 }
 
-const Interactive = view({
+const Interactive = gloss({
   flexFlow: 'row',
   alignItems: 'center',
   opacity: 0,

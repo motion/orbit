@@ -2,7 +2,7 @@
 import nodePath from 'path'
 import { looksLike } from './looksLike'
 
-function handleGlossReferences(parentNode, references, file, babel) {
+export function handleGlossReferences(parentNode, name, references, file, babel) {
   const { types: t, template } = babel
   const buildBuiltInWithConfig = template(`
     IDENTIFIER.withConfig({displayName: "DISPLAY_NAME"})
@@ -17,7 +17,7 @@ function handleGlossReferences(parentNode, references, file, babel) {
     const isViewed = looksLike(path, {
       parent: {
         callee: {
-          name: 'view',
+          name,
         },
       },
     })
@@ -114,5 +114,3 @@ function getFileName(file) {
     ? nodePath.basename(nodePath.dirname(file.opts.filename))
     : file.opts.basename
 }
-
-export default handleGlossReferences

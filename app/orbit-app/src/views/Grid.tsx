@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { View } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
-const GridFrame = view(View, {
+const GridFrame = gloss(View, {
   display: 'grid',
 })
 

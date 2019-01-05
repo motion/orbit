@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import controlX from '../../public/images/control-x.png'
 import controlY from '../../public/images/control-y.png'
 import controlZ from '../../public/images/control-z.png'
 import * as UI from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 const icons = {
   x: controlX,
@@ -11,7 +11,7 @@ const icons = {
   z: controlZ,
 }
 
-const ControlButtonForgiveness = view().theme(({ size, forgiveness }) => ({
+const ControlButtonForgiveness = gloss().theme(({ size, forgiveness }) => ({
   padding: forgiveness,
   margin: -forgiveness,
   width: size + forgiveness * 2,
@@ -25,7 +25,7 @@ const ControlButtonForgiveness = view().theme(({ size, forgiveness }) => ({
   },
 }))
 
-const ControlButtonChrome = view(UI.Col, {
+const ControlButtonChrome = gloss(UI.Col, {
   width: 12,
   height: 12,
   padding: 2,
@@ -42,7 +42,7 @@ const ControlButtonChrome = view(UI.Col, {
   }
 })
 
-const Img = view('img', {
+const Img = gloss('img', {
   margin: 'auto',
   width: '100%',
   height: '100%',

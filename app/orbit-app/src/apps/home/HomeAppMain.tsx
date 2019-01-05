@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Row } from '@mcro/ui'
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
 export const HomeAppMain = React.memo(() => {
   return (
@@ -13,7 +13,7 @@ export const HomeAppMain = React.memo(() => {
   )
 })
 
-const FakeSection = view({
+const FakeSection = gloss({
   width: 400,
   height: '100%',
   borderRadius: 10,

@@ -1,7 +1,7 @@
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
-export const HideablePane = view(UI.FullScreen, {
+export const HideablePane = gloss(UI.FullScreen, {
   opacity: 1,
   invisible: {
     opacity: 0,

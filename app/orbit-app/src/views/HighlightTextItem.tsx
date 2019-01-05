@@ -1,7 +1,7 @@
-import { view } from '@mcro/black'
 import { HighlightText } from './HighlightText'
+import { gloss } from '@mcro/gloss'
 
-export const HighlightTextItem = view(HighlightText)
+export const HighlightTextItem = gloss(HighlightText)
 
 HighlightTextItem.defaultProps = {
   alpha: 0.95,

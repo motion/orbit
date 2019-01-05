@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
 type Props = {
   isActive?: () => boolean
@@ -7,7 +8,7 @@ type Props = {
   [key: string]: any
 }
 
-export const CheckBox = view({
+export const CheckBox = gloss({
   margin: 'auto',
 })
 

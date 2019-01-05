@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { attachTheme } from '@mcro/gloss'
+import { attachTheme, gloss } from '@mcro/gloss'
 import { Link } from '../views'
 import { SectionContent } from '../views/sectionContent'
 import { BrandLogo } from '../components'
@@ -8,7 +8,7 @@ import * as Constants from '../constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
 
-const HeaderContain = view({
+const HeaderContain = gloss({
   // background: Constants.colorMain,
   top: 0,
   left: 0,
@@ -18,14 +18,14 @@ const HeaderContain = view({
   userSelect: 'none',
 })
 
-const HeaderInner = view({
+const HeaderInner = gloss({
   padding: [25, 0],
   flexFlow: 'row',
   zIndex: 100,
   alignItems: 'center',
 })
 
-const Nav = view('nav', {
+const Nav = gloss('nav', {
   flexFlow: 'row',
   // width: 300,
   justifyContent: 'space-between',

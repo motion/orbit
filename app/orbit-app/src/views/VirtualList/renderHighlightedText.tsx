@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { HighlightText } from '../HighlightText'
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-const HighlightTextFrame = view({
+const HighlightTextFrame = gloss({
   padding: [2, 0],
   flex: 1,
   overflow: 'hidden',

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, StoreContext } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { View } from '@mcro/ui'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
@@ -12,6 +12,7 @@ import { AppActions } from '../../actions/AppActions'
 import { WindowCloseButton } from '../../views/WindowControls'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
+import { gloss } from '@mcro/gloss'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -130,7 +131,7 @@ export const OrbitHeader = observer(() => {
   )
 })
 
-const OrbitHeaderContainer = view(View, {
+const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   flexFlow: 'row',
   padding: [7, 14],
@@ -138,12 +139,12 @@ const OrbitHeaderContainer = view(View, {
   zIndex: 4,
 })
 
-const After = view({
+const After = gloss({
   alignItems: 'center',
   flexFlow: 'row',
 })
 
-const OrbitInputContain = view({
+const OrbitInputContain = gloss({
   height: 34,
   alignItems: 'center',
   justifyContent: 'center',
@@ -154,7 +155,7 @@ const OrbitInputContain = view({
   minWidth: 400,
 })
 
-const OrbitClose = view({
+const OrbitClose = gloss({
   position: 'absolute',
   top: 0,
   left: 0,

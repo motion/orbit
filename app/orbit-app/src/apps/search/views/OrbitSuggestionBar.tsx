@@ -5,6 +5,7 @@ import { HorizontalScroll } from '../../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { ButtonProps } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 const dateBg = UI.color('#ffb049')
 
@@ -31,7 +32,7 @@ const activeThemes = {
   },
 }
 
-const SuggestionBar = view(UI.Row, {
+const SuggestionBar = gloss(UI.Row, {
   flex: 1,
   height: '100%',
   overflow: 'hidden',

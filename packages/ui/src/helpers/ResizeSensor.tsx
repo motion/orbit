@@ -5,10 +5,10 @@
  * @format
  */
 
-import { view } from '@mcro/black'
 import * as React from 'react'
+import { gloss } from '@mcro/gloss'
 
-const IFrame = view('iframe', {
+const IFrame = gloss('iframe', {
   height: '100%',
   width: '100%',
   border: 'none',

@@ -4,9 +4,9 @@
   "private": true,
   "main": "./_/Oracle.js",
   "scripts": {
+    "install-pods": "pod install",
     "build": "./build.sh --if-empty && npx tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
-    "postinstall": "pod install"
+    "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@mcro/logger": "^2.3.10",

@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { LINE_Y_ADJ } from './helpers'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
-import { wordKey } from '../../../helpers'
+import { gloss } from '@mcro/gloss'
 
-const OcrLine = view({
+const OcrLine = gloss({
   borderBottom: [2, '#EDD71E'],
   position: 'absolute',
   opacity: 0.05,
@@ -13,9 +12,10 @@ const OcrLine = view({
   },
 })
 
-export const OCRLine = view(({ item, store: { hoveredLine } }) => {
+export const OCRLine = gloss(({ item, store: { hoveredLine } }) => {
   const [x, y, width, height] = item
-  const key = wordKey(item)
+  const key = `${Math.random()}` // TODO
+  // const key = wordKey(item)
   return (
     <OcrLine
       hovered={hoveredLine && hoveredLine.string === key}

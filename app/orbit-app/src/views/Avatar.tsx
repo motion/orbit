@@ -1,6 +1,6 @@
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const Avatar = view('img', {
+export const Avatar = gloss('img', {
   borderRadius: 100,
   width: 70,
   height: 70,

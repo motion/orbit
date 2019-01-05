@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { useResizeObserver } from '../hooks/useResizeObserver'
+import { gloss } from '@mcro/gloss'
 
 type SliderProps = {
   curFrame: number
@@ -108,12 +108,12 @@ export const SliderPane = ({
   )
 }
 
-const SliderPaneContainer = view(View, {
+const SliderPaneContainer = gloss(View, {
   position: 'relative',
   minHeight: 50,
 })
 
-const SliderContainer = view(View, {
+const SliderContainer = gloss(View, {
   flex: 1,
   flexFlow: 'row',
   alignItems: 'flex-start',

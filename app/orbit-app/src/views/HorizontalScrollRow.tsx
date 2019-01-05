@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 export type HorizontalScrollRowProps = {
   height?: number
@@ -11,7 +11,7 @@ export type HorizontalScrollRowProps = {
   forwardRef?: React.RefObject<any>
 }
 
-const HorizontalScrollRowFrame = view(UI.View, {
+const HorizontalScrollRowFrame = gloss(UI.View, {
   flex: 1,
   overflow: 'hidden',
 })
@@ -19,7 +19,7 @@ const HorizontalScrollRowFrame = view(UI.View, {
 // for shadows
 const extraPad = 20
 
-const Inner = view(UI.View, {
+const Inner = gloss(UI.View, {
   flexFlow: 'row',
   alignItems: 'center',
   overflow: 'hidden',

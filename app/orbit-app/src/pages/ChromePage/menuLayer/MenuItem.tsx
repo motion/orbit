@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { View, Row, Text } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
-const MenuItemFrame = view(Row, {
+const MenuItemFrame = gloss(Row, {
   padding: [5, 8],
   alignItems: 'center',
   '&:hover': {

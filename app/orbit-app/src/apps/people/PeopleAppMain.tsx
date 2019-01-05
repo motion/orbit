@@ -10,7 +10,7 @@ import {
   SlackBitData,
 } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import { react, view, ensure, StoreContext } from '@mcro/black'
+import { react, ensure, StoreContext } from '@mcro/black'
 import { RoundButton } from '../../views'
 import { OrbitIcon } from '../../views/OrbitIcon'
 import { PEEK_BORDER_RADIUS } from '../../constants'
@@ -19,6 +19,7 @@ import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
+import { gloss } from '@mcro/gloss'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
@@ -95,7 +96,7 @@ class PeopleAppStore {
   )
 }
 
-const PersonHeader = view()
+const PersonHeader = gloss()
 
 export const PeopleAppMain = observer((props: AppProps<'people'>) => {
   const { appPageStore } = React.useContext(StoreContext)
@@ -199,7 +200,7 @@ const mapH = 200
 
 const StrongSubTitle = props => <SubTitle fontWeight={200} fontSize={18} alpha={0.8} {...props} />
 
-const Frame = view({
+const Frame = gloss({
   width: '100%',
   height: '100%',
   overflow: 'hidden',
@@ -207,28 +208,28 @@ const Frame = view({
   position: 'relative',
 })
 
-const Content = view({
+const Content = gloss({
   padding: [10, 0],
   flex: 1,
   position: 'relative',
   zIndex: 100,
 })
 
-const Unpad = view({
+const Unpad = gloss({
   margin: [0, -15],
 })
 
-const ContentInner = view({
+const ContentInner = gloss({
   padding: [0, 15],
 })
 
-const CardContent = view({
+const CardContent = gloss({
   position: 'relative',
   zIndex: 3,
   height: 180,
 })
 
-const Map = view({
+const Map = gloss({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -239,7 +240,7 @@ const Map = view({
   zIndex: 0,
 })
 
-const MapImg = view('img', {
+const MapImg = gloss('img', {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -249,7 +250,7 @@ const MapImg = view('img', {
   opacity: 0.6,
 })
 
-const FadeMap = view({
+const FadeMap = gloss({
   position: 'absolute',
   bottom: 0,
   left: 0,
@@ -259,7 +260,7 @@ const FadeMap = view({
   background: 'linear-gradient(transparent, #fbfbfb)',
 })
 
-const FadeMapRight = view({
+const FadeMapRight = gloss({
   position: 'absolute',
   top: 0,
   bottom: 0,
@@ -270,14 +271,14 @@ const FadeMapRight = view({
   background: `linear-gradient(to right, transparent, ${theme.background})`,
 }))
 
-const Info = view({
+const Info = gloss({
   display: 'block',
   position: 'absolute',
   top: 30,
   left: 170,
 })
 
-const Name = view({
+const Name = gloss({
   display: 'inline-block',
   fontSize: 30,
   fontWeight: 800,
@@ -285,7 +286,7 @@ const Name = view({
   background: [255, 255, 255],
 })
 
-const Email = view('a', {
+const Email = gloss('a', {
   display: 'inline-block',
   background: [0, 0, 0],
   color: '#fff',
@@ -294,7 +295,7 @@ const Email = view('a', {
   marginLeft: 10,
 })
 
-const Avatar = view('img', {
+const Avatar = gloss('img', {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -304,11 +305,11 @@ const Avatar = view('img', {
   borderRadius: 1000,
 })
 
-const Section = view({
+const Section = gloss({
   marginBottom: 15,
 })
 
-const Links = view({
+const Links = gloss({
   position: 'relative',
   top: 25,
   left: 0,

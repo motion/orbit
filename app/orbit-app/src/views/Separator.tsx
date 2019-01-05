@@ -1,7 +1,7 @@
-import { view } from '@mcro/black'
 import { Text } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
-export const Separator = view(Text, {
+export const Separator = gloss(Text, {
   padding: [2, 12],
 }).theme((_, theme) => ({
   background: theme.borderColor.alpha(0.2),

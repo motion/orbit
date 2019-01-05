@@ -1,22 +1,22 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
 import { View, Row, Text } from '@mcro/ui'
 import { Input } from './Input'
+import { gloss } from '@mcro/gloss'
 
 export * from './RoundButton'
 
 export const highlightColor = UI.color('#696549')
 
-export const Table = view(View, {
+export const Table = gloss(View, {
   width: '100%',
 })
 
-export const TableCell = view(View, {
+export const TableCell = gloss(View, {
   padding: [4, 0],
 })
 
-export const FormTableRow = view(Row, {
+export const FormTableRow = gloss(Row, {
   width: '100%',
   minHeight: 32,
   alignItems: 'center',
@@ -77,16 +77,16 @@ export const CheckBoxRow = ({
   </FormTableRow>
 )
 
-export const SuggestionBarVerticalPad = view({
+export const SuggestionBarVerticalPad = gloss({
   height: 24,
   pointerEvents: 'none',
 })
 
-export const SmallVerticalSpace = view({
+export const SmallVerticalSpace = gloss({
   height: 10,
 })
 
-export const HorizontalScroll = view(Row, {
+export const HorizontalScroll = gloss(Row, {
   overflowX: 'scroll',
   flex: 1,
   flexFlow: 'row',
@@ -96,11 +96,11 @@ export const HorizontalScroll = view(Row, {
   },
 })
 
-export const HorizontalSpace = view({
+export const HorizontalSpace = gloss({
   width: 10,
 })
 
-export const VerticalSpace = view({
+export const VerticalSpace = gloss({
   pointerEvents: 'none',
   height: 16,
   small: {
@@ -136,7 +136,7 @@ export const SubPaneSubTitle = props => {
   return <SubTitle marginLeft={12} marginRight={12} {...props} />
 }
 
-export const SubPaneSection = view({
+export const SubPaneSection = gloss({
   padding: [0, 12],
 })
 
@@ -144,7 +144,7 @@ export const Link = props => (
   <UI.Text cursor="pointer" fontWeight={400} color="#8b2bec" display="inline" {...props} />
 )
 
-export const AppWrapper = view(UI.Col, {
+export const AppWrapper = gloss(UI.Col, {
   // background: [0, 0, 0, 0.1],
   maxWidth: '100%',
   maxHeight: '100%',

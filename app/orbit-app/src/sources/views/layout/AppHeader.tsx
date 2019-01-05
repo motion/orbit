@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../../constants'
-import { CSSPropertySet } from '@mcro/gloss'
+import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { Glint, Row, Text } from '@mcro/ui'
 import { Centered } from '../../../views/Centered'
 import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
@@ -17,7 +17,7 @@ type Props = {
 }
 
 // the full header:
-const AppHeaderContain = view(UI.View, {
+const AppHeaderContain = gloss(UI.View, {
   background: 'transparent',
   zIndex: 100,
   overflow: 'hidden',
@@ -48,7 +48,7 @@ const AppHeaderContain = view(UI.View, {
   return style
 })
 
-const MainHead = view({
+const MainHead = gloss({
   flexFlow: 'row',
   alignItems: 'center',
   position: 'relative',
@@ -56,7 +56,7 @@ const MainHead = view({
   height: 33,
 })
 
-const HeaderSection = view(Row, {
+const HeaderSection = gloss(Row, {
   alignItems: 'center',
   height: '100%',
   position: 'relative',

@@ -6,8 +6,9 @@ import { OCRWord } from './OcrWord'
 import { OCRLine } from './OcrLine'
 import * as UI from '@mcro/ui'
 import { wordKey } from '../../helpers'
+import { gloss } from '@mcro/gloss'
 
-const Frame = view(UI.Col, {
+const Frame = gloss(UI.Col, {
   width: '100%',
   height: '100%',
   pointerEvents: 'none',

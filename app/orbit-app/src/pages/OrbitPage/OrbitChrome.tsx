@@ -1,14 +1,15 @@
 import * as React from 'react'
-import { view, StoreContext } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { BORDER_RADIUS, CHROME_PAD } from '../../constants'
 import * as UI from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
+import { gloss } from '@mcro/gloss'
 
 const extraShadow = -20
 const SHADOW_PAD = 100 + extraShadow
 
-const Border = view({
+const Border = gloss({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -29,7 +30,7 @@ const Border = view({
   }
 })
 
-const ChromeFrame = view({
+const ChromeFrame = gloss({
   position: 'absolute',
   top: -CHROME_PAD,
   left: -CHROME_PAD,
@@ -40,7 +41,7 @@ const ChromeFrame = view({
   zIndex: -1,
 })
 
-const Background = view({
+const Background = gloss({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -62,7 +63,7 @@ const Background = view({
   }
 })
 
-const Chrome = view(({ moreOpaque, isUpper = false }) => {
+const Chrome = gloss(({ moreOpaque, isUpper = false }) => {
   return (
     <>
       <Border />
@@ -78,7 +79,7 @@ const Chrome = view(({ moreOpaque, isUpper = false }) => {
   )
 })
 
-const BlockFrame = view(UI.View, {
+const BlockFrame = gloss(UI.View, {
   pointerEvents: 'none',
   position: 'absolute',
 })

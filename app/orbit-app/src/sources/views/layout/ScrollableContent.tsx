@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
+import { attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
+import { gloss } from '@mcro/gloss'
 
-const PeekContentChrome = view(UI.Col, {
+const PeekContentChrome = gloss(UI.Col, {
   flex: 1,
   position: 'relative',
   zIndex: 0,
@@ -11,7 +12,7 @@ const PeekContentChrome = view(UI.Col, {
   overflow: 'hidden',
 })
 
-const ContentInner = view(UI.Col, {
+const ContentInner = gloss(UI.Col, {
   overflowX: 'auto',
   overflowY: 'auto',
   flex: 1,

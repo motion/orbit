@@ -1,6 +1,6 @@
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const BottomControls = view({
+export const BottomControls = gloss({
   flexFlow: 'row',
   position: 'absolute',
   bottom: 16,

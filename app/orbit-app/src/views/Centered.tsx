@@ -1,6 +1,6 @@
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const Centered = view({
+export const Centered = gloss({
   position: 'absolute',
   top: 0,
   left: 150,

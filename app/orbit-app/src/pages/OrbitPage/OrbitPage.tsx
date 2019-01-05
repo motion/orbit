@@ -9,7 +9,7 @@ import { SpaceStore, AppPanes } from '../../stores/SpaceStore'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { StoreContext, view } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { AppActions } from '../../actions/AppActions'
 import { OrbitOnboard } from './OrbitOnboard'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
@@ -18,6 +18,7 @@ import { App } from '@mcro/stores'
 import { OrbitNav } from './OrbitNav'
 import { OrbitPageContent } from './OrbitPageContent'
 import { observer } from 'mobx-react-lite'
+import { gloss } from '@mcro/gloss'
 
 export default observer(() => {
   const theme = App.state.darkTheme ? 'dark' : 'light'
@@ -65,13 +66,13 @@ export default observer(() => {
   )
 })
 
-const Chrome = view({
+const Chrome = gloss({
   flex: 1,
 }).theme((_, theme) => ({
   background: theme.background.alpha(0.25),
 }))
 
-const InnerChrome = view({
+const InnerChrome = gloss({
   flexFlow: 'row',
   flex: 1,
   overflow: 'hidden',

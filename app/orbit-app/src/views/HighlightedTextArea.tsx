@@ -1,16 +1,15 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { CSSPropertySet } from '@mcro/gloss'
+import { CSSPropertySet, gloss } from '@mcro/gloss'
 
 const oneLine = str => str.replace(/\r?\n|\r/g, '')
 
-const TextAreaOuter = view(UI.Col, {
+const TextAreaOuter = gloss(UI.Col, {
   position: 'relative',
   flex: 1,
 })
 
-const Block = view(UI.Block, {
+const Block = gloss(UI.Block, {
   display: 'block',
   position: 'absolute',
   top: 0,

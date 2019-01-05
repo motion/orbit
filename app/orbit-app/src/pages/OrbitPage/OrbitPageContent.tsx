@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, StoreContext } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
@@ -13,6 +13,7 @@ import { AppActions } from '../../actions/AppActions'
 import { AppStore } from '../../apps/AppStore'
 import { observer } from 'mobx-react-lite'
 import { SelectionManager } from '../../components/SelectionManager'
+import { gloss } from '@mcro/gloss'
 
 class OrbitStore {
   props: { paneManagerStore: PaneManagerStore }
@@ -128,11 +129,11 @@ export const OrbitPageContent = observer(() => {
   )
 })
 
-const ToolbarChrome = view({}).theme((_, theme) => ({
+const ToolbarChrome = gloss({}).theme((_, theme) => ({
   borderBottom: [1, theme.borderColor.alpha(0.25)],
 }))
 
-const OrbitIndexView = view({
+const OrbitIndexView = gloss({
   width: 300,
   position: 'relative',
   isHidden: {
@@ -145,7 +146,7 @@ const OrbitIndexView = view({
   borderRight: [1, theme.borderColor.alpha(0.5)],
 }))
 
-const OrbitMainView = view({
+const OrbitMainView = gloss({
   flex: 1,
   position: 'relative',
 })

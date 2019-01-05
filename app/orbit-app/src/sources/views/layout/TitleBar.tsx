@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Text, Row } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 // just the top titlebar:
 export const TitleBar = ({ children = null, before = null, after = null, ...props }) => (
@@ -11,7 +11,7 @@ export const TitleBar = ({ children = null, before = null, after = null, ...prop
   </TitleBarContain>
 )
 
-const TitleBarContain = view(Row, {
+const TitleBarContain = gloss(Row, {
   flex: 1,
   overflow: 'hidden',
   height: 27,

@@ -27,7 +27,6 @@ class OrbitStore {
 
   handleSelectItem: OrbitItemProps<any>['onSelect'] = (_index, config) => {
     const type = config.type === 'bit' ? 'search' : config.type
-    console.log('select22', config, this)
     this.activeConfig = {
       ...this.activeConfig,
       [type]: config,

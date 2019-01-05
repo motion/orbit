@@ -9,6 +9,7 @@ import { ThemeProvide } from '@mcro/ui'
 import { themes } from './themes'
 import { throttle, isEqual } from 'lodash'
 import { App, Desktop } from '@mcro/stores'
+import OrbitPage from './pages/OrbitPage/OrbitPage'
 
 // pages
 
@@ -21,17 +22,25 @@ function AsyncPage({ page, fallback = <div>Loading...</div>, ...props }) {
   )
 }
 
-function getOrbitNavigator() {
+function getOrbitBrowser() {
+  // cache for HMR
+  if (window['orbitBrowser']) {
+    return window['orbitBrowser']
+  }
+
   const Orbit = ({ descriptors, navigation }) => {
     const activeKey = navigation.state.routes[navigation.state.index].key
     const descriptor = descriptors[activeKey]
     return <SceneView component={descriptor.getComponent()} navigation={descriptor.navigation} />
   }
 
-  return createNavigator(
+  const navigator = createNavigator(
     Orbit,
     SwitchRouter({
-      Home: props => <AsyncPage page={() => import('./pages/OrbitPage/OrbitPage')} {...props} />,
+      // HMR wont work here if you do the import method
+      // for now just importing this directly...
+      // in development mode we could have a switch here to always import all
+      Home: OrbitPage,
       App: props => <AsyncPage page={() => import('./pages/AppPage/AppPage')} {...props} />,
       Chrome: props => (
         <AsyncPage page={() => import('./pages/ChromePage/ChromePage')} {...props} />
@@ -40,11 +49,14 @@ function getOrbitNavigator() {
     }),
     {},
   )
+
+  const OrbitBrowser = createBrowserApp(navigator)
+  window['orbitBrowser'] = OrbitBrowser
+  return OrbitBrowser
 }
 
 export const OrbitRoot = hot(module)(() => {
-  const OrbitNavigator = getOrbitNavigator()
-  const OrbitBrowser = createBrowserApp(OrbitNavigator)
+  const OrbitBrowser = getOrbitBrowser()
 
   // update screen size state
   React.useEffect(() => {

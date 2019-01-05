@@ -101,7 +101,7 @@ export const PeopleAppMain = observer((props: AppProps<'people'>) => {
   const { appPageStore } = React.useContext(StoreContext)
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
-    return <div>No one selected 123 123</div>
+    return <div>No one selected</div>
   }
   return (
     <Frame>

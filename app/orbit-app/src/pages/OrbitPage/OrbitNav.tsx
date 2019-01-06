@@ -39,9 +39,9 @@ export const OrbitNav = observer(() => {
         <NavButton
           isActive={paneManagerStore.activePane === 'sources'}
           onClick={paneManagerStore.activePaneSetter('sources')}
-          label="Orbit"
-          textProps={{ alpha: 0.5 }}
-        />
+        >
+          <UI.Icon name="app" size={14} opacity={0.5} />
+        </NavButton>
       </OrbitNavChrome>
     </OrbitNavClip>
   )
@@ -124,5 +124,5 @@ const Separator = gloss({
   right: 0,
   bottom: 0,
   width: 1,
-  background: 'linear-gradient(transparent, #ddd)',
+  background: 'linear-gradient(transparent, rgba(0,0,0,0.08))',
 })

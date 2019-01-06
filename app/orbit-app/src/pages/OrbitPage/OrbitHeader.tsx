@@ -14,6 +14,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
 import { OrbitNav } from './OrbitNav'
+import { OrbitSwitch } from './OrbitSwitch'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -137,13 +138,14 @@ export const OrbitHeader = observer(() => {
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
-          <Icon name="arrowminleft" opacity={0.25} />
-          <OrbitInputContain>
+          {/* <Icon name="arrowminleft" opacity={0.25} /> */}
+          <OrbitSwitch />
+          <FakeInput>
             <OrbitHeaderInput headerStore={headerStore} />
             <After>
               <OrbitHeaderButtons />
             </After>
-          </OrbitInputContain>
+          </FakeInput>
           <Button
             chromeless
             isActive={stores.paneManagerStore.activePane === 'settings'}
@@ -177,7 +179,7 @@ const After = gloss({
   flexFlow: 'row',
 })
 
-const OrbitInputContain = gloss({
+const FakeInput = gloss({
   height: 34,
   padding: [0, 20],
   alignItems: 'center',
@@ -187,6 +189,12 @@ const OrbitInputContain = gloss({
   maxWidth: 980,
   width: '85%',
   minWidth: 400,
+  cursor: 'text',
+  transition: 'none',
+  '&:active': {
+    background: [0, 0, 0, 0.025],
+    transition: 'all ease-out 250ms',
+  },
 })
 
 const OrbitClose = gloss({

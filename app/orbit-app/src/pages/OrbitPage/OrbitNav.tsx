@@ -39,10 +39,9 @@ export const OrbitNav = observer(() => {
         <NavButton
           isActive={paneManagerStore.activePane === 'sources'}
           onClick={paneManagerStore.activePaneSetter('sources')}
-          tooltip="Sources"
-        >
-          <UI.Icon name="app" size={14} opacity={0.5} />
-        </NavButton>
+          label="Orbit"
+          textProps={{ alpha: 0.5 }}
+        />
       </OrbitNavChrome>
     </OrbitNavClip>
   )
@@ -93,18 +92,24 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean }>({
 })
 
 const NavButton = ({
-  children,
+  children = null,
   tooltip = null,
   label = null,
   isActive = false,
   separator = false,
+  textProps = null,
   ...props
 }) => (
   <Tooltip label={tooltip}>
     <NavButtonChrome isActive={isActive} {...props}>
       {children}
       {!!label && (
-        <Text size={0.95} marginLeft={buttonSidePad * 0.75} fontWeight={500}>
+        <Text
+          size={0.95}
+          marginLeft={!!children ? buttonSidePad * 0.75 : 0}
+          fontWeight={500}
+          {...textProps}
+        >
           {label}
         </Text>
       )}

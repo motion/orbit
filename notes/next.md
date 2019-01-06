@@ -1,12 +1,20 @@
 next steps:
 
 - need to recruit one decent developer in SF
+
   - do some more app work just to get it looking nice
   - fake mockup for adding new apps quickly and linking in data source etc
   - put together a small screencast video
   - compose email with simple but powerful pitch for app dev
   - send it to everyone in SF on github
-- continue towards value
+
+- get to value
+  - get tray working
+  - get slide in search over app
+  - get basic lists app in place again
+  - get tray actions menu
+  - get ocr integrated with memory (memory app?)
+  - iterate 10x
 
 what does orbit do for apps:
 

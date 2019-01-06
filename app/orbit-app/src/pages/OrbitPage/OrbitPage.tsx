@@ -15,7 +15,6 @@ import { OrbitOnboard } from './OrbitOnboard'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
-import { OrbitNav } from './OrbitNav'
 import { OrbitPageContent } from './OrbitPageContent'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
@@ -51,7 +50,6 @@ export default observer(() => {
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
             <Chrome>
               <OrbitHeader />
-              <OrbitNav />
 
               <InnerChrome>
                 <OrbitPageContent />
@@ -69,7 +67,7 @@ export default observer(() => {
 const Chrome = gloss({
   flex: 1,
 }).theme((_, theme) => ({
-  background: theme.background.alpha(0.45),
+  background: theme.background.alpha(0.5),
 }))
 
 const InnerChrome = gloss({

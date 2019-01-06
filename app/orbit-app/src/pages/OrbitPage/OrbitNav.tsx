@@ -13,7 +13,7 @@ export const OrbitNav = observer(() => {
   const { paneManagerStore } = React.useContext(StoreContext)
   return (
     <OrbitNavClip>
-      <OrbitNavChrome className="draggable">
+      <OrbitNavChrome>
         {AppPanes.map(pane => {
           const isActive = paneManagerStore.activePane === pane.id
           return (

@@ -105,11 +105,10 @@ export class OrbitItemStore {
   }
 
   selectItem = () => {
-    const item = {
+    AppActions.setPeekApp({
       appConfig: this.appConfig,
       target: this.cardWrapRef,
-    }
-    AppActions.setPeekApp(item)
+    })
   }
 
   shouldSelect = () => {
@@ -142,11 +141,10 @@ export class OrbitItemStore {
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected) {
-        console.log('updateIsSelected', this.props, this.appConfig)
-        ensure('appConfig`', !!this.appConfig)
         if (onSelect) {
           onSelect(this.index, this.appConfig, this.cardWrapRef)
         } else {
+          ensure('this.appConfig', !!this.appConfig)
           // fluidity
           await sleep()
           this.selectItem()

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StoreContext } from '@mcro/black'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
-import { View, Row, Icon } from '@mcro/ui'
+import { View, Row, Icon, Button } from '@mcro/ui'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
@@ -144,6 +144,15 @@ export const OrbitHeader = observer(() => {
               <OrbitHeaderButtons />
             </After>
           </OrbitInputContain>
+          <Button
+            chromeless
+            isActive={stores.paneManagerStore.activePane === 'settings'}
+            onClick={stores.paneManagerStore.activePaneSetter('settings')}
+            tooltip="Settings"
+          >
+            <Icon name="gear" size={14} opacity={0.5} />
+          </Button>
+          <Row flex={1} />
         </Row>
       </HeaderTop>
 

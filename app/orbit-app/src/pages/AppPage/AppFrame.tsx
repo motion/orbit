@@ -3,7 +3,7 @@ import { view, compose, react, ensure, attach, on, provide } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
 import Resizable, { ResizeCallback } from 're-resizable'
-import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { attachTheme, ThemeObject, gloss } from '@mcro/gloss'
 import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
 import { AppPageStore } from './AppPageStore'
@@ -25,7 +25,7 @@ const transitions = (store: AppPageStore) => {
   return 'transform ease 100ms'
 }
 
-const AppFrameBorder = view(UI.View, {
+const AppFrameBorder = gloss(UI.View, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -36,7 +36,7 @@ const AppFrameBorder = view(UI.View, {
   pointerEvents: 'none',
 })
 
-const AppMainContent = view(UI.View, {
+const AppMainContent = gloss(UI.View, {
   flex: 1,
   overflow: 'hidden',
   opacity: 1,
@@ -232,7 +232,7 @@ export class AppFrameStore {
   }
 }
 
-const PeekFrameContainer = view(UI.View, {
+const PeekFrameContainer = gloss(UI.View, {
   // alignItems: 'flex-end',
   position: 'absolute',
   right: 0,

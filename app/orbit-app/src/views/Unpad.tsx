@@ -1,5 +1,5 @@
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const Unpad = view({
+export const Unpad = gloss({
   margin: [0, -12],
 })

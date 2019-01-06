@@ -3,8 +3,8 @@ import { OrbitCard } from '../../../../views/OrbitCard'
 import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
 import { ItemProps } from '../../../../views/OrbitItemProps'
 import { Setting } from '@mcro/models'
-import { view } from '@mcro/black'
 import { Col, SizedSurface, Theme, Text } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 type Props = ItemProps<Setting> &
   AppInfoProps & {
@@ -14,7 +14,7 @@ type Props = ItemProps<Setting> &
     model?: any
   }
 
-const Centered = view({
+const Centered = gloss({
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
@@ -82,12 +82,11 @@ export const OrbitAppIconCard = (props: Props) => {
           glint
           // tooltip={model.title}
         >
-          {!hideTitle &&
-            !!model.title && (
-              <Text size={0.85} sizeLineHeight={0.9} ellipse>
-                {model.title}
-              </Text>
-            )}
+          {!hideTitle && !!model.title && (
+            <Text size={0.85} sizeLineHeight={0.9} ellipse>
+              {model.title}
+            </Text>
+          )}
         </SizedSurface>
       </Theme>
     </Col>

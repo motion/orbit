@@ -399,6 +399,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   resizeObserver = new ResizeObserver(() => this.setPosition())
   mutationObserver = new MutationObserver(() => this.setPosition())
 
+  get domNode() {
+    return findDOMNode(this) as HTMLDivElement
+  }
+
   componentDidMount() {
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
 
@@ -415,10 +419,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     if (typeof target === 'string') {
       this.target = getTarget(target)
     } else {
-      const child = findDOMNode(this) as HTMLDivElement
-      const target = child.classList.contains('popover-target')
+      const target = this.domNode.classList.contains('popover-target')
       if (target) {
-        this.target = child
+        this.target = this.domNode
       }
     }
 
@@ -439,7 +442,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       this.listenForHover()
       on(this, this.target, 'click', this.handleTargetClick)
       if (closeOnEsc) {
-        on(this, findDOMNode(this).parentNode.querySelector('.popover-portal'), 'keyup', e => {
+        const parentNode = this.domNode.parentNode as HTMLDivElement
+        on(this, parentNode.querySelector('.popover-portal'), 'keyup', e => {
           if (e.keyCode === 27) {
             e.preventDefault()
             e.stopPropagation()
@@ -781,10 +785,17 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const childSelector = `${node.tagName.toLowerCase()}.${node.className
       .trim()
       .replace(/\s+/g, '.')}:hover`
-    return (
-      !!(node.parentNode ? node.parentNode.querySelector(childSelector) : null) ||
-      node.querySelector(':hover')
-    )
+
+    const parentNode = node.parentNode as HTMLDivElement
+
+    if (parentNode) {
+      const hoverChild = parentNode.querySelector(childSelector)
+      if (hoverChild) {
+        return hoverChild
+      }
+    }
+
+    return node.querySelector(':hover')
   }
 
   overlayRef = ref => {

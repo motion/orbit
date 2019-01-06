@@ -23,6 +23,7 @@ export const OrbitHeaderInput = observer(({ headerStore }: Props) => {
   return (
     <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
       <HighlightedTextArea
+        forwardRef={headerStore.inputRef}
         width="100%"
         fontWeight={400}
         fontSize={18}
@@ -37,7 +38,6 @@ export const OrbitHeaderInput = observer(({ headerStore }: Props) => {
         onFocus={orbitWindowStore.onFocus}
         onBlur={orbitWindowStore.onBlur}
         onKeyDown={handleKeyDown}
-        forwardRef={headerStore.inputRef}
       />
     </View>
   )

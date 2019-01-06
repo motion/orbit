@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { CosalSaliency } from './CosalSaliency'
 import { CosalSearch } from './CosalSearch'
+import { gloss } from '@mcro/gloss'
 
 export default function CosalPage() {
   return (
@@ -24,7 +24,7 @@ export default function CosalPage() {
   )
 }
 
-const Half = view({
+const Half = gloss({
   flex: 1,
   overflow: 'scroll',
 })

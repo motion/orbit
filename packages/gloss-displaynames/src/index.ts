@@ -1,40 +1,45 @@
-import handleGlossReferences from './handleGlossReferences'
+import { handleGlossReferences } from './handleGlossReferences'
 
 export default function glossViewDisplayNames(babel) {
-  // const { types: t } = babel
   const references = new Set()
-  const referencePaths = {}
+  const referenceState = {}
+
   return {
     name: '@mcro/gloss-displaynames',
     visitor: {
-      ImportDeclaration(path) {
+      ImportDeclaration(path, state) {
         const fileName = path.hub.file.opts.filename
         // why does babel try and process every file so many times?
         if (references.has(fileName)) {
           return
         }
 
-        const importSpecifier = path.get('specifiers')[0]
-        if (path.node.source.value !== '@mcro/black') {
+        // options
+        const matchNames = state.opts.matchNames || ['gloss']
+        const matchImports = state.opts.matchImports || ['@mcro/gloss']
+
+        // check valid
+        if (matchImports.indexOf(path.node.source.value) === -1) {
           return
         }
-        const {
-          node: {
-            local: { name },
-          },
-        } = importSpecifier
 
-        if (name != 'view') {
+        const importSpecifier = path.get('specifiers')[0]
+        const name = importSpecifier.node.local.name
+        if (matchNames.indexOf(name) === -1) {
           return
         }
 
         references.add(fileName)
-        referencePaths[fileName] = path.scope.getBinding(name).referencePaths
+        referenceState[fileName] = {
+          paths: path.scope.getBinding(name).referencePaths,
+          name,
+        }
       },
       Program: {
         exit({ node }, { file }) {
-          if (referencePaths[file.opts.filename]) {
-            handleGlossReferences(node, referencePaths[file.opts.filename], file, babel)
+          if (referenceState[file.opts.filename]) {
+            const { name, paths } = referenceState[file.opts.filename]
+            handleGlossReferences(node, name, paths, file, babel)
           }
         },
       },

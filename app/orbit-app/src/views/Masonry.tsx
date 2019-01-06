@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { view, on } from '@mcro/black'
+import { on } from '@mcro/black'
 import isEqual from 'react-fast-compare'
+import { gloss } from '@mcro/gloss'
 
 const rowHeight = 1
 const gridGap = 7
 const gridColumnGap = 9
 
-const MasonryGrid = view({
+const MasonryGrid = gloss({
   display: 'grid',
 })
 

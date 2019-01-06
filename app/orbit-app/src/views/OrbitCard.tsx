@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { view, StoreContext } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
 import { PeopleRow } from '../components/PeopleRow'
-import { CSSPropertySet } from '@mcro/gloss'
+import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './ListItems/OrbitItemProps'
@@ -206,11 +206,11 @@ export const OrbitCard = observer(
   },
 )
 
-const VerticalSpaceSmall = view({
+const VerticalSpaceSmall = gloss({
   height: 5,
 })
 
-const CardWrap = view(UI.View, {
+const CardWrap = gloss(UI.View, {
   position: 'relative',
   flex: 1,
   transform: {
@@ -218,7 +218,7 @@ const CardWrap = view(UI.View, {
   },
 })
 
-const Card = view({
+const Card = gloss({
   overflow: 'hidden',
   position: 'relative',
   maxHeight: '100%',
@@ -300,7 +300,7 @@ const Card = view({
   },
 )
 
-const Title = view({
+const Title = gloss({
   maxWidth: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
@@ -310,12 +310,12 @@ const Title = view({
   },
 })
 
-const Preview = view({
+const Preview = gloss({
   flex: 1,
   zIndex: -1,
 })
 
-const CardSubtitle = view(UI.View, {
+const CardSubtitle = gloss(UI.View, {
   height: 20,
   padding: [0, 0, 2, 0],
   flexFlow: 'row',
@@ -334,7 +334,7 @@ const orbitIconProps = {
   },
 }
 
-const Padding = view({
+const Padding = gloss({
   position: 'relative',
   margin: 1,
   overflow: 'hidden',

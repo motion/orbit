@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { OrbitListItem } from './OrbitListItem'
 import { Row, Col, Text } from '@mcro/ui'
-import { view } from '@mcro/black'
 import { HighlightText } from '../HighlightText'
+import { gloss } from '@mcro/gloss'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {
   const num = abbreviateNumber(item.count)
@@ -27,7 +27,7 @@ export const GroupedSearchItem = ({ item, query, ...props }) => {
   )
 }
 
-const Circle = view({
+const Circle = gloss({
   width: 40,
   height: 40,
   margin: ['auto', 14, 'auto', 0],

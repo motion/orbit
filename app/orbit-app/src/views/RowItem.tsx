@@ -1,10 +1,10 @@
-import { view } from '@mcro/black'
 import * as React from 'react'
 import { Row, Col, Text, View } from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
 import { OrbitOrb } from './OrbitOrb'
+import { gloss } from '@mcro/gloss'
 
-const RowItemFrame = view(Row, {
+const RowItemFrame = gloss(Row, {
   padding: [4, 8],
   alignItems: 'center',
 }).theme(({ selected }, theme) => ({

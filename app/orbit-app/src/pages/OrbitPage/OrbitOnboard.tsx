@@ -1,4 +1,4 @@
-import { attach, compose, view, sleep } from '@mcro/black'
+import { attach, compose, sleep } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import * as React from 'react'
@@ -14,6 +14,7 @@ import { Slider, SliderPane } from '../../views/Slider'
 import { BlurryGuys } from './BlurryGuys'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { SetupProxyCommand, CheckProxyCommand } from '@mcro/models'
+import { gloss } from '@mcro/gloss'
 
 type Props = {
   settingStore?: SettingStore
@@ -25,14 +26,14 @@ type Props = {
 const framePad = 30
 export const numFrames = 3
 
-const Centered = view({
+const Centered = gloss({
   margin: 'auto',
   alignItems: 'center',
   justifyContent: 'center',
   textAlign: 'center',
 })
 
-const Unpad = view({
+const Unpad = gloss({
   margin: [0, -framePad],
 })
 
@@ -112,7 +113,7 @@ const decorator = compose(
   attach({
     store: OnboardStore,
   }),
-  view,
+  gloss,
 )
 export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }: Props) => {
   if (paneManagerStore.activePane !== 'onboard') {

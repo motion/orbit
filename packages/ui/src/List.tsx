@@ -11,7 +11,7 @@
 // const idFn = _ => _
 // const SCROLL_BAR_WIDTH = 16
 
-// const ListContain = view({
+// const ListContain = gloss({
 //   alignItems: 'stretch',
 //   overflowX: 'visible',
 // }).theme(props => ({

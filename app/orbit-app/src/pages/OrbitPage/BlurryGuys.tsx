@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view, react, attach } from '@mcro/black'
 import { now } from 'mobx-utils'
 import { View } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 class BlurryStore {
   guys = [[-40, -40], [50, -20], [0, 60]]
@@ -20,7 +21,7 @@ class BlurryStore {
 
 const colors = ['rebeccapurple', 'green', 'orange']
 
-const Blur = view(View, {
+const Blur = gloss(View, {
   width: 200,
   height: 200,
   margin: [-100, 0, 0, -100],

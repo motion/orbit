@@ -11,6 +11,7 @@ import { ShortcutCapture } from '../../views/ShortcutCapture'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { generalSettingQuery } from '../../helpers/queries'
 import { AppProps } from '../AppProps'
+import { gloss } from '@mcro/gloss'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -99,7 +100,7 @@ class SettingAppStore {
   }
 }
 
-const Section = view({
+const Section = gloss({
   padding: [0, 0, 20],
 })
 

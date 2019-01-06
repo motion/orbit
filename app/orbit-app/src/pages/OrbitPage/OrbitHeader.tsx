@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view, StoreContext } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
-import { View } from '@mcro/ui'
+import { View, Row, Icon } from '@mcro/ui'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
@@ -12,6 +12,8 @@ import { AppActions } from '../../actions/AppActions'
 import { WindowCloseButton } from '../../views/WindowControls'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
+import { gloss } from '@mcro/gloss'
+import { OrbitNav } from './OrbitNav'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -27,6 +29,7 @@ export class HeaderStore {
     selectionStore?: SelectionStore
   }
 
+  mouseUpAt = 0
   inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false
 
@@ -107,6 +110,16 @@ export class HeaderStore {
       this.props.paneManagerStore.setActivePane('home')
     }
   }
+
+  handleMouseUp = () => {
+    console.log('mouse up')
+    setTimeout(() => {
+      if (this.inputRef.current) {
+        console.log('focusing input')
+        this.inputRef.current.focus()
+      }
+    })
+  }
 }
 
 export const OrbitHeader = observer(() => {
@@ -116,45 +129,58 @@ export const OrbitHeader = observer(() => {
     <OrbitHeaderContainer
       opacity={stores.paneManagerStore.activePane === 'onboard' ? 0 : 1}
       className="draggable"
+      onMouseUp={headerStore.handleMouseUp}
     >
-      <OrbitClose onClick={AppActions.closeOrbit}>
-        <WindowCloseButton size={8} />
-      </OrbitClose>
-      <OrbitInputContain>
-        <OrbitHeaderInput headerStore={headerStore} />
-        <After>
-          <OrbitHeaderButtons />
-        </After>
-      </OrbitInputContain>
+      <HeaderTop>
+        <OrbitClose onClick={AppActions.closeOrbit}>
+          <WindowCloseButton size={8} />
+        </OrbitClose>
+        <Row flex={1} alignItems="center">
+          <Row flex={1} />
+          <Icon name="arrowminleft" opacity={0.25} />
+          <OrbitInputContain>
+            <OrbitHeaderInput headerStore={headerStore} />
+            <After>
+              <OrbitHeaderButtons />
+            </After>
+          </OrbitInputContain>
+        </Row>
+      </HeaderTop>
+
+      <OrbitNav />
     </OrbitHeaderContainer>
   )
 })
 
-const OrbitHeaderContainer = view(View, {
+const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
-  flexFlow: 'row',
-  padding: [7, 14],
-  transition: 'all ease-in 300ms',
   zIndex: 4,
 })
 
-const After = view({
+const HeaderTop = gloss({
+  padding: [6, 10],
+  flexFlow: 'row',
+  transition: 'all ease-in 300ms',
+})
+
+const After = gloss({
   alignItems: 'center',
   flexFlow: 'row',
 })
 
-const OrbitInputContain = view({
+const OrbitInputContain = gloss({
   height: 34,
+  padding: [0, 20],
   alignItems: 'center',
   justifyContent: 'center',
   margin: 'auto',
   flexFlow: 'row',
-  maxWidth: 900,
-  width: '80%',
+  maxWidth: 980,
+  width: '85%',
   minWidth: 400,
 })
 
-const OrbitClose = view({
+const OrbitClose = gloss({
   position: 'absolute',
   top: 0,
   left: 0,

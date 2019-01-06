@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { SubTitle } from './SubTitle'
+import { gloss } from '@mcro/gloss'
 
-const Separator = view({
+const Separator = gloss({
   padding: [2, 16],
   margin: [0, -16, 7],
 })

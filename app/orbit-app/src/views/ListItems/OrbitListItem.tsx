@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { view, StoreContext } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../OrbitIcon'
 import { PeopleRow } from '../../components/PeopleRow'
-import { CSSPropertySet } from '@mcro/gloss'
+import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from '../RoundButtonSmall'
 import { DateFormat } from '../DateFormat'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
@@ -230,7 +230,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
   )
 })
 
-const ListFrame = view(UI.View, {
+const ListFrame = gloss(UI.View, {
   position: 'relative',
   userSelect: 'none',
   isExpanded: {
@@ -247,7 +247,7 @@ const ListFrame = view(UI.View, {
   }
 })
 
-const Divider = view({
+const Divider = gloss({
   height: 1,
   position: 'absolute',
   bottom: 0,
@@ -257,7 +257,7 @@ const Divider = view({
   background: theme.color.alpha(0.017),
 }))
 
-const ListItem = view({
+const ListItem = gloss({
   overflow: 'hidden',
   position: 'relative',
   maxHeight: '100%',
@@ -299,19 +299,19 @@ const ListItem = view({
   return style
 })
 
-const Title = view({
+const Title = gloss({
   width: '100%',
   flexFlow: 'row',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
 })
 
-const Preview = view({
+const Preview = gloss({
   flex: 1,
   zIndex: -1,
 })
 
-const ListItemSubtitle = view(UI.View, {
+const ListItemSubtitle = gloss(UI.View, {
   minHeight: 20,
   margin: [0, 0, 4],
   flexFlow: 'row',
@@ -320,26 +320,26 @@ const ListItemSubtitle = view(UI.View, {
   overflow: 'hidden',
 })
 
-const AfterHeader = view({
+const AfterHeader = gloss({
   alignItems: 'flex-end',
   // why? for some reason this is really hard to align the text with the title,
   // check the visual date in list items to see if this helps align it in the row
   marginBottom: -4,
 })
 
-const TitleSpace = view({
+const TitleSpace = gloss({
   minWidth: 8,
   shouldFlex: {
     flex: 1,
   },
 })
 
-const Bottom = view({
+const Bottom = gloss({
   flexFlow: 'row',
   alignItems: 'center',
 })
 
-const ListItemMainContent = view({
+const ListItemMainContent = gloss({
   flex: 1,
   maxWidth: '100%',
   margin: ['auto', 0],

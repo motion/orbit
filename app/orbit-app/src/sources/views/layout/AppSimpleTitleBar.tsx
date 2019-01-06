@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { Text } from '@mcro/ui'
-import { StoreContext, view } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
 type Props = {
   title: string
 }
 
-const TitleBar = view({
+const TitleBar = gloss({
   position: 'absolute',
   top: 0,
   left: 0,

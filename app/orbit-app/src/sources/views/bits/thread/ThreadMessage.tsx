@@ -1,18 +1,18 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { HighlightText } from '../../../../views/HighlightText'
 import { AppActions } from '../../../../actions/AppActions'
 import { Text } from '@mcro/ui'
 import { VerticalSpace, HorizontalSpace } from '../../../../views'
 import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 import { DateFormat } from '../../../../views/DateFormat'
+import { gloss } from '@mcro/gloss'
 
-const Message = view({
+const Message = gloss({
   padding: 15,
   borderBottom: [1, 'dotted', '#eee'],
 })
 
-const Paragraph = view(HighlightText, {
+const Paragraph = gloss(HighlightText, {
   marginBottom: '0.35rem',
   userSelect: 'auto',
 })
@@ -21,11 +21,11 @@ Paragraph.defaultProps = {
   className: 'markdown',
 }
 
-const MessageHeader = view({
+const MessageHeader = gloss({
   flexFlow: 'row',
 })
 
-const Block = view({
+const Block = gloss({
   display: 'block',
   '& div': {
     display: 'block',
@@ -48,21 +48,23 @@ export const ThreadMessage = ({ message }) => {
       </Text>
       <VerticalSpace small />
       <MessageHeader>
-        {message.participants.filter(x => x.type === 'from').map(({ name, email }, index) => (
-          <React.Fragment key={index}>
-            <RoundButtonBordered
-              key={index}
-              onClick={openMail(email)}
-              tooltip={email}
-              tooltipProps={{
-                noHoverOnChildren: false,
-              }}
-            >
-              {name}
-            </RoundButtonBordered>
-            <HorizontalSpace />
-          </React.Fragment>
-        ))}
+        {message.participants
+          .filter(x => x.type === 'from')
+          .map(({ name, email }, index) => (
+            <React.Fragment key={index}>
+              <RoundButtonBordered
+                key={index}
+                onClick={openMail(email)}
+                tooltip={email}
+                tooltipProps={{
+                  noHoverOnChildren: false,
+                }}
+              >
+                {name}
+              </RoundButtonBordered>
+              <HorizontalSpace />
+            </React.Fragment>
+          ))}
       </MessageHeader>
       <VerticalSpace small />
       <MailBody>{message.body}</MailBody>

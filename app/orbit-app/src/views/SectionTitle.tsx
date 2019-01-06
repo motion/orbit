@@ -2,9 +2,9 @@ import * as React from 'react'
 import { SubTitle } from '.'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import { Row } from '@mcro/ui'
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-const SectionRow = view(Row, {}).theme((_, theme) => ({
+const SectionRow = gloss(Row, {}).theme((_, theme) => ({
   background: theme.background,
 }))
 

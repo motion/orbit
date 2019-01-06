@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { OrbitIcon } from './OrbitIcon'
 import { Text } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 const sidePad = 16
 
-const Item = view({
+const Item = gloss({
   flexFlow: 'row',
   padding: [0, sidePad],
   height: 36,
@@ -28,7 +28,7 @@ const Item = view({
   },
 }))
 
-const ItemTitle = view(Text, {
+const ItemTitle = gloss(Text, {
   fontWeight: 700,
   justifyContent: 'center',
   fontSize: 14,

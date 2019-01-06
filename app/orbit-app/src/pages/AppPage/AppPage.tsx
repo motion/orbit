@@ -15,6 +15,7 @@ import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShort
 import { SettingStore } from '../../stores/SettingStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { Icon } from '../../views/Icon'
+import { gloss } from '@mcro/gloss'
 
 // see main.ts for setup for testing this in browser
 
@@ -54,7 +55,7 @@ export default class AppPage extends React.Component<Props> {
   }
 }
 
-const TitleBar = view({
+const TitleBar = gloss({
   height: 32,
   alignItems: 'center',
   flexFlow: 'row',
@@ -64,7 +65,7 @@ const TitleBar = view({
   borderBottom: [1, theme.borderColor.alpha(0.5)],
 }))
 
-const CenteredTitle = view({
+const CenteredTitle = gloss({
   position: 'absolute',
   top: 0,
   left: 70,

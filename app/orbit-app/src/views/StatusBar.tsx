@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Row, Text } from '@mcro/ui'
 import { RoundButton } from '.'
+import { gloss } from '@mcro/gloss'
 
-export const StatusBar = view({
+export const StatusBar = gloss({
   margin: 5,
   borderRadius: 7,
   padding: [0, 4],
@@ -22,7 +22,7 @@ export const StatusBar = view({
   border: [1, theme.borderColor.alpha(0.5)],
 }))
 
-StatusBar.Space = view({
+StatusBar.Space = gloss({
   width: 10,
 })
 

@@ -11,7 +11,7 @@ import { PureComponent } from 'react'
 import textContent from '../helpers/textContent'
 // import { colors } from '../helpers/colors'
 
-// const FilterText = view({
+// const FilterText = gloss({
 //   display: 'flex',
 //   alignSelf: 'baseline',
 //   userSelect: 'none',

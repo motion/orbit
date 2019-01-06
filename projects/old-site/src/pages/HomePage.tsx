@@ -17,8 +17,8 @@ import homeImg from '../../public/orbit.jpg'
 import searchImg from '../../public/orbit-search.jpg'
 import avatarCardImg from '../../public/javi.png'
 import { Page } from '../views/Page'
-import { config } from 'react-spring'
 import { throttle } from 'lodash'
+import { gloss } from '@mcro/gloss'
 
 const forwardRef = Component => {
   return React.forwardRef((props, ref) => <Component {...props} forwardRef={ref} />)
@@ -82,7 +82,7 @@ const Half = props => (
   </Media>
 )
 
-const WaveSVG = view(UI.View, {
+const WaveSVG = gloss(UI.View, {
   position: 'absolute',
   top: 0,
   left: 0,

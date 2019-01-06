@@ -1,13 +1,13 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 
-export const DividerContainer = view({
+export const DividerContainer = gloss({
   pointerEvents: 'all',
   padding: [10, 6],
   zIndex: 10,
 })
 
-export const BarInner = view({
+export const BarInner = gloss({
   flex: 1,
   height: 1,
   borderRadius: 100,

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { SlackBitDataMessage } from '@mcro/models'
 import { OrbitIntegrationProps } from '../../../types'
 import { View, Row, Text } from '@mcro/ui'
@@ -8,6 +7,7 @@ import { RoundButtonPerson } from '../../../../views/RoundButtonPerson'
 import { DateFormat } from '../../../../views/DateFormat'
 import { HighlightText } from '../../../../views/HighlightText'
 import { Markdown } from '../../../../views/Markdown'
+import { gloss } from '@mcro/gloss'
 
 type SlackMessageProps = OrbitIntegrationProps<'slack'> & {
   message: SlackBitDataMessage
@@ -15,7 +15,7 @@ type SlackMessageProps = OrbitIntegrationProps<'slack'> & {
   highlight?: Object
 }
 
-const SlackMessageFrame = view(View, {
+const SlackMessageFrame = gloss(View, {
   padding: [0, 0],
   overflow: 'hidden',
   condensed: {
@@ -24,7 +24,7 @@ const SlackMessageFrame = view(View, {
   },
 })
 
-const SlackMessageInner = view({
+const SlackMessageInner = gloss({
   padding: [0, 16],
   flex: 1,
   overflow: 'hidden',
@@ -90,12 +90,11 @@ export class ChatMessage extends React.Component<SlackMessageProps> {
             {!extraProps.condensed && (
               <>
                 <div style={{ width: 6 }} />
-                {!(hide && hide.itemDate) &&
-                  (!previousMessage || !previousWithinOneMinute) && (
-                    <Text size={0.9} fontWeight={500} alpha={0.5}>
-                      {<DateFormat date={new Date(message.time)} />}
-                    </Text>
-                  )}
+                {!(hide && hide.itemDate) && (!previousMessage || !previousWithinOneMinute) && (
+                  <Text size={0.9} fontWeight={500} alpha={0.5}>
+                    {<DateFormat date={new Date(message.time)} />}
+                  </Text>
+                )}
               </>
             )}
           </Row>

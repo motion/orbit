@@ -3,10 +3,10 @@ import { StatusBar } from '../../../views/StatusBar'
 import { AppActions } from '../../../actions/AppActions'
 import { View } from '@mcro/ui'
 import { DateFormat } from '../../../views/DateFormat'
-import { view } from '@mcro/black'
 import { OrbitSourceMainProps } from '../../types'
+import { gloss } from '@mcro/gloss'
 
-const Cmd = view({
+const Cmd = gloss({
   opacity: 0.6,
 })
 

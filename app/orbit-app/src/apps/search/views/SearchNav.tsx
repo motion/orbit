@@ -2,11 +2,12 @@ import './calendar.css' // theme css file
 import * as React from 'react'
 import { Row, View, Popover, Icon } from '@mcro/ui'
 import { NavButton } from '../../../views/NavButton'
-import { StoreContext, view } from '@mcro/black'
+import { StoreContext } from '@mcro/black'
 import { OrbitSuggestionBar } from './OrbitSuggestionBar'
 import { DateRangePicker } from 'react-date-range'
 import { SearchFilters } from './SearchFilters'
 import { observer } from 'mobx-react-lite'
+import { gloss } from '@mcro/gloss'
 
 export const SearchNav = observer(() => {
   const { queryStore } = React.useContext(StoreContext)
@@ -51,7 +52,7 @@ export const SearchNav = observer(() => {
   )
 })
 
-const ScrollableRow = view(View, {
+const ScrollableRow = gloss(View, {
   flexFlow: 'row',
   overflowX: 'auto',
   alignItems: 'center',

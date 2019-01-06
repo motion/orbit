@@ -2,11 +2,11 @@ import * as React from 'react'
 import { useContext } from 'react'
 import { StoreContext } from '../../../contexts'
 import { AppPanes } from '../../../stores/SpaceStore'
-import { view } from '@mcro/black'
 import { Text, Surface, Row } from '@mcro/ui'
 import { SubTitle } from '../../../views/SubTitle'
 import { Desktop } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
+import { gloss } from '@mcro/gloss'
 
 const TRAY_VERT_PAD = 12
 const TRAY_HEIGHT = 60
@@ -31,7 +31,7 @@ export class AppTrayStore {
   }
 }
 
-const TrayCard = view({
+const TrayCard = gloss({
   padding: 6,
   borderRadius: 8,
   background: [100, 100, 100],

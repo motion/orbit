@@ -1,7 +1,7 @@
-import { view } from '@mcro/black'
 import { View } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
-export const Pane = view(View, {
+export const Pane = gloss(View, {
   height: 0,
   opacity: 0,
   pointerEvents: 'none',

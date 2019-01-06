@@ -1,8 +1,8 @@
-import { view } from '@mcro/black'
 import { View, Text } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
 // @ts-ignore
-export const Message = view(Text, {
+export const Message = gloss(Text, {
   lineHeight: '1.4rem',
   cursor: 'text',
   // theres a weird glitchy thing that happens when trying to select this
@@ -21,7 +21,7 @@ Message.defaultProps = {
 }
 
 // @ts-ignore
-export const MessageDark = view(View, {
+export const MessageDark = gloss(View, {
   fontSize: 16,
   lineHeight: '1.3rem',
   cursor: 'text',

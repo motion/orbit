@@ -3,6 +3,6 @@ platform :osx, '10.10'
 
 target 'Oracle' do
   use_frameworks!
-pod 'Swindler', :git => 'https://github.com/tmandry/Swindler.git'
-pod 'Starscream', '>= 3.0.6'
+  pod 'Swindler', :git => 'https://github.com/tmandry/Swindler.git', :commit => 'a0d71455'
+  pod 'Starscream', '>= 3.0.6'
 end

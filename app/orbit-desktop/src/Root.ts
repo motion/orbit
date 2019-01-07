@@ -79,7 +79,6 @@ import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
 import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
 import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
-import { Oracle } from '@mcro/oracle'
 import { OracleManager } from './managers/OracleManager'
 import { AppsManager } from './managers/AppsManager'
 import { TopicsManager } from './managers/TopicsManager'
@@ -90,7 +89,6 @@ export class Root {
 
   private config = getGlobalConfig()
   private screen: Screen
-  private oracle: Oracle
   private authServer: AuthServer
   private onboardManager: OnboardManager
   private disposed = false
@@ -171,7 +169,6 @@ export class Root {
       ...screenOptions,
       showTray: true,
     })
-    this.oracle = new Oracle()
 
     this.screen.onError(err => {
       if (err.indexOf('Could not watch application') >= 0) {
@@ -182,7 +179,7 @@ export class Root {
 
     // start managers...
 
-    this.oracleManager = new OracleManager({ oracle: this.oracle })
+    this.oracleManager = new OracleManager()
     await this.oracleManager.start()
 
     this.ocrManager = new OCRManager({ cosal: this.cosal })

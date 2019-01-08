@@ -1,16 +1,16 @@
 import { Model } from '@mcro/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
-import { App } from './interfaces/AppTypes'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
 import { Person } from './interfaces/Person'
 import { PersonBit } from './interfaces/PersonBit'
-import { SearchResult, SearchResultGroup } from './interfaces/Search'
+import { SearchResult } from './interfaces/Search'
 import { Source } from './interfaces/Source'
 import { Setting } from './interfaces/Setting'
 import { Space } from './interfaces/Space'
 import { IntegrationType } from './interfaces/IntegrationType'
+import { App } from './interfaces/App'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
@@ -59,7 +59,7 @@ export type SearchQuery = {
   skip?: number
   sourceId?: number
   sourceIds?: number[]
-  group?: SearchResultGroup
+  group?: string
   maxBitsCount?: number
   spaceId?: number
   ids?: number[]

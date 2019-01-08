@@ -203,12 +203,12 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
       <CellMeasurer key={key} cache={cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
           <ItemView
-            item={item}
-            index={index}
-            realIndex={index}
             {...getSeparatorProps(items, index)}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
+            {...item}
+            index={index}
+            realIndex={index}
           />
         </div>
       </CellMeasurer>

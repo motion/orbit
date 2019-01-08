@@ -185,7 +185,7 @@ const FakeInput = gloss({
   margin: 'auto',
   flexFlow: 'row',
   maxWidth: 980,
-  width: '85%',
+  width: '80%',
   minWidth: 400,
   cursor: 'text',
   transition: 'none',

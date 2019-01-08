@@ -3,6 +3,7 @@ import { findContiguousPorts } from './helpers/findContiguousPorts'
 import killPort from 'kill-port'
 import * as Path from 'path'
 import { GlobalConfig } from '@mcro/config'
+import execa = require('execa')
 
 export async function getInitialConfig() {
   const isProd = process.env.NODE_ENV !== 'development'
@@ -27,10 +28,7 @@ export async function getInitialConfig() {
 
   const desktopRoot = Path.join(require.resolve('@mcro/orbit-desktop'), '..', '..')
   const appStatic = Path.join(require.resolve('@mcro/orbit-app'), '..', 'dist')
-  let nodeBinary = 'node'
-  if (isProd) {
-    nodeBinary = app.getPath('exe')
-  }
+  const nodeBinary = isProd ? app.getPath('exe') : (await execa('which', ['node'])).stdout
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const userData = app.getPath('userData')
   const [

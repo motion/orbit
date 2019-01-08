@@ -32,8 +32,8 @@ export function startAuthProxy() {
         },
       })
       .then(proc => {
-        proc.stdout.on('data', x => log.info(`OrbitProxy: ${x}`))
-        proc.stderr.on('data', x => log.info(`OrbitProxyErr: ${x}`))
+        proc.stdout.on('data', x => console.log(`OrbitProxy: ${x}`))
+        proc.stderr.on('data', x => console.log(`OrbitProxyErr: ${x}`))
       })
       .catch(err => {
         log.error('error spawning', err)

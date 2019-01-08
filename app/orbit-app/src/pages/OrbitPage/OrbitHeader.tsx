@@ -113,10 +113,8 @@ export class HeaderStore {
   }
 
   handleMouseUp = () => {
-    console.log('mouse up')
     setTimeout(() => {
       if (this.inputRef.current) {
-        console.log('focusing input')
         this.inputRef.current.focus()
       }
     })

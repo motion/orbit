@@ -101,9 +101,7 @@ export const OrbitPageContent = observer(() => {
 
   return (
     <Col flex={1}>
-      {!!activeAppStore && !!activeAppStore.toolbar ? (
-        <ToolbarChrome>{activeAppStore.toolbar}</ToolbarChrome>
-      ) : null}
+      <ToolbarChrome>{!!activeAppStore ? activeAppStore.toolbar : null}</ToolbarChrome>
       <Row flex={1}>
         <Sidebar width={300} minWidth={100} maxWidth={500}>
           <OrbitIndexView isHidden={store.activePane === 'home' || store.activePane === 'settings'}>
@@ -140,8 +138,11 @@ export const OrbitPageContent = observer(() => {
   )
 })
 
-const ToolbarChrome = gloss({}).theme((_, theme) => ({
-  borderBottom: [1, theme.borderColor.alpha(0.25)],
+const ToolbarChrome = gloss({
+  minHeight: 5,
+  maxHeight: 50,
+}).theme((_, theme) => ({
+  // borderBottom: [1, theme.borderColor.alpha(0.25)],
   background: theme.background,
 }))
 

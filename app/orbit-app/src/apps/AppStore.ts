@@ -82,6 +82,10 @@ export class AppStore<Type extends AppType> {
     return this.props.selectionStore.activeIndex
   }
 
+  get spaceStore() {
+    return this.props.spaceStore
+  }
+
   get queryStore() {
     return this.props.queryStore
   }

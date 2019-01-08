@@ -69,7 +69,9 @@ async function main() {
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
 
+  let x = Date.now()
   await App.start()
+  if (Date.now() - x > 200) console.log('long start....', Date.now() - x)
 
   if (process.env.NODE_ENV === 'development') {
     setupTestApp()

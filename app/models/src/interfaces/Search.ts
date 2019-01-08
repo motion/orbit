@@ -1,8 +1,6 @@
 import { Bit } from './Bit'
 import { BitContentType } from './BitContentType'
 
-export type SearchResultGroup = 'accurate' | 'last-day' | 'last-week' | 'last-month' | 'overall'
-
 export interface SearchResult {
   target: 'search-group'
 
@@ -11,7 +9,7 @@ export interface SearchResult {
   /**
    * Search group.
    */
-  group: SearchResultGroup
+  group: string
 
   /**
    * Bit content type they grouped by.

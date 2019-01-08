@@ -130,8 +130,6 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       maxHeight = maxHeight == null ? 600 : maxHeight
     }
 
-    console.log('render with', this.state.width, width)
-
     return (
       <SidebarInteractiveContainer
         className={this.props.className}

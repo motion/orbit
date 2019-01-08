@@ -1,3 +1,4 @@
+export * from './interfaces/App'
 export * from './interfaces/AppTypes'
 export * from './interfaces/Bit'
 export * from './interfaces/IntegrationType'

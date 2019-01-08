@@ -39,7 +39,7 @@ export class SearchResultResolver {
     const searchResults: SearchResult[] = []
 
     for (let contentType of BitContentTypes) {
-      this.log.timer('loading ' + contentType)
+      // this.log.timer('loading ' + contentType)
       const [bits, bitsTotalCount] = await this.search(contentType)
       if (bits.length) {
         const bitSourceIds = uniq(bits.map(bit => bit.sourceId))
@@ -116,7 +116,7 @@ export class SearchResultResolver {
           })
         }
       }
-      this.log.timer('loading ' + contentType)
+      // this.log.timer('loading ' + contentType)
     }
 
     this.log.timer('search', searchResults)

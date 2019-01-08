@@ -1,12 +1,20 @@
-import { ensure, react, always } from '@mcro/black'
-import { loadMany } from '@mcro/model-bridge'
-import { SearchResultModel, SearchResult } from '@mcro/models'
+import { ensure, react } from '@mcro/black'
+import { loadMany, observeMany } from '@mcro/model-bridge'
+import {
+  SearchResultModel,
+  SearchResult,
+  SearchQuery,
+  IntegrationType,
+  AppModel,
+} from '@mcro/models'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
+import { fuzzyQueryFilter } from '../../helpers'
+import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
 
 type SearchState = {
-  results: SearchResult[]
+  results: OrbitItemProps<any>
   finished?: boolean
   query: string
 }
@@ -37,36 +45,37 @@ export class SearchStore {
    * Virtual list has its own format of data representation, so convert our data to that format here.
    * Ideally we need to use our format in there, but if it is generic component we can use transformation as well.
    */
-  get resultsForVirtualList(): SearchResult[] {
-    // convert our search results into something this components expects
-    const items: { [group: string]: [any[], any[]] } = {}
-    for (let result of this.searchState.results) {
-      if (result.bits.length) {
-        if (!items[result.group]) items[result.group] = [[], []]
+  // get resultsForVirtualList(): SearchResult[] {
+  //   // convert our search results into something this components expects
+  //   const items: { [group: string]: [any[], any[]] } = {}
+  //   for (let result of this.searchState.results) {
+  //     if (result.bits.length) {
+  //       if (!items[result.group]) {
+  //         items[result.group] = [[], []]
+  //       }
+  //       items[result.group][0].push(
+  //         ...result.bits.map(bit => {
+  //           return { ...bit, group: result.group }
+  //         }),
+  //       )
+  //       items[result.group][1].push({
+  //         target: 'search-group',
+  //         id: result.id,
+  //         title: result.title,
+  //         text: result.text,
+  //         group: result.group,
+  //         count: result.bitsTotalCount,
+  //       })
+  //     }
+  //   }
 
-        items[result.group][0].push(
-          ...result.bits.map(bit => {
-            return { ...bit, group: result.group }
-          }),
-        )
-        items[result.group][1].push({
-          target: 'search-group',
-          id: result.id,
-          title: result.title,
-          text: result.text,
-          group: result.group,
-          count: result.bitsTotalCount,
-        })
-      }
-    }
-
-    return Object.keys(items).reduce((all, group) => {
-      const [bits, subGroups] = items[group]
-      all.push(...bits)
-      all.push(...subGroups)
-      return all
-    }, [])
-  }
+  //   return Object.keys(items).reduce((all, group) => {
+  //     const [bits, subGroups] = items[group]
+  //     all.push(...bits)
+  //     all.push(...subGroups)
+  //     return all
+  //   }, [])
+  // }
 
   updateSearchHistoryOnSearch = react(
     () => this.activeQuery,
@@ -83,28 +92,39 @@ export class SearchStore {
         return
       }
       const recentSearches = uniq([...settingStore.values.recentSearches, query]).slice(0, 50)
+
+      // TODO need to have recently opened as well so we can use that for search
       settingStore.update({
         recentSearches,
       })
     },
   )
 
-  setSelection = react(
-    () => always(this.searchState),
-    () => {
-      const searchBits = this.searchState.results.reduce(
-        (bits, result) => [...bits, ...result.bits],
-        [],
-      )
-      this.props.appStore.setResults([
-        {
-          type: 'column',
-          // shouldAutoSelect: true,
-          indices: searchBits.map((_, index) => index),
-        },
-      ])
+  apps = react(
+    () => 1,
+    () =>
+      observeMany(AppModel, { args: { where: { spaceId: this.props.spaceStore.activeSpace.id } } }),
+    {
+      defaultValue: [],
     },
   )
+
+  // setSelection = react(
+  //   () => always(this.searchState),
+  //   () => {
+  //     const searchBits = this.searchState.results.reduce(
+  //       (bits, result) => [...bits, ...result.bits],
+  //       [],
+  //     )
+  //     this.props.appStore.setResults([
+  //       {
+  //         type: 'column',
+  //         // shouldAutoSelect: true,
+  //         indices: searchBits.map((_, index) => index),
+  //       },
+  //     ])
+  //   },
+  // )
 
   get isChanging() {
     return this.searchState.query !== this.activeQuery
@@ -131,7 +151,7 @@ export class SearchStore {
         await idle()
       }
 
-      let results: SearchResult[] = []
+      let results: OrbitItemProps<any>[] = []
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query
       if (isChangingQuery) {
@@ -157,12 +177,14 @@ export class SearchStore {
 
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
+
       const integrationFilters = [
         // these come from the text string
         ...activeFilters.filter(x => x.type === MarkType.Integration).map(x => x.text),
         // these come from the button bar
         ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
-      ]
+      ] as IntegrationType[]
+
       const locationFilters = activeFilters
         .filter(x => x.type === MarkType.Location)
         .map(x => x.text)
@@ -181,21 +203,24 @@ export class SearchStore {
       }
 
       const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
-        const searchOpts = {
+        const searchOpts: SearchQuery = {
           ...baseFindOptions,
           group,
           maxBitsCount,
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
-        // const id = Math.random()
-        // console.time(`load results ` + id)
         const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
-        // console.timeEnd(`load results ` + id)
         if (!nextResults) {
           return false
         }
-        results = [...results, ...nextResults]
+        results = [
+          ...results,
+          ...nextResults.map(result => ({
+            ...result,
+            separator: group,
+          })),
+        ]
         setValue({
           results,
           query,
@@ -204,7 +229,15 @@ export class SearchStore {
         return true
       }
 
-      // do initial search
+      // app search
+      results = [
+        ...fuzzyQueryFilter(activeQuery, this.apps, { key: 'name' }).map(app => ({
+          separator: 'App',
+          title: app.name,
+          icon: app.type,
+        })),
+      ]
+
       await updateNextResults({
         maxBitsCount: 2,
         group: 'last-day',

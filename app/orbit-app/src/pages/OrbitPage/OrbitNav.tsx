@@ -70,6 +70,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean }>({
   padding: [5, buttonSidePad],
   height: 28,
   maxWidth: 180,
+  borderTopRadius: 3,
 }).theme(({ isActive, stretch }, theme) => {
   const background = isActive
     ? theme.tabBackgroundActive || theme.background

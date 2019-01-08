@@ -1,5 +1,15 @@
 next steps:
 
+- reply to gwern:
+
+  - finish a nice search demo
+  - cleanup people a bit
+  - cleanup vocab a little
+  - get tray working a little
+  - show history/memory a little
+  - cleanup the orbit dropbox doc
+  - send over to him short video and explanation
+
 - need to recruit one decent developer in SF
 
   - do some more app work just to get it looking nice

@@ -76,7 +76,11 @@ async function setupPortForwarding() {
 
 async function main() {
   const success = await setupPortForwarding()
-  process.exit(success ? 0 : 1)
+  if (!success) {
+    process.exit(1)
+  } else {
+    console.log('done! proxying...')
+  }
 }
 
 main()

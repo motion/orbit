@@ -16,11 +16,9 @@ export function startAuthProxy() {
   const host = Config.urls.authHost
   const port = Config.ports.authProxy
   const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
-  const command = `${
-    Config.paths.nodeBinary
-  } ${authProxyScript} --authUrl=${host}:${port} --proxyTo=${Config.ports.auth}`
+  const command = `${authProxyScript} --authUrl=${host}:${port} --proxyTo=${Config.ports.auth}`
 
-  log.info(`Running proxy script: ${command}`)
+  log.info(`Running proxy script: ${Config.paths.nodeBinary} ${command}`)
 
   return new Promise<boolean>(resolve => {
     // run proxy server in secure sub-process
@@ -33,7 +31,10 @@ export function startAuthProxy() {
       })
       .then(proc => {
         proc.stdout.on('data', x => console.log(`OrbitProxy: ${x}`))
-        proc.stderr.on('data', x => console.log(`OrbitProxyErr: ${x}`))
+        proc.stderr.on('data', x => {
+          console.log(`OrbitProxyErr: ${x}`)
+          // TODO handle error and report to interface...
+        })
       })
       .catch(err => {
         log.error('error spawning', err)
@@ -45,6 +46,7 @@ export function startAuthProxy() {
 
     const checkAndFinish = async () => {
       if (await checkAuthProxy()) {
+        log.info('Successfully ran proxy')
         clearTimeout(failTimeout)
         clearInterval(checkInterval)
         resolve(true)

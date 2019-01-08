@@ -74,8 +74,7 @@ const macModernTheme = Theme.colorize({
   highlightBackgroundActive: '#85afee', // active tokens
   frameBorderColor: '#aaa',
 
-  sidebarBackground: '#f2f2f2',
-  sidebarBorderColor: '#ddd',
+  sidebarBorderColor: '#eee',
 
   // sub-themes go into their own objects so they can be narrowed into
   titleBar: {
@@ -109,6 +108,7 @@ const light = {
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
+    buttonBackground: '#f2f2f2',
     listItemBackground: [255, 255, 255, 0],
     listItemBackgroundSelected: orbitColor,
     listItemBackgroundHover: [100, 100, 100, 0.04],

@@ -5,7 +5,7 @@ import { AppView } from '../../apps/AppView'
 import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
 import { AppConfig, AppType } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { Col, Row } from '@mcro/ui'
+import { Col, Row, Sidebar, View } from '@mcro/ui'
 import { AppPanes } from '../../stores/SpaceStore'
 import { SubPane } from '../../components/SubPane'
 import { App } from '@mcro/stores'
@@ -47,6 +47,15 @@ class OrbitStore {
 export const OrbitPageContent = observer(() => {
   const { paneManagerStore } = React.useContext(StoreContext)
   const store = useStore(OrbitStore, { paneManagerStore })
+
+  // sidebar
+  // const [sidebarWidth, setSidebarWidth] = React.useState(300)
+  // const handleResizeSidebar: ResizeCallback = (_a, direction, _c, diff) => {
+  //   if (direction === 'right' || direction === 'left') {
+  //     console.log('got', diff)
+  //     setSidebarWidth(sidebarWidth + +diff)
+  //   }
+  // }
 
   if (!store.activePane) {
     return null
@@ -96,21 +105,23 @@ export const OrbitPageContent = observer(() => {
         <ToolbarChrome>{activeAppStore.toolbar}</ToolbarChrome>
       ) : null}
       <Row flex={1}>
-        <OrbitIndexView isHidden={store.activePane === 'home' || store.activePane === 'settings'}>
-          {allPanes.map(app => (
-            <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
-              <SelectionManager pane={app.id}>
-                <AppView
-                  viewType="index"
-                  id={app.id}
-                  type={app.type}
-                  itemProps={{ onSelect: store.handleSelectItem }}
-                  onAppStore={store.setAppStore(app.type)}
-                />
-              </SelectionManager>
-            </SubPane>
-          ))}
-        </OrbitIndexView>
+        <Sidebar width={300} minWidth={100} maxWidth={500}>
+          <OrbitIndexView isHidden={store.activePane === 'home' || store.activePane === 'settings'}>
+            {allPanes.map(app => (
+              <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
+                <SelectionManager pane={app.id}>
+                  <AppView
+                    viewType="index"
+                    id={app.id}
+                    type={app.type}
+                    itemProps={{ onSelect: store.handleSelectItem }}
+                    onAppStore={store.setAppStore(app.type)}
+                  />
+                </SelectionManager>
+              </SubPane>
+            ))}
+          </OrbitIndexView>
+        </Sidebar>
         <OrbitMainView>
           {allPanes.map(app => (
             <SubPane key={app.type} id={app.id} type={app.type} fullHeight preventScroll>
@@ -134,8 +145,8 @@ const ToolbarChrome = gloss({}).theme((_, theme) => ({
   background: theme.background,
 }))
 
-const OrbitIndexView = gloss({
-  width: 300,
+const OrbitIndexView = gloss(View, {
+  flex: 1,
   position: 'relative',
   isHidden: {
     position: 'absolute',
@@ -143,10 +154,11 @@ const OrbitIndexView = gloss({
     visibility: 'hidden',
     zIndex: -1,
   },
-}).theme((_, theme) => ({
-  borderRight: [1, theme.borderColor.alpha(0.5)],
-  background: theme.background.alpha(0.5),
-}))
+})
+// .theme((_, theme) => ({
+//   borderRight: [1, theme.borderColor.alpha(0.5)],
+//   background: theme.background.alpha(0.5),
+// }))
 
 const OrbitMainView = gloss({
   flex: 1,

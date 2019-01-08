@@ -174,7 +174,7 @@ export const Surface = React.memo((props: SurfaceProps) => {
           <Glint
             key={0}
             size={size}
-            opacity={0.2}
+            opacity={0.35}
             borderLeftRadius={segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius}
             borderRightRadius={
               segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius

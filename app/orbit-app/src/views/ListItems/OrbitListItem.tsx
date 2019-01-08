@@ -124,7 +124,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                 <Title>
                   {showIcon && (
                     <>
-                      <OrbitIcon icon={icon} size={14} marginTop={2} {...iconProps} />
+                      <OrbitIcon icon={icon} size={16} marginTop={1} {...iconProps} />
                       <TitleSpace />
                     </>
                   )}

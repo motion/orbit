@@ -13,6 +13,8 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
     const { activeSources, allSources } = props.sourcesStore
     return [
       ...activeSources.map(app => ({
+        // only apply the click events to the active sources...
+        ...props.itemProps,
         id: app.source.id,
         title: app.appName,
         subtitle: app.display.name,
@@ -23,6 +25,7 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
         group: 'Sources',
       })),
       ...allSources.map((app, index) => ({
+        // ...these have their own onClick
         id: `${app.integration}${index}`,
         title: app.appName,
         icon: app.integration,
@@ -33,13 +36,12 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
     ]
   })
 
+  console.log('results', results)
   useResults(results)
-
-  console.log('SourcesAppIndex', props, results)
 
   return (
     <>
-      <VirtualList items={results} itemProps={props.itemProps} />
+      <VirtualList items={results} />
     </>
   )
 })

@@ -6,12 +6,12 @@ export class OracleManager {
   private isStarted = false
   private oracle: Oracle
 
-  constructor({ oracle }: { oracle: Oracle }) {
-    this.oracle = oracle
+  constructor() {
+    this.oracle = new Oracle()
   }
 
-  start = () => {
-    this.isStarted = true
+  async start() {
+    await this.oracle.start()
     console.log('start oracle manager', this.isStarted, !!this.oracle)
   }
 }

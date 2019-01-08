@@ -10,7 +10,9 @@ export type MediatorClientOptions = {
 }
 
 export class MediatorClient {
-  constructor(public options: MediatorClientOptions) {}
+  constructor(public options: MediatorClientOptions) {
+    this.options = options
+  }
 
   async command<Args, ReturnType>(
     command: Command<ReturnType, Args>,
@@ -18,6 +20,7 @@ export class MediatorClient {
   ): Promise<ReturnType> {
     const results = await Promise.all(
       this.options.transports.map(transport => {
+        console.log('executing', transport, command, args)
         return transport.execute('command', {
           command: command.name,
           args,

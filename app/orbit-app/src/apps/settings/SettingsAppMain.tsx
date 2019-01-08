@@ -2,7 +2,7 @@ import { ensure, react, view, attach } from '@mcro/black'
 import { observeOne, save } from '@mcro/model-bridge'
 import { SettingModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
-import { Button, Theme } from '@mcro/ui'
+import { Button, Theme, View } from '@mcro/ui'
 import * as React from 'react'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import * as Views from '../../views'
@@ -100,7 +100,7 @@ class SettingAppStore {
   }
 }
 
-const Section = gloss({
+const Section = gloss(View, {
   padding: [0, 0, 20],
 })
 
@@ -130,10 +130,10 @@ export class SettingsAppMain extends React.Component<
       return null
     }
     return (
-      <>
+      <View padding={20}>
         <Views.Title>Settings</Views.Title>
         {!!store.generalSetting && (
-          <Section>
+          <Section maxWidth={450}>
             <Views.CheckBoxRow
               checked={store.generalSetting.values.autoLaunch}
               onChange={store.generalChange('autoLaunch')}
@@ -168,7 +168,7 @@ export class SettingsAppMain extends React.Component<
             </Views.FormRow>
           </Section>
         )}
-      </>
+      </View>
     )
   }
 }

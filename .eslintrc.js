@@ -19,6 +19,10 @@ module.exports = {
     'no-case-declarations': 'off',
     'no-debugger': 'off',
     'no-shadow': 'error',
+
+    // broke in typescript-eslint-parser
+    // broken for polymorphic types
+    'no-dupe-class-members': 'off',
   },
   globals: {
     require: true,

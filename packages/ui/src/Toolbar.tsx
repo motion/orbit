@@ -31,7 +31,7 @@ export const Toolbar = gloss(Row, {
   alignItems: 'center',
   padding: 6,
   width: '100%',
-}).theme(({ height, borderTop, borderBottom, background, position, compact, theme }) => ({
+}).theme(({ height, borderTop, borderBottom, background, position, compact }, theme) => ({
   background: background || theme.background || colors.light02,
   borderBottom:
     borderBottom ||

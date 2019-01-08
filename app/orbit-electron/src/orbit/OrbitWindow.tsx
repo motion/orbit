@@ -144,7 +144,7 @@ export class OrbitWindow extends React.Component<Props> {
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#00000000"
-        vibrancy="light"
+        vibrancy={App.state.darkTheme ? 'dark' : 'light'}
         hasShadow
       />
     )

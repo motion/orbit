@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StoreContext } from '@mcro/black'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
-import { View, Row, Icon } from '@mcro/ui'
+import { View, Row, Icon, Button } from '@mcro/ui'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
@@ -14,6 +14,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
 import { OrbitNav } from './OrbitNav'
+import { OrbitSwitch } from './OrbitSwitch'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -112,10 +113,8 @@ export class HeaderStore {
   }
 
   handleMouseUp = () => {
-    console.log('mouse up')
     setTimeout(() => {
       if (this.inputRef.current) {
-        console.log('focusing input')
         this.inputRef.current.focus()
       }
     })
@@ -137,13 +136,23 @@ export const OrbitHeader = observer(() => {
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
-          <Icon name="arrowminleft" opacity={0.25} />
-          <OrbitInputContain>
+          {/* <Icon name="arrowminleft" opacity={0.25} /> */}
+          <OrbitSwitch />
+          <FakeInput>
             <OrbitHeaderInput headerStore={headerStore} />
             <After>
               <OrbitHeaderButtons />
             </After>
-          </OrbitInputContain>
+          </FakeInput>
+          <Button
+            chromeless
+            isActive={stores.paneManagerStore.activePane === 'settings'}
+            onClick={stores.paneManagerStore.activePaneSetter('settings')}
+            tooltip="Settings"
+          >
+            <Icon name="gear" size={14} opacity={0.5} />
+          </Button>
+          <Row flex={1} />
         </Row>
       </HeaderTop>
 
@@ -168,7 +177,7 @@ const After = gloss({
   flexFlow: 'row',
 })
 
-const OrbitInputContain = gloss({
+const FakeInput = gloss({
   height: 34,
   padding: [0, 20],
   alignItems: 'center',
@@ -178,6 +187,12 @@ const OrbitInputContain = gloss({
   maxWidth: 980,
   width: '85%',
   minWidth: 400,
+  cursor: 'text',
+  transition: 'none',
+  '&:active': {
+    background: [0, 0, 0, 0.025],
+    transition: 'all ease-out 250ms',
+  },
 })
 
 const OrbitClose = gloss({

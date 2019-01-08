@@ -129,7 +129,6 @@ export class OrbitSwitch extends React.Component<Props> {
           theme="light"
           width={300}
           background
-          adjust={[116, 0]}
           borderRadius={borderRadius}
           elevation={7}
           group="filters"

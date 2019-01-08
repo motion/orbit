@@ -1,6 +1,6 @@
 import { store } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
-import { SettingEntity, SpaceEntity } from '@mcro/models'
+import { SettingEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
@@ -31,37 +31,6 @@ export class GeneralSettingManager {
 
   async start() {
     let setting = await getRepository(SettingEntity).findOne({ name: 'general' })
-    if (!setting) {
-      const settingEntity = new SettingEntity()
-      Object.assign(settingEntity, {
-        name: 'general',
-        values: {
-          openShortcut: 'Option+Space',
-          autoLaunch: true,
-          autoUpdate: true,
-          darkTheme: true,
-        },
-      })
-      await getRepository(SettingEntity).save(settingEntity)
-      setting = await getRepository(SettingEntity).findOne({ name: 'general' })
-    }
-    let spaces = await getRepository(SpaceEntity).find()
-    if (!spaces.length) {
-      await getRepository(SpaceEntity).save([
-        {
-          name: 'Orbit',
-          colors: ['blue', 'green'],
-        },
-        {
-          name: 'Me',
-          colors: ['red', 'gray'],
-        },
-        {
-          name: 'Discussions',
-          colors: ['blue', 'red'],
-        },
-      ])
-    }
     this.handleAutoLaunch(setting)
   }
 

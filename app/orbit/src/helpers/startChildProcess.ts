@@ -54,13 +54,13 @@ export function startChildProcess({
     })
 
     child.stderr.on('data', b => {
-      const error = b.toString()
-      if (error.indexOf('Error') === -1) {
-        console.error('\n\n\n got an error but may not be worth reporting:')
-        console.error(`${name} error:`, error, '\n\n\n')
+      const out = b.toString()
+      if (/error/i.test(out) === false) {
+        console.error('\nGot an error that may not be worth reporting:')
+        console.error(`${name} error:`, out, '\n\n\n')
         return
       }
-      console.error(`${name} error:`, error)
+      console.error(`${name} error:`, out)
     })
 
     return child

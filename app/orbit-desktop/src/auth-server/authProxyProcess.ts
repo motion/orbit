@@ -7,7 +7,7 @@ let killPort = require('kill-port')
 
 console.log('starting https proxy server')
 
-async function main() {
+async function setupPortForwarding() {
   const getArg = prefix => {
     const arg = process.argv.find(x => x.indexOf(prefix) === 0)
     return arg.replace(prefix, '')
@@ -25,7 +25,7 @@ async function main() {
   console.log('proxy run on', host, port, proxyPort)
 
   try {
-    console.log('getting certificate')
+    console.log('getting certificate...')
     let ssl = await devcert.certificateFor(host)
     httpProxy
       .createServer({
@@ -37,22 +37,49 @@ async function main() {
       })
       .listen(port)
   } catch (err) {
-    console.log('https error', err)
+    console.log('certificate fetch error', err)
+    return false
   }
+
+  console.log('got certificate')
+
+  const pfEntry = `rdr pass inet proto tcp from any to any port 443 -> ${host} port ${port}`
+
+  // check if we already modified the pfctl
+  const pfExisting = (await exec.shell(`pfctl -s nat`)).stdout
+
+  if (pfExisting.indexOf(pfEntry)) {
+    console.log('has existing entry for port forwarding, done')
+    return true
+  }
+
+  console.log('no existing pf entry, creating...')
 
   // we have to use this style of port forwarding because all the node solutions seem to fail
   // when trying to forward 443
   try {
-    const res = await exec.shell(`echo "
-rdr pass inet proto tcp from any to any port 443 -> ${host} port ${port}
-  " | sudo pfctl -ef -`)
-    console.log('res', res.code, res.failed, res.stdout.toString())
+    const pfCommand = `echo "\n${pfEntry}\n" | sudo pfctl -ef -`
+    console.log('running command', pfCommand)
+    const res = await exec.shell(pfCommand)
+    console.log('created new pf entry...', res.code, res.failed, res.stdout.toString())
   } catch (err) {
     // fine, its already there!
     if (err.message && err.message.indexOf('pf already enabled')) {
-      return
+      return true
     }
     console.log('port forward err', err)
+    return false
+  }
+
+  return true
+}
+
+async function main() {
+  const success = await setupPortForwarding()
+  if (!success) {
+    process.exit(1)
+  } else {
+    console.log('done! proxying...')
   }
 }
 

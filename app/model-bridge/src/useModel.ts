@@ -1,11 +1,12 @@
 import { Model } from '@mcro/mediator'
 import { useEffect, useState, useRef } from 'react'
-import { observeMany } from '.'
+import { observeMany, observeOne } from '.'
 
 function useObserve<ModelType, Args>(
-  Model: Model<ModelType, Args, any>,
+  model: Model<ModelType, Args, any>,
   query: Args,
   defaultValue: any,
+  multiple = false,
 ) {
   const subscription = useRef(null)
   const curQuery = useRef(null)
@@ -25,7 +26,9 @@ function useObserve<ModelType, Args>(
       dispose()
 
       // subscribe new
-      subscription.current = observeMany(Model, { args: query }).subscribe(setValue)
+      subscription.current = multiple
+        ? observeMany(model, { args: query }).subscribe(setValue)
+        : observeOne(model, { args: query }).subscribe(setValue)
     }
   })
 
@@ -33,17 +36,17 @@ function useObserve<ModelType, Args>(
 }
 
 export function useObserveMany<ModelType, Args>(
-  Model: Model<ModelType, Args, any>,
+  model: Model<ModelType, Args, any>,
   query: Args,
   defaultValue: any = [],
 ): ModelType[] {
-  return useObserve(Model, query, defaultValue)
+  return useObserve(model, query, defaultValue, true)
 }
 
 export function useObserveOne<ModelType, Args>(
-  Model: Model<ModelType, Args, any>,
+  model: Model<ModelType, Args, any>,
   query: Args,
   defaultValue: any = null,
 ): ModelType {
-  return useObserve(Model, query, defaultValue)
+  return useObserve(model, query, defaultValue, false)
 }

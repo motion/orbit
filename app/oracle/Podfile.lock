@@ -18,7 +18,7 @@ PODS:
 
 DEPENDENCIES:
   - Starscream (>= 3.0.6)
-  - Swindler (from `https://github.com/tmandry/Swindler.git`)
+  - Swindler (from `https://github.com/tmandry/Swindler.git`, commit `a0d71455`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -28,11 +28,12 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   Swindler:
+    :commit: a0d71455
     :git: https://github.com/tmandry/Swindler.git
 
 CHECKOUT OPTIONS:
   Swindler:
-    :commit: a0d7145531c814ec88dda565548f2a4e6f89a37b
+    :commit: a0d71455
     :git: https://github.com/tmandry/Swindler.git
 
 SPEC CHECKSUMS:
@@ -41,6 +42,6 @@ SPEC CHECKSUMS:
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
   Swindler: e6542328dd440810ea73829fbb41da1105a58d70
 
-PODFILE CHECKSUM: 1f34df572b646a5e1ddd2b0b1e825f659e8f32fe
+PODFILE CHECKSUM: 3f5ed8e9ce68c3b015026599867a0feeb7060370
 
 COCOAPODS: 1.6.0.beta.2

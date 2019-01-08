@@ -17,7 +17,11 @@ export const SourcesAppMain = (props: AppProps<any>) => {
   const View = props.sourcesStore.getView(type, 'setting')
 
   if (!View) {
-    return <div>no view {type}</div>
+    return (
+      <div>
+        no view type {type}, for source {JSON.stringify(source)}
+      </div>
+    )
   }
   if (!source) {
     return <div> no source model</div>

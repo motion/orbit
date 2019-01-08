@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { compose, attach } from '@mcro/black'
 import { AppActions } from '../../actions/AppActions'
 import { App } from '@mcro/stores'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
@@ -7,6 +6,10 @@ import { PopoverState } from '@mcro/ui'
 import { SelectionStore, Direction } from '../../stores/SelectionStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { observer } from 'mobx-react-lite'
+import { StoreContext } from '@mcro/black'
+import { useStore } from '@mcro/use-store'
+import { MergeContext } from '../../views/MergeContext'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -22,8 +25,8 @@ const rootShortcuts = {
   escape: 'esc',
   down: 'down',
   up: 'up',
-  left: 'left',
-  right: 'right',
+  left: ['left', 'command+shift+['],
+  right: ['right', 'command+shift+]'],
   1: 'command+1',
   2: 'command+2',
   3: 'command+3',
@@ -35,78 +38,89 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-const decorate = compose(attach('queryStore', 'selectionStore', 'paneManagerStore'))
-export const MainShortcutHandler = decorate(
-  ({ queryStore, selectionStore, paneManagerStore, children }: Props) => {
-    const movePaneOrSelection = direction => () => {
-      console.log('move pane or selection', direction)
-      if (
-        selectionStore.activeIndex === -1 &&
-        (direction === Direction.left || direction === Direction.right)
-      ) {
-        if (paneManagerStore) {
-          paneManagerStore.move(direction)
-        }
-      } else {
-        selectionStore.move(direction)
+class ShortcutStore {
+  activeSelectionStore: SelectionStore = null
+
+  setActiveSelectionStore(store: SelectionStore) {
+    this.activeSelectionStore = store
+  }
+}
+
+export const MainShortcutHandler = observer(({ children }: Props) => {
+  const { queryStore, paneManagerStore } = React.useContext(StoreContext)
+  const shortcutStore = useStore(ShortcutStore)
+
+  const movePaneOrSelection = direction => () => {
+    const { activeSelectionStore } = shortcutStore
+    console.log('move pane or selection', direction, activeSelectionStore)
+    if (
+      activeSelectionStore.activeIndex === -1 &&
+      (direction === Direction.left || direction === Direction.right)
+    ) {
+      if (paneManagerStore) {
+        paneManagerStore.move(direction)
       }
+    } else {
+      activeSelectionStore.move(direction)
     }
+  }
 
-    let handlers: any = {
-      switchSpaces: () => {
-        AppActions.showSpaceSwitcher()
-      },
-      openCurrent: () => {
-        console.log('openCurrent')
-        // Actions.openSelectedItem()
-        // Actions.openItem(searchStore.selectedItem)
-      },
-      copyLink: async () => {
-        console.log('copyLink')
-        // Actions.copySelectedItemLink()
-        // Actions.copyLink(searchStore.selectedItem)
-      },
-      escape: () => {
-        console.log('escape')
-        if (PopoverState.openPopovers.size > 0) {
-          PopoverState.closeLast()
-          return
-        }
-        // clear peek first
-        if (App.peekState.appConfig) {
-          return AppActions.clearPeek()
-        }
-        // then orbit query
-        if (queryStore) {
-          return queryStore.setQuery('')
-        }
-        // then orbit itself
-        if (App.state.orbitState.docked) {
-          return AppActions.setOrbitDocked(false)
-        }
-      },
-      up: movePaneOrSelection(Direction.up),
-      down: movePaneOrSelection(Direction.down),
-      left: movePaneOrSelection(Direction.left),
-      right: movePaneOrSelection(Direction.right),
-    }
-
-    if (paneManagerStore) {
-      handlers = {
-        ...handlers,
-        1: paneManagerStore.activePaneIndexSetter(1 - 1),
-        2: paneManagerStore.activePaneIndexSetter(2 - 1),
-        3: paneManagerStore.activePaneIndexSetter(3 - 1),
-        4: paneManagerStore.activePaneIndexSetter(4 - 1),
-        5: paneManagerStore.activePaneIndexSetter(5 - 1),
-        6: paneManagerStore.activePaneIndexSetter(6 - 1),
-        7: paneManagerStore.activePaneIndexSetter(7 - 1),
-        8: paneManagerStore.activePaneIndexSetter(8 - 1),
-        9: paneManagerStore.activePaneIndexSetter(9 - 1),
+  let handlers: any = {
+    switchSpaces: () => {
+      AppActions.showSpaceSwitcher()
+    },
+    openCurrent: () => {
+      console.log('openCurrent')
+      // Actions.openSelectedItem()
+      // Actions.openItem(searchStore.selectedItem)
+    },
+    copyLink: async () => {
+      console.log('copyLink')
+      // Actions.copySelectedItemLink()
+      // Actions.copyLink(searchStore.selectedItem)
+    },
+    escape: () => {
+      console.log('escape')
+      if (PopoverState.openPopovers.size > 0) {
+        PopoverState.closeLast()
+        return
       }
-    }
+      // clear peek first
+      if (App.peekState.appConfig) {
+        return AppActions.clearPeek()
+      }
+      // then orbit query
+      if (queryStore) {
+        return queryStore.setQuery('')
+      }
+      // then orbit itself
+      if (App.state.orbitState.docked) {
+        return AppActions.setOrbitDocked(false)
+      }
+    },
+    up: movePaneOrSelection(Direction.up),
+    down: movePaneOrSelection(Direction.down),
+    left: movePaneOrSelection(Direction.left),
+    right: movePaneOrSelection(Direction.right),
+  }
 
-    return (
+  if (paneManagerStore) {
+    handlers = {
+      ...handlers,
+      1: paneManagerStore.activePaneIndexSetter(1 - 1),
+      2: paneManagerStore.activePaneIndexSetter(2 - 1),
+      3: paneManagerStore.activePaneIndexSetter(3 - 1),
+      4: paneManagerStore.activePaneIndexSetter(4 - 1),
+      5: paneManagerStore.activePaneIndexSetter(5 - 1),
+      6: paneManagerStore.activePaneIndexSetter(6 - 1),
+      7: paneManagerStore.activePaneIndexSetter(7 - 1),
+      8: paneManagerStore.activePaneIndexSetter(8 - 1),
+      9: paneManagerStore.activePaneIndexSetter(9 - 1),
+    }
+  }
+
+  return (
+    <MergeContext Context={StoreContext} value={{ shortcutStore }}>
       <FocusableShortcutHandler
         shortcuts={rootShortcuts}
         handlers={handlers}
@@ -114,6 +128,6 @@ export const MainShortcutHandler = decorate(
       >
         {children}
       </FocusableShortcutHandler>
-    )
-  },
-)
+    </MergeContext>
+  )
+})

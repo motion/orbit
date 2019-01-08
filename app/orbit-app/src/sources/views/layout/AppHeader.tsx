@@ -16,6 +16,45 @@ type Props = {
   children?: React.ReactNode
 }
 
+@attach('appPageStore')
+@view
+export class AppHeaderContent extends React.Component<Props> {
+  render() {
+    const { appPageStore, before, after, children, ...props } = this.props
+    let hideTitleBar = false
+    if (appPageStore) {
+      const { viewConfig } = appPageStore.state.appConfig
+      hideTitleBar = viewConfig && viewConfig.showTitleBar === false
+    }
+    return (
+      <AppHeaderContain
+        invisible={hideTitleBar}
+        draggable
+        focused
+        // onDragStart={appPageStore ? appPageStore.onDragStart : null}
+        {...props}
+      >
+        <Glint borderRadius={7.5} opacity={0.65} top={0.5} />
+        <MainHead>
+          {!!before && (
+            <HeaderSection flex={1}>
+              {typeof before === 'string' ? <TitleBarText>{before}</TitleBarText> : before}
+            </HeaderSection>
+          )}
+          {!!children && <Centered>{children}</Centered>}
+          {!!after && <HeaderSection>{after}</HeaderSection>}
+        </MainHead>
+      </AppHeaderContain>
+    )
+  }
+}
+
+export const AppHeader = props => (
+  <UI.Theme select={theme => theme.titleBar || theme}>
+    <AppHeaderContent {...props} />
+  </UI.Theme>
+)
+
 // the full header:
 const AppHeaderContain = gloss(UI.View, {
   background: 'transparent',
@@ -23,7 +62,7 @@ const AppHeaderContain = gloss(UI.View, {
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
   padding: [0, 8],
-}).theme(({ invisible, position, theme, focused }) => {
+}).theme(({ invisible, position, focused }, theme) => {
   if (invisible) {
     return null
   }
@@ -66,40 +105,4 @@ const TitleBarText = props => (
   <div style={{ position: 'absolute', top: 0, left: 10, right: 10, bottom: 0 }}>
     <Text size={0.95} fontWeight={400} ellipse={1} margin={0} lineHeight="1.5rem" {...props} />
   </div>
-)
-
-@attach('appPageStore')
-@view
-export class AppHeaderContent extends React.Component<Props> {
-  render() {
-    const { appPageStore, before, after, children, ...props } = this.props
-    const { viewConfig } = appPageStore.state.appConfig
-    const hideTitleBar = viewConfig && viewConfig.showTitleBar === false
-    return (
-      <AppHeaderContain
-        invisible={hideTitleBar}
-        draggable
-        focused
-        onDragStart={appPageStore.onDragStart}
-        {...props}
-      >
-        <Glint borderRadius={7.5} opacity={0.65} top={0.5} />
-        <MainHead>
-          {!!before && (
-            <HeaderSection flex={1}>
-              {typeof before === 'string' ? <TitleBarText>{before}</TitleBarText> : before}
-            </HeaderSection>
-          )}
-          {!!children && <Centered>{children}</Centered>}
-          {!!after && <HeaderSection>{after}</HeaderSection>}
-        </MainHead>
-      </AppHeaderContain>
-    )
-  }
-}
-
-export const AppHeader = props => (
-  <UI.Theme select={theme => theme.titleBar || theme}>
-    <AppHeaderContent {...props} />
-  </UI.Theme>
 )

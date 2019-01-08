@@ -18,11 +18,10 @@ export function startDevelopment(appRoot) {
   })
 
   process.on('unhandledRejection', function(reason) {
-    if (reason) {
-      if (reason.code === 'SQLITE_BUSY') {
-        console.log('sqlite busy!')
-      }
-    }
-    console.warn('Desktop: Possibly Unhandled Rejection', reason)
+    console.log(
+      `Desktop: Possibly Unhandled Rejection:
+    ${reason.message}
+    ${reason.stack}`,
+    )
   })
 }

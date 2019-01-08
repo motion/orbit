@@ -25,6 +25,8 @@ const StringCache = new WeakMap()
 
 var limiters = {}
 
+export * from './helpers'
+
 export class Color {
   static rgb: Function
 
@@ -316,12 +318,12 @@ export class Color {
     return hsl
   }
 
-  mix(mixinColor, weight) {
+  mix(mixinColor, weight = 0.5) {
     // ported from sass implementation in C
     // https://github.com/sass/libsass/blob/0e6b4a2850092356aa3ece07c6b249f0221caced/functions.cpp#L209
     var color1 = mixinColor.rgb()
     var color2 = this.rgb()
-    var p = weight === undefined ? 0.5 : weight
+    var p = weight
     var w = 2 * p - 1
     var a = color1.alpha() - color2.alpha()
     var w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2.0
@@ -333,26 +335,48 @@ export class Color {
       color1.alpha() * p + color2.alpha() * (1 - p),
     )
   }
-}
 
-// conversions
-const conversions = {
-  red: getset('rgb', 0, maxfn(255)),
-  green: getset('rgb', 1, maxfn(255)),
-  blue: getset('rgb', 2, maxfn(255)),
-  hue: getset(['hsl', 'hsv', 'hsl', 'hwb'], 0, function(val) {
-    return ((val % 360) + 360) % 360
-  }),
-  saturationl: getset('hsl', 1, maxfn(100)),
-  lightness: getset('hsl', 2, maxfn(100)),
-  saturationv: getset('hsv', 1, maxfn(100)),
-  value: getset('hsv', 2, maxfn(100)),
-  white: getset('hwb', 1, maxfn(100)),
-  wblack: getset('hwb', 2, maxfn(100)),
-}
+  get red() {
+    return getset('rgb', 0, maxfn(255))
+  }
 
-for (const key of Object.keys(conversions)) {
-  Color.prototype[key] = conversions[key]
+  get green() {
+    return getset('rgb', 1, maxfn(255))
+  }
+
+  get blue() {
+    return getset('rgb', 2, maxfn(255))
+  }
+
+  get hue() {
+    return getset(['hsl', 'hsv', 'hsl', 'hwb'], 0, function(val) {
+      return ((val % 360) + 360) % 360
+    })
+  }
+
+  get saturationl() {
+    return getset('hsl', 1, maxfn(100))
+  }
+
+  get lightness() {
+    return getset('hsl', 2, maxfn(100))
+  }
+
+  get saturationv() {
+    return getset('hsv', 1, maxfn(100))
+  }
+
+  get value() {
+    return getset('hsv', 2, maxfn(100))
+  }
+
+  get white() {
+    return getset('hwb', 1, maxfn(100))
+  }
+
+  get wblack() {
+    return getset('hwb', 2, maxfn(100))
+  }
 }
 
 // model conversion methods and static constructors
@@ -400,7 +424,7 @@ function getset(model, channel, modifier?) {
     ;(limiters[m] || (limiters[m] = []))[channel] = modifier
   })
   model = model[0]
-  return function(val) {
+  return function(val?) {
     var result
     if (arguments.length) {
       if (modifier) {

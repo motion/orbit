@@ -18,6 +18,7 @@ import { App } from '@mcro/stores'
 import { OrbitPageContent } from './OrbitPageContent'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
+import { invertLightness } from '@mcro/color'
 
 export default observer(() => {
   const theme = App.state.darkTheme ? 'dark' : 'light'
@@ -67,7 +68,7 @@ export default observer(() => {
 const Chrome = gloss({
   flex: 1,
 }).theme((_, theme) => ({
-  background: theme.background.alpha(0.5),
+  background: invertLightness(theme.background, 0.1).alpha(0.75),
 }))
 
 const InnerChrome = gloss({

@@ -15,6 +15,7 @@ import { HorizontalSpace } from '..'
 import { Separator } from '../Separator'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
+import { Icon } from '../Icon'
 
 export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
   const stores = React.useContext(StoreContext)
@@ -124,7 +125,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                 <Title>
                   {showIcon && (
                     <>
-                      <OrbitIcon icon={icon} size={16} marginTop={1} {...iconProps} />
+                      <Icon name={icon} size={16} marginTop={1} {...iconProps} />
                       <TitleSpace />
                     </>
                   )}

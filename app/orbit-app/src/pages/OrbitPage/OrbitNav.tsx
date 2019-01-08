@@ -28,7 +28,7 @@ export const OrbitNav = observer(() => {
               separator={!isActive && isLast && !nextIsActive}
               onClick={paneManagerStore.activePaneSetter(pane.id)}
             >
-              <Icon name={`${pane.icon}`} size={16} />
+              <Icon name={`${pane.icon}`} size={14} style={{ opacity: isActive ? 1 : 0.75 }} />
             </NavButton>
           )
         })}
@@ -107,6 +107,7 @@ const NavButton = ({
         <Text
           size={0.95}
           marginLeft={!!children ? buttonSidePad * 0.75 : 0}
+          alpha={isActive ? 1 : 0.85}
           fontWeight={500}
           {...textProps}
         >

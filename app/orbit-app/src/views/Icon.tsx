@@ -1,7 +1,8 @@
 import * as React from 'react'
 import fuzzy from 'fuzzysort'
 import { SVG } from './SVG'
-import { ThemeContext } from '@mcro/ui'
+import { ThemeContext, IconProps } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 
 const icons = {
   orbit: require('!raw-loader!../../public/icons/icon-orbit.svg'),
@@ -159,18 +160,20 @@ const findIconName = name => {
   return false
 }
 
-type IconProps = React.HTMLProps<SVGElement> & {
-  name: string
-  fill?: string
-  size?: number
-  style?: any
-}
+type Props = React.HTMLProps<SVGElement> &
+  IconProps & {
+    ref: any
+    name: string
+    fill?: string
+    size?: number
+    style?: any
+  }
 
-export const Icon = React.memo(({ name, fill, size = 32, style = null, ...props }: IconProps) => {
+export const Icon = React.memo(({ name, fill, size = 32, style = null, ...props }: Props) => {
   const { activeTheme } = React.useContext(ThemeContext)
   const iconName = findIconName(name)
   if (!iconName) {
-    return null
+    return <UI.Icon name={name} color={fill} size={size} style={style} {...props} />
   }
   const icon = icons[iconName]
   return (

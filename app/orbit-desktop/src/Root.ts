@@ -80,7 +80,6 @@ import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver
 import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
 import { OracleManager } from './managers/OracleManager'
-import { AppsManager } from './managers/AppsManager'
 import { TopicsManager } from './managers/TopicsManager'
 
 export class Root {
@@ -101,7 +100,6 @@ export class Root {
   private cosalManager: CosalManager
   private ocrManager: OCRManager
   private appWindowsManager: AppWindowsManager
-  private appsManager: AppsManager
   private screenManager: ScreenManager
   private generalSettingManager: GeneralSettingManager
   private databaseManager: DatabaseManager
@@ -138,21 +136,19 @@ export class Root {
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
 
+    // run this early, it sets up the general setting if needed
+    // TODO: this abritrary ordering of these things is really a dependency graph, could be setup that way
+    this.generalSettingManager = new GeneralSettingManager()
+    await this.generalSettingManager.start()
+
     // cosal is a dependency of many things
     this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
     await this.cosalManager.start()
     this.cosal = this.cosalManager.cosal
 
-    // cosal dependent things
+    // depends on cosal and generalSetting
     this.topicsManager = new TopicsManager({ cosal: this.cosal })
     await this.topicsManager.start()
-
-    // database dependent things can start here
-    this.generalSettingManager = new GeneralSettingManager()
-    await this.generalSettingManager.start()
-
-    this.appsManager = new AppsManager()
-    await this.appsManager.start()
 
     // start server a bit early so other apps can start
     this.webServer = new WebServer()

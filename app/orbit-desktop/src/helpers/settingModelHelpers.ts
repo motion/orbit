@@ -9,6 +9,9 @@ class SettingValueError extends Error {}
 
 export async function getSettingValue<A extends keyof Setting['values']>(key?: A) {
   const setting = await getSetting()
+  if (!setting) {
+    throw new SettingValueError('No setting!')
+  }
   if (typeof setting.values[key] !== 'undefined') {
     return setting.values[key]
   }

@@ -6,7 +6,12 @@ import { chunk, zip, flatten, last } from 'lodash'
 import { remove } from 'fs-extra'
 import { COSAL_DB } from '../constants'
 import { sleep } from '@mcro/utils'
-import { getSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
+import {
+  getSetting,
+  getSettingValue,
+  updateSetting,
+  ensureSetting,
+} from '../helpers/settingModelHelpers'
 
 const log = new Logger('CosalManager')
 
@@ -27,7 +32,7 @@ export class CosalManager {
   }
 
   async start() {
-    await this.ensureDefaultSetting()
+    await ensureSetting('cosalIndexUpdatedTo', 0)
     this.cosal = new Cosal({
       database: this.dbPath,
     })
@@ -57,15 +62,6 @@ export class CosalManager {
     const res = await this.cosal.search(query, max)
     const ids = res.map(x => x.id)
     return await getRepository(BitEntity).find({ id: { $in: ids } })
-  }
-
-  private async ensureDefaultSetting() {
-    if (typeof (await this.getLastScan()) === 'number') {
-      return
-    }
-    await updateSetting({
-      cosalIndexUpdatedTo: 0,
-    })
   }
 
   private async getLastScan() {

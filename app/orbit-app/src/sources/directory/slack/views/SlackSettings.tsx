@@ -73,14 +73,12 @@ export class SlackSettings extends React.Component<
     const {
       store,
       source,
-      appConfig: {
-        viewConfig: { initialState },
-      },
+      appConfig: { viewConfig },
     } = this.props
     return (
       <SimpleAppExplorer
         source={source}
-        initialState={initialState}
+        initialState={viewConfig ? viewConfig.initialState : null}
         settingsPane={
           <>
             <SettingManageRow source={source} whitelist={store.whitelist} />

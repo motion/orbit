@@ -6,8 +6,8 @@ export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', 
     <svg width="55px" height="55px" viewBox="0 0 55 55" {...props}>
       <defs>
         <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
-          <stop stop-color={stopColor} stop-opacity="0.5" offset="0%" />
-          <stop stop-color={startColor} stop-opacity="0.5" offset="100%" />
+          <stop stopColor={stopColor} stopOpacity="0.5" offset="0%" />
+          <stop stopColor={startColor} stopOpacity="0.5" offset="100%" />
         </linearGradient>
       </defs>
       <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

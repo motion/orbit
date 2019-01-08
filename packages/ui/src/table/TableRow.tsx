@@ -18,18 +18,18 @@ import { Row } from '../blocks/Row.js'
 import FilterRow from './FilterRow.js'
 import { gloss } from '@mcro/gloss'
 
-const backgroundColor = props => {
+const backgroundColor = (props, theme) => {
   if (props.highlighted) {
     if (props.highlightedBackgroundColor) {
       return props.highlightedBackgroundColor
     } else {
-      return props.theme.highlightBackground
+      return theme.highlightBackground
     }
   } else {
     if (props.backgroundColor) {
       return props.backgroundColor
     } else if (props.even && props.zebra) {
-      return props.theme.light02
+      return theme.light02
     } else {
       return 'transparent'
     }
@@ -40,22 +40,22 @@ const TableBodyRowContainer = gloss(Row, {
   overflow: 'hidden',
   width: '100%',
   userSelect: 'none',
-}).theme(props => ({
-  backgroundColor: backgroundColor(props),
+}).theme((props, theme) => ({
+  backgroundColor: backgroundColor(props, theme),
   boxShadow: props.zebra ? 'none' : 'inset 0 -1px #E9EBEE',
-  color: props.highlighted ? props.theme.white : props.color || 'inherit',
+  color: props.highlighted ? theme.white : props.color || 'inherit',
   '& *': {
-    color: props.highlighted ? `${props.theme.white} !important` : null,
+    color: props.highlighted ? `${theme.white} !important` : null,
   },
   '& img': {
-    backgroundColor: props.highlighted ? `${props.theme.white} !important` : 'none',
+    backgroundColor: props.highlighted ? `${theme.white} !important` : 'none',
   },
   height: props.multiline ? 'auto' : props.rowLineHeight,
   lineHeight: `${String(props.rowLineHeight || DEFAULT_ROW_HEIGHT)}px`,
   fontWeight: props.fontWeight || 'inherit',
   flexShrink: 0,
   '&:hover': {
-    backgroundColor: !props.highlighted && props.highlightOnHover ? props.theme.light02 : 'none',
+    backgroundColor: !props.highlighted && props.highlightOnHover ? theme.light02 : 'none',
   },
 }))
 

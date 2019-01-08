@@ -16,20 +16,6 @@ next steps:
   - get ocr integrated with memory (memory app?)
   - iterate 10x
 
-what does orbit do for apps:
-
-- content > app, content first
-  - all apps sync their files or important bits into a common format
-  - that lets you have:
-    - an organizer/journal that works over any app
-- offline first
-  - sync and running all happens locally by default, only team level configuration is synced
-  - means you can use it personally without worry of encroachment
-  - means you can build and deploy apps without infrastructure (torrent based app store, can have p2p based data sync apis)
-- easiest deploy story ever
-  - especially if you need a simple database to access local or private contnt
-- nice app featurs: instant-on, keyboard nav, ui kit, reactive querying
-
 thinking through the lense of apps:
 
 - can do it now without being "custom" just "customizable"

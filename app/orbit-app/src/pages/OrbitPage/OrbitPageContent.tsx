@@ -96,7 +96,7 @@ export const OrbitPageContent = observer(() => {
         <ToolbarChrome>{activeAppStore.toolbar}</ToolbarChrome>
       ) : null}
       <Row flex={1}>
-        <OrbitIndexView isHidden={store.activePane === 'home'}>
+        <OrbitIndexView isHidden={store.activePane === 'home' || store.activePane === 'settings'}>
           {allPanes.map(app => (
             <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
               <SelectionManager pane={app.id}>

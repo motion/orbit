@@ -39,9 +39,8 @@ export const OrbitNav = observer(() => {
         <NavButton
           isActive={paneManagerStore.activePane === 'sources'}
           onClick={paneManagerStore.activePaneSetter('sources')}
-        >
-          <UI.Icon name="app" size={14} opacity={0.5} />
-        </NavButton>
+          label="Manage"
+        />
       </OrbitNavChrome>
     </OrbitNavClip>
   )

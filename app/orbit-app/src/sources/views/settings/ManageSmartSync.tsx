@@ -7,9 +7,11 @@ import { HorizontalSpace } from '../../../views'
 export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any> }) => {
   return (
     <>
-      <CheckBox onChange={whitelist.toggleActive} checked={whitelist.isWhitelisting} />
-      <HorizontalSpace />
-      <Text>Smart sync recent items</Text>
+      <label style={{ flexFlow: 'row' }}>
+        <CheckBox onChange={whitelist.toggleActive} checked={whitelist.isWhitelisting} />
+        <HorizontalSpace />
+        <Text>Smart sync recent items</Text>
+      </label>
     </>
   )
 }

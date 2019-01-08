@@ -1,7 +1,7 @@
 import { MigrationInterface, getRepository } from 'typeorm'
 import { SpaceEntity, SettingEntity, App, AppEntity } from '@mcro/models'
 
-export class CosalReset1538695904657 implements MigrationInterface {
+export class EnsureModels1546916550168 implements MigrationInterface {
   public async up(): Promise<any> {
     await this.ensureDefaultSetting()
     await this.ensureDefaultSpace()

@@ -23,7 +23,7 @@ export const SearchAppIndex = observer((props: AppProps<'search'>) => {
       )}
       <View position="relative" flex={1} opacity={searchStore.isChanging ? 0.7 : 1}>
         <SearchResultsList
-          results={searchStore.searchState.results}
+          items={searchStore.searchState.results}
           query={props.appStore.activeQuery}
           itemProps={props.itemProps}
           rowCount={searchStore.remoteRowCount}

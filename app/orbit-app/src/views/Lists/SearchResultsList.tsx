@@ -4,17 +4,15 @@ import { VirtualList, VirtualListProps } from '../../views/VirtualList/VirtualLi
 import { PersonBit, Bit } from '@mcro/models'
 import { StoreContext } from '@mcro/black'
 import { SearchResultListItem } from '../ListItems/SearchResultListItem'
-import { ResolvableModel } from '../../sources/types'
 
 export type SearchableItem = (Bit | PersonBit)[]
 
 type SearchResultsListProps = Partial<VirtualListProps> & {
   query: string
-  results: ResolvableModel[]
   offsetY?: number
 }
 
-export const SearchResultsList = ({ results, offsetY = 0, ...props }: SearchResultsListProps) => {
+export const SearchResultsList = ({ items, offsetY = 0, ...props }: SearchResultsListProps) => {
   const { appStore } = React.useContext(StoreContext)
 
   return (
@@ -26,10 +24,10 @@ export const SearchResultsList = ({ results, offsetY = 0, ...props }: SearchResu
       }}
     >
       <VirtualList
+        items={items}
         ItemView={SearchResultListItem}
         maxHeight={appStore.maxHeight - offsetY}
-        items={results}
-        isRowLoaded={find => find.index < results.length}
+        isRowLoaded={find => find.index < items.length}
         {...props}
       />
     </ProvideHighlightsContextWithDefaults>

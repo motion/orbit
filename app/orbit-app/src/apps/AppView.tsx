@@ -47,6 +47,7 @@ export const AppView = React.memo((props: Props) => {
       settingStore={stores.settingStore}
       subPaneStore={stores.subPaneStore}
       queryStore={stores.queryStore}
+      spaceStore={stores.spaceStore}
     />
   )
   if (shouldProvideAppStore) {

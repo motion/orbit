@@ -36,7 +36,6 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
     ]
   })
 
-  console.log('results', results)
   useResults(results)
 
   return (

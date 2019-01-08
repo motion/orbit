@@ -1,12 +1,6 @@
-import { ensure, react } from '@mcro/black'
+import { ensure, react, always } from '@mcro/black'
 import { loadMany, observeMany } from '@mcro/model-bridge'
-import {
-  SearchResultModel,
-  SearchResult,
-  SearchQuery,
-  IntegrationType,
-  AppModel,
-} from '@mcro/models'
+import { SearchResultModel, SearchQuery, IntegrationType, AppModel } from '@mcro/models'
 import { uniq } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
@@ -14,7 +8,7 @@ import { fuzzyQueryFilter } from '../../helpers'
 import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
 
 type SearchState = {
-  results: OrbitItemProps<any>
+  results: OrbitItemProps<any>[]
   finished?: boolean
   query: string
 }
@@ -101,9 +95,11 @@ export class SearchStore {
   )
 
   apps = react(
-    () => 1,
-    () =>
-      observeMany(AppModel, { args: { where: { spaceId: this.props.spaceStore.activeSpace.id } } }),
+    () => this.props.spaceStore.activeSpace,
+    space => {
+      ensure('space', !!space)
+      return observeMany(AppModel, { args: { where: { spaceId: space.id } } })
+    },
     {
       defaultValue: [],
     },
@@ -143,6 +139,7 @@ export class SearchStore {
       this.queryFilters.exclusiveFilters,
       this.queryFilters.sortBy,
       this.queryFilters.dateState,
+      always(this.apps),
     ],
     async ([query], { when, setValue, idle, sleep }): Promise<SearchState> => {
       // if not on this pane, delay it a bit
@@ -151,7 +148,9 @@ export class SearchStore {
         await idle()
       }
 
+      // RESULTS
       let results: OrbitItemProps<any>[] = []
+
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query
       if (isChangingQuery) {
@@ -237,6 +236,7 @@ export class SearchStore {
           icon: app.type,
         })),
       ]
+      setValue({ results, query, finished: false })
 
       await updateNextResults({
         maxBitsCount: 2,

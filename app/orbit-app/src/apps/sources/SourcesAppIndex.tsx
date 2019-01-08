@@ -35,8 +35,6 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
 
   useResults(results)
 
-  console.log('SourcesAppIndex', props, results)
-
   return (
     <>
       <VirtualList items={results} itemProps={props.itemProps} />

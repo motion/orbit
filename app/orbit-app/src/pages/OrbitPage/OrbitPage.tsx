@@ -35,6 +35,7 @@ export default observer(() => {
       }
     },
   })
+
   const stores = {
     settingStore,
     sourcesStore,

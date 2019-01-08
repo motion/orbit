@@ -99,7 +99,7 @@ export const OrbitPageContent = observer(() => {
         <OrbitIndexView isHidden={store.activePane === 'home'}>
           {allPanes.map(app => (
             <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
-              <SelectionManager>
+              <SelectionManager pane={app.id}>
                 <AppView
                   viewType="index"
                   id={app.id}

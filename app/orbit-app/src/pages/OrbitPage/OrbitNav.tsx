@@ -68,7 +68,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean }>({
   alignItems: 'center',
   justifyContent: 'center',
   padding: [5, buttonSidePad],
-  height: 30,
+  height: 28,
   maxWidth: 180,
 }).theme(({ isActive, stretch }, theme) => {
   const background = isActive

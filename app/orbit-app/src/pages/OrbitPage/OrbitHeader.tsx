@@ -167,7 +167,7 @@ const OrbitHeaderContainer = gloss(View, {
 })
 
 const HeaderTop = gloss({
-  padding: [6, 10],
+  padding: [5, 10],
   flexFlow: 'row',
   transition: 'all ease-in 300ms',
 })
@@ -179,7 +179,7 @@ const After = gloss({
 
 const FakeInput = gloss({
   height: 34,
-  padding: [0, 20],
+  padding: [0, 10],
   alignItems: 'center',
   justifyContent: 'center',
   margin: 'auto',
@@ -191,7 +191,7 @@ const FakeInput = gloss({
   transition: 'none',
   '&:active': {
     background: [0, 0, 0, 0.025],
-    transition: 'all ease-out 250ms',
+    transition: 'all ease-out 250ms 150ms',
   },
 })
 

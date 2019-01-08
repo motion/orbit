@@ -20,9 +20,13 @@ export async function checkAuthProxy() {
     console.log('nope', res.status)
     return false
   } catch (err) {
-    console.log('checkAuthProxy err', err.message)
+    if (err.message.indexOf('ECONNREFUSED') === -1) {
+      console.log('checkAuthProxy err', err.message)
+    } else {
+      // no connection yet, fine failure case
+    }
   } finally {
     clearTimeout(timeout)
-    return false
   }
+  return false
 }

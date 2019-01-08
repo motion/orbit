@@ -16,11 +16,9 @@ export function startAuthProxy() {
   const host = Config.urls.authHost
   const port = Config.ports.authProxy
   const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
-  const command = `${authProxyScript} --authUrl=${host}:${port} --proxyTo=${Config.ports.auth}`
-  const env = {
-    ...process.env,
-    ELECTRON_RUN_AS_NODE: 1,
-  }
+  const command = `${
+    Config.paths.nodeBinary
+  } ${authProxyScript} --authUrl=${host}:${port} --proxyTo=${Config.ports.auth}`
 
   log.info(`Running proxy script: ${command}`)
 
@@ -28,7 +26,10 @@ export function startAuthProxy() {
     // run proxy server in secure sub-process
     sudoer
       .spawn(Config.paths.nodeBinary, command.split(' '), {
-        env,
+        env: {
+          ...process.env,
+          ELECTRON_RUN_AS_NODE: 1,
+        },
       })
       .then(proc => {
         proc.stdout.on('data', x => log.info(`OrbitProxy: ${x}`))

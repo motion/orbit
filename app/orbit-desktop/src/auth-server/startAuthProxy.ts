@@ -34,6 +34,7 @@ export function startAuthProxy() {
         proc.stderr.on('data', x => {
           console.log(`OrbitProxyErr: ${x}`)
           // TODO handle error and report to interface...
+          resolve(false)
         })
       })
       .catch(err => {

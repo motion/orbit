@@ -12,8 +12,6 @@ export const addSourceClickHandler = memoize(
     e.stopPropagation()
     e.preventDefault()
 
-    console.log('add integration', e.currentTarget, app)
-
     if (app.views.setup) {
       // if this view wants to show a "setup" pane...
       AppActions.togglePeekApp({
@@ -27,6 +25,7 @@ export const addSourceClickHandler = memoize(
       // ...otherwise we open browser to oauth
       AppActions.clearPeek()
       await command(SetupProxyCommand)
+      console.log('proxy setup success, opening...')
       open(`${getGlobalConfig().urls.auth}/auth/${app.integration}`)
     }
   },

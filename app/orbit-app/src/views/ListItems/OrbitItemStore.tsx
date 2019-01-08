@@ -35,7 +35,6 @@ export class OrbitItemStore {
   }
 
   handleClick = (e: React.SyntheticEvent<MouseEvent>) => {
-    console.log('handling click', this.props)
     // so we can control the speed of doubleclicks
     if (Date.now() - this.clickAt < 280) {
       // allow double click of location

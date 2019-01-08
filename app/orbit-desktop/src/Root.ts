@@ -284,6 +284,7 @@ export class Root {
         GithubSourceBlacklistCommand,
         SlackSourceBlacklistCommand,
         SetupProxyCommand,
+        CheckProxyCommand,
       ],
       transport: new WebSocketServerTransport({
         port: this.config.ports.dbBridge,
@@ -314,11 +315,11 @@ export class Root {
         SearchPinnedResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),
         resolveCommand(SetupProxyCommand, async () => {
+          console.log('resolving SetupProxyCommand')
           if (await checkAuthProxy()) {
             return true
-          } else {
-            return await startAuthProxy()
           }
+          return await startAuthProxy()
         }),
       ],
     })

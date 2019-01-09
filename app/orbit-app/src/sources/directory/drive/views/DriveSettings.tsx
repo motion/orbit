@@ -4,7 +4,6 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
 import { DriveSource } from '@mcro/models'
 import { OrbitSourceSettingProps } from '../../../types'
-import { SimpleAppExplorer } from '../../../views/apps/SimpleAppExplorer'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<DriveSource>
@@ -55,68 +54,59 @@ export class DriveSettings extends React.Component<
   render() {
     const {
       store,
-      source,
-      appConfig: {
-        viewConfig: { initialState },
-      },
+      source,,
     } = this.props
     const folders = store.popularFolders
 
     return (
-      <SimpleAppExplorer
-        source={source}
-        initialState={initialState}
-        settingsPane={
-          <>
-            <SettingManageRow source={source} whitelist={null} />
-            <View flex={1} opacity={1} pointerEvents={'auto'}>
-              <SearchableTable
-                virtual
-                rowLineHeight={28}
-                floating={false}
-                columnSizes={{
-                  name: 'flex',
-                  active: '14%',
-                }}
-                columns={{
-                  name: {
-                    value: 'Folder Name',
-                    sortable: true,
-                    resizable: true,
-                  },
-                  active: {
-                    value: 'Active',
-                    sortable: true,
-                  },
-                }}
-                multiHighlight
-                rows={folders.map((file, index) => {
-                  return {
-                    key: `${index}`,
-                    columns: {
-                      name: {
-                        sortValue: file.name,
-                        value: file.name,
-                      },
-                      active: {
-                        sortValue: false,
-                        value: (
-                          <ReactiveCheckBox isActive={this.props.store.onSyncSetter(file.id)} />
-                        ),
-                      },
-                    },
-                  }
-                })}
-                bodyPlaceholder={
-                  <div style={{ margin: 'auto' }}>
-                    <Text size={1.2}>Loading...</Text>
-                  </div>
-                }
-              />
-            </View>
-          </>
-        }
-      />
+      <>
+      <SettingManageRow source={source} whitelist={null} />
+      <View flex={1} opacity={1} pointerEvents={'auto'}>
+        <SearchableTable
+          virtual
+          rowLineHeight={28}
+          floating={false}
+          columnSizes={{
+            name: 'flex',
+            active: '14%',
+          }}
+          columns={{
+            name: {
+              value: 'Folder Name',
+              sortable: true,
+              resizable: true,
+            },
+            active: {
+              value: 'Active',
+              sortable: true,
+            },
+          }}
+          multiHighlight
+          rows={folders.map((file, index) => {
+            return {
+              key: `${index}`,
+              columns: {
+                name: {
+                  sortValue: file.name,
+                  value: file.name,
+                },
+                active: {
+                  sortValue: false,
+                  value: (
+                    <ReactiveCheckBox isActive={this.props.store.onSyncSetter(file.id)} />
+                  ),
+                },
+              },
+            }
+          })}
+          bodyPlaceholder={
+            <div style={{ margin: 'auto' }}>
+              <Text size={1.2}>Loading...</Text>
+            </div>
+          }
+        />
+      </View>
+    </>
     )
   }
 }

@@ -236,8 +236,12 @@ export class SearchStore {
           group: 'Apps',
           title: app.name,
           icon: app.type,
+          // appConfig: {
+          //   type: 'message'
+          // },
           onSelect: () => {
-            console.log('hi')
+            console.log('selecting app...', app.type)
+            this.props.paneManagerStore.setActivePane(app.type)
           },
         })),
       ]

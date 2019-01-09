@@ -47,6 +47,7 @@ export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
     children?: React.ReactNode
     onClick?: Function
     onSelect?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
+    onPreview: (index?: number, config?: AppConfig, element?: HTMLElement) => any
     borderRadius?: number
     nextUpStyle?: Object
     isSelected?: boolean | Function

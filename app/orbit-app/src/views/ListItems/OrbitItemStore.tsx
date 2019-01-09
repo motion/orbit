@@ -135,12 +135,12 @@ export class OrbitItemStore {
   updateIsSelected = react(
     this.shouldSelect,
     async (isSelected, { sleep }) => {
-      const { onSelect } = this.props
+      const { onPreview } = this.props
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected) {
-        if (onSelect) {
-          onSelect(this.index, this.appConfig, this.cardWrapRef)
+        if (onPreview) {
+          onPreview(this.index, this.appConfig, this.cardWrapRef)
         } else {
           ensure('this.appConfig', !!this.appConfig)
           // fluidity

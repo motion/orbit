@@ -311,11 +311,9 @@ export class Root {
         SearchPinnedResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),
         resolveCommand(SetupProxyCommand, async () => {
-          console.log('resolving SetupProxyCommand')
-          if (await checkAuthProxy()) {
-            return true
-          }
-          return await startAuthProxy()
+          const success = (await checkAuthProxy()) || (await startAuthProxy())
+          console.log('finishing setup proxy', success)
+          return success
         }),
         resolveCommand(OpenCommand, async ({ url }) => {
           try {

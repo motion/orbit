@@ -22,8 +22,8 @@ export const OrbitAppInfo = observer((props: Props) => {
         const isSyncing = !!syncJobs.length
         return (
           <Row alignItems="center">
-            <Text size={0.9} alpha={0.7}>
-              {isSyncing ? 'Syncing...' : ''}
+            <Text size={0.9}>
+              {isSyncing ? 'Syncing... ' : ''}
               {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
             </Text>
           </Row>

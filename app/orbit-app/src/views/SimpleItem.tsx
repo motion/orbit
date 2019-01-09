@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { OrbitIcon } from './OrbitIcon'
 import { Text } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { Icon } from './Icon'
 
 const sidePad = 16
 
@@ -40,7 +40,7 @@ export const SimpleItem = ({ after = null, icon = null, title, ...props }) => (
   <Item {...props}>
     {!!icon && (
       <>
-        <OrbitIcon size={18} icon={icon} />
+        <Icon size={18} icon={icon} />
         <div style={{ width: 12 }} />
       </>
     )}

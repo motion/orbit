@@ -139,7 +139,7 @@ export const OrbitPageContent = observer(() => {
 })
 
 const ToolbarChrome = gloss({
-  minHeight: 5,
+  // minHeight: 5,
   maxHeight: 50,
 }).theme((_, theme) => ({
   // borderBottom: [1, theme.borderColor.alpha(0.25)],

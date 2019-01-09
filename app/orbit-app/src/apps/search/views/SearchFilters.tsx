@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { StoreContext } from '@mcro/black'
 import { Row, Button } from '@mcro/ui'
-import { OrbitIcon } from '../../../views/OrbitIcon'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { observer } from 'mobx-react-lite'
+import { Icon } from '../../../views/Icon'
 
 type Props = {
   queryStore?: QueryStore
@@ -43,7 +43,7 @@ export const SearchFilters = observer((props: Props) => {
               opacity: 1,
             }}
           >
-            <OrbitIcon name={filter.integration} size={16} />
+            <Icon name={filter.integration} size={16} />
           </FilterButton>
         )
       })}

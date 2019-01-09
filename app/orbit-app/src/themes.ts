@@ -111,7 +111,7 @@ const light = {
     buttonBackground: '#f2f2f2',
     listItemBackground: [255, 255, 255, 0],
     listItemBackgroundSelected: orbitColor,
-    listItemBackgroundHover: [100, 100, 100, 0.04],
+    listItemBackgroundHover: [100, 100, 100, 0.024],
     inputBorderColor: '#eee',
     inputBackground: '#eee',
     inputBackgroundActive: [0, 0, 0, 0.1],
@@ -119,7 +119,7 @@ const light = {
     cardBorderColor: [0, 0, 0, 0.1],
     background: '#fff',
     color: '#444',
-    borderColor: '#c5c5c5',
+    borderColor: '#ccc',
   }),
 }
 

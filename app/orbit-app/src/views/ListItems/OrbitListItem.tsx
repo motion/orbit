@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from '../OrbitIcon'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from '../RoundButtonSmall'
@@ -147,7 +146,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                 <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
                   {showIcon && !showTitle && (
                     <>
-                      <OrbitIcon icon={icon} size={14} {...iconProps} />
+                      <Icon icon={icon} size={14} {...iconProps} />
                       <TitleSpace />
                     </>
                   )}

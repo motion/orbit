@@ -1,8 +1,9 @@
 import * as React from 'react'
 import fuzzy from 'fuzzysort'
 import { SVG } from './SVG'
-import { ThemeContext, IconProps } from '@mcro/ui'
+import { ThemeContext, IconProps, View, Image } from '@mcro/ui'
 import * as UI from '@mcro/ui'
+import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
 
 const icons = {
   orbit: require('!raw-loader!../../public/icons/icon-orbit.svg'),
@@ -171,11 +172,40 @@ type Props = React.HTMLProps<SVGElement> &
 
 export const Icon = React.memo(({ name, fill, size = 32, style = null, ...props }: Props) => {
   const { activeTheme } = React.useContext(ThemeContext)
+
+  // image based integration icons
+  const integrationIcon = useIntegrationIcon({ icon: name })
+  if (integrationIcon) {
+    const sizeProps = {
+      width: size,
+      height: size,
+    }
+    return (
+      <View
+        className={`icon ${props.className || ''}`}
+        display="inline-block"
+        textAlign="center"
+        justifyContent="center"
+        style={style}
+        {...(integrationIcon ? adjust[integrationIcon] : adjust.icon)}
+        {...sizeProps}
+        {...props}
+      >
+        <Image src={integrationIcon} width="100%" height="100%" {...props.imageStyle} />
+      </View>
+    )
+  }
+
+  // find our custom streamline icons...
   const iconName = findIconName(name)
+
+  // ...or fallback to @mcro/ui icon
   if (!iconName) {
     return <UI.Icon name={name} color={fill} size={size} style={style} {...props} />
   }
+
   const icon = icons[iconName]
+
   return (
     <SVG
       fill={fill || activeTheme.color.toString()}
@@ -195,3 +225,42 @@ export const Icon = React.memo(({ name, fill, size = 32, style = null, ...props 
     />
   )
 })
+
+const adjust = {
+  icon: {
+    transform: {
+      x: -7,
+      y: 2,
+    },
+  },
+  slack: {
+    transform: {
+      scale: 0.95,
+    },
+  },
+  gmail: {
+    transform: {
+      scale: 0.95,
+      x: '-1%',
+      y: '-1%',
+    },
+  },
+  github: {
+    transform: {
+      x: '-1%',
+    },
+  },
+  confluence: {
+    transform: {
+      // y: '-31%',
+      scale: 1.4,
+    },
+  },
+  jira: {
+    transform: {
+      y: '5%',
+      x: '-8%',
+      scale: 1.4,
+    },
+  },
+}

@@ -8,7 +8,6 @@ import { AppActions } from '../../actions/AppActions'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import * as Views from '../../views'
 import { NavButton } from '../../views/NavButton'
-import { OrbitIcon } from '../../views/OrbitIcon'
 import { CSSPropertySet, Theme } from '@mcro/gloss'
 import { RowItem } from '../../views/RowItem'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
@@ -172,12 +171,7 @@ export class OrbitSwitch extends React.Component<Props> {
                   title={activeSpace.name}
                   subtitle="20 people"
                   after={
-                    <OrbitIcon
-                      onClick={this.goToTeamSettings}
-                      name="gear"
-                      size={14}
-                      opacity={0.5}
-                    />
+                    <Icon onClick={this.goToTeamSettings} name="gear" size={14} opacity={0.5} />
                   }
                   hover={false}
                 />

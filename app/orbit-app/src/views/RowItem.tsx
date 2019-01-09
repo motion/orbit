@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Row, Col, Text, View } from '@mcro/ui'
-import { OrbitIcon } from './OrbitIcon'
 import { OrbitOrb } from './OrbitOrb'
 import { gloss } from '@mcro/gloss'
+import { Icon } from './Icon'
 
 const RowItemFrame = gloss(Row, {
   padding: [4, 8],
@@ -42,7 +42,7 @@ export const RowItem = ({
         )}
       </Col>
       {after}
-      {!!icon && <OrbitIcon name={icon} size={14} />}
+      {!!icon && <Icon name={icon} size={14} />}
     </RowItemFrame>
   )
 }

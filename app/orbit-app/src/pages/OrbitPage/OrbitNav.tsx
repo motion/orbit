@@ -39,7 +39,7 @@ export const OrbitNav = observer(() => {
         <NavButton
           isActive={paneManagerStore.activePane === 'sources'}
           onClick={paneManagerStore.activePaneSetter('sources')}
-          label="Manage"
+          label="Sources"
         />
       </OrbitNavChrome>
     </OrbitNavClip>
@@ -48,8 +48,8 @@ export const OrbitNav = observer(() => {
 
 const OrbitNavClip = gloss({
   overflow: 'hidden',
-  paddingTop: 20,
-  marginTop: -20,
+  padding: [20, 8, 0],
+  margin: [-20, 0, 0],
 })
 
 const OrbitNavChrome = gloss({

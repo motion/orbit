@@ -107,13 +107,13 @@ export class WebSocketClientTransport implements ClientTransport {
         const index = this.subscriptions.indexOf(subscription)
         if (index !== -1) this.subscriptions.splice(index, 1)
 
-        const data = {
+        const response = {
           id: this.name + '_' + id,
           type: 'unsubscribe',
         }
-        this.websocket.send(JSON.stringify(data))
+        this.websocket.send(JSON.stringify(response))
         log.verbose('removed subscription', {
-          id: data.id,
+          id: response.id,
           type: subscription.type,
           name: subscription.name,
         })
@@ -131,7 +131,7 @@ export class WebSocketClientTransport implements ClientTransport {
       type,
       ...values,
     }
-    return new Promise((ok, fail) => {
+    return new Promise((resolve, fail) => {
       // we need to send request to the server - here we create a function that does it
       // and if we already have a connection with websockets we execute this function and send a request
       // but if connection isn't established yet, we push function to the list that is going
@@ -153,7 +153,7 @@ export class WebSocketClientTransport implements ClientTransport {
           onSuccess(result) {
             // remove subscription once command is done
             subscriptions.splice(subscriptions.indexOf(this), 1)
-            ok(result)
+            resolve(result)
           },
           onError(error) {
             // remove subscription once command is done
@@ -185,9 +185,8 @@ export class WebSocketClientTransport implements ClientTransport {
       return
     }
 
-    const subscription = this.subscriptions.find(subscription => {
-      return subscription.id === parseInt(id)
-    })
+    const subscription = this.subscriptions.find(x => x.id === +id)
+
     if (!subscription) {
       log.warning(`no subscription found in the client ${this.name}`, data)
       return
@@ -202,6 +201,7 @@ export class WebSocketClientTransport implements ClientTransport {
         notFound: data.notFound,
       })
     }
+
     subscription.onSuccess(data.result)
   }
 }

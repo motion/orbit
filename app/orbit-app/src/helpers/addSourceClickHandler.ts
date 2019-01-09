@@ -1,11 +1,10 @@
 import { command } from '@mcro/model-bridge'
 import { memoize } from 'lodash'
 import { AppActions } from '../actions/AppActions'
-import { open } from '../actions'
 import { OrbitIntegration } from '../sources/types'
 import { sourceToAppConfig } from '../stores/SourcesStore'
 import { getGlobalConfig } from '@mcro/config'
-import { SetupProxyCommand } from '@mcro/models'
+import { SetupProxyCommand, OpenCommand } from '@mcro/models'
 
 export const addSourceClickHandler = memoize(
   (app: OrbitIntegration<any>) => async (e: MouseEvent) => {
@@ -23,10 +22,15 @@ export const addSourceClickHandler = memoize(
       })
     } else {
       // ...otherwise we open browser to oauth
-      AppActions.clearPeek()
-      await command(SetupProxyCommand)
-      console.log('proxy setup success, opening...')
-      open(`${getGlobalConfig().urls.auth}/auth/${app.integration}`)
+      console.log('opening...')
+
+      if (await command(SetupProxyCommand)) {
+        const url = `${getGlobalConfig().urls.auth}/auth/${app.integration}`
+        console.log('proxy setup success, opening...', url)
+        await command(OpenCommand, {
+          url,
+        })
+      }
     }
   },
 )

@@ -241,7 +241,7 @@ export class SearchStore {
           // },
           onSelect: () => {
             console.log('selecting app...', app.type)
-            // this.props.paneManagerStore.setActivePane(app.type)
+            this.props.paneManagerStore.setActivePane(app.type)
           },
         })),
       ]

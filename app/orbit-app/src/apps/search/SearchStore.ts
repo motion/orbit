@@ -230,10 +230,15 @@ export class SearchStore {
 
       // app search
       results = [
-        ...fuzzyQueryFilter(activeQuery, this.apps, { key: 'name' }).map(app => ({
+        ...fuzzyQueryFilter(activeQuery, this.apps.filter(x => x.type !== 'search'), {
+          key: 'name',
+        }).map(app => ({
           group: 'Apps',
           title: app.name,
           icon: app.type,
+          onSelect: () => {
+            console.log('hi')
+          },
         })),
       ]
       setValue({ results, query, finished: false })

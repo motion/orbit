@@ -40,10 +40,10 @@ export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
 
   return (
     <SearchResultsList
+      items={results}
       query={activeQuery}
       itemProps={props.itemProps}
       maxHeight={props.appStore.maxHeight}
-      results={results}
       rowCount={results.length}
     />
   )

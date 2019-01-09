@@ -1,37 +1,18 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { observeMany } from '@mcro/model-bridge'
-import { BitModel, Bit } from '@mcro/models'
-import { react } from '@mcro/black'
-import { useStore } from '@mcro/use-store'
+import { useObserveMany } from '@mcro/model-bridge'
+import { BitModel } from '@mcro/models'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 
-class ListsMainStore {
-  props: AppProps<'lists'>
-
-  get maxHeight() {
-    return this.props.appStore.maxHeight
-  }
-
-  // lets fake this list data for now
-  list = react(
-    () =>
-      (observeMany(BitModel, {
-        args: {
-          take: 10,
-        },
-      }) as unknown) as any[],
-    { defaultValue: [] },
-  )
-}
-
 export const ListsAppMain = React.memo((props: AppProps<'lists'>) => {
-  const store = useStore(ListsMainStore, props)
+  const items = useObserveMany(BitModel, {
+    take: 10,
+  })
   return (
     <>
       <VirtualList
-        maxHeight={store.maxHeight}
-        items={store.list as Bit[]}
+        maxHeight={props.appStore.maxHeight}
+        items={items}
         itemProps={{
           hide: {
             body: true,

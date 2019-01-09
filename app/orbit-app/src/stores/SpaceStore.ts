@@ -46,7 +46,7 @@ export const AppPanes: Pane[] = [
     id: 'topics',
     type: 'topics',
     icon: 'orbittopics',
-    title: 'Vocabulary',
+    title: 'Topics',
     trigger: '#',
   },
 ]

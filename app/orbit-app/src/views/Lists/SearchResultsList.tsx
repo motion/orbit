@@ -7,7 +7,7 @@ import { SearchResultListItem } from '../ListItems/SearchResultListItem'
 
 export type SearchableItem = (Bit | PersonBit)[]
 
-type SearchResultsListProps = Partial<VirtualListProps> & {
+type SearchResultsListProps = VirtualListProps & {
   query: string
   offsetY?: number
 }

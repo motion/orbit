@@ -21,7 +21,7 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
         icon: app.integration,
         total: activeSources.length,
         appConfig: sourceToAppConfig(app),
-        children: <OrbitAppInfo app={app} />,
+        children: <OrbitAppInfo key={app.source.id} app={app} />,
         group: 'Sources',
       })),
       ...allSources.map((app, index) => ({

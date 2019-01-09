@@ -170,7 +170,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                   ) : null}
                   {!!subtitle &&
                     (typeof subtitle === 'string' ? (
-                      <UI.Text alpha={0.75} ellipse {...subtitleProps}>
+                      <UI.Text alpha={0.8} ellipse {...subtitleProps}>
                         {subtitle}
                       </UI.Text>
                     ) : (

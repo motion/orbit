@@ -170,61 +170,67 @@ type Props = React.HTMLProps<SVGElement> &
     style?: any
   }
 
-export const Icon = React.memo(({ name, fill, size = 32, style = null, ...props }: Props) => {
-  const { activeTheme } = React.useContext(ThemeContext)
+export const Icon = React.memo(
+  ({ name, fill, size = 32, style = null, opacity, ...props }: Props) => {
+    const { activeTheme } = React.useContext(ThemeContext)
 
-  // image based integration icons
-  const integrationIcon = useIntegrationIcon({ icon: name })
-  if (integrationIcon) {
-    const sizeProps = {
-      width: size,
-      height: size,
-    }
-    return (
-      <View
-        className={`icon ${props.className || ''}`}
-        display="inline-block"
-        textAlign="center"
-        justifyContent="center"
-        style={style}
-        {...(integrationIcon ? adjust[integrationIcon] : adjust.icon)}
-        {...sizeProps}
-        {...props}
-      >
-        <Image src={integrationIcon} width="100%" height="100%" {...props.imageStyle} />
-      </View>
-    )
-  }
-
-  // find our custom streamline icons...
-  const iconName = findIconName(name)
-
-  // ...or fallback to @mcro/ui icon
-  if (!iconName) {
-    return <UI.Icon name={name} color={fill} size={size} style={style} {...props} />
-  }
-
-  const icon = icons[iconName]
-
-  return (
-    <SVG
-      fill={fill || activeTheme.color.toString()}
-      svg={icon}
-      width={`${size}`}
-      height={`${size}`}
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: 'flex',
+    // image based integration icons
+    const integrationIcon = useIntegrationIcon({ icon: name })
+    if (integrationIcon) {
+      const sizeProps = {
         width: size,
         height: size,
-        ...style,
-      }}
-      cleanup={['fill', 'title', 'desc']}
-      {...props}
-    />
-  )
-})
+      }
+      return (
+        <View
+          className={`icon ${props.className || ''}`}
+          display="inline-block"
+          textAlign="center"
+          justifyContent="center"
+          style={style}
+          opacity={opacity}
+          {...(integrationIcon ? adjust[integrationIcon] : adjust.icon)}
+          {...sizeProps}
+          {...props}
+        >
+          <Image src={integrationIcon} width="100%" height="100%" {...props.imageStyle} />
+        </View>
+      )
+    }
+
+    // find our custom streamline icons...
+    const iconName = findIconName(name)
+
+    // ...or fallback to @mcro/ui icon
+    if (!iconName) {
+      return (
+        <UI.Icon name={name} color={fill} size={size} style={style} opacity={opacity} {...props} />
+      )
+    }
+
+    const icon = icons[iconName]
+
+    return (
+      <SVG
+        fill={fill || activeTheme.color.toString()}
+        svg={icon}
+        width={`${size}`}
+        height={`${size}`}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+          width: size,
+          height: size,
+          opacity,
+          ...style,
+        }}
+        cleanup={['fill', 'title', 'desc']}
+        {...props}
+      />
+    )
+  },
+)
 
 const adjust = {
   icon: {

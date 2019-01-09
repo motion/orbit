@@ -22,7 +22,7 @@ export const OrbitHeaderInput = observer(({ headerStore }: Props) => {
   const { orbitWindowStore, queryStore, paneManagerStore } = React.useContext(StoreContext)
   const { activeTheme } = React.useContext(ThemeContext)
   const pane = paneManagerStore.activePane
-  const placeholder = pane === 'search' ? 'Search' : capitalize(pane)
+  const placeholder = pane === 'search' ? 'Orbit' : capitalize(pane)
   return (
     <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
       <HighlightedTextArea

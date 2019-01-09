@@ -19,16 +19,20 @@ export class DatabaseManager {
 
   async start() {
     // connect models next
+    log.info('Connecting models...')
     await connectModels(Entities)
 
-    // bugfix: sql errors happened here if i didnt wait... @nate
-    await sleep(100)
+    // TODO bugfix: sql errors happened here if i didnt wait... @nate
+    await sleep(250)
 
+    log.info('Ensure search indices...')
     await this.createSearchIndices()
 
     // create some custom indices
+    log.info('Ensure other indices...')
     await this.createIndices()
 
+    // TODO move to command
     // watch for reset all data command
     const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
       await this.resetAllData()

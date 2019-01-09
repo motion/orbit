@@ -129,7 +129,7 @@ export class BridgeManager {
       await this.setupMaster()
     } else {
       log.verbose(`Connecting socket to ${this.port}`)
-      this.socket = new ReconnectingWebSocket(`ws://127.0.0.1:${this.port}`, [], {
+      this.socket = new ReconnectingWebSocket(`ws://localhost:${this.port}`, [], {
         WebSocket,
         minReconnectionDelay: 1,
       })

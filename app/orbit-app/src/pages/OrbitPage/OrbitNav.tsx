@@ -3,7 +3,6 @@ import { Text, View, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { AppPanes } from '../../stores/SpaceStore'
 import { Icon } from '../../views/Icon'
-import * as UI from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 
@@ -28,12 +27,12 @@ export const OrbitNav = observer(() => {
               separator={!isActive && isLast && !nextIsActive}
               onClick={paneManagerStore.activePaneSetter(pane.id)}
             >
-              <Icon name={`${pane.icon}`} size={14} style={{ opacity: isActive ? 1 : 0.75 }} />
+              <Icon name={`${pane.icon}`} size={14} opacity={isActive ? 1 : 0.8} />
             </NavButton>
           )
         })}
         <NavButton tooltip="Create app">
-          <UI.Icon name="simpleadd" size={12} opacity={0.35} />
+          <Icon name="simpleadd" size={12} opacity={0.35} />
         </NavButton>
         <View flex={1} minWidth={10} />
         <NavButton
@@ -48,7 +47,7 @@ export const OrbitNav = observer(() => {
 
 const OrbitNavClip = gloss({
   overflow: 'hidden',
-  padding: [20, 8, 0],
+  padding: [20, 10, 0],
   margin: [-20, 0, 0],
 })
 

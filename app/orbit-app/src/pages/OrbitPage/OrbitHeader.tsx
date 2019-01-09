@@ -167,7 +167,7 @@ const OrbitHeaderContainer = gloss(View, {
 })
 
 const HeaderTop = gloss({
-  padding: [5, 10],
+  padding: [6, 10],
   flexFlow: 'row',
   transition: 'all ease-in 300ms',
 })

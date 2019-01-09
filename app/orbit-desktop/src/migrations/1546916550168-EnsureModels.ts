@@ -56,8 +56,23 @@ export class EnsureModels1546916550168 implements MigrationInterface {
         if (!apps.length) {
           const defaultApps: App[] = [
             {
+              target: 'app',
               name: 'Search',
               type: 'search',
+              spaceId: space.id,
+              data: {},
+            },
+            {
+              target: 'app',
+              name: 'People',
+              type: 'people',
+              spaceId: space.id,
+              data: {},
+            },
+            {
+              target: 'app',
+              name: 'Topics',
+              type: 'topics',
               spaceId: space.id,
               data: {},
             },

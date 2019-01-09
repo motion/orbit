@@ -52,61 +52,56 @@ export class DriveSettings extends React.Component<
   }
 > {
   render() {
-    const {
-      store,
-      source,,
-    } = this.props
+    const { store, source } = this.props
     const folders = store.popularFolders
 
     return (
       <>
-      <SettingManageRow source={source} whitelist={null} />
-      <View flex={1} opacity={1} pointerEvents={'auto'}>
-        <SearchableTable
-          virtual
-          rowLineHeight={28}
-          floating={false}
-          columnSizes={{
-            name: 'flex',
-            active: '14%',
-          }}
-          columns={{
-            name: {
-              value: 'Folder Name',
-              sortable: true,
-              resizable: true,
-            },
-            active: {
-              value: 'Active',
-              sortable: true,
-            },
-          }}
-          multiHighlight
-          rows={folders.map((file, index) => {
-            return {
-              key: `${index}`,
-              columns: {
-                name: {
-                  sortValue: file.name,
-                  value: file.name,
-                },
-                active: {
-                  sortValue: false,
-                  value: (
-                    <ReactiveCheckBox isActive={this.props.store.onSyncSetter(file.id)} />
-                  ),
-                },
+        <SettingManageRow source={source} whitelist={null} />
+        <View flex={1} opacity={1} pointerEvents={'auto'}>
+          <SearchableTable
+            virtual
+            rowLineHeight={28}
+            floating={false}
+            columnSizes={{
+              name: 'flex',
+              active: '14%',
+            }}
+            columns={{
+              name: {
+                value: 'Folder Name',
+                sortable: true,
+                resizable: true,
               },
+              active: {
+                value: 'Active',
+                sortable: true,
+              },
+            }}
+            multiHighlight
+            rows={folders.map((file, index) => {
+              return {
+                key: `${index}`,
+                columns: {
+                  name: {
+                    sortValue: file.name,
+                    value: file.name,
+                  },
+                  active: {
+                    sortValue: false,
+                    value: <ReactiveCheckBox isActive={this.props.store.onSyncSetter(file.id)} />,
+                  },
+                },
+              }
+            })}
+            bodyPlaceholder={
+              <div style={{ margin: 'auto' }}>
+                <Text size={1.2}>Loading...</Text>
+              </div>
             }
-          })}
-          bodyPlaceholder={
-            <div style={{ margin: 'auto' }}>
-              <Text size={1.2}>Loading...</Text>
-            </div>
-          }
-        />
-      </View>
-    </>
+          />
+        </View>
+      </>
     )
   }
 }

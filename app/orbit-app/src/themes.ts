@@ -74,8 +74,6 @@ const macModernTheme = Theme.colorize({
   highlightBackgroundActive: '#85afee', // active tokens
   frameBorderColor: '#aaa',
 
-  sidebarBorderColor: '#eee',
-
   // sub-themes go into their own objects so they can be narrowed into
   titleBar: {
     tabBackgroundActive: '#E8E8E8',
@@ -107,6 +105,7 @@ const light = {
   ...macModernTheme,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
+  sidebarBorderColor: '#eee',
   ...Theme.fromStyles({
     buttonBackground: '#f2f2f2',
     listItemBackground: [255, 255, 255, 0],
@@ -126,6 +125,7 @@ const light = {
 const dark = {
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
+  sidebarBorderColor: '#555',
   ...macModernTheme,
   ...Theme.fromStyles({
     glintColor: [255, 255, 255, 0.2],

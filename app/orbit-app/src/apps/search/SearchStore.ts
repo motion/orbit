@@ -231,7 +231,7 @@ export class SearchStore {
       // app search
       results = [
         ...fuzzyQueryFilter(activeQuery, this.apps, { key: 'name' }).map(app => ({
-          separator: 'Apps',
+          group: 'Apps',
           title: app.name,
           icon: app.type,
         })),

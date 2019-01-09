@@ -100,7 +100,7 @@ const NavButton = ({
   ...props
 }) => (
   <Tooltip label={tooltip}>
-    <NavButtonChrome isActive={isActive} {...props}>
+    <NavButtonChrome className="undraggable" isActive={isActive} {...props}>
       {children}
       {!!label && (
         <Text

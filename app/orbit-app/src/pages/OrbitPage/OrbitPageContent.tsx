@@ -114,7 +114,7 @@ export const OrbitPageContent = observer(() => {
                     viewType="index"
                     id={app.id}
                     type={app.type}
-                    itemProps={{ onSelect: store.handleSelectItem }}
+                    onSelect={store.handleSelectItem}
                     onAppStore={store.setAppStore(app.type)}
                   />
                 </SelectionManager>

@@ -7,7 +7,7 @@ import { SubPaneStore } from '../components/SubPaneStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { OrbitItemProps } from '../views/ListItems/OrbitItemProps'
+import { OrbitItemProps, HandleSelection } from '../views/ListItems/OrbitItemProps'
 import { SpaceStore } from '../stores/SpaceStore'
 
 export type AppProps<Type extends AppType> = {
@@ -16,6 +16,8 @@ export type AppProps<Type extends AppType> = {
   title: string
   type: Type
   data: AppData[Type]
+  onSelectItem: HandleSelection
+  onOpenItem: HandleSelection
   updateData: (values: Partial<AppData[Type]>) => void
   sourceType?: IntegrationType
   appStore: AppStore<Type>
@@ -28,6 +30,5 @@ export type AppProps<Type extends AppType> = {
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore
   itemProps?: Partial<OrbitItemProps<any>>
-  onSelectItem?: OrbitItemProps<any>['onSelect']
   appConfig?: AppConfig
 }

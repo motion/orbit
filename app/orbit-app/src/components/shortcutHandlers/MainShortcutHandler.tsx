@@ -19,8 +19,8 @@ type Props = {
 }
 
 const rootShortcuts = {
+  select: ['tab', 'enter'],
   switchSpaces: 'command+k',
-  openCurrent: 'enter',
   copyLink: 'command+shift+c',
   escape: 'esc',
   down: 'down',
@@ -53,10 +53,8 @@ export const MainShortcutHandler = observer(({ children }: Props) => {
   const movePaneOrSelection = direction => () => {
     const { activeSelectionStore } = shortcutStore
     console.log('move pane or selection', direction, activeSelectionStore)
-    if (
-      activeSelectionStore.activeIndex === -1 &&
-      (direction === Direction.left || direction === Direction.right)
-    ) {
+    const leftOrRight = direction === Direction.left || direction === Direction.right
+    if (leftOrRight) {
       if (paneManagerStore) {
         paneManagerStore.move(direction)
       }
@@ -69,8 +67,9 @@ export const MainShortcutHandler = observer(({ children }: Props) => {
     switchSpaces: () => {
       AppActions.showSpaceSwitcher()
     },
-    openCurrent: () => {
+    select: () => {
       console.log('openCurrent')
+      shortcutStore.activeSelectionStore
       // Actions.openSelectedItem()
       // Actions.openItem(searchStore.selectedItem)
     },

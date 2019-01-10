@@ -262,9 +262,9 @@ export class SearchStore {
           // appConfig: {
           //   type: 'message'
           // },
-          onSelect: () => {
-            console.log('selecting app...', app.type)
-            this.props.paneManagerStore.setActivePane(app.type)
+          onOpen: () => {
+            console.log('selecting app...', app.type, app.id)
+            this.props.paneManagerStore.setActivePane(app.id)
           },
         })),
       ]

@@ -4,10 +4,19 @@ import { AppStore } from './AppStore'
 import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
+import { GenericComponent } from '../types'
 
 type Props = Pick<
   AppProps<any>,
-  'id' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'
+  | 'id'
+  | 'title'
+  | 'viewType'
+  | 'type'
+  | 'isActive'
+  | 'itemProps'
+  | 'appConfig'
+  | 'onSelectItem'
+  | 'onOpenItem'
 > & {
   title?: string
   appStore?: AppStore<any>
@@ -34,7 +43,7 @@ export const AppView = React.memo((props: Props) => {
     console.error('NO APP OF TYPE', props.type, props)
     return null
   }
-  const AppView = apps[props.type][props.viewType]
+  const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
   if (!AppView) {
     return (
       <div>
@@ -44,7 +53,6 @@ export const AppView = React.memo((props: Props) => {
   }
   const appView = (
     <AppView
-      {...props}
       appStore={props.appStore || stores.appStore || appStore}
       sourcesStore={stores.sourcesStore}
       settingStore={stores.settingStore}
@@ -52,6 +60,9 @@ export const AppView = React.memo((props: Props) => {
       queryStore={stores.queryStore}
       spaceStore={stores.spaceStore}
       paneManagerStore={stores.paneManagerStore}
+      data={{}}
+      updateData={_ => _}
+      {...props}
     />
   )
   if (shouldProvideAppStore) {

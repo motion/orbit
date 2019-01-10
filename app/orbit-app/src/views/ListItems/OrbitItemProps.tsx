@@ -9,6 +9,8 @@ import { AppConfig } from '@mcro/models'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 
+export type HandleSelection = (index?: number, config?: AppConfig, element?: HTMLElement) => any
+
 export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
   Partial<NormalItem> & {
     // for setting the view
@@ -46,10 +48,10 @@ export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
     renderText?: ItemRenderText
     children?: React.ReactNode
     onClick?: Function
-    // double click / keyboard enter
-    onSelect?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
     // single click / keyboard select
-    onPreview?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
+    onSelect?: HandleSelection
+    // double click / keyboard enter
+    onOpen?: HandleSelection
     borderRadius?: number
     nextUpStyle?: Object
     isSelected?: boolean | Function

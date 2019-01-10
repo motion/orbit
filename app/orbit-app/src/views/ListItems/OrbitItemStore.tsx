@@ -1,7 +1,5 @@
 import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
-import { NormalItem } from '../../helpers/normalizeItem'
-import { AppActions } from '../../actions/AppActions'
 import { getAppConfig } from '../../helpers/getAppConfig'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
@@ -12,7 +10,6 @@ export const OrbitItemSingleton = {
 export class OrbitItemStore {
   props: OrbitItemProps<any>
 
-  resolvedItem: NormalItem | null = null
   isSelected = false
   cardWrapRef = null
   clickAt = 0
@@ -39,18 +36,15 @@ export class OrbitItemStore {
     if (Date.now() - this.clickAt < 280) {
       // allow double click of location
       if (Date.now() - this.lastClickLocation < 280) {
-        this.searchLocation()
+        if (this.props.onClickLocation) {
+          this.props.onClickLocation(this.props.item)
+        }
         return
       }
-      if (this.props.onSelect) {
-        e.stopPropagation()
-        this.props.onSelect(this.index, this.appConfig, this.cardWrapRef)
-        return
+      if (this.props.onOpen) {
+        this.props.onOpen()
       } else {
-        e.stopPropagation()
-        if (this.open()) {
-          AppActions.setOrbitDocked(false)
-        }
+        console.log('no open event for item', this.props)
       }
     }
     this.clickAt = Date.now()
@@ -70,32 +64,11 @@ export class OrbitItemStore {
     this.lastClickLocation = Date.now()
   }
 
-  searchLocation() {
-    const { onClickLocation } = this.props
-    if (typeof onClickLocation === 'string') {
-      return AppActions.open(onClickLocation)
-    }
-    if (typeof onClickLocation === 'function') {
-      return onClickLocation(this.resolvedItem)
-    }
-    console.log('no handler for location')
-  }
-
-  open = () => {
-    if (!this.props.item || this.props.item.target === 'source') {
-      return false
-    }
-    AppActions.openItem(this.props.item)
-    return true
-  }
-
   setCardWrapRef = cardWrapRef => {
-    if (!cardWrapRef) return
+    if (!cardWrapRef) {
+      return
+    }
     this.cardWrapRef = cardWrapRef
-  }
-
-  setResolvedItem = (item: NormalItem) => {
-    this.resolvedItem = item
   }
 
   get index() {
@@ -108,13 +81,6 @@ export class OrbitItemStore {
       return this.props.appConfig
     }
     return this.props.item ? getAppConfig(this.props.item) : null
-  }
-
-  selectItem = () => {
-    AppActions.setPeekApp({
-      appConfig: this.appConfig,
-      target: this.cardWrapRef,
-    })
   }
 
   shouldSelect = () => {
@@ -131,7 +97,7 @@ export class OrbitItemStore {
       }
     }
     const forceSelected = typeof isSelected === 'function' ? isSelected(this.index) : isSelected
-    let next
+    let next = false
     if (typeof forceSelected === 'boolean') {
       next = forceSelected
     } else {
@@ -142,18 +108,15 @@ export class OrbitItemStore {
 
   updateIsSelected = react(
     this.shouldSelect,
-    async (isSelected, { sleep }) => {
-      const { onPreview } = this.props
+    async isSelected => {
+      const { onSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected) {
-        if (onPreview) {
-          onPreview(this.index, this.appConfig, this.cardWrapRef)
+        if (onSelect) {
+          onSelect(this.index, this.appConfig, this.cardWrapRef)
         } else {
-          ensure('this.appConfig', !!this.appConfig)
-          // fluidity
-          await sleep()
-          this.selectItem()
+          console.log('no preview event for', this.index)
         }
       }
     },

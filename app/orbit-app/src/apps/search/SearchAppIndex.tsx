@@ -9,6 +9,7 @@ import { View } from '@mcro/ui'
 import { SearchResultsList } from '../../views/Lists/SearchResultsList'
 import { MergeContext } from '../../views/MergeContext'
 import { StoreContext } from '@mcro/black'
+import { Selectable } from '../../components/Selectable'
 
 export const SearchAppIndex = observer((props: AppProps<'search'>) => {
   const searchStore = useStore(SearchStore, props)
@@ -22,13 +23,16 @@ export const SearchAppIndex = observer((props: AppProps<'search'>) => {
         </Toolbar>
       )}
       <View position="relative" flex={1} opacity={searchStore.isChanging ? 0.7 : 1}>
-        <SearchResultsList
-          items={searchStore.searchState.results}
-          query={props.appStore.activeQuery}
-          itemProps={props.itemProps}
-          rowCount={searchStore.remoteRowCount}
-          loadMoreRows={searchStore.loadMore}
-        />
+        <Selectable items={searchStore.searchState.results}>
+          <SearchResultsList
+            items={searchStore.searchState.results}
+            query={props.appStore.activeQuery}
+            onSelect={props.onSelectItem}
+            onOpen={props.onOpenItem}
+            rowCount={searchStore.remoteRowCount}
+            loadMoreRows={searchStore.loadMore}
+          />
+        </Selectable>
       </View>
     </MergeContext>
   )

@@ -1,6 +1,7 @@
 import { observeMany } from '@mcro/model-bridge'
-import { Source, SourceModel, Space, SpaceModel, AppType } from '@mcro/models'
+import { Source, SourceModel, Space, SpaceModel, AppType, AppModel } from '@mcro/models'
 import { getAppFromSource } from './SourcesStore'
+import { react, ensure } from '@mcro/black'
 
 export type Pane = {
   id: string
@@ -67,6 +68,17 @@ export class SpaceStore {
   get inactiveSpaces() {
     return this.spaces.filter((_, i) => i !== this.activeIndex)
   }
+
+  apps = react(
+    () => this.activeSpace,
+    space => {
+      ensure('space', !!space)
+      return observeMany(AppModel, { args: { where: { spaceId: space.id } } })
+    },
+    {
+      defaultValue: [],
+    },
+  )
 
   spaceSources(space: Space) {
     return this.sources

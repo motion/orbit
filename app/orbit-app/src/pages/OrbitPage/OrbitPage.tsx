@@ -3,14 +3,12 @@ import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { AppWrapper } from '../../views'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
-// import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
-import { SpaceStore, AppPanes } from '../../stores/SpaceStore'
+import { SpaceStore } from '../../stores/SpaceStore'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { StoreContext } from '@mcro/black'
-import { AppActions } from '../../actions/AppActions'
 import { OrbitOnboard } from './OrbitOnboard'
 import { MainShortcutHandler } from '../../components/shortcutHandlers/MainShortcutHandler'
 import { OrbitHeader } from './OrbitHeader'
@@ -28,12 +26,7 @@ export default observer(() => {
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const paneManagerStore = useStore(PaneManagerStore, {
-    panes: [...AppPanes.map(p => p.id), 'settings', 'sources', 'onboard'],
-    onPaneChange: () => {
-      if (App.peekState.target) {
-        AppActions.clearPeek()
-      }
-    },
+    panes: [...spaceStore.apps.map(p => p.id), 'settings', 'sources', 'onboard'],
   })
 
   const stores = {

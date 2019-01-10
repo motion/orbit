@@ -9,7 +9,7 @@ export type NormalItem = {
   subType?: string
   title: string
   preview?: React.ReactNode
-  content?: React.ReactNode
+  content?: any
   icon: string
   location?: string
   locationLink?: string

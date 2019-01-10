@@ -43,13 +43,15 @@ export type AppData = {
   people: PeopleAppData
   topics: TopicsAppData
   lists: ListsAppData
+  memory: {}
 }
 
 export type SearchApp = BaseApp & { type: 'search'; data: SearchAppData }
 export type PeopleApp = BaseApp & { type: 'people'; data: PeopleAppData }
 export type TopicsApp = BaseApp & { type: 'topics'; data: TopicsAppData }
 export type ListsApp = BaseApp & { type: 'lists'; data: ListsAppData }
+export type MemoryApp = BaseApp & { type: 'memory'; data: {} }
 
 // App
 
-export type App = SearchApp | PeopleApp | TopicsApp | ListsApp
+export type App = SearchApp | PeopleApp | TopicsApp | ListsApp | MemoryApp

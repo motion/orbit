@@ -14,6 +14,9 @@ type SearchResultsListProps = VirtualListProps & {
 
 export const SearchResultsList = ({ items, offsetY = 0, ...props }: SearchResultsListProps) => {
   const { appStore } = React.useContext(StoreContext)
+  const isRowLoaded = React.useCallback(find => find.index < items.length, [
+    items.map(x => x.id).join(' '),
+  ])
 
   return (
     <ProvideHighlightsContextWithDefaults
@@ -27,7 +30,7 @@ export const SearchResultsList = ({ items, offsetY = 0, ...props }: SearchResult
         items={items}
         ItemView={SearchResultListItem}
         maxHeight={appStore.maxHeight - offsetY}
-        isRowLoaded={find => find.index < items.length}
+        isRowLoaded={isRowLoaded}
         {...props}
       />
     </ProvideHighlightsContextWithDefaults>

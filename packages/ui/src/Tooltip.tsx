@@ -42,6 +42,7 @@ export const Tooltip = React.forwardRef(
         delay={400}
         popoverProps={POPOVER_PROPS}
         ignoreSegment
+        elevation={1}
         onClick={onClick}
         theme={themeName}
         target={children}

@@ -27,7 +27,7 @@ const groupToName = {
   overall: 'Overall',
 }
 
-const searchResultsToListItems = (results: SearchResult[]): OrbitItemProps<any>[] => {
+const searchGroupsToResults = (results: SearchResult[]): OrbitItemProps<any>[] => {
   const res = results.map(result => {
     const group = groupToName[result.group]
     const firstFew = result.bits.slice(0, 4).map(bit => ({
@@ -46,8 +46,7 @@ const searchResultsToListItems = (results: SearchResult[]): OrbitItemProps<any>[
         : []
     return [...firstFew, ...showMore]
   })
-  const res2 = flatten(res)
-  return res2
+  return flatten(res)
 }
 
 export class SearchStore {
@@ -131,17 +130,6 @@ export class SearchStore {
     },
   )
 
-  apps = react(
-    () => this.props.spaceStore.activeSpace,
-    space => {
-      ensure('space', !!space)
-      return observeMany(AppModel, { args: { where: { spaceId: space.id } } })
-    },
-    {
-      defaultValue: [],
-    },
-  )
-
   // setSelection = react(
   //   () => always(this.searchState),
   //   () => {
@@ -176,7 +164,7 @@ export class SearchStore {
       this.queryFilters.exclusiveFilters,
       this.queryFilters.sortBy,
       this.queryFilters.dateState,
-      always(this.apps),
+      always(this.props.spaceStore.apps),
     ],
     async ([query], { when, setValue, idle, sleep }): Promise<SearchState> => {
       // if not on this pane, delay it a bit
@@ -250,7 +238,7 @@ export class SearchStore {
         if (!nextResults) {
           return false
         }
-        results = [...results, ...searchResultsToListItems(nextResults)]
+        results = [...results, ...searchGroupsToResults(nextResults)]
         setValue({
           results,
           query,
@@ -261,9 +249,13 @@ export class SearchStore {
 
       // app search
       results = [
-        ...fuzzyQueryFilter(activeQuery, this.apps.filter(x => x.type !== 'search'), {
-          key: 'name',
-        }).map(app => ({
+        ...fuzzyQueryFilter(
+          activeQuery,
+          this.props.spaceStore.apps.filter(x => x.type !== 'search'),
+          {
+            key: 'name',
+          },
+        ).map(app => ({
           group: 'Apps',
           title: app.name,
           icon: app.type,

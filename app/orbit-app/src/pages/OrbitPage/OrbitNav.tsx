@@ -5,29 +5,33 @@ import { AppPanes } from '../../stores/SpaceStore'
 import { Icon } from '../../views/Icon'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
+import { useObserveMany } from '@mcro/model-bridge'
+import { AppModel } from '@mcro/models'
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
 export const OrbitNav = observer(() => {
-  const { paneManagerStore } = React.useContext(StoreContext)
+  const { spaceStore, paneManagerStore } = React.useContext(StoreContext)
+  const apps = useObserveMany(AppModel, { where: { spaceId: spaceStore.activeSpace.id } })
+
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
-        {AppPanes.map((pane, index) => {
+        {apps.map((app, index) => {
           const isLast = index !== AppPanes.length - 1
-          const isActive = paneManagerStore.activePane === pane.id
+          const isActive = paneManagerStore.activePane === app.id
           const nextIsActive =
             AppPanes[index + 1] && paneManagerStore.activePane === AppPanes[index + 1].id
           return (
             <NavButton
-              key={pane.id}
+              key={app.id}
               isActive={isActive}
-              label={pane.title}
+              label={app.name}
               stretch
               separator={!isActive && isLast && !nextIsActive}
-              onClick={paneManagerStore.activePaneSetter(pane.id)}
+              onClick={paneManagerStore.activePaneSetter(app.id)}
             >
-              <Icon name={`${pane.icon}`} size={14} opacity={isActive ? 1 : 0.8} />
+              <Icon name={`${app.type}`} size={14} opacity={isActive ? 1 : 0.8} />
             </NavButton>
           )
         })}

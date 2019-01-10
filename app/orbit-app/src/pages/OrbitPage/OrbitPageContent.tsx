@@ -6,7 +6,6 @@ import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
 import { AppConfig, AppType } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
-import { AppPanes } from '../../stores/SpaceStore'
 import { SubPane } from '../../components/SubPane'
 import { App } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
@@ -48,7 +47,7 @@ class OrbitStore {
 }
 
 export const OrbitPageContent = observer(() => {
-  const { paneManagerStore } = React.useContext(StoreContext)
+  const { spaceStore, paneManagerStore } = React.useContext(StoreContext)
   const store = useStore(OrbitStore, { paneManagerStore })
 
   // sidebar
@@ -87,7 +86,7 @@ export const OrbitPageContent = observer(() => {
   const activeAppStore = store.appStores[store.activePane]
 
   const allPanes: AppConfig[] = [
-    ...AppPanes,
+    ...spaceStore.apps,
     {
       id: 'sources',
       type: 'sources',
@@ -107,7 +106,7 @@ export const OrbitPageContent = observer(() => {
       <ToolbarChrome>{!!activeAppStore ? activeAppStore.toolbar : null}</ToolbarChrome>
       <Row flex={1}>
         <Sidebar width={300} minWidth={100} maxWidth={500}>
-          <OrbitIndexView isHidden={store.activePane === 'home' || store.activePane === 'settings'}>
+          <OrbitIndexView isHidden={false}>
             {allPanes.map(app => (
               <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
                 <SelectionManager pane={app.id}>

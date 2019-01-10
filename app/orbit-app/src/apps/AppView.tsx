@@ -36,8 +36,11 @@ export const AppView = React.memo((props: Props) => {
   }
   const AppView = apps[props.type][props.viewType]
   if (!AppView) {
-    console.error('WAHT THE FUCK', props.type, props.viewType, AppView)
-    return null
+    return (
+      <div>
+        no app view for {props.type} {props.viewType}
+      </div>
+    )
   }
   const appView = (
     <AppView
@@ -47,6 +50,8 @@ export const AppView = React.memo((props: Props) => {
       settingStore={stores.settingStore}
       subPaneStore={stores.subPaneStore}
       queryStore={stores.queryStore}
+      spaceStore={stores.spaceStore}
+      paneManagerStore={stores.paneManagerStore}
     />
   )
   if (shouldProvideAppStore) {

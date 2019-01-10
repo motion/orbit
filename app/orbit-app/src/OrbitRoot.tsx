@@ -8,8 +8,10 @@ import { hot } from 'react-hot-loader'
 import { ThemeProvide } from '@mcro/ui'
 import { themes } from './themes'
 import { throttle, isEqual } from 'lodash'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import OrbitPage from './pages/OrbitPage/OrbitPage'
+import { command } from '@mcro/model-bridge'
+import { OpenCommand } from '@mcro/models'
 
 // pages
 
@@ -84,7 +86,7 @@ export const OrbitRoot = hot(module)(() => {
       if (event.target.tagName === 'A' && event.target.href.startsWith('http')) {
         event.preventDefault()
         console.log('Capturing a A tag from root', event.target.href)
-        App.sendMessage(Desktop, Desktop.messages.OPEN, event.target.href)
+        command(OpenCommand, { url: event.target.href })
       }
     }
     document.addEventListener('click', onClickLink)

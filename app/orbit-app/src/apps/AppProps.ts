@@ -8,6 +8,7 @@ import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { OrbitItemProps } from '../views/ListItems/OrbitItemProps'
+import { SpaceStore } from '../stores/SpaceStore'
 
 export type AppProps<Type extends AppType> = {
   id: string
@@ -18,6 +19,7 @@ export type AppProps<Type extends AppType> = {
   updateData: (values: Partial<AppData[Type]>) => void
   sourceType?: IntegrationType
   appStore: AppStore<Type>
+  spaceStore: SpaceStore
   sourcesStore: SourcesStore
   settingStore: SettingStore
   queryStore: QueryStore

@@ -51,10 +51,6 @@ class VirtualListStore {
   observing = false
   cache: CellMeasurerCache = null
 
-  get items() {
-    return this.props.items
-  }
-
   resizeOnChange = react(
     () => always(this.props.items, this.cache),
     () => {
@@ -171,7 +167,8 @@ function useDefaultProps<A>(a: A, b: Partial<A>): A {
 export const VirtualList = observer((rawProps: VirtualListProps) => {
   const props = useDefaultProps(rawProps, { estimatedRowHeight: 60 })
   const store = useStore(VirtualListStore, props)
-  const { cache, width, height, items } = store
+  const { cache, width, height } = store
+  const { items } = props
 
   React.useEffect(() => {
     if (!store.listRef) {

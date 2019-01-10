@@ -1,11 +1,10 @@
 import { MigrationInterface, getRepository } from 'typeorm'
-import { SpaceEntity, SettingEntity, App, AppEntity } from '@mcro/models'
+import { SpaceEntity, SettingEntity } from '@mcro/models'
 
 export class EnsureModels1546916550168 implements MigrationInterface {
   public async up(): Promise<any> {
     await this.ensureDefaultSetting()
     await this.ensureDefaultSpace()
-    await this.ensureDefaultApps()
   }
 
   private async ensureDefaultSetting() {
@@ -45,31 +44,6 @@ export class EnsureModels1546916550168 implements MigrationInterface {
         },
       ])
     }
-  }
-
-  private async ensureDefaultApps() {
-    const spaces = await getRepository(SpaceEntity).find()
-
-    await Promise.all(
-      spaces.map(async space => {
-        const apps = await getRepository(AppEntity).find({ spaceId: space.id })
-        if (!apps.length) {
-          const defaultApps: App[] = [
-            {
-              name: 'Search',
-              type: 'search',
-              spaceId: space.id,
-              data: {},
-            },
-          ]
-          await Promise.all(
-            defaultApps.map(app => {
-              return getRepository(AppEntity).save(app)
-            }),
-          )
-        }
-      }),
-    )
   }
 
   public async down(): Promise<any> {}

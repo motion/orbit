@@ -1,13 +1,16 @@
 import * as React from 'react'
 import fuzzy from 'fuzzysort'
 import { SVG } from './SVG'
-import { ThemeContext } from '@mcro/ui'
+import { ThemeContext, IconProps, View, Image } from '@mcro/ui'
+import * as UI from '@mcro/ui'
+import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
 
 const icons = {
   orbit: require('!raw-loader!../../public/icons/icon-orbit.svg'),
   orbitSearch: require('!raw-loader!../../public/icons/icon-search.svg'),
   orbitTopics: require('!raw-loader!../../public/icons/icon-topics.svg'),
   orbitPeople: require('!raw-loader!../../public/icons/icon-people.svg'),
+  orbitMemory: require('!raw-loader!../../public/icons/icon-memory.svg'),
 
   orbitalSmall: require('!raw-loader!../../public/orbital-small.svg'),
   sidebar: require('!raw-loader!../../public/streamline/sidebar.svg'),
@@ -159,36 +162,112 @@ const findIconName = name => {
   return false
 }
 
-type IconProps = React.HTMLProps<SVGElement> & {
-  name: string
-  fill?: string
-  size?: number
-  style?: any
-}
-
-export const Icon = React.memo(({ name, fill, size = 32, style = null, ...props }: IconProps) => {
-  const { activeTheme } = React.useContext(ThemeContext)
-  const iconName = findIconName(name)
-  if (!iconName) {
-    return null
+type Props = React.HTMLProps<SVGElement> &
+  IconProps & {
+    ref: any
+    name: string
+    fill?: string
+    size?: number
+    style?: any
   }
-  const icon = icons[iconName]
-  return (
-    <SVG
-      fill={fill || activeTheme.color.toString()}
-      svg={icon}
-      width={`${size}`}
-      height={`${size}`}
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: 'flex',
+
+export const Icon = React.memo(
+  ({ name, fill, size = 32, style = null, opacity, ...props }: Props) => {
+    const { activeTheme } = React.useContext(ThemeContext)
+
+    // image based integration icons
+    const integrationIcon = useIntegrationIcon({ icon: name })
+    if (integrationIcon) {
+      const sizeProps = {
         width: size,
         height: size,
-        ...style,
-      }}
-      cleanup={['fill', 'title', 'desc']}
-      {...props}
-    />
-  )
-})
+      }
+      return (
+        <View
+          className={`icon ${props.className || ''}`}
+          display="inline-block"
+          textAlign="center"
+          justifyContent="center"
+          style={style}
+          opacity={opacity}
+          {...(integrationIcon ? adjust[integrationIcon] : adjust.icon)}
+          {...sizeProps}
+          {...props}
+        >
+          <Image src={integrationIcon} width="100%" height="100%" {...props.imageStyle} />
+        </View>
+      )
+    }
+
+    // find our custom streamline icons...
+    const iconName = findIconName(name)
+
+    // ...or fallback to @mcro/ui icon
+    if (!iconName) {
+      return (
+        <UI.Icon name={name} color={fill} size={size} style={style} opacity={opacity} {...props} />
+      )
+    }
+
+    const icon = icons[iconName]
+
+    return (
+      <SVG
+        fill={fill || activeTheme.color.toString()}
+        svg={icon}
+        width={`${size}`}
+        height={`${size}`}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+          width: size,
+          height: size,
+          opacity,
+          ...style,
+        }}
+        cleanup={['fill', 'title', 'desc']}
+        {...props}
+      />
+    )
+  },
+)
+
+const adjust = {
+  icon: {
+    transform: {
+      x: -7,
+      y: 2,
+    },
+  },
+  slack: {
+    transform: {
+      scale: 0.95,
+    },
+  },
+  gmail: {
+    transform: {
+      scale: 0.95,
+      x: '-1%',
+      y: '-1%',
+    },
+  },
+  github: {
+    transform: {
+      x: '-1%',
+    },
+  },
+  confluence: {
+    transform: {
+      // y: '-31%',
+      scale: 1.4,
+    },
+  },
+  jira: {
+    transform: {
+      y: '5%',
+      x: '-8%',
+      scale: 1.4,
+    },
+  },
+}

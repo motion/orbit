@@ -179,19 +179,19 @@ const After = gloss({
 
 const FakeInput = gloss({
   height: 34,
-  padding: [0, 20],
+  padding: [0, 10],
   alignItems: 'center',
   justifyContent: 'center',
   margin: 'auto',
   flexFlow: 'row',
   maxWidth: 980,
-  width: '85%',
+  width: '80%',
   minWidth: 400,
   cursor: 'text',
   transition: 'none',
   '&:active': {
     background: [0, 0, 0, 0.025],
-    transition: 'all ease-out 250ms',
+    transition: 'all ease-out 250ms 150ms',
   },
 })
 

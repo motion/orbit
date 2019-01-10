@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from './OrbitIcon'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
@@ -14,6 +13,7 @@ import { HorizontalSpace } from '.'
 import { ResolvableModel } from '../sources/types'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import { Icon } from './Icon'
 
 export const OrbitCard = observer(
   ({
@@ -171,7 +171,7 @@ export const OrbitCard = observer(
                 )}
 
                 {!!icon && !(hide && hide.icon) && (
-                  <OrbitIcon
+                  <Icon
                     icon={icon}
                     size={14}
                     {...orbitIconProps}

@@ -16,23 +16,6 @@ const SidebarInteractiveContainer = gloss(Interactive, {
 
 type SidebarPosition = 'left' | 'top' | 'right' | 'bottom'
 
-const SidebarContainer = gloss(Col, {
-  height: '100%',
-  overflowX: 'hidden',
-  overflowY: 'auto',
-}).theme(props => {
-  const borderColor = props.theme.sidebarBorderColor || props.theme.borderColor
-  return {
-    backgroundColor: props.backgroundColor || props.theme.sidebarBackground || '#f2f2f2',
-    borderLeft: props.position === 'right' ? `1px solid ${borderColor}` : 'none',
-    borderTop: props.position === 'bottom' ? `1px solid ${borderColor}` : 'none',
-    borderRight: props.position === 'left' ? `1px solid ${borderColor}` : 'none',
-    borderBottom: props.position === 'top' ? `1px solid ${borderColor}` : 'none',
-    textOverflow: props.overflow ? 'ellipsis' : 'auto',
-    whiteSpace: props.overflow ? 'nowrap' : 'normal',
-  }
-})
-
 type SidebarProps = {
   /**
    * Position of the sidebar.
@@ -90,21 +73,18 @@ type SidebarState = {
 }
 
 export class Sidebar extends React.Component<SidebarProps, SidebarState> {
-  constructor(props: SidebarProps, context: Object) {
-    super(props, context)
-    this.state = {
-      userChange: false,
-      width: props.width,
-      height: props.height,
-    }
-  }
-
   static defaultProps = {
     position: 'left',
   }
 
-  static getDerivedStateFromProps(props, state) {
-    if (!props.userChange && (state.width !== props.width || state.height !== props.height)) {
+  state = {
+    userChange: false,
+    width: this.props.width,
+    height: this.props.height,
+  }
+
+  static getDerivedStateFromProps(props: SidebarProps, state: SidebarState) {
+    if (!state.userChange && (state.width !== props.width || state.height !== props.height)) {
       return { width: props.width, height: props.height }
     }
     return null
@@ -169,3 +149,20 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
     )
   }
 }
+
+const SidebarContainer = gloss(Col, {
+  height: '100%',
+  overflowX: 'hidden',
+  overflowY: 'auto',
+}).theme((props, theme) => {
+  const borderColor = theme.sidebarBorderColor || theme.borderColor
+  return {
+    background: props.background || theme.sidebarBackground || theme.background.alpha(0.5),
+    borderLeft: props.position === 'right' ? `1px solid ${borderColor}` : 'none',
+    borderTop: props.position === 'bottom' ? `1px solid ${borderColor}` : 'none',
+    borderRight: props.position === 'left' ? `1px solid ${borderColor}` : 'none',
+    borderBottom: props.position === 'top' ? `1px solid ${borderColor}` : 'none',
+    textOverflow: props.overflow ? 'ellipsis' : 'auto',
+    whiteSpace: props.overflow ? 'nowrap' : 'normal',
+  }
+})

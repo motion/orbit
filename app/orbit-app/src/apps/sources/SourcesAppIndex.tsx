@@ -2,11 +2,11 @@ import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { Button } from '@mcro/ui'
-import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 import { observer, useComputed } from 'mobx-react-lite'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import { useResults } from '../../hooks/useResults'
+import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 
 export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
   const results = useComputed(() => {
@@ -16,12 +16,11 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
         // only apply the click events to the active sources...
         ...props.itemProps,
         id: app.source.id,
-        title: app.appName,
-        subtitle: app.display.name,
+        title: `${app.appName} · ${app.display.name}`,
+        subtitle: <OrbitAppInfo key={app.source.id} app={app} />,
         icon: app.integration,
         total: activeSources.length,
         appConfig: sourceToAppConfig(app),
-        children: <OrbitAppInfo app={app} />,
         group: 'Sources',
       })),
       ...allSources.map((app, index) => ({
@@ -36,7 +35,6 @@ export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
     ]
   })
 
-  console.log('results', results)
   useResults(results)
 
   return (

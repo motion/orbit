@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Setting } from '@mcro/models'
-import { View, Icon, Row } from '@mcro/ui'
+import { View, Row } from '@mcro/ui'
 import { SubTitle, VerticalSpace } from '../../../views'
 import { Message } from '../../../views/Message'
-import { OrbitIcon } from '../../../views/OrbitIcon'
 import { view, attach } from '@mcro/black'
+import { Icon } from '../../../views/Icon'
 
 type Props = {
   setting: Setting
@@ -25,7 +25,7 @@ export class AppStatusPane extends React.Component<Props> {
         <SubTitle size={2.8}>Active</SubTitle>
         <VerticalSpace />
         <Row alignItems="center">
-          <OrbitIcon size={28} icon={setting.type} />
+          <Icon size={28} icon={setting.type} />
           <div style={{ width: 20 }} />
           <Icon size={28} color="green" name="check" />
         </Row>

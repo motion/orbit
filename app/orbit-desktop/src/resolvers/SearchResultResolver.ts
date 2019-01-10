@@ -39,7 +39,7 @@ export class SearchResultResolver {
     const searchResults: SearchResult[] = []
 
     for (let contentType of BitContentTypes) {
-      this.log.timer('loading ' + contentType)
+      // this.log.timer('loading ' + contentType)
       const [bits, bitsTotalCount] = await this.search(contentType)
       if (bits.length) {
         const bitSourceIds = uniq(bits.map(bit => bit.sourceId))
@@ -116,7 +116,7 @@ export class SearchResultResolver {
           })
         }
       }
-      this.log.timer('loading ' + contentType)
+      // this.log.timer('loading ' + contentType)
     }
 
     this.log.timer('search', searchResults)
@@ -145,29 +145,32 @@ export class SearchResultResolver {
   private async search(contentType: BitContentType): Promise<[Bit[], number]> {
     const sourceIds = this.sources.map(source => source.id)
 
-    // search database using FTS5 search first
-    const [ftsBits, ftsBitsCount] = await this.queryExecutor.execute({
-      ...this.args,
-      contentType,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      sourceIds,
-      take: 10,
-      skip: 0,
-    })
+    // parallel search both fts and cosal
+    const [ftsResults, cosalResults] = await Promise.all([
+      this.queryExecutor.execute({
+        ...this.args,
+        contentType,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        sourceIds,
+        take: 10,
+        skip: 0,
+      }),
+      this.queryExecutor.execute({
+        ...this.args,
+        contentType,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        query: undefined,
+        ids: this.cosalBitIds,
+        sourceIds,
+        take: 10,
+        skip: 0,
+      }),
+    ])
 
-    // now search database with found cosal bit ids
-    const [cosalBits, cosalBitsCount] = await this.queryExecutor.execute({
-      ...this.args,
-      contentType,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      query: undefined,
-      ids: this.cosalBitIds,
-      sourceIds,
-      take: 10,
-      skip: 0,
-    })
+    const [ftsBits, ftsBitsCount] = ftsResults
+    const [cosalBits, cosalBitsCount] = await cosalResults
 
     // results that are found both in cosal and in fts5 search
     // we order into beginning (since they are kinda treated as most accurate)

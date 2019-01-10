@@ -30,7 +30,7 @@ export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
     key: 'name',
   })
   const sortedPeople = sortBy(filteredPeople.filter(x => !!x.name), x => x.name.toLowerCase())
-  const results = groupByFirstLetter(sortedPeople)
+  const results = sortedPeople.length < 10 ? sortedPeople : groupByFirstLetter(sortedPeople)
 
   useResults(results)
 
@@ -40,10 +40,10 @@ export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
 
   return (
     <SearchResultsList
+      items={results}
       query={activeQuery}
       itemProps={props.itemProps}
       maxHeight={props.appStore.maxHeight}
-      results={results}
       rowCount={results.length}
     />
   )

@@ -33,7 +33,7 @@ const ButtonInner = ({
       tagName="button"
       alignItems="center"
       flexFlow="row"
-      style={{ ...buttonStyles, ...style }}
+      style={{ WebkitAppRegion: 'no-drag', ...buttonStyles, ...style }}
       elementProps={{
         justifyContent: 'center',
         ...elementProps,

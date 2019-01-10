@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from '../OrbitIcon'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from '../RoundButtonSmall'
@@ -15,6 +14,7 @@ import { HorizontalSpace } from '..'
 import { Separator } from '../Separator'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
+import { Icon } from '../Icon'
 
 export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
   const stores = React.useContext(StoreContext)
@@ -114,7 +114,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || 10}
+          padding={padding || [9, 10]}
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>
@@ -124,7 +124,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                 <Title>
                   {showIcon && (
                     <>
-                      <OrbitIcon icon={icon} size={14} marginTop={2} {...iconProps} />
+                      <Icon name={icon} size={16} style={{ marginTop: 1 }} {...iconProps} />
                       <TitleSpace />
                     </>
                   )}
@@ -146,7 +146,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                 <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
                   {showIcon && !showTitle && (
                     <>
-                      <OrbitIcon icon={icon} size={14} {...iconProps} />
+                      <Icon icon={icon} size={14} {...iconProps} />
                       <TitleSpace />
                     </>
                   )}
@@ -170,7 +170,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
                   ) : null}
                   {!!subtitle &&
                     (typeof subtitle === 'string' ? (
-                      <UI.Text alpha={0.75} ellipse {...subtitleProps}>
+                      <UI.Text alpha={0.8} ellipse {...subtitleProps}>
                         {subtitle}
                       </UI.Text>
                     ) : (

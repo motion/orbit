@@ -5,8 +5,7 @@ import { AppView } from '../../apps/AppView'
 import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
 import { AppConfig, AppType } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { Col, Row } from '@mcro/ui'
-import { AppPanes } from '../../stores/SpaceStore'
+import { Col, Row, Sidebar, View } from '@mcro/ui'
 import { SubPane } from '../../components/SubPane'
 import { App } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
@@ -27,6 +26,9 @@ class OrbitStore {
   }
 
   handleSelectItem: OrbitItemProps<any>['onSelect'] = (_index, config) => {
+    if (!config) {
+      return
+    }
     const type = config.type === 'bit' ? 'search' : config.type
     this.activeConfig = {
       ...this.activeConfig,
@@ -45,8 +47,17 @@ class OrbitStore {
 }
 
 export const OrbitPageContent = observer(() => {
-  const { paneManagerStore } = React.useContext(StoreContext)
+  const { spaceStore, paneManagerStore } = React.useContext(StoreContext)
   const store = useStore(OrbitStore, { paneManagerStore })
+
+  // sidebar
+  // const [sidebarWidth, setSidebarWidth] = React.useState(300)
+  // const handleResizeSidebar: ResizeCallback = (_a, direction, _c, diff) => {
+  //   if (direction === 'right' || direction === 'left') {
+  //     console.log('got', diff)
+  //     setSidebarWidth(sidebarWidth + +diff)
+  //   }
+  // }
 
   if (!store.activePane) {
     return null
@@ -75,7 +86,7 @@ export const OrbitPageContent = observer(() => {
   const activeAppStore = store.appStores[store.activePane]
 
   const allPanes: AppConfig[] = [
-    ...AppPanes,
+    ...spaceStore.apps,
     {
       id: 'sources',
       type: 'sources',
@@ -92,25 +103,25 @@ export const OrbitPageContent = observer(() => {
 
   return (
     <Col flex={1}>
-      {!!activeAppStore && !!activeAppStore.toolbar ? (
-        <ToolbarChrome>{activeAppStore.toolbar}</ToolbarChrome>
-      ) : null}
+      <ToolbarChrome>{!!activeAppStore ? activeAppStore.toolbar : null}</ToolbarChrome>
       <Row flex={1}>
-        <OrbitIndexView isHidden={store.activePane === 'home' || store.activePane === 'settings'}>
-          {allPanes.map(app => (
-            <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
-              <SelectionManager pane={app.id}>
-                <AppView
-                  viewType="index"
-                  id={app.id}
-                  type={app.type}
-                  itemProps={{ onSelect: store.handleSelectItem }}
-                  onAppStore={store.setAppStore(app.type)}
-                />
-              </SelectionManager>
-            </SubPane>
-          ))}
-        </OrbitIndexView>
+        <Sidebar width={300} minWidth={100} maxWidth={500}>
+          <OrbitIndexView isHidden={false}>
+            {allPanes.map(app => (
+              <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
+                <SelectionManager pane={app.id}>
+                  <AppView
+                    viewType="index"
+                    id={app.id}
+                    type={app.type}
+                    itemProps={{ onSelect: store.handleSelectItem }}
+                    onAppStore={store.setAppStore(app.type)}
+                  />
+                </SelectionManager>
+              </SubPane>
+            ))}
+          </OrbitIndexView>
+        </Sidebar>
         <OrbitMainView>
           {allPanes.map(app => (
             <SubPane key={app.type} id={app.id} type={app.type} fullHeight preventScroll>
@@ -129,13 +140,16 @@ export const OrbitPageContent = observer(() => {
   )
 })
 
-const ToolbarChrome = gloss({}).theme((_, theme) => ({
-  borderBottom: [1, theme.borderColor.alpha(0.25)],
+const ToolbarChrome = gloss({
+  // minHeight: 5,
+  maxHeight: 50,
+}).theme((_, theme) => ({
+  // borderBottom: [1, theme.borderColor.alpha(0.25)],
   background: theme.background,
 }))
 
-const OrbitIndexView = gloss({
-  width: 300,
+const OrbitIndexView = gloss(View, {
+  flex: 1,
   position: 'relative',
   isHidden: {
     position: 'absolute',
@@ -143,10 +157,11 @@ const OrbitIndexView = gloss({
     visibility: 'hidden',
     zIndex: -1,
   },
-}).theme((_, theme) => ({
-  borderRight: [1, theme.borderColor.alpha(0.5)],
-  background: theme.background.alpha(0.5),
-}))
+})
+// .theme((_, theme) => ({
+//   borderRight: [1, theme.borderColor.alpha(0.5)],
+//   background: theme.background.alpha(0.5),
+// }))
 
 const OrbitMainView = gloss({
   flex: 1,

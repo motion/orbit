@@ -11,6 +11,7 @@ import {
   SourceEntity,
   SpaceEntity,
   CosalSaliencyModel,
+  OpenCommand,
 } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -122,12 +123,6 @@ export class Root {
       operatingSystem: {
         macVersion: macosVersion(),
       },
-    })
-
-    // TODO move to command
-    Desktop.onMessage(Desktop.messages.OPEN, url => {
-      console.log('opening', url)
-      open(url)
     })
 
     // FIRST THING
@@ -285,6 +280,7 @@ export class Root {
         SlackSourceBlacklistCommand,
         SetupProxyCommand,
         CheckProxyCommand,
+        OpenCommand,
       ],
       transport: new WebSocketServerTransport({
         port: this.config.ports.dbBridge,
@@ -315,11 +311,18 @@ export class Root {
         SearchPinnedResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),
         resolveCommand(SetupProxyCommand, async () => {
-          console.log('resolving SetupProxyCommand')
-          if (await checkAuthProxy()) {
+          const success = (await checkAuthProxy()) || (await startAuthProxy())
+          console.log('finishing setup proxy', success)
+          return success
+        }),
+        resolveCommand(OpenCommand, async ({ url }) => {
+          try {
+            open(url)
             return true
+          } catch (err) {
+            console.log('error opening', err)
+            return false
           }
-          return await startAuthProxy()
         }),
       ],
     })

@@ -63,10 +63,6 @@ export class SlackBitFactory {
     const title = (await loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 6 } })).join(
       ' ',
     )
-    // and more for body
-    const body = (await loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 25 } })).join(
-      ' ',
-    )
 
     return BitUtils.create(
       {
@@ -74,7 +70,7 @@ export class SlackBitFactory {
         integration: 'slack',
         type: 'conversation',
         title,
-        body,
+        body: '',
         data,
         bitCreatedAt,
         bitUpdatedAt,

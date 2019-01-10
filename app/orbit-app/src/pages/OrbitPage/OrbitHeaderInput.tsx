@@ -4,6 +4,7 @@ import { StoreContext } from '@mcro/black'
 import { View, ThemeContext } from '@mcro/ui'
 import { HeaderStore } from './OrbitHeader'
 import { observer } from 'mobx-react-lite'
+import { capitalize } from 'lodash'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -18,8 +19,10 @@ type Props = {
 }
 
 export const OrbitHeaderInput = observer(({ headerStore }: Props) => {
-  const { orbitWindowStore, queryStore } = React.useContext(StoreContext)
+  const { orbitWindowStore, queryStore, paneManagerStore } = React.useContext(StoreContext)
   const { activeTheme } = React.useContext(ThemeContext)
+  const pane = paneManagerStore.activePane
+  const placeholder = pane === 'search' ? 'Orbit' : capitalize(pane)
   return (
     <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
       <HighlightedTextArea
@@ -31,6 +34,7 @@ export const OrbitHeaderInput = observer(({ headerStore }: Props) => {
         border="none"
         display="block"
         background="transparent"
+        placeholder={placeholder}
         value={queryStore.queryInstant}
         highlight={headerStore.highlightWords}
         color={activeTheme.color}

@@ -14,6 +14,7 @@ import { AppActions } from '../actions/AppActions'
 import { stringify } from '@mcro/helpers'
 import * as Models from '@mcro/models'
 import { PopoverState } from '@mcro/ui'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -33,6 +34,7 @@ const toJS = obj => {
 }
 
 // the heavy hitters
+window['ReconnectingWebSocket'] = ReconnectingWebSocket
 window['PopoverState'] = PopoverState
 window['React'] = React
 window['Constants'] = Constants

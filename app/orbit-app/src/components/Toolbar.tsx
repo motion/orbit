@@ -26,7 +26,6 @@ export const Toolbar = props => {
 
 const ToolbarChrome = view({
   flexFlow: 'row',
-  height: 38,
   alignItems: 'center',
-  padding: [0, '10%'],
+  padding: [4, '10%'],
 })

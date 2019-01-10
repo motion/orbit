@@ -1,17 +1,17 @@
 import * as React from 'react'
-import { OrbitCard } from '../../../../views/OrbitCard'
-import { AppInfoStore, AppInfoProps } from '../../../../stores/AppInfoStore'
-import { ItemProps } from '../../../../views/OrbitItemProps'
-import { Setting } from '@mcro/models'
 import { Col, SizedSurface, Theme, Text } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { OrbitCard } from '../views/OrbitCard'
+import { AppInfoProps, AppInfoStore } from './AppInfoStore'
+import { GenericItemProps } from '../sources/types'
 
-type Props = ItemProps<Setting> &
+type Props = GenericItemProps<any> &
   AppInfoProps & {
     store: AppInfoStore
     isActive?: boolean
     hideTitle?: boolean
     model?: any
+    style?: any
   }
 
 const Centered = gloss({
@@ -20,33 +20,8 @@ const Centered = gloss({
   justifyContent: 'center',
 })
 
-// {!hideTitle && (
-//   <>
-//     <div style={{ height: 2 }} />
-//     <SyncStatus settingId={model.id}>
-//       {(syncJobs, removeJobs) => {
-//         return (
-//           <Text size={0.85} alpha={0.6} ellipse>
-//             {syncJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}
-//           </Text>
-//         )
-//       }}
-//     </SyncStatus>
-//   </>
-// )}
-
 export const OrbitAppIconCard = (props: Props) => {
-  const {
-    store,
-    hideTitle,
-    model,
-    isActive,
-    subtitle,
-    children = null,
-    title,
-    style,
-    ...restProps
-  } = props
+  const { store, hideTitle, model, isActive, style, ...restProps } = props
   return (
     <Col
       marginRight={14}
@@ -56,7 +31,6 @@ export const OrbitAppIconCard = (props: Props) => {
       justifyContent="center"
     >
       <OrbitCard
-        direct
         opacity={0.75}
         activeStyle={{ opacity: 1 }}
         {...{

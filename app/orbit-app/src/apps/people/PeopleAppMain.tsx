@@ -12,7 +12,6 @@ import {
 import { useStore } from '@mcro/use-store'
 import { react, ensure, StoreContext } from '@mcro/black'
 import { RoundButton } from '../../views'
-import { OrbitIcon } from '../../views/OrbitIcon'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { SubTitle } from '../../views/SubTitle'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
@@ -20,6 +19,7 @@ import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
+import { Icon } from '../../views/Icon'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
@@ -317,7 +317,7 @@ const Links = gloss({
 })
 
 const IntegrationButton = ({ children, icon, size = 14, ...props }) => (
-  <RoundButton icon={<OrbitIcon icon={icon} preventAdjust size={size} />} {...props}>
+  <RoundButton icon={<Icon icon={icon} preventAdjust size={size} />} {...props}>
     {children}
   </RoundButton>
 )

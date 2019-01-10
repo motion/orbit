@@ -20,7 +20,6 @@ export class MediatorClient {
   ): Promise<ReturnType> {
     const results = await Promise.all(
       this.options.transports.map(transport => {
-        console.log('executing', transport, command, args)
         return transport.execute('command', {
           command: command.name,
           args,

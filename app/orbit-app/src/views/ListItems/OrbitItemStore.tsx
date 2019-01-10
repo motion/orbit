@@ -42,9 +42,16 @@ export class OrbitItemStore {
         this.searchLocation()
         return
       }
-      this.open()
-      AppActions.setOrbitDocked(false)
-      e.stopPropagation()
+      if (this.props.onSelect) {
+        e.stopPropagation()
+        this.props.onSelect(this.index, this.appConfig, this.cardWrapRef)
+        return
+      } else {
+        e.stopPropagation()
+        if (this.open()) {
+          AppActions.setOrbitDocked(false)
+        }
+      }
     }
     this.clickAt = Date.now()
     OrbitItemSingleton.lastClick = this.clickAt
@@ -76,9 +83,10 @@ export class OrbitItemStore {
 
   open = () => {
     if (!this.props.item || this.props.item.target === 'source') {
-      return
+      return false
     }
     AppActions.openItem(this.props.item)
+    return true
   }
 
   setCardWrapRef = cardWrapRef => {
@@ -135,12 +143,12 @@ export class OrbitItemStore {
   updateIsSelected = react(
     this.shouldSelect,
     async (isSelected, { sleep }) => {
-      const { onSelect } = this.props
+      const { onPreview } = this.props
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected) {
-        if (onSelect) {
-          onSelect(this.index, this.appConfig, this.cardWrapRef)
+        if (onPreview) {
+          onPreview(this.index, this.appConfig, this.cardWrapRef)
         } else {
           ensure('this.appConfig', !!this.appConfig)
           // fluidity

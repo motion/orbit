@@ -1,6 +1,9 @@
 .draggable {
   -webkit-app-region: drag;
 }
+.undraggable {
+  -webkit-app-region: no-drag;
+}
 
 .sortableHelper {
   z-index: 100000000;

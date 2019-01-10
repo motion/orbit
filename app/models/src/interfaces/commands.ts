@@ -24,3 +24,5 @@ export const SlackSourceBlacklistCommand = new Command<
 
 export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')
 export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')
+
+export const OpenCommand = new Command<boolean, { url: string }>('OpenCommand')

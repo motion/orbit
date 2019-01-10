@@ -46,7 +46,10 @@ export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
     renderText?: ItemRenderText
     children?: React.ReactNode
     onClick?: Function
+    // double click / keyboard enter
     onSelect?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
+    // single click / keyboard select
+    onPreview?: (index?: number, config?: AppConfig, element?: HTMLElement) => any
     borderRadius?: number
     nextUpStyle?: Object
     isSelected?: boolean | Function
@@ -60,4 +63,5 @@ export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
     searchTerm?: string
     onClickLocation?: (item: NormalItem, e?: Event) => any
     separator?: React.ReactNode
+    group?: string
   }

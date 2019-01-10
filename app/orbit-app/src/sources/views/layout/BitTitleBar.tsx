@@ -4,7 +4,7 @@ import { TitleBarSpace } from './TitleBarSpace'
 import { NormalItem } from '../../../helpers/normalizeItem'
 import { TitleBarButton } from './TitleBarButton'
 import { AppActions } from '../../../actions/AppActions'
-import { OrbitIcon } from '../../../views/OrbitIcon'
+import { Icon } from '../../../views/Icon'
 
 export class BitTitleBar extends React.Component<{
   searchBar: any
@@ -24,7 +24,7 @@ export class BitTitleBar extends React.Component<{
                 AppActions.open(normalizedItem.locationLink)
                 AppActions.setOrbitDocked(false)
               }}
-              icon={<OrbitIcon icon={normalizedItem.icon} size={14} />}
+              icon={<Icon icon={normalizedItem.icon} size={14} />}
             >
               {normalizedItem.location}
             </TitleBarButton>

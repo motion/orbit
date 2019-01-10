@@ -20,7 +20,7 @@ export async function main() {
     ? JSON.parse(ORBIT_CONFIG)
     : await require('./getInitialConfig').getInitialConfig()
   if (!config) {
-    throw new Error('Couldn\'t find config')
+    throw new Error("Couldn't find config")
   }
   setGlobalConfig(config)
 
@@ -74,7 +74,7 @@ export async function main() {
 
     // wait for server...
     // console.log('waiting for desktop')
-    const desktopServerUrl = `http://127.0.0.1:${config.ports.server}`
+    const desktopServerUrl = `http://localhost:${config.ports.server}`
     await waitOn({ resources: [desktopServerUrl] })
     // console.log('desktop is here')
 

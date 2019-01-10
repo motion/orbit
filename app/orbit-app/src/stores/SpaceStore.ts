@@ -62,7 +62,7 @@ export class SpaceStore {
   }
 
   get activeSpace() {
-    return this.spaces[this.activeIndex]
+    return this.spaces[this.activeIndex] || { id: 0 }
   }
 
   get inactiveSpaces() {

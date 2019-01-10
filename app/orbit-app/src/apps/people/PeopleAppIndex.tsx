@@ -9,7 +9,7 @@ import { SearchResultsList } from '../../views/Lists/SearchResultsList'
 import { observer, useComputed } from 'mobx-react-lite'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { groupByFirstLetter } from '../../helpers/groupByFirstLetter'
-import { useResults } from '../../hooks/useResults'
+import { Selectable } from '../../components/Selectable'
 
 export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
   // people and query
@@ -32,19 +32,19 @@ export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
   const sortedPeople = sortBy(filteredPeople.filter(x => !!x.name), x => x.name.toLowerCase())
   const results = sortedPeople.length < 10 ? sortedPeople : groupByFirstLetter(sortedPeople)
 
-  useResults(results)
-
   if (!results.length) {
     return <NoResultsDialog subName="the directory" />
   }
 
   return (
-    <SearchResultsList
-      items={results}
-      query={activeQuery}
-      itemProps={props.itemProps}
-      maxHeight={props.appStore.maxHeight}
-      rowCount={results.length}
-    />
+    <Selectable items={results}>
+      <SearchResultsList
+        items={results}
+        query={activeQuery}
+        itemProps={props.itemProps}
+        maxHeight={props.appStore.maxHeight}
+        rowCount={results.length}
+      />
+    </Selectable>
   )
 })

@@ -6,7 +6,7 @@ import { memoize } from 'lodash'
 export class PaneManagerStore {
   props: {
     disabled?: boolean
-    panes: string[]
+    panes: (number | string)[]
     onPaneChange: Function
   }
 

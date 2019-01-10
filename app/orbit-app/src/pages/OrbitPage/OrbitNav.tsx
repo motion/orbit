@@ -5,14 +5,13 @@ import { AppPanes } from '../../stores/SpaceStore'
 import { Icon } from '../../views/Icon'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
-import { useObserveMany } from '@mcro/model-bridge'
-import { AppModel } from '@mcro/models'
+import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
 export const OrbitNav = observer(() => {
-  const { spaceStore, paneManagerStore } = React.useContext(StoreContext)
-  const apps = useObserveMany(AppModel, { where: { spaceId: spaceStore.activeSpace.id } })
+  const { paneManagerStore } = React.useContext(StoreContext)
+  const apps = useObserveActiveApps()
 
   return (
     <OrbitNavClip>

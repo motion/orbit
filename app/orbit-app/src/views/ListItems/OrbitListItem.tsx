@@ -114,7 +114,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || 10}
+          padding={padding || [9, 10]}
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>

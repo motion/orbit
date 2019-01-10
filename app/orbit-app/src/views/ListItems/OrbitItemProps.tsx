@@ -63,4 +63,5 @@ export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
     searchTerm?: string
     onClickLocation?: (item: NormalItem, e?: Event) => any
     separator?: React.ReactNode
+    group?: string
   }

@@ -1,16 +1,53 @@
 import { ensure, react, always } from '@mcro/black'
 import { loadMany, observeMany } from '@mcro/model-bridge'
-import { SearchResultModel, SearchQuery, IntegrationType, AppModel } from '@mcro/models'
-import { uniq } from 'lodash'
+import {
+  SearchResultModel,
+  SearchQuery,
+  IntegrationType,
+  AppModel,
+  SearchResult,
+} from '@mcro/models'
+import { uniq, flatten } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
 import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
+import { normalizeItem } from '../../helpers/normalizeItem'
 
 type SearchState = {
   results: OrbitItemProps<any>[]
   finished?: boolean
   query: string
+}
+
+const groupToName = {
+  'last-day': 'Last Day',
+  'last-week': 'Last Week',
+  'last-month': 'Last Month',
+  overall: 'Overall',
+}
+
+const searchResultsToListItems = (results: SearchResult[]): OrbitItemProps<any>[] => {
+  const res = results.map(result => {
+    const group = groupToName[result.group]
+    const firstFew = result.bits.slice(0, 4).map(bit => ({
+      ...normalizeItem(bit),
+      group,
+    }))
+    const showMore =
+      result.bitsTotalCount > 3
+        ? [
+            {
+              title: result.title,
+              subtitle: result.text,
+              group,
+            },
+          ]
+        : []
+    return [...firstFew, ...showMore]
+  })
+  const res2 = flatten(res)
+  return res2
 }
 
 export class SearchStore {
@@ -213,13 +250,7 @@ export class SearchStore {
         if (!nextResults) {
           return false
         }
-        results = [
-          ...results,
-          ...nextResults.map(result => ({
-            ...result,
-            separator: group,
-          })),
-        ]
+        results = [...results, ...searchResultsToListItems(nextResults)]
         setValue({
           results,
           query,

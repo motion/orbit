@@ -16,9 +16,15 @@ type SearchResultsListProps = VirtualListProps & {
   offsetY?: number
 }
 
-const getItemAppConfig = items => index => {
+const getItemAppConfig = (items: any[]) => (index: number) => {
   // normalize bits if handed in directly
-  return items[index].target === 'bit' ? normalizeItem(items[index]) : null
+  const target = items[index].target
+  switch (target) {
+    case 'person-bit':
+    case 'bit':
+      return normalizeItem(items[index])
+  }
+  return null
 }
 
 export const SearchResultsList = ({

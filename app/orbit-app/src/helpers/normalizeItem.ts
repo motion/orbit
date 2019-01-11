@@ -60,6 +60,7 @@ const normalizers = {
     id: `${source.id}`,
     title: source.type,
     icon: source.type,
+    appConfig: getAppConfig(source),
   }),
   'person-bit': (person: PersonBit): NormalItem => {
     return {
@@ -69,6 +70,7 @@ const normalizers = {
       icon: 'person',
       subtitle: person.email,
       image: last(person.allPhotos as any) || person.photo,
+      appConfig: getAppConfig(person),
       // createdAt: person.createdAt,
       // updatedAt: person.updatedAt,
     }

@@ -21,6 +21,7 @@ import { App } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { Icon } from '../../views/Icon'
+import { normalizeItem } from '../../helpers/normalizeItem'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
@@ -38,7 +39,7 @@ class PeopleAppStore {
   props: AppProps<AppType.people>
 
   get appConfig() {
-    return this.props.appStore.appConfig
+    return this.props.appConfig
   }
 
   person = react(
@@ -176,7 +177,7 @@ export const PeopleAppMain = observer((props: AppProps<AppType.people>) => {
                 return (
                   <OrbitListItem
                     key={bit.id}
-                    model={bit}
+                    {...normalizeItem(bit)}
                     margin={0}
                     padding={15}
                     extraProps={{

@@ -44,6 +44,8 @@ export const PeopleAppIndex = observer((props: AppProps<AppType.people>) => {
         itemProps={props.itemProps}
         maxHeight={props.appStore.maxHeight}
         rowCount={results.length}
+        onSelect={props.onSelectItem}
+        onOpen={props.onOpenItem}
       />
     </Selectable>
   )

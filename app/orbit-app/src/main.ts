@@ -1,7 +1,7 @@
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import 'react-hot-loader' // must be imported before react
-import { setGlobalConfig, getGlobalConfig } from '@mcro/config'
+import { setGlobalConfig, getGlobalConfig, GlobalConfig } from '@mcro/config'
 import { App } from '@mcro/stores'
 import { configureUseStore } from '@mcro/use-store'
 import { viewEmitter } from '@mcro/black'
@@ -35,7 +35,7 @@ configureUseStore({
 
 async function fetchInitialConfig() {
   // set config before app starts...
-  let config
+  let config: GlobalConfig
   while (!config) {
     try {
       config = await fetch('/config').then(res => res.json())

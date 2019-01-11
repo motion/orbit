@@ -9,14 +9,14 @@ class DebugTrayStore {
   props: { id: number }
 
   targetSetter = id => () => {
-    console.log('id', id)
-    App.sendMessage(App, App.messages.TRAY_EVENT, `TrayHover${id}`)
+    console.log('chrome set tray hover id', id)
+    App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: id })
   }
 
   onLeave = this.targetSetter('Out')
 }
 
-export const BrowserDebugTray = observer(({ children, menuStore }) => {
+export const BrowserDebugTray = observer(({ children, menuStore }: any) => {
   const store = useStore(DebugTrayStore)
   if (IS_ELECTRON) {
     return children
@@ -31,10 +31,10 @@ export const BrowserDebugTray = observer(({ children, menuStore }) => {
           alignItems="center"
           pointerEvents="auto"
         >
-          <Target id={3} store={store} menuStore={menuStore} />
-          <Target id={2} store={store} menuStore={menuStore} />
-          <Target id={1} store={store} menuStore={menuStore} />
-          <Target id={0} store={store} menuStore={menuStore} />
+          <Target id="3" store={store} menuStore={menuStore} />
+          <Target id="2" store={store} menuStore={menuStore} />
+          <Target id="1" store={store} menuStore={menuStore} />
+          <Target id="0" store={store} menuStore={menuStore} />
         </View>
       </Row>
       <View position="relative" flex={1}>

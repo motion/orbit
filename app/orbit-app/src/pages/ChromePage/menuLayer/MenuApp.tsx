@@ -32,7 +32,7 @@ export const MenuAppInner = React.memo((props: MenuAppProps) => {
       onChangeHeight={props.menuStore.menuHeightSetter(props.menuId)}
       transition="opacity ease 100ms"
     >
-      <AppView viewType="index" {...props} />
+      <AppView id={props.id} type={props.type} viewType="index" {...props} />
     </SubPane>
   )
 })

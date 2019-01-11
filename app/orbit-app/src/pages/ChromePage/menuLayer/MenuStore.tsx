@@ -10,7 +10,7 @@ import { memoize, debounce } from 'lodash'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { createRef } from 'react'
 
-export const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
+export const menuApps = ['search', 'topics', 'people'] as AppType[]
 
 export class MenuStore {
   props: {
@@ -25,7 +25,7 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringID = -1
   didRenderState = { at: Date.now(), open: false }
-  trayEventListener = App.onMessage(App.messages.TRAY_EVENT, this.handleTrayEvent.bind(this))
+  trayEventListener = App.onMessage(App.messages.TRAY_EVENT, a => this.handleTrayEvent(a))
 
   // see how this interacts with isOpen
   activeMenuID = App.openMenu ? App.openMenu.id : -1
@@ -158,7 +158,7 @@ export class MenuStore {
     type: 'trayHovered' | 'trayClicked'
     value: '0' | '1' | '2' | '3' | 'Out'
   }) {
-    console.log('handling tray event', type, value)
+    console.log('handleTrayEvent', type, value)
     if (type === 'trayHovered') {
       switch (value) {
         case 'Out':
@@ -168,8 +168,7 @@ export class MenuStore {
         case '1':
         case '2':
         case '3':
-          const id = +type.replace('TrayHover', '')
-          this.updateTrayHover(id)
+          this.updateTrayHover(+value)
           break
       }
       return
@@ -189,7 +188,7 @@ export class MenuStore {
         case '1':
         case '2':
         case '3':
-          this.togglePinnedOpen(+type.replace('TrayToggle', ''))
+          this.togglePinnedOpen(+value)
           break
       }
     }
@@ -198,6 +197,7 @@ export class MenuStore {
   private updateHoverTm = null
 
   updateTrayHover = (id: number) => {
+    console.log('update tray hover', id)
     clearTimeout(this.updateHoverTm)
     const update = () => {
       this.activeMenuID = id

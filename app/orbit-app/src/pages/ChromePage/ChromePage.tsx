@@ -9,6 +9,7 @@ import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { observer } from 'mobx-react-lite'
+import { AppTray } from './appTray/AppTray'
 
 class ChromePageStore {
   get theme() {
@@ -26,7 +27,7 @@ export default observer(() => {
       <Theme name={store.theme}>
         <AppWrapper>
           <FullScreen>
-            {/* <AppTray /> */}
+            <AppTray />
             <MenuLayer />
           </FullScreen>
         </AppWrapper>

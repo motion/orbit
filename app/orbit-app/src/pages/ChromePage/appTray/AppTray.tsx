@@ -7,6 +7,7 @@ import { SubTitle } from '../../../views/SubTitle'
 import { Desktop } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
+import { IS_ELECTRON } from '../../../constants'
 
 const TRAY_VERT_PAD = 12
 const TRAY_HEIGHT = 60
@@ -41,7 +42,9 @@ const TrayCard = gloss({
 })
 
 export function AppTray() {
-  return null
+  if (IS_ELECTRON) {
+    return null
+  }
   const stores = useContext(StoreContext)
   const store = useStore(AppTrayStore, stores)
   console.log('------render --- Apptray', stores)

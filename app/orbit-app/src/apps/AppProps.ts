@@ -20,7 +20,7 @@ export type AppProps<Type extends AppType> = {
 
   // TODO this is all confused, were moving this onto AppEntity/AppModel
   data?: AppData[Type]
-  updateData: (values: Partial<AppData[Type]>) => void
+  updateData?: (values: Partial<AppData[Type]>) => void
 
   sourceType?: IntegrationType
   appStore: AppStore<Type>

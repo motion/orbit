@@ -1,5 +1,3 @@
 export * from './contextual'
 export * from './emitsMount'
-export * from './storeAttachable'
-export * from './storeProvidable'
 export * from './wrapHOC'

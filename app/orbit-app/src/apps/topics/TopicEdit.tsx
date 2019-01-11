@@ -5,8 +5,9 @@ import * as React from 'react'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { Input, Button, Row } from '@mcro/ui'
 import { IS_MINIMAL } from '../../constants'
-import { useStore } from '@mcro/use-store';
-import { useStoresSafe } from '../../hooks/useStoresSafe';
+import { useStore } from '@mcro/use-store'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { observer } from 'mobx-react-lite'
 
 class TopicEditStore {
   name: string = ''
@@ -46,12 +47,9 @@ class TopicEditStore {
   }
 }
 
-export const TopicEdit = (props: {
-  type: 'term' | 'topic'
-  store?: TopicEditStore
-  spaceStore?: SpaceStore
-}) => {
-  const store = useStore(TopicEditStore, { ...props, ...useStoresSafe() })
+export const TopicEdit = observer(
+  (props: { type: 'term' | 'topic'; store?: TopicEditStore; spaceStore?: SpaceStore }) => {
+    const store = useStore(TopicEditStore, { ...props, ...useStoresSafe() })
     return (
       <Row tagName="form" onSubmit={store.save} alignItems="center">
         <Input
@@ -66,4 +64,5 @@ export const TopicEdit = (props: {
         </Button>
       </Row>
     )
-  })
+  },
+)

@@ -7,7 +7,7 @@ import { useComputed, observer } from 'mobx-react-lite'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 
 export type SelectionManagerProps = {
-  pane: string
+  pane?: string
   onClearSelection?: Function
 }
 

@@ -11,6 +11,7 @@ import { AppPageStore } from './pages/AppPage/AppPageStore'
 import { ShortcutStore } from './stores/ShortcutStore'
 import { AppInfoStore } from './components/AppInfoStore'
 import { SubPaneStore } from './components/SubPaneStore'
+import { AppFrameStore } from './pages/AppPage/AppFrame'
 
 export type AllStores = {
   queryStore?: QueryStore
@@ -25,6 +26,7 @@ export type AllStores = {
   shortcutStore?: ShortcutStore
   appInfoStore?: AppInfoStore
   subPaneStore?: SubPaneStore
+  appFrameStore?: AppFrameStore
 }
 
 export const StoreContext = createContext({} as AllStores)

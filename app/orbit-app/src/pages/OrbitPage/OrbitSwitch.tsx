@@ -1,9 +1,7 @@
 import * as React from 'react'
-import { view, ensure, attach } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { Popover, View, Col, Row } from '@mcro/ui'
-import { reaction, trace } from 'mobx'
 import { App } from '@mcro/stores'
-import { findDOMNode } from 'react-dom'
 import { AppActions } from '../../actions/AppActions'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import * as Views from '../../views'
@@ -15,19 +13,22 @@ import { fuzzyQueryFilter } from '../../helpers'
 import { Icon } from '../../views/Icon'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { OrbitOrb } from '../../views/OrbitOrb'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
-type Props = {
-  paneManagerStore?: PaneManagerStore
-  spaceStore?: SpaceStore
-} & React.HTMLProps<HTMLDivElement> &
-  CSSPropertySet
+type Props = React.HTMLProps<HTMLDivElement> & CSSPropertySet
 
 class SpaceSwitchStore {
-  props: Props
+  props: Props & {
+    spaceStore: SpaceStore
+    paneManagerStore: PaneManagerStore
+  }
   popoverContentRef = React.createRef<HTMLDivElement>()
   selectedIndex = 0
   open = false
   query = ''
+  spaceSwitcherRef = React.createRef<Popover>()
 
   setOpen = open => {
     this.open = open
@@ -53,155 +54,141 @@ class SpaceSwitchStore {
     e.stopPropagation()
     this.selectedIndex = Math.max(this.selectedIndex - 1, 0)
   }
-}
 
-@attach('spaceStore', 'paneManagerStore')
-@attach({
-  store: SpaceSwitchStore,
-})
-@view
-export class OrbitSwitch extends React.Component<Props> {
-  spaceSwitcherRef = React.createRef<Popover>()
-
-  spaceOpener = reaction(
+  spaceOpener = react(
     () => App.state.showSpaceSwitcher,
     () => {
-      ensure('this.spaceSwitcherRef.current', !!this.spaceSwitcherRef.current)
-      this.spaceSwitcherRef.current.toggleOpen()
+      const ref = this.spaceSwitcherRef.current
+      ensure('ref', !!ref)
+      if (ref) {
+        ref.toggleOpen()
+      }
     },
   )
+}
 
-  componentWillUnmount() {
-    this.spaceOpener()
-  }
+const shortcuts = {
+  select: 'enter',
+  up: 'up',
+  down: 'down',
+}
 
-  shortcuts = {
-    select: 'enter',
-    up: 'up',
-    down: 'down',
-  }
+const createNewSpace = () => {
+  AppActions.togglePeekApp({
+    appConfig: {
+      type: 'newSpace',
+      title: 'New Space',
+      icon: 'orbit',
+    },
+    // TODO
+    target: [0, 0],
+  })
+}
 
-  handlers = {
+export const OrbitSwitch = observer((props: Props) => {
+  const stores = useStoresSafe()
+  const store = useStore(SpaceSwitchStore, { ...props, ...stores })
+
+  const handlers = {
     select: () => {
       console.log('should switch space')
       // switch active space
     },
-    down: this.props.store.down,
-    up: this.props.store.up,
+    down: store.down,
+    up: store.up,
   }
 
-  createNewSpace = () => {
-    AppActions.togglePeekApp({
-      appConfig: {
-        type: 'newSpace',
-        title: 'New Space',
-        icon: 'orbit',
-      },
-      target: findDOMNode(this) as HTMLDivElement,
-    })
+  const goToTeamSettings = () => {
+    stores.paneManagerStore.setActivePane('settings')
   }
 
-  goToTeamSettings = () => {
-    this.props.paneManagerStore.setActivePane('settings')
-  }
+  const { activeSpace } = stores.spaceStore
+  const { selectedIndex, filteredSpaces } = store
+  const borderRadius = 8
 
-  render() {
-    const { paneManagerStore, spaceStore, store, ...props } = this.props
-    const { activeSpace } = spaceStore
-    const { selectedIndex, filteredSpaces } = store
-    const borderRadius = 8
-    trace()
-
-    return (
-      <FocusableShortcutHandler
-        focused={store.open}
-        shortcuts={this.shortcuts}
-        handlers={this.handlers}
-      >
-        <Popover
-          ref={this.spaceSwitcherRef}
-          delay={100}
-          openOnClick
-          openOnHover
-          // closeOnClick
-          // closeOnClickAway
-          theme="light"
-          width={300}
-          background
-          borderRadius={borderRadius}
-          elevation={7}
-          group="filters"
-          onChangeVisibility={store.setOpen}
-          target={
-            <NavButton
-              chromeless
-              margin={['auto', 0]}
-              transform={{
-                y: -0.5,
-              }}
-              {...props}
-            >
-              <OrbitOrb size={16} background={'#DDADDA'} color="#985FC9" />
-            </NavButton>
-          }
-        >
-          <Col
-            forwardRef={store.popoverContentRef}
-            borderRadius={borderRadius}
-            overflow="hidden"
-            flex={1}
+  return (
+    <FocusableShortcutHandler focused={store.open} shortcuts={shortcuts} handlers={handlers}>
+      <Popover
+        ref={store.spaceSwitcherRef}
+        delay={100}
+        openOnClick
+        openOnHover
+        // closeOnClick
+        // closeOnClickAway
+        theme="light"
+        width={300}
+        background
+        borderRadius={borderRadius}
+        elevation={7}
+        group="filters"
+        onChangeVisibility={store.setOpen}
+        target={
+          <NavButton
+            chromeless
+            margin={['auto', 0]}
+            transform={{
+              y: -0.5,
+            }}
+            {...props}
           >
-            <Theme name="light">
-              <View padding={5}>
-                <Row background="#eee">
-                  <Icon name="search" size={12} />
-                  <Views.InputRow
-                    label="Search..."
-                    value={store.query}
-                    onChange={value => (store.query = value)}
-                  />
-                  <View tagName="input" placeholder="Search..." />
-                </Row>
-              </View>
-            </Theme>
-            <View overflowY="auto" maxHeight={300}>
-              {activeSpace ? (
-                <RowItem
-                  orb={activeSpace.colors}
-                  title={activeSpace.name}
-                  subtitle="20 people"
-                  after={
-                    <Icon onClick={this.goToTeamSettings} name="gear" size={14} opacity={0.5} />
-                  }
-                  hover={false}
+            <OrbitOrb size={16} background={'#DDADDA'} color="#985FC9" />
+          </NavButton>
+        }
+      >
+        <Col
+          forwardRef={store.popoverContentRef}
+          borderRadius={borderRadius}
+          overflow="hidden"
+          flex={1}
+        >
+          <Theme name="light">
+            <View padding={5}>
+              <Row background="#eee">
+                <Icon name="search" size={12} />
+                <Views.InputRow
+                  label="Search..."
+                  value={store.query}
+                  onChange={value => (store.query = value)}
                 />
-              ) : (
-                <div>No spaces</div>
-              )}
-              <View flex={1} margin={[2, 10]} background="#eee" height={1} />
-              {filteredSpaces.map((space, index) => {
-                return (
-                  <RowItem
-                    onClick={() => (spaceStore.activeIndex = index)}
-                    key={space.name}
-                    selected={selectedIndex === index + 1}
-                    orb={space.color}
-                    title={space.name}
-                    {...space.props}
-                  />
-                )
-              })}
-              <RowItem
-                onClick={this.createNewSpace}
-                key="new-space"
-                title="Create new space..."
-                titleProps={{ fontWeight: 400, size: 1, alpha: 0.8 }}
-                after={<Icon name="addcircle" size={14} fill="#444" />}
-              />
+                <View tagName="input" placeholder="Search..." />
+              </Row>
             </View>
-          </Col>
-        </Popover>
-      </FocusableShortcutHandler>
-    )
-  }
-}
+          </Theme>
+          <View overflowY="auto" maxHeight={300}>
+            {activeSpace ? (
+              <RowItem
+                orb={activeSpace.colors}
+                title={activeSpace.name}
+                subtitle="20 people"
+                after={<Icon onClick={goToTeamSettings} name="gear" size={14} opacity={0.5} />}
+                hover={false}
+              />
+            ) : (
+              <div>No spaces</div>
+            )}
+            <View flex={1} margin={[2, 10]} background="#eee" height={1} />
+            {filteredSpaces.map((space, index) => {
+              return (
+                <RowItem
+                  onClick={() => (stores.spaceStore.activeIndex = index)}
+                  key={space.name}
+                  selected={selectedIndex === index + 1}
+                  orb={space.color}
+                  title={space.name}
+                  {...space.props}
+                />
+              )
+            })}
+            <RowItem
+              onClick={createNewSpace}
+              key="new-space"
+              title="Create new space..."
+              titleProps={{ fontWeight: 400, size: 1, alpha: 0.8 }}
+              after={<Icon name="addcircle" size={14} fill="#444" />}
+            />
+          </View>
+        </Col>
+      </Popover>
+    </FocusableShortcutHandler>
+  )
+})

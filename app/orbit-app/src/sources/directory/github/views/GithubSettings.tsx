@@ -1,4 +1,3 @@
-import { view, provide } from '@mcro/black'
 import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
 import { Text, View, SearchableTable } from '@mcro/ui'
@@ -9,6 +8,8 @@ import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { OrbitSourceSettingProps } from '../../../types'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 type Props = OrbitSourceSettingProps<GithubSource>
 
@@ -46,109 +47,105 @@ class GithubSettingStore {
   }
 }
 
-@provide({ store: GithubSettingStore })
-@view
-export class GithubSettings extends React.Component<Props & { store: GithubSettingStore }> {
-  render() {
-    const { store, source } = this.props
-    return (
-      <>
-        <SettingManageRow source={source} whitelist={store.whitelist} />
-        <View
-          flex={1}
-          opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
-          pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'auto'}
-        >
-          <SearchableTable
-            virtual
-            rowLineHeight={28}
-            floating={false}
-            columnSizes={{
-              repo: 'flex',
-              org: 'flex',
-              lastCommit: '20%',
-              numIssues: '17%',
-              active: '13%',
-            }}
-            columns={{
-              repo: {
-                value: 'Repository',
-                sortable: true,
-                resizable: true,
-              },
-              org: {
-                value: 'Organization',
-                sortable: true,
-                resizable: true,
-              },
-              lastCommit: {
-                value: 'Last Commit',
-                sortable: true,
-                resizable: true,
-              },
-              numIssues: {
-                value: 'Open Issues',
-                sortable: true,
-                resizable: true,
-              },
-              active: {
-                value: 'Active',
-                sortable: true,
-              },
-            }}
-            // onRowHighlighted={this.onRowHighlighted}
-            sortOrder={store.sortOrder}
-            onSort={store.onSortOrder}
-            multiHighlight
-            rows={store.repositories.map(repository => {
-              const [orgName] = repository.nameWithOwner.split('/')
-              const lastCommit = new Date(repository.pushedAt)
-              const isActive = store.whitelist.whilistStatusGetter(repository.nameWithOwner)
-              return {
-                key: `${repository.id}`,
-                columns: {
-                  org: {
-                    sortValue: orgName,
-                    value: orgName,
-                  },
-                  repo: {
-                    sortValue: repository.name,
-                    value: repository.name,
-                  },
-                  lastCommit: {
-                    sortValue: lastCommit.getTime(),
-                    value: (
-                      <Text ellipse>
-                        <DateFormat date={lastCommit} />
-                      </Text>
-                    ),
-                  },
-                  numIssues: {
-                    sortValue: repository.issues.totalCount,
-                    value: repository.issues.totalCount,
-                  },
-                  active: {
-                    sortValue: isActive,
-                    value: (
-                      <ReactiveCheckBox
-                        onChange={store.whitelist.updateWhitelistValueSetter(
-                          repository.nameWithOwner,
-                        )}
-                        isActive={isActive}
-                      />
-                    ),
-                  },
+export const GithubSettings = observer((props: Props) => {
+  const store = useStore(GithubSettingStore, props)
+  return (
+    <>
+      <SettingManageRow source={props.source} whitelist={store.whitelist} />
+      <View
+        flex={1}
+        opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
+        pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'auto'}
+      >
+        <SearchableTable
+          virtual
+          rowLineHeight={28}
+          floating={false}
+          columnSizes={{
+            repo: 'flex',
+            org: 'flex',
+            lastCommit: '20%',
+            numIssues: '17%',
+            active: '13%',
+          }}
+          columns={{
+            repo: {
+              value: 'Repository',
+              sortable: true,
+              resizable: true,
+            },
+            org: {
+              value: 'Organization',
+              sortable: true,
+              resizable: true,
+            },
+            lastCommit: {
+              value: 'Last Commit',
+              sortable: true,
+              resizable: true,
+            },
+            numIssues: {
+              value: 'Open Issues',
+              sortable: true,
+              resizable: true,
+            },
+            active: {
+              value: 'Active',
+              sortable: true,
+            },
+          }}
+          // onRowHighlighted={this.onRowHighlighted}
+          sortOrder={store.sortOrder}
+          onSort={store.onSortOrder}
+          multiHighlight
+          rows={store.repositories.map(repository => {
+            const [orgName] = repository.nameWithOwner.split('/')
+            const lastCommit = new Date(repository.pushedAt)
+            const isActive = store.whitelist.whilistStatusGetter(repository.nameWithOwner)
+            return {
+              key: `${repository.id}`,
+              columns: {
+                org: {
+                  sortValue: orgName,
+                  value: orgName,
                 },
-              }
-            })}
-            bodyPlaceholder={
-              <div style={{ margin: 'auto' }}>
-                <Text size={1.2}>Loading...</Text>
-              </div>
+                repo: {
+                  sortValue: repository.name,
+                  value: repository.name,
+                },
+                lastCommit: {
+                  sortValue: lastCommit.getTime(),
+                  value: (
+                    <Text ellipse>
+                      <DateFormat date={lastCommit} />
+                    </Text>
+                  ),
+                },
+                numIssues: {
+                  sortValue: repository.issues.totalCount,
+                  value: repository.issues.totalCount,
+                },
+                active: {
+                  sortValue: isActive,
+                  value: (
+                    <ReactiveCheckBox
+                      onChange={store.whitelist.updateWhitelistValueSetter(
+                        repository.nameWithOwner,
+                      )}
+                      isActive={isActive}
+                    />
+                  ),
+                },
+              },
             }
-          />
-        </View>
-      </>
-    )
-  }
-}
+          })}
+          bodyPlaceholder={
+            <div style={{ margin: 'auto' }}>
+              <Text size={1.2}>Loading...</Text>
+            </div>
+          }
+        />
+      </View>
+    </>
+  )
+})

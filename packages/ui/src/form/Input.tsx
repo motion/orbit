@@ -10,7 +10,7 @@ export type InputProps = SizedSurfaceProps & {
   form?: Object
   elementProps?: Object
   onClick?: Function
-  forwardRef: any
+  forwardRef?: any
 }
 
 type InputDecoratedProps = InputProps & {

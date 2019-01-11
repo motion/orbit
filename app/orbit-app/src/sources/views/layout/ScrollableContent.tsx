@@ -1,7 +1,8 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
-import { useStoresSafe } from '../../../hooks/useStoresSafe';
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { observer } from 'mobx-react-lite'
 
 const PeekContentChrome = gloss(UI.Col, {
   flex: 1,
@@ -20,7 +21,7 @@ const ContentInner = gloss(UI.Col, {
   wordBreak: 'break-word',
 })
 
-export const ScrollableContent = (props: { scrollTo?: string, children: any }) {
+export const ScrollableContent = observer((props: { scrollTo?: string; children: any }) => {
   const { appPageStore } = useStoresSafe()
 
   React.useEffect(() => {
@@ -41,4 +42,4 @@ export const ScrollableContent = (props: { scrollTo?: string, children: any }) {
       </ContentInner>
     </PeekContentChrome>
   )
-}
+})

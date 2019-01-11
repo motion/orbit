@@ -13,7 +13,7 @@ export const WindowControls = ({
   closeProps = null,
   minProps = null,
   itemProps = null,
-}) => {
+}: any) => {
   return (
     <Row alignItems="center">
       {!!onClose && <WindowCloseButton onClick={onClose} {...itemProps} {...closeProps} />}

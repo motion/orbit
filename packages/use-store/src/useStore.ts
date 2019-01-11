@@ -108,7 +108,7 @@ const setupStoreWithReactiveProps = <A>(Store: new () => A, props?: Object) => {
 
 const useStoreWithReactiveProps = (
   Store: any,
-  props: Object,
+  props: any,
   hasChangedSource = false,
   options?: UseStoreOptions,
 ) => {
@@ -123,9 +123,13 @@ const useStoreWithReactiveProps = (
   return store.current
 }
 
-export function useStore<A>(Store: new () => A, props?: Object, options?: UseStoreOptions): A {
+export function useStore<P, A extends { props?: P } | any>(
+  Store: new () => A,
+  props?: P,
+  options?: UseStoreOptions,
+): A {
   if (options && options.conditionalUse === false) {
-    return null
+    return null as any
   }
 
   const proxyStore = useRef(null)
@@ -137,7 +141,7 @@ export function useStore<A>(Store: new () => A, props?: Object, options?: UseSto
     proxyStore.current = store
   }
 
-  return proxyStore.current
+  return (proxyStore.current as unknown) as A
 }
 
 export const configureUseStore = (opts: UseGlobalStoreOptions) => {

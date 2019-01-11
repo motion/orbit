@@ -16,18 +16,18 @@ type Props = {
   children?: (a: SearchChildProps) => React.ReactNode
 }
 
-@attach('selectionStore', 'appPageStore')
+@attach('appPageStore')
 @view
 export class AppSearchable extends React.Component<Props> {
   render() {
-    const { selectionStore, appStore, children } = this.props
+    const { appStore, children } = this.props
     return (
       <Searchable
         defaultValue={appStore.props.queryStore.query}
         placeholder="Filter..."
         // focusOnMount
         // onEnter={peekStore.goToNextHighlight}
-        onChange={() => selectionStore.setHighlightIndex(0)}
+        // onChange={() => selectionStore.setHighlightIndex(0)}
         searchBarProps={{
           minWidth: 120,
           padding: [3, 0],

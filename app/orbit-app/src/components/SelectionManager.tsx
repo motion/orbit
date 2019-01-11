@@ -13,11 +13,8 @@ export type SelectionManagerProps = {
 
 export const SelectionManager = observer(
   (props: SelectionManagerProps & { children: React.ReactNode }) => {
-    const { paneManagerStore, shortcutStore, queryStore } = useContext(StoreContext)
-    const selectionStore = useStore(SelectionStore, {
-      ...props,
-      queryStore,
-    })
+    const { paneManagerStore, shortcutStore } = useContext(StoreContext)
+    const selectionStore = useStore(SelectionStore, props)
     const isActive = useComputed(() => paneManagerStore.activePane === props.pane)
 
     useEffect(

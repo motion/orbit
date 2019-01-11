@@ -1,9 +1,12 @@
-import { useContext, useEffect } from 'react'
-import { StoreContext } from '@mcro/black'
+import { useEffect } from 'react'
 import { useComputed } from 'mobx-react-lite'
+import { useStoresSafe } from './useStoresSafe'
 
 export function useResults(results: any[], isActiveOverride?: boolean) {
-  const { appStore, selectionStore } = useContext(StoreContext)
+  const { appStore, selectionStore } = useStoresSafe()
+  if (!appStore) {
+    throw new Error('No appstore')
+  }
   const isActive = useComputed(() =>
     typeof isActiveOverride === 'boolean' ? isActiveOverride : !!appStore.isActive,
   )

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
@@ -15,9 +14,10 @@ import { Separator } from '../Separator'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { Icon } from '../Icon'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
-  const stores = React.useContext(StoreContext)
+  const stores = useStoresSafe()
   const store = useStore(OrbitItemStore, { ...props, ...stores })
   const {
     createdAt,

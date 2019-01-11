@@ -3,15 +3,14 @@ import { Row, View, Text, SegmentedRow } from '@mcro/ui'
 import { ManageSmartSync } from './ManageSmartSync'
 import { SourceForceSyncCommand, SourceRemoveCommand, Source } from '@mcro/models'
 import { command } from '@mcro/model-bridge'
-import { StoreContext } from '@mcro/black'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
-import { AppInfoStore } from '../../../components/AppInfoStore'
 import { AppActions } from '../../../actions/AppActions'
 import { useJobs } from '../../../hooks/useJobs'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { getAppFromSource } from '../../../stores/SourcesStore'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 const handleRefresh = async (sourceId: number) => {
   command(SourceForceSyncCommand, {
@@ -33,12 +32,8 @@ const removeIntegration = async (source: Source) => {
   }
 }
 
-export const SettingManageRow = (props: {
-  appInfoStore?: AppInfoStore
-  source: Source
-  whitelist: WhitelistManager<any>
-}) => {
-  const { appInfoStore } = React.useContext(StoreContext)
+export const SettingManageRow = (props: { source: Source; whitelist: WhitelistManager<any> }) => {
+  const { appInfoStore } = useStoresSafe()
   const { activeJobs, removeJobs } = useJobs(props.source.id)
 
   return (

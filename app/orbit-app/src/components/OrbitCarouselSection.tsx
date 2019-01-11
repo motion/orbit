@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { attach } from '@mcro/black'
 import { SelectableCarousel, SelectableCarouselProps } from './SelectableCarousel'
 import { Section } from '../views/Section'
 import { Unpad } from '../views/Unpad'
 import { handleClickLocation } from '../helpers/handleClickLocation'
 import { SubPaneStore } from './SubPaneStore'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { observer } from 'mobx-react-lite'
 
 type Props = SelectableCarouselProps & {
   categoryName?: string
@@ -12,21 +13,16 @@ type Props = SelectableCarouselProps & {
   subPaneStore?: SubPaneStore
 }
 
-@attach('subPaneStore')
-export class OrbitCarouselSection extends React.Component<Props> {
-  shouldComponentUpdate() {
-    return false
-  }
-
-  render() {
-    const { subPaneStore, offset, items, categoryName, cardProps, margin, ...props } = this.props
-    if (!items.length) {
+export const OrbitCarouselSection = observer(
+  ({ offset, items, categoryName, cardProps, margin, ...props }: Props) => {
+    const { subPaneStore } = useStoresSafe()
+    if (!items || !items.length) {
       return null
     }
     const isPeople = categoryName === 'Directory'
     return (
       <Section
-        title={categoryName}
+        title={`${categoryName}`}
         type="carousel"
         margin={margin || [0, 0, -2]}
         alignItems="center"
@@ -59,5 +55,5 @@ export class OrbitCarouselSection extends React.Component<Props> {
         </Unpad>
       </Section>
     )
-  }
-}
+  },
+)

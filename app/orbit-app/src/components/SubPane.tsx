@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { view, StoreContext } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { SubPaneStore } from './SubPaneStore'
 import { AppType } from '@mcro/models'
 import { CSSPropertySetStrict } from '@mcro/css'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../hooks/useStoresSafe'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: string
@@ -27,7 +28,7 @@ type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
 export const SubPane = observer((props: Props) => {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
-  const { paneManagerStore, selectionStore } = React.useContext(StoreContext)
+  const { paneManagerStore, selectionStore } = useStoresSafe()
   const subPaneStore = useStore(SubPaneStore, {
     paneManagerStore,
     selectionStore,

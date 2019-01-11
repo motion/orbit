@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { useContext, useEffect } from 'react'
-import { StoreContext, view } from '@mcro/black'
+import { useEffect } from 'react'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { gloss } from '@mcro/gloss'
 
 export const Toolbar = props => {
-  const stores = useContext(StoreContext)
+  const stores = useStoresSafe()
   const toolbar = <ToolbarChrome>{props.children}</ToolbarChrome>
 
   // this will do something a bit odd,
@@ -24,7 +25,7 @@ export const Toolbar = props => {
   }
 }
 
-const ToolbarChrome = view({
+const ToolbarChrome = gloss({
   flexFlow: 'row',
   alignItems: 'center',
   padding: [4, '10%'],

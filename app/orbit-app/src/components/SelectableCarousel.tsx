@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { view, react, cancel, ensure, attach } from '@mcro/black'
+import { react, cancel, ensure } from '@mcro/black'
 import { Carousel, CarouselProps } from '../views/Carousel'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { SelectionStore } from '../stores/SelectionStore'
+import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStore } from '@mcro/use-store'
 
 export type SelectableCarouselProps = CarouselProps & {
-  selectionStore?: SelectionStore
-  store?: CarouselStore
   isActiveStore?: { isActive?: boolean }
   resetOnInactive?: boolean
   activeIndex?: number
@@ -15,7 +16,9 @@ export type SelectableCarouselProps = CarouselProps & {
 }
 
 class CarouselStore {
-  props: SelectableCarouselProps
+  props: SelectableCarouselProps & {
+    selectionStore: SelectionStore
+  }
 
   carouselRef = React.createRef<Carousel>()
 
@@ -65,30 +68,18 @@ class CarouselStore {
   )
 }
 
-@attach('selectionStore')
-@attach({
-  store: CarouselStore,
+export const SelectableCarousel = observer((props: SelectableCarouselProps) => {
+  const { selectionStore } = useStoresSafe()
+  const store = useStore(CarouselStore, { ...props, selectionStore })
+  const { cardWidth = 180, cardHeight = 95, afterSpace = true, ...rest } = props
+  const afterWidth = typeof afterSpace === 'number' ? afterSpace : ORBIT_WIDTH - cardWidth - 26
+  return (
+    <Carousel
+      ref={store.carouselRef}
+      after={!!afterSpace && <div style={{ width: afterWidth }} />}
+      cardWidth={cardWidth}
+      cardHeight={cardHeight}
+      {...rest}
+    />
+  )
 })
-@view
-export class SelectableCarousel extends React.Component<SelectableCarouselProps> {
-  render() {
-    const {
-      store,
-      selectionStore,
-      cardWidth = 180,
-      cardHeight = 95,
-      afterSpace = true,
-      ...props
-    } = this.props
-    const afterWidth = typeof afterSpace === 'number' ? afterSpace : ORBIT_WIDTH - cardWidth - 26
-    return (
-      <Carousel
-        ref={store.carouselRef}
-        after={!!afterSpace && <div style={{ width: afterWidth }} />}
-        cardWidth={cardWidth}
-        cardHeight={cardHeight}
-        {...props}
-      />
-    )
-  }
-}

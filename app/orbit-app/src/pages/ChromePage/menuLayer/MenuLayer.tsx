@@ -17,6 +17,7 @@ import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainSh
 import { animated, interpolate } from 'react-spring'
 import { useSpring } from 'react-spring/hooks'
 import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 export type MenuAppProps = Partial<AppProps<any>> & {
   menuStore: MenuStore
@@ -24,7 +25,7 @@ export type MenuAppProps = Partial<AppProps<any>> & {
 }
 
 export const MenuLayer = observer(() => {
-  const stores = React.useContext(StoreContext)
+  const stores = useStoresSafe()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const selectionStore = useStore(SelectionStore, {
     queryStore,

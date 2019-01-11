@@ -1,13 +1,34 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import { BORDER_RADIUS, CHROME_PAD } from '../../constants'
 import * as UI from '@mcro/ui'
 import { Desktop } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const extraShadow = -20
 const SHADOW_PAD = 100 + extraShadow
+
+// this view has two halves so it can animate smoothly without causing layout reflows
+
+export const OrbitChrome = observer(() => {
+  const { orbitWindowStore, queryStore } = useStoresSafe()
+  return (
+    <>
+      <BlockTop height={60} overflow={SHADOW_PAD}>
+        <Chrome isUpper moreOpaque={queryStore.hasQuery} />
+      </BlockTop>
+      <BlockBottom
+        above={60}
+        height={orbitWindowStore.contentHeight}
+        maxHeight={window.innerHeight - 20}
+        overflow={SHADOW_PAD}
+      >
+        <Chrome moreOpaque={queryStore.hasQuery} />
+      </BlockBottom>
+    </>
+  )
+})
 
 const Border = gloss({
   position: 'absolute',
@@ -133,24 +154,3 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
     </div>
   </BlockFrame>
 )
-
-// this view has two halves so it can animate smoothly without causing layout reflows
-
-export const OrbitChrome = observer(() => {
-  const { orbitWindowStore, queryStore } = React.useContext(StoreContext)
-  return (
-    <>
-      <BlockTop height={60} overflow={SHADOW_PAD}>
-        <Chrome isUpper moreOpaque={queryStore.hasQuery} />
-      </BlockTop>
-      <BlockBottom
-        above={60}
-        height={orbitWindowStore.contentHeight}
-        maxHeight={window.innerHeight - 20}
-        overflow={SHADOW_PAD}
-      >
-        <Chrome moreOpaque={queryStore.hasQuery} />
-      </BlockBottom>
-    </>
-  )
-})

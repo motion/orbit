@@ -179,10 +179,10 @@ class RecentAppStore {
   }
 }
 
-@attach({
-  store: RecentAppStore,
-})
-@view
+// attach({
+//   store: RecentAppStore,
+// })
+// view
 export class RecentApp extends React.Component<Props> {
   render() {
     const { store } = this.props

@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import { OrbitSourceSettingProps } from '../../../types'
 import { GmailSource } from '@mcro/models'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
+import { useStore } from '@mcro/use-store';
+import { observer } from 'mobx-react-lite';
 
 type Props = OrbitSourceSettingProps<GmailSource>
 
@@ -26,11 +27,9 @@ class GmailSettingStore {
   }
 }
 
-@attach({ store: GmailSettingStore })
-@view
-export class GmailSettings extends React.Component<Props & { store?: GmailSettingStore }> {
-  render() {
-    const { store, source } = this.props
+export const GmailSettings = observer((props: Props) => {
+  const store = useStore(GmailSettingStore, props)
+  const { source } = props
     return (
       <>
         <SettingManageRow source={source} whitelist={store.whitelist} />

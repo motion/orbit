@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useStore } from '@mcro/use-store'
 import { SelectionStore } from '../stores/SelectionStore'
-import { useContext } from 'react'
 import { StoreContext } from '@mcro/black'
 import { MergeContext } from '../views/MergeContext'
 import { useComputed, observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../hooks/useStoresSafe'
 
 export type SelectionManagerProps = {
   pane: string
@@ -13,7 +13,7 @@ export type SelectionManagerProps = {
 
 export const SelectionManager = observer(
   (props: SelectionManagerProps & { children: React.ReactNode }) => {
-    const { paneManagerStore, shortcutStore } = useContext(StoreContext)
+    const { paneManagerStore, shortcutStore } = useStoresSafe()
     const selectionStore = useStore(SelectionStore, props)
     const isActive = useComputed(() => paneManagerStore.activePane === props.pane)
 

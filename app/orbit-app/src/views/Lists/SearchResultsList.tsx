@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { VirtualList, VirtualListProps } from '../../views/VirtualList/VirtualList'
+import { VirtualList, VirtualListProps, GetItemProps } from '../../views/VirtualList/VirtualList'
 import { PersonBit, Bit } from '@mcro/models'
-import { StoreContext } from '@mcro/black'
 import { SearchResultListItem } from '../ListItems/SearchResultListItem'
 import { HandleSelection } from '../ListItems/OrbitItemProps'
 import { normalizeItem } from '../../helpers/normalizeItem'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 export type SearchableItem = (Bit | PersonBit)[]
 
@@ -16,7 +16,7 @@ type SearchResultsListProps = VirtualListProps & {
   offsetY?: number
 }
 
-const getItemAppConfig = (items: any[]) => (index: number) => {
+const getItemAppConfig = (items: any[]): GetItemProps => (index: number) => {
   // normalize bits if handed in directly
   const target = items[index].target
   switch (target) {
@@ -35,7 +35,7 @@ export const SearchResultsList = ({
   onOpen,
   ...props
 }: SearchResultsListProps) => {
-  const { appStore } = React.useContext(StoreContext)
+  const { appStore } = useStoresSafe()
   const isRowLoaded = React.useCallback(find => find.index < items.length, [
     items.map(x => x.id).join(' '),
   ])

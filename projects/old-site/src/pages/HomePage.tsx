@@ -721,11 +721,11 @@ class OrbitStore {
   }
 }
 
-@attach('homeStore')
-@attach({
-  spaceStore: OrbitStore,
-})
-@view
+// attach('homeStore')
+// attach({
+//   spaceStore: OrbitStore,
+// })
+// view
 class Orbit extends React.Component {
   render() {
     const { homeStore, spaceStore } = this.props

@@ -11,7 +11,7 @@ import {
   AppType,
 } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import { react, ensure, StoreContext } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { RoundButton } from '../../views'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { SubTitle } from '../../views/SubTitle'
@@ -22,6 +22,7 @@ import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { Icon } from '../../views/Icon'
 import { normalizeItem } from '../../helpers/normalizeItem'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
@@ -101,7 +102,7 @@ class PeopleAppStore {
 const PersonHeader = gloss()
 
 export const PeopleAppMain = observer((props: AppProps<AppType.people>) => {
-  const { appPageStore } = React.useContext(StoreContext)
+  const { appPageStore } = useStoresSafe()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
     return <div>No one selected</div>

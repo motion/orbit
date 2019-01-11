@@ -10,6 +10,8 @@ import { observer } from 'mobx-react-lite'
 import { StoreContext } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { MergeContext } from '../../views/MergeContext'
+import { ShortcutStore } from '../../stores/ShortcutStore'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -38,16 +40,8 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-class ShortcutStore {
-  activeSelectionStore: SelectionStore = null
-
-  setActiveSelectionStore(store: SelectionStore) {
-    this.activeSelectionStore = store
-  }
-}
-
 export const MainShortcutHandler = observer(({ children }: Props) => {
-  const { queryStore, paneManagerStore } = React.useContext(StoreContext)
+  const { queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 
   const movePaneOrSelection = direction => () => {
@@ -59,7 +53,9 @@ export const MainShortcutHandler = observer(({ children }: Props) => {
         paneManagerStore.move(direction)
       }
     } else {
-      activeSelectionStore.move(direction)
+      if (activeSelectionStore) {
+        activeSelectionStore.move(direction)
+      }
     }
   }
 

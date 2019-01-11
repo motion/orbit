@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as Mobx from 'mobx'
 import root from 'global'
-import { StoreContext } from './contexts'
 import { Disposable } from 'event-kit'
 import { updateProps } from './helpers/updateProps'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
@@ -12,7 +11,7 @@ const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
 
 const DEFAULT_OPTIONS = {
-  context: StoreContext,
+  context: React.createContext(null),
   onStoreUnmount: () => {},
   onStoreWillMount: () => {},
   onStoreDidMount: () => {},

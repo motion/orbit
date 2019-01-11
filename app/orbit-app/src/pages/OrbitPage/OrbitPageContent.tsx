@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { HandleSelection } from '../../views/ListItems/OrbitItemProps'
@@ -13,6 +12,7 @@ import { AppStore } from '../../apps/AppStore'
 import { observer } from 'mobx-react-lite'
 import { SelectionManager } from '../../components/SelectionManager'
 import { gloss } from '@mcro/gloss'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class OrbitStore {
   props: { paneManagerStore: PaneManagerStore }
@@ -25,7 +25,11 @@ class OrbitStore {
     search: { id: '', type: AppType.search, title: '' },
   }
 
-  handleSelectItem: HandleSelection = (_index, appConfig) => {
+  handleSelectItem: HandleSelection = (index, appConfig) => {
+    if (!appConfig) {
+      console.warn('no app config', index)
+      return
+    }
     const type = appConfig.type === 'bit' ? AppType.search : appConfig.type
     this.activeConfig = {
       ...this.activeConfig,
@@ -44,7 +48,7 @@ class OrbitStore {
 }
 
 export const OrbitPageContent = observer(() => {
-  const { spaceStore, paneManagerStore } = React.useContext(StoreContext)
+  const { spaceStore, paneManagerStore } = useStoresSafe()
   const store = useStore(OrbitStore, { paneManagerStore })
 
   if (!store.activePane) {

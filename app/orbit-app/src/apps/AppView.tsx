@@ -5,6 +5,7 @@ import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../types'
+import { useStoresSafe } from '../hooks/useStoresSafe'
 
 type Props = Pick<
   AppProps<any>,
@@ -24,7 +25,7 @@ type Props = Pick<
 }
 
 export const AppView = React.memo((props: Props) => {
-  const stores = React.useContext(StoreContext)
+  const stores = useStoresSafe()
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
   const appStore = useStore(

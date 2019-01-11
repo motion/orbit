@@ -6,6 +6,8 @@ import * as React from 'react'
 import { AppActions } from '../actions/AppActions'
 import * as Views from '../views'
 import { Message } from '../views/Message'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 type Props = {
   space?: Space
@@ -36,84 +38,68 @@ class SpaceEditViewStore {
   )
 }
 
-@attach({
-  store: SpaceEditViewStore,
-})
-@view
-export class SpaceEditView extends React.Component<
-  Props & { store?: SpaceEditViewStore }
-> {
+export const SpaceEditView = observer((props: Props) => {
+  const store = useStore(SpaceEditViewStore, props)
 
-  save = async e => {
+  const handleSave = async e => {
     e.preventDefault()
-    const { space } = this.props.store
 
     // create a space
     const savedSpace = await save(SpaceModel, {
-      ...space,
-      ...this.props.store.values
+      ...store.space,
+      ...store.values,
     })
 
-    console.log("saved space:", savedSpace)
+    console.log('saved space:', savedSpace)
 
     // create a list app for the created space
     const listsApp: ListsApp = {
-      name: "Lists",
-      type: "lists",
+      name: 'Lists',
+      type: 'lists',
       spaceId: savedSpace.id,
       data: {
         lists: [
-          { name: "list #1", order: 0, pinned: false },
-          { name: "list #2", order: 0, pinned: false },
-          { name: "list #3", order: 0, pinned: false }
-        ]
-      }
+          { name: 'list #1', order: 0, pinned: false },
+          { name: 'list #2', order: 0, pinned: false },
+          { name: 'list #3', order: 0, pinned: false },
+        ],
+      },
     }
     await save(AppModel, listsApp)
 
-    this.props.store.values = { name: '', colors: [] }
+    store.values = { name: '', colors: [] }
     AppActions.clearPeek()
   }
 
-  handleChange = (prop: keyof Space) => (val: Space[typeof prop]) => {
-    this.props.store.values = {
-      ...this.props.store.values,
+  const handleChange = (prop: keyof Space) => (val: Space[typeof prop]) => {
+    store.values = {
+      ...store.values,
       [prop]: val,
     }
   }
 
-  render() {
-    const { values } = this.props.store
-    return (
-      <UI.Col tagName="form" onSubmit={this.save} padding={20}>
-        <Message>
-          Enter space name and choose the color.
-        </Message>
-        <Views.VerticalSpace />
-        <UI.Col margin="auto" width={370}>
-          <UI.Col padding={[0, 10]}>
-            <Views.Table>
-              <Views.InputRow
-                label="Name"
-                value={values.name}
-                onChange={this.handleChange('name')}
-              />
-            </Views.Table>
-            <Views.VerticalSpace />
-            <UI.Theme
-              theme={{
-                color: '#fff',
-                background: '#4C36C4',
-              }}
-            >
-              <UI.Button type="submit">
-                Save
-              </UI.Button>
-            </UI.Theme>
-            <Views.VerticalSpace />
-          </UI.Col>
+  const { values } = store
+  return (
+    <UI.Col tagName="form" onSubmit={handleSave} padding={20}>
+      <Message>Enter space name and choose the color.</Message>
+      <Views.VerticalSpace />
+      <UI.Col margin="auto" width={370}>
+        <UI.Col padding={[0, 10]}>
+          <Views.Table>
+            <Views.InputRow label="Name" value={values.name} onChange={handleChange('name')} />
+          </Views.Table>
+          <Views.VerticalSpace />
+          <UI.Theme
+            theme={{
+              color: '#fff',
+              background: '#4C36C4',
+            }}
+          >
+            <UI.Button type="submit">Save</UI.Button>
+          </UI.Theme>
+          <Views.VerticalSpace />
         </UI.Col>
       </UI.Col>
-    )
-  }
-}
+    </UI.Col>
+  )
+})

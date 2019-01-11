@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { view, react, attach } from '@mcro/black'
+import { react } from '@mcro/black'
 import { now } from 'mobx-utils'
 import { View } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { useStore } from '@mcro/use-store'
 
 class BlurryStore {
   guys = [[-40, -40], [50, -20], [0, 60]]
@@ -44,15 +45,9 @@ const Blur = gloss(View, {
   }
 })
 
-@attach({
-  store: BlurryStore,
-})
-@view
-export class BlurryGuys extends React.Component<{ store?: BlurryStore }> {
-  render() {
-    const { store } = this.props
-    return store.guys.map((guy, index) => {
-      return <Blur key={index} at={guy} background={colors[index]} opacity={0.15} />
-    })
-  }
+export const BlurryGuys = () => {
+  const store = useStore(BlurryStore)
+  return store.guys.map((guy, index) => {
+    return <Blur key={index} at={guy} background={colors[index]} opacity={0.15} />
+  })
 }

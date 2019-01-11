@@ -100,6 +100,7 @@ const MenuChrome = observer(({ menuStore, children }: { menuStore: MenuStore; ch
 
   const pad = menuStore.menuPad
   const left = menuCenter - MENU_WIDTH / 2
+  console.log('menu left', left)
   const { open, repositioning } = openState
   const config = repositioning ? noAnimationConfig : springyConfig
   const { x, y, opacity } = useSpring({

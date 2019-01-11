@@ -15,12 +15,12 @@ const CARD_WIDTH = 120
 const CARD_SPACE = 6
 
 export class AppTrayStore {
-  get trayBounds() {
-    return Desktop.state.operatingSystem.trayBounds
+  get trayPosition() {
+    return Desktop.state.operatingSystem.trayBounds.position
   }
 
   get trayCenter() {
-    return (this.trayBounds[0] + this.trayBounds[1]) / 2
+    return (this.trayPosition[0] + this.trayPosition[1]) / 2
   }
 
   get appsWidth() {

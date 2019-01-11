@@ -1,5 +1,8 @@
 import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
+import { Logger } from '@mcro/logger'
+
+const log = new Logger('OrbitItemStore')
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -108,7 +111,7 @@ export class OrbitItemStore {
         if (onSelect) {
           onSelect(this.index, this.props.appConfig)
         } else {
-          console.log('no preview event for', this.index)
+          log.info('no preview event for', this.index)
         }
       }
     },

@@ -100,12 +100,12 @@ export class MenuStore {
     activeID => {
       const id = activeID === -1 ? 0 : activeID
       const maxItems = 3
-      const trayBounds = Desktop.state.operatingSystem.trayBounds
+      const trayPositionX = Desktop.state.operatingSystem.trayBounds.position[0]
       const leftSpacing = 47
       const xOffset = maxItems - id
       const extraSpace = 4
       const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
-      const bounds = trayBounds[0] + offset
+      const bounds = trayPositionX + offset
       return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
     },
     {

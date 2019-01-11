@@ -1,13 +1,8 @@
 import * as React from 'react'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { UIContext } from '../helpers/contexts'
+import { UIContext, UIContextType } from '../helpers/contexts'
 
 export type InputProps = SizedSurfaceProps & {
-  uiContext: {
-    inForm?: boolean
-    formValues: Object
-    form: { submit: Function }
-  }
   sync?: { get: () => any; set: (a: any) => void }
   onEnter?: Function
   type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password' | 'email'
@@ -18,7 +13,11 @@ export type InputProps = SizedSurfaceProps & {
   forwardRef: any
 }
 
-class InputPlain extends React.PureComponent<InputProps> {
+type InputDecoratedProps = InputProps & {
+  uiContext: UIContextType
+}
+
+class InputPlain extends React.PureComponent<InputDecoratedProps> {
   static defaultProps = {
     size: 1,
     type: 'input',
@@ -45,22 +44,29 @@ class InputPlain extends React.PureComponent<InputProps> {
 
   setValues = () => {
     if (this.shouldSyncToForm && this.inputNode) {
-      this.props.uiContext.formValues[this.props.name] = () =>
-        this.inputNode && this.inputNode.value
+      const inForm = this.props.uiContext.inForm
+      const { name } = this.props
+      if (name && inForm) {
+        inForm.formValues[name] = () => this.inputNode && this.inputNode.value
+      }
     }
   }
 
   onClick = e => {
     e.preventDefault()
-    if (this.shouldSyncToForm) {
-      this.props.uiContext.form.submit()
+    if (this.shouldSyncToForm && this.props.uiContext.inForm) {
+      this.props.uiContext.inForm.submit()
     }
     if (this.props.onClick) {
       this.props.onClick(e)
     }
   }
 
-  syncSet = e => this.props.sync.set(e.target.value)
+  syncSet = e => {
+    if (this.props.sync) {
+      this.props.sync.set(e.target.value)
+    }
+  }
 
   render() {
     const { sync, onChange, value, forwardRef, uiContext, ...props } = this.props
@@ -95,7 +101,7 @@ class InputPlain extends React.PureComponent<InputProps> {
   }
 }
 
-export const Input = props => {
+export const Input = (props: InputProps) => {
   return (
     <UIContext.Consumer>
       {uiContext => <InputPlain uiContext={uiContext} {...props} />}

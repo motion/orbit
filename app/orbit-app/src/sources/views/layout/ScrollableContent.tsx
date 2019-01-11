@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { attach } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 import { gloss } from '@mcro/gloss'
+import { useStoresSafe } from '../../../hooks/useStoresSafe';
 
 const PeekContentChrome = gloss(UI.Col, {
   flex: 1,
@@ -21,37 +20,25 @@ const ContentInner = gloss(UI.Col, {
   wordBreak: 'break-word',
 })
 
-@attach('appPageStore')
-export class ScrollableContent extends React.Component<{
-  scrollTo?: string
-  appPageStore?: AppPageStore
-}> {
-  componentDidMount() {
-    this.updateScroll()
-  }
-  componentDidUpdate(prevProps) {
-    if (this.props.scrollTo !== prevProps.scrollTo) {
-      this.updateScroll()
-    }
-  }
+export const ScrollableContent = (props: { scrollTo?: string, children: any }) {
+  const { appPageStore } = useStoresSafe()
 
-  updateScroll() {
-    const { appPageStore, scrollTo } = this.props
-    if (scrollTo && appPageStore) {
+  React.useEffect(() => {
+    if (props.scrollTo && appPageStore) {
       const node = appPageStore.contentFrame.current
-      const div = node.querySelector(scrollTo) as HTMLDivElement
+      if (!node) {
+        return
+      }
+      const div = node.querySelector(props.scrollTo) as HTMLDivElement
       node.scrollTop = div.offsetTop
     }
-  }
+  }, [])
 
-  render() {
-    const { children, appPageStore } = this.props
-    return (
-      <PeekContentChrome>
-        <ContentInner forwardRef={appPageStore && appPageStore.contentFrame}>
-          {children}
-        </ContentInner>
-      </PeekContentChrome>
-    )
-  }
+  return (
+    <PeekContentChrome>
+      <ContentInner forwardRef={appPageStore && appPageStore.contentFrame}>
+        {props.children}
+      </ContentInner>
+    </PeekContentChrome>
+  )
 }

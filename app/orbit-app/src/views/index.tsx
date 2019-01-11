@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { View, Row, Text } from '@mcro/ui'
+import { View, Row, Text, InputProps } from '@mcro/ui'
 import { Input } from './Input'
 import { gloss } from '@mcro/gloss'
 
@@ -40,16 +40,23 @@ export const FormRow = ({ label, children }) => (
 export const InputRow = ({
   label,
   type = 'input',
-  value = undefined,
+  value = '',
   onChange = null,
   ...props
-}) => (
+}: InputProps) => (
   <FormTableRow>
     <FormTableLabel>
       <Label>{label}</Label>
     </FormTableLabel>
     <FormTableValue>
-      <Input value={value} onChange={e => onChange(e.target.value)} type={type} {...props} />
+      <Input
+        value={value}
+        onChange={e => {
+          onChange(e.target.value)
+        }}
+        type={type}
+        {...props}
+      />
     </FormTableValue>
   </FormTableRow>
 )

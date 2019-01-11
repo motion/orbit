@@ -6,14 +6,20 @@ type UISegment = {
   index?: number
 }
 
-const uiContextDefault = {
-  inSegment: null as UISegment | null,
-  hovered: null as boolean | null,
+export type UIContextType = {
+  hovered?: boolean
+  inSegment: UISegment | null
+  inForm: {
+    formValues: { [key: string]: string | number | Function }
+    submit: Function
+  } | null
 }
 
-export type UIContextType = typeof uiContextDefault
-
-export const UIContext = React.createContext(uiContextDefault)
+export const UIContext = React.createContext({
+  inSegment: null,
+  hovered: false,
+  inForm: null,
+} as UIContextType)
 
 export const MergeUIContext = ({ value, children }) => (
   <UIContext.Consumer>

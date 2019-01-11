@@ -177,6 +177,7 @@ export class BridgeManager {
         onMessage: this.handleMessage,
       },
     })
+
     await this.socketManager.start()
   }
 
@@ -190,7 +191,7 @@ export class BridgeManager {
         const msg = JSON.parse(data)
 
         if (msg.message) {
-          this.handleMessage(data)
+          this.handleMessage(msg)
           return
         }
 
@@ -440,7 +441,7 @@ export class BridgeManager {
 
   onMessage = (a, b?): Disposer => {
     let listener = b || a
-    let type = listener ? a : null
+    let type = b ? a : null
     let subscription = { type, listener }
     this.messageListeners.add(subscription)
     // return disposable

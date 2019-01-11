@@ -10,9 +10,11 @@ import { SearchResultsList } from '../../views/Lists/SearchResultsList'
 import { MergeContext } from '../../views/MergeContext'
 import { StoreContext } from '@mcro/black'
 import { Selectable } from '../../components/Selectable'
+import { AppType } from '@mcro/models'
 
-export const SearchAppIndex = observer((props: AppProps<'search'>) => {
+export const SearchAppIndex = observer((props: AppProps<AppType.search>) => {
   const searchStore = useStore(SearchStore, props)
+  // TODO bad
   const shouldHideNav = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
 
   return (

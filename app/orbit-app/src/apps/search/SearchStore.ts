@@ -6,6 +6,7 @@ import {
   IntegrationType,
   AppModel,
   SearchResult,
+  AppType,
 } from '@mcro/models'
 import { uniq, flatten } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
@@ -50,7 +51,7 @@ const searchGroupsToResults = (results: SearchResult[]): OrbitItemProps<any>[] =
 }
 
 export class SearchStore {
-  props: AppProps<'search'>
+  props: AppProps<AppType.search>
 
   get activeQuery() {
     return this.props.appStore.activeQuery
@@ -251,7 +252,7 @@ export class SearchStore {
       results = [
         ...fuzzyQueryFilter(
           activeQuery,
-          this.props.spaceStore.apps.filter(x => x.type !== 'search'),
+          this.props.spaceStore.apps.filter(x => x.type !== AppType.search),
           {
             key: 'name',
           },
@@ -259,9 +260,11 @@ export class SearchStore {
           group: 'Apps',
           title: app.name,
           icon: app.type,
-          // appConfig: {
-          //   type: 'message'
-          // },
+          appConfig: {
+            id: '0',
+            title: '',
+            type: AppType.message,
+          },
           onOpen: () => {
             console.log('selecting app...', app.type, app.id)
             this.props.paneManagerStore.setActivePane(app.id)

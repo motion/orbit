@@ -114,7 +114,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || [9, 10]}
+          padding={padding || [9, 11]}
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>
@@ -328,7 +328,7 @@ const AfterHeader = gloss({
 })
 
 const TitleSpace = gloss({
-  minWidth: 8,
+  minWidth: 10,
   shouldFlex: {
     flex: 1,
   },

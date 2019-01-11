@@ -1,6 +1,5 @@
 import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
-import { getAppConfig } from '../../helpers/getAppConfig'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -42,7 +41,7 @@ export class OrbitItemStore {
         return
       }
       if (this.props.onOpen) {
-        this.props.onOpen()
+        this.props.onOpen(this.index, this.props.appConfig)
       } else {
         console.log('no open event for item', this.props)
       }
@@ -76,13 +75,6 @@ export class OrbitItemStore {
     return getIndex ? getIndex(item) : index
   }
 
-  get appConfig() {
-    if (this.props.appConfig) {
-      return this.props.appConfig
-    }
-    return this.props.item ? getAppConfig(this.props.item) : null
-  }
-
   shouldSelect = () => {
     const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
     if (typeof isSelected === 'undefined') {
@@ -114,7 +106,7 @@ export class OrbitItemStore {
       this.isSelected = isSelected
       if (isSelected) {
         if (onSelect) {
-          onSelect(this.index, this.appConfig, this.cardWrapRef)
+          onSelect(this.index, this.props.appConfig)
         } else {
           console.log('no preview event for', this.index)
         }

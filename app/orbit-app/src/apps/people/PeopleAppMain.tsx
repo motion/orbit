@@ -8,6 +8,7 @@ import {
   CosalTopicsModel,
   Bit,
   SlackBitData,
+  AppType,
 } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import { react, ensure, StoreContext } from '@mcro/black'
@@ -34,7 +35,7 @@ const getBitTexts = (bits: Bit[]) => {
 }
 
 class PeopleAppStore {
-  props: AppProps<'people'>
+  props: AppProps<AppType.people>
 
   get appConfig() {
     return this.props.appStore.appConfig
@@ -98,7 +99,7 @@ class PeopleAppStore {
 
 const PersonHeader = gloss()
 
-export const PeopleAppMain = observer((props: AppProps<'people'>) => {
+export const PeopleAppMain = observer((props: AppProps<AppType.people>) => {
   const { appPageStore } = React.useContext(StoreContext)
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {

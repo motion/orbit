@@ -5,6 +5,7 @@ import { PersonBit, Bit } from '@mcro/models'
 import { StoreContext } from '@mcro/black'
 import { SearchResultListItem } from '../ListItems/SearchResultListItem'
 import { HandleSelection } from '../ListItems/OrbitItemProps'
+import { normalizeItem } from '../../helpers/normalizeItem'
 
 export type SearchableItem = (Bit | PersonBit)[]
 
@@ -13,6 +14,11 @@ type SearchResultsListProps = VirtualListProps & {
   onOpen: HandleSelection
   query: string
   offsetY?: number
+}
+
+const getItemAppConfig = items => index => {
+  // normalize bits if handed in directly
+  return items[index].target === 'bit' ? normalizeItem(items[index]) : null
 }
 
 export const SearchResultsList = ({
@@ -38,6 +44,7 @@ export const SearchResultsList = ({
     >
       <VirtualList
         items={items}
+        getItemProps={getItemAppConfig(items)}
         ItemView={SearchResultListItem}
         maxHeight={appStore.maxHeight - offsetY}
         isRowLoaded={isRowLoaded}

@@ -13,12 +13,15 @@ import { SpaceStore } from '../stores/SpaceStore'
 export type AppProps<Type extends AppType> = {
   id: string
   viewType: 'index' | 'main' | 'setup'
-  title: string
   type: Type
-  data: AppData[Type]
-  onSelectItem: HandleSelection
-  onOpenItem: HandleSelection
+  title?: string
+  onSelectItem?: HandleSelection
+  onOpenItem?: HandleSelection
+
+  // TODO this is all confused, were moving this onto AppEntity/AppModel
+  data?: AppData[Type]
   updateData: (values: Partial<AppData[Type]>) => void
+
   sourceType?: IntegrationType
   appStore: AppStore<Type>
   spaceStore: SpaceStore

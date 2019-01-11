@@ -13,11 +13,7 @@ export const getAppConfig = (model: ResolvableModel): AppConfig => {
       type = 'person'
       break
     default:
-      throw new Error(
-        `Get app config for model.target ${model.target} failed for model: ${JSON.stringify(
-          model,
-        )}`,
-      )
+      return null
   }
   const app = allIntegrations[type]
   if (!app) {

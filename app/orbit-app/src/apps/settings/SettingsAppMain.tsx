@@ -1,6 +1,6 @@
 import { ensure, react, view, attach } from '@mcro/black'
 import { observeOne, save } from '@mcro/model-bridge'
-import { SettingModel } from '@mcro/models'
+import { SettingModel, AppType } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme, View } from '@mcro/ui'
 import * as React from 'react'
@@ -110,7 +110,7 @@ const Section = gloss(View, {
 })
 @view
 export class SettingsAppMain extends React.Component<
-  AppProps<'settings'> & { store: SettingAppStore }
+  AppProps<AppType.settings> & { store: SettingAppStore }
 > {
   handleClearAllData = () => {
     if (

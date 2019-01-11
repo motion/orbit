@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { Person, Bit, PersonBit, IntegrationType, Source } from '@mcro/models'
+import { Person, Bit, PersonBit, IntegrationType, Source, AppConfig } from '@mcro/models'
 import { last } from 'lodash'
 import { ResolvableModel } from '../sources/types'
+import { getAppConfig } from './getAppConfig'
 
 export type NormalItem = {
   id: string
@@ -25,6 +26,7 @@ export type NormalItem = {
   image?: string
   afterTitle?: React.ReactNode
   after?: React.ReactNode
+  appConfig?: AppConfig
 }
 
 export type ItemResolverExtraProps = {
@@ -50,6 +52,7 @@ const normalizers = {
       integration: bit.integration,
       createdAt: new Date(bit.bitCreatedAt),
       updatedAt: new Date(bit.bitUpdatedAt),
+      appConfig: getAppConfig(bit),
     }
   },
   source: (source: Source): NormalItem => ({

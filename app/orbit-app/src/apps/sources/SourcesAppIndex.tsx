@@ -7,8 +7,9 @@ import { VirtualList } from '../../views/VirtualList/VirtualList'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import { useResults } from '../../hooks/useResults'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
+import { AppType } from '@mcro/models'
 
-export const SourcesAppIndex = observer((props: AppProps<'sources'>) => {
+export const SourcesAppIndex = observer((props: AppProps<AppType.sources>) => {
   const results = useComputed(() => {
     const { activeSources, allSources } = props.sourcesStore
     return [

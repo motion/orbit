@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useObserveMany } from '@mcro/model-bridge'
 import { sortBy } from 'lodash'
-import { PersonBitModel } from '@mcro/models'
+import { PersonBitModel, AppType } from '@mcro/models'
 import { NoResultsDialog } from '../../components/NoResultsDialog'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
@@ -11,7 +11,7 @@ import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { groupByFirstLetter } from '../../helpers/groupByFirstLetter'
 import { Selectable } from '../../components/Selectable'
 
-export const PeopleAppIndex = observer((props: AppProps<'people'>) => {
+export const PeopleAppIndex = observer((props: AppProps<AppType.people>) => {
   // people and query
   const people = useObserveMany(PersonBitModel, { take: 10000 })
   const [activeQuery, setActiveQuery] = React.useState('')

@@ -25,9 +25,14 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringID = -1
   didRenderState = { at: Date.now(), open: false }
+  trayEventListener = App.onMessage(App.messages.TRAY_EVENT, this.handleTrayEvent.bind(this))
 
   // see how this interacts with isOpen
   activeMenuID = App.openMenu ? App.openMenu.id : -1
+
+  willUnmount() {
+    this.trayEventListener()
+  }
 
   get menuHeight() {
     return App.state.trayState.menuState[this.activeOrLastActiveMenuID].size[1]
@@ -146,13 +151,14 @@ export class MenuStore {
     }
   }
 
-  handleTrayEvent = async ({
+  async handleTrayEvent({
     type,
     value,
   }: {
     type: 'trayHovered' | 'trayClicked'
     value: '0' | '1' | '2' | '3' | 'Out'
-  }) => {
+  }) {
+    console.log('handling tray event', type, value)
     if (type === 'trayHovered') {
       switch (value) {
         case 'Out':

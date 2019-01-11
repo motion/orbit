@@ -301,9 +301,10 @@ export class BridgeManager {
 
   handleMessage = data => {
     const getMessage = str => str.split(MESSAGE_SPLIT_VAL)
-    const [message, value] = getMessage(data)
+    const [message, rawValue] = getMessage(data)
+    const value = JSON.parse(rawValue)
     // orbit so we can time between other things in the app...
-    log.timer('orbit', `${this.source}.message`, `${message}`, value)
+    log.verbose('Bridge.handleMessage', this.source, message, value)
     for (const { type, listener } of this.messageListeners) {
       if (!type) {
         listener(message, value)
@@ -444,11 +445,10 @@ export class BridgeManager {
     return changed
   }
 
-  onMessage = (type, listener?): Disposer => {
+  onMessage = (a, b?): Disposer => {
+    let listener = b || a
+    let type = listener ? a : null
     let subscription = { type, listener }
-    if (!listener) {
-      subscription = { type: null, listener: type }
-    }
     this.messageListeners.add(subscription)
     // return disposable
     return () => {

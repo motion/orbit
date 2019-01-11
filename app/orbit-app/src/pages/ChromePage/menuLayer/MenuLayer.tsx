@@ -3,7 +3,6 @@ import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { useStore } from '@mcro/use-store'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
-import { App } from '@mcro/stores'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
@@ -66,10 +65,6 @@ export const MenuLayer = observer(() => {
     return () => {
       document.removeEventListener('mousemove', onMove)
     }
-  }, [])
-
-  React.useEffect(() => {
-    return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
   }, [])
 
   return (

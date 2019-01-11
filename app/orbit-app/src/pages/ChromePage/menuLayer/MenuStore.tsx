@@ -3,7 +3,6 @@ import { setTrayFocused } from './helpers'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { react, ensure, always } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
-import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { AppType } from '@mcro/models'
@@ -147,32 +146,46 @@ export class MenuStore {
     }
   }
 
-  handleTrayEvent = async (key: keyof TrayActions) => {
-    switch (key) {
-      case 'TrayToggle0':
-        // special case: switch us over to the main orbit app
-        // sync query over to search
-        App.setState({ query: this.props.queryStore.query })
-        // then open the main window to show it there instead
-        AppActions.setOrbitDocked(!App.state.orbitState.docked)
-        // and close this menu
-        this.closeMenu()
-        break
-      case 'TrayToggle1':
-      case 'TrayToggle2':
-      case 'TrayToggle3':
-        this.togglePinnedOpen(+key.replace('TrayToggle', ''))
-        break
-      case 'TrayHover0':
-      case 'TrayHover1':
-      case 'TrayHover2':
-      case 'TrayHover3':
-        const id = +key.replace('TrayHover', '')
-        this.updateTrayHover(id)
-        break
-      case 'TrayHoverOut':
-        this.updateTrayHover(-1)
-        break
+  handleTrayEvent = async ({
+    type,
+    value,
+  }: {
+    type: 'trayHovered' | 'trayClicked'
+    value: '0' | '1' | '2' | '3' | 'Out'
+  }) => {
+    if (type === 'trayHovered') {
+      switch (value) {
+        case 'Out':
+          this.updateTrayHover(-1)
+          break
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+          const id = +type.replace('TrayHover', '')
+          this.updateTrayHover(id)
+          break
+      }
+      return
+    }
+
+    if (type === 'trayClicked') {
+      switch (value) {
+        case '0':
+          // special case: switch us over to the main orbit app
+          // sync query over to search
+          App.setState({ query: this.props.queryStore.query })
+          // then open the main window to show it there instead
+          AppActions.setOrbitDocked(!App.state.orbitState.docked)
+          // and close this menu
+          this.closeMenu()
+          break
+        case '1':
+        case '2':
+        case '3':
+          this.togglePinnedOpen(+type.replace('TrayToggle', ''))
+          break
+      }
     }
   }
 

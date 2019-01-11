@@ -491,6 +491,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   setPosition = debounce(() => {
+    if (getIsManuallyPositioned(this.props)) {
+      return
+    }
     if (!this.popoverRef || !this.target) {
       throw new Error('missing popvoer ref or target')
     }

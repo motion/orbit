@@ -22,7 +22,6 @@ export type AppFocusState = {
   [key: number]: { focused: number | false; exited: boolean } | null
 }
 
-// @ts-ignore
 @store
 class DesktopStore {
   // TODO have the store decorator auto-define these types

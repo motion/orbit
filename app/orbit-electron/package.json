@@ -27,6 +27,8 @@
     "@mcro/r2": "^2.3.10",
     "@mcro/reactron": "^2.3.10",
     "@mcro/stores": "^2.3.10",
+    "@mcro/use-store": "*",
+    "mobx-react-lite": "0.3.5",
     "babel-polyfill": "7.0.0-beta.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.5.0",

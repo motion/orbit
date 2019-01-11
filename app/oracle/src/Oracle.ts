@@ -12,20 +12,41 @@ const appPath = (bundle: string) =>
   Path.join(dir, '..', 'Build', 'Products', bundle, 'Oracle.app', 'Contents', 'MacOS')
 const RELEASE_PATH = appPath('Release')
 
-type OracleOptions = {
+export type OracleOptions = {
   binPath?: string
   port: number
-  onMessage: MessageHandler
+  onMessage: OracleMessageHandler
 }
 
-type Messages = {
-  trayBounds: {
+// message types
+
+interface Message {
+  message: string
+}
+
+interface TrayBoundsMessage extends Message {
+  message: 'trayBounds'
+  value: {
     position: [number, number]
     size: [number, number]
   }
 }
-type Action = keyof Messages
-type MessageHandler = (<A extends Action>(message: A, value: Messages[Action]) => void)
+
+interface TrayHoverMessage extends Message {
+  message: 'trayHover'
+  value: {
+    id: '0' | '1' | '2' | 'Out'
+  }
+}
+
+type OracleMessage = TrayHoverMessage | TrayBoundsMessage
+
+type Narrow<T, K> = T extends { message: K } ? T : never
+
+export type OracleMessageHandler = (<K extends OracleMessage['message']>(
+  message: K,
+  value: Narrow<OracleMessage, K>,
+) => void)
 
 export class Oracle {
   private process: ChildProcess
@@ -105,7 +126,6 @@ export class Oracle {
 
       socket.on('message', str => {
         const { action, value } = JSON.parse(str.toString())
-        console.log('got message', action, value)
         this.options.onMessage(action, value)
       })
 

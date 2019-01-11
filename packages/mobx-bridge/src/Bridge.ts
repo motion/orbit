@@ -456,17 +456,21 @@ export class BridgeManager {
     }
   }
 
-  sendMessage = async (Store: any, ogMessage: string, value?: string) => {
+  sendMessage = async (Store: any, ogMessage: string, ogValue?: string) => {
     if (!this.started) {
       throw new Error('Not started, can only call sendMessage on the app that starts it.')
     }
     if (!Store || !ogMessage) {
-      throw new Error(`no store || message ${Store} ${ogMessage} ${value}`)
+      throw new Error(`no store || message ${Store} ${ogMessage} ${ogValue}`)
     }
     if (typeof Store.source !== 'string') {
       throw new Error(`Bad store.source, store: ${Store}`)
     }
+
+    const value = typeof ogValue === 'string' ? ogValue : JSON.stringify(ogValue)
     const message = value ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}` : ogMessage
+    this.lastMessage = { message, at: Date.now() }
+
     if (this.options.master) {
       this.socketManager.sendMessage(Store.source, message)
     } else {
@@ -482,7 +486,6 @@ export class BridgeManager {
         if (process.env.NODE_ENV === 'development') {
           log.trace.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
         }
-        this.lastMessage = { message, at: Date.now() }
         this.socket.send(JSON.stringify({ message, to: Store.source }))
       })
     }

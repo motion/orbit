@@ -58,7 +58,7 @@ export class SocketManager {
       if (this.identities[uid] !== source) {
         continue
       }
-      socket.send(`-${message}`)
+      socket.send(message)
     }
   }
 

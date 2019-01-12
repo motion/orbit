@@ -6,7 +6,7 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 
 export class AppStore<Type extends AppType> {
   props: AppProps<Type>
-  stores = useStoresSafe({ optional: ['selectionStore'] })
+  stores = useStoresSafe({ optional: ['selectionStore', 'subPaneStore'] })
 
   toolbar = null
   selectionResults = null

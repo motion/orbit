@@ -20,7 +20,6 @@ export const SelectionManager = observer(
     useEffect(
       () => {
         if (isActive) {
-          console.log('setting active selection pane', props.paneId)
           shortcutStore.setActiveSelectionStore(selectionStore)
         }
       },

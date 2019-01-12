@@ -18,11 +18,15 @@ type SearchResultsListProps = VirtualListProps & {
 
 const getItemAppConfig = (items: any[]): GetItemProps => (index: number) => {
   // normalize bits if handed in directly
-  const target = items[index].target
+  const item = items[index]
+  const target = item.target
   switch (target) {
     case 'person-bit':
     case 'bit':
-      return normalizeItem(items[index])
+      return {
+        ...normalizeItem(item),
+        group: item.group,
+      }
   }
   return null
 }

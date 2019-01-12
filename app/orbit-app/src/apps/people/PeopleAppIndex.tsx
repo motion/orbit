@@ -32,9 +32,7 @@ export const PeopleAppIndex = observer((props: AppProps<AppType.people>) => {
         key: 'name',
       })
       const sortedPeople = sortBy(filteredPeople.filter(x => !!x.name), x => x.name.toLowerCase())
-      const groupedPeople =
-        sortedPeople.length < 10 ? sortedPeople : groupByFirstLetter(sortedPeople)
-      return groupedPeople.slice(0, 1)
+      return sortedPeople.length < 10 ? sortedPeople : groupByFirstLetter(sortedPeople)
     },
     [activeQuery, people.length],
   )

@@ -1,9 +1,6 @@
-import { OrbitItemStore } from './OrbitItemStore'
 import { NormalItem } from '../../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
 import { GenericItemProps } from '../../sources/types'
-import { SourcesStore } from '../../stores/SourcesStore'
-import { AppStore } from '../../apps/AppStore'
 import { CSSPropertySetStrict } from '@mcro/css'
 import { AppConfig } from '@mcro/models'
 
@@ -25,13 +22,10 @@ export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
     theme?: Partial<ThemeObject>
     listItem?: boolean
     hoverToSelect?: boolean
-    sourcesStore?: SourcesStore
-    appStore?: AppStore<any>
     subtitle?: React.ReactNode
     date?: React.ReactNode
     icon?: React.ReactNode
     index?: number
-    store?: OrbitItemStore
     isExpanded?: boolean
     style?: any
     afterTitle?: React.ReactNode

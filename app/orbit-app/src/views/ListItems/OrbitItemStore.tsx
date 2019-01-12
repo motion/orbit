@@ -1,8 +1,7 @@
 import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
 import { Logger } from '@mcro/logger'
-import { StoreContext } from '../../contexts'
-import { useContext } from 'react'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const log = new Logger('OrbitItemStore')
 
@@ -13,7 +12,7 @@ export const OrbitItemSingleton = {
 
 export class OrbitItemStore {
   props: OrbitItemProps<any>
-  stores = useContext(StoreContext)
+  stores = useStoresSafe()
 
   isSelected = false
   cardWrapRef = null
@@ -82,7 +81,8 @@ export class OrbitItemStore {
   }
 
   shouldSelect = () => {
-    const { activeCondition, ignoreSelection, appStore, isSelected } = this.props
+    const { activeCondition, ignoreSelection, isSelected } = this.props
+    const { appStore } = this.stores
     if (typeof isSelected === 'undefined') {
       if (ignoreSelection) {
         return false

@@ -1,14 +1,15 @@
 import * as React from 'react'
 import { OrbitListItem } from './OrbitListItem'
 import { ListItemProps } from '../VirtualList/VirtualListItem'
-import { normalizeItem } from '../../helpers/normalizeItem'
+import { normalizeItem, NormalItem } from '../../helpers/normalizeItem'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
 import { ListItemPerson } from './ListItemPerson'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { OrbitItemProps } from './OrbitItemProps'
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
-export const getNormalPropsForListItem = (normalized: any) => ({
+export const getNormalPropsForListItem = (normalized: NormalItem): OrbitItemProps<any> => ({
   title: normalized.title,
   location: normalized.location,
   webLink: normalized.webLink,
@@ -18,30 +19,26 @@ export const getNormalPropsForListItem = (normalized: any) => ({
   icon: normalized.icon,
   people: normalized.people,
   preview: normalized.preview,
-  children: normalized.children,
-  before: normalized.before,
   after: normalized.after,
 })
 
-export const ListItemNormalize = (props: ListItemProps) => {
+export const ListItemNormalize = ({ item, ...rest }: ListItemProps) => {
   const { sourcesStore } = useStoresSafe()
-  const normalized = normalizeItem(props.item as any)
+  const normalized = normalizeItem(item)
   const ItemView =
-    props.item.target === 'bit'
-      ? sourcesStore.getView(normalized.integration, 'item')
-      : ListItemPerson
+    item.target === 'bit' ? sourcesStore.getView(normalized.integration, 'item') : ListItemPerson
   return (
     <OrbitListItem
-      index={props.realIndex}
-      searchTerm={props.query}
+      index={rest.realIndex}
+      searchTerm={rest.query}
       subtitleSpaceBetween={spaceBetween}
       {...ItemView.itemProps}
       {...getNormalPropsForListItem(normalized)}
-      {...props}
+      {...rest}
     >
       <ItemView
-        item={props.item}
-        bit={props.item}
+        item={item}
+        bit={item}
         shownLimit={10}
         renderText={renderHighlightedText}
         extraProps={{

@@ -3,11 +3,12 @@ import { ListItem } from '../VirtualList/VirtualListItem'
 import { ListItemNormalize } from './ListItemNormalize'
 
 export const SearchResultListItem = React.memo((props: any) => {
-  if (props.target) {
-    switch (props.target) {
+  console.log('render search item', props.item)
+  if (props.item && props.item.target) {
+    switch (props.item.target) {
       case 'bit':
       case 'person-bit':
-        return <ListItemNormalize item={props as any} {...props} />
+        return <ListItemNormalize {...props} />
       default:
         return <div>SearchResultListItem no result</div>
     }

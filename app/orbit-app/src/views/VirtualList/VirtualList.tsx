@@ -15,7 +15,6 @@ import { OrbitItemProps } from '../ListItems/OrbitItemProps'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
-import { trace } from 'mobx'
 
 export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>> | null
 
@@ -206,7 +205,7 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
             {...getSeparatorProps(items, index)}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
-            {...item}
+            item={item}
             index={index}
             realIndex={index}
           />

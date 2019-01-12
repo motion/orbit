@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "@mcro/logger": "^2.3.10",
-    "fbjs": "0.8.16",
+    "fbjs": "1.0.0",
     "lodash.isequal": "^4.5.0",
-    "react-reconciler": "0.11.0"
+    "react-reconciler": "0.18.0"
   },
   "devDependencies": {
     "electron-devtools-installer": "^2.2.4"

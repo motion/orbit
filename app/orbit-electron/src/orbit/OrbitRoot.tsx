@@ -37,7 +37,9 @@ export const OrbitRoot = observer(() => {
     }
     return null
   }
+
   console.log('electron success, rendering...')
+
   return (
     <App
       onBeforeQuit={electronStore.handleBeforeQuit}

@@ -3,8 +3,9 @@ import * as React from 'react'
 import { ElectronStore } from './stores/ElectronStore'
 import { devTools } from './helpers/devTools'
 import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
-export const ElectronRoot = (props: { children: any }) => {
+export const ElectronRoot = observer((props: { children: any }) => {
   const electronStore = useStore(ElectronStore)
   if (electronStore.error) {
     if (electronStore.error) {
@@ -23,4 +24,4 @@ export const ElectronRoot = (props: { children: any }) => {
       {props.children}
     </App>
   )
-}
+})

@@ -2,17 +2,18 @@ import * as React from 'react'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { HandleSelection } from '../../views/ListItems/OrbitItemProps'
-import { AppConfig, AppType } from '@mcro/models'
+import { AppConfig, AppType, App } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
 import { SubPane } from '../../components/SubPane'
-import { App } from '@mcro/stores'
+import { App as AppGlobalStore } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
 import { AppStore } from '../../apps/AppStore'
 import { observer } from 'mobx-react-lite'
 import { SelectionManager } from '../../components/SelectionManager'
 import { gloss } from '@mcro/gloss'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
 
 class OrbitStore {
   props: { paneManagerStore: PaneManagerStore }
@@ -39,7 +40,7 @@ class OrbitStore {
 
   appStores: { [key: string]: AppStore<any> } = {}
 
-  setAppStore = <T extends AppType>(id: T) => (store: AppStore<T>) => {
+  setAppStore = (id: number) => (store: AppStore<any>) => {
     this.appStores = {
       ...this.appStores,
       [id]: store,
@@ -48,48 +49,43 @@ class OrbitStore {
 }
 
 export const OrbitPageContent = observer(() => {
-  const { spaceStore, paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStoresSafe()
   const store = useStore(OrbitStore, { paneManagerStore })
 
   if (!store.activePane) {
     return null
   }
 
-  // TODO make it a reaction inside here using mobx-react-hooks
-  // setActivePaneOnTrigger = react(
-  //   () => this.props.queryStore.queryInstant[0],
-  //   firstChar => {
-  //     for (const { type, trigger } of AppPanes) {
-  //       if (trigger && trigger === firstChar) {
-  //         this.props.paneManagerStore.setActivePane(type)
-  //         return
-  //       }
-  //     }
-  //   },
-  // )
-
   React.useEffect(() => {
-    return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+    return AppGlobalStore.onMessage(AppGlobalStore.messages.TOGGLE_SETTINGS, () => {
       AppActions.setOrbitDocked(true)
       paneManagerStore.setActivePane('settings')
     })
   }, [])
 
   const activeAppStore = store.appStores[store.activePane]
+  const activeApps = useObserveActiveApps()
 
-  const allPanes: AppConfig[] = [
-    ...spaceStore.apps,
+  const allPanes: App[] = [
+    // TODO move away from AppConfig to just App model
+    ...activeApps,
     {
-      id: 'sources',
+      target: 'app',
+      id: 100,
       type: 'sources',
-      title: 'Sources',
-      icon: 'box',
+      name: 'Sources',
+      data: {
+        icon: 'box',
+      },
     },
     {
-      id: 'settings',
+      target: 'app',
+      id: 101,
       type: 'settings',
-      title: 'Settings',
-      icon: 'gear',
+      name: 'Settings',
+      data: {
+        icon: 'gear',
+      },
     },
   ]
 
@@ -100,14 +96,14 @@ export const OrbitPageContent = observer(() => {
         <Sidebar width={300} minWidth={100} maxWidth={500}>
           <OrbitIndexView isHidden={false}>
             {allPanes.map(app => (
-              <SubPane key={app.type} id={app.id} type={app.type} fullHeight>
-                <SelectionManager pane={app.id}>
+              <SubPane key={app.type} id={app.id} type={AppType[app.type]} fullHeight>
+                <SelectionManager paneId={app.id}>
                   <AppView
                     viewType="index"
                     id={app.id}
                     type={app.type}
                     onSelectItem={store.handleSelectItem}
-                    onAppStore={store.setAppStore(app.type)}
+                    onAppStore={store.setAppStore(app.id)}
                   />
                 </SelectionManager>
               </SubPane>
@@ -116,7 +112,7 @@ export const OrbitPageContent = observer(() => {
         </Sidebar>
         <OrbitMainView>
           {allPanes.map(app => (
-            <SubPane key={app.type} id={app.id} type={app.type} fullHeight preventScroll>
+            <SubPane key={app.type} id={app.id} type={AppType[app.type]} fullHeight preventScroll>
               <AppView
                 isActive
                 viewType="main"

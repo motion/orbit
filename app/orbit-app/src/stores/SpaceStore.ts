@@ -26,7 +26,7 @@ export const AppPanes: Pane[] = [
   // },
   {
     id: 'search',
-    type: 'search',
+    type: AppType.search,
     title: 'Search',
     icon: 'orbitsearch',
     props: {
@@ -35,7 +35,7 @@ export const AppPanes: Pane[] = [
   },
   {
     id: 'people',
-    type: 'people',
+    type: AppType.people,
     title: 'People',
     icon: 'orbitpeople',
     trigger: '@',
@@ -45,7 +45,7 @@ export const AppPanes: Pane[] = [
   },
   {
     id: 'topics',
-    type: 'topics',
+    type: AppType.topics,
     icon: 'orbittopics',
     title: 'Topics',
     trigger: '#',

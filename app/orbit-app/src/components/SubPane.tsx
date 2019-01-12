@@ -9,7 +9,7 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 import { gloss } from '@mcro/gloss'
 
 export type SubPaneProps = CSSPropertySetStrict & {
-  id: string
+  id: number
   type?: AppType
   fullHeight?: boolean
   preventScroll?: boolean

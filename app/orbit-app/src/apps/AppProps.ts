@@ -11,7 +11,7 @@ import { OrbitItemProps, HandleSelection } from '../views/ListItems/OrbitItemPro
 import { SpaceStore } from '../stores/SpaceStore'
 
 export type AppProps<Type extends AppType> = {
-  id: string
+  id: number
   viewType: 'index' | 'main' | 'setup'
   type: Type
   title?: string
